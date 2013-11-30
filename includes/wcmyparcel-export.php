@@ -208,7 +208,7 @@ class WC_MyParcel_Export {
 					foreach ($order_ids as $order_id) {
 						if (get_post_meta($order_id,'_myparcel_consignment_id',true)) {
 							$order_consignment_id = get_post_meta($order_id,'_myparcel_consignment_id',true);
-							$consignment_list[] = $order_consignment_id;
+							$consignment_list[$order_id] = $order_consignment_id;
 						}
 					}
 					$consignment_id_encoded = implode('x', $consignment_list);					
@@ -250,16 +250,34 @@ class WC_MyParcel_Export {
 				$decode = json_decode($result);
 				
 				if (isset($decode->consignment_pdf)) {
+					$pdf_data = $decode->consignment_pdf;
+					$consigments_tracktrace = array_combine( explode(',',$decode->consignment_id), explode(',',$decode->tracktrace) );
+					
+					// track & trace fallback
+					foreach ( $consignment_list as $order_id => $consignment_id ) {
+						if ( isset($consigments_tracktrace[$consignment_id]) ) {
+							// create array with $order_id => $tracktrace
+							$orders_tracktrace[$order_id] = $consigments_tracktrace[$consignment_id];
+							
+							// put track&trace code in order meta
+							update_post_meta ( $order_id, '_myparcel_tracktrace', $consigments_tracktrace[$consignment_id] );
+						}
+					}
+					
+					unset($decode->consignment_pdf);
+					
 					// ERROR LOGGING
-					if (isset($this->settings['error_logging']))
+					if (isset($this->settings['error_logging'])) {
 						file_put_contents($this->log_file, date("Y-m-d H:i:s")." PDF data received\n", FILE_APPEND);
+						file_put_contents($this->log_file, print_r($orders_tracktrace,true)."\n", FILE_APPEND);
+					}
 
 					$filename  = 'MyParcel';
 					$filename .= '-' . date('Y-m-d') . '.pdf';
 					
 					header('Content-type: application/force-download');
 					header('Content-Disposition: attachment; filename="'.$filename.'"');
-					echo urldecode($decode->consignment_pdf);
+					echo urldecode($pdf_data);
 				} elseif (isset($decode->error)) {
 					echo 'Error: ' . $decode->error;
 					
