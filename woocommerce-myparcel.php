@@ -4,8 +4,8 @@ Plugin Name: WooCommerce MyParcel export
 Plugin URI: http://www.myparcel.nl
 Description: Export your WooCommerce orders to MyParcel and print labels directly from the WooCommerce admin
 Author: Ewout Fernhout
-Author URI: -
-Version: 1.0.0
+Author URI: http://www.wpovernight.com
+Version: 1.1.0
 Text Domain: wcmyparcel
 
 License: GPLv3 or later
