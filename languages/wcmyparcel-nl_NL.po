@@ -1,0 +1,262 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce PostNL CSV export\n"
+"POT-Creation-Date: 2013-04-03 19:01+0100\n"
+"PO-Revision-Date: 2013-04-03 19:55+0100\n"
+"Last-Translator: Ewout Fernhout <chocolade@extrapuur.nl>\n"
+"Language-Team: Ewout Fernhout\n"
+"Language: nl_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-KeywordsList: __;_x\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: woocommerce-myparcel.php:80
+#, fuzzy, php-format
+msgid ""
+"WooCommerce MyParcel export depends on <a href=\"%s\">WooCommerce</a> to "
+"work!"
+msgstr ""
+"WooCommerce NL Postcode Fields vereist dat <a href=\"%s\">WooCommerce</a> "
+"geactiveerd is!"
+
+#: includes/wcmyparcel-nlpostcode-fields.php:56
+#: includes/wcmyparcel-nlpostcode-fields.php:57
+#: includes/wcmyparcel-nlpostcode-fields.php:119
+#: includes/wcmyparcel-nlpostcode-fields.php:120
+#: includes/wcmyparcel-nlpostcode-fields.php:202
+#: includes/wcmyparcel-nlpostcode-fields.php:228
+msgid "Street name"
+msgstr "Straat"
+
+#: includes/wcmyparcel-nlpostcode-fields.php:64
+#: includes/wcmyparcel-nlpostcode-fields.php:65
+#: includes/wcmyparcel-nlpostcode-fields.php:127
+#: includes/wcmyparcel-nlpostcode-fields.php:128
+msgid "Nr."
+msgstr "Nr."
+
+#: includes/wcmyparcel-nlpostcode-fields.php:72
+#: includes/wcmyparcel-nlpostcode-fields.php:73
+#: includes/wcmyparcel-nlpostcode-fields.php:135
+#: includes/wcmyparcel-nlpostcode-fields.php:136
+#: includes/wcmyparcel-nlpostcode-fields.php:212
+#: includes/wcmyparcel-nlpostcode-fields.php:238
+msgid "Suffix"
+msgstr "Toev."
+
+#: includes/wcmyparcel-nlpostcode-fields.php:207
+#: includes/wcmyparcel-nlpostcode-fields.php:233
+msgid "Number"
+msgstr "Nummer"
+
+#: includes/wcmyparcel-settings.php:12 includes/wcmyparcel-settings.php:13
+msgid "MyParcel export settings"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:66
+msgid "MyParcel API login-gegevens"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:73
+msgid "Gebruikersnaam"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:87
+msgid "API key"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:95
+msgid ""
+"Uw API key, deze dient u eerst <a href=\"mailto:info@myparcel.nl\">aan te "
+"vragen bij MyParcel</a>"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:102
+msgid "MyParcel default export settings"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:109
+msgid "Koppel emailadres klant"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:116
+msgid ""
+"Wanneer u het emailadres van de klant koppelt, wordt daar een bericht met de "
+"Track&Trace link naartoe gemaild. In uw <a href=\"http://www.myparcel.nl/"
+"backend/clientmail\">MyParcel instellingen</a> kunt u deze mail opmaken in "
+"uw eigen stijl."
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:122
+msgid "Koppel telefoonnummer klant"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:129
+msgid ""
+"Wanneer u het telefoonnummer van de klant koppelt met de zending, kan de "
+"koerier dit gebruiken ten behoeve van de aflevering van het pakket. De "
+"afleverkans voor buitenlandzendingen wordt hiermee aanzienlijk verhoogd."
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:135
+msgid "Extra groot formaat (+ &eur; 2.00)"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:142
+msgid ""
+"Vink deze optie aan indien uw pakket groter is dan 100 x 70 x 50 cm, maar "
+"kleiner dan 175 x 78 x 58 cm. Er wordt hiervoor een toeslag van &euro;"
+"&nbsp;2,00 doorberekend.<br/><strong>Let op!</strong> Indien het pakket "
+"groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een "
+"pallettarief van &euro;&nbsp;65,00 in rekening gebracht."
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:148
+msgid "Niet bij buren bezorgen (+ &eur; 0.23)"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:160
+msgid "Handtekening voor ontvangst (+ &eur; 0.30)"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:167
+msgid ""
+"Hier wordt het pakket allereerst op het huisadres aangeboden. Mocht de "
+"geadresseerde niet thuis zijn, dan wordt het pakket bij de buren afgegeven. "
+"Er moet in beide gevallen voor worden getekend."
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:173
+msgid "Niet bij buren bezorgen + Handtekening voor ontvangst (+ &eur; 0.37)"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:180
+msgid ""
+"Hiermee kiest u voor zekerheid. Het pakket wordt alleen bij de geadresseerde "
+"bezorgt die hiervoor tekent. Zo weet u zeker dat het pakket in ontvangst is "
+"genomen door de geadresseerde. Een veilig gevoel."
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:186
+msgid ""
+"Niet bij buren bezorgen + Handtekening voor ontvangst + verzekerd tot &eur; "
+"50 (+ &eur; 0.50)"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:193
+msgid ""
+"Er zit standaard geen verzekering op de zendingen. Indien u uw pakket wilt "
+"verzekeren tegen diefstal, schade en verlies kunt u dit bij ons doen voor "
+"&euro;&nbsp;0,50. Wij verzekeren uw zending tot een waarde van &euro;"
+"&nbsp;50. Wilt u een duurder product verzekeren? Kies dan voor de optie "
+"\"Verhoogd aansprakelijk\"."
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:199
+msgid "Retour bij geen gehoor"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:206
+msgid ""
+"Standaard wordt de zending twee keer aangeboden. Na twee mislukte "
+"afleverpogingen zal het pakket gedurende drie weken beschikbaar zijn op de "
+"dichtstbijzijnde afhaallocatie. Het kan daar door de klant worden opgehaald "
+"met het door de koerier achtergelaten briefje. Indien u wilt dat het pakket "
+"na twee keer te zijn aangeboden direct retour komt en dus NIET op het "
+"postkantoor komt te liggen, vink dan deze optie aan. Let op: Het pakket komt "
+"hierdoor eerder retour, waarvoor wij u ook zullen doorbelasten."
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:212
+msgid "Verhoogd aansprakelijk (+ &eur; 1.45 per 500 euro verzekerd)"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:219
+msgid ""
+"Er zit standaard geen verzekering op de zendingen. Indien u toch wilt "
+"verzekeren kunt u dit doen voor &euro;&nbsp;1.45 extra per &euro;&nbsp;500 "
+"verzekerd. Wij verzekeren de inkoopwaarde van uw product. Met een maximale "
+"verzekerde waarde van &euro;&nbsp;5.000."
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:225
+msgid "Verzekerd bedrag (in euro)"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:233
+msgid ""
+"Indien u kiest voor verhoogd aansprakelijk, dan kunt u hier de waarde van de "
+"inhoud van het pakket vermelden, afgerond op hele euros, zonder kommas "
+"punten of valutateken."
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:239
+msgid "Eigen kenmerk"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:246
+msgid ""
+"Met deze optie kunt u een kenmerk aan de zending toevoegen. Deze wordt "
+"linksboven op het label geprint en hierop kan later in het overzicht "
+"zendingen gezocht of geordend worden."
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:252
+msgid "Optioneel bericht"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:259
+msgid ""
+"Met deze optie kunt u een optioneel bericht aan de zending toevoegen. Deze "
+"kunt u later terug lezen in uw overzicht zendingen. Deze tekst komt niet "
+"terug op het etiket, maar is door de klant wel terug te vinden op de "
+"track&trace pagina van PostNL onder 'Referentie'"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:266
+msgid "Standaard verpakkingsgewicht (gram)"
+msgstr ""
+
+#: includes/wcmyparcel-settings.php:274
+msgid "Gewicht van uw standaard verpakking, afgerond op hele grammen."
+msgstr ""
+
+#: includes/wcmyparcel-writepanel.php:25
+msgid "MyParcel"
+msgstr ""
+
+#: includes/wcmyparcel-writepanel.php:127
+#, php-format
+msgid "You can follow your order with the following track&trace number: %s"
+msgstr "U kunt uw bestelling volgen met het volgende track&trace nummer: %s"
+
+#~ msgid "First Name"
+#~ msgstr "Voornaam"
+
+#~ msgid "Last Name"
+#~ msgstr "Achternaam"
+
+#~ msgid "Company Name"
+#~ msgstr "Bedrijfsnaam"
+
+#~ msgid "Company (optional)"
+#~ msgstr "Bedrijfsnaam (optioneel)"
+
+#~ msgid "Postcode/Zip"
+#~ msgstr "Postcode"
+
+#~ msgid "Town/City"
+#~ msgstr "Stad"
+
+#~ msgid "Country"
+#~ msgstr "Land"
+
+#~ msgid "Email"
+#~ msgstr "E-mail"
+
+#~ msgid "Phone"
+#~ msgstr "Telefoon"

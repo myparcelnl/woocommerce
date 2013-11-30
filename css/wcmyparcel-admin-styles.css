@@ -1,0 +1,34 @@
+.wcmyparcel_settings_table td {
+	border: none;
+	padding: 0px 7px 2px;
+}
+
+td.ordercell {
+	width: 60%;
+}
+
+input[type="checkbox"], input[type="radio"] {
+	margin-right: 8px;
+}
+
+.page-form {
+	width: 96%;
+	margin: 10px auto;
+}
+
+.button-wcmyparcel {
+	margin-top: 8px;
+	float: right;
+}
+
+dl.variation {
+	margin: 0;
+	font-size: 10px;
+	color: #888;
+}
+
+dl.variation dd, dl.variation dt{
+	margin: 0;
+	display: inline;
+}
+
