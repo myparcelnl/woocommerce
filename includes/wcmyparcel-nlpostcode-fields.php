@@ -2,26 +2,31 @@
 if ( !class_exists( 'WC_NLPostcode_Fields' ) ) {
 class WC_NLPostcode_Fields {
 
-    /**
-     * Construct.
-     */
-     		
+	/**
+	 * Construct.
+	 */
+	 		
 	public function __construct() {
-		// Load custom styles
-		add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles' ) );
+		// Load styles & scripts
+		add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles_scripts' ) );
 
-	    // New checkout fields.
-	    add_filter( 'woocommerce_checkout_fields', array( &$this, 'checkout_billing_fields' ) );
-	    add_filter( 'woocommerce_checkout_fields', array( &$this, 'checkout_shipping_fields' ) );
+		// Hide default address fields & state
+		add_filter('woocommerce_get_country_locale', array( &$this, 'woocommerce_locale_nl' ), 1, 1);
 
-	    // Load custom order data.
-	    add_filter( 'woocommerce_load_order_data', array( &$this, 'load_order_data' ) );
+		// Add street name & house number checkout fields.
+		add_filter( 'woocommerce_checkout_fields', array( &$this, 'nl_checkout_fields' ) );
 
-	    // Admin order billing fields.
-	    add_filter( 'woocommerce_admin_billing_fields', array( &$this, 'admin_billing_fields' ) );
+		// Hide state field for countries without states (backwards compatible fix for bug #4223)
+		add_filter( 'woocommerce_countries_allowed_country_states', array( &$this, 'hide_states' ) );
 
-	    // Admin order shipping fields.
-	    add_filter( 'woocommerce_admin_shipping_fields', array( &$this, 'admin_shipping_fields' ) );
+		// Load custom order data.
+		add_filter( 'woocommerce_load_order_data', array( &$this, 'load_order_data' ) );
+
+		// Admin order billing fields.
+		add_filter( 'woocommerce_admin_billing_fields', array( &$this, 'admin_billing_fields' ) );
+
+		// Admin order shipping fields.
+		add_filter( 'woocommerce_admin_shipping_fields', array( &$this, 'admin_shipping_fields' ) );
 
 		add_action( 'save_post', array( &$this,'save_custom_fields' ) );
 
@@ -31,110 +36,141 @@ class WC_NLPostcode_Fields {
 		add_filter('woocommerce_process_checkout_field_shipping_postcode', array( &$this, 'clean_shipping_postcode' ) );	
 		}
 
-    /**
-     * Load styles.
-     */
-	function add_styles(){
-		wp_register_style( 'wcmyparcel-styles', (dirname(plugin_dir_url(__FILE__)) . '/css/wcmyparcel-styles.css'), array(), '', 'all' );
-		wp_enqueue_style( 'wcmyparcel-styles' );  
+	/**
+	 * Load styles & scripts.
+	 */
+	public function add_styles_scripts(){
+	   if ( is_checkout() ) {
+		wp_register_script( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-checkout.js', array( 'wc-checkout' ) );
+		wp_enqueue_script( 'nl-checkout' );
+		wp_enqueue_style( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout.css' );
 	}
 
-    /**
-     * New checkout billing fields
-     * @param  array $fields Default fields.
-     * @return array         New fields.
-     */
-    public function checkout_billing_fields( $fields ) {
-        // Billing street name
-        $fields['billing']['billing_street_name'] = array(
-            'label'       => __( 'Street name', 'wcmyparcel' ),
-            'placeholder' => __( 'Street name', 'wcmyparcel' ),
-            'class'       => array( 'form-row-first' ),
-            'required'    => true
-        );
+	/**
+	 * Hide default Dutch address fields
+	 * @param  array $locale woocommerce country locale field settings
+	 * @return array $locale
+	 */
+	public function woocommerce_locale_nl( $locale ) {
+		$locale['NL']['address_1'] = array(
+			'required'  => false,
+			'hidden'	=> true,
+		);
 
-        // Billing house number
-        $fields['billing']['billing_house_number'] = array(
-            'label'       => __( 'Nr.', 'wcmyparcel' ),
-            'placeholder' => __( 'Nr.', 'wcmyparcel' ),
-            'class'       => array( 'form-row-quart-first' ),
-            'required'    => true
-        );
+		$locale['NL']['address_2'] = array(
+			'hidden'	=> true,
+		);
+		
+		$locale['NL']['state'] = array(
+			'hidden'	=> true,
+		);
 
-        // Billing house number Suffix
-        $fields['billing']['billing_house_number_suffix'] = array(
-            'label'       => __( 'Suffix', 'wcmyparcel' ),
-            'placeholder' => __( 'Suffix', 'wcmyparcel' ),
-            'class'       => array( 'form-row-quart' ),
-            'required'    => false,
-			'clear'		  => true
-        );
+		// Set to false to prevent classes being overriden
+		$locale['NL']['postcode_before_city'] = false;
 
-		// Create new ordering for checkout fields
-		$order_keys = array (
-			'billing_country',
-			'billing_first_name',
-			'billing_last_name',
-			'billing_company',
-			'billing_street_name',
-			'billing_house_number',
-			'billing_house_number_suffix',
-			'billing_postcode',
-			'billing_city',
-			'billing_state',
-			'billing_email',
-			'billing_phone',
+		return $locale;
+	}
+
+	/**
+	 * New checkout billing/shipping fields
+	 * @param  array $fields Default fields.
+	 * @return array		 New fields.
+	 */
+	public function nl_checkout_fields( $fields ) {
+		$forms = array( 'billing', 'shipping' );
+		
+		foreach ($forms as $form) {
+			// Add Street name
+				$fields[$form][$form.'_street_name'] = array(
+				'label'		 => __( 'Street name', 'wcmyparcel' ),
+				'placeholder'   => __( 'Street name', 'wcmyparcel' ),
+				'class'		 => array( 'form-row-first' ),
+				'required'	  => false, // not required by default - handled on locale level
 			);
-		$new_order = array();
-		
-		// Create reordered array and fill with old array values
-		foreach ($order_keys as $key) {
-    		$new_order['billing'][$key] = $fields['billing'][$key];
-		}
-		
-		// Merge (&overwrite) field array
-		$fields = array_merge($fields, $new_order);
 
-		// Unset state ('provincie') field
-	        unset( $fields['billing']['billing_state'] );
-			$fields['billing']['billing_postcode']['class'] = array('form-row-first');
+			// Add house number
+			$fields[$form][$form.'_house_number'] = array(
+				'label'		 => __( 'Nr.', 'wcmyparcel' ),
+				'placeholder'   => __( 'Nr.', 'wcmyparcel' ),
+				'class'		 => array( 'form-row-quart' ),
+				'required'	  => false, // not required by default - handled on locale level
+			);
 
-		$fields['billing']['billing_country']['class'] = array('form-row country_select update_totals_on_change');
+			// Add house number Suffix
+			$fields[$form][$form.'_house_number_suffix'] = array(
+				'label'		 => __( 'Suffix', 'wcmyparcel' ),
+				'placeholder'   => __( 'Suffix', 'wcmyparcel' ),
+				'class'		 => array( 'form-row-quart' ),
+				'required'	  => false, // not required by default - handled on locale level
+			);
 
+			// Create new ordering for checkout fields
+			$order_keys = array (
+				$form.'_country',
+				$form.'_first_name',
+				$form.'_last_name',
+				$form.'_company',
+				$form.'_address_1',
+				$form.'_address_2',
+				$form.'_street_name',
+				$form.'_house_number',
+				$form.'_house_number_suffix',
+				$form.'_postcode',
+				$form.'_city',
+				$form.'_state',
+				);
 
+			if ($form == 'billing') {
+				array_push ($order_keys,
+					$form.'_email',
+					$form.'_phone'
+				);
+			}
+
+			$new_order = array();
+			
+			// Create reordered array and fill with old array values
+			foreach ($order_keys as $key) {
+				$new_order[$form][$key] = $fields[$form][$key];
+			}
+			
+			// Merge (&overwrite) field array
+			$fields = array_merge($fields, $new_order);
+			
+		} 
 		return $fields;
-    }
+	}
 
-    /**
-     * New checkout shipping fields
-     * @param  array $fields Default fields.
-     * @return array         New fields.
-     */
-    public function checkout_shipping_fields( $fields ) {
-        // Shipping street name
-        $fields['shipping']['shipping_street_name'] = array(
-            'label'       => __( 'Street name', 'wcmyparcel' ),
-            'placeholder' => __( 'Street name', 'wcmyparcel' ),
-            'class'       => array( 'form-row-first' ),
-            'required'    => true
-        );
+	/**
+	 * New checkout shipping fields
+	 * @param  array $fields Default fields.
+	 * @return array		 New fields.
+	 */
+	public function checkout_shipping_fields( $fields ) {
+		// Shipping street name
+		$fields['shipping']['shipping_street_name'] = array(
+			'label'	   => __( 'Street name', 'wcmyparcel' ),
+			'placeholder' => __( 'Street name', 'wcmyparcel' ),
+			'class'	   => array( 'form-row-first' ),
+			'required'	=> true
+		);
 
-        // Shipping house number
-        $fields['shipping']['shipping_house_number'] = array(
-            'label'       => __( 'Nr.', 'wcmyparcel' ),
-            'placeholder' => __( 'Nr.', 'wcmyparcel' ),
-            'class'       => array( 'form-row-quart-first' ),
-            'required'    => true
-        );
+		// Shipping house number
+		$fields['shipping']['shipping_house_number'] = array(
+			'label'	   => __( 'Nr.', 'wcmyparcel' ),
+			'placeholder' => __( 'Nr.', 'wcmyparcel' ),
+			'class'	   => array( 'form-row-quart-first' ),
+			'required'	=> true
+		);
 
-        // Shipping house number Suffix
-        $fields['shipping']['shipping_house_number_suffix'] = array(
-            'label'       => __( 'Suffix', 'wcmyparcel' ),
-            'placeholder' => __( 'Suffix', 'wcmyparcel' ),
-            'class'       => array( 'form-row-quart' ),
-            'required'    => false,
+		// Shipping house number Suffix
+		$fields['shipping']['shipping_house_number_suffix'] = array(
+			'label'	   => __( 'Suffix', 'wcmyparcel' ),
+			'placeholder' => __( 'Suffix', 'wcmyparcel' ),
+			'class'	   => array( 'form-row-quart' ),
+			'required'	=> false,
 			'clear'		  => true
-        );
+		);
 
 		// Create new ordering for checkout fields
 		$order_keys = array (
@@ -153,96 +189,133 @@ class WC_NLPostcode_Fields {
 		
 		// Create reordered array and fill with old array values
 		foreach ($order_keys as $key) {
-    		$new_order['shipping'][$key] = $fields['shipping'][$key];
+			$new_order['shipping'][$key] = $fields['shipping'][$key];
 		}
 		
 		// Merge (&overwrite) field array
 		$fields = array_merge($fields, $new_order);
 
 		// Unset state ('provincie') field
-	        unset( $fields['shipping']['shipping_state'] );
+			unset( $fields['shipping']['shipping_state'] );
 			$fields['shipping']['shipping_postcode']['class'] = array('form-row-first');
 
 		return $fields;
-    }
+	}
 
-    /**
-     * Load order custom data.
-     *
-     * @param  array $data Default WC_Order data.
-     * @return array       Custom WC_Order data.
-     */
-    public function load_order_data( $data ) {
+	/**
+	 * Hide state field for countries without states (backwards compatible fix for WooCommerce bug #4223)
+	 * @param  array $allowed_states states per country
+	 * @return array                 
+	 */
+	function hide_states($allowed_states) {
 
-        // Billing
-        $data['billing_street_name']			= '';
-        $data['billing_house_number']			= '';
-        $data['billing_house_number_suffix']	= '';		
+		$hidden_states = array(
+			'AF' => array(),
+			'AT' => array(),
+			'BE' => array(),
+			'BI' => array(),
+			'CZ' => array(),
+			'DE' => array(),
+			'DK' => array(),
+			'FI' => array(),
+			'FR' => array(),
+			'HU' => array(),
+			'IS' => array(),
+			'IL' => array(),
+			'KR' => array(),
+			'NL' => array(),
+			'NO' => array(),
+			'PL' => array(),
+			'PT' => array(),
+			'SG' => array(),
+			'SK' => array(),
+			'SI' => array(),
+			'LK' => array(),
+			'SE' => array(),
+			'VN' => array(),
+		);
+		$states = $hidden_states + $allowed_states;
+			
+		return $states;
+	}
 
-        // Shipping
-        $data['shipping_street_name']			= '';
-        $data['shipping_house_number']			= '';
-        $data['shipping_house_number_suffix']	= '';
+	/**
+	 * Load order custom data.
+	 *
+	 * @param  array $data Default WC_Order data.
+	 * @return array       Custom WC_Order data.
+	 */
+	public function load_order_data( $data ) {
 
-        return $data;
-    }
+		// Billing
+		$data['billing_street_name']			= '';
+		$data['billing_house_number']			= '';
+		$data['billing_house_number_suffix']	= '';		
 
-    /**
-     * Custom billing admin edit fields.
-     *
-     * @param  array $fields Default WC_Order data.
-     * @return array         Custom WC_Order data.
-     */
-    public function admin_billing_fields( $fields ) {
+		// Shipping
+		$data['shipping_street_name']			= '';
+		$data['shipping_house_number']			= '';
+		$data['shipping_house_number_suffix']	= '';
 
-        $fields['street_name'] = array(
-            'label' => __( 'Street name', 'wcmyparcel' ),
-            'show'  => true
-        );
+		return $data;
+	}
 
-        $fields['house_number'] = array(
-            'label' => __( 'Number', 'wcmyparcel' ),
-            'show'  => true
-        );
+	/**
+	 * Custom billing admin edit fields.
+	 *
+	 * @param  array $fields Default WC_Order data.
+	 * @return array		 Custom WC_Order data.
+	 */
+	public function admin_billing_fields( $fields ) {
 
-        $fields['house_number_suffix'] = array(
-            'label' => __( 'Suffix', 'wcmyparcel' ),
-            'show'  => true
-        );
+		$fields['street_name'] = array(
+			'label' => __( 'Street name', 'wcmyparcel' ),
+			'show'  => true
+		);
 
-        return $fields;
-    }
+		$fields['house_number'] = array(
+			'label' => __( 'Number', 'wcmyparcel' ),
+			'show'  => true
+		);
 
-    /**
-     * Custom shipping admin edit fields.
-     *
-     * @param  array $fields Default WC_Order data.
-     * @return array         Custom WC_Order data.
-     */
-    public function admin_shipping_fields( $fields ) {
+		$fields['house_number_suffix'] = array(
+			'label' => __( 'Suffix', 'wcmyparcel' ),
+			'show'  => true
+		);
 
-        $fields['street_name'] = array(
-            'label' => __( 'Street name', 'wcmyparcel' ),
-            'show'  => true
-        );
+		return $fields;
+	}
 
-        $fields['house_number'] = array(
-            'label' => __( 'Number', 'wcmyparcel' ),
-            'show'  => true
-        );
+	/**
+	 * Custom shipping admin edit fields.
+	 *
+	 * @param  array $fields Default WC_Order data.
+	 * @return array		 Custom WC_Order data.
+	 */
+	public function admin_shipping_fields( $fields ) {
 
-        $fields['house_number_suffix'] = array(
-            'label' => __( 'Suffix', 'wcmyparcel' ),
-            'show'  => true
-        );
+		$fields['street_name'] = array(
+			'label' => __( 'Street name', 'wcmyparcel' ),
+			'show'  => true
+		);
 
-        return $fields;
-    }
+		$fields['house_number'] = array(
+			'label' => __( 'Number', 'wcmyparcel' ),
+			'show'  => true
+		);
 
-    /**
-     * Save custom fields from admin.
-     */
-    public function save_custom_fields($post_id) {
+		$fields['house_number_suffix'] = array(
+			'label' => __( 'Suffix', 'wcmyparcel' ),
+			'show'  => true
+		);
+
+		return $fields;
+	}
+
+	/**
+	 * Save custom fields from admin.
+	 */
+	public function save_custom_fields($post_id) {
 		global $post_type;
 		if( $post_type == 'shop_order' ) {
 			update_post_meta( $post_id, '_billing_street_name', stripslashes( $_POST['_billing_street_name'] ));
@@ -254,52 +327,42 @@ class WC_NLPostcode_Fields {
 			update_post_meta( $post_id, '_shipping_house_number_suffix', stripslashes( $_POST['_shipping_house_number_suffix'] ));
 		}
 		return;
-    }
+	}
 	
-    /**
-     * Merge streetname, street number and street suffix into the default 'address_1' field
-     *
-     * @param  string $order_id Order ID of checkout order.
-     * @return void
-     */
+	/**
+	 * Merge streetname, street number and street suffix into the default 'address_1' field
+	 *
+	 * @param  string $order_id Order ID of checkout order.
+	 * @return void
+	 */
 	public function merge_street_number_suffix ( $order_id ) {
-		// check for suffix
-		if ( $_POST['billing_house_number_suffix'] ){
-			$billing_house_number = $_POST['billing_house_number'] . '-' . $_POST['billing_house_number_suffix'];
-		} else {
-			$billing_house_number = $_POST['billing_house_number'];
-		}
+		// check if country is NL
+		if ( $_POST['shipping_country'] == 'NL' ) {
+			// concatenate street & house number & copy to 'billing_address_1'
+			$billing_house_number = $_POST['billing_house_number'] . (isset($_POST['billing_house_number_suffix'])?'-' . $_POST['billing_house_number_suffix']:'');
+			$billing_address_1 = $_POST['billing_street_name'] . ' ' . $billing_house_number;
+			update_post_meta( $order_id,  '_billing_address_1', $billing_address_1 );
 
-		// concatenate street & house number & copy to 'billing_address_1'
-		$billing_address_1 = $_POST['billing_street_name'] . ' ' . $billing_house_number;
-		update_post_meta( $order_id,  '_billing_address_1', $billing_address_1 );
-
-		// check if 'ship to billing address' is checked
-		if ( $_POST['shiptobilling'] ) {
-			// use billing address
-			update_post_meta( $order_id,  '_shipping_address_1', $billing_address_1 );
-		} else {
-			if ( $_POST['shipping_house_number_suffix'] ){
-				$shipping_house_number = $_POST['shipping_house_number'] . '-' . $_POST['shipping_house_number_suffix'];
+			// check if 'ship to billing address' is checked
+			if ( $_POST['shiptobilling'] ) {
+				// use billing address
+				update_post_meta( $order_id,  '_shipping_address_1', $billing_address_1 );
 			} else {
-				$shipping_house_number = $_POST['shipping_house_number'];
+				// concatenate street & house number & copy to 'shipping_address_1'
+				$shipping_house_number = $_POST['shipping_house_number'] . (isset($_POST['shipping_house_number_suffix'])?'-' . $_POST['shipping_house_number_suffix']:'');
+				$shipping_address_1 = $_POST['shipping_street_name'] . ' ' . $shipping_house_number;
+				update_post_meta( $order_id,  '_shipping_address_1', $shipping_address_1 );
 			}
-
-			// concatenate street & house number & copy to 'shipping_address_1'
-			$shipping_address_1 = $_POST['shipping_street_name'] . ' ' . $shipping_house_number;
-			update_post_meta( $order_id,  '_shipping_address_1', $shipping_address_1 );			
 		}
-
-
 		return;
 	}
 
-    /**
-     * Clean postcodes : remove space, dashes (& other non alfanumeric characters)
-     *
-     * @return $billing_postcode
+	/**
+	 * Clean postcodes : remove space, dashes (& other non alfanumeric characters)
+	 *
+	 * @return $billing_postcode
 	 * @return $shipping_postcode
-     */
+	 */
 	public function clean_billing_postcode ( ) {
 		$billing_postcode = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['billing_postcode']);		
 		return $billing_postcode;
