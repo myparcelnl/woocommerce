@@ -40,10 +40,11 @@ class WC_NLPostcode_Fields {
 	 * Load styles & scripts.
 	 */
 	public function add_styles_scripts(){
-	   if ( is_checkout() ) {
-		wp_register_script( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-checkout.js', array( 'wc-checkout' ) );
-		wp_enqueue_script( 'nl-checkout' );
-		wp_enqueue_style( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout.css' );
+   		if ( is_checkout() ) {
+			wp_register_script( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-checkout.js'), array( 'wc-checkout' ) );
+			wp_enqueue_script( 'nl-checkout' );
+			wp_enqueue_style( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout.css') );
+		}
 	}
 
 	/**
@@ -63,10 +64,8 @@ class WC_NLPostcode_Fields {
 		
 		$locale['NL']['state'] = array(
 			'hidden'	=> true,
+			'required'	=> false,
 		);
-
-		// Set to false to prevent classes being overriden
-		$locale['NL']['postcode_before_city'] = false;
 
 		return $locale;
 	}
@@ -92,7 +91,7 @@ class WC_NLPostcode_Fields {
 			$fields[$form][$form.'_house_number'] = array(
 				'label'		 => __( 'Nr.', 'wcmyparcel' ),
 				'placeholder'   => __( 'Nr.', 'wcmyparcel' ),
-				'class'		 => array( 'form-row-quart' ),
+				'class'		 => array( 'form-row-quart-first' ),
 				'required'	  => false, // not required by default - handled on locale level
 			);
 
@@ -138,67 +137,6 @@ class WC_NLPostcode_Fields {
 			$fields = array_merge($fields, $new_order);
 			
 		} 
-		return $fields;
-	}
-
-	/**
-	 * New checkout shipping fields
-	 * @param  array $fields Default fields.
-	 * @return array		 New fields.
-	 */
-	public function checkout_shipping_fields( $fields ) {
-		// Shipping street name
-		$fields['shipping']['shipping_street_name'] = array(
-			'label'	   => __( 'Street name', 'wcmyparcel' ),
-			'placeholder' => __( 'Street name', 'wcmyparcel' ),
-			'class'	   => array( 'form-row-first' ),
-			'required'	=> true
-		);
-
-		// Shipping house number
-		$fields['shipping']['shipping_house_number'] = array(
-			'label'	   => __( 'Nr.', 'wcmyparcel' ),
-			'placeholder' => __( 'Nr.', 'wcmyparcel' ),
-			'class'	   => array( 'form-row-quart-first' ),
-			'required'	=> true
-		);
-
-		// Shipping house number Suffix
-		$fields['shipping']['shipping_house_number_suffix'] = array(
-			'label'	   => __( 'Suffix', 'wcmyparcel' ),
-			'placeholder' => __( 'Suffix', 'wcmyparcel' ),
-			'class'	   => array( 'form-row-quart' ),
-			'required'	=> false,
-			'clear'		  => true
-		);
-
-		// Create new ordering for checkout fields
-		$order_keys = array (
-			'shipping_country',
-			'shipping_first_name',
-			'shipping_last_name',
-			'shipping_company',
-			'shipping_street_name',
-			'shipping_house_number',
-			'shipping_house_number_suffix',
-			'shipping_postcode',
-			'shipping_city',
-			'shipping_state',
-			);
-		$new_order = array();
-		
-		// Create reordered array and fill with old array values
-		foreach ($order_keys as $key) {
-			$new_order['shipping'][$key] = $fields['shipping'][$key];
-		}
-		
-		// Merge (&overwrite) field array
-		$fields = array_merge($fields, $new_order);
-
-		// Unset state ('provincie') field
-			unset( $fields['shipping']['shipping_state'] );
-			$fields['shipping']['shipping_postcode']['class'] = array('form-row-first');
-
 		return $fields;
 	}
 
@@ -339,7 +277,7 @@ class WC_NLPostcode_Fields {
 		// check if country is NL
 		if ( $_POST['shipping_country'] == 'NL' ) {
 			// concatenate street & house number & copy to 'billing_address_1'
-			$billing_house_number = $_POST['billing_house_number'] . (isset($_POST['billing_house_number_suffix'])?'-' . $_POST['billing_house_number_suffix']:'');
+			$billing_house_number = $_POST['billing_house_number'] . (!empty($_POST['billing_house_number_suffix'])?'-' . $_POST['billing_house_number_suffix']:'');
 			$billing_address_1 = $_POST['billing_street_name'] . ' ' . $billing_house_number;
 			update_post_meta( $order_id,  '_billing_address_1', $billing_address_1 );
 
@@ -349,7 +287,7 @@ class WC_NLPostcode_Fields {
 				update_post_meta( $order_id,  '_shipping_address_1', $billing_address_1 );
 			} else {
 				// concatenate street & house number & copy to 'shipping_address_1'
-				$shipping_house_number = $_POST['shipping_house_number'] . (isset($_POST['shipping_house_number_suffix'])?'-' . $_POST['shipping_house_number_suffix']:'');
+				$shipping_house_number = $_POST['shipping_house_number'] . (!empty($_POST['shipping_house_number_suffix'])?'-' . $_POST['shipping_house_number_suffix']:'');
 				$shipping_address_1 = $_POST['shipping_street_name'] . ' ' . $shipping_house_number;
 				update_post_meta( $order_id,  '_shipping_address_1', $shipping_address_1 );
 			}

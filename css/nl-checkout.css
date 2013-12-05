@@ -2,7 +2,7 @@
 .woocommerce-page form .form-row-quart,
 .woocommerce form .form-row-quart-first,
 .woocommerce-page form .form-row-quart-first {
-	float: right;
+	float: left;
 	width: 23.5%;
 	overflow: visible;
 }
