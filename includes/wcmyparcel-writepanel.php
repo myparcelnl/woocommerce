@@ -2,6 +2,8 @@
 class WC_MyParcel_Writepanel {
 
 	public function __construct() {
+		$this->settings = get_option( 'wcmyparcel_settings' );
+
 		// Add meta box with MyParcel links/buttons
 		add_action( 'add_meta_boxes_shop_order', array( $this, 'add_box' ) );
 
@@ -12,7 +14,8 @@ class WC_MyParcel_Writepanel {
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'add_listing_actions' ), 20 );
 		
     	// Customer Emails
-    	add_action( 'woocommerce_email_before_order_table', array( $this, 'track_trace_email' ), 10, 2 );
+		if (isset($this->settings['email_tracktrace']))
+	    	add_action( 'woocommerce_email_before_order_table', array( $this, 'track_trace_email' ), 10, 2 );
 		
 	}
 
@@ -37,9 +40,10 @@ class WC_MyParcel_Writepanel {
 		global $post_id;
 		if (get_post_meta($post_id,'_myparcel_consignment_id',true)) {
 			$consignment_id = get_post_meta($post_id,'_myparcel_consignment_id',true);
+
 			$tracktrace = get_post_meta($post_id,'_myparcel_tracktrace',true);
-			$postcode = preg_replace('/\s+/', '',get_post_meta($post_id,'_shipping_postcode',true));
-			$tracktrace_url = sprintf('https://www.postnlpakketten.nl/klantenservice/tracktrace/basicsearch.aspx?lang=nl&B=%s&P=%s', $tracktrace, $postcode);
+			$tracktrace_url = $this->get_tracktrace_url($post_id);
+
 			$pdf_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&order_ids=' . $post_id ), 'wcmyparcel-label' );
 
 			// fetch TNT status
@@ -131,15 +135,31 @@ class WC_MyParcel_Writepanel {
     	if ( $order->status != 'completed') return;
 		
 		if ( isset($order->order_custom_fields['_myparcel_tracktrace'][0]) ) {
-			$tracktrace = $order->order_custom_fields['_myparcel_tracktrace'][0];
-			$postcode = preg_replace('/\s+/', '',$order->order_custom_fields['_shipping_postcode'][0]);
-			$tracktrace_url = sprintf('https://www.postnlpakketten.nl/klantenservice/tracktrace/basicsearch.aspx?lang=nl&B=%s&P=%s', $tracktrace, $postcode);
-			
+			$tracktrace_url = $this->get_tracktrace_url($order->id);
+
+			$tracktrace = get_post_meta($order->id,'_myparcel_tracktrace',true);
 			$tracktrace_link = '<a href="'.$tracktrace_url.'">'.$tracktrace.'</a>';
+			$email_text = apply_filters( 'wcmyparcel_email_text', 'U kunt uw bestelling volgen met het volgende PostNL track&trace nummer:' );
 			?>
-			<p><?php printf( __( "You can follow your order with the following track&trace number: %s", 'wcmyparcel' ), $tracktrace_link ); ?></p>
+			<p><?php echo $email_text.' '.$tracktrace_link; ?></p>
 	
 			<?php
 		}
+	}
+
+	public function get_tracktrace_url($order_id) {
+		if (empty($order_id))
+			return;
+
+		$tracktrace = get_post_meta($order_id,'_myparcel_tracktrace',true);
+		$postcode = preg_replace('/\s+/', '',get_post_meta($order_id,'_shipping_postcode',true));
+		$tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Claim?Barcode=%s&Postalcode=%s', $tracktrace, $postcode);
+		
+		//Check if foreign
+		$country = get_post_meta($order_id,'_shipping_country',true);
+		if ($country != 'NL')
+			$tracktrace_url = add_query_arg( 'Foreign', 'True', $tracktrace_url );
+
+		return $tracktrace_url;
 	}
 }

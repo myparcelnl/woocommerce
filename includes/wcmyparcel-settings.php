@@ -94,6 +94,28 @@ class WC_MyParcel_Settings {
 	            'description'	=> __( 'Uw API key, deze dient u eerst <a href="mailto:info@myparcel.nl">aan te vragen bij MyParcel</a>', 'wcmyparcel' ),
 	        )
 	    );
+
+	    // Section.
+	    add_settings_section(
+	        'email',
+	        __( 'Email instellingen', 'wcmyparcel' ),
+	        array( &$this, 'section_options_callback' ),
+	        $option
+	    );
+
+	    add_settings_field(
+	        'email_tracktrace',
+	        __( 'Email track&trace code', 'wcmyparcel' ),
+	        array( &$this, 'checkbox_element_callback' ),
+	        $option,
+	        'email',
+	        array(
+	            'menu'			=> $option,
+	            'id'			=> 'email_tracktrace',
+	            'description'	=> __( 'De track&trace code (wanneer beschikbaar) wordt automatisch toegevoegd aan de orderbevestingsmail naar de klant', 'wcmyparcel' )
+	        )
+	    );
+
 	    
 	    // Section.
 	    add_settings_section(
@@ -103,7 +125,6 @@ class WC_MyParcel_Settings {
 	        $option
 	    );
 
-		/* NIET IN GEBRUIK
 	    add_settings_field(
 	        'process',
 	        __( 'Verwerk labels direct', 'wcmyparcel' ),
@@ -116,7 +137,6 @@ class WC_MyParcel_Settings {
 	            'description'	=> __( 'Wanneer u deze optie ingeschakeld heeft, worden de orders bij het exporteren naar MyParcel direct verwerkt.', 'wcmyparcel' )
 	        )
 	    );
-		 */
 
 	    add_settings_field(
 	        'email',
