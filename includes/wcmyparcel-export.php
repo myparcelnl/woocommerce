@@ -9,7 +9,7 @@ class WC_MyParcel_Export {
 	public function __construct() {
 		add_action( 'load-edit.php', array( &$this, 'wcmyparcel_action' ) ); // Export actions (popup & file export)
 		$this->settings = get_option( 'wcmyparcel_settings' );
-		$this->log_file = dirname(dirname(__FILE__)).'/myparcel_error_log.txt';
+		$this->log_file = dirname(dirname(__FILE__)).'/myparcel_log.txt';
 	}
 
 	/**

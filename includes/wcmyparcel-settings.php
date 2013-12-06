@@ -311,7 +311,9 @@ class WC_MyParcel_Settings {
 	        )
 	    );
 
-		$error_log_file = dirname(plugin_dir_url(__FILE__)) . '/myparcel_error_log.txt';
+		$log_file_url = dirname(plugin_dir_url(__FILE__)) . '/myparcel_log.txt';
+		$log_file_path = dirname(dirname(__FILE__)) . '/myparcel_log.txt';
+
 		add_settings_field(
 	        'error_logging',
 	        __( 'Log alle server communicatie', 'wcmyparcel' ),
@@ -321,7 +323,7 @@ class WC_MyParcel_Settings {
 	        array(
 	            'menu'			=> $option,
 	            'id'			=> 'error_logging',
-	            'description'	=> '<a href="'.$error_log_file.'" target="_blank">Download foutenlog</a>',
+	            'description'	=> file_exists($log_file_path)?'<a href="'.$log_file_url.'" target="_blank">Download logbestand</a>':'',
 	        )
 	    );
 
