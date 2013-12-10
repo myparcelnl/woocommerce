@@ -16,9 +16,18 @@ input[type="checkbox"], input[type="radio"] {
 	margin: 10px auto;
 }
 
-.button-wcmyparcel {
+.submit-wcmyparcel {
 	margin-top: 8px;
 	float: right;
+}
+
+.submit-wcmyparcel .waiting {
+	display: none;
+}
+
+.submit-wcmyparcel .waiting, 
+.submit-wcmyparcel input{
+	vertical-align: middle;
 }
 
 dl.variation {

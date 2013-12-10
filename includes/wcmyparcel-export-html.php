@@ -8,7 +8,9 @@
 		wp_enqueue_style( 'wcmyparcel-admin-styles' );		
 		wp_enqueue_style( 'colors' );
 		wp_enqueue_style( 'media' );
+		wp_enqueue_script( 'jquery' );
 		do_action('admin_print_styles');
+		do_action('admin_print_scripts');
 	?>
 </head>
 <body>
@@ -163,8 +165,18 @@
 	</tbody>
 	</table>
 <input type="hidden" name="action" value="wcmyparcel-export">
-<input type="submit" value="Exporteer naar MyParcel" class="button-wcmyparcel">
+<div class="submit-wcmyparcel">
+	<input type="submit" value="Exporteer naar MyParcel" class="button-wcmyparcel">
+	<img src="<?php echo dirname(plugin_dir_url(__FILE__)).'/img/wpspin_light.gif';?>" class="waiting"/>
+</div>
 </form>
+<script type="text/javascript">
+	jQuery(document).ready(function($){
+		$('.button-wcmyparcel').click(function(){
+			$('.waiting').show();
+		});
+	});
+</script>
 
 </body>
 </html>

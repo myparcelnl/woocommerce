@@ -98,7 +98,7 @@ class WC_MyParcel_Settings {
 	    // Section.
 	    add_settings_section(
 	        'email',
-	        __( 'Email instellingen', 'wcmyparcel' ),
+	        __( 'WooCommerce email instellingen', 'wcmyparcel' ),
 	        array( &$this, 'section_options_callback' ),
 	        $option
 	    );
@@ -112,7 +112,7 @@ class WC_MyParcel_Settings {
 	        array(
 	            'menu'			=> $option,
 	            'id'			=> 'email_tracktrace',
-	            'description'	=> __( 'De track&trace code (wanneer beschikbaar) wordt automatisch toegevoegd aan de orderbevestingsmail naar de klant', 'wcmyparcel' )
+	            'description'	=> __( 'De track&trace code (wanneer beschikbaar) wordt automatisch toegevoegd aan de orderbevestingsmail naar de klant.<br/><strong>Let op!</strong> Wanneer u deze optie selecteert, dient u erop te letter dat u geen track&trace mail vanuit MyParcel verstuurt.', 'wcmyparcel' )
 	        )
 	    );
 
@@ -147,7 +147,7 @@ class WC_MyParcel_Settings {
 	        array(
 	            'menu'			=> $option,
 	            'id'			=> 'email',
-	            'description'	=> __( 'Wanneer u het emailadres van de klant koppelt, wordt daar een bericht met de Track&Trace link naartoe gemaild. In uw <a href="http://www.myparcel.nl/backend/clientmail">MyParcel instellingen</a> kunt u deze mail opmaken in uw eigen stijl.', 'wcmyparcel' )
+	            'description'	=> __( 'Wanneer u het emailadres van de klant koppelt, wordt daar een bericht met de Track&Trace link naartoe gemaild vanuit Myparcel. In uw <a href="http://www.myparcel.nl/backend/instellingen/tracktrace">MyParcel instellingen</a> kunt u deze mail opmaken in uw eigen stijl.', 'wcmyparcel' )
 	        )
 	    );
 	    
@@ -173,7 +173,7 @@ class WC_MyParcel_Settings {
 	        array(
 	            'menu'			=> $option,
 	            'id'			=> 'extragroot',
-	            'description'	=> __( 'Vink deze optie aan indien uw pakket groter is dan 100 x 70 x 50 cm, maar kleiner dan 175 x 78 x 58 cm. Er wordt hiervoor een toeslag van &euro;&nbsp;2,00 doorberekend.<br/><strong>Let op!</strong> Indien het pakket groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een pallettarief van &euro;&nbsp;65,00 in rekening gebracht.', 'wcmyparcel' )
+	            'description'	=> __( 'Vink deze optie aan indien uw pakket groter is dan 100 x 70 x 50 cm, maar kleiner dan 175 x 78 x 58 cm. Er wordt hiervoor een toeslag van &euro;&nbsp;2,00 doorberekend.<br/><strong>Let op!</strong> Indien het pakket groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een pallettarief van &euro;&nbsp;70,00 in rekening gebracht.', 'wcmyparcel' )
 	        )
 	    );
 	    
