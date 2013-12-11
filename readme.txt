@@ -7,7 +7,7 @@ Stable tag: 1.1.0
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
-Export your WooCommerce orders to MyParcel and print labels directly from the WooCommerce admin
+Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
 
 == Description ==
 

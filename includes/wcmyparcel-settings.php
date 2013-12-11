@@ -112,7 +112,7 @@ class WC_MyParcel_Settings {
 	        array(
 	            'menu'			=> $option,
 	            'id'			=> 'email_tracktrace',
-	            'description'	=> __( 'De track&trace code (wanneer beschikbaar) wordt automatisch toegevoegd aan de orderbevestingsmail naar de klant.<br/><strong>Let op!</strong> Wanneer u deze optie selecteert, dient u erop te letter dat u geen track&trace mail vanuit MyParcel verstuurt.', 'wcmyparcel' )
+	            'description'	=> __( 'De track&trace code (wanneer beschikbaar) wordt automatisch toegevoegd aan de orderbevestingsmail naar de klant.<br/><strong>Let op!</strong> Wanneer u deze optie selecteert, dient u erop te letten dat u geen track&trace mail vanuit MyParcel verstuurt.', 'wcmyparcel' )
 	        )
 	    );
 
@@ -147,7 +147,7 @@ class WC_MyParcel_Settings {
 	        array(
 	            'menu'			=> $option,
 	            'id'			=> 'email',
-	            'description'	=> __( 'Wanneer u het emailadres van de klant koppelt, wordt daar een bericht met de Track&Trace link naartoe gemaild vanuit Myparcel. In uw <a href="http://www.myparcel.nl/backend/instellingen/tracktrace">MyParcel instellingen</a> kunt u deze mail opmaken in uw eigen stijl.', 'wcmyparcel' )
+	            'description'	=> __( 'Wanneer u het emailadres van de klant koppelt, wordt daar een bericht met de Track&Trace link naartoe gemaild vanuit MyParcel. In uw <a href="http://www.myparcel.nl/backend/instellingen/tracktrace">MyParcel instellingen</a> kunt u deze mail opmaken in uw eigen stijl.', 'wcmyparcel' )
 	        )
 	    );
 	    
