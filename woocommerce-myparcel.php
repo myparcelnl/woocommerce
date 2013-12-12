@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: WooCommerce MyParcel export
+Plugin Name: WooCommerce MyParcel
 Plugin URI: http://www.myparcel.nl
 Description: Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
 Author: Ewout Fernhout
