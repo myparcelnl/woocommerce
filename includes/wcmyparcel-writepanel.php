@@ -104,8 +104,8 @@ class WC_MyParcel_Writepanel {
 	 * Add print actions to the orders listing
 	 */
 	public function add_listing_actions( $order ) {
-		if (isset($order->order_custom_fields['_myparcel_consignment_id'][0])) {
-			$consignment_id = $order->order_custom_fields['_myparcel_consignment_id'][0];
+		$consignment_id = get_post_meta($order->id,'_myparcel_consignment_id',true);
+		if (!empty($consignment_id)) {
 			$pdf_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&order_ids=' . $order->id ), 'wcmyparcel-label' );
 			?>
 			<a href="<?php echo $pdf_link; ?>" class="button tips" alt="Print MyParcel label" data-tip="Print MyParcel label" style="float:left;padding:1px 2px;">
@@ -133,11 +133,11 @@ class WC_MyParcel_Writepanel {
     	if ( $sent_to_admin ) return;
 
     	if ( $order->status != 'completed') return;
-		
-		if ( isset($order->order_custom_fields['_myparcel_tracktrace'][0]) ) {
+
+		$tracktrace = get_post_meta($order->id,'_myparcel_tracktrace',true);
+		if ( !empty($tracktrace) ) {
 			$tracktrace_url = $this->get_tracktrace_url($order->id);
 
-			$tracktrace = get_post_meta($order->id,'_myparcel_tracktrace',true);
 			$tracktrace_link = '<a href="'.$tracktrace_url.'">'.$tracktrace.'</a>';
 			$email_text = apply_filters( 'wcmyparcel_email_text', 'U kunt uw bestelling volgen met het volgende PostNL track&trace nummer:' );
 			?>
