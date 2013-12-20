@@ -146,12 +146,12 @@
 								</tr>
 								<tr>
 									<?php if (!isset($this->settings['bericht'])) $this->settings['bericht'] = ''; ?>
-									<td>Referentie (niet op label, wel in track&trace)</td>
+									<td>Optioneel bericht (linksboven op label)</td>
 									<td><input type="text" name="data[<?php echo $row['orderid']; ?>][bericht]" value="<?php echo $this->settings['bericht']; ?>"></td>
 								</tr>
 								<tr>
 									<?php if (!isset($this->settings['kenmerk'])) $this->settings['kenmerk'] = ''; ?>
-									<td>Optioneel bericht (linksboven op label)</td>
+									<td>Eigen kenmerk (niet op label, wel in track&trace)</td>
 									<td><input type="text" name="data[<?php echo $row['orderid']; ?>][kenmerk]" value="<?php echo $this->settings['kenmerk']; ?>"></td>
 								</tr>
 							</table>
