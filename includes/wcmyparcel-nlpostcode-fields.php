@@ -10,14 +10,16 @@ class WC_NLPostcode_Fields {
 		// Load styles & scripts
 		add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles_scripts' ) );
 
-		// Hide default address fields & state
-		add_filter('woocommerce_get_country_locale', array( &$this, 'woocommerce_locale_nl' ), 1, 1);
-
 		// Add street name & house number checkout fields.
 		add_filter( 'woocommerce_checkout_fields', array( &$this, 'nl_checkout_fields' ) );
 
 		// Hide state field for countries without states (backwards compatible fix for bug #4223)
 		add_filter( 'woocommerce_countries_allowed_country_states', array( &$this, 'hide_states' ) );
+
+		// Localize checkout fields (limit custom checkout fields to NL)
+		add_filter( 'woocommerce_country_locale_field_selectors', array( &$this, 'country_locale_field_selectors' ) );
+		add_filter( 'woocommerce_default_address_fields', array( &$this, 'default_address_fields' ) );
+		add_filter( 'woocommerce_get_country_locale', array( &$this, 'woocommerce_locale_nl' ), 1, 1);
 
 		// Load custom order data.
 		add_filter( 'woocommerce_load_order_data', array( &$this, 'load_order_data' ) );
@@ -81,6 +83,21 @@ class WC_NLPostcode_Fields {
 			'required'	=> false,
 		);
 
+		$locale['NL']['street_name'] = array(
+			'required'  => true,
+			'hidden'	=> false,
+		);
+
+		$locale['NL']['house_number'] = array(
+			'required'  => true,
+			'hidden'	=> false,
+		);
+
+		$locale['NL']['house_number_suffix'] = array(
+			'required'  => false,
+			'hidden'	=> false,
+		);
+
 		return $locale;
 	}
 
@@ -94,7 +111,7 @@ class WC_NLPostcode_Fields {
 		
 		foreach ($forms as $form) {
 			// Add Street name
-				$fields[$form][$form.'_street_name'] = array(
+			$fields[$form][$form.'_street_name'] = array(
 				'label'		 => __( 'Street name', 'wcmyparcel' ),
 				'placeholder'   => __( 'Street name', 'wcmyparcel' ),
 				'class'		 => array( 'form-row-first' ),
@@ -189,6 +206,50 @@ class WC_NLPostcode_Fields {
 		$states = $hidden_states + $allowed_states;
 			
 		return $states;
+	}
+
+	/**
+	 * Localize checkout fields live
+	 * @param  array $locale_fields list of fields filtered by locale
+	 * @return array $locale_fields with custom fields added
+	 */
+	public function country_locale_field_selectors( $locale_fields ) {
+		$custom_locale_fields = array(
+			'street_name'  => '#billing_street_name_field, #shipping_street_name_field',
+			'house_number'  => '#billing_house_number_field, #shipping_house_number_field',
+			'house_number_suffix'  => '#billing_house_number_suffix_field, #shipping_house_number_suffix_field',
+		);
+
+		$locale_fields = array_merge( $locale_fields, $custom_locale_fields );
+
+		return $locale_fields;
+	}
+
+	/**
+	 * Make NL checkout fields hidden by default
+	 * @param  array $fields default checkout fields
+	 * @return array $fields default + custom checkoud fields
+	 */
+	public function default_address_fields( $fields ) {
+		$custom_fields = array(
+			'street_name' => array(
+				'hidden'	=> true,
+				'required'	=> false,
+			),
+			'house_number' => array(
+				'hidden'	=> true,
+				'required'	=> false,
+			),
+			'house_number_suffix' => array(
+				'hidden'	=> true,
+				'required'	=> false,
+			),
+
+		);
+
+		$fields = array_merge( $fields,$custom_fields );
+
+		return $fields;
 	}
 
 	/**
