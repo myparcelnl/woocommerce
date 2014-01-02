@@ -22,12 +22,10 @@ class WC_NLPostcode_Fields {
 		// Load custom order data.
 		add_filter( 'woocommerce_load_order_data', array( &$this, 'load_order_data' ) );
 
-		// Admin order billing fields.
+		// Custom shop_order details.
 		add_filter( 'woocommerce_admin_billing_fields', array( &$this, 'admin_billing_fields' ) );
-
-		// Admin order shipping fields.
 		add_filter( 'woocommerce_admin_shipping_fields', array( &$this, 'admin_shipping_fields' ) );
-
+		add_filter( 'woocommerce_found_customer_details', array( $this, 'customer_details_ajax' ) );
 		add_action( 'save_post', array( &$this,'save_custom_fields' ) );
 
 		// Processing checkout
@@ -248,6 +246,25 @@ class WC_NLPostcode_Fields {
 		);
 
 		return $fields;
+	}
+
+	/**
+	 * Add custom fields in customer details ajax.
+	 * called when clicking the "Load billing/shipping address" button on Edit Order view
+	 *
+	 * @return void
+	 */
+	public function customer_details_ajax( $customer_data ) {
+		$user_id = (int) trim( stripslashes( $_POST['user_id'] ) );
+		$type_to_load = esc_attr( trim( stripslashes( $_POST['type_to_load'] ) ) );
+
+		$custom_data = array(
+			$type_to_load . '_street_name' => get_user_meta( $user_id, $type_to_load . '_street_name', true ),
+			$type_to_load . '_house_number' => get_user_meta( $user_id, $type_to_load . '_house_number', true ),
+			$type_to_load . '_house_number_suffix' => get_user_meta( $user_id, $type_to_load . '_house_number_suffix', true ),
+		);
+
+		return array_merge( $customer_data, $custom_data );
 	}
 
 	/**
