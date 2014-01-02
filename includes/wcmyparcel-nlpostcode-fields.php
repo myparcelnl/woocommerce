@@ -11,7 +11,8 @@ class WC_NLPostcode_Fields {
 		add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles_scripts' ) );
 
 		// Add street name & house number checkout fields.
-		add_filter( 'woocommerce_checkout_fields', array( &$this, 'nl_checkout_fields' ) );
+		add_filter( 'woocommerce_billing_fields', array( &$this, 'nl_billing_fields' ) );
+		add_filter( 'woocommerce_shipping_fields', array( &$this, 'nl_shipping_fields' ) );
 
 		// Hide state field for countries without states (backwards compatible fix for bug #4223)
 		add_filter( 'woocommerce_countries_allowed_country_states', array( &$this, 'hide_states' ) );
@@ -56,7 +57,7 @@ class WC_NLPostcode_Fields {
 	 * Load styles & scripts.
 	 */
 	public function add_styles_scripts(){
-   		if ( is_checkout() ) {
+   		if ( is_checkout() || is_account_page() ) {
 			wp_register_script( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-checkout.js'), array( 'wc-checkout' ) );
 			wp_enqueue_script( 'nl-checkout' );
 			wp_enqueue_style( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout.css') );
@@ -101,73 +102,82 @@ class WC_NLPostcode_Fields {
 		return $locale;
 	}
 
+	public function nl_billing_fields( $fields ) {
+		return $this->nl_checkout_fields( $fields, 'billing');
+	}
+
+	public function nl_shipping_fields( $fields ) {
+		return $this->nl_checkout_fields( $fields, 'shipping');
+	}
+
 	/**
 	 * New checkout billing/shipping fields
 	 * @param  array $fields Default fields.
-	 * @return array		 New fields.
+	 * @return array $fields New fields.
 	 */
-	public function nl_checkout_fields( $fields ) {
-		$forms = array( 'billing', 'shipping' );
+	public function nl_checkout_fields( $fields, $form ) {
+		if (isset($fields['_country'])) {
+			// some weird bug on the my account page
+			$form = '';
+		}
+
+		// Add Street name
+		$fields[$form.'_street_name'] = array(
+			'label'			=> __( 'Street name', 'wcmyparcel' ),
+			'placeholder'	=> __( 'Street name', 'wcmyparcel' ),
+			'class'			=> array( 'form-row-first' ),
+			'required'		=> false, // not required by default - handled on locale level
+		);
+
+		// Add house number
+		$fields[$form.'_house_number'] = array(
+			'label'			=> __( 'Nr.', 'wcmyparcel' ),
+			'placeholder'	=> __( 'Nr.', 'wcmyparcel' ),
+			'class'			=> array( 'form-row-quart-first' ),
+			'required'		=> false, // not required by default - handled on locale level
+		);
+
+		// Add house number Suffix
+		$fields[$form.'_house_number_suffix'] = array(
+			'label'			=> __( 'Suffix', 'wcmyparcel' ),
+			'placeholder'	=> __( 'Suffix', 'wcmyparcel' ),
+			'class'			=> array( 'form-row-quart' ),
+			'required'		=> false, // not required by default - handled on locale level
+		);
+
+		// Create new ordering for checkout fields
+		$order_keys = array (
+			$form.'_country',
+			$form.'_first_name',
+			$form.'_last_name',
+			$form.'_company',
+			$form.'_address_1',
+			$form.'_address_2',
+			$form.'_street_name',
+			$form.'_house_number',
+			$form.'_house_number_suffix',
+			$form.'_postcode',
+			$form.'_city',
+			$form.'_state',
+			);
+
+		if ($form == 'billing') {
+			array_push ($order_keys,
+				$form.'_email',
+				$form.'_phone'
+			);
+		}
+
+		$new_order = array();
 		
-		foreach ($forms as $form) {
-			// Add Street name
-			$fields[$form][$form.'_street_name'] = array(
-				'label'		 => __( 'Street name', 'wcmyparcel' ),
-				'placeholder'   => __( 'Street name', 'wcmyparcel' ),
-				'class'		 => array( 'form-row-first' ),
-				'required'	  => false, // not required by default - handled on locale level
-			);
-
-			// Add house number
-			$fields[$form][$form.'_house_number'] = array(
-				'label'		 => __( 'Nr.', 'wcmyparcel' ),
-				'placeholder'   => __( 'Nr.', 'wcmyparcel' ),
-				'class'		 => array( 'form-row-quart-first' ),
-				'required'	  => false, // not required by default - handled on locale level
-			);
-
-			// Add house number Suffix
-			$fields[$form][$form.'_house_number_suffix'] = array(
-				'label'		 => __( 'Suffix', 'wcmyparcel' ),
-				'placeholder'   => __( 'Suffix', 'wcmyparcel' ),
-				'class'		 => array( 'form-row-quart' ),
-				'required'	  => false, // not required by default - handled on locale level
-			);
-
-			// Create new ordering for checkout fields
-			$order_keys = array (
-				$form.'_country',
-				$form.'_first_name',
-				$form.'_last_name',
-				$form.'_company',
-				$form.'_address_1',
-				$form.'_address_2',
-				$form.'_street_name',
-				$form.'_house_number',
-				$form.'_house_number_suffix',
-				$form.'_postcode',
-				$form.'_city',
-				$form.'_state',
-				);
-
-			if ($form == 'billing') {
-				array_push ($order_keys,
-					$form.'_email',
-					$form.'_phone'
-				);
-			}
-
-			$new_order = array();
+		// Create reordered array and fill with old array values
+		foreach ($order_keys as $key) {
+			$new_order[$key] = $fields[$key];
+		}
+		
+		// Merge (&overwrite) field array
+		$fields = array_merge($new_order, $fields);
 			
-			// Create reordered array and fill with old array values
-			foreach ($order_keys as $key) {
-				$new_order[$form][$key] = $fields[$form][$key];
-			}
-			
-			// Merge (&overwrite) field array
-			$fields = array_merge($fields, $new_order);
-			
-		} 
 		return $fields;
 	}
 
