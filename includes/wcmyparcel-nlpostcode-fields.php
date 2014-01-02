@@ -58,8 +58,12 @@ class WC_NLPostcode_Fields {
 	 */
 	public function add_styles_scripts(){
    		if ( is_checkout() || is_account_page() ) {
-			wp_register_script( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-checkout.js'), array( 'wc-checkout' ) );
-			wp_enqueue_script( 'nl-checkout' );
+			if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
+				// Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
+				wp_register_script( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-checkout.js'), array( 'wc-checkout' ) );
+				wp_enqueue_script( 'nl-checkout' );
+			}
+
 			wp_enqueue_style( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout.css') );
 		}
 	}
