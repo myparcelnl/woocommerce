@@ -108,22 +108,22 @@
 								</tr>
 								<tr>
 									<?php if (!isset($this->settings['extragroot'])) $this->settings['extragroot'] = ''; ?>
-									<td>Extra groot formaat (+ &euro; 2.00)</td>
+									<td>Extra groot formaat (+ &euro; 2.19)</td>
 									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][extragroot]" value="x" <?php checked("1", $this->settings['extragroot'])?>></td>
 								</tr>
 								<tr>
 									<?php if (!isset($this->settings['huisadres'])) $this->settings['huisadres'] = ''; ?>
-									<td>Niet bij buren bezorgen (+ &euro; 0.23)</td>
+									<td>Niet bij buren bezorgen (+ &euro; 0.26)</td>
 									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][huisadres]" value="x" <?php checked("1", $this->settings['huisadres'])?>></td>
 								</tr>
 								<tr>
 									<?php if (!isset($this->settings['handtekening'])) $this->settings['handtekening'] = ''; ?>
-									<td>Handtekening voor ontvangst (+ &euro; 0.30)</td>
+									<td>Handtekening voor ontvangst (+ &euro; 0.33)</td>
 									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][handtekening]" value="x" <?php checked("1", $this->settings['handtekening'])?>></td>
 								</tr>
 								<tr>
 									<?php if (!isset($this->settings['huishand'])) $this->settings['huishand'] = ''; ?>
-									<td>Niet bij buren bezorgen + Handtekening voor ontvangst (+ &euro; 0.37)</td>
+									<td>Niet bij buren bezorgen + Handtekening voor ontvangst (+ &euro; 0.40)</td>
 									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][huishand]" value="x" <?php checked("1", $this->settings['huishand'])?>></td>
 								</tr>
 								<tr>
@@ -138,7 +138,7 @@
 								</tr>
 								<tr>
 									<?php if (!isset($this->settings['verzekerd'])) $this->settings['verzekerd'] = ''; ?>
-									<td>Verhoogd aansprakelijk (+ &euro; 1.45 per &euro; 500 verzekerd)</td>
+									<td>Verhoogd aansprakelijk (+ &euro; 1.58 per &euro; 500 verzekerd)</td>
 									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][verzekerd]" value="x" <?php checked("1", $this->settings['verzekerd'])?>></td>
 								<tr>
 									<td>Verzekerd bedrag (afgerond in hele in &euro;)</td>
