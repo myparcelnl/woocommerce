@@ -32,7 +32,23 @@ class WC_NLPostcode_Fields {
 		add_action('woocommerce_checkout_update_order_meta', array( &$this, 'merge_street_number_suffix' ) );			
 		add_filter('woocommerce_process_checkout_field_billing_postcode', array( &$this, 'clean_billing_postcode' ) );			
 		add_filter('woocommerce_process_checkout_field_shipping_postcode', array( &$this, 'clean_shipping_postcode' ) );	
+
+		add_action( 'plugins_loaded', array( &$this, 'load_woocommerce_filters') );
+	}
+
+	public function load_woocommerce_filters() {
+		// Custom address format.
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.0.6', '>=' ) ) {
+			add_filter( 'woocommerce_localisation_address_formats', array( $this, 'localisation_address_formats' ) );
+			add_filter( 'woocommerce_formatted_address_replacements', array( $this, 'formatted_address_replacements' ), 1, 2 );
+			add_filter( 'woocommerce_order_formatted_billing_address', array( $this, 'order_formatted_billing_address' ), 1, 2 );
+			add_filter( 'woocommerce_order_formatted_shipping_address', array( $this, 'order_formatted_shipping_address' ), 1, 2 );
+			add_filter( 'woocommerce_user_column_billing_address', array( $this, 'user_column_billing_address' ), 1, 2 );
+			add_filter( 'woocommerce_user_column_shipping_address', array( $this, 'user_column_shipping_address' ), 1, 2 );
+			add_filter( 'woocommerce_my_account_my_address_formatted_address', array( $this, 'my_account_my_address_formatted_address' ), 1, 3 );
 		}
+		
+	}
 
 	/**
 	 * Load styles & scripts.
@@ -327,5 +343,116 @@ class WC_NLPostcode_Fields {
 		return $shipping_postcode;
 	}
 
+	/**
+	 * Custom country address formats.
+	 *
+	 * @param  array $formats Defaul formats.
+	 *
+	 * @return array          New NL format.
+	 */
+	function localisation_address_formats( $formats ) {
+		// default = $postcode_before_city = "{company}\n{name}\n{address_1}\n{address_2}\n{postcode} {city}\n{country}";
+		$formats['NL'] = "{company}\n{name}\n{street_name} {house_number} {house_number_suffix}\n{postcode} {city}\n{country}";
+		return $formats;
+	}
+
+	/**
+	 * Custom country address format.
+	 *
+	 * @param  array $replacements Default replacements.
+	 * @param  array $args         Arguments to replace.
+	 *
+	 * @return array               New replacements.
+	 */
+	function formatted_address_replacements( $replacements, $args ) {
+		extract( $args );
+
+		$replacements['{street_name}']			= $street_name;
+		$replacements['{house_number}']			= $house_number;
+		$replacements['{house_number_suffix}']	= $house_number_suffix;
+
+		return $replacements;
+	}
+
+	/**
+	 * Custom order formatted billing address.
+	 *
+	 * @param  array $address Default address.
+	 * @param  object $order  Order data.
+	 *
+	 * @return array          New address format.
+	 */
+	function order_formatted_billing_address( $address, $order ) {
+		$address['street_name']			= $order->billing_street_name;
+		$address['house_number']		= $order->billing_house_number;
+		$address['house_number_suffix']	= $order->billing_house_number_suffix;
+
+		return $address;
+	}
+
+	/**
+	 * Custom order formatted shipping address.
+	 *
+	 * @param  array $address Default address.
+	 * @param  object $order  Order data.
+	 *
+	 * @return array          New address format.
+	 */
+	function order_formatted_shipping_address( $address, $order ) {
+		$address['street_name']			= $order->shipping_street_name;
+		$address['house_number']		= $order->shipping_house_number;
+		$address['house_number_suffix']	= $order->shipping_house_number_suffix;
+
+		return $address;
+	}
+
+	/**
+	 * Custom user column billing address information.
+	 *
+	 * @param  array $address Default address.
+	 * @param  int $user_id   User id.
+	 *
+	 * @return array          New address format.
+	 */
+	function user_column_billing_address( $address, $user_id ) {
+		$address['street_name']			= get_user_meta( $user_id, 'billing_street_name', true );
+		$address['house_number']		= get_user_meta( $user_id, 'billing_house_number', true );
+		$address['house_number_suffix']	= get_user_meta( $user_id, 'billing_house_number_suffix', true );
+
+		return $address;
+	}
+
+	/**
+	 * Custom user column shipping address information.
+	 *
+	 * @param  array $address Default address.
+	 * @param  int $user_id   User id.
+	 *
+	 * @return array          New address format.
+	 */
+	function user_column_shipping_address( $address, $user_id ) {
+		$address['street_name']			= get_user_meta( $user_id, 'shipping_street_name', true );
+		$address['house_number']		= get_user_meta( $user_id, 'shipping_house_number', true );
+		$address['house_number_suffix']	= get_user_meta( $user_id, 'shipping_house_number_suffix', true );
+
+		return $address;
+	}
+
+	/**
+	 * Custom my address formatted address.
+	 *
+	 * @param  array $address   Default address.
+	 * @param  int $customer_id Customer ID.
+	 * @param  string $name     Field name (billing or shipping).
+	 *
+	 * @return array            New address format.
+	 */
+	function my_account_my_address_formatted_address( $address, $customer_id, $name ) {
+		$address['street_name']       = get_user_meta( $customer_id, $name . '_street_name', true );
+		$address['house_number'] = get_user_meta( $customer_id, $name . '_house_number', true );
+		$address['house_number_suffix'] = get_user_meta( $customer_id, $name . '_house_number_suffix', true );
+
+		return $address;
+	}
 }
 }
