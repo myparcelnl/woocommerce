@@ -64,8 +64,15 @@ class WC_NLPostcode_Fields {
 				wp_enqueue_script( 'nl-checkout' );
 			}
 
+			if (is_account_page()) {
+				// Disable regular address fields for NL on account page
+				wp_register_script( 'nl-account-page', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-account-page.js'), array( 'jquery' ) );
+				wp_enqueue_script( 'nl-account-page' );
+			}
+
 			wp_enqueue_style( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout.css') );
 		}
+
 	}
 
 	/**
