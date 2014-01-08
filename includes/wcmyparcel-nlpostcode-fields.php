@@ -62,13 +62,14 @@ class WC_NLPostcode_Fields {
 				// Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
 				wp_register_script( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-checkout.js'), array( 'wc-checkout' ) );
 				wp_enqueue_script( 'nl-checkout' );
+
+				if ( is_account_page() ) {
+					// Disable regular address fields for NL on account page - Fixed in WC 2.1
+					wp_register_script( 'nl-account-page', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-account-page.js'), array( 'jquery' ) );
+					wp_enqueue_script( 'nl-account-page' );
+				}
 			}
 
-			if (is_account_page()) {
-				// Disable regular address fields for NL on account page
-				wp_register_script( 'nl-account-page', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-account-page.js'), array( 'jquery' ) );
-				wp_enqueue_script( 'nl-account-page' );
-			}
 
 			wp_enqueue_style( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout.css') );
 		}
