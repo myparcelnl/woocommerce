@@ -42,8 +42,10 @@ dl.variation dd, dl.variation dt{
 }
 
 .widefat .column-order_actions a.button.one-myparcel {
-	float:left;
-	padding: 1px 2px;
+	float: left;
+	width: 26px;
+	height: 26px;
+	padding: 3px 2px;
 }
 
 .widefat .column-order_actions a.button.one-myparcel img {

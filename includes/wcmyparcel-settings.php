@@ -41,14 +41,6 @@ class WC_MyParcel_Settings {
 	
 	/**
 	 * User settings.
-	 *
-	 * Partnerid
-	 * Brief of pakket
-	 * Standaard gewicht
-	 * Aangetekend (ja/nee)
-	 * Kenmerk
-	 * Email doorgeven 
-	 * 
 	 */
 	
 	public function init_settings() {

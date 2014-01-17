@@ -5,7 +5,7 @@ Plugin URI: http://www.myparcel.nl
 Description: Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
 Author: Ewout Fernhout
 Author URI: http://www.wpovernight.com
-Version: 1.2.0
+Version: 1.3.0
 Text Domain: wcmyparcel
 
 License: GPLv3 or later
@@ -62,7 +62,15 @@ if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) {
 				wp_enqueue_script( 'thickbox' );
 				wp_enqueue_style( 'thickbox' );
 				wp_enqueue_script( 'wcmyparcel-export', plugin_dir_url(__FILE__) . 'js/wcmyparcel-script.js', array( 'jquery', 'thickbox' ) );
-				wp_register_style( 'wcmyparcel-admin-styles', plugins_url( '/css/wcmyparcel-admin-styles.css', __FILE__ ), array(), '', 'all' );
+
+				if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
+					// Old versions
+					wp_register_style( 'wcmyparcel-admin-styles', plugins_url( '/css/wcmyparcel-admin-styles.css', __FILE__ ), array(), '', 'all' );
+				} else {
+					// WC 2.1+, MP6 style with larger buttons
+					wp_register_style( 'wcmyparcel-admin-styles', plugins_url( '/css/wcmyparcel-admin-styles-wc21.css', __FILE__ ), array(), '', 'all' );
+				}				
+
 				wp_enqueue_style( 'wcmyparcel-admin-styles' );  
 			}
 		}

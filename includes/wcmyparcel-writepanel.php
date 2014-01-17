@@ -108,17 +108,17 @@ class WC_MyParcel_Writepanel {
 		if (!empty($consignment_id)) {
 			$pdf_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&order_ids=' . $order->id ), 'wcmyparcel-label' );
 			?>
-			<a href="<?php echo $pdf_link; ?>" class="button tips" alt="Print MyParcel label" data-tip="Print MyParcel label" style="float:left;padding:1px 2px;">
-				<img src="<?php echo dirname(plugin_dir_url(__FILE__)) . '/img/myparcel-pdf.png'; ?>" alt="Print MyParcel label" width="14px" style="width:16px;height:auto;">
+			<a href="<?php echo $pdf_link; ?>" class="button tips" alt="Print MyParcel label" data-tip="Print MyParcel label">
+				<img src="<?php echo dirname(plugin_dir_url(__FILE__)) . '/img/myparcel-pdf.png'; ?>" alt="Print MyParcel label">
 			</a>
-			<a href="<?php echo wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $order->id ), 'wcmyparcel' ); ?>" class="button tips one-myparcel" alt="Exporteer naar MyParcel" data-tip="Exporteer naar MyParcel" style="float:left;padding:1px 2px;">
-				<img src="<?php echo dirname(plugin_dir_url(__FILE__)) . '/img/myparcel-up.png'; ?>" alt="Exporteer naar MyParcel" width="14px" style="width:16px;height:auto;">
+			<a href="<?php echo wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $order->id ), 'wcmyparcel' ); ?>" class="button tips one-myparcel" alt="Exporteer naar MyParcel" data-tip="Exporteer naar MyParcel">
+				<img src="<?php echo dirname(plugin_dir_url(__FILE__)) . '/img/myparcel-up.png'; ?>" alt="Exporteer naar MyParcel">
 			</a>
 			<?php
 		} else {
 			?>
-			<a href="<?php echo wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $order->id ), 'wcmyparcel' ); ?>" class="button tips one-myparcel" alt="Exporteer naar MyParcel" data-tip="Exporteer naar MyParcel" style="float:left;padding:1px 2px;">
-				<img src="<?php echo dirname(plugin_dir_url(__FILE__)) . '/img/myparcel-up.png'; ?>" alt="Exporteer naar MyParcel" width="14px" style="width:16px;height:auto;">
+			<a href="<?php echo wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $order->id ), 'wcmyparcel' ); ?>" class="button tips one-myparcel" alt="Exporteer naar MyParcel" data-tip="Exporteer naar MyParcel">
+				<img src="<?php echo dirname(plugin_dir_url(__FILE__)) . '/img/myparcel-up.png'; ?>" alt="Exporteer naar MyParcel">
 			</a>
 			<?php
 			

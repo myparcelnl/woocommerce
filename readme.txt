@@ -1,9 +1,9 @@
 === Plugin Name ===
 Contributors: pomegranate
 Tags: woocommerce, export, myparcel
-Requires at least: 3.5.1
-Tested up to: 3.8
-Stable tag: 1.2.0
+Requires at least: 3.5.1 & WooCommerce 2.0+
+Tested up to: 3.8 & WooCommerce 2.1
+Stable tag: 1.3.0
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -27,7 +27,7 @@ A MyParcel API account is required for this plugin! Get one at info@myparcel.nl
 == Installation ==
 
 = Automatic installation =
-Automatic installation is the easiest option as WordPress handles the file transfers itself and you don't even need to leave your web browser. To do an automatic install of WooCommerce, log in to your WordPress admin panel, navigate to the Plugins menu and click Add New.
+Automatic installation is the easiest option as WordPress handles the file transfers itself and you don't even need to leave your web browser. To do an automatic install of WooCommerce MyParcel, log in to your WordPress admin panel, navigate to the Plugins menu and click Add New.
 
 In the search field type "WooCommerce MyParcel" and click Search Plugins. You can install it by simply clicking Install Now. After clicking that link you will be asked if you're sure you want to install the plugin. Click yes and WordPress will automatically complete the installation.
 
@@ -56,6 +56,11 @@ Send an email to info@myparcel.nl with your account name and you will be sent al
 3. View the status of the shipment on the order details page.
 
 == Changelog ==
+
+= 1.3.0 =
+* New MyParcel icons
+* Export & PDF buttons compatible with WC2.1 / MP6 styles
+* Button styles are now in CSS instead of inline
 
 = 1.2.0 =
 * Feature: The myparcel checkout fields (street name / house number) can now also be modified on the my account page
