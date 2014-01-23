@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 3.8 & WooCommerce 2.1
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -56,6 +56,9 @@ Send an email to info@myparcel.nl with your account name and you will be sent al
 3. View the status of the shipment on the order details page.
 
 == Changelog ==
+
+= 1.3.2 =
+* Fix: Description labels for Custom ID ('Eigen kenmerk') & Message ('Optioneel bericht')
 
 = 1.3.1 =
 * Fix: button image width
