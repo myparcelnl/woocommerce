@@ -11,8 +11,16 @@ class WC_NLPostcode_Fields {
 		add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles_scripts' ) );
 
 		// Add street name & house number checkout fields.
-		add_filter( 'woocommerce_billing_fields', array( &$this, 'nl_billing_fields' ) );
-		add_filter( 'woocommerce_shipping_fields', array( &$this, 'nl_shipping_fields' ) );
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.0' ) >= 0 ) {
+			// WC 2.0 or newer is used, the filter got a $coutry parameter, yay!
+			add_filter( 'woocommerce_billing_fields', array( &$this, 'nl_billing_fields' ), 10, 2 );
+			add_filter( 'woocommerce_shipping_fields', array( &$this, 'nl_shipping_fields' ), 10, 2 );
+		} else {
+			// Backwards compatibility
+			add_filter( 'woocommerce_billing_fields', array( &$this, 'nl_billing_fields' ) );
+			add_filter( 'woocommerce_shipping_fields', array( &$this, 'nl_shipping_fields' ) );
+		}
+	
 
 		// Hide state field for countries without states (backwards compatible fix for bug #4223)
 		add_filter( 'woocommerce_countries_allowed_country_states', array( &$this, 'hide_states' ) );
@@ -36,7 +44,7 @@ class WC_NLPostcode_Fields {
 		add_filter('woocommerce_process_checkout_field_billing_postcode', array( &$this, 'clean_billing_postcode' ) );			
 		add_filter('woocommerce_process_checkout_field_shipping_postcode', array( &$this, 'clean_shipping_postcode' ) );	
 
-		add_action( 'plugins_loaded', array( &$this, 'load_woocommerce_filters') );
+		$this->load_woocommerce_filters();
 	}
 
 	public function load_woocommerce_filters() {
@@ -62,14 +70,13 @@ class WC_NLPostcode_Fields {
 				// Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
 				wp_register_script( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-checkout.js'), array( 'wc-checkout' ) );
 				wp_enqueue_script( 'nl-checkout' );
-
-				if ( is_account_page() ) {
-					// Disable regular address fields for NL on account page - Fixed in WC 2.1
-					wp_register_script( 'nl-account-page', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-account-page.js'), array( 'jquery' ) );
-					wp_enqueue_script( 'nl-account-page' );
-				}
 			}
 
+			if ( is_account_page() ) {
+				// Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
+				wp_register_script( 'nl-account-page', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-account-page.js'), array( 'jquery' ) );
+				wp_enqueue_script( 'nl-account-page' );
+			}
 
 			wp_enqueue_style( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout.css') );
 		}
@@ -114,12 +121,12 @@ class WC_NLPostcode_Fields {
 		return $locale;
 	}
 
-	public function nl_billing_fields( $fields ) {
-		return $this->nl_checkout_fields( $fields, 'billing');
+	public function nl_billing_fields( $fields, $country = '' ) {
+		return $this->nl_checkout_fields( $fields, $country, 'billing');
 	}
 
-	public function nl_shipping_fields( $fields ) {
-		return $this->nl_checkout_fields( $fields, 'shipping');
+	public function nl_shipping_fields( $fields, $country = '' ) {
+		return $this->nl_checkout_fields( $fields, $country, 'shipping');
 	}
 
 	/**
@@ -127,18 +134,21 @@ class WC_NLPostcode_Fields {
 	 * @param  array $fields Default fields.
 	 * @return array $fields New fields.
 	 */
-	public function nl_checkout_fields( $fields, $form ) {
+	public function nl_checkout_fields( $fields, $country, $form ) {
 		if (isset($fields['_country'])) {
 			// some weird bug on the my account page
 			$form = '';
 		}
+
+		// Set required to true if country is NL
+		$required = ($country == 'NL')?true:false;
 
 		// Add Street name
 		$fields[$form.'_street_name'] = array(
 			'label'			=> __( 'Street name', 'wcmyparcel' ),
 			'placeholder'	=> __( 'Street name', 'wcmyparcel' ),
 			'class'			=> array( 'form-row-first' ),
-			'required'		=> false, // not required by default - handled on locale level
+			'required'		=> $required, // Only required for NL
 		);
 
 		// Add house number
@@ -146,7 +156,7 @@ class WC_NLPostcode_Fields {
 			'label'			=> __( 'Nr.', 'wcmyparcel' ),
 			'placeholder'	=> __( 'Nr.', 'wcmyparcel' ),
 			'class'			=> array( 'form-row-quart-first' ),
-			'required'		=> false, // not required by default - handled on locale level
+			'required'		=> $required, // Only required for NL
 		);
 
 		// Add house number Suffix
@@ -154,7 +164,7 @@ class WC_NLPostcode_Fields {
 			'label'			=> __( 'Suffix', 'wcmyparcel' ),
 			'placeholder'	=> __( 'Suffix', 'wcmyparcel' ),
 			'class'			=> array( 'form-row-quart' ),
-			'required'		=> false, // not required by default - handled on locale level
+			'required'		=> false,
 		);
 
 		// Create new ordering for checkout fields
@@ -435,7 +445,7 @@ class WC_NLPostcode_Fields {
 	 */
 	function localisation_address_formats( $formats ) {
 		// default = $postcode_before_city = "{company}\n{name}\n{address_1}\n{address_2}\n{postcode} {city}\n{country}";
-		$formats['NL'] = "{company}\n{name}\n{street_name} {house_number} {house_number_suffix}\n{postcode} {city}\n{country}";
+		$formats['NL'] = "{company}\n{name}\n{street_name} {house_number}{house_number_suffix}\n{postcode} {city}\n{country}";
 		return $formats;
 	}
 
@@ -468,7 +478,7 @@ class WC_NLPostcode_Fields {
 	function order_formatted_billing_address( $address, $order ) {
 		$address['street_name']			= $order->billing_street_name;
 		$address['house_number']		= $order->billing_house_number;
-		$address['house_number_suffix']	= $order->billing_house_number_suffix;
+		$address['house_number_suffix']	= !empty($order->billing_house_number_suffix)?'-'.$order->billing_house_number_suffix:'';
 
 		return $address;
 	}
@@ -484,7 +494,7 @@ class WC_NLPostcode_Fields {
 	function order_formatted_shipping_address( $address, $order ) {
 		$address['street_name']			= $order->shipping_street_name;
 		$address['house_number']		= $order->shipping_house_number;
-		$address['house_number_suffix']	= $order->shipping_house_number_suffix;
+		$address['house_number_suffix']	= !empty($order->shipping_house_number_suffix)?'-'.$order->shipping_house_number_suffix:'';
 
 		return $address;
 	}
@@ -500,7 +510,7 @@ class WC_NLPostcode_Fields {
 	function user_column_billing_address( $address, $user_id ) {
 		$address['street_name']			= get_user_meta( $user_id, 'billing_street_name', true );
 		$address['house_number']		= get_user_meta( $user_id, 'billing_house_number', true );
-		$address['house_number_suffix']	= get_user_meta( $user_id, 'billing_house_number_suffix', true );
+		$address['house_number_suffix']	= (get_user_meta( $user_id, 'billing_house_number_suffix', true ))?'-'.get_user_meta( $user_id, 'billing_house_number_suffix', true ):'';
 
 		return $address;
 	}
@@ -516,7 +526,7 @@ class WC_NLPostcode_Fields {
 	function user_column_shipping_address( $address, $user_id ) {
 		$address['street_name']			= get_user_meta( $user_id, 'shipping_street_name', true );
 		$address['house_number']		= get_user_meta( $user_id, 'shipping_house_number', true );
-		$address['house_number_suffix']	= get_user_meta( $user_id, 'shipping_house_number_suffix', true );
+		$address['house_number_suffix']	= (get_user_meta( $user_id, 'shipping_house_number_suffix', true ))?'-'.get_user_meta( $user_id, 'shipping_house_number_suffix', true ):'';
 
 		return $address;
 	}
@@ -531,9 +541,9 @@ class WC_NLPostcode_Fields {
 	 * @return array            New address format.
 	 */
 	function my_account_my_address_formatted_address( $address, $customer_id, $name ) {
-		$address['street_name']       = get_user_meta( $customer_id, $name . '_street_name', true );
-		$address['house_number'] = get_user_meta( $customer_id, $name . '_house_number', true );
-		$address['house_number_suffix'] = get_user_meta( $customer_id, $name . '_house_number_suffix', true );
+		$address['street_name']			= get_user_meta( $customer_id, $name . '_street_name', true );
+		$address['house_number']		= get_user_meta( $customer_id, $name . '_house_number', true );
+		$address['house_number_suffix']	= (get_user_meta( $customer_id, $name . '_house_number_suffix', true ))?'-'.get_user_meta( $customer_id, $name . '_house_number_suffix', true ):'';
 
 		return $address;
 	}
