@@ -38,14 +38,15 @@ class WC_MyParcel_Writepanel {
 	 */
 	public function create_box_content() {
 		global $post_id;
+		$pdf_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&order_ids=' . $post_id ), 'wcmyparcel-label' );
+		$export_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $post_id ), 'wcmyparcel' );
+
 		if (get_post_meta($post_id,'_myparcel_consignment_id',true)) {
 			$consignment_id = get_post_meta($post_id,'_myparcel_consignment_id',true);
 
 			$tracktrace = get_post_meta($post_id,'_myparcel_tracktrace',true);
 			$tracktrace_url = $this->get_tracktrace_url($post_id);
 
-			$pdf_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&order_ids=' . $post_id ), 'wcmyparcel-label' );
-			$export_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $post_id ), 'wcmyparcel' );
 
 			// fetch TNT status
 			$tnt_status_url = 'http://www.myparcel.nl/status/tnt/' . $consignment_id;
@@ -106,9 +107,10 @@ class WC_MyParcel_Writepanel {
 	 */
 	public function add_listing_actions( $order ) {
 		$consignment_id = get_post_meta($order->id,'_myparcel_consignment_id',true);
+
+		$pdf_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&order_ids=' . $order->id ), 'wcmyparcel-label' );
+		$export_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $order->id ), 'wcmyparcel' );
 		if (!empty($consignment_id)) {
-			$pdf_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&order_ids=' . $order->id ), 'wcmyparcel-label' );
-			$export_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $order->id ), 'wcmyparcel' );
 			?>
 			<a href="<?php echo $pdf_link; ?>" class="button tips myparcel" alt="Print MyParcel label" data-tip="Print MyParcel label">
 				<img src="<?php echo dirname(plugin_dir_url(__FILE__)) . '/img/myparcel-pdf.png'; ?>" alt="Print MyParcel label">
