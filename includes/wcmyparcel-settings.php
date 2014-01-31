@@ -158,7 +158,7 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'extragroot',
-			__( 'Extra groot formaat (+ € 2.00)', 'wcmyparcel' ),
+			__( 'Extra groot formaat (+ € 2.19)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
@@ -171,7 +171,7 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'huisadres',
-			__( 'Niet bij buren bezorgen (+ € 0.23)', 'wcmyparcel' ),
+			__( 'Niet bij buren bezorgen (+ € 0.26)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
@@ -183,7 +183,7 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'handtekening',
-			__( 'Handtekening voor ontvangst (+ € 0.30)', 'wcmyparcel' ),
+			__( 'Handtekening voor ontvangst (+ € 0.33)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
@@ -196,7 +196,7 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'huishand',
-			__( 'Niet bij buren bezorgen + Handtekening voor ontvangst (+ € 0.37)', 'wcmyparcel' ),
+			__( 'Niet bij buren bezorgen + Handtekening voor ontvangst (+ € 0.40)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
@@ -235,7 +235,7 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'verzekerd',
-			__( 'Verhoogd aansprakelijk (+ € 1.45 per 500 euro verzekerd)', 'wcmyparcel' ),
+			__( 'Verhoogd aansprakelijk (+ € 1.58 per 500 euro verzekerd)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
