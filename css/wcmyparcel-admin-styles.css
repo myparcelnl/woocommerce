@@ -41,12 +41,12 @@ dl.variation dd, dl.variation dt{
 	display: inline;
 }
 
-.widefat .column-order_actions a.button.one-myparcel {
+.widefat .column-order_actions a.button.myparcel {
 	float:left;
 	padding: 1px 2px;
 }
 
-.widefat .column-order_actions a.button.one-myparcel img {
+.widefat .column-order_actions a.button.myparcel img {
 	width: 16px;
 	height: auto;
 }
