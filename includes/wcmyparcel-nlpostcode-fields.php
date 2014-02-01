@@ -154,7 +154,7 @@ class WC_NLPostcode_Fields {
 		// Add house number
 		$fields[$form.'_house_number'] = array(
 			'label'			=> __( 'Nr.', 'wcmyparcel' ),
-			'placeholder'	=> __( 'Nr.', 'wcmyparcel' ),
+			// 'placeholder'	=> __( 'Nr.', 'wcmyparcel' ),
 			'class'			=> array( 'form-row-quart-first' ),
 			'required'		=> $required, // Only required for NL
 		);
@@ -162,7 +162,7 @@ class WC_NLPostcode_Fields {
 		// Add house number Suffix
 		$fields[$form.'_house_number_suffix'] = array(
 			'label'			=> __( 'Suffix', 'wcmyparcel' ),
-			'placeholder'	=> __( 'Suffix', 'wcmyparcel' ),
+			// 'placeholder'	=> __( 'Suffix', 'wcmyparcel' ),
 			'class'			=> array( 'form-row-quart' ),
 			'required'		=> false,
 		);
