@@ -33,6 +33,7 @@ class WC_MyParcel_Export {
 					$order_meta = get_post_meta( $order_id );
 					$order = new WC_Order( $order_id );
 					$order_number = $order->get_order_number();
+					$formatted_address = $order->get_formatted_shipping_address();
 					$full_country = new WC_Countries;
 					$data[] = array(
 						'naam'					=> $order_meta['_shipping_first_name'][0].' '.$order_meta['_shipping_last_name'][0],
@@ -50,7 +51,8 @@ class WC_MyParcel_Export {
 						'telefoon'				=> $order_meta['_billing_phone'][0],
 						'orderid'				=> $order_id,							
 						'ordernr'				=> $order_number,
-						'bestelling'			=> $this->get_order_items( $order_id )
+						'bestelling'			=> $this->get_order_items( $order_id ),
+						'formatted_address'		=> $formatted_address,
 					);
 				}
 				
