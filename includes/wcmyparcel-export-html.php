@@ -67,17 +67,13 @@
 							</table>
 						</td>
 						<td><p><?php
-							if ( empty($row['straat']) || empty($row['huisnummer']) ) { ?>
+							if ( $row['landcode'] == 'NL' && ( empty($row['straat']) || empty($row['huisnummer']) ) ) { ?>
 							<span style="color:red">Deze order bevat geen geldige straatnaam- en huisnummergegevens, en kan daarom niet worden ge-exporteerd!</span>
 							</p>
 						</td>
 					</tr>
 							<?php } else {
-							echo $row['naam'].'<br/>'
-							.(!$row['bedrijfsnaam'] == '' ? $row['bedrijfsnaam'].'<br/>' : '')
-							.$row['straat'].' '.$row['huisnummer'].($row['huisnummertoevoeging']=='' ? '':'-'.$row['huisnummertoevoeging']).'<br/>'
-							.$row['postcode'].' '.$row['woonplaats'].'<br/>'
-							.$row['land'].'<br/>'
+							echo $row['formatted_address'].'<br/>'
 							.$row['telefoon'].'<br/>'
 							.$row['email']; ?></p>
 							<input type="hidden" name="data[<?php echo $row['orderid']; ?>][naam]" value="<?php echo $row['naam'] ?>">
