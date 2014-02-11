@@ -445,7 +445,7 @@ class WC_NLPostcode_Fields {
 	 */
 	function localisation_address_formats( $formats ) {
 		// default = $postcode_before_city = "{company}\n{name}\n{address_1}\n{address_2}\n{postcode} {city}\n{country}";
-		$formats['NL'] = "{company}\n{name}\n{street_name} {house_number}{house_number_suffix}\n{postcode} {city}\n{country}";
+		$formats['NL'] = "{company}\n{name}\n{address_1}\n{address_2}\n{postcode} {city}\n{country}";
 		return $formats;
 	}
 
@@ -460,10 +460,10 @@ class WC_NLPostcode_Fields {
 	function formatted_address_replacements( $replacements, $args ) {
 		extract( $args );
 
-		$replacements['{street_name}']			= $street_name;
-		$replacements['{house_number}']			= $house_number;
-		$replacements['{house_number_suffix}']	= $house_number_suffix;
-
+		if (!empty($street_name)) {
+			$replacements['{address_1}'] = $street_name.' '.$house_number.$house_number_suffix;
+		}
+		
 		return $replacements;
 	}
 
