@@ -13,7 +13,10 @@ jQuery(document).ready(function($) {
 			);
 			
 			var order_ids=checked.join('x');
-			url = 'edit.php?&action=wcmyparcel&order_ids='+order_ids+'&TB_iframe=true&height=460&width=720';
+			
+			var H = $(window).height()-120;
+
+			url = 'edit.php?&action=wcmyparcel&order_ids='+order_ids+'&TB_iframe=true&height='+H+'&width=720';
 
 			// disable background scrolling
 			$("body").css({ overflow: 'hidden' })
@@ -45,7 +48,8 @@ jQuery(document).ready(function($) {
 		// disable background scrolling
 		$("body").css({ overflow: 'hidden' })
 
-		tb_show('', url + '&TB_iframe=true&width=720&height=460');
+		var H = $(window).height()-120;
+		tb_show('', url + '&TB_iframe=true&width=720&height='+H);
 	});
 
 	$(window).bind('tb_unload', function() {
