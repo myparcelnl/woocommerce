@@ -381,7 +381,7 @@ class WC_NLPostcode_Fields {
 	 */
 	public function save_custom_fields($post_id) {
 		global $post_type;
-		if( $post_type == 'shop_order' ) {
+		if( $post_type == 'shop_order'  && !empty($_POST) ) {
 			update_post_meta( $post_id, '_billing_street_name', stripslashes( $_POST['_billing_street_name'] ));
 			update_post_meta( $post_id, '_billing_house_number', stripslashes( $_POST['_billing_house_number'] ));
 			update_post_meta( $post_id, '_billing_house_number_suffix', stripslashes( $_POST['_billing_house_number_suffix'] ));
