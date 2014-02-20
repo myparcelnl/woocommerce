@@ -118,6 +118,22 @@ class WC_MyParcel_Settings {
 		);
 
 		add_settings_field(
+			'download_display',
+			__( 'Labelweergave', 'wpo_wcpdf' ),
+			array( &$this, 'radio_element_callback' ),
+			$option,
+			'default_values',
+			array(
+				'menu'			=> $option,
+				'id'			=> 'download_display',
+				'options' 		=> array(
+					'download'	=> __( 'Download PDF' , 'wcmyparcel' ),
+					'display'	=> __( 'Open de PDF in een nieuw venster/tab' , 'wcmyparcel' ),
+				),
+			)
+		);
+
+		add_settings_field(
 			'process',
 			__( 'Verwerk labels direct', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
@@ -461,6 +477,37 @@ class WC_MyParcel_Settings {
 		echo $html;
 	}
 	
+	/**
+	 * Displays a radio settings field
+	 *
+	 * @param array   $args settings field args
+	 */
+	public function radio_element_callback( $args ) {
+		$menu = $args['menu'];
+		$id = $args['id'];
+	
+		$options = get_option( $menu );
+	
+		if ( isset( $options[$id] ) ) {
+			$current = $options[$id];
+		} else {
+			$current = isset( $args['default'] ) ? $args['default'] : '';
+		}
+
+		$html = '';
+		foreach ( $args['options'] as $key => $label ) {
+			$html .= sprintf( '<input type="radio" class="radio" id="%1$s[%2$s][%3$s]" name="%1$s[%2$s]" value="%3$s"%4$s />', $menu, $id, $key, checked( $current, $key, false ) );
+			$html .= sprintf( '<label for="%1$s[%2$s][%3$s]"> %4$s</label><br>', $menu, $id, $key, $label);
+		}
+		
+		// Displays option description.
+		if ( isset( $args['description'] ) ) {
+			$html .= sprintf( '<p class="description">%s</p>', $args['description'] );
+		}
+
+		echo $html;
+	}
+
 	/**
 	 * Section null fallback.
 	 *

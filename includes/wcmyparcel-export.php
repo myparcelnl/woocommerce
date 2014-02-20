@@ -277,8 +277,25 @@ class WC_MyParcel_Export {
 					$filename  = 'MyParcel';
 					$filename .= '-' . date('Y-m-d') . '.pdf';
 					
-					header('Content-type: application/force-download');
-					header('Content-Disposition: attachment; filename="'.$filename.'"');
+					// Get output setting
+					$output_mode = isset($this->settings['download_display'])?$this->settings['download_display']:'';
+
+					// Switch headers according to output setting
+					if ( $output_mode == 'display' ) {
+						header('Content-type: application/pdf');
+						header('Content-Disposition: inline; filename="'.$filename.'"');
+					} else {
+						header('Content-Description: File Transfer');
+						header('Content-Type: application/octet-stream');
+						header('Content-Disposition: attachment; filename="'.$filename.'"'); 
+						header('Content-Transfer-Encoding: binary');
+						header('Connection: Keep-Alive');
+						header('Expires: 0');
+						header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+						header('Pragma: public');
+					}
+
+					// stream data
 					echo urldecode($pdf_data);
 				} elseif (isset($decode->error)) {
 					echo 'Error: ' . $decode->error;
@@ -436,9 +453,11 @@ class WC_MyParcel_Export {
 			} else {
 				echo '<p>De geselecteerde orders zijn succesvol verwerkt bij MyParcel.<br />';		
 			}
+			$target = ( isset($this->settings['download_display']) && $this->settings['download_display'] == 'display') ? 'target="_blank"' : '';
+
 ?>
 Hieronder kunt u de labels in PDF formaat downloaden.</p>
-<?php printf('<a href="%1$s"><img src="%2$s"></a>', $pdf_url, dirname(plugin_dir_url(__FILE__)) . '/img/download-pdf.png'); ?>
+<?php printf('<a href="%1$s" %2$s><img src="%3$s"></a>', $pdf_url, $target, dirname(plugin_dir_url(__FILE__)) . '/img/download-pdf.png'); ?>
 <p><strong>Let op!</strong><br />
 Uw pakket met daarop het verzendetiket dient binnen 9 werkdagen na het aanmaken bij PostNL binnen te zijn. Daarna verliest het zijn geldigheid.
 </body></html>

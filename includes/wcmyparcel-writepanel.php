@@ -41,6 +41,9 @@ class WC_MyParcel_Writepanel {
 		$pdf_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&order_ids=' . $post_id ), 'wcmyparcel-label' );
 		$export_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $post_id ), 'wcmyparcel' );
 
+		$target = ( isset($this->settings['download_display']) && $this->settings['download_display'] == 'display') ? 'target="_blank"' : '';
+
+
 		if (get_post_meta($post_id,'_myparcel_consignment_id',true)) {
 			$consignment_id = get_post_meta($post_id,'_myparcel_consignment_id',true);
 
@@ -56,7 +59,7 @@ class WC_MyParcel_Writepanel {
 			?>
 			<ul>
 				<li>
-					<a href="<?php echo $pdf_link; ?>" class="button" alt="Download label (PDF)">Download label (PDF)</a>
+					<a href="<?php echo $pdf_link; ?>" class="button" alt="Download label (PDF)" <?php echo $target; ?>>Download label (PDF)</a>
 				</li>
 				<li>Status: <?php echo $tnt_status ?></li>
 				<li>Track&Trace code: <a href="<?php echo $tracktrace_url; ?>"><?php echo $tracktrace; ?></a></li>
@@ -110,9 +113,11 @@ class WC_MyParcel_Writepanel {
 
 		$pdf_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&order_ids=' . $order->id ), 'wcmyparcel-label' );
 		$export_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $order->id ), 'wcmyparcel' );
+
+		$target = ( isset($this->settings['download_display']) && $this->settings['download_display'] == 'display') ? 'target="_blank"' : '';
 		if (!empty($consignment_id)) {
 			?>
-			<a href="<?php echo $pdf_link; ?>" class="button tips myparcel" alt="Print MyParcel label" data-tip="Print MyParcel label">
+			<a href="<?php echo $pdf_link; ?>" class="button tips myparcel" alt="Print MyParcel label" data-tip="Print MyParcel label" <?php echo $target; ?>>
 				<img src="<?php echo dirname(plugin_dir_url(__FILE__)) . '/img/myparcel-pdf.png'; ?>" alt="Print MyParcel label">
 			</a>
 			<a href="<?php echo $export_link; ?>" class="button tips myparcel one-myparcel" alt="Exporteer naar MyParcel" data-tip="Exporteer naar MyParcel">
