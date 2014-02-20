@@ -367,6 +367,7 @@ class WC_MyParcel_Settings {
 	public function default_settings() {
 		$default = array(
 			'process'			=> '1',
+			'download_display'	=> 'download',
 			'email'				=> '1',
 			'telefoon'			=> '1',
 			'extragroot'		=> '0',
