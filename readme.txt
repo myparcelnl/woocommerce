@@ -57,6 +57,9 @@ Send an email to info@myparcel.nl with your account name and you will be sent al
 
 == Changelog ==
 
+= 1.3.6 =
+* Feature: Option to download PDF or display in browser
+
 = 1.3.5 =
 * Fix: Errors when trashing & restoring trashed orders
 
