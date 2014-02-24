@@ -167,15 +167,17 @@ class WC_MyParcel_Export {
 				}
 
 				// put order_id in key!
-				$decode = array_combine(array_keys($array['consignments']), array_values($decode));
+				$decode = array_combine( array_keys($array['consignments']), array_values($decode) );
 				
 				//die( print_r( $decode, true ) ); //for debugging
 
 				$consignment_list = array();
+				$order_ids = array();
 				$error = array();
 				foreach ($decode as $order_id => $order_decode ) {
 					if ( !isset($order_decode['error']) ) {
 						$consignment_id = $order_decode['consignment_id'];
+						$order_ids[] = $order_id;
 						$consignment_list[] = $consignment_id; //collect consigment_ids in an array for pdf retreival
 						$tracktrace = $order_decode['tracktrace'];
 
@@ -189,7 +191,8 @@ class WC_MyParcel_Export {
 				}
 
 				$consignment_list_flat = implode('x', $consignment_list);
-				$pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignment=' . $consignment_list_flat ), 'wcmyparcel-label' );					
+				$order_ids_flat = implode('x', $order_ids);
+				$pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignment=' . $consignment_list_flat . '&order_ids=' . $order_ids_flat ), 'wcmyparcel-label' );
 				
 				$this->export_done($pdf_url, $consignment_list, $error);
 
@@ -202,17 +205,24 @@ class WC_MyParcel_Export {
 				if (isset($this->settings['error_logging']))
 					file_put_contents($this->log_file, date("Y-m-d H:i:s")." Label request\n", FILE_APPEND);
 
-				if ( isset($_GET['consignment']) ) {
-					$consignment_id_encoded = $_GET['consignment'];
-				} elseif ( isset($_GET['order_ids']) ) {
-					$order_ids = explode('x',$_GET['order_ids']);
-					$consignment_list = array();
+				$order_ids = explode('x',$_GET['order_ids']);
+
+				$consignment_list = array();
+
+				if ( !isset($_GET['consignment']) ) {
+					// Bulk export label
 					foreach ($order_ids as $order_id) {
 						if (get_post_meta($order_id,'_myparcel_consignment_id',true)) {
 							$order_consignment_id = get_post_meta($order_id,'_myparcel_consignment_id',true);
 							$consignment_list[$order_id] = $order_consignment_id;
 						}
 					}
+					$consignment_id_encoded = implode('x', $consignment_list);					
+				} else {
+					// Label request from modal (directly after export)
+					// consignments already given!
+					$consignments = explode('x',$_GET['consignment']);
+					$consignment_list = array_combine($order_ids, $consignments);
 					$consignment_id_encoded = implode('x', $consignment_list);					
 				}
 
