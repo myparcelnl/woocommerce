@@ -381,7 +381,7 @@ class WC_NLPostcode_Fields {
 	 */
 	public function save_custom_fields($post_id) {
 		global $post_type;
-		if( $post_type == 'shop_order'  && !empty($_POST) ) {
+		if( $post_type == 'shop_order' && !empty($_POST) ) {
 			update_post_meta( $post_id, '_billing_street_name', stripslashes( $_POST['_billing_street_name'] ));
 			update_post_meta( $post_id, '_billing_house_number', stripslashes( $_POST['_billing_house_number'] ));
 			update_post_meta( $post_id, '_billing_house_number_suffix', stripslashes( $_POST['_billing_house_number_suffix'] ));
@@ -400,23 +400,35 @@ class WC_NLPostcode_Fields {
 	 * @return void
 	 */
 	public function merge_street_number_suffix ( $order_id ) {
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
+			// old versions use 'shiptobilling'
+			$ship_to_different_address = isset($_POST['shiptobilling'])?false:true;
+		} else {
+			// WC2.1
+			$ship_to_different_address = isset($_POST['ship_to_different_address'])?true:false;
+		}
+
+
+		// file_put_contents('postdata.txt', print_r($_POST,true)); // for debugging
 		// check if country is NL
-		if ( $_POST['shipping_country'] == 'NL' ) {
+		if ( $_POST['billing_country'] == 'NL' ) {
 			// concatenate street & house number & copy to 'billing_address_1'
 			$billing_house_number = $_POST['billing_house_number'] . (!empty($_POST['billing_house_number_suffix'])?'-' . $_POST['billing_house_number_suffix']:'');
 			$billing_address_1 = $_POST['billing_street_name'] . ' ' . $billing_house_number;
 			update_post_meta( $order_id,  '_billing_address_1', $billing_address_1 );
 
 			// check if 'ship to billing address' is checked
-			if ( $_POST['shiptobilling'] ) {
+			if ( $ship_to_different_address == false ) {
 				// use billing address
 				update_post_meta( $order_id,  '_shipping_address_1', $billing_address_1 );
-			} else {
-				// concatenate street & house number & copy to 'shipping_address_1'
-				$shipping_house_number = $_POST['shipping_house_number'] . (!empty($_POST['shipping_house_number_suffix'])?'-' . $_POST['shipping_house_number_suffix']:'');
-				$shipping_address_1 = $_POST['shipping_street_name'] . ' ' . $shipping_house_number;
-				update_post_meta( $order_id,  '_shipping_address_1', $shipping_address_1 );
 			}
+		}
+
+		if ( $_POST['shipping_country'] == 'NL' && $ship_to_different_address == true) {
+			// concatenate street & house number & copy to 'shipping_address_1'
+			$shipping_house_number = $_POST['shipping_house_number'] . (!empty($_POST['shipping_house_number_suffix'])?'-' . $_POST['shipping_house_number_suffix']:'');
+			$shipping_address_1 = $_POST['shipping_street_name'] . ' ' . $shipping_house_number;
+			update_post_meta( $order_id,  '_shipping_address_1', $shipping_address_1 );
 		}
 		return;
 	}
