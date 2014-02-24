@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 3.8.1 & WooCommerce 2.1
-Stable tag: 1.3.5
+Stable tag: 1.3.6
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -59,6 +59,8 @@ Send an email to info@myparcel.nl with your account name and you will be sent al
 
 = 1.3.6 =
 * Feature: Option to download PDF or display in browser
+* Fix: warnings when debug set to true & downloading labels directly after exporting
+* Fix: WooCommerce 2.1 bug with copying foreign address data
 
 = 1.3.5 =
 * Fix: Errors when trashing & restoring trashed orders
