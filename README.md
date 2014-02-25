@@ -3,7 +3,7 @@ Welcome to the WooCommerce MyParcel repository on GitHub. Here you can browse th
 
 This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl). Single orders exports aswell as batch exports are possible.
 
-= Main features =
+## Main features
 - Export single orders or batches of orders
 - Define preset MyParcel shipping options (signature required, extra insurance, etc.)
 - Modify the MyParcel shipping options per order before exporting
