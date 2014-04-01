@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 3.8.1 & WooCommerce 2.1
-Stable tag: 1.3.6
+Stable tag: 1.3.7
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -43,11 +43,35 @@ In the search field type "WooCommerce MyParcel" and click Search Plugins. You ca
 2. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installation's wp-content/plugins/ directory.
 3. Activate the plugin from the Plugins menu within the WordPress admin.
 
+= Setting up the plugin =
+1. Go to the menu `settings > MyParcel`.
+2. Fill in your API Details. If you don't have API details, send an email to info@myparcel.nl with your account name and you will be sent all necessary information.
+3. Under 'Default export settings' you can set options that should be set by default for the export. You can change these settings per order at the time of export.
+4. The plugin is ready to be used!
+
+= Testing =
+We advise you to test the whole checkout procedure once to see if everything works as it should. Pay special attention to the following:
+
+The MyParcel plugin adds extra fields to the checkout of your webshop, to make it possible for the client to add street name, number and optional additions separately. This way you can be sure that everything is entered correctly. Because not all checkouts are configured alike, it's possible that the positioning/alignment of these extra fields have to be adjusted.
+
+Moreover, after a label is created, a track&trace code is added to the order. When the order is completed from WooCommerce, this track & trace code is added to the email (when this is enabled in the settings). Check that the code is correctly displayed in your template. You can read how to change the text in the FAQ section.
+
 == Frequently Asked Questions ==
 
-= How do I get an API key =
+= How do I get an API key? =
 
 Send an email to info@myparcel.nl with your account name and you will be sent all necessary information.
+
+= How do I change the track&trace email text? =
+You can change the text (which is placed above the order details table by default) by applying the following filter:
+`
+add_filter( 'wcmyparcel_email_text', 'wcmyparcel_new_email_text' );
+function wcmyparcel_new_email_text($track_trace_tekst) {
+	// Tutoyeren ipv vousvoyeren
+	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende PostNL track&trace nummer:';
+	return $nieuwe_tekst;
+}
+`
 
 == Screenshots ==
 
@@ -56,6 +80,9 @@ Send an email to info@myparcel.nl with your account name and you will be sent al
 3. View the status of the shipment on the order details page.
 
 == Changelog ==
+
+= 1.3.7 =
+* Fix: Checkout placeholder data was being saved in older versions of Internet Explorer
 
 = 1.3.6 =
 * Feature: Option to download PDF or display in browser
