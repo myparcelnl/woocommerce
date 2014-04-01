@@ -40,9 +40,12 @@ class WC_NLPostcode_Fields {
 		add_action( 'save_post', array( &$this,'save_custom_fields' ) );
 
 		// Processing checkout
-		add_action('woocommerce_checkout_update_order_meta', array( &$this, 'merge_street_number_suffix' ) );			
-		add_filter('woocommerce_process_checkout_field_billing_postcode', array( &$this, 'clean_billing_postcode' ) );			
-		add_filter('woocommerce_process_checkout_field_shipping_postcode', array( &$this, 'clean_shipping_postcode' ) );	
+		add_action('woocommerce_checkout_update_order_meta', array( &$this, 'merge_street_number_suffix' ) );
+		add_filter('woocommerce_process_checkout_field_billing_postcode', array( &$this, 'clean_billing_postcode' ) );
+		add_filter('woocommerce_process_checkout_field_shipping_postcode', array( &$this, 'clean_shipping_postcode' ) );
+
+		// Remove placeholder values (IE8 & 9)
+		add_action('woocommerce_checkout_update_order_meta', array( &$this, 'remove_placeholders' ), 10, 2 );
 
 		$this->load_woocommerce_filters();
 	}
@@ -445,6 +448,44 @@ class WC_NLPostcode_Fields {
 	public function clean_shipping_postcode ( ) {
 		$shipping_postcode = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['shipping_postcode']);		
 		return $shipping_postcode;
+	}
+
+	/**
+	 * Remove placeholders from posted checkout data
+	 * @param  string $order_id order_id of the new order
+	 * @param  array  $posted   Array of posted form data
+	 * @return void
+	 */
+	public function remove_placeholders( $order_id, $posted ) {
+		// get default address fields with their placeholders
+		$countries = new WC_Countries;
+		$fields = $countries->get_default_address_fields();
+
+		// define order_comments placeholder
+		$order_comments_placeholder = _x('Notes about your order, e.g. special notes for delivery.', 'placeholder', 'woocommerce');
+
+		// check the billing & shipping fields
+		$field_types = array('billing','shipping');
+		$check_fields = array('address_1','address_2','city','state','postcode');
+		foreach ($field_types as $field_type) {
+			foreach ($check_fields as $check_field) {
+				file_put_contents(ABSPATH.'field_check.txt', $posted[$field_type.'_'.$check_field] .' || '. $fields[$check_field]['placeholder']."\n",FILE_APPEND);
+				if ( $posted[$field_type.'_'.$check_field] == $fields[$check_field]['placeholder'] ) {
+					update_post_meta( $order_id, '_'.$field_type.'_'.$check_field, '' );
+				}
+			}
+		}
+
+		// check the order comments field		
+		if ($posted['order_comments'] == $order_comments_placeholder ) {
+			wp_update_post( array(
+				'ID'			=> $order_id,
+				'post_excerpt'	=> '',
+				)
+			);			
+		}
+		
+		return;
 	}
 
 	/**
