@@ -15,7 +15,6 @@ jQuery(document).ready(function($) {
 		$('#shipping_street_name_field').hide();
 		$('#shipping_house_number_field').hide();
 		$('#shipping_house_number_suffix_field').hide();
-
 	}
 	
 
