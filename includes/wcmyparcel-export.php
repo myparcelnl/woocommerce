@@ -71,7 +71,7 @@ class WC_MyParcel_Export {
 				if (!isset($_POST['data'])) 
 					die('Er zijn geen orders om te exporteren!');
 
-				// stripslashes! Wordpress always slashess...
+				// stripslashes! Wordpress always slashess... http://stackoverflow.com/q/8949768/1446634
 				$post_data = json_decode(stripslashes(json_encode($_POST['data'], JSON_HEX_APOS)), true);
 
 				$array = array(
@@ -139,7 +139,7 @@ class WC_MyParcel_Export {
 				$username = $this->settings['api_username'];
 				$api_key = $this->settings['api_key'];
 				
-				// create GET string
+				// create GET/POST string
 				$string = implode('&', array(
 					'json=' . $json,
 					'nonce=' . $nonce,
@@ -149,13 +149,31 @@ class WC_MyParcel_Export {
 				));
 			
 				// create hash
-				$signature = hash_hmac('sha1', 'GET' . '&' . urlencode($string), $api_key);
-			
-				$request = $target_site_api . 'create-consignments/?' . $string . '&signature=' . $signature;
+				$signature = hash_hmac('sha1', 'POST' . '&' . urlencode($string), $api_key);
+
+				// sign string
+				$string = $string . '&signature=' . $signature;
+
+				// Prepare post data
+				$opts = array('http' =>
+					array(
+						'method'  => 'POST',
+						'header'  => 'Content-type: application/x-www-form-urlencoded',
+						'content' => $string
+					)
+				);
+				$context  = stream_context_create($opts);
 				
+				// request URL
+				$request = $target_site_api . 'create-consignments/';
+				
+				// ERROR LOGGING
+				if (isset($this->settings['error_logging']))
+					file_put_contents($this->log_file, date("Y-m-d H:i:s")." Post content:\n".$string."\n", FILE_APPEND);
+
 				// process request
-				$result = file_get_contents($request);
-			
+				$result = file_get_contents($request, false, $context);
+
 				// decode result
 				$decode = json_decode(urldecode($result), true);
 
