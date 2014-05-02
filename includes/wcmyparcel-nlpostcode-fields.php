@@ -40,7 +40,7 @@ class WC_NLPostcode_Fields {
 		add_action( 'save_post', array( &$this,'save_custom_fields' ) );
 
 		// Processing checkout
-		add_action('woocommerce_checkout_update_order_meta', array( &$this, 'merge_street_number_suffix' ) );
+		add_action('woocommerce_checkout_update_order_meta', array( &$this, 'merge_street_number_suffix' ), 20, 2 );
 		add_filter('woocommerce_process_checkout_field_billing_postcode', array( &$this, 'clean_billing_postcode' ) );
 		add_filter('woocommerce_process_checkout_field_shipping_postcode', array( &$this, 'clean_shipping_postcode' ) );
 

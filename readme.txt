@@ -81,6 +81,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 1.3.8 =
+* Fix: Big exports now run without any warnings/problems (was limited by the server)
+* Fix: Names, cities etc. with quotes (')
+* Fix: Error on combined foreign & Dutch exports
+* Fix: IE9 compatibility 
+
 = 1.3.7 =
 * Fix: Checkout placeholder data was being saved in older versions of Internet Explorer
 
