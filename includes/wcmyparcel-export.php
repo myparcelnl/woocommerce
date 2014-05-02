@@ -128,7 +128,7 @@ class WC_MyParcel_Export {
 
 				// ERROR LOGGING
 				if (isset($this->settings['error_logging']))
-					file_put_contents($this->log_file, date("Y-m-d H:i:s")." consignment data:\n".print_r($array['consignments'],true)."\n", FILE_APPEND);
+					file_put_contents($this->log_file, date("Y-m-d H:i:s")." consignment data:\n".var_export($array['consignments'],true)."\n", FILE_APPEND);
 				//die( print_r( $array ) );
 
 				$json = urlencode(json_encode($array));
