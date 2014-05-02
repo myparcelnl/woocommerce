@@ -70,7 +70,9 @@ class WC_MyParcel_Export {
 				// Get the data
 				if (!isset($_POST['data'])) 
 					die('Er zijn geen orders om te exporteren!');
-				$post_data = $_POST['data'];
+
+				// stripslashes! Wordpress always slashess...
+				$post_data = json_decode(stripslashes(json_encode($_POST['data'], JSON_HEX_APOS)), true);
 
 				$array = array(
 					'process'		=> isset($this->settings['process'])?1:0, // NOTE: process parameter is active, put on 0 to create a consignment without processing it
