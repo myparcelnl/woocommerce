@@ -84,9 +84,9 @@ class WC_MyParcel_Export {
 						'ToAddress'		=> array(),
 						'ProductCode'	=> array(
 							'signature_on_receipt'	=> (isset($consignment['handtekening'])) ? '1' : '0',
-							'insured'				=> (isset($consignment['verzekerd'])) ? '1' : '0',
 							'return_if_no_answer'	=> (isset($consignment['retourbgg'])) ? '1' : '0',
 							'home_address_only'		=> (isset($consignment['huisadres'])) ? '1' : '0',
+							'home_address_signature'=> (isset($consignment['huishand'])) ? '1' : '0',
 							'mypa_insured'			=> (isset($consignment['huishandverzekerd'])) ? '1' : '0',
 							'insured'				=> (isset($consignment['verzekerd'])) ? '1' : '0',
 							
