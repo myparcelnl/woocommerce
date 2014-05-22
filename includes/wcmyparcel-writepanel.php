@@ -10,12 +10,13 @@ class WC_MyParcel_Writepanel {
 		// Add export action to drop down menu
 		add_action(	'admin_footer-edit.php', array( &$this, 'export_actions' ) ); 
 
-		//Add buttons in order listing
+		// Add buttons in order listing
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'add_listing_actions' ), 20 );
 		
     	// Customer Emails
-		if (isset($this->settings['email_tracktrace']))
+		if (isset($this->settings['email_tracktrace'])) {
 	    	add_action( 'woocommerce_email_before_order_table', array( $this, 'track_trace_email' ), 10, 2 );
+		}
 
 		// Track & trace in my account
 		if (isset($this->settings['myaccount_tracktrace'])) {
@@ -147,7 +148,8 @@ class WC_MyParcel_Writepanel {
     /**
     * Add track&trace to user email
     **/
-    function track_trace_email( $order, $sent_to_admin ) {
+
+    public function track_trace_email( $order, $sent_to_admin ) {
 
     	if ( $sent_to_admin ) return;
 
