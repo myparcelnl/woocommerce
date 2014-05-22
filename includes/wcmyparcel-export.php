@@ -311,6 +311,8 @@ class WC_MyParcel_Export {
 						file_put_contents($this->log_file, print_r($orders_tracktrace,true)."\n", FILE_APPEND);
 					}
 
+					do_action( 'wcmyparcel_before_label_print', $consignment_list );
+
 					$filename  = 'MyParcel';
 					$filename .= '-' . date('Y-m-d') . '.pdf';
 					
