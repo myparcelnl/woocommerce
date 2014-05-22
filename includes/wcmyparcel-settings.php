@@ -121,13 +121,16 @@ class WC_MyParcel_Settings {
 			)
 		);
 
-		
-		// Section.
-		add_settings_section(
-			'default_values',
-			__( 'MyParcel standaard export instellingen', 'wcmyparcel' ),
-			array( &$this, 'section_options_callback' ),
-			$option
+		add_settings_field(
+			'myaccount_tracktrace',
+			__( 'Laat track&trace code op de <em>Mijn Account</em> pagina zien.', 'wcmyparcel' ),
+			array( &$this, 'checkbox_element_callback' ),
+			$option,
+			'general',
+			array(
+				'menu'			=> $option,
+				'id'			=> 'myaccount_tracktrace',
+			)
 		);
 
 		add_settings_field(

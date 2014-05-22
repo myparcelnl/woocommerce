@@ -16,6 +16,11 @@ class WC_MyParcel_Writepanel {
     	// Customer Emails
 		if (isset($this->settings['email_tracktrace']))
 	    	add_action( 'woocommerce_email_before_order_table', array( $this, 'track_trace_email' ), 10, 2 );
+
+		// Track & trace in my account
+		if (isset($this->settings['myaccount_tracktrace'])) {
+			add_filter( 'woocommerce_my_account_my_orders_actions', array( $this, 'track_trace_myaccount' ), 10, 2 );
+		}
 		
 		// Pakjegemak
 		if (isset($this->settings['pakjegemak'])) {
@@ -159,6 +164,20 @@ class WC_MyParcel_Writepanel {
 	
 			<?php
 		}
+	}
+
+	public function track_trace_myaccount( $actions, $order ) {
+		$tracktrace = get_post_meta($order->id,'_myparcel_tracktrace',true);
+		if ( !empty($tracktrace) ) {
+			$tracktrace_url = $this->get_tracktrace_url($order->id);
+
+			$actions['myparcel_tracktrace'] = array(
+				'url'  => $tracktrace_url,
+				'name' => apply_filters( 'wcmyparcel_myaccount_tracktrace_button', __( 'Track&Trace', 'wpo_wcpdf' ) )
+			);				
+		}
+
+		return $actions;
 	}
 
 	public function get_tracktrace_url($order_id) {
