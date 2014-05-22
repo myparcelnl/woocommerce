@@ -53,8 +53,8 @@ class WC_MyParcel_Settings {
 	
 		// Section.
 		add_settings_section(
-			'api_credentials',
-			__( 'MyParcel API login-gegevens', 'wcmyparcel' ),
+			'general',
+			__( 'Algemene instellingen', 'wcmyparcel' ),
 			array( &$this, 'section_options_callback' ),
 			$option
 		);
@@ -64,7 +64,7 @@ class WC_MyParcel_Settings {
 			__( 'Gebruikersnaam', 'wcmyparcel' ),
 			array( &$this, 'text_element_callback' ),
 			$option,
-			'api_credentials',
+			'general',
 			array(
 				'menu'			=> $option,
 				'id'			=> 'api_username',
@@ -78,7 +78,7 @@ class WC_MyParcel_Settings {
 			__( 'API key', 'wcmyparcel' ),
 			array( &$this, 'text_element_callback' ),
 			$option,
-			'api_credentials',
+			'general',
 			array(
 				'menu'			=> $option,
 				'id'			=> 'api_key',
@@ -87,12 +87,22 @@ class WC_MyParcel_Settings {
 			)
 		);
 
-		// Section.
-		add_settings_section(
-			'email',
-			__( 'WooCommerce email instellingen', 'wcmyparcel' ),
-			array( &$this, 'section_options_callback' ),
-			$option
+		add_settings_field(
+			'download_display',
+			__( 'Labelweergave', 'wpo_wcpdf' ),
+			array( &$this, 'radio_element_callback' ),
+			$option,
+			'general',
+			array(
+				'menu'			=> $option,
+				'id'			=> 'download_display',
+				'options' 		=> array(
+					'download'	=> __( 'Download PDF' , 'wcmyparcel' ),
+					'display'	=> __( 'Open de PDF in een nieuw venster/tab' , 'wcmyparcel' ),
+				),
+			)
+		);
+
 		add_settings_field(
 			'auto_complete',
 			__( 'Zet orders automatisch op voltooid na (succesvolle) MyParcel export', 'wcmyparcel' ),
@@ -106,6 +116,17 @@ class WC_MyParcel_Settings {
 			)
 		);		
 
+		add_settings_field(
+			'process',
+			__( 'Verwerk labels direct', 'wcmyparcel' ),
+			array( &$this, 'checkbox_element_callback' ),
+			$option,
+			'general',
+			array(
+				'menu'			=> $option,
+				'id'			=> 'process',
+				'description'	=> __( 'Wanneer u deze optie ingeschakeld heeft, worden de orders bij het exporteren naar MyParcel direct verwerkt.', 'wcmyparcel' )
+			)
 		);
 
 		add_settings_field(
@@ -113,7 +134,7 @@ class WC_MyParcel_Settings {
 			__( 'Email track&trace code', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
-			'email',
+			'general',
 			array(
 				'menu'			=> $option,
 				'id'			=> 'email_tracktrace',
@@ -175,6 +196,14 @@ class WC_MyParcel_Settings {
 			)
 		);
 
+		// Section.
+		add_settings_section(
+			'default_values',
+			__( 'Standaard export instellingen', 'wcmyparcel' ),
+			array( &$this, 'section_options_callback' ),
+			$option
+		);
+
 		add_settings_field(
 			'email',
 			__( 'Koppel emailadres klant', 'wcmyparcel' ),
@@ -203,7 +232,8 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'extragroot',
-			__( 'Extra groot formaat (+ € 2.19)', 'wcmyparcel' ),
+			__( 'Extra groot formaat (+ &euro;
+ 2.19)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
@@ -216,7 +246,8 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'huisadres',
-			__( 'Niet bij buren bezorgen (+ € 0.26)', 'wcmyparcel' ),
+			__( 'Niet bij buren bezorgen (+ &euro;
+ 0.26)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
@@ -228,7 +259,8 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'handtekening',
-			__( 'Handtekening voor ontvangst (+ € 0.33)', 'wcmyparcel' ),
+			__( 'Handtekening voor ontvangst (+ &euro;
+ 0.33)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
@@ -241,7 +273,8 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'huishand',
-			__( 'Niet bij buren bezorgen + Handtekening voor ontvangst (+ € 0.40)', 'wcmyparcel' ),
+			__( 'Niet bij buren bezorgen + Handtekening voor ontvangst (+ &euro;
+ 0.40)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
@@ -254,7 +287,9 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'huishandverzekerd',
-			__( 'Niet bij buren bezorgen + Handtekening voor ontvangst + verzekerd tot € 50 (+ € 0.50)', 'wcmyparcel' ),
+			__( 'Niet bij buren bezorgen + Handtekening voor ontvangst + verzekerd tot &euro;
+ 50 (+ &euro;
+ 0.50)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
@@ -280,7 +315,8 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'verzekerd',
-			__( 'Verhoogd aansprakelijk (+ € 1.58 per 500 euro verzekerd)', 'wcmyparcel' ),
+			__( 'Verhoogd aansprakelijk (+ &euro;
+ 1.58 per 500 euro verzekerd)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
@@ -314,7 +350,7 @@ class WC_MyParcel_Settings {
 			array(
 				'menu'			=> $option,
 				'id'			=> 'bericht',
-				'description'	=> __( "Met deze optie kunt u een optioneel bericht aan de zending toevoegen. Deze kunt u later terug lezen in uw overzicht zendingen. Deze tekst komt niet terug op het etiket, maar is door de klant wel terug te vinden op de track&trace pagina van PostNL onder 'Referentie'", 'wcmyparcel' ),
+				'description'	=> __( "Met deze optie kunt u een optioneel bericht aan de zending toevoegen. Deze kunt u later terug lezen in uw overzicht zendingen. Deze tekst komt niet terug op het etiket, maar is door de klant wel terug te vinden op de track&trace pagina van PostNL onder 'Referentie'. Gebruik de code <strong>[ORDER_NR]</strong> om het WooCommerce ordernummer automatisch in te laten vullen.", 'wcmyparcel' ),
 			)
 		);
 
@@ -327,7 +363,7 @@ class WC_MyParcel_Settings {
 			array(
 				'menu'			=> $option,
 				'id'			=> 'kenmerk',
-				'description'	=> __( "Met deze optie kunt u een kenmerk aan de zending toevoegen. Deze wordt linksboven op het label geprint en hierop kan later in het overzicht zendingen gezocht of geordend worden.", 'wcmyparcel' ),
+				'description'	=> __( "Met deze optie kunt u een kenmerk aan de zending toevoegen. Deze wordt linksboven op het label geprint en hierop kan later in het overzicht zendingen gezocht of geordend worden. Ook hier kunt u de code <strong>[ORDER_NR]</strong> gebruiken.", 'wcmyparcel' ),
 			)
 		);
 
