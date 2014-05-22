@@ -93,6 +93,19 @@ class WC_MyParcel_Settings {
 			__( 'WooCommerce email instellingen', 'wcmyparcel' ),
 			array( &$this, 'section_options_callback' ),
 			$option
+		add_settings_field(
+			'auto_complete',
+			__( 'Zet orders automatisch op voltooid na (succesvolle) MyParcel export', 'wcmyparcel' ),
+			array( &$this, 'checkbox_element_callback' ),
+			$option,
+			'general',
+			array(
+				'menu'			=> $option,
+				'id'			=> 'auto_complete',
+				'description'	=> __( 'Zorg dat <strong>Verwerk labels direct</strong> staat ingeschakeld als u deze optie gebruikt in combinatie met <strong>Email track&trace code</strong>, anders wordt de track&trace code niet mee gestuurd.', 'wcmyparcel' )
+			)
+		);		
+
 		);
 
 		add_settings_field(

@@ -203,6 +203,13 @@ class WC_MyParcel_Export {
 
 						update_post_meta ( $order_id, '_myparcel_consignment_id', $consignment_id );
 						update_post_meta ( $order_id, '_myparcel_tracktrace', $tracktrace );
+
+						// set status to complete
+						if ( isset($this->settings['auto_complete']) ) {
+							$order = new WC_Order( $order_id );
+							$order->update_status( 'completed', 'Order voltooid na MyParcel export' );
+						}
+
 					} else {
 						//$error[$order_id] = $order_decode['error'];
 						$error[$order_id] = implode( ', ', $this->array_flatten($order_decode) );
