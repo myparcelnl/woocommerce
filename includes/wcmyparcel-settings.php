@@ -131,31 +131,44 @@ class WC_MyParcel_Settings {
 		);
 
 		add_settings_field(
-			'download_display',
-			__( 'Labelweergave', 'wpo_wcpdf' ),
-			array( &$this, 'radio_element_callback' ),
+			'pakjegemak',
+			__( 'Voeg PakjeGemak toe aan de WooCommerce checkout', 'wcmyparcel' ),
+			array( &$this, 'checkbox_element_callback' ),
 			$option,
-			'default_values',
+			'general',
 			array(
 				'menu'			=> $option,
-				'id'			=> 'download_display',
-				'options' 		=> array(
-					'download'	=> __( 'Download PDF' , 'wcmyparcel' ),
-					'display'	=> __( 'Open de PDF in een nieuw venster/tab' , 'wcmyparcel' ),
-				),
+				'id'			=> 'pakjegemak',
+				'description'	=> __( 'Steeds meer consumenten kiezen ervoor hun pakket af te halen bij een afhaallocatie in plaats van deze thuis te laten bezorgen. Deze service van PostNL wordt PakjeGemak genoemd. U kunt dit ook aanbieden aan uw klanten.<br/><strong>Let op!</strong> Deze service is niet geoptimaliseerd voor mobiele browsers en werkt daar ook niet zo goed. U zou er voor kunnen kiezen om de pakjegemak knop door middel van CSS te verbergen voor mobiele browsers.', 'wcmyparcel' )
+			)
+		);
+		
+		add_settings_field(
+			'pakjegemak_description',
+			__( 'Omschrijving van PakjeGemak op de checkout pagina', 'wcmyparcel' ),
+			array( &$this, 'textarea_element_callback' ),
+			$option,
+			'general',
+			array(
+				'menu'			=> $option,
+				'id'			=> 'pakjegemak_description',
+				'width'			=> '50',
+				'height'		=> '4',
+				'default'		=> 'Wilt u uw bestelling liever laten versturen naar een afhaallocatie van PostNL? Maak dan gebruik van de PakjeGemak service.',
 			)
 		);
 
 		add_settings_field(
-			'process',
-			__( 'Verwerk labels direct', 'wcmyparcel' ),
-			array( &$this, 'checkbox_element_callback' ),
+			'pakjegemak_button',
+			__( 'Tekst op de pakjegemak knop', 'wcmyparcel' ),
+			array( &$this, 'text_element_callback' ),
 			$option,
-			'default_values',
+			'general',
 			array(
 				'menu'			=> $option,
-				'id'			=> 'process',
-				'description'	=> __( 'Wanneer u deze optie ingeschakeld heeft, worden de orders bij het exporteren naar MyParcel direct verwerkt.', 'wcmyparcel' )
+				'id'			=> 'pakjegemak_button',
+				'size'			=> '50',
+				'default'		=> 'PakjeGemak afhaallocatie kiezen',
 			)
 		);
 
@@ -415,6 +428,30 @@ class WC_MyParcel_Settings {
 		}
 	
 		$html = sprintf( '<input type="text" id="%1$s" name="%2$s[%1$s]" value="%3$s" size="%4$s"/>', $id, $menu, $current, $size );
+	
+		// Displays option description.
+		if ( isset( $args['description'] ) ) {
+			$html .= sprintf( '<p class="description">%s</p>', $args['description'] );
+		}
+	
+		echo $html;
+	}
+
+	public function textarea_element_callback( $args ) {
+		$menu = $args['menu'];
+		$id = $args['id'];
+		$width = $args['width'];
+		$height = $args['height'];
+	
+		$options = get_option( $menu );
+	
+		if ( isset( $options[$id] ) ) {
+			$current = $options[$id];
+		} else {
+			$current = isset( $args['default'] ) ? $args['default'] : '';
+		}
+	
+		$html = sprintf( '<textarea id="%1$s" name="%2$s[%1$s]" cols="%4$s" rows="%5$s"/>%3$s</textarea>', $id, $menu, $current, $width, $height );
 	
 		// Displays option description.
 		if ( isset( $args['description'] ) ) {

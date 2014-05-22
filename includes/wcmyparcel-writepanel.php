@@ -17,6 +17,11 @@ class WC_MyParcel_Writepanel {
 		if (isset($this->settings['email_tracktrace']))
 	    	add_action( 'woocommerce_email_before_order_table', array( $this, 'track_trace_email' ), 10, 2 );
 		
+		// Pakjegemak
+		if (isset($this->settings['pakjegemak'])) {
+			add_action( 'woocommerce_checkout_before_customer_details', array( $this, 'pakjegemak' ), 10, 1 );
+		}
+
 	}
 
 	/**
@@ -171,4 +176,74 @@ class WC_MyParcel_Writepanel {
 
 		return $tracktrace_url;
 	}
+
+	/**
+	 * Add pakjegemak button to checkout
+	 */
+	
+	public function pakjegemak() {
+		$username = $this->settings['api_username'];
+		$api_key = $this->settings['api_key'];
+
+		$webshop = plugin_dir_url( __FILE__ ) . '/wcmyparcel-pakjegemak-passdata.html';
+		$hash = hash_hmac('sha1', $username . 'MyParcel' . $webshop, $api_key);
+
+		// check for secure context
+		$context = is_ssl() ? 'https' : 'http';
+
+		$popup_url = sprintf('%s://www.myparcel.nl/pakjegemak-locatie?hash=%s&webshop=%s&user=%s', $context, $hash, $webshop, $username);
+
+
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
+			// old versions use 'shiptobilling'
+			$stda = 'shiptobilling';
+			$stda_checked = 'false'; // uncheck for alternate shipping address			
+		} else {
+			// WC2.1
+			$stda = 'ship-to-different-address';
+			$stda_checked = 'true'; // check for alternate shipping address			
+		}
+
+		// Create page text/HTML
+		$omschrijving	= $this->settings['pakjegemak_description'];
+		$knop			= $this->settings['pakjegemak_button'];
+
+		ob_start();
+		?>
+		<div class="myparcel-pakjegemak" style="overflow:auto;">
+			<span class="myparcel-pakjegemak-omschrijving"><?php echo $omschrijving; ?></span>
+			<a class="myparcel-pakjegemak button" onclick="return pakjegemak();" style="cursor:pointer; float:right; margin:1em 0"><?php echo $knop; ?></a>
+		</div>
+		<?php
+		// gebruik het filter om je eigen HTML/tekst weer te geven
+		echo apply_filters( 'wcmyparcel_pakjegemak_html', ob_get_clean() );
+		?>
+			<script type="text/javascript">
+			var pg_popup;
+			function pakjegemak()
+			{
+				jQuery( '#<?php echo $stda;?> input' ).prop('checked', <?php echo $stda_checked;?>);
+				jQuery( '#<?php echo $stda;?> input' ).change();
+				jQuery( '#shipping_country' ).val('NL');
+				jQuery( '#shipping_country' ).trigger("chosen:updated")
+				jQuery( '#shipping_country' ).change();
+
+				if(!pg_popup || pg_popup.closed)
+				{
+					pg_popup = window.open(
+						'<?php echo $popup_url; ?>',
+						'myparcel-pakjegemak',
+						'width=980,height=680,dependent,resizable,scrollbars'
+					);
+					if(window.focus) { pg_popup.focus(); }
+				}
+				else
+				{
+					pg_popup.focus();
+				}
+				return false;
+			}
+			</script>
+		<?php
+	}	
 }
