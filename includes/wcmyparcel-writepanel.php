@@ -25,7 +25,7 @@ class WC_MyParcel_Writepanel {
 		
 		// Pakjegemak
 		if (isset($this->settings['pakjegemak'])) {
-			add_action( 'woocommerce_checkout_before_customer_details', array( $this, 'pakjegemak' ), 10, 1 );
+			add_action( apply_filters( 'wcmyparcel_pakjegemak_locatie', 'woocommerce_checkout_before_customer_details' ), array( $this, 'pakjegemak' ), 10, 1 );
 		}
 
 	}
