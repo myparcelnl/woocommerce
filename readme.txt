@@ -2,8 +2,8 @@
 Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 3.8.1 & WooCommerce 2.1
-Stable tag: 1.3.8
+Tested up to: 3.9.1 & WooCommerce 2.1.9
+Stable tag: 1.4.0
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -73,6 +73,30 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 }
 `
 
+= How do I hide PakjeGemak for mobile browsers? =
+The following CSS hides PakjeGemak for all devices smaller than 1024px (which is an iPad in landscape). Note that this also excludes smaller laptop & pc screens, if you want to target different devices more specifically you can extend the @media query. See this site for more details: http://css-tricks.com/snippets/css/media-queries-for-standard-devices/
+
+`
+@media only screen 
+and (max-width : 1024px) {
+	/* iPad en kleiner */
+	.myparcel-pakjegemak {
+		display: none;
+		visibility: hidden;
+	}
+}
+`
+
+= How do I change the PakjeGemak location on the checkout page? =
+You can do that with the following filter, where you replace `woocommerce_checkout_after_customer_details` with the action/location that you need. You can find the actions in `woocommerce/templates/checkout/form-checkout.php`, `woocommerce/templates/checkout/form-billing.php` and `woocommerce/templates/checkout/form-shipping.php` for example. You can also use a custom action.
+
+`
+add_filter( 'wcmyparcel_pakjegemak_locatie', 'wcmyparcel_pakjegemak_move', 10, 1 );
+function wcmyparcel_pakjegemak_move() {
+	return 'woocommerce_checkout_after_customer_details'; // change this into your preferred location
+`
+
+
 == Screenshots ==
 
 1. Export or print myparcel label per order
@@ -80,6 +104,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 3. View the status of the shipment on the order details page.
 
 == Changelog ==
+
+= 1.4.0 =
+* Feature: Print order number on label
+* Feature: PakjeGemak integration
+* Feature: Option to autocomplete order after successful export to MyParcel
+* Feature: Option to display track&trace link on my account page
 
 = 1.3.8 =
 * Fix: Big exports now run without any warnings/problems (was limited by the server)
