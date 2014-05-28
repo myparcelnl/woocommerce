@@ -142,17 +142,17 @@
 								</tr>
 								<tr>
 									<?php if (!isset($this->settings['bericht'])) $this->settings['bericht'] = '';
-									$this->settings['bericht'] = str_replace('[ORDER_NR]', $row['ordernr'], $this->settings['bericht']);
+									$bericht = str_replace('[ORDER_NR]', $row['ordernr'], $this->settings['bericht']);
 									?>
 									<td>Optioneel bericht (niet op label, wel in track&trace)</td>
-									<td><input type="text" name="data[<?php echo $row['orderid']; ?>][bericht]" value="<?php echo $this->settings['bericht']; ?>"></td>
+									<td><input type="text" name="data[<?php echo $row['orderid']; ?>][bericht]" value="<?php echo $bericht; ?>"></td>
 								</tr>
 								<tr>
 									<?php if (!isset($this->settings['kenmerk'])) $this->settings['kenmerk'] = '';
-									$this->settings['kenmerk'] = str_replace('[ORDER_NR]', $row['ordernr'], $this->settings['kenmerk']);
+									$kenmerk = str_replace('[ORDER_NR]', $row['ordernr'], $this->settings['kenmerk']);
 									?>
 									<td>Eigen kenmerk (linksboven op label)</td>
-									<td><input type="text" name="data[<?php echo $row['orderid']; ?>][kenmerk]" value="<?php echo $this->settings['kenmerk']; ?>"></td>
+									<td><input type="text" name="data[<?php echo $row['orderid']; ?>][kenmerk]" value="<?php echo $kenmerk; ?>"></td>
 								</tr>
 							</table>
 						</td>
