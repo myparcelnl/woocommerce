@@ -390,6 +390,7 @@ class WC_MyParcel_Settings {
 			$option
 		);
 
+		/*
 		add_settings_field(
 			'testmode',
 			__( 'Testmodus', 'wcmyparcel' ),
@@ -403,6 +404,7 @@ class WC_MyParcel_Settings {
 				//'description'	=> __( 'Schakel testmodus in wanneer u de connectie met MyParcel eerst wilt testen', 'wcmyparcel' ),
 			)
 		);
+		*/
 
 		$log_file_url = dirname(plugin_dir_url(__FILE__)) . '/myparcel_log.txt';
 		$log_file_path = dirname(dirname(__FILE__)) . '/myparcel_log.txt';
