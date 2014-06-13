@@ -106,6 +106,7 @@ function wcmyparcel_pakjegemak_move() {
 == Changelog ==
 
 = 1.4.1 =
+* Fix: Broken special characters (ë, û, à etc.)
 * Tweak: different API communication mode for secure configuration
 
 = 1.4.0 =
