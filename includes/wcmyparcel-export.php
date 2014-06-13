@@ -71,8 +71,8 @@ class WC_MyParcel_Export {
 				if (!isset($_POST['data'])) 
 					die('Er zijn geen orders om te exporteren!');
 
-				// stripslashes! Wordpress always slashess... http://stackoverflow.com/q/8949768/1446634
-				$post_data = json_decode(stripslashes(json_encode($_POST['data'], JSON_HEX_APOS)), true);
+				// stripslashes! Wordpress always slashes POST data, regardless of magic quotes settings... http://stackoverflow.com/q/8949768/1446634
+				$post_data = stripslashes_deep($_POST['data']);
 
 				$array = array(
 					'process'		=> isset($this->settings['process'])?1:0, // NOTE: process parameter is active, put on 0 to create a consignment without processing it
