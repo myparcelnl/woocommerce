@@ -8,7 +8,7 @@ class WC_MyParcel_Writepanel {
 		add_action( 'add_meta_boxes_shop_order', array( $this, 'add_box' ) );
 
 		// Add export action to drop down menu
-		add_action(	'admin_footer-edit.php', array( &$this, 'export_actions' ) ); 
+		add_action(	'admin_footer', array( &$this, 'export_actions' ) ); 
 
 		// Add buttons in order listing
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'add_listing_actions' ), 20 );
