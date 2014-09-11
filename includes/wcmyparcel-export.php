@@ -382,7 +382,26 @@ class WC_MyParcel_Export {
 				$data['sku'] = $product->get_sku();
 
 				// Set item weight
-				$data['weight'] = $product->get_weight();
+				$weight = $product->get_weight();
+				$weight_unit = get_option( 'woocommerce_weight_unit' );
+				switch ($weight_unit) {
+					case 'kg':
+						$data['weight'] = $weight;
+						break;
+					case 'g':
+						$data['weight'] = $weight / 1000;
+						break;
+					case 'lbs':
+						$data['weight'] = $weight * 0.45359237;
+						break;
+					case 'oz':
+						$data['weight'] = $weight * 0.0283495231;
+						break;
+					default:
+						$data['weight'] = $weight;
+						break;
+				}
+				
 				$data['total_weight'] = $data['quantity']*$data['weight'];
 				
 				// Set item dimensions
