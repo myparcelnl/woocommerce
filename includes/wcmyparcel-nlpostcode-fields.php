@@ -44,6 +44,11 @@ class WC_NLPostcode_Fields {
 		add_filter('woocommerce_process_checkout_field_billing_postcode', array( &$this, 'clean_billing_postcode' ) );
 		add_filter('woocommerce_process_checkout_field_shipping_postcode', array( &$this, 'clean_shipping_postcode' ) );
 
+		// Save the order data in WooCommerce 2.2 or later.
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.2' ) >= 0 ) {
+			add_action( 'woocommerce_checkout_update_order_meta', array( &$this, 'save_order_data' ), 10, 2 );
+		}
+
 		// Remove placeholder values (IE8 & 9)
 		add_action('woocommerce_checkout_update_order_meta', array( &$this, 'remove_placeholders' ), 10, 2 );
 
@@ -211,7 +216,7 @@ class WC_NLPostcode_Fields {
 	 * @param  array $allowed_states states per country
 	 * @return array                 
 	 */
-	function hide_states($allowed_states) {
+	public function hide_states($allowed_states) {
 
 		$hidden_states = array(
 			'AF' => array(),
@@ -509,7 +514,7 @@ class WC_NLPostcode_Fields {
 	 *
 	 * @return array          New NL format.
 	 */
-	function localisation_address_formats( $formats ) {
+	public function localisation_address_formats( $formats ) {
 		// default = $postcode_before_city = "{company}\n{name}\n{address_1}\n{address_2}\n{postcode} {city}\n{country}";
 		$formats['NL'] = "{company}\n{name}\n{address_1}\n{address_2}\n{postcode} {city}\n{country}";
 		return $formats;
@@ -523,7 +528,7 @@ class WC_NLPostcode_Fields {
 	 *
 	 * @return array               New replacements.
 	 */
-	function formatted_address_replacements( $replacements, $args ) {
+	public function formatted_address_replacements( $replacements, $args ) {
 		extract( $args );
 
 		if (!empty($street_name)) {
@@ -541,7 +546,7 @@ class WC_NLPostcode_Fields {
 	 *
 	 * @return array          New address format.
 	 */
-	function order_formatted_billing_address( $address, $order ) {
+	public function order_formatted_billing_address( $address, $order ) {
 		$address['street_name']			= $order->billing_street_name;
 		$address['house_number']		= $order->billing_house_number;
 		$address['house_number_suffix']	= !empty($order->billing_house_number_suffix)?'-'.$order->billing_house_number_suffix:'';
@@ -557,7 +562,7 @@ class WC_NLPostcode_Fields {
 	 *
 	 * @return array          New address format.
 	 */
-	function order_formatted_shipping_address( $address, $order ) {
+	public function order_formatted_shipping_address( $address, $order ) {
 		$address['street_name']			= $order->shipping_street_name;
 		$address['house_number']		= $order->shipping_house_number;
 		$address['house_number_suffix']	= !empty($order->shipping_house_number_suffix)?'-'.$order->shipping_house_number_suffix:'';
@@ -573,7 +578,7 @@ class WC_NLPostcode_Fields {
 	 *
 	 * @return array          New address format.
 	 */
-	function user_column_billing_address( $address, $user_id ) {
+	public function user_column_billing_address( $address, $user_id ) {
 		$address['street_name']			= get_user_meta( $user_id, 'billing_street_name', true );
 		$address['house_number']		= get_user_meta( $user_id, 'billing_house_number', true );
 		$address['house_number_suffix']	= (get_user_meta( $user_id, 'billing_house_number_suffix', true ))?'-'.get_user_meta( $user_id, 'billing_house_number_suffix', true ):'';
@@ -589,7 +594,7 @@ class WC_NLPostcode_Fields {
 	 *
 	 * @return array          New address format.
 	 */
-	function user_column_shipping_address( $address, $user_id ) {
+	public function user_column_shipping_address( $address, $user_id ) {
 		$address['street_name']			= get_user_meta( $user_id, 'shipping_street_name', true );
 		$address['house_number']		= get_user_meta( $user_id, 'shipping_house_number', true );
 		$address['house_number_suffix']	= (get_user_meta( $user_id, 'shipping_house_number_suffix', true ))?'-'.get_user_meta( $user_id, 'shipping_house_number_suffix', true ):'';
@@ -606,12 +611,51 @@ class WC_NLPostcode_Fields {
 	 *
 	 * @return array            New address format.
 	 */
-	function my_account_my_address_formatted_address( $address, $customer_id, $name ) {
+	public function my_account_my_address_formatted_address( $address, $customer_id, $name ) {
 		$address['street_name']			= get_user_meta( $customer_id, $name . '_street_name', true );
 		$address['house_number']		= get_user_meta( $customer_id, $name . '_house_number', true );
 		$address['house_number_suffix']	= (get_user_meta( $customer_id, $name . '_house_number_suffix', true ))?'-'.get_user_meta( $customer_id, $name . '_house_number_suffix', true ):'';
 
 		return $address;
 	}
+
+	/**
+	 * Get a posted address field after sanitization and validation.
+	 *
+	 * @param  string $key
+	 * @param  string $type billing for shipping
+	 *
+	 * @return string
+	 */
+	public function get_posted_address_data( $key, $posted, $type = 'billing' ) {
+		if ( 'billing' === $type || false === $posted['ship_to_different_address'] ) {
+			$return = isset( $posted[ 'billing_' . $key ] ) ? $posted[ 'billing_' . $key ] : '';
+		} else {
+			$return = isset( $posted[ 'shipping_' . $key ] ) ? $posted[ 'shipping_' . $key ] : '';
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Save order data.
+	 *
+	 * @param  int   $order_id
+	 * @param  array $posted
+	 *
+	 * @return void
+	 */
+	public function save_order_data( $order_id, $posted ) {
+		// Billing.
+		update_post_meta( $order_id, '_billing_street_name', $this->get_posted_address_data( 'street_name', $posted ) );
+		update_post_meta( $order_id, '_billing_house_number', $this->get_posted_address_data( 'house_number', $posted ) );
+		update_post_meta( $order_id, '_billing_house_number_suffix', $this->get_posted_address_data( 'house_number_suffix', $posted ) );
+
+		// Shipping.
+		update_post_meta( $order_id, '_shipping_street_name', $this->get_posted_address_data( 'street_name', $posted, 'shipping' ) );
+		update_post_meta( $order_id, '_shipping_house_number', $this->get_posted_address_data( 'house_number', $posted, 'shipping' ) );
+		update_post_meta( $order_id, '_shipping_house_number_suffix', $this->get_posted_address_data( 'house_number_suffix', $posted, 'shipping' ) );
+	}
+
 }
 }
