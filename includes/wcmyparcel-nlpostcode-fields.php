@@ -484,7 +484,7 @@ class WC_NLPostcode_Fields {
 		foreach ($field_types as $field_type) {
 			foreach ($check_fields as $check_field) {
 				// file_put_contents(ABSPATH.'field_check.txt', $posted[$field_type.'_'.$check_field] .' || '. $fields[$check_field]['placeholder']."\n",FILE_APPEND);
-				if ( $posted[$field_type.'_'.$check_field] == $fields[$check_field]['placeholder'] ) {
+				if ( isset( $posted[$field_type.'_'.$check_field] ) && $posted[$field_type.'_'.$check_field] == $fields[$check_field]['placeholder'] ) {
 					update_post_meta( $order_id, '_'.$field_type.'_'.$check_field, '' );
 
 					// also clear shipping field when ship_to_different_address is false
