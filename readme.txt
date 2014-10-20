@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.0 & WooCommerce 2.2.2
-Stable tag: 1.4.3
+Stable tag: 1.4.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -104,6 +104,9 @@ function wcmyparcel_pakjegemak_move() {
 3. View the status of the shipment on the order details page.
 
 == Changelog ==
+
+= 1.4.4 =
+* Fix: error for missing shipping fields
 
 = 1.4.3 =
 * Fix: WooCommerce 2.2+ compatibility
