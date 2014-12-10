@@ -68,6 +68,14 @@ jQuery(document).ready(function($) {
 			$streetfield.hide();
 			$numberfield.hide();
 			$suffixfield.hide();
+
+			// Unmark required fields
+			$streetfield.find('label abbr').remove();
+			$numberfield.find('label abbr').remove();
+
+			// Remove validation required classes
+			$streetfield.removeClass('validate-required');
+			$numberfield.removeClass('validate-required');
 		}
 		
 		if ( typeof locale[country] != 'undefined' ) {
