@@ -248,7 +248,6 @@ class WC_MyParcel_Writepanel {
 				jQuery( '#shipping_country' ).val('NL');
 				jQuery( '#shipping_country' ).trigger("chosen:updated")
 				jQuery( '#shipping_country' ).change();
-
 				if(!pg_popup || pg_popup.closed)
 				{
 					pg_popup = window.open(
