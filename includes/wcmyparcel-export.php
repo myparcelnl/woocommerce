@@ -499,12 +499,13 @@ class WC_MyParcel_Export {
 		}
 		if (!empty($consignment_list)) {
 			if (!empty($error)) {
-				echo '<p>De overige orders zijn succesvol verwerkt bij MyParcel.<br />';
+				echo '<p>De overige orders zijn succesvol verzonden naar MyParcel.<br />';
 			} else {
-				echo '<p>De geselecteerde orders zijn succesvol verwerkt bij MyParcel.<br />';		
+				echo '<p>De geselecteerde orders zijn succesvol verzonden naar MyParcel.<br />';		
 			}
 			$target = ( isset($this->settings['download_display']) && $this->settings['download_display'] == 'display') ? 'target="_blank"' : '';
 
+			if ( isset( $this->settings['process'] ) ) :
 ?>
 Hieronder kunt u de labels in PDF formaat downloaden.</p>
 <?php printf('<a href="%1$s" %2$s><img src="%3$s"></a>', $pdf_url, $target, dirname(plugin_dir_url(__FILE__)) . '/img/download-pdf.png'); ?>
@@ -512,6 +513,7 @@ Hieronder kunt u de labels in PDF formaat downloaden.</p>
 Uw pakket met daarop het verzendetiket dient binnen 9 werkdagen na het aanmaken bij PostNL binnen te zijn. Daarna verliest het zijn geldigheid.
 </body></html>
 <?php
+			endif;
 		}
 	}
 
