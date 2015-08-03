@@ -186,14 +186,17 @@ class WC_MyParcel_Writepanel {
 		if (empty($order_id))
 			return;
 
+		$country = get_post_meta($order_id,'_shipping_country',true);
 		$tracktrace = get_post_meta($order_id,'_myparcel_tracktrace',true);
 		$postcode = preg_replace('/\s+/', '',get_post_meta($order_id,'_shipping_postcode',true));
-		$tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Claim?Barcode=%s&Postalcode=%s', $tracktrace, $postcode);
-		
-		//Check if foreign
-		$country = get_post_meta($order_id,'_shipping_country',true);
-		if ($country != 'NL')
-			$tracktrace_url = add_query_arg( 'Foreign', 'True', $tracktrace_url );
+
+		// set url for NL or foreign orders
+		if ($country == 'NL') {
+			// $tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Inbox/Search?lang=nl&B=%s&P=%s', $tracktrace, $postcode);
+			$tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Claim?Barcode=%s&Postalcode=%s', $tracktrace, $postcode);
+		} else {
+			$tracktrace_url = sprintf('https://www.internationalparceltracking.com/Main.aspx#/track/%s/%s/%s', $tracktrace, $country, $postcode);			
+		}
 
 		return $tracktrace_url;
 	}
