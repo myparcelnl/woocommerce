@@ -22,12 +22,12 @@
 		</tr>
 	</thead>
 	<tbody>
-		<?php $c = true; foreach ($data as $row) : ?>
+		<?php $c = true; foreach ( $form_data as $order_id => $order_data ) : extract( $order_data );?>
 		<tr <?php echo (($c = !$c)?' class="alternate"':'');?>>
 			<td>
 				<table>
 					<tr>
-						<td colspan="2"><strong>Bestelling <?php echo $row['ordernr']; ?></strong></td>
+						<td colspan="2"><strong>Bestelling <?php echo $order->get_order_number(); ?></strong></td>
 					</tr>
 					<tr>
 						<td class="ordercell">
@@ -41,118 +41,136 @@
 								</thead>
 								<tbody>
 								<?php
-								$verpakkingsgewicht = (isset($this->settings['verpakkingsgewicht'])) ? preg_replace("/\D/","",$this->settings['verpakkingsgewicht'])/1000 : 0;
-								$total_weight = $verpakkingsgewicht;
-								foreach ($row['bestelling'] as $product) { 
-									$total_weight += $product['total_weight'];?>
+								$items = $order->get_items();
+								foreach ($items as $item_id => $item) {
+									?>
 									<tr>
-										<td><?php echo $product['quantity'].'x'; ?></td>
-										<td><?php echo $product['name'].$product['variation']; ?></td>
-										<td align="right"><?php echo number_format($product['total_weight'], 3, ',', ' '); ?></td>
+										<td><?php echo $item['qty'].'x'; ?></td>
+										<td><?php echo $this->get_item_display_name ( $item, $order ) ?></td>
+										<td align="right"><?php echo number_format( $this->get_item_weight_kg( $item, $order ), 3, ',', ' '); ?></td>
 									</tr>
 								<?php } ?>
 									<tr>
 										<td>&nbsp;</td>
 										<td>Standaard verpakking</td>
-										<td align="right"><?php echo number_format($verpakkingsgewicht, 3, ',', ' '); ?></td>
+										<td align="right"><?php echo number_format( ( (isset($this->settings['verpakkingsgewicht'])) ? preg_replace("/\D/","",$this->settings['verpakkingsgewicht'])/1000 : 0 ), 3, ',', ' '); ?></td>
 									</tr>
 								</tbody>
 								<tfoot>
 									<tr>
 										<td></td>
 										<td>Totaal:</td>
-										<td align="right"><?php echo number_format($total_weight, 3, ',', ' ');?></td>
+										<td align="right"><?php echo number_format( $consignment['weight'], 3, ',', ' ' );?></td>
 									</tr>
 								</tfoot>
 							</table>
 						</td>
-						<td><p><?php
-							if ( $row['landcode'] == 'NL' && ( empty($row['straat']) || empty($row['huisnummer']) ) ) { ?>
-							<span style="color:red">Deze order bevat geen geldige straatnaam- en huisnummergegevens, en kan daarom niet worden ge-exporteerd! Waarschijnlijk is deze order geplaatst voordat de MyParcel plugin werd geactiveerd. De gegevens kunnen wel handmatig worden ingevoerd in het order scherm.</span>
-							</p>
+						<td><?php
+							if ( $order->shipping_country == 'NL' && ( empty($consignment['ToAddress']['street']) || empty($consignment['ToAddress']['house_number']) ) ) { ?>
+							<p><span style="color:red">Deze order bevat geen geldige straatnaam- en huisnummergegevens, en kan daarom niet worden ge-exporteerd! Waarschijnlijk is deze order geplaatst voordat de MyParcel plugin werd geactiveerd. De gegevens kunnen wel handmatig worden ingevoerd in het order scherm.</span></p>
 						</td>
-					</tr>
-							<?php } else {
-							echo $row['formatted_address'].'<br/>'
-							.$row['telefoon'].'<br/>'
-							.$row['email']; ?></p>
-							<input type="hidden" name="data[<?php echo $row['orderid']; ?>][naam]" value="<?php echo $row['naam'] ?>">
-							<input type="hidden" name="data[<?php echo $row['orderid']; ?>][bedrijfsnaam]" value="<?php echo $row['bedrijfsnaam'] ?>">
-							<input type="hidden" name="data[<?php echo $row['orderid']; ?>][straat]" value="<?php echo $row['straat'] ?>">
-							<input type="hidden" name="data[<?php echo $row['orderid']; ?>][huisnummer]" value="<?php echo $row['huisnummer'] ?>">
-							<input type="hidden" name="data[<?php echo $row['orderid']; ?>][huisnummertoevoeging]" value="<?php echo $row['huisnummertoevoeging'] ?>">
-							<input type="hidden" name="data[<?php echo $row['orderid']; ?>][adres1]" value="<?php echo $row['adres1'] ?>">
-							<input type="hidden" name="data[<?php echo $row['orderid']; ?>][adres2]" value="<?php echo $row['adres2'] ?>">
-							<input type="hidden" name="data[<?php echo $row['orderid']; ?>][postcode]" value="<?php echo $row['postcode'] ?>">
-							<input type="hidden" name="data[<?php echo $row['orderid']; ?>][woonplaats]" value="<?php echo $row['woonplaats'] ?>">
-							<input type="hidden" name="data[<?php echo $row['orderid']; ?>][landcode]" value="<?php echo $row['landcode'] ?>">
-							<input type="hidden" name="data[<?php echo $row['orderid']; ?>][gewicht]" value="<?php echo number_format($total_weight, 2, '.', ''); ?>">
+					</tr> <!-- last row -->
+							<?php
+							} else { // required address data is available
+								// print address
+								echo '<p>'.$order->get_formatted_shipping_address().'<br/>'.$order->billing_phone.'<br/>'.$order->billing_email.'</p>';
+
+								foreach ($consignment['ToAddress'] as $key => $value) {
+									$name = "consignments[{$order_id}][ToAddress][{$key}]";
+									printf('<input type="hidden" name="%s" value="%s">', $name, $value);
+								}
+
+								$name = "consignments[{$order_id}][weight]";
+								printf('<input type="hidden" name="%s" value="%s">', $name, $consignment['weight']);
+							?>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2">
 							<table class="wcmyparcel_settings_table">
 								<tr>
-									<?php if (!isset($this->settings['email'])) $this->settings['email'] = ''; ?>
-									<td>Email adres koppelen</td>
-									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][email]" value="<?php echo $row['email']; ?>" <?php checked("1", $this->settings['email'])?>></td>
-								</tr>
+
+								<?php
+								$option_rows = array(
+									'[ToAddress][email]'	=> array(
+										'label'	=> 'Email adres koppelen',
+										'value'	=> $order->billing_email,
+										'checked'	=> checked( $order->billing_email, $consignment['ToAddress']['email'], false ),
+									),
+									'[ToAddress][phone_number]'	=> array(
+										'label'	=> 'Telefoonnummer koppelen',
+										'value'	=> $order->billing_phone,
+										'checked'	=> checked( $order->billing_phone, $consignment['ToAddress']['phone_number'], false ),
+									),
+									'[extra_size]'	=> array(
+										'label'	=> 'Extra groot formaat (+ &euro; 2.19)',
+										'value'	=> $consignment['extra_size'],
+									),
+									'[ProductCode][home_address_only]'	=> array(
+										'label'	=> 'Niet bij buren bezorgen (+ &euro; 0.26)',
+										'value'	=> $consignment['ProductCode']['home_address_only'],
+									),
+									'[ProductCode][signature_on_receipt]'	=> array(
+										'label'	=> 'Handtekening voor ontvangst (+ &euro; 0.33)',
+										'value'	=> $consignment['ProductCode']['signature_on_receipt'],
+									),
+									'[ProductCode][home_address_signature]'	=> array(
+										'label'	=> 'Niet bij buren bezorgen + Handtekening voor ontvangst (+ &euro; 0.40)',
+										'value'	=> $consignment['ProductCode']['home_address_signature'],
+									),
+									'[ProductCode][mypa_insured]'	=> array(
+										'label'	=> 'Niet bij buren bezorgen + Handtekening voor ontvangst + verzekerd tot &euro; 50 (+ &euro; 0.50)',
+										'value'	=> $consignment['ProductCode']['mypa_insured'],
+									),
+									'[ProductCode][return_if_no_answer]'	=> array(
+										'label'	=> 'Retour bij geen gehoor',
+										'value'	=> $consignment['ProductCode']['return_if_no_answer'],
+									),
+									'[ProductCode][insured]'	=> array(
+										'label'	=> 'Verhoogd aansprakelijk (+ &euro; 1.58 per &euro; 500 verzekerd)',
+										'value'	=> $consignment['ProductCode']['insured'],
+									),
+								);
+								?>
+								<?php foreach ($option_rows as $name => $option_row): ?>
 								<tr>
-									<?php if (!isset($this->settings['telefoon'])) $this->settings['telefoon'] = ''; ?>
-									<td>Telefoonnummer koppelen</td>
-									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][telefoon]" value="<?php echo $row['telefoon']; ?>" <?php checked("1", $this->settings['telefoon'])?>></td>
-								</tr>
-								<tr>
-									<?php if (!isset($this->settings['extragroot'])) $this->settings['extragroot'] = ''; ?>
-									<td>Extra groot formaat (+ &euro; 2.19)</td>
-									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][extragroot]" value="x" <?php checked("1", $this->settings['extragroot'])?>></td>
-								</tr>
-								<tr>
-									<?php if (!isset($this->settings['huisadres'])) $this->settings['huisadres'] = ''; ?>
-									<td>Niet bij buren bezorgen (+ &euro; 0.26)</td>
-									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][huisadres]" value="x" <?php checked("1", $this->settings['huisadres'])?>></td>
-								</tr>
-								<tr>
-									<?php if (!isset($this->settings['handtekening'])) $this->settings['handtekening'] = ''; ?>
-									<td>Handtekening voor ontvangst (+ &euro; 0.33)</td>
-									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][handtekening]" value="x" <?php checked("1", $this->settings['handtekening'])?>></td>
-								</tr>
-								<tr>
-									<?php if (!isset($this->settings['huishand'])) $this->settings['huishand'] = ''; ?>
-									<td>Niet bij buren bezorgen + Handtekening voor ontvangst (+ &euro; 0.40)</td>
-									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][huishand]" value="x" <?php checked("1", $this->settings['huishand'])?>></td>
-								</tr>
-								<tr>
-									<?php if (!isset($this->settings['huishandverzekerd'])) $this->settings['huishandverzekerd'] = ''; ?>
-									<td>Niet bij buren bezorgen + Handtekening voor ontvangst + verzekerd tot &euro; 50 (+ &euro; 0.50)</td>
-									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][huishandverzekerd]" value="x" <?php checked("1", $this->settings['huishandverzekerd'])?>></td>
-								</tr>
-								<tr>
-									<?php if (!isset($this->settings['retourbgg'])) $this->settings['retourbgg'] = ''; ?>
-									<td>Retour bij geen gehoor</td>
-									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][retourbgg]" value="x" <?php checked("1", $this->settings['retourbgg'])?>></td>
-								</tr>
-								<tr>
-									<?php if (!isset($this->settings['verzekerd'])) $this->settings['verzekerd'] = ''; ?>
-									<td>Verhoogd aansprakelijk (+ &euro; 1.58 per &euro; 500 verzekerd)</td>
-									<td><input type="checkbox" name="data[<?php echo $row['orderid']; ?>][verzekerd]" value="x" <?php checked("1", $this->settings['verzekerd'])?>></td>
+									<td><?php echo $option_row['label']; ?></td>
+									<td>
+										<?php
+										$name = "consignments[{$order_id}]{$name}";
+										$checked = isset($option_row['checked'])? $option_row['checked'] : checked( "1", $option_row['value'], false );
+										printf('<input type="checkbox" name="%s" value="%s" %s>', $name, $option_row['value'], $checked );
+										?>
+									</td>
+								</tr>									
+								<?php endforeach ?>
+
 								<tr>
 									<td>Verzekerd bedrag (afgerond in hele in &euro;)</td>
-									<td><input type="text" name="data[<?php echo $row['orderid']; ?>][verzekerdbedrag]" value="" size="5"></td>						
+									<td>
+										<?php
+										$name = "consignments[{$order_id}][insured_amount]";
+										printf('<input type="text" name="%s" value="%s" size="5">', $name, $consignment['insured_amount']);
+										?>
+									</td>
 								</tr>
 								<tr>
-									<?php if (!isset($this->settings['bericht'])) $this->settings['bericht'] = '';
-									$bericht = str_replace('[ORDER_NR]', $row['ordernr'], $this->settings['bericht']);
-									?>
 									<td>Optioneel bericht (niet op label, wel in track&trace)</td>
-									<td><input type="text" name="data[<?php echo $row['orderid']; ?>][bericht]" value="<?php echo $bericht; ?>"></td>
+									<td>
+										<?php
+										$name = "consignments[{$order_id}][comments]";
+										printf('<input type="text" name="%s" value="%s">', $name, $consignment['comments']);
+										?>
+									</td>
 								</tr>
 								<tr>
-									<?php if (!isset($this->settings['kenmerk'])) $this->settings['kenmerk'] = '';
-									$kenmerk = str_replace('[ORDER_NR]', $row['ordernr'], $this->settings['kenmerk']);
-									?>
 									<td>Eigen kenmerk (linksboven op label)</td>
-									<td><input type="text" name="data[<?php echo $row['orderid']; ?>][kenmerk]" value="<?php echo $kenmerk; ?>"></td>
+									<td>
+										<?php
+										$name = "consignments[{$order_id}][custom_id]";
+										printf('<input type="text" name="%s" value="%s">', $name, $consignment['custom_id']);
+										?>
+									</td>
 								</tr>
 							</table>
 						</td>

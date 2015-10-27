@@ -13,9 +13,9 @@ class WC_MyParcel_Export {
 	 */
 			
 	public function __construct() {
+		$this->api = include( 'wcmyparcel-api.php' );
 		add_action( 'load-edit.php', array( &$this, 'wcmyparcel_action' ) ); // Export actions (popup & file export)
 		$this->settings = get_option( 'wcmyparcel_settings' );
-		$this->log_file = dirname(dirname(__FILE__)).'/myparcel_log.txt';
 	}
 
 	/**
@@ -25,171 +25,57 @@ class WC_MyParcel_Export {
 	 * @return void
 	 */
 	public function wcmyparcel_action() {
-		if ( isset($_REQUEST['action']) ) {
+		if ( !isset($_REQUEST['action']) ) {
+			return false;
+		}
+
 		$action = $_REQUEST['action'];
 
 		switch($action) {
 			case 'wcmyparcel':
-				if ( empty($_GET['order_ids']) )
+				if ( empty($_GET['order_ids']) ) {
 					die('U heeft geen orders geselecteerd!');
-				
-				$order_ids = explode('x',$_GET['order_ids']);
-				
-				foreach($order_ids as $order_id){
-					$order_meta = get_post_meta( $order_id );
-					$order = new WC_Order( $order_id );
-					$order_number = $order->get_order_number();
-					$formatted_address = $order->get_formatted_shipping_address();
-					$full_country = new WC_Countries;
-					$data[] = array(
-						'naam'					=> $order_meta['_shipping_first_name'][0].' '.$order_meta['_shipping_last_name'][0],
-						'bedrijfsnaam'			=> $order_meta['_shipping_company'][0],
-						'postcode'				=> $order_meta['_shipping_postcode'][0],
-						'adres1'				=> isset($order_meta['_shipping_address_1'][0])?$order_meta['_shipping_address_1'][0]:'',
-						'adres2'				=> isset($order_meta['_shipping_address_2'][0])?$order_meta['_shipping_address_2'][0]:'',
-						'huisnummer'			=> isset($order_meta['_shipping_house_number'][0])?$order_meta['_shipping_house_number'][0]:'',
-						'huisnummertoevoeging'	=> isset($order_meta['_shipping_house_number_suffix'][0])?$order_meta['_shipping_house_number_suffix'][0]:'',
-						'straat'				=> isset($order_meta['_shipping_street_name'][0])?$order_meta['_shipping_street_name'][0]:'',
-						'woonplaats'			=> $order_meta['_shipping_city'][0],
-						'landcode'				=> $order_meta['_shipping_country'][0],
-						'land'					=> $full_country->countries[$order_meta['_shipping_country'][0]],
-						'email'					=> $order_meta['_billing_email'][0],
-						'telefoon'				=> $order_meta['_billing_phone'][0],
-						'orderid'				=> $order_id,							
-						'ordernr'				=> $order_number,
-						'bestelling'			=> $this->get_order_items( $order_id ),
-						'formatted_address'		=> $formatted_address,
-					);
 				}
 				
+				$order_ids = explode('x',$_GET['order_ids']);
+				$form_data = $this->get_export_form_data( $order_ids );
+				
 				// Include HTML for export page/iframe
-				?><?php include('wcmyparcel-export-html.php'); ?><?php
+				include('wcmyparcel-export-html.php');
 
 				die();
 			break;
 			case 'wcmyparcel-export':
-				// die(print_r($_POST['data'])); // for debugging
-				// ERROR LOGGING
-				$this->log( "Export started" );
-
 				// Get the data
-				if (!isset($_POST['data'])) 
+				if (!isset($_POST['consignments'])) {
 					die('Er zijn geen orders om te exporteren!');
+				}
 
 				// stripslashes! Wordpress always slashes POST data, regardless of magic quotes settings... http://stackoverflow.com/q/8949768/1446634
-				$post_data = stripslashes_deep($_POST['data']);
+				$consignments = stripslashes_deep($_POST['consignments']);
 
-				$array = array(
+				$api_data = array(
 					'process'		=> isset($this->settings['process'])?1:0, // NOTE: process parameter is active, put on 0 to create a consignment without processing it
-					'consignments'	=> array()
+					'consignments'	=> $consignments
 				);
 
-				foreach ($post_data as $order_id => $consignment) {
-					$array['consignments'][$order_id] = array(
-						'ToAddress'		=> array(),
-						'ProductCode'	=> array(
-							'signature_on_receipt'	=> (isset($consignment['handtekening'])) ? '1' : '0',
-							'return_if_no_answer'	=> (isset($consignment['retourbgg'])) ? '1' : '0',
-							'home_address_only'		=> (isset($consignment['huisadres'])) ? '1' : '0',
-							'home_address_signature'=> (isset($consignment['huishand'])) ? '1' : '0',
-							'mypa_insured'			=> (isset($consignment['huishandverzekerd'])) ? '1' : '0',
-							'insured'				=> (isset($consignment['verzekerd'])) ? '1' : '0',
-							
-						),
-						'insured_amount'	=> $consignment['verzekerdbedrag'],
-						'extra_size'		=> (isset($consignment['extragroot'])) ? '1' : '0',
-						'custom_id'			=> (isset($consignment['kenmerk'])) ? $consignment['kenmerk'] : '',
-						'comments'			=> (isset($consignment['bericht'])) ? $consignment['bericht'] : '',
-						'weight'			=> $consignment['gewicht'],
-					);
-
-					if( $consignment['landcode'] == 'NL' ) {
-						$array['consignments'][$order_id]['ToAddress'] = array(
-							'name'			=> $consignment['naam'],
-							'business'		=> $consignment['bedrijfsnaam'],
-							'town'			=> $consignment['woonplaats'],
-							'email'			=> (isset($consignment['email'])) ? $consignment['email'] : '',
-							'phone_number'	=> (isset($consignment['telefoon'])) ? $consignment['telefoon'] : '',
-							// Country specific from here //
-							'postcode'		=> $consignment['postcode'],
-							'house_number'	=> $consignment['huisnummer'],
-							'number_addition' => $consignment['huisnummertoevoeging'],
-							'street'		  => $consignment['straat'],
-						);
-					} else {
-						$array['consignments'][$order_id]['ToAddress'] = array(
-							'name'			=> $consignment['naam'],
-							'business'		=> $consignment['bedrijfsnaam'],
-							'town'			=> $consignment['woonplaats'],
-							'email'			=> (isset($consignment['email'])) ? $consignment['email'] : '',
-							'phone_number'	=> (isset($consignment['telefoon'])) ? $consignment['telefoon'] : '',
-							// Country specific from here //
-							'country_code'	=> $consignment['landcode'],
-							'eps_postcode'	=> $consignment['postcode'],
-							'street'		=> $consignment['adres1'].' '.$consignment['adres2'],
-						);
-					}
-				}
-
-				// ERROR LOGGING
-				$this->log( "consignment data:\n". var_export( $array['consignments'], true ) );
-				//die( print_r( $array ) );
-
 				// Send consignments to MyParcel API
-				$decode = $this->api_request( 'create-consignments', $array);
-				
-				// ERROR LOGGING
-				$this->log( "API response:\n". print_r( $decode, true ) );
-				
-				if (isset($decode['error'])) {
-					echo $this->translate_error($decode['error']);
-					exit;
-				}
-
+				$result = $this->api->request( 'create-consignments', $api_data);
 				// put order_id in key!
-				$decode = array_combine( array_keys($array['consignments']), array_values($decode) );
+				$result = array_combine( array_keys($api_data['consignments']), array_values($result) );
 				
-				//die( print_r( $decode, true ) ); //for debugging
+				$processed_result = $this->process_export_result( $result );
+				extract($processed_result); // $consignment_list, $error
 
-				$consignment_list = array();
-				$order_ids = array();
-				$error = array();
-				foreach ($decode as $order_id => $order_decode ) {
-					if ( !isset($order_decode['error']) ) {
-						$consignment_id = $order_decode['consignment_id'];
-						$order_ids[] = $order_id;
-						$consignment_list[] = $consignment_id; //collect consigment_ids in an array for pdf retreival
-						$tracktrace = $order_decode['tracktrace'];
-
-						update_post_meta ( $order_id, '_myparcel_consignment_id', $consignment_id );
-						update_post_meta ( $order_id, '_myparcel_tracktrace', $tracktrace );
-
-						// set status to complete
-						if ( isset($this->settings['auto_complete']) ) {
-							$order = new WC_Order( $order_id );
-							$order->update_status( 'completed', 'Order voltooid na MyParcel export' );
-						}
-
-					} else {
-						//$error[$order_id] = $order_decode['error'];
-						$error[$order_id] = implode( ', ', $this->array_flatten($order_decode) );
-					}
-
-				}
-
-				$consignment_list_flat = implode('x', $consignment_list);
-				$order_ids_flat = implode('x', $order_ids);
-				$pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignment=' . $consignment_list_flat . '&order_ids=' . $order_ids_flat ), 'wcmyparcel-label' );
+				$pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignment=' . implode('x', $consignment_list) . '&order_ids=' . implode('x', array_keys($consignment_list)) ), 'wcmyparcel-label' );
 				
 				$this->export_done($pdf_url, $consignment_list, $error);
 
 				exit;
 			case 'wcmyparcel-label':
-				if ( empty($_GET['consignment']) && empty($_GET['order_ids']) )
+				if ( empty($_GET['consignment']) && empty($_GET['order_ids']) ) {
 					die('U heeft geen orders geselecteerd!');
-
-				// ERROR LOGGING
-				$this->log( "Label request" );
+				}
 
 				$order_ids = explode('x',$_GET['order_ids']);
 
@@ -203,151 +89,197 @@ class WC_MyParcel_Export {
 							$consignment_list[$order_id] = $order_consignment_id;
 						}
 					}
-					$consignment_id_encoded = implode('x', $consignment_list);					
 				} else {
 					// Label request from modal (directly after export)
 					// consignments already given!
-					$consignments = explode('x',$_GET['consignment']);
-					$consignment_list = array_combine($order_ids, $consignments);
-					$consignment_id_encoded = implode('x', $consignment_list);					
+					$consignment_list = array_combine($order_ids, explode('x',$_GET['consignment']));
 				}
-
-				$consignment_id = str_replace('x', ',', $consignment_id_encoded);
 
 				// retrieve pdf for the consignment (this is another api call to retrieve-pdf)
 				$array = array(
-					'consignment_id' => $consignment_id,
+					'consignment_id' => $consignment_id_encoded = implode(',', $consignment_list),
 					'format'		 => 'json',
 				);
 
-				// ERROR LOGGING
-				$this->log( "consignment(s) requested: ".$consignment_id );
-
 				// Request labels from MyParcel API
-				$decode = $this->api_request( 'retrieve-pdf', $array);
+				$result = $this->api->request( 'retrieve-pdf', $array);
 				
-				if (isset($decode['consignment_pdf'])) {
-					$pdf_data = $decode['consignment_pdf'];
-					$consigments_tracktrace = array_combine( explode(',',$decode['consignment_id']), explode(',',$decode['tracktrace']) );
-					
-					// track & trace fallback
-					foreach ( $consignment_list as $order_id => $consignment_id ) {
-						if ( isset($consigments_tracktrace[$consignment_id]) ) {
-							// create array with $order_id => $tracktrace
-							$orders_tracktrace[$order_id] = $consigments_tracktrace[$consignment_id];
-							
-							// put track&trace code in order meta
-							update_post_meta ( $order_id, '_myparcel_tracktrace', $consigments_tracktrace[$consignment_id] );
-						}
-					}
-					
-					unset($decode['consignment_pdf']);
-					
-					// ERROR LOGGING
-					$this->log( "PDF data received:\n" . print_r( $orders_tracktrace, true ) );
+				$this->process_label_result( $result, $consignment_list );
 
-					do_action( 'wcmyparcel_before_label_print', $consignment_list );
-
-					$filename  = 'MyParcel';
-					$filename .= '-' . date('Y-m-d') . '.pdf';
-					
-					// Get output setting
-					$output_mode = isset($this->settings['download_display'])?$this->settings['download_display']:'';
-
-					// Switch headers according to output setting
-					if ( $output_mode == 'display' ) {
-						header('Content-type: application/pdf');
-						header('Content-Disposition: inline; filename="'.$filename.'"');
-					} else {
-						header('Content-Description: File Transfer');
-						header('Content-Type: application/octet-stream');
-						header('Content-Disposition: attachment; filename="'.$filename.'"'); 
-						header('Content-Transfer-Encoding: binary');
-						header('Connection: Keep-Alive');
-						header('Expires: 0');
-						header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-						header('Pragma: public');
-					}
-
-					// stream data
-					echo urldecode($pdf_data);
-				} elseif (isset($decode['error'])) {
-					echo 'Error: ' . $decode['error'];
-					
-					$this->log( "server response:\n" . print_r( $decode, true ) );
-				} else {
-					echo 'An unknown error occured<br/>';
-					echo 'Server response: ' . print_r($decode);
-					
-					$this->log( "server response:\n" . print_r( $decode, true ) );
-				}
 				exit;
 			default: return;
 		}
-			
-		}
 	}
 
-	public function api_request( $request_type, $data, $method = 'POST' ) {
-		// collect API credentials/settings
-		$target_site_api = 'http://www.myparcel.nl/api/';
-		$username = $this->settings['api_username'];
-		$api_key = $this->settings['api_key'];
-		$timestamp = time();
-		$nonce = rand(0,255); // note: this should be incremented in case 2 requests occur within the same timestamp (second)
+	public function get_export_form_data ( $order_ids ) {
 
-		// JSON encode data
-		$json = urlencode(json_encode($data));
-
-		// create GET/POST string (keys in alphabetical order)
-		$string = implode('&', array(
-			'json=' . $json,
-			'nonce=' . $nonce,
-			'test=' . (isset( $this->settings['testmode'] ) ? '1' : '0'),
-			'timestamp=' . $timestamp,
-			'username=' . $username,
-		));	
-
-		// ERROR LOGGING
-		$this->log( "Post content:\n" . $string );
-
-		// create hash
-		$signature = hash_hmac('sha1', $method . '&' . urlencode($string), $api_key);
-
-		if($method == 'POST')
-		{
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $target_site_api . $request_type . '/');
-			curl_setopt($ch, CURLOPT_POST, true);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $string . '&signature=' . $signature);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-			$result = curl_exec($ch);
-			curl_close ($ch);
-		}
-		else // GET
-		{
-			// depricated, long urls for batch processing gives issues
-			$request = $target_site_api . $request_type . '/?' . $string . '&signature=' . $signature;
-			$result = file_get_contents($request);
+		foreach( $order_ids as $order_id ) {
+			$order = new WC_Order( $order_id );
+			$data[ $order_id ] = array (
+				'consignment'	=> $this->get_consignment_data_from_order( $order ),
+				'order'			=> $order,
+			);
 		}
 
-		// decode result
-		$decode = json_decode($result, true);
+		return $data;
+	}
+
+	public function get_consignment_data_from_order ( $order ) {
+		$items = $order->get_items();
+		$order_number = $order->get_order_number();
+
+		$bericht = isset($this->settings['bericht'])
+			? str_replace('[ORDER_NR]', $order_number, $this->settings['bericht'])
+			: '';
+		$kenmerk = isset($this->settings['kenmerk'])
+			? str_replace('[ORDER_NR]', $order_number, $this->settings['kenmerk'])
+			: '';
+
+		$address = array(
+			'name'			=> trim( $order->shipping_first_name . ' ' . $order->shipping_last_name ),
+			'business'		=> $order->shipping_company,
+			'town'			=> $order->shipping_city,
+			'email'			=> isset($this->settings['email']) ? $order->billing_email : '',
+			'phone_number'	=> isset($this->settings['telefoon']) ? $order->billing_phone : '',
+		);
+
+		if ( $order->shipping_country == 'NL' ) {
+			$address_intl = array(
+				'postcode'		=> $order->shipping_postcode,
+				'house_number'	=> $order->shipping_house_number,
+				'number_addition' => $order->shipping_house_number_suffix,
+				'street'		  => $order->shipping_street_name,
+			);
+		} else {
+			$address_intl = array(
+				'country_code'	=> $order->shipping_country,
+				'eps_postcode'	=> $order->shipping_postcode,
+				'street'		=> trim( $order->shipping_address_1.' '.$order->shipping_address_2 ),
+			);
+		}		
+
+		$consignment = array(
+			'ToAddress'		=> array_merge( $address, $address_intl),
+			'ProductCode'	=> array(
+				'signature_on_receipt'	=> (isset($this->settings['handtekening'])) ? '1' : '0',
+				'return_if_no_answer'	=> (isset($this->settings['retourbgg'])) ? '1' : '0',
+				'home_address_only'		=> (isset($this->settings['huisadres'])) ? '1' : '0',
+				'home_address_signature'=> (isset($this->settings['huishand'])) ? '1' : '0',
+				'mypa_insured'			=> (isset($this->settings['huishandverzekerd'])) ? '1' : '0',
+				'insured'				=> (isset($this->settings['verzekerd'])) ? '1' : '0',
+			),
+			'insured_amount'	=> 0, // default to 0 when no user input
+			'extra_size'		=> (isset($this->settings['extragroot'])) ? '1' : '0',
+			'custom_id'			=> $kenmerk,
+			'comments'			=> $bericht,
+			'weight'			=> $this->get_parcel_weight( $order ),
+		);
+
+		return apply_filters( 'wcmyparcel_order_consignment_data', $consignment, $order );
+	}
+
+	public function process_export_result ( $result ) {
+		$consignment_list = array();
+		$error = array();
+		foreach ($result as $order_id => $order_decode ) {
+			if ( !isset($order_decode['error']) ) {
+				$consignment_id = $order_decode['consignment_id'];
+				$consignment_list[$order_id] = $consignment_id; //collect consigment_ids in an array for pdf retreival
+				$tracktrace = $order_decode['tracktrace'];
+
+				update_post_meta ( $order_id, '_myparcel_consignment_id', $consignment_id );
+				update_post_meta ( $order_id, '_myparcel_tracktrace', $tracktrace );
+
+				// set status to complete
+				if ( isset($this->settings['auto_complete']) ) {
+					$order = new WC_Order( $order_id );
+					$order->update_status( 'completed', 'Order voltooid na MyParcel export' );
+				}
+
+			} else {
+				//$error[$order_id] = $order_decode['error'];
+				$error[$order_id] = implode( ', ', $this->array_flatten($order_decode) );
+			}
+		}
+
+		return compact('consignment_list', 'error');
+	}
+
+	public function process_label_result ( $result, $consignment_list ) {
+		if (isset($result['consignment_pdf'])) {
+			// We have a PDF!
+			$pdf_data = $result['consignment_pdf'];
+			$consigments_tracktrace = array_combine( explode(',',$result['consignment_id']), explode(',',$result['tracktrace']) );
+			
+			// track & trace fallback
+			foreach ( $consignment_list as $order_id => $consignment_id ) {
+				if ( isset($consigments_tracktrace[$consignment_id]) ) {
+					// create array with $order_id => $tracktrace
+					$orders_tracktrace[$order_id] = $consigments_tracktrace[$consignment_id];
+					
+					// put track&trace code in order meta
+					update_post_meta ( $order_id, '_myparcel_tracktrace', $consigments_tracktrace[$consignment_id] );
+				}
+			}
+			
+			unset($result['consignment_pdf']);
+			
+			$this->api->log( "PDF data received:\n" . print_r( $orders_tracktrace, true ) );
+
+			do_action( 'wcmyparcel_before_label_print', $consignment_list );
+
+			$filename  = 'MyParcel';
+			$filename .= '-' . date('Y-m-d') . '.pdf';
+			
+			// Get output setting
+			$output_mode = isset($this->settings['download_display'])?$this->settings['download_display']:'';
+
+			// Switch headers according to output setting
+			if ( $output_mode == 'display' ) {
+				header('Content-type: application/pdf');
+				header('Content-Disposition: inline; filename="'.$filename.'"');
+			} else {
+				header('Content-Description: File Transfer');
+				header('Content-Type: application/octet-stream');
+				header('Content-Disposition: attachment; filename="'.$filename.'"'); 
+				header('Content-Transfer-Encoding: binary');
+				header('Connection: Keep-Alive');
+				header('Expires: 0');
+				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+				header('Pragma: public');
+			}
+
+			// stream data
+			echo urldecode($pdf_data);
+		} elseif (isset($result['error'])) {
+			// No PDF, show error
+			echo 'Error: ' . $result['error'];
+		} else {
+			echo 'An unknown error occured<br/>';
+			echo 'Server response: ' . print_r($result);
+		}
+
+		return;
+	}
+
+	public function get_item_display_name ( $item, $order ) {
+		// set base name
+		$name = $item['name'];
+
+		// add variation name if available
+		$product = $order->get_product_from_item( $item );
+		if( $product && isset( $item['variation_id'] ) && $item['variation_id'] > 0 ) {
+			$name .= woocommerce_get_formatted_variation( $product->get_variation_attributes() );
+		}
 		
-		// ERROR LOGGING
-		$this->log( "API response:\n" . print_r( $decode, true ) );
-
-		return $decode;
+		return $name;
 	}
 
 	/**
 	 * Get the current order items
 	 */
-	public function get_order_items( $order_id ) {
+	public function get_order_items( $order ) {
 		global $woocommerce;
-		$order = new WC_Order( $order_id );
-		//global $_product;
 		$items = $order->get_items();
 		$data_list = array();
 	
@@ -360,47 +292,32 @@ class WC_MyParcel_Export {
 				$product = $order->get_product_from_item( $item );
 
 				// Set the variation
-				if( isset( $item['variation_id'] ) && $item['variation_id'] > 0 ) {
+				if( !empty($product) && isset( $item['variation_id'] ) && $item['variation_id'] > 0 ) {
 					$data['variation'] = woocommerce_get_formatted_variation( $product->get_variation_attributes() );
 				} else {
 					$data['variation'] = null;
 				}
-									
+				
 				// Set item name
 				$data['name'] = $item['name'];
 				
 				// Set item quantity
 				$data['quantity'] = $item['qty'];
-																							
-				// Set item SKU
-				$data['sku'] = $product->get_sku();
 
 				// Set item weight
-				$weight = $product->get_weight();
-				$weight_unit = get_option( 'woocommerce_weight_unit' );
-				switch ($weight_unit) {
-					case 'kg':
-						$data['weight'] = $weight;
-						break;
-					case 'g':
-						$data['weight'] = $weight / 1000;
-						break;
-					case 'lbs':
-						$data['weight'] = $weight * 0.45359237;
-						break;
-					case 'oz':
-						$data['weight'] = $weight * 0.0283495231;
-						break;
-					default:
-						$data['weight'] = $weight;
-						break;
+				$data['total_weight'] = $this->get_product_weight_kg( $product ) * $item['qty'];				$weight = $product->get_weight();
+				
+				if ( !empty($product) ) {
+					echo '<pre>';var_dump($product);echo '</pre>';die();
+					// Set item SKU
+					$data['sku'] = $product->get_sku();
+					// Set item dimensions
+					$data['dimensions'] = $product->get_dimensions();
+				} else {
+					// no product, set empty values
+					$data['sku'] = $data['dimensions'] = '';
 				}
-				
-				$data['total_weight'] = $data['quantity']*$data['weight'];
-				
-				// Set item dimensions
-				$data['dimensions'] = $product->get_dimensions();
-														
+
 				$data_list[] = $data;
 			}
 		}
@@ -408,29 +325,72 @@ class WC_MyParcel_Export {
 		return $data_list;
 	}
 
+	public function get_parcel_weight ( $order ) {
+		$parcel_weight = (isset($this->settings['verpakkingsgewicht'])) ? preg_replace("/\D/","",$this->settings['verpakkingsgewicht'])/1000 : 0;
+
+		$items = $order->get_items();
+		foreach ( $items as $item_id => $item ) {
+			$parcel_weight += $this->get_item_weight_kg( $item, $order );
+		}
+
+		return $parcel_weight;
+	}
+
+	public function get_item_weight_kg ( $item, $order ) {
+		$product = $order->get_product_from_item( $item );
+
+		if (empty($product)) {
+			return 0;
+		}
+
+		$weight = $product->get_weight();
+		$weight_unit = get_option( 'woocommerce_weight_unit' );
+		switch ($weight_unit) {
+			case 'kg':
+				$product_weight = $weight;
+				break;
+			case 'g':
+				$product_weight = $weight / 1000;
+				break;
+			case 'lbs':
+				$product_weight = $weight * 0.45359237;
+				break;
+			case 'oz':
+				$product_weight = $weight * 0.0283495231;
+				break;
+			default:
+				$product_weight = $weight;
+				break;
+		}
+	
+		$item_weight = $product_weight * $item['qty'];
+
+		return $item_weight;
+	}
+
 
 	/**
 	 * Get shipping data for current order
 	 */
 	public function name_length_check($names) {
-	$voornaam = $names['voornaam'];
-	$achternaam = $names['achternaam'];
-	$bedrijfsnaam = $names['bedrijfsnaam'];
-	
-	if (strlen($voornaam) + strlen($achternaam) + 1 > 30 ) { $voornaam = preg_replace('/(\w)(\w+) *-*/', '\1.', $voornaam);	}							
-	$naam = $voornaam . ' ' . $achternaam;
-	
-	if (!$bedrijfsnaam=="") {
-		if (strlen($bedrijfsnaam) > 35 ) { $bedrijfsnaam = substr($bedrijfsnaam, 0, 35); }
+		$voornaam = $names['voornaam'];
+		$achternaam = $names['achternaam'];
+		$bedrijfsnaam = $names['bedrijfsnaam'];
 		
-		if (strlen($bedrijfsnaam) + strlen($naam) > 30) {
-			if (strlen($bedrijfsnaam) + strlen($achternaam) <= 30) {$naam = $achternaam;}
-			else {$bedrijfsnaam = "";}
+		if (strlen($voornaam) + strlen($achternaam) + 1 > 30 ) { $voornaam = preg_replace('/(\w)(\w+) *-*/', '\1.', $voornaam);	}							
+		$naam = $voornaam . ' ' . $achternaam;
+		
+		if (!$bedrijfsnaam=="") {
+			if (strlen($bedrijfsnaam) > 35 ) { $bedrijfsnaam = substr($bedrijfsnaam, 0, 35); }
+			
+			if (strlen($bedrijfsnaam) + strlen($naam) > 30) {
+				if (strlen($bedrijfsnaam) + strlen($achternaam) <= 30) {$naam = $achternaam;}
+				else {$bedrijfsnaam = "";}
+			}
 		}
-	}
-	$checked_names['naam'] = $naam;
-	$checked_names['bedrijfsnaam'] = $bedrijfsnaam;		
-	return $checked_names;					
+		$checked_names['naam'] = $naam;
+		$checked_names['bedrijfsnaam'] = $bedrijfsnaam;
+		return $checked_names;
 	}
 	
 	/**
@@ -511,18 +471,7 @@ Uw pakket met daarop het verzendetiket dient binnen 9 werkdagen na het aanmaken 
 		}
 	}
 
-	/**
-	 * Error logging
-	 */
-	public function log ( $message ) {
-		if (isset($this->settings['error_logging'])) {
-			$current_date_time = date("Y-m-d H:i:s");
-			$message = $current_date_time .' ' .$message ."\n";
 
-			file_put_contents($this->log_file, $message, FILE_APPEND);
-		}
-
-	}
 
 }
 
