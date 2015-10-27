@@ -7,7 +7,8 @@ class WC_MyParcel_Settings {
 	}
 
 	public function menu() {
-		add_options_page(
+		add_submenu_page(
+			'woocommerce',
 			__( 'MyParcel', 'wcmyparcel' ),
 			__( 'MyParcel', 'wcmyparcel' ),
 			'manage_options',
