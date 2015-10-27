@@ -205,6 +205,24 @@ class WC_MyParcel_Settings {
 		);
 
 		add_settings_field(
+			'shipment_type',
+			__( 'Soort zending', 'wcmyparcel' ),
+			array( &$this, 'select_element_callback' ),
+			$option,
+			'default_values',
+			array(
+				'menu'			=> $option,
+				'id'			=> 'shipment_type',
+				'default'		=> 'standard',
+				'options' 		=> array(
+					'standard'		=> __( 'Pakket' , 'wcmyparcel' ),
+					'letterbox'		=> __( 'Brievenbuspakje' , 'wcmyparcel' ),
+					'unpaid_letter'	=> __( 'Ongefrankeerd label' , 'wcmyparcel' ),
+				),
+			)
+		);
+
+		add_settings_field(
 			'email',
 			__( 'Koppel emailadres klant', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
@@ -542,15 +560,12 @@ class WC_MyParcel_Settings {
 		if ( isset( $options[$id] ) ) {
 			$current = $options[$id];
 		} else {
-			$current = isset( $args['default'] ) ? $args['default'] : '#ffffff';
+			$current = isset( $args['default'] ) ? $args['default'] : '';
 		}
-	
+
 		$html = sprintf( '<select id="%1$s" name="%2$s[%1$s]">', $id, $menu );
-		$key = 0;
-		foreach ( $args['options'] as $label ) {
+		foreach ( $args['options'] as $key => $label ) {
 			$html .= sprintf( '<option value="%s"%s>%s</option>', $key, selected( $current, $key, false ), $label );
-	
-			$key++;
 		}
 		$html .= '</select>';
 	

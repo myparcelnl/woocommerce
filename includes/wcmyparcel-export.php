@@ -159,6 +159,7 @@ class WC_MyParcel_Export {
 		}		
 
 		$consignment = array(
+			'shipment_type'	=> (isset($this->settings['shipment_type'])) ? $this->settings['shipment_type'] : 'standard', // standard | letterbox | unpaid_letter
 			'ToAddress'		=> array_merge( $address, $address_intl),
 			'ProductCode'	=> array(
 				'signature_on_receipt'	=> (isset($this->settings['handtekening'])) ? '1' : '0',

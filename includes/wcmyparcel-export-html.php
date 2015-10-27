@@ -89,6 +89,24 @@
 						<td colspan="2">
 							<table class="wcmyparcel_settings_table">
 								<tr>
+									<td>Soort zending</td>
+									<td>
+										<?php
+										$zendingen = array(
+											'standard'		=> __( 'Pakket' , 'wcmyparcel' ),
+											'letterbox'		=> __( 'Brievenbuspakje' , 'wcmyparcel' ),
+											'unpaid_letter'	=> __( 'Ongefrankeerd label' , 'wcmyparcel' ),
+										);
+
+										$name = "consignments[{$order_id}][shipment_type]";
+										printf( '<select name="%s">', $name );
+										foreach ( $zendingen as $key => $label ) {
+											printf( '<option value="%s"%s>%s</option>', $key, selected( $consignment['extra_size'], $key, false ), $label );
+										}
+										echo '</select>';
+										?>
+									</td>
+								</tr>								
 
 								<?php
 								$option_rows = array(
