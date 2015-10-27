@@ -1,4 +1,10 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
+if ( !class_exists( 'WC_MyParcel_Export' ) ) :
+
 class WC_MyParcel_Export {
 	public $order_id;
 
@@ -518,3 +524,4 @@ Uw pakket met daarop het verzendetiket dient binnen 9 werkdagen na het aanmaken 
 	}
 
 }
+endif; // class_exists
