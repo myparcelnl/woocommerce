@@ -40,8 +40,7 @@ class WC_MyParcel_API {
 			'username=' . $username,
 		));	
 
-		// ERROR LOGGING
-		$this->log( "Post content:\n" . $string );
+		// $this->log( "Post content:\n" . $string );
 
 		// create hash
 		$signature = hash_hmac('sha1', $method . '&' . urlencode($string), $api_key);
