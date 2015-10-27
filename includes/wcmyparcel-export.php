@@ -70,8 +70,7 @@ class WC_MyParcel_Export {
 			case 'wcmyparcel-export':
 				// die(print_r($_POST['data'])); // for debugging
 				// ERROR LOGGING
-				if (isset($this->settings['error_logging']))
-					file_put_contents($this->log_file, date("Y-m-d H:i:s")." Export started\n", FILE_APPEND);
+				$this->log( "Export started" );
 
 				// Get the data
 				if (!isset($_POST['data'])) 
@@ -133,16 +132,14 @@ class WC_MyParcel_Export {
 				}
 
 				// ERROR LOGGING
-				if (isset($this->settings['error_logging']))
-					file_put_contents($this->log_file, date("Y-m-d H:i:s")." consignment data:\n".var_export($array['consignments'],true)."\n", FILE_APPEND);
+				$this->log( "consignment data:\n". var_export( $array['consignments'], true ) );
 				//die( print_r( $array ) );
 
 				// Send consignments to MyParcel API
 				$decode = $this->api_request( 'create-consignments', $array);
 				
 				// ERROR LOGGING
-				if (isset($this->settings['error_logging']))
-					file_put_contents($this->log_file, date("Y-m-d H:i:s")." API response:\n".print_r($decode,true)."\n", FILE_APPEND);
+				$this->log( "API response:\n". print_r( $decode, true ) );
 				
 				if (isset($decode['error'])) {
 					echo $this->translate_error($decode['error']);
@@ -192,8 +189,7 @@ class WC_MyParcel_Export {
 					die('U heeft geen orders geselecteerd!');
 
 				// ERROR LOGGING
-				if (isset($this->settings['error_logging']))
-					file_put_contents($this->log_file, date("Y-m-d H:i:s")." Label request\n", FILE_APPEND);
+				$this->log( "Label request" );
 
 				$order_ids = explode('x',$_GET['order_ids']);
 
@@ -225,8 +221,7 @@ class WC_MyParcel_Export {
 				);
 
 				// ERROR LOGGING
-				if (isset($this->settings['error_logging']))
-					file_put_contents($this->log_file, date("Y-m-d H:i:s")." consignment(s) requested: ".$consignment_id."\n", FILE_APPEND);
+				$this->log( "consignment(s) requested: ".$consignment_id );
 
 				// Request labels from MyParcel API
 				$decode = $this->api_request( 'retrieve-pdf', $array);
@@ -249,10 +244,7 @@ class WC_MyParcel_Export {
 					unset($decode['consignment_pdf']);
 					
 					// ERROR LOGGING
-					if (isset($this->settings['error_logging'])) {
-						file_put_contents($this->log_file, date("Y-m-d H:i:s")." PDF data received\n", FILE_APPEND);
-						file_put_contents($this->log_file, print_r($orders_tracktrace,true)."\n", FILE_APPEND);
-					}
+					$this->log( "PDF data received:\n" . print_r( $orders_tracktrace, true ) );
 
 					do_action( 'wcmyparcel_before_label_print', $consignment_list );
 
@@ -282,14 +274,12 @@ class WC_MyParcel_Export {
 				} elseif (isset($decode['error'])) {
 					echo 'Error: ' . $decode['error'];
 					
-					if (isset($this->settings['error_logging']))
-						file_put_contents($this->log_file, date("Y-m-d H:i:s")." server response:\n".print_r($decode,true)."\n", FILE_APPEND);
+					$this->log( "server response:\n" . print_r( $decode, true ) );
 				} else {
 					echo 'An unknown error occured<br/>';
 					echo 'Server response: ' . print_r($decode);
 					
-					if (isset($this->settings['error_logging']))
-						file_put_contents($this->log_file, date("Y-m-d H:i:s")." server response:\n".print_r($decode,true)."\n", FILE_APPEND);
+					$this->log( "server response:\n" . print_r( $decode, true ) );
 				}
 				exit;
 			default: return;
@@ -319,8 +309,7 @@ class WC_MyParcel_Export {
 		));	
 
 		// ERROR LOGGING
-		if (isset($this->settings['error_logging']))
-			file_put_contents($this->log_file, date("Y-m-d H:i:s")." Post content:\n".$string."\n", FILE_APPEND);
+		$this->log( "Post content:\n" . $string );
 
 		// create hash
 		$signature = hash_hmac('sha1', $method . '&' . urlencode($string), $api_key);
@@ -347,8 +336,7 @@ class WC_MyParcel_Export {
 		$decode = json_decode($result, true);
 		
 		// ERROR LOGGING
-		if (isset($this->settings['error_logging']))
-			file_put_contents($this->log_file, date("Y-m-d H:i:s")." API response:\n".print_r($decode,true)."\n", FILE_APPEND);
+		$this->log( "API response:\n" . print_r( $decode, true ) );
 
 		return $decode;
 	}
@@ -523,5 +511,19 @@ Uw pakket met daarop het verzendetiket dient binnen 9 werkdagen na het aanmaken 
 		}
 	}
 
+	/**
+	 * Error logging
+	 */
+	public function log ( $message ) {
+		if (isset($this->settings['error_logging'])) {
+			$current_date_time = date("Y-m-d H:i:s");
+			$message = $current_date_time .' ' .$message ."\n";
+
+			file_put_contents($this->log_file, $message, FILE_APPEND);
+		}
+
+	}
+
 }
+
 endif; // class_exists
