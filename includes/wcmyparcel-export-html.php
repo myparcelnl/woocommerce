@@ -101,7 +101,7 @@
 										$name = "consignments[{$order_id}][shipment_type]";
 										printf( '<select name="%s">', $name );
 										foreach ( $zendingen as $key => $label ) {
-											printf( '<option value="%s"%s>%s</option>', $key, selected( $consignment['extra_size'], $key, false ), $label );
+											printf( '<option value="%s"%s>%s</option>', $key, selected( $consignment['shipment_type'], $key, false ), $label );
 										}
 										echo '</select>';
 										?>
