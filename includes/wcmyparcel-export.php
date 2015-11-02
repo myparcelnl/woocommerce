@@ -13,7 +13,7 @@ class WC_MyParcel_Export {
 	 */
 			
 	public function __construct() {
-		$this->api = include( 'wcmyparcel-api.php' );
+		include( 'wcmyparcel-api.php' );
 		add_action( 'load-edit.php', array( &$this, 'wcmyparcel_action' ) ); // Export actions (popup & file export)
 		$this->settings = get_option( 'wcmyparcel_settings' );
 	}
@@ -52,24 +52,15 @@ class WC_MyParcel_Export {
 				}
 
 				// stripslashes! Wordpress always slashes POST data, regardless of magic quotes settings... http://stackoverflow.com/q/8949768/1446634
-				$consignments = stripslashes_deep($_POST['consignments']);
+				$consignment_data = stripslashes_deep($_POST['consignments']);
 
-				$api_data = array(
-					'process'		=> isset($this->settings['process'])?1:0, // NOTE: process parameter is active, put on 0 to create a consignment without processing it
-					'consignments'	=> $consignments
-				);
+				$api = new WC_MyParcel_API();
 
-				// Send consignments to MyParcel API
-				$result = $this->api->request( 'create-consignments', $api_data);
-				// put order_id in key!
-				$result = array_combine( array_keys($api_data['consignments']), array_values($result) );
-				
-				$processed_result = $this->process_export_result( $result );
-				extract($processed_result); // $consignment_list, $error
+				// Send consignment data to MyParcel API
+				$api->create_consignments( $consignment_data );
 
-				$pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignment=' . implode('x', $consignment_list) . '&order_ids=' . implode('x', array_keys($consignment_list)) ), 'wcmyparcel-label' );
-				
-				$this->export_done($pdf_url, $consignment_list, $error);
+				// Include HTML for export done page/iframe
+				include('wcmyparcel-export-done-html.php');
 
 				exit;
 			case 'wcmyparcel-label':
@@ -79,40 +70,43 @@ class WC_MyParcel_Export {
 
 				$order_ids = explode('x',$_GET['order_ids']);
 
-				$consignment_list = array();
+				$consignments = array();
 
 				if ( !isset($_GET['consignment']) ) {
 					// Bulk export label
 					foreach ($order_ids as $order_id) {
 						if (get_post_meta($order_id,'_myparcel_consignment_id',true)) {
 							$order_consignment_id = get_post_meta($order_id,'_myparcel_consignment_id',true);
-							$consignment_list[$order_id] = $order_consignment_id;
+							$consignments[$order_id] = $order_consignment_id;
 						}
 					}
 				} else {
 					// Label request from modal (directly after export)
 					// consignments already given!
-					$consignment_list = array_combine($order_ids, explode('x',$_GET['consignment']));
+					$consignments = array_combine($order_ids, explode('x',$_GET['consignment']));
 				}
 
-				// retrieve pdf for the consignment (this is another api call to retrieve-pdf)
-				$array = array(
-					'consignment_id' => $consignment_id_encoded = implode(',', $consignment_list),
-					'format'		 => 'json',
-				);
+				$api = new WC_MyParcel_API();
 
 				// Request labels from MyParcel API
-				$result = $this->api->request( 'retrieve-pdf', $array);
-				
-				$this->process_label_result( $result, $consignment_list );
+				$api->get_labels( $consignments );
 
+				if (!empty($api->pdf)) {
+					// Get output setting
+					$output_mode = isset($this->settings['download_display'])?$this->settings['download_display']:'';
+					if ( $output_mode == 'display' ) {
+						$api->stream_pdf();
+					} else {
+						$api->download_pdf();
+					}
+				}
+				
 				exit;
 			default: return;
 		}
 	}
 
 	public function get_export_form_data ( $order_ids ) {
-
 		foreach( $order_ids as $order_id ) {
 			$order = new WC_Order( $order_id );
 			$data[ $order_id ] = array (
@@ -177,90 +171,6 @@ class WC_MyParcel_Export {
 		);
 
 		return apply_filters( 'wcmyparcel_order_consignment_data', $consignment, $order );
-	}
-
-	public function process_export_result ( $result ) {
-		$consignment_list = array();
-		$error = array();
-		foreach ($result as $order_id => $order_decode ) {
-			if ( !isset($order_decode['error']) ) {
-				$consignment_id = $order_decode['consignment_id'];
-				$consignment_list[$order_id] = $consignment_id; //collect consigment_ids in an array for pdf retreival
-				$tracktrace = $order_decode['tracktrace'];
-
-				update_post_meta ( $order_id, '_myparcel_consignment_id', $consignment_id );
-				update_post_meta ( $order_id, '_myparcel_tracktrace', $tracktrace );
-
-				// set status to complete
-				if ( isset($this->settings['auto_complete']) ) {
-					$order = new WC_Order( $order_id );
-					$order->update_status( 'completed', 'Order voltooid na MyParcel export' );
-				}
-
-			} else {
-				//$error[$order_id] = $order_decode['error'];
-				$error[$order_id] = implode( ', ', $this->array_flatten($order_decode) );
-			}
-		}
-
-		return compact('consignment_list', 'error');
-	}
-
-	public function process_label_result ( $result, $consignment_list ) {
-		if (isset($result['consignment_pdf'])) {
-			// We have a PDF!
-			$pdf_data = $result['consignment_pdf'];
-			$consigments_tracktrace = array_combine( explode(',',$result['consignment_id']), explode(',',$result['tracktrace']) );
-			
-			// track & trace fallback
-			foreach ( $consignment_list as $order_id => $consignment_id ) {
-				if ( isset($consigments_tracktrace[$consignment_id]) ) {
-					// create array with $order_id => $tracktrace
-					$orders_tracktrace[$order_id] = $consigments_tracktrace[$consignment_id];
-					
-					// put track&trace code in order meta
-					update_post_meta ( $order_id, '_myparcel_tracktrace', $consigments_tracktrace[$consignment_id] );
-				}
-			}
-			
-			unset($result['consignment_pdf']);
-			
-			$this->api->log( "PDF data received:\n" . print_r( $orders_tracktrace, true ) );
-
-			do_action( 'wcmyparcel_before_label_print', $consignment_list );
-
-			$filename  = 'MyParcel';
-			$filename .= '-' . date('Y-m-d') . '.pdf';
-			
-			// Get output setting
-			$output_mode = isset($this->settings['download_display'])?$this->settings['download_display']:'';
-
-			// Switch headers according to output setting
-			if ( $output_mode == 'display' ) {
-				header('Content-type: application/pdf');
-				header('Content-Disposition: inline; filename="'.$filename.'"');
-			} else {
-				header('Content-Description: File Transfer');
-				header('Content-Type: application/octet-stream');
-				header('Content-Disposition: attachment; filename="'.$filename.'"'); 
-				header('Content-Transfer-Encoding: binary');
-				header('Connection: Keep-Alive');
-				header('Expires: 0');
-				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-				header('Pragma: public');
-			}
-
-			// stream data
-			echo urldecode($pdf_data);
-		} elseif (isset($result['error'])) {
-			// No PDF, show error
-			echo 'Error: ' . $result['error'];
-		} else {
-			echo 'An unknown error occured<br/>';
-			echo 'Server response: ' . print_r($result);
-		}
-
-		return;
 	}
 
 	public function get_item_display_name ( $item, $order ) {
@@ -368,111 +278,6 @@ class WC_MyParcel_Export {
 
 		return $item_weight;
 	}
-
-
-	/**
-	 * Get shipping data for current order
-	 */
-	public function name_length_check($names) {
-		$voornaam = $names['voornaam'];
-		$achternaam = $names['achternaam'];
-		$bedrijfsnaam = $names['bedrijfsnaam'];
-		
-		if (strlen($voornaam) + strlen($achternaam) + 1 > 30 ) { $voornaam = preg_replace('/(\w)(\w+) *-*/', '\1.', $voornaam);	}							
-		$naam = $voornaam . ' ' . $achternaam;
-		
-		if (!$bedrijfsnaam=="") {
-			if (strlen($bedrijfsnaam) > 35 ) { $bedrijfsnaam = substr($bedrijfsnaam, 0, 35); }
-			
-			if (strlen($bedrijfsnaam) + strlen($naam) > 30) {
-				if (strlen($bedrijfsnaam) + strlen($achternaam) <= 30) {$naam = $achternaam;}
-				else {$bedrijfsnaam = "";}
-			}
-		}
-		$checked_names['naam'] = $naam;
-		$checked_names['bedrijfsnaam'] = $bedrijfsnaam;
-		return $checked_names;
-	}
-	
-	/**
-	 * Multi-dimensional array flatten
-	 */
-	public function array_flatten($a,$f=array()){
-		if(!$a||!is_array($a))return '';
-		foreach($a as $k=>$v){
-			if(is_array($v))$f=$this->array_flatten($v,$f);
-			else $f[$k]=$v;
-		}
-		return $f;
-	}
-	
-	/**
-	 * Vertaal engelse MyParcel foutmeldingen
-	 */
-	public function translate_error($error){
-		switch ($error) {
-			case 'access denied - Signature does not match request - parameters need to be hashed in alphabetical order':
-				$error = 'Toegang geweigerd - De API key komt niet overeen met de gebruikersnaam.';
-				break;
-			case 'access denied - Username \''.$this->settings['api_username'].'\' does not exist':
-				$error = 'Toegang geweigerd - De gebruikersnaam <strong>'.$this->settings['api_username'].'</strong> bestaat niet.';
-				break;
-		}
-
-		return $error;
-	}
-
-	/**
-	 * Export result page
-	 */
-	public function export_done ($pdf_url, $consignment_list, $error) {
-		?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<?php
-		require_once(ABSPATH . 'wp-admin/admin.php');
-		wp_register_style( 'wcmyparcel-admin-styles', dirname(plugin_dir_url(__FILE__)) .  '/css/wcmyparcel-admin-styles.css', array(), '', 'all' );
-		wp_enqueue_style( 'wcmyparcel-admin-styles' );		
-		wp_enqueue_style( 'colors' );
-		wp_enqueue_style( 'media' );
-		do_action('admin_print_styles');
-	?>
-</head>
-<body style="padding:10px 20px;">
-<h1>Export voltooid</h1>
-<?php
-		if (!empty($error)) {
-			echo '<p>Er hebben zich fouten voorgedaan bij de volgende orders, deze zijn niet verwerkt:<ul style="margin-left:20px;">';
-			foreach($error as $order_id => $error_message) {
-				$order = new WC_Order($order_id);
-				$order_number = $order->get_order_number();
-				echo '<li><strong>'.$order_number.'</strong> <i>'.$error_message.'</i></li>';
-			}
-			echo '</ul></p>';
-		}
-		if (!empty($consignment_list)) {
-			if (!empty($error)) {
-				echo '<p>De overige orders zijn succesvol verzonden naar MyParcel.<br />';
-			} else {
-				echo '<p>De geselecteerde orders zijn succesvol verzonden naar MyParcel.<br />';		
-			}
-			$target = ( isset($this->settings['download_display']) && $this->settings['download_display'] == 'display') ? 'target="_blank"' : '';
-
-			if ( isset( $this->settings['process'] ) ) :
-?>
-Hieronder kunt u de labels in PDF formaat downloaden.</p>
-<?php printf('<a href="%1$s" %2$s><img src="%3$s"></a>', $pdf_url, $target, dirname(plugin_dir_url(__FILE__)) . '/img/download-pdf.png'); ?>
-<p><strong>Let op!</strong><br />
-Uw pakket met daarop het verzendetiket dient binnen 9 werkdagen na het aanmaken bij PostNL binnen te zijn. Daarna verliest het zijn geldigheid.
-</body></html>
-<?php
-			endif;
-		}
-	}
-
-
 
 }
 
