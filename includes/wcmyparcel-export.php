@@ -179,7 +179,7 @@ class WC_MyParcel_Export {
 
 		// add variation name if available
 		$product = $order->get_product_from_item( $item );
-		if( $product && isset( $item['variation_id'] ) && $item['variation_id'] > 0 ) {
+		if( $product && isset( $item['variation_id'] ) && $item['variation_id'] > 0 && method_exists($product, 'get_variation_attributes')) {
 			$name .= woocommerce_get_formatted_variation( $product->get_variation_attributes() );
 		}
 		
