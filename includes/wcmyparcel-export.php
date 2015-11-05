@@ -186,56 +186,6 @@ class WC_MyParcel_Export {
 		return $name;
 	}
 
-	/**
-	 * Get the current order items
-	 */
-	public function get_order_items( $order ) {
-		global $woocommerce;
-		$items = $order->get_items();
-		$data_list = array();
-	
-		if( sizeof( $items ) > 0 ) {
-			foreach ( $items as $item ) {
-				// Array with data for the printing template
-				$data = array();
-				
-				// Create the product
-				$product = $order->get_product_from_item( $item );
-
-				// Set the variation
-				if( !empty($product) && isset( $item['variation_id'] ) && $item['variation_id'] > 0 ) {
-					$data['variation'] = woocommerce_get_formatted_variation( $product->get_variation_attributes() );
-				} else {
-					$data['variation'] = null;
-				}
-				
-				// Set item name
-				$data['name'] = $item['name'];
-				
-				// Set item quantity
-				$data['quantity'] = $item['qty'];
-
-				// Set item weight
-				$data['total_weight'] = $this->get_product_weight_kg( $product ) * $item['qty'];				$weight = $product->get_weight();
-				
-				if ( !empty($product) ) {
-					echo '<pre>';var_dump($product);echo '</pre>';die();
-					// Set item SKU
-					$data['sku'] = $product->get_sku();
-					// Set item dimensions
-					$data['dimensions'] = $product->get_dimensions();
-				} else {
-					// no product, set empty values
-					$data['sku'] = $data['dimensions'] = '';
-				}
-
-				$data_list[] = $data;
-			}
-		}
-
-		return $data_list;
-	}
-
 	public function get_parcel_weight ( $order ) {
 		$parcel_weight = (isset($this->settings['verpakkingsgewicht'])) ? preg_replace("/\D/","",$this->settings['verpakkingsgewicht'])/1000 : 0;
 
