@@ -209,7 +209,7 @@ class WC_MyParcel_Writepanel {
 		$username = $this->settings['api_username'];
 		$api_key = $this->settings['api_key'];
 
-		$webshop = trailingslashit( plugin_dir_url( __FILE__ ) ) . 'wcmyparcel-pakjegemak-passdata.html';
+		$webshop = trailingslashit( plugin_dir_url( __FILE__ ) ) . 'wcmyparcel-pakjegemak-passdata.php';
 		$hash = hash_hmac('sha1', $username . 'MyParcel' . $webshop, $api_key);
 
 		// check for secure context
