@@ -28,7 +28,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) {
 			add_action( 'admin_enqueue_scripts', array( &$this, 'add_admin_styles_scripts' ) );
 			
 			$this->includes();
-			register_activation_hook( __FILE__, array( 'WC_MyParcel_Settings', 'default_settings' ) );
+			register_activation_hook( __FILE__, array( &$this, 'default_settings' ) );
 
 			// Load plugin classes
 			add_action( 'init', array( &$this, 'load_hooks' ) );
@@ -78,6 +78,14 @@ if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) {
 
 				wp_enqueue_style( 'wcmyparcel-admin-styles' );  
 			}
+		}
+
+		public function default_settings () {
+			if (empty($this->settings)) {
+				$this->settings = new WC_MyParcel_Settings();
+			}
+
+			$this->settings->default_settings();
 		}
 	
 	}
