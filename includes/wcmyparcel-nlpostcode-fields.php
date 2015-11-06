@@ -9,6 +9,7 @@ class WC_NLPostcode_Fields {
 	public function __construct() {
 		// Load styles & scripts
 		add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_scripts_styles' ) );
 
 		// Add street name & house number checkout fields.
 		if ( version_compare( WOOCOMMERCE_VERSION, '2.0' ) >= 0 ) {
@@ -89,6 +90,19 @@ class WC_NLPostcode_Fields {
 			wp_enqueue_style( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout.css') );
 		}
 
+	}
+
+	/**
+	 * Load admin styles & scripts.
+	 */
+	public function admin_scripts_styles ( $hook ) {
+		global $post_type;
+		if ( $post_type == 'shop_order' ) {
+			wp_enqueue_style(
+				'nl-checkout-admin',
+				dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout-admin.css'
+			);
+		}
 	}
 
 	/**
