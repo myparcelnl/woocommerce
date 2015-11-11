@@ -209,13 +209,28 @@ class WC_MyParcel_Writepanel {
 		$username = $this->settings['api_username'];
 		$api_key = $this->settings['api_key'];
 
+		// allow overriding passdata file via theme / child theme
+		$passdata_file = 'wcmyparcel-pakjegemak-passdata.php';
+		// get paths for file_exists check
+		$child_theme_template_path = get_stylesheet_directory() . '/woocommerce/';
+		$theme_template_path = get_template_directory() . '/woocommerce/';
+
+		// First check child theme, then theme, else use bundled file
+		if( file_exists( $child_theme_template_path . $passdata_file ) ) {
+			$passdata_url = get_stylesheet_directory_uri() . '/woocommerce/' . $passdata_file;
+		} elseif( file_exists( $theme_template_path . $passdata_file ) ) {
+			$passdata_url = get_template_directory_uri() . '/woocommerce/' . $passdata_file;
+		} else {
+			$passdata_url = trailingslashit( plugin_dir_url( __FILE__ ) ) . $passdata_file;
+		}
+		
 		$webshop = trailingslashit( plugin_dir_url( __FILE__ ) ) . 'wcmyparcel-pakjegemak-passdata.php';
-		$hash = hash_hmac('sha1', $username . 'MyParcel' . $webshop, $api_key);
+		$hash = hash_hmac('sha1', $username . 'MyParcel' . $passdata_url, $api_key);
 
 		// check for secure context
 		$context = is_ssl() ? 'https' : 'http';
 
-		$popup_url = sprintf('%s://www.myparcel.nl/pakjegemak-locatie?hash=%s&webshop=%s&user=%s', $context, $hash, $webshop, $username);
+		$popup_url = sprintf('%s://www.myparcel.nl/pakjegemak-locatie?hash=%s&webshop=%s&user=%s', $context, $hash, $passdata_url, $username);
 
 
 		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
