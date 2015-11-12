@@ -122,9 +122,6 @@ class WC_MyParcel_Export {
 		$items = $order->get_items();
 		$order_number = $order->get_order_number();
 
-		$bericht = isset($this->settings['bericht'])
-			? str_replace('[ORDER_NR]', $order_number, $this->settings['bericht'])
-			: '';
 		$kenmerk = isset($this->settings['kenmerk'])
 			? str_replace('[ORDER_NR]', $order_number, $this->settings['kenmerk'])
 			: '';
@@ -166,7 +163,6 @@ class WC_MyParcel_Export {
 			'insured_amount'	=> 0, // default to 0 when no user input
 			'extra_size'		=> (isset($this->settings['extragroot'])) ? '1' : '0',
 			'custom_id'			=> $kenmerk,
-			'comments'			=> $bericht,
 			'weight'			=> $this->get_parcel_weight( $order ),
 		);
 

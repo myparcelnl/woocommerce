@@ -173,15 +173,6 @@
 									</td>
 								</tr>
 								<tr>
-									<td>Optioneel bericht (niet op label, wel in track&trace)</td>
-									<td>
-										<?php
-										$name = "consignments[{$order_id}][comments]";
-										printf('<input type="text" name="%s" value="%s">', $name, $consignment['comments']);
-										?>
-									</td>
-								</tr>
-								<tr>
 									<td>Eigen kenmerk (linksboven op label)</td>
 									<td>
 										<?php

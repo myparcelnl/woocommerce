@@ -352,19 +352,6 @@ class WC_MyParcel_Settings {
 				'description'	=> __( 'Indien u kiest voor verhoogd aansprakelijk, dan kunt u hier de waarde van de inhoud van het pakket vermelden, afgerond op hele euros, zonder kommas punten of valutateken.', 'wcmyparcel' ),
 			)
 		);
-		
-		add_settings_field(
-			'bericht',
-			__( 'Optioneel bericht', 'wcmyparcel' ),
-			array( &$this, 'text_element_callback' ),
-			$option,
-			'default_values',
-			array(
-				'menu'			=> $option,
-				'id'			=> 'bericht',
-				'description'	=> __( "Met deze optie kunt u een optioneel bericht aan de zending toevoegen. Deze kunt u later terug lezen in uw overzicht zendingen. Deze tekst komt niet terug op het etiket, maar is door de klant wel terug te vinden op de track&trace pagina van PostNL onder 'Referentie'. Gebruik de code <strong>[ORDER_NR]</strong> om het WooCommerce ordernummer automatisch in te laten vullen.", 'wcmyparcel' ),
-			)
-		);
 
 		add_settings_field(
 			'kenmerk',
