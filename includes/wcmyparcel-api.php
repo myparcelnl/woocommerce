@@ -48,7 +48,18 @@ class WC_MyParcel_API {
 		}
 	}
 
-	public function get_labels ( $consignments ) {
+	public function get_labels ( $consignments = '' ) {
+		// get consignments from result if already available
+		if ( empty($consignments) ) {
+			if ( !empty($this->consignments) ) {
+				foreach ($this->consignments as $order_id => $consignment) {
+					$consignments[$order_id] = $consignment['consignment_id'];
+				}
+			} else {
+				return false;
+			}
+		}
+
 		// retrieve pdf for the consignment
 		$api_data = array(
 			'consignment_id' => $consignment_id_encoded = implode(',', $consignments),
