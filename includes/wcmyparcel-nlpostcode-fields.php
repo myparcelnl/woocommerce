@@ -189,40 +189,47 @@ class WC_NLPostcode_Fields {
 			'required'		=> false,
 		);
 
-		// Create new ordering for checkout fields
-		$order_keys = array (
+		// put country first
+		$fields = $this->array_move_before_key(
+			$fields,
 			$form.'_country',
-			$form.'_first_name',
-			$form.'_last_name',
-			$form.'_company',
-			$form.'_address_1',
-			$form.'_address_2',
-			$form.'_street_name',
-			$form.'_house_number',
-			$form.'_house_number_suffix',
-			$form.'_postcode',
-			$form.'_city',
-			$form.'_state',
-			);
+			$form.'_first_name'
+		);
 
-		if ($form == 'billing') {
-			array_push ($order_keys,
-				$form.'_email',
-				$form.'_phone'
-			);
-		}
-
-		$new_order = array();
-		
-		// Create reordered array and fill with old array values
-		foreach ($order_keys as $key) {
-			$new_order[$key] = $fields[$key];
-		}
-		
-		// Merge (&overwrite) field array
-		$fields = array_merge($new_order, $fields);
+		// put street, number, suffix before _address_1
+		$fields = $this->array_move_before_key(
+			$fields,
+			array( $form.'_street_name', $form.'_house_number', $form.'_house_number_suffix' ),
+			$form.'_address_1'
+		);
 			
 		return $fields;
+	}
+
+	public function array_move_before_key ( $array, $keys, $before_key ) {
+		// cast $key as array
+		$keys = (array) $keys;
+
+		if (!isset($array[$before_key])) {
+			return $array;
+		}
+
+		$move = array();
+		foreach ($keys as $key) {
+			if (!isset($array[$key])) {
+				continue;
+			}
+			$move[$key] = $array[$key];
+			unset ($array[$key]);
+		}
+
+		$before_key_pos = array_search($before_key, array_keys($array));
+		$new_array =
+			array_slice($array, 0, $before_key_pos, true)
+			+ $move
+			+ array_slice($array, $before_key_pos, NULL, true);
+
+		return $new_array;
 	}
 
 	/**
