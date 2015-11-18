@@ -12,9 +12,67 @@
 		do_action('admin_print_styles');
 		do_action('admin_print_scripts');
 	?>
+	<script type="text/javascript">
+	jQuery(function($) {
+		// select > 500 if insured amount input is >499
+		$( 'input.insured_amount' ).each( function( index ) {
+			if ( $( this ).val() > 499 ) {
+				insured_select = $( this ).closest('table').parent().find('select.insured_amount');
+				$( insured_select ).val('');
+			};
+		});
+
+		// hide insurance options if unsured not checked
+		$('.insured').change(function () {
+			insured_select = $( this ).closest('table').parent().find('select.insured_amount');
+			insured_input  = $( this ).closest('table').parent().find('input.insured_amount');
+			if (this.checked) {
+				$( insured_select ).prop('disabled', false);
+				$( insured_select ).closest('tr').show();
+				$('select.insured_amount').change();
+			} else {
+				$( insured_select ).prop('disabled', true);
+				$( insured_select ).closest('tr').hide();
+				$( insured_input ).closest('tr').hide();
+			}
+		}).change(); //ensure visible state matches initially
+
+		// hide & disable insured amount input if not needed
+		$('select.insured_amount').change(function () {
+			insured_check  = $( this ).closest('table').parent().find('.insured');
+			insured_select = $( this ).closest('table').parent().find('select.insured_amount');
+			insured_input  = $( this ).closest('table').find('input.insured_amount');
+			if ( $( insured_select ).val() ) {
+				$( insured_input ).val('');
+				$( insured_input ).prop('disabled', true);
+				$( insured_input ).closest('tr').hide();
+			} else {
+				$( insured_input ).prop('disabled', false);
+				$( insured_input ).closest('tr').show();
+			}
+		}).change(); //ensure visible state matches initially
+
+		// hide all options if not a parcel
+		$('select.shipment_type').change(function () {
+			parcel_options  = $( this ).closest('table').parent().find('.parcel_options');
+			if ( $( this ).val() == 'standard') {
+				// parcel
+				$( parcel_options ).find('input, textarea, button, select').prop('disabled', false);
+				$( parcel_options ).show();
+				$('.insured').change();
+			} else {
+				// not a parcel
+				$( parcel_options ).find('input, textarea, button, select').prop('disabled', true);
+				$( parcel_options ).hide();
+				$('.insured').prop('checked', false);
+				$('.insured').change();
+			}
+		}).change(); //ensure visible state matches initially
+	});
+	</script>
 </head>
 <body>
-<form  method="post" class="page-form">						
+<form  method="post" class="page-form">
 	<table class="widefat">
 	<thead>
 		<tr>
@@ -23,9 +81,9 @@
 	</thead>
 	<tbody>
 		<?php $c = true; foreach ( $form_data as $order_id => $order_data ) : extract( $order_data );?>
-		<tr <?php echo (($c = !$c)?' class="alternate"':'');?>>
+		<tr class="order-row <?php echo (($c = !$c)?'alternate':'');?>">
 			<td>
-				<table>
+				<table style="width: 100%">
 					<tr>
 						<td colspan="2"><strong>Bestelling <?php echo $order->get_order_number(); ?></strong></td>
 					</tr>
@@ -87,10 +145,13 @@
 					</tr>
 					<tr>
 						<td colspan="2">
-							<table class="wcmyparcel_settings_table">
+							<table class="wcmyparcel_settings_table" style="width: auto">
 								<tr>
-									<td>Soort zending</td>
 									<td>
+										Soort zending: 
+									</td>
+									<td>
+										
 										<?php
 										$zendingen = array(
 											'standard'		=> __( 'Pakket' , 'wcmyparcel' ),
@@ -99,76 +160,98 @@
 										);
 
 										$name = "consignments[{$order_id}][shipment_type]";
-										printf( '<select name="%s">', $name );
+										printf( '<select name="%s" class="shipment_type">', $name );
 										foreach ( $zendingen as $key => $label ) {
 											printf( '<option value="%s"%s>%s</option>', $key, selected( $consignment['shipment_type'], $key, false ), $label );
 										}
 										echo '</select>';
-										?>
+										?>										
 									</td>
 								</tr>								
 
 								<?php
 								$option_rows = array(
-									'[ToAddress][email]'	=> array(
-										'label'	=> 'Email adres koppelen',
-										'value'	=> $order->billing_email,
-										'checked'	=> checked( $order->billing_email, $consignment['ToAddress']['email'], false ),
-									),
-									'[ToAddress][phone_number]'	=> array(
-										'label'	=> 'Telefoonnummer koppelen',
-										'value'	=> $order->billing_phone,
-										'checked'	=> checked( $order->billing_phone, $consignment['ToAddress']['phone_number'], false ),
-									),
 									'[extra_size]'	=> array(
-										'label'	=> 'Extra groot formaat (+ &euro; 2.19)',
+										'label'	=> 'Extra groot formaat',
 										'value'	=> $consignment['extra_size'],
+										'cost'	=> '2.19',
 									),
 									'[ProductCode][home_address_only]'	=> array(
-										'label'	=> 'Niet bij buren bezorgen (+ &euro; 0.26)',
+										'label'	=> 'Alléén huisadres',
 										'value'	=> $consignment['ProductCode']['home_address_only'],
+										'cost'	=> '0.26',
 									),
 									'[ProductCode][signature_on_receipt]'	=> array(
-										'label'	=> 'Handtekening voor ontvangst (+ &euro; 0.33)',
+										'label'	=> 'Handtekening voor ontvangst',
 										'value'	=> $consignment['ProductCode']['signature_on_receipt'],
+										'cost'	=> '0.33',
 									),
 									'[ProductCode][home_address_signature]'	=> array(
-										'label'	=> 'Niet bij buren bezorgen + Handtekening voor ontvangst (+ &euro; 0.40)',
+										'label'	=> 'Alléén huisadres + Handtekening voor ontvangst',
 										'value'	=> $consignment['ProductCode']['home_address_signature'],
-									),
-									'[ProductCode][mypa_insured]'	=> array(
-										'label'	=> 'Niet bij buren bezorgen + Handtekening voor ontvangst + verzekerd tot &euro; 50 (+ &euro; 0.50)',
-										'value'	=> $consignment['ProductCode']['mypa_insured'],
+										'cost'	=> '0.40',
 									),
 									'[ProductCode][return_if_no_answer]'	=> array(
 										'label'	=> 'Retour bij geen gehoor',
 										'value'	=> $consignment['ProductCode']['return_if_no_answer'],
 									),
 									'[ProductCode][insured]'	=> array(
-										'label'	=> 'Verhoogd aansprakelijk (+ &euro; 1.58 per &euro; 500 verzekerd)',
+										'label'	=> 'Verzekerd + Alléén huisadres + Handtekening voor ontvangst',
 										'value'	=> $consignment['ProductCode']['insured'],
+										'class'	=> 'insured',
 									),
 								);
 								?>
 								<?php foreach ($option_rows as $name => $option_row): ?>
 								<tr>
-									<td><?php echo $option_row['label']; ?></td>
 									<td>
 										<?php
 										$name = "consignments[{$order_id}]{$name}";
+										$class = isset($option_row['class'])?$option_row['class']:'';
 										$checked = isset($option_row['checked'])? $option_row['checked'] : checked( "1", $option_row['value'], false );
-										printf('<input type="checkbox" name="%s" value="%s" %s>', $name, $option_row['value'], $checked );
+										printf('<input type="checkbox" name="%s" value="1" class="%s" %s>', $name, $class, $checked );
+										echo $option_row['label'];
+										?>
+									</td>
+									<td style="text-align: right; font-weight: bold;">
+										<?php
+										if (!empty($option_row['cost'])) {
+											echo "+ &euro; {$option_row['cost']}";
+										}
 										?>
 									</td>
 								</tr>									
 								<?php endforeach ?>
-
+							</table>
+							<table class="wcmyparcel_settings_table">
 								<tr>
-									<td>Verzekerd bedrag (afgerond in hele in &euro;)</td>
+									<td>Verzekering</td>
+									<td>
+										<?php
+										$insured_amount = array(
+											'49'		=> __( 'Tot &euro; 50 verzekerd verzenden (+ &euro; 0.50)' , 'wcmyparcel' ),
+											'249'		=> __( 'Tot &euro; 250 verzekerd verzenden (+ &euro; 1.00)' , 'wcmyparcel' ),
+											'499'		=> __( 'Tot &euro; 500 verzekerd verzenden (+ &euro; 1.50)' , 'wcmyparcel' ),
+											''			=> __( '> &euro; 500 verzekerd verzenden (+ &euro; 1.50)' , 'wcmyparcel' ),
+										);
+
+										$name = "consignments[{$order_id}][insured_amount]";
+										printf( '<select name="%s" class="insured_amount">', $name );
+										foreach ( $insured_amount as $key => $label ) {
+											printf( '<option value="%s"%s>%s</option>', $key, selected( $consignment['insured_amount'], $key, false ), $label );
+										}
+										echo '</select>';
+										?>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										Verzekerd bedrag
+									</td>
 									<td>
 										<?php
 										$name = "consignments[{$order_id}][insured_amount]";
-										printf('<input type="text" name="%s" value="%s" size="5">', $name, $consignment['insured_amount']);
+										printf('<input type="text" name="%s" value="%s" style="width:100%%" class="insured_amount">', $name, $consignment['insured_amount']);
 										?>
 									</td>
 								</tr>
@@ -177,7 +260,7 @@
 									<td>
 										<?php
 										$name = "consignments[{$order_id}][custom_id]";
-										printf('<input type="text" name="%s" value="%s">', $name, $consignment['custom_id']);
+										printf('<input type="text" name="%s" value="%s" style="width:100%%">', $name, $consignment['custom_id']);
 										?>
 									</td>
 								</tr>

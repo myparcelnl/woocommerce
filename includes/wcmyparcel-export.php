@@ -160,7 +160,7 @@ class WC_MyParcel_Export {
 				'mypa_insured'			=> (isset($this->settings['huishandverzekerd'])) ? '1' : '0',
 				'insured'				=> (isset($this->settings['verzekerd'])) ? '1' : '0',
 			),
-			'insured_amount'	=> 0, // default to 0 when no user input
+			'insured_amount'	=> (isset($this->settings['verzekerdbedrag'])) ? $this->settings['verzekerdbedrag'] : '0',
 			'extra_size'		=> (isset($this->settings['extragroot'])) ? '1' : '0',
 			'custom_id'			=> $kenmerk,
 			'weight'			=> $this->get_parcel_weight( $order ),

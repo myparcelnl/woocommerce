@@ -19,6 +19,37 @@ class WC_MyParcel_Settings {
 	
 	public function settings_page() {
 			?>
+			<script type="text/javascript">
+			jQuery(function($) {
+				if ( $( 'input.insured_amount' ).val() > 499 ) {
+					$( 'select.insured_amount' ).val('');
+				}
+				// hide insurance options if unsured not checked
+				$('input.insured').change(function () {
+					if (this.checked) {
+						$( 'select.insured_amount' ).prop('disabled', false);
+						$( 'select.insured_amount' ).closest('tr').show();
+						$( 'select.insured_amount' ).change();
+					} else {
+						$( 'select.insured_amount' ).prop('disabled', true);
+						$( 'select.insured_amount' ).closest('tr').hide();
+						$( 'input.insured_amount' ).closest('tr').hide();
+					}
+				}).change(); //ensure visible state matches initially
+
+				// hide & disable insured amount input if not needed
+				$('select.insured_amount').change(function () {
+					if ( $( 'select.insured_amount' ).val() || !$('input.insured').prop('checked') ) {
+						$( 'input.insured_amount' ).val('');
+						$( 'input.insured_amount' ).prop('disabled', true);
+						$( 'input.insured_amount' ).closest('tr').hide();
+					} else {
+						$( 'input.insured_amount' ).prop('disabled', false);
+						$( 'input.insured_amount' ).closest('tr').show();
+					}
+				}).change(); //ensure visible state matches initially
+			});
+			</script>
 	
 				<div class="wrap">
 					<div class="icon32" id="icon-options-general"><br /></div>
@@ -232,7 +263,7 @@ class WC_MyParcel_Settings {
 			array(
 				'menu'			=> $option,
 				'id'			=> 'email',
-				'description'	=> __( 'Wanneer u het emailadres van de klant koppelt, wordt daar een bericht met de Track&Trace link naartoe gemaild vanuit MyParcel. In uw <a href="http://www.myparcel.nl/backend/instellingen/tracktrace">MyParcel instellingen</a> kunt u deze mail opmaken in uw eigen stijl.', 'wcmyparcel' )
+				'description'	=> __( 'Wanneer u het emailadres van de klant koppelt, kan daar een bericht met de Track&Trace link naartoe worden gemaild vanuit MyParcel. In uw <a href="http://www.myparcel.nl/backend/instellingen/tracktrace">MyParcel instellingen</a> kunt u deze mail in- of uitschakelen en opmaken in uw eigen stijl.', 'wcmyparcel' )
 			)
 		);
 		
@@ -264,7 +295,7 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'huisadres',
-			__( 'Niet bij buren bezorgen (+ &euro;0.26)', 'wcmyparcel' ),
+			__( 'Alléén huisadres (+ &euro;0.26)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
@@ -289,7 +320,7 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'huishand',
-			__( 'Niet bij buren bezorgen + Handtekening voor ontvangst (+ &euro;0.40)', 'wcmyparcel' ),
+			__( 'Alléén huisadres + Handtekening voor ontvangst (+ &euro;0.40)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
@@ -297,19 +328,6 @@ class WC_MyParcel_Settings {
 				'menu'			=> $option,
 				'id'			=> 'huishand',
 				'description'	=> __( 'Hiermee kiest u voor zekerheid. Het pakket wordt alleen bij de geadresseerde bezorgt die hiervoor tekent. Zo weet u zeker dat het pakket in ontvangst is genomen door de geadresseerde. Een veilig gevoel.', 'wcmyparcel' )
-			)
-		);
-		
-		add_settings_field(
-			'huishandverzekerd',
-			__( 'Niet bij buren bezorgen + Handtekening voor ontvangst + verzekerd tot &euro;50 (+ &euro;0.50)', 'wcmyparcel' ),
-			array( &$this, 'checkbox_element_callback' ),
-			$option,
-			'default_values',
-			array(
-				'menu'			=> $option,
-				'id'			=> 'huishandverzekerd',
-				'description'	=> __( 'Er zit standaard geen verzekering op de zendingen. Indien u uw pakket wilt verzekeren tegen diefstal, schade en verlies kunt u dit bij ons doen voor &euro;&nbsp;0,50. Wij verzekeren uw zending tot een waarde van &euro;&nbsp;50. Wilt u een duurder product verzekeren? Kies dan voor de optie "Verhoogd aansprakelijk".', 'wcmyparcel' )
 			)
 		);
 		
@@ -328,19 +346,40 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'verzekerd',
-			__( 'Verhoogd aansprakelijk (+ &euro;1.58 per 500 euro verzekerd)', 'wcmyparcel' ),
+			__( 'Verzekerd + Alléén huisadres + Handtekening voor ontvangst (v.a. + &euro;0.50)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
 			array(
 				'menu'			=> $option,
 				'id'			=> 'verzekerd',
-				'description'	=> __( 'Er zit standaard geen verzekering op de zendingen. Indien u toch wilt verzekeren kunt u dit doen voor &euro;&nbsp;1.45 extra per &euro;&nbsp;500 verzekerd. Wij verzekeren de inkoopwaarde van uw product. Met een maximale verzekerde waarde van &euro;&nbsp;5.000.', 'wcmyparcel' )
+				'description'	=> __( 'Er zit standaard geen verzekering op de zendingen. Indien u toch wilt verzekeren kunt u dit doen vanaf &euro;0.50. Wij verzekeren de inkoopwaarde van uw product, met een maximale verzekerde waarde van &euro;&nbsp;5.000.', 'wcmyparcel' ),
+				'class'			=> 'insured',
 			)
 		);
 
 		add_settings_field(
 			'verzekerdbedrag',
+			__( 'Verzekering', 'wcmyparcel' ),
+			array( &$this, 'select_element_callback' ),
+			$option,
+			'default_values',
+			array(
+				'menu'			=> $option,
+				'id'			=> 'verzekerdbedrag',
+				'default'		=> 'standard',
+				'class'			=> 'insured_amount',
+				'options' 		=> array(
+					'49'		=> __( 'Tot &euro; 50 verzekerd verzenden (+ &euro; 0.50)' , 'wcmyparcel' ),
+					'249'		=> __( 'Tot &euro; 250 verzekerd verzenden (+ &euro; 1.00)' , 'wcmyparcel' ),
+					'499'		=> __( 'Tot &euro; 500 verzekerd verzenden (+ &euro; 1.50)' , 'wcmyparcel' ),
+					''			=> __( '> &euro; 500 verzekerd verzenden (+ &euro; 1.50)' , 'wcmyparcel' ),
+				),
+			)
+		);
+
+		add_settings_field(
+			'verzekerdbedrag_input',
 			__( 'Verzekerd bedrag (in euro)', 'wcmyparcel' ),
 			array( &$this, 'text_element_callback' ),
 			$option,
@@ -349,7 +388,7 @@ class WC_MyParcel_Settings {
 				'menu'			=> $option,
 				'id'			=> 'verzekerdbedrag',
 				'size'			=> '5',
-				'description'	=> __( 'Indien u kiest voor verhoogd aansprakelijk, dan kunt u hier de waarde van de inhoud van het pakket vermelden, afgerond op hele euros, zonder kommas punten of valutateken.', 'wcmyparcel' ),
+				'class'			=> 'insured_amount',
 			)
 		);
 
@@ -440,14 +479,12 @@ class WC_MyParcel_Settings {
 			'huisadres'			=> '0',
 			'handtekening'		=> '0',
 			'huishand'			=> '0',
-			'huishandverzekerd'	=> '0',
 			'retourbgg'			=> '0',
 			'verzekerd'			=> '0',
 			'verzekerdbedrag'	=> '0',
 			'kenmerk'			=> '',
-			'bericht'			=> '',
 			'verpakkingsgewicht'=> '0',
-			);
+		);
 	
 		add_option( 'wcmyparcel_settings', $default );
 	}
@@ -458,6 +495,7 @@ class WC_MyParcel_Settings {
 		$menu = $args['menu'];
 		$id = $args['id'];
 		$size = isset( $args['size'] ) ? $args['size'] : '25';
+		$class = isset($args['class'])?$args['class']:'';
 	
 		$options = get_option( $menu );
 	
@@ -467,7 +505,7 @@ class WC_MyParcel_Settings {
 			$current = isset( $args['default'] ) ? $args['default'] : '';
 		}
 	
-		$html = sprintf( '<input type="text" id="%1$s" name="%2$s[%1$s]" value="%3$s" size="%4$s"/>', $id, $menu, $current, $size );
+		$html = sprintf( '<input type="text" id="%1$s" name="%2$s[%1$s]" value="%3$s" size="%4$s" class="%5$s"/>', $id, $menu, $current, $size, $class );
 	
 		// Displays option description.
 		if ( isset( $args['description'] ) ) {
@@ -511,6 +549,7 @@ class WC_MyParcel_Settings {
 	public function checkbox_element_callback( $args ) {
 		$menu = $args['menu'];
 		$id = $args['id'];
+		$class = isset($args['class'])?$args['class']:'';
 	
 		$options = get_option( $menu );
 	
@@ -520,7 +559,7 @@ class WC_MyParcel_Settings {
 			$current = isset( $args['default'] ) ? $args['default'] : '';
 		}
 	
-		$html = sprintf( '<input type="checkbox" id="%1$s" name="%2$s[%1$s]" value="1"%3$s />', $id, $menu, checked( 1, $current, false ) );
+		$html = sprintf( '<input type="checkbox" id="%1$s" name="%2$s[%1$s]" value="1" class="%3$s" %4$s />', $id, $menu, $class, checked( 1, $current, false ) );
 	
 		//$html .= sprintf( '<label for="%s"> %s</label><br />', $id, __( 'Activate/Deactivate', 'wcmyparcel' ) );
 	
@@ -542,6 +581,7 @@ class WC_MyParcel_Settings {
 	public function select_element_callback( $args ) {
 		$menu = $args['menu'];
 		$id = $args['id'];
+		$class = isset($args['class'])?$args['class']:'';
 	
 		$options = get_option( $menu );
 	
@@ -551,7 +591,7 @@ class WC_MyParcel_Settings {
 			$current = isset( $args['default'] ) ? $args['default'] : '';
 		}
 
-		$html = sprintf( '<select id="%1$s" name="%2$s[%1$s]">', $id, $menu );
+		$html = sprintf( '<select id="%1$s" name="%2$s[%1$s]" class="%3$s" >', $id, $menu, $class );
 		foreach ( $args['options'] as $key => $label ) {
 			$html .= sprintf( '<option value="%s"%s>%s</option>', $key, selected( $current, $key, false ), $label );
 		}
@@ -613,6 +653,8 @@ class WC_MyParcel_Settings {
 	 * @return array        validated options.
 	 */
 	public function validate_options( $input ) {
+		// echo '<pre>';var_dump($input);echo '</pre>';die();
+
 		// Create our array for storing the validated options.
 		$output = array();
 	
