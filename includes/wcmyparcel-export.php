@@ -52,7 +52,9 @@ class WC_MyParcel_Export {
 				}
 
 				// stripslashes! Wordpress always slashes POST data, regardless of magic quotes settings... http://stackoverflow.com/q/8949768/1446634
-				$consignment_data = stripslashes_deep($_POST['consignments']);
+				$consignment_data = $this->process_consignment_data( stripslashes_deep($_POST['consignments']) );
+
+				// echo '<pre>';print_r($consignment_data);echo '</pre>';die();
 
 				$api = new WC_MyParcel_API();
 
@@ -75,15 +77,18 @@ class WC_MyParcel_Export {
 				if ( !isset($_GET['consignment']) ) {
 					// Bulk export label
 					foreach ($order_ids as $order_id) {
-						if (get_post_meta($order_id,'_myparcel_consignment_id',true)) {
-							$order_consignment_id = get_post_meta($order_id,'_myparcel_consignment_id',true);
-							$consignments[$order_id] = $order_consignment_id;
+						if ( $order_consignment_id = get_post_meta($order_id,'_myparcel_consignment_id',true) ) {
+							$consignments[$order_consignment_id] = $order_id;
+						} elseif ( $order_consignments = get_post_meta($order_id,'_myparcel_consignments',true) ) {
+							foreach ($order_consignments as $key => $order_consignment) {
+								$consignments[$order_consignment['consignment_id']] = $order_id;
+							}
 						}
 					}
 				} else {
 					// Label request from modal (directly after export)
 					// consignments already given!
-					$consignments = array_combine($order_ids, explode('x',$_GET['consignment']));
+					$consignments = array_combine(explode('x',$_GET['consignment']), $order_ids);
 				}
 
 				$api = new WC_MyParcel_API();
@@ -167,6 +172,23 @@ class WC_MyParcel_Export {
 		);
 
 		return apply_filters( 'wcmyparcel_order_consignment_data', $consignment, $order );
+	}
+
+	/**
+	 * Process consignment data after it has been reviewed for submit
+	 */
+	public function process_consignment_data ( $consignment_data ) {
+		foreach ($consignment_data as $order_id => $consignment) {
+			$colli_amount = isset($consignment['colli_amount']) ? $consignment['colli_amount'] : 1;
+
+			// multiply consignments by colli_amount
+			for ($i=0; $i < intval($colli_amount); $i++) {
+				unset($consignment['colli_amount']);
+				$consignment['order_id'] = $order_id;
+				$consignment_data_processed[] = $consignment;
+			}
+		}
+		return apply_filters('wcmyparcel_process_consignment_data', $consignment_data_processed );
 	}
 
 	public function get_item_display_name ( $item, $order ) {

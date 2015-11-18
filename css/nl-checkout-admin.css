@@ -9,3 +9,16 @@
 #order_data .order_data_column ._billing_house_number_field {
 	float: right;
 }
+
+table.tracktrace_status {
+	margin-bottom: 10px;
+}
+
+table.tracktrace_status th {
+	text-align: left
+}
+
+table.tracktrace_status th,
+table.tracktrace_status td {
+	padding: 0 5px;
+}

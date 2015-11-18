@@ -1,8 +1,11 @@
 <?php
 // create consigment list
 $consignment_list = array();
-foreach ($api->consignments as $order_id => $consignment) {
-	$consignment_list[$order_id] = $consignment['consignment_id'];
+foreach ($api->consignments as $order_id => $consignments) {
+	foreach ($order_consignments as $order_consignment) {
+		$consignments[$order_consignment['consignment_id']] = $order_id;
+	}
+	$consignment_list = array_keys($consignments);
 }
 $pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignment=' . implode('x', $consignment_list) . '&order_ids=' . implode('x', array_keys($consignment_list)) ), 'wcmyparcel-label' );
 ?>

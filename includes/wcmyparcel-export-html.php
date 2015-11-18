@@ -167,8 +167,21 @@
 										echo '</select>';
 										?>										
 									</td>
-								</tr>								
-
+								</tr>
+								<tr>
+									<td>
+										Aantal: 
+									</td>
+									<td>
+										<?php
+										$name = "consignments[{$order_id}][colli_amount]";
+										printf('<input type="number" step="1" min="0" name="%s" value="%s" size="2">', $name, 1);
+										?>								
+									</td>
+								</tr>
+							</table>
+							<br>
+							<table class="wcmyparcel_settings_table parcel_options">
 								<?php
 								$option_rows = array(
 									'[extra_size]'	=> array(

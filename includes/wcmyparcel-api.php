@@ -26,16 +26,19 @@ class WC_MyParcel_API {
 
 		$result = $this->request( 'create-consignments', $api_data);
 
-		// put order_id in key!
-		$result = array_combine( array_keys($api_data['consignments']), array_values($result) );
+		// add order_id back to result - this assumes result array always matches input array!
+		foreach ($result as $key => $consignment) {
+			$result[$key]['order_id'] = $consignment_data[$key]['order_id'];
+		}
 
 		// separate errors from successful consignments
-		foreach ($result as $order_id => $consignment ) {
+		foreach ($result as $consignment ) {
+			$order_id = $consignment['order_id'];
 			if ( !isset($consignment['error']) ) {
-				$this->consignments[$order_id] = $consignment;
+				$this->consignments[$order_id][] = $consignment;
 			} else {
 				//$error[$order_id] = $order_decode['error'];
-				$this->errors[$order_id] = implode( ', ', $this->array_flatten($consignment) );
+				$this->errors[$order_id][] = implode( ', ', $this->array_flatten($consignment) );
 			}
 		}
 
@@ -52,8 +55,10 @@ class WC_MyParcel_API {
 		// get consignments from result if already available
 		if ( empty($consignments) ) {
 			if ( !empty($this->consignments) ) {
-				foreach ($this->consignments as $order_id => $consignment) {
-					$consignments[$order_id] = $consignment['consignment_id'];
+				foreach ($this->consignments as $order_id => $order_consignments) {
+					foreach ($order_consignments as $order_consignment) {
+						$consignments[$order_consignment['consignment_id']] = $order_id;
+					}
 				}
 			} else {
 				return false;
@@ -62,7 +67,7 @@ class WC_MyParcel_API {
 
 		// retrieve pdf for the consignment
 		$api_data = array(
-			'consignment_id' => $consignment_id_encoded = implode(',', $consignments),
+			'consignment_id' => $consignment_id_encoded = implode(',', array_keys( $consignments ) ),
 			'format'		 => 'json',
 		);
 
@@ -77,11 +82,13 @@ class WC_MyParcel_API {
 			$tracktrace      = explode(',',$result['tracktrace']);
 			$consignments_tracktrace = array_combine( $consignment_ids, $tracktrace );
 			// $downpartner     = explode(',',$result['downpartner']);
-			foreach ($consignments as $order_id => $consignment_id) {
+			foreach ( $consignments as $consignment_id => $order_id ) {
 				if ( isset( $consignments_tracktrace[$consignment_id] ) ) {
 					// add track&trace to consignments
-					$this->consignments[$order_id]['consignment_id'] = $consignment_id;
-					$this->consignments[$order_id]['tracktrace'] = $consignments_tracktrace[$consignment_id];
+					$this->consignments[$order_id][] =  array(
+						'consignment_id'	=> $consignment_id,
+						'tracktrace'		=> $consignments_tracktrace[$consignment_id],
+					);
 				}
 			}
 
@@ -103,11 +110,8 @@ class WC_MyParcel_API {
 			return false;
 		}
 
-		foreach ($this->consignments as $order_id => $consignment) {
-			extract( $consignment ); // consignment_id, tracktrace, downpartner, colli_amount
-
-			update_post_meta ( $order_id, '_myparcel_consignment_id', $consignment_id );
-			update_post_meta ( $order_id, '_myparcel_tracktrace', $tracktrace );
+		foreach ($this->consignments as $order_id => $order_consignments ) {
+			update_post_meta ( $order_id, '_myparcel_consignments', $order_consignments );
 
 			// set status to complete (if setting enabled)
 			if ( isset($this->settings['auto_complete']) ) {
