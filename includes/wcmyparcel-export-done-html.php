@@ -1,7 +1,7 @@
 <?php
 // create consigment list
 $consignment_list = array();
-foreach ($api->consignments as $order_id => $consignments) {
+foreach ($api->consignments as $order_id => $order_consignments) {
 	foreach ($order_consignments as $order_consignment) {
 		$consignments[$order_consignment['consignment_id']] = $order_id;
 	}
