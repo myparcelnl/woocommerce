@@ -237,12 +237,11 @@ class WC_MyParcel_Writepanel {
 		return $consignments;
 	}
 
-	public function get_tracktrace_url($order_id) {
+	public function get_tracktrace_url( $order_id, $tracktrace ) {
 		if (empty($order_id))
 			return;
 
 		$country = get_post_meta($order_id,'_shipping_country',true);
-		$tracktrace = get_post_meta($order_id,'_myparcel_tracktrace',true);
 		$postcode = preg_replace('/\s+/', '',get_post_meta($order_id,'_shipping_postcode',true));
 
 		// set url for NL or foreign orders
