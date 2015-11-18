@@ -2,8 +2,8 @@
 Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.2
-Stable tag: 1.4.7
+Tested up to: 4.3.1
+Stable tag: 1.5.0
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -105,8 +105,15 @@ function wcmyparcel_pakjegemak_move() {
 
 == Changelog ==
 
-= 1.4.7 =
+= 1.5.0 =
 * Feature: Shipment type setting (Pakket/Brievenbuspakje/Ongefrankeerd label)
+* Feature: Multi-colli support
+* Feature: More advanced insurance options
+* Feature: Allow overriding pakjegemak passdata file via child theme (place in /woocommerce/)
+* Fix: Backend address formatting/styles
+* Fix: Unexpected output at first activation
+* Tweak: Hide parcel settings for other shipment types
+* Tweak: Remove deprecated comments field
 * Tweak: Settings now under WooCommerce top menu
 * Tweak: better error logging
 * Dev: Code refactor
