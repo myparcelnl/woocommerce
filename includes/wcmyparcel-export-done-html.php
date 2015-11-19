@@ -57,6 +57,10 @@ $pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignme
 			Uw pakket met daarop het verzendetiket dient binnen 9 werkdagen na het aanmaken bij PostNL binnen te zijn. Daarna verliest het zijn geldigheid.
 			</p>
 			<?php
+		} else {
+			?>
+			<p>Wilt u direct de labels vanuit dit venster downloaden? Zet dan de optie "Verwerk labels direct" aan in de MyParcel plugin instellingen.</p>
+			<?php			
 		}
 	}
 	?>
