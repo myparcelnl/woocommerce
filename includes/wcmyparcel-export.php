@@ -14,8 +14,25 @@ class WC_MyParcel_Export {
 			
 	public function __construct() {
 		include( 'wcmyparcel-api.php' );
-		add_action( 'load-edit.php', array( &$this, 'wcmyparcel_action' ) ); // Export actions (popup & file export)
+
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+		add_action( 'load-edit.php', array( $this, 'wcmyparcel_action' ) ); // Export actions (popup & file export)
 		$this->settings = get_option( 'wcmyparcel_settings' );
+	}
+
+	public function admin_notices () {
+		if (!isset($_GET['myparcel'])) {
+			return;
+		}
+
+		switch ($_GET['myparcel']) {
+			case 'no_consignments':
+				$message = __('U dient de orders eerst naar MyParcel te exporteren voordat u de labels kunt printen!');
+				printf('<div class="error"><p>%s</p></div>', $message);
+				break;
+			default:
+				break;
+		}
 	}
 
 	/**
@@ -89,6 +106,11 @@ class WC_MyParcel_Export {
 					// Label request from modal (directly after export)
 					// consignments already given!
 					$consignments = array_combine(explode('x',$_GET['consignment']), $order_ids);
+				}
+
+				if (empty($consignments)) {
+					wp_redirect( admin_url( 'edit.php?post_type=shop_order&myparcel=no_consignments' ) );
+					exit();
 				}
 
 				$api = new WC_MyParcel_API();
