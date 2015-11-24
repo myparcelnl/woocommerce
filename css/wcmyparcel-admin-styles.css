@@ -9,8 +9,8 @@ input[type=number] {
 
 .wcmyparcel_settings_table td {
 	border: none;
-	padding: 0px 7px 2px;
-	vertical-align: middle;
+	padding: 0px 7px 2px !important;
+	vertical-align: middle !important;
 }
 
 td.ordercell {
