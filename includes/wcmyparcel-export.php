@@ -109,7 +109,14 @@ class WC_MyParcel_Export {
 				}
 
 				if (empty($consignments)) {
-					wp_redirect( admin_url( 'edit.php?post_type=shop_order&myparcel=no_consignments' ) );
+					if (!empty($_SERVER['HTTP_REFERER'])) {
+						$shop_orders = $_SERVER['HTTP_REFERER'];
+					} else {
+						$shop_orders = admin_url( 'edit.php?post_type=shop_order' );
+					}
+					
+					$url = add_query_arg( array( 'myparcel' => 'no_consignments'), $shop_orders);
+					wp_redirect( $url );
 					exit();
 				}
 
