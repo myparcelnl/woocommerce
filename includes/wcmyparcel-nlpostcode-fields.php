@@ -2,6 +2,8 @@
 if ( !class_exists( 'WC_NLPostcode_Fields' ) ) {
 class WC_NLPostcode_Fields {
 
+	public $version = '1.5.1';
+
 	/**
 	 * Construct.
 	 */
@@ -77,13 +79,23 @@ class WC_NLPostcode_Fields {
    		if ( is_checkout() || is_account_page() ) {
 			if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 				// Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
-				wp_register_script( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-checkout.js'), array( 'wc-checkout' ) );
+				wp_register_script(
+					'nl-checkout',
+					(dirname(plugin_dir_url(__FILE__)) . '/js/nl-checkout.js'),
+					array( 'wc-checkout' ),
+					$this->version
+				);
 				wp_enqueue_script( 'nl-checkout' );
 			}
 
 			if ( is_account_page() ) {
 				// Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
-				wp_register_script( 'nl-account-page', (dirname(plugin_dir_url(__FILE__)) . '/js/nl-account-page.js'), array( 'jquery' ) );
+				wp_register_script(
+					'nl-account-page',
+					(dirname(plugin_dir_url(__FILE__)) . '/js/nl-account-page.js'),
+					array( 'jquery' ),
+					$this->version
+				);
 				wp_enqueue_script( 'nl-account-page' );
 			}
 
@@ -100,7 +112,9 @@ class WC_NLPostcode_Fields {
 		if ( $post_type == 'shop_order' ) {
 			wp_enqueue_style(
 				'nl-checkout-admin',
-				dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout-admin.css'
+				dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout-admin.css',
+				array(), // deps
+				$this->version
 			);
 		}
 	}

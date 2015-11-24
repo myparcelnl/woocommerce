@@ -15,8 +15,28 @@ $pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignme
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<?php
 		require_once(ABSPATH . 'wp-admin/admin.php');
-		wp_register_style( 'wcmyparcel-admin-styles', dirname(plugin_dir_url(__FILE__)) .  '/css/wcmyparcel-admin-styles.css', array(), '', 'all' );
-		wp_enqueue_style( 'wcmyparcel-admin-styles' );		
+
+		global $wcmyparcelexport;
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
+			// Old versions
+			wp_register_style(
+				'wcmyparcel-admin-styles',
+				$wcmyparcelexport->plugin_url() . '/css/wcmyparcel-admin-styles.css',
+				array(),
+				WC_MYPARCEL_VERSION,
+				'all'
+			);
+		} else {
+			// WC 2.1+, MP6 style with larger buttons
+			wp_register_style(
+				'wcmyparcel-admin-styles',
+				$wcmyparcelexport->plugin_url() . '/css/wcmyparcel-admin-styles-wc21.css',
+				array(),
+				WC_MYPARCEL_VERSION,
+				'all'
+			);
+		}				
+
 		wp_enqueue_style( 'colors' );
 		wp_enqueue_style( 'media' );
 		do_action('admin_print_styles');

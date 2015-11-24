@@ -14,12 +14,15 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 
 if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) {
 	class WooCommerce_MyParcel_Export {
+
+		public $version = '1.5.1';
 	
 		/**
 		 * Construct.
 		 */
 		 		
 		public function __construct() {
+			$this->define( 'WC_MYPARCEL_VERSION', $this->version );
 	
 			// Load textdomain
 			add_action( 'plugins_loaded', array( &$this, 'languages' ), 0 );
@@ -33,7 +36,18 @@ if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) {
 			// Load plugin classes
 			add_action( 'init', array( &$this, 'load_hooks' ) );
 		}
-	
+
+		/**
+		 * Define constant if not already set
+		 * @param  string $name
+		 * @param  string|bool $value
+		 */
+		private function define( $name, $value ) {
+			if ( ! defined( $name ) ) {
+				define( $name, $value );
+			}
+		}
+
 		/**
 		 * Load the main plugin classes and functions
 		 */
@@ -70,10 +84,22 @@ if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) {
 
 				if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 					// Old versions
-					wp_register_style( 'wcmyparcel-admin-styles', plugins_url( '/css/wcmyparcel-admin-styles.css', __FILE__ ), array(), '', 'all' );
+					wp_register_style(
+						'wcmyparcel-admin-styles',
+						plugins_url( '/css/wcmyparcel-admin-styles.css', __FILE__ ),
+						array(),
+						$this->version,
+						'all'
+					);
 				} else {
 					// WC 2.1+, MP6 style with larger buttons
-					wp_register_style( 'wcmyparcel-admin-styles', plugins_url( '/css/wcmyparcel-admin-styles-wc21.css', __FILE__ ), array(), '', 'all' );
+					wp_register_style(
+						'wcmyparcel-admin-styles',
+						plugins_url( '/css/wcmyparcel-admin-styles-wc21.css', __FILE__ ),
+						array(),
+						$this->version,
+						'all'
+					);
 				}				
 
 				wp_enqueue_style( 'wcmyparcel-admin-styles' );  
@@ -87,7 +113,23 @@ if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) {
 
 			$this->settings->default_settings();
 		}
-	
+
+		/**
+		 * Get the plugin url.
+		 * @return string
+		 */
+		public function plugin_url() {
+			return untrailingslashit( plugins_url( '/', __FILE__ ) );
+		}
+
+		/**
+		 * Get the plugin path.
+		 * @return string
+		 */
+		public function plugin_path() {
+			return untrailingslashit( plugin_dir_path( __FILE__ ) );
+		}
+
 	}
 }
 

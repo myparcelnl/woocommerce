@@ -1,3 +1,18 @@
+tr.order-row table {
+	width: 100%;
+}
+
+input[type=number] {
+	width: 50px;
+	text-align: center;
+}
+
+.wcmyparcel_settings_table td {
+	border: none;
+	padding: 0px 7px 2px;
+	vertical-align: middle;
+}
+
 .wcmyparcel_settings_table td {
 	border: none;
 	padding: 0px 7px 2px;
