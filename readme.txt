@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.3.1
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -104,6 +104,11 @@ function wcmyparcel_pakjegemak_move() {
 3. View the status of the shipment on the order details page.
 
 == Changelog ==
+
+= 1.5.1 =
+* Tweak: Added error when no consignments available when trying to print labels
+* Tweak: Tip for direct processing of labels (when not enabled)
+* Tweak: admin styles
 
 = 1.5.0 =
 * Feature: Shipment type setting (Pakket/Brievenbuspakje/Ongefrankeerd label)
