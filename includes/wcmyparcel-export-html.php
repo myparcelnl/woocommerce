@@ -3,9 +3,9 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<?php
-		global $wcmyparcelexport;
-
 		require_once(ABSPATH . 'wp-admin/admin.php');
+
+		global $wcmyparcelexport;
 		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 			// Old versions
 			wp_register_style(
@@ -24,7 +24,7 @@
 				WC_MYPARCEL_VERSION,
 				'all'
 			);
-		}				
+		}
 
 		wp_enqueue_style( 'wcmyparcel-admin-styles' );	
 		wp_enqueue_style( 'colors' );
