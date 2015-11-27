@@ -170,7 +170,7 @@ class WC_MyParcel_Export {
 
 		if ( $order->shipping_country == 'NL' ) {
 			$address_intl = array(
-				'postcode'		=> $order->shipping_postcode,
+				'postcode'		=> preg_replace('/[^a-zA-Z0-9]/', '', $order->shipping_postcode),
 				'house_number'	=> $order->shipping_house_number,
 				'number_addition' => $order->shipping_house_number_suffix,
 				'street'		  => $order->shipping_street_name,
