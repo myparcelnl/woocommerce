@@ -26,21 +26,26 @@ class WC_MyParcel_API {
 
 		$result = $this->request( 'create-consignments', $api_data);
 
-		// add order_id back to result - this assumes result array always matches input array!
-		foreach ($result as $key => $consignment) {
-			$result[$key]['order_id'] = $consignment_data[$key]['order_id'];
+		// check for general errors
+		if (isset($result['error'])) {
+			$this->errors['general'] = $result['error'];
+		} else {
+			// add order_id back to result - this assumes result array always matches input array!
+			foreach ($result as $key => $consignment) {
+				$result[$key]['order_id'] = $consignment_data[$key]['order_id'];
+			}
+			// separate consignment errors from successful consignments
+			foreach ($result as $consignment ) {
+				$order_id = $consignment['order_id'];
+				if ( !isset($consignment['error']) ) {
+					$this->consignments[$order_id][] = $consignment;
+				} else {
+					//$error[$order_id] = $order_decode['error'];
+					$this->errors[$order_id][] = implode( ', ', $this->array_flatten($consignment) );
+				}
+			}			
 		}
 
-		// separate errors from successful consignments
-		foreach ($result as $consignment ) {
-			$order_id = $consignment['order_id'];
-			if ( !isset($consignment['error']) ) {
-				$this->consignments[$order_id][] = $consignment;
-			} else {
-				//$error[$order_id] = $order_decode['error'];
-				$this->errors[$order_id][] = implode( ', ', $this->array_flatten($consignment) );
-			}
-		}
 
 		$this->save_consignment_data();
 
@@ -210,6 +215,7 @@ class WC_MyParcel_API {
 			$request = $target_site_api . $request_type . '/?' . $string . '&signature=' . $signature;
 			$result = file_get_contents($request);
 		}
+		// $this->log( "RAW api response:\n" . print_r( $result, true ) );
 
 		// decode result
 		$result = json_decode($result, true);

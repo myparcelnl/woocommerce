@@ -51,20 +51,27 @@ $pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignme
 
 	<?php
 	if (!empty($api->errors)) {
-		echo '<p>Er hebben zich fouten voorgedaan bij de volgende orders, deze zijn niet verwerkt:<ul style="margin-left:20px;">';
-		foreach($api->errors as $order_id => $error_message) {
-			$order = new WC_Order($order_id);
-			$order_number = $order->get_order_number();
-			echo '<li><strong>'.$order_number.'</strong> <i>'.$error_message.'</i></li>';
+		foreach($api->errors as $key => $errors) {
+			if ($key == 'general') {
+				echo '<i>'.$errors.'</i>';
+			} else {
+				echo '<p>Er hebben zich fouten voorgedaan bij de volgende orders, deze zijn niet verwerkt:<ul style="margin-left:20px;">';
+				$order_id = $key;
+				$order = new WC_Order($order_id);
+				$order_number = $order->get_order_number();
+				foreach ($errors as $error_message) {
+					echo '<li><strong>'.$order_number.'</strong> <i>'.$error_message.'</i></li>';
+				}				
+				echo '</ul></p>';
+			}
 		}
-		echo '</ul></p>';
 	}
 
 	if (!empty($api->consignments)) {
 		if (!empty($api->errors)) {
 			echo '<p>De overige orders zijn succesvol verzonden naar MyParcel.<br />';
 		} else {
-			echo '<p>De geselecteerde orders zijn succesvol verzonden naar MyParcel.<br />';		
+			echo '<p>De geselecteerde orders zijn succesvol verzonden naar MyParcel.<br />';
 		}
 		$target = ( isset($this->settings['download_display']) && $this->settings['download_display'] == 'display') ? 'target="_blank"' : '';
 
