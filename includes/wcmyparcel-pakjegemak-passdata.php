@@ -85,6 +85,12 @@
 				formulier['shipping_city'].value				= city;
 				// NOTE: de locatie slaan we op als 'bedrijf'. De naam van de persoon die afhaalt, dient door de klant ingevuld te worden in een 'naam' veld.
 
+				//Kopieer billing naam als deze velden leeg zijn
+				if (formulier['shipping_first_name'].value == '' && formulier['shipping_last_name'].value  == '') {
+					formulier['shipping_first_name'].value = formulier['billing_first_name'].value;
+					formulier['shipping_last_name'].value  = formulier['billing_last_name'].value;
+				}
+
 			}
 		}
 		parent.parent.window.close();
