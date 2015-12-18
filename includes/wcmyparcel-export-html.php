@@ -191,7 +191,7 @@
 								</tr>
 								<tr>
 									<td>
-										Aantal: 
+										Aantal labels: 
 									</td>
 									<td>
 										<?php
