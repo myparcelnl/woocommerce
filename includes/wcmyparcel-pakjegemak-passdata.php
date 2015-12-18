@@ -83,6 +83,7 @@
 				formulier['shipping_house_number'].value		= houseNr;
 				formulier['shipping_house_number_suffix'].value	= houseNrAdd.replace("-", "");; // verwijder eerste streepje van toevoeging!
 				formulier['shipping_city'].value				= city;
+				formulier['myparcel_is_pakjegemak'].value		= 'yes';
 				// NOTE: de locatie slaan we op als 'bedrijf'. De naam van de persoon die afhaalt, dient door de klant ingevuld te worden in een 'naam' veld.
 
 				//Kopieer billing naam als deze velden leeg zijn

@@ -28,6 +28,9 @@ class WC_MyParcel_Writepanel {
 			add_action( apply_filters( 'wcmyparcel_pakjegemak_locatie', 'woocommerce_checkout_before_customer_details' ), array( $this, 'pakjegemak' ), 10, 1 );
 		}
 
+		// Save pakjegemak choice
+		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_pakjegemak_choice' ), 10, 2 );
+
 	}
 
 	/**
@@ -306,6 +309,7 @@ class WC_MyParcel_Writepanel {
 		<div class="myparcel-pakjegemak" style="overflow:auto;">
 			<span class="myparcel-pakjegemak-omschrijving"><?php echo $omschrijving; ?></span>
 			<a class="myparcel-pakjegemak button" onclick="return pakjegemak();" style="cursor:pointer; float:right; margin:1em 0"><?php echo $knop; ?></a>
+			<input type="hidden" name="myparcel_is_pakjegemak" value="">
 		</div>
 		<?php
 		// gebruik het filter om je eigen HTML/tekst weer te geven
@@ -337,5 +341,19 @@ class WC_MyParcel_Writepanel {
 			}
 			</script>
 		<?php
-	}	
+	}
+
+	/**
+	 * Save whether pakjegemak was used or not.
+	 *
+	 * @param  int   $order_id
+	 * @param  array $posted
+	 *
+	 * @return void
+	 */
+	public function save_pakjegemak_choice( $order_id, $posted ) {
+		if (!empty($posted['myparcel_is_pakjegemak'])) {
+			update_post_meta( $order_id, '_myparcel_is_pakjegemak', $posted['myparcel_is_pakjegemak'] );
+		}
+	}
 }
