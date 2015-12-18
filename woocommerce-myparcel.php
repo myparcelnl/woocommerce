@@ -80,7 +80,12 @@ if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) {
 			if( $post_type == 'shop_order' ) {
 				wp_enqueue_script( 'thickbox' );
 				wp_enqueue_style( 'thickbox' );
-				wp_enqueue_script( 'wcmyparcel-export', plugin_dir_url(__FILE__) . 'js/wcmyparcel-script.js', array( 'jquery', 'thickbox' ) );
+				wp_enqueue_script(
+					'wcmyparcel-export',
+					plugin_dir_url(__FILE__) . 'js/wcmyparcel-script.js',
+					array( 'jquery', 'thickbox' ),
+					$this->version
+				);
 
 				if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 					// Old versions
