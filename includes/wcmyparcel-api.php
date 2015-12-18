@@ -25,6 +25,7 @@ class WC_MyParcel_API {
 		);
 
 		$result = $this->request( 'create-consignments', $api_data);
+		$timestamp = current_time('mysql');
 
 		// check for general errors
 		if (isset($result['error'])) {
@@ -38,6 +39,7 @@ class WC_MyParcel_API {
 			foreach ($result as $consignment ) {
 				$order_id = $consignment['order_id'];
 				if ( !isset($consignment['error']) ) {
+					$consignment['timestamp'] = $timestamp;
 					$this->consignments[$order_id][] = $consignment;
 				} else {
 					//$error[$order_id] = $order_decode['error'];
@@ -78,6 +80,7 @@ class WC_MyParcel_API {
 
 		// Request labels from MyParcel API
 		$result = $this->request( 'retrieve-pdf', $api_data);
+		$timestamp = current_time('mysql');
 
 		if (!empty($this->pdf)) {
 			// Create proper consignment array, put order_id as key
@@ -93,6 +96,7 @@ class WC_MyParcel_API {
 					$this->consignments[$order_id][] =  array(
 						'consignment_id'	=> $consignment_id,
 						'tracktrace'		=> $consignments_tracktrace[$consignment_id],
+						'timestamp'			=> $timestamp,
 					);
 				}
 			}
