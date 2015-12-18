@@ -162,6 +162,20 @@ class WC_MyParcel_Settings {
 		);
 
 		add_settings_field(
+			'keep_consignments',
+			__( 'Behoud oude zendingen', 'wcmyparcel' ),
+			array( &$this, 'checkbox_element_callback' ),
+			$option,
+			'general',
+			array(
+				'menu'			=> $option,
+				'id'			=> 'update_tracktrace',
+				'default'		=> 0,
+				'description'	=> __( 'Met deze optie blijven gegevens (track & trace links) van voorgaande zendingen bewaard in de order, wanneer u deze meer dan één keer exporteert.', 'wcmyparcel' )
+			)
+		);
+
+		add_settings_field(
 			'email_tracktrace',
 			__( 'Email track&trace code', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
@@ -472,6 +486,7 @@ class WC_MyParcel_Settings {
 	public function default_settings() {
 		$default = array(
 			'process'			=> '1',
+			'keep_consignments'	=> '0',
 			'download_display'	=> 'download',
 			'email'				=> '1',
 			'telefoon'			=> '1',

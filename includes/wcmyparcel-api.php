@@ -40,7 +40,7 @@ class WC_MyParcel_API {
 				$order_id = $consignment['order_id'];
 				if ( !isset($consignment['error']) ) {
 					$consignment['timestamp'] = $timestamp;
-					$this->consignments[$order_id][] = $consignment;
+					$this->consignments[$order_id][$consignment['consignment_id']] = $consignment;
 				} else {
 					//$error[$order_id] = $order_decode['error'];
 					$this->errors[$order_id][] = implode( ', ', $this->array_flatten($consignment) );
@@ -93,7 +93,7 @@ class WC_MyParcel_API {
 			foreach ( $consignments as $consignment_id => $order_id ) {
 				if ( isset( $consignments_tracktrace[$consignment_id] ) ) {
 					// add track&trace to consignments
-					$this->consignments[$order_id][] =  array(
+					$this->consignments[$order_id][$consignment_id] =  array(
 						'consignment_id'	=> $consignment_id,
 						'tracktrace'		=> $consignments_tracktrace[$consignment_id],
 						'timestamp'			=> $timestamp,
@@ -120,6 +120,13 @@ class WC_MyParcel_API {
 		}
 
 		foreach ($this->consignments as $order_id => $order_consignments ) {
+			// check if we need to keep old consignments
+			if ( isset($this->settings['keep_consignments']) ) {
+				if ( $old_consignments = get_post_meta($order_id,'_myparcel_consignments',true) ) {
+					$order_consignments = $old_consignments + $order_consignments;
+				}
+			}
+
 			update_post_meta ( $order_id, '_myparcel_consignments', $order_consignments );
 
 			// set status to complete (if setting enabled)
