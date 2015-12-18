@@ -346,14 +346,14 @@ class WC_MyParcel_Settings {
 		
 		add_settings_field(
 			'verzekerd',
-			__( 'Verzekerd + Alléén huisadres + Handtekening voor ontvangst (v.a. + &euro;0.50)', 'wcmyparcel' ),
+			__( 'Verzekerd verzenden (v.a. + &euro;0.50)', 'wcmyparcel' ),
 			array( &$this, 'checkbox_element_callback' ),
 			$option,
 			'default_values',
 			array(
 				'menu'			=> $option,
 				'id'			=> 'verzekerd',
-				'description'	=> __( 'Er zit standaard geen verzekering op de zendingen. Indien u toch wilt verzekeren kunt u dit doen vanaf &euro;0.50. Wij verzekeren de inkoopwaarde van uw product, met een maximale verzekerde waarde van &euro;&nbsp;5.000.', 'wcmyparcel' ),
+				'description'	=> __( 'Er zit standaard geen verzekering op de zendingen. Indien u toch wilt verzekeren kunt u dit doen vanaf &euro;0.50. Wij verzekeren de inkoopwaarde van uw product, met een maximale verzekerde waarde van &euro; 5.000. Verzekerde pakketten bevatten altijd de opties "Alléén huisadres" en "Handtekening voor ontvangst"', 'wcmyparcel' ),
 				'class'			=> 'insured',
 			)
 		);
