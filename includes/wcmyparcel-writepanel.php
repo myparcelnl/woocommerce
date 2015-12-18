@@ -352,8 +352,8 @@ class WC_MyParcel_Writepanel {
 	 * @return void
 	 */
 	public function save_pakjegemak_choice( $order_id, $posted ) {
-		if (!empty($posted['myparcel_is_pakjegemak'])) {
-			update_post_meta( $order_id, '_myparcel_is_pakjegemak', $posted['myparcel_is_pakjegemak'] );
+		if (!empty($_POST['myparcel_is_pakjegemak'])) {
+			update_post_meta( $order_id, '_myparcel_is_pakjegemak', 'yes' );
 		}
 	}
 }

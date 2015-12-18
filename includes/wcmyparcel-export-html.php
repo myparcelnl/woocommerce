@@ -185,6 +185,13 @@
 											unset($zendingen['letterbox']);
 										}
 
+										// disable letterbox and unpaid letter for pakjegemak
+										if (!empty($order->myparcel_is_pakjegemak)) {
+											unset($zendingen['letterbox']);
+											unset($zendingen['unpaid_letter']);
+											$zendingen['standard'] .= ' (Pakjegemak)';
+										}										
+
 										$name = "consignments[{$order_id}][shipment_type]";
 										printf( '<select name="%s" class="shipment_type">', $name );
 										foreach ( $zendingen as $key => $label ) {
@@ -223,7 +230,7 @@
 									'[ProductCode][signature_on_receipt]'	=> array(
 										'label'	=> 'Handtekening voor ontvangst',
 										'value'	=> $consignment['ProductCode']['signature_on_receipt'],
-										'cost'	=> '0.33',
+										'cost'	=> empty($order->myparcel_is_pakjegemak) ? '0.33' : '',
 									),
 									'[ProductCode][home_address_signature]'	=> array(
 										'label'	=> 'Alléén huisadres + Handtekening voor ontvangst',
@@ -240,6 +247,7 @@
 										'class'	=> 'insured',
 									),
 								);
+
 								?>
 								<?php foreach ($option_rows as $name => $option_row): ?>
 								<tr>

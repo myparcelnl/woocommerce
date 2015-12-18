@@ -200,7 +200,26 @@ class WC_MyParcel_Export {
 			'weight'			=> $this->get_parcel_weight( $order ),
 		);
 
-		return apply_filters( 'wcmyparcel_order_consignment_data', $consignment, $order );
+		// always enable signature on receipt for pakjegemak
+		if (!empty($order->myparcel_is_pakjegemak)) {
+			$consignment['ProductCode']['signature_on_receipt'] = '1';
+		}
+
+		// allow prefiltering consignment data
+		$consignment = apply_filters( 'wcmyparcel_order_consignment_data', $consignment, $order );
+
+		// PREVENT ILLEGAL SETTINGS
+
+		// disable letterbox outside NL
+		if ($order->shipping_country != 'NL' && $consignment['shipment_type'] == 'letterbox' ) {
+			$consignment['shipment_type'] == 'standard';
+		}
+		// always parcel for pakjegemak
+		if (!empty($order->myparcel_is_pakjegemak)) {
+			$consignment['shipment_type'] == 'standard';
+		}
+
+		return $consignment;
 	}
 
 	/**
