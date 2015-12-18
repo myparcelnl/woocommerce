@@ -15,14 +15,16 @@ This WooCommerce extension allows you to export your orders to the MyParcel serv
 
 = Main features =
 - Export single orders or batches of orders
+- Print MyParcel labels directly from WooCommerce (PDF)
+- Create multiple shipments for the same order
+- Send all type of shipments available from parcels to mailbox packages 
 - Define preset MyParcel shipping options (signature required, extra insurance, etc.)
 - Modify the MyParcel shipping options per order before exporting
 - Extra checkout fields to separate street name, house number and house number suffix for more precise address data
 - View the status of the shipment in the order details page
 - Add track&trace link to the order confirmation email
-- Print MyParcel labels directly from WooCommerce (PDF)
 
-A MyParcel API account is required for this plugin! Get one at info@myparcel.nl
+A MyParcel API account is required for this plugin! You can create this in your account or contact MyParcel at info@myparcel.nl
 
 == Installation ==
 
