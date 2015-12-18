@@ -180,6 +180,11 @@
 											'unpaid_letter'	=> __( 'Ongefrankeerd label' , 'wcmyparcel' ),
 										);
 
+										// disable letterbox outside NL
+										if (isset($consignment['ToAddress']['country_code']) && $consignment['ToAddress']['country_code'] != 'NL') {
+											unset($zendingen['letterbox']);
+										}
+
 										$name = "consignments[{$order_id}][shipment_type]";
 										printf( '<select name="%s" class="shipment_type">', $name );
 										foreach ( $zendingen as $key => $label ) {
