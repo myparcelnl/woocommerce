@@ -131,7 +131,11 @@ class WC_MyParcel_API {
 
 			// set status to complete (if setting enabled)
 			if ( isset($this->settings['auto_complete']) ) {
-				$order = new WC_Order( $order_id );
+				if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
+					$order = new WC_Order( $order_id );
+				} else {
+					$order = wc_get_order( $order_id );
+				}
 				$order->update_status( 'completed', 'Order voltooid na MyParcel export' );
 			}
 		}

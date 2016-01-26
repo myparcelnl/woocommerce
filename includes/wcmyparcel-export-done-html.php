@@ -56,7 +56,11 @@ $pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignme
 			} else {
 				echo '<p>Er hebben zich fouten voorgedaan bij de volgende orders, deze zijn niet verwerkt:<ul style="margin-left:20px;">';
 				$order_id = $key;
-				$order = new WC_Order($order_id);
+				if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
+					$order = new WC_Order( $order_id );
+				} else {
+					$order = wc_get_order( $order_id );
+				}
 				$order_number = $order->get_order_number();
 				foreach ($errors as $error_message) {
 					echo '<li><strong>'.$order_number.'</strong> <i>'.$error_message.'</i></li>';

@@ -142,7 +142,11 @@ class WC_MyParcel_Export {
 
 	public function get_export_form_data ( $order_ids ) {
 		foreach( $order_ids as $order_id ) {
-			$order = new WC_Order( $order_id );
+			if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
+				$order = new WC_Order( $order_id );
+			} else {
+				$order = wc_get_order( $order_id );
+			}
 			$data[ $order_id ] = array (
 				'consignment'	=> $this->get_consignment_data_from_order( $order ),
 				'order'			=> $order,
