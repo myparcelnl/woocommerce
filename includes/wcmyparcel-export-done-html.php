@@ -3,11 +3,10 @@
 $consignment_list = array();
 foreach ($api->consignments as $order_id => $order_consignments) {
 	foreach ($order_consignments as $order_consignment) {
-		$consignments[$order_consignment['consignment_id']] = $order_id;
+		$consignment_list[$order_consignment['consignment_id']] = $order_id;
 	}
-	$consignment_list = array_keys($consignments);
 }
-$pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignment=' . implode('x', $consignment_list) . '&order_ids=' . implode('x', array_keys($consignment_list)) ), 'wcmyparcel-label' );
+$pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignment=' . implode('x', array_keys($consignment_list)) . '&order_ids=' . implode('x', $consignment_list) ), 'wcmyparcel-label' );
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
