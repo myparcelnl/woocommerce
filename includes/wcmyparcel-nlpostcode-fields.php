@@ -7,7 +7,7 @@ class WC_NLPostcode_Fields {
 	/**
 	 * Construct.
 	 */
-	 		
+			
 	public function __construct() {
 		// Load styles & scripts
 		add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles_scripts' ) );
@@ -41,6 +41,9 @@ class WC_NLPostcode_Fields {
 		add_filter( 'woocommerce_admin_shipping_fields', array( &$this, 'admin_shipping_fields' ) );
 		add_filter( 'woocommerce_found_customer_details', array( $this, 'customer_details_ajax' ) );
 		add_action( 'save_post', array( &$this,'save_custom_fields' ) );
+
+		// add to user profile page
+		add_filter( 'woocommerce_customer_meta_fields', array( &$this, 'user_profile_fields' ) );
 
 		// Processing checkout
 		add_action('woocommerce_checkout_update_order_meta', array( &$this, 'merge_street_number_suffix' ), 20, 2 );
@@ -76,7 +79,7 @@ class WC_NLPostcode_Fields {
 	 * Load styles & scripts.
 	 */
 	public function add_styles_scripts(){
-   		if ( is_checkout() || is_account_page() ) {
+		if ( is_checkout() || is_account_page() ) {
 			if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 				// Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
 				wp_register_script(
@@ -394,6 +397,52 @@ class WC_NLPostcode_Fields {
 	}
 
 	/**
+	 * Custom user profile edit fields.
+	 */
+	public function user_profile_fields ( $meta_fields ) {
+		$myparcel_billing_fields = array(
+			'billing_street_name' => array(
+				'label'       => __( 'Street', 'wcmyparcel' ),
+				'description' => ''
+			),
+			'billing_house_number' => array(
+				'label'       => __( 'Number', 'wcmyparcel' ),
+				'description' => ''
+			),
+			'billing_house_number_suffix' => array(
+				'label'       => __( 'Suffix', 'wcmyparcel' ),
+				'description' => ''
+			),
+		);
+		$myparcel_shipping_fields = array(
+			'shipping_street_name' => array(
+				'label'       => __( 'Street', 'wcmyparcel' ),
+				'description' => ''
+			),
+			'shipping_house_number' => array(
+				'label'       => __( 'Number', 'wcmyparcel' ),
+				'description' => ''
+			),
+			'shipping_house_number_suffix' => array(
+				'label'       => __( 'Suffix', 'wcmyparcel' ),
+				'description' => ''
+			),
+		);
+
+		// add myparcel fields to billing section
+		$billing_fields = array_merge($meta_fields['billing']['fields'], $myparcel_billing_fields);
+		$billing_fields = $this->array_move_keys( $billing_fields, array( 'billing_street_name', 'billing_house_number', 'billing_house_number_suffix' ), 'billing_address_2', 'after' );
+		$meta_fields['billing']['fields'] = $billing_fields;
+
+		// add myparcel fields to shipping section
+		$shipping_fields = array_merge($meta_fields['shipping']['fields'], $myparcel_shipping_fields);
+		$shipping_fields = $this->array_move_keys( $shipping_fields, array( 'shipping_street_name', 'shipping_house_number', 'shipping_house_number_suffix' ), 'shipping_address_2', 'after' );
+		$meta_fields['shipping']['fields'] = $shipping_fields;
+		
+		return $meta_fields;
+	}
+
+	/**
 	 * Add custom fields in customer details ajax.
 	 * called when clicking the "Load billing/shipping address" button on Edit Order view
 	 *
@@ -685,5 +734,43 @@ class WC_NLPostcode_Fields {
 		update_post_meta( $order_id, '_shipping_house_number_suffix', $this->get_posted_address_data( 'house_number_suffix', $posted, 'shipping' ) );
 	}
 
+	/**
+	 * Helper function to move array elements (one or more) to a position before a specific key
+	 * @param  array  $array         Main array to modify
+	 * @param  mixed  $keys          Single key or array of keys of element(s) to move
+	 * @param  string $reference_key key to put elements before or after
+	 * @param  string $postion       before or after
+	 * @return array                 reordered array
+	 */
+	public function array_move_keys ( $array, $keys, $reference_key, $position = 'before' ) {
+		// cast $key as array
+		$keys = (array) $keys;
+
+		if (!isset($array[$reference_key])) {
+			return $array;
+		}
+
+		$move = array();
+		foreach ($keys as $key) {
+			if (!isset($array[$key])) {
+				continue;
+			}
+			$move[$key] = $array[$key];
+			unset ($array[$key]);
+		}
+
+		if ($position == 'before') {
+			$move_to_pos = array_search($reference_key, array_keys($array));
+		} else { // after
+			$move_to_pos = array_search($reference_key, array_keys($array)) + 1;
+		}
+
+		$new_array =
+			array_slice($array, 0, $move_to_pos, true)
+			+ $move
+			+ array_slice($array, $move_to_pos, NULL, true);
+
+		return $new_array;
+	}
 }
 }
