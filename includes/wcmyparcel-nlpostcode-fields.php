@@ -16,8 +16,8 @@ class WC_NLPostcode_Fields {
 		// Add street name & house number checkout fields.
 		if ( version_compare( WOOCOMMERCE_VERSION, '2.0' ) >= 0 ) {
 			// WC 2.0 or newer is used, the filter got a $coutry parameter, yay!
-			add_filter( 'woocommerce_billing_fields', array( &$this, 'nl_billing_fields' ), 10, 2 );
-			add_filter( 'woocommerce_shipping_fields', array( &$this, 'nl_shipping_fields' ), 10, 2 );
+			add_filter( 'woocommerce_billing_fields', array( &$this, 'nl_billing_fields' ), apply_filters( 'nl_checkout_fields_priority', 10, 'billing' ), 2 );
+			add_filter( 'woocommerce_shipping_fields', array( &$this, 'nl_shipping_fields' ), apply_filters( 'nl_checkout_fields_priority', 10, 'shipping' ), 2 );
 		} else {
 			// Backwards compatibility
 			add_filter( 'woocommerce_billing_fields', array( &$this, 'nl_billing_fields' ) );
@@ -186,7 +186,7 @@ class WC_NLPostcode_Fields {
 		$fields[$form.'_street_name'] = array(
 			'label'			=> __( 'Street name', 'wcmyparcel' ),
 			'placeholder'	=> __( 'Street name', 'wcmyparcel' ),
-			'class'			=> array( 'form-row-first' ),
+			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-first' ), $form, 'street_name' ),
 			'required'		=> $required, // Only required for NL
 		);
 
@@ -194,7 +194,7 @@ class WC_NLPostcode_Fields {
 		$fields[$form.'_house_number'] = array(
 			'label'			=> __( 'Nr.', 'wcmyparcel' ),
 			// 'placeholder'	=> __( 'Nr.', 'wcmyparcel' ),
-			'class'			=> array( 'form-row-quart-first' ),
+			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart-first' ), $form, 'house_number' ),
 			'required'		=> $required, // Only required for NL
 		);
 
@@ -202,7 +202,7 @@ class WC_NLPostcode_Fields {
 		$fields[$form.'_house_number_suffix'] = array(
 			'label'			=> __( 'Suffix', 'wcmyparcel' ),
 			// 'placeholder'	=> __( 'Suffix', 'wcmyparcel' ),
-			'class'			=> array( 'form-row-quart' ),
+			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart' ), $form, 'house_number_suffix' ),
 			'required'		=> false,
 		);
 
