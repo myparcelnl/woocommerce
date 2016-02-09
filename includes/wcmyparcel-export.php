@@ -231,6 +231,40 @@ class WC_MyParcel_Export {
 	 */
 	public function process_consignment_data ( $consignment_data ) {
 		foreach ($consignment_data as $order_id => $consignment) {
+			// Pakjegemak: Use billing address as ToAddress and shipping address as PgAddress
+			$pakjegemak = get_post_meta( $order_id, 'myparcel_is_pakjegemak', true );
+			if (isset($pakjegemak)) {
+				// load order
+				if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
+					$order = new WC_Order( $order_id );
+				} else {
+					$order = wc_get_order( $order_id );
+				}
+
+				$consignment['PgAddress'] = array(
+					'name'				=> $consignment['ToAddress']['name'],
+					'street'			=> $consignment['ToAddress']['street'],
+					'house_number'		=> $consignment['ToAddress']['house_number'],
+					'number_addition'	=> $consignment['ToAddress']['number_addition'],
+					'postcode'			=> $consignment['ToAddress']['postcode'],
+					'town'				=> $consignment['ToAddress']['town'],
+				);
+
+				$consignment['ToAddress'] = array(
+					'name'			=> trim( $order->billing_first_name . ' ' . $order->billing_last_name ),
+					'business'		=> $order->billing_company,
+					'town'			=> $order->billing_city,
+					'email'			=> isset($this->settings['email']) ? $order->billing_email : '',
+					'phone_number'	=> isset($this->settings['telefoon']) ? $order->billing_phone : '',
+					'postcode'		=> preg_replace('/[^a-zA-Z0-9]/', '', $order->billing_postcode),
+					'house_number'	=> $order->billing_house_number,
+					'number_addition' => $order->billing_house_number_suffix,
+					'street'		  => $order->billing_street_name,
+				);
+
+				$consignment['ProductCode']['signature_on_receipt'] = '0';
+			}
+
 			$colli_amount = isset($consignment['colli_amount']) ? $consignment['colli_amount'] : 1;
 
 			// multiply consignments by colli_amount
@@ -240,6 +274,7 @@ class WC_MyParcel_Export {
 				$consignment_data_processed[] = $consignment;
 			}
 		}
+
 		return apply_filters('wcmyparcel_process_consignment_data', $consignment_data_processed );
 	}
 
