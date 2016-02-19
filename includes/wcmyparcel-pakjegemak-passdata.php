@@ -81,9 +81,22 @@
 				formulier['shipping_postcode'].value			= postalCodeNum + postalCodeAlpha;
 				formulier['shipping_street_name'].value			= street;
 				formulier['shipping_house_number'].value		= houseNr;
-				formulier['shipping_house_number_suffix'].value	= houseNrAdd.replace("-", "");; // verwijder eerste streepje van toevoeging!
+				formulier['shipping_house_number_suffix'].value	= houseNrAdd.replace("-", ""); // verwijder eerste streepje van toevoeging!
 				formulier['shipping_city'].value				= city;
 				formulier['myparcel_is_pakjegemak'].value		= 'yes';
+
+				// store address separately for more reliable access
+				var pgaddress = {
+					name:            shopname,
+					street:          street,
+					house_number:    houseNr,
+					number_addition: houseNrAdd,
+					postcode:        postalCodeNum + postalCodeAlpha,
+					town:            city
+				};
+
+				formulier['myparcel_pgaddress'].value			= JSON.stringify( pgaddress );
+
 				// NOTE: de locatie slaan we op als 'bedrijf'. De naam van de persoon die afhaalt, dient door de klant ingevuld te worden in een 'naam' veld.
 
 				//Kopieer billing naam als deze velden leeg zijn

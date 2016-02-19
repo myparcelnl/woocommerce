@@ -310,6 +310,7 @@ class WC_MyParcel_Writepanel {
 			<span class="myparcel-pakjegemak-omschrijving"><?php echo $omschrijving; ?></span>
 			<a class="myparcel-pakjegemak button" onclick="return pakjegemak();" style="cursor:pointer; float:right; margin:1em 0"><?php echo $knop; ?></a>
 			<input type="hidden" name="myparcel_is_pakjegemak" value="">
+			<input type="hidden" name="myparcel_pgaddress" value="">
 		</div>
 		<?php
 		// gebruik het filter om je eigen HTML/tekst weer te geven
@@ -354,6 +355,10 @@ class WC_MyParcel_Writepanel {
 	public function save_pakjegemak_choice( $order_id, $posted ) {
 		if (!empty($_POST['myparcel_is_pakjegemak'])) {
 			update_post_meta( $order_id, '_myparcel_is_pakjegemak', 'yes' );
+		}
+		if (!empty($_POST['myparcel_pgaddress'])) {
+			$pg_address = json_decode( stripslashes( $_POST['myparcel_pgaddress'] ), true );
+			update_post_meta( $order_id, '_myparcel_pgaddress', $pg_address );
 		}
 	}
 }

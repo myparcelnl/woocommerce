@@ -232,7 +232,7 @@ class WC_MyParcel_Export {
 	public function process_consignment_data ( $consignment_data ) {
 		foreach ($consignment_data as $order_id => $consignment) {
 			// Pakjegemak: Use billing address as ToAddress and shipping address as PgAddress
-			$pakjegemak = get_post_meta( $order_id, 'myparcel_is_pakjegemak', true );
+			$pakjegemak = get_post_meta( $order_id, '_myparcel_is_pakjegemak', true );
 			if (isset($pakjegemak)) {
 				// load order
 				if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
@@ -241,14 +241,19 @@ class WC_MyParcel_Export {
 					$order = wc_get_order( $order_id );
 				}
 
-				$consignment['PgAddress'] = array(
-					'name'				=> $consignment['ToAddress']['name'],
-					'street'			=> $consignment['ToAddress']['street'],
-					'house_number'		=> $consignment['ToAddress']['house_number'],
-					'number_addition'	=> $consignment['ToAddress']['number_addition'],
-					'postcode'			=> $consignment['ToAddress']['postcode'],
-					'town'				=> $consignment['ToAddress']['town'],
-				);
+				$pgaddress = get_post_meta( $order_id, '_myparcel_pgaddress', true );
+				if (!empty($pgaddress)) {
+					$consignment['PgAddress'] = $pgaddress;
+				} else {
+					$consignment['PgAddress'] = array(
+						'name'				=> $consignment['ToAddress']['business'],
+						'street'			=> $consignment['ToAddress']['street'],
+						'house_number'		=> $consignment['ToAddress']['house_number'],
+						'number_addition'	=> $consignment['ToAddress']['number_addition'],
+						'postcode'			=> $consignment['ToAddress']['postcode'],
+						'town'				=> $consignment['ToAddress']['town'],
+					);
+				}
 
 				$consignment['ToAddress'] = array(
 					'name'			=> trim( $order->billing_first_name . ' ' . $order->billing_last_name ),
