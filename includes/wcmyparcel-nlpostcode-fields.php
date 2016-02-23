@@ -524,11 +524,15 @@ class WC_NLPostcode_Fields {
 	 * @return $shipping_postcode
 	 */
 	public function clean_billing_postcode ( ) {
-		$billing_postcode = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['billing_postcode']);		
+		if ( $_POST['billing_country'] == 'NL' ) {
+			$billing_postcode = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['billing_postcode']);
+		}	
 		return $billing_postcode;
 	}
 	public function clean_shipping_postcode ( ) {
-		$shipping_postcode = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['shipping_postcode']);		
+		if ( $_POST['shipping_country'] == 'NL' ) {
+			$shipping_postcode = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['shipping_postcode']);
+		}
 		return $shipping_postcode;
 	}
 
