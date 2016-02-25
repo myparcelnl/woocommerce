@@ -26,7 +26,9 @@ class WC_NLPostcode_Fields {
 	
 
 		// Hide state field for countries without states (backwards compatible fix for bug #4223)
-		add_filter( 'woocommerce_countries_allowed_country_states', array( &$this, 'hide_states' ) );
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<' ) ) {
+			add_filter( 'woocommerce_countries_allowed_country_states', array( &$this, 'hide_states' ) );
+		}
 
 		// Localize checkout fields (limit custom checkout fields to NL)
 		add_filter( 'woocommerce_country_locale_field_selectors', array( &$this, 'country_locale_field_selectors' ) );
