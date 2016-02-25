@@ -233,7 +233,7 @@ class WC_MyParcel_Export {
 		foreach ($consignment_data as $order_id => $consignment) {
 			// Pakjegemak: Use billing address as ToAddress and shipping address as PgAddress
 			$pakjegemak = get_post_meta( $order_id, '_myparcel_is_pakjegemak', true );
-			if (isset($pakjegemak)) {
+			if (!empty($pakjegemak)) {
 				// load order
 				if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
 					$order = new WC_Order( $order_id );
