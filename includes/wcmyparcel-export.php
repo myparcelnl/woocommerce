@@ -197,9 +197,9 @@ class WC_MyParcel_Export {
 				'home_address_signature'=> (isset($this->settings['huishand'])) ? '1' : '0',
 				'mypa_insured'			=> (isset($this->settings['huishandverzekerd'])) ? '1' : '0',
 				'insured'				=> (isset($this->settings['verzekerd'])) ? '1' : '0',
+				'extra_size'			=> (isset($this->settings['extragroot'])) ? '1' : '0',
 			),
 			'insured_amount'	=> (isset($this->settings['verzekerdbedrag'])) ? $this->settings['verzekerdbedrag'] : '0',
-			'extra_size'		=> (isset($this->settings['extragroot'])) ? '1' : '0',
 			'custom_id'			=> $kenmerk,
 			'weight'			=> $this->get_parcel_weight( $order ),
 		);

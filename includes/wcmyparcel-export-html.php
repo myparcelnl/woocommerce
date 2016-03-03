@@ -217,9 +217,9 @@
 							<table class="wcmyparcel_settings_table parcel_options">
 								<?php
 								$option_rows = array(
-									'[extra_size]'	=> array(
+									'[ProductCode][extra_size]'	=> array(
 										'label'	=> 'Extra groot formaat',
-										'value'	=> $consignment['extra_size'],
+										'value'	=> $consignment['ProductCode']['extra_size'],
 										'cost'	=> '2.19',
 									),
 									'[ProductCode][home_address_only]'	=> array(
