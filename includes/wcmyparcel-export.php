@@ -205,7 +205,7 @@ class WC_MyParcel_Export {
 		);
 
 		// always enable signature on receipt for pakjegemak
-		if (!empty($order->myparcel_is_pakjegemak)) {
+		if ( $this->is_pakjegemak( $order ) ) {
 			$consignment['ProductCode']['signature_on_receipt'] = '1';
 		}
 
@@ -219,7 +219,7 @@ class WC_MyParcel_Export {
 			$consignment['shipment_type'] == 'standard';
 		}
 		// always parcel for pakjegemak
-		if (!empty($order->myparcel_is_pakjegemak)) {
+		if ( $this->is_pakjegemak( $order ) ) {
 			$consignment['shipment_type'] == 'standard';
 		}
 
@@ -231,9 +231,8 @@ class WC_MyParcel_Export {
 	 */
 	public function process_consignment_data ( $consignment_data ) {
 		foreach ($consignment_data as $order_id => $consignment) {
-			// Pakjegemak: Use billing address as ToAddress and shipping address as PgAddress
-			$pakjegemak = get_post_meta( $order_id, '_myparcel_is_pakjegemak', true );
-			if (!empty($pakjegemak)) {
+			// Pakjegemak: Use billing address as ToAddress and send PgAddress separately
+			if ( $pgaddress = $this->is_pakjegemak( $order_id ) ) {
 				// load order
 				if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
 					$order = new WC_Order( $order_id );
@@ -241,20 +240,7 @@ class WC_MyParcel_Export {
 					$order = wc_get_order( $order_id );
 				}
 
-				$pgaddress = get_post_meta( $order_id, '_myparcel_pgaddress', true );
-				if (!empty($pgaddress)) {
-					$consignment['PgAddress'] = $pgaddress;
-				} else {
-					$consignment['PgAddress'] = array(
-						'name'				=> $consignment['ToAddress']['business'],
-						'street'			=> $consignment['ToAddress']['street'],
-						'house_number'		=> $consignment['ToAddress']['house_number'],
-						'number_addition'	=> $consignment['ToAddress']['number_addition'],
-						'postcode'			=> $consignment['ToAddress']['postcode'],
-						'town'				=> $consignment['ToAddress']['town'],
-					);
-				}
-
+				$consignment['PgAddress'] = $pgaddress;
 				$consignment['ToAddress'] = array(
 					'name'			=> trim( $order->billing_first_name . ' ' . $order->billing_last_name ),
 					'business'		=> $order->billing_company,
@@ -339,6 +325,26 @@ class WC_MyParcel_Export {
 		return $item_weight;
 	}
 
+	public function is_pakjegemak( $order ) {
+		// load order_id if order object passed
+		if (is_object($order)) {
+			$order_id = $order->id;
+		} else {
+			$order_id = $order;
+		}
+
+		// load meta data
+		$pakjegemak = get_post_meta( $order_id, '_myparcel_is_pakjegemak', true );
+		$pgaddress = get_post_meta( $order_id, '_myparcel_pgaddress', true );
+
+		// make sure pakjegemak address is present and contains an address
+		// (cancelled pg popups still save pgaddress)
+		if ( !empty( $pgaddress ) && !empty( $pgaddress['postcode'] ) ) {
+			return $pgaddress;
+		} else {
+			return false;
+		}
+	}
 }
 
 endif; // class_exists

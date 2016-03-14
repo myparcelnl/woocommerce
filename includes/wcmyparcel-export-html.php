@@ -186,7 +186,7 @@
 										}
 
 										// disable letterbox and unpaid letter for pakjegemak
-										if (!empty($order->myparcel_is_pakjegemak)) {
+										if ( $this->is_pakjegemak( $order ) ) {
 											unset($zendingen['letterbox']);
 											unset($zendingen['unpaid_letter']);
 											$zendingen['standard'] .= ' (Pakjegemak)';
