@@ -2,7 +2,7 @@
 if ( !class_exists( 'WC_NLPostcode_Fields' ) ) {
 class WC_NLPostcode_Fields {
 
-	public $version = '1.5.3';
+	public $version = '1.5.4';
 
 	/**
 	 * Construct.
