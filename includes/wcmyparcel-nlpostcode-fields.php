@@ -537,7 +537,7 @@ class WC_NLPostcode_Fields {
 		if ( $_POST['shipping_country'] == 'NL' ) {
 			$shipping_postcode = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['shipping_postcode']);
 		} else {
-			$billing_postcode = $_POST['shipping_postcode'];
+			$shipping_postcode = $_POST['shipping_postcode'];
 		}
 		return $shipping_postcode;
 	}
