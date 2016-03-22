@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.4
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -106,6 +106,9 @@ function wcmyparcel_pakjegemak_move() {
 3. View the status of the shipment on the order details page.
 
 == Changelog ==
+
+= 1.5.5 =
+* Fix: Foreign postcodes validation fix.
 
 = 1.5.4 =
 * Fix: Various Pakjegemak related issues (now saves & sends pakjegemak address separately to MyParcel)
