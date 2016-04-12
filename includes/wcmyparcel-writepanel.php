@@ -353,12 +353,21 @@ class WC_MyParcel_Writepanel {
 	 * @return void
 	 */
 	public function save_pakjegemak_choice( $order_id, $posted ) {
-		if (!empty($_POST['myparcel_is_pakjegemak'])) {
-			update_post_meta( $order_id, '_myparcel_is_pakjegemak', 'yes' );
+		// check 'ship_to_different_address' (old versions use 'shiptobilling')
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
+			$ship_to_different_address = isset($_POST['shiptobilling'])?false:true;
+		} else {
+			$ship_to_different_address = isset($_POST['ship_to_different_address'])?true:false;
 		}
+
+		if ( !$ship_to_different_address ) {
+			return; // customer disabled pakjegemak
+		}
+
 		if (!empty($_POST['myparcel_pgaddress'])) {
 			$pg_address = json_decode( stripslashes( $_POST['myparcel_pgaddress'] ), true );
 			update_post_meta( $order_id, '_myparcel_pgaddress', $pg_address );
+			update_post_meta( $order_id, '_myparcel_is_pakjegemak', 'yes' );
 		}
 	}
 }
