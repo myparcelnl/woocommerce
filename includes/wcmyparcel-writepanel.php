@@ -354,6 +354,7 @@ class WC_MyParcel_Writepanel {
 	 */
 	public function save_pakjegemak_choice( $order_id, $posted ) {
 		// check 'ship_to_different_address' (old versions use 'shiptobilling')
+		// alternative: check postcode + house number
 		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 			$ship_to_different_address = isset($_POST['shiptobilling'])?false:true;
 		} else {
