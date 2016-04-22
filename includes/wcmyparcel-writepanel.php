@@ -249,6 +249,12 @@ class WC_MyParcel_Writepanel {
 
 		// set url for NL or foreign orders
 		if ($country == 'NL') {
+			// use billing postcode for pakjegemak
+			$pgaddress = get_post_meta( $order_id, '_myparcel_pgaddress', true );
+			if ( !empty( $pgaddress ) && !empty( $pgaddress['postcode'] ) ) {
+				$postcode = preg_replace('/\s+/', '',get_post_meta($order_id,'_billing_postcode',true));
+			}
+
 			// $tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Inbox/Search?lang=nl&B=%s&P=%s', $tracktrace, $postcode);
 			$tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Claim?Barcode=%s&Postalcode=%s', $tracktrace, $postcode);
 		} else {
