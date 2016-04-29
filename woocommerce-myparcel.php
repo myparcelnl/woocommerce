@@ -175,7 +175,7 @@ class WooCommerce_MyParcel {
 	 * Plugin install method. Perform any installation tasks here
 	 */
 	protected function install() {
-		// stub
+		// Set default settings?
 	}
 
 	/**
@@ -184,7 +184,7 @@ class WooCommerce_MyParcel {
 	 * @param string $installed_version the currently installed ('old') version
 	 */
 	protected function upgrade( $installed_version ) {
-		// stub
+		// Copy old settings
 	}		
 
 	/**
