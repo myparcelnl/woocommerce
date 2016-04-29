@@ -204,6 +204,17 @@ class WooCommerce_MyParcel_Export {
 			'weight'			=> $this->get_parcel_weight( $order ),
 		);
 
+		// use shipment options from order when available
+		$shipment_options = $order->myparcel_shipment_options;
+		if (!empty($shipment_options)) {
+			// recursively merge (!== array_merge_recursive)
+			if (!empty($shipment_options['ProductCode'])) {
+				$consignment['ProductCode'] = array_merge($consignment['ProductCode'], $shipment_options['ProductCode']);
+				unset($shipment_options['ProductCode']);
+			}
+			$consignment = array_merge($consignment, $shipment_options);
+		}
+
 		// always enable signature on receipt for pakjegemak
 		if ( $this->is_pakjegemak( $order ) ) {
 			$consignment['ProductCode']['signature_on_receipt'] = '1';

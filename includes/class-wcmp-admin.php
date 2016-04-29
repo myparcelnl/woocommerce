@@ -15,6 +15,8 @@ class WooCommerce_MyParcel_Admin {
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_shipment_options' ), 9999 );
 		add_action(	'admin_footer', array( $this, 'bulk_actions' ) ); 
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_order_actions' ), 20 );
+
+		add_action( 'wp_ajax_wcmp_save_shipment_options', array( $this, 'save_shipment_options_ajax' ) );
 	}
 
 	public function order_list_shipment_options( $order ) {
@@ -112,6 +114,20 @@ class WooCommerce_MyParcel_Admin {
 			</a>
 			<?php
 		}
+	}
+
+	public function save_shipment_options_ajax () {
+		check_ajax_referer( 'woocommerce_myparcel', 'security' );
+		extract($_POST);
+		parse_str($form_data, $form_data);
+		
+		if (isset($form_data['consignments'][$order_id])) {
+			$shipment_options = $form_data['consignments'][$order_id];
+			update_post_meta( $order_id, '_myparcel_shipment_options', $shipment_options );
+		}
+
+		// Quit out
+		die();
 	}
 
 }

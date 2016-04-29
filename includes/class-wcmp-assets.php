@@ -56,6 +56,14 @@ class WooCommerce_MyParcel_Assets {
 				array( 'jquery', 'thickbox' ),
 				WC_MYPARCEL_VERSION
 			);
+			wp_localize_script(
+				'wcmyparcel-export',
+				'woocommerce_myparcel',
+				array(  
+					'ajax_url'  => admin_url( 'admin-ajax.php' ),
+					'nonce'     => wp_create_nonce('woocommerce_myparcel'),
+				)
+			);
 
 			wp_enqueue_style(
 				'wcmp-admin-styles',

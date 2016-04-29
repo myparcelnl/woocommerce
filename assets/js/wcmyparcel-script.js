@@ -1,7 +1,7 @@
 jQuery( function( $ ) {
 	// move shipment options to 'Ship to' column
 	$('.wcmp_shipment_options').each( function( index ) {
-		$ship_to_column = $( this ).closest('tr').find('td.shipping_address');
+		var $ship_to_column = $( this ).closest('tr').find('td.shipping_address');
 		$( this ).appendTo( $ship_to_column );
 		// hidden by default - make visible
 		$( this ).show();
@@ -17,15 +17,15 @@ jQuery( function( $ ) {
 	// select > 500 if insured amount input is >499
 	$( '.wcmp_shipment_options input.insured_amount' ).each( function( index ) {
 		if ( $( this ).val() > 499 ) {
-			insured_select = $( this ).closest('table').parent().find('select.insured_amount');
+			var insured_select = $( this ).closest('table').parent().find('select.insured_amount');
 			$( insured_select ).val('');
 		};
 	});
 
 	// hide insurance options if unsured not checked
 	$('.wcmp_shipment_options .insured').change(function () {
-		insured_select = $( this ).closest('table').parent().find('select.insured_amount');
-		insured_input  = $( this ).closest('table').parent().find('input.insured_amount');
+		var insured_select = $( this ).closest('table').parent().find('select.insured_amount');
+		var insured_input  = $( this ).closest('table').parent().find('input.insured_amount');
 		if (this.checked) {
 			$( insured_select ).prop('disabled', false);
 			$( insured_select ).closest('tr').show();
@@ -39,9 +39,9 @@ jQuery( function( $ ) {
 
 	// hide & disable insured amount input if not needed
 	$('.wcmp_shipment_options select.insured_amount').change(function () {
-		insured_check  = $( this ).closest('table').parent().find('.insured');
-		insured_select = $( this ).closest('table').parent().find('select.insured_amount');
-		insured_input  = $( this ).closest('table').find('input.insured_amount');
+		var insured_check  = $( this ).closest('table').parent().find('.insured');
+		var insured_select = $( this ).closest('table').parent().find('select.insured_amount');
+		var insured_input  = $( this ).closest('table').find('input.insured_amount');
 		if ( $( insured_select ).val() ) {
 			$( insured_input ).val('');
 			$( insured_input ).prop('disabled', true);
@@ -54,7 +54,7 @@ jQuery( function( $ ) {
 
 	// hide all options if not a parcel
 	$('.wcmp_shipment_options select.shipment_type').change(function () {
-		parcel_options  = $( this ).closest('table').parent().find('.parcel_options');
+		var parcel_options  = $( this ).closest('table').parent().find('.parcel_options');
 		if ( $( this ).val() == 'standard') {
 			// parcel
 			$( parcel_options ).find('input, textarea, button, select').prop('disabled', false);
@@ -70,7 +70,22 @@ jQuery( function( $ ) {
 	}).change(); //ensure visible state matches initially
 
 
+	$( '.wcmp_save_shipment_settings' )
+		.on( 'click', 'a.button.save', function() {
+			var order_id = $( this ).data().order;
+			var $form = $( this ).closest('.wcmp_shipment_options').find('.wcmp_shipment_options_form');
+			var form_data = $form.find(":input").serialize();
+			var data = {
+				action:     'wcmp_save_shipment_options',
+				order_id:    order_id,
+				form_data:  form_data,
+				security:   woocommerce_myparcel.nonce,
+			};
 
+			$.post( woocommerce_myparcel.ajax_url, data, function( response ) {
+				console.log( response );
+			});
+		});
 
 
 

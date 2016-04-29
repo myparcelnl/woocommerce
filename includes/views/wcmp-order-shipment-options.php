@@ -148,6 +148,6 @@
 </table>
 
 <div class="wcmp_save_shipment_settings">
-	<a class="button"><?php _e( 'Save', 'woocommerce-myparcel' ) ?></a>
+	<a class="button save" data-order="<?php echo $order_id; ?>"><?php _e( 'Save', 'woocommerce-myparcel' ) ?></a>
 	<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="waiting"/>
 </div>
