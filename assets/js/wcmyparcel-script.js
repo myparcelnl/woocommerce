@@ -1,4 +1,80 @@
-jQuery(document).ready(function($) {
+jQuery( function( $ ) {
+	// move shipment options to 'Ship to' column
+	$('.wcmp_shipment_options').each( function( index ) {
+		$ship_to_column = $( this ).closest('tr').find('td.shipping_address');
+		$( this ).appendTo( $ship_to_column );
+		// hidden by default - make visible
+		$( this ).show();
+	});
+
+	$('.wcmp_show_shipment_options').click( function ( event ) {
+		event.preventDefault();
+		$( this ).next('.wcmp_shipment_options_form').toggle();
+	});
+
+	
+
+	// select > 500 if insured amount input is >499
+	$( '.wcmp_shipment_options input.insured_amount' ).each( function( index ) {
+		if ( $( this ).val() > 499 ) {
+			insured_select = $( this ).closest('table').parent().find('select.insured_amount');
+			$( insured_select ).val('');
+		};
+	});
+
+	// hide insurance options if unsured not checked
+	$('.wcmp_shipment_options .insured').change(function () {
+		insured_select = $( this ).closest('table').parent().find('select.insured_amount');
+		insured_input  = $( this ).closest('table').parent().find('input.insured_amount');
+		if (this.checked) {
+			$( insured_select ).prop('disabled', false);
+			$( insured_select ).closest('tr').show();
+			$('select.insured_amount').change();
+		} else {
+			$( insured_select ).prop('disabled', true);
+			$( insured_select ).closest('tr').hide();
+			$( insured_input ).closest('tr').hide();
+		}
+	}).change(); //ensure visible state matches initially
+
+	// hide & disable insured amount input if not needed
+	$('.wcmp_shipment_options select.insured_amount').change(function () {
+		insured_check  = $( this ).closest('table').parent().find('.insured');
+		insured_select = $( this ).closest('table').parent().find('select.insured_amount');
+		insured_input  = $( this ).closest('table').find('input.insured_amount');
+		if ( $( insured_select ).val() ) {
+			$( insured_input ).val('');
+			$( insured_input ).prop('disabled', true);
+			$( insured_input ).closest('tr').hide();
+		} else {
+			$( insured_input ).prop('disabled', false);
+			$( insured_input ).closest('tr').show();
+		}
+	}).change(); //ensure visible state matches initially
+
+	// hide all options if not a parcel
+	$('.wcmp_shipment_options select.shipment_type').change(function () {
+		parcel_options  = $( this ).closest('table').parent().find('.parcel_options');
+		if ( $( this ).val() == 'standard') {
+			// parcel
+			$( parcel_options ).find('input, textarea, button, select').prop('disabled', false);
+			$( parcel_options ).show();
+			$('.insured').change();
+		} else {
+			// not a parcel
+			$( parcel_options ).find('input, textarea, button, select').prop('disabled', true);
+			$( parcel_options ).hide();
+			$('.insured').prop('checked', false);
+			$('.insured').change();
+		}
+	}).change(); //ensure visible state matches initially
+
+
+
+
+
+
+
 	var url
 	
 	$("#doaction, #doaction2").click(function (event) {

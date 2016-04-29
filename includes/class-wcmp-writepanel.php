@@ -13,11 +13,6 @@ class WooCommerce_MyParcel_Writepanel {
 		// Add meta box with MyParcel links/buttons
 		add_action( 'add_meta_boxes_shop_order', array( $this, 'add_box' ) );
 
-		// Add export action to drop down menu
-		add_action(	'admin_footer', array( &$this, 'export_actions' ) ); 
-
-		// Add buttons in order listing
-		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'add_listing_actions' ), 20 );
 		
 		// Customer Emails
 		if (isset($this->settings['email_tracktrace'])) {
@@ -99,70 +94,6 @@ class WooCommerce_MyParcel_Writepanel {
 				<li><a href="<?php echo $export_link; ?>" class="button myparcel one-myparcel" alt="Exporteer naar MyParcel">Exporteer naar MyParcel</a></li>
 			</ul>
 			<?php			
-		}
-	}
-
-	/**
-	 * Add export option to bulk action drop down menu
-	 *
-	 * Using Javascript until WordPress core fixes: http://core.trac.wordpress.org/ticket/16031
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function export_actions() {
-		global $post_type;
-
-		if ( 'shop_order' == $post_type ) {
-			?>
-			<script type="text/javascript">
-			jQuery(document).ready(function() {
-				jQuery('<option>').val('wcmyparcel').text('<?php _e( 'Exporteer naar MyParcel', 'wcmyparcel' )?>').appendTo("select[name='action']");
-				jQuery('<option>').val('wcmyparcel').text('<?php _e( 'Exporteer naar MyParcel', 'wcmyparcel' )?>').appendTo("select[name='action2']");
-
-				jQuery('<option>').val('wcmyparcel-label').text('<?php _e( 'Print MyParcel labels', 'wcmyparcel' )?>').appendTo("select[name='action']");
-				jQuery('<option>').val('wcmyparcel-label').text('<?php _e( 'Print MyParcel labels', 'wcmyparcel' )?>').appendTo("select[name='action2']");
-			});
-			</script>
-			<?php
-		}
-	}		
-
-	/**
-	 * Add print actions to the orders listing
-	 */
-	public function add_listing_actions( $order ) {
-		if ( $consignment_id = get_post_meta($order->id,'_myparcel_consignment_id',true ) ) {
-			$consignments = array(
-				array(
-					'consignment_id' => $consignment_id,
-					'tracktrace'     => get_post_meta($order->id,'_myparcel_tracktrace',true ),
-				),
-			);
-		} else {
-			$consignments = get_post_meta($order->id,'_myparcel_consignments',true );
-		}
-
-		$pdf_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&order_ids=' . $order->id ), 'wcmyparcel-label' );
-		$export_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $order->id ), 'wcmyparcel' );
-
-		$target = ( isset($this->settings['download_display']) && $this->settings['download_display'] == 'display') ? 'target="_blank"' : '';
-		if (!empty($consignments)) {
-			?>
-			<a href="<?php echo $pdf_link; ?>" class="button tips myparcel" alt="Print MyParcel label" data-tip="Print MyParcel label" <?php echo $target; ?>>
-				<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-pdf.png'; ?>" alt="Print MyParcel label">
-			</a>
-			<a href="<?php echo $export_link; ?>" class="button tips myparcel one-myparcel" alt="Exporteer naar MyParcel" data-tip="Exporteer naar MyParcel">
-				<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-up.png'; ?>" alt="Exporteer naar MyParcel">
-			</a>
-			<?php
-		} else {
-			?>
-			<a href="<?php echo $export_link; ?>" class="button tips myparcel one-myparcel" alt="Exporteer naar MyParcel" data-tip="Exporteer naar MyParcel">
-				<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-up.png'; ?>" alt="Exporteer naar MyParcel">
-			</a>
-			<?php
-			
 		}
 	}
 

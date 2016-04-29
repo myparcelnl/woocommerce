@@ -46,7 +46,7 @@ class WooCommerce_MyParcel {
 		$this->plugin_basename = plugin_basename(__FILE__);
 
 		// Load settings
-		$this->main_settings = get_option( 'woocommerce_myparcel_general_settings' );
+		$this->general_settings = get_option( 'woocommerce_myparcel_general_settings' );
 
 		// load the localisation & classes
 		add_action( 'plugins_loaded', array( $this, 'translations' ) );
@@ -96,8 +96,9 @@ class WooCommerce_MyParcel {
 	 */
 	public function includes() {
 		include_once( 'includes/class-wcmp-assets.php' );
+		include_once( 'includes/class-wcmp-admin.php' );
 		include_once( 'includes/class-wcmp-settings.php' );
-		include_once( 'includes/class-wcmp-export.php' );
+		$this->export = include_once( 'includes/class-wcmp-export.php' );
 		include_once( 'includes/class-wcmp-writepanel.php' );
 		include_once( 'includes/class-wcmp-nlpostcode-fields.php' );
 	}

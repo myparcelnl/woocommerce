@@ -10,7 +10,7 @@
 			// Old versions
 			wp_register_style(
 				'wcmyparcel-admin-styles',
-				$wcmyparcelexport->plugin_url() . '/css/wcmyparcel-admin-styles.css',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmyparcel-admin-styles.css',
 				array(),
 				WC_MYPARCEL_VERSION,
 				'all'
@@ -19,7 +19,7 @@
 			// WC 2.1+, MP6 style with larger buttons
 			wp_register_style(
 				'wcmyparcel-admin-styles',
-				$wcmyparcelexport->plugin_url() . '/css/wcmyparcel-admin-styles-wc21.css',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmyparcel-admin-styles-wc21.css',
 				array(),
 				WC_MYPARCEL_VERSION,
 				'all'
@@ -324,7 +324,7 @@
 <input type="hidden" name="action" value="wcmyparcel-export">
 <div class="submit-wcmyparcel">
 	<input type="submit" value="Exporteer naar MyParcel" class="button-wcmyparcel">
-	<img src="<?php echo dirname(plugin_dir_url(__FILE__)).'/img/wpspin_light.gif';?>" class="waiting"/>
+	<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="waiting"/>
 </div>
 </form>
 <script type="text/javascript">

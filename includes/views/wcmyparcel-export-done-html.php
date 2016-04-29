@@ -20,7 +20,7 @@ $pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignme
 			// Old versions
 			wp_register_style(
 				'wcmyparcel-admin-styles',
-				$wcmyparcelexport->plugin_url() . '/css/wcmyparcel-admin-styles.css',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmyparcel-admin-styles.css',
 				array(),
 				WC_MYPARCEL_VERSION,
 				'all'
@@ -29,7 +29,7 @@ $pdf_url = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&consignme
 			// WC 2.1+, MP6 style with larger buttons
 			wp_register_style(
 				'wcmyparcel-admin-styles',
-				$wcmyparcelexport->plugin_url() . '/css/wcmyparcel-admin-styles-wc21.css',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmyparcel-admin-styles-wc21.css',
 				array(),
 				WC_MYPARCEL_VERSION,
 				'all'

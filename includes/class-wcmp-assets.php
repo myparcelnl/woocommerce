@@ -57,27 +57,24 @@ class WooCommerce_MyParcel_Assets {
 				WC_MYPARCEL_VERSION
 			);
 
-			if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
-				// Old versions
-				wp_register_style(
-					'wcmyparcel-admin-styles',
-					WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmyparcel-admin-styles.css',
-					array(),
-					WC_MYPARCEL_VERSION,
-					'all'
-				);
-			} else {
-				// WC 2.1+, MP6 style with larger buttons
-				wp_register_style(
-					'wcmyparcel-admin-styles',
-					WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmyparcel-admin-styles-wc21.css',
-					array(),
-					WC_MYPARCEL_VERSION,
-					'all'
-				);
-			}				
+			wp_enqueue_style(
+				'wcmp-admin-styles',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
+				array(),
+				WC_MYPARCEL_VERSION,
+				'all'
+			);
 
-			wp_enqueue_style( 'wcmyparcel-admin-styles' );  
+			// Legacy styles (WC 2.1+ introduced MP6 style with larger buttons)
+			if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
+				wp_enqueue_style(
+					'wcmp-admin-styles-legacy',
+					WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
+					array(),
+					WC_MYPARCEL_VERSION,
+					'all'
+				);
+			}
 		}
 
 		/* for reference

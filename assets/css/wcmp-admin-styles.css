@@ -1,0 +1,66 @@
+/* Order actions button styling */
+.widefat .column-order_actions a.button.myparcel {
+	float: left;
+	width: 26px;
+	height: 26px;
+	padding: 3px 2px;
+}
+
+.widefat .column-order_actions a.button.myparcel img {
+	width: 16px;
+	height: auto;
+}
+
+/* shipment options form styling */
+.wcmp_shipment_options_form table {
+	width: 100%;
+}
+
+.wcmp_shipment_options_form input[type=number] {
+	width: 50px;
+	text-align: center;
+}
+
+.wcmp_shipment_options_form input[type="checkbox"],
+.wcmp_shipment_options_form input[type="radio"] {
+	margin-right: 8px;
+}
+
+.wcmp_shipment_options_form .wcmyparcel_settings_table td {
+	border: none;
+	padding: 0px 7px 2px !important;
+	vertical-align: middle !important;
+}
+
+.wcmp_shipment_options_form {
+    width: 450px;
+    border: 1px solid #ccc;
+    background: white;
+    position: absolute;
+    z-index: 999;
+    padding: 10px;
+}
+
+.wcmp_shipment_options_form td.wcmp_option_cost {
+	width: 60px;
+	text-align: right;
+	font-weight: bold;
+}
+
+.wcmp_shipment_options_form .calculated_weight {
+	font-size: 80%;
+	color: #999;
+}
+
+.wcmp_save_shipment_settings {
+	margin-top: 8px;
+}
+
+.wcmp_save_shipment_settings .waiting {
+	display: none;
+}
+
+.wcmp_save_shipment_settings .waiting, 
+.wcmp_save_shipment_settings input{
+	vertical-align: middle;
+}

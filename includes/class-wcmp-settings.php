@@ -352,7 +352,7 @@ class WooCommerce_MyParcel_Settings {
 		
 		add_settings_field(
 			'extra_size',
-			__( 'Extra large size (+ &euro;2.19)', 'woocommerce-myparcel' ),
+			__( 'Extra large size', 'woocommerce-myparcel' ).' (+ &euro;2.19)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
@@ -365,7 +365,7 @@ class WooCommerce_MyParcel_Settings {
 		
 		add_settings_field(
 			'home_address_only',
-			__( 'Home address only (+ &euro;0.26)', 'woocommerce-myparcel' ),
+			__( 'Home address only', 'woocommerce-myparcel' ).' (+ &euro;0.26)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
@@ -377,7 +377,7 @@ class WooCommerce_MyParcel_Settings {
 		
 		add_settings_field(
 			'signature_on_receipt',
-			__( 'Signature on delivery (+ &euro;0.33)', 'woocommerce-myparcel' ),
+			__( 'Signature on delivery', 'woocommerce-myparcel' ).' (+ &euro;0.33)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
@@ -390,7 +390,7 @@ class WooCommerce_MyParcel_Settings {
 		
 		add_settings_field(
 			'home_address_signature',
-			__( 'Home address only + signature on delivery (+ &euro;0.40)', 'woocommerce-myparcel' ),
+			__( 'Home address only + signature on delivery', 'woocommerce-myparcel' ).' (+ &euro;0.40)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
@@ -416,7 +416,7 @@ class WooCommerce_MyParcel_Settings {
 		
 		add_settings_field(
 			'insured',
-			__( 'Insured shipment (from + &euro;0.50)', 'woocommerce-myparcel' ),
+			__( 'Insured shipment', 'woocommerce-myparcel' ).' (from + &euro;0.50)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
