@@ -3,9 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-if ( !class_exists( 'WC_MyParcel_Export' ) ) :
+if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) :
 
-class WC_MyParcel_Export {
+class WooCommerce_MyParcel_Export {
 	public $order_id;
 
 	/**
@@ -13,7 +13,7 @@ class WC_MyParcel_Export {
 	 */
 			
 	public function __construct() {
-		include( 'wcmyparcel-api.php' );
+		include( 'class-wcmp-api.php' );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 		add_action( 'load-edit.php', array( $this, 'wcmyparcel_action' ) ); // Export actions (popup & file export)
@@ -58,7 +58,7 @@ class WC_MyParcel_Export {
 				$form_data = $this->get_export_form_data( $order_ids );
 				
 				// Include HTML for export page/iframe
-				include('wcmyparcel-export-html.php');
+				include('views/wcmyparcel-export-html.php');
 
 				die();
 			break;
@@ -79,7 +79,7 @@ class WC_MyParcel_Export {
 				$api->create_consignments( $consignment_data );
 
 				// Include HTML for export done page/iframe
-				include('wcmyparcel-export-done-html.php');
+				include('views/wcmyparcel-export-done-html.php');
 
 				exit;
 			case 'wcmyparcel-label':
@@ -348,3 +348,5 @@ class WC_MyParcel_Export {
 }
 
 endif; // class_exists
+
+return new WooCommerce_MyParcel_Export();

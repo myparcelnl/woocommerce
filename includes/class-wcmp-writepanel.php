@@ -1,5 +1,11 @@
 <?php
-class WC_MyParcel_Writepanel {
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
+if ( !class_exists( 'WooCommerce_MyParcel_Writepanel' ) ) :
+
+class WooCommerce_MyParcel_Writepanel {
 
 	public function __construct() {
 		$this->settings = get_option( 'wcmyparcel_settings' );
@@ -144,16 +150,16 @@ class WC_MyParcel_Writepanel {
 		if (!empty($consignments)) {
 			?>
 			<a href="<?php echo $pdf_link; ?>" class="button tips myparcel" alt="Print MyParcel label" data-tip="Print MyParcel label" <?php echo $target; ?>>
-				<img src="<?php echo dirname(plugin_dir_url(__FILE__)) . '/img/myparcel-pdf.png'; ?>" alt="Print MyParcel label">
+				<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-pdf.png'; ?>" alt="Print MyParcel label">
 			</a>
 			<a href="<?php echo $export_link; ?>" class="button tips myparcel one-myparcel" alt="Exporteer naar MyParcel" data-tip="Exporteer naar MyParcel">
-				<img src="<?php echo dirname(plugin_dir_url(__FILE__)) . '/img/myparcel-up.png'; ?>" alt="Exporteer naar MyParcel">
+				<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-up.png'; ?>" alt="Exporteer naar MyParcel">
 			</a>
 			<?php
 		} else {
 			?>
 			<a href="<?php echo $export_link; ?>" class="button tips myparcel one-myparcel" alt="Exporteer naar MyParcel" data-tip="Exporteer naar MyParcel">
-				<img src="<?php echo dirname(plugin_dir_url(__FILE__)) . '/img/myparcel-up.png'; ?>" alt="Exporteer naar MyParcel">
+				<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-up.png'; ?>" alt="Exporteer naar MyParcel">
 			</a>
 			<?php
 			
@@ -378,3 +384,7 @@ class WC_MyParcel_Writepanel {
 		}
 	}
 }
+
+endif; // class_exists
+
+return new WooCommerce_MyParcel_Writepanel();
