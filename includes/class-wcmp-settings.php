@@ -497,25 +497,44 @@ class WooCommerce_MyParcel_Settings {
 	 * 
 	 * @return void.
 	 */
-	public function default_settings() {
-		$default = array(
-			'process'			=> '1',
-			'keep_consignments'	=> '0',
-			'download_display'	=> 'download',
-			'email'				=> '1',
-			'telefoon'			=> '1',
-			'extragroot'		=> '0',
-			'huisadres'			=> '0',
-			'handtekening'		=> '0',
-			'huishand'			=> '0',
-			'retourbgg'			=> '0',
-			'verzekerd'			=> '0',
-			'verzekerdbedrag'	=> '0',
-			'kenmerk'			=> '',
-			'verpakkingsgewicht'=> '0',
-		);
+	public function default_settings( $option ) {
+		// $default = array(
+		// 	'process'			=> '1',
+		// 	'keep_consignments'	=> '0',
+		// 	'download_display'	=> 'download',
+		// 	'email'				=> '1',
+		// 	'telefoon'			=> '1',
+		// 	'extragroot'		=> '0',
+		// 	'huisadres'			=> '0',
+		// 	'handtekening'		=> '0',
+		// 	'huishand'			=> '0',
+		// 	'retourbgg'			=> '0',
+		// 	'verzekerd'			=> '0',
+		// 	'verzekerdbedrag'	=> '0',
+		// 	'kenmerk'			=> '',
+		// 	'verpakkingsgewicht'=> '0',
+		// );
 	
-		add_option( 'wcmyparcel_settings', $default );
+		// add_option( 'wcmyparcel_settings', $default );
+
+		switch ( $option ) {
+			case 'woocommerce_myparcel_general_settings':
+				$default = array(
+
+				);
+				break;
+			case 'woocommerce_myparcel_export_defaults_settings':
+			case 'woocommerce_myparcel_checkout_settings':
+			default:
+				$default = array();
+				break;
+		}
+
+		if ( false === get_option( $option ) ) {
+			add_option( $option, $default );
+		} else {
+			update_option( $option, $default );
+		}
 	}
 }
 
