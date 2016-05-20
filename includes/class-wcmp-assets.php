@@ -47,7 +47,23 @@ class WooCommerce_MyParcel_Assets {
 	 */
 	public function backend_scripts_styles ( $hook ) {
 	 	global $post_type;
-		if( $post_type == 'shop_order' ) {
+		$screen = get_current_screen();
+
+		if( $post_type == 'shop_order' || ( is_object( $screen ) && $screen->id == 'woocommerce_page_woocommerce_myparcel_settings' ) ) {
+			// WC2.3+ load all WC scripts for shipping_method search!
+			if ( version_compare( WOOCOMMERCE_VERSION, '2.3', '>=' ) ) {
+				wp_enqueue_script( 'woocommerce_admin' );
+				wp_enqueue_script( 'iris' );
+				if (!wp_script_is( 'wc-enhanced-select', 'registered' )) {
+					$suffix       = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+					wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', array( 'jquery', 'select2' ), WC_VERSION );
+				}
+				wp_enqueue_script( 'wc-enhanced-select' );
+				wp_enqueue_script( 'jquery-ui-sortable' );
+				wp_enqueue_script( 'jquery-ui-autocomplete' );
+				wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', array(), WC_VERSION );
+			}
+
 			wp_enqueue_script( 'thickbox' );
 			wp_enqueue_style( 'thickbox' );
 			wp_enqueue_script(
@@ -58,10 +74,11 @@ class WooCommerce_MyParcel_Assets {
 			);
 			wp_localize_script(
 				'wcmyparcel-export',
-				'woocommerce_myparcel',
+				'wc_myparcel',
 				array(  
-					'ajax_url'  => admin_url( 'admin-ajax.php' ),
-					'nonce'     => wp_create_nonce('woocommerce_myparcel'),
+					'ajax_url'			=> admin_url( 'admin-ajax.php' ),
+					'nonce'				=> wp_create_nonce('wc_myparcel'),
+					'download_display'	=> isset(WooCommerce_MyParcel()->general_settings['download_display'])?WooCommerce_MyParcel()->general_settings['download_display']:'',
 				)
 			);
 
@@ -83,6 +100,10 @@ class WooCommerce_MyParcel_Assets {
 					'all'
 				);
 			}
+
+
+
+
 		}
 
 		/* for reference

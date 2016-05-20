@@ -21,16 +21,14 @@ class WooCommerce_MyParcel_Admin {
 
 	public function order_list_shipment_options( $order ) {
 		$order_id = $order->id;
-		$consignment = WooCommerce_MyParcel()->export->get_consignment_data_from_order( $order );
-		$shipment_types = array(
-			'standard'		=> __( 'Parcel' , 'woocommerce-myparcel' ),
-			'letterbox'		=> __( 'Letterbox' , 'woocommerce-myparcel' ),
-			'unpaid_letter'	=> __( 'Unpaid letter' , 'woocommerce-myparcel' ),
-		);
+		$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );
+		$myparcel_options_extra = $order->myparcel_shipment_options_extra;
+		$package_types = WooCommerce_MyParcel()->export->get_package_types();
+
 
 		?>
 		<div class="wcmp_shipment_options" style="display:none">
-			<a href="#" class="wcmp_show_shipment_options"><?php echo $shipment_types[$consignment['shipment_type']]; ?> &#x25BE;</a>
+			<a href="#" class="wcmp_show_shipment_options"><span class="wcpm_package_type"><?php echo $package_types[$shipment_options['package_type']]; ?></span> &#x25BE;</a>
 			<div class="wcmp_shipment_options_form" style="display: none;">
 				<?php include('views/wcmp-order-shipment-options.php'); ?>
 			</div>
@@ -73,21 +71,21 @@ class WooCommerce_MyParcel_Admin {
 	 */
 	public function admin_order_actions( $order ) {
 		$listing_actions = array(
-			'export'		=> array (
-				'url'		=> wp_nonce_url( admin_url( 'edit.php?&action=wcmp_export&order_ids=' . $order->id ), 'wcmp_export' ),
-				'img'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-pdf.png',
+			'add_shipment'		=> array (
+				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_shipment&order_ids=' . $order->id ), 'wc_myparcel' ),
+				'img'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-up.png',
 				'alt'		=> esc_attr__( 'Export to MyParcel', 'woocommerce-myparcel' ),
 			),
-			'print'	=> array (
-				'url'		=> wp_nonce_url( admin_url( 'edit.php?&action=wcmp_print&order_ids=' . $order->id ), 'wcmp_print' ),
-				'img'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-up.png',
+			'get_labels'	=> array (
+				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=get_labels&order_ids=' . $order->id ), 'wc_myparcel' ),
+				'img'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-pdf.png',
 				'alt'		=> esc_attr__( 'Print MyParcel label', 'woocommerce-myparcel' ),
 			),
-			'return'	=> array (
-				'url'		=> wp_nonce_url( admin_url( 'edit.php?&action=wcmp_return&order_ids=' . $order->id ), 'wcmp_return' ),
-				'img'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-retour.png',
-				'alt'		=> esc_attr__( 'Create & Print return label', 'woocommerce-myparcel' ),
-			),
+			// 'add_return'	=> array (
+			// 	'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_return&order_ids=' . $order->id ), 'wc_myparcel' ),
+			// 	'img'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-retour.png',
+			// 	'alt'		=> esc_attr__( 'Create & Print return label', 'woocommerce-myparcel' ),
+			// ),
 		);
 
 		if ( $consignment_id = get_post_meta($order->id,'_myparcel_consignment_id',true ) ) {
@@ -98,18 +96,19 @@ class WooCommerce_MyParcel_Admin {
 				),
 			);
 		} else {
-			$consignments = get_post_meta($order->id,'_myparcel_consignments',true );
+			$consignments = get_post_meta($order->id,'_myparcel_shipments',true );
 		}
 
 		if (empty($consignments)) {
-			unset($listing_actions['print']);
-			unset($listing_actions['return']);
+			unset($listing_actions['get_labels']);
+			unset($listing_actions['add_return']);
 		}
 
 		$target = ( isset(WooCommerce_MyParcel()->general_settings['download_display']) && WooCommerce_MyParcel()->general_settings['download_display'] == 'display') ? 'target="_blank"' : '';
+		$nonce = wp_create_nonce('wc_myparcel');
 		foreach ($listing_actions as $action => $data) {
+			printf( '<a href="%1$s" class="button tips myparcel %2$s" alt="%3$s" data-tip="%3$s" data-order-id="%4$s" data-request="%2$s" data-nonce="%5$s" %6$s>', $data['url'], $action, $data['alt'], $order->id, $nonce, $target );
 			?>
-			<a href="<?php echo $data['url']; ?>" class="button tips wpo_wcpdf <?php echo $action; ?>" target="_blank" alt="<?php echo $data['alt']; ?>" data-tip="<?php echo $data['alt']; ?>">
 				<img src="<?php echo $data['img']; ?>" alt="<?php echo $data['alt']; ?>" width="16">
 			</a>
 			<?php
@@ -117,12 +116,29 @@ class WooCommerce_MyParcel_Admin {
 	}
 
 	public function save_shipment_options_ajax () {
-		check_ajax_referer( 'woocommerce_myparcel', 'security' );
+		check_ajax_referer( 'wc_myparcel', 'security' );
 		extract($_POST);
 		parse_str($form_data, $form_data);
 		
-		if (isset($form_data['consignments'][$order_id])) {
-			$shipment_options = $form_data['consignments'][$order_id];
+		if (isset($form_data['myparcel_options'][$order_id])) {
+			$shipment_options = $form_data['myparcel_options'][$order_id];
+
+			// convert insurance option
+			if (isset($shipment_options['insured'])) {
+				unset($shipment_options['insured']);
+				$shipment_options['insurance'] = array(
+					'insured_amount'	=> $shipment_options['insured_amount'],
+					'currency'			=> 'EUR',
+				);
+				unset($shipment_options['insured_amount']);
+			}
+
+			// separate extra options
+			if (isset($shipment_options['extra_options'])) {
+				update_post_meta( $order_id, '_myparcel_shipment_options_extra', $shipment_options['extra_options'] );
+				unset($shipment_options['extra_options']);
+			}
+
 			update_post_meta( $order_id, '_myparcel_shipment_options', $shipment_options );
 		}
 

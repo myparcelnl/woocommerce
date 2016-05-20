@@ -20,6 +20,7 @@ class WooCommerce_MyParcel_Settings {
 
 		add_action( 'admin_init', array( $this, 'general_settings' ) );
 		add_action( 'admin_init', array( $this, 'export_defaults_settings' ) );
+		add_action( 'admin_init', array( $this, 'checkout_settings' ) );
 	}
 
 	/**
@@ -139,18 +140,18 @@ class WooCommerce_MyParcel_Settings {
 			$option_group
 		);
 
-		add_settings_field(
-			'api_username',
-			__( 'Username', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'text_input' ),
-			$option_group,
-			'api',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'api_username',
-				'size'			=> 50,
-			)
-		);
+		// add_settings_field(
+		// 	'api_username',
+		// 	__( 'Username', 'woocommerce-myparcel' ),
+		// 	array( $this->callbacks, 'text_input' ),
+		// 	$option_group,
+		// 	'api',
+		// 	array(
+		// 		'option_name'	=> $option_name,
+		// 		'id'			=> 'api_username',
+		// 		'size'			=> 50,
+		// 	)
+		// );
 
 		add_settings_field(
 			'api_key',
@@ -229,15 +230,27 @@ class WooCommerce_MyParcel_Settings {
 		);
 
 		add_settings_field(
-			'auto_complete',
-			__( 'Auto complete orders', 'woocommerce-myparcel' ),
+			'order_status_automation',
+			__( 'Order status automation', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'general',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'auto_complete',
+				'id'			=> 'order_status_automation',
 				'description'	=> __( 'Automatically set order status to complete after succesfull MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Email track&trace code</strong> option, otherwise the track&trace code will not be included in the customer email.', 'woocommerce-myparcel' )
+			)
+		);		
+
+		add_settings_field(
+			'automatic_order_status',
+			__( 'Automatic order status', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'order_status_select' ),
+			$option_group,
+			'general',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'automatic_order_status',
 			)
 		);		
 
@@ -284,7 +297,7 @@ class WooCommerce_MyParcel_Settings {
 	}
 
 	/**
-	 * Register General settings
+	 * Register Export defaults settings
 	 */
 	public function export_defaults_settings() {
 		$option_group = 'woocommerce_myparcel_export_defaults_settings';
@@ -306,23 +319,36 @@ class WooCommerce_MyParcel_Settings {
 			$option_group
 		);
 
-		add_settings_field(
-			'shipment_type',
-			__( 'Shipment type', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'select' ),
-			$option_group,
-			'defaults',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'shipment_type',
-				'default'		=> 'standard',
-				'options' 		=> array(
-					'standard'		=> __( 'Parcel' , 'woocommerce-myparcel' ),
-					'letterbox'		=> __( 'Letterbox' , 'woocommerce-myparcel' ),
-					'unpaid_letter'	=> __( 'Unpaid letter' , 'woocommerce-myparcel' ),
-				),
-			)
-		);
+
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '>=' ) ) {
+			add_settings_field(
+				'shipping_methods_package_types',
+				__( 'Package types', 'woocommerce-myparcel' ),
+				array( $this->callbacks, 'shipping_methods_package_types' ),
+				$option_group,
+				'defaults',
+				array(
+					'option_name'	=> $option_name,
+					'id'			=> 'shipping_methods_package_types',
+					'package_types'	=> WooCommerce_MyParcel()->export->get_package_types(),
+					'description'	=> __( 'Select one or more shipping methods for each MyParcel package type', 'woocommerce-myparcel' ),
+				)
+			);
+		} else {
+			add_settings_field(
+				'package_type',
+				__( 'Shipment type', 'woocommerce-myparcel' ),
+				array( $this->callbacks, 'select' ),
+				$option_group,
+				'defaults',
+				array(
+					'option_name'	=> $option_name,
+					'id'			=> 'package_type',
+					'default'		=> '1',
+					'options' 		=> WooCommerce_MyParcel()->export->get_package_types(),
+				)
+			);			
+		}
 
 		add_settings_field(
 			'connect_email',
@@ -351,39 +377,39 @@ class WooCommerce_MyParcel_Settings {
 		);
 		
 		add_settings_field(
-			'extra_size',
+			'large_format',
 			__( 'Extra large size', 'woocommerce-myparcel' ).' (+ &euro;2.19)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'extra_size',
+				'id'			=> 'large_format',
 				'description'	=> __( 'Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee of &euro;&nbsp;2,00 will be charged.<br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate of &euro;&nbsp;70,00 will be charged.', 'woocommerce-myparcel' )
 			)
 		);
 		
 		add_settings_field(
-			'home_address_only',
+			'only_recipient',
 			__( 'Home address only', 'woocommerce-myparcel' ).' (+ &euro;0.26)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'home_address_only',
+				'id'			=> 'only_recipient',
 			)
 		);
 		
 		add_settings_field(
-			'signature_on_receipt',
+			'signature',
 			__( 'Signature on delivery', 'woocommerce-myparcel' ).' (+ &euro;0.33)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'signature_on_receipt',
+				'id'			=> 'signature',
 				'description'	=> __( 'The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signuture will be required.', 'woocommerce-myparcel' )
 			)
 		);
@@ -402,14 +428,14 @@ class WooCommerce_MyParcel_Settings {
 		);
 		
 		add_settings_field(
-			'return_if_no_answer',
+			'return',
 			__( 'Return if no answer', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'return_if_no_answer',
+				'id'			=> 'return',
 				'description'	=> __( 'By default, a parcel will be offered twice. After two unsuccessful delivery attempts, the parcel will be available at the nearest pickup point for three weeks. There it can be picked up by the recipient with the note that was left by the courier. If you want to receive the parcel back directly and NOT forward it to the pickup point, enable this option. Note: the parcel will be returned sooner than normal, for which we have to charge a fee.', 'woocommerce-myparcel' )
 			)
 		);
@@ -463,16 +489,16 @@ class WooCommerce_MyParcel_Settings {
 		);
 
 		add_settings_field(
-			'custom_id',
-			__( 'Custom ID', 'woocommerce-myparcel' ),
+			'label_description',
+			__( 'Label description', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'text_input' ),
 			$option_group,
 			'defaults',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'custom_id',
+				'id'			=> 'label_description',
 				'size'			=> '25',
-				'description'	=> __( "With this option, you can add a custom ID to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> to include the order number.", 'woocommerce-myparcel' ),
+				'description'	=> __( "With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> to include the order number.", 'woocommerce-myparcel' ),
 			)
 		);
 
@@ -491,6 +517,136 @@ class WooCommerce_MyParcel_Settings {
 		);
 
 	}
+
+	/**
+	 * Register Checkout settings
+	 */
+	public function checkout_settings() {
+		$option_group = 'woocommerce_myparcel_checkout_settings';
+
+		// Register settings.
+		$option_name = 'woocommerce_myparcel_checkout_settings';
+		register_setting( $option_group, $option_name, array( $this->callbacks, 'validate' ) );
+
+		// Create option in wp_options.
+		if ( false === get_option( $option_name ) ) {
+			$this->default_settings( $option_name );
+		}
+
+		// Checkout options section.
+		add_settings_section(
+			'checkout_options',
+			__( 'Checkout options', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'section' ),
+			$option_group
+		);
+
+		add_settings_field(
+			'postponed_delivery',
+			__( 'Postponed delivery', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'checkbox' ),
+			$option_group,
+			'checkout_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'postponed_delivery',
+			)
+		);
+
+		add_settings_field(
+			'extra_checkout_options',
+			__( 'Extra checkout options', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'checkbox' ),
+			$option_group,
+			'checkout_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'extra_checkout_options',
+			)
+		);
+
+		add_settings_field(
+			'postnl_pickup',
+			__( 'Pickup at PostNL', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'checkbox' ),
+			$option_group,
+			'checkout_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'postnl_pickup',
+			)
+		);
+
+		$days_of_the_week = array(
+			'0' => __( 'Sunday', 'woocommerce-myparcel' ),
+			'1' => __( 'Monday', 'woocommerce-myparcel' ),
+			'2' => __( 'Tuesday', 'woocommerce-myparcel' ),
+			'3' => __( 'Wednesday', 'woocommerce-myparcel' ),
+			'4' => __( 'Thursday', 'woocommerce-myparcel' ),
+			'5' => __( 'Friday', 'woocommerce-myparcel' ),
+			'6' => __( 'Saturday', 'woocommerce-myparcel' ),
+		);
+
+		add_settings_field(
+			'dropoff_days',
+			__( 'Dropoff days', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'enhanced_select' ),
+			$option_group,
+			'checkout_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'dropoff_days',
+				'options'		=> $days_of_the_week,
+			)
+		);
+
+		add_settings_field(
+			'dropoff_delay',
+			__( 'Dropoff delay', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'text_input' ),
+			$option_group,
+			'checkout_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'dropoff_delay',
+				'size'			=> '5',
+			)
+		);
+
+		add_settings_field(
+			'deliverydays_window',
+			__( 'Delivery days window', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'text_input' ),
+			$option_group,
+			'checkout_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'dropoff_delay',
+				'size'			=> '5',
+			)
+		);
+
+		add_settings_field(
+			'delivery_options',
+			__( 'Delivery options', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'delivery_options_table' ),
+			$option_group,
+			'checkout_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'delivery_options',
+				'options'		=> array(
+					'only_recipient'		=> 'Home address only',
+					'evening'				=> 'Evening delivery',
+					'morning'				=> 'Morning delivery',
+					'postnl_pickup'			=> 'PostNL pickup',
+					'postnl_pickup_early'	=> 'Early PostNL pickup',
+				),
+			)
+		);
+
+	}
+
 	
 	/**
 	 * Set default settings.

@@ -3,33 +3,34 @@
 	<tr>
 		<td>
 			<?php _e( 'Shipment type', 'woocommerce-myparcel' ) ?>:<br/>
-			<small class="calculated_weight"><?php printf( __( 'Calculated weight: %s kg', 'woocommerce-myparcel' ), number_format( $consignment['weight'], 3, ',', ' ' ) ); ?></small>
+			<?php $parcel_weight = WooCommerce_MyParcel()->export->get_parcel_weight( $order ); ?>
+			<small class="calculated_weight"><?php printf( __( 'Calculated weight: %s kg', 'woocommerce-myparcel' ), number_format( $parcel_weight, 3, ',', ' ' ) ); ?></small>
 		</td>
 		<td>
 			
 			<?php
-			$shipment_types = array(
-				'standard'		=> __( 'Parcel' , 'woocommerce-myparcel' ),
-				'letterbox'		=> __( 'Letterbox' , 'woocommerce-myparcel' ),
-				'unpaid_letter'	=> __( 'Unpaid letter' , 'woocommerce-myparcel' ),
+			$package_types = array(
+				1	=> __( 'Parcel' , 'woocommerce-myparcel' ),
+				2	=> __( 'Mailbox package' , 'woocommerce-myparcel' ),
+				3	=> __( 'Unpaid letter' , 'woocommerce-myparcel' ),
 			);
 
 			// disable letterbox outside NL
-			if (isset($consignment['ToAddress']['country_code']) && $consignment['ToAddress']['country_code'] != 'NL') {
-				unset($shipment_types['letterbox']);
+			if (isset($shipment_options['ToAddress']['country_code']) && $shipment_options['ToAddress']['country_code'] != 'NL') {
+				unset($package_types['letterbox']);
 			}
 
 			// disable letterbox and unpaid letter for pakjegemak
-			if ( WooCommerce_MyParcel()->export->is_pakjegemak( $order ) ) {
-				unset($shipment_types['letterbox']);
-				unset($shipment_types['unpaid_letter']);
-				$shipment_types['standard'] .= ' (Pakjegemak)';
+			if ( WooCommerce_MyParcel()->export->is_pickup( $order ) ) {
+				unset($package_types['letterbox']);
+				unset($package_types['unpaid_letter']);
+				$package_types['standard'] .= ' (Pakjegemak)';
 			}										
 
-			$name = "consignments[{$order_id}][shipment_type]";
-			printf( '<select name="%s" class="shipment_type">', $name );
-			foreach ( $shipment_types as $key => $label ) {
-				printf( '<option value="%s"%s>%s</option>', $key, selected( $consignment['shipment_type'], $key, false ), $label );
+			$name = "myparcel_options[{$order_id}][package_type]";
+			printf( '<select name="%s" class="package_type">', $name );
+			foreach ( $package_types as $key => $label ) {
+				printf( '<option value="%s"%s>%s</option>', $key, selected( $shipment_options['package_type'], $key, false ), $label );
 			}
 			echo '</select>';
 			?>										
@@ -41,8 +42,9 @@
 		</td>
 		<td>
 			<?php
-			$name = "consignments[{$order_id}][colli_amount]";
-			printf('<input type="number" step="1" min="0" name="%s" value="%s" size="2">', $name, 1);
+			$name = "myparcel_options[{$order_id}][extra_options][colli_amount]";
+			$colli_amount = isset( $myparcel_options_extra['colli_amount'] ) ? $myparcel_options_extra['colli_amount'] : 1;
+			printf('<input type="number" step="1" min="0" name="%s" value="%s" size="2">', $name, $colli_amount);
 			?>								
 		</td>
 	</tr>
@@ -50,34 +52,34 @@
 <br>
 <table class="wcmyparcel_settings_table parcel_options">
 	<?php
+	$shipment_options['insured'] = isset($shipment_options['insurance']['insured_amount']) ? 1 : 0;
+	if (!isset($shipment_options['insurance'])) {
+		$shipment_options['insurance']['insured_amount'] = '';
+	}
+
 	$option_rows = array(
-		'[ProductCode][extra_size]'	=> array(
+		'[large_format]'	=> array(
 			'label'	=> __( 'Extra large size', 'woocommerce-myparcel' ),
-			'value'	=> $consignment['ProductCode']['extra_size'],
+			'value'	=> $shipment_options['large_format'],
 			'cost'	=> '2.19',
 		),
-		'[ProductCode][home_address_only]'	=> array(
+		'[only_recipient]'	=> array(
 			'label'	=> __( 'Home address only', 'woocommerce-myparcel' ),
-			'value'	=> $consignment['ProductCode']['home_address_only'],
+			'value'	=> $shipment_options['only_recipient'],
 			'cost'	=> '0.26',
 		),
-		'[ProductCode][signature_on_receipt]'	=> array(
+		'[signature]'	=> array(
 			'label'	=> __( 'Signature on delivery', 'woocommerce-myparcel' ),
-			'value'	=> $consignment['ProductCode']['signature_on_receipt'],
-			'cost'	=> empty($order->myparcel_is_pakjegemak) ? '0.33' : '',
+			'value'	=> $shipment_options['signature'],
+			'cost'	=> !(WooCommerce_MyParcel()->export->is_pickup( $order )) ? '0.33' : '',
 		),
-		'[ProductCode][home_address_signature]'	=> array(
-			'label'	=> __( 'Home address only + signature on delivery', 'woocommerce-myparcel' ),
-			'value'	=> $consignment['ProductCode']['home_address_signature'],
-			'cost'	=> '0.40',
-		),
-		'[ProductCode][return_if_no_answer]'	=> array(
+		'[return]'	=> array(
 			'label'	=> __( 'Return if no answer', 'woocommerce-myparcel' ),
-			'value'	=> $consignment['ProductCode']['return_if_no_answer'],
+			'value'	=> $shipment_options['return'],
 		),
-		'[ProductCode][insured]'	=> array(
+		'[insured]'	=> array(
 			'label'	=> __( 'Insured + home address only + signature on delivery', 'woocommerce-myparcel' ),
-			'value'	=> $consignment['ProductCode']['insured'],
+			'value'	=> $shipment_options['insured'],
 			'class'	=> 'insured',
 		),
 	);
@@ -87,7 +89,7 @@
 	<tr>
 		<td>
 			<?php
-			$name = "consignments[{$order_id}]{$name}";
+			$name = "myparcel_options[{$order_id}]{$name}";
 			$class = isset($option_row['class'])?$option_row['class']:'';
 			$checked = isset($option_row['checked'])? $option_row['checked'] : checked( "1", $option_row['value'], false );
 			printf('<input type="checkbox" name="%s" value="1" class="%s" %s>', $name, $class, $checked );
@@ -109,17 +111,18 @@
 		<td><?php _e( 'Insurance', 'woocommerce-myparcel' ) ?></td>
 		<td>
 			<?php
-			$insured_amount = array(
+			$insured_amounts = array(
 				'49'		=> __( 'Insured up to &euro; 50' , 'woocommerce-myparcel' ).' (+ &euro; 0.50)',
 				'249'		=> __( 'Insured up to  &euro; 250' , 'woocommerce-myparcel' ).' (+ &euro; 1.00)',
 				'499'		=> __( 'Insured up to  &euro; 500' , 'woocommerce-myparcel' ).' (+ &euro; 1.50)',
 				''			=> __( '> &euro; 500 insured' , 'woocommerce-myparcel' ).' (+ &euro; 1.50)',
 			);
+			$insured_amount = isset($shipment_options['insurance']['insured_amount']) ? $shipment_options['insurance']['insured_amount'] : '';
 
-			$name = "consignments[{$order_id}][insured_amount]";
+			$name = "myparcel_options[{$order_id}][insured_amount]";
 			printf( '<select name="%s" class="insured_amount">', $name );
-			foreach ( $insured_amount as $key => $label ) {
-				printf( '<option value="%s"%s>%s</option>', $key, selected( $consignment['insured_amount'], $key, false ), $label );
+			foreach ( $insured_amounts as $key => $label ) {
+				printf( '<option value="%s"%s>%s</option>', $key, selected( $insured_amount, $key, false ), $label );
 			}
 			echo '</select>';
 			?>
@@ -131,8 +134,8 @@
 		</td>
 		<td>
 			<?php
-			$name = "consignments[{$order_id}][insured_amount]";
-			printf('<input type="text" name="%s" value="%s" style="width:100%%" class="insured_amount">', $name, $consignment['insured_amount']);
+			$name = "myparcel_options[{$order_id}][insured_amount]";
+			printf('<input type="text" name="%s" value="%s" style="width:100%%" class="insured_amount">', $name, $insured_amount);
 			?>
 		</td>
 	</tr>
@@ -140,8 +143,8 @@
 		<td><?php _e( 'Custom ID (top left on label)', 'woocommerce-myparcel' ) ?></td>
 		<td>
 			<?php
-			$name = "consignments[{$order_id}][custom_id]";
-			printf('<input type="text" name="%s" value="%s" style="width:100%%">', $name, $consignment['custom_id']);
+			$name = "myparcel_options[{$order_id}][label_description]";
+			printf('<input type="text" name="%s" value="%s" style="width:100%%">', $name, $shipment_options['label_description']);
 			?>
 		</td>
 	</tr>

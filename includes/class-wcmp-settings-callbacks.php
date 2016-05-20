@@ -187,6 +187,109 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		}
 	}
 
+	public function order_status_select( $args ) {
+		// get list of WooCommerce statuses
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
+			$statuses = (array) get_terms( 'shop_order_status', array( 'hide_empty' => 0, 'orderby' => 'id' ) );
+			foreach ( $statuses as $status ) {
+				$order_statuses[esc_attr( $status->slug )] = esc_html__( $status->name, 'woocommerce' );
+			}
+		} else {
+			$statuses = wc_get_order_statuses();
+			foreach ( $statuses as $status_slug => $status ) {
+				$status_slug   = 'wc-' === substr( $status_slug, 0, 3 ) ? substr( $status_slug, 3 ) : $status_slug;
+				$order_statuses[$status_slug] = $status;
+			}
+		}
+
+		// select order status
+		$args['options'] = $order_statuses;
+		$this->select( $args );
+	}
+
+	public function shipping_methods_package_types( $args ) {
+		extract( $this->normalize_settings_args( $args ) );
+		foreach ($package_types as $package_type => $package_type_title) {
+			printf ('<div class="package_type_title">%s:<div>', $package_type_title);
+			$args['package_type'] =  $package_type;
+			unset($args['description']);
+			$this->shipping_method_search( $args );
+		}
+		// Displays option description.
+		if ( isset( $description ) ) {
+			printf( '<p class="description">%s</p>', $description );
+		}
+	}
+
+	// Shipping method search callback.
+	public function shipping_method_search( $args ) {
+		extract( $this->normalize_settings_args( $args ) );
+
+		if (isset($package_type)) {
+			$setting_name = "{$setting_name}[{$package_type}]";
+			$current = isset($current[$package_type]) ? $current[$package_type] : '';
+		}
+
+		?>
+		<select id="<?php echo $id; ?>" name="<?php echo $setting_name; ?>[]" style="width: 50%;"  class="wc-enhanced-select" multiple="multiple" data-placeholder="<?php echo $placeholder; ?>">
+			<?php
+				$shipping_methods_selected = (array) $current;
+				$shipping_methods = WC()->shipping->load_shipping_methods();
+				if ( $shipping_methods ) foreach ( $shipping_methods as $key => $shipping_method ) {
+					echo '<option value="' . esc_attr( $key ) . '"' . selected( in_array( $key, $shipping_methods_selected ), true, false ) . '>' . esc_html( $shipping_methods[$key]->title ) . '</option>';
+				}
+			?>
+		</select>
+		<?php
+		// Displays option description.
+		if ( isset( $description ) ) {
+			printf( '<p class="description">%s</p>', $description );
+		}
+	}
+
+	public function enhanced_select( $args ) {
+		extract( $this->normalize_settings_args( $args ) );
+
+		?>
+		<select id="<?php echo $id; ?>" name="<?php echo $setting_name; ?>[]" style="width: 50%;"  class="wc-enhanced-select" multiple="multiple" data-placeholder="<?php echo $placeholder; ?>">
+			<?php
+			foreach ( $options as $key => $title ) {
+				echo '<option value="' . esc_attr( $key ) . '"' . selected( !empty($current) && in_array( $key, (array) $current ), true, false ) . '>' . esc_html( $title ) . '</option>';
+			}
+			?>
+		</select>
+		<?php
+		// Displays option description.
+		if ( isset( $description ) ) {
+			printf( '<p class="description">%s</p>', $description );
+		}
+	}
+
+	public function delivery_options_table( $args ) {
+		extract( $this->normalize_settings_args( $args ) );
+		?>
+		<table>
+
+		<table>
+			<thead>
+				<tr>
+					<th><?php // _e( 'Enabled', 'woocommerce-myparcel' )?></th>
+					<th><?php _e( 'Option', 'woocommerce-myparcel' )?></th>
+					<th><?php _e( 'Fee (optional)', 'woocommerce-myparcel' )?></th>
+					<th><?php _e( 'Description', 'woocommerce-myparcel' )?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+				foreach ($options as $key => $value) {
+					printf('<tr><td><input type="checkbox"></td><td>%1$s</td><td><input type="text"></td><td><input type="text"></td>', $value);
+				}
+				?>
+			</tbody>
+		</table>
+		<?php
+	}
+
 	/**
 	 * Wrapper function to create tabs for settings in different languages
 	 * @param  [type] $args     [description]

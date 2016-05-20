@@ -47,6 +47,7 @@ class WooCommerce_MyParcel {
 
 		// Load settings
 		$this->general_settings = get_option( 'woocommerce_myparcel_general_settings' );
+		$this->export_defaults = get_option( 'woocommerce_myparcel_export_defaults_settings' );
 
 		// load the localisation & classes
 		add_action( 'plugins_loaded', array( $this, 'translations' ) );

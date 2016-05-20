@@ -13,11 +13,11 @@ class WooCommerce_MyParcel_Export {
 	 */
 			
 	public function __construct() {
+		include( 'class-wcmp-rest.php' );
 		include( 'class-wcmp-api.php' );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
-		add_action( 'load-edit.php', array( $this, 'wcmyparcel_action' ) ); // Export actions (popup & file export)
-		$this->settings = get_option( 'wcmyparcel_settings' );
+		add_action( 'wp_ajax_wc_myparcel', array($this, 'export' ));
 	}
 
 	public function admin_notices () {
@@ -41,104 +41,388 @@ class WooCommerce_MyParcel_Export {
 	 * @access public
 	 * @return void
 	 */
-	public function wcmyparcel_action() {
-		if ( !isset($_REQUEST['action']) ) {
+	public function export() {
+		// Check the nonce
+		check_ajax_referer( 'wc_myparcel', 'security' );
+
+		if( ! is_user_logged_in() ) {
+			wp_die( __( 'You do not have sufficient permissions to access this page.', 'woocommerce-myparcel' ) );
+		}
+
+		// Check the user privileges (maybe use order ids for filter?)
+		if( apply_filters( 'wc_myparcel_check_privs', !current_user_can( 'manage_woocommerce_orders' ) && !current_user_can( 'edit_shop_orders' ) ) ) {
+			$return['error'] = __( 'You do not have sufficient permissions to access this page.', 'woocommerce-myparcel' );
+			$json = json_encode( $return );
+			echo $json;
+			die();
+		}
+
+		extract($_REQUEST); // $request, $order_ids, ...
+
+		$return = array();
+		$success = array();
+		$errors = array();
+		switch($request) {
+			case 'add_shipments':
+				if ( empty($order_ids) ) {
+					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
+					break;
+				}
+
+				foreach ($order_ids as $order_id) {
+					$shipments = $this->get_shipment_data( (array) $order_id );
+
+					try {
+						$api = $this->init_api();
+						$response = $api->add_shipments( $shipments );
+						// echo '<pre>';var_dump($response);echo '</pre>';die();
+						if (isset($response['body']['data']['ids'])) {
+							$ids = array_shift($response['body']['data']['ids']);
+							$shipment_id = $ids['id'];
+							$success[$order_id] = $shipment_id;
+
+							$shipment = array (
+								'shipment_id' => $shipment_id,
+							);
+
+							// save shipment data in order meta
+							$this->save_shipment_data( $order_id, $shipment );
+
+						} else {
+							$errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcel' );
+						}
+					} catch (Exception $e) {
+						$errors[$order_id] = $e->getMessage();
+					}
+					
+				}
+				// echo '<pre>';var_dump($success);echo '</pre>';die();
+
+			break;
+			case 'get_labels':
+				if ( empty($order_ids) ) {
+					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
+					break;
+				}
+
+				// check for JSON
+				if (is_string($order_ids) && strpos($order_ids, '[') !== false ) {
+					$order_ids = json_decode(stripslashes($order_ids));
+				}
+
+				// cast as array for single exports
+				$order_ids = (array) $order_ids;
+
+
+				$shipment_ids = $this->get_shipment_ids( $order_ids );
+
+				if ( empty($shipment_ids) ) {
+					$errors[] = __( 'The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcel' );
+					break;
+				}
+
+				try {
+					$api = $this->init_api();
+					$params = array();
+					
+
+					if (isset($label_response_type) && $label_response_type == 'url') {
+						$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
+						// var_dump( $response );
+						if (isset($response['body']['data']['pdfs']['url'])) {
+							$url = untrailingslashit( $api->APIURL ) . $response['body']['data']['pdfs']['url'];
+							$return['url'] = $url;
+
+						} else {
+							$errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
+						}
+					} else {
+						$response = $api->get_shipment_labels( $shipment_ids, $params, 'pdf' );
+
+						if (isset($response['body'])) {
+							$pdf_data = $response['body'];
+							$output_mode = isset(WooCommerce_MyParcel()->general_settings['download_display'])?WooCommerce_MyParcel()->general_settings['download_display']:'';
+							if ( $output_mode == 'display' ) {
+								$this->stream_pdf( $pdf_data, $order_ids );
+							} else {
+								$this->download_pdf( $pdf_data, $order_ids );
+							}
+						} else {
+							$errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
+						}
+
+						// echo '<pre>';var_dump($response);echo '</pre>';die();
+					}
+				} catch (Exception $e) {
+					$errors[] = $e->getMessage();
+				}
+			break;
+		}
+
+		// display errors directly if PDF requested
+		if ( $request == 'get_labels' && !empty($errors) ) {
+			echo $this->parse_errors( $errors );
+			die();
+		}		
+
+		// format errors for html output
+		if (!empty($errors)) {
+			$return['error'] = $this->parse_errors( $errors );
+		}
+
+		// return JSON response
+		echo json_encode( $return );
+		die();
+	}
+
+	public function init_api () {
+		$user = WooCommerce_MyParcel()->general_settings['api_username'];
+		$key = WooCommerce_MyParcel()->general_settings['api_key'];
+		$api = new WC_MyParcel_API( $user, $key );
+
+		return $api;
+	}
+
+	public function get_shipment_data( $order_ids ) {
+		foreach( $order_ids as $order_id ) {
+			// get order
+			if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
+				$order = new WC_Order( $order_id );
+			} else {
+				$order = wc_get_order( $order_id );
+			}
+
+			$shipment = array(
+				'recipient' => $this->get_recipient( $order ),
+				'options'	=> $this->get_options( $order ),
+				'carrier'	=> 1, // default to POSTNL for now
+			);
+
+			// echo '<pre>';var_dump($shipment);echo '</pre>';die();
+
+			$shipments[] = $shipment;
+		}
+
+		return $shipments;
+	}
+
+	public function get_recipient( $order ) {
+		$address = array(
+			'cc'			=> $order->shipping_country,
+			'city'			=> $order->shipping_city,
+			'person'		=> trim( $order->shipping_first_name . ' ' . $order->shipping_last_name ),
+			'company'		=> $order->shipping_company,
+			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? $order->billing_email : '',
+			'phone'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_phone']) ? $order->billing_phone : '',
+		);
+
+
+		if ( $order->shipping_country == 'NL' ) {
+			$address_intl = array(
+				'street'		=> $order->shipping_street_name,
+				'number'		=> $order->shipping_house_number,
+				'number_suffix' => $order->shipping_house_number_suffix,
+				'postal_code'	=> $order->shipping_postcode,
+			);
+		} else {
+			$address_intl = array(
+				'postal_code'				=> $order->shipping_postcode,
+				'street'					=> $order->shipping_address_1,
+				'street_additional_info'	=> $order->shipping_address_2,
+			);
+		}
+
+		return array_merge( $address, $address_intl);
+	}
+
+	public function get_options( $order ) {
+		$order_number = $order->get_order_number();
+
+		if (isset(WooCommerce_MyParcel()->export_defaults['label_description'])) {
+			$description = str_replace('[ORDER_NR]', $order_number, WooCommerce_MyParcel()->export_defaults['label_description']);
+		} else {
+			$description = '';
+		}
+
+		// determine appropriate package type for this order
+		if (isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'])) {
+			// get shipping methods from order
+			$order_shipping_methods = $order->get_items('shipping');
+
+			if ( !empty( $order_shipping_methods ) ) {
+				// we're taking the first (we're not handling multiple shipping methods as of yet)
+				$order_shipping_method = array_shift($order_shipping_methods);
+				$order_shipping_method = $order_shipping_method['method_id'];
+
+				foreach (WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
+					if (in_array($order_shipping_method, $package_type_shipping_methods)) {
+						$package_type = $package_type_key;
+						break;
+					}
+				}
+			}
+		}
+		// fallbacks if no match from previous
+		if (!isset($package_type)) {
+			if ((isset(WooCommerce_MyParcel()->export_defaults['package_type']))) {
+				$package_type = WooCommerce_MyParcel()->export_defaults['package_type'];
+			} else {
+				$package_type = 1; // 1. package | 2. mailbox package | 3. letter
+			}
+		}
+
+		$options = array(
+			'package_type'		=> $package_type,
+			'only_recipient'	=> (isset(WooCommerce_MyParcel()->export_defaults['only_recipient'])) ? 1 : 0,
+			'signature'			=> (isset(WooCommerce_MyParcel()->export_defaults['signature'])) ? 1 : 0,
+			'return'			=> (isset(WooCommerce_MyParcel()->export_defaults['return'])) ? 1 : 0,
+			'large_format'		=> (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
+			'label_description'	=> $description,
+			'insured_amount'	=> (isset(WooCommerce_MyParcel()->export_defaults['insured_amount'])) ? WooCommerce_MyParcel()->export_defaults['verzekerdbedrag'] : 0,
+		);
+
+
+		// use shipment options from order when available
+		$shipment_options = $order->myparcel_shipment_options;
+		if (!empty($shipment_options)) {
+			$options = array_merge($options, $shipment_options);
+		}
+
+		// convert insurance option
+		if (isset($options['insured_amount'])) {
+			$options['insurance'] = array(
+				'amount'	=> (int) $options['insured_amount'],
+				'currency'	=> 'EUR',
+			);
+			unset($options['insured_amount']);
+			unset($options['insured']);
+		}
+
+		// always enable signature on receipt for Pickup and Pickup express delivery types.
+		if ( $this->is_pickup( $order ) ) {
+			$options['signature'] = 1;
+		}
+
+		// allow prefiltering consignment data
+		$options = apply_filters( 'wc_myparcel_order_shipment_options', $options, $order );
+
+		// PREVENT ILLEGAL SETTINGS
+		// convert numeric strings to int
+		$int_options = array( 'package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format' );
+		foreach ($options as $key => &$value) {
+			if ( in_array($key, $int_options) ) {
+				$value = (int) $value;
+			}
+		}
+
+		// disable letterbox outside NL
+		if ($order->shipping_country != 'NL' && $options['package_type'] == 2 ) {
+			$options['package_type'] == 1;
+		}
+		// always parcel for Pickup and Pickup express delivery types.
+		if ( $this->is_pickup( $order ) ) {
+			$options['package_type'] == 1;
+		}
+
+		return $options;
+
+	}
+
+	public function get_shipment_ids( $order_ids ) {
+		$shipment_ids = array();
+		foreach ($order_ids as $order_id) {
+			$shipments = get_post_meta($order_id,'_myparcel_shipments',true);
+			if (!empty($shipments)) {
+				$last_shipment = array_pop( $shipments );
+				$shipment_ids[] = $last_shipment['shipment_id'];
+			}
+		}
+
+		return $shipment_ids;
+	}
+
+	public function save_shipment_data ( $order_id, $shipment ) {
+		if ( empty($shipment) ) {
 			return false;
 		}
 
-		$action = $_REQUEST['action'];
+		$shipments = array();
+		$shipments[$shipment['shipment_id']] = $shipment;
 
-		switch($action) {
-			case 'wcmyparcel':
-				if ( empty($_GET['order_ids']) ) {
-					die('U heeft geen orders geselecteerd!');
-				}
-				
-				$order_ids = explode('x',$_GET['order_ids']);
-				$form_data = $this->get_export_form_data( $order_ids );
-				
-				// Include HTML for export page/iframe
-				include('views/wcmyparcel-export-html.php');
-
-				die();
-			break;
-			case 'wcmyparcel-export':
-				// Get the data
-				if (!isset($_POST['consignments'])) {
-					die('Er zijn geen orders om te exporteren!');
-				}
-
-				// stripslashes! Wordpress always slashes POST data, regardless of magic quotes settings... http://stackoverflow.com/q/8949768/1446634
-				$consignment_data = $this->process_consignment_data( stripslashes_deep($_POST['consignments']) );
-
-				// echo '<pre>';print_r($consignment_data);echo '</pre>';die();
-
-				$api = new WC_MyParcel_API();
-
-				// Send consignment data to MyParcel API
-				$api->create_consignments( $consignment_data );
-
-				// Include HTML for export done page/iframe
-				include('views/wcmyparcel-export-done-html.php');
-
-				exit;
-			case 'wcmyparcel-label':
-				if ( empty($_GET['consignment']) && empty($_GET['order_ids']) ) {
-					die('U heeft geen orders geselecteerd!');
-				}
-
-				$order_ids = explode('x',$_GET['order_ids']);
-
-				$consignments = array();
-
-				if ( !isset($_GET['consignment']) ) {
-					// Bulk export label
-					foreach ($order_ids as $order_id) {
-						if ( $order_consignment_id = get_post_meta($order_id,'_myparcel_consignment_id',true) ) {
-							$consignments[$order_consignment_id] = $order_id;
-						} elseif ( $order_consignments = get_post_meta($order_id,'_myparcel_consignments',true) ) {
-							foreach ($order_consignments as $key => $order_consignment) {
-								$consignments[$order_consignment['consignment_id']] = $order_id;
-							}
-						}
-					}
-				} else {
-					// Label request from modal (directly after export)
-					// consignments already given!
-					$consignments = array_combine(explode('x',$_GET['consignment']), $order_ids);
-				}
-
-				if (empty($consignments)) {
-					if (!empty($_SERVER['HTTP_REFERER'])) {
-						$shop_orders = $_SERVER['HTTP_REFERER'];
-					} else {
-						$shop_orders = admin_url( 'edit.php?post_type=shop_order' );
-					}
-					
-					$url = add_query_arg( array( 'myparcel' => 'no_consignments'), $shop_orders);
-					wp_redirect( $url );
-					exit();
-				}
-
-				$api = new WC_MyParcel_API();
-
-				// Request labels from MyParcel API
-				$api->get_labels( $consignments );
-
-				if (!empty($api->pdf)) {
-					// Get output setting
-					$output_mode = isset($this->settings['download_display'])?$this->settings['download_display']:'';
-					if ( $output_mode == 'display' ) {
-						$api->stream_pdf();
-					} else {
-						$api->download_pdf();
-					}
-				}
-				
-				exit;
-			default: return;
+		if ( isset(WooCommerce_MyParcel()->general_settings['keep_shipments']) ) {
+			if ( $old_shipments = get_post_meta($order_id,'_myparcel_shipments',true) ) {
+				$shipments = $old_shipments + $shipments;
+			}
 		}
+
+		update_post_meta ( $order_id, '_myparcel_shipments', $shipments );
+
+		return;
 	}
+
+	public function get_package_types() {
+		$package_types = array(
+			1	=> __( 'Parcel' , 'woocommerce-myparcel' ),
+			2	=> __( 'Mailbox package' , 'woocommerce-myparcel' ),
+			3	=> __( 'Unpaid letter' , 'woocommerce-myparcel' ),
+		);
+
+		return $package_types;
+	}
+
+	public function parse_errors( $errors ) {
+		$parsed_errors = array();
+		foreach ($errors as $key => $error) {
+			// check if we have an order_id
+			if ($key > 10) {
+				$parsed_errors[] = sprintf("<strong>%s %s:</strong> %s", __( 'Order', 'woocommerce-myparcel' ), $key, $error );
+			} else {
+				$parsed_errors[] = $error;
+			}
+		}
+
+		if (count($parsed_errors) == 1) {
+			$html = array_shift($parsed_errors);
+		} else {
+			foreach ($parsed_errors as &$parsed_error) {
+				$parsed_error = "<li>{$parsed_error}</li>";
+			}
+			$html = sprintf("<ul>%s</ul>", implode("\n",$parsed_errors));
+		}
+
+		return $html;
+	}
+
+	public function stream_pdf ( $pdf_data, $order_ids ) {
+		header('Content-type: application/pdf');
+		header('Content-Disposition: inline; filename="'.$this->get_filename( $order_ids ).'"');
+		echo $pdf_data;
+	}
+	public function download_pdf ( $pdf_data, $order_ids ) {
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename="'.$this->get_filename( $order_ids ).'"'); 
+		header('Content-Transfer-Encoding: binary');
+		header('Connection: Keep-Alive');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header('Pragma: public');
+		echo $pdf_data;
+	}
+
+	public function get_filename ( $order_ids ) {
+		$filename  = 'MyParcel';
+		$filename .= '-' . date('Y-m-d') . '.pdf';
+
+		return apply_filters( 'wcmyparcel_filename', $filename, $order_ids );
+	}
+
+
+
+
+
+
+
 
 	public function get_export_form_data ( $order_ids ) {
 		foreach( $order_ids as $order_id ) {
@@ -215,8 +499,8 @@ class WooCommerce_MyParcel_Export {
 			$consignment = array_merge($consignment, $shipment_options);
 		}
 
-		// always enable signature on receipt for pakjegemak
-		if ( $this->is_pakjegemak( $order ) ) {
+		// always enable signature on receipt for Pickup and Pickup express delivery types.
+		if ( $this->is_pickup( $order ) ) {
 			$consignment['ProductCode']['signature_on_receipt'] = '1';
 		}
 
@@ -229,8 +513,8 @@ class WooCommerce_MyParcel_Export {
 		if ($order->shipping_country != 'NL' && $consignment['shipment_type'] == 'letterbox' ) {
 			$consignment['shipment_type'] == 'standard';
 		}
-		// always parcel for pakjegemak
-		if ( $this->is_pakjegemak( $order ) ) {
+		// always parcel for Pickup and Pickup express delivery types.
+		if ( $this->is_pickup( $order ) ) {
 			$consignment['shipment_type'] == 'standard';
 		}
 
@@ -243,7 +527,7 @@ class WooCommerce_MyParcel_Export {
 	public function process_consignment_data ( $consignment_data ) {
 		foreach ($consignment_data as $order_id => $consignment) {
 			// Pakjegemak: Use billing address as ToAddress and send PgAddress separately
-			if ( $pgaddress = $this->is_pakjegemak( $order_id ) ) {
+			if ( $pgaddress = $this->is_pickup( $order_id ) ) {
 				// load order
 				if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
 					$order = new WC_Order( $order_id );
@@ -336,7 +620,7 @@ class WooCommerce_MyParcel_Export {
 		return $item_weight;
 	}
 
-	public function is_pakjegemak( $order ) {
+	public function is_pickup( $order ) {
 		// load order_id if order object passed
 		if (is_object($order)) {
 			$order_id = $order->id;
@@ -345,7 +629,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// load meta data
-		$pakjegemak = get_post_meta( $order_id, '_myparcel_is_pakjegemak', true );
+		$pakjegemak = get_post_meta( $order_id, '_myparcel_is_pickup', true );
 		$pgaddress = get_post_meta( $order_id, '_myparcel_pgaddress', true );
 
 		// make sure pakjegemak address is present and contains an address
