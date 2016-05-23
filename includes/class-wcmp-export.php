@@ -99,6 +99,43 @@ class WooCommerce_MyParcel_Export {
 				// echo '<pre>';var_dump($success);echo '</pre>';die();
 
 			break;
+			case 'add_return':
+				if ( empty($order_ids) ) {
+					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
+					break;
+				}
+
+				foreach ($order_ids as $order_id) {
+					$return_shipments = $this->get_order_shipment_data( (array) $order_id, 'return' );
+					echo '<pre>';var_dump($return_shipments);echo '</pre>';die();
+
+					try {
+						$api = $this->init_api();
+						$response = $api->add_shipments( $return_shipments, 'return' );
+						echo '<pre>';var_dump($response);echo '</pre>';die();
+						if (isset($response['body']['data']['ids'])) {
+							$ids = array_shift($response['body']['data']['ids']);
+							$shipment_id = $ids['id'];
+							$success[$order_id] = $shipment_id;
+
+							$shipment = array (
+								'shipment_id' => $shipment_id,
+							);
+
+							// save shipment data in order meta
+							$this->save_shipment_data( $order_id, $shipment );
+
+						} else {
+							$errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcel' );
+						}
+					} catch (Exception $e) {
+						$errors[$order_id] = $e->getMessage();
+					}
+					
+				}
+				// echo '<pre>';var_dump($success);echo '</pre>';die();
+
+			break;
 			case 'get_labels':
 				if ( empty($order_ids) ) {
 					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
@@ -187,7 +224,7 @@ class WooCommerce_MyParcel_Export {
 		return $api;
 	}
 
-	public function get_order_shipment_data( $order_ids ) {
+	public function get_order_shipment_data( $order_ids, $type = 'standard' ) {
 		foreach( $order_ids as $order_id ) {
 			// get order
 			if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
@@ -201,6 +238,13 @@ class WooCommerce_MyParcel_Export {
 				'options'	=> $this->get_options( $order ),
 				'carrier'	=> 1, // default to POSTNL for now
 			);
+
+			if ($type == 'return') {
+				$shipment_ids = $this->get_shipment_ids( (array) $order_id );
+				if ( !empty($shipment_ids) ) {
+					$shipment['parent'] = array_pop( $shipment_ids);
+				}
+			}
 
 			// echo '<pre>';var_dump($shipment);echo '</pre>';die();
 

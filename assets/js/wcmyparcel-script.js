@@ -162,7 +162,7 @@ jQuery( function( $ ) {
 					myparcel_print( order_ids );
 					break;
 				case 'add_return':
-					// myparcel_return( order_ids );
+					myparcel_return( order_ids );
 					break;
 			}
 		});			
@@ -187,6 +187,28 @@ jQuery( function( $ ) {
 		});
 
 	}
+
+	// export orders to MyParcel via AJAX
+	function myparcel_return( order_ids ) {
+		console.log('creating return for orders...');
+		var data = {
+			action:           'wc_myparcel',
+			request:          'add_return',
+			order_ids:        order_ids,
+			security:         wc_myparcel.nonce,
+		};
+
+		$.post( wc_myparcel.ajax_url, data, function( response ) {
+			response = $.parseJSON(response);
+			console.log(response);
+			if ( response !== null && typeof response === 'object' && 'error' in response) {
+				myparcel_admin_notice( response.error, 'error' );
+			}
+			return;
+		});
+
+	}
+
 
 	// Request MyParcel labels
 	function myparcel_print( order_ids ) {

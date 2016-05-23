@@ -36,20 +36,24 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 		switch ($type) {
 			case 'standard': default:
 				$content_type = 'application/vnd.shipment+json';
+				$data_key = 'shipments';
 				break;
 			case 'return':
 				$content_type = 'application/vnd.return_shipment+json';
+				$data_key = 'return_shipments';
 				break;
 			case 'unrelated_return':
 				$content_type = 'application/vnd.unrelated_return_shipment+json';
+				$data_key = 'unrelated_return_shipments';
 				break;
 		}
 
 		$data = array(
 			'data' => array (
-				'shipments' => $shipments,
+				$data_key => $shipments,
 			),
 		);
+
 
 		// echo '<pre>';var_dump($data);echo '</pre>';die();
 		$json = json_encode( $data );
