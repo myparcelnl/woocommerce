@@ -70,7 +70,7 @@ class WooCommerce_MyParcel_Export {
 				}
 
 				foreach ($order_ids as $order_id) {
-					$shipments = $this->get_shipment_data( (array) $order_id );
+					$shipments = $this->get_order_shipment_data( (array) $order_id );
 
 					try {
 						$api = $this->init_api();
@@ -176,14 +176,18 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function init_api () {
-		$user = WooCommerce_MyParcel()->general_settings['api_username'];
+		// $user = WooCommerce_MyParcel()->general_settings['api_username'];
+		if ( !isset(WooCommerce_MyParcel()->general_settings['api_key']) ) {
+			return false;
+		}
+
 		$key = WooCommerce_MyParcel()->general_settings['api_key'];
-		$api = new WC_MyParcel_API( $user, $key );
+		$api = new WC_MyParcel_API( $key );
 
 		return $api;
 	}
 
-	public function get_shipment_data( $order_ids ) {
+	public function get_order_shipment_data( $order_ids ) {
 		foreach( $order_ids as $order_id ) {
 			// get order
 			if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
@@ -417,9 +421,67 @@ class WooCommerce_MyParcel_Export {
 		return apply_filters( 'wcmyparcel_filename', $filename, $order_ids );
 	}
 
+	public function get_shipment_status_name( $status_code ) {
+		$shipment_statuses = array(
+			1	=> __('pending - concept', 'woocommerce-myparcel'),
+			2	=> __('pending - registered', 'woocommerce-myparcel'),
+			3	=> __('enroute - handed to carrier', 'woocommerce-myparcel'),
+			4	=> __('enroute - sorting', 'woocommerce-myparcel'),
+			5	=> __('enroute - distribution', 'woocommerce-myparcel'),
+			6	=> __('enroute - customs', 'woocommerce-myparcel'),
+			7	=> __('delivered - at recipient', 'woocommerce-myparcel'),
+			8	=> __('delivered - ready for pickup', 'woocommerce-myparcel'),
+			9	=> __('delivered - package picked up', 'woocommerce-myparcel'),
+			30	=> __('inactive - concept', 'woocommerce-myparcel'),
+			31	=> __('inactive - registered', 'woocommerce-myparcel'),
+			32	=> __('inactive - enroute - handed to carrier', 'woocommerce-myparcel'),
+			33	=> __('inactive - enroute - sorting', 'woocommerce-myparcel'),
+			34	=> __('inactive - enroute - distribution', 'woocommerce-myparcel'),
+			35	=> __('inactive - enroute - customs', 'woocommerce-myparcel'),
+			36	=> __('inactive - delivered - at recipient', 'woocommerce-myparcel'),
+			37	=> __('inactive - delivered - ready for pickup', 'woocommerce-myparcel'),
+			38	=> __('inactive - delivered - package picked up', 'woocommerce-myparcel'),
+			99	=> __('inactive - unknown', 'woocommerce-myparcel'),
+		);
+
+		if (isset($shipment_statuses[$status_code])) {
+			return $shipment_statuses[$status_code];
+		} else {
+			return __('Unknown status', 'woocommerce-myparcel');
+		}
+	}
+
+	public function get_shipment_data( $id ) {
+		try {
+			$api = $this->init_api();
+			$response = $api->get_shipments( $id );
+			// echo '<pre>';var_dump($response);echo '</pre>';die();
+
+			if (!empty($response['body']['data']['shipments'])) {
+				$shipments = $response['body']['data']['shipments'];
+				$shipment = array_shift($shipments);
+				// echo '<pre>';var_export($shipment);echo '</pre>';die();
+
+				// if shipment id matches and status is not concept, get tracktrace barcode and status name
+				if ( isset($shipment['id']) && $shipment['id'] == $id && $shipment['status'] >= 2 )  {
+					$status = $this->get_shipment_status_name( $shipment['status']);
+					$tracktrace = $shipment['barcode']; 
+					return compact('status', 'tracktrace', 'shipment');
+				} else {
+					return false;
+				}
+
+			} else {
+				// No shipments found with this ID
+				return false;
+			}
 
 
-
+		} catch (Exception $e) {
+			// echo $e->getMessage();
+			return false;
+		}
+	}
 
 
 

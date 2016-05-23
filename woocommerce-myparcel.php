@@ -100,7 +100,7 @@ class WooCommerce_MyParcel {
 		include_once( 'includes/class-wcmp-admin.php' );
 		include_once( 'includes/class-wcmp-settings.php' );
 		$this->export = include_once( 'includes/class-wcmp-export.php' );
-		include_once( 'includes/class-wcmp-writepanel.php' );
+		// include_once( 'includes/class-wcmp-writepanel.php' );
 		include_once( 'includes/class-wcmp-nlpostcode-fields.php' );
 	}
 

@@ -177,7 +177,7 @@ class WC_MyParcel_REST_Client
 			}
 
 			if ( !empty($body["errors"])) {
-				$error = $this->parse_errors( $body["errors"] );
+				$error = $this->parse_errors( $body );
 			} elseif ( !empty($body["message"] ) ) {
 				$error = $body["message"];
 			} else {
@@ -202,12 +202,20 @@ class WC_MyParcel_REST_Client
 		return array("code" => $status, "body" => $body, "headers" => $response_headers);
 	}
 
-	public function parse_errors( $errors ) {
+	public function parse_errors( $body ) {
+		$errors = $body['errors'];
+		$message = $body['message'];
+
 		$parsed_errors = array();
 		foreach ($errors as $error) {
 			$code = isset($error['code']) ? $error['code'] : '';
-			foreach ($error['human'] as $key => $human_error) {
-				$parsed_errors[$code] = "{$human_error} (<strong>Code {$code}</strong>)";
+
+			if ( isset($error['human']) && is_array($error['human']) ) {
+				foreach ($error['human'] as $key => $human_error) {
+					$parsed_errors[$code] = "{$human_error} (<strong>Code {$code}</strong>)";
+				}
+			} else {
+				$parsed_errors[$code] = "{$message} (<strong>Code {$code}</strong>)";
 			}
 		}
 

@@ -9,23 +9,18 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 	/** @var API URL */
 	public $APIURL = "https://api.myparcel.nl/";
 
-	/* @var API User */
-	private $user;
-
 	/* @var API Key */
 	private $key;
 
 	/**
 	 * Default constructor
 	 *
-	 * @param  string  $user    API User provided by MyParcel
 	 * @param  string  $key     API Key provided by MyParcel
 	 * @return void
 	 */
-	function __construct( $user, $key ) {
+	function __construct( $key ) {
 		parent::__construct();
 
-		$this->user = $user;
 		$this->key = $key;
 	}
 
@@ -84,7 +79,7 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 		);
 
 		$request_url = $this->APIURL . $endpoint . '/' . implode(';', $ids);
-		$response = $this->delete($request_url);
+		$response = $this->delete($request_url, $headers );
 
 		return $response;
 	}
@@ -101,7 +96,7 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 		);
 
 		$request_url = $this->APIURL . $endpoint;
-		$response = $this->post($request_url);
+		$response = $this->post($request_url, '', $headers );
 
 		return $response;
 	}
@@ -111,16 +106,18 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 	 * @param  array  $params request parameters
 	 * @return array          response
 	 */
-	public function get_shipments ( $params = array() ) {
+	public function get_shipments ( $ids, $params = array() ) {
 		$endpoint = 'shipments';
 
 		$headers = array (
-			'Accept: application/json; charset=UTF-8',
+			// 'Accept: application/json; charset=UTF-8',
 			'Authorization: basic '. base64_encode("{$this->key}"),
 		);
 
-		$request_url = add_query_arg( $params, $this->APIURL . $endpoint );
-		$response = $this->get($request_url);
+		$request_url = $this->APIURL . $endpoint . '/' . implode(';', (array) $ids);
+		$request_url = add_query_arg( $params, $request_url );
+		// echo '<pre>';var_dump($request_url);echo '</pre>';die();
+		$response = $this->get($request_url, $headers);
 
 		return $response;
 	}
@@ -150,7 +147,7 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 
 		$request_url = add_query_arg( $params, $this->APIURL . $endpoint . '/' . implode(';', $ids) );
 		$response = $this->get($request_url, $headers, $raw);
-
+		
 		return $response;
 	}
 

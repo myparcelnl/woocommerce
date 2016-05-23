@@ -15,20 +15,45 @@ class WooCommerce_MyParcel_Admin {
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_shipment_options' ), 9999 );
 		add_action(	'admin_footer', array( $this, 'bulk_actions' ) ); 
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_order_actions' ), 20 );
+		add_action( 'add_meta_boxes_shop_order', array( $this, 'shop_order_metabox' ) );
+		add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'single_order_shipment_options' ) );
 
 		add_action( 'wp_ajax_wcmp_save_shipment_options', array( $this, 'save_shipment_options_ajax' ) );
 	}
 
-	public function order_list_shipment_options( $order ) {
+	public function order_list_shipment_options( $order, $hide = true ) {
 		$order_id = $order->id;
 		$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );
 		$myparcel_options_extra = $order->myparcel_shipment_options_extra;
 		$package_types = WooCommerce_MyParcel()->export->get_package_types();
 
+		// get shipment data
+		$consignments = $this->get_order_shipments( $order );
 
+		// if we have shipments, then we show status & link to track&trace, settings under i
+		if ( !empty( $consignments ) )  {
+			// only use last shipment
+			$last_shipment = array_pop( $consignments );
+			$last_shipment_id = $last_shipment['shipment_id'];
+
+			$shipment = WooCommerce_MyParcel()->export->get_shipment_data( $last_shipment_id );
+			// echo '<pre>';var_dump($shipment);echo '</pre>';die();
+			if (!empty($shipment['tracktrace'])) {
+				$order_has_shipment = true;
+				$tracktrace_url = $this->get_tracktrace_url( $order->id, $shipment['tracktrace']);
+				$text = sprintf('<a href="%s" class="myparcel_tracktrace_link" target="_blank">%s</a> <a href="#" class="wcmp_show_shipment_options"><span class="encircle">i</span></a>', $tracktrace_url, $shipment['status']);
+			}
+		}
+
+		// if no shipments yet - show parcel type and settings on click
+		if (!isset($order_has_shipment)) {
+			$text = sprintf('<a href="#" class="wcmp_show_shipment_options"><span class="wcpm_package_type">%s</span> &#x25BE;</a>', $package_types[$shipment_options['package_type']]);
+		}
+
+		$style = $hide ? 'style="display:none"' : '';
 		?>
-		<div class="wcmp_shipment_options" style="display:none">
-			<a href="#" class="wcmp_show_shipment_options"><span class="wcpm_package_type"><?php echo $package_types[$shipment_options['package_type']]; ?></span> &#x25BE;</a>
+		<div class="wcmp_shipment_options" <?php echo $style; ?>>
+			<?php echo $text; ?>
 			<div class="wcmp_shipment_options_form" style="display: none;">
 				<?php include('views/wcmp-order-shipment-options.php'); ?>
 			</div>
@@ -88,16 +113,7 @@ class WooCommerce_MyParcel_Admin {
 			// ),
 		);
 
-		if ( $consignment_id = get_post_meta($order->id,'_myparcel_consignment_id',true ) ) {
-			$consignments = array(
-				array(
-					'consignment_id' => $consignment_id,
-					'tracktrace'     => get_post_meta($order->id,'_myparcel_tracktrace',true ),
-				),
-			);
-		} else {
-			$consignments = get_post_meta($order->id,'_myparcel_shipments',true );
-		}
+		$consignments = $this->get_order_shipments( $order );
 
 		if (empty($consignments)) {
 			unset($listing_actions['get_labels']);
@@ -113,6 +129,21 @@ class WooCommerce_MyParcel_Admin {
 			</a>
 			<?php
 		}
+	}
+
+	public function get_order_shipments( $order ) {
+		if ( $consignment_id = get_post_meta($order->id,'_myparcel_consignment_id',true ) ) {
+			$consignments = array(
+				array(
+					'consignment_id' => $consignment_id,
+					'tracktrace'     => get_post_meta($order->id,'_myparcel_tracktrace',true ),
+				),
+			);
+		} else {
+			$consignments = get_post_meta($order->id,'_myparcel_shipments',true );
+		}
+
+		return $consignments;
 	}
 
 	public function save_shipment_options_ajax () {
@@ -146,6 +177,112 @@ class WooCommerce_MyParcel_Admin {
 		die();
 	}
 
+	/**
+	 * Add the meta box on the single order page
+	 */
+	public function shop_order_metabox() {
+		add_meta_box(
+			'myparcel', //$id
+			__( 'MyParcel', 'woocommerce-myparcel' ), //$title
+			array( $this, 'create_box_content' ), //$callback
+			'shop_order', //$post_type
+			'side', //$context
+			'default' //$priority
+		);
+	}
+
+
+
+	/**
+	 * Callback: Create the meta box content on the single order page
+	 */
+	public function create_box_content() {
+		global $post_id;
+		// get order
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
+			$order = new WC_Order( $post_id );
+		} else {
+			$order = wc_get_order( $post_id );
+		}
+
+		// show buttons
+		echo '<div class="single_order_actions">';
+		$this->admin_order_actions( $order, false );
+		echo '</div>';
+
+		/*
+		$pdf_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&order_ids=' . $post_id ), 'wcmyparcel-label' );
+		$export_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $post_id ), 'wcmyparcel' );
+
+		$target = ( isset($this->settings['download_display']) && $this->settings['download_display'] == 'display') ? 'target="_blank"' : '';
+
+		if ( get_post_meta($post_id,'_myparcel_consignments',true ) || get_post_meta($post_id,'_myparcel_consignment_id',true ) ) {
+			if ( $tracktrace_consignments = $this->get_tracktrace_consignments( $post_id ) ) {
+				?>
+				<table class="tracktrace_status">
+					<thead>
+						<th>Track&Trace</th>
+						<th>Status</th>
+					</thead>
+					<tbody>
+					<?php
+					// echo '<pre>';var_dump($consignments);echo '</pre>';die();
+					foreach ($tracktrace_consignments as $consignment) {
+						// fetch TNT status
+						$tnt_status_url = 'http://www.myparcel.nl/status/tnt/' . $consignment['consignment_id'];
+						$tnt_status = explode('|', @file_get_contents($tnt_status_url));
+						$tnt_status = (count($tnt_status) == 3) ? $tnt_status[2] : '-';
+
+						echo "<tr><td>{$consignment['tracktrace_link']}</td><td>{$tnt_status}</td></tr>";
+					}
+					?>
+					</tbody>
+				</table>
+				<?php
+			}
+			?>
+			<ul>
+				<li><a href="<?php echo $pdf_link; ?>" class="button" alt="Download label (PDF)" <?php echo $target; ?>>Download label (PDF)</a></li>
+				<li><a href="<?php echo $export_link; ?>" class="button myparcel one-myparcel" alt="Exporteer naar MyParcel">Exporteer opnieuw</a></li>
+			</ul>
+			<?php
+		} else {
+			?>
+			<ul>
+				<li><a href="<?php echo $export_link; ?>" class="button myparcel one-myparcel" alt="Exporteer naar MyParcel">Exporteer naar MyParcel</a></li>
+			</ul>
+			<?php			
+		}
+		*/
+	}
+
+	public function single_order_shipment_options( $order ) {
+		echo '<strong>' . __( 'MyParcel shipment:', 'woocommerce-myparcel' ) . '</strong>';
+		$this->order_list_shipment_options( $order );
+	}
+
+	public function get_tracktrace_url( $order_id, $tracktrace ) {
+		if (empty($order_id))
+			return;
+
+		$country = get_post_meta($order_id,'_shipping_country',true);
+		$postcode = preg_replace('/\s+/', '',get_post_meta($order_id,'_shipping_postcode',true));
+
+		// set url for NL or foreign orders
+		if ($country == 'NL') {
+			// use billing postcode for pickup/pakjegemak
+			if ( WooCommerce_MyParcel()->export->is_pickup( $order_id ) ) {
+				$postcode = preg_replace('/\s+/', '',get_post_meta($order_id,'_billing_postcode',true));
+			}
+
+			// $tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Inbox/Search?lang=nl&B=%s&P=%s', $tracktrace, $postcode);
+			$tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Claim?Barcode=%s&Postalcode=%s', $tracktrace, $postcode);
+		} else {
+			$tracktrace_url = sprintf('https://www.internationalparceltracking.com/Main.aspx#/track/%s/%s/%s', $tracktrace, $country, $postcode);			
+		}
+
+		return $tracktrace_url;
+	}
 }
 
 endif; // class_exists

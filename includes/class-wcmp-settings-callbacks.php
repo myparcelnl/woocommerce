@@ -30,7 +30,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		extract( $this->normalize_settings_args( $args ) );
 
 		// output checkbox	
-		printf( '<input type="checkbox" id="%1$s" name="%2$s" value="%3$s"% 4$s class="%5$s"/>', $id, $setting_name, $value, checked( $value, $current, false ), $class );
+		printf( '<input type="checkbox" id="%1$s" name="%2$s" value="%3$s" %4$s class="%5$s"/>', $id, $setting_name, $value, checked( $value, $current, false ), $class );
 	
 		// output description.
 		if ( isset( $description ) ) {
@@ -273,7 +273,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		<table>
 			<thead>
 				<tr>
-					<th><?php // _e( 'Enabled', 'woocommerce-myparcel' )?></th>
+					<th style="width: 2.2em"><?php // _e( 'Enabled', 'woocommerce-myparcel' )?></th>
 					<th><?php _e( 'Option', 'woocommerce-myparcel' )?></th>
 					<th><?php _e( 'Fee (optional)', 'woocommerce-myparcel' )?></th>
 					<th><?php _e( 'Description', 'woocommerce-myparcel' )?></th>
@@ -281,8 +281,34 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 			</thead>
 			<tbody>
 				<?php
-				foreach ($options as $key => $value) {
-					printf('<tr><td><input type="checkbox"></td><td>%1$s</td><td><input type="text"></td><td><input type="text"></td>', $value);
+				foreach ($options as $key => $title) {
+					// prepare args for input fields
+					$common_args = array (
+						'option_name'	=> "{$option_name}[{$key}]",
+					);
+					// checkbox (enable)
+					$cb_args = array(
+						'id'			=> 'enabled',
+					);
+					// number (fee)
+					$fee_args = array(
+						'id'			=> 'fee',
+						'type'			=> 'number',
+						'size'			=> '5',
+					);					
+					// textarea (description)
+					$description_args = array(
+						'id'			=> 'description',
+						'width'			=> '50',
+						'height'		=> '4',
+					);				
+					?>
+					<tr>
+						<td><?php $this->checkbox( array_merge( $common_args, $cb_args ) ); ?></td>
+						<td><?php echo $title; ?></td>
+						<td><input type="number" min="0"></td>
+						<td><input type="text"></td>
+					<?php
 				}
 				?>
 			</tbody>
@@ -405,7 +431,6 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 	 * @return array		validated options.
 	 */
 	public function validate( $input ) {
-		// echo '<pre>';var_dump($input);die('</pre>');
 		// Create our array for storing the validated options.
 		$output = array();
 

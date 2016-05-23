@@ -609,6 +609,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'dropoff_delay',
+				'type'			=> 'number',
 				'size'			=> '5',
 			)
 		);
@@ -621,7 +622,8 @@ class WooCommerce_MyParcel_Settings {
 			'checkout_options',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'dropoff_delay',
+				'id'			=> 'deliverydays_window',
+				'type'			=> 'number',
 				'size'			=> '5',
 			)
 		);
