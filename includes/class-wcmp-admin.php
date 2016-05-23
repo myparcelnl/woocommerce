@@ -41,7 +41,7 @@ class WooCommerce_MyParcel_Admin {
 			if (!empty($shipment['tracktrace'])) {
 				$order_has_shipment = true;
 				$tracktrace_url = $this->get_tracktrace_url( $order->id, $shipment['tracktrace']);
-				$text = sprintf('<a href="%s" class="myparcel_tracktrace_link" target="_blank">%s</a> <a href="#" class="wcmp_show_shipment_options"><span class="encircle">i</span></a>', $tracktrace_url, $shipment['status']);
+				$text = sprintf('<a href="%s" class="myparcel_tracktrace_link" target="_blank" title="%s">%s</a> <a href="#" class="wcmp_show_shipment_options"><span class="encircle">i</span></a>', $tracktrace_url, $shipment['tracktrace'], $shipment['status']);
 			}
 		}
 
