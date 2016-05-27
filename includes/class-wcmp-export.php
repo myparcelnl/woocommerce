@@ -71,6 +71,7 @@ class WooCommerce_MyParcel_Export {
 
 				foreach ($order_ids as $order_id) {
 					$shipments = $this->get_order_shipment_data( (array) $order_id );
+					// echo '<pre>';var_dump($shipments);echo '</pre>';die();
 
 					// check colli amount
 					$extra_params = $order->myparcel_shipment_options_extra;
@@ -277,7 +278,7 @@ class WooCommerce_MyParcel_Export {
 		$order = $this->get_order( $order_id );
 
 		// convert insurance option
-		if (isset($options['insured_amount'])) {
+		if ( isset($options['insured_amount']) && $options['insured_amount'] != 0 ) {
 			$options['insurance'] = array(
 				'amount'	=> (int) $options['insured_amount'],
 				'currency'	=> 'EUR',
@@ -335,6 +336,7 @@ class WooCommerce_MyParcel_Export {
 	public function get_options( $order ) {
 		$order_number = $order->get_order_number();
 
+		// parse description
 		if (isset(WooCommerce_MyParcel()->export_defaults['label_description'])) {
 			$description = str_replace('[ORDER_NR]', $order_number, WooCommerce_MyParcel()->export_defaults['label_description']);
 		} else {
@@ -368,29 +370,50 @@ class WooCommerce_MyParcel_Export {
 			}
 		}
 
-		$options = array(
-			'package_type'		=> $package_type,
-			'only_recipient'	=> (isset(WooCommerce_MyParcel()->export_defaults['only_recipient'])) ? 1 : 0,
-			'signature'			=> (isset(WooCommerce_MyParcel()->export_defaults['signature'])) ? 1 : 0,
-			'return'			=> (isset(WooCommerce_MyParcel()->export_defaults['return'])) ? 1 : 0,
-			'large_format'		=> (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
-			'label_description'	=> $description,
-			'insured_amount'	=> (isset(WooCommerce_MyParcel()->export_defaults['insured_amount'])) ? WooCommerce_MyParcel()->export_defaults['insured_amount'] : 0,
-		);
+		// disable mailbox package outside NL
+		if ($order->shipping_country != 'NL' && $options['package_type'] == 2 ) {
+			$package_type == 1;
+		}
 
+		// always parcel for Pickup and Pickup express delivery types.
+		if ( $this->is_pickup( $order ) ) {
+			$package_type == 1;
+		}
 
 		// use shipment options from order when available
 		$shipment_options = $order->myparcel_shipment_options;
 		if (!empty($shipment_options)) {
-			$options = array_merge($options, $shipment_options);
+			$emty_defaults = array(
+				'package_type'		=> 1,
+				'only_recipient'	=> 0,
+				'signature'			=> 0,
+				'return'			=> 0,
+				'large_format'		=> 0,
+				'label_description'	=> '',
+				'insured_amount'	=> 0,
+			);
+			$options = array_merge($emty_defaults, $shipment_options);
+		} else {
+			$options = array(
+				'package_type'		=> $package_type,
+				'only_recipient'	=> (isset(WooCommerce_MyParcel()->export_defaults['only_recipient'])) ? 1 : 0,
+				'signature'			=> (isset(WooCommerce_MyParcel()->export_defaults['signature'])) ? 1 : 0,
+				'return'			=> (isset(WooCommerce_MyParcel()->export_defaults['return'])) ? 1 : 0,
+				'large_format'		=> (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
+				'label_description'	=> $description,
+				'insured_amount'	=> (isset(WooCommerce_MyParcel()->export_defaults['insured_amount'])) ? WooCommerce_MyParcel()->export_defaults['insured_amount'] : 0,
+			);
 		}
 
 		// convert insurance option
 		if (isset($options['insured_amount'])) {
-			$options['insurance'] = array(
-				'amount'	=> (int) $options['insured_amount'],
-				'currency'	=> 'EUR',
-			);
+			if ($options['insured_amount'] > 0) {
+				$options['insurance'] = array(
+					'amount'	=> (int) $options['insured_amount'],
+					'currency'	=> 'EUR',
+				);
+			}
+
 			unset($options['insured_amount']);
 			unset($options['insured']);
 		}
@@ -412,13 +435,15 @@ class WooCommerce_MyParcel_Export {
 			}
 		}
 
-		// disable letterbox outside NL
-		if ($order->shipping_country != 'NL' && $options['package_type'] == 2 ) {
-			$options['package_type'] == 1;
-		}
-		// always parcel for Pickup and Pickup express delivery types.
-		if ( $this->is_pickup( $order ) ) {
-			$options['package_type'] == 1;
+		// disable options for mailbox package and unpaid letter
+			// echo '<pre>';var_dump($package_type);echo '</pre>';die();
+		if ( $options['package_type'] != 1 ) {
+			$illegal_options = array( 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance' );
+			foreach ($options as $key => $option) {
+				if (in_array($key, $illegal_options)) {
+					unset($options[$key]);
+				}
+			}
 		}
 
 		return $options;
@@ -445,10 +470,14 @@ class WooCommerce_MyParcel_Export {
 
 		$shipments = array();
 		$shipments[$shipment['shipment_id']] = $shipment;
+		// don't store full shipment data
+		if (isset($shipment['shipment'])) {
+			unset($shipment['shipment']);
+		}
 
 		if ( isset(WooCommerce_MyParcel()->general_settings['keep_shipments']) ) {
 			if ( $old_shipments = get_post_meta($order_id,'_myparcel_shipments',true) ) {
-				$shipments = $old_shipments + $shipments;
+				$shipments = $shipments + $old_shipments;
 			}
 		}
 
@@ -544,7 +573,7 @@ class WooCommerce_MyParcel_Export {
 		}
 	}
 
-	public function get_shipment_data( $id ) {
+	public function get_shipment_data( $id, $order ) {
 		try {
 			$api = $this->init_api();
 			$response = $api->get_shipments( $id );
@@ -558,8 +587,11 @@ class WooCommerce_MyParcel_Export {
 				// if shipment id matches and status is not concept, get tracktrace barcode and status name
 				if ( isset($shipment['id']) && $shipment['id'] == $id && $shipment['status'] >= 2 )  {
 					$status = $this->get_shipment_status_name( $shipment['status']);
-					$tracktrace = $shipment['barcode']; 
-					return compact('status', 'tracktrace', 'shipment');
+					$tracktrace = $shipment['barcode'];
+					$shipment_id = $id;
+					$shipment_data = compact( 'shipment_id', 'status', 'tracktrace', 'shipment');
+					$this->save_shipment_data( $order->id, $shipment_data );
+					return $shipment_data;
 				} else {
 					return false;
 				}
@@ -722,7 +754,7 @@ class WooCommerce_MyParcel_Export {
 		}		
 
 		$consignment = array(
-			'shipment_type'	=> (isset($this->settings['shipment_type'])) ? $this->settings['shipment_type'] : 'standard', // standard | letterbox | unpaid_letter
+			'shipment_type'	=> (isset($this->settings['shipment_type'])) ? $this->settings['shipment_type'] : 'standard', // standard | mailbox package | unpaid_letter
 			'ToAddress'		=> array_merge( $address, $address_intl),
 			'ProductCode'	=> array(
 				'signature_on_receipt'	=> (isset($this->settings['handtekening'])) ? '1' : '0',
@@ -759,7 +791,7 @@ class WooCommerce_MyParcel_Export {
 
 		// PREVENT ILLEGAL SETTINGS
 
-		// disable letterbox outside NL
+		// disable mailbox package outside NL
 		if ($order->shipping_country != 'NL' && $consignment['shipment_type'] == 'letterbox' ) {
 			$consignment['shipment_type'] == 'standard';
 		}

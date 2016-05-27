@@ -84,7 +84,13 @@
     border: 1px solid #666;
     color: #666;
     text-align: center;
+}
 
+table.tracktrace_status {
+	margin-top: 10px;
+}
+table.tracktrace_status td {
+	vertical-align: top;
 }
 
 /* bulk export options styling */

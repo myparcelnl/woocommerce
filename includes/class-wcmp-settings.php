@@ -223,14 +223,14 @@ class WooCommerce_MyParcel_Settings {
 		);		
 
 		add_settings_field(
-			'keep_consignments',
+			'keep_shipments',
 			__( 'Keep old shipments', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'general',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'keep_consignments',
+				'id'			=> 'keep_shipments',
 				'default'		=> 0,
 				'description'	=> __( 'With this option enaled, data from previous shipments (track & trace links) will be kept in the order when you export more than once.', 'woocommerce-myparcel' )
 			)

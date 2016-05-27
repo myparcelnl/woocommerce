@@ -191,7 +191,7 @@ jQuery( function( $ ) {
 
 	// export orders to MyParcel via AJAX
 	function myparcel_export( order_ids ) {
-		console.log('exporting order to myparcel...');
+		// console.log('exporting order to myparcel...');
 		var data = {
 			action:           'wc_myparcel',
 			request:          'add_shipments',
@@ -201,7 +201,7 @@ jQuery( function( $ ) {
 
 		$.post( wc_myparcel.ajax_url, data, function( response ) {
 			response = $.parseJSON(response);
-			console.log(response);
+			// console.log(response);
 			if ( response !== null && typeof response === 'object' && 'error' in response) {
 				myparcel_admin_notice( response.error, 'error' );
 			}
@@ -228,7 +228,7 @@ jQuery( function( $ ) {
 
 	// export orders to MyParcel via AJAX
 	function myparcel_return( order_ids ) {
-		console.log('creating return for orders...');
+		// console.log('creating return for orders...');
 		var data = {
 			action:           'wc_myparcel',
 			request:          'add_return',
@@ -238,7 +238,7 @@ jQuery( function( $ ) {
 
 		$.post( wc_myparcel.ajax_url, data, function( response ) {
 			response = $.parseJSON(response);
-			console.log(response);
+			// console.log(response);
 			if ( response !== null && typeof response === 'object' && 'error' in response) {
 				myparcel_admin_notice( response.error, 'error' );
 			}
@@ -250,7 +250,7 @@ jQuery( function( $ ) {
 
 	// Request MyParcel labels
 	function myparcel_print( order_ids ) {
-		console.log('requesting myparcel labels...');
+		// console.log('requesting myparcel labels...');
 
 		var request_prefix = (wclabels.ajaxurl.indexOf("?") != -1) ? '&' : '?';
 		var url = wc_myparcel.ajax_url+request_prefix+'action=wc_myparcel&request=get_labels&security='+wc_myparcel.nonce;

@@ -8,17 +8,17 @@
 		</td>
 		<td>
 			<?php
-			// disable letterbox outside NL
-			if (isset($shipment_options['ToAddress']['country_code']) && $shipment_options['ToAddress']['country_code'] != 'NL') {
-				unset($package_types['letterbox']);
+			// disable mailbox package outside NL
+			if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
+				unset($package_types[2]); // mailbox package
 			}
 
-			// disable letterbox and unpaid letter for pakjegemak
+			// disable mailbox package and unpaid letter for pakjegemak
 			if ( WooCommerce_MyParcel()->export->is_pickup( $order ) ) {
-				unset($package_types['letterbox']);
-				unset($package_types['unpaid_letter']);
-				$package_types['standard'] .= ' (Pakjegemak)';
-			}										
+				unset($package_types[2]); // mailbox package
+				unset($package_types[3]); // unpaid letter
+				$package_types[1] .= ' (Pakjegemak)';
+			}
 
 			$name = "myparcel_options[{$order_id}][package_type]";
 			printf( '<select name="%s" class="package_type">', $name );
@@ -26,7 +26,7 @@
 				printf( '<option value="%s"%s>%s</option>', $key, selected( $shipment_options['package_type'], $key, false ), $label );
 			}
 			echo '</select>';
-			?>										
+			?>
 		</td>
 	</tr>
 	<tr>
@@ -38,7 +38,7 @@
 			$name = "myparcel_options[{$order_id}][extra_options][colli_amount]";
 			$colli_amount = isset( $myparcel_options_extra['colli_amount'] ) ? $myparcel_options_extra['colli_amount'] : 1;
 			printf('<input type="number" step="1" min="0" name="%s" value="%s" size="2">', $name, $colli_amount);
-			?>								
+			?>
 		</td>
 	</tr>
 </table>
@@ -53,22 +53,22 @@
 	$option_rows = array(
 		'[large_format]'	=> array(
 			'label'	=> __( 'Extra large size', 'woocommerce-myparcel' ),
-			'value'	=> $shipment_options['large_format'],
+			'value'	=> isset($shipment_options['large_format']) ? $shipment_options['large_format'] : 0,
 			'cost'	=> '2.19',
 		),
 		'[only_recipient]'	=> array(
 			'label'	=> __( 'Home address only', 'woocommerce-myparcel' ),
-			'value'	=> $shipment_options['only_recipient'],
+			'value'	=> isset($shipment_options['only_recipient']) ? $shipment_options['only_recipient'] : 0,
 			'cost'	=> '0.26',
 		),
 		'[signature]'	=> array(
 			'label'	=> __( 'Signature on delivery', 'woocommerce-myparcel' ),
-			'value'	=> $shipment_options['signature'],
+			'value'	=> isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,
 			'cost'	=> !(WooCommerce_MyParcel()->export->is_pickup( $order )) ? '0.33' : '',
 		),
 		'[return]'	=> array(
 			'label'	=> __( 'Return if no answer', 'woocommerce-myparcel' ),
-			'value'	=> $shipment_options['return'],
+			'value'	=> isset($shipment_options['return']) ? $shipment_options['return'] : 0,
 		),
 		'[insured]'	=> array(
 			'label'	=> __( 'Insured + home address only + signature on delivery', 'woocommerce-myparcel' ),
@@ -96,7 +96,7 @@
 			}
 			?>
 		</td>
-	</tr>									
+	</tr>
 	<?php endforeach ?>
 </table>
 <table class="wcmyparcel_settings_table">

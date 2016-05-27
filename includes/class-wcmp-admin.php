@@ -19,6 +19,16 @@ class WooCommerce_MyParcel_Admin {
 		add_action( 'add_meta_boxes_shop_order', array( $this, 'shop_order_metabox' ) );
 		add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'single_order_shipment_options' ) );
 
+		// Customer Emails
+		if (isset(WooCommerce_MyParcel()->general_settings['email_tracktrace'])) {
+			add_action( 'woocommerce_email_before_order_table', array( $this, 'track_trace_email' ), 10, 2 );
+		}
+
+		// Track & trace in my account
+		if (isset(WooCommerce_MyParcel()->general_settings['myaccount_tracktrace'])) {
+			add_filter( 'woocommerce_my_account_my_orders_actions', array( $this, 'track_trace_myaccount' ), 10, 2 );
+		}
+
 		add_action( 'wp_ajax_wcmp_save_shipment_options', array( $this, 'save_shipment_options_ajax' ) );
 	}
 
@@ -27,6 +37,7 @@ class WooCommerce_MyParcel_Admin {
 		$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );
 		$myparcel_options_extra = $order->myparcel_shipment_options_extra;
 		$package_types = WooCommerce_MyParcel()->export->get_package_types();
+		$recipient = WooCommerce_MyParcel()->export->get_recipient( $order );
 
 		// get shipment data
 		$consignments = $this->get_order_shipments( $order );
@@ -37,7 +48,7 @@ class WooCommerce_MyParcel_Admin {
 			$last_shipment = array_pop( $consignments );
 			$last_shipment_id = $last_shipment['shipment_id'];
 
-			$shipment = WooCommerce_MyParcel()->export->get_shipment_data( $last_shipment_id );
+			$shipment = WooCommerce_MyParcel()->export->get_shipment_data( $last_shipment_id, $order );
 			// echo '<pre>';var_dump($shipment);echo '</pre>';die();
 			if (!empty($shipment['tracktrace'])) {
 				$order_has_shipment = true;
@@ -68,6 +79,7 @@ class WooCommerce_MyParcel_Admin {
 		$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );
 		$myparcel_options_extra = $order->myparcel_shipment_options_extra;
 		$package_types = WooCommerce_MyParcel()->export->get_package_types();
+		$recipient = WooCommerce_MyParcel()->export->get_recipient( $order );
 
 		$style = $hide ? 'style="display:none"' : '';
 		?>
@@ -232,55 +244,46 @@ class WooCommerce_MyParcel_Admin {
 		$this->admin_order_actions( $order, false );
 		echo '</div>';
 
-		/*
-		$pdf_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel-label&order_ids=' . $post_id ), 'wcmyparcel-label' );
-		$export_link = wp_nonce_url( admin_url( 'edit.php?&action=wcmyparcel&order_ids=' . $post_id ), 'wcmyparcel' );
-
-		$target = ( isset($this->settings['download_display']) && $this->settings['download_display'] == 'display') ? 'target="_blank"' : '';
-
-		if ( get_post_meta($post_id,'_myparcel_consignments',true ) || get_post_meta($post_id,'_myparcel_consignment_id',true ) ) {
-			if ( $tracktrace_consignments = $this->get_tracktrace_consignments( $post_id ) ) {
-				?>
-				<table class="tracktrace_status">
-					<thead>
-						<th>Track&Trace</th>
-						<th>Status</th>
-					</thead>
-					<tbody>
-					<?php
-					// echo '<pre>';var_dump($consignments);echo '</pre>';die();
-					foreach ($tracktrace_consignments as $consignment) {
-						// fetch TNT status
-						$tnt_status_url = 'http://www.myparcel.nl/status/tnt/' . $consignment['consignment_id'];
-						$tnt_status = explode('|', @file_get_contents($tnt_status_url));
-						$tnt_status = (count($tnt_status) == 3) ? $tnt_status[2] : '-';
-
-						echo "<tr><td>{$consignment['tracktrace_link']}</td><td>{$tnt_status}</td></tr>";
-					}
-					?>
-					</tbody>
-				</table>
-				<?php
+		$consignments = $this->get_order_shipments( $order );
+		// show shipments if available
+		if ( !empty( $consignments ) )  {
+			// echo '<pre>';var_dump($consignments);echo '</pre>';die();
+			$track_trace_shipments = array(); 
+			foreach ($consignments as $shipment_id => $consignment) {
+				$shipment = WooCommerce_MyParcel()->export->get_shipment_data( $shipment_id, $order );
+				// skip concepts, letters & mailbox packages
+				if (empty($shipment['tracktrace'])) {
+					unset($consignments[$shipment_id]);
+					continue;
+				}
+				$shipment['tracktrace_url'] = $this->get_tracktrace_url( $order->id, $shipment['tracktrace']);
+				$track_trace_shipments[$shipment_id] = $shipment;
 			}
 			?>
-			<ul>
-				<li><a href="<?php echo $pdf_link; ?>" class="button" alt="Download label (PDF)" <?php echo $target; ?>>Download label (PDF)</a></li>
-				<li><a href="<?php echo $export_link; ?>" class="button myparcel one-myparcel" alt="Exporteer naar MyParcel">Exporteer opnieuw</a></li>
-			</ul>
+			<table class="tracktrace_status">
+				<thead>
+					<th><?php _e( 'Track&Trace', 'woocommerce-myparcel' );?></th>
+					<th><?php _e( 'Status', 'woocommerce-myparcel' );?></th>
+				</thead>
+				<tbody>
+					<?php
+					// echo '<pre>';var_dump($consignments);echo '</pre>';die();
+					foreach ($track_trace_shipments as $shipment_id => $shipment) {
+						if (empty($shipment['tracktrace'])) {
+							continue;
+						}
+						printf ('<tr><td><a href="%s">%s</a></td><td>%s</td></tr>', $shipment['tracktrace_url'], $shipment['tracktrace'], $shipment['status']);
+					}
+					?>
+				</tbody>
+			</table>
 			<?php
-		} else {
-			?>
-			<ul>
-				<li><a href="<?php echo $export_link; ?>" class="button myparcel one-myparcel" alt="Exporteer naar MyParcel">Exporteer naar MyParcel</a></li>
-			</ul>
-			<?php			
 		}
-		*/
 	}
 
 	public function single_order_shipment_options( $order ) {
 		echo '<strong>' . __( 'MyParcel shipment:', 'woocommerce-myparcel' ) . '</strong>';
-		$this->order_list_shipment_options( $order );
+		$this->order_list_shipment_options( $order, false );
 	}
 
 	public function get_tracktrace_url( $order_id, $tracktrace ) {
@@ -304,6 +307,78 @@ class WooCommerce_MyParcel_Admin {
 		}
 
 		return $tracktrace_url;
+	}
+
+	/**
+	* Add track&trace to user email
+	**/
+
+	public function track_trace_email( $order, $sent_to_admin ) {
+
+		if ( $sent_to_admin ) return;
+
+		if ( $order->status != 'completed') return;
+
+		$tracktrace_links = $this->get_tracktrace_links ( $order->id );
+		if ( !empty($tracktrace_links) ) {
+			$email_text = __( 'You can track your order with the following PostNL track&trace code:', 'woocommerce-myparcel' );
+			$email_text = apply_filters( 'wcmyparcel_email_text', $email_text );
+			?>
+			<p><?php echo $email_text.' '.implode(', ', $tracktrace_links); ?></p>
+	
+			<?php
+		}
+	}
+
+	public function track_trace_myaccount( $actions, $order ) {
+		if ( $consignments = $this->get_tracktrace_shipments( $order->id ) ) {
+			foreach ($consignments as $key => $consignment) {
+				$actions['myparcel_tracktrace_'.$consignment['tracktrace']] = array(
+					'url'  => $consignment['tracktrace_url'],
+					'name' => apply_filters( 'wcmyparcel_myaccount_tracktrace_button', __( 'Track&Trace', 'wooocommerce-myparcel' ) )
+				);
+			}
+		}
+
+		return $actions;
+	}
+
+	public function get_tracktrace_links ( $order_id ) {
+		if ( $consignments = $this->get_tracktrace_shipments( $order_id )) {
+			foreach ($consignments as $key => $consignment) {
+				$tracktrace_links[] = $consignment['tracktrace_link'];
+			}
+			return $tracktrace_links;
+		} else {
+			return false;
+		}
+	}
+
+	public function get_tracktrace_shipments ( $order_id ) {
+		// backwards compatibility?
+		$shipments = get_post_meta($order_id,'_myparcel_shipments',true);
+
+		if (empty($shipments)) {
+			return false;
+		}
+
+		foreach ($shipments as $shipment_id => $shipment) {
+			// skip concepts, letters & mailbox packages
+			if (empty($shipment['tracktrace'])) {
+				unset($shipments[$shipment_id]);
+				continue;
+			}
+			// add links & urls
+			$shipments[$shipment_id]['tracktrace_url'] = $tracktrace_url = $this->get_tracktrace_url( $order_id, $shipment['tracktrace'] );
+			$shipments[$shipment_id]['tracktrace_link'] = sprintf('<a href="%s">%s</a>', $tracktrace_url, $shipment['tracktrace']);
+		}
+
+		if (empty($shipments)) {
+			return false;
+		}
+
+
+		return $shipments;
 	}
 }
 
