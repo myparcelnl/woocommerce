@@ -56,38 +56,6 @@ class WooCommerce_MyParcel_Settings {
 
 		$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'general';
 		?>
-		<script type="text/javascript">
-		jQuery(function($) {
-			if ( $( 'input.insured_amount' ).val() > 499 ) {
-				$( 'select.insured_amount' ).val('');
-			}
-			// hide insurance options if unsured not checked
-			$('input.insured').change(function () {
-				if (this.checked) {
-					$( 'select.insured_amount' ).prop('disabled', false);
-					$( 'select.insured_amount' ).closest('tr').show();
-					$( 'select.insured_amount' ).change();
-				} else {
-					$( 'select.insured_amount' ).prop('disabled', true);
-					$( 'select.insured_amount' ).closest('tr').hide();
-					$( 'input.insured_amount' ).closest('tr').hide();
-				}
-			}).change(); //ensure visible state matches initially
-
-			// hide & disable insured amount input if not needed
-			$('select.insured_amount').change(function () {
-				if ( $( 'select.insured_amount' ).val() || !$('input.insured').prop('checked') ) {
-					$( 'input.insured_amount' ).val('');
-					$( 'input.insured_amount' ).prop('disabled', true);
-					$( 'input.insured_amount' ).closest('tr').hide();
-				} else {
-					$( 'input.insured_amount' ).prop('disabled', false);
-					$( 'input.insured_amount' ).closest('tr').show();
-				}
-			}).change(); //ensure visible state matches initially
-		});
-		</script>
-
 		<div class="wrap">
 			<h1><?php _e( 'WooCommerce MyParcel Settings', 'woocommerce-myparcel' ); ?></h1>
 			<h2 class="nav-tab-wrapper">
@@ -100,7 +68,7 @@ class WooCommerce_MyParcel_Settings {
 
 			<?php do_action( 'woocommerce_myparcel_before_settings_page', $active_tab ); ?>
 				
-			<form method="post" action="options.php" id="woocommerce-myparcel-settings">
+			<form method="post" action="options.php" id="woocommerce-myparcel-settings" class="wcmp_shipment_options">
 				<?php
 					do_action( 'woocommerce_myparcel_before_settings', $active_tab );
 					settings_fields( 'woocommerce_myparcel_'.$active_tab.'_settings' );

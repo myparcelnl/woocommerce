@@ -45,9 +45,9 @@
 <br>
 <table class="wcmyparcel_settings_table parcel_options">
 	<?php
-	$shipment_options['insured'] = isset($shipment_options['insurance']['insured_amount']) ? 1 : 0;
+	$shipment_options['insured'] = isset($shipment_options['insurance']['amount']) ? 1 : 0;
 	if (!isset($shipment_options['insurance'])) {
-		$shipment_options['insurance']['insured_amount'] = '';
+		$shipment_options['insurance']['amount'] = '';
 	}
 
 	$option_rows = array(
@@ -110,7 +110,7 @@
 				'499'		=> __( 'Insured up to  &euro; 500' , 'woocommerce-myparcel' ).' (+ &euro; 1.50)',
 				''			=> __( '> &euro; 500 insured' , 'woocommerce-myparcel' ).' (+ &euro; 1.50)',
 			);
-			$insured_amount = isset($shipment_options['insurance']['insured_amount']) ? $shipment_options['insurance']['insured_amount'] : '';
+			$insured_amount = isset($shipment_options['insurance']['amount']) ? $shipment_options['insurance']['amount'] : '';
 
 			$name = "myparcel_options[{$order_id}][insured_amount]";
 			printf( '<select name="%s" class="insured_amount">', $name );

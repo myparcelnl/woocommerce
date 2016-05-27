@@ -1,6 +1,6 @@
 jQuery( function( $ ) {
 	// move shipment options to 'Ship to' column
-	$('.wcmp_shipment_options').each( function( index ) {
+	$('.wp-list-table .wcmp_shipment_options').each( function( index ) {
 		var $ship_to_column = $( this ).closest('tr').find('td.shipping_address');
 		$( this ).appendTo( $ship_to_column );
 		// hidden by default - make visible
@@ -22,7 +22,7 @@ jQuery( function( $ ) {
 	});
 
 	// hide insurance options if insured not checked
-	$('.wcmp_shipment_options .insured').change(function () {
+	$('.wcmp_shipment_options input.insured').change(function () {
 		var insured_select = $( this ).closest('table').parent().find('select.insured_amount');
 		var insured_input  = $( this ).closest('table').parent().find('input.insured_amount');
 		if (this.checked) {
@@ -38,7 +38,7 @@ jQuery( function( $ ) {
 
 	// hide & disable insured amount input if not needed
 	$('.wcmp_shipment_options select.insured_amount').change(function () {
-		var insured_check  = $( this ).closest('table').parent().find('.insured');
+		var insured_check  = $( this ).closest('table').parent().find('input.insured');
 		var insured_select = $( this ).closest('table').parent().find('select.insured_amount');
 		var insured_input  = $( this ).closest('table').find('input.insured_amount');
 		if ( $( insured_select ).val() ) {

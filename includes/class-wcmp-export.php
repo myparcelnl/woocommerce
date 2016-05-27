@@ -249,11 +249,7 @@ class WooCommerce_MyParcel_Export {
 	public function get_order_shipment_data( $order_ids, $type = 'standard' ) {
 		foreach( $order_ids as $order_id ) {
 			// get order
-			if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
-				$order = new WC_Order( $order_id );
-			} else {
-				$order = wc_get_order( $order_id );
-			}
+			$order = $this->get_order( $order_id );
 
 			$shipment = array(
 				'recipient' => $this->get_recipient( $order ),
@@ -348,7 +344,7 @@ class WooCommerce_MyParcel_Export {
 			'return'			=> (isset(WooCommerce_MyParcel()->export_defaults['return'])) ? 1 : 0,
 			'large_format'		=> (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
 			'label_description'	=> $description,
-			'insured_amount'	=> (isset(WooCommerce_MyParcel()->export_defaults['insured_amount'])) ? WooCommerce_MyParcel()->export_defaults['verzekerdbedrag'] : 0,
+			'insured_amount'	=> (isset(WooCommerce_MyParcel()->export_defaults['insured_amount'])) ? WooCommerce_MyParcel()->export_defaults['insured_amount'] : 0,
 		);
 
 
@@ -549,6 +545,101 @@ class WooCommerce_MyParcel_Export {
 		}
 	}
 
+	public function get_order( $order_id ) {
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
+			$order = new WC_Order( $order_id );
+		} else {
+			$order = wc_get_order( $order_id );
+		}
+
+		return $order;
+	}
+
+	public function get_item_display_name ( $item, $order ) {
+		// set base name
+		$name = $item['name'];
+
+		// add variation name if available
+		$product = $order->get_product_from_item( $item );
+		if( $product && isset( $item['variation_id'] ) && $item['variation_id'] > 0 && method_exists($product, 'get_variation_attributes')) {
+			$name .= woocommerce_get_formatted_variation( $product->get_variation_attributes() );
+		}
+		
+		return $name;
+	}
+
+	public function get_parcel_weight ( $order ) {
+		$parcel_weight = (isset(WooCommerce_MyParcel()->general_settings['empty_parcel_weight'])) ? preg_replace("/\D/","",WooCommerce_MyParcel()->general_settings['empty_parcel_weight'])/1000 : 0;
+
+		$items = $order->get_items();
+		foreach ( $items as $item_id => $item ) {
+			$parcel_weight += $this->get_item_weight_kg( $item, $order );
+		}
+
+		return $parcel_weight;
+	}
+
+	public function get_item_weight_kg ( $item, $order ) {
+		$product = $order->get_product_from_item( $item );
+
+		if (empty($product)) {
+			return 0;
+		}
+
+		$weight = $product->get_weight();
+		$weight_unit = get_option( 'woocommerce_weight_unit' );
+		switch ($weight_unit) {
+			case 'kg':
+				$product_weight = $weight;
+				break;
+			case 'g':
+				$product_weight = $weight / 1000;
+				break;
+			case 'lbs':
+				$product_weight = $weight * 0.45359237;
+				break;
+			case 'oz':
+				$product_weight = $weight * 0.0283495231;
+				break;
+			default:
+				$product_weight = $weight;
+				break;
+		}
+	
+		$item_weight = $product_weight * $item['qty'];
+
+		return $item_weight;
+	}
+
+	public function is_pickup( $order ) {
+		// load order_id if order object passed
+		if (is_object($order)) {
+			$order_id = $order->id;
+		} else {
+			$order_id = $order;
+		}
+
+		// load meta data
+		$pakjegemak = get_post_meta( $order_id, '_myparcel_is_pickup', true );
+		$pgaddress = get_post_meta( $order_id, '_myparcel_pgaddress', true );
+
+		// make sure pakjegemak address is present and contains an address
+		// (cancelled pg popups still save pgaddress)
+		if ( !empty( $pgaddress ) && !empty( $pgaddress['postcode'] ) ) {
+			return $pgaddress;
+		} else {
+			return false;
+		}
+	}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -692,82 +783,6 @@ class WooCommerce_MyParcel_Export {
 		return apply_filters('wcmyparcel_process_consignment_data', $consignment_data_processed );
 	}
 
-	public function get_item_display_name ( $item, $order ) {
-		// set base name
-		$name = $item['name'];
-
-		// add variation name if available
-		$product = $order->get_product_from_item( $item );
-		if( $product && isset( $item['variation_id'] ) && $item['variation_id'] > 0 && method_exists($product, 'get_variation_attributes')) {
-			$name .= woocommerce_get_formatted_variation( $product->get_variation_attributes() );
-		}
-		
-		return $name;
-	}
-
-	public function get_parcel_weight ( $order ) {
-		$parcel_weight = (isset($this->settings['verpakkingsgewicht'])) ? preg_replace("/\D/","",$this->settings['verpakkingsgewicht'])/1000 : 0;
-
-		$items = $order->get_items();
-		foreach ( $items as $item_id => $item ) {
-			$parcel_weight += $this->get_item_weight_kg( $item, $order );
-		}
-
-		return $parcel_weight;
-	}
-
-	public function get_item_weight_kg ( $item, $order ) {
-		$product = $order->get_product_from_item( $item );
-
-		if (empty($product)) {
-			return 0;
-		}
-
-		$weight = $product->get_weight();
-		$weight_unit = get_option( 'woocommerce_weight_unit' );
-		switch ($weight_unit) {
-			case 'kg':
-				$product_weight = $weight;
-				break;
-			case 'g':
-				$product_weight = $weight / 1000;
-				break;
-			case 'lbs':
-				$product_weight = $weight * 0.45359237;
-				break;
-			case 'oz':
-				$product_weight = $weight * 0.0283495231;
-				break;
-			default:
-				$product_weight = $weight;
-				break;
-		}
-	
-		$item_weight = $product_weight * $item['qty'];
-
-		return $item_weight;
-	}
-
-	public function is_pickup( $order ) {
-		// load order_id if order object passed
-		if (is_object($order)) {
-			$order_id = $order->id;
-		} else {
-			$order_id = $order;
-		}
-
-		// load meta data
-		$pakjegemak = get_post_meta( $order_id, '_myparcel_is_pickup', true );
-		$pgaddress = get_post_meta( $order_id, '_myparcel_pgaddress', true );
-
-		// make sure pakjegemak address is present and contains an address
-		// (cancelled pg popups still save pgaddress)
-		if ( !empty( $pgaddress ) && !empty( $pgaddress['postcode'] ) ) {
-			return $pgaddress;
-		} else {
-			return false;
-		}
-	}
 }
 
 endif; // class_exists
