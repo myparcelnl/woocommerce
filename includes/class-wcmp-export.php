@@ -72,47 +72,55 @@ class WooCommerce_MyParcel_Export {
 				foreach ($order_ids as $order_id) {
 					$shipments = $this->get_order_shipment_data( (array) $order_id );
 
-					try {
-						$api = $this->init_api();
-						$response = $api->add_shipments( $shipments );
-						// echo '<pre>';var_dump($response);echo '</pre>';die();
-						if (isset($response['body']['data']['ids'])) {
-							$ids = array_shift($response['body']['data']['ids']);
-							$shipment_id = $ids['id'];
-							$success[$order_id] = $shipment_id;
+					// check colli amount
+					$extra_params = $order->myparcel_shipment_options_extra;
+					$colli_amount = isset($extra_params['colli_amount']) ? $extra_params['colli_amount'] : 1;
 
-							$shipment = array (
-								'shipment_id' => $shipment_id,
-							);
+					for ($i=0; $i < intval($colli_amount); $i++) {
+						try {
+							$api = $this->init_api();
+							$response = $api->add_shipments( $shipments );
+							// echo '<pre>';var_dump($response);echo '</pre>';die();
+							if (isset($response['body']['data']['ids'])) {
+								$ids = array_shift($response['body']['data']['ids']);
+								$shipment_id = $ids['id'];
+								$success[$order_id] = $shipment_id;
 
-							// save shipment data in order meta
-							$this->save_shipment_data( $order_id, $shipment );
+								$shipment = array (
+									'shipment_id' => $shipment_id,
+								);
 
-						} else {
-							$errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcel' );
+								// save shipment data in order meta
+								$this->save_shipment_data( $order_id, $shipment );
+
+							} else {
+								$errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcel' );
+							}
+						} catch (Exception $e) {
+							$errors[$order_id] = $e->getMessage();
 						}
-					} catch (Exception $e) {
-						$errors[$order_id] = $e->getMessage();
-					}
-					
+					}					
 				}
 				// echo '<pre>';var_dump($success);echo '</pre>';die();
-
+				if (!empty($success)) {
+					$return['success'] = sprintf(__( '%s shipments successfully exported to Myparcel', 'woocommerce-myparcel' ), count($success));
+				}
 			break;
 			case 'add_return':
-				if ( empty($order_ids) ) {
+				if ( empty($myparcel_options) ) {
 					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
 					break;
 				}
 
-				foreach ($order_ids as $order_id) {
-					$return_shipments = $this->get_order_shipment_data( (array) $order_id, 'return' );
-					echo '<pre>';var_dump($return_shipments);echo '</pre>';die();
+				foreach ($myparcel_options as $order_id => $options) {
+
+					$return_shipment = $this->prepare_return_shipment_data( $order_id, $options );
+					// echo '<pre>';var_dump($return_shipment);echo '</pre>';die();
 
 					try {
 						$api = $this->init_api();
-						$response = $api->add_shipments( $return_shipments, 'return' );
-						echo '<pre>';var_dump($response);echo '</pre>';die();
+						$response = $api->add_shipments( $return_shipment, 'return' );
+						// echo '<pre>';var_dump($response);echo '</pre>';die();
 						if (isset($response['body']['data']['ids'])) {
 							$ids = array_shift($response['body']['data']['ids']);
 							$shipment_id = $ids['id'];
@@ -257,19 +265,42 @@ class WooCommerce_MyParcel_Export {
 				'carrier'	=> 1, // default to POSTNL for now
 			);
 
-			if ($type == 'return') {
-				$shipment_ids = $this->get_shipment_ids( (array) $order_id );
-				if ( !empty($shipment_ids) ) {
-					$shipment['parent'] = array_pop( $shipment_ids);
-				}
-			}
-
 			// echo '<pre>';var_dump($shipment);echo '</pre>';die();
 
 			$shipments[] = $shipment;
 		}
 
 		return $shipments;
+	}
+
+	public function prepare_return_shipment_data( $order_id, $options ) {
+		$order = $this->get_order( $order_id );
+
+		// convert insurance option
+		if (isset($options['insured_amount'])) {
+			$options['insurance'] = array(
+				'amount'	=> (int) $options['insured_amount'],
+				'currency'	=> 'EUR',
+			);
+			unset($options['insured_amount']);
+			unset($options['insured']);
+		}
+
+		// set name & email
+		$return_shipment_data = array(
+			'name'			=> trim( $order->shipping_first_name . ' ' . $order->shipping_last_name ),
+			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? $order->billing_email : '',
+			'carrier'		=> 1, // default to POSTNL for now
+			'options'		=> $options,
+		);
+
+		// get parent
+		$shipment_ids = $this->get_shipment_ids( (array) $order_id );
+		if ( !empty($shipment_ids) ) {
+			$return_shipment_data['parent'] = array_pop( $shipment_ids);
+		}
+
+		return $return_shipment_data;
 	}
 
 	public function get_recipient( $order ) {

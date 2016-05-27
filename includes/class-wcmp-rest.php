@@ -108,6 +108,7 @@ class WC_MyParcel_REST_Client
 	public function request($url, $method = "GET", $headers = array(), $post, $body = null, $raw = false) {
 		// Set the URL
 		curl_setopt($this->curl, CURLOPT_URL, $url);
+		// echo '<pre>';var_dump($post);echo '</pre>';die();
 
 		// Set the method and related options
 		switch ($method) {

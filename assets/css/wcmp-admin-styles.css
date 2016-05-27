@@ -56,11 +56,15 @@
 	margin-top: 8px;
 }
 
-.wcmp_save_shipment_settings .waiting {
+.wcmp_spinner {
 	display: none;
 }
 
-.wcmp_save_shipment_settings .waiting, 
+.widefat .column-order_actions .wcmp_spinner {
+	position: absolute;
+}
+
+.wcmp_spinner, 
 .wcmp_save_shipment_settings input{
 	vertical-align: middle;
 }
@@ -81,4 +85,29 @@
     color: #666;
     text-align: center;
 
+}
+
+/* bulk export options styling */
+.wcmp_bulk_options_form .wcmyparcel_settings_table td {
+	border: none;
+	padding: 0px 7px 2px !important;
+	vertical-align: middle !important;
+}
+
+.wcmp_bulk_options_form td.ordercell {
+	width: 60%;
+}
+
+.wcmp_bulk_options_form input[type="checkbox"], input[type="radio"] {
+	margin-right: 8px;
+}
+
+.wcmp_bulk_options_form {
+	width: 96%;
+	margin: 10px auto;
+}
+
+.wcmp_bulk_options_form .wcmp_save_shipment_settings {
+	margin-top: 8px;
+	float: right;
 }

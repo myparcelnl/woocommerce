@@ -47,7 +47,10 @@
 	?>
 </head>
 <body>
-<form  method="post" class="page-form">
+<?php
+$target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_return' ), 'wc_myparcel' );
+?>
+<form method="post" class="page-form wcmp_bulk_options_form" action="<?php echo $target_url; ?>">
 	<table class="widefat">
 	<thead>
 		<tr>
@@ -122,6 +125,7 @@
 					<tr>
 						<td colspan="2" class="wcmp_shipment_options">
 							<?php
+							$skip_save = true; // don't show save button for each order
 							if ($dialog == 'shipment') {
 								include('wcmp-order-shipment-options.php');
 							} elseif ($dialog == 'return') {
@@ -137,9 +141,9 @@
 		<?php endforeach; ?>
 	</tbody>
 	</table>
-<input type="hidden" name="action" value="wcmyparcel-export">
-<div class="submit-wcmyparcel">
-	<input type="submit" value="Exporteer naar MyParcel" class="button-wcmyparcel">
+<input type="hidden" name="action" value="wc_myparcel">
+<div class="wcmp_save_shipment_settings">
+	<input type="submit" value="<?php _e( 'Export to MyParcel', 'woocommerce-myparcel' ); ?>" class="button save wcmp_export">
 	<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="waiting"/>
 </div>
 </form>

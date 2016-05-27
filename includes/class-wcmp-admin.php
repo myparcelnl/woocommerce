@@ -133,18 +133,24 @@ class WooCommerce_MyParcel_Admin {
 
 		if (empty($consignments)) {
 			unset($listing_actions['get_labels']);
-			unset($listing_actions['add_return']);
 		}
+
+		if (empty($consignments) || $order->shipping_country != 'NL' ) {
+			unset($listing_actions['add_return']);
+		}		
 
 		$target = ( isset(WooCommerce_MyParcel()->general_settings['download_display']) && WooCommerce_MyParcel()->general_settings['download_display'] == 'display') ? 'target="_blank"' : '';
 		$nonce = wp_create_nonce('wc_myparcel');
 		foreach ($listing_actions as $action => $data) {
 			printf( '<a href="%1$s" class="button tips myparcel %2$s" alt="%3$s" data-tip="%3$s" data-order-id="%4$s" data-request="%2$s" data-nonce="%5$s" %6$s>', $data['url'], $action, $data['alt'], $order->id, $nonce, $target );
 			?>
-				<img src="<?php echo $data['img']; ?>" alt="<?php echo $data['alt']; ?>" width="16">
+				<img src="<?php echo $data['img']; ?>" alt="<?php echo $data['alt']; ?>" width="16" class="wcmp_button_img">
 			</a>
 			<?php
 		}
+		?>
+		<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_spinner waiting"/>
+		<?php
 	}
 
 	public function get_order_shipments( $order ) {

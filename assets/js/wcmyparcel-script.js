@@ -144,18 +144,21 @@ jQuery( function( $ ) {
 	});
 
 	// single actions click
-	$(".order_actions")
+	$(".order_actions, .single_order_actions")
 		.on( 'click', 'a.button.myparcel', function( event ) {
 			event.preventDefault();
 			var button_action = $( this ).data('request');
 			var order_ids = [ $( this ).data('order-id') ];
 
-			console.log( button_action );
-			console.log( order_ids );
 			// execute action
 			switch (button_action) {
 				case 'add_shipment':
+					var button = this;
+					show_spinner( button );
 					myparcel_export( order_ids );
+					setTimeout(function() {
+						hide_spinner( button );
+					}, 500);
 					break;
 				case 'get_labels':
 					myparcel_print( order_ids );
@@ -169,9 +172,22 @@ jQuery( function( $ ) {
 
 	$(window).bind('tb_unload', function() {
 		// re-enable scrolling after closing thickbox
-		// (not really needed since page is reloaded in the next step, but applied anyway)
 		$("body").css({ overflow: 'inherit' })
 	});
+
+	function show_spinner( element ) {
+		$button_img = $( element ).find( '.wcmp_button_img' );
+		$button_img.hide();
+		// console.log($( element ).parent().find('.wcmp_spinner'));
+		$( element ).parent().find('.wcmp_spinner')
+			.insertAfter( $button_img )
+			.show();
+	}
+
+	function hide_spinner( element ) {
+		$( element ).parent().find('.wcmp_spinner').hide();
+		$( element ).find( '.wcmp_button_img' ).show();
+	}	
 
 	// export orders to MyParcel via AJAX
 	function myparcel_export( order_ids ) {
@@ -188,6 +204,10 @@ jQuery( function( $ ) {
 			console.log(response);
 			if ( response !== null && typeof response === 'object' && 'error' in response) {
 				myparcel_admin_notice( response.error, 'error' );
+			}
+
+			if ( response !== null && typeof response === 'object' && 'success' in response) {
+				myparcel_admin_notice( response.success, 'updated' );
 			}
 			return;
 		});
