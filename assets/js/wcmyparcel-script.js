@@ -7,12 +7,11 @@ jQuery( function( $ ) {
 		$( this ).show();
 	});
 
+
 	$('.wcmp_show_shipment_options').click( function ( event ) {
 		event.preventDefault();
 		$( this ).next('.wcmp_shipment_options_form').slideToggle();
 	});
-
-	
 
 	// select > 500 if insured amount input is >499
 	$( '.wcmp_shipment_options input.insured_amount' ).each( function( index ) {
@@ -162,10 +161,17 @@ jQuery( function( $ ) {
 					myparcel_print( order_ids );
 					break;
 				case 'add_return':
-					myparcel_return( order_ids );
+					myparcel_modal_dialog( order_ids, 'return' );
+					// myparcel_return( order_ids );
 					break;
 			}
-		});			
+		});		
+
+	$(window).bind('tb_unload', function() {
+		// re-enable scrolling after closing thickbox
+		// (not really needed since page is reloaded in the next step, but applied anyway)
+		$("body").css({ overflow: 'inherit' })
+	});
 
 	// export orders to MyParcel via AJAX
 	function myparcel_export( order_ids ) {
@@ -186,6 +192,18 @@ jQuery( function( $ ) {
 			return;
 		});
 
+	}
+
+	function myparcel_modal_dialog( order_ids, dialog ) {
+		var request_prefix = (wclabels.ajaxurl.indexOf("?") != -1) ? '&' : '?';
+		var thickbox_height = $(window).height()-120;
+		var thickbox_parameters = '&TB_iframe=true&height='+thickbox_height+'&width=720';
+		var url = wc_myparcel.ajax_url+request_prefix+'order_ids='+order_ids+'&action=wc_myparcel&request=modal_dialog&dialog='+dialog+'&security='+wc_myparcel.nonce+thickbox_parameters;
+
+		// disable background scrolling
+		$("body").css({ overflow: 'hidden' })
+	
+		tb_show('', url);
 	}
 
 	// export orders to MyParcel via AJAX
@@ -260,3 +278,4 @@ jQuery( function( $ ) {
 	$( document.body ).trigger( 'wc-enhanced-select-init' );
 
 });
+

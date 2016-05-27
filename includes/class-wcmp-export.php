@@ -194,10 +194,32 @@ class WooCommerce_MyParcel_Export {
 					$errors[] = $e->getMessage();
 				}
 			break;
+			case 'modal_dialog':
+				if ( empty($order_ids) ) {
+					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
+					break;
+				}
+
+				// check for JSON
+				if (is_string($order_ids) && strpos($order_ids, '[') !== false ) {
+					$order_ids = json_decode(stripslashes($order_ids));
+				}
+
+				// cast as array for single exports
+				$order_ids = (array) $order_ids;
+
+				// echo 'bla';
+				// include( WooCommerce_MyParcel()->plugin_path() . 'includes/views/wcmp-bulk-options-form.php' );
+				error_reporting( E_ALL );
+				ini_set( 'display_errors', 1 );
+
+				include('views/wcmp-bulk-options-form.php');
+				die();
+				break;
 		}
 
-		// display errors directly if PDF requested
-		if ( $request == 'get_labels' && !empty($errors) ) {
+		// display errors directly if PDF requested or modal
+		if ( in_array($request, array('get_labels','modal_dialog')) && !empty($errors) ) {
 			echo $this->parse_errors( $errors );
 			die();
 		}		

@@ -13,6 +13,7 @@ class WooCommerce_MyParcel_Admin {
 	
 	function __construct()	{
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_shipment_options' ), 9999 );
+		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_return_shipment_options' ), 9999 );
 		add_action(	'admin_footer', array( $this, 'bulk_actions' ) ); 
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_order_actions' ), 20 );
 		add_action( 'add_meta_boxes_shop_order', array( $this, 'shop_order_metabox' ) );
@@ -57,6 +58,21 @@ class WooCommerce_MyParcel_Admin {
 			<div class="wcmp_shipment_options_form" style="display: none;">
 				<?php include('views/wcmp-order-shipment-options.php'); ?>
 			</div>
+		</div>
+		<?php
+	}
+
+
+	public function order_list_return_shipment_options( $order, $hide = true ) {
+		$order_id = $order->id;
+		$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );
+		$myparcel_options_extra = $order->myparcel_shipment_options_extra;
+		$package_types = WooCommerce_MyParcel()->export->get_package_types();
+
+		$style = $hide ? 'style="display:none"' : '';
+		?>
+		<div class="wcmp_shipment_options_form return_shipment" <?php echo $style; ?>>
+			<?php include('views/wcmp-order-return-shipment-options.php'); ?>
 		</div>
 		<?php
 	}

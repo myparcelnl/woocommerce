@@ -1,4 +1,3 @@
-
 <table class="wcmyparcel_settings_table" style="width: auto">
 	<tr>
 		<td>
@@ -8,18 +7,6 @@
 		</td>
 		<td>
 			<?php
-			// disable letterbox outside NL
-			if (isset($shipment_options['ToAddress']['country_code']) && $shipment_options['ToAddress']['country_code'] != 'NL') {
-				unset($package_types['letterbox']);
-			}
-
-			// disable letterbox and unpaid letter for pakjegemak
-			if ( WooCommerce_MyParcel()->export->is_pickup( $order ) ) {
-				unset($package_types['letterbox']);
-				unset($package_types['unpaid_letter']);
-				$package_types['standard'] .= ' (Pakjegemak)';
-			}										
-
 			$name = "myparcel_options[{$order_id}][package_type]";
 			printf( '<select name="%s" class="package_type">', $name );
 			foreach ( $package_types as $key => $label ) {
@@ -27,18 +14,6 @@
 			}
 			echo '</select>';
 			?>										
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<?php _e( 'Number of labels', 'woocommerce-myparcel' ) ?>:
-		</td>
-		<td>
-			<?php
-			$name = "myparcel_options[{$order_id}][extra_options][colli_amount]";
-			$colli_amount = isset( $myparcel_options_extra['colli_amount'] ) ? $myparcel_options_extra['colli_amount'] : 1;
-			printf('<input type="number" step="1" min="0" name="%s" value="%s" size="2">', $name, $colli_amount);
-			?>								
 		</td>
 	</tr>
 </table>
@@ -129,15 +104,6 @@
 			<?php
 			$name = "myparcel_options[{$order_id}][insured_amount]";
 			printf('<input type="text" name="%s" value="%s" style="width:100%%" class="insured_amount">', $name, $insured_amount);
-			?>
-		</td>
-	</tr>
-	<tr>
-		<td><?php _e( 'Custom ID (top left on label)', 'woocommerce-myparcel' ) ?></td>
-		<td>
-			<?php
-			$name = "myparcel_options[{$order_id}][label_description]";
-			printf('<input type="text" name="%s" value="%s" style="width:100%%">', $name, $shipment_options['label_description']);
 			?>
 		</td>
 	</tr>
