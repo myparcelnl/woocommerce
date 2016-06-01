@@ -330,7 +330,9 @@ class WooCommerce_MyParcel_Export {
 			);
 		}
 
-		return array_merge( $address, $address_intl);
+		$address = array_merge( $address, $address_intl);
+
+		return apply_filters( 'wc_myparcel_recipient', $address, $order );
 	}
 
 	public function get_options( $order ) {
