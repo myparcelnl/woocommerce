@@ -69,9 +69,12 @@ class WooCommerce_MyParcel_Export {
 					break;
 				}
 
+				$this->log("*** Creating shipments started ***");
+
 				foreach ($order_ids as $order_id) {
 					$shipments = $this->get_order_shipment_data( (array) $order_id );
-					// echo '<pre>';var_dump($shipments);echo '</pre>';die();
+	
+					$this->log("Shipment data for order {$order_id}:\n".var_export($shipments, true));
 
 					// check colli amount
 					$extra_params = $order->myparcel_shipment_options_extra;
@@ -81,6 +84,7 @@ class WooCommerce_MyParcel_Export {
 						try {
 							$api = $this->init_api();
 							$response = $api->add_shipments( $shipments );
+							$this->log("API response (order {$order_id}):\n".var_export($response, true));
 							// echo '<pre>';var_dump($response);echo '</pre>';die();
 							if (isset($response['body']['data']['ids'])) {
 								$ids = array_shift($response['body']['data']['ids']);
@@ -113,14 +117,18 @@ class WooCommerce_MyParcel_Export {
 					break;
 				}
 
+				$this->log("*** Creating return shipments started ***");
+
 				foreach ($myparcel_options as $order_id => $options) {
 
 					$return_shipment = $this->prepare_return_shipment_data( $order_id, $options );
+					$this->log("Return shipment data for order {$order_id}:\n".var_export($return_shipment, true));
 					// echo '<pre>';var_dump($return_shipment);echo '</pre>';die();
 
 					try {
 						$api = $this->init_api();
 						$response = $api->add_shipments( $return_shipment, 'return' );
+						$this->log("API response (order {$order_id}):\n".var_export($response, true));
 						// echo '<pre>';var_dump($response);echo '</pre>';die();
 						if (isset($response['body']['data']['ids'])) {
 							$ids = array_shift($response['body']['data']['ids']);
@@ -159,13 +167,15 @@ class WooCommerce_MyParcel_Export {
 				// cast as array for single exports
 				$order_ids = (array) $order_ids;
 
-
 				$shipment_ids = $this->get_shipment_ids( $order_ids );
 
 				if ( empty($shipment_ids) ) {
 					$errors[] = __( 'The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcel' );
 					break;
 				}
+
+				$this->log("*** Label request started ***");
+				$this->log("Shipment ID's: ".implode(', ', $shipment_ids));
 
 				try {
 					$api = $this->init_api();
@@ -174,11 +184,11 @@ class WooCommerce_MyParcel_Export {
 
 					if (isset($label_response_type) && $label_response_type == 'url') {
 						$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
+						$this->log("API response:\n".var_export($response, true));
 						// var_dump( $response );
 						if (isset($response['body']['data']['pdfs']['url'])) {
 							$url = untrailingslashit( $api->APIURL ) . $response['body']['data']['pdfs']['url'];
 							$return['url'] = $url;
-
 						} else {
 							$errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
 						}
@@ -186,6 +196,7 @@ class WooCommerce_MyParcel_Export {
 						$response = $api->get_shipment_labels( $shipment_ids, $params, 'pdf' );
 
 						if (isset($response['body'])) {
+							$this->log("PDF data received");
 							$pdf_data = $response['body'];
 							$output_mode = isset(WooCommerce_MyParcel()->general_settings['download_display'])?WooCommerce_MyParcel()->general_settings['download_display']:'';
 							if ( $output_mode == 'display' ) {
@@ -194,6 +205,7 @@ class WooCommerce_MyParcel_Export {
 								$this->download_pdf( $pdf_data, $order_ids );
 							}
 						} else {
+							$this->log("Unknown error, API response:\n".var_export($response, true));
 							$errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
 						}
 
@@ -216,11 +228,6 @@ class WooCommerce_MyParcel_Export {
 
 				// cast as array for single exports
 				$order_ids = (array) $order_ids;
-
-				// echo 'bla';
-				// include( WooCommerce_MyParcel()->plugin_path() . 'includes/views/wcmp-bulk-options-form.php' );
-				error_reporting( E_ALL );
-				ini_set( 'display_errors', 1 );
 
 				include('views/wcmp-bulk-options-form.php');
 				die();
@@ -694,6 +701,20 @@ class WooCommerce_MyParcel_Export {
 			return $pgaddress;
 		} else {
 			return false;
+		}
+	}
+
+	public function log( $message ) {
+		if (isset(WooCommerce_MyParcel()->general_settings['error_logging'])) {
+			// log file in upload folder - wp-content/uploads
+			$upload_dir = wp_upload_dir();
+			$upload_base = trailingslashit( $upload_dir['basedir'] );
+			$log_file = $upload_base.'myparcel_log.txt';
+
+			$current_date_time = date("Y-m-d H:i:s");
+			$message = $current_date_time .' ' .$message ."\n";
+
+			file_put_contents($log_file, $message, FILE_APPEND);
 		}
 	}
 }
