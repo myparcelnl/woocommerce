@@ -21,6 +21,15 @@ class WooCommerce_MyParcel_Frontend {
 		if (isset(WooCommerce_MyParcel()->general_settings['myaccount_tracktrace'])) {
 			add_filter( 'woocommerce_my_account_my_orders_actions', array( $this, 'track_trace_myaccount' ), 10, 2 );
 		}
+
+		// Delivery options
+		// if (isset(WooCommerce_MyParcel()->checkout_settings['delivery_options'])) {
+			add_action( apply_filters( 'wc_myparcel_delivery_options_location', 'woocommerce_checkout_before_customer_details' ), array( $this, 'output_delivery_options' ), 10, 1 );
+		// }
+
+		// Save delivery options data
+		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_delivery_options' ), 10, 2 );
+
 	}
 
 	public function track_trace_email( $order, $sent_to_admin ) {
@@ -51,6 +60,24 @@ class WooCommerce_MyParcel_Frontend {
 		}
 
 		return $actions;
+	}
+	/**
+	 * Add delivery options to checkout
+	 */
+	public function output_delivery_options() {
+		include('views/wcmp-delivery-options.php');
+	}
+
+	/**
+	 * Save delivery options to order when used
+	 *
+	 * @param  int   $order_id
+	 * @param  array $posted
+	 *
+	 * @return void
+	 */
+	public function save_delivery_options( $order_id, $posted ) {
+		#stub
 	}
 }
 

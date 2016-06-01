@@ -16,21 +16,27 @@ class WooCommerce_MyParcel_Assets {
 	 * Load styles & scripts
 	 */
 	public function frontend_scripts_styles ( $hook ) {
+		if ( is_checkout() /* && isset(WooCommerce_MyParcel()->checkout_settings['delivery_options']) */ ) {
+			wp_enqueue_style(
+				'wc-myparcel-delivery-options',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/css/myparcel.css',
+				array(),
+				WC_MYPARCEL_VERSION
+			);
+			wp_enqueue_script(
+				'wc-myparcel-delivery-options',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/myparcel.js',
+				array( 'jquery' ),
+				WC_MYPARCEL_VERSION
+			);
+			wp_enqueue_script(
+				'wc-myparcel-delivery-options-moment',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/moment.js',
+				array( 'jquery' ),
+				WC_MYPARCEL_VERSION
+			);
+		}
 		/* for reference
-		wp_enqueue_style(
-			'wcmyparcel',
-			WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmyparcel-main.css',
-			array(),
-			WC_MYPARCEL_VERSION
-		);
-
-		wp_enqueue_script(
-			'wcmyparcel',
-			WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmyparcel.js',
-			array( 'jquery' ),
-			WC_MYPARCEL_VERSION
-		);
-
 		wp_localize_script(
 			'wcmyparcel',
 			'wcmyparcel_ajax',

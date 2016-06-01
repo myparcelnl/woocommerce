@@ -179,11 +179,11 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 	 * Get delivery options
 	 * @return array          response
 	 */
-	public function get_delivery_options () {
+	public function get_delivery_options ( $params = array(), $raw = false ) {
 		$endpoint = 'delivery_options';
 
-		$request_url = $this->APIURL . $endpoint;
-		$response = $this->get($request_url, null, false);
+		$request_url = add_query_arg( $params, $this->APIURL . $endpoint );
+		$response = $this->get($request_url, null, $raw);
 
 		return $response;
 	}

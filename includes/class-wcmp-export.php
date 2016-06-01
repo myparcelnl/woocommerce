@@ -18,6 +18,7 @@ class WooCommerce_MyParcel_Export {
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 		add_action( 'wp_ajax_wc_myparcel', array($this, 'export' ));
+		add_action( 'wp_ajax_wc_myparcel_frontend', array($this, 'frontend_api_request' ));
 	}
 
 	public function admin_notices () {
@@ -253,6 +254,39 @@ class WooCommerce_MyParcel_Export {
 
 		// return JSON response
 		echo json_encode( $return );
+		die();
+	}
+
+	public function frontend_api_request() {
+		// TODO: check nonce
+		$params = $_REQUEST;
+
+		// filter non API params
+		$api_param_keys = array(
+			'cc',
+			'postal_code',
+			'number',
+			'carrier',
+			'delivery_time',
+			'delivery_date',
+			'cutoff_time',
+			'dropoff_days',
+			'dropoff_delay',
+			'deliverydays_window',
+			'exclude_delivery_type',
+		);
+		foreach ($params as $key => $value) {
+			if (!in_array($key, $api_param_keys)) {
+				unset($params[$key]);
+			}
+		}
+
+		$api = $this->init_api();
+		$response = $api->get_delivery_options( $params, true );
+
+		@header('Content-type: application/json; charset=utf-8');
+
+		echo $response['body'];
 		die();
 	}
 
