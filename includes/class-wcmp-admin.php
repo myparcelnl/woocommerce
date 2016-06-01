@@ -259,6 +259,9 @@ class WooCommerce_MyParcel_Admin {
 				$shipment['tracktrace_url'] = $this->get_tracktrace_url( $order->id, $shipment['tracktrace']);
 				$track_trace_shipments[$shipment_id] = $shipment;
 			}
+			if ( empty( $track_trace_shipments ) ) {
+				return;
+			}
 			?>
 			<table class="tracktrace_status">
 				<thead>
