@@ -13,6 +13,19 @@ jQuery( function( $ ) {
 		$( this ).next('.wcmp_shipment_options_form').slideToggle();
 	});
 
+	// hide automatic order status if automation not enabled
+	$('.wcmp_shipment_options input#order_status_automation').change(function () {
+		var order_status_select = $( '.wcmp_shipment_options select.automatic_order_status');
+		if (this.checked) {
+			$( order_status_select ).prop('disabled', false);
+			$( '.wcmp_shipment_options tr.automatic_order_status').show();
+		} else {
+			$( order_status_select ).prop('disabled', true);
+			$( '.wcmp_shipment_options tr.automatic_order_status').hide();
+		}
+	}).change(); //ensure visible state matches initially
+
+
 	// select > 500 if insured amount input is >499
 	$( '.wcmp_shipment_options input.insured_amount' ).each( function( index ) {
 		if ( $( this ).val() > 499 ) {

@@ -160,7 +160,7 @@ class WooCommerce_MyParcel_Settings {
 
 		add_settings_field(
 			'email_tracktrace',
-			__( 'Track&trace email', 'woocommerce-myparcel' ),
+			__( 'Track&trace in email', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'general',
@@ -206,7 +206,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'order_status_automation',
-				'description'	=> __( 'Automatically set order status to complete after succesfull MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Email track&trace code</strong> option, otherwise the track&trace code will not be included in the customer email.', 'woocommerce-myparcel' )
+				'description'	=> __( 'Automatically set order status to a predefined status after succesfull MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track&trace in email</strong> option, otherwise the track&trace code will not be included in the customer email.', 'woocommerce-myparcel' )
 			)
 		);		
 
@@ -219,6 +219,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'automatic_order_status',
+				'class'			=> 'automatic_order_status',
 			)
 		);		
 
@@ -244,8 +245,11 @@ class WooCommerce_MyParcel_Settings {
 			$option_group
 		);
 
-		$log_file_url = WooCommerce_MyParcel()->plugin_url() . '/myparcel_log.txt';
-		$log_file_path = WooCommerce_MyParcel()->plugin_path() . '/myparcel_log.txt';
+		$upload_dir = wp_upload_dir();
+		$upload_base_dir = trailingslashit( $upload_dir['basedir'] );
+		$upload_base_url = trailingslashit( $upload_dir['baseurl'] );
+		$log_file_url = $upload_base_url . 'myparcel_log.txt';
+		$log_file_path = $upload_base_dir . 'myparcel_log.txt';
 		$debugging_only = __( 'Only enable this option when debugging!', 'woocommerce-myparcel' );
 		$download_link = sprintf('%s<br/><a href="%s" target="_blank">%s</a>', $debugging_only, $log_file_url, __( 'Download log file', 'woocommerce-myparcel' ) );
 

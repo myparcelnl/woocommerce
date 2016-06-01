@@ -98,6 +98,12 @@ class WooCommerce_MyParcel_Export {
 								// save shipment data in order meta
 								$this->save_shipment_data( $order_id, $shipment );
 
+								// status automation
+								if ( isset(WooCommerce_MyParcel()->general_settings['order_status_automation']) && !empty(WooCommerce_MyParcel()->general_settings['automatic_order_status']) ) {
+									$order = $this->get_order( $order_id );
+									$order->update_status( WooCommerce_MyParcel()->general_settings['automatic_order_status'], __( 'MyParcel shipment created:', 'woocommerce-myparcel' ) );
+								}
+
 							} else {
 								$errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcel' );
 							}
