@@ -1,6 +1,6 @@
 <?php
 /**
- * Main plugin functions
+ * Admin options, buttons & data
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,16 +18,6 @@ class WooCommerce_MyParcel_Admin {
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_order_actions' ), 20 );
 		add_action( 'add_meta_boxes_shop_order', array( $this, 'shop_order_metabox' ) );
 		add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'single_order_shipment_options' ) );
-
-		// Customer Emails
-		if (isset(WooCommerce_MyParcel()->general_settings['email_tracktrace'])) {
-			add_action( 'woocommerce_email_before_order_table', array( $this, 'track_trace_email' ), 10, 2 );
-		}
-
-		// Track & trace in my account
-		if (isset(WooCommerce_MyParcel()->general_settings['myaccount_tracktrace'])) {
-			add_filter( 'woocommerce_my_account_my_orders_actions', array( $this, 'track_trace_myaccount' ), 10, 2 );
-		}
 
 		add_action( 'wp_ajax_wcmp_save_shipment_options', array( $this, 'save_shipment_options_ajax' ) );
 	}
@@ -310,40 +300,6 @@ class WooCommerce_MyParcel_Admin {
 		}
 
 		return $tracktrace_url;
-	}
-
-	/**
-	* Add track&trace to user email
-	**/
-
-	public function track_trace_email( $order, $sent_to_admin ) {
-
-		if ( $sent_to_admin ) return;
-
-		if ( $order->status != 'completed') return;
-
-		$tracktrace_links = $this->get_tracktrace_links ( $order->id );
-		if ( !empty($tracktrace_links) ) {
-			$email_text = __( 'You can track your order with the following PostNL track&trace code:', 'woocommerce-myparcel' );
-			$email_text = apply_filters( 'wcmyparcel_email_text', $email_text );
-			?>
-			<p><?php echo $email_text.' '.implode(', ', $tracktrace_links); ?></p>
-	
-			<?php
-		}
-	}
-
-	public function track_trace_myaccount( $actions, $order ) {
-		if ( $consignments = $this->get_tracktrace_shipments( $order->id ) ) {
-			foreach ($consignments as $key => $consignment) {
-				$actions['myparcel_tracktrace_'.$consignment['tracktrace']] = array(
-					'url'  => $consignment['tracktrace_url'],
-					'name' => apply_filters( 'wcmyparcel_myaccount_tracktrace_button', __( 'Track&Trace', 'wooocommerce-myparcel' ) )
-				);
-			}
-		}
-
-		return $actions;
 	}
 
 	public function get_tracktrace_links ( $order_id ) {
