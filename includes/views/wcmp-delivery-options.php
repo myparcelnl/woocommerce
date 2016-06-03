@@ -6,12 +6,15 @@ $frontend_api_url = wp_nonce_url( $ajax_url . $request_prefix . 'action=wc_mypar
 <script type="text/javascript">
 /* <![CDATA[ */
 window.mypa.settings = {
-  base_url:       '<?php echo $frontend_api_url; ?>',
-  morning:        '',
-  default:        '&#8364; 10,00', // Soms kan het euro teken nog problemen geven. sadly….
-  night:          '',
-  pickup:         '',
-  pickup_express: '',
+  base_url:              '<?php echo $frontend_api_url; ?>',
+  exclude_delivery_type: 'pickup; pickup_express; morning',
+  price: {
+    morning:               '&eur; 10,00',
+    default:               '',
+    night:                 '',
+    pickup:                '&eur; 1,00',
+    pickup_express:        '&eur; 2,00',
+  }
 }
 /* ]]> */
 </script>
