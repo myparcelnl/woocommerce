@@ -24,7 +24,7 @@ class WooCommerce_MyParcel_Frontend {
 
 		// Delivery options
 		// if (isset(WooCommerce_MyParcel()->checkout_settings['delivery_options'])) {
-			add_action( apply_filters( 'wc_myparcel_delivery_options_location', 'woocommerce_checkout_before_customer_details' ), array( $this, 'output_delivery_options' ), 10, 1 );
+			add_action( apply_filters( 'wc_myparcel_delivery_options_location', 'woocommerce_after_checkout_billing_form' ), array( $this, 'output_delivery_options' ), 10, 1 );
 		// }
 
 		// Save delivery options data

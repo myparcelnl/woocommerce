@@ -17,6 +17,14 @@ class WooCommerce_MyParcel_Assets {
 	 */
 	public function frontend_scripts_styles ( $hook ) {
 		if ( is_checkout() /* && isset(WooCommerce_MyParcel()->checkout_settings['delivery_options']) */ ) {
+			wp_enqueue_script(
+				'wc-myparcel-frontend',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-frontend.js',
+				array( 'jquery' ),
+				WC_MYPARCEL_VERSION
+			);
+
+			// MyParcel bundled scripts
 			wp_enqueue_style(
 				'wc-myparcel-delivery-options',
 				WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/css/myparcel.css',
@@ -35,6 +43,8 @@ class WooCommerce_MyParcel_Assets {
 				array( 'jquery' ),
 				WC_MYPARCEL_VERSION
 			);
+
+
 		}
 		/* for reference
 		wp_localize_script(
