@@ -1,3 +1,7 @@
+body{
+  word-wrap: break-word;
+}
+
 input[name=mypa-delivery-type],
 input[name=mypa-delivery-time],
 input[name=mypa-pickup-option]{
@@ -28,6 +32,7 @@ input[name=mypa-pickup-option]{
 }
 
 #mypa-delivery-options-container{
+  word-wrap: initial;
   font-family:"Open Sans";
   font-size: 14px;
   display: inline-block;
@@ -314,7 +319,7 @@ input:checked ~ label.mypa-row-title span.mypa-highlight{
   max-height: 100%
 }
 
-.mypa-price{
+.mypa-price {
   display: inline-block;
   padding: 2px 5px;
   background: #C7C7C7;
@@ -331,16 +336,76 @@ input:checked ~ span span.mypa-price{
 }
 
 .mypa-info{
+  display: inline-block;
+  box-sizing: border-box;
+  vertical-align: middle;
   position: relative;
-  left:24px;
+  font-style: normal;
+  color: #ddd;
+  text-align: left;
+  text-indent: -9999px;
+  direction: ltr;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  margin: 4px;
+  border: 2px solid;
 }
 
 .mypa-info::before{
-  content: "I"
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+  content: '';
+  width: 2px;
+  height: 9px;
+  top: 35%;
+  box-shadow: inset 0 0 0 32px;
+  border-radius: 2px;
+}
+
+.mypa-info::after{
+  pointer-events: none;
+  content: '';
+  width: 6px;
+  height: 2px;
+  -webkit-transform-origin: left center;
+  -ms-transform-origin: left center;
+  transform-origin: left center;
+  -webkit-transform: rotate(45deg) translate(1px,2px);
+  -ms-transform: rotate(45deg) translate(1px,2px);
+  transform: rotate(45deg) translate(1px,2px);
+  top: 35%;
+  box-shadow: inset 0 0 0 32px;
+  border-radius: 2px;
+  position: absolute;
+  left: 50%;
 }
 
 .mypa-opening-hours{
+  display: none;
   position: absolute;
-  top: 80px;
-  right: 90px;
+  top: 77px;
+  right: 115px;
+  padding: 10px;
+  background-color: white;
+  -webkit-box-shadow:  1px 1px 10px #B9B9B9;
+  -moz-box-shadow:  1px 1px 10px #B9B9B9;
+  box-shadow:  1px 1px 10px #B9B9B9;
+}
+
+.mypa-info:hover + .mypa-opening-hours{
+  display: initial;
+}
+
+.mypa-day-of-the-week{
+  display: inline-block;
+  width: 30px;
+}
+
+.mypa-opening-hours-list{
+  display: inline-block;
 }
