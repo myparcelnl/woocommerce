@@ -9,11 +9,11 @@ window.mypa.settings = {
   base_url:              '<?php echo $frontend_api_url; ?>',
   exclude_delivery_type: 'pickup; pickup_express; morning',
   price: {
-    morning:               '10,00',
+    morning:               '10.00',
     default:               '',
     night:                 '',
-    pickup:                '1,00',
-    pickup_express:        '2,00',
+    pickup:                '1.00',
+    pickup_express:        '2.00',
   }
 }
 /* ]]> */
