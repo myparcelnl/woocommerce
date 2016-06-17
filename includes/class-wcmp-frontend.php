@@ -77,7 +77,23 @@ class WooCommerce_MyParcel_Frontend {
 	 * @return void
 	 */
 	public function save_delivery_options( $order_id, $posted ) {
-		#stub
+		// mypa-onoffswitch   - 'on' or not set  
+		// mypa-delivery-type - always 'on'
+		// mypa-delivery-time - 'on' or delivery data (json object)
+		// mypa-pickup-option - pickup data (json object) or not set
+		
+		// echo '<pre>';var_dump($_POST);echo '</pre>';die();
+
+		if (isset($_POST['mypa-delivery-time']) && $_POST['mypa-delivery-time'] != 'on') {
+			$delivery_time = json_decode( stripslashes( $_POST['mypa-delivery-time']), true );
+			update_post_meta( $order_id, '_myparcel_delivery_time', $delivery_time );
+		}
+
+		if (isset($_POST['mypa-pickup-option'])) {
+			$pickup_option = json_decode( stripslashes( $_POST['mypa-pickup-option']), true );
+			update_post_meta( $order_id, '_myparcel_pickup_option', $pickup_option );
+		}
+	}
 	}
 }
 
