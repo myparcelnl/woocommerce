@@ -30,6 +30,8 @@ class WooCommerce_MyParcel_Frontend {
 		// Save delivery options data
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_delivery_options' ), 10, 2 );
 
+		// Delivery options fees
+		add_action( 'woocommerce_cart_calculate_fees', array( $this, 'delivery_options_fees' ) );
 	}
 
 	public function track_trace_email( $order, $sent_to_admin ) {
@@ -94,6 +96,29 @@ class WooCommerce_MyParcel_Frontend {
 			update_post_meta( $order_id, '_myparcel_pickup_option', $pickup_option );
 		}
 	}
+
+	public function delivery_options_fees( $cart ) {
+		global $woocommerce;
+		if ( ! $_POST || ( is_admin() && ! is_ajax() ) ) {
+			return;
+		}
+
+		if ( isset( $_POST['post_data'] ) ) {
+			parse_str( $_POST['post_data'], $post_data );
+		}
+
+		if (isset($post_data['mypa-pickup-option'])) {
+			$pickup_option = json_decode( stripslashes( $post_data['mypa-pickup-option']), true );
+			$cost = 10;
+			$woocommerce->cart->add_fee( 'Pickup', $cost );
+			// echo '<pre>';var_dump($pickup_option);echo '</pre>';die();
+		}
+		if (isset($post_data['mypa-delivery-time']) && $post_data['mypa-delivery-time'] != 'on') {
+			$pickup_option = json_decode( stripslashes( $post_data['mypa-delivery-time']), true );
+			$cost = 5;
+			$woocommerce->cart->add_fee( 'Delivery', $cost );
+			// echo '<pre>';var_dump($pickup_option);echo '</pre>';die();
+		}
 	}
 }
 

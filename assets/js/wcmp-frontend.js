@@ -37,6 +37,11 @@ jQuery( function( $ ) {
 
 	$( '#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number' ).change();
 
+	// any delivery option selected/changed - update checkout for fees
+	$('#mypa-delivery-options-container').on('change', 'input[type=radio]', function() {
+		jQuery('body').trigger('update_checkout');
+	});
+
 	// pickup location selected
 	$('#mypa-location-container').on('change', 'input[type=radio]', function() {
 		var pickup_location = $( this ).val();
