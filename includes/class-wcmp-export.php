@@ -420,7 +420,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// disable mailbox package outside NL
-		if ($order->shipping_country != 'NL' && $options['package_type'] == 2 ) {
+		if ($order->shipping_country != 'NL' && $package_type == 2 ) {
 			$package_type == 1;
 		}
 

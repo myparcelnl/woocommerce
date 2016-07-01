@@ -113,6 +113,9 @@ class WooCommerce_MyParcel_Admin {
 	 * Add print actions to the orders listing
 	 */
 	public function admin_order_actions( $order ) {
+		if (empty($order)) {
+			return;
+		}
 		$listing_actions = array(
 			'add_shipment'		=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_shipment&order_ids=' . $order->id ), 'wc_myparcel' ),
@@ -156,6 +159,9 @@ class WooCommerce_MyParcel_Admin {
 	}
 
 	public function get_order_shipments( $order ) {
+		if (empty($order)) {
+			return;
+		}		
 		if ( $consignment_id = get_post_meta($order->id,'_myparcel_consignment_id',true ) ) {
 			$consignments = array(
 				array(
