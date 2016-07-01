@@ -53,12 +53,19 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 	 */
 	public function text_input( $args ) {
 		extract( $this->normalize_settings_args( $args ) );
-
+		// echo '<pre>';var_dump($this->normalize_settings_args( $args ));echo '</pre>';
 		if (empty($type)) {
 			$type = 'text';
 		}
 
-		printf( '<input type="%1$s" id="%2$s" name="%3$s" value="%4$s" size="%5$s" placeholder="%6$s" class="%7$s"/>', $type, $id, $setting_name, $current, $size, $placeholder, $class );
+		if ($type == 'number') {
+			$width = ($size * 10) + 25;
+			$style = "width: {$width}px";
+		} else {
+			$style = '';
+		}
+
+		printf( '<input type="%1$s" id="%2$s" name="%3$s" value="%4$s" size="%5$s" placeholder="%6$s" class="%7$s" style="%8$s"/>', $type, $id, $setting_name, $current, $size, $placeholder, $class, $style );
 	
 		// output description.
 		if ( isset( $description ) ) {
@@ -265,6 +272,45 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		}
 	}
 
+	public function delivery_option_enable( $args ) {
+		extract( $this->normalize_settings_args( $args ) );
+		// checkbox (enable)
+		$cb_args = array(
+			'id'			=> "{$id}_enabled",
+			'class'			=> 'wcmp_delivery_option'
+		);
+		// number (fee)
+		$fee_args = array(
+			'id'			=> "{$id}_fee",
+			'type'			=> 'text',
+			'size'			=> '5',
+		);					
+		// textarea (description)
+		$description_args = array(
+			'id'			=> "{$id}_description",
+			'type'			=> 'text',
+			'size'			=> '60',
+		);
+
+
+		?>
+		<?php $this->checkbox( array_merge( $args, $cb_args ) ); ?><br/>
+		<table class="wcmp_delivery_option_details">
+			<!--
+			<tr>
+				<td><?php _e( 'Description', 'woocommerce-myparcel' )?>:</td>
+				<td><?php $this->text_input( array_merge( $args, $description_args ) ); ?></td>
+			</tr>
+			!-->
+			<tr> 
+				<td><?php _e( 'Fee (optional)', 'woocommerce-myparcel' )?>:</td>
+				<td>&euro; <?php $this->text_input( array_merge( $args, $fee_args ) ); ?></td>
+			</tr>
+		</table>
+		<?php
+	}
+
+
 	public function delivery_options_table( $args ) {
 		extract( $this->normalize_settings_args( $args ) );
 		?>
@@ -454,7 +500,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		}
 	
 		// Return the array processing any additional functions filtered by this action.
-		return apply_filters( 'woocommerce_myparcel_settings_validate_input', $output, $input );
+		return apply_filters( 'woocommerce_myparcel_settings_validate_input', $input, $input );
 	}
 }
 

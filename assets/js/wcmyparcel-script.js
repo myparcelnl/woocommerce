@@ -81,6 +81,15 @@ jQuery( function( $ ) {
 		}
 	}).change(); //ensure visible state matches initially
 
+	// hide delivery options details if disabled
+	$('input.wcmp_delivery_option').change(function () {
+		if ($(this).is(':checked')) {
+			$(this).parent().find('.wcmp_delivery_option_details').show();
+		} else {
+			$(this).parent().find('.wcmp_delivery_option_details').hide();
+		}
+	}).change(); //ensure visible state matches initially
+
 
 	// saving shipment options via AJAX
 	$( '.wcmp_save_shipment_settings' )

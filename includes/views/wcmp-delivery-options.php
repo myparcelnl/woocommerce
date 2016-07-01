@@ -1,21 +1,8 @@
 <?php 
-$ajax_url = admin_url( 'admin-ajax.php' );
-$request_prefix = strpos($ajax_url, '?') !== false ? '&' : '?';
-$frontend_api_url = wp_nonce_url( $ajax_url . $request_prefix . 'action=wc_myparcel_frontend', 'wc_myparcel_frontend' );
 ?>
 <script type="text/javascript">
 /* <![CDATA[ */
-window.mypa.settings = {
-  base_url:              '<?php echo $frontend_api_url; ?>',
-  exclude_delivery_type: 'pickup; pickup_express; morning',
-  price: {
-    morning:               '10.00',
-    default:               '',
-    night:                 '',
-    pickup:                '1.00',
-    pickup_express:        '2.00',
-  }
-}
+window.mypa.settings = <?php echo $settings; ?>
 /* ]]> */
 </script>
 <div id='mypa-delivery-options-container'>

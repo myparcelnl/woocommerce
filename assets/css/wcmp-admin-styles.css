@@ -117,3 +117,11 @@ table.tracktrace_status td {
 	margin-top: 8px;
 	float: right;
 }
+
+/* settings styling */
+.wcmp_delivery_option_details {
+	margin-top: 5px;
+}
+.wcmp_delivery_option_details td {
+	padding: 0;
+}

@@ -19,6 +19,7 @@ class WooCommerce_MyParcel_Export {
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 		add_action( 'wp_ajax_wc_myparcel', array($this, 'export' ));
 		add_action( 'wp_ajax_wc_myparcel_frontend', array($this, 'frontend_api_request' ));
+		add_action( 'wp_ajax_nopriv_wc_myparcel_frontend', array($this, 'frontend_api_request' ));
 	}
 
 	public function admin_notices () {

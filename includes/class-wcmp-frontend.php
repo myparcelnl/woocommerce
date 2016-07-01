@@ -67,6 +67,36 @@ class WooCommerce_MyParcel_Frontend {
 	 * Add delivery options to checkout
 	 */
 	public function output_delivery_options() {
+		// get api url
+		$ajax_url = admin_url( 'admin-ajax.php' );
+		$request_prefix = strpos($ajax_url, '?') !== false ? '&' : '?';
+		$frontend_api_url = wp_nonce_url( $ajax_url . $request_prefix . 'action=wc_myparcel_frontend', 'wc_myparcel_frontend' );
+
+		// get delivery option fees/prices
+		$prices = array(
+			'morning'			=> isset(WooCommerce_MyParcel()->checkout_settings['morning_delivery_fee']) ? WooCommerce_MyParcel()->checkout_settings['morning_delivery_fee'] : '',
+			'default'			=> isset(WooCommerce_MyParcel()->checkout_settings['default_fee']) ? WooCommerce_MyParcel()->checkout_settings['default_fee'] : '',
+			'night'				=> isset(WooCommerce_MyParcel()->checkout_settings['night_delivery_fee']) ? WooCommerce_MyParcel()->checkout_settings['night_delivery_fee'] : '',
+			'pickup'			=> isset(WooCommerce_MyParcel()->checkout_settings['postnl_pickup_fee']) ? WooCommerce_MyParcel()->checkout_settings['postnl_pickup_fee'] : '',
+			'pickup_express'	=> isset(WooCommerce_MyParcel()->checkout_settings['postnl_pickup_early_fee']) ? WooCommerce_MyParcel()->checkout_settings['postnl_pickup_early_fee'] : '',
+			'signed'			=> isset(WooCommerce_MyParcel()->checkout_settings['signed_fee']) ? WooCommerce_MyParcel()->checkout_settings['signed_fee'] : '',
+			'only_recipient'	=> isset(WooCommerce_MyParcel()->checkout_settings['only_recipient_fee']) ? WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'] : '',
+		);
+
+		// exclude delivery types
+		$exclude_delivery_types = array(1,4,5);
+		$exclude_delivery_types = implode(';', $exclude_delivery_types);
+
+		// combine settings
+		$settings = array(
+			'base_url'				=> $frontend_api_url,
+			'exclude_delivery_type'	=> $exclude_delivery_types,
+			'price'					=> $prices,
+		);
+		
+		// encode settings for JS object
+		$settings = json_encode($settings);
+
 		include('views/wcmp-delivery-options.php');
 	}
 
