@@ -229,9 +229,9 @@ class WooCommerce_MyParcel_Frontend {
 
 		// Fees for delivery time options
 		if (isset($post_data['mypa-delivery-time']) && $post_data['mypa-delivery-time'] != 'on') {
-			$pickup_option = json_decode( stripslashes( $post_data['mypa-delivery-time']), true );
-			// echo '<pre>';var_dump($pickup_option);echo '</pre>';die();
-			$time = array_shift($pickup_option['time']); // take first element in time array
+			$delivery_time = json_decode( stripslashes( $post_data['mypa-delivery-time']), true );
+			// echo '<pre>';var_dump($delivery_time);echo '</pre>';die();
+			$time = array_shift($delivery_time['time']); // take first element in time array
 			if (isset($time['price_comment'])) {
 				switch ($time['price_comment']) {
 					case 'morning':
