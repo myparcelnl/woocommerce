@@ -79,7 +79,7 @@ class WooCommerce_MyParcel_Export {
 					$this->log("Shipment data for order {$order_id}:\n".var_export($shipments, true));
 
 					// check colli amount
-					$extra_params = $order->myparcel_shipment_options_extra;
+					$extra_params = get_post_meta( $order_id, '_myparcel_shipment_options_extra', true );
 					$colli_amount = isset($extra_params['colli_amount']) ? $extra_params['colli_amount'] : 1;
 
 					for ($i=0; $i < intval($colli_amount); $i++) {
@@ -314,6 +314,17 @@ class WooCommerce_MyParcel_Export {
 				'carrier'	=> 1, // default to POSTNL for now
 			);
 
+			if ( $pickup = $this->is_pickup( $order_id ) ) {
+				// $pickup_time = array_shift($pickup['time']); // take first element in time array
+				$shipment['pickup'] = array(
+					'postal_code'	=> $pickup['postal_code'],
+					'street'		=> $pickup['street'],
+					'city'			=> $pickup['city'],
+					'number'		=> $pickup['number'],
+					'location_name'	=> $pickup['location'],
+				);
+			}
+
 			// echo '<pre>';var_dump($shipment);echo '</pre>';die();
 
 			$shipments[] = $shipment;
@@ -468,9 +479,32 @@ class WooCommerce_MyParcel_Export {
 			unset($options['insured']);
 		}
 
-		// always enable signature on receipt for Pickup and Pickup express delivery types.
-		if ( $this->is_pickup( $order ) ) {
+		// Options for Pickup and Pickup express delivery types:
+		// always enable signature on receipt
+		// add delivery type and date
+		if ( $pickup = $this->is_pickup( $order ) ) {
 			$options['signature'] = 1;
+
+			$pickup_time = array_shift($pickup['time']); // take first element in time array
+			if (isset($pickup_time['type'])) {
+				$options['delivery_type'] = $pickup_time['type'];
+			}
+			if (isset($pickup['date'])) {
+				$options['delivery_date'] = $pickup['date'];
+			}
+		}
+
+		// delivery time options
+		if ( !empty($order->myparcel_delivery_time) ) {
+			$delivery_time_options = $order->myparcel_delivery_time;
+			$delivery_time = array_shift($delivery_time_options['time']); // take first element in time array
+			if (isset($delivery_time['type'])) {
+				$options['delivery_type'] = $delivery_time['type'];
+			}
+			if (isset($delivery_time['date'])) {
+				$options['delivery_date'] = "{$delivery_time['date']} {$delivery_time['start']}";
+			}
+
 		}
 
 		// allow prefiltering consignment data
