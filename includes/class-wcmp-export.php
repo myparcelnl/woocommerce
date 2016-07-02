@@ -29,7 +29,7 @@ class WooCommerce_MyParcel_Export {
 
 		switch ($_GET['myparcel']) {
 			case 'no_consignments':
-				$message = __('U dient de orders eerst naar MyParcel te exporteren voordat u de labels kunt printen!');
+				$message = __('You have to export the orders to MyParcel before you can print the labels!', 'woocommerce-myparcel');
 				printf('<div class="error"><p>%s</p></div>', $message);
 				break;
 			default:

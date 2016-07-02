@@ -233,7 +233,7 @@ class WooCommerce_MyParcel_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'keep_shipments',
 				'default'		=> 0,
-				'description'	=> __( 'With this option enaled, data from previous shipments (track & trace links) will be kept in the order when you export more than once.', 'woocommerce-myparcel' )
+				'description'	=> __( 'With this option enabled, data from previous shipments (track & trace links) will be kept in the order when you export more than once.', 'woocommerce-myparcel' )
 			)
 		);
 
@@ -331,7 +331,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'connect_email',
-				'description'	=> __( 'When you connect the customer email, MyParcel can send a Track&Trace email to this address. In your <a href="http://www.myparcel.nl/backend/instellingen/tracktrace">MyParcel backend</a> you can enable or disable this email and format it in your own style.', 'woocommerce-myparcel' )
+				'description'	=> __( 'When you connect the customer email, MyParcel can send a Track&Trace email to this address. In your <a href="https://backoffice.myparcel.nl/ttsettingstable">MyParcel backend</a> you can enable or disable this email and format it in your own style.', 'woocommerce-myparcel' )
 			)
 		);
 		

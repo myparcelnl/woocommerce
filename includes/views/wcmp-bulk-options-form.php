@@ -80,7 +80,7 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&reques
 								<thead>
 									<tr>
 										<th>#</th>
-										<th><?php _e( 'Productnaam', 'woocommerce-myparcel' ); ?></th>
+										<th><?php _e( 'Product name', 'woocommerce-myparcel' ); ?></th>
 										<th align="right"><?php _e( 'Weight (kg)', 'woocommerce-myparcel' ); ?></th>
 									</tr>
 								</thead>
@@ -112,7 +112,7 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&reques
 						</td>
 						<td><?php
 							if ( $order->shipping_country == 'NL' && ( empty($recipient['street']) || empty($recipient['number']) ) ) { ?>
-							<p><span style="color:red"><?php _e( 'Deze order bevat geen geldige straatnaam- en huisnummergegevens, en kan daarom niet worden ge-exporteerd! Waarschijnlijk is deze order geplaatst voordat de MyParcel plugin werd geactiveerd. De gegevens kunnen wel handmatig worden ingevoerd in het order scherm.', 'woocommerce-myparcel' ); ?></span></p>
+							<p><span style="color:red"><?php _e( 'This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcel plugin was activated. The address data can still be manually entered in the order screen.', 'woocommerce-myparcel' ); ?></span></p>
 						</td>
 					</tr> <!-- last row -->
 							<?php
