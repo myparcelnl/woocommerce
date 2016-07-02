@@ -72,27 +72,59 @@ class WooCommerce_MyParcel_Frontend {
 		$request_prefix = strpos($ajax_url, '?') !== false ? '&' : '?';
 		$frontend_api_url = wp_nonce_url( $ajax_url . $request_prefix . 'action=wc_myparcel_frontend', 'wc_myparcel_frontend' );
 
-		// get delivery option fees/prices
-		$prices = array(
-			'morning'			=> isset(WooCommerce_MyParcel()->checkout_settings['morning_delivery_fee']) ? WooCommerce_MyParcel()->checkout_settings['morning_delivery_fee'] : '',
-			'default'			=> isset(WooCommerce_MyParcel()->checkout_settings['default_fee']) ? WooCommerce_MyParcel()->checkout_settings['default_fee'] : '',
-			'night'				=> isset(WooCommerce_MyParcel()->checkout_settings['night_delivery_fee']) ? WooCommerce_MyParcel()->checkout_settings['night_delivery_fee'] : '',
-			'pickup'			=> isset(WooCommerce_MyParcel()->checkout_settings['postnl_pickup_fee']) ? WooCommerce_MyParcel()->checkout_settings['postnl_pickup_fee'] : '',
-			'pickup_express'	=> isset(WooCommerce_MyParcel()->checkout_settings['postnl_pickup_early_fee']) ? WooCommerce_MyParcel()->checkout_settings['postnl_pickup_early_fee'] : '',
-			'signed'			=> isset(WooCommerce_MyParcel()->checkout_settings['signed_fee']) ? WooCommerce_MyParcel()->checkout_settings['signed_fee'] : '',
-			'only_recipient'	=> isset(WooCommerce_MyParcel()->checkout_settings['only_recipient_fee']) ? WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'] : '',
+
+		// delivery types
+		$delivery_types = array(
+			1	=> 'morning',
+			2	=> 'standard', // 'default in JS API'
+			3	=> 'night',
+			4	=> 'pickup',
+			5	=> 'pickup_express',
+		);
+		// delivery options
+		$delivery_options = array(
+			'signed',
+			'only_recipient',
 		);
 
+		// get delivery option fees/prices
+		$price_options = array_merge( $delivery_options, $delivery_types );
+		$prices = array();
+		foreach ($price_options as $key => $option) {
+			// JS API correction
+			if ($option == 'standard') {
+				$option = 'default';
+			}
+
+			if (!empty(WooCommerce_MyParcel()->checkout_settings[$option.'_fee'])) {
+				$prices[$option] = WooCommerce_MyParcel()->checkout_settings[$option.'_fee'];
+			}
+		}
+
 		// exclude delivery types
-		$exclude_delivery_types = array(1,4,5);
+		$exclude_delivery_types = array();
+		foreach ($delivery_types as $key => $delivery_type) {
+			// JS API correction
+			if ($delivery_type == 'standard') {
+				$delivery_type = 'default';
+			}
+			if (!isset(WooCommerce_MyParcel()->checkout_settings[$delivery_type.'_enabled'])) {
+				$exclude_delivery_types[] = $key;
+			}
+		}
 		$exclude_delivery_types = implode(';', $exclude_delivery_types);
+
 
 		// combine settings
 		$settings = array(
 			'base_url'				=> $frontend_api_url,
 			'exclude_delivery_type'	=> $exclude_delivery_types,
 			'price'					=> $prices,
+			'dropoff_delay'			=> isset(WooCommerce_MyParcel()->checkout_settings['dropoff_delay']) ? WooCommerce_MyParcel()->checkout_settings['dropoff_delay'] : '',
+			'deliverydays_window'	=> isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) ? WooCommerce_MyParcel()->checkout_settings['deliverydays_window'] : '',
 		);
+		// remove empty options
+		$settings = array_filter($settings);
 		
 		// encode settings for JS object
 		$settings = json_encode($settings);
@@ -109,12 +141,19 @@ class WooCommerce_MyParcel_Frontend {
 	 * @return void
 	 */
 	public function save_delivery_options( $order_id, $posted ) {
-		// mypa-onoffswitch   - 'on' or not set  
-		// mypa-delivery-type - always 'on'
-		// mypa-delivery-time - 'on' or delivery data (json object)
-		// mypa-pickup-option - pickup data (json object) or not set
+		// mypa-only-recipient - 'on' or not set  
+		// mypa-signed         - 'on' or not set  
+		// mypa-delivery-type  - always 'on'
+		// mypa-delivery-time  - 'on' or delivery data (json object)
+		// mypa-pickup-option  - pickup data (json object) or not set
 		
-		// echo '<pre>';var_dump($_POST);echo '</pre>';die();
+		if (isset($_POST['mypa-signed'])) {
+			update_post_meta( $order_id, '_myparcel_signed', 'on' );
+		}
+
+		if (isset($_POST['mypa-only-recipient'])) {
+			update_post_meta( $order_id, '_myparcel_only_recipient', 'on' );
+		}
 
 		if (isset($_POST['mypa-delivery-time']) && $_POST['mypa-delivery-time'] != 'on') {
 			$delivery_time = json_decode( stripslashes( $_POST['mypa-delivery-time']), true );
@@ -134,21 +173,102 @@ class WooCommerce_MyParcel_Frontend {
 		}
 
 		if ( isset( $_POST['post_data'] ) ) {
+			// non-default post data for AJAX calls
 			parse_str( $_POST['post_data'], $post_data );
+		} else {
+			// checkout finalization
+			$post_data = $_POST;
 		}
 
+		// Fee for "signed" option
+		if (isset($post_data['mypa-signed'])) {
+			if (!empty(WooCommerce_MyParcel()->checkout_settings['signed_fee'])) {
+				$fee = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
+				$fee_name = __( 'Signature on delivery', 'woocommerce-myparcel' );
+				$fee = $this->normalize_price( $fee );
+				$woocommerce->cart->add_fee( $fee_name, $fee );
+			}
+		}
+
+		// Fee for "only recipient" option
+		if (isset($post_data['mypa-only-recipient'])) {
+			if (!empty(WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'])) {
+				$fee = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
+				$fee_name = __( 'Home address only delivery', 'woocommerce-myparcel' );
+				$fee = $this->normalize_price( $fee );
+				$woocommerce->cart->add_fee( $fee_name, $fee );
+			}
+		}
+
+		// Fees for pickup & pickup express
 		if (isset($post_data['mypa-pickup-option'])) {
 			$pickup_option = json_decode( stripslashes( $post_data['mypa-pickup-option']), true );
-			$cost = 10;
-			$woocommerce->cart->add_fee( 'Pickup', $cost );
 			// echo '<pre>';var_dump($pickup_option);echo '</pre>';die();
+			if (isset($pickup_option['price_comment'])) {
+				switch ($pickup_option['price_comment']) {
+					case 'retail':
+						if (!empty(WooCommerce_MyParcel()->checkout_settings['pickup_fee'])) {
+							$fee = WooCommerce_MyParcel()->checkout_settings['pickup_fee'];
+							$fee_name = __( 'PostNL Pickup', 'woocommerce-myparcel' );
+						}
+						break;
+					case 'retailexpress':
+						if (!empty(WooCommerce_MyParcel()->checkout_settings['pickup_express_fee'])) {
+							$fee = WooCommerce_MyParcel()->checkout_settings['pickup_express_fee'];
+							$fee_name = __( 'PostNL Pickup Express', 'woocommerce-myparcel' );
+						}
+						break;
+				}
+
+				if (!empty($fee)) {
+					$fee = $this->normalize_price( $fee );
+					$woocommerce->cart->add_fee( $fee_name, $fee );
+				}
+			}
 		}
+
+		// Fees for delivery time options
 		if (isset($post_data['mypa-delivery-time']) && $post_data['mypa-delivery-time'] != 'on') {
 			$pickup_option = json_decode( stripslashes( $post_data['mypa-delivery-time']), true );
-			$cost = 5;
-			$woocommerce->cart->add_fee( 'Delivery', $cost );
 			// echo '<pre>';var_dump($pickup_option);echo '</pre>';die();
+			$time = array_shift($pickup_option['time']); // take first element in time array
+			if (isset($time['price_comment'])) {
+				switch ($time['price_comment']) {
+					case 'morning':
+						if (!empty(WooCommerce_MyParcel()->checkout_settings['morning_fee'])) {
+							$fee = WooCommerce_MyParcel()->checkout_settings['morning_fee'];
+							$fee_name = __( 'Morning delivery', 'woocommerce-myparcel' );
+						}
+						break;
+					case 'standard':
+						if (!empty(WooCommerce_MyParcel()->checkout_settings['default_fee'])) {
+							$fee = WooCommerce_MyParcel()->checkout_settings['default_fee'];
+							$fee_name = __( 'Standard delivery', 'woocommerce-myparcel' );
+						}
+						break;
+					case 'avond':
+						if (!empty(WooCommerce_MyParcel()->checkout_settings['night_fee'])) {
+							$fee = WooCommerce_MyParcel()->checkout_settings['night_fee'];
+							$fee_name = __( 'Evening delivery', 'woocommerce-myparcel' );
+						}
+						break;
+				}
+
+				if (!empty($fee)) {
+					$fee = $this->normalize_price( $fee );
+					$woocommerce->cart->add_fee( $fee_name, $fee );
+				}
+			}
+
 		}
+	}
+
+	// converts price string to float value, assuming no thousand-separators used
+	public function normalize_price( $price ) {
+		$price = str_replace(',', '.', $price);
+		$price = floatval($price);
+
+		return $price;
 	}
 }
 

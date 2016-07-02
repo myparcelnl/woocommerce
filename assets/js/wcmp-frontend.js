@@ -1,4 +1,10 @@
 jQuery( function( $ ) {
+	var myparcel_update_timer = false;
+	var myparcel_checkout_updating = false;
+
+	// make delivery options update at least once (but don't hammer)
+	// myparcel_update_timer = setTimeout( update_myparcel_delivery_options_action, '500' );
+
 	// update myparcel settings object with address when shipping or billing address changes
 	
 	// billing changes
@@ -17,7 +23,7 @@ jQuery( function( $ ) {
 			window.mypa.settings.postal_code = billing_postcode;
 			window.mypa.settings.number = billing_house_number;
 			window.mypa.settings.street = billing_street_name;
-			window.mypa.fn.updatePage();
+			update_myparcel_delivery_options()
 		}
 	});
 
@@ -31,19 +37,34 @@ jQuery( function( $ ) {
 			window.mypa.settings.postal_code = shipping_postcode;
 			window.mypa.settings.number = shipping_house_number;
 			window.mypa.settings.street = shipping_street_name;
-			window.mypa.fn.updatePage();
+			update_myparcel_delivery_options()
 		}
 	});
 
 	$( '#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number' ).change();
 
 	// any delivery option selected/changed - update checkout for fees
-	$('#mypa-delivery-options-container').on('change', 'input[type=radio]', function() {
+	$('#mypa-delivery-options-container').on('change', 'input[type=radio], input[type=checkbox]', function() {
+		myparcel_checkout_updating = true;
 		jQuery('body').trigger('update_checkout');
+		myparcel_checkout_updating = false;
 	});
 
 	// pickup location selected
-	$('#mypa-location-container').on('change', 'input[type=radio]', function() {
-		var pickup_location = $( this ).val();
-	});
+	// $('#mypa-location-container').on('change', 'input[type=radio]', function() {
+	// 	var pickup_location = $( this ).val();
+	// });
+
+	function update_myparcel_delivery_options() {
+		// Small timeout to prevent multiple requests when several fields update at the same time
+		clearTimeout( myparcel_update_timer );
+		myparcel_update_timer = setTimeout( update_myparcel_delivery_options_action, '5' );
+	}
+
+	function update_myparcel_delivery_options_action() {
+		if ( myparcel_checkout_updating !== true ) {
+			mypa.fn.updatePage();
+		}
+	}
+
 });

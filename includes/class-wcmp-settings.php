@@ -505,24 +505,105 @@ class WooCommerce_MyParcel_Settings {
 			$this->default_settings( $option_name );
 		}
 
-		// Checkout options section.
+		// Delivery options section.
 		add_settings_section(
-			'checkout_options',
-			__( 'Checkout options', 'woocommerce-myparcel' ),
+			'delivery_options',
+			__( 'Delivery options', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'section' ),
 			$option_group
 		);
+
 
 		add_settings_field(
 			'postponed_delivery',
 			__( 'Postponed delivery', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
-			'checkout_options',
+			'delivery_options',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'postponed_delivery',
 			)
+		);
+
+		add_settings_field(
+			'only_recipient',
+			__( 'Home address only', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'delivery_option_enable' ),
+			$option_group,
+			'delivery_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'only_recipient',
+			)
+		);
+
+		add_settings_field(
+			'signed',
+			__( 'Signature on delivery', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'delivery_option_enable' ),
+			$option_group,
+			'delivery_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'signed',
+			)
+		);
+
+		add_settings_field(
+			'night',
+			__( 'Evening delivery', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'delivery_option_enable' ),
+			$option_group,
+			'delivery_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'night',
+			)
+		);
+
+		add_settings_field(
+			'morning',
+			__( 'Morning delivery', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'delivery_option_enable' ),
+			$option_group,
+			'delivery_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'morning',
+			)
+		);
+
+		add_settings_field(
+			'pickup',
+			__( 'PostNL pickup', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'delivery_option_enable' ),
+			$option_group,
+			'delivery_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'pickup',
+			)
+		);
+
+		add_settings_field(
+			'pickup_express',
+			__( 'Early PostNL pickup', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'delivery_option_enable' ),
+			$option_group,
+			'delivery_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'pickup_express',
+			)
+		);
+
+		// Checkout options section.
+		add_settings_section(
+			'processing_parameters',
+			__( 'Shipment processing parameters', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'section' ),
+			$option_group
 		);
 
 		$days_of_the_week = array(
@@ -540,12 +621,12 @@ class WooCommerce_MyParcel_Settings {
 			__( 'Dropoff days', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'enhanced_select' ),
 			$option_group,
-			'checkout_options',
+			'processing_parameters',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'dropoff_days',
 				'options'		=> $days_of_the_week,
-				'description'	=> __( 'Days you hand over parcels to PostNL', 'woocommerce-myparcel' ),
+				'description'	=> __( 'Days of the week on which you hand over parcels to PostNL', 'woocommerce-myparcel' ),
 			)
 		);
 
@@ -554,7 +635,7 @@ class WooCommerce_MyParcel_Settings {
 			__( 'Dropoff delay', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'text_input' ),
 			$option_group,
-			'checkout_options',
+			'processing_parameters',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'dropoff_delay',
@@ -569,82 +650,13 @@ class WooCommerce_MyParcel_Settings {
 			__( 'Delivery days window', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'text_input' ),
 			$option_group,
-			'checkout_options',
+			'processing_parameters',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'deliverydays_window',
 				'type'			=> 'number',
 				'size'			=> '2',
 				'description'	=> __( 'Number of days you allow the customer to postpone a shipment', 'woocommerce-myparcel' ),
-			)
-		);
-
-		// Checkout options section.
-		add_settings_section(
-			'delivery_options',
-			__( 'Delivery options', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'section' ),
-			$option_group
-		);
-
-		add_settings_field(
-			'only_recipient',
-			__( 'Home address only', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'delivery_option_enable' ),
-			$option_group,
-			'delivery_options',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'only_recipient',
-			)
-		);
-
-
-		add_settings_field(
-			'evening_delivery',
-			__( 'Evening delivery', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'delivery_option_enable' ),
-			$option_group,
-			'delivery_options',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'evening_delivery',
-			)
-		);
-
-		add_settings_field(
-			'morning_delivery',
-			__( 'Morning delivery', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'delivery_option_enable' ),
-			$option_group,
-			'delivery_options',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'morning_delivery',
-			)
-		);
-
-		add_settings_field(
-			'postnl_pickup',
-			__( 'PostNL pickup', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'delivery_option_enable' ),
-			$option_group,
-			'delivery_options',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'postnl_pickup',
-			)
-		);
-
-		add_settings_field(
-			'postnl_pickup_early',
-			__( 'Early PostNL pickup', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'delivery_option_enable' ),
-			$option_group,
-			'delivery_options',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'postnl_pickup_early',
 			)
 		);
 
