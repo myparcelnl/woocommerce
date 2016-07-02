@@ -486,7 +486,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// disable options for mailbox package and unpaid letter
-			// echo '<pre>';var_dump($package_type);echo '</pre>';die();
+		// echo '<pre>';var_dump($package_type);echo '</pre>';die();
 		if ( $options['package_type'] != 1 ) {
 			$illegal_options = array( 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance' );
 			foreach ($options as $key => $option) {
