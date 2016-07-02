@@ -331,7 +331,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'connect_email',
-				'description'	=> __( 'When you connect the customer email, MyParcel can send a Track&Trace email to this address. In your <a href="https://backoffice.myparcel.nl/ttsettingstable">MyParcel backend</a> you can enable or disable this email and format it in your own style.', 'woocommerce-myparcel' )
+				'description'	=> sprintf(__( 'When you connect the customer email, MyParcel can send a Track&Trace email to this address. In your %sMyParcel backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-myparcel' ), '<a href="https://backoffice.myparcel.nl/ttsettingstable">', '</a>')
 			)
 		);
 		
