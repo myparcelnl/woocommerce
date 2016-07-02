@@ -732,6 +732,14 @@ class WooCommerce_MyParcel_Export {
 			$order_id = $order;
 		}
 
+		$myparcel_pickup_option = get_post_meta( $order_id, '_myparcel_pickup_option', true );
+		if (!empty($myparcel_pickup_option)) {
+			return $myparcel_pickup_option;
+		} else {
+			return false;
+		}
+
+		/* old pakjegemak code
 		// load meta data
 		$pakjegemak = get_post_meta( $order_id, '_myparcel_is_pickup', true );
 		$pgaddress = get_post_meta( $order_id, '_myparcel_pgaddress', true );
@@ -743,6 +751,7 @@ class WooCommerce_MyParcel_Export {
 		} else {
 			return false;
 		}
+		*/
 	}
 
 	public function log( $message ) {
