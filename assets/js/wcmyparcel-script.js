@@ -237,7 +237,7 @@ jQuery( function( $ ) {
 	}
 
 	function myparcel_modal_dialog( order_ids, dialog ) {
-		var request_prefix = (wclabels.ajaxurl.indexOf("?") != -1) ? '&' : '?';
+		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") != -1) ? '&' : '?';
 		var thickbox_height = $(window).height()-120;
 		var thickbox_parameters = '&TB_iframe=true&height='+thickbox_height+'&width=720';
 		var url = wc_myparcel.ajax_url+request_prefix+'order_ids='+order_ids+'&action=wc_myparcel&request=modal_dialog&dialog='+dialog+'&security='+wc_myparcel.nonce+thickbox_parameters;
@@ -274,7 +274,7 @@ jQuery( function( $ ) {
 	function myparcel_print( order_ids ) {
 		// console.log('requesting myparcel labels...');
 
-		var request_prefix = (wclabels.ajaxurl.indexOf("?") != -1) ? '&' : '?';
+		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") != -1) ? '&' : '?';
 		var url = wc_myparcel.ajax_url+request_prefix+'action=wc_myparcel&request=get_labels&security='+wc_myparcel.nonce;
 
 		// create form to send order_ids via POST
