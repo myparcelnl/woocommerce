@@ -77,6 +77,15 @@
 		),
 	);
 
+	if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
+		unset($option_rows['[only_recipient]']);
+		unset($option_rows['[signature]']);
+		unset($option_rows['[return]']);
+		$option_rows['[insured]']['value'] = $shipment_options['insured'] = 1;
+		$shipment_options['insurance']['amount'] = 499;
+	}
+
+
 	?>
 	<?php foreach ($option_rows as $name => $option_row): ?>
 	<tr>
@@ -104,12 +113,18 @@
 		<td><?php _e( 'Insurance', 'woocommerce-myparcel' ) ?></td>
 		<td>
 			<?php
-			$insured_amounts = array(
-				'49'		=> __( 'Insured up to &euro; 50' , 'woocommerce-myparcel' ).' (+ &euro; 0.50)',
-				'249'		=> __( 'Insured up to  &euro; 250' , 'woocommerce-myparcel' ).' (+ &euro; 1.00)',
-				'499'		=> __( 'Insured up to  &euro; 500' , 'woocommerce-myparcel' ).' (+ &euro; 1.50)',
-				''			=> __( '> &euro; 500 insured' , 'woocommerce-myparcel' ).' (+ &euro; 1.50)',
-			);
+			if (isset($recipient['cc']) && $recipient['cc'] == 'NL') {
+				$insured_amounts = array(
+					'49'		=> __( 'Insured up to &euro; 50' , 'woocommerce-myparcel' ).' (+ &euro; 0.50)',
+					'249'		=> __( 'Insured up to  &euro; 250' , 'woocommerce-myparcel' ).' (+ &euro; 1.00)',
+					'499'		=> __( 'Insured up to  &euro; 500' , 'woocommerce-myparcel' ).' (+ &euro; 1.50)',
+					''			=> __( '> &euro; 500 insured' , 'woocommerce-myparcel' ).' (+ &euro; 1.50)',
+				);
+			} else {
+				$insured_amounts = array(
+					'499'		=> __( 'Insured up to  &euro; 500' , 'woocommerce-myparcel' ),
+				);
+			}
 			$insured_amount = isset($shipment_options['insurance']['amount']) ? $shipment_options['insurance']['amount'] : '';
 
 			$name = "myparcel_options[{$order_id}][insured_amount]";
