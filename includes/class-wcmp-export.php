@@ -479,6 +479,11 @@ class WooCommerce_MyParcel_Export {
 			unset($options['insured']);
 		}
 
+		// set insurance amount to int if already set
+		if (isset($options['insurance'])) {
+			$options['insurance']['amount'] = (int) $options['insurance']['amount'];
+		}
+
 		// Options for Pickup and Pickup express delivery types:
 		// always enable signature on receipt
 		// add delivery type and date
