@@ -116,6 +116,11 @@ class WooCommerce_MyParcel_Admin {
 		if (empty($order)) {
 			return;
 		}
+
+		if ( !WooCommerce_MyParcel()->export->is_eu_country( $order->shipping_country ) ) {
+			return;
+		}
+
 		$listing_actions = array(
 			'add_shipment'		=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_shipment&order_ids=' . $order->id ), 'wc_myparcel' ),

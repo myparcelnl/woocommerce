@@ -793,6 +793,11 @@ class WooCommerce_MyParcel_Export {
 		*/
 	}
 
+	public function is_eu_country($country_code) {
+		$eu_countries = array( 'GB', 'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE' );
+		return in_array( $country_code, $eu_countries);
+	}
+
 	public function log( $message ) {
 		if (isset(WooCommerce_MyParcel()->general_settings['error_logging'])) {
 			// log file in upload folder - wp-content/uploads
