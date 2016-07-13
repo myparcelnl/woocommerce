@@ -165,7 +165,7 @@ class WooCommerce_MyParcel_Admin {
 		if ( $consignment_id = get_post_meta($order->id,'_myparcel_consignment_id',true ) ) {
 			$consignments = array(
 				array(
-					'consignment_id' => $consignment_id,
+					'shipment_id' => $consignment_id,
 					'tracktrace'     => get_post_meta($order->id,'_myparcel_tracktrace',true ),
 				),
 			);
