@@ -350,7 +350,7 @@ class WooCommerce_MyParcel_Settings {
 		
 		add_settings_field(
 			'large_format',
-			__( 'Extra large size', 'woocommerce-myparcel' ).' (+ &euro;2.19)',
+			__( 'Extra large size', 'woocommerce-myparcel' ).' (+ &euro;2.29)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
@@ -363,7 +363,7 @@ class WooCommerce_MyParcel_Settings {
 		
 		add_settings_field(
 			'only_recipient',
-			__( 'Home address only', 'woocommerce-myparcel' ).' (+ &euro;0.26)',
+			__( 'Home address only', 'woocommerce-myparcel' ).' (+ &euro;0.27)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
@@ -375,7 +375,7 @@ class WooCommerce_MyParcel_Settings {
 		
 		add_settings_field(
 			'signature',
-			__( 'Signature on delivery', 'woocommerce-myparcel' ).' (+ &euro;0.33)',
+			__( 'Signature on delivery', 'woocommerce-myparcel' ).' (+ &euro;0.34)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
@@ -386,18 +386,18 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 		
-		add_settings_field(
-			'home_address_signature',
-			__( 'Home address only + signature on delivery', 'woocommerce-myparcel' ).' (+ &euro;0.40)',
-			array( $this->callbacks, 'checkbox' ),
-			$option_group,
-			'defaults',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'home_address_signature',
-				'description'	=> __( 'This is the secure option. The parcel will only be delivered at the recipient address, who has to sign for delivery. This way you can be certain the parcel will be handed to the recipient.', 'woocommerce-myparcel' )
-			)
-		);
+		// add_settings_field(
+		// 	'home_address_signature',
+		// 	__( 'Home address only + signature on delivery', 'woocommerce-myparcel' ).' (+ &euro;0.42)',
+		// 	array( $this->callbacks, 'checkbox' ),
+		// 	$option_group,
+		// 	'defaults',
+		// 	array(
+		// 		'option_name'	=> $option_name,
+		// 		'id'			=> 'home_address_signature',
+		// 		'description'	=> __( 'This is the secure option. The parcel will only be delivered at the recipient address, who has to sign for delivery. This way you can be certain the parcel will be handed to the recipient.', 'woocommerce-myparcel' )
+		// 	)
+		// );
 		
 		add_settings_field(
 			'return',
