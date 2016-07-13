@@ -150,7 +150,9 @@ class WooCommerce_MyParcel_Export {
 
 						// process directly setting
 						if ( isset(WooCommerce_MyParcel()->general_settings['process_directly']) ) {
-							$this->get_labels( $order_ids, 'url' );
+							$order = $this->get_order( $order_id );
+							$this->get_labels( $order_id, 'url' );
+							$this->get_shipment_data( $shipment_id, $order );
 						}
 
 						// status automation
