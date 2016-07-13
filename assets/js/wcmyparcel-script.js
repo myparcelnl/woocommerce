@@ -314,7 +314,7 @@ jQuery( function( $ ) {
 		$main_header = $( '#wpbody-content > .wrap > h1:first' );
 		var notice = '<div class="myparcel_notice '+type+'"><p>'+message+'</p></div>';
 		$main_header.after( notice );
-
+		$('html, body').animate({ scrollTop: 0 }, 'slow');
 	}
 
 	$( document.body ).trigger( 'wc-enhanced-select-init' );
