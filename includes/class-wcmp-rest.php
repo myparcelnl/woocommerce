@@ -205,7 +205,8 @@ class WC_MyParcel_REST_Client
 
 	public function parse_errors( $body ) {
 		$errors = $body['errors'];
-		$message = $body['message'];
+		$message = isset( $body['message'] ) ? $body['message'] : '';
+		// echo '<pre>';var_dump($errors);echo '</pre>';die();
 
 		$parsed_errors = array();
 		foreach ($errors as $error) {
@@ -215,6 +216,8 @@ class WC_MyParcel_REST_Client
 				foreach ($error['human'] as $key => $human_error) {
 					$parsed_errors[$code] = "{$human_error} (<strong>Code {$code}</strong>)";
 				}
+			} elseif ( isset($error['message']) ) {
+				$parsed_errors[$code] = "{$error['message']} (<strong>Code {$code}</strong>)";
 			} else {
 				$parsed_errors[$code] = "{$message} (<strong>Code {$code}</strong>)";
 			}
