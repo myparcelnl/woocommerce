@@ -7,12 +7,17 @@ if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) :
 
 class WooCommerce_MyParcel_Export {
 	public $order_id;
+	public $success;
+	public $errors;
 
 	/**
 	 * Construct.
 	 */
 			
 	public function __construct() {
+		$this->success = array();
+		$this->errors = array();
+
 		include( 'class-wcmp-rest.php' );
 		include( 'class-wcmp-api.php' );
 
@@ -51,6 +56,8 @@ class WooCommerce_MyParcel_Export {
 			wp_die( __( 'You do not have sufficient permissions to access this page.', 'woocommerce-myparcel' ) );
 		}
 
+		$return = array();
+
 		// Check the user privileges (maybe use order ids for filter?)
 		if( apply_filters( 'wc_myparcel_check_privs', !current_user_can( 'manage_woocommerce_orders' ) && !current_user_can( 'edit_shop_orders' ) ) ) {
 			$return['error'] = __( 'You do not have sufficient permissions to access this page.', 'woocommerce-myparcel' );
@@ -61,200 +68,225 @@ class WooCommerce_MyParcel_Export {
 
 		extract($_REQUEST); // $request, $order_ids, ...
 
-		$return = array();
-		$success = array();
-		$errors = array();
 		switch($request) {
 			case 'add_shipments':
 				if ( empty($order_ids) ) {
-					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
+					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
 					break;
 				}
-
-				$this->log("*** Creating shipments started ***");
-
-				foreach ($order_ids as $order_id) {
-					$shipments = $this->get_order_shipment_data( (array) $order_id );
-	
-					$this->log("Shipment data for order {$order_id}:\n".var_export($shipments, true));
-
-					// check colli amount
-					$extra_params = get_post_meta( $order_id, '_myparcel_shipment_options_extra', true );
-					$colli_amount = isset($extra_params['colli_amount']) ? $extra_params['colli_amount'] : 1;
-
-					for ($i=0; $i < intval($colli_amount); $i++) {
-						try {
-							$api = $this->init_api();
-							$response = $api->add_shipments( $shipments );
-							$this->log("API response (order {$order_id}):\n".var_export($response, true));
-							// echo '<pre>';var_dump($response);echo '</pre>';die();
-							if (isset($response['body']['data']['ids'])) {
-								$ids = array_shift($response['body']['data']['ids']);
-								$shipment_id = $ids['id'];
-								$success[$order_id] = $shipment_id;
-
-								$shipment = array (
-									'shipment_id' => $shipment_id,
-								);
-
-								// save shipment data in order meta
-								$this->save_shipment_data( $order_id, $shipment );
-
-								// status automation
-								if ( isset(WooCommerce_MyParcel()->general_settings['order_status_automation']) && !empty(WooCommerce_MyParcel()->general_settings['automatic_order_status']) ) {
-									$order = $this->get_order( $order_id );
-									$order->update_status( WooCommerce_MyParcel()->general_settings['automatic_order_status'], __( 'MyParcel shipment created:', 'woocommerce-myparcel' ) );
-								}
-
-							} else {
-								$errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcel' );
-							}
-						} catch (Exception $e) {
-							$errors[$order_id] = $e->getMessage();
-						}
-					}					
-				}
-				// echo '<pre>';var_dump($success);echo '</pre>';die();
-				if (!empty($success)) {
-					$return['success'] = sprintf(__( '%s shipments successfully exported to Myparcel', 'woocommerce-myparcel' ), count($success));
-				}
-			break;
+				$return = $this->add_shipments( $order_ids );
+				break;
 			case 'add_return':
 				if ( empty($myparcel_options) ) {
-					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
+					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
 					break;
 				}
-
-				$this->log("*** Creating return shipments started ***");
-
-				foreach ($myparcel_options as $order_id => $options) {
-
-					$return_shipment = $this->prepare_return_shipment_data( $order_id, $options );
-					$this->log("Return shipment data for order {$order_id}:\n".var_export($return_shipment, true));
-					// echo '<pre>';var_dump($return_shipment);echo '</pre>';die();
-
-					try {
-						$api = $this->init_api();
-						$response = $api->add_shipments( $return_shipment, 'return' );
-						$this->log("API response (order {$order_id}):\n".var_export($response, true));
-						// echo '<pre>';var_dump($response);echo '</pre>';die();
-						if (isset($response['body']['data']['ids'])) {
-							$ids = array_shift($response['body']['data']['ids']);
-							$shipment_id = $ids['id'];
-							$success[$order_id] = $shipment_id;
-
-							$shipment = array (
-								'shipment_id' => $shipment_id,
-							);
-
-							// save shipment data in order meta
-							$this->save_shipment_data( $order_id, $shipment );
-
-						} else {
-							$errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcel' );
-						}
-					} catch (Exception $e) {
-						$errors[$order_id] = $e->getMessage();
-					}
-					
-				}
-				// echo '<pre>';var_dump($success);echo '</pre>';die();
-
-			break;
+				$return = $this->add_return( $myparcel_options );
+				break;
 			case 'get_labels':
 				if ( empty($order_ids) ) {
-					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
+					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
 					break;
 				}
-
-				// check for JSON
-				if (is_string($order_ids) && strpos($order_ids, '[') !== false ) {
-					$order_ids = json_decode(stripslashes($order_ids));
-				}
-
-				// cast as array for single exports
-				$order_ids = (array) $order_ids;
-
-				$shipment_ids = $this->get_shipment_ids( $order_ids );
-
-				if ( empty($shipment_ids) ) {
-					$errors[] = __( 'The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcel' );
-					break;
-				}
-
-				$this->log("*** Label request started ***");
-				$this->log("Shipment ID's: ".implode(', ', $shipment_ids));
-
-				try {
-					$api = $this->init_api();
-					$params = array();
-					
-
-					if (isset($label_response_type) && $label_response_type == 'url') {
-						$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
-						$this->log("API response:\n".var_export($response, true));
-						// var_dump( $response );
-						if (isset($response['body']['data']['pdfs']['url'])) {
-							$url = untrailingslashit( $api->APIURL ) . $response['body']['data']['pdfs']['url'];
-							$return['url'] = $url;
-						} else {
-							$errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
-						}
-					} else {
-						$response = $api->get_shipment_labels( $shipment_ids, $params, 'pdf' );
-
-						if (isset($response['body'])) {
-							$this->log("PDF data received");
-							$pdf_data = $response['body'];
-							$output_mode = isset(WooCommerce_MyParcel()->general_settings['download_display'])?WooCommerce_MyParcel()->general_settings['download_display']:'';
-							if ( $output_mode == 'display' ) {
-								$this->stream_pdf( $pdf_data, $order_ids );
-							} else {
-								$this->download_pdf( $pdf_data, $order_ids );
-							}
-						} else {
-							$this->log("Unknown error, API response:\n".var_export($response, true));
-							$errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
-						}
-
-						// echo '<pre>';var_dump($response);echo '</pre>';die();
-					}
-				} catch (Exception $e) {
-					$errors[] = $e->getMessage();
-				}
-			break;
+				$label_response_type = isset($label_response_type) ? $label_response_type : NULL;
+				$return = $this->get_labels( $order_ids, $label_response_type );
+				break;
 			case 'modal_dialog':
 				if ( empty($order_ids) ) {
 					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
 					break;
 				}
-
-				// check for JSON
-				if (is_string($order_ids) && strpos($order_ids, '[') !== false ) {
-					$order_ids = json_decode(stripslashes($order_ids));
-				}
-
-				// cast as array for single exports
-				$order_ids = (array) $order_ids;
-
-				include('views/wcmp-bulk-options-form.php');
-				die();
+				$this->modal_dialog( $order_ids, $dialog );
 				break;
 		}
 
 		// display errors directly if PDF requested or modal
-		if ( in_array($request, array('get_labels','modal_dialog')) && !empty($errors) ) {
-			echo $this->parse_errors( $errors );
+		if ( in_array($request, array('get_labels','modal_dialog')) && !empty($this->errors) ) {
+			echo $this->parse_errors( $this->errors );
 			die();
 		}		
 
 		// format errors for html output
-		if (!empty($errors)) {
-			$return['error'] = $this->parse_errors( $errors );
+		if (!empty($this->errors)) {
+			$return['error'] = $this->parse_errors( $this->errors );
 		}
 
 		// return JSON response
 		echo json_encode( $return );
+		die();
+	}
+
+	public function add_shipments( $order_ids ) {
+		$return = array();
+
+		$this->log("*** Creating shipments started ***");
+
+		foreach ($order_ids as $order_id) {
+			$shipments = $this->get_order_shipment_data( (array) $order_id );
+
+			$this->log("Shipment data for order {$order_id}:\n".var_export($shipments, true));
+
+			// check colli amount
+			$extra_params = get_post_meta( $order_id, '_myparcel_shipment_options_extra', true );
+			$colli_amount = isset($extra_params['colli_amount']) ? $extra_params['colli_amount'] : 1;
+
+			for ($i=0; $i < intval($colli_amount); $i++) {
+				try {
+					$api = $this->init_api();
+					$response = $api->add_shipments( $shipments );
+					$this->log("API response (order {$order_id}):\n".var_export($response, true));
+					// echo '<pre>';var_dump($response);echo '</pre>';die();
+					if (isset($response['body']['data']['ids'])) {
+						$ids = array_shift($response['body']['data']['ids']);
+						$shipment_id = $ids['id'];
+						$this->success[$order_id] = $shipment_id;
+
+						$shipment = array (
+							'shipment_id' => $shipment_id,
+						);
+
+						// save shipment data in order meta
+						$this->save_shipment_data( $order_id, $shipment );
+
+						// process directly setting
+						if ( isset(WooCommerce_MyParcel()->general_settings['process_directly']) ) {
+							$this->get_labels( $order_ids, 'url' );
+						}
+
+						// status automation
+						if ( isset(WooCommerce_MyParcel()->general_settings['order_status_automation']) && !empty(WooCommerce_MyParcel()->general_settings['automatic_order_status']) ) {
+							$order = $this->get_order( $order_id );
+							$order->update_status( WooCommerce_MyParcel()->general_settings['automatic_order_status'], __( 'MyParcel shipment created:', 'woocommerce-myparcel' ) );
+						}
+					} else {
+						$this->errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcel' );
+					}
+				} catch (Exception $e) {
+					$this->errors[$order_id] = $e->getMessage();
+				}
+			}					
+		}
+		// echo '<pre>';var_dump($this->success);echo '</pre>';die();
+		if (!empty($this->success)) {
+			$return['success'] = sprintf(__( '%s shipments successfully exported to Myparcel', 'woocommerce-myparcel' ), count($this->success));
+		}
+
+		return $return;
+	}
+
+	public function add_return( $myparcel_options ) {
+		$return = array();
+
+		$this->log("*** Creating return shipments started ***");
+
+		foreach ($myparcel_options as $order_id => $options) {
+
+			$return_shipment = $this->prepare_return_shipment_data( $order_id, $options );
+			$this->log("Return shipment data for order {$order_id}:\n".var_export($return_shipment, true));
+			// echo '<pre>';var_dump($return_shipment);echo '</pre>';die();
+
+			try {
+				$api = $this->init_api();
+				$response = $api->add_shipments( $return_shipment, 'return' );
+				$this->log("API response (order {$order_id}):\n".var_export($response, true));
+				// echo '<pre>';var_dump($response);echo '</pre>';die();
+				if (isset($response['body']['data']['ids'])) {
+					$ids = array_shift($response['body']['data']['ids']);
+					$shipment_id = $ids['id'];
+					$this->success[$order_id] = $shipment_id;
+
+					$shipment = array (
+						'shipment_id' => $shipment_id,
+					);
+
+					// save shipment data in order meta
+					$this->save_shipment_data( $order_id, $shipment );
+
+				} else {
+					$this->errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcel' );
+				}
+			} catch (Exception $e) {
+				$this->errors[$order_id] = $e->getMessage();
+			}
+			
+		}
+		// echo '<pre>';var_dump($success);echo '</pre>';die();
+
+		return $return;
+	}
+
+	public function get_labels( $order_ids, $label_response_type = NULL ) {
+		$return = array();
+
+		// check for JSON
+		if (is_string($order_ids) && strpos($order_ids, '[') !== false ) {
+			$order_ids = json_decode(stripslashes($order_ids));
+		}
+
+		// cast as array for single exports
+		$order_ids = (array) $order_ids;
+
+		$shipment_ids = $this->get_shipment_ids( $order_ids );
+
+		if ( empty($shipment_ids) ) {
+			$this->errors[] = __( 'The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcel' );
+			return $return;
+		}
+
+		$this->log("*** Label request started ***");
+		$this->log("Shipment ID's: ".implode(', ', $shipment_ids));
+
+		try {
+			$api = $this->init_api();
+			$params = array();
+			
+
+			if (isset($label_response_type) && $label_response_type == 'url') {
+				$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
+				$this->log("API response:\n".var_export($response, true));
+				// var_dump( $response );
+				if (isset($response['body']['data']['pdfs']['url'])) {
+					$url = untrailingslashit( $api->APIURL ) . $response['body']['data']['pdfs']['url'];
+					$return['url'] = $url;
+				} else {
+					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
+				}
+			} else {
+				$response = $api->get_shipment_labels( $shipment_ids, $params, 'pdf' );
+
+				if (isset($response['body'])) {
+					$this->log("PDF data received");
+					$pdf_data = $response['body'];
+					$output_mode = isset(WooCommerce_MyParcel()->general_settings['download_display'])?WooCommerce_MyParcel()->general_settings['download_display']:'';
+					if ( $output_mode == 'display' ) {
+						$this->stream_pdf( $pdf_data, $order_ids );
+					} else {
+						$this->download_pdf( $pdf_data, $order_ids );
+					}
+				} else {
+					$this->log("Unknown error, API response:\n".var_export($response, true));
+					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
+				}
+
+				// echo '<pre>';var_dump($response);echo '</pre>';die();
+			}
+		} catch (Exception $e) {
+			$this->errors[] = $e->getMessage();
+		}
+
+		return $return;
+	}
+
+	public function modal_dialog( $order_ids, $dialog ) {
+		// check for JSON
+		if (is_string($order_ids) && strpos($order_ids, '[') !== false ) {
+			$order_ids = json_decode(stripslashes($order_ids));
+		}
+
+		// cast as array for single exports
+		$order_ids = (array) $order_ids;
+
+		include('views/wcmp-bulk-options-form.php');
 		die();
 	}
 
@@ -612,6 +644,7 @@ class WooCommerce_MyParcel_Export {
 		header('Content-type: application/pdf');
 		header('Content-Disposition: inline; filename="'.$this->get_filename( $order_ids ).'"');
 		echo $pdf_data;
+		die();
 	}
 	public function download_pdf ( $pdf_data, $order_ids ) {
 		header('Content-Description: File Transfer');
@@ -623,6 +656,7 @@ class WooCommerce_MyParcel_Export {
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 		header('Pragma: public');
 		echo $pdf_data;
+		die();
 	}
 
 	public function get_filename ( $order_ids ) {
