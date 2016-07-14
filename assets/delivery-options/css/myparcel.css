@@ -134,8 +134,12 @@ input[name=mypa-delivery-type] ~ div.mypa-content-lg{
   max-height: 0px;
 }
 
+input:disabled ~ div.mypa-switch-container label.mypa-onoffswitch-label span.mypa-onoffswitch-switch{
+  background: #c7c7c7;
+}
+
 input[name=mypa-delivery-type]:checked ~ div.mypa-content-lg{
-  max-height: 149px;
+  max-height: 240px;
 }
 
 .mypa-checkmark-stem {
@@ -320,6 +324,8 @@ input:checked ~ label.mypa-row-title span.mypa-highlight{
 }
 
 .mypa-price {
+  position: relative;
+  top: 5px;
   display: inline-block;
   padding: 2px 5px;
   background: #C7C7C7;
@@ -330,8 +336,20 @@ input:checked ~ label.mypa-row-title span.mypa-highlight{
   font-size: 17px;
 }
 
+.mypa-combination-price{
+  padding: 2px 0 2px 0;
+}
+
+.mypa-combination-price.mypa-combination-price-active{
+}
+
+.mypa-combination-price > .mypa-price{
+  margin: 21px 30px 0 0;
+}
+
 input:checked ~ .mypa-price,
-input:checked ~ span span.mypa-price{
+input:checked ~ span span.mypa-price,
+.mypa-price-active{
   background: #ff8c00
 }
 
@@ -408,4 +426,29 @@ input:checked ~ span span.mypa-price{
 
 .mypa-opening-hours-list{
   display: inline-block;
+}
+
+.mypa-hidden{
+  display: none;
+}
+
+.mypa-overlay{
+  position:absolute;
+  height:100%;
+  width:100%;
+  z-index:100;
+  background: rgba(226, 226, 226, 0.75);
+}
+
+#mypa-no-options{
+  color: white;
+  position: relative;
+  z-index: 12;
+  background: #01bbc5;
+  padding: 20px 20px;
+  margin: 0 auto;
+  top: 13%;
+  width: 217px;
+  display: block;
+  font-size: 20px;
 }
