@@ -97,7 +97,7 @@ class WooCommerce_MyParcel_Frontend {
 			}
 
 			if (!empty(WooCommerce_MyParcel()->checkout_settings[$option.'_fee'])) {
-				$prices[$option] = WooCommerce_MyParcel()->checkout_settings[$option.'_fee'];
+				$prices[$option] = '+ &#8364;'.WooCommerce_MyParcel()->checkout_settings[$option.'_fee'];
 			}
 		}
 
