@@ -23,6 +23,9 @@ class WooCommerce_MyParcel_Frontend {
 		}
 
 		// Delivery options
+		// template
+		add_action( 'wp_head', array( $this, 'delivery_options_template' ) );
+		// actual output
 		// if (isset(WooCommerce_MyParcel()->checkout_settings['delivery_options'])) {
 			add_action( apply_filters( 'wc_myparcel_delivery_options_location', 'woocommerce_after_checkout_billing_form' ), array( $this, 'output_delivery_options' ), 10, 1 );
 		// }
@@ -66,6 +69,10 @@ class WooCommerce_MyParcel_Frontend {
 	/**
 	 * Add delivery options to checkout
 	 */
+	public function delivery_options_template() {
+		include('views/wcmp-delivery-options.php');
+	}
+
 	public function output_delivery_options() {
 		// get api url
 		$ajax_url = admin_url( 'admin-ajax.php' );
@@ -106,7 +113,7 @@ class WooCommerce_MyParcel_Frontend {
 		foreach ($delivery_types as $key => $delivery_type) {
 			// JS API correction
 			if ($delivery_type == 'standard') {
-				$delivery_type = 'default';
+				continue;
 			}
 			if (!isset(WooCommerce_MyParcel()->checkout_settings[$delivery_type.'_enabled'])) {
 				$exclude_delivery_types[] = $key;
@@ -122,6 +129,7 @@ class WooCommerce_MyParcel_Frontend {
 			'price'					=> $prices,
 			'dropoff_delay'			=> isset(WooCommerce_MyParcel()->checkout_settings['dropoff_delay']) ? WooCommerce_MyParcel()->checkout_settings['dropoff_delay'] : '',
 			'deliverydays_window'	=> isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) ? WooCommerce_MyParcel()->checkout_settings['deliverydays_window'] : '',
+			'dropoff_days'			=> isset(WooCommerce_MyParcel()->checkout_settings['dropoff_days']) ? implode(';', WooCommerce_MyParcel()->checkout_settings['dropoff_days'] ): '',
 		);
 		// remove empty options
 		$settings = array_filter($settings);
@@ -129,7 +137,14 @@ class WooCommerce_MyParcel_Frontend {
 		// encode settings for JS object
 		$settings = json_encode($settings);
 
-		include('views/wcmp-delivery-options.php');
+		?>
+		<script type="text/javascript">
+		window.mypa = {}
+		window.mypa.settings = <?php echo $settings; ?>;
+		</script>
+		<myparcel id="myparcel"></myparcel>
+		<input style="display: none" id="mypa-input" name="mypa-input">
+		<?php
 	}
 
 	/**
@@ -178,6 +193,12 @@ class WooCommerce_MyParcel_Frontend {
 		} else {
 			// checkout finalization
 			$post_data = $_POST;
+		}
+
+		if (!empty($post_data['mypa-input'])) {
+			// $_POST['mypa-signed']
+			// echo '<pre>';var_dump( $post_data['mypa-signed'] );echo '</pre>';
+			// echo '<pre>';var_dump(json_decode( stripslashes( $post_data['mypa-input']), true ));echo '</pre>';die();
 		}
 
 		// Fee for "signed" option

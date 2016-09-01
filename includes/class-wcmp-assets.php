@@ -17,33 +17,32 @@ class WooCommerce_MyParcel_Assets {
 	 */
 	public function frontend_scripts_styles ( $hook ) {
 		if ( is_checkout() /* && isset(WooCommerce_MyParcel()->checkout_settings['delivery_options']) */ ) {
+			// MyParcel bundled scripts
 			wp_enqueue_script(
-				'wc-myparcel-frontend',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-frontend.js',
+				'wc-myparcel-delivery-options-moment',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/moment.min.js',
 				array( 'jquery' ),
 				WC_MYPARCEL_VERSION
 			);
-
-			// MyParcel bundled scripts
-			wp_enqueue_style(
-				'wc-myparcel-delivery-options',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/css/myparcel.css',
+			wp_enqueue_script(
+				'wc-myparcel-delivery-options-webcomponents',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/webcomponents.min.js',
 				array(),
 				WC_MYPARCEL_VERSION
 			);
 			wp_enqueue_script(
 				'wc-myparcel-delivery-options',
 				WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/myparcel.js',
-				array( 'jquery' ),
-				WC_MYPARCEL_VERSION
-			);
-			wp_enqueue_script(
-				'wc-myparcel-delivery-options-moment',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/moment.js',
-				array( 'jquery' ),
+				array( 'jquery','wc-myparcel-delivery-options-webcomponents','wc-myparcel-delivery-options-moment' ),
 				WC_MYPARCEL_VERSION
 			);
 
+			wp_enqueue_script(
+				'wc-myparcel-frontend',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-frontend.js',
+				array( 'jquery','wc-myparcel-delivery-options' ),
+				WC_MYPARCEL_VERSION
+			);
 
 		}
 		/* for reference
