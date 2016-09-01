@@ -440,8 +440,8 @@ class WooCommerce_MyParcel_Settings {
 				'options' 		=> array(
 					'49'		=> __( 'Insured up to &euro; 50 (+ &euro; 0.50)' , 'woocommerce-myparcel' ),
 					'249'		=> __( 'Insured up to  &euro; 250 (+ &euro; 1.00)' , 'woocommerce-myparcel' ),
-					'499'		=> __( 'Insured up to  &euro; 500 (+ &euro; 1.50)' , 'woocommerce-myparcel' ),
-					''			=> __( '> &euro; 500 insured (+ &euro; 1.50)' , 'woocommerce-myparcel' ),
+					'499'		=> __( 'Insured up to  &euro; 500 (+ &euro; 1.65)' , 'woocommerce-myparcel' ),
+					''			=> __( '> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)' , 'woocommerce-myparcel' ),
 				),
 			)
 		);

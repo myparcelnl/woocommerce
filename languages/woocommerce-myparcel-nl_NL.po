@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2016-07-14 10:49+0200\n"
-"PO-Revision-Date: 2016-07-14 10:49+0200\n"
+"POT-Creation-Date: 2016-09-01 16:46+0200\n"
+"PO-Revision-Date: 2016-09-01 16:47+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -50,7 +50,7 @@ msgstr "Maak & Print retouretiket"
 msgid "MyParcel"
 msgstr "MyParcel"
 
-#: includes/class-wcmp-admin.php:269 includes/class-wcmp-frontend.php:59
+#: includes/class-wcmp-admin.php:269 includes/class-wcmp-frontend.php:62
 msgid "Track&Trace"
 msgstr "Track&Trace"
 
@@ -193,39 +193,39 @@ msgstr "inactief - onbekend"
 msgid "Unknown status"
 msgstr "Onbekende status"
 
-#: includes/class-wcmp-frontend.php:45
+#: includes/class-wcmp-frontend.php:48
 msgid "You can track your order with the following PostNL track&trace code:"
 msgstr ""
 "U kunt uw bestelling met de volgende PostNL track & trace code te volgen:"
 
-#: includes/class-wcmp-frontend.php:187 includes/class-wcmp-settings.php:378
+#: includes/class-wcmp-frontend.php:208 includes/class-wcmp-settings.php:378
 #: includes/class-wcmp-settings.php:543
 #: includes/views/wcmp-order-return-shipment-options.php:40
 #: includes/views/wcmp-order-shipment-options.php:65
 msgid "Signature on delivery"
 msgstr "Handtekening voor ontvangst"
 
-#: includes/class-wcmp-frontend.php:197
+#: includes/class-wcmp-frontend.php:218
 msgid "Home address only delivery"
 msgstr "Alleen afleveren bij ontvanger"
 
-#: includes/class-wcmp-frontend.php:212
+#: includes/class-wcmp-frontend.php:233
 msgid "PostNL Pickup"
 msgstr "Afhalen bij PostNL"
 
-#: includes/class-wcmp-frontend.php:218
+#: includes/class-wcmp-frontend.php:239
 msgid "PostNL Pickup Express"
 msgstr "Extra vroeg afhalen bij PostNL"
 
-#: includes/class-wcmp-frontend.php:240 includes/class-wcmp-settings.php:567
+#: includes/class-wcmp-frontend.php:261 includes/class-wcmp-settings.php:567
 msgid "Morning delivery"
 msgstr "Ochtendlevering"
 
-#: includes/class-wcmp-frontend.php:246
+#: includes/class-wcmp-frontend.php:267
 msgid "Standard delivery"
 msgstr "Standaard levering"
 
-#: includes/class-wcmp-frontend.php:252 includes/class-wcmp-settings.php:555
+#: includes/class-wcmp-frontend.php:273 includes/class-wcmp-settings.php:555
 msgid "Evening delivery"
 msgstr "Avondlevering"
 
@@ -543,12 +543,12 @@ msgid "Insured up to  &euro; 250 (+ &euro; 1.00)"
 msgstr "Verzekerd tot &euro; 250 (+ &euro; 1.00)"
 
 #: includes/class-wcmp-settings.php:443
-msgid "Insured up to  &euro; 500 (+ &euro; 1.50)"
-msgstr "Verzekerd tot &euro; 500 (+ &euro; 1.50)"
+msgid "Insured up to  &euro; 500 (+ &euro; 1.65)"
+msgstr "Verzekerd tot &euro; 500 (+ &euro; 1.65)"
 
 #: includes/class-wcmp-settings.php:444
-msgid "> &euro; 500 insured (+ &euro; 1.50)"
-msgstr "> &euro; 500 verzekerd (+ &euro; 1.50)"
+msgid "> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)"
+msgstr "> &euro; 500 verzekerd (+ &euro; 1.65 / &euro; 500)"
 
 #: includes/class-wcmp-settings.php:451
 msgid "Insured amount (in euro)"
@@ -761,6 +761,12 @@ msgstr ""
 #. Author URI of the plugin/theme
 msgid "http://www.wpovernight.com"
 msgstr ""
+
+#~ msgid "Insured up to  &euro; 500 (+ &euro; 1.50)"
+#~ msgstr "Verzekerd tot &euro; 500 (+ &euro; 1.50)"
+
+#~ msgid "> &euro; 500 insured (+ &euro; 1.50)"
+#~ msgstr "> &euro; 500 verzekerd (+ &euro; 1.50)"
 
 #~ msgid "Home address only + signature on delivery"
 #~ msgstr "Alléén huisadres + Handtekening voor ontvangst"
