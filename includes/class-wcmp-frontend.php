@@ -144,6 +144,8 @@ class WooCommerce_MyParcel_Frontend {
 		</script>
 		<myparcel id="myparcel"></myparcel>
 		<input style="display: none" id="mypa-input" name="mypa-input">
+		<input style="display: none" type="checkbox" name='mypa-signed' id="mypa-signed">
+		<input style="display: none" type="checkbox" name='mypa-recipient-only' id="mypa-recipient-only">
 		<?php
 	}
 
