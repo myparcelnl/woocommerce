@@ -6,6 +6,16 @@ jQuery( function( $ ) {
 	// make delivery options update at least once (but don't hammer)
 	// myparcel_update_timer = setTimeout( update_myparcel_delivery_options_action, '500' );
 
+	// hide checkout options if not NL
+	$( '#billing_country, #shipping_country' ).change(function() {
+		country = get_shipping_country();
+		if (country != 'NL') {
+			$( 'myparcel' ).hide();
+		} else {
+			$( 'myparcel' ).show();
+		}
+	});
+
 	// update myparcel settings object with address when shipping or billing address changes
 	
 	// billing changes
@@ -57,6 +67,16 @@ jQuery( function( $ ) {
 	// 	var pickup_location = $( this ).val();
 	// });
 
+	function get_shipping_country() {
+		if ( $( '#ship-to-different-address-checkbox' ).is(':checked') ) {
+			country = $( '#shipping_country' ).val();
+		} else {
+			country = $( '#billing_country' ).val();
+		}
+
+		return country;
+	}
+
 	function update_myparcel_delivery_options() {
 		// Small timeout to prevent multiple requests when several fields update at the same time
 		clearTimeout( myparcel_update_timer );
@@ -64,7 +84,8 @@ jQuery( function( $ ) {
 	}
 
 	function update_myparcel_delivery_options_action() {
-		if ( myparcel_checkout_updating !== true ) {
+		country = get_shipping_country();
+		if ( myparcel_checkout_updating !== true && country == 'NL') {
 			mypa.fn.updatePage();
 		}
 	}
