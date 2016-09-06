@@ -81,7 +81,14 @@
 		unset($option_rows['[only_recipient]']);
 		unset($option_rows['[signature]']);
 		unset($option_rows['[return]']);
-		$option_rows['[insured]']['value'] = $shipment_options['insured'] = 1;
+		$shipment_options['insured'] = 1;
+		$option_rows['[insured]'] = array(
+			'label'		=> __( 'Standard insurance up to €500 + signature on delivery', 'woocommerce-myparcel' ),
+			'value'		=> $shipment_options['insured'],
+			'class'		=> 'insured',
+			'hidden'	=> 'yes',
+		);
+
 		$shipment_options['insurance']['amount'] = 499;
 	}
 
@@ -94,7 +101,8 @@
 			$name = "myparcel_options[{$order_id}]{$name}";
 			$class = isset($option_row['class'])?$option_row['class']:'';
 			$checked = isset($option_row['checked'])? $option_row['checked'] : checked( "1", $option_row['value'], false );
-			printf('<input type="checkbox" name="%s" value="1" class="%s" %s>', $name, $class, $checked );
+			$type = isset($option_row['hidden']) ? 'hidden' : 'checkbox';
+			printf('<input type="%s" name="%s" value="1" class="%s" %s>', $type, $name, $class, $checked );
 			echo $option_row['label'];
 			?>
 		</td>
@@ -109,44 +117,45 @@
 	<?php endforeach ?>
 </table>
 <table class="wcmyparcel_settings_table">
-	<tr>
-		<td><?php _e( 'Insurance', 'woocommerce-myparcel' ) ?></td>
-		<td>
-			<?php
-			if (isset($recipient['cc']) && $recipient['cc'] == 'NL') {
+	<?php
+	$insured_amount = isset($shipment_options['insurance']['amount']) ? $shipment_options['insurance']['amount'] : '';
+	$name = "myparcel_options[{$order_id}][insured_amount]";
+	if (isset($recipient['cc']) && $recipient['cc'] == 'NL') {
+		?>
+		<tr>
+			<td><?php _e( 'Insurance', 'woocommerce-myparcel' ) ?></td>
+			<td>
+				<?php
 				$insured_amounts = array(
 					'49'		=> __( 'Insured up to &euro; 50' , 'woocommerce-myparcel' ).' (+ &euro; 0.50)',
 					'249'		=> __( 'Insured up to  &euro; 250' , 'woocommerce-myparcel' ).' (+ &euro; 1.00)',
 					'499'		=> __( 'Insured up to  &euro; 500' , 'woocommerce-myparcel' ).' (+ &euro; 1.65)',
 					''			=> __( '> &euro; 500 insured' , 'woocommerce-myparcel' ).' (+ &euro; 1.65 / &euro; 500)',
 				);
-			} else {
-				$insured_amounts = array(
-					'499'		=> __( 'Insured up to  &euro; 500' , 'woocommerce-myparcel' ),
-				);
-			}
-			$insured_amount = isset($shipment_options['insurance']['amount']) ? $shipment_options['insurance']['amount'] : '';
-
-			$name = "myparcel_options[{$order_id}][insured_amount]";
-			printf( '<select name="%s" class="insured_amount">', $name );
-			foreach ( $insured_amounts as $key => $label ) {
-				printf( '<option value="%s"%s>%s</option>', $key, selected( $insured_amount, $key, false ), $label );
-			}
-			echo '</select>';
-			?>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<?php _e( 'Insured amount', 'woocommerce-myparcel' ) ?>
-		</td>
-		<td>
-			<?php
-			$name = "myparcel_options[{$order_id}][insured_amount]";
-			printf('<input type="text" name="%s" value="%s" style="width:100%%" class="insured_amount">', $name, $insured_amount);
-			?>
-		</td>
-	</tr>
+				printf( '<select name="%s" class="insured_amount">', $name );
+				foreach ( $insured_amounts as $key => $label ) {
+					printf( '<option value="%s"%s>%s</option>', $key, selected( $insured_amount, $key, false ), $label );
+				}
+				echo '</select>';
+				?>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<?php _e( 'Insured amount', 'woocommerce-myparcel' ) ?>
+			</td>
+			<td>
+				<?php
+				$name = "myparcel_options[{$order_id}][insured_amount]";
+				printf('<input type="text" name="%s" value="%s" style="width:100%%" class="insured_amount">', $name, $insured_amount);
+				?>
+			</td>
+		</tr>
+		<?php
+	} else {
+		printf('<tr><td colspan="2" style="display:none;"><input type="hidden" name="%s" value="%s"></td></tr>', $name, $insured_amount );
+	}
+	?>
 	<tr>
 		<td><?php _e( 'Custom ID (top left on label)', 'woocommerce-myparcel' ) ?></td>
 		<td>
