@@ -23,6 +23,9 @@ class WooCommerce_MyParcel_Admin {
 	}
 
 	public function order_list_shipment_options( $order, $hide = true ) {
+		if ( !WooCommerce_MyParcel()->export->is_eu_country( $order->shipping_country ) ) {
+			return;
+		}
 		$order_id = $order->id;
 		$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );
 		$myparcel_options_extra = $order->myparcel_shipment_options_extra;
@@ -65,6 +68,9 @@ class WooCommerce_MyParcel_Admin {
 
 
 	public function order_list_return_shipment_options( $order, $hide = true ) {
+		if ( !WooCommerce_MyParcel()->export->is_eu_country( $order->shipping_country ) ) {
+			return;
+		}
 		$order_id = $order->id;
 		$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );
 		$myparcel_options_extra = $order->myparcel_shipment_options_extra;
@@ -240,6 +246,10 @@ class WooCommerce_MyParcel_Admin {
 			$order = wc_get_order( $post_id );
 		}
 
+		if ( !WooCommerce_MyParcel()->export->is_eu_country( $order->shipping_country ) ) {
+			return;
+		}
+
 		// show buttons
 		echo '<div class="single_order_actions">';
 		$this->admin_order_actions( $order, false );
@@ -286,6 +296,10 @@ class WooCommerce_MyParcel_Admin {
 	}
 
 	public function single_order_shipment_options( $order ) {
+		if ( !WooCommerce_MyParcel()->export->is_eu_country( $order->shipping_country ) ) {
+			return;
+		}
+
 		echo '<strong>' . __( 'MyParcel shipment:', 'woocommerce-myparcel' ) . '</strong>';
 		$this->order_list_shipment_options( $order, false );
 	}

@@ -74,6 +74,7 @@ class WooCommerce_MyParcel_Export {
 					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
 					break;
 				}
+				$order_ids = $this->filter_eu_orders( $order_ids );
 				$return = $this->add_shipments( $order_ids );
 				break;
 			case 'add_return':
@@ -88,6 +89,7 @@ class WooCommerce_MyParcel_Export {
 					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
 					break;
 				}
+				$order_ids = $this->filter_eu_orders( $order_ids );
 				$label_response_type = isset($label_response_type) ? $label_response_type : NULL;
 				$return = $this->get_labels( $order_ids, $label_response_type );
 				break;
@@ -96,6 +98,7 @@ class WooCommerce_MyParcel_Export {
 					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
 					break;
 				}
+				$order_ids = $this->filter_eu_orders( $order_ids );
 				$this->modal_dialog( $order_ids, $dialog );
 				break;
 		}
@@ -827,6 +830,17 @@ class WooCommerce_MyParcel_Export {
 			return false;
 		}
 		*/
+	}
+
+	public function filter_eu_orders($order_ids) {
+		foreach ($order_ids as $key => $order_id) {
+			$shipping_country = get_post_meta( $order_id, '_shipping_country', true );
+			// skip non-eu orders
+			if ( !$this->is_eu_country( $shipping_country ) ) {
+				unset($order_ids[$key]);
+			}
+		}
+		return $order_ids;
 	}
 
 	public function is_eu_country($country_code) {
