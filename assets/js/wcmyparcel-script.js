@@ -165,8 +165,7 @@ jQuery( function( $ ) {
 					myparcel_print( order_ids );
 					break;
 				case 'export_print':
-					myparcel_export( order_ids );
-					myparcel_print( order_ids );
+					myparcel_export( order_ids, 'yes' ); /* 'yes' inits print mode and disables refresh */
 					break;
 			}
 
@@ -221,25 +220,38 @@ jQuery( function( $ ) {
 	}	
 
 	// export orders to MyParcel via AJAX
-	function myparcel_export( order_ids ) {
+	function myparcel_export( order_ids, print ) {
+		if (typeof print === 'undefined') { print = 'no'; }
 		// console.log('exporting order to myparcel...');
 		var data = {
 			action:           'wc_myparcel',
 			request:          'add_shipments',
 			order_ids:        order_ids,
+			print:            print,
 			security:         wc_myparcel.nonce,
 		};
 
 		$.post( wc_myparcel.ajax_url, data, function( response ) {
 			response = $.parseJSON(response);
-			// console.log(response);
-			if ( response !== null && typeof response === 'object' && 'error' in response) {
-				myparcel_admin_notice( response.error, 'error' );
+
+			if (print == 'no') {
+				// refresh page, admin notices are stored in options and will be displayed automatically
+				location.reload();
+				return;
+			} else {
+				// when printing, output notices directly so that we can init print in the same run
+				if ( response !== null && typeof response === 'object' && 'error' in response) {
+					myparcel_admin_notice( response.error, 'error' );
+				}
+
+				if ( response !== null && typeof response === 'object' && 'success' in response) {
+					myparcel_admin_notice( response.success, 'success' );
+				}
+
+				// load PDF
+				myparcel_print( order_ids );
 			}
 
-			if ( response !== null && typeof response === 'object' && 'success' in response) {
-				myparcel_admin_notice( response.success, 'updated' );
-			}
 			return;
 		});
 
@@ -321,7 +333,7 @@ jQuery( function( $ ) {
 
 	function myparcel_admin_notice( message, type ) {
 		$main_header = $( '#wpbody-content > .wrap > h1:first' );
-		var notice = '<div class="myparcel_notice '+type+'"><p>'+message+'</p></div>';
+		var notice = '<div class="myparcel_notice notice notice-'+type+'"><p>'+message+'</p></div>';
 		$main_header.after( notice );
 		$('html, body').animate({ scrollTop: 0 }, 'slow');
 	}

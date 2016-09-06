@@ -28,17 +28,24 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function admin_notices () {
-		if (!isset($_GET['myparcel'])) {
-			return;
+		$action_return = get_option( 'wcmyparcel_admin_notices' );
+		if (!empty($action_return)) {
+			foreach ($action_return as $type => $message) {
+				printf('<div class="myparcel_notice notice notice-%s"><p>%s</p></div>', $type, $message);
+			}
+			// destroy after reading
+			delete_option( 'wcmyparcel_admin_notices' );
 		}
 
-		switch ($_GET['myparcel']) {
-			case 'no_consignments':
-				$message = __('You have to export the orders to MyParcel before you can print the labels!', 'woocommerce-myparcel');
-				printf('<div class="error"><p>%s</p></div>', $message);
-				break;
-			default:
-				break;
+		if (isset($_GET['myparcel'])) {
+			switch ($_GET['myparcel']) {
+				case 'no_consignments':
+					$message = __('You have to export the orders to MyParcel before you can print the labels!', 'woocommerce-myparcel');
+					printf('<div class="myparcel_notice notice notice-error"><p>%s</p></div>', $message);
+					break;
+				default:
+					break;
+			}
 		}
 	}
 
@@ -67,6 +74,8 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		extract($_REQUEST); // $request, $order_ids, ...
+		// make sure $order_ids is a proper array
+		$order_ids = !empty($order_ids) ? $this->sanitize_order_ids($order_ids) : array();
 
 		switch($request) {
 			case 'add_shipments':
@@ -75,6 +84,8 @@ class WooCommerce_MyParcel_Export {
 					break;
 				}
 				$order_ids = $this->filter_eu_orders( $order_ids );
+				// if we're going to print directly, we need to process the orders first, regardless of the settings
+				$process = (isset($print) && $print == 'yes') ? true : false;
 				$return = $this->add_shipments( $order_ids );
 				break;
 			case 'add_return':
@@ -114,12 +125,30 @@ class WooCommerce_MyParcel_Export {
 			$return['error'] = $this->parse_errors( $this->errors );
 		}
 
+		// When adding shipments, store $return for use in admin_notice
+		// This way we can refresh the page (JS) to show all new buttons
+		if ($request == 'add_shipments' && !empty($print) && $print == 'no') {
+			update_option( 'wcmyparcel_admin_notices', $return );
+		}
+
 		// return JSON response
 		echo json_encode( $return );
 		die();
 	}
 
-	public function add_shipments( $order_ids ) {
+	public function sanitize_order_ids($order_ids) {
+		// check for JSON
+		if (is_string($order_ids) && strpos($order_ids, '[') !== false ) {
+			$order_ids = json_decode(stripslashes($order_ids));
+		}
+
+		// cast as array for single exports
+		$order_ids = (array) $order_ids;
+
+		return $order_ids;
+	}
+
+	public function add_shipments( $order_ids, $process = false ) {
 		$return = array();
 
 		$this->log("*** Creating shipments started ***");
@@ -152,7 +181,7 @@ class WooCommerce_MyParcel_Export {
 						$this->save_shipment_data( $order_id, $shipment );
 
 						// process directly setting
-						if ( isset(WooCommerce_MyParcel()->general_settings['process_directly']) ) {
+						if ( isset(WooCommerce_MyParcel()->general_settings['process_directly']) || $process === true ) {
 							$order = $this->get_order( $order_id );
 							$this->get_labels( $order_id, 'url' );
 							$this->get_shipment_data( $shipment_id, $order );
@@ -223,17 +252,10 @@ class WooCommerce_MyParcel_Export {
 	public function get_labels( $order_ids, $label_response_type = NULL ) {
 		$return = array();
 
-		// check for JSON
-		if (is_string($order_ids) && strpos($order_ids, '[') !== false ) {
-			$order_ids = json_decode(stripslashes($order_ids));
-		}
-
-		// cast as array for single exports
-		$order_ids = (array) $order_ids;
-
 		$shipment_ids = $this->get_shipment_ids( $order_ids );
 
 		if ( empty($shipment_ids) ) {
+			$this->log("*** Failed label request (not exported yet) ***");
 			$this->errors[] = __( 'The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcel' );
 			return $return;
 		}
@@ -832,7 +854,7 @@ class WooCommerce_MyParcel_Export {
 		*/
 	}
 
-	public function filter_eu_orders($order_ids) {
+	public function filter_eu_orders( $order_ids ) {
 		foreach ($order_ids as $key => $order_id) {
 			$shipping_country = get_post_meta( $order_id, '_shipping_country', true );
 			// skip non-eu orders
