@@ -13,6 +13,15 @@ jQuery( function( $ ) {
 		$( this ).next('.wcmp_shipment_options_form').slideToggle();
 	});
 
+	// hide options form when click outside
+	$(document).click(function(event) {
+		if(!$(event.target).closest('.wcmp_shipment_options_form').length) {
+			if($('.wcmp_shipment_options_form').is(":visible")) {
+				$('.wcmp_shipment_options_form').slideUp();
+			}
+		}
+	})
+
 	// hide automatic order status if automation not enabled
 	$('.wcmp_shipment_options input#order_status_automation').change(function () {
 		var order_status_select = $( '.wcmp_shipment_options select.automatic_order_status');
