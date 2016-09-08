@@ -16,7 +16,7 @@ jQuery( function( $ ) {
 	// hide options form when click outside
 	$(document).click(function(event) {
 		if(!$(event.target).closest('.wcmp_shipment_options_form').length) {
-			if($('.wcmp_shipment_options_form').is(":visible")) {
+			if( !( $(event.target).hasClass('wcmp_show_shipment_options') || $(event.target).parent().hasClass('wcmp_show_shipment_options') ) && $('.wcmp_shipment_options_form').is(":visible")) {
 				$('.wcmp_shipment_options_form').slideUp();
 			}
 		}
