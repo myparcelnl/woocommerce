@@ -141,7 +141,7 @@ class WooCommerce_MyParcel_Admin {
 			'add_return'	=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_return&order_ids=' . $order->id ), 'wc_myparcel' ),
 				'img'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-retour.png',
-				'alt'		=> esc_attr__( 'Create & Print return label', 'woocommerce-myparcel' ),
+				'alt'		=> esc_attr__( 'Email return label', 'woocommerce-myparcel' ),
 			),
 		);
 

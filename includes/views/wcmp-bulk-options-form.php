@@ -48,7 +48,7 @@
 </head>
 <body>
 <?php
-$target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_return' ), 'wc_myparcel' );
+$target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_return&modal=true' ), 'wc_myparcel' );
 ?>
 <form method="post" class="page-form wcmp_bulk_options_form" action="<?php echo $target_url; ?>">
 	<table class="widefat">
@@ -148,7 +148,7 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&reques
 <input type="hidden" name="action" value="wc_myparcel">
 <div class="wcmp_save_shipment_settings">
 	<input type="submit" value="<?php _e( 'Export to MyParcel', 'woocommerce-myparcel' ); ?>" class="button save wcmp_export">
-	<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="waiting"/>
+	<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_spinner"/>
 </div>
 </form>
 <script type="text/javascript">

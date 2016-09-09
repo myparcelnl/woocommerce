@@ -115,7 +115,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// display errors directly if PDF requested or modal
-		if ( in_array($request, array('get_labels','modal_dialog')) && !empty($this->errors) ) {
+		if ( in_array($request, array('add_return','get_labels','modal_dialog')) && !empty($this->errors) ) {
 			echo $this->parse_errors( $this->errors );
 			die();
 		}		
@@ -131,8 +131,14 @@ class WooCommerce_MyParcel_Export {
 			update_option( 'wcmyparcel_admin_notices', $return );
 		}
 
-		// return JSON response
-		echo json_encode( $return );
+		// if we're directed here from modal, show proper result page
+		if (isset($modal)) {
+			$this->modal_success_page( $request, $return );
+		} else {
+			// return JSON response
+			echo json_encode( $return );
+		}
+
 		die();
 	}
 
@@ -313,6 +319,11 @@ class WooCommerce_MyParcel_Export {
 		$order_ids = (array) $order_ids;
 
 		include('views/wcmp-bulk-options-form.php');
+		die();
+	}
+
+	public function modal_success_page( $request, $result ) {
+		include('views/wcmp-modal-result-page.php');
 		die();
 	}
 
