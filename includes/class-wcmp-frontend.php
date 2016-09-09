@@ -103,7 +103,9 @@ class WooCommerce_MyParcel_Frontend {
 				$option = 'default';
 			}
 
-			if (!empty(WooCommerce_MyParcel()->checkout_settings[$option.'_fee'])) {
+			if ( in_array($option,$delivery_options) && !isset(WooCommerce_MyParcel()->checkout_settings[$option.'_enabled']) ) {
+				$prices[$option] = 'disabled';
+			} elseif (!empty(WooCommerce_MyParcel()->checkout_settings[$option.'_fee'])) {
 				$prices[$option] = '+ &#8364;'.WooCommerce_MyParcel()->checkout_settings[$option.'_fee'];
 			}
 		}
