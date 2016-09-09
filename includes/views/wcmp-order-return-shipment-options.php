@@ -86,6 +86,7 @@
 				''			=> __( '> &euro; 500 insured' , 'woocommerce-myparcel' ).' (+ &euro; 1.65 / &euro; 500)',
 			);
 			$insured_amount = isset($shipment_options['insurance']['amount']) ? $shipment_options['insurance']['amount'] : '';
+			$insured_amount = $insured_amount / 100; // frontend is in euros
 
 			$name = "myparcel_options[{$order_id}][insured_amount]";
 			printf( '<select name="%s" class="insured_amount">', $name );

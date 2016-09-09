@@ -395,23 +395,36 @@ class WooCommerce_MyParcel_Export {
 	public function prepare_return_shipment_data( $order_id, $options ) {
 		$order = $this->get_order( $order_id );
 
-		// convert insurance option
-		if ( isset($options['insured_amount']) && $options['insured_amount'] != 0 ) {
-			$options['insurance'] = array(
-				'amount'	=> (int) $options['insured_amount'],
-				'currency'	=> 'EUR',
-			);
-			unset($options['insured_amount']);
-			unset($options['insured']);
-		}
-
 		// set name & email
 		$return_shipment_data = array(
 			'name'			=> trim( $order->shipping_first_name . ' ' . $order->shipping_last_name ),
 			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? $order->billing_email : '',
 			'carrier'		=> 1, // default to POSTNL for now
-			'options'		=> $options,
 		);
+
+		// add options if available
+		if (!empty($options)) {
+			// convert insurance option
+			if ( isset($options['insured_amount']) && $options['insured_amount'] != 0 ) {
+				$options['insurance'] = array(
+					'amount'	=> (int) $options['insured_amount'] * 100,
+					'currency'	=> 'EUR',
+				);
+				unset($options['insured_amount']);
+				unset($options['insured']);
+			}
+
+			// PREVENT ILLEGAL SETTINGS
+			// convert numeric strings to int
+			$int_options = array( 'package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format' );
+			foreach ($options as $key => &$value) {
+				if ( in_array($key, $int_options) ) {
+					$value = (int) $value;
+				}
+			}
+
+			$return_shipment_data['options'] = $options;
+		}
 
 		// get parent
 		$shipment_ids = $this->get_shipment_ids( (array) $order_id );
@@ -529,7 +542,7 @@ class WooCommerce_MyParcel_Export {
 		if (isset($options['insured_amount'])) {
 			if ($options['insured_amount'] > 0) {
 				$options['insurance'] = array(
-					'amount'	=> (int) $options['insured_amount'],
+					'amount'	=> (int) $options['insured_amount'] * 100,
 					'currency'	=> 'EUR',
 				);
 			}
