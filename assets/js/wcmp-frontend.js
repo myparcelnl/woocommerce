@@ -55,7 +55,7 @@ jQuery( function( $ ) {
 	$( '#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number' ).change();
 
 	// any delivery option selected/changed - update checkout for fees
-	$('#mypa-delivery-options-container').on('change', 'input[type=radio], input[type=checkbox]', function() {
+	$('#mypa-chosen-delivery-options').on('change', 'input', function() {
 		console.log('changed');
 		myparcel_checkout_updating = true;
 		jQuery('body').trigger('update_checkout');
