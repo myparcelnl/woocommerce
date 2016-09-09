@@ -214,14 +214,13 @@ class WooCommerce_MyParcel_Export {
 		$this->log("*** Creating return shipments started ***");
 
 		foreach ($myparcel_options as $order_id => $options) {
-
-			$return_shipment = $this->prepare_return_shipment_data( $order_id, $options );
-			$this->log("Return shipment data for order {$order_id}:\n".var_export($return_shipment, true));
+			$return_shipments = array( $this->prepare_return_shipment_data( $order_id, $options ) );
+			$this->log("Return shipment data for order {$order_id}:\n".var_export($return_shipments, true));
 			// echo '<pre>';var_dump($return_shipment);echo '</pre>';die();
 
 			try {
 				$api = $this->init_api();
-				$response = $api->add_shipments( $return_shipment, 'return' );
+				$response = $api->add_shipments( $return_shipments, 'return' );
 				$this->log("API response (order {$order_id}):\n".var_export($response, true));
 				// echo '<pre>';var_dump($response);echo '</pre>';die();
 				if (isset($response['body']['data']['ids'])) {
