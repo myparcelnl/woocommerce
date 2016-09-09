@@ -515,14 +515,14 @@ class WooCommerce_MyParcel_Settings {
 
 
 		add_settings_field(
-			'postponed_delivery',
-			__( 'Postponed delivery', 'woocommerce-myparcel' ),
+			'myparcel_checkout',
+			__( 'Enable MyParcel delivery options', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'delivery_options',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'postponed_delivery',
+				'id'			=> 'myparcel_checkout',
 			)
 		);
 

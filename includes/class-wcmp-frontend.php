@@ -23,12 +23,12 @@ class WooCommerce_MyParcel_Frontend {
 		}
 
 		// Delivery options
-		// template
-		add_action( 'wp_head', array( $this, 'delivery_options_template' ) );
-		// actual output
-		// if (isset(WooCommerce_MyParcel()->checkout_settings['delivery_options'])) {
+		if (isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout'])) {
+			// template
+			add_action( 'wp_head', array( $this, 'delivery_options_template' ) );
+			// actual output
 			add_action( apply_filters( 'wc_myparcel_delivery_options_location', 'woocommerce_after_checkout_billing_form' ), array( $this, 'output_delivery_options' ), 10, 1 );
-		// }
+		}
 
 		// Save delivery options data
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_delivery_options' ), 10, 2 );

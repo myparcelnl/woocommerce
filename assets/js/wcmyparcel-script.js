@@ -99,6 +99,22 @@ jQuery( function( $ ) {
 		}
 	}).change(); //ensure visible state matches initially
 
+	// Hide all checkout options if disabled
+	$('#woocommerce-myparcel-settings #myparcel_checkout').change(function () {
+		$next_settings_rows = $(this).closest('tr').nextAll('tr');
+		$next_settings_headers = $(this).closest('table').nextAll('h2');
+		$next_settings_forms = $(this).closest('table').nextAll('table');
+		if ($(this).is(':checked')) {
+			$next_settings_rows.show();
+			$next_settings_forms.show()
+			$next_settings_headers.show();
+		} else {
+			$next_settings_rows.hide();
+			$next_settings_forms.hide();
+			$next_settings_headers.hide();
+		}
+	}).change(); //ensure visible state matches initially
+	// myparcel_checkout
 
 	// saving shipment options via AJAX
 	$( '.wcmp_save_shipment_settings' )
