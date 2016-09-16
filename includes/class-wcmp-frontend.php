@@ -146,9 +146,9 @@ class WooCommerce_MyParcel_Frontend {
 		</script>
 		<myparcel id="myparcel"></myparcel>
 		<div id="mypa-chosen-delivery-options">
-			<input style="display: none" id="mypa-input" name="mypa-input">
-			<input style="display: none" type="checkbox" name='mypa-signed' id="mypa-signed">
-			<input style="display: none" type="checkbox" name='mypa-recipient-only' id="mypa-recipient-only">
+			<input style="display:none" name='mypa-post-nl-data' id="mypa-input">
+			<input style="display:none" type="checkbox" name='mypa-signed' id="mypa-signed">
+			<input style="display:none" type="checkbox" name='mypa-recipient-only' id="mypa-recipient-only">
 		</div>
 		<?php
 	}
@@ -164,7 +164,7 @@ class WooCommerce_MyParcel_Frontend {
 	public function save_delivery_options( $order_id, $posted ) {
 		// mypa-recipient-only - 'on' or not set  
 		// mypa-signed         - 'on' or not set  
-		// mypa-input          - JSON of chosen delivery options
+		// mypa-post-nl-data          - JSON of chosen delivery options
 		
 		if (isset($_POST['mypa-signed'])) {
 			update_post_meta( $order_id, '_myparcel_signed', 'on' );
@@ -174,8 +174,8 @@ class WooCommerce_MyParcel_Frontend {
 			update_post_meta( $order_id, '_myparcel_only_recipient', 'on' );
 		}
 
-		if (!empty($_POST['mypa-input'])) {
-			$delivery_options = json_decode( stripslashes( $_POST['mypa-input']), true );
+		if (!empty($_POST['mypa-post-nl-data'])) {
+			$delivery_options = json_decode( stripslashes( $_POST['mypa-post-nl-data']), true );
 			update_post_meta( $order_id, '_myparcel_delivery_options', $delivery_options );
 		}
 	}
@@ -215,8 +215,8 @@ class WooCommerce_MyParcel_Frontend {
 		}
 
 		// check for delivery options & add fees
-		if (!empty($post_data['mypa-input'])) {
-			$delivery_options = json_decode( stripslashes( $post_data['mypa-input']), true );
+		if (!empty($post_data['mypa-post-nl-data'])) {
+			$delivery_options = json_decode( stripslashes( $post_data['mypa-post-nl-data']), true );
 			// Fees for pickup & pickup express
 			if (isset($delivery_options['price_comment'])) {
 				switch ($delivery_options['price_comment']) {
