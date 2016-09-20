@@ -151,7 +151,8 @@ class WooCommerce_MyParcel_Admin {
 			unset($listing_actions['get_labels']);
 		}
 
-		if (empty($consignments) || $order->shipping_country != 'NL' ) {
+		$processed_shipments = $this->get_order_shipments( $order, true );
+		if (empty($processed_shipments) || $order->shipping_country != 'NL' ) {
 			unset($listing_actions['add_return']);
 		}		
 
@@ -169,7 +170,7 @@ class WooCommerce_MyParcel_Admin {
 		<?php
 	}
 
-	public function get_order_shipments( $order ) {
+	public function get_order_shipments( $order, $exclude_concepts = false ) {
 		if (empty($order)) {
 			return;
 		}		
@@ -182,6 +183,14 @@ class WooCommerce_MyParcel_Admin {
 			);
 		} else {
 			$consignments = get_post_meta($order->id,'_myparcel_shipments',true );
+		}
+
+		if (!empty($consignments) && $exclude_concepts) {
+			foreach ($consignments as $key => $consignment) {
+				if (empty($consignment['tracktrace'])) {
+					unset($consignments[$key]);
+				}
+			}
 		}
 
 		return $consignments;
