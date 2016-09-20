@@ -695,8 +695,15 @@ class WooCommerce_MyParcel_Settings {
 
 				);
 				break;
-			case 'woocommerce_myparcel_export_defaults_settings':
 			case 'woocommerce_myparcel_checkout_settings':
+				$default = array (
+					'pickup_enabled' => '1',
+					'dropoff_days' => array ( 1,2,3,4,5 ),
+					'dropoff_delay' => '0',
+					'deliverydays_window' => '1',
+				);
+				break;
+			case 'woocommerce_myparcel_export_defaults_settings':
 			default:
 				$default = array();
 				break;
