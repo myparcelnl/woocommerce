@@ -31,7 +31,7 @@ jQuery( function( $ ) {
 		var use_shipping = $( '#ship-to-different-address-checkbox' ).is(':checked');
 
 		if ( !use_shipping && billing_postcode && billing_house_number) {
-			window.mypa.settings.postal_code = billing_postcode;
+			window.mypa.settings.postal_code = billing_postcode.replace(/\s+/g, '');
 			window.mypa.settings.number = billing_house_number;
 			window.mypa.settings.street = billing_street_name;
 			update_myparcel_delivery_options()
@@ -45,7 +45,7 @@ jQuery( function( $ ) {
 		var shipping_street_name = $( '#shipping_street_name' ).val();
 
 		if (shipping_postcode && shipping_house_number) {
-			window.mypa.settings.postal_code = shipping_postcode;
+			window.mypa.settings.postal_code = shipping_postcode.replace(/\s+/g, '');;
 			window.mypa.settings.number = shipping_house_number;
 			window.mypa.settings.street = shipping_street_name;
 			update_myparcel_delivery_options()
