@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2016-09-20 16:03+0200\n"
-"PO-Revision-Date: 2016-09-20 16:03+0200\n"
+"POT-Creation-Date: 2016-09-20 16:23+0200\n"
+"PO-Revision-Date: 2016-09-20 16:25+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -198,8 +198,8 @@ msgid "You can track your order with the following PostNL track&trace code:"
 msgstr ""
 "U kunt uw bestelling met de volgende PostNL track & trace code te volgen:"
 
-#: includes/class-wcmp-frontend.php:201 includes/class-wcmp-settings.php:379
-#: includes/class-wcmp-settings.php:544
+#: includes/class-wcmp-frontend.php:201 includes/class-wcmp-settings.php:380
+#: includes/class-wcmp-settings.php:545
 #: includes/views/wcmp-order-return-shipment-options.php:40
 #: includes/views/wcmp-order-shipment-options.php:65
 msgid "Signature on delivery"
@@ -217,7 +217,7 @@ msgstr "Afhalen bij PostNL"
 msgid "PostNL Pickup Express"
 msgstr "Extra vroeg afhalen bij PostNL"
 
-#: includes/class-wcmp-frontend.php:251 includes/class-wcmp-settings.php:568
+#: includes/class-wcmp-frontend.php:251 includes/class-wcmp-settings.php:569
 msgid "Morning delivery"
 msgstr "Ochtendlevering"
 
@@ -225,7 +225,7 @@ msgstr "Ochtendlevering"
 msgid "Standard delivery"
 msgstr "Standaard levering"
 
-#: includes/class-wcmp-frontend.php:263 includes/class-wcmp-settings.php:556
+#: includes/class-wcmp-frontend.php:263 includes/class-wcmp-settings.php:557
 msgid "Evening delivery"
 msgstr "Avondlevering"
 
@@ -290,7 +290,7 @@ msgstr "Instellingen"
 msgid "General"
 msgstr "Algemeen"
 
-#: includes/class-wcmp-settings.php:52 includes/class-wcmp-settings.php:289
+#: includes/class-wcmp-settings.php:52 includes/class-wcmp-settings.php:290
 msgid "Default export settings"
 msgstr "Standaard exportinstellingen"
 
@@ -302,35 +302,35 @@ msgstr "Checkout"
 msgid "WooCommerce MyParcel Settings"
 msgstr "WooCommerce MyParcel Instellingen"
 
-#: includes/class-wcmp-settings.php:106
+#: includes/class-wcmp-settings.php:107
 msgid "API settings"
 msgstr "API instellingen"
 
-#: includes/class-wcmp-settings.php:126
+#: includes/class-wcmp-settings.php:127
 msgid "Key"
 msgstr "Key"
 
-#: includes/class-wcmp-settings.php:140
+#: includes/class-wcmp-settings.php:141
 msgid "General settings"
 msgstr "Algemene instellingen"
 
-#: includes/class-wcmp-settings.php:147
+#: includes/class-wcmp-settings.php:148
 msgid "Label display"
 msgstr "Label weergave"
 
-#: includes/class-wcmp-settings.php:155
+#: includes/class-wcmp-settings.php:156
 msgid "Download PDF"
 msgstr "PDF downloaden"
 
-#: includes/class-wcmp-settings.php:156
+#: includes/class-wcmp-settings.php:157
 msgid "Open de PDF in a new tab"
 msgstr "Open de PDF in een nieuw tabblad"
 
-#: includes/class-wcmp-settings.php:163
+#: includes/class-wcmp-settings.php:164
 msgid "Track&trace in email"
 msgstr "Track&trace in email"
 
-#: includes/class-wcmp-settings.php:170
+#: includes/class-wcmp-settings.php:171
 msgid ""
 "Add the track&trace code to emails to the customer.<br/><strong>Note!</"
 "strong> When you select this option, make sure you have not enabled the "
@@ -340,19 +340,19 @@ msgstr ""
 "strong> Wanneer u voor deze optie kiest, zorg er dan voor dat u niet de "
 "track&trace email in uw MyParcel backend heeft ingeschakeld."
 
-#: includes/class-wcmp-settings.php:176
+#: includes/class-wcmp-settings.php:177
 msgid "Track&trace in My Account"
 msgstr "Track&trace Mijn Account"
 
-#: includes/class-wcmp-settings.php:183
+#: includes/class-wcmp-settings.php:184
 msgid "Show track&trace trace code & link in My Account."
 msgstr "Toon track&trace code & link in Mijn Account."
 
-#: includes/class-wcmp-settings.php:189
+#: includes/class-wcmp-settings.php:190
 msgid "Process shipments directly"
 msgstr "Verwerk zendingen direct"
 
-#: includes/class-wcmp-settings.php:196
+#: includes/class-wcmp-settings.php:197
 msgid ""
 "When you enable this option, shipments will be directly processed when sent "
 "to myparcel."
@@ -360,11 +360,11 @@ msgstr ""
 "Wanneer u deze optie inschakelt, zullen zendingen direct worden verwerkt "
 "wanneer deze verzonden zijn naar MyParcel."
 
-#: includes/class-wcmp-settings.php:202
+#: includes/class-wcmp-settings.php:203
 msgid "Order status automation"
 msgstr "Orderstatus automatisering"
 
-#: includes/class-wcmp-settings.php:209
+#: includes/class-wcmp-settings.php:210
 msgid ""
 "Automatically set order status to a predefined status after succesfull "
 "MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> "
@@ -378,15 +378,15 @@ msgstr ""
 "<strong>Track&trace in email</strong> optie, anders wordt de track&trace "
 "code niet opgenomen in de email naar de klant."
 
-#: includes/class-wcmp-settings.php:215
+#: includes/class-wcmp-settings.php:216
 msgid "Automatic order status"
 msgstr "Automatische orderstatus"
 
-#: includes/class-wcmp-settings.php:228
+#: includes/class-wcmp-settings.php:229
 msgid "Keep old shipments"
 msgstr "Bewaar oude zendingen"
 
-#: includes/class-wcmp-settings.php:236
+#: includes/class-wcmp-settings.php:237
 msgid ""
 "With this option enabled, data from previous shipments (track & trace links) "
 "will be kept in the order when you export more than once."
@@ -395,41 +395,41 @@ msgstr ""
 "zendingen (track&trace links) in de order worden bewaard wanneer u meer dan "
 "één keer exporteert."
 
-#: includes/class-wcmp-settings.php:243
+#: includes/class-wcmp-settings.php:244
 msgid "Diagnostic tools"
 msgstr "Diagnostische hulpmiddelen"
 
-#: includes/class-wcmp-settings.php:253
+#: includes/class-wcmp-settings.php:254
 msgid "Only enable this option when debugging!"
 msgstr "Gebruik deze optie alleen wanneer er problemen zijn!"
 
-#: includes/class-wcmp-settings.php:254
+#: includes/class-wcmp-settings.php:255
 msgid "Download log file"
 msgstr "Download logbestand"
 
-#: includes/class-wcmp-settings.php:258
+#: includes/class-wcmp-settings.php:259
 msgid "Log API communication"
 msgstr "Log API communicatie"
 
-#: includes/class-wcmp-settings.php:298
+#: includes/class-wcmp-settings.php:299
 msgid "Package types"
 msgstr "Pakkettype"
 
-#: includes/class-wcmp-settings.php:306
+#: includes/class-wcmp-settings.php:307
 msgid "Select one or more shipping methods for each MyParcel package type"
 msgstr "Selecteer een of meer verzendmethoden voor elk MyParcel pakkettype"
 
-#: includes/class-wcmp-settings.php:312
+#: includes/class-wcmp-settings.php:313
 #: includes/views/wcmp-order-return-shipment-options.php:4
 #: includes/views/wcmp-order-shipment-options.php:5
 msgid "Shipment type"
 msgstr "Soort zending"
 
-#: includes/class-wcmp-settings.php:327
+#: includes/class-wcmp-settings.php:328
 msgid "Connect customer email"
 msgstr "Koppel emailadres klant"
 
-#: includes/class-wcmp-settings.php:334
+#: includes/class-wcmp-settings.php:335
 #, php-format
 msgid ""
 "When you connect the customer email, MyParcel can send a Track&Trace email "
@@ -440,11 +440,11 @@ msgstr ""
 "email versturen naar dit adres. In uw %sMyParcel backend%s kunt u deze email "
 "in- of uitschakelen en opmaken in uw eigen stijl."
 
-#: includes/class-wcmp-settings.php:340
+#: includes/class-wcmp-settings.php:341
 msgid "Connect customer phone"
 msgstr "Koppel telefoonnummer klant"
 
-#: includes/class-wcmp-settings.php:347
+#: includes/class-wcmp-settings.php:348
 msgid ""
 "When you connect the customer's phone number, the courier can use this for "
 "the delivery of the parcel. This greatly increases the delivery success rate "
@@ -454,13 +454,13 @@ msgstr ""
 "koerier dit gebruiken ten behoeve van de aflevering van het pakket. De "
 "afleverkans voor buitenlandzendingen wordt hiermee aanzienlijk verhoogd."
 
-#: includes/class-wcmp-settings.php:353
+#: includes/class-wcmp-settings.php:354
 #: includes/views/wcmp-order-return-shipment-options.php:30
 #: includes/views/wcmp-order-shipment-options.php:55
 msgid "Extra large size"
 msgstr "Extra groot formaat"
 
-#: includes/class-wcmp-settings.php:360
+#: includes/class-wcmp-settings.php:361
 msgid ""
 "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
 "smaller than 175 x 78 x 58 cm. An extra fee of &euro;&nbsp;2,29 will be "
@@ -474,13 +474,13 @@ msgstr ""
 "groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een "
 "pallettarief van &euro;&nbsp;70,00 in rekening gebracht."
 
-#: includes/class-wcmp-settings.php:366 includes/class-wcmp-settings.php:532
+#: includes/class-wcmp-settings.php:367 includes/class-wcmp-settings.php:533
 #: includes/views/wcmp-order-return-shipment-options.php:35
 #: includes/views/wcmp-order-shipment-options.php:60
 msgid "Home address only"
 msgstr "Alleen huisadres"
 
-#: includes/class-wcmp-settings.php:373
+#: includes/class-wcmp-settings.php:374
 msgid ""
 "If you don't want the parcel to be delivered at the neighbours, choose this "
 "option."
@@ -488,7 +488,7 @@ msgstr ""
 "Als u niet wilt dat het pakket bij de buren wordt bezorgd, kies dan voor "
 "deze optie."
 
-#: includes/class-wcmp-settings.php:386
+#: includes/class-wcmp-settings.php:387
 msgid ""
 "The parcel will be offered at the delivery address. If the recipient is not "
 "at home, the parcel will be delivered to the neighbours. In both cases, a "
@@ -498,13 +498,13 @@ msgstr ""
 "geadresseerde niet thuis zijn, dan wordt het pakket bij de buren afgegeven. "
 "Er moet in beide gevallen voor worden getekend."
 
-#: includes/class-wcmp-settings.php:405
+#: includes/class-wcmp-settings.php:406
 #: includes/views/wcmp-order-return-shipment-options.php:45
 #: includes/views/wcmp-order-shipment-options.php:70
 msgid "Return if no answer"
 msgstr "Retour bij geen gehoor"
 
-#: includes/class-wcmp-settings.php:412
+#: includes/class-wcmp-settings.php:413
 msgid ""
 "By default, a parcel will be offered twice. After two unsuccessful delivery "
 "attempts, the parcel will be available at the nearest pickup point for two "
@@ -519,11 +519,11 @@ msgstr ""
 "na twee keer te zijn aangeboden direct retour komt en dus NIET op het "
 "postkantoor komt te liggen, vink dan deze optie aan."
 
-#: includes/class-wcmp-settings.php:418
+#: includes/class-wcmp-settings.php:419
 msgid "Insured shipment (from + &euro;0.50)"
 msgstr "Verzekerde verzending (vanaf + &euro;0.50)"
 
-#: includes/class-wcmp-settings.php:425
+#: includes/class-wcmp-settings.php:426
 msgid ""
 "By default, there is no insurance on the shipments. If you still want to "
 "insure the shipment, you can do that from &euro;0.50. We insure the purchase "
@@ -537,37 +537,37 @@ msgstr ""
 "Verzekerde pakketten bevatten altijd de opties \"Alléén huisadres\" en "
 "\"Handtekening voor ontvangst\""
 
-#: includes/class-wcmp-settings.php:432
+#: includes/class-wcmp-settings.php:433
 #: includes/views/wcmp-order-return-shipment-options.php:102
 #: includes/views/wcmp-order-shipment-options.php:146
 msgid "Insured amount"
 msgstr "Verzekerde waarde"
 
-#: includes/class-wcmp-settings.php:442
+#: includes/class-wcmp-settings.php:443
 msgid "Insured up to &euro; 50 (+ &euro; 0.50)"
 msgstr "Verzekerd tot &euro; 50 (+ &euro; 0.50)"
 
-#: includes/class-wcmp-settings.php:443
+#: includes/class-wcmp-settings.php:444
 msgid "Insured up to  &euro; 250 (+ &euro; 1.00)"
 msgstr "Verzekerd tot &euro; 250 (+ &euro; 1.00)"
 
-#: includes/class-wcmp-settings.php:444
+#: includes/class-wcmp-settings.php:445
 msgid "Insured up to  &euro; 500 (+ &euro; 1.65)"
 msgstr "Verzekerd tot &euro; 500 (+ &euro; 1.65)"
 
-#: includes/class-wcmp-settings.php:445
+#: includes/class-wcmp-settings.php:446
 msgid "> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)"
 msgstr "> &euro; 500 verzekerd (+ &euro; 1.65 / &euro; 500)"
 
-#: includes/class-wcmp-settings.php:452
+#: includes/class-wcmp-settings.php:453
 msgid "Insured amount (in euro)"
 msgstr "Verzekerd bedrag (in euro)"
 
-#: includes/class-wcmp-settings.php:466
+#: includes/class-wcmp-settings.php:467
 msgid "Label description"
 msgstr "Label omschrijving"
 
-#: includes/class-wcmp-settings.php:474
+#: includes/class-wcmp-settings.php:475
 msgid ""
 "With this option, you can add a description to the shipment. This will be "
 "printed on the top left of the label, and you can use this to search or sort "
@@ -579,83 +579,93 @@ msgstr ""
 "gebruiken om zendingen in het MyParcel Backend te zoeken of te sorteren. "
 "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden."
 
-#: includes/class-wcmp-settings.php:480
+#: includes/class-wcmp-settings.php:481
 msgid "Empty parcel weight (grams)"
 msgstr "Leeg pakket gewicht (gram)"
 
-#: includes/class-wcmp-settings.php:488
+#: includes/class-wcmp-settings.php:489
 msgid "Default weight of your empty parcel, rounded to grams."
 msgstr "Standaard gewicht van uw lege pakket, afgerond op gram."
 
-#: includes/class-wcmp-settings.php:512
+#: includes/class-wcmp-settings.php:513
 msgid "Delivery options"
 msgstr "Bezorgopties"
 
-#: includes/class-wcmp-settings.php:520
+#: includes/class-wcmp-settings.php:521
 msgid "Enable MyParcel delivery options"
 msgstr "MyParcel checkout opties inschakelen"
 
-#: includes/class-wcmp-settings.php:580
+#: includes/class-wcmp-settings.php:581
 msgid "PostNL pickup"
 msgstr "Afhalen bij PostNL"
 
-#: includes/class-wcmp-settings.php:592
+#: includes/class-wcmp-settings.php:593
 msgid "Early PostNL pickup"
 msgstr "Extra vroeg afhalen bij PostNL"
 
-#: includes/class-wcmp-settings.php:605
+#: includes/class-wcmp-settings.php:606
 msgid "Shipment processing parameters"
 msgstr "Verwerking van zendingen"
 
-#: includes/class-wcmp-settings.php:611
+#: includes/class-wcmp-settings.php:612
 msgid "Sunday"
 msgstr "zondag"
 
-#: includes/class-wcmp-settings.php:612
+#: includes/class-wcmp-settings.php:613
 msgid "Monday"
 msgstr "maandag"
 
-#: includes/class-wcmp-settings.php:613
+#: includes/class-wcmp-settings.php:614
 msgid "Tuesday"
 msgstr "dinsdag"
 
-#: includes/class-wcmp-settings.php:614
+#: includes/class-wcmp-settings.php:615
 msgid "Wednesday"
 msgstr "woensdag"
 
-#: includes/class-wcmp-settings.php:615
+#: includes/class-wcmp-settings.php:616
 msgid "Thursday"
 msgstr "donderdag"
 
-#: includes/class-wcmp-settings.php:616
+#: includes/class-wcmp-settings.php:617
 msgid "Friday"
 msgstr "vrijdag"
 
-#: includes/class-wcmp-settings.php:617
+#: includes/class-wcmp-settings.php:618
 msgid "Saturday"
 msgstr "zaterdag"
 
-#: includes/class-wcmp-settings.php:622
+#: includes/class-wcmp-settings.php:623
 msgid "Dropoff days"
 msgstr "Afleverdagen"
 
-#: includes/class-wcmp-settings.php:630
+#: includes/class-wcmp-settings.php:631
 msgid "Days of the week on which you hand over parcels to PostNL"
 msgstr "Dagen van de week waarop u de pakketten bij PostNL aflevert"
 
-#: includes/class-wcmp-settings.php:636
+#: includes/class-wcmp-settings.php:637
+msgid "Cut-off time"
+msgstr "Sluitingstijd"
+
+#: includes/class-wcmp-settings.php:646
+msgid "Time at which you stop processing orders for the day (format: hh:mm)"
+msgstr ""
+"Het tijdstip waarop u stopt met het verwerken van orders voor de dag "
+"(format: uu:mm)"
+
+#: includes/class-wcmp-settings.php:652
 msgid "Dropoff delay"
 msgstr "Verwerkingstijd"
 
-#: includes/class-wcmp-settings.php:645
+#: includes/class-wcmp-settings.php:661
 msgid "Number of days you take to process an order"
 msgstr "Aantal dagen dat u nodig heeft om een order te verwerken"
 
-#: includes/class-wcmp-settings.php:651
+#: includes/class-wcmp-settings.php:667
 msgid "Delivery days window"
 msgstr "Leverdagen venster"
 
-#: includes/class-wcmp-settings.php:660
+#: includes/class-wcmp-settings.php:676
 msgid "Number of days you allow the customer to postpone a shipment"
 msgstr "Aantal dagen dat een klant een zending kan uitstellen"
 

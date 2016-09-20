@@ -130,6 +130,7 @@ class WooCommerce_MyParcel_Frontend {
 			'exclude_delivery_type'	=> $exclude_delivery_types,
 			'price'					=> $prices,
 			'dropoff_delay'			=> isset(WooCommerce_MyParcel()->checkout_settings['dropoff_delay']) ? WooCommerce_MyParcel()->checkout_settings['dropoff_delay'] : '',
+			'cutoff_time'			=> isset(WooCommerce_MyParcel()->checkout_settings['cutoff_time']) ? WooCommerce_MyParcel()->checkout_settings['cutoff_time'] : '',
 			'deliverydays_window'	=> isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) ? WooCommerce_MyParcel()->checkout_settings['deliverydays_window'] : '',
 			'dropoff_days'			=> isset(WooCommerce_MyParcel()->checkout_settings['dropoff_days']) ? implode(';', WooCommerce_MyParcel()->checkout_settings['dropoff_days'] ): '',
 		);

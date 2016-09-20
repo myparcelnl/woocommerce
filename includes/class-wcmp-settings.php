@@ -632,6 +632,21 @@ class WooCommerce_MyParcel_Settings {
 		);
 
 		add_settings_field(
+			'cutoff_time',
+			__( 'Cut-off time', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'text_input' ),
+			$option_group,
+			'processing_parameters',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'cutoff_time',
+				'type'			=> 'text',
+				'size'			=> '5',
+				'description'	=> __( 'Time at which you stop processing orders for the day (format: hh:mm)', 'woocommerce-myparcel' ),
+			)
+		);
+
+		add_settings_field(
 			'dropoff_delay',
 			__( 'Dropoff delay', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'text_input' ),
