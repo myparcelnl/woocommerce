@@ -189,7 +189,7 @@ class WooCommerce_MyParcel_Export {
 						// process directly setting
 						if ( isset(WooCommerce_MyParcel()->general_settings['process_directly']) || $process === true ) {
 							$order = $this->get_order( $order_id );
-							$this->get_labels( $order_id, 'url' );
+							$this->get_labels( (array) $order_id, 'url' );
 							$this->get_shipment_data( $shipment_id, $order );
 						}
 
