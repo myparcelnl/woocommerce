@@ -437,7 +437,8 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// get parent
-		$shipment_ids = $this->get_shipment_ids( (array) $order_id );
+		$exclude_concepts = true;
+		$shipment_ids = $this->get_shipment_ids( (array) $order_id, $exclude_concepts );
 		if ( !empty($shipment_ids) ) {
 			$return_shipment_data['parent'] = array_pop( $shipment_ids);
 		}
@@ -621,13 +622,23 @@ class WooCommerce_MyParcel_Export {
 
 	}
 
-	public function get_shipment_ids( $order_ids ) {
+	public function get_shipment_ids( $order_ids, $exclude_concepts = false  ) {
 		$shipment_ids = array();
 		foreach ($order_ids as $order_id) {
 			$shipments = get_post_meta($order_id,'_myparcel_shipments',true);
 			if (!empty($shipments)) {
-				$last_shipment = array_pop( $shipments );
-				$shipment_ids[] = $last_shipment['shipment_id'];
+				if ($exclude_concepts) {
+					// loop backwards through shipments until we find a non-concept shipment
+					foreach ( array_reverse($shipments) as $key => $shipment) {
+						if (!empty($shipment['tracktrace'])) {
+							$shipment_ids[] = $shipment['shipment_id'];
+							break;
+						}
+					}
+				} else {
+					$last_shipment = array_pop( $shipments );
+					$shipment_ids[] = $last_shipment['shipment_id'];
+				}
 			}
 		}
 
