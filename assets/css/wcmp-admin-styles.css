@@ -118,6 +118,14 @@ table.tracktrace_status td {
 	float: right;
 }
 
+/* chosen delivery options styling */
+#order_data .delivery-options {
+	margin-top: 10px;
+}
+#order_data .delivery-options strong {
+	display: block;
+}
+
 /* settings styling */
 .wcmp_delivery_option_details {
 	margin-top: 5px;

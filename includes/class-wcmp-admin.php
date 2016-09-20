@@ -62,6 +62,7 @@ class WooCommerce_MyParcel_Admin {
 			<div class="wcmp_shipment_options_form" style="display: none;">
 				<?php include('views/wcmp-order-shipment-options.php'); ?>
 			</div>
+			<?php $this->show_order_delivery_options( $order ); ?>
 		</div>
 		<?php
 	}
@@ -311,6 +312,53 @@ class WooCommerce_MyParcel_Admin {
 
 		echo '<strong>' . __( 'MyParcel shipment:', 'woocommerce-myparcel' ) . '</strong>';
 		$this->order_list_shipment_options( $order, false );
+	}
+
+	public function show_order_delivery_options($order) {
+		$delivery_options = $order->myparcel_delivery_options;
+		if (empty($delivery_options)) {
+			return;
+		}
+
+		extract($delivery_options);
+		echo '<div class="delivery-options">';
+		if (!empty($date)) {
+			if (!empty($time)) {
+				$time = array_shift($time); // take first element in time array
+				if (isset($time['price_comment'])) {
+					switch ($time['price_comment']) {
+						case 'morning':
+							$time_title = __( 'Morning delivery', 'woocommerce-myparcel' );
+							break;
+						case 'standard':
+							// $time_title = __( 'Standard delivery', 'woocommerce-myparcel' );
+							break;
+						case 'avond':
+							$time_title = __( 'Evening delivery', 'woocommerce-myparcel' );
+							break;
+					}
+
+					$time_title = !empty($time_title) ? "({$time_title})" : '';
+				}
+
+			}
+
+			printf('<div class="delivery-date"><strong>%s: </strong>%s %s</div>', __('Delivery date', 'woocommerce-myparcel'), $date, $time_title );
+		}
+
+		if (isset($price_comment) && in_array($price_comment, array('retail','retailexpress'))) {
+			switch ($price_comment) {
+				case 'retail':
+					$title = __( 'PostNL Pickup', 'woocommerce-myparcel' );
+					break;
+				case 'retailexpress':
+					$title = __( 'PostNL Pickup Express', 'woocommerce-myparcel' );
+					break;
+			}
+
+			echo "<div class='pickup-location'><strong>{$title}: </strong>{$location}, {$street} {$number}, {$postal_code} {$city}";
+		}
+		echo '</div>';
 	}
 
 	public function get_tracktrace_url( $order_id, $tracktrace ) {
