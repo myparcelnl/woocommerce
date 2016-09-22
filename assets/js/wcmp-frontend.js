@@ -1,5 +1,5 @@
 jQuery( function( $ ) {
-	window.mypa.initialize();
+	new MyParcel();
 	var myparcel_update_timer = false;
 	var myparcel_checkout_updating = false;
 
@@ -56,7 +56,6 @@ jQuery( function( $ ) {
 
 	// any delivery option selected/changed - update checkout for fees
 	$('#mypa-chosen-delivery-options').on('change', 'input', function() {
-		console.log('changed');
 		myparcel_checkout_updating = true;
 		jQuery('body').trigger('update_checkout');
 		myparcel_checkout_updating = false;

@@ -258,7 +258,7 @@ class WooCommerce_MyParcel_Frontend {
 								$fee_name = __( 'Standard delivery', 'woocommerce-myparcel' );
 							}
 							break;
-						case 'avond':
+						case 'night':
 							if (!empty(WooCommerce_MyParcel()->checkout_settings['night_fee'])) {
 								$fee = WooCommerce_MyParcel()->checkout_settings['night_fee'];
 								$fee_name = __( 'Evening delivery', 'woocommerce-myparcel' );

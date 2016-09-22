@@ -1,7 +1,6 @@
 <?php 
 ?>
 <template id="myparcel-template">
-
   <style>
     body{
       word-wrap: break-word;
@@ -146,7 +145,7 @@
     }
 
     .mypa-checkmark-stem {
-      position: fixed;
+      position: absolute;
       width: 10%;
       height: 55%;
       background-color:#fff;
@@ -155,7 +154,7 @@
     }
 
     .mypa-checkmark-kick {
-      position: fixed;
+      position: absolute;
       width: 32%;
       height: 9%;
       background-color:#fff;
@@ -418,7 +417,7 @@
       box-shadow:  1px 1px 10px #B9B9B9;
     }
 
-    .mypa-info:hover + .mypa-opening-hours{
+    div.afhalen-right:hover + .mypa-opening-hours{
       display: initial;
     }
 
@@ -470,6 +469,69 @@
     .mypa-inline-block{
       display: inline-block;
     }
+
+    .afhalen-right{
+      float: right;
+      margin: 9px 4px 0 0;
+     }
+
+    .afhalen-check{
+      float: left;
+     }
+
+    .afhalen-tekst{
+      margin: 0px 38px 10px 57px;
+      padding-top: 18px;
+     }
+
+    .afhalen-row{
+      min-height: 46px;
+     }
+
+    .edit-stem{
+      background-color: darkorange;
+      width:3px;
+      height:15px;
+      border-radius: 3px 3px 0 0px;
+    }
+
+    .edit-stem-top{
+      border-bottom: 1px solid darkorange;
+      height: 5px;
+      width: 100%;
+    }
+
+    .edit-tip > div{
+      width: 0; 
+      height: 0; 
+      border-left: 2px solid transparent;
+      border-right: 2px solid transparent;
+      border-top: 3px solid darkorange;
+    }
+
+    .edit-tip > div:before{
+      position:relative;
+      display: block;
+      content: '';
+      width: 0; 
+      left: -2px;
+      bottom: 3px;
+      height: 0; 
+      border-left: 2px solid transparent;
+      border-right: 2px solid transparent;
+      border-top: 2px solid white;
+    }
+
+    .edit{
+      display:inline-block;
+      position: relative;
+      top: 12px;
+      left: 6px;
+      width:20px;
+      height:20px;
+      transform: rotate(45deg);
+    }
+
   </style>
 <div id='mypa-delivery-options-container'>
   <div class="mypa-overlay">
@@ -522,6 +584,14 @@
                     <div class="mypa-checkmark-kick"></div>
                   </label>
                   <span class="mypa-highlight">Vanaf 16.00 uur</span><span class='mypa-address' id="mypa-pickup-address"></span>
+                  <div class="edit">  
+                    <div class="edit-stem">
+                    </div>
+                    <div class="edit-tip">
+                      <div>
+                      </div>
+                    </div>
+                  </div>
                   <span class='mypa-price mypa-pickup-price'></span>
                 </label>
                 <label for='mypa-pickup-express' class='mypa-row-subitem mypa-pickup-selector'>
@@ -532,6 +602,14 @@
                     <div class="mypa-checkmark-kick"></div>
                   </label>
                   <span class="mypa-highlight">Vanaf 8.30 uur</span><span class='mypa-address' id="mypa-pickup-express-address"></span>
+                  <div class="edit">  
+                    <div class="edit-stem">
+                    </div>
+                    <div class="edit-tip">
+                      <div>
+                      </div>
+                    </div>
+                  </div>
                   <span class='mypa-price mypa-pickup-express-price'></span>
                 </label>
               </div>
