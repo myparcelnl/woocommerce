@@ -333,14 +333,13 @@ class WooCommerce_MyParcel_Admin {
 						case 'standard':
 							// $time_title = __( 'Standard delivery', 'woocommerce-myparcel' );
 							break;
+						case 'night':
 						case 'avond':
 							$time_title = __( 'Evening delivery', 'woocommerce-myparcel' );
 							break;
 					}
-
-					$time_title = !empty($time_title) ? "({$time_title})" : '';
 				}
-
+				$time_title = !empty($time_title) ? "({$time_title})" : '';
 			}
 
 			printf('<div class="delivery-date"><strong>%s: </strong>%s %s</div>', __('Delivery date', 'woocommerce-myparcel'), $date, $time_title );
