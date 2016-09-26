@@ -955,11 +955,12 @@ class WooCommerce_MyParcel_Export {
 
 			$delivery_type = $this->get_delivery_type( $order, $myparcel_delivery_options );
 			if ( in_array($delivery_type, array(1,3) ) ) {
-				$delivery_time = array_shift($myparcel_delivery_options['time']); // take first element in time array
+				$delivery_time_options = array_shift($myparcel_delivery_options['time']); // take first element in time array
+				$delivery_time = $delivery_time_options['start'];
 			} else {
 				$delivery_time = '00:00:00';
 			}
-			$delivery_date = "{$delivery_date} {$delivery_time['start']}";
+			$delivery_date = "{$delivery_date} {$delivery_time}";
 			return $delivery_date;
 		} else {
 			return false;
