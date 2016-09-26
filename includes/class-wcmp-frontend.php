@@ -153,6 +153,7 @@ class WooCommerce_MyParcel_Frontend {
 		window.myparcel_delivery_options_shipping_methods = <?php echo $delivery_options_shipping_methods; ?>;
 		</script>
 		<myparcel id="myparcel"></myparcel>
+		<input style="display:none" type="checkbox" name='mypa-options-enabled' id="mypa-options-enabled">
 		<div id="mypa-chosen-delivery-options">
 			<input style="display:none" name='mypa-post-nl-data' id="mypa-input">
 			<input style="display:none" type="checkbox" name='mypa-signed' id="mypa-signed">
@@ -172,8 +173,13 @@ class WooCommerce_MyParcel_Frontend {
 	public function save_delivery_options( $order_id, $posted ) {
 		// mypa-recipient-only - 'on' or not set  
 		// mypa-signed         - 'on' or not set  
-		// mypa-post-nl-data          - JSON of chosen delivery options
+		// mypa-post-nl-data   - JSON of chosen delivery options
 		
+		// check if delivery options were used
+		if (!isset($_POST['mypa-options-enabled'])) {
+			return;
+		}
+
 		if (isset($_POST['mypa-signed'])) {
 			update_post_meta( $order_id, '_myparcel_signed', 'on' );
 		}
