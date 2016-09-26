@@ -303,6 +303,7 @@ class WooCommerce_MyParcel_Admin {
 			</table>
 			<?php
 		}
+		// echo '<pre>';var_dump($order->myparcel_delivery_options);echo '</pre>';
 	}
 
 	public function single_order_shipment_options( $order ) {

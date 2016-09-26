@@ -567,32 +567,29 @@ class WooCommerce_MyParcel_Export {
 			$options['insurance']['amount'] = (int) $options['insurance']['amount'];
 		}
 
+		// load delivery options
+		$myparcel_delivery_options = $order->myparcel_delivery_options;
+
+		// set delivery type
+		$options['delivery_type'] = $this->get_delivery_type( $order, $myparcel_delivery_options );
+
 		// Options for Pickup and Pickup express delivery types:
 		// always enable signature on receipt
-		// add delivery type and date
-		if ( $pickup = $this->is_pickup( $order ) ) {
+		if ( $this->is_pickup( $order, $myparcel_delivery_options ) ) {
 			$options['signature'] = 1;
-
-			$pickup_time = array_shift($pickup['time']); // take first element in time array
-			if (isset($pickup_time['type'])) {
-				$options['delivery_type'] = $pickup_time['type'];
-			}
-			if (isset($pickup['date'])) {
-				$options['delivery_date'] = $pickup['date'];
-			}
 		}
 
-		// delivery time options
-		if ( !empty($order->myparcel_delivery_time) ) {
-			$delivery_time_options = $order->myparcel_delivery_time;
-			$delivery_time = array_shift($delivery_time_options['time']); // take first element in time array
-			if (isset($delivery_time['type'])) {
-				$options['delivery_type'] = $delivery_time['type'];
-			}
-			if (isset($delivery_time['date'])) {
-				$options['delivery_date'] = "{$delivery_time['date']} {$delivery_time['start']}";
-			}
+		// delivery date (postponed delivery & pickup)
+		if ($delivery_date = $this->get_delivery_date( $order, $myparcel_delivery_options ) ) {
+			$options['delivery_date'] = $delivery_date;
+		}
 
+		// options signed & recipient only
+		if (isset($order->myparcel_signed)) {
+			$options['signature'] = 1;
+		}
+		if (isset($order->myparcel_only_recipient)) {
+			$options['only_recipient'] = 1;
 		}
 
 		// allow prefiltering consignment data
@@ -802,6 +799,18 @@ class WooCommerce_MyParcel_Export {
 		return $order;
 	}
 
+	public function get_order_id( $order ) {
+		// load order_id if order object passed
+		if (is_object($order)) {
+			$order_id = $order->id;
+		} else {
+			$order_id = $order;
+		}
+
+		return $order_id;
+	}
+
+
 	public function get_item_display_name ( $item, $order ) {
 		// set base name
 		$name = $item['name'];
@@ -858,17 +867,16 @@ class WooCommerce_MyParcel_Export {
 		return $item_weight;
 	}
 
-	public function is_pickup( $order ) {
-		// load order_id if order object passed
-		if (is_object($order)) {
-			$order_id = $order->id;
-		} else {
-			$order_id = $order;
-		}
+	public function is_pickup( $order, $myparcel_delivery_options = '' ) {
+		$order_id = $this->get_order_id( $order );
 
-		$myparcel_pickup_option = get_post_meta( $order_id, '_myparcel_pickup_option', true );
-		if (!empty($myparcel_pickup_option)) {
-			return $myparcel_pickup_option;
+		if (empty($myparcel_delivery_options)) {
+			$myparcel_delivery_options = get_post_meta( $order_id, '_myparcel_delivery_options', true );
+		}
+		
+		$pickup_types = array( 'retail', 'retailexpress' );
+		if ( !empty($myparcel_delivery_options['price_comment']) && in_array($myparcel_delivery_options['price_comment'], $pickup_types) ) {
+			return $myparcel_delivery_options;
 		} else {
 			return false;
 		}
@@ -886,6 +894,67 @@ class WooCommerce_MyParcel_Export {
 			return false;
 		}
 		*/
+	}
+
+	public function get_delivery_type( $order, $myparcel_delivery_options = '' ) {
+		// delivery types
+		$delivery_types = array(
+			'morning'		=> 1,
+			'standard'		=> 2, // 'default in JS API'
+			'night'			=> 3,
+			'retail'		=> 4, // 'pickup'
+			'retailexpress'	=> 5, // 'pickup_express'
+		);
+
+		$order_id = $this->get_order_id( $order );
+
+		if (empty($myparcel_delivery_options)) {
+			$myparcel_delivery_options = get_post_meta( $order_id, '_myparcel_delivery_options', true );
+		}
+
+		// standard = default, overwrite if otpions found
+		$delivery_type = 'standard';
+		if (!empty($myparcel_delivery_options)) {
+			// pickup & pickupexpress store the delivery type in the delivery options,
+			// morning & night store it in the time data (...)
+			if ( empty($myparcel_delivery_options['price_comment']) ) {
+				// check if we have a price_comment in the time option
+				$delivery_time = array_shift($myparcel_delivery_options['time']); // take first element in time array
+				if (isset($delivery_time['price_comment'])) {
+					$delivery_type = $delivery_time['price_comment'];
+				}
+			} else {
+				$delivery_type = $myparcel_delivery_options['price_comment'];
+			}
+		}
+
+		// convert to int (default to 2 = standard for unknown types)
+		$delivery_type = isset($delivery_types[$delivery_type]) ? $delivery_types[$delivery_type] : 2;
+
+		return $delivery_type;
+	}
+
+	public function get_delivery_date( $order, $myparcel_delivery_options = '' ) {
+		$order_id = $this->get_order_id( $order );
+
+		if (empty($myparcel_delivery_options)) {
+			$myparcel_delivery_options = get_post_meta( $order_id, '_myparcel_delivery_options', true );
+		}
+
+
+		if ( !empty($myparcel_delivery_options) ) {
+			$delivery_date = $myparcel_delivery_options['date'];
+
+			$delivery_type = $this->get_delivery_type( $order, $myparcel_delivery_options );
+			if ( in_array($delivery_type, array('morning','night') ) ) {
+				$delivery_time = array_shift($myparcel_delivery_options['time']); // take first element in time array
+				$delivery_date = "{$delivery_date} {$delivery_time['start']}";
+			}
+			return $delivery_date;
+		} else {
+			return false;
+		}
+
 	}
 
 	public function filter_eu_orders( $order_ids ) {

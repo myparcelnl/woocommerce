@@ -79,7 +79,6 @@ class WooCommerce_MyParcel_Frontend {
 		$request_prefix = strpos($ajax_url, '?') !== false ? '&' : '?';
 		$frontend_api_url = wp_nonce_url( $ajax_url . $request_prefix . 'action=wc_myparcel_frontend', 'wc_myparcel_frontend' );
 
-
 		// delivery types
 		$delivery_types = array(
 			1	=> 'morning',
