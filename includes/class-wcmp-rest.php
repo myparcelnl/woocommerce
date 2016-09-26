@@ -114,16 +114,6 @@ class WC_MyParcel_REST_Client
 		switch ($method) {
 			case "PUT":
 				curl_setopt($this->curl, CURLOPT_PUT, true);
-
-				//The file to PUT must be set with CURLOPT_INFILE and CURLOPT_INFILESIZE.
-				if ($f = @fopen($body, "r")) {
-					curl_setopt($this->curl, CURLOPT_INFILE, $f);
-					curl_setopt($this->curl, CURLOPT_INFILESIZE, filesize($body));
-					$headers["Content-Length"] = filesize($body);
-				}
-				else {
-					throw new Exception("Unable to load resource '$body'");
-				}
 			break;
 
 			case "POST":
