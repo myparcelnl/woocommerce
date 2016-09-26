@@ -954,10 +954,12 @@ class WooCommerce_MyParcel_Export {
 			$delivery_date = $myparcel_delivery_options['date'];
 
 			$delivery_type = $this->get_delivery_type( $order, $myparcel_delivery_options );
-			if ( in_array($delivery_type, array('morning','night') ) ) {
+			if ( in_array($delivery_type, array(1,3) ) ) {
 				$delivery_time = array_shift($myparcel_delivery_options['time']); // take first element in time array
-				$delivery_date = "{$delivery_date} {$delivery_time['start']}";
+			} else {
+				$delivery_time = '00:00:00';
 			}
+			$delivery_date = "{$delivery_date} {$delivery_time['start']}";
 			return $delivery_date;
 		} else {
 			return false;
