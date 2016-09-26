@@ -538,6 +538,14 @@ class WooCommerce_MyParcel_Export {
 			);
 			$options = array_merge($emty_defaults, $shipment_options);
 		} else {
+			if (isset(WooCommerce_MyParcel()->export_defaults['insured']) && WooCommerce_MyParcel()->export_defaults['insured_amount'] == '' && isset(WooCommerce_MyParcel()->export_defaults['insured_amount_custom'])) {
+				$insured_amount = WooCommerce_MyParcel()->export_defaults['insured_amount_custom'];
+			} elseif (isset(WooCommerce_MyParcel()->export_defaults['insured_amount'])) {
+				$insured_amount = WooCommerce_MyParcel()->export_defaults['insured_amount'];
+			} else {
+				$insured_amount = 0;
+			}
+
 			$options = array(
 				'package_type'		=> $package_type,
 				'only_recipient'	=> (isset(WooCommerce_MyParcel()->export_defaults['only_recipient'])) ? 1 : 0,
@@ -545,12 +553,12 @@ class WooCommerce_MyParcel_Export {
 				'return'			=> (isset(WooCommerce_MyParcel()->export_defaults['return'])) ? 1 : 0,
 				'large_format'		=> (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
 				'label_description'	=> $description,
-				'insured_amount'	=> (isset(WooCommerce_MyParcel()->export_defaults['insured_amount'])) ? WooCommerce_MyParcel()->export_defaults['insured_amount'] : 0,
+				'insured_amount'	=> $insured_amount,
 			);
 		}
 
 		// convert insurance option
-		if (isset($options['insured_amount'])) {
+		if ( !isset($options['insurance']) && isset($options['insured_amount']) ) {
 			if ($options['insured_amount'] > 0) {
 				$options['insurance'] = array(
 					'amount'	=> (int) $options['insured_amount'] * 100,
