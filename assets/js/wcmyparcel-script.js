@@ -80,13 +80,13 @@ jQuery( function( $ ) {
 			// parcel
 			$( parcel_options ).find('input, textarea, button, select').prop('disabled', false);
 			$( parcel_options ).show();
-			$('.insured').change();
+			$( parcel_options ).find('.insured').change();
 		} else {
 			// not a parcel
 			$( parcel_options ).find('input, textarea, button, select').prop('disabled', true);
 			$( parcel_options ).hide();
-			$('.insured').prop('checked', false);
-			$('.insured').change();
+			$( parcel_options ).find('.insured').prop('checked', false);
+			$( parcel_options ).find('.insured').change();
 		}
 	}).change(); //ensure visible state matches initially
 
