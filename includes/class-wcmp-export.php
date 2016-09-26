@@ -257,7 +257,7 @@ class WooCommerce_MyParcel_Export {
 	public function get_labels( $order_ids, $label_response_type = NULL ) {
 		$return = array();
 
-		$shipment_ids = $this->get_shipment_ids( $order_ids );
+		$shipment_ids = $this->get_shipment_ids( $order_ids, array( 'only_last' => true ) );
 
 		if ( empty($shipment_ids) ) {
 			$this->log("*** Failed label request (not exported yet) ***");
@@ -394,7 +394,10 @@ class WooCommerce_MyParcel_Export {
 				);
 			}
 
-			// echo '<pre>';var_dump($shipment);echo '</pre>';die();
+			$concept_shipments = $this->get_shipment_ids( (array) $order_id, array( 'only_concepts' => true, 'only_last' => true ) );
+			if ( !empty($concept_shipments) ) {
+				$shipment['id'] = array_pop($concept_shipments);
+			}
 
 			$shipments[] = $shipment;
 		}
@@ -437,8 +440,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// get parent
-		$exclude_concepts = true;
-		$shipment_ids = $this->get_shipment_ids( (array) $order_id, $exclude_concepts );
+		$shipment_ids = $this->get_shipment_ids( (array) $order_id, array( 'exclude_concepts' => true, 'only_last' => true ) );
 		if ( !empty($shipment_ids) ) {
 			$return_shipment_data['parent'] = array_pop( $shipment_ids);
 		}
@@ -498,7 +500,7 @@ class WooCommerce_MyParcel_Export {
 				$order_shipping_method = $order_shipping_method['method_id'];
 				if ( strpos($order_shipping_method, ':') !== false ) {
 					// means we have method_id:zone_id
-					$order_shipping_method = explode($order_shipping_metod, ':');
+					$order_shipping_method = explode(':', $order_shipping_method);
 					$order_shipping_method = $order_shipping_method[0];
 				}
 
@@ -632,22 +634,28 @@ class WooCommerce_MyParcel_Export {
 
 	}
 
-	public function get_shipment_ids( $order_ids, $exclude_concepts = false  ) {
+	public function get_shipment_ids( $order_ids, $args ) {
 		$shipment_ids = array();
 		foreach ($order_ids as $order_id) {
-			$shipments = get_post_meta($order_id,'_myparcel_shipments',true);
-			if (!empty($shipments)) {
-				if ($exclude_concepts) {
-					// loop backwards through shipments until we find a non-concept shipment
-					foreach ( array_reverse($shipments) as $key => $shipment) {
-						if (!empty($shipment['tracktrace'])) {
-							$shipment_ids[] = $shipment['shipment_id'];
-							break;
-						}
+			$order_shipments = get_post_meta($order_id,'_myparcel_shipments',true);
+			if (!empty($order_shipments)) {
+				$order_shipment_ids = array();
+				// exclude concepts or only concepts
+				foreach ( $order_shipments as $key => $shipment) {
+					if (isset($args['exclude_concepts']) && empty($shipment['tracktrace'])) {
+						continue;
 					}
+					if (isset($args['only_concepts']) && !empty($shipment['tracktrace'])) {
+						continue;
+					}
+
+					$order_shipment_ids[] = $shipment['shipment_id'];
+				}
+
+				if (isset($args['only_last'])) {
+					$shipment_ids[] = array_pop( $order_shipment_ids );
 				} else {
-					$last_shipment = array_pop( $shipments );
-					$shipment_ids[] = $last_shipment['shipment_id'];
+					$shipment_ids[] = array_merge( $shipment_ids, $order_shipment_ids );
 				}
 			}
 		}

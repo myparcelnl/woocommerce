@@ -260,6 +260,8 @@ class WooCommerce_MyParcel_Admin {
 			return;
 		}
 
+		// echo '<pre>';var_dump($order->myparcel_shipments);echo '</pre>';
+
 		// show buttons
 		echo '<div class="single_order_actions">';
 		$this->admin_order_actions( $order, false );
@@ -303,7 +305,6 @@ class WooCommerce_MyParcel_Admin {
 			</table>
 			<?php
 		}
-		// echo '<pre>';var_dump($order->myparcel_delivery_options);echo '</pre>';
 	}
 
 	public function single_order_shipment_options( $order ) {
