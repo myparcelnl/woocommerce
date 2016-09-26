@@ -16,6 +16,23 @@ jQuery( function( $ ) {
 		}
 	});
 
+	// hide checkout options for non parcel shipments
+	$( document ).on( 'updated_checkout', function() {
+		var shipping_method = $( '#order_review .shipping_method:checked').val();
+		// strip zone_id if present
+		if (shipping_method.indexOf(':') !== -1) {
+			shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
+		}
+		if ( window.myparcel_delivery_options_shipping_methods.length > 0 ) {
+			if ( $.inArray(shipping_method, window.myparcel_delivery_options_shipping_methods) > -1 ) {
+				console.log(window.myparcel_delivery_options_shipping_methods.length);
+				$( 'myparcel' ).show();
+			} else {
+				$( 'myparcel' ).hide();
+			}
+		}
+	});
+
 	// update myparcel settings object with address when shipping or billing address changes
 	
 	// billing changes

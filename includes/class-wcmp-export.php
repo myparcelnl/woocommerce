@@ -496,6 +496,11 @@ class WooCommerce_MyParcel_Export {
 				// we're taking the first (we're not handling multiple shipping methods as of yet)
 				$order_shipping_method = array_shift($order_shipping_methods);
 				$order_shipping_method = $order_shipping_method['method_id'];
+				if ( strpos($order_shipping_method, ':') !== false ) {
+					// means we have method_id:zone_id
+					$order_shipping_method = explode($order_shipping_metod, ':');
+					$order_shipping_method = $order_shipping_method[0];
+				}
 
 				foreach (WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
 					if (in_array($order_shipping_method, $package_type_shipping_methods)) {

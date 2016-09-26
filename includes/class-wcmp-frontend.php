@@ -139,10 +139,18 @@ class WooCommerce_MyParcel_Frontend {
 		// encode settings for JS object
 		$settings = json_encode($settings);
 
+		// Shipping methods associated with delivery options
+		if ( isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] ) && isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1] ) ) {
+			$delivery_options_shipping_methods = WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1];
+		} else {
+			$delivery_options_shipping_methods = array();
+		}
+		$delivery_options_shipping_methods = json_encode($delivery_options_shipping_methods);
 		?>
 		<script type="text/javascript">
 		window.mypa = {}
 		window.mypa.settings = <?php echo $settings; ?>;
+		window.myparcel_delivery_options_shipping_methods = <?php echo $delivery_options_shipping_methods; ?>;
 		</script>
 		<myparcel id="myparcel"></myparcel>
 		<div id="mypa-chosen-delivery-options">

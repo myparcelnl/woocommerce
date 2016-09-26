@@ -527,6 +527,21 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 
+		/*
+		add_settings_field(
+			'shipping_methods',
+			__( 'Shipping methods', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'shipping_method_search' ),
+			$option_group,
+			'delivery_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'shipping_methods',
+				'description'	=> __( 'Select one or more shipping methods for each MyParcel package type', 'woocommerce-myparcel' ),
+			)
+		);
+		*/
+
 		add_settings_field(
 			'only_recipient',
 			__( 'Home address only', 'woocommerce-myparcel' ),
