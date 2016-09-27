@@ -582,6 +582,14 @@ class WooCommerce_MyParcel_Export {
 			$options['insurance']['amount'] = (int) $options['insurance']['amount'];
 		}
 
+		// remove frontend insurance option values
+		if (isset($options['insured_amount'])) {
+			unset($options['insured_amount']);
+		}
+		if (isset($options['insured'])) {
+			unset($options['insured']);
+		}
+
 		// load delivery options
 		$myparcel_delivery_options = $order->myparcel_delivery_options;
 
