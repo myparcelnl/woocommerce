@@ -620,7 +620,7 @@ class WooCommerce_MyParcel_Export {
 
 		// PREVENT ILLEGAL SETTINGS
 		// convert numeric strings to int
-		$int_options = array( 'package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'delivery_date' );
+		$int_options = array( 'package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format' );
 		foreach ($options as $key => &$value) {
 			if ( in_array($key, $int_options) ) {
 				$value = (int) $value;
@@ -630,7 +630,7 @@ class WooCommerce_MyParcel_Export {
 		// disable options for mailbox package and unpaid letter
 		// echo '<pre>';var_dump($package_type);echo '</pre>';die();
 		if ( $options['package_type'] != 1 ) {
-			$illegal_options = array( 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance' );
+			$illegal_options = array( 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date' );
 			foreach ($options as $key => $option) {
 				if (in_array($key, $illegal_options)) {
 					unset($options[$key]);
