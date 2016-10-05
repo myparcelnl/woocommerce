@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2016-09-26 13:32+0200\n"
+"POT-Creation-Date: 2016-10-05 11:06+0200\n"
 "PO-Revision-Date: 2016-07-02 16:21+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -20,67 +20,68 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: includes/class-wcmp-admin.php:100
+#: includes/class-wcmp-admin.php:109
 msgid "MyParcel: Export"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:101
+#: includes/class-wcmp-admin.php:110
 msgid "MyParcel: Print"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:102
+#: includes/class-wcmp-admin.php:111
 msgid "MyParcel: Export & Print"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:135
-#: includes/views/wcmp-bulk-options-form.php:150
+#: includes/class-wcmp-admin.php:144
+#: includes/views/wcmp-bulk-options-form.php:152
 msgid "Export to MyParcel"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:140
+#: includes/class-wcmp-admin.php:149
 msgid "Print MyParcel label"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:145
+#: includes/class-wcmp-admin.php:154
 msgid "Email return label"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:237 includes/class-wcmp-settings.php:32
+#: includes/class-wcmp-admin.php:246 includes/class-wcmp-settings.php:32
 #: includes/class-wcmp-settings.php:33
 msgid "MyParcel"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:289 includes/class-wcmp-frontend.php:62
+#: includes/class-wcmp-admin.php:300 includes/class-wcmp-frontend.php:62
 msgid "Track&Trace"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:290
+#: includes/class-wcmp-admin.php:301
+#: includes/views/wcmp-order-shipment-summary.php:3
 msgid "Status"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:314
+#: includes/class-wcmp-admin.php:324
 msgid "MyParcel shipment:"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:332 includes/class-wcmp-frontend.php:251
-#: includes/class-wcmp-settings.php:568
+#: includes/class-wcmp-admin.php:342 includes/class-wcmp-frontend.php:265
+#: includes/class-wcmp-settings.php:583
 msgid "Morning delivery"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:339 includes/class-wcmp-frontend.php:263
-#: includes/class-wcmp-settings.php:556
+#: includes/class-wcmp-admin.php:349 includes/class-wcmp-frontend.php:277
+#: includes/class-wcmp-settings.php:571
 msgid "Evening delivery"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:346
+#: includes/class-wcmp-admin.php:356
 msgid "Delivery date"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:352 includes/class-wcmp-frontend.php:226
+#: includes/class-wcmp-admin.php:362 includes/class-wcmp-frontend.php:240
 msgid "PostNL Pickup"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:355 includes/class-wcmp-frontend.php:232
+#: includes/class-wcmp-admin.php:365 includes/class-wcmp-frontend.php:246
 msgid "PostNL Pickup Express"
 msgstr ""
 
@@ -116,100 +117,100 @@ msgstr ""
 msgid "The selected orders have not been exported to MyParcel yet!"
 msgstr ""
 
-#: includes/class-wcmp-export.php:678
+#: includes/class-wcmp-export.php:699
 msgid "Parcel"
 msgstr ""
 
-#: includes/class-wcmp-export.php:679
+#: includes/class-wcmp-export.php:700
 msgid "Mailbox package"
 msgstr ""
 
-#: includes/class-wcmp-export.php:680
+#: includes/class-wcmp-export.php:701
 msgid "Unpaid letter"
 msgstr ""
 
-#: includes/class-wcmp-export.php:691
+#: includes/class-wcmp-export.php:712
 #: includes/views/wcmp-bulk-options-form.php:79
 msgid "Order"
 msgstr ""
 
-#: includes/class-wcmp-export.php:737
+#: includes/class-wcmp-export.php:758
 msgid "pending - concept"
 msgstr ""
 
-#: includes/class-wcmp-export.php:738
+#: includes/class-wcmp-export.php:759
 msgid "pending - registered"
 msgstr ""
 
-#: includes/class-wcmp-export.php:739
+#: includes/class-wcmp-export.php:760
 msgid "enroute - handed to carrier"
 msgstr ""
 
-#: includes/class-wcmp-export.php:740
+#: includes/class-wcmp-export.php:761
 msgid "enroute - sorting"
 msgstr ""
 
-#: includes/class-wcmp-export.php:741
+#: includes/class-wcmp-export.php:762
 msgid "enroute - distribution"
 msgstr ""
 
-#: includes/class-wcmp-export.php:742
+#: includes/class-wcmp-export.php:763
 msgid "enroute - customs"
 msgstr ""
 
-#: includes/class-wcmp-export.php:743
+#: includes/class-wcmp-export.php:764
 msgid "delivered - at recipient"
 msgstr ""
 
-#: includes/class-wcmp-export.php:744
+#: includes/class-wcmp-export.php:765
 msgid "delivered - ready for pickup"
 msgstr ""
 
-#: includes/class-wcmp-export.php:745
+#: includes/class-wcmp-export.php:766
 msgid "delivered - package picked up"
 msgstr ""
 
-#: includes/class-wcmp-export.php:746
+#: includes/class-wcmp-export.php:767
 msgid "inactive - concept"
 msgstr ""
 
-#: includes/class-wcmp-export.php:747
+#: includes/class-wcmp-export.php:768
 msgid "inactive - registered"
 msgstr ""
 
-#: includes/class-wcmp-export.php:748
+#: includes/class-wcmp-export.php:769
 msgid "inactive - enroute - handed to carrier"
 msgstr ""
 
-#: includes/class-wcmp-export.php:749
+#: includes/class-wcmp-export.php:770
 msgid "inactive - enroute - sorting"
 msgstr ""
 
-#: includes/class-wcmp-export.php:750
+#: includes/class-wcmp-export.php:771
 msgid "inactive - enroute - distribution"
 msgstr ""
 
-#: includes/class-wcmp-export.php:751
+#: includes/class-wcmp-export.php:772
 msgid "inactive - enroute - customs"
 msgstr ""
 
-#: includes/class-wcmp-export.php:752
+#: includes/class-wcmp-export.php:773
 msgid "inactive - delivered - at recipient"
 msgstr ""
 
-#: includes/class-wcmp-export.php:753
+#: includes/class-wcmp-export.php:774
 msgid "inactive - delivered - ready for pickup"
 msgstr ""
 
-#: includes/class-wcmp-export.php:754
+#: includes/class-wcmp-export.php:775
 msgid "inactive - delivered - package picked up"
 msgstr ""
 
-#: includes/class-wcmp-export.php:755
+#: includes/class-wcmp-export.php:776
 msgid "inactive - unknown"
 msgstr ""
 
-#: includes/class-wcmp-export.php:761
+#: includes/class-wcmp-export.php:782
 msgid "Unknown status"
 msgstr ""
 
@@ -217,18 +218,19 @@ msgstr ""
 msgid "You can track your order with the following PostNL track&trace code:"
 msgstr ""
 
-#: includes/class-wcmp-frontend.php:201 includes/class-wcmp-settings.php:379
-#: includes/class-wcmp-settings.php:544
+#: includes/class-wcmp-frontend.php:215 includes/class-wcmp-settings.php:379
+#: includes/class-wcmp-settings.php:559
 #: includes/views/wcmp-order-return-shipment-options.php:40
 #: includes/views/wcmp-order-shipment-options.php:65
+#: includes/views/wcmp-order-shipment-summary.php:14
 msgid "Signature on delivery"
 msgstr ""
 
-#: includes/class-wcmp-frontend.php:211
+#: includes/class-wcmp-frontend.php:225
 msgid "Home address only delivery"
 msgstr ""
 
-#: includes/class-wcmp-frontend.php:257
+#: includes/class-wcmp-frontend.php:271
 msgid "Standard delivery"
 msgstr ""
 
@@ -412,6 +414,7 @@ msgstr ""
 #: includes/class-wcmp-settings.php:312
 #: includes/views/wcmp-order-return-shipment-options.php:4
 #: includes/views/wcmp-order-shipment-options.php:5
+#: includes/views/wcmp-order-shipment-summary.php:5
 msgid "Shipment type"
 msgstr ""
 
@@ -441,6 +444,7 @@ msgstr ""
 #: includes/class-wcmp-settings.php:353
 #: includes/views/wcmp-order-return-shipment-options.php:30
 #: includes/views/wcmp-order-shipment-options.php:55
+#: includes/views/wcmp-order-shipment-summary.php:12
 msgid "Extra large size"
 msgstr ""
 
@@ -453,9 +457,10 @@ msgid ""
 "charged."
 msgstr ""
 
-#: includes/class-wcmp-settings.php:366 includes/class-wcmp-settings.php:532
+#: includes/class-wcmp-settings.php:366 includes/class-wcmp-settings.php:547
 #: includes/views/wcmp-order-return-shipment-options.php:35
 #: includes/views/wcmp-order-shipment-options.php:60
+#: includes/views/wcmp-order-shipment-summary.php:13
 msgid "Home address only"
 msgstr ""
 
@@ -475,6 +480,7 @@ msgstr ""
 #: includes/class-wcmp-settings.php:405
 #: includes/views/wcmp-order-return-shipment-options.php:45
 #: includes/views/wcmp-order-shipment-options.php:70
+#: includes/views/wcmp-order-shipment-summary.php:15
 msgid "Return if no answer"
 msgstr ""
 
@@ -554,75 +560,75 @@ msgstr ""
 msgid "Enable MyParcel delivery options"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:580
+#: includes/class-wcmp-settings.php:595
 msgid "PostNL pickup"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:592
+#: includes/class-wcmp-settings.php:607
 msgid "Early PostNL pickup"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:605
+#: includes/class-wcmp-settings.php:620
 msgid "Shipment processing parameters"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:611
+#: includes/class-wcmp-settings.php:626
 msgid "Sunday"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:612
+#: includes/class-wcmp-settings.php:627
 msgid "Monday"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:613
+#: includes/class-wcmp-settings.php:628
 msgid "Tuesday"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:614
+#: includes/class-wcmp-settings.php:629
 msgid "Wednesday"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:615
+#: includes/class-wcmp-settings.php:630
 msgid "Thursday"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:616
+#: includes/class-wcmp-settings.php:631
 msgid "Friday"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:617
+#: includes/class-wcmp-settings.php:632
 msgid "Saturday"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:622
+#: includes/class-wcmp-settings.php:637
 msgid "Dropoff days"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:630
+#: includes/class-wcmp-settings.php:645
 msgid "Days of the week on which you hand over parcels to PostNL"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:636
+#: includes/class-wcmp-settings.php:651
 msgid "Cut-off time"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:645
+#: includes/class-wcmp-settings.php:660
 msgid "Time at which you stop processing orders for the day (format: hh:mm)"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:651
+#: includes/class-wcmp-settings.php:666
 msgid "Dropoff delay"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:660
+#: includes/class-wcmp-settings.php:675
 msgid "Number of days you take to process an order"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:666
+#: includes/class-wcmp-settings.php:681
 msgid "Delivery days window"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:675
+#: includes/class-wcmp-settings.php:690
 msgid "Number of days you allow the customer to postpone a shipment"
 msgstr ""
 
@@ -652,6 +658,10 @@ msgid ""
 "exported because of this! This order was probably placed before the MyParcel "
 "plugin was activated. The address data can still be manually entered in the "
 "order screen."
+msgstr ""
+
+#: includes/views/wcmp-bulk-options-form.php:154
+msgid "Send email"
 msgstr ""
 
 #: includes/views/wcmp-modal-result-page.php:53
@@ -708,7 +718,12 @@ msgid "Standard insurance up to €500 + signature on delivery"
 msgstr ""
 
 #: includes/views/wcmp-order-shipment-options.php:161
+#: includes/views/wcmp-order-shipment-summary.php:32
 msgid "Custom ID (top left on label)"
+msgstr ""
+
+#: includes/views/wcmp-order-shipment-summary.php:27
+msgid "Insured for"
 msgstr ""
 
 #: woocommerce-myparcel.php:142
