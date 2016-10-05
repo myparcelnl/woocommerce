@@ -147,7 +147,15 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&reques
 	</table>
 <input type="hidden" name="action" value="wc_myparcel">
 <div class="wcmp_save_shipment_settings">
-	<input type="submit" value="<?php _e( 'Export to MyParcel', 'woocommerce-myparcel' ); ?>" class="button save wcmp_export">
+	<?php
+	if ($dialog == 'shipment') {
+		$button_text = __( 'Export to MyParcel', 'woocommerce-myparcel' );
+	} elseif ($dialog == 'return') {
+		$button_text = __( 'Send email', 'woocommerce-myparcel' );
+	}
+	?>
+
+	<input type="submit" value="<?php echo $button_text; ?>" class="button save wcmp_export">
 	<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_spinner"/>
 </div>
 </form>

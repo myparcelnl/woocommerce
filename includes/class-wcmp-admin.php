@@ -32,11 +32,13 @@ class WooCommerce_MyParcel_Admin {
 		$package_types = WooCommerce_MyParcel()->export->get_package_types();
 		$recipient = WooCommerce_MyParcel()->export->get_recipient( $order );
 
-		// get shipment data
-		$consignments = $this->get_order_shipments( $order );
+		// get shipment data (exclude concepts = true)
+		$consignments = $this->get_order_shipments( $order, true );
 
+		$style = $hide ? 'style="display:none"' : '';
 		// if we have shipments, then we show status & link to track&trace, settings under i
 		if ( !empty( $consignments ) )  {
+			// echo '<pre>';var_dump($consignments);echo '</pre>';die();
 			// only use last shipment
 			$last_shipment = array_pop( $consignments );
 			$last_shipment_id = $last_shipment['shipment_id'];
@@ -46,23 +48,30 @@ class WooCommerce_MyParcel_Admin {
 			if (!empty($shipment['tracktrace'])) {
 				$order_has_shipment = true;
 				$tracktrace_url = $this->get_tracktrace_url( $order->id, $shipment['tracktrace']);
-				$text = sprintf('<a href="%s" class="myparcel_tracktrace_link" target="_blank" title="%s">%s</a> <a href="#" class="wcmp_show_shipment_options"><span class="encircle">i</span></a>', $tracktrace_url, $shipment['tracktrace'], $shipment['status']);
 			}
+			?>
+			<div class="wcmp_shipment_summary" <?php echo $style; ?>>
+				<?php $this->show_order_delivery_options( $order ); ?>
+				<a href="#" class="wcmp_show_shipment_summary"><span class="encircle wcmp_show_shipment_summary">i</span></a>
+				<div class="wcmp_shipment_summary_list" style="display: none;">
+					<?php include('views/wcmp-order-shipment-summary.php'); ?>
+				</div>
+			</div>
+			<?php
+		} else {
+			?>
+			<div class="wcmp_shipment_options" <?php echo $style; ?>>
+			<?php $this->show_order_delivery_options( $order ); ?>
+			</div>
+			<?php
 		}
 
-		// if no shipments yet - show parcel type and settings on click
-		if (!isset($order_has_shipment)) {
-			$text = sprintf('<a href="#" class="wcmp_show_shipment_options"><span class="wcpm_package_type">%s</span> &#x25BE;</a>', $package_types[$shipment_options['package_type']]);
-		}
-
-		$style = $hide ? 'style="display:none"' : '';
 		?>
 		<div class="wcmp_shipment_options" <?php echo $style; ?>>
-			<?php echo $text; ?>
+			<?php printf('<a href="#" class="wcmp_show_shipment_options"><span class="wcpm_package_type">%s</span> &#x25BE;</a>', $package_types[$shipment_options['package_type']]); ?>
 			<div class="wcmp_shipment_options_form" style="display: none;">
 				<?php include('views/wcmp-order-shipment-options.php'); ?>
 			</div>
-			<?php $this->show_order_delivery_options( $order ); ?>
 		</div>
 		<?php
 	}
@@ -312,7 +321,7 @@ class WooCommerce_MyParcel_Admin {
 			return;
 		}
 
-		echo '<strong>' . __( 'MyParcel shipment:', 'woocommerce-myparcel' ) . '</strong>';
+		echo '<strong>' . __( 'MyParcel shipment:', 'woocommerce-myparcel' ) . '</strong><br/>';
 		$this->order_list_shipment_options( $order, false );
 	}
 

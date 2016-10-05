@@ -11,6 +11,23 @@
 	height: auto;
 }
 
+.wcmp_shipment_summary, .wcmp_shipment_options {
+	/*display: inline;*/
+}
+
+.wcmp_shipment_summary .delivery-date, .wcmp_shipment_summary .delivery-options {
+	display: inline;
+}
+
+ul.wcmyparcel_shipment_summary {
+    list-style: none;
+}
+
+ul.wcmyparcel_shipment_summary li:before {
+    content: "+";
+    margin-right: 4px;
+}
+
 /* shipment options form styling */
 .wcmp_shipment_options_form table {
 	width: 100%;
@@ -32,13 +49,17 @@
 	vertical-align: middle !important;
 }
 
-.wcmp_shipment_options_form {
+.wcmp_shipment_options_form, .wcmp_shipment_summary_list {
     width: 450px;
     border: 1px solid #ccc;
     background: white;
     position: absolute;
     z-index: 999;
     padding: 10px;
+}
+
+.wcmp_shipment_summary_list {
+	width: auto;
 }
 
 .wcmp_shipment_options_form td.wcmp_option_cost {

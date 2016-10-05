@@ -1,6 +1,6 @@
 jQuery( function( $ ) {
 	// move shipment options to 'Ship to' column
-	$('.wp-list-table .wcmp_shipment_options').each( function( index ) {
+	$('.wp-list-table .wcmp_shipment_options, .wp-list-table .wcmp_shipment_summary').each( function( index ) {
 		var $ship_to_column = $( this ).closest('tr').find('td.shipping_address');
 		$( this ).appendTo( $ship_to_column );
 		// hidden by default - make visible
@@ -8,11 +8,11 @@ jQuery( function( $ ) {
 	});
 
 
+	// show options when clicked
 	$('.wcmp_show_shipment_options').click( function ( event ) {
 		event.preventDefault();
 		$( this ).next('.wcmp_shipment_options_form').slideToggle();
 	});
-
 	// hide options form when click outside
 	$(document).click(function(event) {
 		if(!$(event.target).closest('.wcmp_shipment_options_form').length) {
@@ -21,6 +21,23 @@ jQuery( function( $ ) {
 			}
 		}
 	})
+
+	// show summary when clicked
+	$('.wcmp_show_shipment_summary').click( function ( event ) {
+		event.preventDefault();
+		$( this ).next('.wcmp_shipment_summary_list').slideToggle();
+	});
+	// hide summary when click outside
+	$(document).click(function(event) {
+		if(!$(event.target).closest('.wcmp_shipment_summary_list').length) {
+			if( !( $(event.target).hasClass('wcmp_show_shipment_summary') || $(event.target).parent().hasClass('wcmp_shipment_summary') ) && $('.wcmp_shipment_summary_list').is(":visible")) {
+				console.log(event.target);
+				$('.wcmp_shipment_summary_list').slideUp();
+			}
+		}
+	})
+
+
 
 	// hide automatic order status if automation not enabled
 	$('.wcmp_shipment_options input#order_status_automation').change(function () {
