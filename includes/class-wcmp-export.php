@@ -692,7 +692,7 @@ class WooCommerce_MyParcel_Export {
 
 		if ( isset(WooCommerce_MyParcel()->general_settings['keep_shipments']) ) {
 			if ( $old_shipments = get_post_meta($order_id,'_myparcel_shipments',true) ) {
-				$shipments = $shipments + $old_shipments;
+				$shipments = $old_shipments + $shipments;
 			}
 		}
 
