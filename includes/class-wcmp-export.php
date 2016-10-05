@@ -394,10 +394,12 @@ class WooCommerce_MyParcel_Export {
 				);
 			}
 
+			/* disabled for now
 			$concept_shipments = $this->get_shipment_ids( (array) $order_id, array( 'only_concepts' => true, 'only_last' => true ) );
 			if ( !empty($concept_shipments) ) {
 				$shipment['id'] = array_pop($concept_shipments);
 			}
+			*/
 
 			$shipments[] = $shipment;
 		}
