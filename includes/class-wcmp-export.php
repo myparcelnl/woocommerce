@@ -604,7 +604,12 @@ class WooCommerce_MyParcel_Export {
 
 		// delivery date (postponed delivery & pickup)
 		if ($delivery_date = $this->get_delivery_date( $order, $myparcel_delivery_options ) ) {
-			$options['delivery_date'] = $delivery_date;
+			$date_time = explode(' ', $delivery_date); // split date and time
+			// only add if date is in the future
+			$timestamp = strtotime($date_time[0]);
+			if (time() < $timestamp) {
+				$options['delivery_date'] = $delivery_date;
+			}
 		}
 
 		// options signed & recipient only
