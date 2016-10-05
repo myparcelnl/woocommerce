@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "POT-Creation-Date: 2016-10-05 11:06+0200\n"
-"PO-Revision-Date: 2016-10-05 11:07+0200\n"
+"PO-Revision-Date: 2016-10-05 11:43+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -755,7 +755,7 @@ msgstr "Verzekerd tot &euro; 500"
 #: includes/views/wcmp-order-return-shipment-options.php:86
 #: includes/views/wcmp-order-shipment-options.php:134
 msgid "> &euro; 500 insured"
-msgstr "> &euro; 500 verzekers"
+msgstr "> &euro; 500 verzekerd"
 
 #: includes/views/wcmp-order-return-shipment-options.php:114
 #: includes/views/wcmp-order-shipment-options.php:172
