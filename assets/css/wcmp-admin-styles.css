@@ -15,8 +15,9 @@
 	/*display: inline;*/
 }
 
-.wcmp_shipment_summary .delivery-date, .wcmp_shipment_summary .delivery-options {
-	display: inline;
+.wcmp_shipment_summary .delivery-date,
+.wcmp_shipment_summary .delivery-options {
+	display: block;
 }
 
 ul.wcmyparcel_shipment_summary {
