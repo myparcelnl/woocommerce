@@ -686,12 +686,21 @@ class WooCommerce_MyParcel_Export {
 		$shipments = array();
 		$shipments[$shipment['shipment_id']] = $shipment;
 		// don't store full shipment data
-		if (isset($shipment['shipment'])) {
-			unset($shipment['shipment']);
-		}
+		// if (isset($shipment['shipment'])) {
+			// unset($shipment['shipment']);
+		// }
 
 		if ( isset(WooCommerce_MyParcel()->general_settings['keep_shipments']) ) {
 			if ( $old_shipments = get_post_meta($order_id,'_myparcel_shipments',true) ) {
+				// merging the arrays with the union operator (+) preserves the left hand version
+				// when the key exists in both arrays, but we also want to preserve keys and put
+				// new shipments AFTER old shipments, so we remove doubles first
+				// More intelligent sorting (created/modified date) would be a better solution
+				foreach ($shipments as $shipment_id => $shipment) {
+					if (isset($old_shipments[$shipment_id])) {
+						unset($old_shipments[$shipment_id]);
+					}
+				}
 				$shipments = $old_shipments + $shipments;
 			}
 		}
