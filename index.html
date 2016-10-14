@@ -2,8 +2,8 @@
 <html lang="en-us">
 <head>
     <meta charset="UTF-8"/>
-    <title>Magento MyParcel installatie- gebruikershandleiding</title>
-    <meta name="description" content="Installatie- gebruikershandleiding voor de Magento MyParcel plug-in">
+    <title>WooCommerce plugin installatie- gebruikershandleiding</title>
+    <meta name="description" content="Installatie- gebruikershandleiding voor de WooCommerce MyParcel plug-in">
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <link rel="shortcut icon" href="https://backoffice.myparcel.nl/images/favicon/favicon.ico">
     <link href="css/normalize.css" media="screen" rel="stylesheet" type="text/css"/>
@@ -22,33 +22,28 @@
         Installatie- gebruikershandleiding
     </h1>
     <h2 class="project-tagline">
-        Magento MyParcel plug-in 1.5.x
+        WooCommerce MyParcel plug-in 1.6
     </h2>
-    <a target="_blank" class="btn" href="https://github.com/myparcelnl/Magento1">GitHub</a>
-    <a target="_blank" class="btn" href="https://github.com/myparcelnl/magento1/releases">Alle updates</a>
-    <a target="_blank" class="btn" href="https://github.com/myparcelnl/magento1/releases/latest">Laatste versie</a>
+
     <!--<a target="_blank" class="btn" href="#">Magento Connect</a>-->
 </section>
 <section class="main-content">
     <h1>Inleiding</h1>
     <p>
-        Deze handleiding beschrijft de functionaliteiten van de MyParcel extensie en hoe je de MyParcel extensie in jouw
-        webwinkel kunt installeren. De installatie kan op twee manieren worden uitgevoerd:
+        Deze handleiding beschrijft de functionaliteiten van de MyParcel plugin en hoe je de MyParcel plugin in jouw
+        webwinkel kunt installeren. Wij adviseren om de plugin eerst in een testomgeving te installeren voordat je deze in jouw live webshop zet. De installatie kan op twee manieren worden uitgevoerd:
     </p>
     <ol>
         <li>
-            SSH/FTP
+            Via de WordPress plugin directory 
         </li>
         <li>
-            Magento Connect
+            Handmatig uploaden
         </li>
     </ol>
+    
     <p>
-        In deze handleiding beschrijven wij de installatie via SSH/FTP. Mocht je hier hulp bij nodig hebben dan
-        adviseren wij om contact op te nemen met je technisch beheerder.
-    </p>
-    <p>
-        Met deze Magento extensie kun je drie soorten MyParcel zendingen aanmaken:
+        Met deze WooCommerce plugin kun je drie soorten MyParcel zendingen aanmaken:
     </p>
     <ol>
         <li>
@@ -70,128 +65,32 @@
         <p>Wij adviseren de installatie altijd eerst op een testomgeving uit te voeren en een back-up te maken van
             jouw webshop voor je begint.</p>
 
-        <h2 id="1_1">1.1 Technische vereisten</h2>
+        <h2 id="1_1">1.1 Via de WordPress plugin directory</h2>
         <p>
-            Om de MyParcel Magento extensie te gebruiken dient uw server aan de onderstaande vereisten te voldoen:
+            Om de MyParcel plugin te installeren via de WordPress plugin directory volg je de volgende stappen:
         </p>
-        <ul>
-            <li>Minimaal PHP versie 5.3</li>
-            <li>SOAP PHP Libraries</li>
-            <li>256MB geheugen</li>
-        </ul>
-        <p>
-            De onderstaande Magento versies worden ondersteund:<br>
-
-            Community 1.6, 1.7, 1.8, 1.9
-        </p>
-        <h2 id="1_2">1.2 Extensie downloaden</h2>
-        <p>
-            U kunt de extensie op drie locaties downloaden:<br>
-
-        </p>
-        <ul>
-            <li>Github MyParcel voor de meest recente versie (Om het zip bestand te downloaden klik onder <span class="nice">Downloads</span> op <span class="nice">source code</span>.)<br>
-                <a target="_blank" href="https://github.com/myparcelnl/magento1/releases/latest">https://github.com/myparcelnl/magento1/releases/latest</a>
-            </li>
-            <li>
-                Website MyParcel<br>
-                <a target="_blank" href="http://backoffice.myparcel.nl/integratie">http://backoffice.myparcel.nl/integratie</a>
-            </li>
-        </ul>
-
-        <h2 id="1_3">1.3 Compiler uitschakelen</h2>
-        <p>
-            Schakel de compiler eerst uit indien deze is ingeschakeld. Dit kan via het menu: <span class="nice">Systeem → Hulpmiddelen
-            → Compilatie</span>.
-        </p>
-
-        <h2 id="1_4">1.4 Mappen & bestanden uploaden</h2>
-        <p>
-
-            Het .zip bestand bevat twee mappen:
-        </p>
-        <ul>
-            <li>app</li>
-            <li>skin</li>
-        </ul>
-        <p>
-            Upload deze mappen naar jouw Magento installatie.<br>
-
-            Er worden geen bestanden overschreven. Als het SSH/FTP programma vraagt of je de mappen wilt samenvoegen of
-            vervangen kies dan voor de optie samenvoegen.
-
-        </p>
-
-        <h2 id="1_5">1.5 Cache legen & opnieuw inloggen</h2>
-        <p>
-
-            Login op jouw Magento beheeromgeving en ga naar het menu <span class="nice">Systeem → Beheer cache</span>. Klik op <span class="nice">Selecteer alles</span>,
-            kies in het dropdownmenu voor de optie Ververs en klik op de Bevestig button.<br>
-            Klik vervolgens rechtsboven op Uitloggen en log opnieuw in op jouw beheeromgeving.
-
-        </p>
-
-        <h2 id="1_6">1.6 Cron controleren</h2>
-        <p>
-
-            De MyParcel extensie maakt gebruik van enkele cronjobs. Deze zijn nodig om de statussen van zendingen bij periodiek bij te werken in uw backend. De extensie haakt in op de cronfunctionaliteit van Magento.
-
-			Bij een correcte Magento installatie is de cron actief. 
-
-			Neem contact op met jouw ontwikkelaar als u hier vragen over heeft. 
-
-			Server cronjob
-			De wijze waarop je cronjobs op jouw server instelt verschilt per hostingprovider omdat er meerdere webserverbeheer systemen bestaan. Voorbeelden hiervan zijn DirectAdmin, Plesk en Cpanel.
-
-			Onderstaand een voorbeeld hoe je in DirectAdmin een cronjob insteld voor Magento.
-		</p>
-		<ol>
-			<li>Ga naar het account waar de Magento omgeving op draait en klik <span class="nice">Cronjobs</span> aan.
-				<img src="media/cron1.png">
-			</li>
-			<li>Voor een Magento Community webshop stelt je in dat de cronjob elke 5 minuten geactiveerd moet worden (zoals in onderstaand voorbeeld).
-			<img src="media/cron2.png">
-			</li>
-			<li>Controleer met SSH of je de cronjob kunt activeren.<br>
-				Dit kan door in een terminal venster in te loggen en het command in te voeren. In ons voorbeeld is dat <span class="nice">/home/magento/public_html/cron.sh</span>. Dit dient je te doen met root rechten.
-
-				Mocht dit niet werken of mocht de server geen shell mogelijkheid hebben dan kunt je uitwijken naar het cron.php bestand. 
-
-				In dat geval kun je twee cronjobs aan te maken. Je kunt aan geven waar PHP draait voor de opdrachten en de locatie achterhalen met de PHP constante PHP_BINDIR.<br>
-
-				Achter de opdrachten moet je een parameter te plaatsen:
-				<ul>
-					<li>Opdracht 1: cron.php -malways 1</li>
-					<li>Opdracht 2: cron.php -mdefault 1</li>
-				</ul>
-				<small>Zie onderstaand screenshot voor een voorbeeld.</small>
-					<img src="media/cron3.png">
-			</li>
-			<li>
-				Zorg dat de cron.sh (of cron.php) bestand 755 rechten heeft.
-
-				De server roept nu elke 5 minuten de cron functionaliteit van Magento aan.
-			</li>
-			<li> Magento cron
-				<ol>
-					<li>
-						Ga naar het menu <span class="nice">System → Configuration → Advanced → System → Cron (Scheduled Tasks)</span>.
-					</li>
-					<li>		
-						Zorg dat de instellingen gelijk zijn aan onderstaande afbeelding.
-						<img src="media/cron4.png">
-					</li>
-				</ol>
-				
-					Je kunt het beste de database openen en de table <span class="nice">cron_schedule</span> openen om te controleren of de cron succesvol draait. Die zal direct gevuld worden en daarin kunt je zien of de aanpassingen effect hebben.
-				
-			</li>
-		</ol>
-
+        <ol>
+            <li>Ga in WordPress naar het menu Plugins > Nieuwe plugin. </li>
+            <li>Typ in ‘MyParcel’ en klik op zoeken.</li>
+            <li>Kies de plugin ‘WooCommerce MyParcel export’ en klik op ‘Nu installeren’. De plugin wordt nu gedownload. </li>
+            <li>Wanneer het downloaden voltooid is, klikt je op ‘Plugin activeren’.</li>
+        </ol>
+        
+        <h2 id="1_2">1.2 Handmatig uploaden</h2>
+      <ol>
+            <li>1.  Download de zip file van de plugin vanaf de WordPress site: 
+http://www.wordpress.org/plugins/woocommerce-myparcel/ 
+ </li>
+            <li>Ga in WordPress naar het menu Plugins > Nieuwe plugin. </li>
+            <li>Klik bovenin het scherm op ‘Uploaden’.  </li>
+            <li>Kies het bestand en klik op ‘Nu Installeren’.</li>
+            <li>Wanneer het installeren voltooid is, klikt u op ‘Plugin activeren’. </li>
+        </ol>
+      
         <h1 id="2">2 Configuratie</h1>
         <p>
 
-            Ga naar het menu <span class="nice">Systeem → Configuratie → Verkoop → MyParcel</span> om de MyParcel extensie te
+            Ga naar het menu <span class="nice">WooCommerce  → MyParcel</span> om de MyParcel plugin te
             configureren.<br>
 
         </p>
