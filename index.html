@@ -86,7 +86,14 @@ http://www.wordpress.org/plugins/woocommerce-myparcel/
             <li>Kies het bestand en klik op ‘Nu Installeren’.</li>
             <li>Wanneer het installeren voltooid is, klikt u op ‘Plugin activeren’. </li>
         </ol>
-      
+         <h2 id="1_3">1.3 Testen</h2>
+        <p>
+            Wij adviseren om jouw bestelprocedure eenmalig door te lopen om te kijken of alles naar wens is. Let hierbij vooral op de volgende aspecten: 
+			De MyParcel plugin voegt aan de checkout van jouw webshop extra velden toe die het mogelijk maken voor de klant om straatnaam, huisnummer en eventuele toevoeging afzonderlijk in te voeren. Op deze manier kunnen de adresgegevens zo nauwkeurig mogelijk worden vastgelegd. Omdat niet alle checkouts exact hetzelfde zijn ingesteld is het mogelijk dat de uitlijning van deze gegevens nog aangepast moet worden. 
+			Verder wordt er nadat er een etiket is aangemaakt ook een track&trace nummer toegevoegd aan de order. Wanneer de order binnen WooCommerce voltooid wordt, krijgt de klant deze track&trace code in de bevestigingsmail te zien. 
+
+
+         </p>
         <h1 id="2">2 Configuratie</h1>
         <p>
 
@@ -95,9 +102,9 @@ http://www.wordpress.org/plugins/woocommerce-myparcel/
 
         </p>
 
-        <h2 id="2_1">2.1 API instellingen</h2>
+        <h2 id="2_1">2.1 Algemeen</h2>
         <p>
-
+		<h3 id="2_2_1">2.1.1 API instellingen</h3>
 
             Vul hier jouw MyParcel gebruikersnaam en API-key in.<br>
 
@@ -106,405 +113,137 @@ http://www.wordpress.org/plugins/woocommerce-myparcel/
 
         </p>
 
-        <h2 id="2_2">2.2 Algemene Instellingen</h2>
-
-        <h3 id="2_2_1">2.2.1 Activeer MyParcel extensie</h3>
+        <h3 id="2_1_2">2.1.2 Labelweergave</h3>
         <p>
 
-            Schakel de extensie in door <span class="nice">Activeer MyParcel extensie</span> op <span class="nice">Ja</span> te configureren.
-
+            Geef hier aan of je het label direct wilt downloaden of wilt openen in een nieuw scherm.
 
         </p>
 
-        <h3 id="2_2_2">2.2.2 Print oriëntatie</h3>
+        <h3 id="2_1_3">2.1.3 Track&Trace instellingen</h3>
         <p>
 
-            Kies de <span class="nice">Print oriëntatie</span>. Als je kiest voor A4 formaat zullen vier verzendlabels per A4 vel geprint
-            worden. Als je kiest voor A6 formaat zijn de verzendlabels geschikt voor het printen met een speciale
-            labelprinter zoals een Zebra of Dymo 4XL.
+            Geef bij ’Email track&trace code’ aan dat het emailadres van de klant wordt meegestuurd naar MyParcel. Het emailadres wordt gebruikt om de Track&Trace mail te versturen naar de klant. 
 
         </p>
 
-        <h3 id="2_2_3">2.2.3 Track&Trace e-mail template</h3>
+        <h3 id="2_1_4">2.1.4 Diagnostische hulpmiddelen</h3>
         <p>
 
-            Kies welke template je wilt gebruiken voor de Track & Trace e-mails in de dropdown Track&Trace email
-            template. Je hebt 2 keuzes:
+            Je kunt de diagnostische hulpmiddelen inschakelen op het moment dat er problemen zijn met het exporteren van de zendingen. In dit bestand wordt de communicatie tussen WooCommerce en MyParcel beschreven. 
         </p>
-        <ol>
-            <li>De Track&Trace mails via MyParcel versturen, of</li>
-            <li>De Track&Trace mails vanuit je Magento shop versturen.</li>
-        </ol>
 
-        <h4>Via MyParcel</h4>
+        <h2 id="2_2">2.2 Standaard exportinstellingen</h2>
+
+        <h3 id="2_2_1">2.2.1 Standaard voorkeuren</h3>
         <p>
-            Volg hiervoor onderstaande stappen:
+            Je kunt de verzendmethoden koppelen aan een pakkettype, zodat het juiste label wordt aangemaakt in jouw MyParcel account. In het voorbeeld hieronder staat ‘Vast tarief’ dat wordt een standaard pakket. De naam voor de verzendmethode ‘Flat rate NL’ is aangepast naar ‘Brievenbuspakket’ en deze is gekoppeld aan ‘Brievenbuspakje’. Dit betekent dat orders met deze verzendmethode als brievenbuspakje doorgezet worden naar MyParcel. De laatste verzendmethode is ‘gratis verzending’, met deze verzendmethode wordt een ongefrankeerd label aangemaakt. Je kunt dit uiteraard ook weglaten of hier een andere verzendmethoden aan koppelen.
         </p>
-        <ol>
-            <li>Log in op MyParcel.nl</li>
-            <li>Ga naar het menu <span class="nice">Instellingen → Track & Trace</span></li>
-            <li>Stel hier jouw Track&Trace mails naar wens in</li>
-        </ol>
-
-
-        <h4>Via je Magento webshop:</h4>
+       
         <p>
-            Volg hiervoor onderstaande stappen:
-        </p>
-        <ol>
-            <li>Ga naar <span class="nice">Systeem → Transactionele Emails</span></li>
-            <li>Kies voor de button <span class="nice">Nieuw Sjabloon Toevoegen</span></li>
-            <li>Selecteer het sjabloon <span class="nice">Verzendings update</span> en kies <span class="nice">Laad Sjabloon</span>.</li>
-            <li>Geef een naam aan het sjabloon in het veld <span class="nice">Naam Sjabloon</span>. Dit is voor intern gebruik.</li>
-            <li>Pas de inhoud van het sjabloon naar wens aan. Je kunt hiervoor de variabele <span class="nice">{{var tracktrace_url}}</span> en
-                <span class="nice">{{var retourlabel_url}}</span> gebruiken.
-            </li>
-            <li>Om er voor te zorgen dat er alleen tekst wordt getoond wanneer deze variabelen aanwezig zijn, kan je gebruik maken van <span class="nice">{{depend tracktrace_url}}</span> en <span class="nice">{{depend retourlabel_url}}</span>.
-            </li>
-            <li>Kies voor de button <span class="nice">Sjabloon Opslaan</span>.</li>
-            <li>Ga naar het menu <span class="nice">Systeem → Configuratie → MyParcel</span> en vervolgens naar de tab <span class="nice">Algemene instellingen</span>.
-            </li>
-            <li>Selecteer in de dropdown <span class="nice">Track&Trace email template</span> het sjabloon dat je zojuist hebt aangemaakt.</li>
-        </ol>
-
-        <h3 id="2_2_4">2.2.4 MyParcel versturingsmethodes</h3>
-        <p>
-            Indien je naast de MyParcel versturingsmethode nog meer versturingsmethodes gebruikt kun je deze selecteren
-            zodat je daar ook MyParcel handelingen op kunt uitvoeren. Door alle versturingsmethode te selecteren, maak
-            je het mogelijk om ten alle tijden de zendingen te exporteren naar MyParcel.
-            <img src="media/image001.jpg" alt="MyParcel versturingsmethodes">
-        </p>
-        <p>
-            Om alles in één keer te selecteren gebruik je:
-        </p>
-        <ul>
-            <li>In Windows: <span class="nice">CTRL + A</span></li>
-            <li>IN OS X: <span class="nice">CMD + A</span>.</li>
-        </ul>
-
-        <h2 id="2_3">2.3 Standaard verzend instellingen</h2>
-
-        <h3 id="2_3_1">2.3.1 Standaard voorkeuren</h3>
-        <p>
-            Op basis van de ingevulde orderwaarde worden de onderstaande opties geactiveerd. Voorbeeld: Indien je bij
-            <span class="nice">Verzekerd tot € 250</span> bijvoorbeeld de waarde 100 invult, worden orders met een verkoopwaarde boven de € 100
-            automatisch verzekerd tot een waarde van € 250. Deze logica is voor alle onderstaande opties in te stellen:
-        </p>
-        <ul>
-            <li>Alleen huisadres</li>
-            <li>Handtekening bij ontvangst</li>
-            <li>Retour bij niet aanwezig</li>
-            <li>Verzekerd tot € 50</li>
-            <li>Verzekerd tot € 250</li>
-            <li>Verzekerd tot € 500</li>
-        </ul>
-        <p>
-            Let op: Op het moment dat <span class="nice">0</span> ingevuld staat, is de optie niet geactiveerd. Bij invullen van <span class="nice">1</span> of hoger staat de optie actief.
+            Let op! Het gaat hier om de standaardinstelling. Uiteraard kan dit nog per order handmatig aangepast worden.
             
         </p>
 
-        <h3 id="2_3_2">2.3.2 Douane verzend type</h3>
+        <h3 id="2_2_2">2.2.2 Koppel emailadres klant</h3>
         <p>
 
-            Kies in het dropdownmenu bij het configuratieveld <span class="nice">Douane verzend type</span> de optie die bij uw zendingen
-            past.<br>
+            Je kunt de keuze maken om wel of niet het e-mailadres vanuit jouw orders mee te sturen naar MyParcel. Wanneer je het emailadres van de klant koppelt, kan MyParcel een Track&Trace email versturen naar dit adres. In jouw MyParcel backend kun je zelf deze email in-of uitschakelen en opmaken in jouw eigen stijl.
         </p>
 
-        <h4>Douane goederen HS code</h4>
+      
+
+        <h3 id="2_2_3">2.2.3 Koppel telefoonnummer klant</h3>
         <p>
-            Vul in het veld <span class="nice">Douane goederen HS code</span> de gewenste HS code in.<br>
 
-            Je kunt de codes vinden op deze link: <a href="http://gebruikstarief.douane.nl" target="_blank">http://gebruikstarief.douane.nl</a><br>
-            Let op: de HS code moet exact vier cijfers zijn.
-
+            Wanneer je het telefoonnummer van de klant koppelt met de zending, kan de koerier dit gebruiken ten behoeve van de aflevering van het pakket. De afleverkans voor buitenlandzendingen wordt hiermee aanzienlijk verhoogd.
         </p>
 
-        <h3 id="2_3_3">2.3.3 Deel straatnaam velden op</h3>
+        <h3 id="2_2_4">2.2.4 Extra verzendopties</h3>
+		<p>
+			Geef direct aan wat jouw standaard verzendopties zijn voor jouw zendingen. Je kunt hier kiezen voor extra groot formaat, alleen huisadres, handtekening voor ontvangst, retour bij geen gehoor en verzekerd verzenden. De opties die je hier aangeeft, kunnen bij het exporteren altijd per zending aangepast worden. 
+		</p>
+
+        <h3 id="2_2_5">2.2.5 Label omschrijving</h3>
+
         <p>
-
-            Je kunt in het veld <span class="nice">Deel straatnaam velden</span> op voor Ja of Nee kiezen. Wij adviseren om de straatnaam velden
-            niet op te delen, kies hier voor <span class="nice">nee</span>.
-
+			Met deze optie kun je een beschrijving toevoegen aan de zending. Dit zal worden afgedrukt op de linkerbovenhoek van het label en kun je gebruiken om de zending in het MyParcel zendingenoverzicht op te zoeken of te sorteren. Gebruik [ORDER_NR] om het ordernummer te vermelden.
         </p>
 
-        <h2 id="2_4">2.4 Versturingsmethodes configuratie</h2>
+        <h3 id="2_2_6">2.2.6 Leeg pakket gewicht</h3>
         <p>
-
-
-            Ga naar het menu <span class="nice">Systeem → Configuratie → Verkoop → Versturings Methodes → MyParcel</span>.<br>
-            Activeer de versturingsmethode. Kies vervolgens een Titel en een Methodenaam.
+        	Geef hier aan wat het gewicht van een leeg pakket is, afgerond op gram.
         </p>
 
-        <h3 id="2_4_1">2.4.1 Tarief type</h3>
+        <h2 id="2_3">2.3 Checkout</h2>
         <p>
-
-            Je kunt gebruik maken van twee methodes om de verzendkosten te berekenen:
-
-        </p>
-        <ul>
-            <li>Plat: Bij deze methode kun je direct het type en de prijs invullen.</li>
-            <li>Tabel: Bij deze methode worden de tarieven uit de Table Rates van Magento gebruikt.
-                <ol>
-                	<li>Ga naar het menu <span class="nice">Systeem → Configuratie → Verzendmethodes → Myparcel</span></li>
-                	<li>
-                		Kies bij <span class="nice">Tarief type</span> voor <span class="nice">Table</span> en bij <span class="nice">Voorwaarde</span> een gewenste instelling.
-					</li>
-					<li>
-						Schakel de tabel tarieven verzendmethode van Magento zelf uit. Om de verzendmethode van Magento uit te schakelen, volg je <span class="nice">Verzendmethode → tarieven prijstabel</span> en zet <span class="nice">ingeschakeld</span> op <span class="nice">nee</span>.
-					</li>
-					<li>
-						Maak een CSV Table Rates bestand. Op deze pagina kun je een CSV genereren: <a href="https://www.elgentos.nl/tablerates/">www.elgentos.nl/tablerates</a>. <br>Tip: Voor gratis verzendkosten vanaf een bepaald bedrag maak je een extra regel aan bij het desbetreffende land.</li>
-					<li>
-						Zorg ervoor dat je werkt op website niveau links bovenin bij <span class="nice">scope huidige configuratie</span>. Hier selecteer je de <span class="nice">main website</span>.
-					</li>
-					<li>
-						Upload het Table Rates CSV bij de verzendmethode Table Rates. De MyParcel extensie gebruikt de Table Rates van Magento zelf.
-					</li>
-                </ol>
-
-            </li>
-        </ul>
-
-        <h3 id="2_4_2">2.4.2 Afhandelingskosten</h3>
-        <p>
-            Stel in of je Afhandelingskosten hanteert naast de verzendkosten. Deze kosten worden bovenop de verzendkosten berekend.
+			Via het tabblad ‘Checkout’ heb je de mogelijkheid om meer verzendopties toe te voegen in jouw checkout. 
         </p>
 
-        <h3 id="2_4_3">2.4.3 PostNL locatie</h3>
-        <h4>PostNL locatie actief</h4>
-        <p>
-            Selecteer hier of jouw klanten hun pakketten bij een postpunt mogen ophalen.
-        </p>
-
-        <h4>PostNL locatie methode naam</h4>
-        <p>Hier kun je aangeven welke titel je in jouw webshop wilt gebruiken voor de verzendmethode <span class="nice">Ophalen bij een PostNL locatie</span>.</p>
-
-        <h4>PostNL locatie afhandelingskosten</h4>
-        <p>Stel in hoeveel afhandelingskosten klanten betalen wanneer ze hun pakket willen ophalen bij een PostNL locatie.</p>
-
-        <h4>PostNL locatie minimaal order bedrag actief</h4>
-        <p>
-            Wanneer je een minimaal orderbedrag wilt hanteren voor het ophalen bij een PostNL locatie kan je dat hier invoeren.
-        </p>
-
-        <h3 id="2_4_4">2.4.4 Verzend naar beschikbare landen</h3>
-        <p>
-            Kies naar welke landen je met MyParcel wilt versturen.
-        </p>
-
-        <h3 id="2_4_5">2.4.5 Sorteer bestelling</h3>
-        <p>
-            Kies de positie van de versturingsmethode in het veld <span class="nice">Sorteer bestelling</span>. Je kunt dit veld ook leeg laten.
-        </p>
-
-        <h1 id="3">3 Frontend functionaliteiten</h1>
-        <p>
-            Klanten zullen in het bestelproces de keuzen kunnen maken uit een normale verzending of afhalen op een PostNL afhaallocatie. Indien klanten kiezen om een zending af te halen op een PostNL afhaallocatie opent er een pop-up waarin zij een afhaallocatie kunnen selecteren.
-            <img src="media/image003.jpg" alt="Frontend functionaliteiten">
-        </p>
-
-        <h1 id="4">4 Backend functionaliteiten</h1>
-        <p>
-            Om de backend functionaliteiten te kunnen gebruiken dient de MyParcel extensie te zijn ingeschakeld.
-        </p>
-
-        <h2 id="4_1">4.1 Verzending aanmaken</h2>
-        <p>
-            Een MyParcel zending aanmaken kan op twee manieren:
-            <img src="media/image005.jpg" alt="Verzending aanmaken">
-        </p>
-
-        <h4>Batch methode in het bestellingenoverzicht.</h4>
-        <ol>
-            <li>Selecteer de zendingen die je wilt exporteren naar MyParcel</li>
-            <li>Kies in de actie balk <span class="nice">MyParcel - creëer en print MyParcel label</span></li>
-            <li>Klik vervolgens op de juiste pakket soort en vervolgens
-                op <span class="nice">Verstuur</span>
-            </li>
-            <li>Kies voor de juiste printpositie, indien je voor A4 hebt gekozen</li>
-            <li>Het PDF verschijnt op je computer en is klaar om te printen</li>
-        </ol>
-
-        <h4>Per bestelling als je een Magento zending aanmaakt.</h4>
-        <ol>
-            <li>Klik op de desbetreffende zending</li>
-            <li>Kies rechtsboven voor de knop <span class="nice">verstuur</span></li>
-            <li>Rechts onderin verschijnt een geel vak met extra verzendopties</li>
-            <li>Verstuur zending naar MyParcel</li>
-        </ol>
-        <p>
-            Het is ook mogelijk om een order in deelleveringen te versturen, bijvoorbeeld wanneer de order in totaliteit
-            te zwaar of te groot is om in één doos te versturen of wanneer een deel van de levering tijdelijk niet
-            voorradig is en je deze later alsnog wil toesturen.
-        </p>
-        <ol>
-            <li>Je kunt hiervoor de order bekijken en rechtsboven kiezen voor Verstuur.</li>
-            <li>Pas de hoeveelheid aan bij <span class="nice">Items te verzenden</span> en kies rechtsonder voor <span class="nice">Stuur verzending</span>.</li>
-            <li>Je kunt hierna op dezelfde wijze nog een verzendlabel aanmaken voor dezelfde order. Beide verzendingen
-                worden opgeslagen in de order.
-            </li>
-        </ol>
-
-        <h2 id="4_2">4.2 Genereer retourlabel</h2>
-        <p>
-            <img src="media/image007.jpg" alt="Genereer retourlabel">
-
-            Klik in het order overzicht op de betreffende order. Op het detailscherm klik je links in het menu op de tab
-            Zendingen. Klik de betreffende zending aan die geretourneerd moet worden. Je bent nu op het verzending
-            detail scherm waar je rechtsboven de button Genereer retourlabel ziet staan.<br><br>
-
-            Jouw klant zal van MyParcel een e-mail ontvangen met een link naar het verzendlabel indien er een
-            e-mailadres is ingevuld bij de zending. Je kunt jouw e-mail voor retouren binnen MyParcel eventueel nog
-            personaliseren. Je kunt dit doen door in te loggen bij MyParcel bij <span class="nice">Instellingen → Retour</span> en dan
-            onderaan de pagina <span class="nice">Pas e-mail aan</span>.
-        </p>
-
-        <h1 id="5">5 Upgraden</h1>
+        <h3 id="2_3_1">2.3.1 Bezorgopties</h3>
         <p>
 
-            Voor de nieuwste versie van de MyParcel extensie klik op de volgende link:
-            <a target="_blank" href="https://github.com/myparcelnl/magento1/releases/latest">https://github.com/myparcelnl/magento1/releases/latest</a><br>
-
-            Om het zip bestand te downloaden klik onder <span class="nice">Downloads</span> op source code.<br><br>
-
-            Voor meer informatie over de release notes kijk dan hier:
-            <a target="_blank" href="https://github.com/myparcelnl/magento1/releases">https://github.com/myparcelnl/magento1/releases</a>
-
-        </p>
-
-        <h2 id="5_1">5.1 Upgrade stappen</h2>
-
-        <p>
-            <b>1 Compiler uitschakelen</b><br>
-            Schakel de compiler uit indien deze is ingeschakeld.<br>
-            Dit kan ingesteld worden in het menu <span class="nice">Systeem → Gereedschap → Compilatie</span>.
-        </p>
-
-        <p>
-            <b>2 Mappen & bestanden uploaden</b><br>
-            Het .zip bestand bevat twee mappen:
-        </p>
-        <ol>
-            <li>app</li>
-            <li>skin</li>
-        </ol>
-        <p>
-            Upload deze mappen naar jouw Magento installatie.<br>
-
-            Als het SSH/FTP programma vraagt of je mappen wilt samenvoegen of vervangen kies dan voor samenvoegen.
-
-        </p>
-
-        <p>
-            <b>3 Cache legen & opnieuw inloggen</b><br>
-            Login op jouw Magento beheeromgeving en ga naar het menu <span class="nice">Systeem → Beheer cache</span>. Klik op <span class="nice">Selecteer alles</span>, kies in de dropdown voor <span class="nice">Ververs</span> en klik op de <span class="nice">Bevestig</span> button.
+            Bij de verschillende bezorgopties is het mogelijk een toeslag in te stellen die voor de desbetreffende bezorgoptie doorberekend wordt aan jouw klant via de checkout. Het is dus een toeslag op de standaardtarieven die je al hebt ingevoerd. In onderstaand voorbeeld zie je hoe deze toeslagen in de check-out terugkomen.
             <br>
-            Klik rechtsboven op <span class="nice">Uitloggen</span> en log opnieuw in op uw beheeromgeving.
-            <br>
-            De extensie is nu geüpgraded.
-
-
+            Je ziet bij de checkout instellingen nog 4 andere instellingen. Dit zijn ‘afleverdagen’, ‘verwerkingstijd’, ‘leverdagen’ en ‘sluitingstijd’. Op basis van deze instelling worden de juiste levertijden en –dagen getoond aan jouw klanten, gebaseerd op jouw manier van orderverwerking. 
         </p>
 
-        <h1 id="6">6 Veel gestelde vragen</h1>
+        <h3 id="2_3_2">2.3.2 Verwerking van zendingen</h3>
+       <p>
+      	Afleverdagen
+		Hiermee kun je aangeven op welke dagen jij het pakket afgeeft bij een PostNL locatie. Jouw klanten krijgen hiermee een beter overzicht van de beschikbare bezorgdagen.
 
-        <h2 id="6_1">6.1 Ondersteunen jullie mijn checkout?</h2>
+		Sluitingstijd
+		Met een sluitingstijd kun je aangeven tot welk moment van de dag de orders nog verwerkt kunnen worden. Als je elke dag rond 17:00 de bestellingen naar een PostNL locatie brengt is het handig om de laatste order rond 16:00 te verwerken. Wanneer jouw klanten na dit tijdstip een bestelling plaatsen zien zij een later levermogelijkheid. Bijvoorbeeld:
+		Sluitingstijd is om 16:00 en je kunt dezelfde dag de orders verwerken. Dan zal jouw klant als eerste levermogelijkheid voor 16:00 de volgende dag zien. Wanneer jouw klant na 16:00 besteld zal het de dag erna zijn.
+
+		Verwerkingstijd
+		Je kunt hier instellen hoeveel dagen jij nodig hebt om een order, die vóór jouw laatste besteltijd binnenkomt, te verwerken. Als je bijvoorbeeld 1 dag invult, zal er in de weergave in de check-out altijd rekening gehouden worden met het feit dat jij de pakketten dus niet morgen geleverd worden. Bijvoorbeeld:
+		De bestelling wordt geplaatst op 16 september voordat jij naar het PostNL punt gaat. Je hebt echter een verwerkingstijd van 1 dag ingesteld, dus de eerste mogelijkheid voor jou om het pakket in te leveren is dan 17 september. Jouw klant krijgt dan dus pas 18 september als eerst mogelijke leverdag te zien.
+
+		Leverdagen venster
+		Met deze optie kun je aangeven tot hoever in de toekomst jouw klanten een leverdag kunnen kiezen. In dit geval staat het op 10 dagen, maar dit kan natuurlijk ook 2 of 5 dagen zijn. Het maximum is 14 dagen.
+		</p>
+
+        <h1 id="3">3 Orderoverzicht</h1>
         <p>
-            De verzendmethode MyParcel maakt gebruik van standaard Magento functionaliteiten. Dit houdt in dat de
-            verzendmethode in elke checkout die volgens de Magento richtlijnen is opgebouwd werkt.<br>
-
-            MyParcel 'Ophalen op een PostNL locatie' wordt ondersteund voor de onderstaande checkout extensies:
+            In het orderoverzicht zie je eenvoudig wat voor zending de nieuwe bestelling betreft. Je heel snel het pakkettype wijzigen indien dit gewenst is.
+		<br>
+			In onderstaande afbeelding is omcirkeld waarmee je de opties eventueel kunt wijzigen voor het type pakket.
+		<br>
+			Wanneer je erop klikt zie het er als volgt uit:	
+		<br>
+			Na het kiezen van jouw gewenste opties of het wijzigen van het ‘Soort zending’ klik je op ‘Opslaan’ en daarna kun je deze keuze doorzetten naar MyParcel.
+			Dit kan op 2 manieren:
+		<br>
+			Na het exporteren van de zending kun je het label downloaden en printen. Ook dit kan op 2 verschillende manieren.	
 
         </p>
-        <ul>
-            <li>OnePageCheckout, dit is de standaard checkout van Magento.</li>
 
-            <li>IWD checkout</li>
 
-            <li>Idev OneStepCheckout, deze kan je aanschaffen op <a target="_blank" href="http://www.onestepcheckout.com">www.onestepcheckout.com</a>. Let op, je dient nooit 'Ophalen op een PostNL locatie' als default verzendmethode in te stellen.</li>
-        </ul>
-
-        <h2 id="6_2">6.2 Ik gebruik een postcode check extensie, is dat een probleem?</h2>
+        <h1 id="4">4 Labels aanmaken en printen/h1>
         <p>
-            In principe is het mogelijk een postcode check extensie te gebruiken in combinatie met de MyParcel Magento
-            extensie.
 
-
+            Je kunt labels aanmaken en printen direct vanuit het order overzicht van WooCommerce.  
+			LET OP: Je kunt enkel orders exporteren die met de nieuwe checkout velden zijn aangemaakt. Om te testen of om oudere orders ook te exporteren kunt u deze wel handmatig aanpassen door in de order bij ‘Verzendingsdetails’ op ‘bewerken’ te klikken. 
+			<br> 
+			Enkele order exporteren:
+		<ol>
+			<li>Klik op het rode verzend icoontje met de pijl, in de kolom acties (helemaal rechts), zie afbeelding.</li>
+			<li>Je krijgt nu een pop-up met export opties die je kunt wijzigen, mocht dit nodig zijn. </li>
+			<li>Klik op ‘Exporteer naar MyParcel’. </li>
+			<li>Als de export klaar is, krijg je een melding, en wanneer de export succesvol was kun je direct een PDF met het label downloaden. </li>
+			<li>Als je de PDF later opnieuw wilt downloaden/openen, dan kunt je dat eenvoudig doen met het rode verzend icoontje met ‘pdf’.  </li>
         </p>
 
-        <h2 id="6_3">6.3 Hoe kan ik gratis verzendkosten instellen?</h2>
         <p>
-            Naast de Table Rates kun je ook gratis verzendkosten instellen via Promoties > Winkelwagen prijsregels.
-        </p>
+        Meerdere orders tegelijk exporteren:
         <ol>
-            <li>Klik rechts bovenin op <span class="nice">Nieuwe regel toevoegen</span>.</li>
-            <li>Bij <span class="nice">Regelgegevens</span> geef je de regel een naam (voorbeeld: ‘gratis verzenden vanaf 50’). Zet de <span class="nice">status</span>
-                op <span class="nice">actief</span> en kies bij <span class="nice">websites</span> en <span class="nice">klantengroepen</span> alle opties.
-            </li>
-            <li>Klik links boven op <span class="nice">Voorwaarden</span> en schrijf zelf de regel door op <span class="nice">+</span> te klikken. (voorbeeld: Subtotaal gelijk aan of groter dan 50)
-            </li>
-            <li>Ga naar de volgende stap <span class="nice">acties</span> en geef bij <span class="nice">gratis verzending</span> aan <span class="nice">Alleen voor betreffende artikelen</span>.
-            <li>Klik rechts bovenin op opslaan.</li>
-        </ol>
+        	<li>Selecteer de te exporteren orders door er een vinkje bij te plaatsen in de linker kolom.</li>
+        	<li>Kies dan in het ‘Acties’ menu bovenaan het bestellingen overzicht ‘Exporteer naar MyParcel’ en klik op ‘Uitvoeren’. </li>
+        	<li>Je krijgt nu een pop-up met export opties die u kunt wijzigen als u dat wilt</li>
+        	<li>Klik op ‘Exporteer naar MyParcel’. </li>
+        	<li>Als de export klaar is, krijgt u een daarvan melding en kun je direct een PDF met het label downloaden. </li>
+        	<li>Als je de PDF met labels later opnieuw wilt laten aanmaken, kun je dat doen op dezelfde manier via ‘Acties’ menu, je kiest dan ‘Print MyParcel labels’. </li>
 
-        <h2 id="6_4">6.4 Waarom komt mijn label niet door naar MyParcel met een andere verzendmethode?</h2>
-        <p>
-            Vanaf versie 1.3 van de MyParcel Magento extensie kun je andere verzendmethode aan de MyParcel extensie koppelen. Dit kan handig zijn als je bijvoorbeeld een verzendkosten extensie gebruikt.<br>
-            Dit kun je instellen via <span class="nice">Systeem > Configuratie > MyParcel</span>.
-
-
-        </p>
-
-        <h2 id="6_5">6.5 API-key van MyParcel plugin verandert na inloggen in Magento naar de inloggegevens.</h2>
-        <p>
-            Je gebruikt waarschijnlijk Safari. Als je bijvoorbeeld Chrome als browser zou gebruiken gaat alles goed. Dit heeft te maken met dat safari wachtwoorden verkeerd opslaat.
-        </p>
-
-        <h2 id="6_6">6.6 Mijn label kan niet aangemaakt worden.</h2>
-        <p>
-            <b>Probleem:</b><br>
-            Label kan niet worden aangemaakt
-        </p>
-        <ul>
-            <li>Er komt wel een popup waar je kan kiezen op welke plek geprint moet worden, maar verder gebeurt er
-                niks
-            </li>
-            <li>Je gebruikt meerdere verzendmethodes (inc. Flat Rate, Table Rates en Free Shipping)</li>
-        </ul>
-        <p>
-            <b>Oplossing:</b><br>
-            Bij instellingen van MyParcel moeten alle verzendmethodes aangevinkt zijn die worden gebruikt. Dit doe je bij <span class="nice">Systeem → Verzendmethodes</span>.
-
-        </p>
-
-        <h2 id="6_7">6.7 Op het label komt geen toevoeging van het huisnummer.</h2>
-        <p>
-            Toevoeging van huisnummer staat in een aparte regel. Dit komt niet mee op het label. Update naar een versie na 1.5.x<br>
-            Ga naar <span class="nice">Systeem → Instellingen → MyParcel → Standaard verzend instellingen</span>. Zet <span class="nice">Deel straatnaam velden op</span> op <span class="nice">nee</span>.
-            <br>
-            <br>
-            <img src="media/image009.png" alt="Op het label komt geen toevoeging van het huisnummer.">
-        </p>
-    </div>
-
-    <footer class="site-footer">
-        <p>
-            <span class="site-footer-owner">MyParcel</span>
-        </p>
-        <p>
-        <span class="site-footer-credits">
-            <strong>Adres </strong>Hoofdweg 679, 2131 BC Hoofddorp&nbsp;
-            <strong>Telefoon </strong>023 30 30 315&nbsp;
-            <strong>E-mail</strong> &nbsp;info@myparcel.nl<br/>
-            <strong>Website </strong>www.myparcel.nl&nbsp;
-            <strong>IBAN </strong>NL48ABNA0447850539&nbsp;
-            <strong>KvK </strong>Amsterdam 34 09 97 58 <br/>
-            <strong>BTW-nr. </strong>NL8045.33.258.B01
-        </span>
-            <br/>
-            &nbsp;
-        </p>
-    </footer>
-</section>
-</body>
-</html>
+        
