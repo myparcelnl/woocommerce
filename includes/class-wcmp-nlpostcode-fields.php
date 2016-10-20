@@ -1,5 +1,10 @@
 <?php
-if ( !class_exists( 'WC_NLPostcode_Fields' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
+if ( !class_exists( 'WC_NLPostcode_Fields' ) ) :
+
 class WC_NLPostcode_Fields {
 
 	public $version = '1.5.4';
@@ -86,7 +91,7 @@ class WC_NLPostcode_Fields {
 				// Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
 				wp_register_script(
 					'nl-checkout',
-					(dirname(plugin_dir_url(__FILE__)) . '/js/nl-checkout.js'),
+					WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-checkout.js',
 					array( 'wc-checkout' ),
 					$this->version
 				);
@@ -97,14 +102,14 @@ class WC_NLPostcode_Fields {
 				// Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
 				wp_register_script(
 					'nl-account-page',
-					(dirname(plugin_dir_url(__FILE__)) . '/js/nl-account-page.js'),
+					WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-account-page.js',
 					array( 'jquery' ),
 					$this->version
 				);
 				wp_enqueue_script( 'nl-account-page' );
 			}
 
-			wp_enqueue_style( 'nl-checkout', (dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout.css') );
+			wp_enqueue_style( 'nl-checkout', WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout.css' );
 		}
 
 	}
@@ -117,7 +122,7 @@ class WC_NLPostcode_Fields {
 		if ( $post_type == 'shop_order' ) {
 			wp_enqueue_style(
 				'nl-checkout-admin',
-				dirname(plugin_dir_url(__FILE__)) . '/css/nl-checkout-admin.css',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout-admin.css',
 				array(), // deps
 				$this->version
 			);
@@ -370,6 +375,8 @@ class WC_NLPostcode_Fields {
 		);
 
 		return $fields;
+
+		echo '<pre>';var_dump($fields);echo '</pre>';die();
 	}
 
 	/**
@@ -783,4 +790,7 @@ class WC_NLPostcode_Fields {
 		return $new_array;
 	}
 }
-}
+
+endif; // class_exists
+
+return new WC_NLPostcode_Fields();

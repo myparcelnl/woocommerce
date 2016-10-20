@@ -1,0 +1,5 @@
+/* Order actions button styling */
+.widefat .column-order_actions a.button.myparcel {
+	float:left;
+	padding: 1px 2px;
+}
