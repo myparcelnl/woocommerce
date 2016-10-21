@@ -1,7 +1,7 @@
-# Woocommerce handleiding
+## Woocommerce handleiding
 Voor de handleiding ga naar https://myparcelnl.github.io/woocommerce-myparcel
 
-=== Plugin Name ===
+## Plugin Name
 Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
@@ -12,7 +12,7 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 
 Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
 
-== Description ==
+## Description
 
 This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl). Single orders exports aswell as batch exports are possible.
 
@@ -29,7 +29,7 @@ This WooCommerce extension allows you to export your orders to the MyParcel serv
 
 A MyParcel API account is required for this plugin! You can create this in your account or contact MyParcel at info@myparcel.nl
 
-== Installation ==
+## Installation
 
 = Automatic installation =
 Automatic installation is the easiest option as WordPress handles the file transfers itself and you don't even need to leave your web browser. To do an automatic install of WooCommerce MyParcel, log in to your WordPress admin panel, navigate to the Plugins menu and click Add New.
@@ -61,7 +61,7 @@ The MyParcel plugin adds extra fields to the checkout of your webshop, to make i
 
 Moreover, after a label is created, a track&trace code is added to the order. When the order is completed from WooCommerce, this track & trace code is added to the email (when this is enabled in the settings). Check that the code is correctly displayed in your template. You can read how to change the text in the FAQ section.
 
-== Frequently Asked Questions ==
+## Frequently Asked Questions
 
 = How do I get an API key? =
 
@@ -102,13 +102,13 @@ function wcmyparcel_pakjegemak_move() {
 `
 
 
-== Screenshots ==
+## Screenshots
 
 1. Export or print myparcel label per order
 2. Bulk export or print myparcel labels
 3. View the status of the shipment on the order details page.
 
-== Changelog ==
+## Changelog
 
 = 1.5.6 =
 * Fix: Disable pakjegemak if 'ship to different address' is disabled after selecting Pakjegemak location
