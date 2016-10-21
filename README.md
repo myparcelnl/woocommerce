@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # WooCommerce MyParcel
 Welcome to the WooCommerce MyParcel repository on GitHub. Here you can browse the source, look at open issues and keep track of development.
 
@@ -13,3 +14,7 @@ This WooCommerce extension allows you to export your orders to the MyParcel serv
 - Print MyParcel labels directly from WooCommerce (PDF)
 
 A MyParcel API account is required for this plugin! Get one at info@myparcel.nl
+=======
+# magento1-handleiding
+Voor de handleiding ga naar https://myparcelnl.github.io/
+>>>>>>> origin/gh-pages
