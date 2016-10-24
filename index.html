@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="https://backoffice.myparcel.nl/images/favicon/favicon.ico">
     <link href="css/normalize.css" media="screen" rel="stylesheet" type="text/css"/>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css"/>
-    <link href="css/stylesheet.css" media="screen" rel="stylesheet" type="text/css"/>
+    <link href="https://myparcelnl.github.io/magento1/css/stylesheet.css" media="screen" rel="stylesheet" type="text/css"/>
     <link href="css/github-light.css" media="screen" rel="stylesheet" type="text/css"/>
     <script src="js/jquery-3.0.0.min.js"></script>
     <script src="js/auto_menu.js"></script>
@@ -48,6 +48,9 @@
     <ol>
         <li>
             Normaal (gewone pakketten en Ophalen op PostNL locatie)
+        </li>
+        <li>
+        Pakketten zowel binnen de EU als buiten de EU
         </li>
         <li>
             Brievenbuspakje
@@ -106,14 +109,14 @@ http://www.wordpress.org/plugins/woocommerce-myparcel/
         <p>
 		<h3 id="2_2_1">2.1.1 API instellingen</h3>
 
-            Vul hier jouw MyParcel gebruikersnaam en API-key in.<br>
+            Om verbinding te kunnen maken met jouw MyParcel account is het noodzakelijk om hier jouw API-key in te vullen.<br>
 
             Als je ingelogd bent in jouw myparcelaccount op backoffice.myparcel.nl dan kun je deze vinden in menu
             <span class="nice">Instellingen → Algemeen.</span>
 
         </p>
 
-        <h3 id="2_1_2">2.1.2 Labelweergave</h3>
+        <h3 id="2_1_2">2.1.2 Label display</h3>
         <p>
 
             Geef hier aan of je het label direct wilt downloaden of wilt openen in een nieuw scherm.
@@ -133,21 +136,34 @@ http://www.wordpress.org/plugins/woocommerce-myparcel/
             Je kunt de diagnostische hulpmiddelen inschakelen op het moment dat er problemen zijn met het exporteren van de zendingen. In dit bestand wordt de communicatie tussen WooCommerce en MyParcel beschreven. 
         </p>
 
+        <img src="media/woocommerce1.png">
         <h2 id="2_2">2.2 Standaard exportinstellingen</h2>
 
         <h3 id="2_2_1">2.2.1 Standaard voorkeuren</h3>
         <p>
-            Je kunt de verzendmethoden koppelen aan een pakkettype, zodat het juiste label wordt aangemaakt in jouw MyParcel account. 
-            <br>
-            In het voorbeeld hieronder staat ‘Vast tarief’ dat wordt een standaard pakket. De naam voor de verzendmethode ‘Flat rate NL’ is aangepast naar ‘Brievenbuspakket’ en deze is gekoppeld aan ‘Brievenbuspakje’. Dit betekent dat orders met deze verzendmethode als brievenbuspakje doorgezet worden naar MyParcel. 
-            <br>
-            De laatste verzendmethode is ‘gratis verzending’, met deze verzendmethode wordt een ongefrankeerd label aangemaakt. Je kunt dit uiteraard ook weglaten of hier een andere verzendmethoden aan koppelen.
+        Je kunt verzendmethoden koppelen aan een pakkettype, zodat het juiste label wordt aangemaakt in jouw MyParcel account. In het voorbeeld hieronder staat ‘Vast tarief’ dat wordt een standaard pakket.<br><br>
+         Daarnaast hebben we de naam van de verzendmethode ‘Flat rate NL’ aangepast naar ‘Brievenbuspakket’ en deze is gekoppeld aan ‘Brievenbuspakje’. Dit betekent dat orders met deze verzendmethode als brievenbuspakje doorgezet worden naar MyParcel.<br><br>
+         Als laatste staat ‘gratis verzending’, met deze verzendmethode wordt een ongefrankeerd label aangemaakt. Je kunt dit uiteraard ook weglaten of hier een andere verzendmethoden aan koppelen.
+         <br><br>
+         De checkout is nu ook gekoppeld aan deze verzendmethoden. Wanneer jouw klant voor de optie ‘Brievenbuspakket’ heeft gekozen zal de uitgebreide checkout niet getoond worden. Ook bij zendingen naar het buitenland wordt deze checkout dan niet getoond. De reden hiervoor is omdat de extra opties niet beschikbaar zijn in combinatie met een brievenbuspakket of een buitenlandse zending.
         </p>
-       
+       <img src="media/woocommerce4.png">
         <p>
-            Let op! Het gaat hier om de standaardinstelling. Uiteraard kan dit nog per order handmatig aangepast worden.
+            <i>Let op! Het gaat hier om de standaardinstelling. Uiteraard kan dit nog per order handmatig aangepast worden.</i>
             
         </p>
+        <p>Het is mogelijk om met 2 verschillende manieren verzendmethoden aan jouw producten te koppelen. Je kunt dit doen door te werken met verzendklassen. Deze kun je aanmaken via <span class="nice"> WooCommerce -> instellingen -> Verzendmethoden -> Verzendklassen.</span><br><br>
+        <img src="media/woocommerce2.png">
+
+        Nu kun je producten toewijzen aan deze verzendklassen. Ga naar <span class="nice">Producten</span> in WooCommerce en kies het product dat jij wilt toevoegen aan een verzendklasse. Kies daarna voor <span class="nice">Verzendmethoden</span> en selecteer de gewenste verzendklasse. Deze verzendklasse zijn erg handig om verschillende verzendtarieven te hanteren. De verzendklassen worden automatisch voor alle landen aangemaakt en de prijzen kun je per land instellen.<br><br>
+
+        <img src="media/woocommerce3.png">
+        De tweede methode is door middel van een extra plugin. Deze methode is wat betrouwbaarder omdat deze ook rekening houdt met meerdere producten in het winkelwagenmandje en deze de gewichten bij elkaar optelt. Je kunt met deze methode verzendkosten berekenen op basis van gewichten. Voor meer informatie over deze plugin kun je <a href="https://woocommerce.com/products/table-rate-shipping/"> hier klikken</a>.<br><br>
+        </p>
+
+
+
+        
 
         <h3 id="2_2_2">2.2.2 Koppel emailadres klant</h3>
         <p>
@@ -183,6 +199,7 @@ http://www.wordpress.org/plugins/woocommerce-myparcel/
         <p>
 			Via het tabblad ‘Checkout’ heb je de mogelijkheid om meer verzendopties toe te voegen in jouw checkout. 
         </p>
+        <img src="media/woocommerce5.png">
 
         <h3 id="2_3_1">2.3.1 Bezorgopties</h3>
         <p>
@@ -191,69 +208,58 @@ http://www.wordpress.org/plugins/woocommerce-myparcel/
             <br>
             Het is dus een toeslag op de standaardtarieven die je al hebt ingevoerd. In onderstaand voorbeeld zie je hoe deze toeslagen in de check-out terugkomen.
             <br>
+            <img src="media/woocommerce6.png">
             Je ziet bij de checkout instellingen nog 4 andere instellingen. Dit zijn ‘afleverdagen’, ‘verwerkingstijd’, ‘leverdagen’ en ‘sluitingstijd’. Op basis van deze instelling worden de juiste levertijden en –dagen getoond aan jouw klanten, gebaseerd op jouw manier van orderverwerking. 
         </p>
+        <img src="media/woocommerce7.png">
 
         <h3 id="2_3_2">2.3.2 Verwerking van zendingen</h3>
        <p>
-      	Afleverdagen
+      	<b>Afleverdagen</b><br>
       	<br>
-		Hiermee kun je aangeven op welke dagen jij het pakket afgeeft bij een PostNL locatie. Jouw klanten krijgen hiermee een beter overzicht van de beschikbare bezorgdagen.
-		<br>
-		Sluitingstijd
+		Hiermee kun je aangeven op welke dagen jij het pakket afgeeft bij een PostNL locatie. Jouw klanten krijgen hiermee de juiste beschikbare bezorgdagen aangeboden.
+		<br><br>
+		<b>Sluitingstijd</b><br>
 		<br>
 		Met een sluitingstijd kun je aangeven tot welk moment van de dag de orders nog verwerkt kunnen worden. Als je elke dag rond 17:00 de bestellingen naar een PostNL locatie brengt is het handig om de laatste order rond 16:00 te verwerken. Wanneer jouw klanten na dit tijdstip een bestelling plaatsen zien zij een later levermogelijkheid. Bijvoorbeeld:
-		Sluitingstijd is om 16:00 en je kunt dezelfde dag de orders verwerken. Dan zal jouw klant als eerste levermogelijkheid voor 16:00 de volgende dag zien. Wanneer jouw klant na 16:00 besteld zal het de dag erna zijn.
-		<br>
-		Verwerkingstijd
+        Sluitingstijd is om 16:00 en je kunt dezelfde dag de orders verwerken. Dan zal jouw klant als eerste levermogelijkheid voor 16:00 de volgende dag zien. Wanneer jouw klant na 16:00 besteld zal het de dag erna zijn.
+		<br><br>
+		<b>Verwerkingstijd</b><br>
 		<br>
 		Je kunt hier instellen hoeveel dagen jij nodig hebt om een order, die vóór jouw laatste besteltijd binnenkomt, te verwerken. Als je bijvoorbeeld 1 dag invult, zal er in de weergave in de check-out altijd rekening gehouden worden met het feit dat jij de pakketten dus niet morgen geleverd worden. Bijvoorbeeld:
-		De bestelling wordt geplaatst op 16 september voordat jij naar het PostNL punt gaat. Je hebt echter een verwerkingstijd van 1 dag ingesteld, dus de eerste mogelijkheid voor jou om het pakket in te leveren is dan 17 september. Jouw klant krijgt dan dus pas 18 september als eerst mogelijke leverdag te zien.
-		<br>
-		Leverdagen venster
+        De bestelling wordt geplaatst op 16 september voordat jij naar het PostNL punt gaat. Je hebt echter een verwerkingstijd van 1 dag ingesteld, dus de eerste mogelijkheid voor jou om het pakket in te leveren is dan 17 september. Jouw klant krijgt dan dus pas 18 september als eerst mogelijke leverdag te zien.
+
+		<br><br>
+		<b>Leverdagen venster</b><br>
 		<br>
 		Met deze optie kun je aangeven tot hoever in de toekomst jouw klanten een leverdag kunnen kiezen. In dit geval staat het op 10 dagen, maar dit kan natuurlijk ook 2 of 5 dagen zijn. Het maximum is 14 dagen.
+        <i>Let op: PostNL houdt geen rekening met de gekozen leverdag van jouw klant. Je dient zelf zorg te dragen voor het op de juiste dag inleveren van jouw pakket.</i>
+
 		</p>
 
         <h1 id="3">3 Orderoverzicht</h1>
         <p>
-            In het orderoverzicht zie je eenvoudig wat voor zending de nieuwe bestelling betreft. Je heel snel het pakkettype wijzigen indien dit gewenst is.
-		<br>
-			In onderstaande afbeelding is omcirkeld waarmee je de opties eventueel kunt wijzigen voor het type pakket.
-		<br>
-			Wanneer je erop klikt zie het er als volgt uit:	
-		<br>
-			Na het kiezen van jouw gewenste opties of het wijzigen van het ‘Soort zending’ klik je op ‘Opslaan’ en daarna kun je deze keuze doorzetten naar MyParcel.
-			Dit kan op 2 manieren:
-		<br>
-			Na het exporteren van de zending kun je het label downloaden en printen. Ook dit kan op 2 verschillende manieren.	
+            In het orderoverzicht kun je eenvoudig zien wat voor zending de nieuwe bestelling betreft. Ook kun je heel snel het pakkettype wijzigen indien dit gewenst is. Wanneer je op “Pakket“ klikt verschijnt het venster eronder, hierin is het mogelijk om verzendopties uit te schakelen of juist toe te voegen of het soort zending aan te passen.
 
         </p>
+        <p>Na het kiezen van jouw gewenste opties of het wijzigen van het ‘Soort zending’ klik je op ‘Opslaan’ en daarna kun je deze keuze doorzetten naar MyParcel.<br><br>
+        <img src="media/woocommerce8.png">
+
+        Je kunt op 2 manieren jouw orders doorzetten naar MyParcel en hier vervolgens een label voor uitprinten. Namelijk door een order (of meerdere orders) te selecteren en vervolgens naar <span class="nice">Acties</span> te gaan. Daar kun je jouw keuze maken <span class="nice">Exporteren</span>, <span class="nice">Printen</span> of <span class="nice">Exporteren en Printen</span>. Ook kun je per order een zending aanmaken, dit kan met het icoontje achter de gewenste order.</p>
+        <img src="media/woocommerce9.png">
 
 
-        <h1 id="4">4 Labels aanmaken en printen</h1>
-        <p>
+       <h1 id="4">4 Orderdetails</h1>
+       <p>Uiteraard is het ook mogelijk gemaakt om zendingen vanuit de order detailpagina zendingen aan te maken. Door op een order te klikken kom je op een pagina waar meer details over deze bestelling te vinden is.
+    </p>
+    <img src="media/woocommerce10.png">
 
-            Je kunt labels aanmaken en printen direct vanuit het order overzicht van WooCommerce.  
-			LET OP: Je kunt enkel orders exporteren die met de nieuwe checkout velden zijn aangemaakt. Om te testen of om oudere orders ook te exporteren kunt u deze wel handmatig aanpassen door in de order bij ‘Verzendingsdetails’ op ‘bewerken’ te klikken. 
-			<br> 
-			Enkele order exporteren:
-		<ol>
-			<li>Klik op het rode verzend icoontje met de pijl, in de kolom acties (helemaal rechts), zie afbeelding.</li>
-			<li>Je krijgt nu een pop-up met export opties die je kunt wijzigen, mocht dit nodig zijn. </li>
-			<li>Klik op ‘Exporteer naar MyParcel’. </li>
-			<li>Als de export klaar is, krijg je een melding, en wanneer de export succesvol was kun je direct een PDF met het label downloaden. </li>
-			<li>Als je de PDF later opnieuw wilt downloaden/openen, dan kunt je dat eenvoudig doen met het rode verzend icoontje met ‘pdf’.  </li>
-        </p>
+    <h1 id="5">5 Zending informatie</h1>
+        <p>Als je informatie over jouw zending wilt zien is het niet nodig om dit te bekijken in jouw MyParcel account. Je kunt deze informatie bekijken in jouw order overzicht in WooCommerce.<br><br>
 
-        <p>
-        Meerdere orders tegelijk exporteren:
-        <ol>
-        	<li>Selecteer de te exporteren orders door er een vinkje bij te plaatsen in de linker kolom.</li>
-        	<li>Kies dan in het ‘Acties’ menu bovenaan het bestellingen overzicht ‘Exporteer naar MyParcel’ en klik op ‘Uitvoeren’. </li>
-        	<li>Je krijgt nu een pop-up met export opties die u kunt wijzigen als u dat wilt</li>
-        	<li>Klik op ‘Exporteer naar MyParcel’. </li>
-        	<li>Als de export klaar is, krijgt u een daarvan melding en kun je direct een PDF met het label downloaden. </li>
-        	<li>Als je de PDF met labels later opnieuw wilt laten aanmaken, kun je dat doen op dezelfde manier via ‘Acties’ menu, je kiest dan ‘Print MyParcel labels’. </li>
-		</ol>
-        </p>
+        Bij elke order die wordt doorgezet naar MyParcel en waarvoor een label is aangemaakt komt een ‘I’ te staan. Door hierop te klikken wordt er meer informatie getoond over de status van de zending.
+
+</p>
+<img src="media/woocommerce11.png">
+
+       
