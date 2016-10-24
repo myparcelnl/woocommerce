@@ -477,6 +477,7 @@
 
     .afhalen-check{
       float: left;
+      clear: left;
      }
 
     .afhalen-tekst{
