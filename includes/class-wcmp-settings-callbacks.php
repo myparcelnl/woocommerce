@@ -243,7 +243,8 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 				$shipping_methods_selected = (array) $current;
 				$shipping_methods = WC()->shipping->load_shipping_methods();
 				if ( $shipping_methods ) foreach ( $shipping_methods as $key => $shipping_method ) {
-					echo '<option value="' . esc_attr( $key ) . '"' . selected( in_array( $key, $shipping_methods_selected ), true, false ) . '>' . esc_html( $shipping_methods[$key]->title ) . '</option>';
+					$method_title = !empty($shipping_methods[$key]->title) ? $shipping_methods[$key]->title : $shipping_methods[$key]->method_title;
+					echo '<option value="' . esc_attr( $key ) . '"' . selected( in_array( $key, $shipping_methods_selected ), true, false ) . '>' . esc_html( $method_title ) . '</option>';
 				}
 			?>
 		</select>
