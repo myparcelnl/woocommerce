@@ -1,5 +1,3 @@
-<?php 
-?>
 <template id="myparcel-template">
   <style>
     body{
