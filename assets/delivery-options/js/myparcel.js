@@ -399,7 +399,9 @@
       });
     }
     showDefaultPickupLocation('#mypa-pickup-address', filter[PICKUP_TIMES[NORMAL_PICKUP]][0]);
-    showDefaultPickupLocation('#mypa-pickup-express-address', filter[PICKUP_TIMES[MORNING_PICKUP]][0]);
+    if(MORNING_PICKUP && PICKUP_TIMES[MORNING_PICKUP] && filter[PICKUP_TIMES[MORNING_PICKUP]]){
+        showDefaultPickupLocation('#mypa-pickup-express-address', filter[PICKUP_TIMES[MORNING_PICKUP]][0]);
+    }
     $('#mypa-pickup-address').off().bind('click', renderPickup);
     $('#mypa-pickup-express-address').off().bind('click', renderExpressPickup);
     return $('.mypa-pickup-selector').on('click', updateInputField);
