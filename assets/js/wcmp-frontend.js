@@ -43,11 +43,18 @@ jQuery( function( $ ) {
 
 	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {
-		var shipping_method = $( '#order_review .shipping_method:checked').val();
+		// check if shipping is user choice or fixed
+		if ( $( '#order_review .shipping_method' ).length > 1 ) {
+			var shipping_method = $( '#order_review .shipping_method:checked').val();
+		} else {
+			var shipping_method = $( '#order_review .shipping_method').val();
+		}
+		console.log(shipping_method);
 		// strip zone_id if present
 		if (shipping_method.indexOf(':') !== -1) {
 			shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
 		}
+		console.log(shipping_method);
 		if ( window.myparcel_delivery_options_shipping_methods.length > 0 ) {
 			if ( $.inArray(shipping_method, window.myparcel_delivery_options_shipping_methods) > -1 ) {
 				// console.log(window.myparcel_delivery_options_shipping_methods.length);
@@ -59,6 +66,10 @@ jQuery( function( $ ) {
 				$( '#myparcel-iframe' ).hide();
 				$( '#mypa-options-enabled' ).prop('checked', false);
 			}
+		} else {
+			// not sure if we should hide by default?
+			$( '#myparcel-iframe' ).hide();
+			$( '#mypa-options-enabled' ).prop('checked', false);
 		}
 	});
 
