@@ -112,20 +112,20 @@
      */
 
     Application.prototype.bindInputListeners = function() {
-      jquery('#mypa-signed').on('change', (function(_this) {
+      jquery('#mypa-signed', parent.document).on('change', (function(_this) {
         return function(e) {
-          return $('#mypa-signed').prop('checked', jquery('#mypa-signed').prop('checked'));
+          return $('#mypa-signed', parent.document).prop('checked', jquery('#mypa-signed', parent.document).prop('checked'));
         };
       })(this));
-      jquery('#mypa-recipient-only').on('change', (function(_this) {
+      jquery('#mypa-recipient-only', parent.document).on('change', (function(_this) {
         return function(e) {
-          return $('#mypa-only-recipient').prop('checked', jquery('#mypa-recipient-only').prop('checked'));
+          return $('#mypa-only-recipient', parent.document).prop('checked', jquery('#mypa-recipient-only', parent.document).prop('checked'));
         };
       })(this));
       return jquery('#mypa-input').on('change', (function(_this) {
         return function(e) {
           var el, i, json, len, ref;
-          json = jquery('#mypa-input').val();
+          json = jquery('#mypa-input', parent.document).val();
           if (json === '') {
             $('input[name=mypa-delivery-time]:checked').prop('checked', false);
             $('input[name=mypa-delivery-type]:checked').prop('checked', false);
@@ -621,17 +621,20 @@
   updateInputField = function() {
     var json;
     json = $('input[name=mypa-delivery-time]:checked').val();
-    if (jquery('#mypa-input').val() !== json) {
-      jquery('#mypa-input').val(json);
-      jquery('#mypa-input').trigger('change');
+    if (jquery('#mypa-input', parent.document).val() !== json) {
+      jquery('#mypa-input', parent.document).val(json);
+      jquery('#mypa-input', parent.document).trigger('change');
+      parent.mypajQuery('#mypa-input').trigger('change');
     }
-    if (jquery('#mypa-signed').val() !== $('#mypa-signed').prop('checked')) {
-      jquery('#mypa-signed').prop('checked', $('#mypa-signed').prop('checked'));
-      jquery('#mypa-signed').trigger('change');
+    if (jquery('#mypa-signed', parent.document).val() !== $('#mypa-signed', parent.document).prop('checked')) {
+      jquery('#mypa-signed', parent.document).prop('checked', $('#mypa-signed', parent.document).prop('checked'));
+      jquery('#mypa-signed', parent.document).trigger('change');
+      parent.mypajQuery('#mypa-input').trigger('change');
     }
-    if (jquery('#mypa-recipient-only').val() !== $('#mypa-recipient-only').prop('checked')) {
-      jquery('#mypa-recipient-only').prop('checked', $('#mypa-only-recipient').prop('checked'));
-      return jquery('#mypa-recipient-only').trigger('change');
+    if (jquery('#mypa-recipient-only', parent.document).val() !== $('#mypa-recipient-only', parent.document).prop('checked')) {
+      jquery('#mypa-recipient-only', parent.document).prop('checked', $('#mypa-only-recipient').prop('checked'));
+      parent.mypajQuery('#mypa-input').trigger('change');
+      return jquery('#mypa-recipient-only', parent.document).trigger('change');
     }
   };
 
