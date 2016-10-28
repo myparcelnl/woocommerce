@@ -12,7 +12,7 @@
 
     #mypa-slider{
       width: 204%;
-      height: 100%;
+      /*height: 100%;*/
     }
 
     .mypa-slider-pos-0{
@@ -27,7 +27,7 @@
       vertical-align: top;
       transition: left 0.5s ease-out;
       width: 49%;
-      height: 100%;
+      /*height: 100%;*/
       display: inline-block;
       position:relative;
       overflow:hidden;
@@ -41,7 +41,7 @@
       overflow: hidden;
       font-weight: 400;
       width: 100%;
-      height: 100%;
+      /*height: 100%;*/
     }
 
     .mypa-delivery-header, .mypa-tab{
@@ -318,9 +318,10 @@
       overflow: hidden;
     }
 
-    #mypa-location-container{
-      overflow: scroll;
-      max-height: 100%
+    #mypa-location-container {
+      overflow-x: auto;
+      max-height: 270px;
+      margin-right: 4px;
     }
 
     .mypa-price {

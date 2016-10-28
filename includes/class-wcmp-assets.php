@@ -17,44 +17,14 @@ class WooCommerce_MyParcel_Assets {
 	 */
 	public function frontend_scripts_styles ( $hook ) {
 		if ( is_checkout() && isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout']) ) {
-			// MyParcel bundled scripts
-			wp_enqueue_script(
-				'wc-myparcel-delivery-options-moment',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/moment.min.js',
-				array( 'jquery' ),
-				WC_MYPARCEL_VERSION
-			);
-			wp_enqueue_script(
-				'wc-myparcel-delivery-options-webcomponents',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/webcomponents.min.js',
-				array(),
-				WC_MYPARCEL_VERSION
-			);
-			wp_enqueue_script(
-				'wc-myparcel-delivery-options',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/myparcel.js',
-				array( 'jquery','wc-myparcel-delivery-options-webcomponents','wc-myparcel-delivery-options-moment' ),
-				WC_MYPARCEL_VERSION
-			);
-
+			// checkout scripts
 			wp_enqueue_script(
 				'wc-myparcel-frontend',
 				WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-frontend.js',
-				array( 'jquery','wc-myparcel-delivery-options' ),
+				array( 'jquery' ),
 				WC_MYPARCEL_VERSION
 			);
-
 		}
-		/* for reference
-		wp_localize_script(
-			'wcmyparcel',
-			'wcmyparcel_ajax',
-			array(  
-				'ajaxurl'        => $ajax_url,
-				'nonce'          => wp_create_nonce('wcmyparcel'),
-			)
-		);
-		*/
 	}
 
 	/**
@@ -115,37 +85,7 @@ class WooCommerce_MyParcel_Assets {
 					'all'
 				);
 			}
-
-
-
-
 		}
-
-		/* for reference
-		// only load on our own settings page
-		if ( $hook == 'woocommerce_page_woocommerce_myparcel_settings' ) {
-			wp_enqueue_style(
-				'wcmyparcel-icons',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmyparcel-icons-pro.css',
-				array(),
-				WC_MYPARCEL_VERSION
-			);
-
-			wp_enqueue_style(
-				'wcmyparcel-admin',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmyparcel-admin.css',
-				array(),
-				WC_MYPARCEL_VERSION
-			);
-			
-			wp_enqueue_script(
-				'wcmyparcel-admin',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmyparcel-admin.js',
-				array( 'common', 'jquery', 'jquery-ui-tabs' ),
-				WC_MYPARCEL_VERSION
-			);
-		}
-		*/
 	}
 }
 

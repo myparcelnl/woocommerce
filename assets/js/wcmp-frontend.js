@@ -1,7 +1,37 @@
 jQuery( function( $ ) {
-	new MyParcel();
 	var myparcel_update_timer = false;
 	var myparcel_checkout_updating = false;
+
+	// reference jQuery for MyParcel iFrame
+	window.mypajQuery = $;
+	
+	// set reference to iFrame
+	var $MyPaiFrame = $('#myparcel-iframe')[0];
+	var MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
+
+	window.MyPaSetHeight = function() {
+		setTimeout(function () {
+			var iframeheight = MyPaWindow.document.body.scrollHeight;
+			// console.log(iframeheight);
+			$('#myparcel-iframe').height(iframeheight);
+		}, 500);
+
+		// $('#myparcel-iframe').height($('#myparcel-iframe').contents().height());
+	}
+
+	window.MyPaLoaded = function() {
+		window.update_myparcel_settings();
+		MyPaWindow.initSettings( window.mypa.settings );
+		MyPaSetHeight();
+	}
+
+	// set iframe height when delivery options changed
+	$('#mypa-chosen-delivery-options').on('change', 'input', function() {
+		MyPaSetHeight(); // may need a trick to prevent height from updating 10x
+		myparcel_checkout_updating = true;
+		$('body').trigger('update_checkout');
+		myparcel_checkout_updating = false;
+	});
 
 	// make delivery options update at least once (but don't hammer)
 	// myparcel_update_timer = setTimeout( update_myparcel_delivery_options_action, '500' );
@@ -27,7 +57,7 @@ jQuery( function( $ ) {
 		}
 		if ( window.myparcel_delivery_options_shipping_methods.length > 0 ) {
 			if ( $.inArray(shipping_method, window.myparcel_delivery_options_shipping_methods) > -1 ) {
-				console.log(window.myparcel_delivery_options_shipping_methods.length);
+				// console.log(window.myparcel_delivery_options_shipping_methods.length);
 				$( 'myparcel' ).show();
 				$( '#mypa-options-enabled' ).prop('checked', true);
 			} else {
@@ -38,40 +68,41 @@ jQuery( function( $ ) {
 	});
 
 	// update myparcel settings object with address when shipping or billing address changes
-	
-	// billing changes
-	$( '#billing_postcode, #billing_house_number' ).change(function() {
-		// only use billing if shipping empty
+	window.update_myparcel_settings = function() {
+		var settings = get_settings();
+		if (settings == false) {
+			return;
+		}
+
 		var billing_postcode = $( '#billing_postcode' ).val();
 		var billing_house_number = $( '#billing_house_number' ).val();
 		var billing_street_name = $( '#billing_street_name' ).val();
 
 		var shipping_postcode = $( '#shipping_postcode' ).val();
 		var shipping_house_number = $( '#shipping_house_number' ).val();
+		var shipping_street_name = $( '#shipping_street_name' ).val();
 
 		var use_shipping = $( '#ship-to-different-address-checkbox' ).is(':checked');
 
-		if ( !use_shipping && billing_postcode && billing_house_number) {
+		if (!use_shipping && billing_postcode && billing_house_number) {
 			window.mypa.settings.postal_code = billing_postcode.replace(/\s+/g, '');
 			window.mypa.settings.number = billing_house_number;
 			window.mypa.settings.street = billing_street_name;
 			update_myparcel_delivery_options()
-		}
-	});
-
-	// shipping changes
-	$( '#shipping_postcode, #shipping_house_number' ).change(function() {
-		var shipping_postcode = $( '#shipping_postcode' ).val();
-		var shipping_house_number = $( '#shipping_house_number' ).val();
-		var shipping_street_name = $( '#shipping_street_name' ).val();
-
-		if (shipping_postcode && shipping_house_number) {
+		} else if (shipping_postcode && shipping_house_number) {
 			window.mypa.settings.postal_code = shipping_postcode.replace(/\s+/g, '');;
 			window.mypa.settings.number = shipping_house_number;
 			window.mypa.settings.street = shipping_street_name;
 			update_myparcel_delivery_options()
 		}
+
+	}
+	
+	// billing or shipping changes
+	$( '#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number' ).change(function() {
+		update_myparcel_settings();
 	});
+
 
 	$( '#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number' ).change();
 
@@ -86,6 +117,14 @@ jQuery( function( $ ) {
 	// $('#mypa-location-container').on('change', 'input[type=radio]', function() {
 	// 	var pickup_location = $( this ).val();
 	// });
+	// 
+	function get_settings() {
+		if (typeof window.mypa != 'undefined' && typeof window.mypa.settings != 'undefined') {
+			return window.mypa.settings;
+		} else {
+			return false;
+		}
+	}
 
 	function get_shipping_country() {
 		if ( $( '#ship-to-different-address-checkbox' ).is(':checked') ) {
@@ -106,7 +145,8 @@ jQuery( function( $ ) {
 	function update_myparcel_delivery_options_action() {
 		country = get_shipping_country();
 		if ( myparcel_checkout_updating !== true && country == 'NL') {
-			mypa.fn.updatePage();
+			MyPaWindow.mypa.settings = window.mypa.settings;
+			MyPaWindow.updateMyPa();
 		}
 	}
 

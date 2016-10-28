@@ -24,9 +24,6 @@ class WooCommerce_MyParcel_Frontend {
 
 		// Delivery options
 		if (isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout'])) {
-			// template
-			add_action( 'wp_head', array( $this, 'delivery_options_template' ) );
-			// actual output
 			add_action( apply_filters( 'wc_myparcel_delivery_options_location', 'woocommerce_after_checkout_billing_form' ), array( $this, 'output_delivery_options' ), 10, 1 );
 		}
 
@@ -66,14 +63,11 @@ class WooCommerce_MyParcel_Frontend {
 
 		return $actions;
 	}
-	/**
-	 * Add delivery options to checkout
-	 */
-	public function delivery_options_template() {
-		include('views/wcmp-delivery-options.php');
-	}
 
 	public function output_delivery_options() {
+		/**
+		 * load settings etc.
+		 */
 		// get api url
 		$ajax_url = admin_url( 'admin-ajax.php' );
 		$request_prefix = strpos($ajax_url, '?') !== false ? '&' : '?';
@@ -122,7 +116,6 @@ class WooCommerce_MyParcel_Frontend {
 		}
 		$exclude_delivery_types = implode(';', $exclude_delivery_types);
 
-
 		// combine settings
 		$settings = array(
 			'base_url'				=> $frontend_api_url,
@@ -135,7 +128,7 @@ class WooCommerce_MyParcel_Frontend {
 		);
 		// remove empty options
 		$settings = array_filter($settings);
-		
+
 		// encode settings for JS object
 		$settings = json_encode($settings);
 
@@ -146,13 +139,22 @@ class WooCommerce_MyParcel_Frontend {
 			$delivery_options_shipping_methods = array();
 		}
 		$delivery_options_shipping_methods = json_encode($delivery_options_shipping_methods);
+
+		$iframe_url = WooCommerce_MyParcel()->plugin_url() . '/includes/views/wcmp-delivery-options.php';
 		?>
-		<script type="text/javascript">
-		window.mypa = {}
-		window.mypa.settings = <?php echo $settings; ?>;
-		window.myparcel_delivery_options_shipping_methods = <?php echo $delivery_options_shipping_methods; ?>;
+		<iframe id="myparcel-iframe" src="<?php echo $iframe_url; ?>" frameborder="0" scrolling="auto" style="width: 100%;" onload="MyPaLoaded()">Bezig met laden...</iframe>
+		<script>
+		jQuery( function( $ ) {
+			window.mypa = {};
+			window.mypa.settings = <?php echo $settings; ?>;
+			window.myparcel_delivery_options_shipping_methods = <?php echo $delivery_options_shipping_methods; ?>;
+			
+			// set reference to iFrame
+			var $MyPaiFrame = $('#myparcel-iframe')[0];
+			var MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
+		});
 		</script>
-		<myparcel id="myparcel"></myparcel>
+		
 		<input style="display:none" type="checkbox" name='mypa-options-enabled' id="mypa-options-enabled">
 		<div id="mypa-chosen-delivery-options">
 			<input style="display:none" name='mypa-post-nl-data' id="mypa-input">
