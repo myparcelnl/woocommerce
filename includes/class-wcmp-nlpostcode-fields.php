@@ -191,24 +191,24 @@ class WC_NLPostcode_Fields {
 
 		// Add Street name
 		$fields[$form.'_street_name'] = array(
-			'label'			=> __( 'Street name', 'wcmyparcel' ),
-			'placeholder'	=> __( 'Street name', 'wcmyparcel' ),
+			'label'			=> __( 'Street name', 'woocommerce-myparcel' ),
+			'placeholder'	=> __( 'Street name', 'woocommerce-myparcel' ),
 			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-first' ), $form, 'street_name' ),
 			'required'		=> $required, // Only required for NL
 		);
 
 		// Add house number
 		$fields[$form.'_house_number'] = array(
-			'label'			=> __( 'Nr.', 'wcmyparcel' ),
-			// 'placeholder'	=> __( 'Nr.', 'wcmyparcel' ),
+			'label'			=> __( 'Nr.', 'woocommerce-myparcel' ),
+			// 'placeholder'	=> __( 'Nr.', 'woocommerce-myparcel' ),
 			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart-first' ), $form, 'house_number' ),
 			'required'		=> $required, // Only required for NL
 		);
 
 		// Add house number Suffix
 		$fields[$form.'_house_number_suffix'] = array(
-			'label'			=> __( 'Suffix', 'wcmyparcel' ),
-			// 'placeholder'	=> __( 'Suffix', 'wcmyparcel' ),
+			'label'			=> __( 'Suffix', 'woocommerce-myparcel' ),
+			// 'placeholder'	=> __( 'Suffix', 'woocommerce-myparcel' ),
 			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart' ), $form, 'house_number_suffix' ),
 			'required'		=> false,
 		);
@@ -360,17 +360,17 @@ class WC_NLPostcode_Fields {
 	public function admin_billing_fields( $fields ) {
 
 		$fields['street_name'] = array(
-			'label' => __( 'Street name', 'wcmyparcel' ),
+			'label' => __( 'Street name', 'woocommerce-myparcel' ),
 			'show'  => true
 		);
 
 		$fields['house_number'] = array(
-			'label' => __( 'Number', 'wcmyparcel' ),
+			'label' => __( 'Number', 'woocommerce-myparcel' ),
 			'show'  => true
 		);
 
 		$fields['house_number_suffix'] = array(
-			'label' => __( 'Suffix', 'wcmyparcel' ),
+			'label' => __( 'Suffix', 'woocommerce-myparcel' ),
 			'show'  => true
 		);
 
@@ -388,17 +388,17 @@ class WC_NLPostcode_Fields {
 	public function admin_shipping_fields( $fields ) {
 
 		$fields['street_name'] = array(
-			'label' => __( 'Street name', 'wcmyparcel' ),
+			'label' => __( 'Street name', 'woocommerce-myparcel' ),
 			'show'  => true
 		);
 
 		$fields['house_number'] = array(
-			'label' => __( 'Number', 'wcmyparcel' ),
+			'label' => __( 'Number', 'woocommerce-myparcel' ),
 			'show'  => true
 		);
 
 		$fields['house_number_suffix'] = array(
-			'label' => __( 'Suffix', 'wcmyparcel' ),
+			'label' => __( 'Suffix', 'woocommerce-myparcel' ),
 			'show'  => true
 		);
 
@@ -411,29 +411,29 @@ class WC_NLPostcode_Fields {
 	public function user_profile_fields ( $meta_fields ) {
 		$myparcel_billing_fields = array(
 			'billing_street_name' => array(
-				'label'       => __( 'Street', 'wcmyparcel' ),
+				'label'       => __( 'Street', 'woocommerce-myparcel' ),
 				'description' => ''
 			),
 			'billing_house_number' => array(
-				'label'       => __( 'Number', 'wcmyparcel' ),
+				'label'       => __( 'Number', 'woocommerce-myparcel' ),
 				'description' => ''
 			),
 			'billing_house_number_suffix' => array(
-				'label'       => __( 'Suffix', 'wcmyparcel' ),
+				'label'       => __( 'Suffix', 'woocommerce-myparcel' ),
 				'description' => ''
 			),
 		);
 		$myparcel_shipping_fields = array(
 			'shipping_street_name' => array(
-				'label'       => __( 'Street', 'wcmyparcel' ),
+				'label'       => __( 'Street', 'woocommerce-myparcel' ),
 				'description' => ''
 			),
 			'shipping_house_number' => array(
-				'label'       => __( 'Number', 'wcmyparcel' ),
+				'label'       => __( 'Number', 'woocommerce-myparcel' ),
 				'description' => ''
 			),
 			'shipping_house_number_suffix' => array(
-				'label'       => __( 'Suffix', 'wcmyparcel' ),
+				'label'       => __( 'Suffix', 'woocommerce-myparcel' ),
 				'description' => ''
 			),
 		);
