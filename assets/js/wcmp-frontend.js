@@ -38,14 +38,7 @@ jQuery( function( $ ) {
 
 	// hide checkout options if not NL
 	$( '#billing_country, #shipping_country' ).change(function() {
-		country = get_shipping_country();
-		if (country != 'NL') {
-			$( 'myparcel' ).hide();
-			$( '#mypa-options-enabled' ).prop('checked', false);
-		} else {
-			$( 'myparcel' ).show();
-			$( '#mypa-options-enabled' ).prop('checked', true);
-		}
+		check_country();
 	});
 
 	// hide checkout options for non parcel shipments
@@ -58,10 +51,12 @@ jQuery( function( $ ) {
 		if ( window.myparcel_delivery_options_shipping_methods.length > 0 ) {
 			if ( $.inArray(shipping_method, window.myparcel_delivery_options_shipping_methods) > -1 ) {
 				// console.log(window.myparcel_delivery_options_shipping_methods.length);
-				$( 'myparcel' ).show();
+				$( '#myparcel-iframe' ).show();
 				$( '#mypa-options-enabled' ).prop('checked', true);
+				// still hide if country is not NL
+				check_country();
 			} else {
-				$( 'myparcel' ).hide();
+				$( '#myparcel-iframe' ).hide();
 				$( '#mypa-options-enabled' ).prop('checked', false);
 			}
 		}
@@ -123,6 +118,17 @@ jQuery( function( $ ) {
 			return window.mypa.settings;
 		} else {
 			return false;
+		}
+	}
+
+	function check_country() {
+		country = get_shipping_country();
+		if (country != 'NL') {
+			$( '#myparcel-iframe' ).hide();
+			$( '#mypa-options-enabled' ).prop('checked', false);
+		} else {
+			$( '#myparcel-iframe' ).show();
+			$( '#mypa-options-enabled' ).prop('checked', true);
 		}
 	}
 
