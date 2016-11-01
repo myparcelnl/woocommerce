@@ -83,9 +83,9 @@ class WooCommerce_MyParcel {
 		/**
 		 * Frontend/global Locale. Looks in:
 		 *
-		 * 		- WP_LANG_DIR/wc-payment-reminders/woocommerce-myparcel-LOCALE.mo
+		 * 		- WP_LANG_DIR/woocommerce-myparcel/woocommerce-myparcel-LOCALE.mo
 		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
-		 * 	 	- wc-payment-reminders/languages/woocommerce-myparcel-LOCALE.mo (which if not found falls back to:)
+		 * 	 	- woocommerce-myparcel/languages/woocommerce-myparcel-LOCALE.mo (which if not found falls back to:)
 		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
 		 */
 		load_textdomain( 'woocommerce-myparcel', $dir . 'woocommerce-myparcel/woocommerce-myparcel-' . $locale . '.mo' );
