@@ -22,8 +22,13 @@
         Installatie- gebruikershandleiding
     </h1>
     <h2 class="project-tagline">
-        WooCommerce MyParcel plug-in 1.6
+        WooCommerce MyParcel plug-in <span id="current_version"></span>
     </h2>
+	<script>
+        $.get('https://api.github.com/repos/myparcelnl/woocommerce-myparcel/releases/latest', function (data) {
+            $('#current_version').html(data.name);
+        });
+    </script>
 
     <!--<a target="_blank" class="btn" href="#">Magento Connect</a>-->
 </section>
