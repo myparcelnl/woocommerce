@@ -327,11 +327,11 @@ class WooCommerce_MyParcel_Admin {
 
 	public function show_order_delivery_options($order) {
 		$delivery_options = $order->myparcel_delivery_options;
-		if (empty($delivery_options)) {
-			return;
+
+		if (!empty($delivery_options)) {
+			extract($delivery_options);
 		}
 
-		extract($delivery_options);
 		echo '<div class="delivery-options">';
 		if (!empty($date)) {
 			if (!empty($time)) {
@@ -356,8 +356,8 @@ class WooCommerce_MyParcel_Admin {
 			printf('<div class="delivery-date"><strong>%s: </strong>%s %s</div>', __('Delivery date', 'woocommerce-myparcel'), $date, $time_title );
 		}
 
-		if (isset($price_comment) && in_array($price_comment, array('retail','retailexpress'))) {
-			switch ($price_comment) {
+		if ( $pickup = WooCommerce_MyParcel()->export->is_pickup( $order, $delivery_options ) ) {
+			switch ($pickup['price_comment']) {
 				case 'retail':
 					$title = __( 'PostNL Pickup', 'woocommerce-myparcel' );
 					break;
@@ -366,7 +366,7 @@ class WooCommerce_MyParcel_Admin {
 					break;
 			}
 
-			echo "<div class='pickup-location'><strong>{$title}: </strong>{$location}, {$street} {$number}, {$postal_code} {$city}";
+			echo "<div class='pickup-location'><strong>{$title}: </strong>{$pickup['location']}, {$pickup['street']} {$pickup['number']}, {$pickup['postal_code']} {$pickup['city']}";
 		}
 		echo '</div>';
 	}

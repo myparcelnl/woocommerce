@@ -462,12 +462,25 @@ class WooCommerce_MyParcel_Export {
 
 
 		if ( $order->shipping_country == 'NL' ) {
-			$address_intl = array(
-				'street'		=> $order->shipping_street_name,
-				'number'		=> $order->shipping_house_number,
-				'number_suffix' => $order->shipping_house_number_suffix,
-				'postal_code'	=> $order->shipping_postcode,
-			);
+			// use billing address if old 'pakjegemak' (1.5.6 and older)
+			if ( $pgaddress = get_post_meta( $order->id, '_myparcel_pgaddress', true ) ) {
+				$address_intl = array(
+					'city'			=> $order->billing_city,
+					'person'		=> trim( $order->billing_first_name . ' ' . $order->billing_last_name ),
+					'company'		=> $order->billing_company,
+					'street'		=> $order->billing_street_name,
+					'number'		=> $order->billing_house_number,
+					'number_suffix' => $order->billing_house_number_suffix,
+					'postal_code'	=> $order->billing_postcode,
+				);
+			} else {
+				$address_intl = array(
+					'street'		=> $order->shipping_street_name,
+					'number'		=> $order->shipping_house_number,
+					'number_suffix' => $order->shipping_house_number_suffix,
+					'postal_code'	=> $order->shipping_postcode,
+				);
+			}
 		} else {
 			$address_intl = array(
 				'postal_code'				=> $order->shipping_postcode,
@@ -922,23 +935,25 @@ class WooCommerce_MyParcel_Export {
 		$pickup_types = array( 'retail', 'retailexpress' );
 		if ( !empty($myparcel_delivery_options['price_comment']) && in_array($myparcel_delivery_options['price_comment'], $pickup_types) ) {
 			return $myparcel_delivery_options;
-		} else {
-			return false;
 		}
 
-		/* old pakjegemak code
-		// load meta data
-		$pakjegemak = get_post_meta( $order_id, '_myparcel_is_pickup', true );
+		// Backwards compatibility for pakjegemak data
 		$pgaddress = get_post_meta( $order_id, '_myparcel_pgaddress', true );
-
-		// make sure pakjegemak address is present and contains an address
-		// (cancelled pg popups still save pgaddress)
 		if ( !empty( $pgaddress ) && !empty( $pgaddress['postcode'] ) ) {
-			return $pgaddress;
-		} else {
-			return false;
+			$pickup = array(
+				'postal_code'	=> $pgaddress['postcode'],
+				'street'		=> $pgaddress['street'],
+				'city'			=> $pgaddress['town'],
+				'number'		=> $pgaddress['house_number'],
+				'location'		=> $pgaddress['name'],
+				'price_comment'	=> 'retail',
+			);
+
+			return $pickup;
 		}
-		*/
+
+		// no pickup
+		return false;
 	}
 
 	public function get_delivery_type( $order, $myparcel_delivery_options = '' ) {
@@ -971,6 +986,11 @@ class WooCommerce_MyParcel_Export {
 			} else {
 				$delivery_type = $myparcel_delivery_options['price_comment'];
 			}
+		}
+
+		// backwards compatibility for pakjegemak
+		if ( $pgaddress = get_post_meta( $order_id, '_myparcel_pgaddress', true ) ) {
+			$delivery_type = 'retail';
 		}
 
 		// convert to int (default to 2 = standard for unknown types)
