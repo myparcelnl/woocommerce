@@ -2,8 +2,8 @@
 Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.5
-Stable tag: 1.5.6
+Tested up to: 4.6
+Stable tag: 2.0.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -11,13 +11,14 @@ Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels di
 
 == Description ==
 
-This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl). Single orders exports aswell as batch exports are possible.
+This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl).
 
 = Main features =
-- Export single orders or batches of orders
-- Print MyParcel labels directly from WooCommerce (PDF)
+- Delivery options integrated in your checkout
+- Export your WooCommerce orders to MyParcel with a simple click, single orders or in batch
+- Print shipping labels directly (PDF)
 - Create multiple shipments for the same order
-- Send all type of shipments available from parcels to mailbox packages 
+- Choose your package type (Parcel, mailbox package or unpaid letter)
 - Define preset MyParcel shipping options (signature required, extra insurance, etc.)
 - Modify the MyParcel shipping options per order before exporting
 - Extra checkout fields to separate street name, house number and house number suffix for more precise address data
@@ -46,8 +47,8 @@ In the search field type "WooCommerce MyParcel" and click Search Plugins. You ca
 3. Activate the plugin from the Plugins menu within the WordPress admin.
 
 = Setting up the plugin =
-1. Go to the menu `settings > MyParcel`.
-2. Fill in your API Details. If you don't have API details, send an email to info@myparcel.nl with your account name and you will be sent all necessary information.
+1. Go to the menu `WooCommerce > MyParcel`.
+2. Fill in your API Details. If you don't have API details, log into your myparcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) where you can find your API key under Instellingen → Algemeen.
 3. Under 'Default export settings' you can set options that should be set by default for the export. You can change these settings per order at the time of export.
 4. The plugin is ready to be used!
 
@@ -61,8 +62,7 @@ Moreover, after a label is created, a track&trace code is added to the order. Wh
 == Frequently Asked Questions ==
 
 = How do I get an API key? =
-
-Send an email to info@myparcel.nl with your account name and you will be sent all necessary information.
+When logged in on your myparcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) you can find your API key under Instellingen → Algemeen.
 
 = How do I change the track&trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
@@ -75,30 +75,6 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 }
 `
 
-= How do I hide PakjeGemak for mobile browsers? =
-The following CSS hides PakjeGemak for all devices smaller than 1024px (which is an iPad in landscape). Note that this also excludes smaller laptop & pc screens, if you want to target different devices more specifically you can extend the @media query. See this site for more details: http://css-tricks.com/snippets/css/media-queries-for-standard-devices/
-
-`
-@media only screen 
-and (max-width : 1024px) {
-	/* iPad en kleiner */
-	.myparcel-pakjegemak {
-		display: none;
-		visibility: hidden;
-	}
-}
-`
-
-= How do I change the PakjeGemak location on the checkout page? =
-You can do that with the following filter, where you replace `woocommerce_checkout_after_customer_details` with the action/location that you need. You can find the actions in `woocommerce/templates/checkout/form-checkout.php`, `woocommerce/templates/checkout/form-billing.php` and `woocommerce/templates/checkout/form-shipping.php` for example. You can also use a custom action.
-
-`
-add_filter( 'wcmyparcel_pakjegemak_locatie', 'wcmyparcel_pakjegemak_move', 10, 1 );
-function wcmyparcel_pakjegemak_move() {
-	return 'woocommerce_checkout_after_customer_details'; // change this into your preferred location
-`
-
-
 == Screenshots ==
 
 1. Export or print myparcel label per order
@@ -106,6 +82,18 @@ function wcmyparcel_pakjegemak_move() {
 3. View the status of the shipment on the order details page.
 
 == Changelog ==
+
+= 2.0.1 =
+* Completely revamped settings & export interface
+* New delivery options replaces old 'Pakjegemak':
+	* Postponed delivery (pick a delivery date)
+	* Home address only option
+	* Signature on delivery option
+	* Evening or morning delivery option
+	* PostNL Pickup & Early PostNL Pickup
+	* Possibility to assign cost to the above delivery options
+* Create return labels from the WooCommerce backend
+* Uses new MyParcel API
 
 = 1.5.6 =
 * Fix: Disable pakjegemak if 'ship to different address' is disabled after selecting Pakjegemak location
