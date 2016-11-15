@@ -5,7 +5,7 @@ Plugin URI: http://www.myparcel.nl
 Description: Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
 Author: Ewout Fernhout
 Author URI: http://www.wpovernight.com
-Version: 2.0
+Version: 2.0.1
 Text Domain: woocommerce-myparcel
 
 License: GPLv3 or later
@@ -20,7 +20,7 @@ if ( !class_exists( 'WooCommerce_MyParcel' ) ) :
 
 class WooCommerce_MyParcel {
 
-	public $version = '2.0';
+	public $version = '2.0.1';
 	public $plugin_basename;
 
 	protected static $_instance = null;
@@ -178,7 +178,71 @@ class WooCommerce_MyParcel {
 	 * Plugin install method. Perform any installation tasks here
 	 */
 	protected function install() {
-		// Set default settings?
+		// copy old settings if available (pre 2.0 didn't store the version, so technically, this is a new install)
+		$old_settings = get_option( 'wcmyparcel_settings' );
+		if (!empty($old_settings)) {
+			// copy old settins to new
+			// Deprecated
+			// api_username
+			// pakjegemak
+			// pakjegemak_description
+			// pakjegemak_button
+			// shipment_type
+			// huishand
+
+			// map old key => new_key
+			$general_settings_keys = array(
+				'api_key'				=> 'api_key',
+				'download_display'		=> 'download_display',
+				'email_tracktrace'		=> 'email_tracktrace',
+				'myaccount_tracktrace'	=> 'myaccount_tracktrace',
+				'process'				=> 'process_directly',
+				'keep_consignments'		=> 'keep_shipments',
+				'error_logging'			=> 'error_logging',
+			);
+
+			$general_settings = array();
+			foreach ($general_settings_keys as $old_key => $new_key) {
+				if (!empty($old_settings[$old_key])) {
+					$general_settings[$new_key] = $old_settings[$old_key];
+				}
+			}
+			// auto_complete breaks down into:
+			// order_status_automation & automatic_order_status
+			if (!empty($old_settings['auto_complete'])) {
+				$general_settings['order_status_automation'] = 1;
+				$general_settings['automatic_order_status'] = 'completed';
+			}
+			
+			// map old key => new_key
+			$defaults_settings_keys = array(
+				'email'					=> 'connect_email',
+				'telefoon'				=> 'connect_phone',
+				'extragroot'			=> 'large_format',
+				'huisadres'				=> 'only_recipient',
+				'handtekening'			=> 'signature',
+				'retourbgg'				=> 'return',
+				'kenmerk'				=> 'label_description',
+				'verpakkingsgewicht'	=> 'empty_parcel_weight',
+				'verzekerd'				=> 'insured',
+				'verzekerdbedrag'		=> 'insured_amount',
+			);
+			$defaults_settings = array();
+			foreach ($defaults_settings_keys as $old_key => $new_key) {
+				if (!empty($old_settings[$old_key])) {
+					$defaults_settings[$new_key] = $old_settings[$old_key];
+				}
+			}
+			// set custom insurance amount
+			if (!empty($defaults_settings['insured']) && (int) $defaults_settings['insured_amount'] > 249) {
+				$defaults_settings['insured_amount'] = 0;
+				$defaults_settings['insured_amount_custom'] = $old_settings['verzekerdbedrag'];
+			}
+			
+			// add options
+			add_option( 'woocommerce_myparcel_general_settings', $general_settings );
+			add_option( 'woocommerce_myparcel_export_defaults_settings', $defaults_settings );
+		}
 	}
 
 	/**
@@ -187,7 +251,7 @@ class WooCommerce_MyParcel {
 	 * @param string $installed_version the currently installed ('old') version
 	 */
 	protected function upgrade( $installed_version ) {
-		// Copy old settings
+		# stub
 	}		
 
 	/**
