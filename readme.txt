@@ -79,7 +79,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 1. Export or print myparcel label per order
 2. Bulk export or print myparcel labels
-3. View the status of the shipment on the order details page.
+3. Change the shipment options for an order
+4. MyParcel actions on the order overview page
+5. Myparcel information on the order details page
 
 == Changelog ==
 
