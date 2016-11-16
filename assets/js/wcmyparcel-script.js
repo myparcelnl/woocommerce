@@ -7,16 +7,34 @@ jQuery( function( $ ) {
 		$( this ).show();
 	});
 
+	// disable ALL shipment options form fiels to avoid conflicts with order search field
+	$('.wcmp_shipment_options :input').prop('disabled', true);
 
-	// show options when clicked
+	// show and enable options when clicked
 	$('.wcmp_show_shipment_options').click( function ( event ) {
 		event.preventDefault();
-		$( this ).next('.wcmp_shipment_options_form').slideToggle();
+		$form = $( this ).next('.wcmp_shipment_options_form');
+		if( $form.is(':visible') ) {
+			// disable all input fields again
+			$form.find(':input').prop('disabled', true);
+			// hide form
+			$form.slideUp();
+		} else {
+			// enable all fields on this form
+			$form.find(':input').prop('disabled', false);
+			// set init states according to change events
+			$form.find(':input').change();
+			// show form
+			$form.slideDown();
+		}
 	});
 	// hide options form when click outside
 	$(document).click(function(event) {
 		if(!$(event.target).closest('.wcmp_shipment_options_form').length) {
 			if( !( $(event.target).hasClass('wcmp_show_shipment_options') || $(event.target).parent().hasClass('wcmp_show_shipment_options') ) && $('.wcmp_shipment_options_form').is(":visible")) {
+				// disable all input fields again
+				$('.wcmp_shipment_options_form :input').prop('disabled', true);
+				// hide form
 				$('.wcmp_shipment_options_form').slideUp();
 			}
 		}
@@ -49,7 +67,7 @@ jQuery( function( $ ) {
 			$( order_status_select ).prop('disabled', true);
 			$( '.wcmp_shipment_options tr.automatic_order_status').hide();
 		}
-	}).change(); //ensure visible state matches initially
+	});
 
 
 	// select > 500 if insured amount input is >499
@@ -73,7 +91,7 @@ jQuery( function( $ ) {
 			$( insured_select ).closest('tr').hide();
 			$( insured_input ).closest('tr').hide();
 		}
-	}).change(); //ensure visible state matches initially
+	});
 
 	// hide & disable insured amount input if not needed
 	$('.wcmp_shipment_options select.insured_amount').change(function () {
@@ -88,7 +106,7 @@ jQuery( function( $ ) {
 			$( insured_input ).prop('disabled', false);
 			$( insured_input ).closest('tr').show();
 		}
-	}).change(); //ensure visible state matches initially
+	});
 
 	// hide all options if not a parcel
 	$('.wcmp_shipment_options select.package_type').change(function () {
@@ -105,7 +123,7 @@ jQuery( function( $ ) {
 			$( parcel_options ).find('.insured').prop('checked', false);
 			$( parcel_options ).find('.insured').change();
 		}
-	}).change(); //ensure visible state matches initially
+	});
 
 	// hide delivery options details if disabled
 	$('input.wcmp_delivery_option').change(function () {
@@ -114,7 +132,7 @@ jQuery( function( $ ) {
 		} else {
 			$(this).parent().find('.wcmp_delivery_option_details').hide();
 		}
-	}).change(); //ensure visible state matches initially
+	});
 
 	// Hide all checkout options if disabled
 	$('#woocommerce-myparcel-settings #myparcel_checkout').change(function () {
@@ -130,7 +148,7 @@ jQuery( function( $ ) {
 			$next_settings_forms.hide();
 			$next_settings_headers.hide();
 		}
-	}).change(); //ensure visible state matches initially
+	});
 	// myparcel_checkout
 
 	// saving shipment options via AJAX
@@ -160,6 +178,9 @@ jQuery( function( $ ) {
 
 				// hide spinner
 				$form.find('.wcmp_save_shipment_settings .waiting').hide();
+
+				// disable all input fields again
+				$form.find(':input').prop('disabled', true);
 
 				// hide the form
 				$form.slideUp();
