@@ -8,7 +8,9 @@ jQuery( function( $ ) {
 	});
 
 	// disable ALL shipment options form fiels to avoid conflicts with order search field
-	$('.wcmp_shipment_options :input').prop('disabled', true);
+	$('.wp-list-table .wcmp_shipment_options :input').prop('disabled', true);
+	// init options on settings page
+	$('#woocommerce-myparcel-settings :input').change();
 
 	// show and enable options when clicked
 	$('.wcmp_show_shipment_options').click( function ( event ) {
