@@ -1,6 +1,7 @@
 <template id="myparcel-template">
   <style>
     body{
+      background-color: white !important;
       word-wrap: break-word;
     }
 
