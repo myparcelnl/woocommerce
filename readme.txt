@@ -12,6 +12,7 @@ Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels di
 == Description ==
 
 This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl).
+
 **Online Manual (in Dutch):** https://myparcelnl.github.io/woocommerce-myparcel/
 
 = Main features =
