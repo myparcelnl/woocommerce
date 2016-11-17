@@ -240,8 +240,8 @@ class WooCommerce_MyParcel {
 			}
 			
 			// add options
-			add_option( 'woocommerce_myparcel_general_settings', $general_settings );
-			add_option( 'woocommerce_myparcel_export_defaults_settings', $defaults_settings );
+			update_option( 'woocommerce_myparcel_general_settings', $general_settings );
+			update_option( 'woocommerce_myparcel_export_defaults_settings', $defaults_settings );
 		}
 	}
 
