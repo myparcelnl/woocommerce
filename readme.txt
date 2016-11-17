@@ -12,6 +12,7 @@ Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels di
 == Description ==
 
 This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl).
+**Online Manual (in Dutch):** https://myparcelnl.github.io/woocommerce-myparcel/
 
 = Main features =
 - Delivery options integrated in your checkout
@@ -61,6 +62,8 @@ Moreover, after a label is created, a track&trace code is added to the order. Wh
 
 == Frequently Asked Questions ==
 
+**Online Manual (in Dutch):** https://myparcelnl.github.io/woocommerce-myparcel/
+
 = How do I get an API key? =
 When logged in on your myparcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) you can find your API key under Instellingen → Algemeen.
 
@@ -84,6 +87,8 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+
+**Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
 
 = 2.0.2 =
 * Fix order search
@@ -223,3 +228,8 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 = 1.0.0 =
 * First release.
+
+== Upgrade Notice ==
+= 2.0.2 =
+**Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
+
