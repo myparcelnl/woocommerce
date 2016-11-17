@@ -9,8 +9,6 @@ jQuery( function( $ ) {
 
 	// disable ALL shipment options form fiels to avoid conflicts with order search field
 	$('.wp-list-table .wcmp_shipment_options :input').prop('disabled', true);
-	// init options on settings page
-	$('#woocommerce-myparcel-settings :input').change();
 
 	// show and enable options when clicked
 	$('.wcmp_show_shipment_options').click( function ( event ) {
@@ -151,6 +149,10 @@ jQuery( function( $ ) {
 			$next_settings_headers.hide();
 		}
 	});
+
+	// init options on settings page
+	$('#woocommerce-myparcel-settings :input').change();
+
 	// myparcel_checkout
 
 	// saving shipment options via AJAX
