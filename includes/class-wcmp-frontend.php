@@ -216,7 +216,7 @@ class WooCommerce_MyParcel_Frontend {
 				$fee = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
 				$fee_name = __( 'Signature on delivery', 'woocommerce-myparcel' );
 				$fee = $this->normalize_price( $fee );
-				$woocommerce->cart->add_fee( $fee_name, $fee );
+				$woocommerce->cart->add_fee( $fee_name, $fee, true );
 			}
 		}
 
@@ -226,7 +226,7 @@ class WooCommerce_MyParcel_Frontend {
 				$fee = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
 				$fee_name = __( 'Home address only delivery', 'woocommerce-myparcel' );
 				$fee = $this->normalize_price( $fee );
-				$woocommerce->cart->add_fee( $fee_name, $fee );
+				$woocommerce->cart->add_fee( $fee_name, $fee, true );
 			}
 		}
 
@@ -252,7 +252,7 @@ class WooCommerce_MyParcel_Frontend {
 
 				if (!empty($fee)) {
 					$fee = $this->normalize_price( $fee );
-					$woocommerce->cart->add_fee( $fee_name, $fee );
+					$woocommerce->cart->add_fee( $fee_name, $fee, true );
 				}
 			}
 
@@ -283,7 +283,7 @@ class WooCommerce_MyParcel_Frontend {
 
 					if (!empty($fee)) {
 						$fee = $this->normalize_price( $fee );
-						$woocommerce->cart->add_fee( $fee_name, $fee );
+						$woocommerce->cart->add_fee( $fee_name, $fee, true );
 					}
 				}
 
