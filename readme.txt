@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.6
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -90,6 +90,11 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 == Changelog ==
 
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
+
+= 2.0.3 =
+* Fix: Checkout option fees tax
+* Fix: Settings page conditional options display
+* Improved settings migration from previous versions
 
 = 2.0.2 =
 * Fix order search
@@ -231,6 +236,6 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * First release.
 
 == Upgrade Notice ==
-= 2.0.2 =
+= 2.0.3 =
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
 
