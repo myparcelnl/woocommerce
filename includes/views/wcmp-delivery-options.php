@@ -46,6 +46,12 @@ require( '../../../../../wp-blog-header.php');
 	// load WordPress header (enqueued scripts etc.)
 	wp_head();
 	?>
+	<style>
+		body{
+			background-color: white !important;
+			word-wrap: break-word;
+		}
+	</style>
 </head>
 <body>
 <myparcel id="myparcel">Bezig met laden...</myparcel>
