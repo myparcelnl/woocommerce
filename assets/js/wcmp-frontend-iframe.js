@@ -8,6 +8,12 @@ jQuery( function( $ ) {
 		window.mypa.settings = settings;
 		// Let's go!
 		new MyParcel();
+
+		var selector = parent.mypajQuery('.woocommerce-billing-fields').length ? '.woocommerce-billing-fields' : 'body';
+		var fontFamily = parent.mypajQuery(selector).css('font-family');
+		var fontsSize = parent.mypajQuery(selector).css('font-size');
+		$('#myparcel').css("font-family", fontFamily).css("font-size", fontsSize);
+
 	}
 
 	window.updateMyPa = function() {
@@ -29,17 +35,4 @@ jQuery( function( $ ) {
 			window.mypa.fn.updatePage()
 		}
 	};
-	// trigger parent init functions
-	// parent.MyPaLoaded();
-
-
-	// setTimeout(function () {
-	// 	new MyParcel();
-	// 	window.mypa = {}
-	// 	// window.mypa.fn.load();
-
-	// 	// var fonts = parent.jQuery('label').css('font-family');
-	// 	// var fontsSize = parent.jQuery('label').css('font-size');
-	// 	// $('#myparcel').css("font-family", fonts).css("font-size", fontsSize);
-	// }, 500);
 });
