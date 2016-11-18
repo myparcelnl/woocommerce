@@ -24,12 +24,6 @@ require( '../../../../../wp-blog-header.php');
 	printf( $script_format, add_query_arg( 'ver', WC_MYPARCEL_VERSION, WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/myparcel.js' ) );
 	printf( $script_format, add_query_arg( 'ver', WC_MYPARCEL_VERSION, WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-frontend-iframe.js' ) );
 	?>
-	<style>
-		body{
-			background-color: white !important;
-			word-wrap: break-word;
-		}
-	</style>
 </head>
 <body>
 <myparcel id="myparcel">Bezig met laden...</myparcel>
