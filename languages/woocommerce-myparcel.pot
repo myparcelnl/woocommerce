@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2016-10-05 11:06+0200\n"
+"POT-Creation-Date: 2016-11-18 14:55+0100\n"
 "PO-Revision-Date: 2016-07-02 16:21+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -50,7 +50,7 @@ msgstr ""
 msgid "MyParcel"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:300 includes/class-wcmp-frontend.php:62
+#: includes/class-wcmp-admin.php:300 includes/class-wcmp-frontend.php:59
 msgid "Track&Trace"
 msgstr ""
 
@@ -63,12 +63,12 @@ msgstr ""
 msgid "MyParcel shipment:"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:342 includes/class-wcmp-frontend.php:265
+#: includes/class-wcmp-admin.php:342 includes/class-wcmp-frontend.php:267
 #: includes/class-wcmp-settings.php:583
 msgid "Morning delivery"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:349 includes/class-wcmp-frontend.php:277
+#: includes/class-wcmp-admin.php:349 includes/class-wcmp-frontend.php:279
 #: includes/class-wcmp-settings.php:571
 msgid "Evening delivery"
 msgstr ""
@@ -77,11 +77,11 @@ msgstr ""
 msgid "Delivery date"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:362 includes/class-wcmp-frontend.php:240
+#: includes/class-wcmp-admin.php:362 includes/class-wcmp-frontend.php:242
 msgid "PostNL Pickup"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:365 includes/class-wcmp-frontend.php:246
+#: includes/class-wcmp-admin.php:365 includes/class-wcmp-frontend.php:248
 msgid "PostNL Pickup Express"
 msgstr ""
 
@@ -117,108 +117,108 @@ msgstr ""
 msgid "The selected orders have not been exported to MyParcel yet!"
 msgstr ""
 
-#: includes/class-wcmp-export.php:699
+#: includes/class-wcmp-export.php:728
 msgid "Parcel"
 msgstr ""
 
-#: includes/class-wcmp-export.php:700
+#: includes/class-wcmp-export.php:729
 msgid "Mailbox package"
 msgstr ""
 
-#: includes/class-wcmp-export.php:701
+#: includes/class-wcmp-export.php:730
 msgid "Unpaid letter"
 msgstr ""
 
-#: includes/class-wcmp-export.php:712
+#: includes/class-wcmp-export.php:741
 #: includes/views/wcmp-bulk-options-form.php:79
 msgid "Order"
 msgstr ""
 
-#: includes/class-wcmp-export.php:758
+#: includes/class-wcmp-export.php:787
 msgid "pending - concept"
 msgstr ""
 
-#: includes/class-wcmp-export.php:759
+#: includes/class-wcmp-export.php:788
 msgid "pending - registered"
 msgstr ""
 
-#: includes/class-wcmp-export.php:760
+#: includes/class-wcmp-export.php:789
 msgid "enroute - handed to carrier"
 msgstr ""
 
-#: includes/class-wcmp-export.php:761
+#: includes/class-wcmp-export.php:790
 msgid "enroute - sorting"
 msgstr ""
 
-#: includes/class-wcmp-export.php:762
+#: includes/class-wcmp-export.php:791
 msgid "enroute - distribution"
 msgstr ""
 
-#: includes/class-wcmp-export.php:763
+#: includes/class-wcmp-export.php:792
 msgid "enroute - customs"
 msgstr ""
 
-#: includes/class-wcmp-export.php:764
+#: includes/class-wcmp-export.php:793
 msgid "delivered - at recipient"
 msgstr ""
 
-#: includes/class-wcmp-export.php:765
+#: includes/class-wcmp-export.php:794
 msgid "delivered - ready for pickup"
 msgstr ""
 
-#: includes/class-wcmp-export.php:766
+#: includes/class-wcmp-export.php:795
 msgid "delivered - package picked up"
 msgstr ""
 
-#: includes/class-wcmp-export.php:767
+#: includes/class-wcmp-export.php:796
 msgid "inactive - concept"
 msgstr ""
 
-#: includes/class-wcmp-export.php:768
+#: includes/class-wcmp-export.php:797
 msgid "inactive - registered"
 msgstr ""
 
-#: includes/class-wcmp-export.php:769
+#: includes/class-wcmp-export.php:798
 msgid "inactive - enroute - handed to carrier"
 msgstr ""
 
-#: includes/class-wcmp-export.php:770
+#: includes/class-wcmp-export.php:799
 msgid "inactive - enroute - sorting"
 msgstr ""
 
-#: includes/class-wcmp-export.php:771
+#: includes/class-wcmp-export.php:800
 msgid "inactive - enroute - distribution"
 msgstr ""
 
-#: includes/class-wcmp-export.php:772
+#: includes/class-wcmp-export.php:801
 msgid "inactive - enroute - customs"
 msgstr ""
 
-#: includes/class-wcmp-export.php:773
+#: includes/class-wcmp-export.php:802
 msgid "inactive - delivered - at recipient"
 msgstr ""
 
-#: includes/class-wcmp-export.php:774
+#: includes/class-wcmp-export.php:803
 msgid "inactive - delivered - ready for pickup"
 msgstr ""
 
-#: includes/class-wcmp-export.php:775
+#: includes/class-wcmp-export.php:804
 msgid "inactive - delivered - package picked up"
 msgstr ""
 
-#: includes/class-wcmp-export.php:776
+#: includes/class-wcmp-export.php:805
 msgid "inactive - unknown"
 msgstr ""
 
-#: includes/class-wcmp-export.php:782
+#: includes/class-wcmp-export.php:811
 msgid "Unknown status"
 msgstr ""
 
-#: includes/class-wcmp-frontend.php:48
+#: includes/class-wcmp-frontend.php:45
 msgid "You can track your order with the following PostNL track&trace code:"
 msgstr ""
 
-#: includes/class-wcmp-frontend.php:215 includes/class-wcmp-settings.php:379
+#: includes/class-wcmp-frontend.php:217 includes/class-wcmp-settings.php:379
 #: includes/class-wcmp-settings.php:559
 #: includes/views/wcmp-order-return-shipment-options.php:40
 #: includes/views/wcmp-order-shipment-options.php:65
@@ -226,11 +226,11 @@ msgstr ""
 msgid "Signature on delivery"
 msgstr ""
 
-#: includes/class-wcmp-frontend.php:225
+#: includes/class-wcmp-frontend.php:227
 msgid "Home address only delivery"
 msgstr ""
 
-#: includes/class-wcmp-frontend.php:271
+#: includes/class-wcmp-frontend.php:273
 msgid "Standard delivery"
 msgstr ""
 
@@ -270,20 +270,20 @@ msgctxt "placeholder"
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
 
-#: includes/class-wcmp-settings-callbacks.php:301
-#: includes/class-wcmp-settings-callbacks.php:325
+#: includes/class-wcmp-settings-callbacks.php:302
+#: includes/class-wcmp-settings-callbacks.php:326
 msgid "Description"
 msgstr ""
 
-#: includes/class-wcmp-settings-callbacks.php:306
-msgid "Additional fee (optional)"
-msgstr ""
-
-#: includes/class-wcmp-settings-callbacks.php:323
-msgid "Option"
+#: includes/class-wcmp-settings-callbacks.php:307
+msgid "Additional fee (ex VAT, optional)"
 msgstr ""
 
 #: includes/class-wcmp-settings-callbacks.php:324
+msgid "Option"
+msgstr ""
+
+#: includes/class-wcmp-settings-callbacks.php:325
 msgid "Fee (optional)"
 msgstr ""
 
@@ -507,7 +507,7 @@ msgid ""
 msgstr ""
 
 #: includes/class-wcmp-settings.php:432
-#: includes/views/wcmp-order-return-shipment-options.php:102
+#: includes/views/wcmp-order-return-shipment-options.php:120
 #: includes/views/wcmp-order-shipment-options.php:146
 msgid "Insured amount"
 msgstr ""
@@ -679,42 +679,43 @@ msgstr ""
 msgid "Insured + home address only + signature on delivery"
 msgstr ""
 
-#: includes/views/wcmp-order-return-shipment-options.php:79
+#: includes/views/wcmp-order-return-shipment-options.php:61
+#: includes/views/wcmp-order-shipment-options.php:86
+msgid "Standard insurance up to €500 + signature on delivery"
+msgstr ""
+
+#: includes/views/wcmp-order-return-shipment-options.php:101
 #: includes/views/wcmp-order-shipment-options.php:127
 msgid "Insurance"
 msgstr ""
 
-#: includes/views/wcmp-order-return-shipment-options.php:83
+#: includes/views/wcmp-order-return-shipment-options.php:105
 #: includes/views/wcmp-order-shipment-options.php:131
 msgid "Insured up to &euro; 50"
 msgstr ""
 
-#: includes/views/wcmp-order-return-shipment-options.php:84
+#: includes/views/wcmp-order-return-shipment-options.php:106
 #: includes/views/wcmp-order-shipment-options.php:132
 msgid "Insured up to  &euro; 250"
 msgstr ""
 
-#: includes/views/wcmp-order-return-shipment-options.php:85
+#: includes/views/wcmp-order-return-shipment-options.php:107
 #: includes/views/wcmp-order-shipment-options.php:133
 msgid "Insured up to  &euro; 500"
 msgstr ""
 
-#: includes/views/wcmp-order-return-shipment-options.php:86
+#: includes/views/wcmp-order-return-shipment-options.php:108
 #: includes/views/wcmp-order-shipment-options.php:134
 msgid "> &euro; 500 insured"
 msgstr ""
 
-#: includes/views/wcmp-order-return-shipment-options.php:114
+#: includes/views/wcmp-order-return-shipment-options.php:137
 #: includes/views/wcmp-order-shipment-options.php:172
 msgid "Save"
 msgstr ""
 
 #: includes/views/wcmp-order-shipment-options.php:34
 msgid "Number of labels"
-msgstr ""
-
-#: includes/views/wcmp-order-shipment-options.php:86
-msgid "Standard insurance up to €500 + signature on delivery"
 msgstr ""
 
 #: includes/views/wcmp-order-shipment-options.php:161
