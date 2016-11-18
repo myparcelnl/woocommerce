@@ -304,7 +304,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 			</tr>
 			!-->
 			<tr> 
-				<td><?php _e( 'Additional fee (optional)', 'woocommerce-myparcel' )?>:</td>
+				<td><?php _e( 'Additional fee (ex VAT, optional)', 'woocommerce-myparcel' )?>:</td>
 				<td>&euro; <?php $this->text_input( array_merge( $args, $fee_args ) ); ?></td>
 			</tr>
 		</table>
