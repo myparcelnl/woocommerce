@@ -562,7 +562,7 @@ class WooCommerce_MyParcel_Export {
 		} else {
 			if (isset(WooCommerce_MyParcel()->export_defaults['insured']) && WooCommerce_MyParcel()->export_defaults['insured_amount'] == '' && isset(WooCommerce_MyParcel()->export_defaults['insured_amount_custom'])) {
 				$insured_amount = WooCommerce_MyParcel()->export_defaults['insured_amount_custom'];
-			} elseif (isset(WooCommerce_MyParcel()->export_defaults['insured_amount'])) {
+			} elseif (isset(WooCommerce_MyParcel()->export_defaults['insured']) && isset(WooCommerce_MyParcel()->export_defaults['insured_amount'])) {
 				$insured_amount = WooCommerce_MyParcel()->export_defaults['insured_amount'];
 			} else {
 				$insured_amount = 0;
