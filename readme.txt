@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.6
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -90,6 +90,11 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 == Changelog ==
 
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
+
+= 2.0.5 =
+* Fix default insurance selection
+* Tweak: Show shipping 'method title' instead of 'title' in settings (with fallback to title)
+* Tweak: added `$order` object to `wcmyparcel_email_text` filter
 
 = 2.0.4 =
 * Improved theme compatibility
