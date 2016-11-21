@@ -43,7 +43,7 @@ class WooCommerce_MyParcel_Frontend {
 		$tracktrace_links = WooCommerce_MyParcel()->admin->get_tracktrace_links ( $order->id );
 		if ( !empty($tracktrace_links) ) {
 			$email_text = __( 'You can track your order with the following PostNL track&trace code:', 'woocommerce-myparcel' );
-			$email_text = apply_filters( 'wcmyparcel_email_text', $email_text );
+			$email_text = apply_filters( 'wcmyparcel_email_text', $email_text, $order );
 			?>
 			<p><?php echo $email_text.' '.implode(', ', $tracktrace_links); ?></p>
 	
