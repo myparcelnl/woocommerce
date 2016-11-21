@@ -34,7 +34,7 @@ class WooCommerce_MyParcel_Assets {
 	 	global $post_type;
 		$screen = get_current_screen();
 
-		if( $post_type == 'shop_order' || ( is_object( $screen ) && $screen->id == 'woocommerce_page_woocommerce_myparcel_settings' ) ) {
+		if( $post_type == 'shop_order' || ( is_object( $screen ) && strpos( $screen->id, 'myparcel' ) !== false ) ) {
 			// WC2.3+ load all WC scripts for shipping_method search!
 			if ( version_compare( WOOCOMMERCE_VERSION, '2.3', '>=' ) ) {
 				wp_enqueue_script( 'woocommerce_admin' );
