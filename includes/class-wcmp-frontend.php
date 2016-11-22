@@ -99,7 +99,11 @@ class WooCommerce_MyParcel_Frontend {
 			if ( in_array($option,$delivery_options) && !isset(WooCommerce_MyParcel()->checkout_settings[$option.'_enabled']) ) {
 				$prices[$option] = 'disabled';
 			} elseif (!empty(WooCommerce_MyParcel()->checkout_settings[$option.'_fee'])) {
-				$prices[$option] = '+ &#8364;'.WooCommerce_MyParcel()->checkout_settings[$option.'_fee'];
+				$fee = WooCommerce_MyParcel()->checkout_settings[$option.'_fee'];
+				$fee = $this->normalize_price( $fee );
+				$fee_including_tax = $fee + array_sum( WC_Tax::calc_shipping_tax( $fee, WC_Tax::get_shipping_tax_rates() ) );
+				$formatted_fee = wc_price($fee_including_tax); // this includes price HTML, may need to use custom function, also for &#8364; instead of eur
+				$prices[$option] = '+ '.$formatted_fee;
 			}
 		}
 
