@@ -215,8 +215,7 @@ class WooCommerce_MyParcel_Frontend {
 			if (!empty(WooCommerce_MyParcel()->checkout_settings['signed_fee'])) {
 				$fee = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
 				$fee_name = __( 'Signature on delivery', 'woocommerce-myparcel' );
-				$fee = $this->normalize_price( $fee );
-				$woocommerce->cart->add_fee( $fee_name, $fee, true );
+				$this->add_fee( $fee_name, $fee );
 			}
 		}
 
@@ -225,8 +224,7 @@ class WooCommerce_MyParcel_Frontend {
 			if (!empty(WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'])) {
 				$fee = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
 				$fee_name = __( 'Home address only delivery', 'woocommerce-myparcel' );
-				$fee = $this->normalize_price( $fee );
-				$woocommerce->cart->add_fee( $fee_name, $fee, true );
+				$this->add_fee( $fee_name, $fee );
 			}
 		}
 
@@ -251,8 +249,7 @@ class WooCommerce_MyParcel_Frontend {
 				}
 
 				if (!empty($fee)) {
-					$fee = $this->normalize_price( $fee );
-					$woocommerce->cart->add_fee( $fee_name, $fee, true );
+					$this->add_fee( $fee_name, $fee );
 				}
 			}
 
@@ -282,15 +279,68 @@ class WooCommerce_MyParcel_Frontend {
 					}
 
 					if (!empty($fee)) {
-						$fee = $this->normalize_price( $fee );
-						$woocommerce->cart->add_fee( $fee_name, $fee, true );
+						$this->add_fee( $fee_name, $fee );
 					}
 				}
 
 			}
 		}
+	}
 
+	public function add_fee( $fee_name, $fee ) {
+		global $woocommerce; // should be rewritten to WC with fallback functions
+		$fee = $this->normalize_price( $fee );
+		// get shipping tax data
+		$shipping_tax_class = $this->get_shipping_tax_class();
+		if ( $shipping_tax_class ) {
+			$woocommerce->cart->add_fee( $fee_name, $fee, true, $shipping_tax_class );
+		} else {
+			$woocommerce->cart->add_fee( $fee_name, $fee );
+		}
+	}
 
+	/**
+	 * Get shipping tax class
+	 * adapted from WC_Tax::get_shipping_tax_rates
+	 *
+	 * assumes per order shipping (per item shipping not supported for MyParcel yet)
+	 * @return [type] [description]
+	 */
+	public function get_shipping_tax_class() {
+		global $woocommerce; // should be rewritten to WC with fallback functions in future WooCommerce versions
+
+		// See if we have an explicitly set shipping tax class
+		if ( $shipping_tax_class = get_option( 'woocommerce_shipping_tax_class' ) ) {
+			$tax_class = 'standard' === $shipping_tax_class ? '' : $shipping_tax_class;
+		}
+
+		$location          = WC_Tax::get_tax_location( '' );
+
+		if ( sizeof( $location ) === 4 ) {
+			list( $country, $state, $postcode, $city ) = $location;
+
+			// This will be per order shipping - loop through the order and find the highest tax class rate
+			$cart_tax_classes = $woocommerce->cart->get_cart_item_tax_classes();
+
+			// If multiple classes are found, use the first one. Don't bother with standard rate, we can get that later.
+			if ( sizeof( $cart_tax_classes ) > 1 && ! in_array( '', $cart_tax_classes ) ) {
+				$tax_classes = WC_Tax::get_tax_classes();
+
+				foreach ( $tax_classes as $tax_class ) {
+					$tax_class = sanitize_title( $tax_class );
+					if ( in_array( $tax_class, $cart_tax_classes ) ) {
+						// correct $tax_class is now set
+						break;
+					}
+				}
+
+			// If a single tax class is found, use it
+			} elseif ( sizeof( $cart_tax_classes ) == 1 ) {
+				$tax_class = array_pop( $cart_tax_classes );
+			}
+		}
+
+		return $tax_class;
 	}
 
 	// converts price string to float value, assuming no thousand-separators used
