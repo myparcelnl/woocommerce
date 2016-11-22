@@ -22,6 +22,12 @@ class WooCommerce_MyParcel_Frontend {
 			add_filter( 'woocommerce_my_account_my_orders_actions', array( $this, 'track_trace_myaccount' ), 10, 2 );
 		}
 
+		// pickup address in email
+		// woocommerce_email_customer_details:
+		// @10 = templates/email-customer-details.php
+		// @20 = templates/email-addresses.php
+		add_action( 'woocommerce_email_customer_details', array( $this, 'email_pickup_html'), 19, 3 );
+
 		// Delivery options
 		if (isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout'])) {
 			add_action( apply_filters( 'wc_myparcel_delivery_options_location', 'woocommerce_after_checkout_billing_form' ), array( $this, 'output_delivery_options' ), 10, 1 );
@@ -49,6 +55,10 @@ class WooCommerce_MyParcel_Frontend {
 	
 			<?php
 		}
+	}
+
+	public function email_pickup_html( $order, $sent_to_admin = false, $plain_text = false ) {
+		WooCommerce_MyParcel()->admin->show_order_delivery_options( $order );
 	}
 
 	public function track_trace_myaccount( $actions, $order ) {
