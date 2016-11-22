@@ -63,7 +63,7 @@ Moreover, after a label is created, a track&trace code is added to the order. Wh
 
 == Frequently Asked Questions ==
 
-**Online Manual (in Dutch):** https://myparcelnl.github.io/woocommerce-myparcel/
+**Online Manual (in Dutch):** https://myparcelnl.github.io/woocommerce-handleiding/
 
 = How do I get an API key? =
 When logged in on your myparcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) you can find your API key under Instellingen → Algemeen.
