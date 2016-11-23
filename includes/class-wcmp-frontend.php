@@ -189,7 +189,7 @@ class WooCommerce_MyParcel_Frontend {
 
 	public function get_shipping_data() {
 		if ($shipping_class = $this->get_cart_shipping_class()) {
-			$shipping_data = sprintf('<input type="hidden" value="%s" id="myparcel_highest_shipping_class">', $shipping_class);
+			$shipping_data = sprintf('<input type="hidden" value="%s" id="myparcel_highest_shipping_class" name="myparcel_highest_shipping_class">', $shipping_class);
 			return $shipping_data;
 		} else {
 			return false;
@@ -225,6 +225,10 @@ class WooCommerce_MyParcel_Frontend {
 		if (!empty($_POST['mypa-post-nl-data'])) {
 			$delivery_options = json_decode( stripslashes( $_POST['mypa-post-nl-data']), true );
 			update_post_meta( $order_id, '_myparcel_delivery_options', $delivery_options );
+		}
+
+		if (isset($_POST['myparcel_highest_shipping_class'])) {
+			update_post_meta( $order_id, '_myparcel_highest_shipping_class', $_POST['myparcel_highest_shipping_class'] );
 		}
 	}
 
