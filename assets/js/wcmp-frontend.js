@@ -59,10 +59,15 @@ jQuery( function( $ ) {
 			var shipping_class = $('#myparcel_highest_shipping_class').val();
 			// add class refinement if we have a shipping class
 			if (shipping_class) {
-				shipping_method = shipping_method+':'+shipping_class;
+				shipping_method_class = shipping_method+':'+shipping_class;
 			}
-			if ( $.inArray(shipping_method, window.myparcel_delivery_options_shipping_methods) > -1 ) {
-				// console.log(window.myparcel_delivery_options_shipping_methods.length);
+			if ( shipping_class && $.inArray(shipping_method_class, window.myparcel_delivery_options_shipping_methods) > -1 ) {
+				$( '#myparcel-iframe' ).show();
+				$( '#mypa-options-enabled' ).prop('checked', true);
+				// still hide if country is not NL
+				check_country();
+			} else if ( $.inArray(shipping_method, window.myparcel_delivery_options_shipping_methods) > -1 ) {
+				// fallback to bare method if selected in settings
 				$( '#myparcel-iframe' ).show();
 				$( '#mypa-options-enabled' ).prop('checked', true);
 				// still hide if country is not NL
