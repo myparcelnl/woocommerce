@@ -50,12 +50,17 @@ jQuery( function( $ ) {
 			var shipping_method = $( '#order_review .shipping_method').val();
 		}
 		// console.log(shipping_method);
-		// strip zone_id if present
+		// strip instance_id if present
 		if (shipping_method.indexOf(':') !== -1) {
 			shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
 		}
 		// console.log(shipping_method);
 		if ( window.myparcel_delivery_options_shipping_methods.length > 0 ) {
+			var shipping_class = $('#myparcel_highest_shipping_class').val();
+			// add class refinement if we have a shipping class
+			if (shipping_class) {
+				shipping_method = shipping_method+':'+shipping_class;
+			}
 			if ( $.inArray(shipping_method, window.myparcel_delivery_options_shipping_methods) > -1 ) {
 				// console.log(window.myparcel_delivery_options_shipping_methods.length);
 				$( '#myparcel-iframe' ).show();

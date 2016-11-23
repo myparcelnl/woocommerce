@@ -245,6 +245,19 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 				if ( $shipping_methods ) foreach ( $shipping_methods as $key => $shipping_method ) {
 					$method_title = !empty($shipping_methods[$key]->method_title) ? $shipping_methods[$key]->method_title : $shipping_methods[$key]->title;
 					echo '<option value="' . esc_attr( $key ) . '"' . selected( in_array( $key, $shipping_methods_selected ), true, false ) . '>' . esc_html( $method_title ) . '</option>';
+					// split flat rate by shipping class
+					if ( ( $key == 'flat_rate' || $key == 'legacy_flat_rate' ) && version_compare( WOOCOMMERCE_VERSION, '2.4', '>=' ) ) {
+						$shipping_classes = WC()->shipping->get_shipping_classes();
+						foreach ($shipping_classes as $shipping_class) {
+							if ( ! isset( $shipping_class->term_id ) ) {
+								continue;
+							}
+							$id = $shipping_class->term_id;
+							$name = esc_html( "{$method_title} - {$shipping_class->name}" );
+							$method_class = esc_attr( $key ).":".$id;
+							echo '<option value="' . $method_class . '"' . selected( in_array( $method_class, $shipping_methods_selected ), true, false ) . '>' . $name . '</option>';
+						}
+					}
 				}
 			?>
 		</select>

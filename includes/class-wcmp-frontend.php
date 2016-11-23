@@ -38,6 +38,10 @@ class WooCommerce_MyParcel_Frontend {
 
 		// Delivery options fees
 		add_action( 'woocommerce_cart_calculate_fees', array( $this, 'delivery_options_fees' ) );
+
+		// Output most expensive shipping class in frontend data
+		add_action( 'woocommerce_checkout_after_order_review', array( $this, 'output_shipping_data' ) );
+		add_action( 'woocommerce_update_order_review_fragments', array( $this, 'order_review_fragments' ) );
 	}
 
 	public function track_trace_email( $order, $sent_to_admin ) {
@@ -176,6 +180,20 @@ class WooCommerce_MyParcel_Frontend {
 			<input style="display:none" type="checkbox" name='mypa-recipient-only' id="mypa-recipient-only">
 		</div>
 		<?php
+	}
+
+	public function output_shipping_data() {
+		$shipping_data = $this->get_shipping_data();
+		printf('<div class="myparcel-shipping-data">%s</div>', $shipping_data);
+	}
+
+	public function get_shipping_data() {
+		if ($shipping_class = $this->get_cart_shipping_class()) {
+			$shipping_data = sprintf('<input type="hidden" value="%s" id="myparcel_highest_shipping_class">', $shipping_class);
+			return $shipping_data;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -318,7 +336,7 @@ class WooCommerce_MyParcel_Frontend {
 	 * adapted from WC_Tax::get_shipping_tax_rates
 	 *
 	 * assumes per order shipping (per item shipping not supported for MyParcel yet)
-	 * @return [type] [description]
+	 * @return string tax class
 	 */
 	public function get_shipping_tax_class() {
 		global $woocommerce; // should be rewritten to WC with fallback functions in future WooCommerce versions
@@ -355,6 +373,172 @@ class WooCommerce_MyParcel_Frontend {
 		}
 
 		return $tax_class;
+	}
+
+	/**
+	 * Get the most expensive shipping class in the cart
+	 * Requires WC2.4+
+	 *
+	 * Only supports 1 packages, takes the first
+	 * @return [type] [description]
+	 */
+	public function get_cart_shipping_class() {
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.4', '<' ) ) {
+			return false;
+		}
+
+		$chosen_method = isset( WC()->session->chosen_shipping_methods[ 0 ] ) ? WC()->session->chosen_shipping_methods[ 0 ] : '';
+
+		// get package
+		$packages = WC()->shipping->get_packages();
+		$package = current($packages);
+
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.6', '>=' ) && $chosen_method !== 'legacy_flat_rate' ) {
+			$chosen_method = explode( ':', $chosen_method ); // slug:instance
+			// only for flat rate
+			if ( $chosen_method[0] !== 'flat_rate' ) {
+				return false;
+			}
+			$method_slug = $chosen_method[0];
+			$method_instance = $chosen_method[1];
+
+			$shipping_method = WC_Shipping_Zones::get_shipping_method( $method_instance );
+		} else {
+			// only for flat rate or legacy flat rate
+			if ( !in_array($chosen_method, array('flat_rate','legacy_flat_rate') ) ) {
+				return false;
+			}
+			$shipping_methods = WC()->shipping->load_shipping_methods( $package );
+
+			if (!isset($shipping_methods[$chosen_method])) {
+				return false;
+			}
+			$shipping_method = $shipping_methods[$chosen_method];
+		}
+
+		if (!isset($shipping_method)) {
+			return false;
+		}
+
+		// get shipping classes from cart
+		$found_shipping_classes = $shipping_method->find_shipping_classes( $package );
+
+		
+		// get most expensive class
+		// adapted from $shipping_method->calculate_shipping()
+		$highest_class_cost = 0;
+		$highest_class = false;
+		foreach ( $found_shipping_classes as $shipping_class => $products ) {
+			// Also handles BW compatibility when slugs were used instead of ids
+			$shipping_class_term = get_term_by( 'slug', $shipping_class, 'product_shipping_class' );
+			$class_cost_string   = $shipping_class_term && $shipping_class_term->term_id ? $shipping_method->get_option( 'class_cost_' . $shipping_class_term->term_id, $shipping_method->get_option( 'class_cost_' . $shipping_class, '' ) ) : $shipping_method->get_option( 'no_class_cost', '' );
+
+			if ( $class_cost_string === '' ) {
+				continue;
+			}
+
+
+			$has_costs  = true;
+			$class_cost = $this->wc_flat_rate_evaluate_cost( $class_cost_string, array(
+				'qty'  => array_sum( wp_list_pluck( $products, 'quantity' ) ),
+				'cost' => array_sum( wp_list_pluck( $products, 'line_total' ) )
+			), $shipping_method );
+
+			if ( $class_cost > $highest_class_cost && $shipping_class_term->term_id) {
+				$highest_class_cost = $class_cost;
+				$highest_class = $shipping_class_term->term_id;
+			}
+		}
+
+		return $highest_class;
+	}
+
+	/**
+	 * Adapted from WC_Shipping_Flat_Rate - Protected method
+	 * Evaluate a cost from a sum/string.
+	 * @param  string $sum
+	 * @param  array  $args
+	 * @return string
+	 */
+	public function wc_flat_rate_evaluate_cost($sum, $args = array(), $flat_rate_method) {
+		if ( version_compare( WOOCOMMERCE_VERSION, '2.6', '>=' ) ) {
+			include_once( WC()->plugin_path() . '/includes/libraries/class-wc-eval-math.php' );
+		} else {
+			include_once( WC()->plugin_path() . '/includes/shipping/flat-rate/includes/class-wc-eval-math.php' );
+		}
+
+		// Allow 3rd parties to process shipping cost arguments
+		$args           = apply_filters( 'woocommerce_evaluate_shipping_cost_args', $args, $sum, $flat_rate_method );
+		$locale         = localeconv();
+		$decimals       = array( wc_get_price_decimal_separator(), $locale['decimal_point'], $locale['mon_decimal_point'], ',' );
+		$this->fee_cost = $args['cost'];
+
+		// Expand shortcodes
+		add_shortcode( 'fee', array( $this, 'wc_flat_rate_fee' ) );
+
+		$sum = do_shortcode( str_replace(
+			array(
+				'[qty]',
+				'[cost]'
+			),
+			array(
+				$args['qty'],
+				$args['cost']
+			),
+			$sum
+		) );
+
+		remove_shortcode( 'fee', array( $this, 'wc_flat_rate_fee' ) );
+
+		// Remove whitespace from string
+		$sum = preg_replace( '/\s+/', '', $sum );
+
+		// Remove locale from string
+		$sum = str_replace( $decimals, '.', $sum );
+
+		// Trim invalid start/end characters
+		$sum = rtrim( ltrim( $sum, "\t\n\r\0\x0B+*/" ), "\t\n\r\0\x0B+-*/" );
+
+		// Do the math
+		return $sum ? WC_Eval_Math::evaluate( $sum ) : 0;
+	}
+
+	/**
+	 * Adapted from WC_Shipping_Flat_Rate - Protected method
+	 * Work out fee (shortcode).
+	 * @param  array $atts
+	 * @return string
+	 */
+	public function wc_flat_rate_fee( $atts ) {
+		$atts = shortcode_atts( array(
+			'percent' => '',
+			'min_fee' => '',
+			'max_fee' => '',
+		), $atts );
+
+		$calculated_fee = 0;
+
+		if ( $atts['percent'] ) {
+			$calculated_fee = $this->fee_cost * ( floatval( $atts['percent'] ) / 100 );
+		}
+
+		if ( $atts['min_fee'] && $calculated_fee < $atts['min_fee'] ) {
+			$calculated_fee = $atts['min_fee'];
+		}
+
+		if ( $atts['max_fee'] && $calculated_fee > $atts['max_fee'] ) {
+			$calculated_fee = $atts['max_fee'];
+		}
+
+		return $calculated_fee;
+	}
+
+	public function order_review_fragments( $fragments ) {
+		$myparcel_shipping_data = $this->get_shipping_data();
+
+		// echo '<pre>';var_dump($myparcel_shipping_data);echo '</pre>';die();
+		$fragments['.myparcel-shipping-data'] = $myparcel_shipping_data;
+		return $fragments;
 	}
 
 	// converts price string to float value, assuming no thousand-separators used
