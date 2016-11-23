@@ -3,7 +3,7 @@
  * LOAD WORDPRESS
  */
 define('WP_USE_THEMES', false);
-require( '../../../../../wp-blog-header.php');
+require( '../../../../../wp-load.php');
 ?>
 <html>
 <head>
