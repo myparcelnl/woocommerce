@@ -325,6 +325,9 @@ class WooCommerce_MyParcel_Frontend {
 		// get shipping tax data
 		$shipping_tax_class = $this->get_shipping_tax_class();
 		if ( $shipping_tax_class ) {
+			if ($shipping_tax_class == 'standard') {
+				$shipping_tax_class = '';
+			}
 			$woocommerce->cart->add_fee( $fee_name, $fee, true, $shipping_tax_class );
 		} else {
 			$woocommerce->cart->add_fee( $fee_name, $fee );
@@ -369,6 +372,11 @@ class WooCommerce_MyParcel_Frontend {
 			// If a single tax class is found, use it
 			} elseif ( sizeof( $cart_tax_classes ) == 1 ) {
 				$tax_class = array_pop( $cart_tax_classes );
+			}
+
+			// no rate = standard rate
+			if (empty($tax_class)) {
+				$tax_class = 'standard';
 			}
 		}
 
