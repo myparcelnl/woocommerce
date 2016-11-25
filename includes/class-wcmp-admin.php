@@ -13,7 +13,7 @@ class WooCommerce_MyParcel_Admin {
 	
 	function __construct()	{
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_shipment_options' ), 9999 );
-		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_return_shipment_options' ), 9999 );
+		//add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_return_shipment_options' ), 9999 );
 		add_action(	'admin_footer', array( $this, 'bulk_actions' ) ); 
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_order_actions' ), 20 );
 		add_action( 'add_meta_boxes_shop_order', array( $this, 'shop_order_metabox' ) );
