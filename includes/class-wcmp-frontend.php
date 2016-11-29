@@ -316,7 +316,7 @@ class WooCommerce_MyParcel_Frontend {
 		}
 
 		// Fee for "only recipient" option, don't apply fee for morning & night delivery (already included)
-		if (isset($post_data['mypa-recipient-only']) && !empty($only_recipient_included)) {
+		if (isset($post_data['mypa-recipient-only']) && empty($only_recipient_included)) {
 			if (!empty(WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'])) {
 				$fee = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
 				$fee_name = __( 'Home address only delivery', 'woocommerce-myparcel' );
