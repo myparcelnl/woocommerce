@@ -246,24 +246,6 @@ class WooCommerce_MyParcel_Frontend {
 			$post_data = $_POST;
 		}
 
-		// Fee for "signed" option
-		if (isset($post_data['mypa-signed'])) {
-			if (!empty(WooCommerce_MyParcel()->checkout_settings['signed_fee'])) {
-				$fee = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
-				$fee_name = __( 'Signature on delivery', 'woocommerce-myparcel' );
-				$this->add_fee( $fee_name, $fee );
-			}
-		}
-
-		// Fee for "only recipient" option
-		if (isset($post_data['mypa-recipient-only'])) {
-			if (!empty(WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'])) {
-				$fee = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
-				$fee_name = __( 'Home address only delivery', 'woocommerce-myparcel' );
-				$this->add_fee( $fee_name, $fee );
-			}
-		}
-
 		// check for delivery options & add fees
 		if (!empty($post_data['mypa-post-nl-data'])) {
 			$delivery_options = json_decode( stripslashes( $post_data['mypa-post-nl-data']), true );
@@ -295,6 +277,7 @@ class WooCommerce_MyParcel_Frontend {
 				if (isset($time['price_comment'])) {
 					switch ($time['price_comment']) {
 						case 'morning':
+							$only_recipient_included = true;
 							if (!empty(WooCommerce_MyParcel()->checkout_settings['morning_fee'])) {
 								$fee = WooCommerce_MyParcel()->checkout_settings['morning_fee'];
 								$fee_name = __( 'Morning delivery', 'woocommerce-myparcel' );
@@ -307,6 +290,7 @@ class WooCommerce_MyParcel_Frontend {
 							}
 							break;
 						case 'night':
+							$only_recipient_included = true;
 							if (!empty(WooCommerce_MyParcel()->checkout_settings['night_fee'])) {
 								$fee = WooCommerce_MyParcel()->checkout_settings['night_fee'];
 								$fee_name = __( 'Evening delivery', 'woocommerce-myparcel' );
@@ -321,6 +305,25 @@ class WooCommerce_MyParcel_Frontend {
 
 			}
 		}
+
+		// Fee for "signed" option
+		if (isset($post_data['mypa-signed'])) {
+			if (!empty(WooCommerce_MyParcel()->checkout_settings['signed_fee'])) {
+				$fee = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
+				$fee_name = __( 'Signature on delivery', 'woocommerce-myparcel' );
+				$this->add_fee( $fee_name, $fee );
+			}
+		}
+
+		// Fee for "only recipient" option, don't apply fee for morning & night delivery (already included)
+		if (isset($post_data['mypa-recipient-only']) && !empty($only_recipient_included)) {
+			if (!empty(WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'])) {
+				$fee = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
+				$fee_name = __( 'Home address only delivery', 'woocommerce-myparcel' );
+				$this->add_fee( $fee_name, $fee );
+			}
+		}
+
 	}
 
 	public function add_fee( $fee_name, $fee ) {
