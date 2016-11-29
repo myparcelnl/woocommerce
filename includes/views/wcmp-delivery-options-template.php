@@ -336,6 +336,7 @@
       margin-right: 25px;
       font-weight: 800;
       font-size: 17px;
+      margin-bottom: 10px;
     }
 
     .mypa-combination-price{
