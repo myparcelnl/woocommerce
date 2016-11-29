@@ -150,8 +150,11 @@ class WooCommerce_MyParcel_Frontend {
 		// encode settings for JS object
 		$settings = json_encode($settings);
 
-		// Shipping methods associated with delivery options
-		if ( isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] ) && isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1] ) ) {
+		if ( isset( WooCommerce_MyParcel()->checkout_settings['checkout_display'] ) && WooCommerce_MyParcel()->checkout_settings['checkout_display'] == 'all_methods' ) {
+			$myparcel_delivery_options_always_display = 'yes';
+			$delivery_options_shipping_methods = array();
+		} elseif ( isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] ) && isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1] ) ) {
+			// Shipping methods associated with parcels = enable delivery options
 			$delivery_options_shipping_methods = WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1];
 		} else {
 			$delivery_options_shipping_methods = array();
@@ -166,7 +169,10 @@ class WooCommerce_MyParcel_Frontend {
 			window.mypa = {};
 			window.mypa.settings = <?php echo $settings; ?>;
 			window.myparcel_delivery_options_shipping_methods = <?php echo $delivery_options_shipping_methods; ?>;
-			
+			<?php if (!empty($myparcel_delivery_options_always_display)): ?>
+			window.myparcel_delivery_options_always_display = 'yes';
+			<?php endif ?>
+
 			// set reference to iFrame
 			var $MyPaiFrame = $('#myparcel-iframe')[0];
 			var MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;

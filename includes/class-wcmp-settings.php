@@ -527,20 +527,22 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 
-		/*
 		add_settings_field(
-			'shipping_methods',
-			__( 'Shipping methods', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'shipping_method_search' ),
+			'checkout_display',
+			__( 'Display for', 'wpo_wcpdf' ),
+			array( $this->callbacks, 'select' ),
 			$option_group,
 			'delivery_options',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'shipping_methods',
-				'description'	=> __( 'Select one or more shipping methods for each MyParcel package type', 'woocommerce-myparcel' ),
+				'id'			=> 'checkout_display',
+				'options' 		=> array(
+					'selected_methods'	=> __( 'Shipping methods associated with Parcels' , 'woocommerce-myparcel' ),
+					'all_methods'		=> __( 'All shipping methods' , 'woocommerce-myparcel' ),
+				),
+				'description'	=> __( 'To associate specific shipping methods with parcels, see the Default export settings tab. Note that the delivery options will be automatically hidden for foreign addresses, regardless of this setting', 'woocommerce-myparcel' ),
 			)
 		);
-		*/
 
 		add_settings_field(
 			'only_recipient',

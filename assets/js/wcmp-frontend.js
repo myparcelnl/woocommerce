@@ -55,31 +55,25 @@ jQuery( function( $ ) {
 			shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
 		}
 		// console.log(shipping_method);
-		if ( window.myparcel_delivery_options_shipping_methods.length > 0 ) {
+		if ( typeof window.myparcel_delivery_options_always_display !== 'undefined' && window.myparcel_delivery_options_always_display == 'yes') {
+			show_myparcel_delivery_options();
+		} else if ( window.myparcel_delivery_options_shipping_methods.length > 0 ) {
 			var shipping_class = $('#myparcel_highest_shipping_class').val();
 			// add class refinement if we have a shipping class
 			if (shipping_class) {
 				shipping_method_class = shipping_method+':'+shipping_class;
 			}
 			if ( shipping_class && $.inArray(shipping_method_class, window.myparcel_delivery_options_shipping_methods) > -1 ) {
-				$( '#myparcel-iframe' ).show();
-				$( '#mypa-options-enabled' ).prop('checked', true);
-				// still hide if country is not NL
-				check_country();
+				show_myparcel_delivery_options();
 			} else if ( $.inArray(shipping_method, window.myparcel_delivery_options_shipping_methods) > -1 ) {
 				// fallback to bare method if selected in settings
-				$( '#myparcel-iframe' ).show();
-				$( '#mypa-options-enabled' ).prop('checked', true);
-				// still hide if country is not NL
-				check_country();
+				show_myparcel_delivery_options();
 			} else {
-				$( '#myparcel-iframe' ).hide();
-				$( '#mypa-options-enabled' ).prop('checked', false);
+				hide_myparcel_delivery_options();
 			}
 		} else {
-			// not sure if we should hide by default?
-			$( '#myparcel-iframe' ).hide();
-			$( '#mypa-options-enabled' ).prop('checked', false);
+			// not sure if we should already hide by default?
+			hide_myparcel_delivery_options();
 		}
 	});
 
@@ -162,6 +156,17 @@ jQuery( function( $ ) {
 
 		return country;
 	}
+
+	function hide_myparcel_delivery_options() {
+		$( '#myparcel-iframe' ).hide();
+		$( '#mypa-options-enabled' ).prop('checked', false);
+	}
+
+	function show_myparcel_delivery_options() {
+		// show only if NL
+		check_country();
+	}
+
 
 	function update_myparcel_delivery_options() {
 		// Small timeout to prevent multiple requests when several fields update at the same time
