@@ -553,12 +553,12 @@ class WooCommerce_MyParcel_Export {
 
 		// disable mailbox package outside NL
 		if ($order->shipping_country != 'NL' && $package_type == 2 ) {
-			$package_type == 1;
+			$package_type = 1;
 		}
 
 		// always parcel for Pickup and Pickup express delivery types.
 		if ( $this->is_pickup( $order ) ) {
-			$package_type == 1;
+			$package_type = 1;
 		}
 
 		// use shipment options from order when available
