@@ -244,9 +244,9 @@ jQuery( function( $ ) {
 					var button = this;
 					show_spinner( button );
 					myparcel_export( order_ids );
-					setTimeout(function() {
-						hide_spinner( button );
-					}, 500);
+					// setTimeout(function() {
+						// hide_spinner( button );
+					// }, 500);
 					break;
 				case 'get_labels':
 					myparcel_print( order_ids );

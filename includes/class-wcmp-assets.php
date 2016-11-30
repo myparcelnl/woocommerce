@@ -53,7 +53,7 @@ class WooCommerce_MyParcel_Assets {
 			wp_enqueue_style( 'thickbox' );
 			wp_enqueue_script(
 				'wcmyparcel-export',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmyparcel-script.js',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-backend.js',
 				array( 'jquery', 'thickbox' ),
 				WC_MYPARCEL_VERSION
 			);
