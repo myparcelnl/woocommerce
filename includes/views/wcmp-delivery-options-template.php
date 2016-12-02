@@ -535,6 +535,16 @@
     }
 
   </style>
+
+  <!-- CUSTOM STYLES / STYLE OVERRIDES -->
+  <style>
+  <?php if (isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) && WooCommerce_MyParcel()->checkout_settings['deliverydays_window'] == 0): ?>
+  #mypa-tabs-container,
+  .mypa-date-slider-button {
+    display: none;
+  }
+  <?php endif ?>
+  </style>
 <div id='mypa-delivery-options-container'>
   <div class="mypa-overlay">
     <span id="mypa-no-options">Geen adres opgegeven</span>
