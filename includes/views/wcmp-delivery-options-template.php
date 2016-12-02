@@ -544,6 +544,11 @@
     display: none;
   }
   <?php endif ?>
+  <?php
+  if (!empty(WooCommerce_MyParcel()->checkout_settings['custom_css'])) {
+    echo nl2br(WooCommerce_MyParcel()->checkout_settings['custom_css']);
+  }
+  ?>
   </style>
 <div id='mypa-delivery-options-container'>
   <div class="mypa-overlay">

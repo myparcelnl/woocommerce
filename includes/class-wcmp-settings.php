@@ -693,6 +693,29 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 
+		// Customizations section
+		add_settings_section(
+			'customizations',
+			__( 'Customizations', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'section' ),
+			$option_group
+		);
+
+
+		add_settings_field(
+			'custom_css',
+			__( 'Custom styles', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'textarea' ),
+			$option_group,
+			'customizations',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'custom_css',
+				'width'			=> '80',
+				'height'		=> '8',
+			)
+		);
+
 	}
 
 	
