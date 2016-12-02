@@ -121,6 +121,7 @@ class WooCommerce_MyParcel_Admin {
 				<?php }	?>
 			});
 			</script>
+			<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_bulk_spinner waiting" style="display:none;"/>
 		<?php
 		}
 	}

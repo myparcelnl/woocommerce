@@ -189,10 +189,13 @@ jQuery( function( $ ) {
 				// hide the form
 				$form.slideUp();
 			});
-
-
-
 		});
+
+	// Print queued labels
+	var print_queue = $("#wcmp_printqueue").val();
+	if ( typeof print_queue !== 'undefined' ) {
+		myparcel_print( $.parseJSON(print_queue), 'yes' );
+	}
 
 	// Bulk actions
 	$("#doaction, #doaction2").click(function (event) {
@@ -217,13 +220,16 @@ jQuery( function( $ ) {
 			// execute action
 			switch (action) {
 				case 'export':
+					bulk_spinner( this, 'show' );
 					myparcel_export( order_ids );
 					break;
 				case 'print':
+					bulk_spinner( this, 'show' );
 					myparcel_print( order_ids );
 					break;
 				case 'export_print':
-					myparcel_export( order_ids, 'yes' ); /* 'yes' inits print mode and disables refresh */
+					bulk_spinner( this, 'show' );
+					myparcel_export( order_ids, 'after_reload' ); /* 'yes' inits print mode and disables refresh */
 					break;
 			}
 
@@ -242,10 +248,10 @@ jQuery( function( $ ) {
 			switch (button_action) {
 				case 'add_shipment':
 					var button = this;
-					show_spinner( button );
+					button_spinner( button, 'show' );
 					myparcel_export( order_ids );
 					// setTimeout(function() {
-						// hide_spinner( button );
+						// button_spinner( button, 'hide' );
 					// }, 500);
 					break;
 				case 'get_labels':
@@ -263,19 +269,28 @@ jQuery( function( $ ) {
 		$("body").css({ overflow: 'inherit' })
 	});
 
-	function show_spinner( element ) {
-		$button_img = $( element ).find( '.wcmp_button_img' );
-		$button_img.hide();
-		// console.log($( element ).parent().find('.wcmp_spinner'));
-		$( element ).parent().find('.wcmp_spinner')
-			.insertAfter( $button_img )
-			.show();
+	function button_spinner( button, display ) {
+		if (display == 'show') {
+			$button_img = $( button ).find( '.wcmp_button_img' );
+			$button_img.hide();
+			// console.log($( button ).parent().find('.wcmp_spinner'));
+			$( button ).parent().find('.wcmp_spinner')
+				.insertAfter( $button_img )
+				.show();
+		} else {
+			$( button ).parent().find('.wcmp_spinner').hide();
+			$( button ).find( '.wcmp_button_img' ).show();
+		}
 	}
 
-	function hide_spinner( element ) {
-		$( element ).parent().find('.wcmp_spinner').hide();
-		$( element ).find( '.wcmp_button_img' ).show();
-	}	
+	function bulk_spinner( action, display ) {
+		if (display == 'show') {
+			$submit_button = $( action ).parent().find('.button.action');
+			$('.wcmp_bulk_spinner').insertAfter($submit_button).show();
+		} else {
+			$('.wcmp_bulk_spinner').hide();
+		}
+	}
 
 	// export orders to MyParcel via AJAX
 	function myparcel_export( order_ids, print ) {
@@ -292,7 +307,7 @@ jQuery( function( $ ) {
 		$.post( wc_myparcel.ajax_url, data, function( response ) {
 			response = $.parseJSON(response);
 
-			if (print == 'no') {
+			if (print == 'no' || print == 'after_reload') {
 				// refresh page, admin notices are stored in options and will be displayed automatically
 				location.reload();
 				return;
@@ -364,6 +379,7 @@ jQuery( function( $ ) {
 		// submit data to open or download pdf
 		$('#myparcel_post_data').submit();
 
+		bulk_spinner( '', 'hide' );
 
 
 		/* alternate method:

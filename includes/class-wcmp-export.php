@@ -29,9 +29,17 @@ class WooCommerce_MyParcel_Export {
 
 	public function admin_notices () {
 		$action_return = get_option( 'wcmyparcel_admin_notices' );
+		$success_ids = get_option( 'wcmyparcel_print_queue', array() );
 		if (!empty($action_return)) {
 			foreach ($action_return as $type => $message) {
-				printf('<div class="myparcel_notice notice notice-%s"><p>%s</p></div>', $type, $message);
+				if (in_array($type, array('success','error'))) {
+					if ( $type == 'success' && !empty($success_ids) ) {
+						$print_queue = sprintf('<input type="hidden" value="%s" id="wcmp_printqueue">', json_encode(array_keys($success_ids)));
+						// dequeue
+						delete_option( 'wcmyparcel_print_queue' );
+					}
+					printf('<div class="myparcel_notice notice notice-%s"><p>%s</p>%s</div>', $type, $message, isset($print_queue)?$print_queue:'');
+				}
 			}
 			// destroy after reading
 			delete_option( 'wcmyparcel_admin_notices' );
@@ -127,8 +135,11 @@ class WooCommerce_MyParcel_Export {
 
 		// When adding shipments, store $return for use in admin_notice
 		// This way we can refresh the page (JS) to show all new buttons
-		if ($request == 'add_shipments' && !empty($print) && $print == 'no') {
+		if ($request == 'add_shipments' && !empty($print) && ($print == 'no'|| $print == 'after_reload')) {
 			update_option( 'wcmyparcel_admin_notices', $return );
+			if ($print == 'after_reload') {
+				update_option( 'wcmyparcel_print_queue', $return['success_ids'] );
+			}
 		}
 
 		// if we're directed here from modal, show proper result page
@@ -209,6 +220,7 @@ class WooCommerce_MyParcel_Export {
 		// echo '<pre>';var_dump($this->success);echo '</pre>';die();
 		if (!empty($this->success)) {
 			$return['success'] = sprintf(__( '%s shipments successfully exported to Myparcel', 'woocommerce-myparcel' ), count($this->success));
+			$return['success_ids'] = $this->success;
 		}
 
 		return $return;
