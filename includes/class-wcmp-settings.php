@@ -144,7 +144,7 @@ class WooCommerce_MyParcel_Settings {
 
 		add_settings_field(
 			'download_display',
-			__( 'Label display', 'wpo_wcpdf' ),
+			__( 'Label display', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'radio_button' ),
 			$option_group,
 			'general',
@@ -529,7 +529,7 @@ class WooCommerce_MyParcel_Settings {
 
 		add_settings_field(
 			'checkout_display',
-			__( 'Display for', 'wpo_wcpdf' ),
+			__( 'Display for', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'select' ),
 			$option_group,
 			'delivery_options',
