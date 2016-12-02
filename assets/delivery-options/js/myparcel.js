@@ -65,7 +65,18 @@
       if ((base = window.mypa.settings).base_url == null) {
         base.base_url = "//localhost:8080/api/delivery_options";
       }
+      
+      /** fix ipad */
+      var isload = false;
+      setTimeout(function () {
+          if(isload != true){
+              parent.mypajQuery('#myparcel-iframe').hide();
+          }
+      }, 1000);
+
       this.el = document.getElementById('myparcel');
+      isload = true;
+
       this.$el = jquery('myparcel');
       if (this.shadow == null) {
         this.shadow = this.el.createShadowRoot();
