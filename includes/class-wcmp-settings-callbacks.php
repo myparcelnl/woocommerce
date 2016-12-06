@@ -74,6 +74,30 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 	}
 
 	/**
+	 * Color picker callback.
+	 *
+	 * args:
+	 *   option_name - name of the main option
+	 *   id          - key of the setting
+	 *   size        - size of the text input (em)
+	 *   default     - default setting (optional)
+	 *   description - description (optional)
+	 *
+	 * @return void.
+	 */
+	public function color_picker( $args ) {
+		extract( $this->normalize_settings_args( $args ) );
+		// echo '<pre>';var_dump($this->normalize_settings_args( $args ));echo '</pre>';
+
+		printf( '<input type="text" id="%1$s" name="%2$s" value="%3$s" size="%4$s" class="wcmp-color-picker %5$s"/>', $id, $setting_name, $current, $size, $class );
+	
+		// output description.
+		if ( isset( $description ) ) {
+			printf( '<p class="description">%s</p>', $description );
+		}
+	}
+
+	/**
 	 * Textarea callback.
 	 *
 	 * args:

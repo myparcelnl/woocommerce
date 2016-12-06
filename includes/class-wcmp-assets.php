@@ -31,7 +31,7 @@ class WooCommerce_MyParcel_Assets {
 	 * Load styles & scripts
 	 */
 	public function backend_scripts_styles ( $hook ) {
-	 	global $post_type;
+		global $post_type;
 		$screen = get_current_screen();
 
 		if( $post_type == 'shop_order' || ( is_object( $screen ) && strpos( $screen->id, 'myparcel' ) !== false ) ) {
@@ -49,12 +49,14 @@ class WooCommerce_MyParcel_Assets {
 				wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', array(), WC_VERSION );
 			}
 
+			// Add the color picker css file       
+			wp_enqueue_style( 'wp-color-picker' ); 
 			wp_enqueue_script( 'thickbox' );
 			wp_enqueue_style( 'thickbox' );
 			wp_enqueue_script(
 				'wcmyparcel-export',
 				WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-backend.js',
-				array( 'jquery', 'thickbox' ),
+				array( 'jquery', 'thickbox', 'wp-color-picker' ),
 				WC_MYPARCEL_VERSION
 			);
 			wp_localize_script(
