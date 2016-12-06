@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2016-12-02 15:48+0100\n"
-"PO-Revision-Date: 2016-12-02 15:49+0100\n"
+"POT-Creation-Date: 2016-12-06 12:12+0100\n"
+"PO-Revision-Date: 2016-12-06 12:13+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.9\n"
+"X-Generator: Poedit 1.8.8\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: woocommerce-myparcel.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -273,20 +273,20 @@ msgctxt "placeholder"
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
 
-#: includes/class-wcmp-settings-callbacks.php:315
 #: includes/class-wcmp-settings-callbacks.php:339
+#: includes/class-wcmp-settings-callbacks.php:363
 msgid "Description"
 msgstr "Omschrijving"
 
-#: includes/class-wcmp-settings-callbacks.php:320
+#: includes/class-wcmp-settings-callbacks.php:344
 msgid "Additional fee (ex VAT, optional)"
 msgstr "Extra kosten (excl. BTW, optioneel)"
 
-#: includes/class-wcmp-settings-callbacks.php:337
+#: includes/class-wcmp-settings-callbacks.php:361
 msgid "Option"
 msgstr "Optie"
 
-#: includes/class-wcmp-settings-callbacks.php:338
+#: includes/class-wcmp-settings-callbacks.php:362
 msgid "Fee (optional)"
 msgstr "Kosten (optioneel)"
 
@@ -707,7 +707,23 @@ msgstr "Aantal dagen dat een klant een zending kan uitstellen"
 msgid "Customizations"
 msgstr "Aanpassingen"
 
-#: includes/class-wcmp-settings.php:707
+#: includes/class-wcmp-settings.php:706
+msgid "Base color"
+msgstr "Basiskleur"
+
+#: includes/class-wcmp-settings.php:714
+msgid "Color of the header & tabs (cyan by default)"
+msgstr "Kleur van de header en tabs (standaardkleur: cyaan)"
+
+#: includes/class-wcmp-settings.php:721
+msgid "Highlight color"
+msgstr "Highlight kleur"
+
+#: includes/class-wcmp-settings.php:729
+msgid "Color of the selections/highlights (orange by default)"
+msgstr "Kleur van de selecties/highlights (standaardkleur: oranje)"
+
+#: includes/class-wcmp-settings.php:735
 msgid "Custom styles"
 msgstr "Aangepaste stijlen (CSS)"
 
