@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.6
-Stable tag: 2.0.5
+Stable tag: 2.1.0
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -90,6 +90,18 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 == Changelog ==
 
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
+
+= 2.1.0 =
+* Feature: Select combinations of Flat Rate & Shipping Class to link parcel settings & delivery options display
+* Feature: Option to show delivery options for all shipping methods (except foreign addresses)
+* Feature: Pick colors for the delivery options
+* Feature: Set custom styles (CSS) for delivery options
+* Feature: Enter '0' for the delivery days window to hide dates in the delivery options
+* Fix: Don't apply 'only recipient' fee for morning & night delivery (already included)
+* Fix: Order search issues
+* Fix: 404 header on delivery options
+* Tweak: Several delivery options style adjustments
+* Tweak: Reload page after exporting
 
 = 2.0.5 =
 * Fix default insurance selection
@@ -244,6 +256,6 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * First release.
 
 == Upgrade Notice ==
-= 2.0.4 =
+= 2.1.0 =
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
 
