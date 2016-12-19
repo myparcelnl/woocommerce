@@ -1004,7 +1004,7 @@ class WooCommerce_MyParcel_Export {
 		if (!empty($myparcel_delivery_options)) {
 			// pickup & pickupexpress store the delivery type in the delivery options,
 			// morning & night store it in the time data (...)
-			if ( empty($myparcel_delivery_options['price_comment']) ) {
+			if ( empty($myparcel_delivery_options['price_comment']) && !empty($myparcel_delivery_options['time']) ) {
 				// check if we have a price_comment in the time option
 				$delivery_time = array_shift($myparcel_delivery_options['time']); // take first element in time array
 				if (isset($delivery_time['price_comment'])) {
@@ -1034,11 +1034,11 @@ class WooCommerce_MyParcel_Export {
 		}
 
 
-		if ( !empty($myparcel_delivery_options) ) {
+		if ( !empty($myparcel_delivery_options) && !empty($myparcel_delivery_options['date']) ) {
 			$delivery_date = $myparcel_delivery_options['date'];
 
 			$delivery_type = $this->get_delivery_type( $order, $myparcel_delivery_options );
-			if ( in_array($delivery_type, array(1,3) ) ) {
+			if ( in_array($delivery_type, array(1,3)) && !empty($myparcel_delivery_options['time']) ) {
 				$delivery_time_options = array_shift($myparcel_delivery_options['time']); // take first element in time array
 				$delivery_time = $delivery_time_options['start'];
 			} else {
