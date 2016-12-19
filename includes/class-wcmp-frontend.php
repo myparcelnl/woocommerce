@@ -79,6 +79,11 @@ class WooCommerce_MyParcel_Frontend {
 	}
 
 	public function output_delivery_options() {
+		// Don't load when cart doesn't need shipping
+		if ( false == WC()->cart->needs_shipping() ) {
+			return;
+		}
+		
 		/**
 		 * load settings etc.
 		 */
