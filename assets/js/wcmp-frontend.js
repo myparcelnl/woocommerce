@@ -7,7 +7,7 @@ jQuery( function( $ ) {
 	
 	// set reference to iFrame
 	var $MyPaiFrame = $('#myparcel-iframe')[0];
-	var MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
+	window.MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
 
 	window.MyPaSetHeight = function() {
 		setTimeout(function () {

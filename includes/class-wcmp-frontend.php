@@ -168,7 +168,7 @@ class WooCommerce_MyParcel_Frontend {
 
 		$iframe_url = WooCommerce_MyParcel()->plugin_url() . '/includes/views/wcmp-delivery-options.php';
 		?>
-		<iframe id="myparcel-iframe" src="<?php echo $iframe_url; ?>" frameborder="0" scrolling="auto" style="width: 100%;" onload="MyPaLoaded()">Bezig met laden...</iframe>
+		<iframe id="myparcel-iframe" src="<?php echo $iframe_url; ?>" frameborder="0" scrolling="auto" style="width: 100%;" onload="MyPaLoaded();">Bezig met laden...</iframe>
 		<script>
 		jQuery( function( $ ) {
 			window.mypa = {};
@@ -180,7 +180,7 @@ class WooCommerce_MyParcel_Frontend {
 
 			// set reference to iFrame
 			var $MyPaiFrame = $('#myparcel-iframe')[0];
-			var MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
+			window.MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
 		});
 		</script>
 		
