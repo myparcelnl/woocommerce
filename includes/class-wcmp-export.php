@@ -28,21 +28,23 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function admin_notices () {
-		$action_return = get_option( 'wcmyparcel_admin_notices' );
-		$success_ids = get_option( 'wcmyparcel_print_queue', array() );
-		if (!empty($action_return)) {
-			foreach ($action_return as $type => $message) {
-				if (in_array($type, array('success','error'))) {
-					if ( $type == 'success' && !empty($success_ids) ) {
-						$print_queue = sprintf('<input type="hidden" value="%s" id="wcmp_printqueue">', json_encode(array_keys($success_ids)));
-						// dequeue
-						delete_option( 'wcmyparcel_print_queue' );
+		if ( isset($_GET['myparcel_done']) ) { // only do this when for the user that initiated this
+			$action_return = get_option( 'wcmyparcel_admin_notices' );
+			$success_ids = get_option( 'wcmyparcel_print_queue', array() );
+			if (!empty($action_return)) {
+				foreach ($action_return as $type => $message) {
+					if (in_array($type, array('success','error'))) {
+						if ( $type == 'success' && !empty($success_ids) ) {
+							$print_queue = sprintf('<input type="hidden" value="%s" id="wcmp_printqueue">', json_encode(array_keys($success_ids)));
+							// dequeue
+							delete_option( 'wcmyparcel_print_queue' );
+						}
+						printf('<div class="myparcel_notice notice notice-%s"><p>%s</p>%s</div>', $type, $message, isset($print_queue)?$print_queue:'');
 					}
-					printf('<div class="myparcel_notice notice notice-%s"><p>%s</p>%s</div>', $type, $message, isset($print_queue)?$print_queue:'');
 				}
+				// destroy after reading
+				delete_option( 'wcmyparcel_admin_notices' );
 			}
-			// destroy after reading
-			delete_option( 'wcmyparcel_admin_notices' );
 		}
 
 		if (isset($_GET['myparcel'])) {

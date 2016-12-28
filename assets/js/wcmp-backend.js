@@ -312,7 +312,9 @@ jQuery( function( $ ) {
 
 			if (print == 'no' || print == 'after_reload') {
 				// refresh page, admin notices are stored in options and will be displayed automatically
-				location.reload();
+				// location.reload(true);
+				redirect_url = updateUrlParameter( window.location.href, 'myparcel_done', 'true' );
+				window.location.href = redirect_url;
 				return;
 			} else {
 				// when printing, output notices directly so that we can init print in the same run
@@ -413,6 +415,24 @@ jQuery( function( $ ) {
 		var notice = '<div class="myparcel_notice notice notice-'+type+'"><p>'+message+'</p></div>';
 		$main_header.after( notice );
 		$('html, body').animate({ scrollTop: 0 }, 'slow');
+	}
+
+	// Add / Update a key-value pair in the URL query parameters
+	// https://gist.github.com/niyazpk/f8ac616f181f6042d1e0
+	function updateUrlParameter(uri, key, value) {
+		// remove the hash part before operating on the uri
+		var i = uri.indexOf('#');
+		var hash = i === -1 ? ''  : uri.substr(i);
+			 uri = i === -1 ? uri : uri.substr(0, i);
+
+		var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+		var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+		if (uri.match(re)) {
+			uri = uri.replace(re, '$1' + key + "=" + value + '$2');
+		} else {
+			uri = uri + separator + key + "=" + value;
+		}
+		return uri + hash;  // finally append the hash as well
 	}
 
 	$( document.body ).trigger( 'wc-enhanced-select-init' );
