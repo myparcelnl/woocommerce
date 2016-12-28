@@ -5,7 +5,7 @@
 	<?php
 		wp_enqueue_script(
 			'wcmyparcel-export',
-			WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-backend.js',
+			WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-admin.js',
 			array( 'jquery', 'thickbox' ),
 			WC_MYPARCEL_VERSION
 		);
