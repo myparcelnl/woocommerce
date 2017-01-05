@@ -160,3 +160,10 @@ table.tracktrace_status td {
 .wcmp_delivery_option_details td {
 	padding: 0;
 }
+
+/* fix woocommerce column float */
+@media only screen and (min-width: 1280px) {
+	#order_data .order_data_column {
+		max-width: 31% !important;
+	}
+}
