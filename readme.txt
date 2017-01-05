@@ -2,8 +2,8 @@
 Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.6
-Stable tag: 2.1.0
+Tested up to: 4.7
+Stable tag: 2.1.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -90,6 +90,14 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 == Changelog ==
 
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
+
+= 2.1.1 =
+* Fix: Delivery options iPad/iPhone issues
+* Fix: Ignore badly formatted delivery options data
+* Fix: Don't show delivery options when cart doesn't need shipping (downloads/virtual items)
+* Fix: Delivery options container not found (explicitly uses window scope)
+* Tweak: Shipping column width/float in order backend
+* Tweak: Page reloading & print dialogue flow optimizations
 
 = 2.1.0 =
 * Feature: Select combinations of Flat Rate & Shipping Class to link parcel settings & delivery options display
@@ -256,6 +264,6 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * First release.
 
 == Upgrade Notice ==
-= 2.1.0 =
+= 2.1.1 =
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
 
