@@ -21,6 +21,9 @@ class WooCommerce_MyParcel_Settings {
 		add_action( 'admin_init', array( $this, 'general_settings' ) );
 		add_action( 'admin_init', array( $this, 'export_defaults_settings' ) );
 		add_action( 'admin_init', array( $this, 'checkout_settings' ) );
+
+		// notice for WC MyParcel Belgium plugin
+		add_action( 'woocommerce_myparcel_before_settings_page', array( $this, 'myparcel_be_notice'), 10, 1 );
 	}
 
 	/**
@@ -83,6 +86,26 @@ class WooCommerce_MyParcel_Settings {
 
 		</div>
 		<?php
+	}
+
+	public function myparcel_be_notice( $active_tab ) {
+		$base_country = WC()->countries->get_base_country();
+
+		// save or check option to hide notice
+		if ( isset( $_GET['myparcel_hide_be_notice'] ) ) {
+			update_option( 'myparcel_hide_be_notice', true );
+			$hide_notice = true;
+		} else {
+			$hide_notice = get_option( 'myparcel_hide_be_notice' );
+		}
+
+		// link to hide message when one of the premium extensions is installed
+		if ( !$hide_notice && $base_country == 'BE' ) {
+			$myparcel_belgium_link = '<a href="https://wordpress.org/plugins/wc-myparcel-belgium/" target="blank">WC MyParcel Belgium</a>';
+			$text = sprintf(__( 'It looks like your shop is based in Belgium. This plugin is for MyParcel Netherlands. If you are using MyParcel Belgium, download the %s plugin instead!', 'woocommerce-myparcel' ), $myparcel_belgium_link);
+			$dismiss_button = sprintf('<a href="%s" style="display:inline-block; margin-top: 10px;">%s</a>', add_query_arg( 'myparcel_hide_be_notice', 'true' ), __( 'Hide this message', 'woocommerce-myparcel' ) );
+			printf('<div class="notice notice-warning"><p>%s %s</p></div>', $text, $dismiss_button);
+		}
 	}
 	
 	/**
