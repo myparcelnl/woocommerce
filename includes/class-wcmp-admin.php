@@ -329,7 +329,7 @@ class WooCommerce_MyParcel_Admin {
 	public function show_order_delivery_options($order) {
 		$delivery_options = $order->myparcel_delivery_options;
 
-		if (!empty($delivery_options)) {
+		if ( !empty($delivery_options) && is_array($delivery_options) ) {
 			extract($delivery_options);
 		}
 
