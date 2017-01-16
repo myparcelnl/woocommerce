@@ -16,7 +16,7 @@ class WooCommerce_MyParcel_Assets {
 	 * Load styles & scripts
 	 */
 	public function frontend_scripts_styles ( $hook ) {
-		if ( is_checkout() && isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout']) ) {
+		if ( is_checkout() && isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout']) && is_order_received_page() === false ) {
 			// checkout scripts
 			wp_enqueue_script(
 				'wc-myparcel-frontend',

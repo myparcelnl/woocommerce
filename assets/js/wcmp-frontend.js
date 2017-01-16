@@ -5,6 +5,11 @@ jQuery( function( $ ) {
 	// reference jQuery for MyParcel iFrame
 	window.mypajQuery = $;
 	
+	// bail if delivery options iframe is not found
+	if ( $('#myparcel-iframe').length == 0 ) {
+		return;
+	}	
+
 	// set reference to iFrame
 	var $MyPaiFrame = $('#myparcel-iframe')[0];
 	window.MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
