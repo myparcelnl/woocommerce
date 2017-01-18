@@ -47,6 +47,11 @@ jQuery( function( $ ) {
 	});
 
 	// hide checkout options for non parcel shipments
+	// multi-step checkout doesn't trigger update_checkout when postcode changed
+	$( document ).on('change','.wizard.three-steps .address-field',function() {
+		update_myparcel_settings();
+		MyPaSetHeight();
+	});
 	$( document ).on( 'updated_checkout', function() {
 		if ( typeof window.myparcel_delivery_options_always_display !== 'undefined' && window.myparcel_delivery_options_always_display == 'yes') {
 			show_myparcel_delivery_options();
