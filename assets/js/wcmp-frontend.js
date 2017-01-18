@@ -48,21 +48,19 @@ jQuery( function( $ ) {
 
 	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {
-		// check if shipping is user choice or fixed
-		if ( $( '#order_review .shipping_method' ).length > 1 ) {
-			var shipping_method = $( '#order_review .shipping_method:checked').val();
-		} else {
-			var shipping_method = $( '#order_review .shipping_method').val();
-		}
-		// console.log(shipping_method);
-		// strip instance_id if present
-		if (shipping_method.indexOf(':') !== -1) {
-			shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
-		}
-		// console.log(shipping_method);
 		if ( typeof window.myparcel_delivery_options_always_display !== 'undefined' && window.myparcel_delivery_options_always_display == 'yes') {
 			show_myparcel_delivery_options();
 		} else if ( window.myparcel_delivery_options_shipping_methods.length > 0 ) {
+			// check if shipping is user choice or fixed
+			if ( $( '#order_review .shipping_method' ).length > 1 ) {
+				var shipping_method = $( '#order_review .shipping_method:checked').val();
+			} else {
+				var shipping_method = $( '#order_review .shipping_method').val();
+			}
+			// strip instance_id if present
+			if (shipping_method.indexOf(':') !== -1) {
+				shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
+			}
 			var shipping_class = $('#myparcel_highest_shipping_class').val();
 			// add class refinement if we have a shipping class
 			if (shipping_class) {
