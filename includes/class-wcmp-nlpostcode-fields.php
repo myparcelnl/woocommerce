@@ -203,6 +203,7 @@ class WC_NLPostcode_Fields {
 			// 'placeholder'	=> __( 'Nr.', 'woocommerce-myparcel' ),
 			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart-first' ), $form, 'house_number' ),
 			'required'		=> $required, // Only required for NL
+			'type'			=> 'number',
 		);
 
 		// Add house number Suffix
