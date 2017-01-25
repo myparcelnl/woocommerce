@@ -15,6 +15,9 @@ jQuery( function( $ ) {
 			var fontFamily = parent.mypajQuery(selector).css('font-family');
 			var fontsSize = parent.mypajQuery(selector).css('font-size');
 			$('#myparcel').css("font-family", fontFamily).css("font-size", fontsSize);
+			if (typeof window.load_google_fonts !== 'undefined') {
+				window.load_google_fonts();
+			}
 		}
 	}
 
