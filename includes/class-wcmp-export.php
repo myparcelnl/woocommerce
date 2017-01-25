@@ -509,11 +509,9 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function get_options( $order ) {
-		$order_number = $order->get_order_number();
-
 		// parse description
 		if (isset(WooCommerce_MyParcel()->export_defaults['label_description'])) {
-			$description = str_replace('[ORDER_NR]', $order_number, WooCommerce_MyParcel()->export_defaults['label_description']);
+			$description = $this->replace_shortcodes( WooCommerce_MyParcel()->export_defaults['label_description'], $order );
 		} else {
 			$description = '';
 		}
@@ -897,6 +895,16 @@ class WooCommerce_MyParcel_Export {
 		return $order_id;
 	}
 
+	public function replace_shortcodes( $description, $order ) {
+		$replacements = array(
+			'[ORDER_NR]'		=> $order->get_order_number(),
+			'[DELIVERY_DATE]'	=> isset($order->myparcel_delivery_options) && isset($order->myparcel_delivery_options['date']) ? $order->myparcel_delivery_options['date'] : '',
+		);
+
+		$description = str_replace(array_keys($replacements), array_values($replacements), $description);
+
+		return $description;
+	}
 
 	public function get_item_display_name ( $item, $order ) {
 		// set base name
