@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2017-01-10 17:28+0100\n"
+"POT-Creation-Date: 2017-01-25 17:53+0100\n"
 "PO-Revision-Date: 2016-07-02 16:21+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -117,100 +117,100 @@ msgstr ""
 msgid "The selected orders have not been exported to MyParcel yet!"
 msgstr ""
 
-#: includes/class-wcmp-export.php:757
+#: includes/class-wcmp-export.php:755
 msgid "Parcel"
 msgstr ""
 
-#: includes/class-wcmp-export.php:758
+#: includes/class-wcmp-export.php:756
 msgid "Mailbox package"
 msgstr ""
 
-#: includes/class-wcmp-export.php:759
+#: includes/class-wcmp-export.php:757
 msgid "Unpaid letter"
 msgstr ""
 
-#: includes/class-wcmp-export.php:770
+#: includes/class-wcmp-export.php:768
 #: includes/views/wcmp-bulk-options-form.php:79
 msgid "Order"
 msgstr ""
 
-#: includes/class-wcmp-export.php:816
+#: includes/class-wcmp-export.php:814
 msgid "pending - concept"
 msgstr ""
 
-#: includes/class-wcmp-export.php:817
+#: includes/class-wcmp-export.php:815
 msgid "pending - registered"
 msgstr ""
 
-#: includes/class-wcmp-export.php:818
+#: includes/class-wcmp-export.php:816
 msgid "enroute - handed to carrier"
 msgstr ""
 
-#: includes/class-wcmp-export.php:819
+#: includes/class-wcmp-export.php:817
 msgid "enroute - sorting"
 msgstr ""
 
-#: includes/class-wcmp-export.php:820
+#: includes/class-wcmp-export.php:818
 msgid "enroute - distribution"
 msgstr ""
 
-#: includes/class-wcmp-export.php:821
+#: includes/class-wcmp-export.php:819
 msgid "enroute - customs"
 msgstr ""
 
-#: includes/class-wcmp-export.php:822
+#: includes/class-wcmp-export.php:820
 msgid "delivered - at recipient"
 msgstr ""
 
-#: includes/class-wcmp-export.php:823
+#: includes/class-wcmp-export.php:821
 msgid "delivered - ready for pickup"
 msgstr ""
 
-#: includes/class-wcmp-export.php:824
+#: includes/class-wcmp-export.php:822
 msgid "delivered - package picked up"
 msgstr ""
 
-#: includes/class-wcmp-export.php:825
+#: includes/class-wcmp-export.php:823
 msgid "inactive - concept"
 msgstr ""
 
-#: includes/class-wcmp-export.php:826
+#: includes/class-wcmp-export.php:824
 msgid "inactive - registered"
 msgstr ""
 
-#: includes/class-wcmp-export.php:827
+#: includes/class-wcmp-export.php:825
 msgid "inactive - enroute - handed to carrier"
 msgstr ""
 
-#: includes/class-wcmp-export.php:828
+#: includes/class-wcmp-export.php:826
 msgid "inactive - enroute - sorting"
 msgstr ""
 
-#: includes/class-wcmp-export.php:829
+#: includes/class-wcmp-export.php:827
 msgid "inactive - enroute - distribution"
 msgstr ""
 
-#: includes/class-wcmp-export.php:830
+#: includes/class-wcmp-export.php:828
 msgid "inactive - enroute - customs"
 msgstr ""
 
-#: includes/class-wcmp-export.php:831
+#: includes/class-wcmp-export.php:829
 msgid "inactive - delivered - at recipient"
 msgstr ""
 
-#: includes/class-wcmp-export.php:832
+#: includes/class-wcmp-export.php:830
 msgid "inactive - delivered - ready for pickup"
 msgstr ""
 
-#: includes/class-wcmp-export.php:833
+#: includes/class-wcmp-export.php:831
 msgid "inactive - delivered - package picked up"
 msgstr ""
 
-#: includes/class-wcmp-export.php:834
+#: includes/class-wcmp-export.php:832
 msgid "inactive - unknown"
 msgstr ""
 
-#: includes/class-wcmp-export.php:840
+#: includes/class-wcmp-export.php:838
 msgid "Unknown status"
 msgstr ""
 
@@ -236,8 +236,8 @@ msgstr ""
 
 #: includes/class-wcmp-nlpostcode-fields.php:194
 #: includes/class-wcmp-nlpostcode-fields.php:195
-#: includes/class-wcmp-nlpostcode-fields.php:363
-#: includes/class-wcmp-nlpostcode-fields.php:391
+#: includes/class-wcmp-nlpostcode-fields.php:364
+#: includes/class-wcmp-nlpostcode-fields.php:392
 msgid "Street name"
 msgstr ""
 
@@ -245,27 +245,27 @@ msgstr ""
 msgid "Nr."
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:210
-#: includes/class-wcmp-nlpostcode-fields.php:373
-#: includes/class-wcmp-nlpostcode-fields.php:401
-#: includes/class-wcmp-nlpostcode-fields.php:422
-#: includes/class-wcmp-nlpostcode-fields.php:436
+#: includes/class-wcmp-nlpostcode-fields.php:211
+#: includes/class-wcmp-nlpostcode-fields.php:374
+#: includes/class-wcmp-nlpostcode-fields.php:402
+#: includes/class-wcmp-nlpostcode-fields.php:423
+#: includes/class-wcmp-nlpostcode-fields.php:437
 msgid "Suffix"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:368
-#: includes/class-wcmp-nlpostcode-fields.php:396
-#: includes/class-wcmp-nlpostcode-fields.php:418
-#: includes/class-wcmp-nlpostcode-fields.php:432
+#: includes/class-wcmp-nlpostcode-fields.php:369
+#: includes/class-wcmp-nlpostcode-fields.php:397
+#: includes/class-wcmp-nlpostcode-fields.php:419
+#: includes/class-wcmp-nlpostcode-fields.php:433
 msgid "Number"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:414
-#: includes/class-wcmp-nlpostcode-fields.php:428
+#: includes/class-wcmp-nlpostcode-fields.php:415
+#: includes/class-wcmp-nlpostcode-fields.php:429
 msgid "Street"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:564
+#: includes/class-wcmp-nlpostcode-fields.php:565
 msgctxt "placeholder"
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
@@ -553,7 +553,8 @@ msgid ""
 "With this option, you can add a description to the shipment. This will be "
 "printed on the top left of the label, and you can use this to search or sort "
 "shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> to "
-"include the order number."
+"include the order number, <strong>[DELIVERY_DATE]</strong> to include the "
+"delivery date."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:503
@@ -685,6 +686,10 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:758
 msgid "Custom styles"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:772
+msgid "Automatically load Google fonts"
 msgstr ""
 
 #: includes/views/wcmp-bulk-options-form.php:57
