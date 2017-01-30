@@ -957,7 +957,7 @@ class WooCommerce_MyParcel_Export {
 				break;
 		}
 	
-		$item_weight = $product_weight * $item['qty'];
+		$item_weight = (float) $product_weight * (int) $item['qty'];
 
 		return $item_weight;
 	}
