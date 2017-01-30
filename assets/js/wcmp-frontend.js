@@ -1,6 +1,6 @@
 jQuery( function( $ ) {
 	var myparcel_update_timer = false;
-	var myparcel_checkout_updating = false;
+	window.myparcel_checkout_updating = false;
 
 	// reference jQuery for MyParcel iFrame
 	window.mypajQuery = $;
@@ -33,9 +33,9 @@ jQuery( function( $ ) {
 	// set iframe height when delivery options changed
 	$('#mypa-chosen-delivery-options').on('change', 'input', function() {
 		MyPaSetHeight(); // may need a trick to prevent height from updating 10x
-		myparcel_checkout_updating = true;
+		window.myparcel_checkout_updating = true;
 		$('body').trigger('update_checkout');
-		myparcel_checkout_updating = false;
+		window.myparcel_checkout_updating = false;
 	});
 
 	// make delivery options update at least once (but don't hammer)
@@ -126,9 +126,9 @@ jQuery( function( $ ) {
 
 	// any delivery option selected/changed - update checkout for fees
 	$('#mypa-chosen-delivery-options').on('change', 'input', function() {
-		myparcel_checkout_updating = true;
+		window.myparcel_checkout_updating = true;
 		jQuery('body').trigger('update_checkout');
-		myparcel_checkout_updating = false;
+		window.myparcel_checkout_updating = false;
 	});
 
 	// pickup location selected
@@ -184,7 +184,7 @@ jQuery( function( $ ) {
 
 	function update_myparcel_delivery_options_action() {
 		country = get_shipping_country();
-		if ( myparcel_checkout_updating !== true && country == 'NL') {
+		if ( window.myparcel_checkout_updating !== true && country == 'NL') {
 			MyPaWindow.mypa.settings = window.mypa.settings;
 			MyPaWindow.updateMyPa();
 		}
