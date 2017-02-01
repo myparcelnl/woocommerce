@@ -118,7 +118,7 @@
 </table>
 <table class="wcmyparcel_settings_table">
 	<?php
-	$insured_amount = isset($shipment_options['insurance']['amount']) ? $shipment_options['insurance']['amount'] : '';
+	$insured_amount = isset($shipment_options['insurance']['amount']) ? (int) $shipment_options['insurance']['amount'] : 0;
 	$insured_amount = $insured_amount / 100; // frontend is in euros
 	$name = "myparcel_options[{$order_id}][insured_amount]";
 	if (isset($recipient['cc']) && $recipient['cc'] == 'NL') {
