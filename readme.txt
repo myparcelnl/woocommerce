@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.7
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -90,6 +90,11 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 == Changelog ==
 
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
+
+= 2.1.3 =
+* Feature: Option to autoload google fonts in delivery options
+* Feature: [DELIVERY_DATE] placeholder on label
+* Various minor fixes
 
 = 2.1.2 =
 * Fix: Script error on the Thank You page (interfered with Facebook/Google tracking)
@@ -270,6 +275,6 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * First release.
 
 == Upgrade Notice ==
-= 2.1.2 =
+= 2.1.3 =
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
 
