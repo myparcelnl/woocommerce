@@ -53,6 +53,8 @@ class WC_NLPostcode_Fields {
 		add_filter( 'woocommerce_customer_meta_fields', array( &$this, 'user_profile_fields' ) );
 
 		// Processing checkout
+		add_filter( 'woocommerce_validate_postcode', array( &$this, 'validate_postcode' ), 10, 3 );
+
 		add_action('woocommerce_checkout_update_order_meta', array( &$this, 'merge_street_number_suffix' ), 20, 2 );
 		add_filter('woocommerce_process_checkout_field_billing_postcode', array( &$this, 'clean_billing_postcode' ) );
 		add_filter('woocommerce_process_checkout_field_shipping_postcode', array( &$this, 'clean_shipping_postcode' ) );
@@ -525,6 +527,19 @@ class WC_NLPostcode_Fields {
 			update_post_meta( $order_id,  '_shipping_address_1', $shipping_address_1 );
 		}
 		return;
+	}
+
+
+	/**
+	 * validate NL postcodes
+	 *
+	 * @return bool $valid
+	 */
+	public function validate_postcode( $valid, $postcode, $country ) {
+		if ($country == 'NL') {
+			$valid = (bool) preg_match( '/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i', trim($postcode) );
+		}
+		return $valid;
 	}
 
 	/**
