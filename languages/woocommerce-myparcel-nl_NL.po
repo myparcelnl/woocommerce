@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "POT-Creation-Date: 2017-01-25 17:52+0100\n"
-"PO-Revision-Date: 2017-01-25 17:52+0100\n"
+"PO-Revision-Date: 2017-02-08 16:55+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -622,7 +622,7 @@ msgstr "Bezorgopties"
 
 #: includes/class-wcmp-settings.php:543
 msgid "Enable MyParcel delivery options"
-msgstr "MyParcel checkout opties inschakelen"
+msgstr "MyParcel bezorgopties inschakelen"
 
 #: includes/class-wcmp-settings.php:555
 msgid "Display for"
