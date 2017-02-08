@@ -31,7 +31,7 @@ jQuery( function( $ ) {
 	}
 
 	// set iframe height when delivery options changed
-	$('#mypa-chosen-delivery-options').on('change', 'input', function() {
+	$( document ).on('change', '#mypa-chosen-delivery-options input', function() {
 		MyPaSetHeight(); // may need a trick to prevent height from updating 10x
 		window.myparcel_checkout_updating = true;
 		$('body').trigger('update_checkout');
@@ -46,12 +46,12 @@ jQuery( function( $ ) {
 		check_country();
 	});
 
-	// hide checkout options for non parcel shipments
 	// multi-step checkout doesn't trigger update_checkout when postcode changed
-	$( document ).on('change','.wizard.three-steps .address-field',function() {
+	$( document ).on('change','.wizard .content #billing_street_name, .wizard .content #billing_house_number, .wizard .content #billing_postcode',function() {
 		update_myparcel_settings();
-		MyPaSetHeight();
 	});
+
+	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {
 		if ( typeof window.myparcel_delivery_options_always_display !== 'undefined' && window.myparcel_delivery_options_always_display == 'yes') {
 			show_myparcel_delivery_options();
