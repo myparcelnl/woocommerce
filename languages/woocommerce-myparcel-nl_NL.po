@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "POT-Creation-Date: 2017-01-25 17:52+0100\n"
-"PO-Revision-Date: 2017-02-08 16:55+0100\n"
+"PO-Revision-Date: 2017-02-21 13:38+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -218,8 +218,7 @@ msgstr "Onbekende status"
 
 #: includes/class-wcmp-frontend.php:55
 msgid "You can track your order with the following PostNL track&trace code:"
-msgstr ""
-"U kunt uw bestelling met de volgende PostNL track & trace code te volgen:"
+msgstr "U kunt uw bestelling met de volgende PostNL track & trace code volgen:"
 
 #: includes/class-wcmp-frontend.php:300
 msgid "Standard delivery"
