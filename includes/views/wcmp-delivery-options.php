@@ -29,6 +29,6 @@ require( '../../../../../wp-load.php');
 	?>
 </head>
 <body>
-<myparcel id="myparcel">Bezig met laden...</myparcel>
+<myparcel id="myparcel"><?php _e( 'Loading...', 'woocommerce-myparcel' ); ?></myparcel>
 </body>
 </html>

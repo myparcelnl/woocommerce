@@ -148,6 +148,10 @@ class WooCommerce_MyParcel_Frontend {
 			'cutoff_time'			=> isset(WooCommerce_MyParcel()->checkout_settings['cutoff_time']) ? WooCommerce_MyParcel()->checkout_settings['cutoff_time'] : '',
 			'deliverydays_window'	=> isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) ? max(1,WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) : '',
 			'dropoff_days'			=> isset(WooCommerce_MyParcel()->checkout_settings['dropoff_days']) ? implode(';', WooCommerce_MyParcel()->checkout_settings['dropoff_days'] ): '',
+			'text'					=> array(
+				'signed'			=> __( 'Signature on delivery', 'woocommerce-myparcel' ),
+				'only_recipient'	=> __( 'Home address only', 'woocommerce-myparcel' ),
+			),
 		);
 		// remove empty options
 		$settings = array_filter($settings);
