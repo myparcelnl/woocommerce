@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2017-02-21 13:27+0100\n"
+"POT-Creation-Date: 2017-01-25 17:53+0100\n"
 "PO-Revision-Date: 2016-07-02 16:21+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -63,12 +63,12 @@ msgstr ""
 msgid "MyParcel shipment:"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:343 includes/class-wcmp-frontend.php:298
+#: includes/class-wcmp-admin.php:343 includes/class-wcmp-frontend.php:294
 #: includes/class-wcmp-settings.php:608
 msgid "Morning delivery"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:350 includes/class-wcmp-frontend.php:311
+#: includes/class-wcmp-admin.php:350 includes/class-wcmp-frontend.php:307
 #: includes/class-wcmp-settings.php:596
 msgid "Evening delivery"
 msgstr ""
@@ -77,11 +77,11 @@ msgstr ""
 msgid "Delivery date"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:363 includes/class-wcmp-frontend.php:273
+#: includes/class-wcmp-admin.php:363 includes/class-wcmp-frontend.php:269
 msgid "PostNL Pickup"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:366 includes/class-wcmp-frontend.php:279
+#: includes/class-wcmp-admin.php:366 includes/class-wcmp-frontend.php:275
 msgid "PostNL Pickup Express"
 msgstr ""
 
@@ -218,62 +218,54 @@ msgstr ""
 msgid "You can track your order with the following PostNL track&trace code:"
 msgstr ""
 
-#: includes/class-wcmp-frontend.php:152 includes/class-wcmp-frontend.php:328
-#: includes/class-wcmp-settings.php:402 includes/class-wcmp-settings.php:584
+#: includes/class-wcmp-frontend.php:300
+msgid "Standard delivery"
+msgstr ""
+
+#: includes/class-wcmp-frontend.php:324 includes/class-wcmp-settings.php:402
+#: includes/class-wcmp-settings.php:584
 #: includes/views/wcmp-order-return-shipment-options.php:40
 #: includes/views/wcmp-order-shipment-options.php:65
 #: includes/views/wcmp-order-shipment-summary.php:14
 msgid "Signature on delivery"
 msgstr ""
 
-#: includes/class-wcmp-frontend.php:153 includes/class-wcmp-settings.php:389
-#: includes/class-wcmp-settings.php:572
-#: includes/views/wcmp-order-return-shipment-options.php:35
-#: includes/views/wcmp-order-shipment-options.php:60
-#: includes/views/wcmp-order-shipment-summary.php:13
-msgid "Home address only"
-msgstr ""
-
-#: includes/class-wcmp-frontend.php:304
-msgid "Standard delivery"
-msgstr ""
-
-#: includes/class-wcmp-frontend.php:337
+#: includes/class-wcmp-frontend.php:333
 msgid "Home address only delivery"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:196
-#: includes/class-wcmp-nlpostcode-fields.php:197
-#: includes/class-wcmp-nlpostcode-fields.php:366
-#: includes/class-wcmp-nlpostcode-fields.php:394
+#: includes/class-wcmp-nlpostcode-fields.php:194
+#: includes/class-wcmp-nlpostcode-fields.php:195
+#: includes/class-wcmp-nlpostcode-fields.php:364
+#: includes/class-wcmp-nlpostcode-fields.php:392
 msgid "Street name"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:204
+#: includes/class-wcmp-nlpostcode-fields.php:202
 msgid "Nr."
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:213
-#: includes/class-wcmp-nlpostcode-fields.php:376
-#: includes/class-wcmp-nlpostcode-fields.php:404
-#: includes/class-wcmp-nlpostcode-fields.php:425
-#: includes/class-wcmp-nlpostcode-fields.php:439
+#: includes/class-wcmp-nlpostcode-fields.php:211
+#: includes/class-wcmp-nlpostcode-fields.php:374
+#: includes/class-wcmp-nlpostcode-fields.php:402
+#: includes/class-wcmp-nlpostcode-fields.php:423
+#: includes/class-wcmp-nlpostcode-fields.php:437
 msgid "Suffix"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:371
-#: includes/class-wcmp-nlpostcode-fields.php:399
-#: includes/class-wcmp-nlpostcode-fields.php:421
-#: includes/class-wcmp-nlpostcode-fields.php:435
+#: includes/class-wcmp-nlpostcode-fields.php:369
+#: includes/class-wcmp-nlpostcode-fields.php:397
+#: includes/class-wcmp-nlpostcode-fields.php:419
+#: includes/class-wcmp-nlpostcode-fields.php:433
 msgid "Number"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:417
-#: includes/class-wcmp-nlpostcode-fields.php:431
+#: includes/class-wcmp-nlpostcode-fields.php:415
+#: includes/class-wcmp-nlpostcode-fields.php:429
 msgid "Street"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:580
+#: includes/class-wcmp-nlpostcode-fields.php:565
 msgctxt "placeholder"
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
@@ -475,6 +467,13 @@ msgid ""
 "charged.<br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x "
 "58 of or heavier than 30 kg, the pallet rate of &euro;&nbsp;70,00 will be "
 "charged."
+msgstr ""
+
+#: includes/class-wcmp-settings.php:389 includes/class-wcmp-settings.php:572
+#: includes/views/wcmp-order-return-shipment-options.php:35
+#: includes/views/wcmp-order-shipment-options.php:60
+#: includes/views/wcmp-order-shipment-summary.php:13
+msgid "Home address only"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:396
@@ -723,38 +722,6 @@ msgstr ""
 
 #: includes/views/wcmp-bulk-options-form.php:154
 msgid "Send email"
-msgstr ""
-
-#: includes/views/wcmp-delivery-options-template.php:599
-msgid "No address entered"
-msgstr ""
-
-#: includes/views/wcmp-delivery-options-template.php:612
-msgid "DELIVERY OPTIONS"
-msgstr ""
-
-#: includes/views/wcmp-delivery-options-template.php:623
-msgid "Delivery at home or at work"
-msgstr ""
-
-#: includes/views/wcmp-delivery-options-template.php:636
-msgid "Pickup at a PostNL pickup point"
-msgstr ""
-
-#: includes/views/wcmp-delivery-options-template.php:647
-msgid "From 4:00 pm"
-msgstr ""
-
-#: includes/views/wcmp-delivery-options-template.php:665
-msgid "From 8:30 am"
-msgstr ""
-
-#: includes/views/wcmp-delivery-options-template.php:688
-msgid "PICKUP"
-msgstr ""
-
-#: includes/views/wcmp-delivery-options.php:32
-msgid "Loading..."
 msgstr ""
 
 #: includes/views/wcmp-modal-result-page.php:53

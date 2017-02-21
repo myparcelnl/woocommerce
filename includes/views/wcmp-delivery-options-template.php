@@ -596,7 +596,7 @@
   </style>
 <div id='mypa-delivery-options-container'>
   <div class="mypa-overlay">
-    <span id="mypa-no-options"><?php _e( 'No address entered', 'woocommerce-myparcel' ); ?></span>
+    <span id="mypa-no-options">Geen adres opgegeven</span>
   </div>
   <div id="mypa-slider">
     <!-- First frame -->
@@ -609,7 +609,7 @@
       </div>
       <div class='mypa-delivery-content mypa-container-lg'>
         <div class='mypa-header-lg mypa-delivery-header'>
-          <span><b><?php _e( 'DELIVERY OPTIONS', 'woocommerce-myparcel' ); ?></b></span> <span class="mypa-location"></span>
+          <span><b>BEZORGOPTIES</b></span> <span class="mypa-location"></span>
         </div>
         <div id='mypa-delivery-body'>
           <div id='mypa-delivery-row' class='mypa-row-lg'>
@@ -620,7 +620,7 @@
                 <div class="mypa-checkmark-stem"></div>
                 <div class="mypa-checkmark-kick"></div>
               </div>
-              <span class="mypa-highlight"><?php _e( 'Delivery at home or at work', 'woocommerce-myparcel' ); ?></span>
+              <span class="mypa-highlight">Thuis of op het werk bezorgd</span>
             </label>
             <div id='mypa-delivery-options' class='mypa-content-lg'>
             </div>
@@ -633,7 +633,7 @@
                 <div class="mypa-checkmark-stem"></div>
                 <div class="mypa-checkmark-kick"></div>
               </div>
-              <span class="mypa-highlight"><?php _e( 'Pickup at a PostNL pickup point', 'woocommerce-myparcel' ); ?></span>
+              <span class="mypa-highlight">Ophalen bij een PostNL locatie</span>
             </label>
             <div id='mypa-pickup-options-content' class='mypa-content-lg'>
               <div>
@@ -644,7 +644,7 @@
                     <div class="mypa-checkmark-stem"></div>
                     <div class="mypa-checkmark-kick"></div>
                   </label>
-                  <span class="mypa-highlight"><?php _e( 'From 4:00 pm', 'woocommerce-myparcel' ); ?></span><span class='mypa-address' id="mypa-pickup-address"></span>
+                  <span class="mypa-highlight">Vanaf 16.00 uur</span><span class='mypa-address' id="mypa-pickup-address"></span>
                   <div class="edit">  
                     <div class="edit-stem">
                     </div>
@@ -662,7 +662,7 @@
                     <div class="mypa-checkmark-stem"></div>
                     <div class="mypa-checkmark-kick"></div>
                   </label>
-                  <span class="mypa-highlight"><?php _e( 'From 8:30 am', 'woocommerce-myparcel' ); ?></span><span class='mypa-address' id="mypa-pickup-express-address"></span>
+                  <span class="mypa-highlight">Vanaf 8.30 uur</span><span class='mypa-address' id="mypa-pickup-express-address"></span>
                   <div class="edit">  
                     <div class="edit-stem">
                     </div>
@@ -685,7 +685,7 @@
       </div>
       <div class='mypa-container-lg mypa-delivery-content'>
         <div class='mypa-header-lg mypa-delivery-header'>
-          <span id='mypa-back-arrow'><b><?php _e( 'PICKUP', 'woocommerce-myparcel' ); ?> </b><span class="mypa-location-time"></span></span>
+          <span id='mypa-back-arrow'><b>AFHALEN </b><span class="mypa-location-time"></span></span>
         </div>
         <div id="mypa-location-container">
 

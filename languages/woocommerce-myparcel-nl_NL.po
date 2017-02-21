@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2017-02-21 13:25+0100\n"
-"PO-Revision-Date: 2017-02-21 13:27+0100\n"
+"POT-Creation-Date: 2017-01-25 17:52+0100\n"
+"PO-Revision-Date: 2017-02-08 16:55+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -63,12 +63,12 @@ msgstr "Status"
 msgid "MyParcel shipment:"
 msgstr "MyParcel zending:"
 
-#: includes/class-wcmp-admin.php:343 includes/class-wcmp-frontend.php:298
+#: includes/class-wcmp-admin.php:343 includes/class-wcmp-frontend.php:294
 #: includes/class-wcmp-settings.php:608
 msgid "Morning delivery"
 msgstr "Ochtendlevering"
 
-#: includes/class-wcmp-admin.php:350 includes/class-wcmp-frontend.php:311
+#: includes/class-wcmp-admin.php:350 includes/class-wcmp-frontend.php:307
 #: includes/class-wcmp-settings.php:596
 msgid "Evening delivery"
 msgstr "Avondlevering"
@@ -77,11 +77,11 @@ msgstr "Avondlevering"
 msgid "Delivery date"
 msgstr "Bezorgdatum"
 
-#: includes/class-wcmp-admin.php:363 includes/class-wcmp-frontend.php:273
+#: includes/class-wcmp-admin.php:363 includes/class-wcmp-frontend.php:269
 msgid "PostNL Pickup"
 msgstr "Afhalen bij PostNL"
 
-#: includes/class-wcmp-admin.php:366 includes/class-wcmp-frontend.php:279
+#: includes/class-wcmp-admin.php:366 includes/class-wcmp-frontend.php:275
 msgid "PostNL Pickup Express"
 msgstr "Extra vroeg afhalen bij PostNL"
 
@@ -218,64 +218,57 @@ msgstr "Onbekende status"
 
 #: includes/class-wcmp-frontend.php:55
 msgid "You can track your order with the following PostNL track&trace code:"
-msgstr "U kunt uw bestelling met de volgende PostNL track & trace code volgen:"
+msgstr ""
+"U kunt uw bestelling met de volgende PostNL track & trace code te volgen:"
 
-#: includes/class-wcmp-frontend.php:152 includes/class-wcmp-frontend.php:328
-#: includes/class-wcmp-settings.php:402 includes/class-wcmp-settings.php:584
+#: includes/class-wcmp-frontend.php:300
+msgid "Standard delivery"
+msgstr "Standaard levering"
+
+#: includes/class-wcmp-frontend.php:324 includes/class-wcmp-settings.php:402
+#: includes/class-wcmp-settings.php:584
 #: includes/views/wcmp-order-return-shipment-options.php:40
 #: includes/views/wcmp-order-shipment-options.php:65
 #: includes/views/wcmp-order-shipment-summary.php:14
 msgid "Signature on delivery"
 msgstr "Handtekening voor ontvangst"
 
-#: includes/class-wcmp-frontend.php:153 includes/class-wcmp-settings.php:389
-#: includes/class-wcmp-settings.php:572
-#: includes/views/wcmp-order-return-shipment-options.php:35
-#: includes/views/wcmp-order-shipment-options.php:60
-#: includes/views/wcmp-order-shipment-summary.php:13
-msgid "Home address only"
-msgstr "Alleen huisadres"
-
-#: includes/class-wcmp-frontend.php:304
-msgid "Standard delivery"
-msgstr "Standaard levering"
-
-#: includes/class-wcmp-frontend.php:337
+#: includes/class-wcmp-frontend.php:333
 msgid "Home address only delivery"
 msgstr "Alleen afleveren bij ontvanger"
 
-#: includes/class-wcmp-nlpostcode-fields.php:196
-#: includes/class-wcmp-nlpostcode-fields.php:197
-#: includes/class-wcmp-nlpostcode-fields.php:366
-#: includes/class-wcmp-nlpostcode-fields.php:394
+#: includes/class-wcmp-nlpostcode-fields.php:194
+#: includes/class-wcmp-nlpostcode-fields.php:195
+#: includes/class-wcmp-nlpostcode-fields.php:364
+#: includes/class-wcmp-nlpostcode-fields.php:392
 msgid "Street name"
 msgstr "Straat"
 
-#: includes/class-wcmp-nlpostcode-fields.php:204
+#: includes/class-wcmp-nlpostcode-fields.php:202
 msgid "Nr."
 msgstr "Nr."
 
-#: includes/class-wcmp-nlpostcode-fields.php:213
-#: includes/class-wcmp-nlpostcode-fields.php:376
-#: includes/class-wcmp-nlpostcode-fields.php:404
-#: includes/class-wcmp-nlpostcode-fields.php:425
-#: includes/class-wcmp-nlpostcode-fields.php:439
+#: includes/class-wcmp-nlpostcode-fields.php:211
+#: includes/class-wcmp-nlpostcode-fields.php:374
+#: includes/class-wcmp-nlpostcode-fields.php:402
+#: includes/class-wcmp-nlpostcode-fields.php:423
+#: includes/class-wcmp-nlpostcode-fields.php:437
 msgid "Suffix"
 msgstr "Toev."
 
-#: includes/class-wcmp-nlpostcode-fields.php:371
-#: includes/class-wcmp-nlpostcode-fields.php:399
-#: includes/class-wcmp-nlpostcode-fields.php:421
-#: includes/class-wcmp-nlpostcode-fields.php:435
+#: includes/class-wcmp-nlpostcode-fields.php:369
+#: includes/class-wcmp-nlpostcode-fields.php:397
+#: includes/class-wcmp-nlpostcode-fields.php:419
+#: includes/class-wcmp-nlpostcode-fields.php:433
 msgid "Number"
 msgstr "Nummer"
 
-#: includes/class-wcmp-nlpostcode-fields.php:417
-#: includes/class-wcmp-nlpostcode-fields.php:431
+#: includes/class-wcmp-nlpostcode-fields.php:415
+#: includes/class-wcmp-nlpostcode-fields.php:429
 msgid "Street"
 msgstr "Straat"
 
-#: includes/class-wcmp-nlpostcode-fields.php:580
+#: includes/class-wcmp-nlpostcode-fields.php:565
 msgctxt "placeholder"
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
@@ -505,6 +498,13 @@ msgstr ""
 "&nbsp;2,29 doorberekend.<br/><strong>Let op!</strong> Indien het pakket "
 "groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een "
 "pallettarief van &euro;&nbsp;70,00 in rekening gebracht."
+
+#: includes/class-wcmp-settings.php:389 includes/class-wcmp-settings.php:572
+#: includes/views/wcmp-order-return-shipment-options.php:35
+#: includes/views/wcmp-order-shipment-options.php:60
+#: includes/views/wcmp-order-shipment-summary.php:13
+msgid "Home address only"
+msgstr "Alleen huisadres"
 
 #: includes/class-wcmp-settings.php:396
 msgid ""
@@ -784,38 +784,6 @@ msgstr ""
 msgid "Send email"
 msgstr "Verstuur email"
 
-#: includes/views/wcmp-delivery-options-template.php:599
-msgid "No address entered"
-msgstr "Geen adres opgegeven"
-
-#: includes/views/wcmp-delivery-options-template.php:612
-msgid "DELIVERY OPTIONS"
-msgstr "BEZORGOPTIES"
-
-#: includes/views/wcmp-delivery-options-template.php:623
-msgid "Delivery at home or at work"
-msgstr "Thuis of op het werk bezorgd"
-
-#: includes/views/wcmp-delivery-options-template.php:636
-msgid "Pickup at a PostNL pickup point"
-msgstr "Ophalen bij een PostNL locatie"
-
-#: includes/views/wcmp-delivery-options-template.php:647
-msgid "From 4:00 pm"
-msgstr "Vanaf 16.00 uur"
-
-#: includes/views/wcmp-delivery-options-template.php:665
-msgid "From 8:30 am"
-msgstr "Vanaf 8.30 uur"
-
-#: includes/views/wcmp-delivery-options-template.php:688
-msgid "PICKUP"
-msgstr "AFHALEN"
-
-#: includes/views/wcmp-delivery-options.php:32
-msgid "Loading..."
-msgstr "Bezig met laden..."
-
 #: includes/views/wcmp-modal-result-page.php:53
 msgid "Return email successfully sent to customer"
 msgstr "Email voor retourzending succesvol verzonden naar klant"
@@ -910,12 +878,6 @@ msgstr ""
 #. Author URI of the plugin/theme
 msgid "http://www.wpovernight.com"
 msgstr ""
-
-#~ msgid "From 16:00"
-#~ msgstr "Vanaf 16.00 uur"
-
-#~ msgid "From 8:30"
-#~ msgstr "Vanaf 8.30 uur"
 
 #~ msgid ""
 #~ "With this option, you can add a description to the shipment. This will be "
