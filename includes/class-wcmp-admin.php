@@ -237,11 +237,11 @@ class WooCommerce_MyParcel_Admin {
 
 			// separate extra options
 			if (isset($shipment_options['extra_options'])) {
-				update_post_meta( $order_id, '_myparcel_shipment_options_extra', $shipment_options['extra_options'] );
+				WCX_Order::update_meta_data( $order, '_myparcel_shipment_options_extra', $shipment_options['extra_options'] );
 				unset($shipment_options['extra_options']);
 			}
 
-			update_post_meta( $order_id, '_myparcel_shipment_options', $shipment_options );
+			WCX_Order::update_meta_data( $order, '_myparcel_shipment_options', $shipment_options );
 		}
 
 		// Quit out

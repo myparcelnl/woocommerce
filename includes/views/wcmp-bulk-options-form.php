@@ -1,3 +1,8 @@
+<?php
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
+?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -61,14 +66,15 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&reques
 		<?php
 		$c = true;
 		foreach ( $order_ids as $order_id) :
-			$order = WooCommerce_MyParcel()->export->get_order( $order_id );
+			$order = WCX::get_order( $order_id );
 			// skip non-eu orders
-			if ( !WooCommerce_MyParcel()->export->is_eu_country( $order->shipping_country ) ) {
+			$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+			if ( !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country ) ) {
 				continue;
 			}
 			$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );
 			$recipient = WooCommerce_MyParcel()->export->get_recipient( $order );
-			$myparcel_options_extra = $order->myparcel_shipment_options_extra;
+			$myparcel_options_extra = WCX_Order::get_meta( $order, '_myparcel_shipment_options_extra' );
 			$package_types = WooCommerce_MyParcel()->export->get_package_types();
 			$parcel_weight = WooCommerce_MyParcel()->export->get_parcel_weight( $order );
 		?>
@@ -115,14 +121,14 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&reques
 							</table>
 						</td>
 						<td><?php
-							if ( $order->shipping_country == 'NL' && ( empty($recipient['street']) || empty($recipient['number']) ) ) { ?>
+							if ( $shipping_country == 'NL' && ( empty($recipient['street']) || empty($recipient['number']) ) ) { ?>
 							<p><span style="color:red"><?php _e( 'This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcel plugin was activated. The address data can still be manually entered in the order screen.', 'woocommerce-myparcel' ); ?></span></p>
 						</td>
 					</tr> <!-- last row -->
 							<?php
 							} else { // required address data is available
 								// print address
-								echo '<p>'.$order->get_formatted_shipping_address().'<br/>'.$order->billing_phone.'<br/>'.$order->billing_email.'</p>';
+								echo '<p>'.$order->get_formatted_shipping_address().'<br/>'.WCX_Order::get_prop( $order, 'billing_phone' ).'<br/>'.WCX_Order::get_prop( $order, 'billing_email' ).'</p>';
 							?>
 						</td>
 					</tr>

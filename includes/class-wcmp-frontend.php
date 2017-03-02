@@ -232,21 +232,23 @@ class WooCommerce_MyParcel_Frontend {
 			return;
 		}
 
+		$order = WCX::get_order( $order_id );
+
 		if (isset($_POST['mypa-signed'])) {
-			update_post_meta( $order_id, '_myparcel_signed', 'on' );
+			WCX_Order::update_meta_data( $order, '_myparcel_signed', 'on' );
 		}
 
 		if (isset($_POST['mypa-recipient-only'])) {
-			update_post_meta( $order_id, '_myparcel_only_recipient', 'on' );
+			WCX_Order::update_meta_data( $order, '_myparcel_only_recipient', 'on' );
 		}
 
 		if (!empty($_POST['mypa-post-nl-data'])) {
 			$delivery_options = json_decode( stripslashes( $_POST['mypa-post-nl-data']), true );
-			update_post_meta( $order_id, '_myparcel_delivery_options', $delivery_options );
+			WCX_Order::update_meta_data( $order, '_myparcel_delivery_options', $delivery_options );
 		}
 
 		if (isset($_POST['myparcel_highest_shipping_class'])) {
-			update_post_meta( $order_id, '_myparcel_highest_shipping_class', $_POST['myparcel_highest_shipping_class'] );
+			WCX_Order::update_meta_data( $order, '_myparcel_highest_shipping_class', $_POST['myparcel_highest_shipping_class'] );
 		}
 	}
 
