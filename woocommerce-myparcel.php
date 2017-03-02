@@ -97,6 +97,12 @@ class WooCommerce_MyParcel {
 	 * Load the main plugin classes and functions
 	 */
 	public function includes() {
+		// include compatibility classes
+		include_once( 'includes/compatibility/abstract-wc-data-compatibility.php' );
+		include_once( 'includes/compatibility/class-wc-core-compatibility.php' );
+		include_once( 'includes/compatibility/class-wc-order-compatibility.php' );
+		include_once( 'includes/compatibility/class-wc-product-compatibility.php' );
+
 		include_once( 'includes/class-wcmp-assets.php' );
 		$this->admin = include_once( 'includes/class-wcmp-admin.php' );
 		include_once( 'includes/class-wcmp-frontend.php' );

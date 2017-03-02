@@ -1,4 +1,8 @@
 <?php
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
+
 /**
  * Frontend views
  */
@@ -48,9 +52,11 @@ class WooCommerce_MyParcel_Frontend {
 
 		if ( $sent_to_admin ) return;
 
-		if ( $order->status != 'completed') return;
+		if ( WCX_Order::get_status( $order ) != 'completed') return;
 
-		$tracktrace_links = WooCommerce_MyParcel()->admin->get_tracktrace_links ( $order->id );
+		$order_id = WCX_Order::get_id( $order );
+
+		$tracktrace_links = WooCommerce_MyParcel()->admin->get_tracktrace_links ( $order_id );
 		if ( !empty($tracktrace_links) ) {
 			$email_text = __( 'You can track your order with the following PostNL track&trace code:', 'woocommerce-myparcel' );
 			$email_text = apply_filters( 'wcmyparcel_email_text', $email_text, $order );
@@ -66,7 +72,8 @@ class WooCommerce_MyParcel_Frontend {
 	}
 
 	public function track_trace_myaccount( $actions, $order ) {
-		if ( $consignments = WooCommerce_MyParcel()->admin->get_tracktrace_shipments( $order->id ) ) {
+		$order_id = WCX_Order::get_id( $order );
+		if ( $consignments = WooCommerce_MyParcel()->admin->get_tracktrace_shipments( $order_id ) ) {
 			foreach ($consignments as $key => $consignment) {
 				$actions['myparcel_tracktrace_'.$consignment['tracktrace']] = array(
 					'url'  => $consignment['tracktrace_url'],

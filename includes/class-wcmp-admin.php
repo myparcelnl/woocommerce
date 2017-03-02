@@ -1,4 +1,8 @@
 <?php
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
+
 /**
  * Admin options, buttons & data
  */
@@ -23,12 +27,13 @@ class WooCommerce_MyParcel_Admin {
 	}
 
 	public function order_list_shipment_options( $order, $hide = true ) {
-		if ( !WooCommerce_MyParcel()->export->is_eu_country( $order->shipping_country ) ) {
+		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+		if ( !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country ) ) {
 			return;
 		}
-		$order_id = $order->id;
+		$order_id = WCX_Order::get_id( $order );
 		$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );
-		$myparcel_options_extra = $order->myparcel_shipment_options_extra;
+		$myparcel_options_extra = WCX_Order::get_meta( $order, '_myparcel_shipment_options_extra' );
 		$package_types = WooCommerce_MyParcel()->export->get_package_types();
 		$recipient = WooCommerce_MyParcel()->export->get_recipient( $order );
 
@@ -47,7 +52,7 @@ class WooCommerce_MyParcel_Admin {
 			// echo '<pre>';var_dump($shipment);echo '</pre>';die();
 			if (!empty($shipment['tracktrace'])) {
 				$order_has_shipment = true;
-				$tracktrace_url = $this->get_tracktrace_url( $order->id, $shipment['tracktrace']);
+				$tracktrace_url = $this->get_tracktrace_url( $order_id, $shipment['tracktrace']);
 			}
 			?>
 			<div class="wcmp_shipment_summary" <?php echo $style; ?>>
@@ -78,12 +83,13 @@ class WooCommerce_MyParcel_Admin {
 
 
 	public function order_list_return_shipment_options( $order, $hide = true ) {
-		if ( !WooCommerce_MyParcel()->export->is_eu_country( $order->shipping_country ) ) {
+		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+		if ( !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country ) ) {
 			return;
 		}
-		$order_id = $order->id;
+		$order_id = WCX_Order::get_id( $order );
 		$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );
-		$myparcel_options_extra = $order->myparcel_shipment_options_extra;
+		$myparcel_options_extra = WCX_Order::get_meta( $order, '_myparcel_shipment_options_extra' );
 		$package_types = WooCommerce_MyParcel()->export->get_package_types();
 		$recipient = WooCommerce_MyParcel()->export->get_recipient( $order );
 
@@ -134,23 +140,26 @@ class WooCommerce_MyParcel_Admin {
 			return;
 		}
 
-		if ( !WooCommerce_MyParcel()->export->is_eu_country( $order->shipping_country ) ) {
+		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+		if ( !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country ) ) {
 			return;
 		}
 
+		$order_id = WCX_Order::get_id( $order );
+
 		$listing_actions = array(
 			'add_shipment'		=> array (
-				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_shipment&order_ids=' . $order->id ), 'wc_myparcel' ),
+				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_shipment&order_ids=' . $order_id ), 'wc_myparcel' ),
 				'img'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-up.png',
 				'alt'		=> esc_attr__( 'Export to MyParcel', 'woocommerce-myparcel' ),
 			),
 			'get_labels'	=> array (
-				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=get_labels&order_ids=' . $order->id ), 'wc_myparcel' ),
+				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=get_labels&order_ids=' . $order_id ), 'wc_myparcel' ),
 				'img'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-pdf.png',
 				'alt'		=> esc_attr__( 'Print MyParcel label', 'woocommerce-myparcel' ),
 			),
 			'add_return'	=> array (
-				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_return&order_ids=' . $order->id ), 'wc_myparcel' ),
+				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_return&order_ids=' . $order_id ), 'wc_myparcel' ),
 				'img'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-retour.png',
 				'alt'		=> esc_attr__( 'Email return label', 'woocommerce-myparcel' ),
 			),
@@ -163,14 +172,14 @@ class WooCommerce_MyParcel_Admin {
 		}
 
 		$processed_shipments = $this->get_order_shipments( $order, true );
-		if (empty($processed_shipments) || $order->shipping_country != 'NL' ) {
+		if (empty($processed_shipments) || $shipping_country != 'NL' ) {
 			unset($listing_actions['add_return']);
 		}		
 
 		$target = ( isset(WooCommerce_MyParcel()->general_settings['download_display']) && WooCommerce_MyParcel()->general_settings['download_display'] == 'display') ? 'target="_blank"' : '';
 		$nonce = wp_create_nonce('wc_myparcel');
 		foreach ($listing_actions as $action => $data) {
-			printf( '<a href="%1$s" class="button tips myparcel %2$s" alt="%3$s" data-tip="%3$s" data-order-id="%4$s" data-request="%2$s" data-nonce="%5$s" %6$s>', $data['url'], $action, $data['alt'], $order->id, $nonce, $target );
+			printf( '<a href="%1$s" class="button tips myparcel %2$s" alt="%3$s" data-tip="%3$s" data-order-id="%4$s" data-request="%2$s" data-nonce="%5$s" %6$s>', $data['url'], $action, $data['alt'], $order_id, $nonce, $target );
 			?>
 				<img src="<?php echo $data['img']; ?>" alt="<?php echo $data['alt']; ?>" width="16" class="wcmp_button_img">
 			</a>
@@ -184,16 +193,17 @@ class WooCommerce_MyParcel_Admin {
 	public function get_order_shipments( $order, $exclude_concepts = false ) {
 		if (empty($order)) {
 			return;
-		}		
-		if ( $consignment_id = get_post_meta($order->id,'_myparcel_consignment_id',true ) ) {
+		}
+		$consignment_id = WCX_Order::get_meta( $order, '_myparcel_consignment_id' );
+		if ( $consignment_id ) {
 			$consignments = array(
 				array(
-					'shipment_id' => $consignment_id,
-					'tracktrace'     => get_post_meta($order->id,'_myparcel_tracktrace',true ),
+					'shipment_id'	=> $consignment_id,
+					'tracktrace'	=> WCX_Order::get_meta( $order, '_myparcel_tracktrace' ),
 				),
 			);
 		} else {
-			$consignments = get_post_meta($order->id,'_myparcel_shipments',true );
+			$consignments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
 		}
 
 		if (!empty($consignments) && $exclude_concepts) {
@@ -260,17 +270,16 @@ class WooCommerce_MyParcel_Admin {
 	public function create_box_content() {
 		global $post_id;
 		// get order
-		if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
-			$order = new WC_Order( $post_id );
-		} else {
-			$order = wc_get_order( $post_id );
-		}
-
-		if ( !WooCommerce_MyParcel()->export->is_eu_country( $order->shipping_country ) ) {
+		$order = WCX::get_order( $post_id );
+		if ( !$order ) {
 			return;
 		}
-
-		// echo '<pre>';var_dump($order->myparcel_shipments);echo '</pre>';
+		$order_id = WCX_Order::get_id( $order );
+		
+		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+		if ( !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country ) ) {
+			return;
+		}
 
 		// show buttons
 		echo '<div class="single_order_actions">';
@@ -289,7 +298,7 @@ class WooCommerce_MyParcel_Admin {
 					unset($consignments[$shipment_id]);
 					continue;
 				}
-				$shipment['tracktrace_url'] = $this->get_tracktrace_url( $order->id, $shipment['tracktrace']);
+				$shipment['tracktrace_url'] = $this->get_tracktrace_url( $order_id, $shipment['tracktrace']);
 				$track_trace_shipments[$shipment_id] = $shipment;
 			}
 			if ( empty( $track_trace_shipments ) ) {
@@ -318,7 +327,8 @@ class WooCommerce_MyParcel_Admin {
 	}
 
 	public function single_order_shipment_options( $order ) {
-		if ( !WooCommerce_MyParcel()->export->is_eu_country( $order->shipping_country ) ) {
+		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+		if ( !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country ) ) {
 			return;
 		}
 
@@ -327,7 +337,7 @@ class WooCommerce_MyParcel_Admin {
 	}
 
 	public function show_order_delivery_options($order) {
-		$delivery_options = $order->myparcel_delivery_options;
+		$delivery_options = WCX_Order::get_meta( $order, '_myparcel_delivery_options' );
 
 		if ( !empty($delivery_options) && is_array($delivery_options) ) {
 			extract($delivery_options);
@@ -373,17 +383,19 @@ class WooCommerce_MyParcel_Admin {
 	}
 
 	public function get_tracktrace_url( $order_id, $tracktrace ) {
-		if (empty($order_id))
+		if (empty($order_id)) {
 			return;
+		}
 
-		$country = get_post_meta($order_id,'_shipping_country',true);
-		$postcode = preg_replace('/\s+/', '',get_post_meta($order_id,'_shipping_postcode',true));
+		$order = WCX::get_order( $order_id );
+		$country = WCX_Order::get_prop( $order, 'shipping_country' );
+		$postcode = preg_replace( '/\s+/', '', WCX_Order::get_prop( $order, 'shipping_postcode' ) );
 
 		// set url for NL or foreign orders
 		if ($country == 'NL') {
 			// use billing postcode for pickup/pakjegemak
-			if ( WooCommerce_MyParcel()->export->is_pickup( $order_id ) ) {
-				$postcode = preg_replace('/\s+/', '',get_post_meta($order_id,'_billing_postcode',true));
+			if ( WooCommerce_MyParcel()->export->is_pickup( $order ) ) {
+				$postcode = preg_replace( '/\s+/', '', WCX_Order::get_prop( $order, 'billing_postcode' ) );
 			}
 
 			// $tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Inbox/Search?lang=nl&B=%s&P=%s', $tracktrace, $postcode);
@@ -407,8 +419,8 @@ class WooCommerce_MyParcel_Admin {
 	}
 
 	public function get_tracktrace_shipments ( $order_id ) {
-		// backwards compatibility?
-		$shipments = get_post_meta($order_id,'_myparcel_shipments',true);
+		$order = WCX::get_order( $order_id );
+		$shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
 
 		if (empty($shipments)) {
 			return false;

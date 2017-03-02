@@ -1,4 +1,8 @@
 <?php
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
@@ -479,13 +483,14 @@ class WC_NLPostcode_Fields {
 	public function save_custom_fields($post_id) {
 		global $post_type;
 		if( $post_type == 'shop_order' && !empty($_POST) ) {
-			update_post_meta( $post_id, '_billing_street_name', stripslashes( $_POST['_billing_street_name'] ));
-			update_post_meta( $post_id, '_billing_house_number', stripslashes( $_POST['_billing_house_number'] ));
-			update_post_meta( $post_id, '_billing_house_number_suffix', stripslashes( $_POST['_billing_house_number_suffix'] ));
+			$order = WCX::get_order( $post_id );
+			WCX_Order::update_meta_data( $order, '_billing_street_name', stripslashes( $_POST['_billing_street_name'] ));
+			WCX_Order::update_meta_data( $order, '_billing_house_number', stripslashes( $_POST['_billing_house_number'] ));
+			WCX_Order::update_meta_data( $order, '_billing_house_number_suffix', stripslashes( $_POST['_billing_house_number_suffix'] ));
 
-			update_post_meta( $post_id, '_shipping_street_name', stripslashes( $_POST['_shipping_street_name'] ));
-			update_post_meta( $post_id, '_shipping_house_number', stripslashes( $_POST['_shipping_house_number'] ));
-			update_post_meta( $post_id, '_shipping_house_number_suffix', stripslashes( $_POST['_shipping_house_number_suffix'] ));
+			WCX_Order::update_meta_data( $order, '_shipping_street_name', stripslashes( $_POST['_shipping_street_name'] ));
+			WCX_Order::update_meta_data( $order, '_shipping_house_number', stripslashes( $_POST['_shipping_house_number'] ));
+			WCX_Order::update_meta_data( $order, '_shipping_house_number_suffix', stripslashes( $_POST['_shipping_house_number_suffix'] ));
 		}
 		return;
 	}
@@ -497,6 +502,7 @@ class WC_NLPostcode_Fields {
 	 * @return void
 	 */
 	public function merge_street_number_suffix ( $order_id ) {
+		$order = WCX::get_order( $order_id );
 		// file_put_contents('postdata.txt', print_r($_POST,true)); // for debugging
 		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 			// old versions use 'shiptobilling'
@@ -511,12 +517,12 @@ class WC_NLPostcode_Fields {
 			// concatenate street & house number & copy to 'billing_address_1'
 			$billing_house_number = $_POST['billing_house_number'] . (!empty($_POST['billing_house_number_suffix'])?'-' . $_POST['billing_house_number_suffix']:'');
 			$billing_address_1 = $_POST['billing_street_name'] . ' ' . $billing_house_number;
-			update_post_meta( $order_id,  '_billing_address_1', $billing_address_1 );
+			WCX_Order::set_address_prop( $order, 'address_1', 'billing', $billing_address_1 );
 
 			// check if 'ship to billing address' is checked
 			if ( $ship_to_different_address == false ) {
 				// use billing address
-				update_post_meta( $order_id,  '_shipping_address_1', $billing_address_1 );
+				WCX_Order::set_address_prop( $order, 'address_1', 'shipping', $billing_address_1 );
 			}
 		}
 
@@ -524,7 +530,7 @@ class WC_NLPostcode_Fields {
 			// concatenate street & house number & copy to 'shipping_address_1'
 			$shipping_house_number = $_POST['shipping_house_number'] . (!empty($_POST['shipping_house_number_suffix'])?'-' . $_POST['shipping_house_number_suffix']:'');
 			$shipping_address_1 = $_POST['shipping_street_name'] . ' ' . $shipping_house_number;
-			update_post_meta( $order_id,  '_shipping_address_1', $shipping_address_1 );
+			WCX_Order::set_address_prop( $order, 'address_1', 'shipping', $shipping_address_1 );
 		}
 		return;
 	}
@@ -572,6 +578,7 @@ class WC_NLPostcode_Fields {
 	 * @return void
 	 */
 	public function remove_placeholders( $order_id, $posted ) {
+		$order = WCX::get_order( $order_id );
 		// get default address fields with their placeholders
 		$countries = new WC_Countries;
 		$fields = $countries->get_default_address_fields();
@@ -595,11 +602,11 @@ class WC_NLPostcode_Fields {
 			foreach ($check_fields as $check_field) {
 				// file_put_contents(ABSPATH.'field_check.txt', $posted[$field_type.'_'.$check_field] .' || '. $fields[$check_field]['placeholder']."\n",FILE_APPEND);
 				if ( isset( $posted[$field_type.'_'.$check_field] ) && isset( $fields[$check_field]['placeholder'] ) && $posted[$field_type.'_'.$check_field] == $fields[$check_field]['placeholder'] ) {
-					update_post_meta( $order_id, '_'.$field_type.'_'.$check_field, '' );
+					WCX_Order::set_address_prop( $order, $check_field, $field_type, '' );
 
 					// also clear shipping field when ship_to_different_address is false
 					if ( $ship_to_different_address == false && $field_type == 'billing') {
-						update_post_meta( $order_id, '_shipping_'.$check_field, '' );
+						WCX_Order::set_address_prop( $order, $check_field, 'shipping', '' );
 					}
 				}
 			}
@@ -611,7 +618,7 @@ class WC_NLPostcode_Fields {
 				'ID'			=> $order_id,
 				'post_excerpt'	=> '',
 				)
-			);			
+			);
 		}
 		
 		return;
@@ -657,9 +664,9 @@ class WC_NLPostcode_Fields {
 	 * @return array          New address format.
 	 */
 	public function order_formatted_billing_address( $address, $order ) {
-		$address['street_name']			= $order->billing_street_name;
-		$address['house_number']		= $order->billing_house_number;
-		$address['house_number_suffix']	= !empty($order->billing_house_number_suffix)?'-'.$order->billing_house_number_suffix:'';
+		$address['street_name']			= WCX_Order::get_meta( $order, '_billing_street_name' );
+		$address['house_number']		= WCX_Order::get_meta( $order, '_billing_house_number' );
+		$address['house_number_suffix']	= !empty(WCX_Order::get_meta( $order, '_billing_house_number_suffix' ))?'-'.WCX_Order::get_meta( $order, '_billing_house_number_suffix' ):'';
 
 		return $address;
 	}
@@ -673,9 +680,9 @@ class WC_NLPostcode_Fields {
 	 * @return array          New address format.
 	 */
 	public function order_formatted_shipping_address( $address, $order ) {
-		$address['street_name']			= $order->shipping_street_name;
-		$address['house_number']		= $order->shipping_house_number;
-		$address['house_number_suffix']	= !empty($order->shipping_house_number_suffix)?'-'.$order->shipping_house_number_suffix:'';
+		$address['street_name']			= WCX_Order::get_meta( $order, '_shipping_street_name' );
+		$address['house_number']		= WCX_Order::get_meta( $order, '_shipping_house_number' );
+		$address['house_number_suffix']	= !empty(WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ))?'-'.WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ):'';
 
 		return $address;
 	}
@@ -756,15 +763,16 @@ class WC_NLPostcode_Fields {
 	 * @return void
 	 */
 	public function save_order_data( $order_id, $posted ) {
+		$order = WCX::get_order( $order_id );
 		// Billing.
-		update_post_meta( $order_id, '_billing_street_name', $this->get_posted_address_data( 'street_name', $posted ) );
-		update_post_meta( $order_id, '_billing_house_number', $this->get_posted_address_data( 'house_number', $posted ) );
-		update_post_meta( $order_id, '_billing_house_number_suffix', $this->get_posted_address_data( 'house_number_suffix', $posted ) );
+		WCX_Order::update_meta_data( $order, '_billing_street_name', $this->get_posted_address_data( 'street_name', $posted ) );
+		WCX_Order::update_meta_data( $order, '_billing_house_number', $this->get_posted_address_data( 'house_number', $posted ) );
+		WCX_Order::update_meta_data( $order, '_billing_house_number_suffix', $this->get_posted_address_data( 'house_number_suffix', $posted ) );
 
 		// Shipping.
-		update_post_meta( $order_id, '_shipping_street_name', $this->get_posted_address_data( 'street_name', $posted, 'shipping' ) );
-		update_post_meta( $order_id, '_shipping_house_number', $this->get_posted_address_data( 'house_number', $posted, 'shipping' ) );
-		update_post_meta( $order_id, '_shipping_house_number_suffix', $this->get_posted_address_data( 'house_number_suffix', $posted, 'shipping' ) );
+		WCX_Order::update_meta_data( $order, '_shipping_street_name', $this->get_posted_address_data( 'street_name', $posted, 'shipping' ) );
+		WCX_Order::update_meta_data( $order, '_shipping_house_number', $this->get_posted_address_data( 'house_number', $posted, 'shipping' ) );
+		WCX_Order::update_meta_data( $order, '_shipping_house_number_suffix', $this->get_posted_address_data( 'house_number_suffix', $posted, 'shipping' ) );
 	}
 
 	/**

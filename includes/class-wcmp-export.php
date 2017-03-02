@@ -1,4 +1,8 @@
 <?php
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
@@ -173,12 +177,13 @@ class WooCommerce_MyParcel_Export {
 		$this->log("*** Creating shipments started ***");
 
 		foreach ($order_ids as $order_id) {
+			$order = WCX::get_order( $order_id );
 			$shipments = $this->get_order_shipment_data( (array) $order_id );
 
 			$this->log("Shipment data for order {$order_id}:\n".var_export($shipments, true));
 
 			// check colli amount
-			$extra_params = get_post_meta( $order_id, '_myparcel_shipment_options_extra', true );
+			$extra_params = WCX_Order::get_meta( $order, '_myparcel_shipment_options_extra' );
 			$colli_amount = isset($extra_params['colli_amount']) ? $extra_params['colli_amount'] : 1;
 
 			for ($i=0; $i < intval($colli_amount); $i++) {
@@ -197,18 +202,20 @@ class WooCommerce_MyParcel_Export {
 						);
 
 						// save shipment data in order meta
-						$this->save_shipment_data( $order_id, $shipment );
+						$this->save_shipment_data( $order, $shipment );
 
 						// process directly setting
 						if ( isset(WooCommerce_MyParcel()->general_settings['process_directly']) || $process === true ) {
-							$order = $this->get_order( $order_id );
+							// flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
+							if (method_exists($order, 'save')) {
+								$order->save();
+							}
 							$this->get_labels( (array) $order_id, 'url' );
 							$this->get_shipment_data( $shipment_id, $order );
 						}
 
 						// status automation
 						if ( isset(WooCommerce_MyParcel()->general_settings['order_status_automation']) && !empty(WooCommerce_MyParcel()->general_settings['automatic_order_status']) ) {
-							$order = $this->get_order( $order_id );
 							$order->update_status( WooCommerce_MyParcel()->general_settings['automatic_order_status'], __( 'MyParcel shipment created:', 'woocommerce-myparcel' ) );
 						}
 					} else {
@@ -244,6 +251,7 @@ class WooCommerce_MyParcel_Export {
 				$this->log("API response (order {$order_id}):\n".var_export($response, true));
 				// echo '<pre>';var_dump($response);echo '</pre>';die();
 				if (isset($response['body']['data']['ids'])) {
+					$order = WCX::get_order( $order_id );
 					$ids = array_shift($response['body']['data']['ids']);
 					$shipment_id = $ids['id'];
 					$this->success[$order_id] = $shipment_id;
@@ -253,7 +261,7 @@ class WooCommerce_MyParcel_Export {
 					);
 
 					// save shipment data in order meta
-					$this->save_shipment_data( $order_id, $shipment );
+					$this->save_shipment_data( $order, $shipment );
 
 				} else {
 					$this->errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcel' );
@@ -389,7 +397,7 @@ class WooCommerce_MyParcel_Export {
 	public function get_order_shipment_data( $order_ids, $type = 'standard' ) {
 		foreach( $order_ids as $order_id ) {
 			// get order
-			$order = $this->get_order( $order_id );
+			$order = WCX::get_order( $order_id );
 
 			$shipment = array(
 				'recipient' => $this->get_recipient( $order ),
@@ -397,7 +405,7 @@ class WooCommerce_MyParcel_Export {
 				'carrier'	=> 1, // default to POSTNL for now
 			);
 
-			if ( $pickup = $this->is_pickup( $order_id ) ) {
+			if ( $pickup = $this->is_pickup( $order ) ) {
 				// $pickup_time = array_shift($pickup['time']); // take first element in time array
 				$shipment['pickup'] = array(
 					'postal_code'	=> $pickup['postal_code'],
@@ -422,12 +430,14 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function prepare_return_shipment_data( $order_id, $options ) {
-		$order = $this->get_order( $order_id );
+		$order = WCX::get_order( $order_id );
+
+		$shipping_name = method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name() : trim( $order->shipping_first_name . ' ' . $order->shipping_last_name );
 
 		// set name & email
 		$return_shipment_data = array(
-			'name'			=> trim( $order->shipping_first_name . ' ' . $order->shipping_last_name ),
-			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? $order->billing_email : '',
+			'name'			=> $shipping_name,
+			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
 			'carrier'		=> 1, // default to POSTNL for now
 		);
 
@@ -465,41 +475,44 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function get_recipient( $order ) {
+		$shipping_name = method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name() : trim( $order->shipping_first_name . ' ' . $order->shipping_last_name );
 		$address = array(
-			'cc'			=> $order->shipping_country,
-			'city'			=> $order->shipping_city,
-			'person'		=> trim( $order->shipping_first_name . ' ' . $order->shipping_last_name ),
-			'company'		=> $order->shipping_company,
-			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? $order->billing_email : '',
-			'phone'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_phone']) ? $order->billing_phone : '',
+			'cc'			=> WCX_Order::get_prop( $order, 'shipping_country' ),
+			'city'			=> WCX_Order::get_prop( $order, 'shipping_city' ),
+			'person'		=> $shipping_name,
+			'company'		=> WCX_Order::get_prop( $order, 'shipping_company' ),
+			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
+			'phone'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_phone']) ? WCX_Order::get_prop( $order, 'billing_phone' ) : '',
 		);
 
 
-		if ( $order->shipping_country == 'NL' ) {
+		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+		if ( $shipping_country == 'NL' ) {
 			// use billing address if old 'pakjegemak' (1.5.6 and older)
-			if ( $pgaddress = get_post_meta( $order->id, '_myparcel_pgaddress', true ) ) {
+			if ( $pgaddress = WCX_Order::get_meta( $order, '_myparcel_pgaddress' ) ) {
+				$billing_name = method_exists($order, 'get_formatted_billing_full_name') ? $order->get_formatted_billing_full_name() : trim( $order->billing_first_name . ' ' . $order->billing_last_name );
 				$address_intl = array(
-					'city'			=> $order->billing_city,
-					'person'		=> trim( $order->billing_first_name . ' ' . $order->billing_last_name ),
-					'company'		=> $order->billing_company,
-					'street'		=> $order->billing_street_name,
-					'number'		=> $order->billing_house_number,
-					'number_suffix' => $order->billing_house_number_suffix,
-					'postal_code'	=> $order->billing_postcode,
+					'city'			=> WCX_Order::get_prop( $order, 'billing_city' ),
+					'person'		=> $billing_name,
+					'company'		=> WCX_Order::get_prop( $order, 'billing_company' ),
+					'street'		=> WCX_Order::get_meta( $order, '_billing_street_name' ),
+					'number'		=> WCX_Order::get_meta( $order, '_billing_house_number' ),
+					'number_suffix' => WCX_Order::get_meta( $order, '_billing_house_number_suffix' ),
+					'postal_code'	=> WCX_Order::get_prop( $order, 'billing_postcode' ),
 				);
 			} else {
 				$address_intl = array(
-					'street'		=> $order->shipping_street_name,
-					'number'		=> $order->shipping_house_number,
-					'number_suffix' => $order->shipping_house_number_suffix,
-					'postal_code'	=> $order->shipping_postcode,
+					'street'		=> WCX_Order::get_meta( $order, '_shipping_street_name' ),
+					'number'		=> WCX_Order::get_meta( $order, '_shipping_house_number' ),
+					'number_suffix' => WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ),
+					'postal_code'	=> WCX_Order::get_prop( $order, 'shipping_postcode' ),
 				);
 			}
 		} else {
 			$address_intl = array(
-				'postal_code'				=> $order->shipping_postcode,
-				'street'					=> $order->shipping_address_1,
-				'street_additional_info'	=> $order->shipping_address_2,
+				'postal_code'				=> WCX_Order::get_prop( $order, 'shipping_postcode' ),
+				'street'					=> WCX_Order::get_prop( $order, 'shipping_address_1' ),
+				'street_additional_info'	=> WCX_Order::get_prop( $order, 'shipping_address_2' ),
 			);
 		}
 
@@ -525,7 +538,7 @@ class WooCommerce_MyParcel_Export {
 				// we're taking the first (we're not handling multiple shipping methods as of yet)
 				$order_shipping_method = array_shift($order_shipping_methods);
 				$order_shipping_method = $order_shipping_method['method_id'];
-				$order_shipping_class = $order->myparcel_highest_shipping_class;
+				$order_shipping_class = WCX_Order::get_meta( $order, '_myparcel_highest_shipping_class' );
 				if (empty($order_shipping_class)) {
 					$order_shipping_class = $this->get_order_shipping_class( $order, $order_shipping_method );
 				}
@@ -564,7 +577,8 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// disable mailbox package outside NL
-		if ($order->shipping_country != 'NL' && $package_type == 2 ) {
+		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+		if ($shipping_country != 'NL' && $package_type == 2 ) {
 			$package_type = 1;
 		}
 
@@ -574,7 +588,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// use shipment options from order when available
-		$shipment_options = $order->myparcel_shipment_options;
+		$shipment_options = WCX_Order::get_meta( $order, '_myparcel_shipment_options' );
 		if (!empty($shipment_options)) {
 			$emty_defaults = array(
 				'package_type'		=> 1,
@@ -633,7 +647,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// load delivery options
-		$myparcel_delivery_options = $order->myparcel_delivery_options;
+		$myparcel_delivery_options = WCX_Order::get_meta( $order, '_myparcel_delivery_options' );
 
 		// set delivery type
 		$options['delivery_type'] = $this->get_delivery_type( $order, $myparcel_delivery_options );
@@ -655,10 +669,12 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// options signed & recipient only
-		if (isset($order->myparcel_signed)) {
+		$myparcel_signed = WCX_Order::get_meta( $order, '_myparcel_signed' );
+		if (!empty($myparcel_signed)) {
 			$options['signature'] = 1;
 		}
-		if (isset($order->myparcel_only_recipient)) {
+		$myparcel_only_recipient = WCX_Order::get_meta( $order, '_myparcel_only_recipient' );
+		if (!empty($myparcel_only_recipient)) {
 			$options['only_recipient'] = 1;
 		}
 
@@ -692,7 +708,8 @@ class WooCommerce_MyParcel_Export {
 	public function get_shipment_ids( $order_ids, $args ) {
 		$shipment_ids = array();
 		foreach ($order_ids as $order_id) {
-			$order_shipments = get_post_meta($order_id,'_myparcel_shipments',true);
+			$order = WCX::get_order( $order_id );
+			$order_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
 			if (!empty($order_shipments)) {
 				$order_shipment_ids = array();
 				// exclude concepts or only concepts
@@ -718,7 +735,7 @@ class WooCommerce_MyParcel_Export {
 		return $shipment_ids;
 	}
 
-	public function save_shipment_data ( $order_id, $shipment ) {
+	public function save_shipment_data ( $order, $shipment ) {
 		if ( empty($shipment) ) {
 			return false;
 		}
@@ -731,7 +748,7 @@ class WooCommerce_MyParcel_Export {
 		// }
 
 		if ( isset(WooCommerce_MyParcel()->general_settings['keep_shipments']) ) {
-			if ( $old_shipments = get_post_meta($order_id,'_myparcel_shipments',true) ) {
+			if ( $old_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' ) ) {
 				// merging the arrays with the union operator (+) preserves the left hand version
 				// when the key exists in both arrays, but we also want to preserve keys and put
 				// new shipments AFTER old shipments, so we remove doubles first
@@ -745,7 +762,7 @@ class WooCommerce_MyParcel_Export {
 			}
 		}
 
-		update_post_meta ( $order_id, '_myparcel_shipments', $shipments );
+		WCX_Order::update_meta_data( $order, '_myparcel_shipments', $shipments );
 
 		return;
 	}
@@ -856,7 +873,7 @@ class WooCommerce_MyParcel_Export {
 					$tracktrace = $shipment['barcode'];
 					$shipment_id = $id;
 					$shipment_data = compact( 'shipment_id', 'status', 'tracktrace', 'shipment');
-					$this->save_shipment_data( $order->id, $shipment_data );
+					$this->save_shipment_data( $order, $shipment_data );
 					return $shipment_data;
 				} else {
 					return false;
@@ -874,31 +891,11 @@ class WooCommerce_MyParcel_Export {
 		}
 	}
 
-	public function get_order( $order_id ) {
-		if ( version_compare( WOOCOMMERCE_VERSION, '2.2', '<' ) ) {
-			$order = new WC_Order( $order_id );
-		} else {
-			$order = wc_get_order( $order_id );
-		}
-
-		return $order;
-	}
-
-	public function get_order_id( $order ) {
-		// load order_id if order object passed
-		if (is_object($order)) {
-			$order_id = $order->id;
-		} else {
-			$order_id = $order;
-		}
-
-		return $order_id;
-	}
-
 	public function replace_shortcodes( $description, $order ) {
+		$myparcel_delivery_options = WCX_Order::get_meta( $order, '_myparcel_delivery_options' );
 		$replacements = array(
 			'[ORDER_NR]'		=> $order->get_order_number(),
-			'[DELIVERY_DATE]'	=> isset($order->myparcel_delivery_options) && isset($order->myparcel_delivery_options['date']) ? $order->myparcel_delivery_options['date'] : '',
+			'[DELIVERY_DATE]'	=> isset($myparcel_delivery_options) && isset($myparcel_delivery_options['date']) ? $myparcel_delivery_options['date'] : '',
 		);
 
 		$description = str_replace(array_keys($replacements), array_values($replacements), $description);
@@ -963,10 +960,8 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function is_pickup( $order, $myparcel_delivery_options = '' ) {
-		$order_id = $this->get_order_id( $order );
-
 		if (empty($myparcel_delivery_options)) {
-			$myparcel_delivery_options = get_post_meta( $order_id, '_myparcel_delivery_options', true );
+			$myparcel_delivery_options = WCX_Order::get_meta( $order, '_myparcel_delivery_options' );
 		}
 		
 		$pickup_types = array( 'retail', 'retailexpress' );
@@ -975,7 +970,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// Backwards compatibility for pakjegemak data
-		$pgaddress = get_post_meta( $order_id, '_myparcel_pgaddress', true );
+		$pgaddress = WCX_Order::get_meta( $order, '_myparcel_pgaddress' );
 		if ( !empty( $pgaddress ) && !empty( $pgaddress['postcode'] ) ) {
 			$pickup = array(
 				'postal_code'	=> $pgaddress['postcode'],
@@ -1003,10 +998,8 @@ class WooCommerce_MyParcel_Export {
 			'retailexpress'	=> 5, // 'pickup_express'
 		);
 
-		$order_id = $this->get_order_id( $order );
-
 		if (empty($myparcel_delivery_options)) {
-			$myparcel_delivery_options = get_post_meta( $order_id, '_myparcel_delivery_options', true );
+			$myparcel_delivery_options = WCX_Order::get_meta( $order, '_myparcel_delivery_options' );
 		}
 
 		// standard = default, overwrite if otpions found
@@ -1026,7 +1019,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// backwards compatibility for pakjegemak
-		if ( $pgaddress = get_post_meta( $order_id, '_myparcel_pgaddress', true ) ) {
+		if ( $pgaddress = WCX_Order::get_meta( $order, '_myparcel_pgaddress' ) ) {
 			$delivery_type = 'retail';
 		}
 
@@ -1037,10 +1030,8 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function get_delivery_date( $order, $myparcel_delivery_options = '' ) {
-		$order_id = $this->get_order_id( $order );
-
 		if (empty($myparcel_delivery_options)) {
-			$myparcel_delivery_options = get_post_meta( $order_id, '_myparcel_delivery_options', true );
+			$myparcel_delivery_options = WCX_Order::get_meta( $order, '_myparcel_delivery_options' );
 		}
 
 
@@ -1095,6 +1086,10 @@ class WooCommerce_MyParcel_Export {
 			if ( $chosen_method[0] !== 'flat_rate' ) {
 				return false;
 			}
+			if ( empty( $chosen_method[1] ) ) {
+				return false; // no instance known (=probably manual order)
+			}
+
 			$method_slug = $chosen_method[0];
 			$method_instance = $chosen_method[1];
 
@@ -1246,7 +1241,8 @@ class WooCommerce_MyParcel_Export {
 
 	public function filter_eu_orders( $order_ids ) {
 		foreach ($order_ids as $key => $order_id) {
-			$shipping_country = get_post_meta( $order_id, '_shipping_country', true );
+			$order = WCX::get_order( $order_id );
+			$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
 			// skip non-eu orders
 			if ( !$this->is_eu_country( $shipping_country ) ) {
 				unset($order_ids[$key]);
