@@ -666,7 +666,8 @@ class WC_NLPostcode_Fields {
 	public function order_formatted_billing_address( $address, $order ) {
 		$address['street_name']			= WCX_Order::get_meta( $order, '_billing_street_name' );
 		$address['house_number']		= WCX_Order::get_meta( $order, '_billing_house_number' );
-		$address['house_number_suffix']	= !empty(WCX_Order::get_meta( $order, '_billing_house_number_suffix' ))?'-'.WCX_Order::get_meta( $order, '_billing_house_number_suffix' ):'';
+		$address['house_number_suffix'] = WCX_Order::get_meta( $order, '_billing_house_number_suffix' );
+		$address['house_number_suffix']	= !empty($address['house_number_suffix'])?'-'.$address['house_number_suffix']:'';
 
 		return $address;
 	}
@@ -682,7 +683,8 @@ class WC_NLPostcode_Fields {
 	public function order_formatted_shipping_address( $address, $order ) {
 		$address['street_name']			= WCX_Order::get_meta( $order, '_shipping_street_name' );
 		$address['house_number']		= WCX_Order::get_meta( $order, '_shipping_house_number' );
-		$address['house_number_suffix']	= !empty(WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ))?'-'.WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ):'';
+		$address['house_number_suffix'] = WCX_Order::get_meta( $order, '_shipping_house_number_suffix' );
+		$address['house_number_suffix']	= !empty($address['house_number_suffix'])?'-'.$address['house_number_suffix']:'';
 
 		return $address;
 	}
