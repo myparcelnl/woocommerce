@@ -115,13 +115,18 @@ class WooCommerce_MyParcel {
 	 * Instantiate classes when woocommerce is activated
 	 */
 	public function load_classes() {
-		if ( $this->is_woocommerce_activated() ) {
-			$this->includes();
-		} else {
-			// display notice instead
+		if ( $this->is_woocommerce_activated() === false ) {
 			add_action( 'admin_notices', array ( $this, 'need_woocommerce' ) );
+			return;
 		}
 
+		if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
+			add_action( 'admin_notices', array ( $this, 'required_php_version' ) );
+			return;
+		}
+
+		// all systems ready - GO!
+		$this->includes();
 	}
 
 	/**
@@ -148,6 +153,18 @@ class WooCommerce_MyParcel {
 		$error = sprintf( __( 'WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!' , 'woocommerce-myparcel' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>' );
 
 		$message = '<div class="error"><p>' . $error . '</p></div>';
+	
+		echo $message;
+	}
+
+	/**
+	 * PHP version requirement notice
+	 */
+	
+	public function required_php_version() {
+		$error = __( 'WooCommerce MyParcel requires PHP 5.3 or higher (5.6 or later recommended).', 'woocommerce-myparcel' );
+		$how_to_update = __( 'How to update your PHP version', 'wpo_wcnlpc' );
+		$message = sprintf('<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>', $error, 'http://docs.wpovernight.com/general/how-to-update-your-php-version/', $how_to_update);
 	
 		echo $message;
 	}
