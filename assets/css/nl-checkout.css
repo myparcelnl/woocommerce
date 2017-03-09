@@ -11,3 +11,14 @@
 .woocommerce form .form-row-quart-first {
 	/*margin-right: 4% !important;*/
 }
+
+#billing_house_number::-webkit-outer-spin-button,
+#billing_house_number::-webkit-inner-spin-button,
+#shipping_house_number::-webkit-outer-spin-button,
+#shipping_house_number::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+#billing_house_number, #shipping_house_number {
+	-moz-appearance: textfield;
+}
