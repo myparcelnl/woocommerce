@@ -480,17 +480,19 @@ class WC_NLPostcode_Fields {
 	/**
 	 * Save custom fields from admin.
 	 */
-	public function save_custom_fields($post_id) {
+	public function save_custom_fields( $post_id ) {
 		$post_type = get_post_type( $post_id );
 		if ( ( $post_type == 'shop_order' || $post_type == 'shop_order_refund' ) && !empty($_POST) ) {
 			$order = WCX::get_order( $post_id );
-			WCX_Order::update_meta_data( $order, '_billing_street_name', stripslashes( $_POST['_billing_street_name'] ));
-			WCX_Order::update_meta_data( $order, '_billing_house_number', stripslashes( $_POST['_billing_house_number'] ));
-			WCX_Order::update_meta_data( $order, '_billing_house_number_suffix', stripslashes( $_POST['_billing_house_number_suffix'] ));
-
-			WCX_Order::update_meta_data( $order, '_shipping_street_name', stripslashes( $_POST['_shipping_street_name'] ));
-			WCX_Order::update_meta_data( $order, '_shipping_house_number', stripslashes( $_POST['_shipping_house_number'] ));
-			WCX_Order::update_meta_data( $order, '_shipping_house_number_suffix', stripslashes( $_POST['_shipping_house_number_suffix'] ));
+			$addresses = array( 'billing', 'shipping' );
+			$address_fields = array( 'street_name', 'house_number', 'house_number_suffix' );
+			foreach ($addresses as $address) {
+				foreach ($address_fields as $address_field) {
+					if (isset($_POST["_{$address}_{$address_field}"])) {
+						WCX_Order::update_meta_data( $order, "_{$address}_{$address_field}", stripslashes( $_POST["_{$address}_{$address_field}"] ));
+					}
+				}
+			}
 		}
 		return;
 	}
