@@ -481,8 +481,8 @@ class WC_NLPostcode_Fields {
 	 * Save custom fields from admin.
 	 */
 	public function save_custom_fields($post_id) {
-		global $post_type;
-		if( $post_type == 'shop_order' && !empty($_POST) ) {
+		$post_type = get_post_type( $post_id );
+		if ( ( $post_type == 'shop_order' || $post_type == 'shop_order_refund' ) && !empty($_POST) ) {
 			$order = WCX::get_order( $post_id );
 			WCX_Order::update_meta_data( $order, '_billing_street_name', stripslashes( $_POST['_billing_street_name'] ));
 			WCX_Order::update_meta_data( $order, '_billing_house_number', stripslashes( $_POST['_billing_house_number'] ));
