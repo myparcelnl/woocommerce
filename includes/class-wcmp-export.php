@@ -444,11 +444,14 @@ class WooCommerce_MyParcel_Export {
 		// add options if available
 		if (!empty($options)) {
 			// convert insurance option
-			if ( isset($options['insured_amount']) && $options['insured_amount'] != 0 ) {
-				$options['insurance'] = array(
-					'amount'	=> (int) $options['insured_amount'] * 100,
-					'currency'	=> 'EUR',
-				);
+			if ( !isset($options['insurance']) && isset($options['insured_amount']) ) {
+				if ($options['insured_amount'] > 0) {
+					$options['insurance'] = array(
+						'amount'	=> (int) $options['insured_amount'] * 100,
+						'currency'	=> 'EUR',
+					);
+				}
+
 				unset($options['insured_amount']);
 				unset($options['insured']);
 			}
@@ -460,6 +463,14 @@ class WooCommerce_MyParcel_Export {
 				if ( in_array($key, $int_options) ) {
 					$value = (int) $value;
 				}
+			}
+
+			// remove frontend insurance option values
+			if (isset($options['insured_amount'])) {
+				unset($options['insured_amount']);
+			}
+			if (isset($options['insured'])) {
+				unset($options['insured']);
 			}
 
 			$return_shipment_data['options'] = $options;
