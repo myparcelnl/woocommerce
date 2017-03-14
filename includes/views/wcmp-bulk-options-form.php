@@ -11,7 +11,7 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 		wp_enqueue_script(
 			'wcmyparcel-export',
 			WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-admin.js',
-			array( 'jquery', 'thickbox' ),
+			array( 'jquery', 'thickbox', 'wp-color-picker' ),
 			WC_MYPARCEL_VERSION
 		);
 		wp_localize_script(
@@ -43,6 +43,7 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 			);
 		}
 
+		wp_enqueue_style( 'wp-color-picker' ); 
 		wp_enqueue_style( 'wcmyparcel-admin-styles' );	
 		wp_enqueue_style( 'colors' );
 		wp_enqueue_style( 'media' );
