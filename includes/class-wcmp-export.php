@@ -774,12 +774,16 @@ class WooCommerce_MyParcel_Export {
 		return;
 	}
 
-	public function get_package_types() {
+	public function get_package_types( $shipment_type = 'shipment' ) {
 		$package_types = array(
 			1	=> __( 'Parcel' , 'woocommerce-myparcel' ),
 			2	=> __( 'Mailbox package' , 'woocommerce-myparcel' ),
 			3	=> __( 'Unpaid letter' , 'woocommerce-myparcel' ),
 		);
+		if ( $shipment_type == 'return' ) {
+			unset($package_types[2]);
+			unset($package_types[3]);
+		}
 
 		return $package_types;
 	}

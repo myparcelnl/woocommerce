@@ -76,7 +76,7 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&reques
 			$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );
 			$recipient = WooCommerce_MyParcel()->export->get_recipient( $order );
 			$myparcel_options_extra = WCX_Order::get_meta( $order, '_myparcel_shipment_options_extra' );
-			$package_types = WooCommerce_MyParcel()->export->get_package_types();
+			$package_types = WooCommerce_MyParcel()->export->get_package_types( $dialog );
 			$parcel_weight = WooCommerce_MyParcel()->export->get_parcel_weight( $order );
 		?>
 		<tr class="order-row <?php echo (($c = !$c)?'alternate':'');?>">
