@@ -99,6 +99,7 @@ class WooCommerce_MyParcel {
 	public function includes() {
 		// include compatibility classes
 		include_once( 'includes/compatibility/abstract-wc-data-compatibility.php' );
+		include_once( 'includes/compatibility/class-wc-date-compatibility.php' );
 		include_once( 'includes/compatibility/class-wc-core-compatibility.php' );
 		include_once( 'includes/compatibility/class-wc-order-compatibility.php' );
 		include_once( 'includes/compatibility/class-wc-product-compatibility.php' );
