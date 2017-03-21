@@ -153,8 +153,8 @@ jQuery( function( $ ) {
 		}
 	});
 
-	// init options on settings page
-	$('#woocommerce-myparcel-settings :input').change();
+	// init options on settings page and in bulk form
+	$('#woocommerce-myparcel-settings :input, .wcmp_bulk_options_form :input').change();
 
 	// myparcel_checkout
 
