@@ -221,6 +221,7 @@ class WooCommerce_MyParcel_Admin {
 		check_ajax_referer( 'wc_myparcel', 'security' );
 		extract($_POST);
 		parse_str($form_data, $form_data);
+		$order = WCX::get_order($order_id);
 		
 		if (isset($form_data['myparcel_options'][$order_id])) {
 			$shipment_options = $form_data['myparcel_options'][$order_id];
@@ -234,7 +235,6 @@ class WooCommerce_MyParcel_Admin {
 				);
 				unset($shipment_options['insured_amount']);
 			}
-
 			// separate extra options
 			if (isset($shipment_options['extra_options'])) {
 				WCX_Order::update_meta_data( $order, '_myparcel_shipment_options_extra', $shipment_options['extra_options'] );
