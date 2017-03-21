@@ -354,24 +354,20 @@ class WooCommerce_MyParcel_Export {
 		$params = $_REQUEST;
 
 		// filter non API params
-		$api_param_keys = array(
-			'cc',
-			'postal_code',
-			'number',
-			'carrier',
-			'delivery_time',
-			'delivery_date',
-			'cutoff_time',
-			'dropoff_days',
-			'dropoff_delay',
-			'deliverydays_window',
-			'exclude_delivery_type',
+		$api_params = array(
+			'cc'					=> '',
+			'postal_code'			=> '',
+			'number'				=> '',
+			'carrier'				=> '',
+			'delivery_time'			=> '',
+			'delivery_date'			=> '',
+			'cutoff_time'			=> '',
+			'dropoff_days'			=> '',
+			'dropoff_delay'			=> '',
+			'deliverydays_window'	=> '',
+			'exclude_delivery_type'	=> '',
 		);
-		foreach ($params as $key => $value) {
-			if (!in_array($key, $api_param_keys)) {
-				unset($params[$key]);
-			}
-		}
+		$params = array_intersect_key($params, $api_params);
 
 		$api = $this->init_api();
 		$response = $api->get_delivery_options( $params, true );
