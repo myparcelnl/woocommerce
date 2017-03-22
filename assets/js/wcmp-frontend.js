@@ -1,6 +1,7 @@
 jQuery( function( $ ) {
 	var myparcel_update_timer = false;
 	window.myparcel_checkout_updating = false;
+	window.myparcel_force_update = false;
 	window.myparcel_selected_shipping_method = '';
 	window.myparcel_updated_shipping_method = '';
 
@@ -44,7 +45,7 @@ jQuery( function( $ ) {
 
 	// hide checkout options if not NL
 	$( '#billing_country, #shipping_country' ).change(function() {
-		window.myparcel_updated_shipping_method = ''; // in case the shipping method doesn't change
+		window.myparcel_force_update = true; // in case the shipping method doesn't change
 		check_country();
 		update_myparcel_settings();
 	});
@@ -188,6 +189,9 @@ jQuery( function( $ ) {
 	function show_myparcel_delivery_options() {
 		// show only if NL
 		check_country();
+		if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
+			update_myparcel_settings();
+		}
 	}
 
 
@@ -199,14 +203,15 @@ jQuery( function( $ ) {
 
 	function update_myparcel_delivery_options_action() {
 		country = get_shipping_country();
-		if ( window.myparcel_checkout_updating !== true && country == 'NL') {
+		if ( window.myparcel_checkout_updating !== true && country == 'NL' && typeof MyPaWindow.mypa != 'undefined' ) {
 			MyPaWindow.mypa.settings = window.mypa.settings;
 			MyPaWindow.updateMyPa();
 		}
 	}
 
-	function is_updated_shipping_method( shipping_method ) {
-		if ( window.myparcel_updated_shipping_method != window.myparcel_selected_shipping_method ) {
+	function is_updated_shipping_method() {
+		if ( window.myparcel_updated_shipping_method != window.myparcel_selected_shipping_method || window.myparcel_force_update === true ) {
+			window.myparcel_force_update = false; // only force once 
 			return true;
 		} else {
 			return false;
