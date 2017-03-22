@@ -1,6 +1,8 @@
 jQuery( function( $ ) {
 	var myparcel_update_timer = false;
 	window.myparcel_checkout_updating = false;
+	window.myparcel_selected_shipping_method = '';
+	window.myparcel_updated_shipping_method = '';
 
 	// reference jQuery for MyParcel iFrame
 	window.mypajQuery = $;
@@ -35,7 +37,6 @@ jQuery( function( $ ) {
 		MyPaSetHeight(); // may need a trick to prevent height from updating 10x
 		window.myparcel_checkout_updating = true;
 		$('body').trigger('update_checkout');
-		window.myparcel_checkout_updating = false;
 	});
 
 	// make delivery options update at least once (but don't hammer)
@@ -43,7 +44,9 @@ jQuery( function( $ ) {
 
 	// hide checkout options if not NL
 	$( '#billing_country, #shipping_country' ).change(function() {
+		window.myparcel_updated_shipping_method = ''; // in case the shipping method doesn't change
 		check_country();
+		update_myparcel_settings();
 	});
 
 	// multi-step checkout doesn't trigger update_checkout when postcode changed
@@ -53,6 +56,7 @@ jQuery( function( $ ) {
 
 	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {
+		window.myparcel_checkout_updating = false; //done updating
 		if ( typeof window.myparcel_delivery_options_always_display !== 'undefined' && window.myparcel_delivery_options_always_display == 'yes') {
 			show_myparcel_delivery_options();
 		} else if ( window.myparcel_delivery_options_shipping_methods.length > 0 ) {
@@ -72,12 +76,19 @@ jQuery( function( $ ) {
 				shipping_method_class = shipping_method+':'+shipping_class;
 			}
 			if ( shipping_class && $.inArray(shipping_method_class, window.myparcel_delivery_options_shipping_methods) > -1 ) {
+				window.myparcel_updated_shipping_method = shipping_method_class;
 				show_myparcel_delivery_options();
+				window.myparcel_selected_shipping_method = shipping_method_class;
 			} else if ( $.inArray(shipping_method, window.myparcel_delivery_options_shipping_methods) > -1 ) {
 				// fallback to bare method if selected in settings
+				window.myparcel_updated_shipping_method = shipping_method;
 				show_myparcel_delivery_options();
+				window.myparcel_selected_shipping_method = shipping_method;
 			} else {
+				shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
+				window.myparcel_updated_shipping_method = shipping_method_now;
 				hide_myparcel_delivery_options();
+				window.myparcel_selected_shipping_method = shipping_method_now;
 			}
 		} else {
 			// not sure if we should already hide by default?
@@ -128,7 +139,6 @@ jQuery( function( $ ) {
 	$('#mypa-chosen-delivery-options').on('change', 'input', function() {
 		window.myparcel_checkout_updating = true;
 		jQuery('body').trigger('update_checkout');
-		window.myparcel_checkout_updating = false;
 	});
 
 	// pickup location selected
@@ -147,8 +157,7 @@ jQuery( function( $ ) {
 	function check_country() {
 		country = get_shipping_country();
 		if (country != 'NL') {
-			$( '#myparcel-iframe' ).hide();
-			$( '#mypa-options-enabled' ).prop('checked', false);
+			hide_myparcel_delivery_options();
 		} else {
 			$( '#myparcel-iframe' ).show();
 			$( '#mypa-options-enabled' ).prop('checked', true);
@@ -168,6 +177,12 @@ jQuery( function( $ ) {
 	function hide_myparcel_delivery_options() {
 		$( '#myparcel-iframe' ).hide();
 		$( '#mypa-options-enabled' ).prop('checked', false);
+		// clear delivery options
+		if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
+			$( '#mypa-chosen-delivery-options #mypa-input' ).val('');		
+			$( '#mypa-chosen-delivery-options :checkbox' ).prop('checked', false);		
+			jQuery('body').trigger('update_checkout');
+		}
 	}
 
 	function show_myparcel_delivery_options() {
@@ -187,6 +202,14 @@ jQuery( function( $ ) {
 		if ( window.myparcel_checkout_updating !== true && country == 'NL') {
 			MyPaWindow.mypa.settings = window.mypa.settings;
 			MyPaWindow.updateMyPa();
+		}
+	}
+
+	function is_updated_shipping_method( shipping_method ) {
+		if ( window.myparcel_updated_shipping_method != window.myparcel_selected_shipping_method ) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
