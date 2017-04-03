@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.7
-Stable tag: 2.1.3
+Stable tag: 2.2.0
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -89,7 +89,16 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-**Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
+= 2.2.0 (2017-04-03) =
+* WooCommerce 3.0 compatible
+* **Requires PHP version 5.3 or higher**
+* Feature: Validate NL postcodes
+* Fix: Multistep checkout
+* Fix: Email text translation typo
+* Fix: Remove spin button (arrows) for house number checkout field
+* Fix: Issues creating return shipments
+* Fix: Clear delivery options (&costs) when no longer available or deselected
+* Fix: Error exporting foreign addresses & PayPal Express checkout
 
 = 2.1.3 =
 * Feature: Option to autoload google fonts in delivery options
@@ -275,6 +284,6 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * First release.
 
 == Upgrade Notice ==
-= 2.1.3 =
+= 2.1 =
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
 
