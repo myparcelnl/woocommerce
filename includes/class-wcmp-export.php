@@ -116,6 +116,7 @@ class WooCommerce_MyParcel_Export {
 				}
 				$label_response_type = isset($label_response_type) ? $label_response_type : NULL;
 				if (!empty($shipment_ids)) {
+					$order_ids = !empty($order_ids) ? $this->sanitize_posted_array($order_ids) : array();
 					$shipment_ids = $this->sanitize_posted_array($shipment_ids);
 					$return = $this->get_shipment_labels( $shipment_ids, $label_response_type );
 				} else {
@@ -281,7 +282,7 @@ class WooCommerce_MyParcel_Export {
 		return $return;
 	}
 
-	public function get_shipment_labels( $shipment_ids, $label_response_type = NULL ) {
+	public function get_shipment_labels( $shipment_ids, $order_ids = array(), $label_response_type = NULL ) {
 		$return = array();
 
 		$this->log("*** Label request started ***");
@@ -337,7 +338,7 @@ class WooCommerce_MyParcel_Export {
 			return array();
 		}
 
-		return $this->get_shipment_labels( $shipment_ids, $label_response_type );
+		return $this->get_shipment_labels( $shipment_ids, $order_ids, $label_response_type );
 	}
 
 	public function modal_dialog( $order_ids, $dialog ) {
@@ -756,8 +757,8 @@ class WooCommerce_MyParcel_Export {
 			return false;
 		}
 
-		$shipments = array();
-		$shipments[$shipment['shipment_id']] = $shipment;
+		$new_shipments = array();
+		$new_shipments[$shipment['shipment_id']] = $shipment;
 		// don't store full shipment data
 		// if (isset($shipment['shipment'])) {
 			// unset($shipment['shipment']);
@@ -765,18 +766,14 @@ class WooCommerce_MyParcel_Export {
 
 		if ( isset(WooCommerce_MyParcel()->general_settings['keep_shipments']) ) {
 			if ( $old_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' ) ) {
-				// merging the arrays with the union operator (+) preserves the left hand version
-				// when the key exists in both arrays, but we also want to preserve keys and put
-				// new shipments AFTER old shipments, so we remove doubles first
-				// More intelligent sorting (created/modified date) would be a better solution
-				foreach ($shipments as $shipment_id => $shipment) {
-					if (isset($old_shipments[$shipment_id])) {
-						unset($old_shipments[$shipment_id]);
-					}
+				$shipments = $old_shipments;
+				foreach ($new_shipments as $shipment_id => $shipment) {
+					$shipments[$shipment_id] = $shipment;
 				}
-				$shipments = $old_shipments + $shipments;
 			}
 		}
+
+		$shipments = isset($shipments) ? $shipments : $new_shipments;
 
 		WCX_Order::update_meta_data( $order, '_myparcel_shipments', $shipments );
 
@@ -795,6 +792,12 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		return $package_types;
+	}
+
+	public function get_package_name( $package_type ) {
+		$package_types = $this->get_package_types();
+		$package_name = isset($package_types[$package_type]) ? $package_types[$package_type] : __( 'Unknown' , 'woocommerce-myparcel' );
+		return $package_name;
 	}
 
 	public function parse_errors( $errors ) {

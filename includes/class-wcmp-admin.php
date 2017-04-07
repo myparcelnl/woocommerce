@@ -290,24 +290,6 @@ class WooCommerce_MyParcel_Admin {
 		// show shipments if available
 		if ( !empty( $consignments ) )  {
 			// echo '<pre>';var_dump($consignments);echo '</pre>';die();
-			// $track_trace_shipments = array(); 
-			// foreach ($consignments as $shipment_id => $consignment) {
-			// 	$shipment = WooCommerce_MyParcel()->export->get_shipment_data( $shipment_id, $order );
-			// 	// skip concepts, letters & mailbox packages
-			// 	if (empty($shipment['tracktrace'])) {
-			// 		unset($consignments[$shipment_id]);
-			// 		continue;
-			// 	}
-			// 	$shipment['tracktrace_url'] = $this->get_tracktrace_url( $order_id, $shipment['tracktrace']);
-			// 	$track_trace_shipments[$shipment_id] = $shipment;
-			// }
-			// if ( empty( $track_trace_shipments ) ) {
-			// 	return;
-			// }
-			// 'get_labels'	=> array (
-			// 	'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=get_labels&order_ids=' . $order_id ), 'wc_myparcel' ),
-			// 	'img'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/myparcel-pdf.png',
-			// 	'alt'		=> esc_attr__( 'Print MyParcel label', 'woocommerce-myparcel' ),
 			?>
 			<table class="tracktrace_status">
 				<thead>
@@ -323,11 +305,16 @@ class WooCommerce_MyParcel_Admin {
 				$target = ( isset(WooCommerce_MyParcel()->general_settings['download_display']) && WooCommerce_MyParcel()->general_settings['download_display'] == 'display') ? 'target="_blank"' : '';
 				$nonce = wp_create_nonce('wc_myparcel');
 				$label_button_text = esc_attr__( 'Print MyParcel label', 'woocommerce-myparcel' );
-				foreach ($consignments as $shipment_id => $shipment): 
+				foreach ($consignments as $shipment_id => $shipment):
+					$shipment = WooCommerce_MyParcel()->export->get_shipment_data( $shipment_id, $order );
 					$label_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=get_labels&shipment_ids=' . $shipment_id ), 'wc_myparcel' );
 					if (isset($shipment['tracktrace'])) {
 						$tracktrace_url = $this->get_tracktrace_url( $order_id, $shipment['tracktrace']);
 						$tracktrace_link = sprintf ( '<a href="%s">%s</a>', $tracktrace_url, $shipment['tracktrace'] );
+					} elseif ( isset($shipment['shipment']) && isset($shipment['shipment']['options']) ) {
+						$tracktrace_link = '('.WooCommerce_MyParcel()->export->get_package_name($shipment['shipment']['options']['package_type']).')';
+					} else {
+						$tracktrace_link = '(Unknown)';
 					}
 					$status = isset($shipment['status']) ? $shipment['status'] : '-';
 					?>
@@ -337,7 +324,7 @@ class WooCommerce_MyParcel_Admin {
 								<img src="<?php echo WooCommerce_MyParcel()->plugin_url(); ?>/assets/img/myparcel-pdf.png" alt="<?php $label_button_text; ?>" width="16" class="wcmp_button_img">
 							</a>
 						</td>
-						<td class="wcmp-tracktrace"><?php if (isset($shipment['tracktrace'])) echo $tracktrace_link; ?></td>
+						<td class="wcmp-tracktrace"><?php echo $tracktrace_link; ?></td>
 						<td class="wcmp-status"><?php echo $status; ?></td>
 					</tr>
 					<?php endforeach ?>
