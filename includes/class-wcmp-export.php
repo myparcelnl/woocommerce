@@ -555,23 +555,31 @@ class WooCommerce_MyParcel_Export {
 				// we're taking the first (we're not handling multiple shipping methods as of yet)
 				$order_shipping_method = array_shift($order_shipping_methods);
 				$order_shipping_method = $order_shipping_method['method_id'];
-				$order_shipping_class = WCX_Order::get_meta( $order, '_myparcel_highest_shipping_class' );
-				if (empty($order_shipping_class)) {
-					$order_shipping_class = $this->get_order_shipping_class( $order, $order_shipping_method );
-				}
 
-				if ( strpos($order_shipping_method, ':') !== false ) {
-					// means we have method_id:instance_id
-					$order_shipping_method = explode(':', $order_shipping_method);
-					$order_shipping_method_id = $order_shipping_method[0];
-					$order_shipping_method_instance = $order_shipping_method[1];
-				} else {
+				if ( strpos($order_shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping') ) {
+					// Automattic / WooCommerce table rate
+					// use full method = method_id:instance_id:rate_id
 					$order_shipping_method_id = $order_shipping_method;
-				}
+				} else { // non table rates
+					$order_shipping_class = WCX_Order::get_meta( $order, '_myparcel_highest_shipping_class' );
+					if (empty($order_shipping_class)) {
+						$order_shipping_class = $this->get_order_shipping_class( $order, $order_shipping_method );
+					}
 
-				// add class if we have one
-				if (!empty($order_shipping_class)) {
-					$order_shipping_method_id_class = "{$order_shipping_method_id}:{$order_shipping_class}";
+					if ( strpos($order_shipping_method, ':') !== false ) {
+						// means we have method_id:instance_id
+						$order_shipping_method = explode(':', $order_shipping_method);
+						$order_shipping_method_id = $order_shipping_method[0];
+						$order_shipping_method_instance = $order_shipping_method[1];
+					} else {
+						$order_shipping_method_id = $order_shipping_method;
+					}
+
+
+					// add class if we have one
+					if (!empty($order_shipping_class)) {
+						$order_shipping_method_id_class = "{$order_shipping_method_id}:{$order_shipping_class}";
+					}
 				}
 
 				foreach (WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {

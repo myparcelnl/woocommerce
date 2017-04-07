@@ -282,6 +282,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 							}
 						}
 					}
+					continue;
 				}
 
 				$method_title = !empty($shipping_methods[$key]->method_title) ? $shipping_methods[$key]->method_title : $shipping_methods[$key]->title;
