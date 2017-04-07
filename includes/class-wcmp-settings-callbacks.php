@@ -261,28 +261,62 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 			$current = isset($current[$package_type]) ? $current[$package_type] : '';
 		}
 
-		?>
-		<select id="<?php echo $id; ?>" name="<?php echo $setting_name; ?>[]" style="width: 50%;"  class="wc-enhanced-select" multiple="multiple" data-placeholder="<?php echo $placeholder; ?>">
-			<?php
-				$shipping_methods_selected = (array) $current;
-				$shipping_methods = WC()->shipping->load_shipping_methods();
-				if ( $shipping_methods ) foreach ( $shipping_methods as $key => $shipping_method ) {
-					$method_title = !empty($shipping_methods[$key]->method_title) ? $shipping_methods[$key]->method_title : $shipping_methods[$key]->title;
-					echo '<option value="' . esc_attr( $key ) . '"' . selected( in_array( $key, $shipping_methods_selected ), true, false ) . '>' . esc_html( $method_title ) . '</option>';
-					// split flat rate by shipping class
-					if ( ( $key == 'flat_rate' || $key == 'legacy_flat_rate' ) && version_compare( WOOCOMMERCE_VERSION, '2.4', '>=' ) ) {
-						$shipping_classes = WC()->shipping->get_shipping_classes();
-						foreach ($shipping_classes as $shipping_class) {
-							if ( ! isset( $shipping_class->term_id ) ) {
-								continue;
+		// get shipping methods
+		$available_shipping_methods = array();
+		$shipping_methods = WC()->shipping->load_shipping_methods();
+		if ( $shipping_methods ) {
+			foreach ( $shipping_methods as $key => $shipping_method ) {
+				// Automattic / WooCommerce Table Rate Shipping
+				if ( $key == 'table_rate' && class_exists('WC_Table_Rate_Shipping') && class_exists('WC_Shipping_Zones')) {
+					$zones = WC_Shipping_Zones::get_zones();
+					foreach ($zones as $zone_data) {
+						$zone = WC_Shipping_Zones::get_zone($zone_data['id']);
+						$zone_methods = $zone->get_shipping_methods( false );
+						foreach ( $zone_methods as $key => $shipping_method ) {
+							if ( $shipping_method->id == 'table_rate' && method_exists( $shipping_method, 'get_shipping_rates') ) {
+								$zone_table_rates = $shipping_method->get_shipping_rates();
+								foreach ($zone_table_rates as $zone_table_rate) {
+									$rate_label = ! empty( $zone_table_rate->rate_label ) ? $zone_table_rate->rate_label : "{$shipping_method->title} ({$zone_table_rate->rate_id})";
+									$available_shipping_methods["table_rate:{$shipping_method->instance_id}:{$zone_table_rate->rate_id}"] = "{$zone->get_zone_name()} - {$rate_label}";
+								}
 							}
-							$id = $shipping_class->term_id;
-							$name = esc_html( "{$method_title} - {$shipping_class->name}" );
-							$method_class = esc_attr( $key ).":".$id;
-							echo '<option value="' . $method_class . '"' . selected( in_array( $method_class, $shipping_methods_selected ), true, false ) . '>' . $name . '</option>';
 						}
 					}
 				}
+
+				$method_title = !empty($shipping_methods[$key]->method_title) ? $shipping_methods[$key]->method_title : $shipping_methods[$key]->title;
+				$available_shipping_methods[ $key ] = $method_title;
+
+				// split flat rate by shipping class
+				if ( ( $key == 'flat_rate' || $key == 'legacy_flat_rate' ) && version_compare( WOOCOMMERCE_VERSION, '2.4', '>=' ) ) {
+					$shipping_classes = WC()->shipping->get_shipping_classes();
+					foreach ($shipping_classes as $shipping_class) {
+						if ( ! isset( $shipping_class->term_id ) ) {
+							continue;
+						}
+						$id = $shipping_class->term_id;
+						$name = esc_html( "{$method_title} - {$shipping_class->name}" );
+						$method_class = esc_attr( $key ).":".$id;
+						$available_shipping_methods[ $method_class ] = $name;
+					}
+				}
+
+
+			}
+		}
+
+		?>
+		<select id="<?php echo $id; ?>" name="<?php echo $setting_name; ?>[]" style="width: 50%;"  class="wc-enhanced-select" multiple="multiple" data-placeholder="<?php echo $placeholder; ?>">
+			<?php
+			$shipping_methods_selected = (array) $current;
+
+
+			$shipping_methods = WC()->shipping->load_shipping_methods();
+			if ( $available_shipping_methods ) {
+				foreach ( $available_shipping_methods as $key => $label ) {
+					echo '<option value="' . esc_attr( $key ) . '"' . selected( in_array( $key, $shipping_methods_selected ), true, false ) . '>' . esc_html( $label ) . '</option>';
+				}
+			}
 			?>
 		</select>
 		<?php
