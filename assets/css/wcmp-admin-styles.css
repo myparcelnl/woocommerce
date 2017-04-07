@@ -5,6 +5,9 @@
 	height: 26px;
 	padding: 3px 2px;
 }
+#myparcel.postbox a.button.myparcel {
+	padding: 2px 5px 0;
+}
 
 .widefat .column-order_actions a.button.myparcel img {
 	width: 16px;
@@ -115,9 +118,23 @@ ul.wcmyparcel_shipment_summary li:before {
 
 table.tracktrace_status {
 	margin-top: 10px;
+	margin-bottom: 10px;
+	border-collapse: collapse;
 }
+
+table.tracktrace_status th {
+	text-align: left
+}
+
+table.tracktrace_status th,
 table.tracktrace_status td {
 	vertical-align: top;
+	padding: 5px 2px;
+	border-bottom: 1px solid #ccc;
+}
+
+table.tracktrace_status td.wcmp-create-label {
+	vertical-align: middle;
 }
 
 /* bulk export options styling */

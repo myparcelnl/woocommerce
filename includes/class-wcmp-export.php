@@ -89,7 +89,7 @@ class WooCommerce_MyParcel_Export {
 
 		extract($_REQUEST); // $request, $order_ids, ...
 		// make sure $order_ids is a proper array
-		$order_ids = !empty($order_ids) ? $this->sanitize_order_ids($order_ids) : array();
+		$order_ids = !empty($order_ids) ? $this->sanitize_posted_array($order_ids) : array();
 
 		switch($request) {
 			case 'add_shipments':
@@ -110,13 +110,18 @@ class WooCommerce_MyParcel_Export {
 				$return = $this->add_return( $myparcel_options );
 				break;
 			case 'get_labels':
-				if ( empty($order_ids) ) {
+				if ( empty($order_ids) && empty($shipment_ids)) {
 					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
 					break;
 				}
-				$order_ids = $this->filter_eu_orders( $order_ids );
 				$label_response_type = isset($label_response_type) ? $label_response_type : NULL;
-				$return = $this->get_labels( $order_ids, $label_response_type );
+				if (!empty($shipment_ids)) {
+					$shipment_ids = $this->sanitize_posted_array($shipment_ids);
+					$return = $this->get_shipment_labels( $shipment_ids, $label_response_type );
+				} else {
+					$order_ids = $this->filter_eu_orders( $order_ids );
+					$return = $this->get_labels( $order_ids, $label_response_type );
+				}
 				break;
 			case 'modal_dialog':
 				if ( empty($order_ids) ) {
@@ -159,16 +164,16 @@ class WooCommerce_MyParcel_Export {
 		die();
 	}
 
-	public function sanitize_order_ids($order_ids) {
+	public function sanitize_posted_array($array) {
 		// check for JSON
-		if (is_string($order_ids) && strpos($order_ids, '[') !== false ) {
-			$order_ids = json_decode(stripslashes($order_ids));
+		if (is_string($array) && strpos($array, '[') !== false ) {
+			$array = json_decode(stripslashes($array));
 		}
 
 		// cast as array for single exports
-		$order_ids = (array) $order_ids;
+		$array = (array) $array;
 
-		return $order_ids;
+		return $array;
 	}
 
 	public function add_shipments( $order_ids, $process = false ) {
@@ -276,16 +281,8 @@ class WooCommerce_MyParcel_Export {
 		return $return;
 	}
 
-	public function get_labels( $order_ids, $label_response_type = NULL ) {
+	public function get_shipment_labels( $shipment_ids, $label_response_type = NULL ) {
 		$return = array();
-
-		$shipment_ids = $this->get_shipment_ids( $order_ids, array( 'only_last' => true ) );
-
-		if ( empty($shipment_ids) ) {
-			$this->log("*** Failed label request (not exported yet) ***");
-			$this->errors[] = __( 'The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcel' );
-			return $return;
-		}
 
 		$this->log("*** Label request started ***");
 		$this->log("Shipment ID's: ".implode(', ', $shipment_ids));
@@ -329,6 +326,18 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		return $return;
+	}
+
+	public function get_labels( $order_ids, $label_response_type = NULL ) {
+		$shipment_ids = $this->get_shipment_ids( $order_ids, array( 'only_last' => true ) );
+
+		if ( empty($shipment_ids) ) {
+			$this->log("*** Failed label request (not exported yet) ***");
+			$this->errors[] = __( 'The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcel' );
+			return array();
+		}
+
+		return $this->get_shipment_labels( $shipment_ids, $label_response_type );
 	}
 
 	public function modal_dialog( $order_ids, $dialog ) {
