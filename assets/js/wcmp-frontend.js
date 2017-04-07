@@ -67,15 +67,23 @@ jQuery( function( $ ) {
 			} else {
 				var shipping_method = $( '#order_review .shipping_method').val();
 			}
-			// strip instance_id if present
-			if (shipping_method.indexOf(':') !== -1) {
-				shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
+
+			if (shipping_method.indexOf('table_rate:') !== -1) {
+				// WC Table Rates
+				// use shipping_method = method_id:instance_id:rate_id
+			} else {
+				// none table rates
+				// strip instance_id if present
+				if (shipping_method.indexOf(':') !== -1) {
+					shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
+				}
+				var shipping_class = $('#myparcel_highest_shipping_class').val();
+				// add class refinement if we have a shipping class
+				if (shipping_class) {
+					shipping_method_class = shipping_method+':'+shipping_class;
+				}
 			}
-			var shipping_class = $('#myparcel_highest_shipping_class').val();
-			// add class refinement if we have a shipping class
-			if (shipping_class) {
-				shipping_method_class = shipping_method+':'+shipping_class;
-			}
+			
 			if ( shipping_class && $.inArray(shipping_method_class, window.myparcel_delivery_options_shipping_methods) > -1 ) {
 				window.myparcel_updated_shipping_method = shipping_method_class;
 				show_myparcel_delivery_options();
