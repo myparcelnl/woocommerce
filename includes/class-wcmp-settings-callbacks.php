@@ -264,6 +264,8 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		// get shipping methods
 		$available_shipping_methods = array();
 		$shipping_methods = WC()->shipping->load_shipping_methods();
+		// echo '<pre>';var_dump($shipping_methods);echo '</pre>';
+	
 		if ( $shipping_methods ) {
 			foreach ( $shipping_methods as $key => $shipping_method ) {
 				// Automattic / WooCommerce Table Rate Shipping
@@ -281,6 +283,27 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 								}
 							}
 						}
+					}
+					continue;
+				}
+
+				// Bolder Elements Table Rate Shipping
+				if ( $key == 'table_rate_shipping' && is_a($shipping_method, 'BE_Table_Rate_Shipping') && method_exists($shipping_method, 'get_table_rates')) {
+					// echo '<pre>';var_dump($shipping_method);echo '</pre>';
+					// load rates is not loaded
+					if (empty($shipping_method->table_rates)) {
+						$shipping_method->get_table_rates();
+					}
+
+					// bail if still empty
+					if (empty($shipping_method->table_rates)) {
+						continue;
+					}
+
+					foreach ( $shipping_method->table_rates as $table_rate_key => $be_table_rate ) {
+						$method_title = !empty($shipping_method->title) ? $shipping_method->title : $shipping_method->method_title;
+						$rate_label = ! empty( $be_table_rate['title'] ) ? $be_table_rate['title'] : "{$method_title} ({$table_rate_key})";
+						$available_shipping_methods[ sanitize_title($shipping_method->id."_".$be_table_rate['identifier']) ] = $rate_label;
 					}
 					continue;
 				}
