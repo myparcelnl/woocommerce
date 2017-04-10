@@ -183,6 +183,7 @@ class WooCommerce_MyParcel_Export {
 		$this->log("*** Creating shipments started ***");
 
 		foreach ($order_ids as $order_id) {
+			$created_shipments = array();
 			$order = WCX::get_order( $order_id );
 			$shipments = $this->get_order_shipment_data( (array) $order_id );
 
@@ -203,6 +204,7 @@ class WooCommerce_MyParcel_Export {
 						$shipment_id = $ids['id'];
 						$this->success[$order_id] = $shipment_id;
 
+						$created_shipments[] = $shipment_id;
 						$shipment = array (
 							'shipment_id' => $shipment_id,
 						);
@@ -230,7 +232,12 @@ class WooCommerce_MyParcel_Export {
 				} catch (Exception $e) {
 					$this->errors[$order_id] = $e->getMessage();
 				}
-			}					
+			}
+
+			// store shipment ids from this export
+			if (!empty($created_shipments)) {
+				WCX_Order::update_meta_data( $order, '_myparcel_last_shipment_ids', $created_shipments );
+			}
 		}
 		// echo '<pre>';var_dump($this->success);echo '</pre>';die();
 		if (!empty($this->success)) {
@@ -750,7 +757,16 @@ class WooCommerce_MyParcel_Export {
 				}
 
 				if (isset($args['only_last'])) {
-					$shipment_ids[] = array_pop( $order_shipment_ids );
+					$last_shipment_ids = WCX_Order::get_meta( $order, '_myparcel_last_shipment_ids' );
+					if ( !empty( $last_shipment_ids ) && is_array( $last_shipment_ids ) ) {
+						foreach ($order_shipment_ids as $order_shipment_id) {
+							if ( in_array($order_shipment_id, $last_shipment_ids ) ) {
+								$shipment_ids[] = $order_shipment_id;
+							}
+						}
+					} else {
+						$shipment_ids[] = array_pop( $order_shipment_ids );
+					}
 				} else {
 					$shipment_ids[] = array_merge( $shipment_ids, $order_shipment_ids );
 				}
