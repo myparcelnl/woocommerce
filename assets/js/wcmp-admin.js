@@ -196,8 +196,10 @@ jQuery( function( $ ) {
 
 	// Print queued labels
 	var print_queue = $("#wcmp_printqueue").val();
+	var print_queue_offset = $("#wcmp_printqueue_offset").val();
 	if ( typeof print_queue !== 'undefined' ) {
-		myparcel_print( $.parseJSON(print_queue), 'yes' );
+		if (typeof print_queue_offset === 'undefined') { print_queue_offset = 0; }
+		myparcel_print( $.parseJSON(print_queue), print_queue_offset );
 	}
 
 	// Bulk actions
@@ -228,7 +230,8 @@ jQuery( function( $ ) {
 					break;
 				case 'print':
 					bulk_spinner( this, 'show' );
-					myparcel_print( order_ids );
+					var offset = wc_myparcel.offset == 1 ? $('.wc_myparcel_offset').val() : 0;
+					myparcel_print( order_ids, offset );						
 					break;
 				case 'export_print':
 					bulk_spinner( this, 'show' );
@@ -258,7 +261,11 @@ jQuery( function( $ ) {
 					// }, 500);
 					break;
 				case 'get_labels':
-					myparcel_print( order_ids );
+					if (wc_myparcel.offset == 1) {
+						contextual_offset_dialog( order_ids, event );
+					} else {
+						myparcel_print( order_ids );
+					}
 					break;
 				case 'add_return':
 					myparcel_modal_dialog( order_ids, 'return' );
@@ -271,6 +278,71 @@ jQuery( function( $ ) {
 		// re-enable scrolling after closing thickbox
 		$("body").css({ overflow: 'inherit' })
 	});
+
+	// Add offset dialog when address labels option is selected
+	$("select[name='action'], select[name='action2']").change( function () {
+		var actionselected = $(this).val();
+		// alert(actionselected);
+		if ( ( actionselected == 'wcmp_print' ||  actionselected == 'wcmp_export_print' ) && wc_myparcel.offset == 1) {
+			var insert_position = $(this).attr("name") == 'action' ? 'top' : 'bottom';
+			$( '#wcmyparcel_offset_dialog' )
+				.attr('style', '') // reset styles
+				.insertAfter( 'div.tablenav.'+insert_position )
+				.show()
+
+			// make sure button is not shown
+			$( '#wcmyparcel_offset_dialog' ).find('button').hide();
+			// clear input
+			$( '#wcmyparcel_offset_dialog' ).find('input').val('');
+		} else {
+			$( '#wcmyparcel_offset_dialog' )
+				.appendTo( 'body' )
+				.hide();
+		}
+	});
+
+	// Click offset dialog button (single export)
+	$("#wcmyparcel_offset_dialog button").click( function (event) {
+		$dialog = $(this).parent();
+
+		// set print variables
+		var order_ids = [$dialog.find('input.order_id').val()];
+		var offset = $dialog.find('input.wc_myparcel_offset').val();
+
+		// hide dialog
+		$dialog.hide();
+
+		// print labels
+		myparcel_print( order_ids, offset );
+	});
+
+
+	function contextual_offset_dialog( order_ids, event ) {
+		// place offset dialog at mouse tip
+		$( '#wcmyparcel_offset_dialog' )
+			.show()
+			.appendTo( 'body' )
+			.css( {
+				position: "absolute", 
+				"background-color": "white",
+				padding: "6px",
+				width: "100px",
+				border: "1px solid #ccc",
+				top: event.pageY,
+				left: event.pageX,
+				"margin-left": "-100px",
+			} );
+
+		$( '#wcmyparcel_offset_dialog' ).find('button')
+			.show()
+			.data( 'order_id', order_ids );
+
+		// clear input
+		$( '#wcmyparcel_offset_dialog' ).find('input').val('');
+
+		$( '#wcmyparcel_offset_dialog' ).append('<input type=hidden class="order_id"/>');
+		$( '#wcmyparcel_offset_dialog input.order_id' ).val(order_ids);
+	}
 
 	function button_spinner( button, display ) {
 		if (display == 'show') {
@@ -298,11 +370,13 @@ jQuery( function( $ ) {
 	// export orders to MyParcel via AJAX
 	function myparcel_export( order_ids, print ) {
 		if (typeof print === 'undefined') { print = 'no'; }
+		var offset = wc_myparcel.offset == 1 ? $('.wc_myparcel_offset').val() : 0;
 		// console.log('exporting order to myparcel...');
 		var data = {
 			action:           'wc_myparcel',
 			request:          'add_shipments',
 			order_ids:        order_ids,
+			offset:           offset, 
 			print:            print,
 			security:         wc_myparcel.nonce,
 		};
@@ -327,7 +401,7 @@ jQuery( function( $ ) {
 				}
 
 				// load PDF
-				myparcel_print( order_ids );
+				myparcel_print( order_ids, offset );
 			}
 
 			return;
@@ -370,14 +444,17 @@ jQuery( function( $ ) {
 
 
 	// Request MyParcel labels
-	function myparcel_print( order_ids ) {
+	function myparcel_print( order_ids, offset ) {
 		// console.log('requesting myparcel labels...');
+		if (typeof offset === 'undefined') { offset = 0; }
 
 		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") != -1) ? '&' : '?';
 		var url = wc_myparcel.ajax_url+request_prefix+'action=wc_myparcel&request=get_labels&security='+wc_myparcel.nonce;
 
 		// create form to send order_ids via POST
 		$('body').append('<form action="'+url+'" method="post" target="_blank" id="myparcel_post_data"></form>');
+		$('#myparcel_post_data').append('<input type="hidden" name="offset" class="offset"/>');
+		$('#myparcel_post_data input.offset').val( offset );
 		$('#myparcel_post_data').append('<input type="hidden" name="order_ids" class="order_ids"/>');
 		$('#myparcel_post_data input.order_ids').val( JSON.stringify( order_ids ) );
 

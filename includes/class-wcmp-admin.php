@@ -19,6 +19,7 @@ class WooCommerce_MyParcel_Admin {
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_shipment_options' ), 9999 );
 		//add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_return_shipment_options' ), 9999 );
 		add_action(	'admin_footer', array( $this, 'bulk_actions' ) ); 
+		add_action( 'admin_footer', array( $this, 'offset_dialog' ) );
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_order_actions' ), 20 );
 		add_action( 'add_meta_boxes_shop_order', array( $this, 'shop_order_metabox' ) );
 		add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'single_order_shipment_options' ) );
@@ -131,6 +132,27 @@ class WooCommerce_MyParcel_Admin {
 		<?php
 		}
 	}
+
+	/**
+	 * Show dialog to choose print position (offset)
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function offset_dialog () {
+		global $post_type;
+		if ( 'shop_order' == $post_type ) {
+			?>
+			<div id="wcmyparcel_offset_dialog">
+				<?php _e( 'Labels to skip', 'woocommerce-myparcel' ); ?>:
+				<input type="text" size="2" class="wc_myparcel_offset">
+				<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>" id="wcmyparcel-offset-icon" style="vertical-align: middle;">
+				<button class="button" style="display:none; margin-top: 4px"><?php _e( 'Print', 'woocommerce-myparcel' ); ?></button>
+			</div>
+			<?php
+		}
+	}
+
 
 	/**
 	 * Add print actions to the orders listing

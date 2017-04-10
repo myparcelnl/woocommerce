@@ -66,6 +66,9 @@ class WooCommerce_MyParcel_Assets {
 					'ajax_url'			=> admin_url( 'admin-ajax.php' ),
 					'nonce'				=> wp_create_nonce('wc_myparcel'),
 					'download_display'	=> isset(WooCommerce_MyParcel()->general_settings['download_display'])?WooCommerce_MyParcel()->general_settings['download_display']:'',
+					'offset'			=> isset(WooCommerce_MyParcel()->general_settings['print_position_offset'])?WooCommerce_MyParcel()->general_settings['print_position_offset']:'',
+					'offset_icon'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/print-offset-icon.png',
+					'offset_label'		=> __( 'Labels to skip', 'woocommerce-myparcel' ),
 				)
 			);
 

@@ -34,16 +34,17 @@ class WooCommerce_MyParcel_Export {
 	public function admin_notices () {
 		if ( isset($_GET['myparcel_done']) ) { // only do this when for the user that initiated this
 			$action_return = get_option( 'wcmyparcel_admin_notices' );
-			$success_ids = get_option( 'wcmyparcel_print_queue', array() );
+			$print_queue = get_option( 'wcmyparcel_print_queue', array() );
 			if (!empty($action_return)) {
 				foreach ($action_return as $type => $message) {
 					if (in_array($type, array('success','error'))) {
-						if ( $type == 'success' && !empty($success_ids) ) {
-							$print_queue = sprintf('<input type="hidden" value="%s" id="wcmp_printqueue">', json_encode(array_keys($success_ids)));
+						if ( $type == 'success' && !empty($print_queue) ) {
+							$print_queue_store = sprintf('<input type="hidden" value="%s" id="wcmp_printqueue">', json_encode(array_keys($print_queue['order_ids'])));
+							$print_queue_offset_store = sprintf('<input type="hidden" value="%s" id="wcmp_printqueue_offset">', $print_queue['offset']);
 							// dequeue
 							delete_option( 'wcmyparcel_print_queue' );
 						}
-						printf('<div class="myparcel_notice notice notice-%s"><p>%s</p>%s</div>', $type, $message, isset($print_queue)?$print_queue:'');
+						printf('<div class="myparcel_notice notice notice-%s"><p>%s</p>%s</div>', $type, $message, isset($print_queue_store)?$print_queue_store.$print_queue_offset_store:'');
 					}
 				}
 				// destroy after reading
@@ -110,6 +111,7 @@ class WooCommerce_MyParcel_Export {
 				$return = $this->add_return( $myparcel_options );
 				break;
 			case 'get_labels':
+				$offset = !empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
 				if ( empty($order_ids) && empty($shipment_ids)) {
 					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
 					break;
@@ -118,10 +120,10 @@ class WooCommerce_MyParcel_Export {
 				if (!empty($shipment_ids)) {
 					$order_ids = !empty($order_ids) ? $this->sanitize_posted_array($order_ids) : array();
 					$shipment_ids = $this->sanitize_posted_array($shipment_ids);
-					$return = $this->get_shipment_labels( $shipment_ids, $label_response_type );
+					$return = $this->get_shipment_labels( $shipment_ids, $order_ids, $label_response_type, $offset );
 				} else {
 					$order_ids = $this->filter_eu_orders( $order_ids );
-					$return = $this->get_labels( $order_ids, $label_response_type );
+					$return = $this->get_labels( $order_ids, $label_response_type, $offset );
 				}
 				break;
 			case 'modal_dialog':
@@ -150,7 +152,11 @@ class WooCommerce_MyParcel_Export {
 		if ($request == 'add_shipments' && !empty($print) && ($print == 'no'|| $print == 'after_reload')) {
 			update_option( 'wcmyparcel_admin_notices', $return );
 			if ($print == 'after_reload') {
-				update_option( 'wcmyparcel_print_queue', $return['success_ids'] );
+				$print_queue = array(
+					'order_ids'	=> $return['success_ids'],
+					'offset'	=> isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
+				);
+				update_option( 'wcmyparcel_print_queue', $print_queue );
 			}
 		}
 
@@ -289,7 +295,7 @@ class WooCommerce_MyParcel_Export {
 		return $return;
 	}
 
-	public function get_shipment_labels( $shipment_ids, $order_ids = array(), $label_response_type = NULL ) {
+	public function get_shipment_labels( $shipment_ids, $order_ids = array(), $label_response_type = NULL, $offset = 0 ) {
 		$return = array();
 
 		$this->log("*** Label request started ***");
@@ -298,7 +304,10 @@ class WooCommerce_MyParcel_Export {
 		try {
 			$api = $this->init_api();
 			$params = array();
-			
+			if (!empty($offset) && is_numeric ($offset)) {
+				$portrait_positions = array( 2, 4, 1, 3 ); // positions are defined on landscape, but paper is filled portrait-wise
+				$params['positions'] = implode( ';', array_slice($portrait_positions,$offset) );
+			}
 
 			if (isset($label_response_type) && $label_response_type == 'url') {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
@@ -336,7 +345,7 @@ class WooCommerce_MyParcel_Export {
 		return $return;
 	}
 
-	public function get_labels( $order_ids, $label_response_type = NULL ) {
+	public function get_labels( $order_ids, $label_response_type = NULL, $offset = 0 ) {
 		$shipment_ids = $this->get_shipment_ids( $order_ids, array( 'only_last' => true ) );
 
 		if ( empty($shipment_ids) ) {
@@ -345,7 +354,7 @@ class WooCommerce_MyParcel_Export {
 			return array();
 		}
 
-		return $this->get_shipment_labels( $shipment_ids, $order_ids, $label_response_type );
+		return $this->get_shipment_labels( $shipment_ids, $order_ids, $label_response_type, $offset );
 	}
 
 	public function modal_dialog( $order_ids, $dialog ) {
