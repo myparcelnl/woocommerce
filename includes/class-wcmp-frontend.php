@@ -371,8 +371,16 @@ class WooCommerce_MyParcel_Frontend {
 	public function get_shipping_tax_class() {
 		global $woocommerce; // should be rewritten to WC with fallback functions in future WooCommerce versions
 
+		$shipping_tax_class = get_option( 'woocommerce_shipping_tax_class' );
+		// WC3.0+ sets 'inherit' for taxes based on items
+		if ( version_compare( WOOCOMMERCE_VERSION, '3.0', '>=' ) && 'inherit' !== $shipping_tax_class ) {
+			return $shipping_tax_class;
+		} elseif ( !empty( $shipping_tax_class ) ) {
+			return $shipping_tax_class;
+		}
+
 		// See if we have an explicitly set shipping tax class
-		if ( $shipping_tax_class = get_option( 'woocommerce_shipping_tax_class' ) ) {
+		if ( $shipping_tax_class ) {
 			$tax_class = 'standard' === $shipping_tax_class ? '' : $shipping_tax_class;
 		}
 
