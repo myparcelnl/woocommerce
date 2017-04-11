@@ -183,14 +183,14 @@ class WooCommerce_MyParcel_Settings {
 
 		add_settings_field(
 			'print_position_offset',
-			__( 'Ask for print position', 'woocommerce-myparcel' ),
+			__( 'Ask for print start position', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'general',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'print_position_offset',
-				'description'	=> __( 'This option enables you to start printing on for example the 2nd label', 'woocommerce-myparcel' )
+				'description'	=> __( 'This option enables you to continue printing where you left off last time', 'woocommerce-myparcel' )
 			)
 		);
 
