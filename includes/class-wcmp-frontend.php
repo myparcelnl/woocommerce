@@ -174,8 +174,25 @@ class WooCommerce_MyParcel_Frontend {
 		$delivery_options_shipping_methods = json_encode($delivery_options_shipping_methods);
 
 		$iframe_url = WooCommerce_MyParcel()->plugin_url() . '/includes/views/wcmp-delivery-options.php';
+
+		// determine whether to pre-hide iframe (prevents flashing)
+		$hide_delivery_options = false;
+		$chosen_shipping_methods = WC()->session->chosen_shipping_methods;
+		if ( empty($myparcel_delivery_options_always_display) && !empty($chosen_shipping_methods) && is_array($chosen_shipping_methods) ) {
+			$shipping_country = WC()->customer->get_shipping_country();
+			if ($shipping_country != 'NL') {
+				$hide_delivery_options = true;
+			} else {
+				$chosen_shipping_method = array_shift($chosen_shipping_methods);
+				$shipping_class = $this->get_cart_shipping_class();
+				$package_type = WooCommerce_MyParcel()->export->get_package_type_from_shipping_method( $chosen_shipping_method, $shipping_class, $shipping_country );
+				if ($package_type != 1) { // parcel
+					$hide_delivery_options = true;
+				}
+			}
+		}
 		?>
-		<iframe id="myparcel-iframe" src="<?php echo $iframe_url; ?>" frameborder="0" scrolling="auto" style="width: 100%;" onload="MyPaLoaded();">Bezig met laden...</iframe>
+		<iframe id="myparcel-iframe" src="<?php echo $iframe_url; ?>" frameborder="0" scrolling="auto" style="width: 100%;<?php if($hide_delivery_options) echo 'display:none;'; ?>" onload="MyPaLoaded();">Bezig met laden...</iframe>
 		<script>
 		jQuery( function( $ ) {
 			window.mypa = {};

@@ -46,7 +46,7 @@ jQuery( function( $ ) {
 	// hide checkout options if not NL
 	$( '#billing_country, #shipping_country' ).change(function() {
 		window.myparcel_force_update = true; // in case the shipping method doesn't change
-		check_country();
+		// check_country();
 		update_myparcel_settings();
 	});
 

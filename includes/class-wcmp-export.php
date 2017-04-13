@@ -562,72 +562,6 @@ class WooCommerce_MyParcel_Export {
 			$description = '';
 		}
 
-		// determine appropriate package type for this order
-		if (isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'])) {
-			// get shipping methods from order
-			$order_shipping_methods = $order->get_items('shipping');
-
-			if ( !empty( $order_shipping_methods ) ) {
-				// we're taking the first (we're not handling multiple shipping methods as of yet)
-				$order_shipping_method = array_shift($order_shipping_methods);
-				$order_shipping_method = $order_shipping_method['method_id'];
-
-				if ( strpos($order_shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping') ) {
-					// Automattic / WooCommerce table rate
-					// use full method = method_id:instance_id:rate_id
-					$order_shipping_method_id = $order_shipping_method;
-				} else { // non table rates
-					$order_shipping_class = WCX_Order::get_meta( $order, '_myparcel_highest_shipping_class' );
-					if (empty($order_shipping_class)) {
-						$order_shipping_class = $this->get_order_shipping_class( $order, $order_shipping_method );
-					}
-
-					if ( strpos($order_shipping_method, ':') !== false ) {
-						// means we have method_id:instance_id
-						$order_shipping_method = explode(':', $order_shipping_method);
-						$order_shipping_method_id = $order_shipping_method[0];
-						$order_shipping_method_instance = $order_shipping_method[1];
-					} else {
-						$order_shipping_method_id = $order_shipping_method;
-					}
-
-
-					// add class if we have one
-					if (!empty($order_shipping_class)) {
-						$order_shipping_method_id_class = "{$order_shipping_method_id}:{$order_shipping_class}";
-					}
-				}
-
-				foreach (WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
-					// check if we have a match with the predefined methods
-					// fallback to bare method (without class) (if bare method also defined in settings)
-					if (in_array($order_shipping_method_id, $package_type_shipping_methods) || (!empty($order_shipping_method_id_class) && in_array($order_shipping_method_id_class, $package_type_shipping_methods))) {
-						$package_type = $package_type_key;
-						break;
-					}
-				}
-			}
-		}
-		// fallbacks if no match from previous
-		if (!isset($package_type)) {
-			if ((isset(WooCommerce_MyParcel()->export_defaults['package_type']))) {
-				$package_type = WooCommerce_MyParcel()->export_defaults['package_type'];
-			} else {
-				$package_type = 1; // 1. package | 2. mailbox package | 3. letter
-			}
-		}
-
-		// disable mailbox package outside NL
-		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ($shipping_country != 'NL' && $package_type == 2 ) {
-			$package_type = 1;
-		}
-
-		// always parcel for Pickup and Pickup express delivery types.
-		if ( $this->is_pickup( $order ) ) {
-			$package_type = 1;
-		}
-
 		// use shipment options from order when available
 		$shipment_options = WCX_Order::get_meta( $order, '_myparcel_shipment_options' );
 		if (!empty($shipment_options)) {
@@ -651,7 +585,7 @@ class WooCommerce_MyParcel_Export {
 			}
 
 			$options = array(
-				'package_type'		=> $package_type,
+				'package_type'		=> $this->get_package_type_for_order( $order ),
 				'only_recipient'	=> (isset(WooCommerce_MyParcel()->export_defaults['only_recipient'])) ? 1 : 0,
 				'signature'			=> (isset(WooCommerce_MyParcel()->export_defaults['signature'])) ? 1 : 0,
 				'return'			=> (isset(WooCommerce_MyParcel()->export_defaults['return'])) ? 1 : 0,
@@ -811,6 +745,85 @@ class WooCommerce_MyParcel_Export {
 		WCX_Order::update_meta_data( $order, '_myparcel_shipments', $shipments );
 
 		return;
+	}
+
+	public function get_package_type_from_shipping_method( $shipping_method, $shipping_class, $shipping_country ) {
+		$package_type = false;
+		if (isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'])) {
+			if ( strpos($shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping') ) {
+				// Automattic / WooCommerce table rate
+				// use full method = method_id:instance_id:rate_id
+				$shipping_method_id = $shipping_method;
+			} else { // non table rates
+
+				if ( strpos($shipping_method, ':') !== false ) {
+					// means we have method_id:instance_id
+					$shipping_method = explode(':', $shipping_method);
+					$shipping_method_id = $shipping_method[0];
+					$shipping_method_instance = $shipping_method[1];
+				} else {
+					$shipping_method_id = $shipping_method;
+				}
+
+				// add class if we have one
+				if (!empty($shipping_class)) {
+					$shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
+				}
+			}
+
+			foreach (WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
+				// check if we have a match with the predefined methods
+				// fallback to bare method (without class) (if bare method also defined in settings)
+				if (in_array($shipping_method_id, $package_type_shipping_methods) || (!empty($shipping_method_id_class) && in_array($shipping_method_id_class, $package_type_shipping_methods))) {
+					$package_type = $package_type_key;
+					break;
+				}
+			}
+		}
+
+		// disable mailbox package outside NL
+		if ($shipping_country != 'NL' && $package_type == 2 ) {
+			$package_type = 1;
+		}
+
+		return $package_type;
+	}
+
+	// determine appropriate package type for this order
+	public function get_package_type_for_order( $order ) {
+		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+
+		// get shipping methods from order
+		$order_shipping_methods = $order->get_items('shipping');
+
+		if ( !empty( $order_shipping_methods ) ) {
+			// we're taking the first (we're not handling multiple shipping methods as of yet)
+			$order_shipping_method = array_shift($order_shipping_methods);
+			$order_shipping_method = $order_shipping_method['method_id'];
+
+			$order_shipping_class = WCX_Order::get_meta( $order, '_myparcel_highest_shipping_class' );
+			if (empty($order_shipping_class)) {
+				$order_shipping_class = $this->get_order_shipping_class( $order, $order_shipping_method );
+			}
+
+			$package_type = $this->get_package_type_from_shipping_method( $order_shipping_method, $order_shipping_class, $shipping_country );
+		}
+
+		// fallbacks if no match from previous
+		if (!isset($package_type)) {
+			if ((isset(WooCommerce_MyParcel()->export_defaults['package_type']))) {
+				$package_type = WooCommerce_MyParcel()->export_defaults['package_type'];
+			} else {
+				$package_type = 1; // 1. package | 2. mailbox package | 3. letter
+			}
+		}
+
+		// always parcel for Pickup and Pickup express delivery types.
+		if ( $this->is_pickup( $order ) ) {
+			$package_type = 1;
+		}
+
+		return $package_type;
 	}
 
 	public function get_package_types( $shipment_type = 'shipment' ) {
