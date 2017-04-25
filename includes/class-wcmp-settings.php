@@ -729,6 +729,17 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 
+		add_settings_field(
+			'monday_delivery',
+			__( 'Enable monday delivery', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'checkbox' ),
+			$option_group,
+			'processing_parameters',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'monday_delivery',
+			)
+		);
 		// Customizations section
 		add_settings_section(
 			'customizations',
