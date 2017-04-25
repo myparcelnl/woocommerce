@@ -288,22 +288,22 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 				}
 
 				// Bolder Elements Table Rate Shipping
-				if ( $key == 'table_rate_shipping' && is_a($shipping_method, 'BE_Table_Rate_Shipping') && method_exists($shipping_method, 'get_table_rates')) {
-					// echo '<pre>';var_dump($shipping_method);echo '</pre>';
-					// load rates is not loaded
-					if (empty($shipping_method->table_rates)) {
-						$shipping_method->get_table_rates();
-					}
-
-					// bail if still empty
-					if (empty($shipping_method->table_rates)) {
-						continue;
-					}
-
-					foreach ( $shipping_method->table_rates as $table_rate_key => $be_table_rate ) {
-						$method_title = !empty($shipping_method->title) ? $shipping_method->title : $shipping_method->method_title;
-						$rate_label = ! empty( $be_table_rate['title'] ) ? $be_table_rate['title'] : "{$method_title} ({$table_rate_key})";
-						$available_shipping_methods[ sanitize_title($shipping_method->id."_".$be_table_rate['identifier']) ] = $rate_label;
+				if ( $key == 'betrs_shipping' && is_a($shipping_method, 'BE_Table_Rate_Method') && class_exists('WC_Shipping_Zones') ) {
+					$zones = WC_Shipping_Zones::get_zones();
+					foreach ($zones as $zone_data) {
+						$zone = WC_Shipping_Zones::get_zone($zone_data['id']);
+						$zone_methods = $zone->get_shipping_methods( false );
+						foreach ( $zone_methods as $key => $shipping_method ) {
+							if ( $shipping_method->id == 'betrs_shipping' ) {
+								$shipping_method_options = get_option( $shipping_method->id . '_options-' . $shipping_method->instance_id );
+								if (isset($shipping_method_options['settings'])) {
+									foreach ($shipping_method_options['settings'] as $zone_table_rate) {
+										$rate_label = ! empty( $zone_table_rate['title'] ) ? $zone_table_rate['title'] : "{$shipping_method->title} ({$zone_table_rate['option_id']})";
+										$available_shipping_methods["betrs_shipping_{$shipping_method->instance_id}-{$zone_table_rate['option_id']}"] = "{$zone->get_zone_name()} - {$rate_label}";
+									}
+								}
+							}
+						}
 					}
 					continue;
 				}
