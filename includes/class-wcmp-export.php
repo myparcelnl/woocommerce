@@ -748,7 +748,7 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function get_package_type_from_shipping_method( $shipping_method, $shipping_class, $shipping_country ) {
-		$package_type = false;
+		$package_type = 1;
 		if (isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'])) {
 			if ( strpos($shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping') ) {
 				// Automattic / WooCommerce table rate
