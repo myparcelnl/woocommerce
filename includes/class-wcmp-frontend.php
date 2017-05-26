@@ -146,13 +146,20 @@ class WooCommerce_MyParcel_Frontend {
 		}
 		$exclude_delivery_types = implode(';', $exclude_delivery_types);
 
+		// Use saturday_cutoff_time on saturdays
+		if ( date_i18n('w') == 6 && isset(WooCommerce_MyParcel()->checkout_settings['saturday_cutoff_time']) ) {
+			$cutoff_time = WooCommerce_MyParcel()->checkout_settings['saturday_cutoff_time'];
+		} else {
+			$cutoff_time = isset(WooCommerce_MyParcel()->checkout_settings['cutoff_time']) ? WooCommerce_MyParcel()->checkout_settings['cutoff_time'] : '';
+		}
+
 		// combine settings
 		$settings = array(
 			'base_url'				=> $frontend_api_url,
 			'exclude_delivery_type'	=> $exclude_delivery_types,
 			'price'					=> $prices,
 			'dropoff_delay'			=> isset(WooCommerce_MyParcel()->checkout_settings['dropoff_delay']) ? WooCommerce_MyParcel()->checkout_settings['dropoff_delay'] : '',
-			'cutoff_time'			=> isset(WooCommerce_MyParcel()->checkout_settings['cutoff_time']) ? WooCommerce_MyParcel()->checkout_settings['cutoff_time'] : '',
+			'cutoff_time'			=> $cutoff_time,
 			'deliverydays_window'	=> isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) ? max(1,WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) : '',
 			'dropoff_days'			=> isset(WooCommerce_MyParcel()->checkout_settings['dropoff_days']) ? implode(';', WooCommerce_MyParcel()->checkout_settings['dropoff_days'] ): '',
 		);

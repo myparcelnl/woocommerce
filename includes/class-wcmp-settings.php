@@ -740,6 +740,22 @@ class WooCommerce_MyParcel_Settings {
 				'id'			=> 'monday_delivery',
 			)
 		);
+
+		add_settings_field(
+			'saturday_cutoff_time',
+			__( 'Cut-off time for monday delivery', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'text_input' ),
+			$option_group,
+			'processing_parameters',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'saturday_cutoff_time',
+				'type'			=> 'text',
+				'size'			=> '5',
+				'description'	=> __( 'Time at which you stop processing orders on saturday for monday delivery (format: hh:mm)', 'woocommerce-myparcel' ),
+			)
+		);
+
 		// Customizations section
 		add_settings_section(
 			'customizations',
