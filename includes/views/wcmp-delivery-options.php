@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <?php 
 /**
  * LOAD WORDPRESS
@@ -8,9 +9,6 @@ require( '../../../../../wp-load.php');
 <html>
 <head>
 	<?php 
-	// Delivery options template
-	include('wcmp-delivery-options-template.php');
-
 	// define script & style formats
 	$script_format = '<script type="text/javascript" data-cfasync="false" src="%s"></script>';
 	$style_format = '<link rel="stylesheet" id="%s" href="%s" type="text/css" media="all">';
@@ -29,6 +27,10 @@ require( '../../../../../wp-load.php');
 	?>
 </head>
 <body>
+<?php
+// Include delivery options template
+include('wcmp-delivery-options-template.php');
+?>
 <myparcel id="myparcel">Bezig met laden...</myparcel>
 </body>
 </html>
