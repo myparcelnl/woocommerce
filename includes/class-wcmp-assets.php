@@ -24,6 +24,13 @@ class WooCommerce_MyParcel_Assets {
 				array( 'jquery' ),
 				WC_MYPARCEL_VERSION
 			);
+			wp_localize_script(
+				'wc-myparcel-frontend',
+				'wc_myparcel_frontend',
+				array(  
+					'iframe_url' => WooCommerce_MyParcel()->plugin_url() . '/includes/views/wcmp-delivery-options.php',
+				)
+			);
 		}
 	}
 

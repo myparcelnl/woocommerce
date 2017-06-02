@@ -198,21 +198,20 @@ class WooCommerce_MyParcel_Frontend {
 				}
 			}
 		}
+		// We're using placeholder for the iframe to prevent race condition:
+		// IE/Edge loads in a different order than Chrome/Firefox and plugin conflicts could cause the same,
+		// so we never know whether the iframe is loaded before the main page scripts
+		// This way we gain control by setting the iframe + src via the main page script 
 		?>
-		<iframe id="myparcel-iframe" src="<?php echo $iframe_url; ?>" frameborder="0" scrolling="auto" style="width: 100%;<?php if($hide_delivery_options) echo 'display:none;'; ?>" onload="MyPaLoaded();">Bezig met laden...</iframe>
+		<div class="myparcel-iframe-placeholder" style="display:none;"></div>
 		<script>
-		jQuery( function( $ ) {
 			window.mypa = {};
 			window.mypa.settings = <?php echo $settings; ?>;
 			window.myparcel_delivery_options_shipping_methods = <?php echo $delivery_options_shipping_methods; ?>;
 			<?php if (!empty($myparcel_delivery_options_always_display)): ?>
 			window.myparcel_delivery_options_always_display = 'yes';
 			<?php endif ?>
-
-			// set reference to iFrame
-			var $MyPaiFrame = $('#myparcel-iframe')[0];
-			window.MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
-		});
+			window.myparcel_initial_hide = <?php echo ($hide_delivery_options) ? 'true' : 'false'; ?>;
 		</script>
 		
 		<input style="display:none" type="checkbox" name='mypa-options-enabled' id="mypa-options-enabled">

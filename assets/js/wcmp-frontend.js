@@ -8,14 +8,22 @@ jQuery( function( $ ) {
 	// reference jQuery for MyParcel iFrame
 	window.mypajQuery = $;
 	
-	// bail if delivery options iframe is not found
-	if ( $('#myparcel-iframe').length == 0 ) {
-		return;
-	}	
+	// replace iframe placeholder with actual iframe
+	$('.myparcel-iframe-placeholder').replaceWith( '<iframe id="myparcel-iframe" src="" frameborder="0" scrolling="auto" style="width: 100%; display: none;">Bezig met laden...</iframe>');
+	// show if we have to
+	if ( window.myparcel_initial_hide == false ) {
+		$('#myparcel-iframe').show();
+	}
 
-	// set reference to iFrame
-	var $MyPaiFrame = $('#myparcel-iframe')[0];
-	window.MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
+	// set iframe object load functions
+	var iframe_object = $('#myparcel-iframe')
+		.load( function() {
+			var $MyPaiFrame = $('#myparcel-iframe')[0];
+			window.MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
+			MyPaLoaded();
+		});
+	// load iframe content
+	iframe_object.attr( 'src', wc_myparcel_frontend.iframe_url );
 
 	window.MyPaSetHeight = function() {
 		setTimeout(function () {
@@ -211,7 +219,7 @@ jQuery( function( $ ) {
 
 	function update_myparcel_delivery_options_action() {
 		country = get_shipping_country();
-		if ( window.myparcel_checkout_updating !== true && country == 'NL' && typeof MyPaWindow.mypa != 'undefined' ) {
+		if ( window.myparcel_checkout_updating !== true && country == 'NL' && typeof MyPaWindow != 'undefined' && typeof MyPaWindow.mypa != 'undefined' ) {
 			MyPaWindow.mypa.settings = window.mypa.settings;
 			MyPaWindow.updateMyPa();
 		}
