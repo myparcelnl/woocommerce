@@ -1188,18 +1188,15 @@ class WooCommerce_MyParcel_Export {
 			// Also handles BW compatibility when slugs were used instead of ids
 			$shipping_class_term = get_term_by( 'slug', $shipping_class, 'product_shipping_class' );
 			$class_cost_string   = $shipping_class_term && $shipping_class_term->term_id ? $shipping_method->get_option( 'class_cost_' . $shipping_class_term->term_id, $shipping_method->get_option( 'class_cost_' . $shipping_class, '' ) ) : $shipping_method->get_option( 'no_class_cost', '' );
-
 			if ( $class_cost_string === '' ) {
 				continue;
 			}
-
 
 			$has_costs  = true;
 			$class_cost = $this->wc_flat_rate_evaluate_cost( $class_cost_string, array(
 				'qty'  => array_sum( wp_list_pluck( $products, 'quantity' ) ),
 				'cost' => array_sum( wp_list_pluck( $products, 'line_total' ) )
 			), $shipping_method );
-
 			if ( $class_cost > $highest_class_cost && $shipping_class_term->term_id) {
 				$highest_class_cost = $class_cost;
 				$highest_class = $shipping_class_term->term_id;
@@ -1220,8 +1217,12 @@ class WooCommerce_MyParcel_Export {
 				if ( ! isset( $found_shipping_classes[ $found_class ] ) ) {
 					$found_shipping_classes[ $found_class ] = array();
 				}
-
-				$found_shipping_classes[ $found_class ][ $item_id ] = $product;
+				// normally this should pass the $product object, but only in the checkout this contains
+				// quantity & line_total (which is all we need), so we pass data from the $item instead
+				$item_product = new stdClass;
+				$item_product->quantity = $item['qty'];
+				$item_product->line_total = $item['line_total'];
+				$found_shipping_classes[ $found_class ][ $item_id ] = $item_product;
 			}
 		}
 
