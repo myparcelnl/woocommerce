@@ -246,6 +246,12 @@ class WooCommerce_MyParcel_Frontend {
 	 * @return void
 	 */
 	public function save_delivery_options( $order_id, $posted ) {
+		$order = WCX::get_order( $order_id );
+
+		if (isset($_POST['myparcel_highest_shipping_class'])) {
+			WCX_Order::update_meta_data( $order, '_myparcel_highest_shipping_class', $_POST['myparcel_highest_shipping_class'] );
+		}
+
 		// mypa-recipient-only - 'on' or not set  
 		// mypa-signed         - 'on' or not set  
 		// mypa-post-nl-data   - JSON of chosen delivery options
@@ -255,7 +261,6 @@ class WooCommerce_MyParcel_Frontend {
 			return;
 		}
 
-		$order = WCX::get_order( $order_id );
 
 		if (isset($_POST['mypa-signed'])) {
 			WCX_Order::update_meta_data( $order, '_myparcel_signed', 'on' );
@@ -268,10 +273,6 @@ class WooCommerce_MyParcel_Frontend {
 		if (!empty($_POST['mypa-post-nl-data'])) {
 			$delivery_options = json_decode( stripslashes( $_POST['mypa-post-nl-data']), true );
 			WCX_Order::update_meta_data( $order, '_myparcel_delivery_options', $delivery_options );
-		}
-
-		if (isset($_POST['myparcel_highest_shipping_class'])) {
-			WCX_Order::update_meta_data( $order, '_myparcel_highest_shipping_class', $_POST['myparcel_highest_shipping_class'] );
 		}
 	}
 
@@ -467,6 +468,7 @@ class WooCommerce_MyParcel_Frontend {
 
 		// get shipping classes from package
 		$found_shipping_classes = $shipping_method->find_shipping_classes( $package );
+		// return print_r( $found_shipping_classes, true );
 
 		$highest_class = WooCommerce_MyParcel()->export->get_shipping_class( $shipping_method, $found_shipping_classes );
 		return $highest_class;
