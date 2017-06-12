@@ -272,7 +272,14 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 				if ( $key == 'table_rate' && class_exists('WC_Table_Rate_Shipping') && class_exists('WC_Shipping_Zones')) {
 					$zones = WC_Shipping_Zones::get_zones();
 					foreach ($zones as $zone_data) {
-						$zone = WC_Shipping_Zones::get_zone($zone_data['id']);
+						if (isset($zone_data['id'])) {
+							$zone_id = $zone_data['id'];
+						} elseif (isset($zone_data['zone_id'])) {
+							$zone_id = $zone_data['zone_id'];
+						} else {
+							continue;
+						}
+						$zone = WC_Shipping_Zones::get_zone($zone_id);
 						$zone_methods = $zone->get_shipping_methods( false );
 						foreach ( $zone_methods as $key => $shipping_method ) {
 							if ( $shipping_method->id == 'table_rate' && method_exists( $shipping_method, 'get_shipping_rates') ) {
@@ -291,7 +298,14 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 				if ( $key == 'betrs_shipping' && is_a($shipping_method, 'BE_Table_Rate_Method') && class_exists('WC_Shipping_Zones') ) {
 					$zones = WC_Shipping_Zones::get_zones();
 					foreach ($zones as $zone_data) {
-						$zone = WC_Shipping_Zones::get_zone($zone_data['id']);
+						if (isset($zone_data['id'])) {
+							$zone_id = $zone_data['id'];
+						} elseif (isset($zone_data['zone_id'])) {
+							$zone_id = $zone_data['zone_id'];
+						} else {
+							continue;
+						}
+						$zone = WC_Shipping_Zones::get_zone($zone_id);
 						$zone_methods = $zone->get_shipping_methods( false );
 						foreach ( $zone_methods as $key => $shipping_method ) {
 							if ( $shipping_method->id == 'betrs_shipping' ) {
