@@ -2,8 +2,8 @@
 Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.7
-Stable tag: 2.2.0
+Tested up to: 4.8
+Stable tag: 2.3.0
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -88,6 +88,18 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+
+= 2.3.0 (2017-06-12)
+* Feature: WooCommerce Table Rate Shipping support (woocommerce.com & Bolder Elements 4.0)
+* Feature: Support for monday delivery
+* Feature: Start print position
+* Feature: Individual label printing from the order details page
+* Fix: Delivery options checkout in Edge browser
+* Fix: HTTPS issue with google fonts
+* Fix: Multi-colli printing
+* Fix: Delivery options tax in WC3.0
+* Fix: Disable 'signature on delivery' & 'recipient only' when switching to pickup location in checkout
+* Fix: Improve order-based calculation of highest shipping class
 
 = 2.2.0 (2017-04-03) =
 * WooCommerce 3.0 compatible
