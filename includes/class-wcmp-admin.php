@@ -375,6 +375,7 @@ class WooCommerce_MyParcel_Admin {
 
 		echo '<div class="delivery-options">';
 		if (!empty($date) && !(isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) && WooCommerce_MyParcel()->checkout_settings['deliverydays_window'] == 0)) {
+			$formatted_date = date_i18n( apply_filters( 'wcmyparcel_delivery_date_format', wc_date_format() ), strtotime( $date ) );
 			if (!empty($time)) {
 				$time = array_shift($time); // take first element in time array
 				if (isset($time['price_comment'])) {
@@ -394,7 +395,7 @@ class WooCommerce_MyParcel_Admin {
 				$time_title = !empty($time_title) ? "({$time_title})" : '';
 			}
 
-			printf('<div class="delivery-date"><strong>%s: </strong>%s %s</div>', __('Delivery date', 'woocommerce-myparcel'), $date, $time_title );
+			printf('<div class="delivery-date"><strong>%s: </strong>%s %s</div>', __('Delivery date', 'woocommerce-myparcel'), $formatted_date, $time_title );
 		}
 
 		if ( $pickup = WooCommerce_MyParcel()->export->is_pickup( $order, $delivery_options ) ) {
