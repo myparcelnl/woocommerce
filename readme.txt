@@ -89,6 +89,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 2.3.1 (2017-06-12)
+* Fix: Table Rate Shipping + WooCommerce 2.6 (error in settings)
+
 = 2.3.0 (2017-06-12)
 * Feature: WooCommerce Table Rate Shipping support (woocommerce.com & Bolder Elements 4.0)
 * Feature: Support for monday delivery
