@@ -396,11 +396,16 @@ class WooCommerce_MyParcel_Export {
 		$params = array_intersect_key($params, $api_params);
 
 		$api = $this->init_api();
-		$response = $api->get_delivery_options( $params, true );
 
-		@header('Content-type: application/json; charset=utf-8');
+		try {
+			$response = $api->get_delivery_options( $params, true );
 
-		echo $response['body'];
+			@header('Content-type: application/json; charset=utf-8');
+
+			echo $response['body'];
+		} catch (Exception $e) {
+			@header("HTTP/1.1 503 service unavailable");
+		}
 		die();
 	}
 

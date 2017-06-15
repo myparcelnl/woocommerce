@@ -192,7 +192,8 @@
           deliverydays_window: settings.deliverydays_window != null ? settings.deliverydays_window : void 0,
           exclude_delivery_type: settings.exclude_delivery_type != null ? settings.exclude_delivery_type : void 0
         },
-        success: renderPage
+        success: renderPage,
+        error: hideMyParcelOptions
       };
       return jquery.ajax(options);
     };
@@ -638,7 +639,12 @@
       return jquery('#mypa-recipient-only', parent.document).trigger('change');
     }
   };
-
+  /*
+   * Hide MyParcel options
+   */
+  hideMyParcelOptions = function() {
+    parent.mypajQuery('#myparcel-iframe').hide();
+  };
 }).call(this);
 
 //# sourceMappingURL=myparcel.js.map
