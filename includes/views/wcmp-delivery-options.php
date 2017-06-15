@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php 
 /**
  * LOAD WORDPRESS
@@ -6,6 +5,7 @@
 define('WP_USE_THEMES', false);
 require( '../../../../../wp-load.php');
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 	<?php 
