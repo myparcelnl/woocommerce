@@ -546,6 +546,7 @@ class WooCommerce_MyParcel_Export {
 				'postal_code'				=> (string) WCX_Order::get_prop( $order, 'shipping_postcode' ),
 				'street'					=> (string) WCX_Order::get_prop( $order, 'shipping_address_1' ),
 				'street_additional_info'	=> (string) WCX_Order::get_prop( $order, 'shipping_address_2' ),
+				'region'					=> (string) WCX_Order::get_prop( $order, 'shipping_state' ),
 			);
 		}
 
@@ -1188,6 +1189,7 @@ class WooCommerce_MyParcel_Export {
 			// Also handles BW compatibility when slugs were used instead of ids
 			$shipping_class_term = get_term_by( 'slug', $shipping_class, 'product_shipping_class' );
 			$class_cost_string   = $shipping_class_term && $shipping_class_term->term_id ? $shipping_method->get_option( 'class_cost_' . $shipping_class_term->term_id, $shipping_method->get_option( 'class_cost_' . $shipping_class, '' ) ) : $shipping_method->get_option( 'no_class_cost', '' );
+
 			if ( $class_cost_string === '' ) {
 				continue;
 			}
