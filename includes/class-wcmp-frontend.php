@@ -32,6 +32,12 @@ class WooCommerce_MyParcel_Frontend {
 		// @20 = templates/email-addresses.php
 		add_action( 'woocommerce_email_customer_details', array( $this, 'email_pickup_html'), 19, 3 );
 
+		// WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
+		add_filter( 'wpo_wcpdf_templates_replace_myparcel_delivery_date', array( $this, 'wpo_wcpdf_delivery_date' ), 10, 2 );
+		add_filter( 'wpo_wcpdf_templates_replace_myparcel_tracktrace', array( $this, 'wpo_wcpdf_tracktrace' ), 10, 2 );
+		add_filter( 'wpo_wcpdf_templates_replace_myparcel_tracktrace_link', array( $this, 'wpo_wcpdf_tracktrace_link' ), 10, 2 );
+		add_filter( 'wpo_wcpdf_templates_replace_myparcel_delivery_options', array( $this, 'wpo_wcpdf_delivery_options' ), 10, 2 );
+
 		// Delivery options
 		if (isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout'])) {
 			add_action( apply_filters( 'wc_myparcel_delivery_options_location', 'woocommerce_after_checkout_billing_form' ), array( $this, 'output_delivery_options' ), 10, 1 );
@@ -83,6 +89,41 @@ class WooCommerce_MyParcel_Frontend {
 		}
 
 		return $actions;
+	}
+
+	public function wpo_wcpdf_delivery_options( $replacement, $order ) {
+		ob_start();
+		WooCommerce_MyParcel()->admin->show_order_delivery_options( $order );
+		return ob_get_clean();
+	}
+
+	public function wpo_wcpdf_delivery_date( $replacement, $order ) {
+		if ($delivery_date = WooCommerce_MyParcel()->export->get_delivery_date( $order ) ) {
+			$formatted_date = date_i18n( apply_filters( 'wcmyparcel_delivery_date_format', wc_date_format() ), strtotime( $delivery_date ) );
+			return $formatted_date;
+		}
+		return $replacement;
+	}
+
+	public function wpo_wcpdf_tracktrace( $replacement, $order ) {
+		if ( $shipments = WooCommerce_MyParcel()->admin->get_tracktrace_shipments( WCX_Order::get_id( $order ) ) ) {
+			$tracktrace = array();
+			foreach ($shipments as $shipment) {
+				if (!empty($shipment['tracktrace'])) {
+					$tracktrace[] = $shipment['tracktrace'];
+				}
+			}
+			$replacement = implode(', ', $tracktrace);
+		}
+		return $replacement;
+	}
+
+	public function wpo_wcpdf_tracktrace_link( $replacement, $order ) {
+		$tracktrace_links = WooCommerce_MyParcel()->admin->get_tracktrace_links ( WCX_Order::get_id( $order ) );
+		if ( !empty($tracktrace_links) ) {
+			$replacement = implode(', ', $tracktrace_links);
+		}
+		return $replacement;
 	}
 
 	public function output_delivery_options() {
