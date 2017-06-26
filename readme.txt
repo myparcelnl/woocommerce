@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.8
-Stable tag: 2.3.1
+Stable tag: 2.3.2
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -89,10 +89,15 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 2.3.1 (2017-06-12)
+= 2.3.2 (2017-06-26) =
+* Fix: Delivery options header order
+* Feature: Support for region (=state) in international addresses
+* Feature: Hide Delivery options if PostNL service is unavailable
+
+= 2.3.1 (2017-06-12) =
 * Fix: Table Rate Shipping + WooCommerce 2.6 (error in settings)
 
-= 2.3.0 (2017-06-12)
+= 2.3.0 (2017-06-12) =
 * Feature: WooCommerce Table Rate Shipping support (woocommerce.com & Bolder Elements 4.0)
 * Feature: Support for monday delivery
 * Feature: Start print position
