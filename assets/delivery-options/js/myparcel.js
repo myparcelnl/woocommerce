@@ -236,6 +236,7 @@
         $tabs.bind('click', updateDelivery);
         $tabs[0].click();
       }
+      $("#mypa-tabs-container").attr('style', "width:" + ($("#mypa-tabs-container").width()) + "px");
       $("#mypa-tabs").attr('style', "width:" + (this.deliveryDays.length * 105) + "px");
       this.makeSlider();
     }
