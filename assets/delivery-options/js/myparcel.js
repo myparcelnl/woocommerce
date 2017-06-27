@@ -236,7 +236,8 @@
         $tabs.bind('click', updateDelivery);
         $tabs[0].click();
       }
-      $("#mypa-tabs-container").attr('style', "width:" + ($("#mypa-tabs-container").width()) + "px");
+      // this should fix iOS canvas size issues but seems to break webcomponents in Safari:
+      // $("#mypa-tabs-container").attr('style', "width:" + ($("#mypa-tabs-container").width()) + "px");
       $("#mypa-tabs").attr('style', "width:" + (this.deliveryDays.length * 105) + "px");
       this.makeSlider();
     }
