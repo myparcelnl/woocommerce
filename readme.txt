@@ -89,6 +89,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 2.3.3 (2017-06-27) =
+* Fix: Pickup locations in Safari
+
 = 2.3.2 (2017-06-26) =
 * Fix: Delivery options header order
 * Feature: Support for region (=state) in international addresses
