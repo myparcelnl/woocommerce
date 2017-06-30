@@ -525,6 +525,46 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 
+		// World Shipments section.
+		add_settings_section(
+			'world_shipments',
+			__( 'World Shipments', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'section' ),
+			$option_group
+		);
+
+		add_settings_field(
+			'hs_code',
+			__( 'Default HS Code', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'text_input' ),
+			$option_group,
+			'world_shipments',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'hs_code',
+				'size'			=> '5',
+				'description'	=> __( sprintf( 'You can find HS codes on the %ssite of the Dutch Customs%s.', '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>' ), 'woocommerce-myparcel' ),
+			)
+		);
+		add_settings_field(
+			'package_contents',
+			__( 'Customs shipment type', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'select' ),
+			$option_group,
+			'world_shipments',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'package_contents',
+				'options' 		=> array(
+					1 => __( 'Commercial goods' , 'woocommerce-myparcel' ),
+					2 => __( 'Commercial samples' , 'woocommerce-myparcel' ),
+					3 => __( 'Documents' , 'woocommerce-myparcel' ),
+					4 => __( 'Gifts' , 'woocommerce-myparcel' ),
+					5 => __( 'Return shipment' , 'woocommerce-myparcel' ),
+				),
+			)
+		);
+
 	}
 
 	/**

@@ -443,6 +443,10 @@ class WooCommerce_MyParcel_Export {
 				);
 			}
 
+			if ( $this->is_world_shipment( $order ) ) {
+				$shipment['customs_declaration'] = $this->get_customs_declaration( $order );
+			}
+
 			/* disabled for now
 			$concept_shipments = $this->get_shipment_ids( (array) $order_id, array( 'only_concepts' => true, 'only_last' => true ) );
 			if ( !empty($concept_shipments) ) {
@@ -684,6 +688,46 @@ class WooCommerce_MyParcel_Export {
 
 		return $options;
 
+	}
+
+	public function get_customs_declariation( $order ) {
+		$weight = $this->get_parcel_weight( $order );
+		$invoice = $this->get_invoice_number( $order );
+		$content = (isset(WooCommerce_MyParcel()->export_defaults['package_contents'])) ? WooCommerce_MyParcel()->export_defaults['package_contents'] : 1;
+
+		// Item defaults:
+		// Classification
+		$default_hs_code = (isset(WooCommerce_MyParcel()->export_defaults['hs_code'])) ? WooCommerce_MyParcel()->export_defaults['hs_code'] : '';
+		// Country (=shop base)
+		$country = WC()->countries->get_base_country();
+
+		$items = array();
+		foreach ( $order->get_items as $item_id => $item ) {
+			$product = $order->get_product_from_item( $item );
+			if ( !empty( $product )) {
+				// Description
+				$description = $item['name'];
+				// Amount
+				$amount = (int) ( isset($item['qty']) ? $item['qty'] : 1 );
+				// Weight (total item weight in grams)
+				$weight = (int) round( $this->get_item_weight_kg ( $item, $order ) * 1000 );
+				// Item value (in cents)
+				$item_value = array(
+					'amount'	=> (int) round( ( $item['line_total'] + $item['line_total_tax'] ) * 100 ),
+					'currency'	=> WCX_Order::get_prop( $order, 'currency' ),
+				);
+				// Classification / HS Code
+				$classification = WCX_Product::get_meta( $product, '_myparcel_hs_code', true );
+				if (empty($classification)) {
+					$classification = $default_hs_code;
+				}
+				
+				// add item to item list
+				$items[] = compact( $description, $amount, $weight, $item_value, $classification, $country );
+			}
+		}
+
+		return compact( $weight, $invoice, $content, $items );
 	}
 
 	public function get_shipment_ids( $order_ids, $args ) {
@@ -1331,6 +1375,14 @@ class WooCommerce_MyParcel_Export {
 	public function is_eu_country($country_code) {
 		$eu_countries = array( 'GB', 'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE' );
 		return in_array( $country_code, $eu_countries);
+	}
+
+	public function is_world_shipment( $order ) {
+		return false;
+	}
+
+	public function get_invoice_number( $order ) {
+		return apply_filters( 'wc_myparcel_invoice_number', $order->get_order_number() );
 	}
 
 	public function log( $message ) {

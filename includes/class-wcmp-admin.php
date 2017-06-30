@@ -25,6 +25,9 @@ class WooCommerce_MyParcel_Admin {
 		add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'single_order_shipment_options' ) );
 
 		add_action( 'wp_ajax_wcmp_save_shipment_options', array( $this, 'save_shipment_options_ajax' ) );
+
+		// HS code in product shipping options tab
+		add_action( 'woocommerce_product_options_shipping', array( $this, 'product_hs_code_field' ) );
 	}
 
 	public function order_list_shipment_options( $order, $hide = true ) {
@@ -474,6 +477,19 @@ class WooCommerce_MyParcel_Admin {
 
 
 		return $shipments;
+	}
+
+	public function product_hs_code_field() {
+		echo '<div class="options_group">';
+		woocommerce_wp_text_input( 
+			array( 
+				'id'          => '_myparcel_hs_code', 
+				'label'       => __( 'HS Code', 'woocommerce-myparcel' ), 
+				'description' => __( sprintf( 'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>' ), 'woocommerce-myparcel' ),
+				// 'desc_tip'    => true,
+			)
+		);  
+		echo '</div>';
 	}
 }
 
