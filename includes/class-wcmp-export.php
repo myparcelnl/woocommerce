@@ -1252,7 +1252,7 @@ class WooCommerce_MyParcel_Export {
 				'qty'  => array_sum( wp_list_pluck( $products, 'quantity' ) ),
 				'cost' => array_sum( wp_list_pluck( $products, 'line_total' ) )
 			), $shipping_method );
-			if ( $class_cost > $highest_class_cost && $shipping_class_term->term_id) {
+			if ( $class_cost > $highest_class_cost && !empty($shipping_class_term->term_id) ) {
 				$highest_class_cost = $class_cost;
 				$highest_class = $shipping_class_term->term_id;
 			}
