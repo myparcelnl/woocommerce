@@ -32,6 +32,9 @@ class WooCommerce_MyParcel_Frontend {
 		// @20 = templates/email-addresses.php
 		add_action( 'woocommerce_email_customer_details', array( $this, 'email_pickup_html'), 19, 3 );
 
+		// pickup address on thank you page
+		add_action( 'woocommerce_thankyou', array( $this, 'thankyou_pickup_html'), 10, 1 );
+
 		// WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
 		add_filter( 'wpo_wcpdf_templates_replace_myparcel_delivery_date', array( $this, 'wpo_wcpdf_delivery_date' ), 10, 2 );
 		add_filter( 'wpo_wcpdf_templates_replace_myparcel_tracktrace', array( $this, 'wpo_wcpdf_tracktrace' ), 10, 2 );
@@ -74,6 +77,11 @@ class WooCommerce_MyParcel_Frontend {
 	}
 
 	public function email_pickup_html( $order, $sent_to_admin = false, $plain_text = false ) {
+		WooCommerce_MyParcel()->admin->show_order_delivery_options( $order );
+	}
+
+	public function thankyou_pickup_html( $order_id ) {
+		$order = wc_get_order( $order_id );
 		WooCommerce_MyParcel()->admin->show_order_delivery_options( $order );
 	}
 
