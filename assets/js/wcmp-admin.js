@@ -286,7 +286,7 @@ jQuery( function( $ ) {
 		if ( ( actionselected == 'wcmp_print' ||  actionselected == 'wcmp_export_print' ) && wc_myparcel.offset == 1) {
 			var insert_position = $(this).attr("name") == 'action' ? 'top' : 'bottom';
 			$( '#wcmyparcel_offset_dialog' )
-				.attr('style', '') // reset styles
+				.attr('style', 'clear:both') // reset styles
 				.insertAfter( 'div.tablenav.'+insert_position )
 				.show()
 

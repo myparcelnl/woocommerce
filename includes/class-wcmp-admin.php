@@ -146,7 +146,7 @@ class WooCommerce_MyParcel_Admin {
 		global $post_type;
 		if ( 'shop_order' == $post_type ) {
 			?>
-			<div id="wcmyparcel_offset_dialog">
+			<div id="wcmyparcel_offset_dialog" style="display:none;">
 				<?php _e( 'Labels to skip', 'woocommerce-myparcel' ); ?>:
 				<input type="text" size="2" class="wc_myparcel_offset">
 				<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>" id="wcmyparcel-offset-icon" style="vertical-align: middle;">
