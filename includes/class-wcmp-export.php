@@ -94,11 +94,14 @@ class WooCommerce_MyParcel_Export {
 
 		switch($request) {
 			case 'add_shipments':
+				// filter out non-myparcel destinations
+				$order_ids = $this->filter_myparcel_destination_orders( $order_ids );
+
 				if ( empty($order_ids) ) {
 					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
 					break;
 				}
-				$order_ids = $this->filter_eu_orders( $order_ids );
+
 				// if we're going to print directly, we need to process the orders first, regardless of the settings
 				$process = (isset($print) && $print == 'yes') ? true : false;
 				$return = $this->add_shipments( $order_ids );
@@ -122,7 +125,7 @@ class WooCommerce_MyParcel_Export {
 					$shipment_ids = $this->sanitize_posted_array($shipment_ids);
 					$return = $this->get_shipment_labels( $shipment_ids, $order_ids, $label_response_type, $offset );
 				} else {
-					$order_ids = $this->filter_eu_orders( $order_ids );
+					$order_ids = $this->filter_myparcel_destination_orders( $order_ids );
 					$return = $this->get_labels( $order_ids, $label_response_type, $offset );
 				}
 				break;
@@ -131,7 +134,7 @@ class WooCommerce_MyParcel_Export {
 					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
 					break;
 				}
-				$order_ids = $this->filter_eu_orders( $order_ids );
+				$order_ids = $this->filter_myparcel_destination_orders( $order_ids );
 				$this->modal_dialog( $order_ids, $dialog );
 				break;
 		}
@@ -443,7 +446,8 @@ class WooCommerce_MyParcel_Export {
 				);
 			}
 
-			if ( $this->is_world_shipment( $order ) ) {
+			$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+			if ( $this->is_world_shipment_country( $shipping_country ) ) {
 				$customs_declaration = $this->get_customs_declaration( $order );
 				$shipment['customs_declaration'] = $customs_declaration;
 				$shipment['physical_properties'] = array(
@@ -1364,26 +1368,31 @@ class WooCommerce_MyParcel_Export {
 		return $calculated_fee;
 	}
 
-	public function filter_eu_orders( $order_ids ) {
+	public function filter_myparcel_destination_orders( $order_ids ) {
 		foreach ($order_ids as $key => $order_id) {
 			$order = WCX::get_order( $order_id );
 			$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-			// skip non-eu orders
-			if ( !$this->is_eu_country( $shipping_country ) ) {
+			// skip non-myparcel destination orders
+			if ( !$this->is_myparcel_destination( $shipping_country ) ) {
 				unset($order_ids[$key]);
 			}
 		}
 		return $order_ids;
 	}
 
-	public function is_eu_country($country_code) {
-		return true;
-		$eu_countries = array( 'GB', 'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE' );
-		return in_array( $country_code, $eu_countries);
+	public function is_myparcel_destination( $country_code ) {
+		return ( $country_code == 'NL' || $this->is_eu_country( $country_code ) || $this->is_world_shipment_country( $country_code ) );
 	}
 
-	public function is_world_shipment( $order ) {
-		return true;
+	public function is_eu_country($country_code) {
+		// $eu_countries = array( 'GB', 'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE' );
+		$euro_countries = array( 'AT','BE','BG','CY','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','MT','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','NO','UA','SM','RS','TR','VA','BY','CH' );
+		return in_array( $country_code, $euro_countries);
+	}
+
+	public function is_world_shipment_country( $country_code ) {
+		$world_shipment_countries = array( 'AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM' );
+		return in_array( $country_code, $world_shipment_countries);
 	}
 
 	public function get_invoice_number( $order ) {

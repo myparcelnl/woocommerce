@@ -68,9 +68,9 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&reques
 		$c = true;
 		foreach ( $order_ids as $order_id) :
 			$order = WCX::get_order( $order_id );
-			// skip non-eu orders
+			// skip non-myparcel destinations
 			$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-			if ( !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country ) ) {
+			if ( !WooCommerce_MyParcel()->export->is_myparcel_destination( $shipping_country ) ) {
 				continue;
 			}
 			$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );

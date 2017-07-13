@@ -32,7 +32,7 @@ class WooCommerce_MyParcel_Admin {
 
 	public function order_list_shipment_options( $order, $hide = true ) {
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country ) ) {
+		if ( !WooCommerce_MyParcel()->export->is_myparcel_destination( $shipping_country ) ) {
 			return;
 		}
 		$order_id = WCX_Order::get_id( $order );
@@ -88,7 +88,7 @@ class WooCommerce_MyParcel_Admin {
 
 	public function order_list_return_shipment_options( $order, $hide = true ) {
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country ) ) {
+		if ( $shipping_country != 'NL' && !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country )  ) {
 			return;
 		}
 		$order_id = WCX_Order::get_id( $order );
@@ -166,7 +166,7 @@ class WooCommerce_MyParcel_Admin {
 		}
 
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country ) ) {
+		if ( !WooCommerce_MyParcel()->export->is_myparcel_destination( $shipping_country ) ) {
 			return;
 		}
 
@@ -302,7 +302,7 @@ class WooCommerce_MyParcel_Admin {
 		$order_id = WCX_Order::get_id( $order );
 		
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country ) ) {
+		if ( !WooCommerce_MyParcel()->export->is_myparcel_destination( $shipping_country ) ) {
 			return;
 		}
 
@@ -361,7 +361,7 @@ class WooCommerce_MyParcel_Admin {
 
 	public function single_order_shipment_options( $order ) {
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( !WooCommerce_MyParcel()->export->is_eu_country( $shipping_country ) ) {
+		if ( !WooCommerce_MyParcel()->export->is_myparcel_destination( $shipping_country ) ) {
 			return;
 		}
 
