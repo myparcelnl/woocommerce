@@ -514,7 +514,7 @@ class WooCommerce_MyParcel_Export {
 		// get parent
 		$shipment_ids = $this->get_shipment_ids( (array) $order_id, array( 'exclude_concepts' => true, 'only_last' => true ) );
 		if ( !empty($shipment_ids) ) {
-			$return_shipment_data['parent'] = array_pop( $shipment_ids);
+			$return_shipment_data['parent'] = (int) array_pop( $shipment_ids);
 		}
 
 		return $return_shipment_data;
