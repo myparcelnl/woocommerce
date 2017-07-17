@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2017-04-25 16:40+0200\n"
-"PO-Revision-Date: 2017-04-25 16:41+0200\n"
+"POT-Creation-Date: 2017-07-17 14:14+0200\n"
+"PO-Revision-Date: 2017-07-17 14:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 1.8.8\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: woocommerce-myparcel.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -20,78 +20,82 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: includes/class-wcmp-admin.php:116
+#: includes/class-wcmp-admin.php:119
 msgid "MyParcel: Export"
 msgstr "MyParcel: Exporteren"
 
-#: includes/class-wcmp-admin.php:117
+#: includes/class-wcmp-admin.php:120
 msgid "MyParcel: Print"
 msgstr "MyParcel: Printen"
 
-#: includes/class-wcmp-admin.php:118
+#: includes/class-wcmp-admin.php:121
 msgid "MyParcel: Export & Print"
 msgstr "MyParcel: Exporteren & Printen"
 
-#: includes/class-wcmp-admin.php:147 includes/class-wcmp-assets.php:71
+#: includes/class-wcmp-admin.php:150 includes/class-wcmp-assets.php:78
 msgid "Labels to skip"
 msgstr "Labels overslaan"
 
-#: includes/class-wcmp-admin.php:150
+#: includes/class-wcmp-admin.php:153
 msgid "Print"
 msgstr "Print"
 
-#: includes/class-wcmp-admin.php:176
+#: includes/class-wcmp-admin.php:179
 #: includes/views/wcmp-bulk-options-form.php:159
 msgid "Export to MyParcel"
 msgstr "Exporteer naar MyParcel"
 
-#: includes/class-wcmp-admin.php:181 includes/class-wcmp-admin.php:329
+#: includes/class-wcmp-admin.php:184 includes/class-wcmp-admin.php:332
 msgid "Print MyParcel label"
 msgstr "Print MyParcel label"
 
-#: includes/class-wcmp-admin.php:186
+#: includes/class-wcmp-admin.php:189
 msgid "Email return label"
 msgstr "Email retourlabel"
 
-#: includes/class-wcmp-admin.php:279 includes/class-wcmp-settings.php:35
+#: includes/class-wcmp-admin.php:282 includes/class-wcmp-settings.php:35
 #: includes/class-wcmp-settings.php:36
 msgid "MyParcel"
 msgstr "MyParcel"
 
-#: includes/class-wcmp-admin.php:320 includes/class-wcmp-frontend.php:80
+#: includes/class-wcmp-admin.php:323 includes/class-wcmp-frontend.php:94
 msgid "Track&Trace"
 msgstr "Track&Trace"
 
-#: includes/class-wcmp-admin.php:321
+#: includes/class-wcmp-admin.php:324
 #: includes/views/wcmp-order-shipment-summary.php:3
 msgid "Status"
 msgstr "Status"
 
-#: includes/class-wcmp-admin.php:365
+#: includes/class-wcmp-admin.php:368
 msgid "MyParcel shipment:"
 msgstr "MyParcel zending:"
 
-#: includes/class-wcmp-admin.php:383 includes/class-wcmp-frontend.php:320
-#: includes/class-wcmp-settings.php:621
+#: includes/class-wcmp-admin.php:387 includes/class-wcmp-frontend.php:376
+#: includes/class-wcmp-settings.php:661
 msgid "Morning delivery"
 msgstr "Ochtendlevering"
 
-#: includes/class-wcmp-admin.php:390 includes/class-wcmp-frontend.php:333
-#: includes/class-wcmp-settings.php:609
+#: includes/class-wcmp-admin.php:394 includes/class-wcmp-frontend.php:389
+#: includes/class-wcmp-settings.php:649
 msgid "Evening delivery"
 msgstr "Avondlevering"
 
-#: includes/class-wcmp-admin.php:397
+#: includes/class-wcmp-admin.php:401
 msgid "Delivery date"
 msgstr "Bezorgdatum"
 
-#: includes/class-wcmp-admin.php:403 includes/class-wcmp-frontend.php:295
+#: includes/class-wcmp-admin.php:407 includes/class-wcmp-frontend.php:351
 msgid "PostNL Pickup"
 msgstr "Afhalen bij PostNL"
 
-#: includes/class-wcmp-admin.php:406 includes/class-wcmp-frontend.php:301
+#: includes/class-wcmp-admin.php:410 includes/class-wcmp-frontend.php:357
 msgid "PostNL Pickup Express"
 msgstr "Extra vroeg afhalen bij PostNL"
+
+#: includes/class-wcmp-admin.php:487
+msgid "HS Code"
+msgstr "HS-code"
 
 #: includes/class-wcmp-export.php:58
 msgid ""
@@ -104,147 +108,147 @@ msgstr ""
 msgid "You do not have sufficient permissions to access this page."
 msgstr "Je hebt onvoldoende rechten voor deze pagina."
 
-#: includes/class-wcmp-export.php:98 includes/class-wcmp-export.php:108
-#: includes/class-wcmp-export.php:116 includes/class-wcmp-export.php:131
+#: includes/class-wcmp-export.php:101 includes/class-wcmp-export.php:111
+#: includes/class-wcmp-export.php:119 includes/class-wcmp-export.php:134
 msgid "You have not selected any orders!"
 msgstr "U heeft geen orders geselecteerd!"
 
-#: includes/class-wcmp-export.php:233
+#: includes/class-wcmp-export.php:236
 msgid "MyParcel shipment created:"
 msgstr "MyParcel verzending aangemaakt:"
 
-#: includes/class-wcmp-export.php:236 includes/class-wcmp-export.php:286
-#: includes/class-wcmp-export.php:320 includes/class-wcmp-export.php:336
+#: includes/class-wcmp-export.php:239 includes/class-wcmp-export.php:289
+#: includes/class-wcmp-export.php:323 includes/class-wcmp-export.php:339
 msgid "Unknown error"
 msgstr "Onbekende fout"
 
-#: includes/class-wcmp-export.php:250
+#: includes/class-wcmp-export.php:253
 #, php-format
 msgid "%s shipments successfully exported to Myparcel"
 msgstr "%s zendingen met succes geëxporteerd naar Myparcel"
 
-#: includes/class-wcmp-export.php:353
+#: includes/class-wcmp-export.php:356
 msgid "The selected orders have not been exported to MyParcel yet!"
-msgstr "De geselecteerde orders zijn nog niet naar MyParcel geselecteerd!"
+msgstr "De geselecteerde orders zijn nog niet naar MyParcel geëxporteerd!"
 
-#: includes/class-wcmp-export.php:831
+#: includes/class-wcmp-export.php:889
 msgid "Parcel"
 msgstr "Pakket"
 
-#: includes/class-wcmp-export.php:832
+#: includes/class-wcmp-export.php:890
 msgid "Mailbox package"
 msgstr "Brievenbuspakje"
 
-#: includes/class-wcmp-export.php:833
+#: includes/class-wcmp-export.php:891
 msgid "Unpaid letter"
 msgstr "Ongefrankeerd"
 
-#: includes/class-wcmp-export.php:845
+#: includes/class-wcmp-export.php:903
 msgid "Unknown"
 msgstr "Onbekend"
 
-#: includes/class-wcmp-export.php:854
+#: includes/class-wcmp-export.php:912
 #: includes/views/wcmp-bulk-options-form.php:86
 msgid "Order"
 msgstr "Bestelling"
 
-#: includes/class-wcmp-export.php:900
+#: includes/class-wcmp-export.php:958
 msgid "pending - concept"
 msgstr "in behandeling - concept"
 
-#: includes/class-wcmp-export.php:901
+#: includes/class-wcmp-export.php:959
 msgid "pending - registered"
 msgstr "in behandeling - geregistreerd"
 
-#: includes/class-wcmp-export.php:902
+#: includes/class-wcmp-export.php:960
 msgid "enroute - handed to carrier"
 msgstr "onderweg - overhandigd aan vervoerder"
 
-#: includes/class-wcmp-export.php:903
+#: includes/class-wcmp-export.php:961
 msgid "enroute - sorting"
 msgstr "onderweg - gesorteerd"
 
-#: includes/class-wcmp-export.php:904
+#: includes/class-wcmp-export.php:962
 msgid "enroute - distribution"
 msgstr "onderweg - in distributie"
 
-#: includes/class-wcmp-export.php:905
+#: includes/class-wcmp-export.php:963
 msgid "enroute - customs"
 msgstr "onderweg - douane"
 
-#: includes/class-wcmp-export.php:906
+#: includes/class-wcmp-export.php:964
 msgid "delivered - at recipient"
 msgstr "afgeleverd - bij geadresseeerde"
 
-#: includes/class-wcmp-export.php:907
+#: includes/class-wcmp-export.php:965
 msgid "delivered - ready for pickup"
 msgstr "afgeleverd - klaar om opgehaald te worden"
 
-#: includes/class-wcmp-export.php:908
+#: includes/class-wcmp-export.php:966
 msgid "delivered - package picked up"
 msgstr "afgeleverd - opgehaald"
 
-#: includes/class-wcmp-export.php:909
+#: includes/class-wcmp-export.php:967
 msgid "inactive - concept"
 msgstr "inactief - concept"
 
-#: includes/class-wcmp-export.php:910
+#: includes/class-wcmp-export.php:968
 msgid "inactive - registered"
 msgstr "inactief - geregistreerd"
 
-#: includes/class-wcmp-export.php:911
+#: includes/class-wcmp-export.php:969
 msgid "inactive - enroute - handed to carrier"
 msgstr "inactief - onderweg - overhandigd aan vervoerder"
 
-#: includes/class-wcmp-export.php:912
+#: includes/class-wcmp-export.php:970
 msgid "inactive - enroute - sorting"
 msgstr "inactief - onderweg - gesorteerd"
 
-#: includes/class-wcmp-export.php:913
+#: includes/class-wcmp-export.php:971
 msgid "inactive - enroute - distribution"
 msgstr "inactief - onderweg - in distributie"
 
-#: includes/class-wcmp-export.php:914
+#: includes/class-wcmp-export.php:972
 msgid "inactive - enroute - customs"
 msgstr "inactief - onderweg - douane"
 
-#: includes/class-wcmp-export.php:915
+#: includes/class-wcmp-export.php:973
 msgid "inactive - delivered - at recipient"
 msgstr "inactief - afgeleverd - bij geadresseeerde"
 
-#: includes/class-wcmp-export.php:916
+#: includes/class-wcmp-export.php:974
 msgid "inactive - delivered - ready for pickup"
 msgstr "inactief - afgeleverd - klaar om opgehaald te worden"
 
-#: includes/class-wcmp-export.php:917
+#: includes/class-wcmp-export.php:975
 msgid "inactive - delivered - package picked up"
 msgstr "inactief - afgeleverd - opgehaald"
 
-#: includes/class-wcmp-export.php:918
+#: includes/class-wcmp-export.php:976
 msgid "inactive - unknown"
 msgstr "inactief - onbekend"
 
-#: includes/class-wcmp-export.php:924
+#: includes/class-wcmp-export.php:982
 msgid "Unknown status"
 msgstr "Onbekende status"
 
-#: includes/class-wcmp-frontend.php:61
+#: includes/class-wcmp-frontend.php:70
 msgid "You can track your order with the following PostNL track&trace code:"
 msgstr "U kunt uw bestelling met de volgende PostNL track & trace code volgen:"
 
-#: includes/class-wcmp-frontend.php:326
+#: includes/class-wcmp-frontend.php:382
 msgid "Standard delivery"
 msgstr "Standaard levering"
 
-#: includes/class-wcmp-frontend.php:350 includes/class-wcmp-settings.php:415
-#: includes/class-wcmp-settings.php:597
+#: includes/class-wcmp-frontend.php:406 includes/class-wcmp-settings.php:415
+#: includes/class-wcmp-settings.php:637
 #: includes/views/wcmp-order-return-shipment-options.php:40
 #: includes/views/wcmp-order-shipment-options.php:65
 #: includes/views/wcmp-order-shipment-summary.php:14
 msgid "Signature on delivery"
 msgstr "Handtekening voor ontvangst"
 
-#: includes/class-wcmp-frontend.php:359
+#: includes/class-wcmp-frontend.php:415
 msgid "Home address only delivery"
 msgstr "Alleen afleveren bij ontvanger"
 
@@ -284,20 +288,20 @@ msgctxt "placeholder"
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
 
-#: includes/class-wcmp-settings-callbacks.php:397
-#: includes/class-wcmp-settings-callbacks.php:421
+#: includes/class-wcmp-settings-callbacks.php:411
+#: includes/class-wcmp-settings-callbacks.php:435
 msgid "Description"
 msgstr "Omschrijving"
 
-#: includes/class-wcmp-settings-callbacks.php:402
+#: includes/class-wcmp-settings-callbacks.php:416
 msgid "Additional fee (ex VAT, optional)"
 msgstr "Extra kosten (excl. BTW, optioneel)"
 
-#: includes/class-wcmp-settings-callbacks.php:419
+#: includes/class-wcmp-settings-callbacks.php:433
 msgid "Option"
 msgstr "Optie"
 
-#: includes/class-wcmp-settings-callbacks.php:420
+#: includes/class-wcmp-settings-callbacks.php:434
 msgid "Fee (optional)"
 msgstr "Kosten (optioneel)"
 
@@ -521,7 +525,7 @@ msgstr ""
 "groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een "
 "pallettarief van &euro;&nbsp;70,00 in rekening gebracht."
 
-#: includes/class-wcmp-settings.php:402 includes/class-wcmp-settings.php:585
+#: includes/class-wcmp-settings.php:402 includes/class-wcmp-settings.php:625
 #: includes/views/wcmp-order-return-shipment-options.php:35
 #: includes/views/wcmp-order-shipment-options.php:60
 #: includes/views/wcmp-order-shipment-summary.php:13
@@ -638,27 +642,59 @@ msgstr "Leeg pakket gewicht (gram)"
 msgid "Default weight of your empty parcel, rounded to grams."
 msgstr "Standaard gewicht van uw lege pakket, afgerond op gram."
 
-#: includes/class-wcmp-settings.php:548
+#: includes/class-wcmp-settings.php:531
+msgid "World Shipments"
+msgstr "Wereldzendingen"
+
+#: includes/class-wcmp-settings.php:538
+msgid "Default HS Code"
+msgstr "Standaard HS-code"
+
+#: includes/class-wcmp-settings.php:551
+msgid "Customs shipment type"
+msgstr "Inhoud van de zending"
+
+#: includes/class-wcmp-settings.php:559
+msgid "Commercial goods"
+msgstr "Handelsgoederen"
+
+#: includes/class-wcmp-settings.php:560
+msgid "Commercial samples"
+msgstr "Samples"
+
+#: includes/class-wcmp-settings.php:561
+msgid "Documents"
+msgstr "Documenten"
+
+#: includes/class-wcmp-settings.php:562
+msgid "Gifts"
+msgstr "Cadeaus"
+
+#: includes/class-wcmp-settings.php:563
+msgid "Return shipment"
+msgstr "Retourzending"
+
+#: includes/class-wcmp-settings.php:588
 msgid "Delivery options"
 msgstr "Bezorgopties"
 
-#: includes/class-wcmp-settings.php:556
+#: includes/class-wcmp-settings.php:596
 msgid "Enable MyParcel delivery options"
 msgstr "MyParcel bezorgopties inschakelen"
 
-#: includes/class-wcmp-settings.php:568
+#: includes/class-wcmp-settings.php:608
 msgid "Display for"
 msgstr "Toon bij"
 
-#: includes/class-wcmp-settings.php:576
+#: includes/class-wcmp-settings.php:616
 msgid "Shipping methods associated with Parcels"
 msgstr "Verzendmethoden gekoppeld aan Pakket"
 
-#: includes/class-wcmp-settings.php:577
+#: includes/class-wcmp-settings.php:617
 msgid "All shipping methods"
 msgstr "Alle verzendmethoden"
 
-#: includes/class-wcmp-settings.php:579
+#: includes/class-wcmp-settings.php:619
 msgid ""
 "To associate specific shipping methods with parcels, see the Default export "
 "settings tab. Note that the delivery options will be automatically hidden "
@@ -668,109 +704,121 @@ msgstr ""
 "'Standaard exportinstellingen' aan de pakkettypes toe te voegen. Bij "
 "buitenlandse adressen zijn de bezorgopties niet zichtbaar."
 
-#: includes/class-wcmp-settings.php:633
+#: includes/class-wcmp-settings.php:673
 msgid "PostNL pickup"
 msgstr "Afhalen bij PostNL"
 
-#: includes/class-wcmp-settings.php:645
+#: includes/class-wcmp-settings.php:685
 msgid "Early PostNL pickup"
 msgstr "Extra vroeg afhalen bij PostNL"
 
-#: includes/class-wcmp-settings.php:658
+#: includes/class-wcmp-settings.php:698
 msgid "Shipment processing parameters"
 msgstr "Verwerking van zendingen"
 
-#: includes/class-wcmp-settings.php:664
+#: includes/class-wcmp-settings.php:704
 msgid "Sunday"
 msgstr "zondag"
 
-#: includes/class-wcmp-settings.php:665
+#: includes/class-wcmp-settings.php:705
 msgid "Monday"
 msgstr "maandag"
 
-#: includes/class-wcmp-settings.php:666
+#: includes/class-wcmp-settings.php:706
 msgid "Tuesday"
 msgstr "dinsdag"
 
-#: includes/class-wcmp-settings.php:667
+#: includes/class-wcmp-settings.php:707
 msgid "Wednesday"
 msgstr "woensdag"
 
-#: includes/class-wcmp-settings.php:668
+#: includes/class-wcmp-settings.php:708
 msgid "Thursday"
 msgstr "donderdag"
 
-#: includes/class-wcmp-settings.php:669
+#: includes/class-wcmp-settings.php:709
 msgid "Friday"
 msgstr "vrijdag"
 
-#: includes/class-wcmp-settings.php:670
+#: includes/class-wcmp-settings.php:710
 msgid "Saturday"
 msgstr "zaterdag"
 
-#: includes/class-wcmp-settings.php:675
+#: includes/class-wcmp-settings.php:715
 msgid "Dropoff days"
 msgstr "Afleverdagen"
 
-#: includes/class-wcmp-settings.php:683
+#: includes/class-wcmp-settings.php:723
 msgid "Days of the week on which you hand over parcels to PostNL"
 msgstr "Dagen van de week waarop u de pakketten bij PostNL aflevert"
 
-#: includes/class-wcmp-settings.php:689
+#: includes/class-wcmp-settings.php:729
 msgid "Cut-off time"
 msgstr "Sluitingstijd"
 
-#: includes/class-wcmp-settings.php:698
+#: includes/class-wcmp-settings.php:738
 msgid "Time at which you stop processing orders for the day (format: hh:mm)"
 msgstr ""
 "Het tijdstip waarop u stopt met het verwerken van orders voor de dag "
 "(format: uu:mm)"
 
-#: includes/class-wcmp-settings.php:704
+#: includes/class-wcmp-settings.php:744
 msgid "Dropoff delay"
 msgstr "Verwerkingstijd"
 
-#: includes/class-wcmp-settings.php:713
+#: includes/class-wcmp-settings.php:753
 msgid "Number of days you take to process an order"
 msgstr "Aantal dagen dat u nodig heeft om een order te verwerken"
 
-#: includes/class-wcmp-settings.php:719
+#: includes/class-wcmp-settings.php:759
 msgid "Delivery days window"
 msgstr "Leverdagen venster"
 
-#: includes/class-wcmp-settings.php:728
+#: includes/class-wcmp-settings.php:768
 msgid "Number of days you allow the customer to postpone a shipment"
 msgstr "Aantal dagen dat een klant een zending kan uitstellen"
 
-#: includes/class-wcmp-settings.php:734
+#: includes/class-wcmp-settings.php:774
 msgid "Enable monday delivery"
 msgstr "Maandaglevering inschakelen"
 
-#: includes/class-wcmp-settings.php:746
+#: includes/class-wcmp-settings.php:786
+msgid "Cut-off time for monday delivery"
+msgstr "Sluitingstijd voor maandaglevering"
+
+#: includes/class-wcmp-settings.php:795
+msgid ""
+"Time at which you stop processing orders on saturday for monday delivery "
+"(format: hh:mm)"
+msgstr ""
+"Het tijdstip waarop u op zaterdag stopt met het verwerken van bestellingen "
+"voor maandaglevering (format: uu:mm)"
+
+#: includes/class-wcmp-settings.php:802
 msgid "Customizations"
 msgstr "Aanpassingen"
 
-#: includes/class-wcmp-settings.php:753
+#: includes/class-wcmp-settings.php:809
 msgid "Base color"
 msgstr "Basiskleur"
 
-#: includes/class-wcmp-settings.php:761
+#: includes/class-wcmp-settings.php:817
 msgid "Color of the header & tabs (cyan by default)"
 msgstr "Kleur van de header en tabs (standaardkleur: cyaan)"
 
-#: includes/class-wcmp-settings.php:768
+#: includes/class-wcmp-settings.php:824
 msgid "Highlight color"
 msgstr "Highlight kleur"
 
-#: includes/class-wcmp-settings.php:776
+#: includes/class-wcmp-settings.php:832
 msgid "Color of the selections/highlights (orange by default)"
 msgstr "Kleur van de selecties/highlights (standaardkleur: oranje)"
 
-#: includes/class-wcmp-settings.php:782
+#: includes/class-wcmp-settings.php:838
 msgid "Custom styles"
 msgstr "Aangepaste stijlen (CSS)"
 
-#: includes/class-wcmp-settings.php:796
+#: includes/class-wcmp-settings.php:852
 msgid "Automatically load Google fonts"
 msgstr "Google lettertypen automatisch laden"
 
