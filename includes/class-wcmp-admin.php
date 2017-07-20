@@ -365,8 +365,9 @@ class WooCommerce_MyParcel_Admin {
 			return;
 		}
 
-		echo '<strong>' . __( 'MyParcel shipment:', 'woocommerce-myparcel' ) . '</strong><br/>';
+		echo '<div style="clear:both;"><strong>' . __( 'MyParcel shipment:', 'woocommerce-myparcel' ) . '</strong><br/>';
 		$this->order_list_shipment_options( $order, false );
+		echo '</div>';
 	}
 
 	public function show_order_delivery_options($order) {
