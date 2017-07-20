@@ -411,7 +411,7 @@ class WooCommerce_MyParcel_Admin {
 					break;
 			}
 
-			echo "<div class='pickup-location'><strong>{$title}: </strong>{$pickup['location']}, {$pickup['street']} {$pickup['number']}, {$pickup['postal_code']} {$pickup['city']}";
+			echo "<div class='pickup-location'><strong>{$title}: </strong>{$pickup['location']}, {$pickup['street']} {$pickup['number']}, {$pickup['postal_code']} {$pickup['city']}</div>";
 		}
 		echo '</div>';
 	}
