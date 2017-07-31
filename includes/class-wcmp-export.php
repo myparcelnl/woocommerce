@@ -49,6 +49,7 @@ class WooCommerce_MyParcel_Export {
 				}
 				// destroy after reading
 				delete_option( 'wcmyparcel_admin_notices' );
+				wp_cache_delete( 'wcmyparcel_admin_notices','options' );
 			}
 		}
 
