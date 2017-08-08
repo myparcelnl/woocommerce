@@ -177,8 +177,11 @@ class WooCommerce_MyParcel_Frontend {
 				$fee = WooCommerce_MyParcel()->checkout_settings[$option.'_fee'];
 				$fee = $this->normalize_price( $fee );
 				$fee_including_tax = $fee + array_sum( WC_Tax::calc_shipping_tax( $fee, WC_Tax::get_shipping_tax_rates() ) );
-				$formatted_fee = wc_price($fee_including_tax); // this includes price HTML, may need to use custom function, also for &#8364; instead of eur
-				$prices[$option] = '+ '.$formatted_fee;
+				if ($fee_including_tax < 0) {
+					$prices[$option] = '- '.wc_price(abs($fee_including_tax)); // this includes price HTML, may need to use custom function, also for &#8364; instead of eur
+				} else {
+					$prices[$option] = '+ '.wc_price($fee_including_tax);
+				}
 			}
 		}
 
