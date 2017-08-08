@@ -758,7 +758,7 @@ class WooCommerce_MyParcel_Export {
 				}
 			}
 			if ($output_errors === true && $missing_hs_codes > 0) {
-				$this->errors[] = __( sprintf('%d shipments missing HS codes - not exported.', $missing_hs_codes), 'woocommerce-myparcel' );
+				$this->errors[] = sprintf( __( '%d shipments missing HS codes - not exported.', 'woocommerce-myparcel' ), $missing_hs_codes);
 			}
 		}
 
