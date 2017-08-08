@@ -78,18 +78,28 @@
 	);
 
 	if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
+		if ( WooCommerce_MyParcel()->export->is_world_shipment_country( $recipient['cc'] ) ) {
+			unset($option_rows['[large_format]']);
+		}
 		unset($option_rows['[only_recipient]']);
 		unset($option_rows['[signature]']);
 		unset($option_rows['[return]']);
+
 		$shipment_options['insured'] = 1;
+		if ( WooCommerce_MyParcel()->export->is_world_shipment_country( $recipient['cc'] ) ) {
+			$shipment_options['insurance']['amount'] = 19900;
+			$insurance_text = __( 'Standard insurance up to €200 + signature on delivery', 'woocommerce-myparcel' );
+		} else {
+			$shipment_options['insurance']['amount'] = 49900;
+			$insurance_text = __( 'Standard insurance up to €500 + signature on delivery', 'woocommerce-myparcel' );
+		}
+
 		$option_rows['[insured]'] = array(
-			'label'		=> __( 'Standard insurance up to €500 + signature on delivery', 'woocommerce-myparcel' ),
+			'label'		=> $insurance_text,
 			'value'		=> $shipment_options['insured'],
 			'class'		=> 'insured',
 			'hidden'	=> 'yes',
 		);
-
-		$shipment_options['insurance']['amount'] = 499;
 	}
 
 
