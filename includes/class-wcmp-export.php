@@ -196,6 +196,11 @@ class WooCommerce_MyParcel_Export {
 			$created_shipments = array();
 			$order = WCX::get_order( $order_id );
 			$shipments = $this->get_order_shipment_data( (array) $order_id );
+			$shipments = $this->validate_shipments( $shipments );
+			if (empty($shipments)) {
+				$this->log("Export for order {$order_id} skipped (missing or invalidated shipment data)");
+				continue;
+			}
 
 			$this->log("Shipment data for order {$order_id}:\n".var_export($shipments, true));
 
@@ -737,6 +742,27 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		return compact( 'weight', 'invoice', 'contents', 'items' );
+	}
+
+	public function validate_shipments( $shipments, $output_errors = true ) {
+		$missing_hs_codes = 0;
+		foreach ($shipments as $key => $shipment) {
+			// check customs declaration for HS codes
+			if (isset($shipment['customs_declaration']) && !empty($shipment['customs_declaration']['items'])) {
+				foreach ($shipment['customs_declaration']['items'] as $key => $item) {
+					if (empty($item['classification'])) {
+						unset($shipments[$key]);
+						$missing_hs_codes++;
+						break;
+					}
+				}
+			}
+			if ($output_errors === true && $missing_hs_codes > 0) {
+				$this->errors[] = __( sprintf('%d shipments missing HS codes - not exported.', $missing_hs_codes), 'woocommerce-myparcel' );
+			}
+		}
+
+		return $shipments;
 	}
 
 	public function get_shipment_ids( $order_ids, $args ) {
