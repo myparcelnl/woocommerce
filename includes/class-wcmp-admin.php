@@ -28,6 +28,7 @@ class WooCommerce_MyParcel_Admin {
 
 		// HS code in product shipping options tab
 		add_action( 'woocommerce_product_options_shipping', array( $this, 'product_hs_code_field' ) );
+		add_action( 'woocommerce_process_product_meta', array( $this, 'product_hs_code_field_save' ) );
 	}
 
 	public function order_list_shipment_options( $order, $hide = true ) {
@@ -486,11 +487,25 @@ class WooCommerce_MyParcel_Admin {
 			array( 
 				'id'          => '_myparcel_hs_code', 
 				'label'       => __( 'HS Code', 'woocommerce-myparcel' ), 
-				'description' => __( sprintf( 'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>' ), 'woocommerce-myparcel' ),
+				'description' => sprintf( __( 'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcel' ), '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>' ),
 				// 'desc_tip'    => true,
 			)
 		);  
 		echo '</div>';
+	}
+
+	public function product_hs_code_field_save( $post_id ) {
+		// check if hs code is passed and not an array (=variation hs code)
+		if (isset($_POST['_myparcel_hs_code']) && !is_array($_POST['_myparcel_hs_code'])) {
+			$product = wc_get_product( $post_id );
+			$hs_code = $_POST['_myparcel_hs_code'];
+			if( !empty( $hs_code ) ) {
+				WCX_Product::update_meta_data( $product, '_myparcel_hs_code', esc_attr( $hs_code ) );
+			} elseif( isset($_POST['_myparcel_hs_code']) && empty( $hs_code ) ) {
+				WCX_Product::delete_meta_data( $product, '_myparcel_hs_code' );
+			}
+		}
+
 	}
 }
 
