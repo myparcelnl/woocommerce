@@ -76,6 +76,12 @@ jQuery( function( $ ) {
 				var shipping_method = $( '#order_review .shipping_method').val();
 			}
 
+			if ( typeof shipping_method === 'undefined' ) {
+				// no shipping method selected, hide by default
+				hide_myparcel_delivery_options();
+				return;
+			}
+
 			if (shipping_method.indexOf('table_rate:') !== -1) {
 				// WC Table Rates
 				// use shipping_method = method_id:instance_id:rate_id
