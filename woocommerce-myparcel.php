@@ -275,7 +275,15 @@ class WooCommerce_MyParcel {
 	 * @param string $installed_version the currently installed ('old') version
 	 */
 	protected function upgrade( $installed_version ) {
-		# stub
+		if ( version_compare( $installed_version, '2.4.0-beta-4', '<' ) ) {
+			// remove log file (now uses WC logger)
+			$upload_dir = wp_upload_dir();
+			$upload_base = trailingslashit( $upload_dir['basedir'] );
+			$log_file = $upload_base.'myparcel_log.txt';
+			if ( @file_exists( $log_file ) ) {
+				@unlink( $log_file );
+			}
+		}
 	}		
 
 	/**
