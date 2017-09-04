@@ -281,14 +281,6 @@ class WooCommerce_MyParcel_Settings {
 			$option_group
 		);
 
-		$upload_dir = wp_upload_dir();
-		$upload_base_dir = trailingslashit( $upload_dir['basedir'] );
-		$upload_base_url = trailingslashit( $upload_dir['baseurl'] );
-		$log_file_url = $upload_base_url . 'myparcel_log.txt';
-		$log_file_path = $upload_base_dir . 'myparcel_log.txt';
-		$debugging_only = __( 'Only enable this option when debugging!', 'woocommerce-myparcel' );
-		$download_link = sprintf('%s<br/><a href="%s" target="_blank">%s</a>', $debugging_only, $log_file_url, __( 'Download log file', 'woocommerce-myparcel' ) );
-
 		add_settings_field(
 			'error_logging',
 			__( 'Log API communication', 'woocommerce-myparcel' ),
@@ -298,7 +290,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'error_logging',
-				'description'	=> file_exists($log_file_path) ? $download_link : $debugging_only,
+				'description'	=> '<a href="'.esc_url_raw( admin_url( 'admin.php?page=wc-status&tab=logs' ) ).'" target="_blank">'.__( 'View logs', 'woocommerce-myparcel' ).'</a> (wc-myparcel)',
 			)
 		);
 
