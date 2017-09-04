@@ -232,6 +232,10 @@ class WooCommerce_MyParcel_Admin {
 			$consignments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
 		}
 
+		if (empty($consignments) || !is_array($consignments)) {
+			return false;
+		}
+
 		if (!empty($consignments) && $exclude_concepts) {
 			foreach ($consignments as $key => $consignment) {
 				if (empty($consignment['tracktrace'])) {
