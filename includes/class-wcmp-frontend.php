@@ -338,7 +338,6 @@ class WooCommerce_MyParcel_Frontend {
 	}
 
 	public function delivery_options_fees( $cart ) {
-		global $woocommerce;
 		if ( ! $_POST || ( is_admin() && ! is_ajax() ) ) {
 			return;
 		}
@@ -432,7 +431,6 @@ class WooCommerce_MyParcel_Frontend {
 	}
 
 	public function add_fee( $fee_name, $fee ) {
-		global $woocommerce; // should be rewritten to WC with fallback functions
 		$fee = $this->normalize_price( $fee );
 		// get shipping tax data
 		$shipping_tax_class = $this->get_shipping_tax_class();
@@ -440,9 +438,9 @@ class WooCommerce_MyParcel_Frontend {
 			if ($shipping_tax_class == 'standard') {
 				$shipping_tax_class = '';
 			}
-			$woocommerce->cart->add_fee( $fee_name, $fee, true, $shipping_tax_class );
+			WC()->cart->add_fee( $fee_name, $fee, true, $shipping_tax_class );
 		} else {
-			$woocommerce->cart->add_fee( $fee_name, $fee );
+			WC()->cart->add_fee( $fee_name, $fee );
 		}
 	}
 
@@ -454,8 +452,6 @@ class WooCommerce_MyParcel_Frontend {
 	 * @return string tax class
 	 */
 	public function get_shipping_tax_class() {
-		global $woocommerce; // should be rewritten to WC with fallback functions in future WooCommerce versions
-
 		$shipping_tax_class = get_option( 'woocommerce_shipping_tax_class' );
 		// WC3.0+ sets 'inherit' for taxes based on items, empty for 'standard'
 		if ( version_compare( WOOCOMMERCE_VERSION, '3.0', '>=' ) && 'inherit' !== $shipping_tax_class ) {
@@ -480,7 +476,7 @@ class WooCommerce_MyParcel_Frontend {
 			list( $country, $state, $postcode, $city ) = $location;
 
 			// This will be per order shipping - loop through the order and find the highest tax class rate
-			$cart_tax_classes = $woocommerce->cart->get_cart_item_tax_classes();
+			$cart_tax_classes = WC()->cart->get_cart_item_tax_classes();
 			// If multiple classes are found, use the first one. Don't bother with standard rate, we can get that later.
 			if ( sizeof( $cart_tax_classes ) > 1 && ! in_array( '', $cart_tax_classes ) ) {
 				$tax_classes = WC_Tax::get_tax_classes();
