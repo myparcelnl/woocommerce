@@ -176,11 +176,20 @@ class WooCommerce_MyParcel_Frontend {
 			} elseif (!empty(WooCommerce_MyParcel()->checkout_settings[$option.'_fee'])) {
 				$fee = WooCommerce_MyParcel()->checkout_settings[$option.'_fee'];
 				$fee = $this->normalize_price( $fee );
-				$fee_including_tax = $fee + array_sum( WC_Tax::calc_shipping_tax( $fee, WC_Tax::get_shipping_tax_rates() ) );
-				if ($fee_including_tax < 0) {
-					$prices[$option] = '- '.wc_price(abs($fee_including_tax)); // this includes price HTML, may need to use custom function, also for &#8364; instead of eur
+
+				// get WC Tax display setting for cart
+				$tax_display_cart = get_option( 'woocommerce_tax_display_cart' );
+				if ($tax_display_cart == 'incl') {
+					$display_fee = $fee + array_sum( WC_Tax::calc_shipping_tax( $fee, WC_Tax::get_shipping_tax_rates() ) );
 				} else {
-					$prices[$option] = '+ '.wc_price($fee_including_tax);
+					$display_fee = $fee;
+				}
+
+				// determine whether fee is cost or discount
+				if ($display_fee < 0) {
+					$prices[$option] = '- '.wc_price(abs($display_fee)); // this includes price HTML, may need to use custom function, also for &#8364; instead of eur
+				} else {
+					$prices[$option] = '+ '.wc_price($display_fee);
 				}
 			}
 		}
@@ -452,8 +461,12 @@ class WooCommerce_MyParcel_Frontend {
 		if ( version_compare( WOOCOMMERCE_VERSION, '3.0', '>=' ) && 'inherit' !== $shipping_tax_class ) {
 			$shipping_tax_class = '' === $shipping_tax_class ? 'standard' : $shipping_tax_class;
 			return $shipping_tax_class;
-		} elseif ( !empty( $shipping_tax_class ) ) {
+		} elseif ( !empty( $shipping_tax_class ) && 'inherit' !== $shipping_tax_class ) {
 			return $shipping_tax_class;
+		}
+
+		if ( $shipping_tax_class == 'inherit' ) {
+			$shipping_tax_class = '';
 		}
 
 		// See if we have an explicitly set shipping tax class
@@ -468,7 +481,6 @@ class WooCommerce_MyParcel_Frontend {
 
 			// This will be per order shipping - loop through the order and find the highest tax class rate
 			$cart_tax_classes = $woocommerce->cart->get_cart_item_tax_classes();
-
 			// If multiple classes are found, use the first one. Don't bother with standard rate, we can get that later.
 			if ( sizeof( $cart_tax_classes ) > 1 && ! in_array( '', $cart_tax_classes ) ) {
 				$tax_classes = WC_Tax::get_tax_classes();
