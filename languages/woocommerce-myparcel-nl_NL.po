@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "POT-Creation-Date: 2017-09-12 09:34+0200\n"
-"PO-Revision-Date: 2017-09-12 09:35+0200\n"
+"PO-Revision-Date: 2017-09-12 09:45+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -310,13 +310,13 @@ msgstr ""
 #: includes/class-wcmp-nlpostcode-fields.php:640
 #, php-format
 msgid "Billing %s"
-msgstr ""
+msgstr "Factuuradres %s"
 
 #: includes/class-wcmp-nlpostcode-fields.php:639
 #: includes/class-wcmp-nlpostcode-fields.php:641
 #, php-format
 msgid "Shipping %s"
-msgstr ""
+msgstr "Verzendadres %s"
 
 #: includes/class-wcmp-nlpostcode-fields.php:645
 msgid "Billing Nr. is a required field"
