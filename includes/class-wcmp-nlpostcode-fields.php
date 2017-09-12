@@ -71,6 +71,9 @@ class WC_NLPostcode_Fields {
 		// Remove placeholder values (IE8 & 9)
 		add_action('woocommerce_checkout_update_order_meta', array( &$this, 'remove_placeholders' ), 10, 2 );
 
+		// Fix weird required field translations
+		add_filter( 'woocommerce_checkout_required_field_notice', array( &$this, 'required_field_notices' ), 10, 2 );
+
 		$this->load_woocommerce_filters();
 	}
 
@@ -624,6 +627,36 @@ class WC_NLPostcode_Fields {
 		}
 		
 		return;
+	}
+
+	/**
+	 * WooCommerce concatenates translations for required field notices that result in
+	 * confusing messages, so we translate the full notice to prevent this
+	 */
+	function required_field_notices( $notice, $field_label ) {
+		// concatenate translations
+		$billing_nr = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-myparcel' ) );
+		$shipping_nr = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-myparcel' ) );
+		$billing_street = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcel' ) );
+		$shipping_street = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcel' ) );
+
+		switch ( $field_label ) {
+			case $billing_nr:
+				$notice = __( 'Billing Nr. is a required field', 'woocommerce-myparcel' );
+				break;
+			case $shipping_nr:
+				$notice = __( 'Shipping Nr. is a required field', 'woocommerce-myparcel' );
+				break;
+			case $billing_street:
+				$notice = __( 'Billing Street name is a required field', 'woocommerce-myparcel' );
+				break;
+			case $shipping_street:
+				$notice = __( 'Shipping Street name is a required field', 'woocommerce-myparcel' );
+				break;
+			default:
+				break;
+		}
+		return $notice;
 	}
 
 	/**
