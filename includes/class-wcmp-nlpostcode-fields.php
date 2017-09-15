@@ -637,21 +637,16 @@ class WC_NLPostcode_Fields {
 		// concatenate translations
 		$billing_nr = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-myparcel' ) );
 		$shipping_nr = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-myparcel' ) );
-		$billing_street = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcel' ) );
-		$shipping_street = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcel' ) );
+		// not used:
+		// $billing_street = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcel' ) );
+		// $shipping_street = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcel' ) );
 
 		switch ( $field_label ) {
 			case $billing_nr:
-				$notice = __( 'Billing Nr. is a required field', 'woocommerce-myparcel' );
+				$notice = __( '<b>Billing Nr.</b> is a required field', 'woocommerce-myparcel' );
 				break;
 			case $shipping_nr:
-				$notice = __( 'Shipping Nr. is a required field', 'woocommerce-myparcel' );
-				break;
-			case $billing_street:
-				$notice = __( 'Billing Street name is a required field', 'woocommerce-myparcel' );
-				break;
-			case $shipping_street:
-				$notice = __( 'Shipping Street name is a required field', 'woocommerce-myparcel' );
+				$notice = __( '<b>Shipping Nr.</b> is a required field', 'woocommerce-myparcel' );
 				break;
 			default:
 				break;

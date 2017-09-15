@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2017-09-12 09:34+0200\n"
-"PO-Revision-Date: 2017-09-12 09:45+0200\n"
+"POT-Creation-Date: 2017-09-15 16:14+0200\n"
+"PO-Revision-Date: 2017-09-15 16:15+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -270,8 +270,6 @@ msgstr "Alleen afleveren bij ontvanger"
 #: includes/class-wcmp-nlpostcode-fields.php:204
 #: includes/class-wcmp-nlpostcode-fields.php:373
 #: includes/class-wcmp-nlpostcode-fields.php:401
-#: includes/class-wcmp-nlpostcode-fields.php:640
-#: includes/class-wcmp-nlpostcode-fields.php:641
 msgid "Street name"
 msgstr "Straat"
 
@@ -307,32 +305,22 @@ msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
 
 #: includes/class-wcmp-nlpostcode-fields.php:638
-#: includes/class-wcmp-nlpostcode-fields.php:640
 #, php-format
 msgid "Billing %s"
 msgstr "Factuuradres %s"
 
 #: includes/class-wcmp-nlpostcode-fields.php:639
-#: includes/class-wcmp-nlpostcode-fields.php:641
 #, php-format
 msgid "Shipping %s"
 msgstr "Verzendadres %s"
 
-#: includes/class-wcmp-nlpostcode-fields.php:645
-msgid "Billing Nr. is a required field"
-msgstr "Factuuradres huisnummer is een verplicht veld."
+#: includes/class-wcmp-nlpostcode-fields.php:646
+msgid "<b>Billing Nr.</b> is a required field"
+msgstr "<b>Factuuradres huisnummer</b> is een verplicht veld"
 
-#: includes/class-wcmp-nlpostcode-fields.php:648
-msgid "Shipping Nr. is a required field"
-msgstr "Verzendadres huisnummer is een verplicht veld."
-
-#: includes/class-wcmp-nlpostcode-fields.php:651
-msgid "Billing Street name is a required field"
-msgstr "Factuuradres Straatnaam is een verplicht veld"
-
-#: includes/class-wcmp-nlpostcode-fields.php:654
-msgid "Shipping Street name is a required field"
-msgstr "Verzendadres Straatnaam is een verplicht veld"
+#: includes/class-wcmp-nlpostcode-fields.php:649
+msgid "<b>Shipping Nr.</b> is a required field"
+msgstr "<b>Verzendadres huisnummer</b> is een verplicht veld"
 
 #: includes/class-wcmp-settings-callbacks.php:411
 #: includes/class-wcmp-settings-callbacks.php:435
@@ -1012,6 +1000,18 @@ msgstr ""
 #. Author URI of the plugin/theme
 msgid "http://www.wpovernight.com"
 msgstr ""
+
+#~ msgid "Billing Nr. is a required field"
+#~ msgstr "Factuuradres huisnummer is een verplicht veld."
+
+#~ msgid "Shipping Nr. is a required field"
+#~ msgstr "Verzendadres huisnummer is een verplicht veld."
+
+#~ msgid "Billing Street name is a required field"
+#~ msgstr "Factuuradres Straatnaam is een verplicht veld"
+
+#~ msgid "Shipping Street name is a required field"
+#~ msgstr "Verzendadres Straatnaam is een verplicht veld"
 
 #~ msgid "Only enable this option when debugging!"
 #~ msgstr "Gebruik deze optie alleen wanneer er problemen zijn!"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2017-09-12 09:34+0200\n"
+"POT-Creation-Date: 2017-09-15 16:14+0200\n"
 "PO-Revision-Date: 2016-07-02 16:21+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -266,8 +266,6 @@ msgstr ""
 #: includes/class-wcmp-nlpostcode-fields.php:204
 #: includes/class-wcmp-nlpostcode-fields.php:373
 #: includes/class-wcmp-nlpostcode-fields.php:401
-#: includes/class-wcmp-nlpostcode-fields.php:640
-#: includes/class-wcmp-nlpostcode-fields.php:641
 msgid "Street name"
 msgstr ""
 
@@ -303,31 +301,21 @@ msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
 
 #: includes/class-wcmp-nlpostcode-fields.php:638
-#: includes/class-wcmp-nlpostcode-fields.php:640
 #, php-format
 msgid "Billing %s"
 msgstr ""
 
 #: includes/class-wcmp-nlpostcode-fields.php:639
-#: includes/class-wcmp-nlpostcode-fields.php:641
 #, php-format
 msgid "Shipping %s"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:645
-msgid "Billing Nr. is a required field"
+#: includes/class-wcmp-nlpostcode-fields.php:646
+msgid "<b>Billing Nr.</b> is a required field"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:648
-msgid "Shipping Nr. is a required field"
-msgstr ""
-
-#: includes/class-wcmp-nlpostcode-fields.php:651
-msgid "Billing Street name is a required field"
-msgstr ""
-
-#: includes/class-wcmp-nlpostcode-fields.php:654
-msgid "Shipping Street name is a required field"
+#: includes/class-wcmp-nlpostcode-fields.php:649
+msgid "<b>Shipping Nr.</b> is a required field"
 msgstr ""
 
 #: includes/class-wcmp-settings-callbacks.php:411
