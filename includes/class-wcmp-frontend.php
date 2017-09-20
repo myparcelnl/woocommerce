@@ -275,11 +275,11 @@ class WooCommerce_MyParcel_Frontend {
 			window.myparcel_initial_hide = <?php echo ($hide_delivery_options) ? 'true' : 'false'; ?>;
 		</script>
 		
-		<input style="display:none" type="checkbox" name='mypa-options-enabled' id="mypa-options-enabled">
-		<div id="mypa-chosen-delivery-options">
-			<input style="display:none" name='mypa-post-nl-data' id="mypa-input">
-			<input style="display:none" type="checkbox" name='mypa-signed' id="mypa-signed">
-			<input style="display:none" type="checkbox" name='mypa-recipient-only' id="mypa-recipient-only">
+		<input style="display:none !important;" type="checkbox" name='mypa-options-enabled' id="mypa-options-enabled">
+		<div id="mypa-chosen-delivery-options" style="display:none !important;">
+			<input style="display:none !important;" name='mypa-post-nl-data' id="mypa-input">
+			<input style="display:none !important;" type="checkbox" name='mypa-signed' id="mypa-signed">
+			<input style="display:none !important;" type="checkbox" name='mypa-recipient-only' id="mypa-recipient-only">
 		</div>
 		<?php
 	}
