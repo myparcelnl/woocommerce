@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.8
-Stable tag: 2.3.2
+Stable tag: 2.4.0
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -88,6 +88,16 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+
+= 2.4.0 (2017-09-25) = 
+* Feature: Export world shipments + customs declaration form
+* Feature: Show delivery options on thank you page
+* Feature: Use WC logger when possible
+* Fix: Return shipment error
+* Fix: Order details layout for pickup location
+* Fix: Delete cache of admin notices
+* Fix: Display of negative delivery options price
+* Fix: Improved tax handling on delivery options fees
 
 = 2.3.3 (2017-06-27) =
 * Fix: Pickup locations in Safari
