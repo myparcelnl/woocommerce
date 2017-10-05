@@ -385,8 +385,6 @@ class WC_NLPostcode_Fields {
 		);
 
 		return $fields;
-
-		echo '<pre>';var_dump($fields);echo '</pre>';die();
 	}
 
 	/**
