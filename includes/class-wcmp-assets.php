@@ -48,7 +48,15 @@ class WooCommerce_MyParcel_Assets {
 				wp_enqueue_script( 'iris' );
 				if (!wp_script_is( 'wc-enhanced-select', 'registered' )) {
 					$suffix       = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-					wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', array( 'jquery', 'select2' ), WC_VERSION );
+					wp_register_script(
+						'wc-enhanced-select',
+						WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js',
+						array(
+							'jquery',
+							version_compare( WC()->version, '3.2.0', '>=' ) ? 'selectWoo' : 'select2',
+						),
+						WC_VERSION
+					);
 				}
 				wp_enqueue_script( 'wc-enhanced-select' );
 				wp_enqueue_script( 'jquery-ui-sortable' );
