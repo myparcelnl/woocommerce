@@ -531,13 +531,13 @@ class WC_NLPostcode_Fields {
 			WCX_Order::set_address_prop( $order, 'address_1', 'billing', $billing_address_1 );
 
 			// check if 'ship to billing address' is checked
-			if ( $ship_to_different_address == false ) {
+			if ( $ship_to_different_address == false && $this->cart_needs_shipping_address() ) {
 				// use billing address
 				WCX_Order::set_address_prop( $order, 'address_1', 'shipping', $billing_address_1 );
 			}
 		}
 
-		if ( $_POST['shipping_country'] == 'NL' && $ship_to_different_address == true) {
+		if ( $_POST['shipping_country'] == 'NL' && $ship_to_different_address == true ) {
 			// concatenate street & house number & copy to 'shipping_address_1'
 			$shipping_house_number = $_POST['shipping_house_number'] . (!empty($_POST['shipping_house_number_suffix'])?'-' . $_POST['shipping_house_number_suffix']:'');
 			$shipping_address_1 = $_POST['shipping_street_name'] . ' ' . $shipping_house_number;
@@ -783,13 +783,27 @@ class WC_NLPostcode_Fields {
 	 * @return string
 	 */
 	public function get_posted_address_data( $key, $posted, $type = 'billing' ) {
-		if ( 'billing' === $type || false === $posted['ship_to_different_address'] ) {
+		if ( 'billing' === $type || ( !$posted['ship_to_different_address'] && $this->cart_needs_shipping_address() ) ) {
 			$return = isset( $posted[ 'billing_' . $key ] ) ? $posted[ 'billing_' . $key ] : '';
+		} elseif ( 'shipping' === $type && !$this->cart_needs_shipping_address() ) {
+			$return = '';
 		} else {
 			$return = isset( $posted[ 'shipping_' . $key ] ) ? $posted[ 'shipping_' . $key ] : '';
 		}
 
 		return $return;
+	}
+
+	public function cart_needs_shipping_address() {
+		if ( is_object( WC()->cart ) && method_exists( WC()->cart, 'needs_shipping_address' ) && function_exists('wc_ship_to_billing_address_only') ) {
+			if ( WC()->cart->needs_shipping_address() || wc_ship_to_billing_address_only() ) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
 	}
 
 	/**
