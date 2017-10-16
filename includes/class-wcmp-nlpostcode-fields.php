@@ -22,6 +22,14 @@ class WC_NLPostcode_Fields {
 		add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_scripts_styles' ) );
 
+		// set later priority for woocommerce_billing_fields / woocommerce_shipping_fields
+		// when Checkout Field Editor is active
+		if ( function_exists('thwcfd_is_locale_field') || function_exists('wc_checkout_fields_modify_billing_fields') ) {
+			add_filter( 'nl_checkout_fields_priority', function(){
+				return 1001;
+			} );
+		}
+
 		// Add street name & house number checkout fields.
 		if ( version_compare( WOOCOMMERCE_VERSION, '2.0' ) >= 0 ) {
 			// WC 2.0 or newer is used, the filter got a $coutry parameter, yay!
