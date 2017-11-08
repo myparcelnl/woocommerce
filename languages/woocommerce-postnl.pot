@@ -924,7 +924,7 @@ msgid ""
 msgstr ""
 
 #. Author of the plugin/theme
-msgid "Richard Perdaan"
+msgid "Richard Perdaan & Ewout Fernhout"
 msgstr ""
 
 #. Author URI of the plugin/theme

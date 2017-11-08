@@ -359,7 +359,7 @@ class WooCommerce_PostNL_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'connect_email',
-				'description'	=> sprintf(__( 'When you connect the customer email, PostNL can send a Track&Trace email to this address. In your %sPostNL backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-postnl' ), '<a href="https://backoffice.postnl.nl/ttsettingstable" target="_blank">', '</a>')
+				'description'	=> sprintf(__( 'When you connect the customer email, PostNL can send a Track&Trace email to this address. In your %sPostNL backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-postnl' ), '<a href="https://backoffice.myparcel.nl/ttsettingstable" target="_blank">', '</a>')
 			)
 		);
 		

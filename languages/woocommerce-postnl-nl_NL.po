@@ -994,7 +994,7 @@ msgstr ""
 "verzendlabels direct vanuit WooCommerce"
 
 #. Author of the plugin/theme
-msgid "Richard Perdaan"
+msgid "Richard Perdaan & Ewout Fernhout"
 msgstr ""
 
 #. Author URI of the plugin/theme
@@ -1109,13 +1109,13 @@ msgstr ""
 
 #~ msgid ""
 #~ "When you connect the customer email, PostNL can send a Track&Trace "
-#~ "email to this address. In your <a href=\"https://backoffice.postnl.nl/"
+#~ "email to this address. In your <a href=\"https://backoffice.myparcel.nl/"
 #~ "ttsettingstable\">PostNL backend</a> you can enable or disable this "
 #~ "email and format it in your own style."
 #~ msgstr ""
 #~ "Wanneer u het emailadres van de klant koppelt, kan PostNL een "
 #~ "Track&Trace email versturen naar dit adres. In uw <a href=\"https://"
-#~ "backoffice.postnl.nl/ttsettingstable\">PostNL backend</a> kunt u deze "
+#~ "backoffice.myparcel.nl/ttsettingstable\">PostNL backend</a> kunt u deze "
 #~ "email in- of uitschakelen en opmaken in uw eigen stijl."
 
 #~ msgid "Productnaam"
@@ -1129,5 +1129,5 @@ msgstr ""
 #~ msgstr ""
 #~ "Wanneer u het emailadres van de klant koppelt, kan PostNL een "
 #~ "Track&Trace email versturen naar dit adres. In uw <a href=\"https://"
-#~ "backoffice.postnl.nl/ttsettingstable\">PostNL backend</a> kunt u deze "
+#~ "backoffice.myparcel.nl/ttsettingstable\">PostNL backend</a> kunt u deze "
 #~ "email in- of uitschakelen en opmaken in uw eigen stijl."

@@ -7,7 +7,7 @@ if ( !class_exists( 'WC_PostNL_API' ) ) :
 
 class WC_PostNL_API extends WC_PostNL_REST_Client {
 	/** @var API URL */
-	public $APIURL = "https://api.postnl.nl/";
+	public $APIURL = "https://api.myparcel.nl/";
 
 	/* @var API Key */
 	private $key;
