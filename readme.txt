@@ -13,7 +13,7 @@ Export your WooCommerce orders to PostNL (www.postnl.nl) and print labels direct
 
 This WooCommerce extension allows you to export your orders to the PostNL service (www.postnl.nl).
 
-**Online Manual (in Dutch):** https://postnl.github.io/woocommerce-handleiding/
+**Online Manual (in Dutch):** https://postnl.github.io/woocommerce/
 
 = Main features =
 - Delivery options integrated in your checkout
@@ -63,10 +63,10 @@ Moreover, after a label is created, a track&trace code is added to the order. Wh
 
 == Frequently Asked Questions ==
 
-**Online Manual (in Dutch):** https://postnl.github.io/woocommerce-handleiding/
+**Online Manual (in Dutch):** https://postnl.github.io/woocommerce/
 
 = How do I get an API key? =
-When logged in on your postnl account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) you can find your API key under Instellingen → Algemeen.
+For the api key, you must be contacting PostNL.
 
 = How do I change the track&trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
