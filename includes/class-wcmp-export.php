@@ -426,62 +426,6 @@ class WooCommerce_PostNL_Export {
 		return $shipments;
 	}
 
-	public function prepare_return_shipment_data( $order_id, $options ) {
-		$order = WCX::get_order( $order_id );
-
-		$shipping_name = method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name() : trim( $order->shipping_first_name . ' ' . $order->shipping_last_name );
-
-		// set name & email
-		$return_shipment_data = array(
-			'name'			=> $shipping_name,
-			'email'			=> isset(WooCommerce_PostNL()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
-			'carrier'		=> 1, // default to POSTNL for now
-		);
-
-		// add options if available
-		if (!empty($options)) {
-			// convert insurance option
-			if ( !isset($options['insurance']) && isset($options['insured_amount']) ) {
-				if ($options['insured_amount'] > 0) {
-					$options['insurance'] = array(
-						'amount'	=> (int) $options['insured_amount'] * 100,
-						'currency'	=> 'EUR',
-					);
-				}
-
-				unset($options['insured_amount']);
-				unset($options['insured']);
-			}
-
-			// PREVENT ILLEGAL SETTINGS
-			// convert numeric strings to int
-			$int_options = array( 'package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format' );
-			foreach ($options as $key => &$value) {
-				if ( in_array($key, $int_options) ) {
-					$value = (int) $value;
-				}
-			}
-
-			// remove frontend insurance option values
-			if (isset($options['insured_amount'])) {
-				unset($options['insured_amount']);
-			}
-			if (isset($options['insured'])) {
-				unset($options['insured']);
-			}
-
-			$return_shipment_data['options'] = $options;
-		}
-
-		// get parent
-		$shipment_ids = $this->get_shipment_ids( (array) $order_id, array( 'exclude_concepts' => true, 'only_last' => true ) );
-		if ( !empty($shipment_ids) ) {
-			$return_shipment_data['parent'] = (int) array_pop( $shipment_ids);
-		}
-
-		return $return_shipment_data;
-	}
-
 	public function get_recipient( $order ) {
 		$shipping_name = method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name() : trim( $order->shipping_first_name . ' ' . $order->shipping_last_name );
 		$address = array(

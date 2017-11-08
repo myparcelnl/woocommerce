@@ -58,8 +58,6 @@ jQuery( function( $ ) {
 		}
 	})
 
-
-
 	// hide automatic order status if automation not enabled
 	$('.wcmp_shipment_options input#order_status_automation').change(function () {
 		var order_status_select = $( '.wcmp_shipment_options select.automatic_order_status');
@@ -267,6 +265,10 @@ jQuery( function( $ ) {
 						postnl_print( order_ids );
 					}
 					break;
+				case 'add_return':
+					postnl_modal_dialog( order_ids, 'return' );
+					// postnl_return( order_ids );
+					break;
 			}
 		});		
 
@@ -416,6 +418,28 @@ jQuery( function( $ ) {
 	
 		tb_show('', url);
 	}
+
+	// export orders to PostNL via AJAX
+	function postnl_return( order_ids ) {
+		// console.log('creating return for orders...');
+		var data = {
+			action:           'wc_postnl',
+			request:          'add_return',
+			order_ids:        order_ids,
+			security:         wc_postnl.nonce,
+		};
+
+		$.post( wc_postnl.ajax_url, data, function( response ) {
+			response = $.parseJSON(response);
+			// console.log(response);
+			if ( response !== null && typeof response === 'object' && 'error' in response) {
+				postnl_admin_notice( response.error, 'error' );
+			}
+			return;
+		});
+
+	}
+
 
 	// Request PostNL labels
 	function postnl_print( order_ids, offset ) {

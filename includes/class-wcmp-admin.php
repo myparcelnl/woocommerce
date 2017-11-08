@@ -17,7 +17,6 @@ class WooCommerce_PostNL_Admin {
 	
 	function __construct()	{
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_shipment_options' ), 9999 );
-		//add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_return_shipment_options' ), 9999 );
 		add_action(	'admin_footer', array( $this, 'bulk_actions' ) ); 
 		add_action( 'admin_footer', array( $this, 'offset_dialog' ) );
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_order_actions' ), 20 );
@@ -82,26 +81,6 @@ class WooCommerce_PostNL_Admin {
 			<div class="wcmp_shipment_options_form" style="display: none;">
 				<?php include('views/wcmp-order-shipment-options.php'); ?>
 			</div>
-		</div>
-		<?php
-	}
-
-
-	public function order_list_return_shipment_options( $order, $hide = true ) {
-		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( $shipping_country != 'NL' && !WooCommerce_PostNL()->export->is_eu_country( $shipping_country )  ) {
-			return;
-		}
-		$order_id = WCX_Order::get_id( $order );
-		$shipment_options = WooCommerce_PostNL()->export->get_options( $order );
-		$postnl_options_extra = WCX_Order::get_meta( $order, '_postnl_shipment_options_extra' );
-		$package_types = WooCommerce_PostNL()->export->get_package_types('return');
-		$recipient = WooCommerce_PostNL()->export->get_recipient( $order );
-
-		$style = $hide ? 'style="display:none"' : '';
-		?>
-		<div class="wcmp_shipment_options_form return_shipment" <?php echo $style; ?>>
-			<?php include('views/wcmp-order-return-shipment-options.php'); ?>
 		</div>
 		<?php
 	}
@@ -187,10 +166,6 @@ class WooCommerce_PostNL_Admin {
 		);
 
 		$consignments = $this->get_order_shipments( $order );
-
-		if (empty($consignments)) {
-			unset($listing_actions['get_labels']);
-		}
 
 		$target = ( isset(WooCommerce_PostNL()->general_settings['download_display']) && WooCommerce_PostNL()->general_settings['download_display'] == 'display') ? 'target="_blank"' : '';
 		$nonce = wp_create_nonce('wc_postnl');
