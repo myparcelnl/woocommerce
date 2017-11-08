@@ -259,15 +259,11 @@ jQuery( function( $ ) {
 					// }, 500);
 					break;
 				case 'get_labels':
-					if (wc_postnl.offset == 1) {
+                    if (wc_postnl.offset == 1) {
 						contextual_offset_dialog( order_ids, event );
 					} else {
 						postnl_print( order_ids );
 					}
-					break;
-				case 'add_return':
-					postnl_modal_dialog( order_ids, 'return' );
-					// postnl_return( order_ids );
 					break;
 			}
 		});		

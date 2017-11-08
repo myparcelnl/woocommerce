@@ -94,20 +94,9 @@ class WooCommerce_PostNL_Export {
 		$order_ids = !empty($order_ids) ? $this->sanitize_posted_array($order_ids) : array();
 
 		switch($request) {
-			case 'add_shipments':
-				// filter out non-postnl destinations
-				$order_ids = $this->filter_postnl_destination_orders( $order_ids );
+            case 'get_labels':
+                $this->export_postnl_label($order_ids);
 
-				if ( empty($order_ids) ) {
-					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-postnl' );
-					break;
-				}
-
-				// if we're going to print directly, we need to process the orders first, regardless of the settings
-				$process = (isset($print) && $print == 'yes') ? true : false;
-				$return = $this->add_shipments( $order_ids );
-				break;
-			case 'get_labels':
 				$offset = !empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
 				if ( empty($order_ids) && empty($shipment_ids)) {
 					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-postnl' );
@@ -167,6 +156,22 @@ class WooCommerce_PostNL_Export {
 
 		die();
 	}
+
+	public function export_postnl_label($order_ids){
+
+	    // filter out non-postnl destinations
+        $order_ids = $this->filter_postnl_destination_orders( $order_ids );
+
+        if ( empty($order_ids) ) {
+            $this->errors[] = __( 'You have not selected any orders!', 'woocommerce-postnl' );
+            return $this;
+        }
+
+        // if we're going to print directly, we need to process the orders first, regardless of the settings
+        isset($print) && $print == 'yes' ? true : false;
+        $this->add_shipments( $order_ids );
+
+    }
 
 	public function sanitize_posted_array($array) {
 		// check for JSON
