@@ -184,11 +184,6 @@ class WooCommerce_PostNL_Admin {
 				'img'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-pdf.png',
 				'alt'		=> esc_attr__( 'Print PostNL label', 'woocommerce-postnl' ),
 			),
-			'add_return'	=> array (
-				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_postnl&request=add_return&order_ids=' . $order_id ), 'wc_postnl' ),
-				'img'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-retour.png',
-				'alt'		=> esc_attr__( 'Email return label', 'woocommerce-postnl' ),
-			),
 		);
 
 		$consignments = $this->get_order_shipments( $order );
@@ -196,11 +191,6 @@ class WooCommerce_PostNL_Admin {
 		if (empty($consignments)) {
 			unset($listing_actions['get_labels']);
 		}
-
-		$processed_shipments = $this->get_order_shipments( $order, true );
-		if (empty($processed_shipments) || $shipping_country != 'NL' ) {
-			unset($listing_actions['add_return']);
-		}		
 
 		$target = ( isset(WooCommerce_PostNL()->general_settings['download_display']) && WooCommerce_PostNL()->general_settings['download_display'] == 'display') ? 'target="_blank"' : '';
 		$nonce = wp_create_nonce('wc_postnl');

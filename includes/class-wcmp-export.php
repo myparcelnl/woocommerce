@@ -107,13 +107,6 @@ class WooCommerce_PostNL_Export {
 				$process = (isset($print) && $print == 'yes') ? true : false;
 				$return = $this->add_shipments( $order_ids );
 				break;
-			case 'add_return':
-				if ( empty($postnl_options) ) {
-					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-postnl' );
-					break;
-				}
-				$return = $this->add_return( $postnl_options );
-				break;
 			case 'get_labels':
 				$offset = !empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
 				if ( empty($order_ids) && empty($shipment_ids)) {
@@ -141,7 +134,7 @@ class WooCommerce_PostNL_Export {
 		}
 
 		// display errors directly if PDF requested or modal
-		if ( in_array($request, array('add_return','get_labels','modal_dialog')) && !empty($this->errors) ) {
+		if ( in_array($request, array('get_labels','modal_dialog')) && !empty($this->errors) ) {
 			echo $this->parse_errors( $this->errors );
 			die();
 		}		
@@ -259,47 +252,6 @@ class WooCommerce_PostNL_Export {
 			$return['success'] = sprintf(__( '%s shipments successfully exported to Myparcel', 'woocommerce-postnl' ), count($this->success));
 			$return['success_ids'] = $this->success;
 		}
-
-		return $return;
-	}
-
-	public function add_return( $postnl_options ) {
-		$return = array();
-
-		$this->log("*** Creating return shipments started ***");
-
-		foreach ($postnl_options as $order_id => $options) {
-			$return_shipments = array( $this->prepare_return_shipment_data( $order_id, $options ) );
-			$this->log("Return shipment data for order {$order_id}:\n".var_export($return_shipments, true));
-			// echo '<pre>';var_dump($return_shipment);echo '</pre>';die();
-
-			try {
-				$api = $this->init_api();
-				$response = $api->add_shipments( $return_shipments, 'return' );
-				$this->log("API response (order {$order_id}):\n".var_export($response, true));
-				// echo '<pre>';var_dump($response);echo '</pre>';die();
-				if (isset($response['body']['data']['ids'])) {
-					$order = WCX::get_order( $order_id );
-					$ids = array_shift($response['body']['data']['ids']);
-					$shipment_id = $ids['id'];
-					$this->success[$order_id] = $shipment_id;
-
-					$shipment = array (
-						'shipment_id' => $shipment_id,
-					);
-
-					// save shipment data in order meta
-					$this->save_shipment_data( $order, $shipment );
-
-				} else {
-					$this->errors[$order_id] = __( 'Unknown error', 'woocommerce-postnl' );
-				}
-			} catch (Exception $e) {
-				$this->errors[$order_id] = $e->getMessage();
-			}
-			
-		}
-		// echo '<pre>';var_dump($success);echo '</pre>';die();
 
 		return $return;
 	}

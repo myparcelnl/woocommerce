@@ -53,9 +53,6 @@ use WPO\WC\PostNL\Compatibility\Product as WCX_Product;
 	?>
 </head>
 <body>
-<?php
-$target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_postnl&request=add_return&modal=true' ), 'wc_postnl' );
-?>
 <form method="post" class="page-form wcmp_bulk_options_form" action="<?php echo $target_url; ?>">
 	<table class="widefat">
 	<thead>

@@ -47,11 +47,9 @@
 	?>
 </head>
 <body style="padding:10px 20px;">
-	<?php 
+	<?php
 	switch ($request) {
-		case 'add_return':
-			printf('<h3>%s</h3>', __('Return email successfully sent to customer') );
-			break;
+
 		default:
 			# code...
 			break;
