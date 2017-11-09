@@ -167,8 +167,6 @@ class WooCommerce_PostNL_Export {
             return $this;
         }
 
-        // if we're going to print directly, we need to process the orders first, regardless of the settings
-        isset($print) && $print == 'yes' ? true : false;
         $this->add_shipments( $order_ids );
 
     }
@@ -185,7 +183,7 @@ class WooCommerce_PostNL_Export {
 		return $array;
 	}
 
-	public function add_shipments( $order_ids, $process = false ) {
+	public function add_shipments( $order_ids ) {
 		$return = array();
 
 		$this->log("*** Creating shipments started ***");
@@ -226,7 +224,7 @@ class WooCommerce_PostNL_Export {
 						$this->save_shipment_data( $order, $shipment );
 
 						// process directly setting
-						if ( isset(WooCommerce_PostNL()->general_settings['process_directly']) || $process === true ) {
+						if ( isset(WooCommerce_PostNL()->general_settings['process_directly'])) {
 							// flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
 							if (method_exists($order, 'save')) {
 								$order->save();
