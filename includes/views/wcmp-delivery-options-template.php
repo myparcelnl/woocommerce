@@ -1,4 +1,4 @@
-<template id="myparcel-template">
+<template id="postnl-template">
   <style>
     body{
       background-color: white !important;
@@ -538,13 +538,13 @@
 
   <!-- CUSTOM STYLES / STYLE OVERRIDES -->
   <style>
-  <?php if (isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) && WooCommerce_MyParcel()->checkout_settings['deliverydays_window'] == 0): ?>
+  <?php if (isset(WooCommerce_PostNL()->checkout_settings['deliverydays_window']) && WooCommerce_PostNL()->checkout_settings['deliverydays_window'] == 0): ?>
   #mypa-tabs-container,
   .mypa-date-slider-button {
     display: none;
   }
   <?php endif ?>
-  <?php if (!empty(WooCommerce_MyParcel()->checkout_settings['base_color'])): $base_color = WooCommerce_MyParcel()->checkout_settings['base_color']; ?>
+  <?php if (!empty(WooCommerce_PostNL()->checkout_settings['base_color'])): $base_color = WooCommerce_PostNL()->checkout_settings['base_color']; ?>
   .mypa-tab{
     background-color: <?php echo $base_color;?>;
     opacity: .5;
@@ -567,7 +567,7 @@
     background: <?php echo $base_color;?>;
   }
   <?php endif ?>
-  <?php if (!empty(WooCommerce_MyParcel()->checkout_settings['highlight_color'])): $highlight_color = WooCommerce_MyParcel()->checkout_settings['highlight_color']; ?>
+  <?php if (!empty(WooCommerce_PostNL()->checkout_settings['highlight_color'])): $highlight_color = WooCommerce_PostNL()->checkout_settings['highlight_color']; ?>
   input:checked ~ .mypa-highlight, input:checked ~ label.mypa-row-title span.mypa-highlight,
   .mypa-arrow-clickable:hover {
     color: <?php echo $highlight_color; ?>;
@@ -589,8 +589,8 @@
   }
   <?php endif ?>
   <?php
-  if (!empty(WooCommerce_MyParcel()->checkout_settings['custom_css'])) {
-    echo WooCommerce_MyParcel()->checkout_settings['custom_css'];
+  if (!empty(WooCommerce_PostNL()->checkout_settings['custom_css'])) {
+    echo WooCommerce_PostNL()->checkout_settings['custom_css'];
   }
   ?>
   </style>
