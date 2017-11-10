@@ -129,7 +129,7 @@ msgstr ""
 
 #: includes/class-wcmp-export.php:259
 #, php-format
-msgid "%s shipments successfully exported to Myparcel"
+msgid "%s shipments successfully exported to PostNL"
 msgstr ""
 
 #: includes/class-wcmp-export.php:362
