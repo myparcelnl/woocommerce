@@ -17,6 +17,7 @@ class WooCommerce_PostNL_Admin {
 	
 	function __construct()	{
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_shipment_options' ), 9999 );
+        //add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_return_shipment_options' ), 9999 );
 		add_action(	'admin_footer', array( $this, 'bulk_actions' ) ); 
 		add_action( 'admin_footer', array( $this, 'offset_dialog' ) );
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_order_actions' ), 20 );
@@ -155,17 +156,21 @@ class WooCommerce_PostNL_Admin {
 		$listing_actions = array(
 			'add_shipment'		=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_postnl&request=add_shipment&order_ids=' . $order_id ), 'wc_postnl' ),
-				'img'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-up.png',
+				'img'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-up.svg',
 				'alt'		=> esc_attr__( 'Export to PostNL', 'woocommerce-postnl' ),
 			),
 			'get_labels'	=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_postnl&request=get_labels&order_ids=' . $order_id ), 'wc_postnl' ),
-				'img'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-pdf.png',
+				'img'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-pdf.svg',
 				'alt'		=> esc_attr__( 'Print PostNL label', 'woocommerce-postnl' ),
 			),
 		);
 
 		$consignments = $this->get_order_shipments( $order );
+
+        if (empty($consignments)) {
+            unset($listing_actions['get_labels']);
+        }
 
 		$target = ( isset(WooCommerce_PostNL()->general_settings['download_display']) && WooCommerce_PostNL()->general_settings['download_display'] == 'display') ? 'target="_blank"' : '';
 		$nonce = wp_create_nonce('wc_postnl');
