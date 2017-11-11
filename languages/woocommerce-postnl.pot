@@ -388,7 +388,7 @@ msgid "Download PDF"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:179
-msgid "Open de PDF in a new tab"
+msgid "Open the PDF in a new tab"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:186
@@ -616,6 +616,10 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:530
 msgid "Default HS Code"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:536
+msgid "You can find HS codes on the %ssite of the Dutch Customs%s."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:543

@@ -176,7 +176,7 @@ class WooCommerce_PostNL_Settings {
 				'id'			=> 'download_display',
 				'options' 		=> array(
 					'download'	=> __( 'Download PDF' , 'woocommerce-postnl' ),
-					'display'	=> __( 'Open de PDF in a new tab' , 'woocommerce-postnl' ),
+					'display'	=> __( 'Open the PDF in a new tab' , 'woocommerce-postnl' ),
 				),
 			)
 		);
@@ -532,9 +532,9 @@ class WooCommerce_PostNL_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'hs_code',
-				'size'			=> '5',
-				'description'	=> __( sprintf( 'You can find HS codes on the %ssite of the Dutch Customs%s.', '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>' ), 'woocommerce-postnl' ),
-			)
+                'description'	=> sprintf(__( 'You can find HS codes on the %ssite of the Dutch Customs%s.', 'woocommerce-postnl' ), '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>')
+
+            )
 		);
 		add_settings_field(
 			'package_contents',
