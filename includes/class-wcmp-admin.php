@@ -156,12 +156,12 @@ class WooCommerce_PostNL_Admin {
 		$listing_actions = array(
 			'add_shipment'		=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_postnl&request=add_shipment&order_ids=' . $order_id ), 'wc_postnl' ),
-				'img'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-up.svg',
+				'img'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-up.png',
 				'alt'		=> esc_attr__( 'Export to PostNL', 'woocommerce-postnl' ),
 			),
 			'get_labels'	=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_postnl&request=get_labels&order_ids=' . $order_id ), 'wc_postnl' ),
-				'img'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-pdf.svg',
+				'img'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-pdf.png',
 				'alt'		=> esc_attr__( 'Print PostNL label', 'woocommerce-postnl' ),
 			),
 		);
