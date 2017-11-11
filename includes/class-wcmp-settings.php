@@ -209,7 +209,7 @@ class WooCommerce_PostNL_Settings {
 
 		add_settings_field(
 			'myaccount_tracktrace',
-			__( 'Track&trace in My Account', 'woocommerce-PostNL' ),
+			__( 'Track&trace in My Account', 'woocommerce-postnl' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'general',
