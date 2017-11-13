@@ -129,7 +129,7 @@ msgstr ""
 
 #: includes/class-wcmp-export.php:259
 #, php-format
-msgid "%s shipments successfully exported to Myparcel"
+msgid "%s shipments successfully exported to PostNL"
 msgstr ""
 
 #: includes/class-wcmp-export.php:362
@@ -388,7 +388,7 @@ msgid "Download PDF"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:179
-msgid "Open de PDF in a new tab"
+msgid "Open the PDF in a new tab"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:186
@@ -559,13 +559,13 @@ msgid ""
 msgstr ""
 
 #: includes/class-wcmp-settings.php:446
-msgid "Insured shipment (from + &euro;0.50)"
+msgid "Insured shipment (from + &euro;1.65)"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:453
 msgid ""
 "By default, there is no insurance on the shipments. If you still want to "
-"insure the shipment, you can do that from &euro;0.50. We insure the purchase "
+"insure the shipment, you can do that from &euro;1.65. We insure the purchase "
 "value of the shipment, with a maximum insured value of &euro; 5.000. Insured "
 "parcels always contain the options \"Home address only\" en \"Signature for "
 "delivery\""
@@ -575,14 +575,6 @@ msgstr ""
 #: includes/views/wcmp-order-return-shipment-options.php:120
 #: includes/views/wcmp-order-shipment-options.php:156
 msgid "Insured amount"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:470
-msgid "Insured up to &euro; 50 (+ &euro; 0.50)"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:471
-msgid "Insured up to  &euro; 250 (+ &euro; 1.00)"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:472
@@ -624,6 +616,10 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:530
 msgid "Default HS Code"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:536
+msgid "You can find HS codes on the %ssite of the Dutch Customs%s."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:543

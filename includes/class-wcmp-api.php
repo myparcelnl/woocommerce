@@ -38,14 +38,6 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 				$content_type = 'application/vnd.shipment+json';
 				$data_key = 'shipments';
 				break;
-			case 'return':
-				$content_type = 'application/vnd.return_shipment+json';
-				$data_key = 'return_shipments';
-				break;
-			case 'unrelated_return':
-				$content_type = 'application/vnd.unrelated_return_shipment+json';
-				$data_key = 'unrelated_return_shipments';
-				break;
 		}
 
 		$data = array(
@@ -54,8 +46,6 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 			),
 		);
 
-
-		// echo '<pre>';var_dump($data);echo '</pre>';die();
 		$json = json_encode( $data );
 
 		$headers = array(
@@ -65,7 +55,6 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 
 		$request_url = $this->APIURL . $endpoint;
 		$response = $this->post($request_url, $json, $headers);
-
 		return $response;
 	}
 
@@ -84,23 +73,6 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 
 		$request_url = $this->APIURL . $endpoint . '/' . implode(';', $ids);
 		$response = $this->delete($request_url, $headers );
-
-		return $response;
-	}
-
-	/**
-	 * Unrelated return shipments
-	 * @return array       response
-	 */
-	public function unrelated_return_shipments () {
-		$endpoint = 'return_shipments';
-
-		$headers = array (
-			'Authorization: basic '. base64_encode("{$this->key}"),
-		);
-
-		$request_url = $this->APIURL . $endpoint;
-		$response = $this->post($request_url, '', $headers );
 
 		return $response;
 	}

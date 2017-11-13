@@ -53,9 +53,6 @@ use WPO\WC\PostNL\Compatibility\Product as WCX_Product;
 	?>
 </head>
 <body>
-<?php
-$target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_postnl&request=add_return&modal=true' ), 'wc_postnl' );
-?>
 <form method="post" class="page-form wcmp_bulk_options_form" action="<?php echo $target_url; ?>">
 	<table class="widefat">
 	<thead>
@@ -156,7 +153,7 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_postnl&request=
 <div class="wcmp_save_shipment_settings">
 	<?php
 	if ($dialog == 'shipment') {
-		$button_text = __( 'Export to postnl', 'woocommerce-postnl' );
+		$button_text = __( 'Export to PostNL', 'woocommerce-postnl' );
 	} elseif ($dialog == 'return') {
 		$button_text = __( 'Send email', 'woocommerce-postnl' );
 	}
