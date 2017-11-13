@@ -17,7 +17,7 @@ class WooCommerce_PostNL_Admin {
 	
 	function __construct()	{
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_shipment_options' ), 9999 );
-        //add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_return_shipment_options' ), 9999 );
+        
 		add_action(	'admin_footer', array( $this, 'bulk_actions' ) ); 
 		add_action( 'admin_footer', array( $this, 'offset_dialog' ) );
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_order_actions' ), 20 );
