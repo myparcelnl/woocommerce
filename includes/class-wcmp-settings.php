@@ -532,6 +532,7 @@ class WooCommerce_PostNL_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'hs_code',
+                'size'			=> '5',
                 'description'	=> sprintf(__( 'You can find HS codes on the %ssite of the Dutch Customs%s.', 'woocommerce-postnl' ), '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>')
 
             )
