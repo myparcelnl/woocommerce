@@ -59,7 +59,7 @@
     .mypa-tab{
       transition: background-color 0.4s;
       font-size: 12px;
-      background: #75D3D8;
+      background: #f7a027;
       padding: 5px 10px 5px 10px;
       display: inline-block;
       text-align: center;
@@ -72,7 +72,7 @@
     }
 
     .mypa-date:checked+label , .mypa-tab:hover{
-      background: #01bbc5;
+      background: #ed8c00;
     }
 
     .mypa-content-lg {
@@ -91,7 +91,7 @@
     .mypa-delivery-header{
       padding: 17px;
       font-size: 20px;
-      background: #01bbc5;
+      background: #ed8c00;
     }
 
     .mypa-checkmark {
@@ -120,14 +120,14 @@
     }
 
     .mypa-circle:hover, label.mypa-row-subitem:hover .mypa-circle{
-      background-color: #ff8c00;
+      background-color: #3440b6;
     }
 
     input:checked + label.mypa-checkmark div.mypa-circle,
     input[name=mypa-delivery-type]:checked + label div.mypa-main div.mypa-circle,
     input[name=mypa-pickup-option]:checked + label div.mypa-main div.mypa-circle
     {
-      background-color: #ff8c00;
+      background-color: #3440b6;
       z-index:0;
     }
 
@@ -243,7 +243,7 @@
 
     input:checked ~ .mypa-highlight,
     input:checked ~ label.mypa-row-title span.mypa-highlight{
-      color: #FF8C00
+      color: #3440b6
     }
 
     #mypa-back-arrow{
@@ -275,12 +275,12 @@
     }
 
     .mypa-arrow-clickable:hover::before{
-      border-left: 0.2em solid #ff8c00;
-      border-bottom: 0.2em solid #ff8c00;
+      border-left: 0.2em solid #3440b6;
+      border-bottom: 0.2em solid #3440b6;
     }
 
     .mypa-arrow-clickable:hover{
-      color: #ff8c00;
+      color: #3440b6;
     }
 
     #mypa-date-slider-left::before, #mypa-date-slider-right::before{
@@ -288,7 +288,7 @@
     }
 
     #mypa-date-slider-left:hover::before, #mypa-date-slider-right:hover::before{
-      border-color: #FF8C00;
+      border-color: #3440b6;
     }
 
     .mypa-slider-disabled#mypa-date-slider-left::before,
@@ -353,7 +353,7 @@
     input:checked ~ .mypa-price,
     input:checked ~ span span.mypa-price,
     .mypa-price-active{
-      background: #ff8c00
+      background: #3440b6
     }
 
     .mypa-info{
@@ -447,7 +447,7 @@
       color: white;
       position: relative;
       z-index: 12;
-      background: #01bbc5;
+      background: #ed8c00;
       padding: 20px 20px;
       margin: 0 auto;
       top: 13%;
