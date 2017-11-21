@@ -433,6 +433,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
                 'city'			=> (string) WCX_Order::get_prop( $order, 'shipping_city' ),
                 'person'		=> $shipping_name,
                 'company'		=> (string) WCX_Order::get_prop( $order, 'shipping_company' ),
+                'email'			=> (string) WCX_Order::get_prop( $order, 'billing_email' ),
                 'phone'			=> isset(WooCommerce_PostNL()->export_defaults['connect_phone']) ? WCX_Order::get_prop( $order, 'billing_phone' ) : '',
             );
 
