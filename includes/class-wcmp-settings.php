@@ -203,7 +203,7 @@ class WooCommerce_PostNL_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'email_tracktrace',
-				'description'	=> __( 'Add the track&trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the track & trace email in your PostNL backend.', 'woocommerce-postnl' )
+				'description'	=> __( 'Add the track&trace code to emails to the customer.', 'woocommerce-postnl' )
 			)
 		);
 
@@ -349,19 +349,6 @@ class WooCommerce_PostNL_Settings {
 				)
 			);			
 		}
-
-		add_settings_field(
-			'connect_email',
-			__( 'Connect customer email', 'woocommerce-postnl' ),
-			array( $this->callbacks, 'checkbox' ),
-			$option_group,
-			'defaults',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'connect_email',
-				'description'	=> sprintf(__( 'When you connect the customer email, PostNL can send a Track&Trace email to this address. In your %sPostNL backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-postnl' ), '<a href="https://backoffice.myparcel.nl/ttsettingstable" target="_blank">', '</a>')
-			)
-		);
 		
 		add_settings_field(
 			'connect_phone',

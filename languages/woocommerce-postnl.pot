@@ -406,9 +406,7 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:206
 msgid ""
-"Add the track&trace code to emails to the customer.<br/><strong>Note!</"
-"strong> When you select this option, make sure you have not enabled the "
-"track & trace email in your PostNL backend."
+"Add the track&trace code to emails to the customer."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:212

@@ -415,13 +415,9 @@ msgstr "Track&trace in email"
 
 #: includes/class-wcmp-settings.php:206
 msgid ""
-"Add the track&trace code to emails to the customer.<br/><strong>Note!</"
-"strong> When you select this option, make sure you have not enabled the "
-"track & trace email in your PostNL backend."
+"Add the track&trace code to emails to the customer."
 msgstr ""
-"Voeg de track&trace code toe aan emails aan de klant.<br/> <strong>Let op!</"
-"strong> Wanneer u voor deze optie kiest, zorg er dan voor dat u niet de "
-"track&trace email in uw PostNL backend heeft ingeschakeld."
+"Voeg de track&trace code toe aan emails aan de klant."
 
 #: includes/class-wcmp-settings.php:212
 msgid "Track&trace in My Account"
@@ -508,17 +504,6 @@ msgstr "Soort zending"
 #: includes/class-wcmp-settings.php:355
 msgid "Connect customer email"
 msgstr "Koppel emailadres klant"
-
-#: includes/class-wcmp-settings.php:362
-#, php-format
-msgid ""
-"When you connect the customer email, PostNL can send a Track&Trace email "
-"to this address. In your %sPostNL backend%s you can enable or disable this "
-"email and format it in your own style."
-msgstr ""
-"Wanneer u het emailadres van de klant koppelt, kan PostNL een Track&Trace "
-"email versturen naar dit adres. In uw %sPostNL backend%s kunt u deze email "
-"in- of uitschakelen en opmaken in uw eigen stijl."
 
 #: includes/class-wcmp-settings.php:368
 msgid "Connect customer phone"
