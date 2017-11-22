@@ -586,8 +586,8 @@ msgstr ""
 "postkantoor komt te liggen, vink dan deze optie aan."
 
 #: includes/class-wcmp-settings.php:446
-msgid "Insured shipment (from + &euro;1.65)"
-msgstr "Verzekerde verzending (vanaf + &euro;1.65)"
+msgid "Insured shipment"
+msgstr "Verzekerde verzending"
 
 #: includes/class-wcmp-settings.php:453
 msgid ""
@@ -610,12 +610,12 @@ msgid "Insured amount"
 msgstr "Verzekerde waarde"
 
 #: includes/class-wcmp-settings.php:472
-msgid "Insured up to  &euro; 500 (+ &euro; 1.65)"
-msgstr "Verzekerd tot &euro; 500 (+ &euro; 1.65)"
+msgid "Insured up to  &euro; 500"
+msgstr "Verzekerd tot &euro; 500"
 
 #: includes/class-wcmp-settings.php:473
-msgid "> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)"
-msgstr "> &euro; 500 verzekerd (+ &euro; 1.65 / &euro; 500)"
+msgid "> &euro; 500 insured"
+msgstr "> &euro; 500 verzekerd"
 
 #: includes/class-wcmp-settings.php:480
 msgid "Insured amount (in euro)"
