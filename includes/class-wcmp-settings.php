@@ -365,20 +365,20 @@ class WooCommerce_PostNL_Settings {
 		
 		add_settings_field(
 			'large_format',
-			__( 'Extra large size', 'woocommerce-postnl' ).' (+ &euro;2.29)',
+			__( 'Extra large size', 'woocommerce-postnl' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'large_format',
-				'description'	=> __( 'Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee of &euro;&nbsp;2,29 will be charged.<br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate of &euro;&nbsp;70,00 will be charged.', 'woocommerce-postnl' )
+				'description'	=> __( "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm.<br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate will be charged.", 'woocommerce-postnl' )
 			)
 		);
 		
 		add_settings_field(
 			'only_recipient',
-			__( 'Home address only', 'woocommerce-postnl' ).' (+ &euro;0.27)',
+			__( 'Home address only', 'woocommerce-postnl' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
@@ -391,7 +391,7 @@ class WooCommerce_PostNL_Settings {
 		
 		add_settings_field(
 			'signature',
-			__( 'Signature on delivery', 'woocommerce-postnl' ).' (+ &euro;0.34)',
+			__( 'Signature on delivery', 'woocommerce-postnl'),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
@@ -430,14 +430,14 @@ class WooCommerce_PostNL_Settings {
 		
 		add_settings_field(
 			'insured',
-			__( 'Insured shipment (from + &euro;1.65)', 'woocommerce-postnl' ),
+			__( 'Insured shipment', 'woocommerce-postnl' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'insured',
-				'description'	=> __( 'By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that from &euro;1.65. We insure the purchase value of the shipment, with a maximum insured value of &euro; 5.000. Insured parcels always contain the options "Home address only" en "Signature for delivery"', 'woocommerce-postnl' ),
+				'description'	=> __( 'By default, there is no insurance on the shipments. If you still want to insure the shipment you can use this option. We insure the purchase value of the shipment, with a maximum insured value of &euro; 5.000. Insured parcels always contain the options "Home address only" en "Signature for delivery"', 'woocommerce-postnl' ),
 				'class'			=> 'insured',
 			)
 		);
@@ -454,8 +454,8 @@ class WooCommerce_PostNL_Settings {
 				'default'		=> 'standard',
 				'class'			=> 'insured_amount',
 				'options' 		=> array(
-					'499'		=> __( 'Insured up to  &euro; 500 (+ &euro; 1.65)' , 'woocommerce-postnl' ),
-					''			=> __( '> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)' , 'woocommerce-postnl' ),
+					'499'		=> __( 'Insured up to  &euro; 500' , 'woocommerce-postnl' ),
+					''			=> __( '> &euro; 500 insured' , 'woocommerce-postnl' ),
 				),
 			)
 		);
