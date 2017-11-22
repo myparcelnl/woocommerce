@@ -438,7 +438,7 @@ class WooCommerce_PostNL_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'insured',
                 'description'	=> __( 'By default, there is no insurance on the shipments. If you still want to insure the shipment, you can use this function. We insure the purchase value of the shipment, with a maximum insured value of &euro; 5.000. Insured parcels always contain the options "Home address only" en "Signature for delivery"', 'woocommerce-postnl' ),
-                'class'			=> 'insured'
+                'class'			=> 'insured',
 			)
 		);
 
