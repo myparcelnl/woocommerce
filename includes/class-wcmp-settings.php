@@ -190,8 +190,8 @@ class WooCommerce_PostNL_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'label_format',
 				'options' 		=> array(
-					'download'	=> __( 'Standard printer (A4)' , 'woocommerce-postnl' ),
-					'display'	=> __( 'Label Printer (A6)' , 'woocommerce-postnl' ),
+					'A4'	=> __( 'Standard printer (A4)' , 'woocommerce-postnl' ),
+					'A6'	=> __( 'Label Printer (A6)' , 'woocommerce-postnl' ),
 				),
 			)
 		);
