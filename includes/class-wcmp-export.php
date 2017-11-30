@@ -95,6 +95,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
 
             switch($request) {
                 case 'add_shipments':
+
                     // filter out non-postnl destinations
                     $order_ids = $this->filter_postnl_destination_orders( $order_ids );
 
@@ -107,6 +108,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
                     $process = (isset($print) && $print == 'yes') ? true : false;
                     $return = $this->add_shipments( $order_ids );
                     break;
+
                 case 'get_labels':
 
                     $offset = !empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
@@ -263,20 +265,11 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
 
         public function get_shipment_labels( $shipment_ids, $order_ids = array(), $label_response_type = NULL, $offset = 0 ) {
             $return = array();
-
             $this->log("*** Label request started ***");
             $this->log("Shipment ID's: ".implode(', ', $shipment_ids));
             try {
                 $api = $this->init_api();
                 $params = array();
-
-               /*if (!empty($offset) && is_numeric ($offset)) {
-                    $portrait_positions = array( 2, 4, 1, 3 ); // positions are defined on landscape, but paper is filled portrait-wise
-                    $params['positions'] = implode( ';', array_slice($portrait_positions,$offset) );
-                    //$params['format'] = 'A4';
-                } else {
-					$params['format'] = 'A6';
-				}*/
 
 				if(WooCommerce_PostNL()->general_settings['label_format'] == 'A4'){
 
@@ -305,7 +298,6 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
 
                     if (isset($response['body'])) {
                         $this->log("PDF data received");
-
                         $pdf_data = $response['body'];
                         $output_mode = isset(WooCommerce_PostNL()->general_settings['download_display'])?WooCommerce_PostNL()->general_settings['download_display']:'';
                         if ( $output_mode == 'display' ) {
