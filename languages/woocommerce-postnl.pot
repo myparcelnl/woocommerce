@@ -383,6 +383,10 @@ msgstr ""
 msgid "Label display"
 msgstr ""
 
+#: includes/class-wcmp-settings.php:158
+msgid "Label format"
+msgstr ""
+
 #: includes/class-wcmp-settings.php:194
 msgid "Standard printer (A4)"
 msgstr ""
