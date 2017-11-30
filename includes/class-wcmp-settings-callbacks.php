@@ -394,24 +394,12 @@ class WooCommerce_PostNL_Settings_Callbacks {
 			'id'			=> "{$id}_fee",
 			'type'			=> 'text',
 			'size'			=> '5',
-		);					
-		// textarea (description)
-		$description_args = array(
-			'id'			=> "{$id}_description",
-			'type'			=> 'text',
-			'size'			=> '60',
 		);
 
 
 		?>
 		<?php $this->checkbox( array_merge( $args, $cb_args ) ); ?><br/>
 		<table class="wcmp_delivery_option_details">
-			<!--
-			<tr>
-				<td><?php _e( 'Description', 'woocommerce-postnl' )?>:</td>
-				<td><?php $this->text_input( array_merge( $args, $description_args ) ); ?></td>
-			</tr>
-			!-->
 			<tr> 
 				<td><?php _e( 'Additional fee (ex VAT, optional)', 'woocommerce-postnl' )?>:</td>
 				<td>&euro; <?php $this->text_input( array_merge( $args, $fee_args ) ); ?></td>
