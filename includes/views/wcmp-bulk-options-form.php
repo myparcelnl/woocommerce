@@ -153,9 +153,7 @@ use WPO\WC\PostNL\Compatibility\Product as WCX_Product;
 <div class="wcmp_save_shipment_settings">
 	<?php
 	if ($dialog == 'shipment') {
-		$button_text = __( 'Export to PostNL', 'woocommerce-postnl' );
-	} elseif ($dialog == 'return') {
-		$button_text = __( 'Send email', 'woocommerce-postnl' );
+		$button_text = __( 'Prepare shipment', 'woocommerce-postnl' );
 	}
 	?>
 
