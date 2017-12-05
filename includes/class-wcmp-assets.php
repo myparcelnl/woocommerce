@@ -120,8 +120,6 @@ class WooCommerce_PostNL_Assets {
 			return isset($generalSettings['print_position_offset']) ? $generalSettings['print_position_offset'] : '';
 		}
 
-		$generalSettings['print_position_offset'] = '';
-
 		return '';
 	}
 
