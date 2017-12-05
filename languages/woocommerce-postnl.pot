@@ -516,13 +516,6 @@ msgid ""
 "for foreign shipments."
 msgstr ""
 
-#: includes/class-wcmp-settings.php:381
-#: includes/views/wcmp-order-return-shipment-options.php:30
-#: includes/views/wcmp-order-shipment-options.php:55
-#: includes/views/wcmp-order-shipment-summary.php:12
-msgid "Extra large size"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:394 includes/class-wcmp-settings.php:617
 #: includes/views/wcmp-order-return-shipment-options.php:35
 #: includes/views/wcmp-order-shipment-options.php:60
