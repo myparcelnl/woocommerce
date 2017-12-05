@@ -74,14 +74,15 @@ class WooCommerce_PostNL_Assets {
 				array( 'jquery', 'thickbox', 'wp-color-picker' ),
 				WC_POSTNL_VERSION
 			);
+
 			wp_localize_script(
 				'wcpostnl-export',
 				'wc_postnl',
 				array(  
 					'ajax_url'			=> admin_url( 'admin-ajax.php' ),
 					'nonce'				=> wp_create_nonce('wc_postnl'),
-					'download_display'	=> isset(WooCommerce_PostNL()->general_settings['download_display'])?WooCommerce_PostNL()->general_settings['download_display']:'',
-					'offset'			=> isset(WooCommerce_PostNL()->general_settings['print_position_offset'])?WooCommerce_PostNL()->general_settings['print_position_offset']:'',
+					'download_display'	=> $this->get_download_display(),
+					'offset'			=> $this->get_label_position(),
 					'offset_icon'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/print-offset-icon.png',
 					'offset_label'		=> __( 'Labels to skip', 'woocommerce-postnl' ),
 				)
@@ -106,6 +107,29 @@ class WooCommerce_PostNL_Assets {
 				);
 			}
 		}
+	}
+
+	/**
+	 * @return string
+	 */
+	private function get_label_position()
+	{
+		$generalSettings = WooCommerce_PostNL()->general_settings;
+
+		if ($generalSettings['label_format'] == 'A4') {
+			return isset($generalSettings['print_position_offset']) ? $generalSettings['print_position_offset'] : '';
+		}
+
+		return '';
+	}
+
+	private function get_download_display()
+	{
+		if (isset(WooCommerce_PostNL()->general_settings['download_display'])) {
+			return WooCommerce_PostNL()->general_settings['download_display'];
+		}
+
+		return '';
 	}
 }
 

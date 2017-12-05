@@ -180,6 +180,21 @@ class WooCommerce_PostNL_Settings {
 				),
 			)
 		);
+		add_settings_field(
+			'label_format',
+			__( 'Label format', 'woocommerce-postnl' ),
+			array( $this->callbacks, 'radio_button' ),
+			$option_group,
+			'general',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'label_format',
+				'options' 		=> array(
+					'A4'	=> __( 'Standard printer (A4)' , 'woocommerce-postnl' ),
+					'A6'	=> __( 'Label Printer (A6)' , 'woocommerce-postnl' ),
+				),
+			)
+		);
 
 		add_settings_field(
 			'print_position_offset',
