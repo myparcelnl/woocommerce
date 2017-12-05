@@ -26,11 +26,6 @@
 	}
 
 	$option_rows = array(
-		'[large_format]'	=> array(
-			'label'	=> __( 'Extra large size', 'woocommerce-postnl' ),
-			'value'	=> isset($shipment_options['large_format']) ? $shipment_options['large_format'] : 0,
-			'cost'	=> '2.19',
-		),
 		'[only_recipient]'	=> array(
 			'label'	=> __( 'Home address only', 'woocommerce-postnl' ),
 			'value'	=> isset($shipment_options['only_recipient']) ? $shipment_options['only_recipient'] : 0,

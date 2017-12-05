@@ -490,7 +490,6 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
                     'only_recipient'	=> 0,
                     'signature'			=> 0,
                     'return'			=> 0,
-                    'large_format'		=> 0,
                     'label_description'	=> '',
                     'insured_amount'	=> 0,
                 );
@@ -509,7 +508,6 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
                     'only_recipient'	=> (isset(WooCommerce_PostNL()->export_defaults['only_recipient'])) ? 1 : 0,
                     'signature'			=> (isset(WooCommerce_PostNL()->export_defaults['signature'])) ? 1 : 0,
                     'return'			=> (isset(WooCommerce_PostNL()->export_defaults['return'])) ? 1 : 0,
-                    'large_format'		=> (isset(WooCommerce_PostNL()->export_defaults['large_format'])) ? 1 : 0,
                     'label_description'	=> $description,
                     'insured_amount'	=> $insured_amount,
                 );
@@ -578,7 +576,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
 
             // PREVENT ILLEGAL SETTINGS
             // convert numeric strings to int
-            $int_options = array( 'package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format' );
+            $int_options = array( 'package_type', 'delivery_type', 'only_recipient', 'signature', 'return' );
             foreach ($options as $key => &$value) {
                 if ( in_array($key, $int_options) ) {
                     $value = (int) $value;
@@ -588,7 +586,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
             // disable options for mailbox package and unpaid letter
             // echo '<pre>';var_dump($package_type);echo '</pre>';die();
             if ( $options['package_type'] != 1 ) {
-                $illegal_options = array( 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date' );
+                $illegal_options = array( 'delivery_type', 'only_recipient', 'signature', 'return', 'insurance', 'delivery_date' );
                 foreach ($options as $key => $option) {
                     if (in_array($key, $illegal_options)) {
                         unset($options[$key]);

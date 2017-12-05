@@ -364,19 +364,6 @@ class WooCommerce_PostNL_Settings {
 		);
 		
 		add_settings_field(
-			'large_format',
-			__( 'Extra large size', 'woocommerce-postnl' ),
-			array( $this->callbacks, 'checkbox' ),
-			$option_group,
-			'defaults',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'large_format',
-				'description'	=> __( "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm.", 'woocommerce-postnl' )
-			)
-		);
-		
-		add_settings_field(
 			'only_recipient',
 			__( 'Home address only', 'woocommerce-postnl' ),
 			array( $this->callbacks, 'checkbox' ),
