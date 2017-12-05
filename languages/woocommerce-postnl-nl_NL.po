@@ -42,8 +42,8 @@ msgstr "Print"
 
 #: includes/class-wcmp-admin.php:180
 #: includes/views/wcmp-bulk-options-form.php:159
-msgid "Export to PostNL"
-msgstr "Exporteer naar PostNL"
+msgid "Prepare shipment"
+msgstr "Zending voorbereiden"
 
 #: includes/class-wcmp-admin.php:185 includes/class-wcmp-admin.php:337
 msgid "Print PostNL label"
@@ -389,6 +389,18 @@ msgstr "Algemene instellingen"
 #: includes/class-wcmp-settings.php:170
 msgid "Label display"
 msgstr "Label weergave"
+
+#: includes/class-wcmp-settings.php:158
+msgid "Label format"
+msgstr "Label formaat"
+
+#: includes/class-wcmp-settings.php:194
+msgid "Standard printer (A4)"
+msgstr "Standaard printer (A4)"
+
+#: includes/class-wcmp-settings.php:195
+msgid "Label Printer (A6)"
+msgstr "Labelprinter (A6)"
 
 #: includes/class-wcmp-settings.php:178
 msgid "Download PDF"

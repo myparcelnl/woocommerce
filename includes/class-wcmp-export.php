@@ -95,6 +95,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
 
             switch($request) {
                 case 'add_shipments':
+
                     // filter out non-postnl destinations
                     $order_ids = $this->filter_postnl_destination_orders( $order_ids );
 
@@ -107,13 +108,17 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
                     $process = (isset($print) && $print == 'yes') ? true : false;
                     $return = $this->add_shipments( $order_ids );
                     break;
+
                 case 'get_labels':
+
                     $offset = !empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
+
                     if ( empty($order_ids) && empty($shipment_ids)) {
                         $this->errors[] = __( 'You have not selected any orders!', 'woocommerce-postnl' );
                         break;
                     }
                     $label_response_type = isset($label_response_type) ? $label_response_type : NULL;
+
                     if (!empty($shipment_ids)) {
                         $order_ids = !empty($order_ids) ? $this->sanitize_posted_array($order_ids) : array();
                         $shipment_ids = $this->sanitize_posted_array($shipment_ids);
@@ -121,6 +126,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
                     } else {
                         $order_ids = $this->filter_postnl_destination_orders( $order_ids );
                         $return = $this->get_labels( $order_ids, $label_response_type, $offset );
+
                     }
                     break;
                 case 'modal_dialog':
@@ -210,6 +216,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
                         if (isset($response['body']['data']['ids'])) {
                             $ids = array_shift($response['body']['data']['ids']);
                             $shipment_id = $ids['id'];
+
                             $this->success[$order_id] = $shipment_id;
 
                             $created_shipments[] = $shipment_id;
@@ -258,17 +265,23 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
 
         public function get_shipment_labels( $shipment_ids, $order_ids = array(), $label_response_type = NULL, $offset = 0 ) {
             $return = array();
-
             $this->log("*** Label request started ***");
             $this->log("Shipment ID's: ".implode(', ', $shipment_ids));
-
             try {
                 $api = $this->init_api();
                 $params = array();
-                if (!empty($offset) && is_numeric ($offset)) {
-                    $portrait_positions = array( 2, 4, 1, 3 ); // positions are defined on landscape, but paper is filled portrait-wise
-                    $params['positions'] = implode( ';', array_slice($portrait_positions,$offset) );
-                }
+
+				if(WooCommerce_PostNL()->general_settings['label_format'] == 'A4'){
+
+					 if (!empty($offset) && is_numeric ($offset)) {
+						$portrait_positions = array( 2, 4, 1, 3 ); // positions are defined on landscape, but paper is filled portrait-wise
+						$params['positions'] = implode( ';', array_slice($portrait_positions,$offset) );
+                	}
+					$params['format'] = 'A4';
+				}else{
+
+					$params['format'] = 'A6';
+				}
 
                 if (isset($label_response_type) && $label_response_type == 'url') {
                     $response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
