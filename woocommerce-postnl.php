@@ -242,7 +242,6 @@ class WooCommerce_PostNL {
 			// map old key => new_key
 			$defaults_settings_keys = array(
 				'telefoon'				=> 'connect_phone',
-				'extragroot'			=> 'large_format',
 				'huisadres'				=> 'only_recipient',
 				'handtekening'			=> 'signature',
 				'retourbgg'				=> 'return',

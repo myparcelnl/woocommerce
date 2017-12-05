@@ -51,10 +51,6 @@
 	}
 
 	$option_rows = array(
-		'[large_format]'	=> array(
-			'label'	=> __( 'Extra large size', 'woocommerce-postnl' ),
-			'value'	=> isset($shipment_options['large_format']) ? $shipment_options['large_format'] : 0,
-		),
 		'[only_recipient]'	=> array(
 			'label'	=> __( 'Home address only', 'woocommerce-postnl' ),
 			'value'	=> isset($shipment_options['only_recipient']) ? $shipment_options['only_recipient'] : 0,
@@ -75,9 +71,7 @@
 	);
 
 	if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
-		if ( WooCommerce_PostNL()->export->is_world_shipment_country( $recipient['cc'] ) ) {
-			unset($option_rows['[large_format]']);
-		}
+
 		unset($option_rows['[only_recipient]']);
 		unset($option_rows['[signature]']);
 		unset($option_rows['[return]']);

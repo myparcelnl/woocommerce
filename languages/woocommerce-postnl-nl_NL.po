@@ -531,24 +531,6 @@ msgstr ""
 "koerier dit gebruiken ten behoeve van de aflevering van het pakket. De "
 "afleverkans voor buitenlandzendingen wordt hiermee aanzienlijk verhoogd."
 
-#: includes/class-wcmp-settings.php:381
-#: includes/views/wcmp-order-return-shipment-options.php:30
-#: includes/views/wcmp-order-shipment-options.php:55
-#: includes/views/wcmp-order-shipment-summary.php:12
-msgid "Extra large size"
-msgstr "Extra groot formaat"
-
-#: includes/class-wcmp-settings.php:388
-msgid ""
-"Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
-"smaller than 175 x 78 x 58 cm.<br/><strong>Note!</strong> If the parcel is "
-"bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate will "
-"be charged."
-msgstr ""
-"Vink deze optie aan indien uw pakket groter is dan 100 x 70 x 50 cm, maar "
-"kleiner dan 175 x 78 x 58 cm.<br/><strong>Let op!</strong> Indien het pakket "
-"groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een "
-"pallettarief in rekening gebracht."
 
 #: includes/class-wcmp-settings.php:394 includes/class-wcmp-settings.php:617
 #: includes/views/wcmp-order-return-shipment-options.php:35
@@ -1050,19 +1032,6 @@ msgstr ""
 #~ "NIET op het postkantoor komt te liggen, vink dan deze optie aan. Let op: "
 #~ "Het pakket komt hierdoor eerder retour, waarvoor wij u ook zullen "
 #~ "doorbelasten."
-
-#~ msgid ""
-#~ "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, "
-#~ "but smaller than 175 x 78 x 58 cm. An extra fee of &euro;&nbsp;2,00 will "
-#~ "be charged.<br/><strong>Note!</strong> If the parcel is bigger than 175 x "
-#~ "78 x 58 of or heavier than 30 kg, the pallet rate of &euro;&nbsp;70,00 "
-#~ "will be charged."
-#~ msgstr ""
-#~ "ink deze optie aan indien uw pakket groter is dan 100 x 70 x 50 cm, maar "
-#~ "kleiner dan 175 x 78 x 58 cm. Er wordt hiervoor een toeslag van &euro;"
-#~ "&nbsp;2,00 doorberekend.<br/><strong>Let op!</strong> Indien het pakket "
-#~ "groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een "
-#~ "pallettarief van &euro;&nbsp;70,00 in rekening gebracht."
 
 #~ msgid "Create & Print return label"
 #~ msgstr "Maak & Print retouretiket"
