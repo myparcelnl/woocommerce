@@ -157,7 +157,7 @@ class WooCommerce_PostNL_Admin {
 			'add_shipment'		=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_postnl&request=add_shipment&order_ids=' . $order_id ), 'wc_postnl' ),
 				'img'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-up.png',
-				'alt'		=> esc_attr__( 'Export to PostNL', 'woocommerce-postnl' ),
+				'alt'		=> esc_attr__( 'Prepare shipment', 'woocommerce-postnl' ),
 			),
 			'get_labels'	=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_postnl&request=get_labels&order_ids=' . $order_id ), 'wc_postnl' ),

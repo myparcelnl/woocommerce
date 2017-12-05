@@ -42,7 +42,7 @@ msgstr ""
 
 #: includes/class-wcmp-admin.php:180
 #: includes/views/wcmp-bulk-options-form.php:159
-msgid "Export to PostNL"
+msgid "Prepare shipment"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:185 includes/class-wcmp-admin.php:337

@@ -42,8 +42,8 @@ msgstr "Print"
 
 #: includes/class-wcmp-admin.php:180
 #: includes/views/wcmp-bulk-options-form.php:159
-msgid "Export to PostNL"
-msgstr "Exporteer naar PostNL"
+msgid "Prepare shipment"
+msgstr "Zending voorbereiden"
 
 #: includes/class-wcmp-admin.php:185 includes/class-wcmp-admin.php:337
 msgid "Print PostNL label"
