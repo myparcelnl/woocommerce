@@ -106,14 +106,12 @@ class WC_PostNL_REST_Client
 	}
 
 	public function request($url, $method = "GET", $headers = array(), $post, $body = null, $raw = false) {
-		// Set the URL
-		curl_setopt($this->curl, CURLOPT_URL, $url);
-		// echo '<pre>';var_dump($post);echo '</pre>';die();
+		$response = [];
 
 		// Set the method and related options
 		switch ($method) {
 			case "PUT":
-				curl_setopt($this->curl, CURLOPT_PUT, true);
+				throw new Exception('Can not put PostNL shipment', 500);
 			break;
 
 			case "POST":
@@ -121,41 +119,38 @@ class WC_PostNL_REST_Client
 			break;
 
 			case "DELETE":
-			    curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+				throw new Exception('Can not delete PostNL shipment', 500);
 				break;
 
 			case "GET":
 			default:
+				$response = wp_remote_get( $url, $headers );
 			break;
 		}
 
+//		echo '<pre>';var_dump($response);echo '</pre>';die();
+
 		// Set the headers
-		if (!empty($headers) && is_array($headers)) {
+//		if (!empty($headers) && is_array($headers)) {
+			//echo '<pre>';var_dump($headers);echo '</pre>';die();
+
 			// An array of HTTP header fields to set, in the format
 			//array("Content-type: text/plain", "Content-length: 100")
-			curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers);
-		}
+//			wp_remote_get ($url, $headers);
+			//curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers);
+//		}
 
-		if (!empty($post)) {
-			curl_setopt($this->curl, CURLOPT_POSTFIELDS, $post);
-		}
-
-		// Retrieve HTTP response headers
-		curl_setopt($this->curl, CURLOPT_HEADER, true);
-
-		$response = curl_exec($this->curl);
-		$info = curl_getinfo($this->curl);
-
-		// echo '<pre>';var_dump($response);echo '</pre>';die();
+//		if (!empty($post)) {
+//			curl_setopt($this->curl, CURLOPT_POSTFIELDS, $post);
+//		}
 
 		// Close any open resource handle
 		if (isset($f) && is_resource($f)) {
 			@fclose($f);
 		}
 
-		$status = $info["http_code"];
-		$header = substr($response, 0, $info["header_size"]);
-		$body = substr( $response, $info["header_size"]);
+		$status = $response["response"]["code"];
+		$body = $response['body'];
 
 		if ($raw !== true) {
 			$body = json_decode($body, true); // The second parameter set to true returns objects as associative arrays
@@ -177,20 +172,7 @@ class WC_PostNL_REST_Client
 			throw new Exception($error, $status);
 		}
 
-		// Parse response headers
-		$response_headers = array();
-		$lines = explode("\r\n", $header);
-		array_shift($lines);
-		foreach ($lines as $line) {
-			// Skip empty lines
-			if ("" == trim($line)) {
-				continue;
-			}
-			@list($k, $v) = explode(": ", $line, 2);
-			$response_headers[strtolower($k)] = $v;
-		}
-
-		return array("code" => $status, "body" => $body, "headers" => $response_headers);
+		return array("code" => $status, "body" => $body, "headers" => $response["headers"]);
 	}
 
 	public function parse_errors( $body ) {

@@ -109,16 +109,18 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 		$endpoint = 'shipment_labels';
 
 		if ( $return == 'pdf' ) {
-			$accept = 'Accept: application/pdf'; // (For the PDF binary. This is the default.)
+			$accept = 'application/pdf'; // (For the PDF binary. This is the default.)
 			$raw = true;
 		} else {
-			$accept = 'Accept: application/json; charset=UTF-8'; // (For shipment download link)
+			$accept = 'application/json; charset=UTF-8'; // (For shipment download link)
 			$raw = false;
 		}
 
-		$headers = array (
-			$accept,
-			'Authorization: basic '. base64_encode("{$this->key}"),
+		$headers = array(
+			'headers' => array(
+				'Accept' => $accept,
+				'Authorization' => 'basic '. base64_encode("{$this->key}")
+			)
 		);
 
 		$request_url = add_query_arg( $params, $this->APIURL . $endpoint . '/' . implode(';', $ids) );
