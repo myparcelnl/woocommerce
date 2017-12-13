@@ -535,66 +535,7 @@
     }
 
   </style>
-
-  <!-- CUSTOM STYLES / STYLE OVERRIDES -->
-  <style>
-  <?php if (isset(WooCommerce_PostNL()->checkout_settings['deliverydays_window']) && WooCommerce_PostNL()->checkout_settings['deliverydays_window'] == 0): ?>
-  #mypa-tabs-container,
-  .mypa-date-slider-button {
-    display: none;
-  }
-  <?php endif ?>
-  <?php if (!empty(WooCommerce_PostNL()->checkout_settings['base_color'])): $base_color = WooCommerce_PostNL()->checkout_settings['base_color']; ?>
-  .mypa-tab{
-    background-color: <?php echo $base_color;?>;
-    opacity: .5;
-  }
-  .mypa-delivery-header,
-  .mypa-date:checked+label, .mypa-tab:hover {
-    background: <?php echo $base_color;?>;
-    opacity: 1;
-  }
-  .mypa-address {
-    color: <?php echo $base_color;?>;
-  }
-  .edit-tip > div {
-    border-top-color: <?php echo $base_color;?>;
-  }
-  .edit-stem {
-    background-color: <?php echo $base_color;?>;
-  }
-  #mypa-no-options {
-    background: <?php echo $base_color;?>;
-  }
-  <?php endif ?>
-  <?php if (!empty(WooCommerce_PostNL()->checkout_settings['highlight_color'])): $highlight_color = WooCommerce_PostNL()->checkout_settings['highlight_color']; ?>
-  input:checked ~ .mypa-highlight, input:checked ~ label.mypa-row-title span.mypa-highlight,
-  .mypa-arrow-clickable:hover {
-    color: <?php echo $highlight_color; ?>;
-  }
-  input:checked + label.mypa-checkmark div.mypa-circle, input[name=mypa-delivery-type]:checked + label div.mypa-main div.mypa-circle, input[name=mypa-pickup-option]:checked + label div.mypa-main div.mypa-circle,
-  .mypa-circle:hover, label.mypa-row-subitem:hover .mypa-circle,
-  input:checked ~ .mypa-price, input:checked ~ span span.mypa-price {
-    background-color: <?php echo $highlight_color; ?>;
-  }
-  .mypa-arrow-clickable:hover::before {
-    border-left: 0.2em solid <?php echo $highlight_color;?>;
-    border-bottom: 0.2em solid <?php echo $highlight_color;?>;
-  }
-  input:checked ~ .mypa-price, input:checked ~ span span.mypa-price, .mypa-price-active {
-    background: <?php echo $highlight_color;?>;
-  }
-  .edit-location {
-    color: <?php echo $highlight_color;?>;
-  }
-  <?php endif ?>
-  <?php
-  if (!empty(WooCommerce_PostNL()->checkout_settings['custom_css'])) {
-    echo WooCommerce_PostNL()->checkout_settings['custom_css'];
-  }
-  ?>
-  </style>
-<div id='mypa-delivery-options-container'>
+ <div id='mypa-delivery-options-container'>
   <div class="mypa-overlay">
     <span id="mypa-no-options">Geen adres opgegeven</span>
   </div>
