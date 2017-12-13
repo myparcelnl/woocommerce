@@ -7,9 +7,7 @@ use WPO\WC\PostNL\Compatibility\Product as WCX_Product;
  * Admin options, buttons & data
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( !class_exists( 'WooCommerce_PostNL_Admin' ) ) :
 

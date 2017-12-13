@@ -13,9 +13,7 @@ License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( !class_exists( 'WooCommerce_PostNL' ) ) :
 

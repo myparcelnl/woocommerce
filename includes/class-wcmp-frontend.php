@@ -7,9 +7,7 @@ use WPO\WC\PostNL\Compatibility\Product as WCX_Product;
  * Frontend views
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( !class_exists( 'WooCommerce_PostNL_Frontend' ) ) :
 
