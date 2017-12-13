@@ -1,4 +1,10 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+/**
+ * LOAD WORDPRESS
+ */
 define('WP_USE_THEMES', false);
 ?>
 <!DOCTYPE html>

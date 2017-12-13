@@ -2,6 +2,9 @@
 use WPO\WC\PostNL\Compatibility\WC_Core as WCX;
 use WPO\WC\PostNL\Compatibility\Order as WCX_Order;
 use WPO\WC\PostNL\Compatibility\Product as WCX_Product;
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">

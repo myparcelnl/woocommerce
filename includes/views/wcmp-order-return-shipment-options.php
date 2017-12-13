@@ -1,3 +1,5 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+
 <table class="wcpostnl_settings_table" style="width: auto">
 	<tr>
 		<td>
