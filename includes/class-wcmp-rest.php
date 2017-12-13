@@ -106,8 +106,6 @@ class WC_PostNL_REST_Client
 	}
 
 	public function request($url, $method = "GET", $headers = array(), $post, $body = null, $raw = false) {
-		$response = [];
-
 		// Set the method and related options
 		switch ($method) {
 			case "PUT":
@@ -115,7 +113,10 @@ class WC_PostNL_REST_Client
 			break;
 
 			case "POST":
-				curl_setopt($this->curl, CURLOPT_POST, true);
+				$response = wp_remote_post( $url, array(
+					'body'    => $post,
+					'headers' => $headers,
+				) );
 			break;
 
 			case "DELETE":
@@ -127,22 +128,6 @@ class WC_PostNL_REST_Client
 				$response = wp_remote_get( $url, $headers );
 			break;
 		}
-
-//		echo '<pre>';var_dump($response);echo '</pre>';die();
-
-		// Set the headers
-//		if (!empty($headers) && is_array($headers)) {
-			//echo '<pre>';var_dump($headers);echo '</pre>';die();
-
-			// An array of HTTP header fields to set, in the format
-			//array("Content-type: text/plain", "Content-length: 100")
-//			wp_remote_get ($url, $headers);
-			//curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers);
-//		}
-
-//		if (!empty($post)) {
-//			curl_setopt($this->curl, CURLOPT_POSTFIELDS, $post);
-//		}
 
 		// Close any open resource handle
 		if (isset($f) && is_resource($f)) {
