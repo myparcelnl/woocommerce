@@ -65,8 +65,10 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 		$endpoint = 'shipments';
 
 		$headers = array (
-			'Accept' => 'application/json; charset=UTF-8',
-			'Authorization' => 'basic '. base64_encode("{$this->key}"),
+			'headers' => array(
+				'Accept' => 'application/json; charset=UTF-8',
+				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+			)
 		);
 
 		$request_url = $this->APIURL . $endpoint . '/' . implode(';', $ids);
@@ -84,13 +86,14 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 		$endpoint = 'shipments';
 
 		$headers = array (
-			'Accept' => 'application/json; charset=UTF-8',
-			'Authorization' => 'basic '. base64_encode("{$this->key}"),
+			'headers' => array(
+				'Accept' => 'application/json; charset=UTF-8',
+				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+			)
 		);
 
 		$request_url = $this->APIURL . $endpoint . '/' . implode(';', (array) $ids);
 		$request_url = add_query_arg( $params, $request_url );
-		// echo '<pre>';var_dump($request_url);echo '</pre>';die();
 		$response = $this->get($request_url, $headers);
 
 		return $response;
@@ -137,7 +140,9 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 		$endpoint = 'tracktraces';
 
 		$headers = array (
-			'Authorization' => 'basic '. base64_encode("{$this->key}"),
+			'headers' => array(
+				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+			)
 		);
 
 		$request_url = add_query_arg( $params, $this->APIURL . $endpoint . '/' . implode(';', $ids) );

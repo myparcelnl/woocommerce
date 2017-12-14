@@ -916,16 +916,14 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
         }
 
         public function get_shipment_data( $id, $order ) {
-            try {
+        	try {
                 $api = $this->init_api();
                 $response = $api->get_shipments( $id );
-                // echo '<pre>';var_dump($response);echo '</pre>';die();
 
                 if (!empty($response['body']['data']['shipments'])) {
                     $shipments = $response['body']['data']['shipments'];
                     $shipment = array_shift($shipments);
-                    // echo '<pre>';var_export($shipment);echo '</pre>';die();
-
+	                
                     // if shipment id matches and status is not concept, get tracktrace barcode and status name
                     if ( isset($shipment['id']) && $shipment['id'] == $id && $shipment['status'] >= 2 )  {
                         $status = $this->get_shipment_status_name( $shipment['status']);
