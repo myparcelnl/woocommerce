@@ -12,7 +12,7 @@ body {
 }
 
 a {
-    color: #1e6bb8;
+    color: #3440b6;
     text-decoration: none;
 }
 
@@ -21,19 +21,19 @@ a:hover {
 }
 
 h1 {
-    border-bottom: 1px solid #1eb9c5;
+    border-bottom: 1px solid #ed8c00;
 }
 
 h2,h3 {
-    padding-left: 15px;
+    padding-left: 0px;
 }
 
-h4, p {
-    padding-left: 60px;
+h4 {
+    padding-left: 0px;
 }
 
 ol, ul {
-    padding-left: 80px;
+    padding-left: 40px;
 }
 
 ol > li, ul > li {
@@ -42,7 +42,7 @@ ol > li, ul > li {
 
 .nice {
     border-radius: 5px;
-    border: solid #1ee8f4 1px;
+    border: solid #ed8c00 1px;
     display: inline-block;
     padding: 0 5px;
 }
@@ -99,7 +99,7 @@ ol > li, ul > li {
     color: #fff;
     text-align: center;
     background-color: #1eb9c4;
-    background-image: linear-gradient(120deg, #57595a, #1eb9c4);
+    background-image: linear-gradient(135deg,#e45123 0,#e45123 0,#fcba1a 100%,#fcba1a 100%);;
 }
 
 @media screen and (min-width: 64em) {
@@ -190,7 +190,7 @@ ol > li, ul > li {
     margin-top: 2rem;
     margin-bottom: 1rem;
     font-weight: normal;
-    color: #1eb9c5;
+    color: #ed8c00;
 }
 
 .main-content p {
@@ -321,7 +321,18 @@ ol > li, ul > li {
     background-color: #eff0f1;
     border: 0;
 }
+.postnl_footer_logo{
+    height: 35%;
+    width: 35%;
+    float: left;
+}
 
+@media screen and (max-width: 920px) {
+    .site-footer-credits {
+        margin-left: 10px;
+        float: left !important;
+    }
+}
 @media screen and (min-width: 64em) {
     .main-content {
         max-width: 64rem;
@@ -358,6 +369,7 @@ ol > li, ul > li {
 
 .site-footer-credits {
     color: #819198;
+    float: right;
 }
 
 @media screen and (min-width: 64em) {
