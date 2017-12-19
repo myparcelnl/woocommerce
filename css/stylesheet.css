@@ -322,9 +322,29 @@ ol > li, ul > li {
     border: 0;
 }
 .postnl_footer_logo{
-    height: 35%;
-    width: 35%;
-    float: left;
+    margin-left: 80%;
+}
+
+.site-footer {
+    margin-top: 2rem;
+    border-top: solid 1px #eff0f1;
+    background-color: #f3f4f7;
+}
+
+.site-footer-owner {
+    display: block;
+    font-weight: bold;
+}
+
+.site-footer-credits {
+    color: #819198;
+    float: right;
+}
+.footer_section{
+    max-width: 64rem;
+    padding: 2rem 6rem;
+    margin: 0 auto;
+    font-size: 1.1rem;
 }
 
 @media screen and (max-width: 920px) {
@@ -354,22 +374,6 @@ ol > li, ul > li {
         padding: 2rem 1rem;
         font-size: 1rem;
     }
-}
-
-.site-footer {
-    padding-top: 2rem;
-    margin-top: 2rem;
-    border-top: solid 1px #eff0f1;
-}
-
-.site-footer-owner {
-    display: block;
-    font-weight: bold;
-}
-
-.site-footer-credits {
-    color: #819198;
-    float: right;
 }
 
 @media screen and (min-width: 64em) {
