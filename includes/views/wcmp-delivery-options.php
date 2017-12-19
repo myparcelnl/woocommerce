@@ -1,11 +1,9 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
 /**
  * LOAD WORDPRESS
  */
 define('WP_USE_THEMES', false);
+require( '../../../../../wp-load.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,11 +13,17 @@ define('WP_USE_THEMES', false);
 	$script_format = '<script type="text/javascript" data-cfasync="false" src="%s"></script>';
 	$style_format = '<link rel="stylesheet" id="%s" href="%s" type="text/css" media="all">';
 
-    printf( $script_format, '../../../../../wp-includes/js/jquery/jquery.js' );
-    printf( $script_format, '../../assets/delivery-options/js/moment.min.js' );
-    printf( $script_format, '../../assets/delivery-options/js/webcomponents.min.js' );
-    printf( $script_format, '../../assets/delivery-options/js/postnl.js' );
-    printf( $script_format, '../../assets/js/wcmp-frontend-iframe.js' );
+	// load jquery
+	printf( $script_format, includes_url( 'js/jquery/jquery.js' ) );
+
+	// PostNL scripts
+	printf( $script_format, add_query_arg( 'ver', WC_POSTNL_VERSION, WooCommerce_PostNL()->plugin_url() . '/assets/delivery-options/js/moment.min.js' ) );
+	printf( $script_format, add_query_arg( 'ver', WC_POSTNL_VERSION, WooCommerce_PostNL()->plugin_url() . '/assets/delivery-options/js/webcomponents.min.js' ) );
+	printf( $script_format, add_query_arg( 'ver', WC_POSTNL_VERSION, WooCommerce_PostNL()->plugin_url() . '/assets/delivery-options/js/postnl.js' ) );
+	printf( $script_format, add_query_arg( 'ver', WC_POSTNL_VERSION, WooCommerce_PostNL()->plugin_url() . '/assets/js/wcmp-frontend-iframe.js' ) );
+
+	$autoload_google_fonts = isset(WooCommerce_PostNL()->checkout_settings['autoload_google_fonts']) ? 'true' : 'false';
+	printf( '<script type="text/javascript">var autoload_google_fonts = %s</script>',$autoload_google_fonts);
 	?>
 </head>
 <body>
