@@ -19,6 +19,8 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 	function __construct( $key ) {
 		parent::__construct();
 
+		$this->user_agent = $this->getUserAgent();
+
 		$this->key = $key;
 	}
 
@@ -49,6 +51,7 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 		$headers = array(
 			'Content-type' => $content_type . '; charset=UTF-8',
 			'Authorization' => 'basic '. base64_encode("{$this->key}"),
+			'user-agent' => $this->user_agent
 		);
 
 		$request_url = $this->APIURL . $endpoint;
@@ -68,6 +71,7 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 			'headers' => array(
 				'Accept' => 'application/json; charset=UTF-8',
 				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+				'user-agent' => $this->user_agent
 			)
 		);
 
@@ -89,6 +93,7 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 			'headers' => array(
 				'Accept' => 'application/json; charset=UTF-8',
 				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+				'user-agent' => $this->user_agent
 			)
 		);
 
@@ -120,7 +125,8 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 		$headers = array(
 			'headers' => array(
 				'Accept' => $accept,
-				'Authorization' => 'basic '. base64_encode("{$this->key}")
+				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+				'user-agent' => $this->user_agent
 			)
 		);
 
@@ -142,6 +148,7 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 		$headers = array (
 			'headers' => array(
 				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+				'user-agent' => $this->user_agent
 			)
 		);
 
@@ -168,6 +175,20 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 
 		return $response;
 	}
+
+	private function getUserAgent() {
+		$userAgent = [];
+
+		$userAgent[] = 'Wordpress/'.get_bloginfo( 'version' );
+		$userAgent[] = 'WooCommerce/'.WOOCOMMERCE_VERSION;
+		$userAgent[] = 'PostNL-WooCommerce/'.WC_POSTNL_VERSION;
+
+		var_dump(implode(' ', $userAgent));
+
+
+		return $userAgent;
+	}
+
 
 }
 
