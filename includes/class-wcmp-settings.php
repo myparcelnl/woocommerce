@@ -378,20 +378,20 @@ class WooCommerce_MyParcel_Settings {
 		
 		add_settings_field(
 			'large_format',
-			__( 'Extra large size', 'woocommerce-myparcel' ).' (+ &euro;2.29)',
+			__( 'Extra large size', 'woocommerce-myparcel' ).' (+ &euro;2.45)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'large_format',
-				'description'	=> __( 'Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee of &euro;&nbsp;2,29 will be charged.<br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate of &euro;&nbsp;70,00 will be charged.', 'woocommerce-myparcel' )
+				'description'	=> __( 'Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee of &euro;&nbsp;2,45 will be charged.<br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate of &euro;&nbsp;70,00 will be charged.', 'woocommerce-myparcel' )
 			)
 		);
 		
 		add_settings_field(
 			'only_recipient',
-			__( 'Home address only', 'woocommerce-myparcel' ).' (+ &euro;0.27)',
+			__( 'Home address only', 'woocommerce-myparcel' ).' (+ &euro;0.29)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
@@ -404,7 +404,7 @@ class WooCommerce_MyParcel_Settings {
 		
 		add_settings_field(
 			'signature',
-			__( 'Signature on delivery', 'woocommerce-myparcel' ).' (+ &euro;0.34)',
+			__( 'Signature on delivery', 'woocommerce-myparcel' ).' (+ &euro;0.36)',
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',

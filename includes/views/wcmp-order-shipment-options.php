@@ -54,17 +54,17 @@
 		'[large_format]'	=> array(
 			'label'	=> __( 'Extra large size', 'woocommerce-myparcel' ),
 			'value'	=> isset($shipment_options['large_format']) ? $shipment_options['large_format'] : 0,
-			'cost'	=> '2.29',
+			'cost'	=> '2.45',
 		),
 		'[only_recipient]'	=> array(
 			'label'	=> __( 'Home address only', 'woocommerce-myparcel' ),
 			'value'	=> isset($shipment_options['only_recipient']) ? $shipment_options['only_recipient'] : 0,
-			'cost'	=> '0.27',
+			'cost'	=> '0.29',
 		),
 		'[signature]'	=> array(
 			'label'	=> __( 'Signature on delivery', 'woocommerce-myparcel' ),
 			'value'	=> isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,
-			'cost'	=> !(WooCommerce_MyParcel()->export->is_pickup( $order )) ? '0.34' : '',
+			'cost'	=> !(WooCommerce_MyParcel()->export->is_pickup( $order )) ? '0.36' : '',
 		),
 		'[return]'	=> array(
 			'label'	=> __( 'Return if no answer', 'woocommerce-myparcel' ),
