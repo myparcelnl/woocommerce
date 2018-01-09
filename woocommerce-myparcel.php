@@ -3,9 +3,9 @@
 Plugin Name: WooCommerce MyParcel
 Plugin URI: http://www.myparcel.nl
 Description: Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
-Author: Ewout Fernhout
+Author: Richard Perdaan
 Author URI: http://www.wpovernight.com
-Version: 2.4.1
+Version: 2.4.4
 Text Domain: woocommerce-myparcel
 
 License: GPLv3 or later
@@ -20,7 +20,7 @@ if ( !class_exists( 'WooCommerce_MyParcel' ) ) :
 
 class WooCommerce_MyParcel {
 
-	public $version = '2.4.1';
+	public $version = '2.4.4';
 	public $plugin_basename;
 
 	protected static $_instance = null;
@@ -40,7 +40,7 @@ class WooCommerce_MyParcel {
 	/**
 	 * Constructor
 	 */
-	 		
+
 	public function __construct() {
 		$this->define( 'WC_MYPARCEL_VERSION', $this->version );
 		$this->plugin_basename = plugin_basename(__FILE__);
@@ -53,6 +53,7 @@ class WooCommerce_MyParcel {
 		// load the localisation & classes
 		add_action( 'plugins_loaded', array( $this, 'translations' ) );
 		add_action( 'init', array( $this, 'load_classes' ) );
+		add_action( 'rest_api_init', array( $this, 'load_classes_api' ) );
 
 		// run lifecycle methods
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
@@ -73,7 +74,7 @@ class WooCommerce_MyParcel {
 
 	/**
 	 * Load the translation / textdomain files
-	 * 
+	 *
 	 * Note: the first-loaded translation file overrides any following ones if the same translation is present
 	 */
 	public function translations() {
@@ -131,6 +132,29 @@ class WooCommerce_MyParcel {
 	}
 
 	/**
+	 * Instantiate classes specifically for the REST api
+	 */
+	public function load_classes_api() {
+		if ( $this->is_woocommerce_activated() === false ) {
+			add_action( 'admin_notices', array ( $this, 'need_woocommerce' ) );
+			return;
+		}
+
+		if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
+			add_action( 'admin_notices', array ( $this, 'required_php_version' ) );
+			return;
+		}
+
+		// The code that adds the data to orders is only defined for the most recent API which was introduced in 3.0
+		if ( version_compare( WC()->version, '2.6.0', '<' ) ) {
+			return;
+		}
+
+		include_once( WC()->plugin_path() . '/includes/class-wcmp-rest-api-integration.php' );
+	}
+
+
+	/**
 	 * Check if woocommerce is activated
 	 */
 	public function is_woocommerce_activated() {
@@ -143,30 +167,30 @@ class WooCommerce_MyParcel {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * WooCommerce not active notice.
 	 *
 	 * @return string Fallack notice.
 	 */
-	 
+
 	public function need_woocommerce() {
 		$error = sprintf( __( 'WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!' , 'woocommerce-myparcel' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>' );
 
 		$message = '<div class="error"><p>' . $error . '</p></div>';
-	
+
 		echo $message;
 	}
 
 	/**
 	 * PHP version requirement notice
 	 */
-	
+
 	public function required_php_version() {
 		$error = __( 'WooCommerce MyParcel requires PHP 5.3 or higher (5.6 or later recommended).', 'woocommerce-myparcel' );
 		$how_to_update = __( 'How to update your PHP version', 'woocommerce-myparcel' );
 		$message = sprintf('<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>', $error, 'http://docs.wpovernight.com/general/how-to-update-your-php-version/', $how_to_update);
-	
+
 		echo $message;
 	}
 
@@ -237,7 +261,7 @@ class WooCommerce_MyParcel {
 				$general_settings['order_status_automation'] = 1;
 				$general_settings['automatic_order_status'] = 'completed';
 			}
-			
+
 			// map old key => new_key
 			$defaults_settings_keys = array(
 				'email'					=> 'connect_email',
@@ -262,7 +286,7 @@ class WooCommerce_MyParcel {
 				$defaults_settings['insured_amount'] = 0;
 				$defaults_settings['insured_amount_custom'] = $old_settings['verzekerdbedrag'];
 			}
-			
+
 			// add options
 			update_option( 'woocommerce_myparcel_general_settings', $general_settings );
 			update_option( 'woocommerce_myparcel_export_defaults_settings', $defaults_settings );
@@ -284,7 +308,7 @@ class WooCommerce_MyParcel {
 				@unlink( $log_file );
 			}
 		}
-	}		
+	}
 
 	/**
 	 * Get the plugin url.
