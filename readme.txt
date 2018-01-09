@@ -89,6 +89,18 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 2.4.4 (2018-01-09) =
+* Fix:Error about rest api (https://wordpress.org/support/topic/error-in-woocommerce/)
+      ```des/class-wcmp-rest-api-integration.php): failed to open stream```
+
+= 2.4.3 (2018-01-05) =
+* Fix: Add myparcel fields to REST api to create order request
+* Fix: Hide days when the pickup delivery is selected
+
+= 2.4.2 (2017-10-29) =
+* Fix: Price changes for 2018
+
+
 = 2.4.1 (2017-10-12) =
 * Fix: WooCommerce 3.2 compatibility
 
