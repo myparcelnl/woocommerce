@@ -150,7 +150,7 @@ class WooCommerce_MyParcel {
 			return;
 		}
 
-		include_once( 'includes/class-wcmp-rest-api-integration.php' );
+		include_once( WC()->plugin_path() . '/includes/class-wcmp-rest-api-integration.php' );
 	}
 
 
