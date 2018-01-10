@@ -671,7 +671,6 @@ class WooCommerce_MyParcel_Export {
 			$options['delivery_date'] = $delivery_date;
         }
 
-
         // options signed & recipient only
 		$myparcel_signed = WCX_Order::get_meta( $order, '_myparcel_signed' );
 		if (!empty($myparcel_signed)) {
@@ -711,10 +710,10 @@ class WooCommerce_MyParcel_Export {
 
 
     /**
-     * @param int $timestamp
-     *
-     * @return false|string
-     */
+    * @param int $timestamp
+    *
+    * @return false|string
+    */
     private function get_next_delivery_day($timestamp) {
         $weekDay = date('w', $timestamp);
         $new_timestamp = strtotime( '+1 day', $timestamp );
