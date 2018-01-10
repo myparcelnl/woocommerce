@@ -669,7 +669,7 @@ class WooCommerce_MyParcel_Export {
 			}
 
 			$options['delivery_date'] = $delivery_date;
-        }
+		}
 
         // options signed & recipient only
 		$myparcel_signed = WCX_Order::get_meta( $order, '_myparcel_signed' );
