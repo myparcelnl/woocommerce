@@ -708,22 +708,21 @@ class WooCommerce_MyParcel_Export {
 
 	}
 
+	/**
+	* @param int $timestamp
+	*
+	* @return false|string
+	*/
+	private function get_next_delivery_day($timestamp) {
+		$weekDay = date('w', $timestamp);
+		$new_timestamp = strtotime( '+1 day', $timestamp );
 
-    /**
-    * @param int $timestamp
-    *
-    * @return false|string
-    */
-    private function get_next_delivery_day($timestamp) {
-        $weekDay = date('w', $timestamp);
-        $new_timestamp = strtotime( '+1 day', $timestamp );
+		if ($weekDay == 0 || $weekDay == 1 || $new_timestamp < time() ) {
+			$new_timestamp = $this->get_next_delivery_day( $new_timestamp );
+		}
 
-        if ($weekDay == 0 || $weekDay == 1 || $new_timestamp < time() ) {
-            $new_timestamp = $this->get_next_delivery_day( $new_timestamp );
-        }
-
-        return $new_timestamp;
-    }
+		return $new_timestamp;
+	}
 
 	public function get_customs_declaration( $order ) {
 		$weight = (int) round( $this->get_parcel_weight( $order ) * 1000 );
