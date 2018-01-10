@@ -5,7 +5,7 @@ Plugin URI: http://www.myparcel.nl
 Description: Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
 Author: Richard Perdaan
 Author URI: http://www.wpovernight.com
-Version: 2.4.4
+Version: 2.4.5
 Text Domain: woocommerce-myparcel
 
 License: GPLv3 or later
@@ -20,7 +20,7 @@ if ( !class_exists( 'WooCommerce_MyParcel' ) ) :
 
 class WooCommerce_MyParcel {
 
-	public $version = '2.4.4';
+	public $version = '2.4.5';
 	public $plugin_basename;
 
 	protected static $_instance = null;
@@ -53,7 +53,6 @@ class WooCommerce_MyParcel {
 		// load the localisation & classes
 		add_action( 'plugins_loaded', array( $this, 'translations' ) );
 		add_action( 'init', array( $this, 'load_classes' ) );
-		add_action( 'rest_api_init', array( $this, 'load_classes_api' ) );
 
 		// run lifecycle methods
 		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
@@ -130,29 +129,6 @@ class WooCommerce_MyParcel {
 		// all systems ready - GO!
 		$this->includes();
 	}
-
-	/**
-	 * Instantiate classes specifically for the REST api
-	 */
-	public function load_classes_api() {
-		if ( $this->is_woocommerce_activated() === false ) {
-			add_action( 'admin_notices', array ( $this, 'need_woocommerce' ) );
-			return;
-		}
-
-		if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
-			add_action( 'admin_notices', array ( $this, 'required_php_version' ) );
-			return;
-		}
-
-		// The code that adds the data to orders is only defined for the most recent API which was introduced in 3.0
-		if ( version_compare( WC()->version, '2.6.0', '<' ) ) {
-			return;
-		}
-
-		include_once( WC()->plugin_path() . '/includes/class-wcmp-rest-api-integration.php' );
-	}
-
 
 	/**
 	 * Check if woocommerce is activated
