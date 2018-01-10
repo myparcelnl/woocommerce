@@ -662,12 +662,16 @@ class WooCommerce_MyParcel_Export {
 			$date_time = explode(' ', $delivery_date); // split date and time
 			// only add if date is in the future
 			$timestamp = strtotime($date_time[0]);
-			if (time() < $timestamp) {
-				$options['delivery_date'] = $delivery_date;
+
+			if ( $timestamp < time() ) {
+                $new_timestamp= $this->get_next_delivery_day($timestamp);
+                $delivery_date = date( 'Y-m-d h:i:s', $new_timestamp );
 			}
+
+			$options['delivery_date'] = $delivery_date;
 		}
 
-		// options signed & recipient only
+        // options signed & recipient only
 		$myparcel_signed = WCX_Order::get_meta( $order, '_myparcel_signed' );
 		if (!empty($myparcel_signed)) {
 			$options['signature'] = 1;
@@ -702,6 +706,22 @@ class WooCommerce_MyParcel_Export {
 
 		return $options;
 
+	}
+
+	/**
+	* @param int $timestamp
+	*
+	* @return false|string
+	*/
+	private function get_next_delivery_day($timestamp) {
+		$weekDay = date('w', $timestamp);
+		$new_timestamp = strtotime( '+1 day', $timestamp );
+
+		if ($weekDay == 0 || $weekDay == 1 || $new_timestamp < time() ) {
+			$new_timestamp = $this->get_next_delivery_day( $new_timestamp );
+		}
+
+		return $new_timestamp;
 	}
 
 	public function get_customs_declaration( $order ) {
