@@ -21,16 +21,16 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #: includes/class-wcmp-admin.php:120
-msgid "PostNL: Export"
-msgstr "PostNL: Exporteren"
+msgid "PostNL: Prepare shipment"
+msgstr "PostNL: Zending voorbereiden"
 
 #: includes/class-wcmp-admin.php:121
 msgid "PostNL: Print"
 msgstr "PostNL: Printen"
 
 #: includes/class-wcmp-admin.php:122
-msgid "PostNL: Export & Print"
-msgstr "PostNL: Exporteren & Printen"
+msgid "PostNL: Prepare & print shipment"
+msgstr "PostNL: Zending voorbereiden & printen"
 
 #: includes/class-wcmp-admin.php:151 includes/class-wcmp-assets.php:78
 msgid "Labels to skip"

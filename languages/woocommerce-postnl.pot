@@ -21,7 +21,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #: includes/class-wcmp-admin.php:120
-msgid "PostNL: Export"
+msgid "PostNL: Prepare shipment"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:121
@@ -29,7 +29,7 @@ msgid "PostNL: Print"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:122
-msgid "PostNL: Export & Print"
+msgid "PostNL: Prepare & print shipment"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:151 includes/class-wcmp-assets.php:78
