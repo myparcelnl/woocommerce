@@ -418,7 +418,7 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:206
 msgid ""
-"Set up the 'track & trace in email' so that the track&trace of the order is included in your track & trace email."
+"Set up the 'track & trace in email' so that the track & trace of the order is included in your track & trace email."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:212
