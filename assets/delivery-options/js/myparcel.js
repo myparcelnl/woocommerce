@@ -362,10 +362,16 @@
       var date;
       date = $('input[name=date]:checked').val();
       renderDeliveryOptions(date);
+
+      $('#mypa-date-slider-right, #mypa-date-slider-left, #mypa-tabs-container').show();
+
       return updateInputField();
     });
     $('#mypa-pickup-options-title').on('click', function() {
       $('#mypa-pickup').prop('checked', true);
+
+      $('#mypa-date-slider-right, #mypa-date-slider-left, #mypa-tabs-container').hide();
+
       return updateInputField();
     });
     return updateInputField();
