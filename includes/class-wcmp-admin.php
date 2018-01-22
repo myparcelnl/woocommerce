@@ -95,9 +95,9 @@ class WooCommerce_PostNL_Admin {
 	public function bulk_actions() {
 		global $post_type;
 		$bulk_actions = array(
-			'wcmp_export'		=> __( 'PostNL: Export', 'woocommerce-postnl' ),
+			'wcmp_export'		=> __( 'PostNL: Prepare shipment', 'woocommerce-postnl' ),
 			'wcmp_print'		=> __( 'PostNL: Print', 'woocommerce-postnl' ),
-			'wcmp_export_print'	=> __( 'PostNL: Export & Print', 'woocommerce-postnl' ),
+			'wcmp_export_print'	=> __( 'PostNL: Prepare & print shipment', 'woocommerce-postnl' ),
 		);
 
 

@@ -216,7 +216,7 @@ class WooCommerce_PostNL_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'email_tracktrace',
-				'description'	=> __( 'Add the track&trace code to emails to the customer.', 'woocommerce-postnl' )
+				'description'	=> __( 'Set up the \'track & trace in email\' so that the track & trace of the order is included in your track & trace email.', 'woocommerce-postnl' )
 			)
 		);
 
