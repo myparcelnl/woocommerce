@@ -1,20 +1,20 @@
 jQuery( function( $ ) {
-	parent.MyPaiFrame = window; //parent now has a ref to the iframe's window
+	parent.PoStiFrame = window; //parent now has a ref to the iframe's window
 	window.initSettings = function( settings ) {
 		// init vars
-		if(window.mypa == null || window.mypa == undefined){
-			window.mypa = {};
+		if(window.post == null || window.post == undefined){
+			window.post = {};
 		}
-		window.mypa.settings = settings;
+		window.post.settings = settings;
 		// Let's go!
 		new PostNL();
 
 		// copy parent font & font size
-		if (typeof parent.mypajQuery !== "undefined" && parent.mypajQuery !== null) {
-			var selector = parent.mypajQuery('.woocommerce-billing-fields').length ? '.woocommerce-billing-fields' : 'body';
-			var fontFamily = parent.mypajQuery(selector).css('font-family');
-			var fontWeight = parent.mypajQuery(selector).css('font-weight');
-			var fontsSize = parent.mypajQuery(selector).css('font-size');
+		if (typeof parent.postjQuery !== "undefined" && parent.postjQuery !== null) {
+			var selector = parent.postjQuery('.woocommerce-billing-fields').length ? '.woocommerce-billing-fields' : 'body';
+			var fontFamily = parent.postjQuery(selector).css('font-family');
+			var fontWeight = parent.postjQuery(selector).css('font-weight');
+			var fontsSize = parent.postjQuery(selector).css('font-size');
 			$('#postnl').css("font-family", fontFamily).css("font-size", fontsSize);
 
 			// autoload Google fonts
@@ -48,14 +48,14 @@ jQuery( function( $ ) {
 		}
 	}
 
-	window.updateMyPa = function() {
+	window.updatePoSt = function() {
 		$.when(
 			updatePageRequest()
 		).done(function () {
-			// parent.$('#mypa-load').on('change', function () {
-			// 	$('#mypa-input', parent.document).trigger('change');
+			// parent.$('#post-load').on('change', function () {
+			// 	$('#post-input', parent.document).trigger('change');
 			// });
-			parent.MyPaSetHeight();
+			parent.PoStSetHeight();
 		});
 	}
 
@@ -64,7 +64,7 @@ jQuery( function( $ ) {
 			window.setTimeout(updatePageRequest, 100);
 		}
 		else {
-			window.mypa.fn.updatePage()
+			window.post.fn.updatePage()
 		}
 	};
 
