@@ -27,7 +27,7 @@ This WooCommerce extension allows you to export your orders to the PostNL servic
 - View the status of the shipment in the order details page
 - Add track&trace link to the order confirmation email
 
-A PostNL API account is required for this plugin! Contact your PostNL account manager for the API key. 
+A PostNL API account is required for this plugin! Contact your PostNL account manager for the API key.
 
 == Installation ==
 
@@ -88,6 +88,19 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 5. postnl information on the order details page
 
 == Changelog ==
+
+= 2.4.5 (2018-01-10) =
+* Fix: Export an order with an old delivery date
+* Refactor: Error about rest api (https://wordpress.org/support/topic/error-in-woocommerce/)
+                  ```des/class-wcmp-rest-api-integration.php): failed to open stream```
+
+= 2.4.4 (2018-01-09) =
+* Fix:Error about rest api (https://wordpress.org/support/topic/error-in-woocommerce/)
+      ```des/class-wcmp-rest-api-integration.php): failed to open stream```
+
+= 2.4.3 (2018-01-05) =
+* Fix: Add PostNL fields to REST api to create order request
+* Fix: Hide days when the pickup delivery is selected
 
 = 2.4.1 (2017-10-12) =
 * Fix: WooCommerce 3.2 compatibility

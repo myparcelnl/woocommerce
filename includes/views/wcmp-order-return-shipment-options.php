@@ -31,12 +31,10 @@
 		'[only_recipient]'	=> array(
 			'label'	=> __( 'Home address only', 'woocommerce-postnl' ),
 			'value'	=> isset($shipment_options['only_recipient']) ? $shipment_options['only_recipient'] : 0,
-			'cost'	=> '0.26',
 		),
 		'[signature]'	=> array(
 			'label'	=> __( 'Signature on delivery', 'woocommerce-postnl' ),
 			'value'	=> isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,
-			'cost'	=> !(WooCommerce_PostNL()->export->is_pickup( $order )) ? '0.33' : '',
 		),
 		'[return]'	=> array(
 			'label'	=> __( 'Return if no answer', 'woocommerce-postnl' ),

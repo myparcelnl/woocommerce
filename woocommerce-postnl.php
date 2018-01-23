@@ -39,7 +39,7 @@ class WooCommerce_PostNL {
 	/**
 	 * Constructor
 	 */
-	 		
+
 	public function __construct() {
 		$this->define( 'WC_POSTNL_VERSION', $this->version );
 		$this->plugin_basename = plugin_basename(__FILE__);
@@ -72,7 +72,7 @@ class WooCommerce_PostNL {
 
 	/**
 	 * Load the translation / textdomain files
-	 * 
+	 *
 	 * Note: the first-loaded translation file overrides any following ones if the same translation is present
 	 */
 	public function translations() {
@@ -142,30 +142,30 @@ class WooCommerce_PostNL {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * WooCommerce not active notice.
 	 *
 	 * @return string Fallack notice.
 	 */
-	 
+
 	public function need_woocommerce() {
 		$error = sprintf( __( 'WooCommerce PostNL requires %sWooCommerce%s to be installed & activated!' , 'woocommerce-postnl' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>' );
 
 		$message = '<div class="error"><p>' . $error . '</p></div>';
-	
+
 		echo $message;
 	}
 
 	/**
 	 * PHP version requirement notice
 	 */
-	
+
 	public function required_php_version() {
 		$error = __( 'WooCommerce PostNL requires PHP 5.3 or higher (5.6 or later recommended).', 'woocommerce-postnl' );
 		$how_to_update = __( 'How to update your PHP version', 'woocommerce-postnl' );
 		$message = sprintf('<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>', $error, 'http://docs.wpovernight.com/general/how-to-update-your-php-version/', $how_to_update);
-	
+
 		echo $message;
 	}
 
@@ -236,7 +236,7 @@ class WooCommerce_PostNL {
 				$general_settings['order_status_automation'] = 1;
 				$general_settings['automatic_order_status'] = 'completed';
 			}
-			
+
 			// map old key => new_key
 			$defaults_settings_keys = array(
 				'telefoon'				=> 'connect_phone',
@@ -259,7 +259,7 @@ class WooCommerce_PostNL {
 				$defaults_settings['insured_amount'] = 0;
 				$defaults_settings['insured_amount_custom'] = $old_settings['verzekerdbedrag'];
 			}
-			
+
 			// add options
 			update_option( 'woocommerce_postnl_general_settings', $general_settings );
 			update_option( 'woocommerce_postnl_export_defaults_settings', $defaults_settings );
@@ -281,7 +281,7 @@ class WooCommerce_PostNL {
 				@unlink( $log_file );
 			}
 		}
-	}		
+	}
 
 	/**
 	 * Get the plugin url.

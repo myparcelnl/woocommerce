@@ -562,25 +562,29 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
                 $options['signature'] = 1;
             }
 
-            // delivery date (postponed delivery & pickup)
-            if ($delivery_date = $this->get_delivery_date( $order, $postnl_delivery_options ) ) {
-                $date_time = explode(' ', $delivery_date); // split date and time
-                // only add if date is in the future
-                $timestamp = strtotime($date_time[0]);
-                if (time() < $timestamp) {
-                    $options['delivery_date'] = $delivery_date;
-                }
-            }
+		// delivery date (postponed delivery & pickup)
+		if ($delivery_date = $this->get_delivery_date( $order, $myparcel_delivery_options ) ) {
+			$date_time = explode(' ', $delivery_date); // split date and time
+			// only add if date is in the future
+			$timestamp = strtotime($date_time[0]);
 
-            // options signed & recipient only
-            $postnl_signed = WCX_Order::get_meta( $order, '_postnl_signed' );
-            if (!empty($postnl_signed)) {
-                $options['signature'] = 1;
-            }
-            $postnl_only_recipient = WCX_Order::get_meta( $order, '_postnl_only_recipient' );
-            if (!empty($postnl_only_recipient)) {
-                $options['only_recipient'] = 1;
-            }
+			if ( $timestamp < time() ) {
+                $new_timestamp= $this->get_next_delivery_day($timestamp);
+                $delivery_date = date( 'Y-m-d h:i:s', $new_timestamp );
+			}
+
+			$options['delivery_date'] = $delivery_date;
+		}
+
+        // options signed & recipient only
+		$myparcel_signed = WCX_Order::get_meta( $order, '_postnl_signed' );
+		if (!empty($myparcel_signed)) {
+			$options['signature'] = 1;
+		}
+		$myparcel_only_recipient = WCX_Order::get_meta( $order, '_postnl_only_recipient' );
+		if (!empty($myparcel_only_recipient)) {
+			$options['only_recipient'] = 1;
+		}
 
             // allow prefiltering consignment data
             $options = apply_filters( 'wc_postnl_order_shipment_options', $options, $order );
@@ -607,6 +611,22 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
 
             return $options;
 
+        }
+
+        /**
+         * @param int $timestamp
+         *
+         * @return false|string
+         */
+        private function get_next_delivery_day($timestamp) {
+            $weekDay = date('w', $timestamp);
+            $new_timestamp = strtotime( '+1 day', $timestamp );
+
+            if ($weekDay == 0 || $weekDay == 1 || $new_timestamp < time() ) {
+                $new_timestamp = $this->get_next_delivery_day( $new_timestamp );
+            }
+
+            return $new_timestamp;
         }
 
         public function get_customs_declaration( $order ) {
@@ -923,7 +943,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
                 if (!empty($response['body']['data']['shipments'])) {
                     $shipments = $response['body']['data']['shipments'];
                     $shipment = array_shift($shipments);
-	                
+
                     // if shipment id matches and status is not concept, get tracktrace barcode and status name
                     if ( isset($shipment['id']) && $shipment['id'] == $id && $shipment['status'] >= 2 )  {
                         $status = $this->get_shipment_status_name( $shipment['status']);
