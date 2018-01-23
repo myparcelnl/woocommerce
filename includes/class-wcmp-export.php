@@ -563,7 +563,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
             }
 
 		// delivery date (postponed delivery & pickup)
-		if ($delivery_date = $this->get_delivery_date( $order, $myparcel_delivery_options ) ) {
+		if ($delivery_date = $this->get_delivery_date( $order, $postnl_delivery_options ) ) {
 			$date_time = explode(' ', $delivery_date); // split date and time
 			// only add if date is in the future
 			$timestamp = strtotime($date_time[0]);
@@ -577,12 +577,12 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
 		}
 
         // options signed & recipient only
-		$myparcel_signed = WCX_Order::get_meta( $order, '_postnl_signed' );
-		if (!empty($myparcel_signed)) {
+		$postnl_signed = WCX_Order::get_meta( $order, '_postnl_signed' );
+		if (!empty($postnl__signed)) {
 			$options['signature'] = 1;
 		}
-		$myparcel_only_recipient = WCX_Order::get_meta( $order, '_postnl_only_recipient' );
-		if (!empty($myparcel_only_recipient)) {
+		$postnl_only_recipient = WCX_Order::get_meta( $order, '_postnl_only_recipient' );
+		if (!empty($postnl_only_recipient)) {
 			$options['only_recipient'] = 1;
 		}
 

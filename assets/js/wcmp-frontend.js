@@ -6,7 +6,7 @@ jQuery( function( $ ) {
 	window.postnl_updated_shipping_method = '';
 
 	// reference jQuery for PostNL iFrame
-	window.mypajQuery = $;
+	window.postjQuery = $;
 	
 	// replace iframe placeholder with actual iframe
 	$('.postnl-iframe-placeholder').replaceWith( '<iframe id="postnl-iframe" src="" frameborder="0" scrolling="auto" style="width: 100%; display: none;">Bezig met laden...</iframe>');
@@ -37,12 +37,12 @@ jQuery( function( $ ) {
 
 	window.MyPaLoaded = function() {
 		window.update_postnl_settings();
-		MyPaWindow.initSettings( window.mypa.settings );
+		MyPaWindow.initSettings( window.post.settings );
 		MyPaSetHeight();
 	}
 
 	// set iframe height when delivery options changed
-	$( document ).on('change', '#mypa-chosen-delivery-options input', function() {
+	$( document ).on('change', '#post-chosen-delivery-options input', function() {
 		MyPaSetHeight(); // may need a trick to prevent height from updating 10x
 		window.postnl_checkout_updating = true;
 		$('body').trigger('update_checkout');
@@ -137,14 +137,14 @@ jQuery( function( $ ) {
 		var use_shipping = $( '#ship-to-different-address-checkbox' ).is(':checked');
 
 		if (!use_shipping && billing_postcode && billing_house_number) {
-			window.mypa.settings.postal_code = billing_postcode.replace(/\s+/g, '');
-			window.mypa.settings.number = billing_house_number;
-			window.mypa.settings.street = billing_street_name;
+			window.post.settings.postal_code = billing_postcode.replace(/\s+/g, '');
+			window.post.settings.number = billing_house_number;
+			window.post.settings.street = billing_street_name;
 			update_postnl_delivery_options()
 		} else if (shipping_postcode && shipping_house_number) {
-			window.mypa.settings.postal_code = shipping_postcode.replace(/\s+/g, '');;
-			window.mypa.settings.number = shipping_house_number;
-			window.mypa.settings.street = shipping_street_name;
+			window.post.settings.postal_code = shipping_postcode.replace(/\s+/g, '');;
+			window.post.settings.number = shipping_house_number;
+			window.post.settings.street = shipping_street_name;
 			update_postnl_delivery_options()
 		}
 
@@ -159,24 +159,24 @@ jQuery( function( $ ) {
 	$( '#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number' ).change();
 
 	// any delivery option selected/changed - update checkout for fees
-	$('#mypa-chosen-delivery-options').on('change', 'input', function() {
+	$('#post-chosen-delivery-options').on('change', 'input', function() {
 		window.postnl_checkout_updating = true;
 		// disable signed & recipient only when switching to pickup location
-		mypa_postnl_data = JSON.parse( $('#mypa-chosen-delivery-options #mypa-input').val() );
-		if (typeof mypa_postnl_data.location != 'undefined' ) {
-			$('#mypa-signed, #mypa-recipient-only').prop( "checked", false );
+		post_postnl_data = JSON.parse( $('#post-chosen-delivery-options #post-input').val() );
+		if (typeof post_postnl_data.location != 'undefined' ) {
+			$('#post-signed, #post-recipient-only').prop( "checked", false );
 		}
 		jQuery('body').trigger('update_checkout');
 	});
 
 	// pickup location selected
-	// $('#mypa-location-container').on('change', 'input[type=radio]', function() {
+	// $('#post-location-container').on('change', 'input[type=radio]', function() {
 	// 	var pickup_location = $( this ).val();
 	// });
 	// 
 	function get_settings() {
-		if (typeof window.mypa != 'undefined' && typeof window.mypa.settings != 'undefined') {
-			return window.mypa.settings;
+		if (typeof window.post != 'undefined' && typeof window.post.settings != 'undefined') {
+			return window.post.settings;
 		} else {
 			return false;
 		}
@@ -188,7 +188,7 @@ jQuery( function( $ ) {
 			hide_postnl_delivery_options();
 		} else {
 			$( '#postnl-iframe' ).show();
-			$( '#mypa-options-enabled' ).prop('checked', true);
+			$( '#post-options-enabled' ).prop('checked', true);
 		}
 	}
 
@@ -204,11 +204,11 @@ jQuery( function( $ ) {
 
 	function hide_postnl_delivery_options() {
 		$( '#postnl-iframe' ).hide();
-		$( '#mypa-options-enabled' ).prop('checked', false);
+		$( '#post-options-enabled' ).prop('checked', false);
 		// clear delivery options
 		if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
-			$( '#mypa-chosen-delivery-options #mypa-input' ).val('');		
-			$( '#mypa-chosen-delivery-options :checkbox' ).prop('checked', false);		
+			$( '#post-chosen-delivery-options #post-input' ).val('');
+			$( '#post-chosen-delivery-options :checkbox' ).prop('checked', false);
 			jQuery('body').trigger('update_checkout');
 		}
 	}
@@ -230,8 +230,8 @@ jQuery( function( $ ) {
 
 	function update_postnl_delivery_options_action() {
 		country = get_shipping_country();
-		if ( window.postnl_checkout_updating !== true && country == 'NL' && typeof MyPaWindow != 'undefined' && typeof MyPaWindow.mypa != 'undefined' ) {
-			MyPaWindow.mypa.settings = window.mypa.settings;
+		if ( window.postnl_checkout_updating !== true && country == 'NL' && typeof MyPaWindow != 'undefined' && typeof MyPaWindow.post != 'undefined' ) {
+			MyPaWindow.post.settings = window.post.settings;
 			MyPaWindow.updateMyPa();
 		}
 	}
