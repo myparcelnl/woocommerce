@@ -18,16 +18,16 @@ jQuery( function( $ ) {
 	// set iframe object load functions
 	var iframe_object = $('#postnl-iframe')
 		.load( function() {
-			var $MyPaiFrame = $('#postnl-iframe')[0];
-			window.MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
-			MyPaLoaded();
+			var $PoStiFrame = $('#postnl-iframe')[0];
+			window.PoStWindow = $PoStiFrame.contentWindow ? $PoStiFrame.contentWindow : $PoStiFrame.contentDocument.defaultView;
+			PoStLoaded();
 		});
 	// load iframe content
 	iframe_object.attr( 'src', wc_postnl_frontend.iframe_url );
 
-	window.MyPaSetHeight = function() {
+	window.PoStSetHeight = function() {
 		setTimeout(function () {
-			var iframeheight = MyPaWindow.document.body.scrollHeight;
+			var iframeheight = PoStWindow.document.body.scrollHeight;
 			// console.log(iframeheight);
 			$('#postnl-iframe').height(iframeheight);
 		}, 500);
@@ -35,15 +35,15 @@ jQuery( function( $ ) {
 		// $('#postnl-iframe').height($('#postnl-iframe').contents().height());
 	}
 
-	window.MyPaLoaded = function() {
+	window.PoStLoaded = function() {
 		window.update_postnl_settings();
-		MyPaWindow.initSettings( window.post.settings );
-		MyPaSetHeight();
+		PoStWindow.initSettings( window.post.settings );
+		PoStSetHeight();
 	}
 
 	// set iframe height when delivery options changed
 	$( document ).on('change', '#post-chosen-delivery-options input', function() {
-		MyPaSetHeight(); // may need a trick to prevent height from updating 10x
+		PoStSetHeight(); // may need a trick to prevent height from updating 10x
 		window.postnl_checkout_updating = true;
 		$('body').trigger('update_checkout');
 	});
@@ -230,9 +230,9 @@ jQuery( function( $ ) {
 
 	function update_postnl_delivery_options_action() {
 		country = get_shipping_country();
-		if ( window.postnl_checkout_updating !== true && country == 'NL' && typeof MyPaWindow != 'undefined' && typeof MyPaWindow.post != 'undefined' ) {
-			MyPaWindow.post.settings = window.post.settings;
-			MyPaWindow.updateMyPa();
+		if ( window.postnl_checkout_updating !== true && country == 'NL' && typeof PoStWindow != 'undefined' && typeof PoStWindow.post != 'undefined' ) {
+			PoStWindow.post.settings = window.post.settings;
+			PoStWindow.updatePoSt();
 		}
 	}
 

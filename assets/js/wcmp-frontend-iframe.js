@@ -1,5 +1,5 @@
 jQuery( function( $ ) {
-	parent.MyPaiFrame = window; //parent now has a ref to the iframe's window
+	parent.PoStiFrame = window; //parent now has a ref to the iframe's window
 	window.initSettings = function( settings ) {
 		// init vars
 		if(window.post == null || window.post == undefined){
@@ -48,14 +48,14 @@ jQuery( function( $ ) {
 		}
 	}
 
-	window.updateMyPa = function() {
+	window.updatePoSt = function() {
 		$.when(
 			updatePageRequest()
 		).done(function () {
 			// parent.$('#post-load').on('change', function () {
 			// 	$('#post-input', parent.document).trigger('change');
 			// });
-			parent.MyPaSetHeight();
+			parent.PoStSetHeight();
 		});
 	}
 
