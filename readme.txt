@@ -44,7 +44,7 @@ In the search field type "WooCommerce PostNL" and click Search Plugins. You can 
 5. After installation has finished, click the 'activate plugin' link
 
 = Manual installation via FTP =
-1. Download the plugin file to your computer and unzip it
+1. Download the plugin file to your computer and unzip it.
 2. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installation's wp-content/plugins/ directory.
 3. Activate the plugin from the Plugins menu within the WordPress admin.
 
