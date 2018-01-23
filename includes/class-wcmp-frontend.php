@@ -264,8 +264,8 @@ class WooCommerce_PostNL_Frontend {
 		?>
 		<div class="postnl-iframe-placeholder" style="display:none;"></div>
 		<script>
-			window.mypa = {};
-			window.mypa.settings = <?php echo $settings; ?>;
+			window.post = {};
+			window.post.settings = <?php echo $settings; ?>;
 			window.postnl_delivery_options_shipping_methods = <?php echo $delivery_options_shipping_methods; ?>;
 			<?php if (!empty($postnl_delivery_options_always_display)): ?>
 			window.postnl_delivery_options_always_display = 'yes';
@@ -273,11 +273,11 @@ class WooCommerce_PostNL_Frontend {
 			window.postnl_initial_hide = <?php echo ($hide_delivery_options) ? 'true' : 'false'; ?>;
 		</script>
 		
-		<input style="display:none !important;" type="checkbox" name='mypa-options-enabled' id="mypa-options-enabled">
-		<div id="mypa-chosen-delivery-options" style="display:none !important;">
-			<input style="display:none !important;" name='mypa-post-nl-data' id="mypa-input">
-			<input style="display:none !important;" type="checkbox" name='mypa-signed' id="mypa-signed">
-			<input style="display:none !important;" type="checkbox" name='mypa-recipient-only' id="mypa-recipient-only">
+		<input style="display:none !important;" type="checkbox" name='post-options-enabled' id="post-options-enabled">
+		<div id="post-chosen-delivery-options" style="display:none !important;">
+			<input style="display:none !important;" name='post-post-nl-data' id="post-input">
+			<input style="display:none !important;" type="checkbox" name='post-signed' id="post-signed">
+			<input style="display:none !important;" type="checkbox" name='post-recipient-only' id="post-recipient-only">
 		</div>
 		<?php
 	}
@@ -311,26 +311,26 @@ class WooCommerce_PostNL_Frontend {
 			WCX_Order::update_meta_data( $order, '_postnl_highest_shipping_class', $_POST['postnl_highest_shipping_class'] );
 		}
 
-		// mypa-recipient-only - 'on' or not set  
-		// mypa-signed         - 'on' or not set  
-		// mypa-post-nl-data   - JSON of chosen delivery options
+		// post-recipient-only - 'on' or not set
+		// post-signed         - 'on' or not set
+		// post-post-nl-data   - JSON of chosen delivery options
 		
 		// check if delivery options were used
-		if (!isset($_POST['mypa-options-enabled'])) {
+		if (!isset($_POST['post-options-enabled'])) {
 			return;
 		}
 
 
-		if (isset($_POST['mypa-signed'])) {
+		if (isset($_POST['post-signed'])) {
 			WCX_Order::update_meta_data( $order, '_postnl_signed', 'on' );
 		}
 
-		if (isset($_POST['mypa-recipient-only'])) {
+		if (isset($_POST['post-recipient-only'])) {
 			WCX_Order::update_meta_data( $order, '_postnl_only_recipient', 'on' );
 		}
 
-		if (!empty($_POST['mypa-post-nl-data'])) {
-			$delivery_options = json_decode( stripslashes( $_POST['mypa-post-nl-data']), true );
+		if (!empty($_POST['post-post-nl-data'])) {
+			$delivery_options = json_decode( stripslashes( $_POST['post-post-nl-data']), true );
 			WCX_Order::update_meta_data( $order, '_postnl_delivery_options', $delivery_options );
 		}
 	}
@@ -349,8 +349,8 @@ class WooCommerce_PostNL_Frontend {
 		}
 
 		// check for delivery options & add fees
-		if (!empty($post_data['mypa-post-nl-data'])) {
-			$delivery_options = json_decode( stripslashes( $post_data['mypa-post-nl-data']), true );
+		if (!empty($post_data['post-post-nl-data'])) {
+			$delivery_options = json_decode( stripslashes( $post_data['post-post-nl-data']), true );
 			// Fees for pickup & pickup express
 			if (isset($delivery_options['price_comment'])) {
 				switch ($delivery_options['price_comment']) {
@@ -409,7 +409,7 @@ class WooCommerce_PostNL_Frontend {
 		}
 
 		// Fee for "signed" option
-		if (isset($post_data['mypa-signed'])) {
+		if (isset($post_data['post-signed'])) {
 			if (!empty(WooCommerce_PostNL()->checkout_settings['signed_fee'])) {
 				$fee = WooCommerce_PostNL()->checkout_settings['signed_fee'];
 				$fee_name = __( 'Signature on delivery', 'woocommerce-postnl' );
@@ -418,7 +418,7 @@ class WooCommerce_PostNL_Frontend {
 		}
 
 		// Fee for "only recipient" option, don't apply fee for morning & night delivery (already included)
-		if (isset($post_data['mypa-recipient-only']) && empty($only_recipient_included)) {
+		if (isset($post_data['post-recipient-only']) && empty($only_recipient_included)) {
 			if (!empty(WooCommerce_PostNL()->checkout_settings['only_recipient_fee'])) {
 				$fee = WooCommerce_PostNL()->checkout_settings['only_recipient_fee'];
 				$fee_name = __( 'Home address only delivery', 'woocommerce-postnl' );

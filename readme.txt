@@ -44,13 +44,13 @@ In the search field type "WooCommerce PostNL" and click Search Plugins. You can 
 5. After installation has finished, click the 'activate plugin' link
 
 = Manual installation via FTP =
-1. Download the plugin file to your computer and unzip it
+1. Download the plugin file to your computer and unzip it.
 2. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installation's wp-content/plugins/ directory.
 3. Activate the plugin from the Plugins menu within the WordPress admin.
 
 = Setting up the plugin =
 1. Go to the menu `WooCommerce > PostNL`.
-2. Fill in your API Details. If you don't have API details, log into your postnl account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) where you can find your API key under Instellingen → Algemeen.
+2. Fill in your API Details.
 3. Under 'Default export settings' you can set options that should be set by default for the export. You can change these settings per order at the time of export.
 4. The plugin is ready to be used!
 
