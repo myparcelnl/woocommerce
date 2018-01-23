@@ -1,11 +1,9 @@
 <?php
-use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
-use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
+use WPO\WC\PostNL\Compatibility\WC_Core as WCX;
+use WPO\WC\PostNL\Compatibility\Order as WCX_Order;
+use WPO\WC\PostNL\Compatibility\Product as WCX_Product;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( !class_exists( 'WC_NLPostcode_Fields' ) ) :
 
@@ -108,7 +106,7 @@ class WC_NLPostcode_Fields {
 				// Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
 				wp_register_script(
 					'nl-checkout',
-					WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-checkout.js',
+					WooCommerce_PostNL()->plugin_url() . '/assets/js/nl-checkout.js',
 					array( 'wc-checkout' ),
 					$this->version
 				);
@@ -119,14 +117,14 @@ class WC_NLPostcode_Fields {
 				// Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
 				wp_register_script(
 					'nl-account-page',
-					WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-account-page.js',
+					WooCommerce_PostNL()->plugin_url() . '/assets/js/nl-account-page.js',
 					array( 'jquery' ),
 					$this->version
 				);
 				wp_enqueue_script( 'nl-account-page' );
 			}
 
-			wp_enqueue_style( 'nl-checkout', WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout.css' );
+			wp_enqueue_style( 'nl-checkout', WooCommerce_PostNL()->plugin_url() . '/assets/css/nl-checkout.css' );
 		}
 
 	}
@@ -139,7 +137,7 @@ class WC_NLPostcode_Fields {
 		if ( $post_type == 'shop_order' ) {
 			wp_enqueue_style(
 				'nl-checkout-admin',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout-admin.css',
+				WooCommerce_PostNL()->plugin_url() . '/assets/css/nl-checkout-admin.css',
 				array(), // deps
 				$this->version
 			);
@@ -208,16 +206,16 @@ class WC_NLPostcode_Fields {
 
 		// Add Street name
 		$fields[$form.'_street_name'] = array(
-			'label'			=> __( 'Street name', 'woocommerce-myparcel' ),
-			'placeholder'	=> __( 'Street name', 'woocommerce-myparcel' ),
+			'label'			=> __( 'Street name', 'woocommerce-postnl' ),
+			'placeholder'	=> __( 'Street name', 'woocommerce-postnl' ),
 			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-first' ), $form, 'street_name' ),
 			'required'		=> $required, // Only required for NL
 		);
 
 		// Add house number
 		$fields[$form.'_house_number'] = array(
-			'label'			=> __( 'Nr.', 'woocommerce-myparcel' ),
-			// 'placeholder'	=> __( 'Nr.', 'woocommerce-myparcel' ),
+			'label'			=> __( 'Nr.', 'woocommerce-postnl' ),
+			// 'placeholder'	=> __( 'Nr.', 'woocommerce-postnl' ),
 			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart-first' ), $form, 'house_number' ),
 			'required'		=> $required, // Only required for NL
 			'type'			=> 'number',
@@ -225,8 +223,8 @@ class WC_NLPostcode_Fields {
 
 		// Add house number Suffix
 		$fields[$form.'_house_number_suffix'] = array(
-			'label'			=> __( 'Suffix', 'woocommerce-myparcel' ),
-			// 'placeholder'	=> __( 'Suffix', 'woocommerce-myparcel' ),
+			'label'			=> __( 'Suffix', 'woocommerce-postnl' ),
+			// 'placeholder'	=> __( 'Suffix', 'woocommerce-postnl' ),
 			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart' ), $form, 'house_number_suffix' ),
 			'required'		=> false,
 		);
@@ -378,17 +376,17 @@ class WC_NLPostcode_Fields {
 	public function admin_billing_fields( $fields ) {
 
 		$fields['street_name'] = array(
-			'label' => __( 'Street name', 'woocommerce-myparcel' ),
+			'label' => __( 'Street name', 'woocommerce-postnl' ),
 			'show'  => true
 		);
 
 		$fields['house_number'] = array(
-			'label' => __( 'Number', 'woocommerce-myparcel' ),
+			'label' => __( 'Number', 'woocommerce-postnl' ),
 			'show'  => true
 		);
 
 		$fields['house_number_suffix'] = array(
-			'label' => __( 'Suffix', 'woocommerce-myparcel' ),
+			'label' => __( 'Suffix', 'woocommerce-postnl' ),
 			'show'  => true
 		);
 
@@ -404,17 +402,17 @@ class WC_NLPostcode_Fields {
 	public function admin_shipping_fields( $fields ) {
 
 		$fields['street_name'] = array(
-			'label' => __( 'Street name', 'woocommerce-myparcel' ),
+			'label' => __( 'Street name', 'woocommerce-postnl' ),
 			'show'  => true
 		);
 
 		$fields['house_number'] = array(
-			'label' => __( 'Number', 'woocommerce-myparcel' ),
+			'label' => __( 'Number', 'woocommerce-postnl' ),
 			'show'  => true
 		);
 
 		$fields['house_number_suffix'] = array(
-			'label' => __( 'Suffix', 'woocommerce-myparcel' ),
+			'label' => __( 'Suffix', 'woocommerce-postnl' ),
 			'show'  => true
 		);
 
@@ -425,42 +423,42 @@ class WC_NLPostcode_Fields {
 	 * Custom user profile edit fields.
 	 */
 	public function user_profile_fields ( $meta_fields ) {
-		$myparcel_billing_fields = array(
+		$postnl_billing_fields = array(
 			'billing_street_name' => array(
-				'label'       => __( 'Street', 'woocommerce-myparcel' ),
+				'label'       => __( 'Street', 'woocommerce-postnl' ),
 				'description' => ''
 			),
 			'billing_house_number' => array(
-				'label'       => __( 'Number', 'woocommerce-myparcel' ),
+				'label'       => __( 'Number', 'woocommerce-postnl' ),
 				'description' => ''
 			),
 			'billing_house_number_suffix' => array(
-				'label'       => __( 'Suffix', 'woocommerce-myparcel' ),
+				'label'       => __( 'Suffix', 'woocommerce-postnl' ),
 				'description' => ''
 			),
 		);
-		$myparcel_shipping_fields = array(
+		$postnl_shipping_fields = array(
 			'shipping_street_name' => array(
-				'label'       => __( 'Street', 'woocommerce-myparcel' ),
+				'label'       => __( 'Street', 'woocommerce-postnl' ),
 				'description' => ''
 			),
 			'shipping_house_number' => array(
-				'label'       => __( 'Number', 'woocommerce-myparcel' ),
+				'label'       => __( 'Number', 'woocommerce-postnl' ),
 				'description' => ''
 			),
 			'shipping_house_number_suffix' => array(
-				'label'       => __( 'Suffix', 'woocommerce-myparcel' ),
+				'label'       => __( 'Suffix', 'woocommerce-postnl' ),
 				'description' => ''
 			),
 		);
 
-		// add myparcel fields to billing section
-		$billing_fields = array_merge($meta_fields['billing']['fields'], $myparcel_billing_fields);
+		// add postnl fields to billing section
+		$billing_fields = array_merge($meta_fields['billing']['fields'], $postnl_billing_fields);
 		$billing_fields = $this->array_move_keys( $billing_fields, array( 'billing_street_name', 'billing_house_number', 'billing_house_number_suffix' ), 'billing_address_2', 'after' );
 		$meta_fields['billing']['fields'] = $billing_fields;
 
-		// add myparcel fields to shipping section
-		$shipping_fields = array_merge($meta_fields['shipping']['fields'], $myparcel_shipping_fields);
+		// add postnl fields to shipping section
+		$shipping_fields = array_merge($meta_fields['shipping']['fields'], $postnl_shipping_fields);
 		$shipping_fields = $this->array_move_keys( $shipping_fields, array( 'shipping_street_name', 'shipping_house_number', 'shipping_house_number_suffix' ), 'shipping_address_2', 'after' );
 		$meta_fields['shipping']['fields'] = $shipping_fields;
 		
@@ -641,18 +639,18 @@ class WC_NLPostcode_Fields {
 	 */
 	function required_field_notices( $notice, $field_label ) {
 		// concatenate translations
-		$billing_nr = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-myparcel' ) );
-		$shipping_nr = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-myparcel' ) );
+		$billing_nr = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-postnl' ) );
+		$shipping_nr = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-postnl' ) );
 		// not used:
-		// $billing_street = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcel' ) );
-		// $shipping_street = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcel' ) );
+		// $billing_street = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Street name', 'woocommerce-postnl' ) );
+		// $shipping_street = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Street name', 'woocommerce-postnl' ) );
 
 		switch ( $field_label ) {
 			case $billing_nr:
-				$notice = __( '<b>Billing Nr.</b> is a required field', 'woocommerce-myparcel' );
+				$notice = __( '<b>Billing Nr.</b> is a required field', 'woocommerce-postnl' );
 				break;
 			case $shipping_nr:
-				$notice = __( '<b>Shipping Nr.</b> is a required field', 'woocommerce-myparcel' );
+				$notice = __( '<b>Shipping Nr.</b> is a required field', 'woocommerce-postnl' );
 				break;
 			default:
 				break;

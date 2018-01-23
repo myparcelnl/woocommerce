@@ -7,7 +7,7 @@ jQuery( function( $ ) {
 		}
 		window.mypa.settings = settings;
 		// Let's go!
-		new MyParcel();
+		new PostNL();
 
 		// copy parent font & font size
 		if (typeof parent.mypajQuery !== "undefined" && parent.mypajQuery !== null) {
@@ -15,7 +15,7 @@ jQuery( function( $ ) {
 			var fontFamily = parent.mypajQuery(selector).css('font-family');
 			var fontWeight = parent.mypajQuery(selector).css('font-weight');
 			var fontsSize = parent.mypajQuery(selector).css('font-size');
-			$('#myparcel').css("font-family", fontFamily).css("font-size", fontsSize);
+			$('#postnl').css("font-family", fontFamily).css("font-size", fontsSize);
 
 			// autoload Google fonts
 			// based on http://exportkit.com/plugin/environments/html5/add-google-fonts-to-html5
@@ -29,15 +29,15 @@ jQuery( function( $ ) {
 
 				for(var gf = 0; gf<gfl.length; gf++){
 					if(df.indexOf(gfl[gf].split(' ').join('').toLowerCase())>-1){
-						$('#myparcel').css("font-family", gfl[gf]);
+						$('#postnl').css("font-family", gfl[gf]);
 
 						var hb = ':400';
 
 						if(fontWeight == 'bold' || df.indexOf('bold') > -1){
-							$('#myparcel').css("font-weight", 700);
+							$('#postnl').css("font-weight", 700);
 							hb = ':400,700';
 						}else{
-							$('#myparcel').css("font-weight", 400);
+							$('#postnl').css("font-weight", 400);
 						}
 
 						if(!fontHash[gfl[gf]]) _agfh(gfl[gf]+hb);

@@ -49,7 +49,7 @@
     obj1
   );
 
-  this.MyParcel = Application = (function() {
+  this.PostNL = Application = (function() {
 
     /*
      * Setup initial variables
@@ -65,9 +65,9 @@
       if ((base = window.mypa.settings).base_url == null) {
         base.base_url = "//localhost:8080/api/delivery_options";
       }
-      this.el = document.getElementById('myparcel');
+      this.el = document.getElementById('postnl');
 
-      this.$el = jquery('myparcel');
+      this.$el = jquery('postnl');
       if (this.shadow == null) {
         this.shadow = this.el.createShadowRoot();
       }
@@ -83,10 +83,10 @@
 
     Application.prototype.render = function() {
       var error, ref;
-      this.shadow.innerHTML = document.getElementById('myparcel-template').innerHTML;
+      this.shadow.innerHTML = document.getElementById('postnl-template').innerHTML;
       try {
         if ((ref = WebComponents.ShadowCSS) != null) {
-          ref.shimStyling(shadow, 'myparcel');
+          ref.shimStyling(shadow, 'postnl');
         }
       } catch (error) {
         console.log('Cannot shim CSS');
@@ -193,7 +193,7 @@
           exclude_delivery_type: settings.exclude_delivery_type != null ? settings.exclude_delivery_type : void 0
         },
         success: renderPage,
-        error: hideMyParcelOptions
+        error: hidePostNLOptions
       };
       return jquery.ajax(options);
     };
@@ -334,7 +334,7 @@
   }
 
   $ = function(selector) {
-    return jquery(document.getElementById('myparcel').shadowRoot).find(selector);
+    return jquery(document.getElementById('postnl').shadowRoot).find(selector);
   };
 
   displayOtherTab = function() {
@@ -648,11 +648,11 @@
     }
   };
   /*
-   * Hide MyParcel options
+   * Hide PostNL options
    */
-  hideMyParcelOptions = function() {
-    parent.mypajQuery('#myparcel-iframe').hide();
+  hidePostNLOptions = function() {
+    parent.mypajQuery('#postnl-iframe').hide();
   };
 }).call(this);
 
-//# sourceMappingURL=myparcel.js.map
+//# sourceMappingURL=postnl.js.map

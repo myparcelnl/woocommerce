@@ -53,10 +53,10 @@ jQuery( function( $ ) {
 
 	$( document.body )
 
-		.on( 'wc-myparcel-enhanced-select-init', function() {
+		.on( 'wc-postnl-enhanced-select-init', function() {
 
 			// Ajax shipping method search box
-			$( ':input.wc-myparcel-shipping-method-search' ).filter( ':not(.enhanced)' ).each( function() {
+			$( ':input.wc-postnl-shipping-method-search' ).filter( ':not(.enhanced)' ).each( function() {
 				var select2_args = {
 					allowClear:  $( this ).data( 'allow_clear' ) ? true : false,
 					placeholder: $( this ).data( 'placeholder' ),
@@ -65,14 +65,14 @@ jQuery( function( $ ) {
 						return m;
 					},
 					ajax: {
-				        url:         wc_myparcel.ajax_url,
+				        url:         wc_postnl.ajax_url,
 				        dataType:    'json',
 				        quietMillis: 250,
 				        data: function( term ) {
 				            return {
 								term:     term,
-								action:   'wc_myparcel_json_search_shipping_methods',
-								security: wc_myparcel.nonce,
+								action:   'wc_postnl_json_search_shipping_methods',
+								security: wc_postnl.nonce,
 				            };
 				        },
 				        results: function( data ) {
@@ -124,6 +124,6 @@ jQuery( function( $ ) {
 			});
 		})
 
-		.trigger( 'wc-myparcel-enhanced-select-init' );
+		.trigger( 'wc-postnl-enhanced-select-init' );
 	
 });

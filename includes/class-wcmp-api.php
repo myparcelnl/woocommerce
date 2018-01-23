@@ -1,11 +1,9 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WC_MyParcel_API' ) ) :
+if ( !class_exists( 'WC_PostNL_API' ) ) :
 
-class WC_MyParcel_API extends WC_MyParcel_REST_Client {
+class WC_PostNL_API extends WC_PostNL_REST_Client {
 	/** @var API URL */
 	public $APIURL = "https://api.myparcel.nl/";
 
@@ -15,11 +13,13 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 	/**
 	 * Default constructor
 	 *
-	 * @param  string  $key     API Key provided by MyParcel
+	 * @param  string  $key     API Key provided by PostNL
 	 * @return void
 	 */
 	function __construct( $key ) {
 		parent::__construct();
+
+		$this->user_agent = $this->getUserAgent();
 
 		$this->key = $key;
 	}
@@ -38,14 +38,6 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 				$content_type = 'application/vnd.shipment+json';
 				$data_key = 'shipments';
 				break;
-			case 'return':
-				$content_type = 'application/vnd.return_shipment+json';
-				$data_key = 'return_shipments';
-				break;
-			case 'unrelated_return':
-				$content_type = 'application/vnd.unrelated_return_shipment+json';
-				$data_key = 'unrelated_return_shipments';
-				break;
 		}
 
 		$data = array(
@@ -54,18 +46,16 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 			),
 		);
 
-
-		// echo '<pre>';var_dump($data);echo '</pre>';die();
 		$json = json_encode( $data );
 
 		$headers = array(
-			"Content-type: " . $content_type . "; charset=UTF-8",
-			'Authorization: basic '. base64_encode("{$this->key}"),
+			'Content-type' => $content_type . '; charset=UTF-8',
+			'Authorization' => 'basic '. base64_encode("{$this->key}"),
+			'user-agent' => $this->user_agent
 		);
 
 		$request_url = $this->APIURL . $endpoint;
 		$response = $this->post($request_url, $json, $headers);
-
 		return $response;
 	}
 
@@ -78,29 +68,15 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 		$endpoint = 'shipments';
 
 		$headers = array (
-			'Accept: application/json; charset=UTF-8',
-			'Authorization: basic '. base64_encode("{$this->key}"),
+			'headers' => array(
+				'Accept' => 'application/json; charset=UTF-8',
+				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+				'user-agent' => $this->user_agent
+			)
 		);
 
 		$request_url = $this->APIURL . $endpoint . '/' . implode(';', $ids);
 		$response = $this->delete($request_url, $headers );
-
-		return $response;
-	}
-
-	/**
-	 * Unrelated return shipments
-	 * @return array       response
-	 */
-	public function unrelated_return_shipments () {
-		$endpoint = 'return_shipments';
-
-		$headers = array (
-			'Authorization: basic '. base64_encode("{$this->key}"),
-		);
-
-		$request_url = $this->APIURL . $endpoint;
-		$response = $this->post($request_url, '', $headers );
 
 		return $response;
 	}
@@ -114,13 +90,15 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 		$endpoint = 'shipments';
 
 		$headers = array (
-			// 'Accept: application/json; charset=UTF-8',
-			'Authorization: basic '. base64_encode("{$this->key}"),
+			'headers' => array(
+				'Accept' => 'application/json; charset=UTF-8',
+				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+				'user-agent' => $this->user_agent
+			)
 		);
 
 		$request_url = $this->APIURL . $endpoint . '/' . implode(';', (array) $ids);
 		$request_url = add_query_arg( $params, $request_url );
-		// echo '<pre>';var_dump($request_url);echo '</pre>';die();
 		$response = $this->get($request_url, $headers);
 
 		return $response;
@@ -137,16 +115,19 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 		$endpoint = 'shipment_labels';
 
 		if ( $return == 'pdf' ) {
-			$accept = 'Accept: application/pdf'; // (For the PDF binary. This is the default.)
+			$accept = 'application/pdf'; // (For the PDF binary. This is the default.)
 			$raw = true;
 		} else {
-			$accept = 'Accept: application/json; charset=UTF-8'; // (For shipment download link)
+			$accept = 'application/json; charset=UTF-8'; // (For shipment download link)
 			$raw = false;
 		}
 
-		$headers = array (
-			$accept,
-			'Authorization: basic '. base64_encode("{$this->key}"),
+		$headers = array(
+			'headers' => array(
+				'Accept' => $accept,
+				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+				'user-agent' => $this->user_agent
+			)
 		);
 
 		$request_url = add_query_arg( $params, $this->APIURL . $endpoint . '/' . implode(';', $ids) );
@@ -165,7 +146,10 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 		$endpoint = 'tracktraces';
 
 		$headers = array (
-			'Authorization: basic '. base64_encode("{$this->key}"),
+			'headers' => array(
+				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+				'user-agent' => $this->user_agent
+			)
 		);
 
 		$request_url = add_query_arg( $params, $this->APIURL . $endpoint . '/' . implode(';', $ids) );
@@ -181,8 +165,8 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 	 */
 	public function get_delivery_options ( $params = array(), $raw = false ) {
 		$endpoint = 'delivery_options';
-		$checkout_settings = WooCommerce_MyParcel()->checkout_settings;
-		if (isset(WooCommerce_MyParcel()->checkout_settings['monday_delivery']) ) {
+		$checkout_settings = WooCommerce_PostNL()->checkout_settings;
+		if (isset(WooCommerce_PostNL()->checkout_settings['monday_delivery']) ) {
 			$params['monday_delivery'] = 1;
 		}
 
@@ -191,6 +175,25 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 
 		return $response;
 	}
+
+	/**
+	 * Get Wordpress, Woocommerce, PostNL version and place theme in a array. Implode the array to get an UserAgent.
+	 * @return string
+	 */
+	private function getUserAgent() {
+
+		$userAgents = [
+			'Wordpress/'.get_bloginfo( 'version' ),
+			'WooCommerce/'.WOOCOMMERCE_VERSION,
+			'PostNL-WooCommerce/'.WC_POSTNL_VERSION,
+			];
+
+		//Place white space between the array elements
+		$userAgent = implode(' ', $userAgents);
+
+		return $userAgent;
+	}
+
 
 }
 
