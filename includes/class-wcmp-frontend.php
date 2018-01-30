@@ -266,7 +266,7 @@ class WooCommerce_MyParcelBE_Frontend {
 		?>
 		<div class="myparcelBE-iframe-placeholder" style="display:none;"></div>
 		<script>
-			window.mypaBE= {};
+			window.mypaBE = {};
 			window.mypaBE.settings = <?php echo $settings; ?>;
 			window.myparcelBE_delivery_options_shipping_methods = <?php echo $delivery_options_shipping_methods; ?>;
 			<?php if (!empty($myparcelBE_delivery_options_always_display)): ?>

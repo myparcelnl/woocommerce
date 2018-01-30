@@ -2,8 +2,8 @@ jQuery( function( $ ) {
 	parent.MyPaiFrame = window; //parent now has a ref to the iframe's window
 	window.initSettings = function( settings ) {
 		// init vars
-		if(window.mypaBE== null || window.mypaBE== undefined){
-			window.mypaBE= {};
+		if(window.mypaBE == null || window.mypaBE == undefined){
+			window.mypaBE = {};
 		}
 		window.mypaBE.settings = settings;
 		// Let's go!

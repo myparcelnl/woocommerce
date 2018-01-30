@@ -57,8 +57,8 @@
     function Application(options) {
       var base;
       moment.locale(NATIONAL);
-      if (window.mypaBE== null) {
-        window.mypaBE= {
+      if (window.mypaBE == null) {
+        window.mypaBE = {
           settings: {}
         };
       }
