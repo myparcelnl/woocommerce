@@ -16,13 +16,13 @@ require( '../../../../../wp-load.php');
 	// load jquery
 	printf( $script_format, includes_url( 'js/jquery/jquery.js' ) );
 
-	// MyParcel scripts
-	printf( $script_format, add_query_arg( 'ver', WC_MYPARCEL_VERSION, WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/moment.min.js' ) );
-	printf( $script_format, add_query_arg( 'ver', WC_MYPARCEL_VERSION, WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/webcomponents.min.js' ) );
-	printf( $script_format, add_query_arg( 'ver', WC_MYPARCEL_VERSION, WooCommerce_MyParcel()->plugin_url() . '/assets/delivery-options/js/myparcel.js' ) );
-	printf( $script_format, add_query_arg( 'ver', WC_MYPARCEL_VERSION, WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-frontend-iframe.js' ) );
+	// MyParcelBE scripts
+	printf( $script_format, add_query_arg( 'ver', WC_MYPARCELBE_VERSION, WooCommerce_MyParcelBE()->plugin_url() . '/assets/delivery-options/js/moment.min.js' ) );
+	printf( $script_format, add_query_arg( 'ver', WC_MYPARCELBE_VERSION, WooCommerce_MyParcelBE()->plugin_url() . '/assets/delivery-options/js/webcomponents.min.js' ) );
+	printf( $script_format, add_query_arg( 'ver', WC_MYPARCELBE_VERSION, WooCommerce_MyParcelBE()->plugin_url() . '/assets/delivery-options/js/myparcelBE.js' ) );
+	printf( $script_format, add_query_arg( 'ver', WC_MYPARCELBE_VERSION, WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-frontend-iframe.js' ) );
 
-	$autoload_google_fonts = isset(WooCommerce_MyParcel()->checkout_settings['autoload_google_fonts']) ? 'true' : 'false';
+	$autoload_google_fonts = isset(WooCommerce_MyParcelBE()->checkout_settings['autoload_google_fonts']) ? 'true' : 'false';
 	printf( '<script type="text/javascript">var autoload_google_fonts = %s</script>',$autoload_google_fonts);
 	?>
 </head>
@@ -31,6 +31,6 @@ require( '../../../../../wp-load.php');
 // Include delivery options template
 include('wcmp-delivery-options-template.php');
 ?>
-<myparcel id="myparcel">Bezig met laden...</myparcel>
+<myparcelBE id="myparcelBE">Bezig met laden...</myparcelBE>
 </body>
 </html>

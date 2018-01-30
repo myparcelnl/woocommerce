@@ -1,12 +1,12 @@
 <?php
 /*
-Plugin Name: WooCommerce MyParcel
-Plugin URI: http://www.myparcel.nl
-Description: Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
+Plugin Name: WooCommerce MyParcelBE
+Plugin URI: http://www.myparcelBE.nl
+Description: Export your WooCommerce orders to MyParcelBE (www.myparcelBE.nl) and print labels directly from the WooCommerce admin
 Author: Richard Perdaan
 Author URI: http://www.wpovernight.com
 Version: 2.4.5
-Text Domain: woocommerce-myparcel
+Text Domain: woocommerce-myparcelBE
 
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -16,9 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-if ( !class_exists( 'WooCommerce_MyParcel' ) ) :
+if ( !class_exists( 'WooCommerce_MyParcelBE' ) ) :
 
-class WooCommerce_MyParcel {
+class WooCommerce_MyParcelBE {
 
 	public $version = '2.4.5';
 	public $plugin_basename;
@@ -46,9 +46,9 @@ class WooCommerce_MyParcel {
 		$this->plugin_basename = plugin_basename(__FILE__);
 
 		// Load settings
-		$this->general_settings = get_option( 'woocommerce_myparcel_general_settings' );
-		$this->export_defaults = get_option( 'woocommerce_myparcel_export_defaults_settings' );
-		$this->checkout_settings = get_option( 'woocommerce_myparcel_checkout_settings' );
+		$this->general_settings = get_option( 'woocommerce_myparcelBE_general_settings' );
+		$this->export_defaults = get_option( 'woocommerce_myparcelBE_export_defaults_settings' );
+		$this->checkout_settings = get_option( 'woocommerce_myparcelBE_checkout_settings' );
 
 		// load the localisation & classes
 		add_action( 'plugins_loaded', array( $this, 'translations' ) );
@@ -77,20 +77,20 @@ class WooCommerce_MyParcel {
 	 * Note: the first-loaded translation file overrides any following ones if the same translation is present
 	 */
 	public function translations() {
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'woocommerce-myparcel' );
+		$locale = apply_filters( 'plugin_locale', get_locale(), 'woocommerce-myparcelBE' );
 		$dir    = trailingslashit( WP_LANG_DIR );
 
 		/**
 		 * Frontend/global Locale. Looks in:
 		 *
-		 * 		- WP_LANG_DIR/woocommerce-myparcel/woocommerce-myparcel-LOCALE.mo
-		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
-		 * 	 	- woocommerce-myparcel/languages/woocommerce-myparcel-LOCALE.mo (which if not found falls back to:)
-		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
+		 * 		- WP_LANG_DIR/woocommerce-myparcelBE/woocommerce-myparcelBE-LOCALE.mo
+		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcelBE-LOCALE.mo
+		 * 	 	- woocommerce-myparcelBE/languages/woocommerce-myparcelBE-LOCALE.mo (which if not found falls back to:)
+		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcelBE-LOCALE.mo
 		 */
-		load_textdomain( 'woocommerce-myparcel', $dir . 'woocommerce-myparcel/woocommerce-myparcel-' . $locale . '.mo' );
-		load_textdomain( 'woocommerce-myparcel', $dir . 'plugins/woocommerce-myparcel-' . $locale . '.mo' );
-		load_plugin_textdomain( 'woocommerce-myparcel', false, dirname( plugin_basename(__FILE__) ) . '/languages' );
+		load_textdomain( 'woocommerce-myparcelBE', $dir . 'woocommerce-myparcelBE/woocommerce-myparcelBE-' . $locale . '.mo' );
+		load_textdomain( 'woocommerce-myparcelBE', $dir . 'plugins/woocommerce-myparcelBE-' . $locale . '.mo' );
+		load_plugin_textdomain( 'woocommerce-myparcelBE', false, dirname( plugin_basename(__FILE__) ) . '/languages' );
 	}
 
 	/**
@@ -151,7 +151,7 @@ class WooCommerce_MyParcel {
 	 */
 
 	public function need_woocommerce() {
-		$error = sprintf( __( 'WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!' , 'woocommerce-myparcel' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>' );
+		$error = sprintf( __( 'WooCommerce MyParcelBE requires %sWooCommerce%s to be installed & activated!' , 'woocommerce-myparcelBE' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>' );
 
 		$message = '<div class="error"><p>' . $error . '</p></div>';
 
@@ -163,8 +163,8 @@ class WooCommerce_MyParcel {
 	 */
 
 	public function required_php_version() {
-		$error = __( 'WooCommerce MyParcel requires PHP 5.3 or higher (5.6 or later recommended).', 'woocommerce-myparcel' );
-		$how_to_update = __( 'How to update your PHP version', 'woocommerce-myparcel' );
+		$error = __( 'WooCommerce MyParcelBE requires PHP 5.3 or higher (5.6 or later recommended).', 'woocommerce-myparcelBE' );
+		$how_to_update = __( 'How to update your PHP version', 'woocommerce-myparcelBE' );
 		$message = sprintf('<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>', $error, 'http://docs.wpovernight.com/general/how-to-update-your-php-version/', $how_to_update);
 
 		echo $message;
@@ -180,7 +180,7 @@ class WooCommerce_MyParcel {
 	 * Handles version checking
 	 */
 	public function do_install() {
-		$version_setting = 'woocommerce_myparcel_version';
+		$version_setting = 'woocommerce_myparcelBE_version';
 		$installed_version = get_option( $version_setting );
 
 		// installed version lower than plugin version?
@@ -203,7 +203,7 @@ class WooCommerce_MyParcel {
 	 */
 	protected function install() {
 		// copy old settings if available (pre 2.0 didn't store the version, so technically, this is a new install)
-		$old_settings = get_option( 'wcmyparcel_settings' );
+		$old_settings = get_option( 'wcmyparcelBE_settings' );
 		if (!empty($old_settings)) {
 			// copy old settins to new
 			// Deprecated
@@ -264,8 +264,8 @@ class WooCommerce_MyParcel {
 			}
 
 			// add options
-			update_option( 'woocommerce_myparcel_general_settings', $general_settings );
-			update_option( 'woocommerce_myparcel_export_defaults_settings', $defaults_settings );
+			update_option( 'woocommerce_myparcelBE_general_settings', $general_settings );
+			update_option( 'woocommerce_myparcelBE_export_defaults_settings', $defaults_settings );
 		}
 	}
 
@@ -279,7 +279,7 @@ class WooCommerce_MyParcel {
 			// remove log file (now uses WC logger)
 			$upload_dir = wp_upload_dir();
 			$upload_base = trailingslashit( $upload_dir['basedir'] );
-			$log_file = $upload_base.'myparcel_log.txt';
+			$log_file = $upload_base.'myparcelBE_log.txt';
 			if ( @file_exists( $log_file ) ) {
 				@unlink( $log_file );
 			}
@@ -302,7 +302,7 @@ class WooCommerce_MyParcel {
 		return untrailingslashit( plugin_dir_path( __FILE__ ) );
 	}
 
-} // class WooCommerce_MyParcel
+} // class WooCommerce_MyParcelBE
 
 endif; // class_exists
 
@@ -310,10 +310,10 @@ endif; // class_exists
  * Returns the main instance of the plugin class to prevent the need to use globals.
  *
  * @since  2.0
- * @return WooCommerce_MyParcel
+ * @return WooCommerce_MyParcelBE
  */
-function WooCommerce_MyParcel() {
-	return WooCommerce_MyParcel::instance();
+function WooCommerce_MyParcelBE() {
+	return WooCommerce_MyParcelBE::instance();
 }
 
-WooCommerce_MyParcel(); // load plugin
+WooCommerce_MyParcelBE(); // load plugin

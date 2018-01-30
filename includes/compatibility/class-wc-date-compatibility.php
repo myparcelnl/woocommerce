@@ -3,11 +3,11 @@
  * Copy of WC3.0 WC_DateTime class
  */
 
-namespace WPO\WC\MyParcel\Compatibility;
+namespace WPO\WC\MyParcelBE\Compatibility;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\WPO\\WC\\MyParcel\\Compatibility\\WC_DateTime' ) ) :
+if ( ! class_exists( '\\WPO\\WC\\MyParcelBE\\Compatibility\\WC_DateTime' ) ) :
 
 
 /**

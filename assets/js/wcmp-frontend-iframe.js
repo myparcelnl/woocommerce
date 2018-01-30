@@ -2,12 +2,12 @@ jQuery( function( $ ) {
 	parent.MyPaiFrame = window; //parent now has a ref to the iframe's window
 	window.initSettings = function( settings ) {
 		// init vars
-		if(window.mypa == null || window.mypa == undefined){
-			window.mypa = {};
+		if(window.mypaBE== null || window.mypaBE== undefined){
+			window.mypaBE= {};
 		}
-		window.mypa.settings = settings;
+		window.mypaBE.settings = settings;
 		// Let's go!
-		new MyParcel();
+		new MyParcelBE();
 
 		// copy parent font & font size
 		if (typeof parent.mypajQuery !== "undefined" && parent.mypajQuery !== null) {
@@ -15,7 +15,7 @@ jQuery( function( $ ) {
 			var fontFamily = parent.mypajQuery(selector).css('font-family');
 			var fontWeight = parent.mypajQuery(selector).css('font-weight');
 			var fontsSize = parent.mypajQuery(selector).css('font-size');
-			$('#myparcel').css("font-family", fontFamily).css("font-size", fontsSize);
+			$('#myparcelBE').css("font-family", fontFamily).css("font-size", fontsSize);
 
 			// autoload Google fonts
 			// based on http://exportkit.com/plugin/environments/html5/add-google-fonts-to-html5
@@ -29,15 +29,15 @@ jQuery( function( $ ) {
 
 				for(var gf = 0; gf<gfl.length; gf++){
 					if(df.indexOf(gfl[gf].split(' ').join('').toLowerCase())>-1){
-						$('#myparcel').css("font-family", gfl[gf]);
+						$('#myparcelBE').css("font-family", gfl[gf]);
 
 						var hb = ':400';
 
 						if(fontWeight == 'bold' || df.indexOf('bold') > -1){
-							$('#myparcel').css("font-weight", 700);
+							$('#myparcelBE').css("font-weight", 700);
 							hb = ':400,700';
 						}else{
-							$('#myparcel').css("font-weight", 400);
+							$('#myparcelBE').css("font-weight", 400);
 						}
 
 						if(!fontHash[gfl[gf]]) _agfh(gfl[gf]+hb);
@@ -64,7 +64,7 @@ jQuery( function( $ ) {
 			window.setTimeout(updatePageRequest, 100);
 		}
 		else {
-			window.mypa.fn.updatePage()
+			window.mypaBE.fn.updatePage()
 		}
 	};
 

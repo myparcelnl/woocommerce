@@ -2,7 +2,7 @@
 /**
  * A simple JSON REST request abstraction layer
  */
-class WC_MyParcel_REST_Client
+class WC_MyParcelBE_REST_Client
 {
 	/**
 	 * Handle for the current cURL session
@@ -29,7 +29,7 @@ class WC_MyParcel_REST_Client
 
 		// STRINGS
 		CURLOPT_ENCODING       => "",       // "identity", "deflate", and "gzip"
-		CURLOPT_USERAGENT      => "MyParcel REST PHP Client/1.0",
+		CURLOPT_USERAGENT      => "MyParcelBE REST PHP Client/1.0",
 		CURLOPT_SSL_VERIFYPEER => false,    // if all else fails :)
 	);
 
