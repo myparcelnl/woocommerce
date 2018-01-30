@@ -53,10 +53,10 @@ jQuery( function( $ ) {
 
 	$( document.body )
 
-		.on( 'wc-myparcelBE-enhanced-select-init', function() {
+		.on( 'wc-myparcelbe-enhanced-select-init', function() {
 
 			// Ajax shipping method search box
-			$( ':input.wc-myparcelBE-shipping-method-search' ).filter( ':not(.enhanced)' ).each( function() {
+			$( ':input.wc-myparcelbe-shipping-method-search' ).filter( ':not(.enhanced)' ).each( function() {
 				var select2_args = {
 					allowClear:  $( this ).data( 'allow_clear' ) ? true : false,
 					placeholder: $( this ).data( 'placeholder' ),
@@ -65,14 +65,14 @@ jQuery( function( $ ) {
 						return m;
 					},
 					ajax: {
-				        url:         wc_myparcelBE.ajax_url,
+				        url:         wc_myparcelbe.ajax_url,
 				        dataType:    'json',
 				        quietMillis: 250,
 				        data: function( term ) {
 				            return {
 								term:     term,
-								action:   'wc_myparcelBE_json_search_shipping_methods',
-								security: wc_myparcelBE.nonce,
+								action:   'wc_myparcelbe_json_search_shipping_methods',
+								security: wc_myparcelbe.nonce,
 				            };
 				        },
 				        results: function( data ) {
@@ -124,6 +124,6 @@ jQuery( function( $ ) {
 			});
 		})
 
-		.trigger( 'wc-myparcelBE-enhanced-select-init' );
+		.trigger( 'wc-myparcelbe-enhanced-select-init' );
 	
 });

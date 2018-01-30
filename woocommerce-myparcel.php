@@ -1,12 +1,12 @@
 <?php
 /*
-Plugin Name: WooCommerce MyParcelBE
-Plugin URI: http://www.myparcelBE.nl
-Description: Export your WooCommerce orders to MyParcelBE (www.myparcelBE.nl) and print labels directly from the WooCommerce admin
+Plugin Name: WooCommerce MyParcelbe
+Plugin URI: http://www.myparcelbe.nl
+Description: Export your WooCommerce orders to MyParcelbe (www.myparcelbe.nl) and print labels directly from the WooCommerce admin
 Author: Richard Perdaan
 Author URI: http://www.wpovernight.com
 Version: 2.4.5
-Text Domain: woocommerce-myparcelBE
+Text Domain: woocommerce-myparcelbe
 
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -46,9 +46,9 @@ class WooCommerce_MyParcelBE {
 		$this->plugin_basename = plugin_basename(__FILE__);
 
 		// Load settings
-		$this->general_settings = get_option( 'woocommerce_myparcelBE_general_settings' );
-		$this->export_defaults = get_option( 'woocommerce_myparcelBE_export_defaults_settings' );
-		$this->checkout_settings = get_option( 'woocommerce_myparcelBE_checkout_settings' );
+		$this->general_settings = get_option( 'woocommerce_myparcelbe_general_settings' );
+		$this->export_defaults = get_option( 'woocommerce_myparcelbe_export_defaults_settings' );
+		$this->checkout_settings = get_option( 'woocommerce_myparcelbe_checkout_settings' );
 
 		// load the localisation & classes
 		add_action( 'plugins_loaded', array( $this, 'translations' ) );
@@ -77,20 +77,20 @@ class WooCommerce_MyParcelBE {
 	 * Note: the first-loaded translation file overrides any following ones if the same translation is present
 	 */
 	public function translations() {
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'woocommerce-myparcelBE' );
+		$locale = apply_filters( 'plugin_locale', get_locale(), 'woocommerce-myparcelbe' );
 		$dir    = trailingslashit( WP_LANG_DIR );
 
 		/**
 		 * Frontend/global Locale. Looks in:
 		 *
-		 * 		- WP_LANG_DIR/woocommerce-myparcelBE/woocommerce-myparcelBE-LOCALE.mo
-		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcelBE-LOCALE.mo
-		 * 	 	- woocommerce-myparcelBE/languages/woocommerce-myparcelBE-LOCALE.mo (which if not found falls back to:)
-		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcelBE-LOCALE.mo
+		 * 		- WP_LANG_DIR/woocommerce-myparcelbe/woocommerce-myparcelbe-LOCALE.mo
+		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcelbe-LOCALE.mo
+		 * 	 	- woocommerce-myparcelbe/languages/woocommerce-myparcelbe-LOCALE.mo (which if not found falls back to:)
+		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcelbe-LOCALE.mo
 		 */
-		load_textdomain( 'woocommerce-myparcelBE', $dir . 'woocommerce-myparcelBE/woocommerce-myparcelBE-' . $locale . '.mo' );
-		load_textdomain( 'woocommerce-myparcelBE', $dir . 'plugins/woocommerce-myparcelBE-' . $locale . '.mo' );
-		load_plugin_textdomain( 'woocommerce-myparcelBE', false, dirname( plugin_basename(__FILE__) ) . '/languages' );
+		load_textdomain( 'woocommerce-myparcelbe', $dir . 'woocommerce-myparcelbe/woocommerce-myparcelbe-' . $locale . '.mo' );
+		load_textdomain( 'woocommerce-myparcelbe', $dir . 'plugins/woocommerce-myparcelbe-' . $locale . '.mo' );
+		load_plugin_textdomain( 'woocommerce-myparcelbe', false, dirname( plugin_basename(__FILE__) ) . '/languages' );
 	}
 
 	/**
@@ -151,7 +151,7 @@ class WooCommerce_MyParcelBE {
 	 */
 
 	public function need_woocommerce() {
-		$error = sprintf( __( 'WooCommerce MyParcelBE requires %sWooCommerce%s to be installed & activated!' , 'woocommerce-myparcelBE' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>' );
+		$error = sprintf( __( 'WooCommerce MyParcelbe requires %sWooCommerce%s to be installed & activated!' , 'woocommerce-myparcelbe' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>' );
 
 		$message = '<div class="error"><p>' . $error . '</p></div>';
 
@@ -163,8 +163,8 @@ class WooCommerce_MyParcelBE {
 	 */
 
 	public function required_php_version() {
-		$error = __( 'WooCommerce MyParcelBE requires PHP 5.3 or higher (5.6 or later recommended).', 'woocommerce-myparcelBE' );
-		$how_to_update = __( 'How to update your PHP version', 'woocommerce-myparcelBE' );
+		$error = __( 'WooCommerce MyParcelbe requires PHP 5.3 or higher (5.6 or later recommended).', 'woocommerce-myparcelbe' );
+		$how_to_update = __( 'How to update your PHP version', 'woocommerce-myparcelbe' );
 		$message = sprintf('<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>', $error, 'http://docs.wpovernight.com/general/how-to-update-your-php-version/', $how_to_update);
 
 		echo $message;
@@ -180,7 +180,7 @@ class WooCommerce_MyParcelBE {
 	 * Handles version checking
 	 */
 	public function do_install() {
-		$version_setting = 'woocommerce_myparcelBE_version';
+		$version_setting = 'woocommerce_myparcelbe_version';
 		$installed_version = get_option( $version_setting );
 
 		// installed version lower than plugin version?
@@ -203,7 +203,7 @@ class WooCommerce_MyParcelBE {
 	 */
 	protected function install() {
 		// copy old settings if available (pre 2.0 didn't store the version, so technically, this is a new install)
-		$old_settings = get_option( 'wcmyparcelBE_settings' );
+		$old_settings = get_option( 'wcmyparcelbe_settings' );
 		if (!empty($old_settings)) {
 			// copy old settins to new
 			// Deprecated
@@ -264,8 +264,8 @@ class WooCommerce_MyParcelBE {
 			}
 
 			// add options
-			update_option( 'woocommerce_myparcelBE_general_settings', $general_settings );
-			update_option( 'woocommerce_myparcelBE_export_defaults_settings', $defaults_settings );
+			update_option( 'woocommerce_myparcelbe_general_settings', $general_settings );
+			update_option( 'woocommerce_myparcelbe_export_defaults_settings', $defaults_settings );
 		}
 	}
 
@@ -279,7 +279,7 @@ class WooCommerce_MyParcelBE {
 			// remove log file (now uses WC logger)
 			$upload_dir = wp_upload_dir();
 			$upload_base = trailingslashit( $upload_dir['basedir'] );
-			$log_file = $upload_base.'myparcelBE_log.txt';
+			$log_file = $upload_base.'myparcelbe_log.txt';
 			if ( @file_exists( $log_file ) ) {
 				@unlink( $log_file );
 			}

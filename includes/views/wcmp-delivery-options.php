@@ -16,10 +16,10 @@ require( '../../../../../wp-load.php');
 	// load jquery
 	printf( $script_format, includes_url( 'js/jquery/jquery.js' ) );
 
-	// MyParcelBE scripts
+	// MyParcelbe scripts
 	printf( $script_format, add_query_arg( 'ver', WC_MYPARCELBE_VERSION, WooCommerce_MyParcelBE()->plugin_url() . '/assets/delivery-options/js/moment.min.js' ) );
 	printf( $script_format, add_query_arg( 'ver', WC_MYPARCELBE_VERSION, WooCommerce_MyParcelBE()->plugin_url() . '/assets/delivery-options/js/webcomponents.min.js' ) );
-	printf( $script_format, add_query_arg( 'ver', WC_MYPARCELBE_VERSION, WooCommerce_MyParcelBE()->plugin_url() . '/assets/delivery-options/js/myparcelBE.js' ) );
+	printf( $script_format, add_query_arg( 'ver', WC_MYPARCELBE_VERSION, WooCommerce_MyParcelBE()->plugin_url() . '/assets/delivery-options/js/myparcelbe.js' ) );
 	printf( $script_format, add_query_arg( 'ver', WC_MYPARCELBE_VERSION, WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-frontend-iframe.js' ) );
 
 	$autoload_google_fonts = isset(WooCommerce_MyParcelBE()->checkout_settings['autoload_google_fonts']) ? 'true' : 'false';
@@ -31,6 +31,6 @@ require( '../../../../../wp-load.php');
 // Include delivery options template
 include('wcmp-delivery-options-template.php');
 ?>
-<myparcelBE id="myparcelBE">Bezig met laden...</myparcelBE>
+<myparcelbe id="myparcelbe">Bezig met laden...</myparcelbe>
 </body>
 </html>

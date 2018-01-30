@@ -408,12 +408,12 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
 		<table class="wcmp_delivery_option_details">
 			<!--
 			<tr>
-				<td><?php _e( 'Description', 'woocommerce-myparcelBE' )?>:</td>
+				<td><?php _e( 'Description', 'woocommerce-myparcelbe' )?>:</td>
 				<td><?php $this->text_input( array_merge( $args, $description_args ) ); ?></td>
 			</tr>
 			!-->
 			<tr> 
-				<td><?php _e( 'Additional fee (ex VAT, optional)', 'woocommerce-myparcelBE' )?>:</td>
+				<td><?php _e( 'Additional fee (ex VAT, optional)', 'woocommerce-myparcelbe' )?>:</td>
 				<td>&euro; <?php $this->text_input( array_merge( $args, $fee_args ) ); ?></td>
 			</tr>
 		</table>
@@ -429,10 +429,10 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
 		<table>
 			<thead>
 				<tr>
-					<th style="width: 2.2em"><?php // _e( 'Enabled', 'woocommerce-myparcelBE' )?></th>
-					<th><?php _e( 'Option', 'woocommerce-myparcelBE' )?></th>
-					<th><?php _e( 'Fee (optional)', 'woocommerce-myparcelBE' )?></th>
-					<th><?php _e( 'Description', 'woocommerce-myparcelBE' )?></th>
+					<th style="width: 2.2em"><?php // _e( 'Enabled', 'woocommerce-myparcelbe' )?></th>
+					<th><?php _e( 'Option', 'woocommerce-myparcelbe' )?></th>
+					<th><?php _e( 'Fee (optional)', 'woocommerce-myparcelbe' )?></th>
+					<th><?php _e( 'Description', 'woocommerce-myparcelbe' )?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -610,7 +610,7 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
 		}
 	
 		// Return the array processing any additional functions filtered by this action.
-		return apply_filters( 'woocommerce_myparcelBE_settings_validate_input', $input, $input );
+		return apply_filters( 'woocommerce_myparcelbe_settings_validate_input', $input, $input );
 	}
 }
 

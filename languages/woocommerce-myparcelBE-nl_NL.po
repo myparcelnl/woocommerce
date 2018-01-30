@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce MyParcelBE\n"
+"Project-Id-Version: WooCommerce MyParcelbe\n"
 "POT-Creation-Date: 2017-09-15 16:14+0200\n"
 "PO-Revision-Date: 2017-09-15 16:15+0200\n"
 "Last-Translator: \n"
@@ -12,7 +12,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.8.8\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-WPHeader: woocommerce-myparcelBE.php\n"
+"X-Poedit-WPHeader: woocommerce-myparcelbe.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
@@ -21,16 +21,16 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #: includes/class-wcmp-admin.php:120
-msgid "MyParcelBE: Export"
-msgstr "MyParcelBE: Exporteren"
+msgid "MyParcelbe: Export"
+msgstr "MyParcelbe: Exporteren"
 
 #: includes/class-wcmp-admin.php:121
-msgid "MyParcelBE: Print"
-msgstr "MyParcelBE: Printen"
+msgid "MyParcelbe: Print"
+msgstr "MyParcelbe: Printen"
 
 #: includes/class-wcmp-admin.php:122
-msgid "MyParcelBE: Export & Print"
-msgstr "MyParcelBE: Exporteren & Printen"
+msgid "MyParcelbe: Export & Print"
+msgstr "MyParcelbe: Exporteren & Printen"
 
 #: includes/class-wcmp-admin.php:151 includes/class-wcmp-assets.php:78
 msgid "Labels to skip"
@@ -42,12 +42,12 @@ msgstr "Print"
 
 #: includes/class-wcmp-admin.php:180
 #: includes/views/wcmp-bulk-options-form.php:159
-msgid "Export to MyParcelBE"
-msgstr "Exporteer naar MyParcelBE"
+msgid "Export to MyParcelbe"
+msgstr "Exporteer naar MyParcelbe"
 
 #: includes/class-wcmp-admin.php:185 includes/class-wcmp-admin.php:337
-msgid "Print MyParcelBE label"
-msgstr "Print MyParcelBE label"
+msgid "Print MyParcelbe label"
+msgstr "Print MyParcelbe label"
 
 #: includes/class-wcmp-admin.php:190
 msgid "Email return label"
@@ -55,8 +55,8 @@ msgstr "Email retourlabel"
 
 #: includes/class-wcmp-admin.php:287 includes/class-wcmp-settings.php:35
 #: includes/class-wcmp-settings.php:36
-msgid "MyParcelBE"
-msgstr "MyParcelBE"
+msgid "MyParcelbe"
+msgstr "MyParcelbe"
 
 #: includes/class-wcmp-admin.php:328 includes/class-wcmp-frontend.php:94
 msgid "Track&Trace"
@@ -68,8 +68,8 @@ msgid "Status"
 msgstr "Status"
 
 #: includes/class-wcmp-admin.php:373
-msgid "MyParcelBE shipment:"
-msgstr "MyParcelBE zending:"
+msgid "MyParcelbe shipment:"
+msgstr "MyParcelbe zending:"
 
 #: includes/class-wcmp-admin.php:393 includes/class-wcmp-frontend.php:387
 #: includes/class-wcmp-settings.php:653
@@ -100,17 +100,17 @@ msgstr "HS-code"
 #: includes/class-wcmp-admin.php:494
 #, php-format
 msgid ""
-"HS Codes are used for MyParcelBE world shipments, you can find the appropriate "
+"HS Codes are used for MyParcelbe world shipments, you can find the appropriate "
 "code on the %ssite of the Dutch Customs%s."
 msgstr ""
-"HS Codes worden gebruikt voor MyParcelBE wereldzendingen, je kunt de codes "
+"HS Codes worden gebruikt voor MyParcelbe wereldzendingen, je kunt de codes "
 "vinden op de %ssite van de Douane%s."
 
 #: includes/class-wcmp-export.php:59
 msgid ""
-"You have to export the orders to MyParcelBE before you can print the labels!"
+"You have to export the orders to MyParcelbe before you can print the labels!"
 msgstr ""
-"U dient de orders eerst naar MyParcelBE te exporteren voordat u de labels kunt "
+"U dient de orders eerst naar MyParcelbe te exporteren voordat u de labels kunt "
 "printen!"
 
 #: includes/class-wcmp-export.php:79 includes/class-wcmp-export.php:86
@@ -123,8 +123,8 @@ msgid "You have not selected any orders!"
 msgstr "U heeft geen orders geselecteerd!"
 
 #: includes/class-wcmp-export.php:242
-msgid "MyParcelBE shipment created:"
-msgstr "MyParcelBE verzending aangemaakt:"
+msgid "MyParcelbe shipment created:"
+msgstr "MyParcelbe verzending aangemaakt:"
 
 #: includes/class-wcmp-export.php:245 includes/class-wcmp-export.php:295
 #: includes/class-wcmp-export.php:329 includes/class-wcmp-export.php:345
@@ -137,8 +137,8 @@ msgid "%s shipments successfully exported to Myparcel"
 msgstr "%s zendingen met succes geëxporteerd naar Myparcel"
 
 #: includes/class-wcmp-export.php:362
-msgid "The selected orders have not been exported to MyParcelBE yet!"
-msgstr "De geselecteerde orders zijn nog niet naar MyParcelBE geëxporteerd!"
+msgid "The selected orders have not been exported to MyParcelbe yet!"
+msgstr "De geselecteerde orders zijn nog niet naar MyParcelbe geëxporteerd!"
 
 #: includes/class-wcmp-export.php:761
 #, php-format
@@ -356,18 +356,18 @@ msgid "Checkout"
 msgstr "Checkout"
 
 #: includes/class-wcmp-settings.php:63
-msgid "WooCommerce MyParcelBE Settings"
-msgstr "WooCommerce MyParcelBE Instellingen"
+msgid "WooCommerce MyParcelbe Settings"
+msgstr "WooCommerce MyParcelbe Instellingen"
 
 #: includes/class-wcmp-settings.php:105
 #, php-format
 msgid ""
-"It looks like your shop is based in Belgium. This plugin is for MyParcelBE "
-"Netherlands. If you are using MyParcelBE Belgium, download the %s plugin "
+"It looks like your shop is based in Belgium. This plugin is for MyParcelbe "
+"Netherlands. If you are using MyParcelbe Belgium, download the %s plugin "
 "instead!"
 msgstr ""
 "Het lijkt erop dat uw winkel is gevestigd in België. Deze plugin is voor "
-"MyParcelBE Nederland. Als u van MyParcelBE België gebruik maakt, dient u de %s "
+"MyParcelbe Nederland. Als u van MyParcelbe België gebruik maakt, dient u de %s "
 "plugin te downloaden (en de huidige plugin te verwijderen)!"
 
 #: includes/class-wcmp-settings.php:106
@@ -417,11 +417,11 @@ msgstr "Track&trace in email"
 msgid ""
 "Add the track&trace code to emails to the customer.<br/><strong>Note!</"
 "strong> When you select this option, make sure you have not enabled the "
-"track & trace email in your MyParcelBE backend."
+"track & trace email in your MyParcelbe backend."
 msgstr ""
 "Voeg de track&trace code toe aan emails aan de klant.<br/> <strong>Let op!</"
 "strong> Wanneer u voor deze optie kiest, zorg er dan voor dat u niet de "
-"track&trace email in uw MyParcelBE backend heeft ingeschakeld."
+"track&trace email in uw MyParcelbe backend heeft ingeschakeld."
 
 #: includes/class-wcmp-settings.php:212
 msgid "Track&trace in My Account"
@@ -438,10 +438,10 @@ msgstr "Verwerk zendingen direct"
 #: includes/class-wcmp-settings.php:232
 msgid ""
 "When you enable this option, shipments will be directly processed when sent "
-"to myparcelBE."
+"to myparcelbe."
 msgstr ""
 "Wanneer u deze optie inschakelt, zullen zendingen direct worden verwerkt "
-"wanneer deze verzonden zijn naar MyParcelBE."
+"wanneer deze verzonden zijn naar MyParcelbe."
 
 #: includes/class-wcmp-settings.php:238
 msgid "Order status automation"
@@ -450,13 +450,13 @@ msgstr "Orderstatus automatisering"
 #: includes/class-wcmp-settings.php:245
 msgid ""
 "Automatically set order status to a predefined status after succesfull "
-"MyParcelBE export.<br/>Make sure <strong>Process shipments directly</strong> "
+"MyParcelbe export.<br/>Make sure <strong>Process shipments directly</strong> "
 "is enabled when you use this option together with the <strong>Track&trace in "
 "email</strong> option, otherwise the track&trace code will not be included "
 "in the customer email."
 msgstr ""
 "Wijzig automatisch de order status na het succesvol exporteren van een order "
-"naar MyParcelBE.<br/>Let op dat <strong>Verwerk zendingen direct</strong> is "
+"naar MyParcelbe.<br/>Let op dat <strong>Verwerk zendingen direct</strong> is "
 "ingeschakeld wanneer u deze optie gebruikt in combinatie met de "
 "<strong>Track&trace in email</strong> optie, anders wordt de track&trace "
 "code niet opgenomen in de email naar de klant."
@@ -495,8 +495,8 @@ msgid "Package types"
 msgstr "Pakkettype"
 
 #: includes/class-wcmp-settings.php:334
-msgid "Select one or more shipping methods for each MyParcelBE package type"
-msgstr "Selecteer een of meer verzendmethoden voor elk MyParcelBE pakkettype"
+msgid "Select one or more shipping methods for each MyParcelbe package type"
+msgstr "Selecteer een of meer verzendmethoden voor elk MyParcelbe pakkettype"
 
 #: includes/class-wcmp-settings.php:340
 #: includes/views/wcmp-order-return-shipment-options.php:4
@@ -512,12 +512,12 @@ msgstr "Koppel emailadres klant"
 #: includes/class-wcmp-settings.php:362
 #, php-format
 msgid ""
-"When you connect the customer email, MyParcelBE can send a Track&Trace email "
-"to this address. In your %sMyParcelBE backend%s you can enable or disable this "
+"When you connect the customer email, MyParcelbe can send a Track&Trace email "
+"to this address. In your %sMyParcelbe backend%s you can enable or disable this "
 "email and format it in your own style."
 msgstr ""
-"Wanneer u het emailadres van de klant koppelt, kan MyParcelBE een Track&Trace "
-"email versturen naar dit adres. In uw %sMyParcelBE backend%s kunt u deze email "
+"Wanneer u het emailadres van de klant koppelt, kan MyParcelbe een Track&Trace "
+"email versturen naar dit adres. In uw %sMyParcelbe backend%s kunt u deze email "
 "in- of uitschakelen en opmaken in uw eigen stijl."
 
 #: includes/class-wcmp-settings.php:368
@@ -654,13 +654,13 @@ msgstr "Label omschrijving"
 msgid ""
 "With this option, you can add a description to the shipment. This will be "
 "printed on the top left of the label, and you can use this to search or sort "
-"shipments in the MyParcelBE Backend. Use <strong>[ORDER_NR]</strong> to "
+"shipments in the MyParcelbe Backend. Use <strong>[ORDER_NR]</strong> to "
 "include the order number, <strong>[DELIVERY_DATE]</strong> to include the "
 "delivery date."
 msgstr ""
 "Met deze optie kunt u een beschrijving toevoegen aan de zending. Dit zal "
 "worden afgedrukt op de linkerbovenhoek van het label, en u kunt dit "
-"gebruiken om zendingen in het MyParcelBE Backend te zoeken of te sorteren. "
+"gebruiken om zendingen in het MyParcelbe Backend te zoeken of te sorteren. "
 "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden, "
 "[DELIVERY_DATE] voor de bezorgdatum."
 
@@ -713,8 +713,8 @@ msgid "Delivery options"
 msgstr "Bezorgopties"
 
 #: includes/class-wcmp-settings.php:588
-msgid "Enable MyParcelBE delivery options"
-msgstr "MyParcelBE bezorgopties inschakelen"
+msgid "Enable MyParcelbe delivery options"
+msgstr "MyParcelbe bezorgopties inschakelen"
 
 #: includes/class-wcmp-settings.php:600
 msgid "Display for"
@@ -883,13 +883,13 @@ msgstr "Totaal gewicht"
 #: includes/views/wcmp-bulk-options-form.php:126
 msgid ""
 "This order does not contain valid street and house number data and cannot be "
-"exported because of this! This order was probably placed before the MyParcelBE "
+"exported because of this! This order was probably placed before the MyParcelbe "
 "plugin was activated. The address data can still be manually entered in the "
 "order screen."
 msgstr ""
 "Deze order bevat geen geldige straatnaam- en huisnummergegevens, en kan "
 "daarom niet worden ge-exporteerd! Waarschijnlijk is deze order geplaatst "
-"voordat de MyParcelBE plugin werd geactiveerd. De gegevens kunnen wel "
+"voordat de MyParcelbe plugin werd geactiveerd. De gegevens kunnen wel "
 "handmatig worden ingevoerd in het order scherm."
 
 #: includes/views/wcmp-bulk-options-form.php:161
@@ -963,38 +963,38 @@ msgstr "Custom-ID (bovenaan op het label links)"
 msgid "Insured for"
 msgstr "Verzekerde waarde"
 
-#: woocommerce-myparcelBE.php:154
+#: woocommerce-myparcelbe.php:154
 #, php-format
 msgid ""
-"WooCommerce MyParcelBE requires %sWooCommerce%s to be installed & activated!"
+"WooCommerce MyParcelbe requires %sWooCommerce%s to be installed & activated!"
 msgstr ""
-"WooCommerce MyParcelBE vereist dat %sWooCommerce%s is geinstalleerd en "
+"WooCommerce MyParcelbe vereist dat %sWooCommerce%s is geinstalleerd en "
 "geactiveerd!"
 
-#: woocommerce-myparcelBE.php:166
+#: woocommerce-myparcelbe.php:166
 msgid ""
-"WooCommerce MyParcelBE requires PHP 5.3 or higher (5.6 or later recommended)."
+"WooCommerce MyParcelbe requires PHP 5.3 or higher (5.6 or later recommended)."
 msgstr ""
-"WooCommerce MyParcelBE vereist PHP 5.3 of hoger (5.6 of hoger aanbevolen)."
+"WooCommerce MyParcelbe vereist PHP 5.3 of hoger (5.6 of hoger aanbevolen)."
 
-#: woocommerce-myparcelBE.php:167
+#: woocommerce-myparcelbe.php:167
 msgid "How to update your PHP version"
 msgstr "Hoe update ik mijn PHP versie?"
 
 #. Plugin Name of the plugin/theme
-msgid "WooCommerce MyParcelBE"
+msgid "WooCommerce MyParcelbe"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "http://www.myparcelBE.nl"
+msgid "http://www.myparcelbe.nl"
 msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Export your WooCommerce orders to MyParcelBE (www.myparcelBE.nl) and print "
+"Export your WooCommerce orders to MyParcelbe (www.myparcelbe.nl) and print "
 "labels directly from the WooCommerce admin"
 msgstr ""
-"Exporteer je WooCommerce orders naar MyParcelBE (www.myparcelBE.nl) en print "
+"Exporteer je WooCommerce orders naar MyParcelbe (www.myparcelbe.nl) en print "
 "verzendlabels direct vanuit WooCommerce"
 
 #. Author of the plugin/theme
@@ -1026,12 +1026,12 @@ msgstr ""
 #~ msgid ""
 #~ "With this option, you can add a description to the shipment. This will be "
 #~ "printed on the top left of the label, and you can use this to search or "
-#~ "sort shipments in the MyParcelBE Backend. Use <strong>[ORDER_NR]</strong> "
+#~ "sort shipments in the MyParcelbe Backend. Use <strong>[ORDER_NR]</strong> "
 #~ "to include the order number."
 #~ msgstr ""
 #~ "Met deze optie kunt u een beschrijving toevoegen aan de zending. Dit zal "
 #~ "worden afgedrukt op de linkerbovenhoek van het label, en u kunt dit "
-#~ "gebruiken om zendingen in het MyParcelBE Backend te zoeken of te sorteren. "
+#~ "gebruiken om zendingen in het MyParcelbe Backend te zoeken of te sorteren. "
 #~ "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden."
 
 #~ msgid "Additional fee (optional)"
@@ -1112,26 +1112,26 @@ msgstr ""
 #~ "in ontvangst is genomen door de geadresseerde. Een veilig gevoel."
 
 #~ msgid ""
-#~ "When you connect the customer email, MyParcelBE can send a Track&Trace "
-#~ "email to this address. In your <a href=\"https://backoffice.myparcelBE.nl/"
-#~ "ttsettingstable\">MyParcelBE backend</a> you can enable or disable this "
+#~ "When you connect the customer email, MyParcelbe can send a Track&Trace "
+#~ "email to this address. In your <a href=\"https://backoffice.myparcelbe.nl/"
+#~ "ttsettingstable\">MyParcelbe backend</a> you can enable or disable this "
 #~ "email and format it in your own style."
 #~ msgstr ""
-#~ "Wanneer u het emailadres van de klant koppelt, kan MyParcelBE een "
+#~ "Wanneer u het emailadres van de klant koppelt, kan MyParcelbe een "
 #~ "Track&Trace email versturen naar dit adres. In uw <a href=\"https://"
-#~ "backoffice.myparcelBE.nl/ttsettingstable\">MyParcelBE backend</a> kunt u deze "
+#~ "backoffice.myparcelbe.nl/ttsettingstable\">MyParcelbe backend</a> kunt u deze "
 #~ "email in- of uitschakelen en opmaken in uw eigen stijl."
 
 #~ msgid "Productnaam"
 #~ msgstr "Productnaam"
 
 #~ msgid ""
-#~ "When you connect the customer email, MyParcelBE can send a Track&Trace "
-#~ "email to this address. In your <a href=\"http://www.myparcelBE.nl/backend/"
-#~ "instellingen/tracktrace\">MyParcelBE backend</a> you can enable or disable "
+#~ "When you connect the customer email, MyParcelbe can send a Track&Trace "
+#~ "email to this address. In your <a href=\"http://www.myparcelbe.nl/backend/"
+#~ "instellingen/tracktrace\">MyParcelbe backend</a> you can enable or disable "
 #~ "this email and format it in your own style."
 #~ msgstr ""
-#~ "Wanneer u het emailadres van de klant koppelt, kan MyParcelBE een "
+#~ "Wanneer u het emailadres van de klant koppelt, kan MyParcelbe een "
 #~ "Track&Trace email versturen naar dit adres. In uw <a href=\"https://"
-#~ "backoffice.myparcelBE.nl/ttsettingstable\">MyParcelBE backend</a> kunt u deze "
+#~ "backoffice.myparcelbe.nl/ttsettingstable\">MyParcelbe backend</a> kunt u deze "
 #~ "email in- of uitschakelen en opmaken in uw eigen stijl."

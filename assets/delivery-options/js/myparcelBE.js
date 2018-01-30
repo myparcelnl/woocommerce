@@ -49,7 +49,7 @@
     obj1
   );
 
-  this.MyParcelBE = Application = (function() {
+  this.MyParcelbe = Application = (function() {
 
     /*
      * Setup initial variables
@@ -57,17 +57,17 @@
     function Application(options) {
       var base;
       moment.locale(NATIONAL);
-      if (window.mypaBE == null) {
-        window.mypaBE = {
+      if (window.mypabe == null) {
+        window.mypabe = {
           settings: {}
         };
       }
-      if ((base = window.mypaBE.settings).base_url == null) {
+      if ((base = window.mypabe.settings).base_url == null) {
         base.base_url = "//localhost:8080/api/delivery_options";
       }
-      this.el = document.getElementById('myparcelBE');
+      this.el = document.getElementById('myparcelbe');
 
-      this.$el = jquery('myparcelBE');
+      this.$el = jquery('myparcelbe');
       if (this.shadow == null) {
         this.shadow = this.el.createShadowRoot();
       }
@@ -83,10 +83,10 @@
 
     Application.prototype.render = function() {
       var error, ref;
-      this.shadow.innerHTML = document.getElementById('myparcelBE-template').innerHTML;
+      this.shadow.innerHTML = document.getElementById('myparcelbe-template').innerHTML;
       try {
         if ((ref = WebComponents.ShadowCSS) != null) {
-          ref.shimStyling(shadow, 'myparcelBE');
+          ref.shimStyling(shadow, 'myparcelbe');
         }
       } catch (error) {
         console.log('Cannot shim CSS');
@@ -96,15 +96,15 @@
 
 
     /*
-     * Puts function in window.mypaBEeffectively exposing the function.
+     * Puts function in window.mypabeeffectively exposing the function.
      */
 
     Application.prototype.expose = function(fn, name) {
       var base;
-      if ((base = window.mypaBE).fn == null) {
+      if ((base = window.mypabe).fn == null) {
         base.fn = {};
       }
-      return window.mypaBE.fn[name] = fn;
+      return window.mypabe.fn[name] = fn;
     };
 
 
@@ -151,14 +151,14 @@
 
     Application.prototype.updatePage = function(postal_code, number, street) {
       var item, key, options, ref, settings, urlBase;
-      ref = window.mypaBE.settings.price;
+      ref = window.mypabe.settings.price;
       for (key in ref) {
         item = ref[key];
         if (!(typeof item === 'string' || typeof item === 'function')) {
           throw new Error('Price needs to be of type string');
         }
       }
-      settings = window.mypaBE.settings;
+      settings = window.mypabe.settings;
       urlBase = settings.base_url;
       if (number == null) {
         number = settings.number;
@@ -193,7 +193,7 @@
           exclude_delivery_type: settings.exclude_delivery_type != null ? settings.exclude_delivery_type : void 0
         },
         success: renderPage,
-        error: hideMyParcelBEOptions
+        error: hideMyParcelbeOptions
       };
       return jquery.ajax(options);
     };
@@ -218,9 +218,9 @@
       }
       $('mypa-delivery-row').removeClass('mypa-hidden');
       deliveryDays.sort(this.orderDays);
-      deliveryTimes = window.mypaBE.sortedDeliverytimes = {};
+      deliveryTimes = window.mypabe.sortedDeliverytimes = {};
       $el = $('#mypa-tabs').html('');
-      window.mypaBE.deliveryDays = deliveryDays.length;
+      window.mypabe.deliveryDays = deliveryDays.length;
       index = 0;
       ref = this.deliveryDays;
       for (i = 0, len = ref.length; i < len; i++) {
@@ -250,8 +250,8 @@
     Slider.prototype.makeSlider = function() {
       this.slider = {};
       this.slider.currentBar = 0;
-      this.slider.bars = window.mypaBE.deliveryDays * 105 / $('#mypa-tabs-container')[0].offsetWidth;
-      $('mypa-tabs').attr('style', "width:" + (window.mypaBE.deliveryDays * 105) + "px;");
+      this.slider.bars = window.mypabe.deliveryDays * 105 / $('#mypa-tabs-container')[0].offsetWidth;
+      $('mypa-tabs').attr('style', "width:" + (window.mypabe.deliveryDays * 105) + "px;");
       $('#mypa-date-slider-right').removeClass('mypa-slider-disabled');
       $('#mypa-date-slider-left').unbind().bind('click', this.slideLeft);
       return $('#mypa-date-slider-right').unbind().bind('click', this.slideRight);
@@ -276,7 +276,7 @@
       slider.currentBar--;
       $el = $('#mypa-tabs');
       left = slider.currentBar * 100 * -1;
-      return $el.attr('style', "left:" + left + "%; width:" + (window.mypaBE.deliveryDays * 105) + "px");
+      return $el.attr('style', "left:" + left + "%; width:" + (window.mypabe.deliveryDays * 105) + "px");
     };
 
 
@@ -298,7 +298,7 @@
       slider.currentBar++;
       $el = $('#mypa-tabs');
       left = slider.currentBar * 100 * -1;
-      return $el.attr('style', "left:" + left + "%; width:" + (window.mypaBE.deliveryDays * 105) + "px");
+      return $el.attr('style', "left:" + left + "%; width:" + (window.mypabe.deliveryDays * 105) + "px");
     };
 
 
@@ -334,7 +334,7 @@
   }
 
   $ = function(selector) {
-    return jquery(document.getElementById('myparcelBE').shadowRoot).find(selector);
+    return jquery(document.getElementById('myparcelbe').shadowRoot).find(selector);
   };
 
   displayOtherTab = function() {
@@ -384,13 +384,13 @@
       return;
     }
     $('#mypa-pickup-row').removeClass('mypa-hidden');
-    pickupPrice = window.mypaBE.settings.price[PICKUP];
-    pickupExpressPrice = window.mypaBE.settings.price[PICKUP_EXPRESS];
+    pickupPrice = window.mypabe.settings.price[PICKUP];
+    pickupExpressPrice = window.mypabe.settings.price[PICKUP_EXPRESS];
     $('.mypa-pickup-price').html(pickupPrice);
     $('.mypa-pickup-price').toggleClass('mypa-hidden', pickupPrice == null);
     $('.mypa-pickup-express-price').html(pickupExpressPrice);
     $('.mypa-pickup-express-price').toggleClass('mypa-hidden', pickupExpressPrice == null);
-    window.mypaBE.pickupFiltered = filter = {};
+    window.mypabe.pickupFiltered = filter = {};
     pickupOptions = sortLocationsOnDistance(pickupOptions);
     for (i = 0, len = pickupOptions.length; i < len; i++) {
       pickupLocation = pickupOptions[i];
@@ -447,7 +447,7 @@
    */
 
   renderPickup = function() {
-    renderPickupLocation(window.mypaBE.pickupFiltered[PICKUP_TIMES[NORMAL_PICKUP]]);
+    renderPickupLocation(window.mypabe.pickupFiltered[PICKUP_TIMES[NORMAL_PICKUP]]);
     $('.mypa-location-time').html('- Vanaf 16.00 uur');
     $('#mypa-pickup').prop('checked', true);
     return false;
@@ -459,7 +459,7 @@
    */
 
   renderExpressPickup = function() {
-    renderPickupLocation(window.mypaBE.pickupFiltered[PICKUP_TIMES[MORNING_PICKUP]]);
+    renderPickupLocation(window.mypabe.pickupFiltered[PICKUP_TIMES[MORNING_PICKUP]]);
     $('.mypa-location-time').html('- Vanaf 08.30 uur');
     $('#mypa-pickup-express').prop('checked', true);
     return false;
@@ -528,14 +528,14 @@
     var checked, combinatedPrice, combine, deliveryTimes, html, hvoPrice, hvoText, i, index, json, len, onlyRecipientPrice, onlyRecipientText, price, ref, ref1, time;
     $('#mypa-delivery-options').html('');
     html = '';
-    deliveryTimes = window.mypaBE.sortedDeliverytimes[date];
+    deliveryTimes = window.mypabe.sortedDeliverytimes[date];
     index = 0;
     for (i = 0, len = deliveryTimes.length; i < len; i++) {
       time = deliveryTimes[i];
       if (time.price_comment === 'avond') {
         time.price_comment = EVENING_DELIVERY;
       }
-      price = window.mypaBE.settings.price[POST_NL_TRANSLATION[time.price_comment]];
+      price = window.mypabe.settings.price[POST_NL_TRANSLATION[time.price_comment]];
       json = {
         date: date,
         time: [time]
@@ -551,17 +551,17 @@
       html += "</label>";
       index++;
     }
-    hvoPrice = window.mypaBE.settings.price.signed;
-    hvoText = (ref = window.mypaBE.settings.text) != null ? ref.signed : void 0;
+    hvoPrice = window.mypabe.settings.price.signed;
+    hvoText = (ref = window.mypabe.settings.text) != null ? ref.signed : void 0;
     if (hvoText == null) {
       hvoText = HVO_DEFAULT_TEXT;
     }
-    onlyRecipientPrice = window.mypaBE.settings.price.only_recipient;
-    onlyRecipientText = (ref1 = window.mypaBE.settings.text) != null ? ref1.only_recipient : void 0;
+    onlyRecipientPrice = window.mypabe.settings.price.only_recipient;
+    onlyRecipientText = (ref1 = window.mypabe.settings.text) != null ? ref1.only_recipient : void 0;
     if (onlyRecipientText == null) {
       onlyRecipientText = AO_DEFAULT_TEXT;
     }
-    combinatedPrice = window.mypaBE.settings.price.combi_options;
+    combinatedPrice = window.mypabe.settings.price.combi_options;
     combine = onlyRecipientPrice !== 'disabled' && hvoPrice !== 'disabled' && (combinatedPrice != null);
     if (combine) {
       html += "<div class='mypa-combination-price'><span class='mypa-price mypa-hidden'>" + combinatedPrice + "</span>";
@@ -592,7 +592,7 @@
         $('input#mypa-only-recipient').prop('checked', true).prop('disabled', true);
         $('label[for=mypa-only-recipient] span.mypa-price').html('incl.');
       } else {
-        onlyRecipientPrice = window.mypaBE.settings.price.only_recipient;
+        onlyRecipientPrice = window.mypabe.settings.price.only_recipient;
         $('input#mypa-only-recipient').prop('disabled', false);
         $('label[for=mypa-only-recipient] span.mypa-price').html(onlyRecipientPrice);
       }
@@ -648,11 +648,11 @@
     }
   };
   /*
-   * Hide MyParcelBE options
+   * Hide MyParcelbe options
    */
-  hideMyParcelBEOptions = function() {
-    parent.mypajQuery('#myparcelBE-iframe').hide();
+  hideMyParcelbeOptions = function() {
+    parent.mypajQuery('#myparcelbe-iframe').hide();
   };
 }).call(this);
 
-//# sourceMappingURL=myparcelBE.js.map
+//# sourceMappingURL=myparcelbe.js.map

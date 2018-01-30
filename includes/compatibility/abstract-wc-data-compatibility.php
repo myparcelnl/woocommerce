@@ -7,7 +7,7 @@ namespace WPO\WC\MyParcelBE\Compatibility;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\WPO\\WC\\MyParcelBE\\Compatibility\\Data' ) ) :
+if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Compatibility\\Data' ) ) :
 
 /**
  * WooCommerce data compatibility class.

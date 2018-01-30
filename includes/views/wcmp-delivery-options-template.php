@@ -1,4 +1,4 @@
-<template id="myparcelBE-template">
+<template id="myparcelbe-template">
   <style>
     body{
       background-color: white !important;
