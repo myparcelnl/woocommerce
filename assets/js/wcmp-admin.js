@@ -368,7 +368,7 @@ jQuery( function( $ ) {
 	}
 
 	// export orders to MyParcelbe via AJAX
-	function myparcelBE_export( order_ids, print ) {
+	function myparcelbe_export( order_ids, print ) {
 		if (typeof print === 'undefined') { print = 'no'; }
 		var offset = wc_myparcelbe.offset == 1 ? $('.wc_myparcelbe_offset').val() : 0;
 		// console.log('exporting order to myparcelbe...');
@@ -409,7 +409,7 @@ jQuery( function( $ ) {
 
 	}
 
-	function myparcelBE_modal_dialog( order_ids, dialog ) {
+	function myparcelbe_modal_dialog( order_ids, dialog ) {
 		var request_prefix = (wc_myparcelbe.ajax_url.indexOf("?") != -1) ? '&' : '?';
 		var thickbox_height = $(window).height()-120;
 		var thickbox_parameters = '&TB_iframe=true&height='+thickbox_height+'&width=720';
@@ -422,7 +422,7 @@ jQuery( function( $ ) {
 	}
 
 	// export orders to MyParcelbe via AJAX
-	function myparcelBE_return( order_ids ) {
+	function myparcelbe_return( order_ids ) {
 		// console.log('creating return for orders...');
 		var data = {
 			action:           'wc_myparcelbe',
@@ -444,7 +444,7 @@ jQuery( function( $ ) {
 
 
 	// Request MyParcelbe labels
-	function myparcelBE_print( order_ids, offset ) {
+	function myparcelbe_print( order_ids, offset ) {
 		// console.log('requesting myparcelbe labels...');
 		if (typeof offset === 'undefined') { offset = 0; }
 
@@ -487,7 +487,7 @@ jQuery( function( $ ) {
 
 	}
 
-	function myparcelBE_admin_notice( message, type ) {
+	function myparcelbe_admin_notice( message, type ) {
 		$main_header = $( '#wpbody-content > .wrap > h1:first' );
 		var notice = '<div class="myparcelbe_notice notice notice-'+type+'"><p>'+message+'</p></div>';
 		$main_header.after( notice );

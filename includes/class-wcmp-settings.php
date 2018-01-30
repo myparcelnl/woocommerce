@@ -88,7 +88,7 @@ class WooCommerce_MyParcelBE_Settings {
 		<?php
 	}
 
-	public function myparcelBE_be_notice( $active_tab ) {
+	public function myparcelbe_be_notice( $active_tab ) {
 		$base_country = WC()->countries->get_base_country();
 
 		// save or check option to hide notice
