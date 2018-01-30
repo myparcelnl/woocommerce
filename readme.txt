@@ -1,40 +1,39 @@
 === Plugin Name ===
-Contributors: pomegranate
-Tags: woocommerce, export, myparcel
+Tags: woocommerce, export, myparcel Belgium
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9
 Stable tag: 2.4.5
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
-Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
+Export your WooCommerce orders to MyParcel Belgium (https://sendmyparcel.be/) and print labels directly from the WooCommerce admin.
 
 == Description ==
 
-This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl).
+This WooCommerce extension allows you to export your orders to the MyParcel Belgium service (https://sendmyparcel.be/).
 
-**Online Manual (in Dutch):** https://myparcelnl.github.io/woocommerce/
+**Online Manual (in Dutch):** https://myparcelbe.github.io/woocommerce/
 
 = Main features =
 - Delivery options integrated in your checkout
-- Export your WooCommerce orders to MyParcel with a simple click, single orders or in batch
+- Export your WooCommerce orders to MyParcel Belgium with a simple click, single orders or in batch
 - Print shipping labels directly (PDF)
 - Create multiple shipments for the same order
 - Choose your package type (Parcel, mailbox package or unpaid letter)
-- Define preset MyParcel shipping options (signature required, extra insurance, etc.)
-- Modify the MyParcel shipping options per order before exporting
+- Define preset MyParcel shipping options (signature required, extra insurance, Saturday delivery)
+- Modify the MyParcel Belgium shipping options per order before exporting
 - Extra checkout fields to separate street name, house number and house number suffix for more precise address data
 - View the status of the shipment in the order details page
 - Add track&trace link to the order confirmation email
 
-A MyParcel API account is required for this plugin! You can create this in your account or contact MyParcel at info@myparcel.nl
+A MyParcel Belgium API account is required for this plugin! You can create this in your account or contact MyParcel Belgium at info@sendmyparcel.be
 
 == Installation ==
 
 = Automatic installation =
 Automatic installation is the easiest option as WordPress handles the file transfers itself and you don't even need to leave your web browser. To do an automatic install of WooCommerce MyParcel, log in to your WordPress admin panel, navigate to the Plugins menu and click Add New.
 
-In the search field type "WooCommerce MyParcel" and click Search Plugins. You can install it by simply clicking Install Now. After clicking that link you will be asked if you're sure you want to install the plugin. Click yes and WordPress will automatically complete the installation.
+In the search field type "WooCommerce MyParcel België" and click Search Plugins. You can install it by simply clicking Install Now. After clicking that link you will be asked if you're sure you want to install the plugin. Click yes and WordPress will automatically complete the installation.
 
 = Manual installation via the WordPress interface =
 1. Download the plugin zip file to your computer
@@ -49,21 +48,21 @@ In the search field type "WooCommerce MyParcel" and click Search Plugins. You ca
 3. Activate the plugin from the Plugins menu within the WordPress admin.
 
 = Setting up the plugin =
-1. Go to the menu `WooCommerce > MyParcel`.
-2. Fill in your API Details. If you don't have API details, log into your myparcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) where you can find your API key under Instellingen → Algemeen.
+1. Go to the menu `WooCommerce > MyParcel België`.
+2. Fill in your API Details. If you don't have API details, log into your myparcel Belgium account at [https://sendmyparcel.be/nl-be/login](https://sendmyparcel.be/nl-be/login) where you can find your API key under Instellingen → Algemeen.
 3. Under 'Default export settings' you can set options that should be set by default for the export. You can change these settings per order at the time of export.
 4. The plugin is ready to be used!
 
 = Testing =
 We advise you to test the whole checkout procedure once to see if everything works as it should. Pay special attention to the following:
 
-The MyParcel plugin adds extra fields to the checkout of your webshop, to make it possible for the client to add street name, number and optional additions separately. This way you can be sure that everything is entered correctly. Because not all checkouts are configured alike, it's possible that the positioning/alignment of these extra fields have to be adjusted.
+The MyParcel Belgium plugin adds extra fields to the checkout of your webshop, to make it possible for the client to add street name, number and optional additions separately. This way you can be sure that everything is entered correctly. Because not all checkouts are configured alike, it's possible that the positioning/alignment of these extra fields have to be adjusted.
 
 Moreover, after a label is created, a track&trace code is added to the order. When the order is completed from WooCommerce, this track & trace code is added to the email (when this is enabled in the settings). Check that the code is correctly displayed in your template. You can read how to change the text in the FAQ section.
 
 == Frequently Asked Questions ==
 
-**Online Manual (in Dutch):** https://myparcelnl.github.io/woocommerce/
+**Online Manual (in Dutch):** https://myparcelbe.github.io/woocommerce/
 
 = How do I get an API key? =
 When logged in on your myparcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) you can find your API key under Instellingen → Algemeen.
@@ -71,10 +70,10 @@ When logged in on your myparcel account at [backoffice.myparcel.nl](http://backo
 = How do I change the track&trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
 `
-add_filter( 'wcmyparcel_email_text', 'wcmyparcel_new_email_text' );
+add_filter( 'wcmyparcelbe_email_text', 'wcmyparcelbe_new_email_text' );
 function wcmyparcel_new_email_text($track_trace_tekst) {
 	// Tutoyeren ipv vousvoyeren
-	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende PostNL track&trace nummer:';
+	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende Bpost track&trace nummer:';
 	return $nieuwe_tekst;
 }
 `
