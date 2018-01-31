@@ -1,7 +1,7 @@
 <?php
-use WPO\WC\MyParcelbe\Compatibility\WC_Core as WCX;
-use WPO\WC\MyParcelbe\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcelbe\Compatibility\Product as WCX_Product;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
 
 /**
  * Admin options, buttons & data
