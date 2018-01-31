@@ -1,9 +1,9 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WooCommerce_PostNL_Settings_Callbacks' ) ) :
+if ( !class_exists( 'WooCommerce_MyParcel_Settings_Callbacks' ) ) :
 
-class WooCommerce_PostNL_Settings_Callbacks {
+class WooCommerce_MyParcel_Settings_Callbacks {
 	/**
 	 * Section null callback.
 	 *
@@ -393,13 +393,25 @@ class WooCommerce_PostNL_Settings_Callbacks {
 			'type'			=> 'text',
 			'size'			=> '5',
 		);
+		// textarea (description)
+		$description_args = array(
+			'id'			=> "{$id}_description",
+			'type'			=> 'text',
+			'size'			=> '60',
+		);
 
 
 		?>
 		<?php $this->checkbox( array_merge( $args, $cb_args ) ); ?><br/>
 		<table class="wcmp_delivery_option_details">
-			<tr> 
-				<td><?php _e( 'Additional fee (ex VAT, optional)', 'woocommerce-postnl' )?>:</td>
+			<!--
+			<tr>
+				<td><?php _e( 'Description', 'woocommerce-myparcel' )?>:</td>
+				<td><?php $this->text_input( array_merge( $args, $description_args ) ); ?></td>
+			</tr>
+			!-->
+			<tr>
+				<td><?php _e( 'Additional fee (ex VAT, optional)', 'woocommerce-myparcel' )?>:</td>
 				<td>&euro; <?php $this->text_input( array_merge( $args, $fee_args ) ); ?></td>
 			</tr>
 		</table>
@@ -415,10 +427,10 @@ class WooCommerce_PostNL_Settings_Callbacks {
 		<table>
 			<thead>
 				<tr>
-					<th style="width: 2.2em"><?php // _e( 'Enabled', 'woocommerce-postnl' )?></th>
-					<th><?php _e( 'Option', 'woocommerce-postnl' )?></th>
-					<th><?php _e( 'Fee (optional)', 'woocommerce-postnl' )?></th>
-					<th><?php _e( 'Description', 'woocommerce-postnl' )?></th>
+					<th style="width: 2.2em"><?php // _e( 'Enabled', 'woocommerce-myparcel' )?></th>
+					<th><?php _e( 'Option', 'woocommerce-myparcel' )?></th>
+					<th><?php _e( 'Fee (optional)', 'woocommerce-myparcel' )?></th>
+					<th><?php _e( 'Description', 'woocommerce-myparcel' )?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -596,10 +608,10 @@ class WooCommerce_PostNL_Settings_Callbacks {
 		}
 	
 		// Return the array processing any additional functions filtered by this action.
-		return apply_filters( 'woocommerce_postnl_settings_validate_input', $input, $input );
+		return apply_filters( 'woocommerce_myparcel_settings_validate_input', $input, $input );
 	}
 }
 
 endif; // class_exists
 
-return new WooCommerce_PostNL_Settings_Callbacks();
+return new WooCommerce_MyParcel_Settings_Callbacks();

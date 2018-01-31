@@ -1,9 +1,9 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WooCommerce_PostNL_Assets' ) ) :
+if ( !class_exists( 'WooCommerce_MyParcel_Assets' ) ) :
 
-class WooCommerce_PostNL_Assets {
+class WooCommerce_MyParcel_Assets {
 	
 	function __construct()	{
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts_styles' ) );
@@ -14,19 +14,19 @@ class WooCommerce_PostNL_Assets {
 	 * Load styles & scripts
 	 */
 	public function frontend_scripts_styles ( $hook ) {
-		if ( is_checkout() && isset(WooCommerce_PostNL()->checkout_settings['postnl_checkout']) && is_order_received_page() === false ) {
+		if ( is_checkout() && isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout']) && is_order_received_page() === false ) {
 			// checkout scripts
 			wp_enqueue_script(
-				'wc-postnl-frontend',
-				WooCommerce_PostNL()->plugin_url() . '/assets/js/wcmp-frontend.js',
+				'wc-myparcel-frontend',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-frontend.js',
 				array( 'jquery' ),
-				WC_POSTNL_VERSION
+				WC_MYPARCEL_VERSION
 			);
 			wp_localize_script(
-				'wc-postnl-frontend',
-				'wc_postnl_frontend',
+				'wc-myparcel-frontend',
+				'wc_myparcel_frontend',
 				array(  
-					'iframe_url' => WooCommerce_PostNL()->plugin_url() . '/includes/views/wcmp-delivery-options.php',
+					'iframe_url' => WooCommerce_MyParcel()->plugin_url() . '/includes/views/wcmp-delivery-options.php',
 				)
 			);
 		}
@@ -39,7 +39,7 @@ class WooCommerce_PostNL_Assets {
 		global $post_type;
 		$screen = get_current_screen();
 
-		if( $post_type == 'shop_order' || ( is_object( $screen ) && strpos( $screen->id, 'postnl' ) !== false ) ) {
+		if( $post_type == 'shop_order' || ( is_object( $screen ) && strpos( $screen->id, 'myparcel' ) !== false ) ) {
 			// WC2.3+ load all WC scripts for shipping_method search!
 			if ( version_compare( WOOCOMMERCE_VERSION, '2.3', '>=' ) ) {
 				wp_enqueue_script( 'woocommerce_admin' );
@@ -67,30 +67,29 @@ class WooCommerce_PostNL_Assets {
 			wp_enqueue_script( 'thickbox' );
 			wp_enqueue_style( 'thickbox' );
 			wp_enqueue_script(
-				'wcpostnl-export',
-				WooCommerce_PostNL()->plugin_url() . '/assets/js/wcmp-admin.js',
+				'wcmyparcel-export',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-admin.js',
 				array( 'jquery', 'thickbox', 'wp-color-picker' ),
-				WC_POSTNL_VERSION
+				WC_MYPARCEL_VERSION
 			);
-
 			wp_localize_script(
-				'wcpostnl-export',
-				'wc_postnl',
+				'wcmyparcel-export',
+				'wc_myparcel',
 				array(  
 					'ajax_url'			=> admin_url( 'admin-ajax.php' ),
-					'nonce'				=> wp_create_nonce('wc_postnl'),
-					'download_display'	=> $this->get_download_display(),
-					'offset'			=> $this->get_label_position(),
-					'offset_icon'		=> WooCommerce_PostNL()->plugin_url() . '/assets/img/print-offset-icon.png',
-					'offset_label'		=> __( 'Labels to skip', 'woocommerce-postnl' ),
+					'nonce'				=> wp_create_nonce('wc_myparcel'),
+					'download_display'	=> isset(WooCommerce_MyParcel()->general_settings['download_display'])?WooCommerce_MyParcel()->general_settings['download_display']:'',
+					'offset'			=> isset(WooCommerce_MyParcel()->general_settings['print_position_offset'])?WooCommerce_MyParcel()->general_settings['print_position_offset']:'',
+					'offset_icon'		=> WooCommerce_MyParcel()->plugin_url() . '/assets/img/print-offset-icon.png',
+					'offset_label'		=> __( 'Labels to skip', 'woocommerce-myparcel' ),
 				)
 			);
 
 			wp_enqueue_style(
 				'wcmp-admin-styles',
-				WooCommerce_PostNL()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
 				array(),
-				WC_POSTNL_VERSION,
+				WC_MYPARCEL_VERSION,
 				'all'
 			);
 
@@ -98,9 +97,9 @@ class WooCommerce_PostNL_Assets {
 			if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 				wp_enqueue_style(
 					'wcmp-admin-styles-legacy',
-					WooCommerce_PostNL()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
+					WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
 					array(),
-					WC_POSTNL_VERSION,
+					WC_MYPARCEL_VERSION,
 					'all'
 				);
 			}
@@ -112,7 +111,7 @@ class WooCommerce_PostNL_Assets {
 	 */
 	private function get_label_position()
 	{
-		$generalSettings = WooCommerce_PostNL()->general_settings;
+		$generalSettings = WooCommerce_MyParcel()->general_settings;
 
 		if ($generalSettings['label_format'] == 'A4') {
 			return isset($generalSettings['print_position_offset']) ? $generalSettings['print_position_offset'] : '';
@@ -123,8 +122,8 @@ class WooCommerce_PostNL_Assets {
 
 	private function get_download_display()
 	{
-		if (isset(WooCommerce_PostNL()->general_settings['download_display'])) {
-			return WooCommerce_PostNL()->general_settings['download_display'];
+		if (isset(WooCommerce_MyParcel()->general_settings['download_display'])) {
+			return WooCommerce_MyParcel()->general_settings['download_display'];
 		}
 
 		return '';
@@ -133,4 +132,4 @@ class WooCommerce_PostNL_Assets {
 
 endif; // class_exists
 
-return new WooCommerce_PostNL_Assets();
+return new WooCommerce_MyParcel_Assets();

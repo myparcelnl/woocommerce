@@ -58,6 +58,8 @@ jQuery( function( $ ) {
 		}
 	})
 
+
+
 	// hide automatic order status if automation not enabled
 	$('.wcmp_shipment_options input#order_status_automation').change(function () {
 		var order_status_select = $( '.wcmp_shipment_options select.automatic_order_status');
@@ -157,7 +159,7 @@ jQuery( function( $ ) {
 
 
 	// Hide all checkout options if disabled
-	$('#woocommerce-postnl-settings #postnl_checkout').change(function () {
+	$('#woocommerce-myparcel-settings #myparcel_checkout').change(function () {
 		$next_settings_rows = $(this).closest('tr').nextAll('tr');
 		$next_settings_headers = $(this).closest('table').nextAll('h2');
 		$next_settings_forms = $(this).closest('table').nextAll('table');
@@ -173,9 +175,9 @@ jQuery( function( $ ) {
 	});
 
 	// init options on settings page and in bulk form
-	$('#woocommerce-postnl-settings :input, .wcmp_bulk_options_form :input').change();
+	$('#woocommerce-myparcel-settings :input, .wcmp_bulk_options_form :input').change();
 
-	// postnl_checkout
+	// myparcel_checkout
 
 	// saving shipment options via AJAX
 	$( '.wcmp_save_shipment_settings' )
@@ -193,10 +195,10 @@ jQuery( function( $ ) {
 				action:     'wcmp_save_shipment_options',
 				order_id:   order_id,
 				form_data:  form_data,
-				security:   wc_postnl.nonce,
+				security:   wc_myparcel.nonce,
 			};
 
-			$.post( wc_postnl.ajax_url, data, function( response ) {
+			$.post( wc_myparcel.ajax_url, data, function( response ) {
 				// console.log(response);
 
 				// set main text to selection
@@ -218,7 +220,7 @@ jQuery( function( $ ) {
 	var print_queue_offset = $("#wcmp_printqueue_offset").val();
 	if ( typeof print_queue !== 'undefined' ) {
 		if (typeof print_queue_offset === 'undefined') { print_queue_offset = 0; }
-		postnl_print( $.parseJSON(print_queue), print_queue_offset );
+		myparcel_print( $.parseJSON(print_queue), print_queue_offset );
 	}
 
 	// Bulk actions
@@ -228,7 +230,7 @@ jQuery( function( $ ) {
 		if ( $('select[name="' + actionselected + '"]').val().substring(0,5) == "wcmp_") {
 			event.preventDefault();
 			// remove notices
-			$( '.postnl_notice' ).remove();
+			$( '.myparcel_notice' ).remove();
 
 			// strip 'wcmp_' from action
 			var action = $('select[name="' + actionselected + '"]').val().substring(5);
@@ -245,16 +247,16 @@ jQuery( function( $ ) {
 			switch (action) {
 				case 'export':
 					bulk_spinner( this, 'show' );
-					postnl_export( order_ids );
+					myparcel_export( order_ids );
 					break;
 				case 'print':
 					bulk_spinner( this, 'show' );
-					var offset = wc_postnl.offset == 1 ? $('.wc_postnl_offset').val() : 0;
-					postnl_print( order_ids, offset );
+					var offset = wc_myparcel.offset == 1 ? $('.wc_myparcel_offset').val() : 0;
+					myparcel_print( order_ids, offset );
 					break;
 				case 'export_print':
 					bulk_spinner( this, 'show' );
-					postnl_export( order_ids, 'after_reload' ); /* 'yes' inits print mode and disables refresh */
+					myparcel_export( order_ids, 'after_reload' ); /* 'yes' inits print mode and disables refresh */
 					break;
 			}
 
@@ -264,7 +266,7 @@ jQuery( function( $ ) {
 
 	// single actions click
 	$(".order_actions, .single_order_actions")
-		.on( 'click', 'a.button.postnl', function( event ) {
+		.on( 'click', 'a.button.myparcel', function( event ) {
 			event.preventDefault();
 			var button_action = $( this ).data('request');
 			var order_ids = [ $( this ).data('order-id') ];
@@ -274,17 +276,21 @@ jQuery( function( $ ) {
 				case 'add_shipment':
 					var button = this;
 					button_spinner( button, 'show' );
-					postnl_export( order_ids );
+					myparcel_export( order_ids );
 					// setTimeout(function() {
 						// button_spinner( button, 'hide' );
 					// }, 500);
 					break;
 				case 'get_labels':
-					if (wc_postnl.offset == 1) {
+					if (wc_myparcel.offset == 1) {
 						contextual_offset_dialog( order_ids, event );
 					} else {
-						postnl_print( order_ids );
+						myparcel_print( order_ids );
 					}
+					break;
+				case 'add_return':
+					myparcel_modal_dialog( order_ids, 'return' );
+					// myparcel_return( order_ids );
 					break;
 			}
 		});		
@@ -298,43 +304,43 @@ jQuery( function( $ ) {
 	$("select[name='action'], select[name='action2']").change( function () {
 		var actionselected = $(this).val();
 		// alert(actionselected);
-		if ( ( actionselected == 'wcmp_print' ||  actionselected == 'wcmp_export_print' ) && wc_postnl.offset == 1) {
+		if ( ( actionselected == 'wcmp_print' ||  actionselected == 'wcmp_export_print' ) && wc_myparcel.offset == 1) {
 			var insert_position = $(this).attr("name") == 'action' ? 'top' : 'bottom';
-			$( '#wcpostnl_offset_dialog' )
+			$( '#wcmyparcel_offset_dialog' )
 				.attr('style', 'clear:both') // reset styles
 				.insertAfter( 'div.tablenav.'+insert_position )
 				.show()
 
 			// make sure button is not shown
-			$( '#wcpostnl_offset_dialog' ).find('button').hide();
+			$( '#wcmyparcel_offset_dialog' ).find('button').hide();
 			// clear input
-			$( '#wcpostnl_offset_dialog' ).find('input').val('');
+			$( '#wcmyparcel_offset_dialog' ).find('input').val('');
 		} else {
-			$( '#wcpostnl_offset_dialog' )
+			$( '#wcmyparcel_offset_dialog' )
 				.appendTo( 'body' )
 				.hide();
 		}
 	});
 
 	// Click offset dialog button (single export)
-	$("#wcpostnl_offset_dialog button").click( function (event) {
+	$("#wcmyparcel_offset_dialog button").click( function (event) {
 		$dialog = $(this).parent();
 
 		// set print variables
 		var order_ids = [$dialog.find('input.order_id').val()];
-		var offset = $dialog.find('input.wc_postnl_offset').val();
+		var offset = $dialog.find('input.wc_myparcel_offset').val();
 
 		// hide dialog
 		$dialog.hide();
 
 		// print labels
-		postnl_print( order_ids, offset );
+		myparcel_print( order_ids, offset );
 	});
 
 
 	function contextual_offset_dialog( order_ids, event ) {
 		// place offset dialog at mouse tip
-		$( '#wcpostnl_offset_dialog' )
+		$( '#wcmyparcel_offset_dialog' )
 			.show()
 			.appendTo( 'body' )
 			.css( {
@@ -348,15 +354,15 @@ jQuery( function( $ ) {
 				"margin-left": "-100px",
 			} );
 
-		$( '#wcpostnl_offset_dialog' ).find('button')
+		$( '#wcmyparcel_offset_dialog' ).find('button')
 			.show()
 			.data( 'order_id', order_ids );
 
 		// clear input
-		$( '#wcpostnl_offset_dialog' ).find('input').val('');
+		$( '#wcmyparcel_offset_dialog' ).find('input').val('');
 
-		$( '#wcpostnl_offset_dialog' ).append('<input type=hidden class="order_id"/>');
-		$( '#wcpostnl_offset_dialog input.order_id' ).val(order_ids);
+		$( '#wcmyparcel_offset_dialog' ).append('<input type=hidden class="order_id"/>');
+		$( '#wcmyparcel_offset_dialog input.order_id' ).val(order_ids);
 	}
 
 	function button_spinner( button, display ) {
@@ -382,41 +388,41 @@ jQuery( function( $ ) {
 		}
 	}
 
-	// export orders to PostNL via AJAX
-	function postnl_export( order_ids, print ) {
+	// export orders to MyParcel via AJAX
+	function myparcel_export( order_ids, print ) {
 		if (typeof print === 'undefined') { print = 'no'; }
-		var offset = wc_postnl.offset == 1 ? $('.wc_postnl_offset').val() : 0;
-		// console.log('exporting order to postnl...');
+		var offset = wc_myparcel.offset == 1 ? $('.wc_myparcel_offset').val() : 0;
+		// console.log('exporting order to myparcel...');
 		var data = {
-			action:           'wc_postnl',
+			action:           'wc_myparcel',
 			request:          'add_shipments',
 			order_ids:        order_ids,
 			offset:           offset, 
 			print:            print,
-			security:         wc_postnl.nonce,
+			security:         wc_myparcel.nonce,
 		};
 
-		$.post( wc_postnl.ajax_url, data, function( response ) {
+		$.post( wc_myparcel.ajax_url, data, function( response ) {
 			response = $.parseJSON(response);
 
 			if (print == 'no' || print == 'after_reload') {
 				// refresh page, admin notices are stored in options and will be displayed automatically
 				// location.reload(true);
-				redirect_url = updateUrlParameter( window.location.href, 'postnl_done', 'true' );
+				redirect_url = updateUrlParameter( window.location.href, 'myparcel_done', 'true' );
 				window.location.href = redirect_url;
 				return;
 			} else {
 				// when printing, output notices directly so that we can init print in the same run
 				if ( response !== null && typeof response === 'object' && 'error' in response) {
-					postnl_admin_notice( response.error, 'error' );
+					myparcel_admin_notice( response.error, 'error' );
 				}
 
 				if ( response !== null && typeof response === 'object' && 'success' in response) {
-					postnl_admin_notice( response.success, 'success' );
+					myparcel_admin_notice( response.success, 'success' );
 				}
 
 				// load PDF
-				postnl_print( order_ids, offset );
+				myparcel_print( order_ids, offset );
 			}
 
 			return;
@@ -424,11 +430,11 @@ jQuery( function( $ ) {
 
 	}
 
-	function postnl_modal_dialog( order_ids, dialog ) {
-		var request_prefix = (wc_postnl.ajax_url.indexOf("?") != -1) ? '&' : '?';
+	function myparcel_modal_dialog( order_ids, dialog ) {
+		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") != -1) ? '&' : '?';
 		var thickbox_height = $(window).height()-120;
 		var thickbox_parameters = '&TB_iframe=true&height='+thickbox_height+'&width=720';
-		var url = wc_postnl.ajax_url+request_prefix+'order_ids='+order_ids+'&action=wc_postnl&request=modal_dialog&dialog='+dialog+'&security='+wc_postnl.nonce+thickbox_parameters;
+		var url = wc_myparcel.ajax_url+request_prefix+'order_ids='+order_ids+'&action=wc_myparcel&request=modal_dialog&dialog='+dialog+'&security='+wc_myparcel.nonce+thickbox_parameters;
 
 		// disable background scrolling
 		$("body").css({ overflow: 'hidden' })
@@ -436,21 +442,21 @@ jQuery( function( $ ) {
 		tb_show('', url);
 	}
 
-	// export orders to PostNL via AJAX
-	function postnl_return( order_ids ) {
+	// export orders to MyParcel via AJAX
+	function myparcel_return( order_ids ) {
 		// console.log('creating return for orders...');
 		var data = {
-			action:           'wc_postnl',
+			action:           'wc_myparcel',
 			request:          'add_return',
 			order_ids:        order_ids,
-			security:         wc_postnl.nonce,
+			security:         wc_myparcel.nonce,
 		};
 
-		$.post( wc_postnl.ajax_url, data, function( response ) {
+		$.post( wc_myparcel.ajax_url, data, function( response ) {
 			response = $.parseJSON(response);
 			// console.log(response);
 			if ( response !== null && typeof response === 'object' && 'error' in response) {
-				postnl_admin_notice( response.error, 'error' );
+				myparcel_admin_notice( response.error, 'error' );
 			}
 			return;
 		});
@@ -458,41 +464,41 @@ jQuery( function( $ ) {
 	}
 
 
-	// Request PostNL labels
-	function postnl_print( order_ids, offset ) {
-		// console.log('requesting postnl labels...');
+	// Request MyParcel labels
+	function myparcel_print( order_ids, offset ) {
+		// console.log('requesting myparcel labels...');
 		if (typeof offset === 'undefined') { offset = 0; }
 
-		var request_prefix = (wc_postnl.ajax_url.indexOf("?") != -1) ? '&' : '?';
-		var url = wc_postnl.ajax_url+request_prefix+'action=wc_postnl&request=get_labels&security='+wc_postnl.nonce;
+		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") != -1) ? '&' : '?';
+		var url = wc_myparcel.ajax_url+request_prefix+'action=wc_myparcel&request=get_labels&security='+wc_myparcel.nonce;
 
 		// create form to send order_ids via POST
-		$('body').append('<form action="'+url+'" method="post" target="_blank" id="postnl_post_data"></form>');
-		$('#postnl_post_data').append('<input type="hidden" name="offset" class="offset"/>');
-		$('#postnl_post_data input.offset').val( offset );
-		$('#postnl_post_data').append('<input type="hidden" name="order_ids" class="order_ids"/>');
-		$('#postnl_post_data input.order_ids').val( JSON.stringify( order_ids ) );
+		$('body').append('<form action="'+url+'" method="post" target="_blank" id="myparcel_post_data"></form>');
+		$('#myparcel_post_data').append('<input type="hidden" name="offset" class="offset"/>');
+		$('#myparcel_post_data input.offset').val( offset );
+		$('#myparcel_post_data').append('<input type="hidden" name="order_ids" class="order_ids"/>');
+		$('#myparcel_post_data input.order_ids').val( JSON.stringify( order_ids ) );
 
 		// submit data to open or download pdf
-		$('#postnl_post_data').submit();
+		$('#myparcel_post_data').submit();
 
 		bulk_spinner( '', 'hide' );
 
 
 		/* alternate method:
 		var data = {
-			action:               'wc_postnl',
+			action:               'wc_myparcel',
 			request:              'get_labels',
 			order_ids:            order_ids,
-			security:             wc_postnl.nonce,
+			security:             wc_myparcel.nonce,
 			label_response_type:  'url',
 		};
 
-		$.post( wc_postnl.ajax_url, data, function( response ) {
+		$.post( wc_myparcel.ajax_url, data, function( response ) {
 			response = $.parseJSON(response);
 			console.log(response);
 			if ( response !== null && typeof response === 'object' && 'error' in response) {
-				postnl_admin_notice( response.error, 'error' );
+				myparcel_admin_notice( response.error, 'error' );
 			} else if ( response !== null && typeof response === 'object' && 'url' in response) {
 				window.open( response.url, '_blank' );
 			}
@@ -502,9 +508,9 @@ jQuery( function( $ ) {
 
 	}
 
-	function postnl_admin_notice( message, type ) {
+	function myparcel_admin_notice( message, type ) {
 		$main_header = $( '#wpbody-content > .wrap > h1:first' );
-		var notice = '<div class="postnl_notice notice notice-'+type+'"><p>'+message+'</p></div>';
+		var notice = '<div class="myparcel_notice notice notice-'+type+'"><p>'+message+'</p></div>';
 		$main_header.after( notice );
 		$('html, body').animate({ scrollTop: 0 }, 'slow');
 	}

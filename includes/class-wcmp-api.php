@@ -1,9 +1,9 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WC_PostNL_API' ) ) :
+if ( !class_exists( 'WC_MyParcel_API' ) ) :
 
-class WC_PostNL_API extends WC_PostNL_REST_Client {
+class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 	/** @var API URL */
 	public $APIURL = "https://api.myparcel.nl/";
 
@@ -13,7 +13,7 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 	/**
 	 * Default constructor
 	 *
-	 * @param  string  $key     API Key provided by PostNL
+	 * @param  string  $key     API Key provided by MyParcel
 	 * @return void
 	 */
 	function __construct( $key ) {
@@ -37,6 +37,14 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 			case 'standard': default:
 				$content_type = 'application/vnd.shipment+json';
 				$data_key = 'shipments';
+				break;
+			case 'return':
+				$content_type = 'application/vnd.return_shipment+json';
+				$data_key = 'return_shipments';
+				break;
+			case 'unrelated_return':
+				$content_type = 'application/vnd.unrelated_return_shipment+json';
+				$data_key = 'unrelated_return_shipments';
 				break;
 		}
 
@@ -77,6 +85,23 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 
 		$request_url = $this->APIURL . $endpoint . '/' . implode(';', $ids);
 		$response = $this->delete($request_url, $headers );
+
+		return $response;
+	}
+
+	/**
+	 * Unrelated return shipments
+	 * @return array       response
+	 */
+	public function unrelated_return_shipments () {
+		$endpoint = 'return_shipments';
+
+		$headers = array (
+			'Authorization: basic '. base64_encode("{$this->key}"),
+		);
+
+		$request_url = $this->APIURL . $endpoint;
+		$response = $this->post($request_url, '', $headers );
 
 		return $response;
 	}
@@ -185,7 +210,7 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
 		$userAgents = [
 			'Wordpress/'.get_bloginfo( 'version' ),
 			'WooCommerce/'.WOOCOMMERCE_VERSION,
-			'PostNL-WooCommerce/'.WC_POSTNL_VERSION,
+			'MyParcelNL-WooCommerce/'.WC_MYPARCEL_VERSION,
 			];
 
 		//Place white space between the array elements

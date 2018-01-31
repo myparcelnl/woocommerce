@@ -1,21 +1,21 @@
 jQuery( function( $ ) {
-	parent.PoStiFrame = window; //parent now has a ref to the iframe's window
+	parent.MyPaiFrame = window; //parent now has a ref to the iframe's window
 	window.initSettings = function( settings ) {
 		// init vars
-		if(window.post == null || window.post == undefined){
-			window.post = {};
+		if(window.mypa == null || window.mypa == undefined){
+			window.mypa = {};
 		}
-		window.post.settings = settings;
+		window.mypa.settings = settings;
 		// Let's go!
-		new PostNL();
+		new MyParcel();
 
 		// copy parent font & font size
-		if (typeof parent.postjQuery !== "undefined" && parent.postjQuery !== null) {
-			var selector = parent.postjQuery('.woocommerce-billing-fields').length ? '.woocommerce-billing-fields' : 'body';
-			var fontFamily = parent.postjQuery(selector).css('font-family');
-			var fontWeight = parent.postjQuery(selector).css('font-weight');
-			var fontsSize = parent.postjQuery(selector).css('font-size');
-			$('#postnl').css("font-family", fontFamily).css("font-size", fontsSize);
+		if (typeof parent.mypajQuery !== "undefined" && parent.mypajQuery !== null) {
+			var selector = parent.mypajQuery('.woocommerce-billing-fields').length ? '.woocommerce-billing-fields' : 'body';
+			var fontFamily = parent.mypajQuery(selector).css('font-family');
+			var fontWeight = parent.mypajQuery(selector).css('font-weight');
+			var fontsSize = parent.mypajQuery(selector).css('font-size');
+			$('#myparcel').css("font-family", fontFamily).css("font-size", fontsSize);
 
 			// autoload Google fonts
 			// based on http://exportkit.com/plugin/environments/html5/add-google-fonts-to-html5
@@ -29,15 +29,15 @@ jQuery( function( $ ) {
 
 				for(var gf = 0; gf<gfl.length; gf++){
 					if(df.indexOf(gfl[gf].split(' ').join('').toLowerCase())>-1){
-						$('#postnl').css("font-family", gfl[gf]);
+						$('#myparcel').css("font-family", gfl[gf]);
 
 						var hb = ':400';
 
 						if(fontWeight == 'bold' || df.indexOf('bold') > -1){
-							$('#postnl').css("font-weight", 700);
+							$('#myparcel').css("font-weight", 700);
 							hb = ':400,700';
 						}else{
-							$('#postnl').css("font-weight", 400);
+							$('#myparcel').css("font-weight", 400);
 						}
 
 						if(!fontHash[gfl[gf]]) _agfh(gfl[gf]+hb);
@@ -48,14 +48,14 @@ jQuery( function( $ ) {
 		}
 	}
 
-	window.updatePoSt = function() {
+	window.updateMyPa = function() {
 		$.when(
 			updatePageRequest()
 		).done(function () {
-			// parent.$('#post-load').on('change', function () {
-			// 	$('#post-input', parent.document).trigger('change');
+			// parent.$('#mypa-load').on('change', function () {
+			// 	$('#mypa-input', parent.document).trigger('change');
 			// });
-			parent.PoStSetHeight();
+			parent.MyPaSetHeight();
 		});
 	}
 
@@ -64,7 +64,7 @@ jQuery( function( $ ) {
 			window.setTimeout(updatePageRequest, 100);
 		}
 		else {
-			window.post.fn.updatePage()
+			window.mypa.fn.updatePage()
 		}
 	};
 

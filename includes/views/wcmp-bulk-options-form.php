@@ -1,7 +1,7 @@
 <?php
-use WPO\WC\PostNL\Compatibility\WC_Core as WCX;
-use WPO\WC\PostNL\Compatibility\Order as WCX_Order;
-use WPO\WC\PostNL\Compatibility\Product as WCX_Product;
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
@@ -12,26 +12,26 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<?php
 		wp_enqueue_script(
-			'wcpostnl-export',
-			WooCommerce_PostNL()->plugin_url() . '/assets/js/wcmp-admin.js',
+			'wcmyparcel-export',
+			WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-admin.js',
 			array( 'jquery', 'thickbox', 'wp-color-picker' ),
-			WC_POSTNL_VERSION
+			WC_MYPARCEL_VERSION
 		);
 		wp_localize_script(
-			'wcpostnl-export',
-			'wc_postnl',
+			'wcmyparcel-export',
+			'wc_myparcel',
 			array(  
 				'ajax_url'			=> admin_url( 'admin-ajax.php' ),
-				'nonce'				=> wp_create_nonce('wc_postnl'),
-				'download_display'	=> isset(WooCommerce_PostNL()->general_settings['download_display'])?WooCommerce_PostNL()->general_settings['download_display']:'',
+				'nonce'				=> wp_create_nonce('wc_myparcel'),
+				'download_display'	=> isset(WooCommerce_MyParcel()->general_settings['download_display'])?WooCommerce_MyParcel()->general_settings['download_display']:'',
 			)
 		);
 
 		wp_enqueue_style(
 			'wcmp-admin-styles',
-			WooCommerce_PostNL()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
+			WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
 			array(),
-			WC_POSTNL_VERSION,
+			WC_MYPARCEL_VERSION,
 			'all'
 		);
 
@@ -39,15 +39,15 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 			wp_enqueue_style(
 				'wcmp-admin-styles-legacy',
-				WooCommerce_PostNL()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
+				WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
 				array(),
-				WC_POSTNL_VERSION,
+				WC_MYPARCEL_VERSION,
 				'all'
 			);
 		}
 
 		wp_enqueue_style( 'wp-color-picker' ); 
-		wp_enqueue_style( 'wcpostnl-admin-styles' );
+		wp_enqueue_style( 'wcmyparcel-admin-styles' );	
 		wp_enqueue_style( 'colors' );
 		wp_enqueue_style( 'media' );
 		wp_enqueue_script( 'jquery' );
@@ -56,11 +56,14 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 	?>
 </head>
 <body>
+<?php
+$target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&request=add_return&modal=true' ), 'wc_myparcel' );
+?>
 <form method="post" class="page-form wcmp_bulk_options_form" action="<?php echo $target_url; ?>">
 	<table class="widefat">
 	<thead>
 		<tr>
-			<th><?php _e( 'Export options', 'woocommerce-postnl' ); ?></td>
+			<th><?php _e( 'Export options', 'woocommerce-myparcel' ); ?></td>
 		</tr>
 	</thead>
 	<tbody>
@@ -68,22 +71,22 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 		$c = true;
 		foreach ( $order_ids as $order_id) :
 			$order = WCX::get_order( $order_id );
-			// skip non-postnl destinations
+			// skip non-myparcel destinations
 			$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-			if ( !WooCommerce_PostNL()->export->is_postnl_destination( $shipping_country ) ) {
+			if ( !WooCommerce_MyParcel()->export->is_myparcel_destination( $shipping_country ) ) {
 				continue;
 			}
-			$shipment_options = WooCommerce_PostNL()->export->get_options( $order );
-			$recipient = WooCommerce_PostNL()->export->get_recipient( $order );
-			$postnl_options_extra = WCX_Order::get_meta( $order, '_postnl_shipment_options_extra' );
-			$package_types = WooCommerce_PostNL()->export->get_package_types( $dialog );
-			$parcel_weight = WooCommerce_PostNL()->export->get_parcel_weight( $order );
+			$shipment_options = WooCommerce_MyParcel()->export->get_options( $order );
+			$recipient = WooCommerce_MyParcel()->export->get_recipient( $order );
+			$myparcel_options_extra = WCX_Order::get_meta( $order, '_myparcel_shipment_options_extra' );
+			$package_types = WooCommerce_MyParcel()->export->get_package_types( $dialog );
+			$parcel_weight = WooCommerce_MyParcel()->export->get_parcel_weight( $order );
 		?>
 		<tr class="order-row <?php echo (($c = !$c)?'alternate':'');?>">
 			<td>
 				<table style="width: 100%">
 					<tr>
-						<td colspan="2"><strong><?php _e( 'Order', 'woocommerce-postnl' ); ?> <?php echo $order->get_order_number(); ?></strong></td>
+						<td colspan="2"><strong><?php _e( 'Order', 'woocommerce-myparcel' ); ?> <?php echo $order->get_order_number(); ?></strong></td>
 					</tr>
 					<tr>
 						<td class="ordercell">
@@ -91,8 +94,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 								<thead>
 									<tr>
 										<th>#</th>
-										<th><?php _e( 'Product name', 'woocommerce-postnl' ); ?></th>
-										<th align="right"><?php _e( 'Weight (kg)', 'woocommerce-postnl' ); ?></th>
+										<th><?php _e( 'Product name', 'woocommerce-myparcel' ); ?></th>
+										<th align="right"><?php _e( 'Weight (kg)', 'woocommerce-myparcel' ); ?></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -108,14 +111,14 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 								<?php } ?>
 									<tr>
 										<td>&nbsp;</td>
-										<td><?php _e( 'Empty parcel weight', 'woocommerce-postnl' ); ?></td>
-										<td align="right"><?php echo number_format( ( (isset(WooCommerce_PostNL()->general_settings['empty_parcel_weight'])) ? preg_replace("/\D/","",$this->settings['verpakkingsgewicht'])/1000 : 0 ), 3, ',', ' '); ?></td>
+										<td><?php _e( 'Empty parcel weight', 'woocommerce-myparcel' ); ?></td>
+										<td align="right"><?php echo number_format( ( (isset(WooCommerce_MyParcel()->general_settings['empty_parcel_weight'])) ? preg_replace("/\D/","",$this->settings['verpakkingsgewicht'])/1000 : 0 ), 3, ',', ' '); ?></td>
 									</tr>
 								</tbody>
 								<tfoot>
 									<tr>
 										<td>&nbsp;</td>
-										<td><?php _e( 'Total weight', 'woocommerce-postnl' ); ?></td>
+										<td><?php _e( 'Total weight', 'woocommerce-myparcel' ); ?></td>
 										<td align="right"><?php echo number_format( $parcel_weight, 3, ',', ' ' );?></td>
 									</tr>
 								</tfoot>
@@ -123,7 +126,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 						</td>
 						<td><?php
 							if ( $shipping_country == 'NL' && ( empty($recipient['street']) || empty($recipient['number']) ) ) { ?>
-							<p><span style="color:red"><?php _e( 'This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the PostNL plugin was activated. The address data can still be manually entered in the order screen.', 'woocommerce-postnl' ); ?></span></p>
+							<p><span style="color:red"><?php _e( 'This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcel plugin was activated. The address data can still be manually entered in the order screen.', 'woocommerce-myparcel' ); ?></span></p>
 						</td>
 					</tr> <!-- last row -->
 							<?php
@@ -152,21 +155,23 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 		<?php endforeach; ?>
 	</tbody>
 	</table>
-<input type="hidden" name="action" value="wc_postnl">
+<input type="hidden" name="action" value="wc_myparcel">
 <div class="wcmp_save_shipment_settings">
 	<?php
 	if ($dialog == 'shipment') {
-		$button_text = __( 'Prepare shipment', 'woocommerce-postnl' );
+		$button_text = __( 'Export to MyParcel', 'woocommerce-myparcel' );
+	} elseif ($dialog == 'return') {
+		$button_text = __( 'Send email', 'woocommerce-myparcel' );
 	}
 	?>
 
 	<input type="submit" value="<?php echo $button_text; ?>" class="button save wcmp_export">
-	<img src="<?php echo WooCommerce_PostNL()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_spinner"/>
+	<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_spinner"/>
 </div>
 </form>
 <script type="text/javascript">
 	jQuery(document).ready(function($){
-		$('.button-wcpostnl').click(function(){
+		$('.button-wcmyparcel').click(function(){
 			$('.waiting').show();
 		});
 	});

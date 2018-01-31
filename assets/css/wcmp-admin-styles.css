@@ -1,15 +1,15 @@
 /* Order actions button styling */
-.widefat .column-order_actions a.button.postnl {
+.widefat .column-order_actions a.button.myparcel {
 	float: left;
 	width: 26px;
 	height: 26px;
 	padding: 3px 2px;
 }
-#postnl.postbox a.button.postnl {
+#myparcel.postbox a.button.myparcel {
 	padding: 2px 5px 0;
 }
 
-.widefat .column-order_actions a.button.postnl img {
+.widefat .column-order_actions a.button.myparcel img {
 	width: 16px;
 	height: auto;
 }
@@ -23,11 +23,11 @@
 	display: block;
 }
 
-ul.wcpostnl_shipment_summary {
+ul.wcmyparcel_shipment_summary {
     list-style: none;
 }
 
-ul.wcpostnl_shipment_summary li:before {
+ul.wcmyparcel_shipment_summary li:before {
     content: "+";
     margin-right: 4px;
 }
@@ -47,7 +47,7 @@ ul.wcpostnl_shipment_summary li:before {
 	margin-right: 8px;
 }
 
-.wcmp_shipment_options_form .wcpostnl_settings_table td {
+.wcmp_shipment_options_form .wcmyparcel_settings_table td {
 	border: none;
 	padding: 0px 7px 2px !important;
 	vertical-align: middle !important;
@@ -138,7 +138,7 @@ table.tracktrace_status td.wcmp-create-label {
 }
 
 /* bulk export options styling */
-.wcmp_bulk_options_form .wcpostnl_settings_table td {
+.wcmp_bulk_options_form .wcmyparcel_settings_table td {
 	border: none;
 	padding: 0px 7px 2px !important;
 	vertical-align: middle !important;

@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /**
  * A simple JSON REST request abstraction layer
  */
-class WC_PostNL_REST_Client
+class WC_MyParcel_REST_Client
 {
 	/**
 	 * Handle for the current cURL session
@@ -32,7 +32,6 @@ class WC_PostNL_REST_Client
 
 		// STRINGS
 		CURLOPT_ENCODING       => "",       // "identity", "deflate", and "gzip"
-		CURLOPT_USERAGENT      => "PostNL REST PHP Client/1.0",
 		CURLOPT_SSL_VERIFYPEER => false,    // if all else fails :)
 	);
 
@@ -112,7 +111,7 @@ class WC_PostNL_REST_Client
 		// Set the method and related options
 		switch ($method) {
 			case "PUT":
-				throw new Exception('Can not put PostNL shipment', 500);
+				throw new Exception('Can not put MyParcel shipment', 500);
 			break;
 
 			case "POST":
@@ -123,7 +122,7 @@ class WC_PostNL_REST_Client
 			break;
 
 			case "DELETE":
-				throw new Exception('Can not delete PostNL shipment', 500);
+				throw new Exception('Can not delete MyParcel shipment', 500);
 				break;
 
 			case "GET":

@@ -1,12 +1,12 @@
 <?php
 /*
-Plugin Name: WooCommerce PostNL
-Plugin URI: http://www.postnl.nl
-Description: Export your WooCommerce orders to PostNL (www.postnl.nl) and print labels directly from the WooCommerce admin
+Plugin Name: WooCommerce MyParcel
+Plugin URI: http://www.myparcel.nl
+Description: Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
 Author: Richard Perdaan
 Author URI: http://www.wpovernight.com
-Version: 2.5.0
-Text Domain: woocommerce-postnl
+Version: 2.4.5
+Text Domain: woocommerce-myparcel
 
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -14,9 +14,9 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WooCommerce_PostNL' ) ) :
+if ( !class_exists( 'WooCommerce_MyParcel' ) ) :
 
-class WooCommerce_PostNL {
+class WooCommerce_MyParcel {
 
 	public $version = '2.5.0';
 	public $plugin_basename;
@@ -40,13 +40,13 @@ class WooCommerce_PostNL {
 	 */
 
 	public function __construct() {
-		$this->define( 'WC_POSTNL_VERSION', $this->version );
+		$this->define( 'WC_MYPARCEL_VERSION', $this->version );
 		$this->plugin_basename = plugin_basename(__FILE__);
 
 		// Load settings
-		$this->general_settings = get_option( 'woocommerce_postnl_general_settings' );
-		$this->export_defaults = get_option( 'woocommerce_postnl_export_defaults_settings' );
-		$this->checkout_settings = get_option( 'woocommerce_postnl_checkout_settings' );
+		$this->general_settings = get_option( 'woocommerce_myparcel_general_settings' );
+		$this->export_defaults = get_option( 'woocommerce_myparcel_export_defaults_settings' );
+		$this->checkout_settings = get_option( 'woocommerce_myparcel_checkout_settings' );
 
 		// load the localisation & classes
 		add_action( 'plugins_loaded', array( $this, 'translations' ) );
@@ -75,20 +75,20 @@ class WooCommerce_PostNL {
 	 * Note: the first-loaded translation file overrides any following ones if the same translation is present
 	 */
 	public function translations() {
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'woocommerce-postnl' );
+		$locale = apply_filters( 'plugin_locale', get_locale(), 'woocommerce-myparcel' );
 		$dir    = trailingslashit( WP_LANG_DIR );
 
 		/**
 		 * Frontend/global Locale. Looks in:
 		 *
-		 * 		- WP_LANG_DIR/woocommerce-postnl/woocommerce-postnl-LOCALE.mo
-		 * 	 	- WP_LANG_DIR/plugins/woocommerce-postnl-LOCALE.mo
-		 * 	 	- woocommerce-postnl/languages/woocommerce-postnl-LOCALE.mo (which if not found falls back to:)
-		 * 	 	- WP_LANG_DIR/plugins/woocommerce-postnl-LOCALE.mo
+		 * 		- WP_LANG_DIR/woocommerce-myparcel/woocommerce-myparcel-LOCALE.mo
+		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
+		 * 	 	- woocommerce-myparcel/languages/woocommerce-myparcel-LOCALE.mo (which if not found falls back to:)
+		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
 		 */
-		load_textdomain( 'woocommerce-postnl', $dir . 'woocommerce-postnl/woocommerce-postnl-' . $locale . '.mo' );
-		load_textdomain( 'woocommerce-postnl', $dir . 'plugins/woocommerce-postnl-' . $locale . '.mo' );
-		load_plugin_textdomain( 'woocommerce-postnl', false, dirname( plugin_basename(__FILE__) ) . '/languages' );
+		load_textdomain( 'woocommerce-myparcel', $dir . 'woocommerce-myparcel/woocommerce-myparcel-' . $locale . '.mo' );
+		load_textdomain( 'woocommerce-myparcel', $dir . 'plugins/woocommerce-myparcel-' . $locale . '.mo' );
+		load_plugin_textdomain( 'woocommerce-myparcel', false, dirname( plugin_basename(__FILE__) ) . '/languages' );
 	}
 
 	/**
@@ -149,7 +149,7 @@ class WooCommerce_PostNL {
 	 */
 
 	public function need_woocommerce() {
-		$error = sprintf( __( 'WooCommerce PostNL requires %sWooCommerce%s to be installed & activated!' , 'woocommerce-postnl' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>' );
+		$error = sprintf( __( 'WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!' , 'woocommerce-myparcel' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>' );
 
 		$message = '<div class="error"><p>' . $error . '</p></div>';
 
@@ -161,8 +161,8 @@ class WooCommerce_PostNL {
 	 */
 
 	public function required_php_version() {
-		$error = __( 'WooCommerce PostNL requires PHP 5.3 or higher (5.6 or later recommended).', 'woocommerce-postnl' );
-		$how_to_update = __( 'How to update your PHP version', 'woocommerce-postnl' );
+		$error = __( 'WooCommerce MyParcel requires PHP 5.3 or higher (5.6 or later recommended).', 'woocommerce-myparcel' );
+		$how_to_update = __( 'How to update your PHP version', 'woocommerce-myparcel' );
 		$message = sprintf('<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>', $error, 'http://docs.wpovernight.com/general/how-to-update-your-php-version/', $how_to_update);
 
 		echo $message;
@@ -178,7 +178,7 @@ class WooCommerce_PostNL {
 	 * Handles version checking
 	 */
 	public function do_install() {
-		$version_setting = 'woocommerce_postnl_version';
+		$version_setting = 'woocommerce_myparcel_version';
 		$installed_version = get_option( $version_setting );
 
 		// installed version lower than plugin version?
@@ -201,7 +201,7 @@ class WooCommerce_PostNL {
 	 */
 	protected function install() {
 		// copy old settings if available (pre 2.0 didn't store the version, so technically, this is a new install)
-		$old_settings = get_option( 'wcpostnl_settings' );
+		$old_settings = get_option( 'wcmyparcel_settings' );
 		if (!empty($old_settings)) {
 			// copy old settins to new
 			// Deprecated
@@ -238,7 +238,9 @@ class WooCommerce_PostNL {
 
 			// map old key => new_key
 			$defaults_settings_keys = array(
+				'email'					=> 'connect_email',
 				'telefoon'				=> 'connect_phone',
+				'extragroot'			=> 'large_format',
 				'huisadres'				=> 'only_recipient',
 				'handtekening'			=> 'signature',
 				'retourbgg'				=> 'return',
@@ -260,8 +262,8 @@ class WooCommerce_PostNL {
 			}
 
 			// add options
-			update_option( 'woocommerce_postnl_general_settings', $general_settings );
-			update_option( 'woocommerce_postnl_export_defaults_settings', $defaults_settings );
+			update_option( 'woocommerce_myparcel_general_settings', $general_settings );
+			update_option( 'woocommerce_myparcel_export_defaults_settings', $defaults_settings );
 		}
 	}
 
@@ -275,7 +277,7 @@ class WooCommerce_PostNL {
 			// remove log file (now uses WC logger)
 			$upload_dir = wp_upload_dir();
 			$upload_base = trailingslashit( $upload_dir['basedir'] );
-			$log_file = $upload_base.'postnl_log.txt';
+			$log_file = $upload_base.'myparcel_log.txt';
 			if ( @file_exists( $log_file ) ) {
 				@unlink( $log_file );
 			}
@@ -298,7 +300,7 @@ class WooCommerce_PostNL {
 		return untrailingslashit( plugin_dir_path( __FILE__ ) );
 	}
 
-} // class WooCommerce_PostNL
+} // class WooCommerce_MyParcel
 
 endif; // class_exists
 
@@ -306,10 +308,10 @@ endif; // class_exists
  * Returns the main instance of the plugin class to prevent the need to use globals.
  *
  * @since  2.0
- * @return WooCommerce_PostNL
+ * @return WooCommerce_MyParcel
  */
-function WooCommerce_PostNL() {
-	return WooCommerce_PostNL::instance();
+function WooCommerce_MyParcel() {
+	return WooCommerce_MyParcel::instance();
 }
 
-WooCommerce_PostNL(); // load plugin
+WooCommerce_MyParcel(); // load plugin
