@@ -90,7 +90,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 == Changelog ==
 
 = 2.4.6 (2018-01-31) =
-* Fix: WooCommerce 3.3 compatibility
+* Improvement: WooCommerce 3.3 compatibility
 
 = 2.4.5 (2018-01-10) =
 * Fix: Export an order with an old delivery date
