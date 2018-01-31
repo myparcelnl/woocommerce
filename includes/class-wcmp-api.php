@@ -190,8 +190,8 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 	 */
 	public function get_delivery_options ( $params = array(), $raw = false ) {
 		$endpoint = 'delivery_options';
-		$checkout_settings = WooCommerce_PostNL()->checkout_settings;
-		if (isset(WooCommerce_PostNL()->checkout_settings['monday_delivery']) ) {
+		$checkout_settings = WooCommerce_MyParcel()->checkout_settings;
+		if (isset(WooCommerce_MyParcel()->checkout_settings['monday_delivery']) ) {
 			$params['monday_delivery'] = 1;
 		}
 
@@ -202,7 +202,7 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 	}
 
 	/**
-	 * Get Wordpress, Woocommerce, PostNL version and place theme in a array. Implode the array to get an UserAgent.
+	 * Get Wordpress, Woocommerce, Myparcel version and place theme in a array. Implode the array to get an UserAgent.
 	 * @return string
 	 */
 	private function getUserAgent() {

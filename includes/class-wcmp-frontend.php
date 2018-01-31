@@ -9,7 +9,7 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WooCommerce_PostNL_Frontend' ) ) :
+if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
 class WooCommerce_MyParcel_Frontend {
 	
