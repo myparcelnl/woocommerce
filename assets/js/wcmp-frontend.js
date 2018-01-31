@@ -1,74 +1,74 @@
 jQuery( function( $ ) {
-	var myparcel_update_timer = false;
-	window.myparcel_checkout_updating = false;
-	window.myparcel_force_update = false;
-	window.myparcel_selected_shipping_method = '';
-	window.myparcel_updated_shipping_method = '';
+	var postnl_update_timer = false;
+	window.postnl_checkout_updating = false;
+	window.postnl_force_update = false;
+	window.postnl_selected_shipping_method = '';
+	window.postnl_updated_shipping_method = '';
 
-	// reference jQuery for MyParcel iFrame
-	window.mypajQuery = $;
+	// reference jQuery for PostNL iFrame
+	window.postjQuery = $;
 	
 	// replace iframe placeholder with actual iframe
-	$('.myparcel-iframe-placeholder').replaceWith( '<iframe id="myparcel-iframe" src="" frameborder="0" scrolling="auto" style="width: 100%; display: none;">Bezig met laden...</iframe>');
+	$('.postnl-iframe-placeholder').replaceWith( '<iframe id="postnl-iframe" src="" frameborder="0" scrolling="auto" style="width: 100%; display: none;">Bezig met laden...</iframe>');
 	// show if we have to
-	if ( window.myparcel_initial_hide == false ) {
-		$('#myparcel-iframe').show();
+	if ( window.postnl_initial_hide == false ) {
+		$('#postnl-iframe').show();
 	}
 
 	// set iframe object load functions
-	var iframe_object = $('#myparcel-iframe')
+	var iframe_object = $('#postnl-iframe')
 		.load( function() {
-			var $MyPaiFrame = $('#myparcel-iframe')[0];
-			window.MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
-			MyPaLoaded();
+			var $PoStiFrame = $('#postnl-iframe')[0];
+			window.PoStWindow = $PoStiFrame.contentWindow ? $PoStiFrame.contentWindow : $PoStiFrame.contentDocument.defaultView;
+			PoStLoaded();
 		});
 	// load iframe content
-	iframe_object.attr( 'src', wc_myparcel_frontend.iframe_url );
+	iframe_object.attr( 'src', wc_postnl_frontend.iframe_url );
 
-	window.MyPaSetHeight = function() {
+	window.PoStSetHeight = function() {
 		setTimeout(function () {
-			var iframeheight = MyPaWindow.document.body.scrollHeight;
+			var iframeheight = PoStWindow.document.body.scrollHeight;
 			// console.log(iframeheight);
-			$('#myparcel-iframe').height(iframeheight);
+			$('#postnl-iframe').height(iframeheight);
 		}, 500);
 
-		// $('#myparcel-iframe').height($('#myparcel-iframe').contents().height());
+		// $('#postnl-iframe').height($('#postnl-iframe').contents().height());
 	}
 
-	window.MyPaLoaded = function() {
-		window.update_myparcel_settings();
-		MyPaWindow.initSettings( window.mypa.settings );
-		MyPaSetHeight();
+	window.PoStLoaded = function() {
+		window.update_postnl_settings();
+		PoStWindow.initSettings( window.post.settings );
+		PoStSetHeight();
 	}
 
 	// set iframe height when delivery options changed
-	$( document ).on('change', '#mypa-chosen-delivery-options input', function() {
-		MyPaSetHeight(); // may need a trick to prevent height from updating 10x
-		window.myparcel_checkout_updating = true;
+	$( document ).on('change', '#post-chosen-delivery-options input', function() {
+		PoStSetHeight(); // may need a trick to prevent height from updating 10x
+		window.postnl_checkout_updating = true;
 		$('body').trigger('update_checkout');
 	});
 
 	// make delivery options update at least once (but don't hammer)
-	// myparcel_update_timer = setTimeout( update_myparcel_delivery_options_action, '500' );
+	// postnl_update_timer = setTimeout( update_postnl_delivery_options_action, '500' );
 
 	// hide checkout options if not NL
 	$( '#billing_country, #shipping_country' ).change(function() {
-		window.myparcel_force_update = true; // in case the shipping method doesn't change
+		window.postnl_force_update = true; // in case the shipping method doesn't change
 		// check_country();
-		update_myparcel_settings();
+		update_postnl_settings();
 	});
 
 	// multi-step checkout doesn't trigger update_checkout when postcode changed
 	$( document ).on('change','.wizard .content #billing_street_name, .wizard .content #billing_house_number, .wizard .content #billing_postcode',function() {
-		update_myparcel_settings();
+		update_postnl_settings();
 	});
 
 	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {
-		window.myparcel_checkout_updating = false; //done updating
-		if ( typeof window.myparcel_delivery_options_always_display !== 'undefined' && window.myparcel_delivery_options_always_display == 'yes') {
-			show_myparcel_delivery_options();
-		} else if ( window.myparcel_delivery_options_shipping_methods.length > 0 ) {
+		window.postnl_checkout_updating = false; //done updating
+		if ( typeof window.postnl_delivery_options_always_display !== 'undefined' && window.postnl_delivery_options_always_display == 'yes') {
+			show_postnl_delivery_options();
+		} else if ( window.postnl_delivery_options_shipping_methods.length > 0 ) {
 			// check if shipping is user choice or fixed
 			if ( $( '#order_review .shipping_method' ).length > 1 ) {
 				var shipping_method = $( '#order_review .shipping_method:checked').val();
@@ -78,7 +78,7 @@ jQuery( function( $ ) {
 
 			if ( typeof shipping_method === 'undefined' ) {
 				// no shipping method selected, hide by default
-				hide_myparcel_delivery_options();
+				hide_postnl_delivery_options();
 				return;
 			}
 
@@ -91,36 +91,36 @@ jQuery( function( $ ) {
 				if (shipping_method.indexOf(':') !== -1) {
 					shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
 				}
-				var shipping_class = $('#myparcel_highest_shipping_class').val();
+				var shipping_class = $('#postnl_highest_shipping_class').val();
 				// add class refinement if we have a shipping class
 				if (shipping_class) {
 					shipping_method_class = shipping_method+':'+shipping_class;
 				}
 			}
 			
-			if ( shipping_class && $.inArray(shipping_method_class, window.myparcel_delivery_options_shipping_methods) > -1 ) {
-				window.myparcel_updated_shipping_method = shipping_method_class;
-				show_myparcel_delivery_options();
-				window.myparcel_selected_shipping_method = shipping_method_class;
-			} else if ( $.inArray(shipping_method, window.myparcel_delivery_options_shipping_methods) > -1 ) {
+			if ( shipping_class && $.inArray(shipping_method_class, window.postnl_delivery_options_shipping_methods) > -1 ) {
+				window.postnl_updated_shipping_method = shipping_method_class;
+				show_postnl_delivery_options();
+				window.postnl_selected_shipping_method = shipping_method_class;
+			} else if ( $.inArray(shipping_method, window.postnl_delivery_options_shipping_methods) > -1 ) {
 				// fallback to bare method if selected in settings
-				window.myparcel_updated_shipping_method = shipping_method;
-				show_myparcel_delivery_options();
-				window.myparcel_selected_shipping_method = shipping_method;
+				window.postnl_updated_shipping_method = shipping_method;
+				show_postnl_delivery_options();
+				window.postnl_selected_shipping_method = shipping_method;
 			} else {
 				shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
-				window.myparcel_updated_shipping_method = shipping_method_now;
-				hide_myparcel_delivery_options();
-				window.myparcel_selected_shipping_method = shipping_method_now;
+				window.postnl_updated_shipping_method = shipping_method_now;
+				hide_postnl_delivery_options();
+				window.postnl_selected_shipping_method = shipping_method_now;
 			}
 		} else {
 			// not sure if we should already hide by default?
-			hide_myparcel_delivery_options();
+			hide_postnl_delivery_options();
 		}
 	});
 
-	// update myparcel settings object with address when shipping or billing address changes
-	window.update_myparcel_settings = function() {
+	// update postnl settings object with address when shipping or billing address changes
+	window.update_postnl_settings = function() {
 		var settings = get_settings();
 		if (settings == false) {
 			return;
@@ -137,46 +137,46 @@ jQuery( function( $ ) {
 		var use_shipping = $( '#ship-to-different-address-checkbox' ).is(':checked');
 
 		if (!use_shipping && billing_postcode && billing_house_number) {
-			window.mypa.settings.postal_code = billing_postcode.replace(/\s+/g, '');
-			window.mypa.settings.number = billing_house_number;
-			window.mypa.settings.street = billing_street_name;
-			update_myparcel_delivery_options()
+			window.post.settings.postal_code = billing_postcode.replace(/\s+/g, '');
+			window.post.settings.number = billing_house_number;
+			window.post.settings.street = billing_street_name;
+			update_postnl_delivery_options()
 		} else if (shipping_postcode && shipping_house_number) {
-			window.mypa.settings.postal_code = shipping_postcode.replace(/\s+/g, '');;
-			window.mypa.settings.number = shipping_house_number;
-			window.mypa.settings.street = shipping_street_name;
-			update_myparcel_delivery_options()
+			window.post.settings.postal_code = shipping_postcode.replace(/\s+/g, '');;
+			window.post.settings.number = shipping_house_number;
+			window.post.settings.street = shipping_street_name;
+			update_postnl_delivery_options()
 		}
 
 	}
 	
 	// billing or shipping changes
 	$( '#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number' ).change(function() {
-		update_myparcel_settings();
+		update_postnl_settings();
 	});
 
 
 	$( '#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number' ).change();
 
 	// any delivery option selected/changed - update checkout for fees
-	$('#mypa-chosen-delivery-options').on('change', 'input', function() {
-		window.myparcel_checkout_updating = true;
+	$('#post-chosen-delivery-options').on('change', 'input', function() {
+		window.postnl_checkout_updating = true;
 		// disable signed & recipient only when switching to pickup location
-		mypa_postnl_data = JSON.parse( $('#mypa-chosen-delivery-options #mypa-input').val() );
-		if (typeof mypa_postnl_data.location != 'undefined' ) {
-			$('#mypa-signed, #mypa-recipient-only').prop( "checked", false );
+		post_postnl_data = JSON.parse( $('#post-chosen-delivery-options #post-input').val() );
+		if (typeof post_postnl_data.location != 'undefined' ) {
+			$('#post-signed, #post-recipient-only').prop( "checked", false );
 		}
 		jQuery('body').trigger('update_checkout');
 	});
 
 	// pickup location selected
-	// $('#mypa-location-container').on('change', 'input[type=radio]', function() {
+	// $('#post-location-container').on('change', 'input[type=radio]', function() {
 	// 	var pickup_location = $( this ).val();
 	// });
 	// 
 	function get_settings() {
-		if (typeof window.mypa != 'undefined' && typeof window.mypa.settings != 'undefined') {
-			return window.mypa.settings;
+		if (typeof window.post != 'undefined' && typeof window.post.settings != 'undefined') {
+			return window.post.settings;
 		} else {
 			return false;
 		}
@@ -185,10 +185,10 @@ jQuery( function( $ ) {
 	function check_country() {
 		country = get_shipping_country();
 		if (country != 'NL') {
-			hide_myparcel_delivery_options();
+			hide_postnl_delivery_options();
 		} else {
-			$( '#myparcel-iframe' ).show();
-			$( '#mypa-options-enabled' ).prop('checked', true);
+			$( '#postnl-iframe' ).show();
+			$( '#post-options-enabled' ).prop('checked', true);
 		}
 	}
 
@@ -202,43 +202,43 @@ jQuery( function( $ ) {
 		return country;
 	}
 
-	function hide_myparcel_delivery_options() {
-		$( '#myparcel-iframe' ).hide();
-		$( '#mypa-options-enabled' ).prop('checked', false);
+	function hide_postnl_delivery_options() {
+		$( '#postnl-iframe' ).hide();
+		$( '#post-options-enabled' ).prop('checked', false);
 		// clear delivery options
 		if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
-			$( '#mypa-chosen-delivery-options #mypa-input' ).val('');		
-			$( '#mypa-chosen-delivery-options :checkbox' ).prop('checked', false);		
+			$( '#post-chosen-delivery-options #post-input' ).val('');
+			$( '#post-chosen-delivery-options :checkbox' ).prop('checked', false);
 			jQuery('body').trigger('update_checkout');
 		}
 	}
 
-	function show_myparcel_delivery_options() {
+	function show_postnl_delivery_options() {
 		// show only if NL
 		check_country();
 		if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
-			update_myparcel_settings();
+			update_postnl_settings();
 		}
 	}
 
 
-	function update_myparcel_delivery_options() {
+	function update_postnl_delivery_options() {
 		// Small timeout to prevent multiple requests when several fields update at the same time
-		clearTimeout( myparcel_update_timer );
-		myparcel_update_timer = setTimeout( update_myparcel_delivery_options_action, '5' );
+		clearTimeout( postnl_update_timer );
+		postnl_update_timer = setTimeout( update_postnl_delivery_options_action, '5' );
 	}
 
-	function update_myparcel_delivery_options_action() {
+	function update_postnl_delivery_options_action() {
 		country = get_shipping_country();
-		if ( window.myparcel_checkout_updating !== true && country == 'NL' && typeof MyPaWindow != 'undefined' && typeof MyPaWindow.mypa != 'undefined' ) {
-			MyPaWindow.mypa.settings = window.mypa.settings;
-			MyPaWindow.updateMyPa();
+		if ( window.postnl_checkout_updating !== true && country == 'NL' && typeof PoStWindow != 'undefined' && typeof PoStWindow.post != 'undefined' ) {
+			PoStWindow.post.settings = window.post.settings;
+			PoStWindow.updatePoSt();
 		}
 	}
 
 	function is_updated_shipping_method() {
-		if ( window.myparcel_updated_shipping_method != window.myparcel_selected_shipping_method || window.myparcel_force_update === true ) {
-			window.myparcel_force_update = false; // only force once 
+		if ( window.postnl_updated_shipping_method != window.postnl_selected_shipping_method || window.postnl_force_update === true ) {
+			window.postnl_force_update = false; // only force once
 			return true;
 		} else {
 			return false;

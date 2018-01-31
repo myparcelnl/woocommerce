@@ -49,7 +49,7 @@
     obj1
   );
 
-  this.MyParcel = Application = (function() {
+  this.PostNL = Application = (function() {
 
     /*
      * Setup initial variables
@@ -57,17 +57,17 @@
     function Application(options) {
       var base;
       moment.locale(NATIONAL);
-      if (window.mypa == null) {
-        window.mypa = {
+      if (window.post == null) {
+        window.post = {
           settings: {}
         };
       }
-      if ((base = window.mypa.settings).base_url == null) {
+      if ((base = window.post.settings).base_url == null) {
         base.base_url = "//localhost:8080/api/delivery_options";
       }
-      this.el = document.getElementById('myparcel');
+      this.el = document.getElementById('postnl');
 
-      this.$el = jquery('myparcel');
+      this.$el = jquery('postnl');
       if (this.shadow == null) {
         this.shadow = this.el.createShadowRoot();
       }
@@ -83,10 +83,10 @@
 
     Application.prototype.render = function() {
       var error, ref;
-      this.shadow.innerHTML = document.getElementById('myparcel-template').innerHTML;
+      this.shadow.innerHTML = document.getElementById('postnl-template').innerHTML;
       try {
         if ((ref = WebComponents.ShadowCSS) != null) {
-          ref.shimStyling(shadow, 'myparcel');
+          ref.shimStyling(shadow, 'postnl');
         }
       } catch (error) {
         console.log('Cannot shim CSS');
@@ -96,15 +96,15 @@
 
 
     /*
-     * Puts function in window.mypa effectively exposing the function.
+     * Puts function in window.post effectively exposing the function.
      */
 
     Application.prototype.expose = function(fn, name) {
       var base;
-      if ((base = window.mypa).fn == null) {
+      if ((base = window.post).fn == null) {
         base.fn = {};
       }
-      return window.mypa.fn[name] = fn;
+      return window.post.fn[name] = fn;
     };
 
 
@@ -113,26 +113,26 @@
      */
 
     Application.prototype.bindInputListeners = function() {
-      jquery('#mypa-signed', parent.document).on('change', (function(_this) {
+      jquery('#post-signed', parent.document).on('change', (function(_this) {
         return function(e) {
-          return $('#mypa-signed', parent.document).prop('checked', jquery('#mypa-signed', parent.document).prop('checked'));
+          return $('#post-signed', parent.document).prop('checked', jquery('#post-signed', parent.document).prop('checked'));
         };
       })(this));
-      jquery('#mypa-recipient-only', parent.document).on('change', (function(_this) {
+      jquery('#post-recipient-only', parent.document).on('change', (function(_this) {
         return function(e) {
-          return $('#mypa-only-recipient', parent.document).prop('checked', jquery('#mypa-recipient-only', parent.document).prop('checked'));
+          return $('#post-only-recipient', parent.document).prop('checked', jquery('#post-recipient-only', parent.document).prop('checked'));
         };
       })(this));
-      return jquery('#mypa-input').on('change', (function(_this) {
+      return jquery('#post-input').on('change', (function(_this) {
         return function(e) {
           var el, i, json, len, ref;
-          json = jquery('#mypa-input', parent.document).val();
+          json = jquery('#post-input', parent.document).val();
           if (json === '') {
-            $('input[name=mypa-delivery-time]:checked').prop('checked', false);
-            $('input[name=mypa-delivery-type]:checked').prop('checked', false);
+            $('input[name=post-delivery-time]:checked').prop('checked', false);
+            $('input[name=post-delivery-type]:checked').prop('checked', false);
             return;
           }
-          ref = $('input[name=mypa-delivery-time]');
+          ref = $('input[name=post-delivery-time]');
           for (i = 0, len = ref.length; i < len; i++) {
             el = ref[i];
             if ($(el).val() === json) {
@@ -151,14 +151,14 @@
 
     Application.prototype.updatePage = function(postal_code, number, street) {
       var item, key, options, ref, settings, urlBase;
-      ref = window.mypa.settings.price;
+      ref = window.post.settings.price;
       for (key in ref) {
         item = ref[key];
         if (!(typeof item === 'string' || typeof item === 'function')) {
           throw new Error('Price needs to be of type string');
         }
       }
-      settings = window.mypa.settings;
+      settings = window.post.settings;
       urlBase = settings.base_url;
       if (number == null) {
         number = settings.number;
@@ -170,13 +170,13 @@
         street = settings.street;
       }
       if (!((street != null) || (postal_code != null) || (number != null))) {
-        $('#mypa-no-options').html('Geen adres opgegeven');
-        $('.mypa-overlay').removeClass('mypa-hidden');
+        $('#post-no-options').html('Geen adres opgegeven');
+        $('.post-overlay').removeClass('post-hidden');
         return;
       }
-      $('#mypa-no-options').html('Bezig met laden...');
-      $('.mypa-overlay').removeClass('mypa-hidden');
-      $('.mypa-location').html(street + " " + number);
+      $('#post-no-options').html('Bezig met laden...');
+      $('.post-overlay').removeClass('post-hidden');
+      $('.post-location').html(street + " " + number);
       options = {
         url: urlBase,
         data: {
@@ -193,7 +193,7 @@
           exclude_delivery_type: settings.exclude_delivery_type != null ? settings.exclude_delivery_type : void 0
         },
         success: renderPage,
-        error: hideMyParcelOptions
+        error: hidePostNLOptions
       };
       return jquery.ajax(options);
     };
@@ -213,32 +213,32 @@
       var $el, $tabs, date, delivery, deliveryTimes, html, i, index, len, ref;
       this.deliveryDays = deliveryDays;
       if (deliveryDays.length < 1) {
-        $('mypa-delivery-row').addClass('mypa-hidden');
+        $('post-delivery-row').addClass('post-hidden');
         return;
       }
-      $('mypa-delivery-row').removeClass('mypa-hidden');
+      $('post-delivery-row').removeClass('post-hidden');
       deliveryDays.sort(this.orderDays);
-      deliveryTimes = window.mypa.sortedDeliverytimes = {};
-      $el = $('#mypa-tabs').html('');
-      window.mypa.deliveryDays = deliveryDays.length;
+      deliveryTimes = window.post.sortedDeliverytimes = {};
+      $el = $('#post-tabs').html('');
+      window.post.deliveryDays = deliveryDays.length;
       index = 0;
       ref = this.deliveryDays;
       for (i = 0, len = ref.length; i < len; i++) {
         delivery = ref[i];
         deliveryTimes[delivery.date] = delivery.time;
         date = moment(delivery.date);
-        html = "<input type=\"radio\" id=\"mypa-date-" + index + "\" class=\"mypa-date\" name=\"date\" checked value=\"" + delivery.date + "\">\n<label for='mypa-date-" + index + "' class='mypa-tab active'>\n  <span class='day-of-the-week'>" + (date.format('dddd')) + "</span>\n  <br>\n  <span class='date'>" + (date.format('DD MMMM')) + "</span>\n</label>";
+        html = "<input type=\"radio\" id=\"post-date-" + index + "\" class=\"post-date\" name=\"date\" checked value=\"" + delivery.date + "\">\n<label for='post-date-" + index + "' class='post-tab active'>\n  <span class='day-of-the-week'>" + (date.format('dddd')) + "</span>\n  <br>\n  <span class='date'>" + (date.format('DD MMMM')) + "</span>\n</label>";
         $el.append(html);
         index++;
       }
-      $tabs = $('.mypa-tab');
+      $tabs = $('.post-tab');
       if ($tabs.length > 0) {
         $tabs.bind('click', updateDelivery);
         $tabs[0].click();
       }
       // this should fix iOS canvas size issues but seems to break webcomponents in Safari:
-      // $("#mypa-tabs-container").attr('style', "width:" + ($("#mypa-tabs-container").width()) + "px");
-      $("#mypa-tabs").attr('style', "width:" + (this.deliveryDays.length * 105) + "px");
+      // $("#post-tabs-container").attr('style', "width:" + ($("#post-tabs-container").width()) + "px");
+      $("#post-tabs").attr('style', "width:" + (this.deliveryDays.length * 105) + "px");
       this.makeSlider();
     }
 
@@ -250,11 +250,11 @@
     Slider.prototype.makeSlider = function() {
       this.slider = {};
       this.slider.currentBar = 0;
-      this.slider.bars = window.mypa.deliveryDays * 105 / $('#mypa-tabs-container')[0].offsetWidth;
-      $('mypa-tabs').attr('style', "width:" + (window.mypa.deliveryDays * 105) + "px;");
-      $('#mypa-date-slider-right').removeClass('mypa-slider-disabled');
-      $('#mypa-date-slider-left').unbind().bind('click', this.slideLeft);
-      return $('#mypa-date-slider-right').unbind().bind('click', this.slideRight);
+      this.slider.bars = window.post.deliveryDays * 105 / $('#post-tabs-container')[0].offsetWidth;
+      $('post-tabs').attr('style', "width:" + (window.post.deliveryDays * 105) + "px;");
+      $('#post-date-slider-right').removeClass('post-slider-disabled');
+      $('#post-date-slider-left').unbind().bind('click', this.slideLeft);
+      return $('#post-date-slider-right').unbind().bind('click', this.slideRight);
     };
 
 
@@ -266,17 +266,17 @@
       var $el, left, slider;
       slider = this.slider;
       if (slider.currentBar === 1) {
-        $(e.currentTarget).addClass('mypa-slider-disabled');
+        $(e.currentTarget).addClass('post-slider-disabled');
       } else if (slider.currentBar < 1) {
         return false;
       } else {
-        $(e.currentTarget).removeClass('mypa-slider-disabled');
+        $(e.currentTarget).removeClass('post-slider-disabled');
       }
-      $('#mypa-date-slider-right').removeClass('mypa-slider-disabled');
+      $('#post-date-slider-right').removeClass('post-slider-disabled');
       slider.currentBar--;
-      $el = $('#mypa-tabs');
+      $el = $('#post-tabs');
       left = slider.currentBar * 100 * -1;
-      return $el.attr('style', "left:" + left + "%; width:" + (window.mypa.deliveryDays * 105) + "px");
+      return $el.attr('style', "left:" + left + "%; width:" + (window.post.deliveryDays * 105) + "px");
     };
 
 
@@ -288,17 +288,17 @@
       var $el, left, slider;
       slider = this.slider;
       if (parseInt(slider.currentBar) === parseInt(slider.bars - 1)) {
-        $(e.currentTarget).addClass('mypa-slider-disabled');
+        $(e.currentTarget).addClass('post-slider-disabled');
       } else if (slider.currentBar >= slider.bars - 1) {
         return false;
       } else {
-        $(e.currentTarget).removeClass('mypa-slider-disabled');
+        $(e.currentTarget).removeClass('post-slider-disabled');
       }
-      $('#mypa-date-slider-left').removeClass('mypa-slider-disabled');
+      $('#post-date-slider-left').removeClass('post-slider-disabled');
       slider.currentBar++;
-      $el = $('#mypa-tabs');
+      $el = $('#post-tabs');
       left = slider.currentBar * 100 * -1;
-      return $el.attr('style', "left:" + left + "%; width:" + (window.mypa.deliveryDays * 105) + "px");
+      return $el.attr('style', "left:" + left + "%; width:" + (window.post.deliveryDays * 105) + "px");
     };
 
 
@@ -321,8 +321,8 @@
 
   })();
 
-  if (typeof mypajQuery !== "undefined" && mypajQuery !== null) {
-    jquery = mypajQuery;
+  if (typeof postjQuery !== "undefined" && postjQuery !== null) {
+    jquery = postjQuery;
   }
 
   if (jquery == null) {
@@ -334,11 +334,11 @@
   }
 
   $ = function(selector) {
-    return jquery(document.getElementById('myparcel').shadowRoot).find(selector);
+    return jquery(document.getElementById('postnl').shadowRoot).find(selector);
   };
 
   displayOtherTab = function() {
-    return $('.mypa-tab-container').toggleClass('mypa-slider-pos-1').toggleClass('mypa-slider-pos-0');
+    return $('.post-tab-container').toggleClass('post-slider-pos-1').toggleClass('post-slider-pos-0');
   };
 
 
@@ -348,29 +348,29 @@
 
   renderPage = function(response) {
     if (response.data.message === 'No results') {
-      $('#mypa-no-options').html('Geen bezorgopties gevonden voor het opgegeven adres.');
-      $('.mypa-overlay').removeClass('mypa-hidden');
+      $('#post-no-options').html('Geen bezorgopties gevonden voor het opgegeven adres.');
+      $('.post-overlay').removeClass('post-hidden');
       return;
     }
-    $('.mypa-overlay').addClass('mypa-hidden');
-    $('#mypa-delivery-option-check').bind('click', function() {
+    $('.post-overlay').addClass('post-hidden');
+    $('#post-delivery-option-check').bind('click', function() {
       return renderDeliveryOptions($('input[name=date]:checked').val());
     });
     new Slider(response.data.delivery);
     preparePickup(response.data.pickup);
-    $('#mypa-delivery-options-title').on('click', function() {
+    $('#post-delivery-options-title').on('click', function() {
       var date;
       date = $('input[name=date]:checked').val();
       renderDeliveryOptions(date);
 
-      $('#mypa-date-slider-right, #mypa-date-slider-left, #mypa-tabs-container').show();
+      $('#post-date-slider-right, #post-date-slider-left, #post-tabs-container').show();
 
       return updateInputField();
     });
-    $('#mypa-pickup-options-title').on('click', function() {
-      $('#mypa-pickup').prop('checked', true);
+    $('#post-pickup-options-title').on('click', function() {
+      $('#post-pickup').prop('checked', true);
 
-      $('#mypa-date-slider-right, #mypa-date-slider-left, #mypa-tabs-container').hide();
+      $('#post-date-slider-right, #post-date-slider-left, #post-tabs-container').hide();
 
       return updateInputField();
     });
@@ -380,17 +380,17 @@
   preparePickup = function(pickupOptions) {
     var filter, i, j, len, len1, name1, pickupExpressPrice, pickupLocation, pickupPrice, ref, time;
     if (pickupOptions.length < 1) {
-      $('#mypa-pickup-row').addClass('mypa-hidden');
+      $('#post-pickup-row').addClass('post-hidden');
       return;
     }
-    $('#mypa-pickup-row').removeClass('mypa-hidden');
-    pickupPrice = window.mypa.settings.price[PICKUP];
-    pickupExpressPrice = window.mypa.settings.price[PICKUP_EXPRESS];
-    $('.mypa-pickup-price').html(pickupPrice);
-    $('.mypa-pickup-price').toggleClass('mypa-hidden', pickupPrice == null);
-    $('.mypa-pickup-express-price').html(pickupExpressPrice);
-    $('.mypa-pickup-express-price').toggleClass('mypa-hidden', pickupExpressPrice == null);
-    window.mypa.pickupFiltered = filter = {};
+    $('#post-pickup-row').removeClass('post-hidden');
+    pickupPrice = window.post.settings.price[PICKUP];
+    pickupExpressPrice = window.post.settings.price[PICKUP_EXPRESS];
+    $('.post-pickup-price').html(pickupPrice);
+    $('.post-pickup-price').toggleClass('post-hidden', pickupPrice == null);
+    $('.post-pickup-express-price').html(pickupExpressPrice);
+    $('.post-pickup-express-price').toggleClass('post-hidden', pickupExpressPrice == null);
+    window.post.pickupFiltered = filter = {};
     pickupOptions = sortLocationsOnDistance(pickupOptions);
     for (i = 0, len = pickupOptions.length; i < len; i++) {
       pickupLocation = pickupOptions[i];
@@ -404,17 +404,17 @@
       }
     }
     if (filter[PICKUP_TIMES[MORNING_PICKUP]] == null) {
-      $('#mypa-pickup-express').parent().css({
+      $('#post-pickup-express').parent().css({
         display: 'none'
       });
     }
-    showDefaultPickupLocation('#mypa-pickup-address', filter[PICKUP_TIMES[NORMAL_PICKUP]][0]);
+    showDefaultPickupLocation('#post-pickup-address', filter[PICKUP_TIMES[NORMAL_PICKUP]][0]);
     if(MORNING_PICKUP && PICKUP_TIMES[MORNING_PICKUP] && filter[PICKUP_TIMES[MORNING_PICKUP]]){
-        showDefaultPickupLocation('#mypa-pickup-express-address', filter[PICKUP_TIMES[MORNING_PICKUP]][0]);
+        showDefaultPickupLocation('#post-pickup-express-address', filter[PICKUP_TIMES[MORNING_PICKUP]][0]);
     }
-    $('#mypa-pickup-address').off().bind('click', renderPickup);
-    $('#mypa-pickup-express-address').off().bind('click', renderExpressPickup);
-    return $('.mypa-pickup-selector').on('click', updateInputField);
+    $('#post-pickup-address').off().bind('click', renderPickup);
+    $('#post-pickup-express-address').off().bind('click', renderExpressPickup);
+    return $('.post-pickup-selector').on('click', updateInputField);
   };
 
 
@@ -447,9 +447,9 @@
    */
 
   renderPickup = function() {
-    renderPickupLocation(window.mypa.pickupFiltered[PICKUP_TIMES[NORMAL_PICKUP]]);
-    $('.mypa-location-time').html('- Vanaf 16.00 uur');
-    $('#mypa-pickup').prop('checked', true);
+    renderPickupLocation(window.post.pickupFiltered[PICKUP_TIMES[NORMAL_PICKUP]]);
+    $('.post-location-time').html('- Vanaf 16.00 uur');
+    $('#post-pickup').prop('checked', true);
     return false;
   };
 
@@ -459,9 +459,9 @@
    */
 
   renderExpressPickup = function() {
-    renderPickupLocation(window.mypa.pickupFiltered[PICKUP_TIMES[MORNING_PICKUP]]);
-    $('.mypa-location-time').html('- Vanaf 08.30 uur');
-    $('#mypa-pickup-express').prop('checked', true);
+    renderPickupLocation(window.post.pickupFiltered[PICKUP_TIMES[MORNING_PICKUP]]);
+    $('.post-location-time').html('- Vanaf 08.30 uur');
+    $('#post-pickup-express').prop('checked', true);
     return false;
   };
 
@@ -473,15 +473,15 @@
   renderPickupLocation = function(data) {
     var day_index, html, i, index, j, k, len, location, openingHoursHtml, orderedHours, ref, ref1, time;
     displayOtherTab();
-    $('.mypa-onoffswitch-checkbox:checked').prop('checked', false);
+    $('.post-onoffswitch-checkbox:checked').prop('checked', false);
     checkCombination();
-    $('#mypa-location-container').html('');
+    $('#post-location-container').html('');
     for (index = i = 0, ref = data.length - 1; 0 <= ref ? i <= ref : i >= ref; index = 0 <= ref ? ++i : --i) {
       location = data[index];
       orderedHours = orderOpeningHours(location.opening_hours);
       openingHoursHtml = '';
       for (day_index = j = 0; j <= 6; day_index = ++j) {
-        openingHoursHtml += "<div>\n  <div class='mypa-day-of-the-week'>\n    " + DAYS_OF_THE_WEEK_TRANSLATED[day_index] + ":\n  </div>\n  <div class='mypa-opening-hours-list'>";
+        openingHoursHtml += "<div>\n  <div class='post-day-of-the-week'>\n    " + DAYS_OF_THE_WEEK_TRANSLATED[day_index] + ":\n  </div>\n  <div class='post-opening-hours-list'>";
         ref1 = orderedHours[day_index];
         for (k = 0, len = ref1.length; k < len; k++) {
           time = ref1[k];
@@ -492,14 +492,14 @@
         }
         openingHoursHtml += '</div></div>';
       }
-      html = "<div for='mypa-pickup-location-" + index + "' class=\"mypa-row-lg afhalen-row\">\n  <div class=\"afhalen-right\">\n    <i class='mypa-info'>\n    </i>\n  </div>\n  <div class='mypa-opening-hours'>\n    " + openingHoursHtml + "\n  </div>\n  <label for='mypa-pickup-location-" + index + "' class=\"afhalen-left\">\n    <div class=\"afhalen-check\">\n      <input id=\"mypa-pickup-location-" + index + "\" type=\"radio\" name=\"mypa-pickup-option\" value='" + (JSON.stringify(location)) + "'>\n      <label for='mypa-pickup-location-" + index + "' class='mypa-row-title'>\n        <div class=\"mypa-checkmark mypa-main\">\n          <div class=\"mypa-circle\"></div>\n          <div class=\"mypa-checkmark-stem\"></div>\n          <div class=\"mypa-checkmark-kick\"></div>\n        </div>\n      </label>\n    </div>\n    <div class='afhalen-tekst'>\n      <span class=\"mypa-highlight mypa-inline-block\">" + location.location + ", <b class='mypa-inline-block'>" + location.street + " " + location.number + "</b>,\n      <i class='mypa-inline-block'>" + (String(Math.round(location.distance / 100) / 10).replace('.', ',')) + " Km</i></span>\n    </div>\n  </label>\n</div>";
-      $('#mypa-location-container').append(html);
+      html = "<div for='post-pickup-location-" + index + "' class=\"post-row-lg afhalen-row\">\n  <div class=\"afhalen-right\">\n    <i class='post-info'>\n    </i>\n  </div>\n  <div class='post-opening-hours'>\n    " + openingHoursHtml + "\n  </div>\n  <label for='post-pickup-location-" + index + "' class=\"afhalen-left\">\n    <div class=\"afhalen-check\">\n      <input id=\"post-pickup-location-" + index + "\" type=\"radio\" name=\"post-pickup-option\" value='" + (JSON.stringify(location)) + "'>\n      <label for='post-pickup-location-" + index + "' class='post-row-title'>\n        <div class=\"post-checkmark post-main\">\n          <div class=\"post-circle\"></div>\n          <div class=\"post-checkmark-stem\"></div>\n          <div class=\"post-checkmark-kick\"></div>\n        </div>\n      </label>\n    </div>\n    <div class='afhalen-tekst'>\n      <span class=\"post-highlight post-inline-block\">" + location.location + ", <b class='post-inline-block'>" + location.street + " " + location.number + "</b>,\n      <i class='post-inline-block'>" + (String(Math.round(location.distance / 100) / 10).replace('.', ',')) + " Km</i></span>\n    </div>\n  </label>\n</div>";
+      $('#post-location-container').append(html);
     }
-    return $('input[name=mypa-pickup-option]').bind('click', function(e) {
+    return $('input[name=post-pickup-option]').bind('click', function(e) {
       var obj, selector;
       displayOtherTab();
       obj = JSON.parse($(e.currentTarget).val());
-      selector = '#' + $('input[name=mypa-delivery-time]:checked').parent().find('span.mypa-address').attr('id');
+      selector = '#' + $('input[name=post-delivery-time]:checked').parent().find('span.post-address').attr('id');
       return showDefaultPickupLocation(selector, obj);
     });
   };
@@ -516,7 +516,7 @@
 
   updateDelivery = function(e) {
     var date;
-    if ($('#mypa-delivery-option-check').prop('checked') !== true) {
+    if ($('#post-delivery-option-check').prop('checked') !== true) {
       return;
     }
     date = $("#" + ($(e.currentTarget).prop('for')))[0].value;
@@ -526,16 +526,16 @@
 
   renderDeliveryOptions = function(date) {
     var checked, combinatedPrice, combine, deliveryTimes, html, hvoPrice, hvoText, i, index, json, len, onlyRecipientPrice, onlyRecipientText, price, ref, ref1, time;
-    $('#mypa-delivery-options').html('');
+    $('#post-delivery-options').html('');
     html = '';
-    deliveryTimes = window.mypa.sortedDeliverytimes[date];
+    deliveryTimes = window.post.sortedDeliverytimes[date];
     index = 0;
     for (i = 0, len = deliveryTimes.length; i < len; i++) {
       time = deliveryTimes[i];
       if (time.price_comment === 'avond') {
         time.price_comment = EVENING_DELIVERY;
       }
-      price = window.mypa.settings.price[POST_NL_TRANSLATION[time.price_comment]];
+      price = window.post.settings.price[POST_NL_TRANSLATION[time.price_comment]];
       json = {
         date: date,
         time: [time]
@@ -544,64 +544,64 @@
       if (time.price_comment === 'standard') {
         checked = "checked";
       }
-      html += "<label for=\"mypa-time-" + index + "\" class='mypa-row-subitem'>\n  <input id='mypa-time-" + index + "' type=\"radio\" name=\"mypa-delivery-time\" value='" + (JSON.stringify(json)) + "' " + checked + ">\n  <label for=\"mypa-time-" + index + "\" class=\"mypa-checkmark\">\n    <div class=\"mypa-circle mypa-circle-checked\"></div>\n    <div class=\"mypa-checkmark-stem\"></div>\n    <div class=\"mypa-checkmark-kick\"></div>\n  </label>\n  <span class=\"mypa-highlight\">" + (moment(time.start, 'HH:mm:SS').format('H.mm')) + " - " + (moment(time.end, 'HH:mm:SS').format('H.mm')) + " uur</span>";
+      html += "<label for=\"post-time-" + index + "\" class='post-row-subitem'>\n  <input id='post-time-" + index + "' type=\"radio\" name=\"post-delivery-time\" value='" + (JSON.stringify(json)) + "' " + checked + ">\n  <label for=\"post-time-" + index + "\" class=\"post-checkmark\">\n    <div class=\"post-circle post-circle-checked\"></div>\n    <div class=\"post-checkmark-stem\"></div>\n    <div class=\"post-checkmark-kick\"></div>\n  </label>\n  <span class=\"post-highlight\">" + (moment(time.start, 'HH:mm:SS').format('H.mm')) + " - " + (moment(time.end, 'HH:mm:SS').format('H.mm')) + " uur</span>";
       if (price != null) {
-        html += "<span class='mypa-price'>" + price + "</span>";
+        html += "<span class='post-price'>" + price + "</span>";
       }
       html += "</label>";
       index++;
     }
-    hvoPrice = window.mypa.settings.price.signed;
-    hvoText = (ref = window.mypa.settings.text) != null ? ref.signed : void 0;
+    hvoPrice = window.post.settings.price.signed;
+    hvoText = (ref = window.post.settings.text) != null ? ref.signed : void 0;
     if (hvoText == null) {
       hvoText = HVO_DEFAULT_TEXT;
     }
-    onlyRecipientPrice = window.mypa.settings.price.only_recipient;
-    onlyRecipientText = (ref1 = window.mypa.settings.text) != null ? ref1.only_recipient : void 0;
+    onlyRecipientPrice = window.post.settings.price.only_recipient;
+    onlyRecipientText = (ref1 = window.post.settings.text) != null ? ref1.only_recipient : void 0;
     if (onlyRecipientText == null) {
       onlyRecipientText = AO_DEFAULT_TEXT;
     }
-    combinatedPrice = window.mypa.settings.price.combi_options;
+    combinatedPrice = window.post.settings.price.combi_options;
     combine = onlyRecipientPrice !== 'disabled' && hvoPrice !== 'disabled' && (combinatedPrice != null);
     if (combine) {
-      html += "<div class='mypa-combination-price'><span class='mypa-price mypa-hidden'>" + combinatedPrice + "</span>";
+      html += "<div class='post-combination-price'><span class='post-price post-hidden'>" + combinatedPrice + "</span>";
     }
     if (onlyRecipientPrice !== DISABLED) {
-      html += "<label for=\"mypa-only-recipient\" class='mypa-row-subitem'>\n  <input type=\"checkbox\" name=\"mypa-only-recipient\" class=\"mypa-onoffswitch-checkbox\" id=\"mypa-only-recipient\">\n  <div class=\"mypa-switch-container\">\n    <div class=\"mypa-onoffswitch\">\n      <label class=\"mypa-onoffswitch-label\" for=\"mypa-only-recipient\">\n        <span class=\"mypa-onoffswitch-inner\"></span>\n        <span class=\"mypa-onoffswitch-switch\"></span>\n      </label>\n    </div>\n  </div>\n  <span>" + onlyRecipientText;
+      html += "<label for=\"post-only-recipient\" class='post-row-subitem'>\n  <input type=\"checkbox\" name=\"post-only-recipient\" class=\"post-onoffswitch-checkbox\" id=\"post-only-recipient\">\n  <div class=\"post-switch-container\">\n    <div class=\"post-onoffswitch\">\n      <label class=\"post-onoffswitch-label\" for=\"post-only-recipient\">\n        <span class=\"post-onoffswitch-inner\"></span>\n        <span class=\"post-onoffswitch-switch\"></span>\n      </label>\n    </div>\n  </div>\n  <span>" + onlyRecipientText;
       if (onlyRecipientPrice != null) {
-        html += "<span class='mypa-price'>" + onlyRecipientPrice + "</span>";
+        html += "<span class='post-price'>" + onlyRecipientPrice + "</span>";
       }
       html += "</span></label>";
     }
     if (hvoPrice !== DISABLED) {
-      html += "<label for=\"mypa-signed\" class='mypa-row-subitem'>\n  <input type=\"checkbox\" name=\"mypa-signed\" class=\"mypa-onoffswitch-checkbox\" id=\"mypa-signed\">\n  <div class=\"mypa-switch-container\">\n    <div class=\"mypa-onoffswitch\">\n      <label class=\"mypa-onoffswitch-label\" for=\"mypa-signed\">\n        <span class=\"mypa-onoffswitch-inner\"></span>\n      <span class=\"mypa-onoffswitch-switch\"></span>\n      </label>\n    </div>\n  </div>\n  <span>" + hvoText;
+      html += "<label for=\"post-signed\" class='post-row-subitem'>\n  <input type=\"checkbox\" name=\"post-signed\" class=\"post-onoffswitch-checkbox\" id=\"post-signed\">\n  <div class=\"post-switch-container\">\n    <div class=\"post-onoffswitch\">\n      <label class=\"post-onoffswitch-label\" for=\"post-signed\">\n        <span class=\"post-onoffswitch-inner\"></span>\n      <span class=\"post-onoffswitch-switch\"></span>\n      </label>\n    </div>\n  </div>\n  <span>" + hvoText;
       if (hvoPrice) {
-        html += "<span class='mypa-price'>" + hvoPrice + "</span>";
+        html += "<span class='post-price'>" + hvoPrice + "</span>";
       }
       html += "</span></label>";
     }
     if (combine) {
       html += "</div>";
     }
-    $('#mypa-delivery-options').html(html);
-    $('.mypa-combination-price label').on('click', checkCombination);
-    $('#mypa-delivery-options label.mypa-row-subitem input[name=mypa-delivery-time]').on('change', function(e) {
+    $('#post-delivery-options').html(html);
+    $('.post-combination-price label').on('click', checkCombination);
+    $('#post-delivery-options label.post-row-subitem input[name=post-delivery-time]').on('change', function(e) {
       var deliveryType;
       deliveryType = JSON.parse($(e.currentTarget).val())['time'][0]['price_comment'];
       if (deliveryType === MORNING_DELIVERY || deliveryType === EVENING_DELIVERY) {
-        $('input#mypa-only-recipient').prop('checked', true).prop('disabled', true);
-        $('label[for=mypa-only-recipient] span.mypa-price').html('incl.');
+        $('input#post-only-recipient').prop('checked', true).prop('disabled', true);
+        $('label[for=post-only-recipient] span.post-price').html('incl.');
       } else {
-        onlyRecipientPrice = window.mypa.settings.price.only_recipient;
-        $('input#mypa-only-recipient').prop('disabled', false);
-        $('label[for=mypa-only-recipient] span.mypa-price').html(onlyRecipientPrice);
+        onlyRecipientPrice = window.post.settings.price.only_recipient;
+        $('input#post-only-recipient').prop('disabled', false);
+        $('label[for=post-only-recipient] span.post-price').html(onlyRecipientPrice);
       }
       return checkCombination();
     });
-    if ($('input[name=mypa-delivery-time]:checked').length < 1) {
-      $($('input[name=mypa-delivery-time]')[0]).prop('checked', true);
+    if ($('input[name=post-delivery-time]:checked').length < 1) {
+      $($('input[name=post-delivery-time]')[0]).prop('checked', true);
     }
-    return $('div#mypa-delivery-row label').bind('click', updateInputField);
+    return $('div#post-delivery-row label').bind('click', updateInputField);
   };
 
 
@@ -611,16 +611,16 @@
 
   checkCombination = function() {
     var combination, deliveryType, inclusiveOption, json;
-    json = $('#mypa-delivery-options .mypa-row-subitem input[name=mypa-delivery-time]:checked').val();
+    json = $('#post-delivery-options .post-row-subitem input[name=post-delivery-time]:checked').val();
     if (json != null) {
       deliveryType = JSON.parse(json)['time'][0]['price_comment'];
     }
     inclusiveOption = deliveryType === MORNING_DELIVERY || deliveryType === EVENING_DELIVERY;
-    combination = $('input[name=mypa-only-recipient]').prop('checked') && $('input[name=mypa-signed]').prop('checked') && !inclusiveOption;
-    $('.mypa-combination-price').toggleClass('mypa-combination-price-active', combination);
-    $('.mypa-combination-price > .mypa-price').toggleClass('mypa-price-active', combination);
-    $('.mypa-combination-price > .mypa-price').toggleClass('mypa-hidden', !combination);
-    return $('.mypa-combination-price label .mypa-price').toggleClass('mypa-hidden', combination);
+    combination = $('input[name=post-only-recipient]').prop('checked') && $('input[name=post-signed]').prop('checked') && !inclusiveOption;
+    $('.post-combination-price').toggleClass('post-combination-price-active', combination);
+    $('.post-combination-price > .post-price').toggleClass('post-price-active', combination);
+    $('.post-combination-price > .post-price').toggleClass('post-hidden', !combination);
+    return $('.post-combination-price label .post-price').toggleClass('post-hidden', combination);
   };
 
 
@@ -630,29 +630,29 @@
 
   updateInputField = function() {
     var json;
-    json = $('input[name=mypa-delivery-time]:checked').val();
-    if (jquery('#mypa-input', parent.document).val() !== json) {
-      jquery('#mypa-input', parent.document).val(json);
-      jquery('#mypa-input', parent.document).trigger('change');
-      parent.mypajQuery('#mypa-input').trigger('change');
+    json = $('input[name=post-delivery-time]:checked').val();
+    if (jquery('#post-input', parent.document).val() !== json) {
+      jquery('#post-input', parent.document).val(json);
+      jquery('#post-input', parent.document).trigger('change');
+      parent.postjQuery('#post-input').trigger('change');
     }
-    if (jquery('#mypa-signed', parent.document).val() !== $('#mypa-signed', parent.document).prop('checked')) {
-      jquery('#mypa-signed', parent.document).prop('checked', $('#mypa-signed', parent.document).prop('checked'));
-      jquery('#mypa-signed', parent.document).trigger('change');
-      parent.mypajQuery('#mypa-input').trigger('change');
+    if (jquery('#post-signed', parent.document).val() !== $('#post-signed', parent.document).prop('checked')) {
+      jquery('#post-signed', parent.document).prop('checked', $('#post-signed', parent.document).prop('checked'));
+      jquery('#post-signed', parent.document).trigger('change');
+      parent.postjQuery('#post-input').trigger('change');
     }
-    if (jquery('#mypa-recipient-only', parent.document).val() !== $('#mypa-recipient-only', parent.document).prop('checked')) {
-      jquery('#mypa-recipient-only', parent.document).prop('checked', $('#mypa-only-recipient').prop('checked'));
-      parent.mypajQuery('#mypa-input').trigger('change');
-      return jquery('#mypa-recipient-only', parent.document).trigger('change');
+    if (jquery('#post-recipient-only', parent.document).val() !== $('#post-recipient-only', parent.document).prop('checked')) {
+      jquery('#post-recipient-only', parent.document).prop('checked', $('#post-only-recipient').prop('checked'));
+      parent.postjQuery('#post-input').trigger('change');
+      return jquery('#post-recipient-only', parent.document).trigger('change');
     }
   };
   /*
-   * Hide MyParcel options
+   * Hide PostNL options
    */
-  hideMyParcelOptions = function() {
-    parent.mypajQuery('#myparcel-iframe').hide();
+  hidePostNLOptions = function() {
+    parent.postjQuery('#postnl-iframe').hide();
   };
 }).call(this);
 
-//# sourceMappingURL=myparcel.js.map
+//# sourceMappingURL=postnl.js.map
