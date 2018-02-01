@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -38,7 +39,7 @@
 			);
 		}
 
-		wp_enqueue_style( 'wcmyparcel-admin-styles' );	
+		wp_enqueue_style( 'wcmyparcel-admin-styles' );
 		wp_enqueue_style( 'colors' );
 		wp_enqueue_style( 'media' );
 		wp_enqueue_script( 'jquery' );
@@ -47,7 +48,7 @@
 	?>
 </head>
 <body style="padding:10px 20px;">
-	<?php 
+	<?php
 	switch ($request) {
 		case 'add_return':
 			printf('<h3>%s</h3>', __('Return email successfully sent to customer') );

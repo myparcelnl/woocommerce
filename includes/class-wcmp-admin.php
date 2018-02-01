@@ -200,14 +200,14 @@ class WooCommerce_MyParcel_Admin {
 		$processed_shipments = $this->get_order_shipments( $order, true );
 		if (empty($processed_shipments) || $shipping_country != 'NL' ) {
 			unset($listing_actions['add_return']);
-		}		
+		}
 
 		$target = ( isset(WooCommerce_MyParcel()->general_settings['download_display']) && WooCommerce_MyParcel()->general_settings['download_display'] == 'display') ? 'target="_blank"' : '';
 		$nonce = wp_create_nonce('wc_myparcel');
 		foreach ($listing_actions as $action => $data) {
 			printf( '<a href="%1$s" class="button tips myparcel %2$s" alt="%3$s" data-tip="%3$s" data-order-id="%4$s" data-request="%2$s" data-nonce="%5$s" %6$s>', $data['url'], $action, $data['alt'], $order_id, $nonce, $target );
 			?>
-				<img src="<?php echo $data['img']; ?>" alt="<?php echo $data['alt']; ?>" width="16" class="wcmp_button_img">
+				<img src="<?php echo $data['img']; ?>" alt="<?php echo $data['alt']; ?>"  style="width:17px; margin: 5px 3px; pointer-events: none;" class="wcmp_button_img">
 			</a>
 			<?php
 		}
@@ -489,8 +489,8 @@ class WooCommerce_MyParcel_Admin {
 		echo '<div class="options_group">';
 		woocommerce_wp_text_input( 
 			array( 
-				'id'          => '_myparcel_hs_code', 
-				'label'       => __( 'HS Code', 'woocommerce-myparcel' ), 
+				'id'          => '_myparcel_hs_code',
+				'label'       => __( 'HS Code', 'woocommerce-myparcel' ),
 				'description' => sprintf( __( 'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcel' ), '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>' ),
 				// 'desc_tip'    => true,
 			)

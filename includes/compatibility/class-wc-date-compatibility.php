@@ -5,7 +5,7 @@
 
 namespace WPO\WC\MyParcel\Compatibility;
 
-defined( 'ABSPATH' ) or exit;
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( ! class_exists( '\\WPO\\WC\\MyParcel\\Compatibility\\WC_DateTime' ) ) :
 
