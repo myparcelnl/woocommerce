@@ -207,7 +207,7 @@ class WooCommerce_MyParcel_Admin {
 		foreach ($listing_actions as $action => $data) {
 			printf( '<a href="%1$s" class="button tips myparcel %2$s" alt="%3$s" data-tip="%3$s" data-order-id="%4$s" data-request="%2$s" data-nonce="%5$s" %6$s>', $data['url'], $action, $data['alt'], $order_id, $nonce, $target );
 			?>
-				<img src="<?php echo $data['img']; ?>" alt="<?php echo $data['alt']; ?>" width="16" class="wcmp_button_img">
+				<img src="<?php echo $data['img']; ?>" alt="<?php echo $data['alt']; ?>"  style="width:17px; margin: 5px 3px; pointer-events: none;" class="wcmp_button_img">
 			</a>
 			<?php
 		}
