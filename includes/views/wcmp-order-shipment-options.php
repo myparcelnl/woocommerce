@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 
 <table class="wcmyparcel_settings_table" style="width: auto">
 	<tr>
