@@ -17,7 +17,7 @@ class WooCommerce_MyParcelBE_Export {
 	/**
 	 * Construct.
 	 */
-			
+
 	public function __construct() {
 		$this->success = array();
 		$this->errors = array();
@@ -144,7 +144,7 @@ class WooCommerce_MyParcelBE_Export {
 		if ( in_array($request, array('add_return','get_labels','modal_dialog')) && !empty($this->errors) ) {
 			echo $this->parse_errors( $this->errors );
 			die();
-		}		
+		}
 
 		// format errors for html output
 		if (!empty($this->errors)) {
@@ -297,7 +297,7 @@ class WooCommerce_MyParcelBE_Export {
 			} catch (Exception $e) {
 				$this->errors[$order_id] = $e->getMessage();
 			}
-			
+
 		}
 		// echo '<pre>';var_dump($success);echo '</pre>';die();
 
@@ -755,7 +755,7 @@ class WooCommerce_MyParcelBE_Export {
 				if (empty($classification)) {
 					$classification = $default_hs_code;
 				}
-				
+
 				// add item to item list
 				$items[] = compact( 'description', 'amount', 'weight', 'item_value', 'classification', 'country' );
 			}
@@ -983,7 +983,7 @@ class WooCommerce_MyParcelBE_Export {
 	public function download_pdf ( $pdf_data, $order_ids ) {
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');
-		header('Content-Disposition: attachment; filename="'.$this->get_filename( $order_ids ).'"'); 
+		header('Content-Disposition: attachment; filename="'.$this->get_filename( $order_ids ).'"');
 		header('Content-Transfer-Encoding: binary');
 		header('Connection: Keep-Alive');
 		header('Expires: 0');
@@ -1086,7 +1086,7 @@ class WooCommerce_MyParcelBE_Export {
 		if( $product && isset( $item['variation_id'] ) && $item['variation_id'] > 0 && method_exists($product, 'get_variation_attributes')) {
 			$name .= woocommerce_get_formatted_variation( $product->get_variation_attributes() );
 		}
-		
+
 		return $name;
 	}
 
@@ -1127,7 +1127,7 @@ class WooCommerce_MyParcelBE_Export {
 				$product_weight = $weight;
 				break;
 		}
-	
+
 		$item_weight = (float) $product_weight * (int) $item['qty'];
 
 		return $item_weight;
@@ -1137,7 +1137,7 @@ class WooCommerce_MyParcelBE_Export {
 		if (empty($myparcelbe_delivery_options)) {
 			$myparcelbe_delivery_options = WCX_Order::get_meta( $order, '_myparcelbe_delivery_options' );
 		}
-		
+
 		$pickup_types = array( 'retail', 'retailexpress' );
 		if ( !empty($myparcelbe_delivery_options['price_comment']) && in_array($myparcelbe_delivery_options['price_comment'], $pickup_types) ) {
 			return $myparcelbe_delivery_options;

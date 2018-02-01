@@ -2,8 +2,8 @@
 Contributors: pomegranate
 Tags: woocommerce, export, myparcelbe
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.9
-Stable tag: 2.4.5
+Tested up to: 4.9.2
+Stable tag: 2.4.6
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -88,6 +88,10 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+
+= 2.4.6 (2018-02-01) =
+* Improvement: WooCommerce 3.3 compatibility
+* Feature: The option to print the label on A4 and A6 format
 
 = 2.4.5 (2018-01-10) =
 * Fix: Export an order with an old delivery date

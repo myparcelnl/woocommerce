@@ -390,6 +390,18 @@ msgstr "Algemene instellingen"
 msgid "Label display"
 msgstr "Label weergave"
 
+#: includes/class-wcmp-settings.php:158
+msgid "Label format"
+msgstr "Label formaat"
+
+#: includes/class-wcmp-settings.php:194
+msgid "Standard printer (A4)"
+msgstr "Standaard printer (A4)"
+
+#: includes/class-wcmp-settings.php:195
+msgid "Label Printer (A6)"
+msgstr "Labelprinter (A6)"
+
 #: includes/class-wcmp-settings.php:178
 msgid "Download PDF"
 msgstr "PDF downloaden"

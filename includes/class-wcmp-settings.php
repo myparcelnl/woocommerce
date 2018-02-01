@@ -3,9 +3,7 @@
  * Create & render settings page
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( !class_exists( 'WooCommerce_MyParcelBE_Settings' ) ) :
 
@@ -177,6 +175,21 @@ class WooCommerce_MyParcelBE_Settings {
 				'options' 		=> array(
 					'download'	=> __( 'Download PDF' , 'woocommerce-myparcelbe' ),
 					'display'	=> __( 'Open de PDF in a new tab' , 'woocommerce-myparcelbe' ),
+				),
+			)
+		);
+		add_settings_field(
+			'label_format',
+			__( 'Label format', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'radio_button' ),
+			$option_group,
+			'general',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'label_format',
+				'options' 		=> array(
+					'A4'	=> __( 'Standard printer (A4)' , 'woocommerce-myparcel' ),
+					'A6'	=> __( 'Label Printer (A6)' , 'woocommerce-myparcel' ),
 				),
 			)
 		);
@@ -362,7 +375,7 @@ class WooCommerce_MyParcelBE_Settings {
 				'description'	=> sprintf(__( 'When you connect the customer email, MyParcelbe can send a Track&Trace email to this address. In your %sMyParcelbe backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-myparcelbe' ), '<a href="https://backoffice.myparcelbe.nl/ttsettingstable" target="_blank">', '</a>')
 			)
 		);
-		
+
 		add_settings_field(
 			'connect_phone',
 			__( 'Connect customer phone', 'woocommerce-myparcelbe' ),
@@ -375,7 +388,7 @@ class WooCommerce_MyParcelBE_Settings {
 				'description'	=> __( "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.", 'woocommerce-myparcelbe' )
 			)
 		);
-		
+
 		add_settings_field(
 			'large_format',
 			__( 'Extra large size', 'woocommerce-myparcelbe' ).' (+ &euro;2.45)',

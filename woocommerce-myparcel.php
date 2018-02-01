@@ -5,22 +5,19 @@ Plugin URI: http://www.myparcelbe.nl
 Description: Export your WooCommerce orders to MyParcelbe (www.myparcelbe.nl) and print labels directly from the WooCommerce admin
 Author: Richard Perdaan
 Author URI: http://www.wpovernight.com
-Version: 2.4.5
+Version: 2.4.6
 Text Domain: woocommerce-myparcelbe
-
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( !class_exists( 'WooCommerce_MyParcelBE' ) ) :
 
 class WooCommerce_MyParcelBE {
 
-	public $version = '2.4.5';
+	public $version = '2.4.6';
 	public $plugin_basename;
 
 	protected static $_instance = null;

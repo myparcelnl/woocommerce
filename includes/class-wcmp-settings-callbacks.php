@@ -1,7 +1,5 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( !class_exists( 'WooCommerce_MyParcelBE_Settings_Callbacks' ) ) :
 
@@ -394,7 +392,7 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
 			'id'			=> "{$id}_fee",
 			'type'			=> 'text',
 			'size'			=> '5',
-		);					
+		);
 		// textarea (description)
 		$description_args = array(
 			'id'			=> "{$id}_description",

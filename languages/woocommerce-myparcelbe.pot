@@ -384,6 +384,18 @@ msgstr ""
 msgid "Label display"
 msgstr ""
 
+#: includes/class-wcmp-settings.php:158
+msgid "Label format"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:194
+msgid "Standard printer (A4)"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:195
+msgid "Label Printer (A6)"
+msgstr ""
+
 #: includes/class-wcmp-settings.php:178
 msgid "Download PDF"
 msgstr ""
@@ -625,6 +637,10 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:530
 msgid "Default HS Code"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:536
+msgid "You can find HS codes on the %ssite of the Dutch Customs%s."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:543
