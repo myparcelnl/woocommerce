@@ -207,8 +207,8 @@ jQuery( function( $ ) {
 		$( '#mypa-options-enabled' ).prop('checked', false);
 		// clear delivery options
 		if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
-			$( '#mypa-chosen-delivery-options #mypa-input' ).val('');		
-			$( '#mypa-chosen-delivery-options :checkbox' ).prop('checked', false);		
+			$( '#mypa-chosen-delivery-options #mypa-input' ).val('');
+			$( '#mypa-chosen-delivery-options :checkbox' ).prop('checked', false);
 			jQuery('body').trigger('update_checkout');
 		}
 	}
@@ -238,7 +238,7 @@ jQuery( function( $ ) {
 
 	function is_updated_shipping_method() {
 		if ( window.myparcel_updated_shipping_method != window.myparcel_selected_shipping_method || window.myparcel_force_update === true ) {
-			window.myparcel_force_update = false; // only force once 
+			window.myparcel_force_update = false; // only force once
 			return true;
 		} else {
 			return false;

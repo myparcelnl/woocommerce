@@ -200,7 +200,7 @@ class WooCommerce_MyParcel_Admin {
 		$processed_shipments = $this->get_order_shipments( $order, true );
 		if (empty($processed_shipments) || $shipping_country != 'NL' ) {
 			unset($listing_actions['add_return']);
-		}		
+		}
 
 		$target = ( isset(WooCommerce_MyParcel()->general_settings['download_display']) && WooCommerce_MyParcel()->general_settings['download_display'] == 'display') ? 'target="_blank"' : '';
 		$nonce = wp_create_nonce('wc_myparcel');
@@ -489,8 +489,8 @@ class WooCommerce_MyParcel_Admin {
 		echo '<div class="options_group">';
 		woocommerce_wp_text_input( 
 			array( 
-				'id'          => '_myparcel_hs_code', 
-				'label'       => __( 'HS Code', 'woocommerce-myparcel' ), 
+				'id'          => '_myparcel_hs_code',
+				'label'       => __( 'HS Code', 'woocommerce-myparcel' ),
 				'description' => sprintf( __( 'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcel' ), '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>' ),
 				// 'desc_tip'    => true,
 			)

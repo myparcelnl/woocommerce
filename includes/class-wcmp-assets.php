@@ -1,7 +1,5 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( !class_exists( 'WooCommerce_MyParcel_Assets' ) ) :
 
@@ -106,6 +104,29 @@ class WooCommerce_MyParcel_Assets {
 				);
 			}
 		}
+	}
+
+	/**
+	 * @return string
+	 */
+	private function get_label_position()
+	{
+		$generalSettings = WooCommerce_MyParcel()->general_settings;
+
+		if ($generalSettings['label_format'] == 'A4') {
+			return isset($generalSettings['print_position_offset']) ? $generalSettings['print_position_offset'] : '';
+		}
+
+		return '';
+	}
+
+	private function get_download_display()
+	{
+		if (isset(WooCommerce_MyParcel()->general_settings['download_display'])) {
+			return WooCommerce_MyParcel()->general_settings['download_display'];
+		}
+
+		return '';
 	}
 }
 

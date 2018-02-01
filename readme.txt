@@ -2,7 +2,7 @@
 Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.9
+Tested up to: 4.9.2
 Stable tag: 2.4.6
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
