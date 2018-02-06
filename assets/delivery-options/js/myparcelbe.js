@@ -96,7 +96,7 @@
 
 
     /*
-     * Puts function in window.mypabeeffectively exposing the function.
+     * Puts function in window.mypabe effectively exposing the function.
      */
 
     Application.prototype.expose = function(fn, name) {
