@@ -65,7 +65,7 @@ Moreover, after a label is created, a track&trace code is added to the order. Wh
 **Online Manual (in Dutch):** https://myparcelbe.github.io/woocommerce/
 
 = How do I get an API key? =
-When logged in on your myparcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) you can find your API key under Instellingen → Algemeen.
+When logged in on your myparcel account at [http://backoffice.sendmyparcel.be/](http://backoffice.sendmyparcel.be) you can find your API key under Instellingen → Algemeen.
 
 = How do I change the track&trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
