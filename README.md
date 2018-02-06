@@ -1,7 +1,7 @@
 # WooCommerce MyParcelbe
 Welcome to the WooCommerce MyParcelbe repository on GitHub. Here you can browse the source, look at open issues and keep track of development.
 
-This WooCommerce extension allows you to export your orders to the MyParcelbe service (www.myparcelbe.nl). Single orders exports aswell as batch exports are possible.
+This WooCommerce extension allows you to export your orders to the MyParcelbe service (http://sendmyparcel.be/). Single orders exports aswell as batch exports are possible.
 
 ## Main features
 - Delivery options integrated in your checkout
@@ -15,6 +15,6 @@ This WooCommerce extension allows you to export your orders to the MyParcelbe se
 - View the status of the shipment in the order details page
 - Add track&trace link to the order confirmation email
 
-A MyParcelbe API account is required for this plugin! You can create this in your account or contact MyParcelbe at info@myparcelbe.nl
+A MyParcelbe API account is required for this plugin! You can create this in your account or contact MyParcelbe at info@sendmyparcel.be
 
 Voor de handleinding ga naar: https://myparcelbe.github.io/woocommerce/
