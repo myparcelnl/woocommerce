@@ -1003,7 +1003,7 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Export your WooCommerce orders to MyParcel BE(www.sendmyparcel.be) and print "
+"Export your WooCommerce orders to MyParcel BE (www.sendmyparcel.be) and print "
 "labels directly from the WooCommerce admin"
 msgstr ""
 "Exporteer je WooCommerce orders naar MyParcel BE (www.sendmyparcel.be) en print "
