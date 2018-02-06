@@ -21,16 +21,16 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #: includes/class-wcmp-admin.php:120
-msgid "MyParcelbe: Export"
-msgstr "MyParcelbe: Exporteren"
+msgid "MyParcel BE: Export"
+msgstr "MyParcel BE: Exporteren"
 
 #: includes/class-wcmp-admin.php:121
-msgid "MyParcelbe: Print"
-msgstr "MyParcelbe: Printen"
+msgid "MyParcel BE: Print"
+msgstr "MyParcel BE: Printen"
 
 #: includes/class-wcmp-admin.php:122
-msgid "MyParcelbe: Export & Print"
-msgstr "MyParcelbe: Exporteren & Printen"
+msgid "MyParcel BE: Export & Print"
+msgstr "MyParcel BE: Exporteren & Printen"
 
 #: includes/class-wcmp-admin.php:151 includes/class-wcmp-assets.php:78
 msgid "Labels to skip"
@@ -42,12 +42,12 @@ msgstr "Print"
 
 #: includes/class-wcmp-admin.php:180
 #: includes/views/wcmp-bulk-options-form.php:159
-msgid "Export to MyParcelbe"
-msgstr "Exporteer naar MyParcelbe"
+msgid "Export to MyParcel BE"
+msgstr "Exporteer naar MyParcel BE"
 
 #: includes/class-wcmp-admin.php:185 includes/class-wcmp-admin.php:337
-msgid "Print MyParcelbe label"
-msgstr "Print MyParcelbe label"
+msgid "Print MyParcel Be label"
+msgstr "Print MyParcel BE label"
 
 #: includes/class-wcmp-admin.php:190
 msgid "Email return label"
@@ -429,11 +429,11 @@ msgstr "Track&trace in email"
 msgid ""
 "Add the track&trace code to emails to the customer.<br/><strong>Note!</"
 "strong> When you select this option, make sure you have not enabled the "
-"track & trace email in your MyParcelbe backend."
+"track & trace email in your MyParcel BE backend."
 msgstr ""
 "Voeg de track&trace code toe aan emails aan de klant.<br/> <strong>Let op!</"
 "strong> Wanneer u voor deze optie kiest, zorg er dan voor dat u niet de "
-"track&trace email in uw MyParcelbe backend heeft ingeschakeld."
+"track&trace email in uw MyParcel BE backend heeft ingeschakeld."
 
 #: includes/class-wcmp-settings.php:212
 msgid "Track&trace in My Account"
@@ -450,10 +450,10 @@ msgstr "Verwerk zendingen direct"
 #: includes/class-wcmp-settings.php:232
 msgid ""
 "When you enable this option, shipments will be directly processed when sent "
-"to myparcelbe."
+"to MyParcel BE."
 msgstr ""
 "Wanneer u deze optie inschakelt, zullen zendingen direct worden verwerkt "
-"wanneer deze verzonden zijn naar MyParcelbe."
+"wanneer deze verzonden zijn naar MyParcel BE."
 
 #: includes/class-wcmp-settings.php:238
 msgid "Order status automation"
@@ -462,13 +462,13 @@ msgstr "Orderstatus automatisering"
 #: includes/class-wcmp-settings.php:245
 msgid ""
 "Automatically set order status to a predefined status after succesfull "
-"MyParcelbe export.<br/>Make sure <strong>Process shipments directly</strong> "
+"MyParcel BE export.<br/>Make sure <strong>Process shipments directly</strong> "
 "is enabled when you use this option together with the <strong>Track&trace in "
 "email</strong> option, otherwise the track&trace code will not be included "
 "in the customer email."
 msgstr ""
 "Wijzig automatisch de order status na het succesvol exporteren van een order "
-"naar MyParcelbe.<br/>Let op dat <strong>Verwerk zendingen direct</strong> is "
+"naar MyParcel BE.<br/>Let op dat <strong>Verwerk zendingen direct</strong> is "
 "ingeschakeld wanneer u deze optie gebruikt in combinatie met de "
 "<strong>Track&trace in email</strong> optie, anders wordt de track&trace "
 "code niet opgenomen in de email naar de klant."
@@ -507,8 +507,8 @@ msgid "Package types"
 msgstr "Pakkettype"
 
 #: includes/class-wcmp-settings.php:334
-msgid "Select one or more shipping methods for each MyParcelbe package type"
-msgstr "Selecteer een of meer verzendmethoden voor elk MyParcelbe pakkettype"
+msgid "Select one or more shipping methods for each MyParcel BE package type"
+msgstr "Selecteer een of meer verzendmethoden voor elk MyParcel BE pakkettype"
 
 #: includes/class-wcmp-settings.php:340
 #: includes/views/wcmp-order-return-shipment-options.php:4
@@ -524,12 +524,12 @@ msgstr "Koppel emailadres klant"
 #: includes/class-wcmp-settings.php:362
 #, php-format
 msgid ""
-"When you connect the customer email, MyParcelbe can send a Track&Trace email "
-"to this address. In your %sMyParcelbe backend%s you can enable or disable this "
+"When you connect the customer email, MyParcel BE can send a Track&Trace email "
+"to this address. In your %sMyParcel BE backend%s you can enable or disable this "
 "email and format it in your own style."
 msgstr ""
-"Wanneer u het emailadres van de klant koppelt, kan MyParcelbe een Track&Trace "
-"email versturen naar dit adres. In uw %sMyParcelbe backend%s kunt u deze email "
+"Wanneer u het emailadres van de klant koppelt, kan MyParcel BE een Track&Trace "
+"email versturen naar dit adres. In uw %sMyParcel BE backend%s kunt u deze email "
 "in- of uitschakelen en opmaken in uw eigen stijl."
 
 #: includes/class-wcmp-settings.php:368
@@ -666,13 +666,13 @@ msgstr "Label omschrijving"
 msgid ""
 "With this option, you can add a description to the shipment. This will be "
 "printed on the top left of the label, and you can use this to search or sort "
-"shipments in the MyParcelbe Backend. Use <strong>[ORDER_NR]</strong> to "
+"shipments in the MyParcel BE Backend. Use <strong>[ORDER_NR]</strong> to "
 "include the order number, <strong>[DELIVERY_DATE]</strong> to include the "
 "delivery date."
 msgstr ""
 "Met deze optie kunt u een beschrijving toevoegen aan de zending. Dit zal "
 "worden afgedrukt op de linkerbovenhoek van het label, en u kunt dit "
-"gebruiken om zendingen in het MyParcelbe Backend te zoeken of te sorteren. "
+"gebruiken om zendingen in het MyParcel BE Backend te zoeken of te sorteren. "
 "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden, "
 "[DELIVERY_DATE] voor de bezorgdatum."
 
@@ -725,8 +725,8 @@ msgid "Delivery options"
 msgstr "Bezorgopties"
 
 #: includes/class-wcmp-settings.php:588
-msgid "Enable MyParcelbe delivery options"
-msgstr "MyParcelbe bezorgopties inschakelen"
+msgid "Enable MyParcel BE delivery options"
+msgstr "MyParcel BE bezorgopties inschakelen"
 
 #: includes/class-wcmp-settings.php:600
 msgid "Display for"
@@ -1003,10 +1003,10 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Export your WooCommerce orders to MyParcelbe (www.myparcelbe.nl) and print "
+"Export your WooCommerce orders to MyParcel BE(www.sendmyparcel.be) and print "
 "labels directly from the WooCommerce admin"
 msgstr ""
-"Exporteer je WooCommerce orders naar MyParcelbe (www.myparcelbe.nl) en print "
+"Exporteer je WooCommerce orders naar MyParcel BE (www.sendmyparcel.be) en print "
 "verzendlabels direct vanuit WooCommerce"
 
 #. Author of the plugin/theme
@@ -1043,7 +1043,7 @@ msgstr ""
 #~ msgstr ""
 #~ "Met deze optie kunt u een beschrijving toevoegen aan de zending. Dit zal "
 #~ "worden afgedrukt op de linkerbovenhoek van het label, en u kunt dit "
-#~ "gebruiken om zendingen in het MyParcelbe Backend te zoeken of te sorteren. "
+#~ "gebruiken om zendingen in het MyParcel BE Backend te zoeken of te sorteren. "
 #~ "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden."
 
 #~ msgid "Additional fee (optional)"
@@ -1124,12 +1124,12 @@ msgstr ""
 #~ "in ontvangst is genomen door de geadresseerde. Een veilig gevoel."
 
 #~ msgid ""
-#~ "When you connect the customer email, MyParcelbe can send a Track&Trace "
+#~ "When you connect the customer email, MyParcel BE can send a Track&Trace "
 #~ "email to this address. In your <a href=\"https://backoffice.myparcelbe.nl/"
 #~ "ttsettingstable\">MyParcelbe backend</a> you can enable or disable this "
 #~ "email and format it in your own style."
 #~ msgstr ""
-#~ "Wanneer u het emailadres van de klant koppelt, kan MyParcelbe een "
+#~ "Wanneer u het emailadres van de klant koppelt, kan MyParcel BE een "
 #~ "Track&Trace email versturen naar dit adres. In uw <a href=\"https://"
 #~ "backoffice.myparcelbe.nl/ttsettingstable\">MyParcelbe backend</a> kunt u deze "
 #~ "email in- of uitschakelen en opmaken in uw eigen stijl."
@@ -1138,12 +1138,12 @@ msgstr ""
 #~ msgstr "Productnaam"
 
 #~ msgid ""
-#~ "When you connect the customer email, MyParcelbe can send a Track&Trace "
+#~ "When you connect the customer email, MyParcel BE can send a Track&Trace "
 #~ "email to this address. In your <a href=\"http://www.myparcelbe.nl/backend/"
 #~ "instellingen/tracktrace\">MyParcelbe backend</a> you can enable or disable "
 #~ "this email and format it in your own style."
 #~ msgstr ""
-#~ "Wanneer u het emailadres van de klant koppelt, kan MyParcelbe een "
+#~ "Wanneer u het emailadres van de klant koppelt, kan MyParcel BE een "
 #~ "Track&Trace email versturen naar dit adres. In uw <a href=\"https://"
 #~ "backoffice.myparcelbe.nl/ttsettingstable\">MyParcelbe backend</a> kunt u deze "
 #~ "email in- of uitschakelen en opmaken in uw eigen stijl."

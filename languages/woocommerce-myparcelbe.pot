@@ -21,7 +21,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #: includes/class-wcmp-admin.php:120
-msgid "MyParcelbe: Export"
+msgid "MyParcel BE: Export"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:121
@@ -29,7 +29,7 @@ msgid "MyParcelbe: Print"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:122
-msgid "MyParcelbe: Export & Print"
+msgid "MyParcel BE: Export & Print"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:151 includes/class-wcmp-assets.php:78
@@ -46,7 +46,7 @@ msgid "Export to MyParcelbe"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:185 includes/class-wcmp-admin.php:337
-msgid "Print MyParcelbe label"
+msgid "Print MyParcel BE label"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:190
@@ -421,7 +421,7 @@ msgstr ""
 msgid ""
 "Add the track&trace code to emails to the customer.<br/><strong>Note!</"
 "strong> When you select this option, make sure you have not enabled the "
-"track & trace email in your MyParcelbe backend."
+"track & trace email in your MyParcel BE backend."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:212
@@ -439,7 +439,7 @@ msgstr ""
 #: includes/class-wcmp-settings.php:232
 msgid ""
 "When you enable this option, shipments will be directly processed when sent "
-"to myparcelbe."
+"to MyParcel BE."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:238
@@ -486,7 +486,7 @@ msgid "Package types"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:334
-msgid "Select one or more shipping methods for each MyParcelbe package type"
+msgid "Select one or more shipping methods for each MyParcel BE package type"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:340
@@ -503,7 +503,7 @@ msgstr ""
 #: includes/class-wcmp-settings.php:362
 #, php-format
 msgid ""
-"When you connect the customer email, MyParcelbe can send a Track&Trace email "
+"When you connect the customer email, MyParcel BE can send a Track&Trace email "
 "to this address. In your %sMyParcelbe backend%s you can enable or disable this "
 "email and format it in your own style."
 msgstr ""
@@ -672,7 +672,7 @@ msgid "Delivery options"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:588
-msgid "Enable MyParcelbe delivery options"
+msgid "Enable MyParcel BE delivery options"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:600
@@ -936,7 +936,7 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Export your WooCommerce orders to MyParcelbe (www.myparcelbe.nl) and print "
+"Export your WooCommerce orders to MyParcel BE (www.sendmyparcel.be) and print "
 "labels directly from the WooCommerce admin"
 msgstr ""
 

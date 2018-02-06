@@ -160,7 +160,7 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&requ
 <div class="wcmp_save_shipment_settings">
 	<?php
 	if ($dialog == 'shipment') {
-		$button_text = __( 'Export to MyParcelbe', 'woocommerce-myparcelbe' );
+		$button_text = __( 'Export to MyParcel BE', 'woocommerce-myparcelbe' );
 	} elseif ($dialog == 'return') {
 		$button_text = __( 'Send email', 'woocommerce-myparcelbe' );
 	}
