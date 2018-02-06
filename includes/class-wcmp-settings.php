@@ -30,8 +30,8 @@ class WooCommerce_MyParcelBE_Settings {
 	public function menu() {
 		add_submenu_page(
 			'woocommerce',
-			__( 'MyParcelbe', 'woocommerce-myparcelbe' ),
-			__( 'MyParcelbe', 'woocommerce-myparcelbe' ),
+			__( 'MyParcel BE', 'woocommerce-myparcelbe' ),
+			__( 'MyParcel BE', 'woocommerce-myparcelbe' ),
 			'manage_options',
 			'woocommerce_myparcelbe_settings',
 			array( $this, 'settings_page' )
@@ -58,7 +58,7 @@ class WooCommerce_MyParcelBE_Settings {
 		$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'general';
 		?>
 		<div class="wrap">
-			<h1><?php _e( 'WooCommerce MyParcelbe Settings', 'woocommerce-myparcelbe' ); ?></h1>
+			<h1><?php _e( 'WooCommerce MyParcel BE Settings', 'woocommerce-myparcelbe' ); ?></h1>
 			<h2 class="nav-tab-wrapper">
 			<?php
 			foreach ($settings_tabs as $tab_slug => $tab_title ) {
@@ -216,7 +216,7 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'email_tracktrace',
-				'description'	=> __( 'Add the track&trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the track & trace email in your MyParcelbe backend.', 'woocommerce-myparcelbe' )
+				'description'	=> __( 'Add the track&trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the track & trace email in your MyParcel BE backend.', 'woocommerce-myparcelbe' )
 			)
 		);
 
@@ -242,7 +242,7 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'process_directly',
-				'description'	=> __( 'When you enable this option, shipments will be directly processed when sent to myparcelbe.', 'woocommerce-myparcelbe' )
+				'description'	=> __( 'When you enable this option, shipments will be directly processed when sent to MyParcel BE.', 'woocommerce-myparcelbe' )
 			)
 		);
 
@@ -255,7 +255,7 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'order_status_automation',
-				'description'	=> __( 'Automatically set order status to a predefined status after succesfull MyParcelbe export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track&trace in email</strong> option, otherwise the track&trace code will not be included in the customer email.', 'woocommerce-myparcelbe' )
+				'description'	=> __( 'Automatically set order status to a predefined status after succesfull MyParcel BE export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track&trace in email</strong> option, otherwise the track&trace code will not be included in the customer email.', 'woocommerce-myparcelbe' )
 			)
 		);		
 
@@ -344,7 +344,7 @@ class WooCommerce_MyParcelBE_Settings {
 					'option_name'	=> $option_name,
 					'id'			=> 'shipping_methods_package_types',
 					'package_types'	=> WooCommerce_MyParcelBE()->export->get_package_types(),
-					'description'	=> __( 'Select one or more shipping methods for each MyParcelbe package type', 'woocommerce-myparcelbe' ),
+					'description'	=> __( 'Select one or more shipping methods for each MyParcel BE package type', 'woocommerce-myparcelbe' ),
 				)
 			);
 		} else {
@@ -372,7 +372,7 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'connect_email',
-				'description'	=> sprintf(__( 'When you connect the customer email, MyParcelbe can send a Track&Trace email to this address. In your %sMyParcelbe backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-myparcelbe' ), '<a href="https://backoffice.myparcelbe.nl/ttsettingstable" target="_blank">', '</a>')
+				'description'	=> sprintf(__( 'When you connect the customer email, MyParcel BE can send a Track&Trace email to this address. In your %sMyParcel BE backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-myparcelbe' ), '<a href="https://backoffice.myparcelbe.nl/ttsettingstable" target="_blank">', '</a>')
 			)
 		);
 
@@ -512,7 +512,7 @@ class WooCommerce_MyParcelBE_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'label_description',
 				'size'			=> '25',
-				'description'	=> __( "With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcelbe Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date.", 'woocommerce-myparcelbe' ),
+				'description'	=> __( "With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcel BE Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date.", 'woocommerce-myparcelbe' ),
 			)
 		);
 
@@ -599,7 +599,7 @@ class WooCommerce_MyParcelBE_Settings {
 
 		add_settings_field(
 			'myparcelbe_checkout',
-			__( 'Enable MyParcelbe delivery options', 'woocommerce-myparcelbe' ),
+			__( 'Enable MyParcel BE delivery options', 'woocommerce-myparcelbe' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'delivery_options',

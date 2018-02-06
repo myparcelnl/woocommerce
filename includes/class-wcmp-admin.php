@@ -117,9 +117,9 @@ class WooCommerce_MyParcelBE_Admin {
 	public function bulk_actions() {
 		global $post_type;
 		$bulk_actions = array(
-			'wcmp_export'		=> __( 'MyParcelbe: Export', 'woocommerce-myparcelbe' ),
-			'wcmp_print'		=> __( 'MyParcelbe: Print', 'woocommerce-myparcelbe' ),
-			'wcmp_export_print'	=> __( 'MyParcelbe: Export & Print', 'woocommerce-myparcelbe' ),
+			'wcmp_export'		=> __( 'MyParcel BE: Export', 'woocommerce-myparcelbe' ),
+			'wcmp_print'		=> __( 'MyParcel BE: Print', 'woocommerce-myparcelbe' ),
+			'wcmp_export_print'	=> __( 'MyParcel BE: Export & Print', 'woocommerce-myparcelbe' ),
 		);
 
 
@@ -177,12 +177,12 @@ class WooCommerce_MyParcelBE_Admin {
 			'add_shipment'		=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&request=add_shipment&order_ids=' . $order_id ), 'wc_myparcelbe' ),
 				'img'		=> WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-up.png',
-				'alt'		=> esc_attr__( 'Export to MyParcelbe', 'woocommerce-myparcelbe' ),
+				'alt'		=> esc_attr__( 'Export to MyParcel BE', 'woocommerce-myparcelbe' ),
 			),
 			'get_labels'	=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&request=get_labels&order_ids=' . $order_id ), 'wc_myparcelbe' ),
 				'img'		=> WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-pdf.png',
-				'alt'		=> esc_attr__( 'Print MyParcelbe label', 'woocommerce-myparcelbe' ),
+				'alt'		=> esc_attr__( 'Print MyParcel BE label', 'woocommerce-myparcelbe' ),
 			),
 			'add_return'	=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&request=add_return&order_ids=' . $order_id ), 'wc_myparcelbe' ),
@@ -334,7 +334,7 @@ class WooCommerce_MyParcelBE_Admin {
 				$action = 'get_labels';
 				$target = ( isset(WooCommerce_MyParcelBE()->general_settings['download_display']) && WooCommerce_MyParcelBE()->general_settings['download_display'] == 'display') ? 'target="_blank"' : '';
 				$nonce = wp_create_nonce('wc_myparcelbe');
-				$label_button_text = esc_attr__( 'Print MyParcelbe label', 'woocommerce-myparcelbe' );
+				$label_button_text = esc_attr__( 'Print MyParcel BE label', 'woocommerce-myparcelbe' );
 				foreach ($consignments as $shipment_id => $shipment):
 					$shipment = WooCommerce_MyParcelBE()->export->get_shipment_data( $shipment_id, $order );
 					$label_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&request=get_labels&shipment_ids=' . $shipment_id ), 'wc_myparcelbe' );
