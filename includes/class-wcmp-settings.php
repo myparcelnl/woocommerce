@@ -30,8 +30,8 @@ class WooCommerce_MyParcelBE_Settings {
 	public function menu() {
 		add_submenu_page(
 			'woocommerce',
-			__( 'MyParcelbe', 'woocommerce-myparcelbe' ),
-			__( 'MyParcelbe', 'woocommerce-myparcelbe' ),
+			__( 'MyParcel BE', 'woocommerce-myparcelbe' ),
+			__( 'MyParcel BE', 'woocommerce-myparcelbe' ),
 			'manage_options',
 			'woocommerce_myparcelbe_settings',
 			array( $this, 'settings_page' )
@@ -58,7 +58,7 @@ class WooCommerce_MyParcelBE_Settings {
 		$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'general';
 		?>
 		<div class="wrap">
-			<h1><?php _e( 'WooCommerce MyParcelbe Settings', 'woocommerce-myparcelbe' ); ?></h1>
+			<h1><?php _e( 'WooCommerce MyParcel BE Settings', 'woocommerce-myparcelbe' ); ?></h1>
 			<h2 class="nav-tab-wrapper">
 			<?php
 			foreach ($settings_tabs as $tab_slug => $tab_title ) {

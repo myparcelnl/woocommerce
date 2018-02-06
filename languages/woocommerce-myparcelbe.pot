@@ -353,7 +353,7 @@ msgid "Checkout"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:63
-msgid "WooCommerce MyParcelbe Settings"
+msgid "WooCommerce MyParcel BE Settings"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:105
@@ -927,7 +927,7 @@ msgid "How to update your PHP version"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-msgid "WooCommerce MyParcelbe"
+msgid "WooCommerce MyParcel BE"
 msgstr ""
 
 #. Plugin URI of the plugin/theme

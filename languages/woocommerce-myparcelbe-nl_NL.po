@@ -55,8 +55,8 @@ msgstr "Email retourlabel"
 
 #: includes/class-wcmp-admin.php:287 includes/class-wcmp-settings.php:35
 #: includes/class-wcmp-settings.php:36
-msgid "MyParcelbe"
-msgstr "MyParcelbe"
+msgid "MyParcel BE"
+msgstr "MyParcel BE"
 
 #: includes/class-wcmp-admin.php:328 includes/class-wcmp-frontend.php:94
 msgid "Track&Trace"
@@ -356,8 +356,8 @@ msgid "Checkout"
 msgstr "Checkout"
 
 #: includes/class-wcmp-settings.php:63
-msgid "WooCommerce MyParcelbe Settings"
-msgstr "WooCommerce MyParcelbe Instellingen"
+msgid "WooCommerce MyParcel BE Settings"
+msgstr "WooCommerce MyParcel BE Instellingen"
 
 #: includes/class-wcmp-settings.php:105
 #, php-format
@@ -994,7 +994,7 @@ msgid "How to update your PHP version"
 msgstr "Hoe update ik mijn PHP versie?"
 
 #. Plugin Name of the plugin/theme
-msgid "WooCommerce MyParcelbe"
+msgid "WooCommerce MyParcel BE"
 msgstr ""
 
 #. Plugin URI of the plugin/theme

@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: WooCommerce MyParcelbe
-Plugin URI: http://www.myparcelbe.nl
-Description: Export your WooCommerce orders to MyParcelbe (www.myparcelbe.nl) and print labels directly from the WooCommerce admin
+Plugin Name: WooCommerce MyParcel BE
+Plugin URI: http://sendmyparcel.be/
+Description: Export your WooCommerce orders to MyParcel BE (http://sendmyparcel.be/) and print labels directly from the WooCommerce admin
 Author: Richard Perdaan
 Author URI: http://www.wpovernight.com
 Version: 2.4.6
