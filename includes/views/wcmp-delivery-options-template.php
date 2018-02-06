@@ -1,4 +1,4 @@
-<template id="myparcel-template">
+<template id="myparcelbe-template">
   <style>
     body{
       background-color: white !important;
@@ -504,8 +504,8 @@
     }
 
     .edit-tip > div{
-      width: 0; 
-      height: 0; 
+      width: 0;
+      height: 0;
       border-left: 2px solid transparent;
       border-right: 2px solid transparent;
       border-top: 3px solid darkorange;
@@ -515,10 +515,10 @@
       position:relative;
       display: block;
       content: '';
-      width: 0; 
+      width: 0;
       left: -2px;
       bottom: 3px;
-      height: 0; 
+      height: 0;
       border-left: 2px solid transparent;
       border-right: 2px solid transparent;
       border-top: 2px solid white;
@@ -538,13 +538,13 @@
 
   <!-- CUSTOM STYLES / STYLE OVERRIDES -->
   <style>
-  <?php if (isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) && WooCommerce_MyParcel()->checkout_settings['deliverydays_window'] == 0): ?>
+  <?php if (isset(WooCommerce_MyParcelBE()->checkout_settings['deliverydays_window']) && WooCommerce_MyParcelBE()->checkout_settings['deliverydays_window'] == 0): ?>
   #mypa-tabs-container,
   .mypa-date-slider-button {
     display: none;
   }
   <?php endif ?>
-  <?php if (!empty(WooCommerce_MyParcel()->checkout_settings['base_color'])): $base_color = WooCommerce_MyParcel()->checkout_settings['base_color']; ?>
+  <?php if (!empty(WooCommerce_MyParcelBE()->checkout_settings['base_color'])): $base_color = WooCommerce_MyParcelBE()->checkout_settings['base_color']; ?>
   .mypa-tab{
     background-color: <?php echo $base_color;?>;
     opacity: .5;
@@ -567,7 +567,7 @@
     background: <?php echo $base_color;?>;
   }
   <?php endif ?>
-  <?php if (!empty(WooCommerce_MyParcel()->checkout_settings['highlight_color'])): $highlight_color = WooCommerce_MyParcel()->checkout_settings['highlight_color']; ?>
+  <?php if (!empty(WooCommerce_MyParcelBE()->checkout_settings['highlight_color'])): $highlight_color = WooCommerce_MyParcelBE()->checkout_settings['highlight_color']; ?>
   input:checked ~ .mypa-highlight, input:checked ~ label.mypa-row-title span.mypa-highlight,
   .mypa-arrow-clickable:hover {
     color: <?php echo $highlight_color; ?>;
@@ -589,8 +589,8 @@
   }
   <?php endif ?>
   <?php
-  if (!empty(WooCommerce_MyParcel()->checkout_settings['custom_css'])) {
-    echo WooCommerce_MyParcel()->checkout_settings['custom_css'];
+  if (!empty(WooCommerce_MyParcelBE()->checkout_settings['custom_css'])) {
+    echo WooCommerce_MyParcelBE()->checkout_settings['custom_css'];
   }
   ?>
   </style>
@@ -645,7 +645,7 @@
                     <div class="mypa-checkmark-kick"></div>
                   </label>
                   <span class="mypa-highlight">Vanaf 16.00 uur</span><span class='mypa-address' id="mypa-pickup-address"></span>
-                  <div class="edit">  
+                  <div class="edit">
                     <div class="edit-stem">
                     </div>
                     <div class="edit-tip">
@@ -663,7 +663,7 @@
                     <div class="mypa-checkmark-kick"></div>
                   </label>
                   <span class="mypa-highlight">Vanaf 8.30 uur</span><span class='mypa-address' id="mypa-pickup-express-address"></span>
-                  <div class="edit">  
+                  <div class="edit">
                     <div class="edit-stem">
                     </div>
                     <div class="edit-tip">
