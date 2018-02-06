@@ -615,22 +615,17 @@ msgstr ""
 "postkantoor komt te liggen, vink dan deze optie aan."
 
 #: includes/class-wcmp-settings.php:446
-msgid "Insured shipment (from + &euro;0.50)"
-msgstr "Verzekerde verzending (vanaf + &euro;0.50)"
+msgid "Insured shipment (to &euro;500)"
+msgstr "Verzekerde verzending (tot &euro; 500)"
 
 #: includes/class-wcmp-settings.php:453
 msgid ""
-"By default, there is no insurance on the shipments. If you still want to "
-"insure the shipment, you can do that from &euro;0.50. We insure the purchase "
-"value of the shipment, with a maximum insured value of &euro; 5.000. Insured "
-"parcels always contain the options \"Home address only\" en \"Signature for "
-"delivery\""
+"There is no default insurance on the shipments. If you want to insure, you can do this. "
+"We insure the purchase value of your product, with a maximum insured value of &euro; 500."
 msgstr ""
 "Er zit standaard geen verzekering op de zendingen. Indien u toch wilt "
-"verzekeren kunt u dit doen vanaf &euro;0.50. Wij verzekeren de inkoopwaarde "
-"van uw product, met een maximale verzekerde waarde van &euro; 5.000. "
-"Verzekerde pakketten bevatten altijd de opties \"Alléén huisadres\" en "
-"\"Handtekening voor ontvangst\""
+"verzekeren kunt u dit doen. Wij verzekeren de inkoopwaarde "
+"van uw product, met een maximale verzekerde waarde van &euro; 500. "
 
 #: includes/class-wcmp-settings.php:460
 #: includes/views/wcmp-order-return-shipment-options.php:120
@@ -638,21 +633,9 @@ msgstr ""
 msgid "Insured amount"
 msgstr "Verzekerde waarde"
 
-#: includes/class-wcmp-settings.php:470
-msgid "Insured up to &euro; 50 (+ &euro; 0.50)"
-msgstr "Verzekerd tot &euro; 50 (+ &euro; 0.50)"
-
-#: includes/class-wcmp-settings.php:471
-msgid "Insured up to  &euro; 250 (+ &euro; 1.00)"
-msgstr "Verzekerd tot &euro; 250 (+ &euro; 1.00)"
-
 #: includes/class-wcmp-settings.php:472
 msgid "Insured up to  &euro; 500 (+ &euro; 1.65)"
 msgstr "Verzekerd tot &euro; 500 (+ &euro; 1.65)"
-
-#: includes/class-wcmp-settings.php:473
-msgid "> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)"
-msgstr "> &euro; 500 verzekerd (+ &euro; 1.65 / &euro; 500)"
 
 #: includes/class-wcmp-settings.php:480
 msgid "Insured amount (in euro)"
@@ -920,8 +903,8 @@ msgstr "Berekend gewicht: %s kg"
 
 #: includes/views/wcmp-order-return-shipment-options.php:49
 #: includes/views/wcmp-order-shipment-options.php:74
-msgid "Insured + home address only + signature on delivery"
-msgstr "Verzekerd + alléén huisadres + handtekening voor ontvangst"
+msgid "Insured to &euro; 500"
+msgstr "Verzekerd tot &euro; 500"
 
 #: includes/views/wcmp-order-return-shipment-options.php:61
 #: includes/views/wcmp-order-shipment-options.php:94
@@ -933,25 +916,10 @@ msgstr "Standaard verzekering tot €500 + handtekening voor ontvangst"
 msgid "Insurance"
 msgstr "Verzekering"
 
-#: includes/views/wcmp-order-return-shipment-options.php:105
-#: includes/views/wcmp-order-shipment-options.php:141
-msgid "Insured up to &euro; 50"
-msgstr "Verzekerd tot &euro; 50"
-
-#: includes/views/wcmp-order-return-shipment-options.php:106
-#: includes/views/wcmp-order-shipment-options.php:142
-msgid "Insured up to  &euro; 250"
-msgstr "Verzekerd tot &euro; 250"
-
 #: includes/views/wcmp-order-return-shipment-options.php:107
 #: includes/views/wcmp-order-shipment-options.php:143
 msgid "Insured up to  &euro; 500"
 msgstr "Verzekerd tot &euro; 500"
-
-#: includes/views/wcmp-order-return-shipment-options.php:108
-#: includes/views/wcmp-order-shipment-options.php:144
-msgid "> &euro; 500 insured"
-msgstr "> &euro; 500 verzekerd"
 
 #: includes/views/wcmp-order-return-shipment-options.php:137
 #: includes/views/wcmp-order-shipment-options.php:182
@@ -1107,9 +1075,6 @@ msgstr ""
 
 #~ msgid "Insured up to  &euro; 500 (+ &euro; 1.50)"
 #~ msgstr "Verzekerd tot &euro; 500 (+ &euro; 1.50)"
-
-#~ msgid "> &euro; 500 insured (+ &euro; 1.50)"
-#~ msgstr "> &euro; 500 verzekerd (+ &euro; 1.50)"
 
 #~ msgid "Home address only + signature on delivery"
 #~ msgstr "Alléén huisadres + Handtekening voor ontvangst"

@@ -72,7 +72,7 @@
 			'value'	=> isset($shipment_options['return']) ? $shipment_options['return'] : 0,
 		),
 		'[insured]'	=> array(
-			'label'	=> __( 'Insured + home address only + signature on delivery', 'woocommerce-myparcelbe' ),
+			'label'	=> __( 'Insured to &euro; 500', 'woocommerce-myparcelbe' ),
 			'value'	=> $shipment_options['insured'],
 			'class'	=> 'insured',
 		),
@@ -139,10 +139,7 @@
 			<td>
 				<?php
 				$insured_amounts = array(
-					'49'		=> __( 'Insured up to &euro; 50' , 'woocommerce-myparcelbe' ).' (+ &euro; 0.50)',
-					'249'		=> __( 'Insured up to  &euro; 250' , 'woocommerce-myparcelbe' ).' (+ &euro; 1.00)',
 					'499'		=> __( 'Insured up to  &euro; 500' , 'woocommerce-myparcelbe' ).' (+ &euro; 1.65)',
-					''			=> __( '> &euro; 500 insured' , 'woocommerce-myparcelbe' ).' (+ &euro; 1.65 / &euro; 500)',
 				);
 				printf( '<select name="%s" class="insured_amount">', $name );
 				foreach ( $insured_amounts as $key => $label ) {
