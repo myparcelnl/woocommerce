@@ -456,51 +456,18 @@ class WooCommerce_MyParcelBE_Settings {
 		
 		add_settings_field(
 			'insured',
-			__( 'Insured shipment (from + &euro;0.50)', 'woocommerce-myparcelbe' ),
+			__( 'Insured shipment (to &euro;500)', 'woocommerce-myparcelbe' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'insured',
-				'description'	=> __( 'By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that from &euro;0.50. We insure the purchase value of the shipment, with a maximum insured value of &euro; 5.000. Insured parcels always contain the options "Home address only" en "Signature for delivery"', 'woocommerce-myparcelbe' ),
+				'description'	=> __( 'There is no default insurance on the shipments. If you want to insure, you can do this. We insure the purchase value of your product, with a maximum insured value of &euro; 500.', 'woocommerce-myparcelbe' ),
 				'class'			=> 'insured',
 			)
 		);
 
-		add_settings_field(
-			'insured_amount',
-			__( 'Insured amount', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'select' ),
-			$option_group,
-			'defaults',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'insured_amount',
-				'default'		=> 'standard',
-				'class'			=> 'insured_amount',
-				'options' 		=> array(
-					'49'		=> __( 'Insured up to &euro; 50 (+ &euro; 0.50)' , 'woocommerce-myparcelbe' ),
-					'249'		=> __( 'Insured up to  &euro; 250 (+ &euro; 1.00)' , 'woocommerce-myparcelbe' ),
-					'499'		=> __( 'Insured up to  &euro; 500 (+ &euro; 1.65)' , 'woocommerce-myparcelbe' ),
-					''			=> __( '> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)' , 'woocommerce-myparcelbe' ),
-				),
-			)
-		);
-
-		add_settings_field(
-			'insured_amount_custom',
-			__( 'Insured amount (in euro)', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'text_input' ),
-			$option_group,
-			'defaults',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'insured_amount_custom',
-				'size'			=> '5',
-				'class'			=> 'insured_amount',
-			)
-		);
 
 		add_settings_field(
 			'label_description',

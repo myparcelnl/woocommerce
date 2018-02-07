@@ -572,16 +572,13 @@ msgid ""
 msgstr ""
 
 #: includes/class-wcmp-settings.php:446
-msgid "Insured shipment (from + &euro;0.50)"
+msgid "Insured shipment (to + &euro;500)"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:453
 msgid ""
-"By default, there is no insurance on the shipments. If you still want to "
-"insure the shipment, you can do that from &euro;0.50. We insure the purchase "
-"value of the shipment, with a maximum insured value of &euro; 5.000. Insured "
-"parcels always contain the options \"Home address only\" en \"Signature for "
-"delivery\""
+"There is no default insurance on the shipments. If you want to insure, you can do this. "
+"We insure the purchase value of your product, with a maximum insured value of &euro; 500."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:460
@@ -590,24 +587,8 @@ msgstr ""
 msgid "Insured amount"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:470
-msgid "Insured up to &euro; 50 (+ &euro; 0.50)"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:471
-msgid "Insured up to  &euro; 250 (+ &euro; 1.00)"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:472
 msgid "Insured up to  &euro; 500 (+ &euro; 1.65)"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:473
-msgid "> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:480
-msgid "Insured amount (in euro)"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:494
@@ -856,7 +837,7 @@ msgstr ""
 
 #: includes/views/wcmp-order-return-shipment-options.php:49
 #: includes/views/wcmp-order-shipment-options.php:74
-msgid "Insured + home address only + signature on delivery"
+msgid "Insured to &euro; 500"
 msgstr ""
 
 #: includes/views/wcmp-order-return-shipment-options.php:61
@@ -869,24 +850,9 @@ msgstr ""
 msgid "Insurance"
 msgstr ""
 
-#: includes/views/wcmp-order-return-shipment-options.php:105
-#: includes/views/wcmp-order-shipment-options.php:141
-msgid "Insured up to &euro; 50"
-msgstr ""
-
-#: includes/views/wcmp-order-return-shipment-options.php:106
-#: includes/views/wcmp-order-shipment-options.php:142
-msgid "Insured up to  &euro; 250"
-msgstr ""
-
 #: includes/views/wcmp-order-return-shipment-options.php:107
 #: includes/views/wcmp-order-shipment-options.php:143
 msgid "Insured up to  &euro; 500"
-msgstr ""
-
-#: includes/views/wcmp-order-return-shipment-options.php:108
-#: includes/views/wcmp-order-shipment-options.php:144
-msgid "> &euro; 500 insured"
 msgstr ""
 
 #: includes/views/wcmp-order-return-shipment-options.php:137
