@@ -16,19 +16,11 @@ if ( !class_exists( 'WooCommerce_MyParcel_Admin' ) ) :
 class WooCommerce_MyParcel_Admin {
 	
 	function __construct()	{
-
-	    // Check if WooCommerce > 3.3.0 is used and select the correct action_notation
-        if ( version_compare( WOOCOMMERCE_VERSION, '3.3.0', '>=' ) ) {
-            $action_notation = 'wc';
-        } else {
-            $action_notation = 'order';
-        }
-
-		add_action( 'woocommerce_admin_'.$action_notation.'_actions_end', array( $this, 'order_list_shipment_options' ), 9999 );
+		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_shipment_options' ), 9999 );
 		// add_action( 'woocommerce_admin_'.$action_notation.'_actions_end', array( $this, 'order_list_return_shipment_options' ), 9999 );
 		add_action(	'admin_footer', array( $this, 'bulk_actions' ) ); 
 		add_action( 'admin_footer', array( $this, 'offset_dialog' ) );
-		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_'.$action_notation.'_actions' ), 20 );
+		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_wc_actions' ), 20 );
 		add_action( 'add_meta_boxes_shop_order', array( $this, 'shop_order_metabox' ) );
 		add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'single_order_shipment_options' ) );
 
