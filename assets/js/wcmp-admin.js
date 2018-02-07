@@ -266,7 +266,7 @@ jQuery( function( $ ) {
 
 
 	// Single actions click. The .wc_actions .single_wc_actions for support wc > 3.3.0
-	$(".order_actions, .single_order_actions .wc_actions, .single_wc_actions")
+	$(".order_actions, .single_order_actions, .wc_actions, .single_wc_actions")
 		.on( 'click', 'a.button.myparcel', function( event ) {
 			event.preventDefault();
 			var button_action = $( this ).data('request');
