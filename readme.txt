@@ -1,9 +1,8 @@
 === Plugin Name ===
-Contributors: pomegranate
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9.2
-Stable tag: 2.4.6
+Stable tag: 2.4.7
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -88,6 +87,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+
+= 2.4.7 (2018-02-07) =
+* Improvement: WooCommerce 3.3.1 compatibility
 
 = 2.4.6 (2018-02-01) =
 * Improvement: WooCommerce 3.3 compatibility
