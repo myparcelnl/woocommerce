@@ -127,54 +127,7 @@
 	</tr>
 	<?php endforeach ?>
 </table>
-<table class="wcmyparcelbe_settings_table">
-	<?php
-	$insured_amount = isset($shipment_options['insurance']['amount']) ? (int) $shipment_options['insurance']['amount'] : 0;
-	$insured_amount = $insured_amount / 100; // frontend is in euros
-	$name = "myparcelbe_options[{$order_id}][insured_amount]";
-	if (isset($recipient['cc']) && $recipient['cc'] == 'NL') {
-		?>
-		<tr>
-			<td><?php _e( 'Insurance', 'woocommerce-myparcelbe' ) ?></td>
-			<td>
-				<?php
-				$insured_amounts = array(
-					'499'		=> __( 'Insured up to  &euro; 500' , 'woocommerce-myparcelbe' ).' (+ &euro; 1.65)',
-				);
-				printf( '<select name="%s" class="insured_amount">', $name );
-				foreach ( $insured_amounts as $key => $label ) {
-					printf( '<option value="%s"%s>%s</option>', $key, selected( $insured_amount, $key, false ), $label );
-				}
-				echo '</select>';
-				?>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<?php _e( 'Insured amount', 'woocommerce-myparcelbe' ) ?>
-			</td>
-			<td>
-				<?php
-				$name = "myparcelbe_options[{$order_id}][insured_amount]";
-				printf('<input type="text" name="%s" value="%s" style="width:100%%" class="insured_amount">', $name, $insured_amount);
-				?>
-			</td>
-		</tr>
-		<?php
-	} else {
-		printf('<tr><td colspan="2" style="display:none;"><input type="hidden" name="%s" value="%s"></td></tr>', $name, $insured_amount );
-	}
-	?>
-	<tr>
-		<td><?php _e( 'Custom ID (top left on label)', 'woocommerce-myparcelbe' ) ?></td>
-		<td>
-			<?php
-			$name = "myparcelbe_options[{$order_id}][label_description]";
-			printf('<input type="text" name="%s" value="%s" style="width:100%%">', $name, $shipment_options['label_description']);
-			?>
-		</td>
-	</tr>
-</table>
+
 
 <div class="wcmp_save_shipment_settings">
 	<a class="button save" data-order="<?php echo $order_id; ?>"><?php _e( 'Save', 'woocommerce-myparcelbe' ) ?></a>
