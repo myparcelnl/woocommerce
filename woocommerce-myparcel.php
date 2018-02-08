@@ -6,7 +6,7 @@ Description: Export your WooCommerce orders to MyParcel BE (http://sendmyparcel.
 Author: Richard Perdaan
 Author URI: http://www.wpovernight.com
 Version: 2.4.7
-Text Domain: woocommerce-myparcel
+Text Domain: woocommerce-myparcelbe
 
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
