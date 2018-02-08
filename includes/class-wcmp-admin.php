@@ -156,20 +156,20 @@ class WooCommerce_MyParcelBE_Admin {
 		}
 	}
 
-	/**
-	 * Add print actions to the orders listing
+    /**
+     * Add print actions to the orders listing
      * Support wc > 3.3.0
      * Call the function admin_order_actions for the same settings
      *
-	 * @param $order
-	 */
-	public function admin_wc_actions( $order ) {
-		return $this->admin_order_actions( $order );
-	}
+     * @param $order 
+     */
+    public function admin_wc_actions( $order ) {
+        return $this->admin_order_actions( $order );
+    }
 
-	/**
-	 * Add print actions to the orders listing
-	 */
+    /**
+     * Add print actions to the orders listing
+     */
 	public function admin_order_actions( $order ) {
 		if (empty($order)) {
 			return;
