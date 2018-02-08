@@ -221,7 +221,7 @@ class WooCommerce_MyParcelBE_Admin {
 			<?php
 		}
 		?>
-		<img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_spinner waiting"/>
+		<img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_spinner waiting" style="width:17px; margin: 5px 3px; pointer-events: none;"/>
 		<?php
 	}
 
