@@ -1,9 +1,9 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WC_MyParcel_API' ) ) :
+if ( !class_exists( 'WC_MyParcelbe_API' ) ) :
 
-class WC_MyParcel_API extends WC_MyParcel_REST_Client {
+class WC_MyParcelbe_API extends WC_MyParcelBE_REST_Client {
 	/** @var API URL */
 	public $APIURL = "https://api.myparcel.nl/";
 
@@ -13,7 +13,7 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 	/**
 	 * Default constructor
 	 *
-	 * @param  string  $key     API Key provided by MyParcel
+	 * @param  string  $key     API Key provided by MyParcelbe
 	 * @return void
 	 */
 	function __construct( $key ) {
@@ -190,8 +190,8 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 	 */
 	public function get_delivery_options ( $params = array(), $raw = false ) {
 		$endpoint = 'delivery_options';
-		$checkout_settings = WooCommerce_MyParcel()->checkout_settings;
-		if (isset(WooCommerce_MyParcel()->checkout_settings['monday_delivery']) ) {
+		$checkout_settings = WooCommerce_MyParcelBE()->checkout_settings;
+		if (isset(WooCommerce_MyParcelBE()->checkout_settings['monday_delivery']) ) {
 			$params['monday_delivery'] = 1;
 		}
 

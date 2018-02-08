@@ -5,7 +5,7 @@
 	height: 26px;
 	padding: 3px 2px;
 }
-#myparcel.postbox a.button.myparcel {
+#myparcelbe.postbox a.button.myparcelbe {
 	padding: 2px 5px 0;
 }
 
@@ -23,11 +23,11 @@
 	display: block;
 }
 
-ul.wcmyparcel_shipment_summary {
+ul.wcmyparcelbe_shipment_summary {
     list-style: none;
 }
 
-ul.wcmyparcel_shipment_summary li:before {
+ul.wcmyparcelbe_shipment_summary li:before {
     content: "+";
     margin-right: 4px;
 }
@@ -47,7 +47,7 @@ ul.wcmyparcel_shipment_summary li:before {
 	margin-right: 8px;
 }
 
-.wcmp_shipment_options_form .wcmyparcel_settings_table td {
+.wcmp_shipment_options_form .wcmyparcelbe_settings_table td {
 	border: none;
 	padding: 0px 7px 2px !important;
 	vertical-align: middle !important;
@@ -138,7 +138,7 @@ table.tracktrace_status td.wcmp-create-label {
 }
 
 /* bulk export options styling */
-.wcmp_bulk_options_form .wcmyparcel_settings_table td {
+.wcmp_bulk_options_form .wcmyparcelbe_settings_table td {
 	border: none;
 	padding: 0px 7px 2px !important;
 	vertical-align: middle !important;
