@@ -17,10 +17,9 @@ class WooCommerce_MyParcelBE_Admin {
 	
 	function __construct()	{
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_shipment_options' ), 9999 );
-		//add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_return_shipment_options' ), 9999 );
-		add_action(	'admin_footer', array( $this, 'bulk_actions' ) ); 
+		add_action(	'admin_footer', array( $this, 'bulk_actions' ) );
 		add_action( 'admin_footer', array( $this, 'offset_dialog' ) );
-		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_order_actions' ), 20 );
+		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_wc_actions' ), 20 );
 		add_action( 'add_meta_boxes_shop_order', array( $this, 'shop_order_metabox' ) );
 		add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'single_order_shipment_options' ) );
 
@@ -157,10 +156,20 @@ class WooCommerce_MyParcelBE_Admin {
 		}
 	}
 
+    /**
+     * Add print actions to the orders listing
+     * Support wc > 3.3.0
+     * Call the function admin_order_actions for the same settings
+     *
+     * @param $order 
+     */
+    public function admin_wc_actions( $order ) {
+        return $this->admin_order_actions( $order );
+    }
 
-	/**
-	 * Add print actions to the orders listing
-	 */
+    /**
+     * Add print actions to the orders listing
+     */
 	public function admin_order_actions( $order ) {
 		if (empty($order)) {
 			return;
@@ -212,7 +221,7 @@ class WooCommerce_MyParcelBE_Admin {
 			<?php
 		}
 		?>
-		<img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_spinner waiting"/>
+		<img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_spinner waiting" style="width:17px; margin: 5px 3px; pointer-events: none;"/>
 		<?php
 	}
 
@@ -311,9 +320,14 @@ class WooCommerce_MyParcelBE_Admin {
 			return;
 		}
 
-		// show buttons
-		echo '<div class="single_order_actions">';
-		$this->admin_order_actions( $order, false );
+		// show buttons and check if WooCommerce > 3.3.0 is used and select the correct function and class
+		if ( version_compare( WOOCOMMERCE_VERSION, '3.3.0', '>=' ) ) {
+			echo '<div class="single_wc_actions">';
+			$this->admin_wc_actions( $order, false );
+		} else {
+			echo '<div class="single_order_actions">';
+			$this->admin_order_actions( $order, false );
+		}
 		echo '</div>';
 
 		$consignments = $this->get_order_shipments( $order );
