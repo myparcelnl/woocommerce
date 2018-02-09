@@ -403,19 +403,6 @@ class WooCommerce_MyParcelBE_Settings {
 		);
 		
 		add_settings_field(
-			'only_recipient',
-			__( 'Home address only', 'woocommerce-myparcelbe' ).' (+ &euro;0.29)',
-			array( $this->callbacks, 'checkbox' ),
-			$option_group,
-			'defaults',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'only_recipient',
-				'description'	=> __( "If you don't want the parcel to be delivered at the neighbours, choose this option.", 'woocommerce-myparcelbe' )
-			)
-		);
-		
-		add_settings_field(
 			'signature',
 			__( 'Signature on delivery', 'woocommerce-myparcelbe' ).' (+ &euro;0.36)',
 			array( $this->callbacks, 'checkbox' ),
@@ -427,20 +414,7 @@ class WooCommerce_MyParcelBE_Settings {
 				'description'	=> __( 'The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signuture will be required.', 'woocommerce-myparcelbe' )
 			)
 		);
-		
-		// add_settings_field(
-		// 	'home_address_signature',
-		// 	__( 'Home address only + signature on delivery', 'woocommerce-myparcelbe' ).' (+ &euro;0.42)',
-		// 	array( $this->callbacks, 'checkbox' ),
-		// 	$option_group,
-		// 	'defaults',
-		// 	array(
-		// 		'option_name'	=> $option_name,
-		// 		'id'			=> 'home_address_signature',
-		// 		'description'	=> __( 'This is the secure option. The parcel will only be delivered at the recipient address, who has to sign for delivery. This way you can be certain the parcel will be handed to the recipient.', 'woocommerce-myparcelbe' )
-		// 	)
-		// );
-		
+
 		add_settings_field(
 			'return',
 			__( 'Return if no answer', 'woocommerce-myparcelbe' ),
@@ -590,18 +564,6 @@ class WooCommerce_MyParcelBE_Settings {
 					'all_methods'		=> __( 'All shipping methods' , 'woocommerce-myparcelbe' ),
 				),
 				'description'	=> __( 'To associate specific shipping methods with parcels, see the Default export settings tab. Note that the delivery options will be automatically hidden for foreign addresses, regardless of this setting', 'woocommerce-myparcelbe' ),
-			)
-		);
-
-		add_settings_field(
-			'only_recipient',
-			__( 'Home address only', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'delivery_option_enable' ),
-			$option_group,
-			'delivery_options',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'only_recipient',
 			)
 		);
 

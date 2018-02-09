@@ -241,7 +241,6 @@ class WooCommerce_MyParcelBE {
 				'email'					=> 'connect_email',
 				'telefoon'				=> 'connect_phone',
 				'extragroot'			=> 'large_format',
-				'huisadres'				=> 'only_recipient',
 				'handtekening'			=> 'signature',
 				'retourbgg'				=> 'return',
 				'kenmerk'				=> 'label_description',

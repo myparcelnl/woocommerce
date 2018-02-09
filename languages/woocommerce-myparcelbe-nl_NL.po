@@ -262,10 +262,6 @@ msgstr "Standaard levering"
 msgid "Signature on delivery"
 msgstr "Handtekening voor ontvangst"
 
-#: includes/class-wcmp-frontend.php:426
-msgid "Home address only delivery"
-msgstr "Alleen afleveren bij ontvanger"
-
 #: includes/class-wcmp-nlpostcode-fields.php:203
 #: includes/class-wcmp-nlpostcode-fields.php:204
 #: includes/class-wcmp-nlpostcode-fields.php:373
@@ -566,13 +562,6 @@ msgstr ""
 "&nbsp;2,45 doorberekend.<br/><strong>Let op!</strong> Indien het pakket "
 "groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een "
 "pallettarief van &euro;&nbsp;70,00 in rekening gebracht."
-
-#: includes/class-wcmp-settings.php:394 includes/class-wcmp-settings.php:617
-#: includes/views/wcmp-order-return-shipment-options.php:35
-#: includes/views/wcmp-order-shipment-options.php:60
-#: includes/views/wcmp-order-shipment-summary.php:13
-msgid "Home address only"
-msgstr "Alleen huisadres"
 
 #: includes/class-wcmp-settings.php:401
 msgid ""
@@ -1075,10 +1064,6 @@ msgstr ""
 
 #~ msgid "Insured up to  &euro; 500 (+ &euro; 1.50)"
 #~ msgstr "Verzekerd tot &euro; 500 (+ &euro; 1.50)"
-
-#~ msgid "Home address only + signature on delivery"
-#~ msgstr "Alléén huisadres + Handtekening voor ontvangst"
-
 #~ msgid ""
 #~ "This is the secure option. The parcel will only be delivered at the "
 #~ "recipient address, who has to sign for delivery. This way you can be "

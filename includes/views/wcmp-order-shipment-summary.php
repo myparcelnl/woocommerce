@@ -13,7 +13,6 @@ printf('%s: %s', __( 'Shipment type', 'woocommerce-myparcelbe' ), $package_types
 	// Options
 	$option_strings = array(
 		'large_format'		=> __( 'Extra large size', 'woocommerce-myparcelbe' ),
-		'only_recipient'	=> __( 'Home address only', 'woocommerce-myparcelbe' ),
 		'signature'			=> __( 'Signature on delivery', 'woocommerce-myparcelbe' ),
 		'return'			=> __( 'Return if no answer', 'woocommerce-myparcelbe' ),
 	);

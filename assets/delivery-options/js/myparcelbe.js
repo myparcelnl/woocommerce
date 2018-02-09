@@ -525,7 +525,7 @@
   };
 
   renderDeliveryOptions = function(date) {
-    var checked, combinatedPrice, combine, deliveryTimes, html, hvoPrice, hvoText, i, index, json, len, onlyRecipientPrice, onlyRecipientText, price, ref, ref1, time;
+    var checked, combine, deliveryTimes, html, hvoPrice, hvoText, i, index, json, len, price, ref, ref1, time;
     $('#mypa-delivery-options').html('');
     html = '';
     deliveryTimes = window.mypabe.sortedDeliverytimes[date];
@@ -556,23 +556,6 @@
     if (hvoText == null) {
       hvoText = HVO_DEFAULT_TEXT;
     }
-    onlyRecipientPrice = window.mypabe.settings.price.only_recipient;
-    onlyRecipientText = (ref1 = window.mypabe.settings.text) != null ? ref1.only_recipient : void 0;
-    if (onlyRecipientText == null) {
-      onlyRecipientText = AO_DEFAULT_TEXT;
-    }
-    combinatedPrice = window.mypabe.settings.price.combi_options;
-    combine = onlyRecipientPrice !== 'disabled' && hvoPrice !== 'disabled' && (combinatedPrice != null);
-    if (combine) {
-      html += "<div class='mypa-combination-price'><span class='mypa-price mypa-hidden'>" + combinatedPrice + "</span>";
-    }
-    if (onlyRecipientPrice !== DISABLED) {
-      html += "<label for=\"mypa-only-recipient\" class='mypa-row-subitem'>\n  <input type=\"checkbox\" name=\"mypa-only-recipient\" class=\"mypa-onoffswitch-checkbox\" id=\"mypa-only-recipient\">\n  <div class=\"mypa-switch-container\">\n    <div class=\"mypa-onoffswitch\">\n      <label class=\"mypa-onoffswitch-label\" for=\"mypa-only-recipient\">\n        <span class=\"mypa-onoffswitch-inner\"></span>\n        <span class=\"mypa-onoffswitch-switch\"></span>\n      </label>\n    </div>\n  </div>\n  <span>" + onlyRecipientText;
-      if (onlyRecipientPrice != null) {
-        html += "<span class='mypa-price'>" + onlyRecipientPrice + "</span>";
-      }
-      html += "</span></label>";
-    }
     if (hvoPrice !== DISABLED) {
       html += "<label for=\"mypa-signed\" class='mypa-row-subitem'>\n  <input type=\"checkbox\" name=\"mypa-signed\" class=\"mypa-onoffswitch-checkbox\" id=\"mypa-signed\">\n  <div class=\"mypa-switch-container\">\n    <div class=\"mypa-onoffswitch\">\n      <label class=\"mypa-onoffswitch-label\" for=\"mypa-signed\">\n        <span class=\"mypa-onoffswitch-inner\"></span>\n      <span class=\"mypa-onoffswitch-switch\"></span>\n      </label>\n    </div>\n  </div>\n  <span>" + hvoText;
       if (hvoPrice) {
@@ -592,9 +575,7 @@
         $('input#mypa-only-recipient').prop('checked', true).prop('disabled', true);
         $('label[for=mypa-only-recipient] span.mypa-price').html('incl.');
       } else {
-        onlyRecipientPrice = window.mypabe.settings.price.only_recipient;
         $('input#mypa-only-recipient').prop('disabled', false);
-        $('label[for=mypa-only-recipient] span.mypa-price').html(onlyRecipientPrice);
       }
       return checkCombination();
     });
