@@ -539,8 +539,23 @@ class WooCommerce_MyParcel_Export {
 			'company'		=> (string) WCX_Order::get_prop( $order, 'shipping_company' ),
 			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
 			'phone'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_phone']) ? WCX_Order::get_prop( $order, 'billing_phone' ) : '',
+
 		);
 
+		// when the channelengine plugin is activated, copy the barcode and place them in the ChannelEngine - Track & Trace field
+		if( is_plugin_active( 'channelengine-woocommerce/woocommerce-channel-engine.php' ) ) {
+
+			$order_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+
+			if (!empty($order_shipments)) {
+				foreach ( array_keys( $order_shipments ) as $key ) {
+					$test = $key;
+				}
+
+				$tracking = $order_shipments[ $test ][ tracktrace ]; // auto
+				update_post_meta( $order->id, '_shipping_ce_track_and_trace', $tracking );
+			}
+		}
 
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
 		if ( $shipping_country == 'NL' ) {
@@ -570,6 +585,7 @@ class WooCommerce_MyParcel_Export {
 				'street'					=> (string) WCX_Order::get_prop( $order, 'shipping_address_1' ),
 				'street_additional_info'	=> (string) WCX_Order::get_prop( $order, 'shipping_address_2' ),
 				'region'					=> (string) WCX_Order::get_prop( $order, 'shipping_state' ),
+
 			);
 		}
 
