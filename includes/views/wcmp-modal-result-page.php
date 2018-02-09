@@ -4,24 +4,24 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<?php
 		wp_enqueue_script(
-			'wcmyparcel-export',
-			WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-admin.js',
+			'wcmyparcelbe-export',
+			WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-admin.js',
 			array( 'jquery', 'thickbox' ),
 			WC_MYPARCEL_VERSION
 		);
 		wp_localize_script(
-			'wcmyparcel-export',
-			'wc_myparcel',
+			'wcmyparcelbe-export',
+			'wc_myparcelbe',
 			array(  
 				'ajax_url'			=> admin_url( 'admin-ajax.php' ),
-				'nonce'				=> wp_create_nonce('wc_myparcel'),
-				'download_display'	=> isset(WooCommerce_MyParcel()->general_settings['download_display'])?WooCommerce_MyParcel()->general_settings['download_display']:'',
+				'nonce'				=> wp_create_nonce('wc_myparcelbe'),
+				'download_display'	=> isset(WooCommerce_MyParcelBE()->general_settings['download_display'])?WooCommerce_MyParcelBE()->general_settings['download_display']:'',
 			)
 		);
 
 		wp_enqueue_style(
 			'wcmp-admin-styles',
-			WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
+			WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
 			array(),
 			WC_MYPARCEL_VERSION,
 			'all'
@@ -31,14 +31,14 @@
 		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 			wp_enqueue_style(
 				'wcmp-admin-styles-legacy',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
+				WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
 				array(),
 				WC_MYPARCEL_VERSION,
 				'all'
 			);
 		}
 
-		wp_enqueue_style( 'wcmyparcel-admin-styles' );	
+		wp_enqueue_style( 'wcmyparcelbe-admin-styles' );
 		wp_enqueue_style( 'colors' );
 		wp_enqueue_style( 'media' );
 		wp_enqueue_script( 'jquery' );
@@ -47,7 +47,7 @@
 	?>
 </head>
 <body style="padding:10px 20px;">
-	<?php 
+	<?php
 	switch ($request) {
 		case 'add_return':
 			printf('<h3>%s</h3>', __('Return email successfully sent to customer') );
