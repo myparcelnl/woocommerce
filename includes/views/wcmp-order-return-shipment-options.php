@@ -43,10 +43,6 @@
 			'value'	=> isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,
 			'cost'	=> !(WooCommerce_MyParcelBE()->export->is_pickup( $order )) ? '0.36' : '',
 		),
-		'[return]'	=> array(
-			'label'	=> __( 'Return if no answer', 'woocommerce-myparcelbe' ),
-			'value'	=> isset($shipment_options['return']) ? $shipment_options['return'] : 0,
-		),
 		'[insured]'	=> array(
 			'label'	=> __( 'Verzekerd to &euro; 500', 'woocommerce-myparcelbe' ),
 			'value'	=> $shipment_options['insured'],

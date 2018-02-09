@@ -555,13 +555,6 @@ msgid ""
 "signuture will be required."
 msgstr ""
 
-#: includes/class-wcmp-settings.php:433
-#: includes/views/wcmp-order-return-shipment-options.php:45
-#: includes/views/wcmp-order-shipment-options.php:70
-#: includes/views/wcmp-order-shipment-summary.php:15
-msgid "Return if no answer"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:440
 msgid ""
 "By default, a parcel will be offered twice. After two unsuccessful delivery "
