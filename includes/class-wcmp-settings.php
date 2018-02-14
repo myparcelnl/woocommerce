@@ -391,7 +391,7 @@ class WooCommerce_MyParcelBE_Settings {
 
 		add_settings_field(
 			'large_format',
-			__( 'Extra large size', 'woocommerce-myparcelbe' ).' (+ &euro;2.45)',
+			__( 'Extra large size', 'woocommerce-myparcelbe' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
@@ -404,7 +404,7 @@ class WooCommerce_MyParcelBE_Settings {
 		
 		add_settings_field(
 			'signature',
-			__( 'Signature on delivery', 'woocommerce-myparcelbe' ).' (+ &euro;0.36)',
+			__( 'Signature on delivery', 'woocommerce-myparcelbe' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'defaults',
