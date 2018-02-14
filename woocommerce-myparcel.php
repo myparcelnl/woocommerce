@@ -243,7 +243,6 @@ class WooCommerce_MyParcelBE {
 				'extragroot'			=> 'large_format',
 				'huisadres'				=> 'only_recipient',
 				'handtekening'			=> 'signature',
-				'retourbgg'				=> 'return',
 				'kenmerk'				=> 'label_description',
 				'verpakkingsgewicht'	=> 'empty_parcel_weight',
 				'verzekerd'				=> 'insured',
