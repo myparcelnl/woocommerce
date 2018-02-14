@@ -581,13 +581,6 @@ msgstr ""
 "geadresseerde niet thuis zijn, dan wordt het pakket bij de buren afgegeven. "
 "Er moet in beide gevallen voor worden getekend."
 
-#: includes/class-wcmp-settings.php:433
-#: includes/views/wcmp-order-return-shipment-options.php:45
-#: includes/views/wcmp-order-shipment-options.php:70
-#: includes/views/wcmp-order-shipment-summary.php:15
-msgid "Return if no answer"
-msgstr "Retour bij geen gehoor"
-
 #: includes/class-wcmp-settings.php:440
 msgid ""
 "By default, a parcel will be offered twice. After two unsuccessful delivery "

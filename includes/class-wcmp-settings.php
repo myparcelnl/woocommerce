@@ -414,20 +414,7 @@ class WooCommerce_MyParcelBE_Settings {
 				'description'	=> __( 'The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signuture will be required.', 'woocommerce-myparcelbe' )
 			)
 		);
-
-		add_settings_field(
-			'return',
-			__( 'Return if no answer', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'checkbox' ),
-			$option_group,
-			'defaults',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'return',
-				'description'	=> __( 'By default, a parcel will be offered twice. After two unsuccessful delivery attempts, the parcel will be available at the nearest pickup point for two weeks. There it can be picked up by the recipient with the note that was left by the courier. If you want to receive the parcel back directly and NOT forward it to the pickup point, enable this option.', 'woocommerce-myparcelbe' )
-			)
-		);
-		
+    
 		add_settings_field(
 			'insured',
 			__( 'Insured shipment (to &euro;500)', 'woocommerce-myparcelbe' ),
@@ -441,7 +428,6 @@ class WooCommerce_MyParcelBE_Settings {
 				'class'			=> 'insured',
 			)
 		);
-
 
 		add_settings_field(
 			'label_description',
@@ -802,25 +788,6 @@ class WooCommerce_MyParcelBE_Settings {
 	 * @return void.
 	 */
 	public function default_settings( $option ) {
-		// $default = array(
-		// 	'process'			=> '1',
-		// 	'keep_consignments'	=> '0',
-		// 	'download_display'	=> 'download',
-		// 	'email'				=> '1',
-		// 	'telefoon'			=> '1',
-		// 	'extragroot'		=> '0',
-		// 	'huisadres'			=> '0',
-		// 	'handtekening'		=> '0',
-		// 	'huishand'			=> '0',
-		// 	'retourbgg'			=> '0',
-		// 	'verzekerd'			=> '0',
-		// 	'verzekerdbedrag'	=> '0',
-		// 	'kenmerk'			=> '',
-		// 	'verpakkingsgewicht'=> '0',
-		// );
-	
-		// add_option( 'wcmyparcelbe_settings', $default );
-
 		switch ( $option ) {
 			case 'woocommerce_myparcelbe_general_settings':
 				$default = array(
