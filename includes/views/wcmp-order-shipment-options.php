@@ -57,11 +57,6 @@
 			'value'	=> isset($shipment_options['large_format']) ? $shipment_options['large_format'] : 0,
 			'cost'	=> '2.45',
 		),
-		'[only_recipient]'	=> array(
-			'label'	=> __( 'Home address only', 'woocommerce-myparcelbe' ),
-			'value'	=> isset($shipment_options['only_recipient']) ? $shipment_options['only_recipient'] : 0,
-			'cost'	=> '0.29',
-		),
 		'[signature]'	=> array(
 			'label'	=> __( 'Signature on delivery', 'woocommerce-myparcelbe' ),
 			'value'	=> isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,
@@ -78,7 +73,6 @@
 		if ( WooCommerce_MyParcelBE()->export->is_world_shipment_country( $recipient['cc'] ) ) {
 			unset($option_rows['[large_format]']);
 		}
-		unset($option_rows['[only_recipient]']);
 		unset($option_rows['[signature]']);
 		unset($option_rows['[return]']);
 

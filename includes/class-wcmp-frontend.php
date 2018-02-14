@@ -157,7 +157,6 @@ class WooCommerce_MyParcelBE_Frontend {
 		// delivery options
 		$delivery_options = array(
 			'signed',
-			'only_recipient',
 		);
 
 		// get delivery option fees/prices
@@ -325,10 +324,6 @@ class WooCommerce_MyParcelBE_Frontend {
 			WCX_Order::update_meta_data( $order, '_myparcelbe_signed', 'on' );
 		}
 
-		if (isset($_POST['mypa-recipient-only'])) {
-			WCX_Order::update_meta_data( $order, '_myparcelbe_only_recipient', 'on' );
-		}
-
 		if (!empty($_POST['mypa-post-nl-data'])) {
 			$delivery_options = json_decode( stripslashes( $_POST['mypa-post-nl-data']), true );
 			WCX_Order::update_meta_data( $order, '_myparcelbe_delivery_options', $delivery_options );
@@ -379,7 +374,6 @@ class WooCommerce_MyParcelBE_Frontend {
 				if (isset($time['price_comment'])) {
 					switch ($time['price_comment']) {
 						case 'morning':
-							$only_recipient_included = true;
 							if (!empty(WooCommerce_MyParcelBE()->checkout_settings['morning_fee'])) {
 								$fee = WooCommerce_MyParcelBE()->checkout_settings['morning_fee'];
 								$fee_name = __( 'Morning delivery', 'woocommerce-myparcelbe' );
@@ -392,7 +386,6 @@ class WooCommerce_MyParcelBE_Frontend {
 							}
 							break;
 						case 'night':
-							$only_recipient_included = true;
 							if (!empty(WooCommerce_MyParcelBE()->checkout_settings['night_fee'])) {
 								$fee = WooCommerce_MyParcelBE()->checkout_settings['night_fee'];
 								$fee_name = __( 'Evening delivery', 'woocommerce-myparcelbe' );
@@ -416,16 +409,6 @@ class WooCommerce_MyParcelBE_Frontend {
 				$this->add_fee( $fee_name, $fee );
 			}
 		}
-
-		// Fee for "only recipient" option, don't apply fee for morning & night delivery (already included)
-		if (isset($post_data['mypa-recipient-only']) && empty($only_recipient_included)) {
-			if (!empty(WooCommerce_MyParcelBE()->checkout_settings['only_recipient_fee'])) {
-				$fee = WooCommerce_MyParcelBE()->checkout_settings['only_recipient_fee'];
-				$fee_name = __( 'Home address only delivery', 'woocommerce-myparcelbe' );
-				$this->add_fee( $fee_name, $fee );
-			}
-		}
-
 	}
 
 	public function add_fee( $fee_name, $fee ) {

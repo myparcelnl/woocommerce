@@ -259,10 +259,6 @@ msgstr ""
 msgid "Signature on delivery"
 msgstr ""
 
-#: includes/class-wcmp-frontend.php:426
-msgid "Home address only delivery"
-msgstr ""
-
 #: includes/class-wcmp-nlpostcode-fields.php:203
 #: includes/class-wcmp-nlpostcode-fields.php:204
 #: includes/class-wcmp-nlpostcode-fields.php:373
@@ -533,13 +529,6 @@ msgid ""
 "charged.<br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x "
 "58 of or heavier than 30 kg, the pallet rate of &euro;&nbsp;70,00 will be "
 "charged."
-msgstr ""
-
-#: includes/class-wcmp-settings.php:394 includes/class-wcmp-settings.php:617
-#: includes/views/wcmp-order-return-shipment-options.php:35
-#: includes/views/wcmp-order-shipment-options.php:60
-#: includes/views/wcmp-order-shipment-summary.php:13
-msgid "Home address only"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:401
