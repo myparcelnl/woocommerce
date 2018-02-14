@@ -31,12 +31,10 @@
 		'[large_format]'	=> array(
 			'label'	=> __( 'Extra large size', 'woocommerce-myparcelbe' ),
 			'value'	=> isset($shipment_options['large_format']) ? $shipment_options['large_format'] : 0,
-			'cost'	=> '2.45',
 		),
 		'[signature]'	=> array(
 			'label'	=> __( 'Signature on delivery', 'woocommerce-myparcelbe' ),
 			'value'	=> isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,
-			'cost'	=> !(WooCommerce_MyParcelBE()->export->is_pickup( $order )) ? '0.36' : '',
 		),
 		'[insured]'	=> array(
 			'label'	=> __( 'Verzekerd to &euro; 500', 'woocommerce-myparcelbe' ),
