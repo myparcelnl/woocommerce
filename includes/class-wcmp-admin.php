@@ -424,10 +424,10 @@ class WooCommerce_MyParcelBE_Admin {
 		if ( $pickup = WooCommerce_MyParcelBE()->export->is_pickup( $order, $delivery_options ) ) {
 			switch ($pickup['price_comment']) {
 				case 'retail':
-					$title = __( 'PostNL Pickup', 'woocommerce-myparcelbe' );
+					$title = __( 'bpost Pickup', 'woocommerce-myparcelbe' );
 					break;
 				case 'retailexpress':
-					$title = __( 'PostNL Pickup Express', 'woocommerce-myparcelbe' );
+					$title = __( 'bpost Pickup Express', 'woocommerce-myparcelbe' );
 					break;
 			}
 
@@ -451,9 +451,7 @@ class WooCommerce_MyParcelBE_Admin {
 			if ( WooCommerce_MyParcelBE()->export->is_pickup( $order ) ) {
 				$postcode = preg_replace( '/\s+/', '', WCX_Order::get_prop( $order, 'billing_postcode' ) );
 			}
-
-			// $tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Inbox/Search?lang=nl&B=%s&P=%s', $tracktrace, $postcode);
-			$tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Claim?Barcode=%s&Postalcode=%s', $tracktrace, $postcode);
+            $tracktrace_url = sprintf('https://track.bpost.be/btr/web/#/search?itemCode=%s', $tracktrace, $postcode);
 		} else {
 			$tracktrace_url = sprintf('https://www.internationalparceltracking.com/Main.aspx#/track/%s/%s/%s', $tracktrace, $country, $postcode);			
 		}
