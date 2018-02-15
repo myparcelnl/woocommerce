@@ -130,7 +130,7 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 = 2.3.2 (2017-06-26) =
 * Fix: Delivery options header order
 * Feature: Support for region (=state) in international addresses
-* Feature: Hide Delivery options if PostNL service is unavailable
+* Feature: Hide Delivery options if bpost service is unavailable
 
 = 2.3.1 (2017-06-12) =
 * Fix: Table Rate Shipping + WooCommerce 2.6 (error in settings)
@@ -213,7 +213,7 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 	* Home address only option
 	* Signature on delivery option
 	* Evening or morning delivery option
-	* PostNL Pickup & Early PostNL Pickup
+	* bpost Pickup & Early bpost Pickup
 	* Possibility to assign cost to the above delivery options
 * Create return labels from the WooCommerce backend
 * Uses new MyParcel BE API

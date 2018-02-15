@@ -162,8 +162,8 @@ jQuery( function( $ ) {
 	$('#mypabe-chosen-delivery-options').on('change', 'input', function() {
 		window.myparcelbe_checkout_updating = true;
 		// disable signed & recipient only when switching to pickup location
-		mypabe_postnl_data = JSON.parse( $('#mypabe-chosen-delivery-options #mypa-input').val() );
-		if (typeof mypabe_postnl_data.location != 'undefined' ) {
+		mypabe_bpost_data = JSON.parse( $('#mypabe-chosen-delivery-options #mypa-input').val() );
+		if (typeof mypabe_bpost_data.location != 'undefined' ) {
 			$('#mypa-signed, #mypa-recipient-only').prop( "checked", false );
 		}
 		jQuery('body').trigger('update_checkout');

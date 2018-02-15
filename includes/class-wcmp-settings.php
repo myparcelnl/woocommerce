@@ -591,7 +591,7 @@ class WooCommerce_MyParcelBE_Settings {
 
 		add_settings_field(
 			'pickup',
-			__( 'PostNL pickup', 'woocommerce-myparcelbe' ),
+			__( 'bpost pickup', 'woocommerce-myparcelbe' ),
 			array( $this->callbacks, 'delivery_option_enable' ),
 			$option_group,
 			'delivery_options',
@@ -603,7 +603,7 @@ class WooCommerce_MyParcelBE_Settings {
 
 		add_settings_field(
 			'pickup_express',
-			__( 'Early PostNL pickup', 'woocommerce-myparcelbe' ),
+			__( 'Early bpost pickup', 'woocommerce-myparcelbe' ),
 			array( $this->callbacks, 'delivery_option_enable' ),
 			$option_group,
 			'delivery_options',
@@ -641,7 +641,7 @@ class WooCommerce_MyParcelBE_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'dropoff_days',
 				'options'		=> $days_of_the_week,
-				'description'	=> __( 'Days of the week on which you hand over parcels to PostNL', 'woocommerce-myparcelbe' ),
+				'description'	=> __( 'Days of the week on which you hand over parcels to bpost', 'woocommerce-myparcelbe' ),
 			)
 		);
 

@@ -86,11 +86,11 @@ msgid "Delivery date"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:413 includes/class-wcmp-frontend.php:362
-msgid "PostNL Pickup"
+msgid "bpost Pickup"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:416 includes/class-wcmp-frontend.php:368
-msgid "PostNL Pickup Express"
+msgid "bpost Pickup Express"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:523
@@ -244,7 +244,7 @@ msgid "Unknown status"
 msgstr ""
 
 #: includes/class-wcmp-frontend.php:70
-msgid "You can track your order with the following PostNL track&trace code:"
+msgid "You can track your order with the following bpost track&trace code:"
 msgstr ""
 
 #: includes/class-wcmp-frontend.php:393
@@ -658,11 +658,11 @@ msgid ""
 msgstr ""
 
 #: includes/class-wcmp-settings.php:665
-msgid "PostNL pickup"
+msgid "bpost pickup"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:677
-msgid "Early PostNL pickup"
+msgid "Early bpost pickup"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:690
@@ -702,7 +702,7 @@ msgid "Dropoff days"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:715
-msgid "Days of the week on which you hand over parcels to PostNL"
+msgid "Days of the week on which you hand over parcels to bpost"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:721
