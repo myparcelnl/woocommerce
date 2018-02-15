@@ -633,7 +633,7 @@
                 <div class="mypa-checkmark-stem"></div>
                 <div class="mypa-checkmark-kick"></div>
               </div>
-              <span class="mypa-highlight">Ophalen bij een PostNL locatie</span>
+              <span class="mypa-highlight">Ophalen bij een bpost locatie</span>
             </label>
             <div id='mypa-pickup-options-content' class='mypa-content-lg'>
               <div>

@@ -86,12 +86,12 @@ msgid "Delivery date"
 msgstr "Bezorgdatum"
 
 #: includes/class-wcmp-admin.php:413 includes/class-wcmp-frontend.php:362
-msgid "PostNL Pickup"
-msgstr "Afhalen bij PostNL"
+msgid "bpost Pickup"
+msgstr "Afhalen bij bpost"
 
 #: includes/class-wcmp-admin.php:416 includes/class-wcmp-frontend.php:368
-msgid "PostNL Pickup Express"
-msgstr "Extra vroeg afhalen bij PostNL"
+msgid "bpost Pickup Express"
+msgstr "Extra vroeg afhalen bij bpost"
 
 #: includes/class-wcmp-admin.php:493
 msgid "HS Code"
@@ -247,8 +247,8 @@ msgid "Unknown status"
 msgstr "Onbekende status"
 
 #: includes/class-wcmp-frontend.php:70
-msgid "You can track your order with the following PostNL track&trace code:"
-msgstr "U kunt uw bestelling met de volgende PostNL track & trace code volgen:"
+msgid "You can track your order with the following bpost track&trace code:"
+msgstr "U kunt uw bestelling met de volgende bpost track & trace code volgen:"
 
 #: includes/class-wcmp-frontend.php:393
 msgid "Standard delivery"
@@ -716,12 +716,12 @@ msgstr ""
 "buitenlandse adressen zijn de bezorgopties niet zichtbaar."
 
 #: includes/class-wcmp-settings.php:665
-msgid "PostNL pickup"
-msgstr "Afhalen bij PostNL"
+msgid "bpost pickup"
+msgstr "Afhalen bij bpost"
 
 #: includes/class-wcmp-settings.php:677
-msgid "Early PostNL pickup"
-msgstr "Extra vroeg afhalen bij PostNL"
+msgid "Early bpost pickup"
+msgstr "Extra vroeg afhalen bij bpost"
 
 #: includes/class-wcmp-settings.php:690
 msgid "Shipment processing parameters"
@@ -760,8 +760,8 @@ msgid "Dropoff days"
 msgstr "Afleverdagen"
 
 #: includes/class-wcmp-settings.php:715
-msgid "Days of the week on which you hand over parcels to PostNL"
-msgstr "Dagen van de week waarop u de pakketten bij PostNL aflevert"
+msgid "Days of the week on which you hand over parcels to bpost"
+msgstr "Dagen van de week waarop u de pakketten bij bpost aflevert"
 
 #: includes/class-wcmp-settings.php:721
 msgid "Cut-off time"

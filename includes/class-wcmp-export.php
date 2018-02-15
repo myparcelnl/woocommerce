@@ -438,7 +438,7 @@ class WooCommerce_MyParcelBE_Export {
 			$shipment = array(
 				'recipient' => $this->get_recipient( $order ),
 				'options'	=> $this->get_options( $order ),
-				'carrier'	=> 1, // default to POSTNL for now
+				'carrier'	=> 1, // default to bpost for now
 			);
 
 			if ( $pickup = $this->is_pickup( $order ) ) {
@@ -483,7 +483,7 @@ class WooCommerce_MyParcelBE_Export {
 		$return_shipment_data = array(
 			'name'			=> $shipping_name,
 			'email'			=> isset(WooCommerce_MyParcelBE()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
-			'carrier'		=> 1, // default to POSTNL for now
+			'carrier'		=> 1, // default to bpost for now
 		);
 
 		// add options if available
