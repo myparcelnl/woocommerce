@@ -52,10 +52,6 @@
 	}
 
 	$option_rows = array(
-		'[large_format]'	=> array(
-			'label'	=> __( 'Extra large size', 'woocommerce-myparcelbe' ),
-			'value'	=> isset($shipment_options['large_format']) ? $shipment_options['large_format'] : 0,
-		),
 		'[signature]'	=> array(
 			'label'	=> __( 'Signature on delivery', 'woocommerce-myparcelbe' ),
 			'value'	=> isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,

@@ -240,7 +240,6 @@ class WooCommerce_MyParcelBE {
 			$defaults_settings_keys = array(
 				'email'					=> 'connect_email',
 				'telefoon'				=> 'connect_phone',
-				'extragroot'			=> 'large_format',
 				'handtekening'			=> 'signature',
 				'kenmerk'				=> 'label_description',
 				'verpakkingsgewicht'	=> 'empty_parcel_weight',
