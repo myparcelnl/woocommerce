@@ -12,7 +12,6 @@ printf('%s: %s', __( 'Shipment type', 'woocommerce-myparcelbe' ), $package_types
 	// echo '<pre>';var_dump($shipment);echo '</pre>';die();
 	// Options
 	$option_strings = array(
-		'large_format'		=> __( 'Extra large size', 'woocommerce-myparcelbe' ),
 		'signature'			=> __( 'Signature on delivery', 'woocommerce-myparcelbe' ),
 	);
 

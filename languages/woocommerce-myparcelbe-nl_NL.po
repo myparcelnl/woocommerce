@@ -542,13 +542,6 @@ msgstr ""
 "koerier dit gebruiken ten behoeve van de aflevering van het pakket. De "
 "afleverkans voor buitenlandzendingen wordt hiermee aanzienlijk verhoogd."
 
-#: includes/class-wcmp-settings.php:381
-#: includes/views/wcmp-order-return-shipment-options.php:30
-#: includes/views/wcmp-order-shipment-options.php:55
-#: includes/views/wcmp-order-shipment-summary.php:12
-msgid "Extra large size"
-msgstr "Extra groot formaat"
-
 #: includes/class-wcmp-settings.php:388
 msgid ""
 "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "

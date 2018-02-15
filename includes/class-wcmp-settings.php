@@ -388,19 +388,6 @@ class WooCommerce_MyParcelBE_Settings {
 				'description'	=> __( "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.", 'woocommerce-myparcelbe' )
 			)
 		);
-
-		add_settings_field(
-			'large_format',
-			__( 'Extra large size', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'checkbox' ),
-			$option_group,
-			'defaults',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'large_format',
-				'description'	=> __( 'Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee of &euro;&nbsp;2,45 will be charged.<br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate of &euro;&nbsp;70,00 will be charged.', 'woocommerce-myparcelbe' )
-			)
-		);
 		
 		add_settings_field(
 			'signature',
