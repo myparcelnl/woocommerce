@@ -150,7 +150,6 @@ class WooCommerce_MyParcelBE_Frontend {
 		$delivery_types = array(
 			1	=> 'morning',
 			2	=> 'standard', // 'default in JS API'
-			3	=> 'night',
 			4	=> 'pickup',
 		);
 		// delivery options
@@ -376,12 +375,6 @@ class WooCommerce_MyParcelBE_Frontend {
 							if (!empty(WooCommerce_MyParcelBE()->checkout_settings['default_fee'])) {
 								$fee = WooCommerce_MyParcelBE()->checkout_settings['default_fee'];
 								$fee_name = __( 'Standard delivery', 'woocommerce-myparcelbe' );
-							}
-							break;
-						case 'night':
-							if (!empty(WooCommerce_MyParcelBE()->checkout_settings['night_fee'])) {
-								$fee = WooCommerce_MyParcelBE()->checkout_settings['night_fee'];
-								$fee_name = __( 'Evening delivery', 'woocommerce-myparcelbe' );
 							}
 							break;
 					}
