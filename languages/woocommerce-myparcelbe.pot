@@ -89,10 +89,6 @@ msgstr ""
 msgid "bpost Pickup"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:416 includes/class-wcmp-frontend.php:368
-msgid "bpost Pickup Express"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:523
 msgid "World Shipments"
 msgstr ""

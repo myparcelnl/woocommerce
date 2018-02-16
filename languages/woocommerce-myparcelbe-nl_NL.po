@@ -89,10 +89,6 @@ msgstr "Bezorgdatum"
 msgid "bpost Pickup"
 msgstr "Afhalen bij bpost"
 
-#: includes/class-wcmp-admin.php:416 includes/class-wcmp-frontend.php:368
-msgid "bpost Pickup Express"
-msgstr "Extra vroeg afhalen bij bpost"
-
 #: includes/class-wcmp-admin.php:493
 msgid "HS Code"
 msgstr "HS-code"
@@ -711,10 +707,6 @@ msgstr ""
 #: includes/class-wcmp-settings.php:665
 msgid "bpost pickup"
 msgstr "Afhalen bij bpost"
-
-#: includes/class-wcmp-settings.php:677
-msgid "Early bpost pickup"
-msgstr "Extra vroeg afhalen bij bpost"
 
 #: includes/class-wcmp-settings.php:690
 msgid "Shipment processing parameters"

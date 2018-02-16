@@ -152,7 +152,6 @@ class WooCommerce_MyParcelBE_Frontend {
 			2	=> 'standard', // 'default in JS API'
 			3	=> 'night',
 			4	=> 'pickup',
-			5	=> 'pickup_express',
 		);
 		// delivery options
 		$delivery_options = array(
@@ -353,12 +352,6 @@ class WooCommerce_MyParcelBE_Frontend {
 						if (!empty(WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'])) {
 							$fee = WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'];
 							$fee_name = __( 'bpost Pickup', 'woocommerce-myparcelbe' );
-						}
-						break;
-					case 'retailexpress':
-						if (!empty(WooCommerce_MyParcelBE()->checkout_settings['pickup_express_fee'])) {
-							$fee = WooCommerce_MyParcelBE()->checkout_settings['pickup_express_fee'];
-							$fee_name = __( 'bpost Pickup Express', 'woocommerce-myparcelbe' );
 						}
 						break;
 				}

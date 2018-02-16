@@ -426,9 +426,6 @@ class WooCommerce_MyParcelBE_Admin {
 				case 'retail':
 					$title = __( 'bpost Pickup', 'woocommerce-myparcelbe' );
 					break;
-				case 'retailexpress':
-					$title = __( 'bpost Pickup Express', 'woocommerce-myparcelbe' );
-					break;
 			}
 
 			echo "<div class='pickup-location'><strong>{$title}: </strong>{$pickup['location']}, {$pickup['street']} {$pickup['number']}, {$pickup['postal_code']} {$pickup['city']}</div>";

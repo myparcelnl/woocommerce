@@ -588,18 +588,6 @@ class WooCommerce_MyParcelBE_Settings {
 			)
 		);
 
-		add_settings_field(
-			'pickup_express',
-			__( 'Early bpost pickup', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'delivery_option_enable' ),
-			$option_group,
-			'delivery_options',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'pickup_express',
-			)
-		);
-
 		// Checkout options section.
 		add_settings_section(
 			'processing_parameters',

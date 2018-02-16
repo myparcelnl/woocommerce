@@ -1128,7 +1128,7 @@ class WooCommerce_MyParcelBE_Export {
 			$myparcelbe_delivery_options = WCX_Order::get_meta( $order, '_myparcelbe_delivery_options' );
 		}
 
-		$pickup_types = array( 'retail', 'retailexpress' );
+		$pickup_types = array( 'retail' );
 		if ( !empty($myparcelbe_delivery_options['price_comment']) && in_array($myparcelbe_delivery_options['price_comment'], $pickup_types) ) {
 			return $myparcelbe_delivery_options;
 		}
@@ -1159,7 +1159,6 @@ class WooCommerce_MyParcelBE_Export {
 			'standard'		=> 2, // 'default in JS API'
 			'night'			=> 3,
 			'retail'		=> 4, // 'pickup'
-			'retailexpress'	=> 5, // 'pickup_express'
 		);
 
 		if (empty($myparcelbe_delivery_options)) {
