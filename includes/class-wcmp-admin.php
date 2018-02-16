@@ -409,10 +409,6 @@ class WooCommerce_MyParcelBE_Admin {
 						case 'standard':
 							// $time_title = __( 'Standard delivery', 'woocommerce-myparcelbe' );
 							break;
-						case 'night':
-						case 'avond':
-							$time_title = __( 'Evening delivery', 'woocommerce-myparcelbe' );
-							break;
 					}
 				}
 				$time_title = !empty($time_title) ? "({$time_title})" : '';
