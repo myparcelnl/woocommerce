@@ -76,11 +76,6 @@ msgstr "MyParcelbe zending:"
 msgid "Morning delivery"
 msgstr "Ochtendlevering"
 
-#: includes/class-wcmp-admin.php:400 includes/class-wcmp-frontend.php:400
-#: includes/class-wcmp-settings.php:641
-msgid "Evening delivery"
-msgstr "Avondlevering"
-
 #: includes/class-wcmp-admin.php:407
 msgid "Delivery date"
 msgstr "Bezorgdatum"

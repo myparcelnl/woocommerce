@@ -1157,7 +1157,6 @@ class WooCommerce_MyParcelBE_Export {
 		$delivery_types = array(
 			'morning'		=> 1,
 			'standard'		=> 2, // 'default in JS API'
-			'night'			=> 3,
 			'retail'		=> 4, // 'pickup'
 			'retailexpress'	=> 5, // 'pickup_express'
 		);
