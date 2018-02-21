@@ -18,7 +18,6 @@
 
   CARRIER = 1;
 
-  MORNING_DELIVERY = 'morning';
 
   DEFAULT_DELIVERY = 'default';
 

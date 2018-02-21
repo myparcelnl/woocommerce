@@ -553,18 +553,6 @@ class WooCommerce_MyParcelBE_Settings {
 		);
 
 		add_settings_field(
-			'morning',
-			__( 'Morning delivery', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'delivery_option_enable' ),
-			$option_group,
-			'delivery_options',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'morning',
-			)
-		);
-
-		add_settings_field(
 			'pickup',
 			__( 'bpost pickup', 'woocommerce-myparcelbe' ),
 			array( $this->callbacks, 'delivery_option_enable' ),
