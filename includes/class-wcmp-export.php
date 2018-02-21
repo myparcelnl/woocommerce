@@ -540,7 +540,7 @@ class WooCommerce_MyParcel_Export {
 			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
 			'phone'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_phone']) ? WCX_Order::get_prop( $order, 'billing_phone' ) : '',
 		);
-
+		$this-> add_myparcel_note($order);
 
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
 		if ( $shipping_country == 'NL' ) {
@@ -576,6 +576,24 @@ class WooCommerce_MyParcel_Export {
 		$address = array_merge( $address, $address_intl);
 
 		return apply_filters( 'wc_myparcel_recipient', $address, $order );
+	}
+
+	public function add_myparcel_note($order){
+
+		$order_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+
+		if (!empty($order_shipments)) {
+			foreach ( array_keys( $order_shipments ) as $key ) {
+				$order_nummer = $key;
+			}
+			$tracking = $order_shipments[ $order_nummer ][ tracktrace ]; // auto
+		}
+
+
+		$message = sprintf( __( $tracking ));
+		$order->add_order_note( $message );
+
+		return;
 	}
 
 	public function get_options( $order ) {
