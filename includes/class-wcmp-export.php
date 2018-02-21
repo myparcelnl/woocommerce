@@ -305,6 +305,7 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function get_shipment_labels( $shipment_ids, $order_ids = array(), $label_response_type = NULL, $offset = 0 ) {
+
 		$return = array();
 
 		$this->log("*** Label request started ***");
@@ -318,8 +319,10 @@ class WooCommerce_MyParcel_Export {
 				$params['positions'] = implode( ';', array_slice($portrait_positions,$offset) );
 			}
 
+
 			if (isset($label_response_type) && $label_response_type == 'url') {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
+
 				$this->log("API response:\n".var_export($response, true));
 				// var_dump( $response );
 				if (isset($response['body']['data']['pdfs']['url'])) {
@@ -328,6 +331,7 @@ class WooCommerce_MyParcel_Export {
 				} else {
 					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
 				}
+
 			} else {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'pdf' );
 
@@ -345,14 +349,17 @@ class WooCommerce_MyParcel_Export {
 					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
 				}
 
-				// echo '<pre>';var_dump($response);echo '</pre>';die();
+				 //echo '<pre>';var_dump($response);echo '</pre>';die();
 			}
+
 		} catch (Exception $e) {
 			$this->errors[] = $e->getMessage();
 		}
 
 		return $return;
 	}
+
+
 
 	public function get_labels( $order_ids, $label_response_type = NULL, $offset = 0 ) {
 		$shipment_ids = $this->get_shipment_ids( $order_ids, array( 'only_last' => true ) );
@@ -362,6 +369,7 @@ class WooCommerce_MyParcel_Export {
 			$this->errors[] = __( 'The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcel' );
 			return array();
 		}
+		$this->add_myparcel_note($order_ids);
 
 		return $this->get_shipment_labels( $shipment_ids, $order_ids, $label_response_type, $offset );
 	}
@@ -542,34 +550,9 @@ class WooCommerce_MyParcel_Export {
 
 		);
 
-		// when the ChannelEngine plugin is activated, copy the barcode and place them in the ChannelEngine - Track & Trace field
-		if( is_plugin_active( 'channelengine-woocommerce/woocommerce-channel-engine.php' ) ) {
+		$this->channel_engine_myparcel_check($order);
+		$this->split_street_admin($order);
 
-			$order_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
-
-			if (!empty($order_shipments)) {
-				foreach ( array_keys( $order_shipments ) as $key ) {
-					$order_nummer = $key;
-				}
-
-				$tracking = $order_shipments[ $order_nummer ][ tracktrace ]; // auto
-				update_post_meta( $order->id, '_shipping_ce_track_and_trace', $tracking );
-			}
-		}
-
-		$split_street_regex = '~(?P<street>.*?)\s?(?P<street_suffix>(?P<number>[\d]+)[\s-]{0,2}(?P<number_suffix>[a-zA-Z/\s]{0,5}$|[0-9/]{0,5}$|\s[a-zA-Z]{1}[0-9]{0,3}$|\s[0-9]{2}[a-zA-Z]{0,3}$))$~';
-		$adres = trim((string) WCX_Order::get_prop( $order, 'shipping_address_1' ));
-		preg_match($split_street_regex, $adres, $matches);
-
-		if (empty (WCX_Order::get_meta( $order, '_shipping_street_name' ) && WCX_Order::get_meta( $order, '_shipping_house_number' ))){
-
-			update_post_meta( $order->id, '_shipping_street_name', $matches[street] );
-		    update_post_meta( $order->id, '_shipping_house_number', $matches[number] );
-
-		    if (empty(WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ))) {
-				update_post_meta( $order->id, '_shipping_house_number_suffix', (string) WCX_Order::get_prop( $order, 'shipping_address_2' ) );
-			}
-		}
 
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
 		if ( $shipping_country == 'NL' ) {
@@ -606,6 +589,49 @@ class WooCommerce_MyParcel_Export {
 		$address = array_merge( $address, $address_intl);
 
 		return apply_filters( 'wc_myparcel_recipient', $address, $order );
+	}
+	
+	/**
+	 * When the ChannelEngine plugin is activated, copy the barcode and place them in the ChannelEngine - Track & Trace field
+	 */
+	public function channel_engine_myparcel_check($order){
+		if (empty(WCX_Order::get_meta( $order, '_shipping_ce_track_and_trace' ))) {
+
+			$order_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+
+			if (!empty($order_shipments)) {
+				foreach ( array_keys( $order_shipments ) as $key ) {
+					$order_nummer = $key;
+				}
+
+				$tracking = $order_shipments[ $order_nummer ][ tracktrace ]; // auto
+				update_post_meta( $order->id, '_shipping_ce_track_and_trace', $tracking );
+			}
+		}
+		return;
+	}
+
+	/**
+	 *
+	 * Get the street from _shipping_address_1 and split them in street, street_suffix, number and number_suffix
+	 * Place the street, street_suffix, number and number_suffix into the correct text field (for export)
+	 *
+	 */
+	public function split_street_admin($order){
+		$split_street_regex = '~(?P<street>.*?)\s?(?P<street_suffix>(?P<number>[\d]+)[\s-]{0,2}(?P<number_suffix>[a-zA-Z/\s]{0,5}$|[0-9/]{0,5}$|\s[a-zA-Z]{1}[0-9]{0,3}$|\s[0-9]{2}[a-zA-Z]{0,3}$))$~';
+		$adres = trim((string) WCX_Order::get_prop( $order, 'shipping_address_1' ));
+		preg_match($split_street_regex, $adres, $matches);
+
+		if (empty (WCX_Order::get_meta( $order, '_shipping_street_name' ) && WCX_Order::get_meta( $order, '_shipping_house_number' ))){
+
+			update_post_meta( $order->id, '_shipping_street_name', $matches[street] );
+			update_post_meta( $order->id, '_shipping_house_number', $matches[number] );
+
+			if (empty(WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ))) {
+				update_post_meta( $order->id, '_shipping_house_number_suffix', (string) WCX_Order::get_prop( $order, 'shipping_address_2' ) );
+			}
+		}
+		return;
 	}
 
 	public function get_options( $order ) {
