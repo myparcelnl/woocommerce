@@ -5,7 +5,7 @@
  */
 
 (function() {
-  var $, AO_DEFAULT_TEXT, Application, CARRIER, DAYS_OF_THE_WEEK, DAYS_OF_THE_WEEK_TRANSLATED, DEFAULT_DELIVERY, DISABLED, HVO_DEFAULT_TEXT, MORNING_DELIVERY, MORNING_PICKUP, NATIONAL, NORMAL_PICKUP, PICKUP, PICKUP_EXPRESS, PICKUP_TIMES, POST_NL_TRANSLATION, Slider, checkCombination, displayOtherTab, jquery, obj1, orderOpeningHours, preparePickup, renderDeliveryOptions, renderExpressPickup, renderPage, renderPickup, renderPickupLocation, showDefaultPickupLocation, sortLocationsOnDistance, updateDelivery, updateInputField,
+  var $, AO_DEFAULT_TEXT, Application, CARRIER, DAYS_OF_THE_WEEK, DAYS_OF_THE_WEEK_TRANSLATED, DEFAULT_DELIVERY, DISABLED, HVO_DEFAULT_TEXT, MORNING_DELIVERY, MORNING_PICKUP, NATIONAL, NORMAL_PICKUP, PICKUP, PICKUP_TIMES, POST_NL_TRANSLATION, Slider, checkCombination, displayOtherTab, jquery, obj1, orderOpeningHours, preparePickup, renderDeliveryOptions, renderExpressPickup, renderPage, renderPickup, renderPickupLocation, showDefaultPickupLocation, sortLocationsOnDistance, updateDelivery, updateInputField,
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   DISABLED = 'disabled';
@@ -22,8 +22,6 @@
   DEFAULT_DELIVERY = 'default';
 
   PICKUP = 'pickup';
-
-  PICKUP_EXPRESS = 'pickup_express';
 
   POST_NL_TRANSLATION = {
     morning: 'morning',
@@ -381,7 +379,6 @@
     }
     $('#mypa-pickup-row').removeClass('mypa-hidden');
     pickupPrice = window.mypabe.settings.price[PICKUP];
-    pickupExpressPrice = window.mypabe.settings.price[PICKUP_EXPRESS];
     $('.mypa-pickup-price').html(pickupPrice);
     $('.mypa-pickup-price').toggleClass('mypa-hidden', pickupPrice == null);
     $('.mypa-pickup-express-price').html(pickupExpressPrice);
