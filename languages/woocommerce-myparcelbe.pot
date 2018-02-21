@@ -71,11 +71,6 @@ msgstr ""
 msgid "MyParcelbe shipment:"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:393 includes/class-wcmp-frontend.php:387
-#: includes/class-wcmp-settings.php:653
-msgid "Morning delivery"
-msgstr ""
-
 #: includes/class-wcmp-admin.php:407
 msgid "Delivery date"
 msgstr ""

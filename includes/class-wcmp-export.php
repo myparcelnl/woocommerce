@@ -1155,7 +1155,6 @@ class WooCommerce_MyParcelBE_Export {
 	public function get_delivery_type( $order, $myparcelbe_delivery_options = '' ) {
 		// delivery types
 		$delivery_types = array(
-			'morning'		=> 1,
 			'standard'		=> 2, // 'default in JS API'
 			'retail'		=> 4, // 'pickup'
 		);
