@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) :
 
 class WooCommerce_MyParcel_Export {
+	const REGEX_SPLIT_STREET = '~(?P<street>.*?)\s?(?P<street_suffix>(?P<number>[\d]+)[\s-]{0,2}(?P<number_suffix>[a-zA-Z/\s]{0,5}$|[0-9/]{0,5}$|\s[a-zA-Z]{1}[0-9]{0,3}$|\s[0-9]{2}[a-zA-Z]{0,3}$))$~';
+
 	public $order_id;
 	public $success;
 	public $errors;
@@ -594,20 +596,22 @@ class WooCommerce_MyParcel_Export {
 	/**
 	 * When the ChannelEngine plugin is activated, copy the barcode and place them in the ChannelEngine - Track & Trace field
 	 */
-	public function channel_engine_myparcel_check($order){
-		if (empty(WCX_Order::get_meta( $order, '_shipping_ce_track_and_trace' ))) {
-
-			$order_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
-
-			if (!empty($order_shipments)) {
-				foreach ( array_keys( $order_shipments ) as $key ) {
-					$order_nummer = $key;
-				}
-
-				$tracking = $order_shipments[ $order_nummer ][ tracktrace ]; // auto
-				update_post_meta( $order->id, '_shipping_ce_track_and_trace', $tracking );
-			}
+	private function channel_engine_myparcel_check($order){
+		if (!empty(WCX_Order::get_meta( $order, '_shipping_ce_track_and_trace' ))) {
+			return;
 		}
+
+		$order_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+
+		if (!empty($order_shipments)) {
+
+			$keys = array_keys( $order_shipments );
+			$order_number = $keys[0];
+
+			$tracking = $order_shipments[ $order_number ][ 'tracktrace' ]; // auto
+			update_post_meta( $order->id, '_shipping_ce_track_and_trace', $tracking );
+		}
+
 		return;
 	}
 
@@ -616,16 +620,17 @@ class WooCommerce_MyParcel_Export {
 	 * Get the street from _shipping_address_1 and split them in street, street_suffix, number and number_suffix
 	 * Place the street, street_suffix, number and number_suffix into the correct text field (for export)
 	 *
+	 * @param $order
 	 */
-	public function split_street_admin($order){
-		$split_street_regex = '~(?P<street>.*?)\s?(?P<street_suffix>(?P<number>[\d]+)[\s-]{0,2}(?P<number_suffix>[a-zA-Z/\s]{0,5}$|[0-9/]{0,5}$|\s[a-zA-Z]{1}[0-9]{0,3}$|\s[0-9]{2}[a-zA-Z]{0,3}$))$~';
-		$adres = trim((string) WCX_Order::get_prop( $order, 'shipping_address_1' ));
-		preg_match($split_street_regex, $adres, $matches);
+	private function split_street_admin($order){
+		$split_street_regex = self::REGEX_SPLIT_STREET;
+		$address = trim((string) WCX_Order::get_prop( $order, 'shipping_address_1' ));
+		preg_match($split_street_regex, $address, $matches);
 
 		if (empty (WCX_Order::get_meta( $order, '_shipping_street_name' ) && WCX_Order::get_meta( $order, '_shipping_house_number' ))){
 
-			update_post_meta( $order->id, '_shipping_street_name', $matches[street] );
-			update_post_meta( $order->id, '_shipping_house_number', $matches[number] );
+			update_post_meta( $order->id, '_shipping_street_name', $matches['street'] );
+			update_post_meta( $order->id, '_shipping_house_number', $matches['number'] );
 
 			if (empty(WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ))) {
 				update_post_meta( $order->id, '_shipping_house_number_suffix', (string) WCX_Order::get_prop( $order, 'shipping_address_2' ) );
