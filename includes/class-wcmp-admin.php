@@ -17,10 +17,10 @@ class WooCommerce_MyParcel_Admin {
 	
 	function __construct()	{
 		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_shipment_options' ), 9999 );
-		//add_action( 'woocommerce_admin_order_actions_end', array( $this, 'order_list_return_shipment_options' ), 9999 );
+		// add_action( 'woocommerce_admin_'.$action_notation.'_actions_end', array( $this, 'order_list_return_shipment_options' ), 9999 );
 		add_action(	'admin_footer', array( $this, 'bulk_actions' ) ); 
 		add_action( 'admin_footer', array( $this, 'offset_dialog' ) );
-		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_order_actions' ), 20 );
+		add_action( 'woocommerce_admin_order_actions_end', array( $this, 'admin_wc_actions' ), 20 );
 		add_action( 'add_meta_boxes_shop_order', array( $this, 'shop_order_metabox' ) );
 		add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'single_order_shipment_options' ) );
 
@@ -157,6 +157,16 @@ class WooCommerce_MyParcel_Admin {
 		}
 	}
 
+	/**
+	 * Add print actions to the orders listing
+     * Support wc > 3.3.0
+     * Call the function admin_order_actions for the same settings
+     *
+	 * @param $order
+	 */
+	public function admin_wc_actions( $order ) {
+		return $this->admin_order_actions( $order );
+	}
 
 	/**
 	 * Add print actions to the orders listing
@@ -200,19 +210,19 @@ class WooCommerce_MyParcel_Admin {
 		$processed_shipments = $this->get_order_shipments( $order, true );
 		if (empty($processed_shipments) || $shipping_country != 'NL' ) {
 			unset($listing_actions['add_return']);
-		}		
+		}
 
 		$target = ( isset(WooCommerce_MyParcel()->general_settings['download_display']) && WooCommerce_MyParcel()->general_settings['download_display'] == 'display') ? 'target="_blank"' : '';
 		$nonce = wp_create_nonce('wc_myparcel');
 		foreach ($listing_actions as $action => $data) {
 			printf( '<a href="%1$s" class="button tips myparcel %2$s" alt="%3$s" data-tip="%3$s" data-order-id="%4$s" data-request="%2$s" data-nonce="%5$s" %6$s>', $data['url'], $action, $data['alt'], $order_id, $nonce, $target );
 			?>
-				<img src="<?php echo $data['img']; ?>" alt="<?php echo $data['alt']; ?>" width="16" class="wcmp_button_img">
+				<img src="<?php echo $data['img']; ?>" alt="<?php echo $data['alt']; ?>"  style="width:17px; margin: 5px 3px; pointer-events: none;" class="wcmp_button_img">
 			</a>
 			<?php
 		}
 		?>
-		<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_spinner waiting"/>
+		<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif';?>" style="width: 17px; margin: 5px 3px;" class="wcmp_spinner waiting"/>
 		<?php
 	}
 
@@ -311,9 +321,14 @@ class WooCommerce_MyParcel_Admin {
 			return;
 		}
 
-		// show buttons
-		echo '<div class="single_order_actions">';
-		$this->admin_order_actions( $order, false );
+		// show buttons and check if WooCommerce > 3.3.0 is used and select the correct function and class
+		if ( version_compare( WOOCOMMERCE_VERSION, '3.3.0', '>=' ) ) {
+			echo '<div class="single_wc_actions">';
+			$this->admin_wc_actions( $order, false );
+		} else {
+			echo '<div class="single_order_actions">';
+			$this->admin_order_actions( $order, false );
+		}
 		echo '</div>';
 
 		$consignments = $this->get_order_shipments( $order );
@@ -489,8 +504,8 @@ class WooCommerce_MyParcel_Admin {
 		echo '<div class="options_group">';
 		woocommerce_wp_text_input( 
 			array( 
-				'id'          => '_myparcel_hs_code', 
-				'label'       => __( 'HS Code', 'woocommerce-myparcel' ), 
+				'id'          => '_myparcel_hs_code',
+				'label'       => __( 'HS Code', 'woocommerce-myparcel' ),
 				'description' => sprintf( __( 'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcel' ), '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>' ),
 				// 'desc_tip'    => true,
 			)

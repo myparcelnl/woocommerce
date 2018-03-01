@@ -7,9 +7,7 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
  * Frontend views
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
@@ -313,8 +311,8 @@ class WooCommerce_MyParcel_Frontend {
 			WCX_Order::update_meta_data( $order, '_myparcel_highest_shipping_class', $_POST['myparcel_highest_shipping_class'] );
 		}
 
-		// mypa-recipient-only - 'on' or not set  
-		// mypa-signed         - 'on' or not set  
+		// mypa-recipient-only - 'on' or not set
+		// mypa-signed         - 'on' or not set
 		// mypa-post-nl-data   - JSON of chosen delivery options
 		
 		// check if delivery options were used

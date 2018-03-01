@@ -3,9 +3,7 @@
  * Create & render settings page
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( !class_exists( 'WooCommerce_MyParcel_Settings' ) ) :
 
@@ -177,6 +175,21 @@ class WooCommerce_MyParcel_Settings {
 				'options' 		=> array(
 					'download'	=> __( 'Download PDF' , 'woocommerce-myparcel' ),
 					'display'	=> __( 'Open de PDF in a new tab' , 'woocommerce-myparcel' ),
+				),
+			)
+		);
+		add_settings_field(
+			'label_format',
+			__( 'Label format', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'radio_button' ),
+			$option_group,
+			'general',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'label_format',
+				'options' 		=> array(
+					'A4'	=> __( 'Standard printer (A4)' , 'woocommerce-myparcel' ),
+					'A6'	=> __( 'Label Printer (A6)' , 'woocommerce-myparcel' ),
 				),
 			)
 		);
@@ -362,7 +375,7 @@ class WooCommerce_MyParcel_Settings {
 				'description'	=> sprintf(__( 'When you connect the customer email, MyParcel can send a Track&Trace email to this address. In your %sMyParcel backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-myparcel' ), '<a href="https://backoffice.myparcel.nl/ttsettingstable" target="_blank">', '</a>')
 			)
 		);
-		
+
 		add_settings_field(
 			'connect_phone',
 			__( 'Connect customer phone', 'woocommerce-myparcel' ),
@@ -375,7 +388,7 @@ class WooCommerce_MyParcel_Settings {
 				'description'	=> __( "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.", 'woocommerce-myparcel' )
 			)
 		);
-		
+
 		add_settings_field(
 			'large_format',
 			__( 'Extra large size', 'woocommerce-myparcel' ).' (+ &euro;2.45)',
@@ -535,7 +548,7 @@ class WooCommerce_MyParcel_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'hs_code',
 				'size'			=> '5',
-				'description'	=> __( sprintf( 'You can find HS codes on the %ssite of the Dutch Customs%s.', '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>' ), 'woocommerce-myparcel' ),
+				'description'	=> sprintf(__( 'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcel' ), '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>')
 			)
 		);
 		add_settings_field(

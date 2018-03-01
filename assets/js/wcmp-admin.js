@@ -137,6 +137,27 @@ jQuery( function( $ ) {
 		}
 	});
 
+	// check witch radio button of A4 or A6 is activated and disable/enable print position
+	$('input[id^=\'label_format\']').change(function () {
+
+		//when the options are not selected
+		if (!$(this).is(':checked')) {
+			return;
+        }
+
+        var parent_offset = $("#print_position_offset").parent().parent();
+
+		if ($(this).attr("value") == "A4") {
+            parent_offset.show();
+			return;
+		}
+
+		// Always A6
+        parent_offset.hide();
+		$("#print_position_offset").prop("checked", false);
+	});
+
+
 	// Hide all checkout options if disabled
 	$('#woocommerce-myparcel-settings #myparcel_checkout').change(function () {
 		$next_settings_rows = $(this).closest('tr').nextAll('tr');
@@ -231,7 +252,7 @@ jQuery( function( $ ) {
 				case 'print':
 					bulk_spinner( this, 'show' );
 					var offset = wc_myparcel.offset == 1 ? $('.wc_myparcel_offset').val() : 0;
-					myparcel_print( order_ids, offset );						
+					myparcel_print( order_ids, offset );
 					break;
 				case 'export_print':
 					bulk_spinner( this, 'show' );
@@ -243,8 +264,9 @@ jQuery( function( $ ) {
 		}
 	});
 
-	// single actions click
-	$(".order_actions, .single_order_actions")
+
+	// Single actions click. The .wc_actions .single_wc_actions for support wc > 3.3.0
+	$(".order_actions, .single_order_actions, .wc_actions, .single_wc_actions")
 		.on( 'click', 'a.button.myparcel', function( event ) {
 			event.preventDefault();
 			var button_action = $( this ).data('request');

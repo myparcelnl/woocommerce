@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * LOAD WORDPRESS
  */
@@ -8,7 +8,7 @@ require( '../../../../../wp-load.php');
 <!DOCTYPE html>
 <html>
 <head>
-	<?php 
+	<?php
 	// define script & style formats
 	$script_format = '<script type="text/javascript" data-cfasync="false" src="%s"></script>';
 	$style_format = '<link rel="stylesheet" id="%s" href="%s" type="text/css" media="all">';

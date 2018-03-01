@@ -1,5 +1,5 @@
 /* Order actions button styling */
-.widefat .column-order_actions a.button.myparcel {
+.widefat .column-order_actions .column-wc_actions a.button.myparcel {
 	float: left;
 	width: 26px;
 	height: 26px;
@@ -9,7 +9,7 @@
 	padding: 2px 5px 0;
 }
 
-.widefat .column-order_actions a.button.myparcel img {
+.widefat .column-order_actions .column-wc_actions a.button.myparcel img {
 	width: 16px;
 	height: auto;
 }
@@ -90,7 +90,7 @@ ul.wcmyparcel_shipment_summary li:before {
 	margin-top: 6px;
 }
 
-.widefat .column-order_actions .wcmp_spinner {
+.widefat .column-order_actions .column-wc_actions .wcmp_spinner {
 	position: absolute;
 }
 

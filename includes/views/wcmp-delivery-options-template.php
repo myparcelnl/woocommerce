@@ -504,8 +504,8 @@
     }
 
     .edit-tip > div{
-      width: 0; 
-      height: 0; 
+      width: 0;
+      height: 0;
       border-left: 2px solid transparent;
       border-right: 2px solid transparent;
       border-top: 3px solid darkorange;
@@ -515,10 +515,10 @@
       position:relative;
       display: block;
       content: '';
-      width: 0; 
+      width: 0;
       left: -2px;
       bottom: 3px;
-      height: 0; 
+      height: 0;
       border-left: 2px solid transparent;
       border-right: 2px solid transparent;
       border-top: 2px solid white;
@@ -645,7 +645,7 @@
                     <div class="mypa-checkmark-kick"></div>
                   </label>
                   <span class="mypa-highlight">Vanaf 16.00 uur</span><span class='mypa-address' id="mypa-pickup-address"></span>
-                  <div class="edit">  
+                  <div class="edit">
                     <div class="edit-stem">
                     </div>
                     <div class="edit-tip">
@@ -663,7 +663,7 @@
                     <div class="mypa-checkmark-kick"></div>
                   </label>
                   <span class="mypa-highlight">Vanaf 8.30 uur</span><span class='mypa-address' id="mypa-pickup-express-address"></span>
-                  <div class="edit">  
+                  <div class="edit">
                     <div class="edit-stem">
                     </div>
                     <div class="edit-tip">

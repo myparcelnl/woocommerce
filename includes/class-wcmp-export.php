@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) :
 
 class WooCommerce_MyParcel_Export {
+	const REGEX_SPLIT_STREET = '~(?P<street>.*?)\s?(?P<street_suffix>(?P<number>[\d]+)[\s-]{0,2}(?P<number_suffix>[a-zA-Z/\s]{0,5}$|[0-9/]{0,5}$|\s[a-zA-Z]{1}[0-9]{0,3}$|\s[0-9]{2}[a-zA-Z]{0,3}$))$~';
+
 	public $order_id;
 	public $success;
 	public $errors;
@@ -17,7 +19,7 @@ class WooCommerce_MyParcel_Export {
 	/**
 	 * Construct.
 	 */
-			
+
 	public function __construct() {
 		$this->success = array();
 		$this->errors = array();
@@ -144,7 +146,7 @@ class WooCommerce_MyParcel_Export {
 		if ( in_array($request, array('add_return','get_labels','modal_dialog')) && !empty($this->errors) ) {
 			echo $this->parse_errors( $this->errors );
 			die();
-		}		
+		}
 
 		// format errors for html output
 		if (!empty($this->errors)) {
@@ -297,7 +299,7 @@ class WooCommerce_MyParcel_Export {
 			} catch (Exception $e) {
 				$this->errors[$order_id] = $e->getMessage();
 			}
-			
+
 		}
 		// echo '<pre>';var_dump($success);echo '</pre>';die();
 
@@ -305,6 +307,7 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function get_shipment_labels( $shipment_ids, $order_ids = array(), $label_response_type = NULL, $offset = 0 ) {
+
 		$return = array();
 
 		$this->log("*** Label request started ***");
@@ -318,8 +321,10 @@ class WooCommerce_MyParcel_Export {
 				$params['positions'] = implode( ';', array_slice($portrait_positions,$offset) );
 			}
 
+
 			if (isset($label_response_type) && $label_response_type == 'url') {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
+
 				$this->log("API response:\n".var_export($response, true));
 				// var_dump( $response );
 				if (isset($response['body']['data']['pdfs']['url'])) {
@@ -328,6 +333,7 @@ class WooCommerce_MyParcel_Export {
 				} else {
 					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
 				}
+
 			} else {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'pdf' );
 
@@ -345,14 +351,17 @@ class WooCommerce_MyParcel_Export {
 					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
 				}
 
-				// echo '<pre>';var_dump($response);echo '</pre>';die();
+				 //echo '<pre>';var_dump($response);echo '</pre>';die();
 			}
+
 		} catch (Exception $e) {
 			$this->errors[] = $e->getMessage();
 		}
 
 		return $return;
 	}
+
+
 
 	public function get_labels( $order_ids, $label_response_type = NULL, $offset = 0 ) {
 		$shipment_ids = $this->get_shipment_ids( $order_ids, array( 'only_last' => true ) );
@@ -362,6 +371,7 @@ class WooCommerce_MyParcel_Export {
 			$this->errors[] = __( 'The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcel' );
 			return array();
 		}
+		$this->add_myparcel_note($order_ids);
 
 		return $this->get_shipment_labels( $shipment_ids, $order_ids, $label_response_type, $offset );
 	}
@@ -539,7 +549,11 @@ class WooCommerce_MyParcel_Export {
 			'company'		=> (string) WCX_Order::get_prop( $order, 'shipping_company' ),
 			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
 			'phone'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_phone']) ? WCX_Order::get_prop( $order, 'billing_phone' ) : '',
+
 		);
+
+		$this->channel_engine_myparcel_check($order);
+		$this->split_street_admin($order);
 
 
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
@@ -570,12 +584,59 @@ class WooCommerce_MyParcel_Export {
 				'street'					=> (string) WCX_Order::get_prop( $order, 'shipping_address_1' ),
 				'street_additional_info'	=> (string) WCX_Order::get_prop( $order, 'shipping_address_2' ),
 				'region'					=> (string) WCX_Order::get_prop( $order, 'shipping_state' ),
+
 			);
 		}
 
 		$address = array_merge( $address, $address_intl);
 
 		return apply_filters( 'wc_myparcel_recipient', $address, $order );
+	}
+	
+	/**
+	 * When the ChannelEngine plugin is activated, copy the barcode and place them in the ChannelEngine - Track & Trace field
+	 */
+	private function channel_engine_myparcel_check($order){
+		if (!empty(WCX_Order::get_meta( $order, '_shipping_ce_track_and_trace' ))) {
+			return;
+		}
+
+		$order_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+
+		if (!empty($order_shipments)) {
+
+			$keys = array_keys( $order_shipments );
+			$order_number = $keys[0];
+
+			$tracking = $order_shipments[ $order_number ][ 'tracktrace' ]; // auto
+			update_post_meta( $order->id, '_shipping_ce_track_and_trace', $tracking );
+		}
+
+		return;
+	}
+
+	/**
+	 *
+	 * Get the street from _shipping_address_1 and split them in street, street_suffix, number and number_suffix
+	 * Place the street, street_suffix, number and number_suffix into the correct text field (for export)
+	 *
+	 * @param $order
+	 */
+	private function split_street_admin($order){
+		$split_street_regex = self::REGEX_SPLIT_STREET;
+		$address = trim((string) WCX_Order::get_prop( $order, 'shipping_address_1' ));
+		preg_match($split_street_regex, $address, $matches);
+
+		if (empty (WCX_Order::get_meta( $order, '_shipping_street_name' ) && WCX_Order::get_meta( $order, '_shipping_house_number' ))){
+
+			update_post_meta( $order->id, '_shipping_street_name', $matches['street'] );
+			update_post_meta( $order->id, '_shipping_house_number', $matches['number'] );
+
+			if (empty(WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ))) {
+				update_post_meta( $order->id, '_shipping_house_number_suffix', (string) WCX_Order::get_prop( $order, 'shipping_address_2' ) );
+			}
+		}
+		return;
 	}
 
 	public function get_options( $order ) {
@@ -755,7 +816,7 @@ class WooCommerce_MyParcel_Export {
 				if (empty($classification)) {
 					$classification = $default_hs_code;
 				}
-				
+
 				// add item to item list
 				$items[] = compact( 'description', 'amount', 'weight', 'item_value', 'classification', 'country' );
 			}
@@ -983,7 +1044,7 @@ class WooCommerce_MyParcel_Export {
 	public function download_pdf ( $pdf_data, $order_ids ) {
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');
-		header('Content-Disposition: attachment; filename="'.$this->get_filename( $order_ids ).'"'); 
+		header('Content-Disposition: attachment; filename="'.$this->get_filename( $order_ids ).'"');
 		header('Content-Transfer-Encoding: binary');
 		header('Connection: Keep-Alive');
 		header('Expires: 0');
@@ -1086,7 +1147,7 @@ class WooCommerce_MyParcel_Export {
 		if( $product && isset( $item['variation_id'] ) && $item['variation_id'] > 0 && method_exists($product, 'get_variation_attributes')) {
 			$name .= woocommerce_get_formatted_variation( $product->get_variation_attributes() );
 		}
-		
+
 		return $name;
 	}
 
@@ -1127,7 +1188,7 @@ class WooCommerce_MyParcel_Export {
 				$product_weight = $weight;
 				break;
 		}
-	
+
 		$item_weight = (float) $product_weight * (int) $item['qty'];
 
 		return $item_weight;
@@ -1137,7 +1198,7 @@ class WooCommerce_MyParcel_Export {
 		if (empty($myparcel_delivery_options)) {
 			$myparcel_delivery_options = WCX_Order::get_meta( $order, '_myparcel_delivery_options' );
 		}
-		
+
 		$pickup_types = array( 'retail', 'retailexpress' );
 		if ( !empty($myparcel_delivery_options['price_comment']) && in_array($myparcel_delivery_options['price_comment'], $pickup_types) ) {
 			return $myparcel_delivery_options;
@@ -1433,12 +1494,12 @@ class WooCommerce_MyParcel_Export {
 
 	public function is_eu_country($country_code) {
 		// $eu_countries = array( 'GB', 'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE' );
-		$euro_countries = array( 'AT','BE','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','NO','UA','SM','RS','TR','VA','BY','CH' );
+		$euro_countries = array( 'AT','BE','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','UA','SM','RS','VA','BY' );
 		return in_array( $country_code, $euro_countries);
 	}
 
 	public function is_world_shipment_country( $country_code ) {
-		$world_shipment_countries = array( 'AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY' );
+		$world_shipment_countries = array( 'AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY','CH','TR','NO' );
 		return in_array( $country_code, $world_shipment_countries);
 	}
 

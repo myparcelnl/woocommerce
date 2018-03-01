@@ -1,7 +1,5 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( !class_exists( 'WooCommerce_MyParcel_Settings_Callbacks' ) ) :
 
@@ -394,7 +392,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 			'id'			=> "{$id}_fee",
 			'type'			=> 'text',
 			'size'			=> '5',
-		);					
+		);
 		// textarea (description)
 		$description_args = array(
 			'id'			=> "{$id}_description",
@@ -412,7 +410,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 				<td><?php $this->text_input( array_merge( $args, $description_args ) ); ?></td>
 			</tr>
 			!-->
-			<tr> 
+			<tr>
 				<td><?php _e( 'Additional fee (ex VAT, optional)', 'woocommerce-myparcel' )?>:</td>
 				<td>&euro; <?php $this->text_input( array_merge( $args, $fee_args ) ); ?></td>
 			</tr>

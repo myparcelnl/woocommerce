@@ -1,7 +1,5 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( !class_exists( 'WC_MyParcel_API' ) ) :
 
@@ -20,6 +18,8 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 	 */
 	function __construct( $key ) {
 		parent::__construct();
+
+		$this->user_agent = $this->getUserAgent();
 
 		$this->key = $key;
 	}
@@ -54,18 +54,16 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 			),
 		);
 
-
-		// echo '<pre>';var_dump($data);echo '</pre>';die();
 		$json = json_encode( $data );
 
 		$headers = array(
-			"Content-type: " . $content_type . "; charset=UTF-8",
-			'Authorization: basic '. base64_encode("{$this->key}"),
+			'Content-type' => $content_type . '; charset=UTF-8',
+			'Authorization' => 'basic '. base64_encode("{$this->key}"),
+			'user-agent' => $this->user_agent
 		);
 
 		$request_url = $this->APIURL . $endpoint;
 		$response = $this->post($request_url, $json, $headers);
-
 		return $response;
 	}
 
@@ -78,8 +76,11 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 		$endpoint = 'shipments';
 
 		$headers = array (
-			'Accept: application/json; charset=UTF-8',
-			'Authorization: basic '. base64_encode("{$this->key}"),
+			'headers' => array(
+				'Accept' => 'application/json; charset=UTF-8',
+				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+				'user-agent' => $this->user_agent
+			)
 		);
 
 		$request_url = $this->APIURL . $endpoint . '/' . implode(';', $ids);
@@ -114,13 +115,15 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 		$endpoint = 'shipments';
 
 		$headers = array (
-			// 'Accept: application/json; charset=UTF-8',
-			'Authorization: basic '. base64_encode("{$this->key}"),
+			'headers' => array(
+				'Accept' => 'application/json; charset=UTF-8',
+				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+				'user-agent' => $this->user_agent
+			)
 		);
 
 		$request_url = $this->APIURL . $endpoint . '/' . implode(';', (array) $ids);
 		$request_url = add_query_arg( $params, $request_url );
-		// echo '<pre>';var_dump($request_url);echo '</pre>';die();
 		$response = $this->get($request_url, $headers);
 
 		return $response;
@@ -137,16 +140,19 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 		$endpoint = 'shipment_labels';
 
 		if ( $return == 'pdf' ) {
-			$accept = 'Accept: application/pdf'; // (For the PDF binary. This is the default.)
+			$accept = 'application/pdf'; // (For the PDF binary. This is the default.)
 			$raw = true;
 		} else {
-			$accept = 'Accept: application/json; charset=UTF-8'; // (For shipment download link)
+			$accept = 'application/json; charset=UTF-8'; // (For shipment download link)
 			$raw = false;
 		}
 
-		$headers = array (
-			$accept,
-			'Authorization: basic '. base64_encode("{$this->key}"),
+		$headers = array(
+			'headers' => array(
+				'Accept' => $accept,
+				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+				'user-agent' => $this->user_agent
+			)
 		);
 
 		$request_url = add_query_arg( $params, $this->APIURL . $endpoint . '/' . implode(';', $ids) );
@@ -165,7 +171,10 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 		$endpoint = 'tracktraces';
 
 		$headers = array (
-			'Authorization: basic '. base64_encode("{$this->key}"),
+			'headers' => array(
+				'Authorization' => 'basic '. base64_encode("{$this->key}"),
+				'user-agent' => $this->user_agent
+			)
 		);
 
 		$request_url = add_query_arg( $params, $this->APIURL . $endpoint . '/' . implode(';', $ids) );
@@ -191,6 +200,25 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 
 		return $response;
 	}
+
+	/**
+	 * Get Wordpress, Woocommerce, Myparcel version and place theme in a array. Implode the array to get an UserAgent.
+	 * @return string
+	 */
+	private function getUserAgent() {
+
+		$userAgents = array(
+			'Wordpress/'.get_bloginfo( 'version' ),
+			'WooCommerce/'.WOOCOMMERCE_VERSION,
+			'MyParcelNL-WooCommerce/'.WC_MYPARCEL_VERSION,
+		);
+
+		//Place white space between the array elements
+		$userAgent = implode(' ', $userAgents);
+
+		return $userAgent;
+	}
+
 
 }
 
