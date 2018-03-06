@@ -1,15 +1,18 @@
 <?php
+
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
-use WPO\WC\MyParcelBE\Compatibility\Order   as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
 
 /**
  * Frontend views
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
 
-if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
+if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 
 	class WooCommerce_MyParcelBE_Frontend_Settings {
 
@@ -33,8 +36,8 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 		 */
 		public function get_cutoff_time() {
 			if (
-				date_i18n('w') == self::DAYS_SATURDAY &&
-				isset($this->settings['saturday_cutoff_time'])
+				date_i18n( 'w' ) == self::DAYS_SATURDAY &&
+				isset( $this->settings['saturday_cutoff_time'] )
 			) {
 				return $this->settings['saturday_cutoff_time'];
 			}
@@ -56,12 +59,14 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 		public function get_deliverydays_window() {
 			return $this->settings['deliverydays_window'];
 		}
+
 		/**
 		 * @return string
 		 */
 		public function get_dropoff_days() {
-			return implode(";", $this->settings['dropoff_days']);
+			return implode( ";", $this->settings['dropoff_days'] );
 		}
+
 		/**
 		 * @return string
 		 */
@@ -72,10 +77,8 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 		/**
 		 * @return string
 		 */
-		public function get_country_code(){
-			/* @todo get the country from the checkout page */
-			return 'BE';
-
+		public function get_country_code() {
+			return WC()->customer->get_shipping_country();
 		}
 
 		/**
@@ -106,7 +109,16 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 			return $this->settings['saturday_delivery_fee'];
 		}
 
+		/**
+		 * @return null|string
+		 */
+		public function get_checkout_display() {
+			if ( isset( $this->settings['checkout_display'] ) ) {
+				return $this->settings['checkout_display'];
+			}
 
+			return null;
+		}
 	}
 
 endif; // class_exists

@@ -13,6 +13,11 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 
 	class WooCommerce_MyParcelBE_Frontend {
 
+        /*
+         * @var WooCommerce_MyParcelBE_Frontend_Settings
+         */
+		private $frontend_settings;
+
 		function __construct()	{
 			// Customer Emails
 			if (isset(WooCommerce_MyParcelBE()->general_settings['email_tracktrace'])) {
@@ -54,6 +59,10 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			add_action( 'woocommerce_checkout_after_order_review', array( $this, 'output_shipping_data' ) );
 			add_action( 'woocommerce_update_order_review_fragments', array( $this, 'order_review_fragments' ) );
 
+			/* @todo remove require_once() */
+			require_once( WooCommerce_MyParcelBE()->plugin_path() . '/includes/class-wcmp-frontend-settings.php' );
+
+			$this->frontend_settings = new WooCommerce_MyParcelBE_Frontend_Settings();
 		}
 
 		public function track_trace_email( $order, $sent_to_admin ) {
@@ -136,47 +145,6 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			return $replacement;
 		}
 
-		private function snakeToCamelCase($string, $capitalizeFirstCharacter = false)
-		{
-
-			$str = str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
-
-			if (!$capitalizeFirstCharacter) {
-				$str[0] = strtolower($str[0]);
-			}
-
-			return $str;
-		}
-
-		private function getCheckoutConfig()
-        {
-			/* @todo remove require_once() */
-			require_once( WooCommerce_MyParcelBE()->plugin_path() . '/includes/class-wcmp-frontend-settings.php' );
-
-			$frontendSettings = new WooCommerce_MyParcelBE_Frontend_Settings();
-
-			$config = [
-				'cutoffTime'                 => $frontendSettings->get_cutoff_time(),
-				'saturdayCutoffTime'         => $frontendSettings->get_saturday_cutoff_time(),
-				'dropoffDelay'               => $frontendSettings->get_dropoff_delay(),
-				'deliverydaysWindow'         => $frontendSettings->get_deliverydays_window(),
-				'dropoffDays'                => $frontendSettings->get_dropoff_days(),
-				'apiBaseUrl'                 => $frontendSettings->get_api_url(),
-				"countryCode"                => $frontendSettings->get_country_code(),
-				"carrierCode"                => $frontendSettings::CARRIER_CODE,
-				"carrierName"                => $frontendSettings::CARRIER_NAME,
-				"allowBpostAutograph"        => $frontendSettings->is_signed_enabled(),
-				"priceBpostAutograph"        => $frontendSettings->get_price_signature(),
-				"allowBpostSaturdayDelivery" => $frontendSettings->is_saterday_delivery_enabled(),
-				"priceBpostSaturdayDelivery" => $frontendSettings->get_price_saterday_delivery(),
-			];
-
-			return json_encode( $config );
-
-			// Use cutoff_time and saturday_cutoff_time on saturdays
-		}
-
-
 		/**
 		 *
 		 * Output some stuff.
@@ -193,77 +161,14 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			$urlJsConfig = WooCommerce_MyParcelBE()->plugin_url() . "/assets/delivery-options/js/myparcel.config.js";
 			$urlJs       = WooCommerce_MyParcelBE()->plugin_url() . "/assets/delivery-options/js/myparcelbe.js";
 
-			$jsonConfig  = $this->getCheckoutConfig();
+			$jsonConfig  = $this->get_checkout_config();
+			$myparcelbeShippingMethods = json_encode($this->get_shipping_methods());
+			$hideDeliveryMethod = $this->is_hide_delivery_method();
 
 			echo "<script> myParcelConfig = {$jsonConfig} </script>";
 			require_once(WooCommerce_MyParcelBE()->plugin_path().'/includes/views/wcmp-checkout-template.php');
 
 			return;
-
-			// get delivery option fees/prices
-//		$price_options = array_merge( $delivery_options, $delivery_types );
-//		$prices = array();
-//		foreach ($price_options as $key => $option) {
-//			// JS API correction
-//			if ($option == 'standard') {
-//				$option = 'default';
-//			}
-//
-//			if ( in_array($option,$delivery_options) && !isset(WooCommerce_MyParcelBE()->checkout_settings[$option.'_enabled']) ) {
-//				$prices[$option] = 'disabled';
-//			} elseif (!empty(WooCommerce_MyParcelBE()->checkout_settings[$option.'_fee'])) {
-//				$fee = WooCommerce_MyParcelBE()->checkout_settings[$option.'_fee'];
-//				$fee = $this->normalize_price( $fee );
-//
-//				// get WC Tax display setting for cart
-//				$tax_display_cart = get_option( 'woocommerce_tax_display_cart' );
-//				if ($tax_display_cart == 'incl') {
-//					$display_fee = $fee + array_sum( WC_Tax::calc_shipping_tax( $fee, WC_Tax::get_shipping_tax_rates() ) );
-//				} else {
-//					$display_fee = $fee;
-//				}
-//
-//				// discounts are negative prices
-//				$prices[$option] = '+ '.wc_price($display_fee);
-//			}
-//		}
-
-			// exclude delivery types
-//		$exclude_delivery_types = array();
-//		foreach ($delivery_types as $key => $delivery_type) {
-//			// JS API correction
-//			if ($delivery_type == 'standard') {
-//				continue;
-//			}
-//			if (!isset(WooCommerce_MyParcelBE()->checkout_settings[$delivery_type.'_enabled'])) {
-//				$exclude_delivery_types[] = $key;
-//			}
-//		}
-//		$exclude_delivery_types = implode(';', $exclude_delivery_types);
-
-
-
-
-			/*// combine settings
-			$settings = array(
-				'base_url'		=> $config['wpApiUrl'],
-				'exclude_delivery_type'	=> $exclude_delivery_types,
-				'price'			=> $prices,
-				'dropoff_delay'		=> $config['dropoffDelay'],
-				'cutoff_time'		=> $cutoffTime,
-				'deliverydays_window'	=> $config['deliverydaysWindow'],
-				'dropoff_days'		=> $config['droppOffDays'],
-			);
-			// remove empty options
-			$settings = array_filter($settings);
-
-			// encode settings for JS object
-			$settings = json_encode($settings);
-			echo "<script> myParcelSettings = {$settings} </script>";
-
-			// XXX set chosen checkout  options in the session ?
-			$chosen_shipping_methods = WC()->session->chosen_shipping_methods;*/
-
 		}
 
 
@@ -541,6 +446,71 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			$price = floatval($price);
 
 			return $price;
+		}
+
+		private function get_checkout_config()
+		{
+
+			$config = [
+				'cutoffTime'                 => $this->frontend_settings->get_cutoff_time(),
+				'saturdayCutoffTime'         => $this->frontend_settings->get_saturday_cutoff_time(),
+				'dropoffDelay'               => $this->frontend_settings->get_dropoff_delay(),
+				'deliverydaysWindow'         => $this->frontend_settings->get_deliverydays_window(),
+				'dropoffDays'                => $this->frontend_settings->get_dropoff_days(),
+				'apiBaseUrl'                 => $this->frontend_settings->get_api_url(),
+				"countryCode"                => $this->frontend_settings->get_country_code(),
+				"carrierCode"                => WooCommerce_MyParcelBE_Frontend_Settings::CARRIER_CODE,
+				"carrierName"                => WooCommerce_MyParcelBE_Frontend_Settings::CARRIER_NAME,
+				"allowBpostAutograph"        => $this->frontend_settings->is_signed_enabled(),
+				"priceBpostAutograph"        => $this->frontend_settings->get_price_signature(),
+				"allowBpostSaturdayDelivery" => $this->frontend_settings->is_saterday_delivery_enabled(),
+				"priceBpostSaturdayDelivery" => $this->frontend_settings->get_price_saterday_delivery(),
+			];
+
+			return json_encode( $config );
+
+			// Use cutoff_time and saturday_cutoff_time on saturdays
+		}
+
+		/**
+         * Get shipping methods associated with parcels to enable delivery options
+		 */
+		private function get_shipping_methods() {
+			var_dump( $this->frontend_settings->get_checkout_display() );
+			if (
+			        $this->frontend_settings->get_checkout_display() != 'all_methods' &&
+                    isset( WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'][1] )
+            ) {
+				return WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'][1];
+			}
+
+            return array();
+		}
+
+		/**
+		 * @todo refactor
+		 */
+		private function is_hide_delivery_method() {
+			if ($this->frontend_settings->get_checkout_display() == 'all_methods' ) {
+				$myparcelbe_delivery_options_always_display = 'yes';
+			}
+
+			// determine whether to pre-hide iframe (prevents flashing)
+			$hide_delivery_options = false;
+			$chosen_shipping_methods = WC()->session->chosen_shipping_methods;
+			if ( empty($myparcelbe_delivery_options_always_display) && !empty($chosen_shipping_methods) && is_array($chosen_shipping_methods) ) {
+				$shipping_country = WC()->customer->get_shipping_country();
+				if ($shipping_country != 'NL') {
+					$hide_delivery_options = true;
+				} else {
+					$chosen_shipping_method = array_shift($chosen_shipping_methods);
+					$shipping_class = $this->get_cart_shipping_class();
+					$package_type = WooCommerce_MyParcelBE()->export->get_package_type_from_shipping_method( $chosen_shipping_method, $shipping_class, $shipping_country );
+					if ($package_type != 1) { // parcel
+						$hide_delivery_options = true;
+					}
+				}
+			}
 		}
 	}
 
