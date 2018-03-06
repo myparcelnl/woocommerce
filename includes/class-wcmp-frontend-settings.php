@@ -71,18 +71,43 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 			return wp_nonce_url($wpAjaxUrl . $requestPrefix . 'action=wc_myparcelbe_frontend', 'wc_myparcelbe_frontend');
 		}
 
+		/**
+		 * @return string
+		 */
 		public function get_country_code(){
+			/* @todo get the country from the checkout page */
+			return 'BE';
+
 		}
 
-		public function get_price_saterday_delivery() {
+		/**
+		 * @return bool
+		 */
+		public function is_signed_enabled() {
+			return (bool) $this->settings['signed_enabled'];
 		}
 
+		/**
+		 * @return mixed
+		 */
 		public function get_price_signature() {
 			return $this->settings['signed_fee'];
 		}
 
-		public function is_active_saterday_delivery() {
+		/**
+		 * @return bool
+		 */
+		public function is_saterday_delivery_enabled() {
+			return (bool) $this->settings['saturday_delivery_enabled'];
 		}
+
+		/**
+		 * @return mixed
+		 */
+		public function get_price_saterday_delivery() {
+			return $this->settings['saturday_delivery_fee'];
+		}
+
 
 	}
 

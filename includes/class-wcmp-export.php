@@ -384,40 +384,6 @@ class WooCommerce_MyParcelBE_Export {
 		die();
 	}
 
-	public function frontend_api_request() {
-		// TODO: check nonce
-		$params = $_REQUEST;
-
-		// filter non API params
-		$api_params = array(
-			'cc'					=> '',
-			'postal_code'			=> '',
-			'number'				=> '',
-			'carrier'				=> '',
-			'delivery_time'			=> '',
-			'delivery_date'			=> '',
-			'cutoff_time'			=> '',
-			'dropoff_days'			=> '',
-			'dropoff_delay'			=> '',
-			'deliverydays_window'	=> '',
-			'exclude_delivery_type'	=> '',
-		);
-		$params = array_intersect_key($params, $api_params);
-
-		$api = $this->init_api();
-
-		try {
-			$response = $api->get_delivery_options( $params, true );
-
-			@header('Content-type: application/json; charset=utf-8');
-
-			echo $response['body'];
-		} catch (Exception $e) {
-			@header("HTTP/1.1 503 service unavailable");
-		}
-		die();
-	}
-
 	public function init_api () {
 		// $user = WooCommerce_MyParcelBE()->general_settings['api_username'];
 		if ( !isset(WooCommerce_MyParcelBE()->general_settings['api_key']) ) {

@@ -642,14 +642,14 @@ class WooCommerce_MyParcelBE_Settings {
 		);
 
 		add_settings_field(
-			'monday_delivery',
-			__( 'Enable monday delivery', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'checkbox' ),
+			'saturday_delivery',
+			__( 'Saturday delivery', 'woocommerce-myparcelbe' ),
+			array( $this->callbacks, 'delivery_option_enable' ),
 			$option_group,
 			'processing_parameters',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'monday_delivery',
+				'id'			=> 'saturday_delivery',
 			)
 		);
 
@@ -667,6 +667,7 @@ class WooCommerce_MyParcelBE_Settings {
 				'description'	=> __( 'Time at which you stop processing orders on saturday for monday delivery (format: hh:mm)', 'woocommerce-myparcelbe' ),
 			)
 		);
+
 
 		// Customizations section
 		add_settings_section(

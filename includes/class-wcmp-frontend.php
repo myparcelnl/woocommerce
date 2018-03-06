@@ -164,13 +164,12 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 				"countryCode"                => $frontendSettings->get_country_code(),
 				"carrierCode"                => $frontendSettings::CARRIER_CODE,
 				"carrierName"                => $frontendSettings::CARRIER_NAME,
-				"priceBpostSaturdayDelivery" => $frontendSettings->get_price_saterday_delivery(),
+				"allowBpostAutograph"        => $frontendSettings->is_signed_enabled(),
 				"priceBpostAutograph"        => $frontendSettings->get_price_signature(),
-				"allowBpostSaturdayDelivery" => $frontendSettings->is_active_saterday_delivery(),
+				"allowBpostSaturdayDelivery" => $frontendSettings->is_saterday_delivery_enabled(),
+				"priceBpostSaturdayDelivery" => $frontendSettings->get_price_saterday_delivery(),
 			];
-	        var_dump( $config );
 
-	        exit( 'asdf' );
 			return json_encode( $config );
 
 			// Use cutoff_time and saturday_cutoff_time on saturdays
@@ -194,11 +193,11 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			$urlJsConfig = WooCommerce_MyParcelBE()->plugin_url() . "/assets/js/myparcel-config.js";
 
 			$jsonConfig  = $this->getCheckoutConfig();
-			$config      = json_decode($jsonConfig);
 
 			echo "<script> myParcelConfig = {$jsonConfig} </script>";
-			require_once(WooCommerce_MyParcelBE()->plugin_path().'/includes/myparcel-checkout.php');
+//			require_once(WooCommerce_MyParcelBE()->plugin_path().'/includes/myparcel-checkout.php');
 
+			return;
 
 			// get delivery option fees/prices
 //		$price_options = array_merge( $delivery_options, $delivery_types );
@@ -242,10 +241,9 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 //		$exclude_delivery_types = implode(';', $exclude_delivery_types);
 
 
-			return;
 
 
-			// combine settings
+			/*// combine settings
 			$settings = array(
 				'base_url'		=> $config['wpApiUrl'],
 				'exclude_delivery_type'	=> $exclude_delivery_types,
@@ -263,7 +261,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			echo "<script> myParcelSettings = {$settings} </script>";
 
 			// XXX set chosen checkout  options in the session ?
-			$chosen_shipping_methods = WC()->session->chosen_shipping_methods;
+			$chosen_shipping_methods = WC()->session->chosen_shipping_methods;*/
 
 		}
 
