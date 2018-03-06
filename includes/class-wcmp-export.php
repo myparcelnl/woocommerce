@@ -425,7 +425,7 @@ class WooCommerce_MyParcelBE_Export {
 		}
 
 		$key = WooCommerce_MyParcelBE()->general_settings['api_key'];
-		$api = new WC_MyParcelbe_API( $key );
+		$api = new WC_MyParcelBE_API( $key );
 
 		return $api;
 	}
