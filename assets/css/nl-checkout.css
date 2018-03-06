@@ -1,3 +1,6 @@
+/*
+ * Styling input files on front page
+ */
 .woocommerce form .form-row-quart,
 .woocommerce-page form .form-row-quart,
 .woocommerce form .form-row-quart-first,
@@ -21,4 +24,232 @@
 }
 #billing_house_number, #shipping_house_number {
 	-moz-appearance: textfield;
+}
+
+/*
+ * Styling delivery options
+ */
+
+
+fieldset {
+	border-radius: 3px;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.mypa-time {
+	margin-left: 5px;
+}
+
+#send-per-carrier {
+	background-color: #4169e1 !important;
+	color: white;
+	font-weight: bold;
+	width: 100%;
+	text-align: center;
+	background-color: transparent;
+}
+
+#send-per-carrier {
+
+}
+
+#txt-send-per-carrier {
+	line-height: 2;
+}
+#mypa-delivery-option-form fieldset, form, ul, li, select {
+	padding: 0;
+	margin: 0;
+}
+
+#mypa-delivery-option-form label,
+#mypa-delivery-option-form div,
+#mypa-delivery-option-form select {
+	display: inline-block;
+	vertical-align: top;
+}
+
+#mypa-delivery-option-form label {
+	width: 66%;
+}
+.myparcel-price::before {
+	content: "+€";
+}
+
+.mypa-error label {
+	display: inline-block;
+	width: 50%;
+}
+
+.mel-style-b {
+	list-style-type: none;
+}
+
+/* temp */
+#method-myparcel-signature-selector-be {
+	display: inline-block;
+	margin-top: 25px;
+}
+
+
+/* temp */
+#myparcel-price-bpost-autograph, #method-myparcel-signature-selector-be {
+	font-size: 12px !important;
+}
+
+.mel-style {
+	display: inline-block;
+	border-bottom: 1px solid black;
+	height: 2em;
+	width: 80%;
+}
+
+#mypa-pickup-location-selector li,
+#mypa-delivery-option-form li,
+#mypa-delivery-selectors-be li {
+	list-style-type: none;
+	padding: 2px 0px 20px 0px;
+	height: 2em;
+}
+
+#mypa-delivery-option-form label,
+#mypa-delivery-selectors-be label {
+	display: inline-block;
+	width: 80%;
+	height: 2em;
+	font-size: smaller;
+}
+
+#mypa-delivery-selectors-be div {
+	display: inline-block;
+	margin-top: 20px;
+}
+
+#mypa-pickup-location {
+	width: 80%;
+}
+#mypa-pickup-location-selector {
+	margin: 50px 0 50px 0;
+}
+
+#mypa-pre-selectors, #mypa-pickup-selector, #mypa-delivery-selectors-be {
+	border-bottom: 1px solid black;
+	border-radius: 3px;
+}
+
+#mypa-pickup-selector li{
+	margin: 0;
+	display: inline-block;
+	height: 60px;
+	width: 100%;
+	padding: 5px 0px 2px 0px;
+}
+
+.mypa-help {
+	color: black;
+	text-decoration: none;
+}
+
+.fa-question {
+	text-decoration: none;
+}
+
+#mypa-shop-mock {
+	margin-top: 500px;
+	background-color: #ccc;
+	width: 100%;
+	margin-bottom: 25px;
+}
+
+.full-width {
+	display: inline-block;
+	width: 100%;
+	background-color: white;
+	margin-bottom: 1px;
+	padding-bottom: 2px;
+}
+
+#mypa-location-details {
+	z-index: 999;
+	padding: 20px;
+	border: 1px solid black;
+	border-radius: 3px;
+	position: absolute;
+	min-width: 300px;
+	max-width: 400px;
+	margin: 5px;
+	display: none;
+	background-color: white;
+}
+
+.mypa-pickup-location-details-location,
+.mypa-pickup-location-details-phone,
+.mypa-pickup-location-details-city,
+.mypa-pickup-location-details-time  {
+	margin-bottom: 5px;
+	display: inline-block;
+	width: 100%;
+}
+
+.mypa-pickup-location-details-day {
+	display: inline-block;
+	width: 30%;
+}
+
+#mypa-message {
+	z-index: 999;
+	position: absolute;
+	display: none;
+	padding: 20px;
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 3px;
+	position: absolute;
+	margin: 0;
+}
+
+#mypa-spinner {
+	position: absolute;
+	margin: 50px 0 0 125px;
+	border: 16px solid #f3f3f3;
+	border-top: 16px solid #000;
+	border-radius: 50%;
+	width: 32px;
+	height: 32px;
+	animation: spin 0.3s linear infinite;
+}
+
+
+
+#mypa-delivery-date,
+#mypa-delivery-date-bpost-saturday {
+	display: inline-block;
+	width: 66%;
+}
+
+
+#mypa-delivery-date-bpost-saturday {
+	margin-top: 20px;
+}
+
+
+#myparcel-bottom-spacer {
+	display: block;
+	clear: both;
+	height: 40px;
+	border-bottom: 1px solid black;
+	margin: 0px 0px 20px 0px;
+}
+
+@keyframes wiggle {
+	0% { transform: rotate(0deg); }
+	25% { transform: rotate(5deg); }
+	50% { transform: rotate(0deg); }
+	75% { transform: rotate(-5deg); }
+	100% { transform: rotate(0deg); }
+}
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
 }

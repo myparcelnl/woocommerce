@@ -152,6 +152,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
         {
 			/* @todo remove require_once() */
 			require_once( WooCommerce_MyParcelBE()->plugin_path() . '/includes/class-wcmp-frontend-settings.php' );
+
 			$frontendSettings = new WooCommerce_MyParcelBE_Frontend_Settings();
 
 			$config = [
@@ -189,13 +190,13 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			}
 
 			$urlCss      = WooCommerce_MyParcelBE()->plugin_url() . "/assets/css/myparcel.css";
-			$urlJs       = WooCommerce_MyParcelBE()->plugin_url() . "/assets/js/myparcel.js";
-			$urlJsConfig = WooCommerce_MyParcelBE()->plugin_url() . "/assets/js/myparcel-config.js";
+			$urlJsConfig = WooCommerce_MyParcelBE()->plugin_url() . "/assets/delivery-options/js/myparcel.config.js";
+			$urlJs       = WooCommerce_MyParcelBE()->plugin_url() . "/assets/delivery-options/js/myparcelbe.js";
 
 			$jsonConfig  = $this->getCheckoutConfig();
 
 			echo "<script> myParcelConfig = {$jsonConfig} </script>";
-//			require_once(WooCommerce_MyParcelBE()->plugin_path().'/includes/myparcel-checkout.php');
+			require_once(WooCommerce_MyParcelBE()->plugin_path().'/includes/views/wcmp-checkout-template.php');
 
 			return;
 

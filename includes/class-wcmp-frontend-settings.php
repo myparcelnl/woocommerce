@@ -17,6 +17,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 
 		const CARRIER_CODE = 2;
 		const CARRIER_NAME = "Bpost";
+		const BASE_URL = "https://api.myparcel.nl/";
 
 		private $settings;
 
@@ -65,10 +66,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 		 * @return string
 		 */
 		public function get_api_url() {
-			$wpAjaxUrl        = admin_url('admin-ajax.php');
-			$requestPrefix    = strpos($wpAjaxUrl, '?') !== false ? '&' : '?';
-
-			return wp_nonce_url($wpAjaxUrl . $requestPrefix . 'action=wc_myparcelbe_frontend', 'wc_myparcelbe_frontend');
+			return self::BASE_URL;
 		}
 
 		/**
