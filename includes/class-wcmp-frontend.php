@@ -476,7 +476,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
          * Get shipping methods associated with parcels to enable delivery options
 		 */
 		private function get_shipping_methods() {
-			var_dump( $this->frontend_settings->get_checkout_display() );
+			
 			if (
 			        $this->frontend_settings->get_checkout_display() != 'all_methods' &&
                     isset( WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'][1] )
