@@ -6,7 +6,6 @@
 ?>
 
 <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
-<link rel="stylesheet" href="<?= $urlCss ?>">
 
 <div id="mypa-spinner"></div>
 <div id="mypa-message"></div>
@@ -37,8 +36,8 @@
         <ul id="mypa-delivery-selectors-be">
             <li>
                 <div class="full-width">
-                    <label for ="mypa-method-signature-selector-be">Handtekening voor ontvangst&nbsp;<span id="mypa-price-bpost-signature"></span></label>
                     <div><input name="mypa-method-signature-selector-be" id="mypa-method-signature-selector-be" type="checkbox"</div>
+                    <label for ="mypa-method-signature-selector-be">Handtekening voor ontvangst&nbsp;<span id="mypa-price-bpost-signature"></span></label>
                 </div>
             </li>
         </ul>
