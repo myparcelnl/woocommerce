@@ -371,7 +371,7 @@ class WooCommerce_MyParcel_Export {
 			$this->errors[] = __( 'The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcel' );
 			return array();
 		}
-		$this->add_myparcel_note($order_ids);
+		
 
 		return $this->get_shipment_labels( $shipment_ids, $order_ids, $label_response_type, $offset );
 	}
