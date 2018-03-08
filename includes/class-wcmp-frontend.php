@@ -157,7 +157,6 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 				return;
 			}
 
-			$urlCss      = WooCommerce_MyParcelBE()->plugin_url() . "/assets/css/myparcel.css";
 			$urlJsConfig = WooCommerce_MyParcelBE()->plugin_url() . "/assets/delivery-options/js/myparcel.config.js";
 			$urlJs       = WooCommerce_MyParcelBE()->plugin_url() . "/assets/delivery-options/js/myparcelbe.js";
 
@@ -452,12 +451,12 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 		{
 
 			$config = [
+				'apiBaseUrl'                 => $this->frontend_settings->get_api_url(),
 				'cutoffTime'                 => $this->frontend_settings->get_cutoff_time(),
 				'saturdayCutoffTime'         => $this->frontend_settings->get_saturday_cutoff_time(),
 				'dropoffDelay'               => $this->frontend_settings->get_dropoff_delay(),
 				'deliverydaysWindow'         => $this->frontend_settings->get_deliverydays_window(),
 				'dropoffDays'                => $this->frontend_settings->get_dropoff_days(),
-				'apiBaseUrl'                 => $this->frontend_settings->get_api_url(),
 				"countryCode"                => $this->frontend_settings->get_country_code(),
 				"carrierCode"                => WooCommerce_MyParcelBE_Frontend_Settings::CARRIER_CODE,
 				"carrierName"                => WooCommerce_MyParcelBE_Frontend_Settings::CARRIER_NAME,
@@ -488,29 +487,25 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 		}
 
 		/**
-		 * @todo refactor
+		 * check if delivery method must hide
 		 */
 		private function is_hide_delivery_method() {
 			if ($this->frontend_settings->get_checkout_display() == 'all_methods' ) {
-				$myparcelbe_delivery_options_always_display = 'yes';
+				return false;
 			}
 
 			// determine whether to pre-hide iframe (prevents flashing)
-			$hide_delivery_options = false;
 			$chosen_shipping_methods = WC()->session->chosen_shipping_methods;
-			if ( empty($myparcelbe_delivery_options_always_display) && !empty($chosen_shipping_methods) && is_array($chosen_shipping_methods) ) {
-				$shipping_country = WC()->customer->get_shipping_country();
-				if ($shipping_country != 'NL') {
-					$hide_delivery_options = true;
-				} else {
-					$chosen_shipping_method = array_shift($chosen_shipping_methods);
-					$shipping_class = $this->get_cart_shipping_class();
-					$package_type = WooCommerce_MyParcelBE()->export->get_package_type_from_shipping_method( $chosen_shipping_method, $shipping_class, $shipping_country );
-					if ($package_type != 1) { // parcel
-						$hide_delivery_options = true;
-					}
-				}
+			if ( empty($chosen_shipping_methods) || !is_array($chosen_shipping_methods) ) {
+				return false;
 			}
+
+            $shipping_country = WC()->customer->get_shipping_country();
+            if ($shipping_country != 'NL') {
+                return true;
+            }
+
+			return false;
 		}
 	}
 
