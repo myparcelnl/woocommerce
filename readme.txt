@@ -2,7 +2,7 @@
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9.2
-Stable tag: 2.4.8
+Stable tag: 2.5.0
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -87,6 +87,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+
+= 2.5.0 (2018-03-8) =
+* Improvement: Support ChannelEngine
 
 = 2.4.8 (2018-02-27) =
 * Fix: The array error from the userAgent (https://wordpress.org/support/topic/parse-error-syntax-error-unexpected-in-wp-content-plugins-woocommerce-mypa/)
