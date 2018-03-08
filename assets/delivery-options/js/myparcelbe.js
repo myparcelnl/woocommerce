@@ -391,7 +391,7 @@ MyParcel = {
         if(dateObj.getDay() == 5 && myParcelConfig.carrierCode == 2){
             MyParcel.showBpostSaturday(dateString);
             if(typeof deliveryOptions.data.delivery[1] !== 'undefined'){
-                dateString = dateToString(deliveryOptions.data.delivery[1].date);
+                dateString = MyParcel.dateToString(deliveryOptions.data.delivery[1].date);
             }
         }
 
