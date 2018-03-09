@@ -388,7 +388,7 @@ MyParcel = {
 
         /* If there is a costly bPost saturday delivery also present the next option
            that has the standard fee */
-        if(dateObj.getDay() == 5 && myParcelConfig.carrierCode == 2){
+        if(dateObj.getDay() == 6 && myParcelConfig.carrierCode == 2){
             MyParcel.showBpostSaturday(dateString);
             if(typeof deliveryOptions.data.delivery[1] !== 'undefined'){
                 dateString = MyParcel.dateToString(deliveryOptions.data.delivery[1].date);
@@ -593,9 +593,9 @@ MyParcel = {
             {
                 /* deliverydays_window:    myParcelConfig.deliverydaysWindow, */
                 dropoff_days: 		myParcelConfig.dropoffDays,
-                cutofff_time: 		myParcelConfig.cutoffTime,
+                cutoff_time: 		myParcelConfig.cutoffTime,
                 street:       		streetName,
-                carrier:      		myParcelConfig.carrierCode,
+                carrier:          	myParcelConfig.carrierCode,
                 cc:           		myParcelConfig.countryCode,
                 number:       		houseNumber,
                 postal_code:  		postalCode
