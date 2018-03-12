@@ -683,17 +683,6 @@ class WooCommerce_MyParcelBE_Export {
 			}
 		}
 
-		// disable options for mailbox package and unpaid letter
-		// echo '<pre>';var_dump($package_type);echo '</pre>';die();
-		if ( $options['package_type'] != 1 ) {
-			$illegal_options = array( 'delivery_type', 'signature', 'insurance', 'delivery_date' );
-			foreach ($options as $key => $option) {
-				if (in_array($key, $illegal_options)) {
-					unset($options[$key]);
-				}
-			}
-		}
-
 		return $options;
 
 	}
@@ -876,11 +865,6 @@ class WooCommerce_MyParcelBE_Export {
 			}
 		}
 
-		// disable mailbox package outside NL
-		if ($shipping_country != 'NL' && $package_type == 2 ) {
-			$package_type = 1;
-		}
-
 		return $package_type;
 	}
 
@@ -909,7 +893,7 @@ class WooCommerce_MyParcelBE_Export {
 			if ((isset(WooCommerce_MyParcelBE()->export_defaults['package_type']))) {
 				$package_type = WooCommerce_MyParcelBE()->export_defaults['package_type'];
 			} else {
-				$package_type = 1; // 1. package | 2. mailbox package | 3. letter
+				$package_type = 1; // 1. package
 			}
 		}
 
@@ -924,8 +908,6 @@ class WooCommerce_MyParcelBE_Export {
 	public function get_package_types( $shipment_type = 'shipment' ) {
 		$package_types = array(
 			1	=> __( 'Parcel' , 'woocommerce-myparcelbe' ),
-			2	=> __( 'Mailbox package' , 'woocommerce-myparcelbe' ),
-			3	=> __( 'Unpaid letter' , 'woocommerce-myparcelbe' ),
 		);
 		if ( $shipment_type == 'return' ) {
 			unset($package_types[2]);

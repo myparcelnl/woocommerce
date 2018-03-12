@@ -469,7 +469,7 @@ class WooCommerce_MyParcelBE_Admin {
 		}
 
 		foreach ($shipments as $shipment_id => $shipment) {
-			// skip concepts, letters & mailbox packages
+			// skip concepts
 			if (empty($shipment['tracktrace'])) {
 				unset($shipments[$shipment_id]);
 				continue;

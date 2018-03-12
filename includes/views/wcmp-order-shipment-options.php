@@ -9,17 +9,6 @@
 		</td>
 		<td>
 			<?php
-			// disable mailbox package outside NL
-			if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
-				unset($package_types[2]); // mailbox package
-			}
-
-			// disable mailbox package and unpaid letter for pakjegemak
-			if ( WooCommerce_MyParcelBE()->export->is_pickup( $order ) ) {
-				unset($package_types[2]); // mailbox package
-				unset($package_types[3]); // unpaid letter
-				$package_types[1] .= ' (Pakjegemak)';
-			}
 
 			$name = "myparcelbe_options[{$order_id}][package_type]";
 			printf( '<select name="%s" class="package_type">', $name );

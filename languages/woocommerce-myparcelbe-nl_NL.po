@@ -135,14 +135,6 @@ msgstr "%d zendingen met ontbrekende HS codes - niet geëxporteerd."
 msgid "Parcel"
 msgstr "Pakket"
 
-#: includes/class-wcmp-export.php:917
-msgid "Mailbox package"
-msgstr "Brievenbuspakje"
-
-#: includes/class-wcmp-export.php:918
-msgid "Unpaid letter"
-msgstr "Ongefrankeerd"
-
 #: includes/class-wcmp-export.php:930
 msgid "Unknown"
 msgstr "Onbekend"
