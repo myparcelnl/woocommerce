@@ -496,7 +496,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			}
 
             $shipping_country = WC()->customer->get_shipping_country();
-            if ($shipping_country != 'NL') {
+            if ($shipping_country != 'BE') {
                 return true;
             }
 

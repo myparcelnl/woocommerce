@@ -88,7 +88,7 @@ class WooCommerce_MyParcelBE_Admin {
 
 	public function order_list_return_shipment_options( $order, $hide = true ) {
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( $shipping_country != 'NL' && !WooCommerce_MyParcelBE()->export->is_eu_country( $shipping_country )  ) {
+		if ( $shipping_country != 'BE' && !WooCommerce_MyParcelBE()->export->is_eu_country( $shipping_country )  ) {
 			return;
 		}
 		$order_id = WCX_Order::get_id( $order );
@@ -207,7 +207,7 @@ class WooCommerce_MyParcelBE_Admin {
 		}
 
 		$processed_shipments = $this->get_order_shipments( $order, true );
-		if (empty($processed_shipments) || $shipping_country != 'NL' ) {
+		if (empty($processed_shipments) || $shipping_country != 'BE' ) {
 			unset($listing_actions['add_return']);
 		}
 
@@ -435,8 +435,8 @@ class WooCommerce_MyParcelBE_Admin {
 		$country = WCX_Order::get_prop( $order, 'shipping_country' );
 		$postcode = preg_replace( '/\s+/', '', WCX_Order::get_prop( $order, 'shipping_postcode' ) );
 
-		// set url for NL or foreign orders
-		if ($country == 'NL') {
+		// set url for BE or foreign orders
+		if ($country == 'BE') {
 			// use billing postcode for pickup/pakjegemak
 			if ( WooCommerce_MyParcelBE()->export->is_pickup( $order ) ) {
 				$postcode = preg_replace( '/\s+/', '', WCX_Order::get_prop( $order, 'billing_postcode' ) );

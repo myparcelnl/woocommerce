@@ -509,7 +509,7 @@ class WooCommerce_MyParcelBE_Export {
 
 
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( $shipping_country == 'NL' ) {
+		if ( $shipping_country == 'BE' ) {
 			// use billing address if old 'pakjegemak' (1.5.6 and older)
 			if ( $pgaddress = WCX_Order::get_meta( $order, '_myparcelbe_pgaddress' ) ) {
 				$billing_name = method_exists($order, 'get_formatted_billing_full_name') ? $order->get_formatted_billing_full_name() : trim( $order->billing_first_name . ' ' . $order->billing_last_name );
@@ -842,8 +842,8 @@ class WooCommerce_MyParcelBE_Export {
 			}
 		}
 
-		// disable mailbox package outside NL
-		if ($shipping_country != 'NL' && $package_type == 2 ) {
+		// disable mailbox package outside BE
+		if ($shipping_country != 'BE' && $package_type == 2 ) {
 			$package_type = 1;
 		}
 
@@ -1381,7 +1381,7 @@ class WooCommerce_MyParcelBE_Export {
 	}
 
 	public function is_myparcelbe_destination( $country_code ) {
-		return ( $country_code == 'NL' || $this->is_eu_country( $country_code ) || $this->is_world_shipment_country( $country_code ) );
+		return ( $country_code == 'BE' || $this->is_eu_country( $country_code ) || $this->is_world_shipment_country( $country_code ) );
 	}
 
 	public function is_eu_country($country_code) {

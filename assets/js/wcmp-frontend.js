@@ -51,7 +51,7 @@ jQuery( function( $ ) {
 	// make delivery options update at least once (but don't hammer)
 	// myparcelbe_update_timer = setTimeout( update_myparcelbe_delivery_options_action, '500' );
 
-	// hide checkout options if not NL
+	// hide checkout options if not BE
 	$( '#billing_country, #shipping_country' ).change(function() {
 		window.myparcelbe_force_update = true; // in case the shipping method doesn't change
 		// check_country();
@@ -225,7 +225,7 @@ jQuery( function( $ ) {
 
 	function update_myparcelbe_delivery_options_action() {
 		country = get_shipping_country();
-		if ( window.myparcelbe_checkout_updating !== true && country == 'NL' && typeof MyPaWindow != 'undefined' && typeof MyPaWindow.mypabe!= 'undefined' ) {
+		if ( window.myparcelbe_checkout_updating !== true && country == 'BE' && typeof MyPaWindow != 'undefined' && typeof MyPaWindow.mypabe!= 'undefined' ) {
 			MyPaWindow.mypabe.settings = window.mypabe.settings;
 			MyPaWindow.updateMyPa();
 		}

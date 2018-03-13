@@ -9,8 +9,8 @@
 		</td>
 		<td>
 			<?php
-			// disable mailbox package outside NL
-			if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
+			// disable mailbox package outside BE
+			if (isset($recipient['cc']) && $recipient['cc'] != 'BE') {
 				unset($package_types[2]); // mailbox package
 			}
 
@@ -63,7 +63,7 @@
 		),
 	);
 
-	if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
+	if (isset($recipient['cc']) && $recipient['cc'] != 'BE') {
 		if ( WooCommerce_MyParcelBE()->export->is_world_shipment_country( $recipient['cc'] ) ) {
 			unset($option_rows['[large_format]']);
 		}

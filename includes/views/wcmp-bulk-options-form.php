@@ -126,7 +126,7 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&requ
 							</table>
 						</td>
 						<td><?php
-							if ( $shipping_country == 'NL' && ( empty($recipient['street']) || empty($recipient['number']) ) ) { ?>
+							if ( $shipping_country == 'BE' && ( empty($recipient['street']) || empty($recipient['number']) ) ) { ?>
 							<p><span style="color:red"><?php _e( 'This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcelbe plugin was activated. The address data can still be manually entered in the order screen.', 'woocommerce-myparcelbe' ); ?></span></p>
 						</td>
 					</tr> <!-- last row -->
