@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( !class_exists( 'WooCommerce_MyParcelBE_Export' ) ) :
 
 class WooCommerce_MyParcelBE_Export {
+	const package_type = 1;
+
 	public $order_id;
 	public $success;
 	public $errors;
@@ -606,10 +608,10 @@ class WooCommerce_MyParcelBE_Export {
 			}
 
 			$options = array(
-				'package_type'		=> $this->get_package_type_for_order( $order ),
-				'signature'			=> (isset(WooCommerce_MyParcelBE()->export_defaults['signature'])) ? 1 : 0,
-				'label_description'	=> $description,
-				'insured_amount'	=> $insured_amount,
+				'package_type'		=>  self::package_type,
+				'signature'			=>  (isset(WooCommerce_MyParcelBE()->export_defaults['signature'])) ? 1 : 0,
+				'label_description'	=>  $description,
+				'insured_amount'	=>  $insured_amount,
 			);
 		}
 
@@ -680,17 +682,6 @@ class WooCommerce_MyParcelBE_Export {
 		foreach ($options as $key => &$value) {
 			if ( in_array($key, $int_options) ) {
 				$value = (int) $value;
-			}
-		}
-
-		// disable options for mailbox package and unpaid letter
-		// echo '<pre>';var_dump($package_type);echo '</pre>';die();
-		if ( $options['package_type'] != 1 ) {
-			$illegal_options = array( 'delivery_type', 'signature', 'insurance', 'delivery_date' );
-			foreach ($options as $key => $option) {
-				if (in_array($key, $illegal_options)) {
-					unset($options[$key]);
-				}
 			}
 		}
 
@@ -876,61 +867,14 @@ class WooCommerce_MyParcelBE_Export {
 			}
 		}
 
-		// disable mailbox package outside NL
-		if ($shipping_country != 'NL' && $package_type == 2 ) {
-			$package_type = 1;
-		}
-
 		return $package_type;
 	}
 
-	// determine appropriate package type for this order
-	public function get_package_type_for_order( $order ) {
-		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+	public function get_package_types() {
 
-		// get shipping methods from order
-		$order_shipping_methods = $order->get_items('shipping');
-
-		if ( !empty( $order_shipping_methods ) ) {
-			// we're taking the first (we're not handling multiple shipping methods as of yet)
-			$order_shipping_method = array_shift($order_shipping_methods);
-			$order_shipping_method = $order_shipping_method['method_id'];
-
-			$order_shipping_class = WCX_Order::get_meta( $order, '_myparcelbe_highest_shipping_class' );
-			if (empty($order_shipping_class)) {
-				$order_shipping_class = $this->get_order_shipping_class( $order, $order_shipping_method );
-			}
-
-			$package_type = $this->get_package_type_from_shipping_method( $order_shipping_method, $order_shipping_class, $shipping_country );
-		}
-
-		// fallbacks if no match from previous
-		if (!isset($package_type)) {
-			if ((isset(WooCommerce_MyParcelBE()->export_defaults['package_type']))) {
-				$package_type = WooCommerce_MyParcelBE()->export_defaults['package_type'];
-			} else {
-				$package_type = 1; // 1. package | 2. mailbox package | 3. letter
-			}
-		}
-
-		// always parcel for Pickup and Pickup express delivery types.
-		if ( $this->is_pickup( $order ) ) {
-			$package_type = 1;
-		}
-
-		return $package_type;
-	}
-
-	public function get_package_types( $shipment_type = 'shipment' ) {
 		$package_types = array(
 			1	=> __( 'Parcel' , 'woocommerce-myparcelbe' ),
-			2	=> __( 'Mailbox package' , 'woocommerce-myparcelbe' ),
-			3	=> __( 'Unpaid letter' , 'woocommerce-myparcelbe' ),
 		);
-		if ( $shipment_type == 'return' ) {
-			unset($package_types[2]);
-			unset($package_types[3]);
-		}
 
 		return $package_types;
 	}

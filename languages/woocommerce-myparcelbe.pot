@@ -132,13 +132,6 @@ msgstr ""
 msgid "Parcel"
 msgstr ""
 
-#: includes/class-wcmp-export.php:917
-msgid "Mailbox package"
-msgstr ""
-
-#: includes/class-wcmp-export.php:918
-msgid "Unpaid letter"
-msgstr ""
 
 #: includes/class-wcmp-export.php:930
 msgid "Unknown"
