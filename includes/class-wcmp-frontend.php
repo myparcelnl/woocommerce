@@ -161,10 +161,9 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			$urlJs       = WooCommerce_MyParcelBE()->plugin_url() . "/assets/delivery-options/js/myparcelbe.js";
 
 			$jsonConfig  = $this->get_checkout_config();
-			$myparcelbeShippingMethods = json_encode($this->get_shipping_methods());
-			$hideDeliveryMethod = $this->is_hide_delivery_method();
+			$myparcelBeShippingMethods = json_encode($this->get_shipping_methods());
 
-			echo "<script> myParcelConfig = {$jsonConfig} </script>";
+			echo "<script> myParcelConfig = {$jsonConfig}; myparcelbe_delivery_options_shipping_methods = {$myparcelBeShippingMethods} </script>";
 			require_once(WooCommerce_MyParcelBE()->plugin_path().'/includes/views/wcmp-checkout-template.php');
 
 			return;
@@ -217,10 +216,6 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 
 			if (isset($_POST['mypa-signed'])) {
 				WCX_Order::update_meta_data( $order, '_myparcelbe_signed', 'on' );
-			}
-
-			if (isset($_POST['mypa-recipient-only'])) {
-				WCX_Order::update_meta_data( $order, '_myparcelbe_only_recipient', 'on' );
 			}
 
 			if (!empty($_POST['mypa-post-nl-data'])) {
@@ -477,8 +472,8 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 		private function get_shipping_methods() {
 			
 			if (
-			        $this->frontend_settings->get_checkout_display() != 'all_methods' &&
-                    isset( WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'][1] )
+                $this->frontend_settings->get_checkout_display() != 'all_methods' &&
+                isset( WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'][1] )
             ) {
 				return WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'][1];
 			}

@@ -179,10 +179,10 @@ jQuery( function( $ ) {
 
 	function check_country() {
 		country = get_shipping_country();
-		if (country != 'NL') {
+		if (country != 'BE') {
 			hide_myparcelbe_delivery_options();
 		} else {
-			$( '#myparcelbe-iframe' ).show();
+			$( '#mypa-pickup-location-selector' ).show();
 			$( '#mypa-options-enabled' ).prop('checked', true);
 		}
 	}
@@ -209,7 +209,7 @@ jQuery( function( $ ) {
 	}
 
 	function show_myparcelbe_delivery_options() {
-		// show only if NL
+		// show only if BE
 		check_country();
 		if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
 			update_myparcelbe_settings();
