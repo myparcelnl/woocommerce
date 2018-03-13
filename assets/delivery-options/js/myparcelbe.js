@@ -327,6 +327,7 @@ MyParcel = {
             $('#mypa-delivery-bpost-saturday-price').html(myParcelConfig.priceBpostSaturdayDelivery);
             $('#mypa-bpost-saturday-delivery').show();
         }
+        $('#mypa-delivery-date-only-bpost-saturday').val(date);
     },
 
     /*
@@ -397,6 +398,7 @@ MyParcel = {
 
         /* All other deliveries */
         $('#mypa-delivery-date').val(dateString);
+        $('#mypa-delivery-date-only-bpost').val(deliveryOptions.data.delivery[0].date);
     },
 
     /*
@@ -438,7 +440,7 @@ MyParcel = {
     {
         var html = "";
         $.each(deliveryOptions.data.pickup, function(key, value){
-            html += '<option value="' + key + '">' + value.location + ', ' + value.street + ' ' + value.number + ", " + value.city + " (" + value.distance  + " M) </option>\n";
+            html += '<option value="' + value.location_code + '">' + value.location + ', ' + value.street + ' ' + value.number + ", " + value.city + " (" + value.distance  + " M) </option>\n";
         });
         $('#mypa-pickup-location').html(html);
         $('#mypa-pickup-location-selector').show();
