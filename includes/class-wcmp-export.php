@@ -1380,14 +1380,42 @@ class WooCommerce_MyParcelBE_Export {
 		return $order_ids;
 	}
 
+	/**
+	 * @param $country_code
+	 *
+	 * @return bool
+	 */
 	public function is_myparcelbe_destination( $country_code ) {
-		return ( $country_code == 'BE' || $this->is_eu_country( $country_code ) || $this->is_world_shipment_country( $country_code ) );
+
+		if ( $country_code == 'BE' ) {
+			return true;
+		}
+
+		if ($this->is_eu_country( $country_code )) {
+			return true;
+		}
+
+		if( $this->is_world_shipment_country( $country_code )){
+			return true;
+		}
+
+		return false;
 	}
 
+
+	/**
+	 * @param $country_code
+	 *
+	 * @return bool
+	 */
 	public function is_eu_country($country_code) {
-		// $eu_countries = array( 'GB', 'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE' );
-		$euro_countries = array( 'AT','BE','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','NO','UA','SM','RS','TR','VA','BY','CH' );
-		return in_array( $country_code, $euro_countries);
+		$euro_countries = array( 'AT','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','NO','UA','SM','RS','TR','VA','BY','CH','NL' );
+
+		if (in_array( $country_code, $euro_countries)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public function is_world_shipment_country( $country_code ) {
