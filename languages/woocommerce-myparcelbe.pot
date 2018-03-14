@@ -693,10 +693,6 @@ msgstr ""
 msgid "Number of days you take to process an order"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:751
-msgid "Delivery days window"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:760
 msgid "Number of days you allow the customer to postpone a shipment"
 msgstr ""

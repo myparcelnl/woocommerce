@@ -627,21 +627,6 @@ class WooCommerce_MyParcelBE_Settings {
 		);
 
 		add_settings_field(
-			'deliverydays_window',
-			__( 'Delivery days window', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'text_input' ),
-			$option_group,
-			'processing_parameters',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'deliverydays_window',
-				'type'			=> 'number',
-				'size'			=> '2',
-				'description'	=> __( 'Number of days you allow the customer to postpone a shipment', 'woocommerce-myparcelbe' ),
-			)
-		);
-
-		add_settings_field(
 			'monday_delivery',
 			__( 'Enable monday delivery', 'woocommerce-myparcelbe' ),
 			array( $this->callbacks, 'checkbox' ),
@@ -750,7 +735,6 @@ class WooCommerce_MyParcelBE_Settings {
 					'pickup_enabled' => '1',
 					'dropoff_days' => array ( 1,2,3,4,5 ),
 					'dropoff_delay' => '0',
-					'deliverydays_window' => '1',
 				);
 				break;
 			case 'woocommerce_myparcelbe_export_defaults_settings':
