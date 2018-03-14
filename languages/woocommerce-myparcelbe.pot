@@ -731,10 +731,6 @@ msgstr ""
 msgid "Custom styles"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:844
-msgid "Automatically load Google fonts"
-msgstr ""
-
 #: includes/compatibility/class-wc-core-compatibility.php:222
 msgid "WooCommerce"
 msgstr ""
