@@ -701,10 +701,6 @@ msgstr ""
 msgid "Enable monday delivery"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:778
-msgid "Cut-off time for monday delivery"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:787
 msgid ""
 "Time at which you stop processing orders on saturday for monday delivery "

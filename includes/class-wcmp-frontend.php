@@ -201,12 +201,7 @@ class WooCommerce_MyParcelBE_Frontend {
 		}
 		$exclude_delivery_types = implode(';', $exclude_delivery_types);
 
-		// Use saturday_cutoff_time on saturdays
-		if ( date_i18n('w') == 6 && isset(WooCommerce_MyParcelBE()->checkout_settings['saturday_cutoff_time']) ) {
-			$cutoff_time = WooCommerce_MyParcelBE()->checkout_settings['saturday_cutoff_time'];
-		} else {
-			$cutoff_time = isset(WooCommerce_MyParcelBE()->checkout_settings['cutoff_time']) ? WooCommerce_MyParcelBE()->checkout_settings['cutoff_time'] : '';
-		}
+		$cutoff_time = isset(WooCommerce_MyParcelBE()->checkout_settings['cutoff_time']) ? WooCommerce_MyParcelBE()->checkout_settings['cutoff_time'] : '';
 
 		// combine settings
 		$settings = array(

@@ -756,10 +756,6 @@ msgstr "Aantal dagen dat een klant een zending kan uitstellen"
 msgid "Enable monday delivery"
 msgstr "Maandaglevering inschakelen"
 
-#: includes/class-wcmp-settings.php:778
-msgid "Cut-off time for monday delivery"
-msgstr "Sluitingstijd voor maandaglevering"
-
 #: includes/class-wcmp-settings.php:787
 msgid ""
 "Time at which you stop processing orders on saturday for monday delivery "
