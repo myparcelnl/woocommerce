@@ -711,16 +711,8 @@ msgstr ""
 msgid "Customizations"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:801
-msgid "Base color"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:809
 msgid "Color of the header & tabs (cyan by default)"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:816
-msgid "Highlight color"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:824

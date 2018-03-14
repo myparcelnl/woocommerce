@@ -768,17 +768,9 @@ msgstr ""
 msgid "Customizations"
 msgstr "Aanpassingen"
 
-#: includes/class-wcmp-settings.php:801
-msgid "Base color"
-msgstr "Basiskleur"
-
 #: includes/class-wcmp-settings.php:809
 msgid "Color of the header & tabs (cyan by default)"
 msgstr "Kleur van de header en tabs (standaardkleur: cyaan)"
-
-#: includes/class-wcmp-settings.php:816
-msgid "Highlight color"
-msgstr "Highlight kleur"
 
 #: includes/class-wcmp-settings.php:824
 msgid "Color of the selections/highlights (orange by default)"

@@ -647,35 +647,6 @@ class WooCommerce_MyParcelBE_Settings {
 		);
 
 		add_settings_field(
-			'base_color',
-			__( 'Base color', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'color_picker' ),
-			$option_group,
-			'customizations',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'base_color',
-				'size'			=> '10',
-				'description'	=> __( 'Color of the header & tabs (cyan by default)', 'woocommerce-myparcelbe' ),
-			)
-		);
-
-
-		add_settings_field(
-			'highlight_color',
-			__( 'Highlight color', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'color_picker' ),
-			$option_group,
-			'customizations',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'highlight_color',
-				'size'			=> '10',
-				'description'	=> __( 'Color of the selections/highlights (orange by default)', 'woocommerce-myparcelbe' ),
-			)
-		);
-
-		add_settings_field(
 			'custom_css',
 			__( 'Custom styles', 'woocommerce-myparcelbe' ),
 			array( $this->callbacks, 'textarea' ),
