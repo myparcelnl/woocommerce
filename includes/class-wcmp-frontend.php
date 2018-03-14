@@ -215,7 +215,6 @@ class WooCommerce_MyParcelBE_Frontend {
 			'price'					=> $prices,
 			'dropoff_delay'			=> isset(WooCommerce_MyParcelBE()->checkout_settings['dropoff_delay']) ? WooCommerce_MyParcelBE()->checkout_settings['dropoff_delay'] : '',
 			'cutoff_time'			=> $cutoff_time,
-			'deliverydays_window'	=> isset(WooCommerce_MyParcelBE()->checkout_settings['deliverydays_window']) ? max(1,WooCommerce_MyParcelBE()->checkout_settings['deliverydays_window']) : '',
 			'dropoff_days'			=> isset(WooCommerce_MyParcelBE()->checkout_settings['dropoff_days']) ? implode(';', WooCommerce_MyParcelBE()->checkout_settings['dropoff_days'] ): '',
 		);
 		// remove empty options

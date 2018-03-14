@@ -397,7 +397,7 @@ class WooCommerce_MyParcelBE_Admin {
 		}
 
 		echo '<div class="delivery-options">';
-		if (!empty($date) && !(isset(WooCommerce_MyParcelBE()->checkout_settings['deliverydays_window']) && WooCommerce_MyParcelBE()->checkout_settings['deliverydays_window'] == 0)) {
+		if (!empty($date)) {
 			$formatted_date = date_i18n( apply_filters( 'wcmyparcelbe_delivery_date_format', wc_date_format() ), strtotime( $date ) );
 			if (!empty($time)) {
 				$time = array_shift($time); // take first element in time array

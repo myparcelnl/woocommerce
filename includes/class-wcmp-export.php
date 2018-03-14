@@ -401,7 +401,6 @@ class WooCommerce_MyParcelBE_Export {
 			'cutoff_time'			=> '',
 			'dropoff_days'			=> '',
 			'dropoff_delay'			=> '',
-			'deliverydays_window'	=> '',
 			'exclude_delivery_type'	=> '',
 		);
 		$params = array_intersect_key($params, $api_params);

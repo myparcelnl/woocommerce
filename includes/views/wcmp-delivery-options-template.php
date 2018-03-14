@@ -538,12 +538,7 @@
 
   <!-- CUSTOM STYLES / STYLE OVERRIDES -->
   <style>
-  <?php if (isset(WooCommerce_MyParcelBE()->checkout_settings['deliverydays_window']) && WooCommerce_MyParcelBE()->checkout_settings['deliverydays_window'] == 0): ?>
-  #mypa-tabs-container,
-  .mypa-date-slider-button {
-    display: none;
-  }
-  <?php endif ?>
+
   <?php if (!empty(WooCommerce_MyParcelBE()->checkout_settings['base_color'])): $base_color = WooCommerce_MyParcelBE()->checkout_settings['base_color']; ?>
   .mypa-tab{
     background-color: <?php echo $base_color;?>;
