@@ -245,59 +245,59 @@ msgstr ""
 msgid "Signature on delivery"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:203
-#: includes/class-wcmp-nlpostcode-fields.php:204
-#: includes/class-wcmp-nlpostcode-fields.php:373
-#: includes/class-wcmp-nlpostcode-fields.php:401
+#: includes/class-wcmp-bepostcode-fields.php:203
+#: includes/class-wcmp-bepostcode-fields.php:204
+#: includes/class-wcmp-bepostcode-fields.php:373
+#: includes/class-wcmp-bepostcode-fields.php:401
 msgid "Street name"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:211
-#: includes/class-wcmp-nlpostcode-fields.php:638
-#: includes/class-wcmp-nlpostcode-fields.php:639
+#: includes/class-wcmp-bepostcode-fields.php:211
+#: includes/class-wcmp-bepostcode-fields.php:638
+#: includes/class-wcmp-bepostcode-fields.php:639
 msgid "Nr."
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:220
-#: includes/class-wcmp-nlpostcode-fields.php:383
-#: includes/class-wcmp-nlpostcode-fields.php:411
-#: includes/class-wcmp-nlpostcode-fields.php:432
-#: includes/class-wcmp-nlpostcode-fields.php:446
+#: includes/class-wcmp-bepostcode-fields.php:220
+#: includes/class-wcmp-bepostcode-fields.php:383
+#: includes/class-wcmp-bepostcode-fields.php:411
+#: includes/class-wcmp-bepostcode-fields.php:432
+#: includes/class-wcmp-bepostcode-fields.php:446
 msgid "Suffix"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:378
-#: includes/class-wcmp-nlpostcode-fields.php:406
-#: includes/class-wcmp-nlpostcode-fields.php:428
-#: includes/class-wcmp-nlpostcode-fields.php:442
+#: includes/class-wcmp-bepostcode-fields.php:378
+#: includes/class-wcmp-bepostcode-fields.php:406
+#: includes/class-wcmp-bepostcode-fields.php:428
+#: includes/class-wcmp-bepostcode-fields.php:442
 msgid "Number"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:424
-#: includes/class-wcmp-nlpostcode-fields.php:438
+#: includes/class-wcmp-bepostcode-fields.php:424
+#: includes/class-wcmp-bepostcode-fields.php:438
 msgid "Street"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:592
+#: includes/class-wcmp-bepostcode-fields.php:592
 msgctxt "placeholder"
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:638
+#: includes/class-wcmp-bepostcode-fields.php:638
 #, php-format
 msgid "Billing %s"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:639
+#: includes/class-wcmp-bepostcode-fields.php:639
 #, php-format
 msgid "Shipping %s"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:646
+#: includes/class-wcmp-bepostcode-fields.php:646
 msgid "<b>Billing Nr.</b> is a required field"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:649
+#: includes/class-wcmp-bepostcode-fields.php:649
 msgid "<b>Shipping Nr.</b> is a required field"
 msgstr ""
 
