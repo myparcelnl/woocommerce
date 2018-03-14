@@ -4,6 +4,13 @@
  *
  */
 ?>
+<style>
+	<?php
+	if (!empty(WooCommerce_MyParcelBE()->checkout_settings['custom_css'])) {
+		echo WooCommerce_MyParcelBE()->checkout_settings['custom_css'];
+	}
+	?>
+</style>
 
 <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 
