@@ -207,7 +207,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 
 			// mypa-recipient-only - 'on' or not set
 			// mypa-signed         - 'on' or not set
-			// mypa-post-nl-data   - JSON of chosen delivery options
+			// mypa-post-be-data   - JSON of chosen delivery options
 
 			// check if delivery options were used
 			if (!isset($_POST['mypa-options-enabled'])) {
@@ -219,8 +219,8 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 				WCX_Order::update_meta_data( $order, '_myparcelbe_signed', 'on' );
 			}
 
-			if (!empty($_POST['mypa-post-nl-data'])) {
-				$delivery_options = json_decode( stripslashes( $_POST['mypa-post-nl-data']), true );
+			if (!empty($_POST['mypa-post-be-data'])) {
+				$delivery_options = json_decode( stripslashes( $_POST['mypa-post-be-data']), true );
 				WCX_Order::update_meta_data( $order, '_myparcelbe_delivery_options', $delivery_options );
 			}
 		}
