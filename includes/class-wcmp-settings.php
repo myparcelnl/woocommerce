@@ -688,18 +688,6 @@ class WooCommerce_MyParcelBE_Settings {
 				'height'		=> '8',
 			)
 		);
-
-		add_settings_field(
-			'autoload_google_fonts',
-			__( 'Automatically load Google fonts', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'checkbox' ),
-			$option_group,
-			'customizations',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'autoload_google_fonts',
-			)
-		);
 	}
 
 	
