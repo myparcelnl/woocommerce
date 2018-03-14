@@ -192,7 +192,7 @@ class WC_MyParcelBE_API extends WC_MyParcelBE_REST_Client {
 		$userAgents = [
 			'Wordpress/'.get_bloginfo( 'version' ),
 			'WooCommerce/'.WOOCOMMERCE_VERSION,
-			'MyParcelNL-WooCommerce/'.WC_MYPARCEL_VERSION,
+			'MyParcelBE-WooCommerce/'.WC_MYPARCEL_VERSION,
 			];
 
 		//Place white space between the array elements

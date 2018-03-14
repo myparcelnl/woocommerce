@@ -154,13 +154,9 @@ jQuery( function( $ ) {
 	$( '#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number' ).change();
 
 	// any delivery option selected/changed - update checkout for fees
-	$('#mypabe-chosen-delivery-options').on('change', 'input', function() {
+	$('#mypa-delivery-option-form ul input').on('change', function() {
 		window.myparcelbe_checkout_updating = true;
-		// disable signed & recipient only when switching to pickup location
-		mypabe_bpost_data = JSON.parse( $('#mypabe-chosen-delivery-options #mypa-input').val() );
-		if (typeof mypabe_bpost_data.location != 'undefined' ) {
-			$('#mypa-signed, #mypa-recipient-only').prop( "checked", false );
-		}
+
 		jQuery('body').trigger('update_checkout');
 	});
 
@@ -198,7 +194,6 @@ jQuery( function( $ ) {
 	}
 
 	function hide_myparcelbe_delivery_options() {
-		$( '#myparcelbe-iframe' ).hide();
 		$( '#mypa-options-enabled' ).prop('checked', false);
 		// clear delivery options
 		if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
