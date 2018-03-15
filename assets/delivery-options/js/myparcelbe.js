@@ -468,7 +468,7 @@ MyParcel = {
     {
         var locationId 		= $('#mypa-pickup-location').val();
         var html       		= "";
-        var currentLocation 	= MyParcel.storeDeliveryOptions.data.pickup[locationId];
+        var currentLocation = MyParcel.getPickupByLocationId(MyParcel.storeDeliveryOptions.data.pickup, locationId);
         var startTime		= currentLocation.start_time;
 
         /* Strip seconds if present */
@@ -495,6 +495,20 @@ MyParcel = {
             });
         $('#mypa-location-details').html(html);
         $('#mypa-location-details').show();
+    },
+
+    getPickupByLocationId: function(obj, locationId) {
+        var object;
+
+        $.each(obj, function(key, info) {
+            if (info.location_code === locationId) {
+                object = info;
+                return false;
+            };
+        });
+
+        return object;
+
     },
 
     /*
