@@ -18,6 +18,12 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
          */
 		private $frontend_settings;
 
+		const POST_VALUE_DELIVER_OR_PICKUP = 'mypa-deliver-or-pickup';
+		const POST_VALUE_SIGNATURE_SELECTOR_BE = 'mypa-method-signature-selector-be';
+		const RADIO_CHECKED = 'on';
+		const SETTINGS_SIGNED_FEE = 'signed_fee';
+		const DELIVERY_TITLE_SIGNATURE_ON_DELIVERY = 'Signature on delivery';
+
 		function __construct()	{
 			// Customer Emails
 			if (isset(WooCommerce_MyParcelBE()->general_settings['email_tracktrace'])) {
@@ -53,7 +59,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_delivery_options' ), 10, 2 );
 
 			// Delivery options fees
-			add_action( 'woocommerce_cart_calculate_fees', array( $this, 'delivery_options_fees' ) );
+			add_action( 'woocommerce_cart_calculate_fees', array( $this, 'get_delivery_options_fees' ) );
 
 			// Output most expensive shipping class in frontend data
 			add_action( 'woocommerce_checkout_after_order_review', array( $this, 'output_shipping_data' ) );
@@ -216,7 +222,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 
 
 			if (isset($_POST['mypa-signed'])) {
-				WCX_Order::update_meta_data( $order, '_myparcelbe_signed', 'on' );
+				WCX_Order::update_meta_data( $order, '_myparcelbe_signed', self::RADIO_CHECKED );
 			}
 
 			if (!empty($_POST['mypa-post-be-data'])) {
@@ -225,32 +231,32 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			}
 		}
 
-		public function delivery_options_fees( $cart ) {
+		/**
+         * Get delivery fee in your order overview, at the front of the website
+         *
+		 * @param $cart
+		 */
+		public function get_delivery_options_fees( $cart ) {
 			$post_data = $this->get_post_data();
 
-            /* @todo pickup no signed */
-
-            if ($this->pickup_fee($post_data)) {
+            /* Bpost pickup */
+            if ($this->add_fee_from_setting($post_data, self::POST_VALUE_DELIVER_OR_PICKUP, 'mypa-pickup', 'pickup_fee', 'Bpost pickup')) {
 	            return;
             }
 
-            $this->signed_fee($post_data);
+            /* Saturday delivery */
+			if ($this->add_fee_from_setting($post_data, self::POST_VALUE_DELIVER_OR_PICKUP,'mypa-deliver-bpost-saturday', 'saturday_delivery_fee', 'Saturday delivery')) {
+
+			    /* Signature Saturday delivery */
+				$this->add_fee_from_setting($post_data, self::POST_VALUE_SIGNATURE_SELECTOR_BE, self::RADIO_CHECKED, self::SETTINGS_SIGNED_FEE, self::DELIVERY_TITLE_SIGNATURE_ON_DELIVERY );
+
+				return;
+			}
+
+			/* Signature */
+            $this->add_fee_from_setting($post_data, self::POST_VALUE_SIGNATURE_SELECTOR_BE, self::RADIO_CHECKED, self::SETTINGS_SIGNED_FEE, self::DELIVERY_TITLE_SIGNATURE_ON_DELIVERY );
 
             return;
-		}
-
-		public function add_fee( $fee_name, $fee ) {
-			$fee = $this->normalize_price( $fee );
-			// get shipping tax data
-			$shipping_tax_class = $this->get_shipping_tax_class();
-			if ( $shipping_tax_class ) {
-				if ($shipping_tax_class == 'standard') {
-					$shipping_tax_class = '';
-				}
-				WC()->cart->add_fee( $fee_name, $fee, true, $shipping_tax_class );
-			} else {
-				WC()->cart->add_fee( $fee_name, $fee );
-			}
 		}
 
 		/**
@@ -444,46 +450,48 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
             return $_POST;
 		}
 
+		private function add_fee( $fee_name, $fee ) {
+			$fee = $this->normalize_price( $fee );
+			// get shipping tax data
+			$shipping_tax_class = $this->get_shipping_tax_class();
+			if ( $shipping_tax_class ) {
+				if ($shipping_tax_class == 'standard') {
+					$shipping_tax_class = '';
+				}
+				WC()->cart->add_fee( $fee_name, $fee, true, $shipping_tax_class );
+			} else {
+				WC()->cart->add_fee( $fee_name, $fee );
+			}
+		}
+
 		/**
+         *
+         * Check witch delivery option is selected
+         *
 		 * @param $post_data
+		 * @param $post_data_value
+		 * @param $delivery_type
+		 * @param $backend_setting
+		 * @param $delivery_titel
 		 *
 		 * @return bool
 		 */
-		private function pickup_fee( $post_data ) {
-			// Fee for "pickup" option
-			if (isset($post_data['test']) && $post_data['test'] == 'on') {
-				if (!empty(WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'])) {
-					$fee = WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'];
-					$fee_name = __( 'Bpost pickup', 'woocommerce-myparcel' );
+		private function add_fee_from_setting( $post_data, $post_data_value ,$delivery_type, $backend_setting, $delivery_titel ) {
+			// Fee for "delivery" option
+
+			if (isset($post_data[$post_data_value]) && $post_data[$post_data_value] == $delivery_type) {
+				if ( ! empty( WooCommerce_MyParcelBE()->checkout_settings[$backend_setting] ) ) {
+					$fee      = WooCommerce_MyParcelBE()->checkout_settings[$backend_setting];
+					$fee_name = __( $delivery_titel, 'woocommerce-myparcel' );
 					$this->add_fee( $fee_name, $fee );
 
 					return true;
-
 				}
 			}
 
 			return false;
 		}
 
-		/**
-		 * @param $post_data
-		 *
-		 * @return bool
-		 */
-		private function signed_fee($post_data) {
-			// Fee for "signed" option
-			if (isset($post_data['mypa-method-signature-selector-be']) && $post_data['mypa-method-signature-selector-be'] == 'on') {
-				if (!empty(WooCommerce_MyParcelBE()->checkout_settings['signed_fee'])) {
-					$fee = WooCommerce_MyParcelBE()->checkout_settings['signed_fee'];
-					$fee_name = __( 'Signature on delivery', 'woocommerce-myparcelbe' );
-					$this->add_fee( $fee_name, $fee );
-
-					return true;
-				}
-			}
-
-			return false;
-		}
 	}
 
 endif; // class_exists
