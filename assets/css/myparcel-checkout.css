@@ -115,13 +115,8 @@
 	margin: 50px 0 50px 0;
 }
 
-#mypa-pre-selectors, #mypa-pickup-selector, #mypa-delivery-selectors-be {
-	border-bottom: 1px solid black;
-	border-radius: 3px;
-}
-
 #mypa-pickup-selector li{
-	margin: 0;
+	margin: 25px 0 0;
 	display: inline-block;
 	height: 60px;
 	width: 100%;
@@ -147,7 +142,6 @@
 .full-width {
 	display: inline-block;
 	width: 100%;
-	background-color: white;
 	margin-bottom: 1px;
 	padding-bottom: 2px;
 }
@@ -202,19 +196,11 @@
 	animation: spin 0.3s linear infinite;
 }
 
-
-
 #mypa-delivery-date,
 #mypa-delivery-date-bpost-saturday {
 	display: inline-block;
 	width: 66%;
 }
-
-
-#mypa-delivery-date-bpost-saturday {
-	margin-top: 20px;
-}
-
 
 #mypa-bottom-spacer {
 	display: block;
