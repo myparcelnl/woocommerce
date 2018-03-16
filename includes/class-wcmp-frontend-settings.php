@@ -46,16 +46,29 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 		}
 
 		/**
+		 * @return int
+		 */
+		public function is_saturday_enabled() {
+			return $this->settings['saturday_delivery_enabled'] ? 1 : 0;
+		}
+
+		/**
 		 * @return mixed
 		 */
 		public function get_saturday_cutoff_time() {
 			return $this->settings['saturday_cutoff_time'];
 		}
 
+		/**
+		 * @return mixed
+		 */
 		public function get_dropoff_delay() {
 			return $this->settings['dropoff_delay'];
 		}
 
+		/**
+		 * @return mixed
+		 */
 		public function get_deliverydays_window() {
 			return $this->settings['deliverydays_window'];
 		}
@@ -81,6 +94,9 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 			return WC()->customer->get_shipping_country();
 		}
 
+		/**
+		 * @return mixed
+		 */
 		public function get_price_pickup() {
 			return $this->settings['pickup_fee'];
 		}
@@ -123,6 +139,8 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 
 			return null;
 		}
+
+
 	}
 
 endif; // class_exists

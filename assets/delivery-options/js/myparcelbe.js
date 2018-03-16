@@ -614,7 +614,8 @@ MyParcel = {
                 carrier:          	myParcelConfig.carrierCode,
                 cc:           		myParcelConfig.countryCode,
                 number:       		houseNumber,
-                postal_code:  		postalCode
+                postal_code:  		postalCode,
+                saturday_delivery:  myParcelConfig.saturdayDelivery,
             })
             .done(function(data){
                 if(data.errors){

@@ -376,7 +376,8 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			$config = [
 				'apiBaseUrl'                 => $this->frontend_settings->get_api_url(),
 				'cutoffTime'                 => $this->frontend_settings->get_cutoff_time(),
-				'saturdayCutoffTime'         => $this->frontend_settings->get_saturday_cutoff_time(),
+				'saturdayDelivery'           => $this->frontend_settings->is_saturday_enabled(),
+                'saturdayCutoffTime'         => $this->frontend_settings->get_saturday_cutoff_time(),
 				'dropoffDelay'               => $this->frontend_settings->get_dropoff_delay(),
 				'deliverydaysWindow'         => $this->frontend_settings->get_deliverydays_window(),
 				'dropoffDays'                => $this->frontend_settings->get_dropoff_days(),
