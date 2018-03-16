@@ -383,6 +383,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 				"countryCode"                => $this->frontend_settings->get_country_code(),
 				"carrierCode"                => WooCommerce_MyParcelBE_Frontend_Settings::CARRIER_CODE,
 				"carrierName"                => WooCommerce_MyParcelBE_Frontend_Settings::CARRIER_NAME,
+				"pricePickup"                => $this->frontend_settings->get_price_pickup(),
 				"allowBpostAutograph"        => $this->frontend_settings->is_signed_enabled(),
 				"priceBpostAutograph"        => $this->frontend_settings->get_price_signature(),
 				"allowBpostSaturdayDelivery" => $this->frontend_settings->is_saterday_delivery_enabled(),

@@ -81,6 +81,10 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 			return WC()->customer->get_shipping_country();
 		}
 
+		public function get_price_pickup() {
+			return $this->settings['pickup_fee'];
+		}
+
 		/**
 		 * @return bool
 		 */
