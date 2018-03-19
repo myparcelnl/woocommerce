@@ -560,10 +560,10 @@ msgstr "Verzekerde verzending (tot &euro; 500)"
 
 #: includes/class-wcmp-settings.php:453
 msgid ""
-"There is no default insurance on the shipments. If you want to insure, you can do this. "
+"There is no default insurance on the domestic shipments. If you want to insure, you can do this. "
 "We insure the purchase value of your product, with a maximum insured value of &euro; 500."
 msgstr ""
-"Er zit standaard geen verzekering op de zendingen. Indien u toch wilt "
+"Er zit standaard geen verzekering op de binnenlandse zendingen. Indien u toch wilt "
 "verzekeren kunt u dit doen. Wij verzekeren de inkoopwaarde "
 "van uw product, met een maximale verzekerde waarde van &euro; 500. "
 
