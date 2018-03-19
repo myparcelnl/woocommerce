@@ -707,11 +707,6 @@ class WooCommerce_MyParcelBE_Export {
 	public function get_customs_declaration( $order ) {
 		$weight = (int) round( $this->get_parcel_weight( $order ) * 1000 );
 		$invoice = $this->get_invoice_number( $order );
-		$contents = (int) ( (isset(WooCommerce_MyParcelBE()->export_defaults['package_contents'])) ? WooCommerce_MyParcelBE()->export_defaults['package_contents'] : 1 );
-
-		// Item defaults:
-		// Classification
-		$default_hs_code = (isset(WooCommerce_MyParcelBE()->export_defaults['hs_code'])) ? WooCommerce_MyParcelBE()->export_defaults['hs_code'] : '';
 		// Country (=shop base)
 		$country = WC()->countries->get_base_country();
 
@@ -730,35 +725,28 @@ class WooCommerce_MyParcelBE_Export {
 					'amount'	=> (int) round( ( $item['line_total'] + $item['line_tax'] ) * 100 ),
 					'currency'	=> WCX_Order::get_prop( $order, 'currency' ),
 				);
-				// Classification / HS Code
-				$classification = WCX_Product::get_meta( $product, '_myparcelbe_hs_code', true );
-				if (empty($classification)) {
-					$classification = $default_hs_code;
-				}
 
 				// add item to item list
 				$items[] = compact( 'description', 'amount', 'weight', 'item_value', 'classification', 'country' );
 			}
 		}
 
-		return compact( 'weight', 'invoice', 'contents', 'items' );
+		return compact( 'weight', 'invoice', 'items' );
 	}
 
 	public function validate_shipments( $shipments, $output_errors = true ) {
-		$missing_hs_codes = 0;
 		foreach ($shipments as $key => $shipment) {
-			// check customs declaration for HS codes
+			// check customs declaration
 			if (isset($shipment['customs_declaration']) && !empty($shipment['customs_declaration']['items'])) {
 				foreach ($shipment['customs_declaration']['items'] as $key => $item) {
 					if (empty($item['classification'])) {
 						unset($shipments[$key]);
-						$missing_hs_codes++;
 						break;
 					}
 				}
 			}
-			if ($output_errors === true && $missing_hs_codes > 0) {
-				$this->errors[] = sprintf( __( '%d shipments missing HS codes - not exported.', 'woocommerce-myparcelbe' ), $missing_hs_codes);
+			if ($output_errors === true ) {
+				$this->errors[] = sprintf( __( '%d shipments - not exported.', 'woocommerce-myparcelbe' ));
 			}
 		}
 

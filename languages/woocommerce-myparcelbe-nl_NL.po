@@ -79,19 +79,6 @@ msgstr "Bezorgdatum"
 msgid "bpost Pickup"
 msgstr "Afhalen bij bpost"
 
-#: includes/class-wcmp-admin.php:493
-msgid "HS Code"
-msgstr "HS-code"
-
-#: includes/class-wcmp-admin.php:494
-#, php-format
-msgid ""
-"HS Codes are used for MyParcelbe world shipments, you can find the appropriate "
-"code on the %ssite of the Dutch Customs%s."
-msgstr ""
-"HS Codes worden gebruikt voor MyParcelbe wereldzendingen, je kunt de codes "
-"vinden op de %ssite van de Douane%s."
-
 #: includes/class-wcmp-export.php:59
 msgid ""
 "You have to export the orders to MyParcelbe before you can print the labels!"
@@ -128,8 +115,8 @@ msgstr "De geselecteerde orders zijn nog niet naar MyParcelbe geëxporteerd!"
 
 #: includes/class-wcmp-export.php:761
 #, php-format
-msgid "%d shipments missing HS codes - not exported."
-msgstr "%d zendingen met ontbrekende HS codes - niet geëxporteerd."
+msgid "%d shipments - not exported."
+msgstr "%d zendingen - niet geëxporteerd."
 
 #: includes/class-wcmp-export.php:916
 msgid "Parcel"
@@ -620,17 +607,6 @@ msgstr "Leeg pakket gewicht (gram)"
 msgid "Default weight of your empty parcel, rounded to grams."
 msgstr "Standaard gewicht van uw lege pakket, afgerond op gram."
 
-#: includes/class-wcmp-settings.php:523
-msgid "World Shipments"
-msgstr "Wereldzendingen"
-
-#: includes/class-wcmp-settings.php:530
-msgid "Default HS Code"
-msgstr "Standaard HS-code"
-
-#: includes/class-wcmp-settings.php:536
-msgid "You can find HS codes on the %ssite of the Dutch Customs%s."
-msgstr "U kunt de HS code vinden op de %swebsite van de Nederlandse douane%s"
 
 #: includes/class-wcmp-settings.php:543
 msgid "Customs shipment type"
