@@ -616,6 +616,7 @@ MyParcel = {
                 number:       		houseNumber,
                 postal_code:  		postalCode,
                 saturday_delivery:  myParcelConfig.saturdayDelivery,
+                dropoff_delay:      myParcelConfig.dropoffDelay,
             })
             .done(function(data){
                 if(data.errors){
