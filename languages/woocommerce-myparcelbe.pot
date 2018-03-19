@@ -519,7 +519,7 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:453
 msgid ""
-"There is no default insurance on the shipments. If you want to insure, you can do this. "
+"There is no default insurance on the domestic shipments. If you want to insure, you can do this. "
 "We insure the purchase value of your product, with a maximum insured value of &euro; 500."
 msgstr ""
 
@@ -544,10 +544,6 @@ msgid ""
 "shipments in the MyParcelbe Backend. Use <strong>[ORDER_NR]</strong> to "
 "include the order number, <strong>[DELIVERY_DATE]</strong> to include the "
 "delivery date."
-msgstr ""
-
-#: includes/class-wcmp-settings.php:508
-msgid "Empty parcel weight (grams)"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:516

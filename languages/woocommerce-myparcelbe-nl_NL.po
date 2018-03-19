@@ -599,10 +599,6 @@ msgstr ""
 "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden, "
 "[DELIVERY_DATE] voor de bezorgdatum."
 
-#: includes/class-wcmp-settings.php:508
-msgid "Empty parcel weight (grams)"
-msgstr "Leeg pakket gewicht (gram)"
-
 #: includes/class-wcmp-settings.php:516
 msgid "Default weight of your empty parcel, rounded to grams."
 msgstr "Standaard gewicht van uw lege pakket, afgerond op gram."

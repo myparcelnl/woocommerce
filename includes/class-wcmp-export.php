@@ -11,6 +11,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Export' ) ) :
 
 class WooCommerce_MyParcelBE_Export {
 	const package_type = 1;
+	const get_parcel_weight = 1;
 
 	public $order_id;
 	public $success;
@@ -705,7 +706,7 @@ class WooCommerce_MyParcelBE_Export {
 	}
 
 	public function get_customs_declaration( $order ) {
-		$weight = (int) round( $this->get_parcel_weight( $order ) * 1000 );
+		$weight = (int) self::get_parcel_weight;
 		$invoice = $this->get_invoice_number( $order );
 		// Country (=shop base)
 		$country = WC()->countries->get_base_country();
@@ -1009,17 +1010,6 @@ class WooCommerce_MyParcelBE_Export {
 		}
 
 		return $name;
-	}
-
-	public function get_parcel_weight ( $order ) {
-		$parcel_weight = (isset(WooCommerce_MyParcelBE()->general_settings['empty_parcel_weight'])) ? preg_replace("/\D/","",WooCommerce_MyParcelBE()->general_settings['empty_parcel_weight'])/1000 : 0;
-
-		$items = $order->get_items();
-		foreach ( $items as $item_id => $item ) {
-			$parcel_weight += $this->get_item_weight_kg( $item, $order );
-		}
-
-		return $parcel_weight;
 	}
 
 	public function get_item_weight_kg ( $item, $order ) {

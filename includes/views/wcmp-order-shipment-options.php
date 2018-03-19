@@ -4,7 +4,7 @@
 	<tr>
 		<td>
 			<?php _e( 'Shipment type', 'woocommerce-myparcelbe' ) ?>:<br/>
-			<?php $parcel_weight = WooCommerce_MyParcelBE()->export->get_parcel_weight( $order ); ?>
+			<?php $parcel_weight = 1; ?>
 			<small class="calculated_weight"><?php printf( __( 'Calculated weight: %s kg', 'woocommerce-myparcelbe' ), number_format( $parcel_weight, 3, ',', ' ' ) ); ?></small>
 		</td>
 		<td>
