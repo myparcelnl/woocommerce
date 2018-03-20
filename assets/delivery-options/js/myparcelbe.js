@@ -16,10 +16,10 @@ MyParcel = {
         }
 
         /* Prices */
-        $('#mypa-price-bpost-signature').html(' €' + myParcelConfig.priceBpostAutograph);
-        $('#mypa-delivery-bpost-saturday-price').html(' €' + myParcelConfig.priceBpostSaturdayDelivery);
+        $('#mypa-price-bpost-signature').html(' (+ € ' + myParcelConfig.priceBpostAutograph + ')');
+        $('#mypa-delivery-bpost-saturday-price').html(' (+ € ' + myParcelConfig.priceBpostSaturdayDelivery + ')');
         if(parseFloat(myParcelConfig.pricePickup) > 0){
-            $('#mypa-price-pickup').html(' €' + myParcelConfig.pricePickup);
+            $('#mypa-price-pickup').html(' (+ € ' + myParcelConfig.pricePickup + ')');
         }
         /* Call delivery options */
         MyParcel.callDeliveryOptions();
@@ -324,7 +324,7 @@ MyParcel = {
     {
         if(myParcelConfig.allowBpostSaturdayDelivery) {
             $('#mypa-delivery-date-bpost-saturday').val(date);
-            $('#mypa-delivery-bpost-saturday-price').html(myParcelConfig.priceBpostSaturdayDelivery);
+            $('#mypa-delivery-bpost-saturday-price').html('(+ € '+ myParcelConfig.priceBpostSaturdayDelivery + ')');
             $('#mypa-bpost-saturday-delivery').show();
         }
         $('#mypa-delivery-date-only-bpost-saturday').val(date);
