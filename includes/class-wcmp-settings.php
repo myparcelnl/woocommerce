@@ -411,7 +411,7 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'insured',
-				'description'	=> __( 'There is no default insurance on the shipments. If you want to insure, you can do this. We insure the purchase value of your product, with a maximum insured value of &euro; 500.', 'woocommerce-myparcelbe' ),
+				'description'	=> __( 'There is no default insurance on the domestic shipments. If you want to insure, you can do this. We insure the purchase value of your product, with a maximum insured value of &euro; 500.', 'woocommerce-myparcelbe' ),
 				'class'			=> 'insured',
 			)
 		);
@@ -427,20 +427,6 @@ class WooCommerce_MyParcelBE_Settings {
 				'id'			=> 'label_description',
 				'size'			=> '25',
 				'description'	=> __( "With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcel BE Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date.", 'woocommerce-myparcelbe' ),
-			)
-		);
-
-		add_settings_field(
-			'empty_parcel_weight',
-			__( 'Empty parcel weight (grams)', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'text_input' ),
-			$option_group,
-			'defaults',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'empty_parcel_weight',
-				'size'			=> '5',
-				'description'	=> __( 'Default weight of your empty parcel, rounded to grams.', 'woocommerce-myparcelbe' ),
 			)
 		);
         

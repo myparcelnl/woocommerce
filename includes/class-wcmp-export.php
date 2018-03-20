@@ -705,7 +705,6 @@ class WooCommerce_MyParcelBE_Export {
 	}
 
 	public function get_customs_declaration( $order ) {
-		$weight = (int) round( $this->get_parcel_weight( $order ) * 1000 );
 		$invoice = $this->get_invoice_number( $order );
 		// Country (=shop base)
 		$country = WC()->countries->get_base_country();
@@ -1011,48 +1010,6 @@ class WooCommerce_MyParcelBE_Export {
 		return $name;
 	}
 
-	public function get_parcel_weight ( $order ) {
-		$parcel_weight = (isset(WooCommerce_MyParcelBE()->general_settings['empty_parcel_weight'])) ? preg_replace("/\D/","",WooCommerce_MyParcelBE()->general_settings['empty_parcel_weight'])/1000 : 0;
-
-		$items = $order->get_items();
-		foreach ( $items as $item_id => $item ) {
-			$parcel_weight += $this->get_item_weight_kg( $item, $order );
-		}
-
-		return $parcel_weight;
-	}
-
-	public function get_item_weight_kg ( $item, $order ) {
-		$product = $order->get_product_from_item( $item );
-
-		if (empty($product)) {
-			return 0;
-		}
-
-		$weight = $product->get_weight();
-		$weight_unit = get_option( 'woocommerce_weight_unit' );
-		switch ($weight_unit) {
-			case 'kg':
-				$product_weight = $weight;
-				break;
-			case 'g':
-				$product_weight = $weight / 1000;
-				break;
-			case 'lbs':
-				$product_weight = $weight * 0.45359237;
-				break;
-			case 'oz':
-				$product_weight = $weight * 0.0283495231;
-				break;
-			default:
-				$product_weight = $weight;
-				break;
-		}
-
-		$item_weight = (float) $product_weight * (int) $item['qty'];
-
-		return $item_weight;
-	}
 
 	public function is_pickup( $order, $myparcelbe_delivery_options = '' ) {
 		if (empty($myparcelbe_delivery_options)) {

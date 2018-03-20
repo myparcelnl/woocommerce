@@ -6,6 +6,7 @@ use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 
+
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -81,7 +82,6 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&requ
 			$recipient = WooCommerce_MyParcelBE()->export->get_recipient( $order );
 			$myparcelbe_options_extra = WCX_Order::get_meta( $order, '_myparcelbe_shipment_options_extra' );
 			$package_types = WooCommerce_MyParcelBE()->export->get_package_types( $dialog );
-			$parcel_weight = WooCommerce_MyParcelBE()->export->get_parcel_weight( $order );
 		?>
 		<tr class="order-row <?php echo (($c = !$c)?'alternate':'');?>">
 			<td>
@@ -110,17 +110,11 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&requ
 										<td align="right"><?php echo number_format( $this->get_item_weight_kg( $item, $order ), 3, ',', ' '); ?></td>
 									</tr>
 								<?php } ?>
-									<tr>
-										<td>&nbsp;</td>
-										<td><?php _e( 'Empty parcel weight', 'woocommerce-myparcelbe' ); ?></td>
-										<td align="right"><?php echo number_format( ( (isset(WooCommerce_MyParcelBE()->general_settings['empty_parcel_weight'])) ? preg_replace("/\D/","",$this->settings['verpakkingsgewicht'])/1000 : 0 ), 3, ',', ' '); ?></td>
-									</tr>
 								</tbody>
 								<tfoot>
 									<tr>
 										<td>&nbsp;</td>
 										<td><?php _e( 'Total weight', 'woocommerce-myparcelbe' ); ?></td>
-										<td align="right"><?php echo number_format( $parcel_weight, 3, ',', ' ' );?></td>
 									</tr>
 								</tfoot>
 							</table>
