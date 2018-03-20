@@ -11,7 +11,6 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Export' ) ) :
 
 class WooCommerce_MyParcelBE_Export {
 	const package_type = 1;
-	const get_parcel_weight = 1;
 
 	public $order_id;
 	public $success;
@@ -706,7 +705,6 @@ class WooCommerce_MyParcelBE_Export {
 	}
 
 	public function get_customs_declaration( $order ) {
-		$weight = (int) self::get_parcel_weight;
 		$invoice = $this->get_invoice_number( $order );
 		// Country (=shop base)
 		$country = WC()->countries->get_base_country();
@@ -1012,37 +1010,6 @@ class WooCommerce_MyParcelBE_Export {
 		return $name;
 	}
 
-	public function get_item_weight_kg ( $item, $order ) {
-		$product = $order->get_product_from_item( $item );
-
-		if (empty($product)) {
-			return 0;
-		}
-
-		$weight = $product->get_weight();
-		$weight_unit = get_option( 'woocommerce_weight_unit' );
-		switch ($weight_unit) {
-			case 'kg':
-				$product_weight = $weight;
-				break;
-			case 'g':
-				$product_weight = $weight / 1000;
-				break;
-			case 'lbs':
-				$product_weight = $weight * 0.45359237;
-				break;
-			case 'oz':
-				$product_weight = $weight * 0.0283495231;
-				break;
-			default:
-				$product_weight = $weight;
-				break;
-		}
-
-		$item_weight = (float) $product_weight * (int) $item['qty'];
-
-		return $item_weight;
-	}
 
 	public function is_pickup( $order, $myparcelbe_delivery_options = '' ) {
 		if (empty($myparcelbe_delivery_options)) {

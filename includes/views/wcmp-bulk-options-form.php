@@ -82,7 +82,6 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&requ
 			$recipient = WooCommerce_MyParcelBE()->export->get_recipient( $order );
 			$myparcelbe_options_extra = WCX_Order::get_meta( $order, '_myparcelbe_shipment_options_extra' );
 			$package_types = WooCommerce_MyParcelBE()->export->get_package_types( $dialog );
-			$parcel_weight = 1;
 		?>
 		<tr class="order-row <?php echo (($c = !$c)?'alternate':'');?>">
 			<td>
@@ -116,7 +115,6 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&requ
 									<tr>
 										<td>&nbsp;</td>
 										<td><?php _e( 'Total weight', 'woocommerce-myparcelbe' ); ?></td>
-										<td align="right"><?php echo number_format( $parcel_weight, 3, ',', ' ' );?></td>
 									</tr>
 								</tfoot>
 							</table>
