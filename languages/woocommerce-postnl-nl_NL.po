@@ -956,7 +956,7 @@ msgstr ""
 "verzendlabels direct vanuit WooCommerce"
 
 #. Author of the plugin/theme
-msgid "Richard Perdaan & Ewout Fernhout"
+msgid "PostNL"
 msgstr ""
 
 #. Author URI of the plugin/theme
