@@ -115,6 +115,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 
 		//  @deprecated ?
 		public function wpo_wcpdf_delivery_options( $replacement, $order ) {
+
 			ob_start();
 			WooCommerce_MyParcelBE()->admin->show_order_delivery_options( $order );
 			return ob_get_clean();
@@ -185,11 +186,11 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 		// XXX Move to Jquery ?
 		public function get_shipping_data() {
 
-
 			if ($shipping_class = $this->get_cart_shipping_class()) {
 				$shipping_data = sprintf('<input type="hidden" value="%s" id="myparcelbe_highest_shipping_class" name="myparcelbe_highest_shipping_class">', $shipping_class);
 				return $shipping_data;
 			}
+
 			return false;
 		}
 
@@ -204,31 +205,36 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 
 		// XXX adapt this to new situation
 		public function save_delivery_options( $order_id, $posted ) {
+
+
 			$order = WCX::get_order( $order_id );
 
 
+
+			/** @todo ? myparcelbe_highest_shipping_class
 			if (isset($_POST['myparcelbe_highest_shipping_class'])) {
 				WCX_Order::update_meta_data( $order, '_myparcelbe_highest_shipping_class', $_POST['myparcelbe_highest_shipping_class'] );
-			}
+			}*/
 
 			// mypa-recipient-only - 'on' or not set
 			// mypa-signed         - 'on' or not set
 			// mypa-post-be-data   - JSON of chosen delivery options
 
 			// check if delivery options were used
-			if (!isset($_POST['mypa-options-enabled'])) {
+			/*if (!isset($_POST['mypa-options-enabled'])) {
 				return;
-			}
+			}*/
 
-
-			if (isset($_POST['mypa-signed'])) {
+			if (isset($_POST['mypa-method-signature-selector-be'])) {
 				WCX_Order::update_meta_data( $order, '_myparcelbe_signed', self::RADIO_CHECKED );
 			}
 
 			if (!empty($_POST['mypa-post-be-data'])) {
+
 				$delivery_options = json_decode( stripslashes( $_POST['mypa-post-be-data']), true );
 				WCX_Order::update_meta_data( $order, '_myparcelbe_delivery_options', $delivery_options );
 			}
+
 		}
 
 		/**
@@ -338,6 +344,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			$packages = WC()->shipping->get_packages();
 			$package = current($packages);
 
+
 			$shipping_method = WooCommerce_MyParcelBE()->export->get_shipping_method($chosen_method);
 			if (empty($shipping_method)) {
 				return false;
@@ -348,6 +355,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 			// return print_r( $found_shipping_classes, true );
 
 			$highest_class = WooCommerce_MyParcelBE()->export->get_shipping_class( $shipping_method, $found_shipping_classes );
+
 			return $highest_class;
 		}
 

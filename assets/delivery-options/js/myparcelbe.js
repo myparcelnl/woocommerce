@@ -62,14 +62,44 @@ MyParcel = {
         });
 
         $('#mypa-deliver-pickup-deliver').on('click', function(){
+
+            var dateObj      = MyParcel.dateToObject(MyParcel.storeDeliveryOptions.data.delivery[0].date);
+
+            if(dateObj.getDay() != 6 && myParcelConfig.carrierCode == 2) {
+                var dayOfWeek = 0;
+            } else{
+                var dayOfWeek = 1;
+            }
+
+            var deliveryData = MyParcel.storeDeliveryOptions.data.delivery[dayOfWeek];
+
+            // @TODO when the bug is fixed inside the api request the  pickupData.price_comment = 'standard'; delete
+            deliveryData.price_comment = 'standard';
+            $('#mypa-post-be-data').val(JSON.stringify(deliveryData));
+
             MyParcel.showDelivery();
+
         });
 
         $('#mypa-deliver-pickup-deliver-bpost-saturday').on('click', function(){
+
+            var saturdayDeliveryData = MyParcel.storeDeliveryOptions.data.delivery[0];
+
+            // @TODO when the bug is fixed inside the api request the  pickupData.price_comment = 'standard'; delete
+            saturdayDeliveryData.price_comment = 'standard';
+            $('#mypa-post-be-data').val(JSON.stringify(saturdayDeliveryData));
+
             MyParcel.showDelivery();
         });
 
         $('#mypa-deliver-pickup-pickup').on('click', function(){
+
+            var pickupData = MyParcel.getPickupByLocationId(MyParcel.storeDeliveryOptions.data.pickup, $('#mypa-pickup-location').val());
+
+            // @TODO when the bug is fixed inside the api request the  pickupData.price_comment = 'retail'; delete
+            pickupData.price_comment = 'retail';
+            $('#mypa-post-be-data').val(JSON.stringify(pickupData));
+
             MyParcel.hideDelivery();
         });
 

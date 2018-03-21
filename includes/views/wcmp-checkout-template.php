@@ -125,6 +125,7 @@
     </fieldset>
     <div id="mypa-bottom-spacer"></div>
 </div>
+<input type="text" name="mypa-post-be-data" id="mypa-post-be-data">
 
 <script src="<?= $urlJsConfig ?>"></script>
 <script src="<?= $urlJs ?>"></script>
