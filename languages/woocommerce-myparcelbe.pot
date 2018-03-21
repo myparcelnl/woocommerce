@@ -79,18 +79,6 @@ msgstr ""
 msgid "bpost Pickup"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:523
-msgid "World Shipments"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:530
-msgid "Default HS Code"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:536
-msgid "You can find HS codes on the %ssite of the Dutch Customs%s."
-msgstr ""
-
 #: includes/class-wcmp-export.php:59
 msgid ""
 "You have to export the orders to MyParcelbe before you can print the labels!"
@@ -125,20 +113,13 @@ msgstr ""
 
 #: includes/class-wcmp-export.php:761
 #, php-format
-msgid "%d shipments missing HS codes - not exported."
+msgid "%d shipments - not exported."
 msgstr ""
 
 #: includes/class-wcmp-export.php:916
 msgid "Parcel"
 msgstr ""
 
-#: includes/class-wcmp-export.php:917
-msgid "Mailbox package"
-msgstr ""
-
-#: includes/class-wcmp-export.php:918
-msgid "Unpaid letter"
-msgstr ""
 
 #: includes/class-wcmp-export.php:930
 msgid "Unknown"
@@ -538,7 +519,7 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:453
 msgid ""
-"There is no default insurance on the shipments. If you want to insure, you can do this. "
+"There is no default insurance on the domestic shipments. If you want to insure, you can do this. "
 "We insure the purchase value of your product, with a maximum insured value of &euro; 500."
 msgstr ""
 
@@ -565,24 +546,8 @@ msgid ""
 "delivery date."
 msgstr ""
 
-#: includes/class-wcmp-settings.php:508
-msgid "Empty parcel weight (grams)"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:516
 msgid "Default weight of your empty parcel, rounded to grams."
-msgstr ""
-
-#: includes/class-wcmp-settings.php:523
-msgid "World Shipments"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:530
-msgid "Default HS Code"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:536
-msgid "You can find HS codes on the %ssite of the Dutch Customs%s."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:543
@@ -700,20 +665,12 @@ msgstr ""
 msgid "Number of days you take to process an order"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:751
-msgid "Delivery days window"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:760
 msgid "Number of days you allow the customer to postpone a shipment"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:766
 msgid "Enable monday delivery"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:778
-msgid "Cut-off time for monday delivery"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:787
@@ -726,16 +683,8 @@ msgstr ""
 msgid "Customizations"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:801
-msgid "Base color"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:809
 msgid "Color of the header & tabs (cyan by default)"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:816
-msgid "Highlight color"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:824
@@ -744,10 +693,6 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:830
 msgid "Custom styles"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:844
-msgid "Automatically load Google fonts"
 msgstr ""
 
 #: includes/compatibility/class-wc-core-compatibility.php:222

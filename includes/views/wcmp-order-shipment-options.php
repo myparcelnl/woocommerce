@@ -1,36 +1,7 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 
 <table class="wcmyparcelbe_settings_table" style="width: auto">
-	<tr>
-		<td>
-			<?php _e( 'Shipment type', 'woocommerce-myparcelbe' ) ?>:<br/>
-			<?php $parcel_weight = WooCommerce_MyParcelBE()->export->get_parcel_weight( $order ); ?>
-			<small class="calculated_weight"><?php printf( __( 'Calculated weight: %s kg', 'woocommerce-myparcelbe' ), number_format( $parcel_weight, 3, ',', ' ' ) ); ?></small>
-		</td>
-		<td>
-			<?php
-			// disable mailbox package outside BE
-			if (isset($recipient['cc']) && $recipient['cc'] != 'BE') {
-				unset($package_types[2]); // mailbox package
-			}
-
-			// disable mailbox package and unpaid letter for pakjegemak
-			if ( WooCommerce_MyParcelBE()->export->is_pickup( $order ) ) {
-				unset($package_types[2]); // mailbox package
-				unset($package_types[3]); // unpaid letter
-				$package_types[1] .= ' (Pakjegemak)';
-			}
-
-			$name = "myparcelbe_options[{$order_id}][package_type]";
-			printf( '<select name="%s" class="package_type">', $name );
-			foreach ( $package_types as $key => $label ) {
-				printf( '<option value="%s"%s>%s</option>', $key, selected( $shipment_options['package_type'], $key, false ), $label );
-			}
-			echo '</select>';
-			?>
-		</td>
-	</tr>
-	<tr>
+    <tr>
 		<td>
 			<?php _e( 'Number of labels', 'woocommerce-myparcelbe' ) ?>:
 		</td>

@@ -79,19 +79,6 @@ msgstr "Bezorgdatum"
 msgid "bpost Pickup"
 msgstr "Afhalen bij bpost"
 
-#: includes/class-wcmp-admin.php:493
-msgid "HS Code"
-msgstr "HS-code"
-
-#: includes/class-wcmp-admin.php:494
-#, php-format
-msgid ""
-"HS Codes are used for MyParcelbe world shipments, you can find the appropriate "
-"code on the %ssite of the Dutch Customs%s."
-msgstr ""
-"HS Codes worden gebruikt voor MyParcelbe wereldzendingen, je kunt de codes "
-"vinden op de %ssite van de Douane%s."
-
 #: includes/class-wcmp-export.php:59
 msgid ""
 "You have to export the orders to MyParcelbe before you can print the labels!"
@@ -128,20 +115,12 @@ msgstr "De geselecteerde orders zijn nog niet naar MyParcelbe geëxporteerd!"
 
 #: includes/class-wcmp-export.php:761
 #, php-format
-msgid "%d shipments missing HS codes - not exported."
-msgstr "%d zendingen met ontbrekende HS codes - niet geëxporteerd."
+msgid "%d shipments - not exported."
+msgstr "%d zendingen - niet geëxporteerd."
 
 #: includes/class-wcmp-export.php:916
 msgid "Parcel"
 msgstr "Pakket"
-
-#: includes/class-wcmp-export.php:917
-msgid "Mailbox package"
-msgstr "Brievenbuspakje"
-
-#: includes/class-wcmp-export.php:918
-msgid "Unpaid letter"
-msgstr "Ongefrankeerd"
 
 #: includes/class-wcmp-export.php:930
 msgid "Unknown"
@@ -581,10 +560,10 @@ msgstr "Verzekerde verzending (tot &euro; 500)"
 
 #: includes/class-wcmp-settings.php:453
 msgid ""
-"There is no default insurance on the shipments. If you want to insure, you can do this. "
+"There is no default insurance on the domestic shipments. If you want to insure, you can do this. "
 "We insure the purchase value of your product, with a maximum insured value of &euro; 500."
 msgstr ""
-"Er zit standaard geen verzekering op de zendingen. Indien u toch wilt "
+"Er zit standaard geen verzekering op de binnenlandse zendingen. Indien u toch wilt "
 "verzekeren kunt u dit doen. Wij verzekeren de inkoopwaarde "
 "van uw product, met een maximale verzekerde waarde van &euro; 500. "
 
@@ -620,25 +599,10 @@ msgstr ""
 "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden, "
 "[DELIVERY_DATE] voor de bezorgdatum."
 
-#: includes/class-wcmp-settings.php:508
-msgid "Empty parcel weight (grams)"
-msgstr "Leeg pakket gewicht (gram)"
-
 #: includes/class-wcmp-settings.php:516
 msgid "Default weight of your empty parcel, rounded to grams."
 msgstr "Standaard gewicht van uw lege pakket, afgerond op gram."
 
-#: includes/class-wcmp-settings.php:523
-msgid "World Shipments"
-msgstr "Wereldzendingen"
-
-#: includes/class-wcmp-settings.php:530
-msgid "Default HS Code"
-msgstr "Standaard HS-code"
-
-#: includes/class-wcmp-settings.php:536
-msgid "You can find HS codes on the %ssite of the Dutch Customs%s."
-msgstr "U kunt de HS code vinden op de %swebsite van de Nederlandse douane%s"
 
 #: includes/class-wcmp-settings.php:543
 msgid "Customs shipment type"
@@ -756,10 +720,6 @@ msgstr "Verwerkingstijd"
 msgid "Number of days you take to process an order"
 msgstr "Aantal dagen dat u nodig heeft om een order te verwerken"
 
-#: includes/class-wcmp-settings.php:751
-msgid "Delivery days window"
-msgstr "Leverdagen venster"
-
 #: includes/class-wcmp-settings.php:760
 msgid "Number of days you allow the customer to postpone a shipment"
 msgstr "Aantal dagen dat een klant een zending kan uitstellen"
@@ -767,10 +727,6 @@ msgstr "Aantal dagen dat een klant een zending kan uitstellen"
 #: includes/class-wcmp-settings.php:766
 msgid "Enable monday delivery"
 msgstr "Maandaglevering inschakelen"
-
-#: includes/class-wcmp-settings.php:778
-msgid "Cut-off time for monday delivery"
-msgstr "Sluitingstijd voor maandaglevering"
 
 #: includes/class-wcmp-settings.php:787
 msgid ""
@@ -784,17 +740,9 @@ msgstr ""
 msgid "Customizations"
 msgstr "Aanpassingen"
 
-#: includes/class-wcmp-settings.php:801
-msgid "Base color"
-msgstr "Basiskleur"
-
 #: includes/class-wcmp-settings.php:809
 msgid "Color of the header & tabs (cyan by default)"
 msgstr "Kleur van de header en tabs (standaardkleur: cyaan)"
-
-#: includes/class-wcmp-settings.php:816
-msgid "Highlight color"
-msgstr "Highlight kleur"
 
 #: includes/class-wcmp-settings.php:824
 msgid "Color of the selections/highlights (orange by default)"
@@ -803,10 +751,6 @@ msgstr "Kleur van de selecties/highlights (standaardkleur: oranje)"
 #: includes/class-wcmp-settings.php:830
 msgid "Custom styles"
 msgstr "Aangepaste stijlen (CSS)"
-
-#: includes/class-wcmp-settings.php:844
-msgid "Automatically load Google fonts"
-msgstr "Google lettertypen automatisch laden"
 
 #: includes/compatibility/class-wc-core-compatibility.php:222
 msgid "WooCommerce"

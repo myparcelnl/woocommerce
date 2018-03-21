@@ -411,7 +411,7 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'insured',
-				'description'	=> __( 'There is no default insurance on the shipments. If you want to insure, you can do this. We insure the purchase value of your product, with a maximum insured value of &euro; 500.', 'woocommerce-myparcelbe' ),
+				'description'	=> __( 'There is no default insurance on the domestic shipments. If you want to insure, you can do this. We insure the purchase value of your product, with a maximum insured value of &euro; 500.', 'woocommerce-myparcelbe' ),
 				'class'			=> 'insured',
 			)
 		);
@@ -427,61 +427,6 @@ class WooCommerce_MyParcelBE_Settings {
 				'id'			=> 'label_description',
 				'size'			=> '25',
 				'description'	=> __( "With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcel BE Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date.", 'woocommerce-myparcelbe' ),
-			)
-		);
-
-		add_settings_field(
-			'empty_parcel_weight',
-			__( 'Empty parcel weight (grams)', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'text_input' ),
-			$option_group,
-			'defaults',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'empty_parcel_weight',
-				'size'			=> '5',
-				'description'	=> __( 'Default weight of your empty parcel, rounded to grams.', 'woocommerce-myparcelbe' ),
-			)
-		);
-
-		// World Shipments section.
-		add_settings_section(
-			'world_shipments',
-			__( 'World Shipments', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'section' ),
-			$option_group
-		);
-
-		add_settings_field(
-			'hs_code',
-			__( 'Default HS Code', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'text_input' ),
-			$option_group,
-			'world_shipments',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'hs_code',
-				'size'			=> '5',
-				'description'	=> sprintf(__( 'You can find HS codes on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcelbe' ), '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">','</a>')
-
-			)
-		);
-		add_settings_field(
-			'package_contents',
-			__( 'Customs shipment type', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'select' ),
-			$option_group,
-			'world_shipments',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'package_contents',
-				'options' 		=> array(
-					1 => __( 'Commercial goods' , 'woocommerce-myparcelbe' ),
-					2 => __( 'Commercial samples' , 'woocommerce-myparcelbe' ),
-					3 => __( 'Documents' , 'woocommerce-myparcelbe' ),
-					4 => __( 'Gifts' , 'woocommerce-myparcelbe' ),
-					5 => __( 'Return shipment' , 'woocommerce-myparcelbe' ),
-				),
 			)
 		);
 
@@ -627,21 +572,6 @@ class WooCommerce_MyParcelBE_Settings {
 		);
 
 		add_settings_field(
-			'deliverydays_window',
-			__( 'Delivery days window', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'text_input' ),
-			$option_group,
-			'processing_parameters',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'deliverydays_window',
-				'type'			=> 'number',
-				'size'			=> '2',
-				'description'	=> __( 'Number of days you allow the customer to postpone a shipment', 'woocommerce-myparcelbe' ),
-			)
-		);
-
-		add_settings_field(
 			'saturday_delivery',
 			__( 'Saturday delivery', 'woocommerce-myparcelbe' ),
 			array( $this->callbacks, 'delivery_option_enable' ),
@@ -653,57 +583,12 @@ class WooCommerce_MyParcelBE_Settings {
 			)
 		);
 
-		add_settings_field(
-			'saturday_cutoff_time',
-			__( 'Cut-off time for monday delivery', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'text_input' ),
-			$option_group,
-			'processing_parameters',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'saturday_cutoff_time',
-				'type'			=> 'text',
-				'size'			=> '5',
-				'description'	=> __( 'Time at which you stop processing orders on saturday for monday delivery (format: hh:mm)', 'woocommerce-myparcelbe' ),
-			)
-		);
-
-
 		// Customizations section
 		add_settings_section(
 			'customizations',
 			__( 'Customizations', 'woocommerce-myparcelbe' ),
 			array( $this->callbacks, 'section' ),
 			$option_group
-		);
-
-		add_settings_field(
-			'base_color',
-			__( 'Base color', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'color_picker' ),
-			$option_group,
-			'customizations',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'base_color',
-				'size'			=> '10',
-				'description'	=> __( 'Color of the header & tabs (cyan by default)', 'woocommerce-myparcelbe' ),
-			)
-		);
-
-
-		add_settings_field(
-			'highlight_color',
-			__( 'Highlight color', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'color_picker' ),
-			$option_group,
-			'customizations',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'highlight_color',
-				'size'			=> '10',
-				'description'	=> __( 'Color of the selections/highlights (orange by default)', 'woocommerce-myparcelbe' ),
-			)
 		);
 
 		add_settings_field(
@@ -717,18 +602,6 @@ class WooCommerce_MyParcelBE_Settings {
 				'id'			=> 'custom_css',
 				'width'			=> '80',
 				'height'		=> '8',
-			)
-		);
-
-		add_settings_field(
-			'autoload_google_fonts',
-			__( 'Automatically load Google fonts', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'checkbox' ),
-			$option_group,
-			'customizations',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'autoload_google_fonts',
 			)
 		);
 	}
@@ -751,7 +624,6 @@ class WooCommerce_MyParcelBE_Settings {
 					'pickup_enabled' => '1',
 					'dropoff_days' => array ( 1,2,3,4,5 ),
 					'dropoff_delay' => '0',
-					'deliverydays_window' => '1',
 				);
 				break;
 			case 'woocommerce_myparcelbe_export_defaults_settings':
