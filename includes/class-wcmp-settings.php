@@ -429,7 +429,7 @@ class WooCommerce_MyParcelBE_Settings {
 				'description'	=> __( "With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcel BE Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date.", 'woocommerce-myparcelbe' ),
 			)
 		);
-        
+
 	}
 
 	/**
@@ -572,14 +572,14 @@ class WooCommerce_MyParcelBE_Settings {
 		);
 
 		add_settings_field(
-			'monday_delivery',
-			__( 'Enable monday delivery', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'checkbox' ),
+			'saturday_delivery',
+			__( 'Saturday delivery', 'woocommerce-myparcelbe' ),
+			array( $this->callbacks, 'delivery_option_enable' ),
 			$option_group,
 			'processing_parameters',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'monday_delivery',
+				'id'			=> 'saturday_delivery',
 			)
 		);
 

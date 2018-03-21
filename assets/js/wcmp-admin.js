@@ -52,7 +52,6 @@ jQuery( function( $ ) {
 	$(document).click(function(event) {
 		if(!$(event.target).closest('.wcmp_shipment_summary_list').length) {
 			if( !( $(event.target).hasClass('wcmp_show_shipment_summary') || $(event.target).parent().hasClass('wcmp_shipment_summary') ) && $('.wcmp_shipment_summary_list').is(":visible")) {
-				console.log(event.target);
 				$('.wcmp_shipment_summary_list').slideUp();
 			}
 		}

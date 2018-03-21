@@ -137,8 +137,8 @@ class WC_MyParcelBE_REST_Client
 			@fclose($f);
 		}
 
-		$status = $response["response"]["code"];
-		$body = $response['body'];
+		$status = $response->response->code;
+		$body = $response->body;
 
 		if ($raw !== true) {
 			$body = json_decode($body, true); // The second parameter set to true returns objects as associative arrays
@@ -160,7 +160,13 @@ class WC_MyParcelBE_REST_Client
 			throw new Exception($error, $status);
 		}
 
-		return array("code" => $status, "body" => $body, "headers" => $response["headers"]);
+		$responseData = array(
+			"code" => $status,
+			"body" => $body,
+			"headers" => $response->headers,
+		);
+
+		return $responseData;
 	}
 
 	public function parse_errors( $body ) {

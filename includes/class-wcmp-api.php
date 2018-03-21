@@ -1,9 +1,9 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WC_MyParcelbe_API' ) ) :
+if ( !class_exists( 'WC_MyParcelBE_API' ) ) :
 
-class WC_MyParcelbe_API extends WC_MyParcelBE_REST_Client {
+class WC_MyParcelBE_API extends WC_MyParcelBE_REST_Client {
 	/** @var API URL */
 	public $APIURL = "https://api.myparcel.nl/";
 
@@ -183,24 +183,6 @@ class WC_MyParcelbe_API extends WC_MyParcelBE_REST_Client {
 		return $response;
 	}
 
-
-	/**
-	 * Get delivery options
-	 * @return array          response
-	 */
-	public function get_delivery_options ( $params = array(), $raw = false ) {
-		$endpoint = 'delivery_options';
-		$checkout_settings = WooCommerce_MyParcelBE()->checkout_settings;
-		if (isset(WooCommerce_MyParcelBE()->checkout_settings['monday_delivery']) ) {
-			$params['monday_delivery'] = 1;
-		}
-
-		$request_url = add_query_arg( $params, $this->APIURL . $endpoint );
-		$response = $this->get($request_url, null, $raw);
-
-		return $response;
-	}
-
 	/**
 	 * Get Wordpress, Woocommerce, Myparcel version and place theme in a array. Implode the array to get an UserAgent.
 	 * @return string
@@ -210,7 +192,7 @@ class WC_MyParcelbe_API extends WC_MyParcelBE_REST_Client {
 		$userAgents = [
 			'Wordpress/'.get_bloginfo( 'version' ),
 			'WooCommerce/'.WOOCOMMERCE_VERSION,
-			'MyParcelNL-WooCommerce/'.WC_MYPARCEL_VERSION,
+			'MyParcelBE-WooCommerce/'.WC_MYPARCEL_VERSION,
 			];
 
 		//Place white space between the array elements

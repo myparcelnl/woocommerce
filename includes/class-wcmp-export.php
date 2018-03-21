@@ -386,39 +386,6 @@ class WooCommerce_MyParcelBE_Export {
 		die();
 	}
 
-	public function frontend_api_request() {
-		// TODO: check nonce
-		$params = $_REQUEST;
-
-		// filter non API params
-		$api_params = array(
-			'cc'					=> '',
-			'postal_code'			=> '',
-			'number'				=> '',
-			'carrier'				=> '',
-			'delivery_time'			=> '',
-			'delivery_date'			=> '',
-			'cutoff_time'			=> '',
-			'dropoff_days'			=> '',
-			'dropoff_delay'			=> '',
-			'exclude_delivery_type'	=> '',
-		);
-		$params = array_intersect_key($params, $api_params);
-
-		$api = $this->init_api();
-
-		try {
-			$response = $api->get_delivery_options( $params, true );
-
-			@header('Content-type: application/json; charset=utf-8');
-
-			echo $response['body'];
-		} catch (Exception $e) {
-			@header("HTTP/1.1 503 service unavailable");
-		}
-		die();
-	}
-
 	public function init_api () {
 		// $user = WooCommerce_MyParcelBE()->general_settings['api_username'];
 		if ( !isset(WooCommerce_MyParcelBE()->general_settings['api_key']) ) {
@@ -426,7 +393,7 @@ class WooCommerce_MyParcelBE_Export {
 		}
 
 		$key = WooCommerce_MyParcelBE()->general_settings['api_key'];
-		$api = new WC_MyParcelbe_API( $key );
+		$api = new WC_MyParcelBE_API( $key );
 
 		return $api;
 	}
@@ -544,7 +511,7 @@ class WooCommerce_MyParcelBE_Export {
 
 
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( $shipping_country == 'NL' ) {
+		if ( $shipping_country == 'BE' ) {
 			// use billing address if old 'pakjegemak' (1.5.6 and older)
 			if ( $pgaddress = WCX_Order::get_meta( $order, '_myparcelbe_pgaddress' ) ) {
 				$billing_name = method_exists($order, 'get_formatted_billing_full_name') ? $order->get_formatted_billing_full_name() : trim( $order->billing_first_name . ' ' . $order->billing_last_name );
@@ -821,37 +788,6 @@ class WooCommerce_MyParcelBE_Export {
 
 	public function get_package_type_from_shipping_method( $shipping_method, $shipping_class, $shipping_country ) {
 		$package_type = 1;
-		if (isset(WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'])) {
-			if ( strpos($shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping') ) {
-				// Automattic / WooCommerce table rate
-				// use full method = method_id:instance_id:rate_id
-				$shipping_method_id = $shipping_method;
-			} else { // non table rates
-
-				if ( strpos($shipping_method, ':') !== false ) {
-					// means we have method_id:instance_id
-					$shipping_method = explode(':', $shipping_method);
-					$shipping_method_id = $shipping_method[0];
-					$shipping_method_instance = $shipping_method[1];
-				} else {
-					$shipping_method_id = $shipping_method;
-				}
-
-				// add class if we have one
-				if (!empty($shipping_class)) {
-					$shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
-				}
-			}
-
-			foreach (WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
-				// check if we have a match with the predefined methods
-				// fallback to bare method (without class) (if bare method also defined in settings)
-				if (in_array($shipping_method_id, $package_type_shipping_methods) || (!empty($shipping_method_id_class) && in_array($shipping_method_id_class, $package_type_shipping_methods))) {
-					$package_type = $package_type_key;
-					break;
-				}
-			}
-		}
 
 		return $package_type;
 	}
@@ -1302,14 +1238,42 @@ class WooCommerce_MyParcelBE_Export {
 		return $order_ids;
 	}
 
+	/**
+	 * @param $country_code
+	 *
+	 * @return bool
+	 */
 	public function is_myparcelbe_destination( $country_code ) {
-		return ( $country_code == 'NL' || $this->is_eu_country( $country_code ) || $this->is_world_shipment_country( $country_code ) );
+
+		if ( $country_code == 'BE' ) {
+			return true;
+		}
+
+		if ($this->is_eu_country( $country_code )) {
+			return true;
+		}
+
+		if( $this->is_world_shipment_country( $country_code )){
+			return true;
+		}
+
+		return false;
 	}
 
+
+	/**
+	 * @param $country_code
+	 *
+	 * @return bool
+	 */
 	public function is_eu_country($country_code) {
-		// $eu_countries = array( 'GB', 'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE' );
-		$euro_countries = array( 'AT','BE','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','NO','UA','SM','RS','TR','VA','BY','CH' );
-		return in_array( $country_code, $euro_countries);
+		$euro_countries = array( 'AT','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','NO','UA','SM','RS','TR','VA','BY','CH','NL' );
+
+		if (in_array( $country_code, $euro_countries)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public function is_world_shipment_country( $country_code ) {

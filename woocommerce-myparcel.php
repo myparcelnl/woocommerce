@@ -107,7 +107,7 @@ class WooCommerce_MyParcelBE {
 		include_once( 'includes/class-wcmp-frontend.php' );
 		include_once( 'includes/class-wcmp-settings.php' );
 		$this->export = include_once( 'includes/class-wcmp-export.php' );
-		include_once( 'includes/class-wcmp-nlpostcode-fields.php' );
+		include_once( 'includes/class-wcmp-bepostcode-fields.php' );
 	}
 
 	/**

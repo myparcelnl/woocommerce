@@ -37,7 +37,7 @@
 		),
 	);
 
-	if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
+	if (isset($recipient['cc']) && $recipient['cc'] != 'BE') {
 		unset($option_rows['[signature]']);
 		unset($option_rows['[return]']);
 		$shipment_options['insured'] = 1;
