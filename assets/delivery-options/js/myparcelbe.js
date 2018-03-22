@@ -63,7 +63,11 @@ MyParcel = {
 
         $('#mypa-deliver-pickup-deliver').on('click', function(){
 
-            var dateObj      = MyParcel.dateToObject(MyParcel.storeDeliveryOptions.data.delivery[0].date);
+            if (typeof MyParcel.storeDeliveryOptions === 'undefined') {
+                return;
+            }
+
+            var dateObj = MyParcel.dateToObject(MyParcel.storeDeliveryOptions.data.delivery[0].date);
 
             if(dateObj.getDay() != 6 && myParcelConfig.carrierCode == 2) {
                 var dayOfWeek = 0;
@@ -93,6 +97,10 @@ MyParcel = {
         });
 
         $('#mypa-deliver-pickup-pickup').on('click', function(){
+
+            if (typeof MyParcel.storeDeliveryOptions === 'undefined') {
+                return;
+            }
 
             var pickupData = MyParcel.getPickupByLocationId(MyParcel.storeDeliveryOptions.data.pickup, $('#mypa-pickup-location').val());
 
