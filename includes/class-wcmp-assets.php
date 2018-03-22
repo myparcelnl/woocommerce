@@ -26,7 +26,7 @@ class WooCommerce_PostNL_Assets {
 				'wc-postnl-frontend',
 				'wc_postnl_frontend',
 				array(  
-					'iframe_url' => WooCommerce_PostNL()->plugin_url() . '/includes/views/wcmp-delivery-options.php',
+					'iframe_url' => WooCommerce_PostNL()->plugin_url() . '/includes/views/wcmp-delivery-options.php?v=' . time(),
 				)
 			);
 		}
