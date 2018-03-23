@@ -1276,56 +1276,7 @@ class WooCommerce_MyParcelBE_Export {
 	 */
 	public function is_eu_country($country_code) {
 
-		$euro_countries = array(
-			'AT',
-			'BG',
-			'CZ',
-			'DK',
-			'EE',
-			'FI',
-			'FR',
-			'DE',
-			'GB',
-			'GR',
-			'HU',
-			'IE',
-			'IT',
-			'LV',
-			'LT',
-			'LU',
-			'PL',
-			'PT',
-			'RO',
-			'SK',
-			'SI',
-			'ES',
-			'SE',
-			'MC',
-			'AL',
-			'AD',
-			'BA',
-			'IC',
-			'FO',
-			'GI',
-			'GL',
-			'GG',
-			'IS',
-			'JE',
-			'HR',
-			'LI',
-			'MK',
-			'MD',
-			'ME',
-			'NO',
-			'UA',
-			'SM',
-			'RS',
-			'TR',
-			'VA',
-			'BY',
-			'CH',
-			'NL'
-		);
+		$euro_countries = array( 'AT','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','NO','UA','SM','RS','TR','VA','BY','CH','NL' );
 
 		if ( in_array( $country_code, $euro_countries ) ) {
 			return true;
