@@ -180,17 +180,18 @@
       options = {
         url: urlBase,
         data: {
-          cc: NATIONAL,
-          carrier: CARRIER,
-          number: number,
-          postal_code: postal_code,
-          delivery_time: settings.delivery_time != null ? settings.delivery_time : void 0,
-          delivery_date: settings.delivery_date != null ? settings.delivery_date : void 0,
-          cutoff_time: settings.cutoff_time != null ? settings.cutoff_time : void 0,
-          dropoff_days: settings.dropoff_days != null ? settings.dropoff_days : void 0,
-          dropoff_delay: settings.dropoff_delay != null ? settings.dropoff_delay : void 0,
-          deliverydays_window: settings.deliverydays_window != null ? settings.deliverydays_window : void 0,
-          exclude_delivery_type: settings.exclude_delivery_type != null ? settings.exclude_delivery_type : void 0
+            cc: NATIONAL,
+            carrier: CARRIER,
+            number: number,
+            postal_code: postal_code,
+            delivery_time: settings.delivery_time != null ? settings.delivery_time : void 0,
+            delivery_date: settings.delivery_date != null ? settings.delivery_date : void 0,
+            cutoff_time: settings.cutoff_time != null ? settings.cutoff_time : void 0,
+            dropoff_days: settings.dropoff_days != null ? settings.dropoff_days : void 0,
+            dropoff_delay: settings.dropoff_delay != null ? settings.dropoff_delay : void 0,
+            deliverydays_window: settings.deliverydays_window != null ? settings.deliverydays_window : void 0,
+            exclude_delivery_type: settings.exclude_delivery_type != null ? settings.exclude_delivery_type : void 0,
+            version: Math.random()
         },
         success: renderPage,
         error: hidePostNLOptions

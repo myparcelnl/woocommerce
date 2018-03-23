@@ -239,7 +239,7 @@ class WooCommerce_PostNL_Frontend {
 		}
 		$delivery_options_shipping_methods = json_encode($delivery_options_shipping_methods);
 
-		$iframe_url = WooCommerce_PostNL()->plugin_url() . '/includes/views/wcmp-delivery-options.php';
+		$iframe_url = WooCommerce_PostNL()->plugin_url() . '/includes/views/wcmp-delivery-options.php?v=' . time();
 
 		// determine whether to pre-hide iframe (prevents flashing)
 		$hide_delivery_options = false;
