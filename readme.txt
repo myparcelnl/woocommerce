@@ -2,7 +2,8 @@
 Tags: woocommerce, export, myparcel Belgium
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9.2
-Stable tag: 2.4.7
+Stable tag: 2.4.9
+
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -86,6 +87,13 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 5. MyParcel BE information on the order details page
 
 == Changelog ==
+= 2.4.9 (2018-03-23) =
+Fix: Scrolling when changing package type in orderview 
+
+= 2.4.8 (2018-02-27) =
+* Fix: The array error from the userAgent (https://wordpress.org/support/topic/parse-error-syntax-error-unexpected-in-wp-content-plugins-woocommerce-mypa/)
+* Fix: The countries Norway, Turkey, Switzerland changed to world country
+* Fix: Changing Type from Order List (https://wordpress.org/support/topic/changing-type-from-order-list/#post-10020043)
 
 = 2.4.7 (2018-02-07) =
 * Improvement: WooCommerce 3.3.1 compatibility

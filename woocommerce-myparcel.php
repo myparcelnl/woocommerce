@@ -18,7 +18,8 @@ if ( !class_exists( 'WooCommerce_MyParcelBE' ) ) :
 
 class WooCommerce_MyParcelBE {
 
-	public $version = '2.4.7';
+	public $version = '2.4.9';
+
 	public $plugin_basename;
 
 	protected static $_instance = null;

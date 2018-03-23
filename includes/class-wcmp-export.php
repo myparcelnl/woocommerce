@@ -307,6 +307,7 @@ class WooCommerce_MyParcelBE_Export {
 	}
 
 	public function get_shipment_labels( $shipment_ids, $order_ids = array(), $label_response_type = NULL, $offset = 0 ) {
+
 		$return = array();
 
 		$this->log("*** Label request started ***");
@@ -320,8 +321,10 @@ class WooCommerce_MyParcelBE_Export {
 				$params['positions'] = implode( ';', array_slice($portrait_positions,$offset) );
 			}
 
+
 			if (isset($label_response_type) && $label_response_type == 'url') {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
+
 				$this->log("API response:\n".var_export($response, true));
 				// var_dump( $response );
 				if (isset($response['body']['data']['pdfs']['url'])) {
@@ -330,6 +333,7 @@ class WooCommerce_MyParcelBE_Export {
 				} else {
 					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcelbe' );
 				}
+
 			} else {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'pdf' );
 
@@ -347,14 +351,17 @@ class WooCommerce_MyParcelBE_Export {
 					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcelbe' );
 				}
 
-				// echo '<pre>';var_dump($response);echo '</pre>';die();
+				 //echo '<pre>';var_dump($response);echo '</pre>';die();
 			}
+
 		} catch (Exception $e) {
 			$this->errors[] = $e->getMessage();
 		}
 
 		return $return;
 	}
+
+
 
 	public function get_labels( $order_ids, $label_response_type = NULL, $offset = 0 ) {
 		$shipment_ids = $this->get_shipment_ids( $order_ids, array( 'only_last' => true ) );
@@ -364,6 +371,7 @@ class WooCommerce_MyParcelBE_Export {
 			$this->errors[] = __( 'The selected orders have not been exported to MyParcelbe yet!', 'woocommerce-myparcelbe' );
 			return array();
 		}
+		
 
 		return $this->get_shipment_labels( $shipment_ids, $order_ids, $label_response_type, $offset );
 	}
@@ -509,7 +517,6 @@ class WooCommerce_MyParcelBE_Export {
 			'phone'			=> isset(WooCommerce_MyParcelBE()->export_defaults['connect_phone']) ? WCX_Order::get_prop( $order, 'billing_phone' ) : '',
 		);
 
-
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
 		if ( $shipping_country == 'BE' ) {
 			// use billing address if old 'pakjegemak' (1.5.6 and older)
@@ -538,6 +545,7 @@ class WooCommerce_MyParcelBE_Export {
 				'street'					=> (string) WCX_Order::get_prop( $order, 'shipping_address_1' ),
 				'street_additional_info'	=> (string) WCX_Order::get_prop( $order, 'shipping_address_2' ),
 				'region'					=> (string) WCX_Order::get_prop( $order, 'shipping_state' ),
+
 			);
 		}
 
@@ -1267,17 +1275,16 @@ class WooCommerce_MyParcelBE_Export {
 	 * @return bool
 	 */
 	public function is_eu_country($country_code) {
+
 		$euro_countries = array( 'AT','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','NO','UA','SM','RS','TR','VA','BY','CH','NL' );
 
 		if (in_array( $country_code, $euro_countries)) {
 			return true;
 		}
-
 		return false;
-	}
 
 	public function is_world_shipment_country( $country_code ) {
-		$world_shipment_countries = array( 'AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY' );
+		$world_shipment_countries = array( 'AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY','CH','TR','NO' );
 		return in_array( $country_code, $world_shipment_countries);
 	}
 
