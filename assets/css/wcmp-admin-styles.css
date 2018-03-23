@@ -178,6 +178,15 @@ table.tracktrace_status td.wcmp-create-label {
 	padding: 0;
 }
 
+.wcmyparcel_change_order{
+	pointer-events: none;
+	cursor: default;
+	color: black;
+	text-decoration: none;
+}
+.wcmyparcel_change_order:hover{
+	color: black;
+}
 /* fix woocommerce column float */
 @media only screen and (min-width: 1280px) {
 	#order_data .order_data_column {
