@@ -19,7 +19,7 @@ if ( !class_exists( 'WooCommerce_MyParcel' ) ) :
 
 class WooCommerce_MyParcel {
 
-	public $version = '2.5.2';
+	public $version = '2.4.9';
 
 	public $plugin_basename;
 
