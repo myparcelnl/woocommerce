@@ -81,7 +81,7 @@ msgstr "Afhalen bij bpost"
 
 #: includes/class-wcmp-frontend.php:514
 msgid "Saturday delivery"
-msgstr "Zaterdag levering"
+msgstr "Zaterdaglevering"
 
 #: includes/class-wcmp-export.php:59
 msgid ""
