@@ -1,13 +1,13 @@
 <?php
-use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
-use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WC_NLPostcode_Fields' ) ) :
+if ( !class_exists( 'WC_BEPostcode_Fields' ) ) :
 
-class WC_NLPostcode_Fields {
+class WC_BEPostcode_Fields {
 
 	public $version = '1.5.4';
 
@@ -45,7 +45,7 @@ class WC_NLPostcode_Fields {
 			add_filter( 'woocommerce_countries_allowed_country_states', array( &$this, 'hide_states' ) );
 		}
 
-		// Localize checkout fields (limit custom checkout fields to NL)
+		// Localize checkout fields (limit custom checkout fields to BE)
 		add_filter( 'woocommerce_country_locale_field_selectors', array( &$this, 'country_locale_field_selectors' ) );
 		add_filter( 'woocommerce_default_address_fields', array( &$this, 'default_address_fields' ) );
 		add_filter( 'woocommerce_get_country_locale', array( &$this, 'woocommerce_locale_nl' ), 1, 1);
@@ -105,26 +105,26 @@ class WC_NLPostcode_Fields {
 			if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 				// Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
 				wp_register_script(
-					'nl-checkout',
-					WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-checkout.js',
+					'be-checkout',
+					WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/be-checkout.js',
 					array( 'wc-checkout' ),
 					$this->version
 				);
-				wp_enqueue_script( 'nl-checkout' );
+				wp_enqueue_script( 'be-checkout' );
 			}
 
 			if ( is_account_page() ) {
-				// Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
+				// Disable regular address fields for BE on account page - Fixed in WC 2.1 but not on init...
 				wp_register_script(
-					'nl-account-page',
-					WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-account-page.js',
+					'be-account-page',
+					WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/be-account-page.js',
 					array( 'jquery' ),
 					$this->version
 				);
-				wp_enqueue_script( 'nl-account-page' );
+				wp_enqueue_script( 'be-account-page' );
 			}
 
-			wp_enqueue_style( 'nl-checkout', WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout.css' );
+			wp_enqueue_style( 'be-checkout', WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/myparcel-checkout.css' );
 		}
 
 	}
@@ -136,8 +136,8 @@ class WC_NLPostcode_Fields {
 		global $post_type;
 		if ( $post_type == 'shop_order' ) {
 			wp_enqueue_style(
-				'nl-checkout-admin',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout-admin.css',
+				'be-checkout-admin',
+				WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/be-checkout-admin.css',
 				array(), // deps
 				$this->version
 			);
@@ -150,31 +150,31 @@ class WC_NLPostcode_Fields {
 	 * @return array $locale
 	 */
 	public function woocommerce_locale_nl( $locale ) {
-		$locale['NL']['address_1'] = array(
+		$locale['BE']['address_1'] = array(
 			'required'  => false,
 			'hidden'	=> true,
 		);
 
-		$locale['NL']['address_2'] = array(
+		$locale['BE']['address_2'] = array(
 			'hidden'	=> true,
 		);
 		
-		$locale['NL']['state'] = array(
+		$locale['BE']['state'] = array(
 			'hidden'	=> true,
 			'required'	=> false,
 		);
 
-		$locale['NL']['street_name'] = array(
+		$locale['BE']['street_name'] = array(
 			'required'  => true,
 			'hidden'	=> false,
 		);
 
-		$locale['NL']['house_number'] = array(
+		$locale['BE']['house_number'] = array(
 			'required'  => true,
 			'hidden'	=> false,
 		);
 
-		$locale['NL']['house_number_suffix'] = array(
+		$locale['BE']['house_number_suffix'] = array(
 			'required'  => false,
 			'hidden'	=> false,
 		);
@@ -201,30 +201,30 @@ class WC_NLPostcode_Fields {
 			$form = '';
 		}
 
-		// Set required to true if country is NL
-		$required = ($country == 'NL')?true:false;
+		// Set required to true if country is BE
+		$required = ($country == 'BE')?true:false;
 
 		// Add Street name
 		$fields[$form.'_street_name'] = array(
-			'label'			=> __( 'Street name', 'woocommerce-myparcel' ),
-			'placeholder'	=> __( 'Street name', 'woocommerce-myparcel' ),
+			'label'			=> __( 'Street name', 'woocommerce-myparcelbe' ),
+			'placeholder'	=> __( 'Street name', 'woocommerce-myparcelbe' ),
 			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-first' ), $form, 'street_name' ),
-			'required'		=> $required, // Only required for NL
+			'required'		=> $required, // Only required for BE
 		);
 
 		// Add house number
 		$fields[$form.'_house_number'] = array(
-			'label'			=> __( 'Nr.', 'woocommerce-myparcel' ),
-			// 'placeholder'	=> __( 'Nr.', 'woocommerce-myparcel' ),
+			'label'			=> __( 'Nr.', 'woocommerce-myparcelbe' ),
+			// 'placeholder'	=> __( 'Nr.', 'woocommerce-myparcelbe' ),
 			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart-first' ), $form, 'house_number' ),
-			'required'		=> $required, // Only required for NL
+			'required'		=> $required, // Only required for BE
 			'type'			=> 'number',
 		);
 
 		// Add house number Suffix
 		$fields[$form.'_house_number_suffix'] = array(
-			'label'			=> __( 'Suffix', 'woocommerce-myparcel' ),
-			// 'placeholder'	=> __( 'Suffix', 'woocommerce-myparcel' ),
+			'label'			=> __( 'Suffix', 'woocommerce-myparcelbe' ),
+			// 'placeholder'	=> __( 'Suffix', 'woocommerce-myparcelbe' ),
 			'class'			=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart' ), $form, 'house_number_suffix' ),
 			'required'		=> false,
 		);
@@ -320,7 +320,7 @@ class WC_NLPostcode_Fields {
 	}
 
 	/**
-	 * Make NL checkout fields hidden by default
+	 * Make BE checkout fields hidden by default
 	 * @param  array $fields default checkout fields
 	 * @return array $fields default + custom checkoud fields
 	 */
@@ -376,17 +376,17 @@ class WC_NLPostcode_Fields {
 	public function admin_billing_fields( $fields ) {
 
 		$fields['street_name'] = array(
-			'label' => __( 'Street name', 'woocommerce-myparcel' ),
+			'label' => __( 'Street name', 'woocommerce-myparcelbe' ),
 			'show'  => true
 		);
 
 		$fields['house_number'] = array(
-			'label' => __( 'Number', 'woocommerce-myparcel' ),
+			'label' => __( 'Number', 'woocommerce-myparcelbe' ),
 			'show'  => true
 		);
 
 		$fields['house_number_suffix'] = array(
-			'label' => __( 'Suffix', 'woocommerce-myparcel' ),
+			'label' => __( 'Suffix', 'woocommerce-myparcelbe' ),
 			'show'  => true
 		);
 
@@ -402,17 +402,17 @@ class WC_NLPostcode_Fields {
 	public function admin_shipping_fields( $fields ) {
 
 		$fields['street_name'] = array(
-			'label' => __( 'Street name', 'woocommerce-myparcel' ),
+			'label' => __( 'Street name', 'woocommerce-myparcelbe' ),
 			'show'  => true
 		);
 
 		$fields['house_number'] = array(
-			'label' => __( 'Number', 'woocommerce-myparcel' ),
+			'label' => __( 'Number', 'woocommerce-myparcelbe' ),
 			'show'  => true
 		);
 
 		$fields['house_number_suffix'] = array(
-			'label' => __( 'Suffix', 'woocommerce-myparcel' ),
+			'label' => __( 'Suffix', 'woocommerce-myparcelbe' ),
 			'show'  => true
 		);
 
@@ -423,42 +423,42 @@ class WC_NLPostcode_Fields {
 	 * Custom user profile edit fields.
 	 */
 	public function user_profile_fields ( $meta_fields ) {
-		$myparcel_billing_fields = array(
+		$myparcelbe_billing_fields = array(
 			'billing_street_name' => array(
-				'label'       => __( 'Street', 'woocommerce-myparcel' ),
+				'label'       => __( 'Street', 'woocommerce-myparcelbe' ),
 				'description' => ''
 			),
 			'billing_house_number' => array(
-				'label'       => __( 'Number', 'woocommerce-myparcel' ),
+				'label'       => __( 'Number', 'woocommerce-myparcelbe' ),
 				'description' => ''
 			),
 			'billing_house_number_suffix' => array(
-				'label'       => __( 'Suffix', 'woocommerce-myparcel' ),
+				'label'       => __( 'Suffix', 'woocommerce-myparcelbe' ),
 				'description' => ''
 			),
 		);
-		$myparcel_shipping_fields = array(
+		$myparcelbe_shipping_fields = array(
 			'shipping_street_name' => array(
-				'label'       => __( 'Street', 'woocommerce-myparcel' ),
+				'label'       => __( 'Street', 'woocommerce-myparcelbe' ),
 				'description' => ''
 			),
 			'shipping_house_number' => array(
-				'label'       => __( 'Number', 'woocommerce-myparcel' ),
+				'label'       => __( 'Number', 'woocommerce-myparcelbe' ),
 				'description' => ''
 			),
 			'shipping_house_number_suffix' => array(
-				'label'       => __( 'Suffix', 'woocommerce-myparcel' ),
+				'label'       => __( 'Suffix', 'woocommerce-myparcelbe' ),
 				'description' => ''
 			),
 		);
 
-		// add myparcel fields to billing section
-		$billing_fields = array_merge($meta_fields['billing']['fields'], $myparcel_billing_fields);
+		// add myparcelbe fields to billing section
+		$billing_fields = array_merge($meta_fields['billing']['fields'], $myparcelbe_billing_fields);
 		$billing_fields = $this->array_move_keys( $billing_fields, array( 'billing_street_name', 'billing_house_number', 'billing_house_number_suffix' ), 'billing_address_2', 'after' );
 		$meta_fields['billing']['fields'] = $billing_fields;
 
-		// add myparcel fields to shipping section
-		$shipping_fields = array_merge($meta_fields['shipping']['fields'], $myparcel_shipping_fields);
+		// add myparcelbe fields to shipping section
+		$shipping_fields = array_merge($meta_fields['shipping']['fields'], $myparcelbe_shipping_fields);
 		$shipping_fields = $this->array_move_keys( $shipping_fields, array( 'shipping_street_name', 'shipping_house_number', 'shipping_house_number_suffix' ), 'shipping_address_2', 'after' );
 		$meta_fields['shipping']['fields'] = $shipping_fields;
 		
@@ -521,8 +521,8 @@ class WC_NLPostcode_Fields {
 			$ship_to_different_address = isset($_POST['ship_to_different_address'])?true:false;
 		}
 
-		// check if country is NL
-		if ( $_POST['billing_country'] == 'NL' ) {
+		// check if country is BE
+		if ( $_POST['billing_country'] == 'BE' ) {
 			// concatenate street & house number & copy to 'billing_address_1'
 			$billing_house_number = $_POST['billing_house_number'] . (!empty($_POST['billing_house_number_suffix'])?'-' . $_POST['billing_house_number_suffix']:'');
 			$billing_address_1 = $_POST['billing_street_name'] . ' ' . $billing_house_number;
@@ -535,7 +535,7 @@ class WC_NLPostcode_Fields {
 			}
 		}
 
-		if ( $_POST['shipping_country'] == 'NL' && $ship_to_different_address == true ) {
+		if ( $_POST['shipping_country'] == 'BE' && $ship_to_different_address == true ) {
 			// concatenate street & house number & copy to 'shipping_address_1'
 			$shipping_house_number = $_POST['shipping_house_number'] . (!empty($_POST['shipping_house_number_suffix'])?'-' . $_POST['shipping_house_number_suffix']:'');
 			$shipping_address_1 = $_POST['shipping_street_name'] . ' ' . $shipping_house_number;
@@ -546,13 +546,13 @@ class WC_NLPostcode_Fields {
 
 
 	/**
-	 * validate NL postcodes
+	 * validate BE postcodes
 	 *
 	 * @return bool $valid
 	 */
 	public function validate_postcode( $valid, $postcode, $country ) {
-		if ($country == 'NL') {
-			$valid = (bool) preg_match( '/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i', trim($postcode) );
+		if ($country == 'BE') {
+			$valid = (bool) preg_match( '/^[0-9]{4}$/i', trim($postcode) );
 		}
 		return $valid;
 	}
@@ -564,16 +564,16 @@ class WC_NLPostcode_Fields {
 	 * @return $shipping_postcode
 	 */
 	public function clean_billing_postcode ( ) {
-		if ( $_POST['billing_country'] == 'NL' ) {
-			$billing_postcode = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['billing_postcode']);
+		if ( $_POST['billing_country'] == 'BE' ) {
+			$billing_postcode = preg_replace('/[^0-9]/', '', $_POST['billing_postcode']);
 		} else {
 			$billing_postcode = $_POST['billing_postcode'];
 		}
 		return $billing_postcode;
 	}
 	public function clean_shipping_postcode ( ) {
-		if ( $_POST['shipping_country'] == 'NL' ) {
-			$shipping_postcode = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['shipping_postcode']);
+		if ( $_POST['shipping_country'] == 'BE' ) {
+			$shipping_postcode = preg_replace('/[^0-9]/', '', $_POST['shipping_postcode']);
 		} else {
 			$shipping_postcode = $_POST['shipping_postcode'];
 		}
@@ -639,18 +639,18 @@ class WC_NLPostcode_Fields {
 	 */
 	function required_field_notices( $notice, $field_label ) {
 		// concatenate translations
-		$billing_nr = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-myparcel' ) );
-		$shipping_nr = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-myparcel' ) );
+		$billing_nr = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-myparcelbe' ) );
+		$shipping_nr = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-myparcelbe' ) );
 		// not used:
-		// $billing_street = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcel' ) );
-		// $shipping_street = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcel' ) );
+		// $billing_street = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcelbe' ) );
+		// $shipping_street = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcelbe' ) );
 
 		switch ( $field_label ) {
 			case $billing_nr:
-				$notice = __( '<b>Billing Nr.</b> is a required field', 'woocommerce-myparcel' );
+				$notice = __( '<b>Billing Nr.</b> is a required field', 'woocommerce-myparcelbe' );
 				break;
 			case $shipping_nr:
-				$notice = __( '<b>Shipping Nr.</b> is a required field', 'woocommerce-myparcel' );
+				$notice = __( '<b>Shipping Nr.</b> is a required field', 'woocommerce-myparcelbe' );
 				break;
 			default:
 				break;
@@ -663,11 +663,11 @@ class WC_NLPostcode_Fields {
 	 *
 	 * @param  array $formats Defaul formats.
 	 *
-	 * @return array          New NL format.
+	 * @return array          New BE format.
 	 */
 	public function localisation_address_formats( $formats ) {
 		// default = $postcode_before_city = "{company}\n{name}\n{address_1}\n{address_2}\n{postcode} {city}\n{country}";
-		$formats['NL'] = "{company}\n{name}\n{address_1}\n{address_2}\n{postcode} {city}\n{country}";
+		$formats['BE'] = "{company}\n{name}\n{address_1}\n{address_2}\n{postcode} {city}\n{country}";
 		return $formats;
 	}
 
@@ -682,7 +682,7 @@ class WC_NLPostcode_Fields {
 	public function formatted_address_replacements( $replacements, $args ) {
 		extract( $args );
 
-		if (!empty($street_name) && $country == 'NL') {
+		if (!empty($street_name) && $country == 'BE') {
 			$replacements['{address_1}'] = $street_name.' '.$house_number.$house_number_suffix;
 		}
 		
@@ -867,4 +867,4 @@ class WC_NLPostcode_Fields {
 
 endif; // class_exists
 
-return new WC_NLPostcode_Fields();
+return new WC_BEPostcode_Fields();

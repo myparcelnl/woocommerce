@@ -1,15 +1,17 @@
 <?php
-use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
-use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) :
+if ( !class_exists( 'WooCommerce_MyParcelBE_Export' ) ) :
 
-class WooCommerce_MyParcel_Export {
+class WooCommerce_MyParcelBE_Export {
+	const package_type = 1;
+
 	public $order_id;
 	public $success;
 	public $errors;
@@ -26,15 +28,15 @@ class WooCommerce_MyParcel_Export {
 		include( 'class-wcmp-api.php' );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
-		add_action( 'wp_ajax_wc_myparcel', array($this, 'export' ));
-		add_action( 'wp_ajax_wc_myparcel_frontend', array($this, 'frontend_api_request' ));
-		add_action( 'wp_ajax_nopriv_wc_myparcel_frontend', array($this, 'frontend_api_request' ));
+		add_action( 'wp_ajax_wc_myparcelbe', array($this, 'export' ));
+		add_action( 'wp_ajax_wc_myparcelbe_frontend', array($this, 'frontend_api_request' ));
+		add_action( 'wp_ajax_nopriv_wc_myparcelbe_frontend', array($this, 'frontend_api_request' ));
 	}
 
 	public function admin_notices () {
-		if ( isset($_GET['myparcel_done']) ) { // only do this when for the user that initiated this
-			$action_return = get_option( 'wcmyparcel_admin_notices' );
-			$print_queue = get_option( 'wcmyparcel_print_queue', array() );
+		if ( isset($_GET['myparcelbe_done']) ) { // only do this when for the user that initiated this
+			$action_return = get_option( 'wcmyparcelbe_admin_notices' );
+			$print_queue = get_option( 'wcmyparcelbe_print_queue', array() );
 			if (!empty($action_return)) {
 				foreach ($action_return as $type => $message) {
 					if (in_array($type, array('success','error'))) {
@@ -42,22 +44,22 @@ class WooCommerce_MyParcel_Export {
 							$print_queue_store = sprintf('<input type="hidden" value="%s" id="wcmp_printqueue">', json_encode(array_keys($print_queue['order_ids'])));
 							$print_queue_offset_store = sprintf('<input type="hidden" value="%s" id="wcmp_printqueue_offset">', $print_queue['offset']);
 							// dequeue
-							delete_option( 'wcmyparcel_print_queue' );
+							delete_option( 'wcmyparcelbe_print_queue' );
 						}
-						printf('<div class="myparcel_notice notice notice-%s"><p>%s</p>%s</div>', $type, $message, isset($print_queue_store)?$print_queue_store.$print_queue_offset_store:'');
+						printf('<div class="myparcelbe_notice notice notice-%s"><p>%s</p>%s</div>', $type, $message, isset($print_queue_store)?$print_queue_store.$print_queue_offset_store:'');
 					}
 				}
 				// destroy after reading
-				delete_option( 'wcmyparcel_admin_notices' );
-				wp_cache_delete( 'wcmyparcel_admin_notices','options' );
+				delete_option( 'wcmyparcelbe_admin_notices' );
+				wp_cache_delete( 'wcmyparcelbe_admin_notices','options' );
 			}
 		}
 
-		if (isset($_GET['myparcel'])) {
-			switch ($_GET['myparcel']) {
+		if (isset($_GET['myparcelbe'])) {
+			switch ($_GET['myparcelbe']) {
 				case 'no_consignments':
-					$message = __('You have to export the orders to MyParcel before you can print the labels!', 'woocommerce-myparcel');
-					printf('<div class="myparcel_notice notice notice-error"><p>%s</p></div>', $message);
+					$message = __('You have to export the orders to MyParcelbe before you can print the labels!', 'woocommerce-myparcelbe');
+					printf('<div class="myparcelbe_notice notice notice-error"><p>%s</p></div>', $message);
 					break;
 				default:
 					break;
@@ -73,17 +75,17 @@ class WooCommerce_MyParcel_Export {
 	 */
 	public function export() {
 		// Check the nonce
-		check_ajax_referer( 'wc_myparcel', 'security' );
+		check_ajax_referer( 'wc_myparcelbe', 'security' );
 
 		if( ! is_user_logged_in() ) {
-			wp_die( __( 'You do not have sufficient permissions to access this page.', 'woocommerce-myparcel' ) );
+			wp_die( __( 'You do not have sufficient permissions to access this page.', 'woocommerce-myparcelbe' ) );
 		}
 
 		$return = array();
 
 		// Check the user privileges (maybe use order ids for filter?)
-		if( apply_filters( 'wc_myparcel_check_privs', !current_user_can( 'manage_woocommerce_orders' ) && !current_user_can( 'edit_shop_orders' ) ) ) {
-			$return['error'] = __( 'You do not have sufficient permissions to access this page.', 'woocommerce-myparcel' );
+		if( apply_filters( 'wc_myparcelbe_check_privs', !current_user_can( 'manage_woocommerce_orders' ) && !current_user_can( 'edit_shop_orders' ) ) ) {
+			$return['error'] = __( 'You do not have sufficient permissions to access this page.', 'woocommerce-myparcelbe' );
 			$json = json_encode( $return );
 			echo $json;
 			die();
@@ -95,11 +97,11 @@ class WooCommerce_MyParcel_Export {
 
 		switch($request) {
 			case 'add_shipments':
-				// filter out non-myparcel destinations
-				$order_ids = $this->filter_myparcel_destination_orders( $order_ids );
+				// filter out non-myparcelbe destinations
+				$order_ids = $this->filter_myparcelbe_destination_orders( $order_ids );
 
 				if ( empty($order_ids) ) {
-					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
+					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcelbe' );
 					break;
 				}
 
@@ -108,16 +110,16 @@ class WooCommerce_MyParcel_Export {
 				$return = $this->add_shipments( $order_ids );
 				break;
 			case 'add_return':
-				if ( empty($myparcel_options) ) {
-					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
+				if ( empty($myparcelbe_options) ) {
+					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcelbe' );
 					break;
 				}
-				$return = $this->add_return( $myparcel_options );
+				$return = $this->add_return( $myparcelbe_options );
 				break;
 			case 'get_labels':
 				$offset = !empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
 				if ( empty($order_ids) && empty($shipment_ids)) {
-					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
+					$this->errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcelbe' );
 					break;
 				}
 				$label_response_type = isset($label_response_type) ? $label_response_type : NULL;
@@ -126,16 +128,16 @@ class WooCommerce_MyParcel_Export {
 					$shipment_ids = $this->sanitize_posted_array($shipment_ids);
 					$return = $this->get_shipment_labels( $shipment_ids, $order_ids, $label_response_type, $offset );
 				} else {
-					$order_ids = $this->filter_myparcel_destination_orders( $order_ids );
+					$order_ids = $this->filter_myparcelbe_destination_orders( $order_ids );
 					$return = $this->get_labels( $order_ids, $label_response_type, $offset );
 				}
 				break;
 			case 'modal_dialog':
 				if ( empty($order_ids) ) {
-					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcel' );
+					$errors[] = __( 'You have not selected any orders!', 'woocommerce-myparcelbe' );
 					break;
 				}
-				$order_ids = $this->filter_myparcel_destination_orders( $order_ids );
+				$order_ids = $this->filter_myparcelbe_destination_orders( $order_ids );
 				$this->modal_dialog( $order_ids, $dialog );
 				break;
 		}
@@ -154,13 +156,13 @@ class WooCommerce_MyParcel_Export {
 		// When adding shipments, store $return for use in admin_notice
 		// This way we can refresh the page (JS) to show all new buttons
 		if ($request == 'add_shipments' && !empty($print) && ($print == 'no'|| $print == 'after_reload')) {
-			update_option( 'wcmyparcel_admin_notices', $return );
+			update_option( 'wcmyparcelbe_admin_notices', $return );
 			if ($print == 'after_reload') {
 				$print_queue = array(
 					'order_ids'	=> $return['success_ids'],
 					'offset'	=> isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
 				);
-				update_option( 'wcmyparcel_print_queue', $print_queue );
+				update_option( 'wcmyparcelbe_print_queue', $print_queue );
 			}
 		}
 
@@ -205,7 +207,7 @@ class WooCommerce_MyParcel_Export {
 			$this->log("Shipment data for order {$order_id}:\n".var_export($shipments, true));
 
 			// check colli amount
-			$extra_params = WCX_Order::get_meta( $order, '_myparcel_shipment_options_extra' );
+			$extra_params = WCX_Order::get_meta( $order, '_myparcelbe_shipment_options_extra' );
 			$colli_amount = isset($extra_params['colli_amount']) ? $extra_params['colli_amount'] : 1;
 
 			for ($i=0; $i < intval($colli_amount); $i++) {
@@ -228,7 +230,7 @@ class WooCommerce_MyParcel_Export {
 						$this->save_shipment_data( $order, $shipment );
 
 						// process directly setting
-						if ( isset(WooCommerce_MyParcel()->general_settings['process_directly']) || $process === true ) {
+						if ( isset(WooCommerce_MyParcelBE()->general_settings['process_directly']) || $process === true ) {
 							// flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
 							if (method_exists($order, 'save')) {
 								$order->save();
@@ -238,11 +240,11 @@ class WooCommerce_MyParcel_Export {
 						}
 
 						// status automation
-						if ( isset(WooCommerce_MyParcel()->general_settings['order_status_automation']) && !empty(WooCommerce_MyParcel()->general_settings['automatic_order_status']) ) {
-							$order->update_status( WooCommerce_MyParcel()->general_settings['automatic_order_status'], __( 'MyParcel shipment created:', 'woocommerce-myparcel' ) );
+						if ( isset(WooCommerce_MyParcelBE()->general_settings['order_status_automation']) && !empty(WooCommerce_MyParcelBE()->general_settings['automatic_order_status']) ) {
+							$order->update_status( WooCommerce_MyParcelBE()->general_settings['automatic_order_status'], __( 'MyParcelbe shipment created:', 'woocommerce-myparcelbe' ) );
 						}
 					} else {
-						$this->errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcel' );
+						$this->errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcelbe' );
 					}
 				} catch (Exception $e) {
 					$this->errors[$order_id] = $e->getMessage();
@@ -251,24 +253,24 @@ class WooCommerce_MyParcel_Export {
 
 			// store shipment ids from this export
 			if (!empty($created_shipments)) {
-				WCX_Order::update_meta_data( $order, '_myparcel_last_shipment_ids', $created_shipments );
+				WCX_Order::update_meta_data( $order, '_myparcelbe_last_shipment_ids', $created_shipments );
 			}
 		}
 		// echo '<pre>';var_dump($this->success);echo '</pre>';die();
 		if (!empty($this->success)) {
-			$return['success'] = sprintf(__( '%s shipments successfully exported to Myparcel', 'woocommerce-myparcel' ), count($this->success));
+			$return['success'] = sprintf(__( '%s shipments successfully exported to Myparcel', 'woocommerce-myparcelbe' ), count($this->success));
 			$return['success_ids'] = $this->success;
 		}
 
 		return $return;
 	}
 
-	public function add_return( $myparcel_options ) {
+	public function add_return( $myparcelbe_options ) {
 		$return = array();
 
 		$this->log("*** Creating return shipments started ***");
 
-		foreach ($myparcel_options as $order_id => $options) {
+		foreach ($myparcelbe_options as $order_id => $options) {
 			$return_shipments = array( $this->prepare_return_shipment_data( $order_id, $options ) );
 			$this->log("Return shipment data for order {$order_id}:\n".var_export($return_shipments, true));
 			// echo '<pre>';var_dump($return_shipment);echo '</pre>';die();
@@ -292,7 +294,7 @@ class WooCommerce_MyParcel_Export {
 					$this->save_shipment_data( $order, $shipment );
 
 				} else {
-					$this->errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcel' );
+					$this->errors[$order_id] = __( 'Unknown error', 'woocommerce-myparcelbe' );
 				}
 			} catch (Exception $e) {
 				$this->errors[$order_id] = $e->getMessage();
@@ -329,7 +331,7 @@ class WooCommerce_MyParcel_Export {
 					$url = untrailingslashit( $api->APIURL ) . $response['body']['data']['pdfs']['url'];
 					$return['url'] = $url;
 				} else {
-					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
+					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcelbe' );
 				}
 
 			} else {
@@ -338,7 +340,7 @@ class WooCommerce_MyParcel_Export {
 				if (isset($response['body'])) {
 					$this->log("PDF data received");
 					$pdf_data = $response['body'];
-					$output_mode = isset(WooCommerce_MyParcel()->general_settings['download_display'])?WooCommerce_MyParcel()->general_settings['download_display']:'';
+					$output_mode = isset(WooCommerce_MyParcelBE()->general_settings['download_display'])?WooCommerce_MyParcelBE()->general_settings['download_display']:'';
 					if ( $output_mode == 'display' ) {
 						$this->stream_pdf( $pdf_data, $order_ids );
 					} else {
@@ -346,7 +348,7 @@ class WooCommerce_MyParcel_Export {
 					}
 				} else {
 					$this->log("Unknown error, API response:\n".var_export($response, true));
-					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
+					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcelbe' );
 				}
 
 				 //echo '<pre>';var_dump($response);echo '</pre>';die();
@@ -366,7 +368,7 @@ class WooCommerce_MyParcel_Export {
 
 		if ( empty($shipment_ids) ) {
 			$this->log("*** Failed label request (not exported yet) ***");
-			$this->errors[] = __( 'The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcel' );
+			$this->errors[] = __( 'The selected orders have not been exported to MyParcelbe yet!', 'woocommerce-myparcelbe' );
 			return array();
 		}
 		
@@ -392,48 +394,14 @@ class WooCommerce_MyParcel_Export {
 		die();
 	}
 
-	public function frontend_api_request() {
-		// TODO: check nonce
-		$params = $_REQUEST;
-
-		// filter non API params
-		$api_params = array(
-			'cc'					=> '',
-			'postal_code'			=> '',
-			'number'				=> '',
-			'carrier'				=> '',
-			'delivery_time'			=> '',
-			'delivery_date'			=> '',
-			'cutoff_time'			=> '',
-			'dropoff_days'			=> '',
-			'dropoff_delay'			=> '',
-			'deliverydays_window'	=> '',
-			'exclude_delivery_type'	=> '',
-		);
-		$params = array_intersect_key($params, $api_params);
-
-		$api = $this->init_api();
-
-		try {
-			$response = $api->get_delivery_options( $params, true );
-
-			@header('Content-type: application/json; charset=utf-8');
-
-			echo $response['body'];
-		} catch (Exception $e) {
-			@header("HTTP/1.1 503 service unavailable");
-		}
-		die();
-	}
-
 	public function init_api () {
-		// $user = WooCommerce_MyParcel()->general_settings['api_username'];
-		if ( !isset(WooCommerce_MyParcel()->general_settings['api_key']) ) {
+		// $user = WooCommerce_MyParcelBE()->general_settings['api_username'];
+		if ( !isset(WooCommerce_MyParcelBE()->general_settings['api_key']) ) {
 			return false;
 		}
 
-		$key = WooCommerce_MyParcel()->general_settings['api_key'];
-		$api = new WC_MyParcel_API( $key );
+		$key = WooCommerce_MyParcelBE()->general_settings['api_key'];
+		$api = new WC_MyParcelBE_API( $key );
 
 		return $api;
 	}
@@ -446,7 +414,7 @@ class WooCommerce_MyParcel_Export {
 			$shipment = array(
 				'recipient' => $this->get_recipient( $order ),
 				'options'	=> $this->get_options( $order ),
-				'carrier'	=> 1, // default to POSTNL for now
+				'carrier'	=> 1, // default to bpost for now
 			);
 
 			if ( $pickup = $this->is_pickup( $order ) ) {
@@ -490,8 +458,8 @@ class WooCommerce_MyParcel_Export {
 		// set name & email
 		$return_shipment_data = array(
 			'name'			=> $shipping_name,
-			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
-			'carrier'		=> 1, // default to POSTNL for now
+			'email'			=> isset(WooCommerce_MyParcelBE()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
+			'carrier'		=> 1, // default to bpost for now
 		);
 
 		// add options if available
@@ -511,7 +479,7 @@ class WooCommerce_MyParcel_Export {
 
 			// PREVENT ILLEGAL SETTINGS
 			// convert numeric strings to int
-			$int_options = array( 'package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format' );
+			$int_options = array( 'package_type', 'delivery_type', 'signature', 'return' );
 			foreach ($options as $key => &$value) {
 				if ( in_array($key, $int_options) ) {
 					$value = (int) $value;
@@ -545,15 +513,14 @@ class WooCommerce_MyParcel_Export {
 			'city'			=> (string) WCX_Order::get_prop( $order, 'shipping_city' ),
 			'person'		=> $shipping_name,
 			'company'		=> (string) WCX_Order::get_prop( $order, 'shipping_company' ),
-			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
-			'phone'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_phone']) ? WCX_Order::get_prop( $order, 'billing_phone' ) : '',
-
+			'email'			=> isset(WooCommerce_MyParcelBE()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
+			'phone'			=> isset(WooCommerce_MyParcelBE()->export_defaults['connect_phone']) ? WCX_Order::get_prop( $order, 'billing_phone' ) : '',
 		);
 
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( $shipping_country == 'NL' ) {
+		if ( $shipping_country == 'BE' ) {
 			// use billing address if old 'pakjegemak' (1.5.6 and older)
-			if ( $pgaddress = WCX_Order::get_meta( $order, '_myparcel_pgaddress' ) ) {
+			if ( $pgaddress = WCX_Order::get_meta( $order, '_myparcelbe_pgaddress' ) ) {
 				$billing_name = method_exists($order, 'get_formatted_billing_full_name') ? $order->get_formatted_billing_full_name() : trim( $order->billing_first_name . ' ' . $order->billing_last_name );
 				$address_intl = array(
 					'city'			=> (string) WCX_Order::get_prop( $order, 'billing_city' ),
@@ -584,47 +551,41 @@ class WooCommerce_MyParcel_Export {
 
 		$address = array_merge( $address, $address_intl);
 
-		return apply_filters( 'wc_myparcel_recipient', $address, $order );
+		return apply_filters( 'wc_myparcelbe_recipient', $address, $order );
 	}
 
 	public function get_options( $order ) {
 		// parse description
-		if (isset(WooCommerce_MyParcel()->export_defaults['label_description'])) {
-			$description = $this->replace_shortcodes( WooCommerce_MyParcel()->export_defaults['label_description'], $order );
+		if (isset(WooCommerce_MyParcelBE()->export_defaults['label_description'])) {
+			$description = $this->replace_shortcodes( WooCommerce_MyParcelBE()->export_defaults['label_description'], $order );
 		} else {
 			$description = '';
 		}
 
 		// use shipment options from order when available
-		$shipment_options = WCX_Order::get_meta( $order, '_myparcel_shipment_options' );
+		$shipment_options = WCX_Order::get_meta( $order, '_myparcelbe_shipment_options' );
 		if (!empty($shipment_options)) {
 			$emty_defaults = array(
 				'package_type'		=> 1,
-				'only_recipient'	=> 0,
 				'signature'			=> 0,
-				'return'			=> 0,
-				'large_format'		=> 0,
 				'label_description'	=> '',
 				'insured_amount'	=> 0,
 			);
 			$options = array_merge($emty_defaults, $shipment_options);
 		} else {
-			if (isset(WooCommerce_MyParcel()->export_defaults['insured']) && WooCommerce_MyParcel()->export_defaults['insured_amount'] == '' && isset(WooCommerce_MyParcel()->export_defaults['insured_amount_custom'])) {
-				$insured_amount = WooCommerce_MyParcel()->export_defaults['insured_amount_custom'];
-			} elseif (isset(WooCommerce_MyParcel()->export_defaults['insured']) && isset(WooCommerce_MyParcel()->export_defaults['insured_amount'])) {
-				$insured_amount = WooCommerce_MyParcel()->export_defaults['insured_amount'];
+			if (isset(WooCommerce_MyParcelBE()->export_defaults['insured']) && WooCommerce_MyParcelBE()->export_defaults['insured_amount'] == '' && isset(WooCommerce_MyParcelBE()->export_defaults['insured_amount_custom'])) {
+				$insured_amount = WooCommerce_MyParcelBE()->export_defaults['insured_amount_custom'];
+			} elseif (isset(WooCommerce_MyParcelBE()->export_defaults['insured']) && isset(WooCommerce_MyParcelBE()->export_defaults['insured_amount'])) {
+				$insured_amount = WooCommerce_MyParcelBE()->export_defaults['insured_amount'];
 			} else {
 				$insured_amount = 0;
 			}
 
 			$options = array(
-				'package_type'		=> $this->get_package_type_for_order( $order ),
-				'only_recipient'	=> (isset(WooCommerce_MyParcel()->export_defaults['only_recipient'])) ? 1 : 0,
-				'signature'			=> (isset(WooCommerce_MyParcel()->export_defaults['signature'])) ? 1 : 0,
-				'return'			=> (isset(WooCommerce_MyParcel()->export_defaults['return'])) ? 1 : 0,
-				'large_format'		=> (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
-				'label_description'	=> $description,
-				'insured_amount'	=> $insured_amount,
+				'package_type'		=>  self::package_type,
+				'signature'			=>  (isset(WooCommerce_MyParcelBE()->export_defaults['signature'])) ? 1 : 0,
+				'label_description'	=>  $description,
+				'insured_amount'	=>  $insured_amount,
 			);
 		}
 
@@ -655,19 +616,19 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// load delivery options
-		$myparcel_delivery_options = WCX_Order::get_meta( $order, '_myparcel_delivery_options' );
+		$myparcelbe_delivery_options = WCX_Order::get_meta( $order, '_myparcelbe_delivery_options' );
 
 		// set delivery type
-		$options['delivery_type'] = $this->get_delivery_type( $order, $myparcel_delivery_options );
+		$options['delivery_type'] = $this->get_delivery_type( $order, $myparcelbe_delivery_options );
 
 		// Options for Pickup and Pickup express delivery types:
 		// always enable signature on receipt
-		if ( $this->is_pickup( $order, $myparcel_delivery_options ) ) {
+		if ( $this->is_pickup( $order, $myparcelbe_delivery_options ) ) {
 			$options['signature'] = 1;
 		}
 
 		// delivery date (postponed delivery & pickup)
-		if ($delivery_date = $this->get_delivery_date( $order, $myparcel_delivery_options ) ) {
+		if ($delivery_date = $this->get_delivery_date( $order, $myparcelbe_delivery_options ) ) {
 			$date_time = explode(' ', $delivery_date); // split date and time
 			// only add if date is in the future
 			$timestamp = strtotime($date_time[0]);
@@ -681,35 +642,20 @@ class WooCommerce_MyParcel_Export {
 		}
 
         // options signed & recipient only
-		$myparcel_signed = WCX_Order::get_meta( $order, '_myparcel_signed' );
-		if (!empty($myparcel_signed)) {
+		$myparcelbe_signed = WCX_Order::get_meta( $order, '_myparcelbe_signed' );
+		if (!empty($myparcelbe_signed)) {
 			$options['signature'] = 1;
-		}
-		$myparcel_only_recipient = WCX_Order::get_meta( $order, '_myparcel_only_recipient' );
-		if (!empty($myparcel_only_recipient)) {
-			$options['only_recipient'] = 1;
 		}
 
 		// allow prefiltering consignment data
-		$options = apply_filters( 'wc_myparcel_order_shipment_options', $options, $order );
+		$options = apply_filters( 'wc_myparcelbe_order_shipment_options', $options, $order );
 
 		// PREVENT ILLEGAL SETTINGS
 		// convert numeric strings to int
-		$int_options = array( 'package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format' );
+		$int_options = array( 'package_type', 'delivery_type', 'signature' );
 		foreach ($options as $key => &$value) {
 			if ( in_array($key, $int_options) ) {
 				$value = (int) $value;
-			}
-		}
-
-		// disable options for mailbox package and unpaid letter
-		// echo '<pre>';var_dump($package_type);echo '</pre>';die();
-		if ( $options['package_type'] != 1 ) {
-			$illegal_options = array( 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date' );
-			foreach ($options as $key => $option) {
-				if (in_array($key, $illegal_options)) {
-					unset($options[$key]);
-				}
 			}
 		}
 
@@ -734,13 +680,7 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function get_customs_declaration( $order ) {
-		$weight = (int) round( $this->get_parcel_weight( $order ) * 1000 );
 		$invoice = $this->get_invoice_number( $order );
-		$contents = (int) ( (isset(WooCommerce_MyParcel()->export_defaults['package_contents'])) ? WooCommerce_MyParcel()->export_defaults['package_contents'] : 1 );
-
-		// Item defaults:
-		// Classification
-		$default_hs_code = (isset(WooCommerce_MyParcel()->export_defaults['hs_code'])) ? WooCommerce_MyParcel()->export_defaults['hs_code'] : '';
 		// Country (=shop base)
 		$country = WC()->countries->get_base_country();
 
@@ -759,35 +699,28 @@ class WooCommerce_MyParcel_Export {
 					'amount'	=> (int) round( ( $item['line_total'] + $item['line_tax'] ) * 100 ),
 					'currency'	=> WCX_Order::get_prop( $order, 'currency' ),
 				);
-				// Classification / HS Code
-				$classification = WCX_Product::get_meta( $product, '_myparcel_hs_code', true );
-				if (empty($classification)) {
-					$classification = $default_hs_code;
-				}
 
 				// add item to item list
 				$items[] = compact( 'description', 'amount', 'weight', 'item_value', 'classification', 'country' );
 			}
 		}
 
-		return compact( 'weight', 'invoice', 'contents', 'items' );
+		return compact( 'weight', 'invoice', 'items' );
 	}
 
 	public function validate_shipments( $shipments, $output_errors = true ) {
-		$missing_hs_codes = 0;
 		foreach ($shipments as $key => $shipment) {
-			// check customs declaration for HS codes
+			// check customs declaration
 			if (isset($shipment['customs_declaration']) && !empty($shipment['customs_declaration']['items'])) {
 				foreach ($shipment['customs_declaration']['items'] as $key => $item) {
 					if (empty($item['classification'])) {
 						unset($shipments[$key]);
-						$missing_hs_codes++;
 						break;
 					}
 				}
 			}
-			if ($output_errors === true && $missing_hs_codes > 0) {
-				$this->errors[] = sprintf( __( '%d shipments missing HS codes - not exported.', 'woocommerce-myparcel' ), $missing_hs_codes);
+			if ($output_errors === true ) {
+				$this->errors[] = sprintf( __( '%d shipments - not exported.', 'woocommerce-myparcelbe' ));
 			}
 		}
 
@@ -798,7 +731,7 @@ class WooCommerce_MyParcel_Export {
 		$shipment_ids = array();
 		foreach ($order_ids as $order_id) {
 			$order = WCX::get_order( $order_id );
-			$order_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+			$order_shipments = WCX_Order::get_meta( $order, '_myparcelbe_shipments' );
 			if (!empty($order_shipments)) {
 				$order_shipment_ids = array();
 				// exclude concepts or only concepts
@@ -814,7 +747,7 @@ class WooCommerce_MyParcel_Export {
 				}
 
 				if (isset($args['only_last'])) {
-					$last_shipment_ids = WCX_Order::get_meta( $order, '_myparcel_last_shipment_ids' );
+					$last_shipment_ids = WCX_Order::get_meta( $order, '_myparcelbe_last_shipment_ids' );
 					if ( !empty( $last_shipment_ids ) && is_array( $last_shipment_ids ) ) {
 						foreach ($order_shipment_ids as $order_shipment_id) {
 							if ( in_array($order_shipment_id, $last_shipment_ids ) ) {
@@ -845,8 +778,8 @@ class WooCommerce_MyParcel_Export {
 			// unset($shipment['shipment']);
 		// }
 
-		if ( isset(WooCommerce_MyParcel()->general_settings['keep_shipments']) ) {
-			if ( $old_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' ) ) {
+		if ( isset(WooCommerce_MyParcelBE()->general_settings['keep_shipments']) ) {
+			if ( $old_shipments = WCX_Order::get_meta( $order, '_myparcelbe_shipments' ) ) {
 				$shipments = $old_shipments;
 				foreach ($new_shipments as $shipment_id => $shipment) {
 					$shipments[$shipment_id] = $shipment;
@@ -856,107 +789,29 @@ class WooCommerce_MyParcel_Export {
 
 		$shipments = isset($shipments) ? $shipments : $new_shipments;
 
-		WCX_Order::update_meta_data( $order, '_myparcel_shipments', $shipments );
+		WCX_Order::update_meta_data( $order, '_myparcelbe_shipments', $shipments );
 
 		return;
 	}
 
 	public function get_package_type_from_shipping_method( $shipping_method, $shipping_class, $shipping_country ) {
 		$package_type = 1;
-		if (isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'])) {
-			if ( strpos($shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping') ) {
-				// Automattic / WooCommerce table rate
-				// use full method = method_id:instance_id:rate_id
-				$shipping_method_id = $shipping_method;
-			} else { // non table rates
-
-				if ( strpos($shipping_method, ':') !== false ) {
-					// means we have method_id:instance_id
-					$shipping_method = explode(':', $shipping_method);
-					$shipping_method_id = $shipping_method[0];
-					$shipping_method_instance = $shipping_method[1];
-				} else {
-					$shipping_method_id = $shipping_method;
-				}
-
-				// add class if we have one
-				if (!empty($shipping_class)) {
-					$shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
-				}
-			}
-
-			foreach (WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
-				// check if we have a match with the predefined methods
-				// fallback to bare method (without class) (if bare method also defined in settings)
-				if (in_array($shipping_method_id, $package_type_shipping_methods) || (!empty($shipping_method_id_class) && in_array($shipping_method_id_class, $package_type_shipping_methods))) {
-					$package_type = $package_type_key;
-					break;
-				}
-			}
-		}
-
-		// disable mailbox package outside NL
-		if ($shipping_country != 'NL' && $package_type == 2 ) {
-			$package_type = 1;
-		}
 
 		return $package_type;
 	}
 
-	// determine appropriate package type for this order
-	public function get_package_type_for_order( $order ) {
-		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+	public function get_package_types() {
 
-		// get shipping methods from order
-		$order_shipping_methods = $order->get_items('shipping');
-
-		if ( !empty( $order_shipping_methods ) ) {
-			// we're taking the first (we're not handling multiple shipping methods as of yet)
-			$order_shipping_method = array_shift($order_shipping_methods);
-			$order_shipping_method = $order_shipping_method['method_id'];
-
-			$order_shipping_class = WCX_Order::get_meta( $order, '_myparcel_highest_shipping_class' );
-			if (empty($order_shipping_class)) {
-				$order_shipping_class = $this->get_order_shipping_class( $order, $order_shipping_method );
-			}
-
-			$package_type = $this->get_package_type_from_shipping_method( $order_shipping_method, $order_shipping_class, $shipping_country );
-		}
-
-		// fallbacks if no match from previous
-		if (!isset($package_type)) {
-			if ((isset(WooCommerce_MyParcel()->export_defaults['package_type']))) {
-				$package_type = WooCommerce_MyParcel()->export_defaults['package_type'];
-			} else {
-				$package_type = 1; // 1. package | 2. mailbox package | 3. letter
-			}
-		}
-
-		// always parcel for Pickup and Pickup express delivery types.
-		if ( $this->is_pickup( $order ) ) {
-			$package_type = 1;
-		}
-
-		return $package_type;
-	}
-
-	public function get_package_types( $shipment_type = 'shipment' ) {
 		$package_types = array(
-			1	=> __( 'Parcel' , 'woocommerce-myparcel' ),
-			2	=> __( 'Mailbox package' , 'woocommerce-myparcel' ),
-			3	=> __( 'Unpaid letter' , 'woocommerce-myparcel' ),
+			1	=> __( 'Parcel' , 'woocommerce-myparcelbe' ),
 		);
-		if ( $shipment_type == 'return' ) {
-			unset($package_types[2]);
-			unset($package_types[3]);
-		}
 
 		return $package_types;
 	}
 
 	public function get_package_name( $package_type ) {
 		$package_types = $this->get_package_types();
-		$package_name = isset($package_types[$package_type]) ? $package_types[$package_type] : __( 'Unknown' , 'woocommerce-myparcel' );
+		$package_name = isset($package_types[$package_type]) ? $package_types[$package_type] : __( 'Unknown' , 'woocommerce-myparcelbe' );
 		return $package_name;
 	}
 
@@ -965,7 +820,7 @@ class WooCommerce_MyParcel_Export {
 		foreach ($errors as $key => $error) {
 			// check if we have an order_id
 			if ($key > 10) {
-				$parsed_errors[] = sprintf("<strong>%s %s:</strong> %s", __( 'Order', 'woocommerce-myparcel' ), $key, $error );
+				$parsed_errors[] = sprintf("<strong>%s %s:</strong> %s", __( 'Order', 'woocommerce-myparcelbe' ), $key, $error );
 			} else {
 				$parsed_errors[] = $error;
 			}
@@ -1003,39 +858,39 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function get_filename ( $order_ids ) {
-		$filename  = 'MyParcel';
+		$filename  = 'MyParcelbe';
 		$filename .= '-' . date('Y-m-d') . '.pdf';
 
-		return apply_filters( 'wcmyparcel_filename', $filename, $order_ids );
+		return apply_filters( 'wcmyparcelbe_filename', $filename, $order_ids );
 	}
 
 	public function get_shipment_status_name( $status_code ) {
 		$shipment_statuses = array(
-			1	=> __('pending - concept', 'woocommerce-myparcel'),
-			2	=> __('pending - registered', 'woocommerce-myparcel'),
-			3	=> __('enroute - handed to carrier', 'woocommerce-myparcel'),
-			4	=> __('enroute - sorting', 'woocommerce-myparcel'),
-			5	=> __('enroute - distribution', 'woocommerce-myparcel'),
-			6	=> __('enroute - customs', 'woocommerce-myparcel'),
-			7	=> __('delivered - at recipient', 'woocommerce-myparcel'),
-			8	=> __('delivered - ready for pickup', 'woocommerce-myparcel'),
-			9	=> __('delivered - package picked up', 'woocommerce-myparcel'),
-			30	=> __('inactive - concept', 'woocommerce-myparcel'),
-			31	=> __('inactive - registered', 'woocommerce-myparcel'),
-			32	=> __('inactive - enroute - handed to carrier', 'woocommerce-myparcel'),
-			33	=> __('inactive - enroute - sorting', 'woocommerce-myparcel'),
-			34	=> __('inactive - enroute - distribution', 'woocommerce-myparcel'),
-			35	=> __('inactive - enroute - customs', 'woocommerce-myparcel'),
-			36	=> __('inactive - delivered - at recipient', 'woocommerce-myparcel'),
-			37	=> __('inactive - delivered - ready for pickup', 'woocommerce-myparcel'),
-			38	=> __('inactive - delivered - package picked up', 'woocommerce-myparcel'),
-			99	=> __('inactive - unknown', 'woocommerce-myparcel'),
+			1	=> __('pending - concept', 'woocommerce-myparcelbe'),
+			2	=> __('pending - registered', 'woocommerce-myparcelbe'),
+			3	=> __('enroute - handed to carrier', 'woocommerce-myparcelbe'),
+			4	=> __('enroute - sorting', 'woocommerce-myparcelbe'),
+			5	=> __('enroute - distribution', 'woocommerce-myparcelbe'),
+			6	=> __('enroute - customs', 'woocommerce-myparcelbe'),
+			7	=> __('delivered - at recipient', 'woocommerce-myparcelbe'),
+			8	=> __('delivered - ready for pickup', 'woocommerce-myparcelbe'),
+			9	=> __('delivered - package picked up', 'woocommerce-myparcelbe'),
+			30	=> __('inactive - concept', 'woocommerce-myparcelbe'),
+			31	=> __('inactive - registered', 'woocommerce-myparcelbe'),
+			32	=> __('inactive - enroute - handed to carrier', 'woocommerce-myparcelbe'),
+			33	=> __('inactive - enroute - sorting', 'woocommerce-myparcelbe'),
+			34	=> __('inactive - enroute - distribution', 'woocommerce-myparcelbe'),
+			35	=> __('inactive - enroute - customs', 'woocommerce-myparcelbe'),
+			36	=> __('inactive - delivered - at recipient', 'woocommerce-myparcelbe'),
+			37	=> __('inactive - delivered - ready for pickup', 'woocommerce-myparcelbe'),
+			38	=> __('inactive - delivered - package picked up', 'woocommerce-myparcelbe'),
+			99	=> __('inactive - unknown', 'woocommerce-myparcelbe'),
 		);
 
 		if (isset($shipment_statuses[$status_code])) {
 			return $shipment_statuses[$status_code];
 		} else {
-			return __('Unknown status', 'woocommerce-myparcel');
+			return __('Unknown status', 'woocommerce-myparcelbe');
 		}
 	}
 
@@ -1075,10 +930,10 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function replace_shortcodes( $description, $order ) {
-		$myparcel_delivery_options = WCX_Order::get_meta( $order, '_myparcel_delivery_options' );
+		$myparcelbe_delivery_options = WCX_Order::get_meta( $order, '_myparcelbe_delivery_options' );
 		$replacements = array(
 			'[ORDER_NR]'		=> $order->get_order_number(),
-			'[DELIVERY_DATE]'	=> isset($myparcel_delivery_options) && isset($myparcel_delivery_options['date']) ? $myparcel_delivery_options['date'] : '',
+			'[DELIVERY_DATE]'	=> isset($myparcelbe_delivery_options) && isset($myparcelbe_delivery_options['date']) ? $myparcelbe_delivery_options['date'] : '',
 		);
 
 		$description = str_replace(array_keys($replacements), array_values($replacements), $description);
@@ -1099,61 +954,19 @@ class WooCommerce_MyParcel_Export {
 		return $name;
 	}
 
-	public function get_parcel_weight ( $order ) {
-		$parcel_weight = (isset(WooCommerce_MyParcel()->general_settings['empty_parcel_weight'])) ? preg_replace("/\D/","",WooCommerce_MyParcel()->general_settings['empty_parcel_weight'])/1000 : 0;
 
-		$items = $order->get_items();
-		foreach ( $items as $item_id => $item ) {
-			$parcel_weight += $this->get_item_weight_kg( $item, $order );
+	public function is_pickup( $order, $myparcelbe_delivery_options = '' ) {
+		if (empty($myparcelbe_delivery_options)) {
+			$myparcelbe_delivery_options = WCX_Order::get_meta( $order, '_myparcelbe_delivery_options' );
 		}
 
-		return $parcel_weight;
-	}
-
-	public function get_item_weight_kg ( $item, $order ) {
-		$product = $order->get_product_from_item( $item );
-
-		if (empty($product)) {
-			return 0;
-		}
-
-		$weight = $product->get_weight();
-		$weight_unit = get_option( 'woocommerce_weight_unit' );
-		switch ($weight_unit) {
-			case 'kg':
-				$product_weight = $weight;
-				break;
-			case 'g':
-				$product_weight = $weight / 1000;
-				break;
-			case 'lbs':
-				$product_weight = $weight * 0.45359237;
-				break;
-			case 'oz':
-				$product_weight = $weight * 0.0283495231;
-				break;
-			default:
-				$product_weight = $weight;
-				break;
-		}
-
-		$item_weight = (float) $product_weight * (int) $item['qty'];
-
-		return $item_weight;
-	}
-
-	public function is_pickup( $order, $myparcel_delivery_options = '' ) {
-		if (empty($myparcel_delivery_options)) {
-			$myparcel_delivery_options = WCX_Order::get_meta( $order, '_myparcel_delivery_options' );
-		}
-
-		$pickup_types = array( 'retail', 'retailexpress' );
-		if ( !empty($myparcel_delivery_options['price_comment']) && in_array($myparcel_delivery_options['price_comment'], $pickup_types) ) {
-			return $myparcel_delivery_options;
+		$pickup_types = array( 'retail' );
+		if ( !empty($myparcelbe_delivery_options['price_comment']) && in_array($myparcelbe_delivery_options['price_comment'], $pickup_types) ) {
+			return $myparcelbe_delivery_options;
 		}
 
 		// Backwards compatibility for pakjegemak data
-		$pgaddress = WCX_Order::get_meta( $order, '_myparcel_pgaddress' );
+		$pgaddress = WCX_Order::get_meta( $order, '_myparcelbe_pgaddress' );
 		if ( !empty( $pgaddress ) && !empty( $pgaddress['postcode'] ) ) {
 			$pickup = array(
 				'postal_code'	=> $pgaddress['postcode'],
@@ -1171,38 +984,35 @@ class WooCommerce_MyParcel_Export {
 		return false;
 	}
 
-	public function get_delivery_type( $order, $myparcel_delivery_options = '' ) {
+	public function get_delivery_type( $order, $myparcelbe_delivery_options = '' ) {
 		// delivery types
 		$delivery_types = array(
-			'morning'		=> 1,
 			'standard'		=> 2, // 'default in JS API'
-			'night'			=> 3,
 			'retail'		=> 4, // 'pickup'
-			'retailexpress'	=> 5, // 'pickup_express'
 		);
 
-		if (empty($myparcel_delivery_options)) {
-			$myparcel_delivery_options = WCX_Order::get_meta( $order, '_myparcel_delivery_options' );
+		if (empty($myparcelbe_delivery_options)) {
+			$myparcelbe_delivery_options = WCX_Order::get_meta( $order, '_myparcelbe_delivery_options' );
 		}
 
 		// standard = default, overwrite if otpions found
 		$delivery_type = 'standard';
-		if (!empty($myparcel_delivery_options)) {
+		if (!empty($myparcelbe_delivery_options)) {
 			// pickup & pickupexpress store the delivery type in the delivery options,
 			// morning & night store it in the time data (...)
-			if ( empty($myparcel_delivery_options['price_comment']) && !empty($myparcel_delivery_options['time']) ) {
+			if ( empty($myparcelbe_delivery_options['price_comment']) && !empty($myparcelbe_delivery_options['time']) ) {
 				// check if we have a price_comment in the time option
-				$delivery_time = array_shift($myparcel_delivery_options['time']); // take first element in time array
+				$delivery_time = array_shift($myparcelbe_delivery_options['time']); // take first element in time array
 				if (isset($delivery_time['price_comment'])) {
 					$delivery_type = $delivery_time['price_comment'];
 				}
 			} else {
-				$delivery_type = $myparcel_delivery_options['price_comment'];
+				$delivery_type = $myparcelbe_delivery_options['price_comment'];
 			}
 		}
 
 		// backwards compatibility for pakjegemak
-		if ( $pgaddress = WCX_Order::get_meta( $order, '_myparcel_pgaddress' ) ) {
+		if ( $pgaddress = WCX_Order::get_meta( $order, '_myparcelbe_pgaddress' ) ) {
 			$delivery_type = 'retail';
 		}
 
@@ -1212,18 +1022,18 @@ class WooCommerce_MyParcel_Export {
 		return $delivery_type;
 	}
 
-	public function get_delivery_date( $order, $myparcel_delivery_options = '' ) {
-		if (empty($myparcel_delivery_options)) {
-			$myparcel_delivery_options = WCX_Order::get_meta( $order, '_myparcel_delivery_options' );
+	public function get_delivery_date( $order, $myparcelbe_delivery_options = '' ) {
+		if (empty($myparcelbe_delivery_options)) {
+			$myparcelbe_delivery_options = WCX_Order::get_meta( $order, '_myparcelbe_delivery_options' );
 		}
 
 
-		if ( !empty($myparcel_delivery_options) && !empty($myparcel_delivery_options['date']) ) {
-			$delivery_date = $myparcel_delivery_options['date'];
+		if ( !empty($myparcelbe_delivery_options) && !empty($myparcelbe_delivery_options['date']) ) {
+			$delivery_date = $myparcelbe_delivery_options['date'];
 
-			$delivery_type = $this->get_delivery_type( $order, $myparcel_delivery_options );
-			if ( in_array($delivery_type, array(1,3)) && !empty($myparcel_delivery_options['time']) ) {
-				$delivery_time_options = array_shift($myparcel_delivery_options['time']); // take first element in time array
+			$delivery_type = $this->get_delivery_type( $order, $myparcelbe_delivery_options );
+			if ( in_array($delivery_type, array(1,3)) && !empty($myparcelbe_delivery_options['time']) ) {
+				$delivery_time_options = array_shift($myparcelbe_delivery_options['time']); // take first element in time array
 				$delivery_time = $delivery_time_options['start'];
 			} else {
 				$delivery_time = '00:00:00';
@@ -1424,27 +1234,54 @@ class WooCommerce_MyParcel_Export {
 		return $calculated_fee;
 	}
 
-	public function filter_myparcel_destination_orders( $order_ids ) {
+	public function filter_myparcelbe_destination_orders( $order_ids ) {
 		foreach ($order_ids as $key => $order_id) {
 			$order = WCX::get_order( $order_id );
 			$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-			// skip non-myparcel destination orders
-			if ( !$this->is_myparcel_destination( $shipping_country ) ) {
+			// skip non-myparcelbe destination orders
+			if ( !$this->is_myparcelbe_destination( $shipping_country ) ) {
 				unset($order_ids[$key]);
 			}
 		}
 		return $order_ids;
 	}
 
-	public function is_myparcel_destination( $country_code ) {
-		return ( $country_code == 'NL' || $this->is_eu_country( $country_code ) || $this->is_world_shipment_country( $country_code ) );
+	/**
+	 * @param $country_code
+	 *
+	 * @return bool
+	 */
+	public function is_myparcelbe_destination( $country_code ) {
+
+		if ( $country_code == 'BE' ) {
+			return true;
+		}
+
+		if ($this->is_eu_country( $country_code )) {
+			return true;
+		}
+
+		if( $this->is_world_shipment_country( $country_code )){
+			return true;
+		}
+
+		return false;
 	}
 
+
+	/**
+	 * @param $country_code
+	 *
+	 * @return bool
+	 */
 	public function is_eu_country($country_code) {
-		// $eu_countries = array( 'GB', 'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE' );
-		$euro_countries = array( 'AT','BE','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','UA','SM','RS','VA','BY' );
-		return in_array( $country_code, $euro_countries);
-	}
+
+		$euro_countries = array( 'AT','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','NO','UA','SM','RS','TR','VA','BY','CH','NL' );
+
+		if (in_array( $country_code, $euro_countries)) {
+			return true;
+		}
+		return false;
 
 	public function is_world_shipment_country( $country_code ) {
 		$world_shipment_countries = array( 'AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY','CH','TR','NO' );
@@ -1452,20 +1289,20 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function get_invoice_number( $order ) {
-		return (string) apply_filters( 'wc_myparcel_invoice_number', $order->get_order_number() );
+		return (string) apply_filters( 'wc_myparcelbe_invoice_number', $order->get_order_number() );
 	}
 
 	public function log( $message ) {
-		if (isset(WooCommerce_MyParcel()->general_settings['error_logging'])) {
+		if (isset(WooCommerce_MyParcelBE()->general_settings['error_logging'])) {
 			if( class_exists('WC_Logger') ) {
 				$wc_logger = function_exists('wc_get_logger') ? wc_get_logger() : new WC_Logger();
-				$wc_logger->add('wc-myparcel', $message );
+				$wc_logger->add('wc-myparcelbe', $message );
 			} else {
 				// Old WC versions didn't have a logger
 				// log file in upload folder - wp-content/uploads
 				$upload_dir = wp_upload_dir();
 				$upload_base = trailingslashit( $upload_dir['basedir'] );
-				$log_file = $upload_base.'myparcel_log.txt';
+				$log_file = $upload_base.'myparcelbe_log.txt';
 
 				$current_date_time = date("Y-m-d H:i:s");
 				$message = $current_date_time .' ' .$message ."\n";
@@ -1478,4 +1315,4 @@ class WooCommerce_MyParcel_Export {
 
 endif; // class_exists
 
-return new WooCommerce_MyParcel_Export();
+return new WooCommerce_MyParcelBE_Export();

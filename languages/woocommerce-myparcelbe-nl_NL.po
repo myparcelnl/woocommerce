@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce MyParcel\n"
+"Project-Id-Version: WooCommerce MyParcelbe\n"
 "POT-Creation-Date: 2017-09-15 16:14+0200\n"
 "PO-Revision-Date: 2017-09-15 16:15+0200\n"
 "Last-Translator: \n"
@@ -12,7 +12,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.8.8\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-WPHeader: woocommerce-myparcel.php\n"
+"X-Poedit-WPHeader: woocommerce-myparcelbe.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
@@ -21,16 +21,16 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #: includes/class-wcmp-admin.php:120
-msgid "MyParcel: Export"
-msgstr "MyParcel: Exporteren"
+msgid "MyParcel BE: Export"
+msgstr "MyParcel BE: Exporteren"
 
 #: includes/class-wcmp-admin.php:121
-msgid "MyParcel: Print"
-msgstr "MyParcel: Printen"
+msgid "MyParcel BE: Print"
+msgstr "MyParcel BE: Printen"
 
 #: includes/class-wcmp-admin.php:122
-msgid "MyParcel: Export & Print"
-msgstr "MyParcel: Exporteren & Printen"
+msgid "MyParcel BE: Export & Print"
+msgstr "MyParcel BE: Exporteren & Printen"
 
 #: includes/class-wcmp-admin.php:151 includes/class-wcmp-assets.php:78
 msgid "Labels to skip"
@@ -42,12 +42,12 @@ msgstr "Print"
 
 #: includes/class-wcmp-admin.php:180
 #: includes/views/wcmp-bulk-options-form.php:159
-msgid "Export to MyParcel"
-msgstr "Exporteer naar MyParcel"
+msgid "Export to MyParcel BE"
+msgstr "Exporteer naar MyParcel BE"
 
 #: includes/class-wcmp-admin.php:185 includes/class-wcmp-admin.php:337
-msgid "Print MyParcel label"
-msgstr "Print MyParcel label"
+msgid "Print MyParcel Be label"
+msgstr "Print MyParcel BE label"
 
 #: includes/class-wcmp-admin.php:190
 msgid "Email return label"
@@ -55,8 +55,8 @@ msgstr "Email retourlabel"
 
 #: includes/class-wcmp-admin.php:287 includes/class-wcmp-settings.php:35
 #: includes/class-wcmp-settings.php:36
-msgid "MyParcel"
-msgstr "MyParcel"
+msgid "MyParcel BE"
+msgstr "MyParcel BE"
 
 #: includes/class-wcmp-admin.php:328 includes/class-wcmp-frontend.php:94
 msgid "Track&Trace"
@@ -68,49 +68,26 @@ msgid "Status"
 msgstr "Status"
 
 #: includes/class-wcmp-admin.php:373
-msgid "MyParcel shipment:"
-msgstr "MyParcel zending:"
-
-#: includes/class-wcmp-admin.php:393 includes/class-wcmp-frontend.php:387
-#: includes/class-wcmp-settings.php:653
-msgid "Morning delivery"
-msgstr "Ochtendlevering"
-
-#: includes/class-wcmp-admin.php:400 includes/class-wcmp-frontend.php:400
-#: includes/class-wcmp-settings.php:641
-msgid "Evening delivery"
-msgstr "Avondlevering"
+msgid "MyParcelbe shipment:"
+msgstr "MyParcelbe zending:"
 
 #: includes/class-wcmp-admin.php:407
 msgid "Delivery date"
 msgstr "Bezorgdatum"
 
 #: includes/class-wcmp-admin.php:413 includes/class-wcmp-frontend.php:362
-msgid "PostNL Pickup"
-msgstr "Afhalen bij PostNL"
+msgid "bpost Pickup"
+msgstr "Afhalen bij bpost"
 
-#: includes/class-wcmp-admin.php:416 includes/class-wcmp-frontend.php:368
-msgid "PostNL Pickup Express"
-msgstr "Extra vroeg afhalen bij PostNL"
-
-#: includes/class-wcmp-admin.php:493
-msgid "HS Code"
-msgstr "HS-code"
-
-#: includes/class-wcmp-admin.php:494
-#, php-format
-msgid ""
-"HS Codes are used for MyParcel world shipments, you can find the appropriate "
-"code on the %ssite of the Dutch Customs%s."
-msgstr ""
-"HS Codes worden gebruikt voor MyParcel wereldzendingen, je kunt de codes "
-"vinden op de %ssite van de Douane%s."
+#: includes/class-wcmp-frontend.php:514
+msgid "Saturday delivery"
+msgstr "Zaterdag levering"
 
 #: includes/class-wcmp-export.php:59
 msgid ""
-"You have to export the orders to MyParcel before you can print the labels!"
+"You have to export the orders to MyParcelbe before you can print the labels!"
 msgstr ""
-"U dient de orders eerst naar MyParcel te exporteren voordat u de labels kunt "
+"U dient de orders eerst naar MyParcelbe te exporteren voordat u de labels kunt "
 "printen!"
 
 #: includes/class-wcmp-export.php:79 includes/class-wcmp-export.php:86
@@ -123,8 +100,8 @@ msgid "You have not selected any orders!"
 msgstr "U heeft geen orders geselecteerd!"
 
 #: includes/class-wcmp-export.php:242
-msgid "MyParcel shipment created:"
-msgstr "MyParcel verzending aangemaakt:"
+msgid "MyParcelbe shipment created:"
+msgstr "MyParcelbe verzending aangemaakt:"
 
 #: includes/class-wcmp-export.php:245 includes/class-wcmp-export.php:295
 #: includes/class-wcmp-export.php:329 includes/class-wcmp-export.php:345
@@ -137,25 +114,17 @@ msgid "%s shipments successfully exported to Myparcel"
 msgstr "%s zendingen met succes geëxporteerd naar Myparcel"
 
 #: includes/class-wcmp-export.php:362
-msgid "The selected orders have not been exported to MyParcel yet!"
-msgstr "De geselecteerde orders zijn nog niet naar MyParcel geëxporteerd!"
+msgid "The selected orders have not been exported to MyParcelbe yet!"
+msgstr "De geselecteerde orders zijn nog niet naar MyParcelbe geëxporteerd!"
 
 #: includes/class-wcmp-export.php:761
 #, php-format
-msgid "%d shipments missing HS codes - not exported."
-msgstr "%d zendingen met ontbrekende HS codes - niet geëxporteerd."
+msgid "%d shipments - not exported."
+msgstr "%d zendingen - niet geëxporteerd."
 
 #: includes/class-wcmp-export.php:916
 msgid "Parcel"
 msgstr "Pakket"
-
-#: includes/class-wcmp-export.php:917
-msgid "Mailbox package"
-msgstr "Brievenbuspakje"
-
-#: includes/class-wcmp-export.php:918
-msgid "Unpaid letter"
-msgstr "Ongefrankeerd"
 
 #: includes/class-wcmp-export.php:930
 msgid "Unknown"
@@ -247,8 +216,8 @@ msgid "Unknown status"
 msgstr "Onbekende status"
 
 #: includes/class-wcmp-frontend.php:70
-msgid "You can track your order with the following PostNL track&trace code:"
-msgstr "U kunt uw bestelling met de volgende PostNL track & trace code volgen:"
+msgid "You can track your order with the following bpost track&trace code:"
+msgstr "U kunt uw bestelling met de volgende bpost track & trace code volgen:"
 
 #: includes/class-wcmp-frontend.php:393
 msgid "Standard delivery"
@@ -262,63 +231,59 @@ msgstr "Standaard levering"
 msgid "Signature on delivery"
 msgstr "Handtekening voor ontvangst"
 
-#: includes/class-wcmp-frontend.php:426
-msgid "Home address only delivery"
-msgstr "Alleen afleveren bij ontvanger"
-
-#: includes/class-wcmp-nlpostcode-fields.php:203
-#: includes/class-wcmp-nlpostcode-fields.php:204
-#: includes/class-wcmp-nlpostcode-fields.php:373
-#: includes/class-wcmp-nlpostcode-fields.php:401
+#: includes/class-wcmp-bepostcode-fields.php:203
+#: includes/class-wcmp-bepostcode-fields.php:204
+#: includes/class-wcmp-bepostcode-fields.php:373
+#: includes/class-wcmp-bepostcode-fields.php:401
 msgid "Street name"
 msgstr "Straat"
 
-#: includes/class-wcmp-nlpostcode-fields.php:211
-#: includes/class-wcmp-nlpostcode-fields.php:638
-#: includes/class-wcmp-nlpostcode-fields.php:639
+#: includes/class-wcmp-bepostcode-fields.php:211
+#: includes/class-wcmp-bepostcode-fields.php:638
+#: includes/class-wcmp-bepostcode-fields.php:639
 msgid "Nr."
 msgstr "Nr."
 
-#: includes/class-wcmp-nlpostcode-fields.php:220
-#: includes/class-wcmp-nlpostcode-fields.php:383
-#: includes/class-wcmp-nlpostcode-fields.php:411
-#: includes/class-wcmp-nlpostcode-fields.php:432
-#: includes/class-wcmp-nlpostcode-fields.php:446
+#: includes/class-wcmp-bepostcode-fields.php:220
+#: includes/class-wcmp-bepostcode-fields.php:383
+#: includes/class-wcmp-bepostcode-fields.php:411
+#: includes/class-wcmp-bepostcode-fields.php:432
+#: includes/class-wcmp-bepostcode-fields.php:446
 msgid "Suffix"
 msgstr "Toev."
 
-#: includes/class-wcmp-nlpostcode-fields.php:378
-#: includes/class-wcmp-nlpostcode-fields.php:406
-#: includes/class-wcmp-nlpostcode-fields.php:428
-#: includes/class-wcmp-nlpostcode-fields.php:442
+#: includes/class-wcmp-bepostcode-fields.php:378
+#: includes/class-wcmp-bepostcode-fields.php:406
+#: includes/class-wcmp-bepostcode-fields.php:428
+#: includes/class-wcmp-bepostcode-fields.php:442
 msgid "Number"
 msgstr "Nummer"
 
-#: includes/class-wcmp-nlpostcode-fields.php:424
-#: includes/class-wcmp-nlpostcode-fields.php:438
+#: includes/class-wcmp-bepostcode-fields.php:424
+#: includes/class-wcmp-bepostcode-fields.php:438
 msgid "Street"
 msgstr "Straat"
 
-#: includes/class-wcmp-nlpostcode-fields.php:592
+#: includes/class-wcmp-bepostcode-fields.php:592
 msgctxt "placeholder"
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:638
+#: includes/class-wcmp-bepostcode-fields.php:638
 #, php-format
 msgid "Billing %s"
 msgstr "Factuuradres %s"
 
-#: includes/class-wcmp-nlpostcode-fields.php:639
+#: includes/class-wcmp-bepostcode-fields.php:639
 #, php-format
 msgid "Shipping %s"
 msgstr "Verzendadres %s"
 
-#: includes/class-wcmp-nlpostcode-fields.php:646
+#: includes/class-wcmp-bepostcode-fields.php:646
 msgid "<b>Billing Nr.</b> is a required field"
 msgstr "<b>Factuuradres huisnummer</b> is een verplicht veld"
 
-#: includes/class-wcmp-nlpostcode-fields.php:649
+#: includes/class-wcmp-bepostcode-fields.php:649
 msgid "<b>Shipping Nr.</b> is a required field"
 msgstr "<b>Verzendadres huisnummer</b> is een verplicht veld"
 
@@ -356,18 +321,18 @@ msgid "Checkout"
 msgstr "Checkout"
 
 #: includes/class-wcmp-settings.php:63
-msgid "WooCommerce MyParcel Settings"
-msgstr "WooCommerce MyParcel Instellingen"
+msgid "WooCommerce MyParcel BE Settings"
+msgstr "WooCommerce MyParcel BE Instellingen"
 
 #: includes/class-wcmp-settings.php:105
 #, php-format
 msgid ""
-"It looks like your shop is based in Belgium. This plugin is for MyParcel "
-"Netherlands. If you are using MyParcel Belgium, download the %s plugin "
+"It looks like your shop is based in Belgium. This plugin is for MyParcelbe "
+"Netherlands. If you are using MyParcelbe Belgium, download the %s plugin "
 "instead!"
 msgstr ""
 "Het lijkt erop dat uw winkel is gevestigd in België. Deze plugin is voor "
-"MyParcel Nederland. Als u van MyParcel België gebruik maakt, dient u de %s "
+"MyParcelbe Nederland. Als u van MyParcelbe België gebruik maakt, dient u de %s "
 "plugin te downloaden (en de huidige plugin te verwijderen)!"
 
 #: includes/class-wcmp-settings.php:106
@@ -429,11 +394,11 @@ msgstr "Track&trace in email"
 msgid ""
 "Add the track&trace code to emails to the customer.<br/><strong>Note!</"
 "strong> When you select this option, make sure you have not enabled the "
-"track & trace email in your MyParcel backend."
+"track & trace email in your MyParcel BE backend."
 msgstr ""
 "Voeg de track&trace code toe aan emails aan de klant.<br/> <strong>Let op!</"
 "strong> Wanneer u voor deze optie kiest, zorg er dan voor dat u niet de "
-"track&trace email in uw MyParcel backend heeft ingeschakeld."
+"track&trace email in uw MyParcel BE backend heeft ingeschakeld."
 
 #: includes/class-wcmp-settings.php:212
 msgid "Track&trace in My Account"
@@ -450,10 +415,10 @@ msgstr "Verwerk zendingen direct"
 #: includes/class-wcmp-settings.php:232
 msgid ""
 "When you enable this option, shipments will be directly processed when sent "
-"to myparcel."
+"to MyParcel BE."
 msgstr ""
 "Wanneer u deze optie inschakelt, zullen zendingen direct worden verwerkt "
-"wanneer deze verzonden zijn naar MyParcel."
+"wanneer deze verzonden zijn naar MyParcel BE."
 
 #: includes/class-wcmp-settings.php:238
 msgid "Order status automation"
@@ -462,13 +427,13 @@ msgstr "Orderstatus automatisering"
 #: includes/class-wcmp-settings.php:245
 msgid ""
 "Automatically set order status to a predefined status after succesfull "
-"MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> "
+"MyParcel BE export.<br/>Make sure <strong>Process shipments directly</strong> "
 "is enabled when you use this option together with the <strong>Track&trace in "
 "email</strong> option, otherwise the track&trace code will not be included "
 "in the customer email."
 msgstr ""
 "Wijzig automatisch de order status na het succesvol exporteren van een order "
-"naar MyParcel.<br/>Let op dat <strong>Verwerk zendingen direct</strong> is "
+"naar MyParcel BE.<br/>Let op dat <strong>Verwerk zendingen direct</strong> is "
 "ingeschakeld wanneer u deze optie gebruikt in combinatie met de "
 "<strong>Track&trace in email</strong> optie, anders wordt de track&trace "
 "code niet opgenomen in de email naar de klant."
@@ -507,8 +472,8 @@ msgid "Package types"
 msgstr "Pakkettype"
 
 #: includes/class-wcmp-settings.php:334
-msgid "Select one or more shipping methods for each MyParcel package type"
-msgstr "Selecteer een of meer verzendmethoden voor elk MyParcel pakkettype"
+msgid "Select one or more shipping methods for the MyParcel BE package type"
+msgstr "Selecteer een of meer verzendmethoden voor de MyParcel BE pakkettype"
 
 #: includes/class-wcmp-settings.php:340
 #: includes/views/wcmp-order-return-shipment-options.php:4
@@ -524,12 +489,12 @@ msgstr "Koppel emailadres klant"
 #: includes/class-wcmp-settings.php:362
 #, php-format
 msgid ""
-"When you connect the customer email, MyParcel can send a Track&Trace email "
-"to this address. In your %sMyParcel backend%s you can enable or disable this "
+"When you connect the customer email, MyParcel BE can send a Track&Trace email "
+"to this address. In your %sMyParcel BE backend%s you can enable or disable this "
 "email and format it in your own style."
 msgstr ""
-"Wanneer u het emailadres van de klant koppelt, kan MyParcel een Track&Trace "
-"email versturen naar dit adres. In uw %sMyParcel backend%s kunt u deze email "
+"Wanneer u het emailadres van de klant koppelt, kan MyParcel BE een Track&Trace "
+"email versturen naar dit adres. In uw %sMyParcel BE backend%s kunt u deze email "
 "in- of uitschakelen en opmaken in uw eigen stijl."
 
 #: includes/class-wcmp-settings.php:368
@@ -546,13 +511,6 @@ msgstr ""
 "koerier dit gebruiken ten behoeve van de aflevering van het pakket. De "
 "afleverkans voor buitenlandzendingen wordt hiermee aanzienlijk verhoogd."
 
-#: includes/class-wcmp-settings.php:381
-#: includes/views/wcmp-order-return-shipment-options.php:30
-#: includes/views/wcmp-order-shipment-options.php:55
-#: includes/views/wcmp-order-shipment-summary.php:12
-msgid "Extra large size"
-msgstr "Extra groot formaat"
-
 #: includes/class-wcmp-settings.php:388
 msgid ""
 "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
@@ -566,13 +524,6 @@ msgstr ""
 "&nbsp;2,45 doorberekend.<br/><strong>Let op!</strong> Indien het pakket "
 "groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een "
 "pallettarief van &euro;&nbsp;70,00 in rekening gebracht."
-
-#: includes/class-wcmp-settings.php:394 includes/class-wcmp-settings.php:617
-#: includes/views/wcmp-order-return-shipment-options.php:35
-#: includes/views/wcmp-order-shipment-options.php:60
-#: includes/views/wcmp-order-shipment-summary.php:13
-msgid "Home address only"
-msgstr "Alleen huisadres"
 
 #: includes/class-wcmp-settings.php:401
 msgid ""
@@ -592,13 +543,6 @@ msgstr ""
 "geadresseerde niet thuis zijn, dan wordt het pakket bij de buren afgegeven. "
 "Er moet in beide gevallen voor worden getekend."
 
-#: includes/class-wcmp-settings.php:433
-#: includes/views/wcmp-order-return-shipment-options.php:45
-#: includes/views/wcmp-order-shipment-options.php:70
-#: includes/views/wcmp-order-shipment-summary.php:15
-msgid "Return if no answer"
-msgstr "Retour bij geen gehoor"
-
 #: includes/class-wcmp-settings.php:440
 msgid ""
 "By default, a parcel will be offered twice. After two unsuccessful delivery "
@@ -615,22 +559,17 @@ msgstr ""
 "postkantoor komt te liggen, vink dan deze optie aan."
 
 #: includes/class-wcmp-settings.php:446
-msgid "Insured shipment (from + &euro;0.50)"
-msgstr "Verzekerde verzending (vanaf + &euro;0.50)"
+msgid "Insured shipment (to &euro;500)"
+msgstr "Verzekerde verzending (tot &euro; 500)"
 
 #: includes/class-wcmp-settings.php:453
 msgid ""
-"By default, there is no insurance on the shipments. If you still want to "
-"insure the shipment, you can do that from &euro;0.50. We insure the purchase "
-"value of the shipment, with a maximum insured value of &euro; 5.000. Insured "
-"parcels always contain the options \"Home address only\" en \"Signature for "
-"delivery\""
+"There is no default insurance on the domestic shipments. If you want to insure, you can do this. "
+"We insure the purchase value of your product, with a maximum insured value of &euro; 500."
 msgstr ""
-"Er zit standaard geen verzekering op de zendingen. Indien u toch wilt "
-"verzekeren kunt u dit doen vanaf &euro;0.50. Wij verzekeren de inkoopwaarde "
-"van uw product, met een maximale verzekerde waarde van &euro; 5.000. "
-"Verzekerde pakketten bevatten altijd de opties \"Alléén huisadres\" en "
-"\"Handtekening voor ontvangst\""
+"Er zit standaard geen verzekering op de binnenlandse zendingen. Indien u toch wilt "
+"verzekeren kunt u dit doen. Wij verzekeren de inkoopwaarde "
+"van uw product, met een maximale verzekerde waarde van &euro; 500. "
 
 #: includes/class-wcmp-settings.php:460
 #: includes/views/wcmp-order-return-shipment-options.php:120
@@ -638,21 +577,9 @@ msgstr ""
 msgid "Insured amount"
 msgstr "Verzekerde waarde"
 
-#: includes/class-wcmp-settings.php:470
-msgid "Insured up to &euro; 50 (+ &euro; 0.50)"
-msgstr "Verzekerd tot &euro; 50 (+ &euro; 0.50)"
-
-#: includes/class-wcmp-settings.php:471
-msgid "Insured up to  &euro; 250 (+ &euro; 1.00)"
-msgstr "Verzekerd tot &euro; 250 (+ &euro; 1.00)"
-
 #: includes/class-wcmp-settings.php:472
 msgid "Insured up to  &euro; 500 (+ &euro; 1.65)"
 msgstr "Verzekerd tot &euro; 500 (+ &euro; 1.65)"
-
-#: includes/class-wcmp-settings.php:473
-msgid "> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)"
-msgstr "> &euro; 500 verzekerd (+ &euro; 1.65 / &euro; 500)"
 
 #: includes/class-wcmp-settings.php:480
 msgid "Insured amount (in euro)"
@@ -666,31 +593,20 @@ msgstr "Label omschrijving"
 msgid ""
 "With this option, you can add a description to the shipment. This will be "
 "printed on the top left of the label, and you can use this to search or sort "
-"shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> to "
+"shipments in the MyParcel BE Backend. Use <strong>[ORDER_NR]</strong> to "
 "include the order number, <strong>[DELIVERY_DATE]</strong> to include the "
 "delivery date."
 msgstr ""
 "Met deze optie kunt u een beschrijving toevoegen aan de zending. Dit zal "
 "worden afgedrukt op de linkerbovenhoek van het label, en u kunt dit "
-"gebruiken om zendingen in het MyParcel Backend te zoeken of te sorteren. "
+"gebruiken om zendingen in het MyParcel BE Backend te zoeken of te sorteren. "
 "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden, "
 "[DELIVERY_DATE] voor de bezorgdatum."
-
-#: includes/class-wcmp-settings.php:508
-msgid "Empty parcel weight (grams)"
-msgstr "Leeg pakket gewicht (gram)"
 
 #: includes/class-wcmp-settings.php:516
 msgid "Default weight of your empty parcel, rounded to grams."
 msgstr "Standaard gewicht van uw lege pakket, afgerond op gram."
 
-#: includes/class-wcmp-settings.php:523
-msgid "World Shipments"
-msgstr "Wereldzendingen"
-
-#: includes/class-wcmp-settings.php:530
-msgid "Default HS Code"
-msgstr "Standaard HS-code"
 
 #: includes/class-wcmp-settings.php:543
 msgid "Customs shipment type"
@@ -721,8 +637,8 @@ msgid "Delivery options"
 msgstr "Bezorgopties"
 
 #: includes/class-wcmp-settings.php:588
-msgid "Enable MyParcel delivery options"
-msgstr "MyParcel bezorgopties inschakelen"
+msgid "Enable MyParcel BE delivery options"
+msgstr "MyParcel BE bezorgopties inschakelen"
 
 #: includes/class-wcmp-settings.php:600
 msgid "Display for"
@@ -747,12 +663,8 @@ msgstr ""
 "buitenlandse adressen zijn de bezorgopties niet zichtbaar."
 
 #: includes/class-wcmp-settings.php:665
-msgid "PostNL pickup"
-msgstr "Afhalen bij PostNL"
-
-#: includes/class-wcmp-settings.php:677
-msgid "Early PostNL pickup"
-msgstr "Extra vroeg afhalen bij PostNL"
+msgid "bpost pickup"
+msgstr "Afhalen bij bpost"
 
 #: includes/class-wcmp-settings.php:690
 msgid "Shipment processing parameters"
@@ -791,8 +703,8 @@ msgid "Dropoff days"
 msgstr "Afleverdagen"
 
 #: includes/class-wcmp-settings.php:715
-msgid "Days of the week on which you hand over parcels to PostNL"
-msgstr "Dagen van de week waarop u de pakketten bij PostNL aflevert"
+msgid "Days of the week on which you hand over parcels to bpost"
+msgstr "Dagen van de week waarop u de pakketten bij bpost aflevert"
 
 #: includes/class-wcmp-settings.php:721
 msgid "Cut-off time"
@@ -812,10 +724,6 @@ msgstr "Verwerkingstijd"
 msgid "Number of days you take to process an order"
 msgstr "Aantal dagen dat u nodig heeft om een order te verwerken"
 
-#: includes/class-wcmp-settings.php:751
-msgid "Delivery days window"
-msgstr "Leverdagen venster"
-
 #: includes/class-wcmp-settings.php:760
 msgid "Number of days you allow the customer to postpone a shipment"
 msgstr "Aantal dagen dat een klant een zending kan uitstellen"
@@ -823,10 +731,6 @@ msgstr "Aantal dagen dat een klant een zending kan uitstellen"
 #: includes/class-wcmp-settings.php:766
 msgid "Enable monday delivery"
 msgstr "Maandaglevering inschakelen"
-
-#: includes/class-wcmp-settings.php:778
-msgid "Cut-off time for monday delivery"
-msgstr "Sluitingstijd voor maandaglevering"
 
 #: includes/class-wcmp-settings.php:787
 msgid ""
@@ -840,17 +744,9 @@ msgstr ""
 msgid "Customizations"
 msgstr "Aanpassingen"
 
-#: includes/class-wcmp-settings.php:801
-msgid "Base color"
-msgstr "Basiskleur"
-
 #: includes/class-wcmp-settings.php:809
 msgid "Color of the header & tabs (cyan by default)"
 msgstr "Kleur van de header en tabs (standaardkleur: cyaan)"
-
-#: includes/class-wcmp-settings.php:816
-msgid "Highlight color"
-msgstr "Highlight kleur"
 
 #: includes/class-wcmp-settings.php:824
 msgid "Color of the selections/highlights (orange by default)"
@@ -859,10 +755,6 @@ msgstr "Kleur van de selecties/highlights (standaardkleur: oranje)"
 #: includes/class-wcmp-settings.php:830
 msgid "Custom styles"
 msgstr "Aangepaste stijlen (CSS)"
-
-#: includes/class-wcmp-settings.php:844
-msgid "Automatically load Google fonts"
-msgstr "Google lettertypen automatisch laden"
 
 #: includes/compatibility/class-wc-core-compatibility.php:222
 msgid "WooCommerce"
@@ -891,13 +783,13 @@ msgstr "Totaal gewicht"
 #: includes/views/wcmp-bulk-options-form.php:126
 msgid ""
 "This order does not contain valid street and house number data and cannot be "
-"exported because of this! This order was probably placed before the MyParcel "
+"exported because of this! This order was probably placed before the MyParcelbe "
 "plugin was activated. The address data can still be manually entered in the "
 "order screen."
 msgstr ""
 "Deze order bevat geen geldige straatnaam- en huisnummergegevens, en kan "
 "daarom niet worden ge-exporteerd! Waarschijnlijk is deze order geplaatst "
-"voordat de MyParcel plugin werd geactiveerd. De gegevens kunnen wel "
+"voordat de MyParcelbe plugin werd geactiveerd. De gegevens kunnen wel "
 "handmatig worden ingevoerd in het order scherm."
 
 #: includes/views/wcmp-bulk-options-form.php:161
@@ -916,8 +808,8 @@ msgstr "Berekend gewicht: %s kg"
 
 #: includes/views/wcmp-order-return-shipment-options.php:49
 #: includes/views/wcmp-order-shipment-options.php:74
-msgid "Insured + home address only + signature on delivery"
-msgstr "Verzekerd + alléén huisadres + handtekening voor ontvangst"
+msgid "Insured to &euro; 500"
+msgstr "Verzekerd tot &euro; 500"
 
 #: includes/views/wcmp-order-return-shipment-options.php:61
 #: includes/views/wcmp-order-shipment-options.php:94
@@ -929,25 +821,10 @@ msgstr "Standaard verzekering tot €500 + handtekening voor ontvangst"
 msgid "Insurance"
 msgstr "Verzekering"
 
-#: includes/views/wcmp-order-return-shipment-options.php:105
-#: includes/views/wcmp-order-shipment-options.php:141
-msgid "Insured up to &euro; 50"
-msgstr "Verzekerd tot &euro; 50"
-
-#: includes/views/wcmp-order-return-shipment-options.php:106
-#: includes/views/wcmp-order-shipment-options.php:142
-msgid "Insured up to  &euro; 250"
-msgstr "Verzekerd tot &euro; 250"
-
 #: includes/views/wcmp-order-return-shipment-options.php:107
 #: includes/views/wcmp-order-shipment-options.php:143
 msgid "Insured up to  &euro; 500"
 msgstr "Verzekerd tot &euro; 500"
-
-#: includes/views/wcmp-order-return-shipment-options.php:108
-#: includes/views/wcmp-order-shipment-options.php:144
-msgid "> &euro; 500 insured"
-msgstr "> &euro; 500 verzekerd"
 
 #: includes/views/wcmp-order-return-shipment-options.php:137
 #: includes/views/wcmp-order-shipment-options.php:182
@@ -971,38 +848,38 @@ msgstr "Custom-ID (bovenaan op het label links)"
 msgid "Insured for"
 msgstr "Verzekerde waarde"
 
-#: woocommerce-myparcel.php:154
+#: woocommerce-myparcelbe.php:154
 #, php-format
 msgid ""
-"WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!"
+"WooCommerce MyParcelbe requires %sWooCommerce%s to be installed & activated!"
 msgstr ""
-"WooCommerce MyParcel vereist dat %sWooCommerce%s is geinstalleerd en "
+"WooCommerce MyParcelbe vereist dat %sWooCommerce%s is geinstalleerd en "
 "geactiveerd!"
 
-#: woocommerce-myparcel.php:166
+#: woocommerce-myparcelbe.php:166
 msgid ""
-"WooCommerce MyParcel requires PHP 5.3 or higher (5.6 or later recommended)."
+"WooCommerce MyParcelbe requires PHP 5.3 or higher (5.6 or later recommended)."
 msgstr ""
-"WooCommerce MyParcel vereist PHP 5.3 of hoger (5.6 of hoger aanbevolen)."
+"WooCommerce MyParcelbe vereist PHP 5.3 of hoger (5.6 of hoger aanbevolen)."
 
-#: woocommerce-myparcel.php:167
+#: woocommerce-myparcelbe.php:167
 msgid "How to update your PHP version"
 msgstr "Hoe update ik mijn PHP versie?"
 
 #. Plugin Name of the plugin/theme
-msgid "WooCommerce MyParcel"
+msgid "WooCommerce MyParcel BE"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "http://www.myparcel.nl"
+msgid "http://www.myparcelbe.nl"
 msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print "
+"Export your WooCommerce orders to MyParcel BE (www.sendmyparcel.be) and print "
 "labels directly from the WooCommerce admin"
 msgstr ""
-"Exporteer je WooCommerce orders naar MyParcel (www.myparcel.nl) en print "
+"Exporteer je WooCommerce orders naar MyParcel BE (www.sendmyparcel.be) en print "
 "verzendlabels direct vanuit WooCommerce"
 
 #. Author of the plugin/theme
@@ -1034,12 +911,12 @@ msgstr ""
 #~ msgid ""
 #~ "With this option, you can add a description to the shipment. This will be "
 #~ "printed on the top left of the label, and you can use this to search or "
-#~ "sort shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> "
+#~ "sort shipments in the MyParcelbe Backend. Use <strong>[ORDER_NR]</strong> "
 #~ "to include the order number."
 #~ msgstr ""
 #~ "Met deze optie kunt u een beschrijving toevoegen aan de zending. Dit zal "
 #~ "worden afgedrukt op de linkerbovenhoek van het label, en u kunt dit "
-#~ "gebruiken om zendingen in het MyParcel Backend te zoeken of te sorteren. "
+#~ "gebruiken om zendingen in het MyParcel BE Backend te zoeken of te sorteren. "
 #~ "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden."
 
 #~ msgid "Additional fee (optional)"
@@ -1103,13 +980,6 @@ msgstr ""
 
 #~ msgid "Insured up to  &euro; 500 (+ &euro; 1.50)"
 #~ msgstr "Verzekerd tot &euro; 500 (+ &euro; 1.50)"
-
-#~ msgid "> &euro; 500 insured (+ &euro; 1.50)"
-#~ msgstr "> &euro; 500 verzekerd (+ &euro; 1.50)"
-
-#~ msgid "Home address only + signature on delivery"
-#~ msgstr "Alléén huisadres + Handtekening voor ontvangst"
-
 #~ msgid ""
 #~ "This is the secure option. The parcel will only be delivered at the "
 #~ "recipient address, who has to sign for delivery. This way you can be "
@@ -1120,26 +990,26 @@ msgstr ""
 #~ "in ontvangst is genomen door de geadresseerde. Een veilig gevoel."
 
 #~ msgid ""
-#~ "When you connect the customer email, MyParcel can send a Track&Trace "
-#~ "email to this address. In your <a href=\"https://backoffice.myparcel.nl/"
-#~ "ttsettingstable\">MyParcel backend</a> you can enable or disable this "
+#~ "When you connect the customer email, MyParcel BE can send a Track&Trace "
+#~ "email to this address. In your <a href=\"https://backoffice.myparcelbe.nl/"
+#~ "ttsettingstable\">MyParcelbe backend</a> you can enable or disable this "
 #~ "email and format it in your own style."
 #~ msgstr ""
-#~ "Wanneer u het emailadres van de klant koppelt, kan MyParcel een "
+#~ "Wanneer u het emailadres van de klant koppelt, kan MyParcel BE een "
 #~ "Track&Trace email versturen naar dit adres. In uw <a href=\"https://"
-#~ "backoffice.myparcel.nl/ttsettingstable\">MyParcel backend</a> kunt u deze "
+#~ "backoffice.myparcelbe.nl/ttsettingstable\">MyParcelbe backend</a> kunt u deze "
 #~ "email in- of uitschakelen en opmaken in uw eigen stijl."
 
 #~ msgid "Productnaam"
 #~ msgstr "Productnaam"
 
 #~ msgid ""
-#~ "When you connect the customer email, MyParcel can send a Track&Trace "
-#~ "email to this address. In your <a href=\"http://www.myparcel.nl/backend/"
-#~ "instellingen/tracktrace\">MyParcel backend</a> you can enable or disable "
+#~ "When you connect the customer email, MyParcel BE can send a Track&Trace "
+#~ "email to this address. In your <a href=\"http://www.myparcelbe.nl/backend/"
+#~ "instellingen/tracktrace\">MyParcelbe backend</a> you can enable or disable "
 #~ "this email and format it in your own style."
 #~ msgstr ""
-#~ "Wanneer u het emailadres van de klant koppelt, kan MyParcel een "
+#~ "Wanneer u het emailadres van de klant koppelt, kan MyParcel BE een "
 #~ "Track&Trace email versturen naar dit adres. In uw <a href=\"https://"
-#~ "backoffice.myparcel.nl/ttsettingstable\">MyParcel backend</a> kunt u deze "
+#~ "backoffice.myparcelbe.nl/ttsettingstable\">MyParcelbe backend</a> kunt u deze "
 #~ "email in- of uitschakelen en opmaken in uw eigen stijl."

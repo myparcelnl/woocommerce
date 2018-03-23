@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /**
  * A simple JSON REST request abstraction layer
  */
-class WC_MyParcel_REST_Client
+class WC_MyParcelBE_REST_Client
 {
 	/**
 	 * Handle for the current cURL session
@@ -32,6 +32,7 @@ class WC_MyParcel_REST_Client
 
 		// STRINGS
 		CURLOPT_ENCODING       => "",       // "identity", "deflate", and "gzip"
+		CURLOPT_USERAGENT      => "MyParcelbe REST PHP Client/1.0",
 		CURLOPT_SSL_VERIFYPEER => false,    // if all else fails :)
 	);
 
@@ -136,8 +137,8 @@ class WC_MyParcel_REST_Client
 			@fclose($f);
 		}
 
-		$status = $response["response"]["code"];
-		$body = $response['body'];
+		$status = $response->response->code;
+		$body = $response->body;
 
 		if ($raw !== true) {
 			$body = json_decode($body, true); // The second parameter set to true returns objects as associative arrays
@@ -159,7 +160,13 @@ class WC_MyParcel_REST_Client
 			throw new Exception($error, $status);
 		}
 
-		return array("code" => $status, "body" => $body, "headers" => $response["headers"]);
+		$responseData = array(
+			"code" => $status,
+			"body" => $body,
+			"headers" => $response->headers,
+		);
+
+		return $responseData;
 	}
 
 	public function parse_errors( $body ) {
