@@ -79,6 +79,10 @@ msgstr "Bezorgdatum"
 msgid "bpost Pickup"
 msgstr "Afhalen bij bpost"
 
+#: includes/class-wcmp-frontend.php:514
+msgid "Saturday delivery"
+msgstr "Zaterdag levering"
+
 #: includes/class-wcmp-export.php:59
 msgid ""
 "You have to export the orders to MyParcelbe before you can print the labels!"
@@ -468,8 +472,8 @@ msgid "Package types"
 msgstr "Pakkettype"
 
 #: includes/class-wcmp-settings.php:334
-msgid "Select one or more shipping methods for each MyParcel BE package type"
-msgstr "Selecteer een of meer verzendmethoden voor elk MyParcel BE pakkettype"
+msgid "Select one or more shipping methods for the MyParcel BE package type"
+msgstr "Selecteer een of meer verzendmethoden voor de MyParcel BE pakkettype"
 
 #: includes/class-wcmp-settings.php:340
 #: includes/views/wcmp-order-return-shipment-options.php:4

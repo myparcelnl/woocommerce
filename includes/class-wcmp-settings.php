@@ -344,7 +344,7 @@ class WooCommerce_MyParcelBE_Settings {
 					'option_name'	=> $option_name,
 					'id'			=> 'shipping_methods_package_types',
 					'package_types'	=> WooCommerce_MyParcelBE()->export->get_package_types(),
-					'description'	=> __( 'Select one or more shipping methods for each MyParcel BE package type', 'woocommerce-myparcelbe' ),
+					'description'	=> __( 'Select one or more shipping methods for the MyParcel BE package type', 'woocommerce-myparcelbe' ),
 				)
 			);
 		} else {
@@ -509,6 +509,18 @@ class WooCommerce_MyParcelBE_Settings {
 			)
 		);
 
+		add_settings_field(
+			'saturday_delivery',
+			__( 'Saturday delivery', 'woocommerce-myparcelbe' ),
+			array( $this->callbacks, 'delivery_option_enable' ),
+			$option_group,
+			'delivery_options',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'saturday_delivery',
+			)
+		);
+
 		// Checkout options section.
 		add_settings_section(
 			'processing_parameters',
@@ -568,18 +580,6 @@ class WooCommerce_MyParcelBE_Settings {
 				'type'			=> 'number',
 				'size'			=> '2',
 				'description'	=> __( 'Number of days you take to process an order', 'woocommerce-myparcelbe' ),
-			)
-		);
-
-		add_settings_field(
-			'saturday_delivery',
-			__( 'Saturday delivery', 'woocommerce-myparcelbe' ),
-			array( $this->callbacks, 'delivery_option_enable' ),
-			$option_group,
-			'processing_parameters',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'saturday_delivery',
 			)
 		);
 

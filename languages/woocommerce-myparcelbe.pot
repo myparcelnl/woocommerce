@@ -79,6 +79,11 @@ msgstr ""
 msgid "bpost Pickup"
 msgstr ""
 
+
+#: includes/class-wcmp-frontend.php:514
+msgid "Saturday delivery"
+msgstr ""
+
 #: includes/class-wcmp-export.php:59
 msgid ""
 "You have to export the orders to MyParcelbe before you can print the labels!"
@@ -449,7 +454,7 @@ msgid "Package types"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:334
-msgid "Select one or more shipping methods for each MyParcel BE package type"
+msgid "Select one or more shipping methods for the MyParcel BE package type"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:340
