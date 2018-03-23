@@ -98,9 +98,9 @@ class WooCommerce_MyParcelBE_Settings {
 		}
 
 		// link to hide message when one of the premium extensions is installed
-		if ( !$hide_notice && $base_country == 'BE' ) {
-			$myparcelbe_belgium_link = '<a href="https://wordpress.org/plugins/wc-myparcelbe-belgium/" target="blank">WC MyParcelbe Belgium</a>';
-			$text = sprintf(__( 'It looks like your shop is based in Belgium. This plugin is for MyParcelbe Netherlands. If you are using MyParcelbe Belgium, download the %s plugin instead!', 'woocommerce-myparcelbe' ), $myparcelbe_belgium_link);
+		if ( !$hide_notice && $base_country == 'NL' ) {
+			$myparcelbe_belgium_link = '<a href="https://wordpress.org/plugins/woocommerce-myparcel/" target="blank">WC MyParcelbe Belgium</a>';
+			$text = sprintf(__( 'It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium. If you are using MyParcel Netherlands, download the %s plugin instead!', 'woocommerce-myparcelbe' ), $myparcelbe_belgium_link);
 			$dismiss_button = sprintf('<a href="%s" style="display:inline-block; margin-top: 10px;">%s</a>', add_query_arg( 'myparcelbe_hide_be_notice', 'true' ), __( 'Hide this message', 'woocommerce-myparcelbe' ) );
 			printf('<div class="notice notice-warning"><p>%s %s</p></div>', $text, $dismiss_button);
 		}
