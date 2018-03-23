@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-<a href="#" class="wcmyparcel_change_order" onclick="return false;">
-    <table class="wcmyparcel_settings_table" style="width: auto">
+<a href="#" class="wcmyparcel_change_order">
+    <table class="wcmyparcel_settings_table" style="width: auto" onclick="return false;">
         <tr>
             <td>
                 <?php _e( 'Shipment type', 'woocommerce-myparcel' ) ?>:<br/>
@@ -8,7 +8,7 @@
                 <small class="calculated_weight"><?php printf( __( 'Calculated weight: %s kg', 'woocommerce-myparcel' ), number_format( $parcel_weight, 3, ',', ' ' ) ); ?></small>
             </td>
             <td>
-                <?php
+            <?php
                 // disable mailbox package outside NL
                 if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
                     unset($package_types[2]); // mailbox package
@@ -127,7 +127,7 @@
         </tr>
         <?php endforeach ?>
     </table>
-    <table class="wcmyparcel_settings_table">
+    <table class="wcmyparcel_settings_table" onclick="return false;">
         <?php
         $insured_amount = isset($shipment_options['insurance']['amount']) ? (int) $shipment_options['insurance']['amount'] : 0;
         $insured_amount = $insured_amount / 100; // frontend is in euros
