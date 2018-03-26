@@ -327,9 +327,8 @@ msgstr ""
 #: includes/class-wcmp-settings.php:105
 #, php-format
 msgid ""
-"It looks like your shop is based in Belgium. This plugin is for MyParcelbe "
-"Netherlands. If you are using MyParcelbe Belgium, download the %s plugin "
-"instead!"
+"It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium."
+"If you are using MyParcel Netherlands, download the %s plugin instead!"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:106

@@ -81,7 +81,7 @@ msgstr "Afhalen bij bpost"
 
 #: includes/class-wcmp-frontend.php:514
 msgid "Saturday delivery"
-msgstr "Zaterdag levering"
+msgstr "Zaterdaglevering"
 
 #: includes/class-wcmp-export.php:59
 msgid ""
@@ -327,12 +327,11 @@ msgstr "WooCommerce MyParcel BE Instellingen"
 #: includes/class-wcmp-settings.php:105
 #, php-format
 msgid ""
-"It looks like your shop is based in Belgium. This plugin is for MyParcelbe "
-"Netherlands. If you are using MyParcelbe Belgium, download the %s plugin "
-"instead!"
+"It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium."
+"If you are using MyParcel Netherlands, download the %s plugin instead!"
 msgstr ""
-"Het lijkt erop dat uw winkel is gevestigd in België. Deze plugin is voor "
-"MyParcelbe Nederland. Als u van MyParcelbe België gebruik maakt, dient u de %s "
+"Het lijkt erop dat uw winkel is gevestigd in Nederland. Deze plugin is voor "
+"MyParcel België. Als u van MyParcel Nederland gebruik maakt, dient u de %s "
 "plugin te downloaden (en de huidige plugin te verwijderen)!"
 
 #: includes/class-wcmp-settings.php:106
