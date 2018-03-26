@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
-
-<table class="wcmyparcelbe_settings_table" style="width: auto">
+<a href="#" class="wcmyparcel_change_order">
+<table class="wcmyparcelbe_settings_table" style="width: auto" onclick="return false">
     <tr>
 		<td>
 			<?php _e( 'Number of labels', 'woocommerce-myparcelbe' ) ?>:
@@ -42,13 +42,9 @@
 		unset($option_rows['[return]']);
 
 		$shipment_options['insured'] = 1;
-		if ( WooCommerce_MyParcelBE()->export->is_world_shipment_country( $recipient['cc'] ) ) {
-			$shipment_options['insurance']['amount'] = 19900;
-			$insurance_text = __( 'Standard insurance up to €200 + signature on delivery', 'woocommerce-myparcelbe' );
-		} else {
-			$shipment_options['insurance']['amount'] = 49900;
-			$insurance_text = __( 'Standard insurance up to €500 + signature on delivery', 'woocommerce-myparcelbe' );
-		}
+        $shipment_options['insurance']['amount'] = 49900;
+        $insurance_text = __( 'Standard insurance up to €500 + signature on delivery', 'woocommerce-myparcelbe' );
+
 
 		$option_rows['[insured]'] = array(
 			'label'		=> $insurance_text,
@@ -57,7 +53,6 @@
 			'hidden'	=> 'yes',
 		);
 	}
-
 
 	?>
 	<?php foreach ($option_rows as $name => $option_row): ?>
@@ -83,7 +78,7 @@
 	<?php endforeach ?>
 </table>
 
-
+</a>
 <div class="wcmp_save_shipment_settings">
 	<a class="button save" data-order="<?php echo $order_id; ?>"><?php _e( 'Save', 'woocommerce-myparcelbe' ) ?></a>
 	<img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_spinner waiting"/>
