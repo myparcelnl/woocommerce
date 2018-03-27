@@ -1,5 +1,5 @@
 /* Order actions button styling */
-.widefat .column-order_actions a.button.postnl {
+.widefat .column-order_actions .column-wc_actions a.button.postnl {
 	float: left;
 	width: 26px;
 	height: 26px;
@@ -9,7 +9,7 @@
 	padding: 2px 5px 0;
 }
 
-.widefat .column-order_actions a.button.postnl img {
+.widefat .column-order_actions .column-wc_actions a.button.postnl img {
 	width: 16px;
 	height: auto;
 }
@@ -90,7 +90,7 @@ ul.wcpostnl_shipment_summary li:before {
 	margin-top: 6px;
 }
 
-.widefat .column-order_actions .wcmp_spinner {
+.widefat .column-order_actions .column-wc_actions .wcmp_spinner {
 	position: absolute;
 }
 
@@ -178,6 +178,14 @@ table.tracktrace_status td.wcmp-create-label {
 	padding: 0;
 }
 
+.wcpostnl_change_order{
+	color: black;
+	text-decoration: none;
+}
+
+.wcpostnl_change_order:hover{
+	color: black;
+}
 /* fix woocommerce column float */
 @media only screen and (min-width: 1280px) {
 	#order_data .order_data_column {
