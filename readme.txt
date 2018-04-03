@@ -88,8 +88,10 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
-= 2.4.9 (2018-03-23) =
+= 2.4.9 (2018-04-03) =
 Fix: Scrolling when changing package type in orderview 
+Fix: Select the correct delivery methode inside the checkout
+Improvement: Support Cloudflare
 
 = 2.4.8 (2018-02-27) =
 * Fix: The array error from the userAgent (https://wordpress.org/support/topic/parse-error-syntax-error-unexpected-in-wp-content-plugins-woocommerce-mypa/)
