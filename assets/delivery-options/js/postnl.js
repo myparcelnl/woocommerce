@@ -364,14 +364,14 @@
       date = $('input[name=date]:checked').val();
       renderDeliveryOptions(date);
 
-      $('#post-date-slider-right, #post-date-slider-left, #post-tabs-container').show();
+      $('#post-date-slider-right, #post-date-slider-left, #post-tabs-container').css("display","block");
 
       return updateInputField();
     });
     $('#post-pickup-options-title').on('click', function() {
       $('#post-pickup').prop('checked', true);
 
-      $('#post-date-slider-right, #post-date-slider-left, #post-tabs-container').hide();
+      $('#post-date-slider-right, #post-date-slider-left, #post-tabs-container').css("display","none");
 
       return updateInputField();
     });
