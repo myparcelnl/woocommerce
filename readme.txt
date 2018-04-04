@@ -1,9 +1,8 @@
 === Plugin Name ===
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.9.2
+Tested up to: 4.9.5
 Stable tag: 2.4.9
-
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
