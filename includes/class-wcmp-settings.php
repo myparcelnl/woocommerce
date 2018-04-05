@@ -286,6 +286,34 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 
+        add_settings_field(
+			'barcode_in_node',
+			__( 'Barcode in node', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'checkbox' ),
+			$option_group,
+			'general',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'barcode_in_node',
+				'description'	=> __( 'tekst123', 'woocommerce-myparcel' )
+			)
+		);
+
+		add_settings_field(
+			'barcode_in_node_titel',
+			__( 'Barcode in node titel', 'woocommerce-myparcel' ),
+			array( $this->callbacks, 'text_input' ),
+			$option_group,
+			'general',
+			array(
+				'option_name'	=> $option_name,
+				'id'			=> 'barcode_in_node_titel',
+				'default'		=> 'Tracking code:',
+				'description'	=> __( 'text', 'woocommerce-myparcel' ),
+			)
+		);
+
+
 		// Diagnostics section.
 		add_settings_section(
 			'diagnostics',
