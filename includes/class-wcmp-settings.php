@@ -286,30 +286,32 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 
-        add_settings_field(
-			'barcode_in_node',
-			__( 'Barcode in node', 'woocommerce-myparcel' ),
+		add_settings_field(
+			'barcode_in_note',
+			__( 'Barcode in note', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'general',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'barcode_in_node',
-				'description'	=> __( 'tekst123', 'woocommerce-myparcel' )
+				'id'			=> 'barcode_in_note',
+				'class'			=> 'barcode_in_note',
+				'description'	=> __( 'Place the track&trace code inside a note, of the order', 'woocommerce-myparcel' )
 			)
 		);
 
 		add_settings_field(
-			'barcode_in_node_titel',
-			__( 'Barcode in node titel', 'woocommerce-myparcel' ),
+			'barcode_in_note_titel',
+			__( 'Barcode in note titel', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'text_input' ),
 			$option_group,
 			'general',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'barcode_in_node_titel',
+				'id'			=> 'barcode_in_note_titel',
+				'class'			=> 'barcode_in_note_titel',
 				'default'		=> 'Tracking code:',
-				'description'	=> __( 'text', 'woocommerce-myparcel' ),
+				'description'	=> __( 'You can change the text before the track&trace code inside an note', 'woocommerce-myparcel' ),
 			)
 		);
 

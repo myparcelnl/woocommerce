@@ -586,12 +586,12 @@ class WooCommerce_MyParcel_Export {
 	 */
 	public function add_myparcel_note_to_shipments($selected_shipment_ids, $order_ids){
 
-		if ( ! isset(WooCommerce_MyParcel()->general_settings['barcode_in_node'])) {
+		if ( ! isset(WooCommerce_MyParcel()->general_settings['barcode_in_note'])) {
 			return;
 		}
 
 		// Select the barcode text of the MyParcel settings
-		$this->prefix_message = WooCommerce_MyParcel()->general_settings['barcode_in_node_titel'];
+		$this->prefix_message = WooCommerce_MyParcel()->general_settings['barcode_in_note_titel'];
 
 		foreach ( $order_ids as $order_id ) {
 			$order = WCX::get_order( $order_id );
