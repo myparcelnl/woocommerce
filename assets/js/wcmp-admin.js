@@ -58,11 +58,9 @@ jQuery( function( $ ) {
 		}
 	})
 
-
-
 	// hide automatic order status if automation not enabled
 	$('.wcmp_shipment_options input#order_status_automation').change(function () {
-		var order_status_select = $( this ).closest('table').parent().find('select.insured_amount');
+        var order_status_select = $( '.wcmp_shipment_options select.automatic_order_status');
 		if (this.checked) {
 			$( order_status_select ).prop('disabled', false);
 			$( '.wcmp_shipment_options tr.automatic_order_status').show();
@@ -72,7 +70,7 @@ jQuery( function( $ ) {
 		}
 	});
 
-    // hide automatic order status if automation not enabled
+    // hide automatic barcode in note titel if barcode in note is not enabled
     $('.wcmp_shipment_options input#barcode_in_note').change(function () {
         var barcode_in_note_select = $( '.wcmp_shipment_options select.barcode_in_note_titel');
         if (this.checked) {
