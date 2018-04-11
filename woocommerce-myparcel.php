@@ -221,6 +221,7 @@ class WooCommerce_MyParcel {
 				'email_tracktrace'		=> 'email_tracktrace',
 				'myaccount_tracktrace'	=> 'myaccount_tracktrace',
 				'process'				=> 'process_directly',
+				'barcode_in_note'		=> 'barcode_in_note',
 				'keep_consignments'		=> 'keep_shipments',
 				'error_logging'			=> 'error_logging',
 			);

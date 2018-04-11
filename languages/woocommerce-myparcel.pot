@@ -468,6 +468,18 @@ msgid ""
 "will be kept in the order when you export more than once."
 msgstr ""
 
+#: includes/class-wcmp-settings.php:291
+msgid "Barcode in note"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:299
+msgid "Place the track&trace code inside a note, of the order"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:305
+msgid "Barcode in note titel"
+msgstr ""
+
 #: includes/class-wcmp-settings.php:279
 msgid "Diagnostic tools"
 msgstr ""
