@@ -70,6 +70,17 @@ jQuery( function( $ ) {
 		}
 	});
 
+	// hide automatic barcode in note titel if barcode in note is not enabled
+    $('.wcmp_shipment_options input#barcode_in_note').change(function () {
+        var barcode_in_note_select = $( '.wcmp_shipment_options select.barcode_in_note_titel');
+        if (this.checked) {
+            $( barcode_in_note_select ).prop('disabled', false);
+            $( '.wcmp_shipment_options tr.barcode_in_note_titel').show();
+        } else {
+            $( barcode_in_note_select ).prop('disabled', true);
+            $( '.wcmp_shipment_options tr.barcode_in_note_titel').hide();
+        }
+    });
 
 	// select > 500 if insured amount input is >499
 	$( '.wcmp_shipment_options input.insured_amount' ).each( function( index ) {
