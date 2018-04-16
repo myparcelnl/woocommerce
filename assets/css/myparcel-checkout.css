@@ -181,7 +181,6 @@
 	background-color: white;
 	border: 1px solid black;
 	border-radius: 3px;
-	position: absolute;
 	margin: 0;
 }
 
@@ -208,6 +207,15 @@
 	height: 40px;
 	border-bottom: 1px solid black;
 	margin: 0px 0px 20px 0px;
+}
+.fa-clock {
+	width: 16px;
+	margin-bottom: -3px;
+}
+
+.fa-times{
+	width: 16px;
+	float: right;
 }
 
 @keyframes spin {

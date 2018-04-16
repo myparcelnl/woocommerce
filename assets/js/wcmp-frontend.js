@@ -178,7 +178,9 @@ jQuery( function( $ ) {
 		if (country != 'BE') {
 			hide_myparcelbe_delivery_options();
 		} else {
-			$( '#mypa-pickup-location-selector' ).show();
+            if(myParcelConfig.allowPickup){
+                $( '#mypa-pickup-location-selector' ).show();
+            }
 			$( '#mypa-options-enabled' ).prop('checked', true);
 		}
 	}
