@@ -381,7 +381,7 @@ class WooCommerce_MyParcelBE_Admin {
 			return;
 		}
 
-		echo '<div style="clear:both;"><strong>' . __( 'MyParcelbe shipment:', 'woocommerce-myparcelbe' ) . '</strong><br/>';
+		echo '<div style="clear:both;"><strong>' . __( 'MyParcel BE shipment:', 'woocommerce-myparcelbe' ) . '</strong><br/>';
 		$this->order_list_shipment_options( $order, false );
 		echo '</div>';
 	}
@@ -414,7 +414,7 @@ class WooCommerce_MyParcelBE_Admin {
 		if ( $pickup = WooCommerce_MyParcelBE()->export->is_pickup( $order, $delivery_options ) ) {
 			switch ($pickup['price_comment']) {
 				case 'retail':
-					$title = __( 'bpost Pickup', 'woocommerce-myparcelbe' );
+					$title = __( 'bpost pickup', 'woocommerce-myparcelbe' );
 					break;
 			}
 
