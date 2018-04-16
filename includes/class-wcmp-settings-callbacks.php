@@ -63,7 +63,7 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
 			$style = '';
 		}
 
-		printf( '<input type="%1$s" id="%2$s" name="%3$s" value="%4$s" size="%5$s" placeholder="%6$s" class="%7$s" style="%8$s"/>', $type, $id, $setting_name, $current, $size, $placeholder, $class, $style );
+		printf( '<input type="%1$s" min="%2$s" step="%3$s" id="%4$s" name="%5$s" value="%6$s" size="%7$s" placeholder="%8$s" class="%9$s" style="%10$s"/>', $type, $min, $step, $id, $setting_name, $current, $size, $placeholder, $class, $style );
 	
 		// output description.
 		if ( isset( $description ) ) {
@@ -390,8 +390,9 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
 		// number (fee)
 		$fee_args = array(
 			'id'			=> "{$id}_fee",
-			'type'			=> 'text',
 			'size'			=> '5',
+			'min'           => "0",
+			'step'          => '0.01',
 		);
 		// textarea (description)
 		$description_args = array(
@@ -422,7 +423,6 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
 	public function delivery_options_table( $args ) {
 		extract( $this->normalize_settings_args( $args ) );
 		?>
-		<table>
 
 		<table>
 			<thead>
