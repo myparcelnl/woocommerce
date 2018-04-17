@@ -242,6 +242,7 @@ MyParcel = {
     {
         $('#mypa-message').hide();
         $('#mypa-message').html(' ');
+        $('#mypa-delivery-option-form').show();
     },
 
     /*
@@ -255,6 +256,7 @@ MyParcel = {
     {
         $('#mypa-message').html(message);
         $('#mypa-message').show();
+        $('#mypa-delivery-option-form').hide();
     },
 
     /*
