@@ -394,8 +394,8 @@ class WooCommerce_MyParcelBE_Admin {
 		}
 
 		echo '<div class="delivery-options">';
-		if (!empty($date)) {
-			$formatted_date = date_i18n( apply_filters( 'wcmyparcelbe_delivery_date_format', wc_date_format() ), strtotime( $date ) );
+		if ($delivery_date = WooCommerce_MyParcelBE()->export->get_delivery_date( $order ) ) {
+			$formatted_date = date_i18n( apply_filters( 'wcmyparcelbe_delivery_date_format', wc_date_format() ), strtotime( $delivery_date ) );
 			if (!empty($time)) {
 				$time = array_shift($time); // take first element in time array
 				if (isset($time['price_comment'])) {

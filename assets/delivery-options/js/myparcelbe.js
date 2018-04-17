@@ -106,6 +106,19 @@ MyParcel = {
 
             // @TODO when the bug is fixed inside the api request the  pickupData.price_comment = 'retail'; delete
             pickupData.price_comment = 'retail';
+
+            /**
+             * get next delivery date for pickup
+             */
+            var nextDeliveryDate = MyParcel.storeDeliveryOptions.data.delivery[0].date;
+            var dateObj = MyParcel.dateToObject(nextDeliveryDate);
+
+            if(dateObj.getDay() === 6) {
+                nextDeliveryDate = MyParcel.storeDeliveryOptions.data.delivery[1].date;
+            }
+
+            pickupData.date = nextDeliveryDate;
+
             $('#mypa-post-be-data').val(JSON.stringify(pickupData));
 
             MyParcel.hideDelivery();
@@ -684,7 +697,6 @@ MyParcel = {
                 else {
                     MyParcel.hidePickUpLocations();
                     if(myParcelConfig.allowPickup) {
-                        console.log("hier");
                         MyParcel.showPickUpLocations(data);
                     }
 

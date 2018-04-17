@@ -1039,6 +1039,7 @@ class WooCommerce_MyParcelBE_Export {
 				$delivery_time = '00:00:00';
 			}
 			$delivery_date = "{$delivery_date} {$delivery_time}";
+			var_dump ($delivery_date);
 			return $delivery_date;
 		} else {
 			return false;
