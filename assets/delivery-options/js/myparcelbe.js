@@ -613,7 +613,7 @@ MyParcel = {
     showRetry: function()
     {
         MyParcel.showMessage(
-            '<h3>Huisnummer en/of postcode onbekend</h3>' +
+            '<h4>Huisnummer en/of postcode onbekend</h4>' +
             '<div class="full-width mypa-error">'+
             '<label for="mypa-error-postcode">Postcode</label>' +
             '<input type="text" name="mypa-error-postcode" id="mypa-error-postcode" value="'+$(triggerPostalCode).val() + '">' +

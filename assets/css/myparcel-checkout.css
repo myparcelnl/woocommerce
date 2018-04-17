@@ -95,6 +95,9 @@
 	display: inline-block;
 	width: 80%;
 }
+#mypa-error-try-again{
+	margin-top: 18px;
+}
 
 #mypa-delivery-selectors-be div {
 	display: block;
