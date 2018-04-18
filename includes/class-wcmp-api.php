@@ -188,7 +188,7 @@ class WC_MyParcelBE_API extends WC_MyParcelBE_REST_Client {
 	}
 
 	/**
-	 * Get Wordpress, Woocommerce, Myparcel version and place theme in a array. Implode the array to get an UserAgent.
+	 * Get Wordpress, Woocommerce, MyparcelBE version and place theme in a array. Implode the array to get an UserAgent.
 	 * @return string
 	 */
 	private function getUserAgent() {
@@ -213,7 +213,7 @@ class WC_MyParcelBE_API extends WC_MyParcelBE_REST_Client {
 	 */
 	private function get_label_format_url( $positions ) {
 
-		$generalSettings = WooCommerce_MyParcel()->general_settings;
+		$generalSettings = WooCommerce_MyParcelBE()->general_settings;
 
 		if ( $generalSettings['label_format'] == 'A4') {
 			return 'format=A4&positions=' . $positions;

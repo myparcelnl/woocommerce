@@ -199,14 +199,14 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
 				$style = '';
 			}
 
-			$suffix = isset($field['suffix']) ? $field['suffix'] : '';
+			$box_number = isset($field['box_number']) ? $field['box_number'] : '';
 
 			// output field label
 			printf( '<label for="%1$s_%2$s" %3$s>%4$s</label>', $id, $name, $style, $label );
 
 			// output field
 			$field_current = isset($current[$name]) ? $current[$name] : '';
-			printf( '<input type="text" id="%1$s_%3$s" name="%2$s[%3$s]" value="%4$s" size="%5$s" placeholder="%6$s"/>%7$s<br/>', $id, $setting_name, $name, $field_current, $size, $placeholder, $suffix );
+			printf( '<input type="text" id="%1$s_%3$s" name="%2$s[%3$s]" value="%4$s" size="%5$s" placeholder="%6$s"/>%7$s<br/>', $id, $setting_name, $name, $field_current, $size, $placeholder, $box_number );
 
 		}
 	

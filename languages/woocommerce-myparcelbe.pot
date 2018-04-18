@@ -249,7 +249,7 @@ msgstr ""
 #: includes/class-wcmp-bepostcode-fields.php:411
 #: includes/class-wcmp-bepostcode-fields.php:432
 #: includes/class-wcmp-bepostcode-fields.php:446
-msgid "Suffix"
+msgid "Box number"
 msgstr ""
 
 #: includes/class-wcmp-bepostcode-fields.php:378

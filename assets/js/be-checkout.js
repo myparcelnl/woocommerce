@@ -9,12 +9,12 @@ jQuery(document).ready(function($) {
 	if (billing_country != 'BE') {
 		$('#billing_street_name_field').hide();
 		$('#billing_house_number_field').hide();
-		$('#billing_house_number_suffix_field').hide();
+		$('#billing_box_number_field').hide();
 	}	
 	if (shipping_country != 'BE') {
 		$('#shipping_street_name_field').hide();
 		$('#shipping_house_number_field').hide();
-		$('#shipping_house_number_suffix_field').hide();
+		$('#shipping_box_number_field').hide();
 	}
 	
 
@@ -36,13 +36,13 @@ jQuery(document).ready(function($) {
 		var $address2field = thisform.find('#billing_address_2_field, #shipping_address_2_field');
 		var $streetfield   = thisform.find('#billing_street_name_field, #shipping_street_name_field');
 		var $numberfield   = thisform.find('#billing_house_number_field, #shipping_house_number_field');
-		var $suffixfield   = thisform.find('#billing_house_number_suffix_field, #shipping_house_number_suffix_field');
+		var $box_numberfield   = thisform.find('#billing_box_number_field, #shipping_box_number_field');
 
 		if (country == 'BE') {
 			//show custom BE fields
 			$streetfield.show();
 			$numberfield.show();
-			$suffixfield.show();
+            $boxNumberfield.show();
 			//$emailfield.add( $phonefield ).removeClass('form-row-first form-row-last').addClass('form-row-wide');
 			
 			// Hide regular address classes
@@ -65,7 +65,7 @@ jQuery(document).ready(function($) {
 			// Hide custom BE fields
 			$streetfield.hide();
 			$numberfield.hide();
-			$suffixfield.hide();
+            $box_numberfield.hide();
 
 			// Unmark required fields
 			$streetfield.find('label abbr').remove();

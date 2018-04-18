@@ -113,7 +113,7 @@ class WC_MyParcelBE_REST_Client
 		// Set the method and related options
 		switch ($method) {
 			case "PUT":
-				throw new Exception('Can not put MyParcel shipment', 500);
+				throw new Exception('Can not put MyParcel BE shipment', 500);
 			break;
 
 			case "POST":
@@ -124,7 +124,7 @@ class WC_MyParcelBE_REST_Client
 			break;
 
 			case "DELETE":
-				throw new Exception('Can not delete MyParcel shipment', 500);
+				throw new Exception('Can not delete MyParcel BE shipment', 500);
 				break;
 
 			case "GET":

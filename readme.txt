@@ -23,7 +23,7 @@ This WooCommerce extension allows you to export your orders to the MyParcel Belg
 - Choose your package type (Parcel, mailbox package or unpaid letter)
 - Define preset MyParcel shipping options (signature required, extra insurance, Saturday delivery)
 - Modify the MyParcel Belgium shipping options per order before exporting
-- Extra checkout fields to separate street name, house number and house number suffix for more precise address data
+- Extra checkout fields to separate street name, house number and box number for more precise address data
 - View the status of the shipment in the order details page
 - Add track&trace link to the order confirmation email
 
@@ -319,7 +319,7 @@ Fix: Scrolling when changing package type in orderview
 = 1.3.3 =
 * Fix: Checks for required fields
 * Tweak: Improved address formatting
-* Tweak: Removed placeholders on house number & suffix for better compatibility with old browsers
+* Tweak: Removed placeholders on house number & box number for better compatibility with old browsers
 
 = 1.3.2 =
 * Fix: Description labels for Custom ID ('Eigen kenmerk') & Message ('Optioneel bericht')

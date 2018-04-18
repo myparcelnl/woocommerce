@@ -526,14 +526,14 @@ class WooCommerce_MyParcelBE_Export {
 					'company'		=> (string) WCX_Order::get_prop( $order, 'billing_company' ),
 					'street'		=> (string) WCX_Order::get_meta( $order, '_billing_street_name' ),
 					'number'		=> (string) WCX_Order::get_meta( $order, '_billing_house_number' ),
-					'box_number' => (string) WCX_Order::get_meta( $order, '_billing_house_number_suffix' ),
+					'box_number' => (string) WCX_Order::get_meta( $order, '_billing_box_number' ),
 					'postal_code'	=> (string) WCX_Order::get_prop( $order, 'billing_postcode' ),
 				);
 			} else {
 				$address_intl = array(
 					'street'		=> (string) WCX_Order::get_meta( $order, '_shipping_street_name' ),
 					'number'		=> (string) WCX_Order::get_meta( $order, '_shipping_house_number' ),
-					'box_number' => (string) WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ),
+					'box_number' => (string) WCX_Order::get_meta( $order, '_shipping_box_number' ),
 					'postal_code'	=> (string) WCX_Order::get_prop( $order, 'shipping_postcode' ),
 				);
 			}

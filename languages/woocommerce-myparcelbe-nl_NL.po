@@ -245,8 +245,8 @@ msgstr "Nr."
 #: includes/class-wcmp-bepostcode-fields.php:411
 #: includes/class-wcmp-bepostcode-fields.php:432
 #: includes/class-wcmp-bepostcode-fields.php:446
-msgid "Suffix"
-msgstr "Toev."
+msgid "Box number"
+msgstr "Box nummer."
 
 #: includes/class-wcmp-bepostcode-fields.php:378
 #: includes/class-wcmp-bepostcode-fields.php:406

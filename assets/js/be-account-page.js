@@ -7,13 +7,13 @@ jQuery(document).ready(function($) {
 			if (country != 'BE') {
 				$('#'+address_type+'_street_name_field').hide();
 				$('#'+address_type+'_house_number_field').hide();
-				$('#'+address_type+'_house_number_suffix_field').hide();
+				$('#'+address_type+'_box_number_field').hide();
 				$('#'+address_type+'_address_1_field').show();
 				$('#'+address_type+'_address_2_field').show();				
 			} else {
 				$('#'+address_type+'_street_name_field').show();
 				$('#'+address_type+'_house_number_field').show();
-				$('#'+address_type+'_house_number_suffix_field').show();
+				$('#'+address_type+'_box_number_field').show();
 				$('#'+address_type+'_address_1_field').hide();
 				$('#'+address_type+'_address_2_field').hide();				
 			}
