@@ -190,11 +190,11 @@ class WooCommerce_MyParcelBE_Admin {
 				'img'		=> WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-pdf.png',
 				'alt'		=> esc_attr__( 'Print MyParcel BE label', 'woocommerce-myparcelbe' ),
 			),
-			'add_return'	=> array (
+			/*'add_return'	=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&request=add_return&order_ids=' . $order_id ), 'wc_myparcelbe' ),
 				'img'		=> WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-retour.png',
 				'alt'		=> esc_attr__( 'Email return label', 'woocommerce-myparcelbe' ),
-			),
+			),*/
 		);
 
 		$consignments = $this->get_order_shipments( $order );
