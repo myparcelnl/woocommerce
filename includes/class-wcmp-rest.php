@@ -109,6 +109,7 @@ class WC_MyParcelBE_REST_Client
 	}
 
 	public function request($url, $method = "GET", $headers = array(), $post, $body = null, $raw = false) {
+
 		// Set the method and related options
 		switch ($method) {
 			case "PUT":
@@ -136,9 +137,8 @@ class WC_MyParcelBE_REST_Client
 		if (isset($f) && is_resource($f)) {
 			@fclose($f);
 		}
-
-		$status = $response->response->code;
-		$body = $response->body;
+		$status = $response['response']['code'];
+		$body = $response['body'];
 
 		if ($raw !== true) {
 			$body = json_decode($body, true); // The second parameter set to true returns objects as associative arrays

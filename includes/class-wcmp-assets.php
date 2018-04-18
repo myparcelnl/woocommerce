@@ -105,29 +105,6 @@ class WooCommerce_MyParcelBE_Assets {
 			}
 		}
 	}
-
-	/**
-	 * @return string
-	 */
-	private function get_label_position()
-	{
-		$generalSettings = WooCommerce_MyParcel()->general_settings;
-
-		if ($generalSettings['label_format'] == 'A4') {
-			return isset($generalSettings['print_position_offset']) ? $generalSettings['print_position_offset'] : '';
-		}
-
-		return '';
-	}
-
-	private function get_download_display()
-	{
-		if (isset(WooCommerce_MyParcel()->general_settings['download_display'])) {
-			return WooCommerce_MyParcel()->general_settings['download_display'];
-		}
-
-		return '';
-	}
 }
 
 endif; // class_exists

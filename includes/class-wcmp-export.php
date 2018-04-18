@@ -215,7 +215,7 @@ class WooCommerce_MyParcelBE_Export {
 					$api = $this->init_api();
 					$response = $api->add_shipments( $shipments );
 					$this->log("API response (order {$order_id}):\n".var_export($response, true));
-					// echo '<pre>';var_dump($response);echo '</pre>';die();
+
 					if (isset($response['body']['data']['ids'])) {
 						$ids = array_shift($response['body']['data']['ids']);
 						$shipment_id = $ids['id'];
@@ -301,7 +301,6 @@ class WooCommerce_MyParcelBE_Export {
 			}
 
 		}
-		// echo '<pre>';var_dump($success);echo '</pre>';die();
 
 		return $return;
 	}
@@ -320,7 +319,6 @@ class WooCommerce_MyParcelBE_Export {
 				$portrait_positions = array( 2, 4, 1, 3 ); // positions are defined on landscape, but paper is filled portrait-wise
 				$params['positions'] = implode( ';', array_slice($portrait_positions,$offset) );
 			}
-
 
 			if (isset($label_response_type) && $label_response_type == 'url') {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
@@ -414,7 +412,7 @@ class WooCommerce_MyParcelBE_Export {
 			$shipment = array(
 				'recipient' => $this->get_recipient( $order ),
 				'options'	=> $this->get_options( $order ),
-				'carrier'	=> 1, // default to bpost for now
+				'carrier'	=> 2, // default to bpost for now
 			);
 
 			if ( $pickup = $this->is_pickup( $order ) ) {
@@ -528,14 +526,14 @@ class WooCommerce_MyParcelBE_Export {
 					'company'		=> (string) WCX_Order::get_prop( $order, 'billing_company' ),
 					'street'		=> (string) WCX_Order::get_meta( $order, '_billing_street_name' ),
 					'number'		=> (string) WCX_Order::get_meta( $order, '_billing_house_number' ),
-					'number_suffix' => (string) WCX_Order::get_meta( $order, '_billing_house_number_suffix' ),
+					'box_number' => (string) WCX_Order::get_meta( $order, '_billing_house_number_suffix' ),
 					'postal_code'	=> (string) WCX_Order::get_prop( $order, 'billing_postcode' ),
 				);
 			} else {
 				$address_intl = array(
 					'street'		=> (string) WCX_Order::get_meta( $order, '_shipping_street_name' ),
 					'number'		=> (string) WCX_Order::get_meta( $order, '_shipping_house_number' ),
-					'number_suffix' => (string) WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ),
+					'box_number' => (string) WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ),
 					'postal_code'	=> (string) WCX_Order::get_prop( $order, 'shipping_postcode' ),
 				);
 			}
@@ -625,20 +623,6 @@ class WooCommerce_MyParcelBE_Export {
 		// always enable signature on receipt
 		if ( $this->is_pickup( $order, $myparcelbe_delivery_options ) ) {
 			$options['signature'] = 1;
-		}
-
-		// delivery date (postponed delivery & pickup)
-		if ($delivery_date = $this->get_delivery_date( $order, $myparcelbe_delivery_options ) ) {
-			$date_time = explode(' ', $delivery_date); // split date and time
-			// only add if date is in the future
-			$timestamp = strtotime($date_time[0]);
-
-			if ( $timestamp < time() ) {
-                $new_timestamp= $this->get_next_delivery_day($timestamp);
-                $delivery_date = date( 'Y-m-d h:i:s', $new_timestamp );
-			}
-
-			$options['delivery_date'] = $delivery_date;
 		}
 
         // options signed & recipient only
