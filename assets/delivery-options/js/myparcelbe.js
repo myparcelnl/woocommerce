@@ -493,7 +493,8 @@ MyParcel = {
     {
         var html = "";
         $.each(deliveryOptions.data.pickup, function(key, value){
-            html += '<option value="' + value.location_code + '">' + value.location + ', ' + value.street + ' ' + value.number + ", " + value.city + " (" + parseFloat(Math.round(value.distance)/1000).toFixed(2)  + " KM) </option>\n";
+            var distance = parseFloat(Math.round(value.distance)/1000).toFixed(2) + ' KM';
+            html += '<option value="' + value.location_code + '">' + value.location + ', ' + value.street + ' ' + value.number + ", " + value.city + " (" + distance + ") </option>\n";
         });
         $('#mypa-pickup-location').html(html);
         $('#mypa-pickup-location-selector').show();
