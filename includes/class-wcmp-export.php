@@ -320,7 +320,6 @@ class WooCommerce_MyParcel_Export {
 				$params['positions'] = implode( ';', array_slice($portrait_positions,$offset) );
 			}
 
-
 			if (isset($label_response_type) && $label_response_type == 'url') {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
 				$this->add_myparcel_note($shipment_ids, $order_ids);

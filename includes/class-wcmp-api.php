@@ -155,9 +155,13 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 			)
 		);
 
-		$request_url = add_query_arg( $params, $this->APIURL . $endpoint . '/' . implode(';', $ids) );
+		$positions = isset($params['positions']) ? $params['positions'] : null;
+
+		$label_format_url = $this->get_label_format_url($positions);
+		$request_url = $this->APIURL . $endpoint . '/' . implode(';', $ids) . '?' . $label_format_url;
+
 		$response = $this->get($request_url, $headers, $raw);
-		
+
 		return $response;
 	}
 
@@ -190,7 +194,6 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 	 */
 	public function get_delivery_options ( $params = array(), $raw = false ) {
 		$endpoint = 'delivery_options';
-		$checkout_settings = WooCommerce_MyParcel()->checkout_settings;
 		if (isset(WooCommerce_MyParcel()->checkout_settings['monday_delivery']) ) {
 			$params['monday_delivery'] = 1;
 		}
@@ -219,7 +222,20 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
 		return $userAgent;
 	}
 
+	private function get_label_format_url( $positions ) {
 
+		$generalSettings = WooCommerce_MyParcel()->general_settings;
+
+		if ( $generalSettings['label_format'] == 'A4') {
+			return 'format=A4&positions=' . $positions;
+		}
+
+		if ( $generalSettings['label_format'] == 'A6' ) {
+			return 'format=A6';
+		}
+
+		return '';
+	}
 }
 
 endif; // class_exists
