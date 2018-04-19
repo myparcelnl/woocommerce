@@ -5,7 +5,7 @@ Plugin URI: http://www.postnl.nl
 Description: Export your WooCommerce orders to PostNL (www.postnl.nl) and print labels directly from the WooCommerce admin
 Author: PostNL
 Author URI: http://www.wpovernight.com
-Version: 2.5.1
+Version: 2.5.2
 Text Domain: woocommerce-postnl
 
 License: GPLv3 or later
