@@ -70,7 +70,7 @@ jQuery( function( $ ) {
 		}
 	});
 
-	// hide automatic barcode in note titel if barcode in note is not enabled
+	// hide automatic titel before the barcode if barcode in note is not enabled
     $('.wcmp_shipment_options input#barcode_in_note').change(function () {
         var barcode_in_note_select = $( '.wcmp_shipment_options select.barcode_in_note_titel');
         if (this.checked) {
