@@ -477,6 +477,22 @@ msgstr "Automatische orderstatus"
 msgid "Keep old shipments"
 msgstr "Bewaar oude zendingen"
 
+#: includes/class-wcmp-settings.php:264
+msgid "Place barcode inside note"
+msgstr "Bewaar barcode in een notitie"
+
+#: includes/class-wcmp-settings.php:264
+msgid "Place the barcode inside a note of the order"
+msgstr "Plaats de barcode in een notitie van een order"
+
+#: includes/class-wcmp-settings.php:264
+msgid "Titel before the barcode"
+msgstr "Titel voor de barcode"
+
+#: includes/class-wcmp-settings.php:264
+msgid "You can change the text before the barcode inside an note"
+msgstr "Je kan de tekst veranderen voor de barcode in een notitie"
+
 #: includes/class-wcmp-settings.php:272
 msgid ""
 "With this option enabled, data from previous shipments (track & trace links) "

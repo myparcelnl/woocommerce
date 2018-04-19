@@ -460,6 +460,22 @@ msgstr ""
 msgid "Keep old shipments"
 msgstr ""
 
+#: includes/class-wcmp-settings.php:264
+msgid "Place barcode inside note"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:264
+msgid "Place the barcode inside a note of the order"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:264
+msgid "Titel before the barcode"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:264
+msgid "You can change the text before the barcode inside an note"
+msgstr ""
+
 #: includes/class-wcmp-settings.php:272
 msgid ""
 "With this option enabled, data from previous shipments (track & trace links) "
