@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9.4
-Stable tag: 2.5.2
+Stable tag: 2.5.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -88,10 +88,6 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 5. postnl information on the order details page
 
 == Changelog ==
-
-= 2.5.2 (2018-04-19) =
-* Fix: Select mailbox package when it is chosen
-* Improvement: Support Effect Connect (barcode inside note)
 
 = 2.5.1 (2018-03-27) =
 * Improvement: WooCommerce 3.3.x compatibility
