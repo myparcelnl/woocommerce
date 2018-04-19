@@ -578,7 +578,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
 
         // options signed & recipient only
 		$postnl_signed = WCX_Order::get_meta( $order, '_postnl_signed' );
-		if (!empty($postnl__signed)) {
+		if (!empty($postnl_signed)) {
 			$options['signature'] = 1;
 		}
 		$postnl_only_recipient = WCX_Order::get_meta( $order, '_postnl_only_recipient' );
