@@ -493,12 +493,12 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
 	     */
 	    public function add_postnl_note_to_shipments($selected_shipment_ids, $order_ids){
 
-			if ( ! isset(WooCommerce_MyParcel()->general_settings['barcode_in_note'])) {
+			if ( ! isset(WooCommerce_PostNL()->general_settings['barcode_in_note'])) {
 				return;
 			}
 
-			// Select the barcode text of the MyParcel settings
-			$this->prefix_message = WooCommerce_MyParcel()->general_settings['barcode_in_note_titel'];
+			// Select the barcode text of the PostNL settings
+			$this->prefix_message = WooCommerce_PostNL()->general_settings['barcode_in_note_titel'];
 
 			foreach ( $order_ids as $order_id ) {
 				$order = WCX::get_order( $order_id );
