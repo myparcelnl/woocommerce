@@ -11,7 +11,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
         public $order_id;
         public $success;
         public $errors;
-		private $prefix_message;
+        private $prefix_message;
         /**
          * Construct.
          */
