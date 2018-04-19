@@ -18,7 +18,7 @@ if ( !class_exists( 'WooCommerce_PostNL' ) ) :
 
 class WooCommerce_PostNL {
 
-	public $version = '2.5.1';
+	public $version = '2.5.2';
 	public $plugin_basename;
 
 	protected static $_instance = null;
