@@ -287,7 +287,7 @@ class WooCommerce_PostNL_Settings {
 		);
 
         add_settings_field(
-			'barcode_in_note',
+                'barcode_in_note',
 			__( 'Place barcode inside note', 'woocommerce-postnl' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
