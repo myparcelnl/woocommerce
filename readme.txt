@@ -1,7 +1,7 @@
 === Plugin Name ===
 Tags: woocommerce, export, myparcel Belgium
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.9.2
+Tested up to: 4.9.5
 Stable tag: 2.4.9
 
 License: GPLv3 or later
@@ -20,8 +20,7 @@ This WooCommerce extension allows you to export your orders to the MyParcel Belg
 - Export your WooCommerce orders to MyParcel Belgium with a simple click, single orders or in batch
 - Print shipping labels directly (PDF)
 - Create multiple shipments for the same order
-- Choose your package type (Parcel, mailbox package or unpaid letter)
-- Define preset MyParcel shipping options (signature required, extra insurance, Saturday delivery)
+- Define preset MyParcel Belgium shipping options (signature required, extra insurance, Saturday delivery)
 - Modify the MyParcel Belgium shipping options per order before exporting
 - Extra checkout fields to separate street name, house number and box number for more precise address data
 - View the status of the shipment in the order details page

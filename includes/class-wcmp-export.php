@@ -324,7 +324,7 @@ class WooCommerce_MyParcelBE_Export {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
 
 				$this->log("API response:\n".var_export($response, true));
-				// var_dump( $response );
+
 				if (isset($response['body']['data']['pdfs']['url'])) {
 					$url = untrailingslashit( $api->APIURL ) . $response['body']['data']['pdfs']['url'];
 					$return['url'] = $url;
@@ -417,13 +417,16 @@ class WooCommerce_MyParcelBE_Export {
 
 			if ( $pickup = $this->is_pickup( $order ) ) {
 				// $pickup_time = array_shift($pickup['time']); // take first element in time array
+
 				$shipment['pickup'] = array(
 					'postal_code'	=> $pickup['postal_code'],
 					'street'		=> $pickup['street'],
 					'city'			=> $pickup['city'],
 					'number'		=> $pickup['number'],
 					'location_name'	=> $pickup['location'],
+					'location_code' => $pickup['location_code'],
 				);
+
 			}
 
 			$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
