@@ -550,8 +550,8 @@ MyParcel = {
 
                 $.each(value, function(key2, times){
                     html +=  '<span class="mypa-time">' + times + '</span>';
-
                 });
+                
                 html += "<br>";
             });
         $('#mypa-location-details').html(html);
