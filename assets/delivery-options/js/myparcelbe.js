@@ -703,7 +703,6 @@ MyParcel = {
 
                     MyParcel.showDeliveryDates(data);
                     MyParcel.storeDeliveryOptions = data;
-                   // $('#mypa-deliver-pickup-deliver').click();
                 }
             })
             .fail(function(){
