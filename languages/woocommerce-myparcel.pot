@@ -473,11 +473,11 @@ msgid "Barcode in note"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:299
-msgid "Place the track&trace code inside a note, of the order"
+msgid "Place the barcode inside a note of the order"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:305
-msgid "Barcode in note titel"
+msgid "Text before the barcode"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:279
