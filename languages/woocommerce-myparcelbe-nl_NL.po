@@ -68,16 +68,12 @@ msgid "Status"
 msgstr "Status"
 
 #: includes/class-wcmp-admin.php:373
-msgid "MyParcelbe shipment:"
-msgstr "MyParcelbe zending:"
+msgid "MyParcel BE shipment:"
+msgstr "MyParcel BE zending:"
 
 #: includes/class-wcmp-admin.php:407
 msgid "Delivery date"
 msgstr "Bezorgdatum"
-
-#: includes/class-wcmp-admin.php:413 includes/class-wcmp-frontend.php:362
-msgid "bpost Pickup"
-msgstr "Afhalen bij bpost"
 
 #: includes/class-wcmp-frontend.php:514
 msgid "Saturday delivery"
@@ -249,8 +245,8 @@ msgstr "Nr."
 #: includes/class-wcmp-bepostcode-fields.php:411
 #: includes/class-wcmp-bepostcode-fields.php:432
 #: includes/class-wcmp-bepostcode-fields.php:446
-msgid "Suffix"
-msgstr "Toev."
+msgid "Box number"
+msgstr "Box nummer."
 
 #: includes/class-wcmp-bepostcode-fields.php:378
 #: includes/class-wcmp-bepostcode-fields.php:406
@@ -382,8 +378,7 @@ msgstr "Vraag om startpositie bij printen"
 msgid ""
 "This option enables you to continue printing where you left off last time"
 msgstr ""
-"Met deze optie kunt u verder gaan met printen waar je de laatste keer was "
-"gebleven"
+"Met deze optie kunt u verder gaan met printen waar u de laatste keer bent gebleven."
 
 #: includes/class-wcmp-settings.php:199
 msgid "Track&trace in email"
@@ -534,13 +529,10 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:414
 msgid ""
-"The parcel will be offered at the delivery address. If the recipient is not "
-"at home, the parcel will be delivered to the neighbours. In both cases, a "
-"signuture will be required."
+"When the package is presented at the home address, there must be signed for receipt."
 msgstr ""
-"Hier wordt het pakket allereerst op het huisadres aangeboden. Mocht de "
-"geadresseerde niet thuis zijn, dan wordt het pakket bij de buren afgegeven. "
-"Er moet in beide gevallen voor worden getekend."
+"Wanneer het pakket wordt aangeboden op het huisadres dan dient er voor het"
+"ontvangst te worden getekend."
 
 #: includes/class-wcmp-settings.php:440
 msgid ""
@@ -653,13 +645,13 @@ msgstr "Alle verzendmethoden"
 
 #: includes/class-wcmp-settings.php:611
 msgid ""
-"To associate specific shipping methods with parcels, see the Default export "
-"settings tab. Note that the delivery options will be automatically hidden "
-"for foreign addresses, regardless of this setting"
+"You can link the delivery options to specific shipping methods by adding them "
+"to the package type under 'Standard export settings'. The delivery options are "
+"not visible at foreign addresses."
 msgstr ""
-"Je kan de bezorgopties aan specifieke verzendmethoden koppelen door deze bij "
-"'Standaard exportinstellingen' aan de pakkettypes toe te voegen. Bij "
-"buitenlandse adressen zijn de bezorgopties niet zichtbaar."
+"Je kan de bezorgopties aan specifieke verzendmethoden koppelen door deze "
+"bij 'Standaard exportinstellingen' aan het pakkettype toe te voegen. Bij buitenlandse"
+"adressen zijn de bezorgopties niet zichtbaar."
 
 #: includes/class-wcmp-settings.php:665
 msgid "bpost pickup"

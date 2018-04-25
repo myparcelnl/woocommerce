@@ -5,7 +5,7 @@ storeDeliveryOptions	 = [];
 /*  Selector ids or classes to bind address fields from webshop */
 triggerPostalCode        = '#billing_postcode';
 triggerHouseNumber	 = '#billing_house_number';
-triggerHouseNumberExtra  = '#billing_house_number_suffix';
+triggerHouseNumberExtra  = '#billing_box_number';
 triggerStreetName	 = '#billing_street_name';
 
 /* Text and translations */

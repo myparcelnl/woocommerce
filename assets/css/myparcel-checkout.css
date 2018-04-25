@@ -30,14 +30,6 @@
  * Styling delivery options
  */
 
-
-.mypa-fieldset {
-	border-radius: 3px;
-	border: 0;
-	padding: 0;
-	margin: 0;
-}
-
 .mypa-time {
 	margin-left: 5px;
 }
@@ -92,15 +84,19 @@
 #mypa-delivery-option-form li,
 #mypa-delivery-selectors-be li {
 	list-style-type: none;
-	padding: 2px 0px 20px 0px;
-	height: 2em;
+	padding: 2px 0px 0px 0px;
+}
+#mypa-pickup-location-selector{
+	margin-top: 30px;
 }
 
 #mypa-delivery-option-form label,
 #mypa-delivery-selectors-be label {
 	display: inline-block;
 	width: 80%;
-	height: 2em;
+}
+#mypa-error-try-again{
+	margin-top: 18px;
 }
 
 #mypa-delivery-selectors-be div {
@@ -110,9 +106,6 @@
 
 #mypa-pickup-location {
 	width: 80%;
-}
-#mypa-pickup-location-selector {
-	margin: 50px 0 50px 0;
 }
 
 #mypa-pickup-selector li{
@@ -175,13 +168,11 @@
 
 #mypa-message {
 	z-index: 999;
-	position: absolute;
 	display: none;
 	padding: 20px;
 	background-color: white;
 	border: 1px solid black;
 	border-radius: 3px;
-	position: absolute;
 	margin: 0;
 }
 
@@ -208,6 +199,15 @@
 	height: 40px;
 	border-bottom: 1px solid black;
 	margin: 0px 0px 20px 0px;
+}
+.fa-clock {
+	width: 16px;
+	margin-bottom: -3px;
+}
+
+.fa-times{
+	width: 16px;
+	float: right;
 }
 
 @keyframes spin {

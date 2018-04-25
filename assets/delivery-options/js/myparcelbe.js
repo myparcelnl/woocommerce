@@ -106,6 +106,19 @@ MyParcel = {
 
             // @TODO when the bug is fixed inside the api request the  pickupData.price_comment = 'retail'; delete
             pickupData.price_comment = 'retail';
+
+            /**
+             * get next delivery date for pickup
+             */
+            var nextDeliveryDate = MyParcel.storeDeliveryOptions.data.delivery[0].date;
+            var dateObj = MyParcel.dateToObject(nextDeliveryDate);
+
+            if(dateObj.getDay() === 6) {
+                nextDeliveryDate = MyParcel.storeDeliveryOptions.data.delivery[1].date;
+            }
+
+            pickupData.date = nextDeliveryDate;
+
             $('#mypa-post-be-data').val(JSON.stringify(pickupData));
 
             MyParcel.hideDelivery();
@@ -242,6 +255,7 @@ MyParcel = {
     {
         $('#mypa-message').hide();
         $('#mypa-message').html(' ');
+        $('#mypa-delivery-option-form').show();
     },
 
     /*
@@ -255,6 +269,7 @@ MyParcel = {
     {
         $('#mypa-message').html(message);
         $('#mypa-message').show();
+        $('#mypa-delivery-option-form').hide();
     },
 
     /*
@@ -478,7 +493,8 @@ MyParcel = {
     {
         var html = "";
         $.each(deliveryOptions.data.pickup, function(key, value){
-            html += '<option value="' + value.location_code + '">' + value.location + ', ' + value.street + ' ' + value.number + ", " + value.city + " (" + value.distance  + " M) </option>\n";
+            var distance = parseFloat(Math.round(value.distance)/1000).toFixed(2) + ' KM';
+            html += '<option value="' + value.location_code + '">' + value.location + ', ' + value.street + ' ' + value.number + ", " + value.city + " (" + distance + ") </option>\n";
         });
         $('#mypa-pickup-location').html(html);
         $('#mypa-pickup-location-selector').show();
@@ -514,21 +530,28 @@ MyParcel = {
             startTime = startTime.slice(0,-3);
         }
 
-
-        html += '<span class="mypa-pickup-location-details-location"><h3>' + currentLocation.location  + '</h3></span>'
+        html +='<svg class="svg-inline--fa fa-times fa-w-12" aria-hidden="true" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M323.1 441l53.9-53.9c9.4-9.4 9.4-24.5 0-33.9L279.8 256l97.2-97.2c9.4-9.4 9.4-24.5 0-33.9L323.1 71c-9.4-9.4-24.5-9.4-33.9 0L192 168.2 94.8 71c-9.4-9.4-24.5-9.4-33.9 0L7 124.9c-9.4 9.4-9.4 24.5 0 33.9l97.2 97.2L7 353.2c-9.4 9.4-9.4 24.5 0 33.9L60.9 441c9.4 9.4 24.5 9.4 33.9 0l97.2-97.2 97.2 97.2c9.3 9.3 24.5 9.3 33.9 0z"></path></svg>';
+        html += '<span class="mypa-pickup-location-details-location"><h3>' + currentLocation.location  + '</h3></span>';
         html += '<span class="mypa-pickup-location-details-street">' + currentLocation.street + '&nbsp;' + currentLocation.number + '</span>';
         html += '<span class="mypa-pickup-location-details-city">' + currentLocation.postal_code + '&nbsp;' + currentLocation.city + '</span>';
         if(currentLocation.phone_number){
             html += '<span class="mypa-pickup-location-details-phone">&nbsp;' + currentLocation.phone_number  + '</span>'
         }
-        html += '<span class="mypa-pickup-location-details-time">Ophalen vanaf:&nbsp;' + startTime + '</span>'
+        html += '<span class="mypa-pickup-location-details-time">Ophalen vanaf:&nbsp;' + startTime + ' uur </span>'
         html += '<h3>Openingstijden</h3>';
         $.each(
             currentLocation.opening_hours, function(weekday, value){
-                html += '<span class="mypa-pickup-location-details-day">' + translateENtoNL[weekday] + "</span> ";
+
+                html += '<span class="mypa-pickup-location-details-day">' + translateENtoNL[weekday] + "</span> "
+
+                if(value[0] === undefined ){
+                    html +=  '<span class="mypa-time">Gesloten</span>';
+                }
+
                 $.each(value, function(key2, times){
-                    html +=  '<span class="mypa-time">' + times + "</span>";
+                    html +=  '<span class="mypa-time">' + times + '</span>';
                 });
+                
                 html += "<br>";
             });
         $('#mypa-location-details').html(html);
@@ -591,7 +614,7 @@ MyParcel = {
     showRetry: function()
     {
         MyParcel.showMessage(
-            '<h3>Huisnummer/postcode combinatie onbekend</h3>' +
+            '<h4>Huisnummer en/of postcode onbekend</h4>' +
             '<div class="full-width mypa-error">'+
             '<label for="mypa-error-postcode">Postcode</label>' +
             '<input type="text" name="mypa-error-postcode" id="mypa-error-postcode" value="'+$(triggerPostalCode).val() + '">' +
@@ -659,8 +682,7 @@ MyParcel = {
             .done(function(data){
                 if(data.errors){
                     $.each(data.errors, function(key, value){
-                        /* Postalcode housenumber combination not found or not
-                   recognised. */
+                        /* Postalcode housenumber combination not found or not recognised. */
                         if(value.code == '3212' || value.code == '3505'){
                             MyParcel.showRetry();
                         }
@@ -674,10 +696,13 @@ MyParcel = {
 
                 /* No errors */
                 else {
-                    MyParcel.showPickUpLocations(data);
+                    MyParcel.hidePickUpLocations();
+                    if(myParcelConfig.allowPickup) {
+                        MyParcel.showPickUpLocations(data);
+                    }
+
                     MyParcel.showDeliveryDates(data);
                     MyParcel.storeDeliveryOptions = data;
-                    $('#mypa-deliver-pickup-deliver').click();
                 }
             })
             .fail(function(){

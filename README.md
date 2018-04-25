@@ -12,7 +12,7 @@ This WooCommerce extension allows you to export your orders to the MyParcel BE s
 - Choose your package type (Parcel, mailbox package or unpaid letter)
 - Define preset MyParcel BE shipping options (signature required, extra insurance, etc.)
 - Modify the MyParcel BE shipping options per order before exporting
-- Extra checkout fields to separate street name, house number and house number suffix for more precise address data
+- Extra checkout fields to separate street name, house number and box number for more precise address data
 - View the status of the shipment in the order details page
 - Add track&trace link to the order confirmation email
 

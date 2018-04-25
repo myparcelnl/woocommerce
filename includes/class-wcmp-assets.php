@@ -45,10 +45,10 @@ class WooCommerce_MyParcelBE_Assets {
 				wp_enqueue_script( 'woocommerce_admin' );
 				wp_enqueue_script( 'iris' );
 				if (!wp_script_is( 'wc-enhanced-select', 'registered' )) {
-					$suffix       = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+					$box_number       = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 					wp_register_script(
 						'wc-enhanced-select',
-						WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js',
+						WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $box_number . '.js',
 						array(
 							'jquery',
 							version_compare( WC()->version, '3.2.0', '>=' ) ? 'selectWoo' : 'select2',
@@ -104,29 +104,6 @@ class WooCommerce_MyParcelBE_Assets {
 				);
 			}
 		}
-	}
-
-	/**
-	 * @return string
-	 */
-	private function get_label_position()
-	{
-		$generalSettings = WooCommerce_MyParcel()->general_settings;
-
-		if ($generalSettings['label_format'] == 'A4') {
-			return isset($generalSettings['print_position_offset']) ? $generalSettings['print_position_offset'] : '';
-		}
-
-		return '';
-	}
-
-	private function get_download_display()
-	{
-		if (isset(WooCommerce_MyParcel()->general_settings['download_display'])) {
-			return WooCommerce_MyParcel()->general_settings['download_display'];
-		}
-
-		return '';
 	}
 }
 

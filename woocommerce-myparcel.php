@@ -215,7 +215,6 @@ class WooCommerce_MyParcelBE {
 
 			// map old key => new_key
 			$general_settings_keys = array(
-				'api_key'				=> 'api_key',
 				'download_display'		=> 'download_display',
 				'email_tracktrace'		=> 'email_tracktrace',
 				'myaccount_tracktrace'	=> 'myaccount_tracktrace',

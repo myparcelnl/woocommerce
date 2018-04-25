@@ -94,6 +94,14 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 			return WC()->customer->get_shipping_country();
 		}
 
+
+		/**
+		 * @return bool
+		 */
+		public function is_pickup_enabled() {
+			return (bool) $this->settings['pickup_enabled'];
+		}
+
 		/**
 		 * @return mixed
 		 */

@@ -190,11 +190,11 @@ class WooCommerce_MyParcelBE_Admin {
 				'img'		=> WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-pdf.png',
 				'alt'		=> esc_attr__( 'Print MyParcel BE label', 'woocommerce-myparcelbe' ),
 			),
-			'add_return'	=> array (
+			/*'add_return'	=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&request=add_return&order_ids=' . $order_id ), 'wc_myparcelbe' ),
 				'img'		=> WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-retour.png',
 				'alt'		=> esc_attr__( 'Email return label', 'woocommerce-myparcelbe' ),
-			),
+			),*/
 		);
 
 		$consignments = $this->get_order_shipments( $order );
@@ -381,7 +381,7 @@ class WooCommerce_MyParcelBE_Admin {
 			return;
 		}
 
-		echo '<div style="clear:both;"><strong>' . __( 'MyParcelbe shipment:', 'woocommerce-myparcelbe' ) . '</strong><br/>';
+		echo '<div style="clear:both;"><strong>' . __( 'MyParcel BE shipment:', 'woocommerce-myparcelbe' ) . '</strong><br/>';
 		$this->order_list_shipment_options( $order, false );
 		echo '</div>';
 	}
@@ -394,8 +394,8 @@ class WooCommerce_MyParcelBE_Admin {
 		}
 
 		echo '<div class="delivery-options">';
-		if (!empty($date)) {
-			$formatted_date = date_i18n( apply_filters( 'wcmyparcelbe_delivery_date_format', wc_date_format() ), strtotime( $date ) );
+		if ($delivery_date = WooCommerce_MyParcelBE()->export->get_delivery_date( $order ) ) {
+			$formatted_date = date_i18n( apply_filters( 'wcmyparcelbe_delivery_date_format', wc_date_format() ), strtotime( $delivery_date ) );
 			if (!empty($time)) {
 				$time = array_shift($time); // take first element in time array
 				if (isset($time['price_comment'])) {
@@ -414,7 +414,7 @@ class WooCommerce_MyParcelBE_Admin {
 		if ( $pickup = WooCommerce_MyParcelBE()->export->is_pickup( $order, $delivery_options ) ) {
 			switch ($pickup['price_comment']) {
 				case 'retail':
-					$title = __( 'bpost Pickup', 'woocommerce-myparcelbe' );
+					$title = __( 'bpost pickup', 'woocommerce-myparcelbe' );
 					break;
 			}
 

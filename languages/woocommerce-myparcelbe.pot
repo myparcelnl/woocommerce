@@ -68,7 +68,7 @@ msgid "Status"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:373
-msgid "MyParcelbe shipment:"
+msgid "MyParcel BE shipment:"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:407
@@ -249,7 +249,7 @@ msgstr ""
 #: includes/class-wcmp-bepostcode-fields.php:411
 #: includes/class-wcmp-bepostcode-fields.php:432
 #: includes/class-wcmp-bepostcode-fields.php:446
-msgid "Suffix"
+msgid "Box number"
 msgstr ""
 
 #: includes/class-wcmp-bepostcode-fields.php:378
@@ -503,9 +503,7 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:414
 msgid ""
-"The parcel will be offered at the delivery address. If the recipient is not "
-"at home, the parcel will be delivered to the neighbours. In both cases, a "
-"signuture will be required."
+"When the package is presented at the home address, it must be signed for receipt."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:440
@@ -600,9 +598,9 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:611
 msgid ""
-"To associate specific shipping methods with parcels, see the Default export "
-"settings tab. Note that the delivery options will be automatically hidden "
-"for foreign addresses, regardless of this setting"
+"You can link the delivery options to specific shipping methods by adding them "
+"to the package type under 'Standard export settings'. The delivery options are "
+"not visible at foreign addresses."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:665

@@ -481,7 +481,7 @@ class WooCommerce_MyParcelBE_Settings {
 					'selected_methods'	=> __( 'Shipping methods associated with Parcels' , 'woocommerce-myparcelbe' ),
 					'all_methods'		=> __( 'All shipping methods' , 'woocommerce-myparcelbe' ),
 				),
-				'description'	=> __( 'To associate specific shipping methods with parcels, see the Default export settings tab. Note that the delivery options will be automatically hidden for foreign addresses, regardless of this setting', 'woocommerce-myparcelbe' ),
+				'description'	=> __( 'You can link the delivery options to specific shipping methods by adding them to the package types under \'Standard export settings\'. The delivery options are not visible at foreign addresses.', 'woocommerce-myparcelbe' ),
 			)
 		);
 
@@ -494,6 +494,8 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'signed',
+				'size'			=> '2',
+				'type'			=> 'number',
 			)
 		);
 
@@ -506,6 +508,7 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'pickup',
+				'type'			=> 'number',
 			)
 		);
 
@@ -518,6 +521,7 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'saturday_delivery',
+				'type'			=> 'number',
 			)
 		);
 
