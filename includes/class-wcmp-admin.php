@@ -238,6 +238,17 @@ class WooCommerce_MyParcel_Admin {
 					'tracktrace'	=> WCX_Order::get_meta( $order, '_myparcel_tracktrace' ),
 				),
 			);
+		} elseif( $legacy_consignments = WCX_Order::get_meta( $order, '_myparcel_consignments' ) ) {
+			// legacy consignment data (v1.5)
+			$consignments = array();
+			foreach ( $legacy_consignments as $consignment ) {
+				if (isset($consignment['consignment_id'])) {
+					$consignments[] = array(
+						'shipment_id'	=> $consignment['consignment_id'],
+						'tracktrace'	=> $consignment['tracktrace'],
+					);
+				}
+			}
 		} else {
 			$consignments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
 		}
@@ -475,7 +486,7 @@ class WooCommerce_MyParcel_Admin {
 
 	public function get_tracktrace_shipments ( $order_id ) {
 		$order = WCX::get_order( $order_id );
-		$shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+		$shipments = $this->get_order_shipments( $order, true );
 
 		if (empty($shipments)) {
 			return false;
