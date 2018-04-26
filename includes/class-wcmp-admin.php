@@ -230,27 +230,28 @@ class WooCommerce_MyParcel_Admin {
 		if (empty($order)) {
 			return;
 		}
-		$consignment_id = WCX_Order::get_meta( $order, '_myparcel_consignment_id' );
-		if ( $consignment_id ) {
-			$consignments = array(
-				array(
-					'shipment_id'	=> $consignment_id,
-					'tracktrace'	=> WCX_Order::get_meta( $order, '_myparcel_tracktrace' ),
-				),
-			);
-		} elseif( $legacy_consignments = WCX_Order::get_meta( $order, '_myparcel_consignments' ) ) {
-			// legacy consignment data (v1.5)
-			$consignments = array();
-			foreach ( $legacy_consignments as $consignment ) {
-				if (isset($consignment['consignment_id'])) {
-					$consignments[] = array(
-						'shipment_id'	=> $consignment['consignment_id'],
-						'tracktrace'	=> $consignment['tracktrace'],
-					);
+
+		$consignments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+		// fallback to legacy consignment data (v1.X)
+		if (empty($consignments)) {
+			if ( $consignment_id = WCX_Order::get_meta( $order, '_myparcel_consignment_id' ) ) {
+				$consignments = array(
+					array(
+						'shipment_id'	=> $consignment_id,
+						'tracktrace'	=> WCX_Order::get_meta( $order, '_myparcel_tracktrace' ),
+					),
+				);
+			} elseif( $legacy_consignments = WCX_Order::get_meta( $order, '_myparcel_consignments' ) ) {
+				$consignments = array();
+				foreach ( $legacy_consignments as $consignment ) {
+					if (isset($consignment['consignment_id'])) {
+						$consignments[] = array(
+							'shipment_id'	=> $consignment['consignment_id'],
+							'tracktrace'	=> $consignment['tracktrace'],
+						);
+					}
 				}
 			}
-		} else {
-			$consignments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
 		}
 
 		if (empty($consignments) || !is_array($consignments)) {
