@@ -92,6 +92,7 @@ class WooCommerce_MyParcel_Admin {
 			$order_has_shipment = true;
 			$tracktrace_url = $this->get_tracktrace_url( $order_id, $shipment['tracktrace']);
 		}
+		$package_types = WooCommerce_MyParcel()->export->get_package_types();
 
 		include('views/wcmp-order-shipment-summary.php');
 		die();
