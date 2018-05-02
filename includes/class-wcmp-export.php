@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( !class_exists( 'WooCommerce_MyParcelBE_Export' ) ) :
 
 class WooCommerce_MyParcelBE_Export {
+	const package_type = 1;
+
 	public $order_id;
 	public $success;
 	public $errors;
@@ -213,7 +215,7 @@ class WooCommerce_MyParcelBE_Export {
 					$api = $this->init_api();
 					$response = $api->add_shipments( $shipments );
 					$this->log("API response (order {$order_id}):\n".var_export($response, true));
-					// echo '<pre>';var_dump($response);echo '</pre>';die();
+
 					if (isset($response['body']['data']['ids'])) {
 						$ids = array_shift($response['body']['data']['ids']);
 						$shipment_id = $ids['id'];
@@ -299,12 +301,12 @@ class WooCommerce_MyParcelBE_Export {
 			}
 
 		}
-		// echo '<pre>';var_dump($success);echo '</pre>';die();
 
 		return $return;
 	}
 
 	public function get_shipment_labels( $shipment_ids, $order_ids = array(), $label_response_type = NULL, $offset = 0 ) {
+
 		$return = array();
 
 		$this->log("*** Label request started ***");
@@ -320,14 +322,16 @@ class WooCommerce_MyParcelBE_Export {
 
 			if (isset($label_response_type) && $label_response_type == 'url') {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
+
 				$this->log("API response:\n".var_export($response, true));
-				// var_dump( $response );
+
 				if (isset($response['body']['data']['pdfs']['url'])) {
 					$url = untrailingslashit( $api->APIURL ) . $response['body']['data']['pdfs']['url'];
 					$return['url'] = $url;
 				} else {
 					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcelbe' );
 				}
+
 			} else {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'pdf' );
 
@@ -345,14 +349,17 @@ class WooCommerce_MyParcelBE_Export {
 					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcelbe' );
 				}
 
-				// echo '<pre>';var_dump($response);echo '</pre>';die();
+				 //echo '<pre>';var_dump($response);echo '</pre>';die();
 			}
+
 		} catch (Exception $e) {
 			$this->errors[] = $e->getMessage();
 		}
 
 		return $return;
 	}
+
+
 
 	public function get_labels( $order_ids, $label_response_type = NULL, $offset = 0 ) {
 		$shipment_ids = $this->get_shipment_ids( $order_ids, array( 'only_last' => true ) );
@@ -362,6 +369,7 @@ class WooCommerce_MyParcelBE_Export {
 			$this->errors[] = __( 'The selected orders have not been exported to MyParcelbe yet!', 'woocommerce-myparcelbe' );
 			return array();
 		}
+		
 
 		return $this->get_shipment_labels( $shipment_ids, $order_ids, $label_response_type, $offset );
 	}
@@ -384,40 +392,6 @@ class WooCommerce_MyParcelBE_Export {
 		die();
 	}
 
-	public function frontend_api_request() {
-		// TODO: check nonce
-		$params = $_REQUEST;
-
-		// filter non API params
-		$api_params = array(
-			'cc'					=> '',
-			'postal_code'			=> '',
-			'number'				=> '',
-			'carrier'				=> '',
-			'delivery_time'			=> '',
-			'delivery_date'			=> '',
-			'cutoff_time'			=> '',
-			'dropoff_days'			=> '',
-			'dropoff_delay'			=> '',
-			'deliverydays_window'	=> '',
-			'exclude_delivery_type'	=> '',
-		);
-		$params = array_intersect_key($params, $api_params);
-
-		$api = $this->init_api();
-
-		try {
-			$response = $api->get_delivery_options( $params, true );
-
-			@header('Content-type: application/json; charset=utf-8');
-
-			echo $response['body'];
-		} catch (Exception $e) {
-			@header("HTTP/1.1 503 service unavailable");
-		}
-		die();
-	}
-
 	public function init_api () {
 		// $user = WooCommerce_MyParcelBE()->general_settings['api_username'];
 		if ( !isset(WooCommerce_MyParcelBE()->general_settings['api_key']) ) {
@@ -425,7 +399,7 @@ class WooCommerce_MyParcelBE_Export {
 		}
 
 		$key = WooCommerce_MyParcelBE()->general_settings['api_key'];
-		$api = new WC_MyParcelbe_API( $key );
+		$api = new WC_MyParcelBE_API( $key );
 
 		return $api;
 	}
@@ -438,18 +412,21 @@ class WooCommerce_MyParcelBE_Export {
 			$shipment = array(
 				'recipient' => $this->get_recipient( $order ),
 				'options'	=> $this->get_options( $order ),
-				'carrier'	=> 1, // default to bpost for now
+				'carrier'	=> 2, // default to bpost for now
 			);
 
 			if ( $pickup = $this->is_pickup( $order ) ) {
 				// $pickup_time = array_shift($pickup['time']); // take first element in time array
+
 				$shipment['pickup'] = array(
 					'postal_code'	=> $pickup['postal_code'],
 					'street'		=> $pickup['street'],
 					'city'			=> $pickup['city'],
 					'number'		=> $pickup['number'],
 					'location_name'	=> $pickup['location'],
+					'location_code' => $pickup['location_code'],
 				);
+
 			}
 
 			$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
@@ -541,9 +518,8 @@ class WooCommerce_MyParcelBE_Export {
 			'phone'			=> isset(WooCommerce_MyParcelBE()->export_defaults['connect_phone']) ? WCX_Order::get_prop( $order, 'billing_phone' ) : '',
 		);
 
-
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( $shipping_country == 'NL' ) {
+		if ( $shipping_country == 'BE' ) {
 			// use billing address if old 'pakjegemak' (1.5.6 and older)
 			if ( $pgaddress = WCX_Order::get_meta( $order, '_myparcelbe_pgaddress' ) ) {
 				$billing_name = method_exists($order, 'get_formatted_billing_full_name') ? $order->get_formatted_billing_full_name() : trim( $order->billing_first_name . ' ' . $order->billing_last_name );
@@ -553,14 +529,14 @@ class WooCommerce_MyParcelBE_Export {
 					'company'		=> (string) WCX_Order::get_prop( $order, 'billing_company' ),
 					'street'		=> (string) WCX_Order::get_meta( $order, '_billing_street_name' ),
 					'number'		=> (string) WCX_Order::get_meta( $order, '_billing_house_number' ),
-					'number_suffix' => (string) WCX_Order::get_meta( $order, '_billing_house_number_suffix' ),
+					'box_number' => (string) WCX_Order::get_meta( $order, '_billing_box_number' ),
 					'postal_code'	=> (string) WCX_Order::get_prop( $order, 'billing_postcode' ),
 				);
 			} else {
 				$address_intl = array(
 					'street'		=> (string) WCX_Order::get_meta( $order, '_shipping_street_name' ),
 					'number'		=> (string) WCX_Order::get_meta( $order, '_shipping_house_number' ),
-					'number_suffix' => (string) WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ),
+					'box_number' => (string) WCX_Order::get_meta( $order, '_shipping_box_number' ),
 					'postal_code'	=> (string) WCX_Order::get_prop( $order, 'shipping_postcode' ),
 				);
 			}
@@ -570,6 +546,7 @@ class WooCommerce_MyParcelBE_Export {
 				'street'					=> (string) WCX_Order::get_prop( $order, 'shipping_address_1' ),
 				'street_additional_info'	=> (string) WCX_Order::get_prop( $order, 'shipping_address_2' ),
 				'region'					=> (string) WCX_Order::get_prop( $order, 'shipping_state' ),
+
 			);
 		}
 
@@ -606,10 +583,10 @@ class WooCommerce_MyParcelBE_Export {
 			}
 
 			$options = array(
-				'package_type'		=> $this->get_package_type_for_order( $order ),
-				'signature'			=> (isset(WooCommerce_MyParcelBE()->export_defaults['signature'])) ? 1 : 0,
-				'label_description'	=> $description,
-				'insured_amount'	=> $insured_amount,
+				'package_type'		=>  self::package_type,
+				'signature'			=>  (isset(WooCommerce_MyParcelBE()->export_defaults['signature'])) ? 1 : 0,
+				'label_description'	=>  $description,
+				'insured_amount'	=>  $insured_amount,
 			);
 		}
 
@@ -651,20 +628,6 @@ class WooCommerce_MyParcelBE_Export {
 			$options['signature'] = 1;
 		}
 
-		// delivery date (postponed delivery & pickup)
-		if ($delivery_date = $this->get_delivery_date( $order, $myparcelbe_delivery_options ) ) {
-			$date_time = explode(' ', $delivery_date); // split date and time
-			// only add if date is in the future
-			$timestamp = strtotime($date_time[0]);
-
-			if ( $timestamp < time() ) {
-                $new_timestamp= $this->get_next_delivery_day($timestamp);
-                $delivery_date = date( 'Y-m-d h:i:s', $new_timestamp );
-			}
-
-			$options['delivery_date'] = $delivery_date;
-		}
-
         // options signed & recipient only
 		$myparcelbe_signed = WCX_Order::get_meta( $order, '_myparcelbe_signed' );
 		if (!empty($myparcelbe_signed)) {
@@ -680,17 +643,6 @@ class WooCommerce_MyParcelBE_Export {
 		foreach ($options as $key => &$value) {
 			if ( in_array($key, $int_options) ) {
 				$value = (int) $value;
-			}
-		}
-
-		// disable options for mailbox package and unpaid letter
-		// echo '<pre>';var_dump($package_type);echo '</pre>';die();
-		if ( $options['package_type'] != 1 ) {
-			$illegal_options = array( 'delivery_type', 'signature', 'insurance', 'delivery_date' );
-			foreach ($options as $key => $option) {
-				if (in_array($key, $illegal_options)) {
-					unset($options[$key]);
-				}
 			}
 		}
 
@@ -715,13 +667,7 @@ class WooCommerce_MyParcelBE_Export {
 	}
 
 	public function get_customs_declaration( $order ) {
-		$weight = (int) round( $this->get_parcel_weight( $order ) * 1000 );
 		$invoice = $this->get_invoice_number( $order );
-		$contents = (int) ( (isset(WooCommerce_MyParcelBE()->export_defaults['package_contents'])) ? WooCommerce_MyParcelBE()->export_defaults['package_contents'] : 1 );
-
-		// Item defaults:
-		// Classification
-		$default_hs_code = (isset(WooCommerce_MyParcelBE()->export_defaults['hs_code'])) ? WooCommerce_MyParcelBE()->export_defaults['hs_code'] : '';
 		// Country (=shop base)
 		$country = WC()->countries->get_base_country();
 
@@ -740,35 +686,28 @@ class WooCommerce_MyParcelBE_Export {
 					'amount'	=> (int) round( ( $item['line_total'] + $item['line_tax'] ) * 100 ),
 					'currency'	=> WCX_Order::get_prop( $order, 'currency' ),
 				);
-				// Classification / HS Code
-				$classification = WCX_Product::get_meta( $product, '_myparcelbe_hs_code', true );
-				if (empty($classification)) {
-					$classification = $default_hs_code;
-				}
 
 				// add item to item list
 				$items[] = compact( 'description', 'amount', 'weight', 'item_value', 'classification', 'country' );
 			}
 		}
 
-		return compact( 'weight', 'invoice', 'contents', 'items' );
+		return compact( 'weight', 'invoice', 'items' );
 	}
 
 	public function validate_shipments( $shipments, $output_errors = true ) {
-		$missing_hs_codes = 0;
 		foreach ($shipments as $key => $shipment) {
-			// check customs declaration for HS codes
+			// check customs declaration
 			if (isset($shipment['customs_declaration']) && !empty($shipment['customs_declaration']['items'])) {
 				foreach ($shipment['customs_declaration']['items'] as $key => $item) {
 					if (empty($item['classification'])) {
 						unset($shipments[$key]);
-						$missing_hs_codes++;
 						break;
 					}
 				}
 			}
-			if ($output_errors === true && $missing_hs_codes > 0) {
-				$this->errors[] = sprintf( __( '%d shipments missing HS codes - not exported.', 'woocommerce-myparcelbe' ), $missing_hs_codes);
+			if ($output_errors === true ) {
+				$this->errors[] = sprintf( __( '%d shipments - not exported.', 'woocommerce-myparcelbe' ));
 			}
 		}
 
@@ -844,93 +783,15 @@ class WooCommerce_MyParcelBE_Export {
 
 	public function get_package_type_from_shipping_method( $shipping_method, $shipping_class, $shipping_country ) {
 		$package_type = 1;
-		if (isset(WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'])) {
-			if ( strpos($shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping') ) {
-				// Automattic / WooCommerce table rate
-				// use full method = method_id:instance_id:rate_id
-				$shipping_method_id = $shipping_method;
-			} else { // non table rates
-
-				if ( strpos($shipping_method, ':') !== false ) {
-					// means we have method_id:instance_id
-					$shipping_method = explode(':', $shipping_method);
-					$shipping_method_id = $shipping_method[0];
-					$shipping_method_instance = $shipping_method[1];
-				} else {
-					$shipping_method_id = $shipping_method;
-				}
-
-				// add class if we have one
-				if (!empty($shipping_class)) {
-					$shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
-				}
-			}
-
-			foreach (WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
-				// check if we have a match with the predefined methods
-				// fallback to bare method (without class) (if bare method also defined in settings)
-				if (in_array($shipping_method_id, $package_type_shipping_methods) || (!empty($shipping_method_id_class) && in_array($shipping_method_id_class, $package_type_shipping_methods))) {
-					$package_type = $package_type_key;
-					break;
-				}
-			}
-		}
-
-		// disable mailbox package outside NL
-		if ($shipping_country != 'NL' && $package_type == 2 ) {
-			$package_type = 1;
-		}
 
 		return $package_type;
 	}
 
-	// determine appropriate package type for this order
-	public function get_package_type_for_order( $order ) {
-		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+	public function get_package_types() {
 
-		// get shipping methods from order
-		$order_shipping_methods = $order->get_items('shipping');
-
-		if ( !empty( $order_shipping_methods ) ) {
-			// we're taking the first (we're not handling multiple shipping methods as of yet)
-			$order_shipping_method = array_shift($order_shipping_methods);
-			$order_shipping_method = $order_shipping_method['method_id'];
-
-			$order_shipping_class = WCX_Order::get_meta( $order, '_myparcelbe_highest_shipping_class' );
-			if (empty($order_shipping_class)) {
-				$order_shipping_class = $this->get_order_shipping_class( $order, $order_shipping_method );
-			}
-
-			$package_type = $this->get_package_type_from_shipping_method( $order_shipping_method, $order_shipping_class, $shipping_country );
-		}
-
-		// fallbacks if no match from previous
-		if (!isset($package_type)) {
-			if ((isset(WooCommerce_MyParcelBE()->export_defaults['package_type']))) {
-				$package_type = WooCommerce_MyParcelBE()->export_defaults['package_type'];
-			} else {
-				$package_type = 1; // 1. package | 2. mailbox package | 3. letter
-			}
-		}
-
-		// always parcel for Pickup and Pickup express delivery types.
-		if ( $this->is_pickup( $order ) ) {
-			$package_type = 1;
-		}
-
-		return $package_type;
-	}
-
-	public function get_package_types( $shipment_type = 'shipment' ) {
 		$package_types = array(
 			1	=> __( 'Parcel' , 'woocommerce-myparcelbe' ),
-			2	=> __( 'Mailbox package' , 'woocommerce-myparcelbe' ),
-			3	=> __( 'Unpaid letter' , 'woocommerce-myparcelbe' ),
 		);
-		if ( $shipment_type == 'return' ) {
-			unset($package_types[2]);
-			unset($package_types[3]);
-		}
 
 		return $package_types;
 	}
@@ -1080,48 +941,6 @@ class WooCommerce_MyParcelBE_Export {
 		return $name;
 	}
 
-	public function get_parcel_weight ( $order ) {
-		$parcel_weight = (isset(WooCommerce_MyParcelBE()->general_settings['empty_parcel_weight'])) ? preg_replace("/\D/","",WooCommerce_MyParcelBE()->general_settings['empty_parcel_weight'])/1000 : 0;
-
-		$items = $order->get_items();
-		foreach ( $items as $item_id => $item ) {
-			$parcel_weight += $this->get_item_weight_kg( $item, $order );
-		}
-
-		return $parcel_weight;
-	}
-
-	public function get_item_weight_kg ( $item, $order ) {
-		$product = $order->get_product_from_item( $item );
-
-		if (empty($product)) {
-			return 0;
-		}
-
-		$weight = $product->get_weight();
-		$weight_unit = get_option( 'woocommerce_weight_unit' );
-		switch ($weight_unit) {
-			case 'kg':
-				$product_weight = $weight;
-				break;
-			case 'g':
-				$product_weight = $weight / 1000;
-				break;
-			case 'lbs':
-				$product_weight = $weight * 0.45359237;
-				break;
-			case 'oz':
-				$product_weight = $weight * 0.0283495231;
-				break;
-			default:
-				$product_weight = $weight;
-				break;
-		}
-
-		$item_weight = (float) $product_weight * (int) $item['qty'];
-
-		return $item_weight;
-	}
 
 	public function is_pickup( $order, $myparcelbe_delivery_options = '' ) {
 		if (empty($myparcelbe_delivery_options)) {
@@ -1155,9 +974,7 @@ class WooCommerce_MyParcelBE_Export {
 	public function get_delivery_type( $order, $myparcelbe_delivery_options = '' ) {
 		// delivery types
 		$delivery_types = array(
-			'morning'		=> 1,
 			'standard'		=> 2, // 'default in JS API'
-			'night'			=> 3,
 			'retail'		=> 4, // 'pickup'
 		);
 
@@ -1416,18 +1233,48 @@ class WooCommerce_MyParcelBE_Export {
 		return $order_ids;
 	}
 
+	/**
+	 * @param $country_code
+	 *
+	 * @return bool
+	 */
 	public function is_myparcelbe_destination( $country_code ) {
-		return ( $country_code == 'NL' || $this->is_eu_country( $country_code ) || $this->is_world_shipment_country( $country_code ) );
+
+		if ( $country_code == 'BE' ) {
+			return true;
+		}
+
+		if ($this->is_eu_country( $country_code )) {
+			return true;
+		}
+
+		if( $this->is_world_shipment_country( $country_code )){
+			return true;
+		}
+
+		return false;
 	}
 
+
+	/**
+	 * @param $country_code
+	 *
+	 * @return bool
+	 */
 	public function is_eu_country($country_code) {
-		// $eu_countries = array( 'GB', 'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE' );
-		$euro_countries = array( 'AT','BE','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','NO','UA','SM','RS','TR','VA','BY','CH' );
-		return in_array( $country_code, $euro_countries);
+
+		$euro_countries = array( 'AT','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','NO','UA','SM','RS','TR','VA','BY','CH','NL' );
+
+		if ( in_array( $country_code, $euro_countries ) ) {
+			return true;
+		}
+
+		return false;
+
 	}
 
 	public function is_world_shipment_country( $country_code ) {
-		$world_shipment_countries = array( 'AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY' );
+		$world_shipment_countries = array( 'AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY','CH','TR','NO' );
 		return in_array( $country_code, $world_shipment_countries);
 	}
 

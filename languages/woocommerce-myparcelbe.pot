@@ -68,17 +68,7 @@ msgid "Status"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:373
-msgid "MyParcelbe shipment:"
-msgstr ""
-
-#: includes/class-wcmp-admin.php:393 includes/class-wcmp-frontend.php:387
-#: includes/class-wcmp-settings.php:653
-msgid "Morning delivery"
-msgstr ""
-
-#: includes/class-wcmp-admin.php:400 includes/class-wcmp-frontend.php:400
-#: includes/class-wcmp-settings.php:641
-msgid "Evening delivery"
+msgid "MyParcel BE shipment:"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:407
@@ -89,16 +79,9 @@ msgstr ""
 msgid "bpost Pickup"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:523
-msgid "World Shipments"
-msgstr ""
 
-#: includes/class-wcmp-settings.php:530
-msgid "Default HS Code"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:536
-msgid "You can find HS codes on the %ssite of the Dutch Customs%s."
+#: includes/class-wcmp-frontend.php:514
+msgid "Saturday delivery"
 msgstr ""
 
 #: includes/class-wcmp-export.php:59
@@ -135,20 +118,13 @@ msgstr ""
 
 #: includes/class-wcmp-export.php:761
 #, php-format
-msgid "%d shipments missing HS codes - not exported."
+msgid "%d shipments - not exported."
 msgstr ""
 
 #: includes/class-wcmp-export.php:916
 msgid "Parcel"
 msgstr ""
 
-#: includes/class-wcmp-export.php:917
-msgid "Mailbox package"
-msgstr ""
-
-#: includes/class-wcmp-export.php:918
-msgid "Unpaid letter"
-msgstr ""
 
 #: includes/class-wcmp-export.php:930
 msgid "Unknown"
@@ -255,59 +231,59 @@ msgstr ""
 msgid "Signature on delivery"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:203
-#: includes/class-wcmp-nlpostcode-fields.php:204
-#: includes/class-wcmp-nlpostcode-fields.php:373
-#: includes/class-wcmp-nlpostcode-fields.php:401
+#: includes/class-wcmp-bepostcode-fields.php:203
+#: includes/class-wcmp-bepostcode-fields.php:204
+#: includes/class-wcmp-bepostcode-fields.php:373
+#: includes/class-wcmp-bepostcode-fields.php:401
 msgid "Street name"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:211
-#: includes/class-wcmp-nlpostcode-fields.php:638
-#: includes/class-wcmp-nlpostcode-fields.php:639
+#: includes/class-wcmp-bepostcode-fields.php:211
+#: includes/class-wcmp-bepostcode-fields.php:638
+#: includes/class-wcmp-bepostcode-fields.php:639
 msgid "Nr."
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:220
-#: includes/class-wcmp-nlpostcode-fields.php:383
-#: includes/class-wcmp-nlpostcode-fields.php:411
-#: includes/class-wcmp-nlpostcode-fields.php:432
-#: includes/class-wcmp-nlpostcode-fields.php:446
-msgid "Suffix"
+#: includes/class-wcmp-bepostcode-fields.php:220
+#: includes/class-wcmp-bepostcode-fields.php:383
+#: includes/class-wcmp-bepostcode-fields.php:411
+#: includes/class-wcmp-bepostcode-fields.php:432
+#: includes/class-wcmp-bepostcode-fields.php:446
+msgid "Box number"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:378
-#: includes/class-wcmp-nlpostcode-fields.php:406
-#: includes/class-wcmp-nlpostcode-fields.php:428
-#: includes/class-wcmp-nlpostcode-fields.php:442
+#: includes/class-wcmp-bepostcode-fields.php:378
+#: includes/class-wcmp-bepostcode-fields.php:406
+#: includes/class-wcmp-bepostcode-fields.php:428
+#: includes/class-wcmp-bepostcode-fields.php:442
 msgid "Number"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:424
-#: includes/class-wcmp-nlpostcode-fields.php:438
+#: includes/class-wcmp-bepostcode-fields.php:424
+#: includes/class-wcmp-bepostcode-fields.php:438
 msgid "Street"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:592
+#: includes/class-wcmp-bepostcode-fields.php:592
 msgctxt "placeholder"
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:638
+#: includes/class-wcmp-bepostcode-fields.php:638
 #, php-format
 msgid "Billing %s"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:639
+#: includes/class-wcmp-bepostcode-fields.php:639
 #, php-format
 msgid "Shipping %s"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:646
+#: includes/class-wcmp-bepostcode-fields.php:646
 msgid "<b>Billing Nr.</b> is a required field"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:649
+#: includes/class-wcmp-bepostcode-fields.php:649
 msgid "<b>Shipping Nr.</b> is a required field"
 msgstr ""
 
@@ -351,9 +327,8 @@ msgstr ""
 #: includes/class-wcmp-settings.php:105
 #, php-format
 msgid ""
-"It looks like your shop is based in Belgium. This plugin is for MyParcelbe "
-"Netherlands. If you are using MyParcelbe Belgium, download the %s plugin "
-"instead!"
+"It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium."
+"If you are using MyParcel Netherlands, download the %s plugin instead!"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:106
@@ -478,7 +453,7 @@ msgid "Package types"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:334
-msgid "Select one or more shipping methods for each MyParcel BE package type"
+msgid "Select one or more shipping methods for the MyParcel BE package type"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:340
@@ -528,9 +503,7 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:414
 msgid ""
-"The parcel will be offered at the delivery address. If the recipient is not "
-"at home, the parcel will be delivered to the neighbours. In both cases, a "
-"signuture will be required."
+"When the package is presented at the home address, it must be signed for receipt."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:440
@@ -548,7 +521,7 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:453
 msgid ""
-"There is no default insurance on the shipments. If you want to insure, you can do this. "
+"There is no default insurance on the domestic shipments. If you want to insure, you can do this. "
 "We insure the purchase value of your product, with a maximum insured value of &euro; 500."
 msgstr ""
 
@@ -575,24 +548,8 @@ msgid ""
 "delivery date."
 msgstr ""
 
-#: includes/class-wcmp-settings.php:508
-msgid "Empty parcel weight (grams)"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:516
 msgid "Default weight of your empty parcel, rounded to grams."
-msgstr ""
-
-#: includes/class-wcmp-settings.php:523
-msgid "World Shipments"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:530
-msgid "Default HS Code"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:536
-msgid "You can find HS codes on the %ssite of the Dutch Customs%s."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:543
@@ -641,9 +598,9 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:611
 msgid ""
-"To associate specific shipping methods with parcels, see the Default export "
-"settings tab. Note that the delivery options will be automatically hidden "
-"for foreign addresses, regardless of this setting"
+"You can link the delivery options to specific shipping methods by adding them "
+"to the package type under 'Standard export settings'. The delivery options are "
+"not visible at foreign addresses."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:665
@@ -710,20 +667,12 @@ msgstr ""
 msgid "Number of days you take to process an order"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:751
-msgid "Delivery days window"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:760
 msgid "Number of days you allow the customer to postpone a shipment"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:766
 msgid "Enable monday delivery"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:778
-msgid "Cut-off time for monday delivery"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:787
@@ -736,16 +685,8 @@ msgstr ""
 msgid "Customizations"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:801
-msgid "Base color"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:809
 msgid "Color of the header & tabs (cyan by default)"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:816
-msgid "Highlight color"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:824
@@ -754,10 +695,6 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:830
 msgid "Custom styles"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:844
-msgid "Automatically load Google fonts"
 msgstr ""
 
 #: includes/compatibility/class-wc-core-compatibility.php:222

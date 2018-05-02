@@ -17,7 +17,7 @@ if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Compatibility\\Data' ) ) :
 abstract class Data {
 
 	/**
-	 * Creates aliases for add_meta_data, update_meta_data and delete_meta_data without the _data suffix
+	 * Creates aliases for add_meta_data, update_meta_data and delete_meta_data without the _data box number
 	 *
 	 * @param  string $name      static function name
 	 * @param  array  $arguments function arguments

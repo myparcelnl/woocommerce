@@ -3,18 +3,18 @@
 
 jQuery(document).ready(function($) {
 	
-	// Hide custom NL fields by default when country not NL
+	// Hide custom BE fields by default when country not BE
 	var billing_country = $('#billing_country').val();
 	var shipping_country = $('#shipping_country').val();
-	if (billing_country != 'NL') {
+	if (billing_country != 'BE') {
 		$('#billing_street_name_field').hide();
 		$('#billing_house_number_field').hide();
-		$('#billing_house_number_suffix_field').hide();
+		$('#billing_box_number_field').hide();
 	}	
-	if (shipping_country != 'NL') {
+	if (shipping_country != 'BE') {
 		$('#shipping_street_name_field').hide();
 		$('#shipping_house_number_field').hide();
-		$('#shipping_house_number_suffix_field').hide();
+		$('#shipping_box_number_field').hide();
 	}
 	
 
@@ -22,8 +22,6 @@ jQuery(document).ready(function($) {
 	var locale_json = woocommerce_params.locale.replace(/&quot;/g, '"');
 	var locale = $.parseJSON( locale_json );
 	var required = ' <abbr class="required" title="' + woocommerce_params.i18n_required_text + '">*</abbr>';
-
-	$('body')
 
 	// Handle locale
 	.bind('country_to_state_changing', function( event, country, wrapper ){
@@ -38,13 +36,13 @@ jQuery(document).ready(function($) {
 		var $address2field = thisform.find('#billing_address_2_field, #shipping_address_2_field');
 		var $streetfield   = thisform.find('#billing_street_name_field, #shipping_street_name_field');
 		var $numberfield   = thisform.find('#billing_house_number_field, #shipping_house_number_field');
-		var $suffixfield   = thisform.find('#billing_house_number_suffix_field, #shipping_house_number_suffix_field');
+		var $box_numberfield   = thisform.find('#billing_box_number_field, #shipping_box_number_field');
 
-		if (country == 'NL') {
-			//show custom NL fields
+		if (country == 'BE') {
+			//show custom BE fields
 			$streetfield.show();
 			$numberfield.show();
-			$suffixfield.show();
+            $boxNumberfield.show();
 			//$emailfield.add( $phonefield ).removeClass('form-row-first form-row-last').addClass('form-row-wide');
 			
 			// Hide regular address classes
@@ -64,10 +62,10 @@ jQuery(document).ready(function($) {
 			$streetfield.addClass('validate-required');
 			$numberfield.addClass('validate-required');
 		} else {
-			// Hide custom NL fields
+			// Hide custom BE fields
 			$streetfield.hide();
 			$numberfield.hide();
-			$suffixfield.hide();
+            $box_numberfield.hide();
 
 			// Unmark required fields
 			$streetfield.find('label abbr').remove();

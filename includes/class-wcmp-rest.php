@@ -109,10 +109,11 @@ class WC_MyParcelBE_REST_Client
 	}
 
 	public function request($url, $method = "GET", $headers = array(), $post, $body = null, $raw = false) {
+
 		// Set the method and related options
 		switch ($method) {
 			case "PUT":
-				throw new Exception('Can not put MyParcel shipment', 500);
+				throw new Exception('Can not put MyParcel BE shipment', 500);
 			break;
 
 			case "POST":
@@ -123,7 +124,7 @@ class WC_MyParcelBE_REST_Client
 			break;
 
 			case "DELETE":
-				throw new Exception('Can not delete MyParcel shipment', 500);
+				throw new Exception('Can not delete MyParcel BE shipment', 500);
 				break;
 
 			case "GET":
@@ -136,8 +137,7 @@ class WC_MyParcelBE_REST_Client
 		if (isset($f) && is_resource($f)) {
 			@fclose($f);
 		}
-
-		$status = $response["response"]["code"];
+		$status = $response['response']['code'];
 		$body = $response['body'];
 
 		if ($raw !== true) {
@@ -160,7 +160,13 @@ class WC_MyParcelBE_REST_Client
 			throw new Exception($error, $status);
 		}
 
-		return array("code" => $status, "body" => $body, "headers" => $response["headers"]);
+		$responseData = array(
+			"code" => $status,
+			"body" => $body,
+			"headers" => $response->headers,
+		);
+
+		return $responseData;
 	}
 
 	public function parse_errors( $body ) {

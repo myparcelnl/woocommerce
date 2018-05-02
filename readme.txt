@@ -1,8 +1,9 @@
 === Plugin Name ===
 Tags: woocommerce, export, myparcel Belgium
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.9.2
-Stable tag: 2.4.7
+Tested up to: 4.9.5
+Stable tag: 2.4.9
+
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -19,10 +20,9 @@ This WooCommerce extension allows you to export your orders to the MyParcel Belg
 - Export your WooCommerce orders to MyParcel Belgium with a simple click, single orders or in batch
 - Print shipping labels directly (PDF)
 - Create multiple shipments for the same order
-- Choose your package type (Parcel, mailbox package or unpaid letter)
-- Define preset MyParcel shipping options (signature required, extra insurance, Saturday delivery)
+- Define preset MyParcel Belgium shipping options (signature required, extra insurance, Saturday delivery)
 - Modify the MyParcel Belgium shipping options per order before exporting
-- Extra checkout fields to separate street name, house number and house number suffix for more precise address data
+- Extra checkout fields to separate street name, house number and box number for more precise address data
 - View the status of the shipment in the order details page
 - Add track&trace link to the order confirmation email
 
@@ -86,6 +86,13 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 5. MyParcel BE information on the order details page
 
 == Changelog ==
+= 2.4.9 (2018-03-23) =
+Fix: Scrolling when changing package type in orderview 
+
+= 2.4.8 (2018-02-27) =
+* Fix: The array error from the userAgent (https://wordpress.org/support/topic/parse-error-syntax-error-unexpected-in-wp-content-plugins-woocommerce-mypa/)
+* Fix: The countries Norway, Turkey, Switzerland changed to world country
+* Fix: Changing Type from Order List (https://wordpress.org/support/topic/changing-type-from-order-list/#post-10020043)
 
 = 2.4.7 (2018-02-07) =
 * Improvement: WooCommerce 3.3.1 compatibility
@@ -311,7 +318,7 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 = 1.3.3 =
 * Fix: Checks for required fields
 * Tweak: Improved address formatting
-* Tweak: Removed placeholders on house number & suffix for better compatibility with old browsers
+* Tweak: Removed placeholders on house number & box number for better compatibility with old browsers
 
 = 1.3.2 =
 * Fix: Description labels for Custom ID ('Eigen kenmerk') & Message ('Optioneel bericht')

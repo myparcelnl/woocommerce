@@ -4,9 +4,7 @@
 	<tr>
 		<td>
 			<?php _e( 'Shipment type', 'woocommerce-myparcelbe' ) ?>:<br/>
-			<?php $parcel_weight = WooCommerce_MyParcelBE()->export->get_parcel_weight( $order ); ?>
-			<small class="calculated_weight"><?php printf( __( 'Calculated weight: %s kg', 'woocommerce-myparcelbe' ), number_format( $parcel_weight, 3, ',', ' ' ) ); ?></small>
-		</td>
+        </td>
 		<td>
 			<?php
 			$name = "myparcelbe_options[{$order_id}][package_type]";
@@ -39,7 +37,7 @@
 		),
 	);
 
-	if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
+	if (isset($recipient['cc']) && $recipient['cc'] != 'BE') {
 		unset($option_rows['[signature]']);
 		unset($option_rows['[return]']);
 		$shipment_options['insured'] = 1;

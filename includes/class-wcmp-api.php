@@ -1,9 +1,9 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WC_MyParcelbe_API' ) ) :
+if ( !class_exists( 'WC_MyParcelBE_API' ) ) :
 
-class WC_MyParcelbe_API extends WC_MyParcelBE_REST_Client {
+class WC_MyParcelBE_API extends WC_MyParcelBE_REST_Client {
 	/** @var API URL */
 	public $APIURL = "https://api.myparcel.nl/";
 
@@ -55,7 +55,6 @@ class WC_MyParcelbe_API extends WC_MyParcelBE_REST_Client {
 		);
 
 		$json = json_encode( $data );
-
 		$headers = array(
 			'Content-type' => $content_type . '; charset=UTF-8',
 			'Authorization' => 'basic '. base64_encode("{$this->key}"),
@@ -64,6 +63,7 @@ class WC_MyParcelbe_API extends WC_MyParcelBE_REST_Client {
 
 		$request_url = $this->APIURL . $endpoint;
 		$response = $this->post($request_url, $json, $headers);
+
 		return $response;
 	}
 
@@ -155,9 +155,13 @@ class WC_MyParcelbe_API extends WC_MyParcelBE_REST_Client {
 			)
 		);
 
-		$request_url = add_query_arg( $params, $this->APIURL . $endpoint . '/' . implode(';', $ids) );
+		$positions = isset($params['positions']) ? $params['positions'] : null;
+
+		$label_format_url = $this->get_label_format_url($positions);
+		$request_url = $this->APIURL . $endpoint . '/' . implode(';', $ids) . '?' . $label_format_url;
+
 		$response = $this->get($request_url, $headers, $raw);
-		
+
 		return $response;
 	}
 
@@ -183,35 +187,18 @@ class WC_MyParcelbe_API extends WC_MyParcelBE_REST_Client {
 		return $response;
 	}
 
-
 	/**
-	 * Get delivery options
-	 * @return array          response
-	 */
-	public function get_delivery_options ( $params = array(), $raw = false ) {
-		$endpoint = 'delivery_options';
-		$checkout_settings = WooCommerce_MyParcelBE()->checkout_settings;
-		if (isset(WooCommerce_MyParcelBE()->checkout_settings['monday_delivery']) ) {
-			$params['monday_delivery'] = 1;
-		}
-
-		$request_url = add_query_arg( $params, $this->APIURL . $endpoint );
-		$response = $this->get($request_url, null, $raw);
-
-		return $response;
-	}
-
-	/**
-	 * Get Wordpress, Woocommerce, Myparcel version and place theme in a array. Implode the array to get an UserAgent.
+	 * Get Wordpress, Woocommerce, MyparcelBE version and place theme in a array. Implode the array to get an UserAgent.
 	 * @return string
 	 */
 	private function getUserAgent() {
 
-		$userAgents = [
+		$userAgents = array(
 			'Wordpress/'.get_bloginfo( 'version' ),
 			'WooCommerce/'.WOOCOMMERCE_VERSION,
-			'MyParcelNL-WooCommerce/'.WC_MYPARCEL_VERSION,
-			];
+			'MyParcelBE-WooCommerce/'.WC_MYPARCEL_VERSION,
+		);
+
 
 		//Place white space between the array elements
 		$userAgent = implode(' ', $userAgents);
@@ -219,7 +206,25 @@ class WC_MyParcelbe_API extends WC_MyParcelBE_REST_Client {
 		return $userAgent;
 	}
 
+	/**
+	 * @param $positions
+	 *
+	 * @return string
+	 */
+	private function get_label_format_url( $positions ) {
 
+		$generalSettings = WooCommerce_MyParcelBE()->general_settings;
+
+		if ( $generalSettings['label_format'] == 'A4') {
+			return 'format=A4&positions=' . $positions;
+		}
+
+		if ( $generalSettings['label_format'] == 'A6' ) {
+			return 'format=A6';
+		}
+
+		return '';
+	}
 }
 
 endif; // class_exists

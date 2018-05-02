@@ -18,7 +18,8 @@ if ( !class_exists( 'WooCommerce_MyParcelBE' ) ) :
 
 class WooCommerce_MyParcelBE {
 
-	public $version = '2.4.7';
+	public $version = '2.4.9';
+
 	public $plugin_basename;
 
 	protected static $_instance = null;
@@ -107,7 +108,7 @@ class WooCommerce_MyParcelBE {
 		include_once( 'includes/class-wcmp-frontend.php' );
 		include_once( 'includes/class-wcmp-settings.php' );
 		$this->export = include_once( 'includes/class-wcmp-export.php' );
-		include_once( 'includes/class-wcmp-nlpostcode-fields.php' );
+		include_once( 'includes/class-wcmp-bepostcode-fields.php' );
 	}
 
 	/**
@@ -214,7 +215,6 @@ class WooCommerce_MyParcelBE {
 
 			// map old key => new_key
 			$general_settings_keys = array(
-				'api_key'				=> 'api_key',
 				'download_display'		=> 'download_display',
 				'email_tracktrace'		=> 'email_tracktrace',
 				'myaccount_tracktrace'	=> 'myaccount_tracktrace',
@@ -242,7 +242,6 @@ class WooCommerce_MyParcelBE {
 				'telefoon'				=> 'connect_phone',
 				'handtekening'			=> 'signature',
 				'kenmerk'				=> 'label_description',
-				'verpakkingsgewicht'	=> 'empty_parcel_weight',
 				'verzekerd'				=> 'insured',
 				'verzekerdbedrag'		=> 'insured_amount',
 			);

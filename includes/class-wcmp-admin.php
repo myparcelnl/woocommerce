@@ -25,9 +25,6 @@ class WooCommerce_MyParcelBE_Admin {
 
 		add_action( 'wp_ajax_wcmp_save_shipment_options', array( $this, 'save_shipment_options_ajax' ) );
 
-		// HS code in product shipping options tab
-		add_action( 'woocommerce_product_options_shipping', array( $this, 'product_hs_code_field' ) );
-		add_action( 'woocommerce_process_product_meta', array( $this, 'product_hs_code_field_save' ) );
 	}
 
 	public function order_list_shipment_options( $order, $hide = true ) {
@@ -88,7 +85,7 @@ class WooCommerce_MyParcelBE_Admin {
 
 	public function order_list_return_shipment_options( $order, $hide = true ) {
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( $shipping_country != 'NL' && !WooCommerce_MyParcelBE()->export->is_eu_country( $shipping_country )  ) {
+		if ( $shipping_country != 'BE' && !WooCommerce_MyParcelBE()->export->is_eu_country( $shipping_country )  ) {
 			return;
 		}
 		$order_id = WCX_Order::get_id( $order );
@@ -193,11 +190,11 @@ class WooCommerce_MyParcelBE_Admin {
 				'img'		=> WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-pdf.png',
 				'alt'		=> esc_attr__( 'Print MyParcel BE label', 'woocommerce-myparcelbe' ),
 			),
-			'add_return'	=> array (
+			/*'add_return'	=> array (
 				'url'		=> wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&request=add_return&order_ids=' . $order_id ), 'wc_myparcelbe' ),
 				'img'		=> WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-retour.png',
 				'alt'		=> esc_attr__( 'Email return label', 'woocommerce-myparcelbe' ),
-			),
+			),*/
 		);
 
 		$consignments = $this->get_order_shipments( $order );
@@ -207,7 +204,7 @@ class WooCommerce_MyParcelBE_Admin {
 		}
 
 		$processed_shipments = $this->get_order_shipments( $order, true );
-		if (empty($processed_shipments) || $shipping_country != 'NL' ) {
+		if (empty($processed_shipments) || $shipping_country != 'BE' ) {
 			unset($listing_actions['add_return']);
 		}
 
@@ -384,7 +381,7 @@ class WooCommerce_MyParcelBE_Admin {
 			return;
 		}
 
-		echo '<div style="clear:both;"><strong>' . __( 'MyParcelbe shipment:', 'woocommerce-myparcelbe' ) . '</strong><br/>';
+		echo '<div style="clear:both;"><strong>' . __( 'MyParcel BE shipment:', 'woocommerce-myparcelbe' ) . '</strong><br/>';
 		$this->order_list_shipment_options( $order, false );
 		echo '</div>';
 	}
@@ -397,21 +394,14 @@ class WooCommerce_MyParcelBE_Admin {
 		}
 
 		echo '<div class="delivery-options">';
-		if (!empty($date) && !(isset(WooCommerce_MyParcelBE()->checkout_settings['deliverydays_window']) && WooCommerce_MyParcelBE()->checkout_settings['deliverydays_window'] == 0)) {
-			$formatted_date = date_i18n( apply_filters( 'wcmyparcelbe_delivery_date_format', wc_date_format() ), strtotime( $date ) );
+		if ($delivery_date = WooCommerce_MyParcelBE()->export->get_delivery_date( $order ) ) {
+			$formatted_date = date_i18n( apply_filters( 'wcmyparcelbe_delivery_date_format', wc_date_format() ), strtotime( $delivery_date ) );
 			if (!empty($time)) {
 				$time = array_shift($time); // take first element in time array
 				if (isset($time['price_comment'])) {
 					switch ($time['price_comment']) {
-						case 'morning':
-							$time_title = __( 'Morning delivery', 'woocommerce-myparcelbe' );
-							break;
 						case 'standard':
 							// $time_title = __( 'Standard delivery', 'woocommerce-myparcelbe' );
-							break;
-						case 'night':
-						case 'avond':
-							$time_title = __( 'Evening delivery', 'woocommerce-myparcelbe' );
 							break;
 					}
 				}
@@ -424,7 +414,7 @@ class WooCommerce_MyParcelBE_Admin {
 		if ( $pickup = WooCommerce_MyParcelBE()->export->is_pickup( $order, $delivery_options ) ) {
 			switch ($pickup['price_comment']) {
 				case 'retail':
-					$title = __( 'bpost Pickup', 'woocommerce-myparcelbe' );
+					$title = __( 'bpost pickup', 'woocommerce-myparcelbe' );
 					break;
 			}
 
@@ -442,8 +432,8 @@ class WooCommerce_MyParcelBE_Admin {
 		$country = WCX_Order::get_prop( $order, 'shipping_country' );
 		$postcode = preg_replace( '/\s+/', '', WCX_Order::get_prop( $order, 'shipping_postcode' ) );
 
-		// set url for NL or foreign orders
-		if ($country == 'NL') {
+		// set url for BE or foreign orders
+		if ($country == 'BE') {
 			// use billing postcode for pickup/pakjegemak
 			if ( WooCommerce_MyParcelBE()->export->is_pickup( $order ) ) {
 				$postcode = preg_replace( '/\s+/', '', WCX_Order::get_prop( $order, 'billing_postcode' ) );
@@ -476,7 +466,7 @@ class WooCommerce_MyParcelBE_Admin {
 		}
 
 		foreach ($shipments as $shipment_id => $shipment) {
-			// skip concepts, letters & mailbox packages
+			// skip concepts
 			if (empty($shipment['tracktrace'])) {
 				unset($shipments[$shipment_id]);
 				continue;
@@ -492,33 +482,6 @@ class WooCommerce_MyParcelBE_Admin {
 
 
 		return $shipments;
-	}
-
-	public function product_hs_code_field() {
-		echo '<div class="options_group">';
-		woocommerce_wp_text_input( 
-			array( 
-				'id'          => '_myparcelbe_hs_code',
-				'label'       => __( 'HS Code', 'woocommerce-myparcelbe' ),
-				'description' => sprintf( __( 'HS Codes are used for MyParcelbe world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcelbe' ), '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>' ),
-				// 'desc_tip'    => true,
-			)
-		);  
-		echo '</div>';
-	}
-
-	public function product_hs_code_field_save( $post_id ) {
-		// check if hs code is passed and not an array (=variation hs code)
-		if (isset($_POST['_myparcelbe_hs_code']) && !is_array($_POST['_myparcelbe_hs_code'])) {
-			$product = wc_get_product( $post_id );
-			$hs_code = $_POST['_myparcelbe_hs_code'];
-			if( !empty( $hs_code ) ) {
-				WCX_Product::update_meta_data( $product, '_myparcelbe_hs_code', esc_attr( $hs_code ) );
-			} elseif( isset($_POST['_myparcelbe_hs_code']) && empty( $hs_code ) ) {
-				WCX_Product::delete_meta_data( $product, '_myparcelbe_hs_code' );
-			}
-		}
-
 	}
 }
 
