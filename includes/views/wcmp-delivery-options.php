@@ -3,7 +3,14 @@
  * LOAD WORDPRESS
  */
 define('WP_USE_THEMES', false);
-require( '../../../../../wp-load.php');
+
+$rootDir = getcwd(); // get the public root of the website
+if ($rootDir == false) {
+	$rootDir = '../../../../..';
+}
+
+require( $rootDir . '/wp-load.php');
+
 ?>
 <!DOCTYPE html>
 <html>
