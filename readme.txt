@@ -3,7 +3,7 @@ Contributors: pomegranate
 Tags: woocommerce, export, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9.4
-Stable tag: 2.5.2
+Stable tag: 2.5.3
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -88,6 +88,9 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 5. postnl information on the order details page
 
 == Changelog ==
+
+= 2.5.3 (2018-05-16) =
+* Fix: error 404 inside the checkout (iframe) and get the correct root url 
 
 = 2.5.2 (2018-04-19) =
 * Fix: Select mailbox package when it is chosen
