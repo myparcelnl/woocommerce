@@ -183,8 +183,6 @@ jQuery( function( $ ) {
 		.on( 'click', 'a.button.save', function() {
 			var order_id = $( this ).data().order;
 			var $form = $( this ).closest('.wcmp_shipment_options').find('.wcmp_shipment_options_form');
-			var package_type = $form.find('select.package_type option:selected').text();
-			var $package_type_text_element = $( this ).closest('.wcmp_shipment_options').find('.wcpm_package_type');
 
 			// show spinner
 			$form.find('.wcmp_save_shipment_settings .waiting').show();
@@ -199,9 +197,6 @@ jQuery( function( $ ) {
 
 			$.post( wc_myparcelbe.ajax_url, data, function( response ) {
 				// console.log(response);
-
-				// set main text to selection
-				$package_type_text_element.text(package_type);
 
 				// hide spinner
 				$form.find('.wcmp_save_shipment_settings .waiting').hide();
