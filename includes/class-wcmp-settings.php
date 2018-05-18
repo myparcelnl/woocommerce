@@ -180,7 +180,7 @@ class WooCommerce_MyParcelBE_Settings {
 		);
 		add_settings_field(
 			'label_format',
-			__( 'Label format', 'woocommerce-myparcel' ),
+			__( 'Label format', 'woocommerce-myparcelbe' ),
 			array( $this->callbacks, 'radio_button' ),
 			$option_group,
 			'general',
@@ -188,8 +188,8 @@ class WooCommerce_MyParcelBE_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'label_format',
 				'options' 		=> array(
-					'A4'	=> __( 'Standard printer (A4)' , 'woocommerce-myparcel' ),
-					'A6'	=> __( 'Label Printer (A6)' , 'woocommerce-myparcel' ),
+					'A4'	=> __( 'Standard printer (A4)' , 'woocommerce-myparcelbe' ),
+					'A6'	=> __( 'Label Printer (A6)' , 'woocommerce-myparcelbe' ),
 				),
 			)
 		);
@@ -398,7 +398,7 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'signature',
-				'description'	=> __( 'The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signuture will be required.', 'woocommerce-myparcelbe' )
+				'description'	=> __( 'When the package is presented at the home address, a signuture will be required.', 'woocommerce-myparcelbe' )
 			)
 		);
     

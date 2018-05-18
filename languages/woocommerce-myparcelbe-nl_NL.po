@@ -227,6 +227,14 @@ msgstr "Standaard levering"
 msgid "Signature on delivery"
 msgstr "Handtekening voor ontvangst"
 
+#:includes/class-wcmp-frontend.php:496
+msgid "Bpost pickup"
+msgstr "Bpost locatie"
+
+#: includes/class-wcmp-settings.php:401
+msgid "When the package is presented at the home address, a signuture will be required."
+msgstr "Wanneer het pakket wordt aangeboden op het huisadres dan dient er voor het ontvangst te worden worden getekend."
+
 #: includes/class-wcmp-bepostcode-fields.php:203
 #: includes/class-wcmp-bepostcode-fields.php:204
 #: includes/class-wcmp-bepostcode-fields.php:373
@@ -352,7 +360,7 @@ msgstr "Label weergave"
 
 #: includes/class-wcmp-settings.php:158
 msgid "Label format"
-msgstr "Label formaat"
+msgstr "Label downloaden voor"
 
 #: includes/class-wcmp-settings.php:194
 msgid "Standard printer (A4)"
@@ -592,7 +600,7 @@ msgstr ""
 "worden afgedrukt op de linkerbovenhoek van het label, en u kunt dit "
 "gebruiken om zendingen in het MyParcel BE Backend te zoeken of te sorteren. "
 "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden, "
-"[DELIVERY_DATE] voor de bezorgdatum."
+"<strong>[DELIVERY_DATE]</strong> voor de bezorgdatum."
 
 #: includes/class-wcmp-settings.php:516
 msgid "Default weight of your empty parcel, rounded to grams."
