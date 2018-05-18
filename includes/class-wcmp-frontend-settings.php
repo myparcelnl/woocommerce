@@ -140,7 +140,7 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 		 */
 		public function get_price_saterday_delivery() {
 			$price = $this->settings['saturday_delivery_fee'];
-			$total_price = $this->myparcelbe_options_tax_calculation($price);
+			$total_price = $this->get_total_price_with_tax($price);
 			return $total_price;
 		}
 
@@ -160,7 +160,7 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 		 *
 		 * @return string
 		 */
-		public function myparcelbe_options_tax_calculation($price){
+		public function get_total_price_with_tax($price){
 			$base_tax_rates     = WC_Tax::get_base_tax_rates( '');
 			$base_tax_key       = key($base_tax_rates);
 			$taxRate            = $base_tax_rates[$base_tax_key]['rate'];
