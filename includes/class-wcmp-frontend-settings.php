@@ -103,10 +103,12 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 		}
 
 		/**
-		 * @return mixed
+		 * @return string
 		 */
 		public function get_price_pickup() {
-			return $this->settings['pickup_fee'];
+			$price = $this->settings['pickup_fee'];
+			$total_price = $this->myparcelbe_options_tax_calculation($price);
+			return $total_price;
 		}
 
 		/**
@@ -117,10 +119,12 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 		}
 
 		/**
-		 * @return mixed
+		 * @return string
 		 */
 		public function get_price_signature() {
-			return $this->settings['signed_fee'];
+			$price = $this->settings['signed_fee'];
+			$total_price = $this->myparcelbe_options_tax_calculation($price);
+			return $total_price;
 		}
 
 		/**
@@ -130,11 +134,14 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 			return (bool) $this->settings['saturday_delivery_enabled'];
 		}
 
+
 		/**
-		 * @return mixed
+		 * @return string
 		 */
 		public function get_price_saterday_delivery() {
-			return $this->settings['saturday_delivery_fee'];
+			$price = $this->settings['saturday_delivery_fee'];
+			$total_price = $this->get_total_price_with_tax($price);
+			return $total_price;
 		}
 
 		/**
@@ -148,6 +155,20 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 			return null;
 		}
 
+		/**
+		 * @param $price
+		 *
+		 * @return string
+		 */
+		public function get_total_price_with_tax($price){
+			$base_tax_rates     = WC_Tax::get_base_tax_rates( '');
+			$base_tax_key       = key($base_tax_rates);
+			$taxRate            = $base_tax_rates[$base_tax_key]['rate'];
+			$tax                = $price * $taxRate / 100;
+			$total_price        = money_format('%.2n', $price + $tax);
+
+			return $total_price;
+		}
 
 	}
 
