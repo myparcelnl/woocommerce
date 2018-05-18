@@ -107,7 +107,7 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 		 */
 		public function get_price_pickup() {
 			$price = $this->settings['pickup_fee'];
-			$total_price = $this->myparcelbe_options_tax_calculation($price);
+			$total_price = $this->get_total_price_with_tax($price);
 			return $total_price;
 		}
 
@@ -123,7 +123,7 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 		 */
 		public function get_price_signature() {
 			$price = $this->settings['signed_fee'];
-			$total_price = $this->myparcelbe_options_tax_calculation($price);
+			$total_price = $this->get_total_price_with_tax($price);
 			return $total_price;
 		}
 
