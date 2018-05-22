@@ -7,6 +7,7 @@ triggerPostalCode        = '#billing_postcode';
 triggerHouseNumber	 = '#billing_house_number';
 triggerHouseNumberExtra  = '#billing_box_number';
 triggerStreetName	 = '#billing_street_name';
+triggerCountryCode  =  '#billing_country';
 
 /* Text and translations */
 txtWeekDays = [
