@@ -91,7 +91,7 @@ if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
 		 * @return string
 		 */
 		public function get_country_code() {
-			return WC()->customer->get_billing_country();
+			return WC()->customer->get_shipping_country();
 		}
 
 
