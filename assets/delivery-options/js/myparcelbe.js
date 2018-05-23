@@ -652,6 +652,7 @@ MyParcel = {
         var houseNumber      = $(triggerHouseNumber).val();
         var houseNumberExtra = $(triggerHouseNumberExtra).val();
         var streetName       = $(triggerStreetName).val();
+        myParcelConfig.countryCode = $(triggerCountryCode).val();
 
         if(houseNumberExtra){
             houseNumber = houseNumber + houseNumberExtra;
