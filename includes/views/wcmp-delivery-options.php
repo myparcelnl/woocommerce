@@ -5,11 +5,13 @@
 define('WP_USE_THEMES', false);
 
 $rootDir = getcwd(); // get the public root of the website
-if ($rootDir == false) {
-	$rootDir = '../../../../..';
+
+if (file_exists('../../../../../wp-load.php')) {
+    require_once('../../../../../wp-load.php');
+} else {
+    require_once(getcwd() . '/wp-load.php');
 }
 
-require( $rootDir . '/wp-load.php');
 
 ?>
 <!DOCTYPE html>
