@@ -652,6 +652,7 @@ MyParcel = {
         var houseNumber      = $(triggerHouseNumber).val();
         var houseNumberExtra = $(triggerHouseNumberExtra).val();
         var streetName       = $(triggerStreetName).val();
+        var city             = $(triggerCity).val();
         myParcelConfig.countryCode = $(triggerCountryCode).val();
 
         if(houseNumberExtra){
@@ -677,6 +678,7 @@ MyParcel = {
                 cc:           		myParcelConfig.countryCode,
                 number:       		houseNumber,
                 postal_code:  		postalCode,
+                city:               city,
                 saturday_delivery:  myParcelConfig.saturdayDelivery,
                 dropoff_delay:      myParcelConfig.dropoffDelay,
             })
