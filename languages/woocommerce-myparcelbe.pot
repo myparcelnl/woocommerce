@@ -231,6 +231,14 @@ msgstr ""
 msgid "Signature on delivery"
 msgstr ""
 
+#:includes/class-wcmp-frontend.php:496
+msgid "Bpost pickup"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:401
+msgid "When the package is presented at the home address, a signuture will be required."
+msgstr ""
+
 #: includes/class-wcmp-bepostcode-fields.php:203
 #: includes/class-wcmp-bepostcode-fields.php:204
 #: includes/class-wcmp-bepostcode-fields.php:373

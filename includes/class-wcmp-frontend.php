@@ -492,8 +492,8 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 
 			if (isset($post_data[$post_data_value]) && $post_data[$post_data_value] == $delivery_type) {
 				if ( ! empty( WooCommerce_MyParcelBE()->checkout_settings[$backend_setting] ) ) {
-					$fee      = WooCommerce_MyParcelBE()->checkout_settings[$backend_setting];
-					$fee_name = __( $delivery_titel, 'woocommerce-myparcel' );
+				    $fee      = WooCommerce_MyParcelBE()->checkout_settings[$backend_setting];
+					$fee_name = __( $delivery_titel, 'woocommerce-myparcelbe' );
 					$this->add_fee( $fee_name, $fee );
 
 					return true;

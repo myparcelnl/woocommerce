@@ -581,7 +581,6 @@ class WooCommerce_MyParcelBE_Export {
 			} else {
 				$insured_amount = 0;
 			}
-
 			$options = array(
 				'package_type'		=>  self::package_type,
 				'signature'			=>  (isset(WooCommerce_MyParcelBE()->export_defaults['signature'])) ? 1 : 0,
@@ -621,12 +620,6 @@ class WooCommerce_MyParcelBE_Export {
 
 		// set delivery type
 		$options['delivery_type'] = $this->get_delivery_type( $order, $myparcelbe_delivery_options );
-
-		// Options for Pickup and Pickup express delivery types:
-		// always enable signature on receipt
-		if ( $this->is_pickup( $order, $myparcelbe_delivery_options ) ) {
-			$options['signature'] = 1;
-		}
 
         // options signed & recipient only
 		$myparcelbe_signed = WCX_Order::get_meta( $order, '_myparcelbe_signed' );
