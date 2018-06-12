@@ -438,13 +438,6 @@ class WooCommerce_MyParcelBE_Export {
 				);
 			}
 
-			/* disabled for now
-			$concept_shipments = $this->get_shipment_ids( (array) $order_id, array( 'only_concepts' => true, 'only_last' => true ) );
-			if ( !empty($concept_shipments) ) {
-				$shipment['id'] = array_pop($concept_shipments);
-			}
-			*/
-
 			$shipments[] = $shipment;
 		}
 
@@ -589,22 +582,9 @@ class WooCommerce_MyParcelBE_Export {
 			);
 		}
 
-		// convert insurance option
-		if ( !isset($options['insurance']) && isset($options['insured_amount']) ) {
-			if ($options['insured_amount'] > 0) {
-				$options['insurance'] = array(
-					'amount'	=> (int) $options['insured_amount'] * 100,
-					'currency'	=> 'EUR',
-				);
-			}
-
-			unset($options['insured_amount']);
-			unset($options['insured']);
-		}
-
 		// set insurance amount to int if already set
 		if (isset($options['insurance'])) {
-			$options['insurance']['amount'] = (int) $options['insurance']['amount'];
+			$options['insurance']['amount'] = 500 * 100;
 		}
 
 		// remove frontend insurance option values
