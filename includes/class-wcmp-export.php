@@ -11,7 +11,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Export' ) ) :
 
 class WooCommerce_MyParcelBE_Export {
 	const package_type = 1;
-
+    const INSURANCE_AMOUNT = 500;
 	public $order_id;
 	public $success;
 	public $errors;
@@ -584,7 +584,7 @@ class WooCommerce_MyParcelBE_Export {
 
 		// set insurance amount to int if already set
 		if (isset($options['insurance'])) {
-			$options['insurance']['amount'] = 500 * 100;
+			$options['insurance']['amount'] = self::INSURANCE_AMOUNT * 100;
 		}
 
 		// remove frontend insurance option values

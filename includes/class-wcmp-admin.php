@@ -266,7 +266,7 @@ class WooCommerce_MyParcelBE_Admin {
 			if (isset($shipment_options['insured'])) {
 				unset($shipment_options['insured']);
 				$shipment_options['insurance'] = array(
-					'amount'	=> 500 * 100,
+					'amount'	=> WooCommerce_MyParcelBE_Export::INSURANCE_AMOUNT * 100,
 					'currency'	=> 'EUR',
 				);
 				unset($shipment_options['insured_amount']);
