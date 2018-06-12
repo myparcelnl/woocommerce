@@ -376,7 +376,7 @@ MyParcel = {
     showBpostSaturday: function(date)
     {
         if(myParcelConfig.allowBpostSaturdayDelivery) {
-            $('#mypa-delivery-date-bpost-saturday').val(date);
+            $('#mypa-delivery-date-bpost-saturday').html(date);
             $('#mypa-delivery-bpost-saturday-price').html('(+ € '+ myParcelConfig.priceBpostSaturdayDelivery + ')');
             $('#mypa-bpost-saturday-delivery').show();
         }
@@ -450,7 +450,7 @@ MyParcel = {
         }
 
         /* All other deliveries */
-        $('#mypa-delivery-date').val(dateString);
+        $('#mypa-delivery-date').html(dateString);
         $('#mypa-delivery-date-only-bpost').val(deliveryOptions.data.delivery[0].date);
     },
 

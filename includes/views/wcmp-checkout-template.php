@@ -26,7 +26,7 @@
             <label for="mypa-deliver-date">Bezorgen op</label>
             <div class="full-width">
                 <input name="mypa-deliver-or-pickup" id="mypa-deliver-pickup-deliver" value="mypa-deliver" type="radio">
-                <input name="mypa-delivery-date" id="mypa-delivery-date" type="text" readonly>
+                <div name="mypa-delivery-date" id="mypa-delivery-date" type="text" readonly></div>
                 <input name="mypa-delivery-date-only" id="mypa-delivery-date-only-bpost" type="hidden">
             </div>
         </li>
@@ -34,7 +34,7 @@
             <label for="mypa-deliver-date-bpost-saturday">Bezorgen op</label>
             <div class="full-width">
                 <input name="mypa-deliver-or-pickup" id="mypa-deliver-pickup-deliver-bpost-saturday" value="mypa-deliver-bpost-saturday" type="radio" readonly>
-                <input name="mypa-delivery-date-bpost-saturday" id="mypa-delivery-date-bpost-saturday" type="text">
+                <div name="mypa-delivery-date-bpost-saturday" id="mypa-delivery-date-bpost-saturday" type="text"></div>
                 <input name="mypa-delivery-date-only-saturday" id="mypa-delivery-date-only-bpost-saturday" type="hidden">
                 <span id="mypa-delivery-bpost-saturday-price"></span>
             </div>
