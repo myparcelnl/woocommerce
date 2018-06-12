@@ -17,9 +17,7 @@
 <br>
 <table class="wcmyparcelbe_settings_table parcel_options">
 	<?php
-
-    $shipment_options['insured'] = isset($shipment_options['insurance']['amount']) ? 1 : 0;
-    var_dump($shipment_options['insured']);
+   
 	$option_rows = array(
 		'[signature]'	=> array(
 			'label'	=> __( 'Signature on delivery', 'woocommerce-myparcelbe' ),
@@ -27,7 +25,7 @@
 		),
 		'[insured]'	=> array(
 			'label'	=> __( 'Insured to &euro; 500', 'woocommerce-myparcelbe' ),
-			'value'	=> $shipment_options['insured'],
+			'value'	=> isset(WooCommerce_MyParcelBE()->export_defaults['insured']) ? 1 : 0,
 			'class'	=> 'insured',
 		),
 	);
