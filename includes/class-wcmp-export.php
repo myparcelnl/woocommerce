@@ -10,11 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( !class_exists( 'WooCommerce_MyParcelBE_Export' ) ) :
 
 class WooCommerce_MyParcelBE_Export {
-	const package_type = 1;
+    const package_type = 1;
     const INSURANCE_AMOUNT = 500;
-	public $order_id;
-	public $success;
-	public $errors;
+
+    public $order_id;
+    public $success;
+    public $errors;
 
 	/**
 	 * Construct.
