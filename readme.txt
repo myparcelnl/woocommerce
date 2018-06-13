@@ -87,7 +87,7 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.0.0 (2018-06-12) =
+= 3.0.1 (2018-06-12) =
 Fix: export with an insurance
 Improvement: delivery date not clickable and you can't change the date
 
