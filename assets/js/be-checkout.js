@@ -128,8 +128,6 @@ jQuery(document).ready(function($) {
 			}
 
 		});
-
-
 	
 	})
 

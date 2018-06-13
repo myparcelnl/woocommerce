@@ -190,7 +190,8 @@
 #mypa-delivery-date,
 #mypa-delivery-date-bpost-saturday {
 	display: inline-block;
-	width: 66%;
+	width: 35%;
+	margin-left: 6px;
 }
 
 #mypa-bottom-spacer {

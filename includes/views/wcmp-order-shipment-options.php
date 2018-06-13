@@ -17,11 +17,7 @@
 <br>
 <table class="wcmyparcelbe_settings_table parcel_options">
 	<?php
-	$shipment_options['insured'] = isset($shipment_options['insurance']['amount']) ? 1 : 0;
-	if (!isset($shipment_options['insurance'])) {
-		$shipment_options['insurance']['amount'] = '';
-	}
-
+   
 	$option_rows = array(
 		'[signature]'	=> array(
 			'label'	=> __( 'Signature on delivery', 'woocommerce-myparcelbe' ),
@@ -29,31 +25,14 @@
 		),
 		'[insured]'	=> array(
 			'label'	=> __( 'Insured to &euro; 500', 'woocommerce-myparcelbe' ),
-			'value'	=> $shipment_options['insured'],
+			'value'	=> isset(WooCommerce_MyParcelBE()->export_defaults['insured']) ? 1 : 0,
 			'class'	=> 'insured',
 		),
 	);
 
-	if (isset($recipient['cc']) && $recipient['cc'] != 'BE') {
-		if ( WooCommerce_MyParcelBE()->export->is_world_shipment_country( $recipient['cc'] ) ) {
-			unset($option_rows['[large_format]']);
-		}
-		unset($option_rows['[signature]']);
-		unset($option_rows['[return]']);
-
-		$shipment_options['insured'] = 1;
-        $shipment_options['insurance']['amount'] = 49900;
-        $insurance_text = __( 'Standard insurance up to €500 + signature on delivery', 'woocommerce-myparcelbe' );
-
-
-		$option_rows['[insured]'] = array(
-			'label'		=> $insurance_text,
-			'value'		=> $shipment_options['insured'],
-			'class'		=> 'insured',
-			'hidden'	=> 'yes',
-		);
-	}
-
+    if (isset($recipient['cc']) && $recipient['cc'] != 'BE') {
+        unset( $option_rows['[signature]'] );
+    }
 	?>
 	<?php foreach ($option_rows as $name => $option_row): ?>
 	<tr>
