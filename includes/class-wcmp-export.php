@@ -449,7 +449,6 @@ class WooCommerce_MyParcel_Export {
                 'carrier'	=> 1, // default to POSTNL for now
             );
 
-					'street'		=> $pickup['street'],
             if ( $pickup = $this->is_pickup( $order ) ) {
                 // $pickup_time = array_shift($pickup['time']); // take first element in time array
                 $shipment['pickup'] = array(
