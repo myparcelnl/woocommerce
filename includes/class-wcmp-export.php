@@ -443,7 +443,7 @@ class WooCommerce_MyParcel_Export {
 			$order = WCX::get_order( $order_id );
 
 			$shipment = array(
-                'reference_identifier'  => $this->replace_shortcodes( WooCommerce_MyParcel()->export_defaults['label_description'], $order ),
+			    'reference_identifier'  => $this->replace_shortcodes( WooCommerce_MyParcel()->export_defaults['label_description'], $order ),
 				'recipient' => $this->get_recipient( $order ),
 				'options'	=> $this->get_options( $order ),
 				'carrier'	=> 1, // default to POSTNL for now
