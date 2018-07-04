@@ -443,9 +443,10 @@ class WooCommerce_MyParcel_Export {
 			$order = WCX::get_order( $order_id );
 
 			$shipment = array(
-				'recipient' => $this->get_recipient( $order ),
-				'options'	=> $this->get_options( $order ),
-				'carrier'	=> 1, // default to POSTNL for now
+                'reference_identifier'  => $this->replace_shortcodes( WooCommerce_MyParcel()->export_defaults['label_description'], $order ),
+                'recipient'             => $this->get_recipient( $order ),
+                'options'               => $this->get_options( $order ),
+                'carrier'               => 1, // default to POSTNL for now
 			);
 
 			if ( $pickup = $this->is_pickup( $order ) ) {
