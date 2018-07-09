@@ -7,6 +7,7 @@ Author: Richard Perdaan
 Author URI: http://www.wpovernight.com
 Version: 2.4.11
 
+
 Text Domain: woocommerce-myparcel
 
 License: GPLv3 or later
@@ -221,6 +222,7 @@ class WooCommerce_MyParcel {
 				'email_tracktrace'		=> 'email_tracktrace',
 				'myaccount_tracktrace'	=> 'myaccount_tracktrace',
 				'process'				=> 'process_directly',
+				'barcode_in_note'		=> 'barcode_in_note',
 				'keep_consignments'		=> 'keep_shipments',
 				'error_logging'			=> 'error_logging',
 			);

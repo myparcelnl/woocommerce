@@ -13,6 +13,7 @@ class WooCommerce_MyParcel_Export {
 	public $order_id;
 	public $success;
 	public $errors;
+	private $prefix_message;
 
 	/**
 	 * Construct.
@@ -319,12 +320,11 @@ class WooCommerce_MyParcel_Export {
 				$params['positions'] = implode( ';', array_slice($portrait_positions,$offset) );
 			}
 
-
 			if (isset($label_response_type) && $label_response_type == 'url') {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
-
+				$this->add_myparcel_note($shipment_ids, $order_ids);
 				$this->log("API response:\n".var_export($response, true));
-				// var_dump( $response );
+
 				if (isset($response['body']['data']['pdfs']['url'])) {
 					$url = untrailingslashit( $api->APIURL ) . $response['body']['data']['pdfs']['url'];
 					$return['url'] = $url;
@@ -334,6 +334,7 @@ class WooCommerce_MyParcel_Export {
 
 			} else {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'pdf' );
+				$this->add_myparcel_note_to_shipments($shipment_ids, $order_ids);
 
 				if (isset($response['body'])) {
 					$this->log("PDF data received");
@@ -348,8 +349,6 @@ class WooCommerce_MyParcel_Export {
 					$this->log("Unknown error, API response:\n".var_export($response, true));
 					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
 				}
-
-				 //echo '<pre>';var_dump($response);echo '</pre>';die();
 			}
 
 		} catch (Exception $e) {
@@ -547,9 +546,8 @@ class WooCommerce_MyParcel_Export {
 			'company'		=> (string) WCX_Order::get_prop( $order, 'shipping_company' ),
 			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
 			'phone'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_phone']) ? WCX_Order::get_prop( $order, 'billing_phone' ) : '',
-
 		);
-
+    
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
 		if ( $shipping_country == 'NL' ) {
 			// use billing address if old 'pakjegemak' (1.5.6 and older)
@@ -585,6 +583,33 @@ class WooCommerce_MyParcel_Export {
 		$address = array_merge( $address, $address_intl);
 
 		return apply_filters( 'wc_myparcel_recipient', $address, $order );
+	}
+
+	/**
+	 * @param $selected_shipment_ids
+	 * @param $order_ids
+	 *
+	 * @internal param $shipment_ids
+	 */
+	public function add_myparcel_note_to_shipments($selected_shipment_ids, $order_ids){
+
+		if ( ! isset(WooCommerce_MyParcel()->general_settings['barcode_in_note'])) {
+			return;
+		}
+
+		// Select the barcode text of the MyParcel settings
+		$this->prefix_message = WooCommerce_MyParcel()->general_settings['barcode_in_note_titel'];
+
+		foreach ( $order_ids as $order_id ) {
+			$order = WCX::get_order( $order_id );
+			$order_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+			foreach ($order_shipments as $shipment) {
+				$shipment_id = $shipment['shipment_id'];
+				$this->add_myparcel_note_to_shipment($selected_shipment_ids, $shipment_id, $order);
+			}
+		}
+
+		return;
 	}
 
 	public function get_options( $order ) {
@@ -1442,12 +1467,12 @@ class WooCommerce_MyParcel_Export {
 
 	public function is_eu_country($country_code) {
 		// $eu_countries = array( 'GB', 'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE' );
-		$euro_countries = array( 'AT','BE','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','UA','SM','RS','VA','BY' );
+		$euro_countries = array( 'AT','BE','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','JE','HR','LI','MK','MD','ME','UA','SM','RS','VA','BY' );
 		return in_array( $country_code, $euro_countries);
 	}
 
 	public function is_world_shipment_country( $country_code ) {
-		$world_shipment_countries = array( 'AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY','CH','TR','NO' );
+		$world_shipment_countries = array( 'AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IS','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY','CH','TR','NO' );
 		return in_array( $country_code, $world_shipment_countries);
 	}
 
@@ -1473,6 +1498,33 @@ class WooCommerce_MyParcel_Export {
 				file_put_contents($log_file, $message, FILE_APPEND);
 			}
 		}
+	}
+
+	private function get_shipment_barcode_from_myparcel_api($shipment_id) {
+
+		$api = $this->init_api();
+		$response = $api->get_shipments( $shipment_id );
+
+		if ( ! isset( $response['body']['data']['shipments'][0]['barcode'] ) ) {
+			throw new \ErrorException( 'No MyParcel barcode found for shipment id; ' . $shipment_id );
+		}
+
+		return $response['body']['data']['shipments'][0]['barcode'];
+	}
+
+	/**
+	 * @param $selected_shipment_ids
+	 * @param $shipment_id
+	 * @param $order
+	 */
+	private function add_myparcel_note_to_shipment($selected_shipment_ids, $shipment_id, $order) {
+		if ( ! in_array($shipment_id, $selected_shipment_ids)) {
+			return;
+		}
+
+		$barcode = $this->get_shipment_barcode_from_myparcel_api($shipment_id);
+
+		$order->add_order_note( $this->prefix_message . sprintf( $barcode ) );
 	}
 }
 
