@@ -214,7 +214,6 @@ class WooCommerce_MyParcel_Export {
 					$api = $this->init_api();
 					$response = $api->add_shipments( $shipments );
 					$this->log("API response (order {$order_id}):\n".var_export($response, true));
-					// echo '<pre>';var_dump($response);echo '</pre>';die();
 					if (isset($response['body']['data']['ids'])) {
 						$ids = array_shift($response['body']['data']['ids']);
 						$shipment_id = $ids['id'];
@@ -255,7 +254,6 @@ class WooCommerce_MyParcel_Export {
 				WCX_Order::update_meta_data( $order, '_myparcel_last_shipment_ids', $created_shipments );
 			}
 		}
-		// echo '<pre>';var_dump($this->success);echo '</pre>';die();
 		if (!empty($this->success)) {
 			$return['success'] = sprintf(__( '%s shipments successfully exported to Myparcel', 'woocommerce-myparcel' ), count($this->success));
 			$return['success_ids'] = $this->success;
@@ -272,13 +270,11 @@ class WooCommerce_MyParcel_Export {
 		foreach ($myparcel_options as $order_id => $options) {
 			$return_shipments = array( $this->prepare_return_shipment_data( $order_id, $options ) );
 			$this->log("Return shipment data for order {$order_id}:\n".var_export($return_shipments, true));
-			// echo '<pre>';var_dump($return_shipment);echo '</pre>';die();
 
 			try {
 				$api = $this->init_api();
 				$response = $api->add_shipments( $return_shipments, 'return' );
 				$this->log("API response (order {$order_id}):\n".var_export($response, true));
-				// echo '<pre>';var_dump($response);echo '</pre>';die();
 				if (isset($response['body']['data']['ids'])) {
 					$order = WCX::get_order( $order_id );
 					$ids = array_shift($response['body']['data']['ids']);
@@ -300,7 +296,6 @@ class WooCommerce_MyParcel_Export {
 			}
 
 		}
-		// echo '<pre>';var_dump($success);echo '</pre>';die();
 
 		return $return;
 	}
@@ -729,7 +724,6 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// disable options for mailbox package and unpaid letter
-		// echo '<pre>';var_dump($package_type);echo '</pre>';die();
 		if ( $options['package_type'] != 1 ) {
 			$illegal_options = array( 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date' );
 			foreach ($options as $key => $option) {
@@ -904,17 +898,9 @@ class WooCommerce_MyParcel_Export {
 				} else {
 					$shipping_method_id = $shipping_method;
 				}
-
-				// add class if we have one
-				if (!empty($shipping_class)) {
-					$shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
-				}
 			}
-
 			foreach (WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
-				// check if we have a match with the predefined methods
-				// fallback to bare method (without class) (if bare method also defined in settings)
-				if (in_array($shipping_method_id, $package_type_shipping_methods) || (!empty($shipping_method_id_class) && in_array($shipping_method_id_class, $package_type_shipping_methods))) {
+				if ($this->isActiveMethod($shipping_method_id, $package_type_shipping_methods, $shipping_class)) {
 					$package_type = $package_type_key;
 					break;
 				}
@@ -942,6 +928,7 @@ class WooCommerce_MyParcel_Export {
 			$order_shipping_method = $order_shipping_method['method_id'];
 
 			$order_shipping_class = WCX_Order::get_meta( $order, '_myparcel_highest_shipping_class' );
+
 			if (empty($order_shipping_class)) {
 				$order_shipping_class = $this->get_order_shipping_class( $order, $order_shipping_method );
 			}
@@ -1069,7 +1056,6 @@ class WooCommerce_MyParcel_Export {
 		try {
 			$api = $this->init_api();
 			$response = $api->get_shipments( $id );
-			// echo '<pre>';var_dump($response);echo '</pre>';die();
 
 			if (!empty($response['body']['data']['shipments'])) {
 				$shipments = $response['body']['data']['shipments'];
@@ -1276,6 +1262,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		$shipping_method = $this->get_shipping_method( $shipping_method_id );
+
 		if (empty($shipping_method)) {
 			return false;
 		}
@@ -1527,6 +1514,34 @@ class WooCommerce_MyParcel_Export {
 
 		$order->add_order_note( $this->prefix_message . sprintf( $barcode ) );
 	}
+
+    /**
+     * @param $shipping_method_id
+     * @param $package_type_shipping_methods
+     * @param $shipping_class
+     *
+     * @return bool
+     */
+    private function isActiveMethod( $shipping_method_id, $package_type_shipping_methods, $shipping_class ) {
+
+        // check if we have a match with the predefined methods
+        if (in_array($shipping_method_id, $package_type_shipping_methods)) {
+            return true;
+        }
+
+        // fallback to bare method (without class) (if bare method also defined in settings)
+        if (!empty($shipping_class) && in_array($shipping_class, $package_type_shipping_methods)) {
+            return true;
+        }
+
+        // support WooCommerce Table Rate Shipping by Bolder Elements
+        $newShippingClass = str_replace(':', '_', $shipping_class);
+        if ( !empty($shipping_class) && in_array($newShippingClass, $package_type_shipping_methods)) {
+            return true;
+        }
+
+        return false;
+    }
 }
 
 endif; // class_exists
