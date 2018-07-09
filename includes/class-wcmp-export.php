@@ -437,49 +437,50 @@ class WooCommerce_MyParcel_Export {
 		return $api;
 	}
 
-	public function get_order_shipment_data( $order_ids, $type = 'standard' ) {
-		foreach( $order_ids as $order_id ) {
-			// get order
-			$order = WCX::get_order( $order_id );
+    public function get_order_shipment_data( $order_ids, $type = 'standard' ) {
+        foreach( $order_ids as $order_id ) {
+            // get order
+            $order = WCX::get_order( $order_id );
 
-			$shipment = array(
-				'recipient' => $this->get_recipient( $order ),
-				'options'	=> $this->get_options( $order ),
-				'carrier'	=> 1, // default to POSTNL for now
-			);
+            $shipment = array(
+                'reference_identifier'  => $this->replace_shortcodes( WooCommerce_MyParcel()->export_defaults['label_description'], $order ),
+                'recipient' => $this->get_recipient( $order ),
+                'options'	=> $this->get_options( $order ),
+                'carrier'	=> 1, // default to POSTNL for now
+            );
 
-			if ( $pickup = $this->is_pickup( $order ) ) {
-				// $pickup_time = array_shift($pickup['time']); // take first element in time array
-				$shipment['pickup'] = array(
-					'postal_code'	=> $pickup['postal_code'],
-					'street'		=> $pickup['street'],
-					'city'			=> $pickup['city'],
-					'number'		=> $pickup['number'],
-					'location_name'	=> $pickup['location'],
-				);
-			}
+            if ( $pickup = $this->is_pickup( $order ) ) {
+                // $pickup_time = array_shift($pickup['time']); // take first element in time array
+                $shipment['pickup'] = array(
+                    'postal_code'	=> $pickup['postal_code'],
+                    'street'		=> $pickup['street'],
+                    'city'			=> $pickup['city'],
+                    'number'		=> $pickup['number'],
+                    'location_name'	=> $pickup['location'],
+                );
+            }
 
-			$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-			if ( $this->is_world_shipment_country( $shipping_country ) ) {
-				$customs_declaration = $this->get_customs_declaration( $order );
-				$shipment['customs_declaration'] = $customs_declaration;
-				$shipment['physical_properties'] = array(
-					'weight' => $customs_declaration['weight'],
-				);
-			}
+            $shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+            if ( $this->is_world_shipment_country( $shipping_country ) ) {
+                $customs_declaration = $this->get_customs_declaration( $order );
+                $shipment['customs_declaration'] = $customs_declaration;
+                $shipment['physical_properties'] = array(
+                    'weight' => $customs_declaration['weight'],
+                );
+            }
 
-			/* disabled for now
-			$concept_shipments = $this->get_shipment_ids( (array) $order_id, array( 'only_concepts' => true, 'only_last' => true ) );
-			if ( !empty($concept_shipments) ) {
-				$shipment['id'] = array_pop($concept_shipments);
-			}
-			*/
+            /* disabled for now
+            $concept_shipments = $this->get_shipment_ids( (array) $order_id, array( 'only_concepts' => true, 'only_last' => true ) );
+            if ( !empty($concept_shipments) ) {
+                $shipment['id'] = array_pop($concept_shipments);
+            }
+            */
 
-			$shipments[] = $shipment;
-		}
+            $shipments[] = $shipment;
+        }
 
-		return $shipments;
-	}
+        return $shipments;
+    }
 
 	public function prepare_return_shipment_data( $order_id, $options ) {
 		$order = WCX::get_order( $order_id );
