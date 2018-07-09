@@ -87,6 +87,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+= 2.4.12 (2018-04-30) =
+Fix: Export shipment labels
+
 = 2.4.10 (2018-04-26) =
 Improvement: Support Effect Connect, you can place the barcode inside a note of the order
 
