@@ -88,7 +88,6 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
-
 = 2.4.12 (2018-07-04) =
 Fix: show the correct package type inside the order view
 
