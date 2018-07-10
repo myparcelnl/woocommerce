@@ -317,7 +317,7 @@ class WooCommerce_MyParcel_Export {
 
 			if (isset($label_response_type) && $label_response_type == 'url') {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
-				$this->add_myparcel_note($shipment_ids, $order_ids);
+				$this->add_myparcel_note_to_shipments($shipment_ids, $order_ids);
 				$this->log("API response:\n".var_export($response, true));
 
 				if (isset($response['body']['data']['pdfs']['url'])) {
