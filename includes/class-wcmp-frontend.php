@@ -256,9 +256,6 @@ class WooCommerce_MyParcel_Frontend {
 			}
 		}
 
-		error_reporting(E_ALL);
-		ini_set('display_errors', 1);
-
         require_once('views/wcmp-delivery-options-template.php');
 	}
 
