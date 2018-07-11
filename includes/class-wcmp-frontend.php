@@ -239,8 +239,6 @@ class WooCommerce_MyParcel_Frontend {
 		}
 		$delivery_options_shipping_methods = json_encode($delivery_options_shipping_methods);
 
-		$iframe_url = WooCommerce_MyParcel()->plugin_url() . '/includes/views/wcmp-delivery-options.php?v=' . time();
-
 		// determine whether to pre-hide iframe (prevents flashing)
 		$hide_delivery_options = false;
 		$chosen_shipping_methods = WC()->session->chosen_shipping_methods;
@@ -257,29 +255,11 @@ class WooCommerce_MyParcel_Frontend {
 				}
 			}
 		}
-		// We're using placeholder for the iframe to prevent race condition:
-		// IE/Edge loads in a different order than Chrome/Firefox and plugin conflicts could cause the same,
-		// so we never know whether the iframe is loaded before the main page scripts
-		// This way we gain control by setting the iframe + src via the main page script 
-		?>
-		<div class="myparcel-iframe-placeholder" style="display:none;"></div>
-		<script>
-			window.mypa = {};
-			window.mypa.settings = <?php echo $settings; ?>;
-			window.myparcel_delivery_options_shipping_methods = <?php echo $delivery_options_shipping_methods; ?>;
-			<?php if (!empty($myparcel_delivery_options_always_display)): ?>
-			window.myparcel_delivery_options_always_display = 'yes';
-			<?php endif ?>
-			window.myparcel_initial_hide = <?php echo ($hide_delivery_options) ? 'true' : 'false'; ?>;
-		</script>
-		
-		<input style="display:none !important;" type="checkbox" name='mypa-options-enabled' id="mypa-options-enabled">
-		<div id="mypa-chosen-delivery-options" style="display:none !important;">
-			<input style="display:none !important;" name='mypa-post-nl-data' id="mypa-input">
-			<input style="display:none !important;" type="checkbox" name='mypa-signed' id="mypa-signed">
-			<input style="display:none !important;" type="checkbox" name='mypa-recipient-only' id="mypa-recipient-only">
-		</div>
-		<?php
+
+		error_reporting(E_ALL);
+		ini_set('display_errors', 1);
+
+        require_once('views/wcmp-delivery-options-template.php');
 	}
 
 	public function output_shipping_data() {

@@ -8,8 +8,6 @@ jQuery( function( $ ) {
 	// reference jQuery for MyParcel iFrame
 	window.mypajQuery = $;
 	
-	// replace iframe placeholder with actual iframe
-	$('.myparcel-iframe-placeholder').replaceWith( '<iframe id="myparcel-iframe" src="" frameborder="0" scrolling="auto" style="width: 100%; display: none;">Bezig met laden...</iframe>');
 	// show if we have to
 	if ( window.myparcel_initial_hide == false ) {
 		$('#myparcel-iframe').show();
