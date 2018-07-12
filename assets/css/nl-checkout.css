@@ -84,7 +84,7 @@
 	border-style: outset;
 	cursor: pointer;
 }
-#mypa-error-try-again: active {
+#mypa-error-try-again:active {
 	margin-top: 18px;
 	border: 2px solid;
 	max-width: 66px;

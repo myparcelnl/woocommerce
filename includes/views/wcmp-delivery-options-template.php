@@ -5,6 +5,15 @@
 //    $myparcel_delivery_options_always_display):
 
 ?>
+<!-- Add the Custom styles to the checkout -->
+<style>
+    <?php
+    if (!empty(WooCommerce_MyParcel()->checkout_settings['custom_css'])) {
+        echo WooCommerce_MyParcel()->checkout_settings['custom_css'];
+    }
+    ?>
+</style>
+
 <input style="/*display:none !important;*/" name='mypa-post-nl-data' id="mypa-input">
 
 <div id="mypa-load">
