@@ -146,6 +146,6 @@
 
 <script>
     jQuery(document).ready(function () {
-        MyParcel.setDataAndInit();
+        MyParcel.init();
     });
 </script>
