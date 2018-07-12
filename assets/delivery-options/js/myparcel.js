@@ -14,6 +14,81 @@ MyParcel = {
     DELIVERY_SIGNED: 0,
     DELIVERY_ONLY_RECIPIENT: 0,
 
+    setDataAndInit: function () {
+
+        //var address = data['address'];
+
+        // if (!address || (address['country'] !== 'NL' && address['country'] !== 'BE') || !address['street']) {
+        //     return;
+        // }
+        // billing or shipping changes
+
+        console.log(jQuery('#billing_postcode').val());
+
+        var myParcelConfig = {
+            address: {
+                cc: 'NL',
+                postalCode: '2131BC',
+                number: '679',
+                city:'Hoofddorp'
+            },
+            txtWeekDays: [
+                'Zondag',
+                'Maandag',
+                'Dinsdag',
+                'Woensdag',
+                'Donderdag',
+                'Vrijdag',
+                'Zaterdag'
+            ],
+            translateENtoNL: {
+                'monday': 'maandag',
+                'tuesday': 'dindsag',
+                'wednesday': 'woensdag',
+                'thursday': 'donderdag',
+                'friday': 'vrijdag',
+                'saturday': 'zaterdag',
+                'sunday': 'zondag'
+            },
+            config: {
+                "apiBaseUrl": "https://api.myparcel.nl/",
+                "carrier": "1",
+
+                "priceMorningDelivery": "10.00",
+                "priceNormalDelivery": "5.85",
+                "priceEveningDelivery": "1.25",
+                "priceSignature": "0.36",
+                "priceOnlyRecipient":"0.29",
+                "pricePickup": "5.85",
+                "pricePickupExpress": "1.38",
+
+                "deliveryTitel":"Bezorgen op",
+                "pickupTitel":"Afhalen op locatie",
+                "deliveryMorningTitel":"Ochtendlevering",
+                "deliveryStandardTitel":"Standaard levering",
+                "deliveryEveningTitel":"Avondlevering",
+                "signatureTitel": "Handtekening",
+                "onlyRecipientTitel": "Alleen geadresseerde",
+
+                "allowMondayDelivery": true,
+                "allowMorningDelivery": true,
+                "allowEveningDelivery": true,
+                "allowSignature": true,
+                "allowOnlyRecipient": true,
+                "allowPickupPoints": true,
+                "allowPickupExpress": true,
+                "dropOffDays": "1;2;3;4;5;6",
+
+                "saturdayCutoffTime": "16:00",
+                "cutoffTime": "15:00",
+                "deliverydaysWindow": "5",
+                "dropoffDelay":"1"
+            }
+        };
+
+        MyParcel.init(myParcelConfig);
+    },
+
     init: function(externalData)
     {
         this.data = externalData;
@@ -194,9 +269,13 @@ MyParcel = {
 
         /* External webshop triggers */
         jQuery('#mypa-load').on('click', function () {
-
             MyParcel.mapExternalWebshopTriggers()
         });
+
+        jQuery('#billing_postcode, #billing_house_number' ).on('change', function(){
+            MyParcel.callDeliveryOptions();
+        });
+
     },
 
     mapExternalWebshopTriggers: function () {
