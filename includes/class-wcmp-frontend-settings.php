@@ -27,9 +27,193 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         function __construct() {
 
             $this->settings = WooCommerce_MyParcel()->checkout_settings;
-//			add_action( 'woocommerce_myparcel_frontend_settings', array($this, 'get_default_settings' ));
-            //add_action( 'woocommerce_update_order_review_fragments', array( $this, 'order_review_fragments' ) );
+       }
+
+
+        /* Settings only_recipient */
+
+        /**
+         * @return int
+         */
+        public function is_only_recipient_enabled() {
+            return $this->settings['only_recipient_enabled'] ? 1 : 0;
         }
+
+        /**
+         * @return mixed
+         */
+        public function only_recipient_titel() {
+            return $this->settings['only_recipient_titel'];
+        }
+
+        /**
+         * @return string
+         */
+        public function get_price_only_recipient() {
+            $price = $this->settings['only_recipient_fee'];
+            $total_price = $this->get_total_price_with_tax($price);
+            return $total_price;
+        }
+
+
+        /* Settings signature */
+
+        /**
+         * @return int
+         */
+        public function is_signature_enabled() {
+            return $this->settings['signed_enabled'] ? 1 : 0;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function signature_titel() {
+            return $this->settings['signed_titel'];
+        }
+        /**
+         * @return string
+         */
+        public function get_price_signature() {
+            $price = $this->settings['signed_fee'];
+            $total_price = $this->get_total_price_with_tax($price);
+            return $total_price;
+        }
+
+
+        /* Settings morning delivery */
+
+        /**
+         * @return int
+         */
+        public function is_morning_enabled() {
+            return $this->settings['morning_enabled'] ? 1 : 0;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function morning_titel() {
+            return $this->settings['morning_titel'];
+        }
+        /**
+         * @return string
+         */
+        public function get_price_morning() {
+            $price = $this->settings['morning_fee'];
+            $total_price = $this->get_total_price_with_tax($price);
+            return $total_price;
+        }
+
+        /* Settings standard delivery */
+
+        /**
+         * @return int
+         */
+        public function is_standard_enabled() {
+            return $this->settings['standard_enabled'] ? 1 : 0;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function standard_titel() {
+            return $this->settings['standard_titel'];
+        }
+
+
+        /* Settings evening delivery */
+
+        /**
+         * @return int
+         */
+        public function is_evening_enabled() {
+            return $this->settings['night_enabled'] ? 1 : 0;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function evening_titel() {
+            return $this->settings['night_titel'];
+        }
+        /**
+         * @return string
+         */
+        public function get_price_evening() {
+            $price = $this->settings['night_fee'];
+            $total_price = $this->get_total_price_with_tax($price);
+            return $total_price;
+        }
+
+
+
+        /* Settings pickup delivery */
+
+        /**
+         * @return bool
+         */
+        public function is_pickup_enabled() {
+            return (bool) $this->settings['pickup_enabled'];
+        }
+        /**
+         * @return mixed
+         */
+        public function pickup_titel() {
+            return $this->settings['pickup_titel'];
+        }
+
+        /**
+         * @return string
+         */
+        public function get_price_pickup() {
+            $price = $this->settings['pickup_fee'];
+            $total_price = $this->get_total_price_with_tax($price);
+            return $total_price;
+        }
+
+        /* Settings pickup express delivery */
+
+        /**
+         * @return bool
+         */
+        public function is_pickup_express_enabled() {
+            return (bool) $this->settings['pickup_express_enabled'];
+        }
+        /**
+         * @return mixed
+         */
+        public function pickup_express_titel() {
+            return $this->settings['pickup_express_titel'];
+        }
+
+        /**
+         * @return string
+         */
+        public function get_price_pickup_express() {
+            $price = $this->settings['pickup_express_fee'];
+            $total_price = $this->get_total_price_with_tax($price);
+            return $total_price;
+        }
+
+
+        /* Settings Monday delivery */
+        /**
+         * @return int
+         */
+        public function is_monday_enabled() {
+            return $this->settings['monday_delivery'] ? 1 : 0;
+        }
+
+        /**
+         * @return mixed
+         *
+         * Cut-off time for monday delivery
+         */
+        public function get_saturday_cutoff_time() {
+            return $this->settings['saturday_cutoff_time'];
+        }
+
 
         /**
          * @return mixed
@@ -43,20 +227,6 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             }
 
             return $this->settings['cutoff_time'];
-        }
-
-        /**
-         * @return int
-         */
-        public function is_saturday_enabled() {
-            return $this->settings['saturday_delivery_enabled'] ? 1 : 0;
-        }
-
-        /**
-         * @return mixed
-         */
-        public function get_saturday_cutoff_time() {
-            return $this->settings['saturday_cutoff_time'];
         }
 
         /**
@@ -92,46 +262,6 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          */
         public function get_country_code() {
             return WC()->customer->get_shipping_country();
-        }
-
-
-        /**
-         * @return bool
-         */
-        public function is_pickup_enabled() {
-            return (bool) $this->settings['pickup_enabled'];
-        }
-
-        /**
-         * @return string
-         */
-        public function get_price_pickup() {
-            $price = $this->settings['pickup_fee'];
-            $total_price = $this->get_total_price_with_tax($price);
-            return $total_price;
-        }
-
-        /**
-         * @return bool
-         */
-        public function is_signed_enabled() {
-            return (bool) $this->settings['signed_enabled'];
-        }
-
-        /**
-         * @return string
-         */
-        public function get_price_signature() {
-            $price = $this->settings['signed_fee'];
-            $total_price = $this->get_total_price_with_tax($price);
-            return $total_price;
-        }
-
-        /**
-         * @return bool
-         */
-        public function is_monday_delivery_enabled() {
-            return (bool) $this->settings['monday_delivery'];
         }
 
         /**

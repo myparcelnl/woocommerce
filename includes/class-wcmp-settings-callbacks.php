@@ -391,29 +391,41 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		$fee_args = array(
 			'id'			=> "{$id}_fee",
 			'type'			=> 'text',
-			'size'			=> '5',
 		);
+        // number (cutoff time)
+        $cutoff_time_args = array(
+            'id'			=> "{$id}_time",
+            'type'			=> 'text',
+        );
 		// textarea (description)
-		$description_args = array(
-			'id'			=> "{$id}_description",
+		$default_delivery_text = array(
+			'id'			=> "{$id}_titel",
 			'type'			=> 'text',
-			'size'			=> '60',
 		);
 
 
 		?>
 		<?php $this->checkbox( array_merge( $args, $cb_args ) ); ?><br/>
 		<table class="wcmp_delivery_option_details">
-			<!--
-			<tr>
-				<td><?php _e( 'Description', 'woocommerce-myparcel' )?>:</td>
-				<td><?php $this->text_input( array_merge( $args, $description_args ) ); ?></td>
-			</tr>
-			!-->
-			<tr>
-				<td><?php _e( 'Additional fee (ex VAT, optional)', 'woocommerce-myparcel' )?>:</td>
-				<td>&euro; <?php $this->text_input( array_merge( $args, $fee_args ) ); ?></td>
-			</tr>
+            <?php if ($args['has_title']):?>
+                <tr>
+                    <td><?php _e( $args['titel'].' titel', 'woocommerce-myparcel' ) ?>:</td>
+                    <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input( array_merge( $args, $default_delivery_text ) )?></td>
+                </tr>
+			<?php endif; ?>
+            <?php if ($args['has_cutoff_time']):?>
+                <tr>
+                    <td><?php _e( 'Cut-off time for monday delivery', 'woocommerce-myparcel' )?>:</td>
+                    <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input( array_merge( $args, $cutoff_time_args ) ); ?></td>
+                </tr>
+            <?php endif; ?>
+            <?php if ($args['has_price']):?>
+                <tr>
+                    <td><?php _e( 'Additional fee (ex VAT, optional)', 'woocommerce-myparcel' )?>:</td>
+                    <td>&euro; <?php $this->text_input( array_merge( $args, $fee_args ) ); ?></td>
+                </tr>
+			<?php endif; ?>
+
 		</table>
 		<?php
 	}
@@ -422,8 +434,6 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 	public function delivery_options_table( $args ) {
 		extract( $this->normalize_settings_args( $args ) );
 		?>
-		<table>
-
 		<table>
 			<thead>
 				<tr>

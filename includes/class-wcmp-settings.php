@@ -458,19 +458,6 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 		
-		// add_settings_field(
-		// 	'home_address_signature',
-		// 	__( 'Home address only + signature on delivery', 'woocommerce-myparcel' ).' (+ &euro;0.42)',
-		// 	array( $this->callbacks, 'checkbox' ),
-		// 	$option_group,
-		// 	'defaults',
-		// 	array(
-		// 		'option_name'	=> $option_name,
-		// 		'id'			=> 'home_address_signature',
-		// 		'description'	=> __( 'This is the secure option. The parcel will only be delivered at the recipient address, who has to sign for delivery. This way you can be certain the parcel will be handed to the recipient.', 'woocommerce-myparcel' )
-		// 	)
-		// );
-		
 		add_settings_field(
 			'return',
 			__( 'Return if no answer', 'woocommerce-myparcel' ),
@@ -662,8 +649,12 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
+                'has_title'     => true,
+				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'only_recipient',
+                'titel'         => 'Home address only',
+                'current'       => 'Home address only',
 			)
 		);
 
@@ -674,8 +665,12 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
+                'has_title'     => true,
+				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'signed',
+                'titel'         => 'Signature on delivery',
+                'current' 	    => 'Signature on delivery',
 			)
 		);
 
@@ -686,8 +681,12 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
+                'has_title'     => true,
+				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'night',
+                'titel'         => 'Evening delivery',
+                'current' 	    => 'Evening delivery',
 			)
 		);
 
@@ -698,8 +697,12 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
+                'has_title'     => true,
+				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'morning',
+                'titel'         => 'Morning delivery',
+                'current' 	    => 'Morning delivery',
 			)
 		);
 
@@ -710,8 +713,12 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
+                'has_title'     => true,
+				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'pickup',
+                'titel'         => 'Pickup',
+                'current' 	    => 'PostNL pickup',
 			)
 		);
 
@@ -722,12 +729,32 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
+                'has_title'     => true,
+				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'pickup_express',
+                'titel'         => 'Pickup express',
+                'current' 	    => 'Early PostNL pickup',
 			)
 		);
 
-		// Checkout options section.
+
+        add_settings_field(
+            'monday_delivery',
+            __( 'Enable monday delivery', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'delivery_option_enable' ),
+            $option_group,
+            'delivery_options',
+            array(
+                'has_title'         => false,
+                'has_price'         => false,
+                'has_cutoff_time'   => true,
+                'option_name'	    => $option_name,
+                'id'			    => 'saturday_cutoff',
+            )
+        );
+
+        // Checkout options section.
 		add_settings_section(
 			'processing_parameters',
 			__( 'Shipment processing parameters', 'woocommerce-myparcel' ),
@@ -801,33 +828,6 @@ class WooCommerce_MyParcel_Settings {
 				'type'			=> 'number',
 				'size'			=> '2',
 				'description'	=> __( 'Number of days you allow the customer to postpone a shipment', 'woocommerce-myparcel' ),
-			)
-		);
-
-		add_settings_field(
-			'monday_delivery',
-			__( 'Enable monday delivery', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'checkbox' ),
-			$option_group,
-			'processing_parameters',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'monday_delivery',
-			)
-		);
-
-		add_settings_field(
-			'saturday_cutoff_time',
-			__( 'Cut-off time for monday delivery', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'text_input' ),
-			$option_group,
-			'processing_parameters',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'saturday_cutoff_time',
-				'type'			=> 'text',
-				'size'			=> '5',
-				'description'	=> __( 'Time at which you stop processing orders on saturday for monday delivery (format: hh:mm)', 'woocommerce-myparcel' ),
 			)
 		);
 
