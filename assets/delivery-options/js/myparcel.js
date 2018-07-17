@@ -690,7 +690,6 @@ MyParcel = {
 
     showPickUpLocations: function()
     {
-       // jQuery('#ship-to-different-address-checkbox').click();
         if(MyParcel.data.config.allowPickupPoints) {
 
             var html = "";
