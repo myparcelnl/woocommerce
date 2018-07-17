@@ -182,7 +182,6 @@ MyParcel = {
 
 
         jQuery('#mypa-pickup-delivery, #mypa-pickup-location').on('change', function(e){
-            console.log("hier kom ik wel");
             MyParcel.setCurrentLocation();
             MyParcel.toggleDeliveryOptions();
             MyParcel.mapExternalWebshopTriggers();
@@ -213,7 +212,7 @@ MyParcel = {
          * Morning delivery
          *
          */
-        if (jQuery('#method-myparcel-delivery-morning').prop('checked'))
+        if (jQuery('#mypa-pickup-delivery').prop('checked') === false && jQuery('#method-myparcel-delivery-morning').prop('checked'))
         {
             jQuery('#s_method_myparcel_morning').click();
             MyParcel.DELIVERY_ONLY_RECIPIENT = 1;
@@ -284,7 +283,7 @@ MyParcel = {
          * Evening delivery
          *
          */
-        if (jQuery('#method-myparcel-delivery-evening').prop('checked'))
+        if (jQuery('#mypa-pickup-delivery').prop('checked') === false &&jQuery('#method-myparcel-delivery-evening').prop('checked'))
         {
             jQuery('#s_method_myparcel_evening').click();
             MyParcel.DELIVERY_ONLY_RECIPIENT = 1;
@@ -300,8 +299,6 @@ MyParcel = {
                 MyParcel.addStyleToPrice('#mypa-signature-price');
             }
 
-            console.log("evening");
-
             MyParcel.addDeliveryToMagentoInput(MyParcel.DELIVERY_NIGHT);
             return;
         }
@@ -312,7 +309,6 @@ MyParcel = {
          */
         if (jQuery('#mypa-pickup-delivery').prop('checked') || jQuery('#mypa-pickup-selector').prop('checked'))
         {
-            console.log('ik kom hier');
             /**
              * Early morning pickup
              */
@@ -341,7 +337,6 @@ MyParcel = {
         if (selectedPriceComment === "retail") {
             result.price_comment = "retail";
         }
-        console.log(JSON.stringify(result));
 
         jQuery('#mypa-input').val(JSON.stringify(result));
     },
