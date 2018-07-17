@@ -131,7 +131,7 @@
             <tr id="mypa-pickup" class="mypa-is-pickup-element">
                 <td></td>
                 <td>
-                    <input name="method-myparcel-only-recipient-selector" id="mypa-pickup-selector" type="radio" value="myparcel-pickup-selector" >
+                    <input name="method-myparcel-pickup-selector" id="mypa-pickup-selector" type="radio" value="myparcel-pickup-selector" >
                     <label for="mypa-pickup-selector">Ophalen vanaf 15:00</label>
                 </td>
                 <td>
@@ -141,7 +141,7 @@
             <tr id="mypa-pickup-express" class="mypa-is-pickup-element">
                 <td></td>
                 <td>
-                    <input name="method-myparcel-only-recipient-selector" id="mypa-pickup-express-selector" type="radio" value="myparcel-pickup-express-selector" >
+                    <input name="method-myparcel-pickup-selector" id="mypa-pickup-express-selector" type="radio" value="myparcel-pickup-express-selector" >
                     <label for="mypa-pickup-express-selector">Ophalen vanaf 09:00</label>
                 </td>
                 <td>

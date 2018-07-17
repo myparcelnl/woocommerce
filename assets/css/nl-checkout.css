@@ -79,7 +79,7 @@
 #mypa-error-try-again{
 	margin-top: 18px;
 	border: 2px solid;
-	max-width: 66px;
+	max-width: 72px;
 	padding: 3px;
 	border-style: outset;
 	cursor: pointer;
@@ -87,7 +87,7 @@
 #mypa-error-try-again:active {
 	margin-top: 18px;
 	border: 2px solid;
-	max-width: 66px;
+	max-width: 72px;
 	padding: 3px;
 	border-style: outset;
 	cursor: pointer;

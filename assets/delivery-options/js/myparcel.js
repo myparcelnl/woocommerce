@@ -182,6 +182,7 @@ MyParcel = {
 
 
         jQuery('#mypa-pickup-delivery, #mypa-pickup-location').on('change', function(e){
+            console.log("hier kom ik wel");
             MyParcel.setCurrentLocation();
             MyParcel.toggleDeliveryOptions();
             MyParcel.mapExternalWebshopTriggers();
@@ -197,7 +198,7 @@ MyParcel = {
             MyParcel.mapExternalWebshopTriggers()
         });
 
-        jQuery('#billing_postcode, #billing_house_number' ).on('change', function(){
+        jQuery('#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number' ).on('change', function(){
             MyParcel.callDeliveryOptions();
         });
 
@@ -299,6 +300,8 @@ MyParcel = {
                 MyParcel.addStyleToPrice('#mypa-signature-price');
             }
 
+            console.log("evening");
+
             MyParcel.addDeliveryToMagentoInput(MyParcel.DELIVERY_NIGHT);
             return;
         }
@@ -309,6 +312,7 @@ MyParcel = {
          */
         if (jQuery('#mypa-pickup-delivery').prop('checked') || jQuery('#mypa-pickup-selector').prop('checked'))
         {
+            console.log('ik kom hier');
             /**
              * Early morning pickup
              */
@@ -337,17 +341,11 @@ MyParcel = {
         if (selectedPriceComment === "retail") {
             result.price_comment = "retail";
         }
+        console.log(JSON.stringify(result));
 
         jQuery('#mypa-input').val(JSON.stringify(result));
     },
 
-    addStyleToPrice: function (chosenDelivery) {
-        jQuery(chosenDelivery).addClass('mypa-bold-price');
-    },
-
-    removeStyleFromPrice: function (){
-        jQuery('.mypa-delivery-option-table').find( "span" ).removeClass('mypa-bold-price');
-    },
 
     addDeliveryToMagentoInput: function (deliveryMomentOfDay) {
 
@@ -360,6 +358,14 @@ MyParcel = {
             currentDeliveryData.only_recipient = MyParcel.DELIVERY_ONLY_RECIPIENT
             jQuery('#mypa-input').val(JSON.stringify(currentDeliveryData));
         }
+    },
+
+    addStyleToPrice: function (chosenDelivery) {
+        jQuery(chosenDelivery).addClass('mypa-bold-price');
+    },
+
+    removeStyleFromPrice: function (){
+        jQuery('.mypa-delivery-option-table').find( "span" ).removeClass('mypa-bold-price');
     },
 
     triggerDefaultOptionDelivery: function (deliveryDateId, deliveryMomentOfDay) {
@@ -450,7 +456,7 @@ MyParcel = {
 
     hideMessage: function()
     {
-        jQuery('.mypa-message-model').hide().html(' ');
+        jQuery('.mypa-message-model').hide();
         jQuery('#mypa-delivery-option-form').show();
     },
 
@@ -689,6 +695,7 @@ MyParcel = {
 
     showPickUpLocations: function()
     {
+       // jQuery('#ship-to-different-address-checkbox').click();
         if(MyParcel.data.config.allowPickupPoints) {
 
             var html = "";
@@ -791,8 +798,12 @@ MyParcel = {
 
     retryPostalcodeHouseNumber: function()
     {
-        this.data.address.postalCode = jQuery('#mypa-error-postcode').val();
-        this.data.address.number = jQuery('#mypa-error-number').val();
+        var retryPostalCode = jQuery('#mypa-error-postcode').val();
+        var retryNumber = jQuery('#mypa-error-number').val();
+
+        jQuery('#billing_postcode').val(retryPostalCode);
+        jQuery('#billing_house_number').val(retryNumber);
+
         MyParcel.callDeliveryOptions();
         jQuery('#mypa-select-delivery').click();
     },
@@ -808,7 +819,7 @@ MyParcel = {
     {
         MyParcel.hideSpinner();
         MyParcel.hideDelivery();
-        jQuery('#mypa-select-date, #method-myparcel-normal').hide();
+        jQuery('#mypa-select-date, #method-myparcel-normal-div').hide();
         jQuery('.mypa-is-pickup-element').hide();
         jQuery('#mypa-select-delivery-titel').html('Zo snel mogelijk bezorgen');
     },
@@ -844,6 +855,25 @@ MyParcel = {
         });
     },
 
+    setAdresFromInputFields: function () {
+
+        if (
+            jQuery('#shipping_house_number').val() &&
+            jQuery('#shipping_postcode').val() &&
+            jQuery('#ship-to-different-address-checkbox').prop('checked')
+        ){
+            this.data.address.cc            = jQuery('#shipping_country').val();
+            this.data.address.postalCode    = jQuery('#shipping_postcode').val();
+            this.data.address.number        = jQuery('#shipping_house_number').val();
+            this.data.address.city          = jQuery('#shipping_city').val();
+        } else {
+            this.data.address.cc            = jQuery('#billing_country').val();
+            this.data.address.postalCode    = jQuery('#billing_postcode').val();
+            this.data.address.number        = jQuery('#billing_house_number').val();
+            this.data.address.city          = jQuery('#billing_city').val();
+        }
+    },
+
 
     /*
      * callDeliveryOptions
@@ -857,28 +887,27 @@ MyParcel = {
     {
         MyParcel.showSpinner();
         MyParcel.clearPickUpLocations();
+        MyParcel.hideDelivery();
 
-        var cc 				= this.data.address.cc;
-        var postalCode 		= this.data.address.postalCode;
-        var number 			= this.data.address.number;
-        var city 			= this.data.address.city;
+        MyParcel.setAdresFromInputFields();
 
-        if (postalCode == '' || number == ''){
+
+        if (this.data.address.postalCode == '' || this.data.address.number == ''){
             MyParcel.showMessage(
                 '<h3>Adres gegevens zijn niet ingevuld</h3>'
             );
         }
-        if (cc === "BE") {
+        if (this.data.address.cc === "BE") {
             var numberExtra 	= this.data.address.numberExtra;
             var street 			= this.data.address.street;
         }
 
         if(numberExtra){
-            number = number + numberExtra;
+            this.data.address.number  = this.data.address.number + numberExtra;
         }
 
         /* Don't call API unless both Postcode and House Number are set */
-        if(!number || !postalCode) {
+        if(!this.data.address.number || !this.data.address.postalCode) {
             MyParcel.showFallBackDelivery();
             return;
         }
@@ -890,15 +919,13 @@ MyParcel = {
             this.deliveryDaysWindow = 1;
         }
 
-
-
         /* Make the api request */
         jQuery.get(this.data.config.apiBaseUrl + "delivery_options",
             {
                 cc           			:this.data.address.cc,
-                postal_code  			:postalCode,
-                number       			:number,
-                city					:city,
+                postal_code  			:this.data.address.postalCode,
+                number       			:this.data.address.number,
+                city					:this.data.address.city,
                 carrier      			:this.data.config.carrier,
                 dropoff_days			:this.data.config.dropOffDays,
                 monday_delivery			:this.data.config.allowMondayDelivery,

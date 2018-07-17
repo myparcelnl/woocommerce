@@ -19,7 +19,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
         private $frontend_settings;
 
         const POST_VALUE_DELIVER_OR_PICKUP = 'mypa-deliver-or-pickup';
-        const POST_VALUE_SIGNATURE_SELECTOR_BE = 'mypa-method-signature-selector-be';
+        const POST_VALUE_SIGNATURE_SELECTOR_NL = 'mypa-method-signature-selector-be';
         const RADIO_CHECKED = 'on';
         const SETTINGS_SIGNED_FEE = 'signed_fee';
         const DELIVERY_TITLE_SIGNATURE_ON_DELIVERY = 'Signature on delivery';
@@ -255,13 +255,13 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             if ($this->add_fee_from_setting($post_data, self::POST_VALUE_DELIVER_OR_PICKUP,'mypa-deliver-bpost-saturday', 'saturday_delivery_fee', 'Saturday delivery')) {
 
                 /* Signature Saturday delivery */
-                $this->add_fee_from_setting($post_data, self::POST_VALUE_SIGNATURE_SELECTOR_BE, self::RADIO_CHECKED, self::SETTINGS_SIGNED_FEE, self::DELIVERY_TITLE_SIGNATURE_ON_DELIVERY );
+                $this->add_fee_from_setting($post_data, self::POST_VALUE_SIGNATURE_SELECTOR_NL, self::RADIO_CHECKED, self::SETTINGS_SIGNED_FEE, self::DELIVERY_TITLE_SIGNATURE_ON_DELIVERY );
 
                 return;
             }
 
             /* Signature */
-            $this->add_fee_from_setting($post_data, self::POST_VALUE_SIGNATURE_SELECTOR_BE, self::RADIO_CHECKED, self::SETTINGS_SIGNED_FEE, self::DELIVERY_TITLE_SIGNATURE_ON_DELIVERY );
+            $this->add_fee_from_setting($post_data, self::POST_VALUE_SIGNATURE_SELECTOR_NL, self::RADIO_CHECKED, self::SETTINGS_SIGNED_FEE, self::DELIVERY_TITLE_SIGNATURE_ON_DELIVERY );
 
             return;
         }
@@ -385,10 +385,10 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             $myParcelConfig = [
 
                 "address"=> [
-                    "cc" => 'NL',
-                    "postalCode" => '2131 BC',
-                    "number" => '679',
-                    "city" =>'Hoofddorp'
+                    "cc" => '',
+                    "postalCode" => '',
+                    "number" => '',
+                    "city" =>''
                 ],
                 "txtWeekDays" => [
                     'Zondag',
@@ -480,7 +480,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             }
 
             $shipping_country = WC()->customer->get_shipping_country();
-            if ($shipping_country != 'BE') {
+            if ($shipping_country != 'NL') {
                 return true;
             }
 
