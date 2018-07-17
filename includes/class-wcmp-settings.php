@@ -651,9 +651,10 @@ class WooCommerce_MyParcel_Settings {
             array(
                 'has_title'     => true,
                 'has_price'     => true,
-                'option_name'	=> $option_name,
-                'id'			=> 'morning',
-                'current' 	    => 'Morning delivery',
+                'option_name'   => $option_name,
+                'id'            => 'morning',
+                'titel'         => 'Morning delivery',
+                'current'       => 'Morning delivery',
             )
         );
 
@@ -666,10 +667,10 @@ class WooCommerce_MyParcel_Settings {
             array(
                 'has_title'     => true,
                 'has_price'     => false,
-                'option_name'	=> $option_name,
-                'id'			=> 'standard',
+                'option_name'   => $option_name,
+                'id'            => 'standard',
                 'titel'         => 'Standard delivery',
-                'current' 	    => 'Standard delivery',
+                'current'       => 'Standard delivery',
             )
         );
 
