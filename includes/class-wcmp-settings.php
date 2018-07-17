@@ -642,6 +642,53 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 
+        add_settings_field(
+            'morning',
+            __( 'Morning delivery', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'delivery_option_enable' ),
+            $option_group,
+            'delivery_options',
+            array(
+                'has_title'     => true,
+                'has_price'     => true,
+                'option_name'	=> $option_name,
+                'id'			=> 'morning',
+                'current' 	    => 'Morning delivery',
+            )
+        );
+
+        add_settings_field(
+            'standard',
+            __( 'Standard delivery', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'delivery_option_enable' ),
+            $option_group,
+            'delivery_options',
+            array(
+                'has_title'     => true,
+                'has_price'     => false,
+                'option_name'	=> $option_name,
+                'id'			=> 'standard',
+                'titel'         => 'Standard delivery',
+                'current' 	    => 'Standard delivery',
+            )
+        );
+
+        add_settings_field(
+            'night',
+            __( 'Evening delivery', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'delivery_option_enable' ),
+            $option_group,
+            'delivery_options',
+            array(
+                'has_title'     => true,
+                'has_price'     => true,
+                'option_name'	=> $option_name,
+                'id'			=> 'night',
+                'titel'         => 'Evening delivery',
+                'current' 	    => 'Evening delivery',
+            )
+        );
+
 		add_settings_field(
 			'only_recipient',
 			__( 'Home address only', 'woocommerce-myparcel' ),
@@ -671,38 +718,6 @@ class WooCommerce_MyParcel_Settings {
 				'id'			=> 'signed',
                 'titel'         => 'Signature on delivery',
                 'current' 	    => 'Signature on delivery',
-			)
-		);
-
-		add_settings_field(
-			'night',
-			__( 'Evening delivery', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'delivery_option_enable' ),
-			$option_group,
-			'delivery_options',
-			array(
-                'has_title'     => true,
-				'has_price'     => true,
-				'option_name'	=> $option_name,
-				'id'			=> 'night',
-                'titel'         => 'Evening delivery',
-                'current' 	    => 'Evening delivery',
-			)
-		);
-
-		add_settings_field(
-			'morning',
-			__( 'Morning delivery', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'delivery_option_enable' ),
-			$option_group,
-			'delivery_options',
-			array(
-                'has_title'     => true,
-				'has_price'     => true,
-				'option_name'	=> $option_name,
-				'id'			=> 'morning',
-                'titel'         => 'Morning delivery',
-                'current' 	    => 'Morning delivery',
 			)
 		);
 
