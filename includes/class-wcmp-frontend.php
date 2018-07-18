@@ -420,7 +420,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "pricePickup" =>  $this->frontend_settings->get_price_pickup(),
                     "pricePickupExpress" =>  $this->frontend_settings->get_price_pickup_express(),
 
-                    "deliveryTitel" => "Bezorgen op",
+                    "deliveryTitel" => $this->frontend_settings->at_home_delivery_titel(),
                     "pickupTitel" => $this->frontend_settings->pickup_titel(),
                     "deliveryMorningTitel" => $this->frontend_settings->morning_titel(),
                     "deliveryStandardTitel" => $this->frontend_settings->standard_titel(),
@@ -441,7 +441,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "cutoffTime" =>  $this->frontend_settings->get_cutoff_time(),
                     "deliverydaysWindow" =>  $this->frontend_settings->get_deliverydays_window(),
                     "dropoffDelay" => $this->frontend_settings->get_dropoff_delay()
-//
                 ],
               ];
 

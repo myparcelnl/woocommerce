@@ -156,6 +156,14 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         public function is_pickup_enabled() {
             return (bool) $this->settings['pickup_enabled'];
         }
+
+        /**
+         * @return mixed
+         */
+        public function at_home_delivery_titel() {
+            return $this->settings['at_home_delivery_titel'];
+        }
+
         /**
          * @return mixed
          */

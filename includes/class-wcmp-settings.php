@@ -643,6 +643,21 @@ class WooCommerce_MyParcel_Settings {
 		);
 
         add_settings_field(
+            'at_home_delivery',
+            __( 'Enable home delivery', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'delivery_option_enable' ),
+            $option_group,
+            'delivery_options',
+            array(
+                'has_titel'         => true,
+                'option_name'	    => $option_name,
+                'id'			    => 'at_home_delivery',
+                'titel'             => 'Home delivery',
+                'current'           => 'Thuis of op het werk bezorgd',
+            )
+        );
+
+        add_settings_field(
             'morning',
             __( 'Morning delivery', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'delivery_option_enable' ),
