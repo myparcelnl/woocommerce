@@ -890,6 +890,7 @@ MyParcel = {
             MyParcel.showMessage(
                 '<h3>Adres gegevens zijn niet ingevuld</h3>'
             );
+            return;
         }
         if (this.data.address.cc === "BE") {
             var numberExtra 	= this.data.address.numberExtra;
@@ -899,13 +900,7 @@ MyParcel = {
         if(numberExtra){
             this.data.address.number  = this.data.address.number + numberExtra;
         }
-
-        /* Don't call API unless both Postcode and House Number are set */
-        if(!this.data.address.number || !this.data.address.postalCode) {
-            MyParcel.showFallBackDelivery();
-            return;
-        }
-
+        
         /* Check if the deliverydaysWindow == 0 and hide the select input*/
         this.deliveryDaysWindow = this.data.config.deliverydaysWindow;
 
