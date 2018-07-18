@@ -30,7 +30,7 @@
                     <input name="mypa-deliver-or-pickup" id="mypa-select-delivery" value="mypa-deliver" type="radio">
                 </td>
                 <td colspan="2">
-                    <label id="mypa-select-delivery-titel" for="mypa-select-delivery"><span id="mypa-delivery-titel"></span></label>
+                    <label id="mypa-select-delivery-title" for="mypa-select-delivery"><span id="mypa-delivery-title"></span></label>
                 </td>
             </tr>
             <tr id="mypa-delivery-date-select">
@@ -50,7 +50,7 @@
                 <td>
                     <div class="mypa-delivery-option" >
                         <input name="shipping-method" id="method-myparcel-delivery-morning" type="radio" value="myparcel-morning">
-                        <label for="method-myparcel-delivery-morning"><span id="mypa-morning-titel"></span></label>
+                        <label for="method-myparcel-delivery-morning"><span id="mypa-morning-title"></span></label>
                     </div>
                 </td>
                 <td>
@@ -64,7 +64,7 @@
                 <td>
                     <div id="mypa-delivery" class="mypa-delivery-option">
                         <input name="shipping-method" id="method-myparcel-normal" type="radio" value="myparcel-normal">
-                        <label for="method-myparcel-normal"><span id="mypa-standard-titel"></span></label>
+                        <label for="method-myparcel-normal"><span id="mypa-standard-title"></span></label>
                     </div>
                 </td>
                 <td>
@@ -78,7 +78,7 @@
                 <td>
                     <div class="mypa-delivery-option">
                         <input name="shipping-method" id="method-myparcel-delivery-evening" type="radio" value="myparcel-delivery-evening" >
-                        <label for="method-myparcel-delivery-evening"><span id="mypa-evening-titel"></span></label>
+                        <label for="method-myparcel-delivery-evening"><span id="mypa-evening-title"></span></label>
                     </div>
                 </td>
                 <td>
@@ -92,7 +92,7 @@
                 <td id="mypa-signature" class=" mypa-extra-delivery-options-padding-top">
                     <div class="mypa-delivery-option">
                         <input name="myparcel-signature-selector" id="mypa-signature-selector" type="checkbox" value="myparcel-signature-selector" >
-                        <label for="mypa-signature-selector"><span id="mypa-signature-titel"></span></label>
+                        <label for="mypa-signature-selector"><span id="mypa-signature-title"></span></label>
                     </div>
                 </td>
                 <td class="mypa-extra-delivery-options-padding-top">
@@ -104,7 +104,7 @@
                 <td id="mypa-only-recipient">
                     <div class="mypa-delivery-option">
                         <input name="method-myparcel-only-recipient-selector" id="mypa-only-recipient-selector" type="checkbox" value="myparcel-only-recipient-selector" >
-                        <label for="mypa-only-recipient-selector"><span id="mypa-only-recipient-titel"></span></label>
+                        <label for="mypa-only-recipient-selector"><span id="mypa-only-recipient-title"></span></label>
                     </div>
                 </td>
                 <td>
@@ -116,7 +116,7 @@
                     <input name="mypa-deliver-or-pickup" id="mypa-pickup-delivery" value="mypa-pickup" type="radio">
                 </td>
                 <td colspan="2">
-                    <label for="mypa-pickup-delivery"><span id="mypa-pickup-titel"></span></label>
+                    <label for="mypa-pickup-delivery"><span id="mypa-pickup-title"></span></label>
                 </td>
             </tr>
             <tr id="mypa-pickup-options" class="mypa-is-pickup-element">

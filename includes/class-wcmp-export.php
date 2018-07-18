@@ -594,7 +594,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// Select the barcode text of the MyParcel settings
-		$this->prefix_message = WooCommerce_MyParcel()->general_settings['barcode_in_note_titel'];
+		$this->prefix_message = WooCommerce_MyParcel()->general_settings['barcode_in_note_title'];
 
 		foreach ( $order_ids as $order_id ) {
 			$order = WCX::get_order( $order_id );

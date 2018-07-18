@@ -399,7 +399,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
         );
 		// textarea (description)
 		$default_delivery_text = array(
-			'id'			=> "{$id}_titel",
+			'id'			=> "{$id}_title",
 			'type'			=> 'text',
 		);
 
@@ -409,7 +409,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		<table class="wcmp_delivery_option_details">
             <?php if ($args['has_title']):?>
                 <tr>
-                    <td style="min-width: 215px;"><?php _e( $args['titel'].' titel', 'woocommerce-myparcel' ) ?>:</td>
+                    <td style="min-width: 215px;"><?php _e( $args['title'].' title', 'woocommerce-myparcel' ) ?>:</td>
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input( array_merge( $args, $default_delivery_text ) )?></td>
                 </tr>
 			<?php endif; ?>

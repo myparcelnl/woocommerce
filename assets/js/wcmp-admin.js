@@ -97,15 +97,15 @@ jQuery( function( $ ) {
 		}
 	});
 
-    // hide automatic barcode in note titel if barcode in note is not enabled
+    // hide automatic barcode in note title if barcode in note is not enabled
     $('.wcmp_shipment_options input#barcode_in_note').change(function () {
-        var barcode_in_note_select = $( '.wcmp_shipment_options select.barcode_in_note_titel');
+        var barcode_in_note_select = $( '.wcmp_shipment_options select.barcode_in_note_title');
         if (this.checked) {
             $( barcode_in_note_select ).prop('disabled', false);
-            $( '.wcmp_shipment_options tr.barcode_in_note_titel').show();
+            $( '.wcmp_shipment_options tr.barcode_in_note_title').show();
         } else {
             $( barcode_in_note_select ).prop('disabled', true);
-            $( '.wcmp_shipment_options tr.barcode_in_note_titel').hide();
+            $( '.wcmp_shipment_options tr.barcode_in_note_title').hide();
         }
     });
 

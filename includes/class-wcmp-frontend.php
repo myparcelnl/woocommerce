@@ -413,7 +413,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "carrier" =>  "1",
 
                     "priceMorningDelivery" =>  $this->frontend_settings->get_price_morning(),
-                    "priceNormalDelivery" =>  "5.85",
+                    "priceNormalDelivery" =>  "",
                     "priceEveningDelivery" =>  $this->frontend_settings->get_price_evening(),
                     "priceSignature" =>  $this->frontend_settings->get_price_signature(),
                     "priceOnlyRecipient" => $this->frontend_settings->get_price_only_recipient(),
@@ -421,12 +421,12 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "pricePickupExpress" =>  $this->frontend_settings->get_price_pickup_express(),
 
                     "deliveryTitel" => "Bezorgen op",
-                    "pickupTitel" => $this->frontend_settings->pickup_titel(),
-                    "deliveryMorningTitel" => $this->frontend_settings->morning_titel(),
-                    "deliveryStandardTitel" => $this->frontend_settings->standard_titel(),
-                    "deliveryEveningTitel" => $this->frontend_settings->evening_titel(),
-                    "signatureTitel" =>  $this->frontend_settings->signature_titel(),
-                    "onlyRecipientTitel" =>  $this->frontend_settings->only_recipient_titel(),
+                    "pickupTitel" => $this->frontend_settings->pickup_title(),
+                    "deliveryMorningTitel" => $this->frontend_settings->morning_title(),
+                    "deliveryStandardTitel" => $this->frontend_settings->standard_title(),
+                    "deliveryEveningTitel" => $this->frontend_settings->evening_title(),
+                    "signatureTitel" =>  $this->frontend_settings->signature_title(),
+                    "onlyRecipientTitel" =>  $this->frontend_settings->only_recipient_title(),
 
                     "allowMondayDelivery" =>  $this->frontend_settings->is_monday_enabled(),
                     "allowMorningDelivery" =>  $this->frontend_settings->is_morning_enabled(),
@@ -528,17 +528,17 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          * @param $post_data_value
          * @param $delivery_type
          * @param $backend_setting
-         * @param $delivery_titel
+         * @param $delivery_title
          *
          * @return bool
          */
-        private function add_fee_from_setting( $post_data, $post_data_value ,$delivery_type, $backend_setting, $delivery_titel ) {
+        private function add_fee_from_setting( $post_data, $post_data_value ,$delivery_type, $backend_setting, $delivery_title ) {
             // Fee for "delivery" option
 
             if (isset($post_data[$post_data_value]) && $post_data[$post_data_value] == $delivery_type) {
                 if ( ! empty( WooCommerce_MyParcel()->checkout_settings[$backend_setting] ) ) {
                     $fee      = WooCommerce_MyParcel()->checkout_settings[$backend_setting];
-                    $fee_name = __( $delivery_titel, 'woocommerce-myparcel' );
+                    $fee_name = __( $delivery_title, 'woocommerce-myparcel' );
                     $this->add_fee( $fee_name, $fee );
 
                     return true;

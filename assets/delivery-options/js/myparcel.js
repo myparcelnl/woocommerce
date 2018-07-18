@@ -25,16 +25,16 @@ MyParcel = {
 
         /* Titels of the options*/
         if (MyParcel.data.config.deliveryTitel){
-            jQuery('#mypa-delivery-titel').html(MyParcel.data.config.deliveryTitel);
+            jQuery('#mypa-delivery-title').html(MyParcel.data.config.deliveryTitel);
         }
         if (MyParcel.data.config.onlyRecipientTitel){
-            jQuery('#mypa-only-recipient-titel').html(MyParcel.data.config.onlyRecipientTitel);
+            jQuery('#mypa-only-recipient-title').html(MyParcel.data.config.onlyRecipientTitel);
         }
         if (MyParcel.data.config.signatureTitel){
-            jQuery('#mypa-signature-titel').html(MyParcel.data.config.signatureTitel);
+            jQuery('#mypa-signature-title').html(MyParcel.data.config.signatureTitel);
         }
         if (MyParcel.data.config.pickupTitel){
-            jQuery('#mypa-pickup-titel').html(MyParcel.data.config.pickupTitel);
+            jQuery('#mypa-pickup-title').html(MyParcel.data.config.pickupTitel);
         }
 
         /* Prices */
@@ -108,10 +108,10 @@ MyParcel = {
         startTime = startTime.replace(/(.*)\D\d+/, '$1');
         endTime = endTime.replace(/(.*)\D\d+/, '$1');
 
-        jQuery('#mypa-'+deliveryMoment+'-titel').html(deliveryTitel);
+        jQuery('#mypa-'+deliveryMoment+'-title').html(deliveryTitel);
 
         if (!configDeliveryTitel){
-            jQuery('#mypa-'+deliveryMoment+'-titel').html(startTime + ' - ' + endTime);
+            jQuery('#mypa-'+deliveryMoment+'-title').html(startTime + ' - ' + endTime);
         }
 
     },
@@ -815,7 +815,7 @@ MyParcel = {
         MyParcel.hideDelivery();
         jQuery('#mypa-select-date, #method-myparcel-normal-div').hide();
         jQuery('.mypa-is-pickup-element').hide();
-        jQuery('#mypa-select-delivery-titel').html('Zo snel mogelijk bezorgen');
+        jQuery('#mypa-select-delivery-title').html('Zo snel mogelijk bezorgen');
     },
 
 
