@@ -3,7 +3,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 // Status
-printf('%1$s: <a href="%2$s" class="myparcel_tracktrace_link" target="_blank" title="%3$s">%4$s</a><br/>', __('Status','woocommerce-myparcel'), $tracktrace_url, $shipment['tracktrace'], $shipment['status']);
+printf('%1$s: <a href="%2$s" class="myparcel_tracktrace_link" target="_blank" titel="%3$s">%4$s</a><br/>', __('Status','woocommerce-myparcel'), $tracktrace_url, $shipment['tracktrace'], $shipment['status']);
 // Shipment type
 printf('%s: %s', __( 'Shipment type', 'woocommerce-myparcel' ), $package_types[$shipment['shipment']['options']['package_type']] );
 ?>

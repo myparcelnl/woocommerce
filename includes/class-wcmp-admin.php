@@ -139,8 +139,8 @@ class WooCommerce_MyParcel_Admin {
 			?>
 			<script type="text/javascript">
 			jQuery(document).ready(function() {
-				<?php foreach ($bulk_actions as $action => $title) { ?>
-				jQuery('<option>').val('<?php echo $action; ?>').html('<?php echo esc_attr( $title ); ?>').appendTo("select[name='action'], select[name='action2']");
+				<?php foreach ($bulk_actions as $action => $titel) { ?>
+				jQuery('<option>').val('<?php echo $action; ?>').html('<?php echo esc_attr( $titel ); ?>').appendTo("select[name='action'], select[name='action2']");
 				<?php }	?>
 			});
 			</script>
@@ -318,7 +318,7 @@ class WooCommerce_MyParcel_Admin {
 	public function shop_order_metabox() {
 		add_meta_box(
 			'myparcel', //$id
-			__( 'MyParcel', 'woocommerce-myparcel' ), //$title
+			__( 'MyParcel', 'woocommerce-myparcel' ), //$titel
 			array( $this, 'create_box_content' ), //$callback
 			'shop_order', //$post_type
 			'side', //$context
@@ -429,34 +429,34 @@ class WooCommerce_MyParcel_Admin {
 				if (isset($time['price_comment'])) {
 					switch ($time['price_comment']) {
 						case 'morning':
-							$time_title = __( 'Morning delivery', 'woocommerce-myparcel' );
+							$time_titel = __( 'Morning delivery', 'woocommerce-myparcel' );
 							break;
 						case 'standard':
-							// $time_title = __( 'Standard delivery', 'woocommerce-myparcel' );
+							// $time_titel = __( 'Standard delivery', 'woocommerce-myparcel' );
 							break;
 						case 'night':
 						case 'avond':
-							$time_title = __( 'Evening delivery', 'woocommerce-myparcel' );
+							$time_titel = __( 'Evening delivery', 'woocommerce-myparcel' );
 							break;
 					}
 				}
-				$time_title = !empty($time_title) ? "({$time_title})" : '';
+				$time_titel = !empty($time_titel) ? "({$time_titel})" : '';
 			}
 
-			printf('<div class="delivery-date"><strong>%s: </strong>%s %s</div>', __('Delivery date', 'woocommerce-myparcel'), $formatted_date, $time_title );
+			printf('<div class="delivery-date"><strong>%s: </strong>%s %s</div>', __('Delivery date', 'woocommerce-myparcel'), $formatted_date, $time_titel );
 		}
 
 		if ( $pickup = WooCommerce_MyParcel()->export->is_pickup( $order, $delivery_options ) ) {
 			switch ($pickup['price_comment']) {
 				case 'retail':
-					$title = __( 'PostNL Pickup', 'woocommerce-myparcel' );
+					$titel = __( 'PostNL Pickup', 'woocommerce-myparcel' );
 					break;
 				case 'retailexpress':
-					$title = __( 'PostNL Pickup Express', 'woocommerce-myparcel' );
+					$titel = __( 'PostNL Pickup Express', 'woocommerce-myparcel' );
 					break;
 			}
 
-			echo "<div class='pickup-location'><strong>{$title}: </strong>{$pickup['location']}, {$pickup['street']} {$pickup['number']}, {$pickup['postal_code']} {$pickup['city']}</div>";
+			echo "<div class='pickup-location'><strong>{$titel}: </strong>{$pickup['location']}, {$pickup['street']} {$pickup['number']}, {$pickup['postal_code']} {$pickup['city']}</div>";
 		}
 		echo '</div>';
 	}

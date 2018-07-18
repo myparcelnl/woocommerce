@@ -215,7 +215,7 @@ Improvement: Support Cloudflare
 
 = 2.0.5 =
 * Fix default insurance selection
-* Tweak: Show shipping 'method title' instead of 'title' in settings (with fallback to title)
+* Tweak: Show shipping 'method titel' instead of 'titel' in settings (with fallback to titel)
 * Tweak: added `$order` object to `wcmyparcel_email_text` filter
 
 = 2.0.4 =

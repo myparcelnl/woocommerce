@@ -306,7 +306,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     $tax_classes = WC_Tax::get_tax_classes();
 
                     foreach ( $tax_classes as $tax_class ) {
-                        $tax_class = sanitize_title( $tax_class );
+                        $tax_class = sanitize_titel( $tax_class );
                         if ( in_array( $tax_class, $cart_tax_classes ) ) {
                             // correct $tax_class is now set
                             break;
@@ -421,12 +421,12 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "pricePickupExpress" =>  $this->frontend_settings->get_price_pickup_express(),
 
                     "deliveryTitel" => "Bezorgen op",
-                    "pickupTitel" => $this->frontend_settings->pickup_title(),
-                    "deliveryMorningTitel" => $this->frontend_settings->morning_title(),
-                    "deliveryStandardTitel" => $this->frontend_settings->standard_title(),
-                    "deliveryEveningTitel" => $this->frontend_settings->evening_title(),
-                    "signatureTitel" =>  $this->frontend_settings->signature_title(),
-                    "onlyRecipientTitel" =>  $this->frontend_settings->only_recipient_title(),
+                    "pickupTitel" => $this->frontend_settings->pickup_titel(),
+                    "deliveryMorningTitel" => $this->frontend_settings->morning_titel(),
+                    "deliveryStandardTitel" => $this->frontend_settings->standard_titel(),
+                    "deliveryEveningTitel" => $this->frontend_settings->evening_titel(),
+                    "signatureTitel" =>  $this->frontend_settings->signature_titel(),
+                    "onlyRecipientTitel" =>  $this->frontend_settings->only_recipient_titel(),
 
                     "allowMondayDelivery" =>  $this->frontend_settings->is_monday_enabled(),
                     "allowMorningDelivery" =>  $this->frontend_settings->is_morning_enabled(),
@@ -528,17 +528,17 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          * @param $post_data_value
          * @param $delivery_type
          * @param $backend_setting
-         * @param $delivery_title
+         * @param $delivery_titel
          *
          * @return bool
          */
-        private function add_fee_from_setting( $post_data, $post_data_value ,$delivery_type, $backend_setting, $delivery_title ) {
+        private function add_fee_from_setting( $post_data, $post_data_value ,$delivery_type, $backend_setting, $delivery_titel ) {
             // Fee for "delivery" option
 
             if (isset($post_data[$post_data_value]) && $post_data[$post_data_value] == $delivery_type) {
                 if ( ! empty( WooCommerce_MyParcel()->checkout_settings[$backend_setting] ) ) {
                     $fee      = WooCommerce_MyParcel()->checkout_settings[$backend_setting];
-                    $fee_name = __( $delivery_title, 'woocommerce-myparcel' );
+                    $fee_name = __( $delivery_titel, 'woocommerce-myparcel' );
                     $this->add_fee( $fee_name, $fee );
 
                     return true;

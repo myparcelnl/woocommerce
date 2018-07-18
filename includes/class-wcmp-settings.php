@@ -61,8 +61,8 @@ class WooCommerce_MyParcel_Settings {
 			<h1><?php _e( 'WooCommerce MyParcel Settings', 'woocommerce-myparcel' ); ?></h1>
 			<h2 class="nav-tab-wrapper">
 			<?php
-			foreach ($settings_tabs as $tab_slug => $tab_title ) {
-				printf('<a href="?page=woocommerce_myparcel_settings&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>', $tab_slug, (($active_tab == $tab_slug) ? 'nav-tab-active' : ''), $tab_title);
+			foreach ($settings_tabs as $tab_slug => $tab_titel ) {
+				printf('<a href="?page=woocommerce_myparcel_settings&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>', $tab_slug, (($active_tab == $tab_slug) ? 'nav-tab-active' : ''), $tab_titel);
 			}
 			?>
 			</h2>
@@ -301,15 +301,15 @@ class WooCommerce_MyParcel_Settings {
 		);
 
 		add_settings_field(
-			'barcode_in_note_title',
+			'barcode_in_note_titel',
 			__( 'Titel before the barcode', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'text_input' ),
 			$option_group,
 			'general',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'barcode_in_note_title',
-				'class'			=> 'barcode_in_note_title',
+				'id'			=> 'barcode_in_note_titel',
+				'class'			=> 'barcode_in_note_titel',
 				'default'		=> 'Tracking code:',
 				'description'	=> __( 'You can change the text before the barcode inside an note', 'woocommerce-myparcel' ),
 			)
@@ -649,11 +649,11 @@ class WooCommerce_MyParcel_Settings {
             $option_group,
             'delivery_options',
             array(
-                'has_title'     => true,
+                'has_titel'     => true,
                 'has_price'     => true,
                 'option_name'   => $option_name,
                 'id'            => 'morning',
-                'title'         => 'Morning delivery',
+                'titel'         => 'Morning delivery',
                 'current'       => 'Morning delivery',
             )
         );
@@ -665,11 +665,11 @@ class WooCommerce_MyParcel_Settings {
             $option_group,
             'delivery_options',
             array(
-                'has_title'     => true,
+                'has_titel'     => true,
                 'has_price'     => false,
                 'option_name'   => $option_name,
                 'id'            => 'standard',
-                'title'         => 'Standard delivery',
+                'titel'         => 'Standard delivery',
                 'current'       => 'Standard delivery',
             )
         );
@@ -681,11 +681,11 @@ class WooCommerce_MyParcel_Settings {
             $option_group,
             'delivery_options',
             array(
-                'has_title'     => true,
+                'has_titel'     => true,
                 'has_price'     => true,
                 'option_name'	=> $option_name,
                 'id'			=> 'night',
-                'title'         => 'Evening delivery',
+                'titel'         => 'Evening delivery',
                 'current' 	    => 'Evening delivery',
             )
         );
@@ -697,11 +697,11 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                'has_title'     => true,
+                'has_titel'     => true,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'only_recipient',
-                'title'         => 'Home address only',
+                'titel'         => 'Home address only',
                 'current'       => 'Home address only',
 			)
 		);
@@ -713,11 +713,11 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                'has_title'     => true,
+                'has_titel'     => true,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'signed',
-                'title'         => 'Signature on delivery',
+                'titel'         => 'Signature on delivery',
                 'current' 	    => 'Signature on delivery',
 			)
 		);
@@ -729,11 +729,11 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                'has_title'     => true,
+                'has_titel'     => true,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'pickup',
-                'title'         => 'Pickup',
+                'titel'         => 'Pickup',
                 'current' 	    => 'PostNL pickup',
 			)
 		);
@@ -745,11 +745,11 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                'has_title'     => true,
+                'has_titel'     => true,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'pickup_express',
-                'title'         => 'Pickup express',
+                'titel'         => 'Pickup express',
                 'current' 	    => 'Early PostNL pickup',
 			)
 		);
@@ -762,7 +762,7 @@ class WooCommerce_MyParcel_Settings {
             $option_group,
             'delivery_options',
             array(
-                'has_title'         => false,
+                'has_titel'         => false,
                 'has_price'         => false,
                 'has_cutoff_time'   => true,
                 'option_name'	    => $option_name,

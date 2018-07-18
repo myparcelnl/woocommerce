@@ -42,8 +42,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function only_recipient_title() {
-            return $this->settings['only_recipient_title'];
+        public function only_recipient_titel() {
+            return $this->settings['only_recipient_titel'];
         }
 
         /**
@@ -68,8 +68,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function signature_title() {
-            return $this->settings['signed_title'];
+        public function signature_titel() {
+            return $this->settings['signed_titel'];
         }
         /**
          * @return string
@@ -93,8 +93,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function morning_title() {
-            return $this->settings['morning_title'];
+        public function morning_titel() {
+            return $this->settings['morning_titel'];
         }
         /**
          * @return string
@@ -117,8 +117,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function standard_title() {
-            return $this->settings['standard_title'];
+        public function standard_titel() {
+            return $this->settings['standard_titel'];
         }
 
 
@@ -134,8 +134,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function evening_title() {
-            return $this->settings['night_title'];
+        public function evening_titel() {
+            return $this->settings['night_titel'];
         }
         /**
          * @return string
@@ -159,8 +159,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function pickup_title() {
-            return $this->settings['pickup_title'];
+        public function pickup_titel() {
+            return $this->settings['pickup_titel'];
         }
 
         /**
@@ -183,8 +183,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function pickup_express_title() {
-            return $this->settings['pickup_express_title'];
+        public function pickup_express_titel() {
+            return $this->settings['pickup_express_titel'];
         }
 
         /**
