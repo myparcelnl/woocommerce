@@ -204,30 +204,15 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          * @return void
          */
 
-        // XXX adapt this to new situation
         public function save_delivery_options( $order_id, $posted ) {
-
-
             $order = WCX::get_order( $order_id );
-
-
-
-            /** @todo ? myparcel_highest_shipping_class
-            if (isset($_POST['myparcel_highest_shipping_class'])) {
-            WCX_Order::update_meta_data( $order, '_myparcel_highest_shipping_class', $_POST['myparcel_highest_shipping_class'] );
-            }*/
-
-            // mypa-recipient-only - 'on' or not set
-            // mypa-signed         - 'on' or not set
-            // mypa-post-be-data   - JSON of chosen delivery options
-
-            // check if delivery options were used
-            /*if (!isset($_POST['mypa-options-enabled'])) {
-                return;
-            }*/
 
             if (isset($_POST['myparcel-signature-selector'])) {
                 WCX_Order::update_meta_data( $order, '_myparcel_signed', self::RADIO_CHECKED );
+            }
+
+            if (isset($_POST['method-myparcel-only-recipient-selector'])) {
+                WCX_Order::update_meta_data( $order, '_myparcel_only_recipient', self::RADIO_CHECKED );
             }
 
             if (!empty($_POST['mypa-post-nl-data'])) {
@@ -237,6 +222,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             }
 
         }
+
 
         /**
          * Get delivery fee in your order overview, at the front of the website
@@ -483,8 +469,8 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          */
         private function get_post_data() {
 
-            WC()->cart->add_fee( 'test fee test 123', 10,0, 'standard');
-            var_dump($_POST);
+//            WC()->cart->add_fee( 'test fee test 123', 10,0, 'standard');
+//            var_dump($_POST);
             if ( ! $_POST || ( is_admin() && ! is_ajax() ) ) {
                 return null;
             }
