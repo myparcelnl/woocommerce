@@ -19,7 +19,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
         private $frontend_settings;
 
         const POST_VALUE_DELIVER_OR_PICKUP = 'mypa-deliver-or-pickup';
-        const POST_VALUE_SIGNATURE_SELECTOR_NL = 'mypa-method-signature-selector-be';
+        const POST_VALUE_SIGNATURE_SELECTOR_NL = 'mypa-signature-selector';
         const RADIO_CHECKED = 'on';
         const SETTINGS_SIGNED_FEE = 'signed_fee';
         const DELIVERY_TITLE_SIGNATURE_ON_DELIVERY = 'Signature on delivery';
@@ -226,11 +226,11 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                 return;
             }*/
 
-            if (isset($_POST['mypa-method-signature-selector-be'])) {
+            if (isset($_POST['myparcel-signature-selector'])) {
                 WCX_Order::update_meta_data( $order, '_myparcel_signed', self::RADIO_CHECKED );
             }
 
-            if (!empty($_POST['mypa-post-be-data'])) {
+            if (!empty($_POST['mypa-post-nl-data'])) {
 
                 $delivery_options = json_decode( stripslashes( $_POST['mypa-post-be-data']), true );
                 WCX_Order::update_meta_data( $order, '_myparcel_delivery_options', $delivery_options );
@@ -244,19 +244,11 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          * @param $cart
          */
         public function get_delivery_options_fees( $cart ) {
+
             $post_data = $this->get_post_data();
 
-            /* Bpost pickup */
-            if ($this->add_fee_from_setting($post_data, self::POST_VALUE_DELIVER_OR_PICKUP, 'mypa-pickup', 'pickup_fee', 'Bpost pickup')) {
-                return;
-            }
-
-            /* Saturday delivery */
-            if ($this->add_fee_from_setting($post_data, self::POST_VALUE_DELIVER_OR_PICKUP,'mypa-deliver-bpost-saturday', 'saturday_delivery_fee', 'Saturday delivery')) {
-
-                /* Signature Saturday delivery */
-                $this->add_fee_from_setting($post_data, self::POST_VALUE_SIGNATURE_SELECTOR_NL, self::RADIO_CHECKED, self::SETTINGS_SIGNED_FEE, self::DELIVERY_TITLE_SIGNATURE_ON_DELIVERY );
-
+            /* PostNL pickup */
+            if ($this->add_fee_from_setting($post_data, self::POST_VALUE_DELIVER_OR_PICKUP, 'mypa-pickup', 'pickup_fee', 'PostNL pickup')) {
                 return;
             }
 
@@ -490,6 +482,9 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          * @return null|array
          */
         private function get_post_data() {
+
+            WC()->cart->add_fee( 'test fee test 123', 10,0, 'standard');
+            var_dump($_POST);
             if ( ! $_POST || ( is_admin() && ! is_ajax() ) ) {
                 return null;
             }
@@ -533,7 +528,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          */
         private function add_fee_from_setting( $post_data, $post_data_value ,$delivery_type, $backend_setting, $delivery_titel ) {
             // Fee for "delivery" option
-
             if (isset($post_data[$post_data_value]) && $post_data[$post_data_value] == $delivery_type) {
                 if ( ! empty( WooCommerce_MyParcel()->checkout_settings[$backend_setting] ) ) {
                     $fee      = WooCommerce_MyParcel()->checkout_settings[$backend_setting];
