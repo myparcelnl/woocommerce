@@ -217,7 +217,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
             if (!empty($_POST['mypa-post-nl-data'])) {
 
-                $delivery_options = json_decode( stripslashes( $_POST['mypa-post-be-data']), true );
+                $delivery_options = json_decode( stripslashes( $_POST['mypa-post-nl-data']), true );
                 WCX_Order::update_meta_data( $order, '_myparcel_delivery_options', $delivery_options );
             }
 
