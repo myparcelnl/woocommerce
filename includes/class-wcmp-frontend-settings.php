@@ -210,7 +210,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_monday_enabled() {
-            return $this->settings['monday_delivery'] ? 1 : 0;
+            return $this->settings['saturday_cutoff_enabled'] ? 1 : 0;
         }
 
         /**
