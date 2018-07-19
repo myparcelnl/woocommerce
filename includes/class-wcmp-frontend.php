@@ -223,7 +223,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
         }
 
-
         /**
          * Get delivery fee in your order overview, at the front of the website
          *
