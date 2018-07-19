@@ -644,16 +644,14 @@ class WooCommerce_MyParcel_Settings {
 
         add_settings_field(
             'at_home_delivery',
-            __( 'Enable home delivery', 'woocommerce-myparcel' ),
-            array( $this->callbacks, 'delivery_option_enable' ),
+            __( 'Home delivery titel', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'text_input' ),
             $option_group,
             'delivery_options',
             array(
-                'has_titel'         => true,
-                'option_name'	    => $option_name,
-                'id'			    => 'at_home_delivery',
-                'titel'             => 'Home delivery',
-                'current'           => 'Thuis of op het werk bezorgd',
+                'option_name'	=> $option_name,
+                'id'			=> 'at_home_delivery_titel',
+                'size'			=> '53',
             )
         );
 
