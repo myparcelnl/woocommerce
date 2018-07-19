@@ -656,6 +656,19 @@ class WooCommerce_MyParcel_Settings {
         );
 
         add_settings_field(
+            'standard',
+            __( 'Standard delivery titel', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'text_input' ),
+            $option_group,
+            'delivery_options',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'standard_titel',
+                'size'			=> '53',
+            )
+        );
+
+        add_settings_field(
             'morning',
             __( 'Morning delivery', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'delivery_option_enable' ),
@@ -670,23 +683,7 @@ class WooCommerce_MyParcel_Settings {
                 'current'       => 'Morning delivery',
             )
         );
-
-        add_settings_field(
-            'standard',
-            __( 'Standard delivery', 'woocommerce-myparcel' ),
-            array( $this->callbacks, 'delivery_option_enable' ),
-            $option_group,
-            'delivery_options',
-            array(
-                'has_titel'     => true,
-                'has_price'     => false,
-                'option_name'   => $option_name,
-                'id'            => 'standard',
-                'titel'         => 'Standard delivery',
-                'current'       => 'Standard delivery',
-            )
-        );
-
+        
         add_settings_field(
             'night',
             __( 'Evening delivery', 'woocommerce-myparcel' ),
