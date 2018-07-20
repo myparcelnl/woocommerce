@@ -185,6 +185,7 @@ MyParcel = {
             MyParcel.setCurrentLocation();
             MyParcel.toggleDeliveryOptions();
             MyParcel.mapExternalWebshopTriggers();
+
         });
 
         jQuery('#mypa-select-date').on('change', function(e){
@@ -228,7 +229,7 @@ MyParcel = {
                 MyParcel.addStyleToPrice('#mypa-signature-price');
             }
 
-            MyParcel.addDeliveryToMagentoInput(MyParcel.DELIVERY_MORNING);
+            MyParcel.addDeliveryToExternalInput(MyParcel.DELIVERY_MORNING);
             return;
         }
 
@@ -275,7 +276,7 @@ MyParcel = {
                 jQuery('#s_method_myparcel_flatrate, #s_method_myparcel_tablerate').click();
             }
 
-            MyParcel.addDeliveryToMagentoInput(MyParcel.DELIVERY_NORMAL);
+            MyParcel.addDeliveryToExternalInput(MyParcel.DELIVERY_NORMAL);
             return;
         }
 
@@ -299,7 +300,7 @@ MyParcel = {
                 MyParcel.addStyleToPrice('#mypa-signature-price');
             }
 
-            MyParcel.addDeliveryToMagentoInput(MyParcel.DELIVERY_NIGHT);
+            MyParcel.addDeliveryToExternalInput(MyParcel.DELIVERY_NIGHT);
             return;
         }
 
@@ -315,7 +316,7 @@ MyParcel = {
             if (jQuery('#mypa-pickup-express-selector').prop('checked'))
             {
                 jQuery('#s_method_myparcel_pickup_express').click();
-                MyParcel.addPickupToMagentoInput('retailexpress');
+                MyParcel.addPickupToExternalInput('retailexpress');
                 MyParcel.addStyleToPrice('#mypa-pickup-express-price');
                 return;
             }else{
@@ -323,11 +324,11 @@ MyParcel = {
             }
 
             jQuery('#s_method_myparcel_pickup').click();
-            MyParcel.addPickupToMagentoInput('retail');
+            MyParcel.addPickupToExternalInput('retail');
         }
     },
 
-    addPickupToMagentoInput: function (selectedPriceComment) {
+    addPickupToExternalInput: function (selectedPriceComment) {
         var locationId = jQuery('#mypa-pickup-location').val();
         var currentLocation = MyParcel.getPickupByLocationId(MyParcel.storeDeliveryOptions.data.pickup, locationId);
 
@@ -337,12 +338,12 @@ MyParcel = {
         if (selectedPriceComment === "retail") {
             result.price_comment = "retail";
         }
-
+        jQuery( 'body' ).trigger( 'update_checkout' );
         jQuery('#mypa-input').val(JSON.stringify(result));
     },
 
 
-    addDeliveryToMagentoInput: function (deliveryMomentOfDay) {
+    addDeliveryToExternalInput: function (deliveryMomentOfDay) {
 
         var deliveryDateId = jQuery('#mypa-select-date').val();
 
@@ -353,6 +354,7 @@ MyParcel = {
             currentDeliveryData.only_recipient = MyParcel.DELIVERY_ONLY_RECIPIENT
             jQuery('#mypa-input').val(JSON.stringify(currentDeliveryData));
         }
+        jQuery( 'body' ).trigger( 'update_checkout' );
     },
 
     addStyleToPrice: function (chosenDelivery) {

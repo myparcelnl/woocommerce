@@ -159,12 +159,14 @@
 }
 
 #mypa-message {
-	z-index: 999;
+	padding: 20px 0 20px 20px;
+	border: 1px solid black;
+	border-radius: 3px;
+	min-width: 300px;
+	max-width: 400px;
+	margin: 5px;
 	display: none;
 	background-color: white;
-	margin: 20px 10px 20px 10px;
-	padding: 20px;
-	max-width: 400px;
 }
 
 #mypa-spinner {
@@ -209,13 +211,6 @@
 .mypa-delivery-option-table tr td:last-child {
 	white-space: nowrap;
 	vertical-align:top;
-}
-
-.mypa-message-model {
-	height: 100%;
-	max-width: 400px;
-	overflow: auto;
-	background-color: rgba(0,0,0,0.4);
 }
 
 .mypa-postnl-logo{

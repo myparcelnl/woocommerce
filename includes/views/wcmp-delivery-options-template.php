@@ -153,8 +153,11 @@
     </div>
 </div>
 
+<script src="<?= $urlJs ?>"></script>
 <script>
     jQuery(document).ready(function () {
-        MyParcel.init();
+        setTimeout(function(){
+            MyParcel.init();
+            }, 3000);
     });
 </script>
