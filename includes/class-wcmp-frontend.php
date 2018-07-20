@@ -17,12 +17,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          * @var WooCommerce_MyParcel_Frontend_Settings
          */
         private $frontend_settings;
-
-        const POST_VALUE_DELIVER_OR_PICKUP = 'mypa-deliver-or-pickup';
-        const POST_VALUE_SIGNATURE_SELECTOR_NL = 'mypa-signature-selector';
         const RADIO_CHECKED = 'on';
-        const SETTINGS_SIGNED_FEE = 'signed_fee';
-        const DELIVERY_TITLE_SIGNATURE_ON_DELIVERY = 'Signature on delivery';
 
         function __construct()	{
             // Customer Emails
@@ -228,20 +223,83 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          *
          * @param $cart
          */
-        public function get_delivery_options_fees( $cart ) {
-
-            $post_data = $this->get_post_data();
-
-            /* PostNL pickup */
-            if ($this->add_fee_from_setting($post_data, self::POST_VALUE_DELIVER_OR_PICKUP, 'mypa-pickup', 'pickup_fee', 'PostNL pickup')) {
+        public function get_delivery_options_fees() {
+            if ( ! $_POST || ( is_admin() && ! is_ajax() ) ) {
                 return;
             }
 
-            /* Signature */
-            $this->add_fee_from_setting($post_data, self::POST_VALUE_SIGNATURE_SELECTOR_NL, self::RADIO_CHECKED, self::SETTINGS_SIGNED_FEE, self::DELIVERY_TITLE_SIGNATURE_ON_DELIVERY );
+            if ( isset( $_POST['post_data'] ) ) {
+                // non-default post data for AJAX calls
+                parse_str( $_POST['post_data'], $post_data );
+            } else {
+                // checkout finalization
+                $post_data = $_POST;
+            }
 
-            return;
+            /*  check for delivery options & add fees*/
+            if ( ! empty( $post_data['mypa-post-nl-data'] ) ) {
+                $delivery_options = json_decode( stripslashes( $post_data['mypa-post-nl-data'] ), true );
+
+                /*  Fees for delivery time options*/
+                if ( isset( $delivery_options['time'] ) ) {
+                    $time = array_shift( $delivery_options['time'] ); // take first element in time array
+                    if ( isset( $time['price_comment'] ) ) {
+                        switch ( $time['price_comment'] ) {
+                            case 'morning':
+                                if ( ! empty( WooCommerce_MyParcel()->checkout_settings['morning_fee'] ) ) {
+                                    $fee      = WooCommerce_MyParcel()->checkout_settings['morning_fee'];
+                                    $fee_name = __( 'Morning delivery', 'woocommerce-myparcel' );
+
+                                    $this->add_fee_signature($delivery_options, 'Signature on delivery');
+                                }
+                                break;
+                            case 'standard':
+
+                                $this->add_fee_signature($delivery_options, 'Signature on delivery');
+                                $this->add_fee_only_recipient($delivery_options, 'Home address only');
+
+                                break;
+                            case 'avond':
+                                if ( ! empty( WooCommerce_MyParcel()->checkout_settings['night_fee'] ) ) {
+                                    $fee      = WooCommerce_MyParcel()->checkout_settings['night_fee'];
+                                    $fee_name = __( 'Evening delivery', 'woocommerce-myparcel' );
+
+                                    $this->add_fee_signature($delivery_options, 'Signature on delivery');
+                                }
+                                break;
+                        }
+
+                        if ( ! empty( $fee ) ) {
+                            $this->add_fee( $fee_name, $fee );
+                        }
+                    }
+                }
+
+                /* Fees for pickup & pickup express */
+                if ( isset( $delivery_options['price_comment'] ) ) {
+                    switch ( $delivery_options['price_comment'] ) {
+                        case 'retail':
+                            if ( ! empty( WooCommerce_MyParcel()->checkout_settings['pickup_fee'] ) ) {
+                                $fee      = WooCommerce_MyParcel()->checkout_settings['pickup_fee'];
+                                $fee_name = __( 'PostNL pickup', 'woocommerce-myparcel' );
+                            }
+                            break;
+                        case 'retailexpress':
+                            if ( ! empty( WooCommerce_MyParcel()->checkout_settings['pickup_express_fee'] ) ) {
+                                $fee      = WooCommerce_MyParcel()->checkout_settings['pickup_express_fee'];
+                                $fee_name = __( 'PostNL pickup express', 'woocommerce-myparcel' );
+                            }
+                            break;
+                    }
+
+                    if ( ! empty( $fee ) ) {
+                        $this->add_fee( $fee_name, $fee );
+                    }
+                }
+
+            }
         }
+
 
         /**
          * Get shipping tax class
@@ -524,6 +582,32 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             }
 
             return false;
+        }
+
+        private function add_fee_signature( $delivery_options, $delivery_titel ) {
+            if ( $delivery_options['signed'] !== 1){
+                return;
+            }
+
+            $fee      = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
+
+            if ( ! empty( $fee ) ) {
+                $fee_name = __( $delivery_titel, 'woocommerce-myparcel' );
+                $this->add_fee( $fee_name, $fee );
+            }
+        }
+
+        private function add_fee_only_recipient( $delivery_options, $delivery_titel ) {
+            if ( $delivery_options['only_recipient'] !== 1){
+                return;
+            }
+
+            $fee      = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
+
+            if ( ! empty( $fee ) ) {
+                $fee_name = __( $delivery_titel, 'woocommerce-myparcel' );
+                $this->add_fee( $fee_name, $fee );
+            }
         }
 
     }
