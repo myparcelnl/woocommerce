@@ -1533,8 +1533,6 @@ class WooCommerce_MyParcel_Export {
             return true;
         }
 
-        var_dump($shipping_method_id_class);
-
         // fallback to bare method (without class) (if bare method also defined in settings)
         if (!empty($shipping_method_id_class) && in_array($shipping_method_id_class, $package_type_shipping_methods)) {
             return true;
