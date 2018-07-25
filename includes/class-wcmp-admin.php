@@ -195,20 +195,32 @@ class WooCommerce_PostNL_Admin {
 	}
 
 	public function get_order_shipments( $order, $exclude_concepts = false ) {
-		if (empty($order)) {
-			return;
-		}
-		$consignment_id = WCX_Order::get_meta( $order, '_postnl_consignment_id' );
-		if ( $consignment_id ) {
-			$consignments = array(
-				array(
-					'shipment_id'	=> $consignment_id,
-					'tracktrace'	=> WCX_Order::get_meta( $order, '_postnl_tracktrace' ),
-				),
-			);
-		} else {
-			$consignments = WCX_Order::get_meta( $order, '_postnl_shipments' );
-		}
+        if ( empty( $order ) ) {
+            return;
+        }
+
+        $consignments = WCX_Order::get_meta( $order, '_postnl_consignment_id' );
+        // fallback to legacy consignment data (v1.X)
+        if ( empty( $consignments ) ) {
+            if ( $consignment_id = WCX_Order::get_meta( $order, '_postnl_consignment_id' ) ) {
+                $consignments = array(
+                    array(
+                        'shipment_id' => $consignment_id,
+                        'tracktrace'  => WCX_Order::get_meta( $order, '_postnl_tracktrace' ),
+                    ),
+                );
+            } elseif ( $legacy_consignments = WCX_Order::get_meta( $order, '_postnl_consignments' ) ) {
+                $consignments = array();
+                foreach ( $legacy_consignments as $consignment ) {
+                    if ( isset( $consignment['consignment_id'] ) ) {
+                        $consignments[] = array(
+                            'shipment_id' => $consignment['consignment_id'],
+                            'tracktrace'  => $consignment['tracktrace'],
+                        );
+                    }
+                }
+            }
+        }
 
 		if (empty($consignments) || !is_array($consignments)) {
 			return false;
@@ -443,7 +455,7 @@ class WooCommerce_PostNL_Admin {
 
 	public function get_tracktrace_shipments ( $order_id ) {
 		$order = WCX::get_order( $order_id );
-		$shipments = WCX_Order::get_meta( $order, '_postnl_shipments' );
+		$shipments = $this->get_order_shipments( $order, true );
 
 		if (empty($shipments)) {
 			return false;
