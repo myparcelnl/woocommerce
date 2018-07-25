@@ -82,9 +82,12 @@ jQuery( function( $ ) {
 				return;
 			}
 
-			if (shipping_method.indexOf('table_rate:') !== -1) {
+			if (shipping_method.indexOf('table_rate:') !== -1 || shipping_method.indexOf('betrs_shipping:') !== -1){
 				// WC Table Rates
 				// use shipping_method = method_id:instance_id:rate_id
+                if (shipping_method.indexOf('betrs_shipping:') !== -1) {
+					shipping_method = shipping_method.replace(":", "_");
+				}
 			} else {
 				// none table rates
 				// strip instance_id if present

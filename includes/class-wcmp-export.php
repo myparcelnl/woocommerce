@@ -811,7 +811,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
                 foreach (WooCommerce_PostNL()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
                     // check if we have a match with the predefined methods
                     // fallback to bare method (without class) (if bare method also defined in settings)
-                    if (in_array($shipping_method_id, $package_type_shipping_methods) || (!empty($shipping_method_id_class) && in_array($shipping_method_id_class, $package_type_shipping_methods))) {
+                    if ($this->isActiveMethod($shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class)) {
                         $package_type = $package_type_key;
                         break;
                     }
@@ -1429,6 +1429,34 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
 
 			$order->add_order_note( $this->prefix_message . sprintf( $barcode ) );
 		}
+        /**
+         * @param $shipping_method_id
+         * @param $package_type_shipping_methods
+         * @param $shipping_class
+         *
+         * @return bool
+         */
+        private function isActiveMethod( $shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class ) {
+
+            //support WooCommerce flate rate
+            // check if we have a match with the predefined methods
+            if (in_array($shipping_method_id_class, $package_type_shipping_methods)) {
+                return true;
+            }
+            //support WooCommerce Table Rate Shipping by Automattic
+            // fallback to bare method (without class) (if bare method also defined in settings)
+            if (!empty($shipping_class) && in_array($shipping_class, $package_type_shipping_methods)) {
+                return true;
+            }
+
+            // support WooCommerce Table Rate Shipping by Bolder Elements
+            $newShippingClass = str_replace(':', '_', $shipping_class);
+            if ( !empty($shipping_class) && in_array($newShippingClass, $package_type_shipping_methods)) {
+                return true;
+            }
+
+            return false;
+        }
     }
 
 
