@@ -199,7 +199,7 @@ class WooCommerce_PostNL_Admin {
             return;
         }
 
-        $consignments = WCX_Order::get_meta( $order, '_postnl_consignment_id' );
+        $consignments = WCX_Order::get_meta( $order, '_postnl_shipments' );
         // fallback to legacy consignment data (v1.X)
         if ( empty( $consignments ) ) {
             if ( $consignment_id = WCX_Order::get_meta( $order, '_postnl_consignment_id' ) ) {
