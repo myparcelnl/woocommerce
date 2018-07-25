@@ -307,11 +307,11 @@ class WooCommerce_PostNL_Frontend {
 	public function save_delivery_options( $order_id, $posted ) {
 		$order = WCX::get_order( $order_id );
 
-        if ($_POST['postnl_highest_shipping_class'] != NULL ) {
-            WCX_Order::update_meta_data( $order, '_postnl_highest_shipping_class', $_POST['postnl_highest_shipping_class'] );
-        } elseif (isset($_POST['shipping_method'])) {
-            WCX_Order::update_meta_data( $order, '_postnl_highest_shipping_class', $_POST['shipping_method'][0] );
-        }
+		if ($_POST['postnl_highest_shipping_class'] != NULL ) {
+		    WCX_Order::update_meta_data( $order, '_postnl_highest_shipping_class', $_POST['postnl_highest_shipping_class'] );
+		} elseif (isset($_POST['shipping_method'])) {
+		    WCX_Order::update_meta_data( $order, '_postnl_highest_shipping_class', $_POST['shipping_method'][0] );
+		}
 		// post-recipient-only - 'on' or not set
 		// post-signed         - 'on' or not set
 		// post-post-nl-data   - JSON of chosen delivery options
