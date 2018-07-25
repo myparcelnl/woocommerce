@@ -310,7 +310,7 @@ class WooCommerce_MyParcel_Frontend {
 		if ($_POST['myparcel_highest_shipping_class'] != NULL ) {
 		    WCX_Order::update_meta_data( $order, '_myparcel_highest_shipping_class', $_POST['myparcel_highest_shipping_class'] );
 		} elseif (isset($_POST['shipping_method'])) {
-			WCX_Order::update_meta_data( $order, '_myparcel_highest_shipping_class', $_POST['shipping_method'][0] );
+		    WCX_Order::update_meta_data( $order, '_myparcel_highest_shipping_class', $_POST['shipping_method'][0] );
 		}
 
 		// mypa-recipient-only - 'on' or not set
