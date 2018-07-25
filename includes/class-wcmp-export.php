@@ -905,10 +905,10 @@ class WooCommerce_MyParcel_Export {
                 }
 			}
 			foreach (WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
-               if ($this->isActiveMethod($shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class)) {
-                    $package_type = $package_type_key;
-					break;
-               }
+			    if ($this->isActiveMethod($shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class)) {
+			        $package_type = $package_type_key;
+			        break;
+			    }
 			}
 		}
 
