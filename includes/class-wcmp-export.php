@@ -898,7 +898,7 @@ class WooCommerce_MyParcel_Export {
 				} else {
 					$shipping_method_id = $shipping_method;
 				}
-                // add class if we have one
+				// add class if we have one
 				if (!empty($shipping_class)) {
 				    $shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
 				}
