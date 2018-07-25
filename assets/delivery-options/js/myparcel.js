@@ -891,7 +891,7 @@ MyParcel = {
         if (this.data.address.postalCode == '' || this.data.address.number == ''){
             MyParcel.hideSpinner();
             MyParcel.showMessage(
-                '<h3>Adres gegevens zijn niet ingevuld</h3>'
+                '<h3>Adresgegevens zijn niet ingevuld</h3>'
             );
             return;
         }
