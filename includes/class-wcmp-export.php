@@ -898,12 +898,16 @@ class WooCommerce_MyParcel_Export {
 				} else {
 					$shipping_method_id = $shipping_method;
 				}
+				// add class if we have one
+				if (!empty($shipping_class)) {
+				    $shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
+				}
 			}
 			foreach (WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
-				if ($this->isActiveMethod($shipping_method_id, $package_type_shipping_methods, $shipping_class)) {
-					$package_type = $package_type_key;
-					break;
-				}
+			    if ($this->isActiveMethod($shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class)) {
+			        $package_type = $package_type_key;
+			        break;
+			    }
 			}
 		}
 
@@ -1522,13 +1526,14 @@ class WooCommerce_MyParcel_Export {
      *
      * @return bool
      */
-    private function isActiveMethod( $shipping_method_id, $package_type_shipping_methods, $shipping_class ) {
+    private function isActiveMethod( $shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class ) {
 
+        //support WooCommerce flate rate
         // check if we have a match with the predefined methods
-        if (in_array($shipping_method_id, $package_type_shipping_methods)) {
+        if (in_array($shipping_method_id_class, $package_type_shipping_methods)) {
             return true;
         }
-
+        //support WooCommerce Table Rate Shipping by Automattic
         // fallback to bare method (without class) (if bare method also defined in settings)
         if (!empty($shipping_class) && in_array($shipping_class, $package_type_shipping_methods)) {
             return true;

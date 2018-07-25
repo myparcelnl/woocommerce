@@ -18,7 +18,7 @@ if ( !class_exists( 'WooCommerce_MyParcel' ) ) :
 
 class WooCommerce_MyParcel {
 
-	public $version = '2.4.12';
+	public $version = '2.4.13';
 
 	public $plugin_basename;
 
