@@ -89,26 +89,26 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 = 2.4.13 (2018-07-26) =
-Fix: Tabel rate shipping witch WooCommerce Table Rate Shipping by Automattic / Bolder Elements 4.0 / Bolder Elements 4.1.3
-Fix: The option to show the checkout only when he is linked to package
+* Fix: Tabel rate shipping witch WooCommerce Table Rate Shipping by Automattic / Bolder Elements 4.0 / Bolder Elements 4.1.3
+* Fix: The option to show the checkout only when he is linked to package
 
 = 2.4.12 (2018-07-09) =
-Fix: #102 change Iceland to world shipping
-Fix: #106 tabel rates shipping
-Improvement: #94 support legacy consignment and tracktrace data
-Improvement: #95 Speed up order list view
-Improvement: #104 Add reference identifier, that is always the order id
+* Fix: #102 change Iceland to world shipping
+* Fix: #106 tabel rates shipping
+* Improvement: #94 support legacy consignment and tracktrace data
+* Improvement: #95 Speed up order list view
+* Improvement: #104 Add reference identifier, that is always the order id
 
 = 2.4.11 (2018-04-30) =
-Fix: Export shipment labels
+* Fix: Export shipment labels
 
 = 2.4.10 (2018-04-26) =
-Improvement: Support Effect Connect, you can place the barcode inside a note of the order
+* Improvement: Support Effect Connect, you can place the barcode inside a note of the order
 
 = 2.4.9 (2018-04-03) =
-Fix: Scrolling when changing package type in orderview 
-Fix: Select the correct delivery methode inside the checkout
-Improvement: Support Cloudflare
+* Fix: Scrolling when changing package type in orderview 
+* Fix: Select the correct delivery methode inside the checkout
+* Improvement: Support Cloudflare
 
 = 2.4.8 (2018-02-27) =
 * Fix: The array error from the userAgent (https://wordpress.org/support/topic/parse-error-syntax-error-unexpected-in-wp-content-plugins-woocommerce-mypa/)
