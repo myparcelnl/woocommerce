@@ -652,6 +652,8 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'	=> $option_name,
                 'id'			=> 'at_home_delivery_titel',
                 'size'			=> '53',
+                'titel'         => 'Delivered at home or at work',
+                'current'       => 'Delivered at home or at work',
             )
         );
 
@@ -665,6 +667,8 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'	=> $option_name,
                 'id'			=> 'standard_titel',
                 'size'			=> '53',
+                'titel'         => 'Standard delivery',
+                'current'       => 'Standard delivery',
             )
         );
 
