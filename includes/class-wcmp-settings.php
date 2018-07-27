@@ -616,8 +616,6 @@ class WooCommerce_MyParcel_Settings {
             )
         );
 
-
-
         add_settings_field(
             'processing_parameters',
             __( 'Display for', 'woocommerce-myparcel' ),
@@ -634,11 +632,6 @@ class WooCommerce_MyParcel_Settings {
                 'description'	=> __( 'To associate specific shipping methods with parcels, see the Default export settings tab. Note that the delivery options will be automatically hidden for foreign addresses, regardless of this setting', 'woocommerce-myparcel' ),
             )
         );
-
-
-
-
-
 
         // Checkout options section.
         add_settings_section(
@@ -877,7 +870,7 @@ class WooCommerce_MyParcel_Settings {
             )
         );
 
-		// Customizations section
+		// Customizations section   
 		add_settings_section(
 			'customizations',
 			__( 'Customizations', 'woocommerce-myparcel' ),
