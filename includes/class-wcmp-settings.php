@@ -604,43 +604,136 @@ class WooCommerce_MyParcel_Settings {
 			$this->default_settings( $option_name );
 		}
 
-		// Delivery options section.
-		add_settings_section(
-			'delivery_options',
-			__( 'Delivery options', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'section' ),
-			$option_group
-		);
+        add_settings_field(
+            'myparcel_checkout',
+            __( 'Enable MyParcel delivery options', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'checkbox' ),
+            $option_group,
+            'processing_parameters',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'myparcel_checkout',
+            )
+        );
 
 
-		add_settings_field(
-			'myparcel_checkout',
-			__( 'Enable MyParcel delivery options', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'checkbox' ),
-			$option_group,
-			'delivery_options',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'myparcel_checkout',
-			)
-		);
 
-		add_settings_field(
-			'checkout_display',
-			__( 'Display for', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'select' ),
-			$option_group,
-			'delivery_options',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'checkout_display',
-				'options' 		=> array(
-					'selected_methods'	=> __( 'Shipping methods associated with Parcels' , 'woocommerce-myparcel' ),
-					'all_methods'		=> __( 'All shipping methods' , 'woocommerce-myparcel' ),
-				),
-				'description'	=> __( 'To associate specific shipping methods with parcels, see the Default export settings tab. Note that the delivery options will be automatically hidden for foreign addresses, regardless of this setting', 'woocommerce-myparcel' ),
-			)
-		);
+        add_settings_field(
+            'processing_parameters',
+            __( 'Display for', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'select' ),
+            $option_group,
+            'processing_parameters',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'checkout_display',
+                'options' 		=> array(
+                    'selected_methods'	=> __( 'Shipping methods associated with Parcels' , 'woocommerce-myparcel' ),
+                    'all_methods'		=> __( 'All shipping methods' , 'woocommerce-myparcel' ),
+                ),
+                'description'	=> __( 'To associate specific shipping methods with parcels, see the Default export settings tab. Note that the delivery options will be automatically hidden for foreign addresses, regardless of this setting', 'woocommerce-myparcel' ),
+            )
+        );
+
+
+
+
+
+
+        // Checkout options section.
+        add_settings_section(
+            'processing_parameters',
+            __( 'Shipment processing parameters', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'section' ),
+            $option_group
+        );
+
+        $days_of_the_week = array(
+            '0' => __( 'Sunday', 'woocommerce-myparcel' ),
+            '1' => __( 'Monday', 'woocommerce-myparcel' ),
+            '2' => __( 'Tuesday', 'woocommerce-myparcel' ),
+            '3' => __( 'Wednesday', 'woocommerce-myparcel' ),
+            '4' => __( 'Thursday', 'woocommerce-myparcel' ),
+            '5' => __( 'Friday', 'woocommerce-myparcel' ),
+            '6' => __( 'Saturday', 'woocommerce-myparcel' ),
+        );
+
+        add_settings_field(
+            'dropoff_days',
+            __( 'Dropoff days', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'enhanced_select' ),
+            $option_group,
+            'processing_parameters',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'dropoff_days',
+                'options'		=> $days_of_the_week,
+                'description'	=> __( 'Days of the week on which you hand over parcels to PostNL', 'woocommerce-myparcel' ),
+            )
+        );
+
+        add_settings_field(
+            'cutoff_time',
+            __( 'Cut-off time', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'text_input' ),
+            $option_group,
+            'processing_parameters',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'cutoff_time',
+                'type'			=> 'text',
+                'size'			=> '5',
+                'description'	=> __( 'Time at which you stop processing orders for the day (format: hh:mm)', 'woocommerce-myparcel' ),
+            )
+        );
+
+        add_settings_field(
+            'dropoff_delay',
+            __( 'Dropoff delay', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'text_input' ),
+            $option_group,
+            'processing_parameters',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'dropoff_delay',
+                'type'			=> 'number',
+                'size'			=> '2',
+                'description'	=> __( 'Number of days you take to process an order', 'woocommerce-myparcel' ),
+            )
+        );
+
+        add_settings_field(
+            'deliverydays_window',
+            __( 'Delivery days window', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'text_input' ),
+            $option_group,
+            'processing_parameters',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'deliverydays_window',
+                'type'			=> 'number',
+                'size'			=> '2',
+                'description'	=> __( 'Number of days you allow the customer to postpone a shipment', 'woocommerce-myparcel' ),
+            )
+        );
+
+
+
+
+
+
+
+
+
+
+
+// Delivery options section.
+        add_settings_section(
+            'delivery_options',
+            __( 'Delivery options', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'section' ),
+            $option_group
+        );
 
         add_settings_field(
             'at_home_delivery',
@@ -748,7 +841,7 @@ class WooCommerce_MyParcel_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'pickup',
                 'titel'         => 'Pickup',
-                'current' 	    => 'PostNL pickup',
+                'current' 	    => 'Pick up at PostNL location',
 			)
 		);
 
@@ -784,118 +877,12 @@ class WooCommerce_MyParcel_Settings {
             )
         );
 
-        // Checkout options section.
-		add_settings_section(
-			'processing_parameters',
-			__( 'Shipment processing parameters', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'section' ),
-			$option_group
-		);
-
-		$days_of_the_week = array(
-			'0' => __( 'Sunday', 'woocommerce-myparcel' ),
-			'1' => __( 'Monday', 'woocommerce-myparcel' ),
-			'2' => __( 'Tuesday', 'woocommerce-myparcel' ),
-			'3' => __( 'Wednesday', 'woocommerce-myparcel' ),
-			'4' => __( 'Thursday', 'woocommerce-myparcel' ),
-			'5' => __( 'Friday', 'woocommerce-myparcel' ),
-			'6' => __( 'Saturday', 'woocommerce-myparcel' ),
-		);
-
-		add_settings_field(
-			'dropoff_days',
-			__( 'Dropoff days', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'enhanced_select' ),
-			$option_group,
-			'processing_parameters',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'dropoff_days',
-				'options'		=> $days_of_the_week,
-				'description'	=> __( 'Days of the week on which you hand over parcels to PostNL', 'woocommerce-myparcel' ),
-			)
-		);
-
-		add_settings_field(
-			'cutoff_time',
-			__( 'Cut-off time', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'text_input' ),
-			$option_group,
-			'processing_parameters',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'cutoff_time',
-				'type'			=> 'text',
-				'size'			=> '5',
-				'description'	=> __( 'Time at which you stop processing orders for the day (format: hh:mm)', 'woocommerce-myparcel' ),
-			)
-		);
-
-		add_settings_field(
-			'dropoff_delay',
-			__( 'Dropoff delay', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'text_input' ),
-			$option_group,
-			'processing_parameters',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'dropoff_delay',
-				'type'			=> 'number',
-				'size'			=> '2',
-				'description'	=> __( 'Number of days you take to process an order', 'woocommerce-myparcel' ),
-			)
-		);
-
-		add_settings_field(
-			'deliverydays_window',
-			__( 'Delivery days window', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'text_input' ),
-			$option_group,
-			'processing_parameters',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'deliverydays_window',
-				'type'			=> 'number',
-				'size'			=> '2',
-				'description'	=> __( 'Number of days you allow the customer to postpone a shipment', 'woocommerce-myparcel' ),
-			)
-		);
-
 		// Customizations section
 		add_settings_section(
 			'customizations',
 			__( 'Customizations', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'section' ),
 			$option_group
-		);
-
-		add_settings_field(
-			'base_color',
-			__( 'Base color', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'color_picker' ),
-			$option_group,
-			'customizations',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'base_color',
-				'size'			=> '10',
-				'description'	=> __( 'Color of the header & tabs (cyan by default)', 'woocommerce-myparcel' ),
-			)
-		);
-
-
-		add_settings_field(
-			'highlight_color',
-			__( 'Highlight color', 'woocommerce-myparcel' ),
-			array( $this->callbacks, 'color_picker' ),
-			$option_group,
-			'customizations',
-			array(
-				'option_name'	=> $option_name,
-				'id'			=> 'highlight_color',
-				'size'			=> '10',
-				'description'	=> __( 'Color of the selections/highlights (orange by default)', 'woocommerce-myparcel' ),
-			)
 		);
 
 		add_settings_field(
