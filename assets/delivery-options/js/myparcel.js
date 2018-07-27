@@ -520,8 +520,9 @@ MyParcel = {
 
     showSpinner: function()
     {
+        jQuery('#mypa-delivery-option-form').hide();
         jQuery('.mypa-message-model').hide();
-        jQuery('#mypa-spinner').show();
+        jQuery('#mypa-spinner-model').show();
     },
 
 
@@ -534,7 +535,7 @@ MyParcel = {
 
     hideSpinner: function()
     {
-        jQuery('#mypa-spinner').hide();
+        jQuery('#mypa-spinner-model').hide();
     },
 
     showMorningDelivery: function()

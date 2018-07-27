@@ -169,15 +169,31 @@
 	background-color: white;
 }
 
-#mypa-spinner {
-	margin: 50px 0 50px 125px;
-	border: 16px solid #f3f3f3;
-	border-top: 16px solid #000;
-	border-radius: 50%;
-	width: 32px;
-	height: 32px;
-	animation: mypa-spin 0.3s linear infinite;
+#mypa-spinner-model {
+	position: relative;
+	display: table;
+	margin: 0 auto;
 }
+
+#mypa-spinner-model img{
+	position: absolute;
+	top: 22%;
+	left: 22%;
+	width: 62%;
+}
+
+#mypa-spinner {
+	position: relative;
+	display: inline-block;
+	width: 90px;
+	height: 90px;
+	border-top: 5px solid #ff8c00;
+	border-radius: 80%;
+	border-top-color: #ff8c00;
+	animation: mypa-spin 1.2s linear infinite;
+
+}
+
 
 .mypa-extra-delivery-options-padding-top {
 	padding-top: 10px;
