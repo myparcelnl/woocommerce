@@ -169,17 +169,21 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                 }
             }
 
-
             // Don't load when cart doesn't need shipping
             if ( false == WC()->cart->needs_shipping()) {
                 return;
             }
 
+            $delivery_options_shipping_methods = $this->getDeliveryOptionsShippingMethods();
+            var_dump( $chosen_shipping_method );
+            /**
+             * todo hide unused method
+             */
+
             $urlJs       = WooCommerce_MyParcel()->plugin_url() . "/assets/delivery-options/js/myparcel.js";
 
             $jsonConfig  = $this->get_checkout_config();
             $myparcelShippingMethods = json_encode($this->get_shipping_methods());
-
 
             echo "<script> myParcelConfig = {$jsonConfig}; myparcel_delivery_options_shipping_methods = {$myparcelShippingMethods} </script>";
             require_once(WooCommerce_MyParcel()->plugin_path().'/includes/views/wcmp-delivery-options-template.php');
@@ -630,6 +634,23 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                 $fee_name = __( $delivery_titel, 'woocommerce-myparcel' );
                 $this->add_fee( $fee_name, $fee );
             }
+        }
+
+        /**
+         * @return string
+         */
+        private function getDeliveryOptionsShippingMethods() {
+            if ( isset( WooCommerce_MyParcel()->checkout_settings['checkout_display'] ) && WooCommerce_MyParcel()->checkout_settings['checkout_display'] == 'all_methods' ) {
+//                $myparcel_delivery_options_always_display = 'yes';
+                $delivery_options_shipping_methods = array();
+            } elseif ( isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] ) && isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1] ) ) {
+                // Shipping methods associated with parcels = enable delivery options
+                $delivery_options_shipping_methods = WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1];
+            } else {
+                $delivery_options_shipping_methods = array();
+            }
+
+            return json_encode($delivery_options_shipping_methods);
         }
 
     }
