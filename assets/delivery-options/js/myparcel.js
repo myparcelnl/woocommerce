@@ -525,6 +525,16 @@ MyParcel = {
         jQuery('#mypa-spinner-model').show();
     },
 
+    hideAllDeliveryOptions: function()
+    {
+        jQuery('#mypa-load').hide();
+    },
+
+    showAllDeliveryOptions: function()
+    {
+        jQuery('#mypa-load').show();
+    },
+
 
     /*
      * hideSpinner
