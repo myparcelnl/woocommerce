@@ -62,17 +62,11 @@ jQuery( function( $ ) {
 
 	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {
-        console.log('updated_checkout');
 		window.myparcel_checkout_updating = false; //done updating
 
-        console.log(myparcel_delivery_options_always_display);
 		if ( typeof myparcel_delivery_options_always_display !== 'undefined' && myparcel_delivery_options_always_display == 'yes') {
-            console.log('help!!!');
 			show_myparcel_delivery_options();
 		} else if ( myparcel_delivery_options_shipping_methods.length > 0 ) {
-            console.log('myparcel_delivery_options_shipping_methods.length');
-            console.log(myparcel_delivery_options_shipping_methods);
-
             // check if shipping is user choice or fixed
 			if ( $( '#order_review .shipping_method' ).length > 1 ) {
 				var shipping_method = $( '#order_review .shipping_method:checked').val();
@@ -119,7 +113,6 @@ jQuery( function( $ ) {
 			}
 		} else {
 			// not sure if we should already hide by default?
-            console.log('not sure if we should already hide by default?');
 			hide_myparcel_delivery_options();
 		}
 	});
@@ -222,10 +215,8 @@ jQuery( function( $ ) {
 	function show_myparcel_delivery_options() {
 		// show only if NL
 		check_country();
-        console.log('before is_updated_shipping_method');
 
         if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
-            console.log('yes is_updated_shipping_method');
             MyParcel.showAllDeliveryOptions();
 		}
 	}

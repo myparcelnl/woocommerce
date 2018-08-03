@@ -18,12 +18,10 @@
 
 <div id="mypa-load" style="<?php echo $show_delivery_options ?: 'display:none';?>">
 
-
-        <div id="mypa-spinner-model">
-            <img src="https://www.postnl.nl//img/logo.png"/>
-            <div id="mypa-spinner"></div>
-        </div>
-
+    <div id="mypa-spinner-model">
+        <img src="https://www.postnl.nl//img/logo.png"/>
+        <div id="mypa-spinner"></div>
+    </div>
 
     <div class="mypa-message-model">
         <div id="mypa-message"></div>
