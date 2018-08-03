@@ -167,11 +167,6 @@ jQuery( function( $ ) {
 		jQuery('body').trigger('update_checkout');
 	});
 
-	// pickup location selected
-	// $('#mypa-location-container').on('change', 'input[type=radio]', function() {
-	// 	var pickup_location = $( this ).val();
-	// });
-	// 
 	function get_settings() {
 		if (typeof window.mypa != 'undefined' && typeof window.mypa.settings != 'undefined') {
 			return window.mypa.settings;
@@ -182,11 +177,8 @@ jQuery( function( $ ) {
 
 	function check_country() {
 		country = get_shipping_country();
-		if (country != 'NL') {
+		if (country != 'NL' && country != 'BE') {
 			hide_myparcel_delivery_options();
-		} else {
-			$( '#myparcel-iframe' ).show();
-			$( '#mypa-options-enabled' ).prop('checked', true);
 		}
 	}
 

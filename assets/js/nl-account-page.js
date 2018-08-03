@@ -4,7 +4,7 @@ jQuery(document).ready(function($) {
 		// Hide custom NL fields by default when country not NL
 		var country = $('#'+address_type+'_country').val();
 		if (typeof country != 'undefined') {		
-			if (country != 'NL') {
+			if (country != 'NL' && country != 'BE') {
 				$('#'+address_type+'_street_name_field').hide();
 				$('#'+address_type+'_house_number_field').hide();
 				$('#'+address_type+'_house_number_suffix_field').hide();

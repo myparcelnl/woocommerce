@@ -159,7 +159,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             $chosen_shipping_methods = WC()->session->chosen_shipping_methods;
             if ( empty($myparcel_delivery_options_always_display) && !empty($chosen_shipping_methods) && is_array($chosen_shipping_methods) ) {
                 $shipping_country = WC()->customer->get_shipping_country();
-                if ($shipping_country != 'NL') {
+                if ($shipping_country != 'NL' && $shipping_country != 'BE') {
                     $show_delivery_options = false;
                 }
                 $chosen_shipping_method = array_shift($chosen_shipping_methods);
@@ -540,7 +540,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             }
 
             $shipping_country = WC()->customer->get_shipping_country();
-            if ($shipping_country != 'NL') {
+            if ($shipping_country != 'NL' && $shipping_country != 'BE') {
                 return true;
             }
 
