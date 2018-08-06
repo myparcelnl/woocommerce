@@ -1531,7 +1531,7 @@ class WooCommerce_MyParcel_Export {
 
         //support WooCommerce flate rate
         // check if we have a match with the predefined methods
-	if (in_array($shipping_method_id, $package_type_shipping_methods)) {
+	    if (in_array($shipping_method_id, $package_type_shipping_methods)) {
             return true;
         }      
         if (in_array($shipping_method_id_class, $package_type_shipping_methods)) {
