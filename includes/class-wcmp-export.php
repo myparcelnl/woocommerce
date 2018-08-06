@@ -13,6 +13,7 @@ class WooCommerce_MyParcel_Export {
 	public $order_id;
 	public $success;
 	public $errors;
+	private $prefix_message;
 
 	/**
 	 * Construct.
@@ -213,7 +214,6 @@ class WooCommerce_MyParcel_Export {
 					$api = $this->init_api();
 					$response = $api->add_shipments( $shipments );
 					$this->log("API response (order {$order_id}):\n".var_export($response, true));
-					// echo '<pre>';var_dump($response);echo '</pre>';die();
 					if (isset($response['body']['data']['ids'])) {
 						$ids = array_shift($response['body']['data']['ids']);
 						$shipment_id = $ids['id'];
@@ -254,7 +254,6 @@ class WooCommerce_MyParcel_Export {
 				WCX_Order::update_meta_data( $order, '_myparcel_last_shipment_ids', $created_shipments );
 			}
 		}
-		// echo '<pre>';var_dump($this->success);echo '</pre>';die();
 		if (!empty($this->success)) {
 			$return['success'] = sprintf(__( '%s shipments successfully exported to Myparcel', 'woocommerce-myparcel' ), count($this->success));
 			$return['success_ids'] = $this->success;
@@ -271,13 +270,11 @@ class WooCommerce_MyParcel_Export {
 		foreach ($myparcel_options as $order_id => $options) {
 			$return_shipments = array( $this->prepare_return_shipment_data( $order_id, $options ) );
 			$this->log("Return shipment data for order {$order_id}:\n".var_export($return_shipments, true));
-			// echo '<pre>';var_dump($return_shipment);echo '</pre>';die();
 
 			try {
 				$api = $this->init_api();
 				$response = $api->add_shipments( $return_shipments, 'return' );
 				$this->log("API response (order {$order_id}):\n".var_export($response, true));
-				// echo '<pre>';var_dump($response);echo '</pre>';die();
 				if (isset($response['body']['data']['ids'])) {
 					$order = WCX::get_order( $order_id );
 					$ids = array_shift($response['body']['data']['ids']);
@@ -299,7 +296,6 @@ class WooCommerce_MyParcel_Export {
 			}
 
 		}
-		// echo '<pre>';var_dump($success);echo '</pre>';die();
 
 		return $return;
 	}
@@ -319,12 +315,11 @@ class WooCommerce_MyParcel_Export {
 				$params['positions'] = implode( ';', array_slice($portrait_positions,$offset) );
 			}
 
-
 			if (isset($label_response_type) && $label_response_type == 'url') {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'link' );
-
+				$this->add_myparcel_note_to_shipments($shipment_ids, $order_ids);
 				$this->log("API response:\n".var_export($response, true));
-				// var_dump( $response );
+
 				if (isset($response['body']['data']['pdfs']['url'])) {
 					$url = untrailingslashit( $api->APIURL ) . $response['body']['data']['pdfs']['url'];
 					$return['url'] = $url;
@@ -334,6 +329,7 @@ class WooCommerce_MyParcel_Export {
 
 			} else {
 				$response = $api->get_shipment_labels( $shipment_ids, $params, 'pdf' );
+				$this->add_myparcel_note_to_shipments($shipment_ids, $order_ids);
 
 				if (isset($response['body'])) {
 					$this->log("PDF data received");
@@ -348,8 +344,6 @@ class WooCommerce_MyParcel_Export {
 					$this->log("Unknown error, API response:\n".var_export($response, true));
 					$this->errors[] = __( 'Unknown error', 'woocommerce-myparcel' );
 				}
-
-				 //echo '<pre>';var_dump($response);echo '</pre>';die();
 			}
 
 		} catch (Exception $e) {
@@ -438,49 +432,50 @@ class WooCommerce_MyParcel_Export {
 		return $api;
 	}
 
-	public function get_order_shipment_data( $order_ids, $type = 'standard' ) {
-		foreach( $order_ids as $order_id ) {
-			// get order
-			$order = WCX::get_order( $order_id );
+    public function get_order_shipment_data( $order_ids, $type = 'standard' ) {
+        foreach( $order_ids as $order_id ) {
+            // get order
+            $order = WCX::get_order( $order_id );
 
-			$shipment = array(
-				'recipient' => $this->get_recipient( $order ),
-				'options'	=> $this->get_options( $order ),
-				'carrier'	=> 1, // default to POSTNL for now
-			);
+            $shipment = array(
+                'reference_identifier'  => $this->replace_shortcodes( WooCommerce_MyParcel()->export_defaults['label_description'], $order ),
+                'recipient' => $this->get_recipient( $order ),
+                'options'	=> $this->get_options( $order ),
+                'carrier'	=> 1, // default to POSTNL for now
+            );
 
-			if ( $pickup = $this->is_pickup( $order ) ) {
-				// $pickup_time = array_shift($pickup['time']); // take first element in time array
-				$shipment['pickup'] = array(
-					'postal_code'	=> $pickup['postal_code'],
-					'street'		=> $pickup['street'],
-					'city'			=> $pickup['city'],
-					'number'		=> $pickup['number'],
-					'location_name'	=> $pickup['location'],
-				);
-			}
+            if ( $pickup = $this->is_pickup( $order ) ) {
+                // $pickup_time = array_shift($pickup['time']); // take first element in time array
+                $shipment['pickup'] = array(
+                    'postal_code'	=> $pickup['postal_code'],
+                    'street'		=> $pickup['street'],
+                    'city'			=> $pickup['city'],
+                    'number'		=> $pickup['number'],
+                    'location_name'	=> $pickup['location'],
+                );
+            }
 
-			$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-			if ( $this->is_world_shipment_country( $shipping_country ) ) {
-				$customs_declaration = $this->get_customs_declaration( $order );
-				$shipment['customs_declaration'] = $customs_declaration;
-				$shipment['physical_properties'] = array(
-					'weight' => $customs_declaration['weight'],
-				);
-			}
+            $shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
+            if ( $this->is_world_shipment_country( $shipping_country ) ) {
+                $customs_declaration = $this->get_customs_declaration( $order );
+                $shipment['customs_declaration'] = $customs_declaration;
+                $shipment['physical_properties'] = array(
+                    'weight' => $customs_declaration['weight'],
+                );
+            }
 
-			/* disabled for now
-			$concept_shipments = $this->get_shipment_ids( (array) $order_id, array( 'only_concepts' => true, 'only_last' => true ) );
-			if ( !empty($concept_shipments) ) {
-				$shipment['id'] = array_pop($concept_shipments);
-			}
-			*/
+            /* disabled for now
+            $concept_shipments = $this->get_shipment_ids( (array) $order_id, array( 'only_concepts' => true, 'only_last' => true ) );
+            if ( !empty($concept_shipments) ) {
+                $shipment['id'] = array_pop($concept_shipments);
+            }
+            */
 
-			$shipments[] = $shipment;
-		}
+            $shipments[] = $shipment;
+        }
 
-		return $shipments;
-	}
+        return $shipments;
+    }
 
 	public function prepare_return_shipment_data( $order_id, $options ) {
 		$order = WCX::get_order( $order_id );
@@ -547,9 +542,8 @@ class WooCommerce_MyParcel_Export {
 			'company'		=> (string) WCX_Order::get_prop( $order, 'shipping_company' ),
 			'email'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? WCX_Order::get_prop( $order, 'billing_email' ) : '',
 			'phone'			=> isset(WooCommerce_MyParcel()->export_defaults['connect_phone']) ? WCX_Order::get_prop( $order, 'billing_phone' ) : '',
-
 		);
-
+    
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
 		if ( $shipping_country == 'NL' ) {
 			// use billing address if old 'pakjegemak' (1.5.6 and older)
@@ -585,6 +579,33 @@ class WooCommerce_MyParcel_Export {
 		$address = array_merge( $address, $address_intl);
 
 		return apply_filters( 'wc_myparcel_recipient', $address, $order );
+	}
+
+	/**
+	 * @param $selected_shipment_ids
+	 * @param $order_ids
+	 *
+	 * @internal param $shipment_ids
+	 */
+	public function add_myparcel_note_to_shipments($selected_shipment_ids, $order_ids){
+
+		if ( ! isset(WooCommerce_MyParcel()->general_settings['barcode_in_note'])) {
+			return;
+		}
+
+		// Select the barcode text of the MyParcel settings
+		$this->prefix_message = WooCommerce_MyParcel()->general_settings['barcode_in_note_titel'];
+
+		foreach ( $order_ids as $order_id ) {
+			$order = WCX::get_order( $order_id );
+			$order_shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+			foreach ($order_shipments as $shipment) {
+				$shipment_id = $shipment['shipment_id'];
+				$this->add_myparcel_note_to_shipment($selected_shipment_ids, $shipment_id, $order);
+			}
+		}
+
+		return;
 	}
 
 	public function get_options( $order ) {
@@ -703,7 +724,6 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// disable options for mailbox package and unpaid letter
-		// echo '<pre>';var_dump($package_type);echo '</pre>';die();
 		if ( $options['package_type'] != 1 ) {
 			$illegal_options = array( 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date' );
 			foreach ($options as $key => $option) {
@@ -863,6 +883,7 @@ class WooCommerce_MyParcel_Export {
 
 	public function get_package_type_from_shipping_method( $shipping_method, $shipping_class, $shipping_country ) {
 		$package_type = 1;
+        $shipping_method_id_class = "";
 		if (isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'])) {
 			if ( strpos($shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping') ) {
 				// Automattic / WooCommerce table rate
@@ -878,20 +899,16 @@ class WooCommerce_MyParcel_Export {
 				} else {
 					$shipping_method_id = $shipping_method;
 				}
-
 				// add class if we have one
 				if (!empty($shipping_class)) {
-					$shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
+				    $shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
 				}
 			}
-
 			foreach (WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
-				// check if we have a match with the predefined methods
-				// fallback to bare method (without class) (if bare method also defined in settings)
-				if (in_array($shipping_method_id, $package_type_shipping_methods) || (!empty($shipping_method_id_class) && in_array($shipping_method_id_class, $package_type_shipping_methods))) {
-					$package_type = $package_type_key;
-					break;
-				}
+			    if ($this->isActiveMethod($shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class)) {
+			        $package_type = $package_type_key;
+			        break;
+			    }
 			}
 		}
 
@@ -916,6 +933,7 @@ class WooCommerce_MyParcel_Export {
 			$order_shipping_method = $order_shipping_method['method_id'];
 
 			$order_shipping_class = WCX_Order::get_meta( $order, '_myparcel_highest_shipping_class' );
+
 			if (empty($order_shipping_class)) {
 				$order_shipping_class = $this->get_order_shipping_class( $order, $order_shipping_method );
 			}
@@ -1043,7 +1061,6 @@ class WooCommerce_MyParcel_Export {
 		try {
 			$api = $this->init_api();
 			$response = $api->get_shipments( $id );
-			// echo '<pre>';var_dump($response);echo '</pre>';die();
 
 			if (!empty($response['body']['data']['shipments'])) {
 				$shipments = $response['body']['data']['shipments'];
@@ -1250,6 +1267,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		$shipping_method = $this->get_shipping_method( $shipping_method_id );
+
 		if (empty($shipping_method)) {
 			return false;
 		}
@@ -1442,12 +1460,12 @@ class WooCommerce_MyParcel_Export {
 
 	public function is_eu_country($country_code) {
 		// $eu_countries = array( 'GB', 'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'EL', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE' );
-		$euro_countries = array( 'AT','BE','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','IS','JE','HR','LI','MK','MD','ME','UA','SM','RS','VA','BY' );
+		$euro_countries = array( 'AT','BE','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','JE','HR','LI','MK','MD','ME','UA','SM','RS','VA','BY' );
 		return in_array( $country_code, $euro_countries);
 	}
 
 	public function is_world_shipment_country( $country_code ) {
-		$world_shipment_countries = array( 'AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY','CH','TR','NO' );
+		$world_shipment_countries = array( 'AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IS','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY','CH','TR','NO' );
 		return in_array( $country_code, $world_shipment_countries);
 	}
 
@@ -1474,6 +1492,66 @@ class WooCommerce_MyParcel_Export {
 			}
 		}
 	}
+
+	private function get_shipment_barcode_from_myparcel_api($shipment_id) {
+
+		$api = $this->init_api();
+		$response = $api->get_shipments( $shipment_id );
+
+		if ( ! isset( $response['body']['data']['shipments'][0]['barcode'] ) ) {
+			throw new \ErrorException( 'No MyParcel barcode found for shipment id; ' . $shipment_id );
+		}
+
+		return $response['body']['data']['shipments'][0]['barcode'];
+	}
+
+	/**
+	 * @param $selected_shipment_ids
+	 * @param $shipment_id
+	 * @param $order
+	 */
+	private function add_myparcel_note_to_shipment($selected_shipment_ids, $shipment_id, $order) {
+		if ( ! in_array($shipment_id, $selected_shipment_ids)) {
+			return;
+		}
+
+		$barcode = $this->get_shipment_barcode_from_myparcel_api($shipment_id);
+
+		$order->add_order_note( $this->prefix_message . sprintf( $barcode ) );
+	}
+
+    /**
+     * @param $shipping_method_id
+     * @param $package_type_shipping_methods
+     * @param $shipping_class
+     *
+     * @return bool
+     */
+    private function isActiveMethod( $shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class ) {
+
+        //support WooCommerce flate rate
+        // check if we have a match with the predefined methods
+	if (in_array($shipping_method_id, $package_type_shipping_methods)) {
+            return true;
+        }      
+        if (in_array($shipping_method_id_class, $package_type_shipping_methods)) {
+            return true;
+        }
+	    
+        //support WooCommerce Table Rate Shipping by Automattic
+        // fallback to bare method (without class) (if bare method also defined in settings)
+        if (!empty($shipping_class) && in_array($shipping_class, $package_type_shipping_methods)) {
+            return true;
+        }
+
+        // support WooCommerce Table Rate Shipping by Bolder Elements
+        $newShippingClass = str_replace(':', '_', $shipping_class);
+        if ( !empty($shipping_class) && in_array($newShippingClass, $package_type_shipping_methods)) {
+            return true;
+        }
+
+        return false;
+    }
 }
 
 endif; // class_exists

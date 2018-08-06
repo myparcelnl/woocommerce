@@ -25,6 +25,7 @@ class WooCommerce_MyParcel_Admin {
 		add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'single_order_shipment_options' ) );
 
 		add_action( 'wp_ajax_wcmp_save_shipment_options', array( $this, 'save_shipment_options_ajax' ) );
+		add_action( 'wp_ajax_wcmp_get_shipment_summary_status', array( $this, 'order_list_ajax_get_shipment_summary' ) );
 
 		// HS code in product shipping options tab
 		add_action( 'woocommerce_product_options_shipping', array( $this, 'product_hs_code_field' ) );
@@ -52,19 +53,12 @@ class WooCommerce_MyParcel_Admin {
 			// only use last shipment
 			$last_shipment = array_pop( $consignments );
 			$last_shipment_id = $last_shipment['shipment_id'];
-
-			$shipment = WooCommerce_MyParcel()->export->get_shipment_data( $last_shipment_id, $order );
-			// echo '<pre>';var_dump($shipment);echo '</pre>';die();
-			if (!empty($shipment['tracktrace'])) {
-				$order_has_shipment = true;
-				$tracktrace_url = $this->get_tracktrace_url( $order_id, $shipment['tracktrace']);
-			}
 			?>
 			<div class="wcmp_shipment_summary" <?php echo $style; ?>>
 				<?php $this->show_order_delivery_options( $order ); ?>
 				<a href="#" class="wcmp_show_shipment_summary"><span class="encircle wcmp_show_shipment_summary">i</span></a>
-				<div class="wcmp_shipment_summary_list" style="display: none;">
-					<?php include('views/wcmp-order-shipment-summary.php'); ?>
+				<div class="wcmp_shipment_summary_list" data-loaded="" data-shipment_id="<?php echo $last_shipment_id; ?>" data-order_id="<?php echo $order_id; ?>" style="display: none;">
+					<img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif';?>" class="wcmp_spinner"/>
 				</div>
 			</div>
 			<?php
@@ -84,6 +78,24 @@ class WooCommerce_MyParcel_Admin {
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Get shipment status + track&trace link via AJAX 
+	 */
+	public function order_list_ajax_get_shipment_summary(){
+		check_ajax_referer( 'wc_myparcel', 'security' );
+		extract($_POST); // order_id, shipment_id
+		$order = wc_get_order($order_id);
+		$shipment = WooCommerce_MyParcel()->export->get_shipment_data( $shipment_id, $order );
+		if (!empty($shipment['tracktrace'])) {
+			$order_has_shipment = true;
+			$tracktrace_url = $this->get_tracktrace_url( $order_id, $shipment['tracktrace']);
+		}
+		$package_types = WooCommerce_MyParcel()->export->get_package_types();
+
+		include('views/wcmp-order-shipment-summary.php');
+		die();
 	}
 
 
@@ -230,16 +242,28 @@ class WooCommerce_MyParcel_Admin {
 		if (empty($order)) {
 			return;
 		}
-		$consignment_id = WCX_Order::get_meta( $order, '_myparcel_consignment_id' );
-		if ( $consignment_id ) {
-			$consignments = array(
-				array(
-					'shipment_id'	=> $consignment_id,
-					'tracktrace'	=> WCX_Order::get_meta( $order, '_myparcel_tracktrace' ),
-				),
-			);
-		} else {
-			$consignments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+
+		$consignments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+		// fallback to legacy consignment data (v1.X)
+		if (empty($consignments)) {
+			if ( $consignment_id = WCX_Order::get_meta( $order, '_myparcel_consignment_id' ) ) {
+				$consignments = array(
+					array(
+						'shipment_id'	=> $consignment_id,
+						'tracktrace'	=> WCX_Order::get_meta( $order, '_myparcel_tracktrace' ),
+					),
+				);
+			} elseif( $legacy_consignments = WCX_Order::get_meta( $order, '_myparcel_consignments' ) ) {
+				$consignments = array();
+				foreach ( $legacy_consignments as $consignment ) {
+					if (isset($consignment['consignment_id'])) {
+						$consignments[] = array(
+							'shipment_id'	=> $consignment['consignment_id'],
+							'tracktrace'	=> $consignment['tracktrace'],
+						);
+					}
+				}
+			}
 		}
 
 		if (empty($consignments) || !is_array($consignments)) {
@@ -475,7 +499,7 @@ class WooCommerce_MyParcel_Admin {
 
 	public function get_tracktrace_shipments ( $order_id ) {
 		$order = WCX::get_order( $order_id );
-		$shipments = WCX_Order::get_meta( $order, '_myparcel_shipments' );
+		$shipments = $this->get_order_shipments( $order, true );
 
 		if (empty($shipments)) {
 			return false;
