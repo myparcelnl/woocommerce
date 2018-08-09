@@ -51,7 +51,6 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 	 */
 	public function text_input( $args ) {
 		extract( $this->normalize_settings_args( $args ) );
-		// echo '<pre>';var_dump($this->normalize_settings_args( $args ));echo '</pre>';
 		if (empty($type)) {
 			$type = 'text';
 		}
@@ -63,9 +62,9 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 			$style = '';
 		}
 
-		printf( '<input type="%1$s" id="%2$s" name="%3$s" value="%4$s" size="%5$s" placeholder="%6$s" class="%7$s" style="%8$s"/>', $type, $id, $setting_name, $current, $size, $placeholder, $class, $style );
-	
-		// output description.
+        printf( '<input type="%1$s" id="%2$s" name="%3$s" value="%4$s" size="%5$s" placeholder="%6$s" class="%7$s" style="%8$s"/>', $type, $id, $setting_name, $current, $size, $placeholder, $class, $style );
+
+        // output description.
 		if ( isset( $description ) ) {
 			printf( '<p class="description">%s</p>', $description );
 		}
@@ -263,7 +262,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		$available_shipping_methods = array();
 		$shipping_methods = WC()->shipping->load_shipping_methods();
 		// echo '<pre>';var_dump($shipping_methods);echo '</pre>';
-	
+
 		if ( $shipping_methods ) {
 			foreach ( $shipping_methods as $key => $shipping_method ) {
 				// Automattic / WooCommerce Table Rate Shipping
@@ -319,9 +318,9 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 					}
 					continue;
 				}
+                $method_title = !empty($shipping_methods[$key]->method_title) ? $shipping_methods[$key]->method_title : $shipping_methods[$key]->titel;
+				$available_shipping_methods[ $key ] = $method_title;
 
-				$method_titel = !empty($shipping_methods[$key]->method_titel) ? $shipping_methods[$key]->method_titel : $shipping_methods[$key]->titel;
-				$available_shipping_methods[ $key ] = $method_titel;
 
 				// split flat rate by shipping class
 				if ( ( $key == 'flat_rate' || $key == 'legacy_flat_rate' ) && version_compare( WOOCOMMERCE_VERSION, '2.4', '>=' ) ) {
@@ -331,7 +330,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 							continue;
 						}
 						$id = $shipping_class->term_id;
-						$name = esc_html( "{$method_titel} - {$shipping_class->name}" );
+						$name = esc_html( "{$method_title} - {$shipping_class->name}" );
 						$method_class = esc_attr( $key ).":".$id;
 						$available_shipping_methods[ $method_class ] = $name;
 					}
@@ -413,13 +412,13 @@ class WooCommerce_MyParcel_Settings_Callbacks {
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input( array_merge( $args, $default_delivery_text ) )?></td>
                 </tr>
 			<?php endif; ?>
-            <?php if ($args['has_cutoff_time']):?>
+            <?php if (isset($args['has_cutoff_time'])):?>
                 <tr>
                     <td><?php _e( 'Cut-off time for monday delivery', 'woocommerce-myparcel' )?>:</td>
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input( array_merge( $args, $cutoff_time_args ) ); ?></td>
                 </tr>
             <?php endif; ?>
-            <?php if ($args['has_price']):?>
+            <?php if (isset($args['has_price'])):?>
                 <tr>
                     <td><?php _e( 'Additional fee (ex VAT, optional)', 'woocommerce-myparcel' )?>:</td>
                     <td>&euro; <?php $this->text_input( array_merge( $args, $fee_args ) ); ?></td>
