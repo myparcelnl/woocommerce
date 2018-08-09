@@ -14,7 +14,7 @@
     ?>
 </style>
 
-<input style="/*display:none !important;*/" name='mypa-post-nl-data' id="mypa-input">
+<input style="display:none;" name='mypa-post-nl-data' id="mypa-input">
 
 <div id="mypa-load" style="<?php echo $show_delivery_options ?: 'display:none';?>">
 
