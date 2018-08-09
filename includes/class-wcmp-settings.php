@@ -771,6 +771,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'            => 'morning',
                 'titel'         => 'Morning delivery',
                 'current'       => 'Morning delivery',
+                'size'              => 30,
             )
         );
         
@@ -787,6 +788,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'night',
                 'titel'         => 'Evening delivery',
                 'current' 	    => 'Evening delivery',
+                'size'              => 30,
             )
         );
 
@@ -803,6 +805,7 @@ class WooCommerce_MyParcel_Settings {
 				'id'			=> 'only_recipient',
                 'titel'         => 'Home address only',
                 'current'       => 'Home address only',
+                'size'              => 30,
 			)
 		);
 
@@ -819,6 +822,7 @@ class WooCommerce_MyParcel_Settings {
 				'id'			=> 'signed',
                 'titel'         => 'Signature on delivery',
                 'current' 	    => 'Signature on delivery',
+                'size'              => 30,
 			)
 		);
 
@@ -835,6 +839,7 @@ class WooCommerce_MyParcel_Settings {
 				'id'			=> 'pickup',
                 'titel'         => 'Pickup',
                 'current' 	    => 'Pick up at PostNL location',
+                'size'              => 30,
 			)
 		);
 
@@ -851,6 +856,7 @@ class WooCommerce_MyParcel_Settings {
 				'id'			=> 'pickup_express',
                 'titel'         => 'Pickup express',
                 'current' 	    => 'Early PostNL pickup',
+                'size'              => 30,
 			)
 		);
 
@@ -867,6 +873,7 @@ class WooCommerce_MyParcel_Settings {
                 'has_cutoff_time'   => true,
                 'option_name'	    => $option_name,
                 'id'			    => 'saturday_cutoff',
+                'size'              => 30,
             )
         );
 
