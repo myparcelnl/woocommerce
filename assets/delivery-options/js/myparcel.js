@@ -481,7 +481,9 @@ MyParcel = {
 
     hideDelivery: function()
     {
-        MyParcel.hideNormalDelivery();
+        jQuery(' #mypa-pre-selectors-nl, #mypa-delivery-date-text,.mypa-extra-delivery-options').hide();
+        jQuery('#mypa-select-date').parent().parent().hide();
+        jQuery('#mypa-delivery').parent().parent().hide();
         MyParcel.hideSignature();
         MyParcel.hideOnlyRecipient();
         MyParcel.hideMorningDelivery();
@@ -496,17 +498,23 @@ MyParcel = {
      *
      */
 
-    showDelivery: function()
-    {
-        MyParcel.showNormalDelivery();
+    showDelivery: function () {
+        jQuery('#mypa-pre-selectors-' + this.data.address.cc.toLowerCase()).show();
+        jQuery('#mypa-delivery-selectors-' + this.data.address.cc.toLowerCase()).show();
+        jQuery('.mypa-extra-delivery-options').show();
+        jQuery('#mypa-delivery').parent().parent().show();
+
+        if (this.data.config.deliverydaysWindow >= 2) {
+            jQuery('#mypa-delivery-date-select').show();
+        }
 
         MyParcel.hideSignature();
-        if(this.data.config.allowSignature){
+        if (this.data.config.allowSignature) {
             MyParcel.showSignature();
         }
 
         MyParcel.hideOnlyRecipient();
-        if(this.data.config.allowOnlyRecipient){
+        if (this.data.config.allowOnlyRecipient) {
             MyParcel.showOnlyRecipient();
         }
     },
@@ -556,22 +564,6 @@ MyParcel = {
     hideMorningDelivery: function()
     {
         jQuery('#method-myparcel-delivery-morning-div').hide();
-    },
-
-    showNormalDelivery: function()
-    {
-        jQuery('#mypa-pre-selectors-' +      this.data.address.cc.toLowerCase()).show();
-        jQuery('#mypa-delivery-selectors-' + this.data.address.cc.toLowerCase()).show();
-        jQuery('#mypa-delivery, #mypa-normal-delivery, #mypa-delivery-date-select').show();
-        jQuery('#mypa-delivery').parent().parent().show();
-    },
-
-    hideNormalDelivery: function()
-    {
-        jQuery('#mypa-delivery-date-select, #mypa-pre-selectors-nl, #mypa-delivery, #mypa-normal-delivery').hide();
-        jQuery('#mypa-delivery').parent().parent().hide();
-
-
     },
 
     showEveningDelivery: function()
@@ -640,7 +632,7 @@ MyParcel = {
 
         /* Hide the day selector when the value of the deliverydaysWindow is 0*/
         if (deliveryWindow === 0){
-            jQuery('#mypa-select-date').hide();
+            jQuery('#mypa-delivery-date-select').hide();
         }
 
         /* When deliverydaysWindow is 1, hide the day selector and show a div to show the date */
@@ -918,7 +910,7 @@ MyParcel = {
         /* Check if the deliverydaysWindow == 0 and hide the select input*/
         this.deliveryDaysWindow = this.data.config.deliverydaysWindow;
 
-        if(this.deliveryDaysWindow === 0){
+        if(this.deliveryDaysWindow === '0'){
             this.deliveryDaysWindow = 1;
         }
 
@@ -958,6 +950,7 @@ MyParcel = {
                     MyParcel.hideMessage();
                     MyParcel.showPickUpLocations();
                     MyParcel.showDeliveryDates();
+
                     if(MyParcel.data.deliveryOptions.data.delivery.length <= 0 ){
                         MyParcel.hideDeliveryDates();
                     }
