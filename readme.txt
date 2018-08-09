@@ -3,7 +3,7 @@ Contributors: richardperdaan
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9.5
-Stable tag: 2.4.12
+Stable tag: 3.0.0
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -88,13 +88,22 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
-= 2.4.12 (2018-07-09) =
-Fix: #102 change Iceland to world shipping
-Fix: #106 tabel rates shipping
-Improvement: #94 support legacy consignment and tracktrace data
-Improvement: #95 Speed up order list view
-Improvement: #104 Add reference identifier, that is always the order id
+= 3.0.0 (2018-07-03) =
+* Improvement: checkout v2 implemented
 
+= 2.4.14 (2018-07-03) =
+* Fix: Select the correct package type inside admin when there is one shipping used.
+
+= 2.4.13 (2018-07-26) =
+* Fix: Tabel rate shipping witch WooCommerce Table Rate Shipping by Automattic / Bolder Elements 4.0 / Bolder Elements 4.1.3
+* Fix: The option to show the checkout only when he is linked to package
+
+= 2.4.12 (2018-07-09) =
+* Fix: #102 change Iceland to world shipping
+* Fix: #106 tabel rates shipping
+* Improvement: #94 support legacy consignment and tracktrace data
+* Improvement: #95 Speed up order list view
+* Improvement: #104 Add reference identifier, that is always the order id
 = 2.4.11 (2018-04-30) =
 Fix: Export shipment labels
 
