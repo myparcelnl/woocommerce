@@ -351,7 +351,7 @@ class WooCommerce_MyParcelBE_Admin {
 					$label_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcelbe&request=get_labels&shipment_ids=' . $shipment_id ), 'wc_myparcelbe' );
 					if (isset($shipment['tracktrace'])) {
 						$tracktrace_url = $this->get_tracktrace_url( $order_id, $shipment['tracktrace']);
-						$tracktrace_link = sprintf ( '<a href="%s">%s</a>', $tracktrace_url, $shipment['tracktrace'] );
+						$tracktrace_link = sprintf ( '<a href="%s" target="_blank">%s</a>', $tracktrace_url, $shipment['tracktrace'] );
 					} elseif ( isset($shipment['shipment']) && isset($shipment['shipment']['options']) ) {
 						$tracktrace_link = '('.WooCommerce_MyParcelBE()->export->get_package_name($shipment['shipment']['options']['package_type']).')';
 					} else {
@@ -440,7 +440,8 @@ class WooCommerce_MyParcelBE_Admin {
 			}
             $tracktrace_url = sprintf('https://track.bpost.be/btr/web/#/search?itemCode=%s', $tracktrace, $postcode);
 		} else {
-			$tracktrace_url = sprintf('https://www.internationalparceltracking.com/Main.aspx#/track/%s/%s/%s', $tracktrace, $country, $postcode);			
+
+			$tracktrace_url = sprintf('https://track.bpost.be/btr/web/#/search?itemCode='.$tracktrace.'&lang='.$country);
 		}
 
 		return $tracktrace_url;

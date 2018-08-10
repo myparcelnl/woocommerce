@@ -81,7 +81,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 
 			$tracktrace_links = WooCommerce_MyParcelBE()->admin->get_tracktrace_links ( $order_id );
 			if ( !empty($tracktrace_links) ) {
-				$email_text = __( 'You can track your order with the following PostNL track&trace code:', 'woocommerce-myparcelbe' );
+				$email_text = __( 'You can track your order with the following Bpost track&trace code:', 'woocommerce-myparcelbe' );
 				$email_text = apply_filters( 'wcmyparcelbe_email_text', $email_text, $order );
 				?>
                 <p><?php echo $email_text.' '.implode(', ', $tracktrace_links); ?></p>
