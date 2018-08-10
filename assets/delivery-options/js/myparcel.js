@@ -841,7 +841,7 @@ MyParcel = {
             '</div><div class="mypa-full-width mypa-error">' +
             '<label for="mypa-error-number">Huisnummer</label>' +
             '<input type="text" name="mypa-error-number" id="mypa-error-number" value="'+ MyParcel.data.address.number +'">' +
-            '<br><div id="mypa-error-try-again">Opnieuw</div>' +
+            '<br><div id="mypa-error-try-again" class="button btn">Opnieuw</div>' +
             '</div>'
         );
 
