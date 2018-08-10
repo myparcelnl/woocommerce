@@ -2,7 +2,7 @@
 Tags: woocommerce, export, myparcel Belgium
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9.6
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -86,6 +86,9 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 5. MyParcel BE information on the order details page
 
 == Changelog ==
+
+= 3.0.2 (2018-08-10) =
+Fix: Track & trace url when the country is not equal to Belgium 
 
 = 3.0.1 (2018-06-12) =
 Fix: export with an insurance
