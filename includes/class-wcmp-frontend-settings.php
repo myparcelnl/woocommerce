@@ -36,7 +36,9 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_only_recipient_enabled() {
-            return $this->settings['only_recipient_enabled'] ? 1 : 0;
+            if (isset($this->settings['only_recipient_enabled'])) {
+                return $this->settings['only_recipient_enabled'] ? 1 : 0;
+            }
         }
 
         /**
@@ -62,7 +64,9 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_signature_enabled() {
-            return $this->settings['signed_enabled'] ? 1 : 0;
+            if (isset($this->settings['signed_enabled'])) {
+                return $this->settings['signed_enabled'] ? 1 : 0;
+            }
         }
 
         /**
@@ -87,7 +91,9 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_morning_enabled() {
-            return $this->settings['morning_enabled'] ? 1 : 0;
+            if (isset($this->settings['morning_enabled'])) {
+                return $this->settings['morning_enabled'] ? 1 : 0;
+            }
         }
 
         /**
@@ -111,7 +117,9 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_standard_enabled() {
-            return $this->settings['standard_enabled'] ? 1 : 0;
+            if (isset($this->settings['standard_enabled'])) {
+                return $this->settings['standard_enabled'] ? 1 : 0;
+            }
         }
 
         /**
@@ -121,6 +129,13 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             return $this->settings['standard_titel'];
         }
 
+        /**
+         * @return mixed
+         */
+        public function be_standard_titel() {
+            return $this->settings['be_standard_titel'];
+        }
+
 
         /* Settings evening delivery */
 
@@ -128,7 +143,9 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_evening_enabled() {
-            return $this->settings['night_enabled'] ? 1 : 0;
+            if (isset($this->settings['night_enabled'])) {
+                return $this->settings['night_enabled'] ? 1 : 0;
+            }
         }
 
         /**
@@ -154,7 +171,9 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return bool
          */
         public function is_pickup_enabled() {
-            return (bool) $this->settings['pickup_enabled'];
+            if (isset($this->settings['pickup_enabled'])) {
+                return (bool) $this->settings['pickup_enabled'];
+            }
         }
 
         /**
@@ -186,7 +205,9 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return bool
          */
         public function is_pickup_express_enabled() {
-            return (bool) $this->settings['pickup_express_enabled'];
+            if(isset($this->settings['pickup_express_enabled'])) {
+                return (bool) $this->settings['pickup_express_enabled'];
+            }
         }
         /**
          * @return mixed
@@ -210,7 +231,9 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_monday_enabled() {
-            return $this->settings['saturday_cutoff_enabled'] ? 1 : 0;
+            if (isset($this->settings['saturday_cutoff_enabled'])) {
+                return $this->settings['saturday_cutoff_enabled'] ? 1 : 0;
+            }
         }
 
         /**
