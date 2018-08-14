@@ -485,6 +485,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "pickupTitel" => $this->frontend_settings->pickup_titel(),
                     "deliveryMorningTitel" => $this->frontend_settings->morning_titel(),
                     "deliveryStandardTitel" => $this->frontend_settings->standard_titel(),
+                    "BEdeliveryTitle" => $this->frontend_settings->be_standard_titel(),
                     "deliveryEveningTitel" => $this->frontend_settings->evening_titel(),
                     "signatureTitel" =>  $this->frontend_settings->signature_titel(),
                     "onlyRecipientTitel" =>  $this->frontend_settings->only_recipient_titel(),
