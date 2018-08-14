@@ -88,27 +88,30 @@ MyParcel = {
 
             if(value['price_comment'] == 'morning' && MyParcel.data.config.allowMorningDelivery){
                 var morningTitel = MyParcel.data.config.deliveryMorningTitel;
-                MyParcel.getDeliveryTime(morningTitel,'morning', MyParcel.data.config.deliveryMorningTitel, value['start'], value['end']);
+                MyParcel.getDeliveryTime(morningTitel,'morning', value['start'], value['end']);
                 MyParcel.showMorningDelivery();
             }
             if(value['price_comment'] == 'standard'){
-                var standardTitel = MyParcel.data.config.deliveryStandardTitel;
-                MyParcel.getDeliveryTime(standardTitel,'standard', MyParcel.data.config.deliveryStandardTitel, value['start'], value['end']);
+                var standardTitel = MyParcel.data.config.deliveryStandardTitle;
+                if(MyParcel.data.address.cc === 'BE'){
+                    standardTitel = MyParcel.data.config.BEdeliveryTitle;
+                }
+                MyParcel.getDeliveryTime(standardTitel,'standard', value['start'], value['end']);
 
             }
             if(value['price_comment'] == 'avond' && MyParcel.data.config.allowEveningDelivery){
                 var eveningTitel = MyParcel.data.config.deliveryEveningTitel;
-                MyParcel.getDeliveryTime(eveningTitel, 'evening', MyParcel.data.config.deliveryEveningTitel, value['start'], value['end'] );
+                MyParcel.getDeliveryTime(eveningTitel, 'evening', value['start'], value['end'] );
                 MyParcel.showEveningDelivery();
             }
 
         });
     },
-    getDeliveryTime: function (configDeliveryTitel, deliveryMoment, deliveryTitel, startTime, endTime) {
+    getDeliveryTime: function (configDeliveryTitel, deliveryMoment, startTime, endTime) {
         startTime = startTime.replace(/(.*)\D\d+/, '$1');
         endTime = endTime.replace(/(.*)\D\d+/, '$1');
 
-        jQuery('#mypa-'+deliveryMoment+'-titel').html(deliveryTitel);
+        jQuery('#mypa-'+deliveryMoment+'-titel').html(configDeliveryTitel);
 
         if (!configDeliveryTitel){
             jQuery('#mypa-'+deliveryMoment+'-titel').html(startTime + ' - ' + endTime);
@@ -499,23 +502,27 @@ MyParcel = {
      */
 
     showDelivery: function () {
-        jQuery('#mypa-pre-selectors-' + this.data.address.cc.toLowerCase()).show();
-        jQuery('#mypa-delivery-selectors-' + this.data.address.cc.toLowerCase()).show();
-        jQuery('.mypa-extra-delivery-options').show();
+
         jQuery('#mypa-delivery').parent().parent().show();
 
-        if (this.data.config.deliverydaysWindow >= 2) {
-            jQuery('#mypa-delivery-date-select').show();
-        }
+        if (MyParcel.data.address.cc === "NL") {
+            jQuery('#mypa-pre-selectors-' + this.data.address.cc.toLowerCase()).show();
+            jQuery('#mypa-delivery-selectors-' + this.data.address.cc.toLowerCase()).show();
+            jQuery('.mypa-extra-delivery-options').show();
 
-        MyParcel.hideSignature();
-        if (this.data.config.allowSignature) {
-            MyParcel.showSignature();
-        }
+            if (this.data.config.deliverydaysWindow >= 2) {
+                jQuery('#mypa-delivery-date-select').show();
+            }
 
-        MyParcel.hideOnlyRecipient();
-        if (this.data.config.allowOnlyRecipient) {
-            MyParcel.showOnlyRecipient();
+            MyParcel.hideSignature();
+            if (this.data.config.allowSignature) {
+                MyParcel.showSignature();
+            }
+
+            MyParcel.hideOnlyRecipient();
+            if (this.data.config.allowOnlyRecipient) {
+                MyParcel.showOnlyRecipient();
+            }
         }
     },
 
