@@ -733,12 +733,28 @@ msgid "Return shipment"
 msgstr "Retourzending"
 
 #: includes/class-wcmp-settings.php:580
+msgid "Delivered at home or at work"
+msgstr "Thuis of op het werk bezorgd"
+
+#: includes/class-wcmp-settings.php:580
 msgid "Delivery options"
 msgstr "Bezorgopties"
+
+#: includes/class-wcmp-settings.php:731
+msgid "Delivery"
+msgstr "Bezorgen"
+
+#: includes/class-wcmp-settings.php:723
+msgid "Home delivery titel"
+msgstr "Thuis levering titel"
 
 #: includes/class-wcmp-settings.php:588
 msgid "Enable MyParcel delivery options"
 msgstr "MyParcel bezorgopties inschakelen"
+
+#: includes/class-wcmp-settings.php:588
+msgid "When there is no titel, the delivery time will automatically be visible."
+msgstr "Wanneer er geen titel is ingevuld, zal automatisch de bezorgtijden zichtbaar zijn."
 
 #: includes/class-wcmp-settings.php:600
 msgid "Display for"
@@ -765,6 +781,10 @@ msgstr ""
 #: includes/class-wcmp-settings.php:665
 msgid "PostNL pickup"
 msgstr "Afhalen bij PostNL"
+
+#: includes/class-wcmp-settings.php:850
+msgid "Pick up at PostNL location"
+msgstr "Afhalen bij PostNL punt"
 
 #: includes/class-wcmp-settings.php:677
 msgid "Early PostNL pickup"
@@ -825,7 +845,7 @@ msgid "Dropoff delay"
 msgstr "Verwerkingstijd"
 
 #: includes/class-wcmp-settings.php:745
-msgid "Number of days you take to process an order"
+msgid "This option allows the Merchant to set the number of days it takes her to pick, pack and hand in her parcel at PostNL when ordered before the cutoff time. By default this is 0 and max. is 14."
 msgstr "Aantal dagen dat u nodig heeft om een order te verwerken"
 
 #: includes/class-wcmp-settings.php:751
