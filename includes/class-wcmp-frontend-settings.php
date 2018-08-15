@@ -126,14 +126,18 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return mixed
          */
         public function standard_titel() {
-            return $this->settings['standard_titel'];
+            if (isset($this->settings['standard_titel'])) {
+                return $this->settings['standard_titel'];
+            }
         }
 
         /**
          * @return mixed
          */
         public function be_standard_titel() {
-            return $this->settings['be_standard_titel'];
+            if (isset($this->settings['be_standard_titel'])) {
+                return $this->settings['be_standard_titel'];
+            }
         }
 
 
@@ -152,7 +156,9 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return mixed
          */
         public function evening_titel() {
-            return $this->settings['night_titel'];
+            if (isset($this->settings['night_titel'])) {
+                return $this->settings['night_titel'];
+            }
         }
         /**
          * @return string

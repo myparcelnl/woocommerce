@@ -68,7 +68,7 @@ class WooCommerce_MyParcel_Settings {
 			</h2>
 
 			<?php do_action( 'woocommerce_myparcel_before_settings_page', $active_tab ); ?>
-				
+
 			<form method="post" action="options.php" id="woocommerce-myparcel-settings" class="wcmp_shipment_options">
 				<?php
 					do_action( 'woocommerce_myparcel_before_settings', $active_tab );
@@ -689,8 +689,8 @@ class WooCommerce_MyParcel_Settings {
             array(
                 'option_name'	=> $option_name,
                 'id'			=> 'dropoff_delay',
-                'type'			=> 'number',
-                'size'			=> '2',
+                'type'			=> 'text',
+                'size'			=> '5',
                 'description'	=> __( 'Number of days you take to process an order', 'woocommerce-myparcel' ),
             )
         );
@@ -704,20 +704,12 @@ class WooCommerce_MyParcel_Settings {
             array(
                 'option_name'	=> $option_name,
                 'id'			=> 'deliverydays_window',
-                'type'			=> 'number',
-                'size'			=> '2',
+                'type'			=> 'text',
+                'size'			=> '5',
+                'size'			=> '5',
                 'description'	=> __( 'Number of days you allow the customer to postpone a shipment', 'woocommerce-myparcel' ),
             )
         );
-
-
-
-
-
-
-
-
-
 
 
 // Delivery options section.
