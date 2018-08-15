@@ -404,7 +404,6 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 			'type'			=> 'text',
 		);
 
-
 		?>
 		<?php $this->checkbox( array_merge( $args, $cb_args ) ); ?><br/>
 		<table class="wcmp_delivery_option_details">
@@ -426,6 +425,11 @@ class WooCommerce_MyParcel_Settings_Callbacks {
                     <td>&euro; <?php $this->text_input( array_merge( $args, $fee_args ) ); ?></td>
                 </tr>
 			<?php endif; ?>
+            <?php if (isset($args['option_description'])):?>
+                <tr>
+                    <td colspan="2"><p class="description"><?php _e( $args['option_description'] ) ?></p></td>
+                </tr>
+            <?php endif; ?>
 
 		</table>
 		<?php
