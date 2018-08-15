@@ -89,7 +89,7 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 == Changelog ==
 
 = 2.5.4 (2018-08-15) =
-* Fix: select the right package type when there 1 shipping methods activated
+* Fix: select the right package type when there 1 shipping method activated
 
 = 2.5.3 (2018-07-26) =
 * Fix:Error 404 inside the checkout (iframe) and get the correct root url
