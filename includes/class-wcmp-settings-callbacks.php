@@ -407,9 +407,9 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		?>
 		<?php $this->checkbox( array_merge( $args, $cb_args ) ); ?><br/>
 		<table class="wcmp_delivery_option_details">
-            <?php if ($args['has_titel']):?>
+            <?php if ($args['has_title']):?>
                 <tr>
-                    <td style="min-width: 215px;"><?php _e( $args['titel'].' titel', 'woocommerce-myparcel' ) ?>:</td>
+                    <td style="min-width: 215px;"><?php _e( $args['title'].' title', 'woocommerce-myparcel' ) ?>:</td>
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input( array_merge( $args, $default_delivery_text ) )?></td>
                 </tr>
 			<?php endif; ?>

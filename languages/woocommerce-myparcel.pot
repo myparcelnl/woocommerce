@@ -81,6 +81,12 @@ msgstr ""
 msgid "Evening delivery"
 msgstr ""
 
+#: includes/class-wcmp-settings.php:750
+#: includes/class-wcmp-settings.php:768
+#: includes/class-wcmp-settings.php:786
+msgid "When there is no title, the delivery time will automatically be visible."
+msgstr ""
+
 #: includes/class-wcmp-admin.php:407
 msgid "Delivery date"
 msgstr ""
@@ -683,7 +689,11 @@ msgid "Delivery options"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:723
-msgid "Home delivery titel"
+msgid "Home delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:740
+msgid "Default delivery title"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:731
@@ -691,6 +701,38 @@ msgid "Delivery"
 msgstr ""
 #: includes/class-wcmp-settings.php:580
 msgid "Delivered at home or at work"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:723
+msgid "Home delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:740
+msgid "Default delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:750
+msgid "Morning delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:760
+msgid "Evening delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:770
+msgid "Home address only title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:780
+msgid "Signature on delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:790
+msgid "Pickup title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:800
+msgid "Pickup express title"
 msgstr ""
 
 

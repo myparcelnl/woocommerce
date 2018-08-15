@@ -92,10 +92,7 @@ MyParcel = {
                 MyParcel.showMorningDelivery();
             }
             if(value['price_comment'] == 'standard'){
-                var standardTitel = MyParcel.data.config.deliveryStandardTitle;
-                if(MyParcel.data.address.cc === 'BE'){
-                    standardTitel = MyParcel.data.config.BEdeliveryTitle;
-                }
+                var standardTitel = MyParcel.data.config.deliveryStandardTitel;
                 MyParcel.getDeliveryTime(standardTitel,'standard', value['start'], value['end']);
 
             }

@@ -730,8 +730,8 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'	=> $option_name,
                 'id'			=> 'at_home_delivery_titel',
                 'size'			=> '53',
-                'titel'         => 'Delivered at home or at work',
-                'current'       => 'Delivered at home or at work',
+                'title'         => 'Delivered at home or at work',
+                'current'       => __( 'Delivered at home or at work', 'woocommerce-myparcel' ),
             )
         );
 
@@ -745,8 +745,8 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'	=> $option_name,
                 'id'			=> 'standard_titel',
                 'size'			=> '53',
-                'titel'         => 'Standard delivery',
-                'current'       => 'Standard delivery',
+                'title'         => 'Standard delivery',
+                'current'       => __( 'Standard delivery', 'woocommerce-myparcel' ),
                 'description'	=> __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
         );
@@ -758,12 +758,12 @@ class WooCommerce_MyParcel_Settings {
             $option_group,
             'delivery_options',
             array(
-                'has_titel'             => true,
+                'has_title'             => true,
                 'has_price'             => true,
                 'option_name'           => $option_name,
                 'id'                    => 'morning',
-                'titel'                 => 'Morning delivery',
-                'current'               => 'Morning delivery',
+                'title'                 => 'Morning delivery',
+                'current'               => __( 'Morning delivery', 'woocommerce-myparcel' ),
                 'size'                  => 30,
                 'option_description'    => __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
@@ -776,12 +776,12 @@ class WooCommerce_MyParcel_Settings {
             $option_group,
             'delivery_options',
             array(
-                'has_titel'             => true,
+                'has_title'             => true,
                 'has_price'             => true,
                 'option_name'	        => $option_name,
                 'id'			        => 'night',
-                'titel'                 => 'Evening delivery',
-                'current' 	            => 'Evening delivery',
+                'title'                 => 'Evening delivery',
+                'current' 	            => __( 'Evening delivery', 'woocommerce-myparcel' ),
                 'size'                  => 30,
                 'option_description'    => __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
@@ -794,12 +794,12 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                'has_titel'     => true,
+                'has_title'     => true,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'only_recipient',
-                'titel'         => 'Home address only',
-                'current'       => 'Home address only',
+                'title'         => 'Home address only',
+                'current'       => __( 'Home address only', 'woocommerce-myparcel' ),
                 'size'          => 30,
 			)
 		);
@@ -811,12 +811,12 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                'has_titel'     => true,
+                'has_title'     => true,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'signed',
-                'titel'         => 'Signature on delivery',
-                'current' 	    => 'Signature on delivery',
+                'title'         => 'Signature on delivery',
+                'current' 	    => __( 'Signature on delivery', 'woocommerce-myparcel' ),
                 'size'          => 30,
 			)
 		);
@@ -828,12 +828,12 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                'has_titel'     => true,
+                'has_title'     => true,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'pickup',
-                'titel'         => 'Pickup',
-                'current' 	    => 'Pick up at PostNL location',
+                'title'         => 'Pickup',
+                'current' 	    => __( 'Pick up at PostNL location', 'woocommerce-myparcel' ),
                 'size'          => 30,
 			)
 		);
@@ -845,12 +845,12 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                'has_titel'     => true,
+                'has_title'     => false,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'pickup_express',
-                'titel'         => 'Pickup express',
-                'current' 	    => 'Early PostNL pickup',
+                'title'         => 'Pickup express',
+                'current' 	    => __( 'Early PostNL pickup', 'woocommerce-myparcel' ),
                 'size'          => 30,
 			)
 		);
@@ -863,7 +863,7 @@ class WooCommerce_MyParcel_Settings {
             $option_group,
             'delivery_options',
             array(
-                'has_titel'         => false,
+                'has_title'         => false,
                 'has_price'         => false,
                 'has_cutoff_time'   => true,
                 'option_name'	    => $option_name,

@@ -81,6 +81,12 @@ msgstr "Ochtendlevering"
 msgid "Evening delivery"
 msgstr "Avondlevering"
 
+#: includes/class-wcmp-settings.php:750
+#: includes/class-wcmp-settings.php:768
+#: includes/class-wcmp-settings.php:786
+msgid "When there is no title, the delivery time will automatically be visible."
+msgstr "Wanneer er geen title is ingevuld, de bezorgtijden zullen automatisch zichtbaar zijn."
+
 #: includes/class-wcmp-admin.php:407
 msgid "Delivery date"
 msgstr "Bezorgdatum"
@@ -745,8 +751,37 @@ msgid "Delivery"
 msgstr "Bezorgen"
 
 #: includes/class-wcmp-settings.php:723
-msgid "Home delivery titel"
+msgid "Home delivery title"
 msgstr "Thuis levering titel"
+
+#: includes/class-wcmp-settings.php:740
+msgid "Default delivery title"
+msgstr "Standaard bezorg titel"
+
+#: includes/class-wcmp-settings.php:750
+msgid "Morning delivery title"
+msgstr "Ochtendlevering titel"
+
+#: includes/class-wcmp-settings.php:760
+msgid "Evening delivery title"
+msgstr "Avondlevering titel"
+
+#: includes/class-wcmp-settings.php:770
+msgid "Home address only title"
+msgstr "Alleen huisadres titel"
+
+#: includes/class-wcmp-settings.php:780
+msgid "Signature on delivery title"
+msgstr "Handtekening voor ontvangst titel"
+
+#: includes/class-wcmp-settings.php:790
+msgid "Pickup title"
+msgstr "Afhalen bij PostNL titel"
+
+#: includes/class-wcmp-settings.php:800
+msgid "Pickup express title"
+msgstr "Extra vroeg afhalen bij PostNL titel"
+
 
 #: includes/class-wcmp-settings.php:588
 msgid "Enable MyParcel delivery options"
