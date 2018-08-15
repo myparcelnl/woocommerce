@@ -691,7 +691,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'dropoff_delay',
                 'type'			=> 'text',
                 'size'			=> '5',
-                'description'	=> __( 'Number of days you take to process an order', 'woocommerce-myparcel' ),
+                'description'	=> __( 'Number of days you need to process an order. By default this is 0 and the maximum is 14 days.', 'woocommerce-myparcel' ),
             )
         );
 

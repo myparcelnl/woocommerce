@@ -786,7 +786,7 @@ msgid "Dropoff delay"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:745
-msgid "This option allows the Merchant to set the number of days it takes her to pick, pack and hand in her parcel at PostNL when ordered before the cutoff time. By default this is 0 and max. is 14."
+msgid "Number of days you need to process an order. By default this is 0 and the maximum is 14 days."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:751
