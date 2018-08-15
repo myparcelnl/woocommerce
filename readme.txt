@@ -1,9 +1,8 @@
 === Plugin Name ===
-Contributors: pomegranate
 Tags: woocommerce, export, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9.4
-Stable tag: 2.5.3
+Stable tag: 2.5.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -89,16 +88,19 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 2.5.4 (2018-08-15) =
+* Fix: select the right package type when there 1 shipping method activated
+
 = 2.5.3 (2018-07-26) =
-Fix:Error 404 inside the checkout (iframe) and get the correct root url
-Fix: Change iceland to wold shipping
-Fix: The option to show the checkout only when he is linked to package
-Fix: Tabel rate shipping by
+* Fix:Error 404 inside the checkout (iframe) and get the correct root url
+* Fix: Change iceland to wold shipping
+* Fix: The option to show the checkout only when he is linked to package
+* Fix: Tabel rate shipping by
      WooCommerce Table Rate Shipping by Automattic
      WooCommerce Table Rate Shipping by Bolder Elements 4.0
      WooCommerce Table Rate Shipping by Bolder Elements 4.1.3
-Fix: support legacy consignment and tracktrace data
-Fix: Speed up order list view
+* Fix: support legacy consignment and tracktrace data
+* Fix: Speed up order list view
 
 = 2.5.2 (2018-04-19) =
 * Fix: Select mailbox package when it is chosen
