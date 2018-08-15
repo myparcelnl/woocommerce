@@ -56,13 +56,15 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		}
 
 		if ($type == 'number') {
-			$width = ($size * 10) + 25;
+			$width = ($size) + 200;
 			$style = "width: {$width}px";
+			$step = "0.01";
 		} else {
 			$style = '';
+            $step = '';
 		}
 
-        printf( '<input type="%1$s" id="%2$s" name="%3$s" value="%4$s" size="%5$s" placeholder="%6$s" class="%7$s" style="%8$s"/>', $type, $id, $setting_name, $current, $size, $placeholder, $class, $style );
+        printf( '<input type="%1$s" id="%2$s" name="%3$s" value="%4$s" size="%5$s" step="%6$s" placeholder="%7$s" class="%8$s" style="%9$s"/>', $type, $id, $setting_name, $current, $size, $step, $placeholder, $class, $style );
 
         // output description.
 		if ( isset( $description ) ) {
@@ -389,7 +391,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		// number (fee)
 		$fee_args = array(
 			'id'			=> "{$id}_fee",
-			'type'			=> 'text',
+			'type'			=> 'number',
 		);
         // number (cutoff time)
         $cutoff_time_args = array(
