@@ -1438,12 +1438,15 @@ if ( !class_exists( 'WooCommerce_PostNL_Export' ) ) :
          */
         private function isActiveMethod( $shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class ) {
 
-            //support WooCommerce flate rate
+            // support WooCommerce flate rate
             // check if we have a match with the predefined methods
+            if (in_array($shipping_method_id, $package_type_shipping_methods)) {
+                return true;
+            }
             if (in_array($shipping_method_id_class, $package_type_shipping_methods)) {
                 return true;
             }
-            //support WooCommerce Table Rate Shipping by Automattic
+            // support WooCommerce Table Rate Shipping by Automattic
             // fallback to bare method (without class) (if bare method also defined in settings)
             if (!empty($shipping_class) && in_array($shipping_class, $package_type_shipping_methods)) {
                 return true;
