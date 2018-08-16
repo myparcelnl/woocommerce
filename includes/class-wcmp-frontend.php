@@ -485,7 +485,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "pickupTitel" => $this->frontend_settings->pickup_titel(),
                     "deliveryMorningTitel" => $this->frontend_settings->morning_titel(),
                     "deliveryStandardTitel" => $this->frontend_settings->standard_titel(),
-                    "BEdeliveryTitle" => $this->frontend_settings->be_standard_titel(),
                     "deliveryEveningTitel" => $this->frontend_settings->evening_titel(),
                     "signatureTitel" =>  $this->frontend_settings->signature_titel(),
                     "onlyRecipientTitel" =>  $this->frontend_settings->only_recipient_titel(),
@@ -502,7 +501,10 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "saturdayCutoffTime" =>  $this->frontend_settings->get_saturday_cutoff_time(),
                     "cutoffTime" =>  $this->frontend_settings->get_cutoff_time(),
                     "deliverydaysWindow" =>  $this->frontend_settings->get_deliverydays_window(),
-                    "dropoffDelay" => $this->frontend_settings->get_dropoff_delay()
+                    "dropoffDelay" => $this->frontend_settings->get_dropoff_delay(),
+
+                    "BEdeliveryTitel" => $this->frontend_settings->be_at_home_delivery_titel(),
+                    "BEdeliveryStandardTitel" => $this->frontend_settings->be_standard_titel(),
                 ],
               ];
 

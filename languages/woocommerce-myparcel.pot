@@ -685,6 +685,10 @@ msgid "Return shipment"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:580
+msgid "Standard delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:580
 msgid "Delivery options"
 msgstr ""
 
@@ -851,6 +855,18 @@ msgstr ""
 msgid ""
 "Time at which you stop processing orders on saturday for monday delivery "
 "(format: hh:mm)"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:878
+msgid "Belgium delivery options"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:885
+msgid "Belgium home delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:900
+msgid "Belgium standard delivery title"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:794

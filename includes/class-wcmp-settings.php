@@ -722,7 +722,7 @@ class WooCommerce_MyParcel_Settings {
 
         add_settings_field(
             'at_home_delivery',
-            __( 'Home delivery titel', 'woocommerce-myparcel' ),
+            __( 'Home delivery title', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'text_input' ),
             $option_group,
             'delivery_options',
@@ -737,7 +737,7 @@ class WooCommerce_MyParcel_Settings {
 
         add_settings_field(
             'standard',
-            __( 'Standard delivery titel', 'woocommerce-myparcel' ),
+            __( 'Standard delivery title', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'text_input' ),
             $option_group,
             'delivery_options',
@@ -872,7 +872,46 @@ class WooCommerce_MyParcel_Settings {
             )
         );
 
-		// Customizations section   
+        // Belgium delivery options
+        add_settings_section(
+            'Belgium_delivery_options',
+            __( 'Belgium delivery options', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'section' ),
+            $option_group
+        );
+
+        add_settings_field(
+            'be_at_home_delivery',
+            __( 'Belgium home delivery title', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'text_input' ),
+            $option_group,
+            'Belgium_delivery_options',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'be_at_home_delivery_titel',
+                'size'			=> '53',
+                'title'         => 'Delivery',
+                'current'       => __( 'Delivery', 'woocommerce-myparcel' ),
+            )
+        );
+
+        add_settings_field(
+            'BEstandard',
+            __( 'Belgium standard delivery title', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'text_input' ),
+            $option_group,
+            'Belgium_delivery_options',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'be_standard_titel',
+                'size'			=> '53',
+                'title'         => 'Standard delivery',
+                'current'       => __( 'Standard delivery', 'woocommerce-myparcel' ),
+                'description'	=> __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
+            )
+        );
+
+        // Customizations section
 		add_settings_section(
 			'customizations',
 			__( 'Customizations', 'woocommerce-myparcel' ),
@@ -894,7 +933,6 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 	}
-
 	
 	/**
 	 * Set default settings.

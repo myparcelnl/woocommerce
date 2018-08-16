@@ -91,10 +91,13 @@ MyParcel = {
                 MyParcel.getDeliveryTime(morningTitel,'morning', value['start'], value['end']);
                 MyParcel.showMorningDelivery();
             }
-            if(value['price_comment'] == 'standard'){
-                var standardTitel = MyParcel.data.config.deliveryStandardTitel;
-                MyParcel.getDeliveryTime(standardTitel,'standard', value['start'], value['end']);
 
+            if(value['price_comment'] == 'standard'){
+                var standardTitle = MyParcel.data.config.deliveryStandardTitel;
+                if(MyParcel.data.address.cc === 'BE'){
+                    standardTitle = MyParcel.data.config.BEdeliveryStandardTitel;
+                }
+                MyParcel.getDeliveryTime(standardTitle, 'standard', value['start'], value['end']);
             }
             if(value['price_comment'] == 'avond' && MyParcel.data.config.allowEveningDelivery){
                 var eveningTitel = MyParcel.data.config.deliveryEveningTitel;
@@ -481,7 +484,7 @@ MyParcel = {
 
     hideDelivery: function()
     {
-        jQuery(' #mypa-pre-selectors-nl, #mypa-delivery-date-text,.mypa-extra-delivery-options').hide();
+        jQuery('#mypa-delivery-date-text,.mypa-extra-delivery-options').hide();
         jQuery('#mypa-select-date').parent().parent().hide();
         jQuery('#mypa-delivery').parent().parent().hide();
         MyParcel.hideSignature();
@@ -503,7 +506,6 @@ MyParcel = {
         jQuery('#mypa-delivery').parent().parent().show();
 
         if (MyParcel.data.address.cc === "NL") {
-            jQuery('#mypa-pre-selectors-' + this.data.address.cc.toLowerCase()).show();
             jQuery('#mypa-delivery-selectors-' + this.data.address.cc.toLowerCase()).show();
             jQuery('.mypa-extra-delivery-options').show();
 
@@ -520,6 +522,11 @@ MyParcel = {
             if (this.data.config.allowOnlyRecipient) {
                 MyParcel.showOnlyRecipient();
             }
+        }
+
+        if(MyParcel.data.address.cc === 'BE'){
+            jQuery('#mypa-delivery-titel').html(MyParcel.data.config.BEdeliveryTitel);
+            jQuery('#mypa-delivery-date-text').hide();
         }
     },
 

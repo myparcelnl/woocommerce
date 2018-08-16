@@ -739,6 +739,15 @@ msgid "Return shipment"
 msgstr "Retourzending"
 
 #: includes/class-wcmp-settings.php:580
+msgid "Home delivery title"
+msgstr "Thuis bezorg titel"
+
+
+#: includes/class-wcmp-settings.php:580
+msgid "Standard delivery title"
+msgstr "Standaard bezorg titel"
+
+#: includes/class-wcmp-settings.php:580
 msgid "Delivered at home or at work"
 msgstr "Thuis of op het werk bezorgd"
 
@@ -906,6 +915,19 @@ msgid ""
 msgstr ""
 "Het tijdstip waarop u op zaterdag stopt met het verwerken van bestellingen "
 "voor maandaglevering (format: uu:mm)"
+
+#: includes/class-wcmp-settings.php:878
+msgid "Belgium delivery options"
+msgstr "België bezorg opties"
+
+
+#: includes/class-wcmp-settings.php:885
+msgid "Belgium home delivery title"
+msgstr "België thuis levering titel"
+
+#: includes/class-wcmp-settings.php:900
+msgid "Belgium standard delivery title"
+msgstr "België standaard bezorg titel"
 
 #: includes/class-wcmp-settings.php:794
 msgid "Customizations"

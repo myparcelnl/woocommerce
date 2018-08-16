@@ -192,6 +192,13 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
+        public function be_at_home_delivery_titel() {
+            return $this->settings['be_at_home_delivery_titel'];
+        }
+
+        /**
+         * @return mixed
+         */
         public function pickup_titel() {
             return $this->settings['pickup_titel'];
         }
