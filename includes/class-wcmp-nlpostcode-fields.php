@@ -717,7 +717,7 @@ class WC_NLPostcode_Fields {
 	public function formatted_address_replacements( $replacements, $args ) {
 		extract( $args );
 
-		if (!empty($street_name) && $country == 'NL' || country == 'BE') {
+		if (!empty($street_name) && $country == 'NL' || $country == 'BE') {
 			$replacements['{address_1}'] = $street_name.' '.$house_number.$house_number_suffix;
 		}
 		
