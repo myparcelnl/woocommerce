@@ -691,7 +691,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'dropoff_delay',
                 'type'			=> 'text',
                 'size'			=> '5',
-                'description'	=> __( 'Number of days you need to process an order. By default this is 0 and the maximum is 14 days.', 'woocommerce-myparcel' ),
+                'description'	=> __( 'Number of days you need to process an order.', 'woocommerce-myparcel' ),
             )
         );
 
@@ -707,7 +707,7 @@ class WooCommerce_MyParcel_Settings {
                 'type'			=> 'text',
                 'size'			=> '5',
                 'size'			=> '5',
-                'description'	=> __( 'Number of days you allow the customer to postpone a shipment', 'woocommerce-myparcel' ),
+                'description'	=> __( 'Aantal dagen dat een klant een zending kan uitstellen. Standaard zijn dit 0 dagen met een maximum van 14 dagen.', 'woocommerce-myparcel' ),
             )
         );
 
@@ -869,6 +869,7 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'	    => $option_name,
                 'id'			    => 'saturday_cutoff',
                 'size'              => 30,
+                'option_description'    => sprintf( __( 'More information about the Monday delivery of PostNL can be found <a href="%s" target="_blank">here</a>.', 'woocommerce-myparcel' ), 'https://blog.myparcel.nl/maandagbezorging/' ),
             )
         );
 

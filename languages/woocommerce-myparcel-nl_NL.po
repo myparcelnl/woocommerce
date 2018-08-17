@@ -85,7 +85,7 @@ msgstr "Avondlevering"
 #: includes/class-wcmp-settings.php:768
 #: includes/class-wcmp-settings.php:786
 msgid "When there is no title, the delivery time will automatically be visible."
-msgstr "Wanneer er geen title is ingevuld, de bezorgtijden zullen automatisch zichtbaar zijn."
+msgstr "Wanneer er geen titel is ingevuld, worden de bezorgtijden automatisch zichtbaar."
 
 #: includes/class-wcmp-admin.php:407
 msgid "Delivery date"
@@ -740,12 +740,12 @@ msgstr "Retourzending"
 
 #: includes/class-wcmp-settings.php:580
 msgid "Home delivery title"
-msgstr "Thuis bezorg titel"
+msgstr "Thuis bezorgtitel"
 
 
 #: includes/class-wcmp-settings.php:580
 msgid "Standard delivery title"
-msgstr "Standaard bezorg titel"
+msgstr "Standaard bezorgtitel"
 
 #: includes/class-wcmp-settings.php:580
 msgid "Delivered at home or at work"
@@ -761,11 +761,11 @@ msgstr "Bezorgen"
 
 #: includes/class-wcmp-settings.php:723
 msgid "Home delivery title"
-msgstr "Thuis levering titel"
+msgstr "Thuislevering titel"
 
 #: includes/class-wcmp-settings.php:740
 msgid "Default delivery title"
-msgstr "Standaard bezorg titel"
+msgstr "Standaard bezorgtitel"
 
 #: includes/class-wcmp-settings.php:750
 msgid "Morning delivery title"
@@ -798,7 +798,7 @@ msgstr "MyParcel bezorgopties inschakelen"
 
 #: includes/class-wcmp-settings.php:588
 msgid "When there is no titel, the delivery time will automatically be visible."
-msgstr "Wanneer er geen titel is ingevuld, zal automatisch de bezorgtijden zichtbaar zijn."
+msgstr "Wanneer er geen titel is ingevuld worden de bezorgtijden automatisch zichtbaar."
 
 #: includes/class-wcmp-settings.php:600
 msgid "Display for"
@@ -889,16 +889,16 @@ msgid "Dropoff delay"
 msgstr "Verwerkingstijd"
 
 #: includes/class-wcmp-settings.php:745
-msgid "Number of days you need to process an order. By default this is 0 and the maximum is 14 days."
-msgstr "Aantal dagen dat u nodig heeft om een order te verwerken. Standaard is het 0 en het maximum is 14 dagen"
+msgid "Number of days you need to process an order."
+msgstr "Aantal dagen dat u nodig heeft om een order te verwerken."
 
 #: includes/class-wcmp-settings.php:751
 msgid "Delivery days window"
 msgstr "Leverdagen venster"
 
 #: includes/class-wcmp-settings.php:760
-msgid "Number of days you allow the customer to postpone a shipment"
-msgstr "Aantal dagen dat een klant een zending kan uitstellen"
+msgid "Number of days you allow the customer to postpone a shipment. By default this is 0 and max. is 14."
+msgstr "Aantal dagen dat een klant een zending kan uitstellen. Standaard zijn dit 0 dagen met een maximum van 14 dagen."
 
 #: includes/class-wcmp-settings.php:766
 msgid "Enable monday delivery"
@@ -907,6 +907,10 @@ msgstr "Maandaglevering inschakelen"
 #: includes/class-wcmp-settings.php:778
 msgid "Cut-off time for monday delivery"
 msgstr "Sluitingstijd voor maandaglevering"
+
+#: includes/class-wcmp-settings.php:778
+msgid "More information about the Monday delivery of PostNL can be found <a href="%s" target="_blank">here</a>."
+msgstr "Meer informatie over de maandaglevering van PostNL is <a href="%s" target="_blank">hier</a> te vinden."
 
 #: includes/class-wcmp-settings.php:787
 msgid ""
@@ -918,16 +922,16 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:878
 msgid "Belgium delivery options"
-msgstr "België bezorg opties"
+msgstr "België bezorgopties"
 
 
 #: includes/class-wcmp-settings.php:885
 msgid "Belgium home delivery title"
-msgstr "België thuis levering titel"
+msgstr "België thuislevering titel"
 
 #: includes/class-wcmp-settings.php:900
 msgid "Belgium standard delivery title"
-msgstr "België standaard bezorg titel"
+msgstr "België standaard bezorgtitel"
 
 #: includes/class-wcmp-settings.php:794
 msgid "Customizations"
