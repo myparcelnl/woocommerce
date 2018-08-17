@@ -105,15 +105,15 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Improvement: #95 Speed up order list view
 * Improvement: #104 Add reference identifier, that is always the order id
 = 2.4.11 (2018-04-30) =
-Fix: Export shipment labels
+* Fix: Export shipment labels
 
 = 2.4.10 (2018-04-26) =
-Improvement: Support Effect Connect, you can place the barcode inside a note of the order
+* Improvement: Support Effect Connect, you can place the barcode inside a note of the order
 
 = 2.4.9 (2018-04-03) =
-Fix: Scrolling when changing package type in orderview 
-Fix: Select the correct delivery methode inside the checkout
-Improvement: Support Cloudflare
+* Fix: Scrolling when changing package type in orderview 
+* Fix: Select the correct delivery methode inside the checkout
+* Improvement: Support Cloudflare
 
 = 2.4.8 (2018-02-27) =
 * Fix: The array error from the userAgent (https://wordpress.org/support/topic/parse-error-syntax-error-unexpected-in-wp-content-plugins-woocommerce-mypa/)

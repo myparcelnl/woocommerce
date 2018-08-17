@@ -885,7 +885,7 @@ class WooCommerce_MyParcel_Export {
 
 	public function get_package_type_from_shipping_method( $shipping_method, $shipping_class, $shipping_country ) {
 		$package_type = 1;
-        $shipping_method_id_class = "";
+    $shipping_method_id_class = "";
 		if (isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'])) {
 			if ( strpos($shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping') ) {
 				// Automattic / WooCommerce table rate
@@ -901,16 +901,17 @@ class WooCommerce_MyParcel_Export {
 				} else {
 					$shipping_method_id = $shipping_method;
 				}
-                // add class if we have one
-                if (!empty($shipping_class)) {
-                    $shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
-                }
+        
+				// add class if we have one
+				if (!empty($shipping_class)) {
+				    $shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
+				}
 			}
 			foreach (WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] as $package_type_key => $package_type_shipping_methods ) {
-				if ($this->isActiveMethod($shipping_method_id, $package_type_shipping_methods,$shipping_method_id_class, $shipping_class)) {
-					$package_type = $package_type_key;
-					break;
-				}
+			    if ($this->isActiveMethod($shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class)) {
+			        $package_type = $package_type_key;
+			        break;
+			    }
 			}
 		}
 
@@ -1533,9 +1534,9 @@ class WooCommerce_MyParcel_Export {
 
         //support WooCommerce flate rate
         // check if we have a match with the predefined methods
-        if (in_array($shipping_method_id, $package_type_shipping_methods)) {
+	    if (in_array($shipping_method_id, $package_type_shipping_methods)) {
             return true;
-        }
+        }      
         if (in_array($shipping_method_id_class, $package_type_shipping_methods)) {
             return true;
         }

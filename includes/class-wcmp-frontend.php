@@ -425,8 +425,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
         public function order_review_fragments( $fragments ) {
             $myparcel_shipping_data = $this->get_shipping_data();
-
-//            echo '<pre>';var_dump($myparcel_shipping_data);echo '</pre>';die();
             $fragments['.myparcel-shipping-data'] = $myparcel_shipping_data;
             return $fragments;
         }
@@ -555,8 +553,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          */
         private function get_post_data() {
 
-//            WC()->cart->add_fee( 'test fee  ', 10,0, 'standard');
-//            var_dump($_POST);
             if ( ! $_POST || ( is_admin() && ! is_ajax() ) ) {
                 return null;
             }
