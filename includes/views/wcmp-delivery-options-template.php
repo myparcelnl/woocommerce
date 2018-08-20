@@ -1,10 +1,3 @@
-<?php
-
-//    $settings
-//    $delivery_options_shipping_methods
-//    $myparcel_delivery_options_always_display):
-
-?>
 <!-- Add the Custom styles to the checkout -->
 <style>
     <?php
