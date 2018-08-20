@@ -21,7 +21,7 @@ jQuery(document).ready(function($) {
 	/* Localisation */
 	var locale_json = woocommerce_params.locale.replace(/&quot;/g, '"');
 	var locale = $.parseJSON( locale_json );
-	var required = ' <abbr class="required" titel="' + woocommerce_params.i18n_required_text + '">*</abbr>';
+	var required = ' <abbr class="required" title="' + woocommerce_params.i18n_required_text + '">*</abbr>';
 
 	$('body')
 
