@@ -196,7 +196,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          *
          * @return void
          */
-
         public function save_delivery_options( $order_id, $posted ) {
             $order = WCX::get_order( $order_id );
 
