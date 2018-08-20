@@ -717,16 +717,17 @@ MyParcel = {
 
     showPickUpLocations: function()
     {
-        if(MyParcel.data.config.allowPickupPoints) {
-
-            var html = "";
-            jQuery.each(MyParcel.data.deliveryOptions.data.pickup, function (key, value) {
-                var distance = parseFloat(Math.round(value.distance) / 1000).toFixed(1);
-                html += '<option value="' + value.location_code + '">' + value.location + ', ' + value.street + ' ' + value.number + ", " + value.city + " (" + distance + " km) </option>\n";
-            });
-            jQuery('#mypa-pickup-location').html(html).prop("checked", true);
-            jQuery('#mypa-pickup-location-selector, #mypa-pickup-options, #mypa-pickup').show();
+        if(false === MyParcel.data.config.allowPickupPoints) {
+            return;
         }
+
+        var html = "";
+        jQuery.each(MyParcel.data.deliveryOptions.data.pickup, function (key, value) {
+            var distance = parseFloat(Math.round(value.distance) / 1000).toFixed(1);
+            html += '<option value="' + value.location_code + '">' + value.location + ', ' + value.street + ' ' + value.number + ", " + value.city + " (" + distance + " km) </option>\n";
+        });
+        jQuery('#mypa-pickup-location').html(html).prop("checked", true);
+        jQuery('#mypa-pickup-location-selector, #mypa-pickup-options, #mypa-pickup').show();
     },
 
     /*
