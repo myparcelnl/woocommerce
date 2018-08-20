@@ -823,8 +823,7 @@ MyParcel = {
     {
         MyParcel.hideSpinner();
         MyParcel.hideDelivery();
-        jQuery('#mypa-select-date, #method-myparcel-normal-div').hide();
-        jQuery('.mypa-is-pickup-element').hide();
+        jQuery('#mypa-select-date, #method-myparcel-normal-div, .mypa-is-pickup-element').hide();
         jQuery('#mypa-select-delivery-titel').html('Zo snel mogelijk bezorgen');
     },
 
