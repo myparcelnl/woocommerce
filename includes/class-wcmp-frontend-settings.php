@@ -38,9 +38,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_only_recipient_enabled() {
-            if (isset($this->settings['only_recipient_enabled'])) {
-                return $this->settings['only_recipient_enabled'] ? 1 : 0;
-            }
+            return $this->settings['only_recipient_enabled'] ? 1 : 0;
         }
 
         /**
@@ -74,9 +72,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_signature_enabled() {
-            if (isset($this->settings['signed_enabled'])) {
-                return $this->settings['signed_enabled'] ? 1 : 0;
-            }
+            return $this->settings['signed_enabled'] ? 1 : 0;
         }
 
         /**
@@ -109,9 +105,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_morning_enabled() {
-            if (isset($this->settings['morning_enabled'])) {
-                return $this->settings['morning_enabled'] ? 1 : 0;
-            }
+            return $this->settings['morning_enabled'] ? 1 : 0;
         }
 
         /**
@@ -143,9 +137,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_standard_enabled() {
-            if (isset($this->settings['standard_enabled'])) {
-                return $this->settings['standard_enabled'] ? 1 : 0;
-            }
+            return $this->settings['standard_enabled'] ? 1 : 0;
         }
 
         /**
@@ -175,9 +167,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_evening_enabled() {
-            if (isset($this->settings['night_enabled'])) {
-                return $this->settings['night_enabled'] ? 1 : 0;
-            }
+            return $this->settings['night_enabled'] ? 1 : 0;
         }
 
         /**
@@ -296,9 +286,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return int
          */
         public function is_monday_enabled() {
-            if (isset($this->settings['saturday_cutoff_enabled'])) {
-                return $this->settings['saturday_cutoff_enabled'] ? 1 : 0;
-            }
+            return $this->settings['saturday_cutoff_enabled'] ? 1 : 0;
         }
 
         /**
