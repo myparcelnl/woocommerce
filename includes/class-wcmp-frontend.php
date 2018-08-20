@@ -173,14 +173,11 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
         }
 
-
-        // XXX Move to Jquery ?
         public function output_shipping_data() {
             $shipping_data = $this->get_shipping_data();
             printf('<div class="myparcel-shipping-data">%s</div>', $shipping_data);
         }
 
-        // XXX Move to Jquery ?
         public function get_shipping_data() {
 
             if ($shipping_class = $this->get_cart_shipping_class()) {
@@ -336,8 +333,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
             $location          = WC_Tax::get_tax_location( '' );
 
-
-            // XXX refactor completely
             if ( sizeof( $location ) === 4 ) {
                 list( $country, $state, $postcode, $city ) = $location;
 
@@ -411,7 +406,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
         }
 
         // converts price string to float value, assuming no thousand-separators used
-        // XXX money format
         public function normalize_price( $price ) {
             $price = str_replace(',', '.', $price);
             $price = floatval($price);
