@@ -197,8 +197,6 @@ jQuery( function( $ ) {
 
 	function hide_myparcel_delivery_options() {
 	    MyParcel.hideAllDeliveryOptions();
-		// $( '#myparcel-iframe' ).hide();
-		// $( '#mypa-options-enabled' ).prop('checked', false);
 		// clear delivery options
 		if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
 			// $( '#mypa-chosen-delivery-options #mypa-input' ).val('');
