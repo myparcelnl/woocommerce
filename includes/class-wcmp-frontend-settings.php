@@ -30,7 +30,9 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
        }
 
 
-        /* Settings only_recipient */
+        /**
+         * Start settings only_recipient
+         */
 
         /**
          * @return int
@@ -63,7 +65,10 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         }
 
 
-        /* Settings signature */
+        /**
+         * End settings only_recipient
+         * Start settings signature
+         */
 
         /**
          * @return int
@@ -95,7 +100,10 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         }
 
 
-        /* Settings morning delivery */
+        /**
+         * End settings signature
+         * Start settings morning delivery
+         */
 
         /**
          * @return int
@@ -126,7 +134,10 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             }
         }
 
-        /* Settings standard delivery */
+        /**
+         * End settings morning delivery
+         * Start settings standard delivery
+         */
 
         /**
          * @return int
@@ -155,8 +166,10 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             }
         }
 
-
-        /* Settings evening delivery */
+        /**
+         * End settings standard delivery
+         * Start settings evening delivery
+         */
 
         /**
          * @return int
@@ -187,9 +200,10 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             }
         }
 
-
-
-        /* Settings pickup delivery */
+        /**
+         * End settings evening delivery
+         * Start settings pickup delivery
+         */
 
         /**
          * @return bool
@@ -239,7 +253,10 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             }
         }
 
-        /* Settings pickup express delivery */
+        /**
+         * End settings pickup delivery
+         * Start settings pickup express delivery
+         */
 
         /**
          * @return bool
@@ -271,7 +288,10 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         }
 
 
-        /* Settings Monday delivery */
+        /**
+         * End settings pickup express delivery
+         * Start settings monday delivery
+         */
         /**
          * @return int
          */
