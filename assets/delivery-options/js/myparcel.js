@@ -19,7 +19,7 @@ MyParcel = {
         this.data = myParcelConfig;
 
         isMobile     = true;
-        if(jQuery( window ).width() > 980 ) {
+        if(jQuery(window).width() > 980) {
             isMobile = false;
         }
 
@@ -355,7 +355,7 @@ MyParcel = {
         if (selectedPriceComment === "retail") {
             result.price_comment = "retail";
         }
-        jQuery( 'body' ).trigger( 'update_checkout' );
+        jQuery('body').trigger('update_checkout');
         jQuery('#mypa-input').val(JSON.stringify(result));
     },
 
@@ -371,7 +371,7 @@ MyParcel = {
             currentDeliveryData.only_recipient = MyParcel.DELIVERY_ONLY_RECIPIENT
             jQuery('#mypa-input').val(JSON.stringify(currentDeliveryData));
         }
-        jQuery( 'body' ).trigger( 'update_checkout' );
+        jQuery('body').trigger('update_checkout');
     },
 
     addStyleToPrice: function (chosenDelivery) {
@@ -379,7 +379,7 @@ MyParcel = {
     },
 
     removeStyleFromPrice: function (){
-        jQuery('.mypa-delivery-option-table').find( "span" ).removeClass('mypa-bold-price');
+        jQuery('.mypa-delivery-option-table').find("span").removeClass('mypa-bold-price');
     },
 
     triggerDefaultOptionDelivery: function (deliveryDateId, deliveryMomentOfDay) {
