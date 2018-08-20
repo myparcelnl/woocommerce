@@ -339,13 +339,6 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return string
          */
-        public function get_api_url() {
-            return self::BASE_URL;
-        }
-
-        /**
-         * @return string
-         */
         public function get_country_code() {
             return WC()->customer->get_shipping_country();
         }

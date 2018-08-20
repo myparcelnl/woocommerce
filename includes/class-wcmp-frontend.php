@@ -468,7 +468,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     'sunday' => 'zondag'
                 ],
                 "config" => [
-                    "apiBaseUrl" =>  $this->frontend_settings->get_api_url(),
+                    "apiBaseUrl" =>  WooCommerce_MyParcel_Frontend_Settings::BASE_URL,
                     "carrier" =>  "1",
 
                     "priceMorningDelivery" =>  $this->frontend_settings->get_price_morning(),
