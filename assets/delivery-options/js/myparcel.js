@@ -542,20 +542,6 @@ MyParcel = {
         }
     },
 
-    /*
-     * showSpinner
-     *
-     * Shows the MyParcel spinner.
-     *
-     */
-
-    showSpinner: function()
-    {
-        jQuery('#mypa-delivery-option-form').hide();
-        jQuery('.mypa-message-model').hide();
-        jQuery('#mypa-spinner-model').show();
-    },
-
     hideAllDeliveryOptions: function()
     {
         jQuery('#mypa-load').hide();
@@ -566,6 +552,19 @@ MyParcel = {
         jQuery('#mypa-load').show();
     },
 
+    /*
+    * showSpinner
+    *
+    * Shows the MyParcel spinner.
+    *
+    */
+
+    showSpinner: function()
+    {
+        jQuery('#mypa-delivery-option-form').hide();
+        jQuery('.mypa-message-model').hide();
+        jQuery('#mypa-spinner-model').show();
+    },
 
     /*
      * hideSpinner
