@@ -4,6 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 if ( !class_exists( 'WooCommerce_MyParcel_Settings_Callbacks' ) ) :
 
 class WooCommerce_MyParcel_Settings_Callbacks {
+
+    const step_money_input_fields = "0.01";
+
 	/**
 	 * Section null callback.
 	 *
@@ -58,7 +61,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		if ($type == 'number') {
 			$width = ($size) + 200;
 			$style = "width: {$width}px";
-			$step = "0.01";
+			$step = self::step_money_input_fields;
 		} else {
 			$style = '';
             $step = '';
