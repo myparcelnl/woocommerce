@@ -5,7 +5,8 @@ if ( !class_exists( 'WooCommerce_MyParcel_Settings_Callbacks' ) ) :
 
 class WooCommerce_MyParcel_Settings_Callbacks {
 
-    const step_money_input_fields = "0.01";
+    const extra_with_for_number_input = 200;
+    const steps_number_input_fields = "0.01";
 
 	/**
 	 * Section null callback.
@@ -59,9 +60,9 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		}
 
 		if ($type == 'number') {
-			$width = ($size) + 200;
+			$width = ($size) + self::extra_with_for_number_input;
 			$style = "width: {$width}px";
-			$step = self::step_money_input_fields;
+			$step = self::steps_number_input_fields;
 		} else {
 			$style = '';
             $step = '';
