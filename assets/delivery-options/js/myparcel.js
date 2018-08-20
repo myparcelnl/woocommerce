@@ -898,8 +898,8 @@ MyParcel = {
             return;
         }
         if (this.data.address.cc === "BE") {
-            var numberExtra 	= this.data.address.numberExtra;
-            var street 			= this.data.address.street;
+            var numberExtra     = this.data.address.numberExtra;
+            var street          = this.data.address.street;
         }
 
         if(numberExtra){
