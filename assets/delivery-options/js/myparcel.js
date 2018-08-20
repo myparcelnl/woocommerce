@@ -902,8 +902,9 @@ MyParcel = {
             var street          = this.data.address.street;
         }
 
+        var streetSuffix = this.data.address.number;
         if(numberExtra){
-            this.data.address.number  = this.data.address.number + numberExtra;
+            streetSuffix  = this.data.address.number + numberExtra;
         }
         
         /* Check if the deliverydaysWindow == 0 and hide the select input*/
@@ -918,7 +919,7 @@ MyParcel = {
             {
                 cc           			:this.data.address.cc,
                 postal_code  			:this.data.address.postalCode,
-                number       			:this.data.address.number,
+                number       			:streetSuffix,
                 city					:this.data.address.city,
                 carrier      			:this.data.config.carrier,
                 dropoff_days			:this.data.config.dropOffDays,
