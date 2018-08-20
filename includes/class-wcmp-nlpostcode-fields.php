@@ -353,7 +353,7 @@ class WC_NLPostcode_Fields {
 	/**
 	 * Make NL and BE checkout fields hidden by default
 	 * @param  array $fields default checkout fields
-	 * @return arra y $fields default + custom checkoud fields
+	 * @return array $fields default + custom checkoud fields
 	 */
 	public function default_address_fields( $fields ) {
 		$custom_fields = array(
