@@ -367,7 +367,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     $tax_classes = WC_Tax::get_tax_classes();
 
                     foreach ( $tax_classes as $tax_class ) {
-                        $tax_class = sanitize_titel( $tax_class );
+                        $tax_class = sanitize_title( $tax_class );
                         if ( in_array( $tax_class, $cart_tax_classes ) ) {
                             // correct $tax_class is now set
                             break;
@@ -479,13 +479,13 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "pricePickup" =>  $this->frontend_settings->get_price_pickup(),
                     "pricePickupExpress" =>  $this->frontend_settings->get_price_pickup_express(),
 
-                    "deliveryTitel" => $this->frontend_settings->at_home_delivery_titel(),
-                    "pickupTitel" => $this->frontend_settings->pickup_titel(),
-                    "deliveryMorningTitel" => $this->frontend_settings->morning_titel(),
-                    "deliveryStandardTitel" => $this->frontend_settings->standard_titel(),
-                    "deliveryEveningTitel" => $this->frontend_settings->evening_titel(),
-                    "signatureTitel" =>  $this->frontend_settings->signature_titel(),
-                    "onlyRecipientTitel" =>  $this->frontend_settings->only_recipient_titel(),
+                    "deliveryTitle" => $this->frontend_settings->at_home_delivery_title(),
+                    "pickupTitle" => $this->frontend_settings->pickup_title(),
+                    "deliveryMorningTitle" => $this->frontend_settings->morning_title(),
+                    "deliveryStandardTitle" => $this->frontend_settings->standard_title(),
+                    "deliveryEveningTitle" => $this->frontend_settings->evening_title(),
+                    "signatureTitle" =>  $this->frontend_settings->signature_title(),
+                    "onlyRecipientTitle" =>  $this->frontend_settings->only_recipient_title(),
 
                     "allowMondayDelivery" =>  $this->frontend_settings->is_monday_enabled(),
                     "allowMorningDelivery" =>  $this->frontend_settings->is_morning_enabled(),
@@ -501,8 +501,8 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "deliverydaysWindow" =>  $this->frontend_settings->get_deliverydays_window(),
                     "dropoffDelay" => $this->frontend_settings->get_dropoff_delay(),
 
-                    "BEdeliveryTitel" => $this->frontend_settings->be_at_home_delivery_titel(),
-                    "BEdeliveryStandardTitel" => $this->frontend_settings->be_standard_titel(),
+                    "BEdeliveryTitle" => $this->frontend_settings->be_at_home_delivery_title(),
+                    "BEdeliveryStandardTitle" => $this->frontend_settings->be_standard_title(),
                 ],
               ];
 
@@ -590,16 +590,16 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          * @param $post_data_value
          * @param $delivery_type
          * @param $backend_setting
-         * @param $delivery_titel
+         * @param $delivery_title
          *
          * @return bool
          */
-        private function add_fee_from_setting( $post_data, $post_data_value ,$delivery_type, $backend_setting, $delivery_titel ) {
+        private function add_fee_from_setting( $post_data, $post_data_value ,$delivery_type, $backend_setting, $delivery_title ) {
             // Fee for "delivery" option
             if (isset($post_data[$post_data_value]) && $post_data[$post_data_value] == $delivery_type) {
                 if ( ! empty( WooCommerce_MyParcel()->checkout_settings[$backend_setting] ) ) {
                     $fee      = WooCommerce_MyParcel()->checkout_settings[$backend_setting];
-                    $fee_name = __( $delivery_titel, 'woocommerce-myparcel' );
+                    $fee_name = __( $delivery_title, 'woocommerce-myparcel' );
                     $this->add_fee( $fee_name, $fee );
 
                     return true;
@@ -609,7 +609,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             return false;
         }
 
-        private function add_fee_signature( $delivery_options, $delivery_titel ) {
+        private function add_fee_signature( $delivery_options, $delivery_title ) {
             if ( $delivery_options['signed'] !== 1){
                 return;
             }
@@ -617,12 +617,12 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             $fee      = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
 
             if ( ! empty( $fee ) ) {
-                $fee_name = __( $delivery_titel, 'woocommerce-myparcel' );
+                $fee_name = __( $delivery_title, 'woocommerce-myparcel' );
                 $this->add_fee( $fee_name, $fee );
             }
         }
 
-        private function add_fee_only_recipient( $delivery_options, $delivery_titel ) {
+        private function add_fee_only_recipient( $delivery_options, $delivery_title ) {
             if ( $delivery_options['only_recipient'] !== 1){
                 return;
             }
@@ -630,7 +630,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             $fee      = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
 
             if ( ! empty( $fee ) ) {
-                $fee_name = __( $delivery_titel, 'woocommerce-myparcel' );
+                $fee_name = __( $delivery_title, 'woocommerce-myparcel' );
                 $this->add_fee( $fee_name, $fee );
             }
         }

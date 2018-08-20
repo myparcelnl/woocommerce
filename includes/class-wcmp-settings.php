@@ -61,8 +61,8 @@ class WooCommerce_MyParcel_Settings {
 			<h1><?php _e( 'WooCommerce MyParcel Settings', 'woocommerce-myparcel' ); ?></h1>
 			<h2 class="nav-tab-wrapper">
 			<?php
-			foreach ($settings_tabs as $tab_slug => $tab_titel ) {
-				printf('<a href="?page=woocommerce_myparcel_settings&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>', $tab_slug, (($active_tab == $tab_slug) ? 'nav-tab-active' : ''), $tab_titel);
+			foreach ($settings_tabs as $tab_slug => $tab_title ) {
+				printf('<a href="?page=woocommerce_myparcel_settings&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>', $tab_slug, (($active_tab == $tab_slug) ? 'nav-tab-active' : ''), $tab_title);
 			}
 			?>
 			</h2>
@@ -301,15 +301,15 @@ class WooCommerce_MyParcel_Settings {
 		);
 
 		add_settings_field(
-			'barcode_in_note_titel',
-			__( 'Titel before the barcode', 'woocommerce-myparcel' ),
+			'barcode_in_note_title',
+			__( 'Title before the barcode', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'text_input' ),
 			$option_group,
 			'general',
 			array(
 				'option_name'	=> $option_name,
-				'id'			=> 'barcode_in_note_titel',
-				'class'			=> 'barcode_in_note_titel',
+				'id'			=> 'barcode_in_note_title',
+				'class'			=> 'barcode_in_note_title',
 				'default'		=> 'Tracking code:',
 				'description'	=> __( 'You can change the text before the barcode inside an note', 'woocommerce-myparcel' ),
 			)
@@ -728,7 +728,7 @@ class WooCommerce_MyParcel_Settings {
             'delivery_options',
             array(
                 'option_name'	=> $option_name,
-                'id'			=> 'at_home_delivery_titel',
+                'id'			=> 'at_home_delivery_title',
                 'size'			=> '53',
                 'title'         => 'Delivered at home or at work',
                 'current'       => __( 'Delivered at home or at work', 'woocommerce-myparcel' ),
@@ -743,7 +743,7 @@ class WooCommerce_MyParcel_Settings {
             'delivery_options',
             array(
                 'option_name'	=> $option_name,
-                'id'			=> 'standard_titel',
+                'id'			=> 'standard_title',
                 'size'			=> '53',
                 'title'         => 'Standard delivery',
                 'current'       => __( 'Standard delivery', 'woocommerce-myparcel' ),
@@ -889,7 +889,7 @@ class WooCommerce_MyParcel_Settings {
             'Belgium_delivery_options',
             array(
                 'option_name'	=> $option_name,
-                'id'			=> 'be_at_home_delivery_titel',
+                'id'			=> 'be_at_home_delivery_title',
                 'size'			=> '53',
                 'title'         => 'Delivery',
                 'current'       => __( 'Delivery', 'woocommerce-myparcel' ),
@@ -904,7 +904,7 @@ class WooCommerce_MyParcel_Settings {
             'Belgium_delivery_options',
             array(
                 'option_name'	=> $option_name,
-                'id'			=> 'be_standard_titel',
+                'id'			=> 'be_standard_title',
                 'size'			=> '53',
                 'title'         => 'Standard delivery',
                 'current'       => __( 'Standard delivery', 'woocommerce-myparcel' ),

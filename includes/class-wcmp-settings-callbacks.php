@@ -239,8 +239,8 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 
 	public function shipping_methods_package_types( $args ) {
 		extract( $this->normalize_settings_args( $args ) );
-		foreach ($package_types as $package_type => $package_type_titel) {
-			printf ('<div class="package_type_titel">%s:<div>', $package_type_titel);
+		foreach ($package_types as $package_type => $package_type_title) {
+			printf ('<div class="package_type_title">%s:<div>', $package_type_title);
 			$args['package_type'] =  $package_type;
 			unset($args['description']);
 			$this->shipping_method_search( $args );
@@ -284,7 +284,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 							if ( $shipping_method->id == 'table_rate' && method_exists( $shipping_method, 'get_shipping_rates') ) {
 								$zone_table_rates = $shipping_method->get_shipping_rates();
 								foreach ($zone_table_rates as $zone_table_rate) {
-									$rate_label = ! empty( $zone_table_rate->rate_label ) ? $zone_table_rate->rate_label : "{$shipping_method->titel} ({$zone_table_rate->rate_id})";
+									$rate_label = ! empty( $zone_table_rate->rate_label ) ? $zone_table_rate->rate_label : "{$shipping_method->title} ({$zone_table_rate->rate_id})";
 									$available_shipping_methods["table_rate:{$shipping_method->instance_id}:{$zone_table_rate->rate_id}"] = "{$zone->get_zone_name()} - {$rate_label}";
 								}
 							}
@@ -311,7 +311,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 								$shipping_method_options = get_option( $shipping_method->id . '_options-' . $shipping_method->instance_id );
 								if (isset($shipping_method_options['settings'])) {
 									foreach ($shipping_method_options['settings'] as $zone_table_rate) {
-										$rate_label = ! empty( $zone_table_rate['titel'] ) ? $zone_table_rate['titel'] : "{$shipping_method->titel} ({$zone_table_rate['option_id']})";
+										$rate_label = ! empty( $zone_table_rate['title'] ) ? $zone_table_rate['title'] : "{$shipping_method->title} ({$zone_table_rate['option_id']})";
 										$available_shipping_methods["betrs_shipping_{$shipping_method->instance_id}-{$zone_table_rate['option_id']}"] = "{$zone->get_zone_name()} - {$rate_label}";
 									}
 								}
@@ -320,7 +320,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 					}
 					continue;
 				}
-                $method_title = !empty($shipping_methods[$key]->method_title) ? $shipping_methods[$key]->method_title : $shipping_methods[$key]->titel;
+                $method_title = !empty($shipping_methods[$key]->method_title) ? $shipping_methods[$key]->method_title : $shipping_methods[$key]->title;
 				$available_shipping_methods[ $key ] = $method_title;
 
 
@@ -369,8 +369,8 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		?>
 		<select id="<?php echo $id; ?>" name="<?php echo $setting_name; ?>[]" style="width: 50%;"  class="wc-enhanced-select" multiple="multiple" data-placeholder="<?php echo $placeholder; ?>">
 			<?php
-			foreach ( $options as $key => $titel ) {
-				echo '<option value="' . esc_attr( $key ) . '"' . selected( !empty($current) && in_array( $key, (array) $current ), true, false ) . '>' . esc_html( $titel ) . '</option>';
+			foreach ( $options as $key => $title ) {
+				echo '<option value="' . esc_attr( $key ) . '"' . selected( !empty($current) && in_array( $key, (array) $current ), true, false ) . '>' . esc_html( $title ) . '</option>';
 			}
 			?>
 		</select>
@@ -400,7 +400,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
         );
 		// textarea (description)
 		$default_delivery_text = array(
-			'id'			=> "{$id}_titel",
+			'id'			=> "{$id}_title",
 			'type'			=> 'text',
 		);
 
@@ -450,7 +450,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 			</thead>
 			<tbody>
 				<?php
-				foreach ($options as $key => $titel) {
+				foreach ($options as $key => $title) {
 					// prepare args for input fields
 					$common_args = array (
 						'option_name'	=> "{$option_name}[{$key}]",
@@ -474,7 +474,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 					?>
 					<tr>
 						<td><?php $this->checkbox( array_merge( $common_args, $cb_args ) ); ?></td>
-						<td><?php echo $titel; ?></td>
+						<td><?php echo $title; ?></td>
 						<td><input type="number" min="0"></td>
 						<td><input type="text"></td>
 					<?php

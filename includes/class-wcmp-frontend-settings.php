@@ -44,17 +44,22 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function only_recipient_titel() {
-            return $this->settings['only_recipient_titel'];
+        public function only_recipient_title() {
+            if (isset($this->settings['only_recipient_title'])) {
+                return $this->settings['only_recipient_title'];
+            }
         }
 
         /**
          * @return string
          */
         public function get_price_only_recipient() {
-            $price = $this->settings['only_recipient_fee'];
-            $total_price = $this->get_total_price_with_tax($price);
-            return $total_price;
+            if (isset($this->settings['only_recipient_fee'])) {
+                $price       = $this->settings['only_recipient_fee'];
+                $total_price = $this->get_total_price_with_tax( $price );
+
+                return $total_price;
+            }
         }
 
 
@@ -72,16 +77,21 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function signature_titel() {
-            return $this->settings['signed_titel'];
+        public function signature_title() {
+            if (isset($this->settings['signed_title'])) {
+                return $this->settings['signed_title'];
+            }
         }
         /**
          * @return string
          */
         public function get_price_signature() {
-            $price = $this->settings['signed_fee'];
-            $total_price = $this->get_total_price_with_tax($price);
-            return $total_price;
+            if (isset($this->settings['signed_fee'])) {
+                $price       = $this->settings['signed_fee'];
+                $total_price = $this->get_total_price_with_tax( $price );
+
+                return $total_price;
+            }
         }
 
 
@@ -99,16 +109,21 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function morning_titel() {
-            return $this->settings['morning_titel'];
+        public function morning_title() {
+            if (isset($this->settings['morning_title'])) {
+                return $this->settings['morning_title'];
+            }
         }
         /**
          * @return string
          */
         public function get_price_morning() {
-            $price = $this->settings['morning_fee'];
-            $total_price = $this->get_total_price_with_tax($price);
-            return $total_price;
+            if (isset($this->settings['morning_fee'])) {
+                $price       = $this->settings['morning_fee'];
+                $total_price = $this->get_total_price_with_tax( $price );
+
+                return $total_price;
+            }
         }
 
         /* Settings standard delivery */
@@ -125,18 +140,18 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function standard_titel() {
-            if (isset($this->settings['standard_titel'])) {
-                return $this->settings['standard_titel'];
+        public function standard_title() {
+            if (isset($this->settings['standard_title'])) {
+                return $this->settings['standard_title'];
             }
         }
 
         /**
          * @return mixed
          */
-        public function be_standard_titel() {
-            if (isset($this->settings['be_standard_titel'])) {
-                return $this->settings['be_standard_titel'];
+        public function be_standard_title() {
+            if (isset($this->settings['be_standard_title'])) {
+                return $this->settings['be_standard_title'];
             }
         }
 
@@ -155,18 +170,21 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function evening_titel() {
-            if (isset($this->settings['night_titel'])) {
-                return $this->settings['night_titel'];
+        public function evening_title() {
+            if (isset($this->settings['night_title'])) {
+                return $this->settings['night_title'];
             }
         }
         /**
          * @return string
          */
         public function get_price_evening() {
-            $price = $this->settings['night_fee'];
-            $total_price = $this->get_total_price_with_tax($price);
-            return $total_price;
+            if (isset($this->settings['night_fee'])) {
+                $price       = $this->settings['night_fee'];
+                $total_price = $this->get_total_price_with_tax( $price );
+
+                return $total_price;
+            }
         }
 
 
@@ -185,33 +203,40 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function at_home_delivery_titel() {
-            return $this->settings['at_home_delivery_titel'];
-        }
-
-        /**
-         * @return mixed
-         */
-        public function be_at_home_delivery_titel() {
-            if (isset($this->settings['be_at_home_delivery_titel'])) {
-                return $this->settings['be_at_home_delivery_titel'];
+        public function at_home_delivery_title() {
+            if (isset($this->settings['signed_title'])) {
+                return $this->settings['signed_title'];
             }
         }
 
         /**
          * @return mixed
          */
-        public function pickup_titel() {
-            return $this->settings['pickup_titel'];
+        public function be_at_home_delivery_title() {
+            if (isset($this->settings['be_at_home_delivery_title'])) {
+                return $this->settings['be_at_home_delivery_title'];
+            }
+        }
+
+        /**
+         * @return mixed
+         */
+        public function pickup_title() {
+            if (isset($this->settings['pickup_title'])) {
+                return $this->settings['pickup_title'];
+            }
         }
 
         /**
          * @return string
          */
         public function get_price_pickup() {
-            $price = $this->settings['pickup_fee'];
-            $total_price = $this->get_total_price_with_tax($price);
-            return $total_price;
+            if (isset($this->settings['pickup_fee'])) {
+                $price       = $this->settings['pickup_fee'];
+                $total_price = $this->get_total_price_with_tax( $price );
+
+                return $total_price;
+            }
         }
 
         /* Settings pickup express delivery */
@@ -227,17 +252,22 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function pickup_express_titel() {
-            return $this->settings['pickup_express_titel'];
+        public function pickup_express_title() {
+            if (isset($this->settings['pickup_express_title'])) {
+                return $this->settings['pickup_express_title'];
+            }
         }
 
         /**
          * @return string
          */
         public function get_price_pickup_express() {
-            $price = $this->settings['pickup_express_fee'];
-            $total_price = $this->get_total_price_with_tax($price);
-            return $total_price;
+            if (isset($this->settings['pickup_express_fee'])) {
+                $price       = $this->settings['pickup_express_fee'];
+                $total_price = $this->get_total_price_with_tax( $price );
+
+                return $total_price;
+            }
         }
 
 
@@ -257,7 +287,9 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * Cut-off time for monday delivery
          */
         public function get_saturday_cutoff_time() {
-            return $this->settings['saturday_cutoff_time'];
+            if (isset($this->settings['saturday_cutoff_time'])) {
+                return $this->settings['saturday_cutoff_time'];
+            }
         }
 
 
