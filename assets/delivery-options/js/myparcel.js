@@ -144,7 +144,6 @@ MyParcel = {
      * Bind actions to selectors.
      *
      */
-
     bind: function ()
     {
         jQuery('#mypa-submit').on('click', function(e)
@@ -424,7 +423,6 @@ MyParcel = {
      * Shows and hides the display options that are valid for the recipient only and signature required pre-selectors
      *
      */
-
     toggleDeliveryOptions: function()
     {
         var isPickup	= jQuery('#mypa-pickup-delivery').is(':checked');
@@ -448,7 +446,6 @@ MyParcel = {
      * Exports the selected deliveryoption to the webshop.
      *
      */
-
     exportDeliveryOptionToWebshop: function()
     {
         var deliveryOption = "";
@@ -465,7 +462,6 @@ MyParcel = {
      * Hides pop-up message.
      *
      */
-
     hideMessage: function()
     {
         jQuery('.mypa-message-model').hide();
@@ -478,7 +474,6 @@ MyParcel = {
      * Hides pop-up essage.
      *
      */
-
     showMessage: function(message)
     {
         jQuery('.mypa-message-model').show();
@@ -493,7 +488,6 @@ MyParcel = {
      * Hides interface part for delivery.
      *
      */
-
     hideDelivery: function()
     {
         jQuery('#mypa-delivery-date-text,.mypa-extra-delivery-options').hide();
@@ -512,7 +506,6 @@ MyParcel = {
      * Shows interface part for delivery.
      *
      */
-
     showDelivery: function () {
 
         jQuery('#mypa-delivery').parent().parent().show();
@@ -553,12 +546,11 @@ MyParcel = {
     },
 
     /*
-    * showSpinner
-    *
-    * Shows the MyParcel spinner.
-    *
-    */
-
+     * showSpinner
+     *
+     * Shows the MyParcel spinner.
+     *
+     */
     showSpinner: function()
     {
         jQuery('#mypa-delivery-option-form').hide();
@@ -572,7 +564,6 @@ MyParcel = {
      * Hides the MyParcel spinner.
      *
      */
-
     hideSpinner: function()
     {
         jQuery('#mypa-spinner-model').hide();
@@ -624,7 +615,6 @@ MyParcel = {
      * Convert api date string format to human readable string format
      *
      */
-
     dateToString: function(apiDate)
     {
         var deliveryDate 	= apiDate;
@@ -642,7 +632,6 @@ MyParcel = {
      * Show possible delivery dates.
      *
      */
-
     showDeliveryDates: function()
     {
         var html = "";
@@ -682,7 +671,6 @@ MyParcel = {
      * Clear pickup locations and show a non-value option.
      *
      */
-
     clearPickUpLocations: function()
     {
         var html = '<option value="">---</option>';
@@ -696,7 +684,6 @@ MyParcel = {
      * Hide the pickup location option.
      *
      */
-
     hidePickUpLocations: function()
     {
         if(!MyParcel.data.config.allowPickupPoints) {
@@ -714,7 +701,6 @@ MyParcel = {
      * Shows possible pickup locations, from closest to furdest.
      *
      */
-
     showPickUpLocations: function()
     {
         if(false === MyParcel.data.config.allowPickupPoints) {
@@ -736,7 +722,6 @@ MyParcel = {
      * Hide the detailed information pop-up for selected location.
      *
      */
-
     hideLocationDetails: function()
     {
         jQuery('#mypa-delivery-option-form').show();
@@ -748,7 +733,6 @@ MyParcel = {
      *
      * Shows the detailed information pop-up for the selected pick-up location.
      */
-
     showLocationDetails: function()
     {
         var html       		= "";
@@ -769,14 +753,14 @@ MyParcel = {
         html += '<span class="mypa-pickup-location-details-city">' + currentLocation.postal_code + '&nbsp;' + currentLocation.city + '</span>';
 
         if(currentLocation.phone_number){
-            html += '<span class="mypa-pickup-location-details-phone">' + currentLocation.phone_number  + '</span>'
+            html += '<span class="mypa-pickup-location-details-phone">' + currentLocation.phone_number  + '</span>';
         }
-        html += '<span class="mypa-pickup-location-details-time">Ophalen vanaf:&nbsp;' + startTime + '</span>'
+        html += '<span class="mypa-pickup-location-details-time">Ophalen vanaf:&nbsp;' + startTime + '</span>';
         html += '<h3>Openingstijden</h3>';
 
         jQuery.each(
             currentLocation.opening_hours, function(weekday, value){
-                html += '<span class="mypa-pickup-location-details-day">' + MyParcel.data.translateENtoNL[weekday] + "</span> ";
+                html += '<span class="mypa-pickup-location-details-day">' + MyParcel.data.translateENtoNL[weekday] + "</span>";
 
                 if(value[0] === undefined ){
                     html +=  '<span class="mypa-time">Gesloten</span>';
@@ -817,7 +801,6 @@ MyParcel = {
      * This function copies the newly entered data back into the webshop forms.
      *
      */
-
     retryPostalcodeHouseNumber: function()
     {
         var retryPostalCode = jQuery('#mypa-error-postcode').val();
@@ -836,7 +819,6 @@ MyParcel = {
      * If the API call fails and we have no data about delivery or pick up options
      * show the customer an "As soon as possible" option.
      */
-
     showFallBackDelivery: function()
     {
         MyParcel.hideSpinner();
@@ -853,7 +835,6 @@ MyParcel = {
      * If a customer enters an unrecognised postal code housenumber combination show a
      * pop-up so they can try again.
      */
-
     showRetry: function()
     {
         MyParcel.showMessage(
@@ -904,7 +885,6 @@ MyParcel = {
      * Postal Code.
      *
      */
-
     callDeliveryOptions: function()
     {
         MyParcel.showSpinner();
