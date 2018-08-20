@@ -38,12 +38,16 @@ MyParcel = {
         }
 
         /* Prices */
-        jQuery('#mypa-morning-delivery').html(MyParcel.getPriceHtml(this.data.config.priceMorningDelivery));
-        jQuery('#mypa-evening-delivery').html(MyParcel.getPriceHtml(this.data.config.priceEveningDelivery));
-        jQuery('#mypa-normal-delivery').html(MyParcel.getPriceHtml(this.data.config.priceNormalDelivery));
-        jQuery('#mypa-signature-price').html(MyParcel.getPriceHtml(this.data.config.priceSignature));
-        jQuery('#mypa-only-recipient-price').html(MyParcel.getPriceHtml(this.data.config.priceOnlyRecipient));
-        jQuery('#mypa-pickup-price').html(MyParcel.getPriceHtml(this.data.config.pricePickup));
+        var prices = {
+            'morning':          this.data.config.priceMorningDelivery,
+            'evening':          this.data.config.priceEveningDelivery,
+            'normal':           this.data.config.priceNormalDelivery,
+            'signature':        this.data.config.priceSignature,
+            'onlyRecipient':    this.data.config.priceOnlyRecipient,
+            'pickup':           this.data.config.pricePickup
+        }
+
+        MyParcel.showPrices(prices);
 
         /* Call delivery options */
         MyParcel.callDeliveryOptions();
@@ -53,6 +57,16 @@ MyParcel = {
         jQuery('#method-myparcel-normal').click();
 
         MyParcel.bind();
+    },
+
+    showPrices: function (prices) {
+        jQuery('#mypa-morning-delivery').html(MyParcel.getPriceHtml(prices.morning));
+        jQuery('#mypa-evening-delivery').html(MyParcel.getPriceHtml(prices.evening));
+        jQuery('#mypa-normal-delivery').html(MyParcel.getPriceHtml(prices.normal));
+        jQuery('#mypa-signature-price').html(MyParcel.getPriceHtml(prices.signature));
+        jQuery('#mypa-only-recipient-price').html(MyParcel.getPriceHtml(prices.onlyRecipient));
+        jQuery('#mypa-pickup-price').html(MyParcel.getPriceHtml(prices.pickup));
+
     },
 
     getPriceHtml: function(priceOfDeliveryOption){
