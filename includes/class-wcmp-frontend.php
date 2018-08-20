@@ -16,8 +16,9 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
         /*
          * @var WooCommerce_MyParcel_Frontend_Settings
          */
-        private $frontend_settings;
         const RADIO_CHECKED = 'on';
+        private $frontend_settings;
+
 
         function __construct()	{
             // Customer Emails
