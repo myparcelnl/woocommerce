@@ -156,8 +156,8 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                 $show_delivery_options = false;
             }
 
-            $delivery_options_shipping_methods = $this->getDeliveryOptionsShippingMethods();
-            $delivery_options_always_display = $this->myparcelDeliveryOptionsAlwaysDisplay()? 'yes' : 'no';
+            $delivery_options_shipping_methods = $this->get_delivery_options_shipping_methods();
+            $delivery_options_always_display = $this->myparcel_delivery_options_always_display()? 'yes' : 'no';
 
             $urlJs       = WooCommerce_MyParcel()->plugin_url() . "/assets/delivery-options/js/myparcel.js";
 
@@ -612,7 +612,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
         /**
          * @return string
          */
-        private function getDeliveryOptionsShippingMethods() {
+        private function get_delivery_options_shipping_methods() {
 
            if ( isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] ) && isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1] ) ) {
                 // Shipping methods associated with parcels = enable delivery options
@@ -626,7 +626,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
 
 
-        private function myparcelDeliveryOptionsAlwaysDisplay() {
+        private function myparcel_delivery_options_always_display() {
 
             if ( isset( WooCommerce_MyParcel()->checkout_settings['checkout_display'] ) && WooCommerce_MyParcel()->checkout_settings['checkout_display'] == 'all_methods' ) {
                 return true;
