@@ -876,7 +876,6 @@ MyParcel = {
         }
     },
 
-
     /*
      * callDeliveryOptions
      *
@@ -889,7 +888,6 @@ MyParcel = {
         MyParcel.showSpinner();
         MyParcel.clearPickUpLocations();
         MyParcel.hideDelivery();
-
         MyParcel.setAdresFromInputFields();
 
         if (this.data.address.postalCode === '' || this.data.address.number === ''){
