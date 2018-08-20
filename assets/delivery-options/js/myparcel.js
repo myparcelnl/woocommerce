@@ -442,8 +442,6 @@ MyParcel = {
         if (selected.length > 0) {
             deliveryOption = selected.val();
         }
-
-        /* XXX Send to appropriate webshop field */
     },
 
 
