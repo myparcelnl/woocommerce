@@ -90,7 +90,6 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 	 */
 	public function color_picker( $args ) {
 		extract( $this->normalize_settings_args( $args ) );
-		// echo '<pre>';var_dump($this->normalize_settings_args( $args ));echo '</pre>';
 
 		printf( '<input type="text" id="%1$s" name="%2$s" value="%3$s" size="%4$s" class="wcmp-color-picker %5$s"/>', $id, $setting_name, $current, $size, $class );
 	
@@ -267,7 +266,6 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		// get shipping methods
 		$available_shipping_methods = array();
 		$shipping_methods = WC()->shipping->load_shipping_methods();
-		// echo '<pre>';var_dump($shipping_methods);echo '</pre>';
 
 		if ( $shipping_methods ) {
 			foreach ( $shipping_methods as $key => $shipping_method ) {
