@@ -49,7 +49,6 @@ class WooCommerce_MyParcel_Admin {
 		$style = $hide ? 'style="display:none"' : '';
 		// if we have shipments, then we show status & link to track&trace, settings under i
 		if ( !empty( $consignments ) )  {
-			// echo '<pre>';var_dump($consignments);echo '</pre>';die();
 			// only use last shipment
 			$last_shipment = array_pop( $consignments );
 			$last_shipment_id = $last_shipment['shipment_id'];
@@ -358,7 +357,6 @@ class WooCommerce_MyParcel_Admin {
 		$consignments = $this->get_order_shipments( $order );
 		// show shipments if available
 		if ( !empty( $consignments ) )  {
-			// echo '<pre>';var_dump($consignments);echo '</pre>';die();
 			?>
 			<table class="tracktrace_status">
 				<thead>

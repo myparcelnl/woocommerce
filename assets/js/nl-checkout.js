@@ -1,9 +1,9 @@
-// Most functionality copied from woocommerce/assets/js/checkout.js
-// Thanks Mike!
+/* Most functionality copied from woocommerce/assets/js/checkout.js */
+/* Thanks Mike! */
 
 jQuery(document).ready(function($) {
 	
-	// Hide custom NL fields by default when country not NL
+	/* Hide custom NL fields by default when country not NL */
 	var billing_country = $('#billing_country').val();
 	var shipping_country = $('#shipping_country').val();
 	if (billing_country != 'NL') {
@@ -25,7 +25,7 @@ jQuery(document).ready(function($) {
 
 	$('body')
 
-	// Handle locale
+	/* Handle locale */
 	.bind('country_to_state_changing', function( event, country, wrapper ){
 		var thisform = wrapper;
 
@@ -41,39 +41,39 @@ jQuery(document).ready(function($) {
 		var $suffixfield   = thisform.find('#billing_house_number_suffix_field, #shipping_house_number_suffix_field');
 
 		if (country == 'NL') {
-			//show custom NL fields
+			/* show custom NL fields */
 			$streetfield.show();
 			$numberfield.show();
 			$suffixfield.show();
-			//$emailfield.add( $phonefield ).removeClass('form-row-first form-row-last').addClass('form-row-wide');
+			/* $emailfield.add( $phonefield ).removeClass('form-row-first form-row-last').addClass('form-row-wide'); */
 			
-			// Hide regular address classes
+			/* Hide regular address classes */
 			$address1field.find('label abbr').remove();
 			$address1field.hide();
 			$address2field.hide();
 
-			// Place postcode & city on one line
+			/* Place postcode & city on one line */
 			$postcodefield.removeClass('form-row-wide').addClass('form-row-first');
 			$cityfield.removeClass('form-row-wide').addClass('form-row-last');
 
-			// Mark required fields
+			/* Mark required fields */
 			if ($streetfield.find('label abbr').size()==0) $streetfield.find('label').append( required );
 			if ($numberfield.find('label abbr').size()==0) $numberfield.find('label').append( required );
 			
-			// Add validation required classes
+			/* Add validation required classes */
 			$streetfield.addClass('validate-required');
 			$numberfield.addClass('validate-required');
 		} else {
-			// Hide custom NL fields
+			/* Hide custom NL fields */
 			$streetfield.hide();
 			$numberfield.hide();
 			$suffixfield.hide();
 
-			// Unmark required fields
+			/* Unmark required fields */
 			$streetfield.find('label abbr').remove();
 			$numberfield.find('label abbr').remove();
 
-			// Remove validation required classes
+			/* Remove validation required classes */
 			$streetfield.removeClass('validate-required');
 			$numberfield.removeClass('validate-required');
 		}
@@ -84,7 +84,7 @@ jQuery(document).ready(function($) {
 			var thislocale = locale['default'];
 		}
 
-		// Handle locale fields
+		/* Handle locale fields */
 		var locale_fields = {
 			'address_1'	: 	'#billing_address_1_field, #shipping_address_1_field',
 			'address_2'	: 	'#billing_address_2_field, #shipping_address_2_field',
@@ -135,12 +135,12 @@ jQuery(document).ready(function($) {
 	
 	})
 
-	// Init trigger
+	/* Init trigger */
 	.bind('init_checkout', function() {
 		$('#billing_country, #shipping_country, .country_to_state').change();
 	});
 
-	// Update on page load
+	/* Update on page load */
 	if ( woocommerce_params.is_checkout == 1 ) {
 		$('body').trigger('init_checkout');
 	}

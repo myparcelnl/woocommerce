@@ -9,7 +9,6 @@ printf('%s: %s', __( 'Shipment type', 'woocommerce-myparcel' ), $package_types[$
 ?>
 <ul class="wcmyparcel_shipment_summary">
 	<?php
-	// echo '<pre>';var_dump($shipment);echo '</pre>';die();
 	// Options
 	$option_strings = array(
 		'large_format'		=> __( 'Extra large size', 'woocommerce-myparcel' ),

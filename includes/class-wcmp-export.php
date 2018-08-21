@@ -447,11 +447,13 @@ class WooCommerce_MyParcel_Export {
             if ( $pickup = $this->is_pickup( $order ) ) {
                 // $pickup_time = array_shift($pickup['time']); // take first element in time array
                 $shipment['pickup'] = array(
-                    'postal_code'	=> $pickup['postal_code'],
-                    'street'		=> $pickup['street'],
-                    'city'			=> $pickup['city'],
-                    'number'		=> $pickup['number'],
-                    'location_name'	=> $pickup['location'],
+                    'postal_code'	    => $pickup['postal_code'],
+                    'street'		    => $pickup['street'],
+                    'city'			    => $pickup['city'],
+                    'number'		    => $pickup['number'],
+                    'location_code'     => $pickup['location_code'],
+                    'retail_network_id' => $pickup['retail_network_id'],
+                    'location_name'	    => $pickup['location'],
                 );
             }
 
@@ -594,7 +596,7 @@ class WooCommerce_MyParcel_Export {
 		}
 
 		// Select the barcode text of the MyParcel settings
-		$this->prefix_message = WooCommerce_MyParcel()->general_settings['barcode_in_note_titel'];
+		$this->prefix_message = WooCommerce_MyParcel()->general_settings['barcode_in_note_title'];
 
 		foreach ( $order_ids as $order_id ) {
 			$order = WCX::get_order( $order_id );
@@ -883,7 +885,7 @@ class WooCommerce_MyParcel_Export {
 
 	public function get_package_type_from_shipping_method( $shipping_method, $shipping_class, $shipping_country ) {
 		$package_type = 1;
-        $shipping_method_id_class = "";
+    $shipping_method_id_class = "";
 		if (isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'])) {
 			if ( strpos($shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping') ) {
 				// Automattic / WooCommerce table rate
@@ -899,6 +901,7 @@ class WooCommerce_MyParcel_Export {
 				} else {
 					$shipping_method_id = $shipping_method;
 				}
+        
 				// add class if we have one
 				if (!empty($shipping_class)) {
 				    $shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
@@ -1193,7 +1196,7 @@ class WooCommerce_MyParcel_Export {
 		$delivery_types = array(
 			'morning'		=> 1,
 			'standard'		=> 2, // 'default in JS API'
-			'night'			=> 3,
+			'avond'			=> 3,
 			'retail'		=> 4, // 'pickup'
 			'retailexpress'	=> 5, // 'pickup_express'
 		);
@@ -1537,10 +1540,9 @@ class WooCommerce_MyParcel_Export {
         if (in_array($shipping_method_id_class, $package_type_shipping_methods)) {
             return true;
         }
-	    
-        //support WooCommerce Table Rate Shipping by Automattic
+
         // fallback to bare method (without class) (if bare method also defined in settings)
-        if (!empty($shipping_class) && in_array($shipping_class, $package_type_shipping_methods)) {
+        if (!empty($shipping_method_id_class) && in_array($shipping_method_id_class, $package_type_shipping_methods)) {
             return true;
         }
 

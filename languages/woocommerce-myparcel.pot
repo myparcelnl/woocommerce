@@ -81,6 +81,12 @@ msgstr ""
 msgid "Evening delivery"
 msgstr ""
 
+#: includes/class-wcmp-settings.php:750
+#: includes/class-wcmp-settings.php:768
+#: includes/class-wcmp-settings.php:786
+msgid "When there is no title, the delivery time will automatically be visible."
+msgstr ""
+
 #: includes/class-wcmp-admin.php:407
 msgid "Delivery date"
 msgstr ""
@@ -679,7 +685,63 @@ msgid "Return shipment"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:580
+msgid "Standard delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:580
 msgid "Delivery options"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:723
+msgid "Home delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:740
+msgid "Default delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:731
+msgid "Delivery"
+msgstr ""
+#: includes/class-wcmp-settings.php:580
+msgid "Delivered at home or at work"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:723
+msgid "Home delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:740
+msgid "Default delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:750
+msgid "Morning delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:760
+msgid "Evening delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:770
+msgid "Home address only title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:780
+msgid "Signature on delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:790
+msgid "Pickup title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:800
+msgid "Pickup express title"
+msgstr ""
+
+
+#: includes/class-wcmp-settings.php:588
+msgid "When there is no titel, the delivery time will automatically be visible."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:588
@@ -707,6 +769,10 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:665
 msgid "PostNL pickup"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:850
+msgid "Pick up at PostNL location"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:677
@@ -766,7 +832,7 @@ msgid "Dropoff delay"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:745
-msgid "Number of days you take to process an order"
+msgid "Number of days you need to process an order."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:751
@@ -774,7 +840,7 @@ msgid "Delivery days window"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:760
-msgid "Number of days you allow the customer to postpone a shipment"
+msgid "Aantal dagen dat een klant een zending kan uitstellen. Standaard zijn dit 0 dagen met een maximum van 14 dagen."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:766
@@ -789,6 +855,22 @@ msgstr ""
 msgid ""
 "Time at which you stop processing orders on saturday for monday delivery "
 "(format: hh:mm)"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:787
+msgid "More information about the Monday delivery of PostNL can be found <a href="%s" target="_blank">here</a>."
+msgstr ""
+
+#: includes/class-wcmp-settings.php:878
+msgid "Belgium delivery options"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:885
+msgid "Belgium home delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:900
+msgid "Belgium standard delivery title"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:794
@@ -815,9 +897,6 @@ msgstr ""
 msgid "Custom styles"
 msgstr ""
 
-#: includes/class-wcmp-settings.php:844
-msgid "Automatically load Google fonts"
-msgstr ""
 
 #: includes/compatibility/class-wc-core-compatibility.php:222
 msgid "WooCommerce"

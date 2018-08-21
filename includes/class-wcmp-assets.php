@@ -25,7 +25,7 @@ class WooCommerce_MyParcel_Assets {
 			wp_localize_script(
 				'wc-myparcel-frontend',
 				'wc_myparcel_frontend',
-				array(  
+				array(
 					'iframe_url' => WooCommerce_MyParcel()->plugin_url() . '/includes/views/wcmp-delivery-options.php?v=' . time(),
 				)
 			);
