@@ -691,11 +691,10 @@ MyParcel = {
 
     },
 
-
     /*
      * showPickupLocations
      *
-     * Shows possible pickup locations, from closest to furdest.
+     * Shows possible pickup locations, from closest to further.
      *
      */
     showPickUpLocations: function()
