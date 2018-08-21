@@ -882,14 +882,14 @@ class WooCommerce_MyParcel_Settings {
         );
 
         add_settings_field(
-            'be_at_home_delivery',
+            'belgium_at_home_delivery',
             __( 'Belgium home delivery title', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'text_input' ),
             $option_group,
             'Belgium_delivery_options',
             array(
                 'option_name'	=> $option_name,
-                'id'			=> 'be_at_home_delivery_title',
+                'id'			=> 'belgium_at_home_delivery_title',
                 'size'			=> '53',
                 'title'         => 'Delivery',
                 'current'       => __( 'Delivery', 'woocommerce-myparcel' ),
@@ -904,7 +904,7 @@ class WooCommerce_MyParcel_Settings {
             'Belgium_delivery_options',
             array(
                 'option_name'	=> $option_name,
-                'id'			=> 'be_standard_title',
+                'id'			=> 'belgium_standard_title',
                 'size'			=> '53',
                 'title'         => 'Standard delivery',
                 'current'       => __( 'Standard delivery', 'woocommerce-myparcel' ),

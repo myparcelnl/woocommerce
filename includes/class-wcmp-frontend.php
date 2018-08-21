@@ -13,10 +13,11 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
     class WooCommerce_MyParcel_Frontend {
 
-        /*
-         * @var WooCommerce_MyParcel_Frontend_Settings
-         */
         const RADIO_CHECKED = 'on';
+
+        /*
+        * @var WooCommerce_MyParcel_Frontend_Settings
+        */
         private $frontend_settings;
 
 
@@ -475,8 +476,8 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "deliverydaysWindow" =>  $this->frontend_settings->get_deliverydays_window(),
                     "dropoffDelay" => $this->frontend_settings->get_dropoff_delay(),
 
-                    "BEdeliveryTitle" => $this->frontend_settings->be_at_home_delivery_title(),
-                    "BEdeliveryStandardTitle" => $this->frontend_settings->be_standard_title(),
+                    "BEdeliveryTitle" => $this->frontend_settings->belgium_at_home_delivery_title(),
+                    "BEdeliveryStandardTitle" => $this->frontend_settings->belgium_standard_title(),
                 ],
               ];
 

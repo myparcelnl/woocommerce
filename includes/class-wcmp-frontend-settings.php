@@ -152,9 +152,9 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function be_standard_title() {
-            if (isset($this->settings['be_standard_title'])) {
-                return $this->settings['be_standard_title'];
+        public function belgium_standard_title() {
+            if (isset($this->settings['belgium_standard_title'])) {
+                return $this->settings['belgium_standard_title'];
             }
         }
 
@@ -202,6 +202,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['pickup_enabled'])) {
                 return (bool) $this->settings['pickup_enabled'];
             }
+            return false;
         }
 
         /**
@@ -215,10 +216,12 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
 
         /**
          * @return mixed
+         *
+         * Get the at home delivery title for Belgium delivery
          */
-        public function be_at_home_delivery_title() {
-            if (isset($this->settings['be_at_home_delivery_title'])) {
-                return $this->settings['be_at_home_delivery_title'];
+        public function belgium_at_home_delivery_title() {
+            if (isset($this->settings['belgium_at_home_delivery_title'])) {
+                return $this->settings['belgium_at_home_delivery_title'];
             }
         }
 
@@ -255,6 +258,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if(isset($this->settings['pickup_express_enabled'])) {
                 return (bool) $this->settings['pickup_express_enabled'];
             }
+            return false;
         }
         /**
          * @return mixed

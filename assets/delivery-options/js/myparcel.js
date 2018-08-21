@@ -23,7 +23,7 @@ MyParcel = {
             isMobile = false;
         }
 
-        /* Title's of the options*/
+        /* Titles of the options*/
         if (MyParcel.data.config.deliveryTitle){
             jQuery('#mypa-delivery-title').html(MyParcel.data.config.deliveryTitle);
         }
@@ -43,7 +43,7 @@ MyParcel = {
             'evening':          this.data.config.priceEveningDelivery,
             'normal':           this.data.config.priceNormalDelivery,
             'signature':        this.data.config.priceSignature,
-            'onlyRecipient':    this.data.config.priceOnlyRecipient,
+            'only-recipient':   this.data.config.priceOnlyRecipient,
             'pickup':           this.data.config.pricePickup
         }
 
@@ -60,13 +60,10 @@ MyParcel = {
     },
 
     showPrices: function (prices) {
-        jQuery('#mypa-morning-delivery').html(MyParcel.getPriceHtml(prices.morning));
-        jQuery('#mypa-evening-delivery').html(MyParcel.getPriceHtml(prices.evening));
-        jQuery('#mypa-normal-delivery').html(MyParcel.getPriceHtml(prices.normal));
-        jQuery('#mypa-signature-price').html(MyParcel.getPriceHtml(prices.signature));
-        jQuery('#mypa-only-recipient-price').html(MyParcel.getPriceHtml(prices.onlyRecipient));
-        jQuery('#mypa-pickup-price').html(MyParcel.getPriceHtml(prices.pickup));
 
+        jQuery.each(prices, function(selectName, price){
+            jQuery('#mypa-' + selectName + '-delivery, #mypa-' + selectName + '-price').html(MyParcel.getPriceHtml(price));
+        });
     },
 
     getPriceHtml: function(priceOfDeliveryOption){
