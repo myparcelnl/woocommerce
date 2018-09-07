@@ -88,6 +88,10 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+= 3.0.0-beta.2 (2018-09-08) =
+* Fix: at home delivery titel
+* Fix: Export Belgium delivery, use the street/number input fields
+
 = 3.0.0 (2018-07-03) =
 * Improvement: checkout v2 implemented
 

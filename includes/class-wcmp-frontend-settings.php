@@ -209,8 +209,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return mixed
          */
         public function at_home_delivery_title() {
-            if (isset($this->settings['signed_title'])) {
-                return $this->settings['signed_title'];
+            if (isset($this->settings['at_home_delivery_title'])) {
+                return $this->settings['at_home_delivery_title'];
             }
         }
 
