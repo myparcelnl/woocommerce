@@ -547,7 +547,7 @@ class WooCommerce_MyParcel_Export {
 		);
     
 		$shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
-		if ( $shipping_country == 'NL' ) {
+		if ( $shipping_country == 'NL' || $shipping_country == 'BE' ) {
 			// use billing address if old 'pakjegemak' (1.5.6 and older)
 			if ( $pgaddress = WCX_Order::get_meta( $order, '_myparcel_pgaddress' ) ) {
 				$billing_name = method_exists($order, 'get_formatted_billing_full_name') ? $order->get_formatted_billing_full_name() : trim( $order->billing_first_name . ' ' . $order->billing_last_name );
