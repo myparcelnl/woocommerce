@@ -816,11 +816,33 @@ msgstr "Alle verzendmethoden"
 msgid ""
 "To associate specific shipping methods with parcels, see the Default export "
 "settings tab. Note that the delivery options will be automatically hidden "
-"for foreign addresses, regardless of this setting"
+"for foreign addresses, regardless of this setting."
 msgstr ""
 "Je kan de bezorgopties aan specifieke verzendmethoden koppelen door deze bij "
 "'Standaard exportinstellingen' aan de pakkettypes toe te voegen. Bij "
 "buitenlandse adressen zijn de bezorgopties niet zichtbaar."
+
+#: includes/class-wcmp-settings.php:647
+msgid "Checkout place"
+msgstr "Bezorgopties positie"
+
+#: includes/class-wcmp-settings.php:655
+msgid "Show checkout options after billing details"
+msgstr "Toon na factuurgegevens"
+
+#: includes/class-wcmp-settings.php:656
+msgid "Show checkout options after shipping details"
+msgstr "Toon na verzendgegevens"
+
+#: includes/class-wcmp-settings.php:657
+msgid "Show checkout options after notes"
+msgstr "Toon na notities"
+
+#: includes/class-wcmp-settings.php:659
+msgid "You can change the place of the checkout options on the checkout page. "
+"By default it will be placed after shipping details."
+msgstr "Hier kan je de positie van de bezorgopties aanpassen. "
+"Standaard staat deze na de factuurgegevens."
 
 #: includes/class-wcmp-settings.php:665
 msgid "PostNL pickup"
