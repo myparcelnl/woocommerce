@@ -473,7 +473,7 @@ class WooCommerce_MyParcel_Export {
             }
             */
 
-            $shipments[] = $shipment;
+            $shipments[] = apply_filters( 'wc_myparcel_order_shipment', $shipment, $order, $type, $this );
         }
 
         return $shipments;
