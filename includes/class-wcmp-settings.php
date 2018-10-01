@@ -988,11 +988,11 @@ class WooCommerce_MyParcel_Settings {
 				break;
 			case 'woocommerce_myparcel_checkout_settings':
 				$default = array (
-				    'checkout_position'=> 'woocommerce_after_checkout_billing_form',
 					'pickup_enabled' => '0',
 					'dropoff_days' => array ( 1,2,3,4,5 ),
 					'dropoff_delay' => '0',
 					'deliverydays_window' => '1',
+                    'checkout_position'=> 'woocommerce_after_checkout_billing_form',
                     'at_home_delivery_title' => 'Thuis of op het werk bezorgd',
                     'standard_title'=> 'Standaard levering',
                     'only_recipient_title' => 'Alleen huisadres',
