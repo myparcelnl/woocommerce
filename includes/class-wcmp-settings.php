@@ -650,7 +650,7 @@ class WooCommerce_MyParcel_Settings {
             'processing_parameters',
             array(
 	            'option_name'   => $option_name,
-                'id'            => 'checkout_place',
+                'id'            => 'checkout_position',
                 'options'       => array(
 	                'woocommerce_after_checkout_billing_form'   => __( 'Show checkout options after billing details' , 'woocommerce-myparcel' ),
 	                'woocommerce_after_checkout_shipping_form'  => __( 'Show checkout options after shipping details' , 'woocommerce-myparcel' ),
@@ -982,16 +982,25 @@ class WooCommerce_MyParcel_Settings {
 		switch ( $option ) {
 			case 'woocommerce_myparcel_general_settings':
 				$default = array(
-
+                    'download_display'=> 'download',
+                    'label_format'=> 'A4',
 				);
 				break;
 			case 'woocommerce_myparcel_checkout_settings':
 				$default = array (
-					'pickup_enabled' => '1',
+				    'checkout_position'=> 'woocommerce_after_checkout_billing_form',
+					'pickup_enabled' => '0',
 					'dropoff_days' => array ( 1,2,3,4,5 ),
 					'dropoff_delay' => '0',
 					'deliverydays_window' => '1',
-				);
+                    'at_home_delivery_title' => 'Thuis of op het werk bezorgd',
+                    'standard_title'=> 'Standaard levering',
+                    'only_recipient_title' => 'Alleen huisadres',
+                    'signed_title' => 'Handtekeing voor ontvangst',
+                    'pickup_title' => 'Afhalen bij een PostNL punt',
+                    'belgium_at_home_delivery_title' => 'Bezorgen',
+                    'belgium_standard_title' => 'Standaard levering',
+                );
 				break;
 			case 'woocommerce_myparcel_export_defaults_settings':
 			default:

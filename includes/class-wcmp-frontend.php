@@ -48,7 +48,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             // Delivery options
             if (isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout'])) {
                 // Change the position of the checkout
-                $checkout_place  = WooCommerce_MyParcel()->checkout_settings['checkout_place'];
+                $checkout_place  = WooCommerce_MyParcel()->checkout_settings['checkout_position'];
                 add_action( apply_filters( 'wc_myparcel_delivery_options_location', $checkout_place ), array( $this, 'output_delivery_options' ), 10, 1 );
             }
 
