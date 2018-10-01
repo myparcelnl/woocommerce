@@ -982,8 +982,8 @@ class WooCommerce_MyParcel_Settings {
 		switch ( $option ) {
 			case 'woocommerce_myparcel_general_settings':
 				$default = array(
-                    'download_display'=> 'download',
-                    'label_format'=> 'A4',
+					'download_display'=> 'download',
+					'label_format'=> 'A4',
 				);
 				break;
 			case 'woocommerce_myparcel_checkout_settings':
@@ -992,15 +992,15 @@ class WooCommerce_MyParcel_Settings {
 					'dropoff_days' => array ( 1,2,3,4,5 ),
 					'dropoff_delay' => '0',
 					'deliverydays_window' => '1',
-                    'checkout_position'=> 'woocommerce_after_checkout_billing_form',
-                    'at_home_delivery_title' => 'Thuis of op het werk bezorgd',
-                    'standard_title'=> 'Standaard levering',
-                    'only_recipient_title' => 'Alleen huisadres',
-                    'signed_title' => 'Handtekeing voor ontvangst',
-                    'pickup_title' => 'Afhalen bij een PostNL punt',
-                    'belgium_at_home_delivery_title' => 'Bezorgen',
-                    'belgium_standard_title' => 'Standaard levering',
-                );
+					'checkout_position'=> 'woocommerce_after_checkout_billing_form',
+					'at_home_delivery_title' => 'Thuis of op het werk bezorgd',
+					'standard_title'=> 'Standaard levering',
+					'only_recipient_title' => 'Alleen huisadres',
+					'signed_title' => 'Handtekeing voor ontvangst',
+					'pickup_title' => 'Afhalen bij een PostNL punt',
+					'belgium_at_home_delivery_title' => 'Bezorgen',
+					'belgium_standard_title' => 'Standaard levering',
+				);
 				break;
 			case 'woocommerce_myparcel_export_defaults_settings':
 			default:
