@@ -629,7 +629,7 @@ class WooCommerce_MyParcel_Settings {
                     'selected_methods'	=> __( 'Shipping methods associated with Parcels' , 'woocommerce-myparcel' ),
                     'all_methods'		=> __( 'All shipping methods' , 'woocommerce-myparcel' ),
                 ),
-                'description'	=> __( 'To associate specific shipping methods with parcels, see the Default export settings tab. Note that the delivery options will be automatically hidden for foreign addresses, regardless of this setting', 'woocommerce-myparcel' ),
+                'description'	=> __( 'To associate specific shipping methods with parcels, see the Default export settings tab. Note that the delivery options will be automatically hidden for foreign addresses, regardless of this setting.', 'woocommerce-myparcel' ),
             )
         );
 
@@ -639,6 +639,25 @@ class WooCommerce_MyParcel_Settings {
             __( 'Shipment processing parameters', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'section' ),
             $option_group
+        );
+
+        // Place of the checkout
+        add_settings_field(
+	        'checkout_place',
+            __( 'Checkout place', 'woocommerce-myparcel'),
+            array( $this->callbacks, 'select' ),
+            $option_group,
+            'processing_parameters',
+            array(
+	            'option_name'   => $option_name,
+                'id'            => 'checkout_position',
+                'options'       => array(
+	                'woocommerce_after_checkout_billing_form'   => __( 'Show checkout options after billing details' , 'woocommerce-myparcel' ),
+	                'woocommerce_after_checkout_shipping_form'  => __( 'Show checkout options after shipping details' , 'woocommerce-myparcel' ),
+	                'woocommerce_after_order_notes'             => __( 'Show checkout options after notes' , 'woocommerce-myparcel' ),
+                ),
+                'description'   => __( 'You can change the place of the checkout options on the checkout page. By default it will be placed after shipping details.', 'woocommerce-myparcel'),
+            )
         );
 
         $days_of_the_week = array(
@@ -963,15 +982,24 @@ class WooCommerce_MyParcel_Settings {
 		switch ( $option ) {
 			case 'woocommerce_myparcel_general_settings':
 				$default = array(
-
+					'download_display'=> 'download',
+					'label_format'=> 'A4',
 				);
 				break;
 			case 'woocommerce_myparcel_checkout_settings':
 				$default = array (
-					'pickup_enabled' => '1',
+					'pickup_enabled' => '0',
 					'dropoff_days' => array ( 1,2,3,4,5 ),
 					'dropoff_delay' => '0',
 					'deliverydays_window' => '1',
+					'checkout_position'=> 'woocommerce_after_checkout_billing_form',
+					'at_home_delivery_title' => 'Thuis of op het werk bezorgd',
+					'standard_title'=> 'Standaard levering',
+					'only_recipient_title' => 'Alleen huisadres',
+					'signed_title' => 'Handtekeing voor ontvangst',
+					'pickup_title' => 'Afhalen bij een PostNL punt',
+					'belgium_at_home_delivery_title' => 'Bezorgen',
+					'belgium_standard_title' => 'Standaard levering',
 				);
 				break;
 			case 'woocommerce_myparcel_export_defaults_settings':
