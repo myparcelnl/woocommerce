@@ -41,6 +41,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['only_recipient_enabled'])) {
                 return $this->settings['only_recipient_enabled'] ? 1 : 0;
             }
+            return 0;
         }
 
         /**
@@ -77,6 +78,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['signed_enabled'])) {
                 return $this->settings['signed_enabled'] ? 1 : 0;
             }
+            return 0;
         }
 
         /**
@@ -86,6 +88,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['signed_title'])) {
                 return $this->settings['signed_title'];
             }
+            return 0;
         }
         /**
          * @return string
@@ -112,6 +115,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['morning_enabled'])) {
                 return $this->settings['morning_enabled'] ? 1 : 0;
             }
+            return 0;
         }
 
         /**
@@ -176,6 +180,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['night_enabled'])) {
                 return $this->settings['night_enabled'] ? 1 : 0;
             }
+            return 0;
         }
 
         /**
@@ -301,6 +306,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['saturday_cutoff_enabled'])) {
                 return $this->settings['saturday_cutoff_enabled'] ? 1 : 0;
             }
+            return 0;
         }
 
         /**
