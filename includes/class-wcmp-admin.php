@@ -528,7 +528,7 @@ class WooCommerce_MyParcel_Admin {
 			array( 
 				'id'          => '_myparcel_hs_code',
 				'label'       => __( 'HS Code', 'woocommerce-myparcel' ),
-				'description' => sprintf( __( 'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcel' ), '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>' ),
+				'description' => sprintf( __( 'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcel' ), '<a href="http://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">', '</a>' ),
 				// 'desc_tip'    => true,
 			)
 		);  
