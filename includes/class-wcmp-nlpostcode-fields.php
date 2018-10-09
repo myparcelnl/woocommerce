@@ -124,7 +124,7 @@ class WC_NLPostcode_Fields {
 				wp_enqueue_script( 'nl-account-page' );
 			}
 
-			wp_enqueue_style( 'nl-checkout', WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout.css' );
+			wp_enqueue_style( 'nl-checkout', WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout.css?MP=' . WC_MYPARCEL_VERSION);
 		}
 
 	}
