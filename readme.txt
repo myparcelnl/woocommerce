@@ -88,12 +88,28 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
-= 3.0.0-beta.2 (2018-09-08) =
-* Fix: at home delivery titel
-* Fix: Export Belgium delivery, use the street/number input fields
 
-= 3.0.0 (2018-07-03) =
-* Improvement: checkout v2 implemented
+= 3.0.0 (2018-10-09) =
+Changes:
+* The whole checkout has a new look. A choice has been made to go back to the basic checkout. The checkout is designed so that he will take the styling of the website.
+
+These are the biggest changes:
+* No use of libraries (only jQuery)
+* No iframe is used
+* The checkout is more stable
+* Easier to implement improvements
+
+Fix:
+* Use street and house number fields for export a Belgium order
+* The at home or at work delivery title inside the checkout
+* The default settings
+
+Improvement:
+* The option to change the position of the checkout (edited)
+
+= 3.0.0-beta.2 (2018-09-08) =
+* Fix: at home delivery title
+* Fix: Export Belgium delivery, use the street/number input fields
 
 = 2.4.14 (2018-07-03) =
 * Fix: Select the correct package type inside admin when there is one shipping used.
@@ -115,7 +131,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Improvement: Support Effect Connect, you can place the barcode inside a note of the order
 
 = 2.4.9 (2018-04-03) =
-* Fix: Scrolling when changing package type in orderview 
+* Fix: Scrolling when changing package type in orderview
 * Fix: Select the correct delivery methode inside the checkout
 * Improvement: Support Cloudflare
 
@@ -151,7 +167,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 = 2.4.1 (2017-10-12) =
 * Fix: WooCommerce 3.2 compatibility
 
-= 2.4.0 (2017-09-25) = 
+= 2.4.0 (2017-09-25) =
 * Feature: Export world shipments + customs declaration form
 * Feature: Show delivery options on thank you page
 * Feature: Use WC logger when possible
@@ -327,7 +343,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: Big exports now run without any warnings/problems (was limited by the server)
 * Fix: Names, cities etc. with quotes (')
 * Fix: Error on combined foreign & Dutch exports
-* Fix: IE9 compatibility 
+* Fix: IE9 compatibility
 
 = 1.3.7 =
 * Fix: Checkout placeholder data was being saved in older versions of Internet Explorer
@@ -381,4 +397,3 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 == Upgrade Notice ==
 = 2.1 =
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
-
