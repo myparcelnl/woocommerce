@@ -48,7 +48,12 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             // Delivery options
             if (isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout'])) {
                 // Change the position of the checkout
-                $checkout_place  = WooCommerce_MyParcel()->checkout_settings['checkout_position'];
+                if ( isset( WooCommerce_MyParcel()->checkout_settings['checkout_position'] ) ) {
+                    $checkout_place  = WooCommerce_MyParcel()->checkout_settings['checkout_position'];
+                } else {
+                    $checkout_place  = 'woocommerce_after_checkout_billing_form';
+                }
+
                 add_action( apply_filters( 'wc_myparcel_delivery_options_location', $checkout_place ), array( $this, 'output_delivery_options' ), 10, 1 );
             }
 
