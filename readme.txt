@@ -111,7 +111,6 @@ Improvement:
 * Fix: at home delivery title
 * Fix: Export Belgium delivery, use the street/number input fields
 
-= 3.0.0 (2018-07-03) =
 = 2.4.14 (2018-07-03) =
 * Fix: Select the correct package type inside admin when there is one shipping used.
 
