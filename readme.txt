@@ -3,7 +3,7 @@ Contributors: richardperdaan
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9.5
-Stable tag: 3.0.0
+Stable tag: 3.0.2
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -88,6 +88,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+
+= 3.0.2 (2018-10-09) =
+Fix:
+* Error a non-numeric value encountered in class-wcmp-frontend-settings.php
+* Notice Undefined index: checkout_position
+* Add version number after the nl-checkout.css call
 
 = 3.0.0 (2018-10-09) =
 Changes:
