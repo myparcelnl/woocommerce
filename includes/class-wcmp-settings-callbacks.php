@@ -4,6 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 if ( !class_exists( 'WooCommerce_MyParcel_Settings_Callbacks' ) ) :
 
 class WooCommerce_MyParcel_Settings_Callbacks {
+
+    const extra_width_for_number_input = 200;
+    const steps_number_input_fields = "0.01";
+
 	/**
 	 * Section null callback.
 	 *
@@ -51,21 +55,22 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 	 */
 	public function text_input( $args ) {
 		extract( $this->normalize_settings_args( $args ) );
-		// echo '<pre>';var_dump($this->normalize_settings_args( $args ));echo '</pre>';
 		if (empty($type)) {
 			$type = 'text';
 		}
 
 		if ($type == 'number') {
-			$width = ($size * 10) + 25;
+			$width = ($size) + self::extra_width_for_number_input;
 			$style = "width: {$width}px";
+			$step = self::steps_number_input_fields;
 		} else {
 			$style = '';
+            $step = '';
 		}
 
-		printf( '<input type="%1$s" id="%2$s" name="%3$s" value="%4$s" size="%5$s" placeholder="%6$s" class="%7$s" style="%8$s"/>', $type, $id, $setting_name, $current, $size, $placeholder, $class, $style );
-	
-		// output description.
+        printf( '<input type="%1$s" id="%2$s" name="%3$s" value="%4$s" size="%5$s" step="%6$s" placeholder="%7$s" class="%8$s" style="%9$s"/>', $type, $id, $setting_name, $current, $size, $step, $placeholder, $class, $style );
+
+        // output description.
 		if ( isset( $description ) ) {
 			printf( '<p class="description">%s</p>', $description );
 		}
@@ -85,7 +90,6 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 	 */
 	public function color_picker( $args ) {
 		extract( $this->normalize_settings_args( $args ) );
-		// echo '<pre>';var_dump($this->normalize_settings_args( $args ));echo '</pre>';
 
 		printf( '<input type="text" id="%1$s" name="%2$s" value="%3$s" size="%4$s" class="wcmp-color-picker %5$s"/>', $id, $setting_name, $current, $size, $class );
 	
@@ -262,8 +266,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		// get shipping methods
 		$available_shipping_methods = array();
 		$shipping_methods = WC()->shipping->load_shipping_methods();
-		// echo '<pre>';var_dump($shipping_methods);echo '</pre>';
-	
+
 		if ( $shipping_methods ) {
 			foreach ( $shipping_methods as $key => $shipping_method ) {
 				// Automattic / WooCommerce Table Rate Shipping
@@ -319,9 +322,9 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 					}
 					continue;
 				}
-
-				$method_title = !empty($shipping_methods[$key]->method_title) ? $shipping_methods[$key]->method_title : $shipping_methods[$key]->title;
+                $method_title = !empty($shipping_methods[$key]->method_title) ? $shipping_methods[$key]->method_title : $shipping_methods[$key]->title;
 				$available_shipping_methods[ $key ] = $method_title;
+
 
 				// split flat rate by shipping class
 				if ( ( $key == 'flat_rate' || $key == 'legacy_flat_rate' ) && version_compare( WOOCOMMERCE_VERSION, '2.4', '>=' ) ) {
@@ -390,30 +393,46 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		// number (fee)
 		$fee_args = array(
 			'id'			=> "{$id}_fee",
-			'type'			=> 'text',
-			'size'			=> '5',
+			'type'			=> 'number',
 		);
+        // number (cutoff time)
+        $cutoff_time_args = array(
+            'id'			=> "{$id}_time",
+            'type'			=> 'text',
+        );
 		// textarea (description)
-		$description_args = array(
-			'id'			=> "{$id}_description",
+		$default_delivery_text = array(
+			'id'			=> "{$id}_title",
 			'type'			=> 'text',
-			'size'			=> '60',
 		);
-
 
 		?>
 		<?php $this->checkbox( array_merge( $args, $cb_args ) ); ?><br/>
 		<table class="wcmp_delivery_option_details">
-			<!--
-			<tr>
-				<td><?php _e( 'Description', 'woocommerce-myparcel' )?>:</td>
-				<td><?php $this->text_input( array_merge( $args, $description_args ) ); ?></td>
-			</tr>
-			!-->
-			<tr>
-				<td><?php _e( 'Additional fee (ex VAT, optional)', 'woocommerce-myparcel' )?>:</td>
-				<td>&euro; <?php $this->text_input( array_merge( $args, $fee_args ) ); ?></td>
-			</tr>
+            <?php if ($args['has_title']):?>
+                <tr>
+                    <td style="min-width: 215px;"><?php _e( $args['title'].' title', 'woocommerce-myparcel' ) ?>:</td>
+                    <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input( array_merge( $args, $default_delivery_text ) )?></td>
+                </tr>
+			<?php endif; ?>
+            <?php if (isset($args['has_cutoff_time'])):?>
+                <tr>
+                    <td><?php _e( 'Cut-off time for monday delivery', 'woocommerce-myparcel' )?>:</td>
+                    <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input( array_merge( $args, $cutoff_time_args ) ); ?></td>
+                </tr>
+            <?php endif; ?>
+            <?php if (isset($args['has_price'])):?>
+                <tr>
+                    <td><?php _e( 'Additional fee (ex VAT, optional)', 'woocommerce-myparcel' )?>:</td>
+                    <td>&euro; <?php $this->text_input( array_merge( $args, $fee_args ) ); ?></td>
+                </tr>
+			<?php endif; ?>
+            <?php if (isset($args['option_description'])):?>
+                <tr>
+                    <td colspan="2"><p class="description"><?php _e( $args['option_description'] ) ?></p></td>
+                </tr>
+            <?php endif; ?>
+
 		</table>
 		<?php
 	}
@@ -422,8 +441,6 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 	public function delivery_options_table( $args ) {
 		extract( $this->normalize_settings_args( $args ) );
 		?>
-		<table>
-
 		<table>
 			<thead>
 				<tr>

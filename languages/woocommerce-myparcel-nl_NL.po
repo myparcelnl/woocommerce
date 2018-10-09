@@ -81,6 +81,12 @@ msgstr "Ochtendlevering"
 msgid "Evening delivery"
 msgstr "Avondlevering"
 
+#: includes/class-wcmp-settings.php:750
+#: includes/class-wcmp-settings.php:768
+#: includes/class-wcmp-settings.php:786
+msgid "When there is no title, the delivery time will automatically be visible."
+msgstr "Wanneer er geen titel is ingevuld, worden de bezorgtijden automatisch zichtbaar."
+
 #: includes/class-wcmp-admin.php:407
 msgid "Delivery date"
 msgstr "Bezorgdatum"
@@ -490,7 +496,7 @@ msgid "Place the barcode inside a note of the order"
 msgstr "Plaats de barcode in een notitie van een order"
 
 #: includes/class-wcmp-settings.php:264
-msgid "Titel before the barcode"
+msgid "Title before the barcode"
 msgstr "Titel voor de barcode"
 
 #: includes/class-wcmp-settings.php:264
@@ -733,12 +739,66 @@ msgid "Return shipment"
 msgstr "Retourzending"
 
 #: includes/class-wcmp-settings.php:580
+msgid "Home delivery title"
+msgstr "Thuis bezorgtitel"
+
+
+#: includes/class-wcmp-settings.php:580
+msgid "Standard delivery title"
+msgstr "Standaard bezorgtitel"
+
+#: includes/class-wcmp-settings.php:580
+msgid "Delivered at home or at work"
+msgstr "Thuis of op het werk bezorgd"
+
+#: includes/class-wcmp-settings.php:580
 msgid "Delivery options"
 msgstr "Bezorgopties"
+
+#: includes/class-wcmp-settings.php:731
+msgid "Delivery"
+msgstr "Bezorgen"
+
+#: includes/class-wcmp-settings.php:723
+msgid "Home delivery title"
+msgstr "Thuislevering titel"
+
+#: includes/class-wcmp-settings.php:740
+msgid "Default delivery title"
+msgstr "Standaard bezorgtitel"
+
+#: includes/class-wcmp-settings.php:750
+msgid "Morning delivery title"
+msgstr "Ochtendlevering titel"
+
+#: includes/class-wcmp-settings.php:760
+msgid "Evening delivery title"
+msgstr "Avondlevering titel"
+
+#: includes/class-wcmp-settings.php:770
+msgid "Home address only title"
+msgstr "Alleen huisadres titel"
+
+#: includes/class-wcmp-settings.php:780
+msgid "Signature on delivery title"
+msgstr "Handtekening voor ontvangst titel"
+
+#: includes/class-wcmp-settings.php:790
+msgid "Pickup title"
+msgstr "Afhalen bij PostNL titel"
+
+#: includes/class-wcmp-settings.php:800
+msgid "Pickup express title"
+msgstr "Extra vroeg afhalen bij PostNL titel"
+
 
 #: includes/class-wcmp-settings.php:588
 msgid "Enable MyParcel delivery options"
 msgstr "MyParcel bezorgopties inschakelen"
+
+#: includes/class-wcmp-settings.php:588
+msgid "When there is no titel, the delivery time will automatically be visible."
+msgstr "Wanneer er geen titel is ingevuld worden de bezorgtijden automatisch zichtbaar."
 
 #: includes/class-wcmp-settings.php:600
 msgid "Display for"
@@ -756,15 +816,41 @@ msgstr "Alle verzendmethoden"
 msgid ""
 "To associate specific shipping methods with parcels, see the Default export "
 "settings tab. Note that the delivery options will be automatically hidden "
-"for foreign addresses, regardless of this setting"
+"for foreign addresses, regardless of this setting."
 msgstr ""
 "Je kan de bezorgopties aan specifieke verzendmethoden koppelen door deze bij "
 "'Standaard exportinstellingen' aan de pakkettypes toe te voegen. Bij "
 "buitenlandse adressen zijn de bezorgopties niet zichtbaar."
 
+#: includes/class-wcmp-settings.php:647
+msgid "Checkout place"
+msgstr "Bezorgopties positie"
+
+#: includes/class-wcmp-settings.php:655
+msgid "Show checkout options after billing details"
+msgstr "Toon na factuurgegevens"
+
+#: includes/class-wcmp-settings.php:656
+msgid "Show checkout options after shipping details"
+msgstr "Toon na verzendgegevens"
+
+#: includes/class-wcmp-settings.php:657
+msgid "Show checkout options after notes"
+msgstr "Toon na notities"
+
+#: includes/class-wcmp-settings.php:659
+msgid "You can change the place of the checkout options on the checkout page. "
+"By default it will be placed after shipping details."
+msgstr "Hier kan je de positie van de bezorgopties aanpassen. "
+"Standaard staat deze na de factuurgegevens."
+
 #: includes/class-wcmp-settings.php:665
 msgid "PostNL pickup"
 msgstr "Afhalen bij PostNL"
+
+#: includes/class-wcmp-settings.php:850
+msgid "Pick up at PostNL location"
+msgstr "Afhalen bij PostNL punt"
 
 #: includes/class-wcmp-settings.php:677
 msgid "Early PostNL pickup"
@@ -825,16 +911,16 @@ msgid "Dropoff delay"
 msgstr "Verwerkingstijd"
 
 #: includes/class-wcmp-settings.php:745
-msgid "Number of days you take to process an order"
-msgstr "Aantal dagen dat u nodig heeft om een order te verwerken"
+msgid "Number of days you need to process an order."
+msgstr "Aantal dagen dat u nodig heeft om een order te verwerken."
 
 #: includes/class-wcmp-settings.php:751
 msgid "Delivery days window"
 msgstr "Leverdagen venster"
 
 #: includes/class-wcmp-settings.php:760
-msgid "Number of days you allow the customer to postpone a shipment"
-msgstr "Aantal dagen dat een klant een zending kan uitstellen"
+msgid "Number of days you allow the customer to postpone a shipment. By default this is 0 and max. is 14."
+msgstr "Aantal dagen dat een klant een zending kan uitstellen. Standaard zijn dit 0 dagen met een maximum van 14 dagen."
 
 #: includes/class-wcmp-settings.php:766
 msgid "Enable monday delivery"
@@ -844,6 +930,10 @@ msgstr "Maandaglevering inschakelen"
 msgid "Cut-off time for monday delivery"
 msgstr "Sluitingstijd voor maandaglevering"
 
+#: includes/class-wcmp-settings.php:778
+msgid "More information about the Monday delivery of PostNL can be found <a href="%s" target="_blank">here</a>."
+msgstr "Meer informatie over de maandaglevering van PostNL is <a href="%s" target="_blank">hier</a> te vinden."
+
 #: includes/class-wcmp-settings.php:787
 msgid ""
 "Time at which you stop processing orders on saturday for monday delivery "
@@ -851,6 +941,19 @@ msgid ""
 msgstr ""
 "Het tijdstip waarop u op zaterdag stopt met het verwerken van bestellingen "
 "voor maandaglevering (format: uu:mm)"
+
+#: includes/class-wcmp-settings.php:878
+msgid "Belgium delivery options"
+msgstr "België bezorgopties"
+
+
+#: includes/class-wcmp-settings.php:885
+msgid "Belgium home delivery title"
+msgstr "België thuislevering titel"
+
+#: includes/class-wcmp-settings.php:900
+msgid "Belgium standard delivery title"
+msgstr "België standaard bezorgtitel"
 
 #: includes/class-wcmp-settings.php:794
 msgid "Customizations"
@@ -875,10 +978,6 @@ msgstr "Kleur van de selecties/highlights (standaardkleur: oranje)"
 #: includes/class-wcmp-settings.php:830
 msgid "Custom styles"
 msgstr "Aangepaste stijlen (CSS)"
-
-#: includes/class-wcmp-settings.php:844
-msgid "Automatically load Google fonts"
-msgstr "Google lettertypen automatisch laden"
 
 #: includes/compatibility/class-wc-core-compatibility.php:222
 msgid "WooCommerce"

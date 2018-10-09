@@ -8,8 +8,6 @@ jQuery( function( $ ) {
 	// reference jQuery for MyParcel iFrame
 	window.mypajQuery = $;
 	
-	// replace iframe placeholder with actual iframe
-	$('.myparcel-iframe-placeholder').replaceWith( '<iframe id="myparcel-iframe" src="" frameborder="0" scrolling="auto" style="width: 100%; display: none;">Bezig met laden...</iframe>');
 	// show if we have to
 	if ( window.myparcel_initial_hide == false ) {
 		$('#myparcel-iframe').show();
@@ -28,7 +26,6 @@ jQuery( function( $ ) {
 	window.MyPaSetHeight = function() {
 		setTimeout(function () {
 			var iframeheight = MyPaWindow.document.body.scrollHeight;
-			// console.log(iframeheight);
 			$('#myparcel-iframe').height(iframeheight);
 		}, 500);
 
@@ -66,10 +63,11 @@ jQuery( function( $ ) {
 	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {
 		window.myparcel_checkout_updating = false; //done updating
-		if ( typeof window.myparcel_delivery_options_always_display !== 'undefined' && window.myparcel_delivery_options_always_display == 'yes') {
+
+		if ( typeof myparcel_delivery_options_always_display !== 'undefined' && myparcel_delivery_options_always_display == 'yes') {
 			show_myparcel_delivery_options();
-		} else if ( window.myparcel_delivery_options_shipping_methods.length > 0 ) {
-			// check if shipping is user choice or fixed
+		} else if ( myparcel_delivery_options_shipping_methods.length > 0 ) {
+            // check if shipping is user choice or fixed
 			if ( $( '#order_review .shipping_method' ).length > 1 ) {
 				var shipping_method = $( '#order_review .shipping_method:checked').val();
 			} else {
@@ -104,17 +102,17 @@ jQuery( function( $ ) {
 			if ( shipping_class && $.inArray(shipping_method_class, window.myparcel_delivery_options_shipping_methods) > -1 ) {
 				window.myparcel_updated_shipping_method = shipping_method_class;
 				show_myparcel_delivery_options();
-				window.myparcel_selected_shipping_method = shipping_method_class;
-			} else if ( $.inArray(shipping_method, window.myparcel_delivery_options_shipping_methods) > -1 ) {
+				myparcel_selected_shipping_method = shipping_method_class;
+			} else if ( $.inArray(shipping_method, myparcel_delivery_options_shipping_methods) > -1 ) {
 				// fallback to bare method if selected in settings
-				window.myparcel_updated_shipping_method = shipping_method;
+				myparcel_updated_shipping_method = shipping_method;
 				show_myparcel_delivery_options();
-				window.myparcel_selected_shipping_method = shipping_method;
+				myparcel_selected_shipping_method = shipping_method;
 			} else {
 				shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
-				window.myparcel_updated_shipping_method = shipping_method_now;
+				myparcel_updated_shipping_method = shipping_method_now;
 				hide_myparcel_delivery_options();
-				window.myparcel_selected_shipping_method = shipping_method_now;
+				myparcel_selected_shipping_method = shipping_method_now;
 			}
 		} else {
 			// not sure if we should already hide by default?
@@ -172,11 +170,6 @@ jQuery( function( $ ) {
 		jQuery('body').trigger('update_checkout');
 	});
 
-	// pickup location selected
-	// $('#mypa-location-container').on('change', 'input[type=radio]', function() {
-	// 	var pickup_location = $( this ).val();
-	// });
-	// 
 	function get_settings() {
 		if (typeof window.mypa != 'undefined' && typeof window.mypa.settings != 'undefined') {
 			return window.mypa.settings;
@@ -187,11 +180,8 @@ jQuery( function( $ ) {
 
 	function check_country() {
 		country = get_shipping_country();
-		if (country != 'NL') {
+		if (country != 'NL' && country != 'BE') {
 			hide_myparcel_delivery_options();
-		} else {
-			$( '#myparcel-iframe' ).show();
-			$( '#mypa-options-enabled' ).prop('checked', true);
 		}
 	}
 
@@ -206,12 +196,9 @@ jQuery( function( $ ) {
 	}
 
 	function hide_myparcel_delivery_options() {
-		$( '#myparcel-iframe' ).hide();
-		$( '#mypa-options-enabled' ).prop('checked', false);
+	    MyParcel.hideAllDeliveryOptions();
 		// clear delivery options
 		if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
-			$( '#mypa-chosen-delivery-options #mypa-input' ).val('');
-			$( '#mypa-chosen-delivery-options :checkbox' ).prop('checked', false);
 			jQuery('body').trigger('update_checkout');
 		}
 	}
@@ -219,8 +206,9 @@ jQuery( function( $ ) {
 	function show_myparcel_delivery_options() {
 		// show only if NL
 		check_country();
-		if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
-			update_myparcel_settings();
+
+        if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
+            MyParcel.showAllDeliveryOptions();
 		}
 	}
 

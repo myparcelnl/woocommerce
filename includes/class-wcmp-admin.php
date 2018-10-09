@@ -49,7 +49,6 @@ class WooCommerce_MyParcel_Admin {
 		$style = $hide ? 'style="display:none"' : '';
 		// if we have shipments, then we show status & link to track&trace, settings under i
 		if ( !empty( $consignments ) )  {
-			// echo '<pre>';var_dump($consignments);echo '</pre>';die();
 			// only use last shipment
 			$last_shipment = array_pop( $consignments );
 			$last_shipment_id = $last_shipment['shipment_id'];
@@ -358,7 +357,6 @@ class WooCommerce_MyParcel_Admin {
 		$consignments = $this->get_order_shipments( $order );
 		// show shipments if available
 		if ( !empty( $consignments ) )  {
-			// echo '<pre>';var_dump($consignments);echo '</pre>';die();
 			?>
 			<table class="tracktrace_status">
 				<thead>
@@ -530,7 +528,7 @@ class WooCommerce_MyParcel_Admin {
 			array( 
 				'id'          => '_myparcel_hs_code',
 				'label'       => __( 'HS Code', 'woocommerce-myparcel' ),
-				'description' => sprintf( __( 'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcel' ), '<a href="http://tarief.douane.nl/tariff/index.jsf" target="_blank">', '</a>' ),
+				'description' => sprintf( __( 'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcel' ), '<a href="http://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">', '</a>' ),
 				// 'desc_tip'    => true,
 			)
 		);  

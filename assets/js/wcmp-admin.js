@@ -1,54 +1,54 @@
 jQuery( function( $ ) {
-	// enable color picker
+	/* enable color picker */
 	$('.wcmp-color-picker').wpColorPicker();
 
-	// move shipment options to 'Ship to' column
+	/* move shipment options to 'Ship to' column */
 	$('.wp-list-table .wcmp_shipment_options, .wp-list-table .wcmp_shipment_summary').each( function( index ) {
 		var $ship_to_column = $( this ).closest('tr').find('td.shipping_address');
 		$( this ).appendTo( $ship_to_column );
-		// hidden by default - make visible
+		/* hidden by default - make visible */
 		$( this ).show();
 	});
 
-	// disable ALL shipment options form fiels to avoid conflicts with order search field
+	/* disable ALL shipment options form fiels to avoid conflicts with order search field */
 	$('.wp-list-table .wcmp_shipment_options_form :input').prop('disabled', true);
 
-	// show and enable options when clicked
+	/* show and enable options when clicked */
 	$('.wcmp_show_shipment_options').click( function ( event ) {
 		event.preventDefault();
 		$form = $( this ).next('.wcmp_shipment_options_form');
 		if( $form.is(':visible') ) {
-			// disable all input fields again
+			/* disable all input fields again */
 			$form.find(':input').prop('disabled', true);
-			// hide form
+			/* hide form */
 			$form.slideUp();
 		} else {
-			// enable all fields on this form
+			/* enable all fields on this form */
 			$form.find(':input').prop('disabled', false);
-			// set init states according to change events
+			/* set init states according to change events */
 			$form.find(':input').change();
-			// show form
+			/* show form */
 			$form.slideDown();
 		}
 	});
-	// hide options form when click outside
+	/* hide options form when click outside */
 	$(document).click(function(event) {
 		if(!$(event.target).closest('.wcmp_shipment_options_form').length) {
 			if( !( $(event.target).hasClass('wcmp_show_shipment_options') || $(event.target).parent().hasClass('wcmp_show_shipment_options') ) && $('.wcmp_shipment_options_form').is(":visible")) {
-				// disable all input fields again
+				/* disable all input fields again */
 				$('.wcmp_shipment_options_form :input').prop('disabled', true);
-				// hide form
+				/* hide form */
 				$('.wcmp_shipment_options_form').slideUp();
 			}
 		}
 	})
 
-	// show summary when clicked
+	/* show summary when clicked */
 	$('.wcmp_show_shipment_summary').click( function ( event ) {
 		event.preventDefault();
 		$summary_list = $( this ).next('.wcmp_shipment_summary_list');
 		if ($summary_list.is(":visible") || $summary_list.data('loaded') != '') {
-			// just open / close
+			/* just open / close */
 			$summary_list.slideToggle();
 		} else if ($summary_list.is(":hidden") && $summary_list.data('loaded') == '') {
 			$summary_list.addClass('ajax-waiting');
@@ -75,7 +75,7 @@ jQuery( function( $ ) {
 		}
 
 	});
-	// hide summary when click outside
+	/* hide summary when click outside */
 	$(document).click(function(event) {
 		if(!$(event.target).closest('.wcmp_shipment_summary_list').length) {
 			if( !( $(event.target).hasClass('wcmp_show_shipment_summary') || $(event.target).parent().hasClass('wcmp_shipment_summary') ) && $('.wcmp_shipment_summary_list').is(":visible")) {
@@ -85,7 +85,7 @@ jQuery( function( $ ) {
 		}
 	})
 
-	// hide automatic order status if automation not enabled
+	/* hide automatic order status if automation not enabled */
 	$('.wcmp_shipment_options input#order_status_automation').change(function () {
         var order_status_select = $( '.wcmp_shipment_options select.automatic_order_status');
 		if (this.checked) {
@@ -97,20 +97,20 @@ jQuery( function( $ ) {
 		}
 	});
 
-    // hide automatic barcode in note titel if barcode in note is not enabled
+    /* hide automatic barcode in note title if barcode in note is not enabled */
     $('.wcmp_shipment_options input#barcode_in_note').change(function () {
-        var barcode_in_note_select = $( '.wcmp_shipment_options select.barcode_in_note_titel');
+        var barcode_in_note_select = $( '.wcmp_shipment_options select.barcode_in_note_title');
         if (this.checked) {
             $( barcode_in_note_select ).prop('disabled', false);
-            $( '.wcmp_shipment_options tr.barcode_in_note_titel').show();
+            $( '.wcmp_shipment_options tr.barcode_in_note_title').show();
         } else {
             $( barcode_in_note_select ).prop('disabled', true);
-            $( '.wcmp_shipment_options tr.barcode_in_note_titel').hide();
+            $( '.wcmp_shipment_options tr.barcode_in_note_title').hide();
         }
     });
 
 
-	// select > 500 if insured amount input is >499
+	/* select > 500 if insured amount input is >499 */
 	$( '.wcmp_shipment_options input.insured_amount' ).each( function( index ) {
 		if ( $( this ).val() > 499 ) {
 			var insured_select = $( this ).closest('table').parent().find('select.insured_amount');
@@ -118,7 +118,7 @@ jQuery( function( $ ) {
 		};
 	});
 
-	// hide insurance options if insured not checked
+	/* hide insurance options if insured not checked */
 	$('.wcmp_shipment_options input.insured').change(function () {
 		var insured_select = $( this ).closest('table').parent().find('select.insured_amount');
 		var insured_input  = $( this ).closest('table').parent().find('input.insured_amount');
@@ -133,7 +133,7 @@ jQuery( function( $ ) {
 		}
 	});
 
-	// hide & disable insured amount input if not needed
+	/* hide & disable insured amount input if not needed */
 	$('.wcmp_shipment_options select.insured_amount').change(function () {
 		var insured_check  = $( this ).closest('table').parent().find('input.insured');
 		var insured_select = $( this ).closest('table').parent().find('select.insured_amount');
@@ -148,16 +148,16 @@ jQuery( function( $ ) {
 		}
 	});
 
-	// hide all options if not a parcel
+	/* hide all options if not a parcel */
 	$('.wcmp_shipment_options select.package_type').change(function () {
 		var parcel_options  = $( this ).closest('table').parent().find('.parcel_options');
 		if ( $( this ).val() == '1') {
-			// parcel
+			/* parcel */
 			$( parcel_options ).find('input, textarea, button, select').prop('disabled', false);
 			$( parcel_options ).show();
 			$( parcel_options ).find('.insured').change();
 		} else {
-			// not a parcel
+			/* not a parcel */
 			$( parcel_options ).find('input, textarea, button, select').prop('disabled', true);
 			$( parcel_options ).hide();
 			$( parcel_options ).find('.insured').prop('checked', false);
@@ -165,7 +165,7 @@ jQuery( function( $ ) {
 		}
 	});
 
-	// hide delivery options details if disabled
+	/* hide delivery options details if disabled */
 	$('input.wcmp_delivery_option').change(function () {
 		if ($(this).is(':checked')) {
 			$(this).parent().find('.wcmp_delivery_option_details').show();
@@ -174,10 +174,10 @@ jQuery( function( $ ) {
 		}
 	});
 
-	// check witch radio button of A4 or A6 is activated and disable/enable print position
+	/* check witch radio button of A4 or A6 is activated and disable/enable print position */
 	$('input[id^=\'label_format\']').change(function () {
 
-		//when the options are not selected
+		/* when the options are not selected */
 		if (!$(this).is(':checked')) {
 			return;
         }
@@ -189,13 +189,13 @@ jQuery( function( $ ) {
 			return;
 		}
 
-		// Always A6
+		/* Always A6 */
         parent_offset.hide();
 		$("#print_position_offset").prop("checked", false);
 	});
 
 
-	// Hide all checkout options if disabled
+	/* Hide all checkout options if disabled */
 	$('#woocommerce-myparcel-settings #myparcel_checkout').change(function () {
 		$next_settings_rows = $(this).closest('tr').nextAll('tr');
 		$next_settings_headers = $(this).closest('table').nextAll('h2');
@@ -211,12 +211,12 @@ jQuery( function( $ ) {
 		}
 	});
 
-	// init options on settings page and in bulk form
+	/* init options on settings page and in bulk form */
 	$('#woocommerce-myparcel-settings :input, .wcmp_bulk_options_form :input').change();
 
-	// myparcel_checkout
+	/* myparcel_checkout */
 
-	// saving shipment options via AJAX
+	/* saving shipment options via AJAX */
 	$( '.wcmp_save_shipment_settings' )
 		.on( 'click', 'a.button.save', function() {
 			var order_id = $( this ).data().order;
@@ -224,7 +224,7 @@ jQuery( function( $ ) {
 			var package_type = $form.find('select.package_type option:selected').text();
 			var $package_type_text_element = $( this ).closest('.wcmp_shipment_options').find('.wcpm_package_type');
 
-			// show spinner
+			/* show spinner */
 			$form.find('.wcmp_save_shipment_settings .waiting').show();
 
 			var form_data = $form.find(":input").serialize();
@@ -236,23 +236,23 @@ jQuery( function( $ ) {
 			};
 
 			$.post( wc_myparcel.ajax_url, data, function( response ) {
-				// console.log(response);
+				/* console.log(response); */
 
-				// set main text to selection
+				/* set main text to selection */
 				$package_type_text_element.text(package_type);
 
-				// hide spinner
+				/* hide spinner */
 				$form.find('.wcmp_save_shipment_settings .waiting').hide();
 
-				// disable all input fields again
+				/* disable all input fields again */
 				$form.find(':input').prop('disabled', true);
 
-				// hide the form
+				/* hide the form */
 				$form.slideUp();
 			});
 		});
 
-	// Print queued labels
+	/* Print queued labels */
 	var print_queue = $("#wcmp_printqueue").val();
 	var print_queue_offset = $("#wcmp_printqueue_offset").val();
 	if ( typeof print_queue !== 'undefined' ) {
@@ -260,19 +260,19 @@ jQuery( function( $ ) {
 		myparcel_print( $.parseJSON(print_queue), print_queue_offset );
 	}
 
-	// Bulk actions
+	/* Bulk actions */
 	$("#doaction, #doaction2").click(function (event) {
 		var actionselected = $(this).attr("id").substr(2);
-		// check if action starts with 'wcmp_'
+		/* check if action starts with 'wcmp_' */
 		if ( $('select[name="' + actionselected + '"]').val().substring(0,5) == "wcmp_") {
 			event.preventDefault();
-			// remove notices
+			/* remove notices */
 			$( '.myparcel_notice' ).remove();
 
-			// strip 'wcmp_' from action
+			/* strip 'wcmp_' from action */
 			var action = $('select[name="' + actionselected + '"]').val().substring(5);
 
-			// Get array of checked orders (order_ids)
+			/* Get array of checked orders (order_ids) */
 			var order_ids = [];
 			$('tbody th.check-column input[type="checkbox"]:checked').each(
 				function() {
@@ -280,7 +280,7 @@ jQuery( function( $ ) {
 				}
 			);
 
-			// execute action
+			/* execute action */
 			switch (action) {
 				case 'export':
 					bulk_spinner( this, 'show' );
@@ -302,22 +302,22 @@ jQuery( function( $ ) {
 	});
 
 
-	// Single actions click. The .wc_actions .single_wc_actions for support wc > 3.3.0
+	/* Single actions click. The .wc_actions .single_wc_actions for support wc > 3.3.0 */
 	$(".order_actions, .single_order_actions, .wc_actions, .single_wc_actions")
 		.on( 'click', 'a.button.myparcel', function( event ) {
 			event.preventDefault();
 			var button_action = $( this ).data('request');
 			var order_ids = [ $( this ).data('order-id') ];
 
-			// execute action
+			/* execute action */
 			switch (button_action) {
 				case 'add_shipment':
 					var button = this;
 					button_spinner( button, 'show' );
 					myparcel_export( order_ids );
-					// setTimeout(function() {
-						// button_spinner( button, 'hide' );
-					// }, 500);
+					/* setTimeout(function() { */
+						/* button_spinner( button, 'hide' ); */
+					/* }, 500); */
 					break;
 				case 'get_labels':
 					if (wc_myparcel.offset == 1) {
@@ -328,30 +328,30 @@ jQuery( function( $ ) {
 					break;
 				case 'add_return':
 					myparcel_modal_dialog( order_ids, 'return' );
-					// myparcel_return( order_ids );
+					/* myparcel_return( order_ids ); */
 					break;
 			}
 		});		
 
 	$(window).bind('tb_unload', function() {
-		// re-enable scrolling after closing thickbox
+		/* re-enable scrolling after closing thickbox */
 		$("body").css({ overflow: 'inherit' })
 	});
 
-	// Add offset dialog when address labels option is selected
+	/* Add offset dialog when address labels option is selected */
 	$("select[name='action'], select[name='action2']").change( function () {
 		var actionselected = $(this).val();
-		// alert(actionselected);
+		/* alert(actionselected); */
 		if ( ( actionselected == 'wcmp_print' ||  actionselected == 'wcmp_export_print' ) && wc_myparcel.offset == 1) {
 			var insert_position = $(this).attr("name") == 'action' ? 'top' : 'bottom';
 			$( '#wcmyparcel_offset_dialog' )
-				.attr('style', 'clear:both') // reset styles
+				.attr('style', 'clear:both') /* reset styles */
 				.insertAfter( 'div.tablenav.'+insert_position )
 				.show()
 
-			// make sure button is not shown
+			/* make sure button is not shown */
 			$( '#wcmyparcel_offset_dialog' ).find('button').hide();
-			// clear input
+			/* clear input */
 			$( '#wcmyparcel_offset_dialog' ).find('input').val('');
 		} else {
 			$( '#wcmyparcel_offset_dialog' )
@@ -360,24 +360,24 @@ jQuery( function( $ ) {
 		}
 	});
 
-	// Click offset dialog button (single export)
+	/* Click offset dialog button (single export) */
 	$("#wcmyparcel_offset_dialog button").click( function (event) {
 		$dialog = $(this).parent();
 
-		// set print variables
+		/* set print variables */
 		var order_ids = [$dialog.find('input.order_id').val()];
 		var offset = $dialog.find('input.wc_myparcel_offset').val();
 
-		// hide dialog
+		/* hide dialog */
 		$dialog.hide();
 
-		// print labels
+		/* print labels */
 		myparcel_print( order_ids, offset );
 	});
 
 
 	function contextual_offset_dialog( order_ids, event ) {
-		// place offset dialog at mouse tip
+		/* place offset dialog at mouse tip */
 		$( '#wcmyparcel_offset_dialog' )
 			.show()
 			.appendTo( 'body' )
@@ -396,7 +396,7 @@ jQuery( function( $ ) {
 			.show()
 			.data( 'order_id', order_ids );
 
-		// clear input
+		/* clear input */
 		$( '#wcmyparcel_offset_dialog' ).find('input').val('');
 
 		$( '#wcmyparcel_offset_dialog' ).append('<input type=hidden class="order_id"/>');
@@ -407,7 +407,7 @@ jQuery( function( $ ) {
 		if (display == 'show') {
 			$button_img = $( button ).find( '.wcmp_button_img' );
 			$button_img.hide();
-			// console.log($( button ).parent().find('.wcmp_spinner'));
+			/* console.log($( button ).parent().find('.wcmp_spinner')); */
 			$( button ).parent().find('.wcmp_spinner')
 				.insertAfter( $button_img )
 				.show();
@@ -426,11 +426,11 @@ jQuery( function( $ ) {
 		}
 	}
 
-	// export orders to MyParcel via AJAX
+	/* export orders to MyParcel via AJAX */
 	function myparcel_export( order_ids, print ) {
 		if (typeof print === 'undefined') { print = 'no'; }
 		var offset = wc_myparcel.offset == 1 ? $('.wc_myparcel_offset').val() : 0;
-		// console.log('exporting order to myparcel...');
+		/* console.log('exporting order to myparcel...'); */
 		var data = {
 			action:           'wc_myparcel',
 			request:          'add_shipments',
@@ -444,13 +444,13 @@ jQuery( function( $ ) {
 			response = $.parseJSON(response);
 
 			if (print == 'no' || print == 'after_reload') {
-				// refresh page, admin notices are stored in options and will be displayed automatically
-				// location.reload(true);
+				/* refresh page, admin notices are stored in options and will be displayed automatically */
+				/* location.reload(true); */
 				redirect_url = updateUrlParameter( window.location.href, 'myparcel_done', 'true' );
 				window.location.href = redirect_url;
 				return;
 			} else {
-				// when printing, output notices directly so that we can init print in the same run
+				/* when printing, output notices directly so that we can init print in the same run */
 				if ( response !== null && typeof response === 'object' && 'error' in response) {
 					myparcel_admin_notice( response.error, 'error' );
 				}
@@ -459,7 +459,7 @@ jQuery( function( $ ) {
 					myparcel_admin_notice( response.success, 'success' );
 				}
 
-				// load PDF
+				/* load PDF */
 				myparcel_print( order_ids, offset );
 			}
 
@@ -474,15 +474,15 @@ jQuery( function( $ ) {
 		var thickbox_parameters = '&TB_iframe=true&height='+thickbox_height+'&width=720';
 		var url = wc_myparcel.ajax_url+request_prefix+'order_ids='+order_ids+'&action=wc_myparcel&request=modal_dialog&dialog='+dialog+'&security='+wc_myparcel.nonce+thickbox_parameters;
 
-		// disable background scrolling
+		/* disable background scrolling */
 		$("body").css({ overflow: 'hidden' })
 	
 		tb_show('', url);
 	}
 
-	// export orders to MyParcel via AJAX
+	/* export orders to MyParcel via AJAX */
 	function myparcel_return( order_ids ) {
-		// console.log('creating return for orders...');
+		/* console.log('creating return for orders...'); */
 		var data = {
 			action:           'wc_myparcel',
 			request:          'add_return',
@@ -492,7 +492,7 @@ jQuery( function( $ ) {
 
 		$.post( wc_myparcel.ajax_url, data, function( response ) {
 			response = $.parseJSON(response);
-			// console.log(response);
+			/* console.log(response); */
 			if ( response !== null && typeof response === 'object' && 'error' in response) {
 				myparcel_admin_notice( response.error, 'error' );
 			}
@@ -502,22 +502,22 @@ jQuery( function( $ ) {
 	}
 
 
-	// Request MyParcel labels
+	/* Request MyParcel labels */
 	function myparcel_print( order_ids, offset ) {
-		// console.log('requesting myparcel labels...');
+		/* console.log('requesting myparcel labels...'); */
 		if (typeof offset === 'undefined') { offset = 0; }
 
 		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") != -1) ? '&' : '?';
 		var url = wc_myparcel.ajax_url+request_prefix+'action=wc_myparcel&request=get_labels&security='+wc_myparcel.nonce;
 
-		// create form to send order_ids via POST
+		/* create form to send order_ids via POST */
 		$('body').append('<form action="'+url+'" method="post" target="_blank" id="myparcel_post_data"></form>');
 		$('#myparcel_post_data').append('<input type="hidden" name="offset" class="offset"/>');
 		$('#myparcel_post_data input.offset').val( offset );
 		$('#myparcel_post_data').append('<input type="hidden" name="order_ids" class="order_ids"/>');
 		$('#myparcel_post_data input.order_ids').val( JSON.stringify( order_ids ) );
 
-		// submit data to open or download pdf
+		/* submit data to open or download pdf */
 		$('#myparcel_post_data').submit();
 
 		bulk_spinner( '', 'hide' );
@@ -553,10 +553,10 @@ jQuery( function( $ ) {
 		$('html, body').animate({ scrollTop: 0 }, 'slow');
 	}
 
-	// Add / Update a key-value pair in the URL query parameters
-	// https://gist.github.com/niyazpk/f8ac616f181f6042d1e0
+	/* Add / Update a key-value pair in the URL query parameters */
+	/* https://gist.github.com/niyazpk/f8ac616f181f6042d1e0 */
 	function updateUrlParameter(uri, key, value) {
-		// remove the hash part before operating on the uri
+		/* remove the hash part before operating on the uri */
 		var i = uri.indexOf('#');
 		var hash = i === -1 ? ''  : uri.substr(i);
 			 uri = i === -1 ? uri : uri.substr(0, i);
@@ -568,7 +568,7 @@ jQuery( function( $ ) {
 		} else {
 			uri = uri + separator + key + "=" + value;
 		}
-		return uri + hash;  // finally append the hash as well
+		return uri + hash;  /* finally append the hash as well */
 	}
 
 	$( document.body ).trigger( 'wc-enhanced-select-init' );

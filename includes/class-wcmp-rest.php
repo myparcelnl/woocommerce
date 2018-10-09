@@ -165,7 +165,6 @@ class WC_MyParcel_REST_Client
 	public function parse_errors( $body ) {
 		$errors = $body['errors'];
 		$message = isset( $body['message'] ) ? $body['message'] : '';
-		// echo '<pre>';var_dump($errors);echo '</pre>';die();
 
 		$parsed_errors = array();
 		foreach ($errors as $error) {
