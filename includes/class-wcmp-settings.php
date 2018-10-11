@@ -311,6 +311,7 @@ class WooCommerce_MyParcel_Settings {
 				'id'			=> 'barcode_in_note_title',
 				'class'			=> 'barcode_in_note_title',
 				'default'		=> 'Tracking code:',
+				'size'          =>  25,
 				'description'	=> __( 'You can change the text before the barcode inside an note', 'woocommerce-myparcel' ),
 			)
 		);
