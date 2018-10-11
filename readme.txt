@@ -3,7 +3,7 @@ Contributors: richardperdaan
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9.5
-Stable tag: 3.0.2
+Stable tag: 3.0.3
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -88,6 +88,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+= 3.0.3 (-) =
+
+Fix:Problem with WooCommerce PDF Invoices & Packing Slips
 
 = 3.0.2 (2018-10-09) =
 Fix:
