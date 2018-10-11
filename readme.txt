@@ -89,8 +89,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 = 3.0.3 (-) =
-
 Fix:Problem with WooCommerce PDF Invoices & Packing Slips
+Fix:error about "Bewaar barcode in een notitie" size
+improvement: add preliminary support for "digitale postzegel"
 
 = 3.0.2 (2018-10-09) =
 Fix:
