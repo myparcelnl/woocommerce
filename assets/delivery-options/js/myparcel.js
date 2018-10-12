@@ -425,7 +425,7 @@ MyParcel = {
         var isPickup	= jQuery('#mypa-pickup-delivery').is(':checked');
         jQuery('#mypa-pickup-selector').prop('checked', true);
 
-        if(isPickup && this.currentLocation.price_comment === "retailexpress"){
+        if(isPickup && this.currentLocation.price_comment === "retailexpress" && this.data.config.allowPickupExpress === true){
             jQuery('#mypa-pickup-express-price').html(MyParcel.getPriceHtml(this.data.config.pricePickupExpress));
             jQuery('#mypa-pickup-express').show();
 
