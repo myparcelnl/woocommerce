@@ -218,6 +218,16 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             return false;
         }
 
+	    /**
+	     * @return mixed
+	     */
+	    public function delivery_options_title() {
+		    if (isset($this->settings['delivery_options_title'])) {
+			    return $this->settings['delivery_options_title'];
+		    }
+		    return;
+	    }
+
         /**
          * @return mixed
          */

@@ -24,6 +24,11 @@
         <table class="mypa-delivery-option-table">
             <tbody>
             <tr>
+                <td colspan="3">
+                    <label id="mypa-delivery-options-title2" for="mypa-delivery-options-title"></label><h3><span id="mypa-delivery-options-title"></span></h3></label>
+                </td>
+            </tr>
+            <tr >
                 <td>
                     <input name="mypa-deliver-or-pickup" id="mypa-select-delivery" value="mypa-deliver" type="radio">
                 </td>

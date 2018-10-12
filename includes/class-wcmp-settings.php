@@ -741,6 +741,21 @@ class WooCommerce_MyParcel_Settings {
         );
 
         add_settings_field(
+                'delivery_options_title',
+                __( 'Delivery options title', 'woocommerce-myparcel' ),
+                array( $this->callbacks, 'text_input' ),
+                $option_group,
+                'delivery_options',
+                array(
+                        'option_name'   => $option_name,
+                        'id'            => 'delivery_options_title',
+                        'size'          => '53',
+                        'title'         => 'Delivery options title',
+                        'current'       => __( 'Delivery options', 'woocommerce-myparcel' ),
+                )
+        );
+
+        add_settings_field(
             'at_home_delivery',
             __( 'Home delivery title', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'text_input' ),
@@ -994,6 +1009,7 @@ class WooCommerce_MyParcel_Settings {
 					'dropoff_delay' => '0',
 					'deliverydays_window' => '1',
 					'checkout_position'=> 'woocommerce_after_checkout_billing_form',
+					'delivery_options_title'=> 'Bezorgopties',
 					'at_home_delivery_title' => 'Thuis of op het werk bezorgd',
 					'standard_title'=> 'Standaard levering',
 					'only_recipient_title' => 'Alleen huisadres',
