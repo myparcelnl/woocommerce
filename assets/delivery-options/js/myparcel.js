@@ -177,7 +177,7 @@ MyParcel = {
 
         /* Desktop specific triggers */
         else {
-            jQuery('#mypa-show-location-details').on('mouseenter', function(){
+            jQuery('#mypa-show-location-details').on('click', function(){
                 MyParcel.setCurrentLocation();
                 MyParcel.showLocationDetails();
             });
