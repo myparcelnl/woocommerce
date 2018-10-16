@@ -51,6 +51,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['only_recipient_title'])) {
                 return $this->settings['only_recipient_title'];
             }
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('only_recipient_title');
         }
 
         /**
@@ -88,7 +89,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['signed_title'])) {
                 return $this->settings['signed_title'];
             }
-            return 0;
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('signed_title');
         }
         /**
          * @return string
@@ -125,6 +126,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['morning_title'])) {
                 return $this->settings['morning_title'];
             }
+
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('morning_title');
         }
         /**
          * @return string
@@ -157,6 +160,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['standard_title'])) {
                 return $this->settings['standard_title'];
             }
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('standard_title');
         }
 
         /**
@@ -166,6 +170,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['belgium_standard_title'])) {
                 return $this->settings['belgium_standard_title'];
             }
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('belgium_standard_title');
         }
 
         /**
@@ -187,9 +192,11 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return mixed
          */
         public function evening_title() {
-            if (isset($this->settings['night_title'])) {
-                return $this->settings['night_title'];
+            if (isset($this->settings['evening_title'])) {
+                return $this->settings['evening_title'];
             }
+
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('evening_title');
         }
         /**
          * @return string
@@ -225,6 +232,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['at_home_delivery_title'])) {
                 return $this->settings['at_home_delivery_title'];
             }
+
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('at_home_delivery_title');
         }
 
         /**
@@ -236,6 +245,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['belgium_at_home_delivery_title'])) {
                 return $this->settings['belgium_at_home_delivery_title'];
             }
+
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('belgium_at_home_delivery_title');
         }
 
         /**
@@ -245,6 +256,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['pickup_title'])) {
                 return $this->settings['pickup_title'];
             }
+
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('pickup_title');
         }
 
         /**
@@ -280,6 +293,8 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['pickup_express_title'])) {
                 return $this->settings['pickup_express_title'];
             }
+
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('pickup_express_title');
         }
 
         /**
