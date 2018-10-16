@@ -156,6 +156,7 @@
     jQuery(document).ready(function () {
         setTimeout(function(){
             MyParcel.init();
-            }, 3000);
+            jQuery('#billing_country, #shipping_country, .country_to_state').change();
+            }, 50);
     });
 </script>
