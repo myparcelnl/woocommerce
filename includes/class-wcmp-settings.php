@@ -1022,6 +1022,7 @@ class WooCommerce_MyParcel_Settings {
             'dropoff_delay' => '0',
             'deliverydays_window' => '1',
             'checkout_position'=> 'woocommerce_after_checkout_billing_form',
+            'header_delivery_options_title' => "Delivery options",
             'at_home_delivery_title' => 'Delivered at home or at work',
             'standard_title'=> 'Standard delivery',
             'morning_title' => 'Morning delivery',
