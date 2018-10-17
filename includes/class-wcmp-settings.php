@@ -752,7 +752,7 @@ class WooCommerce_MyParcel_Settings {
                         'size'          => '53',
                         'title'         => 'Delivery options title',
                         'current'       => self::get_one_checkout_setting_title('header_delivery_options_title'),
-                        'description'	=> __( 'You can place a delivery title above the MyParcel options. When there is no title, it will not be visible. ', 'woocommerce-myparcel' ),
+                        'description'	=> __( 'You can place a delivery title above the MyParcel options. When there is no title, it will not be visible.', 'woocommerce-myparcel' ),
                 )
         );
 
@@ -1022,6 +1022,7 @@ class WooCommerce_MyParcel_Settings {
             'dropoff_delay' => '0',
             'deliverydays_window' => '1',
             'checkout_position'=> 'woocommerce_after_checkout_billing_form',
+            'header_delivery_options_title' => 'Delivery options',
             'at_home_delivery_title' => 'Delivered at home or at work',
             'standard_title'=> 'Standard delivery',
             'morning_title' => 'Morning delivery',

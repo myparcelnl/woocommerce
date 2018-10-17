@@ -755,6 +755,14 @@ msgstr "Thuis of op het werk bezorgd"
 msgid "Delivery options"
 msgstr "Bezorgopties"
 
+#: includes/class-wcmp-settings.php:745
+msgid "Delivery options title"
+msgstr "Bezorgopties titel"
+
+#: includes/class-wcmp-settings.php:755
+msgid "You can place a delivery title above the MyParcel options. When there is no title, it will not be visible."
+msgstr "Je kan een bezorgtitel boven de MyParcel opties plaatsen. Als er geen titel is, is deze niet zichtbaar."
+
 #: includes/class-wcmp-settings.php:731
 msgid "Delivery"
 msgstr "Bezorgen"
