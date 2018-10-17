@@ -11,6 +11,12 @@ jQuery( function( $ ) {
 	// replace iframe placeholder with actual iframe
 	$('.postnl-iframe-placeholder').replaceWith( '<iframe id="postnl-iframe" src="" frameborder="0" scrolling="auto" style="width: 100%; display: none;">Bezig met laden...</iframe>');
 	// show if we have to
+
+    setTimeout(function() {
+        // Removed in WooCommerce version 3.5.0 (https://github.com/woocommerce/woocommerce/pull/20655/files#diff-27a95ce2f13e565129eca0979b69aedbL154)
+        jQuery(':input.country_to_state').change();
+    }, 100);
+
 	if ( window.postnl_initial_hide == false ) {
 		$('#postnl-iframe').show();
 	}
