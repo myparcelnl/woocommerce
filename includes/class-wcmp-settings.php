@@ -751,7 +751,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'at_home_delivery_title',
                 'size'			=> '53',
                 'title'         => 'Delivered at home or at work',
-                'current'       => __( 'Delivered at home or at work', 'woocommerce-myparcel' ),
+                'current'       => self::get_one_checkout_setting_title('at_home_delivery_title'),
             )
         );
 
@@ -766,7 +766,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'standard_title',
                 'size'			=> '53',
                 'title'         => 'Standard delivery',
-                'current'       => __( 'Standard delivery', 'woocommerce-myparcel' ),
+                'current'       => self::get_one_checkout_setting_title('standard_title'),
                 'description'	=> __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
         );
@@ -783,7 +783,7 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'           => $option_name,
                 'id'                    => 'morning',
                 'title'                 => 'Morning delivery',
-                'current'               => __( 'Morning delivery', 'woocommerce-myparcel' ),
+                'current'               => self::get_one_checkout_setting_title('morning_title'),
                 'size'                  => 30,
                 'option_description'    => __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
@@ -801,7 +801,7 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'	        => $option_name,
                 'id'			        => 'night',
                 'title'                 => 'Evening delivery',
-                'current' 	            => __( 'Evening delivery', 'woocommerce-myparcel' ),
+                'current' 	            => self::get_one_checkout_setting_title('night_title'),
                 'size'                  => 30,
                 'option_description'    => __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
@@ -819,7 +819,7 @@ class WooCommerce_MyParcel_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'only_recipient',
                 'title'         => 'Home address only',
-                'current'       => __( 'Home address only', 'woocommerce-myparcel' ),
+                'current'       => self::get_one_checkout_setting_title('at_home_delivery_title'),
                 'size'          => 30,
 			)
 		);
@@ -836,7 +836,7 @@ class WooCommerce_MyParcel_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'signed',
                 'title'         => 'Signature on delivery',
-                'current' 	    => __( 'Signature on delivery', 'woocommerce-myparcel' ),
+                'current' 	    => self::get_one_checkout_setting_title('signed_title'),
                 'size'          => 30,
 			)
 		);
@@ -853,7 +853,7 @@ class WooCommerce_MyParcel_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'pickup',
                 'title'         => 'Pickup',
-                'current' 	    => __( 'Pick up at PostNL location', 'woocommerce-myparcel' ),
+                'current' 	    => self::get_one_checkout_setting_title('pickup_title'),
                 'size'          => 30,
 			)
 		);
@@ -912,7 +912,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'belgium_at_home_delivery_title',
                 'size'			=> '53',
                 'title'         => 'Delivery',
-                'current'       => __( 'Delivery', 'woocommerce-myparcel' ),
+                'current'       => self::get_one_checkout_setting_title('belgium_at_home_delivery_title'),
             )
         );
 
@@ -927,7 +927,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'belgium_standard_title',
                 'size'			=> '53',
                 'title'         => 'Standard delivery',
-                'current'       => __( 'Standard delivery', 'woocommerce-myparcel' ),
+                'current'       => self::get_one_checkout_setting_title('belgium_standard_title'),
                 'description'	=> __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
         );
@@ -954,67 +954,70 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 	}
-	
-	/**
-	 * Set default settings.
-	 * 
-	 * @return void.
-	 */
-	public function default_settings( $option ) {
-		// $default = array(
-		// 	'process'			=> '1',
-		// 	'keep_consignments'	=> '0',
-		// 	'download_display'	=> 'download',
-		// 	'email'				=> '1',
-		// 	'telefoon'			=> '1',
-		// 	'extragroot'		=> '0',
-		// 	'huisadres'			=> '0',
-		// 	'handtekening'		=> '0',
-		// 	'huishand'			=> '0',
-		// 	'retourbgg'			=> '0',
-		// 	'verzekerd'			=> '0',
-		// 	'verzekerdbedrag'	=> '0',
-		// 	'kenmerk'			=> '',
-		// 	'verpakkingsgewicht'=> '0',
-		// );
-	
-		// add_option( 'wcmyparcel_settings', $default );
 
-		switch ( $option ) {
-			case 'woocommerce_myparcel_general_settings':
-				$default = array(
-					'download_display'=> 'download',
-					'label_format'=> 'A4',
-				);
-				break;
-			case 'woocommerce_myparcel_checkout_settings':
-				$default = array (
-					'pickup_enabled' => '0',
-					'dropoff_days' => array ( 1,2,3,4,5 ),
-					'dropoff_delay' => '0',
-					'deliverydays_window' => '1',
-					'checkout_position'=> 'woocommerce_after_checkout_billing_form',
-					'at_home_delivery_title' => 'Thuis of op het werk bezorgd',
-					'standard_title'=> 'Standaard levering',
-					'only_recipient_title' => 'Alleen huisadres',
-					'signed_title' => 'Handtekeing voor ontvangst',
-					'pickup_title' => 'Afhalen bij een PostNL punt',
-					'belgium_at_home_delivery_title' => 'Bezorgen',
-					'belgium_standard_title' => 'Standaard levering',
-				);
-				break;
-			case 'woocommerce_myparcel_export_defaults_settings':
-			default:
-				$default = array();
-				break;
-		}
+    /**
+     * Set default settings.
+     *
+     * @return void.
+     */
+    public function default_settings( $option ) {
 
-		if ( false === get_option( $option ) ) {
-			add_option( $option, $default );
-		} else {
-			update_option( $option, $default );
-		}
-	}
+        switch ( $option ) {
+            case 'woocommerce_myparcel_general_settings':
+                $default = array(
+                    'download_display'=> 'download',
+                    'label_format'=> 'A4',
+                );
+                break;
+            case 'woocommerce_myparcel_checkout_settings':
+                $default = self::get_checkout_settings();
+                break;
+            case 'woocommerce_myparcel_export_defaults_settings':
+            default:
+                $default = array();
+                break;
+        }
+
+        if ( false === get_option( $option ) ) {
+            add_option( $option, $default );
+        } else {
+            update_option( $option, $default );
+        }
+    }
+
+    /**
+     * @param $key
+     *
+     * @return string
+     */
+    public static function get_one_checkout_setting_title( $key ) {
+        $checkout_settings = self::get_checkout_settings();
+        $setting = $checkout_settings[ $key ];
+
+        return __( $setting, 'woocommerce-myparcel' );
+    }
+
+    /**
+     * @return array
+     */
+    public static function get_checkout_settings() {
+        return array (
+            'pickup_enabled' => '0',
+            'dropoff_days' => array ( 1,2,3,4,5 ),
+            'dropoff_delay' => '0',
+            'deliverydays_window' => '1',
+            'checkout_position'=> 'woocommerce_after_checkout_billing_form',
+            'at_home_delivery_title' => 'Delivered at home or at work',
+            'standard_title'=> 'Standard delivery',
+            'morning_title' => 'Morning delivery',
+            'night_title' => 'Evening delivery',
+            'only_recipient_title' => 'Home address only',
+            'signed_title' => 'Signature on delivery',
+            'pickup_title' => 'PostNL Pickup',
+            'belgium_at_home_delivery_title' => 'Delivery',
+            'belgium_standard_title' => 'Standard delivery',
+        );
+    }
 }
 
 endif; // class_exists
