@@ -51,6 +51,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['only_recipient_title'])) {
                 return $this->settings['only_recipient_title'];
             }
+
             return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('only_recipient_title');
         }
 
@@ -89,6 +90,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['signed_title'])) {
                 return $this->settings['signed_title'];
             }
+
             return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('signed_title');
         }
         /**
@@ -160,6 +162,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['standard_title'])) {
                 return $this->settings['standard_title'];
             }
+
             return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('standard_title');
         }
 
@@ -170,6 +173,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             if (isset($this->settings['belgium_standard_title'])) {
                 return $this->settings['belgium_standard_title'];
             }
+            
             return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('belgium_standard_title');
         }
 
