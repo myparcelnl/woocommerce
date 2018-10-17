@@ -801,7 +801,7 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'	        => $option_name,
                 'id'			        => 'night',
                 'title'                 => 'Evening delivery',
-                'current' 	            => self::get_one_checkout_setting_title('evening_title'),
+                'current' 	            => self::get_one_checkout_setting_title('night_title'),
                 'size'                  => 30,
                 'option_description'    => __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
@@ -1010,7 +1010,7 @@ class WooCommerce_MyParcel_Settings {
             'at_home_delivery_title' => 'Delivered at home or at work',
             'standard_title'=> 'Standard delivery',
             'morning_title' => 'Morning delivery',
-            'evening_title' => 'Evening delivery',
+            'night_title' => 'Evening delivery',
             'only_recipient_title' => 'Home address only',
             'signed_title' => 'Signature on delivery',
             'pickup_title' => 'PostNL Pickup',

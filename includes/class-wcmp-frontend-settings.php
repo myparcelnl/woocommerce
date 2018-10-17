@@ -195,12 +195,12 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          */
-        public function evening_title() {
-            if (isset($this->settings['evening_title'])) {
-                return $this->settings['evening_title'];
+        public function night_title() {
+            if (isset($this->settings['night_title'])) {
+                return $this->settings['night_title'];
             }
 
-            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('evening_title');
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('night_title');
         }
         /**
          * @return string
