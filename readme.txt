@@ -92,6 +92,8 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 Fix: Problem with WooCommerce PDF Invoices & Packing Slips
 Fix: error about "Bewaar barcode in een notitie" size
 Fix: Turn of the option allow Pickup Express
+Fix: Save settings with a new update
+Improvement: Support WooCommerce 3.5.0
 Improvement: add preliminary support for "digitale postzegel"
 
 = 3.0.2 (2018-10-09) =

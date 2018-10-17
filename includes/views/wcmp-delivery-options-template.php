@@ -159,8 +159,13 @@
 <script src="<?= $urlJs ?>"></script>
 <script>
     jQuery(document).ready(function () {
+        setTimeout(function() {
+            // Removed in WooCommerce version 3.5.0 (https://github.com/woocommerce/woocommerce/pull/20655/files#diff-27a95ce2f13e565129eca0979b69aedbL154)
+            jQuery(':input.country_to_state').change();
+        }, 100);
+
         setTimeout(function(){
             MyParcel.init();
-            }, 3000);
+        }, 3000);
     });
 </script>
