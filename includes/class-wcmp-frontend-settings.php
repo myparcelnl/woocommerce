@@ -229,6 +229,17 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             return false;
         }
 
+	    /**
+	     * @return mixed
+	     */
+	    public function header_delivery_options_title() {
+		    if (isset($this->settings['header_delivery_options_title'])) {
+			    return $this->settings['header_delivery_options_title'];
+		    }
+
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('header_delivery_options_title');
+	    }
+
         /**
          * @return mixed
          */

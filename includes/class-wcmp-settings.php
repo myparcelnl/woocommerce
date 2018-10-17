@@ -741,6 +741,22 @@ class WooCommerce_MyParcel_Settings {
         );
 
         add_settings_field(
+                'header_delivery_options_title',
+                __( 'Delivery options title', 'woocommerce-myparcel' ),
+                array( $this->callbacks, 'text_input' ),
+                $option_group,
+                'delivery_options',
+                array(
+                        'option_name'   => $option_name,
+                        'id'            => 'header_delivery_options_title',
+                        'size'          => '53',
+                        'title'         => 'Delivery options title',
+                        'current'       => self::get_one_checkout_setting_title('header_delivery_options_title'),
+                        'description'	=> __( 'You can place a delivery title above the MyParcel options. When there is no title, it will not be visible. ', 'woocommerce-myparcel' ),
+                )
+        );
+
+        add_settings_field(
             'at_home_delivery',
             __( 'Home delivery title', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'text_input' ),
@@ -954,7 +970,6 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 	}
-
     /**
      * Set default settings.
      *

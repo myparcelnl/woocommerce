@@ -192,6 +192,9 @@
 #mypa-delivery-date-text{
 	display: none;
 }
+#header-delivery-options-titel{
+	display: none;
+}
 
 #mypa-list-postnl-pickup option{
 	padding: 5px 0px 5px 0px;
