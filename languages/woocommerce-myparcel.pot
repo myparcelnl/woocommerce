@@ -692,6 +692,14 @@ msgstr ""
 msgid "Delivery options"
 msgstr ""
 
+#: includes/class-wcmp-settings.php:755
+msgid "You can place a delivery title above the MyParcel options. When there is no title, it will not be visible."
+msgstr ""
+
+#: includes/class-wcmp-settings.php:745
+msgid "Delivery options title"
+msgstr ""
+
 #: includes/class-wcmp-settings.php:723
 msgid "Home delivery title"
 msgstr ""
