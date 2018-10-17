@@ -477,7 +477,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "pricePickup" =>  $this->frontend_settings->get_price_pickup(),
                     "pricePickupExpress" =>  $this->frontend_settings->get_price_pickup_express(),
 
-                    "deliveryOptionsTitle" => $this->frontend_settings->delivery_options_title(),
+                    "headerDeliveryOptions" => $this->frontend_settings->header_delivery_options_title(),
                     "deliveryTitle" => $this->frontend_settings->at_home_delivery_title(),
                     "pickupTitle" => $this->frontend_settings->pickup_title(),
                     "deliveryMorningTitle" => $this->frontend_settings->morning_title(),

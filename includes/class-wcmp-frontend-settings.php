@@ -221,11 +221,12 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
 	    /**
 	     * @return mixed
 	     */
-	    public function delivery_options_title() {
-		    if (isset($this->settings['delivery_options_title'])) {
-			    return $this->settings['delivery_options_title'];
+	    public function header_delivery_options_title() {
+		    if (isset($this->settings['header_delivery_options_title'])) {
+			    return $this->settings['header_delivery_options_title'];
 		    }
-		    return;
+
+            return WooCommerce_MyParcel_Settings::get_one_checkout_setting_title('header_delivery_options_title');
 	    }
 
         /**

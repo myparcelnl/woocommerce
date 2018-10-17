@@ -23,9 +23,9 @@
     <div id="mypa-delivery-option-form">
         <table class="mypa-delivery-option-table">
             <tbody>
-            <tr>
+            <tr id="header-delivery-options-titel">
                 <td colspan="3">
-                    <label id="mypa-delivery-options-title2" for="mypa-delivery-options-title"></label><h3><span id="mypa-delivery-options-title"></span></h3></label>
+                    <label for="mypa-delivery-options-title"><h3><span id="mypa-delivery-options-title"></span></h3></label>
                 </td>
             </tr>
             <tr >

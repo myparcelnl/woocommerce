@@ -27,8 +27,10 @@ MyParcel = {
         if (MyParcel.data.config.deliveryTitle){
             jQuery('#mypa-delivery-title').html(MyParcel.data.config.deliveryTitle);
         }
-        if (MyParcel.data.config.deliveryOptionsTitle){
-            jQuery('#mypa-delivery-options-title').html(MyParcel.data.config.deliveryOptionsTitle);
+        console.log(MyParcel.data.config);
+        if (MyParcel.data.config.headerDeliveryOptions){
+            jQuery('#mypa-delivery-options-title').html(MyParcel.data.config.headerDeliveryOptions);
+            jQuery('#header-delivery-options-titel').show();
         }
         if (MyParcel.data.config.onlyRecipientTitle){
             jQuery('#mypa-only-recipient-title').html(MyParcel.data.config.onlyRecipientTitle);
