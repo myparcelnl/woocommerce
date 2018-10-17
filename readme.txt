@@ -93,6 +93,7 @@ Fix: Problem with WooCommerce PDF Invoices & Packing Slips
 Fix: error about "Bewaar barcode in een notitie" size
 Fix: Turn of the option allow Pickup Express
 Fix: Save settings with a new update
+Improvement: MyParcel delivery header titel 
 Improvement: Support WooCommerce 3.5.0
 Improvement: add preliminary support for "digitale postzegel"
 
