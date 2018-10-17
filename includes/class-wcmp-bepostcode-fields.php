@@ -229,8 +229,8 @@ class WC_BEPostcode_Fields {
 			'required'		=> false,
 		);
 
-		// Create new ordering for checkout fields
-		$order_keys = array (
+		// Create new ordering for checkout fields 
+        $order_keys = array (
             $form.'_first_name',
             $form.'_last_name',
             $form.'_company',
