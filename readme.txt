@@ -88,7 +88,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
-= 3.0.3 (-) =
+= 3.0.3 (2018-10-09) =
 Fix: Problem with WooCommerce PDF Invoices & Packing Slips
 Fix: error about "Bewaar barcode in een notitie" size
 Fix: Turn of the option allow Pickup Express
