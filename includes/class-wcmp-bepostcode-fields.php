@@ -231,19 +231,19 @@ class WC_BEPostcode_Fields {
 
 		// Create new ordering for checkout fields
 		$order_keys = array (
-			$form.'_country',
-			$form.'_first_name',
-			$form.'_last_name',
-			$form.'_company',
-			$form.'_address_1',
-			$form.'_address_2',
-			$form.'_street_name',
-			$form.'_house_number',
-			$form.'_box_number',
-			$form.'_postcode',
-			$form.'_city',
-			$form.'_state',
-			);
+            $form.'_first_name',
+            $form.'_last_name',
+            $form.'_company',
+            $form.'_country',
+            $form.'_address_1',
+            $form.'_address_2',
+            $form.'_street_name',
+            $form.'_house_number',
+            $form.'_box_number',
+            $form.'_postcode',
+            $form.'_city',
+            $form.'_state',
+        );
 
 		if ($form == 'billing') {
 			array_push ($order_keys,
