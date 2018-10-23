@@ -847,13 +847,13 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                'has_title'     => true,
+                		'has_title'     => true,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'signed',
-                'title'         => 'Signature on delivery',
-                'current' 	    => self::get_one_checkout_setting_title('signed_title'),
-                'size'          => 30,
+				'title'         => 'Signature on delivery',
+                		'current' 	    => self::get_one_checkout_setting_title('signed_title'),
+                		'size'          => 30,
 			)
 		);
 
@@ -864,16 +864,16 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                'has_title'     => true,
-                'has_price'     => true,
-                'option_name'	=> $option_name,
-                'id'			=> 'pickup',
-                'class'			=> 'pickup',
-                'title'         => 'Pickup',
-                'current' 	    => self::get_one_checkout_setting_title('pickup_title'),
-                'size'          => 30,
+				'has_title'     => true,
+				'has_price'     => true,
+				'option_name'	=> $option_name,
+				'id'		=> 'pickup',
+				'class'		=> 'pickup',
+				'title'         => 'Pickup',
+				'current' 	    => self::get_one_checkout_setting_title('pickup_title'),
+				'size'          => 30,
 			)
-		);
+		);	
 
 		add_settings_field(
 			'pickup_express',
@@ -882,14 +882,14 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                'has_title'     => false,
-                'has_price'     => true,
-                'option_name'	=> $option_name,
-                'id'			=> 'pickup_express',
-                'class'			=> 'pickup_express',
-                'title'         => 'Pickup express',
-                'current' 	    => __( 'Early PostNL pickup', 'woocommerce-myparcel' ),
-                'size'          => 30,
+				'has_title'     => false,
+				'has_price'     => true,
+				'option_name'	=> $option_name,
+				'id'			=> 'pickup_express',
+				'class'			=> 'pickup_express',
+				'title'         => 'Pickup express',
+				'current' 	    => __( 'Early PostNL pickup', 'woocommerce-myparcel' ),
+				'size'          => 30,
 			)
 		);
 
