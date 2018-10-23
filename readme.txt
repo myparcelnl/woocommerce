@@ -3,7 +3,7 @@ Contributors: richardperdaan
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9.5
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 Requires PHP: 5.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -89,24 +89,28 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+
+= 3.0.4 (2018-10-23) =
+* Fix: mollie payments
+* Improvement: Check for minimum php version (php 5.4) 
+* Improvement: Hide automatic pickup express if pickup is not enabled
+
 = 3.0.3 (2018-10-09) =
-Fix: Problem with WooCommerce PDF Invoices & Packing Slips
-Fix: error about "Bewaar barcode in een notitie" size
-Fix: Turn of the option allow Pickup Express
-Fix: Save settings with a new update
-Improvement: MyParcel delivery header titel 
-Improvement: Support WooCommerce 3.5.0
-Improvement: add preliminary support for "digitale postzegel"
+* Fix: Problem with WooCommerce PDF Invoices & Packing Slips
+* Fix: error about "Bewaar barcode in een notitie" size
+* Fix: Turn of the option allow Pickup Express
+* Fix: Save settings with a new update
+* Improvement: MyParcel delivery header titel 
+* Improvement: Support WooCommerce 3.5.0
+* Improvement: add preliminary support for "digitale postzegel"
 
 = 3.0.2 (2018-10-09) =
-Fix:
-* Error a non-numeric value encountered in class-wcmp-frontend-settings.php
-* Notice Undefined index: checkout_position
-* Add version number after the nl-checkout.css call
+* Fix: Error a non-numeric value encountered in class-wcmp-frontend-settings.php
+* Fix: Notice Undefined index: checkout_position
+* Fix: Add version number after the nl-checkout.css call
 
 = 3.0.0 (2018-10-09) =
-Changes:
-* The whole checkout has a new look. A choice has been made to go back to the basic checkout. The checkout is designed so that he will take the styling of the website.
+* Changes: The whole checkout has a new look. A choice has been made to go back to the basic checkout. The checkout is designed so that he will take the styling of the website.
 
 These are the biggest changes:
 * No use of libraries (only jQuery)
@@ -114,13 +118,10 @@ These are the biggest changes:
 * The checkout is more stable
 * Easier to implement improvements
 
-Fix:
-* Use street and house number fields for export a Belgium order
-* The at home or at work delivery title inside the checkout
-* The default settings
-
-Improvement:
-* The option to change the position of the checkout (edited)
+* Fix: Use street and house number fields for export a Belgium order
+* Fix: The at home or at work delivery title inside the checkout
+* Fix: The default settings
+* Improvement: The option to change the position of the checkout (edited)
 
 = 3.0.0-beta.2 (2018-09-08) =
 * Fix: at home delivery title
