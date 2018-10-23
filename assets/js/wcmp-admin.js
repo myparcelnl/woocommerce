@@ -97,17 +97,17 @@ jQuery( function( $ ) {
 		}
 	});
 
-    /* hide automatic barcode in note title if barcode in note is not enabled */
-    $('.wcmp_shipment_options input#barcode_in_note').change(function () {
-        var barcode_in_note_select = $( '.wcmp_shipment_options select.barcode_in_note_title');
-        if (this.checked) {
-            $( barcode_in_note_select ).prop('disabled', false);
-            $( '.wcmp_shipment_options tr.barcode_in_note_title').show();
-        } else {
-            $( barcode_in_note_select ).prop('disabled', true);
-            $( '.wcmp_shipment_options tr.barcode_in_note_title').hide();
-        }
-    });
+	/* hide automatic barcode in note title if barcode in note is not enabled */
+	$('.wcmp_shipment_options input#barcode_in_note').change(function () {
+		var barcode_in_note_select = $( '.wcmp_shipment_options select.barcode_in_note_title');
+		if (this.checked) {
+		    $( barcode_in_note_select ).prop('disabled', false);
+		    $( '.wcmp_shipment_options tr.barcode_in_note_title').show();
+		} else {
+		    $( barcode_in_note_select ).prop('disabled', true);
+		    $( '.wcmp_shipment_options tr.barcode_in_note_title').hide();
+		}
+	});
 
 
 	/* select > 500 if insured amount input is >499 */
