@@ -566,7 +566,7 @@ class WC_NLPostcode_Fields {
 			}
 		}
 
-		if ( $_POST['shipping_country'] == 'NL' || $_POST['shipping_country'] == 'BE' && $ship_to_different_address == true ) {
+		if (($_POST['shipping_country'] == 'NL' || $_POST['shipping_country'] == 'BE') && $ship_to_different_address == true ) {
 			// concatenate street & house number & copy to 'shipping_address_1'
 			$shipping_house_number = $_POST['shipping_house_number'] . (!empty($_POST['shipping_house_number_suffix'])?'-' . $_POST['shipping_house_number_suffix']:'');
 			$shipping_address_1 = $_POST['shipping_street_name'] . ' ' . $shipping_house_number;
@@ -717,7 +717,7 @@ class WC_NLPostcode_Fields {
 	public function formatted_address_replacements( $replacements, $args ) {
 		extract( $args );
 
-		if (!empty($street_name) && $country == 'NL' || $country == 'BE') {
+		if (!empty($street_name) && ($country == 'NL' || $country == 'BE')) {
 			$replacements['{address_1}'] = $street_name.' '.$house_number.$house_number_suffix;
 		}
 		
