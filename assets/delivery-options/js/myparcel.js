@@ -472,7 +472,7 @@ MyParcel = {
     /*
      * hideMessage
      *
-     * Hides pop-up essage.
+     * Hides pop-up message.
      *
      */
     showMessage: function(message)
@@ -797,7 +797,7 @@ MyParcel = {
     /*
      * retryPostalcodeHouseNumber
      *
-     * After detecting an unrecognised postcal code / house number combination the user can try again.
+     * After detecting an unrecognised postal code / house number combination the user can try again.
      * This function copies the newly entered data back into the webshop forms.
      *
      */
@@ -829,9 +829,9 @@ MyParcel = {
 
 
     /*
-     * showRetru
+     * showRetry
      *
-     * If a customer enters an unrecognised postal code housenumber combination show a
+     * If a customer enters an unrecognised postal code and house number combination show a
      * pop-up so they can try again.
      */
     showRetry: function()
@@ -933,7 +933,7 @@ MyParcel = {
                 MyParcel.data.deliveryOptions = response;
                 if(response.errors){
                     jQuery.each(response.errors, function(key, value){
-                        /* Postalcode housenumber combination not found or not recognised. */
+                        /* Postal code and house number combination not found or not recognised. */
                         if(value.code == '3212' || value.code == '3505'){
                             MyParcel.showRetry();
                         }

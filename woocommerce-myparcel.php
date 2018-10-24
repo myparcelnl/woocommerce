@@ -71,7 +71,7 @@ class WooCommerce_MyParcel {
 	}
 
 	/**
-	 * Load the translation / textdomain files
+	 * Load the translation / text-domain files
 	 *
 	 * Note: the first-loaded translation file overrides any following ones if the same translation is present
 	 */

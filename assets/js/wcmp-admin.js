@@ -10,7 +10,7 @@ jQuery( function( $ ) {
 		$( this ).show();
 	});
 
-	/* disable ALL shipment options form fiels to avoid conflicts with order search field */
+	/* disable ALL shipment options form fields to avoid conflicts with order search field */
 	$('.wp-list-table .wcmp_shipment_options_form :input').prop('disabled', true);
 
 	/* show and enable options when clicked */
@@ -305,7 +305,7 @@ jQuery( function( $ ) {
 					break;
 				case 'export_print':
 					bulk_spinner( this, 'show' );
-					myparcel_export( order_ids, 'after_reload' ); /* 'yes' inits print mode and disables refresh */
+					myparcel_export( order_ids, 'after_reload' ); /* 'yes' initializes print mode and disables refresh */
 					break;
 			}
 
