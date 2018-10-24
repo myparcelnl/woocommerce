@@ -29,7 +29,7 @@ MyParcel = {
         }
         if (MyParcel.data.config.headerDeliveryOptions){
             jQuery('#mypa-delivery-options-title').html(MyParcel.data.config.headerDeliveryOptions);
-            jQuery('#header-delivery-options-titel').show();
+            jQuery('#header-delivery-options-title').show();
         }
         if (MyParcel.data.config.onlyRecipientTitle){
             jQuery('#mypa-only-recipient-title').html(MyParcel.data.config.onlyRecipientTitle);
