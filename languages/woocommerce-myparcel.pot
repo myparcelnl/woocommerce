@@ -410,7 +410,7 @@ msgstr ""
 
 #: class-wcmp-settings.php:258
 msgid ""
-"Automatically set order status to a predefined status after succesfull "
+"Automatically set order status to a predefined status after successful "
 "MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> "
 "is enabled when you use this option together with the <strong>Track & Trace in "
 "email</strong> option, otherwise the Track & Trace code will not be included "
@@ -535,7 +535,7 @@ msgstr ""
 msgid ""
 "The parcel will be offered at the delivery address. If the recipient is not "
 "at home, the parcel will be delivered to the neighbours. In both cases, a "
-"signuture will be required."
+"signature will be required."
 msgstr ""
 
 #: class-wcmp-settings.php:464 views/wcmp-order-return-shipment-options.php:47

@@ -255,7 +255,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'order_status_automation',
-				'description'	=> __( 'Automatically set order status to a predefined status after succesfull MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.', 'woocommerce-myparcel' )
+				'description'	=> __( 'Automatically set order status to a predefined status after successful MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.', 'woocommerce-myparcel' )
 			)
 		);		
 
@@ -455,7 +455,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'signature',
-				'description'	=> __( 'The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signuture will be required.', 'woocommerce-myparcel' )
+				'description'	=> __( 'The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signature will be required.', 'woocommerce-myparcel' )
 			)
 		);
 		
