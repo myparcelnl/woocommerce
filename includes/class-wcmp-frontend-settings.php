@@ -342,7 +342,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         /**
          * @return mixed
          *
-         * Cut-off time for monday delivery
+         * cutoff time for monday delivery
          */
         public function get_saturday_cutoff_time() {
             if (isset($this->settings['saturday_cutoff_time'])) {

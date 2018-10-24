@@ -47,7 +47,7 @@ class WooCommerce_MyParcel_Admin {
 		$consignments = $this->get_order_shipments( $order, true );
 
 		$style = $hide ? 'style="display:none"' : '';
-		// if we have shipments, then we show status & link to track&trace, settings under i
+		// if we have shipments, then we show status & link to Track & Trace, settings under i
 		if ( !empty( $consignments ) )  {
 			// only use last shipment
 			$last_shipment = array_pop( $consignments );
@@ -80,7 +80,7 @@ class WooCommerce_MyParcel_Admin {
 	}
 
 	/**
-	 * Get shipment status + track&trace link via AJAX 
+	 * Get shipment status + Track & Trace link via AJAX
 	 */
 	public function order_list_ajax_get_shipment_summary(){
 		check_ajax_referer( 'wc_myparcel', 'security' );
@@ -362,7 +362,7 @@ class WooCommerce_MyParcel_Admin {
 				<thead>
 					<tr>
 						<th>&nbsp;</th>
-						<th><?php _e( 'Track&Trace', 'woocommerce-myparcel' );?></th>
+						<th><?php _e( 'Track & Trace', 'woocommerce-myparcel' );?></th>
 						<th><?php _e( 'Status', 'woocommerce-myparcel' );?></th>
 					</tr>
 				</thead>
