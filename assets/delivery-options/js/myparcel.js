@@ -795,13 +795,13 @@ MyParcel = {
     },
 
     /*
-     * retryPostalcodeHouseNumber
+     * retryPostalCodeHouseNumber
      *
      * After detecting an unrecognised postal code / house number combination the user can try again.
      * This function copies the newly entered data back into the webshop forms.
      *
      */
-    retryPostalcodeHouseNumber: function()
+    retryPostalCodeHouseNumber: function()
     {
         var retryPostalCode = jQuery('#mypa-error-postcode').val();
         var retryNumber = jQuery('#mypa-error-number').val();
@@ -853,11 +853,11 @@ MyParcel = {
 
         /* bind trigger to new button */
         jQuery('#mypa-error-try-again').on('click', function(){
-            MyParcel.retryPostalcodeHouseNumber();
+            MyParcel.retryPostalCodeHouseNumber();
         });
     },
 
-    setAdresFromInputFields: function () {
+    setAddressFromInputFields: function () {
 
         if (
             jQuery('#shipping_house_number').val() &&
@@ -888,7 +888,7 @@ MyParcel = {
         MyParcel.showSpinner();
         MyParcel.clearPickUpLocations();
         MyParcel.hideDelivery();
-        MyParcel.setAdresFromInputFields();
+        MyParcel.setAddressFromInputFields();
 
         if (this.data.address.postalCode === '' || this.data.address.number === ''){
             MyParcel.hideSpinner();
