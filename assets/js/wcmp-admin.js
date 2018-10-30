@@ -416,7 +416,7 @@ jQuery( function( $ ) {
 	}
 
 	function button_spinner( button, display ) {
-		if (display == 'show') {
+		if (display === 'show') {
 			$button_img = $( button ).find( '.wcmp_button_img' );
 			$button_img.hide();
 			/* console.log($( button ).parent().find('.wcmp_spinner')); */
@@ -430,7 +430,7 @@ jQuery( function( $ ) {
 	}
 
 	function bulk_spinner( action, display ) {
-		if (display == 'show') {
+		if (display === 'show') {
 			$submit_button = $( action ).parent().find('.button.action');
 			$('.wcmp_bulk_spinner').insertAfter($submit_button).show();
 		} else {
@@ -441,7 +441,7 @@ jQuery( function( $ ) {
 	/* export orders to MyParcel via AJAX */
 	function myparcel_export( order_ids, print ) {
 		if (typeof print === 'undefined') { print = 'no'; }
-		var offset = wc_myparcel.offset == 1 ? $('.wc_myparcel_offset').val() : 0;
+		var offset = wc_myparcel.offset === 1 ? $('.wc_myparcel_offset').val() : 0;
 		/* console.log('exporting order to myparcel...'); */
 		var data = {
 			action:           'wc_myparcel',
@@ -455,7 +455,7 @@ jQuery( function( $ ) {
 		$.post( wc_myparcel.ajax_url, data, function( response ) {
 			response = $.parseJSON(response);
 
-			if (print == 'no' || print == 'after_reload') {
+			if (print === 'no' || print === 'after_reload') {
 				/* refresh page, admin notices are stored in options and will be displayed automatically */
 				/* location.reload(true); */
 				redirect_url = updateUrlParameter( window.location.href, 'myparcel_done', 'true' );
@@ -481,7 +481,7 @@ jQuery( function( $ ) {
 	}
 
 	function myparcel_modal_dialog( order_ids, dialog ) {
-		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") != -1) ? '&' : '?';
+		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") !== -1) ? '&' : '?';
 		var thickbox_height = $(window).height()-120;
 		var thickbox_parameters = '&TB_iframe=true&height='+thickbox_height+'&width=720';
 		var url = wc_myparcel.ajax_url+request_prefix+'order_ids='+order_ids+'&action=wc_myparcel&request=modal_dialog&dialog='+dialog+'&security='+wc_myparcel.nonce+thickbox_parameters;
@@ -519,7 +519,7 @@ jQuery( function( $ ) {
 		/* console.log('requesting myparcel labels...'); */
 		if (typeof offset === 'undefined') { offset = 0; }
 
-		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") != -1) ? '&' : '?';
+		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") !== -1) ? '&' : '?';
 		var url = wc_myparcel.ajax_url+request_prefix+'action=wc_myparcel&request=get_labels&security='+wc_myparcel.nonce;
 
 		/* create form to send order_ids via POST */

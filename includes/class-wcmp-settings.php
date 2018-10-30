@@ -316,7 +316,6 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 
-
 		// Diagnostics section.
 		add_settings_section(
 			'diagnostics',
@@ -726,13 +725,11 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'deliverydays_window',
                 'type'			=> 'text',
                 'size'			=> '5',
-                'size'			=> '5',
                 'description'	=> __( 'Aantal dagen dat een klant een zending kan uitstellen. Standaard zijn dit 0 dagen met een maximum van 14 dagen.', 'woocommerce-myparcel' ),
             )
         );
 
-
-// Delivery options section.
+        // Delivery options section.
         add_settings_section(
             'delivery_options',
             __( 'Delivery options', 'woocommerce-myparcel' ),
@@ -892,7 +889,6 @@ class WooCommerce_MyParcel_Settings {
 				'size'          => 30,
 			)
 		);
-
 
         add_settings_field(
             'monday_delivery',

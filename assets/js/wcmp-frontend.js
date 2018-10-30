@@ -8,7 +8,7 @@ jQuery(function ($) {
 
 	// reference jQuery for MyParcel iFrame
 	window.mypajQuery = $;
-	
+
 	// show if we have to
 	if ( window.myparcel_initial_hide == false ) {
 		$('#myparcel-iframe').show();
@@ -31,13 +31,13 @@ jQuery(function ($) {
 		}, 500);
 
 		// $('#myparcel-iframe').height($('#myparcel-iframe').contents().height());
-	}
+	};
 
 	window.MyPaLoaded = function() {
 		window.update_myparcel_settings();
 		MyPaWindow.initSettings( window.mypa.settings );
 		MyPaSetHeight();
-	}
+	};
 
 	// set iframe height when delivery options changed
 	$( document ).on('change', '#mypa-chosen-delivery-options input', function() {

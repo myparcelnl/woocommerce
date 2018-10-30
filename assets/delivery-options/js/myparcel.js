@@ -67,7 +67,8 @@ MyParcel = {
         });
     },
 
-    getPriceHtml: function(priceOfDeliveryOption){
+    getPriceHtml: function(priceOfDeliveryOption)
+    {
 
         if (!priceOfDeliveryOption) {
             var price = "";
@@ -441,7 +442,7 @@ MyParcel = {
     /*
      * exportDeliverOptionToWebshop
      *
-     * Exports the selected deliveryoption to the webshop.
+     * Exports the selected delivery option to the webshop.
      *
      */
     exportDeliveryOptionToWebshop: function()
@@ -495,7 +496,6 @@ MyParcel = {
         MyParcel.hideOnlyRecipient();
         MyParcel.hideMorningDelivery();
         MyParcel.hideEveningDelivery();
-
     },
 
     /*
@@ -778,27 +778,28 @@ MyParcel = {
      * Find the location by id and return the object.
      *
      */
-    getPickupByLocationId: function (obj, locationId) {
+    getPickupByLocationId: function(obj, locationId)
+    {
         var object;
 
         jQuery.each(obj, function (key, info) {
             if (info.location_code === locationId) {
                 object = info;
                 return false;
-            };
+            }
         });
 
         return object;
     },
 
     /*
-     * retryPostalcodeHouseNumber
+     * retryPostalCodeHouseNumber
      *
-     * After detecting an unrecognised postcal code / house number combination the user can try again.
+     * After detecting an unrecognised postal code / house number combination the user can try again.
      * This function copies the newly entered data back into the webshop forms.
      *
      */
-    retryPostalcodeHouseNumber: function()
+    retryPostalCodeHouseNumber: function()
     {
         var retryPostalCode = jQuery('#mypa-error-postcode').val();
         var retryNumber = jQuery('#mypa-error-number').val();
@@ -826,21 +827,21 @@ MyParcel = {
 
 
     /*
-     * showRetru
+     * showRetry
      *
-     * If a customer enters an unrecognised postal code housenumber combination show a
+     * If a customer enters an unrecognised postal code & house number combination show a
      * pop-up so they can try again.
      */
     showRetry: function()
     {
         MyParcel.showMessage(
             '<h3>Huisnummer/postcode combinatie onbekend</h3>' +
-            '<div class="mypa-full-width mypa-error">'+
+            '<div class="mypa-full-width mypa-error">' +
             '<label for="mypa-error-postcode">Postcode</label>' +
-            '<input type="text" name="mypa-error-postcode" id="mypa-error-postcode" value="'+ MyParcel.data.address.postalCode +'">' +
+            '<input type="text" name="mypa-error-postcode" id="mypa-error-postcode" value="' + MyParcel.data.address.postalCode + '">' +
             '</div><div class="mypa-full-width mypa-error">' +
             '<label for="mypa-error-number">Huisnummer</label>' +
-            '<input type="text" name="mypa-error-number" id="mypa-error-number" value="'+ MyParcel.data.address.number +'">' +
+            '<input type="text" name="mypa-error-number" id="mypa-error-number" value="' + MyParcel.data.address.number + '">' +
             '<br><div id="mypa-error-try-again" class="button btn">Opnieuw</div>' +
             '</div>'
         );
@@ -905,7 +906,7 @@ MyParcel = {
         if(numberExtra){
             streetSuffix  = this.data.address.number + numberExtra;
         }
-        
+
         /* Check if the deliverydaysWindow == 0 and hide the select input*/
         this.deliveryDaysWindow = this.data.config.deliverydaysWindow;
 

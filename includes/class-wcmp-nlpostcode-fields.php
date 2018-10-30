@@ -638,7 +638,7 @@ class WC_NLPostcode_Fields {
     }
 
 	/**
-	 * Clean postcodes : remove space, dashes (& other non alfanumeric characters)
+	 * Clean postcodes : remove space, dashes (& other non alphanumeric characters)
 	 *
 	 * @return $billing_postcode
 	 * @return $shipping_postcode
