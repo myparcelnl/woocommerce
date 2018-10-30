@@ -38,10 +38,12 @@ class WC_NLPostcode_Fields {
     public function __construct() {
 	    $this->use_old_fields = get_option('woocommerce_myparcel_checkout_settings')['use_old_address_fields'] ?? false;
 
-		// Load styles & scripts
+	    // Load styles
+	    add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles_scripts' ) );
+        // Load scripts
+        add_action( 'admin_enqueue_scripts', array( &$this, 'admin_scripts_styles' ) );
+
 		if ( $this->use_old_fields ) {
-		    add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles_scripts' ) );
-		    add_action( 'admin_enqueue_scripts', array( &$this, 'admin_scripts_styles' ) );
 
             // Add street name & house number checkout fields.
             if (version_compare(WOOCOMMERCE_VERSION, '2.0') >= 0) {
@@ -94,11 +96,13 @@ class WC_NLPostcode_Fields {
             add_filter( 'woocommerce_checkout_required_field_notice', array( &$this, 'required_field_notices' ), 10, 2 );
 
 		    $this->load_woocommerce_filters();
+
+		    // validate address field
+            add_action('woocommerce_after_checkout_validation', array( &$this, 'validate_address_field' ), 10, 2);
         }
 
         // Processing checkout
         add_filter('woocommerce_validate_postcode', array( &$this, 'validate_postcode' ), 10, 3 );
-        add_action('woocommerce_after_checkout_validation', array( &$this, 'validate_address_field' ), 10, 2);
 
         // set later priority for woocommerce_billing_fields / woocommerce_shipping_fields
         // when Checkout Field Editor is active
@@ -133,28 +137,29 @@ class WC_NLPostcode_Fields {
 	 */
 	public function add_styles_scripts(){
 		if ( is_checkout() || is_account_page() ) {
-			if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
-				// Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
-				wp_register_script(
-					'nl-checkout',
-					WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-checkout.js',
-					array( 'wc-checkout' ),
-					$this->version
-				);
-				wp_enqueue_script( 'nl-checkout' );
-			}
+		    if ( $this->use_old_fields ) {
+                if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
+                    // Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
+                    wp_register_script(
+                        'nl-checkout',
+                        WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-checkout.js',
+                        array('wc-checkout'),
+                        $this->version
+                    );
+                    wp_enqueue_script('nl-checkout');
+                }
 
-			if ( is_account_page() ) {
-				// Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
-				wp_register_script(
-					'nl-account-page',
-					WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-account-page.js',
-					array( 'jquery' ),
-					$this->version
-				);
-				wp_enqueue_script( 'nl-account-page' );
-			}
-
+                if (is_account_page()) {
+                    // Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
+                    wp_register_script(
+                        'nl-account-page',
+                        WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-account-page.js',
+                        array('jquery'),
+                        $this->version
+                    );
+                    wp_enqueue_script('nl-account-page');
+                }
+            }
 			wp_enqueue_style( 'nl-checkout', WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout.css?MP=' . WC_MYPARCEL_VERSION);
 		}
 
