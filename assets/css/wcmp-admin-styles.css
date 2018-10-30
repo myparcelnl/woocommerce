@@ -117,6 +117,7 @@ ul.wcmyparcel_shipment_summary li:before {
 }
 
 table.tracktrace_status {
+	width: 100%;
 	margin-top: 10px;
 	margin-bottom: 10px;
 	border-collapse: collapse;

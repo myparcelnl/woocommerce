@@ -18,10 +18,7 @@ MyParcel = {
     {
         this.data = myParcelConfig;
 
-        isMobile     = true;
-        if(jQuery(window).width() > 980) {
-            isMobile = false;
-        }
+        isMobile = jQuery(window).width() < 980;
 
         /* Titles of the options*/
         if (MyParcel.data.config.deliveryTitle){
@@ -853,12 +850,12 @@ MyParcel = {
 
         /* bind trigger to new button */
         jQuery('#mypa-error-try-again').on('click', function(){
-            MyParcel.retryPostalcodeHouseNumber();
+            MyParcel.retryPostalCodeHouseNumber();
         });
     },
 
-    setAdresFromInputFields: function () {
-
+    setAddressFromInputFields: function()
+    {
         if (
             jQuery('#shipping_house_number').val() &&
             jQuery('#shipping_postcode').val() &&
@@ -888,7 +885,9 @@ MyParcel = {
         MyParcel.showSpinner();
         MyParcel.clearPickUpLocations();
         MyParcel.hideDelivery();
-        MyParcel.setAdresFromInputFields();
+        if (window.myparcel_use_old_address_fields) {
+            MyParcel.setAddressFromInputFields();
+        }
 
         if (this.data.address.postalCode === '' || this.data.address.number === ''){
             MyParcel.hideSpinner();

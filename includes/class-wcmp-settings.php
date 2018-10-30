@@ -958,7 +958,21 @@ class WooCommerce_MyParcel_Settings {
 			$option_group
 		);
 
-		add_settings_field(
+        add_settings_field(
+            'use_old_address_fields',
+            __( 'Use old address fields', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'checkbox' ),
+            $option_group,
+            'customizations',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'use_old_address_fields',
+                'class'			=> 'use_old_address_fields',
+                'description'	=> __( 'Choose whether you want to use the "old" address fields in the checkout or not. "Old" is separate fields for street, number and number suffix. "New" default fields are simply address line 1 and address line 2.', 'woocommerce-myparcel' ),
+            )
+        );
+
+        add_settings_field(
 			'custom_css',
 			__( 'Custom styles', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'textarea' ),

@@ -202,7 +202,7 @@ jQuery( function( $ ) {
 		$next_settings_forms = $(this).closest('table').nextAll('table');
 		if ($(this).is(':checked')) {
 			$next_settings_rows.show();
-			$next_settings_forms.show()
+			$next_settings_forms.show();
 			$next_settings_headers.show();
 		} else {
 			$next_settings_rows.hide();

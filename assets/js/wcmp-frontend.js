@@ -1,5 +1,6 @@
-jQuery( function( $ ) {
+jQuery(function ($) {
 	var myparcel_update_timer = false;
+	window.myparcel_use_old_address_fields = wc_myparcel_frontend.useOldAddressFields === '1';
 	window.myparcel_checkout_updating = false;
 	window.myparcel_force_update = false;
 	window.myparcel_selected_shipping_method = '';
@@ -45,6 +46,34 @@ jQuery( function( $ ) {
 		$('body').trigger('update_checkout');
 	});
 
+	// Auto fill helper for layout with separate number field
+	if (window.myparcel_use_old_address_fields) {
+		// helper variable to disable splitting street on user input
+		var auto_fill = true;
+
+		// Split street to 3 fields on autofill
+		$('#billing_street_name, #shipping_street_name').on('input', function () {
+			type = $(this).attr('id').search('billing') ? 'shipping' : 'billing';
+
+			if (auto_fill === true) {
+				address = this.value.split(/(?:([A-z]+)\s?(\d{1,6})(.+)?)/g)
+					.filter(function (value) {
+						return value !== ''
+					}); // filter out empty values
+
+				$('#' + type + '_street_name').val(address[0]);
+				$('#' + type + '_house_number').val(address[1]);
+				$('#' + type + '_house_number_suffix').val(address[2]);
+			}
+		});
+
+		$(['shipping', 'billing']).each(function () {
+			$('#' + this + '_street_name,#' + this + '_house_number,#' + this + '_house_number_suffix').on('keypress', function () { // disable splitting when user modifies street field manually
+				auto_fill = false;
+			});
+		});
+	}
+
 	// make delivery options update at least once (but don't hammer)
 	// myparcel_update_timer = setTimeout( update_myparcel_delivery_options_action, '500' );
 
@@ -56,9 +85,11 @@ jQuery( function( $ ) {
 	});
 
 	// multi-step checkout doesn't trigger update_checkout when postcode changed
-	$( document ).on('change','.wizard .content #billing_street_name, .wizard .content #billing_house_number, .wizard .content #billing_postcode',function() {
-		update_myparcel_settings();
-	});
+    if (window.myparcel_use_old_address_fields) {
+        $(document).on('change', '.wizard .content #billing_street_name, .wizard .content #billing_house_number, .wizard .content #billing_postcode', function () {
+            update_myparcel_settings();
+        });
+    }
 
 	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {
@@ -122,56 +153,53 @@ jQuery( function( $ ) {
 
 	// update myparcel settings object with address when shipping or billing address changes
 	window.update_myparcel_settings = function() {
-		var settings = get_settings();
-		if (settings == false) {
-			return;
-		}
+		if ( window.myparcel_use_old_address_fields ) {
+			if (get_settings() === false) {
+				return;
+			}
 
-		var billing_postcode = $( '#billing_postcode' ).val();
-		var billing_house_number = $( '#billing_house_number' ).val();
-		var billing_street_name = $( '#billing_street_name' ).val();
+			var billing_postcode = $( '#billing_postcode' ).val();
+			var billing_house_number = $( '#billing_house_number' ).val();
+			var billing_street_name = $( '#billing_street_name' ).val();
 
-		var shipping_postcode = $( '#shipping_postcode' ).val();
-		var shipping_house_number = $( '#shipping_house_number' ).val();
-		var shipping_street_name = $( '#shipping_street_name' ).val();
+			var shipping_postcode = $( '#shipping_postcode' ).val();
+			var shipping_house_number = $( '#shipping_house_number' ).val();
+			var shipping_street_name = $( '#shipping_street_name' ).val();
 
-		var use_shipping = $( '#ship-to-different-address-checkbox' ).is(':checked');
+			var use_shipping = $( '#ship-to-different-address-checkbox' ).is(':checked');
 
-		if (!use_shipping && billing_postcode && billing_house_number) {
-			window.mypa.settings.postal_code = billing_postcode.replace(/\s+/g, '');
-			window.mypa.settings.number = billing_house_number;
-			window.mypa.settings.street = billing_street_name;
-			update_myparcel_delivery_options()
-		} else if (shipping_postcode && shipping_house_number) {
-			window.mypa.settings.postal_code = shipping_postcode.replace(/\s+/g, '');;
-			window.mypa.settings.number = shipping_house_number;
-			window.mypa.settings.street = shipping_street_name;
-			update_myparcel_delivery_options()
-		}
+			if (!use_shipping && billing_postcode && billing_house_number) {
+				window.mypa.settings.postal_code = billing_postcode.replace(/\s+/g, '');
+				window.mypa.settings.number = billing_house_number;
+				window.mypa.settings.street = billing_street_name;
+				update_myparcel_delivery_options()
+			} else if (shipping_postcode && shipping_house_number) {
+				window.mypa.settings.postal_code = shipping_postcode.replace(/\s+/g, '');;
+				window.mypa.settings.number = shipping_house_number;
+				window.mypa.settings.street = shipping_street_name;
+				update_myparcel_delivery_options()
+			}
+        }
+	};
 
-	}
-	
 	// billing or shipping changes
-	$( '#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number' ).change(function() {
+	$('#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number').change(function () {
 		update_myparcel_settings();
-	});
-
-
-	$( '#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number' ).change();
+	}).change();
 
 	// any delivery option selected/changed - update checkout for fees
-	$('#mypa-chosen-delivery-options').on('change', 'input', function() {
+	$('#mypa-chosen-delivery-options').on('change', 'input', function () {
 		window.myparcel_checkout_updating = true;
 		// disable signed & recipient only when switching to pickup location
-		mypa_postnl_data = JSON.parse( $('#mypa-chosen-delivery-options #mypa-input').val() );
-		if (typeof mypa_postnl_data.location != 'undefined' ) {
-			$('#mypa-signed, #mypa-recipient-only').prop( "checked", false );
+		mypa_postnl_data = JSON.parse($('#mypa-chosen-delivery-options #mypa-input').val());
+		if (typeof mypa_postnl_data.location !== 'undefined') {
+			$('#mypa-signed, #mypa-recipient-only').prop("checked", false);
 		}
 		jQuery('body').trigger('update_checkout');
 	});
 
 	function get_settings() {
-		if (typeof window.mypa != 'undefined' && typeof window.mypa.settings != 'undefined') {
+		if (typeof window.mypa !== 'undefined' && typeof window.mypa.settings !== 'undefined') {
 			return window.mypa.settings;
 		} else {
 			return false;
@@ -180,25 +208,25 @@ jQuery( function( $ ) {
 
 	function check_country() {
 		country = get_shipping_country();
-		if (country != 'NL' && country != 'BE') {
+		if (country !== 'NL' && country !== 'BE') {
 			hide_myparcel_delivery_options();
 		}
 	}
 
 	function get_shipping_country() {
-		if ( $( '#ship-to-different-address-checkbox' ).is(':checked') ) {
-			country = $( '#shipping_country' ).val();
+		if ($('#ship-to-different-address-checkbox').is(':checked')) {
+			country = $('#shipping_country').val();
 		} else {
-			country = $( '#billing_country' ).val();
+			country = $('#billing_country').val();
 		}
 
 		return country;
 	}
 
 	function hide_myparcel_delivery_options() {
-	    MyParcel.hideAllDeliveryOptions();
+		MyParcel.hideAllDeliveryOptions();
 		// clear delivery options
-		if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
+		if (is_updated_shipping_method()) { // prevents infinite updated_checkout - update_checkout loop
 			jQuery('body').trigger('update_checkout');
 		}
 	}
@@ -212,7 +240,6 @@ jQuery( function( $ ) {
 		}
 	}
 
-
 	function update_myparcel_delivery_options() {
 		// Small timeout to prevent multiple requests when several fields update at the same time
 		clearTimeout( myparcel_update_timer );
@@ -221,19 +248,18 @@ jQuery( function( $ ) {
 
 	function update_myparcel_delivery_options_action() {
 		country = get_shipping_country();
-		if ( window.myparcel_checkout_updating !== true && country == 'NL' && typeof MyPaWindow != 'undefined' && typeof MyPaWindow.mypa != 'undefined' ) {
+		if (window.myparcel_checkout_updating !== true && country === 'NL' && typeof MyPaWindow !== 'undefined' && typeof MyPaWindow.mypa !== 'undefined') {
 			MyPaWindow.mypa.settings = window.mypa.settings;
 			MyPaWindow.updateMyPa();
 		}
 	}
 
 	function is_updated_shipping_method() {
-		if ( window.myparcel_updated_shipping_method != window.myparcel_selected_shipping_method || window.myparcel_force_update === true ) {
+		if (window.myparcel_updated_shipping_method !== window.myparcel_selected_shipping_method || window.myparcel_force_update === true) {
 			window.myparcel_force_update = false; // only force once
 			return true;
 		} else {
 			return false;
 		}
 	}
-
 });
