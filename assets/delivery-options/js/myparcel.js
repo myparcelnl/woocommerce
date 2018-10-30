@@ -69,17 +69,18 @@ MyParcel = {
 
     getPriceHtml: function(priceOfDeliveryOption)
     {
+        var price;
 
         if (!priceOfDeliveryOption) {
-            var price = "";
+            price = "";
         }
 
         if (parseFloat(priceOfDeliveryOption) >= 0){
-            var price = '+ &euro; ' + Number(priceOfDeliveryOption).toFixed(2).replace(".", ",");
+            price = '+ &euro; ' + Number(priceOfDeliveryOption).toFixed(2).replace(".", ",");
         }
 
         if (priceOfDeliveryOption && isNaN(parseFloat(priceOfDeliveryOption))){
-            var price = priceOfDeliveryOption ;
+            price = priceOfDeliveryOption ;
         }
 
         return price;
@@ -857,20 +858,42 @@ MyParcel = {
 
     setAddressFromInputFields: function()
     {
-        if (
-            jQuery('#shipping_house_number').val() &&
-            jQuery('#shipping_postcode').val() &&
-            jQuery('#ship-to-different-address-checkbox').prop('checked')
-        ){
-            this.data.address.cc            = jQuery('#shipping_country').val();
-            this.data.address.postalCode    = jQuery('#shipping_postcode').val();
-            this.data.address.number        = jQuery('#shipping_house_number').val();
-            this.data.address.city          = jQuery('#shipping_city').val();
-        } else {
-            this.data.address.cc            = jQuery('#billing_country').val();
-            this.data.address.postalCode    = jQuery('#billing_postcode').val();
-            this.data.address.number        = jQuery('#billing_house_number').val();
-            this.data.address.city          = jQuery('#billing_city').val();
+        // Same regex as used in SDK
+        fullStreetRegex = new RegExp(/(.*?)\s?(\d{1,4})[/\s\-]{0,2}([a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$/g);
+        input = {};
+        types = ['billing', 'shipping'];
+
+        for ( i = 0; i < types.length; i++) {
+            type = types[i];
+            input[type] = {
+                'fullStreet':        jQuery('#' + type + '_address_1').val().trim(),
+                'streetName':        jQuery('#' + type + '_street_name').val().trim(),
+                'houseNumber':       jQuery('#' + type + '_house_number').val().trim(),
+                'houseNumberSuffix': jQuery('#' + type + '_house_number_suffix').val().trim(),
+                'postalCode':        jQuery('#' + type + '_postcode').val().trim(),
+                'city':              jQuery('#' + type + '_city').val().trim(),
+                'country':           jQuery('#' + type + '_country').val().trim(),
+            }
+        }
+
+        differentAddress = jQuery('#ship-to-different-address-checkbox').prop('checked');
+        if ( input.billing.postalCode ) {
+            if ( window.myparcel_use_old_address_fields ) {
+                this.data.address.street       = differentAddress ? input.shipping.streetName        : input.billing.streetName;
+                this.data.address.number       = differentAddress ? input.shipping.houseNumber       : input.billing.houseNumber;
+                this.data.address.numberSuffix = differentAddress ? input.shipping.houseNumberSuffix : input.billing.houseNumberSuffix;
+            }
+            else {
+                this.data.address.fullStreet = differentAddress ? input.shipping.fullStreet : input.billing.fullStreet;
+                // Split full street into parts
+                streetParts = fullStreetRegex.exec( this.data.address.fullStreet );
+                this.data.address.street =       streetParts[1];
+                this.data.address.number =       streetParts[2];
+                this.data.address.numberSuffix = streetParts[3];
+            }
+            this.data.address.cc         = differentAddress ? input.shipping.country : input.billing.country;
+            this.data.address.postalCode = differentAddress ? input.shipping.postalCode : input.billing.postalCode;
+            this.data.address.city       = differentAddress ? input.shipping.city : input.billing.city;
         }
     },
 
@@ -886,26 +909,26 @@ MyParcel = {
         MyParcel.showSpinner();
         MyParcel.clearPickUpLocations();
         MyParcel.hideDelivery();
-        if (window.myparcel_use_old_address_fields) {
-            MyParcel.setAddressFromInputFields();
-        }
+        MyParcel.setAddressFromInputFields();
 
-        if (this.data.address.postalCode === '' || this.data.address.number === ''){
+        // Hide PostNL field if there is no address entered
+        if ( this.data.address.postalCode === '' || this.data.address.number === '' ) {
             MyParcel.hideSpinner();
             MyParcel.showMessage(
                 '<h3>Adresgegevens zijn niet ingevuld</h3>'
             );
             return;
         }
+
         if (this.data.address.cc === "BE") {
             var numberExtra     = this.data.address.numberExtra;
             var street          = this.data.address.street;
         }
 
-        var streetSuffix = this.data.address.number;
-        if(numberExtra){
-            streetSuffix  = this.data.address.number + numberExtra;
-        }
+        // var streetSuffix = this.data.address.number + this.data.address.numberSuffix;
+        // if(numberExtra){
+        //     streetSuffix  = this.data.address.number + numberExtra;
+        // }
 
         /* Check if the deliverydaysWindow == 0 and hide the select input*/
         this.deliveryDaysWindow = this.data.config.deliverydaysWindow;
@@ -919,7 +942,7 @@ MyParcel = {
             {
                 cc           			:this.data.address.cc,
                 postal_code  			:this.data.address.postalCode,
-                number       			:streetSuffix,
+                number       			:this.data.address.number + this.data.address.numberSuffix,
                 city					:this.data.address.city,
                 carrier      			:this.data.config.carrier,
                 dropoff_days			:this.data.config.dropOffDays,
