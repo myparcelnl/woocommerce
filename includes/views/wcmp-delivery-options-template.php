@@ -7,7 +7,7 @@
     ?>
 </style>
 
-<input style="display:none;" name='mypa-post-nl-data' id="mypa-input">
+<input style="display:none;" name='mypa-post-nl-data' id="mypa-input" />
 
 <div id="mypa-load" <?php echo $show_delivery_options ?'': 'style="display: none"';?>>
 

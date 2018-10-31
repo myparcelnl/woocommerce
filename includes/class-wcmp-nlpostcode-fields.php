@@ -96,8 +96,7 @@ class WC_NLPostcode_Fields {
             add_filter( 'woocommerce_checkout_required_field_notice', array( &$this, 'required_field_notices' ), 10, 2 );
 
 		    $this->load_woocommerce_filters();
-
-		    // validate address field
+        } else { // if NOT using old fields
             add_action('woocommerce_after_checkout_validation', array( &$this, 'validate_address_field' ), 10, 2);
         }
 
@@ -627,6 +626,9 @@ class WC_NLPostcode_Fields {
 		return $valid;
 	}
 
+    /**
+     * validate address field 1 for shipping and billing
+     */
     public function validate_address_field($address, $errors)
     {
         if ($address['billing_country'] == 'NL') {

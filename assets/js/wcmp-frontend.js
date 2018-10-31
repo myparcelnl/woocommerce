@@ -1,95 +1,10 @@
+console.log('wcmp-frontend.js');
+
 jQuery(function ($) {
-	var myparcel_update_timer = false;
-	window.myparcel_use_old_address_fields = wc_myparcel_frontend.useOldAddressFields === '1';
 	window.myparcel_checkout_updating = false;
 	window.myparcel_force_update = false;
 	window.myparcel_selected_shipping_method = '';
 	window.myparcel_updated_shipping_method = '';
-
-	// reference jQuery for MyParcel iFrame
-	window.mypajQuery = $;
-
-	// show if we have to
-	if ( window.myparcel_initial_hide == false ) {
-		$('#myparcel-iframe').show();
-	}
-
-	// set iframe object load functions
-	var iframe_object = $('#myparcel-iframe')
-		.load( function() {
-			var $MyPaiFrame = $('#myparcel-iframe')[0];
-			window.MyPaWindow = $MyPaiFrame.contentWindow ? $MyPaiFrame.contentWindow : $MyPaiFrame.contentDocument.defaultView;
-			MyPaLoaded();
-		});
-	// load iframe content
-	iframe_object.attr( 'src', wc_myparcel_frontend.iframe_url );
-
-	window.MyPaSetHeight = function() {
-		setTimeout(function () {
-			var iframeheight = MyPaWindow.document.body.scrollHeight;
-			$('#myparcel-iframe').height(iframeheight);
-		}, 500);
-
-		// $('#myparcel-iframe').height($('#myparcel-iframe').contents().height());
-	};
-
-	window.MyPaLoaded = function() {
-		window.update_myparcel_settings();
-		MyPaWindow.initSettings( window.mypa.settings );
-		MyPaSetHeight();
-	};
-
-	// set iframe height when delivery options changed
-	$( document ).on('change', '#mypa-chosen-delivery-options input', function() {
-		MyPaSetHeight(); // may need a trick to prevent height from updating 10x
-		window.myparcel_checkout_updating = true;
-		$('body').trigger('update_checkout');
-	});
-
-	// Auto fill helper for layout with separate number field
-	if (window.myparcel_use_old_address_fields) {
-		// helper variable to disable splitting street on user input
-		var auto_fill = true;
-
-		// Split street to 3 fields on autofill
-		$('#billing_street_name, #shipping_street_name').on('input', function () {
-			type = $(this).attr('id').search('billing') ? 'shipping' : 'billing';
-
-			if (auto_fill === true) {
-				address = this.value.split(/(?:([A-z]+)\s?(\d{1,6})(.+)?)/g)
-					.filter(function (value) {
-						return value !== ''
-					}); // filter out empty values
-
-				$('#' + type + '_street_name').val(address[0]);
-				$('#' + type + '_house_number').val(address[1]);
-				$('#' + type + '_house_number_suffix').val(address[2]);
-			}
-		});
-
-		$(['shipping', 'billing']).each(function () {
-			$('#' + this + '_street_name,#' + this + '_house_number,#' + this + '_house_number_suffix').on('keypress', function () { // disable splitting when user modifies street field manually
-				auto_fill = false;
-			});
-		});
-	}
-
-	// make delivery options update at least once (but don't hammer)
-	// myparcel_update_timer = setTimeout( update_myparcel_delivery_options_action, '500' );
-
-	// hide checkout options if not NL
-	$( '#billing_country, #shipping_country' ).change(function() {
-		window.myparcel_force_update = true; // in case the shipping method doesn't change
-		// check_country();
-		update_myparcel_settings();
-	});
-
-	// multi-step checkout doesn't trigger update_checkout when postcode changed
-    if (window.myparcel_use_old_address_fields) {
-        $(document).on('change', '.wizard .content #billing_street_name, .wizard .content #billing_house_number, .wizard .content #billing_postcode', function () {
-            update_myparcel_settings();
-        });
-    }
 
 	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {
@@ -151,42 +66,6 @@ jQuery(function ($) {
 		}
 	});
 
-	// update myparcel settings object with address when shipping or billing address changes
-	window.update_myparcel_settings = function() {
-		if ( window.myparcel_use_old_address_fields ) {
-			if (get_settings() === false) {
-				return;
-			}
-
-			var billing_postcode = $( '#billing_postcode' ).val();
-			var billing_house_number = $( '#billing_house_number' ).val();
-			var billing_street_name = $( '#billing_street_name' ).val();
-
-			var shipping_postcode = $( '#shipping_postcode' ).val();
-			var shipping_house_number = $( '#shipping_house_number' ).val();
-			var shipping_street_name = $( '#shipping_street_name' ).val();
-
-			var use_shipping = $( '#ship-to-different-address-checkbox' ).is(':checked');
-
-			if (!use_shipping && billing_postcode && billing_house_number) {
-				window.mypa.settings.postal_code = billing_postcode.replace(/\s+/g, '');
-				window.mypa.settings.number = billing_house_number;
-				window.mypa.settings.street = billing_street_name;
-				update_myparcel_delivery_options()
-			} else if (shipping_postcode && shipping_house_number) {
-				window.mypa.settings.postal_code = shipping_postcode.replace(/\s+/g, '');;
-				window.mypa.settings.number = shipping_house_number;
-				window.mypa.settings.street = shipping_street_name;
-				update_myparcel_delivery_options()
-			}
-        }
-	};
-
-	// billing or shipping changes
-	$('#billing_postcode, #billing_house_number, #shipping_postcode, #shipping_house_number').change(function () {
-		update_myparcel_settings();
-	}).change();
-
 	// any delivery option selected/changed - update checkout for fees
 	$('#mypa-chosen-delivery-options').on('change', 'input', function () {
 		window.myparcel_checkout_updating = true;
@@ -237,20 +116,6 @@ jQuery(function ($) {
 
         if ( is_updated_shipping_method() ) { // prevents infinite updated_checkout - update_checkout loop
             MyParcel.showAllDeliveryOptions();
-		}
-	}
-
-	function update_myparcel_delivery_options() {
-		// Small timeout to prevent multiple requests when several fields update at the same time
-		clearTimeout( myparcel_update_timer );
-		myparcel_update_timer = setTimeout( update_myparcel_delivery_options_action, '5' );
-	}
-
-	function update_myparcel_delivery_options_action() {
-		country = get_shipping_country();
-		if (window.myparcel_checkout_updating !== true && country === 'NL' && typeof MyPaWindow !== 'undefined' && typeof MyPaWindow.mypa !== 'undefined') {
-			MyPaWindow.mypa.settings = window.mypa.settings;
-			MyPaWindow.updateMyPa();
 		}
 	}
 
