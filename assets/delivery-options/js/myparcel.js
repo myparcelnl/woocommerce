@@ -210,7 +210,7 @@ MyParcel = {
         });
 
         /* External webshop triggers */
-        jQuery('#mypa-load').on('click', function () {
+        jQuery('#mypa-load input, #mypa-load select').on('input', function () {
             MyParcel.mapExternalWebshopTriggers()
         });
 
