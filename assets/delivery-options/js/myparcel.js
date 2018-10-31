@@ -772,7 +772,7 @@ MyParcel = {
                 html += "<br>";
             });
         jQuery('#mypa-delivery-option-form').hide();
-        jQuery('#mypa-location-details').html(html).show();
+        jQuery('#mypa-location-details').html(html).css('display', 'inline-block');
     },
 
     /*
