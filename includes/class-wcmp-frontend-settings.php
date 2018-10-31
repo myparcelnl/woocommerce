@@ -323,7 +323,6 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             }
         }
 
-
         /**
          * End settings pickup express delivery
          * Start settings monday delivery
