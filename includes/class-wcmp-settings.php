@@ -1044,6 +1044,7 @@ class WooCommerce_MyParcel_Settings {
             'pickup_title' => 'PostNL Pickup',
             'belgium_at_home_delivery_title' => 'Delivery',
             'belgium_standard_title' => 'Standard delivery',
+            'use_old_address_fields' => '0',
         );
     }
 }
