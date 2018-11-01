@@ -25,7 +25,7 @@ class WooCommerce_MyParcel_Export {
 		$this->errors = array();
 
 		$this->use_old_fields = array_key_exists('use_old_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
-            ? $this->get_option('woocommerce_myparcel_checkout_settings')['use_old_address_fields'] === '1'
+            ? get_option('woocommerce_myparcel_checkout_settings')['use_old_address_fields'] === '1'
             : false;
 
 		include( 'class-wcmp-rest.php' );

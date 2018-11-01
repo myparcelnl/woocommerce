@@ -37,7 +37,7 @@ class WC_NLPostcode_Fields {
      */
     public function __construct() {
         $this->use_old_fields = array_key_exists('use_old_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
-            ? $this->get_option('woocommerce_myparcel_checkout_settings')['use_old_address_fields'] === '1'
+            ? get_option('woocommerce_myparcel_checkout_settings')['use_old_address_fields'] === '1'
             : false;
 
 	    // Load styles
@@ -49,7 +49,7 @@ class WC_NLPostcode_Fields {
 
             // Add street name & house number checkout fields.
             if (version_compare(WOOCOMMERCE_VERSION, '2.0') >= 0) {
-                // WC 2.0 or newer is used, the filter got a $coutry parameter, yay!
+                // WC 2.0 or newer is used, the filter got a $country parameter, yay!
                 add_filter('woocommerce_billing_fields', [
                     &$this,
                     'nl_billing_fields'
@@ -63,7 +63,6 @@ class WC_NLPostcode_Fields {
                 add_filter('woocommerce_billing_fields', [&$this, 'nl_billing_fields']);
                 add_filter('woocommerce_shipping_fields', [&$this, 'nl_shipping_fields']);
             }
-
 
             // Localize checkout fields (limit custom checkout fields to NL and BE)
             add_filter('woocommerce_country_locale_field_selectors', [&$this, 'country_locale_field_selectors']);

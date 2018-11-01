@@ -28,7 +28,7 @@ class WooCommerce_MyParcel_Assets {
 				array(
 					'iframe_url' => WooCommerce_MyParcel()->plugin_url() . '/includes/views/wcmp-delivery-options.php?v=' . time(),
                     'useOldAddressFields' => array_key_exists('use_old_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
-                        ? $this->get_option('woocommerce_myparcel_checkout_settings')['use_old_address_fields'] === '1'
+                        ? get_option('woocommerce_myparcel_checkout_settings')['use_old_address_fields'] === '1'
                         : false
                 )
 			);

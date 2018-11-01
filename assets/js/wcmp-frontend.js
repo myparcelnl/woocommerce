@@ -1,5 +1,3 @@
-console.log('wcmp-frontend.js');
-
 jQuery(function ($) {
 	window.myparcel_checkout_updating = false;
 	window.myparcel_force_update = false;
