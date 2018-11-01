@@ -14,6 +14,7 @@ class WooCommerce_MyParcel_Export {
 	public $success;
 	public $errors;
 	private $prefix_message;
+	private $use_old_fields;
 
 	/**
 	 * Construct.
@@ -22,6 +23,10 @@ class WooCommerce_MyParcel_Export {
 	public function __construct() {
 		$this->success = array();
 		$this->errors = array();
+
+		$this->use_old_fields = array_key_exists('use_old_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
+            ? $this->get_option('woocommerce_myparcel_checkout_settings')['use_old_address_fields'] === '1'
+            : false;
 
 		include( 'class-wcmp-rest.php' );
 		include( 'class-wcmp-api.php' );
@@ -476,6 +481,7 @@ class WooCommerce_MyParcel_Export {
             $shipments[] = apply_filters( 'wc_myparcel_order_shipment', $shipment, $order, $type, $this );
         }
 
+        die();
         return $shipments;
     }
 
@@ -536,6 +542,10 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function get_recipient( $order ) {
+	    $is_using_old_fields =
+            (string) WCX_Order::get_meta($order, '_billing_street_name') != '' ||
+            (string) WCX_Order::get_meta($order, '_billing_house_number') != '';
+
 		$shipping_name = method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name() : trim( $order->shipping_first_name . ' ' . $order->shipping_last_name );
 		$address = array(
 			'cc'			=> (string) WCX_Order::get_prop( $order, 'shipping_country' ),
@@ -555,18 +565,54 @@ class WooCommerce_MyParcel_Export {
 					'city'			=> (string) WCX_Order::get_prop( $order, 'billing_city' ),
 					'person'		=> $billing_name,
 					'company'		=> (string) WCX_Order::get_prop( $order, 'billing_company' ),
-					'street'		=> (string) WCX_Order::get_meta( $order, '_billing_street_name' ),
-					'number'		=> (string) WCX_Order::get_meta( $order, '_billing_house_number' ),
-					'number_suffix' => (string) WCX_Order::get_meta( $order, '_billing_house_number_suffix' ),
 					'postal_code'	=> (string) WCX_Order::get_prop( $order, 'billing_postcode' ),
 				);
+
+				// If not using old fields
+                if (!$is_using_old_fields) {
+                    // Split the address line 1 into three parts
+                    preg_match(
+                        WC_NLPostcode_Fields::SPLIT_STREET_REGEX,
+                        WCX_Order::get_prop( $order, 'billing_address_1' ),
+                        $address_parts
+                    );
+                    $address_intl['street'] =        (string) $address_parts['street'];
+                    $address_intl['number'] =        (string) $address_parts['number'];
+                    $address_intl['number_suffix'] = array_key_exists('number_suffix', $address_parts ) // optional
+                        ? (string) $address_parts['number_suffix']
+                        : '';
+                } else {
+                    $address_intl['street'] =        (string) WCX_Order::get_meta($order, '_billing_street_name');
+                    $address_intl['number'] =        (string) WCX_Order::get_meta($order, '_billing_house_number');
+                    $address_intl['number_suffix'] = (string) WCX_Order::get_meta($order, '_billing_house_number_suffix');
+                }
 			} else {
-				$address_intl = array(
-					'street'		=> (string) WCX_Order::get_meta( $order, '_shipping_street_name' ),
-					'number'		=> (string) WCX_Order::get_meta( $order, '_shipping_house_number' ),
-					'number_suffix' => (string) WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ),
-					'postal_code'	=> (string) WCX_Order::get_prop( $order, 'shipping_postcode' ),
-				);
+                $address_intl = array(
+                    'postal_code'	=> (string) WCX_Order::get_prop( $order, 'shipping_postcode' ),
+                );
+                // If not using old fields
+                if (!$is_using_old_fields) {
+                    // Split the address line 1 into three parts
+                    preg_match(
+                        WC_NLPostcode_Fields::SPLIT_STREET_REGEX,
+                        WCX_Order::get_prop($order, 'shipping_address_1'),
+                        $address_parts
+                    );
+
+                    echo "<pre>";
+                    print_r($address_parts);
+                    echo "</pre>";
+
+                    $address_intl['street'] =        (string) $address_parts['street'];
+                    $address_intl['number'] =        (string) $address_parts['number'];
+                    $address_intl['number_suffix'] = array_key_exists('number_suffix', $address_parts ) // optional
+                        ? (string) $address_parts['number_suffix']
+                        : '';;
+                } else {
+                    $address_intl['street'] =        (string) WCX_Order::get_meta($order, '_shipping_street_name');
+                    $address_intl['number'] =        (string) WCX_Order::get_meta($order, '_shipping_house_number');
+                    $address_intl['number_suffix'] = (string) WCX_Order::get_meta($order, '_shipping_house_number_suffix');
+                }
 			}
 		} else {
 			$address_intl = array(

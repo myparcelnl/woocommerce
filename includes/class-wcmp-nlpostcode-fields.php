@@ -36,7 +36,9 @@ class WC_NLPostcode_Fields {
      * WC_NLPostcode_Fields constructor.
      */
     public function __construct() {
-	    $this->use_old_fields = get_option('woocommerce_myparcel_checkout_settings')['use_old_address_fields'] ?? false;
+        $this->use_old_fields = array_key_exists('use_old_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
+            ? $this->get_option('woocommerce_myparcel_checkout_settings')['use_old_address_fields'] === '1'
+            : false;
 
 	    // Load styles
 	    add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles_scripts' ) );
