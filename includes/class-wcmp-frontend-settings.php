@@ -415,7 +415,7 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             $base_tax_key       = key($base_tax_rates);
             $taxRate            = (float)$base_tax_rates[$base_tax_key]['rate'];
             $tax                = $price * $taxRate / 100;
-            $total_price        = money_format('%.2n', $price + $tax);
+            $total_price        = (float)number_format($price + $tax, 2);
 
             return $total_price;
         }
