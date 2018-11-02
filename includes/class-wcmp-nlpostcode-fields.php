@@ -919,7 +919,7 @@ class WC_NLPostcode_Fields {
 	 * @param  array  $array         Main array to modify
 	 * @param  mixed  $keys          Single key or array of keys of element(s) to move
 	 * @param  string $reference_key key to put elements before or after
-	 * @param  string $postion       before or after
+	 * @param  string $position       before or after
 	 * @return array                 reordered array
 	 */
 	public function array_move_keys ( $array, $keys, $reference_key, $position = 'before' ) {

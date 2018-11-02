@@ -13,7 +13,7 @@ This WooCommerce extension allows you to export your orders to the MyParcel serv
 - Modify the MyParcel shipping options per order before exporting
 - Extra checkout fields to separate street name, house number and house number suffix for more precise address data
 - View the status of the shipment in the order details page
-- Add track&trace link to the order confirmation email
+- Add Track & Trace link to the order confirmation email
 
 A MyParcel API account is required for this plugin! You can create this in your account or contact MyParcel at info@myparcel.nl
 

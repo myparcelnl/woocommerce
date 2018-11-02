@@ -43,7 +43,7 @@ class WooCommerce_MyParcel {
 	public function __construct() {
 		$this->define( 'WC_MYPARCEL_VERSION', $this->version );
 		$this->define( 'WC_CHANNEL_ENGINE_ACTIVE', class_exists('Channel_Engine'));
-        $this->plugin_basename = plugin_basename(__FILE__);
+        	$this->plugin_basename = plugin_basename(__FILE__);
 
 		// Load settings
 		$this->general_settings = get_option( 'woocommerce_myparcel_general_settings' );
@@ -72,7 +72,7 @@ class WooCommerce_MyParcel {
 	}
 
 	/**
-	 * Load the translation / textdomain files
+	 * Load the translation / text-domain files
 	 *
 	 * Note: the first-loaded translation file overrides any following ones if the same translation is present
 	 */
