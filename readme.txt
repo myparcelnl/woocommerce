@@ -26,7 +26,7 @@ This WooCommerce extension allows you to export your orders to the MyParcel serv
 - Modify the MyParcel shipping options per order before exporting
 - Extra checkout fields to separate street name, house number and house number suffix for more precise address data
 - View the status of the shipment in the order details page
-- Add track&trace link to the order confirmation email
+- Add Track & Trace link to the order confirmation email
 
 A MyParcel API account is required for this plugin! You can create this in your account or contact MyParcel at info@myparcel.nl
 
@@ -60,7 +60,7 @@ We advise you to test the whole checkout procedure once to see if everything wor
 
 The MyParcel plugin adds extra fields to the checkout of your webshop, to make it possible for the client to add street name, number and optional additions separately. This way you can be sure that everything is entered correctly. Because not all checkouts are configured alike, it's possible that the positioning/alignment of these extra fields have to be adjusted.
 
-Moreover, after a label is created, a track&trace code is added to the order. When the order is completed from WooCommerce, this track & trace code is added to the email (when this is enabled in the settings). Check that the code is correctly displayed in your template. You can read how to change the text in the FAQ section.
+Moreover, after a label is created, a Track & Trace code is added to the order. When the order is completed from WooCommerce, this Track & Trace code is added to the email (when this is enabled in the settings). Check that the code is correctly displayed in your template. You can read how to change the text in the FAQ section.
 
 == Frequently Asked Questions ==
 
@@ -69,13 +69,13 @@ Moreover, after a label is created, a track&trace code is added to the order. Wh
 = How do I get an API key? =
 When logged in on your myparcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) you can find your API key under Instellingen → Algemeen.
 
-= How do I change the track&trace email text? =
+= How do I change the Track & Trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
 `
 add_filter( 'wcmyparcel_email_text', 'wcmyparcel_new_email_text' );
 function wcmyparcel_new_email_text($track_trace_tekst) {
 	// Tutoyeren ipv vousvoyeren
-	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende PostNL track&trace nummer:';
+	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende PostNL Track & Trace nummer:';
 	return $nieuwe_tekst;
 }
 `
@@ -289,7 +289,7 @@ These are the biggest changes:
 
 = 1.5.6 =
 * Fix: Disable pakjegemak if 'ship to different address' is disabled after selecting Pakjegemak location
-* Fix: Use billing postcode for Pakjegemak track & trace
+* Fix: Use billing postcode for Pakjegemak Track & Trace
 
 = 1.5.5 =
 * Fix: Foreign postcodes validation fix.
@@ -329,7 +329,7 @@ These are the biggest changes:
 * Dev: Code refactor
 
 = 1.4.6 =
-* Fix: Foreign track & trace link updated
+* Fix: Foreign Track & Trace link updated
 
 = 1.4.5 =
 * Tweak: Prevent label creation if direct processing is disabled. NOTE! If you had this setting disabled and were used to downloading the labels directly, you need to change this in the settings.
@@ -353,7 +353,7 @@ These are the biggest changes:
 * Feature: Print order number on label
 * Feature: PakjeGemak integration
 * Feature: Option to autocomplete order after successful export to MyParcel
-* Feature: Option to display track&trace link on my account page
+* Feature: Option to display Track & Trace link on my account page
 
 = 1.3.8 =
 * Fix: Big exports now run without any warnings/problems (was limited by the server)

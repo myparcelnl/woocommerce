@@ -23,7 +23,7 @@
     <div id="mypa-delivery-option-form">
         <table class="mypa-delivery-option-table">
             <tbody>
-            <tr id="header-delivery-options-titel">
+            <tr id="header-delivery-options-title">
                 <td colspan="3">
                     <label for="mypa-delivery-options-title"><h3><span id="mypa-delivery-options-title"></span></h3></label>
                 </td>

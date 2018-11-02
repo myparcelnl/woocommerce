@@ -209,27 +209,27 @@ class WooCommerce_MyParcel_Settings {
 
 		add_settings_field(
 			'email_tracktrace',
-			__( 'Track&trace in email', 'woocommerce-myparcel' ),
+			__( 'Track & Trace in email', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'general',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'email_tracktrace',
-				'description'	=> __( 'Add the track&trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the track & trace email in your MyParcel backend.', 'woocommerce-myparcel' )
+				'description'	=> __( 'Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel backend.', 'woocommerce-myparcel' )
 			)
 		);
 
 		add_settings_field(
 			'myaccount_tracktrace',
-			__( 'Track&trace in My Account', 'woocommerce-myparcel' ),
+			__( 'Track & Trace in My Account', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'general',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'myaccount_tracktrace',
-				'description'	=> __( 'Show track&trace trace code & link in My Account.', 'woocommerce-myparcel' )
+				'description'	=> __( 'Show Track & Trace trace code & link in My Account.', 'woocommerce-myparcel' )
 			)
 		);
 
@@ -255,7 +255,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'order_status_automation',
-				'description'	=> __( 'Automatically set order status to a predefined status after succesfull MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track&trace in email</strong> option, otherwise the track&trace code will not be included in the customer email.', 'woocommerce-myparcel' )
+				'description'	=> __( 'Automatically set order status to a predefined status after successful MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.', 'woocommerce-myparcel' )
 			)
 		);		
 
@@ -282,7 +282,7 @@ class WooCommerce_MyParcel_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'keep_shipments',
 				'default'		=> 0,
-				'description'	=> __( 'With this option enabled, data from previous shipments (track & trace links) will be kept in the order when you export more than once.', 'woocommerce-myparcel' )
+				'description'	=> __( 'With this option enabled, data from previous shipments (Track & Trace links) will be kept in the order when you export more than once.', 'woocommerce-myparcel' )
 			)
 		);
 
@@ -403,7 +403,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'connect_email',
-				'description'	=> sprintf(__( 'When you connect the customer email, MyParcel can send a Track&Trace email to this address. In your %sMyParcel backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-myparcel' ), '<a href="https://backoffice.myparcel.nl/ttsettingstable" target="_blank">', '</a>')
+				'description'	=> sprintf(__( 'When you connect the customer email, MyParcel can send a Track & Trace email to this address. In your %sMyParcel backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-myparcel' ), '<a href="https://backoffice.myparcel.nl/ttsettingstable" target="_blank">', '</a>')
 			)
 		);
 
@@ -455,7 +455,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'signature',
-				'description'	=> __( 'The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signuture will be required.', 'woocommerce-myparcel' )
+				'description'	=> __( 'The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signature will be required.', 'woocommerce-myparcel' )
 			)
 		);
 		
@@ -673,7 +673,7 @@ class WooCommerce_MyParcel_Settings {
 
         add_settings_field(
             'dropoff_days',
-            __( 'Dropoff days', 'woocommerce-myparcel' ),
+            __( 'Drop-off days', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'enhanced_select' ),
             $option_group,
             'processing_parameters',
@@ -687,7 +687,7 @@ class WooCommerce_MyParcel_Settings {
 
         add_settings_field(
             'cutoff_time',
-            __( 'Cut-off time', 'woocommerce-myparcel' ),
+            __( 'Cutoff time', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'text_input' ),
             $option_group,
             'processing_parameters',
@@ -702,7 +702,7 @@ class WooCommerce_MyParcel_Settings {
 
         add_settings_field(
             'dropoff_delay',
-            __( 'Dropoff delay', 'woocommerce-myparcel' ),
+            __( 'Drop-off delay', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'text_input' ),
             $option_group,
             'processing_parameters',
@@ -725,7 +725,6 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'	=> $option_name,
                 'id'			=> 'deliverydays_window',
                 'type'			=> 'text',
-                'size'			=> '5',
                 'size'			=> '5',
                 'description'	=> __( 'Aantal dagen dat een klant een zending kan uitstellen. Standaard zijn dit 0 dagen met een maximum van 14 dagen.', 'woocommerce-myparcel' ),
             )

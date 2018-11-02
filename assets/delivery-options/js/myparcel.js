@@ -29,7 +29,7 @@ MyParcel = {
         }
         if (MyParcel.data.config.headerDeliveryOptions){
             jQuery('#mypa-delivery-options-title').html(MyParcel.data.config.headerDeliveryOptions);
-            jQuery('#header-delivery-options-titel').show();
+            jQuery('#header-delivery-options-title').show();
         }
         if (MyParcel.data.config.onlyRecipientTitle){
             jQuery('#mypa-only-recipient-title').html(MyParcel.data.config.onlyRecipientTitle);
@@ -472,7 +472,7 @@ MyParcel = {
     /*
      * hideMessage
      *
-     * Hides pop-up essage.
+     * Hides pop-up message.
      *
      */
     showMessage: function(message)
@@ -795,13 +795,13 @@ MyParcel = {
     },
 
     /*
-     * retryPostalcodeHouseNumber
+     * retryPostalCodeHouseNumber
      *
-     * After detecting an unrecognised postcal code / house number combination the user can try again.
+     * After detecting an unrecognised postal code / house number combination the user can try again.
      * This function copies the newly entered data back into the webshop forms.
      *
      */
-    retryPostalcodeHouseNumber: function()
+    retryPostalCodeHouseNumber: function()
     {
         var retryPostalCode = jQuery('#mypa-error-postcode').val();
         var retryNumber = jQuery('#mypa-error-number').val();
@@ -829,9 +829,9 @@ MyParcel = {
 
 
     /*
-     * showRetru
+     * showRetry
      *
-     * If a customer enters an unrecognised postal code housenumber combination show a
+     * If a customer enters an unrecognised postal code and house number combination show a
      * pop-up so they can try again.
      */
     showRetry: function()
@@ -853,11 +853,11 @@ MyParcel = {
 
         /* bind trigger to new button */
         jQuery('#mypa-error-try-again').on('click', function(){
-            MyParcel.retryPostalcodeHouseNumber();
+            MyParcel.retryPostalCodeHouseNumber();
         });
     },
 
-    setAdresFromInputFields: function () {
+    setAddressFromInputFields: function () {
 
         if (
             jQuery('#shipping_house_number').val() &&
@@ -888,7 +888,7 @@ MyParcel = {
         MyParcel.showSpinner();
         MyParcel.clearPickUpLocations();
         MyParcel.hideDelivery();
-        MyParcel.setAdresFromInputFields();
+        MyParcel.setAddressFromInputFields();
 
         if (this.data.address.postalCode === '' || this.data.address.number === ''){
             MyParcel.hideSpinner();
@@ -933,7 +933,7 @@ MyParcel = {
                 MyParcel.data.deliveryOptions = response;
                 if(response.errors){
                     jQuery.each(response.errors, function(key, value){
-                        /* Postalcode housenumber combination not found or not recognised. */
+                        /* Postal code and house number combination not found or not recognised. */
                         if(value.code == '3212' || value.code == '3505'){
                             MyParcel.showRetry();
                         }
