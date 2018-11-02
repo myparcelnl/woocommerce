@@ -1077,6 +1077,11 @@ class WooCommerce_MyParcel_Export {
 					$shipment_id = $id;
 					$shipment_data = compact( 'shipment_id', 'status', 'tracktrace', 'shipment');
 					$this->save_shipment_data( $order, $shipment_data );
+					// If Channel Engine is active, add the created Track & Trace code and set shipping method to PostNL in their meta data
+					if ( WC_CHANNEL_ENGINE_ACTIVE and !WCX_Order::get_meta($order, '_shipping_ce_track_and_trace')) {
+                        WCX_Order::update_meta_data( $order, '_shipping_ce_track_and_trace', $tracktrace );
+                        WCX_Order::update_meta_data( $order, '_shipping_ce_shipping_method', 'PostNL' );
+                    }
 					return $shipment_data;
 				} else {
 					return false;
