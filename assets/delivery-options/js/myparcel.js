@@ -14,6 +14,8 @@ MyParcel = {
     DELIVERY_SIGNED: 0,
     DELIVERY_ONLY_RECIPIENT: 0,
 
+    SPLIT_STREET_REGEX: '/(.*?)\s?(\d{1,4})[/\s\-]{0,2}([a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$/g',
+
     init: function()
     {
         this.data = myParcelConfig;
@@ -57,7 +59,7 @@ MyParcel = {
             jQuery('#billing_street_name, #shipping_street_name').on('animationend', function () {
                 type = jQuery(this).attr('id').search('billing') ? 'shipping' : 'billing';
                 jQuery('#' + type + '_address_1').val(this.value); // Fill in the hidden address line 1 field in case a theme forces it to be required
-                address = this.value.split(/(.*?)\s?(\d{1,4})[/\s\-]{0,2}([a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$/g)
+                address = this.value.split(MyParcel.SPLIT_STREET_REGEX)
                     .filter(function (value) {
                         return value !== ''
                     }); // filter out empty values
@@ -875,51 +877,78 @@ MyParcel = {
         });
     },
 
+    /*
+    * splitFullStreetFromInput
+    *
+    * Split full street into parts and returning empty array if there's no street entered
+    */
+    splitFullStreetFromInput: function(fullStreet)
+    {
+        result = {
+            streetName: '',
+            houseNumber: '',
+            houseNumberSuffix: '',
+        };
+
+        if (fullStreet.length) {
+            streetParts = RegExp(MyParcel.SPLIT_STREET_REGEX).exec(fullStreet);
+            result.streetName = streetParts[1];
+            result.houseNumber = streetParts[2];
+            result.houseNumberSuffix = streetParts[3];
+        }
+
+        return result;
+    },
+
     setAddressFromInputFields: function()
     {
-        // Same regex as used in SDK
-        fullStreetRegex = new RegExp(/(.*?)\s?(\d{1,4})[/\s\-]{0,2}([a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$/g);
+        streetParts = {};
+        input = MyParcel.getAddressInputValues();
+        differentAddress = jQuery('#ship-to-different-address-checkbox').prop('checked');
+        address = differentAddress ? input.shipping : input.billing;
+
+        if (!input.billing.postalCode) {
+            return;
+        }
+
+        if (window.myparcel_use_old_address_fields) {
+            streetParts.street = address.streetName;
+            streetParts.number = address.houseNumber;
+            streetParts.numberSuffix = address.houseNumberSuffix;
+        }
+        else {
+            fullStreet = address.fullStreet;
+            streetParts = MyParcel.splitFullStreetFromInput(fullStreet);
+        }
+
+        this.data.address.street = streetParts.street;
+        this.data.address.number = streetParts.houseNumber;
+        this.data.address.numberSuffix = streetParts.houseNumberSuffix;
+
+        this.data.address.cc = address.country;
+        this.data.address.postalCode = address.postalCode;
+        this.data.address.city = address.city;
+    },
+
+    getAddressInputValues: function()
+    {
         input = {};
         types = ['billing', 'shipping'];
 
-        for ( i = 0; i < types.length; i++) {
+        for (i = 0; i < types.length; i++) {
             type = types[i];
             input[type] = {
-                'fullStreet':        jQuery('#' + type + '_address_1').val(),
-                'streetName':        jQuery('#' + type + '_street_name').val(),
-                'houseNumber':       jQuery('#' + type + '_house_number').val(),
+                'fullStreet': jQuery('#' + type + '_address_1').val(),
+                'streetName': jQuery('#' + type + '_street_name').val(),
+                'houseNumber': jQuery('#' + type + '_house_number').val(),
                 'houseNumberSuffix': jQuery('#' + type + '_house_number_suffix').val(),
-                'postalCode':        jQuery('#' + type + '_postcode').val(),
-                'city':              jQuery('#' + type + '_city').val(),
-                'country':           jQuery('#' + type + '_country').val(),
+                'postalCode': jQuery('#' + type + '_postcode').val(),
+                'city': jQuery('#' + type + '_city').val(),
+                'country': jQuery('#' + type + '_country').val(),
             }
         }
 
-        differentAddress = jQuery('#ship-to-different-address-checkbox').prop('checked');
-        if ( input.billing.postalCode ) {
-            if ( window.myparcel_use_old_address_fields ) {
-                this.data.address.street       = differentAddress ? input.shipping.streetName        : input.billing.streetName;
-                this.data.address.number       = differentAddress ? input.shipping.houseNumber       : input.billing.houseNumber;
-                this.data.address.numberSuffix = differentAddress ? input.shipping.houseNumberSuffix : input.billing.houseNumberSuffix;
-            }
-            else {
-                this.data.address.fullStreet = differentAddress ? input.shipping.fullStreet : input.billing.fullStreet;
-                // Split full street into parts and emptying data if there's no street entered
-                if (this.data.address.fullStreet.length) {
-                    streetParts = fullStreetRegex.exec(this.data.address.fullStreet);
-                    this.data.address.street = streetParts[1];
-                    this.data.address.number = streetParts[2];
-                    this.data.address.numberSuffix = streetParts[3];
-                } else {
-                    this.data.address.street = '';
-                    this.data.address.number = '';
-                    this.data.address.numberSuffix = '';
-                }
-            }
-            this.data.address.cc         = differentAddress ? input.shipping.country : input.billing.country;
-            this.data.address.postalCode = differentAddress ? input.shipping.postalCode : input.billing.postalCode;
-            this.data.address.city       = differentAddress ? input.shipping.city : input.billing.city;
-        }
+        return input;
     },
 
     /*
