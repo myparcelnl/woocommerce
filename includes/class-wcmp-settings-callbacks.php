@@ -586,7 +586,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 			}
 		}
 
-		// falback to default or empty if no value in option
+		// fallback to default or empty if no value in option
 		if ( !isset($args['current']) ) {
 			$args['current'] = isset( $args['default'] ) ? $args['default'] : '';
 		}		

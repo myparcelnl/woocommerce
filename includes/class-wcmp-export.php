@@ -599,15 +599,11 @@ class WooCommerce_MyParcel_Export {
                         $address_parts
                     );
 
-                    echo "<pre>";
-                    print_r($address_parts);
-                    echo "</pre>";
-
                     $address_intl['street'] =        (string) $address_parts['street'];
                     $address_intl['number'] =        (string) $address_parts['number'];
                     $address_intl['number_suffix'] = array_key_exists('number_suffix', $address_parts ) // optional
                         ? (string) $address_parts['number_suffix']
-                        : '';;
+                        : '';
                 } else {
                     $address_intl['street'] =        (string) WCX_Order::get_meta($order, '_shipping_street_name');
                     $address_intl['number'] =        (string) WCX_Order::get_meta($order, '_shipping_house_number');
