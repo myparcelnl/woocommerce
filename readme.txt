@@ -2,8 +2,8 @@
 Contributors: richardperdaan
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.9.5
-Stable tag: 3.0.4
+Tested up to: 4.9.8
+Stable tag: 3.0.5
 Requires PHP: 5.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -89,6 +89,13 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+
+= 3.0.5 (-) =
+* Fix: Error message about money_format
+* Fix:Add the priority to the checkout field for support WooCommerce 3.5.1
+* Fix:The PostNL logo is not visible with all browsers 
+* Improvement: Support Channel Engine
+* Improvement: Information inside the checkout and the translations
 
 = 3.0.4 (2018-10-23) =
 * Fix: mollie payments
