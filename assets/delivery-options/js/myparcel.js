@@ -992,7 +992,7 @@ MyParcel = {
                 if(response.errors){
                     jQuery.each(response.errors, function(key, value) {
                         /* Postal code & house number combination not found or not recognised. */
-                        if (value.code === 3212 || value.code === 3505) {
+                        if (value.code == '3212' || value.code == '3505') {
                             MyParcel.showRetry();
                         }
 
