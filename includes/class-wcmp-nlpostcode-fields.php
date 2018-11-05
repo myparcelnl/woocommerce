@@ -107,7 +107,7 @@ class WC_NLPostcode_Fields {
         // set later priority for woocommerce_billing_fields / woocommerce_shipping_fields
         // when Checkout Field Editor is active
         if ( function_exists('thwcfd_is_locale_field') || function_exists('wc_checkout_fields_modify_billing_fields') ) {
-            add_filter( 'nl_checkout_fields_priority', function(){
+            add_filter( 'nl_checkout_fields_priority', 1001)
                 return 1001;
             } );
         }
