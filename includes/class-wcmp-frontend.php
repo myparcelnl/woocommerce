@@ -187,7 +187,12 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
             $jsonConfig  = $this->get_checkout_config();
 
-            echo "<script>" . "myparcel_delivery_options_always_display = '$delivery_options_always_display';" . "myparcel_delivery_options_shipping_methods = $delivery_options_shipping_methods;" . "myParcelConfig = {$jsonConfig} myparcel_delivery_options_shipping_methods = {$delivery_options_shipping_methods} </script>";
+            echo "<script>",
+                 "myparcel_delivery_options_always_display = '$delivery_options_always_display';",
+                 "myparcel_delivery_options_shipping_methods = $delivery_options_shipping_methods;",
+                 "myParcelConfig = {$jsonConfig}; myparcel_delivery_options_shipping_methods = {$delivery_options_shipping_methods}",
+                 "</script>";
+
             require_once(WooCommerce_MyParcel()->plugin_path().'/includes/views/wcmp-delivery-options-template.php');
 
             return;
