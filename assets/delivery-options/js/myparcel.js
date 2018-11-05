@@ -14,7 +14,7 @@ MyParcel = {
     DELIVERY_SIGNED: 0,
     DELIVERY_ONLY_RECIPIENT: 0,
 
-    SPLIT_STREET_REGEX: '/(.*?)\s?(\d{1,4})[/\s\-]{0,2}([a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$/g',
+    SPLIT_STREET_REGEX: /(.*?)\s?(\d{1,4})[/\s\-]{0,2}([a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$/g,
 
     init: function()
     {
