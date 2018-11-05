@@ -902,50 +902,41 @@ MyParcel = {
 
     setAddressFromInputFields: function()
     {
-        streetParts = {};
-        input = MyParcel.getAddressInputValues();
-        differentAddress = jQuery('#ship-to-different-address-checkbox').prop('checked');
-        address = differentAddress ? input.shipping : input.billing;
+        addressType = jQuery('#ship-to-different-address-checkbox').prop('checked') ? 'shipping' : 'billing';
+        address = MyParcel.getAddressInputValues(addressType);
 
-        if (!input.billing.postalCode) {
+        if (!MyParcel.getAddressInputValues('billing').postalCode) {
             return;
         }
 
-        if (window.myparcel_use_old_address_fields) {
-            streetParts.street = address.streetName;
-            streetParts.number = address.houseNumber;
-            streetParts.numberSuffix = address.houseNumberSuffix;
-        }
-        else {
-            fullStreet = address.fullStreet;
-            streetParts = MyParcel.splitFullStreetFromInput(fullStreet);
-        }
-
-        this.data.address.street = streetParts.street;
-        this.data.address.number = streetParts.houseNumber;
-        this.data.address.numberSuffix = streetParts.houseNumberSuffix;
-
-        this.data.address.cc = address.country;
-        this.data.address.postalCode = address.postalCode;
-        this.data.address.city = address.city;
+        this.data.address.street =       address.street;
+        this.data.address.number =       address.houseNumber;
+        this.data.address.numberSuffix = address.houseNumberSuffix;
+        this.data.address.cc =           address.country;
+        this.data.address.postalCode =   address.postalCode;
+        this.data.address.city =         address.city;
     },
 
-    getAddressInputValues: function()
+    getAddressInputValues: function(type)
     {
-        input = {};
-        types = ['billing', 'shipping'];
+        streetParts = {};
+        input = {
+            'fullStreet': jQuery('#' + type + '_address_1').val(),
+            'postalCode': jQuery('#' + type + '_postcode').val(),
+            'city': jQuery('#' + type + '_city').val(),
+            'country': jQuery('#' + type + '_country').val(),
+        };
 
-        for (i = 0; i < types.length; i++) {
-            type = types[i];
-            input[type] = {
-                'fullStreet': jQuery('#' + type + '_address_1').val(),
-                'streetName': jQuery('#' + type + '_street_name').val(),
-                'houseNumber': jQuery('#' + type + '_house_number').val(),
-                'houseNumberSuffix': jQuery('#' + type + '_house_number_suffix').val(),
-                'postalCode': jQuery('#' + type + '_postcode').val(),
-                'city': jQuery('#' + type + '_city').val(),
-                'country': jQuery('#' + type + '_country').val(),
-            }
+        if (window.myparcel_is_using_old_address_fields) {
+            input.streetName = jQuery('#' + type + '_street_name').val();
+            input.houseNumber = jQuery('#' + type + '_house_number').val();
+            input.houseNumberSuffix = jQuery('#' + type + '_house_number_suffix').val();
+        }
+        else {
+            streetParts = MyParcel.splitFullStreetFromInput(input.fullStreet);
+            input.streetName = streetParts.streetName;
+            input.houseNumber = streetParts.houseNumber;
+            input.houseNumberSuffix = streetParts.houseNumberSuffix;
         }
 
         return input;
