@@ -942,6 +942,30 @@ MyParcel = {
         return input;
     },
 
+
+    /*
+    * splitFullStreetFromInput
+    *
+    * Split full street into parts and returning empty array if there's no street entered
+    */
+    splitFullStreetFromInput: function(fullStreet)
+    {
+        result = {
+            streetName: '',
+            houseNumber: '',
+            houseNumberSuffix: '',
+        };
+
+        if (fullStreet.length) {
+            streetParts = new RegExp(MyParcel.SPLIT_STREET_REGEX).exec(fullStreet);
+            result.streetName = streetParts[1];
+            result.houseNumber = streetParts[2];
+            result.houseNumberSuffix = streetParts[3];
+        }
+
+        return result;
+    },
+
     /*
      * callDeliveryOptions
      *
