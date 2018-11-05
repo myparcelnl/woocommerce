@@ -18,7 +18,7 @@ class WC_NLPostcode_Fields {
      * This regex goes from right to left
      * Contains php keys to store the data in an array
      *
-     * Taken from the sdk
+     * Taken from https://github.com/myparcelnl/sdk
      */
     const SPLIT_STREET_REGEX =
         '~(?P<street>.*?)' .            // The rest belongs to the street
@@ -98,7 +98,7 @@ class WC_NLPostcode_Fields {
 
 		    $this->load_woocommerce_filters();
         } else { // if NOT using old fields
-            add_action('woocommerce_after_checkout_validation', array( &$this, 'validate_address_field' ), 10, 2);
+            add_action('woocommerce_after_checkout_validation', array(&$this, 'validate_address_fields'), 10, 2);
         }
 
         // Processing checkout
@@ -630,7 +630,7 @@ class WC_NLPostcode_Fields {
     /**
      * validate address field 1 for shipping and billing
      */
-    public function validate_address_field($address, $errors)
+    public function validate_address_fields($address, $errors)
     {
         if ($address['billing_country'] == 'NL'
             && !(bool) preg_match(self::SPLIT_STREET_REGEX, trim($address['billing_address_1']))) {
