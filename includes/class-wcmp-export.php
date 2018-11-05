@@ -14,7 +14,7 @@ class WooCommerce_MyParcel_Export {
 	public $success;
 	public $errors;
 	private $prefix_message;
-	private $use_old_fields;
+	private $use_split_address_fields;
 
 	/**
 	 * Construct.
@@ -24,8 +24,8 @@ class WooCommerce_MyParcel_Export {
 		$this->success = array();
 		$this->errors = array();
 
-		$this->use_old_fields = array_key_exists('use_old_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
-            ? get_option('woocommerce_myparcel_checkout_settings')['use_old_address_fields'] === '1'
+		$this->use_split_address_fields = array_key_exists('use_split_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
+            ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] === '1'
             : false;
 
 		include( 'class-wcmp-rest.php' );
@@ -481,7 +481,6 @@ class WooCommerce_MyParcel_Export {
             $shipments[] = apply_filters( 'wc_myparcel_order_shipment', $shipment, $order, $type, $this );
         }
 
-        die();
         return $shipments;
     }
 

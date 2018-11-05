@@ -11,7 +11,7 @@ class WC_NLPostcode_Fields {
 
 	public $version = '1.5.4';
 
-	private $use_old_fields;
+	private $use_split_address_fields;
 
     /**
      * Regular expression used to split street name from house number.
@@ -36,8 +36,8 @@ class WC_NLPostcode_Fields {
      * WC_NLPostcode_Fields constructor.
      */
     public function __construct() {
-        $this->use_old_fields = array_key_exists('use_old_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
-            ? get_option('woocommerce_myparcel_checkout_settings')['use_old_address_fields'] === '1'
+        $this->use_split_address_fields = array_key_exists('use_split_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
+            ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] === '1'
             : false;
 
 	    // Load styles
@@ -45,7 +45,7 @@ class WC_NLPostcode_Fields {
         // Load scripts
         add_action( 'admin_enqueue_scripts', array( &$this, 'admin_scripts_styles' ) );
 
-		if ( $this->use_old_fields ) {
+		if ( $this->use_split_address_fields ) {
 
             // Add street name & house number checkout fields.
             if (version_compare(WOOCOMMERCE_VERSION, '2.0') >= 0) {
@@ -137,7 +137,7 @@ class WC_NLPostcode_Fields {
 	 */
 	public function add_styles_scripts(){
 		if ( is_checkout() || is_account_page() ) {
-		    if ( $this->use_old_fields ) {
+		    if ( $this->use_split_address_fields ) {
                 if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
                     // Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
                     wp_register_script(
@@ -632,16 +632,15 @@ class WC_NLPostcode_Fields {
      */
     public function validate_address_field($address, $errors)
     {
-        if ($address['billing_country'] == 'NL') {
-            if (!(bool) preg_match(self::SPLIT_STREET_REGEX, trim($address['billing_address_1']))) {
-                $errors->add( 'address', __('Please enter a valid billing address.', 'woocommerce-myparcel'));
-            }
+        if ($address['billing_country'] == 'NL'
+            && !(bool) preg_match(self::SPLIT_STREET_REGEX, trim($address['billing_address_1']))) {
+            $errors->add('address', __('Please enter a valid billing address.', 'woocommerce-myparcel'));
         }
 
-        if (array_key_exists('ship_to_different_address', $addess) && $address['shipping_country'] == 'NL') {
-            if (!(bool) preg_match(self::SPLIT_STREET_REGEX, trim($address['shipping_address_1']))) {
-                $errors->add( 'address', __('Please enter a valid shipping address.', 'woocommerce-myparcel'));
-            }
+        if ($address['shipping_country'] == 'NL'
+            && array_key_exists('ship_to_different_address', $address)
+            && !(bool) preg_match(self::SPLIT_STREET_REGEX, trim($address['shipping_address_1']))) {
+            $errors->add('address', __('Please enter a valid shipping address.', 'woocommerce-myparcel'));
         }
     }
 

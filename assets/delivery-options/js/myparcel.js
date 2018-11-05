@@ -54,7 +54,7 @@ MyParcel = {
         MyParcel.callDeliveryOptions();
 
         // Auto fill helper for layout with separate number field
-        if (window.myparcel_is_using_old_address_fields) {
+        if (window.myparcel_is_using_split_address_fields) {
             // Split street to 3 fields on autofill
             jQuery('#billing_street_name, #shipping_street_name').on('animationend', function () {
                 type = jQuery(this).attr('id').search('billing') ? 'shipping' : 'billing';
@@ -233,7 +233,7 @@ MyParcel = {
         });
 
 
-        fields = window.myparcel_is_using_old_address_fields
+        fields = window.myparcel_is_using_split_address_fields
             ? '#billing_house_number, #shipping_house_number'
             : '#billing_address_1, #shipping_address_1';
 
@@ -904,7 +904,7 @@ MyParcel = {
             'country': jQuery('#' + type + '_country').val(),
         };
 
-        if (window.myparcel_is_using_old_address_fields) {
+        if (window.myparcel_is_using_split_address_fields) {
             input.streetName = jQuery('#' + type + '_street_name').val();
             input.houseNumber = jQuery('#' + type + '_house_number').val();
             input.houseNumberSuffix = jQuery('#' + type + '_house_number_suffix').val();

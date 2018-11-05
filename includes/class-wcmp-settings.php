@@ -955,16 +955,16 @@ class WooCommerce_MyParcel_Settings {
 		);
 
         add_settings_field(
-            'use_old_address_fields',
+            'use_split_address_fields',
             __( 'Use old address fields', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'checkbox' ),
             $option_group,
             'customizations',
             array(
                 'option_name'	=> $option_name,
-                'id'			=> 'use_old_address_fields',
-                'class'			=> 'use_old_address_fields',
-                'description'	=> __( 'Choose whether you want to use the "old" address fields in the checkout or not. "Old" is separate fields for street, number and number suffix. "New" default fields are simply address line 1 and address line 2.', 'woocommerce-myparcel' ),
+                'id'			=> 'use_split_address_fields',
+                'class'			=> 'use_split_address_fields',
+                'description'	=> __( 'Choose whether you want to use the "old" address fields in the checkout or not. The old fields are three separate fields for street, number and number suffix. Disabling this setting enables the default WooCommerce address fields, which are "address line 1" and "address line 2". We recommend using the default fields for optimal integration with WooCommerce and any other plugins.', 'woocommerce-myparcel' ),
             )
         );
 
@@ -1044,7 +1044,7 @@ class WooCommerce_MyParcel_Settings {
             'pickup_title' => 'PostNL Pickup',
             'belgium_at_home_delivery_title' => 'Delivery',
             'belgium_standard_title' => 'Standard delivery',
-            'use_old_address_fields' => '0',
+            'use_split_address_fields' => '0',
         );
     }
 }

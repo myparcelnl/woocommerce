@@ -3,6 +3,7 @@ jQuery(function ($) {
 	window.myparcel_force_update = false;
 	window.myparcel_selected_shipping_method = '';
 	window.myparcel_updated_shipping_method = '';
+	window.myparcel_is_using_split_address_fields = wc_myparcel_frontend.isUsingOldAddressFields;
 
 	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {

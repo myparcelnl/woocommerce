@@ -276,12 +276,6 @@ class WooCommerce_MyParcel {
 	 * @param string $installed_version the currently installed ('old') version
 	 */
 	protected function upgrade( $installed_version ) {
-        if ( version_compare( $installed_version, '3.0.4', '<=' ) ) {
-            $new_settings = get_option( 'woocommerce_myparcel_checkout_settings' );
-            $new_settings['use_old_address_fields'] = '1';
-            update_option('woocommerce_myparcel_checkout_settings', $new_settings);
-        }
-
         if ( version_compare( $installed_version, '2.4.0-beta-4', '<' ) ) {
 			// remove log file (now uses WC logger)
 			$upload_dir = wp_upload_dir();
@@ -291,6 +285,13 @@ class WooCommerce_MyParcel {
 				@unlink( $log_file );
 			}
 		}
+
+		if ( version_compare( $installed_version, '3.0.4', '<=' ) ) {
+            $new_settings = get_option( 'woocommerce_myparcel_checkout_settings' );
+            $new_settings['use_split_address_fields'] = '1';
+            update_option('woocommerce_myparcel_checkout_settings', $new_settings);
+        }
+
 	}
 
 	/**
