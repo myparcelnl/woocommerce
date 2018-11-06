@@ -316,7 +316,6 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 
-
 		// Diagnostics section.
 		add_settings_section(
 			'diagnostics',
@@ -730,8 +729,7 @@ class WooCommerce_MyParcel_Settings {
             )
         );
 
-
-// Delivery options section.
+        // Delivery options section.
         add_settings_section(
             'delivery_options',
             __( 'Delivery options', 'woocommerce-myparcel' ),
@@ -892,7 +890,6 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 
-
         add_settings_field(
             'monday_delivery',
             __( 'Enable monday delivery', 'woocommerce-myparcel' ),
@@ -957,7 +954,21 @@ class WooCommerce_MyParcel_Settings {
 			$option_group
 		);
 
-		add_settings_field(
+        add_settings_field(
+            'use_split_address_fields',
+            __( 'Use old address fields', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'checkbox' ),
+            $option_group,
+            'customizations',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'use_split_address_fields',
+                'class'			=> 'use_split_address_fields',
+                'description'	=> __( 'Choose whether you want to use the "old" address fields in the checkout or not. The old fields are three separate fields for street, number and number suffix. Disabling this setting enables the default WooCommerce address fields, which are "address line 1" and "address line 2". We recommend using the default fields for optimal integration with WooCommerce and any other plugins.', 'woocommerce-myparcel' ),
+            )
+        );
+
+        add_settings_field(
 			'custom_css',
 			__( 'Custom styles', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'textarea' ),
@@ -1033,6 +1044,7 @@ class WooCommerce_MyParcel_Settings {
             'pickup_title' => 'PostNL Pickup',
             'belgium_at_home_delivery_title' => 'Delivery',
             'belgium_standard_title' => 'Standard delivery',
+            'use_split_address_fields' => '0',
         );
     }
 }

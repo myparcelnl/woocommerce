@@ -14,6 +14,7 @@ class WooCommerce_MyParcel_Export {
 	public $success;
 	public $errors;
 	private $prefix_message;
+	private $use_split_address_fields;
 
 	/**
 	 * Construct.
@@ -22,6 +23,10 @@ class WooCommerce_MyParcel_Export {
 	public function __construct() {
 		$this->success = array();
 		$this->errors = array();
+
+		$this->use_split_address_fields = array_key_exists('use_split_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
+            ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] === '1'
+            : false;
 
 		include( 'class-wcmp-rest.php' );
 		include( 'class-wcmp-api.php' );
@@ -536,6 +541,10 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function get_recipient( $order ) {
+	    $is_using_old_fields =
+            (string) WCX_Order::get_meta($order, '_billing_street_name') != '' ||
+            (string) WCX_Order::get_meta($order, '_billing_house_number') != '';
+
 		$shipping_name = method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name() : trim( $order->shipping_first_name . ' ' . $order->shipping_last_name );
 		$address = array(
 			'cc'			=> (string) WCX_Order::get_prop( $order, 'shipping_country' ),
@@ -555,18 +564,50 @@ class WooCommerce_MyParcel_Export {
 					'city'			=> (string) WCX_Order::get_prop( $order, 'billing_city' ),
 					'person'		=> $billing_name,
 					'company'		=> (string) WCX_Order::get_prop( $order, 'billing_company' ),
-					'street'		=> (string) WCX_Order::get_meta( $order, '_billing_street_name' ),
-					'number'		=> (string) WCX_Order::get_meta( $order, '_billing_house_number' ),
-					'number_suffix' => (string) WCX_Order::get_meta( $order, '_billing_house_number_suffix' ),
 					'postal_code'	=> (string) WCX_Order::get_prop( $order, 'billing_postcode' ),
 				);
+
+				// If not using old fields
+                if (!$is_using_old_fields) {
+                    // Split the address line 1 into three parts
+                    preg_match(
+                        WC_NLPostcode_Fields::SPLIT_STREET_REGEX,
+                        WCX_Order::get_prop( $order, 'billing_address_1' ),
+                        $address_parts
+                    );
+                    $address_intl['street'] =        (string) $address_parts['street'];
+                    $address_intl['number'] =        (string) $address_parts['number'];
+                    $address_intl['number_suffix'] = array_key_exists('number_suffix', $address_parts ) // optional
+                        ? (string) $address_parts['number_suffix']
+                        : '';
+                } else {
+                    $address_intl['street'] =        (string) WCX_Order::get_meta($order, '_billing_street_name');
+                    $address_intl['number'] =        (string) WCX_Order::get_meta($order, '_billing_house_number');
+                    $address_intl['number_suffix'] = (string) WCX_Order::get_meta($order, '_billing_house_number_suffix');
+                }
 			} else {
-				$address_intl = array(
-					'street'		=> (string) WCX_Order::get_meta( $order, '_shipping_street_name' ),
-					'number'		=> (string) WCX_Order::get_meta( $order, '_shipping_house_number' ),
-					'number_suffix' => (string) WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ),
-					'postal_code'	=> (string) WCX_Order::get_prop( $order, 'shipping_postcode' ),
-				);
+                $address_intl = array(
+                    'postal_code'	=> (string) WCX_Order::get_prop( $order, 'shipping_postcode' ),
+                );
+                // If not using old fields
+                if (!$is_using_old_fields) {
+                    // Split the address line 1 into three parts
+                    preg_match(
+                        WC_NLPostcode_Fields::SPLIT_STREET_REGEX,
+                        WCX_Order::get_prop($order, 'shipping_address_1'),
+                        $address_parts
+                    );
+
+                    $address_intl['street'] =        (string) $address_parts['street'];
+                    $address_intl['number'] =        (string) $address_parts['number'];
+                    $address_intl['number_suffix'] = array_key_exists('number_suffix', $address_parts ) // optional
+                        ? (string) $address_parts['number_suffix']
+                        : '';
+                } else {
+                    $address_intl['street'] =        (string) WCX_Order::get_meta($order, '_shipping_street_name');
+                    $address_intl['number'] =        (string) WCX_Order::get_meta($order, '_shipping_house_number');
+                    $address_intl['number_suffix'] = (string) WCX_Order::get_meta($order, '_shipping_house_number_suffix');
+                }
 			}
 		} else {
 			$address_intl = array(
@@ -1034,19 +1075,19 @@ class WooCommerce_MyParcel_Export {
 		$shipment_statuses = array(
 			1	=> __('pending - concept', 'woocommerce-myparcel'),
 			2	=> __('pending - registered', 'woocommerce-myparcel'),
-			3	=> __('en route - handed to carrier', 'woocommerce-myparcel'),
-			4	=> __('en route - sorting', 'woocommerce-myparcel'),
-			5	=> __('en route - distribution', 'woocommerce-myparcel'),
-			6	=> __('en route - customs', 'woocommerce-myparcel'),
+			3	=> __('enroute - handed to carrier', 'woocommerce-myparcel'),
+			4	=> __('enroute - sorting', 'woocommerce-myparcel'),
+			5	=> __('enroute - distribution', 'woocommerce-myparcel'),
+			6	=> __('enroute - customs', 'woocommerce-myparcel'),
 			7	=> __('delivered - at recipient', 'woocommerce-myparcel'),
 			8	=> __('delivered - ready for pickup', 'woocommerce-myparcel'),
 			9	=> __('delivered - package picked up', 'woocommerce-myparcel'),
 			30	=> __('inactive - concept', 'woocommerce-myparcel'),
 			31	=> __('inactive - registered', 'woocommerce-myparcel'),
-			32	=> __('inactive - en route - handed to carrier', 'woocommerce-myparcel'),
-			33	=> __('inactive - en route - sorting', 'woocommerce-myparcel'),
-			34	=> __('inactive - en route - distribution', 'woocommerce-myparcel'),
-			35	=> __('inactive - en route - customs', 'woocommerce-myparcel'),
+			32	=> __('inactive - enroute - handed to carrier', 'woocommerce-myparcel'),
+			33	=> __('inactive - enroute - sorting', 'woocommerce-myparcel'),
+			34	=> __('inactive - enroute - distribution', 'woocommerce-myparcel'),
+			35	=> __('inactive - enroute - customs', 'woocommerce-myparcel'),
 			36	=> __('inactive - delivered - at recipient', 'woocommerce-myparcel'),
 			37	=> __('inactive - delivered - ready for pickup', 'woocommerce-myparcel'),
 			38	=> __('inactive - delivered - package picked up', 'woocommerce-myparcel'),
@@ -1537,7 +1578,7 @@ class WooCommerce_MyParcel_Export {
      */
     private function isActiveMethod( $shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class ) {
 
-        //support WooCommerce flate rate
+        //support WooCommerce flat rate
         // check if we have a match with the predefined methods
 	    if (in_array($shipping_method_id, $package_type_shipping_methods)) {
             return true;

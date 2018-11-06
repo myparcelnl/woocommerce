@@ -11,79 +11,112 @@ class WC_NLPostcode_Fields {
 
 	public $version = '1.5.4';
 
-	/**
-	 * Construct.
-	 */
-			
-	public function __construct() {
-		// Load styles & scripts
-		add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_scripts_styles' ) );
+	private $use_split_address_fields;
 
-		// set later priority for woocommerce_billing_fields / woocommerce_shipping_fields
-		// when Checkout Field Editor is active
-		if ( function_exists('thwcfd_is_locale_field') || function_exists('wc_checkout_fields_modify_billing_fields') ) {
-			add_filter( 'nl_checkout_fields_priority', function(){
-				return 1001;
-			} );
-		}
+    /**
+     * Regular expression used to split street name from house number.
+     * This regex goes from right to left
+     * Contains php keys to store the data in an array
+     *
+     * Taken from https://github.com/myparcelnl/sdk
+     */
+    const SPLIT_STREET_REGEX =
+        '~(?P<street>.*?)' .            // The rest belongs to the street
+        '\s?' .                         // Separator between street and number
+        '(?P<number>\d{1,4})' .         // Number can contain a maximum of 4 numbers
+        '[/\s\-]{0,2}' .                // Separators between number and addition
+        '(?P<number_suffix>' .
+        '[a-zA-Z]{1}\d{1,3}|' .         // Numbers suffix starts with a letter followed by numbers or
+        '-\d{1,4}|' .                   // starts with - and has up to 4 numbers or
+        '\d{2}\w{1,2}|' .               // starts with 2 numbers followed by letters or
+        '[a-zA-Z]{1}[a-zA-Z\s]{0,3}' .  // has up to 4 letters with a space
+        ')?$~';
 
-		// Add street name & house number checkout fields.
-		if ( version_compare( WOOCOMMERCE_VERSION, '2.0' ) >= 0 ) {
-			// WC 2.0 or newer is used, the filter got a $coutry parameter, yay!
-			add_filter( 'woocommerce_billing_fields', array( &$this, 'nl_billing_fields' ), apply_filters( 'nl_checkout_fields_priority', 10, 'billing' ), 2 );
-			add_filter( 'woocommerce_shipping_fields', array( &$this, 'nl_shipping_fields' ), apply_filters( 'nl_checkout_fields_priority', 10, 'shipping' ), 2 );
-		} else {
-			// Backwards compatibility
-			add_filter( 'woocommerce_billing_fields', array( &$this, 'nl_billing_fields' ) );
-			add_filter( 'woocommerce_shipping_fields', array( &$this, 'nl_shipping_fields' ) );
-		}
-	
+    /**
+     * WC_NLPostcode_Fields constructor.
+     */
+    public function __construct() {
+        $this->use_split_address_fields = array_key_exists('use_split_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
+            ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] === '1'
+            : false;
 
-		// Hide state field for countries without states (backwards compatible fix for bug #4223)
-		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<' ) ) {
-			add_filter( 'woocommerce_countries_allowed_country_states', array( &$this, 'hide_states' ) );
-		}
+	    // Load styles
+	    add_action( 'wp_enqueue_scripts', array( &$this, 'add_styles_scripts' ) );
+        // Load scripts
+        add_action( 'admin_enqueue_scripts', array( &$this, 'admin_scripts_styles' ) );
 
-		// Localize checkout fields (limit custom checkout fields to NL and BE)
-		add_filter( 'woocommerce_country_locale_field_selectors', array( &$this, 'country_locale_field_selectors' ) );
-		add_filter( 'woocommerce_default_address_fields', array( &$this, 'default_address_fields' ) );
-		add_filter( 'woocommerce_get_country_locale', array( &$this, 'woocommerce_locale_nl' ), 1, 1);
+		if ( $this->use_split_address_fields ) {
 
-		// Load custom order data.
-		add_filter( 'woocommerce_load_order_data', array( &$this, 'load_order_data' ) );
+            // Add street name & house number checkout fields.
+            if (version_compare(WOOCOMMERCE_VERSION, '2.0') >= 0) {
+                // WC 2.0 or newer is used, the filter got a $country parameter, yay!
+                add_filter('woocommerce_billing_fields', [
+                    &$this,
+                    'nl_billing_fields'
+                ], apply_filters('nl_checkout_fields_priority', 10, 'billing'), 2);
+                add_filter('woocommerce_shipping_fields', [
+                    &$this,
+                    'nl_shipping_fields'
+                ], apply_filters('nl_checkout_fields_priority', 10, 'shipping'), 2);
+            } else {
+                // Backwards compatibility
+                add_filter('woocommerce_billing_fields', [&$this, 'nl_billing_fields']);
+                add_filter('woocommerce_shipping_fields', [&$this, 'nl_shipping_fields']);
+            }
 
-		// Custom shop_order details.
-		add_filter( 'woocommerce_admin_billing_fields', array( &$this, 'admin_billing_fields' ) );
-		add_filter( 'woocommerce_admin_shipping_fields', array( &$this, 'admin_shipping_fields' ) );
-		add_filter( 'woocommerce_found_customer_details', array( $this, 'customer_details_ajax' ) );
-		add_action( 'save_post', array( &$this,'save_custom_fields' ) );
+            // Localize checkout fields (limit custom checkout fields to NL and BE)
+            add_filter('woocommerce_country_locale_field_selectors', [&$this, 'country_locale_field_selectors']);
+            add_filter('woocommerce_default_address_fields', [&$this, 'default_address_fields']);
+            add_filter('woocommerce_get_country_locale', [&$this, 'woocommerce_locale_nl'], 1, 1); // !
 
-		// add to user profile page
-		add_filter( 'woocommerce_customer_meta_fields', array( &$this, 'user_profile_fields' ) );
+            // Load custom order data.
+            add_filter('woocommerce_load_order_data', [&$this, 'load_order_data']);
 
-		// Processing checkout
-		add_filter( 'woocommerce_validate_postcode', array( &$this, 'validate_postcode' ), 10, 3 );
+            // Custom shop_order details.
+            add_filter('woocommerce_admin_billing_fields', [&$this, 'admin_billing_fields']);
+            add_filter('woocommerce_admin_shipping_fields', [&$this, 'admin_shipping_fields']);
+            add_filter('woocommerce_found_customer_details', [$this, 'customer_details_ajax']);
+            add_action('save_post', [&$this, 'save_custom_fields']);
 
-		add_action('woocommerce_checkout_update_order_meta', array( &$this, 'merge_street_number_suffix' ), 20, 2 );
-		add_filter('woocommerce_process_checkout_field_billing_postcode', array( &$this, 'clean_billing_postcode' ) );
-		add_filter('woocommerce_process_checkout_field_shipping_postcode', array( &$this, 'clean_shipping_postcode' ) );
+            // add to user profile page
+            add_filter('woocommerce_customer_meta_fields', [&$this, 'user_profile_fields']);
 
-		// Save the order data in WooCommerce 2.2 or later.
-		if ( version_compare( WOOCOMMERCE_VERSION, '2.2' ) >= 0 ) {
-			add_action( 'woocommerce_checkout_update_order_meta', array( &$this, 'save_order_data' ), 10, 2 );
-		}
+            add_action('woocommerce_checkout_update_order_meta', array( &$this, 'merge_street_number_suffix' ), 20, 2 );
+            add_filter('woocommerce_process_checkout_field_billing_postcode', array( &$this, 'clean_billing_postcode' ) );
+            add_filter('woocommerce_process_checkout_field_shipping_postcode', array( &$this, 'clean_shipping_postcode' ) );
 
-		// Remove placeholder values (IE8 & 9)
-		add_action('woocommerce_checkout_update_order_meta', array( &$this, 'remove_placeholders' ), 10, 2 );
+            // Save the order data in WooCommerce 2.2 or later.
+            if ( version_compare( WOOCOMMERCE_VERSION, '2.2' ) >= 0 ) {
+                add_action( 'woocommerce_checkout_update_order_meta', array( &$this, 'save_order_data' ), 10, 2 );
+            }
 
-		// Fix weird required field translations
-		add_filter( 'woocommerce_checkout_required_field_notice', array( &$this, 'required_field_notices' ), 10, 2 );
+            // Remove placeholder values (IE8 & 9)
+            add_action('woocommerce_checkout_update_order_meta', array( &$this, 'remove_placeholders' ), 10, 2 );
 
-		$this->load_woocommerce_filters();
-	}
+            // Fix weird required field translations
+            add_filter( 'woocommerce_checkout_required_field_notice', array( &$this, 'required_field_notices' ), 10, 2 );
 
-	public function load_woocommerce_filters() {
+		    $this->load_woocommerce_filters();
+        } else { // if NOT using old fields
+            add_action('woocommerce_after_checkout_validation', array(&$this, 'validate_address_fields'), 10, 2);
+        }
+
+        // Processing checkout
+        add_filter('woocommerce_validate_postcode', array( &$this, 'validate_postcode' ), 10, 3 );
+
+        // set later priority for woocommerce_billing_fields / woocommerce_shipping_fields
+        // when Checkout Field Editor is active
+        if ( function_exists('thwcfd_is_locale_field') || function_exists('wc_checkout_fields_modify_billing_fields') ) {
+            add_filter( 'nl_checkout_fields_priority', 1001);
+        }
+
+        // Hide state field for countries without states (backwards compatible fix for bug #4223)
+        if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<' ) ) {
+            add_filter( 'woocommerce_countries_allowed_country_states', array( &$this, 'hide_states' ) );
+        }
+    }
+
+    public function load_woocommerce_filters() {
 		// Custom address format.
 		if ( version_compare( WOOCOMMERCE_VERSION, '2.0.6', '>=' ) ) {
 			add_filter( 'woocommerce_localisation_address_formats', array( $this, 'localisation_address_formats' ) );
@@ -102,28 +135,29 @@ class WC_NLPostcode_Fields {
 	 */
 	public function add_styles_scripts(){
 		if ( is_checkout() || is_account_page() ) {
-			if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
-				// Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
-				wp_register_script(
-					'nl-checkout',
-					WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-checkout.js',
-					array( 'wc-checkout' ),
-					$this->version
-				);
-				wp_enqueue_script( 'nl-checkout' );
-			}
+		    if ( $this->use_split_address_fields ) {
+                if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
+                    // Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
+                    wp_register_script(
+                        'nl-checkout',
+                        WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-checkout.js',
+                        array('wc-checkout'),
+                        $this->version
+                    );
+                    wp_enqueue_script('nl-checkout');
+                }
 
-			if ( is_account_page() ) {
-				// Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
-				wp_register_script(
-					'nl-account-page',
-					WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-account-page.js',
-					array( 'jquery' ),
-					$this->version
-				);
-				wp_enqueue_script( 'nl-account-page' );
-			}
-
+                if (is_account_page()) {
+                    // Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
+                    wp_register_script(
+                        'nl-account-page',
+                        WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-account-page.js',
+                        array('jquery'),
+                        $this->version
+                    );
+                    wp_enqueue_script('nl-account-page');
+                }
+            }
 			wp_enqueue_style( 'nl-checkout', WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout.css?MP=' . WC_MYPARCEL_VERSION);
 		}
 
@@ -594,8 +628,25 @@ class WC_NLPostcode_Fields {
 		return $valid;
 	}
 
+    /**
+     * validate address field 1 for shipping and billing
+     */
+    public function validate_address_fields($address, $errors)
+    {
+        if ($address['billing_country'] == 'NL'
+            && !(bool) preg_match(self::SPLIT_STREET_REGEX, trim($address['billing_address_1']))) {
+            $errors->add('address', __('Please enter a valid billing address.', 'woocommerce-myparcel'));
+        }
+
+        if ($address['shipping_country'] == 'NL'
+            && array_key_exists('ship_to_different_address', $address)
+            && !(bool) preg_match(self::SPLIT_STREET_REGEX, trim($address['shipping_address_1']))) {
+            $errors->add('address', __('Please enter a valid shipping address.', 'woocommerce-myparcel'));
+        }
+    }
+
 	/**
-	 * Clean postcodes : remove space, dashes (& other non alfanumeric characters)
+	 * Clean postcodes : remove space, dashes (& other non alphanumeric characters)
 	 *
 	 * @return $billing_postcode
 	 * @return $shipping_postcode

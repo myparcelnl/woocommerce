@@ -26,8 +26,10 @@ class WooCommerce_MyParcel_Assets {
 				'wc-myparcel-frontend',
 				'wc_myparcel_frontend',
 				array(
-					'iframe_url' => WooCommerce_MyParcel()->plugin_url() . '/includes/views/wcmp-delivery-options.php?v=' . time(),
-				)
+                    'isUsingSplitAddressFields' => array_key_exists('use_split_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
+                        ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] == '1'
+                        : false
+                )
 			);
 		}
 	}

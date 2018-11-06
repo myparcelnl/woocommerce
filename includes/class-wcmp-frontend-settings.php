@@ -25,7 +25,6 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         private $settings;
 
         function __construct() {
-
             $this->settings = WooCommerce_MyParcel()->checkout_settings;
        }
 
@@ -323,7 +322,6 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
                 return $total_price;
             }
         }
-
 
         /**
          * End settings pickup express delivery
