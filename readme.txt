@@ -96,6 +96,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix:The PostNL logo is not visible with all browsers 
 * Improvement: Support Channel Engine
 * Improvement: Information inside the checkout and the translations
+* Improvement: Support WooCommerce default shipping fields (_address_1 and _address_2)
 
 = 3.0.4 (2018-10-23) =
 * Fix: mollie payments
