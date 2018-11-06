@@ -634,7 +634,7 @@ class WC_NLPostcode_Fields {
     public function validate_address_fields($address, $errors)
     {
         if ($address['billing_country'] == 'NL'
-            && !(bool) preg_match(self::SPLIT_STREET_REGEX, trim($address['billing_address_1'].''.$address['billing_address_2']))) {
+            && !(bool) preg_match(self::SPLIT_STREET_REGEX, trim($address['billing_address_1'].' '.$address['billing_address_2']))) {
             $errors->add('address', __('Please enter a valid billing address.', 'woocommerce-myparcel'));
         }
 
