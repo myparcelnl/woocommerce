@@ -174,7 +174,7 @@ class WooCommerce_MyParcel_Settings {
 				'id'			=> 'download_display',
 				'options' 		=> array(
 					'download'	=> __( 'Download PDF' , 'woocommerce-myparcel' ),
-					'display'	=> __( 'Open de PDF in a new tab' , 'woocommerce-myparcel' ),
+					'display'	=> __( 'Open the PDF in a new tab' , 'woocommerce-myparcel' ),
 				),
 			)
 		);
@@ -229,7 +229,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'myaccount_tracktrace',
-				'description'	=> __( 'Show Track & Trace trace code & link in My Account.', 'woocommerce-myparcel' )
+				'description'	=> __( 'Show Track & Trace trace code and link in My Account.', 'woocommerce-myparcel' )
 			)
 		);
 
@@ -242,7 +242,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'process_directly',
-				'description'	=> __( 'When you enable this option, shipments will be directly processed when sent to myparcel.', 'woocommerce-myparcel' )
+				'description'	=> __( 'When you enable this option, shipments will be directly processed when sent to MyParcel.', 'woocommerce-myparcel' )
 			)
 		);
 
@@ -498,8 +498,8 @@ class WooCommerce_MyParcel_Settings {
 				'class'			=> 'insured_amount',
 				'options' 		=> array(
 					'49'		=> __( 'Insured up to &euro; 50 (+ &euro; 0.50)' , 'woocommerce-myparcel' ),
-					'249'		=> __( 'Insured up to  &euro; 250 (+ &euro; 1.00)' , 'woocommerce-myparcel' ),
-					'499'		=> __( 'Insured up to  &euro; 500 (+ &euro; 1.65)' , 'woocommerce-myparcel' ),
+					'249'		=> __( 'Insured up to &euro; 250 (+ &euro; 1.00)' , 'woocommerce-myparcel' ),
+					'499'		=> __( 'Insured up to &euro; 500 (+ &euro; 1.65)' , 'woocommerce-myparcel' ),
 					''			=> __( '> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)' , 'woocommerce-myparcel' ),
 				),
 			)
@@ -686,7 +686,7 @@ class WooCommerce_MyParcel_Settings {
 
         add_settings_field(
             'cutoff_time',
-            __( 'Cutoff time', 'woocommerce-myparcel' ),
+            __( 'Cut-off time', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'text_input' ),
             $option_group,
             'processing_parameters',
@@ -725,7 +725,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'deliverydays_window',
                 'type'			=> 'text',
                 'size'			=> '5',
-                'description'	=> __( 'Aantal dagen dat een klant een zending kan uitstellen. Standaard zijn dit 0 dagen met een maximum van 14 dagen.', 'woocommerce-myparcel' ),
+                'description'	=> __( 'Amount of days a customer can postpone delivery. Default is 0 days with a maximum of 14.', 'woocommerce-myparcel' ),
             )
         );
 
