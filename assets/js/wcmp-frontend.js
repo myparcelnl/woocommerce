@@ -3,7 +3,7 @@ jQuery(function ($) {
 	window.myparcel_force_update = false;
 	window.myparcel_selected_shipping_method = '';
 	window.myparcel_updated_shipping_method = '';
-	window.myparcel_is_using_split_address_fields = wc_myparcel_frontend.isUsingOldAddressFields;
+	window.myparcel_is_using_split_address_fields = wc_myparcel_frontend.isUsingSplitAddressFields;
 
 	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {
@@ -12,11 +12,12 @@ jQuery(function ($) {
 		if ( typeof myparcel_delivery_options_always_display !== 'undefined' && myparcel_delivery_options_always_display == 'yes') {
 			show_myparcel_delivery_options();
 		} else if ( myparcel_delivery_options_shipping_methods.length > 0 ) {
+			var shipping_method;
             // check if shipping is user choice or fixed
 			if ( $( '#order_review .shipping_method' ).length > 1 ) {
-				var shipping_method = $( '#order_review .shipping_method:checked').val();
+				shipping_method = $( '#order_review .shipping_method:checked').val();
 			} else {
-				var shipping_method = $( '#order_review .shipping_method').val();
+				shipping_method = $( '#order_review .shipping_method').val();
 			}
 
 			if ( typeof shipping_method === 'undefined' ) {
