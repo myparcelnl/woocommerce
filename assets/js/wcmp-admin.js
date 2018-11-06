@@ -41,7 +41,7 @@ jQuery( function( $ ) {
 				$('.wcmp_shipment_options_form').slideUp();
 			}
 		}
-	})
+	});
 
 	/* show summary when clicked */
 	$('.wcmp_show_shipment_summary').click( function ( event ) {
@@ -83,7 +83,7 @@ jQuery( function( $ ) {
 				$('.wcmp_shipment_summary_list').slideUp();
 			}
 		}
-	})
+	});
 
 	/* hide automatic order status if automation not enabled */
 	$('.wcmp_shipment_options input#order_status_automation').change(function () {
@@ -359,7 +359,7 @@ jQuery( function( $ ) {
 			$( '#wcmyparcel_offset_dialog' )
 				.attr('style', 'clear:both') /* reset styles */
 				.insertAfter( 'div.tablenav.'+insert_position )
-				.show()
+				.show();
 
 			/* make sure button is not shown */
 			$( '#wcmyparcel_offset_dialog' ).find('button').hide();
@@ -442,7 +442,7 @@ jQuery( function( $ ) {
 	function myparcel_export( order_ids, print ) {
 		if (typeof print === 'undefined') { print = 'no'; }
 		var offset = wc_myparcel.offset === 1 ? $('.wc_myparcel_offset').val() : 0;
-		/* console.log('exporting order to myparcel...'); */
+		/* console.log('exporting order to MyParcel...'); */
 		var data = {
 			action:           'wc_myparcel',
 			request:          'add_shipments',
@@ -487,7 +487,7 @@ jQuery( function( $ ) {
 		var url = wc_myparcel.ajax_url+request_prefix+'order_ids='+order_ids+'&action=wc_myparcel&request=modal_dialog&dialog='+dialog+'&security='+wc_myparcel.nonce+thickbox_parameters;
 
 		/* disable background scrolling */
-		$("body").css({ overflow: 'hidden' })
+		$("body").css({ overflow: 'hidden' });
 	
 		tb_show('', url);
 	}
