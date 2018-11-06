@@ -605,6 +605,20 @@ class WooCommerce_MyParcel_Settings {
 		}
 
         add_settings_field(
+            'use_split_address_fields',
+            __( 'MyParcel address fields', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'checkbox' ),
+            $option_group,
+            'processing_parameters',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'use_split_address_fields',
+                'class'			=> 'use_split_address_fields',
+                'description'	=> __( 'When enabled the checkout will use the MyParcel address fields. This means there will be three separate fields for street name, number and suffix. Want to use the WooCommerce default fields? Leave this option unchecked.', 'woocommerce-myparcel' ),
+            )
+        );
+
+        add_settings_field(
             'myparcel_checkout',
             __( 'Enable MyParcel delivery options', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'checkbox' ),
@@ -953,20 +967,6 @@ class WooCommerce_MyParcel_Settings {
 			array( $this->callbacks, 'section' ),
 			$option_group
 		);
-
-        add_settings_field(
-            'use_split_address_fields',
-            __( 'Use old address fields', 'woocommerce-myparcel' ),
-            array( $this->callbacks, 'checkbox' ),
-            $option_group,
-            'customizations',
-            array(
-                'option_name'	=> $option_name,
-                'id'			=> 'use_split_address_fields',
-                'class'			=> 'use_split_address_fields',
-                'description'	=> __( 'Choose whether you want to use the "old" address fields in the checkout or not. The old fields are three separate fields for street, number and number suffix. Disabling this setting enables the default WooCommerce address fields, which are "address line 1" and "address line 2". We recommend using the default fields for optimal integration with WooCommerce and any other plugins.', 'woocommerce-myparcel' ),
-            )
-        );
 
         add_settings_field(
 			'custom_css',

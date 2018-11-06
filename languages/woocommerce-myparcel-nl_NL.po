@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2018-11-06 10:34+0100\n"
-"PO-Revision-Date: 2018-11-06 10:39+0100\n"
+"POT-Creation-Date: 2018-11-06 14:59+0100\n"
+"PO-Revision-Date: 2018-11-06 15:00+0100\n"
 "Last-Translator: Edie Lemoine <edie@myparcel.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -72,12 +72,12 @@ msgid "MyParcel shipment:"
 msgstr "MyParcel zending:"
 
 #: includes/class-wcmp-admin.php:430 includes/class-wcmp-frontend.php:280
-#: includes/class-wcmp-settings.php:789
+#: includes/class-wcmp-settings.php:803
 msgid "Morning delivery"
 msgstr "Ochtendlevering"
 
 #: includes/class-wcmp-admin.php:437 includes/class-wcmp-frontend.php:294
-#: includes/class-wcmp-settings.php:807
+#: includes/class-wcmp-settings.php:821
 msgid "Evening delivery"
 msgstr "Avondlevering"
 
@@ -252,7 +252,7 @@ msgstr "Onbekende status"
 msgid "You can track your order with the following PostNL Track & Trace code:"
 msgstr "Je kunt je order met de volgende PostNL Track & Trace code volgen:"
 
-#: includes/class-wcmp-frontend.php:313 includes/class-wcmp-settings.php:859
+#: includes/class-wcmp-frontend.php:313 includes/class-wcmp-settings.php:873
 msgid "PostNL pickup"
 msgstr "Afhalen bij PostNL"
 
@@ -600,7 +600,7 @@ msgstr ""
 "groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een "
 "pallettarief van &euro;&nbsp;70,00 in rekening gebracht."
 
-#: includes/class-wcmp-settings.php:437 includes/class-wcmp-settings.php:825
+#: includes/class-wcmp-settings.php:437 includes/class-wcmp-settings.php:839
 #: includes/views/wcmp-order-return-shipment-options.php:37
 #: includes/views/wcmp-order-shipment-options.php:61
 #: includes/views/wcmp-order-shipment-summary.php:15
@@ -615,7 +615,7 @@ msgstr ""
 "Als je niet wilt dat het pakket bij de buren wordt bezorgd, kies dan voor "
 "deze optie."
 
-#: includes/class-wcmp-settings.php:450 includes/class-wcmp-settings.php:842
+#: includes/class-wcmp-settings.php:450 includes/class-wcmp-settings.php:856
 #: includes/views/wcmp-order-return-shipment-options.php:42
 #: includes/views/wcmp-order-shipment-options.php:66
 #: includes/views/wcmp-order-shipment-summary.php:16
@@ -762,22 +762,38 @@ msgid "Return shipment"
 msgstr "Retourzending"
 
 #: includes/class-wcmp-settings.php:609
+#, fuzzy
+#| msgid "Use old address fields"
+msgid "MyParcel address fields"
+msgstr "Gebruik oude velden voor adres"
+
+#: includes/class-wcmp-settings.php:617
+msgid ""
+"When enabled the checkout will use the MyParcel address fields. This means "
+"there will be three separate fields for street name, number and suffix. Want "
+"to use the WooCommerce default fields? Leave this option unchecked."
+msgstr ""
+"Wanneer aangevinkt wordt er gebruik gemaakt van de MyParcel adresvelden. Dit "
+"houdt in dat straat, huisnummer en toevoeging los komen te staan. Wil je de "
+"standaard WooCommerce adresvelden gebruiken? Laat deze optie afgevinkt staan."
+
+#: includes/class-wcmp-settings.php:623
 msgid "Enable MyParcel delivery options"
 msgstr "MyParcel bezorgopties inschakelen"
 
-#: includes/class-wcmp-settings.php:621
+#: includes/class-wcmp-settings.php:635
 msgid "Display for"
 msgstr "Toon bij"
 
-#: includes/class-wcmp-settings.php:629
+#: includes/class-wcmp-settings.php:643
 msgid "Shipping methods associated with Parcels"
 msgstr "Verzendmethoden gekoppeld aan Pakket"
 
-#: includes/class-wcmp-settings.php:630
+#: includes/class-wcmp-settings.php:644
 msgid "All shipping methods"
 msgstr "Alle verzendmethoden"
 
-#: includes/class-wcmp-settings.php:632
+#: includes/class-wcmp-settings.php:646
 msgid ""
 "To associate specific shipping methods with parcels, see the Default export "
 "settings tab. Note that the delivery options will be automatically hidden "
@@ -787,27 +803,27 @@ msgstr ""
 "bij 'Standaard exportinstellingen' aan de pakkettypes toe te voegen. Bij "
 "buitenlandse adressen zijn de bezorgopties niet zichtbaar."
 
-#: includes/class-wcmp-settings.php:639
+#: includes/class-wcmp-settings.php:653
 msgid "Shipment processing parameters"
 msgstr "Verwerking van zendingen"
 
-#: includes/class-wcmp-settings.php:647
+#: includes/class-wcmp-settings.php:661
 msgid "Checkout place"
 msgstr "Bezorgopties positie"
 
-#: includes/class-wcmp-settings.php:655
+#: includes/class-wcmp-settings.php:669
 msgid "Show checkout options after billing details"
 msgstr "Toon na factuurgegevens"
 
-#: includes/class-wcmp-settings.php:656
+#: includes/class-wcmp-settings.php:670
 msgid "Show checkout options after shipping details"
 msgstr "Toon na verzendgegevens"
 
-#: includes/class-wcmp-settings.php:657
+#: includes/class-wcmp-settings.php:671
 msgid "Show checkout options after notes"
 msgstr "Toon na notities"
 
-#: includes/class-wcmp-settings.php:659
+#: includes/class-wcmp-settings.php:673
 msgid ""
 "You can change the place of the checkout options on the checkout page. By "
 "default it will be placed after shipping details."
@@ -815,71 +831,71 @@ msgstr ""
 "Hier kun je de positie van de bezorgopties aanpassen. Standaard staat deze "
 "na de factuurgegevens."
 
-#: includes/class-wcmp-settings.php:664
+#: includes/class-wcmp-settings.php:678
 msgid "Sunday"
 msgstr "zondag"
 
-#: includes/class-wcmp-settings.php:665
+#: includes/class-wcmp-settings.php:679
 msgid "Monday"
 msgstr "maandag"
 
-#: includes/class-wcmp-settings.php:666
+#: includes/class-wcmp-settings.php:680
 msgid "Tuesday"
 msgstr "dinsdag"
 
-#: includes/class-wcmp-settings.php:667
+#: includes/class-wcmp-settings.php:681
 msgid "Wednesday"
 msgstr "woensdag"
 
-#: includes/class-wcmp-settings.php:668
+#: includes/class-wcmp-settings.php:682
 msgid "Thursday"
 msgstr "donderdag"
 
-#: includes/class-wcmp-settings.php:669
+#: includes/class-wcmp-settings.php:683
 msgid "Friday"
 msgstr "vrijdag"
 
-#: includes/class-wcmp-settings.php:670
+#: includes/class-wcmp-settings.php:684
 msgid "Saturday"
 msgstr "zaterdag"
 
-#: includes/class-wcmp-settings.php:675
+#: includes/class-wcmp-settings.php:689
 #, fuzzy
 #| msgid "Dropoff days"
 msgid "Drop-off days"
 msgstr "Afleverdagen"
 
-#: includes/class-wcmp-settings.php:683
+#: includes/class-wcmp-settings.php:697
 msgid "Days of the week on which you hand over parcels to PostNL"
 msgstr "Dagen van de week waarop je de pakketten bij PostNL aflevert"
 
-#: includes/class-wcmp-settings.php:689
+#: includes/class-wcmp-settings.php:703
 #, fuzzy
 #| msgid "Cut-off time"
 msgid "Cut-off time"
 msgstr "Sluitingstijd"
 
-#: includes/class-wcmp-settings.php:698
+#: includes/class-wcmp-settings.php:712
 msgid "Time at which you stop processing orders for the day (format: hh:mm)"
 msgstr ""
 "Het tijdstip waarop je stopt met het verwerken van orders voor de dag "
 "(format: uu:mm)"
 
-#: includes/class-wcmp-settings.php:704
+#: includes/class-wcmp-settings.php:718
 #, fuzzy
 #| msgid "Dropoff delay"
 msgid "Drop-off delay"
 msgstr "Verwerkingstijd"
 
-#: includes/class-wcmp-settings.php:713
+#: includes/class-wcmp-settings.php:727
 msgid "Number of days you need to process an order."
 msgstr "Aantal dagen dat je nodig heeft om een order te verwerken."
 
-#: includes/class-wcmp-settings.php:719
+#: includes/class-wcmp-settings.php:733
 msgid "Delivery days window"
 msgstr "Leverdagen venster"
 
-#: includes/class-wcmp-settings.php:728
+#: includes/class-wcmp-settings.php:742
 msgid ""
 "Amount of days a customer can postpone delivery. Default is 0 days with a "
 "maximum of 14."
@@ -887,15 +903,15 @@ msgstr ""
 "Aantal dagen dat een klant een zending kan uitstellen. Standaard zijn dit 0 "
 "dagen met een maximum van 14."
 
-#: includes/class-wcmp-settings.php:735
+#: includes/class-wcmp-settings.php:749
 msgid "Delivery options"
 msgstr "Bezorgopties"
 
-#: includes/class-wcmp-settings.php:742
+#: includes/class-wcmp-settings.php:756
 msgid "Delivery options title"
 msgstr "Bezorgopties titel"
 
-#: includes/class-wcmp-settings.php:752
+#: includes/class-wcmp-settings.php:766
 msgid ""
 "You can place a delivery title above the MyParcel options. When there is no "
 "title, it will not be visible."
@@ -903,31 +919,31 @@ msgstr ""
 "Je kunt een bezorgtitel boven de MyParcel opties plaatsen. Als er geen titel "
 "is, is deze niet zichtbaar."
 
-#: includes/class-wcmp-settings.php:758
+#: includes/class-wcmp-settings.php:772
 msgid "Home delivery title"
 msgstr "Thuis bezorgtitel"
 
-#: includes/class-wcmp-settings.php:773
+#: includes/class-wcmp-settings.php:787
 msgid "Standard delivery title"
 msgstr "Standaard bezorgtitel"
 
-#: includes/class-wcmp-settings.php:783 includes/class-wcmp-settings.php:801
-#: includes/class-wcmp-settings.php:819 includes/class-wcmp-settings.php:945
+#: includes/class-wcmp-settings.php:797 includes/class-wcmp-settings.php:815
+#: includes/class-wcmp-settings.php:833 includes/class-wcmp-settings.php:959
 msgid ""
 "When there is no title, the delivery time will automatically be visible."
 msgstr ""
 "Wanneer er geen titel is ingevuld, worden de bezorgtijden automatisch "
 "zichtbaar."
 
-#: includes/class-wcmp-settings.php:877 includes/class-wcmp-settings.php:888
+#: includes/class-wcmp-settings.php:891 includes/class-wcmp-settings.php:902
 msgid "Early PostNL pickup"
 msgstr "Extra vroeg afhalen bij PostNL"
 
-#: includes/class-wcmp-settings.php:895
+#: includes/class-wcmp-settings.php:909
 msgid "Enable monday delivery"
 msgstr "Maandaglevering inschakelen"
 
-#: includes/class-wcmp-settings.php:906
+#: includes/class-wcmp-settings.php:920
 #, php-format
 msgid ""
 "More information about the Monday delivery of PostNL can be found <a href="
@@ -936,38 +952,21 @@ msgstr ""
 "Meer informatie over de maandaglevering van PostNL is <a href=\"%s\" target="
 "\"_blank\">hier</a> te vinden."
 
-#: includes/class-wcmp-settings.php:913
+#: includes/class-wcmp-settings.php:927
 msgid "Belgium delivery options"
 msgstr "België bezorgopties"
 
-#: includes/class-wcmp-settings.php:920
+#: includes/class-wcmp-settings.php:934
 msgid "Belgium home delivery title"
 msgstr "België thuislevering titel"
 
-#: includes/class-wcmp-settings.php:935
+#: includes/class-wcmp-settings.php:949
 msgid "Belgium standard delivery title"
 msgstr "België standaard bezorgtitel"
 
-#: includes/class-wcmp-settings.php:952
+#: includes/class-wcmp-settings.php:966
 msgid "Customizations"
 msgstr "Aanpassingen"
-
-#: includes/class-wcmp-settings.php:959
-msgid "Use old address fields"
-msgstr "Gebruik oude velden voor adres"
-
-#: includes/class-wcmp-settings.php:967
-msgid ""
-"Choose whether you want to use the \"old\" address fields in the checkout or "
-"not. The old fields are three separate fields for street, number and number "
-"suffix. Disabling this setting enables the default WooCommerce address "
-"fields, which are \"address line 1\" and \"address line 2\". We recommend "
-"using the default fields for optimal integration with WooCommerce and any "
-"other plugins."
-msgstr ""
-"Geef aan of je wel of niet de oude velden voor het adres wilt gebruiken. De "
-"“oude” velden bestaan uit losse velden voor straatnaam, huisnummer en "
-"toevoeging. De “nieuwe” velden zijn enkel adresregel 1 en 2."
 
 #: includes/class-wcmp-settings.php:973
 msgid "Custom styles"
@@ -1117,6 +1116,18 @@ msgstr ""
 #. Author of the plugin/theme
 msgid "Richard Perdaan"
 msgstr "Richard Perdaan"
+
+#~ msgid ""
+#~ "Choose whether you want to use the \"old\" address fields in the checkout "
+#~ "or not. The old fields are three separate fields for street, number and "
+#~ "number suffix. Disabling this setting enables the default WooCommerce "
+#~ "address fields, which are \"address line 1\" and \"address line 2\". We "
+#~ "recommend using the default fields for optimal integration with "
+#~ "WooCommerce and any other plugins."
+#~ msgstr ""
+#~ "Geef aan of je wel of niet de oude velden voor het adres wilt gebruiken. "
+#~ "De “oude” velden bestaan uit losse velden voor straatnaam, huisnummer en "
+#~ "toevoeging. De “nieuwe” velden zijn enkel adresregel 1 en 2."
 
 #~ msgid "PostNL pickup express"
 #~ msgstr "Extra vroeg afhalen bij PostNL"
