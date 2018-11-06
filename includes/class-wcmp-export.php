@@ -260,7 +260,7 @@ class WooCommerce_MyParcel_Export {
 			}
 		}
 		if (!empty($this->success)) {
-			$return['success'] = sprintf(__( '%s shipments successfully exported to Myparcel', 'woocommerce-myparcel' ), count($this->success));
+			$return['success'] = sprintf(__( '%s shipments successfully exported to MyParcel', 'woocommerce-myparcel' ), count($this->success));
 			$return['success_ids'] = $this->success;
 		}
 
