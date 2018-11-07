@@ -174,12 +174,14 @@ MyParcel = {
         jQuery('#mypa-select-delivery').on('click', function(){
             MyParcel.setCurrentDeliveryOptions();
             MyParcel.showDelivery();
+            MyParcel.showShippingAddress();
             MyParcel.hidePickUpLocations();
         });
 
         /* hide default delivery options and show PostNL options */
         jQuery('#mypa-pickup-delivery').on('click', function(){
             MyParcel.hideDelivery();
+            MyParcel.hideShippingAddress();
             MyParcel.showPickUpLocations();
         });
 
@@ -792,6 +794,27 @@ MyParcel = {
             });
         jQuery('#mypa-delivery-option-form').hide();
         jQuery('#mypa-location-details').html(html).css('display', 'inline-block');
+    },
+
+
+    /*
+     * hideShippingAddress
+     *
+     * Hide the "ship to different address" section.
+     *
+     */
+    hideShippingAddress: function() {
+        $('.woocommerce-shipping-fields').hide();
+    },
+
+    /*
+     * showShippingAddress
+     *
+     * Show the "ship to different address" section.
+     *
+     */
+    showShippingAddress: function() {
+        $('.woocommerce-shipping-fields').show();
     },
 
     /*
