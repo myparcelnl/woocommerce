@@ -68,11 +68,6 @@
 <script src="<?= $urlJsConfig ?>"></script>
 <script src="<?= $urlJs ?>"></script>
 <script>
-    setTimeout(function() {
-        // Removed in WooCommerce version 3.5.0 (https://github.com/woocommerce/woocommerce/pull/20655/files#diff-27a95ce2f13e565129eca0979b69aedbL154)
-        jQuery(':input.country_to_state').change();
-    }, 100);
-
     MyParcel.init();
     MyParcel.bind();
 </script>

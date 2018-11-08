@@ -55,6 +55,8 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 				add_action( apply_filters( 'wc_myparcelbe_delivery_options_location', 'woocommerce_after_checkout_billing_form' ), array( $this, 'output_delivery_options' ), 10, 1 );
 			}
 
+			add_action( 'wp_footer', array($this, 'inline_footer_script'), 10, 1);
+
 			// Save delivery options data
 			add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_delivery_options' ), 10, 2 );
 
@@ -377,6 +379,19 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 
 			return $price;
 		}
+
+        /**
+         * Add inline script to footer
+         * @todo Move to a template file
+         */
+        public function inline_footer_script() {
+            echo "<script>
+                setTimeout(function() {
+                    // Removed in WooCommerce version 3.5.0 (https://github.com/woocommerce/woocommerce/pull/20655/files#diff-27a95ce2f13e565129eca0979b69aedbL154)
+                    jQuery(':input.country_to_state').change();
+                }, 100);
+            </script>";
+        }
 
 		private function get_checkout_config()
 		{
