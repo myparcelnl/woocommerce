@@ -382,6 +382,7 @@ if ( !class_exists( 'WooCommerce_MyParcelBE_Frontend' ) ) :
 
         /**
          * Add inline script to footer
+         * @todo Move to a template file
          */
         public function inline_footer_script() {
             echo "<script>
