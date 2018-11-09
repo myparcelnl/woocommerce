@@ -3,13 +3,14 @@ jQuery(function ($) {
 	window.myparcel_force_update = false;
 	window.myparcel_selected_shipping_method = '';
 	window.myparcel_updated_shipping_method = '';
+	window.myparcel_show_on_all_shipping_methods = wc_myparcel_frontend.showOnAllShippingMethods;
 	window.myparcel_is_using_split_address_fields = wc_myparcel_frontend.isUsingSplitAddressFields;
 
 	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {
 		window.myparcel_checkout_updating = false; //done updating
 
-		if ( typeof myparcel_delivery_options_always_display !== 'undefined' && myparcel_delivery_options_always_display == 'yes') {
+		if (window.myparcel_show_on_all_shipping_methods) {
 			show_myparcel_delivery_options();
 		} else if ( myparcel_delivery_options_shipping_methods.length > 0 ) {
 			var shipping_method;

@@ -26,6 +26,9 @@ class WooCommerce_MyParcel_Assets {
 				'wc-myparcel-frontend',
 				'wc_myparcel_frontend',
 				array(
+                    'showOnAllShippingMethods' => array_key_exists('checkout_display', get_option('woocommerce_myparcel_checkout_settings'))
+                        ? get_option('woocommerce_myparcel_checkout_settings')['checkout_display'] == '1'
+                        : false,
                     'isUsingSplitAddressFields' => array_key_exists('use_split_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
                         ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] == '1'
                         : false
