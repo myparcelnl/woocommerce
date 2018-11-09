@@ -20,7 +20,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
         */
         private $frontend_settings;
 
-
         function __construct()	{
             // Customer Emails
             if (isset(WooCommerce_MyParcel()->general_settings['email_tracktrace'])) {
@@ -68,9 +67,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             // Output most expensive shipping class in frontend data
             add_action( 'woocommerce_checkout_after_order_review', array( $this, 'output_shipping_data' ) );
             add_action( 'woocommerce_update_order_review_fragments', array( $this, 'order_review_fragments' ) );
-
-            /* @todo remove require_once() */
-            require_once( WooCommerce_MyParcel()->plugin_path() . '/includes/class-wcmp-frontend-settings.php' );
 
             $this->frontend_settings = new WooCommerce_MyParcel_Frontend_Settings();
         }
@@ -512,63 +508,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             // Use cutoff_time and saturday_cutoff_time on saturdays
         }
 
-        /**
-         * Get shipping methods associated with parcels to enable delivery options
-         */
-        private function get_shipping_methods() {
-
-            if (
-                $this->frontend_settings->get_checkout_display() != 'all_methods' &&
-                isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1] )
-            ) {
-                return WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1];
-            }
-
-            return array();
-        }
-
-        /**
-         * check if delivery method must hide
-         */
-        private function is_hide_delivery_method() {
-            if ($this->frontend_settings->get_checkout_display() == 'all_methods' ) {
-                return false;
-            }
-
-            // determine whether to pre-hide iframe (prevents flashing)
-            $chosen_shipping_methods = WC()->session->chosen_shipping_methods;
-            if ( empty($chosen_shipping_methods) || !is_array($chosen_shipping_methods) ) {
-                return false;
-            }
-
-            $shipping_country = WC()->customer->get_shipping_country();
-            if ($shipping_country != 'NL' && $shipping_country != 'BE') {
-                return true;
-            }
-
-            return false;
-        }
-
-        /**
-         * @return null|array
-         */
-        private function get_post_data() {
-
-            if ( ! $_POST || ( is_admin() && ! is_ajax() ) ) {
-                return null;
-            }
-
-            if ( isset( $_POST['post_data'] ) ) {
-                // non-default post data for AJAX calls
-                parse_str( $_POST['post_data'], $post_data );
-
-                return $post_data;
-            }
-
-            // checkout finalization
-            return $_POST;
-        }
-
         private function add_fee( $fee_name, $fee ) {
             $fee = $this->normalize_price( $fee );
             // get shipping tax data
@@ -577,9 +516,9 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                 if ($shipping_tax_class == 'standard') {
                     $shipping_tax_class = '';
                 }
-                WC()->cart->add_fee( $fee_name, $fee, true, $shipping_tax_class );
+                WC()->cart->add_fee($fee_name, $fee, true, $shipping_tax_class);
             } else {
-                WC()->cart->add_fee( $fee_name, $fee );
+                WC()->cart->add_fee($fee_name, $fee);
             }
         }
 
@@ -610,14 +549,14 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             return false;
         }
 
-        private function add_fee_signature( $delivery_options, $delivery_title ) {
-            if ( $delivery_options['signed'] !== 1){
+        private function add_fee_signature($delivery_options, $delivery_title) {
+            if ($delivery_options['signed'] !== 1) {
                 return;
             }
 
-            $fee      = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
+            $fee = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
 
-            if ( ! empty( $fee ) ) {
+            if (!empty($fee)) {
                 $fee_name = __( $delivery_title, 'woocommerce-myparcel' );
                 $this->add_fee( $fee_name, $fee );
             }
@@ -628,7 +567,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                 return;
             }
 
-            $fee      = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
+            $fee = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
 
             if ( ! empty( $fee ) ) {
                 $fee_name = __( $delivery_title, 'woocommerce-myparcel' );

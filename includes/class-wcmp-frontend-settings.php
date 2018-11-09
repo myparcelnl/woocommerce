@@ -28,7 +28,6 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             $this->settings = WooCommerce_MyParcel()->checkout_settings;
        }
 
-
         /**
          * Start settings only_recipient
          */
@@ -392,17 +391,6 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         }
 
         /**
-         * @return null|string
-         */
-        public function get_checkout_display() {
-            if ( isset( $this->settings['checkout_display'] ) ) {
-                return $this->settings['checkout_display'];
-            }
-
-            return null;
-        }
-
-        /**
          * @param $price
          *
          * @return string
@@ -421,5 +409,3 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
     }
 
 endif; // class_exists
-
-return new WooCommerce_MyParcel_Frontend_Settings();
