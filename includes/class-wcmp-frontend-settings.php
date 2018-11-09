@@ -28,7 +28,6 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
             $this->settings = WooCommerce_MyParcel()->checkout_settings;
        }
 
-
         /**
          * Start settings only_recipient
          */

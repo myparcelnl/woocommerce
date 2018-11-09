@@ -20,7 +20,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
         */
         private $frontend_settings;
 
-
         function __construct()	{
             // Customer Emails
             if (isset(WooCommerce_MyParcel()->general_settings['email_tracktrace'])) {
@@ -517,9 +516,9 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                 if ($shipping_tax_class == 'standard') {
                     $shipping_tax_class = '';
                 }
-                WC()->cart->add_fee( $fee_name, $fee, true, $shipping_tax_class );
+                WC()->cart->add_fee($fee_name, $fee, true, $shipping_tax_class);
             } else {
-                WC()->cart->add_fee( $fee_name, $fee );
+                WC()->cart->add_fee($fee_name, $fee);
             }
         }
 
@@ -550,14 +549,14 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             return false;
         }
 
-        private function add_fee_signature( $delivery_options, $delivery_title ) {
-            if ( $delivery_options['signed'] !== 1){
+        private function add_fee_signature($delivery_options, $delivery_title) {
+            if ($delivery_options['signed'] !== 1) {
                 return;
             }
 
-            $fee      = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
+            $fee = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
 
-            if ( ! empty( $fee ) ) {
+            if (!empty($fee)) {
                 $fee_name = __( $delivery_title, 'woocommerce-myparcel' );
                 $this->add_fee( $fee_name, $fee );
             }
@@ -568,7 +567,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                 return;
             }
 
-            $fee      = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
+            $fee = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
 
             if ( ! empty( $fee ) ) {
                 $fee_name = __( $delivery_title, 'woocommerce-myparcel' );
