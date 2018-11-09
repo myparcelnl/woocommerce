@@ -804,7 +804,7 @@ MyParcel = {
      *
      */
     hideShippingAddress: function() {
-        $('.woocommerce-shipping-fields').hide();
+        jQuery('.woocommerce-shipping-fields').hide();
     },
 
     /*
@@ -814,7 +814,7 @@ MyParcel = {
      *
      */
     showShippingAddress: function() {
-        $('.woocommerce-shipping-fields').show();
+        jQuery('.woocommerce-shipping-fields').show();
     },
 
     /*
