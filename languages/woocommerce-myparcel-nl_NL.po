@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2018-11-06 14:59+0100\n"
-"PO-Revision-Date: 2018-11-06 15:00+0100\n"
+"POT-Creation-Date: 2018-11-09 12:39+0100\n"
+"PO-Revision-Date: 2018-11-09 12:40+0100\n"
 "Last-Translator: Edie Lemoine <edie@myparcel.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -32,7 +32,7 @@ msgstr "MyParcel: Printen"
 msgid "MyParcel: Export & Print"
 msgstr "MyParcel: Exporteren & Printen"
 
-#: includes/class-wcmp-admin.php:162 includes/class-wcmp-assets.php:86
+#: includes/class-wcmp-admin.php:162 includes/class-wcmp-assets.php:89
 msgid "Labels to skip"
 msgstr "Labels overslaan"
 
@@ -58,7 +58,7 @@ msgstr "E-mail retourlabel"
 msgid "MyParcel"
 msgstr "MyParcel"
 
-#: includes/class-wcmp-admin.php:365 includes/class-wcmp-frontend.php:112
+#: includes/class-wcmp-admin.php:365 includes/class-wcmp-frontend.php:108
 msgid "Track & Trace"
 msgstr "Track & Trace"
 
@@ -71,12 +71,12 @@ msgstr "Status"
 msgid "MyParcel shipment:"
 msgstr "MyParcel zending:"
 
-#: includes/class-wcmp-admin.php:430 includes/class-wcmp-frontend.php:280
+#: includes/class-wcmp-admin.php:430 includes/class-wcmp-frontend.php:276
 #: includes/class-wcmp-settings.php:803
 msgid "Morning delivery"
 msgstr "Ochtendlevering"
 
-#: includes/class-wcmp-admin.php:437 includes/class-wcmp-frontend.php:294
+#: includes/class-wcmp-admin.php:437 includes/class-wcmp-frontend.php:290
 #: includes/class-wcmp-settings.php:821
 msgid "Evening delivery"
 msgstr "Avondlevering"
@@ -89,7 +89,7 @@ msgstr "Bezorgdatum"
 msgid "PostNL Pickup"
 msgstr "Afhalen bij PostNL"
 
-#: includes/class-wcmp-admin.php:453 includes/class-wcmp-frontend.php:319
+#: includes/class-wcmp-admin.php:453 includes/class-wcmp-frontend.php:315
 #, fuzzy
 #| msgid "PostNL pickup express"
 msgid "PostNL Pickup Express"
@@ -248,76 +248,80 @@ msgstr "inactief - onbekend"
 msgid "Unknown status"
 msgstr "Onbekende status"
 
-#: includes/class-wcmp-frontend.php:88
+#: includes/class-wcmp-frontend.php:84
 msgid "You can track your order with the following PostNL Track & Trace code:"
 msgstr "Je kunt je order met de volgende PostNL Track & Trace code volgen:"
 
-#: includes/class-wcmp-frontend.php:313 includes/class-wcmp-settings.php:873
+#: includes/class-wcmp-frontend.php:309 includes/class-wcmp-settings.php:873
 msgid "PostNL pickup"
 msgstr "Afhalen bij PostNL"
 
 #: includes/class-wcmp-nlpostcode-fields.php:274
 #: includes/class-wcmp-nlpostcode-fields.php:275
-#: includes/class-wcmp-nlpostcode-fields.php:447
-#: includes/class-wcmp-nlpostcode-fields.php:473
+#: includes/class-wcmp-nlpostcode-fields.php:445
+#: includes/class-wcmp-nlpostcode-fields.php:471
 msgid "Street name"
 msgstr "Straatnaam"
 
 #: includes/class-wcmp-nlpostcode-fields.php:283
-#: includes/class-wcmp-nlpostcode-fields.php:730
-#: includes/class-wcmp-nlpostcode-fields.php:731
-msgid "Nr."
+#: includes/class-wcmp-nlpostcode-fields.php:728
+#: includes/class-wcmp-nlpostcode-fields.php:729
+msgid "No."
 msgstr "Nr."
 
-#: includes/class-wcmp-nlpostcode-fields.php:293
-#: includes/class-wcmp-nlpostcode-fields.php:457
-#: includes/class-wcmp-nlpostcode-fields.php:483
-#: includes/class-wcmp-nlpostcode-fields.php:504
-#: includes/class-wcmp-nlpostcode-fields.php:518
+#: includes/class-wcmp-nlpostcode-fields.php:292
+#: includes/class-wcmp-nlpostcode-fields.php:455
+#: includes/class-wcmp-nlpostcode-fields.php:481
+#: includes/class-wcmp-nlpostcode-fields.php:502
+#: includes/class-wcmp-nlpostcode-fields.php:516
 msgid "Suffix"
 msgstr "Toev."
 
-#: includes/class-wcmp-nlpostcode-fields.php:452
-#: includes/class-wcmp-nlpostcode-fields.php:478
-#: includes/class-wcmp-nlpostcode-fields.php:500
-#: includes/class-wcmp-nlpostcode-fields.php:514
+#: includes/class-wcmp-nlpostcode-fields.php:450
+#: includes/class-wcmp-nlpostcode-fields.php:476
+#: includes/class-wcmp-nlpostcode-fields.php:498
+#: includes/class-wcmp-nlpostcode-fields.php:512
 msgid "Number"
 msgstr "Nummer"
 
-#: includes/class-wcmp-nlpostcode-fields.php:496
-#: includes/class-wcmp-nlpostcode-fields.php:510
+#: includes/class-wcmp-nlpostcode-fields.php:494
+#: includes/class-wcmp-nlpostcode-fields.php:508
 msgid "Street"
 msgstr "Straat"
 
-#: includes/class-wcmp-nlpostcode-fields.php:638
+#: includes/class-wcmp-nlpostcode-fields.php:636
 msgid "Please enter a valid billing address."
 msgstr "Vul een geldig factuuradres in."
 
-#: includes/class-wcmp-nlpostcode-fields.php:644
+#: includes/class-wcmp-nlpostcode-fields.php:642
 msgid "Please enter a valid shipping address."
 msgstr "Vul een geldig verzendadres in."
 
-#: includes/class-wcmp-nlpostcode-fields.php:684
+#: includes/class-wcmp-nlpostcode-fields.php:682
 msgctxt "placeholder"
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr "Notities over je order, bijv. over de bezorging."
 
-#: includes/class-wcmp-nlpostcode-fields.php:730
+#: includes/class-wcmp-nlpostcode-fields.php:728
 #, php-format
 msgid "Billing %s"
 msgstr "Factuuradres %s"
 
-#: includes/class-wcmp-nlpostcode-fields.php:731
+#: includes/class-wcmp-nlpostcode-fields.php:729
 #, php-format
 msgid "Shipping %s"
 msgstr "Verzendadres %s"
 
-#: includes/class-wcmp-nlpostcode-fields.php:738
-msgid "<b>Billing Nr.</b> is a required field"
+#: includes/class-wcmp-nlpostcode-fields.php:736
+#, fuzzy
+#| msgid "<b>Billing Nr.</b> is a required field"
+msgid "<b>Billing No.</b> is a required field"
 msgstr "<b>Factuuradres huisnummer</b> is een verplicht veld"
 
-#: includes/class-wcmp-nlpostcode-fields.php:741
-msgid "<b>Shipping Nr.</b> is a required field"
+#: includes/class-wcmp-nlpostcode-fields.php:739
+#, fuzzy
+#| msgid "<b>Shipping Nr.</b> is a required field"
+msgid "<b>Shipping No.</b> is a required field"
 msgstr "<b>Verzendadres huisnummer</b> is een verplicht veld"
 
 #: includes/class-wcmp-settings-callbacks.php:414
@@ -889,7 +893,7 @@ msgstr "Verwerkingstijd"
 
 #: includes/class-wcmp-settings.php:727
 msgid "Number of days you need to process an order."
-msgstr "Aantal dagen dat je nodig heeft om een order te verwerken."
+msgstr "Aantal dagen dat je nodig hebt om een order te verwerken."
 
 #: includes/class-wcmp-settings.php:733
 msgid "Delivery days window"
@@ -1079,7 +1083,7 @@ msgstr "Custom-ID (bovenaan op het label links)"
 msgid "Insured for"
 msgstr "Verzekerde waarde"
 
-#: woocommerce-myparcel.php:154
+#: woocommerce-myparcel.php:155
 #, php-format
 msgid ""
 "WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!"
@@ -1087,13 +1091,13 @@ msgstr ""
 "WooCommerce MyParcel vereist dat %sWooCommerce%s is geïnstalleerd en "
 "geactiveerd!"
 
-#: woocommerce-myparcel.php:166
+#: woocommerce-myparcel.php:167
 msgid ""
 "WooCommerce MyParcel requires PHP 5.4 or higher (5.6 or later recommended)."
 msgstr ""
 "WooCommerce MyParcel vereist PHP 5.4 of hoger (5.6 of hoger aanbevolen)."
 
-#: woocommerce-myparcel.php:167
+#: woocommerce-myparcel.php:168
 msgid "How to update your PHP version"
 msgstr "Hoe update ik mijn PHP versie?"
 
@@ -1117,6 +1121,9 @@ msgstr ""
 msgid "Richard Perdaan"
 msgstr "Richard Perdaan"
 
+#~ msgid "Nr."
+#~ msgstr "Nr."
+
 #~ msgid ""
 #~ "Choose whether you want to use the \"old\" address fields in the checkout "
 #~ "or not. The old fields are three separate fields for street, number and "
@@ -1131,9 +1138,6 @@ msgstr "Richard Perdaan"
 
 #~ msgid "PostNL pickup express"
 #~ msgstr "Extra vroeg afhalen bij PostNL"
-
-#~ msgid "No."
-#~ msgstr "Nr."
 
 #~ msgid "Standard delivery"
 #~ msgstr "Standaard levering"

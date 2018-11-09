@@ -267,34 +267,32 @@ class WC_NLPostcode_Fields {
 		}
 
 		// Set required to true if country is NL
-		$required = ($country == 'NL' || $country == 'BE')?true:false;
+        $required = ($country == 'NL' || $country == 'BE') ? true : false;
 
-        // Add Street name
-        $fields[$form.'_street_name'] = array(
-            'label'		=> __( 'Street name', 'woocommerce-myparcel' ),
+        // Add street name
+        $fields[$form . '_street_name'] = array(
+            'label'		    => __( 'Street name', 'woocommerce-myparcel' ),
             'placeholder'	=> __( 'Street name', 'woocommerce-myparcel' ),
-            'class'		=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-first' ), $form, 'street_name' ),
+            'class'		    => apply_filters( 'nl_custom_address_field_class', array( 'form-row-first' ), $form, 'street_name' ),
             'required'		=> $required, // Only required for NL
-            'priority'      	=> 60,
+            'priority'      => 60,
         );
 
         // Add house number
-        $fields[$form.'_house_number'] = array(
-            'label'		=> __( 'Nr.', 'woocommerce-myparcel' ),
-            // 'placeholder'	=> __( 'Nr.', 'woocommerce-myparcel' ),
+        $fields[$form . '_house_number'] = array(
+            'label'		=> __( 'No.', 'woocommerce-myparcel' ),
             'class'		=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart-first' ), $form, 'house_number' ),
-            'required'		=> $required, // Only required for NL
+            'required'	=> $required, // Only required for NL
             'type'		=> 'number',
-            'priority'     	=> 61,
+            'priority'  => 61,
         );
 
-        // Add house number Suffix
-        $fields[$form.'_house_number_suffix'] = array(
+        // Add house number suffix
+        $fields[$form . '_house_number_suffix'] = array(
             'label'		=> __( 'Suffix', 'woocommerce-myparcel' ),
-            // 'placeholder'	=> __( 'Suffix', 'woocommerce-myparcel' ),
             'class'		=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart' ), $form, 'house_number_suffix' ),
-            'required'		=> false,
-            'priority'      	=> 62,
+            'required'	=> false,
+            'priority'  => 62,
         );
 
         // Create new ordering for checkout fields
@@ -727,18 +725,18 @@ class WC_NLPostcode_Fields {
 	 */
 	function required_field_notices( $notice, $field_label ) {
 		// concatenate translations
-		$billing_nr = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-myparcel' ) );
-		$shipping_nr = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Nr.', 'woocommerce-myparcel' ) );
+		$billing_nr = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'No.', 'woocommerce-myparcel' ) );
+		$shipping_nr = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'No.', 'woocommerce-myparcel' ) );
 		// not used:
 		// $billing_street = sprintf( __( 'Billing %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcel' ) );
 		// $shipping_street = sprintf( __( 'Shipping %s', 'woocommerce' ), __( 'Street name', 'woocommerce-myparcel' ) );
 
 		switch ( $field_label ) {
 			case $billing_nr:
-				$notice = __( '<b>Billing Nr.</b> is a required field', 'woocommerce-myparcel' );
+				$notice = __( '<b>Billing No.</b> is a required field', 'woocommerce-myparcel' );
 				break;
 			case $shipping_nr:
-				$notice = __( '<b>Shipping Nr.</b> is a required field', 'woocommerce-myparcel' );
+				$notice = __( '<b>Shipping No.</b> is a required field', 'woocommerce-myparcel' );
 				break;
 			default:
 				break;
