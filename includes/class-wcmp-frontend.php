@@ -509,63 +509,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             // Use cutoff_time and saturday_cutoff_time on saturdays
         }
 
-        /**
-         * Get shipping methods associated with parcels to enable delivery options
-         */
-        private function get_shipping_methods() {
-
-            if (
-                $this->frontend_settings->get_checkout_display() != 'all_methods' &&
-                isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1] )
-            ) {
-                return WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1];
-            }
-
-            return array();
-        }
-
-        /**
-         * check if delivery method must hide
-         */
-        private function is_hide_delivery_method() {
-            if ($this->frontend_settings->get_checkout_display() == 'all_methods' ) {
-                return false;
-            }
-
-            // determine whether to pre-hide iframe (prevents flashing)
-            $chosen_shipping_methods = WC()->session->chosen_shipping_methods;
-            if ( empty($chosen_shipping_methods) || !is_array($chosen_shipping_methods) ) {
-                return false;
-            }
-
-            $shipping_country = WC()->customer->get_shipping_country();
-            if ($shipping_country != 'NL' && $shipping_country != 'BE') {
-                return true;
-            }
-
-            return false;
-        }
-
-        /**
-         * @return null|array
-         */
-        private function get_post_data() {
-
-            if ( ! $_POST || ( is_admin() && ! is_ajax() ) ) {
-                return null;
-            }
-
-            if ( isset( $_POST['post_data'] ) ) {
-                // non-default post data for AJAX calls
-                parse_str( $_POST['post_data'], $post_data );
-
-                return $post_data;
-            }
-
-            // checkout finalization
-            return $_POST;
-        }
-
         private function add_fee( $fee_name, $fee ) {
             $fee = $this->normalize_price( $fee );
             // get shipping tax data
