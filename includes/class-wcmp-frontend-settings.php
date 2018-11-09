@@ -410,5 +410,3 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
     }
 
 endif; // class_exists
-
-return new WooCommerce_MyParcel_Frontend_Settings();
