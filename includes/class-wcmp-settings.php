@@ -631,7 +631,7 @@ class WooCommerce_MyParcel_Settings {
         );
 
         add_settings_field(
-            'processing_parameters',
+            'checkout_display',
             __( 'Display for', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'select' ),
             $option_group,
