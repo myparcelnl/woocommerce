@@ -106,6 +106,7 @@ class WooCommerce_MyParcel {
 
 		include_once( 'includes/class-wcmp-assets.php' );
 		$this->admin = include_once( 'includes/class-wcmp-admin.php' );
+        include_once( 'includes/class-wcmp-frontend-settings.php' );
 		include_once( 'includes/class-wcmp-frontend.php' );
 		include_once( 'includes/class-wcmp-settings.php' );
 		$this->export = include_once( 'includes/class-wcmp-export.php' );

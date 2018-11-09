@@ -392,17 +392,6 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
         }
 
         /**
-         * @return null|string
-         */
-        public function get_checkout_display() {
-            if ( isset( $this->settings['checkout_display'] ) ) {
-                return $this->settings['checkout_display'];
-            }
-
-            return null;
-        }
-
-        /**
          * @param $price
          *
          * @return string

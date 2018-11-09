@@ -69,9 +69,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             add_action( 'woocommerce_checkout_after_order_review', array( $this, 'output_shipping_data' ) );
             add_action( 'woocommerce_update_order_review_fragments', array( $this, 'order_review_fragments' ) );
 
-            /* @todo remove require_once() */
-            require_once( WooCommerce_MyParcel()->plugin_path() . '/includes/class-wcmp-frontend-settings.php' );
-
             $this->frontend_settings = new WooCommerce_MyParcel_Frontend_Settings();
         }
 
