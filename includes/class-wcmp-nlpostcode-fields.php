@@ -127,7 +127,6 @@ class WC_NLPostcode_Fields {
 			add_filter( 'woocommerce_user_column_shipping_address', array( $this, 'user_column_shipping_address' ), 1, 2 );
 			add_filter( 'woocommerce_my_account_my_address_formatted_address', array( $this, 'my_account_my_address_formatted_address' ), 1, 3 );
 		}
-		
 	}
 
 	/**
@@ -160,7 +159,6 @@ class WC_NLPostcode_Fields {
             }
 			wp_enqueue_style( 'nl-checkout', WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout.css?MP=' . WC_MYPARCEL_VERSION);
 		}
-
 	}
 
 	/**
@@ -212,8 +210,6 @@ class WC_NLPostcode_Fields {
 			'required'  => false,
 			'hidden'	=> false,
 		);
-
-
 
         $locale['BE']['address_1'] = array(
             'required'  => false,
@@ -273,7 +269,7 @@ class WC_NLPostcode_Fields {
         $fields[$form . '_street_name'] = array(
             'label'		    => __( 'Street name', 'woocommerce-myparcel' ),
             'placeholder'	=> __( 'Street name', 'woocommerce-myparcel' ),
-            'class'		    => apply_filters( 'nl_custom_address_field_class', array( 'form-row-first' ), $form, 'street_name' ),
+            'class'		=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-third first' )),
             'required'		=> $required, // Only required for NL
             'priority'      => 60,
         );
@@ -281,7 +277,7 @@ class WC_NLPostcode_Fields {
         // Add house number
         $fields[$form . '_house_number'] = array(
             'label'		=> __( 'No.', 'woocommerce-myparcel' ),
-            'class'		=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart-first' ), $form, 'house_number' ),
+            'class'		=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-third' )),
             'required'	=> $required, // Only required for NL
             'type'		=> 'number',
             'priority'  => 61,
@@ -290,7 +286,7 @@ class WC_NLPostcode_Fields {
         // Add house number suffix
         $fields[$form . '_house_number_suffix'] = array(
             'label'		=> __( 'Suffix', 'woocommerce-myparcel' ),
-            'class'		=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-quart' ), $form, 'house_number_suffix' ),
+            'class'		=> apply_filters( 'nl_custom_address_field_class', array( 'form-row-third last' )),
             'required'	=> false,
             'priority'  => 62,
         );
