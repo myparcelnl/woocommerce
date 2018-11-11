@@ -752,19 +752,19 @@ class WooCommerce_MyParcel_Settings {
         );
 
         add_settings_field(
-                'header_delivery_options_title',
-                __( 'Delivery options title', 'woocommerce-myparcel' ),
-                array( $this->callbacks, 'text_input' ),
-                $option_group,
-                'delivery_options',
-                array(
-                        'option_name'   => $option_name,
-                        'id'            => 'header_delivery_options_title',
-                        'size'          => '53',
-                        'title'         => 'Delivery options title',
-                        'current'       => self::get_one_checkout_setting_title('header_delivery_options_title'),
-                        'description'	=> __( 'You can place a delivery title above the MyParcel options. When there is no title, it will not be visible.', 'woocommerce-myparcel' ),
-                )
+            'header_delivery_options_title',
+            __( 'Delivery options title', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'text_input' ),
+            $option_group,
+            'delivery_options',
+            array(
+                'option_name'   => $option_name,
+                'id'            => 'header_delivery_options_title',
+                'size'          => '53',
+                'title'         => 'Delivery options title',
+                'current'       => self::get_one_checkout_setting_title('header_delivery_options_title'),
+                'description'	=> __( 'You can place a delivery title above the MyParcel options. When there is no title, it will not be visible.', 'woocommerce-myparcel' ),
+            )
         );
 
         add_settings_field(
@@ -846,7 +846,7 @@ class WooCommerce_MyParcel_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'only_recipient',
                 'title'         => 'Home address only',
-                'current'       => self::get_one_checkout_setting_title('at_home_delivery_title'),
+                'current'       => self::get_one_checkout_setting_title('only_recipient_title'),
                 'size'          => 30,
 			)
 		);
@@ -858,13 +858,13 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                		'has_title'     => true,
+                'has_title'     => true,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'signed',
 				'title'         => 'Signature on delivery',
-                		'current' 	    => self::get_one_checkout_setting_title('signed_title'),
-                		'size'          => 30,
+                'current' 	    => self::get_one_checkout_setting_title('signed_title'),
+                'size'          => 30,
 			)
 		);
 
