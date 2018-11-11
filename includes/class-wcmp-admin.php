@@ -432,7 +432,7 @@ class WooCommerce_MyParcel_Admin {
 						case 'standard':
 							// $time_title = __( 'Standard delivery', 'woocommerce-myparcel' );
 							break;
-						case 'night':
+						case 'evening':
 						case 'avond':
 							$time_title = __( 'Evening delivery', 'woocommerce-myparcel' );
 							break;

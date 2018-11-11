@@ -228,7 +228,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             }
 
             if (isset($_POST['myparcel-signature-selector'])) {
-                WCX_Order::update_meta_data( $order, '_myparcel_signed', self::RADIO_CHECKED );
+                WCX_Order::update_meta_data( $order, '_myparcel_signature', self::RADIO_CHECKED );
             }
 
             if (isset($_POST['method-myparcel-only-recipient-selector'])) {
@@ -285,8 +285,8 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
                                 break;
                             case 'avond':
-                                if ( ! empty( WooCommerce_MyParcel()->checkout_settings['night_fee'] ) ) {
-                                    $fee      = WooCommerce_MyParcel()->checkout_settings['night_fee'];
+                                if ( ! empty( WooCommerce_MyParcel()->checkout_settings['evening_fee'] ) ) {
+                                    $fee      = WooCommerce_MyParcel()->checkout_settings['evening_fee'];
                                     $fee_name = __( 'Evening delivery', 'woocommerce-myparcel' );
 
                                     $this->add_fee_signature($delivery_options, 'Signature on delivery');
@@ -550,11 +550,11 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
         }
 
         private function add_fee_signature($delivery_options, $delivery_title) {
-            if ($delivery_options['signed'] !== 1) {
+            if ($delivery_options['signature'] !== 1) {
                 return;
             }
 
-            $fee = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
+            $fee = WooCommerce_MyParcel()->checkout_settings['signature_fee'];
 
             if (!empty($fee)) {
                 $fee_name = __( $delivery_title, 'woocommerce-myparcel' );

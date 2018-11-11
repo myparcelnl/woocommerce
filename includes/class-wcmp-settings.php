@@ -762,7 +762,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'            => 'header_delivery_options_title',
                 'size'          => '53',
                 'title'         => 'Delivery options title',
-                'current'       => self::get_one_checkout_setting_title('header_delivery_options_title'),
+                'current'       => self::get_checkout_setting_title('header_delivery_options_title'),
                 'description'	=> __( 'You can place a delivery title above the MyParcel options. When there is no title, it will not be visible.', 'woocommerce-myparcel' ),
             )
         );
@@ -778,7 +778,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'at_home_delivery_title',
                 'size'			=> '53',
                 'title'         => 'Delivered at home or at work',
-                'current'       => self::get_one_checkout_setting_title('at_home_delivery_title'),
+                'current'       => self::get_checkout_setting_title('at_home_delivery_title'),
             )
         );
 
@@ -793,7 +793,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'standard_title',
                 'size'			=> '53',
                 'title'         => 'Standard delivery',
-                'current'       => self::get_one_checkout_setting_title('standard_title'),
+                'current'       => self::get_checkout_setting_title('standard_title'),
                 'description'	=> __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
         );
@@ -810,14 +810,14 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'           => $option_name,
                 'id'                    => 'morning',
                 'title'                 => 'Morning delivery',
-                'current'               => self::get_one_checkout_setting_title('morning_title'),
+                'current'               => self::get_checkout_setting_title('morning_title'),
                 'size'                  => 30,
                 'option_description'    => __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
         );
         
         add_settings_field(
-            'night',
+            'evening',
             __( 'Evening delivery', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'delivery_option_enable' ),
             $option_group,
@@ -826,9 +826,9 @@ class WooCommerce_MyParcel_Settings {
                 'has_title'             => true,
                 'has_price'             => true,
                 'option_name'	        => $option_name,
-                'id'			        => 'night',
+                'id'			        => 'evening',
                 'title'                 => 'Evening delivery',
-                'current' 	            => self::get_one_checkout_setting_title('night_title'),
+                'current' 	            => self::get_checkout_setting_title('evening_title'),
                 'size'                  => 30,
                 'option_description'    => __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
@@ -846,13 +846,13 @@ class WooCommerce_MyParcel_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'only_recipient',
                 'title'         => 'Home address only',
-                'current'       => self::get_one_checkout_setting_title('only_recipient_title'),
+                'current'       => self::get_checkout_setting_title('at_home_delivery_title'),
                 'size'          => 30,
 			)
 		);
 
 		add_settings_field(
-			'signed',
+			'signature',
 			__( 'Signature on delivery', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'delivery_option_enable' ),
 			$option_group,
@@ -861,9 +861,9 @@ class WooCommerce_MyParcel_Settings {
                 'has_title'     => true,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
-				'id'			=> 'signed',
+				'id'			=> 'signature',
 				'title'         => 'Signature on delivery',
-                'current' 	    => self::get_one_checkout_setting_title('signed_title'),
+                'current' 	    => self::get_checkout_setting_title('signature_title'),
                 'size'          => 30,
 			)
 		);
@@ -875,14 +875,14 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-				'has_title'     => true,
-				'has_price'     => true,
-				'option_name'	=> $option_name,
-				'id'		=> 'pickup',
-				'class'		=> 'pickup',
-				'title'         => 'Pickup',
-				'current' 	    => self::get_one_checkout_setting_title('pickup_title'),
-				'size'          => 30,
+                'has_title'     => true,
+                'has_price'     => true,
+                'option_name'	=> $option_name,
+                'id'		=> 'pickup',
+                'class'		=> 'pickup',
+                'title'         => 'Pickup',
+                'current' 	    => self::get_checkout_setting_title('pickup_title'),
+                'size'          => 30,
 			)
 		);	
 
@@ -905,7 +905,7 @@ class WooCommerce_MyParcel_Settings {
 		);
 
         add_settings_field(
-            'monday_delivery',
+            'saturday_cutoff',
             __( 'Enable monday delivery', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'delivery_option_enable' ),
             $option_group,
@@ -917,7 +917,7 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'	    => $option_name,
                 'id'			    => 'saturday_cutoff',
                 'size'              => 30,
-                'option_description'    => sprintf( __( 'More information about the Monday delivery of PostNL can be found <a href="%s" target="_blank">here</a>.', 'woocommerce-myparcel' ), 'https://blog.myparcel.nl/maandagbezorging/' ),
+                'option_description'    => sprintf( __( '<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended). </strong> More information about the Monday delivery service of PostNL can be found <a href="%s" target="_blank">here</a>.', 'woocommerce-myparcel' ), 'https://blog.myparcel.nl/maandagbezorging/' ),
             )
         );
 
@@ -940,7 +940,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'belgium_at_home_delivery_title',
                 'size'			=> '53',
                 'title'         => 'Delivery',
-                'current'       => self::get_one_checkout_setting_title('belgium_at_home_delivery_title'),
+                'current'       => self::get_checkout_setting_title('belgium_at_home_delivery_title'),
             )
         );
 
@@ -955,7 +955,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'belgium_standard_title',
                 'size'			=> '53',
                 'title'         => 'Standard delivery',
-                'current'       => self::get_one_checkout_setting_title('belgium_standard_title'),
+                'current'       => self::get_checkout_setting_title('belgium_standard_title'),
                 'description'	=> __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
         );
@@ -1017,7 +1017,7 @@ class WooCommerce_MyParcel_Settings {
      *
      * @return string
      */
-    public static function get_one_checkout_setting_title( $key ) {
+    public static function get_checkout_setting_title($key ) {
         $checkout_settings = self::get_checkout_settings();
         $setting = $checkout_settings[ $key ];
 
@@ -1038,9 +1038,9 @@ class WooCommerce_MyParcel_Settings {
             'at_home_delivery_title' => 'Delivered at home or at work',
             'standard_title'=> 'Standard delivery',
             'morning_title' => 'Morning delivery',
-            'night_title' => 'Evening delivery',
+            'evening_title' => 'Evening delivery',
             'only_recipient_title' => 'Home address only',
-            'signed_title' => 'Signature on delivery',
+            'signature_title' => 'Signature on delivery',
             'pickup_title' => 'PostNL Pickup',
             'belgium_at_home_delivery_title' => 'Delivery',
             'belgium_standard_title' => 'Standard delivery',

@@ -10,8 +10,8 @@ MyParcel = {
 
     DELIVERY_MORNING: 'morning',
     DELIVERY_NORMAL: 'standard',
-    DELIVERY_NIGHT: 'avond',
-    DELIVERY_SIGNED: 0,
+    DELIVERY_EVENING: 'avond',
+    DELIVERY_SIGNATURE: 0,
     DELIVERY_ONLY_RECIPIENT: 0,
 
     SPLIT_STREET_REGEX: /(.*?)\s?(\d{1,4})[/\s\-]{0,2}([a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$/g,
@@ -245,7 +245,7 @@ MyParcel = {
     },
 
     mapExternalWebshopTriggers: function () {
-        MyParcel.DELIVERY_SIGNED = 0;
+        MyParcel.DELIVERY_SIGNATURE = 0;
         MyParcel.DELIVERY_ONLY_RECIPIENT = 0;
         MyParcel.removeStyleFromPrice();
 
@@ -265,7 +265,7 @@ MyParcel = {
             if (jQuery('#mypa-signature-selector').prop('checked'))
             {
                 jQuery('#s_method_myparcel_morning_signature').click();
-                MyParcel.DELIVERY_SIGNED = 1;
+                MyParcel.DELIVERY_SIGNATURE = 1;
                 MyParcel.addStyleToPrice('#mypa-signature-price');
             }
 
@@ -287,7 +287,7 @@ MyParcel = {
             if (jQuery('#mypa-signature-selector').prop('checked') && jQuery('#mypa-only-recipient-selector').prop('checked'))
             {
                 jQuery('#s_method_myparcel_delivery_signature_and_only_recipient_fee').click();
-                MyParcel.DELIVERY_SIGNED = 1;
+                MyParcel.DELIVERY_SIGNATURE = 1;
                 MyParcel.DELIVERY_ONLY_RECIPIENT = 1;
                 MyParcel.addStyleToPrice('#mypa-signature-price, #mypa-only-recipient-price');
             } else
@@ -298,7 +298,7 @@ MyParcel = {
             if (jQuery('#mypa-signature-selector').prop('checked'))
             {
                 jQuery('#s_method_myparcel_delivery_signature').click();
-                MyParcel.DELIVERY_SIGNED = 1;
+                MyParcel.DELIVERY_SIGNATURE = 1;
                 MyParcel.addStyleToPrice('#mypa-signature-price');
 
             } else
@@ -336,11 +336,11 @@ MyParcel = {
             if (jQuery('#mypa-signature-selector').prop('checked'))
             {
                 jQuery('#s_method_myparcel_evening_signature').click();
-                MyParcel.DELIVERY_SIGNED = 1;
+                MyParcel.DELIVERY_SIGNATURE = 1;
                 MyParcel.addStyleToPrice('#mypa-signature-price');
             }
 
-            MyParcel.addDeliveryToExternalInput(MyParcel.DELIVERY_NIGHT);
+            MyParcel.addDeliveryToExternalInput(MyParcel.DELIVERY_EVENING);
             return;
         }
 
@@ -390,7 +390,7 @@ MyParcel = {
         var currentDeliveryData = MyParcel.triggerDefaultOptionDelivery(deliveryDateId, deliveryMomentOfDay);
 
         if (currentDeliveryData !== null) {
-            currentDeliveryData.signed = MyParcel.DELIVERY_SIGNED;
+            currentDeliveryData.signature = MyParcel.DELIVERY_SIGNATURE;
             currentDeliveryData.only_recipient = MyParcel.DELIVERY_ONLY_RECIPIENT;
             jQuery('#mypa-input').val(JSON.stringify(currentDeliveryData));
         }
