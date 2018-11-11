@@ -432,11 +432,9 @@ class WooCommerce_MyParcel_Settings_Callbacks {
                     <td colspan="2"><p class="description"><?php _e( $args['option_description'] ) ?></p></td>
                 </tr>
             <?php endif; ?>
-
 		</table>
 		<?php
 	}
-
 
 	public function delivery_options_table( $args ) {
 		extract( $this->normalize_settings_args( $args ) );

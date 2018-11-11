@@ -213,8 +213,6 @@ class WC_NLPostcode_Fields {
 			'hidden'	=> false,
 		);
 
-
-
         $locale['BE']['address_1'] = array(
             'required'  => false,
             'hidden'	=> true,

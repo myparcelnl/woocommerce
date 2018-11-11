@@ -842,9 +842,9 @@ class WooCommerce_MyParcel_Settings {
 			'delivery_options',
 			array(
                 'has_title'     => true,
-				'has_price'     => true,
-				'option_name'	=> $option_name,
-				'id'			=> 'only_recipient',
+                'has_price'     => true,
+                'option_name'	=> $option_name,
+                'id'			=> 'only_recipient',
                 'title'         => 'Home address only',
                 'current'       => self::get_checkout_setting_title('at_home_delivery_title'),
                 'size'          => 30,
