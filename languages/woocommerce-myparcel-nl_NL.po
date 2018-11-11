@@ -330,8 +330,8 @@ msgstr "Afhalen bij PostNL titel"
 
 #: includes/class-wcmp-settings-callbacks.php:420
 #, fuzzy
-#| msgid "Cut-off time for monday delivery"
-msgid "Cut-off time for monday delivery"
+#| msgid "Cut-off time on Saturday"
+msgid "Cut-off time on Saturday"
 msgstr "Sluitingstijd voor maandaglevering"
 
 #: includes/class-wcmp-settings-callbacks.php:426

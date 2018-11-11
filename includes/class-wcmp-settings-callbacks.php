@@ -417,7 +417,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 			<?php endif; ?>
             <?php if (isset($args['has_cutoff_time'])):?>
                 <tr>
-                    <td><?php _e( 'Cut-off time for monday delivery', 'woocommerce-myparcel' )?>:</td>
+                    <td><?php _e( 'Cut-off time on Saturday', 'woocommerce-myparcel' )?>:</td>
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input( array_merge( $args, $cutoff_time_args ) ); ?></td>
                 </tr>
             <?php endif; ?>
