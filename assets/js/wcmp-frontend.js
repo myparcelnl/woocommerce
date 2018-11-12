@@ -70,10 +70,10 @@ jQuery(function ($) {
 	// any delivery option selected/changed - update checkout for fees
 	$('#mypa-chosen-delivery-options').on('change', 'input', function () {
 		window.myparcel_checkout_updating = true;
-		// disable signed & recipient only when switching to pickup location
+		// disable signature & recipient only when switching to pickup location
 		mypa_postnl_data = JSON.parse($('#mypa-chosen-delivery-options #mypa-input').val());
 		if (typeof mypa_postnl_data.location !== 'undefined') {
-			$('#mypa-signed, #mypa-recipient-only').prop("checked", false);
+			$('#mypa-signature, #mypa-recipient-only').prop("checked", false);
 		}
 		jQuery('body').trigger('update_checkout');
 	});

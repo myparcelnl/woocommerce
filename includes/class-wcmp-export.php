@@ -744,9 +744,9 @@ class WooCommerce_MyParcel_Export {
 			$options['delivery_date'] = $delivery_date;
 		}
 
-        // options signed & recipient only
-		$myparcel_signed = WCX_Order::get_meta( $order, '_myparcel_signed' );
-		if (!empty($myparcel_signed)) {
+        // options signature & recipient only
+		$myparcel_signature = WCX_Order::get_meta( $order, '_myparcel_signature' );
+		if (!empty($myparcel_signature)) {
 			$options['signature'] = 1;
 		}
 		$myparcel_only_recipient = WCX_Order::get_meta( $order, '_myparcel_only_recipient' );

@@ -303,7 +303,7 @@ msgid " title"
 msgstr ""
 
 #: includes/class-wcmp-settings-callbacks.php:420
-msgid "Cut-off time for monday delivery"
+msgid "Cut-off time on Saturday"
 msgstr ""
 
 #: includes/class-wcmp-settings-callbacks.php:426

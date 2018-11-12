@@ -43,7 +43,7 @@ class WooCommerce_MyParcel {
 	public function __construct() {
 		$this->define( 'WC_MYPARCEL_VERSION', $this->version );
 		$this->define( 'WC_CHANNEL_ENGINE_ACTIVE', class_exists('Channel_Engine'));
-        	$this->plugin_basename = plugin_basename(__FILE__);
+		$this->plugin_basename = plugin_basename(__FILE__);
 
 		// Load settings
 		$this->general_settings = get_option( 'woocommerce_myparcel_general_settings' );
@@ -288,11 +288,32 @@ class WooCommerce_MyParcel {
 		}
 
 		if ( version_compare( $installed_version, '3.0.4', '<=' ) ) {
-            $new_settings = get_option( 'woocommerce_myparcel_checkout_settings' );
+            $old_settings = get_option( 'woocommerce_myparcel_checkout_settings' );
+            $new_settings = $old_settings;
+
+            // Add/replace new settings
             $new_settings['use_split_address_fields'] = '1';
+
+            // Rename signed to signature and night to evening for consistency
+            $new_settings['signature_enabled'] = $old_settings['signed_enabled'];
+            $new_settings['signature_title'] = $old_settings['signed_title'];
+            $new_settings['signature_fee'] = $old_settings['signed_fee'];
+
+            $new_settings['evening_enabled'] = $old_settings['night_enabled'];
+            $new_settings['evening_title'] = $old_settings['night_title'];
+            $new_settings['evening_fee'] = $old_settings['night_fee'];
+
+            // Remove old settings
+            unset($new_settings['signed_enabled']);
+            unset($new_settings['signed_title']);
+            unset($new_settings['signed_fee']);
+
+            unset($new_settings['night_enabled']);
+            unset($new_settings['night_title']);
+            unset($new_settings['night_fee']);
+
             update_option('woocommerce_myparcel_checkout_settings', $new_settings);
         }
-
 	}
 
 	/**
