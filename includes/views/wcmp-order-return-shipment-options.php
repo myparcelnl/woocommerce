@@ -105,8 +105,8 @@
 				<?php
 				$insured_amounts = array(
 					'49'		=> __( 'Insured up to &euro; 50' , 'woocommerce-myparcel' ).' (+ &euro; 0.50)',
-					'249'		=> __( 'Insured up to  &euro; 250' , 'woocommerce-myparcel' ).' (+ &euro; 1.00)',
-					'499'		=> __( 'Insured up to  &euro; 500' , 'woocommerce-myparcel' ).' (+ &euro; 1.65)',
+					'249'		=> __( 'Insured up to &euro; 250' , 'woocommerce-myparcel' ).' (+ &euro; 1.00)',
+					'499'		=> __( 'Insured up to &euro; 500' , 'woocommerce-myparcel' ).' (+ &euro; 1.65)',
 					''			=> __( '> &euro; 500 insured' , 'woocommerce-myparcel' ).' (+ &euro; 1.65 / &euro; 500)',
 				);
 				printf( '<select name="%s" class="insured_amount">', $name );

@@ -14,6 +14,7 @@ class WooCommerce_MyParcel_Export {
 	public $success;
 	public $errors;
 	private $prefix_message;
+	private $use_split_address_fields;
 
 	/**
 	 * Construct.
@@ -22,6 +23,10 @@ class WooCommerce_MyParcel_Export {
 	public function __construct() {
 		$this->success = array();
 		$this->errors = array();
+
+		$this->use_split_address_fields = array_key_exists('use_split_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
+            ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] === '1'
+            : false;
 
 		include( 'class-wcmp-rest.php' );
 		include( 'class-wcmp-api.php' );
@@ -255,7 +260,7 @@ class WooCommerce_MyParcel_Export {
 			}
 		}
 		if (!empty($this->success)) {
-			$return['success'] = sprintf(__( '%s shipments successfully exported to Myparcel', 'woocommerce-myparcel' ), count($this->success));
+			$return['success'] = sprintf(__( '%s shipments successfully exported to MyParcel', 'woocommerce-myparcel' ), count($this->success));
 			$return['success_ids'] = $this->success;
 		}
 
@@ -473,7 +478,7 @@ class WooCommerce_MyParcel_Export {
             }
             */
 
-            $shipments[] = $shipment;
+            $shipments[] = apply_filters( 'wc_myparcel_order_shipment', $shipment, $order, $type, $this );
         }
 
         return $shipments;
@@ -536,6 +541,10 @@ class WooCommerce_MyParcel_Export {
 	}
 
 	public function get_recipient( $order ) {
+	    $is_using_old_fields =
+            (string) WCX_Order::get_meta($order, '_billing_street_name') != '' ||
+            (string) WCX_Order::get_meta($order, '_billing_house_number') != '';
+
 		$shipping_name = method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name() : trim( $order->shipping_first_name . ' ' . $order->shipping_last_name );
 		$address = array(
 			'cc'			=> (string) WCX_Order::get_prop( $order, 'shipping_country' ),
@@ -555,18 +564,50 @@ class WooCommerce_MyParcel_Export {
 					'city'			=> (string) WCX_Order::get_prop( $order, 'billing_city' ),
 					'person'		=> $billing_name,
 					'company'		=> (string) WCX_Order::get_prop( $order, 'billing_company' ),
-					'street'		=> (string) WCX_Order::get_meta( $order, '_billing_street_name' ),
-					'number'		=> (string) WCX_Order::get_meta( $order, '_billing_house_number' ),
-					'number_suffix' => (string) WCX_Order::get_meta( $order, '_billing_house_number_suffix' ),
 					'postal_code'	=> (string) WCX_Order::get_prop( $order, 'billing_postcode' ),
 				);
+
+				// If not using old fields
+                if (!$is_using_old_fields) {
+                    // Split the address line 1 into three parts
+                    preg_match(
+                        WC_NLPostcode_Fields::SPLIT_STREET_REGEX,
+                        WCX_Order::get_prop( $order, 'billing_address_1' ).' '.WCX_Order::get_prop( $order, 'billing_address_2' ),
+                        $address_parts
+                    );
+                    $address_intl['street'] =        (string) $address_parts['street'];
+                    $address_intl['number'] =        (string) $address_parts['number'];
+                    $address_intl['number_suffix'] = array_key_exists('number_suffix', $address_parts ) // optional
+                        ? (string) $address_parts['number_suffix']
+                        : '';
+                } else {
+                    $address_intl['street'] =        (string) WCX_Order::get_meta($order, '_billing_street_name');
+                    $address_intl['number'] =        (string) WCX_Order::get_meta($order, '_billing_house_number');
+                    $address_intl['number_suffix'] = (string) WCX_Order::get_meta($order, '_billing_house_number_suffix');
+                }
 			} else {
-				$address_intl = array(
-					'street'		=> (string) WCX_Order::get_meta( $order, '_shipping_street_name' ),
-					'number'		=> (string) WCX_Order::get_meta( $order, '_shipping_house_number' ),
-					'number_suffix' => (string) WCX_Order::get_meta( $order, '_shipping_house_number_suffix' ),
-					'postal_code'	=> (string) WCX_Order::get_prop( $order, 'shipping_postcode' ),
-				);
+                $address_intl = array(
+                    'postal_code'	=> (string) WCX_Order::get_prop( $order, 'shipping_postcode' ),
+                );
+                // If not using old fields
+                if (!$is_using_old_fields) {
+                    // Split the address line 1 into three parts
+                    preg_match(
+                        WC_NLPostcode_Fields::SPLIT_STREET_REGEX,
+                        WCX_Order::get_prop($order, 'shipping_address_1').' '.WCX_Order::get_prop($order, 'shipping_address_2'),
+                        $address_parts
+                    );
+
+                    $address_intl['street'] =        (string) $address_parts['street'];
+                    $address_intl['number'] =        (string) $address_parts['number'];
+                    $address_intl['number_suffix'] = array_key_exists('number_suffix', $address_parts ) // optional
+                        ? (string) $address_parts['number_suffix']
+                        : '';
+                } else {
+                    $address_intl['street'] =        (string) WCX_Order::get_meta($order, '_shipping_street_name');
+                    $address_intl['number'] =        (string) WCX_Order::get_meta($order, '_shipping_house_number');
+                    $address_intl['number_suffix'] = (string) WCX_Order::get_meta($order, '_shipping_house_number_suffix');
+                }
 			}
 		} else {
 			$address_intl = array(
@@ -703,9 +744,9 @@ class WooCommerce_MyParcel_Export {
 			$options['delivery_date'] = $delivery_date;
 		}
 
-        // options signed & recipient only
-		$myparcel_signed = WCX_Order::get_meta( $order, '_myparcel_signed' );
-		if (!empty($myparcel_signed)) {
+        // options signature & recipient only
+		$myparcel_signature = WCX_Order::get_meta( $order, '_myparcel_signature' );
+		if (!empty($myparcel_signature)) {
 			$options['signature'] = 1;
 		}
 		$myparcel_only_recipient = WCX_Order::get_meta( $order, '_myparcel_only_recipient' );
@@ -1077,6 +1118,11 @@ class WooCommerce_MyParcel_Export {
 					$shipment_id = $id;
 					$shipment_data = compact( 'shipment_id', 'status', 'tracktrace', 'shipment');
 					$this->save_shipment_data( $order, $shipment_data );
+					// If Channel Engine is active, add the created Track & Trace code and set shipping method to PostNL in their meta data
+					if ( WC_CHANNEL_ENGINE_ACTIVE and !WCX_Order::get_meta($order, '_shipping_ce_track_and_trace')) {
+                        WCX_Order::update_meta_data( $order, '_shipping_ce_track_and_trace', $tracktrace );
+                        WCX_Order::update_meta_data( $order, '_shipping_ce_shipping_method', 'PostNL' );
+                    }
 					return $shipment_data;
 				} else {
 					return false;
@@ -1532,7 +1578,7 @@ class WooCommerce_MyParcel_Export {
      */
     private function isActiveMethod( $shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class ) {
 
-        //support WooCommerce flate rate
+        //support WooCommerce flat rate
         // check if we have a match with the predefined methods
 	    if (in_array($shipping_method_id, $package_type_shipping_methods)) {
             return true;

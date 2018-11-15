@@ -20,14 +20,13 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
         */
         private $frontend_settings;
 
-
         function __construct()	{
             // Customer Emails
             if (isset(WooCommerce_MyParcel()->general_settings['email_tracktrace'])) {
                 add_action( 'woocommerce_email_before_order_table', array( $this, 'track_trace_email' ), 10, 2 );
             }
 
-            // Track & trace in my account
+            // Track & Trace in my account
             if (isset(WooCommerce_MyParcel()->general_settings['myaccount_tracktrace'])) {
                 add_filter( 'woocommerce_my_account_my_orders_actions', array( $this, 'track_trace_myaccount' ), 10, 2 );
             }
@@ -42,13 +41,20 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             add_action( 'woocommerce_thankyou', array( $this, 'thankyou_pickup_html'), 10, 1 );
 
             // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
+            add_filter( 'wpo_wcpdf_templates_replace_myparcel_delivery_date', array( $this, 'wpo_wcpdf_delivery_date' ), 10, 2 );
             add_filter( 'wpo_wcpdf_templates_replace_myparcel_tracktrace', array( $this, 'wpo_wcpdf_tracktrace' ), 10, 2 );
             add_filter( 'wpo_wcpdf_templates_replace_myparcel_tracktrace_link', array( $this, 'wpo_wcpdf_tracktrace_link' ), 10, 2 );
+            add_filter( 'wpo_wcpdf_templates_replace_myparcel_delivery_options', array( $this, 'wpo_wcpdf_delivery_options' ), 10, 2 );
 
             // Delivery options
             if (isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout'])) {
                 // Change the position of the checkout
-                $checkout_place  = WooCommerce_MyParcel()->checkout_settings['checkout_position'];
+                if ( isset( WooCommerce_MyParcel()->checkout_settings['checkout_position'] ) ) {
+                    $checkout_place  = WooCommerce_MyParcel()->checkout_settings['checkout_position'];
+                } else {
+                    $checkout_place  = 'woocommerce_after_checkout_billing_form';
+                }
+
                 add_action( apply_filters( 'wc_myparcel_delivery_options_location', $checkout_place ), array( $this, 'output_delivery_options' ), 10, 1 );
             }
 
@@ -61,9 +67,6 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             // Output most expensive shipping class in frontend data
             add_action( 'woocommerce_checkout_after_order_review', array( $this, 'output_shipping_data' ) );
             add_action( 'woocommerce_update_order_review_fragments', array( $this, 'order_review_fragments' ) );
-
-            /* @todo remove require_once() */
-            require_once( WooCommerce_MyParcel()->plugin_path() . '/includes/class-wcmp-frontend-settings.php' );
 
             $this->frontend_settings = new WooCommerce_MyParcel_Frontend_Settings();
         }
@@ -78,7 +81,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
             $tracktrace_links = WooCommerce_MyParcel()->admin->get_tracktrace_links ( $order_id );
             if ( !empty($tracktrace_links) ) {
-                $email_text = __( 'You can track your order with the following PostNL track&trace code:', 'woocommerce-myparcel' );
+                $email_text = __( 'You can track your order with the following PostNL Track & Trace code:', 'woocommerce-myparcel' );
                 $email_text = apply_filters( 'wcmyparcel_email_text', $email_text, $order );
                 ?>
                 <p><?php echo $email_text.' '.implode(', ', $tracktrace_links); ?></p>
@@ -102,12 +105,26 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                 foreach ($consignments as $key => $consignment) {
                     $actions['myparcel_tracktrace_'.$consignment['tracktrace']] = array(
                         'url'  => $consignment['tracktrace_url'],
-                        'name' => apply_filters( 'wcmyparcel_myaccount_tracktrace_button', __( 'Track&Trace', 'wooocommerce-myparcel' ) )
+                        'name' => apply_filters( 'wcmyparcel_myaccount_tracktrace_button', __( 'Track & Trace', 'wooocommerce-myparcel' ) )
                     );
                 }
             }
 
             return $actions;
+        }
+
+        public function wpo_wcpdf_delivery_options( $replacement, $order ) {
+            ob_start();
+            WooCommerce_MyParcel()->admin->show_order_delivery_options( $order );
+            return ob_get_clean();
+        }
+
+        public function wpo_wcpdf_delivery_date( $replacement, $order ) {
+            if ($delivery_date = WooCommerce_MyParcel()->export->get_delivery_date( $order ) ) {
+                $formatted_date = date_i18n( apply_filters( 'wcmyparcel_delivery_date_format', wc_date_format() ), strtotime( $delivery_date ) );
+                return $formatted_date;
+            }
+            return $replacement;
         }
 
         public function wpo_wcpdf_tracktrace( $replacement, $order ) {
@@ -166,10 +183,12 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
             $jsonConfig  = $this->get_checkout_config();
 
-            echo "<script>" .
-                 "myparcel_delivery_options_always_display = '$delivery_options_always_display';" .
-                 "myparcel_delivery_options_shipping_methods = $delivery_options_shipping_methods;" .
-                 "myParcelConfig = {$jsonConfig}; myparcel_delivery_options_shipping_methods = {$delivery_options_shipping_methods} </script>";
+            echo "<script>",
+                 "myparcel_delivery_options_always_display = '$delivery_options_always_display';",
+                 "myparcel_delivery_options_shipping_methods = $delivery_options_shipping_methods;",
+                 "myParcelConfig = {$jsonConfig}; myparcel_delivery_options_shipping_methods = {$delivery_options_shipping_methods}",
+                 "</script>";
+
             require_once(WooCommerce_MyParcel()->plugin_path().'/includes/views/wcmp-delivery-options-template.php');
 
             return;
@@ -209,7 +228,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             }
 
             if (isset($_POST['myparcel-signature-selector'])) {
-                WCX_Order::update_meta_data( $order, '_myparcel_signed', self::RADIO_CHECKED );
+                WCX_Order::update_meta_data( $order, '_myparcel_signature', self::RADIO_CHECKED );
             }
 
             if (isset($_POST['method-myparcel-only-recipient-selector'])) {
@@ -266,8 +285,8 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
 
                                 break;
                             case 'avond':
-                                if ( ! empty( WooCommerce_MyParcel()->checkout_settings['night_fee'] ) ) {
-                                    $fee      = WooCommerce_MyParcel()->checkout_settings['night_fee'];
+                                if ( ! empty( WooCommerce_MyParcel()->checkout_settings['evening_fee'] ) ) {
+                                    $fee      = WooCommerce_MyParcel()->checkout_settings['evening_fee'];
                                     $fee_name = __( 'Evening delivery', 'woocommerce-myparcel' );
 
                                     $this->add_fee_signature($delivery_options, 'Signature on delivery');
@@ -293,7 +312,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                         case 'retailexpress':
                             if ( ! empty( WooCommerce_MyParcel()->checkout_settings['pickup_express_fee'] ) ) {
                                 $fee      = WooCommerce_MyParcel()->checkout_settings['pickup_express_fee'];
-                                $fee_name = __( 'PostNL pickup express', 'woocommerce-myparcel' );
+                                $fee_name = __( 'PostNL Pickup Express', 'woocommerce-myparcel' );
                             }
                             break;
                     }
@@ -448,29 +467,30 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "apiBaseUrl" =>  WooCommerce_MyParcel_Frontend_Settings::BASE_URL,
                     "carrier" =>  "1",
 
-                    "priceMorningDelivery" =>  $this->frontend_settings->get_price_morning(),
+                    "priceMorningDelivery" =>  $this->frontend_settings->get_price('morning'),
                     "priceNormalDelivery" =>  "",
-                    "priceEveningDelivery" =>  $this->frontend_settings->get_price_evening(),
-                    "priceSignature" =>  $this->frontend_settings->get_price_signature(),
-                    "priceOnlyRecipient" => $this->frontend_settings->get_price_only_recipient(),
-                    "pricePickup" =>  $this->frontend_settings->get_price_pickup(),
-                    "pricePickupExpress" =>  $this->frontend_settings->get_price_pickup_express(),
+                    "priceEveningDelivery" =>  $this->frontend_settings->get_price('evening'),
+                    "priceSignature" =>  $this->frontend_settings->get_price('signature'),
+                    "priceOnlyRecipient" => $this->frontend_settings->get_price('only_recipient'),
+                    "pricePickup" =>  $this->frontend_settings->get_price('pickup'),
+                    "pricePickupExpress" =>  $this->frontend_settings->get_price('pickup_express'),
 
-                    "deliveryTitle" => $this->frontend_settings->at_home_delivery_title(),
-                    "pickupTitle" => $this->frontend_settings->pickup_title(),
-                    "deliveryMorningTitle" => $this->frontend_settings->morning_title(),
-                    "deliveryStandardTitle" => $this->frontend_settings->standard_title(),
-                    "deliveryEveningTitle" => $this->frontend_settings->evening_title(),
-                    "signatureTitle" =>  $this->frontend_settings->signature_title(),
-                    "onlyRecipientTitle" =>  $this->frontend_settings->only_recipient_title(),
+                    "headerDeliveryOptions" => $this->frontend_settings->get_title('header_delivery_options'),
+                    "deliveryTitle" => $this->frontend_settings->get_title('at_home_delivery'),
+                    "pickupTitle" => $this->frontend_settings->get_title('pickup'),
+                    "deliveryMorningTitle" => $this->frontend_settings->get_title('morning'),
+                    "deliveryStandardTitle" => $this->frontend_settings->get_title('standard'),
+                    "deliveryEveningTitle" => $this->frontend_settings->get_title('evening'),
+                    "signatureTitle" =>  $this->frontend_settings->get_title('signature'),
+                    "onlyRecipientTitle" =>  $this->frontend_settings->get_title('only_recipient'),
 
-                    "allowMondayDelivery" =>  $this->frontend_settings->is_monday_enabled(),
-                    "allowMorningDelivery" =>  $this->frontend_settings->is_morning_enabled(),
-                    "allowEveningDelivery" =>  $this->frontend_settings->is_evening_enabled(),
-                    "allowSignature" =>  $this->frontend_settings->is_signature_enabled(),
-                    "allowOnlyRecipient" =>  $this->frontend_settings->is_only_recipient_enabled(),
-                    "allowPickupPoints" =>  $this->frontend_settings->is_pickup_enabled(),
-                    "allowPickupExpress" =>  $this->frontend_settings->is_pickup_express_enabled(),
+                    "allowMondayDelivery" =>  $this->frontend_settings->is_enabled('saturday_cutoff'),
+                    "allowMorningDelivery" =>  $this->frontend_settings->is_enabled('morning'),
+                    "allowEveningDelivery" =>  $this->frontend_settings->is_enabled('evening'),
+                    "allowSignature" =>  $this->frontend_settings->is_enabled('signature'),
+                    "allowOnlyRecipient" =>  $this->frontend_settings->is_enabled('only_recipient'),
+                    "allowPickupPoints" =>  $this->frontend_settings->is_enabled('pickup'),
+                    "allowPickupExpress" =>  $this->frontend_settings->is_enabled('pickup_express'),
 
                     "dropOffDays" =>  $this->frontend_settings->get_dropoff_days(),
                     "saturdayCutoffTime" =>  $this->frontend_settings->get_saturday_cutoff_time(),
@@ -478,71 +498,14 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                     "deliverydaysWindow" =>  $this->frontend_settings->get_deliverydays_window(),
                     "dropoffDelay" => $this->frontend_settings->get_dropoff_delay(),
 
-                    "BEdeliveryTitle" => $this->frontend_settings->belgium_at_home_delivery_title(),
-                    "BEdeliveryStandardTitle" => $this->frontend_settings->belgium_standard_title(),
+                    "BEdeliveryTitle" => $this->frontend_settings->get_title('belgium_at_home_delivery'),
+                    "BEdeliveryStandardTitle" => $this->frontend_settings->get_title('belgium_standard'),
                 ],
               ];
 
             return json_encode( $myParcelConfig );
 
             // Use cutoff_time and saturday_cutoff_time on saturdays
-        }
-
-        /**
-         * Get shipping methods associated with parcels to enable delivery options
-         */
-        private function get_shipping_methods() {
-
-            if (
-                $this->frontend_settings->get_checkout_display() != 'all_methods' &&
-                isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1] )
-            ) {
-                return WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1];
-            }
-
-            return array();
-        }
-
-        /**
-         * check if delivery method must hide
-         */
-        private function is_hide_delivery_method() {
-            if ($this->frontend_settings->get_checkout_display() == 'all_methods' ) {
-                return false;
-            }
-
-            // determine whether to pre-hide iframe (prevents flashing)
-            $chosen_shipping_methods = WC()->session->chosen_shipping_methods;
-            if ( empty($chosen_shipping_methods) || !is_array($chosen_shipping_methods) ) {
-                return false;
-            }
-
-            $shipping_country = WC()->customer->get_shipping_country();
-            if ($shipping_country != 'NL' && $shipping_country != 'BE') {
-                return true;
-            }
-
-            return false;
-        }
-
-        /**
-         * @return null|array
-         */
-        private function get_post_data() {
-
-            if ( ! $_POST || ( is_admin() && ! is_ajax() ) ) {
-                return null;
-            }
-
-            if ( isset( $_POST['post_data'] ) ) {
-                // non-default post data for AJAX calls
-                parse_str( $_POST['post_data'], $post_data );
-
-                return $post_data;
-            }
-
-            // checkout finalization
-            return $_POST;
         }
 
         private function add_fee( $fee_name, $fee ) {
@@ -553,9 +516,9 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                 if ($shipping_tax_class == 'standard') {
                     $shipping_tax_class = '';
                 }
-                WC()->cart->add_fee( $fee_name, $fee, true, $shipping_tax_class );
+                WC()->cart->add_fee($fee_name, $fee, true, $shipping_tax_class);
             } else {
-                WC()->cart->add_fee( $fee_name, $fee );
+                WC()->cart->add_fee($fee_name, $fee);
             }
         }
 
@@ -586,14 +549,14 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
             return false;
         }
 
-        private function add_fee_signature( $delivery_options, $delivery_title ) {
-            if ( $delivery_options['signed'] !== 1){
+        private function add_fee_signature($delivery_options, $delivery_title) {
+            if ($delivery_options['signature'] !== 1) {
                 return;
             }
 
-            $fee      = WooCommerce_MyParcel()->checkout_settings['signed_fee'];
+            $fee = WooCommerce_MyParcel()->checkout_settings['signature_fee'];
 
-            if ( ! empty( $fee ) ) {
+            if (!empty($fee)) {
                 $fee_name = __( $delivery_title, 'woocommerce-myparcel' );
                 $this->add_fee( $fee_name, $fee );
             }
@@ -604,7 +567,7 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
                 return;
             }
 
-            $fee      = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
+            $fee = WooCommerce_MyParcel()->checkout_settings['only_recipient_fee'];
 
             if ( ! empty( $fee ) ) {
                 $fee_name = __( $delivery_title, 'woocommerce-myparcel' );

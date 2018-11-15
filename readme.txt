@@ -2,8 +2,9 @@
 Contributors: richardperdaan
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.9.5
-Stable tag: 3.0.0
+Tested up to: 4.9.8
+Stable tag: 3.0.5
+Requires PHP: 5.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -25,7 +26,7 @@ This WooCommerce extension allows you to export your orders to the MyParcel serv
 - Modify the MyParcel shipping options per order before exporting
 - Extra checkout fields to separate street name, house number and house number suffix for more precise address data
 - View the status of the shipment in the order details page
-- Add track&trace link to the order confirmation email
+- Add Track & Trace link to the order confirmation email
 
 A MyParcel API account is required for this plugin! You can create this in your account or contact MyParcel at info@myparcel.nl
 
@@ -59,7 +60,7 @@ We advise you to test the whole checkout procedure once to see if everything wor
 
 The MyParcel plugin adds extra fields to the checkout of your webshop, to make it possible for the client to add street name, number and optional additions separately. This way you can be sure that everything is entered correctly. Because not all checkouts are configured alike, it's possible that the positioning/alignment of these extra fields have to be adjusted.
 
-Moreover, after a label is created, a track&trace code is added to the order. When the order is completed from WooCommerce, this track & trace code is added to the email (when this is enabled in the settings). Check that the code is correctly displayed in your template. You can read how to change the text in the FAQ section.
+Moreover, after a label is created, a Track & Trace code is added to the order. When the order is completed from WooCommerce, this Track & Trace code is added to the email (when this is enabled in the settings). Check that the code is correctly displayed in your template. You can read how to change the text in the FAQ section.
 
 == Frequently Asked Questions ==
 
@@ -68,13 +69,13 @@ Moreover, after a label is created, a track&trace code is added to the order. Wh
 = How do I get an API key? =
 When logged in on your myparcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) you can find your API key under Instellingen → Algemeen.
 
-= How do I change the track&trace email text? =
+= How do I change the Track & Trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
 `
 add_filter( 'wcmyparcel_email_text', 'wcmyparcel_new_email_text' );
 function wcmyparcel_new_email_text($track_trace_tekst) {
 	// Tutoyeren ipv vousvoyeren
-	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende PostNL track&trace nummer:';
+	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende PostNL Track & Trace nummer:';
 	return $nieuwe_tekst;
 }
 `
@@ -89,9 +90,35 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 3.0.5 (-) =
+* Fix: Error message about money_format
+* Fix:Add the priority to the checkout field for support WooCommerce 3.5.1
+* Fix:The PostNL logo is not visible with all browsers 
+* Improvement: Support Channel Engine
+* Improvement: Information inside the checkout and the translations
+* Improvement: Support WooCommerce default shipping fields (_address_1 and _address_2)
+
+= 3.0.4 (2018-10-23) =
+* Fix: mollie payments
+* Improvement: Check for minimum php version (php 5.4) 
+* Improvement: Hide automatic pickup express if pickup is not enabled
+
+= 3.0.3 (2018-10-09) =
+* Fix: Problem with WooCommerce PDF Invoices & Packing Slips
+* Fix: error about "Bewaar barcode in een notitie" size
+* Fix: Turn of the option allow Pickup Express
+* Fix: Save settings with a new update
+* Improvement: MyParcel delivery header titel 
+* Improvement: Support WooCommerce 3.5.0
+* Improvement: add preliminary support for "digitale postzegel"
+
+= 3.0.2 (2018-10-09) =
+* Fix: Error a non-numeric value encountered in class-wcmp-frontend-settings.php
+* Fix: Notice Undefined index: checkout_position
+* Fix: Add version number after the nl-checkout.css call
+
 = 3.0.0 (2018-10-09) =
-Changes:
-* The whole checkout has a new look. A choice has been made to go back to the basic checkout. The checkout is designed so that he will take the styling of the website.
+* Changes: The whole checkout has a new look. A choice has been made to go back to the basic checkout. The checkout is designed so that he will take the styling of the website.
 
 These are the biggest changes:
 * No use of libraries (only jQuery)
@@ -99,13 +126,10 @@ These are the biggest changes:
 * The checkout is more stable
 * Easier to implement improvements
 
-Fix:
-* Use street and house number fields for export a Belgium order
-* The at home or at work delivery title inside the checkout
-* The default settings
-
-Improvement:
-* The option to change the position of the checkout (edited)
+* Fix: Use street and house number fields for export a Belgium order
+* Fix: The at home or at work delivery title inside the checkout
+* Fix: The default settings
+* Improvement: The option to change the position of the checkout (edited)
 
 = 3.0.0-beta.2 (2018-09-08) =
 * Fix: at home delivery title
@@ -273,7 +297,7 @@ Improvement:
 
 = 1.5.6 =
 * Fix: Disable pakjegemak if 'ship to different address' is disabled after selecting Pakjegemak location
-* Fix: Use billing postcode for Pakjegemak track & trace
+* Fix: Use billing postcode for Pakjegemak Track & Trace
 
 = 1.5.5 =
 * Fix: Foreign postcodes validation fix.
@@ -313,7 +337,7 @@ Improvement:
 * Dev: Code refactor
 
 = 1.4.6 =
-* Fix: Foreign track & trace link updated
+* Fix: Foreign Track & Trace link updated
 
 = 1.4.5 =
 * Tweak: Prevent label creation if direct processing is disabled. NOTE! If you had this setting disabled and were used to downloading the labels directly, you need to change this in the settings.
@@ -337,7 +361,7 @@ Improvement:
 * Feature: Print order number on label
 * Feature: PakjeGemak integration
 * Feature: Option to autocomplete order after successful export to MyParcel
-* Feature: Option to display track&trace link on my account page
+* Feature: Option to display Track & Trace link on my account page
 
 = 1.3.8 =
 * Fix: Big exports now run without any warnings/problems (was limited by the server)

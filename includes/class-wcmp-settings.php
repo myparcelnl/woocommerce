@@ -174,7 +174,7 @@ class WooCommerce_MyParcel_Settings {
 				'id'			=> 'download_display',
 				'options' 		=> array(
 					'download'	=> __( 'Download PDF' , 'woocommerce-myparcel' ),
-					'display'	=> __( 'Open de PDF in a new tab' , 'woocommerce-myparcel' ),
+					'display'	=> __( 'Open the PDF in a new tab' , 'woocommerce-myparcel' ),
 				),
 			)
 		);
@@ -209,27 +209,27 @@ class WooCommerce_MyParcel_Settings {
 
 		add_settings_field(
 			'email_tracktrace',
-			__( 'Track&trace in email', 'woocommerce-myparcel' ),
+			__( 'Track & Trace in email', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'general',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'email_tracktrace',
-				'description'	=> __( 'Add the track&trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the track & trace email in your MyParcel backend.', 'woocommerce-myparcel' )
+				'description'	=> __( 'Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel backend.', 'woocommerce-myparcel' )
 			)
 		);
 
 		add_settings_field(
 			'myaccount_tracktrace',
-			__( 'Track&trace in My Account', 'woocommerce-myparcel' ),
+			__( 'Track & Trace in My Account', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'checkbox' ),
 			$option_group,
 			'general',
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'myaccount_tracktrace',
-				'description'	=> __( 'Show track&trace trace code & link in My Account.', 'woocommerce-myparcel' )
+				'description'	=> __( 'Show Track & Trace trace code and link in My Account.', 'woocommerce-myparcel' )
 			)
 		);
 
@@ -242,7 +242,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'process_directly',
-				'description'	=> __( 'When you enable this option, shipments will be directly processed when sent to myparcel.', 'woocommerce-myparcel' )
+				'description'	=> __( 'When you enable this option, shipments will be directly processed when sent to MyParcel.', 'woocommerce-myparcel' )
 			)
 		);
 
@@ -255,7 +255,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'order_status_automation',
-				'description'	=> __( 'Automatically set order status to a predefined status after succesfull MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track&trace in email</strong> option, otherwise the track&trace code will not be included in the customer email.', 'woocommerce-myparcel' )
+				'description'	=> __( 'Automatically set order status to a predefined status after successful MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.', 'woocommerce-myparcel' )
 			)
 		);		
 
@@ -282,7 +282,7 @@ class WooCommerce_MyParcel_Settings {
 				'option_name'	=> $option_name,
 				'id'			=> 'keep_shipments',
 				'default'		=> 0,
-				'description'	=> __( 'With this option enabled, data from previous shipments (track & trace links) will be kept in the order when you export more than once.', 'woocommerce-myparcel' )
+				'description'	=> __( 'With this option enabled, data from previous shipments (Track & Trace links) will be kept in the order when you export more than once.', 'woocommerce-myparcel' )
 			)
 		);
 
@@ -311,10 +311,10 @@ class WooCommerce_MyParcel_Settings {
 				'id'			=> 'barcode_in_note_title',
 				'class'			=> 'barcode_in_note_title',
 				'default'		=> 'Tracking code:',
+				'size'          =>  25,
 				'description'	=> __( 'You can change the text before the barcode inside an note', 'woocommerce-myparcel' ),
 			)
 		);
-
 
 		// Diagnostics section.
 		add_settings_section(
@@ -402,7 +402,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'connect_email',
-				'description'	=> sprintf(__( 'When you connect the customer email, MyParcel can send a Track&Trace email to this address. In your %sMyParcel backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-myparcel' ), '<a href="https://backoffice.myparcel.nl/ttsettingstable" target="_blank">', '</a>')
+				'description'	=> sprintf(__( 'When you connect the customer email, MyParcel can send a Track & Trace email to this address. In your %sMyParcel backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-myparcel' ), '<a href="https://backoffice.myparcel.nl/ttsettingstable" target="_blank">', '</a>')
 			)
 		);
 
@@ -454,7 +454,7 @@ class WooCommerce_MyParcel_Settings {
 			array(
 				'option_name'	=> $option_name,
 				'id'			=> 'signature',
-				'description'	=> __( 'The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signuture will be required.', 'woocommerce-myparcel' )
+				'description'	=> __( 'The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signature will be required.', 'woocommerce-myparcel' )
 			)
 		);
 		
@@ -498,8 +498,8 @@ class WooCommerce_MyParcel_Settings {
 				'class'			=> 'insured_amount',
 				'options' 		=> array(
 					'49'		=> __( 'Insured up to &euro; 50 (+ &euro; 0.50)' , 'woocommerce-myparcel' ),
-					'249'		=> __( 'Insured up to  &euro; 250 (+ &euro; 1.00)' , 'woocommerce-myparcel' ),
-					'499'		=> __( 'Insured up to  &euro; 500 (+ &euro; 1.65)' , 'woocommerce-myparcel' ),
+					'249'		=> __( 'Insured up to &euro; 250 (+ &euro; 1.00)' , 'woocommerce-myparcel' ),
+					'499'		=> __( 'Insured up to &euro; 500 (+ &euro; 1.65)' , 'woocommerce-myparcel' ),
 					''			=> __( '> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)' , 'woocommerce-myparcel' ),
 				),
 			)
@@ -605,6 +605,20 @@ class WooCommerce_MyParcel_Settings {
 		}
 
         add_settings_field(
+            'use_split_address_fields',
+            __( 'MyParcel address fields', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'checkbox' ),
+            $option_group,
+            'processing_parameters',
+            array(
+                'option_name'	=> $option_name,
+                'id'			=> 'use_split_address_fields',
+                'class'			=> 'use_split_address_fields',
+                'description'	=> __( 'When enabled the checkout will use the MyParcel address fields. This means there will be three separate fields for street name, number and suffix. Want to use the WooCommerce default fields? Leave this option unchecked.', 'woocommerce-myparcel' ),
+            )
+        );
+
+        add_settings_field(
             'myparcel_checkout',
             __( 'Enable MyParcel delivery options', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'checkbox' ),
@@ -617,7 +631,7 @@ class WooCommerce_MyParcel_Settings {
         );
 
         add_settings_field(
-            'processing_parameters',
+            'checkout_display',
             __( 'Display for', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'select' ),
             $option_group,
@@ -672,7 +686,7 @@ class WooCommerce_MyParcel_Settings {
 
         add_settings_field(
             'dropoff_days',
-            __( 'Dropoff days', 'woocommerce-myparcel' ),
+            __( 'Drop-off days', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'enhanced_select' ),
             $option_group,
             'processing_parameters',
@@ -701,7 +715,7 @@ class WooCommerce_MyParcel_Settings {
 
         add_settings_field(
             'dropoff_delay',
-            __( 'Dropoff delay', 'woocommerce-myparcel' ),
+            __( 'Drop-off delay', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'text_input' ),
             $option_group,
             'processing_parameters',
@@ -725,18 +739,32 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'deliverydays_window',
                 'type'			=> 'text',
                 'size'			=> '5',
-                'size'			=> '5',
-                'description'	=> __( 'Aantal dagen dat een klant een zending kan uitstellen. Standaard zijn dit 0 dagen met een maximum van 14 dagen.', 'woocommerce-myparcel' ),
+                'description'	=> __( 'Amount of days a customer can postpone delivery. Default is 0 days with a maximum of 14.', 'woocommerce-myparcel' ),
             )
         );
 
-
-// Delivery options section.
+        // Delivery options section.
         add_settings_section(
             'delivery_options',
             __( 'Delivery options', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'section' ),
             $option_group
+        );
+
+        add_settings_field(
+            'header_delivery_options_title',
+            __( 'Delivery options title', 'woocommerce-myparcel' ),
+            array( $this->callbacks, 'text_input' ),
+            $option_group,
+            'delivery_options',
+            array(
+                'option_name'   => $option_name,
+                'id'            => 'header_delivery_options_title',
+                'size'          => '53',
+                'title'         => 'Delivery options title',
+                'current'       => self::get_checkout_setting_title('header_delivery_options_title'),
+                'description'	=> __( 'You can place a delivery title above the MyParcel options. When there is no title, it will not be visible.', 'woocommerce-myparcel' ),
+            )
         );
 
         add_settings_field(
@@ -750,7 +778,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'at_home_delivery_title',
                 'size'			=> '53',
                 'title'         => 'Delivered at home or at work',
-                'current'       => __( 'Delivered at home or at work', 'woocommerce-myparcel' ),
+                'current'       => self::get_checkout_setting_title('at_home_delivery_title'),
             )
         );
 
@@ -765,7 +793,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'standard_title',
                 'size'			=> '53',
                 'title'         => 'Standard delivery',
-                'current'       => __( 'Standard delivery', 'woocommerce-myparcel' ),
+                'current'       => self::get_checkout_setting_title('standard_title'),
                 'description'	=> __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
         );
@@ -782,14 +810,14 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'           => $option_name,
                 'id'                    => 'morning',
                 'title'                 => 'Morning delivery',
-                'current'               => __( 'Morning delivery', 'woocommerce-myparcel' ),
+                'current'               => self::get_checkout_setting_title('morning_title'),
                 'size'                  => 30,
                 'option_description'    => __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
         );
         
         add_settings_field(
-            'night',
+            'evening',
             __( 'Evening delivery', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'delivery_option_enable' ),
             $option_group,
@@ -798,9 +826,9 @@ class WooCommerce_MyParcel_Settings {
                 'has_title'             => true,
                 'has_price'             => true,
                 'option_name'	        => $option_name,
-                'id'			        => 'night',
+                'id'			        => 'evening',
                 'title'                 => 'Evening delivery',
-                'current' 	            => __( 'Evening delivery', 'woocommerce-myparcel' ),
+                'current' 	            => self::get_checkout_setting_title('evening_title'),
                 'size'                  => 30,
                 'option_description'    => __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
@@ -814,17 +842,17 @@ class WooCommerce_MyParcel_Settings {
 			'delivery_options',
 			array(
                 'has_title'     => true,
-				'has_price'     => true,
-				'option_name'	=> $option_name,
-				'id'			=> 'only_recipient',
+                'has_price'     => true,
+                'option_name'	=> $option_name,
+                'id'			=> 'only_recipient',
                 'title'         => 'Home address only',
-                'current'       => __( 'Home address only', 'woocommerce-myparcel' ),
+                'current'       => self::get_checkout_setting_title('at_home_delivery_title'),
                 'size'          => 30,
 			)
 		);
 
 		add_settings_field(
-			'signed',
+			'signature',
 			__( 'Signature on delivery', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'delivery_option_enable' ),
 			$option_group,
@@ -833,9 +861,9 @@ class WooCommerce_MyParcel_Settings {
                 'has_title'     => true,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
-				'id'			=> 'signed',
-                'title'         => 'Signature on delivery',
-                'current' 	    => __( 'Signature on delivery', 'woocommerce-myparcel' ),
+				'id'			=> 'signature',
+				'title'         => 'Signature on delivery',
+                'current' 	    => self::get_checkout_setting_title('signature_title'),
                 'size'          => 30,
 			)
 		);
@@ -848,14 +876,15 @@ class WooCommerce_MyParcel_Settings {
 			'delivery_options',
 			array(
                 'has_title'     => true,
-				'has_price'     => true,
-				'option_name'	=> $option_name,
-				'id'			=> 'pickup',
+                'has_price'     => true,
+                'option_name'	=> $option_name,
+                'id'		=> 'pickup',
+                'class'		=> 'pickup',
                 'title'         => 'Pickup',
-                'current' 	    => __( 'Pick up at PostNL location', 'woocommerce-myparcel' ),
+                'current' 	    => self::get_checkout_setting_title('pickup_title'),
                 'size'          => 30,
 			)
-		);
+		);	
 
 		add_settings_field(
 			'pickup_express',
@@ -864,19 +893,19 @@ class WooCommerce_MyParcel_Settings {
 			$option_group,
 			'delivery_options',
 			array(
-                'has_title'     => false,
+				'has_title'     => false,
 				'has_price'     => true,
 				'option_name'	=> $option_name,
 				'id'			=> 'pickup_express',
-                'title'         => 'Pickup express',
-                'current' 	    => __( 'Early PostNL pickup', 'woocommerce-myparcel' ),
-                'size'          => 30,
+				'class'			=> 'pickup_express',
+				'title'         => 'Pickup express',
+				'current' 	    => __( 'Early PostNL pickup', 'woocommerce-myparcel' ),
+				'size'          => 30,
 			)
 		);
 
-
         add_settings_field(
-            'monday_delivery',
+            'saturday_cutoff',
             __( 'Enable monday delivery', 'woocommerce-myparcel' ),
             array( $this->callbacks, 'delivery_option_enable' ),
             $option_group,
@@ -888,7 +917,7 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'	    => $option_name,
                 'id'			    => 'saturday_cutoff',
                 'size'              => 30,
-                'option_description'    => sprintf( __( 'More information about the Monday delivery of PostNL can be found <a href="%s" target="_blank">here</a>.', 'woocommerce-myparcel' ), 'https://blog.myparcel.nl/maandagbezorging/' ),
+                'option_description'    => sprintf( __( '<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended). </strong> More information about the Monday delivery service of PostNL can be found <a href="%s" target="_blank">here</a>.', 'woocommerce-myparcel' ), 'https://blog.myparcel.nl/maandagbezorging/' ),
             )
         );
 
@@ -911,7 +940,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'belgium_at_home_delivery_title',
                 'size'			=> '53',
                 'title'         => 'Delivery',
-                'current'       => __( 'Delivery', 'woocommerce-myparcel' ),
+                'current'       => self::get_checkout_setting_title('belgium_at_home_delivery_title'),
             )
         );
 
@@ -926,7 +955,7 @@ class WooCommerce_MyParcel_Settings {
                 'id'			=> 'belgium_standard_title',
                 'size'			=> '53',
                 'title'         => 'Standard delivery',
-                'current'       => __( 'Standard delivery', 'woocommerce-myparcel' ),
+                'current'       => self::get_checkout_setting_title('belgium_standard_title'),
                 'description'	=> __( 'When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcel' ),
             )
         );
@@ -939,7 +968,7 @@ class WooCommerce_MyParcel_Settings {
 			$option_group
 		);
 
-		add_settings_field(
+        add_settings_field(
 			'custom_css',
 			__( 'Custom styles', 'woocommerce-myparcel' ),
 			array( $this->callbacks, 'textarea' ),
@@ -953,67 +982,71 @@ class WooCommerce_MyParcel_Settings {
 			)
 		);
 	}
-	
-	/**
-	 * Set default settings.
-	 * 
-	 * @return void.
-	 */
-	public function default_settings( $option ) {
-		// $default = array(
-		// 	'process'			=> '1',
-		// 	'keep_consignments'	=> '0',
-		// 	'download_display'	=> 'download',
-		// 	'email'				=> '1',
-		// 	'telefoon'			=> '1',
-		// 	'extragroot'		=> '0',
-		// 	'huisadres'			=> '0',
-		// 	'handtekening'		=> '0',
-		// 	'huishand'			=> '0',
-		// 	'retourbgg'			=> '0',
-		// 	'verzekerd'			=> '0',
-		// 	'verzekerdbedrag'	=> '0',
-		// 	'kenmerk'			=> '',
-		// 	'verpakkingsgewicht'=> '0',
-		// );
-	
-		// add_option( 'wcmyparcel_settings', $default );
+    /**
+     * Set default settings.
+     *
+     * @return void.
+     */
+    public function default_settings( $option ) {
 
-		switch ( $option ) {
-			case 'woocommerce_myparcel_general_settings':
-				$default = array(
-					'download_display'=> 'download',
-					'label_format'=> 'A4',
-				);
-				break;
-			case 'woocommerce_myparcel_checkout_settings':
-				$default = array (
-					'pickup_enabled' => '0',
-					'dropoff_days' => array ( 1,2,3,4,5 ),
-					'dropoff_delay' => '0',
-					'deliverydays_window' => '1',
-					'checkout_position'=> 'woocommerce_after_checkout_billing_form',
-					'at_home_delivery_title' => 'Thuis of op het werk bezorgd',
-					'standard_title'=> 'Standaard levering',
-					'only_recipient_title' => 'Alleen huisadres',
-					'signed_title' => 'Handtekeing voor ontvangst',
-					'pickup_title' => 'Afhalen bij een PostNL punt',
-					'belgium_at_home_delivery_title' => 'Bezorgen',
-					'belgium_standard_title' => 'Standaard levering',
-				);
-				break;
-			case 'woocommerce_myparcel_export_defaults_settings':
-			default:
-				$default = array();
-				break;
-		}
+        switch ( $option ) {
+            case 'woocommerce_myparcel_general_settings':
+                $default = array(
+                    'download_display'=> 'download',
+                    'label_format'=> 'A4',
+                );
+                break;
+            case 'woocommerce_myparcel_checkout_settings':
+                $default = self::get_checkout_settings();
+                break;
+            case 'woocommerce_myparcel_export_defaults_settings':
+            default:
+                $default = array();
+                break;
+        }
 
-		if ( false === get_option( $option ) ) {
-			add_option( $option, $default );
-		} else {
-			update_option( $option, $default );
-		}
-	}
+        if ( false === get_option( $option ) ) {
+            add_option( $option, $default );
+        } else {
+            update_option( $option, $default );
+        }
+    }
+
+    /**
+     * @param $key
+     *
+     * @return string
+     */
+    public static function get_checkout_setting_title($key ) {
+        $checkout_settings = self::get_checkout_settings();
+        $setting = $checkout_settings[ $key ];
+
+        return __( $setting, 'woocommerce-myparcel' );
+    }
+
+    /**
+     * @return array
+     */
+    public static function get_checkout_settings() {
+        return array (
+            'pickup_enabled' => '0',
+            'dropoff_days' => array ( 1,2,3,4,5 ),
+            'dropoff_delay' => '0',
+            'deliverydays_window' => '1',
+            'checkout_position'=> 'woocommerce_after_checkout_billing_form',
+            'header_delivery_options_title' => 'Delivery options',
+            'at_home_delivery_title' => 'Delivered at home or at work',
+            'standard_title'=> 'Standard delivery',
+            'morning_title' => 'Morning delivery',
+            'evening_title' => 'Evening delivery',
+            'only_recipient_title' => 'Home address only',
+            'signature_title' => 'Signature on delivery',
+            'pickup_title' => 'PostNL Pickup',
+            'belgium_at_home_delivery_title' => 'Delivery',
+            'belgium_standard_title' => 'Standard delivery',
+            'use_split_address_fields' => '0',
+        );
+    }
 }
 
 endif; // class_exists

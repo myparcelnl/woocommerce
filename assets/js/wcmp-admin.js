@@ -10,7 +10,7 @@ jQuery( function( $ ) {
 		$( this ).show();
 	});
 
-	/* disable ALL shipment options form fiels to avoid conflicts with order search field */
+	/* disable ALL shipment options form fields to avoid conflicts with order search field */
 	$('.wp-list-table .wcmp_shipment_options_form :input').prop('disabled', true);
 
 	/* show and enable options when clicked */
@@ -41,7 +41,7 @@ jQuery( function( $ ) {
 				$('.wcmp_shipment_options_form').slideUp();
 			}
 		}
-	})
+	});
 
 	/* show summary when clicked */
 	$('.wcmp_show_shipment_summary').click( function ( event ) {
@@ -83,7 +83,7 @@ jQuery( function( $ ) {
 				$('.wcmp_shipment_summary_list').slideUp();
 			}
 		}
-	})
+	});
 
 	/* hide automatic order status if automation not enabled */
 	$('.wcmp_shipment_options input#order_status_automation').change(function () {
@@ -97,17 +97,17 @@ jQuery( function( $ ) {
 		}
 	});
 
-    /* hide automatic barcode in note title if barcode in note is not enabled */
-    $('.wcmp_shipment_options input#barcode_in_note').change(function () {
-        var barcode_in_note_select = $( '.wcmp_shipment_options select.barcode_in_note_title');
-        if (this.checked) {
-            $( barcode_in_note_select ).prop('disabled', false);
-            $( '.wcmp_shipment_options tr.barcode_in_note_title').show();
-        } else {
-            $( barcode_in_note_select ).prop('disabled', true);
-            $( '.wcmp_shipment_options tr.barcode_in_note_title').hide();
-        }
-    });
+	/* hide automatic barcode in note title if barcode in note is not enabled */
+	$('.wcmp_shipment_options input#barcode_in_note').change(function () {
+		var barcode_in_note_select = $( '.wcmp_shipment_options select.barcode_in_note_title');
+		if (this.checked) {
+		    $( barcode_in_note_select ).prop('disabled', false);
+		    $( '.wcmp_shipment_options tr.barcode_in_note_title').show();
+		} else {
+		    $( barcode_in_note_select ).prop('disabled', true);
+		    $( '.wcmp_shipment_options tr.barcode_in_note_title').hide();
+		}
+	});
 
 
 	/* select > 500 if insured amount input is >499 */
@@ -202,12 +202,24 @@ jQuery( function( $ ) {
 		$next_settings_forms = $(this).closest('table').nextAll('table');
 		if ($(this).is(':checked')) {
 			$next_settings_rows.show();
-			$next_settings_forms.show()
+			$next_settings_forms.show();
 			$next_settings_headers.show();
 		} else {
 			$next_settings_rows.hide();
 			$next_settings_forms.hide();
 			$next_settings_headers.hide();
+		}
+	});
+
+	/* hide automatic pickup express if pickup is not enabled */
+	$('.wcmp_shipment_options input#pickup_enabled').change(function () {
+		var pickup_express = $( '.wcmp_shipment_options select.pickup_express_enabled');
+		if (this.checked) {
+		    $( pickup_express ).prop('disabled', false);
+		    $( '.wcmp_shipment_options tr.pickup_express').show();
+		} else {
+		    $( pickup_express ).prop('disabled', true);
+		    $( '.wcmp_shipment_options tr.pickup_express').hide();
 		}
 	});
 
@@ -293,7 +305,7 @@ jQuery( function( $ ) {
 					break;
 				case 'export_print':
 					bulk_spinner( this, 'show' );
-					myparcel_export( order_ids, 'after_reload' ); /* 'yes' inits print mode and disables refresh */
+					myparcel_export( order_ids, 'after_reload' ); /* 'yes' initializes print mode and disables refresh */
 					break;
 			}
 
@@ -347,7 +359,7 @@ jQuery( function( $ ) {
 			$( '#wcmyparcel_offset_dialog' )
 				.attr('style', 'clear:both') /* reset styles */
 				.insertAfter( 'div.tablenav.'+insert_position )
-				.show()
+				.show();
 
 			/* make sure button is not shown */
 			$( '#wcmyparcel_offset_dialog' ).find('button').hide();
@@ -404,7 +416,7 @@ jQuery( function( $ ) {
 	}
 
 	function button_spinner( button, display ) {
-		if (display == 'show') {
+		if (display === 'show') {
 			$button_img = $( button ).find( '.wcmp_button_img' );
 			$button_img.hide();
 			/* console.log($( button ).parent().find('.wcmp_spinner')); */
@@ -418,7 +430,7 @@ jQuery( function( $ ) {
 	}
 
 	function bulk_spinner( action, display ) {
-		if (display == 'show') {
+		if (display === 'show') {
 			$submit_button = $( action ).parent().find('.button.action');
 			$('.wcmp_bulk_spinner').insertAfter($submit_button).show();
 		} else {
@@ -429,8 +441,8 @@ jQuery( function( $ ) {
 	/* export orders to MyParcel via AJAX */
 	function myparcel_export( order_ids, print ) {
 		if (typeof print === 'undefined') { print = 'no'; }
-		var offset = wc_myparcel.offset == 1 ? $('.wc_myparcel_offset').val() : 0;
-		/* console.log('exporting order to myparcel...'); */
+		var offset = wc_myparcel.offset === 1 ? $('.wc_myparcel_offset').val() : 0;
+		/* console.log('exporting order to MyParcel...'); */
 		var data = {
 			action:           'wc_myparcel',
 			request:          'add_shipments',
@@ -443,7 +455,7 @@ jQuery( function( $ ) {
 		$.post( wc_myparcel.ajax_url, data, function( response ) {
 			response = $.parseJSON(response);
 
-			if (print == 'no' || print == 'after_reload') {
+			if (print === 'no' || print === 'after_reload') {
 				/* refresh page, admin notices are stored in options and will be displayed automatically */
 				/* location.reload(true); */
 				redirect_url = updateUrlParameter( window.location.href, 'myparcel_done', 'true' );
@@ -469,13 +481,13 @@ jQuery( function( $ ) {
 	}
 
 	function myparcel_modal_dialog( order_ids, dialog ) {
-		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") != -1) ? '&' : '?';
+		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") !== -1) ? '&' : '?';
 		var thickbox_height = $(window).height()-120;
 		var thickbox_parameters = '&TB_iframe=true&height='+thickbox_height+'&width=720';
 		var url = wc_myparcel.ajax_url+request_prefix+'order_ids='+order_ids+'&action=wc_myparcel&request=modal_dialog&dialog='+dialog+'&security='+wc_myparcel.nonce+thickbox_parameters;
 
 		/* disable background scrolling */
-		$("body").css({ overflow: 'hidden' })
+		$("body").css({ overflow: 'hidden' });
 	
 		tb_show('', url);
 	}
@@ -507,7 +519,7 @@ jQuery( function( $ ) {
 		/* console.log('requesting myparcel labels...'); */
 		if (typeof offset === 'undefined') { offset = 0; }
 
-		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") != -1) ? '&' : '?';
+		var request_prefix = (wc_myparcel.ajax_url.indexOf("?") !== -1) ? '&' : '?';
 		var url = wc_myparcel.ajax_url+request_prefix+'action=wc_myparcel&request=get_labels&security='+wc_myparcel.nonce;
 
 		/* create form to send order_ids via POST */

@@ -1,15 +1,49 @@
-.woocommerce form .form-row-quart,
-.woocommerce-page form .form-row-quart,
-.woocommerce form .form-row-quart-first,
-.woocommerce-page form .form-row-quart-first {
-	float: left;
-	width: 22%;
-	overflow: visible;
+/* Hack to disable yellow bg color on filled fields and allow js to listen for it  */
+@-webkit-keyframes onAutoFillStart { 0% { } 100% { } }
+
+@keyframes onAutoFillStart { 0% { } 100% { } }
+
+input:-webkit-autofill {
+	-webkit-animation-name: onAutoFillStart;
+	animation-name: onAutoFillStart;
+	transition: background-color 50000s ease-in-out 0s;
+}
+/* End of hack */
+
+#mypa-load,
+#mypa-delivery-date-text,
+#header-delivery-options-title,
+#mypa-delivery-option-form,
+#mypa-location-details,
+.mypa-message-model,
+.woocommerce form .optional {
+	display: none;
 }
 
-.woocommerce-page form .form-row-quart-first,
-.woocommerce form .form-row-quart-first {
-	/*margin-right: 4% !important;*/
+.woocommerce-page form .form-row-third {
+	float: left;
+	width: 16%;
+	overflow: visible;
+}
+.woocommerce form .form-row-third {
+	margin-right: 4%;
+}
+
+.woocommerce form .form-row-third.first {
+	width: 60%;
+}
+
+.woocommerce-page form .form-row-third.last {
+	margin-right: 0 !important;
+}
+
+@media screen and (max-width: 450px) {
+	.woocommerce-page form .form-row-third.first {
+		width: 100%;
+	}
+	.woocommerce-page form .form-row-third {
+		width: 48%;
+	}
 }
 
 #billing_house_number::-webkit-outer-spin-button,
@@ -22,10 +56,10 @@
 #billing_house_number, #shipping_house_number {
 	-moz-appearance: textfield;
 }
+
 /*
  * Styling delivery options
  */
-
 .mypa-time {
 	margin-left: 5px;
 }
@@ -57,22 +91,19 @@
 #mypa-pickup-location-selector li,
 #mypa-delivery-option-form li {
 	list-style-type: none;
-	padding: 2px 0px 0px 0px;
+	padding: 2px 0 0 0;
 }
 #mypa-pickup-location-selector ul:last-child,
 #mypa-delivery-option-form ul:last-child {
 	margin-top: 10px;
 }
 
-#mypa-delivery-option-form {
-	display: none;
-}
-
-#mypa-delivery-option-form label{
+#mypa-delivery-option-form label {
 	display: inline-block;
 	width: 80%;
 	margin: 0;
 }
+
 #mypa-error-try-again{
 	margin-top: 18px;
 }
@@ -86,7 +117,7 @@
 	margin: 15px 0 0;
 	display: inline-block;
 	width: 100%;
-	padding: 5px 0px 2px 0px;
+	padding: 5px 0 2px 0;
 }
 
 .mypa-help {
@@ -107,6 +138,7 @@
 	margin-bottom: 1px;
 	padding-bottom: 2px;
 }
+
 #mypa-pickup-location-selector li:nth-last-of-type(-n+2) {
 	margin-left: 30px;
 }
@@ -122,7 +154,6 @@
 	min-width: 300px;
 	max-width: 400px;
 	margin: 5px;
-	display: none;
 	background-color: white;
 }
 
@@ -184,17 +215,11 @@
 	border: 1px solid black;
 	border-radius: 3px;
 	min-width: 300px;
-	max-width: 400px;
-	margin: 5px;
-	display: none;
 	background-color: white;
-}
-#mypa-delivery-date-text{
-	display: none;
 }
 
 #mypa-list-postnl-pickup option{
-	padding: 5px 0px 5px 0px;
+	padding: 5px 0 5px 0;
 }
 .mypa-bold-price{
 	font-weight: bold;
@@ -220,9 +245,7 @@
 	height: 90px;
 	border-top: 3px solid #ff8c00;
 	border-radius: 100%;
-	border-top-color: #ff8c00;
 	animation: mypa-spin 1.2s linear infinite;
-
 }
 
 @keyframes mypa-spin {
@@ -231,7 +254,6 @@
 }
 
 @media only screen and (max-width: 400px) {
-
 	.mypa-delivery-option-table tr {
 		height: 30px !important;
 	}
@@ -241,7 +263,7 @@
 
 	}
 	.mypa-extra-delivery-options-padding-top {
-		padding: 15px 0px 10px 0px;
+		padding: 15px 0 10px 0;
 	}
 
 	.mypa-pickup-location-details-location, .mypa-pickup-location-details-phone, .mypa-pickup-location-details-city, .mypa-pickup-location-details-time {

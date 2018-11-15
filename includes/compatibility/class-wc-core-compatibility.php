@@ -218,7 +218,7 @@ class WC_Core {
 	 */
 	public static function normalize_wc_screen_id( $slug = 'wc-settings' ) {
 
-		// The textdomain usage is intentional here, we need to match the menu title.
+		// The text-domain usage is intentional here, we need to match the menu title.
 		$prefix = sanitize_title( __( 'WooCommerce', 'woocommerce' ) );
 
 		return $prefix . '_page_' . $slug;

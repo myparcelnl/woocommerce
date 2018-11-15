@@ -4,7 +4,7 @@ Plugin Name: WooCommerce MyParcel
 Plugin URI: http://www.myparcel.nl
 Description: Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
 Author: Richard Perdaan
-Version: 3.0.0
+Version: 3.0.5
 
 Text Domain: woocommerce-myparcel
 
@@ -18,7 +18,7 @@ if ( !class_exists( 'WooCommerce_MyParcel' ) ) :
 
 class WooCommerce_MyParcel {
 
-	public $version = '3.0.0';
+	public $version = '3.0.5';
 
 	public $plugin_basename;
 
@@ -42,6 +42,7 @@ class WooCommerce_MyParcel {
 
 	public function __construct() {
 		$this->define( 'WC_MYPARCEL_VERSION', $this->version );
+		$this->define( 'WC_CHANNEL_ENGINE_ACTIVE', class_exists('Channel_Engine'));
 		$this->plugin_basename = plugin_basename(__FILE__);
 
 		// Load settings
@@ -71,7 +72,7 @@ class WooCommerce_MyParcel {
 	}
 
 	/**
-	 * Load the translation / textdomain files
+	 * Load the translation / text-domain files
 	 *
 	 * Note: the first-loaded translation file overrides any following ones if the same translation is present
 	 */
@@ -105,6 +106,7 @@ class WooCommerce_MyParcel {
 
 		include_once( 'includes/class-wcmp-assets.php' );
 		$this->admin = include_once( 'includes/class-wcmp-admin.php' );
+        include_once( 'includes/class-wcmp-frontend-settings.php' );
 		include_once( 'includes/class-wcmp-frontend.php' );
 		include_once( 'includes/class-wcmp-settings.php' );
 		$this->export = include_once( 'includes/class-wcmp-export.php' );
@@ -120,7 +122,7 @@ class WooCommerce_MyParcel {
 			return;
 		}
 
-		if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
+		if ( version_compare( PHP_VERSION, '5.4', '<' ) ) {
 			add_action( 'admin_notices', array ( $this, 'required_php_version' ) );
 			return;
 		}
@@ -162,7 +164,7 @@ class WooCommerce_MyParcel {
 	 */
 
 	public function required_php_version() {
-		$error = __( 'WooCommerce MyParcel requires PHP 5.3 or higher (5.6 or later recommended).', 'woocommerce-myparcel' );
+		$error = __( 'WooCommerce MyParcel requires PHP 5.4 or higher (5.6 or later recommended).', 'woocommerce-myparcel' );
 		$how_to_update = __( 'How to update your PHP version', 'woocommerce-myparcel' );
 		$message = sprintf('<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>', $error, 'http://docs.wpovernight.com/general/how-to-update-your-php-version/', $how_to_update);
 
@@ -275,7 +277,7 @@ class WooCommerce_MyParcel {
 	 * @param string $installed_version the currently installed ('old') version
 	 */
 	protected function upgrade( $installed_version ) {
-		if ( version_compare( $installed_version, '2.4.0-beta-4', '<' ) ) {
+        if ( version_compare( $installed_version, '2.4.0-beta-4', '<' ) ) {
 			// remove log file (now uses WC logger)
 			$upload_dir = wp_upload_dir();
 			$upload_base = trailingslashit( $upload_dir['basedir'] );
@@ -284,6 +286,34 @@ class WooCommerce_MyParcel {
 				@unlink( $log_file );
 			}
 		}
+
+		if ( version_compare( $installed_version, '3.0.4', '<=' ) ) {
+            $old_settings = get_option( 'woocommerce_myparcel_checkout_settings' );
+            $new_settings = $old_settings;
+
+            // Add/replace new settings
+            $new_settings['use_split_address_fields'] = '1';
+
+            // Rename signed to signature and night to evening for consistency
+            $new_settings['signature_enabled'] = $old_settings['signed_enabled'];
+            $new_settings['signature_title'] = $old_settings['signed_title'];
+            $new_settings['signature_fee'] = $old_settings['signed_fee'];
+
+            $new_settings['evening_enabled'] = $old_settings['night_enabled'];
+            $new_settings['evening_title'] = $old_settings['night_title'];
+            $new_settings['evening_fee'] = $old_settings['night_fee'];
+
+            // Remove old settings
+            unset($new_settings['signed_enabled']);
+            unset($new_settings['signed_title']);
+            unset($new_settings['signed_fee']);
+
+            unset($new_settings['night_enabled']);
+            unset($new_settings['night_title']);
+            unset($new_settings['night_fee']);
+
+            update_option('woocommerce_myparcel_checkout_settings', $new_settings);
+        }
 	}
 
 	/**

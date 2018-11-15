@@ -136,7 +136,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		printf( '<select id="%1$s" name="%2$s" class="%3$s">', $id, $setting_name, $class );
 
 		foreach ( $options as $key => $label ) {
-			printf( '<option value="%s"%s>%s</option>', $key, selected( $current, $key, false ), $label );
+			printf( '<option value="%s" %s>%s</option>', $key, selected( $current, $key, false ), $label );
 		}
 
 		echo '</select>';
@@ -168,7 +168,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 		extract( $this->normalize_settings_args( $args ) );
 	
 		foreach ( $options as $key => $label ) {
-			printf( '<input type="radio" class="radio" id="%1$s[%3$s]" name="%2$s" value="%3$s"%4$s />', $id, $setting_name, $key, checked( $current, $key, false ) );
+			printf( '<input type="radio" class="radio" id="%1$s[%3$s]" name="%2$s" value="%3$s" %4$s />', $id, $setting_name, $key, checked( $current, $key, false ) );
 			printf( '<label for="%1$s[%3$s]"> %4$s</label><br>', $id, $setting_name, $key, $label);
 		}
 		
@@ -395,7 +395,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 			'id'			=> "{$id}_fee",
 			'type'			=> 'number',
 		);
-        // number (cutoff time)
+        // number (cut-off time)
         $cutoff_time_args = array(
             'id'			=> "{$id}_time",
             'type'			=> 'text',
@@ -417,7 +417,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 			<?php endif; ?>
             <?php if (isset($args['has_cutoff_time'])):?>
                 <tr>
-                    <td><?php _e( 'Cut-off time for monday delivery', 'woocommerce-myparcel' )?>:</td>
+                    <td><?php _e( 'Cut-off time on Saturday', 'woocommerce-myparcel' )?>:</td>
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input( array_merge( $args, $cutoff_time_args ) ); ?></td>
                 </tr>
             <?php endif; ?>
@@ -432,11 +432,9 @@ class WooCommerce_MyParcel_Settings_Callbacks {
                     <td colspan="2"><p class="description"><?php _e( $args['option_description'] ) ?></p></td>
                 </tr>
             <?php endif; ?>
-
 		</table>
 		<?php
 	}
-
 
 	public function delivery_options_table( $args ) {
 		extract( $this->normalize_settings_args( $args ) );
@@ -586,7 +584,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 			}
 		}
 
-		// falback to default or empty if no value in option
+		// fallback to default or empty if no value in option
 		if ( !isset($args['current']) ) {
 			$args['current'] = isset( $args['default'] ) ? $args['default'] : '';
 		}		
