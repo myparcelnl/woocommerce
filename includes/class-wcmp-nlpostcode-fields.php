@@ -9,7 +9,7 @@ if ( !class_exists( 'WC_NLPostcode_Fields' ) ) :
 
 class WC_NLPostcode_Fields {
 
-	public $version = '1.5.4';
+	public $version = '1.5.5';
 
 	private $use_split_address_fields;
 
