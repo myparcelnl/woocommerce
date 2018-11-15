@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: WooCommerce MyParcel\n"
-"POT-Creation-Date: 2018-11-09 12:39+0100\n"
+"POT-Creation-Date: 2018-11-14 19:57+0100\n"
 "PO-Revision-Date: 2016-07-02 16:21+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -242,59 +242,59 @@ msgstr ""
 msgid "PostNL pickup"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:274 includes/class-wcmp-nlpostcode-fields.php:275
-#: includes/class-wcmp-nlpostcode-fields.php:445 includes/class-wcmp-nlpostcode-fields.php:471
+#: includes/class-wcmp-nlpostcode-fields.php:270 includes/class-wcmp-nlpostcode-fields.php:271
+#: includes/class-wcmp-nlpostcode-fields.php:441 includes/class-wcmp-nlpostcode-fields.php:467
 msgid "Street name"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:283 includes/class-wcmp-nlpostcode-fields.php:728
-#: includes/class-wcmp-nlpostcode-fields.php:729
+#: includes/class-wcmp-nlpostcode-fields.php:279 includes/class-wcmp-nlpostcode-fields.php:724
+#: includes/class-wcmp-nlpostcode-fields.php:725
 msgid "No."
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:292 includes/class-wcmp-nlpostcode-fields.php:455
-#: includes/class-wcmp-nlpostcode-fields.php:481 includes/class-wcmp-nlpostcode-fields.php:502
-#: includes/class-wcmp-nlpostcode-fields.php:516
+#: includes/class-wcmp-nlpostcode-fields.php:288 includes/class-wcmp-nlpostcode-fields.php:451
+#: includes/class-wcmp-nlpostcode-fields.php:477 includes/class-wcmp-nlpostcode-fields.php:498
+#: includes/class-wcmp-nlpostcode-fields.php:512
 msgid "Suffix"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:450 includes/class-wcmp-nlpostcode-fields.php:476
-#: includes/class-wcmp-nlpostcode-fields.php:498 includes/class-wcmp-nlpostcode-fields.php:512
+#: includes/class-wcmp-nlpostcode-fields.php:446 includes/class-wcmp-nlpostcode-fields.php:472
+#: includes/class-wcmp-nlpostcode-fields.php:494 includes/class-wcmp-nlpostcode-fields.php:508
 msgid "Number"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:494 includes/class-wcmp-nlpostcode-fields.php:508
+#: includes/class-wcmp-nlpostcode-fields.php:490 includes/class-wcmp-nlpostcode-fields.php:504
 msgid "Street"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:636
+#: includes/class-wcmp-nlpostcode-fields.php:632
 msgid "Please enter a valid billing address."
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:642
+#: includes/class-wcmp-nlpostcode-fields.php:638
 msgid "Please enter a valid shipping address."
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:682
+#: includes/class-wcmp-nlpostcode-fields.php:678
 msgctxt "placeholder"
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:728
+#: includes/class-wcmp-nlpostcode-fields.php:724
 #, php-format
 msgid "Billing %s"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:729
+#: includes/class-wcmp-nlpostcode-fields.php:725
 #, php-format
 msgid "Shipping %s"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:736
+#: includes/class-wcmp-nlpostcode-fields.php:732
 msgid "<b>Billing No.</b> is a required field"
 msgstr ""
 
-#: includes/class-wcmp-nlpostcode-fields.php:739
+#: includes/class-wcmp-nlpostcode-fields.php:735
 msgid "<b>Shipping No.</b> is a required field"
 msgstr ""
 
@@ -310,15 +310,15 @@ msgstr ""
 msgid "Additional fee (ex VAT, optional)"
 msgstr ""
 
-#: includes/class-wcmp-settings-callbacks.php:448
+#: includes/class-wcmp-settings-callbacks.php:446
 msgid "Option"
 msgstr ""
 
-#: includes/class-wcmp-settings-callbacks.php:449
+#: includes/class-wcmp-settings-callbacks.php:447
 msgid "Fee (optional)"
 msgstr ""
 
-#: includes/class-wcmp-settings-callbacks.php:450
+#: includes/class-wcmp-settings-callbacks.php:448
 msgid "Description"
 msgstr ""
 
@@ -797,7 +797,10 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:920
 #, php-format
-msgid "More information about the Monday delivery of PostNL can be found <a href=\"%s\" target=\"_blank\">here</a>."
+msgid ""
+"<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 "
+"recommended). </strong> More information about the Monday delivery service of PostNL can be found <a href=\"%s\" "
+"target=\"_blank\">here</a>."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:927
