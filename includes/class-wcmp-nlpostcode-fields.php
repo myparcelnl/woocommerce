@@ -20,17 +20,7 @@ class WC_NLPostcode_Fields {
      *
      * Taken from https://github.com/myparcelnl/sdk
      */
-    const SPLIT_STREET_REGEX =
-        '~(?P<street>.*?)' .            // The rest belongs to the street
-        '\s?' .                         // Separator between street and number
-        '(?P<number>\d{1,4})' .         // Number can contain a maximum of 4 numbers
-        '[/\s\-]{0,2}' .                // Separators between number and addition
-        '(?P<number_suffix>' .
-        '[a-zA-Z]{1}\d{1,3}|' .         // Numbers suffix starts with a letter followed by numbers or
-        '-\d{1,4}|' .                   // starts with - and has up to 4 numbers or
-        '\d{2}\w{1,2}|' .               // starts with 2 numbers followed by letters or
-        '[a-zA-Z]{1}[a-zA-Z\s]{0,3}' .  // has up to 4 letters with a space
-        ')?$~';
+    const SPLIT_STREET_REGEX = '~(?P<street>.*?)\s?(?P<number>\d{1,4})[/\s\-]{0,2}(?P<number_suffix>[a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$~';
 
     /**
      * WC_NLPostcode_Fields constructor.
