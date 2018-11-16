@@ -153,46 +153,26 @@ if ( !class_exists( 'WooCommerce_MyParcel_Frontend' ) ) :
          * Output some stuff.
          * Return to hide delivery options
          */
-
         public function output_delivery_options() {
-
-            $show_delivery_options = true;
-            $chosen_shipping_methods = WC()->session->chosen_shipping_methods;
-            if ( empty($myparcel_delivery_options_always_display) && !empty($chosen_shipping_methods) && is_array($chosen_shipping_methods) ) {
-                $shipping_country = WC()->customer->get_shipping_country();
-                if ($shipping_country != 'NL' && $shipping_country != 'BE') {
-                    $show_delivery_options = false;
-                }
-                $chosen_shipping_method = array_shift($chosen_shipping_methods);
-                $shipping_class = $this->get_cart_shipping_class();
-                $package_type = WooCommerce_MyParcel()->export->get_package_type_from_shipping_method( $chosen_shipping_method, $shipping_class, $shipping_country );
-                if ($package_type != 1) { // parcel
-                    $show_delivery_options = false;
-                }
-            }
-
-            // Don't load when cart doesn't need shipping
-            if ( false == WC()->cart->needs_shipping()) {
-                $show_delivery_options = false;
-            }
-
             $delivery_options_shipping_methods = $this->get_delivery_options_shipping_methods();
-            $delivery_options_always_display = $this->myparcel_delivery_options_always_display()? 'yes' : 'no';
+            $delivery_options_always_display = $this->myparcel_delivery_options_always_display() ? '1' : '0';
 
-            $urlJs       = WooCommerce_MyParcel()->plugin_url() . "/assets/delivery-options/js/myparcel.js";
+            $urlJs = WooCommerce_MyParcel()->plugin_url() . "/assets/delivery-options/js/myparcel.js";
 
             $jsonConfig  = $this->get_checkout_config();
 
-            echo "<script>",
-                 "myparcel_delivery_options_always_display = '$delivery_options_always_display';",
-                 "myparcel_delivery_options_shipping_methods = $delivery_options_shipping_methods;",
-                 "myParcelConfig = {$jsonConfig}; myparcel_delivery_options_shipping_methods = {$delivery_options_shipping_methods}",
-                 "</script>";
+            echo "<script>
+                 myparcel_delivery_options_always_display = $delivery_options_always_display;
+                 myparcel_delivery_options_shipping_methods = $delivery_options_shipping_methods;
+                 myParcelConfig = {$jsonConfig}
+                 myparcel_delivery_options_shipping_methods = {$delivery_options_shipping_methods}
+                 jQuery(document).ready(function() { setTimeout(function() { MyParcel.init() }, 3000) });
+                 </script>";
+            echo "<script src='$urlJs'></script>";
 
             require_once(WooCommerce_MyParcel()->plugin_path().'/includes/views/wcmp-delivery-options-template.php');
 
             return;
-
         }
 
         public function output_shipping_data() {

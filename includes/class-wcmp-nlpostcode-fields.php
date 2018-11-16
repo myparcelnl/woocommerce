@@ -9,8 +9,6 @@ if ( !class_exists( 'WC_NLPostcode_Fields' ) ) :
 
 class WC_NLPostcode_Fields {
 
-	public $version = '1.5.5';
-
 	private $use_split_address_fields;
 
     /**
@@ -125,13 +123,21 @@ class WC_NLPostcode_Fields {
 	public function add_styles_scripts(){
 		if ( is_checkout() || is_account_page() ) {
 		    if ( $this->use_split_address_fields ) {
+                wp_register_script(
+                    'wcmp-checkout-fields',
+                    WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
+                    array('jquery', 'wc-checkout'),
+                    WC_MYPARCEL_VERSION
+                );
+                wp_enqueue_script('wcmp-checkout-fields');
+
                 if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
                     // Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
                     wp_register_script(
                         'nl-checkout',
                         WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-checkout.js',
                         array('wc-checkout'),
-                        $this->version
+                        WC_MYPARCEL_VERSION
                     );
                     wp_enqueue_script('nl-checkout');
                 }
@@ -142,7 +148,7 @@ class WC_NLPostcode_Fields {
                         'nl-account-page',
                         WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-account-page.js',
                         array('jquery'),
-                        $this->version
+                        WC_MYPARCEL_VERSION
                     );
                     wp_enqueue_script('nl-account-page');
                 }
@@ -161,7 +167,7 @@ class WC_NLPostcode_Fields {
 				'nl-checkout-admin',
 				WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout-admin.css',
 				array(), // deps
-				$this->version
+                WC_MYPARCEL_VERSION
 			);
 		}
 	}
