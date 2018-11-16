@@ -63,7 +63,7 @@ $target_url = wp_nonce_url( admin_url( 'admin-ajax.php?action=wc_myparcel&reques
 	<table class="widefat">
 	<thead>
 		<tr>
-			<th><?php _e( 'Export options', 'woocommerce-myparcel' ); ?></td>
+			<th><?php _e( 'Export options', 'woocommerce-myparcel' ); ?></th>
 		</tr>
 	</thead>
 	<tbody>
