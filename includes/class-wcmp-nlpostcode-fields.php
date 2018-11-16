@@ -123,6 +123,14 @@ class WC_NLPostcode_Fields {
 	public function add_styles_scripts(){
 		if ( is_checkout() || is_account_page() ) {
 		    if ( $this->use_split_address_fields ) {
+                wp_register_script(
+                    'wcmp-checkout-fields',
+                    WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
+                    array('jquery', 'wc-checkout'),
+                    WC_MYPARCEL_VERSION
+                );
+                wp_enqueue_script('wcmp-checkout-fields');
+
                 if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
                     // Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
                     wp_register_script(
