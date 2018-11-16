@@ -53,25 +53,6 @@ MyParcel = {
         MyParcel.showPrices(prices);
         MyParcel.callDeliveryOptions();
 
-        // Auto fill helper for layout with separate number field
-        if (window.myparcel_is_using_split_address_fields) {
-            // Split street to 3 fields on autofill
-            jQuery('#billing_street_name, #shipping_street_name').on('animationend', function () {
-                type = jQuery(this).attr('id').search('billing') ? 'shipping' : 'billing';
-                jQuery('#' + type + '_address_1').val(this.value); // Fill in the hidden address line 1 field in case a theme forces it to be required
-                address = this.value.split(MyParcel.SPLIT_STREET_REGEX)
-                    .filter(function (value) {
-                        return value !== ''
-                    }); // filter out empty values
-
-                jQuery('#' + type + '_street_name').val(address[0]);
-                jQuery('#' + type + '_house_number').val(address[1]);
-                jQuery('#' + type + '_house_number_suffix').val(address[2]);
-
-                MyParcel.callDeliveryOptions();
-            });
-        }
-
         /* Engage defaults */
         MyParcel.hideDelivery();
         jQuery('#method-myparcel-normal').click();
@@ -216,7 +197,6 @@ MyParcel = {
 
         jQuery('#mypa-pickup-express').hide();  /* todo: move */
 
-
         jQuery('#mypa-pickup-delivery, #mypa-pickup-location').on('change', function(e){
             MyParcel.setCurrentLocation();
             MyParcel.toggleDeliveryOptions();
@@ -233,7 +213,6 @@ MyParcel = {
         jQuery('#mypa-load input, #mypa-load select').on('input', function () {
             MyParcel.mapExternalWebshopTriggers()
         });
-
 
         fields = window.myparcel_is_using_split_address_fields
             ? '#billing_house_number, #shipping_house_number'
