@@ -2,21 +2,21 @@
 /* Thanks Mike! */
 
 jQuery(document).ready(function($) {
-	
-	/* Hide custom NL fields by default when country not NL */
+
+    /* Hide custom NL fields by default when country not NL */
 	var billing_country = $('#billing_country').val();
 	var shipping_country = $('#shipping_country').val();
 	if (billing_country != 'NL') {
 		$('#billing_street_name_field').hide();
 		$('#billing_house_number_field').hide();
 		$('#billing_house_number_suffix_field').hide();
-	}	
+	}
 	if (shipping_country != 'NL') {
 		$('#shipping_street_name_field').hide();
 		$('#shipping_house_number_field').hide();
 		$('#shipping_house_number_suffix_field').hide();
 	}
-	
+
 
 	/* Localisation */
 	var locale_json = woocommerce_params.locale.replace(/&quot;/g, '"');
@@ -26,27 +26,23 @@ jQuery(document).ready(function($) {
 	$('body')
 
 	/* Handle locale */
-	.bind('country_to_state_changing', function( event, country, wrapper ){
-		var thisform = wrapper;
-
-		var $postcodefield = thisform.find('#billing_postcode_field, #shipping_postcode_field');
-		var $cityfield     = thisform.find('#billing_city_field, #shipping_city_field');
-		var $statefield    = thisform.find('#billing_state_field, #shipping_state_field');
-		var $emailfield    = thisform.find('#billing_email_field');
-		var $phonefield    = thisform.find('#billing_phone_field');
-		var $address1field = thisform.find('#billing_address_1_field, #shipping_address_1_field');
-		var $address2field = thisform.find('#billing_address_2_field, #shipping_address_2_field');
-		var $streetfield   = thisform.find('#billing_street_name_field, #shipping_street_name_field');
-		var $numberfield   = thisform.find('#billing_house_number_field, #shipping_house_number_field');
-		var $suffixfield   = thisform.find('#billing_house_number_suffix_field, #shipping_house_number_suffix_field');
+        .bind('country_to_state_changing', function(event, country, wrapper) {
+            var thislocale,
+            thisform = wrapper,
+            $postcodefield = thisform.find('#billing_postcode_field, #shipping_postcode_field'),
+            $cityfield = thisform.find('#billing_city_field, #shipping_city_field'),
+            $address1field = thisform.find('#billing_address_1_field, #shipping_address_1_field'),
+            $address2field = thisform.find('#billing_address_2_field, #shipping_address_2_field'),
+            $streetfield = thisform.find('#billing_street_name_field, #shipping_street_name_field'),
+            $numberfield = thisform.find('#billing_house_number_field, #shipping_house_number_field'),
+            $suffixfield = thisform.find('#billing_house_number_suffix_field, #shipping_house_number_suffix_field');
 
 		if (country == 'NL') {
 			/* show custom NL fields */
 			$streetfield.show();
 			$numberfield.show();
 			$suffixfield.show();
-			/* $emailfield.add( $phonefield ).removeClass('form-row-first form-row-last').addClass('form-row-wide'); */
-			
+
 			/* Hide regular address classes */
 			$address1field.find('label abbr').remove();
 			$address1field.hide();
@@ -59,7 +55,7 @@ jQuery(document).ready(function($) {
 			/* Mark required fields */
 			if ($streetfield.find('label abbr').size()==0) $streetfield.find('label').append( required );
 			if ($numberfield.find('label abbr').size()==0) $numberfield.find('label').append( required );
-			
+
 			/* Add validation required classes */
 			$streetfield.addClass('validate-required');
 			$numberfield.addClass('validate-required');
@@ -77,12 +73,12 @@ jQuery(document).ready(function($) {
 			$streetfield.removeClass('validate-required');
 			$numberfield.removeClass('validate-required');
 		}
-		
-		if ( typeof locale[country] != 'undefined' ) {
-			var thislocale = locale[country];
-		} else {
-			var thislocale = locale['default'];
-		}
+
+        if (typeof locale[country] != 'undefined') {
+            thislocale = locale[country];
+        } else {
+            thislocale = locale['default'];
+        }
 
 		/* Handle locale fields */
 		var locale_fields = {
@@ -119,7 +115,6 @@ jQuery(document).ready(function($) {
 						field.show();
 					}
 				}
-
 			} else if ( locale['default'][key] ) {
 				if ( locale['default'][key]['required'] == true ) {
 					if (field.find('label abbr').size()==0) field.find('label').append( required );
@@ -128,11 +123,7 @@ jQuery(document).ready(function($) {
 					field.show();
 				}
 			}
-
 		});
-
-
-	
 	})
 
 	/* Init trigger */
@@ -144,5 +135,4 @@ jQuery(document).ready(function($) {
 	if ( woocommerce_params.is_checkout == 1 ) {
 		$('body').trigger('init_checkout');
 	}
-
 });
