@@ -106,14 +106,20 @@ if ( ! class_exists( 'WooCommerce_MyParcel_Frontend_Settings' ) ) :
          * @return mixed
          */
         public function get_dropoff_delay() {
-            return $this->settings['dropoff_delay'];
+            if (isset($this->settings['dropoff_delay'])) {
+                return $this->settings['dropoff_delay'];
+            }
+            return 0;
         }
 
         /**
          * @return mixed
          */
         public function get_deliverydays_window() {
-            return $this->settings['deliverydays_window'];
+            if (isset($this->settings['deliverydays_window'])) {
+                return $this->settings['deliverydays_window'];
+            }
+            return 0;
         }
 
         /**
