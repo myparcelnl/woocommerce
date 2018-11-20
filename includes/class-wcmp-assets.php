@@ -1,7 +1,8 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WooCommerce_MyParcel_Assets' ) ) :
+if ( ! defined('ABSPATH') ) exit; // Exit if accessed directly
+
+if ( ! class_exists('WooCommerce_MyParcel_Assets') ) :
 
 class WooCommerce_MyParcel_Assets {
 	

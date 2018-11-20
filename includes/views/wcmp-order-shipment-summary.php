@@ -1,6 +1,6 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined('ABSPATH') ) exit; // Exit if accessed directly
 
 // Status
 printf('%1$s: <a href="%2$s" class="myparcel_tracktrace_link" target="_blank" title="%3$s">%4$s</a><br/>', __('Status','woocommerce-myparcel'), $tracktrace_url, $shipment['tracktrace'], $shipment['status']);

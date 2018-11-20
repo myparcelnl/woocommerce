@@ -1,13 +1,13 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WC_MyParcel_API' ) ) :
+if ( ! defined('ABSPATH') ) exit; // Exit if accessed directly
+
+if ( ! class_exists('WC_MyParcel_API') ) :
 
 class WC_MyParcel_API extends WC_MyParcel_REST_Client {
-	/** @var API URL */
-	public $APIURL = "https://api.myparcel.nl/";
 
-	/* @var API Key */
+    public $APIURL = "https://api.myparcel.nl/";
+
 	private $key;
 
 	/**

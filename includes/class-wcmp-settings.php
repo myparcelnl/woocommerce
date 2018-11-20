@@ -1,12 +1,12 @@
 <?php
+
+if ( ! defined('ABSPATH') ) exit; // Exit if accessed directly
+
+if ( ! class_exists('WooCommerce_MyParcel_Settings') ) :
+
 /**
  * Create & render settings page
  */
-
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
-if ( !class_exists( 'WooCommerce_MyParcel_Settings' ) ) :
-
 class WooCommerce_MyParcel_Settings {
 
 	public $options_page_hook;

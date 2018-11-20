@@ -1,24 +1,21 @@
 <?php
+
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+if ( ! defined('ABSPATH') ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WooCommerce_MyParcel_Export' ) ) :
+if ( ! class_exists('WooCommerce_MyParcel_Export') ) :
 
 class WooCommerce_MyParcel_Export {
+
 	public $order_id;
 	public $success;
 	public $errors;
+
 	private $prefix_message;
 	private $use_split_address_fields;
-
-	/**
-	 * Construct.
-	 */
 
 	public function __construct() {
 		$this->success = array();

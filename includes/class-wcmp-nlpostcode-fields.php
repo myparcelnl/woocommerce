@@ -1,28 +1,24 @@
 <?php
+
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined('ABSPATH') ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WC_NLPostcode_Fields' ) ) :
+if ( ! class_exists('WC_NLPostcode_Fields') ) :
 
 class WC_NLPostcode_Fields {
 
-	private $use_split_address_fields;
-
-    /**
+    /*
      * Regular expression used to split street name from house number.
      * This regex goes from right to left
      * Contains php keys to store the data in an array
-     *
      * Taken from https://github.com/myparcelnl/sdk
      */
     const SPLIT_STREET_REGEX = '~(?P<street>.*?)\s?(?P<number>\d{1,4})[/\s\-]{0,2}(?P<number_suffix>[a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$~';
 
-    /**
-     * WC_NLPostcode_Fields constructor.
-     */
+    private $use_split_address_fields;
+
     public function __construct() {
         $this->use_split_address_fields = array_key_exists('use_split_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
             ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] === '1'

@@ -1,4 +1,5 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined('ABSPATH') ) exit; // Exit if accessed directly ?>
+
 <a href="#" class="wcmyparcel_change_order">
     <table class="wcmyparcel_settings_table" style="width: auto" onclick="return false;">
         <tr>

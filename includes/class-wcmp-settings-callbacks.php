@@ -1,7 +1,8 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WooCommerce_MyParcel_Settings_Callbacks' ) ) :
+if ( ! defined('ABSPATH') ) exit; // Exit if accessed directly
+
+if ( ! class_exists('WooCommerce_MyParcel_Settings_Callbacks') ) :
 
 class WooCommerce_MyParcel_Settings_Callbacks {
 
@@ -13,8 +14,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
 	 *
 	 * @return void.
 	 */
-	public function section() {
-	}
+	public function section() { }
 
 	/**
 	 * Checkbox callback.

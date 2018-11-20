@@ -1,18 +1,16 @@
 <?php
+
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
+if ( ! defined('ABSPATH') ) exit; // Exit if accessed directly
+
+if ( ! class_exists('WooCommerce_MyParcel_Admin') ) :
+
 /**
  * Admin options, buttons & data
  */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
-
-if ( !class_exists( 'WooCommerce_MyParcel_Admin' ) ) :
-
 class WooCommerce_MyParcel_Admin {
 	
 	function __construct()	{
