@@ -5,7 +5,7 @@ if ( ! defined('ABSPATH') ) exit; // Exit if accessed directly
 if ( ! class_exists('WooCommerce_MyParcel_Assets') ) :
 
 class WooCommerce_MyParcel_Assets {
-	
+
 	function __construct()	{
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'backend_scripts_styles' ) );
@@ -68,8 +68,8 @@ class WooCommerce_MyParcel_Assets {
 				wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', array(), WC_VERSION );
 			}
 
-			// Add the color picker css file       
-			wp_enqueue_style( 'wp-color-picker' ); 
+			// Add the color picker css file
+			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_script( 'thickbox' );
 			wp_enqueue_style( 'thickbox' );
 			wp_enqueue_script(
@@ -81,7 +81,7 @@ class WooCommerce_MyParcel_Assets {
 			wp_localize_script(
 				'wcmyparcel-export',
 				'wc_myparcel',
-				array(  
+				array(
 					'ajax_url'			=> admin_url( 'admin-ajax.php' ),
 					'nonce'				=> wp_create_nonce('wc_myparcel'),
 					'download_display'	=> isset(WooCommerce_MyParcel()->general_settings['download_display'])?WooCommerce_MyParcel()->general_settings['download_display']:'',
