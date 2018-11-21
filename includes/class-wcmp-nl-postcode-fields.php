@@ -260,7 +260,6 @@ class WC_NLPostcode_Fields {
         // Add street name
         $fields[$form . '_street_name'] = array(
             'label'		    => __( 'Street name', 'woocommerce-myparcel' ),
-            'placeholder'	=> __( 'Street name', 'woocommerce-myparcel' ),
             'class'		    => apply_filters( 'nl_custom_address_field_class', array( 'form-row-third first' )),
             'required'		=> $required, // Only required for NL
             'priority'      => 60,
