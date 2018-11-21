@@ -1,11 +1,9 @@
 <!-- Add the Custom styles to the checkout -->
-<style>
-    <?php
-    if (!empty(WooCommerce_MyParcel()->checkout_settings['custom_css'])) {
-        echo WooCommerce_MyParcel()->checkout_settings['custom_css'];
-    }
-    ?>
-</style>
+<?php if (!empty(WooCommerce_MyParcel()->checkout_settings['custom_css'])) {
+echo "<style>";
+echo WooCommerce_MyParcel()->checkout_settings['custom_css'];
+echo "</style>";
+} ?>
 
 <div id="mypa-load" class="myparcel-delivery-options" <?php echo $show_delivery_options ? '' : 'style="display: none"'; ?>>
     <input style="display:none;" name='mypa-post-nl-data' id="mypa-input" />
