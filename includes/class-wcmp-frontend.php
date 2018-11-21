@@ -46,9 +46,9 @@ class WooCommerce_MyParcel_Frontend {
         if (isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout'])) {
             // Change the position of the checkout
             if ( isset( WooCommerce_MyParcel()->checkout_settings['checkout_position'] ) ) {
-                $checkout_place  = WooCommerce_MyParcel()->checkout_settings['checkout_position'];
+                $checkout_place = WooCommerce_MyParcel()->checkout_settings['checkout_position'];
             } else {
-                $checkout_place  = 'woocommerce_after_checkout_billing_form';
+                $checkout_place = 'woocommerce_after_checkout_billing_form';
             }
 
             add_action( apply_filters( 'wc_myparcel_delivery_options_location', $checkout_place ), array( $this, 'output_delivery_options' ), 10, 1 );
@@ -153,7 +153,7 @@ class WooCommerce_MyParcel_Frontend {
         $delivery_options_shipping_methods = $this->get_delivery_options_shipping_methods();
         $delivery_options_always_display = $this->myparcel_delivery_options_always_display() ? '1' : '0';
 
-        $urlJs = WooCommerce_MyParcel()->plugin_url() . "/assets/delivery-options/js/myparcel.js";
+        // $urlJs = WooCommerce_MyParcel()->plugin_url() . "/assets/delivery-options/js/myparcel.js";
 
         $jsonConfig  = $this->get_checkout_config();
 
@@ -164,9 +164,10 @@ class WooCommerce_MyParcel_Frontend {
              myparcel_delivery_options_shipping_methods = {$delivery_options_shipping_methods}
              jQuery(document).ready(function() { setTimeout(function() { MyParcel.init() }, 3000) });
              </script>";
-        echo "<script src='$urlJs'></script>";
 
-        require_once(WooCommerce_MyParcel()->plugin_path().'/includes/views/wcmp-delivery-options-template.php');
+        do_action('wcmp_before_delivery_options_template');
+        require_once(WooCommerce_MyParcel()->plugin_path() . '/templates/wcmp-delivery-options-template.php');
+        do_action('wcmp_after_delivery_options_template');
 
         return;
     }
@@ -566,8 +567,6 @@ class WooCommerce_MyParcel_Frontend {
         return json_encode($delivery_options_shipping_methods);
     }
 
-
-
     private function myparcel_delivery_options_always_display() {
 
         if ( isset( WooCommerce_MyParcel()->checkout_settings['checkout_display'] ) && WooCommerce_MyParcel()->checkout_settings['checkout_display'] == 'all_methods' ) {
@@ -576,7 +575,6 @@ class WooCommerce_MyParcel_Frontend {
 
         return false;
     }
-
 }
 
 endif; // class_exists
