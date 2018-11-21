@@ -12,7 +12,7 @@
 
     <div id="mypa-spinner-model">
         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 99" enable-background="new 0 0 100 99" xml:space="preserve">
-            <img id="postnl-logo" width="100" height="99" src="<?php WCMP ?>" />
+            <image id="postnl-logo" width="100" height="99" href="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wcmp-postnl-logo.png' ?>" />
         </svg>
         <div id="mypa-spinner"></div>
     </div>
