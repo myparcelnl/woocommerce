@@ -568,7 +568,7 @@ class WooCommerce_MyParcel_Export {
                 if (!$is_using_old_fields) {
                     // Split the address line 1 into three parts
                     preg_match(
-                        WC_NLPostcode_Fields::SPLIT_STREET_REGEX,
+                        Woocommerce_MyParcel_Postcode_Fields::SPLIT_STREET_REGEX,
                         WCX_Order::get_prop( $order, 'billing_address_1' ).' '.WCX_Order::get_prop( $order, 'billing_address_2' ),
                         $address_parts
                     );
@@ -590,7 +590,7 @@ class WooCommerce_MyParcel_Export {
                 if (!$is_using_old_fields) {
                     // Split the address line 1 into three parts
                     preg_match(
-                        WC_NLPostcode_Fields::SPLIT_STREET_REGEX,
+                        Woocommerce_MyParcel_Postcode_Fields::SPLIT_STREET_REGEX,
                         WCX_Order::get_prop($order, 'shipping_address_1').' '.WCX_Order::get_prop($order, 'shipping_address_2'),
                         $address_parts
                     );
