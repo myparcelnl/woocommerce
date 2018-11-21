@@ -116,41 +116,35 @@ class Woocommerce_MyParcel_Postcode_Fields {
 	/**
 	 * Load styles & scripts.
 	 */
-	public function add_styles_scripts(){
-		if ( is_checkout() || is_account_page() ) {
-		    if ( $this->use_split_address_fields ) {
-                wp_register_script(
-                    'wcmp-checkout-fields',
-                    WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
-                    array('jquery', 'wc-checkout'),
-                    WC_MYPARCEL_VERSION
-                );
-                wp_enqueue_script('wcmp-checkout-fields');
+	public function add_styles_scripts() {
+        if ( ! is_checkout() && ! is_account_page() ) return;
 
-                if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
-                    // Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
-                    wp_register_script(
-                        'nl-checkout',
-                        WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-checkout.js',
-                        array('wc-checkout'),
-                        WC_MYPARCEL_VERSION
-                    );
-                    wp_enqueue_script('nl-checkout');
-                }
+        // Enqueue styles for delivery options
+        wp_enqueue_style( 'nl-checkout', WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout.css', false, WC_MYPARCEL_VERSION );
 
-                if (is_account_page()) {
-                    // Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
-                    wp_register_script(
-                        'nl-account-page',
-                        WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-account-page.js',
-                        array('jquery'),
-                        WC_MYPARCEL_VERSION
-                    );
-                    wp_enqueue_script('nl-account-page');
-                }
-            }
-			wp_enqueue_style( 'nl-checkout', WooCommerce_MyParcel()->plugin_url() . '/assets/css/nl-checkout.css?MP=' . WC_MYPARCEL_VERSION);
-		}
+        if ( !$this->use_split_address_fields ) return;
+
+        if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
+            // Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
+            wp_register_script(
+                'nl-checkout',
+                WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-checkout.js',
+                array( 'wc-checkout' ),
+                WC_MYPARCEL_VERSION
+            );
+            wp_enqueue_script( 'nl-checkout' );
+        }
+
+        if ( is_account_page() ) {
+            // Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
+            wp_register_script(
+                'nl-account-page',
+                WooCommerce_MyParcel()->plugin_url() . '/assets/js/nl-account-page.js',
+                array( 'jquery' ),
+                WC_MYPARCEL_VERSION
+            );
+            wp_enqueue_script( 'nl-account-page' );
+        }
 	}
 
 	/**
@@ -182,7 +176,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
 		$locale['NL']['address_2'] = array(
 			'hidden'	=> true,
 		);
-		
+
 		$locale['NL']['state'] = array(
 			'hidden'	=> true,
 			'required'	=> false,
@@ -306,22 +300,22 @@ class Woocommerce_MyParcel_Postcode_Fields {
 		}
 
 		$new_order = array();
-		
+
 		// Create reordered array and fill with old array values
 		foreach ($order_keys as $key) {
 			$new_order[$key] = $fields[$key];
 		}
-		
+
 		// Merge (&overwrite) field array
 		$fields = array_merge($new_order, $fields);
-			
+
 		return $fields;
 	}
 
 	/**
 	 * Hide state field for countries without states (backwards compatible fix for WooCommerce bug #4223)
 	 * @param  array $allowed_states states per country
-	 * @return array                 
+	 * @return array
 	 */
 	public function hide_states($allowed_states) {
 
@@ -351,7 +345,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
 			'VN' => array(),
 		);
 		$states = $hidden_states + $allowed_states;
-			
+
 		return $states;
 	}
 
@@ -410,7 +404,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
 		// Billing
 		$data['billing_street_name']			= '';
 		$data['billing_house_number']			= '';
-		$data['billing_house_number_suffix']	= '';		
+		$data['billing_house_number_suffix']	= '';
 
 		// Shipping
 		$data['shipping_street_name']			= '';
@@ -514,7 +508,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
 		$shipping_fields = array_merge($meta_fields['shipping']['fields'], $myparcel_shipping_fields);
 		$shipping_fields = $this->array_move_keys( $shipping_fields, array( 'shipping_street_name', 'shipping_house_number', 'shipping_house_number_suffix' ), 'shipping_address_2', 'after' );
 		$meta_fields['shipping']['fields'] = $shipping_fields;
-		
+
 		return $meta_fields;
 	}
 
@@ -556,7 +550,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
 		}
 		return;
 	}
-	
+
 	/**
 	 * Merge streetname, street number and street suffix into the default 'address_1' field
 	 *
@@ -694,7 +688,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
 			}
 		}
 
-		// check the order comments field		
+		// check the order comments field
 		if ($posted['order_comments'] == $order_comments_placeholder ) {
 			wp_update_post( array(
 				'ID'			=> $order_id,
@@ -702,7 +696,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
 				)
 			);
 		}
-		
+
 		return;
 	}
 
@@ -759,7 +753,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
 		if (!empty($street_name) && ($country == 'NL' || $country == 'BE')) {
 			$replacements['{address_1}'] = $street_name.' '.$house_number.$house_number_suffix;
 		}
-		
+
 		return $replacements;
 	}
 
