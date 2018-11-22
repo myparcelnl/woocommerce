@@ -3,16 +3,17 @@ jQuery(function ($) {
 	window.myparcel_force_update = false;
 	window.myparcel_selected_shipping_method = '';
 	window.myparcel_updated_shipping_method = '';
-	window.myparcel_show_on_all_shipping_methods = wc_myparcel_frontend.showOnAllShippingMethods;
-	window.myparcel_is_using_split_address_fields = wc_myparcel_frontend.isUsingSplitAddressFields;
+	window.myparcel_is_using_split_address_fields = wcmp_display_settings.isUsingSplitAddressFields;
+	window.myparcel_shipping_methods = JSON.parse(wcmp_delivery_options.shipping_methods);
+	window.myparcel_always_display = wcmp_delivery_options.always_display;
 
 	// hide checkout options for non parcel shipments
 	$( document ).on( 'updated_checkout', function() {
 		window.myparcel_checkout_updating = false; //done updating
 
-		if (window.myparcel_show_on_all_shipping_methods) {
+		if (window.myparcel_always_display) {
 			show_myparcel_delivery_options();
-		} else if ( myparcel_delivery_options_shipping_methods.length > 0 ) {
+		} else if ( window.myparcel_shipping_methods.length > 0 ) {
 			var shipping_method;
             // check if shipping is user choice or fixed
 			if ( $( '#order_review .shipping_method' ).length > 1 ) {
@@ -46,11 +47,11 @@ jQuery(function ($) {
 				}
 			}
 
-			if ( shipping_class && $.inArray(shipping_method_class, window.myparcel_delivery_options_shipping_methods) > -1 ) {
+			if ( shipping_class && $.inArray(shipping_method_class, window.window.myparcel_shipping_methods) > -1 ) {
 				window.myparcel_updated_shipping_method = shipping_method_class;
 				show_myparcel_delivery_options();
 				myparcel_selected_shipping_method = shipping_method_class;
-			} else if ( $.inArray(shipping_method, myparcel_delivery_options_shipping_methods) > -1 ) {
+			} else if ( $.inArray(shipping_method, window.myparcel_shipping_methods) > -1 ) {
 				// fallback to bare method if selected in settings
 				myparcel_updated_shipping_method = shipping_method;
 				show_myparcel_delivery_options();
