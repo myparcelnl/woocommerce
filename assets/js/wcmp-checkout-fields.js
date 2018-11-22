@@ -16,9 +16,9 @@ jQuery(function($) {
         address = el.value.split(
             /(.*?)\s?(\d{1,4})[/\s\-]{0,2}([a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$/g
         )
-            .filter(function(value) {
-                return value !== ''
-            }); // filter out empty values
+        .filter(function(value) {
+            return value !== ''
+        }); // filter out empty values
 
         $('#' + type + '_street_name').val(address[0]);
         $('#' + type + '_house_number').val(address[1]);
