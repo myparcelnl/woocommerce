@@ -9,34 +9,51 @@ class WooCommerce_MyParcel_Assets {
 	function __construct()	{
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'backend_scripts_styles' ) );
-	}
+    }
 
 	/**
 	 * Load styles & scripts
 	 */
-	public function frontend_scripts_styles ( $hook ) {
-		if ( is_checkout() && isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout']) && is_order_received_page() === false ) {
-			// checkout scripts
-			wp_enqueue_script(
-				'wc-myparcel-frontend',
-				WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-frontend.js',
-				array( 'jquery' ),
-				WC_MYPARCEL_VERSION
-			);
-			wp_localize_script(
-				'wc-myparcel-frontend',
-				'wc_myparcel_frontend',
-				array(
-                    'showOnAllShippingMethods' => array_key_exists('checkout_display', get_option('woocommerce_myparcel_checkout_settings'))
-                        ? get_option('woocommerce_myparcel_checkout_settings')['checkout_display'] == '1'
-                        : false,
-                    'isUsingSplitAddressFields' => array_key_exists('use_split_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
-                        ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] == '1'
-                        : false
-                )
-			);
-		}
-	}
+    public function frontend_scripts_styles() {
+        // return if not checkout or order received page
+        if ( ! is_checkout() && ! is_order_received_page() ) return;
+
+        // if using split fields
+        if ( isset( WooCommerce_MyParcel()->checkout_settings['use_split_address_fields'] ) ) {
+            wp_enqueue_script(
+                'wcmp-checkout-fields',
+                WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
+                array('jquery', 'wc-checkout'),
+                WC_MYPARCEL_VERSION
+            );
+        }
+
+        // return if myparcel checkout is not active
+        if ( ! isset( WooCommerce_MyParcel()->checkout_settings['myparcel_checkout'] ) ) return;
+
+        wp_enqueue_script(
+            'wc-myparcel',
+            WooCommerce_MyParcel()->plugin_url() . '/assets/js/myparcel.js',
+            array('jquery'),
+            WC_MYPARCEL_VERSION
+        );
+
+        wp_enqueue_script(
+            'wc-myparcel-frontend',
+            WooCommerce_MyParcel()->plugin_url() .
+            '/assets/js/wcmp-frontend.js',
+            array('jquery', 'wc-myparcel'),
+            WC_MYPARCEL_VERSION
+        );
+
+        wp_localize_script(
+            'wc-myparcel-frontend',
+            'wcmp_display_settings',
+            array(
+                'isUsingSplitAddressFields' => isset( WooCommerce_MyParcel()->checkout_settings['use_split_address_fields'] )
+            )
+        );
+    }
 
 	/**
 	 * Load styles & scripts
