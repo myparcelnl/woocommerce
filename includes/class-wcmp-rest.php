@@ -107,18 +107,13 @@ class WC_MyParcel_REST_Client {
 
     public function request($url, $method = "GET", $headers = array(), $post, $body = null, $raw = false) {
         // Set the method and related options
-        switch ( $method ) {
+        switch($method) {
             case "PUT":
                 throw new Exception('Can not put MyParcel shipment', 500);
             break;
 
             case "POST":
-                $response = wp_remote_post(
-                    $url, array(
-                    'body'    => $post,
-                    'headers' => $headers,
-                )
-                );
+                $response = wp_remote_post( $url, array('body'    => $post, 'headers' => $headers));
             break;
 
             case "DELETE":

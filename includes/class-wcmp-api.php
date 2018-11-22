@@ -34,7 +34,7 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
         $endpoint = 'shipments';
 
         // define content type
-        switch ( $type ) {
+        switch($type) {
             case 'standard':
             default:
                 $content_type = 'application/vnd.shipment+json';

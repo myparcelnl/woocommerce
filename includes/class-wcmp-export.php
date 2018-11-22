@@ -57,7 +57,7 @@ class WooCommerce_MyParcel_Export {
         }
 
         if (isset($_GET['myparcel'])) {
-            switch ( $_GET['myparcel'] ) {
+            switch($_GET['myparcel']) {
                 case 'no_consignments':
                     $message = __('You have to export the orders to MyParcel before you can print the labels!', 'woocommerce-myparcel');
                     printf('<div class="myparcel_notice notice notice-error"><p>%s</p></div>', $message);
@@ -95,7 +95,7 @@ class WooCommerce_MyParcel_Export {
         // make sure $order_ids is a proper array
         $order_ids = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : array();
 
-        switch ( $request ) {
+        switch($request) {
             case 'add_shipments':
                 // filter out non-myparcel destinations
                 $order_ids = $this->filter_myparcel_destination_orders($order_ids);
@@ -479,7 +479,7 @@ class WooCommerce_MyParcel_Export {
         $return_shipment_data = array(
             'name' => $shipping_name,
             'email' => isset(WooCommerce_MyParcel()->export_defaults['connect_email'])
-                ? WCX_Order::get_prop($order, 'billing_email') 
+                ? WCX_Order::get_prop($order, 'billing_email')
                 : '',
             'carrier' => 1, // default to POSTNL for now
         );
@@ -605,7 +605,7 @@ class WooCommerce_MyParcel_Export {
                     $address_intl['street'] = (string) $address_parts['street'];
                     $address_intl['number'] = (string) $address_parts['number'];
                     $address_intl['number_suffix'] = array_key_exists('number_suffix', $address_parts) // optional
-                        ? (string) $address_parts['number_suffix'] 
+                        ? (string) $address_parts['number_suffix']
                         : '';
                 } else {
                     $address_intl['street'] =        (string) WCX_Order::get_meta($order, '_shipping_street_name');
@@ -1209,7 +1209,7 @@ class WooCommerce_MyParcel_Export {
 
         $weight = $product->get_weight();
         $weight_unit = get_option('woocommerce_weight_unit');
-        switch ( $weight_unit ) {
+        switch($weight_unit) {
             case 'kg':
                 $product_weight = $weight;
             break;

@@ -272,7 +272,7 @@ class WooCommerce_MyParcel_Frontend {
             if (isset($delivery_options['time'])) {
                 $time = array_shift($delivery_options['time']); // take first element in time array
                 if (isset($time['price_comment'])) {
-                    switch ( $time['price_comment'] ) {
+                    switch($time['price_comment']) {
                         case 'morning':
                             if ( ! empty(WooCommerce_MyParcel()->checkout_settings['morning_fee'])) {
                                 $fee = WooCommerce_MyParcel()->checkout_settings['morning_fee'];
@@ -305,7 +305,7 @@ class WooCommerce_MyParcel_Frontend {
 
             /* Fees for pickup & pickup express */
             if (isset($delivery_options['price_comment'])) {
-                switch ( $delivery_options['price_comment'] ) {
+                switch($delivery_options['price_comment']) {
                     case 'retail':
                         if ( ! empty(WooCommerce_MyParcel()->checkout_settings['pickup_fee'])) {
                             $fee = WooCommerce_MyParcel()->checkout_settings['pickup_fee'];

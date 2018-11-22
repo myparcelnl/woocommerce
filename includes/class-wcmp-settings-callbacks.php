@@ -168,7 +168,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
         if (isset($custom)) {
             printf('<div class="%1$s_custom custom">', $id);
 
-            switch ( $custom['type'] ) {
+            switch($custom['type']) {
                 case 'text_element_callback':
                     $this->text_input($custom['args']);
                 break;

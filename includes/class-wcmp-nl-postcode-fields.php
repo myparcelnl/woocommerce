@@ -749,7 +749,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
         $billing_nr = sprintf(__('Billing %s', 'woocommerce'), __('No.', 'woocommerce-myparcel'));
         $shipping_nr = sprintf(__('Shipping %s', 'woocommerce'), __('No.', 'woocommerce-myparcel'));
 
-        switch ( $field_label ) {
+        switch($field_label) {
             case $billing_nr:
                 $notice = __('<b>Billing No.</b> is a required field', 'woocommerce-myparcel');
             break;
