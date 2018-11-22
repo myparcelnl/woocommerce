@@ -3,7 +3,7 @@ Contributors: richardperdaan
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 4.9.8
-Stable tag: 3.0.5
+Stable tag: trunk
 Requires PHP: 5.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -90,10 +90,22 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.0.5 (-) =
+= 3.1.0 (TBD) =
+* Feature: Digital stamp support
+* Fix:
+* Improvement: Better code!
+
+= 3.0.7 (2018-11-20) =
+* Fix: Set default values for dropoff days and delivery days window
+
+= 3.0.6 (2018-11-16) =
+* Fix: Remove concatenation from constant (causes an error on php version < 5.6)
+* Fix: No more double address fields with delivery options disabled
+
+= 3.0.5 (2018-11-15) =
 * Fix: Error message about money_format
-* Fix:Add the priority to the checkout field for support WooCommerce 3.5.1
-* Fix:The PostNL logo is not visible with all browsers 
+* Fix: Add the priority to the checkout field for support WooCommerce 3.5.1
+* Fix: The PostNL logo is not visible with all browsers
 * Improvement: Support Channel Engine
 * Improvement: Information inside the checkout and the translations
 * Improvement: Support WooCommerce default shipping fields (_address_1 and _address_2)
