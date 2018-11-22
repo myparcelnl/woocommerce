@@ -25,13 +25,13 @@ class WooCommerce_MyParcel_Export {
             ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] === '1'
             : false;
 
-        include( 'class-wcmp-rest.php' );
-        include( 'class-wcmp-api.php' );
+        include('class-wcmp-rest.php');
+        include('class-wcmp-api.php');
 
-        add_action( 'admin_notices', array( $this, 'admin_notices' ) );
-        add_action( 'wp_ajax_wc_myparcel', array($this, 'export' ));
-        add_action( 'wp_ajax_wc_myparcel_frontend', array($this, 'frontend_api_request' ));
-        add_action( 'wp_ajax_nopriv_wc_myparcel_frontend', array($this, 'frontend_api_request' ));
+        add_action('admin_notices', array($this, 'admin_notices'));
+        add_action('wp_ajax_wc_myparcel', array($this, 'export'));
+        add_action('wp_ajax_wc_myparcel_frontend', array($this, 'frontend_api_request'));
+        add_action('wp_ajax_nopriv_wc_myparcel_frontend', array($this, 'frontend_api_request'));
     }
 
     public function admin_notices() {
