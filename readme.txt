@@ -92,7 +92,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 = 3.1.0 (TBD) =
 * Feature: Digital stamp support
-* Fix:
+* Fix: Woocommerce tabel rates
 * Improvement: Better code!
 
 = 3.0.7 (2018-11-20) =
