@@ -18,6 +18,7 @@ MyParcel = {
 
     init: function() {
 
+        this.data = JSON.parse(wcmp_config);
         isMobile = jQuery(window).width() < 980;
 
         /* Titles of the options*/
@@ -970,3 +971,8 @@ MyParcel = {
         });
     }
 };
+// timeout because postcode api might take too long to respond
+setTimeout(function() {
+    MyParcel.init();
+}, 3000);
+
