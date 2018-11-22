@@ -118,7 +118,7 @@ MyParcel = {
 
         });
     },
-    getDeliveryTime:           function(configDeliveryTitle, deliveryMoment, startTime, endTime) {
+    getDeliveryTime: function(configDeliveryTitle, deliveryMoment, startTime, endTime) {
         startTime = startTime.replace(/(.*)\D\d+/, '$1');
         endTime = endTime.replace(/(.*)\D\d+/, '$1');
 
@@ -141,7 +141,7 @@ MyParcel = {
      * Bind actions to selectors.
      *
      */
-    bind:               function() {
+    bind: function() {
         jQuery('#mypa-submit').on('click', function(e) {
             e.preventDefault();
             MyParcel.exportDeliveryOptionToWebshop();
