@@ -1634,6 +1634,11 @@ class WooCommerce_MyParcel_Export {
             return true;
         }
 
+        // support WooCommerce Table Rate Shipping by WooCommerce
+        if ( ! empty($shipping_class) && in_array($shipping_class, $package_type_shipping_methods)) {
+            return true;
+        }
+
         // support WooCommerce Table Rate Shipping by Bolder Elements
         $newShippingClass = str_replace(':', '_', $shipping_class);
         if ( ! empty($shipping_class) && in_array($newShippingClass, $package_type_shipping_methods)) {
