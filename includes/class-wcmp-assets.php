@@ -41,10 +41,7 @@ class WooCommerce_MyParcel_Assets {
         wp_enqueue_script(
             'wc-myparcel-frontend',
             WooCommerce_MyParcel()->plugin_url() . '/assets/js/wcmp-frontend.js',
-            array(
-                'jquery',
-                'wc-myparcel'
-            ),
+            array('jquery', 'wc-myparcel'),
             WC_MYPARCEL_VERSION
         );
 
@@ -76,10 +73,7 @@ class WooCommerce_MyParcel_Assets {
                     wp_register_script(
                         'wc-enhanced-select',
                         WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js',
-                        array(
-                            'jquery',
-                            version_compare(WC()->version, '3.2.0', '>=') ? 'selectWoo' : 'select2',
-                        ),
+                        array('jquery', version_compare(WC()->version, '3.2.0', '>=') ? 'selectWoo' : 'select2'),
                         WC_VERSION
                     );
                 }
@@ -105,19 +99,17 @@ class WooCommerce_MyParcel_Assets {
                 WC_MYPARCEL_VERSION
             );
             wp_localize_script(
-                'wcmyparcel-export',
-                'wc_myparcel',
-                array(
-                    'ajax_url' => admin_url('admin-ajax.php'),
-                    'nonce' => wp_create_nonce('wc_myparcel'),
+                'wcmyparcel-export', 'wc_myparcel', array(
+                    'ajax_url'         => admin_url('admin-ajax.php'),
+                    'nonce'            => wp_create_nonce('wc_myparcel'),
                     'download_display' => isset(WooCommerce_MyParcel()->general_settings['download_display'])
                         ? WooCommerce_MyParcel()->general_settings['download_display']
                         : '',
-                    'offset' => isset(WooCommerce_MyParcel()->general_settings['print_position_offset'])
+                    'offset'           => isset(WooCommerce_MyParcel()->general_settings['print_position_offset'])
                         ? WooCommerce_MyParcel()->general_settings['print_position_offset']
                         : '',
-                    'offset_icon' => WooCommerce_MyParcel()->plugin_url() . '/assets/img/print-offset-icon.png',
-                    'offset_label' => __('Labels to skip', 'woocommerce-myparcel'),
+                    'offset_icon'      => WooCommerce_MyParcel()->plugin_url() . '/assets/img/print-offset-icon.png',
+                    'offset_label'     => __('Labels to skip', 'woocommerce-myparcel'),
                 )
             );
 
@@ -132,11 +124,7 @@ class WooCommerce_MyParcel_Assets {
             // Legacy styles (WC 2.1+ introduced MP6 style with larger buttons)
             if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
                 wp_enqueue_style(
-                    'wcmp-admin-styles-legacy',
-                    WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
-                    array(),
-                    WC_MYPARCEL_VERSION,
-                    'all'
+                    'wcmp-admin-styles-legacy', WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css', array(), WC_MYPARCEL_VERSION, 'all'
                 );
             }
         }
