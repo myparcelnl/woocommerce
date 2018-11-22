@@ -51,7 +51,8 @@ class WooCommerce_MyParcel_Frontend {
                 $checkout_place = 'woocommerce_after_checkout_billing_form';
             }
 
-            add_action( apply_filters( 'wc_myparcel_delivery_options_location', $checkout_place ), array( $this, 'output_delivery_options' ), 10, 1 );
+            add_action( 'wp_enqueue_scripts', array( $this, 'inject_delivery_options_variables' ), 9999 );
+            add_action( apply_filters( 'wc_myparcel_delivery_options_location', $checkout_place ), array( $this, 'output_delivery_options' ), 10 );
         }
 
         // Save delivery options data
@@ -150,26 +151,29 @@ class WooCommerce_MyParcel_Frontend {
      * Return to hide delivery options
      */
     public function output_delivery_options() {
-        $delivery_options_shipping_methods = $this->get_delivery_options_shipping_methods();
-        $delivery_options_always_display = $this->myparcel_delivery_options_always_display() ? '1' : '0';
-
-        // $urlJs = WooCommerce_MyParcel()->plugin_url() . "/assets/delivery-options/js/myparcel.js";
-
-        $jsonConfig  = $this->get_checkout_config();
-
-        echo "<script>
-             myparcel_delivery_options_always_display = $delivery_options_always_display;
-             myparcel_delivery_options_shipping_methods = $delivery_options_shipping_methods;
-             myParcelConfig = {$jsonConfig}
-             myparcel_delivery_options_shipping_methods = {$delivery_options_shipping_methods}
-             jQuery(document).ready(function() { setTimeout(function() { MyParcel.init() }, 3000) });
-             </script>";
-
-        do_action('wcmp_before_delivery_options_template');
+        do_action( 'woocommerce_myparcel_before_delivery_options' );
         require_once(WooCommerce_MyParcel()->plugin_path() . '/templates/wcmp-delivery-options-template.php');
-        do_action('wcmp_after_delivery_options_template');
+        do_action('woocommerce_myparcel_after_delivery_options');
+    }
 
-        return;
+    /**
+     * Output inline script with the variables needed
+     */
+    public function inject_delivery_options_variables() {
+        wp_localize_script(
+            'wc-myparcel',
+            'wcmp_delivery_options',
+            array(
+                'shipping_methods' => $this->get_delivery_options_shipping_methods(),
+                'always_display' => $this->myparcel_delivery_options_always_display()
+            )
+        );
+
+        wp_localize_script(
+            'wc-myparcel',
+            'wcmp_config',
+            $this->get_checkout_config()
+        );
     }
 
     public function output_shipping_data() {
@@ -178,7 +182,6 @@ class WooCommerce_MyParcel_Frontend {
     }
 
     public function get_shipping_data() {
-
         if ($shipping_class = $this->get_cart_shipping_class()) {
             $shipping_data = sprintf('<input type="hidden" value="%s" id="myparcel_highest_shipping_class" name="myparcel_highest_shipping_class">', $shipping_class);
             return $shipping_data;
@@ -556,19 +559,17 @@ class WooCommerce_MyParcel_Frontend {
      * @return string
      */
     private function get_delivery_options_shipping_methods() {
-
-       if ( isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] ) && isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1] ) ) {
+        if ( isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'] ) && isset( WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1] ) ) {
             // Shipping methods associated with parcels = enable delivery options
             $delivery_options_shipping_methods = WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1];
         } else {
             $delivery_options_shipping_methods = array();
         }
 
-        return json_encode($delivery_options_shipping_methods);
+        return json_encode( $delivery_options_shipping_methods );
     }
 
     private function myparcel_delivery_options_always_display() {
-
         if ( isset( WooCommerce_MyParcel()->checkout_settings['checkout_display'] ) && WooCommerce_MyParcel()->checkout_settings['checkout_display'] == 'all_methods' ) {
             return true;
         }
