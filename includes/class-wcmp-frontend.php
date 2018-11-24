@@ -580,10 +580,9 @@ class WooCommerce_MyParcel_Frontend {
         if (isset(
                 WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types']
             )
-            && isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1])) {
+            && isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][WooCommerce_MyParcel_Export::PACKAGE])) {
             // Shipping methods associated with parcels = enable delivery options
-            $delivery_options_shipping_methods = WooCommerce_MyParcel(
-                                                 )->export_defaults['shipping_methods_package_types'][1];
+            $delivery_options_shipping_methods = WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][WooCommerce_MyParcel_Export::PACKAGE];
         } else {
             $delivery_options_shipping_methods = array();
         }

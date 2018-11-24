@@ -10,6 +10,12 @@ if ( ! class_exists('WooCommerce_MyParcel_Export')) :
 
 class WooCommerce_MyParcel_Export {
 
+    // Package types
+    const PACKAGE         = 1;
+    const MAILBOX_PACKAGE = 2;
+    const LETTER          = 3;
+    const DIGITAL_STAMP   = 4;
+
     public $order_id;
     public $success;
     public $errors;
@@ -665,7 +671,7 @@ class WooCommerce_MyParcel_Export {
         $shipment_options = WCX_Order::get_meta($order, '_myparcel_shipment_options');
         if ( ! empty($shipment_options)) {
             $emty_defaults = array(
-                'package_type' => 1,
+                'package_type' => self::PACKAGE,
                 'only_recipient' => 0,
                 'signature' => 0,
                 'return' => 0,
@@ -770,8 +776,8 @@ class WooCommerce_MyParcel_Export {
             }
         }
 
-        // disable options for mailbox package and unpaid letter
-        if ($options['package_type'] != 1) {
+        // disable options for mailbox package, unpaid letter and digital stamp
+        if ($options['package_type'] != self::PACKAGE) {
             $illegal_options = array('delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date');
             foreach ($options as $key => $option) {
                 if (in_array($key, $illegal_options)) {
@@ -937,7 +943,7 @@ class WooCommerce_MyParcel_Export {
     }
 
     public function get_package_type_from_shipping_method($shipping_method, $shipping_class, $shipping_country) {
-        $package_type = 1;
+        $package_type = self::PACKAGE;
         $shipping_method_id_class = "";
         if (isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'])) {
             if (strpos($shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping')) {
@@ -974,8 +980,8 @@ class WooCommerce_MyParcel_Export {
         }
 
         // disable mailbox package outside NL
-        if ($shipping_country != 'NL' && $package_type == 2) {
-            $package_type = 1;
+        if ($shipping_country != 'NL' && $package_type == self::MAILBOX_PACKAGE) {
+            $package_type = self::PACKAGE;
         }
 
         return $package_type;
@@ -1011,13 +1017,13 @@ class WooCommerce_MyParcel_Export {
             if ((isset(WooCommerce_MyParcel()->export_defaults['package_type']))) {
                 $package_type = WooCommerce_MyParcel()->export_defaults['package_type'];
             } else {
-                $package_type = 1; // 1. package | 2. mailbox package | 3. letter
+                $package_type = self::PACKAGE;
             }
         }
 
         // always parcel for Pickup and Pickup express delivery types.
         if ($this->is_pickup($order)) {
-            $package_type = 1;
+            $package_type = self::PACKAGE;
         }
 
         return $package_type;
@@ -1025,13 +1031,15 @@ class WooCommerce_MyParcel_Export {
 
     public function get_package_types($shipment_type = 'shipment') {
         $package_types = array(
-            1 => __('Parcel', 'woocommerce-myparcel'),
-            2 => __('Mailbox package', 'woocommerce-myparcel'),
-            3 => __('Unpaid letter', 'woocommerce-myparcel'),
+            self::PACKAGE         => __('Parcel', 'woocommerce-myparcel'),
+            self::MAILBOX_PACKAGE => __('Mailbox package', 'woocommerce-myparcel'),
+            self::LETTER          => __('Unpaid letter', 'woocommerce-myparcel'),
+            self::DIGITAL_STAMP   => __('Digital stamp', 'woocommerce-myparcel'),
         );
         if ($shipment_type == 'return') {
-            unset($package_types[2]);
-            unset($package_types[3]);
+            unset($package_types[self::MAILBOX_PACKAGE]);
+            unset($package_types[self::LETTER]);
+            unset($package_types[self::DIGITAL_STAMP]);
         }
 
         return $package_types;
