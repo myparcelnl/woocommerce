@@ -28,7 +28,7 @@ class WooCommerce_MyParcel_Export {
         $this->errors = array();
 
         $this->use_split_address_fields = array_key_exists('use_split_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
-            ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] === '1'
+            ? isset(get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'])
             : false;
 
         include('class-wcmp-rest.php');
