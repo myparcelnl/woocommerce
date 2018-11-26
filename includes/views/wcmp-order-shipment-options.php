@@ -12,14 +12,15 @@
                 <?php
                 // disable mailbox package outside NL
                 if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
-                    unset($package_types[2]); // mailbox package
+                    unset($package_types[WooCommerce_MyParcel_Export::MAILBOX_PACKAGE]); // mailbox package
                 }
 
                 // disable mailbox package and unpaid letter for pakjegemak
                 if (WooCommerce_MyParcel()->export->is_pickup($order)) {
-                    unset($package_types[2]); // mailbox package
-                    unset($package_types[3]); // unpaid letter
-                    $package_types[1] .= ' (Pakjegemak)';
+                    unset($package_types[WooCommerce_MyParcel_Export::MAILBOX_PACKAGE]);
+                    unset($package_types[WooCommerce_MyParcel_Export::LETTER]);
+                    unset($package_types[WooCommerce_MyParcel_Export::DIGITAL_STAMP]);
+                    $package_types[WooCommerce_MyParcel_Export::PACKAGE] .= ' (Pakjegemak)';
                 }
 
                 $name = "myparcel_options[{$order_id}][package_type]";
