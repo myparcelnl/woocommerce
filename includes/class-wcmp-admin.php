@@ -100,11 +100,6 @@ class WooCommerce_MyParcel_Admin {
         if ($shipping_country != 'NL' && ! WooCommerce_MyParcel()->export->is_eu_country($shipping_country)) {
             return;
         }
-        $order_id = WCX_Order::get_id($order);
-        $shipment_options = WooCommerce_MyParcel()->export->get_options($order);
-        $myparcel_options_extra = WCX_Order::get_meta($order, '_myparcel_shipment_options_extra');
-        $package_types = WooCommerce_MyParcel()->export->get_package_types('return');
-        $recipient = WooCommerce_MyParcel()->export->get_recipient($order);
 
         $style = $hide ? 'style="display:none"' : '';
         ?>

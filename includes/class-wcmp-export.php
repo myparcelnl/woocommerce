@@ -447,7 +447,6 @@ class WooCommerce_MyParcel_Export {
             );
 
             if ($pickup = $this->is_pickup($order)) {
-                // $pickup_time = array_shift($pickup['time']); // take first element in time array
                 $shipment['pickup'] = array(
                     'postal_code'       => $pickup['postal_code'],
                     'street'            => $pickup['street'],
