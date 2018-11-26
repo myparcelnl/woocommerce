@@ -640,8 +640,8 @@ class Woocommerce_MyParcel_Postcode_Fields {
         if ($address['billing_country'] == 'NL'
             && ! (bool) preg_match(
                 self::SPLIT_STREET_REGEX,
-                trim($address['billing_address_1'] . ' ' . $address['billing_address_2'])
-            )) {
+                trim($address['billing_address_1']
+            ))) {
             $errors->add('address', __('Please enter a valid billing address.', 'woocommerce-myparcel'));
         }
 
@@ -649,8 +649,8 @@ class Woocommerce_MyParcel_Postcode_Fields {
             && array_key_exists('ship_to_different_address', $address)
             && ! (bool) preg_match(
                 self::SPLIT_STREET_REGEX,
-                trim($address['shipping_address_1'] . ' ' . $address['shipping_address_2'])
-            )) {
+                trim($address['shipping_address_1']
+            ))) {
             $errors->add('address', __('Please enter a valid shipping address.', 'woocommerce-myparcel'));
         }
     }
