@@ -12,6 +12,7 @@ jQuery(function($) {
         window.myparcel_checkout_updating = false; //done updating
 
         if (window.myparcel_always_display) {
+            window.myparcel_force_update = true;
             show_myparcel_delivery_options();
         } else if (window.myparcel_shipping_methods.length > 0) {
             var shipping_method;
