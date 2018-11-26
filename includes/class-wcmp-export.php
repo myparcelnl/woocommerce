@@ -669,6 +669,7 @@ class WooCommerce_MyParcel_Export {
 
         // use shipment options from order when available
         $shipment_options = WCX_Order::get_meta($order, '_myparcel_shipment_options');
+
         if ( ! empty($shipment_options)) {
             $emty_defaults = array(
                 'package_type' => self::PACKAGE,
@@ -1195,14 +1196,21 @@ class WooCommerce_MyParcel_Export {
         return $name;
     }
 
-    public function get_parcel_weight($order) {
+    public function get_parcel_weight($order, $unit = 'kg') {
         $parcel_weight = (isset(WooCommerce_MyParcel()->general_settings['empty_parcel_weight']))
             ? preg_replace("/\D/", "", WooCommerce_MyParcel()->general_settings['empty_parcel_weight']) / 1000
             : 0;
 
         $items = $order->get_items();
         foreach ( $items as $item_id => $item ) {
-            $parcel_weight += $this->get_item_weight_kg($item, $order);
+            switch ($unit) {
+                case 'kg':
+                    $parcel_weight += $this->get_item_weight_kg($item, $order);
+                break;
+                case 'g':
+                    $parcel_weight += $this->get_item_weight_g($item, $order);
+                break;
+            }
         }
 
         return $parcel_weight;
@@ -1238,6 +1246,11 @@ class WooCommerce_MyParcel_Export {
         $item_weight = (float) $product_weight * (int) $item['qty'];
 
         return $item_weight;
+    }
+
+    public function get_item_weight_g($item, $order) {
+        $item_weight = $this->get_item_weight_kg($item, $order);
+        return $item_weight * 1000;
     }
 
     public function is_pickup($order, $myparcel_delivery_options = '') {
