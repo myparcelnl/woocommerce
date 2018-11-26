@@ -161,17 +161,14 @@ jQuery(function($) {
             $(div).hide();
         };
 
-        $package_type == '1'
-            ? enable_options(parcel_options)
-            : (
-                disable_options(parcel_options),
-                $(parcel_options).find('.insured').prop('checked', false),
-                $(parcel_options).find('.insured').change()
-            );
+        if ($package_type == '1') {
+            enable_options(parcel_options);
+        } else {
+            disable_options(parcel_options);
+            $(parcel_options).find('.insured').prop('checked', false).change();
+        }
 
-        $package_type == '4'
-            ? enable_options(digital_stamp_options)
-            : disable_options(digital_stamp_options);
+        $package_type == '4' ? enable_options(digital_stamp_options) : disable_options(digital_stamp_options);
     });
 
     /* hide delivery options details if disabled */
