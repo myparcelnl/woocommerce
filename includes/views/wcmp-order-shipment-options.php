@@ -49,6 +49,7 @@
     <br>
     <table class="wcmyparcel_settings_table parcel_options">
         <?php
+
         $shipment_options['insured'] = isset($shipment_options['insurance']['amount']) ? 1 : 0;
         if ( ! isset($shipment_options['insurance'])) {
             $shipment_options['insurance']['amount'] = '';

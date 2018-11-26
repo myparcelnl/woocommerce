@@ -303,6 +303,7 @@ class WooCommerce_MyParcel_Admin {
                 );
                 unset($shipment_options['insured_amount']);
             }
+
             // separate extra options
             if (isset($shipment_options['extra_options'])) {
                 WCX_Order::update_meta_data(
