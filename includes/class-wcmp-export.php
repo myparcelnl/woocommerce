@@ -1719,7 +1719,7 @@ class WooCommerce_MyParcel_Export {
         $current_range = false;
 
         foreach (WooCommerce_MyParcel_Export::get_tier_ranges() as $tier_range => $value) {
-            if ($weight > $value['min'] && $weight < $value['max']) {
+            if ($weight >= $value['min'] && $weight < $value['max']) {
                 $current_range = $tier_range;
             }
         }
