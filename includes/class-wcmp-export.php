@@ -671,7 +671,7 @@ class WooCommerce_MyParcel_Export {
         $shipment_options = WCX_Order::get_meta($order, '_myparcel_shipment_options');
 
         if ( ! empty($shipment_options)) {
-            $emty_defaults = array(
+            $empty_defaults = array(
                 'package_type' => self::PACKAGE,
                 'only_recipient' => 0,
                 'signature' => 0,
@@ -680,7 +680,7 @@ class WooCommerce_MyParcel_Export {
                 'label_description' => '',
                 'insured_amount' => 0,
             );
-            $options = array_merge($emty_defaults, $shipment_options);
+            $options = array_merge($empty_defaults, $shipment_options);
         } else {
             if (isset(WooCommerce_MyParcel()->export_defaults['insured'])
                 && WooCommerce_MyParcel()->export_defaults['insured_amount'] == ''
@@ -1299,7 +1299,7 @@ class WooCommerce_MyParcel_Export {
         // standard = default, overwrite if otpions found
         $delivery_type = 'standard';
         if ( ! empty($myparcel_delivery_options)) {
-            // pickup & pickupexpress store the delivery type in the delivery options,
+            // pickup & pickup express store the delivery type in the delivery options,
             // morning & night store it in the time data (...)
             if (empty($myparcel_delivery_options['price_comment']) && ! empty($myparcel_delivery_options['time'])) {
                 // check if we have a price_comment in the time option
