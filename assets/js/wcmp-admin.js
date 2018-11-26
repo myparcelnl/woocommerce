@@ -325,9 +325,6 @@ jQuery(function($) {
                 var button = this;
                 button_spinner(button, 'show');
                 myparcel_export(order_ids);
-                /* setTimeout(function() { */
-                /* button_spinner( button, 'hide' ); */
-                /* }, 500); */
                 break;
             case 'get_labels':
                 if (wc_myparcel.offset == 1) {
@@ -338,7 +335,6 @@ jQuery(function($) {
                 break;
             case 'add_return':
                 myparcel_modal_dialog(order_ids, 'return');
-                /* myparcel_return( order_ids ); */
                 break;
         }
     });
@@ -441,7 +437,6 @@ jQuery(function($) {
             print = 'no';
         }
         var offset = wc_myparcel.offset === 1 ? $('.wc_myparcel_offset').val() : 0;
-        /* console.log('exporting order to MyParcel...'); */
         var data = {
             action:    'wc_myparcel',
             request:   'add_shipments',
@@ -493,7 +488,6 @@ jQuery(function($) {
 
     /* export orders to MyParcel via AJAX */
     function myparcel_return(order_ids) {
-        /* console.log('creating return for orders...'); */
         var data = {
             action:    'wc_myparcel',
             request:   'add_return',
@@ -503,7 +497,6 @@ jQuery(function($) {
 
         $.post(wc_myparcel.ajax_url, data, function(response) {
             response = $.parseJSON(response);
-            /* console.log(response); */
             if (response !== null && typeof response === 'object' && 'error' in response) {
                 myparcel_admin_notice(response.error, 'error');
             }
@@ -514,7 +507,6 @@ jQuery(function($) {
 
     /* Request MyParcel labels */
     function myparcel_print(order_ids, offset) {
-        /* console.log('requesting myparcel labels...'); */
         if (typeof offset === 'undefined') {
             offset = 0;
         }
@@ -533,28 +525,6 @@ jQuery(function($) {
         $('#myparcel_post_data').submit();
 
         bulk_spinner('', 'hide');
-
-        /* alternate method:
-         var data = {
-         action:               'wc_myparcel',
-         request:              'get_labels',
-         order_ids:            order_ids,
-         security:             wc_myparcel.nonce,
-         label_response_type:  'url',
-         };
-
-         $.post( wc_myparcel.ajax_url, data, function( response ) {
-         response = $.parseJSON(response);
-         console.log(response);
-         if ( response !== null && typeof response === 'object' && 'error' in response) {
-         myparcel_admin_notice( response.error, 'error' );
-         } else if ( response !== null && typeof response === 'object' && 'url' in response) {
-         window.open( response.url, '_blank' );
-         }
-         return;
-         });
-         */
-
     }
 
     function myparcel_admin_notice(message, type) {
@@ -584,6 +554,5 @@ jQuery(function($) {
     }
 
     $(document.body).trigger('wc-enhanced-select-init');
-
 });
 
