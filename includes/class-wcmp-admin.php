@@ -53,7 +53,7 @@ class WooCommerce_MyParcel_Admin {
             ?>
             <div class="wcmp_shipment_summary" <?php echo $style; ?>>
                 <?php $this->show_order_delivery_options($order); ?>
-                <a href="#" class="wcmp_show_shipment_summary"><span class="encircle wcmp_show_shipment_summary">i</span></a>
+                <a class="wcmp_show_shipment_summary"><span class="encircle wcmp_show_shipment_summary">i</span></a>
                 <div class="wcmp_shipment_summary_list" data-loaded="" data-shipment_id="<?php echo $last_shipment_id; ?>" data-order_id="<?php echo $order_id; ?>" style="display: none;">
                     <img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>" class="wcmp_spinner" />
                 </div>

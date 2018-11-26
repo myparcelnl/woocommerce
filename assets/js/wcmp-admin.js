@@ -45,7 +45,6 @@ jQuery(function($) {
 
     /* show summary when clicked */
     $('.wcmp_show_shipment_summary').click(function(event) {
-        event.preventDefault();
         $summary_list = $(this).next('.wcmp_shipment_summary_list');
         if ($summary_list.is(":visible") || $summary_list.data('loaded') != '') {
             /* just open / close */
@@ -148,19 +147,31 @@ jQuery(function($) {
 
     /* hide all options if not a parcel */
     $('.wcmp_shipment_options select.package_type').change(function() {
-        var parcel_options = $(this).closest('table').parent().find('.parcel_options');
-        if ($(this).val() == '1') {
-            /* parcel */
-            $(parcel_options).find('input, textarea, button, select').prop('disabled', false);
-            $(parcel_options).show();
-            $(parcel_options).find('.insured').change();
-        } else {
-            /* not a parcel */
-            $(parcel_options).find('input, textarea, button, select').prop('disabled', true);
-            $(parcel_options).hide();
-            $(parcel_options).find('.insured').prop('checked', false);
-            $(parcel_options).find('.insured').change();
-        }
+        var $package_type = $(this).val();
+        var parcel_options = $('.wcmyparcel_settings_table.parcel_options');
+        var digital_stamp_options = $('.wcmyparcel_settings_table.digital_stamp_options');
+
+        enable_options = function(div) {
+            $(div).find('input, textarea, button, select').prop('disabled', false);
+            $(div).show();
+        };
+
+        disable_options = function(div) {
+            $(div).find('input, textarea, button, select').prop('disabled', true);
+            $(div).hide();
+        };
+
+        $package_type == '1'
+            ? enable_options(parcel_options)
+            : (
+                disable_options(parcel_options),
+                $(parcel_options).find('.insured').prop('checked', false),
+                $(parcel_options).find('.insured').change()
+            );
+
+        $package_type == '4'
+            ? enable_options(digital_stamp_options)
+            : disable_options(digital_stamp_options);
     });
 
     /* hide delivery options details if disabled */
@@ -451,7 +462,6 @@ jQuery(function($) {
 
             if (print === 'no' || print === 'after_reload') {
                 /* refresh page, admin notices are stored in options and will be displayed automatically */
-                /* location.reload(true); */
                 redirect_url = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
                 window.location.href = redirect_url;
                 return;

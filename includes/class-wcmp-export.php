@@ -467,6 +467,13 @@ class WooCommerce_MyParcel_Export {
                 );
             }
 
+            if ($shipment['options']['package_type'] == self::DIGITAL_STAMP ) {
+                $shipment['physical_properties'] = array(
+                    'weight' => (int) $shipment['options']['weight'],
+                );
+                unset($shipment['options']['weight']);
+            }
+
             $shipments[] = apply_filters('wc_myparcel_order_shipment', $shipment, $order, $type, $this);
         }
 
@@ -1295,7 +1302,7 @@ class WooCommerce_MyParcel_Export {
             $myparcel_delivery_options = WCX_Order::get_meta($order, '_myparcel_delivery_options');
         }
 
-        // standard = default, overwrite if otpions found
+        // standard = default, overwrite if options found
         $delivery_type = 'standard';
         if ( ! empty($myparcel_delivery_options)) {
             // pickup & pickup express store the delivery type in the delivery options,
@@ -1661,6 +1668,58 @@ class WooCommerce_MyParcel_Export {
         }
 
         return false;
+    }
+
+    public static function get_tier_ranges($round = false) {
+        // same as in backoffice, average is value of option
+        $tier_ranges = array(
+            1 => array(
+                'min' => 0,
+                'max' => 21,
+                'average' => 15
+            ),
+            2 => array(
+                'min' => 21,
+                'max' => 51,
+                'average' => 35
+            ),
+            3 => array(
+                'min' => 51,
+                'max' => 101,
+                'average' => 75
+            ),
+            4 => array(
+                'min' => 101,
+                'max' => 351,
+                'average' => 225
+            ),
+            5 => array(
+                'min' => 351,
+                'max' => 2001,
+                'average' => 1175
+            )
+        );
+
+        if ($round) {
+            foreach ($tier_ranges as &$tier_range) {
+                $tier_range['min'] = $tier_range['min'] > 0 ? $tier_range['min'] - 1 : $tier_range['min'];
+                $tier_range['max'] = $tier_range['max'] - 1;
+            }
+        }
+
+        return $tier_ranges;
+    }
+
+    public static function find_tier_range($weight) {
+        $current_range = false;
+
+        foreach (WooCommerce_MyParcel_Export::get_tier_ranges() as $tier_range => $value) {
+            if ($weight > $value['min'] && $weight < $value['max']) {
+                $current_range = $tier_range;
+            }
+        }
+
+        return $current_range;
     }
 }
 
