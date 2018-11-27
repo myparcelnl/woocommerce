@@ -886,7 +886,7 @@ class WooCommerce_MyParcel_Settings {
                 'option_name'        => $option_name,
                 'id'                 => 'saturday_cutoff',
                 'size'               => 30,
-                'option_description' => sprintf(__('<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended). </strong> More information about the Monday delivery service of PostNL can be found <a href="%s" target="_blank">here</a>.', 'woocommerce-myparcel'), 'https://blog.myparcel.nl/maandagbezorging/'),
+                'option_description' => sprintf(__('<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended). </strong> More information about the Monday delivery service of PostNL can be found %s here%s.', 'woocommerce-myparcel'), '<a href="https://blog.myparcel.nl/maandagbezorging/" target="_blank">', '</a>'),
             )
         );
 
