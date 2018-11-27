@@ -20,7 +20,6 @@ jQuery(function($) {
             show_myparcel_delivery_options();
         } else if (window.myparcel_shipping_methods.length > 0) {
             var shipping_method;
-            var country = get_shipping_country();
 
             // check if shipping is user choice or fixed
             if ($('#order_review .shipping_method').length > 1) {
@@ -61,17 +60,13 @@ jQuery(function($) {
             } else if ($.inArray(shipping_method, window.myparcel_shipping_methods) > -1) {
                 // fallback to bare method if selected in settings
                 myparcel_updated_shipping_method = shipping_method;
-                myparcel_updated_country = country;
                 show_myparcel_delivery_options();
                 myparcel_selected_shipping_method = shipping_method;
-                myparcel_selected_country = country;
             } else {
                 shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
                 myparcel_updated_shipping_method = shipping_method_now;
-                myparcel_updated_country = country;
                 hide_myparcel_delivery_options();
                 myparcel_selected_shipping_method = shipping_method_now;
-                myparcel_selected_country = country;
             }
         } else {
             // not sure if we should already hide by default?
@@ -99,10 +94,15 @@ jQuery(function($) {
     }
 
     function check_country() {
-        country = get_shipping_country();
-        if (country !== 'NL' && country !== 'BE') {
+        window.myparcel_updated_country = get_shipping_country();
+
+        if (window.myparcel_updated_country !== 'NL' && window.myparcel_updated_country !== 'BE') {
             hide_myparcel_delivery_options();
+        } else if (window.myparcel_updated_country !== window.myparcel_selected_country) {
+            MyParcel.callDeliveryOptions();
         }
+
+        window.myparcel_selected_country = window.myparcel_updated_country;
     }
 
     function get_shipping_country() {
