@@ -17,7 +17,6 @@ MyParcel = {
     SPLIT_STREET_REGEX: /(.*?)\s?(\d{1,4})[/\s\-]{0,2}([a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$/g,
 
     init: function() {
-
         this.data = JSON.parse(wcmp_config);
         isMobile = jQuery(window).width() < 980;
 

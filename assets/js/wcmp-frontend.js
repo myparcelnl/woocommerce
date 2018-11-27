@@ -98,7 +98,7 @@ jQuery(function($) {
 
         if (window.myparcel_updated_country !== 'NL' && window.myparcel_updated_country !== 'BE') {
             hide_myparcel_delivery_options();
-        } else if (window.myparcel_updated_country !== window.myparcel_selected_country) {
+        } else if (window.myparcel_updated_country !== window.myparcel_selected_country && MyParcel.data.length > 0) {
             MyParcel.callDeliveryOptions();
         }
 
