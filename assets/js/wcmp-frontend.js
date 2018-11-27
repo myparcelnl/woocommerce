@@ -1,8 +1,12 @@
 jQuery(function($) {
     window.myparcel_checkout_updating = false;
     window.myparcel_force_update = false;
+
     window.myparcel_selected_shipping_method = '';
     window.myparcel_updated_shipping_method = '';
+    window.myparcel_selected_country = '';
+    window.myparcel_updated_country = '';
+
     window.myparcel_is_using_split_address_fields = wcmp_display_settings.isUsingSplitAddressFields;
     window.myparcel_shipping_methods = JSON.parse(wcmp_delivery_options.shipping_methods);
     window.myparcel_always_display = wcmp_delivery_options.always_display;
@@ -16,6 +20,7 @@ jQuery(function($) {
             show_myparcel_delivery_options();
         } else if (window.myparcel_shipping_methods.length > 0) {
             var shipping_method;
+
             // check if shipping is user choice or fixed
             if ($('#order_review .shipping_method').length > 1) {
                 shipping_method = $('#order_review .shipping_method:checked').val();
@@ -89,10 +94,15 @@ jQuery(function($) {
     }
 
     function check_country() {
-        country = get_shipping_country();
-        if (country !== 'NL' && country !== 'BE') {
+        window.myparcel_updated_country = get_shipping_country();
+
+        if (window.myparcel_updated_country !== 'NL' && window.myparcel_updated_country !== 'BE') {
             hide_myparcel_delivery_options();
+        } else if (window.myparcel_updated_country !== window.myparcel_selected_country) {
+            MyParcel.callDeliveryOptions();
         }
+
+        window.myparcel_selected_country = window.myparcel_updated_country;
     }
 
     function get_shipping_country() {
@@ -108,26 +118,30 @@ jQuery(function($) {
     function hide_myparcel_delivery_options() {
         MyParcel.hideAllDeliveryOptions();
         // clear delivery options
-        if (is_updated_shipping_method()) { // prevents infinite updated_checkout - update_checkout loop
+        if (is_updated()) {
             jQuery('body').trigger('update_checkout');
         }
     }
 
     function show_myparcel_delivery_options() {
-        // show only if NL
+        // show only if NL or BE
         check_country();
 
-        if (is_updated_shipping_method()) { // prevents infinite updated_checkout - update_checkout loop
+        if (is_updated()) {
             MyParcel.showAllDeliveryOptions();
         }
     }
 
-    function is_updated_shipping_method() {
-        if (window.myparcel_updated_shipping_method !== window.myparcel_selected_shipping_method || window.myparcel_force_update === true) {
+    // prevents infinite updated_checkout - update_checkout loop
+    function is_updated() {
+        if (window.myparcel_updated_shipping_method !== window.myparcel_selected_shipping_method
+            || window.myparcel_updated_country !== window.myparcel_selected_country
+            || window.myparcel_force_update === true
+        ) {
             window.myparcel_force_update = false; // only force once
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 });
