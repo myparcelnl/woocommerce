@@ -1,8 +1,12 @@
 jQuery(function($) {
     window.myparcel_checkout_updating = false;
     window.myparcel_force_update = false;
+
     window.myparcel_selected_shipping_method = '';
     window.myparcel_updated_shipping_method = '';
+    window.myparcel_selected_country = '';
+    window.myparcel_updated_country = '';
+
     window.myparcel_is_using_split_address_fields = wcmp_display_settings.isUsingSplitAddressFields;
     window.myparcel_shipping_methods = JSON.parse(wcmp_delivery_options.shipping_methods);
     window.myparcel_always_display = wcmp_delivery_options.always_display;
@@ -16,6 +20,8 @@ jQuery(function($) {
             show_myparcel_delivery_options();
         } else if (window.myparcel_shipping_methods.length > 0) {
             var shipping_method;
+            var country = get_shipping_country();
+
             // check if shipping is user choice or fixed
             if ($('#order_review .shipping_method').length > 1) {
                 shipping_method = $('#order_review .shipping_method:checked').val();
@@ -55,13 +61,17 @@ jQuery(function($) {
             } else if ($.inArray(shipping_method, window.myparcel_shipping_methods) > -1) {
                 // fallback to bare method if selected in settings
                 myparcel_updated_shipping_method = shipping_method;
+                myparcel_updated_country = country;
                 show_myparcel_delivery_options();
                 myparcel_selected_shipping_method = shipping_method;
+                myparcel_selected_country = country;
             } else {
                 shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
                 myparcel_updated_shipping_method = shipping_method_now;
+                myparcel_updated_country = country;
                 hide_myparcel_delivery_options();
                 myparcel_selected_shipping_method = shipping_method_now;
+                myparcel_selected_country = country;
             }
         } else {
             // not sure if we should already hide by default?
@@ -108,26 +118,30 @@ jQuery(function($) {
     function hide_myparcel_delivery_options() {
         MyParcel.hideAllDeliveryOptions();
         // clear delivery options
-        if (is_updated_shipping_method()) { // prevents infinite updated_checkout - update_checkout loop
+        if (is_updated()) {
             jQuery('body').trigger('update_checkout');
         }
     }
 
     function show_myparcel_delivery_options() {
-        // show only if NL
+        // show only if NL or BE
         check_country();
 
-        if (is_updated_shipping_method()) { // prevents infinite updated_checkout - update_checkout loop
+        if (is_updated()) {
             MyParcel.showAllDeliveryOptions();
         }
     }
 
-    function is_updated_shipping_method() {
-        if (window.myparcel_updated_shipping_method !== window.myparcel_selected_shipping_method || window.myparcel_force_update === true) {
+    // prevents infinite updated_checkout - update_checkout loop
+    function is_updated() {
+        if (window.myparcel_updated_shipping_method !== window.myparcel_selected_shipping_method
+            || window.myparcel_updated_country !== window.myparcel_selected_country
+            || window.myparcel_force_update === true
+        ) {
             window.myparcel_force_update = false; // only force once
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 });
