@@ -347,9 +347,7 @@ MyParcel = {
     },
 
     addDeliveryToExternalInput: function(deliveryMomentOfDay) {
-
         var deliveryDateId = jQuery('#mypa-select-date').val();
-
         var currentDeliveryData = MyParcel.triggerDefaultOptionDelivery(deliveryDateId, deliveryMomentOfDay);
 
         if (currentDeliveryData !== null) {
