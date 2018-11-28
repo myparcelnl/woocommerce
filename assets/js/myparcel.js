@@ -11,6 +11,8 @@ MyParcel = {
     DELIVERY_MORNING:        'morning',
     DELIVERY_NORMAL:         'standard',
     DELIVERY_EVENING:        'avond',
+    DELIVERY_PICKUP:         'retail',
+    DELIVERY_PICKUP_EXPRESS: 'retailexpress',
     DELIVERY_SIGNATURE:      0,
     DELIVERY_ONLY_RECIPIENT: 0,
 
@@ -318,7 +320,7 @@ MyParcel = {
              */
             if (jQuery('#mypa-pickup-express-selector').prop('checked')) {
                 jQuery('#s_method_myparcel_pickup_express').click();
-                MyParcel.addPickupToExternalInput('retailexpress');
+                MyParcel.addPickupToExternalInput(MyParcel.DELIVERY_PICKUP_EXPRESS);
                 MyParcel.addStyleToPrice('#mypa-pickup-express-price');
                 return;
             } else {
@@ -326,7 +328,7 @@ MyParcel = {
             }
 
             jQuery('#s_method_myparcel_pickup').click();
-            MyParcel.addPickupToExternalInput('retail');
+            MyParcel.addPickupToExternalInput(MyParcel.DELIVERY_PICKUP);
         }
     },
 
@@ -336,10 +338,11 @@ MyParcel = {
 
         var result = jQuery.extend({}, currentLocation);
 
-        /* If retail; convert retailexpress to retail */
-        if (selectedPriceComment === "retail") {
-            result.price_comment = "retail";
+        /* If pickup; convert pickup express to pickup */
+        if (selectedPriceComment === MyParcel.DELIVERY_PICKUP) {
+            result.price_comment = MyParcel.DELIVERY_PICKUP;
         }
+
         jQuery('body').trigger('update_checkout');
         jQuery('#mypa-input').val(JSON.stringify(result));
     },
@@ -412,7 +415,7 @@ MyParcel = {
         var isPickup = jQuery('#mypa-pickup-delivery').is(':checked');
         jQuery('#mypa-pickup-selector').prop('checked', true);
 
-        if (isPickup && this.currentLocation.price_comment === "retailexpress" && this.data.config.allowPickupExpress) {
+        if (isPickup && this.currentLocation.price_comment === MyParcel.DELIVERY_PICKUP_EXPRESS && this.data.config.allowPickupExpress) {
             jQuery('#mypa-pickup-express-price').html(MyParcel.getPriceHtml(this.data.config.pricePickupExpress));
             jQuery('#mypa-pickup-express').show();
         } else {
