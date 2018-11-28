@@ -85,14 +85,6 @@ jQuery(function($) {
         jQuery('body').trigger('update_checkout');
     });
 
-    function get_settings() {
-        if (typeof window.mypa !== 'undefined' && typeof window.mypa.settings !== 'undefined') {
-            return window.mypa.settings;
-        } else {
-            return false;
-        }
-    }
-
     function check_country() {
         window.myparcel_updated_country = get_shipping_country();
 
