@@ -20,6 +20,7 @@ jQuery(function($) {
             show_myparcel_delivery_options();
         } else if (window.myparcel_shipping_methods.length > 0) {
             var shipping_method;
+            window.myparcel_selected_country = window.myparcel_updated_country;
 
             // check if shipping is user choice or fixed
             if ($('#order_review .shipping_method').length > 1) {
@@ -82,7 +83,7 @@ jQuery(function($) {
         if (typeof mypa_postnl_data.location !== 'undefined') {
             $('#mypa-signature, #mypa-recipient-only').prop("checked", false);
         }
-        jQuery('body').trigger('update_checkout');
+        $('body').trigger('update_checkout');
     });
 
     function check_country() {
@@ -93,8 +94,6 @@ jQuery(function($) {
         } else if (window.myparcel_updated_country !== window.myparcel_selected_country && $.isEmptyObject(MyParcel.data) === false) {
             MyParcel.callDeliveryOptions();
         }
-
-        window.myparcel_selected_country = window.myparcel_updated_country;
     }
 
     function get_shipping_country() {

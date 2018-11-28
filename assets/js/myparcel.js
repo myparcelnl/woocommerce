@@ -127,7 +127,6 @@ MyParcel = {
         if (!configDeliveryTitle) {
             jQuery('#mypa-' + deliveryMoment + '-title').html(startTime + ' - ' + endTime);
         }
-
     },
 
     setCurrentLocation: function() {
@@ -213,7 +212,7 @@ MyParcel = {
             ? '#billing_house_number, #shipping_house_number'
             : '#billing_address_1, #shipping_address_1';
 
-        jQuery('#billing_postcode, #shipping_postcode, ' + fields).on('change', function() {
+        jQuery('#billing_country, #shipping_country, #billing_postcode, #shipping_postcode, ' + fields).on('change', function() {
             MyParcel.callDeliveryOptions();
         });
     },
