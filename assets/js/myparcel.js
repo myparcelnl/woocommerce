@@ -780,8 +780,17 @@ MyParcel = {
         var retryPostalCode = jQuery('#mypa-error-postcode').val();
         var retryNumber = jQuery('#mypa-error-number').val();
 
+        if (window.myparcel_is_using_split_address_fields) {
+            jQuery('#billing_house_number').val(retryNumber);
+        } else {
+            address = MyParcel.data.address.street + ' ' + retryNumber;
+            if (typeof MyParcel.data.address.numberSuffix !== 'undefined') {
+                address += MyParcel.data.address.numberSuffix
+            }
+
+            jQuery('#billing_address_1').val(address);
+        }
         jQuery('#billing_postcode').val(retryPostalCode);
-        jQuery('#billing_house_number').val(retryNumber);
 
         MyParcel.callDeliveryOptions();
         jQuery('#mypa-select-delivery').click();
