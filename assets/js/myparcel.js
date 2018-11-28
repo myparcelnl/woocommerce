@@ -86,6 +86,7 @@ MyParcel = {
 
     setCurrentDeliveryOptions: function() {
         if (typeof MyParcel.storeDeliveryOptions === 'undefined') {
+            console.error('setCurrentDeliveryOptions() MyParcel.storeDeliveryOptions === undefined');
             return;
         }
 
