@@ -1,4 +1,6 @@
 jQuery(function($) {
+    window.myparcel_is_using_split_address_fields = wcmp_display_settings.isUsingSplitAddressFields;
+
     var MyParcel_Frontend = {
         checkout_updating: false,
         force_update:      false,
@@ -8,7 +10,6 @@ jQuery(function($) {
         selected_country:         false,
         updated_country:          false,
 
-        is_using_split_address_fields: wcmp_display_settings.isUsingSplitAddressFields,
         shipping_methods:              JSON.parse(wcmp_delivery_options.shipping_methods),
         always_display:                wcmp_delivery_options.always_display,
 
