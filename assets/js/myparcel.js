@@ -11,13 +11,14 @@ MyParcel = {
     DELIVERY_MORNING:        'morning',
     DELIVERY_NORMAL:         'standard',
     DELIVERY_EVENING:        'avond',
+    DELIVERY_PICKUP:         'retail',
+    DELIVERY_PICKUP_EXPRESS: 'retailexpress',
     DELIVERY_SIGNATURE:      0,
     DELIVERY_ONLY_RECIPIENT: 0,
 
     SPLIT_STREET_REGEX: /(.*?)\s?(\d{1,4})[/\s\-]{0,2}([a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$/g,
 
     init: function() {
-
         this.data = JSON.parse(wcmp_config);
         isMobile = jQuery(window).width() < 980;
 
@@ -126,7 +127,6 @@ MyParcel = {
         if (!configDeliveryTitle) {
             jQuery('#mypa-' + deliveryMoment + '-title').html(startTime + ' - ' + endTime);
         }
-
     },
 
     setCurrentLocation: function() {
@@ -212,7 +212,7 @@ MyParcel = {
             ? '#billing_house_number, #shipping_house_number'
             : '#billing_address_1, #shipping_address_1';
 
-        jQuery('#billing_postcode, #shipping_postcode, ' + fields).on('input', function() {
+        jQuery('#billing_country, #shipping_country, #billing_postcode, #shipping_postcode, ' + fields).on('change', function() {
             MyParcel.callDeliveryOptions();
         });
     },
@@ -319,7 +319,7 @@ MyParcel = {
              */
             if (jQuery('#mypa-pickup-express-selector').prop('checked')) {
                 jQuery('#s_method_myparcel_pickup_express').click();
-                MyParcel.addPickupToExternalInput('retailexpress');
+                MyParcel.addPickupToExternalInput(MyParcel.DELIVERY_PICKUP_EXPRESS);
                 MyParcel.addStyleToPrice('#mypa-pickup-express-price');
                 return;
             } else {
@@ -327,7 +327,7 @@ MyParcel = {
             }
 
             jQuery('#s_method_myparcel_pickup').click();
-            MyParcel.addPickupToExternalInput('retail');
+            MyParcel.addPickupToExternalInput(MyParcel.DELIVERY_PICKUP);
         }
     },
 
@@ -337,10 +337,11 @@ MyParcel = {
 
         var result = jQuery.extend({}, currentLocation);
 
-        /* If retail; convert retailexpress to retail */
-        if (selectedPriceComment === "retail") {
-            result.price_comment = "retail";
+        /* If pickup; convert pickup express to pickup */
+        if (selectedPriceComment === MyParcel.DELIVERY_PICKUP) {
+            result.price_comment = MyParcel.DELIVERY_PICKUP;
         }
+
         jQuery('body').trigger('update_checkout');
         jQuery('#mypa-input').val(JSON.stringify(result));
     },
@@ -413,7 +414,7 @@ MyParcel = {
         var isPickup = jQuery('#mypa-pickup-delivery').is(':checked');
         jQuery('#mypa-pickup-selector').prop('checked', true);
 
-        if (isPickup && this.currentLocation.price_comment === "retailexpress" && this.data.config.allowPickupExpress) {
+        if (isPickup && this.currentLocation.price_comment === MyParcel.DELIVERY_PICKUP_EXPRESS && this.data.config.allowPickupExpress) {
             jQuery('#mypa-pickup-express-price').html(MyParcel.getPriceHtml(this.data.config.pricePickupExpress));
             jQuery('#mypa-pickup-express').show();
         } else {
@@ -778,8 +779,17 @@ MyParcel = {
         var retryPostalCode = jQuery('#mypa-error-postcode').val();
         var retryNumber = jQuery('#mypa-error-number').val();
 
+        if (window.myparcel_is_using_split_address_fields) {
+            jQuery('#billing_house_number').val(retryNumber);
+        } else {
+            address = MyParcel.data.address.street + ' ' + retryNumber;
+            if (typeof MyParcel.data.address.numberSuffix !== 'undefined') {
+                address += MyParcel.data.address.numberSuffix
+            }
+
+            jQuery('#billing_address_1').val(address);
+        }
         jQuery('#billing_postcode').val(retryPostalCode);
-        jQuery('#billing_house_number').val(retryNumber);
 
         MyParcel.callDeliveryOptions();
         jQuery('#mypa-select-delivery').click();
