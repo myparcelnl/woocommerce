@@ -86,7 +86,6 @@ MyParcel = {
 
     setCurrentDeliveryOptions: function() {
         if (typeof MyParcel.storeDeliveryOptions === 'undefined') {
-            console.error('setCurrentDeliveryOptions() MyParcel.storeDeliveryOptions === undefined');
             return;
         }
 
@@ -347,9 +346,7 @@ MyParcel = {
     },
 
     addDeliveryToExternalInput: function(deliveryMomentOfDay) {
-
         var deliveryDateId = jQuery('#mypa-select-date').val();
-
         var currentDeliveryData = MyParcel.triggerDefaultOptionDelivery(deliveryDateId, deliveryMomentOfDay);
 
         if (currentDeliveryData !== null) {
