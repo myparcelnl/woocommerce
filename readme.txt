@@ -90,10 +90,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.1.0 (TBD) =
-* Feature: Digital stamp support
+= 3.0.8 (TBD) =
+* Fix: The multiple calls that are made to retrieve the shipping data.
+* Fix: The option for Pick up extra early
+* Fix: Wrong house number / postcode message and the possibility to adjust the address in the myparcel checkout
 * Fix: Woocommerce tabel rates
-* Improvement: Better code!
+* Improvement: Better support the default WooCommerce checkout address fields
 
 = 3.0.7 (2018-11-20) =
 * Fix: Set default values for dropoff days and delivery days window
