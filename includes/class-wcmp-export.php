@@ -567,6 +567,7 @@ class WooCommerce_MyParcel_Export {
             'company' => (string) WCX_Order::get_prop($order, 'shipping_company'),
             'email'   => isset(WooCommerce_MyParcel()->export_defaults['connect_email']) ? WCX_Order::get_prop($order, 'billing_email') : '',
             'phone'   => isset(WooCommerce_MyParcel()->export_defaults['connect_phone']) ? WCX_Order::get_prop($order, 'billing_phone') : '',
+            'street_additional_info' => WCX_Order::get_prop($order, 'shipping_address_2'),
         );
 
         $shipping_country = WCX_Order::get_prop( $order, 'shipping_country' );
@@ -588,7 +589,7 @@ class WooCommerce_MyParcel_Export {
                     // Split the address line 1 into three parts
                     preg_match(
                         Woocommerce_MyParcel_Postcode_Fields::SPLIT_STREET_REGEX,
-                        WCX_Order::get_prop($order, 'billing_address_1') . ' ' . WCX_Order::get_prop($order, 'billing_address_2'),
+                        WCX_Order::get_prop($order, 'billing_address_1'),
                         $address_parts
                     );
                     $address_intl['street'] =        (string) $address_parts['street'];
@@ -596,6 +597,7 @@ class WooCommerce_MyParcel_Export {
                     $address_intl['number_suffix'] = array_key_exists('number_suffix', $address_parts) // optional
                         ? (string) $address_parts['number_suffix']
                         : '';
+                    $address_intl['street_additional_info'] = WCX_Order::get_prop($order, 'billing_address_2');
                 } else {
                     $address_intl['street'] =        (string) WCX_Order::get_meta($order, '_billing_street_name');
                     $address_intl['number'] =        (string) WCX_Order::get_meta($order, '_billing_house_number');
@@ -610,7 +612,7 @@ class WooCommerce_MyParcel_Export {
                     // Split the address line 1 into three parts
                     preg_match(
                         Woocommerce_MyParcel_Postcode_Fields::SPLIT_STREET_REGEX,
-                        WCX_Order::get_prop($order, 'shipping_address_1') . ' ' . WCX_Order::get_prop($order, 'shipping_address_2'),
+                        WCX_Order::get_prop($order, 'shipping_address_1'),
                         $address_parts
                     );
 
