@@ -4,7 +4,7 @@ Plugin Name: WooCommerce MyParcel
 Plugin URI: http://www.myparcel.nl
 Description: Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
 Author: Richard Perdaan
-Version: 3.0.7
+Version: 3.0.9
 
 Text Domain: woocommerce-myparcel
 
@@ -12,283 +12,269 @@ License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( ! class_exists( 'WooCommerce_MyParcel' ) ) :
+if ( ! class_exists('WooCommerce_MyParcel')) :
 
 class WooCommerce_MyParcel {
 
-	public $version = '3.0.7';
+    public $version = '3.0.9';
+    public $plugin_basename;
+    protected static $_instance = null;
 
-	public $plugin_basename;
+    /**
+     * Main Plugin Instance
+     * Ensures only one instance of plugin is loaded or can be loaded.
+     */
+    public static function instance() {
+        if (is_null(self::$_instance)) {
+            self::$_instance = new self();
+        }
 
-	protected static $_instance = null;
+        return self::$_instance;
+    }
 
-	/**
-	 * Main Plugin Instance
-	 *
-	 * Ensures only one instance of plugin is loaded or can be loaded.
-	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
-		return self::$_instance;
-	}
+    /**
+     * Constructor
+     */
 
-	/**
-	 * Constructor
-	 */
+    public function __construct() {
+        $this->define('WC_MYPARCEL_VERSION', $this->version);
+        $this->define('WC_CHANNEL_ENGINE_ACTIVE', class_exists('Channel_Engine'));
+        $this->plugin_basename = plugin_basename(__FILE__);
 
-	public function __construct() {
-		$this->define( 'WC_MYPARCEL_VERSION', $this->version );
-		$this->define( 'WC_CHANNEL_ENGINE_ACTIVE', class_exists('Channel_Engine'));
-		$this->plugin_basename = plugin_basename(__FILE__);
+        // Load settings
+        $this->general_settings = get_option('woocommerce_myparcel_general_settings');
+        $this->export_defaults = get_option('woocommerce_myparcel_export_defaults_settings');
+        $this->checkout_settings = get_option('woocommerce_myparcel_checkout_settings');
 
-		// Load settings
-		$this->general_settings = get_option( 'woocommerce_myparcel_general_settings' );
-		$this->export_defaults = get_option( 'woocommerce_myparcel_export_defaults_settings' );
-		$this->checkout_settings = get_option( 'woocommerce_myparcel_checkout_settings' );
+        // load the localisation & classes
+        add_action('plugins_loaded', array($this, 'translations'));
+        add_action('init', array($this, 'load_classes'));
 
-		// load the localisation & classes
-		add_action( 'plugins_loaded', array( $this, 'translations' ) );
-		add_action( 'init', array( $this, 'load_classes' ) );
+        // run lifecycle methods
+        if (is_admin() && ! defined('DOING_AJAX')) {
+            add_action('wp_loaded', array($this, 'do_install'));
+        }
+    }
 
-		// run lifecycle methods
-		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
-			add_action( 'wp_loaded', array( $this, 'do_install' ) );
-		}
-	}
+    /**
+     * Define constant if not already set
+     *
+     * @param  string      $name
+     * @param  string|bool $value
+     */
+    private function define($name, $value) {
+        if ( ! defined($name)) {
+            define($name, $value);
+        }
+    }
 
-	/**
-	 * Define constant if not already set
-	 * @param  string $name
-	 * @param  string|bool $value
-	 */
-	private function define( $name, $value ) {
-		if ( ! defined( $name ) ) {
-			define( $name, $value );
-		}
-	}
+    /**
+     * Load the translation / text-domain files
+     * Note: the first-loaded translation file overrides any following ones if the same translation is present
+     */
+    public function translations() {
+        $locale = apply_filters('plugin_locale', get_locale(), 'woocommerce-myparcel');
+        $dir = trailingslashit(WP_LANG_DIR);
 
-	/**
-	 * Load the translation / text-domain files
-	 *
-	 * Note: the first-loaded translation file overrides any following ones if the same translation is present
-	 */
-	public function translations() {
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'woocommerce-myparcel' );
-		$dir    = trailingslashit( WP_LANG_DIR );
+        /**
+         * Frontend/global Locale. Looks in:
+         *        - WP_LANG_DIR/woocommerce-myparcel/woocommerce-myparcel-LOCALE.mo
+         *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
+         *        - woocommerce-myparcel/languages/woocommerce-myparcel-LOCALE.mo (which if not found falls back to:)
+         *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
+         */
+        load_textdomain('woocommerce-myparcel', $dir . 'woocommerce-myparcel/woocommerce-myparcel-' . $locale . '.mo');
+        load_textdomain('woocommerce-myparcel', $dir . 'plugins/woocommerce-myparcel-' . $locale . '.mo');
+        load_plugin_textdomain('woocommerce-myparcel', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    }
 
-		/**
-		 * Frontend/global Locale. Looks in:
-		 *
-		 * 		- WP_LANG_DIR/woocommerce-myparcel/woocommerce-myparcel-LOCALE.mo
-		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
-		 * 	 	- woocommerce-myparcel/languages/woocommerce-myparcel-LOCALE.mo (which if not found falls back to:)
-		 * 	 	- WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
-		 */
-		load_textdomain( 'woocommerce-myparcel', $dir . 'woocommerce-myparcel/woocommerce-myparcel-' . $locale . '.mo' );
-		load_textdomain( 'woocommerce-myparcel', $dir . 'plugins/woocommerce-myparcel-' . $locale . '.mo' );
-		load_plugin_textdomain( 'woocommerce-myparcel', false, dirname( plugin_basename(__FILE__) ) . '/languages' );
-	}
+    /**
+     * Load the main plugin classes and functions
+     */
+    public function includes() {
+        // include compatibility classes
+        include_once('includes/compatibility/abstract-wc-data-compatibility.php');
+        include_once('includes/compatibility/class-wc-date-compatibility.php');
+        include_once('includes/compatibility/class-wc-core-compatibility.php');
+        include_once('includes/compatibility/class-wc-order-compatibility.php');
+        include_once('includes/compatibility/class-wc-product-compatibility.php');
 
-	/**
-	 * Load the main plugin classes and functions
-	 */
-	public function includes() {
-		// include compatibility classes
-		include_once( 'includes/compatibility/abstract-wc-data-compatibility.php' );
-		include_once( 'includes/compatibility/class-wc-date-compatibility.php' );
-		include_once( 'includes/compatibility/class-wc-core-compatibility.php' );
-		include_once( 'includes/compatibility/class-wc-order-compatibility.php' );
-		include_once( 'includes/compatibility/class-wc-product-compatibility.php' );
+        include_once('includes/class-wcmp-assets.php');
+        $this->admin = include_once('includes/class-wcmp-admin.php');
+        include_once('includes/class-wcmp-frontend-settings.php');
+        include_once('includes/class-wcmp-frontend.php');
+        include_once('includes/class-wcmp-settings.php');
+        $this->export = include_once('includes/class-wcmp-export.php');
+        include_once('includes/class-wcmp-nl-postcode-fields.php');
+    }
 
-		include_once( 'includes/class-wcmp-assets.php' );
-		$this->admin = include_once( 'includes/class-wcmp-admin.php' );
-        include_once( 'includes/class-wcmp-frontend-settings.php' );
-		include_once( 'includes/class-wcmp-frontend.php' );
-		include_once( 'includes/class-wcmp-settings.php' );
-		$this->export = include_once( 'includes/class-wcmp-export.php' );
-		include_once( 'includes/class-wcmp-nlpostcode-fields.php' );
-	}
+    /**
+     * Instantiate classes when woocommerce is activated
+     */
+    public function load_classes() {
+        if ($this->is_woocommerce_activated() === false) {
+            add_action('admin_notices', array($this, 'need_woocommerce'));
 
-	/**
-	 * Instantiate classes when woocommerce is activated
-	 */
-	public function load_classes() {
-		if ( $this->is_woocommerce_activated() === false ) {
-			add_action( 'admin_notices', array ( $this, 'need_woocommerce' ) );
-			return;
-		}
+            return;
+        }
 
-		if ( version_compare( PHP_VERSION, '5.4', '<' ) ) {
-			add_action( 'admin_notices', array ( $this, 'required_php_version' ) );
-			return;
-		}
+        if (version_compare(PHP_VERSION, '5.4', '<')) {
+            add_action('admin_notices', array($this, 'required_php_version'));
 
-		// all systems ready - GO!
-		$this->includes();
-	}
+            return;
+        }
 
-	/**
-	 * Check if woocommerce is activated
-	 */
-	public function is_woocommerce_activated() {
-		$blog_plugins = get_option( 'active_plugins', array() );
-		$site_plugins = get_site_option( 'active_sitewide_plugins', array() );
+        // all systems ready - GO!
+        $this->includes();
+    }
 
-		if ( in_array( 'woocommerce/woocommerce.php', $blog_plugins ) || isset( $site_plugins['woocommerce/woocommerce.php'] ) ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * Check if woocommerce is activated
+     */
+    public function is_woocommerce_activated() {
+        $blog_plugins = get_option('active_plugins', array());
+        $site_plugins = get_site_option('active_sitewide_plugins', array());
 
-	/**
-	 * WooCommerce not active notice.
-	 *
-	 * @return string Fallack notice.
-	 */
+        if (in_array('woocommerce/woocommerce.php', $blog_plugins) || isset($site_plugins['woocommerce/woocommerce.php'])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public function need_woocommerce() {
-		$error = sprintf( __( 'WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!' , 'woocommerce-myparcel' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>' );
+    /**
+     * WooCommerce not active notice.
+     * @return string Fallack notice.
+     */
+    public function need_woocommerce() {
+        $error = sprintf(__('WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!', 'woocommerce-myparcel'), '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>');
 
-		$message = '<div class="error"><p>' . $error . '</p></div>';
+        $message = '<div class="error"><p>' . $error . '</p></div>';
 
-		echo $message;
-	}
+        echo $message;
+    }
 
-	/**
-	 * PHP version requirement notice
-	 */
+    /**
+     * PHP version requirement notice
+     */
 
-	public function required_php_version() {
-		$error = __( 'WooCommerce MyParcel requires PHP 5.4 or higher (5.6 or later recommended).', 'woocommerce-myparcel' );
-		$how_to_update = __( 'How to update your PHP version', 'woocommerce-myparcel' );
-		$message = sprintf('<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>', $error, 'http://docs.wpovernight.com/general/how-to-update-your-php-version/', $how_to_update);
+    public function required_php_version() {
+        $error = __('WooCommerce MyParcel requires PHP 5.4 or higher (5.6 or later recommended).', 'woocommerce-myparcel');
+        $how_to_update = __('How to update your PHP version', 'woocommerce-myparcel');
+        $message = sprintf('<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>', $error, 'http://docs.wpovernight.com/general/how-to-update-your-php-version/', $how_to_update);
 
-		echo $message;
-	}
+        echo $message;
+    }
 
-	/** Lifecycle methods *******************************************************
-	 * Because register_activation_hook only runs when the plugin is manually
-	 * activated by the user, we're checking the current version against the
-	 * version stored in the database
-	****************************************************************************/
+    /** Lifecycle methods *******************************************************
+     * Because register_activation_hook only runs when the plugin is manually
+     * activated by the user, we're checking the current version against the
+     * version stored in the database
+     ****************************************************************************/
 
-	/**
-	 * Handles version checking
-	 */
-	public function do_install() {
-		$version_setting = 'woocommerce_myparcel_version';
-		$installed_version = get_option( $version_setting );
+    /**
+     * Handles version checking
+     */
+    public function do_install() {
+        $version_setting = 'woocommerce_myparcel_version';
+        $installed_version = get_option($version_setting);
 
-		// installed version lower than plugin version?
-		if ( version_compare( $installed_version, $this->version, '<' ) ) {
+        // installed version lower than plugin version?
+        if (version_compare($installed_version, $this->version, '<')) {
+            if ( ! $installed_version) {
+                $this->install();
+            } else {
+                $this->upgrade($installed_version);
+            }
 
-			if ( ! $installed_version ) {
-				$this->install();
-			} else {
-				$this->upgrade( $installed_version );
-			}
+            // new version number
+            update_option($version_setting, $this->version);
+        }
+    }
 
-			// new version number
-			update_option( $version_setting, $this->version );
-		}
-	}
+    /**
+     * Plugin install method. Perform any installation tasks here
+     */
+    protected function install() {
+        // copy old settings if available (pre 2.0 didn't store the version, so technically, this is a new install)
+        $old_settings = get_option('wcmyparcel_settings');
+        if ( ! empty($old_settings)) {
+            // map old key => new_key
+            $general_settings_keys = array(
+                'api_key'              => 'api_key',
+                'download_display'     => 'download_display',
+                'email_tracktrace'     => 'email_tracktrace',
+                'myaccount_tracktrace' => 'myaccount_tracktrace',
+                'process'              => 'process_directly',
+                'barcode_in_note'      => 'barcode_in_note',
+                'keep_consignments'    => 'keep_shipments',
+                'error_logging'        => 'error_logging',
+            );
 
+            $general_settings = array();
+            foreach ($general_settings_keys as $old_key => $new_key) {
+                if ( ! empty($old_settings[$old_key])) {
+                    $general_settings[$new_key] = $old_settings[$old_key];
+                }
+            }
+            // auto_complete breaks down into:
+            // order_status_automation & automatic_order_status
+            if ( ! empty($old_settings['auto_complete'])) {
+                $general_settings['order_status_automation'] = 1;
+                $general_settings['automatic_order_status'] = 'completed';
+            }
 
-	/**
-	 * Plugin install method. Perform any installation tasks here
-	 */
-	protected function install() {
-		// copy old settings if available (pre 2.0 didn't store the version, so technically, this is a new install)
-		$old_settings = get_option( 'wcmyparcel_settings' );
-		if (!empty($old_settings)) {
-			// copy old settins to new
-			// Deprecated
-			// api_username
-			// pakjegemak
-			// pakjegemak_description
-			// pakjegemak_button
-			// shipment_type
-			// huishand
+            // map old key => new_key
+            $defaults_settings_keys = array(
+                'email'              => 'connect_email',
+                'telefoon'           => 'connect_phone',
+                'extragroot'         => 'large_format',
+                'huisadres'          => 'only_recipient',
+                'handtekening'       => 'signature',
+                'retourbgg'          => 'return',
+                'kenmerk'            => 'label_description',
+                'verpakkingsgewicht' => 'empty_parcel_weight',
+                'verzekerd'          => 'insured',
+                'verzekerdbedrag'    => 'insured_amount',
+            );
+            $defaults_settings = array();
+            foreach ($defaults_settings_keys as $old_key => $new_key) {
+                if ( ! empty($old_settings[$old_key])) {
+                    $defaults_settings[$new_key] = $old_settings[$old_key];
+                }
+            }
+            // set custom insurance amount
+            if ( ! empty($defaults_settings['insured']) && (int) $defaults_settings['insured_amount'] > 249) {
+                $defaults_settings['insured_amount'] = 0;
+                $defaults_settings['insured_amount_custom'] = $old_settings['verzekerdbedrag'];
+            }
 
-			// map old key => new_key
-			$general_settings_keys = array(
-				'api_key'				=> 'api_key',
-				'download_display'		=> 'download_display',
-				'email_tracktrace'		=> 'email_tracktrace',
-				'myaccount_tracktrace'	=> 'myaccount_tracktrace',
-				'process'				=> 'process_directly',
-				'barcode_in_note'		=> 'barcode_in_note',
-				'keep_consignments'		=> 'keep_shipments',
-				'error_logging'			=> 'error_logging',
-			);
+            // add options
+            update_option('woocommerce_myparcel_general_settings', $general_settings);
+            update_option('woocommerce_myparcel_export_defaults_settings', $defaults_settings);
+        }
+    }
 
-			$general_settings = array();
-			foreach ($general_settings_keys as $old_key => $new_key) {
-				if (!empty($old_settings[$old_key])) {
-					$general_settings[$new_key] = $old_settings[$old_key];
-				}
-			}
-			// auto_complete breaks down into:
-			// order_status_automation & automatic_order_status
-			if (!empty($old_settings['auto_complete'])) {
-				$general_settings['order_status_automation'] = 1;
-				$general_settings['automatic_order_status'] = 'completed';
-			}
+    /**
+     * Plugin upgrade method.  Perform any required upgrades here
+     *
+     * @param string $installed_version the currently installed ('old') version
+     */
+    protected function upgrade($installed_version) {
+        if (version_compare($installed_version, '2.4.0-beta-4', '<')) {
+            // remove log file (now uses WC logger)
+            $upload_dir = wp_upload_dir();
+            $upload_base = trailingslashit($upload_dir['basedir']);
+            $log_file = $upload_base . 'myparcel_log.txt';
+            if (@file_exists($log_file)) {
+                @unlink($log_file);
+            }
+        }
 
-			// map old key => new_key
-			$defaults_settings_keys = array(
-				'email'					=> 'connect_email',
-				'telefoon'				=> 'connect_phone',
-				'extragroot'			=> 'large_format',
-				'huisadres'				=> 'only_recipient',
-				'handtekening'			=> 'signature',
-				'retourbgg'				=> 'return',
-				'kenmerk'				=> 'label_description',
-				'verpakkingsgewicht'	=> 'empty_parcel_weight',
-				'verzekerd'				=> 'insured',
-				'verzekerdbedrag'		=> 'insured_amount',
-			);
-			$defaults_settings = array();
-			foreach ($defaults_settings_keys as $old_key => $new_key) {
-				if (!empty($old_settings[$old_key])) {
-					$defaults_settings[$new_key] = $old_settings[$old_key];
-				}
-			}
-			// set custom insurance amount
-			if (!empty($defaults_settings['insured']) && (int) $defaults_settings['insured_amount'] > 249) {
-				$defaults_settings['insured_amount'] = 0;
-				$defaults_settings['insured_amount_custom'] = $old_settings['verzekerdbedrag'];
-			}
-
-			// add options
-			update_option( 'woocommerce_myparcel_general_settings', $general_settings );
-			update_option( 'woocommerce_myparcel_export_defaults_settings', $defaults_settings );
-		}
-	}
-
-	/**
-	 * Plugin upgrade method.  Perform any required upgrades here
-	 *
-	 * @param string $installed_version the currently installed ('old') version
-	 */
-	protected function upgrade( $installed_version ) {
-        if ( version_compare( $installed_version, '2.4.0-beta-4', '<' ) ) {
-			// remove log file (now uses WC logger)
-			$upload_dir = wp_upload_dir();
-			$upload_base = trailingslashit( $upload_dir['basedir'] );
-			$log_file = $upload_base.'myparcel_log.txt';
-			if ( @file_exists( $log_file ) ) {
-				@unlink( $log_file );
-			}
-		}
-
-		if ( version_compare( $installed_version, '3.0.4', '<=' ) ) {
-            $old_settings = get_option( 'woocommerce_myparcel_checkout_settings' );
+        if (version_compare($installed_version, '3.0.4', '<=')) {
+            $old_settings = get_option('woocommerce_myparcel_checkout_settings');
             $new_settings = $old_settings;
 
             // Add/replace new settings
@@ -314,36 +300,34 @@ class WooCommerce_MyParcel {
 
             update_option('woocommerce_myparcel_checkout_settings', $new_settings);
         }
-	}
+    }
 
-	/**
-	 * Get the plugin url.
-	 * @return string
-	 */
-	public function plugin_url() {
-		return untrailingslashit( plugins_url( '/', __FILE__ ) );
-	}
+    /**
+     * Get the plugin url.
+     * @return string
+     */
+    public function plugin_url() {
+        return untrailingslashit(plugins_url('/', __FILE__));
+    }
 
-	/**
-	 * Get the plugin path.
-	 * @return string
-	 */
-	public function plugin_path() {
-		return untrailingslashit( plugin_dir_path( __FILE__ ) );
-	}
-
+    /**
+     * Get the plugin path.
+     * @return string
+     */
+    public function plugin_path() {
+        return untrailingslashit(plugin_dir_path(__FILE__));
+    }
 } // class WooCommerce_MyParcel
 
 endif; // class_exists
 
 /**
  * Returns the main instance of the plugin class to prevent the need to use globals.
- *
  * @since  2.0
  * @return WooCommerce_MyParcel
  */
 function WooCommerce_MyParcel() {
-	return WooCommerce_MyParcel::instance();
+    return WooCommerce_MyParcel::instance();
 }
 
 WooCommerce_MyParcel(); // load plugin

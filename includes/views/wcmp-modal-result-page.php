@@ -1,4 +1,5 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
+<?php if ( ! defined('ABSPATH')) exit; // Exit if accessed directly ?>
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -13,10 +14,12 @@
 		wp_localize_script(
 			'wcmyparcel-export',
 			'wc_myparcel',
-			array(  
-				'ajax_url'			=> admin_url( 'admin-ajax.php' ),
-				'nonce'				=> wp_create_nonce('wc_myparcel'),
-				'download_display'	=> isset(WooCommerce_MyParcel()->general_settings['download_display'])?WooCommerce_MyParcel()->general_settings['download_display']:'',
+			array(
+                'ajax_url'         => admin_url('admin-ajax.php'),
+                'nonce'            => wp_create_nonce('wc_myparcel'),
+                'download_display' => isset(WooCommerce_MyParcel()->general_settings['download_display'])
+                    ? WooCommerce_MyParcel()->general_settings['download_display']
+                    : '',
 			)
 		);
 
@@ -49,13 +52,13 @@
 </head>
 <body style="padding:10px 20px;">
 	<?php
-	switch ($request) {
-		case 'add_return':
-			printf('<h3>%s</h3>', __('Return email successfully sent to customer') );
-			break;
-		default:
-			# code...
-			break;
-	}
+    switch($request) {
+        case 'add_return':
+            printf('<h3>%s</h3>', __('Return email successfully sent to customer'));
+        break;
+        default:
+            # code...
+        break;
+    }
 	?>
 </body></html>
