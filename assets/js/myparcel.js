@@ -978,4 +978,4 @@ MyParcel = {
 // timeout because postcode api might take too long to respond
 setTimeout(function() {
     MyParcel.init();
-}, 3000);
+}, 2000);
