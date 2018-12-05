@@ -90,6 +90,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 3.0.10 (2018-12-05) =
+* Hotfix: Flashing of the order summary.
+
 = 3.0.9 (2018-12-04) =
 * Hotfix: Get mailbox delivery option and save it into the order.
 
