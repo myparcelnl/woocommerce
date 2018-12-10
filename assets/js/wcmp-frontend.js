@@ -1,6 +1,11 @@
 jQuery(function($) {
     window.myparcel_is_using_split_address_fields = wcmp_display_settings.isUsingSplitAddressFields;
 
+    // The timeout is necessary, otherwise the order summary is going to flash
+    setTimeout(function() {
+        $(':input.country_to_state').change();
+    }, 100);
+
     var MyParcel_Frontend = {
         checkout_updating: false,
         force_update:      false,
