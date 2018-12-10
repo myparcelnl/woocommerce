@@ -577,7 +577,7 @@ class WooCommerce_MyParcelBE_Export {
 			}
 			$options = array(
 				'package_type'		=>  self::package_type,
-				'signature'			=>  (isset(WooCommerce_MyParcelBE()->export_defaults['signature'])) ? 1 : 0,
+				'signature'			=>  (isset(WooCommerce_MyParcelBE()->export_defaults['signature']) && WooCommerce_MyParcelBE()->export_defaults['signature'] == "BE" ) ? 1 : 0,
 				'label_description'	=>  $description,
 				'insured_amount'	=>  $insured_amount,
 			);
