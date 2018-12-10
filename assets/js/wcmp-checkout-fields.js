@@ -1,7 +1,10 @@
 // Loaded in checkout when using split address fields
 jQuery(function($) {
     // trigger hiding of address line 1 and 2 if necessary
-    $(':input.country_to_state').change();
+    // The timeout is necessary, otherwise the order summary is going to flash
+    setTimeout(function() {
+        $(':input.country_to_state').change();
+    }, 100);
 
     // Auto fill helper for layout with separate number field
     // Split street to 3 fields on autofill

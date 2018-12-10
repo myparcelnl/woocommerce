@@ -1,6 +1,11 @@
 jQuery(function($) {
     window.myparcel_is_using_split_address_fields = wcmp_display_settings.isUsingSplitAddressFields;
 
+    // The timeout is necessary, otherwise the order summary is going to flash
+    setTimeout(function() {
+        $(':input.country_to_state').change();
+    }, 100);
+
     var MyParcel_Frontend = {
         checkout_updating: false,
         force_update:      false,
@@ -69,7 +74,6 @@ jQuery(function($) {
                     } else {
                         var shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
                         MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method_now;
-                        MyParcel_Frontend.hide_delivery_options();
                         MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_now;
                     }
                 } else {
