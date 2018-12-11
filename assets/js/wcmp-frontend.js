@@ -142,9 +142,7 @@ jQuery(function($) {
         },
 
         show_delivery_options: function() {
-            if (MyParcel_Frontend.is_updated()) {
-                MyParcel.showAllDeliveryOptions();
-            }
+            MyParcel.showAllDeliveryOptions();
         },
 
         is_updated: function() {
