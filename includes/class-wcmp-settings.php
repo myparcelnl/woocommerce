@@ -387,7 +387,7 @@ class WooCommerce_MyParcel_Settings {
 				array(
                     'option_name' => $option_name,
                     'id'          => 'package_type',
-                    'default'     => '1',
+                    'default'     => (string) WooCommerce_MyParcel_Export::PACKAGE,
                     'options'     => WooCommerce_MyParcel()->export->get_package_types(),
                 )
             );

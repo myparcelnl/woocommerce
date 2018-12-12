@@ -1,7 +1,12 @@
-<?php if ( ! defined('ABSPATH')) exit; // Exit if accessed directly ?>
+<?php if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
+// get parcel weight in grams
+$parcel_weight = WooCommerce_MyParcel()->export->get_parcel_weight($order);
+$parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 'g');
+
+?>
 <a href="#" class="wcmyparcel_change_order">
-    <table class="wcmyparcel_settings_table" style="width: auto" onclick="return false;">
+    <table class="wcmyparcel_settings_table" onclick="return false;">
         <tr>
             <td>
                 <?php _e('Shipment type', 'woocommerce-myparcel') ?>:<br />
@@ -12,20 +17,26 @@
                 <?php
                 // disable mailbox package outside NL
                 if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
-                    unset($package_types[2]); // mailbox package
+                    unset($package_types[WooCommerce_MyParcel_Export::MAILBOX_PACKAGE]); // mailbox package
                 }
 
                 // disable mailbox package and unpaid letter for pakjegemak
                 if (WooCommerce_MyParcel()->export->is_pickup($order)) {
-                    unset($package_types[2]); // mailbox package
-                    unset($package_types[3]); // unpaid letter
-                    $package_types[1] .= ' (Pakjegemak)';
+                    unset($package_types[WooCommerce_MyParcel_Export::MAILBOX_PACKAGE]);
+                    unset($package_types[WooCommerce_MyParcel_Export::LETTER]);
+                    unset($package_types[WooCommerce_MyParcel_Export::DIGITAL_STAMP]);
+                    $package_types[WooCommerce_MyParcel_Export::PACKAGE] .= ' (Pakjegemak)';
                 }
 
                 $name = "myparcel_options[{$order_id}][package_type]";
                 printf('<select name="%s" class="package_type">', $name);
                 foreach ($package_types as $key => $label) {
-                    printf('<option value="%s"%s>%s</option>', $key, selected($shipment_options['package_type'], $key, false), $label);
+                    printf(
+                        '<option value="%s"%s>%s</option>',
+                        $key,
+                        selected($shipment_options['package_type'], $key, false),
+                        $label
+                    );
                 }
                 echo '</select>';
                 ?>
@@ -44,10 +55,8 @@
                 ?>
             </td>
         </tr>
-    </table>
-    <br>
-    <table class="wcmyparcel_settings_table parcel_options">
         <?php
+
         $shipment_options['insured'] = isset($shipment_options['insurance']['amount']) ? 1 : 0;
         if ( ! isset($shipment_options['insurance'])) {
             $shipment_options['insurance']['amount'] = '';
@@ -103,17 +112,22 @@
                 'class'  => 'insured',
                 'hidden' => 'yes',
             );
-        }
-
-        ?>
+        } ?>
+    </table>
+    <table class="wcmyparcel_settings_table parcel_options">
         <?php foreach ($option_rows as $name => $option_row): ?>
             <tr>
                 <td>
                     <?php
                     $name = "myparcel_options[{$order_id}]{$name}";
                     $class = isset($option_row['class']) ? $option_row['class'] : '';
-                    $checked = isset($option_row['checked']) ? $option_row['checked']
-                        : checked("1", $option_row['value'], false);
+                    $checked = isset($option_row['checked'])
+                        ? $option_row['checked']
+                        : checked(
+                            "1",
+                            $option_row['value'],
+                            false
+                        );
                     $type = isset($option_row['hidden']) ? 'hidden' : 'checkbox';
                     printf('<input type="%s" name="%s" value="1" class="%s" %s>', $type, $name, $class, $checked);
                     echo $option_row['label'];
@@ -129,7 +143,42 @@
             </tr>
         <?php endforeach ?>
     </table>
-    <table class="wcmyparcel_settings_table" onclick="return false;">
+    <table class="wcmyparcel_settings_table digital_stamp_options">
+        <tr>
+            <td>
+                <label for="myparcel_options_weight"><?php _e('Weight:', 'woocommerce-myparcel') ?></label>
+            </td>
+            <td>
+                <?php
+                $name = "myparcel_options[{$order_id}][weight]";
+                // use grams
+                $current_tier_range = WooCommerce_MyParcel_Export::find_tier_range($parcel_weight_gram);
+
+                printf('<select name="%s">', $name);
+                foreach (WooCommerce_MyParcel_Export::get_tier_ranges(true) as $tier_range => $weight) {
+                    printf(
+                        '<option id="myparcel_options_weight" value="%s"%s>%s – %s %s</option>',
+                        $weight['average'],
+                        selected($current_tier_range == $tier_range),
+                        $weight['min'],
+                        $weight['max'],
+                        __('gram', 'woocommerce-myparcel')
+                    );
+                }
+                printf('</select>');
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <small><?php _e(
+                        '<strong>Note:</strong> Digital stamps are only available if weight is under 2000g and dimensions are within 14 x 9 cm and 38 x 26,5 x 3,2 cm.',
+                        'woocommerce-myparcel'
+                    ) ?></small>
+            </td>
+        </tr>
+    </table>
+    <table>
         <?php
         $insured_amount = isset($shipment_options['insurance']['amount'])
             ? (int) $shipment_options['insurance']['amount'] : 0;
@@ -142,14 +191,22 @@
                 <td>
                     <?php
                     $insured_amounts = array(
-                        '49'  => __('Insured up to &euro; 50', 'woocommerce-myparcel') . ' (+ &euro; 0.50)',
+                        '49' => __('Insured up to &euro; 50', 'woocommerce-myparcel') . ' (+ &euro; 0.50)',
                         '249' => __('Insured up to &euro; 250', 'woocommerce-myparcel') . ' (+ &euro; 1.00)',
                         '499' => __('Insured up to &euro; 500', 'woocommerce-myparcel') . ' (+ &euro; 1.65)',
-                        ''    => __('> &euro; 500 insured', 'woocommerce-myparcel') . ' (+ &euro; 1.65 / &euro; 500)',
+                        '' => __(
+                                  '> &euro; 500 insured',
+                                  'woocommerce-myparcel'
+                              ) . ' (+ &euro; 1.65 / &euro; 500)',
                     );
                     printf('<select name="%s" class="insured_amount">', $name);
                     foreach ($insured_amounts as $key => $label) {
-                        printf('<option value="%s"%s>%s</option>', $key, selected($insured_amount, $key, false), $label);
+                        printf(
+                            '<option value="%s"%s>%s</option>',
+                            $key,
+                            selected($insured_amount, $key, false),
+                            $label
+                        );
                     }
                     echo '</select>';
                     ?>
@@ -162,13 +219,21 @@
                 <td>
                     <?php
                     $name = "myparcel_options[{$order_id}][insured_amount]";
-                    printf('<input type="text" name="%s" value="%s" style="width:100%%" class="insured_amount">', $name, $insured_amount);
+                    printf(
+                        '<input type="text" name="%s" value="%s" class="insured_amount">',
+                        $name,
+                        $insured_amount
+                    );
                     ?>
                 </td>
             </tr>
             <?php
         } else {
-            printf('<tr><td colspan="2" style="display:none;"><input type="hidden" name="%s" value="%s"></td></tr>', $name, $insured_amount);
+            printf(
+                '<tr><td colspan="2" class="hidden"><input type="hidden" name="%s" value="%s"></td></tr>',
+                $name,
+                $insured_amount
+            );
         }
         ?>
         <tr>
@@ -176,7 +241,7 @@
             <td>
                 <?php
                 $name = "myparcel_options[{$order_id}][label_description]";
-                printf('<input type="text" name="%s" value="%s" style="width:100%%">', $name, $shipment_options['label_description']);
+                printf('<input type="text" name="%s" value="%s">', $name, $shipment_options['label_description']);
                 ?>
             </td>
         </tr>

@@ -148,6 +148,10 @@ msgstr ""
 msgid "Unpaid letter"
 msgstr ""
 
+#: includes/class-wcmp-export.php:1033
+msgid "Digital stamp"
+msgstr ""
+
 #: includes/class-wcmp-export.php:1046
 msgid "Unknown"
 msgstr ""
@@ -902,6 +906,15 @@ msgstr ""
 
 #: includes/views/wcmp-order-shipment-options.php:36
 msgid "Number of labels"
+msgstr ""
+
+#: includes/views/wcmp-order-shipment-options.php:149
+msgid "Weight:"
+msgstr ""
+
+#: includes/views/wcmp-order-shipment-options.php:175
+msgid "<strong>Note:</strong> Digital stamps are only available if weight is under 2000g and dimensions are within "
+"14 x 9 cm and 38 x 26,5 x 3,2 cm."
 msgstr ""
 
 #: includes/views/wcmp-order-shipment-options.php:94

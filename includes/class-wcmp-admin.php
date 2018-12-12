@@ -53,7 +53,7 @@ class WooCommerce_MyParcel_Admin {
             ?>
             <div class="wcmp_shipment_summary" <?php echo $style; ?>>
                 <?php $this->show_order_delivery_options($order); ?>
-                <a href="#" class="wcmp_show_shipment_summary"><span class="encircle wcmp_show_shipment_summary">i</span></a>
+                <a class="wcmp_show_shipment_summary"><span class="encircle wcmp_show_shipment_summary">i</span></a>
                 <div class="wcmp_shipment_summary_list" data-loaded="" data-shipment_id="<?php echo $last_shipment_id; ?>" data-order_id="<?php echo $order_id; ?>" style="display: none;">
                     <img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>" class="wcmp_spinner" />
                 </div>
@@ -100,11 +100,6 @@ class WooCommerce_MyParcel_Admin {
         if ($shipping_country != 'NL' && ! WooCommerce_MyParcel()->export->is_eu_country($shipping_country)) {
             return;
         }
-        $order_id = WCX_Order::get_id($order);
-        $shipment_options = WooCommerce_MyParcel()->export->get_options($order);
-        $myparcel_options_extra = WCX_Order::get_meta($order, '_myparcel_shipment_options_extra');
-        $package_types = WooCommerce_MyParcel()->export->get_package_types('return');
-        $recipient = WooCommerce_MyParcel()->export->get_recipient($order);
 
         $style = $hide ? 'style="display:none"' : '';
         ?>
@@ -303,6 +298,7 @@ class WooCommerce_MyParcel_Admin {
                 );
                 unset($shipment_options['insured_amount']);
             }
+
             // separate extra options
             if (isset($shipment_options['extra_options'])) {
                 WCX_Order::update_meta_data(
