@@ -2,7 +2,7 @@
 Contributors: richardperdaan
 Tags: woocommerce, export, myparcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.9.8
+Tested up to: 5.0.0
 Stable tag: trunk
 Requires PHP: 5.4
 License: GPLv3 or later
@@ -89,6 +89,10 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+
+= 3.1.0 (2018-12-12) =
+* Hotfix: Show delivery options when checkout form already filled in.
+* Improvement: Add Digital stamp
 
 = 3.0.10 (2018-12-05) =
 * Hotfix: Flashing of the order summary.
