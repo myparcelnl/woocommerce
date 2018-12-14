@@ -127,7 +127,7 @@ $target_url = wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcelbe&reques
 						</td>
 						<td><?php
 							if ($shipping_country == 'BE' && (empty($recipient['street']) || empty($recipient['number']))) { ?>
-							<p><span style="color:red"><?php _e('This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcel BE plugin was activated. The address data can still be manually entered in the order screen.', 'woocommerce-myparcelbe); ?></span></p>
+							<p><span style="color:red"><?php echo _e('This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcel BE plugin was activated. The address data can still be manually entered in the order screen.', 'woocommerce-myparcelbe'); ?></span></p>
 						</td>
 					</tr> <!-- last row -->
 							<?php
@@ -140,7 +140,7 @@ $target_url = wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcelbe&reques
 					<tr>
 						<td colspan="2" class="wcmp_shipment_options">
 							<?php
-							$skip_save = true; // don't show save button for each order
+							$skip_save = true; // dont show save button for each order
 							if ($dialog == 'shipment') {
 								include('wcmp-order-shipment-options.php');
 							} elseif ($dialog == 'return') {
