@@ -1,7 +1,7 @@
 <?php
 
-use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
-use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 

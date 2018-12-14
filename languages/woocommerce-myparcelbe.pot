@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"Project-Id-Version: WooCommerce MyParcel\n"
+"Project-Id-Version: WooCommerce MyParcelBE\n"
 "POT-Creation-Date: 2018-11-27 16:01+0100\n"
 "PO-Revision-Date: 2016-07-02 16:21+0200\n"
 "Last-Translator: \n"
@@ -18,7 +18,7 @@ msgstr ""
 "esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
-"X-Poedit-SearchPathExcluded-1: woocommerce-myparcel\n"
+"X-Poedit-SearchPathExcluded-1: woocommerce-myparcelbe\n"
 "X-Poedit-SearchPathExcluded-2: patches\n"
 
 #: includes/class-wcmp-admin.php:126

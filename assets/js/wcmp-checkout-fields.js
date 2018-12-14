@@ -28,8 +28,8 @@ jQuery(function($) {
         $('#' + type + '_house_number_suffix').val(address[2]);
 
         // Update delivery options after filling if myparcelbe.js is loaded and initialized
-        if (typeof MyParcelBE != 'undefined' && MyParcel.data.length === 0) {
-            MyParcel.callDeliveryOptions();
+        if (typeof MyParcelBE != 'undefined' && MyParcelBE.data.length === 0) {
+            MyParcelBE.callDeliveryOptions();
         }
     }
 });

@@ -1,8 +1,8 @@
 <?php
 
-use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
-use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
@@ -338,6 +338,7 @@ class WooCommerce_MyParcelBE_Admin {
         global $post_id;
         // get order
         $order = WCX::get_order($post_id);
+
         if ( ! $order) {
             return;
         }

@@ -244,7 +244,7 @@ class WooCommerce_MyParcelBE_Settings {
             array(
                 'option_name' => $option_name,
                 'id'          => 'process_directly',
-                'description' => __('When you enable this option, shipments will be directly processed when sent to MyParcel.', 'woocommerce-myparcelbe')
+                'description' => __('When you enable this option, shipments will be directly processed when sent to MyParcel BE.', 'woocommerce-myparcelbe')
             )
         );
 

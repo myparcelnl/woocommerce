@@ -65,14 +65,14 @@ jQuery(function($) {
                     return m;
                 },
                 ajax:               {
-                    url:         wc_myparcel.ajax_url,
+                    url:         wc_myparcelbe.ajax_url,
                     dataType:    'json',
                     quietMillis: 250,
                     data:        function(term) {
                         return {
                             term:     term,
                             action:   'wc_myparcelbe_json_search_shipping_methods',
-                            security: wc_myparcel.nonce,
+                            security: wc_myparcelbe.nonce,
                         };
                     },
                     results:     function(data) {

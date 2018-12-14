@@ -54,14 +54,14 @@ jQuery(function($) {
             $summary_list.find('.wcmp_spinner').show();
             $summary_list.slideToggle();
             var data = {
-                security:    wc_myparcel.nonce,
+                security:    wc_myparcelbe.nonce,
                 action:      "wcmp_get_shipment_summary_status",
                 order_id:    $summary_list.data('order_id'),
                 shipment_id: $summary_list.data('shipment_id'),
             };
             xhr = $.ajax({
                 type:    'POST',
-                url:     wc_myparcel.ajax_url,
+                url:     wc_myparcelbe.ajax_url,
                 data:    data,
                 context: $summary_list,
                 success: function(response) {
@@ -249,10 +249,10 @@ jQuery(function($) {
             action:    'wcmp_save_shipment_options',
             order_id:  order_id,
             form_data: form_data,
-            security:  wc_myparcel.nonce,
+            security:  wc_myparcelbe.nonce,
         };
 
-        $.post(wc_myparcel.ajax_url, data, function(response) {
+        $.post(wc_myparcelbe.ajax_url, data, function(response) {
             /* console.log(response); */
 
             /* set main text to selection */
@@ -444,7 +444,7 @@ jQuery(function($) {
         if (typeof print === 'undefined') {
             print = 'no';
         }
-        var offset = wc_myparcel.offset === 1 ? $('.wc_myparcelbe_offset').val() : 0;
+        var offset = wc_myparcelbe.offset === 1 ? $('.wc_myparcelbe_offset').val() : 0;
         var data = {
             action:    'wc_myparcelbe',
             request:   'add_shipments',
@@ -482,7 +482,7 @@ jQuery(function($) {
     }
 
     function myparcelbe_modal_dialog(order_ids, dialog) {
-        var request_prefix = (wc_myparcel.ajax_url.indexOf("?") !== -1) ? '&' : '?';
+        var request_prefix = (wc_myparcelbe.ajax_url.indexOf("?") !== -1) ? '&' : '?';
         var thickbox_height = $(window).height() - 120;
         var thickbox_parameters = '&TB_iframe=true&height=' + thickbox_height + '&width=720';
         var url = wc_myparcelbe.ajax_url + request_prefix + 'order_ids=' + order_ids + '&action=wc_myparcelbe&request=modal_dialog&dialog=' + dialog + '&security=' + wc_myparcelbe.nonce + thickbox_parameters;
