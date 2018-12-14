@@ -68,6 +68,6 @@
 <script src="<?= $urlJsConfig ?>"></script>
 <script src="<?= $urlJs ?>"></script>
 <script>
-    MyParcel.init();
-    MyParcel.bind();
+    MyParcelBE.init();
+    MyParcelBE.bind();
 </script>

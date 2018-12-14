@@ -22,14 +22,14 @@ jQuery(function($) {
             MyParcelBE_Frontend.selected_country = MyParcelBE_Frontend.get_shipping_country();
 
             $('#shipping_country, #billing_country').change(function() {
-                MyParcelBE_Frontend.updated_country = MyParcel_FrontendBE.get_shipping_country();
+                MyParcelBE_Frontend.updated_country = MyParcelBE_Frontend.get_shipping_country();
             });
 
             // hide checkout options for non parcel shipments
             $(document).on('updated_checkout', function() {
                 MyParcelBE_Frontend.checkout_updating = false; //done updating
 
-                if (!MyParcel_FrontendBE.check_country()) return;
+                if (!MyParcelBE_Frontend.check_country()) return;
 
                 if (MyParcelBE_Frontend.always_display) {
                     MyParcelBE_Frontend.force_update = true;

@@ -48,7 +48,7 @@ if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
     }
 
     wp_enqueue_style('wp-color-picker');
-    wp_enqueue_style('wcmyparcel-admin-styles');
+    wp_enqueue_style('wcmyparcelbe-admin-styles');
     wp_enqueue_style('colors');
     wp_enqueue_style('media');
     wp_enqueue_script('jquery');

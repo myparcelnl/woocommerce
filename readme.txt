@@ -137,7 +137,7 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 = 3.0.2 (2018-10-09) =
 * Fix: Error a non-numeric value encountered in class-wcmp-frontend-settings.php
 * Fix: Notice Undefined index: checkout_position
-* Fix: Add version number after the nl-checkout.css call
+* Fix: Add version number after the be-checkout.css call
 
 = 3.0.0 (2018-10-09) =
 * Changes: The whole checkout has a new look. A choice has been made to go back to the basic checkout. The checkout is designed so that he will take the styling of the website.

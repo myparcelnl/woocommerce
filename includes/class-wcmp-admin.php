@@ -31,6 +31,7 @@ class WooCommerce_MyParcelBE_Admin {
     }
 
     public function order_list_shipment_options($order, $hide = true) {
+
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
         if ( ! WooCommerce_MyParcelBE()->export->is_myparcelbe_destination($shipping_country)) {
             return;
@@ -149,7 +150,7 @@ class WooCommerce_MyParcelBE_Admin {
             <div id="wcmyparcelbe_offset_dialog" style="display:none;">
                 <?php _e('Labels to skip', 'woocommerce-myparcelbe'); ?>:
                 <input type="text" size="2" class="wc_myparcelbe_offset">
-                <img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>" id="wcmyparcel-offset-icon" style="vertical-align: middle;">
+                <img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>" id="wcmyparcelbe-offset-icon" style="vertical-align: middle;">
                 <button class="button" style="display:none; margin-top: 4px"><?php _e('Print', 'woocommerce-myparcelbe'); ?></button>
             </div>
             <?php
@@ -184,17 +185,17 @@ class WooCommerce_MyParcelBE_Admin {
 
         $listing_actions = array(
             'add_shipment' => array(
-                'url' => wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcel&request=add_shipment&order_ids=' . $order_id), 'wc_myparcelbe'),
+                'url' => wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcelbe&request=add_shipment&order_ids=' . $order_id), 'wc_myparcelbe'),
                 'img' => WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-up.png',
                 'alt' => esc_attr__('Export to MyParcel BE', 'woocommerce-myparcelbe'),
             ),
             'get_labels'   => array(
-                'url' => wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcel&request=get_labels&order_ids=' . $order_id), 'wc_myparcelbe'),
+                'url' => wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcelbe&request=get_labels&order_ids=' . $order_id), 'wc_myparcelbe'),
                 'img' => WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-pdf.png',
                 'alt' => esc_attr__('Print MyParcel BE label', 'woocommerce-myparcelbe'),
             ),
             'add_return'   => array(
-                'url' => wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcel&request=add_return&order_ids=' . $order_id), 'wc_myparcelbe'),
+                'url' => wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcelbe&request=add_return&order_ids=' . $order_id), 'wc_myparcelbe'),
                 'img' => WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-retour.png',
                 'alt' => esc_attr__('Email return label', 'woocommerce-myparcelbe'),
             ),
