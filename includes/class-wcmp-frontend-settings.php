@@ -1,177 +1,142 @@
 <?php
 
-use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
-use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
+if ( ! defined('ABSPATH')) exit;  // Exit if accessed directly
+
+if ( ! class_exists('WooCommerce_MyParcelBE_Frontend_Settings')) :
 
 /**
- * Frontend views
+ * Frontend settings
  */
+class WooCommerce_MyParcelBE_Frontend_Settings {
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-} // Exit if accessed directly
+    const DAYS_SATURDAY = 6;
+    const CARRIER_CODE = 2;
+    const CARRIER_NAME = "Bpost";
+    const BASE_URL = "https://api.myparcel.nl/";
+    private static $settings;
 
-if ( ! class_exists( 'WooCommerce_MyParcelBE_Frontend_Settings' ) ) :
+    function __construct() {
+        self::$settings = WooCommerce_MyParcelBE()->checkout_settings;
+    }
 
-	class WooCommerce_MyParcelBE_Frontend_Settings {
+    /**
+     * Check if given option is enabled
+     * @return bool
+     */
+    public static function is_enabled($option) {
+        $option = $option . "_enabled";
 
-		const DAYS_SATURDAY = 6;
+        if (isset(self::$settings[$option])) {
+            return self::$settings[$option] ? 1 : 0;
+        }
 
-		const CARRIER_CODE = 2;
-		const CARRIER_NAME = "Bpost";
-		const BASE_URL = "https://api.myparcel.nl/";
+        return 0;
+    }
 
-		private $settings;
+    /**
+     * Get given option title
+     * @return string
+     */
+    public static function get_title($option) {
+        $option = $option . "_title";
 
-		function __construct() {
+        if (isset(self::$settings[$option])) {
+            return self::$settings[$option];
+        }
 
-			$this->settings = WooCommerce_MyParcelBE()->checkout_settings;
-//			add_action( 'woocommerce_myparcelbe_frontend_settings', array($this, 'get_default_settings' ));
-			//add_action( 'woocommerce_update_order_review_fragments', array( $this, 'order_review_fragments' ) );
-		}
+        return WooCommerce_MyParcelBE_Settings::get_checkout_setting_title($option);
+    }
 
-		/**
-		 * @return mixed
-		 */
-		public function get_cutoff_time() {
-			if (
-				date_i18n( 'w' ) == self::DAYS_SATURDAY &&
-				isset( $this->settings['saturday_cutoff_time'] )
-			) {
-				return $this->settings['saturday_cutoff_time'];
-			}
+    /**
+     * Get price of given option
+     * @return float
+     */
+    public static function get_price($option) {
+        $option = $option . "_fee";
 
-			return $this->settings['cutoff_time'];
-		}
+        if (isset(WooCommerce_MyParcelBE_Frontend_Settings::$settings[$option])) {
+            $price = self::$settings[$option];
+            $total_price = self::get_total_price_with_tax($price);
 
-		/**
-		 * @return int
-		 */
-		public function is_saturday_enabled() {
-			return $this->settings['saturday_delivery_enabled'] ? 1 : 0;
-		}
+            return $total_price;
+        }
 
-		/**
-		 * @return mixed
-		 */
-		public function get_saturday_cutoff_time() {
-			return $this->settings['saturday_cutoff_time'];
-		}
+        return 0;
+    }
 
-		/**
-		 * @return mixed
-		 */
-		public function get_dropoff_delay() {
-			return $this->settings['dropoff_delay'];
-		}
+    /**
+     * @return mixed
+     * cut-off time for monday delivery
+     */
+    public function get_saturday_cutoff_time() {
+        if (isset(self::$settings['saturday_cutoff_time'])) {
+            return self::$settings['saturday_cutoff_time'];
+        }
+    }
 
-		/**
-		 * @return mixed
-		 */
-		public function get_deliverydays_window() {
-			return $this->settings['deliverydays_window'];
-		}
+    /**
+     * @return mixed
+     */
+    public function get_cutoff_time() {
+        if (date_i18n('w') == self::DAYS_SATURDAY
+            && isset(self::$settings['saturday_cutoff_time'])) {
+            return self::$settings['saturday_cutoff_time'];
+        }
 
-		/**
-		 * @return string
-		 */
-		public function get_dropoff_days() {
-			return implode( ";", $this->settings['dropoff_days'] );
-		}
+        return self::$settings['cutoff_time'];
+    }
 
-		/**
-		 * @return string
-		 */
-		public function get_api_url() {
-			return self::BASE_URL;
-		}
+    /**
+     * @return mixed
+     */
+    public function get_dropoff_delay() {
+        if (isset(self::$settings['dropoff_delay'])) {
+            return self::$settings['dropoff_delay'];
+        }
 
-		/**
-		 * @return string
-		 */
-		public function get_country_code() {
-			return WC()->customer->get_shipping_country();
-		}
+        return 0;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function get_deliverydays_window() {
+        if (isset(self::$settings['deliverydays_window'])) {
+            return self::$settings['deliverydays_window'];
+        }
 
-		/**
-		 * @return bool
-		 */
-		public function is_pickup_enabled() {
-			return (bool) $this->settings['pickup_enabled'];
-		}
+        return 0;
+    }
 
-		/**
-		 * @return string
-		 */
-		public function get_price_pickup() {
-			$price = $this->settings['pickup_fee'];
-			$total_price = $this->get_total_price_with_tax($price);
-			return $total_price;
-		}
+    /**
+     * @return string
+     */
+    public function get_dropoff_days() {
+        return implode(";", self::$settings['dropoff_days']);
+    }
 
-		/**
-		 * @return bool
-		 */
-		public function is_signed_enabled() {
-			return (bool) $this->settings['signed_enabled'];
-		}
+    /**
+     * @return string
+     */
+    public function get_country_code() {
+        return WC()->customer->get_shipping_country();
+    }
 
-		/**
-		 * @return string
-		 */
-		public function get_price_signature() {
-			$price = $this->settings['signed_fee'];
-			$total_price = $this->get_total_price_with_tax($price);
-			return $total_price;
-		}
+    /**
+     * @param $price
+     *
+     * @return string
+     */
+    public static function get_total_price_with_tax($price) {
+        $price = (float) $price;
+        $base_tax_rates = WC_Tax::get_base_tax_rates('');
+        $base_tax_key = key($base_tax_rates);
+        $taxRate = (float) $base_tax_rates[$base_tax_key]['rate'];
+        $tax = $price * $taxRate / 100;
+        $total_price = (float) number_format($price + $tax, 2);
 
-		/**
-		 * @return bool
-		 */
-		public function is_saterday_delivery_enabled() {
-			return (bool) $this->settings['saturday_delivery_enabled'];
-		}
-
-
-		/**
-		 * @return string
-		 */
-		public function get_price_saterday_delivery() {
-			$price = $this->settings['saturday_delivery_fee'];
-			$total_price = $this->get_total_price_with_tax($price);
-			return $total_price;
-		}
-
-		/**
-		 * @return null|string
-		 */
-		public function get_checkout_display() {
-			if ( isset( $this->settings['checkout_display'] ) ) {
-				return $this->settings['checkout_display'];
-			}
-
-			return null;
-		}
-
-		/**
-		 * @param $price
-		 *
-		 * @return string
-		 */
-		public function get_total_price_with_tax($price){
-			$base_tax_rates     = WC_Tax::get_base_tax_rates( '');
-			$base_tax_key       = key($base_tax_rates);
-			$taxRate            = $base_tax_rates[$base_tax_key]['rate'];
-			$tax                = $price * $taxRate / 100;
-			$total_price        = money_format('%.2n', $price + $tax);
-
-			return $total_price;
-		}
-
-	}
+        return $total_price;
+    }
+}
 
 endif; // class_exists
-
-return new WooCommerce_MyParcelBE_Frontend_Settings();
