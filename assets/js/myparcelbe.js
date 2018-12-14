@@ -485,10 +485,12 @@ MyParcelBE = {
 
         jQuery('#mypa-delivery').parent().parent().show();
 
-        if (MyParcelBE.data.address.cc === "NL") {
+        if (MyParcelBE.data.address.cc === "BE") {
             jQuery('#mypa-delivery-selectors-' + this.data.address.cc.toLowerCase()).show();
             jQuery('.mypa-extra-delivery-options').show();
 
+
+            console.log(this.data.config.deliverydaysWindow);
             if (this.data.config.deliverydaysWindow >= 2) {
                 jQuery('#mypa-delivery-date-select').show();
             }

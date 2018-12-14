@@ -465,7 +465,7 @@ class WooCommerce_MyParcelBE_Frontend {
             ],
             "config" => [
                 "apiBaseUrl" => WooCommerce_MyParcelBE_Frontend_Settings::BASE_URL,
-                "carrier" => "1",
+                "carrier" => "2",
 
                 "priceMorningDelivery" => $this->frontend_settings->get_price('morning'),
                 "priceNormalDelivery" => "",

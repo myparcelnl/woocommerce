@@ -5,9 +5,9 @@ use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( ! class_exists('Woocommerce_MyParcel_Postcode_Fields')) :
+if ( ! class_exists('Woocommerce_MyParcelBE_Postcode_Fields')) :
 
-class Woocommerce_MyParcel_Postcode_Fields {
+class Woocommerce_MyParcelBE_Postcode_Fields {
 
     /*
      * Regular expression used to split street name from house number.
@@ -21,8 +21,8 @@ class Woocommerce_MyParcel_Postcode_Fields {
     public function __construct() {
         $this->use_split_address_fields = array_key_exists(
             'use_split_address_fields',
-            get_option('woocommerce_myparcel_checkout_settings')
-        ) ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] === '1' : false;
+            get_option('woocommerce_myparcelbe_checkout_settings')
+        ) ? get_option('woocommerce_myparcelbe_checkout_settings')['use_split_address_fields'] === '1' : false;
 
         // Load styles
         add_action('wp_enqueue_scripts', array(&$this, 'add_styles_scripts'));
@@ -33,18 +33,18 @@ class Woocommerce_MyParcel_Postcode_Fields {
             // Add street name & house number checkout fields.
             if (version_compare(WOOCOMMERCE_VERSION, '2.0') >= 0) {
                 // WC 2.0 or newer is used, the filter got a $country parameter, yay!
-                add_filter('woocommerce_billing_fields', [&$this, 'nl_billing_fields'], apply_filters('nl_checkout_fields_priority', 10, 'billing'), 2);
-                add_filter('woocommerce_shipping_fields', [&$this, 'nl_shipping_fields'], apply_filters('nl_checkout_fields_priority', 10, 'shipping'), 2);
+                add_filter('woocommerce_billing_fields', [&$this, 'be_billing_fields'], apply_filters('be_checkout_fields_priority', 10, 'billing'), 2);
+                add_filter('woocommerce_shipping_fields', [&$this, 'be_shipping_fields'], apply_filters('be_checkout_fields_priority', 10, 'shipping'), 2);
             } else {
                 // Backwards compatibility
-                add_filter('woocommerce_billing_fields', [&$this, 'nl_billing_fields']);
-                add_filter('woocommerce_shipping_fields', [&$this, 'nl_shipping_fields']);
+                add_filter('woocommerce_billing_fields', [&$this, 'be_billing_fields']);
+                add_filter('woocommerce_shipping_fields', [&$this, 'be_shipping_fields']);
             }
 
             // Localize checkout fields (limit custom checkout fields to NL and BE)
             add_filter('woocommerce_country_locale_field_selectors', [&$this, 'country_locale_field_selectors']);
             add_filter('woocommerce_default_address_fields', [&$this, 'default_address_fields']);
-            add_filter('woocommerce_get_country_locale', [&$this, 'woocommerce_locale_nl'], 1, 1); // !
+            add_filter('woocommerce_get_country_locale', [&$this, 'woocommerce_locale_be'], 1, 1); // !
 
             // Load custom order data.
             add_filter('woocommerce_load_order_data', [&$this, 'load_order_data']);
@@ -84,7 +84,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
         // set later priority for woocommerce_billing_fields / woocommerce_shipping_fields
         // when Checkout Field Editor is active
         if (function_exists('thwcfd_is_locale_field') || function_exists('wc_checkout_fields_modify_billing_fields')) {
-            add_filter('nl_checkout_fields_priority', 1001);
+            add_filter('be_checkout_fields_priority', 1001);
         }
 
         // Hide state field for countries without states (backwards compatible fix for bug #4223)
@@ -167,35 +167,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
      *
      * @return array $locale
      */
-    public function woocommerce_locale_nl($locale) {
-        $locale['NL']['address_1'] = array(
-            'required' => false,
-            'hidden' => true,
-        );
-
-        $locale['NL']['address_2'] = array(
-            'hidden' => true,
-        );
-
-        $locale['NL']['state'] = array(
-            'hidden' => true,
-            'required' => false,
-        );
-
-        $locale['NL']['street_name'] = array(
-            'required' => true,
-            'hidden' => false,
-        );
-
-        $locale['NL']['house_number'] = array(
-            'required' => true,
-            'hidden' => false,
-        );
-
-        $locale['NL']['house_number_suffix'] = array(
-            'required' => false,
-            'hidden' => false,
-        );
+    public function woocommerce_locale_be($locale) {
 
         $locale['BE']['address_1'] = array(
             'required' => false,
@@ -229,12 +201,12 @@ class Woocommerce_MyParcel_Postcode_Fields {
         return $locale;
     }
 
-    public function nl_billing_fields($fields, $country = '') {
-        return $this->nl_checkout_fields($fields, $country, 'billing');
+    public function be_billing_fields($fields, $country = '') {
+        return $this->be_checkout_fields($fields, $country, 'billing');
     }
 
-    public function nl_shipping_fields($fields, $country = '') {
-        return $this->nl_checkout_fields($fields, $country, 'shipping');
+    public function be_shipping_fields($fields, $country = '') {
+        return $this->be_checkout_fields($fields, $country, 'shipping');
     }
 
     /**
@@ -244,19 +216,19 @@ class Woocommerce_MyParcel_Postcode_Fields {
      *
      * @return array $fields New fields.
      */
-    public function nl_checkout_fields($fields, $country, $form) {
+    public function be_checkout_fields($fields, $country, $form) {
         if (isset($fields['_country'])) {
             // some weird bug on the my account page
             $form = '';
         }
 
         // Set required to true if country is NL
-        $required = ($country == 'NL' || $country == 'BE') ? true : false;
+        $required = ($country == 'BE') ? true : false;
 
         // Add street name
         $fields[$form . '_street_name'] = array(
             'label' => __('Street name', 'woocommerce-myparcelbe'),
-            'class' => apply_filters('nl_custom_address_field_class', array('form-row-third first')),
+            'class' => apply_filters('be_custom_address_field_class', array('form-row-third first')),
             'required' => $required, // Only required for NL
             'priority' => 60,
         );
@@ -264,7 +236,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
         // Add house number
         $fields[$form . '_house_number'] = array(
             'label' => __('No.', 'woocommerce-myparcelbe'),
-            'class' => apply_filters('nl_custom_address_field_class', array('form-row-third')),
+            'class' => apply_filters('be_custom_address_field_class', array('form-row-third')),
             'required' => $required, // Only required for NL
             'type' => 'number',
             'priority' => 61,
@@ -273,7 +245,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
         // Add house number suffix
         $fields[$form . '_house_number_suffix'] = array(
             'label' => __('Suffix', 'woocommerce-myparcelbe'),
-            'class' => apply_filters('nl_custom_address_field_class', array('form-row-third last')),
+            'class' => apply_filters('be_custom_address_field_class', array('form-row-third last')),
             'required' => false,
             'priority' => 62,
         );
@@ -595,7 +567,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
         }
 
         // check if country is NL
-        if ($_POST['billing_country'] == 'NL' || $_POST['billing_country'] == 'BE') {
+        if ($_POST['billing_country'] == 'BE') {
             // concatenate street & house number & copy to 'billing_address_1'
             $billing_house_number = $_POST['billing_house_number'] . (! empty($_POST['billing_house_number_suffix']) ? '-' . $_POST['billing_house_number_suffix'] : '');
             $billing_address_1 = $_POST['billing_street_name'] . ' ' . $billing_house_number;
@@ -608,7 +580,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
             }
         }
 
-        if (($_POST['shipping_country'] == 'NL' || $_POST['shipping_country'] == 'BE') && $ship_to_different_address == true) {
+        if (($_POST['shipping_country'] == 'BE') && $ship_to_different_address == true) {
             // concatenate street & house number & copy to 'shipping_address_1'
             $shipping_house_number = $_POST['shipping_house_number'] . (! empty($_POST['shipping_house_number_suffix']) ? '-' . $_POST['shipping_house_number_suffix'] : '');
             $shipping_address_1 = $_POST['shipping_street_name'] . ' ' . $shipping_house_number;
@@ -623,9 +595,6 @@ class Woocommerce_MyParcel_Postcode_Fields {
      * @return bool $valid
      */
     public function validate_postcode($valid, $postcode, $country) {
-        if ($country == 'NL') {
-            $valid = (bool) preg_match('/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i', trim($postcode));
-        }
         if ($country == 'BE') {
             $valid = (bool) preg_match('/^[1-9][0-9]{3}/i', trim($postcode));
         }
@@ -637,7 +606,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
      * validate address field 1 for shipping and billing
      */
     public function validate_address_fields($address, $errors) {
-        if ($address['billing_country'] == 'NL'
+        if ($address['billing_country'] == 'BE'
             && ! (bool) preg_match(
                 self::SPLIT_STREET_REGEX,
                 trim($address['billing_address_1']
@@ -645,7 +614,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
             $errors->add('address', __('Please enter a valid billing address.', 'woocommerce-myparcelbe'));
         }
 
-        if ($address['shipping_country'] == 'NL'
+        if ($address['shipping_country'] == 'BE'
             && array_key_exists('ship_to_different_address', $address)
             && ! (bool) preg_match(
                 self::SPLIT_STREET_REGEX,
@@ -661,7 +630,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
      * @return $shipping_postcode
      */
     public function clean_billing_postcode() {
-        if ($_POST['billing_country'] == 'NL' || $_POST['billing_country'] == 'BE') {
+        if ($_POST['billing_country'] == 'BE') {
             $billing_postcode = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['billing_postcode']);
         } else {
             $billing_postcode = $_POST['billing_postcode'];
@@ -671,7 +640,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
     }
 
     public function clean_shipping_postcode() {
-        if ($_POST['shipping_country'] == 'NL' || $_POST['billing_country'] == 'BE') {
+        if ($_POST['billing_country'] == 'BE') {
             $shipping_postcode = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['shipping_postcode']);
         } else {
             $shipping_postcode = $_POST['shipping_postcode'];
@@ -771,7 +740,6 @@ class Woocommerce_MyParcel_Postcode_Fields {
      * @return array          New NL format.
      */
     public function localisation_address_formats($formats) {
-        $formats['NL'] = "{company}\n{name}\n{address_1}\n{address_2}\n{postcode} {city}\n{country}";
         $formats['BE'] = "{company}\n{name}\n{address_1}\n{address_2}\n{postcode} {city}\n{country}";
 
         return $formats;
@@ -788,7 +756,7 @@ class Woocommerce_MyParcel_Postcode_Fields {
     public function formatted_address_replacements($replacements, $args) {
         extract($args);
 
-        if ( ! empty($street_name) && ($country == 'NL' || $country == 'BE')) {
+        if ( ! empty($street_name) && ($country == 'BE')) {
             $replacements['{address_1}'] = $street_name . ' ' . $house_number . $house_number_suffix;
         }
 
@@ -1013,4 +981,4 @@ class Woocommerce_MyParcel_Postcode_Fields {
 
 endif; // class_exists
 
-return new Woocommerce_MyParcel_Postcode_Fields();
+return new Woocommerce_MyParcelBE_Postcode_Fields();

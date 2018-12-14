@@ -184,7 +184,7 @@ $parcel_weight_gram = WooCommerce_MyParcelBE()->export->get_parcel_weight($order
             ? (int) $shipment_options['insurance']['amount'] : 0;
         $insured_amount = $insured_amount / 100; // frontend is in euros
         $name = "myparcelbe_options[{$order_id}][insured_amount]";
-        if (isset($recipient['cc']) && $recipient['cc'] == 'NL') {
+        if (isset($recipient['cc']) && $recipient['cc'] == 'BE') {
             ?>
             <tr>
                 <td><?php _e('Insurance', 'woocommerce-myparcelbe') ?></td>
