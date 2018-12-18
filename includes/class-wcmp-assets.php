@@ -29,7 +29,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
             }
 
             // return if myparcel checkout is not active
-            if ( ! isset(WooCommerce_MyParcelBE()->checkout_settings['myparcel_checkout'])) return;
+            if ( ! isset(WooCommerce_MyParcelBE()->checkout_settings['myparcelbe_checkout'])) return;
 
             wp_enqueue_script(
                 'wc-myparcelbe',
@@ -109,7 +109,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
                             ? WooCommerce_MyParcelBE()->general_settings['print_position_offset']
                             : '',
                         'offset_icon'      => WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/print-offset-icon.png',
-                        'offset_label'     => __('Labels to skip', 'woocommerce-myparcel'),
+                        'offset_label'     => __('Labels to skip', 'woocommerce-myparcelbe'),
                     )
                 );
 

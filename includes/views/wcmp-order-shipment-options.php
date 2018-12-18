@@ -49,7 +49,7 @@ $parcel_weight_gram = WooCommerce_MyParcelBE()->export->get_parcel_weight($order
             <td>
                 <?php
                 $name = "myparcelbe_options[{$order_id}][extra_options][colli_amount]";
-                $colli_amount = isset($myparcel_options_extra['colli_amount']) ? $myparcelbe_options_extra['colli_amount']
+                $colli_amount = isset($myparcelbe_options_extra['colli_amount']) ? $myparcelbe_options_extra['colli_amount']
                     : 1;
                 printf('<input type="number" step="1" min="0" name="%s" value="%s" size="2">', $name, $colli_amount);
                 ?>

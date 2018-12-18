@@ -449,7 +449,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
      * Custom user profile edit fields.
      */
     public function user_profile_fields($meta_fields) {
-        $myparcel_billing_fields = array(
+        $myparcelbe_billing_fields = array(
             'billing_street_name' => array(
                 'label' => __('Street', 'woocommerce-myparcelbe'),
                 'description' => ''
@@ -463,7 +463,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
                 'description' => ''
             ),
         );
-        $myparcel_shipping_fields = array(
+        $myparcelbe_shipping_fields = array(
             'shipping_street_name' => array(
                 'label' => __('Street', 'woocommerce-myparcelbe'),
                 'description' => ''
@@ -479,7 +479,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
         );
 
         // add myparcelbe fields to billing section
-        $billing_fields = array_merge($meta_fields['billing']['fields'], $myparcel_billing_fields);
+        $billing_fields = array_merge($meta_fields['billing']['fields'], $myparcelbe_billing_fields);
         $billing_fields = $this->array_move_keys(
             $billing_fields,
             array('billing_street_name', 'billing_house_number', 'billing_house_number_suffix'),
@@ -489,7 +489,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
         $meta_fields['billing']['fields'] = $billing_fields;
 
         // add myparcelbe fields to shipping section
-        $shipping_fields = array_merge($meta_fields['shipping']['fields'], $myparcel_shipping_fields);
+        $shipping_fields = array_merge($meta_fields['shipping']['fields'], $myparcelbe_shipping_fields);
         $shipping_fields = $this->array_move_keys(
             $shipping_fields,
             array('shipping_street_name', 'shipping_house_number', 'shipping_house_number_suffix'),

@@ -79,7 +79,7 @@ $target_url = wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcelbe&reques
         }
         $shipment_options = WooCommerce_MyParcelBE()->export->get_options($order);
         $recipient = WooCommerce_MyParcelBE()->export->get_recipient($order);
-        $myparcel_options_extra = WCX_Order::get_meta($order, '_myparcelbe_shipment_options_extra');
+        $myparcelbe_options_extra = WCX_Order::get_meta($order, '_myparcelbe_shipment_options_extra');
         $package_types = WooCommerce_MyParcelBE()->export->get_package_types($dialog);
         $parcel_weight = WooCommerce_MyParcelBE()->export->get_parcel_weight($order);
         ?>

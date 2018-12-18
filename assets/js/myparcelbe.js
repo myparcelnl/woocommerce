@@ -208,7 +208,7 @@ MyParcelBE = {
             MyParcelBE.mapExternalWebshopTriggers()
         });
 
-        fields = window.myparcel_is_using_split_address_fields
+        fields = window.myparcelbe_is_using_split_address_fields
             ? '#billing_house_number, #shipping_house_number'
             : '#billing_address_1, #shipping_address_1';
 
@@ -227,7 +227,7 @@ MyParcelBE = {
          *
          */
         if (jQuery('#mypabe-pickup-delivery').prop('checked') === false && jQuery('#method-myparcel-delivery-morning').prop('checked')) {
-            jQuery('#s_method_myparcel_morning').click();
+            jQuery('#s_method_myparcelbe_morning').click();
             MyParcelBE.DELIVERY_ONLY_RECIPIENT = 1;
             MyParcelBE.addStyleToPrice('#mypabe-morning-delivery, #mypabe-only-recipient-price');
 
@@ -235,7 +235,7 @@ MyParcelBE = {
              * Signature
              */
             if (jQuery('#mypabe-signature-selector').prop('checked')) {
-                jQuery('#s_method_myparcel_morning_signature').click();
+                jQuery('#s_method_myparcelbe_morning_signature').click();
                 MyParcelBE.DELIVERY_SIGNATURE = 1;
                 MyParcelBE.addStyleToPrice('#mypabe-signature-price');
             }
@@ -255,7 +255,7 @@ MyParcelBE = {
              * Signature and only recipient
              */
             if (jQuery('#mypabe-signature-selector').prop('checked') && jQuery('#mypabe-only-recipient-selector').prop('checked')) {
-                jQuery('#s_method_myparcel_delivery_signature_and_only_recipient_fee').click();
+                jQuery('#s_method_myparcelbe_delivery_signature_and_only_recipient_fee').click();
                 MyParcelBE.DELIVERY_SIGNATURE = 1;
                 MyParcelBE.DELIVERY_ONLY_RECIPIENT = 1;
                 MyParcelBE.addStyleToPrice('#mypabe-signature-price, #mypabe-only-recipient-price');
@@ -265,7 +265,7 @@ MyParcelBE = {
              * Signature
              */
             if (jQuery('#mypabe-signature-selector').prop('checked')) {
-                jQuery('#s_method_myparcel_delivery_signature').click();
+                jQuery('#s_method_myparcelbe_delivery_signature').click();
                 MyParcelBE.DELIVERY_SIGNATURE = 1;
                 MyParcelBE.addStyleToPrice('#mypabe-signature-price');
 
@@ -275,12 +275,12 @@ MyParcelBE = {
              * Only recipient
              */
             if (jQuery('#mypabe-only-recipient-selector').prop('checked')) {
-                jQuery('#s_method_myparcel_delivery_only_recipient').click();
+                jQuery('#s_method_myparcelbe_delivery_only_recipient').click();
                 MyParcelBE.DELIVERY_ONLY_RECIPIENT = 1;
                 MyParcelBE.addStyleToPrice('#mypabe-only-recipient-price');
 
             } else {
-                jQuery('#s_method_myparcel_flatrate, #s_method_myparcel_tablerate').click();
+                jQuery('#s_method_myparcelbe_flatrate, #s_method_myparcelbe_tablerate').click();
             }
 
             MyParcelBE.addDeliveryToExternalInput(MyParcelBE.DELIVERY_NORMAL);
@@ -292,7 +292,7 @@ MyParcelBE = {
          *
          */
         if (jQuery('#mypabe-pickup-delivery').prop('checked') === false && jQuery('#method-myparcel-delivery-evening').prop('checked')) {
-            jQuery('#s_method_myparcel_evening').click();
+            jQuery('#s_method_myparcelbe_evening').click();
             MyParcelBE.DELIVERY_ONLY_RECIPIENT = 1;
             MyParcelBE.addStyleToPrice('#mypabe-evening-delivery, #mypabe-only-recipient-price');
 
@@ -300,7 +300,7 @@ MyParcelBE = {
              * Signature
              */
             if (jQuery('#mypabe-signature-selector').prop('checked')) {
-                jQuery('#s_method_myparcel_evening_signature').click();
+                jQuery('#s_method_myparcelbe_evening_signature').click();
                 MyParcelBE.DELIVERY_SIGNATURE = 1;
                 MyParcelBE.addStyleToPrice('#mypabe-signature-price');
             }
@@ -318,7 +318,7 @@ MyParcelBE = {
              * Early morning pickup
              */
             if (jQuery('#mypabe-pickup-express-selector').prop('checked')) {
-                jQuery('#s_method_myparcel_pickup_express').click();
+                jQuery('#s_method_myparcelbe_pickup_express').click();
                 MyParcelBE.addPickupToExternalInput(MyParcelBE.DELIVERY_PICKUP_EXPRESS);
                 MyParcelBE.addStyleToPrice('#mypabe-pickup-express-price');
                 return;
@@ -326,7 +326,7 @@ MyParcelBE = {
                 MyParcelBE.addStyleToPrice('#mypabe-pickup-price');
             }
 
-            jQuery('#s_method_myparcel_pickup').click();
+            jQuery('#s_method_myparcelbe_pickup').click();
             MyParcelBE.addPickupToExternalInput(MyParcelBE.DELIVERY_PICKUP);
         }
     },
@@ -778,7 +778,7 @@ MyParcelBE = {
         var retryPostalCode = jQuery('#mypabe-error-postcode').val();
         var retryNumber = jQuery('#mypabe-error-number').val();
 
-        if (window.myparcel_is_using_split_address_fields) {
+        if (window.myparcelbe_is_using_split_address_fields) {
             jQuery('#billing_house_number').val(retryNumber);
         } else {
             address = MyParcelBE.data.address.street + ' ' + retryNumber;
@@ -860,7 +860,7 @@ MyParcelBE = {
             'country':    jQuery('#' + type + '_country').val(),
         };
 
-        if (window.myparcel_is_using_split_address_fields) {
+        if (window.myparcelbe_is_using_split_address_fields) {
             input.streetName = jQuery('#' + type + '_street_name').val();
             input.houseNumber = jQuery('#' + type + '_house_number').val();
             input.houseNumberSuffix = jQuery('#' + type + '_house_number_suffix').val();

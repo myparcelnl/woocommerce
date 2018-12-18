@@ -148,8 +148,8 @@ jQuery(function($) {
     /* hide all options if not a parcel */
     $('.wcmp_shipment_options select.package_type').change(function() {
         var $package_type = $(this).val();
-        var parcel_options = $('.wcmyparcel_settings_table.parcel_options');
-        var digital_stamp_options = $('.wcmyparcel_settings_table.digital_stamp_options');
+        var parcel_options = $('.wcmyparcelbe_settings_table.parcel_options');
+        var digital_stamp_options = $('.wcmyparcelbe_settings_table.digital_stamp_options');
 
         enable_options = function(div) {
             $(div).find('input, textarea, button, select').prop('disabled', false);
@@ -307,7 +307,7 @@ jQuery(function($) {
                     break;
                 case 'print':
                     bulk_spinner(this, 'show');
-                    var offset = wc_myparcelbe.offset == 1 ? $('.wc_myparcelbe_offset').val() : 0;
+                    var offset = wc_myparcelbe.offset == 1 ? $('.wc_myparcelbebe_offset').val() : 0;
                     myparcelbe_print(order_ids, offset);
                     break;
                 case 'export_print':
@@ -380,7 +380,7 @@ jQuery(function($) {
 
         /* set print variables */
         var order_ids = [$dialog.find('input.order_id').val()];
-        var offset = $dialog.find('input.wc_myparcelbe_offset').val();
+        var offset = $dialog.find('input.wc_myparcelbebe_offset').val();
 
         /* hide dialog */
         $dialog.hide();
@@ -444,7 +444,8 @@ jQuery(function($) {
         if (typeof print === 'undefined') {
             print = 'no';
         }
-        var offset = wc_myparcelbe.offset === 1 ? $('.wc_myparcelbe_offset').val() : 0;
+
+        var offset = wc_myparcelbe.offset === 1 ? $('.wc_myparcelbebe_offset').val() : 0;
         var data = {
             action:    'wc_myparcelbe',
             request:   'add_shipments',

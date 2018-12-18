@@ -260,66 +260,66 @@ msgstr "Je kunt je order met de volgende PostNL Track & Trace code volgen:"
 msgid "PostNL pickup"
 msgstr "Afhalen bij PostNL"
 
-#: includes/class-wcmp-nl-postcode-fields.php:258
-#: includes/class-wcmp-nl-postcode-fields.php:433
-#: includes/class-wcmp-nl-postcode-fields.php:459
+#: includes/class-wcmp-bepostcode-fields.php:258
+#: includes/class-wcmp-bepostcode-fields.php:433
+#: includes/class-wcmp-bepostcode-fields.php:459
 msgid "Street name"
 msgstr "Straatnaam"
 
-#: includes/class-wcmp-nl-postcode-fields.php:266
-#: includes/class-wcmp-nl-postcode-fields.php:749
-#: includes/class-wcmp-nl-postcode-fields.php:750
+#: includes/class-wcmp-bepostcode-fields.php:266
+#: includes/class-wcmp-bepostcode-fields.php:749
+#: includes/class-wcmp-bepostcode-fields.php:750
 msgid "No."
 msgstr "Nr."
 
-#: includes/class-wcmp-nl-postcode-fields.php:275
-#: includes/class-wcmp-nl-postcode-fields.php:443
-#: includes/class-wcmp-nl-postcode-fields.php:469
-#: includes/class-wcmp-nl-postcode-fields.php:490
-#: includes/class-wcmp-nl-postcode-fields.php:504
+#: includes/class-wcmp-bepostcode-fields.php:275
+#: includes/class-wcmp-bepostcode-fields.php:443
+#: includes/class-wcmp-bepostcode-fields.php:469
+#: includes/class-wcmp-bepostcode-fields.php:490
+#: includes/class-wcmp-bepostcode-fields.php:504
 msgid "Suffix"
 msgstr "Toev."
 
-#: includes/class-wcmp-nl-postcode-fields.php:438
-#: includes/class-wcmp-nl-postcode-fields.php:464
-#: includes/class-wcmp-nl-postcode-fields.php:486
-#: includes/class-wcmp-nl-postcode-fields.php:500
+#: includes/class-wcmp-bepostcode-fields.php:438
+#: includes/class-wcmp-bepostcode-fields.php:464
+#: includes/class-wcmp-bepostcode-fields.php:486
+#: includes/class-wcmp-bepostcode-fields.php:500
 msgid "Number"
 msgstr "Nummer"
 
-#: includes/class-wcmp-nl-postcode-fields.php:482
-#: includes/class-wcmp-nl-postcode-fields.php:496
+#: includes/class-wcmp-bepostcode-fields.php:482
+#: includes/class-wcmp-bepostcode-fields.php:496
 msgid "Street"
 msgstr "Straat"
 
-#: includes/class-wcmp-nl-postcode-fields.php:645
+#: includes/class-wcmp-bepostcode-fields.php:645
 msgid "Please enter a valid billing address."
 msgstr "Vul een geldig factuuradres in."
 
-#: includes/class-wcmp-nl-postcode-fields.php:654
+#: includes/class-wcmp-bepostcode-fields.php:654
 msgid "Please enter a valid shipping address."
 msgstr "Vul een geldig verzendadres in."
 
-#: includes/class-wcmp-nl-postcode-fields.php:699
+#: includes/class-wcmp-bepostcode-fields.php:699
 msgctxt "placeholder"
 msgid "Notes about your order, e.g. special notes for delivery."
 msgstr "Notities over je order, bijv. over de bezorging."
 
-#: includes/class-wcmp-nl-postcode-fields.php:749
+#: includes/class-wcmp-bepostcode-fields.php:749
 #, php-format
 msgid "Billing %s"
 msgstr "Factuuradres %s"
 
-#: includes/class-wcmp-nl-postcode-fields.php:750
+#: includes/class-wcmp-bepostcode-fields.php:750
 #, php-format
 msgid "Shipping %s"
 msgstr "Verzendadres %s"
 
-#: includes/class-wcmp-nl-postcode-fields.php:754
+#: includes/class-wcmp-bepostcode-fields.php:754
 msgid "<b>Billing No.</b> is a required field"
 msgstr "<b>Factuuradres huisnummer</b> is een verplicht veld"
 
-#: includes/class-wcmp-nl-postcode-fields.php:757
+#: includes/class-wcmp-bepostcode-fields.php:757
 msgid "<b>Shipping No.</b> is a required field"
 msgstr "<b>Verzendadres huisnummer</b> is een verplicht veld"
 
