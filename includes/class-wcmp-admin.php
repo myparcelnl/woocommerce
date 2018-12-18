@@ -149,7 +149,7 @@ class WooCommerce_MyParcelBE_Admin {
             ?>
             <div id="wcmyparcelbe_offset_dialog" style="display:none;">
                 <?php _e('Labels to skip', 'woocommerce-myparcelbe'); ?>:
-                <input type="text" size="2" class="wc_myparcelbebe_offset">
+                <input type="text" size="2" class="wc_myparcelbe_offset">
                 <img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>" id="wcmyparcelbe-offset-icon" style="vertical-align: middle;">
                 <button class="button" style="display:none; margin-top: 4px"><?php _e('Print', 'woocommerce-myparcelbe'); ?></button>
             </div>

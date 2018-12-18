@@ -307,7 +307,7 @@ jQuery(function($) {
                     break;
                 case 'print':
                     bulk_spinner(this, 'show');
-                    var offset = wc_myparcelbe.offset == 1 ? $('.wc_myparcelbebe_offset').val() : 0;
+                    var offset = wc_myparcelbe.offset == 1 ? $('.wc_myparcelbe_offset').val() : 0;
                     myparcelbe_print(order_ids, offset);
                     break;
                 case 'export_print':
@@ -380,7 +380,7 @@ jQuery(function($) {
 
         /* set print variables */
         var order_ids = [$dialog.find('input.order_id').val()];
-        var offset = $dialog.find('input.wc_myparcelbebe_offset').val();
+        var offset = $dialog.find('input.wc_myparcelbe_offset').val();
 
         /* hide dialog */
         $dialog.hide();
@@ -445,7 +445,7 @@ jQuery(function($) {
             print = 'no';
         }
 
-        var offset = wc_myparcelbe.offset === 1 ? $('.wc_myparcelbebe_offset').val() : 0;
+        var offset = wc_myparcelbe.offset === 1 ? $('.wc_myparcelbe_offset').val() : 0;
         var data = {
             action:    'wc_myparcelbe',
             request:   'add_shipments',

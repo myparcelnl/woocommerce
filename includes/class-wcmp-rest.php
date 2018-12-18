@@ -5,7 +5,7 @@ if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 /**
  * A simple JSON REST request abstraction layer
  */
-class wc_myparcelbebe_REST_Client {
+class wc_myparcelbe_REST_Client {
 
     /**
      * Handle for the current cURL session

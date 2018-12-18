@@ -71,7 +71,7 @@ jQuery(function($) {
                     data:        function(term) {
                         return {
                             term:     term,
-                            action:   'wc_myparcelbebe_json_search_shipping_methods',
+                            action:   'wc_myparcelbe_json_search_shipping_methods',
                             security: wc_myparcelbe.nonce,
                         };
                     },

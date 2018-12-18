@@ -36,8 +36,8 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
 
             add_action('admin_notices', array($this, 'admin_notices'));
             add_action('wp_ajax_wc_myparcelbe', array($this, 'export'));
-            add_action('wp_ajax_wc_myparcelbebe_frontend', array($this, 'frontend_api_request'));
-            add_action('wp_ajax_nopriv_wc_myparcelbebe_frontend', array($this, 'frontend_api_request'));
+            add_action('wp_ajax_wc_myparcelbe_frontend', array($this, 'frontend_api_request'));
+            add_action('wp_ajax_nopriv_wc_myparcelbe_frontend', array($this, 'frontend_api_request'));
         }
 
         public function admin_notices() {
@@ -90,7 +90,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             $return = array();
 
             // Check the user privileges (maybe use order ids for filter?)
-            if (apply_filters('wc_myparcelbebe_check_privs', ! current_user_can('manage_woocommerce_orders') && ! current_user_can('edit_shop_orders'))) {
+            if (apply_filters('wc_myparcelbe_check_privs', ! current_user_can('manage_woocommerce_orders') && ! current_user_can('edit_shop_orders'))) {
                 $return['error'] = __('You do not have sufficient permissions to access this page.', 'woocommerce-myparcelbe');
                 $json = json_encode($return);
                 echo $json;
@@ -429,7 +429,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             }
 
             $key = WooCommerce_MyParcelBE()->general_settings['api_key'];
-            $api = new wc_myparcelbebe_API($key);
+            $api = new wc_myparcelbe_API($key);
 
             return $api;
         }
@@ -474,7 +474,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                     unset($shipment['options']['weight']);
                 }
 
-                $shipments[] = apply_filters('wc_myparcelbebe_order_shipment', $shipment, $order, $type, $this);
+                $shipments[] = apply_filters('wc_myparcelbe_order_shipment', $shipment, $order, $type, $this);
             }
 
             return $shipments;
@@ -638,7 +638,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
 
             $address = array_merge($address, $address_intl);
 
-            return apply_filters('wc_myparcelbebe_recipient', $address, $order);
+            return apply_filters('wc_myparcelbe_recipient', $address, $order);
         }
 
         /**
@@ -774,7 +774,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             }
 
             // allow prefiltering consignment data
-            $options = apply_filters('wc_myparcelbebe_order_shipment_options', $options, $order);
+            $options = apply_filters('wc_myparcelbe_order_shipment_options', $options, $order);
 
             // PREVENT ILLEGAL SETTINGS
             // convert numeric strings to int
@@ -1592,7 +1592,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
         }
 
         public function get_invoice_number($order) {
-            return (string) apply_filters('wc_myparcelbebe_invoice_number', $order->get_order_number());
+            return (string) apply_filters('wc_myparcelbe_invoice_number', $order->get_order_number());
         }
 
         public function log($message) {

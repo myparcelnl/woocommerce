@@ -29,11 +29,11 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
             }
 
             // return if myparcel checkout is not active
-            if ( ! isset(WooCommerce_MyParcelBE()->checkout_settings['myparcelbe_checkout'])) return;
+            if ( ! isset(WooCommerce_MyParcelBE()->checkout_settings['myparcel_checkout'])) return;
 
             wp_enqueue_script(
                 'wc-myparcelbe',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/myparcel.js',
+                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/myparcelbe.js',
                 array('jquery'),
                 WC_MYPARCEL_BE_VERSION
             );
@@ -62,8 +62,9 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
         public function backend_scripts_styles() {
             global $post_type;
             $screen = get_current_screen();
-
+            var_dump("backend_scripts_styles");
             if ($post_type == 'shop_order' || (is_object($screen) && strpos($screen->id, 'myparcel') !== false)) {
+                var_dump("komt er in");
                 // WC2.3+ load all WC scripts for shipping_method search!
                 if (version_compare(WOOCOMMERCE_VERSION, '2.3', '>=')) {
                     wp_enqueue_script('woocommerce_admin');
@@ -93,7 +94,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
                 wp_enqueue_script('thickbox');
                 wp_enqueue_style('thickbox');
                 wp_enqueue_script(
-                    'wcmyparcelbebe-export',
+                    'wcmyparcelbe-export',
                     WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-admin.js',
                     array('jquery', 'thickbox', 'wp-color-picker'),
                     WC_MYPARCEL_BE_VERSION
@@ -109,7 +110,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
                             ? WooCommerce_MyParcelBE()->general_settings['print_position_offset']
                             : '',
                         'offset_icon'      => WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/print-offset-icon.png',
-                        'offset_label'     => __('Labels to skip', 'woocommerce-myparcelbe'),
+                        'offset_label'     => __('Labels to skip', 'woocommerce-myparcel'),
                     )
                 );
 
