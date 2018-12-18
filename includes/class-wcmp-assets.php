@@ -62,9 +62,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
         public function backend_scripts_styles() {
             global $post_type;
             $screen = get_current_screen();
-            var_dump("backend_scripts_styles");
             if ($post_type == 'shop_order' || (is_object($screen) && strpos($screen->id, 'myparcel') !== false)) {
-                var_dump("komt er in");
                 // WC2.3+ load all WC scripts for shipping_method search!
                 if (version_compare(WOOCOMMERCE_VERSION, '2.3', '>=')) {
                     wp_enqueue_script('woocommerce_admin');
