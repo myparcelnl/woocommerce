@@ -485,7 +485,7 @@ MyParcelBE = {
 
         jQuery('#mypabe-delivery').parent().parent().show();
 
-        if (MyParcelBE.data.address.cc !== "BE") {
+        if (MyParcelBE.data.address.cc === "BE") {
             jQuery('#mypabe-delivery-selectors-' + this.data.address.cc.toLowerCase()).show();
             jQuery('.mypabe-extra-delivery-options').show();
 
