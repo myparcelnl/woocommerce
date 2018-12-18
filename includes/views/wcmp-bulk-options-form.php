@@ -15,11 +15,11 @@ if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
         'wcmyparcelbe-export',
         WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-admin.js',
         array('jquery', 'thickbox', 'wp-color-picker'),
-        WC_MYPARCEL_VERSION
+        WC_MYPARCEL_BE_VERSION
     );
     wp_localize_script(
         'wcmyparcelbe-export',
-        'wc_myparcel',
+        'wc_myparcelbe',
         array(
             'ajax_url'         => admin_url('admin-ajax.php'),
             'nonce'            => wp_create_nonce('wc_myparcelbe'),
@@ -32,7 +32,7 @@ if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
         'wcmp-admin-styles',
         WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
         array(),
-        WC_MYPARCEL_VERSION,
+        WC_MYPARCEL_BE_VERSION,
         'all'
     );
 
@@ -42,7 +42,7 @@ if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
             'wcmp-admin-styles-legacy',
             WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
             array(),
-            WC_MYPARCEL_VERSION,
+            WC_MYPARCEL_BE_VERSION,
             'all'
         );
     }

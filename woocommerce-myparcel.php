@@ -39,7 +39,7 @@ class WooCommerce_MyParcelBE {
      */
 
     public function __construct() {
-        $this->define('WC_MYPARCEL_VERSION', $this->version);
+        $this->define('WC_MYPARCEL_BE_VERSION', $this->version);
         $this->define('WC_CHANNEL_ENGINE_ACTIVE', class_exists('Channel_Engine'));
         $this->plugin_basename = plugin_basename(__FILE__);
 

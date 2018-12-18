@@ -26,7 +26,7 @@ msgid "MyParcel BE: Export"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:127
-msgid "MyParcel bE: Print"
+msgid "MyParcel BE: Print"
 msgstr ""
 
 #: includes/class-wcmp-admin.php:128

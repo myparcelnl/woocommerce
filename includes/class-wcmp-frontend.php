@@ -51,7 +51,7 @@ class WooCommerce_MyParcelBE_Frontend {
             }
 
             add_action('wp_enqueue_scripts', array($this, 'inject_delivery_options_variables'), 9999);
-            add_action(apply_filters('wc_myparcel_delivery_options_location', $checkout_place), array($this, 'output_delivery_options'), 10);
+            add_action(apply_filters('wc_myparcelbe_delivery_options_location', $checkout_place), array($this, 'output_delivery_options'), 10);
         }
 
         // Save delivery options data

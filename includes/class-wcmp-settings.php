@@ -107,7 +107,7 @@ class WooCommerce_MyParcelBE_Settings {
 
         // link to hide message when one of the premium extensions is installed
         if ( ! $hide_notice && $base_country == 'BE') {
-            $myparcelbe_belgium_link = '<a href="https://wordpress.org/plugins/woocommerce-myparcel/" target="blank">WC MyParcel Belgium</a>';
+            $myparcelbe_belgium_link = '<a href="https://wordpress.org/plugins/wc-myparcel-belgium/" target="blank">WC MyParcel Belgium</a>';
             $text = sprintf(
                 __('It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium. If you are using MyParcel Netherlands, download the %s plugin instead!', 'woocommerce-myparcelbe'),
                 $myparcelbe_belgium_link
@@ -529,7 +529,7 @@ class WooCommerce_MyParcelBE_Settings {
                 'option_name' => $option_name,
                 'id'          => 'label_description',
                 'size'        => '25',
-                'description' => __("With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date.", 'woocommerce-myparcel'),
+                'description' => __("With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date.", 'woocommerce-myparcelbe'),
             )
         );
 
@@ -580,7 +580,7 @@ class WooCommerce_MyParcelBE_Settings {
                 'options'     => array(
                     1 => __('Commercial goods', 'woocommerce-myparcelbe'),
                     2 => __('Commercial samples', 'woocommerce-myparcelbe'),
-                    3 => __('Documents', 'woocommerce-myparcel'),
+                    3 => __('Documents', 'woocommerce-myparcelbe'),
                     4 => __('Gifts', 'woocommerce-myparcelbe'),
                     5 => __('Return shipment', 'woocommerce-myparcelbe'),
                 ),
@@ -983,7 +983,7 @@ class WooCommerce_MyParcelBE_Settings {
         $checkout_settings = self::get_checkout_settings();
         $setting = $checkout_settings[$key];
 
-        return __($setting, 'woocommerce-myparcel');
+        return __($setting, 'woocommerce-myparcelbe');
     }
 
     /**

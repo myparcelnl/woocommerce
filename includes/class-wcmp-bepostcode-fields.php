@@ -117,7 +117,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
             'be-checkout',
             WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/be-checkout.css',
             false,
-            WC_MYPARCEL_VERSION
+            WC_MYPARCEL_BE_VERSION
         );
 
         if ( ! $this->use_split_address_fields) return;
@@ -128,7 +128,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
                 'be-checkout',
                 WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/be-checkout.js',
                 array('wc-checkout'),
-                WC_MYPARCEL_VERSION
+                WC_MYPARCEL_BE_VERSION
             );
             wp_enqueue_script('be-checkout');
         }
@@ -139,7 +139,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
                 'be-account-page',
                 WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/be-account-page.js',
                 array('jquery'),
-                WC_MYPARCEL_VERSION
+                WC_MYPARCEL_BE_VERSION
             );
             wp_enqueue_script('be-account-page');
         }
@@ -155,7 +155,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
                 'be-checkout-admin',
                 WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/be-checkout-admin.css',
                 array(), // deps
-                WC_MYPARCEL_VERSION
+                WC_MYPARCEL_BE_VERSION
             );
         }
     }

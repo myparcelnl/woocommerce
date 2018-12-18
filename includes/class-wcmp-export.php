@@ -11,7 +11,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
 class WooCommerce_MyParcelBE_Export {
 
     // Package types
-    const PACKAGE         = 1;
+    const PACKAGE = 1;
 
     public $order_id;
     public $success;

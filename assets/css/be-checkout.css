@@ -10,12 +10,12 @@ input:-webkit-autofill {
 
 /* End of hack */
 
-#mypa-load,
-#mypa-delivery-date-text,
+#mypabe-load,
+#mypabe-delivery-date-text,
 #header-delivery-options-title,
-#mypa-delivery-option-form,
-#mypa-location-details,
-.mypa-message-model,
+#mypabe-delivery-option-form,
+#mypabe-location-details,
+.mypabe-message-model,
 .woocommerce form .optional {
     display: none;
 }
@@ -63,95 +63,95 @@ input:-webkit-autofill {
 /*
  * Styling delivery options
  */
-.mypa-time {
+.mypabe-time {
     margin-left: 5px;
 }
 
-#mypa-send-per-carrier {
+#mypabe-send-per-carrier {
     font-weight: bold;
     width: 100%;
     background-color: transparent;
 }
 
-#mypa-delivery-option-form fieldset, form, ul, li, select {
+#mypabe-delivery-option-form fieldset, form, ul, li, select {
     padding: 0;
     margin: 0;
 }
 
-#mypa-delivery-option-form label {
+#mypabe-delivery-option-form label {
     width: 66%;
 }
 
-#mypa-select-date {
+#mypabe-select-date {
     width: 100%;
 }
 
-.mypa-error label {
+.mypabe-error label {
     display: inline-block;
     width: 50%;
 }
 
-#mypa-pickup-location-selector li,
-#mypa-delivery-option-form li {
+#mypabe-pickup-location-selector li,
+#mypabe-delivery-option-form li {
     list-style-type: none;
     padding: 2px 0 0 0;
 }
 
-#mypa-pickup-location-selector ul:last-child,
-#mypa-delivery-option-form ul:last-child {
+#mypabe-pickup-location-selector ul:last-child,
+#mypabe-delivery-option-form ul:last-child {
     margin-top: 10px;
 }
 
-#mypa-delivery-option-form label {
+#mypabe-delivery-option-form label {
     display: inline-block;
     width: 80%;
     margin: 0;
 }
 
-#mypa-error-try-again {
+#mypabe-error-try-again {
     margin-top: 18px;
 }
 
-#mypa-delivery-selectors-be div {
+#mypabe-delivery-selectors-be div {
     display: block;
     margin-top: 20px;
 }
 
-#mypa-delivery-selector li {
+#mypabe-delivery-selector li {
     margin: 15px 0 0;
     display: inline-block;
     width: 100%;
     padding: 5px 0 2px 0;
 }
 
-.mypa-help {
+.mypabe-help {
     color: black;
     text-decoration: none;
 }
 
-#mypa-shop-mock {
+#mypabe-shop-mock {
     margin-top: 500px;
     background-color: #ccc;
     width: 100%;
     margin-bottom: 25px;
 }
 
-.mypa-full-width {
+.mypabe-full-width {
     display: inline-block;
     width: 100%;
     margin-bottom: 1px;
     padding-bottom: 2px;
 }
 
-#mypa-pickup-location-selector li:nth-last-of-type(-n+2) {
+#mypabe-pickup-location-selector li:nth-last-of-type(-n+2) {
     margin-left: 30px;
 }
 
-#mypa-pickup-location {
+#mypabe-pickup-location {
     width: calc(100% - 25px);
 }
 
-#mypa-location-details {
+#mypabe-location-details {
     padding: 20px;
     border: 1px solid black;
     border-radius: 3px;
@@ -161,65 +161,65 @@ input:-webkit-autofill {
     background-color: white;
 }
 
-.mypa-pickup-location-details-location,
-.mypa-pickup-location-details-phone,
-.mypa-pickup-location-details-city,
-.mypa-pickup-location-details-time {
+.mypabe-pickup-location-details-location,
+.mypabe-pickup-location-details-phone,
+.mypabe-pickup-location-details-city,
+.mypabe-pickup-location-details-time {
     margin-bottom: 5px;
     display: inline-block;
     width: 65%;
     float: left;
 }
 
-.mypa-openings-title {
+.mypabe-openings-title {
     width: 200px;
     height: auto;
 }
 
-.mypa-pickup-location-details-day {
+.mypabe-pickup-location-details-day {
     display: inline-block;
     width: 30%;
 }
 
-.mypa-extra-delivery-options-padding-top {
+.mypabe-extra-delivery-options-padding-top {
     padding-top: 10px;
 }
 
-.mypa-fa-clock {
+.mypabe-fa-clock {
     width: 16px;
     margin-bottom: -3px;
 }
 
-.mypa-fa-times {
+.mypabe-fa-times {
     width: 16px;
     float: right;
 }
 
-.mypa-delivery-option-table {
+.mypabe-delivery-option-table {
     width: 100%;
 }
 
-.mypa-delivery-option-table tr td:first-child {
+.mypabe-delivery-option-table tr td:first-child {
     white-space: nowrap;
     width: 20px;
 }
 
-.mypa-delivery-option input {
+.mypabe-delivery-option input {
     width: 20px;
 }
 
-.mypa-delivery-option-table tr td:last-child {
+.mypabe-delivery-option-table tr td:last-child {
     white-space: nowrap;
     vertical-align: top;
 }
 
-.mypa-postnl-logo {
+.mypabe-postnl-logo {
     width: 100px;
     float: right;
     margin: 45px 8px 0 0;
 }
 
-.mypa-message-model {
+.mypabe-message-model {
     padding: 20px 0 20px 20px;
     border: 1px solid black;
     border-radius: 3px;
@@ -227,38 +227,38 @@ input:-webkit-autofill {
     background-color: white;
 }
 
-#mypa-list-postnl-pickup option {
+#mypabe-list-postnl-pickup option {
     padding: 5px 0 5px 0;
 }
 
-.mypa-bold-price {
+.mypabe-bold-price {
     font-weight: bold;
 }
 
-#mypa-spinner-model {
+#mypabe-spinner-model {
     position: relative;
     display: table;
     margin: auto auto;
 }
 
-#mypa-spinner-model svg {
+#mypabe-spinner-model svg {
     position: absolute;
     top: 19%;
     left: 22%;
     width: 62%;
 }
 
-#mypa-spinner {
+#mypabe-spinner {
     position: relative;
     display: inline-block;
     width: 90px;
     height: 90px;
     border-top: 3px solid #ff8c00;
     border-radius: 100%;
-    animation: mypa-spin 1.2s linear infinite;
+    animation: mypabe-spin 1.2s linear infinite;
 }
 
-@keyframes mypa-spin {
+@keyframes mypabe-spin {
     0% {
         transform: rotate(0deg);
     }
@@ -268,21 +268,21 @@ input:-webkit-autofill {
 }
 
 @media only screen and (max-width: 400px) {
-    .mypa-delivery-option-table tr {
+    .mypabe-delivery-option-table tr {
         height: 30px !important;
     }
 
-    .mypa-postnl-logo {
+    .mypabe-postnl-logo {
         float: none;
         margin: 0 100% 0 0;
 
     }
 
-    .mypa-extra-delivery-options-padding-top {
+    .mypabe-extra-delivery-options-padding-top {
         padding: 15px 0 10px 0;
     }
 
-    .mypa-pickup-location-details-location, .mypa-pickup-location-details-phone, .mypa-pickup-location-details-city, .mypa-pickup-location-details-time {
+    .mypabe-pickup-location-details-location, .mypabe-pickup-location-details-phone, .mypabe-pickup-location-details-city, .mypabe-pickup-location-details-time {
         width: 90%;
     }
 }

@@ -9,25 +9,25 @@
 			'wcmyparcelbe-export',
 			WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-admin.js',
 			array( 'jquery', 'thickbox' ),
-			WC_MYPARCEL_VERSION
+			WC_MYPARCEL_BE_VERSION
 		);
-		wp_localize_script(
-			'wcmyparcelbe-export',
-			'wc_myparcelbe',
-			array(
+        wp_localize_script(
+            'wcmyparcelbe-export',
+            'wc_myparcelbe',
+            array(
                 'ajax_url'         => admin_url('admin-ajax.php'),
                 'nonce'            => wp_create_nonce('wc_myparcelbe'),
                 'download_display' => isset(WooCommerce_MyParcelBE()->general_settings['download_display'])
                     ? WooCommerce_MyParcelBE()->general_settings['download_display']
                     : '',
-			)
-		);
+            )
+        );
 
 		wp_enqueue_style(
 			'wcmp-admin-styles',
 			WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
 			array(),
-			WC_MYPARCEL_VERSION,
+			WC_MYPARCEL_BE_VERSION,
 			'all'
 		);
 
@@ -37,7 +37,7 @@
 				'wcmp-admin-styles-legacy',
 				WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
 				array(),
-				WC_MYPARCEL_VERSION,
+				WC_MYPARCEL_BE_VERSION,
 				'all'
 			);
 		}
