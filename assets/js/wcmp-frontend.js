@@ -27,6 +27,7 @@ jQuery(function($) {
 
             // hide checkout options for non parcel shipments
             $(document).on('updated_checkout', function() {
+
                 MyParcelBE_Frontend.checkout_updating = false; //done updating
 
                 if (!MyParcelBE_Frontend.check_country()) return;

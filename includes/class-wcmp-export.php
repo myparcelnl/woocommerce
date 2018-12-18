@@ -443,7 +443,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                     'reference_identifier' => $this->replace_shortcodes(WooCommerce_MyParcelBE()->export_defaults['label_description'], $order),
                     'recipient'            => $this->get_recipient($order),
                     'options'              => $this->get_options($order),
-                    'carrier'              => 1, // default to POSTNL for now
+                    'carrier'              => 2, // default to bpost for now
                 );
 
                 if ($pickup = $this->is_pickup($order)) {
@@ -493,7 +493,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 'email' => isset(WooCommerce_MyParcelBE()->export_defaults['connect_email'])
                     ? WCX_Order::get_prop($order, 'billing_email')
                     : '',
-                'carrier' => 1, // default to POSTNL for now
+                'carrier' => 2, // default to Bpost for now
             );
 
             // add options if available
@@ -1161,7 +1161,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                         // If Channel Engine is active, add the created Track & Trace code and set shipping method to PostNL in their meta data
                         if (WC_CHANNEL_ENGINE_ACTIVE and ! WCX_Order::get_meta($order, '_shipping_ce_track_and_trace')) {
                             WCX_Order::update_meta_data($order, '_shipping_ce_track_and_trace', $tracktrace);
-                            WCX_Order::update_meta_data($order, '_shipping_ce_shipping_method', 'PostNL');
+                            WCX_Order::update_meta_data($order, '_shipping_ce_shipping_method', 'Bpost');
                         }
 
                         return $shipment_data;

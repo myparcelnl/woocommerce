@@ -15,7 +15,7 @@ $parcel_weight_gram = WooCommerce_MyParcelBE()->export->get_parcel_weight($order
             </td>
             <td>
                 <?php
-                // disable mailbox package outside NL
+                // disable mailbox package outside BE
                 if (isset($recipient['cc']) && $recipient['cc'] != 'BE') {
                     unset($package_types[WooCommerce_MyParcelBE_Export::MAILBOX_PACKAGE]); // mailbox package
                 }

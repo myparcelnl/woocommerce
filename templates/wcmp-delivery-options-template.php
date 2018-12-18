@@ -5,7 +5,7 @@
     echo "</style>";
 } ?>
 
-<div id="mypabe-load" class="myparcel-delivery-options">
+<div id="mypabe-load" class="myparcelbe-delivery-options">
     <input style="display:none;" name='mypabe-post-nl-data' id="mypabe-input" />
 
     <div id="mypabe-spinner-model">
@@ -50,12 +50,12 @@
                     <div name="mypabe-delivery-date-text" id="mypabe-date" title="Delivery date"></div>
                 </td>
             </tr>
-            <tr id="method-myparcel-delivery-morning-div">
+            <tr id="method-myparcelbe-delivery-morning-div">
                 <td></td>
                 <td>
                     <div class="mypabe-delivery-option">
-                        <input name="shipping-method" id="method-myparcel-delivery-morning" type="radio" value="myparcel-morning">
-                        <label for="method-myparcel-delivery-morning"><span id="mypabe-morning-title"></span></label>
+                        <input name="shipping-method" id="method-myparcelbe-delivery-morning" type="radio" value="myparcelbe-morning">
+                        <label for="method-myparcelbe-delivery-morning"><span id="mypabe-morning-title"></span></label>
                     </div>
                 </td>
                 <td>
@@ -64,12 +64,12 @@
                     </div>
                 </td>
             </tr>
-            <tr id="mypabe-delivery-option method-myparcel-normal-div">
+            <tr id="mypabe-delivery-option method-myparcelbe-normal-div">
                 <td></td>
                 <td>
                     <div id="mypabe-delivery" class="mypabe-delivery-option">
-                        <input name="shipping-method" id="method-myparcel-normal" type="radio" value="myparcel-normal">
-                        <label for="method-myparcel-normal"><span id="mypabe-standard-title"></span></label>
+                        <input name="shipping-method" id="method-myparcelbe-normal" type="radio" value="myparcelbe-normal">
+                        <label for="method-myparcelbe-normal"><span id="mypabe-standard-title"></span></label>
                     </div>
                 </td>
                 <td>
@@ -78,12 +78,12 @@
                     </div>
                 </td>
             </tr>
-            <tr id="method-myparcel-delivery-evening-div">
+            <tr id="method-myparcelbe-delivery-evening-div">
                 <td></td>
                 <td>
                     <div class="mypabe-delivery-option">
-                        <input name="shipping-method" id="method-myparcel-delivery-evening" type="radio" value="myparcel-delivery-evening">
-                        <label for="method-myparcel-delivery-evening"><span id="mypabe-evening-title"></span></label>
+                        <input name="shipping-method" id="method-myparcelbe-delivery-evening" type="radio" value="myparcelbe-delivery-evening">
+                        <label for="method-myparcelbe-delivery-evening"><span id="mypabe-evening-title"></span></label>
                     </div>
                 </td>
                 <td>
@@ -96,7 +96,7 @@
                 <td></td>
                 <td id="mypabe-signature" class=" mypabe-extra-delivery-options-padding-top">
                     <div class="mypabe-delivery-option">
-                        <input name="myparcel-signature-selector" id="mypabe-signature-selector" type="checkbox" value="myparcel-signature-selector">
+                        <input name="myparcelbe-signature-selector" id="mypabe-signature-selector" type="checkbox" value="myparcelbe-signature-selector">
                         <label for="mypabe-signature-selector"><span id="mypabe-signature-title"></span></label>
                     </div>
                 </td>
@@ -108,7 +108,7 @@
                 <td></td>
                 <td id="mypabe-only-recipient">
                     <div class="mypabe-delivery-option">
-                        <input name="method-myparcel-only-recipient-selector" id="mypabe-only-recipient-selector" type="checkbox" value="myparcel-only-recipient-selector">
+                        <input name="method-myparcelbe-only-recipient-selector" id="mypabe-only-recipient-selector" type="checkbox" value="myparcelbe-only-recipient-selector">
                         <label for="mypabe-only-recipient-selector"><span id="mypabe-only-recipient-title"></span></label>
                     </div>
                 </td>
@@ -139,7 +139,7 @@
             <tr id="mypabe-pickup" class="mypabe-is-pickup-element">
                 <td></td>
                 <td>
-                    <input name="method-myparcel-pickup-selector" id="mypabe-pickup-selector" type="radio" value="myparcel-pickup-selector">
+                    <input name="method-myparcelbe-pickup-selector" id="mypabe-pickup-selector" type="radio" value="myparcelbe-pickup-selector">
                     <label for="mypabe-pickup-selector">Ophalen vanaf 15:00</label>
                 </td>
                 <td>
@@ -149,7 +149,7 @@
             <tr id="mypabe-pickup-express" class="mypabe-is-pickup-element">
                 <td></td>
                 <td>
-                    <input name="method-myparcel-pickup-selector" id="mypabe-pickup-express-selector" type="radio" value="myparcel-pickup-express-selector">
+                    <input name="method-myparcelbe-pickup-selector" id="mypabe-pickup-express-selector" type="radio" value="myparcelbe-pickup-express-selector">
                     <label for="mypabe-pickup-express-selector">Ophalen vanaf 09:00</label>
                 </td>
                 <td>

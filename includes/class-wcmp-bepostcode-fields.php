@@ -222,14 +222,14 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
             $form = '';
         }
 
-        // Set required to true if country is NL
+        // Set required to true if country is BE
         $required = ($country == 'BE') ? true : false;
 
         // Add street name
         $fields[$form . '_street_name'] = array(
             'label' => __('Street name', 'woocommerce-myparcelbe'),
             'class' => apply_filters('be_custom_address_field_class', array('form-row-third first')),
-            'required' => $required, // Only required for NL
+            'required' => $required, // Only required for BE
             'priority' => 60,
         );
 
@@ -237,7 +237,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
         $fields[$form . '_house_number'] = array(
             'label' => __('No.', 'woocommerce-myparcelbe'),
             'class' => apply_filters('be_custom_address_field_class', array('form-row-third')),
-            'required' => $required, // Only required for NL
+            'required' => $required, // Only required for BE
             'type' => 'number',
             'priority' => 61,
         );
@@ -345,7 +345,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
     }
 
     /**
-     * Make NL and BE checkout fields hidden by default
+     * Make BE checkout fields hidden by default
      *
      * @param  array $fields default checkout fields
      *
@@ -566,7 +566,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
             $ship_to_different_address = isset($_POST['ship_to_different_address']) ? true : false;
         }
 
-        // check if country is NL
+        // check if country is BE
         if ($_POST['billing_country'] == 'BE') {
             // concatenate street & house number & copy to 'billing_address_1'
             $billing_house_number = $_POST['billing_house_number'] . (! empty($_POST['billing_house_number_suffix']) ? '-' . $_POST['billing_house_number_suffix'] : '');
@@ -591,7 +591,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
     }
 
     /**
-     * validate NL postcodes
+     * validate BE postcodes
      * @return bool $valid
      */
     public function validate_postcode($valid, $postcode, $country) {

@@ -3,7 +3,7 @@
 
 jQuery(document).ready(function($) {
 
-    /* Hide custom NL fields by default when country not NL */
+    /* Hide custom BE fields by default when country not BE */
     var billing_country = $('#billing_country').val();
     var shipping_country = $('#shipping_country').val();
     if (billing_country != 'BE') {
