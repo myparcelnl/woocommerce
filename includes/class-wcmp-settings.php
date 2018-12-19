@@ -415,72 +415,33 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
                 'option_name' => $option_name,
                 'id'          => 'connect_phone',
-                'description' => __("When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.", 'woocommerce-myparcelbe')
-            )
-        );
-
-        add_settings_field(
-			'large_format',
-            __('Extra large size', 'woocommerce-myparcelbe') . ' (+ &euro;2.45)',
-            array($this->callbacks, 'checkbox'),
-			$option_group,
-			'defaults',
-			array(
-                'option_name' => $option_name,
-                'id'          => 'large_format',
-                'description' => __('Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee of &euro;&nbsp;2,45 will be charged.<br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate of &euro;&nbsp;70,00 will be charged.', 'woocommerce-myparcelbe')
-            )
-        );
-
-        add_settings_field(
-            'only_recipient',
-            __('Home address only', 'woocommerce-myparcelbe') . ' (+ &euro;0.29)',
-            array($this->callbacks, 'checkbox'),
-            $option_group,
-            'defaults',
-            array(
-                'option_name' => $option_name,
-                'id'          => 'only_recipient',
-                'description' => __("If you don't want the parcel to be delivered at the neighbours, choose this option.", 'woocommerce-myparcelbe')
+                'description' => __("There is no default insurance on the domestic shipments. If you want to insure, you can do this. We insure the purchase value of your product, with a maximum insured value of € 500.", 'woocommerce-myparcelbe')
             )
         );
 
         add_settings_field(
 			'signature',
-            __('Signature on delivery', 'woocommerce-myparcelbe') . ' (+ &euro;0.36)',
+            __('Signature on delivery', 'woocommerce-myparcelbe'),
             array($this->callbacks, 'checkbox'),
             $option_group,
             'defaults',
             array(
                 'option_name' => $option_name,
                 'id'          => 'signature',
-                'description' => __('The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signature will be required.', 'woocommerce-myparcelbe')
-            )
-        );
-
-        add_settings_field(
-			'return',
-            __('Return if no answer', 'woocommerce-myparcelbe'),
-            array($this->callbacks, 'checkbox'),
-            $option_group,
-            'defaults',
-			array(
-                'option_name' => $option_name,
-                'id'          => 'return',
-                'description' => __('By default, a parcel will be offered twice. After two unsuccessful delivery attempts, the parcel will be available at the nearest pickup point for two weeks. There it can be picked up by the recipient with the note that was left by the courier. If you want to receive the parcel back directly and NOT forward it to the pickup point, enable this option.', 'woocommerce-myparcelbe')
+                'description' => __('When the package is presented at the home address, a signuture will be required.', 'woocommerce-myparcelbe')
             )
         );
 
         add_settings_field(
 			'insured',
-            __('Insured shipment (from + &euro;0.50)', 'woocommerce-myparcelbe'),
+            __('Insured shipment (to € 500)', 'woocommerce-myparcelbe'),
             array($this->callbacks, 'checkbox'),
             $option_group,
             'defaults',
 			array(
                 'option_name' => $option_name,
                 'id'          => 'insured',
-                'description' => __('By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that from &euro;0.50. We insure the purchase value of the shipment, with a maximum insured value of &euro; 5.000. Insured parcels always contain the options "Home address only" en "Signature for delivery"', 'woocommerce-myparcelbe'),
+                'description' => __('By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that from &euro;0.50. We insure the purchase value of the shipment, with a maximum insured value of &euro; 5.000. Insured parcels always contain the option "Signature for delivery"', 'woocommerce-myparcelbe'),
                 'class'       => 'insured',
             )
         );
@@ -530,20 +491,6 @@ class WooCommerce_MyParcelBE_Settings {
                 'id'          => 'label_description',
                 'size'        => '25',
                 'description' => __("With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date.", 'woocommerce-myparcelbe'),
-            )
-        );
-
-        add_settings_field(
-            'empty_parcel_weight',
-            __('Empty parcel weight (grams)', 'woocommerce-myparcelbe'),
-            array($this->callbacks, 'text_input'),
-            $option_group,
-            'defaults',
-            array(
-                'option_name' => $option_name,
-                'id'          => 'empty_parcel_weight',
-                'size'        => '5',
-                'description' => __('Default weight of your empty parcel, rounded to grams.', 'woocommerce-myparcelbe'),
             )
         );
 
@@ -814,21 +761,6 @@ class WooCommerce_MyParcelBE_Settings {
         );
 
         add_settings_field(
-            'only_recipient', __('Home address only', 'woocommerce-myparcelbe'), array(
-            $this->callbacks,
-            'delivery_option_enable'
-        ), $option_group, 'delivery_options', array(
-                'has_title'   => true,
-                'has_price'   => true,
-                'option_name' => $option_name,
-                'id'          => 'only_recipient',
-                'title'       => 'Home address only',
-                'current'     => self::get_checkout_setting_title('at_home_delivery_title'),
-                'size'        => 30,
-            )
-        );
-
-        add_settings_field(
             'signature', __('Signature on delivery', 'woocommerce-myparcelbe'), array(
             $this->callbacks,
             'delivery_option_enable'
@@ -1001,7 +933,6 @@ class WooCommerce_MyParcelBE_Settings {
             'standard_title'                 => 'Standard delivery',
             'morning_title'                  => 'Morning delivery',
             'evening_title'                  => 'Evening delivery',
-            'only_recipient_title'           => 'Home address only',
             'signature_title'                => 'Signature on delivery',
             'pickup_title'                   => 'PostNL Pickup',
             'belgium_at_home_delivery_title' => 'Delivery',

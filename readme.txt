@@ -90,13 +90,9 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 = 3.1.0 (2018-12-12) =
 * Hotfix: Show delivery options when checkout form already filled in.
-* Improvement: Add Digital stamp
 
 = 3.0.10 (2018-12-05) =
 * Hotfix: Flashing of the order summary.
-
-= 3.0.9 (2018-12-04) =
-* Hotfix: Get mailbox delivery option and save it into the order.
 
 = 3.0.8 (2018-12-04) =
 * Fix: The multiple calls that are made to retrieve the shipping data.
@@ -132,7 +128,6 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 * Fix: Save settings with a new update
 * Improvement: MyParcel delivery header titel
 * Improvement: Support WooCommerce 3.5.0
-* Improvement: add preliminary support for "digitale postzegel"
 
 = 3.0.2 (2018-10-09) =
 * Fix: Error a non-numeric value encountered in class-wcmp-frontend-settings.php
@@ -309,7 +304,6 @@ These are the biggest changes:
 * Completely revamped settings & export interface
 * New delivery options replaces old 'Pakjegemak':
 	* Postponed delivery (pick a delivery date)
-	* Home address only option
 	* Signature on delivery option
 	* Evening or morning delivery option
 	* bpost Pickup & Early bpost Pickup

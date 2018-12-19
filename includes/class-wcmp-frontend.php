@@ -236,10 +236,6 @@ class WooCommerce_MyParcelBE_Frontend {
             WCX_Order::update_meta_data($order, '_myparcelbe_signature', self::RADIO_CHECKED);
         }
 
-        if (isset($_POST['method-myparcelbe-only-recipient-selector'])) {
-            WCX_Order::update_meta_data($order, '_myparcelbe_only_recipient', self::RADIO_CHECKED);
-        }
-
         if ( ! empty($_POST['mypabe-post-nl-data'])) {
             $delivery_options = json_decode(stripslashes($_POST['mypabe-post-nl-data']), true);
             WCX_Order::update_meta_data($order, '_myparcelbe_delivery_options', $delivery_options);
@@ -282,10 +278,7 @@ class WooCommerce_MyParcelBE_Frontend {
                             }
                         break;
                         case 'standard':
-
                             $this->add_fee_signature($delivery_options, 'Signature on delivery');
-                            $this->add_fee_only_recipient($delivery_options, 'Home address only');
-
                         break;
                         case 'avond':
                             if ( ! empty(WooCommerce_MyParcelBE()->checkout_settings['evening_fee'])) {
@@ -471,7 +464,6 @@ class WooCommerce_MyParcelBE_Frontend {
                 "priceNormalDelivery" => "",
                 "priceEveningDelivery" => $this->frontend_settings->get_price('evening'),
                 "priceSignature" => $this->frontend_settings->get_price('signature'),
-                "priceOnlyRecipient" => $this->frontend_settings->get_price('only_recipient'),
                 "pricePickup" => $this->frontend_settings->get_price('pickup'),
                 "pricePickupExpress" => $this->frontend_settings->get_price('pickup_express'),
 
@@ -482,13 +474,11 @@ class WooCommerce_MyParcelBE_Frontend {
                 "deliveryStandardTitle" => $this->frontend_settings->get_title('standard'),
                 "deliveryEveningTitle" => $this->frontend_settings->get_title('evening'),
                 "signatureTitle" => $this->frontend_settings->get_title('signature'),
-                "onlyRecipientTitle" => $this->frontend_settings->get_title('only_recipient'),
 
                 "allowMondayDelivery" => $this->frontend_settings->is_enabled('saturday_cutoff'),
                 "allowMorningDelivery" => $this->frontend_settings->is_enabled('morning'),
                 "allowEveningDelivery" => $this->frontend_settings->is_enabled('evening'),
                 "allowSignature" => $this->frontend_settings->is_enabled('signature'),
-                "allowOnlyRecipient" => $this->frontend_settings->is_enabled('only_recipient'),
                 "allowPickupPoints" => $this->frontend_settings->is_enabled('pickup'),
                 "allowPickupExpress" => $this->frontend_settings->is_enabled('pickup_express'),
 
@@ -553,19 +543,6 @@ class WooCommerce_MyParcelBE_Frontend {
         }
 
         $fee = WooCommerce_MyParcelBE()->checkout_settings['signature_fee'];
-
-        if ( ! empty($fee)) {
-            $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
-            $this->add_fee($fee_name, $fee);
-        }
-    }
-
-    private function add_fee_only_recipient($delivery_options, $delivery_title) {
-        if ($delivery_options['only_recipient'] !== 1) {
-            return;
-        }
-
-        $fee = WooCommerce_MyParcelBE()->checkout_settings['only_recipient_fee'];
 
         if ( ! empty($fee)) {
             $fee_name = __($delivery_title, 'woocommerce-myparcelbe');

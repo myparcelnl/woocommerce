@@ -12,9 +12,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
 
         // Package types
         const PACKAGE         = 1;
-        const MAILBOX_PACKAGE = 2;
-        const LETTER          = 3;
-        const DIGITAL_STAMP   = 4;
+        const INSURANCE_AMOUNT = 500;
 
         public $order_id;
         public $success;
@@ -467,13 +465,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                     );
                 }
 
-                if ($shipment['options']['package_type'] == self::DIGITAL_STAMP ) {
-                    $shipment['physical_properties'] = array(
-                        'weight' => (int) $shipment['options']['weight'],
-                    );
-                    unset($shipment['options']['weight']);
-                }
-
                 $shipments[] = apply_filters('wc_myparcelbe_order_shipment', $shipment, $order, $type, $this);
             }
 
@@ -497,36 +488,26 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             );
 
             // add options if available
-            if ( ! empty($options)) {
+            if (!empty($options)) {
                 // convert insurance option
-                if ( ! isset($options['insurance']) && isset($options['insured_amount'])) {
+                if ( !isset($options['insurance']) && isset($options['insured_amount']) ) {
                     if ($options['insured_amount'] > 0) {
                         $options['insurance'] = array(
-                            'amount'   => (int) $options['insured_amount'] * 100,
-                            'currency' => 'EUR',
+                            'amount'	=> (int) $options['insured_amount'] * 100,
+                            'currency'	=> 'EUR',
                         );
                     }
-
                     unset($options['insured_amount']);
                     unset($options['insured']);
                 }
-
                 // PREVENT ILLEGAL SETTINGS
                 // convert numeric strings to int
-                $int_options = array(
-                    'package_type',
-                    'delivery_type',
-                    'only_recipient',
-                    'signature',
-                    'return',
-                    'large_format'
-                );
+                $int_options = array( 'package_type', 'delivery_type', 'signature', 'return' );
                 foreach ($options as $key => &$value) {
-                    if (in_array($key, $int_options)) {
+                    if ( in_array($key, $int_options) ) {
                         $value = (int) $value;
                     }
                 }
-
                 // remove frontend insurance option values
                 if (isset($options['insured_amount'])) {
                     unset($options['insured_amount']);
@@ -534,7 +515,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 if (isset($options['insured'])) {
                     unset($options['insured']);
                 }
-
                 $return_shipment_data['options'] = $options;
             }
 
@@ -667,68 +647,42 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             return;
         }
 
-        public function get_options($order) {
+        public function get_options( $order ) {
             // parse description
             if (isset(WooCommerce_MyParcelBE()->export_defaults['label_description'])) {
-                $description = $this->replace_shortcodes(WooCommerce_MyParcelBE()->export_defaults['label_description'], $order);
+                $description = $this->replace_shortcodes( WooCommerce_MyParcelBE()->export_defaults['label_description'], $order );
             } else {
                 $description = '';
             }
-
             // use shipment options from order when available
-            $shipment_options = WCX_Order::get_meta($order, '_myparcelbe_shipment_options');
-
-            if ( ! empty($shipment_options)) {
-                $empty_defaults = array(
-                    'package_type' => self::PACKAGE,
-                    'only_recipient' => 0,
-                    'signature' => 0,
-                    'return' => 0,
-                    'large_format' => 0,
-                    'label_description' => '',
-                    'insured_amount' => 0,
+            $shipment_options = WCX_Order::get_meta( $order, '_myparcelbe_shipment_options' );
+            if (!empty($shipment_options)) {
+                $emty_defaults = array(
+                    'package_type'		=> 1,
+                    'signature'			=> 0,
+                    'label_description'	=> '',
+                    'insured_amount'	=> 0,
                 );
-                $options = array_merge($empty_defaults, $shipment_options);
+                $options = array_merge($emty_defaults, $shipment_options);
             } else {
-                if (isset(WooCommerce_MyParcelBE()->export_defaults['insured'])
-                    && WooCommerce_MyParcelBE()->export_defaults['insured_amount'] == ''
-                    && isset(WooCommerce_MyParcelBE()->export_defaults['insured_amount_custom'])) {
+                if (isset(WooCommerce_MyParcelBE()->export_defaults['insured']) && WooCommerce_MyParcelBE()->export_defaults['insured_amount'] == '' && isset(WooCommerce_MyParcelBE()->export_defaults['insured_amount_custom'])) {
                     $insured_amount = WooCommerce_MyParcelBE()->export_defaults['insured_amount_custom'];
-                } else if (isset(WooCommerce_MyParcelBE()->export_defaults['insured']) && isset( WooCommerce_MyParcelBE()->export_defaults['insured_amount'] )) {
+                } elseif (isset(WooCommerce_MyParcelBE()->export_defaults['insured']) && isset(WooCommerce_MyParcelBE()->export_defaults['insured_amount'])) {
                     $insured_amount = WooCommerce_MyParcelBE()->export_defaults['insured_amount'];
                 } else {
                     $insured_amount = 0;
                 }
-
                 $options = array(
-                    'package_type' => $this->get_package_type_for_order($order),
-                    'only_recipient' => (isset(WooCommerce_MyParcelBE()->export_defaults['only_recipient'])) ? 1 : 0,
-                    'signature' => (isset(WooCommerce_MyParcelBE()->export_defaults['signature'])) ? 1 : 0,
-                    'return' => (isset(WooCommerce_MyParcelBE()->export_defaults['return'])) ? 1 : 0,
-                    'large_format' => (isset(WooCommerce_MyParcelBE()->export_defaults['large_format'])) ? 1 : 0,
-                    'label_description' => $description,
-                    'insured_amount' => $insured_amount,
+                    'package_type'		=>  self::PACKAGE,
+                    'signature'			=>  (isset(WooCommerce_MyParcelBE()->export_defaults['signature'])) ? 1 : 0,
+                    'label_description'	=>  $description,
+                    'insured_amount'	=>  $insured_amount,
                 );
             }
-
-            // convert insurance option
-            if ( ! isset($options['insurance']) && isset($options['insured_amount'])) {
-                if ($options['insured_amount'] > 0) {
-                    $options['insurance'] = array(
-                        'amount' => (int) $options['insured_amount'] * 100,
-                        'currency' => 'EUR',
-                    );
-                }
-
-                unset($options['insured_amount']);
-                unset($options['insured']);
-            }
-
             // set insurance amount to int if already set
             if (isset($options['insurance'])) {
-                $options['insurance']['amount'] = (int) $options['insurance']['amount'];
+                $options['insurance']['amount'] = self::INSURANCE_AMOUNT * 100;
             }
-
             // remove frontend insurance option values
             if (isset($options['insured_amount'])) {
                 unset($options['insured_amount']);
@@ -766,26 +720,22 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             if ( ! empty($myparcelbe_signature)) {
                 $options['signature'] = 1;
             }
-            $myparcelbe_only_recipient = WCX_Order::get_meta($order, '_myparcelbe_only_recipient');
-            if ( ! empty($myparcelbe_only_recipient)) {
-                $options['only_recipient'] = 1;
-            }
 
             // allow prefiltering consignment data
             $options = apply_filters('wc_myparcelbe_order_shipment_options', $options, $order);
 
             // PREVENT ILLEGAL SETTINGS
             // convert numeric strings to int
-            $int_options = array('package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format');
+            $int_options = array('package_type', 'delivery_type', 'signature', 'return');
             foreach ($options as $key => &$value) {
                 if (in_array($key, $int_options)) {
                     $value = (int) $value;
                 }
             }
 
-            // disable options for mailbox package, unpaid letter and digital stamp
+            // disable options
             if ($options['package_type'] != self::PACKAGE) {
-                $illegal_options = array('delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date');
+                $illegal_options = array('delivery_type', 'signature', 'return', 'insurance', 'delivery_date');
                 foreach ($options as $key => $option) {
                     if (in_array($key, $illegal_options)) {
                         unset($options[$key]);
@@ -985,11 +935,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 }
             }
 
-            // disable mailbox package outside NL
-            if ($shipping_country != 'BE' && $package_type == self::MAILBOX_PACKAGE) {
-                $package_type = self::PACKAGE;
-            }
-
             return $package_type;
         }
 
@@ -1038,15 +983,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
         public function get_package_types($shipment_type = 'shipment') {
             $package_types = array(
                 self::PACKAGE         => __('Parcel', 'woocommerce-myparcelbe'),
-                self::MAILBOX_PACKAGE => __('Mailbox package', 'woocommerce-myparcelbe'),
-                self::LETTER          => __('Unpaid letter', 'woocommerce-myparcelbe'),
-                self::DIGITAL_STAMP   => __('Digital stamp', 'woocommerce-myparcelbe'),
             );
-            if ($shipment_type == 'return') {
-                unset($package_types[self::MAILBOX_PACKAGE]);
-                unset($package_types[self::LETTER]);
-                unset($package_types[self::DIGITAL_STAMP]);
-            }
 
             return $package_types;
         }
@@ -1202,9 +1139,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
         }
 
         public function get_parcel_weight($order, $unit = 'kg') {
-            $parcel_weight = (isset(WooCommerce_MyParcelBE()->general_settings['empty_parcel_weight']))
-                ? preg_replace("/\D/", "", WooCommerce_MyParcelBE()->general_settings['empty_parcel_weight']) / 1000
-                : 0;
+            $parcel_weight = 0;
 
             $items = $order->get_items();
             foreach ( $items as $item_id => $item ) {

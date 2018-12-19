@@ -27,39 +27,24 @@
     }
 
     $option_rows = array(
-        '[large_format]'   => array(
-            'label' => __('Extra large size', 'woocommerce-myparcelbe'),
-            'value' => isset($shipment_options['large_format']) ? $shipment_options['large_format'] : 0,
-            'cost'  => '2.45',
-        ),
-        '[only_recipient]' => array(
-            'label' => __('Home address only', 'woocommerce-myparcelbe'),
-            'value' => isset($shipment_options['only_recipient']) ? $shipment_options['only_recipient'] : 0,
-            'cost'  => '0.29',
-        ),
         '[signature]'      => array(
             'label' => __('Signature on delivery', 'woocommerce-myparcelbe'),
             'value' => isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,
             'cost'  => ! (WooCommerce_MyParcelBE()->export->is_pickup($order)) ? '0.36' : '',
         ),
-        '[return]'         => array(
-            'label' => __('Return if no answer', 'woocommerce-myparcelbe'),
-            'value' => isset($shipment_options['return']) ? $shipment_options['return'] : 0,
-        ),
         '[insured]'        => array(
-            'label' => __('Insured + home address only + signature on delivery', 'woocommerce-myparcelbe'),
+            'label' => __('Insured', 'woocommerce-myparcelbe'),
             'value' => $shipment_options['insured'],
             'class' => 'insured',
         ),
     );
 
     if (isset($recipient['cc']) && $recipient['cc'] != 'BE') {
-        unset($option_rows['[only_recipient]']);
         unset($option_rows['[signature]']);
         unset($option_rows['[return]']);
         $shipment_options['insured'] = 1;
         $option_rows['[insured]'] = array(
-            'label'  => __('Standard insurance up to €500 + signature on delivery', 'woocommerce-myparcelbe'),
+            'label'  => __('Standard insurance up to €500', 'woocommerce-myparcelbe'),
             'value'  => $shipment_options['insured'],
             'class'  => 'insured',
             'hidden' => 'yes',

@@ -110,11 +110,6 @@ $target_url = wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcelbe&reques
 										<td align="right"><?php echo number_format($this->get_item_weight_kg($item, $order), 3, ',', ' '); ?></td>
 									</tr>
 								<?php } ?>
-									<tr>
-										<td>&nbsp;</td>
-										<td><?php _e('Empty parcel weight', 'woocommerce-myparcelbe'); ?></td>
-										<td align="right"><?php echo number_format(((isset(WooCommerce_MyParcelBE()->general_settings['empty_parcel_weight'])) ? preg_replace("/\D/","",$this->settings['verpakkingsgewicht'])/1000 : 0), 3, ',', ' '); ?></td>
-									</tr>
 								</tbody>
 								<tfoot>
 									<tr>

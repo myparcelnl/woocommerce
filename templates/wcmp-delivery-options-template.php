@@ -104,18 +104,6 @@
                     <span id="mypabe-signature-price"></span>
                 </td>
             </tr>
-            <tr class="mypabe-extra-delivery-options">
-                <td></td>
-                <td id="mypabe-only-recipient">
-                    <div class="mypabe-delivery-option">
-                        <input name="method-myparcelbe-only-recipient-selector" id="mypabe-only-recipient-selector" type="checkbox" value="myparcelbe-only-recipient-selector">
-                        <label for="mypabe-only-recipient-selector"><span id="mypabe-only-recipient-title"></span></label>
-                    </div>
-                </td>
-                <td>
-                    <span id="mypabe-only-recipient-price"></span>
-                </td>
-            </tr>
             <tr id="mypabe-pickup-location-selector" class="mypabe-is-pickup-element">
                 <td>
                     <input name="mypabe-deliver-or-pickup" id="mypabe-pickup-delivery" value="mypabe-pickup" type="radio">

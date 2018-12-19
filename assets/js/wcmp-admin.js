@@ -149,7 +149,6 @@ jQuery(function($) {
     $('.wcmp_shipment_options select.package_type').change(function() {
         var $package_type = $(this).val();
         var parcel_options = $('.wcmyparcelbe_settings_table.parcel_options');
-        var digital_stamp_options = $('.wcmyparcelbe_settings_table.digital_stamp_options');
 
         enable_options = function(div) {
             $(div).find('input, textarea, button, select').prop('disabled', false);
@@ -167,8 +166,6 @@ jQuery(function($) {
             disable_options(parcel_options);
             $(parcel_options).find('.insured').prop('checked', false).change();
         }
-
-        $package_type == '4' ? enable_options(digital_stamp_options) : disable_options(digital_stamp_options);
     });
 
     /* hide delivery options details if disabled */

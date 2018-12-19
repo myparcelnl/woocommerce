@@ -151,18 +151,6 @@ msgstr "%d zendingen met ontbrekende HS codes - niet geëxporteerd."
 msgid "Parcel"
 msgstr "Pakket"
 
-#: includes/class-wcmp-export.php:1031
-msgid "Mailbox package"
-msgstr "Brievenbuspakje"
-
-#: includes/class-wcmp-export.php:1032
-msgid "Unpaid letter"
-msgstr "Ongefrankeerd"
-
-#: includes/class-wcmp-export.php:1033
-msgid "Digital stamp"
-msgstr "Digitale postzegel"
-
 #: includes/class-wcmp-export.php:1046
 msgid "Unknown"
 msgstr "Onbekend"
@@ -561,49 +549,13 @@ msgstr "Koppel telefoonnummer klant"
 
 #: includes/class-wcmp-settings.php:418
 msgid ""
-"When you connect the customer's phone number, the courier can use this for "
-"the delivery of the parcel. This greatly increases the delivery success rate "
-"for foreign shipments."
+"There is no default insurance on the domestic shipments. If you want to "
+"insure, you can do this. We insure the purchase value of your product, "
+"with a maximum insured value of € 500."
 msgstr ""
 "Wanneer je het telefoonnummer van de klant koppelt met de zending, kan de "
 "koerier dit gebruiken ten behoeve van de aflevering van het pakket. De "
 "afleverkans voor buitenlandzendingen wordt hiermee aanzienlijk verhoogd."
-
-#: includes/class-wcmp-settings.php:424
-#: includes/views/wcmp-order-return-shipment-options.php:31
-#: includes/views/wcmp-order-shipment-options.php:58
-#: includes/views/wcmp-order-shipment-summary.php:14
-msgid "Extra large size"
-msgstr "Extra groot formaat"
-
-#: includes/class-wcmp-settings.php:431
-msgid ""
-"Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
-"smaller than 175 x 78 x 58 cm. An extra fee of &euro;&nbsp;2,45 will be "
-"charged.<br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x "
-"58 of or heavier than 30 kg, the pallet rate of &euro;&nbsp;70,00 will be "
-"charged."
-msgstr ""
-"Vink deze optie aan indien je pakket groter is dan 100 x 70 x 50 cm, maar "
-"kleiner dan 175 x 78 x 58 cm. Er wordt hiervoor een toeslag van &euro;"
-"&nbsp;2,45 doorberekend.<br/><strong>Let op!</strong> Indien het pakket "
-"groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een "
-"pallettarief van &euro;&nbsp;70,00 in rekening gebracht."
-
-#: includes/class-wcmp-settings.php:437 includes/class-wcmp-settings.php:817
-#: includes/views/wcmp-order-return-shipment-options.php:36
-#: includes/views/wcmp-order-shipment-options.php:63
-#: includes/views/wcmp-order-shipment-summary.php:15
-msgid "Home address only"
-msgstr "Alleen huisadres"
-
-#: includes/class-wcmp-settings.php:444
-msgid ""
-"If you don't want the parcel to be delivered at the neighbours, choose this "
-"option."
-msgstr ""
-"Als je niet wilt dat het pakket bij de buren wordt bezorgd, kies dan voor "
-"deze optie."
 
 #: includes/class-wcmp-settings.php:450 includes/class-wcmp-settings.php:832
 #: includes/views/wcmp-order-return-shipment-options.php:41
@@ -614,52 +566,27 @@ msgstr "Handtekening voor ontvangst"
 
 #: includes/class-wcmp-settings.php:457
 msgid ""
-"The parcel will be offered at the delivery address. If the recipient is not "
-"at home, the parcel will be delivered to the neighbours. In both cases, a "
-"signature will be required."
+"When the package is presented at the home address, a signuture will be required."
 msgstr ""
 "Hier wordt het pakket allereerst op het huisadres aangeboden. Mocht de "
 "geadresseerde niet thuis zijn, dan wordt het pakket bij de buren afgegeven. "
 "Er moet in beide gevallen voor worden getekend."
 
-#: includes/class-wcmp-settings.php:463
-#: includes/views/wcmp-order-return-shipment-options.php:46
-#: includes/views/wcmp-order-shipment-options.php:73
-#: includes/views/wcmp-order-shipment-summary.php:17
-msgid "Return if no answer"
-msgstr "Retour bij geen gehoor"
-
-#: includes/class-wcmp-settings.php:470
-msgid ""
-"By default, a parcel will be offered twice. After two unsuccessful delivery "
-"attempts, the parcel will be available at the nearest pickup point for two "
-"weeks. There it can be picked up by the recipient with the note that was "
-"left by the courier. If you want to receive the parcel back directly and NOT "
-"forward it to the pickup point, enable this option."
-msgstr ""
-"Standaard wordt de zending twee keer aangeboden. Na twee mislukte "
-"afleverpogingen zal het pakket gedurende twee weken beschikbaar zijn op de "
-"dichtstbijzijnde afhaallocatie. Het kan daar door de klant worden opgehaald "
-"met het door de koerier achtergelaten briefje. Indien je wilt dat het pakket "
-"na twee keer te zijn aangeboden direct retour komt en dus NIET op het "
-"postkantoor komt te liggen, vink dan deze optie aan."
-
 #: includes/class-wcmp-settings.php:476
-msgid "Insured shipment (from + &euro;0.50)"
-msgstr "Verzekerde verzending (vanaf + &euro;0.50)"
+msgid "Insured shipment (to € 500)"
+msgstr "Verzekerde verzending (tot € 500)"
 
 #: includes/class-wcmp-settings.php:483
+#: includes/class-wcmp-settings.php:418
 msgid ""
-"By default, there is no insurance on the shipments. If you still want to "
-"insure the shipment, you can do that from &euro;0.50. We insure the purchase "
-"value of the shipment, with a maximum insured value of &euro; 5.000. Insured "
-"parcels always contain the options \"Home address only\" en \"Signature for "
-"delivery\""
+"There is no default insurance on the domestic shipments. If you want to "
+"insure, you can do this. We insure the purchase value of your product, "
+"with a maximum insured value of € 500."
 msgstr ""
 "Er zit standaard geen verzekering op de zendingen. Indien je toch wilt "
 "verzekeren kun je dit doen vanaf &euro;0.50. Wij verzekeren de inkoopwaarde "
 "van je product, met een maximale verzekerde waarde van &euro; 5.000. "
-"Verzekerde pakketten bevatten altijd de opties \"Alléén huisadres\" en "
+"Verzekerde pakketten bevatten altijd de optie "
 "\"Handtekening voor ontvangst\""
 
 #: includes/class-wcmp-settings.php:490
@@ -667,26 +594,6 @@ msgstr ""
 #: includes/views/wcmp-order-shipment-options.php:160
 msgid "Insured amount"
 msgstr "Verzekerde waarde"
-
-#: includes/class-wcmp-settings.php:500
-msgid "Insured up to &euro; 50 (+ &euro; 0.50)"
-msgstr "Verzekerd tot &euro; 50 (+ &euro; 0.50)"
-
-#: includes/class-wcmp-settings.php:501
-msgid "Insured up to &euro; 250 (+ &euro; 1.00)"
-msgstr "Verzekerd tot &euro; 250 (+ &euro; 1.00)"
-
-#: includes/class-wcmp-settings.php:502
-msgid "Insured up to &euro; 500 (+ &euro; 1.65)"
-msgstr "Verzekerd tot &euro; 500 (+ &euro; 1.65)"
-
-#: includes/class-wcmp-settings.php:503
-msgid "> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)"
-msgstr "> &euro; 500 verzekerd (+ &euro; 1.65 / &euro; 500)"
-
-#: includes/class-wcmp-settings.php:510
-msgid "Insured amount (in euro)"
-msgstr "Verzekerd bedrag (in euro)"
 
 #: includes/class-wcmp-settings.php:524
 msgid "Label description"
@@ -705,14 +612,6 @@ msgstr ""
 "gebruiken om zendingen in het MyParcel BE Backend te zoeken of te sorteren. "
 "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden, "
 "[DELIVERY_DATE] voor de bezorgdatum."
-
-#: includes/class-wcmp-settings.php:538
-msgid "Empty parcel weight (grams)"
-msgstr "Leeg pakket gewicht (gram)"
-
-#: includes/class-wcmp-settings.php:546
-msgid "Default weight of your empty parcel, rounded to grams."
-msgstr "Standaard gewicht van je lege pakket, afgerond op gram."
 
 #: includes/class-wcmp-settings.php:553
 msgid "World Shipments"
@@ -968,10 +867,6 @@ msgstr "Productnaam"
 msgid "Weight (kg)"
 msgstr "Gewicht (kg)"
 
-#: includes/views/wcmp-bulk-options-form.php:115
-msgid "Empty parcel weight"
-msgstr "Leeg pakket gewicht"
-
 #: includes/views/wcmp-bulk-options-form.php:122
 msgid "Total weight"
 msgstr "Totaal gewicht"
@@ -1002,40 +897,10 @@ msgstr "Email voor retourzending succesvol verzonden naar klant"
 msgid "Calculated weight: %s kg"
 msgstr "Berekend gewicht: %s kg"
 
-#: includes/views/wcmp-order-return-shipment-options.php:50
-#: includes/views/wcmp-order-shipment-options.php:77
-msgid "Insured + home address only + signature on delivery"
-msgstr "Verzekerd + alléén huisadres + handtekening voor ontvangst"
-
 #: includes/views/wcmp-order-return-shipment-options.php:62
 #: includes/views/wcmp-order-shipment-options.php:97
-msgid "Standard insurance up to €500 + signature on delivery"
-msgstr "Standaard verzekering tot €500 + handtekening voor ontvangst"
-
-#: includes/views/wcmp-order-return-shipment-options.php:104
-#: includes/views/wcmp-order-shipment-options.php:141
-msgid "Insurance"
-msgstr "Verzekering"
-
-#: includes/views/wcmp-order-return-shipment-options.php:108
-#: includes/views/wcmp-order-shipment-options.php:145
-msgid "Insured up to &euro; 50"
-msgstr "Verzekerd tot &euro; 50"
-
-#: includes/views/wcmp-order-return-shipment-options.php:109
-#: includes/views/wcmp-order-shipment-options.php:146
-msgid "Insured up to &euro; 250"
-msgstr "Verzekerd tot &euro; 250"
-
-#: includes/views/wcmp-order-return-shipment-options.php:110
-#: includes/views/wcmp-order-shipment-options.php:147
-msgid "Insured up to &euro; 500"
-msgstr "Verzekerd tot &euro; 500"
-
-#: includes/views/wcmp-order-return-shipment-options.php:111
-#: includes/views/wcmp-order-shipment-options.php:148
-msgid "> &euro; 500 insured"
-msgstr "> &euro; 500 verzekerd"
+msgid "Standard insurance up to €500"
+msgstr "Standaard verzekering tot €500"
 
 #: includes/views/wcmp-order-return-shipment-options.php:140
 #: includes/views/wcmp-order-shipment-options.php:186
@@ -1051,23 +916,9 @@ msgid "Weight:"
 msgstr "Gewicht:"
 
 #: includes/views/wcmp-order-shipment-options.php:175
-msgid "<strong>Note:</strong> Digital stamps are only available if weight is under 2000g and dimensions are within "
-"14 x 9 cm and 38 x 26,5 x 3,2 cm."
-msgstr "<strong>Let op:</strong> Digitale postzegels zijn alleen beschikbaar als het gewicht minder is dan 2000g en "
-"de afmetingen liggen tussen 14 x 9 cm en 38 x 26,5 x 3,2 cm."
-
-#: includes/views/wcmp-order-shipment-options.php:94
-msgid "Standard insurance up to €200 + signature on delivery"
-msgstr "Standaard verzekering tot €200 + handtekening voor ontvangst"
-
-#: includes/views/wcmp-order-shipment-options.php:175
 #: includes/views/wcmp-order-shipment-summary.php:34
 msgid "Custom ID (top left on label)"
 msgstr "Custom-ID (bovenaan op het label links)"
-
-#: includes/views/wcmp-order-shipment-summary.php:29
-msgid "Insured for"
-msgstr "Verzekerde waarde"
 
 #: woocommerce-myparcelbe.php:152
 #, php-format
