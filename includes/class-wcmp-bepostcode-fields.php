@@ -15,7 +15,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
      * Contains php keys to store the data in an array
      * Taken from https://github.com/myparcelnl/sdk
      */
-    const SPLIT_STREET_REGEX = '~(?P<street>.*?)\s?(?P<number>\d{1,4})[/\s\-]{0,2}(?P<number_suffix>[a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$~';
+    const SPLIT_STREET_REGEX = '~(?P<street>.*?)\s?(?P<street_suffix>(?P<number>[\d]+)[\s-]{0,2}(?P<extension>[a-zA-Z/\s]{0,5}$|[0-9/]{0,5}$|\s[a-zA-Z]{1}[0-9]{0,3}$|\s[0-9]{2}[a-zA-Z]{0,3}$))$~';
     private $use_split_address_fields;
 
     public function __construct() {
