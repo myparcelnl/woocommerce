@@ -111,7 +111,7 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 = 3.0.5 (2018-11-15) =
 * Fix: Error message about money_format
 * Fix: Add the priority to the checkout field for support WooCommerce 3.5.1
-* Fix: The PostNL logo is not visible with all browsers
+* Fix: The bpost logo is not visible with all browsers
 * Improvement: Support Channel Engine
 * Improvement: Information inside the checkout and the translations
 * Improvement: Support WooCommerce default shipping fields (_address_1 and _address_2)

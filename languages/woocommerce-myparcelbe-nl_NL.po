@@ -88,25 +88,12 @@ msgid "Delivery date"
 msgstr "Bezorgdatum"
 
 #: includes/class-wcmp-admin.php:486
-msgid "PostNL Pickup"
-msgstr "Afhalen bij PostNL"
+msgid "bpost Pickup"
+msgstr "Afhalen bij bpost"
 
 #: includes/class-wcmp-admin.php:489 includes/class-wcmp-frontend.php:318
-msgid "PostNL Pickup Express"
-msgstr "Extra vroeg afhalen bij PostNL"
-
-#: includes/class-wcmp-admin.php:582
-msgid "HS Code"
-msgstr "HS-code"
-
-#: includes/class-wcmp-admin.php:584 includes/class-wcmp-settings.php:568
-#, php-format
-msgid ""
-"HS Codes are used for MyParcelbe world shipments, you can find the appropriate "
-"code on the %ssite of the Dutch Customs%s."
-msgstr ""
-"HS Codes worden gebruikt voor MyParcelbe wereldzendingen, je kunt de codes "
-"vinden op de %ssite van de Douane%s."
+msgid "bpost Pickup Express"
+msgstr "Extra vroeg afhalen bij bpost"
 
 #: includes/class-wcmp-export.php:62
 msgid ""
@@ -141,11 +128,6 @@ msgstr "%s zendingen met succes geëxporteerd naar Myparcel BE"
 #: includes/class-wcmp-export.php:359
 msgid "The selected orders have not been exported to MyParcelbe yet!"
 msgstr "De geselecteerde orders zijn nog niet naar MyParcelbe geëxporteerd!"
-
-#: includes/class-wcmp-export.php:863
-#, php-format
-msgid "%d shipments missing HS codes - not exported."
-msgstr "%d zendingen met ontbrekende HS codes - niet geëxporteerd."
 
 #: includes/class-wcmp-export.php:1030
 msgid "Parcel"
@@ -241,12 +223,12 @@ msgid "Unknown status"
 msgstr "Onbekende status"
 
 #: includes/class-wcmp-frontend.php:80
-msgid "You can track your order with the following PostNL Track & Trace code:"
-msgstr "Je kunt je order met de volgende PostNL Track & Trace code volgen:"
+msgid "You can track your order with the following bpost Track & Trace code:"
+msgstr "Je kunt je order met de volgende bpost Track & Trace code volgen:"
 
 #: includes/class-wcmp-frontend.php:312 includes/class-wcmp-settings.php:847
-msgid "PostNL pickup"
-msgstr "Afhalen bij PostNL"
+msgid "bpost pickup"
+msgstr "Afhalen bij bpost"
 
 #: includes/class-wcmp-bepostcode-fields.php:258
 #: includes/class-wcmp-bepostcode-fields.php:433
@@ -313,7 +295,7 @@ msgstr "<b>Verzendadres huisnummer</b> is een verplicht veld"
 
 #: includes/class-wcmp-settings-callbacks.php:467
 msgid " title"
-msgstr "Afhalen bij PostNL titel"
+msgstr "Afhalen bij bpost titel"
 
 #: includes/class-wcmp-settings-callbacks.php:478
 msgid "Cut-off time on Saturday"
@@ -583,11 +565,8 @@ msgid ""
 "insure, you can do this. We insure the purchase value of your product, "
 "with a maximum insured value of € 500."
 msgstr ""
-"Er zit standaard geen verzekering op de zendingen. Indien je toch wilt "
-"verzekeren kun je dit doen vanaf &euro;0.50. Wij verzekeren de inkoopwaarde "
-"van je product, met een maximale verzekerde waarde van &euro; 5.000. "
-"Verzekerde pakketten bevatten altijd de optie "
-"\"Handtekening voor ontvangst\""
+"There is no default insurance on the domestic shipments. If you want to insure, you can do this. "
+"We insure the purchase value of your product, with a maximum insured value of € 500."
 
 #: includes/class-wcmp-settings.php:490
 #: includes/views/wcmp-order-return-shipment-options.php:123
@@ -612,34 +591,6 @@ msgstr ""
 "gebruiken om zendingen in het MyParcel BE Backend te zoeken of te sorteren. "
 "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden, "
 "[DELIVERY_DATE] voor de bezorgdatum."
-
-#: includes/class-wcmp-settings.php:553
-msgid "World Shipments"
-msgstr "Wereldzendingen"
-
-#: includes/class-wcmp-settings.php:560
-msgid "Default HS Code"
-msgstr "Standaard HS-code"
-
-#: includes/class-wcmp-settings.php:573
-msgid "Customs shipment type"
-msgstr "Inhoud van de zending"
-
-#: includes/class-wcmp-settings.php:581
-msgid "Commercial goods"
-msgstr "Handelsgoederen"
-
-#: includes/class-wcmp-settings.php:582
-msgid "Commercial samples"
-msgstr "Samples"
-
-#: includes/class-wcmp-settings.php:583
-msgid "Documents"
-msgstr "Documenten"
-
-#: includes/class-wcmp-settings.php:584
-msgid "Gifts"
-msgstr "Cadeaus"
 
 #: includes/class-wcmp-settings.php:585
 msgid "Return shipment"
@@ -746,8 +697,8 @@ msgid "Drop-off days"
 msgstr "Afleverdagen"
 
 #: includes/class-wcmp-settings.php:692
-msgid "Days of the week on which you hand over parcels to PostNL"
-msgstr "Dagen van de week waarop je de pakketten bij PostNL aflevert"
+msgid "Days of the week on which you hand over parcels to bpost"
+msgstr "Dagen van de week waarop je de pakketten bij bpost aflevert"
 
 #: includes/class-wcmp-settings.php:697
 msgid "Cut-off time"
@@ -812,8 +763,8 @@ msgstr ""
 "zichtbaar."
 
 #: includes/class-wcmp-settings.php:863 includes/class-wcmp-settings.php:873
-msgid "Early PostNL pickup"
-msgstr "Extra vroeg afhalen bij PostNL"
+msgid "Early bpost pickup"
+msgstr "Extra vroeg afhalen bij bpost"
 
 #: includes/class-wcmp-settings.php:879
 msgid "Enable monday delivery"
@@ -824,12 +775,12 @@ msgstr "Maandaglevering inschakelen"
 msgid ""
 "<strong>Note: Your drop-off days must include Saturday and cut-off time on "
 "Saturday must be before 15:00 (14:30 recommended). </strong> More "
-"information about the Monday delivery service of PostNL can be found %s here"
+"information about the Monday delivery service of bpost can be found %s here"
 "%s."
 msgstr ""
 "<strong>Let op: Je moet zaterdag in je afleverdagen hebben en de "
 "sluitingstijd op zaterdag moet voor 15:00 zijn. (aanbevolen: 14:30)</strong> "
-"Meer informatie over de maandagbezorging van PostNL vind je %s hier%s."
+"Meer informatie over de maandagbezorging van bpost vind je %s hier%s."
 
 #: includes/class-wcmp-settings.php:895
 msgid "Belgium delivery options"

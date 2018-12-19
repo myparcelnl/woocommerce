@@ -202,7 +202,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 $created_shipments = array();
                 $order = WCX::get_order($order_id);
                 $shipments = $this->get_order_shipment_data((array) $order_id);
-                $shipments = $this->validate_shipments($shipments);
                 if (empty($shipments)) {
                     $this->log("Export for order {$order_id} skipped (missing or invalidated shipment data)");
                     continue;
@@ -791,42 +790,13 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                         'amount' => (int) round(($item['line_total'] + $item['line_tax']) * 100),
                         'currency' => WCX_Order::get_prop($order, 'currency'),
                     );
-                    // Classification / HS Code
-                    $classification = WCX_Product::get_meta($product, '_myparcelbe_hs_code', true);
-                    if (empty($classification)) {
-                        $classification = $default_hs_code;
-                    }
 
                     // add item to item list
-                    $items[] = compact('description', 'amount', 'weight', 'item_value', 'classification', 'country');
+                    $items[] = compact('description', 'amount', 'weight', 'item_value', 'country');
                 }
             }
 
             return compact('weight', 'invoice', 'contents', 'items');
-        }
-
-        public function validate_shipments($shipments, $output_errors = true) {
-            $missing_hs_codes = 0;
-            foreach ($shipments as $key => $shipment) {
-                // check customs declaration for HS codes
-                if (isset($shipment['customs_declaration']) && ! empty($shipment['customs_declaration']['items'])) {
-                    foreach ($shipment['customs_declaration']['items'] as $key => $item) {
-                        if (empty($item['classification'])) {
-                            unset($shipments[$key]);
-                            $missing_hs_codes++;
-                            break;
-                        }
-                    }
-                }
-                if ($output_errors === true && $missing_hs_codes > 0) {
-                    $this->errors[] = sprintf(
-                        __('%d shipments missing HS codes - not exported.', 'woocommerce-myparcelbe'),
-                        $missing_hs_codes
-                    );
-                }
-            }
-
-            return $shipments;
         }
 
         public function get_shipment_ids($order_ids, $args) {
@@ -1092,7 +1062,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                         $shipment_id = $id;
                         $shipment_data = compact('shipment_id', 'status', 'tracktrace', 'shipment');
                         $this->save_shipment_data($order, $shipment_data);
-                        // If Channel Engine is active, add the created Track & Trace code and set shipping method to PostNL in their meta data
+                        // If Channel Engine is active, add the created Track & Trace code and set shipping method to bpost in their meta data
                         if (WC_CHANNEL_ENGINE_ACTIVE and ! WCX_Order::get_meta($order, '_shipping_ce_track_and_trace')) {
                             WCX_Order::update_meta_data($order, '_shipping_ce_track_and_trace', $tracktrace);
                             WCX_Order::update_meta_data($order, '_shipping_ce_shipping_method', 'Bpost');

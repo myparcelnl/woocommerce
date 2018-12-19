@@ -77,7 +77,7 @@ class WooCommerce_MyParcelBE_Frontend {
         $tracktrace_links = WooCommerce_MyParcelBE()->admin->get_tracktrace_links($order_id);
         if ( ! empty($tracktrace_links)) {
             $email_text = __(
-                'You can track your order with the following PostNL Track & Trace code:',
+                'You can track your order with the following bpost Track & Trace code:',
                 'woocommerce-myparcelbe'
             );
             $email_text = apply_filters('wcmyparcelbe_email_text', $email_text, $order);
@@ -302,13 +302,13 @@ class WooCommerce_MyParcelBE_Frontend {
                     case 'retail':
                         if ( ! empty(WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'])) {
                             $fee = WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'];
-                            $fee_name = __('PostNL pickup', 'woocommerce-myparcelbe');
+                            $fee_name = __('bpost pickup', 'woocommerce-myparcelbe');
                         }
                     break;
                     case 'retailexpress':
                         if ( ! empty(WooCommerce_MyParcelBE()->checkout_settings['pickup_express_fee'])) {
                             $fee = WooCommerce_MyParcelBE()->checkout_settings['pickup_express_fee'];
-                            $fee_name = __('PostNL Pickup Express', 'woocommerce-myparcelbe');
+                            $fee_name = __('bpost Pickup Express', 'woocommerce-myparcelbe');
                         }
                     break;
                 }

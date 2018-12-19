@@ -441,7 +441,7 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
                 'option_name' => $option_name,
                 'id'          => 'insured',
-                'description' => __('By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that from &euro;0.50. We insure the purchase value of the shipment, with a maximum insured value of &euro; 5.000. Insured parcels always contain the option "Signature for delivery"', 'woocommerce-myparcelbe'),
+                'description' => __('There is no default insurance on the domestic shipments. If you want to insure, you can do this. We insure the purchase value of your product, with a maximum insured value of € 500.', 'woocommerce-myparcelbe'),
                 'class'       => 'insured',
             )
         );
@@ -494,27 +494,6 @@ class WooCommerce_MyParcelBE_Settings {
             )
         );
 
-        // World Shipments section.
-        add_settings_section(
-			'world_shipments',
-            __('World Shipments', 'woocommerce-myparcelbe'),
-            array($this->callbacks, 'section'),
-            $option_group
-        );
-
-        add_settings_field(
-            'hs_code',
-            __('Default HS Code', 'woocommerce-myparcelbe'),
-            array($this->callbacks, 'text_input'),
-            $option_group,
-            'world_shipments',
-			array(
-                'option_name' => $option_name,
-                'id'          => 'hs_code',
-                'size'        => '5',
-                'description' => sprintf(__('HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcelbe'), '<a href="http://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">', '</a>')
-            )
-        );
         add_settings_field(
             'package_contents',
             __('Customs shipment type', 'woocommerce-myparcelbe'),
@@ -636,7 +615,7 @@ class WooCommerce_MyParcelBE_Settings {
                 'option_name' => $option_name,
                 'id'          => 'dropoff_days',
                 'options'     => $days_of_the_week,
-                'description' => __('Days of the week on which you hand over parcels to PostNL', 'woocommerce-myparcelbe'),
+                'description' => __('Days of the week on which you hand over parcels to bpost', 'woocommerce-myparcelbe'),
             )
         );
 
@@ -776,7 +755,7 @@ class WooCommerce_MyParcelBE_Settings {
         );
 
         add_settings_field(
-            'pickup', __('PostNL pickup', 'woocommerce-myparcelbe'), array(
+            'pickup', __('bpost pickup', 'woocommerce-myparcelbe'), array(
             $this->callbacks,
             'delivery_option_enable'
         ), $option_group, 'delivery_options', array(
@@ -792,7 +771,7 @@ class WooCommerce_MyParcelBE_Settings {
         );
 
         add_settings_field(
-            'pickup_express', __('Early PostNL pickup', 'woocommerce-myparcelbe'), array(
+            'pickup_express', __('Early bpost pickup', 'woocommerce-myparcelbe'), array(
             $this->callbacks,
             'delivery_option_enable'
         ), $option_group, 'delivery_options', array(
@@ -802,7 +781,7 @@ class WooCommerce_MyParcelBE_Settings {
                 'id'          => 'pickup_express',
                 'class'       => 'pickup_express',
                 'title'       => 'Pickup express',
-                'current'     => __('Early PostNL pickup', 'woocommerce-myparcelbe'),
+                'current'     => __('Early bpost pickup', 'woocommerce-myparcelbe'),
                 'size'        => 30,
             )
         );
@@ -818,7 +797,7 @@ class WooCommerce_MyParcelBE_Settings {
                 'option_name'        => $option_name,
                 'id'                 => 'saturday_cutoff',
                 'size'               => 30,
-                'option_description' => sprintf(__('<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended). </strong> More information about the Monday delivery service of PostNL can be found %s here%s.', 'woocommerce-myparcelbe'), '<a href="https://blog.myparcel.nl/maandagbezorging/" target="_blank">', '</a>'),
+                'option_description' => sprintf(__('<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended). </strong> More information about the Monday delivery service of bpost can be found %s here%s.', 'woocommerce-myparcelbe'), '<a href="https://blog.myparcel.nl/maandagbezorging/" target="_blank">', '</a>'),
             )
         );
 
@@ -934,7 +913,7 @@ class WooCommerce_MyParcelBE_Settings {
             'morning_title'                  => 'Morning delivery',
             'evening_title'                  => 'Evening delivery',
             'signature_title'                => 'Signature on delivery',
-            'pickup_title'                   => 'PostNL Pickup',
+            'pickup_title'                   => 'bpost Pickup',
             'belgium_at_home_delivery_title' => 'Delivery',
             'belgium_standard_title'         => 'Standard delivery',
             'use_split_address_fields'       => '0',

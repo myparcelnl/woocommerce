@@ -24,10 +24,6 @@ class WooCommerce_MyParcelBE_Admin {
 
         add_action('wp_ajax_wcmp_save_shipment_options', array($this, 'save_shipment_options_ajax'));
         add_action('wp_ajax_wcmp_get_shipment_summary_status', array($this, 'order_list_ajax_get_shipment_summary'));
-
-        // HS code in product shipping options tab
-        add_action('woocommerce_product_options_shipping', array($this, 'product_hs_code_field'));
-        add_action('woocommerce_process_product_meta', array($this, 'product_hs_code_field_save'));
     }
 
     public function order_list_shipment_options($order, $hide = true) {
@@ -567,37 +563,6 @@ class WooCommerce_MyParcelBE_Admin {
         }
 
         return $shipments;
-    }
-
-    public function product_hs_code_field() {
-        echo '<div class="options_group">';
-        woocommerce_wp_text_input(
-            array(
-                'id'          => '_myparcelbe_hs_code',
-                'label'       => __('HS Code', 'woocommerce-myparcelbe'),
-                'description' => sprintf(
-                    __('HS Codes are used for MyParcel BE world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcelbe'),
-                    '<a href="http://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',
-                    '</a>'
-                )
-            )
-        );
-        echo '</div>';
-    }
-
-    public function product_hs_code_field_save($post_id) {
-        // check if hs code is passed and not an array (=variation hs code)
-        if (isset($_POST['_myparcelbe_hs_code']) && ! is_array($_POST['_myparcelbe_hs_code'])) {
-            $product = wc_get_product($post_id);
-            $hs_code = $_POST['_myparcelbe_hs_code'];
-            if ( ! empty($hs_code)) {
-                WCX_Product::update_meta_data($product, '_myparcelbe_hs_code', esc_attr($hs_code));
-            } else {
-                if (isset($_POST['_myparcelbe_hs_code']) && empty($hs_code)) {
-                    WCX_Product::delete_meta_data($product, '_myparcelbe_hs_code');
-                }
-            }
-        }
     }
 }
 

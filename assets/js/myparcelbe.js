@@ -141,7 +141,7 @@ MyParcelBE = {
             MyParcelBE.exportDeliveryOptionToWebshop();
         });
 
-        /* show default delivery options and hide PostNL options */
+        /* show default delivery options and hide bpost options */
         jQuery('#mypabe-select-delivery').on('click', function() {
             MyParcelBE.setCurrentDeliveryOptions();
             MyParcelBE.showDelivery();
@@ -149,7 +149,7 @@ MyParcelBE = {
             MyParcelBE.hidePickUpLocations();
         });
 
-        /* hide default delivery options and show PostNL options */
+        /* hide default delivery options and show bpost options */
         jQuery('#mypabe-pickup-delivery').on('click', function() {
             MyParcelBE.hideDelivery();
             MyParcelBE.hideShippingAddress();
@@ -851,7 +851,7 @@ MyParcelBE = {
         MyParcelBE.hideDelivery();
         MyParcelBE.setAddressFromInputFields();
 
-        // Hide PostNL field if there is no address entered
+        // Hide bpost field if there is no address entered
         if (this.data.address.postalCode == '' || this.data.address.number == '') {
             MyParcelBE.hideSpinner();
             MyParcelBE.showMessage(

@@ -89,17 +89,6 @@ msgstr ""
 msgid "Bpost Pickup Express"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:582
-msgid "HS Code"
-msgstr ""
-
-#: includes/class-wcmp-admin.php:584 includes/class-wcmp-settings.php:568
-#, php-format
-msgid ""
-"HS Codes are used for MyParcel BE world shipments, you can find the appropriate code on the %ssite of the Dutch Customs"
-"%s."
-msgstr ""
-
 #: includes/class-wcmp-export.php:62
 msgid "You have to export the orders to MyParcel BE before you can print the labels!"
 msgstr ""
@@ -129,11 +118,6 @@ msgstr ""
 
 #: includes/class-wcmp-export.php:359
 msgid "The selected orders have not been exported to MyParcel BE yet!"
-msgstr ""
-
-#: includes/class-wcmp-export.php:863
-#, php-format
-msgid "%d shipments missing HS codes - not exported."
 msgstr ""
 
 #: includes/class-wcmp-export.php:1030
@@ -544,22 +528,6 @@ msgid ""
 "order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date."
 msgstr ""
 
-#: includes/class-wcmp-settings.php:553
-msgid "World Shipments"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:560
-msgid "Default HS Code"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:573
-msgid "Customs shipment type"
-msgstr ""
-
-#: includes/class-wcmp-settings.php:581
-msgid "Commercial goods"
-msgstr ""
-
 #: includes/class-wcmp-settings.php:582
 msgid "Commercial samples"
 msgstr ""
@@ -720,7 +688,7 @@ msgid "When there is no title, the delivery time will automatically be visible."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:863 includes/class-wcmp-settings.php:873
-msgid "Early PostNL pickup"
+msgid "Early bpost pickup"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:879
@@ -731,7 +699,7 @@ msgstr ""
 #, php-format
 msgid ""
 "<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 "
-"recommended). </strong> More information about the Monday delivery service of PostNL can be found %s here%s."
+"recommended). </strong> More information about the Monday delivery service of bpost can be found %s here%s."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:895
