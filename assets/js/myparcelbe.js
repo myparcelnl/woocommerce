@@ -548,8 +548,6 @@ MyParcelBE = {
             jQuery('#mypabe-delivery-date-select').hide();
         }
 
-        console.log(deliveryWindow);
-
         /* When deliverydaysWindow is 1, hide the day selector and show a div to show the date */
         if (deliveryWindow === 1) {
             jQuery('#mypabe-select-date').hide();
