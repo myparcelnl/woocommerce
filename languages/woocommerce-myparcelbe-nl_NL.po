@@ -73,16 +73,6 @@ msgstr "Status"
 msgid "MyParcel BE shipment:"
 msgstr "MyParcel BE zending:"
 
-#: includes/class-wcmp-admin.php:461 includes/class-wcmp-frontend.php:279
-#: includes/class-wcmp-settings.php:785
-msgid "Morning delivery"
-msgstr "Ochtendlevering"
-
-#: includes/class-wcmp-admin.php:468 includes/class-wcmp-frontend.php:293
-#: includes/class-wcmp-settings.php:801
-msgid "Evening delivery"
-msgstr "Avondlevering"
-
 #: includes/class-wcmp-admin.php:477
 msgid "Delivery date"
 msgstr "Bezorgdatum"
@@ -762,10 +752,6 @@ msgstr ""
 "Wanneer er geen titel is ingevuld, worden de bezorgtijden automatisch "
 "zichtbaar."
 
-#: includes/class-wcmp-settings.php:863 includes/class-wcmp-settings.php:873
-msgid "Early bpost pickup"
-msgstr "Extra vroeg afhalen bij bpost"
-
 #: includes/class-wcmp-settings.php:879
 msgid "Enable monday delivery"
 msgstr "Maandaglevering inschakelen"
@@ -785,14 +771,6 @@ msgstr ""
 #: includes/class-wcmp-settings.php:895
 msgid "Belgium delivery options"
 msgstr "België bezorgopties"
-
-#: includes/class-wcmp-settings.php:902
-msgid "Belgium home delivery title"
-msgstr "België thuislevering titel"
-
-#: includes/class-wcmp-settings.php:915
-msgid "Belgium standard delivery title"
-msgstr "België standaard bezorgtitel"
 
 #: includes/class-wcmp-settings.php:930
 msgid "Customizations"

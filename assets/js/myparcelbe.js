@@ -12,7 +12,6 @@ MyParcelBE = {
     DELIVERY_NORMAL:         'standard',
     DELIVERY_EVENING:        'avond',
     DELIVERY_PICKUP:         'retail',
-    DELIVERY_PICKUP_EXPRESS: 'retailexpress',
     DELIVERY_SIGNATURE:      0,
 
     SPLIT_STREET_REGEX: /(.*?)\s?(\d{1,4})[/\s\-]{0,2}([a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$/g,
@@ -38,8 +37,6 @@ MyParcelBE = {
 
         /* Prices */
         var prices = {
-            'morning':        this.data.config.priceMorningDelivery,
-            'evening':        this.data.config.priceEveningDelivery,
             'normal':         this.data.config.priceNormalDelivery,
             'signature':      this.data.config.priceSignature,
             'pickup':         this.data.config.pricePickup
@@ -88,27 +85,11 @@ MyParcelBE = {
         var selectedDate = jQuery('#mypabe-select-date').val();
         var selectDateKey = MyParcelBE.storeDeliveryOptions.data.delivery[selectedDate]['time'];
 
-        MyParcelBE.hideMorningDelivery();
-        MyParcelBE.hideEveningDelivery();
-
         jQuery.each(selectDateKey, function(key, value) {
-            if (value['price_comment'] == 'morning' && MyParcelBE.data.config.allowMorningDelivery) {
-                var morningTitle = MyParcelBE.data.config.deliveryMorningTitle;
-                MyParcelBE.getDeliveryTime(morningTitle, 'morning', value['start'], value['end']);
-                MyParcelBE.showMorningDelivery();
-            }
 
             if (value['price_comment'] == 'standard') {
                 var standardTitle = MyParcelBE.data.config.deliveryStandardTitle;
-                if (MyParcelBE.data.address.cc === 'BE') {
-                    standardTitle = MyParcelBE.data.config.BEdeliveryStandardTitle;
-                }
                 MyParcelBE.getDeliveryTime(standardTitle, 'standard', value['start'], value['end']);
-            }
-            if (value['price_comment'] == 'avond' && MyParcelBE.data.config.allowEveningDelivery) {
-                var eveningTitle = MyParcelBE.data.config.deliveryEveningTitle;
-                MyParcelBE.getDeliveryTime(eveningTitle, 'evening', value['start'], value['end']);
-                MyParcelBE.showEveningDelivery();
             }
         });
     },
@@ -209,27 +190,6 @@ MyParcelBE = {
         MyParcelBE.removeStyleFromPrice();
 
         /**
-         * Morning delivery
-         *
-         */
-        if (jQuery('#mypabe-pickup-delivery').prop('checked') === false && jQuery('#method-myparcelbe-delivery-morning').prop('checked')) {
-            jQuery('#s_method_myparcelbe_morning').click();
-            MyParcelBE.addStyleToPrice('#mypabe-morning-delivery');
-
-            /**
-             * Signature
-             */
-            if (jQuery('#mypabe-signature-selector').prop('checked')) {
-                jQuery('#s_method_myparcelbe_morning_signature').click();
-                MyParcelBE.DELIVERY_SIGNATURE = 1;
-                MyParcelBE.addStyleToPrice('#mypabe-signature-price');
-            }
-
-            MyParcelBE.addDeliveryToExternalInput(MyParcelBE.DELIVERY_MORNING);
-            return;
-        }
-
-        /**
          * Normal delivery
          *
          */
@@ -261,42 +221,11 @@ MyParcelBE = {
         }
 
         /**
-         * Evening delivery
-         *
-         */
-        if (jQuery('#mypabe-pickup-delivery').prop('checked') === false && jQuery('#method-myparcelbe-delivery-evening').prop('checked')) {
-            jQuery('#s_method_myparcelbe_evening').click();
-            MyParcelBE.addStyleToPrice('#mypabe-evening-delivery');
-
-            /**
-             * Signature
-             */
-            if (jQuery('#mypabe-signature-selector').prop('checked')) {
-                jQuery('#s_method_myparcelbe_evening_signature').click();
-                MyParcelBE.DELIVERY_SIGNATURE = 1;
-                MyParcelBE.addStyleToPrice('#mypabe-signature-price');
-            }
-
-            MyParcelBE.addDeliveryToExternalInput(MyParcelBE.DELIVERY_EVENING);
-            return;
-        }
-
-        /**
          * Pickup
          *
          */
         if (jQuery('#mypabe-pickup-delivery').prop('checked') || jQuery('#mypabe-pickup-selector').prop('checked')) {
-            /**
-             * Early morning pickup
-             */
-            if (jQuery('#mypabe-pickup-express-selector').prop('checked')) {
-                jQuery('#s_method_myparcelbe_pickup_express').click();
-                MyParcelBE.addPickupToExternalInput(MyParcelBE.DELIVERY_PICKUP_EXPRESS);
-                MyParcelBE.addStyleToPrice('#mypabe-pickup-express-price');
-                return;
-            } else {
-                MyParcelBE.addStyleToPrice('#mypabe-pickup-price');
-            }
+            MyParcelBE.addStyleToPrice('#mypabe-pickup-price');
 
             jQuery('#s_method_myparcelbe_pickup').click();
             MyParcelBE.addPickupToExternalInput(MyParcelBE.DELIVERY_PICKUP);
@@ -424,8 +353,6 @@ MyParcelBE = {
         jQuery('#mypabe-select-date').parent().parent().hide();
         jQuery('#mypabe-delivery').parent().parent().hide();
         MyParcelBE.hideSignature();
-        MyParcelBE.hideMorningDelivery();
-        MyParcelBE.hideEveningDelivery();
     },
 
     /*
@@ -451,11 +378,6 @@ MyParcelBE = {
             if (this.data.config.allowSignature) {
                 MyParcelBE.showSignature();
             }
-        }
-
-        if (MyParcelBE.data.address.cc !== 'BE') {
-            jQuery('#mypabe-delivery-title').html(MyParcelBE.data.config.BEdeliveryTitle);
-            jQuery('#mypabe-delivery-date-text').hide();
         }
     },
 
@@ -487,22 +409,6 @@ MyParcelBE = {
      */
     hideSpinner: function() {
         jQuery('#mypabe-spinner-model').hide();
-    },
-
-    showMorningDelivery: function() {
-        jQuery('#method-myparcelbe-delivery-morning-div').show();
-    },
-
-    hideMorningDelivery: function() {
-        jQuery('#method-myparcelbe-delivery-morning-div').hide();
-    },
-
-    showEveningDelivery: function() {
-        jQuery('#method-myparcelbe-delivery-evening-div').show();
-    },
-
-    hideEveningDelivery: function() {
-        jQuery('#method-myparcelbe-delivery-evening-div').hide();
     },
 
     showSignature: function() {

@@ -269,24 +269,8 @@ class WooCommerce_MyParcelBE_Frontend {
                 $time = array_shift($delivery_options['time']); // take first element in time array
                 if (isset($time['price_comment'])) {
                     switch($time['price_comment']) {
-                        case 'morning':
-                            if ( ! empty(WooCommerce_MyParcelBE()->checkout_settings['morning_fee'])) {
-                                $fee = WooCommerce_MyParcelBE()->checkout_settings['morning_fee'];
-                                $fee_name = __('Morning delivery', 'woocommerce-myparcelbe');
-
-                                $this->add_fee_signature($delivery_options, 'Signature on delivery');
-                            }
-                        break;
                         case 'standard':
                             $this->add_fee_signature($delivery_options, 'Signature on delivery');
-                        break;
-                        case 'avond':
-                            if ( ! empty(WooCommerce_MyParcelBE()->checkout_settings['evening_fee'])) {
-                                $fee = WooCommerce_MyParcelBE()->checkout_settings['evening_fee'];
-                                $fee_name = __('Evening delivery', 'woocommerce-myparcelbe');
-
-                                $this->add_fee_signature($delivery_options, 'Signature on delivery');
-                            }
                         break;
                     }
 
@@ -303,12 +287,6 @@ class WooCommerce_MyParcelBE_Frontend {
                         if ( ! empty(WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'])) {
                             $fee = WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'];
                             $fee_name = __('bpost pickup', 'woocommerce-myparcelbe');
-                        }
-                    break;
-                    case 'retailexpress':
-                        if ( ! empty(WooCommerce_MyParcelBE()->checkout_settings['pickup_express_fee'])) {
-                            $fee = WooCommerce_MyParcelBE()->checkout_settings['pickup_express_fee'];
-                            $fee_name = __('bpost Pickup Express', 'woocommerce-myparcelbe');
                         }
                     break;
                 }
@@ -460,36 +438,25 @@ class WooCommerce_MyParcelBE_Frontend {
                 "apiBaseUrl" => WooCommerce_MyParcelBE_Frontend_Settings::BASE_URL,
                 "carrier" => "2",
 
-                "priceMorningDelivery" => $this->frontend_settings->get_price('morning'),
                 "priceNormalDelivery" => "",
-                "priceEveningDelivery" => $this->frontend_settings->get_price('evening'),
                 "priceSignature" => $this->frontend_settings->get_price('signature'),
                 "pricePickup" => $this->frontend_settings->get_price('pickup'),
-                "pricePickupExpress" => $this->frontend_settings->get_price('pickup_express'),
 
                 "headerDeliveryOptions" => $this->frontend_settings->get_title('header_delivery_options'),
                 "deliveryTitle" => $this->frontend_settings->get_title('at_home_delivery'),
                 "pickupTitle" => $this->frontend_settings->get_title('pickup'),
-                "deliveryMorningTitle" => $this->frontend_settings->get_title('morning'),
                 "deliveryStandardTitle" => $this->frontend_settings->get_title('standard'),
-                "deliveryEveningTitle" => $this->frontend_settings->get_title('evening'),
                 "signatureTitle" => $this->frontend_settings->get_title('signature'),
 
                 "allowMondayDelivery" => $this->frontend_settings->is_enabled('saturday_cutoff'),
-                "allowMorningDelivery" => $this->frontend_settings->is_enabled('morning'),
-                "allowEveningDelivery" => $this->frontend_settings->is_enabled('evening'),
                 "allowSignature" => $this->frontend_settings->is_enabled('signature'),
                 "allowPickupPoints" => $this->frontend_settings->is_enabled('pickup'),
-                "allowPickupExpress" => $this->frontend_settings->is_enabled('pickup_express'),
 
                 "dropOffDays" => $this->frontend_settings->get_dropoff_days(),
                 "saturdayCutoffTime" => $this->frontend_settings->get_saturday_cutoff_time(),
                 "cutoffTime" => $this->frontend_settings->get_cutoff_time(),
                 "deliverydaysWindow" => $this->frontend_settings->get_deliverydays_window(),
                 "dropoffDelay" => $this->frontend_settings->get_dropoff_delay(),
-
-                "BEdeliveryTitle" => $this->frontend_settings->get_title('belgium_at_home_delivery'),
-                "BEdeliveryStandardTitle" => $this->frontend_settings->get_title('belgium_standard'),
             ],
         ];
 

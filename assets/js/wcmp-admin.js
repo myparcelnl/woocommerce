@@ -213,18 +213,6 @@ jQuery(function($) {
         }
     });
 
-    /* hide automatic pickup express if pickup is not enabled */
-    $('.wcmp_shipment_options input#pickup_enabled').change(function() {
-        var pickup_express = $('.wcmp_shipment_options select.pickup_express_enabled');
-        if (this.checked) {
-            $(pickup_express).prop('disabled', false);
-            $('.wcmp_shipment_options tr.pickup_express').show();
-        } else {
-            $(pickup_express).prop('disabled', true);
-            $('.wcmp_shipment_options tr.pickup_express').hide();
-        }
-    });
-
     /* init options on settings page and in bulk form */
     $('#woocommerce-myparcelbe-settings :input, .wcmp_bulk_options_form :input').change();
 

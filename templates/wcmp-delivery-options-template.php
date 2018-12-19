@@ -50,20 +50,6 @@
                     <div name="mypabe-delivery-date-text" id="mypabe-date" title="Delivery date"></div>
                 </td>
             </tr>
-            <tr id="method-myparcelbe-delivery-morning-div">
-                <td></td>
-                <td>
-                    <div class="mypabe-delivery-option">
-                        <input name="shipping-method" id="method-myparcelbe-delivery-morning" type="radio" value="myparcelbe-morning">
-                        <label for="method-myparcelbe-delivery-morning"><span id="mypabe-morning-title"></span></label>
-                    </div>
-                </td>
-                <td>
-                    <div class="mypabe-delivery-option">
-                        <span id="mypabe-morning-delivery"></span>
-                    </div>
-                </td>
-            </tr>
             <tr id="mypabe-delivery-option method-myparcelbe-normal-div">
                 <td></td>
                 <td>
@@ -75,20 +61,6 @@
                 <td>
                     <div class="mypabe-delivery-option">
                         <span id="mypabe-normal-delivery"></span>
-                    </div>
-                </td>
-            </tr>
-            <tr id="method-myparcelbe-delivery-evening-div">
-                <td></td>
-                <td>
-                    <div class="mypabe-delivery-option">
-                        <input name="shipping-method" id="method-myparcelbe-delivery-evening" type="radio" value="myparcelbe-delivery-evening">
-                        <label for="method-myparcelbe-delivery-evening"><span id="mypabe-evening-title"></span></label>
-                    </div>
-                </td>
-                <td>
-                    <div class="mypabe-delivery-option">
-                        <span id="mypabe-evening-delivery"> </span>
                     </div>
                 </td>
             </tr>

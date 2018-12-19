@@ -708,38 +708,6 @@ class WooCommerce_MyParcelBE_Settings {
         );
 
         add_settings_field(
-            'morning', __('Morning delivery', 'woocommerce-myparcelbe'), array(
-            $this->callbacks,
-            'delivery_option_enable'
-        ), $option_group, 'delivery_options', array(
-                'has_title'          => true,
-                'has_price'          => true,
-                'option_name'        => $option_name,
-                'id'                 => 'morning',
-                'title'              => 'Morning delivery',
-                'current'            => self::get_checkout_setting_title('morning_title'),
-                'size'               => 30,
-                'option_description' => __('When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcelbe'),
-            )
-        );
-
-        add_settings_field(
-            'evening', __('Evening delivery', 'woocommerce-myparcelbe'), array(
-            $this->callbacks,
-            'delivery_option_enable'
-        ), $option_group, 'delivery_options', array(
-                'has_title'          => true,
-                'has_price'          => true,
-                'option_name'        => $option_name,
-                'id'                 => 'evening',
-                'title'              => 'Evening delivery',
-                'current'            => self::get_checkout_setting_title('evening_title'),
-                'size'               => 30,
-                'option_description' => __('When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcelbe'),
-            )
-        );
-
-        add_settings_field(
             'signature', __('Signature on delivery', 'woocommerce-myparcelbe'), array(
             $this->callbacks,
             'delivery_option_enable'
@@ -771,22 +739,6 @@ class WooCommerce_MyParcelBE_Settings {
         );
 
         add_settings_field(
-            'pickup_express', __('Early bpost pickup', 'woocommerce-myparcelbe'), array(
-            $this->callbacks,
-            'delivery_option_enable'
-        ), $option_group, 'delivery_options', array(
-                'has_title'   => false,
-                'has_price'   => true,
-                'option_name' => $option_name,
-                'id'          => 'pickup_express',
-                'class'       => 'pickup_express',
-                'title'       => 'Pickup express',
-                'current'     => __('Early bpost pickup', 'woocommerce-myparcelbe'),
-                'size'        => 30,
-            )
-        );
-
-        add_settings_field(
             'saturday_cutoff', __('Enable monday delivery', 'woocommerce-myparcelbe'), array(
             $this->callbacks,
             'delivery_option_enable'
@@ -798,41 +750,6 @@ class WooCommerce_MyParcelBE_Settings {
                 'id'                 => 'saturday_cutoff',
                 'size'               => 30,
                 'option_description' => sprintf(__('<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended). </strong> More information about the Monday delivery service of bpost can be found %s here%s.', 'woocommerce-myparcelbe'), '<a href="https://blog.myparcel.nl/maandagbezorging/" target="_blank">', '</a>'),
-            )
-        );
-
-        // Belgium delivery options
-        add_settings_section(
-            'Belgium_delivery_options', __('Belgium delivery options', 'woocommerce-myparcelbe'), array(
-            $this->callbacks,
-            'section'
-        ), $option_group
-        );
-
-        add_settings_field(
-            'belgium_at_home_delivery', __('Belgium home delivery title', 'woocommerce-myparcelbe'), array(
-            $this->callbacks,
-            'text_input'
-        ), $option_group, 'Belgium_delivery_options', array(
-                'option_name' => $option_name,
-                'id'          => 'belgium_at_home_delivery_title',
-                'size'        => '53',
-                'title'       => 'Delivery',
-                'current'     => self::get_checkout_setting_title('belgium_at_home_delivery_title'),
-            )
-        );
-
-        add_settings_field(
-            'BEstandard', __('Belgium standard delivery title', 'woocommerce-myparcelbe'), array(
-            $this->callbacks,
-            'text_input'
-        ), $option_group, 'Belgium_delivery_options', array(
-                'option_name' => $option_name,
-                'id'          => 'belgium_standard_title',
-                'size'        => '53',
-                'title'       => 'Standard delivery',
-                'current'     => self::get_checkout_setting_title('belgium_standard_title'),
-                'description' => __('When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcelbe'),
             )
         );
 
@@ -910,12 +827,8 @@ class WooCommerce_MyParcelBE_Settings {
             'header_delivery_options_title'  => 'Delivery options',
             'at_home_delivery_title'         => 'Delivered at home or at work',
             'standard_title'                 => 'Standard delivery',
-            'morning_title'                  => 'Morning delivery',
-            'evening_title'                  => 'Evening delivery',
             'signature_title'                => 'Signature on delivery',
             'pickup_title'                   => 'bpost Pickup',
-            'belgium_at_home_delivery_title' => 'Delivery',
-            'belgium_standard_title'         => 'Standard delivery',
             'use_split_address_fields'       => '0',
         );
     }

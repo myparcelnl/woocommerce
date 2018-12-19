@@ -451,15 +451,8 @@ class WooCommerce_MyParcelBE_Admin {
                 $time = array_shift($time); // take first element in time array
                 if (isset($time['price_comment'])) {
                     switch($time['price_comment']) {
-                        case 'morning':
-                            $time_title = __('Morning delivery', 'woocommerce-myparcelbe');
-                        break;
                         case 'standard':
                             // $time_title = __( 'Standard delivery', 'woocommerce-myparcelbe' );
-                        break;
-                        case 'evening':
-                        case 'avond':
-                            $time_title = __('Evening delivery', 'woocommerce-myparcelbe');
                         break;
                     }
                 }

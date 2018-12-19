@@ -277,7 +277,6 @@ These are the biggest changes:
 * Feature: Pick colors for the delivery options
 * Feature: Set custom styles (CSS) for delivery options
 * Feature: Enter '0' for the delivery days window to hide dates in the delivery options
-* Fix: Don't apply 'only recipient' fee for morning & night delivery (already included)
 * Fix: Order search issues
 * Fix: 404 header on delivery options
 * Tweak: Several delivery options style adjustments
