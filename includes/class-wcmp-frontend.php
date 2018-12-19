@@ -36,7 +36,7 @@ class WooCommerce_MyParcelBE_Frontend {
         add_action('woocommerce_thankyou', array($this, 'thankyou_pickup_html'), 10, 1);
 
         // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
-        add_filter('wpo_wcpdf_templates_replace_myparcelbe_delivery_date', array($this, 'wpo_wcpdf_delivery_date'), 10, 2);
+        //add_filter('wpo_wcpdf_templates_replace_myparcelbe_delivery_date', array($this, 'wpo_wcpdf_delivery_date'), 10, 2); options.delivery_date custom delivery date not supported for carrier bpost
         add_filter('wpo_wcpdf_templates_replace_myparcelbe_tracktrace', array($this, 'wpo_wcpdf_tracktrace'), 10, 2);
         add_filter('wpo_wcpdf_templates_replace_myparcelbe_tracktrace_link', array($this, 'wpo_wcpdf_tracktrace_link'), 10, 2);
         add_filter('wpo_wcpdf_templates_replace_myparcelbe_delivery_options', array($this, 'wpo_wcpdf_delivery_options'), 10, 2);
@@ -120,19 +120,19 @@ class WooCommerce_MyParcelBE_Frontend {
 
         return ob_get_clean();
     }
-
-    public function wpo_wcpdf_delivery_date($replacement, $order) {
-        if ($delivery_date = WooCommerce_MyParcelBE()->export->get_delivery_date($order)) {
-            $formatted_date = date_i18n(
-                apply_filters('wcmyparcelbe_delivery_date_format', wc_date_format()),
-                strtotime($delivery_date)
-            );
-
-            return $formatted_date;
-        }
-
-        return $replacement;
-    }
+    // options.delivery_date custom delivery date not supported for carrier bpost
+    //    public function wpo_wcpdf_delivery_date($replacement, $order) {
+    //        if ($delivery_date = WooCommerce_MyParcelBE()->export->get_delivery_date($order)) {
+    //            $formatted_date = date_i18n(
+    //                apply_filters('wcmyparcelbe_delivery_date_format', wc_date_format()),
+    //                strtotime($delivery_date)
+    //            );
+    //
+    //            return $formatted_date;
+    //        }
+    //
+    //        return $replacement;
+    //    }
 
     public function wpo_wcpdf_tracktrace($replacement, $order) {
         if ($shipments = WooCommerce_MyParcelBE()->admin->get_tracktrace_shipments(WCX_Order::get_id($order))) {

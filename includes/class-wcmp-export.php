@@ -748,20 +748,18 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             if ($this->is_pickup($order, $myparcelbe_delivery_options)) {
                 $options['signature'] = 1;
             }
-
-            // delivery date (postponed delivery & pickup)
-            if ($delivery_date = $this->get_delivery_date($order, $myparcelbe_delivery_options)) {
-                $date_time = explode(' ', $delivery_date); // split date and time
-                // only add if date is in the future
-                $timestamp = strtotime($date_time[0]);
-
-                if ($timestamp < time()) {
-                    $new_timestamp = $this->get_next_delivery_day($timestamp);
-                    $delivery_date = date('Y-m-d h:i:s', $new_timestamp);
-                }
-
-                $options['delivery_date'] = $delivery_date;
-            }
+            //options.delivery_date custom delivery date not supported for carrier bpost
+            //if ($delivery_date = $this->get_delivery_date($order, $myparcelbe_delivery_options)) {
+            //    $date_time = explode(' ', $delivery_date); // split date and time
+            //    // only add if date is in the future
+            //    $timestamp = strtotime($date_time[0]);
+            //
+            //    if ($timestamp < time()) {
+            //        $new_timestamp = $this->get_next_delivery_day($timestamp);
+            //        $delivery_date = date('Y-m-d h:i:s', $new_timestamp);
+            //    }
+            //    $options['delivery_date'] = $delivery_date;
+            //}
 
             // options signature & recipient only
             $myparcelbe_signature = WCX_Order::get_meta($order, '_myparcelbe_signature');
@@ -794,7 +792,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                     }
                 }
             }
-
             return $options;
         }
 
@@ -1330,31 +1327,31 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
 
             return $delivery_type;
         }
-
-        public function get_delivery_date($order, $myparcelbe_delivery_options = '') {
-            if (empty($myparcelbe_delivery_options)) {
-                $myparcelbe_delivery_options = WCX_Order::get_meta($order, '_myparcelbe_delivery_options');
-            }
-
-            if ( ! empty($myparcelbe_delivery_options) && ! empty($myparcelbe_delivery_options['date'])) {
-                $delivery_date = $myparcelbe_delivery_options['date'];
-
-                $delivery_type = $this->get_delivery_type($order, $myparcelbe_delivery_options);
-                if (in_array($delivery_type, array(1, 3)) && ! empty($myparcelbe_delivery_options['time'])) {
-                    $delivery_time_options = array_shift(
-                        $myparcelbe_delivery_options['time']
-                    ); // take first element in time array
-                    $delivery_time = $delivery_time_options['start'];
-                } else {
-                    $delivery_time = '00:00:00';
-                }
-                $delivery_date = "{$delivery_date} {$delivery_time}";
-
-                return $delivery_date;
-            } else {
-                return false;
-            }
-        }
+        //options.delivery_date custom delivery date not supported for carrier bpost
+        //public function get_delivery_date($order, $myparcelbe_delivery_options = '') {
+        //    if (empty($myparcelbe_delivery_options)) {
+        //        $myparcelbe_delivery_options = WCX_Order::get_meta($order, '_myparcelbe_delivery_options');
+        //    }
+        //
+        //    if ( ! empty($myparcelbe_delivery_options) && ! empty($myparcelbe_delivery_options['date'])) {
+        //        $delivery_date = $myparcelbe_delivery_options['date'];
+        //
+        //        $delivery_type = $this->get_delivery_type($order, $myparcelbe_delivery_options);
+        //        if (in_array($delivery_type, array(1, 3)) && ! empty($myparcelbe_delivery_options['time'])) {
+        //            $delivery_time_options = array_shift(
+        //                $myparcelbe_delivery_options['time']
+        //            ); // take first element in time array
+        //            $delivery_time = $delivery_time_options['start'];
+        //        } else {
+        //            $delivery_time = '00:00:00';
+        //        }
+        //        $delivery_date = "{$delivery_date} {$delivery_time}";
+        //
+        //        return $delivery_date;
+        //    } else {
+        //        return false;
+        //    }
+        //}
 
         public function get_order_shipping_class($order, $shipping_method_id = '') {
             if (empty($shipping_method_id)) {
