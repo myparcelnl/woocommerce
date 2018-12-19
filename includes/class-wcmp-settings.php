@@ -648,13 +648,11 @@ class WooCommerce_MyParcelBE_Settings {
         add_settings_field(
             'deliverydays_window', __('Delivery days window', 'woocommerce-myparcelbe'), array(
             $this->callbacks,
-            'text_input'
+            'checkbox'
         ), $option_group, 'processing_parameters', array(
                 'option_name' => $option_name,
                 'id'          => 'deliverydays_window',
-                'type'        => 'text',
-                'size'        => '5',
-                'description' => __('Amount of days a customer can postpone delivery. Default is 0 days with a maximum of 14.', 'woocommerce-myparcelbe'),
+                'description' => __('Show the delivery date inside the checkout.', 'woocommerce-myparcelbe'),
             )
         );
 

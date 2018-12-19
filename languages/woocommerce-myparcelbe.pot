@@ -651,7 +651,7 @@ msgid "Delivery days window"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:731
-msgid "Amount of days a customer can postpone delivery. Default is 0 days with a maximum of 14."
+msgid "Show the delivery date inside the checkout."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:737

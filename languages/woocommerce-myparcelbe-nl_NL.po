@@ -714,11 +714,9 @@ msgstr "Leverdagen venster"
 
 #: includes/class-wcmp-settings.php:731
 msgid ""
-"Amount of days a customer can postpone delivery. Default is 0 days with a "
-"maximum of 14."
+"Show the delivery date inside the checkout."
 msgstr ""
-"Aantal dagen dat een klant een zending kan uitstellen. Standaard zijn dit 0 "
-"dagen met een maximum van 14."
+"Laad een bezorgdag zien in de chekcout."
 
 #: includes/class-wcmp-settings.php:737
 msgid "Delivery options"
