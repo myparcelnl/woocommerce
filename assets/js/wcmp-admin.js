@@ -467,8 +467,7 @@ jQuery(function($) {
 
     function myparcelbe_modal_dialog(order_ids, dialog) {
         var request_prefix = (wc_myparcelbe.ajax_url.indexOf("?") !== -1) ? '&' : '?';
-        var thickbox_height = $(window).height() - 120;
-        var thickbox_parameters = '&TB_iframe=true&height=' + thickbox_height + '&width=720';
+        var thickbox_parameters = '&TB_iframe=true&height=380&width=720';
         var url = wc_myparcelbe.ajax_url + request_prefix + 'order_ids=' + order_ids + '&action=wc_myparcelbe&request=modal_dialog&dialog=' + dialog + '&security=' + wc_myparcelbe.nonce + thickbox_parameters;
 
         /* disable background scrolling */
