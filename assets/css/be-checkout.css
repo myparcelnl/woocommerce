@@ -213,7 +213,7 @@ input:-webkit-autofill {
     vertical-align: top;
 }
 
-.mypabe-postnl-logo {
+.mypabe-bpost-logo {
     width: 100px;
     float: right;
     margin: 45px 8px 0 0;
@@ -253,7 +253,7 @@ input:-webkit-autofill {
     display: inline-block;
     width: 90px;
     height: 90px;
-    border-top: 3px solid #ff8c00;
+    border-top: 3px solid #ef2736;
     border-radius: 100%;
     animation: mypabe-spin 1.2s linear infinite;
 }
@@ -272,7 +272,7 @@ input:-webkit-autofill {
         height: 30px !important;
     }
 
-    .mypabe-postnl-logo {
+    .mypabe-bpost-logo {
         float: none;
         margin: 0 100% 0 0;
 
