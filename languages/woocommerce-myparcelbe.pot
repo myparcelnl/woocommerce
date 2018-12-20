@@ -680,7 +680,7 @@ msgid "When there is no title, the delivery time will automatically be visible."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:879
-msgid "Enable monday delivery"
+msgid "Enable Saturday delivery"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:889

@@ -271,16 +271,22 @@ class WooCommerce_MyParcelBE_Frontend {
                     switch($time['price_comment']) {
                         case 'standard':
                             $this->add_fee_signature($delivery_options, 'Signature on delivery');
+                            $fee_name = __('Signature on delivery', 'woocommerce-myparcelbe');
                         break;
                     }
 
                     if ( ! empty($fee)) {
                         $this->add_fee($fee_name, $fee);
                     }
+                    if (date('w', strtotime($delivery_options['date'])) == 6){
+                        $fee = WooCommerce_MyParcelBE()->checkout_settings['saturday_cutoff_fee'];
+                        $fee_name = __('Saturday delivery', 'woocommerce-myparcelbe');
+                        $this->add_fee($fee_name, $fee);
+                    }
                 }
             }
 
-            /* Fees for pickup & pickup express */
+            /* Fees for pickup */
             if (isset($delivery_options['price_comment'])) {
                 switch($delivery_options['price_comment']) {
                     case 'retail':
@@ -441,6 +447,7 @@ class WooCommerce_MyParcelBE_Frontend {
                 "priceNormalDelivery" => "",
                 "priceSignature" => $this->frontend_settings->get_price('signature'),
                 "pricePickup" => $this->frontend_settings->get_price('pickup'),
+                "priceSaturdayDelivery" => $this->frontend_settings->is_enabled('saturday_cutoff_fee'),
 
                 "headerDeliveryOptions" => $this->frontend_settings->get_title('header_delivery_options'),
                 "deliveryTitle" => $this->frontend_settings->get_title('at_home_delivery'),
@@ -448,12 +455,11 @@ class WooCommerce_MyParcelBE_Frontend {
                 "deliveryStandardTitle" => $this->frontend_settings->get_title('standard'),
                 "signatureTitle" => $this->frontend_settings->get_title('signature'),
 
-                "allowMondayDelivery" => $this->frontend_settings->is_enabled('saturday_cutoff'),
+                "allowSaturdayDelivery" => $this->frontend_settings->is_enabled('saturday_cutoff'),
                 "allowSignature" => $this->frontend_settings->is_enabled('signature'),
                 "allowPickupPoints" => $this->frontend_settings->is_enabled('pickup'),
 
                 "dropOffDays" => $this->frontend_settings->get_dropoff_days(),
-                "saturdayCutoffTime" => $this->frontend_settings->get_saturday_cutoff_time(),
                 "cutoffTime" => $this->frontend_settings->get_cutoff_time(),
                 "deliverydaysWindow" => $this->frontend_settings->get_deliverydays_window(),
                 "dropoffDelay" => $this->frontend_settings->get_dropoff_delay(),
@@ -510,6 +516,19 @@ class WooCommerce_MyParcelBE_Frontend {
         }
 
         $fee = WooCommerce_MyParcelBE()->checkout_settings['signature_fee'];
+
+        if ( ! empty($fee)) {
+            $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
+            $this->add_fee($fee_name, $fee);
+        }
+    }
+
+    private function add_fee_saturday_delivery($delivery_options, $delivery_title) {
+        if ($delivery_options['saturday'] !== 1) {
+            return;
+        }
+
+        $fee = WooCommerce_MyParcelBE()->checkout_settings['saturday_cutoff_fee'];
 
         if ( ! empty($fee)) {
             $fee_name = __($delivery_title, 'woocommerce-myparcelbe');

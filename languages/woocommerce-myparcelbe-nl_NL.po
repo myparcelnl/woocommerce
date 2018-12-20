@@ -751,8 +751,8 @@ msgstr ""
 "zichtbaar."
 
 #: includes/class-wcmp-settings.php:879
-msgid "Enable monday delivery"
-msgstr "Maandaglevering inschakelen"
+msgid "Enable Saturday delivery"
+msgstr "Zaterdaglevering inschakelen"
 
 #: includes/class-wcmp-settings.php:889
 #, php-format

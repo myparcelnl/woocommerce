@@ -231,7 +231,7 @@ These are the biggest changes:
 
 = 2.3.0 (2017-06-12) =
 * Feature: WooCommerce Table Rate Shipping support (woocommerce.com & Bolder Elements 4.0)
-* Feature: Support for monday delivery
+* Feature: Support for saturday delivery
 * Feature: Start print position
 * Feature: Individual label printing from the order details page
 * Fix: Delivery options checkout in Edge browser

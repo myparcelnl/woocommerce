@@ -49,7 +49,6 @@ $parcel_weight_gram = WooCommerce_MyParcelBE()->export->get_parcel_weight($order
             '[signature]'      => array(
                 'label' => __('Signature on delivery', 'woocommerce-myparcelbe'),
                 'value' => isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,
-                'cost'  => ! (WooCommerce_MyParcelBE()->export->is_pickup($order)) ? '0.36' : '',
             ),
             '[insured]'        => array(
                 'label' => __('Insured to &euro; 500', 'woocommerce-myparcelbe'),

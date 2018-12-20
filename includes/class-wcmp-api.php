@@ -204,8 +204,8 @@ class wc_myparcelbe_API extends wc_myparcelbe_REST_Client {
      */
     public function get_delivery_options($params = array(), $raw = false) {
         $endpoint = 'delivery_options';
-        if (isset(WooCommerce_MyParcelBE()->checkout_settings['monday_delivery'])) {
-            $params['monday_delivery'] = 1;
+        if (isset(WooCommerce_MyParcelBE()->checkout_settings['saturday_delivery'])) {
+            $params['saturday_delivery'] = 1;
         }
 
         $request_url = add_query_arg($params, $this->APIURL . $endpoint);

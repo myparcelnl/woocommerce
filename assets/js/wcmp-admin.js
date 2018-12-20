@@ -1,6 +1,4 @@
 jQuery(function($) {
-    /* enable color picker */
-    $('.wcmp-color-picker').wpColorPicker();
 
     /* move shipment options to 'Ship to' column */
     $('.wp-list-table .wcmp_shipment_options, .wp-list-table .wcmp_shipment_summary').each(function(index) {

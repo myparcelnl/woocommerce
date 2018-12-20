@@ -298,7 +298,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                     $this->errors[$order_id] = $e->getMessage();
                 }
             }
-
             return $return;
         }
 

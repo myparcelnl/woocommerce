@@ -737,7 +737,7 @@ class WooCommerce_MyParcelBE_Settings {
         );
 
         add_settings_field(
-            'saturday_cutoff', __('Enable monday delivery', 'woocommerce-myparcelbe'), array(
+            'saturday_cutoff', __('Enable saturday delivery', 'woocommerce-myparcelbe'), array(
             $this->callbacks,
             'delivery_option_enable'
         ), $option_group, 'delivery_options', array(
@@ -747,7 +747,7 @@ class WooCommerce_MyParcelBE_Settings {
                 'option_name'        => $option_name,
                 'id'                 => 'saturday_cutoff',
                 'size'               => 30,
-                'option_description' => sprintf(__('<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended). </strong> More information about the Monday delivery service of bpost can be found %s here%s.', 'woocommerce-myparcelbe'), '<a href="https://blog.myparcel.nl/maandagbezorging/" target="_blank">', '</a>'),
+                'option_description' => sprintf(__('<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended). </strong> More information about the Saturday delivery service of bpost can be found %s here%s.', 'woocommerce-myparcelbe'), '<a href="https://blog.myparcel.nl/maandagbezorging/" target="_blank">', '</a>'),
             )
         );
 

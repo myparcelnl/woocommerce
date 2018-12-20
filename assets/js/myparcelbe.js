@@ -8,9 +8,7 @@ MyParcelBE = {
     data:            {},
     currentLocation: {},
 
-    DELIVERY_MORNING:        'morning',
     DELIVERY_NORMAL:         'standard',
-    DELIVERY_EVENING:        'avond',
     DELIVERY_PICKUP:         'retail',
     DELIVERY_SIGNATURE:      0,
 
@@ -39,7 +37,8 @@ MyParcelBE = {
         var prices = {
             'normal':         this.data.config.priceNormalDelivery,
             'signature':      this.data.config.priceSignature,
-            'pickup':         this.data.config.pricePickup
+            'pickup':         this.data.config.pricePickup,
+            'saturday':       this.data.config.priceSaturdayDelivery
         };
 
         MyParcelBE.showPrices(prices);
@@ -197,14 +196,6 @@ MyParcelBE = {
             MyParcelBE.addStyleToPrice('#mypabe-normal-delivery');
 
             /**
-             * Signature and only recipient
-             */
-            if (jQuery('#mypabe-signature-selector').prop('checked')) {
-                MyParcelBE.DELIVERY_SIGNATURE = 1;
-                MyParcelBE.addStyleToPrice('#mypabe-signature-price');
-            } else
-
-            /**
              * Signature
              */
             if (jQuery('#mypabe-signature-selector').prop('checked')) {
@@ -295,13 +286,6 @@ MyParcelBE = {
         var isPickup = jQuery('#mypabe-pickup-delivery').is(':checked');
         jQuery('#mypabe-pickup-selector').prop('checked', true);
 
-        if (isPickup && this.currentLocation.price_comment === MyParcelBE.DELIVERY_PICKUP_EXPRESS && this.data.config.allowPickupExpress) {
-            jQuery('#mypabe-pickup-express-price').html(MyParcelBE.getPriceHtml(this.data.config.pricePickupExpress));
-            jQuery('#mypabe-pickup-express').show();
-        } else {
-            jQuery('#mypabe-pickup-express-selector').attr("checked", false);
-            jQuery('#mypabe-pickup-express').hide();
-        }
     },
 
     /*
@@ -780,7 +764,7 @@ MyParcelBE = {
                 city:                this.data.address.city,
                 carrier:             this.data.config.carrier,
                 dropoff_days:        this.data.config.dropOffDays,
-                monday_delivery:     this.data.config.allowMondayDelivery,
+                saturday_delivery:   this.data.config.allowSaturdayDelivery,
                 deliverydays_window: this.deliveryDaysWindow,
                 cutoff_time:         this.data.config.cutoffTime,
                 dropoff_delay:       this.data.config.dropoffDelay
