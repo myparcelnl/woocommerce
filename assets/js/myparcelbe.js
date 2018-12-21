@@ -681,6 +681,10 @@ MyParcelBE = {
         this.data.address.cc = address.country;
         this.data.address.postalCode = address.postalCode;
         this.data.address.city = address.city;
+
+        if (this.data.address.cc !== "BE"){
+            MyParcelBE.hideDelivery();
+        }
     },
 
     getAddressInputValues: function(type) {

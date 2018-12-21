@@ -374,7 +374,7 @@ class WooCommerce_MyParcelBE_Settings {
                     'option_name'   => $option_name,
                     'id'            => 'shipping_methods_package_types',
                     'package_types' => WooCommerce_MyParcelBE()->export->get_package_types(),
-                    'description'   => __('Select one or more shipping methods for each MyParcel package type', 'woocommerce-myparcelbe'),
+                    'description'   => __('Select one or more shipping methods for each MyParcel BE package type', 'woocommerce-myparcelbe'),
                 )
             );
         } else {

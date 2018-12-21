@@ -463,10 +463,8 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
         <table class="wcmp_delivery_option_details">
             <?php if ($args['has_title']): ?>
                 <tr>
-                    <td style="min-width: 215px;"><?php _e(
-                            $args['title'] . ' title',
-                            'woocommerce-myparcelbe'
-                        ) ?>:
+                    <td style="min-width: 215px;">
+                        <?php _e($args['title'] . ' title', 'woocommerce-myparcelbe') ?>:
                     </td>
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input(
                             array_merge($args, $default_delivery_text)

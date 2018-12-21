@@ -493,6 +493,18 @@ msgstr ""
 msgid "Signature on delivery"
 msgstr ""
 
+#: includes/views/wcmp-order-shipment-summary.php:16
+msgid "Signature on delivery title"
+msgstr ""
+
+#: includes/views/wcmp-order-shipment-summary.php:16
+msgid "Pickup title"
+msgstr ""
+
+#: includes/views/wcmp-order-shipment-summary.php:16
+msgid "title"
+msgstr "titel"
+
 #: includes/class-wcmp-settings.php:457
 msgid ""
 "When the package is presented at the home address, a signuture will be required."
@@ -552,6 +564,11 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:634
 msgid "Display for"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:634
+msgid "You can link the delivery options to specific shipping methods by adding them to the package types "
+"under 'Standard export settings'. The delivery options are not visible at foreign addresses."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:642

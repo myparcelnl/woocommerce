@@ -394,9 +394,8 @@ msgstr "Track & Trace in e-mail"
 
 #: includes/class-wcmp-settings.php:221
 msgid ""
-"Add the Track & Trace code to emails to the customer.<br/><strong>Note!</"
-"strong> When you select this option, make sure you have not enabled the "
-"Track & Trace email in your MyParcel BE backend."
+"Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make "
+"sure you have not enabled the Track & Trace email in your MyParcel BE backend."
 msgstr ""
 "Voeg de Track & Trace code toe aan e-mails aan de klant.<br/> <strong>Let op!"
 "</strong> Wanneer je voor deze optie kiest, zorg er dan voor dat je niet de "
@@ -428,11 +427,9 @@ msgstr "Orderstatus automatisering"
 
 #: includes/class-wcmp-settings.php:260
 msgid ""
-"Automatically set order status to a predefined status after successful "
-"MyParcel BE export.<br/>Make sure <strong>Process shipments directly</strong> "
-"is enabled when you use this option together with the <strong>Track & Trace "
-"in email</strong> option, otherwise the Track & Trace code will not be "
-"included in the customer email."
+"Automatically set order status to a predefined status after successful MyParcel BE export.<br/>Make sure "
+ "<strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & "
+ "Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email."
 msgstr ""
 "Wijzig automatisch de orderstatus na het succesvol exporteren van een order "
 "naar MyParcel BE.<br/>Let op dat <strong>Verwerk zendingen direct</strong> is "
@@ -519,6 +516,13 @@ msgstr ""
 msgid "Connect customer phone"
 msgstr "Koppel telefoonnummer klant"
 
+#: includes/class-wcmp-settings.php:411
+msgid "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This "
+"greatly increases the delivery success rate for foreign shipments."
+msgstr "Wanneer u het telefoonnummer van de klant koppelt met de zending, kan de koerier dit gebruiken ten behoeve "
+"van de aflevering van het pakket. De afleverkans voor buitenlandzendingen wordt hiermee aanzienlijk verhoogd."
+
+
 #: includes/class-wcmp-settings.php:418
 msgid ""
 "There is no default insurance on the domestic shipments. If you want to "
@@ -535,6 +539,14 @@ msgstr ""
 #: includes/views/wcmp-order-shipment-summary.php:16
 msgid "Signature on delivery"
 msgstr "Handtekening voor ontvangst"
+
+#: includes/views/wcmp-order-shipment-summary.php:16
+msgid "Signature on delivery title"
+msgstr "Handtekening voor ontvangst titel"
+
+#: includes/views/wcmp-order-shipment-summary.php:16
+msgid "Pickup title"
+msgstr "Afhalen bij bpost titel"
 
 #: includes/class-wcmp-settings.php:457
 msgid ""
@@ -607,6 +619,12 @@ msgstr "MyParcel BE bezorgopties inschakelen"
 #: includes/class-wcmp-settings.php:634
 msgid "Display for"
 msgstr "Toon bij"
+
+#: includes/class-wcmp-settings.php:634
+msgid "You can link the delivery options to specific shipping methods by adding them to the package types "
+"under 'Standard export settings'. The delivery options are not visible at foreign addresses."
+msgstr "U kunt de bezorgopties koppelen aan specifieke verzendmethoden door ze toe te voegen aan de pakkettypen "
+"onder 'Standaard exportinstellingen'. De bezorgopties zijn niet zichtbaar op buitenlandse adressen."
 
 #: includes/class-wcmp-settings.php:642
 msgid "Shipping methods associated with Parcels"
