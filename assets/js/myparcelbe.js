@@ -690,7 +690,8 @@ MyParcelBE = {
     getAddressInputValues: function(type) {
         streetParts = {};
         input = {
-            'fullStreet': jQuery('#' + type + '_address_1').val(),
+            'addressLine1': jQuery('#' + type + '_address_1').val(),
+            'addressLine2': jQuery('#' + type + '_address_2').val(),
             'postalCode': jQuery('#' + type + '_postcode').val(),
             'city':       jQuery('#' + type + '_city').val(),
             'country':    jQuery('#' + type + '_country').val(),
@@ -701,7 +702,7 @@ MyParcelBE = {
             input.houseNumber = jQuery('#' + type + '_house_number').val();
             input.houseNumberSuffix = jQuery('#' + type + '_house_number_suffix').val();
         } else {
-            streetParts = MyParcelBE.splitFullStreetFromInput(input.fullStreet);
+            streetParts = MyParcelBE.splitFullStreetFromInput(input.addressLine1, input.addressLine2);
             input.streetName = streetParts.streetName;
             input.houseNumber = streetParts.houseNumber;
             input.houseNumberSuffix = streetParts.houseNumberSuffix;
@@ -715,15 +716,15 @@ MyParcelBE = {
      *
      * Split full street into parts and returning empty array if there's no street entered
      */
-    splitFullStreetFromInput: function(fullStreet) {
+    splitFullStreetFromInput: function(addressLine1, addressLine2) {
         result = {
             streetName:        '',
             houseNumber:       '',
             houseNumberSuffix: '',
         };
 
-        if (fullStreet.length) {
-            streetParts = new RegExp(MyParcelBE.SPLIT_STREET_REGEX).exec(fullStreet);
+        if (addressLine1.length) {
+            streetParts = new RegExp(MyParcelBE.SPLIT_STREET_REGEX).exec(addressLine1 + " " + addressLine2);
             result.streetName = streetParts[1];
             result.houseNumber = streetParts[2];
             result.houseNumberSuffix = streetParts[3];

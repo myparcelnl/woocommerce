@@ -106,16 +106,6 @@
                     <span id="mypabe-pickup-price"></span>
                 </td>
             </tr>
-            <tr id="mypabe-pickup-express" class="mypabe-is-pickup-element">
-                <td></td>
-                <td>
-                    <input name="method-myparcelbe-pickup-selector" id="mypabe-pickup-express-selector" type="radio" value="myparcelbe-pickup-express-selector">
-                    <label for="mypabe-pickup-express-selector">Ophalen vanaf 09:00</label>
-                </td>
-                <td>
-                    <span id="mypabe-pickup-express-price"></span>
-                </td>
-            </tr>
             </tbody>
         </table>
     </div>
