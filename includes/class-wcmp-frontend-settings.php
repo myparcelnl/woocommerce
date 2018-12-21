@@ -68,9 +68,9 @@ class WooCommerce_MyParcelBE_Frontend_Settings {
      * @return mixed
      */
     public function get_cutoff_time() {
-        if (date_i18n('w') == self::DAYS_SATURDAY && isset($this->settings['saturday_cutoff_time'])) {
-            return self::$settings['saturday_cutoff_time'];
-        }
+//        if (date_i18n('w') == self::DAYS_SATURDAY && isset($this->settings['saturday_cutoff_time'])) {
+//            return self::$settings['saturday_cutoff_time'];
+//        }
         return self::$settings['cutoff_time'];
     }
 
