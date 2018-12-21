@@ -1606,7 +1606,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 )
             );
 
-            // round values for display according to postnl standard
+            // round values for display according to bpost standard
             if ($round) {
                 foreach ($tier_ranges as &$tier_range) {
                     $tier_range['min'] = $tier_range['min'] > 0 ? $tier_range['min'] - 1 : $tier_range['min'];

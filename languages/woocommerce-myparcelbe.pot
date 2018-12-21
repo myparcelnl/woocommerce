@@ -374,7 +374,7 @@ msgstr ""
 #: includes/class-wcmp-settings.php:221
 msgid ""
 "Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make "
-"sure you have not enabled the Track & Trace email in your MyParcel backend."
+"sure you have not enabled the Track & Trace email in your MyParcel BE backend."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:227
@@ -499,7 +499,7 @@ msgid ""
 msgstr ""
 
 #: includes/class-wcmp-settings.php:476
-msgid "Insured shipment (to € 500)"
+msgid "Insured shipment (to €500)"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:418
@@ -516,7 +516,7 @@ msgstr ""
 #: includes/class-wcmp-settings.php:532
 msgid ""
 "With this option, you can add a description to the shipment. This will be printed on the top left of the label, and "
-"you can use this to search or sort shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> to include the "
+"you can use this to search or sort shipments in the MyParcel BE Backend. Use <strong>[ORDER_NR]</strong> to include the "
 "order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date."
 msgstr ""
 
@@ -573,7 +573,7 @@ msgid "Shipment processing parameters"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:659
-msgid "Checkout place"
+msgid "Checkout position"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:666
@@ -663,7 +663,7 @@ msgid "Delivery options title"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:753
-msgid "You can place a delivery title above the MyParcel options. When there is no title, it will not be visible."
+msgid "You can place a delivery title above the MyParcel BE options. When there is no title, it will not be visible."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:758

@@ -545,8 +545,8 @@ msgstr ""
 "Er moet in beide gevallen voor worden getekend."
 
 #: includes/class-wcmp-settings.php:476
-msgid "Insured shipment (to € 500)"
-msgstr "Verzekerde verzending (tot € 500)"
+msgid "Insured shipment (to €500)"
+msgstr "Verzekerde verzending (tot €500)"
 
 #: includes/class-wcmp-settings.php:483
 #: includes/class-wcmp-settings.php:418
@@ -631,7 +631,7 @@ msgid "Shipment processing parameters"
 msgstr "Verwerking van zendingen"
 
 #: includes/class-wcmp-settings.php:659
-msgid "Checkout place"
+msgid "Checkout position"
 msgstr "Bezorgopties positie"
 
 #: includes/class-wcmp-settings.php:666

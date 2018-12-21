@@ -218,7 +218,7 @@ class WooCommerce_MyParcelBE_Settings {
             array(
                 'option_name' => $option_name,
                 'id'          => 'email_tracktrace',
-                'description' => __('Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel backend.', 'woocommerce-myparcelbe')
+                'description' => __('Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel BE backend.', 'woocommerce-myparcelbe')
             )
         );
 
@@ -257,7 +257,7 @@ class WooCommerce_MyParcelBE_Settings {
             array(
                 'option_name' => $option_name,
                 'id'          => 'order_status_automation',
-                'description' => __('Automatically set order status to a predefined status after successful MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.', 'woocommerce-myparcelbe')
+                'description' => __('Automatically set order status to a predefined status after successful MyParcel BE export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.', 'woocommerce-myparcelbe')
             )
         );
 
@@ -415,7 +415,7 @@ class WooCommerce_MyParcelBE_Settings {
 			array(
                 'option_name' => $option_name,
                 'id'          => 'connect_phone',
-                'description' => __("There is no default insurance on the domestic shipments. If you want to insure, you can do this. We insure the purchase value of your product, with a maximum insured value of € 500.", 'woocommerce-myparcelbe')
+                'description' => __("When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.", 'woocommerce-myparcelbe')
             )
         );
 
@@ -434,7 +434,7 @@ class WooCommerce_MyParcelBE_Settings {
 
         add_settings_field(
 			'insured',
-            __('Insured shipment (to € 500)', 'woocommerce-myparcelbe'),
+            __('Insured shipment (to €500)', 'woocommerce-myparcelbe'),
             array($this->callbacks, 'checkbox'),
             $option_group,
             'defaults',
@@ -490,7 +490,7 @@ class WooCommerce_MyParcelBE_Settings {
                 'option_name' => $option_name,
                 'id'          => 'label_description',
                 'size'        => '25',
-                'description' => __("With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date.", 'woocommerce-myparcelbe'),
+                'description' => __("With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcel BE Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date.", 'woocommerce-myparcelbe'),
             )
         );
 
@@ -568,7 +568,7 @@ class WooCommerce_MyParcelBE_Settings {
                     'selected_methods' => __('Shipping methods associated with Parcels', 'woocommerce-myparcelbe'),
                     'all_methods'      => __('All shipping methods', 'woocommerce-myparcelbe'),
                 ),
-                'description' => __('To associate specific shipping methods with parcels, see the Default export settings tab. Note that the delivery options will be automatically hidden for foreign addresses, regardless of this setting.', 'woocommerce-myparcelbe'),
+                'description' => __('You can link the delivery options to specific shipping methods by adding them to the package types under \'Standard export settings\'. The delivery options are not visible at foreign addresses.', 'woocommerce-myparcelbe'),
             )
         );
 
@@ -582,7 +582,7 @@ class WooCommerce_MyParcelBE_Settings {
 
         // Place of the checkout
         add_settings_field(
-            'checkout_place', __('Checkout place', 'woocommerce-myparcelbe'), array(
+            'checkout_place', __('Checkout position', 'woocommerce-myparcelbe'), array(
             $this->callbacks,
             'select'
         ), $option_group, 'processing_parameters', array(
@@ -674,7 +674,7 @@ class WooCommerce_MyParcelBE_Settings {
                 'size'        => '53',
                 'title'       => 'Delivery options title',
                 'current'     => self::get_checkout_setting_title('header_delivery_options_title'),
-                'description' => __('You can place a delivery title above the MyParcel options. When there is no title, it will not be visible.', 'woocommerce-myparcelbe'),
+                'description' => __('You can place a delivery title above the MyParcel BE options. When there is no title, it will not be visible.', 'woocommerce-myparcelbe'),
             )
         );
 

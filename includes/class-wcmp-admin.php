@@ -495,7 +495,6 @@ class WooCommerce_MyParcelBE_Admin {
                 $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
             }
 
-            // $tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Inbox/Search?lang=nl&B=%s&P=%s', $tracktrace, $postcode);
             $tracktrace_url = sprintf(
                 'https://track.bpost.be/btr/web/#/search?itemCode=%s',
                 $tracktrace,
