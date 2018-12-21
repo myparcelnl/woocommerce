@@ -87,8 +87,8 @@ jQuery(function($) {
             $('#mypabe-chosen-delivery-options').on('change', 'input', function() {
                 MyParcelBE_Frontend.checkout_updating = true;
                 // disable signature & recipient only when switching to pickup location
-                var mypabe_postnl_data = JSON.parse($('#mypabe-chosen-delivery-options #mypabe-input').val());
-                if (typeof mypabe_postnl_data.location !== 'undefined') {
+                var mypabe_bpost_data = JSON.parse($('#mypabe-chosen-delivery-options #mypabe-input').val());
+                if (typeof mypabe_bpost_data.location !== 'undefined') {
                     $('#mypabe-signature, #mypabe-recipient-only').prop("checked", false);
                 }
                 $('body').trigger('update_checkout');
