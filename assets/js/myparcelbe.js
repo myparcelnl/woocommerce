@@ -58,7 +58,7 @@ MyParcelBE = {
         });
     },
 
-    getPriceHtml: function(priceOfDeliveryOption) {
+    getPriceHtml: function(priceOfDeliveryOption = '') {
         var price;
 
         if (!priceOfDeliveryOption) {
@@ -67,6 +67,10 @@ MyParcelBE = {
 
         if (parseFloat(priceOfDeliveryOption) >= 0) {
             price = '+ &euro; ' + Number(priceOfDeliveryOption).toFixed(2).replace(".", ",");
+        }
+
+        if (parseFloat(priceOfDeliveryOption) < 0) {
+            price = "<p class='colorGreen'>"+'- &euro; ' + Number(priceOfDeliveryOption).toFixed(2).replace(/-|\./g,function(match) {return (match==".")?",":""})+"</p>";
         }
 
         if (priceOfDeliveryOption && isNaN(parseFloat(priceOfDeliveryOption))) {
@@ -158,8 +162,6 @@ MyParcelBE = {
             MyParcelBE.hideLocationDetails();
         });
 
-        // jQuery('#mypabe-pickup-express').hide();  /* todo: move */
-
         jQuery('#mypabe-pickup-delivery, #mypabe-pickup-location').on('change', function(e) {
             MyParcelBE.setCurrentLocation();
             MyParcelBE.toggleDeliveryOptions();
@@ -200,14 +202,10 @@ MyParcelBE = {
              * Signature
              */
             if (jQuery('#mypabe-signature-selector').prop('checked')) {
-                jQuery('#s_method_myparcelbe_delivery_signature').click();
                 MyParcelBE.DELIVERY_SIGNATURE = 1;
                 MyParcelBE.addStyleToPrice('#mypabe-signature-price');
 
-            } else {
-                jQuery('#s_method_myparcelbe_flatrate, #s_method_myparcelbe_tablerate').click();
             }
-
 
             MyParcelBE.addDeliveryToExternalInput(MyParcelBE.DELIVERY_NORMAL);
             return;
@@ -252,7 +250,7 @@ MyParcelBE = {
     },
 
     addStyleToPrice: function(chosenDelivery) {
-        jQuery(chosenDelivery).addClass('mypabe-bold-price');
+            jQuery(chosenDelivery).addClass('mypabe-bold-price');
     },
 
     removeStyleFromPrice: function() {
@@ -540,15 +538,15 @@ MyParcelBE = {
         if (currentLocation.phone_number) {
             html += '<span class="mypabe-pickup-location-details-phone">' + currentLocation.phone_number + '</span>';
         }
-        html += '<span class="mypabe-pickup-location-details-time">Ophalen vanaf:&nbsp;' + startTime + '</span>';
-        html += '<h3>Openingstijden</h3>';
+        html += '<span class="mypabe-pickup-location-details-time">' + MyParcelBE.data.textToTranslate.pickUpFrom + ':&nbsp;' + startTime + '</span>';
+        html += '<h3>' + this.data.textToTranslate.openingHours + '</h3>';
 
         jQuery.each(
             currentLocation.opening_hours, function(weekday, value) {
                 html += '<span class="mypabe-pickup-location-details-day">' + MyParcelBE.data.translateENtoNL[weekday] + "</span>";
 
                 if (value[0] === undefined) {
-                    html += '<span class="mypabe-time">Gesloten</span>';
+                    html += '<span class="mypabe-time">' + MyParcelBE.data.textToTranslate.closed +'</span>';
                 }
 
                 jQuery.each(value, function(key2, times) {
@@ -647,14 +645,14 @@ MyParcelBE = {
      */
     showRetry: function() {
         MyParcelBE.showMessage(
-            '<h3>Huisnummer/postcode combinatie onbekend</h3>' +
+            '<h3>' + MyParcelBE.data.textToTranslate.wrongHouseNumberPostcode + '</h3>' +
             '<div class="mypabe-full-width mypabe-error">' +
-            '<label for="mypabe-error-postcode">Postcode</label>' +
+            '<label for="mypabe-error-postcode">' + MyParcelBE.data.textToTranslate.postcode + '</label>' +
             '<input type="text" name="mypabe-error-postcode" id="mypabe-error-postcode" value="' + MyParcelBE.data.address.postalCode + '">' +
             '</div><div class="mypabe-full-width mypabe-error">' +
-            '<label for="mypabe-error-number">Huisnummer</label>' +
+            '<label for="mypabe-error-number">' + MyParcelBE.data.textToTranslate.houseNumber + '</label>' +
             '<input type="text" name="mypabe-error-number" id="mypabe-error-number" value="' + MyParcelBE.data.address.number + '">' +
-            '<br><div id="mypabe-error-try-again" class="button btn">Opnieuw</div>' +
+            '<br><div id="mypabe-error-try-again" class="button btn">' + MyParcelBE.data.textToTranslate.again + '</div>' +
             '</div>'
         );
 
@@ -750,7 +748,7 @@ MyParcelBE = {
         if (this.data.address.postalCode == '' || this.data.address.number == '') {
             MyParcelBE.hideSpinner();
             MyParcelBE.showMessage(
-                '<h3>Adresgegevens zijn niet ingevuld</h3>'
+                '<h3>'+ this.data.textToTranslate.allDataNotFound + '</h3>'
             );
             return;
         }

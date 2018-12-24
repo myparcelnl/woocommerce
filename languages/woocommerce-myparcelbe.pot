@@ -81,6 +81,11 @@ msgstr ""
 msgid "Bpost Pickup Express"
 msgstr ""
 
+#: includes/class-wcmp-admin.php:489 includes/class-wcmp-frontend.php:318
+msgid "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
+msgstr ""
+
+
 #: includes/class-wcmp-export.php:62
 msgid "You have to export the orders to MyParcel BE before you can print the labels!"
 msgstr ""
@@ -687,8 +692,48 @@ msgstr ""
 msgid "Home delivery title"
 msgstr ""
 
+#: includes/class-wcmp-settings.php:758
+msgid "Home delivery title"
+msgstr ""
+
 #: includes/class-wcmp-settings.php:771
 msgid "Standard delivery title"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Standard delivery"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Address details are not entered"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Pick up from"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "House number/postcode combination unknown"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Postcode"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "House number"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Again"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Closed"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Opening hours"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:780 includes/class-wcmp-settings.php:796 includes/class-wcmp-settings.php:812

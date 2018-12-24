@@ -449,11 +449,11 @@ class WooCommerce_MyParcelBE_Frontend {
                 "pricePickup" => $this->frontend_settings->get_price('pickup'),
 //                "priceSaturdayDelivery" => $this->frontend_settings->is_enabled('saturday_cutoff_fee'),
 
-                "headerDeliveryOptions" => $this->frontend_settings->get_title('header_delivery_options'),
-                "deliveryTitle" => $this->frontend_settings->get_title('at_home_delivery'),
-                "pickupTitle" => $this->frontend_settings->get_title('pickup'),
-                "deliveryStandardTitle" => $this->frontend_settings->get_title('standard'),
-                "signatureTitle" => $this->frontend_settings->get_title('signature'),
+                "headerDeliveryOptions" => __($this->frontend_settings->get_title('header_delivery_options'), 'woocommerce-myparcelbe'),
+                "deliveryTitle" => __($this->frontend_settings->get_title('at_home_delivery'), 'woocommerce-myparcelbe'),
+                "pickupTitle" => __($this->frontend_settings->get_title('pickup'), 'woocommerce-myparcelbe'),
+                "deliveryStandardTitle" => __($this->frontend_settings->get_title('standard'), 'woocommerce-myparcelbe'),
+                "signatureTitle" => __($this->frontend_settings->get_title('signature'), 'woocommerce-myparcelbe'),
 
 //                "allowSaturdayDelivery" => $this->frontend_settings->is_enabled('saturday_cutoff'),
                 "allowSignature" => $this->frontend_settings->is_enabled('signature'),
@@ -464,6 +464,17 @@ class WooCommerce_MyParcelBE_Frontend {
                 "deliverydaysWindow" => $this->frontend_settings->get_deliverydays_window(),
                 "dropoffDelay" => $this->frontend_settings->get_dropoff_delay(),
             ],
+            "textToTranslate" =>[
+                "allDataNotFound" => __('Address details are not entered', 'woocommerce-myparcelbe'),
+                "pickUpFrom" =>__('Pick up from', 'woocommerce-myparcelbe'),
+                "openingHours" =>__('Opening hours', 'woocommerce-myparcelbe'),
+                "closed" =>__('Closed', 'woocommerce-myparcelbe'),
+                "postcode" =>__('Postcode', 'woocommerce-myparcelbe'),
+                "houseNumber" =>__('House number', 'woocommerce-myparcelbe'),
+                "again" =>__('Again', 'woocommerce-myparcelbe'),
+                "wrongHouseNumberPostcode" =>__('House number/postcode combination unknown', 'woocommerce-myparcelbe'),
+
+            ]
         ];
 
         return json_encode($myParcelConfig);

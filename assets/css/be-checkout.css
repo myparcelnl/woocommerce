@@ -234,6 +234,9 @@ input:-webkit-autofill {
 .mypabe-bold-price {
     font-weight: bold;
 }
+.colorGreen{
+    color: green;
+}
 
 #mypabe-spinner-model {
     position: relative;

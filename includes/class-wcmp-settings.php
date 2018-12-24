@@ -733,6 +733,7 @@ class WooCommerce_MyParcelBE_Settings {
                 'title'       => 'Pickup',
                 'current'     => self::get_checkout_setting_title('pickup_title'),
                 'size'        => 30,
+                'option_description' => sprintf(__('Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.', 'woocommerce-myparcelbe')),
             )
         );
 

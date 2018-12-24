@@ -452,7 +452,7 @@ class WooCommerce_MyParcelBE_Admin {
                 if (isset($time['price_comment'])) {
                     switch($time['price_comment']) {
                         case 'standard':
-                            // $time_title = __( 'Standard delivery', 'woocommerce-myparcelbe' );
+                            $time_title = __( 'Standard delivery', 'woocommerce-myparcelbe' );
                         break;
                     }
                 }
