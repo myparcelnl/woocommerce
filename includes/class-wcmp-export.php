@@ -698,7 +698,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             // Options for Pickup and Pickup express delivery types:
             // always enable signature on receipt
             if ($this->is_pickup($order, $myparcelbe_delivery_options)) {
-                $options['signature'] = 1;
+                $options['signature'] = 0;
             }
             //options.delivery_date custom delivery date not supported for carrier bpost
             //if ($delivery_date = $this->get_delivery_date($order, $myparcelbe_delivery_options)) {
