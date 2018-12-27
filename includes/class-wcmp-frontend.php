@@ -471,8 +471,9 @@ class WooCommerce_MyParcelBE_Frontend {
                 "closed" =>__('Closed', 'woocommerce-myparcelbe'),
                 "postcode" =>__('Postcode', 'woocommerce-myparcelbe'),
                 "houseNumber" =>__('House number', 'woocommerce-myparcelbe'),
+                "city"=>__('City', 'woocommerce-myparcelbe'),
                 "again" =>__('Again', 'woocommerce-myparcelbe'),
-                "wrongHouseNumberPostcode" =>__('House number/postcode combination unknown', 'woocommerce-myparcelbe'),
+                "wrongHouseNumberCity" =>__('House number/city combination unknown', 'woocommerce-myparcelbe'),
 
             ]
         ];

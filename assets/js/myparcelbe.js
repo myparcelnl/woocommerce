@@ -182,7 +182,7 @@ MyParcelBE = {
             ? '#billing_house_number, #shipping_house_number'
             : '#billing_address_1, #shipping_address_1';
 
-        jQuery('#billing_country, #shipping_country, #billing_postcode, #shipping_postcode, ' + fields).on('change', function() {
+        jQuery('#billing_country, #shipping_country, #billing_postcode, #shipping_postcode, #billing_city, #shipping_city, ' + fields).on('change', function() {
             MyParcelBE.callDeliveryOptions();
         });
     },
@@ -606,18 +606,10 @@ MyParcelBE = {
      */
     retryPostalCodeHouseNumber: function() {
         var retryPostalCode = jQuery('#mypabe-error-postcode').val();
-        var retryNumber = jQuery('#mypabe-error-number').val();
+        var retryCity = jQuery('#mypabe-error-city').val();
 
-        if (window.myparcelbe_is_using_split_address_fields) {
-            jQuery('#billing_house_number').val(retryNumber);
-        } else {
-            address = MyParcelBE.data.address.street + ' ' + retryNumber;
-            if (typeof MyParcelBE.data.address.numberSuffix !== 'undefined') {
-                address += MyParcelBE.data.address.numberSuffix
-            }
+        jQuery('#billing_city').val(retryCity);
 
-            jQuery('#billing_address_1').val(address);
-        }
         jQuery('#billing_postcode').val(retryPostalCode);
 
         MyParcelBE.callDeliveryOptions();
@@ -645,13 +637,13 @@ MyParcelBE = {
      */
     showRetry: function() {
         MyParcelBE.showMessage(
-            '<h3>' + MyParcelBE.data.textToTranslate.wrongHouseNumberPostcode + '</h3>' +
+            '<h3>' + MyParcelBE.data.textToTranslate.wrongHouseNumberCity+ '</h3>' +
             '<div class="mypabe-full-width mypabe-error">' +
             '<label for="mypabe-error-postcode">' + MyParcelBE.data.textToTranslate.postcode + '</label>' +
             '<input type="text" name="mypabe-error-postcode" id="mypabe-error-postcode" value="' + MyParcelBE.data.address.postalCode + '">' +
             '</div><div class="mypabe-full-width mypabe-error">' +
-            '<label for="mypabe-error-number">' + MyParcelBE.data.textToTranslate.houseNumber + '</label>' +
-            '<input type="text" name="mypabe-error-number" id="mypabe-error-number" value="' + MyParcelBE.data.address.number + '">' +
+            '<label for="mypabe-error-city">' + MyParcelBE.data.textToTranslate.city + '</label>' +
+            '<input type="text" name="mypabe-error-city" id="mypabe-error-city" value="' + MyParcelBE.data.address.city + '">' +
             '<br><div id="mypabe-error-try-again" class="button btn">' + MyParcelBE.data.textToTranslate.again + '</div>' +
             '</div>'
         );
@@ -721,12 +713,12 @@ MyParcelBE = {
             houseNumberSuffix: '',
         };
 
-        if (addressLine1.length) {
-            streetParts = new RegExp(MyParcelBE.SPLIT_STREET_REGEX).exec(addressLine1 + " " + addressLine2);
-            result.streetName = streetParts[1];
-            result.houseNumber = streetParts[2];
-            result.houseNumberSuffix = streetParts[3];
-        }
+        // if (addressLine1.length) {
+        //     streetParts = new RegExp(MyParcelBE.SPLIT_STREET_REGEX).exec(addressLine1 + " " + addressLine2);
+        //     result.streetName = streetParts[1];
+        //     result.houseNumber = streetParts[2];
+        //     result.houseNumberSuffix = streetParts[3];
+        // }
 
         return result;
     },
@@ -745,7 +737,7 @@ MyParcelBE = {
         MyParcelBE.setAddressFromInputFields();
 
         // Hide bpost field if there is no address entered
-        if (this.data.address.postalCode == '' || this.data.address.number == '') {
+        if (this.data.address.postalCode == '' || this.data.address.city == '') {
             MyParcelBE.hideSpinner();
             MyParcelBE.showMessage(
                 '<h3>'+ this.data.textToTranslate.allDataNotFound + '</h3>'

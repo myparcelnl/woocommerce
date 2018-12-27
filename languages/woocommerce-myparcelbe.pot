@@ -713,7 +713,7 @@ msgid "Pick up from"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:771
-msgid "House number/postcode combination unknown"
+msgid "House number/city combination unknown"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:771
@@ -722,6 +722,10 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:771
 msgid "House number"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "City"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:771
