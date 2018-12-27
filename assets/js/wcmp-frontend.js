@@ -74,6 +74,7 @@ jQuery(function($) {
                     } else {
                         var shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
                         MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method_now;
+                        MyParcel_Frontend.hide_delivery_options();
                         MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_now;
                     }
                 } else {
