@@ -781,7 +781,7 @@ msgid "Pick up from"
 msgstr "Ophalen vanaf"
 
 #: includes/class-wcmp-settings.php:771
-msgid "Postalcode/city combination unknown"
+msgid "Postcode/city combination unknown"
 msgstr "Postcode/plaats combinatie onbekend"
 
 #: includes/class-wcmp-settings.php:771

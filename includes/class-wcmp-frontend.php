@@ -473,7 +473,7 @@ class WooCommerce_MyParcelBE_Frontend {
                 "houseNumber" =>__('House number', 'woocommerce-myparcelbe'),
                 "city"=>__('City', 'woocommerce-myparcelbe'),
                 "retry" =>__('Retry', 'woocommerce-myparcelbe'),
-                "wrongHouseNumberCity" =>__('House number/city combination unknown', 'woocommerce-myparcelbe'),
+                "wrongHouseNumberCity" =>__('Postcode/city combination unknown', 'woocommerce-myparcelbe'),
 
             ]
         ];
