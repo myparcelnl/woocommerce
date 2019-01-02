@@ -1,9 +1,10 @@
 === Plugin Name ===
+Contributors: richardperdaan
 Tags: woocommerce, export, myparcel Belgium
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.9.8
-Stable tag: 3.0.3
-
+Tested up to: 5.0.0
+Stable tag: trunk
+Requires PHP: 5.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -24,7 +25,7 @@ This WooCommerce extension allows you to export your orders to the MyParcel Belg
 - Modify the MyParcel Belgium shipping options per order before exporting
 - Extra checkout fields to separate street name, house number and box number for more precise address data
 - View the status of the shipment in the order details page
-- Add track&trace link to the order confirmation email
+- Add Track & Trace link to the order confirmation email
 
 A MyParcel Belgium API account is required for this plugin! You can create this in your account or contact MyParcel Belgium at info@sendmyparcel.be
 
@@ -58,7 +59,7 @@ We advise you to test the whole checkout procedure once to see if everything wor
 
 The MyParcel BE plugin adds extra fields to the checkout of your webshop, to make it possible for the client to add street name, number and optional additions separately. This way you can be sure that everything is entered correctly. Because not all checkouts are configured alike, it's possible that the positioning/alignment of these extra fields have to be adjusted.
 
-Moreover, after a label is created, a track&trace code is added to the order. When the order is completed from WooCommerce, this track & trace code is added to the email (when this is enabled in the settings). Check that the code is correctly displayed in your template. You can read how to change the text in the FAQ section.
+Moreover, after a label is created, a Track & Trace code is added to the order. When the order is completed from WooCommerce, this Track & Trace code is added to the email (when this is enabled in the settings). Check that the code is correctly displayed in your template. You can read how to change the text in the FAQ section.
 
 == Frequently Asked Questions ==
 
@@ -67,7 +68,7 @@ Moreover, after a label is created, a track&trace code is added to the order. Wh
 = How do I get an API key? =
 When logged in on your myparcel account at [http://backoffice.sendmyparcel.be/](http://backoffice.sendmyparcel.be) you can find your API key under Instellingen → Algemeen.
 
-= How do I change the track&trace email text? =
+= How do I change the Track & Trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
 `
 add_filter( 'wcmyparcelbe_email_text', 'wcmyparcelbe_new_email_text' );
@@ -87,24 +88,93 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.0.3 (2018-10-17) =
-Improvement: Support WooCommerce 3.5.0
+= 3.1.0 (2018-12-12) =
+* Hotfix: Show delivery options when checkout form already filled in.
 
-= 3.0.2 (2018-08-10) =
-Fix: Track & trace url when the country is not equal to Belgium 
+= 3.0.10 (2018-12-05) =
+* Hotfix: Flashing of the order summary.
 
-= 3.0.1 (2018-06-12) =
-Fix: export with an insurance
-Improvement: delivery date not clickable and you can't change the date
+= 3.0.8 (2018-12-04) =
+* Fix: The multiple calls that are made to retrieve the shipping data.
+* Fix: The option for Pick up extra early
+* Fix: Wrong house number / postcode message and the possibility to adjust the address in the myparcel checkout
+* Fix: Woocommerce tabel rates
+* Improvement: Better support the default WooCommerce checkout address fields
 
-= 3.0.0 (2018-06-11) =
-Improvement: Introduce a new checkout (version 2 of the checkout)
-Improvement: more shipping options
-Improvement: more general settings
-Improvement: more standard export settings
+= 3.0.7 (2018-11-20) =
+* Fix: Set default values for dropoff days and delivery days window
 
-= 2.4.9 (2018-03-23) =
-Fix: Scrolling when changing package type in orderview 
+= 3.0.6 (2018-11-16) =
+* Fix: Remove concatenation from constant (causes an error on php version < 5.6)
+* Fix: No more double address fields with delivery options disabled
+
+= 3.0.5 (2018-11-15) =
+* Fix: Error message about money_format
+* Fix: Add the priority to the checkout field for support WooCommerce 3.5.1
+* Fix: The bpost logo is not visible with all browsers
+* Improvement: Support Channel Engine
+* Improvement: Information inside the checkout and the translations
+* Improvement: Support WooCommerce default shipping fields (_address_1 and _address_2)
+
+= 3.0.4 (2018-10-23) =
+* Fix: mollie payments
+* Improvement: Check for minimum php version (php 5.4)
+* Improvement: Hide automatic pickup express if pickup is not enabled
+
+= 3.0.3 (2018-10-09) =
+* Fix: Problem with WooCommerce PDF Invoices & Packing Slips
+* Fix: error about "Bewaar barcode in een notitie" size
+* Fix: Turn of the option allow Pickup Express
+* Fix: Save settings with a new update
+* Improvement: MyParcel delivery header titel
+* Improvement: Support WooCommerce 3.5.0
+
+= 3.0.2 (2018-10-09) =
+* Fix: Error a non-numeric value encountered in class-wcmp-frontend-settings.php
+* Fix: Notice Undefined index: checkout_position
+* Fix: Add version number after the be-checkout.css call
+
+= 3.0.0 (2018-10-09) =
+* Changes: The whole checkout has a new look. A choice has been made to go back to the basic checkout. The checkout is designed so that he will take the styling of the website.
+
+These are the biggest changes:
+* No use of libraries (only jQuery)
+* No iframe is used
+* The checkout is more stable
+* Easier to implement improvements
+
+* Fix: Use street and house number fields for export a Belgium order
+* Fix: The at home or at work delivery title inside the checkout
+* Fix: The default settings
+* Improvement: The option to change the position of the checkout (edited)
+
+= 3.0.0-beta.2 (2018-09-08) =
+* Fix: at home delivery title
+* Fix: Export Belgium delivery, use the street/number input fields
+
+= 2.4.14 (2018-07-03) =
+* Fix: Select the correct package type inside admin when there is one shipping used.
+
+= 2.4.13 (2018-07-26) =
+* Fix: Tabel rate shipping witch WooCommerce Table Rate Shipping by Automattic / Bolder Elements 4.0 / Bolder Elements 4.1.3
+* Fix: The option to show the checkout only when he is linked to package
+
+= 2.4.12 (2018-07-09) =
+* Fix: #102 change Iceland to world shipping
+* Fix: #106 tabel rates shipping
+* Improvement: #94 support legacy consignment and tracktrace data
+* Improvement: #95 Speed up order list view
+* Improvement: #104 Add reference identifier, that is always the order id
+= 2.4.11 (2018-04-30) =
+* Fix: Export shipment labels
+
+= 2.4.10 (2018-04-26) =
+* Improvement: Support Effect Connect, you can place the barcode inside a note of the order
+
+= 2.4.9 (2018-04-03) =
+* Fix: Scrolling when changing package type in orderview
+* Fix: Select the correct delivery methode inside the checkout
+* Improvement: Support Cloudflare
 
 = 2.4.8 (2018-02-27) =
 * Fix: The array error from the userAgent (https://wordpress.org/support/topic/parse-error-syntax-error-unexpected-in-wp-content-plugins-woocommerce-mypa/)
@@ -138,7 +208,7 @@ Fix: Scrolling when changing package type in orderview
 = 2.4.1 (2017-10-12) =
 * Fix: WooCommerce 3.2 compatibility
 
-= 2.4.0 (2017-09-25) = 
+= 2.4.0 (2017-09-25) =
 * Feature: Export world shipments + customs declaration form
 * Feature: Show delivery options on thank you page
 * Feature: Use WC logger when possible
@@ -161,7 +231,7 @@ Fix: Scrolling when changing package type in orderview
 
 = 2.3.0 (2017-06-12) =
 * Feature: WooCommerce Table Rate Shipping support (woocommerce.com & Bolder Elements 4.0)
-* Feature: Support for monday delivery
+* Feature: Support for saturday delivery
 * Feature: Start print position
 * Feature: Individual label printing from the order details page
 * Fix: Delivery options checkout in Edge browser
@@ -207,7 +277,6 @@ Fix: Scrolling when changing package type in orderview
 * Feature: Pick colors for the delivery options
 * Feature: Set custom styles (CSS) for delivery options
 * Feature: Enter '0' for the delivery days window to hide dates in the delivery options
-* Fix: Don't apply 'only recipient' fee for morning & night delivery (already included)
 * Fix: Order search issues
 * Fix: 404 header on delivery options
 * Tweak: Several delivery options style adjustments
@@ -234,7 +303,6 @@ Fix: Scrolling when changing package type in orderview
 * Completely revamped settings & export interface
 * New delivery options replaces old 'Pakjegemak':
 	* Postponed delivery (pick a delivery date)
-	* Home address only option
 	* Signature on delivery option
 	* Evening or morning delivery option
 	* bpost Pickup & Early bpost Pickup
@@ -244,7 +312,7 @@ Fix: Scrolling when changing package type in orderview
 
 = 1.5.6 =
 * Fix: Disable pakjegemak if 'ship to different address' is disabled after selecting Pakjegemak location
-* Fix: Use billing postcode for Pakjegemak track & trace
+* Fix: Use billing postcode for Pakjegemak Track & Trace
 
 = 1.5.5 =
 * Fix: Foreign postcodes validation fix.
@@ -284,7 +352,7 @@ Fix: Scrolling when changing package type in orderview
 * Dev: Code refactor
 
 = 1.4.6 =
-* Fix: Foreign track & trace link updated
+* Fix: Foreign Track & Trace link updated
 
 = 1.4.5 =
 * Tweak: Prevent label creation if direct processing is disabled. NOTE! If you had this setting disabled and were used to downloading the labels directly, you need to change this in the settings.
@@ -307,14 +375,14 @@ Fix: Scrolling when changing package type in orderview
 = 1.4.0 =
 * Feature: Print order number on label
 * Feature: PakjeGemak integration
-* Feature: Option to autocomplete order after successful export to MyParcelbe
-* Feature: Option to display track&trace link on my account page
+* Feature: Option to autocomplete order after successful export to MyParcel
+* Feature: Option to display Track & Trace link on my account page
 
 = 1.3.8 =
 * Fix: Big exports now run without any warnings/problems (was limited by the server)
 * Fix: Names, cities etc. with quotes (')
 * Fix: Error on combined foreign & Dutch exports
-* Fix: IE9 compatibility 
+* Fix: IE9 compatibility
 
 = 1.3.7 =
 * Fix: Checkout placeholder data was being saved in older versions of Internet Explorer
@@ -368,4 +436,3 @@ Fix: Scrolling when changing package type in orderview
 == Upgrade Notice ==
 = 2.1 =
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
-

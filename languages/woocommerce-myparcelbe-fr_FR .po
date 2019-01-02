@@ -82,12 +82,12 @@ msgid "bpost Pickup"
 msgstr "Afhalen bij bpost"
 
 #: includes/class-wcmp-admin.php:489 includes/class-wcmp-frontend.php:318
-msgid "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
-msgstr "Vul hier een bedrag in dat zowel positief of negatief is. Wil je bijvoorbeeld korting geven voor het gebruiken van deze functie of wil je extra kosten rekenen voor deze bezorgoptie."
-
-#: includes/class-wcmp-admin.php:489 includes/class-wcmp-frontend.php:318
 msgid "bpost Pickup Express"
 msgstr "Extra vroeg afhalen bij bpost"
+
+#: includes/class-wcmp-admin.php:489 includes/class-wcmp-frontend.php:318
+msgid "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
+msgstr "Vul hier een bedrag in dat zowel positief of negatief is. Wil je bijvoorbeeld korting geven voor het gebruiken van deze functie of wil je extra kosten rekenen voor deze bezorgoptie."
 
 #: includes/class-wcmp-export.php:62
 msgid ""
@@ -791,10 +791,6 @@ msgstr "Postcode"
 #: includes/class-wcmp-settings.php:771
 msgid "House number"
 msgstr "Huisnummer"
-
-#: includes/class-wcmp-settings.php:771
-msgid "City"
-msgstr "Plaats"
 
 #: includes/class-wcmp-settings.php:771
 msgid "Retry"
