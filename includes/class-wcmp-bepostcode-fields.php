@@ -13,7 +13,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
      * Regular expression used to split street name from house number.
      * This regex goes from right to left
      * Contains php keys to store the data in an array
-     * Taken from https://github.com/myparcelnl/sdk
+     * Taken from https://github.com/myparcelbe/sdk
      */
     const SPLIT_STREET_REGEX = '~(?P<street>.*?)\s?(?P<street_suffix>(?P<number>[\d]+)[\s-]{0,2}(?P<extension>[a-zA-Z/\s]{0,5}$|[0-9/]{0,5}$|\s[a-zA-Z]{1}[0-9]{0,3}$|\s[0-9]{2}[a-zA-Z]{0,3}$))$~';
     private $use_split_address_fields;
