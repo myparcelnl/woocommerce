@@ -644,7 +644,7 @@ MyParcelBE = {
             '</div><div class="mypabe-full-width mypabe-error">' +
             '<label for="mypabe-error-city">' + MyParcelBE.data.textToTranslate.city + '</label>' +
             '<input type="text" name="mypabe-error-city" id="mypabe-error-city" value="' + MyParcelBE.data.address.city + '">' +
-            '<br><div id="mypabe-error-try-again" class="button btn">' + MyParcelBE.data.textToTranslate.again + '</div>' +
+            '<br><div id="mypabe-error-try-again" class="button btn">' + MyParcelBE.data.textToTranslate.retry + '</div>' +
             '</div>'
         );
 

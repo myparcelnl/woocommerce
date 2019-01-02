@@ -729,7 +729,7 @@ msgid "City"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:771
-msgid "Again"
+msgid "Retry"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:771

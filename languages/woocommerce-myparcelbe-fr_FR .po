@@ -793,7 +793,7 @@ msgid "House number"
 msgstr "Huisnummer"
 
 #: includes/class-wcmp-settings.php:771
-msgid "Again"
+msgid "Retry"
 msgstr "Opnieuw"
 
 #: includes/class-wcmp-settings.php:771
