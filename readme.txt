@@ -88,8 +88,13 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.1.0 (2018-12-12) =
-* Hotfix: Show delivery options when checkout form already filled in.
+= 3.1.0 (2019) =
+* Improvement: Improved checkout
+* Improvement: Return delivery
+* Improvement: Barcode in notes
+* Improvement: Checkout position
+* Improvement: Show and hide delivery day
+* Fix: Check if postcode and city are filled in
 
 = 3.0.10 (2018-12-05) =
 * Hotfix: Flashing of the order summary.
