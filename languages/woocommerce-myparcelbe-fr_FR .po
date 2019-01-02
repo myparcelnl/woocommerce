@@ -614,7 +614,7 @@ msgid ""
 msgstr ""
 "Wanneer aangevinkt wordt er gebruik gemaakt van de MyParcel BE adresvelden. Dit "
 "houdt in dat straat, huisnummer en toevoeging los komen te staan. Wil je de "
-"standaard WooCommerce adresvelden gebruiken? Laat deze optie afgevinkt staan."
+"standaard WooCommerce adresvelden gebruiken? Laat deze optie uitgevinkt staan."
 
 #: includes/class-wcmp-settings.php:622
 msgid "Enable MyParcel BE delivery options"
@@ -738,7 +738,7 @@ msgstr "Leverdagen venster"
 msgid ""
 "Show the delivery date inside the checkout."
 msgstr ""
-"Laad een bezorgdag zien in de chekcout."
+"Laat een bezorgdag zien in de checkout."
 
 #: includes/class-wcmp-settings.php:737
 msgid "Delivery options"
