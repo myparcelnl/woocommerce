@@ -733,7 +733,7 @@ MyParcelBE = {
         if (this.data.address.postalCode == '' || this.data.address.city == '') {
             MyParcelBE.hideSpinner();
             MyParcelBE.showMessage(
-                '<h3>'+ this.data.textToTranslate.allDataNotFound + '</h3>'
+                '<h3>'+ this.data.textToTranslate.addressNotFound + '</h3>'
             );
             return;
         }

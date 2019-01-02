@@ -465,7 +465,7 @@ class WooCommerce_MyParcelBE_Frontend {
                 "dropoffDelay" => $this->frontend_settings->get_dropoff_delay(),
             ],
             "textToTranslate" =>[
-                "allDataNotFound" => __('Address details are not entered', 'woocommerce-myparcelbe'),
+                "addressNotFound" => __('Address details are not entered', 'woocommerce-myparcelbe'),
                 "pickUpFrom" =>__('Pick up from', 'woocommerce-myparcelbe'),
                 "openingHours" =>__('Opening hours', 'woocommerce-myparcelbe'),
                 "closed" =>__('Closed', 'woocommerce-myparcelbe'),
