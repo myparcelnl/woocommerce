@@ -713,13 +713,6 @@ MyParcelBE = {
             houseNumberSuffix: '',
         };
 
-        // if (addressLine1.length) {
-        //     streetParts = new RegExp(MyParcelBE.SPLIT_STREET_REGEX).exec(addressLine1 + " " + addressLine2);
-        //     result.streetName = streetParts[1];
-        //     result.houseNumber = streetParts[2];
-        //     result.houseNumberSuffix = streetParts[3];
-        // }
-
         return result;
     },
 
