@@ -66,17 +66,14 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
             '[large_format]'   => array(
                 'label' => __('Extra large size', 'woocommerce-myparcel'),
                 'value' => isset($shipment_options['large_format']) ? $shipment_options['large_format'] : 0,
-                'cost'  => '2.45',
             ),
             '[only_recipient]' => array(
                 'label' => __('Home address only', 'woocommerce-myparcel'),
                 'value' => isset($shipment_options['only_recipient']) ? $shipment_options['only_recipient'] : 0,
-                'cost'  => '0.29',
             ),
             '[signature]'      => array(
                 'label' => __('Signature on delivery', 'woocommerce-myparcel'),
                 'value' => isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,
-                'cost'  => ! (WooCommerce_MyParcel()->export->is_pickup($order)) ? '0.36' : '',
             ),
             '[return]'         => array(
                 'label' => __('Return if no answer', 'woocommerce-myparcel'),
@@ -191,13 +188,10 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
                 <td>
                     <?php
                     $insured_amounts = array(
-                        '49' => __('Insured up to &euro; 50', 'woocommerce-myparcel') . ' (+ &euro; 0.50)',
-                        '249' => __('Insured up to &euro; 250', 'woocommerce-myparcel') . ' (+ &euro; 1.00)',
-                        '499' => __('Insured up to &euro; 500', 'woocommerce-myparcel') . ' (+ &euro; 1.65)',
-                        '' => __(
-                                  '> &euro; 500 insured',
-                                  'woocommerce-myparcel'
-                              ) . ' (+ &euro; 1.65 / &euro; 500)',
+                        '99' => __('Insured up to &euro; 100', 'woocommerce-myparcel'),
+                        '249' => __('Insured up to &euro; 250', 'woocommerce-myparcel'),
+                        '499' => __('Insured up to &euro; 500', 'woocommerce-myparcel'),
+                        '' => __('> &euro; 500 insured','woocommerce-myparcel'),
                     );
                     printf('<select name="%s" class="insured_amount">', $name);
                     foreach ($insured_amounts as $key => $label) {

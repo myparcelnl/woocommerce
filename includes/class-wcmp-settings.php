@@ -218,7 +218,7 @@ class WooCommerce_MyParcel_Settings {
             array(
                 'option_name' => $option_name,
                 'id'          => 'email_tracktrace',
-                'description' => __('Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel backend.', 'woocommerce-myparcel')
+                'description' => __('Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your backoffice.', 'woocommerce-myparcel')
             )
         );
 
@@ -257,7 +257,7 @@ class WooCommerce_MyParcel_Settings {
             array(
                 'option_name' => $option_name,
                 'id'          => 'order_status_automation',
-                'description' => __('Automatically set order status to a predefined status after successful MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.', 'woocommerce-myparcel')
+                'description' => __('Automatically set order status to a predefined status after successful export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.', 'woocommerce-myparcel')
             )
         );
 
@@ -374,7 +374,7 @@ class WooCommerce_MyParcel_Settings {
                     'option_name'   => $option_name,
                     'id'            => 'shipping_methods_package_types',
                     'package_types' => WooCommerce_MyParcel()->export->get_package_types(),
-                    'description'   => __('Select one or more shipping methods for each MyParcel package type', 'woocommerce-myparcel'),
+                    'description'   => __('Select one or more shipping methods for each delivery type', 'woocommerce-myparcel'),
                 )
             );
         } else {
@@ -402,7 +402,7 @@ class WooCommerce_MyParcel_Settings {
             array(
                 'option_name' => $option_name,
                 'id'          => 'connect_email',
-                'description' => sprintf(__('When you connect the customer email, MyParcel can send a Track & Trace email to this address. In your %sMyParcel backend%s you can enable or disable this email and format it in your own style.', 'woocommerce-myparcel'), '<a href="https://backoffice.myparcel.nl/ttsettingstable" target="_blank">', '</a>')
+                'description' => __('When you connect the customer email, MyParcel can send a Track & Trace email to this address. In your backoffice you can enable or disable this email and format it in your own style.', 'woocommerce-myparcel'),
             )
         );
 
@@ -421,20 +421,20 @@ class WooCommerce_MyParcel_Settings {
 
         add_settings_field(
 			'large_format',
-            __('Extra large size', 'woocommerce-myparcel') . ' (+ &euro;2.45)',
+            __('Extra large size', 'woocommerce-myparcel'),
             array($this->callbacks, 'checkbox'),
 			$option_group,
 			'defaults',
 			array(
                 'option_name' => $option_name,
                 'id'          => 'large_format',
-                'description' => __('Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee of &euro;&nbsp;2,45 will be charged.<br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate of &euro;&nbsp;70,00 will be charged.', 'woocommerce-myparcel')
+                'description' => __('Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee will be charged. <br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate will be charged.', 'woocommerce-myparcel')
             )
         );
 
         add_settings_field(
             'only_recipient',
-            __('Home address only', 'woocommerce-myparcel') . ' (+ &euro;0.29)',
+            __('Home address only', 'woocommerce-myparcel'),
             array($this->callbacks, 'checkbox'),
             $option_group,
             'defaults',
@@ -447,7 +447,7 @@ class WooCommerce_MyParcel_Settings {
 
         add_settings_field(
 			'signature',
-            __('Signature on delivery', 'woocommerce-myparcel') . ' (+ &euro;0.36)',
+            __('Signature on delivery', 'woocommerce-myparcel'),
             array($this->callbacks, 'checkbox'),
             $option_group,
             'defaults',
@@ -473,14 +473,14 @@ class WooCommerce_MyParcel_Settings {
 
         add_settings_field(
 			'insured',
-            __('Insured shipment (from + &euro;0.50)', 'woocommerce-myparcel'),
+            __('Insured shipment', 'woocommerce-myparcel'),
             array($this->callbacks, 'checkbox'),
             $option_group,
             'defaults',
 			array(
                 'option_name' => $option_name,
                 'id'          => 'insured',
-                'description' => __('By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that from &euro;0.50. We insure the purchase value of the shipment, with a maximum insured value of &euro; 5.000. Insured parcels always contain the options "Home address only" en "Signature for delivery"', 'woocommerce-myparcel'),
+                'description' => __('By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that. We insure the purchase value of the shipment, with a maximum insured value of &euro; 5.000. Insured parcels always contain the options "Home address only" en "Signature for delivery"', 'woocommerce-myparcel'),
                 'class'       => 'insured',
             )
         );
@@ -497,10 +497,10 @@ class WooCommerce_MyParcel_Settings {
                 'default'     => 'standard',
                 'class'       => 'insured_amount',
                 'options'     => array(
-                    '49'  => __('Insured up to &euro; 50 (+ &euro; 0.50)', 'woocommerce-myparcel'),
-                    '249' => __('Insured up to &euro; 250 (+ &euro; 1.00)', 'woocommerce-myparcel'),
-                    '499' => __('Insured up to &euro; 500 (+ &euro; 1.65)', 'woocommerce-myparcel'),
-                    ''    => __('> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)', 'woocommerce-myparcel'),
+                    '99'  => __('Insured up to &euro; 100', 'woocommerce-myparcel'),
+                    '249' => __('Insured up to &euro; 250', 'woocommerce-myparcel'),
+                    '499' => __('Insured up to &euro; 500', 'woocommerce-myparcel'),
+                    ''    => __('> &euro; 500 insured', 'woocommerce-myparcel'),
                 ),
             )
         );
@@ -529,7 +529,7 @@ class WooCommerce_MyParcel_Settings {
                 'option_name' => $option_name,
                 'id'          => 'label_description',
                 'size'        => '25',
-                'description' => __("With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date.", 'woocommerce-myparcel'),
+                'description' => __("With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in your backoffice. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to include the delivery date.", 'woocommerce-myparcel'),
             )
         );
 
