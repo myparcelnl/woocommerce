@@ -1,0 +1,154 @@
+<script src="js/auto_menu.js"></script>
+<section class="page-header">
+    <p>
+        <img alt="" src="media/MyParcel_Belgie.png"/>
+        <img height="150" src="media/woocommerce-logo.png"/>
+    </p>
+    <h1 class="project-name">Manuel d'installation utilisateur</h1>
+    <h2 class="project-tagline">Plug-in WooCommerce MyParcel Belgique</h2>
+    <a target="_blank" class="btn" href="https://github.com/myparcelbe/woocommerce">GitHub</a>
+    <a target="_blank" class="btn" href="https://github.com/myparcelbe/woocommerce/releases">Toutes les mises à jour</a>
+    <a target="_blank" class="btn" href="https://github.com/myparcelbe/woocommerce/archive/master.zip">Dernière version stable</a>
+</section>
+<section class="main-content">
+    <h1>Introduction</h1>
+    <p>
+        Ce manuel décrit les fonctionnalités du plug-in MyParcel Belgique et vous explique comment l’installer dans votre boutique en ligne. Nous vous recommandons d’abord d’installer le plug-in dans un environnement de test avant de l’appliquer dans votre boutique web ‘live’. L’installation peut être réalisée de deux façons :
+    </p>
+    <ol>
+        <li>via le répertoire de plug-in WordPress</li>
+        <li>via un téléchargement manuel.</li>
+    </ol>
+
+    <h1>Sommaire</h1>
+    <div class="menu"></div>
+    <div>
+
+        <h1 id="1">1 Installation</h1>
+        <p>WDans tous les cas, nous recommandons d’abord de procéder à une installation dans un environnement de test et d’effectuer une sauvegarde de votre boutique en ligne.</p>
+
+        <h2 id="1_1">1.1 Via le répertoire de plug-in WordPress</h2>
+        <p>Pour installer le plug-in MyParcel via le répertoire du plug-in WordPress, procédez comme suit:</p>
+        <ol>
+            <li>Allez dans le menu Plug-ins de <span class="nice">WordPress > Nouveau plugin</span>. </li>
+            <li>Tapez <span class="nice">MyParcel</span> et cliquez sur rechercher.</li>
+            <li>Choisissez le plug-in WC MyParcel Belgique et cliquez sur ‘Installer maintenant’. Le plug-in va alors être téléchargé.</li>
+            <li>Lorsque le téléchargement est terminé, cliquez sur <span class="nice">Activer le plug-in’</span>.</li>
+        </ol>
+
+        <h2 id="1_2">1.2 Téléchargement manuel</h2>
+        <ol>
+            <li>Téléchargez le fichier zip du plug-in sur le site de WordPress:
+                <a href="https://nl.wordpress.org/plugins/wc-myparcel-belgium/" target="_blank"> https://nl.wordpress.org/plugins/wc-myparcel-belgium/</a>
+            </li>
+            <li>Dans WordPress, accédez au menu Plug-ins > Nouveau plug-in.</li>
+            <li>Cliquez sur ‘Télécharger’ en haut de l'écran.</li>
+            <li>Choisissez le fichier, puis cliquez sur ‘Installer maintenant’.</li>
+            <li>Une fois l’installation terminée, cliquez sur ‘Activer le plug-in’.</li>
+        </ol>
+        <h2 id="1_3">1.3 Testen</h2>
+        <p>
+            Le plug-in MyParcel Belgique ajoute certaines options de livraison à votre checkout. Les options de livraison que vous souhaitez proposer à vos clients peuvent être définies dans la configuration du plug-in MyParcel. Nous vous conseillons donc de bien vérifier votre processus de commande après avoir installé le plug-in. Il est par exemple possible de paramétrer une livraison différée au niveau du checkout. Il est utile de pouvoir visualiser ce que vos clients pourront eux-mêmes voir.
+            <br><br>
+            Tous les checkouts dans Woocommerce ne fonctionnent pas de la même façon. Il est donc important de vérifier que tout est en ordre, que tout est bien correct et à la bonne place. Notre conseil est de contrôler chaque élément avant toute utilisation par vos clients.
+
+        <h1 id="2">2 Configuration</h1>
+        <p>Allez dans le menu <span class="nice">WooCommerce  → MyParcel BE</span> pour configurer le plug-in MyParcel.<br></p>
+
+        <h2 id="2_1">2.1 Généralités</h2>
+        <p>
+            <h3 id="2_1_1">2.1.1 Paramètres API</h3>
+            Pour effectuer la connexion avec votre compte MyParcel, il est nécessaire de saisir votre clé API. <br>
+            Lorsque vous êtes connecté à votre compte MyParcel sur <a href="https://backoffice.sendmyparcel.be" target="_blank">backoffice.sendmyparcel.be</a> accédez au menu<span class="nice">Paramètres → Général</span>.
+        </p>
+
+        <h3 id="2_1_2">2.1.2 Affichage des étiquettes</h3>
+        <p>Indiquez ici si vous souhaitez télécharger immédiatement les étiquettes ou si vous souhaitez les ouvrir dans une nouvelle fenêtre.</p>
+
+        <h3 id="2_1_3">2.1.3 Paramètres Track & Trace</h3>
+        <p>Configurez ‘Email track & trace code’ pour permettre l’envoi de l’adresse e-mail du client à MyParcel BE. L’adresse e-mail peut être utilisée afin d’envoyer l’e-mail Tack & Trace au client.</p>
+
+        <h3 id="2_1_4">2.1.4 Outils de diagnostic</h3>
+        <p>Vous pouvez activer les outils de diagnostic si un problème devait survenir au moment de l’exportation des envois. Ce fichier décrit la communication entre WooCommerce et MyParcel.</p>
+
+        <img src="media/woocommerceBE1.png">
+        <h2 id="2_2">2.2 Paramètres d'exportation standards</h2>
+
+        <h3 id="2_2_1">2.2.1 Coupler des types de colis à des types d’expédition</h3>
+        <p>
+            Vous pouvez coupler des modes d’expédition à un type de colis pour que l’étiquette correcte soit créée dans votre compte MyParcel. Vous trouverez plus d’explications dans l’exemple ci-dessous. <br><br>
+            <img src="media/woocommerceBE4.png">
+            <br><br>
+            L’exemple montre que le mode d’expédition <span class="nice">Tarif fixe</span> est couplé au type de colis <span class="nice">Colis</span>.
+        </p>
+        <h3 id="2_2_2">2.2.2 Couplage de l’adresse e-mail du client</h3>
+        <p>Vous pouvez choisir d'envoyer ou non l’e-mail de vos commandes à MyParcel BE. Lorsque vous associez l’adresse e-mail du client, vous pouvez configurer MyParcel BE pour que les e-mails Track & Trace soient envoyés à cette adresse. Vous pouvez activer ou désactiver cet e-mail dans votre back-end MyParcel BE et le formater selon votre charte graphique.</p>
+
+        <h3 id="2_2_3">2.2.3 Référence de l’étiquette</h3>
+        <p>Cette option vous permet d’ajouter une référence à l’envoi. Celle-ci sera imprimée dans le coin supérieur gauche de l’étiquette et peut ensuite être utilisée pour rechercher un envoi dans l’aperçu. Utilisez [ORDER_NR] pour indiquer le numéro de commande.</p>
+
+        <h3 id="2_2_4">2.2.4 Poids du colis vide</h3>
+        <p>Indiquez ici le poids d’un colis vide, arrondi au gramme.</p>
+
+
+        <h2 id="2_3">2.3 Checkout</h2>
+        <p>Dans l’onglet ‘Checkout’, vous avez la possibilité d’ajouter d’autres options d’expédition à votre checkout. Il est également possible de choisir de montrer le checkout non seulement au niveau des colis, mais aussi pour tous les modes d’expédition.</p>
+        <img src="media/checkoutpakketwooBE.png">
+
+        <h3 id="2_3_1">2.3.1 Options de livraison</h3>
+        <p>
+            Pour chacune des différentes options de livraison, vous pouvez paramétrer un supplément qui sera facturé à votre client via le checkout. Il s’agit donc de frais supplémentaires par rapport aux tarifs standards que vous avez déjà complétés. L’exemple ci-dessous vous montre comment ces suppléments sont repris dans le checkout. <br>
+            <img src="media/woocommerce6BE.png"><br>
+            Au niveau de la configuration du checkout, 3 autres paramètres sont présents. Il s’agit des <span class="nice">jours de livraison</span>, <span class="nice">de l’heure de clôture</span> et du <span class="nice">temps de traitement</span>. Sur base de ces paramètres, basés sur votre méthode de traitement des commandes, les délais et jours de livraison corrects seront montrés à vos clients via le checkout.
+        </p>
+        <img src="media/woocommerce7BE.png"><br><br>
+
+        <h3 id="2_3_2">2.3.2 Traitement des envois</h3>
+        <p>
+            <b>Jours de livraison </b><br><br>
+            Vous indiquez ici les jours de dépôt de colis dans un point bpost. Vos clients se verront alors proposer des jours de livraison corrects et possibles.   <br><br>
+
+            <b>Heure de clôture</b><br><br>
+            Vous pouvez préciser ici jusqu’à quelle heure les commandes peuvent être traitées. Si vous déposez les commandes dans un point bpost chaque jour vers 17:00, il vous sera plus facile de clôturer le traitement des commandes vers 16:00. Lorsque vos clients passent commande après cette heure, une date de livraison ultérieure leur sera montrée. Par exemple : l’heure de clôture est fixée à 16:00. Vous pouvez traiter les commandes le jour même et les déposer à temps. Votre client se verra alors proposer le lendemain avant 16:00 comme premier délai de livraison. Si le client commande après 16:00, la livraison sera pour le surlendemain.  <br><br>
+
+            <b>Temps de traitement</b><br><br>
+            Vous pouvez ici indiquer le nombre de jours nécessaires au traitement d’une commande passée avant l’heure de clôture. Si vous indiquez ‘1 jour’, vous devrez tenir compte, dans l’affichage au niveau du checkout, que les colis ne seront pas livrés le lendemain. Par exemple : la commande est passée le 16 septembre, avant que vous ne vous rendiez au point bpost. Vous avez cependant configuré un temps de traitement d’un jour. Ce qui signifie que la première possibilité pour vous de déposer le colis est fixée au 17 septembre. Votre client se verra donc proposer le 18 septembre comme première date de livraison possible.  <br><br>
+        </p>
+
+        <h1 id="3">3 Aperçu des commandes</h1>
+        <p>L’aperçu des commandes vous permet de vérifier facilement le mode d’expédition relatif à la commande. Si vous le souhaitez, vous pouvez également modifier facilement le type de colis. Lorsque vous cliquez sur <span class="nice">Colis</span>, la fenêtre ci-dessous apparaît. Il est possible de désactiver les options d’expédition, ou bien d’ajouter ou de modifier le type d’envoi.</p>
+        <p>
+            Après avoir choisi les options souhaitées ou modifié le Type d’envoi, cliquez sur ‘Enregistrer’. Vous pouvez ensuite exporter ce choix vers MyParcel BE et créer l’étiquette souhaitée. <br><br>
+            <img src="media/woocommerce8BE.png"><br><br>
+            Vous pouvez transférer vos commandes vers MyParcel BE de deux manières, puis imprimer une étiquette. En sélectionnant une ou plusieurs commandes, puis en allant dans <span class="nice">Actions</span>. Vous pouvez ensuite faire votre choix : <span class="nice">Exporter</span>, <span class="nice">Imprimer</span> ou <span class="nice">Exporter et Imprimer</span>.
+
+            Une icône de chargement est visible, tant en cas d’exportation par lot que d’exportation individuelle. La page est ensuite immédiatement rafraîchie (voir l’exemple ci-dessous). <br><br>
+        </p>
+        <img src="media/laadicoontje.png">
+        <img src="media/woocommerce9.png"><br><br>
+
+        <h2 id="3_1">3.1 E-mail étiquette de retour</h2>
+        <p>Vous pouvez envoyer un lien de retour à votre client depuis l’aperçu des commandes. Votre client reçoit un e-mail comprenant un lien lui permettant d’imprimer facilement une étiquette de retour. L’image ci-dessous vous explique quelle icône doit être utilisée pour ce faire.</p>
+        <img src="media/retourlabelmailbutton.png"><br><br>
+
+        <h1 id="4">4 Détails de la commande</h1>
+        <p>Bien sûr, il est aussi possible de créer des envois depuis la page de détail de commandes. En cliquant sur une commande, vous serez transféré vers une page reprenant plus de détails.</p>
+        <img src="media/woocommerceBE10.png">
+
+        <footer class="site-footer">
+            <p>
+                <span class="site-footer-owner">MyParcel Belgique</span>
+            </p>
+            <p>
+            <span class="site-footer-credits">
+                <strong>Adresse </strong>Adriaan Brouwerstraat 16, 2000 Antwerpen&nbsp;
+                <strong>Téléphone </strong>03 808 18 20&nbsp;
+                <strong>E-mail </strong> info@sendmyparcel.be<br/>
+                <strong>Site internet </strong>www.sendmyparcel.be&nbsp;
+            </span>
+                <br/>
+                &nbsp;
+            </p>
+        </footer>
+    </div>
+</section>
