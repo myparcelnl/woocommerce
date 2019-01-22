@@ -31,6 +31,4 @@ $( document ).ready(function() {
     $(index).each(function() {
         console.log(this);
     });
-    console.log(index);
-    console.log('test');
 });
