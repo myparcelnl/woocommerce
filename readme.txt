@@ -90,6 +90,14 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 3.1.1 (2019-01-25) =
+* Improvement: Remove some styling code
+* Improvement: Text changes
+* Hotfix: Hide delivery options 
+* Improvement: get the total weight on a later moment
+* Improvement: Add maxlength to number suffix field
+* Hotfix: Unset weight by mailbox package 
+
 = 3.1.0 (2018-12-12) =
 * Hotfix: Show delivery options when checkout form already filled in.
 * Improvement: Add Digital stamp
