@@ -815,7 +815,6 @@ class WooCommerce_MyParcel_Export {
     }
 
     public function get_customs_declaration( $order ) {
-        $weight = (int) round($this->get_parcel_weight($order) * 1000);
         $invoice = $this->get_invoice_number($order);
         $contents = (int) ((isset(WooCommerce_MyParcel()->export_defaults['package_contents']))
             ? WooCommerce_MyParcel()->export_defaults['package_contents']
@@ -854,6 +853,8 @@ class WooCommerce_MyParcel_Export {
                 $items[] = compact('description', 'amount', 'weight', 'item_value', 'classification', 'country');
             }
         }
+        // Get the total weight of the package
+        $weight = (int) round($this->get_parcel_weight($order) * 1000);
 
         return compact('weight', 'invoice', 'contents', 'items');
     }
