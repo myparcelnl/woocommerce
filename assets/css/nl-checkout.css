@@ -73,11 +73,6 @@ input:-webkit-autofill {
     background-color: transparent;
 }
 
-#mypa-delivery-option-form fieldset, form, ul, li, select {
-    padding: 0;
-    margin: 0;
-}
-
 #mypa-delivery-option-form label {
     width: 66%;
 }
