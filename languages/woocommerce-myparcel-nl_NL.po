@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "POT-Creation-Date: 2018-11-27 16:01+0100\n"
 "PO-Revision-Date: 2018-11-27 16:04+0100\n"
-"Last-Translator: Edie Lemoine <edie@myparcel.nl>\n"
+"Last-Translator: Richard Perdaan <richard@myparcel.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -437,11 +437,11 @@ msgstr "Track & Trace in e-mail"
 msgid ""
 "Add the Track & Trace code to emails to the customer.<br/><strong>Note!</"
 "strong> When you select this option, make sure you have not enabled the "
-"Track & Trace email in your MyParcel backend."
+"Track & Trace email in your backoffice."
 msgstr ""
 "Voeg de Track & Trace code toe aan e-mails aan de klant.<br/> <strong>Let op!"
 "</strong> Wanneer je voor deze optie kiest, zorg er dan voor dat je niet de "
-"Track & Trace e-mail in MyParcel backend hebt ingeschakeld."
+"Track & Trace e-mail in de backoffice hebt ingeschakeld."
 
 #: includes/class-wcmp-settings.php:227
 msgid "Track & Trace in My Account"
@@ -470,13 +470,13 @@ msgstr "Orderstatus automatisering"
 #: includes/class-wcmp-settings.php:260
 msgid ""
 "Automatically set order status to a predefined status after successful "
-"MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> "
+"export.<br/>Make sure <strong>Process shipments directly</strong> "
 "is enabled when you use this option together with the <strong>Track & Trace "
 "in email</strong> option, otherwise the Track & Trace code will not be "
 "included in the customer email."
 msgstr ""
-"Wijzig automatisch de orderstatus na het succesvol exporteren van een order "
-"naar MyParcel.<br/>Let op dat <strong>Verwerk zendingen direct</strong> is "
+"Wijzig automatisch de orderstatus na het succesvol exporteren van een order."
+"<br/>Let op dat <strong>Verwerk zendingen direct</strong> is "
 "ingeschakeld wanneer je deze optie gebruikt in combinatie met de "
 "<strong>Track & Trace in e-mail</strong> optie, anders wordt de Track & "
 "Trace code niet opgenomen in de e-mail naar de klant."
@@ -531,8 +531,8 @@ msgid "Package types"
 msgstr "Pakkettype"
 
 #: includes/class-wcmp-settings.php:377
-msgid "Select one or more shipping methods for each MyParcel package type"
-msgstr "Selecteer een of meer verzendmethoden voor elk MyParcel pakkettype"
+msgid "Select one or more shipping methods for each delivery type"
+msgstr "Selecteer een of meer verzendmethoden voor elk bezorg type"
 
 #: includes/class-wcmp-settings.php:383
 #: includes/views/wcmp-order-return-shipment-options.php:6
@@ -549,11 +549,11 @@ msgstr "Koppel e-mailadres klant"
 #, php-format
 msgid ""
 "When you connect the customer email, MyParcel can send a Track & Trace email "
-"to this address. In your %sMyParcel backend%s you can enable or disable this "
+"to this address. In your backoffice you can enable or disable this "
 "email and format it in your own style."
 msgstr ""
 "Wanneer je het e-mailadres van de klant koppelt, kan MyParcel een Track & "
-"Trace e-mail versturen naar dit adres. In je %sMyParcel backend%s kun je "
+"Trace e-mail versturen naar dit adres. In je backoffice kun je "
 "deze e-mail in- of uitschakelen en opmaken in je eigen stijl."
 
 #: includes/class-wcmp-settings.php:411
@@ -579,17 +579,14 @@ msgstr "Extra groot formaat"
 
 #: includes/class-wcmp-settings.php:431
 msgid ""
-"Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
-"smaller than 175 x 78 x 58 cm. An extra fee of &euro;&nbsp;2,45 will be "
-"charged.<br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x "
-"58 of or heavier than 30 kg, the pallet rate of &euro;&nbsp;70,00 will be "
-"charged."
+"Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. "
+"An extra fee will be charged. <br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x 58 of or "
+"heavier than 30 kg, the pallet rate will be charged."
 msgstr ""
 "Vink deze optie aan indien je pakket groter is dan 100 x 70 x 50 cm, maar "
-"kleiner dan 175 x 78 x 58 cm. Er wordt hiervoor een toeslag van &euro;"
-"&nbsp;2,45 doorberekend.<br/><strong>Let op!</strong> Indien het pakket "
+"kleiner dan 175 x 78 x 58 cm. <br/><strong>Let op!</strong> Indien het pakket "
 "groter is dan 175 x 78 x 58 of zwaarder dan 30 kg, dan wordt er een "
-"pallettarief van &euro;&nbsp;70,00 in rekening gebracht."
+"pallettarief in rekening gebracht."
 
 #: includes/class-wcmp-settings.php:437 includes/class-wcmp-settings.php:817
 #: includes/views/wcmp-order-return-shipment-options.php:36
@@ -646,19 +643,19 @@ msgstr ""
 "postkantoor komt te liggen, vink dan deze optie aan."
 
 #: includes/class-wcmp-settings.php:476
-msgid "Insured shipment (from + &euro;0.50)"
-msgstr "Verzekerde verzending (vanaf + &euro;0.50)"
+msgid "Insured shipment"
+msgstr "Verzekerde verzending"
 
 #: includes/class-wcmp-settings.php:483
 msgid ""
 "By default, there is no insurance on the shipments. If you still want to "
-"insure the shipment, you can do that from &euro;0.50. We insure the purchase "
+"insure the shipment, you can do that. We insure the purchase "
 "value of the shipment, with a maximum insured value of &euro; 5.000. Insured "
 "parcels always contain the options \"Home address only\" en \"Signature for "
 "delivery\""
 msgstr ""
 "Er zit standaard geen verzekering op de zendingen. Indien je toch wilt "
-"verzekeren kun je dit doen vanaf &euro;0.50. Wij verzekeren de inkoopwaarde "
+"verzekeren kun je dit doen. Wij verzekeren de inkoopwaarde "
 "van je product, met een maximale verzekerde waarde van &euro; 5.000. "
 "Verzekerde pakketten bevatten altijd de opties \"Alléén huisadres\" en "
 "\"Handtekening voor ontvangst\""
@@ -670,20 +667,20 @@ msgid "Insured amount"
 msgstr "Verzekerde waarde"
 
 #: includes/class-wcmp-settings.php:500
-msgid "Insured up to &euro; 50 (+ &euro; 0.50)"
-msgstr "Verzekerd tot &euro; 50 (+ &euro; 0.50)"
+msgid "Insured up to &euro; 100"
+msgstr "Verzekerd tot &euro; 100"
 
 #: includes/class-wcmp-settings.php:501
-msgid "Insured up to &euro; 250 (+ &euro; 1.00)"
-msgstr "Verzekerd tot &euro; 250 (+ &euro; 1.00)"
+msgid "Insured up to &euro; 250"
+msgstr "Verzekerd tot &euro; 250"
 
 #: includes/class-wcmp-settings.php:502
-msgid "Insured up to &euro; 500 (+ &euro; 1.65)"
-msgstr "Verzekerd tot &euro; 500 (+ &euro; 1.65)"
+msgid "Insured up to &euro; 500"
+msgstr "Verzekerd tot &euro; 500"
 
 #: includes/class-wcmp-settings.php:503
-msgid "> &euro; 500 insured (+ &euro; 1.65 / &euro; 500)"
-msgstr "> &euro; 500 verzekerd (+ &euro; 1.65 / &euro; 500)"
+msgid "> &euro; 500 insured"
+msgstr "> &euro; 500 verzekerd"
 
 #: includes/class-wcmp-settings.php:510
 msgid "Insured amount (in euro)"
@@ -697,13 +694,13 @@ msgstr "Label omschrijving"
 msgid ""
 "With this option, you can add a description to the shipment. This will be "
 "printed on the top left of the label, and you can use this to search or sort "
-"shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> to "
+"shipments in your backoffice. Use <strong>[ORDER_NR]</strong> to "
 "include the order number, <strong>[DELIVERY_DATE]</strong> to include the "
 "delivery date."
 msgstr ""
 "Met deze optie kun je een beschrijving toevoegen aan de zending. Dit zal "
 "worden afgedrukt op de linkerbovenhoek van het label, en je kunt dit "
-"gebruiken om zendingen in het MyParcel Backend te zoeken of te sorteren. "
+"gebruiken om zendingen in jouw backoffice te zoeken of te sorteren. "
 "Gebruik <strong>[ORDER_NR]</strong> om het ordernummer te vermelden, "
 "[DELIVERY_DATE] voor de bezorgdatum."
 
@@ -1020,8 +1017,8 @@ msgstr "Verzekering"
 
 #: includes/views/wcmp-order-return-shipment-options.php:108
 #: includes/views/wcmp-order-shipment-options.php:145
-msgid "Insured up to &euro; 50"
-msgstr "Verzekerd tot &euro; 50"
+msgid "Insured up to &euro; 100"
+msgstr "Verzekerd tot &euro; 100"
 
 #: includes/views/wcmp-order-return-shipment-options.php:109
 #: includes/views/wcmp-order-shipment-options.php:146
