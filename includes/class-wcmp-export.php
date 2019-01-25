@@ -473,6 +473,10 @@ class WooCommerce_MyParcel_Export {
                 );
                 unset($shipment['options']['weight']);
             }
+            
+            if ($shipment['options']['package_type'] == self::MAILBOX_PACKAGE ) {
+                unset($shipment['options']['weight']);
+            }
 
             $shipments[] = apply_filters('wc_myparcel_order_shipment', $shipment, $order, $type, $this);
         }
