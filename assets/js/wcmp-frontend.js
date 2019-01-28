@@ -143,10 +143,7 @@ jQuery(function($) {
         },
 
         is_updated: function() {
-            if (MyParcel_Frontend.updated_shipping_method !== MyParcel_Frontend.selected_shipping_method
-                || MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country
-                || MyParcel_Frontend.force_update === true
-            ) {
+            if (MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country || MyParcel_Frontend.force_update === true) {
                 MyParcel_Frontend.force_update = false; // only force once
                 return true;
             }
