@@ -230,6 +230,10 @@ input:-webkit-autofill {
     font-weight: bold;
 }
 
+.colorGreen{
+    color: green;
+}
+
 #mypa-spinner-model {
     position: relative;
     display: table;

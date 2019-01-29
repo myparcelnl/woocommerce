@@ -784,8 +784,48 @@ msgstr ""
 msgid "Home delivery title"
 msgstr ""
 
+#: includes/class-wcmp-settings.php:758
+msgid "Delivered at home or at work"
+msgstr ""
+
 #: includes/class-wcmp-settings.php:771
-msgid "Standard delivery title"
+msgid "Standard delivery"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Address details are not entered"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Pick up from"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "House number/postcode combination unknown"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Postcode"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "House number"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Again"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Deliver as quickly as possible"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Closed"
+msgstr ""
+
+#: includes/class-wcmp-settings.php:771
+msgid "Opening hours"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:780 includes/class-wcmp-settings.php:796 includes/class-wcmp-settings.php:812
