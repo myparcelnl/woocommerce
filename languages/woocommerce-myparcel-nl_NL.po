@@ -772,7 +772,7 @@ msgstr "Standaard bezorging"
 
 #: includes/class-wcmp-settings.php:771
 msgid "Address details are not entered"
-msgstr "Adresgegevens zijn niet ingevuld"
+msgstr "Adresgegevens zijn nog niet ingevuld"
 
 #: includes/class-wcmp-settings.php:771
 msgid "Pick up from"
