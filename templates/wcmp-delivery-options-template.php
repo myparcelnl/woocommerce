@@ -35,7 +35,7 @@
                 </td>
                 <td colspan="2">
                     <label id="mypa-select-delivery-title" for="mypa-select-delivery">
-                        <span id="mypa-delivery-title"></span></label>
+                    <span id="mypa-delivery-title"></span></label>
                 </td>
             </tr>
             <tr id="mypa-delivery-date-select">
@@ -140,7 +140,7 @@
                 <td></td>
                 <td>
                     <input name="method-myparcel-pickup-selector" id="mypa-pickup-selector" type="radio" value="myparcel-pickup-selector">
-                    <label for="mypa-pickup-selector">Ophalen vanaf 15:00</label>
+                    <label for="mypa-pickup-selector"><span class="mypa-pickup-delivery-titel"></span> 15:00</label>
                 </td>
                 <td>
                     <span id="mypa-pickup-price"></span>
@@ -150,7 +150,7 @@
                 <td></td>
                 <td>
                     <input name="method-myparcel-pickup-selector" id="mypa-pickup-express-selector" type="radio" value="myparcel-pickup-express-selector">
-                    <label for="mypa-pickup-express-selector">Ophalen vanaf 09:00</label>
+                    <label for="mypa-pickup-express-selector"><span class="mypa-pickup-delivery-titel"></span> 09:00</label>
                 </td>
                 <td>
                     <span id="mypa-pickup-express-price"></span>

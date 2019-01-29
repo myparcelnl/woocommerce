@@ -762,6 +762,51 @@ msgstr ""
 msgid "Enable MyParcel delivery options"
 msgstr "MyParcel bezorgopties inschakelen"
 
+#: includes/class-wcmp-settings.php:758
+msgid "Delivered at home or at work"
+msgstr "Thuis of op het werk bezorgd"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Standard delivery"
+msgstr "Standaard bezorging"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Address details are not entered"
+msgstr "Adresgegevens zijn niet ingevuld"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Pick up from"
+msgstr "Ophalen vanaf"
+
+#: includes/class-wcmp-settings.php:771
+msgid "House number/postcode combination unknown"
+msgstr "Huisnummer/postcode combinatie onbekend"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Postcode"
+msgstr "Postcode"
+
+#: includes/class-wcmp-settings.php:771
+msgid "House number"
+msgstr "Huisnummer"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Again"
+msgstr "Opnieuw"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Deliver as quickly as possible"
+msgstr "Zo snel mogelijk bezorgen"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Closed"
+msgstr "Gesloten"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Opening hours"
+msgstr "Openingstijden"
+
+
 #: includes/class-wcmp-settings.php:634
 msgid "Display for"
 msgstr "Toon bij"
