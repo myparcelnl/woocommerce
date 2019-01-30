@@ -523,7 +523,8 @@ class WooCommerce_MyParcel_Export {
                 'only_recipient',
                 'signature',
                 'return',
-                'large_format'
+                'large_format',
+                'age_check'
             );
             foreach ($options as $key => &$value) {
                 if (in_array($key, $int_options)) {
@@ -691,6 +692,7 @@ class WooCommerce_MyParcel_Export {
                 'large_format' => 0,
                 'label_description' => '',
                 'insured_amount' => 0,
+                'age_check' => 0,
             );
             $options = array_merge($empty_defaults, $shipment_options);
         } else {
@@ -712,6 +714,7 @@ class WooCommerce_MyParcel_Export {
                 'large_format' => (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
                 'label_description' => $description,
                 'insured_amount' => $insured_amount,
+                'age_check' => (isset(WooCommerce_MyParcel()->export_defaults['age_check'])) ? 1 : 0,
             );
         }
 
@@ -782,7 +785,7 @@ class WooCommerce_MyParcel_Export {
 
         // PREVENT ILLEGAL SETTINGS
         // convert numeric strings to int
-        $int_options = array('package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format');
+        $int_options = array('package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'age_check');
         foreach ($options as $key => &$value) {
             if (in_array($key, $int_options)) {
                 $value = (int) $value;
@@ -791,7 +794,7 @@ class WooCommerce_MyParcel_Export {
 
         // disable options for mailbox package, unpaid letter and digital stamp
         if ($options['package_type'] != self::PACKAGE) {
-            $illegal_options = array('delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date');
+            $illegal_options = array('delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date', 'age_check');
             foreach ($options as $key => $option) {
                 if (in_array($key, $illegal_options)) {
                     unset($options[$key]);

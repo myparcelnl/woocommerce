@@ -79,12 +79,21 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
                 'label' => __('Return if no answer', 'woocommerce-myparcel'),
                 'value' => isset($shipment_options['return']) ? $shipment_options['return'] : 0,
             ),
+            '[age_check]'         => array(
+                'label' => __('Age check 18+', 'woocommerce-myparcel'),
+                'value' => isset($shipment_options['age_check']) ? $shipment_options['age_check'] : 0,
+            ),
             '[insured]'        => array(
                 'label' => __('Insured + home address only + signature on delivery', 'woocommerce-myparcel'),
                 'value' => $shipment_options['insured'],
                 'class' => 'insured',
             ),
         );
+
+//        if ($option_rows['[age_check]']['value'] == 1 ){
+//            $option_rows['[only_recipient]']['value'] = 1;
+//            $option_rows['[signature]']['value'] = 1;
+//        }
 
         if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
             if (WooCommerce_MyParcel()->export->is_world_shipment_country($recipient['cc'])) {
@@ -93,6 +102,7 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
             unset($option_rows['[only_recipient]']);
             unset($option_rows['[signature]']);
             unset($option_rows['[return]']);
+            unset($option_rows['[age_check]']);
 
             $shipment_options['insured'] = 1;
             if (WooCommerce_MyParcel()->export->is_world_shipment_country($recipient['cc'])) {
