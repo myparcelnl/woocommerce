@@ -33,7 +33,7 @@ jQuery(function($) {
 
                 if (MyParcel_Frontend.always_display) {
                     MyParcel_Frontend.force_update = true;
-                    MyParcel_Frontend.show_delivery_options();
+                    MyParcel.showAllDeliveryOptions();
                 } else if (MyParcel_Frontend.shipping_methods.length > 0) {
                     var shipping_method = MyParcel_Frontend.get_shipping_method();
 
@@ -64,16 +64,17 @@ jQuery(function($) {
 
                     if (shipping_class && $.inArray(shipping_method_class, MyParcel_Frontend.shipping_methods) > -1) {
                         MyParcel_Frontend.updated_shipping_method = shipping_method_class;
-                        MyParcel_Frontend.show_delivery_options();
+                        MyParcel.showAllDeliveryOptions();
                         MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_class;
                     } else if ($.inArray(shipping_method, MyParcel_Frontend.shipping_methods) > -1) {
                         // fallback to bare method if selected in settings
                         MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method;
-                        MyParcel_Frontend.show_delivery_options();
+                        MyParcel.showAllDeliveryOptions();
                         MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method;
                     } else {
                         var shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
                         MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method_now;
+                        MyParcel.hideAllDeliveryOptions();
                         MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_now;
                     }
                 } else {
@@ -100,7 +101,7 @@ jQuery(function($) {
                 && $.isEmptyObject(MyParcel.data) === false
             ) {
                 MyParcel.callDeliveryOptions();
-                MyParcel_Frontend.show_delivery_options();
+                MyParcel.showAllDeliveryOptions();
                 MyParcel_Frontend.selected_country = MyParcel_Frontend.updated_country;
             }
 
@@ -141,17 +142,8 @@ jQuery(function($) {
             }
         },
 
-        show_delivery_options: function() {
-            if (MyParcel_Frontend.is_updated()) {
-                MyParcel.showAllDeliveryOptions();
-            }
-        },
-
         is_updated: function() {
-            if (MyParcel_Frontend.updated_shipping_method !== MyParcel_Frontend.selected_shipping_method
-                || MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country
-                || MyParcel_Frontend.force_update === true
-            ) {
+            if (MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country || MyParcel_Frontend.force_update === true) {
                 MyParcel_Frontend.force_update = false; // only force once
                 return true;
             }

@@ -16,7 +16,7 @@
 }
 
 .wcmp_shipment_summary, .wcmp_shipment_options {
-    /*display: inline;*/
+    display: inline;
 }
 
 .wcmp_shipment_summary .delivery-date,
@@ -38,20 +38,14 @@ ul.wcmyparcel_shipment_summary li:before {
     width: 100%;
 }
 
-.wcmp_shipment_options_form input[type=number] {
-    width: 50px;
-    text-align: center;
-}
-
 .wcmp_shipment_options_form input[type="checkbox"],
 .wcmp_shipment_options_form input[type="radio"] {
     margin-right: 8px;
 }
 
 .wcmp_shipment_options_form .wcmyparcel_settings_table td {
-    border: none;
-    padding: 0 7px 2px !important;
-    vertical-align: middle !important;
+    padding-bottom: 6px;
+    vertical-align: middle;
 }
 
 .wcmp_shipment_options_form, .wcmp_shipment_summary_list {

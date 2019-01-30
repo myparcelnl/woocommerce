@@ -1,20 +1,20 @@
 === Plugin Name ===
 Contributors: richardperdaan
-Tags: woocommerce, export, myparcel
+Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, MyParcel, myparcel, Flespakket, flespakket, PostNL, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.9.8
+Tested up to: 5.0.0
 Stable tag: trunk
 Requires PHP: 5.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
-Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin
+Export your WooCommerce orders to MyParcel (www.myparcel.nl) or to Flespakket (www.flespakket.nl) and print labels directly from the WooCommerce admin
 
 == Description ==
+[vimeo https://vimeo.com/241571840]
+This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl) & Flespakket service (www.flespakket.nl). The products are delivered by PostNL.
 
-This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl).
-
-**Online Manual (in Dutch):** https://myparcelnl.github.io/woocommerce/
+**Online Manual (in Dutch):** [https://myparcelnl.github.io/woocommerce/](https://myparcelnl.github.io/woocommerce/)
 
 = Main features =
 - Delivery options integrated in your checkout
@@ -28,7 +28,7 @@ This WooCommerce extension allows you to export your orders to the MyParcel serv
 - View the status of the shipment in the order details page
 - Add Track & Trace link to the order confirmation email
 
-A MyParcel API account is required for this plugin! You can create this in your account or contact MyParcel at info@myparcel.nl
+An API-key is required for this plugin! You can create this in your backoffice account.
 
 == Installation ==
 
@@ -51,7 +51,7 @@ In the search field type "WooCommerce MyParcel" and click Search Plugins. You ca
 
 = Setting up the plugin =
 1. Go to the menu `WooCommerce > MyParcel`.
-2. Fill in your API Details. If you don't have API details, log into your myparcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) where you can find your API key under Instellingen → Algemeen.
+2. Fill in your API Details. If you don't have API details, log into your MyParcel or Flespakket account, you can find your API key under Instellingen → Algemeen.
 3. Under 'Default export settings' you can set options that should be set by default for the export. You can change these settings per order at the time of export.
 4. The plugin is ready to be used!
 
@@ -64,10 +64,10 @@ Moreover, after a label is created, a Track & Trace code is added to the order. 
 
 == Frequently Asked Questions ==
 
-**Online Manual (in Dutch):** https://myparcelnl.github.io/woocommerce/
+**Online Manual (in Dutch):** [https://myparcelnl.github.io/woocommerce/](https://myparcelnl.github.io/woocommerce/)
 
 = How do I get an API key? =
-When logged in on your myparcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) you can find your API key under Instellingen → Algemeen.
+When logged in on your MyParcel or Flespakket account, you can find your API key under Instellingen → Algemeen.
 
 = How do I change the Track & Trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
@@ -89,6 +89,23 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+
+= 3.1.1 (2019-01-30) =
+* Fix: Remove some styling code
+* Fix: Text changes
+* Fix: Hide delivery options 
+* Fix: Get the total weight on a later moment
+* Fix: Unset weight by mailbox package 
+* Fix: Since WooCommerce 3.0, logging can be grouped by context (error code 0 when exporting / printing)
+* Fix: The checkout is still loading when change the country.
+
+* Improvement: Add maxlength to number suffix field
+* Improvement: Translate all text inside the checkout
+* Improvement: The option to give a discount on the shipping method ( negative amounts)
+
+= 3.1.0 (2018-12-12) =
+* Hotfix: Show delivery options when checkout form already filled in.
+* Improvement: Add Digital stamp
 
 = 3.0.10 (2018-12-05) =
 * Hotfix: Flashing of the order summary.

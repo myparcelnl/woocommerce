@@ -10,6 +10,12 @@ if ( ! class_exists('WooCommerce_MyParcel_Export')) :
 
 class WooCommerce_MyParcel_Export {
 
+    // Package types
+    const PACKAGE         = 1;
+    const MAILBOX_PACKAGE = 2;
+    const LETTER          = 3;
+    const DIGITAL_STAMP   = 4;
+
     public $order_id;
     public $success;
     public $errors;
@@ -22,16 +28,16 @@ class WooCommerce_MyParcel_Export {
         $this->errors = array();
 
         $this->use_split_address_fields = array_key_exists('use_split_address_fields', get_option('woocommerce_myparcel_checkout_settings'))
-            ? get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'] === '1'
+            ? isset(get_option('woocommerce_myparcel_checkout_settings')['use_split_address_fields'])
             : false;
 
-        include( 'class-wcmp-rest.php' );
-        include( 'class-wcmp-api.php' );
+        include('class-wcmp-rest.php');
+        include('class-wcmp-api.php');
 
-        add_action( 'admin_notices', array( $this, 'admin_notices' ) );
-        add_action( 'wp_ajax_wc_myparcel', array($this, 'export' ));
-        add_action( 'wp_ajax_wc_myparcel_frontend', array($this, 'frontend_api_request' ));
-        add_action( 'wp_ajax_nopriv_wc_myparcel_frontend', array($this, 'frontend_api_request' ));
+        add_action('admin_notices', array($this, 'admin_notices'));
+        add_action('wp_ajax_wc_myparcel', array($this, 'export'));
+        add_action('wp_ajax_wc_myparcel_frontend', array($this, 'frontend_api_request'));
+        add_action('wp_ajax_nopriv_wc_myparcel_frontend', array($this, 'frontend_api_request'));
     }
 
     public function admin_notices() {
@@ -441,7 +447,6 @@ class WooCommerce_MyParcel_Export {
             );
 
             if ($pickup = $this->is_pickup($order)) {
-                // $pickup_time = array_shift($pickup['time']); // take first element in time array
                 $shipment['pickup'] = array(
                     'postal_code'       => $pickup['postal_code'],
                     'street'            => $pickup['street'],
@@ -460,6 +465,17 @@ class WooCommerce_MyParcel_Export {
                 $shipment['physical_properties'] = array(
                     'weight' => $customs_declaration['weight'],
                 );
+            }
+
+            if ($shipment['options']['package_type'] == self::DIGITAL_STAMP ) {
+                $shipment['physical_properties'] = array(
+                    'weight' => (int) $shipment['options']['weight'],
+                );
+                unset($shipment['options']['weight']);
+            }
+            
+            if ($shipment['options']['package_type'] == self::MAILBOX_PACKAGE ) {
+                unset($shipment['options']['weight']);
             }
 
             $shipments[] = apply_filters('wc_myparcel_order_shipment', $shipment, $order, $type, $this);
@@ -665,9 +681,10 @@ class WooCommerce_MyParcel_Export {
 
         // use shipment options from order when available
         $shipment_options = WCX_Order::get_meta($order, '_myparcel_shipment_options');
+
         if ( ! empty($shipment_options)) {
-            $emty_defaults = array(
-                'package_type' => 1,
+            $empty_defaults = array(
+                'package_type' => self::PACKAGE,
                 'only_recipient' => 0,
                 'signature' => 0,
                 'return' => 0,
@@ -675,7 +692,7 @@ class WooCommerce_MyParcel_Export {
                 'label_description' => '',
                 'insured_amount' => 0,
             );
-            $options = array_merge($emty_defaults, $shipment_options);
+            $options = array_merge($empty_defaults, $shipment_options);
         } else {
             if (isset(WooCommerce_MyParcel()->export_defaults['insured'])
                 && WooCommerce_MyParcel()->export_defaults['insured_amount'] == ''
@@ -772,8 +789,8 @@ class WooCommerce_MyParcel_Export {
             }
         }
 
-        // disable options for mailbox package and unpaid letter
-        if ($options['package_type'] != 1) {
+        // disable options for mailbox package, unpaid letter and digital stamp
+        if ($options['package_type'] != self::PACKAGE) {
             $illegal_options = array('delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date');
             foreach ($options as $key => $option) {
                 if (in_array($key, $illegal_options)) {
@@ -802,7 +819,6 @@ class WooCommerce_MyParcel_Export {
     }
 
     public function get_customs_declaration( $order ) {
-        $weight = (int) round($this->get_parcel_weight($order) * 1000);
         $invoice = $this->get_invoice_number($order);
         $contents = (int) ((isset(WooCommerce_MyParcel()->export_defaults['package_contents']))
             ? WooCommerce_MyParcel()->export_defaults['package_contents']
@@ -841,6 +857,8 @@ class WooCommerce_MyParcel_Export {
                 $items[] = compact('description', 'amount', 'weight', 'item_value', 'classification', 'country');
             }
         }
+        // Get the total weight of the package
+        $weight = (int) round($this->get_parcel_weight($order) * 1000);
 
         return compact('weight', 'invoice', 'contents', 'items');
     }
@@ -939,7 +957,7 @@ class WooCommerce_MyParcel_Export {
     }
 
     public function get_package_type_from_shipping_method($shipping_method, $shipping_class, $shipping_country) {
-        $package_type = 1;
+        $package_type = self::PACKAGE;
         $shipping_method_id_class = "";
         if (isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'])) {
             if (strpos($shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping')) {
@@ -976,8 +994,8 @@ class WooCommerce_MyParcel_Export {
         }
 
         // disable mailbox package outside NL
-        if ($shipping_country != 'NL' && $package_type == 2) {
-            $package_type = 1;
+        if ($shipping_country != 'NL' && $package_type == self::MAILBOX_PACKAGE) {
+            $package_type = self::PACKAGE;
         }
 
         return $package_type;
@@ -1013,13 +1031,13 @@ class WooCommerce_MyParcel_Export {
             if ((isset(WooCommerce_MyParcel()->export_defaults['package_type']))) {
                 $package_type = WooCommerce_MyParcel()->export_defaults['package_type'];
             } else {
-                $package_type = 1; // 1. package | 2. mailbox package | 3. letter
+                $package_type = self::PACKAGE;
             }
         }
 
         // always parcel for Pickup and Pickup express delivery types.
         if ($this->is_pickup($order)) {
-            $package_type = 1;
+            $package_type = self::PACKAGE;
         }
 
         return $package_type;
@@ -1027,13 +1045,15 @@ class WooCommerce_MyParcel_Export {
 
     public function get_package_types($shipment_type = 'shipment') {
         $package_types = array(
-            1 => __('Parcel', 'woocommerce-myparcel'),
-            2 => __('Mailbox package', 'woocommerce-myparcel'),
-            3 => __('Unpaid letter', 'woocommerce-myparcel'),
+            self::PACKAGE         => __('Parcel', 'woocommerce-myparcel'),
+            self::MAILBOX_PACKAGE => __('Mailbox package', 'woocommerce-myparcel'),
+            self::LETTER          => __('Unpaid letter', 'woocommerce-myparcel'),
+            self::DIGITAL_STAMP   => __('Digital stamp', 'woocommerce-myparcel'),
         );
         if ($shipment_type == 'return') {
-            unset($package_types[2]);
-            unset($package_types[3]);
+            unset($package_types[self::MAILBOX_PACKAGE]);
+            unset($package_types[self::LETTER]);
+            unset($package_types[self::DIGITAL_STAMP]);
         }
 
         return $package_types;
@@ -1189,14 +1209,21 @@ class WooCommerce_MyParcel_Export {
         return $name;
     }
 
-    public function get_parcel_weight($order) {
+    public function get_parcel_weight($order, $unit = 'kg') {
         $parcel_weight = (isset(WooCommerce_MyParcel()->general_settings['empty_parcel_weight']))
             ? preg_replace("/\D/", "", WooCommerce_MyParcel()->general_settings['empty_parcel_weight']) / 1000
             : 0;
 
         $items = $order->get_items();
         foreach ( $items as $item_id => $item ) {
-            $parcel_weight += $this->get_item_weight_kg($item, $order);
+            switch ($unit) {
+                case 'kg':
+                    $parcel_weight += $this->get_item_weight_kg($item, $order);
+                break;
+                case 'g':
+                    $parcel_weight += $this->get_item_weight_g($item, $order);
+                break;
+            }
         }
 
         return $parcel_weight;
@@ -1232,6 +1259,11 @@ class WooCommerce_MyParcel_Export {
         $item_weight = (float) $product_weight * (int) $item['qty'];
 
         return $item_weight;
+    }
+
+    public function get_item_weight_g($item, $order) {
+        $item_weight = $this->get_item_weight_kg($item, $order);
+        return $item_weight * 1000;
     }
 
     public function is_pickup($order, $myparcel_delivery_options = '') {
@@ -1277,10 +1309,10 @@ class WooCommerce_MyParcel_Export {
             $myparcel_delivery_options = WCX_Order::get_meta($order, '_myparcel_delivery_options');
         }
 
-        // standard = default, overwrite if otpions found
+        // standard = default, overwrite if options found
         $delivery_type = 'standard';
         if ( ! empty($myparcel_delivery_options)) {
-            // pickup & pickupexpress store the delivery type in the delivery options,
+            // pickup & pickup express store the delivery type in the delivery options,
             // morning & night store it in the time data (...)
             if (empty($myparcel_delivery_options['price_comment']) && ! empty($myparcel_delivery_options['time'])) {
                 // check if we have a price_comment in the time option
@@ -1570,21 +1602,33 @@ class WooCommerce_MyParcel_Export {
 
     public function log($message) {
         if (isset(WooCommerce_MyParcel()->general_settings['error_logging'])) {
+
+            // Starting with WooCommerce 3.0, logging can be grouped by context and severity.
+            if (class_exists('WC_Logger') && version_compare(WOOCOMMERCE_VERSION, '3.0', '>=')) {
+                $logger = wc_get_logger();
+                $logger->debug( $message, array( 'source' => 'wc-myparcel' ) );
+
+                return;
+            }
+
             if (class_exists('WC_Logger')) {
                 $wc_logger = function_exists('wc_get_logger') ? wc_get_logger() : new WC_Logger();
                 $wc_logger->add('wc-myparcel', $message);
-            } else {
-                // Old WC versions didn't have a logger
-                // log file in upload folder - wp-content/uploads
-                $upload_dir = wp_upload_dir();
-                $upload_base = trailingslashit($upload_dir['basedir']);
-                $log_file = $upload_base . 'myparcel_log.txt';
 
-                $current_date_time = date("Y-m-d H:i:s");
-                $message = $current_date_time . ' ' . $message . "\n";
-
-                file_put_contents($log_file, $message, FILE_APPEND);
+                return;
             }
+
+            // Old WC versions didn't have a logger
+            // log file in upload folder - wp-content/uploads
+            $upload_dir = wp_upload_dir();
+            $upload_base = trailingslashit($upload_dir['basedir']);
+            $log_file = $upload_base . 'myparcel_log.txt';
+
+            $current_date_time = date("Y-m-d H:i:s");
+            $message = $current_date_time . ' ' . $message . "\n";
+
+            file_put_contents($log_file, $message, FILE_APPEND);
+            return;
         }
     }
 
@@ -1648,6 +1692,59 @@ class WooCommerce_MyParcel_Export {
         }
 
         return false;
+    }
+
+    public static function get_tier_ranges($round = false) {
+        // same as in backoffice, average is value of option
+        $tier_ranges = array(
+            1 => array(
+                'min' => 0,
+                'max' => 21,
+                'average' => 15
+            ),
+            2 => array(
+                'min' => 21,
+                'max' => 51,
+                'average' => 35
+            ),
+            3 => array(
+                'min' => 51,
+                'max' => 101,
+                'average' => 75
+            ),
+            4 => array(
+                'min' => 101,
+                'max' => 351,
+                'average' => 225
+            ),
+            5 => array(
+                'min' => 351,
+                'max' => 2001,
+                'average' => 1175
+            )
+        );
+
+        // round values for display according to postnl standard
+        if ($round) {
+            foreach ($tier_ranges as &$tier_range) {
+                $tier_range['min'] = $tier_range['min'] > 0 ? $tier_range['min'] - 1 : $tier_range['min'];
+                $tier_range['max'] = $tier_range['max'] - 1;
+            }
+        }
+
+        return $tier_ranges;
+    }
+
+    public static function find_tier_range($weight) {
+        $current_range = false;
+
+        foreach (WooCommerce_MyParcel_Export::get_tier_ranges() as $tier_range => $value) {
+            if ($weight >= $value['min'] && $weight < $value['max']) {
+                $current_range = $tier_range;
+            }
+        }
+
+        return $current_range;
     }
 }
 

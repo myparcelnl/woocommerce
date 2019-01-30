@@ -454,15 +454,6 @@ class WooCommerce_MyParcel_Frontend {
                 'Vrijdag',
                 'Zaterdag'
             ],
-            "translateENtoNL" => [
-                'monday' => 'maandag',
-                'tuesday' => 'dindsag',
-                'wednesday' => 'woensdag',
-                'thursday' => 'donderdag',
-                'friday' => 'vrijdag',
-                'saturday' => 'zaterdag',
-                'sunday' => 'zondag'
-            ],
             "config" => [
                 "apiBaseUrl" => WooCommerce_MyParcel_Frontend_Settings::BASE_URL,
                 "carrier" => "1",
@@ -474,15 +465,6 @@ class WooCommerce_MyParcel_Frontend {
                 "priceOnlyRecipient" => $this->frontend_settings->get_price('only_recipient'),
                 "pricePickup" => $this->frontend_settings->get_price('pickup'),
                 "pricePickupExpress" => $this->frontend_settings->get_price('pickup_express'),
-
-                "headerDeliveryOptions" => $this->frontend_settings->get_title('header_delivery_options'),
-                "deliveryTitle" => $this->frontend_settings->get_title('at_home_delivery'),
-                "pickupTitle" => $this->frontend_settings->get_title('pickup'),
-                "deliveryMorningTitle" => $this->frontend_settings->get_title('morning'),
-                "deliveryStandardTitle" => $this->frontend_settings->get_title('standard'),
-                "deliveryEveningTitle" => $this->frontend_settings->get_title('evening'),
-                "signatureTitle" => $this->frontend_settings->get_title('signature'),
-                "onlyRecipientTitle" => $this->frontend_settings->get_title('only_recipient'),
 
                 "allowMondayDelivery" => $this->frontend_settings->is_enabled('saturday_cutoff'),
                 "allowMorningDelivery" => $this->frontend_settings->is_enabled('morning'),
@@ -498,9 +480,40 @@ class WooCommerce_MyParcel_Frontend {
                 "deliverydaysWindow" => $this->frontend_settings->get_deliverydays_window(),
                 "dropoffDelay" => $this->frontend_settings->get_dropoff_delay(),
 
-                "BEdeliveryTitle" => $this->frontend_settings->get_title('belgium_at_home_delivery'),
-                "BEdeliveryStandardTitle" => $this->frontend_settings->get_title('belgium_standard'),
             ],
+            "textToTranslate" =>[
+                "deliveryTitle"=> __($this->frontend_settings->get_title('at_home_delivery'), 'woocommerce-myparcel'),
+                "deliveryMorningTitle" => __($this->frontend_settings->get_title('morning'),'woocommerce-myparcel'),
+                "deliveryStandardTitle" => __($this->frontend_settings->get_title('standard'),'woocommerce-myparcel'),
+                "deliveryEveningTitle" => __($this->frontend_settings->get_title('evening'),'woocommerce-myparcel'),
+                "signatureTitle"=> __($this->frontend_settings->get_title('signature'), 'woocommerce-myparcel'),
+                "onlyRecipientTitle"=> __($this->frontend_settings->get_title('only_recipient'), 'woocommerce-myparcel'),
+                "saturdayDeliveryTitle"=> __('saturday_delivery_title', 'woocommerce-myparcel'),
+                "pickupTitle"=> __($this->frontend_settings->get_title('pickup'), 'woocommerce-myparcel'),
+                "headerDeliveryOptions" => __($this->frontend_settings->get_title('header_delivery_options'), 'woocommerce-myparcel'),
+
+                "BEdeliveryTitle" => __($this->frontend_settings->get_title('belgium_at_home_delivery'), 'woocommerce-myparcel'),
+                "BEdeliveryStandardTitle" => __($this->frontend_settings->get_title('belgium_standard'), 'woocommerce-myparcel'),
+
+                "addressNotFound" => __('Address details are not entered', 'woocommerce-myparcel'),
+                "pickUpFrom" =>__('Pick up from', 'woocommerce-myparcel'),
+                "openingHours" =>__('Opening hours', 'woocommerce-myparcel'),
+                "closed" =>__('Closed', 'woocommerce-myparcel'),
+                "postcode" =>__('Postcode', 'woocommerce-myparcel'),
+                "houseNumber" =>__('House number', 'woocommerce-myparcel'),
+                "city"=>__('City', 'woocommerce-myparcel'),
+                "retry" =>__('Retry', 'woocommerce-myparcel'),
+                "wrongHouseNumberPostcode" =>__('House number/Postcode combination unknown', 'woocommerce-myparcel'),
+                "quickDelivery"=>__('Deliver as quickly as possible', 'woocommerce-myparcel'),
+
+                'sunday'=> __('Sunday', 'woocommerce-myparcel'),
+                'monday'=> __('Monday', 'woocommerce-myparcel'),
+                'tuesday'=> __('Tuesday', 'woocommerce-myparcel'),
+                'wednesday'=> __('Wednesday', 'woocommerce-myparcel'),
+                'thursday'=> __('Thursday', 'woocommerce-myparcel'),
+                'friday'=> __('Friday', 'woocommerce-myparcel'),
+                'saturday'=> __('Saturday', 'woocommerce-myparcel')
+            ]
         ];
 
         return json_encode($myParcelConfig);
@@ -580,10 +593,9 @@ class WooCommerce_MyParcel_Frontend {
         if (isset(
                 WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types']
             )
-            && isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][1])) {
+            && isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][WooCommerce_MyParcel_Export::PACKAGE])) {
             // Shipping methods associated with parcels = enable delivery options
-            $delivery_options_shipping_methods = WooCommerce_MyParcel(
-                                                 )->export_defaults['shipping_methods_package_types'][1];
+            $delivery_options_shipping_methods = WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][WooCommerce_MyParcel_Export::PACKAGE];
         } else {
             $delivery_options_shipping_methods = array();
         }
