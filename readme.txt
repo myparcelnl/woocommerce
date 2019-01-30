@@ -90,13 +90,18 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.1.1 (2019-01-25) =
-* Improvement: Remove some styling code
-* Improvement: Text changes
-* Hotfix: Hide delivery options 
-* Improvement: get the total weight on a later moment
+= 3.1.1 (2019-01-30) =
+* Fix: Remove some styling code
+* Fix: Text changes
+* Fix: Hide delivery options 
+* Fix: Get the total weight on a later moment
+* Fix: Unset weight by mailbox package 
+* Fix: Since WooCommerce 3.0, logging can be grouped by context (error code 0 when exporting / printing)
+* Fix: The checkout is still loading when change the country.
+
 * Improvement: Add maxlength to number suffix field
-* Hotfix: Unset weight by mailbox package 
+* Improvement: Translate all text inside the checkout
+* Improvement: The option to give a discount on the shipping method ( negative amounts)
 
 = 3.1.0 (2018-12-12) =
 * Hotfix: Show delivery options when checkout form already filled in.
