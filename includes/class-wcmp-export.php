@@ -524,7 +524,7 @@ class WooCommerce_MyParcel_Export {
                 'signature',
                 'return',
                 'large_format',
-                'age_check'
+                'age_check',
             );
             foreach ($options as $key => &$value) {
                 if (in_array($key, $int_options)) {
