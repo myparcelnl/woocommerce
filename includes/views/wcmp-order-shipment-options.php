@@ -133,7 +133,6 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
                     $name = "myparcel_options[{$order_id}]{$name}";
                     $class = isset($option_row['class']) ? $option_row['class'] : '';
                     $checked = isset($option_row['checked'])
-
                         ? $option_row['checked']
                         : checked(
                             "1",
