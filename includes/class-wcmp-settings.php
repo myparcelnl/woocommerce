@@ -467,7 +467,7 @@ class WooCommerce_MyParcel_Settings {
             array(
                 'option_name' => $option_name,
                 'id'          => 'age_check',
-                'description' => __('The age 18+ check is intended for parcel shipments for which the recipient must show 18+ by means of a proof of identity. With this shipping option "Signature for receipt" and "Delivery only at recipient" are included. The age 18+ is further excluded from the delivery options morning and evening delivery.', 'woocommerce-myparcel')
+                'description' => __('The age 18+ check is intended for parcel shipments for which the recipient must show 18+ by means of a proof of identity. With this shipping option <strong>Signature for receipt</strong> and <strong>Delivery only at recipient</strong> are included. The age 18+ is further excluded from the delivery options morning and evening delivery.', 'woocommerce-myparcel')
             )
         );
 

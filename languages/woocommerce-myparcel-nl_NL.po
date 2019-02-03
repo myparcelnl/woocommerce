@@ -621,6 +621,22 @@ msgstr ""
 "Er moet in beide gevallen voor worden getekend."
 
 #: includes/class-wcmp-settings.php:463
+msgid "Age check 18+"
+msgstr "18+ controle"
+
+#: includes/class-wcmp-settings.php:470
+msgid ""
+"The age 18+ check is intended for parcel shipments for which the recipient must "
+"show 18+ by means of a proof of identity. With this shipping option <strong>Signature for receipt</strong> and "
+"<strong>Delivery only at recipient</strong> are included. The age 18+ is further excluded from the delivery "
+"options morning and evening delivery."
+msgstr ""
+"De 18+ controle is bedoeld voor pakketzendingen waarvoor de ontvanger 18+ moet zijn en "
+"dit moet bewijzen door middel van een identiteitsbewijs. "
+"Met deze verzendoptie zijn handtekening voor ontvangst en alleen huisadres inbegrepen. "
+"De 18+ controle is verder uitgesloten van de bezorgopties in de ochtend- en avondlevering."
+
+#: includes/class-wcmp-settings.php:463
 #: includes/views/wcmp-order-return-shipment-options.php:46
 #: includes/views/wcmp-order-shipment-options.php:73
 #: includes/views/wcmp-order-shipment-summary.php:17

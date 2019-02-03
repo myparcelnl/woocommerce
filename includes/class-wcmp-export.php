@@ -750,6 +750,15 @@ class WooCommerce_MyParcel_Export {
         // set delivery type
         $options['delivery_type'] = $this->get_delivery_type($order, $myparcel_delivery_options);
 
+        // age check cann't be used in morning and evening delivery
+        if ($options['age_check'] == 1) {
+            $age_check_options = $this->get_age_check($order, $options, $myparcel_delivery_options);
+
+            $options['age_check'] = $age_check_options[0];
+            $options['signature'] = $age_check_options[1];
+            $options['only_recipient'] = $age_check_options[2];
+        }
+
         // Options for Pickup and Pickup express delivery types:
         // always enable signature on receipt
         if ($this->is_pickup($order, $myparcel_delivery_options)) {
@@ -1337,6 +1346,31 @@ class WooCommerce_MyParcel_Export {
         $delivery_type = isset($delivery_types[$delivery_type]) ? $delivery_types[$delivery_type] : 2;
 
         return $delivery_type;
+    }
+
+    /**
+     * @param $order
+     * @param $options
+     * @param string $myparcel_delivery_options
+     *
+     * @return array|void
+     */
+    public function get_age_check($order, $options, $myparcel_delivery_options = '') {
+
+        if (empty($myparcel_delivery_options)) {
+            $myparcel_delivery_options = WCX_Order::get_meta($order, '_myparcel_delivery_options');
+        }
+        $delivery_type = $this->get_delivery_type($order, $myparcel_delivery_options);
+
+        if ( ! empty($myparcel_delivery_options) && ! in_array($delivery_type, array(1, 3))) {
+
+            $age_check = $options['age_check'] = 1;
+            $signature = $options['signature'] = 1;
+            $only_recipient = $options['only_recipient'] = 1;
+
+            return [$age_check, $signature, $only_recipient];
+        }
+        return;
     }
 
     public function get_delivery_date($order, $myparcel_delivery_options = '') {
