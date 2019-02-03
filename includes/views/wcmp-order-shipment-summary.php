@@ -15,6 +15,7 @@ printf('%s: %s', __('Shipment type', 'woocommerce-myparcel'), $package_types[$sh
         'only_recipient' => __('Home address only', 'woocommerce-myparcel'),
         'signature'      => __('Signature on delivery', 'woocommerce-myparcel'),
         'return'         => __('Return if no answer', 'woocommerce-myparcel'),
+        'age_check'      => __('Age check 18+', 'woocommerce-myparcel'),
     );
 
     foreach ($option_strings as $key => $label) {

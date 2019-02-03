@@ -523,7 +523,8 @@ class WooCommerce_MyParcel_Export {
                 'only_recipient',
                 'signature',
                 'return',
-                'large_format'
+                'large_format',
+                'age_check',
             );
             foreach ($options as $key => &$value) {
                 if (in_array($key, $int_options)) {
@@ -691,6 +692,7 @@ class WooCommerce_MyParcel_Export {
                 'large_format' => 0,
                 'label_description' => '',
                 'insured_amount' => 0,
+                'age_check' => 0,
             );
             $options = array_merge($empty_defaults, $shipment_options);
         } else {
@@ -712,6 +714,7 @@ class WooCommerce_MyParcel_Export {
                 'large_format' => (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
                 'label_description' => $description,
                 'insured_amount' => $insured_amount,
+                'age_check' => (isset(WooCommerce_MyParcel()->export_defaults['age_check'])) ? 1 : 0,
             );
         }
 
@@ -746,6 +749,15 @@ class WooCommerce_MyParcel_Export {
 
         // set delivery type
         $options['delivery_type'] = $this->get_delivery_type($order, $myparcel_delivery_options);
+
+        // age check cann't be used in morning and evening delivery
+        if ($options['age_check'] == 1) {
+            $age_check_options = $this->get_age_check($order, $options, $myparcel_delivery_options);
+
+            $options['age_check'] = $age_check_options[0];
+            $options['signature'] = $age_check_options[1];
+            $options['only_recipient'] = $age_check_options[2];
+        }
 
         // Options for Pickup and Pickup express delivery types:
         // always enable signature on receipt
@@ -782,7 +794,7 @@ class WooCommerce_MyParcel_Export {
 
         // PREVENT ILLEGAL SETTINGS
         // convert numeric strings to int
-        $int_options = array('package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format');
+        $int_options = array('package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'age_check');
         foreach ($options as $key => &$value) {
             if (in_array($key, $int_options)) {
                 $value = (int) $value;
@@ -791,7 +803,7 @@ class WooCommerce_MyParcel_Export {
 
         // disable options for mailbox package, unpaid letter and digital stamp
         if ($options['package_type'] != self::PACKAGE) {
-            $illegal_options = array('delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date');
+            $illegal_options = array('delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date', 'age_check');
             foreach ($options as $key => $option) {
                 if (in_array($key, $illegal_options)) {
                     unset($options[$key]);
@@ -1334,6 +1346,31 @@ class WooCommerce_MyParcel_Export {
         $delivery_type = isset($delivery_types[$delivery_type]) ? $delivery_types[$delivery_type] : 2;
 
         return $delivery_type;
+    }
+
+    /**
+     * @param $order
+     * @param $options
+     * @param string $myparcel_delivery_options
+     *
+     * @return array|void
+     */
+    public function get_age_check($order, $options, $myparcel_delivery_options = '') {
+
+        if (empty($myparcel_delivery_options)) {
+            $myparcel_delivery_options = WCX_Order::get_meta($order, '_myparcel_delivery_options');
+        }
+        $delivery_type = $this->get_delivery_type($order, $myparcel_delivery_options);
+
+        if ( ! empty($myparcel_delivery_options) && ! in_array($delivery_type, array(1, 3))) {
+
+            $age_check = $options['age_check'] = 1;
+            $signature = $options['signature'] = 1;
+            $only_recipient = $options['only_recipient'] = 1;
+
+            return [$age_check, $signature, $only_recipient];
+        }
+        return;
     }
 
     public function get_delivery_date($order, $myparcel_delivery_options = '') {
