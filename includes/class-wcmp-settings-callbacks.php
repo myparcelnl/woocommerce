@@ -41,7 +41,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
             $style = "cursor: not-allowed;";
             $description = __("Not possible if age check is active", "woocommerce-myparcel");
 
-            if ($id == "only_recipient_enabled"){
+            if ($id == "only_recipient_enabled") {
                 $current = 1;
                 $description = __("Home address only is mandatory when age check is active", "woocommerce-myparcel");
             }
