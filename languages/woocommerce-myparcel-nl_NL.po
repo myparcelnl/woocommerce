@@ -595,6 +595,10 @@ msgstr ""
 msgid "Home address only"
 msgstr "Alleen huisadres"
 
+#: /includes/class-wcmp-settings-callbacks.php:41
+msgid "Home address only is mandatory when age check is active"
+msgstr "Alleen thuisadres is verplicht als leeftijdscontrole actief is"
+
 #: includes/class-wcmp-settings.php:444
 msgid ""
 "If you don't want the parcel to be delivered at the neighbours, choose this "
@@ -609,6 +613,10 @@ msgstr ""
 #: includes/views/wcmp-order-shipment-summary.php:16
 msgid "Signature on delivery"
 msgstr "Handtekening voor ontvangst"
+
+#: /includes/class-wcmp-settings-callbacks.php:41
+msgid "Signature for receipt is mandatory when age check is active"
+msgstr "Handtekening voor ontvangst is verplicht als leeftijdscontrole actief is"
 
 #: includes/class-wcmp-settings.php:457
 msgid ""
@@ -635,6 +643,10 @@ msgstr ""
 "dit moet bewijzen door middel van een identiteitsbewijs. "
 "Met deze verzendoptie zijn handtekening voor ontvangst en alleen huisadres inbegrepen. "
 "De 18+ controle is verder uitgesloten van de bezorgopties in de ochtend- en avondlevering."
+
+#: includes/class-wcmp-settings-callbacks.php:36
+msgid "Not possible if age check is active"
+msgstr "Niet mogelijk als leeftijdscontrole actief is"
 
 #: includes/class-wcmp-settings.php:463
 #: includes/views/wcmp-order-return-shipment-options.php:46

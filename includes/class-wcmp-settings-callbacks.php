@@ -25,17 +25,44 @@ class WooCommerce_MyParcel_Settings_Callbacks {
      *   description - description (optional)
      * @return void.
      */
-    public function checkbox($args) {
+    public function checkbox($args, $disabled = '', $style = '') {
         extract($this->normalize_settings_args($args));
+
+        // check if age_check is active and disabled moning and evening delivery
+        if (WooCommerce_MyParcel()->export_defaults['age_check'] &&
+            (
+                $id == "morning_enabled" ||
+                $id == "evening_enabled" ||
+                $id == "only_recipient_enabled" ||
+                $id == "signature_enabled"
+            )){
+
+            $current = 0;
+            $disabled = 'disabled';
+            $style = 'cursor: not-allowed;';
+            $description = __("Not possible if age check is active", 'woocommerce-myparcel');
+
+            if ($id == "only_recipient_enabled"){
+                $current = 1;
+                $description = __("Home address only is mandatory when age check is active", 'woocommerce-myparcel');
+            }
+
+            if ($id == "signature_enabled"){
+                $current = 1;
+                $description = __("Signature for receipt is mandatory when age check is active", 'woocommerce-myparcel');
+            }
+        }
 
         // output checkbox
         printf(
-            '<input type="checkbox" id="%1$s" name="%2$s" value="%3$s" %4$s class="%5$s"/>',
+            '<input type="checkbox" id="%1$s" name="%2$s" value="%3$s" %4$s class="%5$s" %6$s style="%7$s"/>',
             $id,
             $setting_name,
             $value,
             checked($value, $current, false),
-            $class
+            $class,
+            $disabled,
+            $style
         );
 
         // output description.
@@ -57,6 +84,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
      */
     public function text_input($args) {
         extract($this->normalize_settings_args($args));
+
         if (empty($type)) {
             $type = 'text';
         }
@@ -459,7 +487,16 @@ class WooCommerce_MyParcel_Settings_Callbacks {
             'type' => 'text',
         );
 
-        ?><?php $this->checkbox(array_merge($args, $cb_args)); ?><br />
+        ?><?php $this->checkbox(array_merge($args, $cb_args));
+
+        if (isset(WooCommerce_MyParcel()->export_defaults['age_check'])){
+            if ($args['id'] == "only_recipient" || $id == "signature"){
+                $args['has_title'] = false;
+                $args['has_price'] = false;
+            }
+        }
+
+        ?><br />
         <table class="wcmp_delivery_option_details">
             <?php if ($args['has_title']): ?>
                 <tr>
@@ -479,7 +516,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input(array_merge($args, $cutoff_time_args)); ?></td>
                 </tr>
             <?php endif; ?>
-            <?php if (isset($args['has_price'])): ?>
+            <?php if ($args['has_price']): ?>
                 <tr>
                     <td><?php _e('Additional fee (ex VAT, optional)', 'woocommerce-myparcel') ?>:</td>
                     <td>&euro; <?php $this->text_input(array_merge($args, $fee_args)); ?></td>

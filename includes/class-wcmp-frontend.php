@@ -467,10 +467,10 @@ class WooCommerce_MyParcel_Frontend {
                 "pricePickupExpress" => $this->frontend_settings->get_price('pickup_express'),
 
                 "allowMondayDelivery" => $this->frontend_settings->is_enabled('saturday_cutoff'),
-                "allowMorningDelivery" => $this->frontend_settings->is_enabled('morning'),
-                "allowEveningDelivery" => $this->frontend_settings->is_enabled('evening'),
-                "allowSignature" => $this->frontend_settings->is_enabled('signature'),
-                "allowOnlyRecipient" => $this->frontend_settings->is_enabled('only_recipient'),
+                "allowMorningDelivery" => isset(WooCommerce_MyParcel()->export_defaults['age_check']) ? 0 : $this->frontend_settings->is_enabled('morning'),
+                "allowEveningDelivery" => isset(WooCommerce_MyParcel()->export_defaults['age_check']) ? 0 : $this->frontend_settings->is_enabled('evening'),
+                "allowSignature" => isset(WooCommerce_MyParcel()->export_defaults['age_check']) ? 0 : $this->frontend_settings->is_enabled('signature'),
+                "allowOnlyRecipient" => isset(WooCommerce_MyParcel()->export_defaults['age_check']) ? 0 : $this->frontend_settings->is_enabled('only_recipient'),
                 "allowPickupPoints" => $this->frontend_settings->is_enabled('pickup'),
                 "allowPickupExpress" => $this->frontend_settings->is_enabled('pickup_express'),
 
