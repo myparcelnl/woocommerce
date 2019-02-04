@@ -25,31 +25,30 @@ class WooCommerce_MyParcel_Settings_Callbacks {
      *   description - description (optional)
      * @return void.
      */
-    public function checkbox($args, $disabled = '', $style = '') {
+    public function checkbox($args, $disabled = "", $style = "") {
         extract($this->normalize_settings_args($args));
 
         // check if age_check is active and disabled moning and evening delivery
-        if (isset(WooCommerce_MyParcel()->export_defaults['age_check']) &&
+        if (isset(WooCommerce_MyParcel()->export_defaults["age_check"]) &&
             (
                 $id == "morning_enabled" ||
                 $id == "evening_enabled" ||
                 $id == "only_recipient_enabled" ||
                 $id == "signature_enabled"
             )){
-
             $current = 0;
-            $disabled = 'disabled';
-            $style = 'cursor: not-allowed;';
-            $description = __("Not possible if age check is active", 'woocommerce-myparcel');
+            $disabled = "disabled";
+            $style = "cursor: not-allowed;";
+            $description = __("Not possible if age check is active", "woocommerce-myparcel");
 
             if ($id == "only_recipient_enabled"){
                 $current = 1;
-                $description = __("Home address only is mandatory when age check is active", 'woocommerce-myparcel');
+                $description = __("Home address only is mandatory when age check is active", "woocommerce-myparcel");
             }
 
             if ($id == "signature_enabled"){
                 $current = 1;
-                $description = __("Signature for receipt is mandatory when age check is active", 'woocommerce-myparcel');
+                $description = __("Signature for receipt is mandatory when age check is active", "woocommerce-myparcel");
             }
         }
 
