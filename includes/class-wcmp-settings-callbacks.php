@@ -29,7 +29,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
         extract($this->normalize_settings_args($args));
 
         // check if age_check is active and disabled moning and evening delivery
-        if (WooCommerce_MyParcel()->export_defaults['age_check'] &&
+        if (isset(WooCommerce_MyParcel()->export_defaults['age_check']) &&
             (
                 $id == "morning_enabled" ||
                 $id == "evening_enabled" ||
