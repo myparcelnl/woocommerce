@@ -486,12 +486,12 @@ class WooCommerce_MyParcel_Settings_Callbacks {
         );
 
         $this->checkbox(array_merge($args, $cb_args));
-            if (isset(WooCommerce_MyParcel()->export_defaults['age_check'])){
-                if ($args['id'] == "only_recipient" || $id == "signature"){
-                    $args['has_title'] = false;
-                    $args['has_price'] = false;
-                }
+        if (isset(WooCommerce_MyParcel()->export_defaults['age_check'])){
+            if ($args['id'] == "only_recipient" || $id == "signature"){
+                $args['has_title'] = false;
+                $args['has_price'] = false;
             }
+        }
         ?>
         <table class="wcmp_delivery_option_details">
             <?php if ($args['has_title']): ?>
