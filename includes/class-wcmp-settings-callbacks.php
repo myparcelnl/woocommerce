@@ -46,7 +46,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
                 $description = __("Home address only is mandatory when age check is active", "woocommerce-myparcel");
             }
 
-            if ($id == "signature_enabled"){
+            if ($id == "signature_enabled") {
                 $current = 1;
                 $description = __("Signature for receipt is mandatory when age check is active", "woocommerce-myparcel");
             }
