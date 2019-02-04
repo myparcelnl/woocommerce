@@ -84,7 +84,6 @@ class WooCommerce_MyParcel_Settings_Callbacks {
      */
     public function text_input($args) {
         extract($this->normalize_settings_args($args));
-
         if (empty($type)) {
             $type = 'text';
         }
@@ -487,16 +486,14 @@ class WooCommerce_MyParcel_Settings_Callbacks {
             'type' => 'text',
         );
 
-        ?><?php $this->checkbox(array_merge($args, $cb_args));
-
-        if (isset(WooCommerce_MyParcel()->export_defaults['age_check'])){
-            if ($args['id'] == "only_recipient" || $id == "signature"){
-                $args['has_title'] = false;
-                $args['has_price'] = false;
+        $this->checkbox(array_merge($args, $cb_args));
+            if (isset(WooCommerce_MyParcel()->export_defaults['age_check'])){
+                if ($args['id'] == "only_recipient" || $id == "signature"){
+                    $args['has_title'] = false;
+                    $args['has_price'] = false;
+                }
             }
-        }
-
-        ?><br />
+        ?>
         <table class="wcmp_delivery_option_details">
             <?php if ($args['has_title']): ?>
                 <tr>
