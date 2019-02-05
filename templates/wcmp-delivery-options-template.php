@@ -100,7 +100,7 @@
                 <td></td>
                 <td>
                     <input name="method-myparcelbe-pickup-selector" id="mypabe-pickup-selector" type="radio" value="myparcelbe-pickup-selector">
-                    <label for="mypabe-pickup-selector">Ophalen vanaf 15:00</label>
+                    <label for="mypabe-pickup-selector"><span class="mypabe-pickup-delivery-title"></span></label>
                 </td>
                 <td>
                     <span id="mypabe-pickup-price"></span>

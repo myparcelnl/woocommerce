@@ -947,6 +947,34 @@ msgstr ""
 "Exporteer je WooCommerce orders naar MyParcel BE (www.sendmyparcel.be) en print "
 "verzendlabels direct vanuit WooCommerce"
 
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:469
+msgid "sunday"
+msgstr "zondag"
+
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:470
+msgid "monday"
+msgstr "maandag"
+
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:471
+msgid "tuesday"
+msgstr "dinsdag"
+
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:472
+msgid "wednesday"
+msgstr "woensdag"
+
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:473
+msgid "thursday"
+msgstr "donderdag"
+
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:474
+msgid "friday"
+msgstr "vrijdag"
+
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:475
+msgid "saturday"
+msgstr "zaterdag"
+
 #. Author of the plugin/theme
 msgid "Richard Perdaan"
 msgstr "Richard Perdaan"

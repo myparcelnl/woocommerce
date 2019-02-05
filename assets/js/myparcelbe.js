@@ -32,6 +32,7 @@ MyParcelBE = {
         }
         if (MyParcelBE.data.config.pickupTitle) {
             jQuery('#mypabe-pickup-title').html(MyParcelBE.data.config.pickupTitle);
+            jQuery('.mypabe-pickup-delivery-title').html(MyParcelBE.data.textToTranslate.pickUpFrom +': 15:00');
         }
 
         /* Prices */
@@ -543,7 +544,7 @@ MyParcelBE = {
 
         jQuery.each(
             currentLocation.opening_hours, function(weekday, value) {
-                html += '<span class="mypabe-pickup-location-details-day">' + MyParcelBE.data.translateENtoNL[weekday] + "</span>";
+                html += '<span class="mypabe-pickup-location-details-day">' + MyParcelBE.data.textToTranslate[weekday] + "</span>";
 
                 if (value[0] === undefined) {
                     html += '<span class="mypabe-time">' + MyParcelBE.data.textToTranslate.closed +'</span>';

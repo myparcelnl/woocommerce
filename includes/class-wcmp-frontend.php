@@ -431,15 +431,6 @@ class WooCommerce_MyParcelBE_Frontend {
                 'Vrijdag',
                 'Zaterdag'
             ],
-            "translateENtoNL" => [
-                'monday' => 'maandag',
-                'tuesday' => 'dindsag',
-                'wednesday' => 'woensdag',
-                'thursday' => 'donderdag',
-                'friday' => 'vrijdag',
-                'saturday' => 'zaterdag',
-                'sunday' => 'zondag'
-            ],
             "config" => [
                 "apiBaseUrl" => WooCommerce_MyParcelBE_Frontend_Settings::BASE_URL,
                 "carrier" => "2",
@@ -475,6 +466,13 @@ class WooCommerce_MyParcelBE_Frontend {
                 "retry" =>__('Retry', 'woocommerce-myparcelbe'),
                 "wrongHouseNumberCity" =>__('Postcode/city combination unknown', 'woocommerce-myparcelbe'),
 
+                "sunday"=> __('sunday', 'woocommerce-myparcelbe'),
+                "monday"=> __('monday', 'woocommerce-myparcelbe'),
+                "tuesday"=> __('tuesday', 'woocommerce-myparcelbe'),
+                "wednesday"=> __('wednesday', 'woocommerce-myparcelbe'),
+                "thursday"=> __('thursday', 'woocommerce-myparcelbe'),
+                "friday"=> __('friday', 'woocommerce-myparcelbe'),
+                "saturday"=> __('saturday', 'woocommerce-myparcelbe'),
             ]
         ];
 

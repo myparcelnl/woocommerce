@@ -792,8 +792,20 @@ msgid "House number"
 msgstr "Numéro de rue"
 
 #: includes/class-wcmp-settings.php:771
-msgid "Again"
+msgid "City"
+msgstr "Ville"
+
+#: includes/class-wcmp-settings.php:771
+msgid "City"
+msgstr "Réessayez"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Retry"
 msgstr "A nouveau"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Postcode/city combination unknown"
+msgstr "Combinaison code postal / ville inconnue"
 
 #: includes/class-wcmp-settings.php:771
 msgid "Closed"
@@ -942,6 +954,34 @@ msgstr ""
 "Exportez vos commandes WooCommerce vers MyParcel BE (www.sendmyparcel.be) et imprimez "
 "directement vos étiquettes d'expédition depuis WooCommerce"
 
-#. Author of the plugin/theme
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:469
+msgid "sunday"
+msgstr "dimanche"
+
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:470
+msgid "monday"
+msgstr "lundi"
+
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:471
+msgid "tuesday"
+msgstr "mardi"
+
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:472
+msgid "wednesday"
+msgstr "mercredi"
+
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:473
+msgid "thursday"
+msgstr "jeudi"
+
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:474
+msgid "friday"
+msgstr "vendredi"
+
+#. /plugins/woocommerce-belgie/includes/class-wcmp-frontend.php:475
+msgid "saturday"
+msgstr "samedi"
+
+#. Description of the plugin/theme
 msgid "Richard Perdaan"
 msgstr "Richard Perdaan"
