@@ -565,7 +565,7 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:470
 msgid ""
-"The age 18+ check is intended for parcel shipments for which the recipient must "
+"The age check is intended for parcel shipments for which the recipient must "
 "show 18+ by means of a proof of identity. With this shipping option <strong>Signature for receipt</strong> and "
 "<strong>Delivery only at recipient</strong> are included. The age 18+ is further excluded from the delivery "
 "options morning and evening delivery."
