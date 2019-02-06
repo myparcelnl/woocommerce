@@ -1459,7 +1459,7 @@ class WooCommerce_MyParcel_Export {
     public function get_shipping_class($shipping_method, $found_shipping_classes) {
         // get most expensive class
         // adapted from $shipping_method->calculate_shipping()
-        $highest_class_cost = 0;
+        $highest_class_cost = -1;
         $highest_class = false;
         foreach ( $found_shipping_classes as $shipping_class => $products ) {
             // Also handles BW compatibility when slugs were used instead of ids
@@ -1468,9 +1468,6 @@ class WooCommerce_MyParcel_Export {
                 ? $shipping_method->get_option('class_cost_' . $shipping_class_term->term_id, $shipping_method->get_option('class_cost_' . $shipping_class, ''))
                 : $shipping_method->get_option('no_class_cost', '');
 
-            if ($class_cost_string === '') {
-                continue;
-            }
 
             $has_costs = true;
             $class_cost = $this->wc_flat_rate_evaluate_cost(
@@ -1481,6 +1478,7 @@ class WooCommerce_MyParcel_Export {
                 ),
                 $shipping_method
             );
+
             if ($class_cost > $highest_class_cost && ! empty($shipping_class_term->term_id)) {
                 $highest_class_cost = $class_cost;
                 $highest_class = $shipping_class_term->term_id;
