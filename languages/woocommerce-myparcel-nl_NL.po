@@ -597,7 +597,7 @@ msgstr "Alleen huisadres"
 
 #: /includes/class-wcmp-settings-callbacks.php:41
 msgid "Home address only is mandatory when age check is active"
-msgstr "Alleen thuisadres is verplicht als Leeftijdscheck actief is"
+msgstr "Alleen thuisadres is verplicht als leeftijdscheck actief is"
 
 #: includes/class-wcmp-settings.php:444
 msgid ""
