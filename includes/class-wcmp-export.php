@@ -1362,7 +1362,9 @@ class WooCommerce_MyParcel_Export {
         }
         $delivery_type = $this->get_delivery_type($order, $myparcel_delivery_options);
 
-        if ( ! empty($myparcel_delivery_options) && ! in_array($delivery_type, array(1, 3))) {
+        $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
+        
+        if ( ! empty($myparcel_delivery_options) && ! in_array($delivery_type, array(1, 3)) && $shipping_country == 'NL' ) {
 
             $age_check = $options['age_check'] = 1;
             $signature = $options['signature'] = 1;
