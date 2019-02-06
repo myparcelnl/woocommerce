@@ -18,6 +18,7 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
                 // disable mailbox package outside NL
                 if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
                     unset($package_types[WooCommerce_MyParcel_Export::MAILBOX_PACKAGE]); // mailbox package
+                    unset($package_types[WooCommerce_MyParcel_Export::DIGITAL_STAMP]); // digital stamp
                 }
 
                 // disable mailbox package and unpaid letter for pakjegemak
