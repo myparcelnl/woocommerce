@@ -109,7 +109,7 @@ MyParcel = {
             }
 
             if (value['price_comment'] == 'standard') {
-                var standardTitle = MyParcel.data.config.deliveryStandardTitle;
+                var standardTitle = MyParcel.data.textToTranslate.deliveryStandardTitle;
                 if (MyParcel.data.address.cc === 'BE') {
                     standardTitle = MyParcel.data.textToTranslate.BEdeliveryStandardTitle;
                 }
