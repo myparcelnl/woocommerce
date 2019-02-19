@@ -90,9 +90,10 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.1.2 (-) =
+= 3.1.2 (2019-02-19) =
 * Improvement: 18+ check
-
+* Fix: Standard delivery text
+* Fix: showing checkout
 
 = 3.1.1 (2019-01-30) =
 * Fix: Remove some styling code
