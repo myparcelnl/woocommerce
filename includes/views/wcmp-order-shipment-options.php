@@ -156,7 +156,7 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
             </tr>
         <?php endforeach ?>
     </table>
-    <table class="wcmyparcel_settings_table digital_stamp_options">
+    <table class="wcmyparcel_settings_table digital_stamp_options" onclick="return false;">
         <tr>
             <td>
                 <label for="myparcel_options_weight"><?php _e('Weight:', 'woocommerce-myparcel') ?></label>
@@ -191,7 +191,7 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
             </td>
         </tr>
     </table>
-    <table>
+    <table onclick="return false;">
         <?php
         $insured_amount = isset($shipment_options['insurance']['amount'])
             ? (int) $shipment_options['insurance']['amount'] : 0;
