@@ -90,6 +90,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 3.1.4 (-)
+* Fix: Delivery date when deliveryday window is 0
+
 = 3.1.3 (2019-02-26) =
 * Fix: Showing delivery date in the order when consumer using safari
 * Fix: Scrolling of the order overview when an input is clicked.
