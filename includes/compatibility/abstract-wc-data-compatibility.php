@@ -3,11 +3,11 @@
  * Derived from SkyVerge WooCommerce Plugin Framework https://github.com/skyverge/wc-plugin-framework/
  */
 
-namespace WPO\WC\PostNL\Compatibility;
+namespace WPO\WC\MyParcel\Compatibility;
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\WPO\\WC\\PostNL\\Compatibility\\Data' ) ) :
+if ( ! class_exists( '\\WPO\\WC\\MyParcel\\Compatibility\\Data' ) ) :
 
 /**
  * WooCommerce data compatibility class.
@@ -157,7 +157,7 @@ abstract class Data {
 	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
 	 * @param string $key the meta key
 	 * @param string $value the meta value
-	 * @param int|strint $meta_id Optional. The specific meta ID to update
+	 * @param int|string $meta_id Optional. The specific meta ID to update
 	 */
 	public static function update_meta_data( $object, $key, $value, $meta_id = '' ) {
 

@@ -1,8 +1,10 @@
 === Plugin Name ===
-Tags: woocommerce, export, postnl
+Contributors: richardperdaan
+Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, MyParcel, myparcel, Flespakket, flespakket, PostNL, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.9.4
-Stable tag: 2.5.5
+Tested up to: 5.1.0
+Stable tag: trunk
+Requires PHP: 5.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -43,7 +45,7 @@ In the search field type "WooCommerce PostNL" and click Search Plugins. You can 
 5. After installation has finished, click the 'activate plugin' link
 
 = Manual installation via FTP =
-1. Download the plugin file to your computer and unzip it.
+1. Download the plugin file to your computer and unzip it
 2. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installation's wp-content/plugins/ directory.
 3. Activate the plugin from the Plugins menu within the WordPress admin.
 
@@ -67,7 +69,7 @@ Moreover, after a label is created, a track&trace code is added to the order. Wh
 = How do I get an API key? =
 For the api key, you must be contacting PostNL.
 
-= How do I change the track&trace email text? =
+= How do I change the Track & Trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
 `
 add_filter( 'wcpostnl_email_text', 'wcpostnl_new_email_text' );
@@ -275,7 +277,7 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 * Dev: Code refactor
 
 = 1.4.6 =
-* Fix: Foreign track & trace link updated
+* Fix: Foreign Track & Trace link updated
 
 = 1.4.5 =
 * Tweak: Prevent label creation if direct processing is disabled. NOTE! If you had this setting disabled and were used to downloading the labels directly, you need to change this in the settings.

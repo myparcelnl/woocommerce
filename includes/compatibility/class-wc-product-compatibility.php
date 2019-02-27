@@ -3,11 +3,11 @@
  * Derived from SkyVerge WooCommerce Plugin Framework https://github.com/skyverge/wc-plugin-framework/
  */
 
-namespace WPO\WC\PostNL\Compatibility;
+namespace WPO\WC\MyParcel\Compatibility;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! class_exists( '\\WPO\\WC\\PostNL\\Compatibility\\Product' ) ) :
+if ( ! class_exists( '\\WPO\\WC\\MyParcel\\Compatibility\\Product' ) ) :
 
 /**
  * WooCommerce product compatibility class.

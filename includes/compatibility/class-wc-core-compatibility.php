@@ -3,11 +3,11 @@
  * Derived from SkyVerge WooCommerce Plugin Framework https://github.com/skyverge/wc-plugin-framework/
  */
 
-namespace WPO\WC\PostNL\Compatibility;
+namespace WPO\WC\MyParcel\Compatibility;
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\WPO\\WC\\PostNL\\Compatibility\\WC_Core' ) ) :
+if ( ! class_exists( '\\WPO\\WC\\MyParcel\\Compatibility\\WC_Core' ) ) :
 
 /**
  * WooCommerce Compatibility Utility Class
@@ -218,7 +218,7 @@ class WC_Core {
 	 */
 	public static function normalize_wc_screen_id( $slug = 'wc-settings' ) {
 
-		// The textdomain usage is intentional here, we need to match the menu title.
+		// The text-domain usage is intentional here, we need to match the menu title.
 		$prefix = sanitize_title( __( 'WooCommerce', 'woocommerce' ) );
 
 		return $prefix . '_page_' . $slug;
