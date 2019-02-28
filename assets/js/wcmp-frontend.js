@@ -84,12 +84,12 @@ jQuery(function($) {
                 }
             });
             // any delivery option selected/changed - update checkout for fees
-            $('#mypa-chosen-delivery-options').on('change', 'input', function() {
+            $('#post-chosen-delivery-options').on('change', 'input', function() {
                 PostNL_Frontend.checkout_updating = true;
                 // disable signature & recipient only when switching to pickup location
-                var mypa_postnl_data = JSON.parse($('#mypa-chosen-delivery-options #mypa-input').val());
-                if (typeof mypa_postnl_data.location !== 'undefined') {
-                    $('#mypa-signature, #mypa-recipient-only').prop("checked", false);
+                var post_postnl_data = JSON.parse($('#post-chosen-delivery-options #post-input').val());
+                if (typeof post_postnl_data.location !== 'undefined') {
+                    $('#post-signature, #post-recipient-only').prop("checked", false);
                 }
                 $('body').trigger('update_checkout');
             });

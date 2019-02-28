@@ -5,9 +5,9 @@ use WPO\WC\PostNL\Compatibility\Product as WCX_Product;
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( ! class_exists('WooCommerce_MyParcel_Export')) :
+if ( ! class_exists('WooCommerce_PostNL_Export')) :
 
-class WooCommerce_MyParcel_Export {
+class WooCommerce_PostNL_Export {
 
     // Package types
     const PACKAGE         = 1;
@@ -244,7 +244,7 @@ class WooCommerce_MyParcel_Export {
 
                         // status automation
                         if (isset(WooCommerce_PostNL()->general_settings['order_status_automation']) && ! empty(WooCommerce_PostNL()->general_settings['automatic_order_status'])) {
-                            $order->update_status(WooCommerce_PostNL()->general_settings['automatic_order_status'], __('PostNL shipment created:', 'woocommerce-myparcel'));
+                            $order->update_status(WooCommerce_PostNL()->general_settings['automatic_order_status'], __('PostNL shipment created:', 'woocommerce-postnl'));
                         }
                     } else {
                         $this->errors[$order_id] = __('Unknown error', 'woocommerce-postnl');
@@ -324,7 +324,7 @@ class WooCommerce_MyParcel_Export {
 
         if (empty($shipment_ids)) {
             $this->log("*** Failed label request (not exported yet) ***");
-            $this->errors[] = __('The selected orders have not been exported to PostNL yet!', 'woocommerce-myparcel');
+            $this->errors[] = __('The selected orders have not been exported to PostNL yet!', 'woocommerce-postnl');
 
             return array();
         }
@@ -539,7 +539,7 @@ class WooCommerce_MyParcel_Export {
             return;
         }
 
-        // Select the barcode text of the MyParcel settings
+        // Select the barcode text of the PostNL settings
         $this->prefix_message = WooCommerce_PostNL()->general_settings['barcode_in_note_title'];
 
         foreach ($order_ids as $order_id) {
@@ -627,7 +627,7 @@ class WooCommerce_MyParcel_Export {
         }
 
         // load delivery options
-        $myparcel_delivery_options = WCX_Order::get_meta($order, '_postnl_delivery_options');
+        $postnl_delivery_options = WCX_Order::get_meta($order, '_postnl_delivery_options');
 
         // set delivery type
         $options['delivery_type'] = $this->get_delivery_type($order, $postnl_delivery_options);
@@ -772,7 +772,7 @@ class WooCommerce_MyParcel_Export {
             }
             if ($output_errors === true && $missing_hs_codes > 0) {
                 $this->errors[] = sprintf(
-                    __('%d shipments missing HS codes - not exported.', 'woocommerce-myparcel'),
+                    __('%d shipments missing HS codes - not exported.', 'woocommerce-postnl'),
                     $missing_hs_codes
                 );
             }
@@ -1003,10 +1003,10 @@ class WooCommerce_MyParcel_Export {
     }
 
     public function get_filename($order_ids) {
-        $filename = 'MyParcel';
+        $filename = 'PostNL';
         $filename .= '-' . date('Y-m-d') . '.pdf';
 
-        return apply_filters('wcmyparcel_filename', $filename, $order_ids);
+        return apply_filters('wcpostnl_filename', $filename, $order_ids);
     }
 
     public function get_shipment_status_name($status_code) {
@@ -1075,7 +1075,7 @@ class WooCommerce_MyParcel_Export {
     }
 
     public function replace_shortcodes($description, $order) {
-        $myparcel_delivery_options = WCX_Order::get_meta($order, '_postnl_delivery_options');
+        $postnl_delivery_options = WCX_Order::get_meta($order, '_postnl_delivery_options');
         $replacements = array(
             '[ORDER_NR]' => $order->get_order_number(),
             '[DELIVERY_DATE]' => isset($postnl_delivery_options) && isset($postnl_delivery_options['date'])
@@ -1499,7 +1499,7 @@ class WooCommerce_MyParcel_Export {
         return $order_ids;
     }
 
-    public function is_myparcel_destination($country_code) {
+    public function is_postnl_destination($country_code) {
         return ($country_code == 'NL' || $this->is_eu_country($country_code)
                 || $this->is_world_shipment_country(
                 $country_code

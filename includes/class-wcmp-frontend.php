@@ -14,7 +14,7 @@ if ( ! class_exists('WooCommerce_PostNL()_Frontend')) :
 /**
      * Frontend views
      */
-class WooCommerce_PostNL()_Frontend {
+class WooCommerce_PostNL_Frontend{
 
     const RADIO_CHECKED = 'on';
     private $frontend_settings;
@@ -68,7 +68,7 @@ class WooCommerce_PostNL()_Frontend {
         add_action('woocommerce_checkout_after_order_review', array($this, 'output_shipping_data'));
         add_action('woocommerce_update_order_review_fragments', array($this, 'order_review_fragments'));
 
-        $this->frontend_settings = new WooCommerce_PostNL()_Frontend_Settings();
+        $this->frontend_settings = new WooCommerce_PostNL_Frontend_Settings();
     }
 
     public function track_trace_email($order, $sent_to_admin) {
@@ -166,9 +166,9 @@ class WooCommerce_PostNL()_Frontend {
      * Return to hide delivery options
      */
     public function output_delivery_options() {
-        do_action('woocommerce_myparcel_before_delivery_options');
+        do_action('woocommerce_postnl_before_delivery_options');
         require_once(WooCommerce_PostNL()->plugin_path() . '/templates/wcmp-delivery-options-template.php');
-        do_action('woocommerce_myparcel_after_delivery_options');
+        do_action('woocommerce_postnl_after_delivery_options');
     }
 
     /**
@@ -244,8 +244,8 @@ class WooCommerce_PostNL()_Frontend {
             WCX_Order::update_meta_data($order, '_postnl_only_recipient', self::RADIO_CHECKED);
         }
 
-        if ( ! empty($_POST['mypa-post-nl-data'])) {
-            $delivery_options = json_decode(stripslashes($_POST['mypa-post-nl-data']), true);
+        if ( ! empty($_POST['post-post-nl-data'])) {
+            $delivery_options = json_decode(stripslashes($_POST['post-post-nl-data']), true);
             WCX_Order::update_meta_data($order, '_postnl_delivery_options', $delivery_options);
         }
     }
@@ -278,8 +278,8 @@ class WooCommerce_PostNL()_Frontend {
                 if (isset($time['price_comment'])) {
                     switch($time['price_comment']) {
                         case 'morning':
-                            if ( ! empty(WooCommerce_MyParcel()->checkout_settings['morning_fee'])) {
-                                $fee = WooCommerce_MyParcel()->checkout_settings['morning_fee'];
+                            if ( ! empty(WooCommerce_PostNL()->checkout_settings['morning_fee'])) {
+                                $fee = WooCommerce_PostNL()->checkout_settings['morning_fee'];
                                 $fee_name = __('Morning delivery', 'woocommerce-postnl');
 
                                 $this->add_fee_signature($delivery_options, 'Signature on delivery');
@@ -292,8 +292,8 @@ class WooCommerce_PostNL()_Frontend {
 
                         break;
                         case 'avond':
-                            if ( ! empty(WooCommerce_MyParcel()->checkout_settings['evening_fee'])) {
-                                $fee = WooCommerce_MyParcel()->checkout_settings['evening_fee'];
+                            if ( ! empty(WooCommerce_PostNL()->checkout_settings['evening_fee'])) {
+                                $fee = WooCommerce_PostNL()->checkout_settings['evening_fee'];
                                 $fee_name = __('Evening delivery', 'woocommerce-postnl');
 
                                 $this->add_fee_signature($delivery_options, 'Signature on delivery');
@@ -334,7 +334,7 @@ class WooCommerce_PostNL()_Frontend {
     /**
      * Get shipping tax class
      * adapted from WC_Tax::get_shipping_tax_rates
-     * assumes per order shipping (per item shipping not supported for myparcel yet)
+     * assumes per order shipping (per item shipping not supported for postnl yet)
      * @return string tax class
      */
     public function get_shipping_tax_class() {
@@ -426,7 +426,7 @@ class WooCommerce_PostNL()_Frontend {
     }
 
     public function order_review_fragments($fragments) {
-        $myparcel_shipping_data = $this->get_shipping_data();
+        $postnl_shipping_data = $this->get_shipping_data();
         $fragments['.postnl-shipping-data'] = $postnl_shipping_data;
 
         return $fragments;
@@ -441,7 +441,7 @@ class WooCommerce_PostNL()_Frontend {
     }
 
     private function get_checkout_config() {
-        $myParcelConfig = [
+        $POSTNLConfig = [
 
             "address" => [
                 "cc" => '',
@@ -520,7 +520,7 @@ class WooCommerce_PostNL()_Frontend {
             ]
         ];
 
-        return json_encode($myParcelConfig);
+        return json_encode($POSTNLConfig);
         // Use cutoff_time and saturday_cutoff_time on saturdays
     }
 

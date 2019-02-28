@@ -2,12 +2,12 @@
 
 if ( ! defined('ABSPATH')) exit;  // Exit if accessed directly
 
-if ( ! class_exists('WooCommerce_MyParcel_Frontend_Settings')) :
+if ( ! class_exists('WooCommerce_PostNL_Frontend_Settings')) :
 
 /**
  * Frontend settings
  */
-class WooCommerce_MyParcel_Frontend_Settings {
+class WooCommerce_PostNL_Frontend_Settings {
 
     const DAYS_SATURDAY = 6;
     const CARRIER_CODE = 1;
@@ -16,7 +16,7 @@ class WooCommerce_MyParcel_Frontend_Settings {
     private static $settings;
 
     function __construct() {
-        self::$settings = WooCommerce_MyParcel()->checkout_settings;
+        self::$settings = WooCommerce_PostNL()->checkout_settings;
     }
 
     /**
@@ -44,7 +44,7 @@ class WooCommerce_MyParcel_Frontend_Settings {
             return self::$settings[$option];
         }
 
-        return WooCommerce_MyParcel_Settings::get_checkout_setting_title($option);
+        return WooCommerce_PostNL_Settings::get_checkout_setting_title($option);
     }
 
     /**
@@ -54,7 +54,7 @@ class WooCommerce_MyParcel_Frontend_Settings {
     public static function get_price($option) {
         $option = $option . "_fee";
 
-        if (isset(WooCommerce_MyParcel_Frontend_Settings::$settings[$option])) {
+        if (isset(WooCommerce_PostNL_Frontend_Settings::$settings[$option])) {
             $price = self::$settings[$option];
             $total_price = self::get_total_price_with_tax($price);
 

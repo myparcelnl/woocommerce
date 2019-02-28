@@ -54,7 +54,7 @@ jQuery(function($) {
             $summary_list.find('.wcmp_spinner').show();
             $summary_list.slideToggle();
             var data = {
-                security:    wc_myparcel.nonce,
+                security:    wc_postnl.nonce,
                 action:      "wcmp_get_shipment_summary_status",
                 order_id:    $summary_list.data('order_id'),
                 shipment_id: $summary_list.data('shipment_id'),
@@ -356,7 +356,7 @@ jQuery(function($) {
     $("select[name='action'], select[name='action2']").change(function() {
         var actionselected = $(this).val();
         /* alert(actionselected); */
-        if ((actionselected == 'wcmp_print' || actionselected == 'wcmp_export_print') && wc_myparcel.offset == 1) {
+        if ((actionselected == 'wcmp_print' || actionselected == 'wcmp_export_print') && wc_postnl.offset == 1) {
             var insert_position = $(this).attr("name") == 'action' ? 'top' : 'bottom';
             $('#wcpostnl_offset_dialog')
             .attr('style', 'clear:both') /* reset styles */
@@ -493,7 +493,7 @@ jQuery(function($) {
         tb_show('', url);
     }
 
-    /* export orders to MyParcel via AJAX */
+    /* export orders to PostNL via AJAX */
     function postnl_return(order_ids) {
         var data = {
             action:    'wc_postnl',
@@ -512,7 +512,7 @@ jQuery(function($) {
 
     }
 
-    /* Request MyParcel labels */
+    /* Request PostNL labels */
     function postnl_print(order_ids, offset) {
         if (typeof offset === 'undefined') {
             offset = 0;

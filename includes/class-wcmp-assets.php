@@ -28,7 +28,7 @@ class WooCommerce_PostNL_Assets {
             );
         }
 
-        // return if myparcel checkout is not active
+        // return if postnl checkout is not active
         if ( ! isset(WooCommerce_PostNL()->checkout_settings['postnl_checkout'])) return;
 
         wp_enqueue_script(
@@ -124,7 +124,7 @@ class WooCommerce_PostNL_Assets {
             // Legacy styles (WC 2.1+ introduced MP6 style with larger buttons)
             if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
                 wp_enqueue_style(
-                    'wcmp-admin-styles-legacy', WooCommerce_MyParcel()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css', array(), WC_POSTNL_VERSION, 'all'
+                    'wcmp-admin-styles-legacy', WooCommerce_PostNL()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css', array(), WC_POSTNL_VERSION, 'all'
                 );
             }
         }

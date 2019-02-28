@@ -10,12 +10,12 @@ input:-webkit-autofill {
 
 /* End of hack */
 
-#mypa-load,
-#mypa-delivery-date-text,
+#post-load,
+#post-delivery-date-text,
 #header-delivery-options-title,
-#mypa-delivery-option-form,
-#mypa-location-details,
-.mypa-message-model,
+#post-delivery-option-form,
+#post-location-details,
+.post-message-model,
 .woocommerce form .optional {
     display: none;
 }
@@ -63,90 +63,90 @@ input:-webkit-autofill {
 /*
  * Styling delivery options
  */
-.mypa-time {
+.post-time {
     margin-left: 5px;
 }
 
-#mypa-send-per-carrier {
+#post-send-per-carrier {
     font-weight: bold;
     width: 100%;
     background-color: transparent;
 }
 
-#mypa-delivery-option-form label {
+#post-delivery-option-form label {
     width: 66%;
 }
 
-#mypa-select-date {
+#post-select-date {
     width: 100%;
 }
 
-.mypa-error label {
+.post-error label {
     display: inline-block;
     width: 50%;
 }
 
-#mypa-pickup-location-selector li,
-#mypa-delivery-option-form li {
+#post-pickup-location-selector li,
+#post-delivery-option-form li {
     list-style-type: none;
     padding: 2px 0 0 0;
 }
 
-#mypa-pickup-location-selector ul:last-child,
-#mypa-delivery-option-form ul:last-child {
+#post-pickup-location-selector ul:last-child,
+#post-delivery-option-form ul:last-child {
     margin-top: 10px;
 }
 
-#mypa-delivery-option-form label {
+#post-delivery-option-form label {
     display: inline-block;
     width: 80%;
     margin: 0;
 }
 
-#mypa-error-try-again {
+#post-error-try-again {
     margin-top: 18px;
 }
 
-#mypa-delivery-selectors-be div {
+#post-delivery-selectors-be div {
     display: block;
     margin-top: 20px;
 }
 
-#mypa-delivery-selector li {
+#post-delivery-selector li {
     margin: 15px 0 0;
     display: inline-block;
     width: 100%;
     padding: 5px 0 2px 0;
 }
 
-.mypa-help {
+.post-help {
     color: black;
     text-decoration: none;
 }
 
-#mypa-shop-mock {
+#post-shop-mock {
     margin-top: 500px;
     background-color: #ccc;
     width: 100%;
     margin-bottom: 25px;
 }
 
-.mypa-full-width {
+.post-full-width {
     display: inline-block;
     width: 100%;
     margin-bottom: 1px;
     padding-bottom: 2px;
 }
 
-#mypa-pickup-location-selector li:nth-last-of-type(-n+2) {
+#post-pickup-location-selector li:nth-last-of-type(-n+2) {
     margin-left: 30px;
 }
 
-#mypa-pickup-location {
+#post-pickup-location {
     width: calc(100% - 25px);
 }
 
-#mypa-location-details {
+#post-location-details {
     padding: 20px;
     border: 1px solid black;
     border-radius: 3px;
@@ -156,65 +156,65 @@ input:-webkit-autofill {
     background-color: white;
 }
 
-.mypa-pickup-location-details-location,
-.mypa-pickup-location-details-phone,
-.mypa-pickup-location-details-city,
-.mypa-pickup-location-details-time {
+.post-pickup-location-details-location,
+.post-pickup-location-details-phone,
+.post-pickup-location-details-city,
+.post-pickup-location-details-time {
     margin-bottom: 5px;
     display: inline-block;
     width: 65%;
     float: left;
 }
 
-.mypa-openings-title {
+.post-openings-title {
     width: 200px;
     height: auto;
 }
 
-.mypa-pickup-location-details-day {
+.post-pickup-location-details-day {
     display: inline-block;
     width: 30%;
 }
 
-.mypa-extra-delivery-options-padding-top {
+.post-extra-delivery-options-padding-top {
     padding-top: 10px;
 }
 
-.mypa-fa-clock {
+.post-fa-clock {
     width: 16px;
     margin-bottom: -3px;
 }
 
-.mypa-fa-times {
+.post-fa-times {
     width: 16px;
     float: right;
 }
 
-.mypa-delivery-option-table {
+.post-delivery-option-table {
     width: 100%;
 }
 
-.mypa-delivery-option-table tr td:first-child {
+.post-delivery-option-table tr td:first-child {
     white-space: nowrap;
     width: 20px;
 }
 
-.mypa-delivery-option input {
+.post-delivery-option input {
     width: 20px;
 }
 
-.mypa-delivery-option-table tr td:last-child {
+.post-delivery-option-table tr td:last-child {
     white-space: nowrap;
     vertical-align: top;
 }
 
-.mypa-postnl-logo {
+.post-postnl-logo {
     width: 100px;
     float: right;
     margin: 45px 8px 0 0;
 }
 
-.mypa-message-model {
+.post-message-model {
     padding: 20px 0 20px 20px;
     border: 1px solid black;
     border-radius: 3px;
@@ -222,11 +222,11 @@ input:-webkit-autofill {
     background-color: white;
 }
 
-#mypa-list-postnl-pickup option {
+#post-list-postnl-pickup option {
     padding: 5px 0 5px 0;
 }
 
-.mypa-bold-price {
+.post-bold-price {
     font-weight: bold;
 }
 
@@ -234,30 +234,30 @@ input:-webkit-autofill {
     color: green;
 }
 
-#mypa-spinner-model {
+#post-spinner-model {
     position: relative;
     display: table;
     margin: auto auto;
 }
 
-#mypa-spinner-model svg {
+#post-spinner-model svg {
     position: absolute;
     top: 19%;
     left: 22%;
     width: 62%;
 }
 
-#mypa-spinner {
+#post-spinner {
     position: relative;
     display: inline-block;
     width: 90px;
     height: 90px;
     border-top: 3px solid #ff8c00;
     border-radius: 100%;
-    animation: mypa-spin 1.2s linear infinite;
+    animation: post-spin 1.2s linear infinite;
 }
 
-@keyframes mypa-spin {
+@keyframes post-spin {
     0% {
         transform: rotate(0deg);
     }
@@ -267,21 +267,21 @@ input:-webkit-autofill {
 }
 
 @media only screen and (max-width: 400px) {
-    .mypa-delivery-option-table tr {
+    .post-delivery-option-table tr {
         height: 30px !important;
     }
 
-    .mypa-postnl-logo {
+    .post-postnl-logo {
         float: none;
         margin: 0 100% 0 0;
 
     }
 
-    .mypa-extra-delivery-options-padding-top {
+    .post-extra-delivery-options-padding-top {
         padding: 15px 0 10px 0;
     }
 
-    .mypa-pickup-location-details-location, .mypa-pickup-location-details-phone, .mypa-pickup-location-details-city, .mypa-pickup-location-details-time {
+    .post-pickup-location-details-location, .post-pickup-location-details-phone, .post-pickup-location-details-city, .post-pickup-location-details-time {
         width: 90%;
     }
 }

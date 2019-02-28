@@ -2,9 +2,9 @@
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( ! class_exists('WC_MyParcel_API')) :
+if ( ! class_exists('WC_PostNL_API')) :
 
-class WC_MyParcel_API extends WC_MyParcel_REST_Client {
+class WC_PostNL_API extends WC_PostNL_REST_Client {
 
     public $APIURL = "https://api.myparcel.nl/";
     private $key;
@@ -12,7 +12,7 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
     /**
      * Default constructor
      *
-     * @param  string $key API Key provided by MyParcel
+     * @param  string $key API Key provided by PostNL
      *
      * @return void
      */
@@ -204,7 +204,7 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
      */
     public function get_delivery_options($params = array(), $raw = false) {
         $endpoint = 'delivery_options';
-        if (isset(WooCommerce_MyParcel()->checkout_settings['monday_delivery'])) {
+        if (isset(WooCommerce_PostNL()->checkout_settings['monday_delivery'])) {
             $params['monday_delivery'] = 1;
         }
 
@@ -215,14 +215,14 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
     }
 
     /**
-     * Get Wordpress, Woocommerce, Myparcel version and place theme in a array. Implode the array to get an UserAgent.
+     * Get Wordpress, Woocommerce, POSTNL version and place theme in a array. Implode the array to get an UserAgent.
      * @return string
      */
     private function getUserAgent() {
         $userAgents = array(
             'Wordpress/' . get_bloginfo('version'),
             'WooCommerce/' . WOOCOMMERCE_VERSION,
-            'MyParcelNL-WooCommerce/' . WC_MYPARCEL_VERSION,
+            'PostNLNL-WooCommerce/' . WC_POSTNL_VERSION,
         );
 
         //Place white space between the array elements
@@ -232,7 +232,7 @@ class WC_MyParcel_API extends WC_MyParcel_REST_Client {
     }
 
     private function get_label_format_url($positions) {
-        $generalSettings = WooCommerce_MyParcel()->general_settings;
+        $generalSettings = WooCommerce_PostNL()->general_settings;
 
         if ($generalSettings['label_format'] == 'A4') {
             return 'format=A4&positions=' . $positions;

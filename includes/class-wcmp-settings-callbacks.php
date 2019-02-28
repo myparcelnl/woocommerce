@@ -2,9 +2,9 @@
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( ! class_exists('WooCommerce_MyParcel_Settings_Callbacks')) :
+if ( ! class_exists('WooCommerce_PostNL_Settings_Callbacks')) :
 
-class WooCommerce_MyParcel_Settings_Callbacks {
+class WooCommerce_PostNL_Settings_Callbacks {
 
     const extra_width_for_number_input = 200;
     const steps_number_input_fields = "0.01";
@@ -29,7 +29,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
         extract($this->normalize_settings_args($args));
 
         // check if age_check is active and disabled moning and evening delivery
-        if (isset(WooCommerce_MyParcel()->export_defaults["age_check"]) &&
+        if (isset(WooCommerce_PostNL()->export_defaults["age_check"]) &&
             (
                 $id == "morning_enabled" ||
                 $id == "evening_enabled" ||
@@ -39,16 +39,16 @@ class WooCommerce_MyParcel_Settings_Callbacks {
             $current = 0;
             $disabled = "disabled";
             $style = "cursor: not-allowed;";
-            $description = __("Not possible if age check is active", "woocommerce-myparcel");
+            $description = __("Not possible if age check is active", "woocommerce-postnl");
 
             if ($id == "only_recipient_enabled") {
                 $current = 1;
-                $description = __("Home address only is mandatory when age check is active", "woocommerce-myparcel");
+                $description = __("Home address only is mandatory when age check is active", "woocommerce-postnl");
             }
 
             if ($id == "signature_enabled") {
                 $current = 1;
-                $description = __("Signature for receipt is mandatory when age check is active", "woocommerce-myparcel");
+                $description = __("Signature for receipt is mandatory when age check is active", "woocommerce-postnl");
             }
         }
 
@@ -486,7 +486,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
         );
 
         $this->checkbox(array_merge($args, $cb_args));
-        if (isset(WooCommerce_MyParcel()->export_defaults['age_check'])){
+        if (isset(WooCommerce_PostNL()->export_defaults['age_check'])){
             if ($args['id'] == "only_recipient" || $id == "signature"){
                 $args['has_title'] = false;
                 $args['has_price'] = false;
@@ -498,7 +498,7 @@ class WooCommerce_MyParcel_Settings_Callbacks {
                 <tr>
                     <td style="min-width: 215px;"><?php _e(
                             $args['title'] . ' title',
-                            'woocommerce-myparcel'
+                            'woocommerce-postnl'
                         ) ?>:
                     </td>
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input(
@@ -508,13 +508,13 @@ class WooCommerce_MyParcel_Settings_Callbacks {
             <?php endif; ?>
             <?php if (isset($args['has_cutoff_time'])): ?>
                 <tr>
-                    <td><?php _e('Cut-off time on Saturday', 'woocommerce-myparcel') ?>:</td>
+                    <td><?php _e('Cut-off time on Saturday', 'woocommerce-postnl') ?>:</td>
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input(array_merge($args, $cutoff_time_args)); ?></td>
                 </tr>
             <?php endif; ?>
             <?php if ($args['has_price']): ?>
                 <tr>
-                    <td><?php _e('Additional fee (ex VAT, optional)', 'woocommerce-myparcel') ?>:</td>
+                    <td><?php _e('Additional fee (ex VAT, optional)', 'woocommerce-postnl') ?>:</td>
                     <td>&euro; <?php $this->text_input(array_merge($args, $fee_args)); ?></td>
                 </tr>
             <?php endif; ?>
@@ -535,10 +535,10 @@ class WooCommerce_MyParcel_Settings_Callbacks {
         <table>
             <thead>
             <tr>
-                <th style="width: 2.2em"><?php // _e( 'Enabled', 'woocommerce-myparcel' )?></th>
-                <th><?php _e('Option', 'woocommerce-myparcel') ?></th>
-                <th><?php _e('Fee (optional)', 'woocommerce-myparcel') ?></th>
-                <th><?php _e('Description', 'woocommerce-myparcel') ?></th>
+                <th style="width: 2.2em"><?php // _e( 'Enabled', 'woocommerce-postnl' )?></th>
+                <th><?php _e('Option', 'woocommerce-postnl') ?></th>
+                <th><?php _e('Fee (optional)', 'woocommerce-postnl') ?></th>
+                <th><?php _e('Description', 'woocommerce-postnl') ?></th>
             </tr>
             </thead>
             <tbody>
@@ -709,10 +709,10 @@ class WooCommerce_MyParcel_Settings_Callbacks {
         }
 
         // Return the array processing any additional functions filtered by this action.
-        return apply_filters('woocommerce_myparcel_settings_validate_input', $input, $input);
+        return apply_filters('woocommerce_postnl_settings_validate_input', $input, $input);
     }
 }
 
 endif; // class_exists
 
-return new WooCommerce_MyParcel_Settings_Callbacks();
+return new WooCommerce_PostNL_Settings_Callbacks();

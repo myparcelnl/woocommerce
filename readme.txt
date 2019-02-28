@@ -1,6 +1,6 @@
 === Plugin Name ===
 Contributors: richardperdaan
-Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, MyParcel, myparcel, Flespakket, flespakket, PostNL, postnl
+Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, PostNL, postnl, Flespakket, flespakket, PostNL, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 5.1.0
 Stable tag: trunk

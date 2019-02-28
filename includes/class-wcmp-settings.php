@@ -107,9 +107,9 @@ class WooCommerce_PostNL_Settings {
 
         // link to hide message when one of the premium extensions is installed
         if ( ! $hide_notice && $base_country == 'BE') {
-            $postnl_belgium_link = '<a href="https://wordpress.org/plugins/wc-postnl-belgium/" target="blank">WC MyParcel Belgium</a>';
+            $postnl_belgium_link = '<a href="https://wordpress.org/plugins/wc-postnl-belgium/" target="blank">WC PostNL Belgium</a>';
             $text = sprintf(
-                __('It looks like your shop is based in Belgium. This plugin is for MyParcel Netherlands. If you are using MyParcel Belgium, download the %s plugin instead!', 'woocommerce-postnl'),
+                __('It looks like your shop is based in Belgium. This plugin is for PostNL Netherlands. If you are using PostNL Belgium, download the %s plugin instead!', 'woocommerce-postnl'),
                 $postnl_belgium_link
             );
             $dismiss_button = sprintf(
@@ -244,7 +244,7 @@ class WooCommerce_PostNL_Settings {
             array(
                 'option_name' => $option_name,
                 'id'          => 'process_directly',
-                'description' => __('When you enable this option, shipments will be directly processed when sent to MyParcel.', 'woocommerce-postnl')
+                'description' => __('When you enable this option, shipments will be directly processed when sent to PostNL.', 'woocommerce-postnl')
             )
         );
 
@@ -763,7 +763,7 @@ class WooCommerce_PostNL_Settings {
                 'size'        => '53',
                 'title'       => 'Delivery options title',
                 'current'     => self::get_checkout_setting_title('header_delivery_options_title'),
-                'description' => __('You can place a delivery title above the MyParcel options. When there is no title, it will not be visible.', 'woocommerce-postnl'),
+                'description' => __('You can place a delivery title above the PostNL options. When there is no title, it will not be visible.', 'woocommerce-postnl'),
             )
         );
 

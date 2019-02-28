@@ -259,6 +259,6 @@ $parcel_weight_gram = WooCommerce_PostNL()->export->get_parcel_weight($order, 'g
 
     <div class="wcmp_save_shipment_settings">
         <a class="button save" data-order="<?php echo $order_id; ?>"><?php _e('Save', 'woocommerce-postnl') ?></a>
-        <img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>" class="wcmp_spinner waiting" />
+        <img src="<?php echo WooCommerce_PostNL()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>" class="wcmp_spinner waiting" />
     </div>
 </a>

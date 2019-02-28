@@ -14,7 +14,7 @@ if ( !class_exists( 'WooCommerce_PostNL_Admin' ) ) :
 /**
  * Admin options, buttons & data
  */
-class WooCommerce_MyParcel_Admin {
+class WooCommerce_PostNL_Admin {
 
     function __construct() {
         add_action('woocommerce_admin_order_actions_end', array($this, 'order_list_shipment_options'), 9999);
@@ -58,7 +58,7 @@ class WooCommerce_MyParcel_Admin {
                 <?php $this->show_order_delivery_options($order); ?>
                 <a class="wcmp_show_shipment_summary"><span class="encircle wcmp_show_shipment_summary">i</span></a>
                 <div class="wcmp_shipment_summary_list" data-loaded="" data-shipment_id="<?php echo $last_shipment_id; ?>" data-order_id="<?php echo $order_id; ?>" style="display: none;">
-                    <img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>" class="wcmp_spinner" />
+                    <img src="<?php echo WooCommerce_PostNL()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>" class="wcmp_spinner" />
                 </div>
             </div>
             <?php
@@ -320,7 +320,7 @@ class WooCommerce_MyParcel_Admin {
     public function shop_order_metabox() {
         add_meta_box(
             'postnl', //$id
-            __('MyParcel', 'woocommerce-postnl'), //$title
+            __('PostNL', 'woocommerce-postnl'), //$title
             array($this, 'create_box_content'), //$callback
             'shop_order', //$post_type
             'side', //$context
@@ -341,7 +341,7 @@ class WooCommerce_MyParcel_Admin {
         $order_id = WCX_Order::get_id($order);
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-        if ( ! WooCommerce_PostNL()->export->is_myparcel_destination($shipping_country)) {
+        if ( ! WooCommerce_PostNL()->export->is_postnl_destination($shipping_country)) {
             return;
         }
 
@@ -423,7 +423,7 @@ class WooCommerce_MyParcel_Admin {
 
     public function single_order_shipment_options($order) {
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-        if ( ! WooCommerce_PostNL()->export->is_myparcel_destination($shipping_country)) {
+        if ( ! WooCommerce_PostNL()->export->is_postnl_destination($shipping_country)) {
             return;
         }
 
@@ -474,7 +474,7 @@ class WooCommerce_MyParcel_Admin {
             );
         }
 
-        if ($pickup = WooCommerce_MyParcel()->export->is_pickup($order, $delivery_options)) {
+        if ($pickup = WooCommerce_PostNL()->export->is_pickup($order, $delivery_options)) {
             switch($pickup['price_comment']) {
                 case 'retail':
                     $title = __('PostNL Pickup', 'woocommerce-postnl');
