@@ -222,7 +222,7 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
         $userAgents = array(
             'Wordpress/' . get_bloginfo('version'),
             'WooCommerce/' . WOOCOMMERCE_VERSION,
-            'PostNLNL-WooCommerce/' . WC_POSTNL_VERSION,
+            'PostNL-WooCommerce/' . WC_POSTNL_VERSION,
         );
 
         //Place white space between the array elements

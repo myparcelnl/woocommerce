@@ -13,7 +13,7 @@ class Woocommerce_PostNL_Postcode_Fields {
      * Regular expression used to split street name from house number.
      * This regex goes from right to left
      * Contains php keys to store the data in an array
-     * Taken from https://github.com/postnlnl/sdk
+     * Taken from https://github.com/postnl/sdk
      */
     const SPLIT_STREET_REGEX = '~(?P<street>.*?)\s?(?P<number>\d{1,4})[/\s\-]{0,2}(?P<number_suffix>[a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$~';
     private $use_split_address_fields;
