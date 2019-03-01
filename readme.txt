@@ -1,6 +1,5 @@
 === Plugin Name ===
-Contributors: richardperdaan
-Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, PostNL, postnl, Flespakket, flespakket, PostNL, postnl
+Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, PostNL, postnl, PostNL
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 5.1.0
 Stable tag: trunk
@@ -8,13 +7,13 @@ Requires PHP: 5.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
-Export your WooCommerce orders to PostNL (www.postnl.nl) or to Flespakket (www.flespakket.nl) and print labels directly from the WooCommerce admin
+Export your WooCommerce orders to PostNL (www.postnl.nl) and print labels directly from the WooCommerce admin
 
 == Description ==
-[vimeo https://vimeo.com/241571840]
-This WooCommerce extension allows you to export your orders to the PostNL service (www.postnl.nl) & Flespakket service (www.flespakket.nl). The products are delivered by PostNL.
 
-**Online Manual (in Dutch):** [https://postnlnl.github.io/woocommerce/](https://postnlnl.github.io/woocommerce/)
+This WooCommerce extension allows you to export your orders to the PostNL service (www.postnl.nl).
+
+**Online Manual (in Dutch):** https://postnl.github.io/woocommerce/
 
 = Main features =
 - Delivery options integrated in your checkout
@@ -26,9 +25,9 @@ This WooCommerce extension allows you to export your orders to the PostNL servic
 - Modify the PostNL shipping options per order before exporting
 - Extra checkout fields to separate street name, house number and house number suffix for more precise address data
 - View the status of the shipment in the order details page
-- Add Track & Trace link to the order confirmation email
+- Add track&trace link to the order confirmation email
 
-An API-key is required for this plugin! You can create this in your backoffice account.
+A PostNL API account is required for this plugin! Contact your PostNL account manager for the API key.
 
 == Installation ==
 
@@ -45,13 +44,13 @@ In the search field type "WooCommerce PostNL" and click Search Plugins. You can 
 5. After installation has finished, click the 'activate plugin' link
 
 = Manual installation via FTP =
-1. Download the plugin file to your computer and unzip it
+1. Download the plugin file to your computer and unzip it.
 2. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installation's wp-content/plugins/ directory.
 3. Activate the plugin from the Plugins menu within the WordPress admin.
 
 = Setting up the plugin =
 1. Go to the menu `WooCommerce > PostNL`.
-2. Fill in your API Details. If you don't have API details, log into your PostNL or Flespakket account, you can find your API key under Instellingen → Algemeen.
+2. Fill in your API Details.
 3. Under 'Default export settings' you can set options that should be set by default for the export. You can change these settings per order at the time of export.
 4. The plugin is ready to be used!
 
@@ -60,22 +59,22 @@ We advise you to test the whole checkout procedure once to see if everything wor
 
 The PostNL plugin adds extra fields to the checkout of your webshop, to make it possible for the client to add street name, number and optional additions separately. This way you can be sure that everything is entered correctly. Because not all checkouts are configured alike, it's possible that the positioning/alignment of these extra fields have to be adjusted.
 
-Moreover, after a label is created, a Track & Trace code is added to the order. When the order is completed from WooCommerce, this Track & Trace code is added to the email (when this is enabled in the settings). Check that the code is correctly displayed in your template. You can read how to change the text in the FAQ section.
+Moreover, after a label is created, a track&trace code is added to the order. When the order is completed from WooCommerce, this track & trace code is added to the email (when this is enabled in the settings). Check that the code is correctly displayed in your template. You can read how to change the text in the FAQ section.
 
 == Frequently Asked Questions ==
 
-**Online Manual (in Dutch):** [https://postnlnl.github.io/woocommerce/](https://postnlnl.github.io/woocommerce/)
+**Online Manual (in Dutch):** https://postnl.github.io/woocommerce/
 
 = How do I get an API key? =
-When logged in on your PostNL or Flespakket account, you can find your API key under Instellingen → Algemeen.
+For the api key, you must be contacting PostNL.
 
-= How do I change the Track & Trace email text? =
+= How do I change the track&trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
 `
 add_filter( 'wcpostnl_email_text', 'wcpostnl_new_email_text' );
 function wcpostnl_new_email_text($track_trace_tekst) {
 	// Tutoyeren ipv vousvoyeren
-	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende PostNL Track & Trace nummer:';
+	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende PostNL track&trace nummer:';
 	return $nieuwe_tekst;
 }
 `
@@ -85,8 +84,8 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 1. Export or print postnl label per order
 2. Bulk export or print postnl labels
 3. Change the shipment options for an order
-4. PostNL actions on the order overview page
-5. PostNL information on the order details page
+4. postnl actions on the order overview page
+5. postnl information on the order details page
 
 == Changelog ==
 
