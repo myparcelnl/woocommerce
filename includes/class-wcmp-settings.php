@@ -218,7 +218,7 @@ class WooCommerce_PostNL_Settings {
             array(
                 'option_name' => $option_name,
                 'id'          => 'email_tracktrace',
-                'description' => __('Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your backoffice.', 'woocommerce-postnl')
+                'description' => __('Add the Track & Trace code to emails to the customer.', 'woocommerce-postnl')
             )
         );
 
@@ -394,19 +394,6 @@ class WooCommerce_PostNL_Settings {
         }
 
         add_settings_field(
-            'connect_email',
-            __('Connect customer email', 'woocommerce-postnl'),
-            array($this->callbacks, 'checkbox'),
-            $option_group,
-            'defaults',
-            array(
-                'option_name' => $option_name,
-                'id'          => 'connect_email',
-                'description' => __('When you connect the customer email, PostNL can send a Track & Trace email to this address. In your backoffice you can enable or disable this email and format it in your own style.', 'woocommerce-postnl'),
-            )
-        );
-
-        add_settings_field(
 			'connect_phone',
             __('Connect customer phone', 'woocommerce-postnl'),
             array($this->callbacks, 'checkbox'),
@@ -416,19 +403,6 @@ class WooCommerce_PostNL_Settings {
                 'option_name' => $option_name,
                 'id'          => 'connect_phone',
                 'description' => __("When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.", 'woocommerce-postnl')
-            )
-        );
-
-        add_settings_field(
-			'large_format',
-            __('Extra large size', 'woocommerce-postnl'),
-            array($this->callbacks, 'checkbox'),
-			$option_group,
-			'defaults',
-			array(
-                'option_name' => $option_name,
-                'id'          => 'large_format',
-                'description' => __('Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee will be charged. <br/><strong>Note!</strong> If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate will be charged.', 'woocommerce-postnl')
             )
         );
 
@@ -899,7 +873,7 @@ class WooCommerce_PostNL_Settings {
                 'option_name'        => $option_name,
                 'id'                 => 'saturday_cutoff',
                 'size'               => 30,
-                'option_description' => sprintf(__('<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended). </strong> More information about the Monday delivery service of PostNL can be found %s here%s.', 'woocommerce-postnl'), '<a href="https://blog.postnl.nl/maandagbezorging/" target="_blank">', '</a>'),
+                'option_description' => sprintf(__('<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended).</strong>', 'woocommerce-postnl')),
             )
         );
 

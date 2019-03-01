@@ -118,9 +118,9 @@ class WooCommerce_PostNL_Admin {
     public function bulk_actions() {
         global $post_type;
         $bulk_actions = array(
-            'wcmp_export'       => __('PostNL: Export', 'woocommerce-postnl'),
+            'wcmp_export'       => __('PostNL: Prepare shipment', 'woocommerce-postnl'),
             'wcmp_print'        => __('PostNL: Print', 'woocommerce-postnl'),
-            'wcmp_export_print' => __('PostNL: Export & Print', 'woocommerce-postnl'),
+            'wcmp_export_print' => __('PostNL: Prepare & print shipment', 'woocommerce-postnl'),
         );
 
         if ('shop_order' == $post_type) {
@@ -192,11 +192,6 @@ class WooCommerce_PostNL_Admin {
                 'url' => wp_nonce_url(admin_url('admin-ajax.php?action=wc_postnl&request=get_labels&order_ids=' . $order_id), 'wc_postnl'),
                 'img' => WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-pdf.png',
                 'alt' => esc_attr__('Print PostNL label', 'woocommerce-postnl'),
-            ),
-            'add_return'   => array(
-                'url' => wp_nonce_url(admin_url('admin-ajax.php?action=wc_postnl&request=add_return&order_ids=' . $order_id), 'wc_postnl'),
-                'img' => WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-retour.png',
-                'alt' => esc_attr__('Email return label', 'woocommerce-postnl'),
             ),
         );
 

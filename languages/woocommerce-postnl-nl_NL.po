@@ -23,16 +23,16 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-2: patches\n"
 
 #: includes/class-wcmp-admin.php:126
-msgid "PostNL: Export"
-msgstr "PostNL: Exporteren"
+msgid "PostNL: Prepare shipment"
+msgstr "PostNL: Zending voorbereiden"
 
 #: includes/class-wcmp-admin.php:127
 msgid "PostNL: Print"
 msgstr "PostNL: Printen"
 
 #: includes/class-wcmp-admin.php:128
-msgid "PostNL: Export & Print"
-msgstr "PostNL: Exporteren & Printen"
+msgid "PostNL: Prepare & print shipment"
+msgstr "PostNL: Zending voorbereiden & printen"
 
 #: includes/class-wcmp-admin.php:155 includes/class-wcmp-assets.php:112
 msgid "Labels to skip"
@@ -158,10 +158,6 @@ msgstr "Brievenbuspakje"
 #: includes/class-wcmp-export.php:1032
 msgid "Unpaid letter"
 msgstr "Ongefrankeerd"
-
-#: includes/class-wcmp-export.php:1033
-msgid "Digital stamp"
-msgstr "Digitale postzegel"
 
 #: includes/class-wcmp-export.php:1046
 msgid "Unknown"
@@ -435,9 +431,7 @@ msgstr "Track & Trace in e-mail"
 
 #: includes/class-wcmp-settings.php:221
 msgid ""
-"Add the Track & Trace code to emails to the customer.<br/><strong>Note!</"
-"strong> When you select this option, make sure you have not enabled the "
-"Track & Trace email in your backoffice."
+"Add the Track & Trace code to emails to the customer."
 msgstr ""
 "Voeg de Track & Trace code toe aan e-mails aan de klant.<br/> <strong>Let op!"
 "</strong> Wanneer je voor deze optie kiest, zorg er dan voor dat je niet de "
@@ -541,10 +535,6 @@ msgstr "Selecteer een of meer verzendmethoden voor elk bezorg type"
 msgid "Shipment type"
 msgstr "Soort zending"
 
-#: includes/class-wcmp-settings.php:398
-msgid "Connect customer email"
-msgstr "Koppel e-mailadres klant"
-
 #: includes/class-wcmp-settings.php:405
 #, php-format
 msgid ""
@@ -569,13 +559,6 @@ msgstr ""
 "Wanneer je het telefoonnummer van de klant koppelt met de zending, kan de "
 "koerier dit gebruiken ten behoeve van de aflevering van het pakket. De "
 "afleverkans voor buitenlandzendingen wordt hiermee aanzienlijk verhoogd."
-
-#: includes/class-wcmp-settings.php:424
-#: includes/views/wcmp-order-return-shipment-options.php:31
-#: includes/views/wcmp-order-shipment-options.php:58
-#: includes/views/wcmp-order-shipment-summary.php:14
-msgid "Extra large size"
-msgstr "Extra groot formaat"
 
 #: includes/class-wcmp-settings.php:431
 msgid ""
@@ -975,6 +958,26 @@ msgstr "Thuis bezorgtitel"
 msgid "Standard delivery title"
 msgstr "Standaard bezorgtitel"
 
+#: includes/class-wcmp-settings.php:771
+msgid "Morning delivery title"
+msgstr "Ochtend aflevering titel"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Evening delivery title"
+msgstr "Avond aflevering titel"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Home address only title"
+msgstr "Alleen thuisadres titel"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Signature on delivery title"
+msgstr "Handtekening voor ontvangst titel"
+
+#: includes/class-wcmp-settings.php:771
+msgid "Pickup title"
+msgstr "Afhalen bij PostNL titel"
+
 #: includes/class-wcmp-settings.php:780 includes/class-wcmp-settings.php:796
 #: includes/class-wcmp-settings.php:812 includes/class-wcmp-settings.php:924
 msgid ""
@@ -995,13 +998,10 @@ msgstr "Maandaglevering inschakelen"
 #, php-format
 msgid ""
 "<strong>Note: Your drop-off days must include Saturday and cut-off time on "
-"Saturday must be before 15:00 (14:30 recommended). </strong> More "
-"information about the Monday delivery service of PostNL can be found %s here"
-"%s."
+"Saturday must be before 15:00 (14:30 recommended).</strong>"
 msgstr ""
 "<strong>Let op: Je moet zaterdag in je afleverdagen hebben en de "
-"sluitingstijd op zaterdag moet voor 15:00 zijn. (aanbevolen: 14:30)</strong> "
-"Meer informatie over de maandagbezorging van PostNL vind je %s hier%s."
+"sluitingstijd op zaterdag moet voor 15:00 zijn. (aanbevolen: 14:30).</strong>"
 
 #: includes/class-wcmp-settings.php:895
 msgid "Belgium delivery options"
@@ -1121,12 +1121,6 @@ msgstr "Aantal labels"
 msgid "Weight:"
 msgstr "Gewicht:"
 
-#: includes/views/wcmp-order-shipment-options.php:175
-msgid "<strong>Note:</strong> Digital stamps are only available if weight is under 2000g and dimensions are within "
-"14 x 9 cm and 38 x 26,5 x 3,2 cm."
-msgstr "<strong>Let op:</strong> Digitale postzegels zijn alleen beschikbaar als het gewicht minder is dan 2000g en "
-"de afmetingen liggen tussen 14 x 9 cm en 38 x 26,5 x 3,2 cm."
-
 #: includes/views/wcmp-order-shipment-options.php:94
 msgid "Standard insurance up to €200 + signature on delivery"
 msgstr "Standaard verzekering tot €200 + handtekening voor ontvangst"
@@ -1175,5 +1169,5 @@ msgstr ""
 "verzendlabels direct vanuit WooCommerce"
 
 #. Author of the plugin/theme
-msgid "Richard Perdaan"
-msgstr "Richard Perdaan"
+msgid "PostNL"
+msgstr "PostNL"

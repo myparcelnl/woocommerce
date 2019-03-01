@@ -14,7 +14,6 @@ class WooCommerce_PostNL_Export {
     const PACKAGE         = 1;
     const MAILBOX_PACKAGE = 2;
     const LETTER          = 3;
-    const DIGITAL_STAMP   = 4;
 
     public $order_id;
     public $success;
@@ -466,13 +465,6 @@ class WooCommerce_PostNL_Export {
                     'weight' => $customs_declaration['weight'],
                 );
             }
-
-            if ($shipment['options']['package_type'] == self::DIGITAL_STAMP ) {
-                $shipment['physical_properties'] = array(
-                    'weight' => (int) $shipment['options']['weight'],
-                );
-                unset($shipment['options']['weight']);
-            }
             
             if ($shipment['options']['package_type'] == self::MAILBOX_PACKAGE ) {
                 unset($shipment['options']['weight']);
@@ -482,79 +474,6 @@ class WooCommerce_PostNL_Export {
         }
 
         return $shipments;
-    }
-
-    public function prepare_return_shipment_data($order_id, $options) {
-        $order = WCX::get_order($order_id);
-
-        $shipping_name = method_exists($order, 'get_formatted_shipping_full_name')
-            ? $order->get_formatted_shipping_full_name()
-            : trim($order->shipping_first_name . ' ' . $order->shipping_last_name);
-
-        // set name & email
-        $return_shipment_data = array(
-            'name' => $shipping_name,
-            'email' => isset(WooCommerce_PostNL()->export_defaults['connect_email'])
-                ? WCX_Order::get_prop($order, 'billing_email')
-                : '',
-            'carrier' => 1, // default to POSTNL for now
-        );
-
-        // add options if available
-        if ( ! empty($options)) {
-            // convert insurance option
-            if ( ! isset($options['insurance']) && isset($options['insured_amount'])) {
-                if ($options['insured_amount'] > 0) {
-                    $options['insurance'] = array(
-                        'amount'   => (int) $options['insured_amount'] * 100,
-                        'currency' => 'EUR',
-                    );
-                }
-
-                unset($options['insured_amount']);
-                unset($options['insured']);
-            }
-
-            // PREVENT ILLEGAL SETTINGS
-            // convert numeric strings to int
-            $int_options = array(
-                'package_type',
-                'delivery_type',
-                'only_recipient',
-                'signature',
-                'return',
-                'large_format',
-                'age_check',
-            );
-            foreach ($options as $key => &$value) {
-                if (in_array($key, $int_options)) {
-                    $value = (int) $value;
-                }
-            }
-
-            // remove frontend insurance option values
-            if (isset($options['insured_amount'])) {
-                unset($options['insured_amount']);
-            }
-            if (isset($options['insured'])) {
-                unset($options['insured']);
-            }
-
-            $return_shipment_data['options'] = $options;
-        }
-
-        // get parent
-        $shipment_ids = $this->get_shipment_ids(
-            (array) $order_id, array(
-            'exclude_concepts' => true,
-            'only_last' => true
-        )
-        );
-        if ( ! empty($shipment_ids)) {
-            $return_shipment_data['parent'] = (int) array_pop($shipment_ids);
-        }
-
-        return $return_shipment_data;
     }
 
     public function get_recipient($order) {
@@ -570,7 +489,7 @@ class WooCommerce_PostNL_Export {
             'city'    => (string) WCX_Order::get_prop($order, 'shipping_city'),
             'person'  => $shipping_name,
             'company' => (string) WCX_Order::get_prop($order, 'shipping_company'),
-            'email'   => isset(WooCommerce_PostNL()->export_defaults['connect_email']) ? WCX_Order::get_prop($order, 'billing_email') : '',
+            'email'   => WCX_Order::get_prop($order, 'billing_email'),
             'phone'   => isset(WooCommerce_PostNL()->export_defaults['connect_phone']) ? WCX_Order::get_prop($order, 'billing_phone') : '',
             'street_additional_info' => WCX_Order::get_prop($order, 'shipping_address_2'),
         );
@@ -689,7 +608,6 @@ class WooCommerce_PostNL_Export {
                 'only_recipient' => 0,
                 'signature' => 0,
                 'return' => 0,
-                'large_format' => 0,
                 'label_description' => '',
                 'insured_amount' => 0,
                 'age_check' => 0,
@@ -711,7 +629,6 @@ class WooCommerce_PostNL_Export {
                 'only_recipient' => (isset(WooCommerce_PostNL()->export_defaults['only_recipient'])) ? 1 : 0,
                 'signature' => (isset(WooCommerce_PostNL()->export_defaults['signature'])) ? 1 : 0,
                 'return' => (isset(WooCommerce_PostNL()->export_defaults['return'])) ? 1 : 0,
-                'large_format' => (isset(WooCommerce_PostNL()->export_defaults['large_format'])) ? 1 : 0,
                 'label_description' => $description,
                 'insured_amount' => $insured_amount,
                 'age_check' => (isset(WooCommerce_PostNL()->export_defaults['age_check'])) ? 1 : 0,
@@ -794,16 +711,16 @@ class WooCommerce_PostNL_Export {
 
         // PREVENT ILLEGAL SETTINGS
         // convert numeric strings to int
-        $int_options = array('package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'age_check');
+        $int_options = array('package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'age_check');
         foreach ($options as $key => &$value) {
             if (in_array($key, $int_options)) {
                 $value = (int) $value;
             }
         }
 
-        // disable options for mailbox package, unpaid letter and digital stamp
+        // disable options for mailbox package, unpaid letter
         if ($options['package_type'] != self::PACKAGE) {
-            $illegal_options = array('delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date', 'age_check');
+            $illegal_options = array('delivery_type', 'only_recipient', 'signature', 'return', 'insurance', 'delivery_date', 'age_check');
             foreach ($options as $key => $option) {
                 if (in_array($key, $illegal_options)) {
                     unset($options[$key]);
@@ -1060,12 +977,10 @@ class WooCommerce_PostNL_Export {
             self::PACKAGE         => __('Parcel', 'woocommerce-postnl'),
             self::MAILBOX_PACKAGE => __('Mailbox package', 'woocommerce-postnl'),
             self::LETTER          => __('Unpaid letter', 'woocommerce-postnl'),
-            self::DIGITAL_STAMP   => __('Digital stamp', 'woocommerce-postnl'),
         );
         if ($shipment_type == 'return') {
             unset($package_types[self::MAILBOX_PACKAGE]);
             unset($package_types[self::LETTER]);
-            unset($package_types[self::DIGITAL_STAMP]);
         }
 
         return $package_types;

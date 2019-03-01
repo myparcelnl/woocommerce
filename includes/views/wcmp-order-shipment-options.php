@@ -18,14 +18,12 @@ $parcel_weight_gram = WooCommerce_PostNL()->export->get_parcel_weight($order, 'g
                 // disable mailbox package outside NL
                 if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
                     unset($package_types[WooCommerce_PostNL_Export::MAILBOX_PACKAGE]); // mailbox package
-                    unset($package_types[WooCommerce_PostNL_Export::DIGITAL_STAMP]); // digital stamp
                 }
 
                 // disable mailbox package and unpaid letter for pakjegemak
                 if (WooCommerce_PostNL()->export->is_pickup($order)) {
                     unset($package_types[WooCommerce_PostNL_Export::MAILBOX_PACKAGE]);
                     unset($package_types[WooCommerce_PostNL_Export::LETTER]);
-                    unset($package_types[WooCommerce_PostNL_Export::DIGITAL_STAMP]);
                     $package_types[WooCommerce_PostNL_Export::PACKAGE] .= ' (Pakjegemak)';
                 }
 
@@ -64,10 +62,6 @@ $parcel_weight_gram = WooCommerce_PostNL()->export->get_parcel_weight($order, 'g
         }
 
         $option_rows = array(
-            '[large_format]'   => array(
-                'label' => __('Extra large size', 'woocommerce-postnl'),
-                'value' => isset($shipment_options['large_format']) ? $shipment_options['large_format'] : 0,
-            ),
             '[only_recipient]' => array(
                 'label' => __('Home address only', 'woocommerce-postnl'),
                 'value' => isset($shipment_options['only_recipient']) ? $shipment_options['only_recipient'] : 0,
@@ -101,9 +95,6 @@ $parcel_weight_gram = WooCommerce_PostNL()->export->get_parcel_weight($order, 'g
         }
 
         if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
-            if (WooCommerce_PostNL()->export->is_world_shipment_country($recipient['cc'])) {
-                unset($option_rows['[large_format]']);
-            }
             unset($option_rows['[only_recipient]']);
             unset($option_rows['[signature]']);
             unset($option_rows['[return]']);
@@ -156,41 +147,7 @@ $parcel_weight_gram = WooCommerce_PostNL()->export->get_parcel_weight($order, 'g
             </tr>
         <?php endforeach ?>
     </table>
-    <table class="wcpostnl_settings_table digital_stamp_options" onclick="return false;">
-        <tr>
-            <td>
-                <label for="postnl_options_weight"><?php _e('Weight:', 'woocommerce-postnl') ?></label>
-            </td>
-            <td>
-                <?php
-                $name = "postnl_options[{$order_id}][weight]";
-                // use grams
-                $current_tier_range = WooCommerce_PostNL_Export::find_tier_range($parcel_weight_gram);
 
-                printf('<select name="%s">', $name);
-                foreach (WooCommerce_PostNL_Export::get_tier_ranges(true) as $tier_range => $weight) {
-                    printf(
-                        '<option id="postnl_options_weight" value="%s"%s>%s – %s %s</option>',
-                        $weight['average'],
-                        selected($current_tier_range == $tier_range),
-                        $weight['min'],
-                        $weight['max'],
-                        __('gram', 'woocommerce-postnl')
-                    );
-                }
-                printf('</select>');
-                ?>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <small><?php _e(
-                        '<strong>Note:</strong> Digital stamps are only available if weight is under 2000g and dimensions are within 14 x 9 cm and 38 x 26,5 x 3,2 cm.',
-                        'woocommerce-postnl'
-                    ) ?></small>
-            </td>
-        </tr>
-    </table>
     <table onclick="return false;">
         <?php
         $insured_amount = isset($shipment_options['insurance']['amount'])

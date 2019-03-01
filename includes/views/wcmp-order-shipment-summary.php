@@ -11,7 +11,6 @@ printf('%s: %s', __('Shipment type', 'woocommerce-postnl'), $package_types[$ship
     <?php
     // Options
     $option_strings = array(
-        'large_format'   => __('Extra large size', 'woocommerce-postnl'),
         'only_recipient' => __('Home address only', 'woocommerce-postnl'),
         'signature'      => __('Signature on delivery', 'woocommerce-postnl'),
         'return'         => __('Return if no answer', 'woocommerce-postnl'),

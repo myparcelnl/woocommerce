@@ -117,7 +117,6 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 
 = 3.1.0 (2018-12-12) =
 * Hotfix: Show delivery options when checkout form already filled in.
-* Improvement: Add Digital stamp
 
 = 3.0.10 (2018-12-05) =
 * Hotfix: Flashing of the order summary.
@@ -447,7 +446,7 @@ These are the biggest changes:
 
 = 1.3.0 =
 * New PostNL icons
-* Export & PDF buttons compatible with WC2.1 / MP6 styles
+* Prepare & PDF buttons compatible with WC2.1 / MP6 styles
 * Button styles are now in CSS instead of inline
 
 = 1.2.0 =
