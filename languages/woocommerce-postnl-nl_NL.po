@@ -136,7 +136,7 @@ msgstr "Onbekende fout"
 #: includes/class-wcmp-export.php:259
 #, php-format
 msgid "%s shipments successfully exported to PostNL"
-msgstr "%s zendingen met succes geëxporteerd naar POSTNL"
+msgstr "%s zendingen met succes geëxporteerd naar PostNL"
 
 #: includes/class-wcmp-export.php:359
 msgid "The selected orders have not been exported to PostNL yet!"

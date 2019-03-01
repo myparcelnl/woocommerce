@@ -1,4 +1,5 @@
 <?php
+
 use WPO\WC\PostNL\Compatibility\WC_Core as WCX;
 use WPO\WC\PostNL\Compatibility\Order as WCX_Order;
 use WPO\WC\PostNL\Compatibility\Product as WCX_Product;
@@ -13,6 +14,7 @@ class WooCommerce_PostNL_Export {
     const PACKAGE         = 1;
     const MAILBOX_PACKAGE = 2;
     const LETTER          = 3;
+    const DIGITAL_STAMP   = 4;
 
     public $order_id;
     public $success;
@@ -160,13 +162,13 @@ class WooCommerce_PostNL_Export {
         // When adding shipments, store $return for use in admin_notice
         // This way we can refresh the page (JS) to show all new buttons
         if ($request == 'add_shipments' && ! empty($print) && ($print == 'no' || $print == 'after_reload')) {
-            update_option('postnl_admin_notices', $return);
+            update_option('wcpostnl_admin_notices', $return);
             if ($print == 'after_reload') {
                 $print_queue = array(
                     'order_ids' => $return['success_ids'],
                     'offset'    => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
                 );
-                update_option('postnl_print_queue', $print_queue);
+                update_option('wcpostnl_print_queue', $print_queue);
             }
         }
 
@@ -262,6 +264,42 @@ class WooCommerce_PostNL_Export {
         if ( ! empty($this->success)) {
             $return['success'] = sprintf(__('%s shipments successfully exported to PostNL', 'woocommerce-postnl'), count($this->success));
             $return['success_ids'] = $this->success;
+        }
+
+        return $return;
+    }
+
+    public function add_return($postnl_options) {
+        $return = array();
+
+        $this->log("*** Creating return shipments started ***");
+
+        foreach ($postnl_options as $order_id => $options) {
+            $return_shipments = array($this->prepare_return_shipment_data($order_id, $options));
+            $this->log("Return shipment data for order {$order_id}:\n" . var_export($return_shipments, true));
+
+            try {
+                $api = $this->init_api();
+                $response = $api->add_shipments($return_shipments, 'return');
+                $this->log("API response (order {$order_id}):\n" . var_export($response, true));
+                if (isset($response['body']['data']['ids'])) {
+                    $order = WCX::get_order($order_id);
+                    $ids = array_shift($response['body']['data']['ids']);
+                    $shipment_id = $ids['id'];
+                    $this->success[$order_id] = $shipment_id;
+
+                    $shipment = array(
+                        'shipment_id' => $shipment_id,
+                    );
+
+                    // save shipment data in order meta
+                    $this->save_shipment_data($order, $shipment);
+                } else {
+                    $this->errors[$order_id] = __('Unknown error', 'woocommerce-postnl');
+                }
+            } catch ( Exception $e ) {
+                $this->errors[$order_id] = $e->getMessage();
+            }
         }
 
         return $return;
@@ -402,6 +440,7 @@ class WooCommerce_PostNL_Export {
             $order = WCX::get_order($order_id);
 
             $shipment = array(
+                'reference_identifier' => $this->replace_shortcodes(WooCommerce_PostNL()->export_defaults['label_description'], $order),
                 'recipient'            => $this->get_recipient($order),
                 'options'              => $this->get_options($order),
                 'carrier'              => 1, // default to POSTNL for now
@@ -428,6 +467,13 @@ class WooCommerce_PostNL_Export {
                 );
             }
 
+            if ($shipment['options']['package_type'] == self::DIGITAL_STAMP ) {
+                $shipment['physical_properties'] = array(
+                    'weight' => (int) $shipment['options']['weight'],
+                );
+                unset($shipment['options']['weight']);
+            }
+            
             if ($shipment['options']['package_type'] == self::MAILBOX_PACKAGE ) {
                 unset($shipment['options']['weight']);
             }
@@ -438,6 +484,78 @@ class WooCommerce_PostNL_Export {
         return $shipments;
     }
 
+    public function prepare_return_shipment_data($order_id, $options) {
+        $order = WCX::get_order($order_id);
+
+        $shipping_name = method_exists($order, 'get_formatted_shipping_full_name')
+            ? $order->get_formatted_shipping_full_name()
+            : trim($order->shipping_first_name . ' ' . $order->shipping_last_name);
+
+        // set name & email
+        $return_shipment_data = array(
+            'name' => $shipping_name,
+            'email' => isset(WooCommerce_PostNL()->export_defaults['connect_email'])
+                ? WCX_Order::get_prop($order, 'billing_email')
+                : '',
+            'carrier' => 1, // default to POSTNL for now
+        );
+
+        // add options if available
+        if ( ! empty($options)) {
+            // convert insurance option
+            if ( ! isset($options['insurance']) && isset($options['insured_amount'])) {
+                if ($options['insured_amount'] > 0) {
+                    $options['insurance'] = array(
+                        'amount'   => (int) $options['insured_amount'] * 100,
+                        'currency' => 'EUR',
+                    );
+                }
+
+                unset($options['insured_amount']);
+                unset($options['insured']);
+            }
+
+            // PREVENT ILLEGAL SETTINGS
+            // convert numeric strings to int
+            $int_options = array(
+                'package_type',
+                'delivery_type',
+                'only_recipient',
+                'signature',
+                'return',
+                'large_format',
+                'age_check',
+            );
+            foreach ($options as $key => &$value) {
+                if (in_array($key, $int_options)) {
+                    $value = (int) $value;
+                }
+            }
+
+            // remove frontend insurance option values
+            if (isset($options['insured_amount'])) {
+                unset($options['insured_amount']);
+            }
+            if (isset($options['insured'])) {
+                unset($options['insured']);
+            }
+
+            $return_shipment_data['options'] = $options;
+        }
+
+        // get parent
+        $shipment_ids = $this->get_shipment_ids(
+            (array) $order_id, array(
+            'exclude_concepts' => true,
+            'only_last' => true
+        )
+        );
+        if ( ! empty($shipment_ids)) {
+            $return_shipment_data['parent'] = (int) array_pop($shipment_ids);
+        }
+
+        return $return_shipment_data;
+    }
 
     public function get_recipient($order) {
         $is_using_old_fields =
@@ -942,10 +1060,12 @@ class WooCommerce_PostNL_Export {
             self::PACKAGE         => __('Parcel', 'woocommerce-postnl'),
             self::MAILBOX_PACKAGE => __('Mailbox package', 'woocommerce-postnl'),
             self::LETTER          => __('Unpaid letter', 'woocommerce-postnl'),
+            self::DIGITAL_STAMP   => __('Digital stamp', 'woocommerce-postnl'),
         );
         if ($shipment_type == 'return') {
             unset($package_types[self::MAILBOX_PACKAGE]);
             unset($package_types[self::LETTER]);
+            unset($package_types[self::DIGITAL_STAMP]);
         }
 
         return $package_types;
@@ -1243,7 +1363,7 @@ class WooCommerce_PostNL_Export {
         $delivery_type = $this->get_delivery_type($order, $postnl_delivery_options);
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-
+        
         if ( ! empty($postnl_delivery_options) && ! in_array($delivery_type, array(1, 3)) && $shipping_country == 'NL' ) {
 
             $age_check = $options['age_check'] = 1;

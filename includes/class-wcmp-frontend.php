@@ -1,20 +1,16 @@
 <?php
+
 use WPO\WC\PostNL\Compatibility\WC_Core as WCX;
 use WPO\WC\PostNL\Compatibility\Order as WCX_Order;
-use WPO\WC\PostNL\Compatibility\Product as WCX_Product;
-
-/**
- * Frontend views
- */
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( ! class_exists('WooCommerce_PostNL()_Frontend')) :
+if ( ! class_exists('WooCommerce_PostNL_Frontend')) :
 
 /**
      * Frontend views
      */
-class WooCommerce_PostNL_Frontend{
+class WooCommerce_PostNL_Frontend {
 
     const RADIO_CHECKED = 'on';
     private $frontend_settings;
@@ -441,7 +437,7 @@ class WooCommerce_PostNL_Frontend{
     }
 
     private function get_checkout_config() {
-        $POSTNLConfig = [
+        $PostNLConfig = [
 
             "address" => [
                 "cc" => '',
@@ -520,7 +516,7 @@ class WooCommerce_PostNL_Frontend{
             ]
         ];
 
-        return json_encode($POSTNLConfig);
+        return json_encode($PostNLConfig);
         // Use cutoff_time and saturday_cutoff_time on saturdays
     }
 

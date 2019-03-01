@@ -102,7 +102,7 @@ class WooCommerce_PostNL_Frontend_Settings {
      */
     public function get_deliverydays_window() {
         if (isset(self::$settings['deliverydays_window'])) {
-            return self::$settings['deliverydays_window'];
+            return (int) self::$settings['deliverydays_window'];
         }
 
         return 0;

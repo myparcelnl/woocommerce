@@ -215,7 +215,7 @@ class WC_PostNL_API extends WC_PostNL_REST_Client {
     }
 
     /**
-     * Get Wordpress, Woocommerce, POSTNL version and place theme in a array. Implode the array to get an UserAgent.
+     * Get Wordpress, Woocommerce, PostNL version and place theme in a array. Implode the array to get an UserAgent.
      * @return string
      */
     private function getUserAgent() {

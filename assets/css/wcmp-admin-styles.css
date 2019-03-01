@@ -1,17 +1,18 @@
 /* Order actions button styling */
-.widefat .column-order_actions a.button.postnl {
-	float: left;
-	width: 26px;
-	height: 26px;
-	padding: 3px 2px;
-}
-#postnl.postbox a.button.postnl {
-	padding: 2px 5px 0;
+.widefat .column-order_actions .column-wc_actions a.button.postnl {
+    float: left;
+    width: 26px;
+    height: 26px;
+    padding: 3px 2px;
 }
 
-.widefat .column-order_actions a.button.postnl img {
-	width: 16px;
-	height: auto;
+#postnl.postbox a.button.postnl {
+    padding: 2px 5px 0;
+}
+
+.widefat .column-order_actions .column-wc_actions a.button.postnl img {
+    width: 16px;
+    height: auto;
 }
 
 .wcmp_shipment_summary, .wcmp_shipment_options {
@@ -134,9 +135,9 @@ table.tracktrace_status td.wcmp-create-label {
 
 /* bulk export options styling */
 .wcmp_bulk_options_form .wcpostnl_settings_table td {
-	border: none;
-	padding: 0px 7px 2px !important;
-	vertical-align: middle !important;
+    border: none;
+    padding: 0 7px 2px !important;
+    vertical-align: middle !important;
 }
 
 .wcmp_bulk_options_form td.ordercell {
@@ -161,6 +162,7 @@ table.tracktrace_status td.wcmp-create-label {
 #order_data .delivery-options {
     margin-top: 10px;
 }
+
 #order_data .delivery-options strong {
     display: block;
 }
@@ -169,6 +171,7 @@ table.tracktrace_status td.wcmp-create-label {
 .wcmp_delivery_option_details {
     margin-top: 5px;
 }
+
 .wcmp_delivery_option_details td {
     padding: 0;
 }
@@ -182,17 +185,9 @@ table.tracktrace_status td.wcmp-create-label {
     color: black;
 }
 
-.wcpostnl_change_order{
-	color: black;
-	text-decoration: none;
-}
-
-.wcpostnl_change_order:hover{
-	color: black;
-}
 /* fix woocommerce column float */
 @media only screen and (min-width: 1280px) {
-	#order_data .order_data_column {
-		max-width: 31% !important;
-	}
+    #order_data .order_data_column {
+        max-width: 31% !important;
+    }
 }

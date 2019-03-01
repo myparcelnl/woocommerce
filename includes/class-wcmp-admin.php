@@ -1,15 +1,12 @@
 <?php
+
 use WPO\WC\PostNL\Compatibility\WC_Core as WCX;
 use WPO\WC\PostNL\Compatibility\Order as WCX_Order;
 use WPO\WC\PostNL\Compatibility\Product as WCX_Product;
 
-/**
- * Admin options, buttons & data
- */
-
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( !class_exists( 'WooCommerce_PostNL_Admin' ) ) :
+if ( ! class_exists('WooCommerce_PostNL_Admin')) :
 
 /**
  * Admin options, buttons & data
@@ -28,10 +25,10 @@ class WooCommerce_PostNL_Admin {
         add_action('wp_ajax_wcmp_save_shipment_options', array($this, 'save_shipment_options_ajax'));
         add_action('wp_ajax_wcmp_get_shipment_summary_status', array($this, 'order_list_ajax_get_shipment_summary'));
 
-		// HS code in product shipping options tab
-		add_action( 'woocommerce_product_options_shipping', array( $this, 'product_hs_code_field' ) );
-		add_action( 'woocommerce_process_product_meta', array( $this, 'product_hs_code_field_save' ) );
-	}
+        // HS code in product shipping options tab
+        add_action('woocommerce_product_options_shipping', array($this, 'product_hs_code_field'));
+        add_action('woocommerce_process_product_meta', array($this, 'product_hs_code_field_save'));
+    }
 
     public function order_list_shipment_options($order, $hide = true) {
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
@@ -195,6 +192,11 @@ class WooCommerce_PostNL_Admin {
                 'url' => wp_nonce_url(admin_url('admin-ajax.php?action=wc_postnl&request=get_labels&order_ids=' . $order_id), 'wc_postnl'),
                 'img' => WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-pdf.png',
                 'alt' => esc_attr__('Print PostNL label', 'woocommerce-postnl'),
+            ),
+            'add_return'   => array(
+                'url' => wp_nonce_url(admin_url('admin-ajax.php?action=wc_postnl&request=add_return&order_ids=' . $order_id), 'wc_postnl'),
+                'img' => WooCommerce_PostNL()->plugin_url() . '/assets/img/postnl-retour.png',
+                'alt' => esc_attr__('Email return label', 'woocommerce-postnl'),
             ),
         );
 

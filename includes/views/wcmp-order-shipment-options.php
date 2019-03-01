@@ -5,8 +5,8 @@ $parcel_weight = WooCommerce_PostNL()->export->get_parcel_weight($order);
 $parcel_weight_gram = WooCommerce_PostNL()->export->get_parcel_weight($order, 'g');
 
 ?>
-<a href="#" class="wcmpostnl_change_order">
-    <table class="wcmpostnl_settings_table" onclick="return false;">
+<a href="#" class="wcpostnl_change_order">
+    <table class="wcpostnl_settings_table" onclick="return false;">
         <tr>
             <td>
                 <?php _e('Shipment type', 'woocommerce-postnl') ?>:<br />
