@@ -784,7 +784,7 @@ msgid ""
 msgstr ""
 "Wanneer aangevinkt wordt er gebruik gemaakt van de MyParcel adresvelden. Dit "
 "houdt in dat straat, huisnummer en toevoeging los komen te staan. Wil je de "
-"standaard WooCommerce adresvelden gebruiken? Laat deze optie afgevinkt staan."
+"standaard WooCommerce adresvelden gebruiken? Laat deze optie uitgevinkt staan."
 
 #: includes/class-wcmp-settings.php:622
 msgid "Enable MyParcel delivery options"
