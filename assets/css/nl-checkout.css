@@ -1,24 +1,287 @@
-.woocommerce form .form-row-quart,
-.woocommerce-page form .form-row-quart,
-.woocommerce form .form-row-quart-first,
-.woocommerce-page form .form-row-quart-first {
-	float: left;
-	width: 22%;
-	overflow: visible;
+/* Hack to disable yellow bg color on filled fields and allow js to listen for it  */
+@-webkit-keyframes onAutoFillStart { 0% { } 100% { } }
+@keyframes onAutoFillStart { 0% { } 100% { } }
+
+input:-webkit-autofill {
+    -webkit-animation-name: onAutoFillStart;
+    animation-name: onAutoFillStart;
+    transition: background-color 50000s ease-in-out 0s;
 }
 
-.woocommerce-page form .form-row-quart-first,
-.woocommerce form .form-row-quart-first {
-	/*margin-right: 4% !important;*/
+/* End of hack */
+
+#post-load,
+#post-delivery-date-text,
+#header-delivery-options-title,
+#post-delivery-option-form,
+#post-location-details,
+.post-message-model,
+.woocommerce form .optional {
+    display: none;
+}
+
+.woocommerce-page form .form-row-third {
+    float: left;
+    width: 16%;
+    overflow: visible;
+}
+
+.woocommerce form .form-row-third {
+    margin-right: 4%;
+}
+
+.woocommerce form .form-row-third.first {
+    width: 60%;
+}
+
+.woocommerce-page form .form-row-third.last {
+    margin-right: 0 !important;
+}
+
+@media screen and (max-width: 450px) {
+    .woocommerce-page form .form-row-third.first {
+        width: 100%;
+    }
+
+    .woocommerce-page form .form-row-third {
+        width: 48%;
+    }
 }
 
 #billing_house_number::-webkit-outer-spin-button,
 #billing_house_number::-webkit-inner-spin-button,
 #shipping_house_number::-webkit-outer-spin-button,
 #shipping_house_number::-webkit-inner-spin-button {
-	-webkit-appearance: none;
-	margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
+
 #billing_house_number, #shipping_house_number {
-	-moz-appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+/*
+ * Styling delivery options
+ */
+.post-time {
+    margin-left: 5px;
+}
+
+#post-send-per-carrier {
+    font-weight: bold;
+    width: 100%;
+    background-color: transparent;
+}
+
+#post-delivery-option-form label {
+    width: 66%;
+}
+
+#post-select-date {
+    width: 100%;
+}
+
+.post-error label {
+    display: inline-block;
+    width: 50%;
+}
+
+#post-pickup-location-selector li,
+#post-delivery-option-form li {
+    list-style-type: none;
+    padding: 2px 0 0 0;
+}
+
+#post-pickup-location-selector ul:last-child,
+#post-delivery-option-form ul:last-child {
+    margin-top: 10px;
+}
+
+#post-delivery-option-form label {
+    display: inline-block;
+    width: 80%;
+    margin: 0;
+}
+
+#post-error-try-again {
+    margin-top: 18px;
+}
+
+#post-delivery-selectors-be div {
+    display: block;
+    margin-top: 20px;
+}
+
+#post-delivery-selector li {
+    margin: 15px 0 0;
+    display: inline-block;
+    width: 100%;
+    padding: 5px 0 2px 0;
+}
+
+.post-help {
+    color: black;
+    text-decoration: none;
+}
+
+#post-shop-mock {
+    margin-top: 500px;
+    background-color: #ccc;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.post-full-width {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 1px;
+    padding-bottom: 2px;
+}
+
+#post-pickup-location-selector li:nth-last-of-type(-n+2) {
+    margin-left: 30px;
+}
+
+#post-pickup-location {
+    width: calc(100% - 25px);
+}
+
+#post-location-details {
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 3px;
+    min-width: 300px;
+    max-width: 400px;
+    margin: 5px;
+    background-color: white;
+}
+
+.post-pickup-location-details-location,
+.post-pickup-location-details-phone,
+.post-pickup-location-details-city,
+.post-pickup-location-details-time {
+    margin-bottom: 5px;
+    display: inline-block;
+    width: 65%;
+    float: left;
+}
+
+.post-openings-title {
+    width: 200px;
+    height: auto;
+}
+
+.post-pickup-location-details-day {
+    display: inline-block;
+    width: 30%;
+}
+
+.post-extra-delivery-options-padding-top {
+    padding-top: 10px;
+}
+
+.post-fa-clock {
+    width: 16px;
+    margin-bottom: -3px;
+}
+
+.post-fa-times {
+    width: 16px;
+    float: right;
+}
+
+.post-delivery-option-table {
+    width: 100%;
+}
+
+.post-delivery-option-table tr td:first-child {
+    white-space: nowrap;
+    width: 20px;
+}
+
+.post-delivery-option input {
+    width: 20px;
+}
+
+.post-delivery-option-table tr td:last-child {
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+.post-postnl-logo {
+    width: 100px;
+    float: right;
+    margin: 45px 8px 0 0;
+}
+
+.post-message-model {
+    padding: 20px 0 20px 20px;
+    border: 1px solid black;
+    border-radius: 3px;
+    min-width: 300px;
+    background-color: white;
+}
+
+#post-list-postnl-pickup option {
+    padding: 5px 0 5px 0;
+}
+
+.post-bold-price {
+    font-weight: bold;
+}
+
+.colorGreen{
+    color: green;
+}
+
+#post-spinner-model {
+    position: relative;
+    display: table;
+    margin: auto auto;
+}
+
+#post-spinner-model svg {
+    position: absolute;
+    top: 19%;
+    left: 22%;
+    width: 62%;
+}
+
+#post-spinner {
+    position: relative;
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+    border-top: 3px solid #ff8c00;
+    border-radius: 100%;
+    animation: post-spin 1.2s linear infinite;
+}
+
+@keyframes post-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .post-delivery-option-table tr {
+        height: 30px !important;
+    }
+
+    .post-postnl-logo {
+        float: none;
+        margin: 0 100% 0 0;
+
+    }
+
+    .post-extra-delivery-options-padding-top {
+        padding: 15px 0 10px 0;
+    }
+
+    .post-pickup-location-details-location, .post-pickup-location-details-phone, .post-pickup-location-details-city, .post-pickup-location-details-time {
+        width: 90%;
+    }
 }

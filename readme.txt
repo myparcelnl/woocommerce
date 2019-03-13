@@ -1,8 +1,9 @@
 === Plugin Name ===
-Tags: woocommerce, export, postnl
+Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, PostNL, postnl, PostNL
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 4.9.4
-Stable tag: 2.5.5
+Tested up to: 5.1.0
+Stable tag: trunk
+Requires PHP: 5.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -88,30 +89,134 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 2.5.5 (2018-10-17) =
+= 3.1.4 (-)
+* Fix: Delivery date when deliveryday window is 0
+
+= 3.1.3 (2019-02-26) =
+* Fix: Showing delivery date in the order when consumer using safari
+* Fix: Scrolling of the order overview when an input is clicked.
+
+= 3.1.2 (2019-02-19) =
+* Improvement: 18+ check
+* Fix: Standard delivery text
+* Fix: showing checkout
+
+= 3.1.1 (2019-01-30) =
+* Fix: Remove some styling code
+* Fix: Text changes
+* Fix: Hide delivery options 
+* Fix: Get the total weight on a later moment
+* Fix: Unset weight by mailbox package 
+* Fix: Since WooCommerce 3.0, logging can be grouped by context (error code 0 when exporting / printing)
+* Fix: The checkout is still loading when change the country.
+
+* Improvement: Add maxlength to number suffix field
+* Improvement: Translate all text inside the checkout
+* Improvement: The option to give a discount on the shipping method ( negative amounts)
+
+= 3.1.0 (2018-12-12) =
+* Hotfix: Show delivery options when checkout form already filled in.
+
+= 3.0.10 (2018-12-05) =
+* Hotfix: Flashing of the order summary.
+
+= 3.0.9 (2018-12-04) =
+* Hotfix: Get mailbox delivery option and save it into the order.
+
+= 3.0.8 (2018-12-04) =
+* Fix: The multiple calls that are made to retrieve the shipping data.
+* Fix: The option for Pick up extra early
+* Fix: Wrong house number / postcode message and the possibility to adjust the address in the postnl checkout
+* Fix: Woocommerce tabel rates
+* Improvement: Better support the default WooCommerce checkout address fields
+
+= 3.0.7 (2018-11-20) =
+* Fix: Set default values for dropoff days and delivery days window
+
+= 3.0.6 (2018-11-16) =
+* Fix: Remove concatenation from constant (causes an error on php version < 5.6)
+* Fix: No more double address fields with delivery options disabled
+
+= 3.0.5 (2018-11-15) =
+* Fix: Error message about money_format
+* Fix: Add the priority to the checkout field for support WooCommerce 3.5.1
+* Fix: The PostNL logo is not visible with all browsers
+* Improvement: Support Channel Engine
+* Improvement: Information inside the checkout and the translations
+* Improvement: Support WooCommerce default shipping fields (_address_1 and _address_2)
+
+= 3.0.4 (2018-10-23) =
+* Fix: mollie payments
+* Improvement: Check for minimum php version (php 5.4) 
+* Improvement: Hide automatic pickup express if pickup is not enabled
+
+= 3.0.3 (2018-10-09) =
+* Fix: Problem with WooCommerce PDF Invoices & Packing Slips
+* Fix: error about "Bewaar barcode in een notitie" size
+* Fix: Turn of the option allow Pickup Express
+* Fix: Save settings with a new update
+* Improvement: PostNL delivery header titel
 * Improvement: Support WooCommerce 3.5.0
+* Improvement: add preliminary support for "digitale postzegel"
 
-= 2.5.4 (2018-08-15) =
-* Fix: select the right package type when there 1 shipping method activated
+= 3.0.2 (2018-10-09) =
+* Fix: Error a non-numeric value encountered in class-wcmp-frontend-settings.php
+* Fix: Notice Undefined index: checkout_position
+* Fix: Add version number after the nl-checkout.css call
 
-= 2.5.3 (2018-07-26) =
-* Fix:Error 404 inside the checkout (iframe) and get the correct root url
-* Fix: Change iceland to wold shipping
+= 3.0.0 (2018-10-09) =
+* Changes: The whole checkout has a new look. A choice has been made to go back to the basic checkout. The checkout is designed so that he will take the styling of the website.
+
+These are the biggest changes:
+* No use of libraries (only jQuery)
+* No iframe is used
+* The checkout is more stable
+* Easier to implement improvements
+
+* Fix: Use street and house number fields for export a Belgium order
+* Fix: The at home or at work delivery title inside the checkout
+* Fix: The default settings
+* Improvement: The option to change the position of the checkout (edited)
+
+= 3.0.0-beta.2 (2018-09-08) =
+* Fix: at home delivery title
+* Fix: Export Belgium delivery, use the street/number input fields
+
+= 2.4.14 (2018-07-03) =
+* Fix: Select the correct package type inside admin when there is one shipping used.
+
+= 2.4.13 (2018-07-26) =
+* Fix: Tabel rate shipping witch WooCommerce Table Rate Shipping by Automattic / Bolder Elements 4.0 / Bolder Elements 4.1.3
 * Fix: The option to show the checkout only when he is linked to package
-* Fix: Tabel rate shipping by
-     WooCommerce Table Rate Shipping by Automattic
-     WooCommerce Table Rate Shipping by Bolder Elements 4.0
-     WooCommerce Table Rate Shipping by Bolder Elements 4.1.3
-* Fix: support legacy consignment and tracktrace data
-* Fix: Speed up order list view
 
-= 2.5.2 (2018-04-19) =
-* Fix: Select mailbox package when it is chosen
-* Improvement: Support Effect Connect (barcode inside note)
+= 2.4.12 (2018-07-09) =
+* Fix: #102 change Iceland to world shipping
+* Fix: #106 tabel rates shipping
+* Improvement: #94 support legacy consignment and tracktrace data
+* Improvement: #95 Speed up order list view
+* Improvement: #104 Add reference identifier, that is always the order id
+= 2.4.11 (2018-04-30) =
+* Fix: Export shipment labels
 
-= 2.5.1 (2018-03-27) =
-* Improvement: WooCommerce 3.3.x compatibility
+= 2.4.10 (2018-04-26) =
+* Improvement: Support Effect Connect, you can place the barcode inside a note of the order
+
+= 2.4.9 (2018-04-03) =
+* Fix: Scrolling when changing package type in orderview
+* Fix: Select the correct delivery methode inside the checkout
 * Improvement: Support Cloudflare
+
+= 2.4.8 (2018-02-27) =
+* Fix: The array error from the userAgent (https://wordpress.org/support/topic/parse-error-syntax-error-unexpected-in-wp-content-plugins-woocommerce-post/)
+* Fix: The countries Norway, Turkey, Switzerland changed to world country
+* Fix: Changing Type from Order List (https://wordpress.org/support/topic/changing-type-from-order-list/#post-10020043)
+
+= 2.4.7 (2018-02-07) =
+* Improvement: WooCommerce 3.3.1 compatibility
+
+= 2.4.6 (2018-02-01) =
+* Improvement: WooCommerce 3.3 compatibility
+* Feature: The option to print the label on A4 and A6 format
 
 = 2.4.5 (2018-01-10) =
 * Fix: Export an order with an old delivery date
@@ -123,13 +228,17 @@ function wcpostnl_new_email_text($track_trace_tekst) {
       ```des/class-wcmp-rest-api-integration.php): failed to open stream```
 
 = 2.4.3 (2018-01-05) =
-* Fix: Add PostNL fields to REST api to create order request
+* Fix: Add postnl fields to REST api to create order request
 * Fix: Hide days when the pickup delivery is selected
+
+= 2.4.2 (2017-10-29) =
+* Fix: Price changes for 2018
+
 
 = 2.4.1 (2017-10-12) =
 * Fix: WooCommerce 3.2 compatibility
 
-= 2.4.0 (2017-09-25) = 
+= 2.4.0 (2017-09-25) =
 * Feature: Export world shipments + customs declaration form
 * Feature: Show delivery options on thank you page
 * Feature: Use WC logger when possible
@@ -235,7 +344,7 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 
 = 1.5.6 =
 * Fix: Disable pakjegemak if 'ship to different address' is disabled after selecting Pakjegemak location
-* Fix: Use billing postcode for Pakjegemak track & trace
+* Fix: Use billing postcode for Pakjegemak Track & Trace
 
 = 1.5.5 =
 * Fix: Foreign postcodes validation fix.
@@ -275,7 +384,7 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 * Dev: Code refactor
 
 = 1.4.6 =
-* Fix: Foreign track & trace link updated
+* Fix: Foreign Track & Trace link updated
 
 = 1.4.5 =
 * Tweak: Prevent label creation if direct processing is disabled. NOTE! If you had this setting disabled and were used to downloading the labels directly, you need to change this in the settings.
@@ -299,13 +408,13 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 * Feature: Print order number on label
 * Feature: PakjeGemak integration
 * Feature: Option to autocomplete order after successful export to PostNL
-* Feature: Option to display track&trace link on my account page
+* Feature: Option to display Track & Trace link on my account page
 
 = 1.3.8 =
 * Fix: Big exports now run without any warnings/problems (was limited by the server)
 * Fix: Names, cities etc. with quotes (')
 * Fix: Error on combined foreign & Dutch exports
-* Fix: IE9 compatibility 
+* Fix: IE9 compatibility
 
 = 1.3.7 =
 * Fix: Checkout placeholder data was being saved in older versions of Internet Explorer
@@ -336,14 +445,13 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 
 = 1.3.0 =
 * New PostNL icons
-* Export & PDF buttons compatible with WC2.1 / MP6 styles
+* Prepare & PDF buttons compatible with WC2.1 / MP6 styles
 * Button styles are now in CSS instead of inline
 
 = 1.2.0 =
 * Feature: The postnl checkout fields (street name / house number) can now also be modified on the my account page
 * Fix: WooCommerce 2.1 compatibility (checkout field localisation is now in WC core)
-* Updated
-postnl tariffs
+* Updated PostNL tariffs
 
 = 1.1.1 =
 * Fix: Labels for Custom id ('Eigen kenmerk') & Message ('Optioneel bericht') in the export window were reversed
@@ -360,4 +468,3 @@ postnl tariffs
 == Upgrade Notice ==
 = 2.1 =
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
-
