@@ -89,8 +89,14 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.1.4 (-)
-* Fix: Delivery date when deliveryday window is 0
+= 3.1.4 (2019-03-19)
+* Improvement: Renewed checkout that takes the look & feel of the template.
+* Improvement: The titles of the checkout can be changed.
+* Improvement: Age check 18+ is now available.
+* Improvement: € 100 and € 250 insured is possible.
+* Improvement: Support the standard WooCommerce address fields.
+* Improvement: Place the PostNL delivery options at every position.
+* Improvement: Belgium support.
 
 = 3.1.3 (2019-02-26) =
 * Fix: Showing delivery date in the order when consumer using safari
