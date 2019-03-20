@@ -90,6 +90,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 3.1.5 (-)
+* Improvement: Add the link for the personalized Track & Trace page (portal)
+
 = 3.1.4 (2019-03-18)
 * Fix: Delivery date when deliveryday window is 0
 * Fix: Change `afgevinkt` to `uitgevinkt`
