@@ -89,6 +89,9 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 3.1.5 (-)
+* Hotfix: Move Great Britain to EU shipment
+
 = 3.1.4 (2019-03-19)
 * Improvement: Renewed checkout that takes the look & feel of the template.
 * Improvement: The titles of the checkout can be changed.
