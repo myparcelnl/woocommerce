@@ -18,6 +18,7 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
                 // disable mailbox package outside NL
                 if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
                     unset($package_types[WooCommerce_MyParcel_Export::MAILBOX_PACKAGE]); // mailbox package
+                    unset($package_types[WooCommerce_MyParcel_Export::DIGITAL_STAMP]); // digital stamp
                 }
 
                 // disable mailbox package and unpaid letter for pakjegemak
@@ -79,12 +80,25 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
                 'label' => __('Return if no answer', 'woocommerce-myparcel'),
                 'value' => isset($shipment_options['return']) ? $shipment_options['return'] : 0,
             ),
-            '[insured]'        => array(
+            '[insured]' => array(
                 'label' => __('Insured + home address only + signature on delivery', 'woocommerce-myparcel'),
                 'value' => $shipment_options['insured'],
                 'class' => 'insured',
             ),
         );
+
+        // Only with a normal delivery the 18 plus check will be visible.
+        $delivery_type = WooCommerce_MyParcel()->export->get_delivery_type($order);
+        if (! in_array($delivery_type, array(1, 3))) {
+
+            $age_check = array(
+                '[age_check]' => array(
+                    'label'   => __('Age check 18+', 'woocommerce-myparcel'),
+                    'value'   => isset($shipment_options['age_check']) ? $shipment_options['age_check'] : 0,
+                )
+            );
+            $option_rows =  $option_rows + $age_check;
+        }
 
         if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
             if (WooCommerce_MyParcel()->export->is_world_shipment_country($recipient['cc'])) {
@@ -93,6 +107,7 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
             unset($option_rows['[only_recipient]']);
             unset($option_rows['[signature]']);
             unset($option_rows['[return]']);
+            unset($option_rows['[age_check]']);
 
             $shipment_options['insured'] = 1;
             if (WooCommerce_MyParcel()->export->is_world_shipment_country($recipient['cc'])) {
@@ -125,6 +140,7 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
                             $option_row['value'],
                             false
                         );
+                    $disabled = isset($option_row['disabled']);
                     $type = isset($option_row['hidden']) ? 'hidden' : 'checkbox';
                     printf('<input type="%s" name="%s" value="1" class="%s" %s>', $type, $name, $class, $checked);
                     echo $option_row['label'];
@@ -140,7 +156,7 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
             </tr>
         <?php endforeach ?>
     </table>
-    <table class="wcmyparcel_settings_table digital_stamp_options">
+    <table class="wcmyparcel_settings_table digital_stamp_options" onclick="return false;">
         <tr>
             <td>
                 <label for="myparcel_options_weight"><?php _e('Weight:', 'woocommerce-myparcel') ?></label>
@@ -175,7 +191,7 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
             </td>
         </tr>
     </table>
-    <table>
+    <table onclick="return false;">
         <?php
         $insured_amount = isset($shipment_options['insurance']['amount'])
             ? (int) $shipment_options['insurance']['amount'] : 0;

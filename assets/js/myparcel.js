@@ -109,7 +109,7 @@ MyParcel = {
             }
 
             if (value['price_comment'] == 'standard') {
-                var standardTitle = MyParcel.data.config.deliveryStandardTitle;
+                var standardTitle = MyParcel.data.textToTranslate.deliveryStandardTitle;
                 if (MyParcel.data.address.cc === 'BE') {
                     standardTitle = MyParcel.data.textToTranslate.BEdeliveryStandardTitle;
                 }
@@ -209,7 +209,7 @@ MyParcel = {
         });
 
         /* External webshop triggers */
-        jQuery('#mypa-load input, #mypa-load select').on('input', function() {
+        jQuery('#mypa-load input, #mypa-load select').on('click', function() {
             MyParcel.mapExternalWebshopTriggers()
         });
 
@@ -925,7 +925,7 @@ MyParcel = {
         /* Check if the deliverydaysWindow == 0 and hide the select input*/
         this.deliveryDaysWindow = this.data.config.deliverydaysWindow;
 
-        if (this.deliveryDaysWindow === '0') {
+        if (this.deliveryDaysWindow === 0) {
             this.deliveryDaysWindow = 1;
         }
 

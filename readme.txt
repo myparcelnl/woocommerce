@@ -2,7 +2,7 @@
 Contributors: richardperdaan
 Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, MyParcel, myparcel, Flespakket, flespakket, PostNL, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 5.0.0
+Tested up to: 5.1.0
 Stable tag: trunk
 Requires PHP: 5.4
 License: GPLv3 or later
@@ -89,6 +89,23 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. Myparcel information on the order details page
 
 == Changelog ==
+
+= 3.1.5 (-)
+* Improvement: Add the link for the personalized Track & Trace page (portal)
+
+= 3.1.4 (2019-03-18)
+* Fix: Delivery date when deliveryday window is 0
+* Fix: Change `afgevinkt` to `uitgevinkt`
+* Preparation: Move Great Britain to world shipment for the Brexit
+
+= 3.1.3 (2019-02-26) =
+* Fix: Showing delivery date in the order when consumer using safari
+* Fix: Scrolling of the order overview when an input is clicked.
+
+= 3.1.2 (2019-02-19) =
+* Improvement: 18+ check
+* Fix: Standard delivery text
+* Fix: showing checkout
 
 = 3.1.1 (2019-01-30) =
 * Fix: Remove some styling code

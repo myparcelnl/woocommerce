@@ -383,7 +383,7 @@ class WooCommerce_MyParcel_Admin {
                     $label_url = wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcel&request=get_labels&shipment_ids=' . $shipment_id),'wc_myparcel');
                     if (isset($shipment['tracktrace'])) {
                         $tracktrace_url = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
-                        $tracktrace_link = sprintf('<a href="%s">%s</a>', $tracktrace_url, $shipment['tracktrace']);
+                        $tracktrace_link = sprintf('<a href="%s" target="_blank">%s</a>', $tracktrace_url, $shipment['tracktrace']);
                     } else {
                         if (isset($shipment['shipment']) && isset($shipment['shipment']['options'])) {
                             $tracktrace_link = '(' . WooCommerce_MyParcel()->export->get_package_name( $shipment['shipment']['options']['package_type']) . ')';
@@ -507,11 +507,11 @@ class WooCommerce_MyParcel_Admin {
                 $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
             }
 
-            // $tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Inbox/Search?lang=nl&B=%s&P=%s', $tracktrace, $postcode);
             $tracktrace_url = sprintf(
-                'https://mijnpakket.postnl.nl/Claim?Barcode=%s&Postalcode=%s',
+                'https://myparcel.me/track-trace/%s/%s/%s',
                 $tracktrace,
-                $postcode
+                $postcode,
+                $country
             );
         } else {
             $tracktrace_url = sprintf(

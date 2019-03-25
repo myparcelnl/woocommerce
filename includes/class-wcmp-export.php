@@ -523,7 +523,8 @@ class WooCommerce_MyParcel_Export {
                 'only_recipient',
                 'signature',
                 'return',
-                'large_format'
+                'large_format',
+                'age_check',
             );
             foreach ($options as $key => &$value) {
                 if (in_array($key, $int_options)) {
@@ -691,6 +692,7 @@ class WooCommerce_MyParcel_Export {
                 'large_format' => 0,
                 'label_description' => '',
                 'insured_amount' => 0,
+                'age_check' => 0,
             );
             $options = array_merge($empty_defaults, $shipment_options);
         } else {
@@ -712,6 +714,7 @@ class WooCommerce_MyParcel_Export {
                 'large_format' => (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
                 'label_description' => $description,
                 'insured_amount' => $insured_amount,
+                'age_check' => (isset(WooCommerce_MyParcel()->export_defaults['age_check'])) ? 1 : 0,
             );
         }
 
@@ -746,6 +749,15 @@ class WooCommerce_MyParcel_Export {
 
         // set delivery type
         $options['delivery_type'] = $this->get_delivery_type($order, $myparcel_delivery_options);
+
+        // age check cann't be used in morning and evening delivery
+        if ($options['age_check'] == 1) {
+            $age_check_options = $this->get_age_check($order, $options, $myparcel_delivery_options);
+
+            $options['age_check'] = $age_check_options[0];
+            $options['signature'] = $age_check_options[1];
+            $options['only_recipient'] = $age_check_options[2];
+        }
 
         // Options for Pickup and Pickup express delivery types:
         // always enable signature on receipt
@@ -782,7 +794,7 @@ class WooCommerce_MyParcel_Export {
 
         // PREVENT ILLEGAL SETTINGS
         // convert numeric strings to int
-        $int_options = array('package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format');
+        $int_options = array('package_type', 'delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'age_check');
         foreach ($options as $key => &$value) {
             if (in_array($key, $int_options)) {
                 $value = (int) $value;
@@ -791,7 +803,7 @@ class WooCommerce_MyParcel_Export {
 
         // disable options for mailbox package, unpaid letter and digital stamp
         if ($options['package_type'] != self::PACKAGE) {
-            $illegal_options = array('delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date');
+            $illegal_options = array('delivery_type', 'only_recipient', 'signature', 'return', 'large_format', 'insurance', 'delivery_date', 'age_check');
             foreach ($options as $key => $option) {
                 if (in_array($key, $illegal_options)) {
                     unset($options[$key]);
@@ -1336,6 +1348,33 @@ class WooCommerce_MyParcel_Export {
         return $delivery_type;
     }
 
+    /**
+     * @param $order
+     * @param $options
+     * @param string $myparcel_delivery_options
+     *
+     * @return array|void
+     */
+    public function get_age_check($order, $options, $myparcel_delivery_options = '') {
+
+        if (empty($myparcel_delivery_options)) {
+            $myparcel_delivery_options = WCX_Order::get_meta($order, '_myparcel_delivery_options');
+        }
+        $delivery_type = $this->get_delivery_type($order, $myparcel_delivery_options);
+
+        $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
+        
+        if ( ! empty($myparcel_delivery_options) && ! in_array($delivery_type, array(1, 3)) && $shipping_country == 'NL' ) {
+
+            $age_check = $options['age_check'] = 1;
+            $signature = $options['signature'] = 1;
+            $only_recipient = $options['only_recipient'] = 1;
+
+            return [$age_check, $signature, $only_recipient];
+        }
+        return;
+    }
+
     public function get_delivery_date($order, $myparcel_delivery_options = '') {
         if (empty($myparcel_delivery_options)) {
             $myparcel_delivery_options = WCX_Order::get_meta($order, '_myparcel_delivery_options');
@@ -1424,11 +1463,14 @@ class WooCommerce_MyParcel_Export {
         // adapted from $shipping_method->calculate_shipping()
         $highest_class_cost = 0;
         $highest_class = false;
+
         foreach ( $found_shipping_classes as $shipping_class => $products ) {
             // Also handles BW compatibility when slugs were used instead of ids
             $shipping_class_term = get_term_by('slug', $shipping_class, 'product_shipping_class');
-            $class_cost_string = $shipping_class_term && $shipping_class_term->term_id
-                ? $shipping_method->get_option('class_cost_' . $shipping_class_term->term_id, $shipping_method->get_option('class_cost_' . $shipping_class, ''))
+            $shipping_class_term_id = $shipping_class_term->term_id;
+
+            $class_cost_string = $shipping_class_term && $shipping_class_term_id
+                ? $shipping_method->get_option('class_cost_' . $shipping_class_term_id, $shipping_method->get_option('class_cost_' . $shipping_class, $shipping_class_term_id))
                 : $shipping_method->get_option('no_class_cost', '');
 
             if ($class_cost_string === '') {
@@ -1444,9 +1486,9 @@ class WooCommerce_MyParcel_Export {
                 ),
                 $shipping_method
             );
-            if ($class_cost > $highest_class_cost && ! empty($shipping_class_term->term_id)) {
+            if ($class_cost > $highest_class_cost && ! empty($shipping_class_term_id)) {
                 $highest_class_cost = $class_cost;
-                $highest_class = $shipping_class_term->term_id;
+                $highest_class = $shipping_class_term_id;
             }
         }
 
@@ -1585,13 +1627,13 @@ class WooCommerce_MyParcel_Export {
     }
 
     public function is_eu_country($country_code) {
-        $euro_countries = array('AT','BE','BG','CZ','DK','EE','FI','FR','DE','GB','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','JE','HR','LI','MK','MD','ME','UA','SM','RS','VA','BY');
+        $euro_countries = array('AT','BE','BG','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','PL','PT','RO','SK','SI','ES','SE','MC','AL','AD','BA','IC','FO','GI','GL','GG','JE','HR','LI','MK','MD','ME','UA','SM','RS','VA','BY');
 
         return in_array($country_code, $euro_countries);
     }
 
     public function is_world_shipment_country($country_code) {
-        $world_shipment_countries = array('AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IS','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY','CH','TR','NO');
+        $world_shipment_countries = array('AF','AQ','DZ','VI','AO','AG','AR','AM','AW','AU','AZ','BS','BH','BD','BB','BZ','BJ','BM','BT','BO','BW','BR','VG','BN','BF','BI','KH','CA','KY','CF','CL','CN','CO','KM','CG','CD','CR','CU','DJ','DM','DO','EC','EG','SV','GQ','ER','ET','FK','FJ','PH','GB','GF','PF','GA','GM','GE','GH','GD','GP','GT','GN','GW','GY','HT','HN','HK','IN','ID','IS','IQ','IR','IL','CI','JM','JP','YE','JO','CV','CM','KZ','KE','KG','KI','KW','LA','LS','LB','LR','LY','MO','MG','MW','MV','MY','ML','MA','MQ','MR','MU','MX','MN','MS','MZ','MM','NA','NR','NP','NI','NC','NZ','NE','NG','KP','UZ','OM','TL','PK','PA','PG','PY','PE','PN','PR','QA','RE','RU','RW','KN','LC','VC','PM','WS','ST','SA','SN','SC','SL','SG','SO','LK','SD','SR','SZ','SY','TJ','TW','TZ','TH','TG','TO','TT','TD','TN','TM','TC','TV','UG','UY','VU','VE','AE','US','VN','ZM','ZW','ZA','KR','AN','BQ','CW','SX','XK','IM','MT','CY','CH','TR','NO');
 
         return in_array($country_code, $world_shipment_countries);
     }

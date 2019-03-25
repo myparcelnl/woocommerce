@@ -459,6 +459,19 @@ class WooCommerce_MyParcel_Settings {
         );
 
         add_settings_field(
+            'age_check',
+            __('Age check 18+', 'woocommerce-myparcel'),
+            array($this->callbacks, 'checkbox'),
+            $option_group,
+            'defaults',
+            array(
+                'option_name' => $option_name,
+                'id'          => 'age_check',
+                'description' => __('The age check is intended for parcel shipments for which the recipient must show 18+ by means of a proof of identity. With this shipping option <strong>Signature for receipt</strong> and <strong>Delivery only at recipient</strong> are included. The age 18+ is further excluded from the delivery options morning and evening delivery.', 'woocommerce-myparcel')
+            )
+        );
+
+        add_settings_field(
 			'return',
             __('Return if no answer', 'woocommerce-myparcel'),
             array($this->callbacks, 'checkbox'),

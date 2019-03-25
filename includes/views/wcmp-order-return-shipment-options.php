@@ -27,19 +27,19 @@
     }
 
     $option_rows = array(
-        '[large_format]'   => array(
-            'label' => __('Extra large size', 'woocommerce-myparcel'),
-            'value' => isset($shipment_options['large_format']) ? $shipment_options['large_format'] : 0,
+        '[large_format]'    => array(
+            'label'         => __('Extra large size', 'woocommerce-myparcel'),
+            'value'         => isset($shipment_options['large_format']) ? $shipment_options['large_format'] : 0,
         ),
-        '[only_recipient]' => array(
-            'label' => __('Home address only', 'woocommerce-myparcel'),
-            'value' => isset($shipment_options['only_recipient']) ? $shipment_options['only_recipient'] : 0,
+        '[only_recipient]'  => array(
+            'label'         => __('Home address only', 'woocommerce-myparcel'),
+            'value'         => isset($shipment_options['only_recipient']) ? $shipment_options['only_recipient'] : 0,
         ),
-        '[signature]'      => array(
-            'label' => __('Signature on delivery', 'woocommerce-myparcel'),
-            'value' => isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,
+        '[signature]'   => array(
+            'label'     => __('Signature on delivery', 'woocommerce-myparcel'),
+            'value'     => isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,
         ),
-        '[return]'         => array(
+        '[return]'  => array(
             'label' => __('Return if no answer', 'woocommerce-myparcel'),
             'value' => isset($shipment_options['return']) ? $shipment_options['return'] : 0,
         ),
@@ -48,12 +48,17 @@
             'value' => $shipment_options['insured'],
             'class' => 'insured',
         ),
+        '[age_check]'         => array(
+            'label' => __('Age check 18+', 'woocommerce-myparcel'),
+            'value' => isset($shipment_options['age_check']) ? $shipment_options['age_check'] : 0,
+        ),
     );
 
     if (isset($recipient['cc']) && $recipient['cc'] != 'NL') {
         unset($option_rows['[only_recipient]']);
         unset($option_rows['[signature]']);
         unset($option_rows['[return]']);
+        unset($option_rows['[age_check]']);
         $shipment_options['insured'] = 1;
         $option_rows['[insured]'] = array(
             'label'  => __('Standard insurance up to €500 + signature on delivery', 'woocommerce-myparcel'),

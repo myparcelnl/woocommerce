@@ -595,6 +595,10 @@ msgstr ""
 msgid "Home address only"
 msgstr "Alleen huisadres"
 
+#: /includes/class-wcmp-settings-callbacks.php:41
+msgid "Home address only is mandatory when age check is active"
+msgstr "Alleen thuisadres is verplicht als leeftijdscheck actief is"
+
 #: includes/class-wcmp-settings.php:444
 msgid ""
 "If you don't want the parcel to be delivered at the neighbours, choose this "
@@ -610,6 +614,10 @@ msgstr ""
 msgid "Signature on delivery"
 msgstr "Handtekening voor ontvangst"
 
+#: /includes/class-wcmp-settings-callbacks.php:41
+msgid "Signature for receipt is mandatory when age check is active"
+msgstr "Handtekening voor ontvangst is verplicht als leeftijdscheck actief is"
+
 #: includes/class-wcmp-settings.php:457
 msgid ""
 "The parcel will be offered at the delivery address. If the recipient is not "
@@ -619,6 +627,26 @@ msgstr ""
 "Hier wordt het pakket allereerst op het huisadres aangeboden. Mocht de "
 "geadresseerde niet thuis zijn, dan wordt het pakket bij de buren afgegeven. "
 "Er moet in beide gevallen voor worden getekend."
+
+#: includes/class-wcmp-settings.php:463
+msgid "Age check 18+"
+msgstr "Leeftijdscheck 18+"
+
+#: includes/class-wcmp-settings.php:470
+msgid ""
+"The age check is intended for parcel shipments for which the recipient must "
+"show 18+ by means of a proof of identity. With this shipping option <strong>Signature for receipt</strong> and "
+"<strong>Delivery only at recipient</strong> are included. The age 18+ is further excluded from the delivery "
+"options morning and evening delivery."
+msgstr ""
+"De leeftijdscheck is bedoeld voor pakketzendingen waarvoor de ontvanger 18+ moet zijn en "
+"dit moet bewijzen door middel van een identiteitsbewijs. "
+"Met deze verzendoptie zijn handtekening voor ontvangst en alleen huisadres inbegrepen. "
+"De leeftijdscheck is verder uitgesloten van de bezorgopties in de ochtend- en avondlevering."
+
+#: includes/class-wcmp-settings-callbacks.php:36
+msgid "Not possible if age check is active"
+msgstr "Niet mogelijk als leeftijdscheck actief is"
 
 #: includes/class-wcmp-settings.php:463
 #: includes/views/wcmp-order-return-shipment-options.php:46
@@ -756,7 +784,7 @@ msgid ""
 msgstr ""
 "Wanneer aangevinkt wordt er gebruik gemaakt van de MyParcel adresvelden. Dit "
 "houdt in dat straat, huisnummer en toevoeging los komen te staan. Wil je de "
-"standaard WooCommerce adresvelden gebruiken? Laat deze optie afgevinkt staan."
+"standaard WooCommerce adresvelden gebruiken? Laat deze optie uitgevinkt staan."
 
 #: includes/class-wcmp-settings.php:622
 msgid "Enable MyParcel delivery options"
