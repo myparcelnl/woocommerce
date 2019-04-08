@@ -503,9 +503,8 @@ class WooCommerce_MyParcel_Frontend {
                 "houseNumber" =>__('House number', 'woocommerce-myparcel'),
                 "city"=>__('City', 'woocommerce-myparcel'),
                 "retry" =>__('Retry', 'woocommerce-myparcel'),
-                "wrongHouseNumberPostcode" =>__('House number/postcode combination unknown', 'woocommerce-myparcel'),
+                "wrongHouseNumberPostcode" =>__('House number/Postcode combination unknown', 'woocommerce-myparcel'),
                 "quickDelivery"=>__('Deliver as quickly as possible', 'woocommerce-myparcel'),
-                "again" =>__('Again', 'woocommerce-myparcel'),
 
                 'sunday'=> __('Sunday', 'woocommerce-myparcel'),
                 'monday'=> __('Monday', 'woocommerce-myparcel'),
