@@ -467,13 +467,16 @@ class WooCommerce_MyParcel_Admin {
                 }
                 $time_title = ! empty($time_title) ? "({$time_title})" : '';
             }
+	        $country = WCX_Order::get_prop($order, 'shipping_country');
 
-            printf(
-                '<div class="delivery-date"><strong>%s: </strong>%s %s</div>',
-                __('Delivery date', 'woocommerce-myparcel'),
-                $formatted_date,
-                $time_title
-            );
+            if ($country == 'NL') {
+	            printf(
+		            '<div class="delivery-date"><strong>%s: </strong>%s %s</div>',
+		            __('Delivery date', 'woocommerce-myparcel'),
+		            $formatted_date,
+		            $time_title
+	            );
+            }
         }
 
         if ($pickup = WooCommerce_MyParcel()->export->is_pickup($order, $delivery_options)) {
