@@ -469,6 +469,11 @@ class WooCommerce_MyParcel_Admin {
             }
 	        $country = WCX_Order::get_prop($order, 'shipping_country');
 
+            // order -> shipping -> id country
+
+            var_dump($order-> shipping);
+            die();
+
             if ($country == 'NL') {
 	            printf(
 		            '<div class="delivery-date"><strong>%s: </strong>%s %s</div>',
