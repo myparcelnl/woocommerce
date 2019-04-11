@@ -92,6 +92,8 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 = 3.1.5 (-)
 * Improvement: Add the link for the personalized Track & Trace page (portal)
+* Improvement: Show deliverday only for NL shipments
+* Fix: Translation house number again button
 
 = 3.1.4 (2019-03-18)
 * Fix: Delivery date when deliveryday window is 0
