@@ -442,9 +442,12 @@ class WooCommerce_MyParcel_Admin {
         }
 
         echo '<div class="delivery-options">';
-        if ( ! empty($date)
-             && ! (isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window'])
-             && WooCommerce_MyParcel()->checkout_settings['deliverydays_window'] == 0)) {
+
+        if (! empty($date) &&
+            !(isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) &&
+            WooCommerce_MyParcel()->checkout_settings['deliverydays_window'] == 0) &&
+            $order->data['shipping']['country'] === 'NL'
+        ) {
             $formatted_date = date_i18n(
                 apply_filters('wcmyparcel_delivery_date_format', wc_date_format()),
                 strtotime($date)
@@ -467,7 +470,6 @@ class WooCommerce_MyParcel_Admin {
                 }
                 $time_title = ! empty($time_title) ? "({$time_title})" : '';
             }
-
             printf(
                 '<div class="delivery-date"><strong>%s: </strong>%s %s</div>',
                 __('Delivery date', 'woocommerce-myparcel'),
