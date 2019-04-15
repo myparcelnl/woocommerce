@@ -436,6 +436,7 @@ class WooCommerce_MyParcel_Admin {
 
     public function show_order_delivery_options($order) {
         $delivery_options = WCX_Order::get_meta($order, '_myparcel_delivery_options');
+        $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
 
         if ( ! empty($delivery_options) && is_array($delivery_options)) {
             extract($delivery_options);
@@ -446,7 +447,7 @@ class WooCommerce_MyParcel_Admin {
         if (! empty($date) &&
             !(isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) &&
             WooCommerce_MyParcel()->checkout_settings['deliverydays_window'] == 0) &&
-            $order->data['shipping']['country'] === 'NL'
+            $shipping_country === 'NL'
         ) {
             $formatted_date = date_i18n(
                 apply_filters('wcmyparcel_delivery_date_format', wc_date_format()),
