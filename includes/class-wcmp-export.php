@@ -1467,7 +1467,11 @@ class WooCommerce_MyParcel_Export {
         foreach ( $found_shipping_classes as $shipping_class => $products ) {
             // Also handles BW compatibility when slugs were used instead of ids
             $shipping_class_term = get_term_by('slug', $shipping_class, 'product_shipping_class');
-            $shipping_class_term_id = $shipping_class_term->term_id;
+            $shipping_class_term_id = '';
+
+            if ($shipping_class_term != null) {
+                $shipping_class_term_id = $shipping_class_term->term_id;
+            }
 
             $class_cost_string = $shipping_class_term && $shipping_class_term_id
                 ? $shipping_method->get_option('class_cost_' . $shipping_class_term_id, $shipping_method->get_option('class_cost_' . $shipping_class, $shipping_class_term_id))
