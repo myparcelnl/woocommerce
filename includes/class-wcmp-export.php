@@ -16,7 +16,7 @@ class WooCommerce_MyParcel_Export {
     const LETTER          = 3;
     const DIGITAL_STAMP   = 4;
 
-    // Maximum byte length of item description.
+    // Maximum characters length of item description.
     const DESCRIPTION_MAX_LENGTH = 50;
 
     public $order_id;
@@ -833,7 +833,7 @@ class WooCommerce_MyParcel_Export {
         return $new_timestamp;
     }
 
-	public function get_customs_declaration($order ) {
+    public function get_customs_declaration($order ) {
         $invoice = $this->get_invoice_number($order);
         $contents = (int) ((isset(WooCommerce_MyParcel()->export_defaults['package_contents']))
             ? WooCommerce_MyParcel()->export_defaults['package_contents']
@@ -852,11 +852,11 @@ class WooCommerce_MyParcel_Export {
             $product = $order->get_product_from_item($item);
             if ( ! empty($product)) {
                 // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
-	            // Description cut after 50 chars
-	            $description = $item['name'];
-	            if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH){
-		            $description = substr( $item['name'], 0, 47) . '...';
-	            }
+                // Description cut after 50 chars
+                $description = $item['name'];
+                if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH){
+                    $description = substr( $item['name'], 0, 47) . '...';
+                }
                 // Amount
                 $amount = (int) (isset($item['qty']) ? $item['qty'] : 1);
                 // Weight (total item weight in grams)
@@ -871,6 +871,7 @@ class WooCommerce_MyParcel_Export {
                 if (empty($classification)) {
                     $classification = $default_hs_code;
                 }
+
                 // add item to item list
                 $items[] = compact('description', 'amount', 'weight', 'item_value', 'classification', 'country');
             }
