@@ -855,7 +855,7 @@ class WooCommerce_MyParcel_Export {
                 // Description cut after 50 chars
                 $description = $item['name'];
                 if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH){
-                    $description = substr( $item['name'], 0, 47) . '...';
+                    $description = substr($item['name'], 0, 47) . '...';
                 }
                 // Amount
                 $amount = (int) (isset($item['qty']) ? $item['qty'] : 1);
