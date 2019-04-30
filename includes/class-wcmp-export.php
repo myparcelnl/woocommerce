@@ -1255,7 +1255,7 @@ class WooCommerce_MyParcel_Export {
             return 0;
         }
 
-        $weight = $product->get_weight();
+        $weight = (int) $product->get_weight();
         $weight_unit = get_option('woocommerce_weight_unit');
         switch($weight_unit) {
             case 'kg':
