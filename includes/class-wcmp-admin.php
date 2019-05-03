@@ -29,6 +29,7 @@ class WooCommerce_MyParcel_Admin {
         add_action('woocommerce_product_options_shipping', array($this, 'product_hs_code_field'));
         add_action('woocommerce_process_product_meta', array($this, 'product_hs_code_field_save'));
 
+        // Add barcode in order grid
         add_filter('manage_edit-shop_order_columns', array($this, 'barcode_add_new_order_admin_list_column'), 10, 1);
         add_action('manage_shop_order_posts_custom_column', array($this, 'barcode_add_new_order_admin_list_column_content'), 10, 2);
     }
@@ -615,9 +616,10 @@ class WooCommerce_MyParcel_Admin {
      */
     public function barcode_add_new_order_admin_list_column($columns)
     {
-        $columns['barcode'] = 'Barcode';
-
-        return $columns;
+        // I want to display Barcode column just after the date column
+        return array_slice( $columns, 0, 3, true)
+            + array( 'barcode' => 'Barcode' )
+            + array_slice( $columns, 3, NULL, true );
     }
     
     /**
