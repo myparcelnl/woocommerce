@@ -685,6 +685,7 @@ class WooCommerce_MyParcel_Export {
 
         // use shipment options from order when available
         $shipment_options = WCX_Order::get_meta($order, '_myparcel_shipment_options');
+        $package_type = $this->get_package_type_for_order($order);
 
         if ( ! empty($shipment_options)) {
             $empty_defaults = array(
@@ -710,10 +711,10 @@ class WooCommerce_MyParcel_Export {
             }
 
             $options = array(
-                'package_type' => $this->get_package_type_for_order($order),
+                'package_type' => $package_type,
                 'only_recipient' => (isset(WooCommerce_MyParcel()->export_defaults['only_recipient'])) ? 1 : 0,
                 'signature' => (isset(WooCommerce_MyParcel()->export_defaults['signature'])) ? 1 : 0,
-                'return' => (isset(WooCommerce_MyParcel()->export_defaults['return'])) ? 1 : 0,
+                'return' => (isset(WooCommerce_MyParcel()->export_defaults['return']) && (!$package_type == 4 || !$package_type == 5)) ? 1 : 0,
                 'large_format' => (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
                 'label_description' => $description,
                 'insured_amount' => $insured_amount,
