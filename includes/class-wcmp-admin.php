@@ -650,7 +650,7 @@ class WooCommerce_MyParcel_Admin {
         }
 
         foreach ($shipments as $shipment_id => $shipment) {
-            $barcode = "<a target='_blank' href=" . $this->get_tracktrace_url($order, $shipment['tracktrace']) . ">" . $shipment['tracktrace'] . "</a>";
+            $barcode .= "<a target='_blank' href=" . $this->get_tracktrace_url($order, $shipment['tracktrace']) . ">" . $shipment['tracktrace'] . "</a> <br>";
         }
 
         return $barcode;
