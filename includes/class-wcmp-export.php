@@ -16,6 +16,9 @@ class WooCommerce_MyParcel_Export {
     const LETTER          = 3;
     const DIGITAL_STAMP   = 4;
 
+    // Maximum characters length of item description.
+    const DESCRIPTION_MAX_LENGTH = 50;
+
     public $order_id;
     public $success;
     public $errors;
@@ -469,7 +472,7 @@ class WooCommerce_MyParcel_Export {
 
             if ($shipment['options']['package_type'] == self::DIGITAL_STAMP ) {
                 $shipment['physical_properties'] = array(
-                    'weight' => (int) $shipment['options']['weight'],
+                    'weight' => (int) round($this->get_parcel_weight($order) * 1000)
                 );
                 unset($shipment['options']['weight']);
             }
@@ -682,6 +685,7 @@ class WooCommerce_MyParcel_Export {
 
         // use shipment options from order when available
         $shipment_options = WCX_Order::get_meta($order, '_myparcel_shipment_options');
+        $package_type = $this->get_package_type_for_order($order);
 
         if ( ! empty($shipment_options)) {
             $empty_defaults = array(
@@ -707,10 +711,10 @@ class WooCommerce_MyParcel_Export {
             }
 
             $options = array(
-                'package_type' => $this->get_package_type_for_order($order),
+                'package_type' => $package_type,
                 'only_recipient' => (isset(WooCommerce_MyParcel()->export_defaults['only_recipient'])) ? 1 : 0,
                 'signature' => (isset(WooCommerce_MyParcel()->export_defaults['signature'])) ? 1 : 0,
-                'return' => (isset(WooCommerce_MyParcel()->export_defaults['return'])) ? 1 : 0,
+                'return' => (isset(WooCommerce_MyParcel()->export_defaults['return']) && (!$package_type == 4 || !$package_type == 5)) ? 1 : 0,
                 'large_format' => (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
                 'label_description' => $description,
                 'insured_amount' => $insured_amount,
@@ -830,7 +834,7 @@ class WooCommerce_MyParcel_Export {
         return $new_timestamp;
     }
 
-    public function get_customs_declaration( $order ) {
+    public function get_customs_declaration($order ) {
         $invoice = $this->get_invoice_number($order);
         $contents = (int) ((isset(WooCommerce_MyParcel()->export_defaults['package_contents']))
             ? WooCommerce_MyParcel()->export_defaults['package_contents']
@@ -848,8 +852,12 @@ class WooCommerce_MyParcel_Export {
         foreach ($order->get_items() as $item_id => $item) {
             $product = $order->get_product_from_item($item);
             if ( ! empty($product)) {
-                // Description
+                // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
+                // Description cut after 50 chars
                 $description = $item['name'];
+                if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH){
+                    $description = substr($item['name'], 0, 47) . '...';
+                }
                 // Amount
                 $amount = (int) (isset($item['qty']) ? $item['qty'] : 1);
                 // Weight (total item weight in grams)
@@ -1248,7 +1256,7 @@ class WooCommerce_MyParcel_Export {
             return 0;
         }
 
-        $weight = $product->get_weight();
+        $weight = (int) $product->get_weight();
         $weight_unit = get_option('woocommerce_weight_unit');
         switch($weight_unit) {
             case 'kg':
@@ -1267,7 +1275,7 @@ class WooCommerce_MyParcel_Export {
                 $product_weight = $weight;
             break;
         }
-
+        
         $item_weight = (float) $product_weight * (int) $item['qty'];
 
         return $item_weight;
@@ -1467,7 +1475,11 @@ class WooCommerce_MyParcel_Export {
         foreach ( $found_shipping_classes as $shipping_class => $products ) {
             // Also handles BW compatibility when slugs were used instead of ids
             $shipping_class_term = get_term_by('slug', $shipping_class, 'product_shipping_class');
-            $shipping_class_term_id = $shipping_class_term->term_id;
+            $shipping_class_term_id = '';
+
+            if ($shipping_class_term != null) {
+                $shipping_class_term_id = $shipping_class_term->term_id;
+            }
 
             $class_cost_string = $shipping_class_term && $shipping_class_term_id
                 ? $shipping_method->get_option('class_cost_' . $shipping_class_term_id, $shipping_method->get_option('class_cost_' . $shipping_class, $shipping_class_term_id))
