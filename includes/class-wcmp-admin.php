@@ -660,5 +660,4 @@ class WooCommerce_MyParcel_Admin {
 
 endif; // class_exists
 
-
 return new WooCommerce_MyParcel_Admin();
