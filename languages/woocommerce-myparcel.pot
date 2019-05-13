@@ -81,6 +81,10 @@ msgstr ""
 msgid "Delivery date"
 msgstr ""
 
+#: includes/class-wcmp-admin.php:650
+msgid "No label has created yet"
+msgstr ""
+
 #: includes/class-wcmp-admin.php:486
 msgid "PostNL Pickup"
 msgstr ""
@@ -1019,6 +1023,9 @@ msgstr ""
 msgid ""
 "Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin"
 msgstr ""
+
+msgid ""
+""
 
 #. Author of the plugin/theme
 msgid "Richard Perdaan"

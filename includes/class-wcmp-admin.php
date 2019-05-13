@@ -618,9 +618,9 @@ class WooCommerce_MyParcel_Admin {
     public function barcode_add_new_order_admin_list_column($columns)
     {
         // I want to display Barcode column just after the date column
-        return array_slice( $columns, 0, 3, true)
-            + array( 'barcode' => 'Barcode' )
-            + array_slice( $columns, 3, NULL, true );
+        return array_slice($columns, 0, 6, true)
+               + array('barcode' => 'Barcode')
+               + array_slice($columns, 6, null, true);
     }
     
     /**
@@ -647,7 +647,7 @@ class WooCommerce_MyParcel_Admin {
         $shipments = $this->get_order_shipments($order, true);
 
         if (empty($shipments)) {
-            return 'Er is nog geen zending aangemaakt';
+            return __('No label has created yet', 'woocommerce-myparcel');
         }
 
         foreach ($shipments as $shipment_id => $shipment) {
