@@ -28,6 +28,10 @@ class WooCommerce_MyParcel_Admin {
         // HS code in product shipping options tab
         add_action('woocommerce_product_options_shipping', array($this, 'product_hs_code_field'));
         add_action('woocommerce_process_product_meta', array($this, 'product_hs_code_field_save'));
+
+        // Add barcode in order grid
+        add_filter('manage_edit-shop_order_columns', array($this, 'barcode_add_new_order_admin_list_column'), 10, 1);
+        add_action('manage_shop_order_posts_custom_column', array($this, 'barcode_add_new_order_admin_list_column_content'), 10, 2);
     }
 
     public function order_list_shipment_options($order, $hide = true) {
@@ -603,6 +607,56 @@ class WooCommerce_MyParcel_Admin {
             }
         }
     }
+
+    /**
+     * @snippet       Add Column to Orders Table (e.g. Barcode) - WooCommerce
+     *
+     * @param $columns
+     *
+     * @return mixed
+     */
+    public function barcode_add_new_order_admin_list_column($columns)
+    {
+        // I want to display Barcode column just after the date column
+        return array_slice($columns, 0, 6, true)
+               + array('barcode' => 'Barcode')
+               + array_slice($columns, 6, null, true);
+    }
+    
+    /**
+     * @param $column
+     */
+    public function barcode_add_new_order_admin_list_column_content($column)
+    {
+        global $post;
+
+        if ('barcode' === $column) {
+            $order = WCX::get_order($post->ID);
+            echo $this->get_barcode($order);
+        }
+    }
+
+    /**
+     * @param $order
+     * @param null $barcode
+     *
+     * @return string|null
+     */
+    public function get_barcode($order, $barcode = null)
+    {
+        $shipments = $this->get_order_shipments($order, true);
+
+        if (empty($shipments)) {
+            return __('No label has created yet', 'woocommerce-myparcel');
+        }
+
+        foreach ($shipments as $shipment_id => $shipment) {
+            $barcode .= "<a target='_blank' href=" . $this->get_tracktrace_url($order, $shipment['tracktrace']) . ">" . $shipment['tracktrace'] . "</a> <br>";
+        }
+
+        return $barcode;
+    }
+
 }
 
 endif; // class_exists
