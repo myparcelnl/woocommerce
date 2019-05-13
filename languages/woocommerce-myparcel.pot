@@ -1024,9 +1024,6 @@ msgid ""
 "Export your WooCommerce orders to MyParcel (www.myparcel.nl) and print labels directly from the WooCommerce admin"
 msgstr ""
 
-msgid ""
-""
-
 #. Author of the plugin/theme
 msgid "Richard Perdaan"
 msgstr ""
