@@ -2,7 +2,7 @@
 Contributors: richardperdaan
 Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, MyParcel, myparcel, Flespakket, flespakket, PostNL, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 5.1.0
+Tested up to: 5.2.0
 Stable tag: trunk
 Requires PHP: 5.4
 License: GPLv3 or later
@@ -90,10 +90,17 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.1.5 (-)
+= 3.1.5 (2019-05-14)
 * Improvement: Add the link for the personalized Track & Trace page (portal)
 * Improvement: Show deliverday only for NL shipments
+* Improvement: Cut the product title after 50 characters
+* Improvement: Barcode in order grid
 * Fix: Translation house number again button
+* Fix: Set default to 0 if there's no tax rate set up
+* Fix: fix issue with shipping class term id
+* Fix: Correct amount on the digital stamp
+* Fix: trying to get property of non-object
+* Fix: Shipment validation error (PakjeGemak)
 
 = 3.1.4 (2019-03-18)
 * Fix: Delivery date when deliveryday window is 0
