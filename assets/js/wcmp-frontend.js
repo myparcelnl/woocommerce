@@ -8,6 +8,7 @@ jQuery(function($) {
 
     var MyParcel_Frontend = {
         checkout_updating: false,
+        shipping_method_changed: false,
         force_update:      false,
 
         selected_shipping_method: false,
@@ -25,8 +26,7 @@ jQuery(function($) {
                 MyParcel_Frontend.updated_country = MyParcel_Frontend.get_shipping_country();
             });
 
-            // hide checkout options for non parcel shipments
-            $(document).on('updated_checkout', function() {
+            function showOrHideCheckoutOptions() {
                 MyParcel_Frontend.checkout_updating = false; //done updating
 
                 if (!MyParcel_Frontend.check_country()) return;
@@ -77,6 +77,19 @@ jQuery(function($) {
                         MyParcel_Frontend.hide_delivery_options();
                         jQuery('#mypa-input').val(JSON.stringify(''));
                         MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_now;
+
+                        // Hide extra fees when selecting local pickup
+                        if (MyParcel_Frontend.shipping_method_changed == false) {
+                            MyParcel_Frontend.shipping_method_changed = true;
+
+                            // Update checkout when selecting other method
+                            jQuery('body').trigger('update_checkout');
+
+                            // Onyl update when the method change after 2seconds
+                            setTimeout(function(){
+                                MyParcel_Frontend.shipping_method_changed = false;
+                            }, 2000);
+                        }
                     }
                 } else {
 
@@ -84,6 +97,10 @@ jQuery(function($) {
                     MyParcel_Frontend.hide_delivery_options();
                     jQuery('#mypa-input').val(JSON.stringify(''));
                 }
+            }
+            // hide checkout options for non parcel shipments
+            $(document).on('updated_checkout', function() {
+                showOrHideCheckoutOptions();
             });
             // any delivery option selected/changed - update checkout for fees
             $('#mypa-chosen-delivery-options').on('change', 'input', function() {
