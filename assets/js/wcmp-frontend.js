@@ -74,13 +74,15 @@ jQuery(function($) {
                     } else {
                         var shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
                         MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method_now;
-                        MyParcel.hideAllDeliveryOptions();
+                        MyParcel_Frontend.hide_delivery_options();
+                        jQuery('#mypa-input').val(JSON.stringify(''));
                         MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_now;
                     }
                 } else {
 
                     // not sure if we should already hide by default?
                     MyParcel_Frontend.hide_delivery_options();
+                    jQuery('#mypa-input').val(JSON.stringify(''));
                 }
             });
             // any delivery option selected/changed - update checkout for fees
