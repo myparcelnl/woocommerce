@@ -247,6 +247,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
             'label' => __('Suffix', 'woocommerce-myparcelbe'),
             'class' => apply_filters('be_custom_address_field_class', array('form-row-third last')),
             'required' => false,
+            'maxlength' => 4,
             'priority' => 62,
         );
 

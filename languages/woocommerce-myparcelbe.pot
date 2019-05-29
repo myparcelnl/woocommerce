@@ -73,6 +73,10 @@ msgstr ""
 msgid "Delivery date"
 msgstr ""
 
+#: includes/class-wcmp-admin.php:650
+msgid "No label has created yet"
+msgstr ""
+
 #: includes/class-wcmp-admin.php:486
 msgid "Bpost Pickup"
 msgstr ""
@@ -84,7 +88,6 @@ msgstr ""
 #: includes/class-wcmp-admin.php:489 includes/class-wcmp-frontend.php:318
 msgid "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
 msgstr ""
-
 
 #: includes/class-wcmp-export.php:62
 msgid "You have to export the orders to MyParcel BE before you can print the labels!"

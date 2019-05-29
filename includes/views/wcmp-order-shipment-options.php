@@ -75,6 +75,7 @@ $parcel_weight_gram = WooCommerce_MyParcelBE()->export->get_parcel_weight($order
                             $option_row['value'],
                             false
                         );
+                    $disabled = isset($option_row['disabled']);
                     $type = isset($option_row['hidden']) ? 'hidden' : 'checkbox';
                     printf('<input type="%s" name="%s" value="1" class="%s" %s>', $type, $name, $class, $checked);
                     echo $option_row['label'];
