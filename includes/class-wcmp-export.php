@@ -1664,4 +1664,4 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
 
 endif; // class_exists
 
-return new WooCommerce_MyParcel_Export();
+return new WooCommerce_MyParcelBE_Export();
