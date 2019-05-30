@@ -565,6 +565,55 @@ class WooCommerce_MyParcelBE_Admin {
 
         return $shipments;
     }
+
+    /**
+     * @snippet       Add Column to Orders Table (e.g. Barcode) - WooCommerce
+     *
+     * @param $columns
+     *
+     * @return mixed
+     */
+    public function barcode_add_new_order_admin_list_column($columns)
+    {
+        // I want to display Barcode column just after the date column
+        return array_slice($columns, 0, 6, true)
+               + array('barcode' => 'Barcode')
+               + array_slice($columns, 6, null, true);
+    }
+
+    /**
+     * @param $column
+     */
+    public function barcode_add_new_order_admin_list_column_content($column)
+    {
+        global $post;
+
+        if ('barcode' === $column) {
+            $order = \WPO\WC\MyParcelBE\Compatibility\WC_Core::get_order($post->ID);
+            echo $this->get_barcode($order);
+        }
+    }
+
+    /**
+     * @param $order
+     * @param null $barcode
+     *
+     * @return string|null
+     */
+    public function get_barcode($order, $barcode = null)
+    {
+        $shipments = $this->get_order_shipments($order, true);
+
+        if (empty($shipments)) {
+            return __('No label has created yet', 'woocommerce-myparcelbe');
+        }
+
+        foreach ($shipments as $shipment_id => $shipment) {
+            $barcode .= "<a target='_blank' href=" . $this->get_tracktrace_url($order, $shipment['tracktrace']) . ">" . $shipment['tracktrace'] . "</a> <br>";
+        }
+
+        return $barcode;
+    }
 }
 
 endif; // class_exists
