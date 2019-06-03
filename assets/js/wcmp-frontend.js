@@ -27,7 +27,6 @@ jQuery(function($) {
 
             // hide checkout options for non parcel shipments
             $(document).on('updated_checkout', function() {
-
                 MyParcelBE_Frontend.checkout_updating = false; //done updating
 
                 if (!MyParcelBE_Frontend.check_country()) return;
@@ -75,6 +74,7 @@ jQuery(function($) {
                     } else {
                         var shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
                         MyParcelBE_Frontend.myparcelbe_updated_shipping_method = shipping_method_now;
+                        MyParcelBE.hideAllDeliveryOptions();
                         MyParcelBE_Frontend.myparcelbe_selected_shipping_method = shipping_method_now;
                     }
                 } else {
@@ -143,10 +143,7 @@ jQuery(function($) {
         },
 
         is_updated: function() {
-            if (MyParcelBE_Frontend.updated_shipping_method !== MyParcelBE_Frontend.selected_shipping_method
-                || MyParcelBE_Frontend.updated_country !== MyParcelBE_Frontend.selected_country
-                || MyParcelBE_Frontend.force_update === true
-            ) {
+            if (MyParcelBE_Frontend.updated_country !== MyParcelBE_Frontend.selected_country || MyParcel_Frontend.force_update === true) {
                 MyParcelBE_Frontend.force_update = false; // only force once
                 return true;
             }

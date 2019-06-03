@@ -30,12 +30,14 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
 
         // output checkbox
         printf(
-            '<input type="checkbox" id="%1$s" name="%2$s" value="%3$s" %4$s class="%5$s"/>',
+            '<input type="checkbox" id="%1$s" name="%2$s" value="%3$s" %4$s class="%5$s" %6$s style="%7$s"/>',
             $id,
             $setting_name,
             $value,
             checked($value, $current, false),
-            $class
+            $class,
+            $disabled,
+            $style
         );
 
         // output description.
@@ -477,7 +479,7 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input(array_merge($args, $cutoff_time_args)); ?></td>
                 </tr>
             <?php endif; ?>
-            <?php if (isset($args['has_price'])): ?>
+            <?php if ($args['has_price']): ?>
                 <tr>
                     <td><?php _e('Additional fee (ex VAT, optional)', 'woocommerce-myparcelbe') ?>:</td>
                     <td>&euro; <?php $this->text_input(array_merge($args, $fee_args)); ?></td>

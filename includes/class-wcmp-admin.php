@@ -24,10 +24,17 @@ class WooCommerce_MyParcelBE_Admin {
 
         add_action('wp_ajax_wcmp_save_shipment_options', array($this, 'save_shipment_options_ajax'));
         add_action('wp_ajax_wcmp_get_shipment_summary_status', array($this, 'order_list_ajax_get_shipment_summary'));
+
+        // HS code in product shipping options tab
+        add_action('woocommerce_product_options_shipping', array($this, 'product_hs_code_field'));
+        add_action('woocommerce_process_product_meta', array($this, 'product_hs_code_field_save'));
+
+        // Add barcode in order grid
+        add_filter('manage_edit-shop_order_columns', array($this, 'barcode_add_new_order_admin_list_column'), 10, 1);
+        add_action('manage_shop_order_posts_custom_column', array($this, 'barcode_add_new_order_admin_list_column_content'), 10, 2);
     }
 
     public function order_list_shipment_options($order, $hide = true) {
-
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
         if ( ! WooCommerce_MyParcelBE()->export->is_myparcelbe_destination($shipping_country)) {
             return;
@@ -338,6 +345,7 @@ class WooCommerce_MyParcelBE_Admin {
         if ( ! $order) {
             return;
         }
+
         $order_id = WCX_Order::get_id($order);
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
@@ -381,7 +389,7 @@ class WooCommerce_MyParcelBE_Admin {
                     $label_url = wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcelbe&request=get_labels&shipment_ids=' . $shipment_id),'wc_myparcelbe');
                     if (isset($shipment['tracktrace'])) {
                         $tracktrace_url = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
-                        $tracktrace_link = sprintf('<a href="%s">%s</a>', $tracktrace_url, $shipment['tracktrace']);
+                        $tracktrace_link = sprintf('<a href="%s" target="_blank">%s</a>', $tracktrace_url, $shipment['tracktrace']);
                     } else {
                         if (isset($shipment['shipment']) && isset($shipment['shipment']['options'])) {
                             $tracktrace_link = '(' . WooCommerce_MyParcelBE()->export->get_package_name( $shipment['shipment']['options']['package_type']) . ')';
@@ -496,9 +504,10 @@ class WooCommerce_MyParcelBE_Admin {
             }
 
             $tracktrace_url = sprintf(
-                'https://track.bpost.be/btr/web/#/search?itemCode=%s',
+                'https://sendmyparcel.me/track-trace/%s/%s/%s',
                 $tracktrace,
-                $postcode
+                $postcode,
+                $country
             );
         } else {
             $tracktrace_url = sprintf(
@@ -555,6 +564,55 @@ class WooCommerce_MyParcelBE_Admin {
         }
 
         return $shipments;
+    }
+
+    /**
+     * @snippet       Add Column to Orders Table (e.g. Barcode) - WooCommerce
+     *
+     * @param $columns
+     *
+     * @return mixed
+     */
+    public function barcode_add_new_order_admin_list_column($columns)
+    {
+        // I want to display Barcode column just after the date column
+        return array_slice($columns, 0, 6, true)
+               + array('barcode' => 'Barcode')
+               + array_slice($columns, 6, null, true);
+    }
+
+    /**
+     * @param $column
+     */
+    public function barcode_add_new_order_admin_list_column_content($column)
+    {
+        global $post;
+
+        if ('barcode' === $column) {
+            $order = \WPO\WC\MyParcelBE\Compatibility\WC_Core::get_order($post->ID);
+            echo $this->get_barcode($order);
+        }
+    }
+
+    /**
+     * @param $order
+     * @param null $barcode
+     *
+     * @return string|null
+     */
+    public function get_barcode($order, $barcode = null)
+    {
+        $shipments = $this->get_order_shipments($order, true);
+
+        if (empty($shipments)) {
+            return __('No label has created yet', 'woocommerce-myparcelbe');
+        }
+
+        foreach ($shipments as $shipment_id => $shipment) {
+            $barcode .= "<a target='_blank' href=" . $this->get_tracktrace_url($order, $shipment['tracktrace']) . ">" . $shipment['tracktrace'] . "</a> <br>";
+        }
+
+        return $barcode;
     }
 }
 
