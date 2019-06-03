@@ -900,6 +900,21 @@ MyParcel = {
         return result;
     },
 
+     /*
+     * saturdayCutoffTime
+     *
+     * Check if it is Saturday today, then use the Saturday CutoffTime
+     *
+     */
+    saturdayCutoffTime: function() {
+        var date = new Date();
+        var numberOfDay = date.getDay();
+
+        if (numberOfDay === 6) {
+            this.data.config.cutoffTime = this.data.config.saturdayCutoffTime;
+        }
+    },
+
     /*
      * callDeliveryOptions
      *
@@ -912,6 +927,7 @@ MyParcel = {
         MyParcel.clearPickUpLocations();
         MyParcel.hideDelivery();
         MyParcel.setAddressFromInputFields();
+        MyParcel.saturdayCutoffTime();
 
         // Hide PostNL field if there is no address entered
         if (MyParcel.data.address.postalCode == '' || MyParcel.data.address.number == '') {
