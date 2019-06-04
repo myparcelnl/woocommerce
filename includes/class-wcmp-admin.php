@@ -326,7 +326,7 @@ class WooCommerce_MyParcelBE_Admin {
     public function shop_order_metabox() {
         add_meta_box(
             'myparcelbe', //$id
-            __('MyParcelbe', 'woocommerce-myparcelbe'), //$title
+            __('MyParcelBE', 'woocommerce-myparcelbe'), //$title
             array($this, 'create_box_content'), //$callback
             'shop_order', //$post_type
             'side', //$context

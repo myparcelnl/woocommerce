@@ -344,9 +344,7 @@ msgstr ""
 #: includes/class-wcmp-settings.php:112
 #, php-format
 msgid ""
-"It looks like your shop is based in Netherlands. This plugin is for MyParcel "
-"Belgium.If you are using MyParcel Netherlands, download the %s plugin "
-"instead!"
+"It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium.If you are using MyParcel Netherlands, download the %s plugin instead!"
 msgstr ""
 
 #: includes/class-wcmp-settings.php:118
@@ -433,8 +431,9 @@ msgstr ""
 
 #: includes/class-wcmp-settings.php:260
 msgid ""
-"Automatically set order status to a predefined status after successful "
-"MyParcel BE export.<br/>Make sure "
+"Automatically set order status to a predefined status after successful MyParcel BE export.<br/>Make sure "
+ "<strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & "
+ "Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email."
 msgstr ""
 
 #: includes/class-wcmp-settings.php:266

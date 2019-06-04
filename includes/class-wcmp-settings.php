@@ -107,10 +107,10 @@ class WooCommerce_MyParcelBE_Settings {
 
         // link to hide message when one of the premium extensions is installed
         if ( ! $hide_notice && $base_country == 'BE') {
-            $myparcelbe_belgium_link = '<a href="https://wordpress.org/plugins/wc-myparcel-belgium/" target="blank">WC MyParcel Belgium</a>';
+            $myparcel_nl_link = '<a href="https://nl.wordpress.org/plugins/woocommerce-myparcel/" target="blank">WC MyParcel Netherlands</a>';
             $text = sprintf(
                 __('It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium. If you are using MyParcel Netherlands, download the %s plugin instead!', 'woocommerce-myparcelbe'),
-                $myparcelbe_belgium_link
+                $myparcel_nl_link
             );
             $dismiss_button = sprintf(
                 '<a href="%s" style="display:inline-block; margin-top: 10px;">%s</a>',
