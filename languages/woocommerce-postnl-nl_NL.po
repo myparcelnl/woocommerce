@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WooCommerce PostNL\n"
 "POT-Creation-Date: 2018-11-27 16:01+0100\n"
 "PO-Revision-Date: 2018-11-27 16:04+0100\n"
-"Last-Translator: Richard Perdaan <richard@postnl.nl>\n"
+"Last-Translator: Adem Demir <plugin-support@postnl.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -90,6 +90,10 @@ msgstr "Bezorgdatum"
 #: includes/class-wcmp-admin.php:486
 msgid "PostNL Pickup"
 msgstr "Afhalen bij PostNL"
+
+#: includes/class-wcmp-admin.php:650
+msgid "No label has created yet"
+msgstr "Er is nog geen label aangemaakt"
 
 #: includes/class-wcmp-admin.php:489 includes/class-wcmp-frontend.php:318
 msgid "PostNL Pickup Express"
@@ -677,22 +681,6 @@ msgstr ""
 msgid "Insured amount"
 msgstr "Verzekerde waarde"
 
-#: includes/class-wcmp-settings.php:500
-msgid "Insured up to &euro; 100"
-msgstr "Verzekerd tot &euro; 100"
-
-#: includes/class-wcmp-settings.php:501
-msgid "Insured up to &euro; 250"
-msgstr "Verzekerd tot &euro; 250"
-
-#: includes/class-wcmp-settings.php:502
-msgid "Insured up to &euro; 500"
-msgstr "Verzekerd tot &euro; 500"
-
-#: includes/class-wcmp-settings.php:503
-msgid "> &euro; 500 insured"
-msgstr "> &euro; 500 verzekerd"
-
 #: includes/class-wcmp-settings.php:510
 msgid "Insured amount (in euro)"
 msgstr "Verzekerd bedrag (in euro)"
@@ -767,7 +755,7 @@ msgid ""
 msgstr ""
 "Wanneer aangevinkt wordt er gebruik gemaakt van de PostNL adresvelden. Dit "
 "houdt in dat straat, huisnummer en toevoeging los komen te staan. Wil je de "
-"standaard WooCommerce adresvelden gebruiken? Laat deze optie afgevinkt staan."
+"standaard WooCommerce adresvelden gebruiken? Laat deze optie uitgevinkt staan."
 
 #: includes/class-wcmp-settings.php:622
 msgid "Enable PostNL delivery options"
@@ -1169,5 +1157,5 @@ msgstr ""
 "verzendlabels direct vanuit WooCommerce"
 
 #. Author of the plugin/theme
-msgid "PostNL"
-msgstr "PostNL"
+msgid "Adem Demir"
+msgstr "Adem Demir"
