@@ -503,7 +503,7 @@ class WooCommerce_PostNL_Frontend {
                 "houseNumber" =>__('House number', 'woocommerce-postnl'),
                 "city"=>__('City', 'woocommerce-postnl'),
                 "retry" =>__('Retry', 'woocommerce-postnl'),
-                "wrongHouseNumberPostcode" =>__('House number/Postcode combination unknown', 'woocommerce-postnl'),
+                "wrongHouseNumberPostcode" =>__('House number/postcode combination unknown', 'woocommerce-postnl'),
                 "quickDelivery"=>__('Deliver as quickly as possible', 'woocommerce-postnl'),
 
                 'sunday'=> __('Sunday', 'woocommerce-postnl'),

@@ -15,6 +15,13 @@ class WooCommerce_PostNL_Export {
     const MAILBOX_PACKAGE = 2;
     const LETTER          = 3;
 
+    // Delivery types
+    const PICKUP          = 4;
+    const PICKUP_EXPRESS  = 5;
+
+    // Maximum characters length of item description
+    const DESCRIPTION_MAX_LENGTH = 50;
+
     public $order_id;
     public $success;
     public $errors;
@@ -601,6 +608,8 @@ class WooCommerce_PostNL_Export {
 
         // use shipment options from order when available
         $shipment_options = WCX_Order::get_meta($order, '_postnl_shipment_options');
+        $package_type = $this->get_package_type_for_order($order);
+        $delivery_type = $this->get_delivery_type($order);
 
         if ( ! empty($shipment_options)) {
             $empty_defaults = array(
@@ -625,10 +634,10 @@ class WooCommerce_PostNL_Export {
             }
 
             $options = array(
-                'package_type' => $this->get_package_type_for_order($order),
+                'package_type' => $package_type,
                 'only_recipient' => (isset(WooCommerce_PostNL()->export_defaults['only_recipient'])) ? 1 : 0,
                 'signature' => (isset(WooCommerce_PostNL()->export_defaults['signature'])) ? 1 : 0,
-                'return' => (isset(WooCommerce_PostNL()->export_defaults['return'])) ? 1 : 0,
+                'return' => (isset(WooCommerce_PostNL()->export_defaults['return']) && ($delivery_type != self::PICKUP && $delivery_type != self::PICKUP_EXPRESS)) ? 1 : 0,
                 'label_description' => $description,
                 'insured_amount' => $insured_amount,
                 'age_check' => (isset(WooCommerce_PostNL()->export_defaults['age_check'])) ? 1 : 0,
@@ -747,7 +756,7 @@ class WooCommerce_PostNL_Export {
         return $new_timestamp;
     }
 
-    public function get_customs_declaration( $order ) {
+    public function get_customs_declaration($order) {
         $invoice = $this->get_invoice_number($order);
         $contents = (int) ((isset(WooCommerce_PostNL()->export_defaults['package_contents']))
             ? WooCommerce_PostNL()->export_defaults['package_contents']
@@ -765,8 +774,11 @@ class WooCommerce_PostNL_Export {
         foreach ($order->get_items() as $item_id => $item) {
             $product = $order->get_product_from_item($item);
             if ( ! empty($product)) {
-                // Description
+                // Description cut after 50 chars
                 $description = $item['name'];
+                if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH) {
+                    $description = substr($item['name'], 0, 47) . '...';
+                }
                 // Amount
                 $amount = (int) (isset($item['qty']) ? $item['qty'] : 1);
                 // Weight (total item weight in grams)
@@ -1163,7 +1175,7 @@ class WooCommerce_PostNL_Export {
             return 0;
         }
 
-        $weight = $product->get_weight();
+        $weight = (int) $product->get_weight();
         $weight_unit = get_option('woocommerce_weight_unit');
         switch($weight_unit) {
             case 'kg':
@@ -1382,7 +1394,11 @@ class WooCommerce_PostNL_Export {
         foreach ( $found_shipping_classes as $shipping_class => $products ) {
             // Also handles BW compatibility when slugs were used instead of ids
             $shipping_class_term = get_term_by('slug', $shipping_class, 'product_shipping_class');
-            $shipping_class_term_id = $shipping_class_term->term_id;
+            $shipping_class_term_id = '';
+
+            if ($shipping_class_term != null) {
+                $shipping_class_term_id = $shipping_class_term->term_id;
+            }
 
             $class_cost_string = $shipping_class_term && $shipping_class_term_id
                 ? $shipping_method->get_option('class_cost_' . $shipping_class_term_id, $shipping_method->get_option('class_cost_' . $shipping_class, $shipping_class_term_id))
