@@ -16,6 +16,10 @@ class WooCommerce_MyParcel_Export {
     const LETTER          = 3;
     const DIGITAL_STAMP   = 4;
 
+    // Delivery types
+    const PICKUP          = 4;
+    const PICKUP_EXPRESS  = 5;
+
     // Maximum characters length of item description.
     const DESCRIPTION_MAX_LENGTH = 50;
 
@@ -686,6 +690,7 @@ class WooCommerce_MyParcel_Export {
         // use shipment options from order when available
         $shipment_options = WCX_Order::get_meta($order, '_myparcel_shipment_options');
         $package_type = $this->get_package_type_for_order($order);
+        $delivery_type = $this->get_delivery_type($order);
 
         if ( ! empty($shipment_options)) {
             $empty_defaults = array(
@@ -714,7 +719,7 @@ class WooCommerce_MyParcel_Export {
                 'package_type' => $package_type,
                 'only_recipient' => (isset(WooCommerce_MyParcel()->export_defaults['only_recipient'])) ? 1 : 0,
                 'signature' => (isset(WooCommerce_MyParcel()->export_defaults['signature'])) ? 1 : 0,
-                'return' => (isset(WooCommerce_MyParcel()->export_defaults['return']) && (!$package_type == 4 || !$package_type == 5)) ? 1 : 0,
+                'return' => (isset(WooCommerce_MyParcel()->export_defaults['return']) && ($delivery_type != self::PICKUP && $delivery_type != self::PICKUP_EXPRESS)) ? 1 : 0,
                 'large_format' => (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
                 'label_description' => $description,
                 'insured_amount' => $insured_amount,
