@@ -55,11 +55,6 @@ msgstr "Print PostNL label"
 msgid "Email return label"
 msgstr "E-mail retourlabel"
 
-#: includes/class-wcmp-admin.php:329 includes/class-wcmp-settings.php:38
-#: includes/class-wcmp-settings.php:39
-msgid "PostNL"
-msgstr "PostNL"
-
 #: includes/class-wcmp-admin.php:372 includes/class-wcmp-frontend.php:108
 msgid "Track & Trace"
 msgstr "Track & Trace"
@@ -1157,5 +1152,5 @@ msgstr ""
 "verzendlabels direct vanuit WooCommerce"
 
 #. Author of the plugin/theme
-msgid "Adem Demir"
-msgstr "Adem Demir"
+msgid "PostNL"
+msgstr "PostNL"
