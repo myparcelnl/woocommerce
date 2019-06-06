@@ -81,6 +81,10 @@ msgstr ""
 msgid "Delivery date"
 msgstr ""
 
+#: includes/class-wcmp-admin.php:650
+msgid "No label has created yet"
+msgstr ""
+
 #: includes/class-wcmp-admin.php:486
 msgid "PostNL Pickup"
 msgstr ""
