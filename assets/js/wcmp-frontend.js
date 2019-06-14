@@ -8,6 +8,7 @@ jQuery(function($) {
 
     var PostNL_Frontend = {
         checkout_updating: false,
+        shipping_method_changed: false,
         force_update:      false,
 
         selected_shipping_method: false,
@@ -25,9 +26,9 @@ jQuery(function($) {
                 PostNL_Frontend.updated_country = PostNL_Frontend.get_shipping_country();
             });
 
-            // hide checkout options for non parcel shipments
-            $(document).on('updated_checkout', function() {
-                PostNL_Frontend.checkout_updating = false; //done updating
+            /* hide checkout options for non parcel shipments */
+            function showOrHideCheckoutOptions() {
+                PostNL_Frontend.checkout_updating = false; /* done updating */
 
                 if (!PostNL_Frontend.check_country()) return;
 
@@ -67,21 +68,41 @@ jQuery(function($) {
                         PostNL.showAllDeliveryOptions();
                         PostNL_Frontend.postnl_selected_shipping_method = shipping_method_class;
                     } else if ($.inArray(shipping_method, PostNL_Frontend.shipping_methods) > -1) {
-                        // fallback to bare method if selected in settings
+                        /* fallback to bare method if selected in settings */
                         PostNL_Frontend.postnl_updated_shipping_method = shipping_method;
                         PostNL.showAllDeliveryOptions();
                         PostNL_Frontend.postnl_selected_shipping_method = shipping_method;
                     } else {
                         var shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
                         PostNL_Frontend.postnl_updated_shipping_method = shipping_method_now;
-                        PostNL.hideAllDeliveryOptions();
+                        PostNL_Frontend.hide_delivery_options();
+                        jQuery('#post-input').val(JSON.stringify(''));
                         PostNL_Frontend.postnl_selected_shipping_method = shipping_method_now;
+
+                        /* Hide extra fees when selecting local pickup */
+                        if (PostNL_Frontend.shipping_method_changed == false) {
+                            PostNL_Frontend.shipping_method_changed = true;
+
+                            /* Update checkout when selecting other method */
+                            jQuery('body').trigger('update_checkout');
+
+                            /* Onyl update when the method change after 2seconds */
+                            setTimeout(function () {
+                                PostNL_Frontend.shipping_method_changed = false;
+                            }, 2000);
+                        }
                     }
                 } else {
 
-                    // not sure if we should already hide by default?
+                    /* not sure if we should already hide by default? */
                     PostNL_Frontend.hide_delivery_options();
+                    jQuery('#post-input').val(JSON.stringify(''));
                 }
+            }
+
+            /* hide checkout options for non parcel shipments */
+            $(document).on('updated_checkout', function () {
+                showOrHideCheckoutOptions();
             });
             // any delivery option selected/changed - update checkout for fees
             $('#post-chosen-delivery-options').on('change', 'input', function() {
@@ -116,7 +137,7 @@ jQuery(function($) {
 
         get_shipping_method: function() {
             var shipping_method;
-            // check if shipping is user choice or fixed
+            /* check if shipping is user choice or fixed */
             if ($('#order_review .shipping_method').length > 1) {
                 shipping_method = $('#order_review .shipping_method:checked').val();
             } else {
@@ -144,7 +165,7 @@ jQuery(function($) {
 
         is_updated: function() {
             if (PostNL_Frontend.updated_country !== PostNL_Frontend.selected_country || PostNL_Frontend.force_update === true) {
-                PostNL_Frontend.force_update = false; // only force once
+                PostNL_Frontend.force_update = false; /* only force once */
                 return true;
             }
             return false;

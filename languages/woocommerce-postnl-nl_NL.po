@@ -82,6 +82,10 @@ msgstr "Avondlevering"
 msgid "Delivery date"
 msgstr "Bezorgdatum"
 
+#: includes/class-wcmp-admin.php:650
+msgid "No label has created yet"
+msgstr "Er is nog geen label aangemaakt"
+
 #: includes/class-wcmp-admin.php:486
 msgid "PostNL Pickup"
 msgstr "Afhalen bij PostNL"
