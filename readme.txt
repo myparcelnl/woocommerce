@@ -89,6 +89,17 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 == Changelog ==
 
 = 3.1.0 (2019) =
+* Fix: Scrolling of the order overview when an input is clicked
+* Fix: Showing delivery date in the order when consumer using safari
+* Fix: Delivery date from integer to String
+* Fix: Set default to 0 if there's no tax rate set up
+* Fix: Issue with shipping class term id
+* Fix: Error trying to get property of non-object
+* Improvement: Add the link for the personalized Track & Trace page (portal)
+* Improvement: Cut the product title after 50 characters (50 is the max for Non-eu shipments)
+* Improvement: Barcode in order grid
+
+= 3.1.0 (2019) =
 * Improvement: Improved checkout
 * Improvement: Return delivery
 * Improvement: Barcode in notes
