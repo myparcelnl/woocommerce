@@ -88,7 +88,7 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.1.0 (2019) =
+= 3.1.5 (2019-06-20) =
 * Fix: Scrolling of the order overview when an input is clicked
 * Fix: Showing delivery date in the order when consumer using safari
 * Fix: Delivery date from integer to String
@@ -99,7 +99,7 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 * Improvement: Cut the product title after 50 characters (50 is the max for Non-eu shipments)
 * Improvement: Barcode in order grid
 
-= 3.1.0 (2019) =
+= 3.1.0 (2019-02-06) =
 * Improvement: Improved checkout
 * Improvement: Return delivery
 * Improvement: Barcode in notes
