@@ -467,21 +467,24 @@ class WooCommerce_MyParcel_Export {
 
             $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
             if ($this->is_world_shipment_country($shipping_country)) {
-                $customs_declaration = $this->get_customs_declaration($order);
+                $customs_declaration             = $this->get_customs_declaration($order);
                 $shipment['customs_declaration'] = $customs_declaration;
                 $shipment['physical_properties'] = array(
                     'weight' => $customs_declaration['weight'],
                 );
             }
 
-            if ($shipment['options']['package_type'] == self::DIGITAL_STAMP ) {
+            if ($shipment['options']['package_type'] == self::DIGITAL_STAMP) {
                 $shipment['physical_properties'] = array(
-                    'weight' => (int) round($this->get_parcel_weight($order) * 1000)
+                    'weight' =>
+                        ((int) $shipment['options']['weight'] ? (int) $shipment['options']['weight'] :
+                            (int) round($this->get_parcel_weight($order) * 1000))
                 );
+
                 unset($shipment['options']['weight']);
             }
-            
-            if ($shipment['options']['package_type'] == self::MAILBOX_PACKAGE ) {
+
+            if ($shipment['options']['package_type'] == self::MAILBOX_PACKAGE) {
                 unset($shipment['options']['weight']);
             }
 
