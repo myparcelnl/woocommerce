@@ -166,18 +166,26 @@ $parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 
                 $name = "myparcel_options[{$order_id}][weight]";
                 // use grams
                 $current_tier_range = WooCommerce_MyParcel_Export::find_tier_range($parcel_weight_gram);
+                $changed_selected_digital_stamp_weight = false;
+
+                if (isset($shipment_options['weight'])) {
+                    $changed_selected_digital_stamp_weight = true;
+                    $current_tier_range                    = $shipment_options['weight'];
+                }
 
                 printf('<select name="%s">', $name);
                 foreach (WooCommerce_MyParcel_Export::get_tier_ranges(true) as $tier_range => $weight) {
+                    $selected_digital_stamp_weight = $changed_selected_digital_stamp_weight ? $weight['average'] : $tier_range;
                     printf(
                         '<option id="myparcel_options_weight" value="%s"%s>%s – %s %s</option>',
                         $weight['average'],
-                        selected($current_tier_range == $tier_range),
+                        selected($current_tier_range == $selected_digital_stamp_weight),
                         $weight['min'],
                         $weight['max'],
                         __('gram', 'woocommerce-myparcel')
                     );
                 }
+
                 printf('</select>');
                 ?>
             </td>
