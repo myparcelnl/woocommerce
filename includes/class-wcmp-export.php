@@ -475,9 +475,10 @@ class WooCommerce_MyParcel_Export {
             }
 
             if ($shipment['options']['package_type'] == self::DIGITAL_STAMP) {
+                $digital_stamp_option_weight     = (int) $shipment['options']['weight'];
                 $shipment['physical_properties'] = array(
                     'weight' =>
-                        ((int) $shipment['options']['weight'] ? (int) $shipment['options']['weight'] :
+                        ($digital_stamp_option_weight ? $digital_stamp_option_weight :
                             (int) round($this->get_parcel_weight($order) * 1000))
                 );
 
