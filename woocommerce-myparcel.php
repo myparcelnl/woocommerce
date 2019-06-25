@@ -18,7 +18,7 @@ if ( ! class_exists('WooCommerce_MyParcel')) :
 
 class WooCommerce_MyParcel {
 
-    public $version = '3.1.5';
+    public $version = '3.1.6';
     public $plugin_basename;
     protected static $_instance = null;
 
