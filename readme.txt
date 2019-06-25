@@ -90,7 +90,13 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.1.5 (2019-05-14)
+= 3.1.6 (2019) =
+* Fix: Use constants for delivery_type
+* Fix: Saturday cutoff time
+* Fix: Shipping method issue with pickup
+* Fix: Digital stamp weight issue
+
+= 3.1.5 (2019-05-14) =
 * Improvement: Add the link for the personalized Track & Trace page (portal)
 * Improvement: Show deliverday only for NL shipments
 * Improvement: Cut the product title after 50 characters
@@ -102,7 +108,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: trying to get property of non-object
 * Fix: Shipment validation error (PakjeGemak)
 
-= 3.1.4 (2019-03-18)
+= 3.1.4 (2019-03-18) =
 * Fix: Delivery date when deliveryday window is 0
 * Fix: Change `afgevinkt` to `uitgevinkt`
 * Preparation: Move Great Britain to world shipment for the Brexit
