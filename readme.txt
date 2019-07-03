@@ -90,7 +90,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.1.6 (2019) =
+= 3.1.6 (2019-07-04) =
 * Fix: Use constants for delivery_type
 * Fix: Saturday cutoff time
 * Fix: Shipping method issue with pickup
