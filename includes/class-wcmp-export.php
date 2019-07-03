@@ -466,7 +466,7 @@ class WooCommerce_PostNL_Export {
 
             $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
             if ($this->is_world_shipment_country($shipping_country)) {
-                $customs_declaration = $this->get_customs_declaration($order);
+                $customs_declaration             = $this->get_customs_declaration($order);
                 $shipment['customs_declaration'] = $customs_declaration;
                 $shipment['physical_properties'] = array(
                     'weight' => $customs_declaration['weight'],
