@@ -89,6 +89,18 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 3.1.6 (2019-07-04) =
+* Fix: Trying to get property of non-object
+* Fix: Shipment validation error (PakjeGemak)
+* Fix: Set default to 0 if there's no tax rate set up
+* Fix: Issue with shipping class term id
+* Fix: Shipping method issue with pickup
+* Fix: Saturday cutoff time
+* Fix: Use constants for delivery_type
+* Improvement: Barcode in order grid
+* Improvement: Cut the product title after 50 characters
+* Improvement: Show deliveryday only for NL shipments
+
 = 3.1.3 (2019-02-26) =
 * Fix: Showing delivery date in the order when consumer using safari
 * Fix: Scrolling of the order overview when an input is clicked.
