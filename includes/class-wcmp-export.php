@@ -24,7 +24,7 @@ class WooCommerce_MyParcel_Export {
     const DESCRIPTION_MAX_LENGTH = 50;
 
     // Maximum items for world shipments
-    const MAX_ITEMS        = 5;
+    const MAX_WORLD_SHIPMENT_ITEMS = 5;
 
     public $order_id;
     public $success;
@@ -863,7 +863,7 @@ class WooCommerce_MyParcel_Export {
 
         $items = $this->get_item_data($order, $default_hs_code, $country);
         // Select first 5 arrays when you have more than 5 items
-        if (count($items) > self::MAX_ITEMS) {
+        if (count($items) > self::MAX_WORLD_SHIPMENT_ITEMS) {
             $items = array_slice($items, 0, 5);
         }
 
@@ -880,14 +880,15 @@ class WooCommerce_MyParcel_Export {
      *
      * @return array
      */
-    public function get_item_data($order, $default_hs_code, $country){
+    public function get_item_data($order, $default_hs_code, $country, $items)
+    {
         foreach ($order->get_items() as $item_id => $item) {
             $product = $order->get_product_from_item($item);
             if ( ! empty($product)) {
                 // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
                 // Description cut after 50 chars
                 $description = $item['name'];
-                if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH){
+                if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH) {
                     $description = substr($item['name'], 0, 47) . '...';
                 }
                 // Amount
@@ -896,7 +897,7 @@ class WooCommerce_MyParcel_Export {
                 $weight = (int) round($this->get_item_weight_kg($item, $order) * 1000);
                 // Item value (in cents)
                 $item_value = array(
-                    'amount' => (int) round(($item['line_total'] + $item['line_tax']) * 100),
+                    'amount'   => (int) round(($item['line_total'] + $item['line_tax']) * 100),
                     'currency' => WCX_Order::get_prop($order, 'currency'),
                 );
                 // Classification / HS Code
