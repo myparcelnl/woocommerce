@@ -880,7 +880,7 @@ class WooCommerce_MyParcel_Export {
      *
      * @return array
      */
-    public function get_item_data($order, $default_hs_code, $country, $items)
+    public function get_item_data($order, $default_hs_code, $country)
     {
         foreach ($order->get_items() as $item_id => $item) {
             $product = $order->get_product_from_item($item);
@@ -905,12 +905,10 @@ class WooCommerce_MyParcel_Export {
                 if (empty($classification)) {
                     $classification = $default_hs_code;
                 }
-                // add item to item list
-                $items[] = compact('description', 'amount', 'weight', 'item_value', 'classification', 'country');
             }
         }
-
-        return $items;
+        // add items to item list
+        return $items [] = compact('description', 'amount', 'weight', 'item_value', 'classification', 'country');
     }
 
     public function validate_shipments($shipments, $output_errors = true) {
