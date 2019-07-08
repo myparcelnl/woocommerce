@@ -882,6 +882,7 @@ class WooCommerce_MyParcel_Export {
      */
     public function get_item_data($order, $default_hs_code, $country)
     {
+        $items = array();
         foreach ($order->get_items() as $item_id => $item) {
             $product = $order->get_product_from_item($item);
             if ( ! empty($product)) {
