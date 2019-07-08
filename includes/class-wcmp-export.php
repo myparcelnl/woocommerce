@@ -905,10 +905,12 @@ class WooCommerce_MyParcel_Export {
                 if (empty($classification)) {
                     $classification = $default_hs_code;
                 }
+                // add item to item list
+                $items [] = compact('description', 'amount', 'weight', 'item_value', 'classification', 'country');
             }
         }
-        // add items to item list
-        return $items [] = compact('description', 'amount', 'weight', 'item_value', 'classification', 'country');
+
+        return $items;
     }
 
     public function validate_shipments($shipments, $output_errors = true) {
