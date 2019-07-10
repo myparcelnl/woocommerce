@@ -660,6 +660,11 @@ class WooCommerce_MyParcel_Admin {
         return $barcode;
     }
 
+    /**
+     * @param $search_fields
+     *
+     * @return array
+     */
     public function woocommerce_search_order_grid($search_fields)
     {
         $search_fields[] = '_myparcel_shipments';
