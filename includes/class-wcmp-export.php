@@ -23,6 +23,9 @@ class WooCommerce_MyParcel_Export {
     // Maximum characters length of item description.
     const DESCRIPTION_MAX_LENGTH = 50;
 
+    // Maximum items for world shipments
+    const MAX_WORLD_SHIPMENT_ITEMS = 5;
+
     public $order_id;
     public $success;
     public $errors;
@@ -844,8 +847,8 @@ class WooCommerce_MyParcel_Export {
         return $new_timestamp;
     }
 
-    public function get_customs_declaration($order ) {
-        $invoice = $this->get_invoice_number($order);
+    public function get_customs_declaration($order) {
+        $invoice  = $this->get_invoice_number($order);
         $contents = (int) ((isset(WooCommerce_MyParcel()->export_defaults['package_contents']))
             ? WooCommerce_MyParcel()->export_defaults['package_contents']
             : 1);
@@ -858,6 +861,27 @@ class WooCommerce_MyParcel_Export {
         // Country (=shop base)
         $country = WC()->countries->get_base_country();
 
+        $items = $this->get_item_data($order, $default_hs_code, $country);
+        // Select first 5 arrays when you have more than 5 items
+        if (count($items) > self::MAX_WORLD_SHIPMENT_ITEMS) {
+            $items = array_slice($items, 0, 5);
+        }
+
+        // Get the total weight of the package
+        $weight = (int) round($this->get_parcel_weight($order) * 1000);
+
+        return compact('weight', 'invoice', 'contents', 'items');
+    }
+
+    /**
+     * @param $order
+     * @param $default_hs_code
+     * @param $country
+     *
+     * @return array
+     */
+    public function get_item_data($order, $default_hs_code, $country)
+    {
         $items = array();
         foreach ($order->get_items() as $item_id => $item) {
             $product = $order->get_product_from_item($item);
@@ -865,7 +889,7 @@ class WooCommerce_MyParcel_Export {
                 // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
                 // Description cut after 50 chars
                 $description = $item['name'];
-                if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH){
+                if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH) {
                     $description = substr($item['name'], 0, 47) . '...';
                 }
                 // Amount
@@ -874,7 +898,7 @@ class WooCommerce_MyParcel_Export {
                 $weight = (int) round($this->get_item_weight_kg($item, $order) * 1000);
                 // Item value (in cents)
                 $item_value = array(
-                    'amount' => (int) round(($item['line_total'] + $item['line_tax']) * 100),
+                    'amount'   => (int) round(($item['line_total'] + $item['line_tax']) * 100),
                     'currency' => WCX_Order::get_prop($order, 'currency'),
                 );
                 // Classification / HS Code
@@ -882,15 +906,12 @@ class WooCommerce_MyParcel_Export {
                 if (empty($classification)) {
                     $classification = $default_hs_code;
                 }
-
                 // add item to item list
-                $items[] = compact('description', 'amount', 'weight', 'item_value', 'classification', 'country');
+                $items [] = compact('description', 'amount', 'weight', 'item_value', 'classification', 'country');
             }
         }
-        // Get the total weight of the package
-        $weight = (int) round($this->get_parcel_weight($order) * 1000);
 
-        return compact('weight', 'invoice', 'contents', 'items');
+        return $items;
     }
 
     public function validate_shipments($shipments, $output_errors = true) {
