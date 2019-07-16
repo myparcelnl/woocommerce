@@ -90,6 +90,10 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 3.1.7 (2019-07-16) =
+* Fix: Search in order grid myparcel shipment
+* Fix: More than 5 products for World shipments
+
 = 3.1.6 (2019-07-04) =
 * Fix: Use constants for delivery_type
 * Fix: Saturday cutoff time
