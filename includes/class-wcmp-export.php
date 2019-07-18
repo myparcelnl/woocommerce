@@ -32,8 +32,8 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             $this->success = array();
             $this->errors  = array();
 
-            $this->use_split_address_fields = array_key_exists('use_split_address_fields', get_option('woocommerce_myparcelbe_checkout_settings'))
-                ? isset(get_option('woocommerce_myparcelbe_checkout_settings')['use_split_address_fields'])
+            $this->use_split_address_fields = array_key_exists('use_split_address_fields', get_option('woocommerce_myparcelbe_general_settings'))
+                ? isset(get_option('woocommerce_myparcelbe_general_settings')['use_split_address_fields'])
                 : false;
 
             include('class-wcmp-rest.php');
