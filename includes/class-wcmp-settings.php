@@ -68,7 +68,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                     'general'         => __('General', 'woocommerce-myparcelbe'),
                     'export_defaults' => __('Default export settings', 'woocommerce-myparcelbe'),
                     'checkout'        => __('bpost', 'woocommerce-myparcelbe'),
-                    'dpd'             => __('DPD', 'woocommerce-myparcelbe'),
+//                    'dpd'             => __('DPD', 'woocommerce-myparcelbe'),
                 )
             );
 
@@ -581,14 +581,14 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
             );
 
             add_settings_field(
-                'checkout_settings_enable',
+                'myparcelbe_checkout',
                 __('Enable bpost delivery options', 'woocommerce-myparcelbe'),
                 array($this->callbacks, 'checkbox'),
                 $option_group,
                 'checkout_settings',
                 array(
                     'option_name' => $option_name,
-                    'id'          => 'checkout_settings_enable',
+                    'id'          => 'myparcelbe_checkout',
                 )
             );
 
@@ -771,14 +771,14 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
             }
 
             add_settings_field(
-                'myparcelbe_dpd_checkout',
+                'myparcelbe_dpd_settings',
                 __('Enable dpd delivery options', 'woocommerce-myparcelbe'),
                 array($this->callbacks, 'checkbox'),
                 $option_group,
                 'dpd_settings',
                 array(
                     'option_name' => $option_name,
-                    'id'          => 'myparcelbe_dpd_checkout',
+                    'id'          => 'myparcelbe_dpd_settings',
                 )
             );
 
@@ -895,7 +895,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                     'id'                 => 'dpd_pickup',
                     'class'              => 'pickup',
                     'title'              => 'Pickup',
-                    'current'            => self::get_checkout_setting_title('dpd_pickup_title'),
+                    'current'            => self::get_checkout_setting_title('pickup_title'),
                     'size'               => 30,
                     'option_description' => sprintf(__('Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.', 'woocommerce-myparcelbe')),
                 )

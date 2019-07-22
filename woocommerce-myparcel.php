@@ -45,7 +45,8 @@ class WooCommerce_MyParcelBE {
         // Load settings
         $this->general_settings = get_option('woocommerce_myparcelbe_general_settings');
         $this->export_defaults = get_option('woocommerce_myparcelbe_export_defaults_settings');
-        $this->bpost_settings = get_option('woocommerce_myparcelbe_bpost_settings');
+        $this->checkout_settings = get_option('woocommerce_myparcelbe_checkout_settings');
+        $this->dpd_settings = get_option('woocommerce_myparcelbe_dpd_settings');
 
 
         // load the localisation & classes
@@ -271,7 +272,7 @@ class WooCommerce_MyParcelBE {
         }
 
         if (version_compare($installed_version, '3.0.4', '<=')) {
-            $old_settings = get_option('woocommerce_myparcelbe_bpost_settings');
+            $old_settings = get_option('woocommerce_myparcelbe_checkout_settings');
             $new_settings = $old_settings;
 
             // Add/replace new settings
@@ -287,7 +288,7 @@ class WooCommerce_MyParcelBE {
             unset($new_settings['signed_title']);
             unset($new_settings['signed_fee']);
 
-            update_option('woocommerce_myparcelbe_bpost_settings', $new_settings);
+            update_option('woocommerce_myparcelbe_checkout_settings', $new_settings);
         }
     }
 
