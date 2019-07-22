@@ -41,18 +41,18 @@ class WooCommerce_MyParcelBE_Frontend {
         add_filter('wpo_wcpdf_templates_replace_myparcelbe_tracktrace_link', array($this, 'wpo_wcpdf_tracktrace_link'), 10, 2);
         add_filter('wpo_wcpdf_templates_replace_myparcelbe_delivery_options', array($this, 'wpo_wcpdf_delivery_options'), 10, 2);
 
-        // Delivery options
-        if (isset(WooCommerce_MyParcelBE()->checkout_settings['myparcelbe_checkout'])) {
-            // Change the position of the checkout
-            if (isset(WooCommerce_MyParcelBE()->checkout_settings['checkout_position'])) {
-                $checkout_place = WooCommerce_MyParcelBE()->checkout_settings['checkout_position'];
-            } else {
-                $checkout_place = 'woocommerce_after_checkout_billing_form';
-            }
-
-            add_action('wp_enqueue_scripts', array($this, 'inject_delivery_options_variables'), 9999);
-            add_action(apply_filters('wc_myparcelbe_delivery_options_location', $checkout_place), array($this, 'output_delivery_options'), 10);
+        // Change the position of the checkout
+        if (isset(WooCommerce_MyParcelBE()->general_settings['checkout_place'])) {
+            $checkout_place = WooCommerce_MyParcelBE()->general_settings['checkout_place'];
+        } else {
+            $checkout_place = 'woocommerce_after_checkout_billing_form';
         }
+
+        add_action('wp_enqueue_scripts', array($this, 'inject_delivery_options_variables'), 9999);
+        add_action(apply_filters('wc_myparcelbe_delivery_options_location', $checkout_place), array(
+            $this,
+            'output_delivery_options'
+        ), 10);
 
         // Save delivery options data
         add_action('woocommerce_checkout_update_order_meta', array($this, 'save_delivery_options'), 10, 2);
@@ -440,7 +440,7 @@ class WooCommerce_MyParcelBE_Frontend {
                 "pricePickup" => $this->frontend_settings->get_price('pickup'),
 //                "priceSaturdayDelivery" => $this->frontend_settings->is_enabled('saturday_cutoff_fee'),
 
-                "headerDeliveryOptions" => __($this->frontend_settings->get_title('header_delivery_options'), 'woocommerce-myparcelbe'),
+                "headerDeliveryOptions" => __($this->frontend_settings->get_title('header_delivery_options', 'general'), 'woocommerce-myparcelbe'),
                 "deliveryTitle" => __($this->frontend_settings->get_title('at_home_delivery'), 'woocommerce-myparcelbe'),
                 "pickupTitle" => __($this->frontend_settings->get_title('pickup'), 'woocommerce-myparcelbe'),
                 "deliveryStandardTitle" => __($this->frontend_settings->get_title('standard'), 'woocommerce-myparcelbe'),
@@ -564,8 +564,8 @@ class WooCommerce_MyParcelBE_Frontend {
     }
 
     private function myparcelbe_delivery_options_always_display() {
-        if (isset(WooCommerce_MyParcelBE()->checkout_settings['checkout_display'])
-            && WooCommerce_MyParcelBE()->checkout_settings['checkout_display'] == 'all_methods') {
+        if (isset(WooCommerce_MyParcelBE()->general_settings['checkout_display'])
+            && WooCommerce_MyParcelBE()->general_settings['checkout_display'] == 'all_methods') {
             return true;
         }
 

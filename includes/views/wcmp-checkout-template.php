@@ -6,8 +6,8 @@
 ?>
 <style>
 	<?php
-	if (!empty(WooCommerce_MyParcelBE()->checkout_settings['custom_css'])) {
-		echo WooCommerce_MyParcelBE()->checkout_settings['custom_css'];
+	if (!empty(WooCommerce_MyParcelBE()->general_settings['custom_css'])) {
+		echo WooCommerce_MyParcelBE()->general_settings['custom_css'];
 	}
 	?>
 </style>

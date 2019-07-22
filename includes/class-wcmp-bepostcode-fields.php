@@ -21,8 +21,8 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
     public function __construct() {
         $this->use_split_address_fields = array_key_exists(
             'use_split_address_fields',
-            get_option('woocommerce_myparcelbe_checkout_settings')
-        ) ? get_option('woocommerce_myparcelbe_checkout_settings')['use_split_address_fields'] === '1' : false;
+            get_option('woocommerce_myparcelbe_general_settings')
+        ) ? get_option('woocommerce_myparcelbe_general_settings')['use_split_address_fields'] === '1' : false;
 
         // Load styles
         add_action('wp_enqueue_scripts', array(&$this, 'add_styles_scripts'));

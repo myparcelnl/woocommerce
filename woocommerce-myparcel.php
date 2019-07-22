@@ -45,8 +45,8 @@ class WooCommerce_MyParcelBE {
         // Load settings
         $this->general_settings = get_option('woocommerce_myparcelbe_general_settings');
         $this->export_defaults = get_option('woocommerce_myparcelbe_export_defaults_settings');
-        $this->checkout_settings = get_option('woocommerce_myparcelbe_bpost_settings');
-        $this->dpd_settings = get_option('woocommerce_myparcelbe_dpd_settings');
+        $this->bpost_settings = get_option('woocommerce_myparcelbe_bpost_settings');
+
 
         // load the localisation & classes
         add_action('plugins_loaded', array($this, 'translations'));

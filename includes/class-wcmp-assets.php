@@ -19,7 +19,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
             if ( ! is_checkout() && ! is_order_received_page()) return;
 
             // if using split fields
-            if (isset(WooCommerce_MyParcelBE()->checkout_settings['use_split_address_fields'])) {
+            if (isset(WooCommerce_MyParcelBE()->general_settings['use_split_address_fields'])) {
                 wp_enqueue_script(
                     'wcmp-checkout-fields',
                     WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
@@ -50,7 +50,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
                 'wcmp_display_settings',
                 array(
                     'isUsingSplitAddressFields' => isset(
-                        WooCommerce_MyParcelBE()->checkout_settings['use_split_address_fields']
+                        WooCommerce_MyParcelBE()->general_settings['use_split_address_fields']
                     )
                 )
             );

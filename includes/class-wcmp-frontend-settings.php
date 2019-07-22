@@ -13,10 +13,13 @@ class WooCommerce_MyParcelBE_Frontend_Settings {
     const CARRIER_CODE = 2;
     const CARRIER_NAME = "Bpost";
     const BASE_URL = "https://api.myparcel.nl/";
+
     private static $settings;
+    private static $general_settings;
 
     function __construct() {
         self::$settings = WooCommerce_MyParcelBE()->checkout_settings;
+        self::$general_settings = WooCommerce_MyParcelBE()->general_settings;
     }
 
     /**
@@ -35,10 +38,21 @@ class WooCommerce_MyParcelBE_Frontend_Settings {
 
     /**
      * Get given option title
+     *
+     * @param $option
+     * @param null $general
+     *
      * @return string
      */
-    public static function get_title($option) {
+    public static function get_title($option, $general = null) {
+
         $option = $option . "_title";
+
+        if ($general) {
+            if (isset(self::$settings[$option])) {
+                return self::$general_settings[$option];
+            }
+        }
 
         if (isset(self::$settings[$option])) {
             return self::$settings[$option];
