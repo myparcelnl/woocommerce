@@ -68,7 +68,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                     'general'         => __('General', 'woocommerce-myparcelbe'),
                     'export_defaults' => __('Default export settings', 'woocommerce-myparcelbe'),
                     'checkout'        => __('bpost', 'woocommerce-myparcelbe'),
-//                    'dpd'             => __('DPD', 'woocommerce-myparcelbe'),
+                    'dpd'             => __('DPD', 'woocommerce-myparcelbe'),
                 )
             );
 
@@ -770,18 +770,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                 $this->default_settings($option_name);
             }
 
-            add_settings_field(
-                'myparcelbe_dpd_settings',
-                __('Enable dpd delivery options', 'woocommerce-myparcelbe'),
-                array($this->callbacks, 'checkbox'),
-                $option_group,
-                'dpd_settings',
-                array(
-                    'option_name' => $option_name,
-                    'id'          => 'myparcelbe_dpd_settings',
-                )
-            );
-
             // dpd Checkout options section.
             add_settings_section(
                 'dpd_settings', __('dpd settings', 'woocommerce-myparcelbe'), array(
@@ -790,7 +778,19 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
             ), $option_group
             );
 
-            $days_of_the_week = array(
+            add_settings_field(
+                'myparcelbe_dpd',
+                __('Enable dpd delivery options', 'woocommerce-myparcelbe'),
+                array($this->callbacks, 'checkbox'),
+                $option_group,
+                'dpd_settings',
+                array(
+                    'option_name' => $option_name,
+                    'id'          => 'myparcelbe_dpd',
+                )
+            );
+
+            $dpd_days_of_the_week = array(
                 '0' => __('Sunday', 'woocommerce-myparcelbe'),
                 '1' => __('Monday', 'woocommerce-myparcelbe'),
                 '2' => __('Tuesday', 'woocommerce-myparcelbe'),
@@ -807,7 +807,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
             ), $option_group, 'dpd_settings', array(
                     'option_name' => $option_name,
                     'id'          => 'dpd_dropoff_days',
-                    'options'     => $days_of_the_week,
+                    'options'     => $dpd_days_of_the_week,
                     'description' => __('Days of the week on which you hand over parcels to dpd', 'woocommerce-myparcelbe'),
                 )
             );
@@ -918,7 +918,10 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                 case 'woocommerce_myparcelbe_checkout_settings':
                     $default = self::get_checkout_settings();
                     break;
-                case 'woocommerce_myparcelbe_export_defaults_settings':
+                case 'woocommerce_myparcelbe_dpd_settings':
+                    $default = self::get_checkout_settings();
+                    break;
+                    case 'woocommerce_myparcelbe_export_defaults_settings':
                 default:
                     $default = array();
                     break;

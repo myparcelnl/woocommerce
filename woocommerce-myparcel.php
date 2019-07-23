@@ -272,23 +272,20 @@ class WooCommerce_MyParcelBE {
         }
 
         if (version_compare($installed_version, '3.0.4', '<=')) {
-            $old_settings = get_option('woocommerce_myparcelbe_checkout_settings');
-            $new_settings = $old_settings;
-
-            // Add/replace new settings
-            $new_settings['use_split_address_fields'] = '1';
+            $old_settings_bpost = get_option('woocommerce_myparcelbe_checkout_settings');
+            $new_settings_bpost = $old_settings_bpost;
 
             // Rename signed to signature for consistency
-            $new_settings['signature_enabled'] = $old_settings['signed_enabled'];
-            $new_settings['signature_title'] = $old_settings['signed_title'];
-            $new_settings['signature_fee'] = $old_settings['signed_fee'];
+            $new_settings_bpost['signature_enabled'] = $old_settings_bpost['signed_enabled'];
+            $new_settings_bpost['signature_title'] = $old_settings_bpost['signed_title'];
+            $new_settings_bpost['signature_fee'] = $old_settings_bpost['signed_fee'];
 
             // Remove old settings
-            unset($new_settings['signed_enabled']);
-            unset($new_settings['signed_title']);
-            unset($new_settings['signed_fee']);
+            unset($new_settings_bpost['signed_enabled']);
+            unset($new_settings_bpost['signed_title']);
+            unset($new_settings_bpost['signed_fee']);
 
-            update_option('woocommerce_myparcelbe_checkout_settings', $new_settings);
+            update_option('woocommerce_myparcelbe_checkout_settings', $new_settings_bpost);
         }
     }
 

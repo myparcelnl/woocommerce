@@ -31,6 +31,8 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
             // return if myparcel checkout is not active
             if ( ! isset(WooCommerce_MyParcelBE()->checkout_settings['myparcelbe_checkout'])) return;
 
+            if ( ! isset(WooCommerce_MyParcelBE()->dpd_settings['myparcelbe_dpd'])) return;
+
             wp_enqueue_script(
                 'wc-myparcelbe',
                 WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/myparcelbe.js',
