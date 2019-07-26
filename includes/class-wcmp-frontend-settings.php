@@ -18,7 +18,7 @@ class WooCommerce_MyParcelBE_Frontend_Settings {
     private static $general_settings;
 
     function __construct() {
-        self::$settings = WooCommerce_MyParcelBE()->checkout_settings;
+        self::$settings = WooCommerce_MyParcelBE()->bpost_settings;
         self::$general_settings = WooCommerce_MyParcelBE()->general_settings;
     }
 

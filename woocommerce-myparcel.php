@@ -45,7 +45,7 @@ class WooCommerce_MyParcelBE {
         // Load settings
         $this->general_settings = get_option('woocommerce_myparcelbe_general_settings');
         $this->export_defaults = get_option('woocommerce_myparcelbe_export_defaults_settings');
-        $this->checkout_settings = get_option('woocommerce_myparcelbe_checkout_settings');
+        $this->bpost_settings = get_option('woocommerce_myparcelbe_bpost_settings');
         $this->dpd_settings = get_option('woocommerce_myparcelbe_dpd_settings');
 
 
@@ -272,7 +272,7 @@ class WooCommerce_MyParcelBE {
         }
 
         if (version_compare($installed_version, '3.0.4', '<=')) {
-            $old_settings_bpost = get_option('woocommerce_myparcelbe_checkout_settings');
+            $old_settings_bpost = get_option('woocommerce_myparcelbe_bpost_settings');
             $new_settings_bpost = $old_settings_bpost;
 
             // Rename signed to signature for consistency
@@ -285,7 +285,7 @@ class WooCommerce_MyParcelBE {
             unset($new_settings_bpost['signed_title']);
             unset($new_settings_bpost['signed_fee']);
 
-            update_option('woocommerce_myparcelbe_checkout_settings', $new_settings_bpost);
+            update_option('woocommerce_myparcelbe_bpost_settings', $new_settings_bpost);
         }
     }
 

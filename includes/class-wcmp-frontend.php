@@ -290,8 +290,8 @@ class WooCommerce_MyParcelBE_Frontend {
             if (isset($delivery_options['price_comment'])) {
                 switch($delivery_options['price_comment']) {
                     case 'retail':
-                        if ( ! empty(WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'])) {
-                            $fee = WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'];
+                        if ( ! empty(WooCommerce_MyParcelBE()->bpost_settings['pickup_fee'])) {
+                            $fee = WooCommerce_MyParcelBE()->bpost_settings['pickup_fee'];
                             $fee_name = __('bpost pickup', 'woocommerce-myparcelbe');
                         }
                     break;
@@ -508,8 +508,8 @@ class WooCommerce_MyParcelBE_Frontend {
     private function add_fee_from_setting($post_data, $post_data_value, $delivery_type, $backend_setting, $delivery_title) {
         // Fee for "delivery" option
         if (isset($post_data[$post_data_value]) && $post_data[$post_data_value] == $delivery_type) {
-            if ( ! empty(WooCommerce_MyParcelBE()->checkout_settings[$backend_setting])) {
-                $fee = WooCommerce_MyParcelBE()->checkout_settings[$backend_setting];
+            if ( ! empty(WooCommerce_MyParcelBE()->bpost_settings[$backend_setting])) {
+                $fee = WooCommerce_MyParcelBE()->bpost_settings[$backend_setting];
                 $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
                 $this->add_fee($fee_name, $fee);
 
@@ -525,7 +525,7 @@ class WooCommerce_MyParcelBE_Frontend {
             return;
         }
 
-        $fee = WooCommerce_MyParcelBE()->checkout_settings['signature_fee'];
+        $fee = WooCommerce_MyParcelBE()->bpost_settings['signature_fee'];
 
         if ( ! empty($fee)) {
             $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
@@ -538,7 +538,7 @@ class WooCommerce_MyParcelBE_Frontend {
 //            return;
 //        }
 //
-//        $fee = WooCommerce_MyParcelBE()->checkout_settings['saturday_cutoff_fee'];
+//        $fee = WooCommerce_MyParcelBE()->bpost_settings['saturday_cutoff_fee'];
 //
 //        if ( ! empty($fee)) {
 //            $fee_name = __($delivery_title, 'woocommerce-myparcelbe');

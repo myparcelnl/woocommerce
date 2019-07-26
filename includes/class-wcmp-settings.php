@@ -27,7 +27,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
 
             add_action('admin_init', array($this, 'general_settings'));
             add_action('admin_init', array($this, 'export_defaults_settings'));
-            add_action('admin_init', array($this, 'checkout_settings'));
+            add_action('admin_init', array($this, 'bpost_settings'));
             add_action('admin_init', array($this, 'dpd_settings'));
 
             // notice for WC MyParcel Belgium plugin
@@ -67,7 +67,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                 array(
                     'general'         => __('General', 'woocommerce-myparcelbe'),
                     'export_defaults' => __('Default export settings', 'woocommerce-myparcelbe'),
-                    'checkout'        => __('bpost', 'woocommerce-myparcelbe'),
+                    'bpost'        => __('bpost', 'woocommerce-myparcelbe'),
                     'dpd'             => __('DPD', 'woocommerce-myparcelbe'),
                 )
             );
@@ -559,12 +559,12 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
         /**
          * Register Bpost settings
          */
-        public function checkout_settings()
+        public function bpost_settings()
         {
-            $option_group = 'woocommerce_myparcelbe_checkout_settings';
+            $option_group = 'woocommerce_myparcelbe_bpost_settings';
 
             // Register settings.
-            $option_name = 'woocommerce_myparcelbe_checkout_settings';
+            $option_name = 'woocommerce_myparcelbe_bpost_settings';
             register_setting($option_group, $option_name, array($this->callbacks, 'validate'));
 
             // Create option in wp_options.
@@ -574,21 +574,21 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
 
             // bpost Checkout options section.
             add_settings_section(
-                'checkout_settings', __('bpost settings', 'woocommerce-myparcelbe'), array(
+                'bpost_settings', __('bpost settings', 'woocommerce-myparcelbe'), array(
                 $this->callbacks,
                 'section'
             ), $option_group
             );
 
             add_settings_field(
-                'myparcelbe_checkout',
+                'myparcelbe_bpost',
                 __('Enable bpost delivery options', 'woocommerce-myparcelbe'),
                 array($this->callbacks, 'checkbox'),
                 $option_group,
-                'checkout_settings',
+                'bpost_settings',
                 array(
                     'option_name' => $option_name,
-                    'id'          => 'myparcelbe_checkout',
+                    'id'          => 'myparcelbe_bpost',
                 )
             );
 
@@ -606,7 +606,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                 'bpost_dropoff_days', __('Drop-off days', 'woocommerce-myparcelbe'), array(
                 $this->callbacks,
                 'enhanced_select'
-            ), $option_group, 'checkout_settings', array(
+            ), $option_group, 'bpost_settings', array(
                     'option_name' => $option_name,
                     'id'          => 'bpost_dropoff_days',
                     'options'     => $bpost_days_of_the_week,
@@ -618,7 +618,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                 'bpost_cutoff_time', __('Cut-off time', 'woocommerce-myparcelbe'), array(
                 $this->callbacks,
                 'text_input'
-            ), $option_group, 'checkout_settings', array(
+            ), $option_group, 'bpost_settings', array(
                     'option_name' => $option_name,
                     'id'          => 'bpost_cutoff_time',
                     'type'        => 'text',
@@ -631,7 +631,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                 'bpost_dropoff_delay', __('Drop-off delay', 'woocommerce-myparcelbe'), array(
                 $this->callbacks,
                 'text_input'
-            ), $option_group, 'checkout_settings', array(
+            ), $option_group, 'bpost_settings', array(
                     'option_name' => $option_name,
                     'id'          => 'bpost_dropoff_delay',
                     'type'        => 'text',
@@ -644,7 +644,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                 'bpost_deliverydays_window', __('Delivery days window', 'woocommerce-myparcelbe'), array(
                 $this->callbacks,
                 'checkbox'
-            ), $option_group, 'checkout_settings', array(
+            ), $option_group, 'bpost_settings', array(
                     'option_name' => $option_name,
                     'id'          => 'bpost_deliverydays_window',
                     'description' => __('Show the delivery date inside the checkout.', 'woocommerce-myparcelbe'),
@@ -915,7 +915,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                         'label_format'     => 'A4',
                     );
                     break;
-                case 'woocommerce_myparcelbe_checkout_settings':
+                case 'woocommerce_myparcelbe_bpost_settings':
                     $default = self::get_checkout_settings();
                     break;
                 case 'woocommerce_myparcelbe_dpd_settings':
@@ -941,8 +941,8 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
          */
         public static function get_checkout_setting_title($key)
         {
-            $checkout_settings = self::get_checkout_settings();
-            $setting           = $checkout_settings[$key];
+            $bpost_settings = self::get_checkout_settings();
+            $setting           = $bpost_settings[$key];
 
             return __($setting, 'woocommerce-myparcelbe');
         }
@@ -960,7 +960,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                 'at_home_delivery_title' => 'Delivered at home or at work',
                 'standard_title'         => 'Standard delivery',
                 'signature_title'        => 'Signature on delivery',
-                'pickup_title'           => 'bpost Pickup',
+                'pickup_title'           => 'Pickup',
             );
         }
     }

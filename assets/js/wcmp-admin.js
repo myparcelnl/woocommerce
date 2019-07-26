@@ -196,7 +196,7 @@ jQuery(function($) {
     });
 
     /* Hide all checkout options if disabled */
-    $('#woocommerce-myparcelbe-settings #myparcelbe_checkout').change(function() {
+    $('#woocommerce-myparcelbe-settings #myparcelbe_bpost').change(function() {
         $next_settings_rows = $(this).closest('tr').nextAll('tr');
         $next_settings_headers = $(this).closest('table').nextAll('h2');
         $next_settings_forms = $(this).closest('table').nextAll('table');
