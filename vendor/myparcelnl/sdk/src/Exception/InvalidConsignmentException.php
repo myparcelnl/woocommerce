@@ -2,6 +2,6 @@
 
 namespace MyParcelNL\Sdk\src\Exception;
 
-class ApiException extends \Exception
+class InvalidConsignmentException extends \Exception
 {
 }

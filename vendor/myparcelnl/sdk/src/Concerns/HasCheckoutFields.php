@@ -7,7 +7,7 @@ namespace MyParcelNL\Sdk\src\Concerns;
 
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\CheckoutFields;
-use MyParcelNL\Sdk\src\Model\MyParcelConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 
 trait HasCheckoutFields
 {
@@ -36,24 +36,25 @@ trait HasCheckoutFields
      * @param string $checkoutData
      *
      * @return $this
+     * @throws \Exception
      */
-    public function setDeliveryDateFromCheckout($checkoutData = null)
+    public function setDeliveryDateFromCheckout(?string $checkoutData)
     {
         if (! $checkoutData) {
             return $this;
         }
 
-        $checkoutData = json_decode($checkoutData, true);
-      
+        $aCheckoutData = json_decode($checkoutData, true);
+
         if (
-            ! is_array($checkoutData) ||
-            ! key_exists('date', $checkoutData)
+            ! is_array($aCheckoutData) ||
+            ! key_exists('date', $aCheckoutData)
         ) {
             return $this;
         }
 
         if ($this->getDeliveryDate() == null) {
-            $this->setDeliveryDate($checkoutData['date']);
+            $this->setDeliveryDate($aCheckoutData['date']);
         }
 
         return $this;
@@ -69,9 +70,9 @@ trait HasCheckoutFields
      * @return $this
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
-    public function setPickupAddressFromCheckout($checkoutData = null)
+    public function setPickupAddressFromCheckout(?string $checkoutData)
     {
-        if ($this->getCountry() !== MyParcelConsignment::CC_NL && $this->getCountry() !== MyParcelConsignment::CC_BE) {
+        if ($this->getCountry() !== AbstractConsignment::CC_NL && $this->getCountry() !== AbstractConsignment::CC_BE) {
             return $this;
         }
 
@@ -79,36 +80,36 @@ trait HasCheckoutFields
             return $this;
         }
 
-        $checkoutData = json_decode($checkoutData, true);
+        $aCheckoutData = json_decode($checkoutData, true);
 
-        if (! is_array($checkoutData) ||
-            ! key_exists('location', $checkoutData)
+        if (! is_array($aCheckoutData) ||
+            ! key_exists('location', $aCheckoutData)
         ) {
             return $this;
         }
 
         if ($this->getDeliveryDate() == null) {
-            $this->setDeliveryDate($checkoutData['date']);
+            $this->setDeliveryDate($aCheckoutData['date']);
         }
 
-        if ($checkoutData['price_comment'] == 'retail') {
-            $this->setDeliveryType(MyParcelConsignment::DELIVERY_TYPE_PICKUP);
-        } else if ($checkoutData['price_comment'] == 'retailexpress') {
-            $this->setDeliveryType(MyParcelConsignment::DELIVERY_TYPE_PICKUP_EXPRESS);
+        if ($aCheckoutData['price_comment'] == 'retail') {
+            $this->setDeliveryType(AbstractConsignment::DELIVERY_TYPE_PICKUP);
+        } else if ($aCheckoutData['price_comment'] == 'retailexpress') {
+            $this->setDeliveryType(AbstractConsignment::DELIVERY_TYPE_PICKUP_EXPRESS);
         } else {
             throw new MissingFieldException('No PostNL location found in checkout data: ' . $checkoutData);
         }
 
         $this
-            ->setPickupPostalCode($checkoutData['postal_code'])
-            ->setPickupStreet($checkoutData['street'])
-            ->setPickupCity($checkoutData['city'])
-            ->setPickupNumber($checkoutData['number'])
-            ->setPickupLocationName($checkoutData['location'])
-            ->setPickupLocationCode($checkoutData['location_code']);
+            ->setPickupPostalCode($aCheckoutData['postal_code'])
+            ->setPickupStreet($aCheckoutData['street'])
+            ->setPickupCity($aCheckoutData['city'])
+            ->setPickupNumber($aCheckoutData['number'])
+            ->setPickupLocationName($aCheckoutData['location'])
+            ->setPickupLocationCode($aCheckoutData['location_code']);
 
-        if (isset($checkoutData['retail_network_id'])) {
-            $this->setPickupNetworkId($checkoutData['retail_network_id']);
+        if (isset($aCheckoutData['retail_network_id'])) {
+            $this->setPickupNetworkId($aCheckoutData['retail_network_id']);
         }
 
         return $this;

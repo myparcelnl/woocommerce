@@ -20,7 +20,8 @@ use InvalidArgumentException;
 use MyParcelNL\Sdk\src\Adapter\ConsignmentAdapter;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
-use MyParcelNL\Sdk\src\Model\MyParcelConsignment;
+use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelRequest;
 use MyParcelNL\Sdk\src\Services\CollectionEncode;
 use MyParcelNL\Sdk\src\Support\Arr;
@@ -75,7 +76,7 @@ class MyParcelCollection extends Collection
     /**
      * @param bool $keepKeys
      *
-     * @return MyParcelConsignment[]
+     * @return AbstractConsignment[]
      */
     public function getConsignments($keepKeys = true)
     {
@@ -88,8 +89,8 @@ class MyParcelCollection extends Collection
 
     /**
      * Get one consignment
+     * @return mixed
      *
-     * @return \MyParcelNL\Sdk\src\Model\MyParcelConsignment|null
      * @throws BadMethodCallException
      */
     public function getOneConsignment()
@@ -123,7 +124,7 @@ class MyParcelCollection extends Collection
     /**
      * This is deprecated because there may be multiple consignments with the same reference id
      *
-     * @deprecated Use getConsignmentsByReferenceId instead
+     * @deprecated Use getConsignmentsByReferenceId()->first() instead
      *
      * @param $id
      *
@@ -138,11 +139,11 @@ class MyParcelCollection extends Collection
     /**
      * @param integer $id
      *
-     * @return MyParcelConsignment
+     * @return AbstractConsignment
      */
     public function getConsignmentByApiId($id)
     {
-        return $this->where('myparcel_consignment_id', $id)->first();
+        return $this->where('consignment_id', $id)->first();
     }
 
     /**
@@ -164,12 +165,12 @@ class MyParcelCollection extends Collection
     }
 
     /**
-     * @param MyParcelConsignment $consignment
+     * @param \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment|null $consignment
      *
      * @return $this
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
-    public function addConsignment(MyParcelConsignment $consignment)
+    public function addConsignment(?AbstractConsignment $consignment)
     {
         if ($consignment->getApiKey() === null) {
             throw new MissingFieldException('First set the API key with setApiKey() before running addConsignment()');
@@ -182,7 +183,7 @@ class MyParcelCollection extends Collection
 
     /**
      * @param int[] $ids
-     * @param sting $apiKey
+     * @param string $apiKey
      *
      * @return self
      * @throws \Exception
@@ -190,9 +191,9 @@ class MyParcelCollection extends Collection
     public function addConsignmentByConsignmentIds($ids, $apiKey)
     {
         foreach ($ids as $consignmentId) {
-            $consignment = (new MyParcelConsignment())
+            $consignment = (new AbstractConsignment())
                 ->setApiKey($apiKey)
-                ->setMyParcelConsignmentId($consignmentId);
+                ->setConsignmentId($consignmentId);
 
             $this->addConsignment($consignment);
         }
@@ -210,7 +211,7 @@ class MyParcelCollection extends Collection
     public function addConsignmentByReferenceIds($ids, $apiKey)
     {
         foreach ($ids as $referenceId) {
-            $consignment = (new MyParcelConsignment())
+            $consignment = (new AbstractConsignment())
                 ->setApiKey($apiKey)
                 ->setReferenceId($referenceId);
 
@@ -221,12 +222,12 @@ class MyParcelCollection extends Collection
     }
 
     /**
-     * @param MyParcelConsignment $consignment
+     * @param AbstractConsignment $consignment
      * @param $amount
      *
      * @return MyParcelCollection
      */
-    public function addMultiCollo(MyParcelConsignment $consignment, $amount): self
+    public function addMultiCollo(AbstractConsignment $consignment, $amount): self
     {
         $i = 1;
 
@@ -258,8 +259,7 @@ class MyParcelCollection extends Collection
         $this->addMissingReferenceId();
 
         /* @var $consignments MyParcelCollection */
-        foreach ($this->where('myparcel_consignment_id', null)->groupBy('api_key') as $consignments) {
-
+        foreach ($this->where('consignment_id', null)->groupBy('api_key') as $consignments) {
             $data    = (new CollectionEncode($consignments))->encode();
             $request = (new MyParcelRequest())
                 ->setUserAgent($this->getUserAgent())
@@ -271,9 +271,9 @@ class MyParcelCollection extends Collection
                 ->sendRequest();
 
             foreach ($request->getResult('data.ids') as $responseShipment) {
-                /** @var MyParcelConsignment $consignment */
+                /** @var AbstractConsignment $consignment */
                 $consignment = $this->getConsignmentsByReferenceId($responseShipment['reference_identifier'])->first();
-                $consignment->setMyParcelConsignmentId($responseShipment['id']);
+                $consignment->setConsignmentId($responseShipment['id']);
             }
         }
 
@@ -288,14 +288,14 @@ class MyParcelCollection extends Collection
      */
     public function deleteConcepts()
     {
-        /* @var $consignments MyParcelConsignment[] */
-        foreach ($this->groupBy('api_key')->where('myparcel_consignment_id', '!=', null) as $key => $consignments) {
+        /* @var $consignments AbstractConsignment[] */
+        foreach ($this->groupBy('api_key')->where('consignment_id', '!=', null) as $key => $consignments) {
             foreach ($consignments as $consignment) {
                 (new MyParcelRequest())
                     ->setUserAgent($this->getUserAgent())
                     ->setRequestParameters(
                         $key,
-                        $consignment->getMyParcelConsignmentId(),
+                        $consignment->getConsignmentId(),
                         MyParcelRequest::REQUEST_HEADER_DELETE
                     )
                     ->sendRequest('DELETE');
@@ -350,6 +350,7 @@ class MyParcelCollection extends Collection
      * @return $this
      * @throws \MyParcelNL\Sdk\src\Exception\ApiException
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
+     * @throws \Exception
      */
     public function setLatestDataWithoutIds($key, $size = 300)
     {
@@ -369,7 +370,7 @@ class MyParcelCollection extends Collection
         }
 
         foreach ($request->getResult()['data']['shipments'] as $shipment) {
-            $consignmentAdapter = new ConsignmentAdapter($shipment, (new MyParcelConsignment())->setApiKey($key));
+            $consignmentAdapter = new ConsignmentAdapter($shipment, (ConsignmentFactory::createByCarrierId($shipment['carrier_id'])->setApiKey($key)));
             $this->addConsignment($consignmentAdapter->getConsignment());
         }
 
@@ -396,7 +397,6 @@ class MyParcelCollection extends Collection
             ->setLabelFormat($positions);
 
         $conceptIds = $this->getConsignmentIds($key);
-
         if ($key) {
             $request = (new MyParcelRequest())
                 ->setUserAgent($this->getUserAgent())
@@ -522,17 +522,16 @@ class MyParcelCollection extends Collection
      *
      * @internal
      *
-     * @param $key
+     * @param string|null $key
      *
-     * @return array
+     * @return array|null
      */
-    public function getConsignmentIds(&$key)
+    public function getConsignmentIds(string &$key = null): ?array
     {
         $conceptIds = [];
-
-        /** @var MyParcelConsignment $consignment */
-        foreach ($this->where('myparcel_consignment_id', '!=', null) as $consignment) {
-            $conceptIds[] = $consignment->getMyParcelConsignmentId();
+        /** @var AbstractConsignment $consignment */
+        foreach ($this->where('consignment_id', '!=', null) as $consignment) {
+            $conceptIds[] = $consignment->getConsignmentId();
             $key          = $consignment->getApiKey();
         }
 
@@ -609,8 +608,8 @@ class MyParcelCollection extends Collection
 
         foreach ($consignmentIds as $id) {
 
-            $consignment = new MyParcelConsignment();
-            $consignment->setMyParcelConsignmentId($id);
+            $consignment = new AbstractConsignment();
+            $consignment->setConsignmentId((int) $id);
             $consignment->setApiKey($apiKey);
 
             $collection->addConsignment($consignment);
@@ -629,7 +628,7 @@ class MyParcelCollection extends Collection
      */
     public static function findByReferenceId(string $id, string $apiKey): MyParcelCollection
     {
-        return self::findManyByReferenceId($id, $apiKey);
+        return self::findManyByReferenceId([$id], $apiKey);
     }
 
     /**
@@ -645,7 +644,7 @@ class MyParcelCollection extends Collection
 
         foreach ($referenceIds as $id) {
 
-            $consignment = new MyParcelConsignment();
+            $consignment = new AbstractConsignment();
             $consignment->setReferenceId($id);
             $consignment->setApiKey($apiKey);
 
@@ -691,7 +690,7 @@ class MyParcelCollection extends Collection
     /**
      * Encode ReturnShipment to send to MyParcel
      *
-     * @param MyParcelConsignment $consignment
+     * @param AbstractConsignment $consignment
      *
      * @return string
      */
@@ -699,7 +698,7 @@ class MyParcelCollection extends Collection
     {
         $data     = [];
         $shipment = [
-            'parent'  => $consignment->getMyParcelConsignmentId(),
+            'parent'  => $consignment->getConsignmentId(),
             'carrier' => 1,
             'email'   => $consignment->getEmail(),
             'name'    => $consignment->getPerson(),
@@ -719,16 +718,13 @@ class MyParcelCollection extends Collection
     private function getNewCollectionFromResult($result)
     {
         $newCollection = new static;
+        /** @var AbstractConsignment $consignment */
+        $consignment = $this->first();
+        $apiKey      = $consignment->getApiKey();
+
         foreach ($result as $shipment) {
-
-            /** @var Collection|MyParcelConsignment[] $consignments */
-            $consignments = $this->where('myparcel_consignment_id', $shipment['id']);
-
-            if ($consignments->isEmpty()) {
-                $consignments = $this->getConsignmentsByReferenceId($shipment['reference_identifier']);
-            }
-
-            $consignmentAdapter = new ConsignmentAdapter($shipment, $consignments->first());
+            $consignment        = ConsignmentFactory::createByCarrierId($shipment['carrier_id'])->setApiKey($apiKey);
+            $consignmentAdapter = new ConsignmentAdapter($shipment, $consignment);
             $isMultiCollo       = ! empty($shipment['secondary_shipments']);
             $newCollection->addConsignment($consignmentAdapter->getConsignment()->setMultiCollo($isMultiCollo));
 
@@ -744,10 +740,12 @@ class MyParcelCollection extends Collection
         return $newCollection;
     }
 
-    private function addMissingReferenceId()
+    /**
+     * @return void
+     */
+    private function addMissingReferenceId(): void
     {
-        $this->transform(function($consignment) {
-            /** @var MyParcelConsignment $consignment */
+        $this->transform(function(AbstractConsignment $consignment) {
             if (null == $consignment->getReferenceId()) {
                 $consignment->setReferenceId('random_' . uniqid());
             }

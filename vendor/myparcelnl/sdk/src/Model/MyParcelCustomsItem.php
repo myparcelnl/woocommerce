@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 /**
- * This object is embedded in the MyParcelConsignment object for global shipments and is
+ * This object is embedded in the AbstractConsignment object for global shipments and is
  *
  * If you want to add improvements, please create a fork in our GitHub:
  * https://github.com/myparcelnl
@@ -15,7 +15,6 @@
 namespace MyParcelNL\Sdk\src\Model;
 
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
-use MyParcelNL\Sdk\src\Support\Str;
 
 /**
  * This object is embedded in the MyParcelConsignment object for global shipments and is
@@ -25,8 +24,6 @@ use MyParcelNL\Sdk\src\Support\Str;
  */
 class MyParcelCustomsItem
 {
-    const DESCRIPTION_MAX_LENGTH = 47;
-
     private $description;
     private $amount;
     private $weight;
@@ -52,10 +49,7 @@ class MyParcelCustomsItem
      */
     public function setDescription($description)
     {
-        /**
-         * Description cut after 47 chars
-         */
-        $this->description = Str::limit($description, self::DESCRIPTION_MAX_LENGTH);
+        $this->description = $description;
 
         return $this;
     }
@@ -163,7 +157,7 @@ class MyParcelCustomsItem
      */
     public function setClassification($classification)
     {
-        $this->classification = substr($classification, 0, 4);
+        $this->classification = substr("$classification", 0, 4);
 
         return $this;
     }
