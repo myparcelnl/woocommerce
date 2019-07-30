@@ -95,21 +95,22 @@ class WooCommerce_MyParcelBE {
      * Load the main plugin classes and functions
      */
     public function includes() {
-        // include compatibility classes
-        include_once('vendor/autoload.php');
-        include_once('includes/compatibility/abstract-wc-data-compatibility.php');
-        include_once('includes/compatibility/class-wc-date-compatibility.php');
-        include_once('includes/compatibility/class-wc-core-compatibility.php');
-        include_once('includes/compatibility/class-wc-order-compatibility.php');
-        include_once('includes/compatibility/class-wc-product-compatibility.php');
+        require_once('vendor/autoload.php');
 
-        include_once('includes/class-wcmp-assets.php');
-        $this->admin = include_once('includes/class-wcmp-admin.php');
-        include_once('includes/class-wcmp-frontend-settings.php');
-        include_once('includes/class-wcmp-frontend.php');
-        include_once('includes/class-wcmp-settings.php');
-        $this->export = include_once('includes/class-wcmp-export.php');
-        include_once('includes/class-wcmp-bepostcode-fields.php');
+        // include compatibility classes
+        require_once('includes/compatibility/abstract-wc-data-compatibility.php');
+        require_once('includes/compatibility/class-wc-date-compatibility.php');
+        require_once('includes/compatibility/class-wc-core-compatibility.php');
+        require_once('includes/compatibility/class-wc-order-compatibility.php');
+        require_once('includes/compatibility/class-wc-product-compatibility.php');
+
+        require_once('includes/class-wcmp-assets.php');
+        $this->admin = require_once('includes/class-wcmp-admin.php');
+        require_once('includes/class-wcmp-frontend-settings.php');
+        require_once('includes/class-wcmp-frontend.php');
+        require_once('includes/class-wcmp-settings.php');
+        $this->export = require_once('includes/class-wcmp-export.php');
+        require_once('includes/class-wcmp-bepostcode-fields.php');
     }
 
     /**
