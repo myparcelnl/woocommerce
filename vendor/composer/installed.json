@@ -1,0 +1,58 @@
+[
+    {
+        "name": "myparcelnl/sdk",
+        "version": "v2.1.3",
+        "version_normalized": "2.1.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/myparcelnl/sdk.git",
+            "reference": "b44d97af689395cd5ebee04719152fc2ed89596f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/b44d97af689395cd5ebee04719152fc2ed89596f",
+            "reference": "b44d97af689395cd5ebee04719152fc2ed89596f",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=7.1.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^5.5"
+        },
+        "time": "2019-07-29T13:18:00+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/AutoLoader.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL-3.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "Reindert Vetter",
+                "role": "Developer",
+                "email": "support@myparcel.nl",
+                "homepage": "https://www.myparcel.nl"
+            },
+            {
+                "name": "Richard Perdaan",
+                "role": "Developer",
+                "email": "support@myparcel.nl",
+                "homepage": "https://www.myparcel.nl"
+            },
+            {
+                "name": "Edie Lemoine",
+                "role": "Developer",
+                "email": "support@myparcel.nl",
+                "homepage": "https://www.myparcel.nl"
+            }
+        ],
+        "description": "This package is designed to send and receive data from MyParcel by means of an API.",
+        "homepage": "https://www.myparcel.nl"
+    }
+]

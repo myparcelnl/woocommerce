@@ -96,6 +96,7 @@ class WooCommerce_MyParcelBE {
      */
     public function includes() {
         // include compatibility classes
+        include_once('vendor/autoload.php');
         include_once('includes/compatibility/abstract-wc-data-compatibility.php');
         include_once('includes/compatibility/class-wc-date-compatibility.php');
         include_once('includes/compatibility/class-wc-core-compatibility.php');
