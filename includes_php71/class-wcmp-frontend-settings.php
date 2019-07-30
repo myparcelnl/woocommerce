@@ -14,12 +14,13 @@ class WooCommerce_MyParcelBE_Frontend_Settings {
     const CARRIER_NAME = "Bpost";
     const BASE_URL = "https://api.myparcel.nl/";
 
+    /**
+     * @var \WPO\WC\MyParcelBE\Collections\SettingsCollection
+     */
     private static $settings;
-    private static $general_settings;
 
     function __construct() {
-        self::$settings = WooCommerce_MyParcelBE()->bpost_settings;
-        self::$general_settings = WooCommerce_MyParcelBE()->general_settings;
+        self::$settings = WooCommerce_MyParcelBE()->setting_collection;
     }
 
     /**

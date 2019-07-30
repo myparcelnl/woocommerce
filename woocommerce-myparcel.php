@@ -46,28 +46,11 @@ class WooCommerce_MyParcelBE {
      */
 
     public function __construct() {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
         $this->define('WC_MYPARCEL_BE_VERSION', $this->version);
         $this->define('WC_CHANNEL_ENGINE_ACTIVE', class_exists('Channel_Engine'));
         $this->plugin_basename = plugin_basename(__FILE__);
-
-
-        if (version_compare(PHP_VERSION, '7.1', '<')) {
-            $this->general_settings = get_option('woocommerce_myparcelbe_general_settings');
-            $this->export_defaults = get_option('woocommerce_myparcelbe_export_defaults_settings');
-            $this->checkout_settings = get_option('woocommerce_myparcelbe_bpost_settings');
-            $this->dpd_settings = get_option('woocommerce_myparcelbe_dpd_settings');
-            return;
-        } else {
-            // Load settings
-            $settings = new SettingsCollection();
-            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_general_settings'), 'general');
-            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_export_defaults_settings'), 'export');
-            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_bpost_settings'), 'carrier', BpostConsignment::CARRIER_ID);
-            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_dpd_settings'), 'carrier', DPDConsignment::CARRIER_ID);
-
-            $this->setting_collection = $settings;
-        }
-
 
         // load the localisation & classes
         add_action('plugins_loaded', array($this, 'translations'));
@@ -158,6 +141,8 @@ ini_set('display_errors', 1);
         require_once('includes_php71/class-wcmp-settings.php');
         $this->export = require_once('includes_php71/class-wcmp-export.php');
         require_once('includes_php71/class-wcmp-bepostcode-fields.php');
+        require_once('includes_php71/collections/settings-collection.php');
+        require_once('includes_php71/entities/setting.php');
     }
 
     /**
@@ -178,6 +163,23 @@ ini_set('display_errors', 1);
 
         // all systems ready - GO!
         $this->includes();
+
+        if (version_compare(PHP_VERSION, '7.1', '<')) {
+            $this->general_settings = get_option('woocommerce_myparcelbe_general_settings');
+            $this->export_defaults = get_option('woocommerce_myparcelbe_export_defaults_settings');
+            $this->checkout_settings = get_option('woocommerce_myparcelbe_bpost_settings');
+            $this->dpd_settings = get_option('woocommerce_myparcelbe_dpd_settings');
+            return;
+        } else {
+            // Load settings
+            $settings = new \WPO\WC\MyParcelBE\Collections\SettingsCollection();
+            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_general_settings'), 'general');
+            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_export_defaults_settings'), 'export');
+            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_bpost_settings'), 'carrier', BpostConsignment::CARRIER_ID);
+            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_dpd_settings'), 'carrier', DPDConsignment::CARRIER_ID);
+
+            $this->setting_collection = $settings;
+        }
     }
 
     /**

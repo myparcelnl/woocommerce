@@ -15,7 +15,7 @@ if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Entity\\Setting' ) ) :
         public $name;
 
         /**
-         * @var string
+         * @var mixed
          */
         public $value;
 
@@ -33,11 +33,11 @@ if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Entity\\Setting' ) ) :
          * Setting constructor.
          *
          * @param string $name
-         * @param string $value
+         * @param mixed  $value
          * @param string $type
          * @param string|null $carrier
          */
-        public function __construct(string $name, string $value, string $type, string $carrier = null)
+        public function __construct(string $name, $value, string $type, string $carrier = null)
         {
             $this->name = $name;
             $this->value = $value;

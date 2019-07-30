@@ -36,8 +36,8 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
             $value,
             checked($value, $current, false),
             $class,
-            $disabled,
-            $style
+            $disabled ?? null,
+            $style ?? null
         );
 
         // output description.
