@@ -1,13 +1,48 @@
 <?php
 
-namespace WPO\WC\MyParcelBE\Collections;
+namespace WPO\WC\MyParcelBE\Entity;
 
 defined( 'ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Entity\\Setting' ) ) :
+    /**
+     * Use public fields because this is required for Laravel collections
+     */
     class Setting {
-        public function __construct($name, $carrier = null)
+        /**
+         * @var string
+         */
+        public $name;
+
+        /**
+         * @var string
+         */
+        public $value;
+
+        /**
+         * @var string
+         */
+        public $type;
+
+        /**
+         * @var string|null
+         */
+        public $carrier;
+
+        /**
+         * Setting constructor.
+         *
+         * @param string $name
+         * @param string $value
+         * @param string $type
+         * @param string|null $carrier
+         */
+        public function __construct(string $name, string $value, string $type, string $carrier = null)
         {
+            $this->name = $name;
+            $this->value = $value;
+            $this->type = $type;
+            $this->carrier = $carrier;
         }
     }
 endif; // Class exists check

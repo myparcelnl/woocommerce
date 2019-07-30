@@ -11,6 +11,10 @@ License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 */
 
+use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use WPO\WC\MyParcelBE\Collections\SettingsCollection;
+
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
 if ( ! class_exists('WooCommerce_MyParcelBE')) :
@@ -20,6 +24,10 @@ class WooCommerce_MyParcelBE {
     public $version = '3.1.5';
     public $plugin_basename;
     protected static $_instance = null;
+    /**
+     * @var SettingsCollection
+     */
+    private $setting_collection;
 
     /**
      * Main Plugin Instance
@@ -43,10 +51,13 @@ class WooCommerce_MyParcelBE {
         $this->plugin_basename = plugin_basename(__FILE__);
 
         // Load settings
-        $this->general_settings = get_option('woocommerce_myparcelbe_general_settings');
-        $this->export_defaults = get_option('woocommerce_myparcelbe_export_defaults_settings');
-        $this->bpost_settings = get_option('woocommerce_myparcelbe_bpost_settings');
-        $this->dpd_settings = get_option('woocommerce_myparcelbe_dpd_settings');
+        $settings = new SettingsCollection();
+        $settings->setSettingsByType(get_option('woocommerce_myparcelbe_general_settings'), 'general');
+        $settings->setSettingsByType(get_option('woocommerce_myparcelbe_export_defaults_settings'), 'export');
+        $settings->setSettingsByType(get_option('woocommerce_myparcelbe_bpost_settings'), 'carrier', BpostConsignment::CARRIER_ID);
+        $settings->setSettingsByType(get_option('woocommerce_myparcelbe_dpd_settings'), 'carrier', DPDConsignment::CARRIER_ID);
+
+        $this->setting_collection = $settings;
 
 
         // load the localisation & classes
