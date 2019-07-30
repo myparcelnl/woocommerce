@@ -13,7 +13,6 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
-use WPO\WC\MyParcelBE\Collections\SettingsCollection;
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
@@ -24,10 +23,11 @@ class WooCommerce_MyParcelBE {
     public $version = '3.1.5';
     public $plugin_basename;
     protected static $_instance = null;
+
     /**
-     * @var SettingsCollection
+     * @var WPO\WC\MyParcelBE\Collections\SettingsCollection
      */
-    private $setting_collection;
+    public $setting_collection;
 
     /**
      * Main Plugin Instance
@@ -50,14 +50,23 @@ class WooCommerce_MyParcelBE {
         $this->define('WC_CHANNEL_ENGINE_ACTIVE', class_exists('Channel_Engine'));
         $this->plugin_basename = plugin_basename(__FILE__);
 
-        // Load settings
-        $settings = new SettingsCollection();
-        $settings->setSettingsByType(get_option('woocommerce_myparcelbe_general_settings'), 'general');
-        $settings->setSettingsByType(get_option('woocommerce_myparcelbe_export_defaults_settings'), 'export');
-        $settings->setSettingsByType(get_option('woocommerce_myparcelbe_bpost_settings'), 'carrier', BpostConsignment::CARRIER_ID);
-        $settings->setSettingsByType(get_option('woocommerce_myparcelbe_dpd_settings'), 'carrier', DPDConsignment::CARRIER_ID);
 
-        $this->setting_collection = $settings;
+        if (version_compare(PHP_VERSION, '7.1', '<')) {
+            $this->general_settings = get_option('woocommerce_myparcelbe_general_settings');
+            $this->export_defaults = get_option('woocommerce_myparcelbe_export_defaults_settings');
+            $this->checkout_settings = get_option('woocommerce_myparcelbe_bpost_settings');
+            $this->dpd_settings = get_option('woocommerce_myparcelbe_dpd_settings');
+            return;
+        } else {
+            // Load settings
+            $settings = new SettingsCollection();
+            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_general_settings'), 'general');
+            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_export_defaults_settings'), 'export');
+            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_bpost_settings'), 'carrier', BpostConsignment::CARRIER_ID);
+            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_dpd_settings'), 'carrier', DPDConsignment::CARRIER_ID);
+
+            $this->setting_collection = $settings;
+        }
 
 
         // load the localisation & classes
@@ -106,8 +115,12 @@ class WooCommerce_MyParcelBE {
      * Load the main plugin classes and functions
      */
     public function includes() {
+        /**
+         * todo remove
+         */
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
         // use php version 5.6
         if (version_compare(PHP_VERSION, '7.1', '<')) {
             // include compatibility classes
@@ -308,20 +321,36 @@ ini_set('display_errors', 1);
         }
 
         if (version_compare($installed_version, '3.0.4', '<=')) {
-            $old_settings_bpost = get_option('woocommerce_myparcelbe_bpost_settings');
-            $new_settings_bpost = $old_settings_bpost;
+            $old_settings = get_option('woocommerce_myparcelbe_checkout_settings');
+            $new_settings = $old_settings;
+
+            // Add/replace new settings
+            $new_settings['use_split_address_fields'] = '1';
 
             // Rename signed to signature for consistency
-            $new_settings_bpost['signature_enabled'] = $old_settings_bpost['signed_enabled'];
-            $new_settings_bpost['signature_title'] = $old_settings_bpost['signed_title'];
-            $new_settings_bpost['signature_fee'] = $old_settings_bpost['signed_fee'];
+            $new_settings['signature_enabled'] = $old_settings['signed_enabled'];
+            $new_settings['signature_title'] = $old_settings['signed_title'];
+            $new_settings['signature_fee'] = $old_settings['signed_fee'];
 
             // Remove old settings
-            unset($new_settings_bpost['signed_enabled']);
-            unset($new_settings_bpost['signed_title']);
-            unset($new_settings_bpost['signed_fee']);
+            unset($new_settings['signed_enabled']);
+            unset($new_settings['signed_title']);
+            unset($new_settings['signed_fee']);
 
-            update_option('woocommerce_myparcelbe_bpost_settings', $new_settings_bpost);
+            update_option('woocommerce_myparcelbe_checkout_settings', $new_settings);
+        }
+
+        if (version_compare($installed_version, '4.0.0', '<=')) {
+            $checkout_settings = get_option('woocommerce_myparcelbe_checkout_settings');
+            // Split current checkout settings to general and bpost
+            $general_settings = [
+                'use_split_address_fields' => '1',
+            ];
+            $bpost_settings = [
+                /*'use_split_address_fields' => $checkout_settings,*/
+            ];
+            update_option('woocommerce_myparcelbe_general_settings', $general_settings);
+            update_option('woocommerce_myparcelbe_bpost_settings', $bpost_settings);
         }
     }
 
