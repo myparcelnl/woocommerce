@@ -95,22 +95,45 @@ class WooCommerce_MyParcelBE {
      * Load the main plugin classes and functions
      */
     public function includes() {
-        require_once('vendor/autoload.php');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+        // use php version 5.6
+        if (version_compare(PHP_VERSION, '7.1', '<')) {
+            // include compatibility classes
+            require_once('includes_php56/compatibility/abstract-wc-data-compatibility.php');
+            require_once('includes_php56/compatibility/class-wc-date-compatibility.php');
+            require_once('includes_php56/compatibility/class-wc-core-compatibility.php');
+            require_once('includes_php56/compatibility/class-wc-order-compatibility.php');
+            require_once('includes_php56/compatibility/class-wc-product-compatibility.php');
+
+            require_once('includes_php56/class-wcmp-assets.php');
+            $this->admin = require_once('includes_php56/class-wcmp-admin.php');
+            require_once('includes_php56/class-wcmp-frontend-settings.php');
+            require_once('includes_php56/class-wcmp-frontend.php');
+            require_once('includes_php56/class-wcmp-settings.php');
+            $this->export = require_once('includes_php56/class-wcmp-export.php');
+            require_once('includes_php56/class-wcmp-bepostcode-fields.php');
+
+            return;
+        }
+
+        // Use minimum php version 7.1
+        require_once('includes_php71/vendor/autoload.php');
 
         // include compatibility classes
-        require_once('includes/compatibility/abstract-wc-data-compatibility.php');
-        require_once('includes/compatibility/class-wc-date-compatibility.php');
-        require_once('includes/compatibility/class-wc-core-compatibility.php');
-        require_once('includes/compatibility/class-wc-order-compatibility.php');
-        require_once('includes/compatibility/class-wc-product-compatibility.php');
+        require_once('includes_php71/compatibility/abstract-wc-data-compatibility.php');
+        require_once('includes_php71/compatibility/class-wc-date-compatibility.php');
+        require_once('includes_php71/compatibility/class-wc-core-compatibility.php');
+        require_once('includes_php71/compatibility/class-wc-order-compatibility.php');
+        require_once('includes_php71/compatibility/class-wc-product-compatibility.php');
 
-        require_once('includes/class-wcmp-assets.php');
-        $this->admin = require_once('includes/class-wcmp-admin.php');
-        require_once('includes/class-wcmp-frontend-settings.php');
-        require_once('includes/class-wcmp-frontend.php');
-        require_once('includes/class-wcmp-settings.php');
-        $this->export = require_once('includes/class-wcmp-export.php');
-        require_once('includes/class-wcmp-bepostcode-fields.php');
+        require_once('includes_php71/class-wcmp-assets.php');
+        $this->admin = require_once('includes_php71/class-wcmp-admin.php');
+        require_once('includes_php71/class-wcmp-frontend-settings.php');
+        require_once('includes_php71/class-wcmp-frontend.php');
+        require_once('includes_php71/class-wcmp-settings.php');
+        $this->export = require_once('includes_php71/class-wcmp-export.php');
+        require_once('includes_php71/class-wcmp-bepostcode-fields.php');
     }
 
     /**
