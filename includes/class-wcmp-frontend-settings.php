@@ -131,7 +131,7 @@ class WooCommerce_MyParcel_Frontend_Settings {
         $price = (float) $price;
         $base_tax_rates = WC_Tax::get_base_tax_rates('');
         $base_tax_key = key($base_tax_rates);
-        $taxRate = (float) $base_tax_rates[$base_tax_key]['rate'];
+        $taxRate = isset($base_tax_key) ? (float) $base_tax_rates[$base_tax_key]['rate'] : 0;
         $tax = $price * $taxRate / 100;
         $total_price = (float) number_format($price + $tax, 2);
 

@@ -1,13 +1,14 @@
 jQuery(function($) {
     window.myparcel_is_using_split_address_fields = wcmp_display_settings.isUsingSplitAddressFields;
 
-    // The timeout is necessary, otherwise the order summary is going to flash
+    /* The timeout is necessary, otherwise the order summary is going to flash */
     setTimeout(function() {
         $(':input.country_to_state').change();
     }, 100);
 
     var MyParcel_Frontend = {
         checkout_updating: false,
+        shipping_method_changed: false,
         force_update:      false,
 
         selected_shipping_method: false,
@@ -25,9 +26,9 @@ jQuery(function($) {
                 MyParcel_Frontend.updated_country = MyParcel_Frontend.get_shipping_country();
             });
 
-            // hide checkout options for non parcel shipments
-            $(document).on('updated_checkout', function() {
-                MyParcel_Frontend.checkout_updating = false; //done updating
+            /* hide checkout options for non parcel shipments */
+            function showOrHideCheckoutOptions() {
+                MyParcel_Frontend.checkout_updating = false; /* done updating */
 
                 if (!MyParcel_Frontend.check_country()) return;
 
@@ -37,26 +38,26 @@ jQuery(function($) {
                 } else if (MyParcel_Frontend.shipping_methods.length > 0) {
                     var shipping_method = MyParcel_Frontend.get_shipping_method();
 
-                    // no shipping method selected, hide by default
+                    /* no shipping method selected, hide by default */
                     if (typeof shipping_method === 'undefined') {
                         MyParcel_Frontend.hide_delivery_options();
                         return;
                     }
 
                     if (shipping_method.indexOf('table_rate:') !== -1 || shipping_method.indexOf('betrs_shipping:') !== -1) {
-                        // WC Table Rates
-                        // use shipping_method = method_id:instance_id:rate_id
+                        /* WC Table Rates
+                         * use shipping_method = method_id:instance_id:rate_id */
                         if (shipping_method.indexOf('betrs_shipping:') !== -1) {
                             shipping_method = shipping_method.replace(":", "_");
                         }
                     } else {
-                        // none table rates
-                        // strip instance_id if present
+                        /* none table rates
+                         * strip instance_id if present */
                         if (shipping_method.indexOf(':') !== -1) {
                             shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
                         }
                         var shipping_class = $('#myparcel_highest_shipping_class').val();
-                        // add class refinement if we have a shipping class
+                        /* add class refinement if we have a shipping class */
                         if (shipping_class) {
                             shipping_method_class = shipping_method + ':' + shipping_class;
                         }
@@ -67,26 +68,46 @@ jQuery(function($) {
                         MyParcel.showAllDeliveryOptions();
                         MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_class;
                     } else if ($.inArray(shipping_method, MyParcel_Frontend.shipping_methods) > -1) {
-                        // fallback to bare method if selected in settings
+                        /* fallback to bare method if selected in settings */
                         MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method;
                         MyParcel.showAllDeliveryOptions();
                         MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method;
                     } else {
                         var shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
                         MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method_now;
-                        MyParcel.hideAllDeliveryOptions();
+                        MyParcel_Frontend.hide_delivery_options();
+                        jQuery('#mypa-input').val(JSON.stringify(''));
                         MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_now;
+
+                        /* Hide extra fees when selecting local pickup */
+                        if (MyParcel_Frontend.shipping_method_changed == false) {
+                            MyParcel_Frontend.shipping_method_changed = true;
+
+                            /* Update checkout when selecting other method */
+                            jQuery('body').trigger('update_checkout');
+
+                            /* Onyl update when the method change after 2seconds */
+                            setTimeout(function () {
+                                MyParcel_Frontend.shipping_method_changed = false;
+                            }, 2000);
+                        }
                     }
                 } else {
 
-                    // not sure if we should already hide by default?
+                    /* not sure if we should already hide by default? */
                     MyParcel_Frontend.hide_delivery_options();
+                    jQuery('#mypa-input').val(JSON.stringify(''));
                 }
+            }
+
+            /* hide checkout options for non parcel shipments */
+            $(document).on('updated_checkout', function () {
+                showOrHideCheckoutOptions();
             });
-            // any delivery option selected/changed - update checkout for fees
-            $('#mypa-chosen-delivery-options').on('change', 'input', function() {
+            /* any delivery option selected/changed - update checkout for fees */
+            $('#mypa-chosen-delivery-options').on('change', 'input', function () {
                 MyParcel_Frontend.checkout_updating = true;
-                // disable signature & recipient only when switching to pickup location
+                /* disable signature & recipient only when switching to pickup location */
                 var mypa_postnl_data = JSON.parse($('#mypa-chosen-delivery-options #mypa-input').val());
                 if (typeof mypa_postnl_data.location !== 'undefined') {
                     $('#mypa-signature, #mypa-recipient-only').prop("checked", false);
@@ -116,7 +137,7 @@ jQuery(function($) {
 
         get_shipping_method: function() {
             var shipping_method;
-            // check if shipping is user choice or fixed
+            /* check if shipping is user choice or fixed */
             if ($('#order_review .shipping_method').length > 1) {
                 shipping_method = $('#order_review .shipping_method:checked').val();
             } else {
@@ -144,7 +165,7 @@ jQuery(function($) {
 
         is_updated: function() {
             if (MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country || MyParcel_Frontend.force_update === true) {
-                MyParcel_Frontend.force_update = false; // only force once
+                MyParcel_Frontend.force_update = false; /* only force once */
                 return true;
             }
             return false;

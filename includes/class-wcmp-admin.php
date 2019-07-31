@@ -28,6 +28,13 @@ class WooCommerce_MyParcel_Admin {
         // HS code in product shipping options tab
         add_action('woocommerce_product_options_shipping', array($this, 'product_hs_code_field'));
         add_action('woocommerce_process_product_meta', array($this, 'product_hs_code_field_save'));
+
+        // Add barcode in order grid
+        add_filter('manage_edit-shop_order_columns', array($this, 'barcode_add_new_order_admin_list_column'), 10, 1);
+        add_action('manage_shop_order_posts_custom_column', array($this, 'barcode_add_new_order_admin_list_column_content'), 10, 2);
+
+        // Enables to search for shipment details in the order grid
+        add_filter('woocommerce_shop_order_search_fields', array($this, 'woocommerce_search_order_grid'));
     }
 
     public function order_list_shipment_options($order, $hide = true) {
@@ -436,15 +443,19 @@ class WooCommerce_MyParcel_Admin {
 
     public function show_order_delivery_options($order) {
         $delivery_options = WCX_Order::get_meta($order, '_myparcel_delivery_options');
+        $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
 
         if ( ! empty($delivery_options) && is_array($delivery_options)) {
             extract($delivery_options);
         }
 
         echo '<div class="delivery-options">';
-        if ( ! empty($date)
-             && ! (isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window'])
-             && WooCommerce_MyParcel()->checkout_settings['deliverydays_window'] == 0)) {
+
+        if (! empty($date) &&
+            !(isset(WooCommerce_MyParcel()->checkout_settings['deliverydays_window']) &&
+            WooCommerce_MyParcel()->checkout_settings['deliverydays_window'] == 0) &&
+            $shipping_country === 'NL'
+        ) {
             $formatted_date = date_i18n(
                 apply_filters('wcmyparcel_delivery_date_format', wc_date_format()),
                 strtotime($date)
@@ -467,7 +478,6 @@ class WooCommerce_MyParcel_Admin {
                 }
                 $time_title = ! empty($time_title) ? "({$time_title})" : '';
             }
-
             printf(
                 '<div class="delivery-date"><strong>%s: </strong>%s %s</div>',
                 __('Delivery date', 'woocommerce-myparcel'),
@@ -600,6 +610,68 @@ class WooCommerce_MyParcel_Admin {
             }
         }
     }
+
+    /**
+     * @snippet       Add Column to Orders Table (e.g. Barcode) - WooCommerce
+     *
+     * @param $columns
+     *
+     * @return mixed
+     */
+    public function barcode_add_new_order_admin_list_column($columns)
+    {
+        // I want to display Barcode column just after the date column
+        return array_slice($columns, 0, 6, true)
+               + array('barcode' => 'Barcode')
+               + array_slice($columns, 6, null, true);
+    }
+    
+    /**
+     * @param $column
+     */
+    public function barcode_add_new_order_admin_list_column_content($column)
+    {
+        global $post;
+
+        if ('barcode' === $column) {
+            $order = WCX::get_order($post->ID);
+            echo $this->get_barcode($order);
+        }
+    }
+
+    /**
+     * @param $order
+     * @param null $barcode
+     *
+     * @return string|null
+     */
+    public function get_barcode($order, $barcode = null)
+    {
+        $shipments = $this->get_order_shipments($order, true);
+
+        if (empty($shipments)) {
+            return __('No label has created yet', 'woocommerce-myparcel');
+        }
+
+        foreach ($shipments as $shipment_id => $shipment) {
+            $barcode .= "<a target='_blank' href=" . $this->get_tracktrace_url($order, $shipment['tracktrace']) . ">" . $shipment['tracktrace'] . "</a> <br>";
+        }
+
+        return $barcode;
+    }
+
+    /**
+     * @param $search_fields
+     *
+     * @return array
+     */
+    public function woocommerce_search_order_grid($search_fields)
+    {
+        $search_fields[] = '_myparcel_shipments';
+
+        return $search_fields;
+    }
+
 }
 
 endif; // class_exists
