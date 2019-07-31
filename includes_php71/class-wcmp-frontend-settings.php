@@ -5,6 +5,7 @@ if ( ! defined('ABSPATH')) exit;  // Exit if accessed directly
 if ( ! class_exists('WooCommerce_MyParcelBE_Frontend_Settings')) :
 
 /**
+ * @deprecated
  * Frontend settings
  */
 class WooCommerce_MyParcelBE_Frontend_Settings {
@@ -20,6 +21,7 @@ class WooCommerce_MyParcelBE_Frontend_Settings {
     private static $settings;
 
     function __construct() {
+        exit ('dit gaat weg als dat kan');
         self::$settings = WooCommerce_MyParcelBE()->setting_collection;
     }
 

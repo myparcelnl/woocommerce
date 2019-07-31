@@ -581,14 +581,14 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
             );
 
             add_settings_field(
-                'myparcelbe_bpost',
+                'myparcelbe_carrier_enable_bpost',
                 __('Enable bpost delivery options', 'woocommerce-myparcelbe'),
                 array($this->callbacks, 'checkbox'),
                 $option_group,
                 'bpost_settings',
                 array(
                     'option_name' => $option_name,
-                    'id'          => 'myparcelbe_bpost',
+                    'id'          => 'myparcelbe_carrier_enable_bpost',
                 )
             );
 
@@ -779,14 +779,14 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
             );
 
             add_settings_field(
-                'myparcelbe_dpd',
+                'myparcelbe_carrier_enable_dpd',
                 __('Enable dpd delivery options', 'woocommerce-myparcelbe'),
                 array($this->callbacks, 'checkbox'),
                 $option_group,
                 'dpd_settings',
                 array(
                     'option_name' => $option_name,
-                    'id'          => 'myparcelbe_dpd',
+                    'id'          => 'myparcelbe_carrier_enable_dpd',
                 )
             );
 
