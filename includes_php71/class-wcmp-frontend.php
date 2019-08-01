@@ -459,7 +459,6 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                 ->toArray();
 //            $bpostSettings = $this->settings->where('carrier', BpostConsignment::CARRIER_ID);
 
-
             $myParcelConfig = [
                 "address"         => [
                     "cc"         => '',
@@ -481,8 +480,8 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                         "deliveryDaysWindow"    => $this->settings->getByName('bpost_deliverydays_window'),
                         "dropOffDays"           => $this->settings->getByName('bpost_dropoff_days'),
                         "dropOffDelay"          => $this->settings->getByName('bpost_dropoff_delay'),
-                        "pricePickup"           => null,
-                        "priceSignature"        => null,
+                        "pricePickup"           => $this->settings->getByName('bpost_pickup_fee'),
+                        "priceSignature"        => $this->settings->getByName('bpost_signature_fee'),
                         "priceStandardDelivery" => null,
                         "signatureTitle"        => $this->settings->getByName('bpost_signature_title'),
                     ],
@@ -492,7 +491,7 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                         "deliveryDaysWindow"    => $this->settings->getByName('dpd_deliverydays_window'),
                         "dropOffDays"           => $this->settings->getByName('dpd_dropoff_days'),
                         "dropOffDelay"          => $this->settings->getByName('dpd_dropoff_delay'),
-                        "pricePickup"           => null,
+                        "pricePickup"           => $this->settings->getByName('dpd_pickup_fee'),
                         "priceStandardDelivery" => null,
                     ],
                 ],

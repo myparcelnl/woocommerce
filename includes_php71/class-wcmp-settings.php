@@ -67,7 +67,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                 array(
                     'general'         => __('General', 'woocommerce-myparcelbe'),
                     'export_defaults' => __('Default export settings', 'woocommerce-myparcelbe'),
-                    'bpost'        => __('bpost', 'woocommerce-myparcelbe'),
+                    'bpost'           => __('bpost', 'woocommerce-myparcelbe'),
                     'dpd'             => __('DPD', 'woocommerce-myparcelbe'),
                 )
             );
