@@ -1,5 +1,7 @@
 <?php
 
+use WPO\WC\MyParcelBE\Collections\SettingsCollection;
+
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
 if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
@@ -7,55 +9,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
     class WooCommerce_MyParcelBE_Assets {
 
         function __construct() {
-            add_action('wp_enqueue_scripts', array($this, 'frontend_scripts_styles'));
             add_action('admin_enqueue_scripts', array($this, 'backend_scripts_styles'));
-        }
-
-        /**
-         * Load styles & scripts
-         */
-        public function frontend_scripts_styles() {
-            // return if not checkout or order received page
-            if ( ! is_checkout() && ! is_order_received_page()) return;
-
-            // if using split fields
-            if (isset(WooCommerce_MyParcelBE()->general_settings['use_split_address_fields'])) {
-                wp_enqueue_script(
-                    'wcmp-checkout-fields',
-                    WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
-                    array('jquery', 'wc-checkout'),
-                    WC_MYPARCEL_BE_VERSION
-                );
-            }
-
-            // return if myparcel checkout is not active
-            if ( ! isset(WooCommerce_MyParcelBE()->bpost_settings['myparcelbe_bpost'])) return;
-
-            if ( ! isset(WooCommerce_MyParcelBE()->dpd_settings['myparcelbe_dpd'])) return;
-
-            wp_enqueue_script(
-                'wc-myparcelbe',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/myparcel.js',
-                [],
-                WC_MYPARCEL_BE_VERSION
-            );
-
-            wp_enqueue_script(
-                'wc-myparcelbe-frontend',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-frontend.js',
-                ['wc-myparcelbe'],
-                WC_MYPARCEL_BE_VERSION
-            );
-
-            wp_localize_script(
-                'wc-myparcelbe-frontend',
-                'wcmp_display_settings',
-                array(
-                    'isUsingSplitAddressFields' => isset(
-                        WooCommerce_MyParcelBE()->general_settings['use_split_address_fields']
-                    )
-                )
-            );
         }
 
         /**

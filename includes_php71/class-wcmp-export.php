@@ -6,7 +6,6 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
 
 if ( ! defined('ABSPATH')) {
     exit;
