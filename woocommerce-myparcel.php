@@ -13,6 +13,7 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use WPO\WC\MyParcelBE\Collections\SettingsCollection;
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
@@ -21,13 +22,60 @@ if ( ! class_exists('WooCommerce_MyParcelBE')) :
 class WooCommerce_MyParcelBE {
 
     public $version = '3.1.5';
+
     public $plugin_basename;
+
     protected static $_instance = null;
+
+    /**
+     * @var string
+     */
+    private $minimumPhpVersion = '5.4';
+
+    /**
+     * @var string
+     */
+    private $legacySettingsPhpVersion = '7.1';
+
+    /**
+     * @var string
+     */
+    private $recommendedPhpVersion = '7.1';
 
     /**
      * @var WPO\WC\MyParcelBE\Collections\SettingsCollection
      */
     public $setting_collection;
+
+	/**
+	 * @var WooCommerce_MyParcelBE_Export
+	 */
+	public $export;
+
+	/**
+	 * @var WooCommerce_MyParcelBE_Admin
+	 */
+	public $admin;
+
+	/**
+	 * @var array
+	 */
+	public $general_settings;
+
+	/**
+	 * @var array
+	 */
+	public $export_defaults;
+
+	/**
+	 * @var array
+	 */
+	public $dpd_settings;
+
+	/**
+	 * @var array
+	 */
+	public  $bpost_settings;
 
     /**
      * Main Plugin Instance
@@ -97,15 +145,10 @@ class WooCommerce_MyParcelBE {
     /**
      * Load the main plugin classes and functions
      */
-    public function includes() {
-        /**
-         * todo remove
-         */
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-        // use php version 5.6
-        if (version_compare(PHP_VERSION, '7.1', '<')) {
+    public function includes()
+    {
+        // Between php 5.6 and 7.1
+        if (!$this->phpVersionMeets($this->legacySettingsPhpVersion)) {
             // include compatibility classes
             require_once('includes_php56/compatibility/abstract-wc-data-compatibility.php');
             require_once('includes_php56/compatibility/class-wc-date-compatibility.php');
@@ -140,6 +183,7 @@ ini_set('display_errors', 1);
         require_once('includes_php71/class-wcmp-assets.php');
         $this->admin = require_once('includes_php71/class-wcmp-admin.php');
         require_once('includes_php71/class-wcmp-frontend-settings.php');
+        require_once('includes_php71/class-wcmp-checkout.php');
         require_once('includes_php71/class-wcmp-frontend.php');
         require_once('includes_php71/class-wcmp-settings.php');
         $this->export = require_once('includes_php71/class-wcmp-export.php');
@@ -156,7 +200,7 @@ ini_set('display_errors', 1);
             return;
         }
 
-        if (version_compare(PHP_VERSION, '5.4', '<')) {
+        if (!$this->phpVersionMeets($this->minimumPhpVersion)) {
             add_action('admin_notices', array($this, 'required_php_version'));
 
             return;
@@ -358,13 +402,18 @@ ini_set('display_errors', 1);
         return untrailingslashit(plugin_dir_path(__FILE__));
     }
 
+    /**
+     * Initialize the settings.
+     *
+     * Legacy: Before PHP 7.1, use old settings structure.
+     */
     public function initSettings(): void
     {
-        if (version_compare(PHP_VERSION, '7.1', '<')) {
-            $this->general_settings  = get_option('woocommerce_myparcelbe_general_settings');
-            $this->export_defaults   = get_option('woocommerce_myparcelbe_export_defaults_settings');
-            $this->checkout_settings = get_option('woocommerce_myparcelbe_bpost_settings');
-            $this->dpd_settings      = get_option('woocommerce_myparcelbe_dpd_settings');
+        if (!$this->phpVersionMeets($this->legacySettingsPhpVersion)) {
+            $this->general_settings = get_option('woocommerce_myparcelbe_general_settings');
+            $this->export_defaults  = get_option('woocommerce_myparcelbe_export_defaults_settings');
+            $this->bpost_settings   = get_option('woocommerce_myparcelbe_bpost_settings');
+            $this->dpd_settings     = get_option('woocommerce_myparcelbe_dpd_settings');
 
             return;
         } else {
@@ -373,14 +422,32 @@ ini_set('display_errors', 1);
             }
 
             // Load settings
-            $settings = new \WPO\WC\MyParcelBE\Collections\SettingsCollection();
+            $settings = new SettingsCollection();
             $settings->setSettingsByType(get_option('woocommerce_myparcelbe_general_settings'), 'general');
             $settings->setSettingsByType(get_option('woocommerce_myparcelbe_export_defaults_settings'), 'export');
-            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_bpost_settings'), 'carrier', BpostConsignment::CARRIER_ID);
-            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_dpd_settings'), 'carrier', DPDConsignment::CARRIER_ID);
+            $settings->setSettingsByType(
+                get_option('woocommerce_myparcelbe_bpost_settings'),
+                'carrier',
+                BpostConsignment::CARRIER_NAME
+            );
+            $settings->setSettingsByType(
+                get_option('woocommerce_myparcelbe_dpd_settings'),
+                'carrier',
+                DPDConsignment::CARRIER_NAME
+            );
 
             $this->setting_collection = $settings;
         }
+    }
+
+    /**
+     * @param string $version
+     *
+     * @return bool
+     */
+    private function phpVersionMeets(string $version): bool
+    {
+        return version_compare(PHP_VERSION, $version, '>=');
     }
 } // class WooCommerce_MyParcelBE
 
