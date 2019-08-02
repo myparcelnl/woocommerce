@@ -409,15 +409,20 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
             );
 
             add_settings_field(
-                'custom_css', __('Custom styles', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'textarea'
-            ), $option_group, 'customizations', array(
+                'custom_css',
+                __('Custom styles', 'woocommerce-myparcelbe'),
+                [
+                    $this->callbacks,
+                    'textarea',
+                ],
+                $option_group,
+                'customizations',
+                [
                     'option_name' => $option_name,
                     'id'          => 'custom_css',
                     'width'       => '80',
                     'height'      => '8',
-                )
+                ]
             );
 
             // Diagnostics section.
@@ -915,13 +920,11 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                         'label_format'     => 'A4',
                     );
                     break;
-                case 'woocommerce_myparcelbe_bpost_settings':
+	            case 'woocommerce_myparcelbe_dpd_settings':
+	            case 'woocommerce_myparcelbe_bpost_settings':
                     $default = self::get_checkout_settings();
                     break;
-                case 'woocommerce_myparcelbe_dpd_settings':
-                    $default = self::get_checkout_settings();
-                    break;
-                    case 'woocommerce_myparcelbe_export_defaults_settings':
+	            case 'woocommerce_myparcelbe_export_defaults_settings':
                 default:
                     $default = array();
                     break;

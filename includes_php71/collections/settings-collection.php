@@ -15,18 +15,25 @@ if (! class_exists('\\WPO\\WC\\MyParcelBE\\Collections\\SettingsCollection')) :
     class SettingsCollection extends Collection
     {
         /**
-         * @param array $rawSettings
+         * @param array  $rawSettings
          * @param string $type
-         * @param int|null $carrierId
+         * @param string $carrierName
          */
-        public function setSettingsByType(array $rawSettings, string $type, int $carrierId = null)
+        public function setSettingsByType(array $rawSettings, string $type, string $carrierName = null)
         {
             foreach ($rawSettings as $name => $value) {
-                $setting = new Setting($name, $value, $type, $carrierId);
+                $setting = new Setting($name, $value, $type, $carrierName);
                 $this->push($setting);
             }
         }
 
+        /**
+         * Check if a setting is enabled
+         *
+         * @param string $name
+         *
+         * @return bool
+         */
         public function isEnabled(string $name): bool
         {
             /** @var Setting|null $setting */
@@ -39,6 +46,8 @@ if (! class_exists('\\WPO\\WC\\MyParcelBE\\Collections\\SettingsCollection')) :
         }
 
         /**
+         * Search for a setting by name and value.
+         *
          * @param string $name
          * @param string $value
          *
@@ -51,12 +60,30 @@ if (! class_exists('\\WPO\\WC\\MyParcelBE\\Collections\\SettingsCollection')) :
             });
         }
 
+        /**
+         * @param string $name
+         *
+         * @return mixed|null
+         */
         public function getByName(string $name)
         {
             /** @var Setting $setting */
             $setting = $this->where('name', $name)->first();
 
             return $setting->value ?? null;
+        }
+
+        /**
+         * @param string $name
+         *
+         * @return bool
+         */
+        public function exists(string $name): bool
+        {
+            /** @var Setting $setting */
+            $setting = $this->where('name', $name)->first();
+
+            return (bool) $setting->value;
         }
     }
 endif; // Class exists check

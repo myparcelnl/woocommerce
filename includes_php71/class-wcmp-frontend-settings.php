@@ -1,6 +1,8 @@
 <?php
 
-if ( ! defined('ABSPATH')) exit;  // Exit if accessed directly
+use WPO\WC\MyParcelBE\Collections\SettingsCollection;
+
+if ( ! defined( 'ABSPATH')) exit;  // Exit if accessed directly
 
 if ( ! class_exists('WooCommerce_MyParcelBE_Frontend_Settings')) :
 
@@ -10,25 +12,25 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Frontend_Settings')) :
  */
 class WooCommerce_MyParcelBE_Frontend_Settings {
 
-    const DAYS_SATURDAY = 6;
-    const CARRIER_CODE = 2;
-    const CARRIER_NAME = "Bpost";
     const BASE_URL = "https://api.myparcel.nl/";
 
     /**
-     * @var \WPO\WC\MyParcelBE\Collections\SettingsCollection
+     * @var SettingsCollection
      */
     private static $settings;
+	private static $general_settings;
 
-    function __construct() {
-        exit ('dit gaat weg als dat kan');
+	function __construct() {
         self::$settings = WooCommerce_MyParcelBE()->setting_collection;
     }
 
-    /**
-     * Check if given option is enabled
-     * @return bool
-     */
+	/**
+	 * Check if given option is enabled
+	 *
+	 * @param $option
+	 *
+	 * @return bool
+	 */
     public static function is_enabled($option) {
         $option = $option . "_enabled";
 
@@ -48,7 +50,6 @@ class WooCommerce_MyParcelBE_Frontend_Settings {
      * @return string
      */
     public static function get_title($option, $general = null) {
-
         $option = $option . "_title";
 
         if ($general) {
@@ -85,9 +86,6 @@ class WooCommerce_MyParcelBE_Frontend_Settings {
      * @return mixed
      */
     public function get_cutoff_time() {
-//        if (date_i18n('w') == self::DAYS_SATURDAY && isset($this->settings['saturday_cutoff_time'])) {
-//            return self::$settings['saturday_cutoff_time'];
-//        }
         return self::$settings['cutoff_time'];
     }
 

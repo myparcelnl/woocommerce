@@ -30,16 +30,11 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
         public $myParcelCollection;
 
         private $prefix_message;
-        private $use_split_address_fields;
 
         public function __construct()
         {
             $this->success = array();
             $this->errors  = array();
-
-            $this->use_split_address_fields = array_key_exists('use_split_address_fields', get_option('woocommerce_myparcelbe_general_settings'))
-                ? isset(get_option('woocommerce_myparcelbe_general_settings')['use_split_address_fields'])
-                : false;
 
             include('class-wcmp-rest.php');
             include('class-wcmp-api.php');
@@ -498,7 +493,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                     'reference_identifier' => $this->replace_shortcodes(WooCommerce_MyParcelBE()->export_defaults['label_description'], $order),
                     'recipient'            => $this->get_recipient($order),
                     'options'              => $this->get_options($order),
-                    'carrier'              => 2, // default to bpost for now
+                    'carrier'              => BpostConsignment::CARRIER_NAME, // default to bpost for now
                 );
 
                 if ($pickup = $this->is_pickup($order)) {
@@ -1860,7 +1855,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             $response = $api->get_shipments($shipment_id);
 
             if ( ! isset($response['body']['data']['shipments'][0]['barcode'])) {
-                throw new \ErrorException('No MyParcel barcode found for shipment id; ' . $shipment_id);
+                throw new ErrorException('No MyParcel barcode found for shipment id; ' . $shipment_id);
             }
 
             return $response['body']['data']['shipments'][0]['barcode'];
