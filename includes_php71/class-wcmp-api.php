@@ -12,9 +12,9 @@ class wc_myparcelbe_API extends wc_myparcelbe_REST_Client {
     /**
      * Default constructor
      *
-     * @param  string $key API Key provided by MyParcel
+     * @param string $key API Key provided by MyParcel
      *
-     * @return void
+     * @throws Exception
      */
     function __construct($key) {
         parent::__construct();
@@ -27,8 +27,10 @@ class wc_myparcelbe_API extends wc_myparcelbe_REST_Client {
     /**
      * Add shipment
      *
-     * @param array  $shipments array of shipments
-     * @param string $type      shipment type: standard/return/unrelated_return
+     * @param array $shipments array of shipments
+     * @param string $type shipment type: standard/return/unrelated_return
+     *
+     * @return array
      */
     public function add_shipments($shipments, $type = 'standard') {
         $endpoint = 'shipments';
