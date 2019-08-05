@@ -221,94 +221,98 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
          */
         public function add_shipments($test)
         {
+            $myParcelCollection = (new MyParcelCollection())
+                ->setUserAgent('test dit moet nog nagekeken worden', '1.0');
+
             $consignment = (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))
-                ->setApiKey('510c8c37e4f57ca320f3e1fca5ba59c0e014f9b9')
+                ->setApiKey($this->init_api())
                 ->setReferenceId('Order 146')
                 ->setCountry('BE')
-                ->setPerson('Piet is gek')
+                ->setPerson('Piet is gek123343')
                 ->setFullStreet('hoofdstraat 16')
                 ->setPostalCode('2000')
                 ->setCity('Antwerpen')
                 ->setEmail('piet.hier@test.nl');
 
-            $myParcelCollection = new MyParcelCollection();
+
             $myParcelCollection->addConsignment($consignment);
+
 
             $consignment = $myParcelCollection->createConcepts()->setLatestData()->first();
             $consignment = $myParcelCollection->getOneConsignment();
 
             return $this;
 
-//            $return = array();
-//
-//            $this->log("*** Creating shipments started ***");
-//
-//            foreach ($order_ids as $order_id) {
-//                $created_shipments = array();
-//                $order             = WCX::get_order($order_id);
-//                $shipments         = $this->get_order_shipment_data((array) $order_id);
-//                if (empty($shipments)) {
-//                    $this->log("Export for order {$order_id} skipped (missing or invalidated shipment data)");
-//                    continue;
-//                }
-//
-//                $this->log("Shipment data for order {$order_id}:\n" . var_export($shipments, true));
-//
-//                // check colli amount
-//                $extra_params = WCX_Order::get_meta($order, '_myparcelbe_shipment_options_extra');
-//                $colli_amount = isset($extra_params['colli_amount']) ? $extra_params['colli_amount'] : 1;
-//
-//                for ($i = 0; $i < intval($colli_amount); $i ++) {
-//                    try {
-//                        $api      = $this->init_api();
-//                        $response = $api->add_shipments($shipments);
-//                        $this->log("API response (order {$order_id}):\n" . var_export($response, true));
-//                        if (isset($response['body']['data']['ids'])) {
-//                            $ids                      = array_shift($response['body']['data']['ids']);
-//                            $shipment_id              = $ids['id'];
-//                            $this->success[$order_id] = $shipment_id;
-//
-//                            $created_shipments[] = $shipment_id;
-//                            $shipment            = array(
-//                                'shipment_id' => $shipment_id,
-//                            );
-//
-//                            // save shipment data in order meta
-//                            $this->save_shipment_data($order, $shipment);
-//
-//                            // process directly setting
-//                            if (isset(WooCommerce_MyParcelBE()->general_settings['process_directly']) || $process === true) {
-//                                // flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
-//                                if (method_exists($order, 'save')) {
-//                                    $order->save();
-//                                }
-//                                $this->get_labels((array) $order_id, 'url');
-//                                $this->get_shipment_data($shipment_id, $order);
-//                            }
-//
-//                            // status automation
-//                            if (isset(WooCommerce_MyParcelBE()->general_settings['order_status_automation']) && ! empty(WooCommerce_MyParcelBE()->general_settings['automatic_order_status'])) {
-//                                $order->update_status(WooCommerce_MyParcelBE()->general_settings['automatic_order_status'], __('MyParcel shipment created:', 'woocommerce-myparcelbe'));
-//                            }
-//                        } else {
-//                            $this->errors[$order_id] = __('Unknown error', 'woocommerce-myparcelbe');
-//                        }
-//                    } catch (Exception $e) {
-//                        $this->errors[$order_id] = $e->getMessage();
-//                    }
-//                }
-//
-//                // store shipment ids from this export
-//                if ( ! empty($created_shipments)) {
-//                    WCX_Order::update_meta_data($order, '_myparcelbe_last_shipment_ids', $created_shipments);
-//                }
-//            }
-//            if ( ! empty($this->success)) {
-//                $return['success']     = sprintf(__('%s shipments successfully exported to MyParcel', 'woocommerce-myparcelbe'), count($this->success));
-//                $return['success_ids'] = $this->success;
-//            }
-//
-//            return $return;
+            $return = array();
+
+            $this->log("*** Creating shipments started ***");
+
+            foreach ($order_ids as $order_id) {
+                $created_shipments = array();
+                $order             = WCX::get_order($order_id);
+                $shipments         = $this->get_order_shipment_data((array) $order_id);
+                if (empty($shipments)) {
+                    $this->log("Export for order {$order_id} skipped (missing or invalidated shipment data)");
+                    continue;
+                }
+
+                $this->log("Shipment data for order {$order_id}:\n" . var_export($shipments, true));
+
+                // check colli amount
+                $extra_params = WCX_Order::get_meta($order, '_myparcelbe_shipment_options_extra');
+                $colli_amount = isset($extra_params['colli_amount']) ? $extra_params['colli_amount'] : 1;
+
+                for ($i = 0; $i < intval($colli_amount); $i ++) {
+                    try {
+                        $api      = $this->init_api();
+                        $response = $api->add_shipments($shipments);
+                        $this->log("API response (order {$order_id}):\n" . var_export($response, true));
+                        if (isset($response['body']['data']['ids'])) {
+                            $ids                      = array_shift($response['body']['data']['ids']);
+                            $shipment_id              = $ids['id'];
+                            $this->success[$order_id] = $shipment_id;
+
+                            $created_shipments[] = $shipment_id;
+                            $shipment            = array(
+                                'shipment_id' => $shipment_id,
+                            );
+
+                            // save shipment data in order meta
+                            $this->save_shipment_data($order, $shipment);
+
+                            // process directly setting
+                            if (isset(WooCommerce_MyParcelBE()->general_settings['process_directly']) || $process === true) {
+                                // flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
+                                if (method_exists($order, 'save')) {
+                                    $order->save();
+                                }
+                                $this->get_labels((array) $order_id, 'url');
+                                $this->get_shipment_data($shipment_id, $order);
+                            }
+
+                            // status automation
+                            if (isset(WooCommerce_MyParcelBE()->general_settings['order_status_automation']) && ! empty(WooCommerce_MyParcelBE()->general_settings['automatic_order_status'])) {
+                                $order->update_status(WooCommerce_MyParcelBE()->general_settings['automatic_order_status'], __('MyParcel shipment created:', 'woocommerce-myparcelbe'));
+                            }
+                        } else {
+                            $this->errors[$order_id] = __('Unknown error', 'woocommerce-myparcelbe');
+                        }
+                    } catch (Exception $e) {
+                        $this->errors[$order_id] = $e->getMessage();
+                    }
+                }
+
+                // store shipment ids from this export
+                if ( ! empty($created_shipments)) {
+                    WCX_Order::update_meta_data($order, '_myparcelbe_last_shipment_ids', $created_shipments);
+                }
+            }
+            if ( ! empty($this->success)) {
+                $return['success']     = sprintf(__('%s shipments successfully exported to MyParcel', 'woocommerce-myparcelbe'), count($this->success));
+                $return['success_ids'] = $this->success;
+            }
+
+            return $return;
         }
 
         public function add_return($myparcelbe_options)
@@ -475,17 +479,19 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             die();
         }
 
+        /**
+         * @return bool|wc_myparcelbe_API
+         * @throws Exception
+         */
         public function init_api()
         {
+            $key = WooCommerce_MyParcelBE()->setting_collection->getByName('api_key');
             // $user = WooCommerce_MyParcelBE()->general_settings['api_username'];
-            if ( ! isset(WooCommerce_MyParcelBE()->general_settings['api_key'])) {
+            if ( ! ($key)) {
                 return false;
             }
 
-            $key = WooCommerce_MyParcelBE()->general_settings['api_key'];
-            $api = new wc_myparcelbe_API($key);
-
-            return $api;
+            return $key;
         }
 
         public function get_order_shipment_data($order_ids, $type = 'standard')

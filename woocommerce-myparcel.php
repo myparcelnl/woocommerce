@@ -22,6 +22,7 @@ class WooCommerce_MyParcelBE {
 
     public $version = '3.1.5';
     public $plugin_basename;
+
     protected static $_instance = null;
 
     /**
@@ -371,7 +372,6 @@ ini_set('display_errors', 1);
             if ($this->setting_collection) {
                 return;
             }
-
             // Load settings
             $settings = new \WPO\WC\MyParcelBE\Collections\SettingsCollection();
             $settings->setSettingsByType(get_option('woocommerce_myparcelbe_general_settings'), 'general');
