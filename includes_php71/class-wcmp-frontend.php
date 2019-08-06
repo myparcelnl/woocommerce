@@ -514,8 +514,8 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                 ],
             ];
 
-echo '<pre>';print_r($myParcelConfig);echo '</pre>';die();
-            return json_encode($myParcelConfig);
+//echo '<pre>';print_r($myParcelConfig);echo '</pre>';die();
+//            return json_encode($myParcelConfig);
             // Use cutoff_time and saturday_cutoff_time on saturdays
         }
 

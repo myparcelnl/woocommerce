@@ -219,30 +219,44 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
          * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
          * @throws Exception
          */
-        public function add_shipments($test)
+        public function add_shipments($order_ids)
         {
-            $myParcelCollection = (new MyParcelCollection())
-                ->setUserAgent('test dit moet nog nagekeken worden', '1.0');
 
-            $consignment = (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))
-                ->setApiKey($this->init_api())
-                ->setReferenceId('Order 146')
-                ->setCountry('BE')
-                ->setPerson('Piet is gek123343')
-                ->setFullStreet('hoofdstraat 16')
-                ->setPostalCode('2000')
-                ->setCity('Antwerpen')
-                ->setEmail('piet.hier@test.nl');
+            foreach ($order_ids as $order_id) {
+                $created_shipments = array();
+                $order             = WCX::get_order($order_id);
+                $shipments         = $this->get_order_shipment_data((array) $order_id);
+                if (empty($shipments)) {
+                    $this->log("Export for order {$order_id} skipped (missing or invalidated shipment data)");
+                    continue;
+                }
+
+                $this->log("Shipment data for order {$order_id}:\n" . var_export($shipments, true));
+
+                $myParcelCollection = (new MyParcelCollection())
+                    ->setUserAgent('test dit moet nog nagekeken worden', '1.0');
 
 
-            $myParcelCollection->addConsignment($consignment);
+                $consignment = $this->getConsignmentData($shipments, $order_id);
 
 
-            $consignment = $myParcelCollection->createConcepts()->setLatestData()->first();
-            $consignment = $myParcelCollection->getOneConsignment();
+                var_dump($consignment);
+                exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
+
+
+                $myParcelCollection->addConsignment($consignment);
+
+
+                $consignment = $myParcelCollection->createConcepts()->setLatestData()->first();
+                $consignment = $myParcelCollection->getOneConsignment();
+            }
 
             return $this;
 
+
+            /*
+             * old code
+             */
             $return = array();
 
             $this->log("*** Creating shipments started ***");
@@ -313,6 +327,40 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             }
 
             return $return;
+
+            /*
+             * end old code
+             */
+        }
+
+
+        /**
+         * @param $shipments
+         * @param $order_id
+         *
+         * @return AbstractConsignment
+         * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
+         * @throws Exception
+         */
+        public function getConsignmentData($shipments, $order_id)
+        {
+            $shipmentRecipient = $shipments[0]['recipient'];
+            $fullStreet        = $shipmentRecipient['street'] . ' ' .
+                                 $shipmentRecipient['number'] . ' ' .
+                                 $shipmentRecipient['number_suffix'];
+
+            // TODO: loop for multiple orders
+            $consignment = (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))
+                ->setApiKey($this->init_api())
+                ->setReferenceId($order_id)
+                ->setCountry($shipmentRecipient['cc'])
+                ->setPerson($shipmentRecipient['person'])
+                ->setFullStreet($fullStreet)
+                ->setPostalCode('2000')
+                ->setCity('Antwerpen')
+                ->setEmail('piet.hier@test.nl');
+
+            return $consignment;
         }
 
         public function add_return($myparcelbe_options)
@@ -486,7 +534,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
         public function init_api()
         {
             $key = WooCommerce_MyParcelBE()->setting_collection->getByName('api_key');
-            // $user = WooCommerce_MyParcelBE()->general_settings['api_username'];
             if ( ! ($key)) {
                 return false;
             }
@@ -501,7 +548,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 $order = WCX::get_order($order_id);
 
                 $shipment = array(
-                    'reference_identifier' => $this->replace_shortcodes(WooCommerce_MyParcelBE()->export_defaults['label_description'], $order),
                     'recipient'            => $this->get_recipient($order),
                     'options'              => $this->get_options($order),
                     'carrier'              => 2, // default to bpost for now
@@ -596,6 +642,11 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             return $return_shipment_data;
         }
 
+        /**
+         * @param $order
+         *
+         * @return mixed|void
+         */
         public function get_recipient($order)
         {
             $is_using_old_fields =
