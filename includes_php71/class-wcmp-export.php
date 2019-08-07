@@ -240,8 +240,8 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 $consignment = $this->getConsignmentData($shipments, $order_id);
 
 
-                var_dump($consignment);
-                exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
+//                var_dump($consignment);
+//                exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
 
 
                 $myParcelCollection->addConsignment($consignment);
@@ -356,9 +356,9 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 ->setCountry($shipmentRecipient['cc'])
                 ->setPerson($shipmentRecipient['person'])
                 ->setFullStreet($fullStreet)
-                ->setPostalCode('2000')
-                ->setCity('Antwerpen')
-                ->setEmail('piet.hier@test.nl');
+                ->setPostalCode($shipmentRecipient['postal_code'])
+                ->setCity($shipmentRecipient['city'])
+                ->setEmail($shipmentRecipient['email']);
 
             return $consignment;
         }
