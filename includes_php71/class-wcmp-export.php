@@ -354,6 +354,30 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 ->setFullStreet($fullStreet)
                 ->setPostalCode($shipmentRecipient['postal_code'])
                 ->setCity($shipmentRecipient['city'])
+                ->setPhone('+31 612345678')
+                // Options
+                ->setOnlyRecipient(false)   // Deliver the package only at address of the intended recipient. This option is required for Morning and Evening delivery types.
+                ->setSignature(true)        // Recipient must sign for the package. This option is required for Pickup and Pickup express delivery types.
+                ->setReturn(true)           // Return the package to the sender when the recipient is not home.
+                ->setLargeFormat(false)     // Must be specified if the dimensions of the package are between 100x70x50 and 175x78x58 cm.
+                ->setInsurance(250)         // Allows a shipment to be insured up to certain amount. Only packages (package type 1) can be insured. // Phone number
+                // Set pickup location
+                ->setPickupLocationName('Supermarkt')
+                ->setPickupStreet('Straatnaam')
+                ->setPickupNumber('32')
+                ->setPickupPostalCode('1234 AB')
+                ->setPickupCity('Hoofddorp')
+                // Physical properties
+                ->setPhysicalProperties(['weight' => 73])
+                // Non-EU shipment attributes: see https://myparcelnl.github.io/api/#7_E
+//                ->setInvoice()
+//                ->setContents()
+//                ->addItem()
+                // Convert pickup data from checkout
+                // You can use these if you use the following code in your checkout: https://github.com/myparcelnl/checkout
+//                ->setDeliveryDateFromCheckout()
+//                ->setPickupAddressFromCheckout()
+
                 ->setEmail($shipmentRecipient['email']);
 
             return $consignment;
