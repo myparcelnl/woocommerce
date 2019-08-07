@@ -211,13 +211,9 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
 
         /**
          * @param $order_ids
-         * @param bool $process
-         *
-         * @param $consignment AbstractConsignment
          *
          * @return WooCommerce_MyParcelBE_Export
          * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
-         * @throws Exception
          */
         public function add_shipments($order_ids)
         {
@@ -240,8 +236,8 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 $consignment = $this->getConsignmentData($shipments, $order_id);
 
 
-//                var_dump($consignment);
-//                exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
+                var_dump($consignment);
+                exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
 
 
                 $myParcelCollection->addConsignment($consignment);
