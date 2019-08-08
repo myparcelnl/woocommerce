@@ -18,7 +18,10 @@ if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
 if ( ! class_exists('WooCommerce_MyParcelBE')) :
 
-class WooCommerce_MyParcelBE {
+    /**
+     * @property  export_defaults
+     */
+    class WooCommerce_MyParcelBE {
 
     public $version = '3.1.5';
     public $plugin_basename;

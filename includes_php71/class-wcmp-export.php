@@ -213,6 +213,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
          * @param $order_ids
          *
          * @return WooCommerce_MyParcelBE_Export
+         * @throws \MyParcelNL\Sdk\src\Exception\ApiException
          * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
          */
         public function add_shipments($order_ids)
@@ -354,21 +355,22 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 ->setFullStreet($fullStreet)
                 ->setPostalCode($shipmentRecipient['postal_code'])
                 ->setCity($shipmentRecipient['city'])
-                ->setPhone('+31 612345678')
+                ->setPhone($shipmentRecipient['phone'])
+                ->setEmail($shipmentRecipient['email']);
                 // Options
-                ->setOnlyRecipient(false)   // Deliver the package only at address of the intended recipient. This option is required for Morning and Evening delivery types.
-                ->setSignature(true)        // Recipient must sign for the package. This option is required for Pickup and Pickup express delivery types.
-                ->setReturn(true)           // Return the package to the sender when the recipient is not home.
-                ->setLargeFormat(false)     // Must be specified if the dimensions of the package are between 100x70x50 and 175x78x58 cm.
-                ->setInsurance(250)         // Allows a shipment to be insured up to certain amount. Only packages (package type 1) can be insured. // Phone number
+//                ->setOnlyRecipient(false)   // Deliver the package only at address of the intended recipient. This option is required for Morning and Evening delivery types.
+//                ->setSignature(true)        // Recipient must sign for the package. This option is required for Pickup and Pickup express delivery types.
+//                ->setReturn(true)           // Return the package to the sender when the recipient is not home.
+//                ->setLargeFormat(false)     // Must be specified if the dimensions of the package are between 100x70x50 and 175x78x58 cm.
+//                ->setInsurance(250);         // Allows a shipment to be insured up to certain amount. Only packages (package type 1) can be insured. // Phone number
                 // Set pickup location
-                ->setPickupLocationName('Supermarkt')
-                ->setPickupStreet('Straatnaam')
-                ->setPickupNumber('32')
-                ->setPickupPostalCode('1234 AB')
-                ->setPickupCity('Hoofddorp')
+//                ->setPickupLocationName('Supermarkt')
+//                ->setPickupStreet('Straatnaam')
+//                ->setPickupNumber('32')
+//                ->setPickupPostalCode('1234 AB')
+//                ->setPickupCity('Hoofddorp')
                 // Physical properties
-                ->setPhysicalProperties(['weight' => 73])
+//                ->setPhysicalProperties(['weight' => 73]);
                 // Non-EU shipment attributes: see https://myparcelnl.github.io/api/#7_E
 //                ->setInvoice()
 //                ->setContents()
@@ -377,8 +379,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 // You can use these if you use the following code in your checkout: https://github.com/myparcelnl/checkout
 //                ->setDeliveryDateFromCheckout()
 //                ->setPickupAddressFromCheckout()
-
-                ->setEmail($shipmentRecipient['email']);
 
             return $consignment;
         }
@@ -669,6 +669,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
          */
         public function get_recipient($order)
         {
+
             $is_using_old_fields =
                 (string) WCX_Order::get_meta($order, '_billing_street_name') != '' ||
                 (string) WCX_Order::get_meta($order, '_billing_house_number') != '';
@@ -676,13 +677,17 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             $shipping_name = method_exists($order, 'get_formatted_shipping_full_name')
                 ? $order->get_formatted_shipping_full_name()
                 : trim($order->shipping_first_name . ' ' . $order->shipping_last_name);
+
+            $connectEmail = WooCommerce_MyParcelBE()->setting_collection->getByName('connect_email');
+            $connectPhone = WooCommerce_MyParcelBE()->setting_collection->getByName('connect_phone');
+
             $address       = array(
                 'cc'                     => (string) WCX_Order::get_prop($order, 'shipping_country'),
                 'city'                   => (string) WCX_Order::get_prop($order, 'shipping_city'),
                 'person'                 => $shipping_name,
                 'company'                => (string) WCX_Order::get_prop($order, 'shipping_company'),
-                'email'                  => isset(WooCommerce_MyParcelBE()->export_defaults['connect_email']) ? WCX_Order::get_prop($order, 'billing_email') : '',
-                'phone'                  => isset(WooCommerce_MyParcelBE()->export_defaults['connect_phone']) ? WCX_Order::get_prop($order, 'billing_phone') : '',
+                'email'                  => $connectEmail ? WCX_Order::get_prop($order, 'billing_email') : '',
+                'phone'                  => $connectPhone ? WCX_Order::get_prop($order, 'billing_phone') : '',
                 'street_additional_info' => WCX_Order::get_prop($order, 'shipping_address_2'),
             );
 
@@ -795,13 +800,13 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             // use shipment options from order when available
             $shipment_options = WCX_Order::get_meta($order, '_myparcelbe_shipment_options');
             if ( ! empty($shipment_options)) {
-                $emty_defaults = array(
+                $empty_defaults = array(
                     'package_type'      => 1,
                     'signature'         => 0,
                     'label_description' => '',
                     'insured_amount'    => 0,
                 );
-                $options       = array_merge($emty_defaults, $shipment_options);
+                $options       = array_merge($empty_defaults, $shipment_options);
             } else {
                 if (isset(WooCommerce_MyParcelBE()->export_defaults['insured']) && WooCommerce_MyParcelBE()->export_defaults['insured_amount'] == '' && isset(WooCommerce_MyParcelBE()->export_defaults['insured_amount_custom'])) {
                     $insured_amount = WooCommerce_MyParcelBE()->export_defaults['insured_amount_custom'];

@@ -116,7 +116,8 @@ class wc_myparcelbe_API extends wc_myparcelbe_REST_Client {
     /**
      * Get shipments
      *
-     * @param  array $params request parameters
+     * @param $ids
+     * @param array $params request parameters
      *
      * @return array          response
      */
