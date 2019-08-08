@@ -12,6 +12,9 @@ if (! class_exists('\\WPO\\WC\\MyParcelBE\\Collections\\SettingsCollection')) :
     /**
      * @mixin Setting
      */
+    /**
+     * @property mixed getByName
+     */
     class SettingsCollection extends Collection
     {
         /**
