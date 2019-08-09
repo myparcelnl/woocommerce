@@ -1,0 +1,10 @@
+{
+  "globals": {
+    "MyParcelBE": "readonly",
+    "wcmp_config": "readonly"
+  },
+  "env": {
+    "browser": true,
+    "jquery": true
+  }
+}
