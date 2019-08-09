@@ -239,8 +239,8 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 $consignment = $this->getConsignmentData($shipments, $order_id);
 
 
-//                var_dump($consignment);
-//                exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
+                var_dump($consignment);
+                exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
 
 
                 $myParcelCollection->addConsignment($consignment);
@@ -343,29 +343,31 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
          */
         public function getConsignmentData($shipments, $order_id)
         {
+
             $shipmentRecipient = $shipments[0]['recipient'];
             $fullStreet        = $shipmentRecipient['street'] . ' ' .
                                  $shipmentRecipient['number'] . ' ' .
                                  $shipmentRecipient['number_suffix'];
+            $shipmentOptions   = $shipments[0]['options'];
+
 
             // TODO: loop for multiple orders
             $consignment = (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))
                 ->setApiKey($this->init_api())
                 ->setReferenceId($order_id)
-                ->setPackageType(1)
+                ->setPackageType($shipmentOptions['package_type'])
                 ->setCountry($shipmentRecipient['cc'])
                 ->setPerson($shipmentRecipient['person'])
                 ->setFullStreet($fullStreet)
                 ->setStreetAdditionalInfo($shipmentRecipient['street_additional_info'])
-                ->setBoxNumber('200')
                 ->setPostalCode($shipmentRecipient['postal_code'])
                 ->setCity($shipmentRecipient['city'])
                 ->setPhone($shipmentRecipient['phone'])
                 ->setEmail($shipmentRecipient['email'])
-                ->setLabelDescription('ademtheking')
-                ->setCompany('PIET BV')
+                ->setLabelDescription($shipmentOptions['label_description'])
+                ->setCompany($shipmentRecipient['company'])
                 // Options
-                ->setSignature(true)
+                ->setSignature($shipmentOptions['signature'])
                 ->setInsurance(500)
                 // Pickup options
                 ->setPickupLocationName('Supermarkt')
