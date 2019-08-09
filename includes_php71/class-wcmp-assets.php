@@ -19,7 +19,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
             if ( ! is_checkout() && ! is_order_received_page()) return;
 
             // if using split fields
-            if (isset(WooCommerce_MyParcelBE()->general_settings['use_split_address_fields'])) {
+            if (WooCommerce_MyParcelBE()->setting_collection->getByName('use_split_address_fields')) {
                 wp_enqueue_script(
                     'wcmp-checkout-fields',
                     WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
@@ -51,9 +51,8 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
                 'wc-myparcelbe-frontend',
                 'wcmp_display_settings',
                 array(
-                    'isUsingSplitAddressFields' => isset(
-                        WooCommerce_MyParcelBE()->general_settings['use_split_address_fields']
-                    )
+                    'isUsingSplitAddressFields' =>
+                        WooCommerce_MyParcelBE()->setting_collection->getByName('use_split_address_fields')
                 )
             );
         }
@@ -103,11 +102,11 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
                     'wcmyparcelbe-export', 'wc_myparcelbe', array(
                         'ajax_url'         => admin_url('admin-ajax.php'),
                         'nonce'            => wp_create_nonce('wc_myparcelbe'),
-                        'download_display' => isset(WooCommerce_MyParcelBE()->general_settings['download_display'])
-                            ? WooCommerce_MyParcelBE()->general_settings['download_display']
+                        'download_display' => WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
+                            ? WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
                             : '',
-                        'offset'           => isset(WooCommerce_MyParcelBE()->general_settings['print_position_offset'])
-                            ? WooCommerce_MyParcelBE()->general_settings['print_position_offset']
+                        'offset'           => WooCommerce_MyParcelBE()->setting_collection->getByName('print_position_offset')
+                            ? WooCommerce_MyParcelBE()->setting_collection->getByName('print_position_offset')
                             : '',
                         'offset_icon'      => WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/print-offset-icon.png',
                         'offset_label'     => __('Labels to skip', 'woocommerce-myparcel'),

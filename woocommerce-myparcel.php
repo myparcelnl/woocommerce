@@ -33,7 +33,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE')) :
      */
     public $setting_collection;
 
-    /**
+        /**
      * Main Plugin Instance
      * Ensures only one instance of plugin is loaded or can be loaded.
      */

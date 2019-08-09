@@ -235,7 +235,7 @@ class wc_myparcelbe_API extends wc_myparcelbe_REST_Client {
     }
 
     private function get_label_format_url($positions) {
-        $generalSettings = WooCommerce_MyParcelBE()->general_settings;
+        $generalSettings = WooCommerce_MyParcelBE()->setting_collection;
 
         if ($generalSettings['label_format'] == 'A4') {
             return 'format=A4&positions=' . $positions;

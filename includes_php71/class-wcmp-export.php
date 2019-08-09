@@ -915,7 +915,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
          *
          * @return mixed
          */
-        private function getSetting($name) {
+        public function getSetting($name) {
             return WooCommerce_MyParcelBE()->setting_collection->getByName($name);
         }
 

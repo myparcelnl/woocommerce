@@ -60,8 +60,8 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
             ), 10, 2);
 
             // Change the position of the checkout
-            if (isset(WooCommerce_MyParcelBE()->general_settings['checkout_place'])) {
-                $checkout_place = WooCommerce_MyParcelBE()->general_settings['checkout_place'];
+            if (WooCommerce_MyParcelBE()->setting_collection->getByName('checkout_place')) {
+                $checkout_place = WooCommerce_MyParcelBE()->setting_collection->getByName('checkout_place');
             } else {
                 $checkout_place = 'woocommerce_after_checkout_billing_form';
             }
@@ -323,7 +323,7 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                 if (isset($delivery_options['price_comment'])) {
                     switch ($delivery_options['price_comment']) {
                         case 'retail':
-                            if (! empty(WooCommerce_MyParcelBE()->bpost_settings['pickup_fee'])) {
+                            if (! empty(WooCommerce_MyParcelBE()->bpost_settings['bpost_pickup_fee'])) {
                                 $fee      = WooCommerce_MyParcelBE()->bpost_settings['pickup_fee'];
                                 $fee_name = __('bpost pickup', 'woocommerce-myparcelbe');
                             }
@@ -334,6 +334,7 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                         $this->add_fee($fee_name, $fee);
                     }
                 }
+
             }
         }
 
@@ -593,12 +594,12 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
          */
         private function get_delivery_options_shipping_methods()
         {
-            if (isset(
-                    WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types']
-                )
-                && isset(WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'][WooCommerce_MyParcelBE_Export::PACKAGE])) {
+            if (WooCommerce_MyParcelBE()->setting_collection->getByName('shipping_methods_package_types')
+                && (WooCommerce_MyParcelBE()->setting_collection->getByName('shipping_methods_package_types')
+                [WooCommerce_MyParcelBE_Export::PACKAGE])) {
                 // Shipping methods associated with parcels = enable delivery options
-                $delivery_options_shipping_methods = WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'][WooCommerce_MyParcelBE_Export::PACKAGE];
+                $delivery_options_shipping_methods = WooCommerce_MyParcelBE()->setting_collection->getByName('shipping_methods_package_types')
+                [WooCommerce_MyParcelBE_Export::PACKAGE];
             } else {
                 $delivery_options_shipping_methods = array();
             }
@@ -608,8 +609,8 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
 
         private function myparcelbe_delivery_options_always_display()
         {
-            if (isset(WooCommerce_MyParcelBE()->general_settings['checkout_display'])
-                && WooCommerce_MyParcelBE()->general_settings['checkout_display'] == 'all_methods') {
+            if (WooCommerce_MyParcelBE()->setting_collection->getByName('checkout_display')
+                && WooCommerce_MyParcelBE()->setting_collection->getByName('checkout_display') == 'all_methods') {
                 return true;
             }
 

@@ -6,8 +6,8 @@
 ?>
 <style>
 	<?php
-	if (!empty(WooCommerce_MyParcelBE()->general_settings['custom_css'])) {
-		echo WooCommerce_MyParcelBE()->general_settings['custom_css'];
+	if (WooCommerce_MyParcelBE()->setting_collection->getByName('custom_css')) {
+		echo WooCommerce_MyParcelBE()->setting_collection->getByName('custom_css');
 	}
 	?>
 </style>
