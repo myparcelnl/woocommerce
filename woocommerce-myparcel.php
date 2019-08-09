@@ -77,6 +77,11 @@ class WooCommerce_MyParcelBE {
 	 */
 	public  $bpost_settings;
 
+	/**
+     * @var string
+     */
+    public $includes;
+
     /**
      * Main Plugin Instance
      * Ensures only one instance of plugin is loaded or can be loaded.
@@ -149,6 +154,8 @@ class WooCommerce_MyParcelBE {
     {
         // Between php 5.6 and 7.1
         if (!$this->phpVersionMeets($this->legacySettingsPhpVersion)) {
+            $this->includes = $this->plugin_path() . '/includes_php56';
+
             // include compatibility classes
             require_once('includes_php56/compatibility/abstract-wc-data-compatibility.php');
             require_once('includes_php56/compatibility/class-wc-date-compatibility.php');
@@ -167,6 +174,7 @@ class WooCommerce_MyParcelBE {
             return;
         }
 
+        $this->includes = $this->plugin_path() . '/includes_php71';
         // Use minimum php version 7.1
         require_once('includes_php71/vendor/autoload.php');
 
