@@ -1,4 +1,9 @@
 {
+  "globals": {
+    "MyParcel": "readonly",
+    "wcmp_display_settings": "readonly",
+    "wcmp_delivery_options": "readonly"
+  },
   "env": {
     "browser": true
   },
