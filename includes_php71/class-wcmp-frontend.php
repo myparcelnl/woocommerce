@@ -318,24 +318,34 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
 //                    }
                     }
                 }
-
                 /* Fees for pickup */
-                if (isset($delivery_options['price_comment'])) {
-                    switch ($delivery_options['price_comment']) {
-                        case 'retail':
-                            if (! empty(WooCommerce_MyParcelBE()->bpost_settings['bpost_pickup_fee'])) {
-                                $fee      = WooCommerce_MyParcelBE()->bpost_settings['pickup_fee'];
-                                $fee_name = __('bpost pickup', 'woocommerce-myparcelbe');
-                            }
-                            break;
-                    }
+                $this->getPickupFee($delivery_options, 'bpost_pickup_fee');
+            }
+        }
 
-                    if (! empty($fee)) {
-                        $this->add_fee($fee_name, $fee);
-                    }
+        /**
+         * @param $delivery_options
+         * @param string $pickupFee
+         *
+         * @return void
+         */
+        public function getPickupFee($delivery_options, string $pickupFee): void
+        {
+            if (isset($delivery_options['price_comment'])) {
+                switch ($delivery_options['price_comment']) {
+                    case 'retail':
+                        if (! empty(WooCommerce_MyParcelBE()->setting_collection->getByName($pickupFee))) {
+                            $fee      = WooCommerce_MyParcelBE()->setting_collection->getByName($pickupFee);
+                            $fee_name = __('Pickup', 'woocommerce-myparcelbe');
+                        }
+                        break;
                 }
 
+                if (! empty($fee) && ! empty($fee_name) ) {
+                    $this->add_fee($fee_name, $fee);
+                }
             }
+            return;
         }
 
         /**
