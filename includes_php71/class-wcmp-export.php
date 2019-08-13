@@ -220,7 +220,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
          */
         public function add_shipments($order_ids)
         {
-
             foreach ($order_ids as $order_id) {
                 $created_shipments = array();
                 $order             = WCX::get_order($order_id);
@@ -238,13 +237,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
 
                 $consignment = $this->getConsignmentData($shipments, $order_id);
 
-
-                var_dump($consignment);
-                exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
-
-
                 $myParcelCollection->addConsignment($consignment);
-
 
                 $consignment = $myParcelCollection->createConcepts()->setLatestData()->first();
                 $consignment = $myParcelCollection->getOneConsignment();
@@ -349,6 +342,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                                  $shipmentRecipient['number'] . ' ' .
                                  $shipmentRecipient['number_suffix'];
             $shipmentOptions   = $shipments[0]['options'];
+            $shipmentPickup    = $shipments[0]['pickup'];
 
 
             // TODO: loop for multiple orders
@@ -368,13 +362,13 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                 ->setCompany($shipmentRecipient['company'])
                 // Options
                 ->setSignature($shipmentOptions['signature'])
-                ->setInsurance(500)
+                ->setInsurance($this->getInsuranceAmount())
                 // Pickup options
-                ->setPickupLocationName('Supermarkt')
-                ->setPickupStreet('Straatnaam')
-                ->setPickupNumber('32')
-                ->setPickupPostalCode('1234 AB')
-                ->setPickupCity('Hoofddorp');
+                ->setPickupLocationName($shipmentPickup['location_name'])
+                ->setPickupStreet($shipmentPickup['street'])
+                ->setPickupNumber($shipmentPickup['number'])
+                ->setPickupPostalCode($shipmentPickup['postal_code'])
+                ->setPickupCity($shipmentPickup['city']);
 
             return $consignment;
         }
