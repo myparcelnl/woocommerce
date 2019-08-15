@@ -4,7 +4,7 @@ Plugin Name: WC MyParcel Belgium
 Plugin URI: http://sendmyparcel.be/
 Description: Export your WooCommerce orders to MyParcel BE (http://sendmyparcel.be/) and print labels directly from the WooCommerce admin
 Author: Richard Perdaan
-Version: 3.1.5
+Version: 4.0.0
 Text Domain: wcmyparcelbe_be
 
 License: GPLv3 or later
@@ -23,7 +23,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE')) :
      */
     class WooCommerce_MyParcelBE {
 
-    public $version = '3.1.5';
+    public $version = '4.0.0';
     public $plugin_basename;
 
     protected static $_instance = null;
@@ -333,17 +333,42 @@ ini_set('display_errors', 1);
         }
 
         if (version_compare($installed_version, '4.0.0', '<=')) {
-            $checkout_settings = get_option('woocommerce_myparcelbe_checkout_settings');
-            // Split current checkout settings to general and bpost
-            $general_settings = [
-                'use_split_address_fields' => '1',
-            ];
-            $bpost_settings = [
-                /*'use_split_address_fields' => $checkout_settings,*/
-            ];
-            update_option('woocommerce_myparcelbe_general_settings', $general_settings);
-            update_option('woocommerce_myparcelbe_bpost_settings', $bpost_settings);
+            $checkoutSettings = get_option('woocommerce_myparcelbe_checkout_settings');
+            $bpostSettings = $this->setBpostSettings($checkoutSettings);
+
+
+            update_option('woocommerce_myparcelbe_bpost_settings', $bpostSettings);
+
         }
+    }
+
+    /**
+     * @param array $checkoutSettings
+     *
+     * @return array
+     */
+    public function setBpostSettings(array $checkoutSettings): array
+    {
+        $bpostSettings = $checkoutSettings;
+
+        $fromCheckoutToBpost = [
+            'myparcelbe_checkout' => 'myparcelbe_carrier_enable_bpost',
+            'dropoff_days'        => 'bpost_dropoff_days',
+            'cutoff_time'         => 'bpost_cutoff_time',
+            'dropoff_delay'       => 'bpost_dropoff_delay',
+            'deliverydays_window' => 'bpost_deliverydays_window',
+            'standard'            => 'bpost_standard',
+            'signature'           => 'bpost_signature',
+            'pickup'              => 'bpost_pickup',
+            'signature_fee'       => 'bpost_signature_fee',
+            'pickup_fee'          => 'bpost_pickup_fee',
+        ];
+
+        foreach ($fromCheckoutToBpost as $singleCarrierSettings => $multiCarrierSettings) {
+            $bpostSettings[$singleCarrierSettings] = $checkoutSettings[$multiCarrierSettings];
+        }
+
+       return $bpostSettings;
     }
 
     /**
