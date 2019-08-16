@@ -23,7 +23,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE')) :
      */
     class WooCommerce_MyParcelBE {
 
-    public $version = '4.1.3';
+    public $version = '4.1.13';
     public $plugin_basename;
 
     protected static $_instance = null;
@@ -332,22 +332,46 @@ ini_set('display_errors', 1);
             update_option('woocommerce_myparcelbe_checkout_settings', $new_settings);
         }
 
-        if (version_compare($installed_version, '4.1.3', '<=')) {
+        if (version_compare($installed_version, '4.1.13', '<=')) {
             $checkoutSettings = get_option('woocommerce_myparcelbe_checkout_settings');
-            $bpostSettings = $this->setBpostSettings($checkoutSettings);
+            $defaultSettings = get_option('woocommerce_myparcelbe_export_defaults_settings');
+            $bpostSettings = $this->setBpostSettings($checkoutSettings, $defaultSettings);
+
+            $bpostSettings = array_merge($bpostSettings[0], $bpostSettings[1]);
+
             update_option('woocommerce_myparcelbe_bpost_settings', $bpostSettings);
+
         }
     }
 
         /**
          * @param array $checkoutSettings
          *
+         * @param array $defaultSettings
+         *
          * @return array
          */
-    public function setBpostSettings(array $checkoutSettings): array
+    public function setBpostSettings(array $checkoutSettings, array $defaultSettings): array
     {
         $bpostSettings = $checkoutSettings;
+        $oldDefaultSettings = $defaultSettings;
 
+        $bpostSettings = $this->setFromCheckoutToBpostSettings($bpostSettings, $checkoutSettings);
+        $oldDefaultSettings = $this->setFromDefaultToBpostSettings($oldDefaultSettings, $defaultSettings);
+
+        return [$bpostSettings, $oldDefaultSettings];
+    }
+    public function setFromDefaultToBpostSettings($bpostSettings, $defaultSettings){
+        $fromDefaultToBpost = ['signature', 'insured'];
+
+        foreach ($fromDefaultToBpost as $carrierSettings) {
+            $bpostSettings[$carrierSettings] = $defaultSettings[$carrierSettings];
+        }
+
+        return $bpostSettings;
+    }
+
+    public function setFromCheckoutToBpostSettings($bpostSettings, $checkoutSettings){
         $fromCheckoutToBpost = [
             'myparcelbe_checkout' => 'myparcelbe_carrier_enable_bpost',
             'dropoff_days'        => 'bpost_dropoff_days',
@@ -364,8 +388,8 @@ ini_set('display_errors', 1);
 
         foreach ($fromCheckoutToBpost as $singleCarrierSettings => $multiCarrierSettings) {
             $bpostSettings[$multiCarrierSettings] = $checkoutSettings[$singleCarrierSettings];
+            unset($bpostSettings[$singleCarrierSettings]);
         }
-
         return $bpostSettings;
     }
 
