@@ -4,7 +4,7 @@ Plugin Name: WC MyParcel Belgium
 Plugin URI: http://sendmyparcel.be/
 Description: Export your WooCommerce orders to MyParcel BE (http://sendmyparcel.be/) and print labels directly from the WooCommerce admin
 Author: Richard Perdaan
-Version: 4.0.0
+Version: 4.1.0
 Text Domain: wcmyparcelbe_be
 
 License: GPLv3 or later
@@ -23,7 +23,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE')) :
      */
     class WooCommerce_MyParcelBE {
 
-    public $version = '4.0.0';
+    public $version = '4.1.3';
     public $plugin_basename;
 
     protected static $_instance = null;
@@ -332,21 +332,18 @@ ini_set('display_errors', 1);
             update_option('woocommerce_myparcelbe_checkout_settings', $new_settings);
         }
 
-        if (version_compare($installed_version, '4.0.0', '<=')) {
+        if (version_compare($installed_version, '4.1.3', '<=')) {
             $checkoutSettings = get_option('woocommerce_myparcelbe_checkout_settings');
             $bpostSettings = $this->setBpostSettings($checkoutSettings);
-
-
             update_option('woocommerce_myparcelbe_bpost_settings', $bpostSettings);
-
         }
     }
 
-    /**
-     * @param array $checkoutSettings
-     *
-     * @return array
-     */
+        /**
+         * @param array $checkoutSettings
+         *
+         * @return array
+         */
     public function setBpostSettings(array $checkoutSettings): array
     {
         $bpostSettings = $checkoutSettings;
@@ -357,18 +354,19 @@ ini_set('display_errors', 1);
             'cutoff_time'         => 'bpost_cutoff_time',
             'dropoff_delay'       => 'bpost_dropoff_delay',
             'deliverydays_window' => 'bpost_deliverydays_window',
-            'standard'            => 'bpost_standard',
-            'signature'           => 'bpost_signature',
-            'pickup'              => 'bpost_pickup',
+            'signature_enabled'   => 'bpost_signature_enabled',
+            'signature_title'     => 'bpost_signature_title',
             'signature_fee'       => 'bpost_signature_fee',
+            'pickup_enabled'      => 'bpost_pickup_enabled',
+            'pickup_title'        => 'bpost_pickup_title',
             'pickup_fee'          => 'bpost_pickup_fee',
         ];
 
         foreach ($fromCheckoutToBpost as $singleCarrierSettings => $multiCarrierSettings) {
-            $bpostSettings[$singleCarrierSettings] = $checkoutSettings[$multiCarrierSettings];
+            $bpostSettings[$multiCarrierSettings] = $checkoutSettings[$singleCarrierSettings];
         }
 
-       return $bpostSettings;
+        return $bpostSettings;
     }
 
     /**
@@ -392,8 +390,7 @@ ini_set('display_errors', 1);
         if (version_compare(PHP_VERSION, '7.1', '<')) {
             $this->general_settings  = get_option('woocommerce_myparcelbe_general_settings');
             $this->export_defaults   = get_option('woocommerce_myparcelbe_export_defaults_settings');
-            $this->checkout_settings = get_option('woocommerce_myparcelbe_bpost_settings');
-            $this->dpd_settings      = get_option('woocommerce_myparcelbe_dpd_settings');
+            $this->checkout_settings = get_option('woocommerce_myparcelbe_checkout_settings');
 
             return;
         } else {

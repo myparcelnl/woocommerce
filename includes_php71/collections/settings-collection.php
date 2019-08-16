@@ -20,9 +20,9 @@ if (! class_exists('\\WPO\\WC\\MyParcelBE\\Collections\\SettingsCollection')) :
         /**
          * @param array $rawSettings
          * @param string $type
-         * @param int|null $carrierId
+         * @param int $carrierId
          */
-        public function setSettingsByType(array $rawSettings, string $type, int $carrierId = null)
+        public function setSettingsByType(?array $rawSettings, string $type, int $carrierId = null)
         {
             foreach ($rawSettings as $name => $value) {
                 $setting = new Setting($name, $value, $type, $carrierId);
