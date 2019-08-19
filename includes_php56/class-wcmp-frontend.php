@@ -58,13 +58,13 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
             if (isset(WooCommerce_MyParcelBE()->checkout_settings['myparcelbe_checkout'])) {
                 // Change the position of the checkout
                 if (isset(WooCommerce_MyParcelBE()->checkout_settings['checkout_position'])) {
-                    $checkout_place = WooCommerce_MyParcelBE()->checkout_settings['checkout_position'];
+                    $checkout_position = WooCommerce_MyParcelBE()->checkout_settings['checkout_position'];
                 } else {
-                    $checkout_place = 'woocommerce_after_checkout_billing_form';
+                    $checkout_position = 'woocommerce_after_checkout_billing_form';
                 }
 
                 add_action('wp_enqueue_scripts', array($this, 'inject_delivery_options_variables'), 9999);
-                add_action(apply_filters('wc_myparcelbe_delivery_options_location', $checkout_place), array(
+                add_action(apply_filters('wc_myparcelbe_delivery_options_location', $checkout_position), array(
                     $this,
                     'output_delivery_options'
                 ), 10);

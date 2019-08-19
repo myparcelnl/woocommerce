@@ -333,17 +333,16 @@ ini_set('display_errors', 1);
         }
 
         if (version_compare($installed_version, '4.0.0', '<=')) {
-            $checkoutSettings = get_option('woocommerce_myparcelbe_checkout_settings');
-            $defaultSettings = get_option('woocommerce_myparcelbe_export_defaults_settings');
-            $generalSettings = get_option('woocommerce_myparcelbe_general_settings');
-            $bpostSettings = $this->setBpostSettings($checkoutSettings, $defaultSettings);
-            $Settings = $this->setFromCheckoutToGeneralSettings($checkoutSettings, $generalSettings);
-
+            $checkoutSettings            = get_option('woocommerce_myparcelbe_checkout_settings');
+            $defaultSettings             = get_option('woocommerce_myparcelbe_export_defaults_settings');
+            $generalSettings             = get_option('woocommerce_myparcelbe_general_settings');
+            $bpostSettings               = $this->setBpostSettings($checkoutSettings, $defaultSettings);
+            $multiCarrierGeneralSettings = $this->setFromCheckoutToGeneralSettings($checkoutSettings, $generalSettings);
 
             $bpostSettings = array_merge($bpostSettings[0], $bpostSettings[1]);
 
             update_option('woocommerce_myparcelbe_bpost_settings', $bpostSettings);
-            update_option('woocommerce_myparcelbe_general_settings', $Settings);
+            update_option('woocommerce_myparcelbe_general_settings', $multiCarrierGeneralSettings);
 
         }
     }
@@ -366,15 +365,16 @@ ini_set('display_errors', 1);
         return [$bpostSettings, $singleCarrierDefaults];
     }
 
-    public function setFromDefaultToBpostSettings($bpostSettings, $defaultSettings){
-        $fromDefaultToBpost = ['signature', 'insured'];
+        public function setFromDefaultToBpostSettings($bpostSettings, $defaultSettings)
+        {
+            $fromDefaultToBpost = ['signature', 'insured'];
 
-        foreach ($fromDefaultToBpost as $carrierSettings) {
-            $bpostSettings[$carrierSettings] = $defaultSettings[$carrierSettings];
+            foreach ($fromDefaultToBpost as $carrierSettings) {
+                $bpostSettings[$carrierSettings] = $defaultSettings[$carrierSettings];
+            }
+
+            return $bpostSettings;
         }
-
-        return $bpostSettings;
-    }
 
     /**
      * @param array $checkoutSettings
@@ -382,37 +382,46 @@ ini_set('display_errors', 1);
      *
      * @return array
      */
-    public function setFromCheckoutToGeneralSettings(array $checkoutSettings, array $generalSettings){
-        $fromCheckoutToGeneral = ['use_split_address_fields', 'checkout_display', 'checkout_place', 'header_delivery_options_title', 'customs_css'];
+        public function setFromCheckoutToGeneralSettings(array $checkoutSettings, array $generalSettings)
+        {
+            $fromCheckoutToGeneral = [
+                'use_split_address_fields',
+                'checkout_display',
+                'checkout_position',
+                'header_delivery_options_title',
+                'customs_css'
+            ];
 
-        foreach ($fromCheckoutToGeneral as $generalCarrierSettings) {
-            $generalSettings[$generalCarrierSettings] = $checkoutSettings[$generalCarrierSettings];
+            foreach ($fromCheckoutToGeneral as $generalCarrierSettings) {
+                $generalSettings[$generalCarrierSettings] = $checkoutSettings[$generalCarrierSettings];
+            }
+
+            return $generalSettings;
         }
 
-        return $generalSettings;
-    }
+        public function setFromCheckoutToBpostSettings($bpostSettings, $checkoutSettings)
+        {
+            $fromCheckoutToBpost = [
+                'myparcelbe_checkout' => 'myparcelbe_carrier_enable_bpost',
+                'dropoff_days'        => 'bpost_dropoff_days',
+                'cutoff_time'         => 'bpost_cutoff_time',
+                'dropoff_delay'       => 'bpost_dropoff_delay',
+                'deliverydays_window' => 'bpost_deliverydays_window',
+                'signature_enabled'   => 'bpost_signature_enabled',
+                'signature_title'     => 'bpost_signature_title',
+                'signature_fee'       => 'bpost_signature_fee',
+                'pickup_enabled'      => 'bpost_pickup_enabled',
+                'pickup_title'        => 'bpost_pickup_title',
+                'pickup_fee'          => 'bpost_pickup_fee',
+            ];
 
-    public function setFromCheckoutToBpostSettings($bpostSettings, $checkoutSettings){
-        $fromCheckoutToBpost = [
-            'myparcelbe_checkout' => 'myparcelbe_carrier_enable_bpost',
-            'dropoff_days'        => 'bpost_dropoff_days',
-            'cutoff_time'         => 'bpost_cutoff_time',
-            'dropoff_delay'       => 'bpost_dropoff_delay',
-            'deliverydays_window' => 'bpost_deliverydays_window',
-            'signature_enabled'   => 'bpost_signature_enabled',
-            'signature_title'     => 'bpost_signature_title',
-            'signature_fee'       => 'bpost_signature_fee',
-            'pickup_enabled'      => 'bpost_pickup_enabled',
-            'pickup_title'        => 'bpost_pickup_title',
-            'pickup_fee'          => 'bpost_pickup_fee',
-        ];
+            foreach ($fromCheckoutToBpost as $singleCarrierSettings => $multiCarrierSettings) {
+                $bpostSettings[$multiCarrierSettings] = $checkoutSettings[$singleCarrierSettings];
+                unset($bpostSettings[$singleCarrierSettings]);
+            }
 
-        foreach ($fromCheckoutToBpost as $singleCarrierSettings => $multiCarrierSettings) {
-            $bpostSettings[$multiCarrierSettings] = $checkoutSettings[$singleCarrierSettings];
-            unset($bpostSettings[$singleCarrierSettings]);
+            return $bpostSettings;
         }
-        return $bpostSettings;
-    }
 
     /**
      * Get the plugin url.
