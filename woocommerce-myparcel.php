@@ -335,11 +335,15 @@ ini_set('display_errors', 1);
         if (version_compare($installed_version, '4.0.0', '<=')) {
             $checkoutSettings = get_option('woocommerce_myparcelbe_checkout_settings');
             $defaultSettings = get_option('woocommerce_myparcelbe_export_defaults_settings');
+            $generalSettings = get_option('woocommerce_myparcelbe_general_settings');
             $bpostSettings = $this->setBpostSettings($checkoutSettings, $defaultSettings);
+            $Settings = $this->setFromCheckoutToGeneralSettings($checkoutSettings, $generalSettings);
+
 
             $bpostSettings = array_merge($bpostSettings[0], $bpostSettings[1]);
 
             update_option('woocommerce_myparcelbe_bpost_settings', $bpostSettings);
+            update_option('woocommerce_myparcelbe_general_settings', $Settings);
 
         }
     }
@@ -354,13 +358,14 @@ ini_set('display_errors', 1);
     public function setBpostSettings(array $checkoutSettings, array $defaultSettings): array
     {
         $bpostSettings = $checkoutSettings;
-        $oldDefaultSettings = $defaultSettings;
+        $singleCarrierDefaults = $defaultSettings;
 
         $bpostSettings = $this->setFromCheckoutToBpostSettings($bpostSettings, $checkoutSettings);
-        $oldDefaultSettings = $this->setFromDefaultToBpostSettings($oldDefaultSettings, $defaultSettings);
+        $singleCarrierDefaults = $this->setFromDefaultToBpostSettings($singleCarrierDefaults, $defaultSettings);
 
-        return [$bpostSettings, $oldDefaultSettings];
+        return [$bpostSettings, $singleCarrierDefaults];
     }
+
     public function setFromDefaultToBpostSettings($bpostSettings, $defaultSettings){
         $fromDefaultToBpost = ['signature', 'insured'];
 
@@ -369,6 +374,22 @@ ini_set('display_errors', 1);
         }
 
         return $bpostSettings;
+    }
+
+    /**
+     * @param array $checkoutSettings
+     * @param array $generalSettings
+     *
+     * @return array
+     */
+    public function setFromCheckoutToGeneralSettings(array $checkoutSettings, array $generalSettings){
+        $fromCheckoutToGeneral = ['use_split_address_fields', 'checkout_display', 'checkout_place', 'header_delivery_options_title', 'customs_css'];
+
+        foreach ($fromCheckoutToGeneral as $generalCarrierSettings) {
+            $generalSettings[$generalCarrierSettings] = $checkoutSettings[$generalCarrierSettings];
+        }
+
+        return $generalSettings;
     }
 
     public function setFromCheckoutToBpostSettings($bpostSettings, $checkoutSettings){

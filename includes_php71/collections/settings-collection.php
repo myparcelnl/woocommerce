@@ -18,7 +18,7 @@ if (! class_exists('\\WPO\\WC\\MyParcelBE\\Collections\\SettingsCollection')) :
     class SettingsCollection extends Collection
     {
         /**
-         * @param $rawSettings
+         * @param array $rawSettings
          * @param string $type
          * @param int $carrierId
          */
