@@ -70,6 +70,19 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                 'wpo_wcpdf_delivery_options'
             ), 10, 2);
 
+            // Change the position of the checkout
+            if (WooCommerce_MyParcelBE()->setting_collection->getByName('checkout_position')) {
+                $checkout_position = WooCommerce_MyParcelBE()->setting_collection->getByName('checkout_position');
+            } else {
+                $checkout_position = 'woocommerce_after_checkout_billing_form';
+            }
+
+            add_action('wp_enqueue_scripts', array($this, 'inject_delivery_options_variables'), 9999);
+            add_action(apply_filters('wc_myparcelbe_delivery_options_location', $checkout_position), array(
+                $this,
+                'output_delivery_options'
+            ), 10);
+
             // Save delivery options data
             add_action('woocommerce_checkout_update_order_meta', array($this, 'save_delivery_options'), 10, 2);
 
@@ -285,23 +298,34 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
 //                    }
                     }
                 }
-
                 /* Fees for pickup */
-                if (isset($delivery_options['price_comment'])) {
-                    switch ($delivery_options['price_comment']) {
-                        case 'retail':
-                            if (! empty(WooCommerce_MyParcelBE()->bpost_settings['pickup_fee'])) {
-                                $fee      = WooCommerce_MyParcelBE()->bpost_settings['pickup_fee'];
-                                $fee_name = __('bpost pickup', 'woocommerce-myparcelbe');
-                            }
-                            break;
-                    }
+                $this->getPickupFee($delivery_options, 'bpost_pickup_fee');
+            }
+        }
 
-                    if (! empty($fee)) {
-                        $this->add_fee($fee_name, $fee);
-                    }
+        /**
+         * @param $delivery_options
+         * @param string $pickupFee
+         *
+         * @return void
+         */
+        public function getPickupFee($delivery_options, string $pickupFee): void
+        {
+            if (isset($delivery_options['price_comment'])) {
+                switch ($delivery_options['price_comment']) {
+                    case 'retail':
+                        if (! empty(WooCommerce_MyParcelBE()->setting_collection->getByName($pickupFee))) {
+                            $fee      = WooCommerce_MyParcelBE()->setting_collection->getByName($pickupFee);
+                            $fee_name = __('Pickup', 'woocommerce-myparcelbe');
+                        }
+                        break;
+                }
+
+                if (! empty($fee) && ! empty($fee_name) ) {
+                    $this->add_fee($fee_name, $fee);
                 }
             }
+            return;
         }
 
         /**
@@ -417,7 +441,72 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
             return $price;
         }
 
-	      private function add_fee($fee_name, $fee)
+        private function get_checkout_config()
+        {
+            $carriers = $this
+                ->settings
+                ->like('name', 'myparcelbe_carrier_enable_')
+                ->pluck('carrier')
+                ->toArray();
+//            $bpostSettings = $this->settings->where('carrier', BpostConsignment::CARRIER_ID);
+
+            $myParcelConfig = [
+                "address"         => [
+                    "cc"         => '',
+                    "postalCode" => '',
+                    "number"     => '',
+                    "city"       => '',
+                ],
+                "config"          => [
+                    "apiBaseUrl" => WooCommerce_MyParcelBE_Frontend_Settings::BASE_URL,
+                    "carriers"   => $carriers,
+                    "platform"   => "sendmyparcel",
+                    "locale"     => "nl-NL",
+                ],
+                "carrierSettings" => [
+                    "bpost" => [
+                        "allowPickupPoints"     => $this->settings->getByName('bpost_pickup_enabled'),
+                        "allowSignature"        => $this->settings->getByName('bpost_signature_enabled'),
+                        "cutoffTime"            => $this->settings->getByName('bpost_cutoff_time'),
+                        "deliveryDaysWindow"    => $this->settings->getByName('bpost_deliverydays_window'),
+                        "dropOffDays"           => $this->settings->getByName('bpost_dropoff_days'),
+                        "dropOffDelay"          => $this->settings->getByName('bpost_dropoff_delay'),
+                        "pricePickup"           => $this->settings->getByName('bpost_pickup_fee'),
+                        "priceSignature"        => $this->settings->getByName('bpost_signature_fee'),
+                        "priceStandardDelivery" => null,
+                        "signatureTitle"        => $this->settings->getByName('bpost_signature_title'),
+                    ],
+                    "dpd"   => [
+                        "allowPickupPoints"     => $this->settings->getByName('dpd_pickup_enabled'),
+                        "cutoffTime"            => $this->settings->getByName('dpd_cutoff_time'),
+                        "deliveryDaysWindow"    => $this->settings->getByName('dpd_deliverydays_window'),
+                        "dropOffDays"           => $this->settings->getByName('dpd_dropoff_days'),
+                        "dropOffDelay"          => $this->settings->getByName('dpd_dropoff_delay'),
+                        "pricePickup"           => $this->settings->getByName('dpd_pickup_fee'),
+                        "priceStandardDelivery" => null,
+                    ],
+                ],
+                "strings"         => [
+                    /*
+                     * todo translate null
+                     */
+                    "addressNotFound"       => __('Address details are not entered', 'woocommerce-myparcelbe'),
+                    "city"                  => __('City', 'woocommerce-myparcelbe'),
+                    "closed"                => __('Closed', 'woocommerce-myparcelbe'),
+                    "deliveryTitle"         => __('Standard delivery title', 'woocommerce-myparcelbe'),
+                    "headerDeliveryOptions" => __('Delivery options title', 'woocommerce-myparcelbe'),
+                    "houseNumber"           => __('House number', 'woocommerce-myparcelbe'),
+                    "openingHours"          => __('Opening hours', 'woocommerce-myparcelbe'),
+                    "pickUpFrom"            => __('Pick up from', 'woocommerce-myparcelbe'),
+                    "pickupTitle"           => __('bpost pickup', 'woocommerce-myparcelbe'),
+                    "postcode"              => __('Postcode', 'woocommerce-myparcelbe'),
+                    "retry"                 => __('Retry', 'woocommerce-myparcelbe'),
+                    "wrongHouseNumberCity"  => __('Postcode/city combination unknown', 'woocommerce-myparcelbe'),
+                ],
+            ];
+        }
+
+        private function add_fee($fee_name, $fee)
         {
             $fee = $this->normalize_price($fee);
             // get shipping tax data
@@ -472,7 +561,6 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                 $this->add_fee($fee_name, $fee);
             }
         }
-
     }
 
 endif; // class_exists

@@ -17,8 +17,8 @@
             array(
                 'ajax_url'         => admin_url('admin-ajax.php'),
                 'nonce'            => wp_create_nonce('wc_myparcelbe'),
-                'download_display' => isset(WooCommerce_MyParcelBE()->general_settings['download_display'])
-                    ? WooCommerce_MyParcelBE()->general_settings['download_display']
+                'download_display' => WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
+                    ? WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
                     : '',
             )
         );

@@ -548,7 +548,7 @@ class WooCommerce_MyParcelBE_Settings {
 
         // Place of the checkout
         add_settings_field(
-            'checkout_place', __('Checkout position', 'woocommerce-myparcelbe'), array(
+            'checkout_position', __('Checkout position', 'woocommerce-myparcelbe'), array(
             $this->callbacks,
             'select'
         ), $option_group, 'processing_parameters', array(

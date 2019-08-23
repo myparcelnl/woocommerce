@@ -385,12 +385,12 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
 
             // Place of the checkout
             add_settings_field(
-                'checkout_place', __('Checkout position', 'woocommerce-myparcelbe'), array(
+                'checkout_position', __('Checkout position', 'woocommerce-myparcelbe'), array(
                 $this->callbacks,
                 'select'
             ), $option_group, 'checkout_options', array(
                     'option_name' => $option_name,
-                    'id'          => 'checkout_place',
+                    'id'          => 'checkout_position',
                     'options'     => array(
                         'woocommerce_after_checkout_billing_form'  => __('Show checkout options after billing details', 'woocommerce-myparcelbe'),
                         'woocommerce_after_checkout_shipping_form' => __('Show checkout options after shipping details', 'woocommerce-myparcelbe'),

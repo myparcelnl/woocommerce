@@ -215,8 +215,8 @@ class WooCommerce_MyParcelBE_Admin {
             unset($listing_actions['add_return']);
         }
 
-        $target = (isset(WooCommerce_MyParcelBE()->general_settings['download_display'])
-                   && WooCommerce_MyParcelBE()->general_settings['download_display'] == 'display') ? 'target="_blank"'
+        $target = (WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
+                   && WooCommerce_MyParcelBE()->setting_collection->get('download_display') == 'display') ? 'target="_blank"'
             : '';
         $nonce = wp_create_nonce('wc_myparcelbe');
         foreach ($listing_actions as $action => $data) {
@@ -378,8 +378,8 @@ class WooCommerce_MyParcelBE_Admin {
                 <tbody>
                 <?php
                 $action = 'get_labels';
-                $target = (isset(WooCommerce_MyParcelBE()->general_settings['download_display'])
-                           && WooCommerce_MyParcelBE()->general_settings['download_display'] == 'display')
+                $target = (WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
+                           && WooCommerce_MyParcelBE()->setting_collection->getByName('download_display') == 'display')
                     ? 'target="_blank"'
                     : '';
                 $nonce = wp_create_nonce('wc_myparcelbe');

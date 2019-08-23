@@ -15,6 +15,52 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
         /**
          * Load styles & scripts
          */
+        public function frontend_scripts_styles() {
+            // return if not checkout or order received page
+            if ( ! is_checkout() && ! is_order_received_page()) return;
+
+            // if using split fields
+            if (WooCommerce_MyParcelBE()->setting_collection->getByName('use_split_address_fields')) {
+                wp_enqueue_script(
+                    'wcmp-checkout-fields',
+                    WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
+                    array('jquery', 'wc-checkout'),
+                    WC_MYPARCEL_BE_VERSION
+                );
+            }
+
+            // return if myparcel checkout is not active
+            if ( ! isset(WooCommerce_MyParcelBE()->bpost_settings['myparcelbe_bpost'])) return;
+
+            if ( ! isset(WooCommerce_MyParcelBE()->dpd_settings['myparcelbe_dpd'])) return;
+
+            wp_enqueue_script(
+                'wc-myparcelbe',
+                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/myparcelbe.js',
+                array('jquery'),
+                WC_MYPARCEL_BE_VERSION
+            );
+
+            wp_enqueue_script(
+                'wc-myparcelbe-frontend',
+                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-frontend.js',
+                array('jquery', 'wc-myparcelbe'),
+                WC_MYPARCEL_BE_VERSION
+            );
+
+            wp_localize_script(
+                'wc-myparcelbe-frontend',
+                'wcmp_display_settings',
+                array(
+                    'isUsingSplitAddressFields' =>
+                        WooCommerce_MyParcelBE()->setting_collection->getByName('use_split_address_fields')
+                )
+            );
+        }
+
+        /**
+         * Load styles & scripts
+         */
         public function backend_scripts_styles() {
             global $post_type;
             $screen = get_current_screen();
@@ -57,11 +103,11 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
                     'wcmyparcelbe-export', 'wc_myparcelbe', array(
                         'ajax_url'         => admin_url('admin-ajax.php'),
                         'nonce'            => wp_create_nonce('wc_myparcelbe'),
-                        'download_display' => isset(WooCommerce_MyParcelBE()->general_settings['download_display'])
-                            ? WooCommerce_MyParcelBE()->general_settings['download_display']
+                        'download_display' => WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
+                            ? WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
                             : '',
-                        'offset'           => isset(WooCommerce_MyParcelBE()->general_settings['print_position_offset'])
-                            ? WooCommerce_MyParcelBE()->general_settings['print_position_offset']
+                        'offset'           => WooCommerce_MyParcelBE()->setting_collection->getByName('print_position_offset')
+                            ? WooCommerce_MyParcelBE()->setting_collection->getByName('print_position_offset')
                             : '',
                         'offset_icon'      => WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/print-offset-icon.png',
                         'offset_label'     => __('Labels to skip', 'woocommerce-myparcel'),

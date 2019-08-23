@@ -52,7 +52,7 @@ $parcel_weight_gram = WooCommerce_MyParcelBE()->export->get_parcel_weight($order
             ),
             '[insured]'        => array(
                 'label' => __('Insured to &euro; 500', 'woocommerce-myparcelbe'),
-                'value' => isset(WooCommerce_MyParcelBE()->export_defaults['insured']) ? 1 : 0,
+                'value' => WooCommerce_MyParcelBE()->setting_collection->getByName('insured') ? 1 : 0,
                 'class' => 'insured',
             ),
         );
