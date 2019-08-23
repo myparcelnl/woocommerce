@@ -163,7 +163,7 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
             return $actions;
         }
 
-        public function wpo_wcpdf_delivery_options($replacement, $order)
+        public function wpo_wcpdf_delivery_options($order)
         {
             ob_start();
             WooCommerce_MyParcelBE()->admin->show_order_delivery_options($order);
@@ -291,11 +291,6 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                         if (! empty($fee)) {
                             $this->add_fee($fee_name, $fee);
                         }
-//                    if (date('w', strtotime($delivery_options['date'])) == 6){
-//                        $fee = WooCommerce_MyParcelBE()->checkout_settings['saturday_cutoff_fee'];
-//                        $fee_name = __('Saturday delivery', 'woocommerce-myparcelbe');
-//                        $this->add_fee($fee_name, $fee);
-//                    }
                     }
                 }
                 /* Fees for pickup */
@@ -448,7 +443,6 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                 ->like('name', 'myparcelbe_carrier_enable_')
                 ->pluck('carrier')
                 ->toArray();
-//            $bpostSettings = $this->settings->where('carrier', BpostConsignment::CARRIER_ID);
 
             $myParcelConfig = [
                 "address"         => [
@@ -560,6 +554,37 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                 $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
                 $this->add_fee($fee_name, $fee);
             }
+        }
+
+        /**
+         * @return string
+         */
+        private function get_delivery_options_shipping_methods()
+        {
+            if (WooCommerce_MyParcelBE()->setting_collection->getByName('shipping_methods_package_types')
+                && (WooCommerce_MyParcelBE()->setting_collection->getByName('shipping_methods_package_types')
+                [WooCommerce_MyParcelBE_Export::PACKAGE])) {
+                // Shipping methods associated with parcels = enable delivery options
+                $delivery_options_shipping_methods = WooCommerce_MyParcelBE()->setting_collection->getByName('shipping_methods_package_types')
+                [WooCommerce_MyParcelBE_Export::PACKAGE];
+            } else {
+                $delivery_options_shipping_methods = array();
+            }
+
+            return json_encode($delivery_options_shipping_methods);
+        }
+
+        /**
+         * @return bool
+         */
+        private function myparcelbe_delivery_options_always_display()
+        {
+            if (WooCommerce_MyParcelBE()->setting_collection->getByName('checkout_display')
+                && WooCommerce_MyParcelBE()->setting_collection->getByName('checkout_display') == 'all_methods') {
+                return true;
+            }
+
+            return false;
         }
     }
 

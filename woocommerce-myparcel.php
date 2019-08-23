@@ -71,8 +71,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE')) :
      */
 
     public function __construct() {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
         $this->define('WC_MYPARCEL_BE_VERSION', $this->version);
         $this->define('WC_CHANNEL_ENGINE_ACTIVE', class_exists('Channel_Engine'));
         $this->plugin_basename = plugin_basename(__FILE__);
@@ -124,7 +122,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE')) :
      */
     public function includes()
     {
-        // Between php 5.6 and 7.1
+        // Use php version 5.6
         if (!$this->phpVersionMeets($this->legacySettingsPhpVersion)) {
             $this->includes = $this->plugin_path() . '/includes_php56';
 
