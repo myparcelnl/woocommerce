@@ -129,7 +129,10 @@ if (!class_exists('WooCommerce_MyParcelBE_Checkout')) :
          */
         public function get_checkout_config()
         {
-            $carriers = $this->settings->like("name", "myparcelbe_carrier_enable_")->pluck("carrier")->toArray();
+            $carriers = $this->settings
+                ->like("name", "myparcelbe_carrier_enable_")
+                ->pluck("carrier")
+                ->toArray();
 
             $myParcelConfig = [
                 "config"  => [
@@ -137,6 +140,7 @@ if (!class_exists('WooCommerce_MyParcelBE_Checkout')) :
                     "carriers"   => $carriers,
                     "platform"   => "belgie",
                     "locale"     => "nl-BE",
+                    "currency"   => get_woocommerce_currency(),
 
                     "allowDelivery"     => $this->settings->getByName('deliver_enabled'),
                     "allowPickupPoints" => $this->settings->getByName('pickup_enabled'),
@@ -169,7 +173,7 @@ if (!class_exists('WooCommerce_MyParcelBE_Checkout')) :
             ];
 
             foreach ($carriers as $carrier) {
-                $myParcelConfig["carrierSettings"][$carrier] = [];
+                $myParcelConfig["config"]["carrierSettings"][$carrier] = [];
 
                 foreach ($settingsMap as $jsKey => $settingKey) {
                     $myParcelConfig["carrierSettings"][$carrier][$jsKey] = $this->prepareSettingForConfig(
