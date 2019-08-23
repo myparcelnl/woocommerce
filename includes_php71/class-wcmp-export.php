@@ -840,18 +840,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             if ($this->is_pickup($order, $myparcelbe_delivery_options)) {
                 $options['signature'] = 0;
             }
-            //options.delivery_date custom delivery date not supported for carrier bpost
-            //if ($delivery_date = $this->get_delivery_date($order, $myparcelbe_delivery_options)) {
-            //    $date_time = explode(' ', $delivery_date); // split date and time
-            //    // only add if date is in the future
-            //    $timestamp = strtotime($date_time[0]);
-            //
-            //    if ($timestamp < time()) {
-            //        $new_timestamp = $this->get_next_delivery_day($timestamp);
-            //        $delivery_date = date('Y-m-d h:i:s', $new_timestamp);
-            //    }
-            //    $options['delivery_date'] = $delivery_date;
-            //}
 
             // options signature & recipient only
             $myparcelbe_signature = WCX_Order::get_meta($order, '_myparcelbe_signature');
@@ -1437,31 +1425,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
 
             return $delivery_type;
         }
-        //options.delivery_date custom delivery date not supported for carrier bpost
-        //public function get_delivery_date($order, $myparcelbe_delivery_options = '') {
-        //    if (empty($myparcelbe_delivery_options)) {
-        //        $myparcelbe_delivery_options = WCX_Order::get_meta($order, '_myparcelbe_delivery_options');
-        //    }
-        //
-        //    if ( ! empty($myparcelbe_delivery_options) && ! empty($myparcelbe_delivery_options['date'])) {
-        //        $delivery_date = $myparcelbe_delivery_options['date'];
-        //
-        //        $delivery_type = $this->get_delivery_type($order, $myparcelbe_delivery_options);
-        //        if (in_array($delivery_type, array(1, 3)) && ! empty($myparcelbe_delivery_options['time'])) {
-        //            $delivery_time_options = array_shift(
-        //                $myparcelbe_delivery_options['time']
-        //            ); // take first element in time array
-        //            $delivery_time = $delivery_time_options['start'];
-        //        } else {
-        //            $delivery_time = '00:00:00';
-        //        }
-        //        $delivery_date = "{$delivery_date} {$delivery_time}";
-        //
-        //        return $delivery_date;
-        //    } else {
-        //        return false;
-        //    }
-        //}
 
         public function get_order_shipping_class($order, $shipping_method_id = '')
         {
@@ -2037,61 +2000,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
             }
 
             return false;
-        }
-
-        public static function get_tier_ranges($round = false)
-        {
-            // same as in backoffice, average is value of option
-            $tier_ranges = array(
-                1 => array(
-                    'min'     => 0,
-                    'max'     => 21,
-                    'average' => 15
-                ),
-                2 => array(
-                    'min'     => 21,
-                    'max'     => 51,
-                    'average' => 35
-                ),
-                3 => array(
-                    'min'     => 51,
-                    'max'     => 101,
-                    'average' => 75
-                ),
-                4 => array(
-                    'min'     => 101,
-                    'max'     => 351,
-                    'average' => 225
-                ),
-                5 => array(
-                    'min'     => 351,
-                    'max'     => 2001,
-                    'average' => 1175
-                )
-            );
-
-            // round values for display according to bpost standard
-            if ($round) {
-                foreach ($tier_ranges as &$tier_range) {
-                    $tier_range['min'] = $tier_range['min'] > 0 ? $tier_range['min'] - 1 : $tier_range['min'];
-                    $tier_range['max'] = $tier_range['max'] - 1;
-                }
-            }
-
-            return $tier_ranges;
-        }
-
-        public static function find_tier_range($weight)
-        {
-            $current_range = false;
-
-            foreach (WooCommerce_MyParcelBE_Export::get_tier_ranges() as $tier_range => $value) {
-                if ($weight >= $value['min'] && $weight < $value['max']) {
-                    $current_range = $tier_range;
-                }
-            }
-
-            return $current_range;
         }
     }
 
