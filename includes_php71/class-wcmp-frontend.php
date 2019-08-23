@@ -138,26 +138,13 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
             return $actions;
         }
 
-        public function wpo_wcpdf_delivery_options($replacement, $order)
+        public function wpo_wcpdf_delivery_options($order)
         {
             ob_start();
             WooCommerce_MyParcelBE()->admin->show_order_delivery_options($order);
 
             return ob_get_clean();
         }
-        // options.delivery_date custom delivery date not supported for carrier bpost
-        //    public function wpo_wcpdf_delivery_date($replacement, $order) {
-        //        if ($delivery_date = WooCommerce_MyParcelBE()->export->get_delivery_date($order)) {
-        //            $formatted_date = date_i18n(
-        //                apply_filters('wcmyparcelbe_delivery_date_format', wc_date_format()),
-        //                strtotime($delivery_date)
-        //            );
-        //
-        //            return $formatted_date;
-        //        }
-        //
-        //        return $replacement;
-        //    }
 
         public function wpo_wcpdf_tracktrace($replacement, $order)
         {
@@ -311,11 +298,6 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                         if (! empty($fee)) {
                             $this->add_fee($fee_name, $fee);
                         }
-//                    if (date('w', strtotime($delivery_options['date'])) == 6){
-//                        $fee = WooCommerce_MyParcelBE()->checkout_settings['saturday_cutoff_fee'];
-//                        $fee_name = __('Saturday delivery', 'woocommerce-myparcelbe');
-//                        $this->add_fee($fee_name, $fee);
-//                    }
                     }
                 }
                 /* Fees for pickup */
@@ -468,7 +450,6 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                 ->like('name', 'myparcelbe_carrier_enable_')
                 ->pluck('carrier')
                 ->toArray();
-//            $bpostSettings = $this->settings->where('carrier', BpostConsignment::CARRIER_ID);
 
             $myParcelConfig = [
                 "address"         => [
@@ -524,10 +505,6 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                     "wrongHouseNumberCity"  => __('Postcode/city combination unknown', 'woocommerce-myparcelbe'),
                 ],
             ];
-
-//echo '<pre>';print_r($myParcelConfig);echo '</pre>';die();
-//            return json_encode($myParcelConfig);
-            // Use cutoff_time and saturday_cutoff_time on saturdays
         }
 
         private function add_fee($fee_name, $fee)
@@ -585,19 +562,6 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                 $this->add_fee($fee_name, $fee);
             }
         }
-
-//    private function add_fee_saturday_delivery($delivery_options, $delivery_title) {
-//        if ($delivery_options['saturday'] !== 1) {
-//            return;
-//        }
-//
-//        $fee = WooCommerce_MyParcelBE()->bpost_settings['saturday_cutoff_fee'];
-//
-//        if ( ! empty($fee)) {
-//            $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
-//            $this->add_fee($fee_name, $fee);
-//        }
-//    }
 
         /**
          * @return string

@@ -33,7 +33,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE')) :
      */
     public $setting_collection;
 
-        /**
+    /**
      * Main Plugin Instance
      * Ensures only one instance of plugin is loaded or can be loaded.
      */
@@ -50,8 +50,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE')) :
      */
 
     public function __construct() {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
         $this->define('WC_MYPARCEL_BE_VERSION', $this->version);
         $this->define('WC_CHANNEL_ENGINE_ACTIVE', class_exists('Channel_Engine'));
         $this->plugin_basename = plugin_basename(__FILE__);
@@ -102,12 +100,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE')) :
      * Load the main plugin classes and functions
      */
     public function includes() {
-        /**
-         * todo remove
-         */
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
         // use php version 5.6
         if (version_compare(PHP_VERSION, '7.1', '<')) {
             // include compatibility classes
