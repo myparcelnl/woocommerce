@@ -1,7 +1,7 @@
 <!-- Add the Custom styles to the checkout -->
-<?php if ( ! empty(WooCommerce_MyParcelBE()->checkout_settings['custom_css'])) {
+<?php if ( ! empty(WooCommerce_MyParcelBE()->general_settings['custom_css'])) {
     echo "<style>";
-    echo WooCommerce_MyParcelBE()->checkout_settings['custom_css'];
+    echo WooCommerce_MyParcelBE()->general_settings['custom_css'];
     echo "</style>";
 } ?>
 

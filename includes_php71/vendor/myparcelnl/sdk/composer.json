@@ -1,0 +1,44 @@
+{
+    "name": "myparcelnl/sdk",
+    "version": "v3.0.0-alpha.2",
+    "description": "This package is designed to send and receive data from MyParcel by means of an API.",
+    "homepage": "https://www.myparcel.nl",
+    "tags": ["MyParcel", "My Parcel", "Flespakket", "Post NL", "PostNL"],
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Reindert Vetter",
+            "email": "support@myparcel.nl",
+            "homepage": "https://www.myparcel.nl",
+            "role": "Developer"
+        },
+        {
+            "name": "Richard Perdaan",
+            "email": "support@myparcel.nl",
+            "homepage": "https://www.myparcel.nl",
+            "role": "Developer"
+        },
+        {
+            "name": "Edie Lemoine",
+            "email": "support@myparcel.nl",
+            "homepage": "https://www.myparcel.nl",
+            "role": "Developer"
+        }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/myparcelnl/sdk"
+    },
+    "bugs": {
+        "url": "https://github.com/myparcelnl/sdk/issues"
+    },
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.5"
+    },
+    "autoload": {
+        "files": [ "src/AutoLoader.php" ]
+    }
+}
