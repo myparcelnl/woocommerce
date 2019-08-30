@@ -169,7 +169,6 @@ class WooCommerce_MyParcelBE
         require_once('includes_php71/class-wcmp-assets.php');
         $this->admin = require_once('includes_php71/class-wcmp-admin.php');
         require_once('includes_php71/class-wcmp-checkout.php');
-        require_once('includes_php71/class-wcmp-frontend.php');
         require_once('includes_php71/class-wcmp-settings.php');
         $this->export = require_once('includes_php71/class-wcmp-export.php');
         require_once('includes_php71/class-wcmp-bepostcode-fields.php');
@@ -403,7 +402,7 @@ class WooCommerce_MyParcelBE
      *
      * @return array
      */
-    public function setBpostSettings(array $checkoutSettings, array $defaultSettings): array
+    public function setBpostSettings(array $checkoutSettings, array $defaultSettings)
     {
         $bpostSettings         = $checkoutSettings;
         $singleCarrierDefaults = $defaultSettings;
@@ -496,7 +495,7 @@ class WooCommerce_MyParcelBE
      * Initialize the settings.
      * Legacy: Before PHP 7.1, use old settings structure.
      */
-    public function initSettings(): void
+    public function initSettings()
     {
         if (!$this->phpVersionMeets($this->legacySettingsPhpVersion)) {
             $this->general_settings  = get_option('woocommerce_myparcelbe_general_settings');
@@ -532,7 +531,7 @@ class WooCommerce_MyParcelBE
      *
      * @return bool
      */
-    private function phpVersionMeets(string $version): bool
+    private function phpVersionMeets($version)
     {
         return version_compare(PHP_VERSION, $version, '>=');
     }
