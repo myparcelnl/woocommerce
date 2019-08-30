@@ -33,15 +33,15 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
 
             wp_enqueue_script(
                 'wc-myparcelbe',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/myparcelbe.js',
+                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/legacy/myparcelbe.js',
                 array('jquery'),
                 WC_MYPARCEL_BE_VERSION
             );
 
             wp_enqueue_script(
                 'wc-myparcelbe-frontend',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-frontend.js',
-                array('jquery', 'wc-myparcelbe'),
+                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/legacy/wcmp-frontend.js',
+                array('wc-myparcelbe'),
                 WC_MYPARCEL_BE_VERSION
             );
 

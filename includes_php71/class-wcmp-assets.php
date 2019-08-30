@@ -1,5 +1,7 @@
 <?php
 
+use WPO\WC\MyParcelBE\Collections\SettingsCollection;
+
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
 if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
@@ -7,7 +9,6 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
     class WooCommerce_MyParcelBE_Assets {
 
         function __construct() {
-            add_action('wp_enqueue_scripts', array($this, 'frontend_scripts_styles'));
             add_action('admin_enqueue_scripts', array($this, 'backend_scripts_styles'));
         }
 

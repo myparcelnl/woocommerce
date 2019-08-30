@@ -1,23 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6813b5aec918172f1cdcae142bb4b1f0",
+    "content-hash": "74c94efc6822a2922a32a535c0427fba",
     "packages": [
         {
             "name": "myparcelnl/sdk",
-            "version": "v3.0.0-alpha.2",
+            "version": "v3.0.0-beta.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "f3b9cb98c863ac0057d5f31dff9d5dee8f13732d"
+                "reference": "51e18c4a0859d84abf2406dd8f20e56361271812"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/f3b9cb98c863ac0057d5f31dff9d5dee8f13732d",
-                "reference": "f3b9cb98c863ac0057d5f31dff9d5dee8f13732d",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/51e18c4a0859d84abf2406dd8f20e56361271812",
+                "reference": "51e18c4a0859d84abf2406dd8f20e56361271812",
                 "shasum": ""
             },
             "require": {
@@ -58,7 +58,7 @@
             ],
             "description": "This package is designed to send and receive data from MyParcel by means of an API.",
             "homepage": "https://www.myparcel.nl",
-            "time": "2019-07-30T12:51:31+00:00"
+            "time": "2019-08-19T07:11:55+00:00"
         }
     ],
     "packages-dev": [],

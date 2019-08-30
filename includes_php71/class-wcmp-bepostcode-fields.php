@@ -127,7 +127,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
             wp_register_script(
                 'be-checkout',
                 WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/be-checkout.js',
-                array('wc-checkout'),
+                array('jquery', 'wc-checkout'),
                 WC_MYPARCEL_BE_VERSION
             );
             wp_enqueue_script('be-checkout');

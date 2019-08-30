@@ -1,176 +1,390 @@
-jQuery(function ($) {
-    window.myparcelbe_is_using_split_address_fields = wcmp_display_settings.isUsingSplitAddressFields;
+/* eslint-disable max-lines-per-function */
+window.addEventListener('load', function() {
 
-    /* The timeout is necessary, otherwise the order summary is going to flash */
-    setTimeout(function () {
-        $(':input.country_to_state').change();
-    }, 100);
+  if (!window.hasOwnProperty('MyParcel')) {
+    return
+  }
 
-    var MyParcelBE_Frontend = {
-        checkout_updating: false,
-        shipping_method_changed: false,
-        force_update: false,
+  /* The timeout is necessary, otherwise the order summary is going to flash */
+  setTimeout(function() {
+    var event = document.createEvent('HTMLEvents');
+    event.initEvent('change', true, false);
+    document.querySelectorAll('.country_to_state').forEach(function(selector) {
+      selector.dispatchEvent(event)
+    });
+  }, 100);
 
-        selected_shipping_method: false,
-        updated_shipping_method: false,
-        selected_country: false,
-        updated_country: false,
+  var MyParcel_Frontend = {
+    split_street_regex: /(.*?)\s?(\d{1,4})[/\s-]{0,2}([A-z]\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[A-z][A-z\s]{0,3})?$/,
+    is_using_split_address_fields: parseInt(wcmp_display_settings.isUsingSplitAddressFields),
 
-        shipping_methods: JSON.parse(wcmp_delivery_options.shipping_methods),
-        always_display: wcmp_delivery_options.always_display,
+    shipping_method_changed: false,
+    force_update: false,
 
-        init: function () {
-            MyParcelBE_Frontend.selected_country = MyParcelBE_Frontend.get_shipping_country();
+    selected_shipping_method: false,
+    updated_shipping_method: false,
+    selected_country: false,
+    updated_country: false,
 
-            $('#shipping_country, #billing_country').change(function () {
-                MyParcelBE_Frontend.updated_country = MyParcelBE_Frontend.get_shipping_country();
-            });
+    shipping_methods: JSON.parse(wcmp_delivery_options.shipping_methods),
+    always_display: wcmp_delivery_options.always_display,
 
-            /* hide checkout options for non parcel shipments */
-            function showOrHideCheckoutOptions() {
-                MyParcelBE_Frontend.checkout_updating = false; /* done updating */
+    /**
+     * @type {Element}
+     */
+    shippingFields: document.querySelector('.woocommerce-shipping-fields'),
 
-                if (!MyParcelBE_Frontend.check_country()) return;
+    /**
+     * @type {String}
+     */
+    addressType: null,
 
-                if (MyParcelBE_Frontend.always_display) {
-                    MyParcelBE_Frontend.force_update = true;
-                    MyParcelBE.showAllDeliveryOptions();
-                } else if (MyParcelBE_Frontend.shipping_methods.length > 0) {
-                    var shipping_method = MyParcelBE_Frontend.get_shipping_method();
+    /**
+     * Ship to different address field
+     *
+     * @type {String}
+     */
+    shipToDifferentAddressField: '#ship-to-different-address-checkbox',
+    checkoutDataField: '#mypa-input',
 
-                    /* no shipping method selected, hide by default */
-                    if (typeof shipping_method === 'undefined') {
-                        MyParcelBE_Frontend.hide_delivery_options();
-                        return;
-                    }
+    houseNumberField: 'house_number',
+    addressField: 'address_1',
+    countryField: 'country',
+    postcodeField: 'postcode',
 
-                    if (shipping_method.indexOf('table_rate:') !== -1 || shipping_method.indexOf('betrs_shipping:') !== -1) {
-                        /* WC Table Rates
-                        /* use shipping_method = method_id:instance_id:rate_id */
-                        if (shipping_method.indexOf('betrs_shipping:') !== -1) {
-                            shipping_method = shipping_method.replace(":", "_");
-                        }
-                    } else {
-                        /* none table rates
-                        /* strip instance_id if present */
-                        if (shipping_method.indexOf(':') !== -1) {
-                            shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
-                        }
-                        var shipping_class = $('#myparcelbe_highest_shipping_class').val();
-                        /* add class refinement if we have a shipping class */
-                        if (shipping_class) {
-                            shipping_method_class = shipping_method + ':' + shipping_class;
-                        }
-                    }
+    updateCheckoutEvent: 'myparcel_update_checkout',
+    updatedCheckoutEvent: 'myparcel_checkout_updated',
+    updatedAddressEvent: 'address_updated',
 
-                    if (shipping_class && $.inArray(shipping_method_class, MyParcelBE_Frontend.shipping_methods) > -1) {
-                        MyParcelBE_Frontend.updated_shipping_method = shipping_method_class;
-                        MyParcelBE.showAllDeliveryOptions();
-                        MyParcelBE_Frontend.myparcelbe_selected_shipping_method = shipping_method_class;
-                    } else if ($.inArray(shipping_method, MyParcelBE_Frontend.shipping_methods) > -1) {
-                        /* fallback to bare method if selected in settings */
-                        MyParcelBE_Frontend.myparcelbe_updated_shipping_method = shipping_method;
-                        MyParcelBE.showAllDeliveryOptions();
-                        MyParcelBE_Frontend.myparcelbe_selected_shipping_method = shipping_method;
-                    } else {
-                        var shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
-                        MyParcelBE_Frontend.myparcelbe_updated_shipping_method = shipping_method_now;
-                        MyParcelBE_Frontend.hide_delivery_options();
-                        jQuery('#mypabe-input').val(JSON.stringify(''));
-                        MyParcelBE_Frontend.myparcelbe_selected_shipping_method = shipping_method_now;
+    /**
+     * Initialize the script.
+     */
+    init: function() {
+      MyParcel_Frontend.addListeners();
 
-                        /* Hide extra fees when selecting local pickup */
-                        if (MyParcelBE_Frontend.shipping_method_changed == false) {
-                            MyParcelBE_Frontend.shipping_method_changed = true;
+      document.querySelector(this.shipToDifferentAddressField).addEventListener('load', this.addListeners);
+      document.querySelector(this.shipToDifferentAddressField).addEventListener('change', this.addListeners);
 
-                            /* Update checkout when selecting other method */
-                            jQuery('body').trigger('update_checkout');
+      document.addEventListener(this.updatedAddressEvent, function(event) {
+        this.setAddress(event.detail);
+      });
 
-                            /* Onyl update when the method change after 2seconds */
-                            setTimeout(function () {
-                                MyParcelBE_Frontend.shipping_method_changed = false;
-                            }, 2000);
-                        }
-                    }
-                } else {
+      document.addEventListener(this.updatedCheckoutEvent, function() {
+        console.warn(MyParcel_Frontend.updatedCheckoutEvent, document.querySelector(this.checkoutDataField).value);
+      });
 
-                    /* not sure if we should already hide by default? */
-                    MyParcelBE_Frontend.hide_delivery_options();
-                    jQuery('#mypabe-input').val(JSON.stringify(''));
-                }
-            }
+      /**
+       * Hide checkout options for non parcel shipments.
+       */
+      function showOrHideCheckoutOptions() {
+        var shipping_method_class;
 
-            /* hide checkout options for non parcel shipments */
-            $(document).on('updated_checkout', function () {
-                showOrHideCheckoutOptions();
-            });
-            /* any delivery option selected/changed - update checkout for fees */
-            $('#mypabe-chosen-delivery-options').on('change', 'input', function () {
-                MyParcelBE_Frontend.checkout_updating = true;
-                /* disable signature & recipient only when switching to pickup location */
-                var mypabe_bpost_data = JSON.parse($('#mypabe-chosen-delivery-options #mypabe-input').val());
-                if (typeof mypabe_bpost_data.location !== 'undefined') {
-                    $('#mypabe-signature, #mypabe-recipient-only').prop("checked", false);
-                }
-                $('body').trigger('update_checkout');
-            });
-        },
-
-        check_country: function () {
-            if (MyParcelBE_Frontend.updated_country !== false
-                && MyParcelBE_Frontend.updated_country !== MyParcelBE_Frontend.selected_country
-                && $.isEmptyObject(MyParcelBE.data) === false
-            ) {
-                MyParcelBE.callDeliveryOptions();
-                MyParcelBE.showAllDeliveryOptions();
-                MyParcelBE_Frontend.selected_country = MyParcelBE_Frontend.updated_country;
-            }
-
-            if (MyParcelBE_Frontend.selected_country !== 'BE') {
-
-                MyParcelBE_Frontend.hide_delivery_options();
-                return false;
-            }
-
-            return true;
-        },
-
-        get_shipping_method: function () {
-            var shipping_method;
-            /* check if shipping is user choice or fixed */
-            if ($('#order_review .shipping_method').length > 1) {
-                shipping_method = $('#order_review .shipping_method:checked').val();
-            } else {
-                shipping_method = $('#order_review .shipping_method').val();
-            }
-            return shipping_method;
-        },
-
-        get_shipping_country: function () {
-            var country;
-            if ($('#ship-to-different-address-checkbox').is(':checked')) {
-                country = $('#shipping_country').val();
-            } else {
-                country = $('#billing_country').val();
-            }
-            return country;
-        },
-
-        hide_delivery_options: function () {
-            MyParcelBE.hideAllDeliveryOptions();
-            if (MyParcelBE_Frontend.is_updated()) {
-                jQuery('body').trigger('update_checkout');
-            }
-        },
-
-        is_updated: function () {
-            if (MyParcelBE_Frontend.updated_country !== MyParcelBE_Frontend.selected_country || MyParcelBE_Frontend.force_update === true) {
-                MyParcelBE_Frontend.force_update = false; /* only force once */
-                return true;
-            }
-            return false;
+        if (!MyParcel_Frontend.checkCountry()) {
+          return;
         }
-    };
 
-    MyParcelBE_Frontend.init();
+        if (MyParcel_Frontend.always_display) {
+          MyParcel_Frontend.force_update = true;
+          this.triggerEvent('myparcel_update_checkout');
+        } else if (MyParcel_Frontend.shipping_methods.length > 0) {
+          var shipping_method = MyParcel_Frontend.getShippingMethod();
+
+          /* no shipping method selected, hide by default */
+          if (typeof shipping_method === 'undefined') {
+            MyParcel_Frontend.hideDeliveryOptions();
+            return;
+          }
+
+          if (shipping_method.indexOf('table_rate:') !== -1 || shipping_method.indexOf('betrs_shipping:') !== -1) {
+            /*
+             * WC Table Rates
+             * use shipping_method = method_id:instance_id:rate_id
+             *
+             */
+            if (shipping_method.indexOf('betrs_shipping:') !== -1) {
+              shipping_method = shipping_method.replace(":", "_");
+            }
+          } else {
+            /*
+             * none table rates
+             * strip instance_id if present
+             */
+            if (shipping_method.indexOf(':') !== -1) {
+              shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
+            }
+            var shipping_class = document.querySelector('#myparcel_highest_shipping_class').value;
+            /* add class refinement if we have a shipping class */
+            if (shipping_class) {
+              shipping_method_class = shipping_method + ':' + shipping_class;
+            }
+          }
+
+          if (shipping_class && MyParcel_Frontend.shipping_methods.indexOf(shipping_method_class) > -1) {
+            MyParcel_Frontend.updated_shipping_method = shipping_method_class;
+            MyParcel.showAllDeliveryOptions();
+            MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_class;
+          } else if (MyParcel_Frontend.shipping_methods.indexOf(shipping_method) > -1) {
+            /* fallback to bare method if selected in settings */
+            MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method;
+            MyParcel.showAllDeliveryOptions();
+            MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method;
+          } else {
+            var shipping_method_now = typeof shipping_method_class === 'undefined'
+              ? shipping_method
+              : shipping_method_class;
+
+            MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method_now;
+            MyParcel_Frontend.hideDeliveryOptions();
+
+            MyParcel_Frontend.updateInput();
+
+            MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_now;
+
+            /* Hide extra fees when selecting local pickup */
+            if (MyParcel_Frontend.shipping_method_changed === false) {
+              MyParcel_Frontend.shipping_method_changed = true;
+
+              /* Update woocommerce checkout when selecting other method */
+              MyParcel_Frontend.triggerEvent('update_checkout');
+
+              /* Only update when the method change after 2seconds */
+              setTimeout(function() {
+                MyParcel_Frontend.shipping_method_changed = false;
+              }, 2000);
+            }
+          }
+        } else {
+          /* not sure if we should already hide by default? */
+          MyParcel_Frontend.hideDeliveryOptions();
+          MyParcel_Frontend.updateInput();
+        }
+      }
+
+      /* hide checkout options for non parcel shipments */
+      document.addEventListener('updated_checkout', showOrHideCheckoutOptions);
+    },
+
+    /**
+     * Update the #mypa-input with new data.
+     *
+     * @param {Object} content - Content that will be converted to JSON string.
+     */
+    updateInput: function(content) {
+      content = content || '';
+      document.querySelector('#mypa-input').value = JSON.stringify(content);
+    },
+
+    /**
+     * If split fields are used add house number to the fields. Otherwise use address line 1.
+     *
+     * @return {string}
+     */
+    getSplitField: function() {
+      return this.is_using_split_address_fields ? MyParcel_Frontend.houseNumberField : MyParcel_Frontend.addressField;
+    },
+
+    updateCountry: function() {
+      MyParcel_Frontend.updated_country = MyParcel_Frontend.getField('country').value;
+    },
+
+    /**
+     * Add event listeners to the address fields. Remove them first if they already exist.
+     */
+    addListeners: function() {
+      /* The fields to add listeners to. */
+      var fields = [MyParcel_Frontend.countryField, MyParcel_Frontend.postcodeField, this.getSplitField()];
+
+      /* If address type is already set, remove the existing listeners before adding new ones. */
+      if (MyParcel_Frontend.addressType) {
+        MyParcel_Frontend.getField(MyParcel_Frontend.countryField).removeEventListener(
+          'change',
+          MyParcel_Frontend.updateCountry
+        );
+
+        fields.forEach(function(field) {
+          MyParcel_Frontend.getField(field).removeEventListener('change', MyParcel_Frontend.update_settings);
+        })
+      }
+
+      MyParcel_Frontend.getAddressType();
+      MyParcel_Frontend.selected_country = MyParcel_Frontend.getField(MyParcel_Frontend.countryField).value;
+
+      MyParcel_Frontend.getField(MyParcel_Frontend.countryField).addEventListener(
+        'change',
+        MyParcel_Frontend.updateCountry
+      );
+
+      fields.forEach(function(field) {
+        MyParcel_Frontend.getField(field).addEventListener('change', MyParcel_Frontend.update_settings);
+      });
+
+      MyParcel_Frontend.update_settings();
+    },
+
+    /**
+     * Get field by name. Will return element with this selector: "#<billing|shipping>_<name>".
+     *
+     * @param {string} name - The part after `shipping/billing` in the id of an element in WooCommerce.
+     *
+     * @returns {Element}
+     */
+    getField: function(name) {
+      return document.querySelector('#' + MyParcel_Frontend.addressType + '_' + name);
+    },
+
+    /**
+     * Update address type.
+     */
+    getAddressType: function() {
+      this.addressType = document.querySelector(MyParcel_Frontend.shipToDifferentAddressField).checked
+        ? 'shipping'
+        : 'billing';
+    },
+
+    /**
+     * Get the house number from either the house_number field or the address_1 field. If it's the address field use
+     * the split street regex to extract the house number.
+     *
+     * @return {String}
+     */
+    getHouseNumber: function() {
+      if (MyParcel_Frontend.is_using_split_address_fields) {
+        return MyParcel_Frontend.getField('house_number').value;
+      }
+
+      var address = MyParcel_Frontend.getField('address_1').value;
+      var result = MyParcel_Frontend.split_street_regex.exec(address);
+      var numberIndex = 2;
+
+      return result ? result[numberIndex] : null;
+    },
+
+    /**
+     * @return {boolean}
+     */
+    checkCountry: function() {
+      if (MyParcel_Frontend.updated_country !== false
+        && MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country
+      ) {
+        this.update_settings();
+        MyParcel_Frontend.triggerEvent(MyParcel_Frontend.updateCheckoutEvent);
+        MyParcel_Frontend.selected_country = MyParcel_Frontend.updated_country;
+      }
+
+      if (MyParcel_Frontend.selected_country !== 'NL' && MyParcel_Frontend.selected_country !== 'BE') {
+        MyParcel_Frontend.hideDeliveryOptions();
+        return false;
+      }
+
+      return true;
+    },
+
+    /**
+     *
+     * @return {*}
+     */
+    getShippingMethod: function() {
+      var shipping_method;
+      /* check if shipping is user choice or fixed */
+      if (document.querySelector('#order_review .shipping_method').length > 1) {
+        shipping_method = document.querySelector('#order_review .shipping_method:checked').value;
+      } else {
+        shipping_method = document.querySelector('#order_review .shipping_method').value;
+      }
+      return shipping_method;
+    },
+
+    /**
+     * Tell the checkout to hide itself.
+     */
+    hideDeliveryOptions: function() {
+      this.triggerEvent('myparcel_hide_checkout');
+      if (MyParcel_Frontend.isUpdated()) {
+        this.triggerEvent('update_checkout');
+      }
+    },
+
+    /**
+     * Trigger an event on the document body.
+     *
+     * @param {String} identifier - Name of the event.
+     */
+    triggerEvent: function(identifier) {
+      var event = document.createEvent('HTMLEvents');
+      event.initEvent(identifier, true, false);
+      document.querySelector('body').dispatchEvent(event);
+    },
+
+    /**
+     *
+     * @return {boolean}
+     */
+    isUpdated: function() {
+      if (MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country
+        || MyParcel_Frontend.force_update === true) {
+        MyParcel_Frontend.force_update = false; /* only force once */
+        return true;
+      }
+
+      return false;
+    },
+
+    /**
+     * Get data from form fields and put it in the global MyParcelConfig.
+     */
+    update_settings: function() {
+      var data = JSON.parse(window.MyParcelConfig);
+
+      data.address = {
+        cc: MyParcel_Frontend.getField('country').value,
+        postalCode: MyParcel_Frontend.getField('postcode').value,
+        number: MyParcel_Frontend.getHouseNumber(),
+        city: MyParcel_Frontend.getField('city').value,
+      };
+
+      window.MyParcelConfig = JSON.stringify(data);
+      MyParcel_Frontend.triggerEvent('myparcel_update_checkout');
+    },
+
+    /**
+     * Set the values of the WooCommerce fields.
+     * @param {Object} address
+     */
+    setAddress: function(address) {
+      if (address.postalCode) {
+        MyParcel_Frontend.getField('postcode').value = address.postalCode;
+      }
+
+      if (address.city) {
+        MyParcel_Frontend.getField('city').value = address.city
+      }
+
+      if (address.number) {
+        MyParcel_Frontend.setHouseNumber(address.number);
+      }
+    },
+
+    /**
+     * Set the house number.
+     *
+     * @param {String|Number} number
+     */
+    setHouseNumber: function(number) {
+      if (MyParcel_Frontend.is_using_split_address_fields) {
+        var address = MyParcel_Frontend.getField('address_1').value;
+        var oldHouseNumber = MyParcel_Frontend.getHouseNumber();
+
+        if (oldHouseNumber) {
+          MyParcel_Frontend.getField('address_1').value = address.replace(oldHouseNumber, number);
+        } else {
+          MyParcel_Frontend.getField('address_1').value = address + number;
+        }
+      } else {
+        MyParcel_Frontend.getField('number').value = number;
+      }
+    },
+  };
+
+  MyParcel_Frontend.init();
+  window.MyParcel_Frontend = MyParcel_Frontend;
 });
