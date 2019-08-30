@@ -152,26 +152,26 @@ class WooCommerce_MyParcelBE
             return;
         }
 
-        $this->includes = $this->plugin_path() . '/includes_php71';
+        $this->includes = $this->plugin_path() . '/includes';
         // Use minimum php version 7.1
-        require_once('includes_php71/vendor/autoload.php');
+        require_once('includes/vendor/autoload.php');
 
         // include compatibility classes
-        require_once('includes_php71/compatibility/abstract-wc-data-compatibility.php');
-        require_once('includes_php71/compatibility/class-wc-date-compatibility.php');
-        require_once('includes_php71/compatibility/class-wc-core-compatibility.php');
-        require_once('includes_php71/compatibility/class-wc-order-compatibility.php');
-        require_once('includes_php71/compatibility/class-wc-product-compatibility.php');
+        require_once('includes/compatibility/abstract-wc-data-compatibility.php');
+        require_once('includes/compatibility/class-wc-date-compatibility.php');
+        require_once('includes/compatibility/class-wc-core-compatibility.php');
+        require_once('includes/compatibility/class-wc-order-compatibility.php');
+        require_once('includes/compatibility/class-wc-product-compatibility.php');
 
-        require_once('includes_php71/collections/settings-collection.php');
-        require_once('includes_php71/entities/setting.php');
+        require_once('includes/collections/settings-collection.php');
+        require_once('includes/entities/setting.php');
 
-        require_once('includes_php71/class-wcmp-assets.php');
-        $this->admin = require_once('includes_php71/class-wcmp-admin.php');
-        require_once('includes_php71/class-wcmp-checkout.php');
-        require_once('includes_php71/class-wcmp-settings.php');
-        $this->export = require_once('includes_php71/class-wcmp-export.php');
-        require_once('includes_php71/class-wcmp-bepostcode-fields.php');
+        require_once('includes/class-wcmp-assets.php');
+        $this->admin = require_once('includes/class-wcmp-admin.php');
+        require_once('includes/class-wcmp-checkout.php');
+        require_once('includes/class-wcmp-settings.php');
+        $this->export = require_once('includes/class-wcmp-export.php');
+        require_once('includes/class-wcmp-bepostcode-fields.php');
     }
 
     /**
