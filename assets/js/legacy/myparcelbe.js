@@ -1,10 +1,4 @@
 MyParcelBE = {
-  /*
-     * Init
-     *
-     * Initialize the MyParcel BE checkout.
-     *
-     */
   data: {},
   currentLocation: {},
 
@@ -15,6 +9,12 @@ MyParcelBE = {
 
   SPLIT_STREET_REGEX: /(.*?)\s?(\d{1,4})[/\s\-]{0,2}([a-zA-Z]{1}\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[a-zA-Z]{1}[a-zA-Z\s]{0,3})?$/g,
 
+  /*
+   * Init
+   *
+   * Initialize the MyParcel BE checkout.
+   *
+   */
   init: function() {
     this.data = JSON.parse(wcmp_config);
     isMobile = jQuery(window).width() < 980;
@@ -118,11 +118,9 @@ MyParcelBE = {
   },
 
   /*
-     * Bind
-     *
-     * Bind actions to selectors.
-     *
-     */
+   * Bind actions to selectors.
+   *
+   */
   bind: function() {
     jQuery('#mypabe-submit').on('click', function(e) {
       e.preventDefault();
@@ -195,15 +193,15 @@ MyParcelBE = {
     MyParcelBE.removeStyleFromPrice();
 
     /**
-         * Normal delivery
-         *
-         */
+     * Normal delivery
+     *
+     */
     if (jQuery('#mypabe-pickup-delivery').prop('checked') === false && jQuery('#method-myparcelbe-normal').prop('checked')) {
       MyParcelBE.addStyleToPrice('#mypabe-normal-delivery');
 
       /**
-             * Signature
-             */
+       * Signature
+       */
       if (jQuery('#mypabe-signature-selector').prop('checked')) {
         MyParcelBE.DELIVERY_SIGNATURE = 1;
         MyParcelBE.addStyleToPrice('#mypabe-signature-price');
@@ -215,9 +213,8 @@ MyParcelBE = {
     }
 
     /**
-         * Pickup
-         *
-         */
+     * Pickup
+     */
     if (jQuery('#mypabe-pickup-delivery').prop('checked') || jQuery('#mypabe-pickup-selector').prop('checked')) {
       MyParcelBE.addStyleToPrice('#mypabe-pickup-price');
 
@@ -280,11 +277,11 @@ MyParcelBE = {
   },
 
   /*
-     * toggleDeliveryOptions
-     *
-     * Shows and hides the display options that are valid for the recipient only and signature required pre-selectors
-     *
-     */
+   * toggleDeliveryOptions
+   *
+   * Shows and hides the display options that are valid for the recipient only and signature required pre-selectors
+   *
+   */
   toggleDeliveryOptions: function() {
     var isPickup = jQuery('#mypabe-pickup-delivery').is(':checked');
     jQuery('#mypabe-pickup-selector').prop('checked', true);
@@ -292,11 +289,11 @@ MyParcelBE = {
   },
 
   /*
-     * exportDeliverOptionToWebshop
-     *
-     * Exports the selected delivery option to the webshop.
-     *
-     */
+   * exportDeliverOptionToWebshop
+   *
+   * Exports the selected delivery option to the webshop.
+   *
+   */
   exportDeliveryOptionToWebshop: function() {
     var deliveryOption = "";
     var selected = jQuery("#mypabe-delivery-option-form").find("input[type='radio']:checked");
@@ -306,22 +303,22 @@ MyParcelBE = {
   },
 
   /*
-     * hideMessage
-     *
-     * Hides pop-up message.
-     *
-     */
+   * hideMessage
+   *
+   * Hides pop-up message.
+   *
+   */
   hideMessage: function() {
     jQuery('.mypabe-message-model').hide();
     jQuery('#mypabe-delivery-option-form').show();
   },
 
   /*
-     * hideMessage
-     *
-     * Hides pop-up message.
-     *
-     */
+   * hideMessage
+   *
+   * Hides pop-up message.
+   *
+   */
   showMessage: function(message) {
     jQuery('.mypabe-message-model').show();
     jQuery('#mypabe-message').html(message).show();
@@ -330,11 +327,11 @@ MyParcelBE = {
   },
 
   /*
-     * hideDelivery
-     *
-     * Hides interface part for delivery.
-     *
-     */
+   * hideDelivery
+   *
+   * Hides interface part for delivery.
+   *
+   */
   hideDelivery: function() {
     jQuery('#mypabe-delivery-date-text,.mypabe-extra-delivery-options').hide();
     jQuery('#mypabe-select-date').parent().parent().hide();
@@ -343,11 +340,11 @@ MyParcelBE = {
   },
 
   /*
-     * showDelivery
-     *
-     * Shows interface part for delivery.
-     *
-     */
+   * showDelivery
+   *
+   * Shows interface part for delivery.
+   *
+   */
   showDelivery: function() {
 
     jQuery('#mypabe-delivery').parent().parent().show();
@@ -376,11 +373,11 @@ MyParcelBE = {
   },
 
   /*
-     * showSpinner
-     *
-     * Shows the MyParcel BE spinner.
-     *
-     */
+   * showSpinner
+   *
+   * Shows the MyParcel BE spinner.
+   *
+   */
   showSpinner: function() {
     jQuery('#mypabe-delivery-option-form').hide();
     jQuery('.mypabe-message-model').hide();
@@ -388,11 +385,11 @@ MyParcelBE = {
   },
 
   /*
-     * hideSpinner
-     *
-     * Hides the MyParcel BE spinner.
-     *
-     */
+   * hideSpinner
+   *
+   * Hides the MyParcel BE spinner.
+   *
+   */
   hideSpinner: function() {
     jQuery('#mypabe-spinner-model').hide();
   },
@@ -406,11 +403,11 @@ MyParcelBE = {
   },
 
   /*
-     * dateToString
-     *
-     * Convert api date string format to human readable string format
-     *
-     */
+   * dateToString
+   *
+   * Convert api date string format to human readable string format
+   *
+   */
   dateToString: function(apiDate) {
     var deliveryDate = apiDate;
     var dateArr = deliveryDate.split('-');
@@ -422,11 +419,11 @@ MyParcelBE = {
   },
 
   /*
-     * showDeliveryDates
-     *
-     * Show possible delivery dates.
-     *
-     */
+   * showDeliveryDates
+   *
+   * Show possible delivery dates.
+   *
+   */
   showDeliveryDates: function() {
     var html = "";
     var deliveryWindow = parseInt(MyParcelBE.data.config.deliverydaysWindow);
@@ -459,22 +456,22 @@ MyParcelBE = {
   },
 
   /*
-     * clearPickupLocations
-     *
-     * Clear pickup locations and show a non-value option.
-     *
-     */
+   * clearPickupLocations
+   *
+   * Clear pickup locations and show a non-value option.
+   *
+   */
   clearPickUpLocations: function() {
     var html = '<option value="">---</option>';
     jQuery('#mypabe-pickup-location').html(html);
   },
 
   /*
-     * hidePickupLocations
-     *
-     * Hide the pickup location option.
-     *
-     */
+   * hidePickupLocations
+   *
+   * Hide the pickup location option.
+   *
+   */
   hidePickUpLocations: function() {
     if (!MyParcelBE.data.config.allowPickupPoints) {
       jQuery('#mypabe-pickup-location-selector').hide();
@@ -484,11 +481,11 @@ MyParcelBE = {
   },
 
   /*
-     * showPickupLocations
-     *
-     * Shows possible pickup locations, from closest to further.
-     *
-     */
+   * showPickupLocations
+   *
+   * Shows possible pickup locations, from closest to further.
+   *
+   */
   showPickUpLocations: function() {
     if (MyParcelBE.data.config.allowPickupPoints === false) {
       return;
@@ -504,21 +501,21 @@ MyParcelBE = {
   },
 
   /*
-     * hideLocationDetails
-     *
-     * Hide the detailed information pop-up for selected location.
-     *
-     */
+   * hideLocationDetails
+   *
+   * Hide the detailed information pop-up for selected location.
+   *
+   */
   hideLocationDetails: function() {
     jQuery('#mypabe-delivery-option-form').show();
     jQuery('#mypabe-location-details').hide();
   },
 
   /*
-     * showLocationDetails
-     *
-     * Shows the detailed information pop-up for the selected pick-up location.
-     */
+   * showLocationDetails
+   *
+   * Shows the detailed information pop-up for the selected pick-up location.
+   */
   showLocationDetails: function() {
     var html = "";
     var locationId = jQuery('#mypabe-pickup-location').val();
@@ -562,31 +559,31 @@ MyParcelBE = {
   },
 
   /*
-     * hideShippingAddress
-     *
-     * Hide the "ship to different address" section.
-     *
-     */
+   * hideShippingAddress
+   *
+   * Hide the "ship to different address" section.
+   *
+   */
   hideShippingAddress: function() {
     jQuery('.woocommerce-shipping-fields').hide();
   },
 
   /*
-     * showShippingAddress
-     *
-     * Show the "ship to different address" section.
-     *
-     */
+   * showShippingAddress
+   *
+   * Show the "ship to different address" section.
+   *
+ */
   showShippingAddress: function() {
     jQuery('.woocommerce-shipping-fields').show();
   },
 
   /*
-     * getPickupByLocationId
-     *
-     * Find the location by id and return the object.
-     *
-     */
+   * getPickupByLocationId
+   *
+   * Find the location by id and return the object.
+   *
+ */
   getPickupByLocationId: function(obj, locationId) {
     var object;
 
@@ -601,12 +598,12 @@ MyParcelBE = {
   },
 
   /*
-     * retryPostalCodeHouseNumber
-     *
-     * After detecting an unrecognised postal code / house number combination the user can try again.
-     * This function copies the newly entered data back into the webshop forms.
-     *
-     */
+   * retryPostalCodeHouseNumber
+   *
+   * After detecting an unrecognised postal code / house number combination the user can try again.
+   * This function copies the newly entered data back into the webshop forms.
+   *
+ */
   retryPostalCodeHouseNumber: function() {
     var retryPostalCode = jQuery('#mypabe-error-postcode').val();
     var retryCity = jQuery('#mypabe-error-city').val();
@@ -620,11 +617,11 @@ MyParcelBE = {
   },
 
   /*
-     * showFallBackDelivery
-     *
-     * If the API call fails and we have no data about delivery or pick up options
-     * show the customer an "As soon as possible" option.
-     */
+   * showFallBackDelivery
+   *
+   * If the API call fails and we have no data about delivery or pick up options
+   * show the customer an "As soon as possible" option.
+   */
   showFallBackDelivery: function() {
     MyParcelBE.hideSpinner();
     MyParcelBE.hideDelivery();
@@ -633,22 +630,34 @@ MyParcelBE = {
   },
 
   /*
-     * showRetry
-     *
-     * If a customer enters an unrecognised postal code & house number combination show a
-     * pop-up so they can try again.
-     */
+   * showRetry
+   *
+   * If a customer enters an unrecognised postal code & house number combination show a
+   * pop-up so they can try again.
+   */
   showRetry: function() {
     MyParcelBE.showMessage(
-      '<h3>' + MyParcelBE.data.textToTranslate.wrongHouseNumberCity + '</h3>' +
-            '<div class="mypabe-full-width mypabe-error">' +
-            '<label for="mypabe-error-postcode">' + MyParcelBE.data.textToTranslate.postcode + '</label>' +
-            '<input type="text" name="mypabe-error-postcode" id="mypabe-error-postcode" value="' + MyParcelBE.data.address.postalCode + '">' +
-            '</div><div class="mypabe-full-width mypabe-error">' +
-            '<label for="mypabe-error-city">' + MyParcelBE.data.textToTranslate.city + '</label>' +
-            '<input type="text" name="mypabe-error-city" id="mypabe-error-city" value="' + MyParcelBE.data.address.city + '">' +
-            '<br><div id="mypabe-error-try-again" class="button btn">' + MyParcelBE.data.textToTranslate.retry + '</div>' +
-            '</div>'
+      '<h3>' +
+      MyParcelBE.data.textToTranslate.wrongHouseNumberCity +
+      '</h3>' +
+      '<div class="mypabe-full-width mypabe-error">' +
+      '<label for="mypabe-error-postcode">' +
+      MyParcelBE.data.textToTranslate.postcode +
+      '</label>' +
+      '<input type="text" name="mypabe-error-postcode" id="mypabe-error-postcode" value="' +
+      MyParcelBE.data.address.postalCode +
+      '">' +
+      '</div><div class="mypabe-full-width mypabe-error">' +
+      '<label for="mypabe-error-city">' +
+      MyParcelBE.data.textToTranslate.city +
+      '</label>' +
+      '<input type="text" name="mypabe-error-city" id="mypabe-error-city" value="' +
+      MyParcelBE.data.address.city +
+      '">' +
+      '<br><div id="mypabe-error-try-again" class="button btn">' +
+      MyParcelBE.data.textToTranslate.retry +
+      '</div>' +
+      '</div>'
     );
 
     /* remove trigger that closes message */
@@ -705,12 +714,12 @@ MyParcelBE = {
   },
 
   /*
-     * splitFullStreetFromInput
-     *
-     * Split full street into parts and returning empty array if there's no street entered
-     */
+   * splitFullStreetFromInput
+   *
+   * Split full street into parts and returning empty array if there's no street entered
+   */
   splitFullStreetFromInput: function(addressLine1, addressLine2) {
-    result = {
+    var result = {
       streetName: '',
       houseNumber: '',
       houseNumberSuffix: '',
@@ -720,12 +729,12 @@ MyParcelBE = {
   },
 
   /*
-     * callDeliveryOptions
-     *
-     * Calls the MyParcel BE API to retrieve the pickup and delivery options for given house number and
-     * Postal Code.
-     *
-     */
+   * callDeliveryOptions
+   *
+   * Calls the MyParcel BE API to retrieve the pickup and delivery options for given house number and
+   * Postal Code.
+   *
+   */
   callDeliveryOptions: function() {
     MyParcelBE.showSpinner();
     MyParcelBE.clearPickUpLocations();
