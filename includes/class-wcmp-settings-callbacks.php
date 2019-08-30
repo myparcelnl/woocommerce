@@ -2,9 +2,9 @@
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( ! class_exists('WooCommerce_MyParcelBE_Settings_Callbacks')) :
+if ( ! class_exists('wcmp_settings_callbacks')) :
 
-class WooCommerce_MyParcelBE_Settings_Callbacks {
+class wcmp_settings_callbacks {
 
     const extra_width_for_number_input = 200;
     const steps_number_input_fields = "0.01";
@@ -682,4 +682,4 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
 
 endif; // class_exists
 
-return new WooCommerce_MyParcelBE_Settings_Callbacks();
+return new wcmp_settings_callbacks();

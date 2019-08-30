@@ -4,9 +4,9 @@ use WPO\WC\MyParcelBE\Collections\SettingsCollection;
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
+if ( ! class_exists('wcmp_assets')) :
 
-    class WooCommerce_MyParcelBE_Assets {
+    class wcmp_assets {
 
         function __construct() {
             add_action('admin_enqueue_scripts', array($this, 'backend_scripts_styles'));
@@ -134,4 +134,4 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
 
 endif; // class_exists
 
-return new WooCommerce_MyParcelBE_Assets();
+return new wcmp_assets();

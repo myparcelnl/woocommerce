@@ -4,14 +4,13 @@ if ( ! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
+if ( ! class_exists('wcmp_settings')) :
 
     /**
      * Create & render settings page
      */
-    class WooCommerce_MyParcelBE_Settings
+    class wcmp_settings
     {
-
         public $options_page_hook;
 
         public function __construct()
@@ -44,7 +43,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                 __('MyParcel BE', 'woocommerce-myparcelbe'),
                 __('MyParcel BE', 'woocommerce-myparcelbe'),
                 'manage_options',
-                'woocommerce_myparcelbe_settings',
+                'wcmp_settings',
                 array($this, 'settings_page')
             );
         }
@@ -495,7 +494,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
                     array(
                         'option_name' => $option_name,
                         'id'          => 'package_type',
-                        'default'     => (string) WooCommerce_MyParcelBE_Export::PACKAGE,
+                        'default'     => (string) wcmp_export::PACKAGE,
                         'options'     => WooCommerce_MyParcelBE()->export->get_package_types(),
                     )
                 );
@@ -970,4 +969,4 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Settings')) :
 
 endif; // class_exists
 
-return new WooCommerce_MyParcelBE_Settings();
+return new wcmp_settings();

@@ -6,12 +6,12 @@ if (!defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (!class_exists('WooCommerce_MyParcelBE_Checkout')) :
+if (!class_exists('wcmp_checkout')) :
 
     /**
      * Frontend views
      */
-    class WooCommerce_MyParcelBE_Checkout
+    class wcmp_checkout
     {
         /**
          * @var SettingsCollection
@@ -104,9 +104,9 @@ if (!class_exists('WooCommerce_MyParcelBE_Checkout')) :
             $packageTypes = $this->settings->getByName("shipping_methods_package_types");
             $shipping_methods = [];
 
-            if (array_key_exists(WooCommerce_MyParcelBE_Export::PACKAGE, $packageTypes ?? [])) {
+            if (array_key_exists(wcmp_export::PACKAGE, $packageTypes ?? [])) {
                 // Shipping methods associated with parcels = enable delivery options
-                $shipping_methods = $packageTypes[WooCommerce_MyParcelBE_Export::PACKAGE];
+                $shipping_methods = $packageTypes[wcmp_export::PACKAGE];
             }
 
             return json_encode($shipping_methods);

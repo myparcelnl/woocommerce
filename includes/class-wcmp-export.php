@@ -12,9 +12,9 @@ if ( ! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
+if ( ! class_exists('wcmp_export')) :
 
-    class WooCommerce_MyParcelBE_Export
+    class wcmp_export
     {
 
         // Package types
@@ -208,7 +208,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
         /**
          * @param $order_ids
          *
-         * @return WooCommerce_MyParcelBE_Export
+         * @return wcmp_export
          * @throws \MyParcelNL\Sdk\src\Exception\ApiException
          * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
          */
@@ -532,7 +532,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
         }
 
         /**
-         * @return bool|wc_myparcelbe_API
+         * @return bool|wcmp_api
          * @throws Exception
          */
         public function init_api()
@@ -693,7 +693,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                     if ( ! $is_using_old_fields) {
                         // Split the address line 1 into three parts
                         preg_match(
-                            Woocommerce_MyParcelBE_Postcode_Fields::SPLIT_STREET_REGEX,
+                            wcmp_be_postcode_fields::SPLIT_STREET_REGEX,
                             WCX_Order::get_prop($order, 'billing_address_1'),
                             $address_parts
                         );
@@ -716,7 +716,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
                     if ( ! $is_using_old_fields) {
                         // Split the address line 1 into three parts
                         preg_match(
-                            Woocommerce_MyParcelBE_Postcode_Fields::SPLIT_STREET_REGEX,
+                            wcmp_be_postcode_fields::SPLIT_STREET_REGEX,
                             WCX_Order::get_prop($order, 'shipping_address_1'),
                             $address_parts
                         );
@@ -1999,4 +1999,4 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Export')) :
 
 endif; // class_exists
 
-return new WooCommerce_MyParcelBE_Export();
+return new wcmp_export();

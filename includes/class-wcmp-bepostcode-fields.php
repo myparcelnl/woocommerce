@@ -5,9 +5,9 @@ use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( ! class_exists('Woocommerce_MyParcelBE_Postcode_Fields')) :
+if ( ! class_exists('wcmp_be_postcode_fields')) :
 
-class Woocommerce_MyParcelBE_Postcode_Fields {
+class wcmp_be_postcode_fields {
 
     /*
      * Regular expression used to split street name from house number.
@@ -982,4 +982,4 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
 
 endif; // class_exists
 
-return new Woocommerce_MyParcelBE_Postcode_Fields();
+return new wcmp_be_postcode_fields();

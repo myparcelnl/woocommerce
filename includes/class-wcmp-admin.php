@@ -6,12 +6,12 @@ use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( ! class_exists('WooCommerce_MyParcelBE_Admin')) :
+if ( ! class_exists('wcmp_admin')) :
 
 /**
  * Admin options, buttons & data
  */
-class WooCommerce_MyParcelBE_Admin {
+class wcmp_admin {
 
     function __construct() {
         add_action('woocommerce_admin_order_actions_end', array($this, 'order_list_shipment_options'), 9999);
@@ -618,4 +618,4 @@ class WooCommerce_MyParcelBE_Admin {
 
 endif; // class_exists
 
-return new WooCommerce_MyParcelBE_Admin();
+return new wcmp_admin();
