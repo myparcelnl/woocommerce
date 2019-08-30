@@ -55,7 +55,7 @@ jQuery(function($) {
 
     .on('wc-myparcelbe-enhanced-select-init', function() {
 
-      // Ajax shipping method search box
+     /* Ajax shipping method search box */
       $(':input.wc-myparcelbe-shipping-method-search').filter(':not(.enhanced)').each(function() {
         var select2_args = {
           allowClear: !!$(this).data('allow_clear'),

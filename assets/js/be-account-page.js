@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
   function localize_address_fields(address_type) {
-    // Hide custom BE fields by default when country not BE
+   /* Hide custom BE fields by default when country not BE */
     var country = $('#' + address_type + '_country').val();
     if (typeof country != 'undefined') {
       if (country != 'BE') {

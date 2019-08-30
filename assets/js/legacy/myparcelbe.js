@@ -573,7 +573,7 @@ MyParcelBE = {
    *
    * Show the "ship to different address" section.
    *
- */
+   */
   showShippingAddress: function() {
     jQuery('.woocommerce-shipping-fields').show();
   },
@@ -583,7 +583,7 @@ MyParcelBE = {
    *
    * Find the location by id and return the object.
    *
- */
+   */
   getPickupByLocationId: function(obj, locationId) {
     var object;
 
@@ -603,7 +603,7 @@ MyParcelBE = {
    * After detecting an unrecognised postal code / house number combination the user can try again.
    * This function copies the newly entered data back into the webshop forms.
    *
- */
+   */
   retryPostalCodeHouseNumber: function() {
     var retryPostalCode = jQuery('#mypabe-error-postcode').val();
     var retryCity = jQuery('#mypabe-error-city').val();
@@ -741,7 +741,7 @@ MyParcelBE = {
     MyParcelBE.hideDelivery();
     MyParcelBE.setAddressFromInputFields();
 
-    // Hide bpost field if there is no address entered
+   /* Hide bpost field if there is no address entered */
     if (this.data.address.postalCode == '' || this.data.address.city == '') {
       MyParcelBE.hideSpinner();
       MyParcelBE.showMessage(
@@ -808,7 +808,7 @@ MyParcelBE = {
       });
   },
 };
-// timeout because postcode api might take too long to respond
+/* timeout because postcode api might take too long to respond */
 setTimeout(function() {
   MyParcelBE.init();
 }, 2000);

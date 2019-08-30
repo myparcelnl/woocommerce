@@ -18,7 +18,6 @@ window.addEventListener('load', function() {
     split_street_regex: /(.*?)\s?(\d{1,4})[/\s-]{0,2}([A-z]\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[A-z][A-z\s]{0,3})?$/,
     is_using_split_address_fields: parseInt(wcmp_display_settings.isUsingSplitAddressFields),
 
-    // checkout_updating: false,
     shipping_method_changed: false,
     force_update: false,
 
@@ -78,7 +77,6 @@ window.addEventListener('load', function() {
        * Hide checkout options for non parcel shipments.
        */
       function showOrHideCheckoutOptions() {
-        // MyParcel_Frontend.checkout_updating = false; /* done updating */
         var shipping_method_class;
 
         if (!MyParcel_Frontend.checkCountry()) {
@@ -98,14 +96,19 @@ window.addEventListener('load', function() {
           }
 
           if (shipping_method.indexOf('table_rate:') !== -1 || shipping_method.indexOf('betrs_shipping:') !== -1) {
-            /* WC Table Rates
-                         * use shipping_method = method_id:instance_id:rate_id */
+            /*
+             * WC Table Rates
+             * use shipping_method = method_id:instance_id:rate_id
+             *
+             */
             if (shipping_method.indexOf('betrs_shipping:') !== -1) {
               shipping_method = shipping_method.replace(":", "_");
             }
           } else {
-            /* none table rates
-                         * strip instance_id if present */
+            /*
+             * none table rates
+             * strip instance_id if present
+             */
             if (shipping_method.indexOf(':') !== -1) {
               shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
             }
@@ -188,10 +191,10 @@ window.addEventListener('load', function() {
      * Add event listeners to the address fields. Remove them first if they already exist.
      */
     addListeners: function() {
-      // The fields to add listeners to.
+      /* The fields to add listeners to. */
       var fields = [MyParcel_Frontend.countryField, MyParcel_Frontend.postcodeField, this.getSplitField()];
 
-      // If address type is already set, remove the existing listeners before adding new ones.
+      /* If address type is already set, remove the existing listeners before adding new ones. */
       if (MyParcel_Frontend.addressType) {
         MyParcel_Frontend.getField(MyParcel_Frontend.countryField).removeEventListener(
           'change',
@@ -262,7 +265,6 @@ window.addEventListener('load', function() {
     checkCountry: function() {
       if (MyParcel_Frontend.updated_country !== false
         && MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country
-        // && !isEmptyObject(window.MyParcel.data)
       ) {
         this.update_settings();
         MyParcel_Frontend.triggerEvent(MyParcel_Frontend.updateCheckoutEvent);
@@ -382,17 +384,6 @@ window.addEventListener('load', function() {
       }
     },
   };
-
-  /**
-   * Check if given variable is an empty object.
-   *
-   * @param {Object} obj - Object to check.
-   *
-   * @returns {boolean}
-   */
-  function isEmptyObject(obj) {
-    return Object.keys(obj).length === 0 && obj.constructor === Object;
-  }
 
   MyParcel_Frontend.init();
   window.MyParcel_Frontend = MyParcel_Frontend;

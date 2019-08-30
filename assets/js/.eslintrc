@@ -146,7 +146,6 @@
       "warn", "as-needed"
     ],
     "require-await": "warn",
-    // deprecated
     "space-before-blocks": [
       "warn", "always"
     ],
@@ -173,6 +172,7 @@
     "wrap-regex": "warn",
     "yoda": [
       "warn", "never"
-    ]
+    ],
+    "multiline-comment-style": ["warn", "starred-block"]
   }
 }

@@ -48,18 +48,18 @@ window.addEventListener('load', function() {
   function setAddress() {
     var type = this.getAttribute('id').search('billing') ? 'shipping' : 'billing';
 
-    // Fill in the hidden address line 1 field in case a theme forces it to be required
+   /* Fill in the hidden address line 1 field in case a theme forces it to be required */
     document.querySelector('#' + type + '_address_1').value = this.value;
 
     var address = this.value.split(addressRegex).filter(function(value) {
-      return !!value; // filter out empty values
+      return !!value;/* filter out empty values */
     });
 
     document.querySelector('#' + type + '_street_name').value = address[0] || '';
     document.querySelector('#' + type + '_house_number').value = address[1] || '';
     document.querySelector('#' + type + '_house_number_suffix').value = address[2] || '';
 
-    // Update settings after filling if the frontend script is loaded and initialized and address is not empty
+   /* Update settings after filling if the frontend script is loaded and initialized and address is not empty */
     if (address.length && window.hasOwnProperty('MyParcel_Frontend')) {
       window.MyParcel_Frontend.update_settings();
     }
