@@ -1,0 +1,23 @@
+{
+  "name": "@woocommerce/myparcelbe",
+  "private": true,
+  "version": "3.1.7",
+  "description": "Welcome to the WooCommerce MyParcel BE repository on GitHub. Here you can browse the source, look at open issues and keep track of development.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/myparcelbe/woocommerce.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/myparcelbe/woocommerce/issues"
+  },
+  "homepage": "https://github.com/myparcelbe/woocommerce#readme",
+  "devDependencies": {
+    "@myparcel/checkout": "^3.0.1",
+    "husky": "^3.0.4"
+  }
+}
