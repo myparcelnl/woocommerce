@@ -78,11 +78,9 @@ window.addEventListener('load', function() {
        * Hide checkout options for non parcel shipments.
        */
       function showOrHideCheckoutOptions() {
-        console.log('showOrHideCheckoutOptions');
         // MyParcel_Frontend.checkout_updating = false; /* done updating */
         var shipping_method_class;
 
-        console.log('MyParcel_Frontend.checkCountry()', MyParcel_Frontend.checkCountry());
         if (!MyParcel_Frontend.checkCountry()) {
           return;
         }
@@ -262,7 +260,6 @@ window.addEventListener('load', function() {
      * @return {boolean}
      */
     checkCountry: function() {
-      console.log('checkCountry');
       if (MyParcel_Frontend.updated_country !== false
         && MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country
         // && !isEmptyObject(window.MyParcel.data)
@@ -375,7 +372,6 @@ window.addEventListener('load', function() {
         var address = MyParcel_Frontend.getField('address_1').value;
         var oldHouseNumber = MyParcel_Frontend.getHouseNumber();
 
-        console.log(oldHouseNumber);
         if (oldHouseNumber) {
           MyParcel_Frontend.getField('address_1').value = address.replace(oldHouseNumber, number);
         } else {

@@ -50,8 +50,10 @@ class WooCommerce_MyParcelBE
     /**
      * @var string
      */
-    public  $includes;
-    private $export;
+    public $includes;
+
+    public $export;
+
     private $admin;
 
     /**

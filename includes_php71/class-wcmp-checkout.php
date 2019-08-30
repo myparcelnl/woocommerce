@@ -66,18 +66,20 @@ if (!class_exists('WooCommerce_MyParcelBE_Checkout')) :
                 WC_MYPARCEL_BE_VERSION
             );
 
+            $this->inject_delivery_options_variables();
+        }
+
+        /**
+         * Localize variables into the checkout scripts.
+         */
+        public function inject_delivery_options_variables()
+        {
             wp_localize_script(
                 'wc-myparcelbe-frontend',
                 'wcmp_display_settings',
                 ['isUsingSplitAddressFields' => $this->settings->isEnabled('use_split_address_fields')]
             );
-        }
 
-        /**
-         * Output inline script with the variables needed
-         */
-        public function inject_delivery_options_variables()
-        {
             wp_localize_script(
                 'wc-myparcelbe',
                 'wcmp_delivery_options',
@@ -136,7 +138,6 @@ if (!class_exists('WooCommerce_MyParcelBE_Checkout')) :
 
             $myParcelConfig = [
                 "config"  => [
-                    "apiBaseUrl" => WooCommerce_MyParcelBE_Frontend_Settings::BASE_URL,
                     "carriers"   => $carriers,
                     "platform"   => "belgie",
                     "locale"     => "nl-BE",
