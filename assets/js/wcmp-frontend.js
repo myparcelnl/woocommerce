@@ -2,7 +2,7 @@
 window.addEventListener('load', function() {
 
   if (!window.hasOwnProperty('MyParcel')) {
-    return
+    throw 'window.MyParcel doesn\'t exist! This means the checkout (myparcel.js) is probably not loaded.';
   }
 
   /* The timeout is necessary, otherwise the order summary is going to flash */
@@ -10,7 +10,7 @@ window.addEventListener('load', function() {
     var event = document.createEvent('HTMLEvents');
     event.initEvent('change', true, false);
     document.querySelectorAll('.country_to_state').forEach(function(selector) {
-      selector.dispatchEvent(event)
+      selector.dispatchEvent(event);
     });
   }, 100);
 
@@ -102,7 +102,7 @@ window.addEventListener('load', function() {
              *
              */
             if (shipping_method.indexOf('betrs_shipping:') !== -1) {
-              shipping_method = shipping_method.replace(":", "_");
+              shipping_method = shipping_method.replace(':', '_');
             }
           } else {
             /*
@@ -202,8 +202,8 @@ window.addEventListener('load', function() {
         );
 
         fields.forEach(function(field) {
-          MyParcel_Frontend.getField(field).removeEventListener('change', MyParcel_Frontend.update_settings);
-        })
+          MyParcel_Frontend.getField(field).removeEventListener('change', MyParcel_Frontend.updateAddress);
+        });
       }
 
       MyParcel_Frontend.getAddressType();
@@ -215,10 +215,10 @@ window.addEventListener('load', function() {
       );
 
       fields.forEach(function(field) {
-        MyParcel_Frontend.getField(field).addEventListener('change', MyParcel_Frontend.update_settings);
+        MyParcel_Frontend.getField(field).addEventListener('change', MyParcel_Frontend.updateAddress);
       });
 
-      MyParcel_Frontend.update_settings();
+      MyParcel_Frontend.updateAddress();
     },
 
     /**
@@ -266,7 +266,7 @@ window.addEventListener('load', function() {
       if (MyParcel_Frontend.updated_country !== false
         && MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country
       ) {
-        this.update_settings();
+        this.updateAddress();
         MyParcel_Frontend.triggerEvent(MyParcel_Frontend.updateCheckoutEvent);
         MyParcel_Frontend.selected_country = MyParcel_Frontend.updated_country;
       }
@@ -332,7 +332,7 @@ window.addEventListener('load', function() {
     /**
      * Get data from form fields and put it in the global MyParcelConfig.
      */
-    update_settings: function() {
+    updateAddress: function() {
       var data = JSON.parse(window.MyParcelConfig);
 
       data.address = {
@@ -356,7 +356,7 @@ window.addEventListener('load', function() {
       }
 
       if (address.city) {
-        MyParcel_Frontend.getField('city').value = address.city
+        MyParcel_Frontend.getField('city').value = address.city;
       }
 
       if (address.number) {

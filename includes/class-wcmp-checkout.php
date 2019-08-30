@@ -1,10 +1,6 @@
 <?php
 
-use WPO\WC\MyParcelBE\Collections\SettingsCollection;
-
-if (!defined('ABSPATH')) {
-    exit;
-} // Exit if accessed directly
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 if (!class_exists('wcmp_checkout')) :
 
@@ -14,17 +10,11 @@ if (!class_exists('wcmp_checkout')) :
     class wcmp_checkout
     {
         /**
-         * @var SettingsCollection
-         */
-        private $settings;
-
-        /**
          * WooCommerce_MyParcelBE_Checkout constructor.
          */
         public function __construct()
         {
             add_action('wp_enqueue_scripts', [$this, 'frontend_scripts_styles']);
-            $this->settings = WooCommerce_MyParcelBE()->setting_collection;
         }
 
         /**
@@ -38,7 +28,7 @@ if (!class_exists('wcmp_checkout')) :
             }
 
             // if using split fields
-            if ($this->settings->isEnabled('use_split_address_fields')) {
+            if (WooCommerce_MyParcelBE()->setting_collection->getByName('use_split_address_fields')) {
                 wp_enqueue_script(
                     'wcmp-checkout-fields',
                     WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
@@ -47,8 +37,9 @@ if (!class_exists('wcmp_checkout')) :
                 );
             }
 
-            // return if no carriers are enabled
-            if (!count($this->settings->like("name", "myparcelbe_carrier_enable_")->toArray())) {
+            // Don't load any further checkout data if no carrier is active
+            if (!WooCommerce_MyParcelBE()->setting_collection->getByName('myparcelbe_carrier_enable_dpd')
+                && !WooCommerce_MyParcelBE()->setting_collection->getByName('myparcelbe_carrier_enable_bpost')) {
                 return;
             }
 
@@ -77,7 +68,11 @@ if (!class_exists('wcmp_checkout')) :
             wp_localize_script(
                 'wc-myparcelbe-frontend',
                 'wcmp_display_settings',
-                ['isUsingSplitAddressFields' => $this->settings->isEnabled('use_split_address_fields')]
+                [
+                    'isUsingSplitAddressFields' => WooCommerce_MyParcelBE()->setting_collection->getByName(
+                        'use_split_address_fields'
+                    ),
+                ]
             );
 
             wp_localize_script(
@@ -101,7 +96,8 @@ if (!class_exists('wcmp_checkout')) :
          */
         public function get_delivery_options_shipping_methods()
         {
-            $packageTypes = $this->settings->getByName("shipping_methods_package_types");
+            $packageTypes     =
+                WooCommerce_MyParcelBE()->setting_collection->getByName("shipping_methods_package_types");
             $shipping_methods = [];
 
             if (array_key_exists(wcmp_export::PACKAGE, $packageTypes ?? [])) {
@@ -117,7 +113,7 @@ if (!class_exists('wcmp_checkout')) :
          */
         public function get_delivery_options_always_display()
         {
-            if ($this->settings->getByName('checkout_display') === 'all_methods') {
+            if (WooCommerce_MyParcelBE()->setting_collection->getByName('checkout_display') === 'all_methods') {
                 return true;
             }
 
@@ -131,27 +127,28 @@ if (!class_exists('wcmp_checkout')) :
          */
         public function get_checkout_config()
         {
-            $carriers = $this->settings
-                ->like("name", "myparcelbe_carrier_enable_")
-                ->pluck("carrier")
-                ->toArray();
+            $carriers = WooCommerce_MyParcelBE()->setting_collection->like("name", "myparcelbe_carrier_enable_")->pluck(
+                "carrier"
+            )->toArray();
 
             $myParcelConfig = [
                 "config"  => [
-                    "carriers"   => $carriers,
-                    "platform"   => "belgie",
-                    "locale"     => "nl-BE",
-                    "currency"   => get_woocommerce_currency(),
+                    "carriers" => $carriers,
+                    "platform" => "belgie",
+                    "locale"   => "nl-BE",
+                    "currency" => get_woocommerce_currency(),
 
-                    "allowDelivery"     => $this->settings->getByName('deliver_enabled'),
-                    "allowPickupPoints" => $this->settings->getByName('pickup_enabled'),
+                    "allowDelivery"     => WooCommerce_MyParcelBE()->setting_collection->getByName('deliver_enabled'),
+                    "allowPickupPoints" => WooCommerce_MyParcelBE()->setting_collection->getByName('pickup_enabled'),
                 ],
                 "strings" => [
                     "addressNotFound"       => __('Address details are not entered', 'woocommerce-myparcelbe'),
                     "city"                  => __('City', 'woocommerce-myparcelbe'),
                     "closed"                => __('Closed', 'woocommerce-myparcelbe'),
                     "deliveryTitle"         => __('Standard delivery title', 'woocommerce-myparcelbe'),
-                    "headerDeliveryOptions" => strip_tags($this->settings->getByName("header_delivery_options_title")),
+                    "headerDeliveryOptions" => strip_tags(
+                        WooCommerce_MyParcelBE()->setting_collection->getByName("header_delivery_options_title")
+                    ),
                     "houseNumber"           => __('House number', 'woocommerce-myparcelbe'),
                     "openingHours"          => __('Opening hours', 'woocommerce-myparcelbe'),
                     "pickUpFrom"            => __('Pick up from', 'woocommerce-myparcelbe'),
@@ -177,8 +174,8 @@ if (!class_exists('wcmp_checkout')) :
                 $myParcelConfig["config"]["carrierSettings"][$carrier] = [];
 
                 foreach ($settingsMap as $jsKey => $settingKey) {
-                    $myParcelConfig["carrierSettings"][$carrier][$jsKey] = $this->prepareSettingForConfig(
-                        $this->settings->getByName("{$carrier}_{$settingKey}")
+                    $myParcelConfig["config"]["carrierSettings"][$carrier][$jsKey] = $this->prepareSettingForConfig(
+                        WooCommerce_MyParcelBE()->setting_collection->getByName("{$carrier}_{$settingKey}")
                     );
                 }
             }
@@ -218,7 +215,7 @@ if (!class_exists('wcmp_checkout')) :
          */
         public function get_checkout_place(): string
         {
-            $setLocation = $this->settings->getByName("checkout_place");
+            $setLocation = WooCommerce_MyParcelBE()->setting_collection->getByName("checkout_place");
 
             return $setLocation ?? 'woocommerce_after_checkout_billing_form';
         }
