@@ -458,6 +458,7 @@ class WooCommerce_MyParcelBE
             'signature_enabled'   => 'bpost_signature_enabled',
             'signature_title'     => 'bpost_signature_title',
             'signature_fee'       => 'bpost_signature_fee',
+            'delivery_enabled'    => 'bpost_delivery_enabled',
             'pickup_enabled'      => 'bpost_pickup_enabled',
             'pickup_title'        => 'bpost_pickup_title',
             'pickup_fee'          => 'bpost_pickup_fee',

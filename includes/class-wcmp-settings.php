@@ -53,7 +53,7 @@ if ( ! class_exists('wcmp_settings')) :
          */
         public function add_settings_link($links)
         {
-            $settings_link = '<a href="admin.php?page=woocommerce_myparcelbe_settings">' . __('Settings', 'woocommerce-myparcelbe') . '</a>';
+            $settings_link = '<a href="admin.php?page=wcmp_settings">' . __('Settings', 'woocommerce-myparcelbe') . '</a>';
             array_push($links, $settings_link);
 
             return $links;
@@ -78,7 +78,7 @@ if ( ! class_exists('wcmp_settings')) :
                 <h2 class="nav-tab-wrapper">
                     <?php
                     foreach ($settings_tabs as $tab_slug => $tab_title) {
-                        printf('<a href="?page=woocommerce_myparcelbe_settings&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>', $tab_slug, (($active_tab == $tab_slug) ? 'nav-tab-active' : ''), $tab_title);
+                        printf('<a href="?page=wcmp_settings&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>', $tab_slug, (($active_tab == $tab_slug) ? 'nav-tab-active' : ''), $tab_title);
                     }
                     ?>
                 </h2>
@@ -352,6 +352,18 @@ if ( ! class_exists('wcmp_settings')) :
             );
 
             add_settings_field(
+                'delivery_options_enabled',
+                __('Enable MyParcel BE delivery options', 'woocommerce-myparcelbe'),
+                array($this->callbacks, 'checkbox'),
+                $option_group,
+                'checkout_options',
+                array(
+                    'option_name' => $option_name,
+                    'id'          => 'delivery_options_enabled',
+                )
+            );
+
+            add_settings_field(
                 'header_delivery_options_title', __('Delivery options title', 'woocommerce-myparcelbe'), array(
                 $this->callbacks,
                 'text_input'
@@ -364,6 +376,82 @@ if ( ! class_exists('wcmp_settings')) :
                 )
             );
 
+            add_settings_field(
+                'at_home_delivery',
+                __('Home delivery title', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'text_input'
+                ),
+                $option_group,
+                'checkout_options',
+                array(
+                    'option_name' => $option_name,
+                    'id'          => 'at_home_delivery',
+                    'size'        => '53',
+                    'title'       => 'Delivered at home or at work',
+                    'current'     => self::get_checkout_setting_title('at_home_delivery_title'),
+                )
+            );
+
+            add_settings_field(
+                'standard_title',
+                __('Standard delivery title', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'text_input'
+                ),
+                $option_group,
+                'checkout_options',
+                array(
+                    'option_name' => $option_name,
+                    'id'          => 'standard_title',
+                    'size'        => '53',
+                    'title'       => 'Standard delivery',
+                    'current'     => self::get_checkout_setting_title('standard_title'),
+                    'description' => __('When there is no title, the delivery time will automatically be visible.',
+                        'woocommerce-myparcelbe'
+                    ),
+                )
+            );
+
+            add_settings_field(
+                'signature_title',
+                __('Signature on delivery', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'text_input'
+                ),
+                $option_group,
+                'checkout_options',
+                array(
+                    'option_name' => $option_name,
+                    'id'          => 'signature_title',
+                    'has_title'   => true,
+                    'title'       => 'Signature on delivery',
+                    'current'     => self::get_checkout_setting_title('signature_title'),
+                    'size'        => '30',
+                )
+            );
+
+            add_settings_field(
+                'pickup_title',
+                __('Pickup', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'text_input'
+                ),
+                $option_group,
+                'checkout_options',
+                array(
+                    'option_name' => $option_name,
+                    'id'          => 'pickup_title',
+                    'has_title'   => true,
+                    'title'       => 'Pickup',
+                    'current'     => self::get_checkout_setting_title('pickup_title'),
+                    'size'        => '30',
+                )
+            );
 
             add_settings_field(
                 'checkout_display',
@@ -384,7 +472,8 @@ if ( ! class_exists('wcmp_settings')) :
 
             // Place of the checkout
             add_settings_field(
-                'checkout_position', __('Checkout position', 'woocommerce-myparcelbe'), array(
+                'checkout_position',
+                __('Checkout position', 'woocommerce-myparcelbe'), array(
                 $this->callbacks,
                 'select'
             ), $option_group, 'checkout_options', array(
@@ -578,21 +667,24 @@ if ( ! class_exists('wcmp_settings')) :
 
             // bpost Checkout options section.
             add_settings_section(
-                'bpost_settings', __('bpost settings', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'section'
-            ), $option_group
+                'bpost_settings',
+                __('bpost settings', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'section'
+                ),
+                $option_group
             );
 
             add_settings_field(
-                'myparcelbe_carrier_enable_bpost',
-                __('Enable bpost delivery options', 'woocommerce-myparcelbe'),
+                'bpost_delivery_enabled',
+                __('Enable bpost delivery', 'woocommerce-myparcelbe'),
                 array($this->callbacks, 'checkbox'),
                 $option_group,
                 'bpost_settings',
                 array(
-                    'option_name' => $option_name,
-                    'id'          => 'myparcelbe_carrier_enable_bpost',
+                    'option_name' => '$option_name',
+                    'id'          => 'bpost_delivery_enabled'
                 )
             );
 
@@ -607,35 +699,54 @@ if ( ! class_exists('wcmp_settings')) :
             );
 
             add_settings_field(
-                'bpost_dropoff_days', __('Drop-off days', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'enhanced_select'
-            ), $option_group, 'bpost_settings', array(
+                'bpost_dropoff_days',
+                __('Drop-off days', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'enhanced_select'
+                ),
+                $option_group,
+                'bpost_settings',
+                array(
                     'option_name' => $option_name,
                     'id'          => 'bpost_dropoff_days',
                     'options'     => $bpost_days_of_the_week,
-                    'description' => __('Days of the week on which you hand over parcels to bpost', 'woocommerce-myparcelbe'),
+                    'description' => __('Days of the week on which you hand over parcels to bpost',
+                        'woocommerce-myparcelbe'
+                    ),
                 )
             );
 
             add_settings_field(
-                'bpost_cutoff_time', __('Cut-off time', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'text_input'
-            ), $option_group, 'bpost_settings', array(
+                'bpost_cutoff_time',
+                __('Cut-off time', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'text_input'
+                ),
+                $option_group,
+                'bpost_settings',
+                array(
                     'option_name' => $option_name,
                     'id'          => 'bpost_cutoff_time',
                     'type'        => 'text',
                     'size'        => '5',
-                    'description' => __('Time at which you stop processing orders for the day (format: hh:mm)', 'woocommerce-myparcelbe'),
+                    'description' => __('Time at which you stop processing orders for the day (format: hh:mm)',
+                        'woocommerce-myparcelbe'
+                    ),
                 )
             );
 
             add_settings_field(
-                'bpost_dropoff_delay', __('Drop-off delay', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'text_input'
-            ), $option_group, 'bpost_settings', array(
+                'bpost_dropoff_delay',
+                __('Drop-off delay', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'text_input'
+                ),
+                $option_group,
+                'bpost_settings',
+                array(
                     'option_name' => $option_name,
                     'id'          => 'bpost_dropoff_delay',
                     'type'        => 'text',
@@ -645,10 +756,15 @@ if ( ! class_exists('wcmp_settings')) :
             );
 
             add_settings_field(
-                'bpost_deliverydays_window', __('Delivery days window', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'checkbox'
-            ), $option_group, 'bpost_settings', array(
+                'bpost_deliverydays_window',
+                __('Delivery days window', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'checkbox'
+                ),
+                $option_group,
+                'bpost_settings',
+                array(
                     'option_name' => $option_name,
                     'id'          => 'bpost_deliverydays_window',
                     'description' => __('Show the delivery date inside the checkout.', 'woocommerce-myparcelbe'),
@@ -657,77 +773,68 @@ if ( ! class_exists('wcmp_settings')) :
 
             // bpost Delivery options section.
             add_settings_section(
-                'bpost_delivery_options', __('bpost delivery options', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'section'
-            ), $option_group
+                'bpost_delivery_options',
+                __('bpost delivery options', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'section'
+                ),
+                $option_group
             );
 
             add_settings_field(
-                'bpost_at_home_delivery', __('Home delivery title', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'text_input'
-            ), $option_group, 'bpost_delivery_options', array(
-                    'option_name' => $option_name,
-                    'id'          => 'bpost_at_home_delivery',
-                    'size'        => '53',
-                    'title'       => 'Delivered at home or at work',
-                    'current'     => self::get_checkout_setting_title('at_home_delivery_title'),
-                )
-            );
-
-            add_settings_field(
-                'bpost_standard', __('Standard delivery title', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'text_input'
-            ), $option_group, 'bpost_delivery_options', array(
-                    'option_name' => $option_name,
-                    'id'          => 'bpost_standard_title',
-                    'size'        => '53',
-                    'title'       => 'Standard delivery',
-                    'current'     => self::get_checkout_setting_title('standard_title'),
-                    'description' => __('When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcelbe'),
-                )
-            );
-
-            add_settings_field(
-                'bpost_signature', __('Signature on delivery', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'delivery_option_enable'
-            ), $option_group, 'bpost_delivery_options', array(
-                    'has_title'   => true,
+                'bpost_signature',
+                __('Signature on delivery', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'delivery_option_enable'
+                ),
+                $option_group,
+                'bpost_delivery_options',
+                array(
+                    'has_title'   => false,
                     'has_price'   => true,
                     'option_name' => $option_name,
                     'id'          => 'bpost_signature',
-                    'title'       => 'Signature on delivery',
-                    'current'     => self::get_checkout_setting_title('signature_title'),
-                    'size'        => 30,
+                    'size'        => 3,
+                    'option_description' => sprintf(__('Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.',
+                            'woocommerce-myparcelbe'
+                        )
+                    ),
                 )
             );
 
             add_settings_field(
-                'bpost_pickup', __('bpost pickup', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'delivery_option_enable'
-            ), $option_group, 'bpost_delivery_options', array(
-                    'has_title'          => true,
+                'bpost_pickup',
+                __('bpost pickup', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'delivery_option_enable'
+                ),
+                $option_group,
+                'bpost_delivery_options',
+                array(
+                    'has_title'          => false,
                     'has_price'          => true,
                     'option_name'        => $option_name,
                     'id'                 => 'bpost_pickup',
-                    'class'              => 'pickup',
-                    'title'              => 'Pickup',
-                    'current'            => self::get_checkout_setting_title('pickup_title'),
-                    'size'               => 30,
-                    'option_description' => sprintf(__('Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.', 'woocommerce-myparcelbe')),
+                    'size'               => 3,
+                    'option_description' => sprintf(__('Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.',
+                            'woocommerce-myparcelbe'
+                        )
+                    ),
                 )
             );
 
             // bpost standard label options
             add_settings_section(
-                'bpost_standard_options', __('bpost standard label options', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'section'
-            ), $option_group
+                'bpost_standard_options',
+                __('bpost standard label options', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'section'
+                ),
+                $option_group
             );
 
             add_settings_field(
@@ -739,7 +846,9 @@ if ( ! class_exists('wcmp_settings')) :
                 array(
                     'option_name' => $option_name,
                     'id'          => 'signature',
-                    'description' => __('When the package is presented at the home address, a signuture will be required.', 'woocommerce-myparcelbe')
+                    'description' => __('When the package is presented at the home address, a signuture will be required.',
+                        'woocommerce-myparcelbe'
+                    )
                 )
             );
 
@@ -752,7 +861,9 @@ if ( ! class_exists('wcmp_settings')) :
                 array(
                     'option_name' => $option_name,
                     'id'          => 'insured',
-                    'description' => __('There is no default insurance on the domestic shipments. If you want to insure, you can do this. We insure the purchase value of your product, with a maximum insured value of € 500.', 'woocommerce-myparcelbe'),
+                    'description' => __('There is no default insurance on the domestic shipments. If you want to insure, you can do this. We insure the purchase value of your product, with a maximum insured value of € 500.',
+                        'woocommerce-myparcelbe'
+                    ),
                     'class'       => 'insured',
                 )
             );
@@ -776,21 +887,24 @@ if ( ! class_exists('wcmp_settings')) :
 
             // dpd Checkout options section.
             add_settings_section(
-                'dpd_settings', __('dpd settings', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'section'
-            ), $option_group
+                'dpd_settings',
+                __('dpd settings', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'section'
+                ),
+                $option_group
             );
 
             add_settings_field(
-                'myparcelbe_carrier_enable_dpd',
-                __('Enable dpd delivery options', 'woocommerce-myparcelbe'),
+                'dpd_delivery_enabled',
+                __('Enable DPD delivery', 'woocommerce-myparcelbe'),
                 array($this->callbacks, 'checkbox'),
                 $option_group,
                 'dpd_settings',
                 array(
-                    'option_name' => $option_name,
-                    'id'          => 'myparcelbe_carrier_enable_dpd',
+                    'option_name' => '$option_name',
+                    'id'          => 'dpd_delivery_enabled'
                 )
             );
 
@@ -805,35 +919,54 @@ if ( ! class_exists('wcmp_settings')) :
             );
 
             add_settings_field(
-                'dpd_dropoff_days', __('Drop-off days', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'enhanced_select'
-            ), $option_group, 'dpd_settings', array(
+                'dpd_dropoff_days',
+                __('Drop-off days', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'enhanced_select'
+                ),
+                $option_group,
+                'dpd_settings',
+                array(
                     'option_name' => $option_name,
                     'id'          => 'dpd_dropoff_days',
                     'options'     => $dpd_days_of_the_week,
-                    'description' => __('Days of the week on which you hand over parcels to dpd', 'woocommerce-myparcelbe'),
+                    'description' => __('Days of the week on which you hand over parcels to dpd',
+                        'woocommerce-myparcelbe'
+                    ),
                 )
             );
 
             add_settings_field(
-                'dpd_cutoff_time', __('Cut-off time', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'text_input'
-            ), $option_group, 'dpd_settings', array(
+                'dpd_cutoff_time',
+                __('Cut-off time', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'text_input'
+                ),
+                $option_group,
+                'dpd_settings',
+                array(
                     'option_name' => $option_name,
                     'id'          => 'dpd_cutoff_time',
                     'type'        => 'text',
                     'size'        => '5',
-                    'description' => __('Time at which you stop processing orders for the day (format: hh:mm)', 'woocommerce-myparcelbe'),
+                    'description' => __('Time at which you stop processing orders for the day (format: hh:mm)',
+                        'woocommerce-myparcelbe'
+                    ),
                 )
             );
 
             add_settings_field(
-                'dpd_dropoff_delay', __('Drop-off delay', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'text_input'
-            ), $option_group, 'dpd_settings', array(
+                'dpd_dropoff_delay',
+                __('Drop-off delay', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'text_input'
+                ),
+                $option_group,
+                'dpd_settings',
+                array(
                     'option_name' => $option_name,
                     'id'          => 'dpd_dropoff_delay',
                     'type'        => 'text',
@@ -843,10 +976,15 @@ if ( ! class_exists('wcmp_settings')) :
             );
 
             add_settings_field(
-                'dpd_deliverydays_window', __('Delivery days window', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'checkbox'
-            ), $option_group, 'dpd_settings', array(
+                'dpd_deliverydays_window',
+                __('Delivery days window', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'checkbox'
+                ),
+                $option_group,
+                'dpd_settings',
+                array(
                     'option_name' => $option_name,
                     'id'          => 'dpd_deliverydays_window',
                     'description' => __('Show the delivery date inside the checkout.', 'woocommerce-myparcelbe'),
@@ -855,53 +993,35 @@ if ( ! class_exists('wcmp_settings')) :
 
             // dpd Delivery options section.
             add_settings_section(
-                'dpd_delivery_options', __('dpd delivery options', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'section'
-            ), $option_group
+                'dpd_delivery_options',
+                __('dpd delivery options', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'section'
+                ),
+                $option_group
             );
 
             add_settings_field(
-                'dpd_at_home_delivery', __('Home delivery title', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'text_input'
-            ), $option_group, 'dpd_delivery_options', array(
-                    'option_name' => $option_name,
-                    'id'          => 'dpd_at_home_delivery',
-                    'size'        => '53',
-                    'title'       => 'Delivered at home or at work',
-                    'current'     => self::get_checkout_setting_title('at_home_delivery_title'),
-                )
-            );
-
-            add_settings_field(
-                'dpd_standard', __('Standard delivery title', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'text_input'
-            ), $option_group, 'dpd_delivery_options', array(
-                    'option_name' => $option_name,
-                    'id'          => 'dpd_standard_title',
-                    'size'        => '53',
-                    'title'       => 'Standard delivery',
-                    'current'     => self::get_checkout_setting_title('standard_title'),
-                    'description' => __('When there is no title, the delivery time will automatically be visible.', 'woocommerce-myparcelbe'),
-                )
-            );
-
-            add_settings_field(
-                'dpd_pickup', __('dpd pickup', 'woocommerce-myparcelbe'), array(
-                $this->callbacks,
-                'delivery_option_enable'
-            ), $option_group, 'dpd_delivery_options', array(
-                    'has_title'          => true,
+                'dpd_pickup',
+                __('dpd pickup', 'woocommerce-myparcelbe'),
+                array(
+                    $this->callbacks,
+                    'delivery_option_enable'
+                ),
+                $option_group,
+                'dpd_delivery_options',
+                array(
+                    'has_title'          => false,
                     'has_price'          => true,
                     'option_name'        => $option_name,
                     'id'                 => 'dpd_pickup',
-                    'class'              => 'pickup',
-                    'title'              => 'Pickup',
-                    'current'            => self::get_checkout_setting_title('pickup_title'),
-                    'size'               => 30,
-                    'option_description' => sprintf(__('Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.', 'woocommerce-myparcelbe')),
+                    'size'               => 3,
+                    'option_description' => sprintf(
+                        __('Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.',
+                            'woocommerce-myparcelbe'
+                        )
+                    ),
                 )
             );
         }
@@ -943,8 +1063,8 @@ if ( ! class_exists('wcmp_settings')) :
          */
         public static function get_checkout_setting_title($key)
         {
-            $bpost_settings = self::get_checkout_settings();
-            $setting           = $bpost_settings[$key];
+            $checkout_settings = self::get_checkout_settings();
+            $setting           = $checkout_settings[$key];
 
             return __($setting, 'woocommerce-myparcelbe');
         }
@@ -955,6 +1075,7 @@ if ( ! class_exists('wcmp_settings')) :
         public static function get_checkout_settings()
         {
             return array(
+                'delivery_enabled'       => '1',
                 'pickup_enabled'         => '0',
                 'dropoff_days'           => array(1, 2, 3, 4, 5),
                 'dropoff_delay'          => '0',

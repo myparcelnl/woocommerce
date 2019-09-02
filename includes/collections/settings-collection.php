@@ -22,7 +22,7 @@ if (! class_exists('\\WPO\\WC\\MyParcelBE\\Collections\\SettingsCollection')) :
          * @param string $type
          * @param string $carrierName
          */
-        public function setSettingsByType(array $rawSettings, string $type, string $carrierName = null)
+        public function setSettingsByType( $rawSettings, string $type, string $carrierName = null)
         {
             foreach ($rawSettings as $name => $value) {
                 $setting = new Setting($name, $value, $type, $carrierName);
@@ -41,6 +41,7 @@ if (! class_exists('\\WPO\\WC\\MyParcelBE\\Collections\\SettingsCollection')) :
         {
             /** @var Setting|null $setting */
             $setting = $this->where('name', $name)->first();
+
             if (! $setting) {
                 return false;
             }
@@ -87,6 +88,36 @@ if (! class_exists('\\WPO\\WC\\MyParcelBE\\Collections\\SettingsCollection')) :
             $setting = $this->where('name', $name)->first();
 
             return (bool) $setting->value;
+        }
+
+        /**
+         * @param string $name
+         *
+         * @return int
+         */
+        public function getIntegerByName(string $name): int
+        {
+            return (int) $this->getByName($name) ?? 0;
+        }
+
+        /**
+         * @param string $name
+         *
+         * @return string
+         */
+        public function getStringByName(string $name): string
+        {
+            return $this->getByName($name) ?? '';
+        }
+
+        /**
+         * @param string $name
+         *
+         * @return bool
+         */
+        public function getBooleanByName(string $name): bool
+        {
+            return $this->getByName($name) ?? false;
         }
     }
 endif; // Class exists check

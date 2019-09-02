@@ -1,8 +1,10 @@
 <?php
 
-if (!defined('ABSPATH')) exit; // Exit if accessed directly
+if (! defined('ABSPATH')) {
+    exit;
+} // Exit if accessed directly
 
-if (!class_exists('wcmp_checkout')) :
+if (! class_exists('wcmp_checkout')) :
 
     /**
      * Frontend views
@@ -23,12 +25,12 @@ if (!class_exists('wcmp_checkout')) :
         public function frontend_scripts_styles()
         {
             // return if not checkout or order received page
-            if (!is_checkout() && !is_order_received_page()) {
+            if (! is_checkout() && ! is_order_received_page()) {
                 return;
             }
 
             // if using split fields
-            if (WooCommerce_MyParcelBE()->setting_collection->getByName('use_split_address_fields')) {
+            if (array_key_exists('use_split_address_fields', get_option('woocommerce_myparcelbe_general_settings'))) {
                 wp_enqueue_script(
                     'wcmp-checkout-fields',
                     WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
@@ -38,8 +40,7 @@ if (!class_exists('wcmp_checkout')) :
             }
 
             // Don't load any further checkout data if no carrier is active
-            if (!WooCommerce_MyParcelBE()->setting_collection->getByName('myparcelbe_carrier_enable_dpd')
-                && !WooCommerce_MyParcelBE()->setting_collection->getByName('myparcelbe_carrier_enable_bpost')) {
+            if (! WooCommerce_MyParcelBE()->setting_collection->isEnabled('delivery_options_enabled')) {
                 return;
             }
 
@@ -69,9 +70,10 @@ if (!class_exists('wcmp_checkout')) :
                 'wc-myparcelbe-frontend',
                 'wcmp_display_settings',
                 [
-                    'isUsingSplitAddressFields' => WooCommerce_MyParcelBE()->setting_collection->getByName(
-                        'use_split_address_fields'
-                    ),
+                    // Convert true/false to int for JavaScript
+                    'isUsingSplitAddressFields' => (int) array_key_exists('use_split_address_fields',
+                        get_option('woocommerce_myparcelbe_general_settings')
+                    )
                 ]
             );
 
@@ -89,6 +91,16 @@ if (!class_exists('wcmp_checkout')) :
                 'MyParcelConfig',
                 $this->get_checkout_config()
             );
+
+            // Load the checkout template.
+            add_action(
+                apply_filters(
+                    'wc_myparcel_delivery_options_location',
+                    $this->get_checkout_position()
+                ),
+                array($this, 'output_delivery_options'),
+                10
+            );
         }
 
         /**
@@ -96,8 +108,9 @@ if (!class_exists('wcmp_checkout')) :
          */
         public function get_delivery_options_shipping_methods()
         {
-            $packageTypes     =
-                WooCommerce_MyParcelBE()->setting_collection->getByName("shipping_methods_package_types");
+            $packageTypes     = WooCommerce_MyParcelBE()->setting_collection->getByName(
+                "shipping_methods_package_types"
+            );
             $shipping_methods = [];
 
             if (array_key_exists(wcmp_export::PACKAGE, $packageTypes ?? [])) {
@@ -127,19 +140,17 @@ if (!class_exists('wcmp_checkout')) :
          */
         public function get_checkout_config()
         {
-            $carriers = WooCommerce_MyParcelBE()->setting_collection->like("name", "myparcelbe_carrier_enable_")->pluck(
-                "carrier"
-            )->toArray();
+            $settings = WooCommerce_MyParcelBE()->setting_collection;
+
+            $carriers = $this->get_carriers();
 
             $myParcelConfig = [
                 "config"  => [
-                    "carriers" => $carriers,
-                    "platform" => "belgie",
-                    "locale"   => "nl-BE",
-                    "currency" => get_woocommerce_currency(),
-
-                    "allowDelivery"     => WooCommerce_MyParcelBE()->setting_collection->getByName('deliver_enabled'),
-                    "allowPickupPoints" => WooCommerce_MyParcelBE()->setting_collection->getByName('pickup_enabled'),
+                    "apiBaseUrl" => "https://edie.api.staging.myparcel.nl", // todo remove
+                    "carriers"   => $carriers,
+                    "platform"   => "belgie",
+                    "locale"     => "nl-BE",
+                    "currency"   => get_woocommerce_currency(),
                 ],
                 "strings" => [
                     "addressNotFound"       => __('Address details are not entered', 'woocommerce-myparcelbe'),
@@ -147,37 +158,31 @@ if (!class_exists('wcmp_checkout')) :
                     "closed"                => __('Closed', 'woocommerce-myparcelbe'),
                     "deliveryTitle"         => __('Standard delivery title', 'woocommerce-myparcelbe'),
                     "headerDeliveryOptions" => strip_tags(
-                        WooCommerce_MyParcelBE()->setting_collection->getByName("header_delivery_options_title")
+                        $settings->getStringByName("header_delivery_options_title")
                     ),
                     "houseNumber"           => __('House number', 'woocommerce-myparcelbe'),
                     "openingHours"          => __('Opening hours', 'woocommerce-myparcelbe'),
                     "pickUpFrom"            => __('Pick up from', 'woocommerce-myparcelbe'),
-                    "pickupTitle"           => __('bpost pickup', 'woocommerce-myparcelbe'),
+                    "pickupTitle"           => __('Pickup', 'woocommerce-myparcelbe'),
                     "postcode"              => __('Postcode', 'woocommerce-myparcelbe'),
                     "retry"                 => __('Retry', 'woocommerce-myparcelbe'),
                     "wrongHouseNumberCity"  => __('Postcode/city combination unknown', 'woocommerce-myparcelbe'),
+                    "signatureTitle"        => $settings->getStringByName("signature_title"),
                 ],
             ];
 
-            $settingsMap = [
-                "allowSignature"     => "signature_enabled",
-                "cutoffTime"         => "cutoff_time",
-                "deliveryDaysWindow" => "deliverydays_window",
-                "dropOffDays"        => "dropoff_days",
-                "dropOffDelay"       => "dropoff_delay",
-                "pricePickup"        => "pickup_fee",
-                "priceSignature"     => "signature_fee",
-                "signatureTitle"     => "priceStandardDelivery",
-            ];
-
             foreach ($carriers as $carrier) {
-                $myParcelConfig["config"]["carrierSettings"][$carrier] = [];
-
-                foreach ($settingsMap as $jsKey => $settingKey) {
-                    $myParcelConfig["config"]["carrierSettings"][$carrier][$jsKey] = $this->prepareSettingForConfig(
-                        WooCommerce_MyParcelBE()->setting_collection->getByName("{$carrier}_{$settingKey}")
-                    );
-                }
+                $myParcelConfig["config"]["carrierSettings"][$carrier] = [
+                    "allowDeliveryOptions" => $settings->isEnabled("{$carrier}_delivery_enabled"),
+                    "allowPickupLocations" => $settings->isEnabled("{$carrier}_pickup_enabled"),
+                    "allowSignature"       => $settings->getBooleanByName("{$carrier}_signature_enabled"),
+                    "cutoffTime"           => $settings->getStringByName("{$carrier}_cutoff_time"),
+                    "deliveryDaysWindow"   => $settings->getIntegerByName("{$carrier}_deliverydays_window"),
+                    "dropOffDays"          => $settings->getByName("{$carrier}_dropoff_days"),
+                    "dropOffDelay"         => $settings->getIntegerByName("{$carrier}_dropoff_delay"),
+                    "pricePickup"          => $settings->getIntegerByName("{$carrier}_pickup_fee"),
+                    "priceSignature"       => $settings->getIntegerByName("{$carrier}_signature_fee"),
+                ];
             }
 
             return json_encode($myParcelConfig);
@@ -190,7 +195,9 @@ if (!class_exists('wcmp_checkout')) :
          */
         public function prepareSettingForConfig($setting)
         {
-            if (is_array($setting)) {
+            if (null === $setting) {
+                $setting = 0;
+            } else if (is_array($setting)) {
                 $setting = implode(';', $setting);
             }
 
@@ -198,8 +205,7 @@ if (!class_exists('wcmp_checkout')) :
         }
 
         /**
-         * Output some stuff.
-         * Return to hide delivery options
+         * Output the delivery options template.
          */
         public function output_delivery_options()
         {
@@ -209,15 +215,38 @@ if (!class_exists('wcmp_checkout')) :
         }
 
         /**
-         * Get the location where the checkout should be rendered.
+         * Get the position where the checkout should be rendered.
          *
          * @return string
          */
-        public function get_checkout_place(): string
+        public function get_checkout_position(): string
         {
-            $setLocation = WooCommerce_MyParcelBE()->setting_collection->getByName("checkout_place");
+            $setLocation = WooCommerce_MyParcelBE()->setting_collection->getByName("checkout_position");
 
             return $setLocation ?? 'woocommerce_after_checkout_billing_form';
         }
+
+        /**
+         * Get the array of enabled carriers by checking if they have either delivery or pickup enabled.
+         *
+         * @return array
+         */
+        private function get_carriers(): array
+        {
+            $settings = WooCommerce_MyParcelBE()->setting_collection;
+            $carriers = [];
+
+            foreach (["bpost", "dpd"] as $carrier) {
+                if ($settings->getByName("{$carrier}_pickup_enabled") ||
+                    $settings->getByName("{$carrier}_delivery_enabled")
+                ) {
+                    $carriers[] = $carrier;
+                }
+            }
+
+            return $carriers;
+        }
     }
 endif;
+
+return new wcmp_checkout();

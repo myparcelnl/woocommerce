@@ -1,10 +1,6 @@
 /* eslint-disable max-lines-per-function */
 window.addEventListener('load', function() {
 
-  if (!window.hasOwnProperty('MyParcel')) {
-    throw 'window.MyParcel doesn\'t exist! This means the checkout (myparcel.js) is probably not loaded.';
-  }
-
   /* The timeout is necessary, otherwise the order summary is going to flash */
   setTimeout(function() {
     var event = document.createEvent('HTMLEvents');
@@ -310,6 +306,7 @@ window.addEventListener('load', function() {
      * @param {String} identifier - Name of the event.
      */
     triggerEvent: function(identifier) {
+      console.trace();
       var event = document.createEvent('HTMLEvents');
       event.initEvent(identifier, true, false);
       document.querySelector('body').dispatchEvent(event);

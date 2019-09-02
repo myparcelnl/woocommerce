@@ -99,20 +99,6 @@ class wcmp_admin {
         die();
     }
 
-    public function order_list_return_shipment_options($order, $hide = true) {
-        $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-        if ($shipping_country != 'BE' && ! WooCommerce_MyParcelBE()->export->is_eu_country($shipping_country)) {
-            return;
-        }
-
-        $style = $hide ? 'style="display:none"' : '';
-        ?>
-        <div class="wcmp_shipment_options_form return_shipment" <?php echo $style; ?>>
-            <?php include('views/wcmp-order-return-shipment-options.php'); ?>
-        </div>
-        <?php
-    }
-
     /**
      * Add export option to bulk action drop down menu
      * Using Javascript until WordPress core fixes: http://core.trac.wordpress.org/ticket/16031
