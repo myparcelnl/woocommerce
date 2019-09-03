@@ -435,8 +435,8 @@ class wcmp_admin {
 
         echo '<div class="delivery-options">';
         if ( ! empty($date)
-             && ! (isset(WooCommerce_MyParcelBE()->bpost_settings['deliverydays_window'])
-             && WooCommerce_MyParcelBE()->bpost_settings['deliverydays_window'] == 0)) {
+             && ! (isset(WooCommerce_MyParcelBE()->setting_collection['deliverydays_window'])
+             && WooCommerce_MyParcelBE()->setting_collection['deliverydays_window'] == 0)) {
             $formatted_date = date_i18n(
                 apply_filters('wcmyparcelbe_delivery_date_format', wc_date_format()),
                 strtotime($date)

@@ -62,7 +62,7 @@ if ( ! class_exists('wcmp_settings')) :
         public function settings_page()
         {
             $settings_tabs = apply_filters(
-                'woocommerce_myparcelbe_settings_tabs',
+                'wcmp_settings_tabs',
                 array(
                     'general'         => __('General', 'woocommerce-myparcelbe'),
                     'export_defaults' => __('Default export settings', 'woocommerce-myparcelbe'),
@@ -85,7 +85,7 @@ if ( ! class_exists('wcmp_settings')) :
 
                 <?php do_action('woocommerce_myparcelbe_before_settings_page', $active_tab); ?>
 
-                <form method="post" action="options.php" id="woocommerce-myparcelbe-settings"
+                <form method="post" action="options.php" id="wcmp_settings"
                       class="wcmp_shipment_options">
                     <?php
                     do_action('woocommerce_myparcelbe_before_settings', $active_tab);
@@ -683,7 +683,7 @@ if ( ! class_exists('wcmp_settings')) :
                 $option_group,
                 'bpost_settings',
                 array(
-                    'option_name' => '$option_name',
+                    'option_name' => $option_name,
                     'id'          => 'bpost_delivery_enabled'
                 )
             );
@@ -903,7 +903,7 @@ if ( ! class_exists('wcmp_settings')) :
                 $option_group,
                 'dpd_settings',
                 array(
-                    'option_name' => '$option_name',
+                    'option_name' => $option_name,
                     'id'          => 'dpd_delivery_enabled'
                 )
             );

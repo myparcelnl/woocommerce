@@ -19,6 +19,7 @@
   "homepage": "https://github.com/myparcelbe/woocommerce#readme",
   "devDependencies": {
     "@myparcel/checkout": "^3.0.3",
+    "@myparcel/eslint-config": "^1.0.0",
     "husky": "^3.0.4"
   }
 }

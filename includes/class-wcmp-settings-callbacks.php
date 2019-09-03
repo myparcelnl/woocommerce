@@ -676,7 +676,7 @@ class wcmp_settings_callbacks {
         }
 
         // Return the array processing any additional functions filtered by this action.
-        return apply_filters('woocommerce_myparcelbe_settings_validate_input', $input, $input);
+        return apply_filters('wcmp_settings_validate_input', $input, $input);
     }
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable */
 jQuery(function($) {
 
   /* move shipment options to 'Ship to' column */
@@ -32,7 +33,7 @@ jQuery(function($) {
   /* hide options form when click outside */
   $(document).click(function(event) {
     if (!$(event.target).closest('.wcmp_shipment_options_form').length) {
-      if (!($(event.target).hasClass('wcmp_show_shipment_options') || $(event.target).parent().hasClass('wcmp_show_shipment_options')) && $('.wcmp_shipment_options_form').is(":visible")) {
+      if (!($(event.target).hasClass('wcmp_show_shipment_options') || $(event.target).parent().hasClass('wcmp_show_shipment_options')) && $('.wcmp_shipment_options_form').is(':visible')) {
         /* disable all input fields again */
         $('.wcmp_shipment_options_form :input').prop('disabled', true);
         /* hide form */
@@ -44,16 +45,16 @@ jQuery(function($) {
   /* show summary when clicked */
   $('.wcmp_show_shipment_summary').click(function(event) {
     $summary_list = $(this).next('.wcmp_shipment_summary_list');
-    if ($summary_list.is(":visible") || $summary_list.data('loaded') != '') {
+    if ($summary_list.is(':visible') || $summary_list.data('loaded') != '') {
       /* just open / close */
       $summary_list.slideToggle();
-    } else if ($summary_list.is(":hidden") && $summary_list.data('loaded') == '') {
+    } else if ($summary_list.is(':hidden') && $summary_list.data('loaded') == '') {
       $summary_list.addClass('ajax-waiting');
       $summary_list.find('.wcmp_spinner').show();
       $summary_list.slideToggle();
       var data = {
         security: wc_myparcelbe.nonce,
-        action: "wcmp_get_shipment_summary_status",
+        action: 'wcmp_get_shipment_summary_status',
         order_id: $summary_list.data('order_id'),
         shipment_id: $summary_list.data('shipment_id'),
       };
@@ -75,7 +76,7 @@ jQuery(function($) {
   /* hide summary when click outside */
   $(document).click(function(event) {
     if (!$(event.target).closest('.wcmp_shipment_summary_list').length) {
-      if (!($(event.target).hasClass('wcmp_show_shipment_summary') || $(event.target).parent().hasClass('wcmp_shipment_summary')) && $('.wcmp_shipment_summary_list').is(":visible")) {
+      if (!($(event.target).hasClass('wcmp_show_shipment_summary') || $(event.target).parent().hasClass('wcmp_shipment_summary')) && $('.wcmp_shipment_summary_list').is(':visible')) {
         $('.wcmp_shipment_summary_list').slideUp();
       }
     }
@@ -183,20 +184,35 @@ jQuery(function($) {
       return;
     }
 
-    var parent_offset = $("#print_position_offset").parent().parent();
+    var parent_offset = $('#print_position_offset').parent().parent();
 
-    if ($(this).attr("value") == "A4") {
+    if ($(this).attr('value') == 'A4') {
       parent_offset.show();
       return;
     }
 
     /* Always A6 */
     parent_offset.hide();
-    $("#print_position_offset").prop("checked", false);
+    $('#print_position_offset').prop('checked', false);
   });
 
-  /* Hide all checkout options if disabled */
-  $('#woocommerce-myparcelbe-settings #myparcelbe_bpost').change(function() {
+  /* Hide all delivery options if disabled */
+  $('#wcmp_settings #delivery_options_enabled').change(function() {
+    var $next_settings_rows = $(this).closest('tr').nextAll('tr');
+    var $next_settings_headers = $(this).closest('table').nextAll('h2');
+    var $next_settings_forms = $(this).closest('table').nextAll('table');
+    if ($(this).is(':checked')) {
+      $next_settings_rows.show();
+      $next_settings_forms.show();
+      $next_settings_headers.show();
+    } else {
+      $next_settings_rows.hide();
+      $next_settings_forms.hide();
+      $next_settings_headers.hide();
+    }
+  });
+  /* Hide all bpost options if disabled */
+  $('#wcmp_settings #bpost_delivery_enabled').change(function() {
     var $next_settings_rows = $(this).closest('tr').nextAll('tr');
     var $next_settings_headers = $(this).closest('table').nextAll('h2');
     var $next_settings_forms = $(this).closest('table').nextAll('table');
@@ -211,8 +227,8 @@ jQuery(function($) {
     }
   });
 
-  /* Hide all checkout options if disabled */
-  $('#woocommerce-myparcelbe-settings #myparcelbe_dpd').change(function() {
+  /* Hide all DPD options if disabled */
+  $('#wcmp_settings #dpd_delivery_enabled').change(function() {
     var $next_settings_rows = $(this).closest('tr').nextAll('tr');
     var $next_settings_headers = $(this).closest('table').nextAll('h2');
     var $next_settings_forms = $(this).closest('table').nextAll('table');
@@ -228,7 +244,7 @@ jQuery(function($) {
   });
 
   /* init options on settings page and in bulk form */
-  $('#woocommerce-myparcelbe-settings :input, .wcmp_bulk_options_form :input').change();
+  $('#wcmp_settings :input, .wcmp_bulk_options_form :input').change();
 
   /* myparcelbe_checkout */
 
@@ -243,7 +259,7 @@ jQuery(function($) {
       /* show spinner */
       $form.find('.wcmp_save_shipment_settings .waiting').show();
 
-      var form_data = $form.find(":input").serialize();
+      var form_data = $form.find(':input').serialize();
       var data = {
         action: 'wcmp_save_shipment_options',
         order_id: order_id,
@@ -269,8 +285,8 @@ jQuery(function($) {
     });
 
   /* Print queued labels */
-  var print_queue = $("#wcmp_printqueue").val();
-  var print_queue_offset = $("#wcmp_printqueue_offset").val();
+  var print_queue = $('#wcmp_printqueue').val();
+  var print_queue_offset = $('#wcmp_printqueue_offset').val();
   if (typeof print_queue !== 'undefined') {
     if (typeof print_queue_offset === 'undefined') {
       print_queue_offset = 0;
@@ -279,10 +295,10 @@ jQuery(function($) {
   }
 
   /* Bulk actions */
-  $("#doaction, #doaction2").click(function(event) {
-    var actionselected = $(this).attr("id").substr(2);
+  $('#doaction, #doaction2').click(function(event) {
+    var actionselected = $(this).attr('id').substr(2);
     /* check if action starts with 'wcmp_' */
-    if ($('select[name="' + actionselected + '"]').val().substring(0, 5) == "wcmp_") {
+    if ($('select[name="' + actionselected + '"]').val().substring(0, 5) == 'wcmp_') {
       event.preventDefault();
       /* remove notices */
       $('.myparcelbe_notice').remove();
@@ -319,7 +335,7 @@ jQuery(function($) {
   });
 
   /* Single actions click. The .wc_actions .single_wc_actions for support wc > 3.3.0 */
-  $(".order_actions, .single_order_actions, .wc_actions, .single_wc_actions")
+  $('.order_actions, .single_order_actions, .wc_actions, .single_wc_actions')
     .on('click', 'a.button.myparcelbe', function(event) {
       event.preventDefault();
       var button_action = $(this).data('request');
@@ -347,15 +363,15 @@ jQuery(function($) {
 
   $(window).bind('tb_unload', function() {
     /* re-enable scrolling after closing thickbox */
-    $("body").css({overflow: 'inherit'})
+    $('body').css({overflow: 'inherit'});
   });
 
   /* Add offset dialog when address labels option is selected */
-  $("select[name='action'], select[name='action2']").change(function() {
+  $('select[name=\'action\'], select[name=\'action2\']').change(function() {
     var actionselected = $(this).val();
     /* alert(actionselected); */
     if ((actionselected == 'wcmp_print' || actionselected == 'wcmp_export_print') && wc_myparcelbe.offset == 1) {
-      var insert_position = $(this).attr("name") == 'action' ? 'top' : 'bottom';
+      var insert_position = $(this).attr('name') == 'action' ? 'top' : 'bottom';
       $('#wcmyparcelbe_offset_dialog')
         .attr('style', 'clear:both') /* reset styles */
         .insertAfter('div.tablenav.' + insert_position)
@@ -373,7 +389,7 @@ jQuery(function($) {
   });
 
   /* Click offset dialog button (single export) */
-  $("#wcmyparcelbe_offset_dialog button").click(function(event) {
+  $('#wcmyparcelbe_offset_dialog button').click(function(event) {
     $dialog = $(this).parent();
 
     /* set print variables */
@@ -393,14 +409,14 @@ jQuery(function($) {
       .show()
       .appendTo('body')
       .css({
-        position: "absolute",
-        "background-color": "white",
-        padding: "6px",
-        width: "100px",
-        border: "1px solid #ccc",
+        position: 'absolute',
+        'background-color': 'white',
+        padding: '6px',
+        width: '100px',
+        border: '1px solid #ccc',
         top: event.pageY,
         left: event.pageX,
-        "margin-left": "-100px",
+        'margin-left': '-100px',
       });
 
     $('#wcmyparcelbe_offset_dialog').find('button')
@@ -480,12 +496,12 @@ jQuery(function($) {
   }
 
   function myparcelbe_modal_dialog(order_ids, dialog) {
-    var request_prefix = (wc_myparcelbe.ajax_url.indexOf("?") !== -1) ? '&' : '?';
+    var request_prefix = (wc_myparcelbe.ajax_url.indexOf('?') !== -1) ? '&' : '?';
     var thickbox_parameters = '&TB_iframe=true&height=380&width=720';
     var url = wc_myparcelbe.ajax_url + request_prefix + 'order_ids=' + order_ids + '&action=wc_myparcelbe&request=modal_dialog&dialog=' + dialog + '&security=' + wc_myparcelbe.nonce + thickbox_parameters;
 
     /* disable background scrolling */
-    $("body").css({overflow: 'hidden'});
+    $('body').css({overflow: 'hidden'});
 
     tb_show('', url);
   }
@@ -515,7 +531,7 @@ jQuery(function($) {
       offset = 0;
     }
 
-    var request_prefix = (wc_myparcelbe.ajax_url.indexOf("?") !== -1) ? '&' : '?';
+    var request_prefix = (wc_myparcelbe.ajax_url.indexOf('?') !== -1) ? '&' : '?';
     var url = wc_myparcelbe.ajax_url + request_prefix + 'action=wc_myparcelbe&request=get_labels&security=' + wc_myparcelbe.nonce;
 
     /* create form to send order_ids via POST */
@@ -547,12 +563,12 @@ jQuery(function($) {
     var hash = i === -1 ? '' : uri.substr(i);
     uri = i === -1 ? uri : uri.substr(0, i);
 
-    var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+    var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+    var separator = uri.indexOf('?') !== -1 ? '&' : '?';
     if (uri.match(re)) {
-      uri = uri.replace(re, '$1' + key + "=" + value + '$2');
+      uri = uri.replace(re, '$1' + key + '=' + value + '$2');
     } else {
-      uri = uri + separator + key + "=" + value;
+      uri = uri + separator + key + '=' + value;
     }
     return uri + hash; /* finally append the hash as well */
   }
