@@ -6,8 +6,8 @@ if ( ! class_exists('wcmp_settings_callbacks')) :
 
 class wcmp_settings_callbacks {
 
-    const extra_width_for_number_input = 200;
-    const steps_number_input_fields = "0.01";
+    const EXTRA_WIDTH_FOR_NUMBER_INPUT = 200;
+    const STEPS_NUMBER_INPUT_FIELDS    = "0.01";
 
     /**
      * Section null callback.
@@ -23,6 +23,9 @@ class wcmp_settings_callbacks {
      *   value       - value if not 1 (optional)
      *   default     - default setting (optional)
      *   description - description (optional)
+     *
+     * @param $args
+     *
      * @return void.
      */
     public function checkbox($args) {
@@ -64,9 +67,9 @@ class wcmp_settings_callbacks {
         }
 
         if ($type == 'number') {
-            $width = ($size) + self::extra_width_for_number_input;
+            $width = ($size) + self::EXTRA_WIDTH_FOR_NUMBER_INPUT;
             $style = "width: {$width}px";
-            $step = self::steps_number_input_fields;
+            $step = self::STEPS_NUMBER_INPUT_FIELDS;
         } else {
             $style = '';
             $step = '';

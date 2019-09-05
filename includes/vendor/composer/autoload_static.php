@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit54174d3391ad5e8a854a84146bc04a0c
+class ComposerStaticInit6e0eaeba8f9af67a7fc5406552a3a089
 {
     public static $files = array (
         '3480d8f702c8d1d51e7b6bdf09c0b045' => __DIR__ . '/..' . '/myparcelnl/sdk/src/AutoLoader.php',
