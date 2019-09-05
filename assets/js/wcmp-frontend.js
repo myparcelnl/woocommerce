@@ -36,7 +36,7 @@ window.addEventListener('load', function() {
     addressType: null,
 
     /**
-     * Ship to different address field
+     * Ship to different address field.
      *
      * @type {String}
      */
@@ -49,8 +49,10 @@ window.addEventListener('load', function() {
     postcodeField: 'postcode',
 
     updateCheckoutEvent: 'myparcel_update_checkout',
-    updatedCheckoutEvent: 'myparcel_checkout_updated',
-    updatedAddressEvent: 'address_updated',
+    updatedCheckoutEvent: 'myparcel_updated_checkout',
+    updatedAddressEvent: 'myparcel_address_updated',
+
+    updateWooCommerceCheckoutEvent: 'update_checkout',
 
     /**
      * Initialize the script.
@@ -65,100 +67,102 @@ window.addEventListener('load', function() {
         this.setAddress(event.detail);
       });
 
-      document.addEventListener(this.updatedCheckoutEvent, function() {
-        console.warn(MyParcel_Frontend.updatedCheckoutEvent, document.querySelector(this.checkoutDataField).value);
-      });
-
-      /**
-       * Hide checkout options for non parcel shipments.
-       */
-      function showOrHideCheckoutOptions() {
-        var shipping_method_class;
-
-        if (!MyParcel_Frontend.checkCountry()) {
-          return;
-        }
-
-        if (MyParcel_Frontend.always_display) {
-          MyParcel_Frontend.force_update = true;
-          this.triggerEvent('myparcel_update_checkout');
-        } else if (MyParcel_Frontend.shipping_methods.length > 0) {
-          var shipping_method = MyParcel_Frontend.getShippingMethod();
-
-          /* no shipping method selected, hide by default */
-          if (typeof shipping_method === 'undefined') {
-            MyParcel_Frontend.hideDeliveryOptions();
-            return;
-          }
-
-          if (shipping_method.indexOf('table_rate:') !== -1 || shipping_method.indexOf('betrs_shipping:') !== -1) {
-            /*
-             * WC Table Rates
-             * use shipping_method = method_id:instance_id:rate_id
-             *
-             */
-            if (shipping_method.indexOf('betrs_shipping:') !== -1) {
-              shipping_method = shipping_method.replace(':', '_');
-            }
-          } else {
-            /*
-             * none table rates
-             * strip instance_id if present
-             */
-            if (shipping_method.indexOf(':') !== -1) {
-              shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
-            }
-            var shipping_class = document.querySelector('#myparcel_highest_shipping_class').value;
-            /* add class refinement if we have a shipping class */
-            if (shipping_class) {
-              shipping_method_class = shipping_method + ':' + shipping_class;
-            }
-          }
-
-          if (shipping_class && MyParcel_Frontend.shipping_methods.indexOf(shipping_method_class) > -1) {
-            MyParcel_Frontend.updated_shipping_method = shipping_method_class;
-            MyParcel.showAllDeliveryOptions();
-            MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_class;
-          } else if (MyParcel_Frontend.shipping_methods.indexOf(shipping_method) > -1) {
-            /* fallback to bare method if selected in settings */
-            MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method;
-            MyParcel.showAllDeliveryOptions();
-            MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method;
-          } else {
-            var shipping_method_now = typeof shipping_method_class === 'undefined'
-              ? shipping_method
-              : shipping_method_class;
-
-            MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method_now;
-            MyParcel_Frontend.hideDeliveryOptions();
-
-            MyParcel_Frontend.updateInput();
-
-            MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_now;
-
-            /* Hide extra fees when selecting local pickup */
-            if (MyParcel_Frontend.shipping_method_changed === false) {
-              MyParcel_Frontend.shipping_method_changed = true;
-
-              /* Update woocommerce checkout when selecting other method */
-              MyParcel_Frontend.triggerEvent('update_checkout');
-
-              /* Only update when the method change after 2seconds */
-              setTimeout(function() {
-                MyParcel_Frontend.shipping_method_changed = false;
-              }, 2000);
-            }
-          }
-        } else {
-          /* not sure if we should already hide by default? */
-          MyParcel_Frontend.hideDeliveryOptions();
-          MyParcel_Frontend.updateInput();
-        }
-      }
-
-      /* hide checkout options for non parcel shipments */
-      document.addEventListener('updated_checkout', showOrHideCheckoutOptions);
+      document.addEventListener(MyParcel_Frontend.updatedCheckoutEvent, MyParcel_Frontend.onCheckoutUpdate);
     },
+
+    onCheckoutUpdate: function() {
+      console.log(document.querySelector(this.checkoutDataField).value);
+
+      MyParcel_Frontend.triggerEvent(MyParcel_Frontend.updateWooCommerceCheckoutEvent);
+    },
+
+    /**
+     * Hide checkout options for non parcel shipments.
+     */
+    // showOrHideCheckoutOptions: function(e) {
+    //   console.log('showOrHideCheckoutOptions1', e);
+    //   var shipping_method_class;
+    //
+    //   if (!MyParcel_Frontend.checkCountry()) {
+    //     return;
+    //   }
+    //
+    //   if (MyParcel_Frontend.always_display) {
+    //     MyParcel_Frontend.force_update = true;
+    //     // MyParcel_Frontend.triggerEvent(MyParcel_Frontend.updateCheckoutEvent);
+    //   } else if (MyParcel_Frontend.shipping_methods.length > 0) {
+    //     var shipping_method = MyParcel_Frontend.getShippingMethod();
+    //
+    //     /* no shipping method selected, hide by default */
+    //     if (typeof shipping_method === 'undefined') {
+    //       MyParcel_Frontend.hideDeliveryOptions();
+    //       return;
+    //     }
+    //
+    //     if (shipping_method.indexOf('table_rate:') !== -1 || shipping_method.indexOf('betrs_shipping:') !== -1) {
+    //       /*
+    //        * WC Table Rates
+    //        * use shipping_method = method_id:instance_id:rate_id
+    //        *
+    //        */
+    //       if (shipping_method.indexOf('betrs_shipping:') !== -1) {
+    //         shipping_method = shipping_method.replace(':', '_');
+    //       }
+    //     } else {
+    //       /*
+    //        * none table rates
+    //        * strip instance_id if present
+    //        */
+    //       if (shipping_method.indexOf(':') !== -1) {
+    //         shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
+    //       }
+    //       var shipping_class = document.querySelector('#myparcel_highest_shipping_class').value;
+    //       /* add class refinement if we have a shipping class */
+    //       if (shipping_class) {
+    //         shipping_method_class = shipping_method + ':' + shipping_class;
+    //       }
+    //     }
+    //
+    //     if (shipping_class && MyParcel_Frontend.shipping_methods.indexOf(shipping_method_class) > -1) {
+    //       MyParcel_Frontend.updated_shipping_method = shipping_method_class;
+    //       MyParcel.showAllDeliveryOptions();
+    //       MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_class;
+    //     } else if (MyParcel_Frontend.shipping_methods.indexOf(shipping_method) > -1) {
+    //       /* fallback to bare method if selected in settings */
+    //       MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method;
+    //       MyParcel.showAllDeliveryOptions();
+    //       MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method;
+    //     } else {
+    //       var shipping_method_now = typeof shipping_method_class === 'undefined'
+    //         ? shipping_method
+    //         : shipping_method_class;
+    //
+    //       MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method_now;
+    //       MyParcel_Frontend.hideDeliveryOptions();
+    //
+    //       MyParcel_Frontend.updateInput();
+    //
+    //       MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_now;
+    //
+    //       /* Hide extra fees when selecting local pickup */
+    //       if (MyParcel_Frontend.shipping_method_changed === false) {
+    //         MyParcel_Frontend.shipping_method_changed = true;
+    //         console.log('hier kom ik in');
+    //         /* Update woocommerce checkout when selecting other method */
+    //         MyParcel_Frontend.triggerEvent('update_checkout');
+    //
+    //         /* Only update when the method change after 2seconds */
+    //         setTimeout(function() {
+    //           MyParcel_Frontend.shipping_method_changed = false;
+    //         }, 2000);
+    //       }
+    //     }
+    //   } else {
+    //     /* not sure if we should already hide by default? */
+    //     MyParcel_Frontend.hideDeliveryOptions();
+    //     MyParcel_Frontend.updateInput();
+    //   }
+    // },
 
     /**
      * Update the #mypa-input with new data.
@@ -306,7 +310,6 @@ window.addEventListener('load', function() {
      * @param {String} identifier - Name of the event.
      */
     triggerEvent: function(identifier) {
-      console.trace();
       var event = document.createEvent('HTMLEvents');
       event.initEvent(identifier, true, false);
       document.querySelector('body').dispatchEvent(event);
@@ -345,6 +348,7 @@ window.addEventListener('load', function() {
 
     /**
      * Set the values of the WooCommerce fields.
+     *
      * @param {Object} address
      */
     setAddress: function(address) {
