@@ -269,6 +269,15 @@ if (! class_exists('wcmp_settings_data')) :
         }
 
         /**
+         * Create the export defaults settings sections
+         */
+        public function create_export_defaults_settings()
+        {
+            $this->generate_settings($this->get_export_defaults_sections(), "export_defaults");
+        }
+
+
+        /**
          * Register Export defaults settings
          */
         public function export_defaults_settings()
@@ -873,6 +882,19 @@ if (! class_exists('wcmp_settings_data')) :
             ];
         }
 
+        private function get_export_defaults_sections()
+        {
+            return [
+                "export_defaults" => [
+                    [
+                        "name"     => "defaults",
+                        "label"    => __('Default export settings', 'woocommerce-myparcelbe'),
+                        "settings" => $this->get_export_defaults_section_defaults()
+                    ],
+                ]
+            ];
+        }
+
         /**
          * Get the array of all carrier sections and their settings to be added to WordPress.
          *
@@ -1214,9 +1236,9 @@ if (! class_exists('wcmp_settings_data')) :
                     "label" => __("Home delivery title", "woocommerce-myparcelbe"),
                     "type"  => "text_input",
                     "args"  => [
-                        "size"        => "53",
-                        "title"       => "Delivered at home or at work",
-                        "current"     => self::get_checkout_setting_title("at_home_delivery_title"),
+                        "size"    => "53",
+                        "title"   => "Delivered at home or at work",
+                        "current" => self::get_checkout_setting_title("at_home_delivery_title"),
                     ]
                 ],
                 [
@@ -1237,10 +1259,10 @@ if (! class_exists('wcmp_settings_data')) :
                     "label" => __("Signature on delivery", "woocommerce-myparcelbe"),
                     "type"  => "text_input",
                     "args"  => [
-                        "has_title"   => true,
-                        "title"       => "Signature on delivery",
-                        "current"     => self::get_checkout_setting_title("signature_title"),
-                        "size"        => "30",
+                        "has_title" => true,
+                        "title"     => "Signature on delivery",
+                        "current"   => self::get_checkout_setting_title("signature_title"),
+                        "size"      => "30",
                     ]
                 ],
                 [
@@ -1248,10 +1270,10 @@ if (! class_exists('wcmp_settings_data')) :
                     "label" => __("Pickup", "woocommerce-myparcelbe"),
                     "type"  => "text_input",
                     "args"  => [
-                        "has_title"   => true,
-                        "title"       => "Pickup",
-                        "current"     => self::get_checkout_setting_title("pickup_title"),
-                        "size"        => "30",
+                        "has_title" => true,
+                        "title"     => "Pickup",
+                        "current"   => self::get_checkout_setting_title("pickup_title"),
+                        "size"      => "30",
                     ]
                 ],
                 [
@@ -1297,28 +1319,107 @@ if (! class_exists('wcmp_settings_data')) :
         private function get_general_section_customizations()
         {
             return [
-                "name"  => "custom_css",
-                "label" => __("Custom styles", "woocommerce-myparcelbe"),
-                "type"  => "textarea",
-                "args"  => [
-                    "width"  => "80",
-                    "height" => "8",
+                [
+                    "name"  => "custom_css",
+                    "label" => __("Custom styles", "woocommerce-myparcelbe"),
+                    "type"  => "textarea",
+                    "args"  => [
+                        "width"  => "80",
+                        "height" => "8",
 
-                ],
+                    ],
+                ]
             ];
         }
 
         private function get_general_section_diagnostics()
         {
             return [
-                "name"  => "error_logging",
-                "label" => __("Log API communication", "woocommerce-myparcelbe"),
-                "type"  => "checkbox",
-                "args"  => [
-                    "description" => '<a href="' . esc_url_raw(admin_url("admin.php?page=wc-status&tab=logs")
-                        ) . '" target="_blank">' . __("View logs", "woocommerce-myparcelbe") . "</a> (wc-myparcelbe)",
-                ],
+                [
+                    "name"  => "error_logging",
+                    "label" => __("Log API communication", "woocommerce-myparcelbe"),
+                    "type"  => "checkbox",
+                    "args"  => [
+                        "description" => '<a href="' . esc_url_raw(admin_url("admin.php?page=wc-status&tab=logs")
+                            ) . '" target="_blank">' . __("View logs",
+                                "woocommerce-myparcelbe"
+                                         ) . "</a> (wc-myparcelbe)",
+                    ],
+                ]
+            ];
+        }
 
+        private function get_export_defaults_section_defaults()
+        {
+            return [
+                [
+                    "name"  => "shipping_methods_package_types",
+                    "label" => __("Package types", "woocommerce-myparcelbe"),
+                    "type"  => "shipping_methods_package_types",
+                    "args"  => [
+                        "package_types" => [
+                            "package_types" => WooCommerce_MyParcelBE()->export->get_package_types(),
+                        ],
+                        "description"   => __("Select one or more shipping methods for each MyParcel BE package type",
+                            "woocommerce-myparcelbe"
+                        ),
+                    ],
+                ],
+                [
+                    "name"  => "package_type",
+                    "label" => __("Shipment type", "woocommerce-myparcelbe"),
+                    "type"  => "select",
+                    "args"  => [
+                        "default" => [
+                            (string) wcmp_export::PACKAGE,
+                            "options" => WooCommerce_MyParcelBE()->export->get_package_types(),
+                        ],
+                    ],
+                ],
+                [
+                    "name"  => "connect_email",
+                    "label" => __("Connect customer email", "woocommerce-myparcelbe"),
+                    "type"  => "checkbox",
+                    "args"  => [
+                        "description" => sprintf(__("When you connect the customer email, MyParcel BE can send a Track & Trace email to this address. In your %sMyParcel BE backend%s you can enable or disable this email and format it in your own style.",
+                            "woocommerce-myparcelbe"
+                        ),
+                            '<a href="https://backoffice.sendmyparcel.be/settings/account" target="_blank">',
+                            '</a>'
+                        )
+                    ],
+                ],
+                [
+                    "name"  => "connect_phone",
+                    "label" => __("Connect customer phone", "woocommerce-myparcelbe"),
+                    "type"  => "checkbox",
+                    "args"  => [
+                        "description" => __("When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.",
+                            "woocommerce-myparcelbe"
+                        ),
+                    ],
+                ],
+                [
+                    "name"  => "label_description",
+                    "label" => __("Label description", "woocommerce-myparcelbe"),
+                    "type"  => "text_input",
+                    "args"  => [
+                        "size"        => "25",
+                        "description" => __("When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.",
+                            "woocommerce-myparcelbe"
+                        ),
+                    ],
+                ],
+                [
+                    "name"  => "connect_phone",
+                    "label" => __("Connect customer phone", "woocommerce-myparcelbe"),
+                    "type"  => "checkbox",
+                    "args"  => [
+                        "description" => __("When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.",
+                            "woocommerce-myparcelbe"
+                        ),
+                    ],
+                ]
             ];
         }
     }
