@@ -54,8 +54,14 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
          */
         public $includes;
 
+        /**
+         * @var wcmp_export
+         */
         public $export;
 
+        /**
+         * @var wcmp_admin
+         */
         private $admin;
 
         /**
@@ -443,16 +449,7 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
             // Load settings
             $settings = new SettingsCollection();
             $settings->setSettingsByType(get_option('woocommerce_myparcelbe_general_settings'), 'general');
-            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_export_defaults_settings'),
-                'export'
-            );
-
-            echo "<pre>";
-            print_r(get_option('woocommerce_myparcelbe_bpost_settings'));
-            print_r(get_option('woocommerce_myparcelbe_dpd_settings'));
-            echo "</pre>";
-            exit();
-
+            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_export_defaults_settings'), 'export');
             $settings->setSettingsByType(
                 get_option('woocommerce_myparcelbe_bpost_settings'),
                 'carrier',

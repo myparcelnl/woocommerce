@@ -16,13 +16,19 @@ class wcmp_be_postcode_fields {
      * Taken from https://github.com/myparcelbe/sdk
      */
     const SPLIT_STREET_REGEX = '~(?P<street>.*?)\s?(?P<street_suffix>(?P<number>[\d]+)[\s-]{0,2}(?P<extension>[a-zA-Z/\s]{0,5}$|[0-9/]{0,5}$|\s[a-zA-Z]{1}[0-9]{0,3}$|\s[0-9]{2}[a-zA-Z]{0,3}$))$~';
+
     private $use_split_address_fields;
 
-    public function __construct() {
+    public function __construct()
+    {
+        add_action("admin_init", [$this, "initialize"], 9999);
+    }
+
+    public function initialize() {
         $this->use_split_address_fields = array_key_exists(
-            'use_split_address_fields',
-            get_option('woocommerce_myparcelbe_general_settings')
-        ) ? get_option('woocommerce_myparcelbe_general_settings')['use_split_address_fields'] === '1' : false;
+            "use_split_address_fields",
+            get_option("woocommerce_myparcelbe_general_settings")
+        ) ? get_option("woocommerce_myparcelbe_general_settings")["use_split_address_fields"] === "1" : false;
 
         // Load styles
         add_action('wp_enqueue_scripts', array(&$this, 'add_styles_scripts'));
