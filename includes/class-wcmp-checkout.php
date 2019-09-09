@@ -29,8 +29,8 @@ if (! class_exists('wcmp_checkout')) :
                 return;
             }
 
-            // if using split fields
-            if (array_key_exists('use_split_address_fields', get_option('woocommerce_myparcelbe_general_settings'))) {
+            // if using split address fields
+            if (WooCommerce_MyParcelBE()->setting_collection->isEnabled('use_split_address_fields')) {
                 wp_enqueue_script(
                     'wcmp-checkout-fields',
                     WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
@@ -71,9 +71,8 @@ if (! class_exists('wcmp_checkout')) :
                 'wcmp_display_settings',
                 [
                     // Convert true/false to int for JavaScript
-                    'isUsingSplitAddressFields' => (int) array_key_exists('use_split_address_fields',
-                        get_option('woocommerce_myparcelbe_general_settings')
-                    )
+                    'isUsingSplitAddressFields' => WooCommerce_MyParcelBE()
+                        ->setting_collection->isEnabled('use_split_address_fields')
                 ]
             );
 
@@ -108,9 +107,10 @@ if (! class_exists('wcmp_checkout')) :
          */
         public function get_delivery_options_shipping_methods()
         {
-            $packageTypes     = WooCommerce_MyParcelBE()->setting_collection->getByName(
+            $packageTypes = WooCommerce_MyParcelBE()->setting_collection->getByName(
                 "shipping_methods_package_types"
             );
+
             $shipping_methods = [];
 
             if (array_key_exists(wcmp_export::PACKAGE, $packageTypes ?? [])) {

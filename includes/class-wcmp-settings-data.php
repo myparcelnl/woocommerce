@@ -43,9 +43,8 @@ if (! class_exists('wcmp_settings_data')) :
             $this->generate_settings($this->get_general_sections(), self::SETTINGS_GENERAL);
             $this->generate_settings($this->get_export_defaults_sections(), self::SETTINGS_EXPORT_DEFAULTS);
 
-            foreach (self::CARRIERS as $carrier) {
-                $this->generate_settings($this->get_carrier_sections(), $carrier, true);
-            }
+            $this->generate_settings($this->get_carrier_bpost_sections(), 'bpost', true);
+            $this->generate_settings($this->get_carrier_dpd_sections(), 'dpd', true);
         }
 
         /**
@@ -148,30 +147,6 @@ if (! class_exists('wcmp_settings_data')) :
         /**
          * @return array
          */
-        private function get_dpd_section_delivery_options(): array
-        {
-            return [
-                [
-                    "name"  => "pickup",
-                    "label" => __("dpd pickup", "woocommerce-myparcelbe"),
-                    "type"  => "delivery_option_enable",
-                    "args"  => [
-                        "has_title"          => false,
-                        "has_price"          => true,
-                        "size"               => 3,
-                        "option_description" => sprintf(
-                            __("Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                                "woocommerce-myparcelbe"
-                            )
-                        ),
-                    ]
-                ]
-            ];
-        }
-
-        /**
-         * @return array
-         */
         private function get_bpost_section_settings(): array
         {
             return [
@@ -269,7 +244,7 @@ if (! class_exists('wcmp_settings_data')) :
                 ],
                 [
                     "name"  => "pickup",
-                    "label" => __("dpd pickup", "woocommerce-myparcelbe"),
+                    "label" => __("bpost pickup", "woocommerce-myparcelbe"),
                     "type"  => "delivery_option_enable",
                     "args"  => [
                         "has_title"          => false,
@@ -291,7 +266,7 @@ if (! class_exists('wcmp_settings_data')) :
         private function get_general_sections()
         {
             return [
-                self::SETTINGS_GENERAL => [
+                self:: SETTINGS_GENERAL => [
                     [
                         "name"     => "api",
                         "label"    => __("API settings", "woocommerce-myparcelbe"),
@@ -335,26 +310,37 @@ if (! class_exists('wcmp_settings_data')) :
         }
 
         /**
-         * Get the array of all carrier sections and their settings to be added to WordPress.
+         * Get the array of bpost sections and their settings to be added to WordPress.
          *
          * @return array
          */
-        private function get_carrier_sections()
+        private function get_carrier_bpost_sections()
         {
             return [
                 BpostConsignment::CARRIER_NAME => [
                     [
                         "name"     => "settings",
-                        "label"    => __("bpost settings", "woocommerce-myparcelbe"),
+                        "label"    => __("bpost delivery settings", "woocommerce-myparcelbe"),
                         "settings" => $this->get_bpost_section_settings()
                     ],
                     [
                         "name"     => "delivery_options",
-                        "label"    => __("bpost delivery options", "woocommerce-myparcelbe"),
+                        "label"    => __("bpost pickup options", "woocommerce-myparcelbe"),
                         "settings" => $this->get_bpost_section_delivery_options()
                     ]
                 ],
-                DPDConsignment::CARRIER_NAME   => [
+            ];
+        }
+
+        /**
+         * Get the array of dpd sections and their settings to be added to WordPress.
+         *
+         * @return array
+         */
+        private function get_carrier_dpd_sections()
+        {
+            return [
+                DPDConsignment::CARRIER_NAME => [
                     [
                         "name"     => "settings",
                         "label"    => __("dpd settings", "woocommerce-myparcelbe"),
@@ -365,7 +351,7 @@ if (! class_exists('wcmp_settings_data')) :
                         "label"    => __("dpd delivery options", "woocommerce-myparcelbe"),
                         "settings" => $this->get_dpd_section_delivery_options()
                     ]
-                ]
+                ],
             ];
         }
 
@@ -454,6 +440,30 @@ if (! class_exists('wcmp_settings_data')) :
                         ),
                     ]
                 ],
+            ];
+        }
+
+        /**
+         * @return array
+         */
+        private function get_dpd_section_delivery_options(): array
+        {
+            return [
+                [
+                    "name"  => "pickup",
+                    "label" => __("dpd pickup", "woocommerce-myparcelbe"),
+                    "type"  => "delivery_option_enable",
+                    "args"  => [
+                        "has_title"          => false,
+                        "has_price"          => true,
+                        "size"               => 3,
+                        "option_description" => sprintf(
+                            __("Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                                "woocommerce-myparcelbe"
+                            )
+                        ),
+                    ]
+                ]
             ];
         }
 
@@ -766,15 +776,6 @@ if (! class_exists('wcmp_settings_data')) :
                         "description"   => __("Select one or more shipping methods for each MyParcel BE package type",
                             "woocommerce-myparcelbe"
                         ),
-                    ],
-                ],
-                [
-                    "name"  => "package_type",
-                    "label" => __("Shipment type", "woocommerce-myparcelbe"),
-                    "type"  => "select",
-                    "args"  => [
-                        "default" => (string) wcmp_export::PACKAGE,
-                        "options" => WooCommerce_MyParcelBE()->export->get_package_types(),
                     ],
                 ],
                 [

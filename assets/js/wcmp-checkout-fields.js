@@ -1,5 +1,5 @@
 /**
- * Loaded in checkout when using split address fields
+ * Loaded in checkout when using split address fields.
  *
  * Compatible with 5.6 and 7.1 version of the plugin.
  */

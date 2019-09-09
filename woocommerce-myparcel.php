@@ -435,7 +435,7 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
                 return;
             }
 
-            add_action('admin_init', [$this, 'initializeSettingCollection'], 9999);
+            $this->initializeSettingCollection();
         }
 
         /**
