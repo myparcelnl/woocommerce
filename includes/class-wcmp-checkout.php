@@ -146,7 +146,6 @@ if (! class_exists('wcmp_checkout')) :
 
             $myParcelConfig = [
                 "config"  => [
-                    "apiBaseUrl" => "https://edie.api.staging.myparcel.nl", // todo remove
                     "carriers"   => $carriers,
                     "platform"   => "belgie",
                     "locale"     => "nl-BE",
