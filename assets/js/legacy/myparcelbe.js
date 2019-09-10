@@ -530,7 +530,7 @@ MyParcelBE = {
 
     html += '<svg class="svg-inline--fa mypabe-fa-times fa-w-12" aria-hidden="true" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M323.1 441l53.9-53.9c9.4-9.4 9.4-24.5 0-33.9L279.8 256l97.2-97.2c9.4-9.4 9.4-24.5 0-33.9L323.1 71c-9.4-9.4-24.5-9.4-33.9 0L192 168.2 94.8 71c-9.4-9.4-24.5-9.4-33.9 0L7 124.9c-9.4 9.4-9.4 24.5 0 33.9l97.2 97.2L7 353.2c-9.4 9.4-9.4 24.5 0 33.9L60.9 441c9.4 9.4 24.5 9.4 33.9 0l97.2-97.2 97.2 97.2c9.3 9.3 24.5 9.3 33.9 0z"></path></svg>'
     html += '<span class="mypabe-pickup-location-details-location"><h3>' + currentLocation.location + '</h3></span>';
-    html += '<svg class="mypabe-bpost-logo" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 99" enable-background="new 0 0 100 99" xml:space="preserve"><image id="bpost-logo" width="100" height="99" href="http://localhost/woocommerce/wp-content/plugins/woocommerce-belgie/assets/img/wcmp-bpost-logo.png"></image></svg>';
+    html += '<svg class="mypabe-bpost-logo" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 99" enable-background="new 0 0 100 99" xml:space="preserve"><image id="bpost-logo" width="100" height="99" href="http://localhost/woocommerce/wp-content/plugins/woocommerce-myparcelbe/assets/img/wcmp-bpost-logo.png"></image></svg>';
     html += '<span class="mypabe-pickup-location-details-street">' + currentLocation.street + '&nbsp;' + this.currentLocation.number + '</span>';
     html += '<span class="mypabe-pickup-location-details-city">' + currentLocation.postal_code + '&nbsp;' + currentLocation.city + '</span>';
 

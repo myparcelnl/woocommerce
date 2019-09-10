@@ -504,13 +504,13 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                     "retry"                => __('Retry', 'woocommerce-myparcelbe'),
                     "wrongHouseNumberCity" => __('Postcode/city combination unknown', 'woocommerce-myparcelbe'),
 
-                    "sunday"    => __('sunday', 'woocommerce-myparcelbe'),
-                    "monday"    => __('monday', 'woocommerce-myparcelbe'),
-                    "tuesday"   => __('tuesday', 'woocommerce-myparcelbe'),
-                    "wednesday" => __('wednesday', 'woocommerce-myparcelbe'),
-                    "thursday"  => __('thursday', 'woocommerce-myparcelbe'),
-                    "friday"    => __('friday', 'woocommerce-myparcelbe'),
-                    "saturday"  => __('saturday', 'woocommerce-myparcelbe'),
+                    "sunday"    => __('Sunday', 'woocommerce-myparcelbe'),
+                    "monday"    => __('Monday', 'woocommerce-myparcelbe'),
+                    "tuesday"   => __('Tuesday', 'woocommerce-myparcelbe'),
+                    "wednesday" => __('Wednesday', 'woocommerce-myparcelbe'),
+                    "thursday"  => __('Thursday', 'woocommerce-myparcelbe'),
+                    "friday"    => __('Friday', 'woocommerce-myparcelbe'),
+                    "saturday"  => __('Saturday', 'woocommerce-myparcelbe'),
                 ]
             ];
 

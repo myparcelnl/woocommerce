@@ -261,7 +261,7 @@ if (! class_exists('wcmp_settings_data')) :
             return [
                 [
                     "name"  => "pickup",
-                    "label" => __("bpost pickup", "woocommerce-myparcelbe"),
+                    "label" => __("Enable bpost pickup", "woocommerce-myparcelbe"),
                     "type"  => [$this->callbacks, "delivery_option_enable"],
                     "args"  => [
                         "has_title"   => false,
@@ -338,7 +338,7 @@ if (! class_exists('wcmp_settings_data')) :
                 BpostConsignment::CARRIER_NAME => [
                     [
                         "name"     => "delivery_options",
-                        "label"    => __("bpost delivery settings", "woocommerce-myparcelbe"),
+                        "label"    => __("bpost delivery options", "woocommerce-myparcelbe"),
                         "settings" => $this->get_bpost_section_delivery_options(),
                     ],
                     [
@@ -361,12 +361,12 @@ if (! class_exists('wcmp_settings_data')) :
                 DPDConsignment::CARRIER_NAME => [
                     [
                         "name"     => "delivery_options",
-                        "label"    => __("dpd settings", "woocommerce-myparcelbe"),
+                        "label"    => __("dpd delivery options", "woocommerce-myparcelbe"),
                         "settings" => $this->get_dpd_section_delivery_options(),
                     ],
                     [
                         "name"     => "pickup_options",
-                        "label"    => __("dpd delivery options", "woocommerce-myparcelbe"),
+                        "label"    => __("dpd pickup options", "woocommerce-myparcelbe"),
                         "settings" => $this->get_dpd_section_pickup_options(),
                     ],
                 ],
@@ -477,7 +477,7 @@ if (! class_exists('wcmp_settings_data')) :
             return [
                 [
                     "name"  => "pickup",
-                    "label" => __("dpd pickup", "woocommerce-myparcelbe"),
+                    "label" => __("Enable dpd pickup", "woocommerce-myparcelbe"),
                     "type"  => [$this->callbacks, "delivery_option_enable"],
                     "args"  => [
                         "has_title"   => false,
@@ -662,6 +662,11 @@ if (! class_exists('wcmp_settings_data')) :
                     "name"  => "delivery_options_enabled",
                     "label" => __("Enable MyParcel BE delivery options", "woocommerce-myparcelbe"),
                     "type"  => [$this->callbacks, "checkbox"],
+                    "args"  => [
+                        "description" => __(
+                            "The MyParcel delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery."
+                        ),
+                    ],
                 ],
                 [
                     "name"  => "header_delivery_options_title",
