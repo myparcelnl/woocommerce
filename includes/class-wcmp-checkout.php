@@ -177,9 +177,9 @@ if (! class_exists('wcmp_checkout')) :
                     "allowPickupLocations" => $settings->isEnabled("{$carrier}_pickup_enabled"),
                     "allowSignature"       => $settings->getBooleanByName("{$carrier}_signature_enabled"),
                     "cutoffTime"           => $settings->getStringByName("{$carrier}_cutoff_time"),
-                    "deliveryDaysWindow"   => $settings->getIntegerByName("{$carrier}_deliverydays_window"),
-                    "dropOffDays"          => $settings->getByName("{$carrier}_dropoff_days"),
-                    "dropOffDelay"         => $settings->getIntegerByName("{$carrier}_dropoff_delay"),
+                    "deliveryDaysWindow"   => $settings->getIntegerByName("{$carrier}_delivery_days_window"),
+                    "dropOffDays"          => $settings->getByName("{$carrier}_drop_off_days"),
+                    "dropOffDelay"         => $settings->getIntegerByName("{$carrier}_drop_off_delay"),
                     "pricePickup"          => $settings->getIntegerByName("{$carrier}_pickup_fee"),
                     "priceSignature"       => $settings->getIntegerByName("{$carrier}_signature_fee"),
                 ];

@@ -380,10 +380,10 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
         {
             $fromCheckoutToBpost = [
                 'myparcelbe_checkout' => 'myparcelbe_carrier_enable_bpost',
-                'dropoff_days'        => 'bpost_dropoff_days',
+                'dropoff_days'        => 'bpost_drop_off_days',
                 'cutoff_time'         => 'bpost_cutoff_time',
-                'dropoff_delay'       => 'bpost_dropoff_delay',
-                'deliverydays_window' => 'bpost_deliverydays_window',
+                'dropoff_delay'       => 'bpost_drop_off_delay',
+                'deliverydays_window' => 'bpost_delivery_days_window',
                 'signature_enabled'   => 'bpost_signature_enabled',
                 'signature_title'     => 'bpost_signature_title',
                 'signature_fee'       => 'bpost_signature_fee',
