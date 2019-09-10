@@ -18,8 +18,19 @@ if (! class_exists('wcmp_settings')) :
                 'plugin_action_links_' . WooCommerce_MyParcelBE()->plugin_basename,
                 [
                     $this,
-                    'add_settings_link'
+                    'add_settings_link',
                 ]
+            );
+
+            /**
+             * Add the new screen to the woocommerce screen ids to make tooltips work.
+             */
+            add_filter(
+                'woocommerce_screen_ids',
+                function ($ids) {
+                    $ids[] = "woocommerce_page_wcmp_settings";
+                    return $ids;
+                }
             );
 
             // Create the admin settings
@@ -40,7 +51,7 @@ if (! class_exists('wcmp_settings')) :
                 __('MyParcel BE', 'woocommerce-myparcelbe'),
                 'manage_options',
                 'wcmp_settings',
-                array($this, 'settings_page')
+                [$this, 'settings_page']
             );
         }
 
@@ -49,7 +60,8 @@ if (! class_exists('wcmp_settings')) :
          */
         public function add_settings_link($links)
         {
-            $settings_link = '<a href="admin.php?page=wcmp_settings">' . __('Settings',
+            $settings_link = '<a href="admin.php?page=wcmp_settings">' . __(
+                    'Settings',
                     'woocommerce-myparcelbe'
                 ) . '</a>';
             array_push($links, $settings_link);
@@ -61,47 +73,43 @@ if (! class_exists('wcmp_settings')) :
         {
             $settings_tabs = apply_filters(
                 'wcmp_settings_tabs',
-                array(
+                [
                     'general'         => __('General', 'woocommerce-myparcelbe'),
                     'export_defaults' => __('Default export settings', 'woocommerce-myparcelbe'),
                     'bpost'           => __('bpost', 'woocommerce-myparcelbe'),
                     'dpd'             => __('DPD', 'woocommerce-myparcelbe'),
-                )
+                ]
             );
 
             $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'general';
             ?>
-            <div class="wrap">
-                <h1><?php _e('WooCommerce MyParcel BE Settings', 'woocommerce-myparcelbe'); ?></h1>
-                <h2 class="nav-tab-wrapper">
-                    <?php
-                    foreach ($settings_tabs as $tab_slug => $tab_title) {
-                        printf('<a href="?page=wcmp_settings&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>',
-                            $tab_slug,
-                            (($active_tab == $tab_slug) ? 'nav-tab-active' : ''),
-                            $tab_title
-                        );
-                    }
-                    ?>
-                </h2>
+          <div class="wrap">
+            <h1><?php _e('WooCommerce MyParcel BE Settings', 'woocommerce-myparcelbe'); ?></h1>
+            <h2 class="nav-tab-wrapper">
+                <?php
+                foreach ($settings_tabs as $tab_slug => $tab_title) {
+                    printf(
+                        '<a href="?page=wcmp_settings&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>',
+                        $tab_slug,
+                        (($active_tab == $tab_slug) ? 'nav-tab-active' : ''),
+                        $tab_title
+                    );
+                }
+                ?>
+            </h2>
+              <?php do_action('woocommerce_myparcelbe_before_settings_page', $active_tab); ?>
+            <form method="post" action="options.php" id="wcmp_settings" class="wcmp_shipment_options">
+                <?php
+                do_action('woocommerce_myparcelbe_before_settings', $active_tab);
+                settings_fields('woocommerce_myparcelbe_' . $active_tab . '_settings');
+                do_settings_sections('woocommerce_myparcelbe_' . $active_tab . '_settings');
+                do_action('woocommerce_myparcelbe_after_settings', $active_tab);
 
-                <?php do_action('woocommerce_myparcelbe_before_settings_page', $active_tab); ?>
-
-                <form method="post" action="options.php" id="wcmp_settings"
-                      class="wcmp_shipment_options">
-                    <?php
-                    do_action('woocommerce_myparcelbe_before_settings', $active_tab);
-                    settings_fields('woocommerce_myparcelbe_' . $active_tab . '_settings');
-                    do_settings_sections('woocommerce_myparcelbe_' . $active_tab . '_settings');
-                    do_action('woocommerce_myparcelbe_after_settings', $active_tab);
-
-                    submit_button();
-                    ?>
-                </form>
-
-                <?php do_action('woocommerce_myparcelbe_after_settings_page', $active_tab); ?>
-
-            </div>
+                submit_button();
+                ?>
+            </form>
+              <?php do_action('woocommerce_myparcelbe_after_settings_page', $active_tab); ?>
+          </div>
             <?php
         }
 
@@ -119,9 +127,11 @@ if (! class_exists('wcmp_settings')) :
 
             // link to hide message when one of the premium extensions is installed
             if (! $hide_notice && $base_country == 'BE') {
-                $myparcel_nl_link = '<a href="https://wordpress.org/plugins/woocommerce-myparcel/" target="blank">WC MyParcel Netherlands</a>';
+                $myparcel_nl_link =
+                    '<a href="https://wordpress.org/plugins/woocommerce-myparcel/" target="blank">WC MyParcel Netherlands</a>';
                 $text             = sprintf(
-                    __('It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium. If you are using MyParcel Netherlands, download the %s plugin instead!',
+                    __(
+                        'It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium. If you are using MyParcel Netherlands, download the %s plugin instead!',
                         'woocommerce-myparcelbe'
                     ),
                     $myparcel_nl_link

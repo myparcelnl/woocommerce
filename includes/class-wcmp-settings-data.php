@@ -3,11 +3,11 @@
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 
-if (!defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-if (!class_exists('wcmp_settings_data')) :
+if (! class_exists('wcmp_settings_data')) :
 
     /**
      * This class contains all data for the admin settings screens created by the plugin.
@@ -33,6 +33,13 @@ if (!class_exists('wcmp_settings_data')) :
 
             // Create the MyParcel settings with the admin_init hook.
             add_action("admin_init", [$this, "create_all_settings"]);
+        }
+
+        public function log_screen()
+        {
+            echo "<pre>";
+            var_dump(get_current_screen());
+            echo "</pre>";
         }
 
         /**
@@ -83,7 +90,7 @@ if (!class_exists('wcmp_settings_data')) :
                         add_settings_field(
                             $settingName,
                             $setting["label"],
-                            [$this->callbacks, $setting["type"]],
+                            $setting["type"],
                             $optionIdentifier,
                             $sectionName,
                             array_merge(
@@ -147,9 +154,7 @@ if (!class_exists('wcmp_settings_data')) :
 
         /**
          * These are the unprefixed settings for bpost.
-         *
          * After the settings are generated every name will be prefixed with "bpost_"
-         *
          * Example: delivery_enabled => bpost_delivery_enabled
          *
          * @return array
@@ -160,12 +165,12 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "delivery_enabled",
                     "label" => __("Enable bpost delivery", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                 ],
                 [
                     "name"  => "drop_off_days",
                     "label" => __("Drop-off days", "woocommerce-myparcelbe"),
-                    "type"  => "enhanced_select",
+                    "type"  => [$this->callbacks, "enhanced_select"],
                     "args"  => [
                         "options"     => self::get_weekdays(),
                         "description" => __(
@@ -177,7 +182,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "cutoff_time",
                     "label" => __("Cut-off time", "woocommerce-myparcelbe"),
-                    "type"  => "text_input",
+                    "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
                         "type"        => "text",
                         "size"        => "5",
@@ -190,7 +195,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "drop_off_delay",
                     "label" => __("Drop-off delay", "woocommerce-myparcelbe"),
-                    "type"  => "text_input",
+                    "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
                         "type"        => "text",
                         "size"        => "5",
@@ -203,7 +208,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "delivery_days_window",
                     "label" => __("Delivery days window", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "description" => __(
                             "Show the delivery date inside the checkout.",
@@ -214,12 +219,12 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "signature",
                     "label" => __("Signature on delivery", "woocommerce-myparcelbe"),
-                    "type"  => "delivery_option_enable",
+                    "type"  => [$this->callbacks, "delivery_option_enable"],
                     "args"  => [
-                        "has_title"          => false,
-                        "has_price"          => true,
-                        "size"               => 3,
-                        "option_description" => sprintf(
+                        "has_title"   => false,
+                        "has_price"   => true,
+                        "size"        => 3,
+                        "description" => sprintf(
                             __(
                                 "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
                                 "woocommerce-myparcelbe"
@@ -257,12 +262,12 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "pickup",
                     "label" => __("bpost pickup", "woocommerce-myparcelbe"),
-                    "type"  => "delivery_option_enable",
+                    "type"  => [$this->callbacks, "delivery_option_enable"],
                     "args"  => [
-                        "has_title"          => false,
-                        "has_price"          => true,
-                        "size"               => 3,
-                        "option_description" => sprintf(
+                        "has_title"   => false,
+                        "has_price"   => true,
+                        "size"        => 3,
+                        "description" => sprintf(
                             __(
                                 "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
                                 "woocommerce-myparcelbe"
@@ -399,9 +404,7 @@ if (!class_exists('wcmp_settings_data')) :
 
         /**
          * These are the unprefixed settings for dpd.
-         *
          * After the settings are generated every name will be prefixed with "dpd_"
-         *
          * Example: delivery_enabled => dpd_delivery_enabled
          *
          * @return array
@@ -412,12 +415,12 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "delivery_enabled",
                     "label" => __("Enable DPD delivery", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                 ],
                 [
                     "name"  => "drop_off_days",
                     "label" => __("Drop-off days", "woocommerce-myparcelbe"),
-                    "type"  => "enhanced_select",
+                    "type"  => [$this->callbacks, "enhanced_select"],
                     "args"  => [
                         "options"     => self::get_weekdays(),
                         "description" => __(
@@ -429,7 +432,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "cutoff_time",
                     "label" => __("Cut-off time", "woocommerce-myparcelbe"),
-                    "type"  => "text_input",
+                    "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
                         "type"        => "text",
                         "size"        => "5",
@@ -442,7 +445,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "drop_off_delay",
                     "label" => __("Drop-off delay", "woocommerce-myparcelbe"),
-                    "type"  => "text_input",
+                    "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
                         "type"        => "text",
                         "size"        => "5",
@@ -455,7 +458,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "delivery_days_window",
                     "label" => __("Delivery days window", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "description" => __(
                             "Show the delivery date inside the checkout.",
@@ -475,12 +478,12 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "pickup",
                     "label" => __("dpd pickup", "woocommerce-myparcelbe"),
-                    "type"  => "delivery_option_enable",
+                    "type"  => [$this->callbacks, "delivery_option_enable"],
                     "args"  => [
-                        "has_title"          => false,
-                        "has_price"          => true,
-                        "size"               => 3,
-                        "option_description" => sprintf(
+                        "has_title"   => false,
+                        "has_price"   => true,
+                        "size"        => 3,
+                        "description" => sprintf(
                             __(
                                 "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
                                 "woocommerce-myparcelbe"
@@ -500,7 +503,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "api_key",
                     "label" => __("Key", "woocommerce-myparcelbe"),
-                    "type"  => "text_input",
+                    "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
                         "size" => 50,
                     ],
@@ -517,7 +520,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "download_display",
                     "label" => __("Label display", "woocommerce-myparcelbe"),
-                    "type"  => "radio_button",
+                    "type"  => [$this->callbacks, "radio_button"],
                     "args"  => [
                         "options" => [
                             "download" => __("Download PDF", "woocommerce-myparcelbe"),
@@ -528,7 +531,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "label_format",
                     "label" => __("Label format", "woocommerce-myparcelbe"),
-                    "type"  => "radio_button",
+                    "type"  => [$this->callbacks, "radio_button"],
                     "args"  => [
                         "options" => [
                             "A4" => __("Standard printer (A4)", "woocommerce-myparcelbe"),
@@ -539,7 +542,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "print_position_offset",
                     "label" => __("Ask for print start position", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "description" => __(
                             "This option enables you to continue printing where you left off last time",
@@ -550,7 +553,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "email_tracktrace",
                     "label" => __("Track & Trace in email", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "description" => __(
                             "Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel BE backend.",
@@ -561,7 +564,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "myaccount_tracktrace",
                     "label" => __("Track & Trace in My Account", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "description" => __(
                             "Show Track & Trace trace code and link in My Account.",
@@ -572,7 +575,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "process_directly",
                     "label" => __("Process shipments directly", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "description" => __(
                             "When you enable this option, shipments will be directly processed when sent to MyParcel BE.",
@@ -583,7 +586,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "order_status_automation",
                     "label" => __("Order status automation", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "description" => __(
                             "Automatically set order status to a predefined status after successful MyParcel BE export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.",
@@ -594,7 +597,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "automatic_order_status",
                     "label" => __("Automatic order status", "woocommerce-myparcelbe"),
-                    "type"  => "order_status_select",
+                    "type"  => [$this->callbacks, "order_status_select"],
                     "args"  => [
                         "class" => "automatic_order_status",
                     ],
@@ -602,7 +605,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "keep_shipments",
                     "label" => __("Keep old shipments", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "default"     => 0,
                         "description" => __(
@@ -614,7 +617,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "barcode_in_note",
                     "label" => __("Place barcode inside note", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "class"       => "barcode_in_note",
                         "description" => __("Place the barcode inside a note of the order", "woocommerce-myparcelbe"),
@@ -623,7 +626,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "barcode_in_note_title",
                     "label" => __("Title before the barcode", "woocommerce-myparcelbe"),
-                    "type"  => "text_input",
+                    "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
                         "class"       => "barcode_in_note_title",
                         "default"     => "Tracking code:",
@@ -646,7 +649,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "use_split_address_fields",
                     "label" => __("MyParcel BE address fields", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "class"       => "use_split_address_fields",
                         "description" => __(
@@ -658,12 +661,12 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "delivery_options_enabled",
                     "label" => __("Enable MyParcel BE delivery options", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                 ],
                 [
                     "name"  => "header_delivery_options_title",
                     "label" => __("Delivery options title", "woocommerce-myparcelbe"),
-                    "type"  => "text_input",
+                    "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
                         "size"        => "53",
                         "title"       => "Delivery options title",
@@ -676,7 +679,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "at_home_delivery",
                     "label" => __("Home delivery title", "woocommerce-myparcelbe"),
-                    "type"  => "text_input",
+                    "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
                         "size"    => "53",
                         "title"   => "Delivered at home or at work",
@@ -686,7 +689,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "standard_title",
                     "label" => __("Standard delivery title", "woocommerce-myparcelbe"),
-                    "type"  => "text_input",
+                    "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
                         "size"        => "53",
                         "title"       => "Standard delivery",
@@ -700,7 +703,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "signature_title",
                     "label" => __("Signature on delivery", "woocommerce-myparcelbe"),
-                    "type"  => "text_input",
+                    "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
                         "has_title" => true,
                         "title"     => "Signature on delivery",
@@ -711,7 +714,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "pickup_title",
                     "label" => __("Pickup", "woocommerce-myparcelbe"),
-                    "type"  => "text_input",
+                    "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
                         "has_title" => true,
                         "title"     => "Pickup",
@@ -722,7 +725,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "checkout_display",
                     "label" => __("Display for", "woocommerce-myparcelbe"),
-                    "type"  => "select",
+                    "type"  => [$this->callbacks, "select"],
                     "args"  => [
                         "options"     => [
                             "selected_methods" => __(
@@ -740,7 +743,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "checkout_position",
                     "label" => __("Checkout position", "woocommerce-myparcelbe"),
-                    "type"  => "select",
+                    "type"  => [$this->callbacks, "select"],
                     "args"  => [
                         "options"     => [
                             "woocommerce_after_checkout_billing_form"  => __(
@@ -774,7 +777,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "custom_css",
                     "label" => __("Custom styles", "woocommerce-myparcelbe"),
-                    "type"  => "textarea",
+                    "type"  => [$this->callbacks, "textarea"],
                     "args"  => [
                         "width"  => "80",
                         "height" => "8",
@@ -793,7 +796,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "error_logging",
                     "label" => __("Log API communication", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "description" => '<a href="' . esc_url_raw(
                                 admin_url("admin.php?page=wc-status&tab=logs")
@@ -812,7 +815,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "shipping_methods_package_types",
                     "label" => __("Package types", "woocommerce-myparcelbe"),
-                    "type"  => "shipping_methods_package_types",
+                    "type"  => [$this->callbacks, "shipping_methods_package_types"],
                     "args"  => [
                         "package_types" => WooCommerce_MyParcelBE()->export->get_package_types(),
                         "description"   => __(
@@ -824,7 +827,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "connect_email",
                     "label" => __("Connect customer email", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "description" => sprintf(
                             __(
@@ -839,7 +842,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "connect_phone",
                     "label" => __("Connect customer phone", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "description" => __(
                             "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.",
@@ -850,7 +853,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "label_description",
                     "label" => __("Label description", "woocommerce-myparcelbe"),
-                    "type"  => "text_input",
+                    "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
                         "size"        => "25",
                         "description" => __(
@@ -862,7 +865,7 @@ if (!class_exists('wcmp_settings_data')) :
                 [
                     "name"  => "connect_phone",
                     "label" => __("Connect customer phone", "woocommerce-myparcelbe"),
-                    "type"  => "checkbox",
+                    "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "description" => __(
                             "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.",

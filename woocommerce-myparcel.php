@@ -99,7 +99,7 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
         /**
          * Define constant if not already set
          *
-         * @param string $name
+         * @param string      $name
          * @param string|bool $value
          */
         private function define($name, $value)
@@ -226,15 +226,14 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
          */
         public function need_woocommerce()
         {
-            $error =
-                sprintf(
-                    __(
-                        'WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!',
-                        'woocommerce-myparcelbe'
-                    ),
-                    '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
-                    '</a>'
-                );
+            $error = sprintf(
+                __(
+                    'WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!',
+                    'woocommerce-myparcelbe'
+                ),
+                '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
+                '</a>'
+            );
 
             $message = '<div class="error"><p>' . $error . '</p></div>';
 
@@ -247,19 +246,17 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
 
         public function required_php_version()
         {
-            $error         =
-                __(
-                    'WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended).',
-                    'woocommerce-myparcelbe'
-                );
+            $error         = __(
+                'WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended).',
+                'woocommerce-myparcelbe'
+            );
             $how_to_update = __('How to update your PHP version', 'woocommerce-myparcelbe');
-            $message       =
-                sprintf(
-                    '<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>',
-                    $error,
-                    'http://docs.wpovernight.com/general/how-to-update-your-php-version/',
-                    $how_to_update
-                );
+            $message       = sprintf(
+                '<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>',
+                $error,
+                'http://docs.wpovernight.com/general/how-to-update-your-php-version/',
+                $how_to_update
+            );
 
             echo $message;
         }
@@ -300,7 +297,6 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
             if (! empty(get_option('wcmyparcelbe_settings'))) {
                 require_once('migration/wcmp-installation-migration-v2-0-0.php');
             }
-
             // todo: Pre 4.0.0?
 
         }
@@ -479,6 +475,7 @@ endif; // class_exists
 
 /**
  * Returns the main instance of the plugin class to prevent the need to use globals.
+ *
  * @return WooCommerce_MyParcelBE
  * @since  2.0
  */
