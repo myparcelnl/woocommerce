@@ -55,7 +55,7 @@ if (! class_exists('wcmp_settings_callbacks')) :
              */
             // output description.
             if (isset($description)) {
-                $this->showDescription($description);
+                $this->showTooltip($description);
             }
         }
 
@@ -102,7 +102,7 @@ if (! class_exists('wcmp_settings_callbacks')) :
 
             // output description.
             if (isset($description)) {
-                $this->showDescription($description);
+                $this->showTooltip($description);
             }
         }
 
@@ -130,12 +130,9 @@ if (! class_exists('wcmp_settings_callbacks')) :
                 $class
             );
 
-            /**
-             *
-             */
             // output description.
             if (isset($description)) {
-                $this->showDescription($description);
+                $this->showTooltip($description);
             }
         }
 
@@ -155,6 +152,11 @@ if (! class_exists('wcmp_settings_callbacks')) :
         {
             extract($this->normalize_settings_args($args));
 
+            // output tooltip.
+            if (isset($description)) {
+                $this->showTooltip($description);
+            }
+
             printf(
                 '<textarea id="%1$s" name="%2$s" cols="%4$s" rows="%5$s" placeholder="%6$s"/>%3$s</textarea>',
                 $id,
@@ -164,14 +166,6 @@ if (! class_exists('wcmp_settings_callbacks')) :
                 $height,
                 $placeholder
             );
-
-            /**
-             *
-             */
-            // output description.
-            if (isset($description)) {
-                $this->showDescription($description);
-            }
         }
 
         /**
@@ -323,7 +317,7 @@ if (! class_exists('wcmp_settings_callbacks')) :
              */
             // Displays option description.
             if (isset($description)) {
-                $this->showDescription($description);
+                $this->showTooltip($description);
             }
         }
 
@@ -438,63 +432,63 @@ if (! class_exists('wcmp_settings_callbacks')) :
             }
 
             ?>
-          <select id="<?php echo $id; ?>"
-                  name="<?php echo $setting_name; ?>[]"
-                  style="width: 50%;"
-                  class="wc-enhanced-select"
-                  multiple="multiple"
-                  data-placeholder="<?php echo $placeholder; ?>">
-              <?php
-              $shipping_methods_selected = (array)$current;
+            <select id="<?php echo $id; ?>"
+                    name="<?php echo $setting_name; ?>[]"
+                    style="width: 50%;"
+                    class="wc-enhanced-select"
+                    multiple="multiple"
+                    data-placeholder="<?php echo $placeholder; ?>">
+                <?php
+                $shipping_methods_selected = (array)$current;
 
-              $shipping_methods = WC()->shipping->load_shipping_methods();
-              if ($available_shipping_methods) {
-                  foreach ($available_shipping_methods as $key => $label) {
-                      echo '<option value="' . esc_attr($key) . '"' . selected(
-                              in_array($key, $shipping_methods_selected),
-                              true,
-                              false
-                          ) . '>' . esc_html($label) . '</option>';
-                  }
-              }
-              ?>
-          </select>
+                $shipping_methods = WC()->shipping->load_shipping_methods();
+                if ($available_shipping_methods) {
+                    foreach ($available_shipping_methods as $key => $label) {
+                        echo '<option value="' . esc_attr($key) . '"' . selected(
+                                in_array($key, $shipping_methods_selected),
+                                true,
+                                false
+                            ) . '>' . esc_html($label) . '</option>';
+                    }
+                }
+                ?>
+            </select>
             <?php
             /**
              *
              */
             // Displays option description.
             if (isset($description)) {
-                $this->showDescription($description);
+                $this->showTooltip($description);
             }
         }
 
         public function enhanced_select($args)
         {
             extract($this->normalize_settings_args($args)); ?>
-          <select id="<?php echo $id; ?>"
-                  name="<?php echo $setting_name; ?>[]"
-                  style="width: 50%;"
-                  class="wc-enhanced-select"
-                  multiple="multiple"
-                  data-placeholder="<?php echo $placeholder; ?>">
-              <?php
-              foreach ($options as $key => $title) {
-                  echo '<option value="' . esc_attr($key) . '"' . selected(
-                          ! empty($current) && in_array($key, (array)$current),
-                          true,
-                          false
-                      ) . '>' . esc_html($title) . '</option>';
-              }
-              ?>
-          </select>
+            <select id="<?php echo $id; ?>"
+                    name="<?php echo $setting_name; ?>[]"
+                    style="width: 50%;"
+                    class="wc-enhanced-select"
+                    multiple="multiple"
+                    data-placeholder="<?php echo $placeholder; ?>">
+                <?php
+                foreach ($options as $key => $title) {
+                    echo '<option value="' . esc_attr($key) . '"' . selected(
+                            ! empty($current) && in_array($key, (array)$current),
+                            true,
+                            false
+                        ) . '>' . esc_html($title) . '</option>';
+                }
+                ?>
+            </select>
             <?php
             /**
              *
              */
             // Displays option description.
             if (isset($description)) {
-                $this->showDescription($description);
+                $this->showTooltip($description);
             }
         }
 
@@ -523,35 +517,35 @@ if (! class_exists('wcmp_settings_callbacks')) :
             ];
 
             ?><?php $this->checkbox(array_merge($args, $cb_args)); ?><br/>
-          <table class="wcmp_delivery_option_details">
-              <?php if ($args['has_title']): ?>
-                <tr>
-                  <td style="min-width: 215px;">
-                      <?php _e($args['title'] . ' title', 'woocommerce-myparcelbe') ?>:
-                  </td>
-                  <td>&nbsp;&nbsp;&nbsp;
-                      <?php $this->text_input(array_merge($args, $default_delivery_text)) ?></td>
-                </tr>
-              <?php endif; ?>
-              <?php if (isset($args['has_cutoff_time'])): ?>
-                <tr>
-                  <td><?php _e('Cut-off time on Saturday', 'woocommerce-myparcelbe') ?>:</td>
-                  <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input(array_merge($args, $cutoff_time_args)); ?></td>
-                </tr>
-              <?php endif; ?>
-              <?php if ($args['has_price']): ?>
-                <tr>
-                  <td><?php _e('Additional fee (ex VAT, optional)', 'woocommerce-myparcelbe') ?>:</td>
-                  <td>
-                      <?php echo get_woocommerce_currency_symbol(); ?><?php $this->text_input(
-                          array_merge(
-                              $args,
-                              $fee_args
-                          )
-                      ); ?></td>
-                </tr>
-              <?php endif; ?>
-          </table>
+            <table class="wcmp_delivery_option_details">
+                <?php if ($args['has_title']): ?>
+                    <tr>
+                        <td style="min-width: 215px;">
+                            <?php _e($args['title'] . ' title', 'woocommerce-myparcelbe') ?>:
+                        </td>
+                        <td>&nbsp;&nbsp;&nbsp;
+                            <?php $this->text_input(array_merge($args, $default_delivery_text)) ?></td>
+                    </tr>
+                <?php endif; ?>
+                <?php if (isset($args['has_cutoff_time'])): ?>
+                    <tr>
+                        <td><?php _e('Cut-off time on Saturday', 'woocommerce-myparcelbe') ?>:</td>
+                        <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input(array_merge($args, $cutoff_time_args)); ?></td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($args['has_price']): ?>
+                    <tr>
+                        <td><?php _e('Additional fee (ex VAT, optional)', 'woocommerce-myparcelbe') ?>:</td>
+                        <td>
+                            <?php echo get_woocommerce_currency_symbol(); ?><?php $this->text_input(
+                                array_merge(
+                                    $args,
+                                    $fee_args
+                                )
+                            ); ?></td>
+                    </tr>
+                <?php endif; ?>
+            </table>
             <?php
         }
 
@@ -559,52 +553,52 @@ if (! class_exists('wcmp_settings_callbacks')) :
         {
             extract($this->normalize_settings_args($args));
             ?>
-          <table>
-            <thead>
-            <tr>
-              <th style="width: 2.2em"><?php // _e( 'Enabled', 'woocommerce-myparcelbe' )
-                  ?></th>
-              <th><?php _e('Option', 'woocommerce-myparcelbe') ?></th>
-              <th><?php _e('Fee (optional)', 'woocommerce-myparcelbe') ?></th>
-              <th><?php _e('Description', 'woocommerce-myparcelbe') ?></th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php
-            foreach ($options
-
-            as $key => $title) {
-            // prepare args for input fields
-            $common_args = [
-                'option_name' => "{$option_name}[{$key}]",
-            ];
-            // checkbox (enable)
-            $cb_args = [
-                'id' => 'enabled',
-            ];
-            // number (fee)
-            $fee_args = [
-                'id'   => 'fee',
-                'type' => 'number',
-                'size' => '5',
-            ];
-            // textarea (description)
-            $description_args = [
-                'id'     => 'description',
-                'width'  => '50',
-                'height' => '4',
-            ];
-            ?>
-            <tr>
-              <td><?php $this->checkbox(array_merge($common_args, $cb_args)); ?></td>
-              <td><?php echo $title; ?></td>
-              <td><input type="number" min="0"></td>
-              <td><input type="text"></td>
+            <table>
+                <thead>
+                <tr>
+                    <th style="width: 2.2em"><?php // _e( 'Enabled', 'woocommerce-myparcelbe' )
+                        ?></th>
+                    <th><?php _e('Option', 'woocommerce-myparcelbe') ?></th>
+                    <th><?php _e('Fee (optional)', 'woocommerce-myparcelbe') ?></th>
+                    <th><?php _e('Description', 'woocommerce-myparcelbe') ?></th>
+                </tr>
+                </thead>
+                <tbody>
                 <?php
-                }
+                foreach ($options
+
+                as $key => $title) {
+                // prepare args for input fields
+                $common_args = [
+                    'option_name' => "{$option_name}[{$key}]",
+                ];
+                // checkbox (enable)
+                $cb_args = [
+                    'id' => 'enabled',
+                ];
+                // number (fee)
+                $fee_args = [
+                    'id'   => 'fee',
+                    'type' => 'number',
+                    'size' => '5',
+                ];
+                // textarea (description)
+                $description_args = [
+                    'id'     => 'description',
+                    'width'  => '50',
+                    'height' => '4',
+                ];
                 ?>
-            </tbody>
-          </table>
+                <tr>
+                    <td><?php $this->checkbox(array_merge($common_args, $cb_args)); ?></td>
+                    <td><?php echo $title; ?></td>
+                    <td><input type="number" min="0"></td>
+                    <td><input type="text"></td>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
             <?php
         }
 
@@ -618,13 +612,13 @@ if (! class_exists('wcmp_settings_callbacks')) :
             if ($languages = $this->get_languages()) {
                 printf('<div id="%s-%s-translations" class="translations">', $option_name, $id)
                 ?>
-              <ul>
-                  <?php foreach ($languages as $lang_code => $language_name) {
-                      $translation_id = "{$option_name}_{$id}_{$lang_code}";
-                      printf('<li><a href="#%s">%s</a></li>', $translation_id, $language_name);
-                  }
-                  ?>
-              </ul>
+                <ul>
+                    <?php foreach ($languages as $lang_code => $language_name) {
+                        $translation_id = "{$option_name}_{$id}_{$lang_code}";
+                        printf('<li><a href="#%s">%s</a></li>', $translation_id, $language_name);
+                    }
+                    ?>
+                </ul>
                 <?php foreach ($languages as $lang_code => $language_name) {
                     $translation_id = "{$option_name}_{$id}_{$lang_code}";
                     printf('<div id="%s">', $translation_id);
@@ -633,7 +627,7 @@ if (! class_exists('wcmp_settings_callbacks')) :
                     echo '</div>';
                 }
                 ?>
-              </div>
+                </div>
                 <?php
             } else {
                 $args['lang'] = 'default';
@@ -746,11 +740,13 @@ if (! class_exists('wcmp_settings_callbacks')) :
         }
 
         /**
-         * @param $description
+         * Echoes a woocommerce help tip.
+         *
+         * @param string $content - Can contain HTML.
          */
-        private function showDescription($description)
+        private function showTooltip(string $content): void
         {
-            echo wc_help_tip($description, true);
+            echo wc_help_tip($content, true);
         }
     }
 

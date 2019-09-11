@@ -2,7 +2,6 @@
 
 namespace WPO\WC\MyParcelBE\Collections;
 
-use http\Exception\BadMethodCallException;
 use MyParcelNL\Sdk\src\Support\Collection;
 use WPO\WC\MyParcelBE\Entity\Setting;
 

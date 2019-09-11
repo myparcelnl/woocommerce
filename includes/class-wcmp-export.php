@@ -8,11 +8,11 @@ use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if ( ! class_exists('wcmp_export')) :
+if (! class_exists('wcmp_export')) :
 
     class wcmp_export
     {
@@ -33,33 +33,44 @@ if ( ! class_exists('wcmp_export')) :
 
         public function __construct()
         {
-            $this->success = array();
-            $this->errors  = array();
+            $this->success = [];
+            $this->errors  = [];
 
             include('class-wcmp-rest.php');
             include('class-wcmp-api.php');
 
-            add_action('admin_notices', array($this, 'admin_notices'));
-            add_action('wp_ajax_wc_myparcelbe', array($this, 'export'));
-            add_action('wp_ajax_wc_myparcelbe_frontend', array($this, 'frontend_api_request'));
-            add_action('wp_ajax_nopriv_wc_myparcelbe_frontend', array($this, 'frontend_api_request'));
+            add_action('admin_notices', [$this, 'admin_notices']);
+            add_action('wp_ajax_wc_myparcelbe', [$this, 'export']);
+            add_action('wp_ajax_wc_myparcelbe_frontend', [$this, 'frontend_api_request']);
+            add_action('wp_ajax_nopriv_wc_myparcelbe_frontend', [$this, 'frontend_api_request']);
         }
 
         public function admin_notices()
         {
             if (isset($_GET['myparcelbe_done'])) { // only do this when for the user that initiated this
                 $action_return = get_option('wcmyparcelbe_admin_notices');
-                $print_queue   = get_option('wcmyparcelbe_print_queue', array());
-                if ( ! empty($action_return)) {
+                $print_queue   = get_option('wcmyparcelbe_print_queue', []);
+                if (! empty($action_return)) {
                     foreach ($action_return as $type => $message) {
-                        if (in_array($type, array('success', 'error'))) {
+                        if (in_array($type, ['success', 'error'])) {
                             if ($type == 'success' && ! empty($print_queue)) {
-                                $print_queue_store        = sprintf('<input type="hidden" value="%s" id="wcmp_printqueue">', json_encode(array_keys($print_queue['order_ids'])));
-                                $print_queue_offset_store = sprintf('<input type="hidden" value="%s" id="wcmp_printqueue_offset">', $print_queue['offset']);
+                                $print_queue_store        = sprintf(
+                                    '<input type="hidden" value="%s" id="wcmp_printqueue">',
+                                    json_encode(array_keys($print_queue['order_ids']))
+                                );
+                                $print_queue_offset_store = sprintf(
+                                    '<input type="hidden" value="%s" id="wcmp_printqueue_offset">',
+                                    $print_queue['offset']
+                                );
                                 // dequeue
                                 delete_option('wcmyparcelbe_print_queue');
                             }
-                            printf('<div class="myparcelbe_notice notice notice-%s"><p>%s</p>%s</div>', $type, $message, isset($print_queue_store) ? $print_queue_store . $print_queue_offset_store : '');
+                            printf(
+                                '<div class="myparcelbe_notice notice notice-%s"><p>%s</p>%s</div>',
+                                $type,
+                                $message,
+                                isset($print_queue_store) ? $print_queue_store . $print_queue_offset_store : ''
+                            );
                         }
                     }
                     // destroy after reading
@@ -71,7 +82,10 @@ if ( ! class_exists('wcmp_export')) :
             if (isset($_GET['myparcelbe'])) {
                 switch ($_GET['myparcelbe']) {
                     case 'no_consignments':
-                        $message = __('You have to export the orders to MyParcel before you can print the labels!', 'woocommerce-myparcelbe');
+                        $message = __(
+                            'You have to export the orders to MyParcel before you can print the labels!',
+                            'woocommerce-myparcelbe'
+                        );
                         printf('<div class="myparcelbe_notice notice notice-error"><p>%s</p></div>', $message);
                         break;
                     default:
@@ -82,6 +96,7 @@ if ( ! class_exists('wcmp_export')) :
 
         /**
          * Export selected orders
+         *
          * @access public
          * @return void
          * @throws \MyParcelNL\Sdk\src\Exception\ApiException
@@ -92,15 +107,19 @@ if ( ! class_exists('wcmp_export')) :
             // Check the nonce
             check_ajax_referer('wc_myparcelbe', 'security');
 
-            if ( ! is_user_logged_in()) {
+            if (! is_user_logged_in()) {
                 wp_die(__('You do not have sufficient permissions to access this page.', 'woocommerce-myparcelbe'));
             }
 
-            $return = array();
+            $return = [];
 
             // Check the user privileges (maybe use order ids for filter?)
-            if (apply_filters('wc_myparcelbe_check_privs', ! current_user_can('manage_woocommerce_orders') && ! current_user_can('edit_shop_orders'))) {
-                $return['error'] = __('You do not have sufficient permissions to access this page.', 'woocommerce-myparcelbe');
+            if (apply_filters(
+                'wc_myparcelbe_check_privs',
+                ! current_user_can('manage_woocommerce_orders') && ! current_user_can('edit_shop_orders')
+            )) {
+                $return['error'] =
+                    __('You do not have sufficient permissions to access this page.', 'woocommerce-myparcelbe');
                 $json            = json_encode($return);
                 echo $json;
                 die();
@@ -108,7 +127,7 @@ if ( ! class_exists('wcmp_export')) :
 
             extract($_REQUEST); // $request, $order_ids, ...
             // make sure $order_ids is a proper array
-            $order_ids = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : array();
+            $order_ids = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : [];
 
             switch ($request) {
                 case 'add_shipments':
@@ -138,10 +157,11 @@ if ( ! class_exists('wcmp_export')) :
                         break;
                     }
                     $label_response_type = isset($label_response_type) ? $label_response_type : null;
-                    if ( ! empty($shipment_ids)) {
-                        $order_ids    = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : array();
+                    if (! empty($shipment_ids)) {
+                        $order_ids    = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : [];
                         $shipment_ids = $this->sanitize_posted_array($shipment_ids);
-                        $return       = $this->get_shipment_labels($shipment_ids, $order_ids, $label_response_type, $offset);
+                        $return       =
+                            $this->get_shipment_labels($shipment_ids, $order_ids, $label_response_type, $offset);
                     } else {
                         $order_ids = $this->filter_myparcelbe_destination_orders($order_ids);
                         $return    = $this->get_labels($order_ids, $label_response_type, $offset);
@@ -158,13 +178,13 @@ if ( ! class_exists('wcmp_export')) :
             }
 
             // display errors directly if PDF requested or modal
-            if (in_array($request, array('add_return', 'get_labels', 'modal_dialog')) && ! empty($this->errors)) {
+            if (in_array($request, ['add_return', 'get_labels', 'modal_dialog']) && ! empty($this->errors)) {
                 echo $this->parse_errors($this->errors);
                 die();
             }
 
             // format errors for html output
-            if ( ! empty($this->errors)) {
+            if (! empty($this->errors)) {
                 $return['error'] = $this->parse_errors($this->errors);
             }
 
@@ -173,10 +193,10 @@ if ( ! class_exists('wcmp_export')) :
             if ($request == 'add_shipments' && ! empty($print) && ($print == 'no' || $print == 'after_reload')) {
                 update_option('wcmyparcelbe_admin_notices', $return);
                 if ($print == 'after_reload') {
-                    $print_queue = array(
+                    $print_queue = [
                         'order_ids' => $return['success_ids'],
                         'offset'    => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
-                    );
+                    ];
                     update_option('wcmyparcelbe_print_queue', $print_queue);
                 }
             }
@@ -215,7 +235,7 @@ if ( ! class_exists('wcmp_export')) :
         public function add_shipments($order_ids)
         {
             foreach ($order_ids as $order_id) {
-                $created_shipments = array();
+                $created_shipments = [];
                 $order             = WCX::get_order($order_id);
                 $shipments         = $this->get_order_shipment_data((array) $order_id);
                 if (empty($shipments)) {
@@ -225,9 +245,8 @@ if ( ! class_exists('wcmp_export')) :
 
                 $this->log("Shipment data for order {$order_id}:\n" . var_export($shipments, true));
 
-                $myParcelCollection = (new MyParcelCollection())
-                    ->setUserAgent('test dit moet nog nagekeken worden', '1.0');
-
+                $myParcelCollection =
+                    (new MyParcelCollection())->setUserAgent('test dit moet nog nagekeken worden', '1.0');
 
                 $consignment = $this->getConsignmentData($shipments, $order_id);
 
@@ -239,16 +258,15 @@ if ( ! class_exists('wcmp_export')) :
 
             return $this;
 
-
             /*
              * old code
              */
-            $return = array();
+            $return = [];
 
             $this->log("*** Creating shipments started ***");
 
             foreach ($order_ids as $order_id) {
-                $created_shipments = array();
+                $created_shipments = [];
                 $order             = WCX::get_order($order_id);
                 $shipments         = $this->get_order_shipment_data((array) $order_id);
                 if (empty($shipments)) {
@@ -262,7 +280,7 @@ if ( ! class_exists('wcmp_export')) :
                 $extra_params = WCX_Order::get_meta($order, '_myparcelbe_shipment_options_extra');
                 $colli_amount = isset($extra_params['colli_amount']) ? $extra_params['colli_amount'] : 1;
 
-                for ($i = 0; $i < intval($colli_amount); $i ++) {
+                for ($i = 0; $i < intval($colli_amount); $i++) {
                     try {
                         $api      = $this->init_api();
                         $response = $api->add_shipments($shipments);
@@ -273,9 +291,9 @@ if ( ! class_exists('wcmp_export')) :
                             $this->success[$order_id] = $shipment_id;
 
                             $created_shipments[] = $shipment_id;
-                            $shipment            = array(
+                            $shipment            = [
                                 'shipment_id' => $shipment_id,
-                            );
+                            ];
 
                             // save shipment data in order meta
                             $this->save_shipment_data($order, $shipment);
@@ -291,8 +309,14 @@ if ( ! class_exists('wcmp_export')) :
                             }
 
                             // status automation
-                            if ($this->getSetting('order_status_automation') && $this->getSetting('automatic_order_status')) {
-                                $order->update_status($this->getSetting('automatic_order_status'), __('MyParcel shipment created:', 'woocommerce-myparcelbe'));
+                            if ($this->getSetting('order_status_automation')
+                                && $this->getSetting(
+                                    'automatic_order_status'
+                                )) {
+                                $order->update_status(
+                                    $this->getSetting('automatic_order_status'),
+                                    __('MyParcel shipment created:', 'woocommerce-myparcelbe')
+                                );
                             }
                         } else {
                             $this->errors[$order_id] = __('Unknown error', 'woocommerce-myparcelbe');
@@ -303,22 +327,23 @@ if ( ! class_exists('wcmp_export')) :
                 }
 
                 // store shipment ids from this export
-                if ( ! empty($created_shipments)) {
+                if (! empty($created_shipments)) {
                     WCX_Order::update_meta_data($order, '_myparcelbe_last_shipment_ids', $created_shipments);
                 }
             }
-            if ( ! empty($this->success)) {
-                $return['success']     = sprintf(__('%s shipments successfully exported to MyParcel', 'woocommerce-myparcelbe'), count($this->success));
+            if (! empty($this->success)) {
+                $return['success']     = sprintf(
+                    __('%s shipments successfully exported to MyParcel', 'woocommerce-myparcelbe'),
+                    count($this->success)
+                );
                 $return['success_ids'] = $this->success;
             }
 
             return $return;
-
             /*
              * end old code
              */
         }
-
 
         /**
          * @param $shipments
@@ -330,51 +355,86 @@ if ( ! class_exists('wcmp_export')) :
          */
         public function getConsignmentData($shipments, $order_id)
         {
-
             $shipmentRecipient = $shipments[0]['recipient'];
-            $fullStreet        = $shipmentRecipient['street'] . ' ' .
-                                 $shipmentRecipient['number'] . ' ' .
-                                 $shipmentRecipient['number_suffix'];
+            $fullStreet        =
+                $shipmentRecipient['street']
+                . ' '
+                . $shipmentRecipient['number']
+                . ' '
+                . $shipmentRecipient['number_suffix'];
             $shipmentOptions   = $shipments[0]['options'];
             $shipmentPickup    = $shipments[0]['pickup'];
 
-
             // TODO: loop for multiple orders
-            $consignment = (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))
-                ->setApiKey($this->init_api())
-                ->setReferenceId($order_id)
-                ->setPackageType($shipmentOptions['package_type'])
-                ->setCountry($shipmentRecipient['cc'])
-                ->setPerson($shipmentRecipient['person'])
-                ->setFullStreet($fullStreet)
-                ->setStreetAdditionalInfo($shipmentRecipient['street_additional_info'])
-                ->setPostalCode($shipmentRecipient['postal_code'])
-                ->setCity($shipmentRecipient['city'])
-                ->setPhone($shipmentRecipient['phone'])
-                ->setEmail($shipmentRecipient['email'])
-                ->setLabelDescription($shipmentOptions['label_description'])
-                ->setCompany($shipmentRecipient['company'])
-                // Options
-                ->setSignature($shipmentOptions['signature'])
-                ->setInsurance($this->getInsuranceAmount())
-                // Pickup options
-                ->setPickupLocationName($shipmentPickup['location_name'])
-                ->setPickupStreet($shipmentPickup['street'])
-                ->setPickupNumber($shipmentPickup['number'])
-                ->setPickupPostalCode($shipmentPickup['postal_code'])
-                ->setPickupCity($shipmentPickup['city']);
+            $consignment =
+                (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))->setApiKey($this->init_api())
+                                                                                     ->setReferenceId($order_id)
+                                                                                     ->setPackageType(
+                                                                                         $shipmentOptions['package_type']
+                                                                                     )
+                                                                                     ->setCountry(
+                                                                                         $shipmentRecipient['cc']
+                                                                                     )
+                                                                                     ->setPerson(
+                                                                                         $shipmentRecipient['person']
+                                                                                     )
+                                                                                     ->setFullStreet($fullStreet)
+                                                                                     ->setStreetAdditionalInfo(
+                                                                                         $shipmentRecipient['street_additional_info']
+                                                                                     )
+                                                                                     ->setPostalCode(
+                                                                                         $shipmentRecipient['postal_code']
+                                                                                     )
+                                                                                     ->setCity(
+                                                                                         $shipmentRecipient['city']
+                                                                                     )
+                                                                                     ->setPhone(
+                                                                                         $shipmentRecipient['phone']
+                                                                                     )
+                                                                                     ->setEmail(
+                                                                                         $shipmentRecipient['email']
+                                                                                     )
+                                                                                     ->setLabelDescription(
+                                                                                         $shipmentOptions['label_description']
+                                                                                     )
+                                                                                     ->setCompany(
+                                                                                         $shipmentRecipient['company']
+                                                                                     )
+                    // Options
+                                                                                     ->setSignature(
+                        $shipmentOptions['signature']
+                    )
+                                                                                     ->setInsurance(
+                                                                                         $this->getInsuranceAmount()
+                                                                                     )
+                    // Pickup options
+                                                                                     ->setPickupLocationName(
+                        $shipmentPickup['location_name']
+                    )
+                                                                                     ->setPickupStreet(
+                                                                                         $shipmentPickup['street']
+                                                                                     )
+                                                                                     ->setPickupNumber(
+                                                                                         $shipmentPickup['number']
+                                                                                     )
+                                                                                     ->setPickupPostalCode(
+                                                                                         $shipmentPickup['postal_code']
+                                                                                     )
+                                                                                     ->setPickupCity(
+                                                                                         $shipmentPickup['city']
+                                                                                     );
 
             return $consignment;
         }
 
         public function add_return($myparcelbe_options)
         {
-            $return = array();
+            $return = [];
 
             $this->log("*** Creating return shipments started ***");
 
             foreach ($myparcelbe_options as $order_id => $options) {
-                $return_shipments = array($this->prepare_return_shipment_data($order_id, $options));
+                $return_shipments = [$this->prepare_return_shipment_data($order_id, $options)];
                 $this->log("Return shipment data for order {$order_id}:\n" . var_export($return_shipments, true));
 
                 try {
@@ -387,9 +447,9 @@ if ( ! class_exists('wcmp_export')) :
                         $shipment_id              = $ids['id'];
                         $this->success[$order_id] = $shipment_id;
 
-                        $shipment = array(
+                        $shipment = [
                             'shipment_id' => $shipment_id,
-                        );
+                        ];
 
                         // save shipment data in order meta
                         $this->save_shipment_data($order, $shipment);
@@ -404,23 +464,23 @@ if ( ! class_exists('wcmp_export')) :
             return $return;
         }
 
-        public function get_shipment_labels($shipment_ids, $order_ids = array(), $label_response_type = null, $offset = 0)
+        public function get_shipment_labels($shipment_ids, $order_ids = [], $label_response_type = null, $offset = 0)
         {
-            $return = array();
+            $return = [];
 
             $this->log("*** Label request started ***");
             $this->log("Shipment ID's: " . implode(', ', $shipment_ids));
 
             try {
                 $api    = $this->init_api();
-                $params = array();
-                if ( ! empty($offset) && is_numeric($offset)) {
-                    $portrait_positions  = array(
+                $params = [];
+                if (! empty($offset) && is_numeric($offset)) {
+                    $portrait_positions  = [
                         2,
                         4,
                         1,
-                        3
-                    ); // positions are defined on landscape, but paper is filled portrait-wise
+                        3,
+                    ]; // positions are defined on landscape, but paper is filled portrait-wise
                     $params['positions'] = implode(';', array_slice($portrait_positions, $offset));
                 }
 
@@ -442,9 +502,8 @@ if ( ! class_exists('wcmp_export')) :
                     if (isset($response['body'])) {
                         $this->log("PDF data received");
                         $pdf_data    = $response['body'];
-                        $output_mode = $this->getSetting('download_display')
-                            ? $this->getSetting('download_display')
-                            : '';
+                        $output_mode =
+                            $this->getSetting('download_display') ? $this->getSetting('download_display') : '';
                         if ($output_mode == 'display') {
                             $this->stream_pdf($pdf_data, $order_ids);
                         } else {
@@ -464,13 +523,14 @@ if ( ! class_exists('wcmp_export')) :
 
         public function get_labels($order_ids, $label_response_type = null, $offset = 0)
         {
-            $shipment_ids = $this->get_shipment_ids($order_ids, array('only_last' => true));
+            $shipment_ids = $this->get_shipment_ids($order_ids, ['only_last' => true]);
 
             if (empty($shipment_ids)) {
                 $this->log("*** Failed label request (not exported yet) ***");
-                $this->errors[] = __('The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcelbe');
+                $this->errors[] =
+                    __('The selected orders have not been exported to MyParcel yet!', 'woocommerce-myparcelbe');
 
-                return array();
+                return [];
             }
 
             return $this->get_shipment_labels($shipment_ids, $order_ids, $label_response_type, $offset);
@@ -502,7 +562,7 @@ if ( ! class_exists('wcmp_export')) :
             $params = $_REQUEST;
 
             // filter non API params
-            $api_params = array(
+            $api_params = [
                 'cc'                    => '',
                 'postal_code'           => '',
                 'number'                => '',
@@ -514,7 +574,7 @@ if ( ! class_exists('wcmp_export')) :
                 'dropoff_delay'         => '',
                 'deliverydays_window'   => '',
                 'exclude_delivery_type' => '',
-            );
+            ];
             $params     = array_intersect_key($params, $api_params);
 
             $api = $this->init_api();
@@ -538,7 +598,7 @@ if ( ! class_exists('wcmp_export')) :
         public function init_api()
         {
             $key = $this->getSetting('api_key');
-            if ( ! ($key)) {
+            if (! ($key)) {
                 return false;
             }
 
@@ -551,14 +611,14 @@ if ( ! class_exists('wcmp_export')) :
                 // get order
                 $order = WCX::get_order($order_id);
 
-                $shipment = array(
-                    'recipient'            => $this->get_recipient($order),
-                    'options'              => $this->get_options($order),
-                    'carrier'              => BpostConsignment::CARRIER_NAME, // default to bpost for now
-                );
+                $shipment = [
+                    'recipient' => $this->get_recipient($order),
+                    'options'   => $this->get_options($order),
+                    'carrier'   => BpostConsignment::CARRIER_NAME, // default to bpost for now
+                ];
 
                 if ($pickup = $this->is_pickup($order)) {
-                    $shipment['pickup'] = array(
+                    $shipment['pickup'] = [
                         'postal_code'       => $pickup['postal_code'],
                         'street'            => $pickup['street'],
                         'city'              => $pickup['city'],
@@ -566,16 +626,16 @@ if ( ! class_exists('wcmp_export')) :
                         'location_code'     => $pickup['location_code'],
                         'retail_network_id' => $pickup['retail_network_id'],
                         'location_name'     => $pickup['location'],
-                    );
+                    ];
                 }
 
                 $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
                 if ($this->is_world_shipment_country($shipping_country)) {
                     $customs_declaration             = $this->get_customs_declaration($order);
                     $shipment['customs_declaration'] = $customs_declaration;
-                    $shipment['physical_properties'] = array(
+                    $shipment['physical_properties'] = [
                         'weight' => $customs_declaration['weight'],
-                    );
+                    ];
                 }
 
                 $shipments[] = apply_filters('wc_myparcelbe_order_shipment', $shipment, $order, $type, $this);
@@ -588,35 +648,33 @@ if ( ! class_exists('wcmp_export')) :
         {
             $order = WCX::get_order($order_id);
 
-            $shipping_name = method_exists($order, 'get_formatted_shipping_full_name')
-                ? $order->get_formatted_shipping_full_name()
-                : trim($order->shipping_first_name . ' ' . $order->shipping_last_name);
+            $shipping_name =
+                method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name()
+                    : trim($order->shipping_first_name . ' ' . $order->shipping_last_name);
 
             // set name & email
-            $return_shipment_data = array(
+            $return_shipment_data = [
                 'name'    => $shipping_name,
-                'email'   => ($this->getSetting('connect_email'))
-                    ? WCX_Order::get_prop($order, 'billing_email')
-                    : '',
-                'carrier' => 2, // default to Bpost for now
-            );
+                'email'   => ($this->getSetting('connect_email')) ? WCX_Order::get_prop($order, 'billing_email') : '',
+                'carrier' => BpostConsignment::CARRIER_ID, // default to Bpost for now
+            ];
 
             // add options if available
-            if ( ! empty($options)) {
+            if (! empty($options)) {
                 // convert insurance option
-                if ( ! isset($options['insurance']) && isset($options['insured_amount'])) {
+                if (! isset($options['insurance']) && isset($options['insured_amount'])) {
                     if ($options['insured_amount'] > 0) {
-                        $options['insurance'] = array(
+                        $options['insurance'] = [
                             'amount'   => (int) $options['insured_amount'] * 100,
                             'currency' => 'EUR',
-                        );
+                        ];
                     }
                     unset($options['insured_amount']);
                     unset($options['insured']);
                 }
                 // PREVENT ILLEGAL SETTINGS
                 // convert numeric strings to int
-                $int_options = array('package_type', 'delivery_type', 'signature', 'return');
+                $int_options = ['package_type', 'delivery_type', 'signature', 'return'];
                 foreach ($options as $key => &$value) {
                     if (in_array($key, $int_options)) {
                         $value = (int) $value;
@@ -634,12 +692,13 @@ if ( ! class_exists('wcmp_export')) :
 
             // get parent
             $shipment_ids = $this->get_shipment_ids(
-                (array) $order_id, array(
+                (array) $order_id,
+                [
                     'exclude_concepts' => true,
-                    'only_last'        => true
-                )
+                    'only_last'        => true,
+                ]
             );
-            if ( ! empty($shipment_ids)) {
+            if (! empty($shipment_ids)) {
                 $return_shipment_data['parent'] = (int) array_pop($shipment_ids);
             }
 
@@ -653,19 +712,20 @@ if ( ! class_exists('wcmp_export')) :
          */
         public function get_recipient($order)
         {
+            $is_using_old_fields = (string) WCX_Order::get_meta($order, '_billing_street_name') != ''
+                || (string) WCX_Order::get_meta(
+                    $order,
+                    '_billing_house_number'
+                ) != '';
 
-            $is_using_old_fields =
-                (string) WCX_Order::get_meta($order, '_billing_street_name') != '' ||
-                (string) WCX_Order::get_meta($order, '_billing_house_number') != '';
-
-            $shipping_name = method_exists($order, 'get_formatted_shipping_full_name')
-                ? $order->get_formatted_shipping_full_name()
-                : trim($order->shipping_first_name . ' ' . $order->shipping_last_name);
+            $shipping_name =
+                method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name()
+                    : trim($order->shipping_first_name . ' ' . $order->shipping_last_name);
 
             $connectEmail = $this->getSetting('connect_email');
             $connectPhone = $this->getSetting('connect_phone');
 
-            $address       = array(
+            $address = [
                 'cc'                     => (string) WCX_Order::get_prop($order, 'shipping_country'),
                 'city'                   => (string) WCX_Order::get_prop($order, 'shipping_city'),
                 'person'                 => $shipping_name,
@@ -673,7 +733,7 @@ if ( ! class_exists('wcmp_export')) :
                 'email'                  => $connectEmail ? WCX_Order::get_prop($order, 'billing_email') : '',
                 'phone'                  => $connectPhone ? WCX_Order::get_prop($order, 'billing_phone') : '',
                 'street_additional_info' => WCX_Order::get_prop($order, 'shipping_address_2'),
-            );
+            ];
 
             $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
             if ($shipping_country == 'BE') {
@@ -681,16 +741,18 @@ if ( ! class_exists('wcmp_export')) :
                 if ($pgaddress = WCX_Order::get_meta($order, '_myparcelbe_pgaddress')) {
                     $billing_name = method_exists($order, 'get_formatted_billing_full_name')
                         ? $order->get_formatted_billing_full_name()
-                        : trim($order->billing_first_name . ' ' . $order->billing_last_name);
-                    $address_intl = array(
+                        : trim(
+                            $order->billing_first_name . ' ' . $order->billing_last_name
+                        );
+                    $address_intl = [
                         'city'        => (string) WCX_Order::get_prop($order, 'billing_city'),
                         'person'      => $billing_name,
                         'company'     => (string) WCX_Order::get_prop($order, 'billing_company'),
                         'postal_code' => (string) WCX_Order::get_prop($order, 'billing_postcode'),
-                    );
+                    ];
 
                     // If not using old fields
-                    if ( ! $is_using_old_fields) {
+                    if (! $is_using_old_fields) {
                         // Split the address line 1 into three parts
                         preg_match(
                             wcmp_be_postcode_fields::SPLIT_STREET_REGEX,
@@ -699,21 +761,22 @@ if ( ! class_exists('wcmp_export')) :
                         );
                         $address_intl['street']                 = (string) $address_parts['street'];
                         $address_intl['number']                 = (string) $address_parts['number'];
-                        $address_intl['number_suffix']          = array_key_exists('number_suffix', $address_parts) // optional
-                            ? (string) $address_parts['number_suffix']
-                            : '';
+                        $address_intl['number_suffix']          =
+                            array_key_exists('number_suffix', $address_parts) // optional
+                                ? (string) $address_parts['number_suffix'] : '';
                         $address_intl['street_additional_info'] = WCX_Order::get_prop($order, 'billing_address_2');
                     } else {
                         $address_intl['street']        = (string) WCX_Order::get_meta($order, '_billing_street_name');
                         $address_intl['number']        = (string) WCX_Order::get_meta($order, '_billing_house_number');
-                        $address_intl['number_suffix'] = (string) WCX_Order::get_meta($order, '_billing_house_number_suffix');
+                        $address_intl['number_suffix'] =
+                            (string) WCX_Order::get_meta($order, '_billing_house_number_suffix');
                     }
                 } else {
-                    $address_intl = array(
+                    $address_intl = [
                         'postal_code' => (string) WCX_Order::get_prop($order, 'shipping_postcode'),
-                    );
+                    ];
                     // If not using old fields
-                    if ( ! $is_using_old_fields) {
+                    if (! $is_using_old_fields) {
                         // Split the address line 1 into three parts
                         preg_match(
                             wcmp_be_postcode_fields::SPLIT_STREET_REGEX,
@@ -724,21 +787,21 @@ if ( ! class_exists('wcmp_export')) :
                         $address_intl['street']        = (string) $address_parts['street'];
                         $address_intl['number']        = (string) $address_parts['number'];
                         $address_intl['number_suffix'] = array_key_exists('number_suffix', $address_parts) // optional
-                            ? (string) $address_parts['number_suffix']
-                            : '';
+                            ? (string) $address_parts['number_suffix'] : '';
                     } else {
                         $address_intl['street']        = (string) WCX_Order::get_meta($order, '_shipping_street_name');
                         $address_intl['number']        = (string) WCX_Order::get_meta($order, '_shipping_house_number');
-                        $address_intl['number_suffix'] = (string) WCX_Order::get_meta($order, '_shipping_house_number_suffix');
+                        $address_intl['number_suffix'] =
+                            (string) WCX_Order::get_meta($order, '_shipping_house_number_suffix');
                     }
                 }
             } else {
-                $address_intl = array(
+                $address_intl = [
                     'postal_code'            => (string) WCX_Order::get_prop($order, 'shipping_postcode'),
                     'street'                 => (string) WCX_Order::get_prop($order, 'shipping_address_1'),
                     'street_additional_info' => (string) WCX_Order::get_prop($order, 'shipping_address_2'),
                     'region'                 => (string) WCX_Order::get_prop($order, 'shipping_state'),
-                );
+                ];
             }
 
             $address = array_merge($address, $address_intl);
@@ -755,7 +818,7 @@ if ( ! class_exists('wcmp_export')) :
          */
         public function add_myparcelbe_note_to_shipments($selected_shipment_ids, $order_ids)
         {
-            if ( $this->getSetting('barcode_in_note')) {
+            if ($this->getSetting('barcode_in_note')) {
                 return;
             }
 
@@ -789,24 +852,23 @@ if ( ! class_exists('wcmp_export')) :
 
             // use shipment options from order when available
             $shipment_options = WCX_Order::get_meta($order, '_myparcelbe_shipment_options');
-            if ( ! empty($shipment_options)) {
-                $empty_defaults = array(
+            if (! empty($shipment_options)) {
+                $empty_defaults = [
                     'package_type'      => 1,
                     'signature'         => 0,
                     'label_description' => '',
                     'insured_amount'    => 0,
-                );
-                $options       = array_merge($empty_defaults, $shipment_options);
-
+                ];
+                $options        = array_merge($empty_defaults, $shipment_options);
             } else {
                 $insured_amount = $this->getInsuranceAmount();
 
-                $options = array(
+                $options = [
                     'package_type'      => self::PACKAGE,
                     'signature'         => ($this->getSetting('signature')) ? 1 : 0,
                     'label_description' => $description,
                     'insured_amount'    => $insured_amount,
-                );
+                ];
             }
 
             // set insurance amount to int if already set
@@ -837,7 +899,7 @@ if ( ! class_exists('wcmp_export')) :
 
             // options signature & recipient only
             $myparcelbe_signature = WCX_Order::get_meta($order, '_myparcelbe_signature');
-            if ( ! empty($myparcelbe_signature)) {
+            if (! empty($myparcelbe_signature)) {
                 $options['signature'] = 1;
             }
 
@@ -846,7 +908,7 @@ if ( ! class_exists('wcmp_export')) :
 
             // PREVENT ILLEGAL SETTINGS
             // convert numeric strings to int
-            $int_options = array('package_type', 'delivery_type', 'signature', 'return');
+            $int_options = ['package_type', 'delivery_type', 'signature', 'return'];
             foreach ($options as $key => &$value) {
                 if (in_array($key, $int_options)) {
                     $value = (int) $value;
@@ -855,7 +917,7 @@ if ( ! class_exists('wcmp_export')) :
 
             // disable options
             if ($options['package_type'] != self::PACKAGE) {
-                $illegal_options = array('delivery_type', 'signature', 'return', 'insurance', 'delivery_date');
+                $illegal_options = ['delivery_type', 'signature', 'return', 'insurance', 'delivery_date'];
                 foreach ($options as $key => $option) {
                     if (in_array($key, $illegal_options)) {
                         unset($options[$key]);
@@ -871,7 +933,8 @@ if ( ! class_exists('wcmp_export')) :
          *
          * @return bool
          */
-        private function isActiveSetting(string ...$settings): bool {
+        private function isActiveSetting(string ...$settings): bool
+        {
             foreach ($settings as $setting) {
                 if (! $this->getSetting($setting)) {
                     return false;
@@ -886,7 +949,8 @@ if ( ! class_exists('wcmp_export')) :
          *
          * @return mixed
          */
-        public function getSetting($name) {
+        public function getSetting($name)
+        {
             return WooCommerce_MyParcelBE()->setting_collection->getByName($name);
         }
 
@@ -899,7 +963,7 @@ if ( ! class_exists('wcmp_export')) :
 
             if ($this->isActiveSetting('insured', 'insured_amount', 'insured_amount_custom')) {
                 $insured_amount = $this->getSetting('insured_amount_custom');
-            } elseif ($this->isActiveSetting('insured', 'insured_amount')) {
+            } else if ($this->isActiveSetting('insured', 'insured_amount')) {
                 $insured_amount = $this->getSetting('insured_amount');
             }
 
@@ -925,28 +989,20 @@ if ( ! class_exists('wcmp_export')) :
 
         public function get_customs_declaration($order)
         {
-            $weight   = (int) round($this->get_parcel_weight($order) * 1000);
+            $weight   = (int) round($this->get_total_order_weight($order));
             $invoice  = $this->get_invoice_number($order);
-            $contents = (int) ($this->getSetting('package_contents')
-                ? $this->getSetting('package_contents')
-                : 1);
+            $contents = (int) ($this->getSetting('package_contents') ? $this->getSetting('package_contents') : 1);
 
-            // Item defaults:
-            // Classification
-            $default_hs_code = $this->getSetting('hs_code')
-                ? $this->getSetting('hs_code')
-                : '';
-            // Country (=shop base)
             $country = WC()->countries->get_base_country();
 
-            $items = array();
+            $items = [];
             foreach ($order->get_items() as $item_id => $item) {
                 $product = $order->get_product_from_item($item);
-                if ( ! empty($product)) {
+                if (! empty($product)) {
                     // Description
                     $description = $item['name'];
                     // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
-                    if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH){
+                    if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH) {
                         $description = substr($item['name'], 0, 47) . '...';
                     }
                     // Amount
@@ -954,10 +1010,10 @@ if ( ! class_exists('wcmp_export')) :
                     // Weight (total item weight in grams)
                     $weight = (int) round($this->get_item_weight_kg($item, $order) * 1000);
                     // Item value (in cents)
-                    $item_value = array(
+                    $item_value = [
                         'amount'   => (int) round(($item['line_total'] + $item['line_tax']) * 100),
                         'currency' => WCX_Order::get_prop($order, 'currency'),
-                    );
+                    ];
 
                     // add item to item list
                     $items[] = compact('description', 'amount', 'weight', 'item_value', 'country');
@@ -969,12 +1025,12 @@ if ( ! class_exists('wcmp_export')) :
 
         public function get_shipment_ids($order_ids, $args)
         {
-            $shipment_ids = array();
+            $shipment_ids = [];
             foreach ($order_ids as $order_id) {
                 $order           = WCX::get_order($order_id);
                 $order_shipments = WCX_Order::get_meta($order, '_myparcelbe_shipments');
-                if ( ! empty($order_shipments)) {
-                    $order_shipment_ids = array();
+                if (! empty($order_shipments)) {
+                    $order_shipment_ids = [];
                     // exclude concepts or only concepts
                     foreach ($order_shipments as $key => $shipment) {
                         if (isset($args['exclude_concepts']) && empty($shipment['tracktrace'])) {
@@ -989,7 +1045,7 @@ if ( ! class_exists('wcmp_export')) :
 
                     if (isset($args['only_last'])) {
                         $last_shipment_ids = WCX_Order::get_meta($order, '_myparcelbe_last_shipment_ids');
-                        if ( ! empty($last_shipment_ids) && is_array($last_shipment_ids)) {
+                        if (! empty($last_shipment_ids) && is_array($last_shipment_ids)) {
                             foreach ($order_shipment_ids as $order_shipment_id) {
                                 if (in_array($order_shipment_id, $last_shipment_ids)) {
                                     $shipment_ids[] = $order_shipment_id;
@@ -1019,7 +1075,7 @@ if ( ! class_exists('wcmp_export')) :
                 return false;
             }
 
-            $new_shipments                           = array();
+            $new_shipments                           = [];
             $new_shipments[$shipment['shipment_id']] = $shipment;
 
             if ($this->getSetting('keep_shipments')) {
@@ -1059,11 +1115,12 @@ if ( ! class_exists('wcmp_export')) :
                     }
 
                     // add class if we have one
-                    if ( ! empty($shipping_class)) {
+                    if (! empty($shipping_class)) {
                         $shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
                     }
                 }
-                foreach ($this->getSetting('shipping_methods_package_types') as $package_type_key => $package_type_shipping_methods) {
+                foreach ($this->getSetting('shipping_methods_package_types') as $package_type_key =>
+                         $package_type_shipping_methods) {
                     if ($this->isActiveMethod(
                         $shipping_method_id,
                         $package_type_shipping_methods,
@@ -1079,54 +1136,11 @@ if ( ! class_exists('wcmp_export')) :
             return $package_type;
         }
 
-        // determine appropriate package type for this order
-        public function get_package_type_for_order($order)
-        {
-            $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-
-            // get shipping methods from order
-            $order_shipping_methods = $order->get_items('shipping');
-
-            if ( ! empty($order_shipping_methods)) {
-                // we're taking the first (we're not handling multiple shipping methods as of yet)
-                $order_shipping_method = array_shift($order_shipping_methods);
-                $order_shipping_method = $order_shipping_method['method_id'];
-
-                $order_shipping_class = WCX_Order::get_meta($order, '_myparcelbe_highest_shipping_class');
-
-                if (empty($order_shipping_class)) {
-                    $order_shipping_class = $this->get_order_shipping_class($order, $order_shipping_method);
-                }
-
-                $package_type = $this->get_package_type_from_shipping_method(
-                    $order_shipping_method,
-                    $order_shipping_class,
-                    $shipping_country
-                );
-            }
-
-            // fallback if no match from previous
-            if ( ! isset($package_type)) {
-                if ($this->getSetting('package_type')) {
-                    $package_type = $this->getSetting('package_type');
-                } else {
-                    $package_type = self::PACKAGE;
-                }
-            }
-
-            // always parcel for Pickup and Pickup express delivery types.
-            if ($this->is_pickup($order)) {
-                $package_type = self::PACKAGE;
-            }
-
-            return $package_type;
-        }
-
         public function get_package_types($shipment_type = 'shipment')
         {
-            $package_types = array(
+            $package_types = [
                 self::PACKAGE => __('Parcel', 'woocommerce-myparcelbe'),
-            );
+            ];
 
             return $package_types;
         }
@@ -1136,18 +1150,22 @@ if ( ! class_exists('wcmp_export')) :
             $package_types = $this->get_package_types();
             $package_name  = isset($package_types[$package_type])
                 ? $package_types[$package_type]
-                : __('Unknown', 'woocommerce-myparcelbe');
+                : __(
+                    'Unknown',
+                    'woocommerce-myparcelbe'
+                );
 
             return $package_name;
         }
 
         public function parse_errors($errors)
         {
-            $parsed_errors = array();
+            $parsed_errors = [];
             foreach ($errors as $key => $error) {
                 // check if we have an order_id
                 if ($key > 10) {
-                    $parsed_errors[] = sprintf("<strong>%s %s:</strong> %s", __('Order', 'woocommerce-myparcelbe'), $key, $error);
+                    $parsed_errors[] =
+                        sprintf("<strong>%s %s:</strong> %s", __('Order', 'woocommerce-myparcelbe'), $key, $error);
                 } else {
                     $parsed_errors[] = $error;
                 }
@@ -1197,7 +1215,7 @@ if ( ! class_exists('wcmp_export')) :
 
         public function get_shipment_status_name($status_code)
         {
-            $shipment_statuses = array(
+            $shipment_statuses = [
                 1  => __('pending - concept', 'woocommerce-myparcelbe'),
                 2  => __('pending - registered', 'woocommerce-myparcelbe'),
                 3  => __('enroute - handed to carrier', 'woocommerce-myparcelbe'),
@@ -1217,7 +1235,7 @@ if ( ! class_exists('wcmp_export')) :
                 37 => __('inactive - delivered - ready for pickup', 'woocommerce-myparcelbe'),
                 38 => __('inactive - delivered - package picked up', 'woocommerce-myparcelbe'),
                 99 => __('inactive - unknown', 'woocommerce-myparcelbe'),
-            );
+            ];
 
             if (isset($shipment_statuses[$status_code])) {
                 return $shipment_statuses[$status_code];
@@ -1232,7 +1250,7 @@ if ( ! class_exists('wcmp_export')) :
                 $api      = $this->init_api();
                 $response = $api->get_shipments($id);
 
-                if ( ! empty($response['body']['data']['shipments'])) {
+                if (! empty($response['body']['data']['shipments'])) {
                     $shipments = $response['body']['data']['shipments'];
                     $shipment  = array_shift($shipments);
 
@@ -1244,7 +1262,10 @@ if ( ! class_exists('wcmp_export')) :
                         $shipment_data = compact('shipment_id', 'status', 'tracktrace', 'shipment');
                         $this->save_shipment_data($order, $shipment_data);
                         // If Channel Engine is active, add the created Track & Trace code and set shipping method to bpost in their meta data
-                        if (WC_CHANNEL_ENGINE_ACTIVE and ! WCX_Order::get_meta($order, '_shipping_ce_track_and_trace')) {
+                        if (WC_CHANNEL_ENGINE_ACTIVE and ! WCX_Order::get_meta(
+                                $order,
+                                '_shipping_ce_track_and_trace'
+                            )) {
                             WCX_Order::update_meta_data($order, '_shipping_ce_track_and_trace', $tracktrace);
                             WCX_Order::update_meta_data($order, '_shipping_ce_shipping_method', 'Bpost');
                         }
@@ -1265,51 +1286,33 @@ if ( ! class_exists('wcmp_export')) :
         public function replace_shortcodes($description, $order)
         {
             $myparcelbe_delivery_options = WCX_Order::get_meta($order, '_myparcelbe_delivery_options');
-            $replacements                = array(
+            $replacements                = [
                 '[ORDER_NR]'      => $order->get_order_number(),
                 '[DELIVERY_DATE]' => isset($myparcelbe_delivery_options) && isset($myparcelbe_delivery_options['date'])
-                    ? $myparcelbe_delivery_options['date']
-                    : '',
-            );
+                    ? $myparcelbe_delivery_options['date'] : '',
+            ];
 
             $description = str_replace(array_keys($replacements), array_values($replacements), $description);
 
             return $description;
         }
 
-        public function get_item_display_name($item, $order)
+        /**
+         * @param WC_Order $order
+         *
+         * @return float
+         */
+        public function get_total_order_weight(WC_Order $order): float
         {
-            // set base name
-            $name = $item['name'];
-
-            // add variation name if available
-            $product = $order->get_product_from_item($item);
-            if ($product && isset($item['variation_id']) && $item['variation_id'] > 0 && method_exists($product, 'get_variation_attributes')) {
-                $name .= woocommerce_get_formatted_variation($product->get_variation_attributes());
-            }
-
-            return $name;
+            return (float) $order->get_meta('_wcmp_order_weight');
         }
 
-        public function get_parcel_weight($order, $unit = 'kg')
-        {
-            $parcel_weight = 0;
-
-            $items = $order->get_items();
-            foreach ($items as $item_id => $item) {
-                switch ($unit) {
-                    case 'kg':
-                        $parcel_weight += $this->get_item_weight_kg($item, $order);
-                        break;
-                    case 'g':
-                        $parcel_weight += $this->get_item_weight_g($item, $order);
-                        break;
-                }
-            }
-
-            return $parcel_weight;
-        }
-
+        /**
+         * @param $item
+         * @param $order
+         *
+         * @return float|int
+         */
         public function get_item_weight_kg($item, $order)
         {
             $product = $order->get_product_from_item($item);
@@ -1318,7 +1321,7 @@ if ( ! class_exists('wcmp_export')) :
                 return 0;
             }
 
-            $weight      = (int)$product->get_weight();
+            $weight      = (int) $product->get_weight();
             $weight_unit = get_option('woocommerce_weight_unit');
             switch ($weight_unit) {
                 case 'kg':
@@ -1343,35 +1346,32 @@ if ( ! class_exists('wcmp_export')) :
             return $item_weight;
         }
 
-        public function get_item_weight_g($item, $order)
-        {
-            $item_weight = $this->get_item_weight_kg($item, $order);
-
-            return $item_weight * 1000;
-        }
-
         public function is_pickup($order, $myparcelbe_delivery_options = '')
         {
             if (empty($myparcelbe_delivery_options)) {
                 $myparcelbe_delivery_options = WCX_Order::get_meta($order, '_myparcelbe_delivery_options');
             }
 
-            $pickup_types = array('retail');
-            if ( ! empty($myparcelbe_delivery_options['price_comment']) && in_array($myparcelbe_delivery_options['price_comment'], $pickup_types)) {
+            $pickup_types = ['retail'];
+            if (! empty($myparcelbe_delivery_options['price_comment'])
+                && in_array(
+                    $myparcelbe_delivery_options['price_comment'],
+                    $pickup_types
+                )) {
                 return $myparcelbe_delivery_options;
             }
 
             // Backwards compatibility for pakjegemak data
             $pgaddress = WCX_Order::get_meta($order, '_myparcelbe_pgaddress');
-            if ( ! empty($pgaddress) && ! empty($pgaddress['postcode'])) {
-                $pickup = array(
+            if (! empty($pgaddress) && ! empty($pgaddress['postcode'])) {
+                $pickup = [
                     'postal_code'   => $pgaddress['postcode'],
                     'street'        => $pgaddress['street'],
                     'city'          => $pgaddress['town'],
                     'number'        => $pgaddress['house_number'],
                     'location'      => $pgaddress['name'],
                     'price_comment' => 'retail',
-                );
+                ];
 
                 return $pickup;
             }
@@ -1383,12 +1383,12 @@ if ( ! class_exists('wcmp_export')) :
         public function get_delivery_type($order, $myparcelbe_delivery_options = '')
         {
             // delivery types
-            $delivery_types = array(
+            $delivery_types = [
                 'morning'  => 1,
                 'standard' => 2, // 'default in JS API'
                 'avond'    => 3,
                 'retail'   => 4, // 'pickup'
-            );
+            ];
 
             if (empty($myparcelbe_delivery_options)) {
                 $myparcelbe_delivery_options = WCX_Order::get_meta($order, '_myparcelbe_delivery_options');
@@ -1396,11 +1396,13 @@ if ( ! class_exists('wcmp_export')) :
 
             // standard = default, overwrite if options found
             $delivery_type = 'standard';
-            if ( ! empty($myparcelbe_delivery_options)) {
+            if (! empty($myparcelbe_delivery_options)) {
                 // pickup & pickup express store the delivery type in the delivery options,
-                if (empty($myparcelbe_delivery_options['price_comment']) && ! empty($myparcelbe_delivery_options['time'])) {
+                if (empty($myparcelbe_delivery_options['price_comment'])
+                    && ! empty($myparcelbe_delivery_options['time'])) {
                     // check if we have a price_comment in the time option
-                    $delivery_time = array_shift($myparcelbe_delivery_options['time']); // take first element in time array
+                    $delivery_time =
+                        array_shift($myparcelbe_delivery_options['time']); // take first element in time array
                     if (isset($delivery_time['price_comment'])) {
                         $delivery_type = $delivery_time['price_comment'];
                     }
@@ -1425,7 +1427,7 @@ if ( ! class_exists('wcmp_export')) :
             if (empty($shipping_method_id)) {
                 $order_shipping_methods = $order->get_items('shipping');
 
-                if ( ! empty($order_shipping_methods)) {
+                if (! empty($order_shipping_methods)) {
                     // we're taking the first (we're not handling multiple shipping methods as of yet)
                     $order_shipping_method = array_shift($order_shipping_methods);
                     $shipping_method_id    = $order_shipping_method['method_id'];
@@ -1466,12 +1468,12 @@ if ( ! class_exists('wcmp_export')) :
                 $shipping_method = WC_Shipping_Zones::get_shipping_method($method_instance);
             } else {
                 // only for flat rate or legacy flat rate
-                if ( ! in_array($chosen_method, array('flat_rate', 'legacy_flat_rate'))) {
+                if (! in_array($chosen_method, ['flat_rate', 'legacy_flat_rate'])) {
                     return false;
                 }
                 $shipping_methods = WC()->shipping->load_shipping_methods($package);
 
-                if ( ! isset($shipping_methods[$chosen_method])) {
+                if (! isset($shipping_methods[$chosen_method])) {
                     return false;
                 }
                 $shipping_method = $shipping_methods[$chosen_method];
@@ -1488,16 +1490,17 @@ if ( ! class_exists('wcmp_export')) :
             $highest_class      = false;
             foreach ($found_shipping_classes as $shipping_class => $products) {
                 // Also handles BW compatibility when slugs were used instead of ids
-                $shipping_class_term = get_term_by('slug', $shipping_class, 'product_shipping_class');
+                $shipping_class_term    = get_term_by('slug', $shipping_class, 'product_shipping_class');
                 $shipping_class_term_id = '';
 
                 if ($shipping_class_term != null) {
                     $shipping_class_term_id = $shipping_class_term->term_id;
                 }
 
-                $class_cost_string   = $shipping_class_term && $shipping_class_term_id
-                    ? $shipping_method->get_option('class_cost_' . $shipping_class_term_id, $shipping_method->get_option('class_cost_' . $shipping_class, ''))
-                    : $shipping_method->get_option('no_class_cost', '');
+                $class_cost_string = $shipping_class_term && $shipping_class_term_id ? $shipping_method->get_option(
+                    'class_cost_' . $shipping_class_term_id,
+                    $shipping_method->get_option('class_cost_' . $shipping_class, '')
+                ) : $shipping_method->get_option('no_class_cost', '');
 
                 if ($class_cost_string === '') {
                     continue;
@@ -1506,10 +1509,10 @@ if ( ! class_exists('wcmp_export')) :
                 $has_costs  = true;
                 $class_cost = $this->wc_flat_rate_evaluate_cost(
                     $class_cost_string,
-                    array(
+                    [
                         'qty'  => array_sum(wp_list_pluck($products, 'quantity')),
-                        'cost' => array_sum(wp_list_pluck($products, 'line_total'))
-                    ),
+                        'cost' => array_sum(wp_list_pluck($products, 'line_total')),
+                    ],
                     $shipping_method
                 );
                 if ($class_cost > $highest_class_cost && ! empty($shipping_class_term_id)) {
@@ -1523,15 +1526,15 @@ if ( ! class_exists('wcmp_export')) :
 
         public function find_order_shipping_classes($order)
         {
-            $found_shipping_classes = array();
+            $found_shipping_classes = [];
             $order_items            = $order->get_items();
             foreach ($order_items as $item_id => $item) {
                 $product = $order->get_product_from_item($item);
                 if ($product && $product->needs_shipping()) {
                     $found_class = $product->get_shipping_class();
 
-                    if ( ! isset($found_shipping_classes[$found_class])) {
-                        $found_shipping_classes[$found_class] = array();
+                    if (! isset($found_shipping_classes[$found_class])) {
+                        $found_shipping_classes[$found_class] = [];
                     }
                     // normally this should pass the $product object, but only in the checkout this contains
                     // quantity & line_total (which is all we need), so we pass data from the $item instead
@@ -1550,7 +1553,7 @@ if ( ! class_exists('wcmp_export')) :
          * Evaluate a cost from a sum/string.
          *
          * @param string $sum
-         * @param array $args
+         * @param array  $args
          *
          * @return string
          */
@@ -1565,26 +1568,26 @@ if ( ! class_exists('wcmp_export')) :
             // Allow 3rd parties to process shipping cost arguments
             $args           = apply_filters('woocommerce_evaluate_shipping_cost_args', $args, $sum, $flat_rate_method);
             $locale         = localeconv();
-            $decimals       = array(
+            $decimals       = [
                 wc_get_price_decimal_separator(),
                 $locale['decimal_point'],
                 $locale['mon_decimal_point'],
-                ','
-            );
+                ',',
+            ];
             $this->fee_cost = $args['cost'];
 
             // Expand shortcodes
-            add_shortcode('fee', array($this, 'wc_flat_rate_fee'));
+            add_shortcode('fee', [$this, 'wc_flat_rate_fee']);
 
             $sum = do_shortcode(
                 str_replace(
-                    array('[qty]', '[cost]'),
-                    array($args['qty'], $args['cost']),
+                    ['[qty]', '[cost]'],
+                    [$args['qty'], $args['cost']],
                     $sum
                 )
             );
 
-            remove_shortcode('fee', array($this, 'wc_flat_rate_fee'));
+            remove_shortcode('fee', [$this, 'wc_flat_rate_fee']);
 
             // Remove whitespace from string
             $sum = preg_replace('/\s+/', '', $sum);
@@ -1610,11 +1613,11 @@ if ( ! class_exists('wcmp_export')) :
         public function wc_flat_rate_fee($atts)
         {
             $atts = shortcode_atts(
-                array(
+                [
                     'percent' => '',
                     'min_fee' => '',
                     'max_fee' => '',
-                ),
+                ],
                 $atts
             );
 
@@ -1641,7 +1644,7 @@ if ( ! class_exists('wcmp_export')) :
                 $order            = WCX::get_order($order_id);
                 $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
                 // skip non-myparcel destination orders
-                if ( ! $this->is_myparcelbe_destination($shipping_country)) {
+                if (! $this->is_myparcelbe_destination($shipping_country)) {
                     unset($order_ids[$key]);
                 }
             }
@@ -1652,14 +1655,14 @@ if ( ! class_exists('wcmp_export')) :
         public function is_myparcelbe_destination($country_code)
         {
             return ($country_code == 'BE' || $this->is_eu_country($country_code)
-                    || $this->is_world_shipment_country(
+                || $this->is_world_shipment_country(
                     $country_code
                 ));
         }
 
         public function is_eu_country($country_code)
         {
-            $euro_countries = array(
+            $euro_countries = [
                 'AT',
                 'NL',
                 'BG',
@@ -1702,15 +1705,15 @@ if ( ! class_exists('wcmp_export')) :
                 'SM',
                 'RS',
                 'VA',
-                'BY'
-            );
+                'BY',
+            ];
 
             return in_array($country_code, $euro_countries);
         }
 
         public function is_world_shipment_country($country_code)
         {
-            $world_shipment_countries = array(
+            $world_shipment_countries = [
                 'AF',
                 'AQ',
                 'DZ',
@@ -1888,8 +1891,8 @@ if ( ! class_exists('wcmp_export')) :
                 'CY',
                 'CH',
                 'TR',
-                'NO'
-            );
+                'NO',
+            ];
 
             return in_array($country_code, $world_shipment_countries);
         }
@@ -1905,7 +1908,7 @@ if ( ! class_exists('wcmp_export')) :
                 // Starting with WooCommerce 3.0, logging can be grouped by context and severity.
                 if (class_exists('WC_Logger') && version_compare(WOOCOMMERCE_VERSION, '3.0', '>=')) {
                     $logger = wc_get_logger();
-                    $logger->debug($message, array('source' => 'wc-myparcelbe'));
+                    $logger->debug($message, ['source' => 'wc-myparcelbe']);
 
                     return;
                 }
@@ -1933,7 +1936,7 @@ if ( ! class_exists('wcmp_export')) :
             $api      = $this->init_api();
             $response = $api->get_shipments($shipment_id);
 
-            if ( ! isset($response['body']['data']['shipments'][0]['barcode'])) {
+            if (! isset($response['body']['data']['shipments'][0]['barcode'])) {
                 throw new ErrorException('No MyParcel barcode found for shipment id; ' . $shipment_id);
             }
 
@@ -1949,7 +1952,7 @@ if ( ! class_exists('wcmp_export')) :
          */
         private function add_myparcelbe_note_to_shipment($selected_shipment_ids, $shipment_id, $order)
         {
-            if ( ! in_array($shipment_id, $selected_shipment_ids)) {
+            if (! in_array($shipment_id, $selected_shipment_ids)) {
                 return;
             }
 
@@ -1966,8 +1969,12 @@ if ( ! class_exists('wcmp_export')) :
          *
          * @return bool
          */
-        private function isActiveMethod($shipping_method_id, $package_type_shipping_methods, $shipping_method_id_class, $shipping_class)
-        {
+        private function isActiveMethod(
+            $shipping_method_id,
+            $package_type_shipping_methods,
+            $shipping_method_id_class,
+            $shipping_class
+        ) {
             //support WooCommerce flat rate
             // check if we have a match with the predefined methods
             if (in_array($shipping_method_id, $package_type_shipping_methods)) {
@@ -1978,18 +1985,22 @@ if ( ! class_exists('wcmp_export')) :
             }
 
             // fallback to bare method (without class) (if bare method also defined in settings)
-            if ( ! empty($shipping_method_id_class) && in_array($shipping_method_id_class, $package_type_shipping_methods)) {
+            if (! empty($shipping_method_id_class)
+                && in_array(
+                    $shipping_method_id_class,
+                    $package_type_shipping_methods
+                )) {
                 return true;
             }
 
             // support WooCommerce Table Rate Shipping by WooCommerce
-            if ( ! empty($shipping_class) && in_array($shipping_class, $package_type_shipping_methods)) {
+            if (! empty($shipping_class) && in_array($shipping_class, $package_type_shipping_methods)) {
                 return true;
             }
 
             // support WooCommerce Table Rate Shipping by Bolder Elements
             $newShippingClass = str_replace(':', '_', $shipping_class);
-            if ( ! empty($shipping_class) && in_array($newShippingClass, $package_type_shipping_methods)) {
+            if (! empty($shipping_class) && in_array($newShippingClass, $package_type_shipping_methods)) {
                 return true;
             }
 

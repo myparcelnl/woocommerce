@@ -1,5 +1,26 @@
 /* eslint-disable max-lines-per-function */
 window.addEventListener('load', function() {
+  /**
+   * The following jsdoc blocks are for declaring the types of the injected variables from php.
+   */
+
+  /**
+   * @var {Object} MyParcelDisplaySettings
+   *
+   * @property {Boolean} MyParcelDisplaySettings.isUsingSplitAddressFields
+   *
+   * @see \wcmp_checkout::inject_delivery_options_variables
+   */
+
+  /**
+   * @var {Object} MyParcelDeliveryOptions
+   *
+   * @property {Array} MyParcelDeliveryOptions.shippingMethods
+   * @property {Boolean} MyParcelDeliveryOptions.alwaysDisplay
+   * @property {String} MyParcelDeliveryOptions.hiddenInputName
+   *
+   * @see \wcmp_checkout::inject_delivery_options_variables
+   */
 
   /* The timeout is necessary, otherwise the order summary is going to flash */
   setTimeout(function() {
@@ -10,25 +31,61 @@ window.addEventListener('load', function() {
     });
   }, 100);
 
-  var MyParcel_Frontend = {
-    split_street_regex: /(.*?)\s?(\d{1,4})[/\s-]{0,2}([A-z]\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[A-z][A-z\s]{0,3})?$/,
-    is_using_split_address_fields: parseInt(wcmp_display_settings.isUsingSplitAddressFields),
-
-    shipping_method_changed: false,
-    force_update: false,
-
-    selected_shipping_method: false,
-    updated_shipping_method: false,
-    selected_country: false,
-    updated_country: false,
-
-    shipping_methods: JSON.parse(wcmp_delivery_options.shipping_methods),
-    always_display: wcmp_delivery_options.always_display,
+  var MyParcelFrontend = {
+    /**
+     * @type RegExp
+     */
+    splitStreetRegex: /(.*?)\s?(\d{1,4})[/\s-]{0,2}([A-z]\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[A-z][A-z\s]{0,3})?$/,
 
     /**
-     * @type {Element}
+     * @type Boolean
      */
-    shippingFields: document.querySelector('.woocommerce-shipping-fields'),
+    isUsingSplitAddressFields: !!parseInt(MyParcelDisplaySettings.isUsingSplitAddressFields),
+
+    /**
+     * @type Array
+     */
+    shippingMethods: JSON.parse(MyParcelDeliveryOptions.shippingMethods),
+
+    /**
+     * @type Boolean
+     */
+    alwaysDisplay: !!parseInt(MyParcelDeliveryOptions.alwaysDisplay),
+
+    /**
+     * @type Boolean
+     */
+    forceUpdate: false,
+
+    /**
+     * @type Boolean
+     */
+    changedShippingMethod: false,
+
+    /**
+     * @type Boolean
+     */
+    selectedCountry: false,
+
+    /**
+     * @type Boolean
+     */
+    selectedShippingMethod: false,
+
+    /**
+     * @type Boolean
+     */
+    updatedCountry: false,
+
+    /**
+     * @type Boolean
+     */
+    updatedShippingMethod: false,
+
+    /**
+     * @type Element
+     */
+    hiddenDataInput: null,
 
     /**
      * @type {String}
@@ -41,7 +98,6 @@ window.addEventListener('load', function() {
      * @type {String}
      */
     shipToDifferentAddressField: '#ship-to-different-address-checkbox',
-    checkoutDataField: '#mypa-input',
 
     houseNumberField: 'house_number',
     addressField: 'address_1',
@@ -58,7 +114,8 @@ window.addEventListener('load', function() {
      * Initialize the script.
      */
     init: function() {
-      MyParcel_Frontend.addListeners();
+      this.addListeners();
+      this.createHiddenInput();
 
       document.querySelector(this.shipToDifferentAddressField).addEventListener('load', this.addListeners);
       document.querySelector(this.shipToDifferentAddressField).addEventListener('change', this.addListeners);
@@ -67,102 +124,17 @@ window.addEventListener('load', function() {
         this.setAddress(event.detail);
       });
 
-      document.addEventListener(MyParcel_Frontend.updatedCheckoutEvent, MyParcel_Frontend.onCheckoutUpdate);
-    },
-
-    onCheckoutUpdate: function() {
-      console.log(document.querySelector(this.checkoutDataField).value);
-
-      MyParcel_Frontend.triggerEvent(MyParcel_Frontend.updateWooCommerceCheckoutEvent);
+      document.addEventListener(this.updatedCheckoutEvent, this.onCheckoutUpdate);
     },
 
     /**
-     * Hide checkout options for non parcel shipments.
+     * When the checkout is updated trigger the WooCommerce update_checkout event.
      */
-    // showOrHideCheckoutOptions: function(e) {
-    //   console.log('showOrHideCheckoutOptions1', e);
-    //   var shipping_method_class;
-    //
-    //   if (!MyParcel_Frontend.checkCountry()) {
-    //     return;
-    //   }
-    //
-    //   if (MyParcel_Frontend.always_display) {
-    //     MyParcel_Frontend.force_update = true;
-    //     // MyParcel_Frontend.triggerEvent(MyParcel_Frontend.updateCheckoutEvent);
-    //   } else if (MyParcel_Frontend.shipping_methods.length > 0) {
-    //     var shipping_method = MyParcel_Frontend.getShippingMethod();
-    //
-    //     /* no shipping method selected, hide by default */
-    //     if (typeof shipping_method === 'undefined') {
-    //       MyParcel_Frontend.hideDeliveryOptions();
-    //       return;
-    //     }
-    //
-    //     if (shipping_method.indexOf('table_rate:') !== -1 || shipping_method.indexOf('betrs_shipping:') !== -1) {
-    //       /*
-    //        * WC Table Rates
-    //        * use shipping_method = method_id:instance_id:rate_id
-    //        *
-    //        */
-    //       if (shipping_method.indexOf('betrs_shipping:') !== -1) {
-    //         shipping_method = shipping_method.replace(':', '_');
-    //       }
-    //     } else {
-    //       /*
-    //        * none table rates
-    //        * strip instance_id if present
-    //        */
-    //       if (shipping_method.indexOf(':') !== -1) {
-    //         shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
-    //       }
-    //       var shipping_class = document.querySelector('#myparcel_highest_shipping_class').value;
-    //       /* add class refinement if we have a shipping class */
-    //       if (shipping_class) {
-    //         shipping_method_class = shipping_method + ':' + shipping_class;
-    //       }
-    //     }
-    //
-    //     if (shipping_class && MyParcel_Frontend.shipping_methods.indexOf(shipping_method_class) > -1) {
-    //       MyParcel_Frontend.updated_shipping_method = shipping_method_class;
-    //       MyParcel.showAllDeliveryOptions();
-    //       MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_class;
-    //     } else if (MyParcel_Frontend.shipping_methods.indexOf(shipping_method) > -1) {
-    //       /* fallback to bare method if selected in settings */
-    //       MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method;
-    //       MyParcel.showAllDeliveryOptions();
-    //       MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method;
-    //     } else {
-    //       var shipping_method_now = typeof shipping_method_class === 'undefined'
-    //         ? shipping_method
-    //         : shipping_method_class;
-    //
-    //       MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method_now;
-    //       MyParcel_Frontend.hideDeliveryOptions();
-    //
-    //       MyParcel_Frontend.updateInput();
-    //
-    //       MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_now;
-    //
-    //       /* Hide extra fees when selecting local pickup */
-    //       if (MyParcel_Frontend.shipping_method_changed === false) {
-    //         MyParcel_Frontend.shipping_method_changed = true;
-    //         console.log('hier kom ik in');
-    //         /* Update woocommerce checkout when selecting other method */
-    //         MyParcel_Frontend.triggerEvent('update_checkout');
-    //
-    //         /* Only update when the method change after 2seconds */
-    //         setTimeout(function() {
-    //           MyParcel_Frontend.shipping_method_changed = false;
-    //         }, 2000);
-    //       }
-    //     }
-    //   } else {
-    //     /* not sure if we should already hide by default? */
-    //     MyParcel_Frontend.hideDeliveryOptions();
-    //     MyParcel_Frontend.updateInput();
-    //   }
-    // },
+    onCheckoutUpdate: function(event) {
+      MyParcelFrontend.hiddenDataInput.value = JSON.stringify(event.detail);
+
+      MyParcelFrontend.triggerEvent(MyParcelFrontend.updateWooCommerceCheckoutEvent);
+    },
 
     /**
      * Update the #mypa-input with new data.
@@ -180,11 +152,11 @@ window.addEventListener('load', function() {
      * @return {string}
      */
     getSplitField: function() {
-      return this.is_using_split_address_fields ? MyParcel_Frontend.houseNumberField : MyParcel_Frontend.addressField;
+      return this.isUsingSplitAddressFields ? MyParcelFrontend.houseNumberField : MyParcelFrontend.addressField;
     },
 
     updateCountry: function() {
-      MyParcel_Frontend.updated_country = MyParcel_Frontend.getField('country').value;
+      MyParcelFrontend.updatedCountry = MyParcelFrontend.getField('country').value;
     },
 
     /**
@@ -192,33 +164,33 @@ window.addEventListener('load', function() {
      */
     addListeners: function() {
       /* The fields to add listeners to. */
-      var fields = [MyParcel_Frontend.countryField, MyParcel_Frontend.postcodeField, this.getSplitField()];
+      var fields = [MyParcelFrontend.countryField, MyParcelFrontend.postcodeField, this.getSplitField()];
 
       /* If address type is already set, remove the existing listeners before adding new ones. */
-      if (MyParcel_Frontend.addressType) {
-        MyParcel_Frontend.getField(MyParcel_Frontend.countryField).removeEventListener(
+      if (MyParcelFrontend.addressType) {
+        MyParcelFrontend.getField(MyParcelFrontend.countryField).removeEventListener(
           'change',
-          MyParcel_Frontend.updateCountry
+          MyParcelFrontend.updateCountry,
         );
 
         fields.forEach(function(field) {
-          MyParcel_Frontend.getField(field).removeEventListener('change', MyParcel_Frontend.updateAddress);
+          MyParcelFrontend.getField(field).removeEventListener('change', MyParcelFrontend.updateAddress);
         });
       }
 
-      MyParcel_Frontend.getAddressType();
-      MyParcel_Frontend.selected_country = MyParcel_Frontend.getField(MyParcel_Frontend.countryField).value;
+      MyParcelFrontend.getAddressType();
+      MyParcelFrontend.selectedCountry = MyParcelFrontend.getField(MyParcelFrontend.countryField).value;
 
-      MyParcel_Frontend.getField(MyParcel_Frontend.countryField).addEventListener(
+      MyParcelFrontend.getField(MyParcelFrontend.countryField).addEventListener(
         'change',
-        MyParcel_Frontend.updateCountry
+        MyParcelFrontend.updateCountry,
       );
 
       fields.forEach(function(field) {
-        MyParcel_Frontend.getField(field).addEventListener('change', MyParcel_Frontend.updateAddress);
+        MyParcelFrontend.getField(field).addEventListener('change', MyParcelFrontend.updateAddress);
       });
 
-      MyParcel_Frontend.updateAddress();
+      MyParcelFrontend.updateAddress();
     },
 
     /**
@@ -229,14 +201,14 @@ window.addEventListener('load', function() {
      * @returns {Element}
      */
     getField: function(name) {
-      return document.querySelector('#' + MyParcel_Frontend.addressType + '_' + name);
+      return document.querySelector('#' + MyParcelFrontend.addressType + '_' + name);
     },
 
     /**
      * Update address type.
      */
     getAddressType: function() {
-      this.addressType = document.querySelector(MyParcel_Frontend.shipToDifferentAddressField).checked
+      this.addressType = document.querySelector(MyParcelFrontend.shipToDifferentAddressField).checked
         ? 'shipping'
         : 'billing';
     },
@@ -248,12 +220,12 @@ window.addEventListener('load', function() {
      * @return {String}
      */
     getHouseNumber: function() {
-      if (MyParcel_Frontend.is_using_split_address_fields) {
-        return MyParcel_Frontend.getField('house_number').value;
+      if (MyParcelFrontend.isUsingSplitAddressFields) {
+        return MyParcelFrontend.getField('house_number').value;
       }
 
-      var address = MyParcel_Frontend.getField('address_1').value;
-      var result = MyParcel_Frontend.split_street_regex.exec(address);
+      var address = MyParcelFrontend.getField('address_1').value;
+      var result = MyParcelFrontend.splitStreetRegex.exec(address);
       var numberIndex = 2;
 
       return result ? result[numberIndex] : null;
@@ -263,16 +235,16 @@ window.addEventListener('load', function() {
      * @return {boolean}
      */
     checkCountry: function() {
-      if (MyParcel_Frontend.updated_country !== false
-        && MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country
+      if (MyParcelFrontend.updatedCountry !== false
+        && MyParcelFrontend.updatedCountry !== MyParcelFrontend.selectedCountry
       ) {
         this.updateAddress();
-        MyParcel_Frontend.triggerEvent(MyParcel_Frontend.updateCheckoutEvent);
-        MyParcel_Frontend.selected_country = MyParcel_Frontend.updated_country;
+        MyParcelFrontend.triggerEvent(MyParcelFrontend.updateCheckoutEvent);
+        MyParcelFrontend.selectedCountry = MyParcelFrontend.updatedCountry;
       }
 
-      if (MyParcel_Frontend.selected_country !== 'NL' && MyParcel_Frontend.selected_country !== 'BE') {
-        MyParcel_Frontend.hideDeliveryOptions();
+      if (MyParcelFrontend.selectedCountry !== 'NL' && MyParcelFrontend.selectedCountry !== 'BE') {
+        MyParcelFrontend.hideDeliveryOptions();
         return false;
       }
 
@@ -299,7 +271,7 @@ window.addEventListener('load', function() {
      */
     hideDeliveryOptions: function() {
       this.triggerEvent('myparcel_hide_checkout');
-      if (MyParcel_Frontend.isUpdated()) {
+      if (MyParcelFrontend.isUpdated()) {
         this.triggerEvent('update_checkout');
       }
     },
@@ -320,9 +292,9 @@ window.addEventListener('load', function() {
      * @return {boolean}
      */
     isUpdated: function() {
-      if (MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country
-        || MyParcel_Frontend.force_update === true) {
-        MyParcel_Frontend.force_update = false; /* only force once */
+      if (MyParcelFrontend.updatedCountry !== MyParcelFrontend.selectedCountry
+        || MyParcelFrontend.forceUpdate === true) {
+        MyParcelFrontend.forceUpdate = false; /* only force once */
         return true;
       }
 
@@ -336,14 +308,14 @@ window.addEventListener('load', function() {
       var data = JSON.parse(window.MyParcelConfig);
 
       data.address = {
-        cc: MyParcel_Frontend.getField('country').value,
-        postalCode: MyParcel_Frontend.getField('postcode').value,
-        number: MyParcel_Frontend.getHouseNumber(),
-        city: MyParcel_Frontend.getField('city').value,
+        cc: MyParcelFrontend.getField('country').value,
+        postalCode: MyParcelFrontend.getField('postcode').value,
+        number: MyParcelFrontend.getHouseNumber(),
+        city: MyParcelFrontend.getField('city').value,
       };
 
       window.MyParcelConfig = JSON.stringify(data);
-      MyParcel_Frontend.triggerEvent('myparcel_update_checkout');
+      MyParcelFrontend.triggerEvent('myparcel_update_checkout');
     },
 
     /**
@@ -353,15 +325,15 @@ window.addEventListener('load', function() {
      */
     setAddress: function(address) {
       if (address.postalCode) {
-        MyParcel_Frontend.getField('postcode').value = address.postalCode;
+        MyParcelFrontend.getField('postcode').value = address.postalCode;
       }
 
       if (address.city) {
-        MyParcel_Frontend.getField('city').value = address.city;
+        MyParcelFrontend.getField('city').value = address.city;
       }
 
       if (address.number) {
-        MyParcel_Frontend.setHouseNumber(address.number);
+        MyParcelFrontend.setHouseNumber(address.number);
       }
     },
 
@@ -371,21 +343,35 @@ window.addEventListener('load', function() {
      * @param {String|Number} number
      */
     setHouseNumber: function(number) {
-      if (MyParcel_Frontend.is_using_split_address_fields) {
-        var address = MyParcel_Frontend.getField('address_1').value;
-        var oldHouseNumber = MyParcel_Frontend.getHouseNumber();
+      if (MyParcelFrontend.isUsingSplitAddressFields) {
+        var address = MyParcelFrontend.getField('address_1').value;
+        var oldHouseNumber = MyParcelFrontend.getHouseNumber();
 
         if (oldHouseNumber) {
-          MyParcel_Frontend.getField('address_1').value = address.replace(oldHouseNumber, number);
+          MyParcelFrontend.getField('address_1').value = address.replace(oldHouseNumber, number);
         } else {
-          MyParcel_Frontend.getField('address_1').value = address + number;
+          MyParcelFrontend.getField('address_1').value = address + number;
         }
       } else {
-        MyParcel_Frontend.getField('number').value = number;
+        MyParcelFrontend.getField('number').value = number;
       }
+    },
+
+    /**
+     * Create an input field in the checkout form to be able to pass the checkout data to the $_POST variable when
+     * placing the order.
+     *
+     * @see includes/class-wcmp-checkout.php::save_delivery_options();
+     */
+    createHiddenInput() {
+      MyParcelFrontend.hiddenDataInput = document.createElement('input');
+      MyParcelFrontend.hiddenDataInput.setAttribute('hidden', true);
+      MyParcelFrontend.hiddenDataInput.setAttribute('name', MyParcelDeliveryOptions.hiddenInputName);
+      document.querySelector('form[name="checkout"]').appendChild(MyParcelFrontend.hiddenDataInput);
     },
   };
 
-  MyParcel_Frontend.init();
-  window.MyParcel_Frontend = MyParcel_Frontend;
+  MyParcelFrontend.init();
+  window.MyParcelFrontend = MyParcelFrontend;
 });
+

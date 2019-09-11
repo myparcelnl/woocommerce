@@ -50,8 +50,10 @@ if (! class_exists('wcmp_settings_data')) :
             $this->generate_settings($this->get_general_sections(), self::SETTINGS_GENERAL);
             $this->generate_settings($this->get_export_defaults_sections(), self::SETTINGS_EXPORT_DEFAULTS);
 
-            $this->generate_settings($this->get_carrier_bpost_sections(), 'bpost', true);
-            $this->generate_settings($this->get_carrier_dpd_sections(), 'dpd', true);
+            if (WooCommerce_MyParcelBE()->setting_collection->isEnabled("delivery_options_enabled")) {
+                $this->generate_settings($this->get_carrier_bpost_sections(), 'bpost', true);
+                $this->generate_settings($this->get_carrier_dpd_sections(), 'dpd', true);
+            }
         }
 
         /**
@@ -80,7 +82,7 @@ if (! class_exists('wcmp_settings_data')) :
                     add_settings_section(
                         $sectionName,
                         $section["label"],
-                        [$this->callbacks, 'section'],
+                        [$this->callbacks, "section"],
                         $optionIdentifier
                     );
 
@@ -95,8 +97,9 @@ if (! class_exists('wcmp_settings_data')) :
                             $sectionName,
                             array_merge(
                                 [
-                                    'option_name' => $optionIdentifier,
-                                    'id'          => $settingName,
+                                    "option_name" => $optionIdentifier,
+                                    "id"          => $settingName,
+                                    "class"       => $sectionName,
                                 ],
                                 $setting["args"] ?? []
                             )
@@ -115,7 +118,7 @@ if (! class_exists('wcmp_settings_data')) :
          */
         public static function get_default_string($key): string
         {
-            return __(self::get_default_strings()[$key], 'woocommerce-myparcelbe');
+            return __(self::get_default_strings()[$key], "woocommerce-myparcelbe");
         }
 
         /**
@@ -301,11 +304,6 @@ if (! class_exists('wcmp_settings_data')) :
                         "settings" => $this->get_general_section_checkout_options(),
                     ],
                     [
-                        "name"     => "customizations",
-                        "label"    => __("Customizations", "woocommerce-myparcelbe"),
-                        "settings" => $this->get_general_section_customizations(),
-                    ],
-                    [
                         "name"     => "diagnostics",
                         "label"    => __("Diagnostic tools", "woocommerce-myparcelbe"),
                         "settings" => $this->get_general_section_diagnostics(),
@@ -319,7 +317,7 @@ if (! class_exists('wcmp_settings_data')) :
             return [
                 self::SETTINGS_EXPORT_DEFAULTS => [
                     [
-                        "name"     => "defaults",
+                        "name"     => "export_defaults",
                         "label"    => __('Default export settings', 'woocommerce-myparcelbe'),
                         "settings" => $this->get_export_defaults_section_defaults(),
                     ],
@@ -664,7 +662,8 @@ if (! class_exists('wcmp_settings_data')) :
                     "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
                         "description" => __(
-                            "The MyParcel delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery."
+                            "The MyParcel delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery.",
+                            "woocommerce-myparcelbe"
                         ),
                     ],
                 ],
@@ -770,23 +769,14 @@ if (! class_exists('wcmp_settings_data')) :
                         ),
                     ],
                 ],
-            ];
-        }
-
-        /**
-         * @return array
-         */
-        private function get_general_section_customizations()
-        {
-            return [
                 [
                     "name"  => "custom_css",
                     "label" => __("Custom styles", "woocommerce-myparcelbe"),
                     "type"  => [$this->callbacks, "textarea"],
                     "args"  => [
+                        "font"   => "monospace", // TODO
                         "width"  => "80",
                         "height" => "8",
-
                     ],
                 ],
             ];

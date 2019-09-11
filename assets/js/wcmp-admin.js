@@ -198,19 +198,15 @@ jQuery(function($) {
 
   /* Hide all delivery options if disabled */
   $('#wcmp_settings #delivery_options_enabled').change(function() {
-    var $next_settings_rows = $(this).closest('tr').nextAll('tr');
-    var $next_settings_headers = $(this).closest('table').nextAll('h2');
-    var $next_settings_forms = $(this).closest('table').nextAll('table');
+    var $next_settings_rows = $(this).closest('tr').nextAll('.general_checkout_options');
+
     if ($(this).is(':checked')) {
-      $next_settings_rows.show();
-      $next_settings_forms.show();
-      $next_settings_headers.show();
+      $next_settings_rows.show(300);
     } else {
-      $next_settings_rows.hide();
-      $next_settings_forms.hide();
-      $next_settings_headers.hide();
+      $next_settings_rows.hide(300);
     }
   });
+
   /* Hide all bpost options if disabled */
   $('#wcmp_settings #bpost_delivery_enabled').change(function() {
     var $next_settings_rows = $(this).closest('tr').nextAll('tr');

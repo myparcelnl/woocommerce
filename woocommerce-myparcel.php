@@ -62,7 +62,7 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
         /**
          * @var wcmp_admin
          */
-        private $admin;
+        public $admin;
 
         /**
          * Main Plugin Instance
@@ -171,6 +171,7 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
             require_once('includes/compatibility/class-wc-order-compatibility.php');
             require_once('includes/compatibility/class-wc-product-compatibility.php');
 
+            require_once('includes/entities/delivery-options.php');
             require_once('includes/collections/settings-collection.php');
             require_once('includes/entities/setting.php');
 
@@ -375,7 +376,7 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
         public function setFromCheckoutToBpostSettings($bpostSettings, $checkoutSettings)
         {
             $fromCheckoutToBpost = [
-                'myparcelbe_checkout' => 'myparcelbe_carrier_enable_bpost',
+                'myparcelbe_checkout' => 'delivery_options_enabled',
                 'dropoff_days'        => 'bpost_drop_off_days',
                 'cutoff_time'         => 'bpost_cutoff_time',
                 'dropoff_delay'       => 'bpost_drop_off_delay',

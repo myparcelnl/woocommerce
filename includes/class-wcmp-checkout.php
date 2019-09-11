@@ -1,5 +1,11 @@
 <?php
 
+use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use WPO\WC\MyParcelBE\Compatibility\Order;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core;
+use WPO\WC\MyParcelBE\Entity\DeliveryOptions;
+
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
@@ -16,13 +22,16 @@ if (! class_exists('wcmp_checkout')) :
          */
         public function __construct()
         {
-            add_action('wp_enqueue_scripts', [$this, 'frontend_scripts_styles']);
+            add_action("wp_enqueue_scripts", [$this, "enqueue_frontend_scripts"]);
+
+            // Save delivery options data
+            add_action("woocommerce_checkout_update_order_meta", [$this, "save_delivery_options"], 10, 2);
         }
 
         /**
          * Load styles & scripts
          */
-        public function frontend_scripts_styles()
+        public function enqueue_frontend_scripts()
         {
             // return if not checkout or order received page
             if (! is_checkout() && ! is_order_received_page()) {
@@ -39,7 +48,7 @@ if (! class_exists('wcmp_checkout')) :
                 );
             }
 
-            // Don't load any further checkout data if no carrier is active
+            // Don't load the delivery options scripts if it's disabled
             if (! WooCommerce_MyParcelBE()->setting_collection->isEnabled('delivery_options_enabled')) {
                 return;
             }
@@ -67,21 +76,23 @@ if (! class_exists('wcmp_checkout')) :
         public function inject_delivery_options_variables()
         {
             wp_localize_script(
-                'wc-myparcelbe-frontend',
-                'wcmp_display_settings',
+                "wc-myparcelbe-frontend",
+                "MyParcelDisplaySettings",
                 [
                     // Convert true/false to int for JavaScript
-                    'isUsingSplitAddressFields' => WooCommerce_MyParcelBE()
-                        ->setting_collection->isEnabled('use_split_address_fields')
+                    "isUsingSplitAddressFields" => (int) WooCommerce_MyParcelBE()->setting_collection->isEnabled(
+                        "use_split_address_fields"
+                    ),
                 ]
             );
 
             wp_localize_script(
-                'wc-myparcelbe',
-                'wcmp_delivery_options',
+                "wc-myparcelbe",
+                "MyParcelDeliveryOptions",
                 [
-                    'shipping_methods' => $this->get_delivery_options_shipping_methods(),
-                    'always_display'   => $this->get_delivery_options_always_display(),
+                    "shippingMethods" => $this->get_delivery_options_shipping_methods(),
+                    "alwaysDisplay"   => (int) $this->get_delivery_options_always_display(),
+                    "hiddenInputName" => DeliveryOptions::HIDDEN_INPUT_NAME,
                 ]
             );
 
@@ -94,10 +105,10 @@ if (! class_exists('wcmp_checkout')) :
             // Load the checkout template.
             add_action(
                 apply_filters(
-                    'wc_myparcel_delivery_options_location',
+                    'wc_wcmp_delivery_options_location',
                     $this->get_checkout_position()
                 ),
-                array($this, 'output_delivery_options'),
+                [$this, 'output_delivery_options'],
                 10
             );
         }
@@ -124,7 +135,7 @@ if (! class_exists('wcmp_checkout')) :
         /**
          * @return bool
          */
-        public function get_delivery_options_always_display()
+        public function get_delivery_options_always_display(): bool
         {
             if (WooCommerce_MyParcelBE()->setting_collection->getByName('checkout_display') === 'all_methods') {
                 return true;
@@ -146,10 +157,10 @@ if (! class_exists('wcmp_checkout')) :
 
             $myParcelConfig = [
                 "config"  => [
-                    "carriers"   => $carriers,
-                    "platform"   => "belgie",
-                    "locale"     => "nl-BE",
-                    "currency"   => get_woocommerce_currency(),
+                    "carriers" => $carriers,
+                    "platform" => "belgie",
+                    "locale"   => "nl-BE",
+                    "currency" => get_woocommerce_currency(),
                 ],
                 "strings" => [
                     "addressNotFound"       => __('Address details are not entered', 'woocommerce-myparcelbe'),
@@ -184,7 +195,7 @@ if (! class_exists('wcmp_checkout')) :
                 ];
             }
 
-            return json_encode($myParcelConfig);
+            return json_encode($myParcelConfig, JSON_UNESCAPED_SLASHES);
         }
 
         /**
@@ -235,15 +246,69 @@ if (! class_exists('wcmp_checkout')) :
             $settings = WooCommerce_MyParcelBE()->setting_collection;
             $carriers = [];
 
-            foreach (["bpost", "dpd"] as $carrier) {
-                if ($settings->getByName("{$carrier}_pickup_enabled") ||
-                    $settings->getByName("{$carrier}_delivery_enabled")
-                ) {
+            foreach ([BpostConsignment::CARRIER_NAME, DPDConsignment::CARRIER_NAME] as $carrier) {
+                if ($settings->getByName("{$carrier}_pickup_enabled")
+                    || $settings->getByName(
+                        "{$carrier}_delivery_enabled"
+                    )) {
                     $carriers[] = $carrier;
                 }
             }
 
             return $carriers;
+        }
+
+        /**
+         * Save delivery options to order when used
+         *
+         * @param int   $order_id
+         * @param array $posted
+         *
+         * @return void
+         */
+        public static function save_delivery_options($order_id)
+        {
+            $order = WC_Core::get_order($order_id);
+
+            /**
+             * Save the order weight here because it's easier than digging through order data after creating it.
+             *
+             * @see https://businessbloomer.com/woocommerce-save-display-order-total-weight/
+             */
+            $weight = WC()->cart->get_cart_contents_weight();
+            Order::update_meta_data($order, '_wcmp_order_weight', $weight);
+
+            if ($_POST["myparcelbe_highest_shipping_class"] !== null) {
+                Order::update_meta_data(
+                    $order,
+                    "_myparcelbe_highest_shipping_class",
+                    $_POST["myparcelbe_highest_shipping_class"]
+                );
+            } else {
+                if (isset($_POST["shipping_method"])) {
+                    Order::update_meta_data(
+                        $order,
+                        "_myparcelbe_highest_shipping_class",
+                        $_POST["shipping_method"][0]
+                    );
+                }
+            }
+
+            if (isset($_POST["myparcelbe-signature-selector"])) {
+                Order::update_meta_data(
+                    $order,
+                    "_myparcelbe_signature",
+                    'on'
+                );
+            }
+
+            if (isset($_POST[DeliveryOptions::HIDDEN_INPUT_NAME])) {
+                Order::update_meta_data(
+                    $order,
+                    DeliveryOptions::HIDDEN_INPUT_NAME,
+                    $_POST[DeliveryOptions::HIDDEN_INPUT_NAME]
+                );
+            }
         }
     }
 endif;

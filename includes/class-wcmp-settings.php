@@ -1,5 +1,8 @@
 <?php
 
+use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
@@ -74,42 +77,42 @@ if (! class_exists('wcmp_settings')) :
             $settings_tabs = apply_filters(
                 'wcmp_settings_tabs',
                 [
-                    'general'         => __('General', 'woocommerce-myparcelbe'),
-                    'export_defaults' => __('Default export settings', 'woocommerce-myparcelbe'),
-                    'bpost'           => __('bpost', 'woocommerce-myparcelbe'),
-                    'dpd'             => __('DPD', 'woocommerce-myparcelbe'),
+                    'general'                      => __('General', 'woocommerce-myparcelbe'),
+                    'export_defaults'              => __('Default export settings', 'woocommerce-myparcelbe'),
+                    BpostConsignment::CARRIER_NAME => __('bpost', 'woocommerce-myparcelbe'),
+                    DPDConsignment::CARRIER_NAME   => __('DPD', 'woocommerce-myparcelbe'),
                 ]
             );
 
             $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'general';
             ?>
-          <div class="wrap">
-            <h1><?php _e('WooCommerce MyParcel BE Settings', 'woocommerce-myparcelbe'); ?></h1>
-            <h2 class="nav-tab-wrapper">
-                <?php
-                foreach ($settings_tabs as $tab_slug => $tab_title) {
-                    printf(
-                        '<a href="?page=wcmp_settings&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>',
-                        $tab_slug,
-                        (($active_tab == $tab_slug) ? 'nav-tab-active' : ''),
-                        $tab_title
-                    );
-                }
-                ?>
-            </h2>
-              <?php do_action('woocommerce_myparcelbe_before_settings_page', $active_tab); ?>
-            <form method="post" action="options.php" id="wcmp_settings" class="wcmp_shipment_options">
-                <?php
-                do_action('woocommerce_myparcelbe_before_settings', $active_tab);
-                settings_fields('woocommerce_myparcelbe_' . $active_tab . '_settings');
-                do_settings_sections('woocommerce_myparcelbe_' . $active_tab . '_settings');
-                do_action('woocommerce_myparcelbe_after_settings', $active_tab);
+            <div class="wrap">
+                <h1><?php _e('WooCommerce MyParcel BE Settings', 'woocommerce-myparcelbe'); ?></h1>
+                <h2 class="nav-tab-wrapper">
+                    <?php
+                    foreach ($settings_tabs as $tab_slug => $tab_title) :
+                        printf(
+                            '<a href="?page=wcmp_settings&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>',
+                            $tab_slug,
+                            (($active_tab === $tab_slug) ? 'nav-tab-active' : ''),
+                            $tab_title
+                        );
+                    endforeach;
+                    ?>
+                </h2>
+                <?php do_action('woocommerce_myparcelbe_before_settings_page', $active_tab); ?>
+                <form method="post" action="options.php" id="wcmp_settings" class="wcmp_shipment_options">
+                    <?php
+                    do_action('woocommerce_myparcelbe_before_settings', $active_tab);
+                    settings_fields('woocommerce_myparcelbe_' . $active_tab . '_settings');
+                    do_settings_sections('woocommerce_myparcelbe_' . $active_tab . '_settings');
+                    do_action('woocommerce_myparcelbe_after_settings', $active_tab);
 
-                submit_button();
-                ?>
-            </form>
-              <?php do_action('woocommerce_myparcelbe_after_settings_page', $active_tab); ?>
-          </div>
+                    submit_button();
+                    ?>
+                </form>
+                <?php do_action('woocommerce_myparcelbe_after_settings_page', $active_tab); ?>
+            </div>
             <?php
         }
 
