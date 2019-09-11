@@ -80,7 +80,7 @@ if (! class_exists('wcmp_admin')) :
                          style="display: none;">
                         <img alt="loading"
                              src="<?php echo WooCommerce_MyParcelBE()->plugin_url()
-                                 . '/assets/img/wpspin_light.gif'; ?>"
+                                             . '/assets/img/wpspin_light.gif'; ?>"
                              class="wcmp_spinner"/>
                     </div>
                 </div>
@@ -95,7 +95,9 @@ if (! class_exists('wcmp_admin')) :
                     $package_types[$shipment_options['package_type']]
                 ); ?>
                 <div class="wcmp_shipment_options_form" style="display: none;">
-                    <?php include('views/wcmp-order-shipment-options.php'); ?>
+                    <a class="wcmp-display--block">
+                        <?php include('views/wcmp-order-shipment-options.php'); ?>
+                    </a>
                 </div>
             </div>
             <?php
@@ -148,7 +150,9 @@ if (! class_exists('wcmp_admin')) :
                     <?php }    ?>
                 });
                 </script><img src="<?php echo WooCommerce_MyParcelBE()->plugin_url()
-                    . '/assets/img/wpspin_light.gif'; ?>" class="wcmp_bulk_spinner waiting" style="display:none;"/>
+                                              . '/assets/img/wpspin_light.gif'; ?>"
+                              class="wcmp_bulk_spinner waiting"
+                              style="display:none;"/>
                 <?php
             }
         }
@@ -169,7 +173,7 @@ if (! class_exists('wcmp_admin')) :
                                                                                      size="2"
                                                                                      class="wc_myparcelbe_offset"> <img
                         src="<?php echo WooCommerce_MyParcelBE()->plugin_url()
-                            . '/assets/img/print-offset-icon.png'; ?>"
+                                        . '/assets/img/print-offset-icon.png'; ?>"
                         id="wcmyparcelbe-offset-icon"
                         style="vertical-align: middle;">
                     <button class="button" style="display:none; margin-top: 4px"><?php _e(
@@ -248,7 +252,7 @@ if (! class_exists('wcmp_admin')) :
             }
 
             $target = (WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
-                && WooCommerce_MyParcelBE()->setting_collection->get('download_display') == 'display')
+                       && WooCommerce_MyParcelBE()->setting_collection->get('download_display') == 'display')
                 ? 'target="_blank"' : '';
             $nonce  = wp_create_nonce('wc_myparcelbe');
             foreach ($listing_actions as $action => $data) {
@@ -419,8 +423,8 @@ if (! class_exists('wcmp_admin')) :
                     <?php
                     $action            = 'get_labels';
                     $target            = (WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
-                        && WooCommerce_MyParcelBE()->setting_collection->getByName('download_display') == 'display')
-                        ? 'target="_blank"' : '';
+                                          && WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
+                                             == 'display') ? 'target="_blank"' : '';
                     $nonce             = wp_create_nonce('wc_myparcelbe');
                     $label_button_text = esc_attr__('Print MyParcel BE label', 'woocommerce-myparcelbe');
                     foreach ($consignments as $shipment_id => $shipment):
@@ -492,8 +496,8 @@ if (! class_exists('wcmp_admin')) :
             }
 
             echo '<div style="clear: both;"><strong>'
-                . __('MyParcel BE shipment:', 'woocommerce-myparcelbe')
-                . '</strong><br/>';
+                 . __('MyParcel BE shipment:', 'woocommerce-myparcelbe')
+                 . '</strong><br/>';
 
             $this->showMyParcelSettings($order);
             echo '</div>';
@@ -506,7 +510,7 @@ if (! class_exists('wcmp_admin')) :
          */
         public function showDeliveryOptionsForOrder(WC_Order $order): void
         {
-            $deliveryOptions = $this->getDeliveryOptionsFromOrder($order);
+            $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
 
             $deliveryDaysWindow = WooCommerce_MyParcelBE()->setting_collection->getByName(
                 $deliveryOptions->carrier . "_delivery_days_window"
@@ -661,10 +665,10 @@ if (! class_exists('wcmp_admin')) :
 
             foreach ($shipments as $shipment_id => $shipment) {
                 $barcode .= "<a target='_blank' href="
-                    . $this->get_tracktrace_url($order, $shipment['tracktrace'])
-                    . ">"
-                    . $shipment['tracktrace']
-                    . "</a> <br>";
+                            . $this->get_tracktrace_url($order, $shipment['tracktrace'])
+                            . ">"
+                            . $shipment['tracktrace']
+                            . "</a> <br>";
             }
 
             return $barcode;
@@ -679,7 +683,7 @@ if (! class_exists('wcmp_admin')) :
          * @throws Exception
          * @see \wcmp_checkout::save_delivery_options
          */
-        public function getDeliveryOptionsFromOrder(WC_Order $order): DeliveryOptions
+        public static function getDeliveryOptionsFromOrder(WC_Order $order): DeliveryOptions
         {
             return new DeliveryOptions(
                 (array) json_decode(stripslashes(WCX_Order::get_meta($order, DeliveryOptions::HIDDEN_INPUT_NAME)))

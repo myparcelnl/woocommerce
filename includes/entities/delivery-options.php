@@ -67,12 +67,20 @@ if (! class_exists('\\WPO\\WC\\MyParcelBE\\Entity\\DeliveryOptions')) :
             $this->additionalOptions = $delivery_options["additionalOptions"];
             $this->carrier           = $carrier ?? BpostConsignment::CARRIER_NAME;
 
-            if ("pickup" === $this->deliveryType) {
+            if ($this->isPickup()) {
                 $this->pickupLocation = (object) $delivery_options["pickupLocation"];
                 $this->time           = $delivery_options["pickupMoment"];
             } else {
                 $this->time = $delivery_options["deliveryMoment"];
             }
+        }
+
+        /**
+         * @return bool
+         */
+        public function isPickup(): bool
+        {
+            return $this->deliveryType === "pickup";
         }
     }
 

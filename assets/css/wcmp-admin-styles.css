@@ -176,13 +176,19 @@ table.tracktrace_status td.wcmp-create-label {
   padding: 0;
 }
 
-.wcmyparcelbe_change_order {
-  color: black;
+.wcmp_shipment_options_form > a {
+  color: inherit;
   text-decoration: none;
 }
 
+/* Order settings table inside expanding div on order list and order detail page */
+.wcmyparcelbe_change_order .wcmyparcelbe_settings_table td,
+.wcmyparcelbe_change_order .wcmyparcelbe_settings_table th {
+  padding: .5em !important;
+}
+
 .wcmyparcelbe_change_order:hover {
-  color: black;
+  color: inherit;
 }
 
 /* fix woocommerce column float */
@@ -190,4 +196,9 @@ table.tracktrace_status td.wcmp-create-label {
   #order_data .order_data_column {
     max-width: 31% !important;
   }
+}
+
+/*Helpers*/
+.wcmp-display--block {
+  display: block;
 }

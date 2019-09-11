@@ -2,8 +2,6 @@
     exit;
 } // Exit if accessed directly
 
-$parcel_weight = WooCommerce_MyParcelBE()->export->get_total_order_weight($order);
-
 ?>
 <table class="wcmyparcelbe_settings_table" style="width: auto">
     <tr>
@@ -11,7 +9,7 @@ $parcel_weight = WooCommerce_MyParcelBE()->export->get_total_order_weight($order
             <?php _e('Shipment type', 'woocommerce-myparcelbe') ?>:<br/> <small class="calculated_weight">
                 <?php printf(
                     __('Calculated weight: %s', 'woocommerce-myparcelbe'),
-                    wc_format_weight($parcel_weight)
+                    wc_format_weight($order->get_meta('_wcmp_order_weight'))
                 ) ?>
             </small>
         </td>

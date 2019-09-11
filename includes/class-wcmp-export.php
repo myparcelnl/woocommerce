@@ -16,7 +16,6 @@ if (! class_exists('wcmp_export')) :
 
     class wcmp_export
     {
-
         // Package types
         const PACKAGE          = 1;
         const INSURANCE_AMOUNT = 500;
@@ -987,9 +986,14 @@ if (! class_exists('wcmp_export')) :
             return $new_timestamp;
         }
 
-        public function get_customs_declaration($order)
+        /**
+         * @param WC_Order $order
+         *
+         * @return array
+         */
+        public function get_customs_declaration(WC_Order $order): array
         {
-            $weight   = (int) round($this->get_total_order_weight($order));
+            $weight   = (int) round($order->get_meta('_wcmp_order_weight'));
             $invoice  = $this->get_invoice_number($order);
             $contents = (int) ($this->getSetting('package_contents') ? $this->getSetting('package_contents') : 1);
 
@@ -1298,22 +1302,12 @@ if (! class_exists('wcmp_export')) :
         }
 
         /**
-         * @param WC_Order $order
-         *
-         * @return float
-         */
-        public function get_total_order_weight(WC_Order $order): float
-        {
-            return (float) $order->get_meta('_wcmp_order_weight');
-        }
-
-        /**
          * @param $item
          * @param $order
          *
-         * @return float|int
+         * @return float
          */
-        public function get_item_weight_kg($item, $order)
+        public function get_item_weight_kg($item, WC_Order $order): float
         {
             $product = $order->get_product_from_item($item);
 
@@ -1324,9 +1318,6 @@ if (! class_exists('wcmp_export')) :
             $weight      = (int) $product->get_weight();
             $weight_unit = get_option('woocommerce_weight_unit');
             switch ($weight_unit) {
-                case 'kg':
-                    $product_weight = $weight;
-                    break;
                 case 'g':
                     $product_weight = $weight / 1000;
                     break;
@@ -1343,9 +1334,15 @@ if (! class_exists('wcmp_export')) :
 
             $item_weight = (float) $product_weight * (int) $item['qty'];
 
-            return $item_weight;
+            return (float) $item_weight;
         }
 
+        /**
+         * @param        $order
+         * @param string $myparcelbe_delivery_options
+         *
+         * @return array|bool|mixed|string
+         */
         public function is_pickup($order, $myparcelbe_delivery_options = '')
         {
             if (empty($myparcelbe_delivery_options)) {
@@ -1380,6 +1377,12 @@ if (! class_exists('wcmp_export')) :
             return false;
         }
 
+        /**
+         * @param        $order
+         * @param string $myparcelbe_delivery_options
+         *
+         * @return int|mixed|string
+         */
         public function get_delivery_type($order, $myparcelbe_delivery_options = '')
         {
             // delivery types
@@ -1422,6 +1425,12 @@ if (! class_exists('wcmp_export')) :
             return $delivery_type;
         }
 
+        /**
+         * @param        $order
+         * @param string $shipping_method_id
+         *
+         * @return bool
+         */
         public function get_order_shipping_class($order, $shipping_method_id = '')
         {
             if (empty($shipping_method_id)) {
@@ -1450,6 +1459,11 @@ if (! class_exists('wcmp_export')) :
             return $highest_class;
         }
 
+        /**
+         * @param $chosen_method
+         *
+         * @return bool|WC_Shipping_Method
+         */
         public function get_shipping_method($chosen_method)
         {
             if (version_compare(WOOCOMMERCE_VERSION, '2.6', '>=') && $chosen_method !== 'legacy_flat_rate') {
@@ -1482,6 +1496,12 @@ if (! class_exists('wcmp_export')) :
             return $shipping_method;
         }
 
+        /**
+         * @param $shipping_method
+         * @param $found_shipping_classes
+         *
+         * @return bool|int
+         */
         public function get_shipping_class($shipping_method, $found_shipping_classes)
         {
             // get most expensive class
@@ -1524,6 +1544,11 @@ if (! class_exists('wcmp_export')) :
             return $highest_class;
         }
 
+        /**
+         * @param $order
+         *
+         * @return array
+         */
         public function find_order_shipping_classes($order)
         {
             $found_shipping_classes = [];
