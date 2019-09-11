@@ -175,7 +175,7 @@ if (! class_exists('wcmp_settings_data')) :
                     "label" => __("Drop-off days", "woocommerce-myparcelbe"),
                     "type"  => [$this->callbacks, "enhanced_select"],
                     "args"  => [
-                        "options"     => self::get_weekdays(),
+                        "options"     => (new WP_Locale())->weekday,
                         "description" => __(
                             "Days of the week on which you hand over parcels to bpost",
                             "woocommerce-myparcelbe"
@@ -200,8 +200,9 @@ if (! class_exists('wcmp_settings_data')) :
                     "label" => __("Drop-off delay", "woocommerce-myparcelbe"),
                     "type"  => [$this->callbacks, "text_input"],
                     "args"  => [
-                        "type"        => "text",
+                        "type"        => "number",
                         "size"        => "5",
+                        "step"        => 1,
                         "description" => __(
                             "Number of days you need to process an order.",
                             "woocommerce-myparcelbe"
@@ -239,24 +240,6 @@ if (! class_exists('wcmp_settings_data')) :
         }
 
         /**
-         * Create an array of translated weekdays.
-         *
-         * @return array
-         */
-        public static function get_weekdays()
-        {
-            return [
-                '0' => __('Sunday', 'woocommerce-myparcelbe'),
-                '1' => __('Monday', 'woocommerce-myparcelbe'),
-                '2' => __('Tuesday', 'woocommerce-myparcelbe'),
-                '3' => __('Wednesday', 'woocommerce-myparcelbe'),
-                '4' => __('Thursday', 'woocommerce-myparcelbe'),
-                '5' => __('Friday', 'woocommerce-myparcelbe'),
-                '6' => __('Saturday', 'woocommerce-myparcelbe'),
-            ];
-        }
-
-        /**
          * @return array
          */
         private function get_bpost_section_pickup_options(): array
@@ -270,11 +253,9 @@ if (! class_exists('wcmp_settings_data')) :
                         "has_title"   => false,
                         "has_price"   => true,
                         "size"        => 3,
-                        "description" => sprintf(
-                            __(
-                                "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                                "woocommerce-myparcelbe"
-                            )
+                        "description" => __(
+                            "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                            "woocommerce-myparcelbe"
                         ),
                     ],
                 ],
@@ -420,7 +401,7 @@ if (! class_exists('wcmp_settings_data')) :
                     "label" => __("Drop-off days", "woocommerce-myparcelbe"),
                     "type"  => [$this->callbacks, "enhanced_select"],
                     "args"  => [
-                        "options"     => self::get_weekdays(),
+                        "options"     => (new WP_Locale())->weekday,
                         "description" => __(
                             "Days of the week on which you hand over parcels to dpd",
                             "woocommerce-myparcelbe"
@@ -434,6 +415,7 @@ if (! class_exists('wcmp_settings_data')) :
                     "args"  => [
                         "type"        => "text",
                         "size"        => "5",
+                        "placeholder" => "17:00",
                         "description" => __(
                             "Time at which you stop processing orders for the day (format: hh:mm)",
                             "woocommerce-myparcelbe"
@@ -481,11 +463,9 @@ if (! class_exists('wcmp_settings_data')) :
                         "has_title"   => false,
                         "has_price"   => true,
                         "size"        => 3,
-                        "description" => sprintf(
-                            __(
-                                "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                                "woocommerce-myparcelbe"
-                            )
+                        "description" => __(
+                            "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                            "woocommerce-myparcelbe"
                         ),
                     ],
                 ],
@@ -824,14 +804,12 @@ if (! class_exists('wcmp_settings_data')) :
                     "label" => __("Connect customer email", "woocommerce-myparcelbe"),
                     "type"  => [$this->callbacks, "checkbox"],
                     "args"  => [
-                        "description" => sprintf(
-                            __(
-                                "When you connect the customer email, MyParcel BE can send a Track & Trace email to this address. In your %sMyParcel BE backend%s you can enable or disable this email and format it in your own style.",
-                                "woocommerce-myparcelbe"
-                            ),
-                            '<a href="https://backoffice.sendmyparcel.be/settings/account" target="_blank">',
-                            '</a>'
+                        "description" => __(
+                            "When you connect the customer email, MyParcel BE can send a Track & Trace email to this address. In your %sMyParcel BE backend%s you can enable or disable this email and format it in your own style.",
+                            "woocommerce-myparcelbe"
                         ),
+                        '<a href="https://backoffice.sendmyparcel.be/settings/account" target="_blank">',
+                        '</a>',
                     ],
                 ],
                 [

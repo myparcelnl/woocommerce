@@ -49,7 +49,7 @@ if (! class_exists('wcmp_admin')) :
          *
          * @throws Exception
          */
-        public function showMyParcelSettings($order)
+        public function showMyParcelSettings($order): void
         {
             if (! WooCommerce_MyParcelBE()->export->is_myparcelbe_destination(
                 WCX_Order::get_prop($order, 'shipping_country')
@@ -479,6 +479,11 @@ if (! class_exists('wcmp_admin')) :
             }
         }
 
+        /**
+         * @param $order
+         *
+         * @throws Exception
+         */
         public function single_order_shipment_options($order)
         {
             $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
@@ -490,7 +495,7 @@ if (! class_exists('wcmp_admin')) :
                 . __('MyParcel BE shipment:', 'woocommerce-myparcelbe')
                 . '</strong><br/>';
 
-            $this->showMyParcelSettings($order, false);
+            $this->showMyParcelSettings($order);
             echo '</div>';
         }
 
@@ -501,10 +506,10 @@ if (! class_exists('wcmp_admin')) :
          */
         public function showDeliveryOptionsForOrder(WC_Order $order): void
         {
-            $delivery_options = $this->getDeliveryOptionsFromOrder($order);
+            $deliveryOptions = $this->getDeliveryOptionsFromOrder($order);
 
-            $delivery_days_window = WooCommerce_MyParcelBE()->setting_collection->getByName(
-                $delivery_options->carrier . "_delivery_days_window"
+            $deliveryDaysWindow = WooCommerce_MyParcelBE()->setting_collection->getByName(
+                $deliveryOptions->carrier . "_delivery_days_window"
             );
 
             echo "<div class=\"delivery-options\">";
@@ -512,15 +517,15 @@ if (! class_exists('wcmp_admin')) :
             /**
              * Show the delivery date if it is present.
              */
-            if ($delivery_options->date || $delivery_days_window === 0) {
-                $this->printDeliveryDate($delivery_options);
+            if ($deliveryOptions->date || $deliveryDaysWindow === 0) {
+                $this->printDeliveryDate($deliveryOptions);
             }
 
             /**
              * If the order will be sent to a pickup location show its address.
              */
-            if ("pickup" === $delivery_options->deliveryType) {
-                $this->printPickupLocation($delivery_options);
+            if ("pickup" === $deliveryOptions->deliveryType) {
+                $this->printPickupLocation($deliveryOptions);
             }
 
             echo "</div>";

@@ -69,6 +69,8 @@ if (! class_exists('wcmp_settings_callbacks')) :
          *   description - description (optional)
          *   type        - type (optional)
          *
+         * @param $args
+         *
          * @return void.
          */
         public function text_input($args)
@@ -115,6 +117,8 @@ if (! class_exists('wcmp_settings_callbacks')) :
          *   default     - default setting (optional)
          *   description - description (optional)
          *
+         * @param $args
+         *
          * @return void.
          */
         public function color_picker($args)
@@ -146,6 +150,8 @@ if (! class_exists('wcmp_settings_callbacks')) :
          *   default     - default setting (optional)
          *   description - description (optional)
          *
+         * @param $args
+         *
          * @return void.
          */
         public function textarea($args)
@@ -158,7 +164,7 @@ if (! class_exists('wcmp_settings_callbacks')) :
             }
 
             printf(
-                '<textarea id="%1$s" name="%2$s" cols="%4$s" rows="%5$s" placeholder="%6$s"/>%3$s</textarea>',
+                '<textarea id=" % 1$s" name=" % 2$s" cols=" % 4$s" rows=" % 5$s" placeholder=" % 6$s"/>%3$s</textarea>',
                 $id,
                 $setting_name,
                 $current,
@@ -179,16 +185,16 @@ if (! class_exists('wcmp_settings_callbacks')) :
         {
             extract($this->normalize_settings_args($args));
 
-            printf('<select id="%1$s" name="%2$s" class="%3$s">', $id, $setting_name, $class);
+            printf('<select id=" % 1$s" name=" % 2$s" class=" % 3$s">', $id, $setting_name, $class);
 
             foreach ($options as $key => $label) {
-                printf('<option value="%s" %s>%s</option>', $key, selected($current, $key, false), $label);
+                printf('<option value=" % s" %s>%s</option>', $key, selected($current, $key, false), $label);
             }
 
             echo '</select>';
 
             if (isset($custom)) {
-                printf('<div class="%1$s_custom custom">', $id);
+                printf('<div class=" % 1$s_custom custom">', $id);
 
                 switch ($custom['type']) {
                     case 'text_element_callback':
@@ -215,13 +221,13 @@ if (! class_exists('wcmp_settings_callbacks')) :
 
             foreach ($options as $key => $label) {
                 printf(
-                    '<input type="radio" class="radio" id="%1$s[%3$s]" name="%2$s" value="%3$s" %4$s />',
+                    '<input type="radio" class="radio" id=" % 1$s[%3$s]" name=" % 2$s" value=" % 3$s" %4$s />',
                     $id,
                     $setting_name,
                     $key,
                     checked($current, $key, false)
                 );
-                printf('<label for="%1$s[%3$s]"> %4$s</label><br>', $id, $setting_name, $key, $label);
+                printf('<label for=" % 1$s[%3$s]"> %4$s</label><br>', $id, $setting_name, $key, $label);
             }
 
             // Displays option description.
@@ -251,7 +257,7 @@ if (! class_exists('wcmp_settings_callbacks')) :
                 $placeholder = isset($field['placeholder']) ? $field['placeholder'] : '';
 
                 if (isset($field['label_width'])) {
-                    $style = sprintf('style="display:inline-block; width:%1$s;"', $field['label_width']);
+                    $style = sprintf('style="display:inline - block; width:%1$s;"', $field['label_width']);
                 } else {
                     $style = '';
                 }
@@ -259,7 +265,7 @@ if (! class_exists('wcmp_settings_callbacks')) :
                 $suffix = isset($field['box_number']) ? $field['box_number'] : '';
 
                 // output field label
-                printf('<label for="%1$s_%2$s" %3$s>%4$s</label>', $id, $name, $style, $label);
+                printf('<label for=" % 1$s_ % 2$s" %3$s>%4$s</label>', $id, $name, $style, $label);
 
                 // output field
                 $field_current = isset($current[$name]) ? $current[$name] : '';
@@ -285,7 +291,7 @@ if (! class_exists('wcmp_settings_callbacks')) :
         {
             // get list of WooCommerce statuses
             if (version_compare(WOOCOMMERCE_VERSION, '2.2', '<')) {
-                $statuses = (array)get_terms('shop_order_status', ['hide_empty' => 0, 'orderby' => 'id']);
+                $statuses = (array) get_terms('shop_order_status', ['hide_empty' => 0, 'orderby' => 'id']);
                 foreach ($statuses as $status) {
                     $order_statuses[esc_attr($status->slug)] = esc_html__($status->name, 'woocommerce');
                 }
@@ -441,17 +447,17 @@ if (! class_exists('wcmp_settings_callbacks')) :
                 <?php
                 $shipping_methods_selected = (array)$current;
 
-                $shipping_methods = WC()->shipping->load_shipping_methods();
-                if ($available_shipping_methods) {
-                    foreach ($available_shipping_methods as $key => $label) {
-                        echo '<option value="' . esc_attr($key) . '"' . selected(
-                                in_array($key, $shipping_methods_selected),
-                                true,
-                                false
-                            ) . '>' . esc_html($label) . '</option>';
-                    }
+            $shipping_methods = WC()->shipping->load_shipping_methods();
+            if ($available_shipping_methods) {
+                foreach ($available_shipping_methods as $key => $label) {
+                    echo '<option value="' . esc_attr($key) . '"' . selected(
+                            in_array($key, $shipping_methods_selected),
+                            true,
+                            false
+                        ) . '>' . esc_html($label) . '</option>';
                 }
-                ?>
+            }
+            ?>
             </select>
             <?php
             /**
@@ -475,7 +481,7 @@ if (! class_exists('wcmp_settings_callbacks')) :
                 <?php
                 foreach ($options as $key => $title) {
                     echo '<option value="' . esc_attr($key) . '"' . selected(
-                            ! empty($current) && in_array($key, (array)$current),
+                            ! empty($current) && in_array($key, (array) $current),
                             true,
                             false
                         ) . '>' . esc_html($title) . '</option>';
@@ -604,6 +610,8 @@ if (! class_exists('wcmp_settings_callbacks')) :
 
         /**
          * Wrapper function to create tabs for settings in different languages
+         *
+         * @param $args
          */
         public function i18n_wrap($args)
         {
