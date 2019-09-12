@@ -646,7 +646,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                     "current"   => self::get_default_string("pickup_title"),
                 ],
                 [
-                    "name"        => "checkout_display",
+                    "name"        => "delivery_options_display",
                     "condition"   => "delivery_options_enabled",
                     "label"       => __("Display for", "woocommerce-myparcelbe"),
                     "type"        => "select",
@@ -687,7 +687,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                     ),
                 ],
                 [
-                    "name"              => "custom_css",
+                    "name"              => "delivery_options_custom_css",
                     "condition"         => "delivery_options_enabled",
                     "label"             => __("Custom styles", "woocommerce-myparcelbe"),
                     "type"              => "textarea",

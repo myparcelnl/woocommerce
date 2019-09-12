@@ -13,7 +13,7 @@ if (! class_exists('wcmp_installation_migration_v4_0_0')) :
     {
         public function __construct()
         {
-           // TODO
+            // TODO
         }
 
         /**
@@ -31,6 +31,13 @@ if (! class_exists('wcmp_installation_migration_v4_0_0')) :
             $singleCarrierDefaults = $this->setFromDefaultToBpostSettings($singleCarrierDefaults, $newDefaultSettings);
 
             return [$bpostSettings, $singleCarrierDefaults];
+        }
+
+        public function renamedSettings()
+        {
+            $general = [
+                "custom_css" => "delivery_options_custom_css",
+            ];
         }
 
         public function setFromDefaultToBpostSettings($bpostSettings, $defaultSettings)

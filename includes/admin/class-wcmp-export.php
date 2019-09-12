@@ -551,7 +551,7 @@ class WCMP_Export
 
     public function modal_success_page($request, $result)
     {
-        include('views/wcmp-modal-result-page.php');
+        include('views/html-modal-result-page.php');
         die();
     }
 

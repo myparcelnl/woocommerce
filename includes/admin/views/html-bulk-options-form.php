@@ -156,10 +156,10 @@ $target_url =
                                 <td colspan="2" class="wcmp_shipment_options">
                                     <?php
                                     $skip_save = true; // dont show save button for each order
-                                    if ($dialog == 'shipment') {
-                                        include('wcmp-order-shipment-options.php');
-                                    } else if ($dialog == 'return') {
-                                        include('wcmp-order-return-shipment-options.php');
+                                    if ($dialog === 'shipment') {
+                                        include('html-order-shipment-options.php');
+                                    } else if ($dialog === 'return') {
+                                        include('html-order-return-shipment-options.php');
                                     }
                                     ?>
                                 </td>

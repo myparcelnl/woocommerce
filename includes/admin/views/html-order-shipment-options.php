@@ -16,8 +16,7 @@ if (! defined('ABSPATH')) {
 /**
  * @type DeliveryOptions
  */
-$deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-
+$deliveryOptions    = self::getDeliveryOptionsFromOrder($order);
 $packageTypeOptions = [];
 
 foreach ($package_types as $packageType) {
@@ -25,6 +24,8 @@ foreach ($package_types as $packageType) {
 }
 
 echo '<div class="wcmyparcelbe_change_order">';
+
+$isPackageTypeDisabled = count($package_types) === 1 || $deliveryOptions->isPickup();
 
 woocommerce_form_field(
     "myparcelbe_options[$order_id][package_type]",
@@ -107,6 +108,7 @@ foreach ($option_rows as $option_name => $option_row) {
 }
 
 echo '<div class="wcmp_save_shipment_settings">';
+
 echo get_submit_button(
     __('Save', 'woocommerce-myparcelbe'),
     null,
@@ -117,7 +119,7 @@ echo get_submit_button(
         "data-order" => $order_id,
     ]
 );
+
 $this->showSpinner();
 
 echo '</div></div>';
-?>

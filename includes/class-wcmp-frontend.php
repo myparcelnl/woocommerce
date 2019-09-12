@@ -15,8 +15,6 @@ if (class_exists('WCMP_Frontend')) {
  */
 class WCMP_Frontend
 {
-    private $frontend_settings;
-
     function __construct()
     {
         // Customer Emails

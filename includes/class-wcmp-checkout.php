@@ -20,7 +20,7 @@ if (class_exists('WCMP_Checkout')) {
 class WCMP_Checkout
 {
     /**
-     * WooCommerce_MyParcelBE_Checkout constructor.
+     * WCMP_Checkout constructor.
      */
     public function __construct()
     {
@@ -73,7 +73,7 @@ class WCMP_Checkout
     }
 
     /**
-     * Localize variables into the checkout scripts.
+     * Localize variables into the delivery options scripts.
      */
     public function inject_delivery_options_variables()
     {
@@ -101,14 +101,14 @@ class WCMP_Checkout
         wp_localize_script(
             'wc-myparcelbe',
             'MyParcelConfig',
-            $this->get_checkout_config()
+            $this->get_delivery_options_config()
         );
 
         // Load the checkout template.
         add_action(
             apply_filters(
                 'wc_wcmp_delivery_options_location',
-                $this->get_checkout_position()
+                $this->get_delivery_options_location()
             ),
             [$this, 'output_delivery_options'],
             10
@@ -139,7 +139,7 @@ class WCMP_Checkout
      */
     public function get_delivery_options_always_display(): bool
     {
-        if (WooCommerce_MyParcelBE()->setting_collection->getByName('checkout_display') === 'all_methods') {
+        if (WooCommerce_MyParcelBE()->setting_collection->getByName('delivery_options_display') === 'all_methods') {
             return true;
         }
 
@@ -147,11 +147,11 @@ class WCMP_Checkout
     }
 
     /**
-     * Get the checkout config in JSON for passing to JavaScript.
+     * Get the delivery options config in JSON for passing to JavaScript.
      *
      * @return false|mixed|string|void
      */
-    public function get_checkout_config()
+    public function get_delivery_options_config()
     {
         $settings = WooCommerce_MyParcelBE()->setting_collection;
 
@@ -201,28 +201,12 @@ class WCMP_Checkout
     }
 
     /**
-     * @param $setting
-     *
-     * @return string
-     */
-    public function prepareSettingForConfig($setting)
-    {
-        if (null === $setting) {
-            $setting = 0;
-        } else if (is_array($setting)) {
-            $setting = implode(';', $setting);
-        }
-
-        return $setting;
-    }
-
-    /**
      * Output the delivery options template.
      */
     public function output_delivery_options()
     {
         do_action('woocommerce_myparcelbe_before_delivery_options');
-        require_once(WooCommerce_MyParcelBE()->includes . '/views/wcmp-checkout-template.php');
+        require_once(WooCommerce_MyParcelBE()->includes . '/views/html-delivery-options-template.php');
         do_action('woocommerce_myparcelbe_after_delivery_options');
     }
 
@@ -231,7 +215,7 @@ class WCMP_Checkout
      *
      * @return string
      */
-    public function get_checkout_position(): string
+    public function get_delivery_options_location(): string
     {
         $setLocation = WooCommerce_MyParcelBE()->setting_collection->getByName("checkout_position");
 
