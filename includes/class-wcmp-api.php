@@ -1,12 +1,17 @@
 <?php
 
-if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
+if (! defined('ABSPATH')) {
+    exit;
+} // Exit if accessed directly
 
-if ( !class_exists('wcmp_api') ) :
+if (class_exists('wcmp_api')) {
+    return;
+}
 
-class wcmp_api extends wcmp_rest {
+class wcmp_api extends wcmp_rest
+{
 
-    public $APIURL = "https://api.myparcel.nl/";
+    public  $APIURL = "https://api.myparcel.nl/";
     private $key;
 
     /**
@@ -16,7 +21,8 @@ class wcmp_api extends wcmp_rest {
      *
      * @throws Exception
      */
-    function __construct($key) {
+    function __construct($key)
+    {
         parent::__construct();
 
         $this->user_agent = $this->getUserAgent();
@@ -27,47 +33,48 @@ class wcmp_api extends wcmp_rest {
     /**
      * Add shipment
      *
-     * @param array $shipments array of shipments
-     * @param string $type shipment type: standard/return/unrelated_return
+     * @param array  $shipments array of shipments
+     * @param string $type      shipment type: standard/return/unrelated_return
      *
      * @return array
      */
-    public function add_shipments($shipments, $type = 'standard') {
+    public function add_shipments($shipments, $type = 'standard')
+    {
         $endpoint = 'shipments';
 
         // define content type
-        switch($type) {
+        switch ($type) {
             case 'standard':
             default:
                 $content_type = 'application/vnd.shipment+json';
-                $data_key = 'shipments';
-            break;
+                $data_key     = 'shipments';
+                break;
             case 'return':
                 $content_type = 'application/vnd.return_shipment+json';
-                $data_key = 'return_shipments';
-            break;
+                $data_key     = 'return_shipments';
+                break;
             case 'unrelated_return':
                 $content_type = 'application/vnd.unrelated_return_shipment+json';
-                $data_key = 'unrelated_return_shipments';
-            break;
+                $data_key     = 'unrelated_return_shipments';
+                break;
         }
 
-        $data = array(
-            'data' => array(
+        $data = [
+            'data' => [
                 $data_key => $shipments,
-            ),
-        );
+            ],
+        ];
 
         $json = json_encode($data);
 
-        $headers = array(
+        $headers = [
             'Content-type'  => $content_type . '; charset=UTF-8',
             'Authorization' => 'basic ' . base64_encode("{$this->key}"),
-            'user-agent'    => $this->user_agent
-        );
+            'user-agent'    => $this->user_agent,
+        ];
 
         $request_url = $this->APIURL . $endpoint;
-        $response = $this->post($request_url, $json, $headers);
+        $response    = $this->post($request_url, $json, $headers);
 
         return $response;
     }
@@ -75,40 +82,43 @@ class wcmp_api extends wcmp_rest {
     /**
      * Delete Shipment
      *
-     * @param  array $ids shipment ids
+     * @param array $ids shipment ids
      *
      * @return array       response
      */
-    public function delete_shipments($ids) {
+    public function delete_shipments($ids)
+    {
         $endpoint = 'shipments';
 
-        $headers = array(
-            'headers' => array(
+        $headers = [
+            'headers' => [
                 'Accept'        => 'application/json; charset=UTF-8',
                 'Authorization' => 'basic ' . base64_encode("{$this->key}"),
-                'user-agent'    => $this->user_agent
-            )
-        );
+                'user-agent'    => $this->user_agent,
+            ],
+        ];
 
         $request_url = $this->APIURL . $endpoint . '/' . implode(';', $ids);
-        $response = $this->delete($request_url, $headers);
+        $response    = $this->delete($request_url, $headers);
 
         return $response;
     }
 
     /**
      * Unrelated return shipments
+     *
      * @return array       response
      */
-    public function unrelated_return_shipments() {
+    public function unrelated_return_shipments()
+    {
         $endpoint = 'return_shipments';
 
-        $headers = array(
+        $headers = [
             'Authorization: basic ' . base64_encode("{$this->key}"),
-        );
+        ];
 
         $request_url = $this->APIURL . $endpoint;
-        $response = $this->post($request_url, '', $headers);
+        $response    = $this->post($request_url, '', $headers);
 
         return $response;
     }
@@ -116,25 +126,26 @@ class wcmp_api extends wcmp_rest {
     /**
      * Get shipments
      *
-     * @param $ids
+     * @param       $ids
      * @param array $params request parameters
      *
      * @return array          response
      */
-    public function get_shipments($ids, $params = array()) {
+    public function get_shipments($ids, $params = [])
+    {
         $endpoint = 'shipments';
 
-        $headers = array(
-            'headers' => array(
+        $headers = [
+            'headers' => [
                 'Accept'        => 'application/json; charset=UTF-8',
                 'Authorization' => 'basic ' . base64_encode("{$this->key}"),
-                'user-agent'    => $this->user_agent
-            )
-        );
+                'user-agent'    => $this->user_agent,
+            ],
+        ];
 
         $request_url = $this->APIURL . $endpoint . '/' . implode(';', (array) $ids);
         $request_url = add_query_arg($params, $request_url);
-        $response = $this->get($request_url, $headers);
+        $response    = $this->get($request_url, $headers);
 
         return $response;
     }
@@ -142,35 +153,36 @@ class wcmp_api extends wcmp_rest {
     /**
      * Get shipment labels
      *
-     * @param  array  $ids    shipment ids
-     * @param  array  $params request parameters
-     * @param  string $return pdf or json
+     * @param array  $ids    shipment ids
+     * @param array  $params request parameters
+     * @param string $return pdf or json
      *
      * @return array          response
      */
-    public function get_shipment_labels($ids, $params = array(), $return = 'pdf') {
+    public function get_shipment_labels($ids, $params = [], $return = 'pdf')
+    {
         $endpoint = 'shipment_labels';
 
         if ($return == 'pdf') {
             $accept = 'application/pdf'; // (For the PDF binary. This is the default.)
-            $raw = true;
+            $raw    = true;
         } else {
             $accept = 'application/json; charset=UTF-8'; // (For shipment download link)
-            $raw = false;
+            $raw    = false;
         }
 
-        $headers = array(
-            'headers' => array(
+        $headers = [
+            'headers' => [
                 'Accept'        => $accept,
                 'Authorization' => 'basic ' . base64_encode("{$this->key}"),
-                'user-agent'    => $this->user_agent
-            )
-        );
+                'user-agent'    => $this->user_agent,
+            ],
+        ];
 
         $positions = isset($params['positions']) ? $params['positions'] : null;
 
         $label_format_url = $this->get_label_format_url($positions);
-        $request_url = $this->APIURL . $endpoint . '/' . implode(';', $ids) . '?' . $label_format_url;
+        $request_url      = $this->APIURL . $endpoint . '/' . implode(';', $ids) . '?' . $label_format_url;
 
         $response = $this->get($request_url, $headers, $raw);
 
@@ -180,53 +192,58 @@ class wcmp_api extends wcmp_rest {
     /**
      * Track shipments
      *
-     * @param  array $ids    shipment ids
-     * @param  array $params request parameters
+     * @param array $ids    shipment ids
+     * @param array $params request parameters
      *
      * @return array          response
      */
-    public function get_tracktraces($ids, $params = array()) {
+    public function get_tracktraces($ids, $params = [])
+    {
         $endpoint = 'tracktraces';
 
-        $headers = array(
-            'headers' => array(
+        $headers = [
+            'headers' => [
                 'Authorization' => 'basic ' . base64_encode("{$this->key}"),
-                'user-agent'    => $this->user_agent
-            )
-        );
+                'user-agent'    => $this->user_agent,
+            ],
+        ];
 
         $request_url = add_query_arg($params, $this->APIURL . $endpoint . '/' . implode(';', $ids));
-        $response = $this->get($request_url, $headers, false);
+        $response    = $this->get($request_url, $headers, false);
 
         return $response;
     }
 
     /**
      * Get delivery options
+     *
      * @return array          response
      */
-    public function get_delivery_options($params = array(), $raw = false) {
+    public function get_delivery_options($params = [], $raw = false)
+    {
         $endpoint = 'delivery_options';
         if (isset(WooCommerce_MyParcelBE()->bpost_settings['saturday_delivery'])) {
             $params['saturday_delivery'] = 1;
         }
 
         $request_url = add_query_arg($params, $this->APIURL . $endpoint);
-        $response = $this->get($request_url, null, $raw);
+        $response    = $this->get($request_url, null, $raw);
 
         return $response;
     }
 
     /**
      * Get Wordpress, Woocommerce, Myparcel version and place theme in a array. Implode the array to get an UserAgent.
+     *
      * @return string
      */
-    private function getUserAgent() {
-        $userAgents = array(
+    private function getUserAgent()
+    {
+        $userAgents = [
             'Wordpress/' . get_bloginfo('version'),
             'WooCommerce/' . WOOCOMMERCE_VERSION,
             'MyParcelBE-WooCommerce/' . WC_MYPARCEL_BE_VERSION,
-        );
+        ];
 
         //Place white space between the array elements
         $userAgent = implode(' ', $userAgents);
@@ -234,7 +251,8 @@ class wcmp_api extends wcmp_rest {
         return $userAgent;
     }
 
-    private function get_label_format_url($positions) {
+    private function get_label_format_url($positions)
+    {
         $generalSettings = WooCommerce_MyParcelBE()->setting_collection;
 
         if ($generalSettings['label_format'] == 'A4') {
@@ -248,5 +266,3 @@ class wcmp_api extends wcmp_rest {
         return '';
     }
 }
-
-endif; // class_exists
