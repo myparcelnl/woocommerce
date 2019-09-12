@@ -4,10 +4,14 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
+if (class_exists('WCMP_Rest')) {
+    return;
+}
+
 /**
  * A simple JSON REST request abstraction layer
  */
-class wcmp_rest
+class WCMP_Rest
 {
 
     /**

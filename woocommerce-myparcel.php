@@ -55,12 +55,12 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
         public $includes;
 
         /**
-         * @var wcmp_export
+         * @var WCMP_Export
          */
         public $export;
 
         /**
-         * @var wcmp_admin
+         * @var WCMP_Admin
          */
         public $admin;
 
@@ -171,16 +171,17 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
             require_once('includes/compatibility/class-wc-order-compatibility.php');
             require_once('includes/compatibility/class-wc-product-compatibility.php');
 
-            require_once('includes/entities/delivery-options.php');
             require_once('includes/collections/settings-collection.php');
+            require_once('includes/entities/delivery-options.php');
             require_once('includes/entities/setting.php');
+            require_once('includes/entities/settings-field-arguments.php');
 
             require_once('includes/class-wcmp-assets.php');
-            $this->admin = require_once('includes/class-wcmp-admin.php');
             require_once('includes/class-wcmp-checkout.php');
-            require_once('includes/class-wcmp-settings.php');
+            $this->admin = require_once('includes/admin/class-wcmp-admin.php');
+            require_once('includes/admin/settings/class-wcmp-settings.php');
             $this->export = require_once('includes/class-wcmp-export.php');
-            require_once('includes/class-wcmp-bepostcode-fields.php');
+            require_once('includes/class-wcmp-be-postcode-fields.php');
         }
 
         /**
@@ -300,6 +301,35 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
             }
             // todo: Pre 4.0.0?
 
+            self::create_options();
+        }
+
+        /**
+         * Default options.
+         * Sets up the default options used on the settings page.
+         */
+        private static function create_options()
+        {
+            // Include settings so that we can run through defaults.
+            include_once dirname(__FILE__) . '/includes/admin/class-wcmp-settings.php';
+
+            $settings = wcmp_admin_settings::get_settings_pages();
+
+            foreach ($settings as $section) {
+                if (! method_exists($section, 'get_settings')) {
+                    continue;
+                }
+                $subsections = array_unique(array_merge([''], array_keys($section->get_sections())));
+
+                foreach ($subsections as $subsection) {
+                    foreach ($section->get_settings($subsection) as $value) {
+                        if (isset($value['default']) && isset($value['id'])) {
+                            $autoload = isset($value['autoload']) ? (bool) $value['autoload'] : true;
+                            add_option($value['id'], $value['default'], '', ($autoload ? 'yes' : 'no'));
+                        }
+                    }
+                }
+            }
         }
 
         /**

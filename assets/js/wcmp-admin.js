@@ -1,5 +1,75 @@
-/* eslint-disable */
+/**
+ * @var {Object} wc_myparcelbe
+ */
+
+// eslint-disable-next-line max-lines-per-function
 jQuery(function($) {
+  function handleDependency(relatedInput, element) {
+    var easing = 300;
+
+    var type = element.getAttribute('data-parent-type');
+    var wantedValue = element.getAttribute('data-parent-value') || '1';
+    var setValue = element.getAttribute('data-parent-set') || null;
+    var value = relatedInput.value;
+
+    var parentElement = $(element).closest('tr');
+
+    var matches = value === wantedValue;
+
+    switch (type) {
+      case 'show':
+        parentElement[matches ? 'show' : 'hide'](easing);
+        break;
+      case 'disable':
+        $(element).prop('disabled', matches);
+        if (matches && setValue) {
+          element.value = setValue;
+        }
+        break;
+    }
+  }
+
+  // Get all nodes with a data-parent attribute.
+  var nodesWithParent = document.querySelectorAll('[data-parent]');
+
+  /**
+   * Dependency object.
+   *
+   * @type {Object.<String, Node[]>}
+   */
+  var dependencies = {};
+
+  /**
+   * Loop through the classes to create a dependency like this: { [parent]: node[] }.
+   */
+  nodesWithParent.forEach(function(node) {
+    var parent = node.getAttribute('data-parent');
+
+    if (dependencies.hasOwnProperty(parent)) {
+      dependencies[parent].push(node);
+    } else {
+      // Or create the list with the node inside it
+      dependencies[parent] = [node];
+    }
+  });
+
+  /**
+   * Handle showing and hiding of settings.
+   */
+  Object.keys(dependencies).forEach(function(dependency) {
+    var relatedInput = document.querySelector('#' + dependency);
+
+    function handle() {
+      dependencies[dependency].forEach(function(el) {
+        handleDependency(relatedInput, el);
+      });
+    };
+
+    relatedInput.addEventListener('change', handle);
+
+    // Do this on load too.
+    handle();
+  });
 
   /* move shipment options to 'Ship to' column */
   $('.wp-list-table .wcmp_shipment_options, .wp-list-table .wcmp_shipment_summary').each(function(index) {
@@ -30,10 +100,13 @@ jQuery(function($) {
       $form.slideDown();
     }
   });
+
   /* hide options form when click outside */
   $(document).click(function(event) {
     if (!$(event.target).closest('.wcmp_shipment_options_form').length) {
-      if (!($(event.target).hasClass('wcmp_show_shipment_options') || $(event.target).parent().hasClass('wcmp_show_shipment_options')) && $('.wcmp_shipment_options_form').is(':visible')) {
+      if (!($(event.target).hasClass('wcmp_show_shipment_options') || $(event.target)
+        .parent()
+        .hasClass('wcmp_show_shipment_options')) && $('.wcmp_shipment_options_form').is(':visible')) {
         /* disable all input fields again */
         $('.wcmp_shipment_options_form :input').prop('disabled', true);
         /* hide form */
@@ -48,7 +121,7 @@ jQuery(function($) {
     if ($summary_list.is(':visible') || $summary_list.data('loaded') != '') {
       /* just open / close */
       $summary_list.slideToggle();
-    } else if ($summary_list.is(':hidden') && $summary_list.data('loaded') == '') {
+    } else if ($summary_list.is(':hidden') && $summary_list.data('loaded') === '') {
       $summary_list.addClass('ajax-waiting');
       $summary_list.find('.wcmp_spinner').show();
       $summary_list.slideToggle();
@@ -76,7 +149,9 @@ jQuery(function($) {
   /* hide summary when click outside */
   $(document).click(function(event) {
     if (!$(event.target).closest('.wcmp_shipment_summary_list').length) {
-      if (!($(event.target).hasClass('wcmp_show_shipment_summary') || $(event.target).parent().hasClass('wcmp_shipment_summary')) && $('.wcmp_shipment_summary_list').is(':visible')) {
+      if (!($(event.target).hasClass('wcmp_show_shipment_summary') || $(event.target)
+        .parent()
+        .hasClass('wcmp_shipment_summary')) && $('.wcmp_shipment_summary_list').is(':visible')) {
         $('.wcmp_shipment_summary_list').slideUp();
       }
     }
@@ -159,7 +234,7 @@ jQuery(function($) {
       $(div).hide();
     };
 
-    if ($package_type == '1') {
+    if ($package_type === '1') {
       enable_options(parcel_options);
     } else {
       disable_options(parcel_options);
@@ -176,68 +251,23 @@ jQuery(function($) {
     }
   });
 
-  /* check witch radio button of A4 or A6 is activated and disable/enable print position */
-  $('input[id^=\'label_format\']').change(function() {
-
-    /* when the options are not selected */
-    if (!$(this).is(':checked')) {
-      return;
-    }
-
-    var parent_offset = $('#print_position_offset').parent().parent();
-
-    if ($(this).attr('value') == 'A4') {
-      parent_offset.show();
-      return;
-    }
-
-    /* Always A6 */
-    parent_offset.hide();
-    $('#print_position_offset').prop('checked', false);
-  });
-
-  /* Hide all delivery options if disabled */
-  $('#wcmp_settings #delivery_options_enabled').change(function() {
-    var $next_settings_rows = $(this).closest('tr').nextAll('.general_checkout_options');
-
-    if ($(this).is(':checked')) {
-      $next_settings_rows.show(300);
-    } else {
-      $next_settings_rows.hide(300);
-    }
-  });
-
-  /* Hide all bpost options if disabled */
-  $('#wcmp_settings #bpost_delivery_enabled').change(function() {
-    var $next_settings_rows = $(this).closest('tr').nextAll('tr');
-    var $next_settings_headers = $(this).closest('table').nextAll('h2');
-    var $next_settings_forms = $(this).closest('table').nextAll('table');
-    if ($(this).is(':checked')) {
-      $next_settings_rows.show();
-      $next_settings_forms.show();
-      $next_settings_headers.show();
-    } else {
-      $next_settings_rows.hide();
-      $next_settings_forms.hide();
-      $next_settings_headers.hide();
-    }
-  });
-
-  /* Hide all DPD options if disabled */
-  $('#wcmp_settings #dpd_delivery_enabled').change(function() {
-    var $next_settings_rows = $(this).closest('tr').nextAll('tr');
-    var $next_settings_headers = $(this).closest('table').nextAll('h2');
-    var $next_settings_forms = $(this).closest('table').nextAll('table');
-    if ($(this).is(':checked')) {
-      $next_settings_rows.show();
-      $next_settings_forms.show();
-      $next_settings_headers.show();
-    } else {
-      $next_settings_rows.hide();
-      $next_settings_forms.hide();
-      $next_settings_headers.hide();
-    }
-  });
+  /* check which radio button of A4 or A6 is activated and disable/enable print position */
+  // $('select[id^=\'label_format\']').change(function() {
+  //   if (!$(this).value(':checked')) {
+  //     return;
+  //   }
+  //   var printPositionOffset = $('#print_position_offset');
+  //   var parent_offset = printPositionOffset.closest('tr');
+  //
+  //   if ($(this).attr('value') === 'A4') {
+  //     parent_offset.enable();
+  //     return;
+  //   }
+  //
+  //   /* Always A6 */
+  //   parent_offset.disable();
+  //   printPositionOffset.prop('checked', false);
+  // });
 
   /* init options on settings page and in bulk form */
   $('#wcmp_settings :input, .wcmp_bulk_options_form :input').change();
@@ -263,9 +293,7 @@ jQuery(function($) {
         security: wc_myparcelbe.nonce,
       };
 
-      $.post(wc_myparcelbe.ajax_url, data, function(response) {
-        /* console.log(response); */
-
+      $.post(wc_myparcelbe.ajax_url, data, function() {
         /* set main text to selection */
         $package_type_text_element.text(package_type);
 
@@ -294,13 +322,14 @@ jQuery(function($) {
   $('#doaction, #doaction2').click(function(event) {
     var actionselected = $(this).attr('id').substr(2);
     /* check if action starts with 'wcmp_' */
-    if ($('select[name="' + actionselected + '"]').val().substring(0, 5) == 'wcmp_') {
+    var element = $('select[name="' + actionselected + '"]');
+    if (element.val().substring(0, 5) === 'wcmp_') {
       event.preventDefault();
       /* remove notices */
       $('.myparcelbe_notice').remove();
 
       /* strip 'wcmp_' from action */
-      var action = $('select[name="' + actionselected + '"]').val().substring(5);
+      var action = element.val().substring(5);
 
       /* Get array of checked orders (order_ids) */
       var order_ids = [];
@@ -318,7 +347,7 @@ jQuery(function($) {
           break;
         case 'print':
           bulk_spinner(this, 'show');
-          var offset = wc_myparcelbe.offset == 1 ? $('.wc_myparcelbe_offset').val() : 0;
+          var offset = wc_myparcelbe.offset === 1 ? $('.wc_myparcelbe_offset').val() : 0;
           myparcelbe_print(order_ids, offset);
           break;
         case 'export_print':
@@ -345,7 +374,7 @@ jQuery(function($) {
           myparcelbe_export(order_ids);
           break;
         case 'get_labels':
-          if (wc_myparcelbe.offset == 1) {
+          if (wc_myparcelbe.offset === 1) {
             contextual_offset_dialog(order_ids, event);
           } else {
             myparcelbe_print(order_ids);
@@ -365,35 +394,37 @@ jQuery(function($) {
   /* Add offset dialog when address labels option is selected */
   $('select[name=\'action\'], select[name=\'action2\']').change(function() {
     var actionselected = $(this).val();
-    /* alert(actionselected); */
-    if ((actionselected == 'wcmp_print' || actionselected == 'wcmp_export_print') && wc_myparcelbe.offset == 1) {
-      var insert_position = $(this).attr('name') == 'action' ? 'top' : 'bottom';
-      $('#wcmyparcelbe_offset_dialog')
+    var offsetDialog = $('#wcmyparcelbe_offset_dialog');
+
+    if ((actionselected === 'wcmp_print' || actionselected === 'wcmp_export_print') && wc_myparcelbe.offset === 1) {
+      var insert_position = $(this).attr('name') === 'action' ? 'top' : 'bottom';
+
+      offsetDialog
         .attr('style', 'clear:both') /* reset styles */
         .insertAfter('div.tablenav.' + insert_position)
         .show();
 
       /* make sure button is not shown */
-      $('#wcmyparcelbe_offset_dialog').find('button').hide();
+      offsetDialog.find('button').hide();
       /* clear input */
-      $('#wcmyparcelbe_offset_dialog').find('input').val('');
+      offsetDialog.find('input').val('');
     } else {
-      $('#wcmyparcelbe_offset_dialog')
+      offsetDialog
         .appendTo('body')
         .hide();
     }
   });
 
   /* Click offset dialog button (single export) */
-  $('#wcmyparcelbe_offset_dialog button').click(function(event) {
-    $dialog = $(this).parent();
+  $('#wcmyparcelbe_offset_dialog button').click(function() {
+    var dialog = $(this).parent();
 
     /* set print variables */
-    var order_ids = [$dialog.find('input.order_id').val()];
-    var offset = $dialog.find('input.wc_myparcelbe_offset').val();
+    var order_ids = [dialog.find('input.order_id').val()];
+    var offset = dialog.find('input.wc_myparcelbe_offset').val();
 
     /* hide dialog */
-    $dialog.hide();
+    dialog.hide();
 
     /* print labels */
     myparcelbe_print(order_ids, offset);
@@ -401,7 +432,9 @@ jQuery(function($) {
 
   function contextual_offset_dialog(order_ids, event) {
     /* place offset dialog at mouse tip */
-    $('#wcmyparcelbe_offset_dialog')
+    var offsetDialog = $('#wcmyparcelbe_offset_dialog');
+
+    offsetDialog
       .show()
       .appendTo('body')
       .css({
@@ -415,14 +448,14 @@ jQuery(function($) {
         'margin-left': '-100px',
       });
 
-    $('#wcmyparcelbe_offset_dialog').find('button')
+    offsetDialog.find('button')
       .show()
       .data('order_id', order_ids);
 
     /* clear input */
-    $('#wcmyparcelbe_offset_dialog').find('input').val('');
+    offsetDialog.find('input').val('');
 
-    $('#wcmyparcelbe_offset_dialog').append('<input type=hidden class="order_id"/>');
+    offsetDialog.append('<input type="hidden" class="order_id"/>');
     $('#wcmyparcelbe_offset_dialog input.order_id').val(order_ids);
   }
 
@@ -494,7 +527,15 @@ jQuery(function($) {
   function myparcelbe_modal_dialog(order_ids, dialog) {
     var request_prefix = (wc_myparcelbe.ajax_url.indexOf('?') !== -1) ? '&' : '?';
     var thickbox_parameters = '&TB_iframe=true&height=380&width=720';
-    var url = wc_myparcelbe.ajax_url + request_prefix + 'order_ids=' + order_ids + '&action=wc_myparcelbe&request=modal_dialog&dialog=' + dialog + '&security=' + wc_myparcelbe.nonce + thickbox_parameters;
+    var url = wc_myparcelbe.ajax_url
+      + request_prefix
+      + 'order_ids='
+      + order_ids
+      + '&action=wc_myparcelbe&request=modal_dialog&dialog='
+      + dialog
+      + '&security='
+      + wc_myparcelbe.nonce
+      + thickbox_parameters;
 
     /* disable background scrolling */
     $('body').css({overflow: 'hidden'});
@@ -528,7 +569,10 @@ jQuery(function($) {
     }
 
     var request_prefix = (wc_myparcelbe.ajax_url.indexOf('?') !== -1) ? '&' : '?';
-    var url = wc_myparcelbe.ajax_url + request_prefix + 'action=wc_myparcelbe&request=get_labels&security=' + wc_myparcelbe.nonce;
+    var url = wc_myparcelbe.ajax_url
+      + request_prefix
+      + 'action=wc_myparcelbe&request=get_labels&security='
+      + wc_myparcelbe.nonce;
 
     /* create form to send order_ids via POST */
     $('body').append('<form action="' + url + '" method="post" target="_blank" id="myparcelbe_post_data"></form>');

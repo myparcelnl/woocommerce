@@ -6,14 +6,14 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('wcmp_frontend')) {
-    return new wcmp_frontend();
+if (class_exists('WCMP_Frontend')) {
+    return new WCMP_Frontend();
 }
 
 /**
  * Frontend views
  */
-class wcmp_frontend
+class WCMP_Frontend
 {
     private $frontend_settings;
 
@@ -128,27 +128,26 @@ class wcmp_frontend
         return $actions;
     }
 
+    /**
+     * @param $replacement
+     * @param $order
+     *
+     * @return false|string
+     * @throws Exception
+     */
     public function wpo_wcpdf_delivery_options($replacement, $order)
     {
         ob_start();
         WooCommerce_MyParcelBE()->admin->showDeliveryOptionsForOrder($order);
-
         return ob_get_clean();
     }
-    // options.delivery_date custom delivery date not supported for carrier bpost
-    //    public function wpo_wcpdf_delivery_date($replacement, $order) {
-    //        if ($delivery_date = WooCommerce_MyParcelBE()->export->get_delivery_date($order)) {
-    //            $formatted_date = date_i18n(
-    //                apply_filters('wcmyparcelbe_delivery_date_format', wc_date_format()),
-    //                strtotime($delivery_date)
-    //            );
-    //
-    //            return $formatted_date;
-    //        }
-    //
-    //        return $replacement;
-    //    }
 
+    /**
+     * @param $replacement
+     * @param $order
+     *
+     * @return string
+     */
     public function wpo_wcpdf_tracktrace($replacement, $order)
     {
         if ($shipments = WooCommerce_MyParcelBE()->admin->get_tracktrace_shipments(WCX_Order::get_id($order))) {
@@ -164,6 +163,12 @@ class wcmp_frontend
         return $replacement;
     }
 
+    /**
+     * @param $replacement
+     * @param $order
+     *
+     * @return string
+     */
     public function wpo_wcpdf_tracktrace_link($replacement, $order)
     {
         $tracktrace_links = WooCommerce_MyParcelBE()->admin->get_tracktrace_links(WCX_Order::get_id($order));
@@ -444,52 +449,6 @@ class wcmp_frontend
             $this->add_fee($fee_name, $fee);
         }
     }
-
-//    private function add_fee_saturday_delivery($delivery_options, $delivery_title) {
-//        if ($delivery_options['saturday'] !== 1) {
-//            return;
-//        }
-//
-//        $fee = WooCommerce_MyParcelBE()->checkout_settings['saturday_cutoff_fee'];
-//
-//        if ( ! empty($fee)) {
-//            $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
-//            $this->add_fee($fee_name, $fee);
-//        }
-//    }
-
-    /**
-     * @return string
-     */
-    private function get_delivery_options_shipping_methods()
-    {
-        if (isset(
-                WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types']
-            )
-            && isset(
-                WooCommerce_MyParcelBE(
-                )->export_defaults['shipping_methods_package_types'][WooCommerce_MyParcelBE_Export::PACKAGE]
-            )) {
-            // Shipping methods associated with parcels = enable delivery options
-            $delivery_options_shipping_methods =
-                WooCommerce_MyParcelBE(
-                )->export_defaults['shipping_methods_package_types'][WooCommerce_MyParcelBE_Export::PACKAGE];
-        } else {
-            $delivery_options_shipping_methods = [];
-        }
-
-        return json_encode($delivery_options_shipping_methods);
-    }
-
-    private function myparcelbe_delivery_options_always_display()
-    {
-        if (isset(WooCommerce_MyParcelBE()->checkout_settings['checkout_display'])
-            && WooCommerce_MyParcelBE()->checkout_settings['checkout_display'] == 'all_methods') {
-            return true;
-        }
-
-        return false;
-    }
 }
 
-return new wcmp_frontend();
+return new WCMP_Frontend();

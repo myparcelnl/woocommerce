@@ -4,14 +4,13 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('wcmp_api')) {
+if (class_exists('WCMP_Api')) {
     return;
 }
 
-class wcmp_api extends wcmp_rest
+class WCMP_Api extends WCMP_Rest
 {
-
-    public  $APIURL = "https://api.myparcel.nl/";
+    public  $apiUrl = "https://api.myparcel.nl/";
     private $key;
 
     /**
@@ -37,6 +36,7 @@ class wcmp_api extends wcmp_rest
      * @param string $type      shipment type: standard/return/unrelated_return
      *
      * @return array
+     * @throws Exception
      */
     public function add_shipments($shipments, $type = 'standard')
     {
@@ -73,7 +73,7 @@ class wcmp_api extends wcmp_rest
             'user-agent'    => $this->user_agent,
         ];
 
-        $request_url = $this->APIURL . $endpoint;
+        $request_url = $this->apiUrl . $endpoint;
         $response    = $this->post($request_url, $json, $headers);
 
         return $response;
@@ -85,6 +85,7 @@ class wcmp_api extends wcmp_rest
      * @param array $ids shipment ids
      *
      * @return array       response
+     * @throws Exception
      */
     public function delete_shipments($ids)
     {
@@ -98,7 +99,7 @@ class wcmp_api extends wcmp_rest
             ],
         ];
 
-        $request_url = $this->APIURL . $endpoint . '/' . implode(';', $ids);
+        $request_url = $this->apiUrl . $endpoint . '/' . implode(';', $ids);
         $response    = $this->delete($request_url, $headers);
 
         return $response;
@@ -108,6 +109,7 @@ class wcmp_api extends wcmp_rest
      * Unrelated return shipments
      *
      * @return array       response
+     * @throws Exception
      */
     public function unrelated_return_shipments()
     {
@@ -117,7 +119,7 @@ class wcmp_api extends wcmp_rest
             'Authorization: basic ' . base64_encode("{$this->key}"),
         ];
 
-        $request_url = $this->APIURL . $endpoint;
+        $request_url = $this->apiUrl . $endpoint;
         $response    = $this->post($request_url, '', $headers);
 
         return $response;
@@ -130,6 +132,7 @@ class wcmp_api extends wcmp_rest
      * @param array $params request parameters
      *
      * @return array          response
+     * @throws Exception
      */
     public function get_shipments($ids, $params = [])
     {
@@ -143,7 +146,7 @@ class wcmp_api extends wcmp_rest
             ],
         ];
 
-        $request_url = $this->APIURL . $endpoint . '/' . implode(';', (array) $ids);
+        $request_url = $this->apiUrl . $endpoint . '/' . implode(';', (array) $ids);
         $request_url = add_query_arg($params, $request_url);
         $response    = $this->get($request_url, $headers);
 
@@ -158,6 +161,7 @@ class wcmp_api extends wcmp_rest
      * @param string $return pdf or json
      *
      * @return array          response
+     * @throws Exception
      */
     public function get_shipment_labels($ids, $params = [], $return = 'pdf')
     {
@@ -182,7 +186,7 @@ class wcmp_api extends wcmp_rest
         $positions = isset($params['positions']) ? $params['positions'] : null;
 
         $label_format_url = $this->get_label_format_url($positions);
-        $request_url      = $this->APIURL . $endpoint . '/' . implode(';', $ids) . '?' . $label_format_url;
+        $request_url      = $this->apiUrl . $endpoint . '/' . implode(';', $ids) . '?' . $label_format_url;
 
         $response = $this->get($request_url, $headers, $raw);
 
@@ -196,6 +200,7 @@ class wcmp_api extends wcmp_rest
      * @param array $params request parameters
      *
      * @return array          response
+     * @throws Exception
      */
     public function get_tracktraces($ids, $params = [])
     {
@@ -208,7 +213,7 @@ class wcmp_api extends wcmp_rest
             ],
         ];
 
-        $request_url = add_query_arg($params, $this->APIURL . $endpoint . '/' . implode(';', $ids));
+        $request_url = add_query_arg($params, $this->apiUrl . $endpoint . '/' . implode(';', $ids));
         $response    = $this->get($request_url, $headers, false);
 
         return $response;
@@ -218,6 +223,7 @@ class wcmp_api extends wcmp_rest
      * Get delivery options
      *
      * @return array          response
+     * @throws Exception
      */
     public function get_delivery_options($params = [], $raw = false)
     {
@@ -226,7 +232,7 @@ class wcmp_api extends wcmp_rest
             $params['saturday_delivery'] = 1;
         }
 
-        $request_url = add_query_arg($params, $this->APIURL . $endpoint);
+        $request_url = add_query_arg($params, $this->apiUrl . $endpoint);
         $response    = $this->get($request_url, null, $raw);
 
         return $response;

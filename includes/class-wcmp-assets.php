@@ -4,11 +4,11 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('wcmp_assets')) {
-    return new wcmp_assets();
+if (class_exists('WCMP_Assets')) {
+    return new WCMP_Assets();
 }
 
-class wcmp_assets
+class WCMP_Assets
 {
 
     function __construct()
@@ -23,7 +23,8 @@ class wcmp_assets
     {
         global $post_type;
         $screen = get_current_screen();
-        if ($post_type == 'shop_order' || (is_object($screen) && strpos($screen->id, 'wcmp') !== false)) {
+
+        if ($post_type === 'shop_order' || (is_object($screen) && strpos($screen->id, 'wcmp') !== false)) {
             // WC2.3+ load all WC scripts for shipping_method search!
             if (version_compare(WOOCOMMERCE_VERSION, '2.3', '>=')) {
                 wp_enqueue_script('woocommerce_admin');
@@ -97,4 +98,4 @@ class wcmp_assets
     }
 }
 
-return new wcmp_assets();
+return new WCMP_Assets();

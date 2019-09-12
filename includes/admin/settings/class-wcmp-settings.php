@@ -7,12 +7,12 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (! class_exists('wcmp_settings')) :
+if (! class_exists('WCMP_Settings')) :
 
     /**
      * Create & render settings page
      */
-    class wcmp_settings
+    class WCMP_Settings
     {
         public function __construct()
         {
@@ -52,7 +52,7 @@ if (! class_exists('wcmp_settings')) :
                 'woocommerce',
                 __('MyParcel BE', 'woocommerce-myparcelbe'),
                 __('MyParcel BE', 'woocommerce-myparcelbe'),
-                'manage_options',
+                'manage_woocommerce',
                 'wcmp_settings',
                 [$this, 'settings_page']
             );
@@ -63,7 +63,7 @@ if (! class_exists('wcmp_settings')) :
          */
         public function add_settings_link($links)
         {
-            $settings_link = '<a href="admin.php?page=wcmp_settings">' . __(
+            $settings_link = '<a href="../../../../../../wp-admin/admin.php?page=wcmp_settings">' . __(
                     'Settings',
                     'woocommerce-myparcelbe'
                 ) . '</a>';
@@ -151,4 +151,4 @@ if (! class_exists('wcmp_settings')) :
 
 endif; // class_exists
 
-return new wcmp_settings();
+return new WCMP_Settings();

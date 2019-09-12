@@ -12,11 +12,11 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('wcmp_export')) {
-    return new wcmp_export();
+if (class_exists('WCMP_Export')) {
+    return new WCMP_Export();
 }
 
-class wcmp_export
+class WCMP_Export
 {
     // Package types
     const PACKAGE          = 1;
@@ -229,7 +229,7 @@ class wcmp_export
     /**
      * @param $order_ids
      *
-     * @return wcmp_export
+     * @return WCMP_Export
      * @throws \MyParcelNL\Sdk\src\Exception\ApiException
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
@@ -490,7 +490,7 @@ class wcmp_export
                 $this->log("API response:\n" . var_export($response, true));
 
                 if (isset($response['body']['data']['pdfs']['url'])) {
-                    $url           = untrailingslashit($api->APIURL) . $response['body']['data']['pdfs']['url'];
+                    $url           = untrailingslashit($api->apiUrl) . $response['body']['data']['pdfs']['url'];
                     $return['url'] = $url;
                 } else {
                     $this->errors[] = __('Unknown error', 'woocommerce-myparcelbe');
@@ -591,7 +591,7 @@ class wcmp_export
     }
 
     /**
-     * @return bool|wcmp_api
+     * @return bool|WCMP_Api
      * @throws Exception
      */
     public function init_api()
@@ -754,7 +754,7 @@ class wcmp_export
                 if (! $is_using_old_fields) {
                     // Split the address line 1 into three parts
                     preg_match(
-                        wcmp_be_postcode_fields::SPLIT_STREET_REGEX,
+                        WCMP_BE_Postcode_Fields::SPLIT_STREET_REGEX,
                         WCX_Order::get_prop($order, 'billing_address_1'),
                         $address_parts
                     );
@@ -778,7 +778,7 @@ class wcmp_export
                 if (! $is_using_old_fields) {
                     // Split the address line 1 into three parts
                     preg_match(
-                        wcmp_be_postcode_fields::SPLIT_STREET_REGEX,
+                        WCMP_BE_Postcode_Fields::SPLIT_STREET_REGEX,
                         WCX_Order::get_prop($order, 'shipping_address_1'),
                         $address_parts
                     );
@@ -2032,4 +2032,4 @@ class wcmp_export
     }
 }
 
-return new wcmp_export();
+return new WCMP_Export();

@@ -10,14 +10,14 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('wcmp_checkout')) {
-    return new wcmp_checkout();
+if (class_exists('WCMP_Checkout')) {
+    return new WCMP_Checkout();
 }
 
 /**
  * Frontend views
  */
-class wcmp_checkout
+class WCMP_Checkout
 {
     /**
      * WooCommerce_MyParcelBE_Checkout constructor.
@@ -126,9 +126,9 @@ class wcmp_checkout
 
         $shipping_methods = [];
 
-        if (array_key_exists(wcmp_export::PACKAGE, $packageTypes ?? [])) {
+        if (array_key_exists(WCMP_Export::PACKAGE, $packageTypes ?? [])) {
             // Shipping methods associated with parcels = enable delivery options
-            $shipping_methods = $packageTypes[wcmp_export::PACKAGE];
+            $shipping_methods = $packageTypes[WCMP_Export::PACKAGE];
         }
 
         return json_encode($shipping_methods);
@@ -314,4 +314,4 @@ class wcmp_checkout
     }
 }
 
-return new wcmp_checkout();
+return new WCMP_Checkout();

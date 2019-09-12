@@ -7,11 +7,11 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('wcmp_be_postcode_fields')) {
-    return new wcmp_be_postcode_fields();
+if (class_exists('WCMP_BE_Postcode_Fields')) {
+    return new WCMP_BE_Postcode_Fields();
 }
 
-class wcmp_be_postcode_fields
+class WCMP_BE_Postcode_Fields
 {
 
     /*
@@ -1119,4 +1119,4 @@ class wcmp_be_postcode_fields
     }
 }
 
-return new wcmp_be_postcode_fields();
+return new WCMP_BE_Postcode_Fields();

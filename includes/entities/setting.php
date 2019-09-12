@@ -2,47 +2,50 @@
 
 namespace WPO\WC\MyParcelBE\Entity;
 
-defined( 'ABSPATH' ) or exit;
+defined('ABSPATH') or exit;
 
-if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Entity\\Setting' ) ) :
+if (class_exists('\\WPO\\WC\\MyParcelbe\\Entity\\Setting')) {
+    return;
+}
+
+/**
+ * Use public fields because this is required for Laravel collections
+ */
+class Setting
+{
     /**
-     * Use public fields because this is required for Laravel collections
+     * @var string
      */
-    class Setting {
-        /**
-         * @var string
-         */
-        public $name;
+    public $name;
 
-        /**
-         * @var mixed
-         */
-        public $value;
+    /**
+     * @var mixed
+     */
+    public $value;
 
-        /**
-         * @var string
-         */
-        public $type;
+    /**
+     * @var string
+     */
+    public $type;
 
-        /**
-         * @var string|null
-         */
-        public $carrier;
+    /**
+     * @var string|null
+     */
+    public $carrier;
 
-        /**
-         * Setting constructor.
-         *
-         * @param string $name
-         * @param mixed  $value
-         * @param string $type
-         * @param string|null $carrier
-         */
-        public function __construct(string $name, $value, string $type, string $carrier = null)
-        {
-            $this->name = $name;
-            $this->value = $value;
-            $this->type = $type;
-            $this->carrier = $carrier;
-        }
+    /**
+     * Setting constructor.
+     *
+     * @param string      $name
+     * @param mixed       $value
+     * @param string      $type
+     * @param string|null $carrier
+     */
+    public function __construct(string $name, $value, string $type, string $carrier = null)
+    {
+        $this->name    = $name;
+        $this->value   = $value;
+        $this->type    = $type;
+        $this->carrier = $carrier;
     }
-endif; // Class exists check
+}

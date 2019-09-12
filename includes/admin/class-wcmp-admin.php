@@ -8,14 +8,14 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('wcmp_admin')) {
-    return new wcmp_admin();
+if (class_exists('WCMP_Admin')) {
+    return new WCMP_Admin();
 }
 
 /**
  * Admin options, buttons & data
  */
-class wcmp_admin
+class WCMP_Admin
 {
 
     function __construct()
@@ -243,7 +243,7 @@ class wcmp_admin
     {
         global $post_type;
         $bulk_actions = [
-            'wcmp_export'       => __('MyParcel BE: Export', 'woocommerce-myparcelbe'),
+            'WCMP_Export'       => __('MyParcel BE: Export', 'woocommerce-myparcelbe'),
             'wcmp_print'        => __('MyParcel BE: Print', 'woocommerce-myparcelbe'),
             'wcmp_export_print' => __('MyParcel BE: Export & Print', 'woocommerce-myparcelbe'),
         ];
@@ -789,7 +789,7 @@ class wcmp_admin
      *
      * @return DeliveryOptions
      * @throws Exception
-     * @see \wcmp_checkout::save_delivery_options
+     * @see \WCMP_Checkout::save_delivery_options
      */
     public static function getDeliveryOptionsFromOrder(WC_Order $order): DeliveryOptions
     {
@@ -854,4 +854,4 @@ class wcmp_admin
     }
 }
 
-return new wcmp_admin();
+return new WCMP_Admin();

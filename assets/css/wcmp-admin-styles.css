@@ -184,7 +184,7 @@ table.tracktrace_status td.wcmp-create-label {
 /* Order settings table inside expanding div on order list and order detail page */
 .wcmyparcelbe_change_order .wcmyparcelbe_settings_table td,
 .wcmyparcelbe_change_order .wcmyparcelbe_settings_table th {
-  padding: .5em !important;
+  padding: 0 0 6px 0 !important;
 }
 
 .wcmyparcelbe_change_order:hover {
@@ -201,4 +201,9 @@ table.tracktrace_status td.wcmp-create-label {
 /*Helpers*/
 .wcmp-display--block {
   display: block;
+}
+
+body.woocommerce_page_wcmp_settings input,
+body.woocommerce_page_wcmp_settings select {
+  max-width: 360px;
 }
