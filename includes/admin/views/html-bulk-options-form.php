@@ -15,7 +15,7 @@ if (! defined('ABSPATH')) {
     <?php
     wp_enqueue_script(
         'wcmyparcelbe-export',
-        WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-admin.js',
+        WCMP()->plugin_url() . '/assets/js/wcmp-admin.js',
         ['jquery', 'thickbox', 'wp-color-picker'],
         WC_MYPARCEL_BE_VERSION
     );
@@ -25,14 +25,14 @@ if (! defined('ABSPATH')) {
         [
             'ajax_url'         => admin_url('admin-ajax.php'),
             'nonce'            => wp_create_nonce('wc_myparcelbe'),
-            'download_display' => WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
-                ? WooCommerce_MyParcelBE()->setting_collection->getByName('download_display') : '',
+            'download_display' => WCMP()->setting_collection->getByName('download_display')
+                ? WCMP()->setting_collection->getByName('download_display') : '',
         ]
     );
 
     wp_enqueue_style(
         'wcmp-admin-styles',
-        WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
+        WCMP()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
         [],
         WC_MYPARCEL_BE_VERSION,
         'all'
@@ -42,7 +42,7 @@ if (! defined('ABSPATH')) {
     if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
         wp_enqueue_style(
             'wcmp-admin-styles-legacy',
-            WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
+            WCMP()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
             [],
             WC_MYPARCEL_BE_VERSION,
             'all'
@@ -77,13 +77,13 @@ $target_url =
             $order = WCX::get_order($order_id);
             // skip non-myparcelbe destinations
             $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-            if (! WooCommerce_MyParcelBE()->export->is_myparcelbe_destination($shipping_country)) {
+            if (! WCMP()->export->is_myparcelbe_destination($shipping_country)) {
                 continue;
             }
-            $shipment_options         = WooCommerce_MyParcelBE()->export->get_options($order);
-            $recipient                = WooCommerce_MyParcelBE()->export->get_recipient($order);
+            $shipment_options         = WCMP()->export->get_options($order);
+            $recipient                = WCMP()->export->get_recipient($order);
             $myparcelbe_options_extra = WCX_Order::get_meta($order, '_myparcelbe_shipment_options_extra');
-            $package_types            = WooCommerce_MyParcelBE()->export->get_package_types($dialog);
+            $package_types            = WCMP()->export->get_package_types($dialog);
             ?>
             <tr class="order-row <?php echo(($c = ! $c) ? 'alternate' : ''); ?>">
                 <td>
@@ -182,7 +182,7 @@ $target_url =
         }
         ?>
         <input type="submit" value="<?php echo $button_text; ?>" class="button save wcmp_export">
-        <img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
+        <img src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
              class="wcmp_spinner"/>
     </div>
 </form>

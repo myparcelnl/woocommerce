@@ -950,7 +950,7 @@ class WCMP_Export
      */
     public function getSetting($name)
     {
-        return WooCommerce_MyParcelBE()->setting_collection->getByName($name);
+        return WCMP()->setting_collection->getByName($name);
     }
 
     /**

@@ -7,7 +7,7 @@
         <?php
             wp_enqueue_script(
                 'wcmyparcelbe-export',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-admin.js',
+                WCMP()->plugin_url() . '/assets/js/wcmp-admin.js',
                 array( 'jquery', 'thickbox' ),
                 WC_MYPARCEL_BE_VERSION
             );
@@ -17,15 +17,15 @@
                 array(
                     'ajax_url'         => admin_url('admin-ajax.php'),
                     'nonce'            => wp_create_nonce('wc_myparcelbe'),
-                    'download_display' => WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
-                        ? WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
+                    'download_display' => WCMP()->setting_collection->getByName('download_display')
+                        ? WCMP()->setting_collection->getByName('download_display')
                         : '',
                 )
             );
 
             wp_enqueue_style(
                 'wcmp-admin-styles',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
+                WCMP()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
                 array(),
                 WC_MYPARCEL_BE_VERSION,
                 'all'
@@ -35,7 +35,7 @@
             if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
                 wp_enqueue_style(
                     'wcmp-admin-styles-legacy',
-                    WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
+                    WCMP()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
                     array(),
                     WC_MYPARCEL_BE_VERSION,
                     'all'

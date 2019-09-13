@@ -67,7 +67,7 @@ $option_rows = [
     ],
     "[insured]"   => [
         "label" => __("Insured to &euro; 500", "woocommerce-myparcelbe"),
-        "value" => WooCommerce_MyParcelBE()->setting_collection->getByName("insured") ? 1 : 0,
+        "value" => WCMP()->setting_collection->getByName("insured") ? 1 : 0,
         "class" => "insured",
     ],
 ];

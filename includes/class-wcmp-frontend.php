@@ -18,12 +18,12 @@ class WCMP_Frontend
     function __construct()
     {
         // Customer Emails
-        if (WooCommerce_MyParcelBE()->setting_collection->isEnabled('email_tracktrace')) {
+        if (WCMP()->setting_collection->isEnabled('email_tracktrace')) {
             add_action('woocommerce_email_before_order_table', [$this, 'track_trace_email'], 10, 2);
         }
 
         // Track & Trace in my account
-        if (WooCommerce_MyParcelBE()->setting_collection->isEnabled('myaccount_tracktrace')) {
+        if (WCMP()->setting_collection->isEnabled('myaccount_tracktrace')) {
             add_filter('woocommerce_my_account_my_orders_actions', [$this, 'track_trace_myaccount'], 10, 2);
         }
 
@@ -72,7 +72,7 @@ class WCMP_Frontend
 
         $order_id = WCX_Order::get_id($order);
 
-        $tracktrace_links = WooCommerce_MyParcelBE()->admin->get_tracktrace_links($order_id);
+        $tracktrace_links = WCMP()->admin->get_tracktrace_links($order_id);
         if (! empty($tracktrace_links)) {
             $email_text = __(
                 'You can track your order with the following bpost Track & Trace code:',
@@ -94,7 +94,7 @@ class WCMP_Frontend
      */
     public function email_pickup_html($order, $sent_to_admin = false, $plain_text = false)
     {
-        WooCommerce_MyParcelBE()->admin->showDeliveryOptionsForOrder($order);
+        WCMP()->admin->showDeliveryOptionsForOrder($order);
     }
 
     /**
@@ -105,13 +105,13 @@ class WCMP_Frontend
     public function thankyou_pickup_html($order_id)
     {
         $order = wc_get_order($order_id);
-        WooCommerce_MyParcelBE()->admin->showDeliveryOptionsForOrder($order);
+        WCMP()->admin->showDeliveryOptionsForOrder($order);
     }
 
     public function track_trace_myaccount($actions, $order)
     {
         $order_id = WCX_Order::get_id($order);
-        if ($consignments = WooCommerce_MyParcelBE()->admin->get_tracktrace_shipments($order_id)) {
+        if ($consignments = WCMP()->admin->get_tracktrace_shipments($order_id)) {
             foreach ($consignments as $key => $consignment) {
                 $actions['myparcelbe_tracktrace_' . $consignment['tracktrace']] = [
                     'url'  => $consignment['tracktrace_url'],
@@ -136,7 +136,7 @@ class WCMP_Frontend
     public function wpo_wcpdf_delivery_options($replacement, $order)
     {
         ob_start();
-        WooCommerce_MyParcelBE()->admin->showDeliveryOptionsForOrder($order);
+        WCMP()->admin->showDeliveryOptionsForOrder($order);
         return ob_get_clean();
     }
 
@@ -148,7 +148,7 @@ class WCMP_Frontend
      */
     public function wpo_wcpdf_tracktrace($replacement, $order)
     {
-        if ($shipments = WooCommerce_MyParcelBE()->admin->get_tracktrace_shipments(WCX_Order::get_id($order))) {
+        if ($shipments = WCMP()->admin->get_tracktrace_shipments(WCX_Order::get_id($order))) {
             $tracktrace = [];
             foreach ($shipments as $shipment) {
                 if (! empty($shipment['tracktrace'])) {
@@ -169,7 +169,7 @@ class WCMP_Frontend
      */
     public function wpo_wcpdf_tracktrace_link($replacement, $order)
     {
-        $tracktrace_links = WooCommerce_MyParcelBE()->admin->get_tracktrace_links(WCX_Order::get_id($order));
+        $tracktrace_links = WCMP()->admin->get_tracktrace_links(WCX_Order::get_id($order));
         if (! empty($tracktrace_links)) {
             $replacement = implode(', ', $tracktrace_links);
         }
@@ -184,7 +184,7 @@ class WCMP_Frontend
     public function output_delivery_options()
     {
         do_action('woocommerce_myparcelbe_before_delivery_options');
-        require_once(WooCommerce_MyParcelBE()->plugin_path() . '/templates/wcmp-delivery-options-template.php');
+        require_once(WCMP()->plugin_path() . '/templates/wcmp-delivery-options-template.php');
         do_action('woocommerce_myparcelbe_after_delivery_options');
     }
 
@@ -257,8 +257,8 @@ class WCMP_Frontend
             if (isset($delivery_options['price_comment'])) {
                 switch ($delivery_options['price_comment']) {
                     case 'retail':
-                        if (! empty(WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'])) {
-                            $fee      = WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'];
+                        if (! empty(WCMP()->checkout_settings['pickup_fee'])) {
+                            $fee      = WCMP()->checkout_settings['pickup_fee'];
                             $fee_name = __('bpost pickup', 'woocommerce-myparcelbe');
                         }
                         break;
@@ -353,7 +353,7 @@ class WCMP_Frontend
         $packages = WC()->shipping->get_packages();
         $package  = current($packages);
 
-        $shipping_method = WooCommerce_MyParcelBE()->export->get_shipping_method($chosen_method);
+        $shipping_method = WCMP()->export->get_shipping_method($chosen_method);
         if (empty($shipping_method)) {
             return false;
         }
@@ -362,7 +362,7 @@ class WCMP_Frontend
         $found_shipping_classes = $shipping_method->find_shipping_classes($package);
         // return print_r( $found_shipping_classes, true );
 
-        $highest_class = WooCommerce_MyParcelBE()->export->get_shipping_class(
+        $highest_class = WCMP()->export->get_shipping_class(
             $shipping_method,
             $found_shipping_classes
         );
@@ -422,8 +422,8 @@ class WCMP_Frontend
     ) {
         // Fee for "delivery" option
         if (isset($post_data[$post_data_value]) && $post_data[$post_data_value] == $delivery_type) {
-            if (! empty(WooCommerce_MyParcelBE()->checkout_settings[$backend_setting])) {
-                $fee      = WooCommerce_MyParcelBE()->checkout_settings[$backend_setting];
+            if (! empty(WCMP()->checkout_settings[$backend_setting])) {
+                $fee      = WCMP()->checkout_settings[$backend_setting];
                 $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
                 $this->add_fee($fee_name, $fee);
 
@@ -440,7 +440,7 @@ class WCMP_Frontend
             return;
         }
 
-        $fee = WooCommerce_MyParcelBE()->checkout_settings['signature_fee'];
+        $fee = WCMP()->checkout_settings['signature_fee'];
 
         if (! empty($fee)) {
             $fee_name = __($delivery_title, 'woocommerce-myparcelbe');

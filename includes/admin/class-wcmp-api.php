@@ -228,7 +228,7 @@ class WCMP_Api extends WCMP_Rest
     public function get_delivery_options($params = [], $raw = false)
     {
         $endpoint = 'delivery_options';
-        if (isset(WooCommerce_MyParcelBE()->bpost_settings['saturday_delivery'])) {
+        if (isset(WCMP()->bpost_settings['saturday_delivery'])) {
             $params['saturday_delivery'] = 1;
         }
 
@@ -259,7 +259,7 @@ class WCMP_Api extends WCMP_Rest
 
     private function get_label_format_url($positions)
     {
-        $generalSettings = WooCommerce_MyParcelBE()->setting_collection;
+        $generalSettings = WCMP()->setting_collection;
 
         if ($generalSettings['label_format'] == 'A4') {
             return 'format=A4&positions=' . $positions;

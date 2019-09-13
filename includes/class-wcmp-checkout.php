@@ -41,30 +41,30 @@ class WCMP_Checkout
         }
 
         // if using split address fields
-        if (WooCommerce_MyParcelBE()->setting_collection->isEnabled('use_split_address_fields')) {
+        if (WCMP()->setting_collection->isEnabled('use_split_address_fields')) {
             wp_enqueue_script(
                 'wcmp-checkout-fields',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
+                WCMP()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
                 ['wc-checkout'],
                 WC_MYPARCEL_BE_VERSION
             );
         }
 
         // Don't load the delivery options scripts if it's disabled
-        if (! WooCommerce_MyParcelBE()->setting_collection->isEnabled('delivery_options_enabled')) {
+        if (! WCMP()->setting_collection->isEnabled('delivery_options_enabled')) {
             return;
         }
 
         wp_enqueue_script(
             'wc-myparcelbe',
-            WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/myparcel.js',
+            WCMP()->plugin_url() . '/assets/js/myparcel.js',
             [],
             WC_MYPARCEL_BE_VERSION
         );
 
         wp_enqueue_script(
             'wc-myparcelbe-frontend',
-            WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-frontend.js',
+            WCMP()->plugin_url() . '/assets/js/wcmp-frontend.js',
             ['wc-myparcelbe'],
             WC_MYPARCEL_BE_VERSION
         );
@@ -82,7 +82,7 @@ class WCMP_Checkout
             "MyParcelDisplaySettings",
             [
                 // Convert true/false to int for JavaScript
-                "isUsingSplitAddressFields" => (int) WooCommerce_MyParcelBE()->setting_collection->isEnabled(
+                "isUsingSplitAddressFields" => (int) WCMP()->setting_collection->isEnabled(
                     "use_split_address_fields"
                 ),
             ]
@@ -120,7 +120,7 @@ class WCMP_Checkout
      */
     public function get_delivery_options_shipping_methods()
     {
-        $packageTypes = WooCommerce_MyParcelBE()->setting_collection->getByName(
+        $packageTypes = WCMP()->setting_collection->getByName(
             "shipping_methods_package_types"
         );
 
@@ -139,7 +139,7 @@ class WCMP_Checkout
      */
     public function get_delivery_options_always_display(): bool
     {
-        if (WooCommerce_MyParcelBE()->setting_collection->getByName('delivery_options_display') === 'all_methods') {
+        if (WCMP()->setting_collection->getByName('delivery_options_display') === 'all_methods') {
             return true;
         }
 
@@ -153,7 +153,7 @@ class WCMP_Checkout
      */
     public function get_delivery_options_config()
     {
-        $settings = WooCommerce_MyParcelBE()->setting_collection;
+        $settings = WCMP()->setting_collection;
 
         $carriers = $this->get_carriers();
 
@@ -206,7 +206,7 @@ class WCMP_Checkout
     public function output_delivery_options()
     {
         do_action('woocommerce_myparcelbe_before_delivery_options');
-        require_once(WooCommerce_MyParcelBE()->includes . '/views/html-delivery-options-template.php');
+        require_once(WCMP()->includes . '/views/html-delivery-options-template.php');
         do_action('woocommerce_myparcelbe_after_delivery_options');
     }
 
@@ -217,7 +217,7 @@ class WCMP_Checkout
      */
     public function get_delivery_options_location(): string
     {
-        $setLocation = WooCommerce_MyParcelBE()->setting_collection->getByName("checkout_position");
+        $setLocation = WCMP()->setting_collection->getByName("checkout_position");
 
         return $setLocation ?? 'woocommerce_after_checkout_billing_form';
     }
@@ -229,7 +229,7 @@ class WCMP_Checkout
      */
     private function get_carriers(): array
     {
-        $settings = WooCommerce_MyParcelBE()->setting_collection;
+        $settings = WCMP()->setting_collection;
         $carriers = [];
 
         foreach ([BpostConsignment::CARRIER_NAME, DPDConsignment::CARRIER_NAME] as $carrier) {

@@ -14,14 +14,6 @@ if (! class_exists('WCMP_Settings_Data')) :
      */
     class WCMP_Settings_Data
     {
-        const CARRIERS = [
-            BpostConsignment::CARRIER_NAME,
-            DPDConsignment::CARRIER_NAME,
-        ];
-
-        const SETTINGS_GENERAL         = "general";
-        const SETTINGS_EXPORT_DEFAULTS = "export_defaults";
-
         /**
          * @var WCMP_Settings_Callbacks
          */
@@ -35,22 +27,15 @@ if (! class_exists('WCMP_Settings_Data')) :
             add_action("admin_init", [$this, "create_all_settings"]);
         }
 
-        public function log_screen()
-        {
-            echo "<pre>";
-            var_dump(get_current_screen());
-            echo "</pre>";
-        }
-
         /**
          * Create all settings sections.
          */
         public function create_all_settings(): void
         {
-            $this->generate_settings($this->get_general_sections(), self::SETTINGS_GENERAL);
-            $this->generate_settings($this->get_export_defaults_sections(), self::SETTINGS_EXPORT_DEFAULTS);
+            $this->generate_settings($this->get_general_sections(), WCMP_Settings::SETTINGS_GENERAL);
+            $this->generate_settings($this->get_export_defaults_sections(), WCMP_Settings::SETTINGS_EXPORT_DEFAULTS);
 
-            if (WooCommerce_MyParcelBE()->setting_collection->isEnabled("delivery_options_enabled")) {
+            if (WCMP()->setting_collection->isEnabled("delivery_options_enabled")) {
                 $this->generate_settings($this->get_carrier_bpost_sections(), 'bpost', true);
                 $this->generate_settings($this->get_carrier_dpd_sections(), 'dpd', true);
             }
@@ -143,14 +128,14 @@ if (! class_exists('WCMP_Settings_Data')) :
         public static function set_default_settings(string $option, string $optionIdentifier): void
         {
             switch ($option) {
-                case self::SETTINGS_GENERAL:
+                case WCMP_Settings::SETTINGS_GENERAL:
                     $default = self::get_default_general_settings();
                     break;
-                case self::SETTINGS_EXPORT_DEFAULTS:
+                case WCMP_Settings::SETTINGS_EXPORT_DEFAULTS:
                     $default = self::get_default_export_defaults_settings();
                     break;
-                case BpostConsignment::CARRIER_NAME:
-                case DPDConsignment::CARRIER_NAME:
+                case WCMP_Settings::SETTINGS_BPOST:
+                case WCMP_Settings::SETTINGS_DPD:
                     $default = self::get_default_carrier_settings($option);
                     break;
                 default:
@@ -265,7 +250,7 @@ if (! class_exists('WCMP_Settings_Data')) :
         private function get_general_sections()
         {
             return [
-                self::SETTINGS_GENERAL => [
+                WCMP_Settings::SETTINGS_GENERAL => [
                     [
                         "name"     => "api",
                         "label"    => __("API settings", "woocommerce-myparcelbe"),
@@ -293,7 +278,7 @@ if (! class_exists('WCMP_Settings_Data')) :
         private function get_export_defaults_sections()
         {
             return [
-                self::SETTINGS_EXPORT_DEFAULTS => [
+                WCMP_Settings::SETTINGS_EXPORT_DEFAULTS => [
                     [
                         "name"     => "export_defaults",
                         "label"    => __('Default export settings', 'woocommerce-myparcelbe'),
@@ -727,7 +712,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                     "name"          => "shipping_methods_package_types",
                     "label"         => __("Package types", "woocommerce-myparcelbe"),
                     "callback"      => [$this->callbacks, "shipping_methods_package_types"],
-                    "package_types" => WooCommerce_MyParcelBE()->export->get_package_types(),
+                    "package_types" => WCMP()->export->get_package_types(),
                     "description"   => __(
                         "Select one or more shipping methods for each MyParcel BE package type",
                         "woocommerce-myparcelbe"
@@ -810,6 +795,9 @@ if (! class_exists('WCMP_Settings_Data')) :
             return [];
         }
 
+        /**
+         * @return array
+         */
         private static function get_default_strings()
         {
             return [

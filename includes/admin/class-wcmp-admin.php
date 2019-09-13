@@ -53,15 +53,15 @@ class WCMP_Admin
      */
     public function showMyParcelSettings($order): void
     {
-        if (! WooCommerce_MyParcelBE()->export->is_myparcelbe_destination(
+        if (! WCMP()->export->is_myparcelbe_destination(
             WCX_Order::get_prop($order, 'shipping_country')
         )) {
             return;
         }
 
         $order_id         = WCX_Order::get_id($order);
-        $shipment_options = WooCommerce_MyParcelBE()->export->get_options($order);
-        $package_types    = WooCommerce_MyParcelBE()->export->get_package_types();
+        $shipment_options = WCMP()->export->get_options($order);
+        $package_types    = WCMP()->export->get_package_types();
 
         $consignments         = $this->get_order_shipments($order, true);
 
@@ -81,7 +81,7 @@ class WCMP_Admin
                      data-order_id="<?php echo $order_id; ?>"
                      style="display: none;">
                     <img alt="loading"
-                         src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
+                         src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
                          class="wcmp_spinner"/>
                 </div>
             </div>
@@ -112,12 +112,12 @@ class WCMP_Admin
         check_ajax_referer('wc_myparcelbe', 'security');
         extract($_POST); // order_id, shipment_id
         $order    = wc_get_order($order_id);
-        $shipment = WooCommerce_MyParcelBE()->export->get_shipment_data($shipment_id, $order);
+        $shipment = WCMP()->export->get_shipment_data($shipment_id, $order);
         if (! empty($shipment['tracktrace'])) {
             $order_has_shipment = true;
             $tracktrace_url     = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
         }
-        $package_types = WooCommerce_MyParcelBE()->export->get_package_types();
+        $package_types = WCMP()->export->get_package_types();
 
         include('views/html-order-shipment-summary.php');
         die();
@@ -150,7 +150,7 @@ class WCMP_Admin
                 .appendTo('select[name=\'action\'], select[name=\'action2\']');
                 <?php }    ?>
             });
-            </script><img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
+            </script><img src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
                           class="wcmp_bulk_spinner waiting"
                           style="display:none;"/>
             <?php
@@ -172,7 +172,7 @@ class WCMP_Admin
                 <?php _e('Labels to skip', 'woocommerce-myparcelbe'); ?>: <input type="text"
                                                                                  size="2"
                                                                                  class="wc_myparcelbe_offset">
-                <img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>"
+                <img src="<?php echo WCMP()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>"
                      id="wcmyparcelbe-offset-icon"
                      style="vertical-align: middle;">
                 <button class="button" style="display:none; margin-top: 4px"><?php _e(
@@ -206,7 +206,7 @@ class WCMP_Admin
         }
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-        if (! WooCommerce_MyParcelBE()->export->is_myparcelbe_destination($shipping_country)) {
+        if (! WCMP()->export->is_myparcelbe_destination($shipping_country)) {
             return;
         }
 
@@ -218,7 +218,7 @@ class WCMP_Admin
                     admin_url('admin-ajax.php?action=wc_myparcelbe&request=add_shipment&order_ids=' . $order_id),
                     'wc_myparcelbe'
                 ),
-                'img' => WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-up.png',
+                'img' => WCMP()->plugin_url() . '/assets/img/myparcelbe-up.png',
                 'alt' => esc_attr__('Export to MyParcel BE', 'woocommerce-myparcelbe'),
             ],
             'get_labels'   => [
@@ -226,7 +226,7 @@ class WCMP_Admin
                     admin_url('admin-ajax.php?action=wc_myparcelbe&request=get_labels&order_ids=' . $order_id),
                     'wc_myparcelbe'
                 ),
-                'img' => WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-pdf.png',
+                'img' => WCMP()->plugin_url() . '/assets/img/myparcelbe-pdf.png',
                 'alt' => esc_attr__('Print MyParcel BE label', 'woocommerce-myparcelbe'),
             ],
             'add_return'   => [
@@ -234,7 +234,7 @@ class WCMP_Admin
                     admin_url('admin-ajax.php?action=wc_myparcelbe&request=add_return&order_ids=' . $order_id),
                     'wc_myparcelbe'
                 ),
-                'img' => WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/myparcelbe-retour.png',
+                'img' => WCMP()->plugin_url() . '/assets/img/myparcelbe-retour.png',
                 'alt' => esc_attr__('Email return label', 'woocommerce-myparcelbe'),
             ],
         ];
@@ -250,8 +250,8 @@ class WCMP_Admin
             unset($listing_actions['add_return']);
         }
 
-        $target = (WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
-                   && WooCommerce_MyParcelBE()->setting_collection->get('download_display') == 'display')
+        $target = (WCMP()->setting_collection->getByName('download_display')
+                   && WCMP()->setting_collection->get('download_display') == 'display')
             ? 'target="_blank"' : '';
         $nonce  = wp_create_nonce('wc_myparcelbe');
         foreach ($listing_actions as $action => $data) {
@@ -272,7 +272,7 @@ class WCMP_Admin
             <?php
         }
         ?>
-        <img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
+        <img src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
              style="width: 17px; margin: 5px 3px;"
              class="wcmp_spinner waiting"/>
         <?php
@@ -392,7 +392,7 @@ class WCMP_Admin
         $order_id = WCX_Order::get_id($order);
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-        if (! WooCommerce_MyParcelBE()->export->is_myparcelbe_destination($shipping_country)) {
+        if (! WCMP()->export->is_myparcelbe_destination($shipping_country)) {
             return;
         }
 
@@ -421,13 +421,13 @@ class WCMP_Admin
                 <tbody>
                 <?php
                 $action            = 'get_labels';
-                $target            = (WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
-                                      && WooCommerce_MyParcelBE()->setting_collection->getByName('download_display')
+                $target            = (WCMP()->setting_collection->getByName('download_display')
+                                      && WCMP()->setting_collection->getByName('download_display')
                                          == 'display') ? 'target="_blank"' : '';
                 $nonce             = wp_create_nonce('wc_myparcelbe');
                 $label_button_text = esc_attr__('Print MyParcel BE label', 'woocommerce-myparcelbe');
                 foreach ($consignments as $shipment_id => $shipment):
-                    $shipment = WooCommerce_MyParcelBE()->export->get_shipment_data($shipment_id, $order);
+                    $shipment = WCMP()->export->get_shipment_data($shipment_id, $order);
                     $label_url     = wp_nonce_url(
                         admin_url(
                             'admin-ajax.php?action=wc_myparcelbe&request=get_labels&shipment_ids=' . $shipment_id
@@ -443,7 +443,7 @@ class WCMP_Admin
                         );
                     } else {
                         if (isset($shipment['shipment']) && isset($shipment['shipment']['options'])) {
-                            $tracktrace_link = '(' . WooCommerce_MyParcelBE()->export->get_package_name(
+                            $tracktrace_link = '(' . WCMP()->export->get_package_name(
                                     $shipment['shipment']['options']['package_type']
                                 ) . ')';
                         } else {
@@ -466,7 +466,7 @@ class WCMP_Admin
                             );
                             printf(
                                 '<img class="wcmp_button_img" src="%1$s" alt="%2$s" width="16" />',
-                                WooCommerce_MyParcelBE()->plugin_url() . "/assets/img/myparcelbe-pdf.png",
+                                WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png",
                                 $label_button_text
                             );
                             printf("</a>");
@@ -490,7 +490,7 @@ class WCMP_Admin
     public function single_order_shipment_options($order)
     {
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-        if (! WooCommerce_MyParcelBE()->export->is_myparcelbe_destination($shipping_country)) {
+        if (! WCMP()->export->is_myparcelbe_destination($shipping_country)) {
             return;
         }
 
@@ -511,7 +511,7 @@ class WCMP_Admin
     {
         $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
 
-        $deliveryDaysWindow = WooCommerce_MyParcelBE()->setting_collection->getByName(
+        $deliveryDaysWindow = WCMP()->setting_collection->getByName(
             $deliveryOptions->carrier . "_delivery_days_window"
         );
 
@@ -553,7 +553,7 @@ class WCMP_Admin
         // set url for NL or foreign orders
         if ($country == 'BE') {
             // use billing postcode for pickup/pakjegemak
-            if (WooCommerce_MyParcelBE()->export->is_pickup($order)) {
+            if (WCMP()->export->is_pickup($order)) {
                 $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
             }
 
@@ -740,7 +740,7 @@ class WCMP_Admin
             '<img alt="loading"
                  src="%s"
                  class="wcmp_spinner waiting"/>',
-            WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wpspin_light.gif'
+            WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'
         );
     }
 }

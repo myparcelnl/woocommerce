@@ -14,11 +14,16 @@ if (! class_exists('WCMP_Settings')) :
      */
     class WCMP_Settings
     {
+        const SETTINGS_GENERAL         = 'general';
+        const SETTINGS_EXPORT_DEFAULTS = 'export_defaults';
+        const SETTINGS_BPOST           = BpostConsignment::CARRIER_NAME;
+        const SETTINGS_DPD             = DPDConsignment::CARRIER_NAME;
+
         public function __construct()
         {
             add_action('admin_menu', [$this, 'menu']);
             add_filter(
-                'plugin_action_links_' . WooCommerce_MyParcelBE()->plugin_basename,
+                'plugin_action_links_' . WCMP()->plugin_basename,
                 [
                     $this,
                     'add_settings_link',
@@ -77,14 +82,14 @@ if (! class_exists('WCMP_Settings')) :
             $settings_tabs = apply_filters(
                 'wcmp_settings_tabs',
                 [
-                    'general'                      => __('General', 'woocommerce-myparcelbe'),
-                    'export_defaults'              => __('Default export settings', 'woocommerce-myparcelbe'),
-                    BpostConsignment::CARRIER_NAME => __('bpost', 'woocommerce-myparcelbe'),
-                    DPDConsignment::CARRIER_NAME   => __('DPD', 'woocommerce-myparcelbe'),
+                    self::SETTINGS_GENERAL         => __('General', 'woocommerce-myparcelbe'),
+                    self::SETTINGS_EXPORT_DEFAULTS => __('Default export settings', 'woocommerce-myparcelbe'),
+                    self::SETTINGS_BPOST           => __('bpost', 'woocommerce-myparcelbe'),
+                    self::SETTINGS_DPD             => __('DPD', 'woocommerce-myparcelbe'),
                 ]
             );
 
-            $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'general';
+            $active_tab = isset($_GET['tab']) ? $_GET['tab'] : self::SETTINGS_GENERAL;
             ?>
             <div class="wrap">
                 <h1><?php _e('WooCommerce MyParcel BE Settings', 'woocommerce-myparcelbe'); ?></h1>

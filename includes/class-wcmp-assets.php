@@ -55,7 +55,7 @@ class WCMP_Assets
             wp_enqueue_style('thickbox');
             wp_enqueue_script(
                 'wcmyparcelbe-export',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-admin.js',
+                WCMP()->plugin_url() . '/assets/js/wcmp-admin.js',
                 ['jquery', 'thickbox', 'wp-color-picker'],
                 WC_MYPARCEL_BE_VERSION
             );
@@ -65,20 +65,20 @@ class WCMP_Assets
                 [
                     'ajax_url'         => admin_url('admin-ajax.php'),
                     'nonce'            => wp_create_nonce('wc_myparcelbe'),
-                    'download_display' => WooCommerce_MyParcelBE()->setting_collection->getByName(
+                    'download_display' => WCMP()->setting_collection->getByName(
                         'download_display'
-                    ) ? WooCommerce_MyParcelBE()->setting_collection->getByName('download_display') : '',
-                    'offset'           => WooCommerce_MyParcelBE()->setting_collection->getByName(
+                    ) ? WCMP()->setting_collection->getByName('download_display') : '',
+                    'offset'           => WCMP()->setting_collection->getByName(
                         'print_position_offset'
-                    ) ? WooCommerce_MyParcelBE()->setting_collection->getByName('print_position_offset') : '',
-                    'offset_icon'      => WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/print-offset-icon.png',
+                    ) ? WCMP()->setting_collection->getByName('print_position_offset') : '',
+                    'offset_icon'      => WCMP()->plugin_url() . '/assets/img/print-offset-icon.png',
                     'offset_label'     => __('Labels to skip', 'woocommerce-myparcel'),
                 ]
             );
 
             wp_enqueue_style(
                 'wcmp-admin-styles',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
+                WCMP()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
                 [],
                 WC_MYPARCEL_BE_VERSION,
                 'all'
@@ -88,7 +88,7 @@ class WCMP_Assets
             if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
                 wp_enqueue_style(
                     'wcmp-admin-styles-legacy',
-                    WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
+                    WCMP()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
                     [],
                     WC_MYPARCEL_BE_VERSION,
                     'all'

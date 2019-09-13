@@ -35,7 +35,7 @@ class WCMP_BE_Postcode_Fields
 
     public function initialize()
     {
-        if (WooCommerce_MyParcelBE()->setting_collection->isEnabled('use_split_address_fields')) {
+        if (WCMP()->setting_collection->isEnabled('use_split_address_fields')) {
             // Add street name & house number checkout fields.
             if (version_compare(WOOCOMMERCE_VERSION, '2.0') >= 0) {
                 // WC 2.0 or newer is used, the filter got a $country parameter, yay!
@@ -184,12 +184,12 @@ class WCMP_BE_Postcode_Fields
         // Enqueue styles for delivery options
         wp_enqueue_style(
             'be-checkout',
-            WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/be-checkout.css',
+            WCMP()->plugin_url() . '/assets/css/be-checkout.css',
             false,
             WC_MYPARCEL_BE_VERSION
         );
 
-        if (! WooCommerce_MyParcelBE()->setting_collection->isEnabled('use_split_address_fields')) {
+        if (! WCMP()->setting_collection->isEnabled('use_split_address_fields')) {
             return;
         }
 
@@ -197,7 +197,7 @@ class WCMP_BE_Postcode_Fields
             // Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
             wp_register_script(
                 'be-checkout',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/be-checkout.js',
+                WCMP()->plugin_url() . '/assets/js/be-checkout.js',
                 ['jquery', 'wc-checkout'],
                 WC_MYPARCEL_BE_VERSION
             );
@@ -208,7 +208,7 @@ class WCMP_BE_Postcode_Fields
             // Disable regular address fields for BE on account page - Fixed in WC 2.1 but not on init...
             wp_register_script(
                 'be-account-page',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/be-account-page.js',
+                WCMP()->plugin_url() . '/assets/js/be-account-page.js',
                 ['jquery'],
                 WC_MYPARCEL_BE_VERSION
             );
@@ -225,7 +225,7 @@ class WCMP_BE_Postcode_Fields
         if ($post_type == 'shop_order') {
             wp_enqueue_style(
                 'be-checkout-admin',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/be-checkout-admin.css',
+                WCMP()->plugin_url() . '/assets/css/be-checkout-admin.css',
                 [], // deps
                 WC_MYPARCEL_BE_VERSION
             );

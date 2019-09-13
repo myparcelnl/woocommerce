@@ -33,7 +33,7 @@
 <?php if (! isset($skip_save)): ?>
     <div class="wcmp_save_shipment_settings">
         <a class="button save" data-order="<?php echo $order_id; ?>"><?php _e('Save', 'woocommerce-myparcelbe') ?></a>
-        <img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
+        <img src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
              class="wcmp_spinner waiting"/>
     </div>
 <?php endif ?>
