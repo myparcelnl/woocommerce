@@ -58,14 +58,15 @@ class WCMP_Settings
     const SETTING_CARRIER_CUTOFF_TIME          = "cutoff_time";
     const SETTING_CARRIER_DELIVERY_DAYS_WINDOW = "delivery_days_window";
     const SETTING_CARRIER_DELIVERY_ENABLED     = "delivery_enabled";
-    const SETTING_CARRIER_DROP_OFF_DAYS        = "drop_off_days";
-    const SETTING_CARRIER_DROP_OFF_DELAY       = "drop_off_delay";
-    const SETTING_CARRIER_INSURED              = "insured";
-    const SETTING_CARRIER_PICKUP_ENABLED       = "pickup_enabled";
-    const SETTING_CARRIER_PICKUP_FEE           = "pickup_fee";
-    const SETTING_CARRIER_PICKUP_TITLE         = "pickup_title";
-    const SETTING_CARRIER_SIGNATURE_ENABLED    = "signature_enabled";
-    const SETTING_CARRIER_SIGNATURE_FEE        = "signature_fee";
+    const SETTING_CARRIER_DROP_OFF_DAYS                 = "drop_off_days";
+    const SETTING_CARRIER_DROP_OFF_DELAY                = "drop_off_delay";
+    const SETTING_CARRIER_INSURED                       = "insured";
+    const SETTING_CARRIER_PICKUP_ENABLED                = "pickup_enabled";
+    const SETTING_CARRIER_PICKUP_FEE                    = "pickup_fee";
+    const SETTING_CARRIER_PICKUP_TITLE                  = "pickup_title";
+    const SETTING_CARRIER_SIGNATURE_ENABLED             = "signature_enabled";
+    const SETTING_CARRIER_SIGNATURE_FEE                 = "signature_fee";
+    public const SETTING_SHIPPING_METHODS_PACKAGE_TYPES = "shipping_methods_package_types";
 
     public function __construct()
     {

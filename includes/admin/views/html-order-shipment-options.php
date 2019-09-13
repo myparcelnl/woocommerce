@@ -1,7 +1,5 @@
 <?php
 
-use WPO\WC\MyParcelBE\Entity\DeliveryOptions;
-
 /**
  * @var int   $order_id
  * @var array $package_types
@@ -13,14 +11,10 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-/**
- * @type DeliveryOptions
- */
-$deliveryOptions    = self::getDeliveryOptionsFromOrder($order);
-$packageTypeOptions = [];
-
-foreach ($package_types as $packageType) {
-    array_push($packageTypeOptions, $packageType);
+try {
+    $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+} catch (Exception $e) {
+    exit();
 }
 
 echo '<div class="wcmyparcelbe_change_order">';
@@ -37,12 +31,12 @@ woocommerce_form_field(
         ),
         "type"              => "select",
         "class"             => ["package_type"],
-        "options"           => $packageTypeOptions,
-        "selected"          => $shipment_options["package_type"],
+        "options"           => $package_types,
         "custom_attributes" => [
             "disabled" => $isPackageTypeDisabled ? "disabled" : null,
         ],
-    ]
+    ],
+    $shipment_options["package_type"]
 );
 
 woocommerce_form_field(
@@ -50,14 +44,13 @@ woocommerce_form_field(
     [
         "label"             => _wcmp("Number of labels"),
         "type"              => "number",
-        "value"             => isset($myparcelbe_options_extra['colli_amount'])
-            ? $myparcelbe_options_extra['colli_amount'] : 1,
         "custom_attributes" => [
             "step" => "1",
             "min"  => "1",
             "max"  => "10",
         ],
-    ]
+    ],
+    isset($myparcelbe_options_extra['colli_amount']) ? $myparcelbe_options_extra['colli_amount'] : 1
 );
 
 $option_rows = [
@@ -91,13 +84,14 @@ foreach ($option_rows as $option_name => $option_row) {
             "label"             => $option_row['label'],
             "type"              => isset($option_row['hidden']) ? 'hidden' : 'checkbox',
             "class"             => [isset($option_row['class']) ? $option_row['class'] : ''],
-            "options"           => $packageTypeOptions,
+            "options"           => $package_types,
             "selected"          => $shipment_options["package_type"],
             "custom_attributes" => [
                 "checked"  => $isChecked,
                 "disabled" => isset($option_row['disabled']) ? "disabled" : null,
             ],
-        ]
+        ],
+        $option_row["value"]
     );
 
     echo '</td>';
@@ -109,8 +103,8 @@ foreach ($option_rows as $option_name => $option_row) {
 
 echo '<div class="wcmp_save_shipment_settings">';
 
-echo get_submit_button(
-    _wcmp('Save'),
+submit_button(
+    null,
     null,
     null,
     null,

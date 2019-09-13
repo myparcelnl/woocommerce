@@ -83,7 +83,7 @@ class WCMP_Checkout
             [
                 // Convert true/false to int for JavaScript
                 "isUsingSplitAddressFields" => (int) WCMP()->setting_collection->isEnabled(
-                    "use_split_address_fields"
+                    WCMP_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS
                 ),
             ]
         );
@@ -108,7 +108,7 @@ class WCMP_Checkout
         add_action(
             apply_filters(
                 'wc_wcmp_delivery_options_location',
-                $this->get_delivery_options_location()
+                WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_CHECKOUT_POSITION)
             ),
             [$this, 'output_delivery_options'],
             10
@@ -120,9 +120,7 @@ class WCMP_Checkout
      */
     public function get_delivery_options_shipping_methods()
     {
-        $packageTypes = WCMP()->setting_collection->getByName(
-            "shipping_methods_package_types"
-        );
+        $packageTypes = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
 
         $shipping_methods = [];
 
@@ -139,7 +137,7 @@ class WCMP_Checkout
      */
     public function get_delivery_options_always_display(): bool
     {
-        if (WCMP()->setting_collection->getByName('delivery_options_display') === 'all_methods') {
+        if (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY) === 'all_methods') {
             return true;
         }
 
@@ -221,18 +219,6 @@ class WCMP_Checkout
     }
 
     /**
-     * Get the position where the checkout should be rendered.
-     *
-     * @return string
-     */
-    public function get_delivery_options_location(): string
-    {
-        $setLocation = WCMP()->setting_collection->getByName("checkout_position");
-
-        return $setLocation ?? 'woocommerce_after_checkout_billing_form';
-    }
-
-    /**
      * Get the array of enabled carriers by checking if they have either delivery or pickup enabled.
      *
      * @return array
@@ -243,9 +229,9 @@ class WCMP_Checkout
         $carriers = [];
 
         foreach ([BpostConsignment::CARRIER_NAME, DPDConsignment::CARRIER_NAME] as $carrier) {
-            if ($settings->getByName("{$carrier}_pickup_enabled")
+            if ($settings->getByName("{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED)
                 || $settings->getByName(
-                    "{$carrier}_delivery_enabled"
+                    "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED
                 )) {
                 $carriers[] = $carrier;
             }
