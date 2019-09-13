@@ -19,12 +19,18 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (! class_exists('WooCommerce_MyParcelBE')) :
+if (! class_exists('WCMP')) :
 
-    class WooCommerce_MyParcelBE
+    class WCMP
     {
 
+        /**
+         * Translations domain
+         */
+        const DOMAIN = 'woocommerce-myparcelbe';
+
         public $version = '4.0.0';
+
         public $plugin_basename;
 
         protected static $_instance = null;
@@ -115,7 +121,7 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
          */
         public function translations()
         {
-            $locale = apply_filters('plugin_locale', get_locale(), 'woocommerce-myparcelbe');
+            $locale = apply_filters('plugin_locale', get_locale(), self::DOMAIN);
             $dir    = trailingslashit(WP_LANG_DIR);
 
             /**
@@ -126,11 +132,11 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
              *        - WP_LANG_DIR/plugins/woocommerce-myparcelbe-LOCALE.mo
              */
             load_textdomain(
-                'woocommerce-myparcelbe',
-                $dir . 'woocommerce-myparcelbe/woocommerce-myparcelbe-' . $locale . '.mo'
+                self::DOMAIN,
+                $dir . 'woocommerce-myparcelbe/' . self::DOMAIN . '-' . $locale . '.mo'
             );
-            load_textdomain('woocommerce-myparcelbe', $dir . 'plugins/woocommerce-myparcelbe-' . $locale . '.mo');
-            load_plugin_textdomain('woocommerce-myparcelbe', false, dirname(plugin_basename(__FILE__)) . '/languages');
+            load_textdomain(self::DOMAIN, $dir . 'plugins/' . self::DOMAIN . '-' . $locale . '.mo');
+            load_plugin_textdomain(self::DOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages');
         }
 
         /**
@@ -180,7 +186,7 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
             require_once('includes/class-wcmp-checkout.php');
             $this->admin = require_once('includes/admin/class-wcmp-admin.php');
             require_once('includes/admin/settings/class-wcmp-settings.php');
-            $this->export = require_once('includes/class-wcmp-export.php');
+            $this->export = require_once('includes/admin/class-wcmp-export.php');
             require_once('includes/class-wcmp-be-postcode-fields.php');
         }
 
@@ -229,9 +235,8 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
         public function need_woocommerce()
         {
             $error = sprintf(
-                __(
-                    'WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!',
-                    'woocommerce-myparcelbe'
+                _wcmp(
+                    'WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!'
                 ),
                 '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
                 '</a>'
@@ -248,11 +253,8 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
 
         public function required_php_version()
         {
-            $error         = __(
-                'WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended).',
-                'woocommerce-myparcelbe'
-            );
-            $how_to_update = __('How to update your PHP version', 'woocommerce-myparcelbe');
+            $error         =  _wcmp('WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended).');
+            $how_to_update = _wcmp('How to update your PHP version');
             $message       = sprintf(
                 '<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>',
                 $error,
@@ -300,36 +302,6 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
                 require_once('migration/wcmp-installation-migration-v2-0-0.php');
             }
             // todo: Pre 4.0.0?
-
-            self::create_options();
-        }
-
-        /**
-         * Default options.
-         * Sets up the default options used on the settings page.
-         */
-        private static function create_options()
-        {
-            // Include settings so that we can run through defaults.
-            include_once dirname(__FILE__) . '/includes/admin/class-wcmp-settings.php';
-
-            $settings = wcmp_admin_settings::get_settings_pages();
-
-            foreach ($settings as $section) {
-                if (! method_exists($section, 'get_settings')) {
-                    continue;
-                }
-                $subsections = array_unique(array_merge([''], array_keys($section->get_sections())));
-
-                foreach ($subsections as $subsection) {
-                    foreach ($section->get_settings($subsection) as $value) {
-                        if (isset($value['default']) && isset($value['id'])) {
-                            $autoload = isset($value['autoload']) ? (bool) $value['autoload'] : true;
-                            add_option($value['id'], $value['default'], '', ($autoload ? 'yes' : 'no'));
-                        }
-                    }
-                }
-            }
         }
 
         /**
@@ -399,15 +371,25 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
             }
             // Load settings
             $settings = new SettingsCollection();
-            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_general_settings'), 'general');
-            $settings->setSettingsByType(get_option('woocommerce_myparcelbe_export_defaults_settings'), 'export');
+            function getOption($option)
+            {
+                $option = get_option($option);
+                if (! $option) {
+                    return [];
+                }
+
+                return $option;
+            }
+
+            $settings->setSettingsByType(getOption('woocommerce_myparcelbe_general_settings'), 'general');
+            $settings->setSettingsByType(getOption('woocommerce_myparcelbe_export_defaults_settings'), 'export');
             $settings->setSettingsByType(
-                get_option('woocommerce_myparcelbe_bpost_settings'),
+                getOption('woocommerce_myparcelbe_bpost_settings'),
                 'carrier',
                 BpostConsignment::CARRIER_NAME
             );
             $settings->setSettingsByType(
-                get_option('woocommerce_myparcelbe_dpd_settings'),
+                getOption('woocommerce_myparcelbe_dpd_settings'),
                 'carrier',
                 DPDConsignment::CARRIER_NAME
             );
@@ -424,19 +406,51 @@ if (! class_exists('WooCommerce_MyParcelBE')) :
         {
             return version_compare(PHP_VERSION, $version, '>=');
         }
-    } // class WooCommerce_MyParcelBE
+    }
 
-endif; // class_exists
+endif;
+
+/**
+ * Returns translated string.
+ *
+ * @param $string
+ *
+ * @return string|void
+ */
+function _wcmp($string)
+{
+    return __($string, WCMP::DOMAIN);
+}
+
+/**
+ * Echoes translated string.
+ *
+ * @param $string
+ */
+function _wcmpe($string)
+{
+    _e($string, WCMP::DOMAIN);
+}
 
 /**
  * Returns the main instance of the plugin class to prevent the need to use globals.
  *
- * @return WooCommerce_MyParcelBE
+ * @return WCMP
  * @since  2.0
+ */
+function WCMP()
+{
+    return WCMP::instance();
+}
+
+/**
+ * For PHP < 7.1 support.
+ *
+ * @return WCMP
  */
 function WooCommerce_MyParcelBE()
 {
-    return WooCommerce_MyParcelBE::instance();
+    return WCMP();
 }
 
-WooCommerce_MyParcelBE(); // load plugin
+WCMP(); // load plugin
