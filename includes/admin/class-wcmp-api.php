@@ -259,13 +259,17 @@ class WCMP_Api extends WCMP_Rest
 
     private function get_label_format_url($positions)
     {
+        $labelFormat = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_LABEL_FORMAT);
+        var_dump($labelFormat);
         $generalSettings = WCMP()->setting_collection;
+        var_dump($generalSettings);
+        exit();
 
-        if ($generalSettings['label_format'] == 'A4') {
+        if ($generalSettings[WCMP_Settings::SETTING_LABEL_FORMAT] == 'A4') {
             return 'format=A4&positions=' . $positions;
         }
 
-        if ($generalSettings['label_format'] == 'A6') {
+        if ($generalSettings[WCMP_Settings::SETTING_LABEL_FORMAT] == 'A6') {
             return 'format=A6';
         }
 

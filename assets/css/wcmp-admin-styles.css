@@ -198,12 +198,16 @@ table.tracktrace_status td.wcmp-create-label {
   }
 }
 
+body.woocommerce_page_wcmp_settings input,
+body.woocommerce_page_wcmp_settings select {
+  max-width: 360px;
+}
+
 /*Helpers*/
 .wcmp-display--block {
   display: block;
 }
 
-body.woocommerce_page_wcmp_settings input,
-body.woocommerce_page_wcmp_settings select {
-  max-width: 360px;
+.wcmp-white-space--nowrap {
+  white-space: nowrap;
 }

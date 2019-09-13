@@ -247,8 +247,8 @@ class WCMP_Admin
             unset($listing_actions['add_return']);
         }
 
-        $target = (WCMP()->setting_collection->getByName('download_display')
-                   && WCMP()->setting_collection->get('download_display') == 'display')
+        $target = (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY)
+                   && WCMP()->setting_collection->get(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) == 'display')
             ? 'target="_blank"' : '';
         $nonce  = wp_create_nonce('wc_myparcelbe');
         foreach ($listing_actions as $action => $data) {
@@ -418,8 +418,8 @@ class WCMP_Admin
                 <tbody>
                 <?php
                 $action            = 'get_labels';
-                $target            = (WCMP()->setting_collection->getByName('download_display')
-                                      && WCMP()->setting_collection->getByName('download_display')
+                $target            = (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY)
+                                      && WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY)
                                          == 'display') ? 'target="_blank"' : '';
                 $nonce             = wp_create_nonce('wc_myparcelbe');
                 $label_button_text = esc_attr__('Print MyParcel BE label', 'woocommerce-myparcelbe');

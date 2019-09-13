@@ -1,10 +1,10 @@
 <?php
 
-if (! defined('ABSPATH')) {
+if (! defined("ABSPATH")) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('WCMP_Assets')) {
+if (class_exists("WCMP_Assets")) {
     return new WCMP_Assets();
 }
 
@@ -13,7 +13,7 @@ class WCMP_Assets
 
     function __construct()
     {
-        add_action('admin_enqueue_scripts', [$this, 'backend_scripts_styles']);
+        add_action("admin_enqueue_scripts", [$this, "backend_scripts_styles"]);
     }
 
     /**
@@ -24,74 +24,73 @@ class WCMP_Assets
         global $post_type;
         $screen = get_current_screen();
 
-        if ($post_type === 'shop_order' || (is_object($screen) && strpos($screen->id, 'wcmp') !== false)) {
+        if ($post_type === "shop_order" || (is_object($screen) && strpos($screen->id, "wcmp") !== false)) {
             // WC2.3+ load all WC scripts for shipping_method search!
-            if (version_compare(WOOCOMMERCE_VERSION, '2.3', '>=')) {
-                wp_enqueue_script('woocommerce_admin');
-                wp_enqueue_script('iris');
-                if (! wp_script_is('wc-enhanced-select', 'registered')) {
-                    $suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+            if (version_compare(WOOCOMMERCE_VERSION, "2.3", ">=")) {
+                wp_enqueue_script("woocommerce_admin");
+                wp_enqueue_script("iris");
+                if (! wp_script_is("wc-enhanced-select", "registered")) {
+                    $suffix = defined("SCRIPT_DEBUG") && SCRIPT_DEBUG ? "" : ".min";
                     wp_register_script(
-                        'wc-enhanced-select',
-                        WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js',
-                        ['jquery', version_compare(WC()->version, '3.2.0', '>=') ? 'selectWoo' : 'select2'],
+                        "wc-enhanced-select",
+                        WC()->plugin_url() . "/assets/js/admin/wc-enhanced-select" . $suffix . ".js",
+                        ["jquery", version_compare(WC()->version, "3.2.0", ">=") ? "selectWoo" : "select2"],
                         WC_VERSION
                     );
                 }
-                wp_enqueue_script('wc-enhanced-select');
-                wp_enqueue_script('jquery-ui-sortable');
-                wp_enqueue_script('jquery-ui-autocomplete');
+                wp_enqueue_script("wc-enhanced-select");
+                wp_enqueue_script("jquery-ui-sortable");
+                wp_enqueue_script("jquery-ui-autocomplete");
                 wp_enqueue_style(
-                    'woocommerce_admin_styles',
-                    WC()->plugin_url() . '/assets/css/admin.css',
+                    "woocommerce_admin_styles",
+                    WC()->plugin_url() . "/assets/css/admin.css",
                     [],
                     WC_VERSION
                 );
             }
 
-            // Add the color picker css file
-            wp_enqueue_style('wp-color-picker');
-            wp_enqueue_script('thickbox');
-            wp_enqueue_style('thickbox');
+            wp_enqueue_script("thickbox");
+            wp_enqueue_style("thickbox");
             wp_enqueue_script(
-                'wcmyparcelbe-export',
-                WCMP()->plugin_url() . '/assets/js/wcmp-admin.js',
-                ['jquery', 'thickbox', 'wp-color-picker'],
+                "wcmyparcelbe-export",
+                WCMP()->plugin_url() . "/assets/js/wcmp-admin.js",
+                ["jquery", "thickbox"],
                 WC_MYPARCEL_BE_VERSION
             );
+
             wp_localize_script(
-                'wcmyparcelbe-export',
-                'wc_myparcelbe',
+                "wcmyparcelbe-export",
+                "wc_myparcelbe",
                 [
-                    'ajax_url'         => admin_url('admin-ajax.php'),
-                    'nonce'            => wp_create_nonce('wc_myparcelbe'),
-                    'download_display' => WCMP()->setting_collection->getByName(
-                        'download_display'
-                    ) ? WCMP()->setting_collection->getByName('download_display') : '',
-                    'offset'           => WCMP()->setting_collection->getByName(
-                        'print_position_offset'
-                    ) ? WCMP()->setting_collection->getByName('print_position_offset') : '',
-                    'offset_icon'      => WCMP()->plugin_url() . '/assets/img/print-offset-icon.png',
-                    'offset_label'     => __('Labels to skip', 'woocommerce-myparcel'),
+                    "ajax_url"         => admin_url("admin-ajax.php"),
+                    "nonce"            => wp_create_nonce("wc_myparcelbe"),
+                    "download_display" => WCMP()->setting_collection->getByName(
+                        WCMP_Settings::SETTING_DOWNLOAD_DISPLAY
+                    ),
+                    "offset"           => WCMP()->setting_collection->getByName(
+                        WCMP_Settings::SETTING_PRINT_POSITION_OFFSET
+                    ),
+                    "offset_icon"      => WCMP()->plugin_url() . "/assets/img/print-offset-icon.png",
+                    "offset_label"     => _wcmp("Labels to skip"),
                 ]
             );
 
             wp_enqueue_style(
-                'wcmp-admin-styles',
-                WCMP()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
+                "wcmp-admin-styles",
+                WCMP()->plugin_url() . "/assets/css/wcmp-admin-styles.css",
                 [],
                 WC_MYPARCEL_BE_VERSION,
-                'all'
+                "all"
             );
 
             // Legacy styles (WC 2.1+ introduced MP6 style with larger buttons)
-            if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
+            if (version_compare(WOOCOMMERCE_VERSION, "2.1", "<=")) {
                 wp_enqueue_style(
-                    'wcmp-admin-styles-legacy',
-                    WCMP()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
+                    "wcmp-admin-styles-legacy",
+                    WCMP()->plugin_url() . "/assets/css/wcmp-admin-styles-legacy.css",
                     [],
                     WC_MYPARCEL_BE_VERSION,
-                    'all'
+                    "all"
                 );
             }
         }

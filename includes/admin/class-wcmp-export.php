@@ -499,7 +499,7 @@ class WCMP_Export
                 if (isset($response['body'])) {
                     $this->log("PDF data received");
                     $pdf_data    = $response['body'];
-                    $output_mode = $this->getSetting('download_display') ? $this->getSetting('download_display') : '';
+                    $output_mode = $this->getSetting(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) ? $this->getSetting(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) : '';
                     if ($output_mode == 'display') {
                         $this->stream_pdf($pdf_data, $order_ids);
                     } else {
@@ -593,7 +593,7 @@ class WCMP_Export
      */
     public function init_api()
     {
-        $key = $this->getSetting('api_key');
+        $key = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
         if (! ($key)) {
             return false;
         }

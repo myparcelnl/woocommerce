@@ -17,8 +17,8 @@
                 array(
                     'ajax_url'         => admin_url('admin-ajax.php'),
                     'nonce'            => wp_create_nonce('wc_myparcelbe'),
-                    'download_display' => WCMP()->setting_collection->getByName('download_display')
-                        ? WCMP()->setting_collection->getByName('download_display')
+                    WCMP_Settings::SETTING_DOWNLOAD_DISPLAY => WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY)
+                        ? WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY)
                         : '',
                 )
             );

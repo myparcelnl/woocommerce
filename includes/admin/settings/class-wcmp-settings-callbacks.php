@@ -47,9 +47,9 @@ class WCMP_Settings_Callbacks
     }
 
     /**
-     * @param $args
+     * @param array $args
      */
-    public function shipping_methods_package_types($args)
+    public function shipping_methods_package_types(array $args): void
     {
         include("class-wcmp-settings-callbacks-package-types.php");
 
@@ -72,21 +72,27 @@ class WCMP_Settings_Callbacks
     }
 
     /**
+     * @param array $args
+     */
+    public function renderSection(array $args): void
+    {
+        if (isset($args["description"])) {
+            echo "<p>{$args["description"]}</p>";
+        }
+    }
+
+    /**
      * Output a WooCommerce style form field.
      *
      * @param $args
+     * @param $optionId
      */
-    public function renderField($args)
+    public function renderField(SettingsFieldArguments $args, string $optionId): void
     {
-        $args = new SettingsFieldArguments($args);
-
-        if (isset($args->helpText)) {
-            $this->renderTooltip($args->helpText);
-        }
-
         woocommerce_form_field(
-            "{$args->name}[{$args->id}]",
-            $args->getArguments()
+            "{$optionId}[{$args->id}]",
+            $args->getArguments(),
+            get_option($optionId)[$args->id]
         );
     }
 }

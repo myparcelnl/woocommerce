@@ -51,7 +51,7 @@ class WCMP_Checkout
         }
 
         // Don't load the delivery options scripts if it's disabled
-        if (! WCMP()->setting_collection->isEnabled('delivery_options_enabled')) {
+        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
             return;
         }
 
@@ -170,7 +170,7 @@ class WCMP_Checkout
                 "closed"                => _wcmp('Closed'),
                 "deliveryTitle"         => _wcmp('Standard delivery title'),
                 "headerDeliveryOptions" => strip_tags(
-                    $settings->getStringByName("header_delivery_options_title")
+                    $settings->getStringByName(WCMP_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE)
                 ),
                 "houseNumber"           => _wcmp('House number'),
                 "openingHours"          => _wcmp('Opening hours'),
@@ -179,21 +179,31 @@ class WCMP_Checkout
                 "postcode"              => _wcmp('Postcode'),
                 "retry"                 => _wcmp('Retry'),
                 "wrongHouseNumberCity"  => _wcmp('Postcode/city combination unknown'),
-                "signatureTitle"        => $settings->getStringByName("signature_title"),
+                "signatureTitle"        => $settings->getStringByName(WCMP_Settings::SETTING_SIGNATURE_TITLE),
             ],
         ];
 
         foreach ($carriers as $carrier) {
+            $allowDeliveryOptions = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED;
+            $allowPickupLocations = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED;
+            $allowSignature       = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED;
+            $cutoffTime           = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME;
+            $deliveryDaysWindow   = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW;
+            $dropOffDays          = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS;
+            $dropOffDelay         = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY;
+            $pricePickup          = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_FEE;
+            $priceSignature       = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE;
+
             $myParcelConfig["config"]["carrierSettings"][$carrier] = [
-                "allowDeliveryOptions" => $settings->isEnabled("{$carrier}_delivery_enabled"),
-                "allowPickupLocations" => $settings->isEnabled("{$carrier}_pickup_enabled"),
-                "allowSignature"       => $settings->getBooleanByName("{$carrier}_signature_enabled"),
-                "cutoffTime"           => $settings->getStringByName("{$carrier}_cutoff_time"),
-                "deliveryDaysWindow"   => $settings->getIntegerByName("{$carrier}_delivery_days_window"),
-                "dropOffDays"          => $settings->getByName("{$carrier}_drop_off_days"),
-                "dropOffDelay"         => $settings->getIntegerByName("{$carrier}_drop_off_delay"),
-                "pricePickup"          => $settings->getIntegerByName("{$carrier}_pickup_fee"),
-                "priceSignature"       => $settings->getIntegerByName("{$carrier}_signature_fee"),
+                "allowDeliveryOptions" => $settings->isEnabled($allowDeliveryOptions),
+                "allowPickupLocations" => $settings->isEnabled($allowPickupLocations),
+                "allowSignature"       => $settings->getBooleanByName($allowSignature),
+                "cutoffTime"           => $settings->getStringByName($cutoffTime),
+                "deliveryDaysWindow"   => $settings->getIntegerByName($deliveryDaysWindow),
+                "dropOffDays"          => $settings->getByName($dropOffDays),
+                "dropOffDelay"         => $settings->getIntegerByName($dropOffDelay),
+                "pricePickup"          => $settings->getIntegerByName($pricePickup),
+                "priceSignature"       => $settings->getIntegerByName($priceSignature),
             ];
         }
 

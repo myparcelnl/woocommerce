@@ -45,7 +45,7 @@ class SettingsFieldArguments
     /**
      * @var array
      */
-    public $arguments = [];
+    private $arguments = [];
 
     /**
      * @var array
@@ -54,28 +54,39 @@ class SettingsFieldArguments
         "type"  => "text",
         "class" => [],
     ];
-    private $condition;
 
+    /**
+     * @var string|array
+     */
+    private $condition;
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var mixed
+     */
+    public $value;
+
+    /**
+     * SettingsFieldArguments constructor.
+     *
+     * @param array $args - The setting's arguments.
+     */
     public function __construct(array $args)
     {
         $this->input = $args;
 
-        $this->name = $this->getArgument("name");
-        $this->id   = $this->getArgument("id");
+        $this->name        = $this->getArgument("name");
+        $this->id          = $this->getArgument("id");
+        $this->description = $this->getArgument("description");
 
         $this->setType();
         $this->setCondition();
         $this->setClass();
 
-        $this->setArguments();
-    }
-
-    /**
-     * @param null $class
-     */
-    private function addClass($class): void
-    {
-        array_push($this->class, $class);
+        $this->setArguments($this->input);
     }
 
     private function setType(): void
@@ -86,13 +97,16 @@ class SettingsFieldArguments
             case "toggle" :
                 $type = "select";
 
-                $this->arguments["options"] = [
-                    "1" => "Enabled",
-                    "0" => "Disabled",
-                ];
+                $this->addArgument(
+                    "options",
+                    [
+                        "1" => "Enabled",
+                        "0" => "Disabled",
+                    ]
+                );
                 break;
             case 'select':
-                $this->arguments["options"] = $this->getArgument("options") ?? [];
+                $this->addArgument("options", $this->getArgument("options") ?? []);
                 break;
         }
 
@@ -103,7 +117,9 @@ class SettingsFieldArguments
     {
         $class = $this->getArgument("class");
 
-        $this->class = is_array($class) ? $class : [$class];
+        if ($class) {
+            $this->class = is_array($class) ? $class : [$class];
+        }
     }
 
     private function setCondition()
@@ -170,7 +186,7 @@ class SettingsFieldArguments
             $arguments["class"] = $this->class;
         }
 
-        return array_merge(
+        return array_replace_recursive(
             $arguments,
             $this->arguments
         );
@@ -182,13 +198,14 @@ class SettingsFieldArguments
      */
     private function addArgument(string $key, $value): void
     {
-        $this->arguments[$key] = $value;
+        $this->setArguments([$key => $value]);
     }
 
-    private function setArguments(): void
+    /**
+     * @param array $args
+     */
+    private function setArguments(array $args): void
     {
-        $args = $this->arguments;
-
         $ignoredArguments = [
             "name",
             "id",
@@ -217,6 +234,7 @@ class SettingsFieldArguments
             "default",
             "autofocus",
             "priority",
+            "help_text",
         ];
 
         foreach ($args as $arg => $value) {

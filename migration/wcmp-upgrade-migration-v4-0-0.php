@@ -42,9 +42,11 @@ if (! class_exists('wcmp_installation_migration_v4_0_0')) :
 
         public function setFromDefaultToBpostSettings($bpostSettings, $defaultSettings)
         {
+            $bpost = WCMP_Settings::SETTINGS_BPOST;
+
             $fromDefaultToBpost = [
-                "signature" => "bpost_signature",
-                "insured"   => "insured",
+                "insured"   => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_INSURED,
+                "signature" => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
             ];
 
             foreach ($fromDefaultToBpost as $carrierSettings) {
@@ -68,7 +70,7 @@ if (! class_exists('wcmp_installation_migration_v4_0_0')) :
                 "checkout_position"             => "delivery_options_position",
                 "header_delivery_options_title" => "header_delivery_options_title",
                 "customs_css"                   => "header_delivery_options_title",
-                "myparcelbe_checkout"           => "delivery_options_enabled",
+                "myparcelbe_checkout"           => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
             ];
 
             foreach ($fromCheckoutToGeneral as $generalCarrierSettings) {
@@ -80,18 +82,20 @@ if (! class_exists('wcmp_installation_migration_v4_0_0')) :
 
         public function setFromCheckoutToBpostSettings($bpostSettings, $checkoutSettings)
         {
+            $bpost = WCMP_Settings::SETTINGS_BPOST;
+
             $fromCheckoutToBpost = [
-                'dropoff_days'        => 'bpost_drop_off_days',
-                'cutoff_time'         => 'bpost_cutoff_time',
-                'dropoff_delay'       => 'bpost_drop_off_delay',
-                'deliverydays_window' => 'bpost_delivery_days_window',
-                'signature_enabled'   => 'bpost_signature_enabled',
-                'signature_title'     => 'bpost_signature_title',
-                'signature_fee'       => 'bpost_signature_fee',
-                'delivery_enabled'    => 'bpost_delivery_enabled',
-                'pickup_enabled'      => 'bpost_pickup_enabled',
-                'pickup_title'        => 'bpost_pickup_title',
-                'pickup_fee'          => 'bpost_pickup_fee',
+                "dropoff_days"        => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
+                "cutoff_time"         => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME,
+                "dropoff_delay"       => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
+                "deliverydays_window" => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+                "signature_enabled"   => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                "signature_title"     => "{$bpost}_" . WCMP_Settings::SETTING_SIGNATURE_TITLE,
+                "signature_fee"       => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE,
+                "delivery_enabled"    => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "pickup_enabled"      => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "pickup_title"        => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_TITLE,
+                "pickup_fee"          => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_FEE,
             ];
 
             foreach ($fromCheckoutToBpost as $singleCarrierSettings => $multiCarrierSettings) {
