@@ -55,8 +55,8 @@ if (! class_exists('WCMP_Settings')) :
         {
             add_submenu_page(
                 'woocommerce',
-                __('MyParcel BE', 'woocommerce-myparcelbe'),
-                __('MyParcel BE', 'woocommerce-myparcelbe'),
+                _wcmp('MyParcel BE'),
+                _wcmp('MyParcel BE'),
                 'manage_woocommerce',
                 'wcmp_settings',
                 [$this, 'settings_page']
@@ -68,10 +68,7 @@ if (! class_exists('WCMP_Settings')) :
          */
         public function add_settings_link($links)
         {
-            $settings_link = '<a href="../../../../../../wp-admin/admin.php?page=wcmp_settings">' . __(
-                    'Settings',
-                    'woocommerce-myparcelbe'
-                ) . '</a>';
+            $settings_link = '<a href="../../../../../../wp-admin/admin.php?page=wcmp_settings">' .  _wcmp('Settings') . '</a>';
             array_push($links, $settings_link);
 
             return $links;
@@ -82,17 +79,17 @@ if (! class_exists('WCMP_Settings')) :
             $settings_tabs = apply_filters(
                 'wcmp_settings_tabs',
                 [
-                    self::SETTINGS_GENERAL         => __('General', 'woocommerce-myparcelbe'),
-                    self::SETTINGS_EXPORT_DEFAULTS => __('Default export settings', 'woocommerce-myparcelbe'),
-                    self::SETTINGS_BPOST           => __('bpost', 'woocommerce-myparcelbe'),
-                    self::SETTINGS_DPD             => __('DPD', 'woocommerce-myparcelbe'),
+                    self::SETTINGS_GENERAL         => _wcmp('General'),
+                    self::SETTINGS_EXPORT_DEFAULTS => _wcmp('Default export settings'),
+                    self::SETTINGS_BPOST           => _wcmp('bpost'),
+                    self::SETTINGS_DPD             => _wcmp('DPD'),
                 ]
             );
 
             $active_tab = isset($_GET['tab']) ? $_GET['tab'] : self::SETTINGS_GENERAL;
             ?>
             <div class="wrap">
-                <h1><?php _e('WooCommerce MyParcel BE Settings', 'woocommerce-myparcelbe'); ?></h1>
+                <h1><?php _wcmpe('WooCommerce MyParcel BE Settings'); ?></h1>
                 <h2 class="nav-tab-wrapper">
                     <?php
                     foreach ($settings_tabs as $tab_slug => $tab_title) :
@@ -138,16 +135,13 @@ if (! class_exists('WCMP_Settings')) :
                 $myparcel_nl_link =
                     '<a href="https://wordpress.org/plugins/woocommerce-myparcel/" target="blank">WC MyParcel Netherlands</a>';
                 $text             = sprintf(
-                    __(
-                        'It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium. If you are using MyParcel Netherlands, download the %s plugin instead!',
-                        'woocommerce-myparcelbe'
-                    ),
+                     _wcmp('It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium. If you are using MyParcel Netherlands, download the %s plugin instead!'),
                     $myparcel_nl_link
                 );
                 $dismiss_button   = sprintf(
                     '<a href="%s" style="display:inline-block; margin-top: 10px;">%s</a>',
                     add_query_arg('myparcelbe_hide_be_notice', 'true'),
-                    __('Hide this message', 'woocommerce-myparcelbe')
+                    _wcmp('Hide this message')
                 );
                 printf('<div class="notice notice-warning"><p>%s %s</p></div>', $text, $dismiss_button);
             }

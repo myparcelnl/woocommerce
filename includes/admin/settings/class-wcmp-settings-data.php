@@ -114,7 +114,7 @@ if (! class_exists('WCMP_Settings_Data')) :
          */
         public static function get_default_string($key): string
         {
-            return __(self::get_default_strings()[$key], "woocommerce-myparcelbe");
+            return _wcmp(self::get_default_strings()[$key]);
         }
 
         /**
@@ -163,62 +163,47 @@ if (! class_exists('WCMP_Settings_Data')) :
             return [
                 [
                     "name"  => "delivery_enabled",
-                    "label" => __("Enable bpost delivery", "woocommerce-myparcelbe"),
+                    "label" => _wcmp("Enable bpost delivery"),
                     "type"  => "toggle",
                 ],
                 [
                     "name"        => "drop_off_days",
                     "condition"   => "delivery_enabled",
-                    "label"       => __("Drop-off days", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Drop-off days"),
                     "type"        => "enhanced_select",
                     "options"     => (new WP_Locale())->weekday,
-                    "description" => __(
-                        "Days of the week on which you hand over parcels to bpost",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("Days of the week on which you hand over parcels to bpost"),
                 ],
                 [
                     "name"        => "cutoff_time",
                     "condition"   => "delivery_enabled",
-                    "label"       => __("Cut-off time", "woocommerce-myparcelbe"),
-                    "description" => __(
-                        "Time at which you stop processing orders for the day (format: hh:mm)",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "label"       => _wcmp("Cut-off time"),
+                    "description" =>  _wcmp("Time at which you stop processing orders for the day (format: hh:mm)"),
                 ],
                 [
                     "name"        => "drop_off_delay",
                     "condition"   => "delivery_enabled",
-                    "label"       => __("Drop-off delay", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Drop-off delay"),
                     "type"        => "number",
                     "step"        => 1,
-                    "description" => __(
-                        "Number of days you need to process an order.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("Number of days you need to process an order."),
                 ],
                 [
                     "name"        => "delivery_days_window",
                     "condition"   => "delivery_enabled",
-                    "label"       => __("Delivery days window", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Delivery days window"),
                     "type"        => "toggle",
-                    "description" => __(
-                        "Show the delivery date inside the checkout.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("Show the delivery date inside the checkout."),
                 ],
                 [
                     "name"        => "signature",
                     "condition"   => "delivery_enabled",
-                    "label"       => __("Signature on delivery", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Signature on delivery"),
                     "type"        => "delivery_option_enable",
                     "has_title"   => false,
                     "has_price"   => true,
                     "description" => sprintf(
-                        __(
-                            "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                            "woocommerce-myparcelbe"
-                        )
+                         _wcmp("Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.")
                     ),
                 ],
             ];
@@ -232,14 +217,11 @@ if (! class_exists('WCMP_Settings_Data')) :
             return [
                 [
                     "name"        => "pickup",
-                    "label"       => __("Enable bpost pickup", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Enable bpost pickup"),
                     "type"        => "delivery_option_enable",
                     "has_title"   => false,
                     "has_price"   => true,
-                    "description" => __(
-                        "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."),
                 ],
             ];
         }
@@ -253,22 +235,22 @@ if (! class_exists('WCMP_Settings_Data')) :
                 WCMP_Settings::SETTINGS_GENERAL => [
                     [
                         "name"     => "api",
-                        "label"    => __("API settings", "woocommerce-myparcelbe"),
+                        "label"    => _wcmp("API settings"),
                         "settings" => $this->get_general_section_api(),
                     ],
                     [
                         "name"     => "general",
-                        "label"    => __("General settings", "woocommerce-myparcelbe"),
+                        "label"    => _wcmp("General settings"),
                         "settings" => $this->get_general_section_general(),
                     ],
                     [
                         "name"     => "checkout_options",
-                        "label"    => __("Checkout options", "woocommerce-myparcelbe"),
+                        "label"    => _wcmp("Checkout options"),
                         "settings" => $this->get_general_section_checkout_options(),
                     ],
                     [
                         "name"     => "diagnostics",
-                        "label"    => __("Diagnostic tools", "woocommerce-myparcelbe"),
+                        "label"    => _wcmp("Diagnostic tools"),
                         "settings" => $this->get_general_section_diagnostics(),
                     ],
                 ],
@@ -281,7 +263,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                 WCMP_Settings::SETTINGS_EXPORT_DEFAULTS => [
                     [
                         "name"     => "export_defaults",
-                        "label"    => __('Default export settings', 'woocommerce-myparcelbe'),
+                        "label"    => _wcmp('Default export settings'),
                         "settings" => $this->get_export_defaults_section_defaults(),
                     ],
                 ],
@@ -299,12 +281,12 @@ if (! class_exists('WCMP_Settings_Data')) :
                 BpostConsignment::CARRIER_NAME => [
                     [
                         "name"     => "delivery_options",
-                        "label"    => __("bpost delivery options", "woocommerce-myparcelbe"),
+                        "label"    => _wcmp("bpost delivery options"),
                         "settings" => $this->get_bpost_section_delivery_options(),
                     ],
                     [
                         "name"     => "pickup_options",
-                        "label"    => __("bpost pickup options", "woocommerce-myparcelbe"),
+                        "label"    => _wcmp("bpost pickup options"),
                         "settings" => $this->get_bpost_section_pickup_options(),
                     ],
                 ],
@@ -322,12 +304,12 @@ if (! class_exists('WCMP_Settings_Data')) :
                 DPDConsignment::CARRIER_NAME => [
                     [
                         "name"     => "delivery_options",
-                        "label"    => __("dpd delivery options", "woocommerce-myparcelbe"),
+                        "label"    => _wcmp("dpd delivery options"),
                         "settings" => $this->get_dpd_section_delivery_options(),
                     ],
                     [
                         "name"     => "pickup_options",
-                        "label"    => __("dpd pickup options", "woocommerce-myparcelbe"),
+                        "label"    => _wcmp("dpd pickup options"),
                         "settings" => $this->get_dpd_section_pickup_options(),
                     ],
                 ],
@@ -375,44 +357,32 @@ if (! class_exists('WCMP_Settings_Data')) :
             return [
                 [
                     "name"  => "delivery_enabled",
-                    "label" => __("Enable DPD delivery", "woocommerce-myparcelbe"),
+                    "label" => _wcmp("Enable DPD delivery"),
                     "type"  => "toggle",
                 ],
                 [
                     "name"        => "drop_off_days",
-                    "label"       => __("Drop-off days", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Drop-off days"),
                     "type"        => "enhanced_select",
                     "options"     => (new WP_Locale())->weekday,
-                    "description" => __(
-                        "Days of the week on which you hand over parcels to dpd",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("Days of the week on which you hand over parcels to dpd"),
                 ],
                 [
                     "name"        => "cutoff_time",
-                    "label"       => __("Cut-off time", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Cut-off time"),
                     "placeholder" => "17:00",
-                    "description" => __(
-                        "Time at which you stop processing orders for the day (format: hh:mm)",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("Time at which you stop processing orders for the day (format: hh:mm)"),
                 ],
                 [
                     "name"        => "drop_off_delay",
-                    "label"       => __("Drop-off delay", "woocommerce-myparcelbe"),
-                    "description" => __(
-                        "Number of days you need to process an order.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "label"       => _wcmp("Drop-off delay"),
+                    "description" =>  _wcmp("Number of days you need to process an order."),
                 ],
                 [
                     "name"        => "delivery_days_window",
-                    "label"       => __("Delivery days window", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Delivery days window"),
                     "type"        => "toggle",
-                    "description" => __(
-                        "Show the delivery date inside the checkout.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("Show the delivery date inside the checkout."),
                 ],
             ];
         }
@@ -425,14 +395,11 @@ if (! class_exists('WCMP_Settings_Data')) :
             return [
                 [
                     "name"        => "pickup",
-                    "label"       => __("Enable dpd pickup", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Enable dpd pickup"),
                     "type"        => "delivery_option_enable",
                     "has_title"   => false,
                     "has_price"   => true,
-                    "description" => __(
-                        "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."),
                 ],
             ];
         }
@@ -445,7 +412,7 @@ if (! class_exists('WCMP_Settings_Data')) :
             return [
                 [
                     "name"  => "api_key",
-                    "label" => __("Key", "woocommerce-myparcelbe"),
+                    "label" => _wcmp("Key"),
                 ],
             ];
         }
@@ -458,25 +425,25 @@ if (! class_exists('WCMP_Settings_Data')) :
             return [
                 [
                     "name"    => "download_display",
-                    "label"   => __("Label display", "woocommerce-myparcelbe"),
+                    "label"   => _wcmp("Label display"),
                     "type"    => "select",
                     "options" => [
-                        "download" => __("Download PDF", "woocommerce-myparcelbe"),
-                        "display"  => __("Open the PDF in a new tab", "woocommerce-myparcelbe"),
+                        "download" => _wcmp("Download PDF"),
+                        "display"  => _wcmp("Open the PDF in a new tab"),
                     ],
                 ],
                 [
                     "name"    => "label_format",
-                    "label"   => __("Label format", "woocommerce-myparcelbe"),
+                    "label"   => _wcmp("Label format"),
                     "type"    => "select",
                     "options" => [
-                        "A4" => __("Standard printer (A4)", "woocommerce-myparcelbe"),
-                        "A6" => __("Label Printer (A6)", "woocommerce-myparcelbe"),
+                        "A4" => _wcmp("Standard printer (A4)"),
+                        "A6" => _wcmp("Label Printer (A6)"),
                     ],
                 ],
                 [
                     "name"        => "print_position_offset",
-                    "label"       => __("Ask for print start position", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Ask for print start position"),
                     "condition"   => [
                         "name"         => "label_format",
                         "type"         => "disable",
@@ -484,79 +451,58 @@ if (! class_exists('WCMP_Settings_Data')) :
                         "set_value"    => "0",
                     ],
                     "type"        => "toggle",
-                    "description" => __(
-                        "This option enables you to continue printing where you left off last time",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("This option enables you to continue printing where you left off last time"),
                 ],
                 [
                     "name"        => "email_tracktrace",
-                    "label"       => __("Track & Trace in email", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Track & Trace in email"),
                     "type"        => "toggle",
-                    "description" => __(
-                        "Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel BE backend.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel BE backend."),
                 ],
                 [
                     "name"        => "myaccount_tracktrace",
-                    "label"       => __("Track & Trace in My Account", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Track & Trace in My Account"),
                     "type"        => "toggle",
-                    "description" => __(
-                        "Show Track & Trace trace code and link in My Account.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("Show Track & Trace trace code and link in My Account."),
                 ],
                 [
                     "name"        => "process_directly",
-                    "label"       => __("Process shipments directly", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Process shipments directly"),
                     "type"        => "toggle",
-                    "description" => __(
-                        "When you enable this option, shipments will be directly processed when sent to MyParcel BE.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("When you enable this option, shipments will be directly processed when sent to MyParcel BE."),
                 ],
                 [
                     "name"        => "order_status_automation",
-                    "label"       => __("Order status automation", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Order status automation"),
                     "type"        => "toggle",
-                    "description" => __(
-                        "Automatically set order status to a predefined status after successful MyParcel BE export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("Automatically set order status to a predefined status after successful MyParcel BE export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email."),
                 ],
                 [
                     "name"  => "automatic_order_status",
-                    "label" => __("Automatic order status", "woocommerce-myparcelbe"),
+                    "label" => _wcmp("Automatic order status"),
                     "type"  => "order_status_select",
                     "class" => "automatic_order_status",
                 ],
                 [
                     "name"        => "keep_shipments",
-                    "label"       => __("Keep old shipments", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Keep old shipments"),
                     "type"        => "toggle",
                     "default"     => 0,
-                    "description" => __(
-                        "With this option enabled, data from previous shipments (Track & Trace links) will be kept in the order when you export more than once.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("With this option enabled, data from previous shipments (Track & Trace links) will be kept in the order when you export more than once."),
                 ],
                 [
                     "name"        => "barcode_in_note",
-                    "label"       => __("Place barcode inside note", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Place barcode inside note"),
                     "type"        => "toggle",
                     "class"       => "barcode_in_note",
-                    "description" => __("Place the barcode inside a note of the order", "woocommerce-myparcelbe"),
+                    "description" => _wcmp("Place the barcode inside a note of the order"),
                 ],
                 [
                     "name"        => "barcode_in_note_title",
-                    "label"       => __("Title before the barcode", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Title before the barcode"),
                     "class"       => "barcode_in_note_title",
                     "default"     => "Tracking code:",
-                    "description" => __(
-                        "You can change the text before the barcode inside an note",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("You can change the text before the barcode inside an note"),
                 ],
             ];
         }
@@ -569,55 +515,43 @@ if (! class_exists('WCMP_Settings_Data')) :
             return [
                 [
                     "name"        => "use_split_address_fields",
-                    "label"       => __("MyParcel BE address fields", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("MyParcel BE address fields"),
                     "type"        => "toggle",
                     "class"       => "use_split_address_fields",
-                    "description" => __(
-                        "When enabled the checkout will use the MyParcel BE address fields. This means there will be three separate fields for street name, number and suffix. Want to use the WooCommerce default fields? Leave this option unchecked.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("When enabled the checkout will use the MyParcel BE address fields. This means there will be three separate fields for street name, number and suffix. Want to use the WooCommerce default fields? Leave this option unchecked."),
                 ],
                 [
                     "name"        => "delivery_options_enabled",
-                    "label"       => __("Enable MyParcel BE delivery options", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Enable MyParcel BE delivery options"),
                     "type"        => "toggle",
-                    "description" => __(
-                        "The MyParcel delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("The MyParcel delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery."),
                 ],
                 [
                     "name"        => "header_delivery_options_title",
                     "condition"   => "delivery_options_enabled",
-                    "label"       => __("Delivery options title", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Delivery options title"),
                     "title"       => "Delivery options title",
-                    "description" => __(
-                        "You can place a delivery title above the MyParcel BE options. When there is no title, it will not be visible.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("You can place a delivery title above the MyParcel BE options. When there is no title, it will not be visible."),
                 ],
                 [
                     "name"      => "at_home_delivery",
                     "condition" => "delivery_options_enabled",
-                    "label"     => __("Home delivery title", "woocommerce-myparcelbe"),
+                    "label"     => _wcmp("Home delivery title"),
                     "title"     => "Delivered at home or at work",
                     "current"   => self::get_default_string("at_home_delivery_title"),
                 ],
                 [
                     "name"        => "standard_title",
                     "condition"   => "delivery_options_enabled",
-                    "label"       => __("Standard delivery title", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Standard delivery title"),
                     "title"       => "Standard delivery",
                     "current"     => self::get_default_string("standard_title"),
-                    "description" => __(
-                        "When there is no title, the delivery time will automatically be visible.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("When there is no title, the delivery time will automatically be visible."),
                 ],
                 [
                     "name"      => "signature_title",
                     "condition" => "delivery_options_enabled",
-                    "label"     => __("Signature on delivery", "woocommerce-myparcelbe"),
+                    "label"     => _wcmp("Signature on delivery"),
                     "has_title" => true,
                     "title"     => "Signature on delivery",
                     "current"   => self::get_default_string("signature_title"),
@@ -625,7 +559,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                 [
                     "name"      => "pickup_title",
                     "condition" => "delivery_options_enabled",
-                    "label"     => __("Pickup", "woocommerce-myparcelbe"),
+                    "label"     => _wcmp("Pickup"),
                     "has_title" => true,
                     "title"     => "Pickup",
                     "current"   => self::get_default_string("pickup_title"),
@@ -633,48 +567,30 @@ if (! class_exists('WCMP_Settings_Data')) :
                 [
                     "name"        => "delivery_options_display",
                     "condition"   => "delivery_options_enabled",
-                    "label"       => __("Display for", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Display for"),
                     "type"        => "select",
                     "options"     => [
-                        "selected_methods" => __(
-                            "Shipping methods associated with Parcels",
-                            "woocommerce-myparcelbe"
-                        ),
-                        "all_methods"      => __("All shipping methods", "woocommerce-myparcelbe"),
+                        "selected_methods" =>  _wcmp("Shipping methods associated with Parcels"),
+                        "all_methods"      => _wcmp("All shipping methods"),
                     ],
-                    "description" => __(
-                        "You can link the delivery options to specific shipping methods by adding them to the package types under \"Standard export settings\". The delivery options are not visible at foreign addresses.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("You can link the delivery options to specific shipping methods by adding them to the package types under \"Standard export settings\". The delivery options are not visible at foreign addresses."),
                 ],
                 [
                     "name"        => "checkout_position",
                     "condition"   => "delivery_options_enabled",
-                    "label"       => __("Checkout position", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Checkout position"),
                     "type"        => "select",
                     "options"     => [
-                        "woocommerce_after_checkout_billing_form"  => __(
-                            "Show checkout options after billing details",
-                            "woocommerce-myparcelbe"
-                        ),
-                        "woocommerce_after_checkout_shipping_form" => __(
-                            "Show checkout options after shipping details",
-                            "woocommerce-myparcelbe"
-                        ),
-                        "woocommerce_after_order_notes"            => __(
-                            "Show checkout options after notes",
-                            "woocommerce-myparcelbe"
-                        ),
+                        "woocommerce_after_checkout_billing_form"  =>  _wcmp("Show checkout options after billing details"),
+                        "woocommerce_after_checkout_shipping_form" =>  _wcmp("Show checkout options after shipping details"),
+                        "woocommerce_after_order_notes"            =>  _wcmp("Show checkout options after notes"),
                     ],
-                    "description" => __(
-                        "You can change the place of the checkout options on the checkout page. By default it will be placed after shipping details.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("You can change the place of the checkout options on the checkout page. By default it will be placed after shipping details."),
                 ],
                 [
                     "name"              => "delivery_options_custom_css",
                     "condition"         => "delivery_options_enabled",
-                    "label"             => __("Custom styles", "woocommerce-myparcelbe"),
+                    "label"             => _wcmp("Custom styles"),
                     "type"              => "textarea",
                     "custom_attributes" => [
                         "style" => "font-family: monospace;",
@@ -693,14 +609,11 @@ if (! class_exists('WCMP_Settings_Data')) :
             return [
                 [
                     "name"        => "error_logging",
-                    "label"       => __("Log API communication", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Log API communication"),
                     "type"        => "toggle",
                     "description" => '<a href="' . esc_url_raw(
                             admin_url("admin.php?page=wc-status&tab=logs")
-                        ) . '" target="_blank">' . __(
-                                         "View logs",
-                                         "woocommerce-myparcelbe"
-                                     ) . "</a> (wc-myparcelbe)",
+                        ) . '" target="_blank">' .  _wcmp("View logs") . "</a> (wc-myparcelbe)",
                 ],
             ];
         }
@@ -710,50 +623,35 @@ if (! class_exists('WCMP_Settings_Data')) :
             return [
                 [
                     "name"          => "shipping_methods_package_types",
-                    "label"         => __("Package types", "woocommerce-myparcelbe"),
+                    "label"         => _wcmp("Package types"),
                     "callback"      => [$this->callbacks, "shipping_methods_package_types"],
                     "package_types" => WCMP()->export->get_package_types(),
-                    "description"   => __(
-                        "Select one or more shipping methods for each MyParcel BE package type",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description"   =>  _wcmp("Select one or more shipping methods for each MyParcel BE package type"),
                 ],
                 [
                     "name"        => "connect_email",
-                    "label"       => __("Connect customer email", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Connect customer email"),
                     "type"        => "toggle",
-                    "description" => __(
-                        "When you connect the customer email, MyParcel BE can send a Track & Trace email to this address. In your %sMyParcel BE backend%s you can enable or disable this email and format it in your own style.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("When you connect the customer email, MyParcel BE can send a Track & Trace email to this address. In your %sMyParcel BE backend%s you can enable or disable this email and format it in your own style."),
                     '<a href="https://backoffice.sendmyparcel.be/settings/account" target="_blank">',
                     '</a>',
                 ],
                 [
                     "name"        => "connect_phone",
-                    "label"       => __("Connect customer phone", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Connect customer phone"),
                     "type"        => "toggle",
-                    "description" => __(
-                        "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments."),
                 ],
                 [
                     "name"        => "label_description",
-                    "label"       => __("Label description", "woocommerce-myparcelbe"),
-                    "description" => __(
-                        "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "label"       => _wcmp("Label description"),
+                    "description" =>  _wcmp("When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments."),
                 ],
                 [
                     "name"        => "connect_phone",
-                    "label"       => __("Connect customer phone", "woocommerce-myparcelbe"),
+                    "label"       => _wcmp("Connect customer phone"),
                     "type"        => "toggle",
-                    "description" => __(
-                        "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.",
-                        "woocommerce-myparcelbe"
-                    ),
+                    "description" =>  _wcmp("When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments."),
                 ],
             ];
         }

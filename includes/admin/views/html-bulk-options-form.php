@@ -25,8 +25,8 @@ if (! defined('ABSPATH')) {
         [
             'ajax_url'         => admin_url('admin-ajax.php'),
             'nonce'            => wp_create_nonce('wc_myparcelbe'),
-            'download_display' => WCMP()->setting_collection->getByName('download_display')
-                ? WCMP()->setting_collection->getByName('download_display') : '',
+            'download_display' => WCMP()->setting_collection->getByName('download_display') ? WCMP(
+            )->setting_collection->getByName('download_display') : '',
         ]
     );
 
@@ -67,7 +67,7 @@ $target_url =
     <table class="widefat">
         <thead>
         <tr>
-            <th><?php _e('Export options', 'woocommerce-myparcelbe'); ?></th>
+            <th><?php _wcmpe('Export options'); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -91,10 +91,7 @@ $target_url =
                         <tr>
                             <td colspan="2">
                                 <strong>
-                                    <?php _e(
-                                        'Order',
-                                        'woocommerce-myparcelbe'
-                                    ); ?><?php echo $order->get_order_number(); ?>
+                                    <?php echo _wcmp('Order') . $order->get_order_number(); ?>
                                 </strong>
                             </td>
                         </tr>
@@ -104,8 +101,8 @@ $target_url =
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th><?php _e('Product name', 'woocommerce-myparcelbe'); ?></th>
-                                        <th align="right"><?php _e('Weight (kg)', 'woocommerce-myparcelbe'); ?></th>
+                                        <th><?php _wcmpe('Product name'); ?></th>
+                                        <th align="right"><?php _wcmpe('Weight (kg)'); ?></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -124,7 +121,7 @@ $target_url =
                                     <tfoot>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td><?php _e('Total weight', 'woocommerce-myparcelbe'); ?></td>
+                                        <td><?php _wcmpe('Total weight'); ?></td>
                                         <td align="right"><?php echo wc_format_weight(
                                                 $order->get_meta('_wcmp_order_weight')
                                             ); ?></td>
@@ -137,9 +134,8 @@ $target_url =
                                 if ($shipping_country == 'BE'
                                     && (empty($recipient['street'])
                                         || empty($recipient['number']))) { ?>
-                                <p><span style="color:red"><?php _e(
-                                            'This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcel BE plugin was activated. The address data can still be manually entered in the order screen.',
-                                            'woocommerce-myparcelbe'
+                                <p><span style="color:red"><?php _wcmp(
+                                            'This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcel BE plugin was activated. The address data can still be manually entered in the order screen.'
                                         ); ?></span></p>
                             </td>
                         </tr> <!-- last row -->
@@ -176,14 +172,13 @@ $target_url =
     <div class="wcmp_save_shipment_settings">
         <?php
         if ($dialog == 'shipment') {
-            $button_text = __('Export to MyParcel BE', 'woocommerce-myparcelbe');
+            $button_text = _wcmp('Export to MyParcel BE');
         } else if ($dialog == 'return') {
-            $button_text = __('Send email', 'woocommerce-myparcelbe');
+            $button_text = _wcmp('Send email');
         }
         ?>
         <input type="submit" value="<?php echo $button_text; ?>" class="button save wcmp_export">
-        <img src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
-             class="wcmp_spinner"/>
+        <img src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>" class="wcmp_spinner"/>
     </div>
 </form>
 <script type="text/javascript">

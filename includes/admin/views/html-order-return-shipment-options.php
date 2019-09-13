@@ -6,9 +6,9 @@
 <table class="wcmyparcelbe_settings_table" style="width: auto">
     <tr>
         <td>
-            <?php _e('Shipment type', 'woocommerce-myparcelbe') ?>:<br/> <small class="calculated_weight">
+            <?php _wcmpe('Shipment type') ?>:<br/> <small class="calculated_weight">
                 <?php printf(
-                    __('Calculated weight: %s', 'woocommerce-myparcelbe'),
+                    _wcmp('Calculated weight: %s'),
                     wc_format_weight($order->get_meta('_wcmp_order_weight'))
                 ) ?>
             </small>
@@ -32,7 +32,7 @@
 </table><br>
 <?php if (! isset($skip_save)): ?>
     <div class="wcmp_save_shipment_settings">
-        <a class="button save" data-order="<?php echo $order_id; ?>"><?php _e('Save', 'woocommerce-myparcelbe') ?></a>
+        <a class="button save" data-order="<?php echo $order_id; ?>"><?php _wcmpe('Save') ?></a>
         <img src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
              class="wcmp_spinner waiting"/>
     </div>

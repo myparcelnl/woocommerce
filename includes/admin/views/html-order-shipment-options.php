@@ -30,9 +30,9 @@ $isPackageTypeDisabled = count($package_types) === 1 || $deliveryOptions->isPick
 woocommerce_form_field(
     "myparcelbe_options[$order_id][package_type]",
     [
-        "label"             => __("Shipment type", "woocommerce-myparcelbe"),
+        "label"             => _wcmp("Shipment type"),
         "description"       => sprintf(
-            __("Calculated weight: %s", "woocommerce-myparcelbe"),
+            _wcmp("Calculated weight: %s"),
             wc_format_weight($order->get_meta("_wcmp_order_weight"))
         ),
         "type"              => "select",
@@ -48,7 +48,7 @@ woocommerce_form_field(
 woocommerce_form_field(
     "myparcelbe_options[$order_id][extra_options][colli_amount]",
     [
-        "label"             => __("Number of labels", "woocommerce-myparcelbe"),
+        "label"             => _wcmp("Number of labels"),
         "type"              => "number",
         "value"             => isset($myparcelbe_options_extra['colli_amount'])
             ? $myparcelbe_options_extra['colli_amount'] : 1,
@@ -62,11 +62,11 @@ woocommerce_form_field(
 
 $option_rows = [
     "[signature]" => [
-        "label" => __("Signature on delivery", "woocommerce-myparcelbe"),
+        "label" => _wcmp("Signature on delivery"),
         "value" => isset($shipment_options["signature"]) ? $shipment_options["signature"] : 0,
     ],
     "[insured]"   => [
-        "label" => __("Insured to &euro; 500", "woocommerce-myparcelbe"),
+        "label" => _wcmp("Insured to &euro; 500"),
         "value" => WCMP()->setting_collection->getByName("insured") ? 1 : 0,
         "class" => "insured",
     ],
@@ -110,7 +110,7 @@ foreach ($option_rows as $option_name => $option_row) {
 echo '<div class="wcmp_save_shipment_settings">';
 
 echo get_submit_button(
-    __('Save', 'woocommerce-myparcelbe'),
+    _wcmp('Save'),
     null,
     null,
     null,

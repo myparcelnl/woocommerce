@@ -134,9 +134,9 @@ class WCMP_Admin
     {
         global $post_type;
         $bulk_actions = [
-            'WCMP_Export'       => __('MyParcel BE: Export', 'woocommerce-myparcelbe'),
-            'wcmp_print'        => __('MyParcel BE: Print', 'woocommerce-myparcelbe'),
-            'wcmp_export_print' => __('MyParcel BE: Export & Print', 'woocommerce-myparcelbe'),
+            'WCMP_Export'       => _wcmp('MyParcel BE: Export'),
+            'wcmp_print'        => _wcmp('MyParcel BE: Print'),
+            'wcmp_export_print' => _wcmp('MyParcel BE: Export & Print'),
         ];
 
         if ('shop_order' == $post_type) {
@@ -169,16 +169,13 @@ class WCMP_Admin
         if ('shop_order' == $post_type) {
             ?>
             <div id="wcmyparcelbe_offset_dialog" style="display:none;">
-                <?php _e('Labels to skip', 'woocommerce-myparcelbe'); ?>: <input type="text"
+                <?php _wcmpe('Labels to skip'); ?>: <input type="text"
                                                                                  size="2"
                                                                                  class="wc_myparcelbe_offset">
                 <img src="<?php echo WCMP()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>"
                      id="wcmyparcelbe-offset-icon"
                      style="vertical-align: middle;">
-                <button class="button" style="display:none; margin-top: 4px"><?php _e(
-                        'Print',
-                        'woocommerce-myparcelbe'
-                    ); ?></button>
+                <button class="button" style="display:none; margin-top: 4px"><?php  _wcmpe('Print'); ?></button>
             </div>
             <?php
         }
@@ -368,7 +365,7 @@ class WCMP_Admin
     {
         add_meta_box(
             'myparcelbe',                               //$id
-            __('MyParcelBE', 'woocommerce-myparcelbe'), //$title
+            _wcmp('MyParcelBE'), //$title
             [$this, 'create_box_content'],              //$callback
             'shop_order',                               //$post_type
             'side',                                     //$context
@@ -414,8 +411,8 @@ class WCMP_Admin
                 <thead>
                 <tr>
                     <th>&nbsp;</th>
-                    <th><?php _e('Track & Trace', 'woocommerce-myparcelbe'); ?></th>
-                    <th><?php _e('Status', 'woocommerce-myparcelbe'); ?></th>
+                    <th><?php _wcmpe('Track & Trace'); ?></th>
+                    <th><?php _wcmpe('Status'); ?></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -495,7 +492,7 @@ class WCMP_Admin
         }
 
         echo '<div style="clear: both;"><strong>'
-             . __('MyParcel BE shipment:', 'woocommerce-myparcelbe')
+             . _wcmp('MyParcel BE shipment:')
              . '</strong><br/>';
 
         $this->showMyParcelSettings($order);
@@ -659,7 +656,7 @@ class WCMP_Admin
         $shipments = $this->get_order_shipments($order, true);
 
         if (empty($shipments)) {
-            return __('No label has created yet', 'woocommerce-myparcelbe');
+            return _wcmp('No label has created yet');
         }
 
         foreach ($shipments as $shipment_id => $shipment) {
@@ -700,7 +697,7 @@ class WCMP_Admin
 
         printf(
             "<div class=\"pickup-location\"><strong>%s:</strong> %s<br />%s %s<br />%s %s</div>",
-            __('bpost Pickup', 'woocommerce-myparcelbe'),
+            _wcmp('bpost Pickup'),
             $pickup->location_name,
             $pickup->street,
             $pickup->number,
@@ -721,11 +718,11 @@ class WCMP_Admin
             strtotime($delivery_options->date)
         );
 
-        $time_title = __('Standard delivery', 'woocommerce-myparcelbe');
+        $time_title = _wcmp('Standard delivery');
 
         printf(
             '<div class="delivery-date"><strong>%s: </strong>%s %s</div>',
-            __("Delivery date", "woocommerce-myparcelbe"),
+            _wcmp("Delivery date"),
             $formatted_date,
             $time_title
         );

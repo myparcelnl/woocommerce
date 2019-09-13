@@ -74,10 +74,7 @@ class WCMP_Frontend
 
         $tracktrace_links = WCMP()->admin->get_tracktrace_links($order_id);
         if (! empty($tracktrace_links)) {
-            $email_text = __(
-                'You can track your order with the following bpost Track & Trace code:',
-                'woocommerce-myparcelbe'
-            );
+            $email_text =  _wcmp('You can track your order with the following bpost Track & Trace code:');
             $email_text = apply_filters('wcmyparcelbe_email_text', $email_text, $order);
             ?>
             <p><?php echo $email_text . ' ' . implode(', ', $tracktrace_links); ?></p>
@@ -238,7 +235,7 @@ class WCMP_Frontend
                     switch ($time['price_comment']) {
                         case 'standard':
                             $this->add_fee_signature($delivery_options, 'Signature on delivery');
-                            $fee_name = __('Signature on delivery', 'woocommerce-myparcelbe');
+                            $fee_name = _wcmp('Signature on delivery');
                             break;
                     }
 
@@ -247,7 +244,7 @@ class WCMP_Frontend
                     }
 //                    if (date('w', strtotime($delivery_options['date'])) == 6){
 //                        $fee = WooCommerce_MyParcelBE()->checkout_settings['saturday_cutoff_fee'];
-//                        $fee_name = __('Saturday delivery', 'woocommerce-myparcelbe');
+//                        $fee_name = _wcmp('Saturday delivery');
 //                        $this->add_fee($fee_name, $fee);
 //                    }
                 }
@@ -259,7 +256,7 @@ class WCMP_Frontend
                     case 'retail':
                         if (! empty(WCMP()->checkout_settings['pickup_fee'])) {
                             $fee      = WCMP()->checkout_settings['pickup_fee'];
-                            $fee_name = __('bpost pickup', 'woocommerce-myparcelbe');
+                            $fee_name = _wcmp('bpost pickup');
                         }
                         break;
                 }
@@ -424,7 +421,7 @@ class WCMP_Frontend
         if (isset($post_data[$post_data_value]) && $post_data[$post_data_value] == $delivery_type) {
             if (! empty(WCMP()->checkout_settings[$backend_setting])) {
                 $fee      = WCMP()->checkout_settings[$backend_setting];
-                $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
+                $fee_name = _wcmp($delivery_title);
                 $this->add_fee($fee_name, $fee);
 
                 return true;
@@ -443,7 +440,7 @@ class WCMP_Frontend
         $fee = WCMP()->checkout_settings['signature_fee'];
 
         if (! empty($fee)) {
-            $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
+            $fee_name = _wcmp($delivery_title);
             $this->add_fee($fee_name, $fee);
         }
     }
