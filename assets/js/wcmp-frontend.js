@@ -111,31 +111,17 @@ window.addEventListener('load', function() {
       document.querySelector(this.shipToDifferentAddressField).addEventListener('load', this.addListeners);
       document.querySelector(this.shipToDifferentAddressField).addEventListener('change', this.addListeners);
 
-      document.addEventListener(this.updatedAddressEvent, function(event) {
-        this.setAddress(event.detail);
-      });
+      document.addEventListener(this.updatedAddressEvent, this.onDeliveryOptionsAddressUpdate);
 
-      document.addEventListener(this.updateWooCommerceCheckoutEvent, this.onWooCommerceCheckoutUpdate);
       document.addEventListener(this.updatedDeliveryOptionsEvent, this.onDeliveryOptionsUpdate);
     },
 
     /**
-     * When the checkout is updated trigger the WooCommerce update_checkout event.
+     * When the delivery options are updated trigger the WooCommerce update_checkout event.
      *
      * @param {CustomEvent} event - The update event.
      */
     onDeliveryOptionsUpdate: function(event) {
-      MyParcelFrontend.hiddenDataInput.value = JSON.stringify(event.detail);
-
-      MyParcelFrontend.triggerEvent(MyParcelFrontend.updateWooCommerceCheckoutEvent);
-    },
-
-    /**
-     * When the checkout is updated trigger the WooCommerce update_checkout event.
-     *
-     * @param {CustomEvent} event - The update event.
-     */
-    onWooCommerceCheckoutUpdate: function(event) {
       MyParcelFrontend.hiddenDataInput.value = JSON.stringify(event.detail);
 
       MyParcelFrontend.triggerEvent(MyParcelFrontend.updateWooCommerceCheckoutEvent);
@@ -237,51 +223,6 @@ window.addEventListener('load', function() {
     },
 
     /**
-     * @returns {boolean}
-     */
-    checkCountry: function() {
-      if (MyParcelFrontend.updatedCountry !== false
-        && MyParcelFrontend.updatedCountry !== MyParcelFrontend.selectedCountry
-      ) {
-        this.updateAddress();
-        MyParcelFrontend.triggerEvent(MyParcelFrontend.updateDeliveryOptionsEvent);
-        MyParcelFrontend.selectedCountry = MyParcelFrontend.updatedCountry;
-      }
-
-      if (MyParcelFrontend.selectedCountry !== 'NL' && MyParcelFrontend.selectedCountry !== 'BE') {
-        MyParcelFrontend.hideDeliveryOptions();
-        return false;
-      }
-
-      return true;
-    },
-
-    /**
-     *
-     * @returns {*}
-     */
-    getShippingMethod: function() {
-      var shipping_method;
-      /* check if shipping is user choice or fixed */
-      if (document.querySelector('#order_review .shipping_method').length > 1) {
-        shipping_method = document.querySelector('#order_review .shipping_method:checked').value;
-      } else {
-        shipping_method = document.querySelector('#order_review .shipping_method').value;
-      }
-      return shipping_method;
-    },
-
-    /**
-     * Tell the checkout to hide itself.
-     */
-    hideDeliveryOptions: function() {
-      this.triggerEvent('myparcel_hide_checkout');
-      if (MyParcelFrontend.isUpdated()) {
-        this.triggerEvent(MyParcelFrontend.updateWooCommerceCheckoutEvent);
-      }
-    },
-
-    /**
      * Trigger an event on the document body.
      *
      * @param {String} identifier - Name of the event.
@@ -290,19 +231,6 @@ window.addEventListener('load', function() {
       var event = document.createEvent('HTMLEvents');
       event.initEvent(identifier, true, false);
       document.querySelector('body').dispatchEvent(event);
-    },
-
-    /**
-     * @returns {boolean}
-     */
-    isUpdated: function() {
-      if (MyParcelFrontend.updatedCountry !== MyParcelFrontend.selectedCountry
-        || MyParcelFrontend.forceUpdate === true) {
-        MyParcelFrontend.forceUpdate = false; /* only force once */
-        return true;
-      }
-
-      return false;
     },
 
     /**
@@ -372,6 +300,15 @@ window.addEventListener('load', function() {
       MyParcelFrontend.hiddenDataInput.setAttribute('hidden', true);
       MyParcelFrontend.hiddenDataInput.setAttribute('name', MyParcelDeliveryOptions.hiddenInputName);
       document.querySelector('form[name="checkout"]').appendChild(MyParcelFrontend.hiddenDataInput);
+    },
+
+    /**
+     * When the delivery options module has updated the address, using the "retry" option.
+     *
+     * @param {CustomEvent} event - The event containing the new address.
+     */
+    onDeliveryOptionsAddressUpdate: function(event) {
+      this.setAddress(event.detail);
     },
   };
 
