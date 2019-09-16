@@ -149,45 +149,45 @@ if (! class_exists('WCMP')) :
                 $this->includes = $this->plugin_path() . '/includes_php56';
 
                 // include compatibility classes
-                require_once('includes_php56/compatibility/abstract-wc-data-compatibility.php');
-                require_once('includes_php56/compatibility/class-wc-date-compatibility.php');
-                require_once('includes_php56/compatibility/class-wc-core-compatibility.php');
-                require_once('includes_php56/compatibility/class-wc-order-compatibility.php');
-                require_once('includes_php56/compatibility/class-wc-product-compatibility.php');
+                require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes_php56/compatibility/abstract-wc-data-compatibility.php');
+                require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes_php56/compatibility/class-wc-date-compatibility.php');
+                require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes_php56/compatibility/class-wc-core-compatibility.php');
+                require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes_php56/compatibility/class-wc-order-compatibility.php');
+                require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes_php56/compatibility/class-wc-product-compatibility.php');
 
-                require_once('includes_php56/class-wcmp-assets.php');
-                $this->admin = require_once('includes_php56/class-wcmp-admin.php');
-                require_once('includes_php56/class-wcmp-frontend-settings.php');
-                require_once('includes_php56/class-wcmp-frontend.php');
-                require_once('includes_php56/class-wcmp-settings.php');
-                $this->export = require_once('includes_php56/class-wcmp-export.php');
-                require_once('includes_php56/class-wcmp-bepostcode-fields.php');
+                require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes_php56/class-wcmp-assets.php');
+                $this->admin = require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes_php56/class-wcmp-admin.php');
+                require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes_php56/class-wcmp-frontend-settings.php');
+                require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes_php56/class-wcmp-frontend.php');
+                require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes_php56/class-wcmp-settings.php');
+                $this->export = require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes_php56/class-wcmp-export.php');
+                require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes_php56/class-wcmp-bepostcode-fields.php');
 
                 return;
             }
 
             $this->includes = $this->plugin_path() . '/includes';
             // Use minimum php version 7.1
-            require_once('includes/vendor/autoload.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/vendor/autoload.php');
 
             // include compatibility classes
-            require_once('includes/compatibility/abstract-wc-data-compatibility.php');
-            require_once('includes/compatibility/class-wc-date-compatibility.php');
-            require_once('includes/compatibility/class-wc-core-compatibility.php');
-            require_once('includes/compatibility/class-wc-order-compatibility.php');
-            require_once('includes/compatibility/class-wc-product-compatibility.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/compatibility/abstract-wc-data-compatibility.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/compatibility/class-wc-date-compatibility.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/compatibility/class-wc-core-compatibility.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/compatibility/class-wc-order-compatibility.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/compatibility/class-wc-product-compatibility.php');
 
-            require_once('includes/collections/settings-collection.php');
-            require_once('includes/entities/delivery-options.php');
-            require_once('includes/entities/setting.php');
-            require_once('includes/entities/settings-field-arguments.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/collections/settings-collection.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/entities/delivery-options.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/entities/setting.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/entities/settings-field-arguments.php');
 
-            require_once('includes/class-wcmp-assets.php');
-            require_once('includes/class-wcmp-checkout.php');
-            $this->admin = require_once('includes/admin/class-wcmp-admin.php');
-            require_once('includes/admin/settings/class-wcmp-settings.php');
-            $this->export = require_once('includes/admin/class-wcmp-export.php');
-            require_once('includes/class-wcmp-be-postcode-fields.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/class-wcmp-assets.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/class-wcmp-checkout.php');
+            $this->admin = require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/admin/class-wcmp-admin.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/admin/settings/class-wcmp-settings.php');
+            $this->export = require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/admin/class-wcmp-export.php');
+            require_once(getcwd() . '/../wp-content/plugins/woocommerce-myparcelbe/includes/class-wcmp-be-postcode-fields.php');
         }
 
         /**
