@@ -211,3 +211,7 @@ body.woocommerce_page_wcmp_settings select {
 .wcmp-white-space--nowrap {
   white-space: nowrap;
 }
+
+.woocommerce table.form-table th {
+  width: 280px;
+}

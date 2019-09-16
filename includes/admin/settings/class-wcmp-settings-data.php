@@ -15,6 +15,9 @@ if (! class_exists('WCMP_Settings_Data')) :
      */
     class WCMP_Settings_Data
     {
+        const ENABLED  = "1";
+        const DISABLED = "0";
+
         /**
          * @var WCMP_Settings_Callbacks
          */
@@ -42,18 +45,18 @@ if (! class_exists('WCMP_Settings_Data')) :
                 WCMP_Settings::SETTINGS_EXPORT_DEFAULTS
             );
 
-            if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
-                $this->generate_settings(
-                    $this->get_sections_carrier_bpost(),
-                    WCMP_Settings::SETTINGS_BPOST,
-                    true
-                );
-                $this->generate_settings(
-                    $this->get_sections_carrier_dpd(),
-                    WCMP_Settings::SETTINGS_DPD,
-                    true
-                );
-            }
+//            if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
+            $this->generate_settings(
+                $this->get_sections_carrier_bpost(),
+                WCMP_Settings::SETTINGS_BPOST,
+                true
+            );
+            $this->generate_settings(
+                $this->get_sections_carrier_dpd(),
+                WCMP_Settings::SETTINGS_DPD,
+                true
+            );
+//            }
         }
 
         /**
@@ -66,14 +69,10 @@ if (! class_exists('WCMP_Settings_Data')) :
         private function generate_settings(array $settingsArray, string $optionName, bool $prefix = false): void
         {
             $optionIdentifier = WCMP_Settings::getOptionId($optionName);
+            $defaults         = [];
 
             // Register settings.
             register_setting($optionIdentifier, $optionIdentifier, [$this->callbacks, 'validate']);
-
-            // Create option in wp_options with default settings if the option doesn't exist yet.
-            if (false === get_option($optionIdentifier)) {
-                $this->set_default_settings($optionName, $optionIdentifier);
-            }
 
             foreach ($settingsArray as $name => $array) {
                 foreach ($array as $section) {
@@ -95,12 +94,15 @@ if (! class_exists('WCMP_Settings_Data')) :
 
                         $class = new SettingsFieldArguments($setting);
 
+                        // Add the setting's default value to the defaults array.
+                        $defaults[$setting["id"]] = $class->default;
+
                         $defaultCallback = function () use ($class, $optionIdentifier) {
                             $this->callbacks->renderField($class, $optionIdentifier);
                         };
 
                         $args     = $class->getArguments();
-                        $callback = $args["callback"] ?? $defaultCallback;
+                        $callback = $setting["callback"] ?? $defaultCallback;
 
                         add_settings_field(
                             $setting["id"],
@@ -113,52 +115,20 @@ if (! class_exists('WCMP_Settings_Data')) :
                     }
                 }
             }
-        }
 
-        /**
-         * Get a default string from the translations.
-         *
-         * @param $key
-         *
-         * @return string
-         */
-        private static function get_default_string($key): string
-        {
-            return _wcmp(self::get_default_strings()[$key]);
-        }
-
-        /**
-         * Set default settings.
-         *
-         * @param string $option
-         * @param string $optionIdentifier
-         *
-         * @return void.
-         */
-        private function set_default_settings(string $option, string $optionIdentifier): void
-        {
-            switch ($option) {
-                case WCMP_Settings::SETTINGS_GENERAL:
-                    $default = self::get_defaults_general();
-                    break;
-                case WCMP_Settings::SETTINGS_EXPORT_DEFAULTS:
-                    $default = self::get_defaults_export_defaults();
-                    break;
-                case WCMP_Settings::SETTINGS_BPOST:
-                case WCMP_Settings::SETTINGS_DPD:
-                    $default = self::get_defaults_carrier($option);
-                    break;
-                default:
-                    $default = [];
-                    break;
-            }
-
-            // Add the option if it doesn't exist yet, otherwise update it.
+            // Create option in wp_options with default settings if the option doesn't exist yet.
             if (false === get_option($optionIdentifier)) {
-                add_option($optionIdentifier, $default);
-            } else {
-                update_option($optionIdentifier, $default);
+                add_option($optionIdentifier, $defaults);
             }
+
+            // Merge any missing values into the settings
+            update_option(
+                $optionIdentifier,
+                array_replace_recursive(
+                    $defaults,
+                    get_option($optionIdentifier)
+                )
+            );
         }
 
         /**
@@ -299,7 +269,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                         "name"         => WCMP_Settings::SETTING_LABEL_FORMAT,
                         "type"         => "disable",
                         "parent_value" => "A4",
-                        "set_value"    => "0",
+                        "set_value"    => self::DISABLED,
                     ],
                     "type"      => "toggle",
                     "help_text" => _wcmp("This option enables you to continue printing where you left off last time"),
@@ -336,17 +306,15 @@ if (! class_exists('WCMP_Settings_Data')) :
                 ],
                 [
                     "name"    => WCMP_Settings::SETTING_AUTOMATIC_ORDER_STATUS,
+                    //                    "default" => "", // todo
                     "label"   => _wcmp("Automatic order status"),
                     "type"    => "select",
-                    "options" => [
-
-                    ],
+                    "options" => $this->callbacks->get_order_status_options(),
                 ],
                 [
                     "name"      => WCMP_Settings::SETTING_KEEP_SHIPMENTS,
                     "label"     => _wcmp("Keep old shipments"),
                     "type"      => "toggle",
-                    "default"   => 0,
                     "help_text" => _wcmp(
                         "With this option enabled, data from previous shipments (Track & Trace links) will be kept in the order when you export more than once."
                     ),
@@ -360,7 +328,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                 [
                     "name"      => WCMP_Settings::SETTING_BARCODE_IN_NOTE_TITLE,
                     "label"     => _wcmp("Title before the barcode"),
-                    "default"   => "Tracking code:",
+                    "default"   => "Track & trace code:",
                     "help_text" => _wcmp("You can change the text before the barcode inside an note"),
                 ],
             ];
@@ -398,35 +366,26 @@ if (! class_exists('WCMP_Settings_Data')) :
                     ),
                 ],
                 [
-                    "name"      => WCMP_Settings::SETTING_AT_HOME_DELIVERY,
+                    "name"      => WCMP_Settings::SETTING_DELIVERY_TITLE,
                     "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                     "label"     => _wcmp("Home delivery title"),
                     "title"     => "Delivered at home or at work",
-                    "current"   => self::get_default_string("at_home_delivery_title"),
                 ],
                 [
                     "name"      => WCMP_Settings::SETTING_STANDARD_TITLE,
                     "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                     "label"     => _wcmp("Standard delivery title"),
-                    "title"     => "Standard delivery",
-                    "current"   => self::get_default_string(WCMP_Settings::SETTING_STANDARD_TITLE),
                     "help_text" => _wcmp("When there is no title, the delivery time will automatically be visible."),
                 ],
                 [
                     "name"      => WCMP_Settings::SETTING_SIGNATURE_TITLE,
                     "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                     "label"     => _wcmp("Signature on delivery"),
-                    "has_title" => true,
-                    "title"     => "Signature on delivery",
-                    "current"   => self::get_default_string("signature_title"),
                 ],
                 [
                     "name"      => WCMP_Settings::SETTING_PICKUP_TITLE,
                     "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                     "label"     => _wcmp("Pickup"),
-                    "has_title" => true,
-                    "title"     => "Pickup",
-                    "current"   => self::get_default_string(WCMP_Settings::SETTING_PICKUP_TITLE),
                 ],
                 [
                     "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY,
@@ -446,6 +405,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                     "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                     "label"     => _wcmp("Checkout position"),
                     "type"      => "select",
+                    "default"   => "woocommerce_after_checkout_billing_form",
                     "options"   => [
                         "woocommerce_after_checkout_billing_form"  => _wcmp(
                             "Show checkout options after billing details"
@@ -453,7 +413,9 @@ if (! class_exists('WCMP_Settings_Data')) :
                         "woocommerce_after_checkout_shipping_form" => _wcmp(
                             "Show checkout options after shipping details"
                         ),
-                        "woocommerce_after_order_notes"            => _wcmp("Show checkout options after notes"),
+                        "woocommerce_after_order_notes"            => _wcmp(
+                            "Show checkout options after notes"
+                        ),
                     ],
                     "help_text" => _wcmp(
                         "You can change the place of the checkout options on the checkout page. By default it will be placed after shipping details."
@@ -480,7 +442,7 @@ if (! class_exists('WCMP_Settings_Data')) :
         {
             return [
                 [
-                    "name"      => "error_logging",
+                    "name"      => WCMP_Settings::SETTING_ERROR_LOGGING,
                     "label"     => _wcmp("Log API communication"),
                     "type"      => "toggle",
                     "help_text" => '<a href="' . esc_url_raw(
@@ -539,7 +501,6 @@ if (! class_exists('WCMP_Settings_Data')) :
                     "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                     "label"     => _wcmp("Signature on delivery"),
                     "type"      => "toggle",
-                    "has_title" => false,
                     "has_price" => true,
                     "help_text" => sprintf(
                         _wcmp(
@@ -560,7 +521,6 @@ if (! class_exists('WCMP_Settings_Data')) :
                     "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
                     "label"     => _wcmp("Enable bpost pickup"),
                     "type"      => "toggle",
-                    "has_title" => false,
                     "has_price" => true,
                     "help_text" => _wcmp(
                         "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
@@ -621,7 +581,6 @@ if (! class_exists('WCMP_Settings_Data')) :
                     "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
                     "label"     => _wcmp("Enable dpd pickup"),
                     "type"      => "toggle",
-                    "has_title" => false,
                     "has_price" => true,
                     "help_text" => _wcmp(
                         "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
@@ -637,11 +596,11 @@ if (! class_exists('WCMP_Settings_Data')) :
         {
             return [
                 [
-                    "name"          => "shipping_methods_package_types",
-                    "label"         => _wcmp("Package types"),
-                    "callback"      => [$this->callbacks, "shipping_methods_package_types"],
-                    "package_types" => WCMP()->export->get_package_types(),
-                    "help_text"     => _wcmp("Select one or more shipping methods for each MyParcel BE package type"),
+                    "name"      => "shipping_methods_package_types",
+                    "label"     => _wcmp("Package types"),
+                    "callback"  => [$this->callbacks, "shipping_methods_package_types"],
+                    "options"   => WCMP()->export->get_package_types(),
+                    "help_text" => _wcmp("Select one or more shipping methods for each MyParcel BE package type"),
                 ],
                 [
                     "name"      => "connect_email",
@@ -676,56 +635,6 @@ if (! class_exists('WCMP_Settings_Data')) :
                         "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments."
                     ),
                 ],
-            ];
-        }
-
-        /**
-         * @return array
-         */
-        private static function get_defaults_general(): array
-        {
-            return [
-                WCMP_Settings::SETTING_DOWNLOAD_DISPLAY => "download",
-                WCMP_Settings::SETTING_LABEL_FORMAT     => "A4",
-            ];
-        }
-
-        /**
-         * @return array
-         */
-        private static function get_defaults_export_defaults(): array
-        {
-            return [];
-        }
-
-        /**
-         * Get the defaults for each carrier.
-         *
-         * @param string $carrier
-         *
-         * @return array
-         */
-        private static function get_defaults_carrier(string $carrier): array
-        {
-            return [
-                "{$carrier}_delivery_enabled"     => 1,
-                "{$carrier}_pickup_enabled"       => 0,
-                "{$carrier}_drop_off_days"        => [1, 2, 3, 4, 5],
-                "{$carrier}_drop_off_delay"       => 0,
-                "{$carrier}_delivery_days_window" => 1,
-            ];
-        }
-
-        /**
-         * @return array
-         */
-        private static function get_default_strings()
-        {
-            return [
-                "at_home_delivery_title"              => "Delivered at home or at work",
-                WCMP_Settings::SETTING_STANDARD_TITLE => "Standard delivery",
-                "signature_title"                     => "Signature on delivery",
-                WCMP_Settings::SETTING_PICKUP_TITLE   => "Pickup",
             ];
         }
     }

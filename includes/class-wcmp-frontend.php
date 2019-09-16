@@ -74,7 +74,7 @@ class WCMP_Frontend
 
         $tracktrace_links = WCMP()->admin->get_tracktrace_links($order_id);
         if (! empty($tracktrace_links)) {
-            $email_text =  _wcmp('You can track your order with the following bpost Track & Trace code:');
+            $email_text = _wcmp('You can track your order with the following bpost Track & Trace code:');
             $email_text = apply_filters('wcmyparcelbe_email_text', $email_text, $order);
             ?>
             <p><?php echo $email_text . ' ' . implode(', ', $tracktrace_links); ?></p>
@@ -351,13 +351,13 @@ class WCMP_Frontend
         $package  = current($packages);
 
         $shipping_method = WCMP()->export->get_shipping_method($chosen_method);
+
         if (empty($shipping_method)) {
             return false;
         }
 
         // get shipping classes from package
         $found_shipping_classes = $shipping_method->find_shipping_classes($package);
-        // return print_r( $found_shipping_classes, true );
 
         $highest_class = WCMP()->export->get_shipping_class(
             $shipping_method,

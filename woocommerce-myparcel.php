@@ -253,7 +253,7 @@ if (! class_exists('WCMP')) :
 
         public function required_php_version()
         {
-            $error         =  _wcmp('WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended).');
+            $error         = _wcmp('WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended).');
             $how_to_update = _wcmp('How to update your PHP version');
             $message       = sprintf(
                 '<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>',

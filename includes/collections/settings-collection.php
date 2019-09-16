@@ -108,6 +108,16 @@ class SettingsCollection extends Collection
     /**
      * @param string $name
      *
+     * @return float
+     */
+    public function getFloatByName(string $name): float
+    {
+        return (float) $this->getByName($name) ?? 0;
+    }
+
+    /**
+     * @param string $name
+     *
      * @return string
      */
     public function getStringByName(string $name): string

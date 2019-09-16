@@ -84,8 +84,8 @@ class WCMP_Settings_Callbacks
     /**
      * Output a WooCommerce style form field.
      *
-     * @param $args
-     * @param $optionId
+     * @param SettingsFieldArguments $args
+     * @param string                 $optionId
      */
     public function renderField(SettingsFieldArguments $args, string $optionId): void
     {
@@ -95,6 +95,33 @@ class WCMP_Settings_Callbacks
             get_option($optionId)[$args->id]
         );
     }
+
+    /**
+     * Get the order statuses as options array.
+     *
+     * @return array
+     */
+    public function get_order_status_options(): array
+    {
+        $order_statuses = [];
+
+        if (version_compare(WOOCOMMERCE_VERSION, '2.2', '<')) {
+            $statuses = (array) get_terms('shop_order_status', ['hide_empty' => 0, 'orderby' => 'id']);
+            foreach ($statuses as $status) {
+                $order_statuses[esc_attr($status->slug)] = esc_html__($status->name, 'woocommerce');
+            }
+        } else {
+            $statuses = wc_get_order_statuses();
+            foreach ($statuses as $status_slug => $status) {
+                $status_slug = 'wc-' === substr($status_slug, 0, 3) ? substr($status_slug, 3) : $status_slug;
+
+                $order_statuses[$status_slug] = $status;
+            }
+        }
+
+        return $order_statuses;
+    }
+
 }
 
 return new WCMP_Settings_Callbacks();

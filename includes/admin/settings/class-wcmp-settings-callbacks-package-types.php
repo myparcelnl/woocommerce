@@ -1,7 +1,5 @@
 <?php
 
-use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
-
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
@@ -12,17 +10,25 @@ if (class_exists('WCMP_Settings_Callbacks_Package_Types')) {
 
 class WCMP_Settings_Callbacks_Package_Types
 {
-    public function __construct($args)
+    /**
+     * WCMP_Settings_Callbacks_Package_Types constructor.
+     *
+     * @param array $args
+     */
+    public function __construct(array $args)
     {
-        $this->createPackageTypeSearchBox($args);
+        $this->createPackageTypesSelect($args);
     }
 
     /**
-     * @param $args
+     * @param array $args
      */
-    public function createPackageTypesSelect($args)
+    public function createPackageTypesSelect(array $args): void
     {
-        foreach ($args["package_types"] as $package_type => $package_type_title) {
+        echo "<pre>";
+        print_r($args);
+        echo "</pre>";
+        foreach ($args["options"] as $package_type => $package_type_title) {
             printf('<div class="package_type_title">%s:<div>', $package_type_title);
             $args["package_type"] = $package_type;
             unset($args["description"]);
@@ -30,8 +36,12 @@ class WCMP_Settings_Callbacks_Package_Types
         }
     }
 
-    // Shipping method search callback.
-    public function createPackageTypeSearchBox($args)
+    /**
+     * Shipping method search callback.
+     *
+     * @param array $args
+     */
+    public function createPackageTypeSearchBox(array $args)
     {
         $option = get_option($args["name"]);
 

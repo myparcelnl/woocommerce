@@ -27,29 +27,33 @@ class WCMP_Settings
      * All settings except carrier specific ones.
      */
 
-    const SETTING_API_KEY                       = "api_key";
-    const SETTING_AT_HOME_DELIVERY              = "at_home_delivery";
-    const SETTING_AUTOMATIC_ORDER_STATUS        = "automatic_order_status";
-    const SETTING_BARCODE_IN_NOTE               = "barcode_in_note";
-    const SETTING_BARCODE_IN_NOTE_TITLE         = "barcode_in_note_title";
-    const SETTING_CHECKOUT_POSITION             = "checkout_position";
-    const SETTING_DELIVERY_OPTIONS_CUSTOM_CSS   = "delivery_options_custom_css";
-    const SETTING_DELIVERY_OPTIONS_DISPLAY      = "delivery_options_display";
-    const SETTING_DELIVERY_OPTIONS_ENABLED      = "delivery_options_enabled";
-    const SETTING_DOWNLOAD_DISPLAY              = "download_display";
-    const SETTING_EMAIL_TRACKTRACE              = "email_tracktrace";
-    const SETTING_ERROR_LOGGING                 = "error_logging";
-    const SETTING_HEADER_DELIVERY_OPTIONS_TITLE = "header_delivery_options_title";
-    const SETTING_KEEP_SHIPMENTS                = "keep_shipments";
-    const SETTING_LABEL_FORMAT                  = "label_format";
-    const SETTING_MYACCOUNT_TRACKTRACE          = "myaccount_tracktrace";
-    const SETTING_ORDER_STATUS_AUTOMATION       = "order_status_automation";
-    const SETTING_PICKUP_TITLE                  = "pickup_title";
-    const SETTING_PRINT_POSITION_OFFSET         = "print_position_offset";
-    const SETTING_PROCESS_DIRECTLY              = "process_directly";
-    const SETTING_SIGNATURE_TITLE               = "signature_title";
-    const SETTING_STANDARD_TITLE                = "standard_title";
-    const SETTING_USE_SPLIT_ADDRESS_FIELDS      = "use_split_address_fields";
+    const SETTING_API_KEY                        = "api_key";
+    const SETTING_AUTOMATIC_ORDER_STATUS         = "automatic_order_status";
+    const SETTING_BARCODE_IN_NOTE                = "barcode_in_note";
+    const SETTING_BARCODE_IN_NOTE_TITLE          = "barcode_in_note_title";
+    const SETTING_CHECKOUT_POSITION              = "checkout_position";
+    const SETTING_DELIVERY_OPTIONS_CUSTOM_CSS    = "delivery_options_custom_css";
+    const SETTING_DELIVERY_OPTIONS_DISPLAY       = "delivery_options_display";
+    const SETTING_DELIVERY_OPTIONS_ENABLED       = "delivery_options_enabled";
+    const SETTING_DELIVERY_TITLE                 = "at_home_delivery";
+    const SETTING_DOWNLOAD_DISPLAY               = "download_display";
+    const SETTING_EMAIL_TRACKTRACE               = "email_tracktrace";
+    const SETTING_ERROR_LOGGING                  = "error_logging";
+    const SETTING_HEADER_DELIVERY_OPTIONS_TITLE  = "header_delivery_options_title";
+    const SETTING_KEEP_SHIPMENTS                 = "keep_shipments";
+    const SETTING_LABEL_FORMAT                   = "label_format";
+    const SETTING_MYACCOUNT_TRACKTRACE           = "myaccount_tracktrace";
+    const SETTING_ORDER_STATUS_AUTOMATION        = "order_status_automation";
+    const SETTING_PICKUP_TITLE                   = "pickup_title";
+    const SETTING_PRINT_POSITION_OFFSET          = "print_position_offset";
+    const SETTING_PROCESS_DIRECTLY               = "process_directly";
+    const SETTING_SHIPPING_METHODS_PACKAGE_TYPES = "shipping_methods_package_types";
+    const SETTING_SIGNATURE_TITLE                = "signature_title";
+    const SETTING_STANDARD_TITLE                 = "standard_title";
+    const SETTING_USE_SPLIT_ADDRESS_FIELDS       = "use_split_address_fields";
+
+    const SETTING_SATURDAY_DELIVERY_ENABLED = "saturday_delivery_enabled";
+    const SETTING_SATURDAY_DELIVERY_FEE     = "saturday_delivery_fee";
 
     /*
      * Carrier settings will be prefixed with carrier names.
@@ -58,15 +62,14 @@ class WCMP_Settings
     const SETTING_CARRIER_CUTOFF_TIME          = "cutoff_time";
     const SETTING_CARRIER_DELIVERY_DAYS_WINDOW = "delivery_days_window";
     const SETTING_CARRIER_DELIVERY_ENABLED     = "delivery_enabled";
-    const SETTING_CARRIER_DROP_OFF_DAYS                 = "drop_off_days";
-    const SETTING_CARRIER_DROP_OFF_DELAY                = "drop_off_delay";
-    const SETTING_CARRIER_INSURED                       = "insured";
-    const SETTING_CARRIER_PICKUP_ENABLED                = "pickup_enabled";
-    const SETTING_CARRIER_PICKUP_FEE                    = "pickup_fee";
-    const SETTING_CARRIER_PICKUP_TITLE                  = "pickup_title";
-    const SETTING_CARRIER_SIGNATURE_ENABLED             = "signature_enabled";
-    const SETTING_CARRIER_SIGNATURE_FEE                 = "signature_fee";
-    public const SETTING_SHIPPING_METHODS_PACKAGE_TYPES = "shipping_methods_package_types";
+    const SETTING_CARRIER_DROP_OFF_DAYS        = "drop_off_days";
+    const SETTING_CARRIER_DROP_OFF_DELAY       = "drop_off_delay";
+    const SETTING_CARRIER_INSURED              = "insured";
+    const SETTING_CARRIER_PICKUP_ENABLED       = "pickup_enabled";
+    const SETTING_CARRIER_PICKUP_FEE           = "pickup_fee";
+    const SETTING_CARRIER_PICKUP_TITLE         = "pickup_title";
+    const SETTING_CARRIER_SIGNATURE_ENABLED    = "signature_enabled";
+    const SETTING_CARRIER_SIGNATURE_FEE        = "signature_fee";
 
     public function __construct()
     {
@@ -295,6 +298,9 @@ class WCMP_Settings
                      . $help_tip
                      . '</span></th>';
             }
+
+            // Pass the option id as argument
+            $field["args"]["option_id"] = $page;
 
             echo '<td>';
             call_user_func($field['callback'], $field['args']);

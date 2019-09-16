@@ -70,6 +70,11 @@ class SettingsFieldArguments
     public $value;
 
     /**
+     * @var string
+     */
+    public $default;
+
+    /**
      * SettingsFieldArguments constructor.
      *
      * @param array $args - The setting's arguments.
@@ -83,6 +88,7 @@ class SettingsFieldArguments
         $this->description = $this->getArgument("description");
 
         $this->setType();
+        $this->setDefault();
         $this->setCondition();
         $this->setClass();
 
@@ -100,12 +106,12 @@ class SettingsFieldArguments
                 $this->addArgument(
                     "options",
                     [
-                        "1" => "Enabled",
-                        "0" => "Disabled",
+                        "1" => _wcmp("Enabled"),
+                        "0" => _wcmp("Disabled"),
                     ]
                 );
                 break;
-            case 'select':
+            case "select":
                 $this->addArgument("options", $this->getArgument("options") ?? []);
                 break;
         }
@@ -122,7 +128,10 @@ class SettingsFieldArguments
         }
     }
 
-    private function setCondition()
+    /**
+     * If the setting has a condition array set up the attributes so the JS can use them.
+     */
+    private function setCondition(): void
     {
         $condition = $this->getArgument("condition");
 
@@ -165,7 +174,7 @@ class SettingsFieldArguments
     {
         if (isset($this->input[$name])) {
             return $this->input[$name];
-        } else if (array_key_exists($name, $this->defaults)) {
+        } elseif (array_key_exists($name, $this->defaults)) {
             return $this->defaults[$name];
         } else {
             return null;
@@ -207,34 +216,36 @@ class SettingsFieldArguments
     private function setArguments(array $args): void
     {
         $ignoredArguments = [
-            "name",
-            "id",
+            "callback",
             "class",
-            "type",
-            "label",
             "condition",
+            "default",
+            "id",
+            "label",
+            "name",
+            "option_id",
+            "type",
         ];
 
         $allowedArguments = [
-            "type",
-            "label",
-            "description",
-            "placeholder",
-            "maxlength",
-            "required",
             "autocomplete",
-            "id",
-            "class",
-            "label_class",
-            "input_class",
-            "return",
-            "options",
-            "custom_attributes",
-            "validate",
-            "default",
             "autofocus",
-            "priority",
+            "class",
+            "custom_attributes",
+            "description",
             "help_text",
+            "id",
+            "input_class",
+            "label",
+            "label_class",
+            "maxlength",
+            "options",
+            "placeholder",
+            "priority",
+            "required",
+            "return",
+            "type",
+            "validate",
         ];
 
         foreach ($args as $arg => $value) {
@@ -253,6 +264,33 @@ class SettingsFieldArguments
                 unset($this->arguments[$arg]);
                 $this->arguments["custom_attributes"][$arg] = $value;
             }
+        }
+    }
+
+    /**
+     * Set the default value based on the type.
+     */
+    private function setDefault(): void
+    {
+        if (isset($this->input["default"])) {
+            $this->default = $this->input["default"];
+            return;
+        }
+
+        if (isset($this->input["type"]) && $this->input["type"] === "toggle") {
+            $this->default = "0";
+            return;
+        }
+
+        switch ($this->type) {
+            case "text":
+            case "textarea":
+                $this->default = "";
+                break;
+            case "select":
+                // Set first option as default value.
+                $this->default = array_key_first($this->arguments["options"]);
+                break;
         }
     }
 }

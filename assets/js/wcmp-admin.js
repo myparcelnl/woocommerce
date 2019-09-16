@@ -87,13 +87,9 @@ jQuery(function($) {
     event.preventDefault();
     $form = $(this).next('.wcmp_shipment_options_form');
     if ($form.is(':visible')) {
-      /* disable all input fields again */
-      $form.find(':input').prop('disabled', true);
       /* hide form */
       $form.slideUp();
     } else {
-      /* enable all fields on this form */
-      $form.find(':input').prop('disabled', false);
       /* set init states according to change events */
       $form.find(':input').change();
       /* show form */

@@ -159,7 +159,7 @@ class WCMP_Checkout
             "config"  => [
                 "carriers" => $carriers,
                 "platform" => "belgie",
-                "locale"   => "nl-BE",
+                "locale"   => get_locale(),
                 "currency" => get_woocommerce_currency(),
             ],
             "strings" => [
@@ -182,15 +182,16 @@ class WCMP_Checkout
         ];
 
         foreach ($carriers as $carrier) {
-            $allowDeliveryOptions = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED;
-            $allowPickupLocations = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED;
-            $allowSignature       = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED;
-            $cutoffTime           = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME;
-            $deliveryDaysWindow   = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW;
-            $dropOffDays          = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS;
-            $dropOffDelay         = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY;
-            $pricePickup          = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_FEE;
-            $priceSignature       = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE;
+            $allowDeliveryOptions  = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED;
+            $allowPickupLocations  = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED;
+            $allowSignature        = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED;
+            $cutoffTime            = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME;
+            $deliveryDaysWindow    = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW;
+            $dropOffDays           = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS;
+            $dropOffDelay          = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY;
+            $pricePickup           = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_FEE;
+            $priceSignature        = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE;
+            $priceSaturdayDelivery = "{$carrier}_" . WCMP_Settings::SETTING_SATURDAY_DELIVERY_FEE;
 
             $myParcelConfig["config"]["carrierSettings"][$carrier] = [
                 "allowDeliveryOptions" => $settings->isEnabled($allowDeliveryOptions),
@@ -200,8 +201,10 @@ class WCMP_Checkout
                 "deliveryDaysWindow"   => $settings->getIntegerByName($deliveryDaysWindow),
                 "dropOffDays"          => $settings->getByName($dropOffDays),
                 "dropOffDelay"         => $settings->getIntegerByName($dropOffDelay),
-                "pricePickup"          => $settings->getIntegerByName($pricePickup),
-                "priceSignature"       => $settings->getIntegerByName($priceSignature),
+
+                "pricePickup"           => $settings->getFloatByName($pricePickup),
+                "priceSignature"        => $settings->getFloatByName($priceSignature),
+                "priceSaturdayDelivery" => $settings->getFloatByName($priceSaturdayDelivery),
             ];
         }
 

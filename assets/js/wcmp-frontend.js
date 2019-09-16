@@ -90,9 +90,10 @@ window.addEventListener('load', function() {
      */
     shipToDifferentAddressField: '#ship-to-different-address-checkbox',
 
-    houseNumberField: 'house_number',
     addressField: 'address_1',
+    cityField: 'city',
     countryField: 'country',
+    houseNumberField: 'house_number',
     postcodeField: 'postcode',
 
     updateDeliveryOptionsEvent: 'myparcel_update_delivery_options',
@@ -125,16 +126,6 @@ window.addEventListener('load', function() {
       MyParcelFrontend.hiddenDataInput.value = JSON.stringify(event.detail);
 
       MyParcelFrontend.triggerEvent(MyParcelFrontend.updateWooCommerceCheckoutEvent);
-    },
-
-    /**
-     * Update the #mypa-input with new data.
-     *
-     * @param {Object} content - Content that will be converted to JSON string.
-     */
-    updateInput: function(content) {
-      content = content || '';
-      document.querySelector('#mypa-input').value = JSON.stringify(content);
     },
 
     /**
@@ -240,14 +231,14 @@ window.addEventListener('load', function() {
       var data = JSON.parse(window.MyParcelConfig);
 
       data.address = {
-        cc: MyParcelFrontend.getField('country').value,
-        postalCode: MyParcelFrontend.getField('postcode').value,
+        cc: MyParcelFrontend.getField(MyParcelFrontend.countryField).value,
+        postalCode: MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value,
         number: MyParcelFrontend.getHouseNumber(),
-        city: MyParcelFrontend.getField('city').value,
+        city: MyParcelFrontend.getField(MyParcelFrontend.cityField).value,
       };
 
       window.MyParcelConfig = JSON.stringify(data);
-      MyParcelFrontend.triggerEvent('myparcel_update_checkout');
+      MyParcelFrontend.triggerEvent(MyParcelFrontend.updateDeliveryOptionsEvent);
     },
 
     /**
@@ -257,11 +248,11 @@ window.addEventListener('load', function() {
      */
     setAddress: function(address) {
       if (address.postalCode) {
-        MyParcelFrontend.getField('postcode').value = address.postalCode;
+        MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value = address.postalCode;
       }
 
       if (address.city) {
-        MyParcelFrontend.getField('city').value = address.city;
+        MyParcelFrontend.getField(MyParcelFrontend.cityField).value = address.city;
       }
 
       if (address.number) {
@@ -285,7 +276,7 @@ window.addEventListener('load', function() {
           MyParcelFrontend.getField(MyParcelFrontend.addressField).value = address + number;
         }
       } else {
-        MyParcelFrontend.getField('number').value = number;
+        MyParcelFrontend.getField(MyParcelFrontend.houseNumberField).value = number;
       }
     },
 
