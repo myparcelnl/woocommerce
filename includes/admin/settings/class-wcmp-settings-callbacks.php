@@ -53,11 +53,13 @@ class WCMP_Settings_Callbacks
     {
         include("class-wcmp-settings-callbacks-package-types.php");
 
+        $class = new SettingsFieldArguments($args);
+
         new WCMP_Settings_Callbacks_Package_Types($args);
 
         // Displays option description.
-        if (isset($args["description"])) {
-            $this->renderTooltip($args["description"]);
+        if (isset($args["help_text"])) {
+            $this->renderTooltip($args["help_text"]);
         }
     }
 
@@ -89,11 +91,23 @@ class WCMP_Settings_Callbacks
      */
     public function renderField(SettingsFieldArguments $args, string $optionId): void
     {
+        $arguments = $args->getArguments();
+
+        if (isset($arguments["description"])) {
+            $description = $arguments["description"];
+            unset ($arguments["description"]);
+        }
+
         woocommerce_form_field(
             "{$optionId}[{$args->id}]",
-            $args->getArguments(),
+            $arguments,
             get_option($optionId)[$args->id]
         );
+
+        // Render the description here instead of inside the above function.
+        if (isset($description)) {
+            $this->renderDescription($description);
+        }
     }
 
     /**
@@ -122,6 +136,13 @@ class WCMP_Settings_Callbacks
         return $order_statuses;
     }
 
+    /**
+     * @param $description
+     */
+    private function renderDescription($description)
+    {
+        echo "<p>$description</p>";
+    }
 }
 
 return new WCMP_Settings_Callbacks();

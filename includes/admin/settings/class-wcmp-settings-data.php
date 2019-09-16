@@ -275,7 +275,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                     "help_text" => _wcmp("This option enables you to continue printing where you left off last time"),
                 ],
                 [
-                    "name"      => WCMP_Settings::SETTING_EMAIL_TRACKTRACE,
+                    "name"      => WCMP_Settings::SETTING_EMAIL_TRACK_TRACE,
                     "label"     => _wcmp("Track & Trace in email"),
                     "type"      => "toggle",
                     "help_text" => _wcmp(
@@ -283,7 +283,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                     ),
                 ],
                 [
-                    "name"      => WCMP_Settings::SETTING_MYACCOUNT_TRACKTRACE,
+                    "name"      => WCMP_Settings::SETTING_MY_ACCOUNT_TRACK_TRACE,
                     "label"     => _wcmp("Track & Trace in My Account"),
                     "type"      => "toggle",
                     "help_text" => _wcmp("Show Track & Trace trace code and link in My Account."),
@@ -328,7 +328,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                 [
                     "name"      => WCMP_Settings::SETTING_BARCODE_IN_NOTE_TITLE,
                     "label"     => _wcmp("Title before the barcode"),
-                    "default"   => "Track & trace code:",
+                    "default"   => _wcmp("Track & trace code:"),
                     "help_text" => _wcmp("You can change the text before the barcode inside an note"),
                 ],
             ];
@@ -368,8 +368,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                 [
                     "name"      => WCMP_Settings::SETTING_DELIVERY_TITLE,
                     "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                    "label"     => _wcmp("Home delivery title"),
-                    "title"     => "Delivered at home or at work",
+                    "label"     => _wcmp("Delivery options title"),
                 ],
                 [
                     "name"      => WCMP_Settings::SETTING_STANDARD_TITLE,
@@ -385,7 +384,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                 [
                     "name"      => WCMP_Settings::SETTING_PICKUP_TITLE,
                     "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                    "label"     => _wcmp("Pickup"),
+                    "label"     => _wcmp("Pickup title"),
                 ],
                 [
                     "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY,
@@ -442,10 +441,10 @@ if (! class_exists('WCMP_Settings_Data')) :
         {
             return [
                 [
-                    "name"      => WCMP_Settings::SETTING_ERROR_LOGGING,
-                    "label"     => _wcmp("Log API communication"),
-                    "type"      => "toggle",
-                    "help_text" => '<a href="' . esc_url_raw(
+                    "name"        => WCMP_Settings::SETTING_ERROR_LOGGING,
+                    "label"       => _wcmp("Log API communication"),
+                    "type"        => "toggle",
+                    "description" => '<a href="' . esc_url_raw(
                             admin_url("admin.php?page=wc-status&tab=logs")
                         ) . '" target="_blank">' . _wcmp("View logs") . "</a> (wc-myparcelbe)",
                 ],
@@ -497,7 +496,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                     "help_text" => _wcmp("Show the delivery date inside the checkout."),
                 ],
                 [
-                    "name"      => "signature",
+                    "name"      => WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
                     "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                     "label"     => _wcmp("Signature on delivery"),
                     "type"      => "toggle",
@@ -596,14 +595,15 @@ if (! class_exists('WCMP_Settings_Data')) :
         {
             return [
                 [
-                    "name"      => "shipping_methods_package_types",
+                    "name"      => WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES,
                     "label"     => _wcmp("Package types"),
                     "callback"  => [$this->callbacks, "shipping_methods_package_types"],
+                    "default"   => [],
                     "options"   => WCMP()->export->get_package_types(),
                     "help_text" => _wcmp("Select one or more shipping methods for each MyParcel BE package type"),
                 ],
                 [
-                    "name"      => "connect_email",
+                    "name"      => WCMP_Settings::SETTING_CONNECT_EMAIL,
                     "label"     => _wcmp("Connect customer email"),
                     "type"      => "toggle",
                     "help_text" => _wcmp(
@@ -613,7 +613,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                     '</a>',
                 ],
                 [
-                    "name"      => "connect_phone",
+                    "name"      => WCMP_Settings::SETTING_CONNECT_PHONE,
                     "label"     => _wcmp("Connect customer phone"),
                     "type"      => "toggle",
                     "help_text" => _wcmp(
@@ -621,16 +621,8 @@ if (! class_exists('WCMP_Settings_Data')) :
                     ),
                 ],
                 [
-                    "name"      => "label_description",
+                    "name"      => WCMP_Settings::SETTING_LABEL_DESCRIPTION,
                     "label"     => _wcmp("Label description"),
-                    "help_text" => _wcmp(
-                        "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments."
-                    ),
-                ],
-                [
-                    "name"      => "connect_phone",
-                    "label"     => _wcmp("Connect customer phone"),
-                    "type"      => "toggle",
                     "help_text" => _wcmp(
                         "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments."
                     ),

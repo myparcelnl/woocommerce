@@ -122,6 +122,10 @@ class WCMP_Checkout
     {
         $packageTypes = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
 
+        echo "<pre>";
+        var_dump($packageTypes);
+        echo "</pre>";
+
         $shipping_methods = [];
 
         if (array_key_exists(WCMP_Export::PACKAGE, $packageTypes ?? [])) {
@@ -191,7 +195,7 @@ class WCMP_Checkout
             $dropOffDelay          = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY;
             $pricePickup           = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_FEE;
             $priceSignature        = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE;
-            $priceSaturdayDelivery = "{$carrier}_" . WCMP_Settings::SETTING_SATURDAY_DELIVERY_FEE;
+            $priceSaturdayDelivery = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE;
 
             $myParcelConfig["config"]["carrierSettings"][$carrier] = [
                 "allowDeliveryOptions" => $settings->isEnabled($allowDeliveryOptions),

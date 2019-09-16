@@ -18,8 +18,8 @@ class wcmp_installation_migration_v2_0_0
         $general_settings_keys = [
             'api_key'              => WCMP_Settings::SETTING_API_KEY,
             'download_display'     => WCMP_Settings::SETTING_DOWNLOAD_DISPLAY,
-            'email_tracktrace'     => WCMP_Settings::SETTING_EMAIL_TRACKTRACE,
-            'myaccount_tracktrace' => WCMP_Settings::SETTING_MYACCOUNT_TRACKTRACE,
+            'email_tracktrace'     => WCMP_Settings::SETTING_EMAIL_TRACK_TRACE,
+            'myaccount_tracktrace' => WCMP_Settings::SETTING_MY_ACCOUNT_TRACK_TRACE,
             'process'              => WCMP_Settings::SETTING_PROCESS_DIRECTLY,
             'barcode_in_note'      => WCMP_Settings::SETTING_BARCODE_IN_NOTE,
             'keep_consignments'    => WCMP_Settings::SETTING_KEEP_SHIPMENTS,
