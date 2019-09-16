@@ -92,6 +92,17 @@ if (! class_exists('WCMP_Settings_Data')) :
                     foreach ($section["settings"] as $setting) {
                         $setting["id"] = $prefix ? "{$name}_{$setting["name"]}" : $setting["name"];
 
+                        // Add the prefix to the name in the condition array
+                        if (isset($setting["condition"]) && $prefix) {
+                            if (is_array($setting["condition"])) {
+                                $related = $setting["condition"]["name"];
+                                $setting["condition"]["name"] = "{$name}_{$related}";
+                            } else {
+                                $related = $setting["condition"];
+                                $setting["condition"] = "{$name}_{$related}";
+                            }
+                        }
+
                         $class = new SettingsFieldArguments($setting);
 
                         // Add the setting's default value to the defaults array.
@@ -470,7 +481,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                     "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
                     "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                     "label"     => _wcmp("Drop-off days"),
-                    "type"      => "enhanced_select",
+                    "type"      => "multi_select",
                     "options"   => (new WP_Locale())->weekday,
                     "help_text" => _wcmp("Days of the week on which you hand over parcels to bpost"),
                 ],
@@ -507,6 +518,18 @@ if (! class_exists('WCMP_Settings_Data')) :
                         )
                     ),
                 ],
+                [
+                    "name"      => WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE,
+                    "condition" => [
+                        "name" => WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                        "type" => "child",
+                    ],
+                    "label"     => _wcmp("Fee (optional)"),
+                    "type"      => "currency",
+                    "help_text" => _wcmp(
+                        "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
+                    ),
+                ],
             ];
         }
 
@@ -517,10 +540,18 @@ if (! class_exists('WCMP_Settings_Data')) :
         {
             return [
                 [
-                    "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                    "label"     => _wcmp("Enable bpost pickup"),
-                    "type"      => "toggle",
-                    "has_price" => true,
+                    "name"  => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                    "label" => _wcmp("Enable bpost pickup"),
+                    "type"  => "toggle",
+                ],
+                [
+                    "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_FEE,
+                    "condition" => [
+                        "name" => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                        "type" => "child",
+                    ],
+                    "label"     => _wcmp("Fee (optional)"),
+                    "type"      => "currency",
                     "help_text" => _wcmp(
                         "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
                     ),
@@ -546,7 +577,7 @@ if (! class_exists('WCMP_Settings_Data')) :
                 [
                     "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
                     "label"     => _wcmp("Drop-off days"),
-                    "type"      => "enhanced_select",
+                    "type"      => "multi_select",
                     "options"   => (new WP_Locale())->weekday,
                     "help_text" => _wcmp("Days of the week on which you hand over parcels to dpd"),
                 ],
@@ -581,6 +612,15 @@ if (! class_exists('WCMP_Settings_Data')) :
                     "label"     => _wcmp("Enable dpd pickup"),
                     "type"      => "toggle",
                     "has_price" => true,
+                    "help_text" => _wcmp(
+                        "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
+                    ),
+                ],
+                [
+                    "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_FEE,
+                    "condition" => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                    "label"     => _wcmp("Fee (optional)"),
+                    "type"      => "currency",
                     "help_text" => _wcmp(
                         "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
                     ),

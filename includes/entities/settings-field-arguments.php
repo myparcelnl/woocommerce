@@ -12,15 +12,47 @@ if (class_exists('\\WPO\\WC\\MyParcelbe\\Entity\\SettingsFieldArguments')) {
 
 class SettingsFieldArguments
 {
-    /**
-     * @var array
-     */
-    private $input;
+    public const IGNORED_ARGUMENTS = [
+        "callback",
+        "condition",
+        "default",
+        "id",
+        "label",
+        "name",
+        "option_id",
+        "type",
+    ];
+
+    public const ALLOWED_ARGUMENTS = [
+        "autocomplete",
+        "autofocus",
+        "class",
+        "custom_attributes",
+        "description",
+        "help_text",
+        "id",
+        "input_class",
+        "label",
+        "label_class",
+        "maxlength",
+        "options",
+        "placeholder",
+        "priority",
+        "required",
+        "return",
+        "type",
+        "validate",
+    ];
 
     /**
      * @var array
      */
-    public $class;
+    private $input = [];
+
+    /**
+     * @var array
+     */
+    public $class = [];
 
     /**
      * @var string
@@ -87,10 +119,10 @@ class SettingsFieldArguments
         $this->id          = $this->getArgument("id");
         $this->description = $this->getArgument("description");
 
+        $this->setClass();
         $this->setType();
         $this->setDefault();
         $this->setCondition();
-        $this->setClass();
 
         $this->setArguments($this->input);
     }
@@ -100,6 +132,21 @@ class SettingsFieldArguments
         $type = $this->getArgument("type");
 
         switch ($type) {
+            case "currency":
+                $type = "text";
+                $this->addArgument("placeholder", "0,00");
+                break;
+            case "multi_select":
+                $type = "select";
+                $this->addArgument("multiple", "multiple");
+                $this->pushArgument("input_class", "wc-enhanced-select");
+                $this->addArgument("options", $this->getArgument("options") ?? []);
+
+                if (isset($this->input["placeholder"])) {
+                    $this->addArgument("data-placeholder", $this->getArgument("placeholder"));
+                    unset($this->input["placeholder"]);
+                }
+                break;
             case "toggle" :
                 $type = "select";
 
@@ -182,7 +229,11 @@ class SettingsFieldArguments
     }
 
     /**
+     * Return the arguments formatted for woocommerce_form_field()
+     *
      * @return array
+     *
+     * @see \woocommerce_form_field
      */
     public function getArguments(): array
     {
@@ -195,10 +246,23 @@ class SettingsFieldArguments
             $arguments["class"] = $this->class;
         }
 
-        return array_replace_recursive(
-            $arguments,
-            $this->arguments
-        );
+        foreach ($this->arguments as $arg => $value) {
+            if (in_array($arg, self::IGNORED_ARGUMENTS)) {
+                continue;
+            }
+
+            if (in_array($arg, self::ALLOWED_ARGUMENTS)) {
+                $arguments[$arg] = $value;
+            } else {
+                if (! isset($arguments["custom_attributes"])) {
+                    $arguments["custom_attributes"] = [];
+                }
+
+                $arguments["custom_attributes"][$arg] = $value;
+            }
+        }
+
+        return $arguments;
     }
 
     /**
@@ -211,59 +275,27 @@ class SettingsFieldArguments
     }
 
     /**
+     * To push one or more values to an array type argument.
+     *
+     * @param string $argument
+     * @param string ...$items
+     */
+    private function pushArgument(string $argument, string ...$items): void
+    {
+        if (! isset($this->arguments[$argument])) {
+            $this->arguments[$argument] = [];
+        }
+
+        array_push($this->arguments[$argument], ...$items);
+    }
+
+    /**
      * @param array $args
      */
     private function setArguments(array $args): void
     {
-        $ignoredArguments = [
-            "callback",
-            "class",
-            "condition",
-            "default",
-            "id",
-            "label",
-            "name",
-            "option_id",
-            "type",
-        ];
-
-        $allowedArguments = [
-            "autocomplete",
-            "autofocus",
-            "class",
-            "custom_attributes",
-            "description",
-            "help_text",
-            "id",
-            "input_class",
-            "label",
-            "label_class",
-            "maxlength",
-            "options",
-            "placeholder",
-            "priority",
-            "required",
-            "return",
-            "type",
-            "validate",
-        ];
-
         foreach ($args as $arg => $value) {
-            if (in_array($arg, $ignoredArguments)) {
-                unset($this->arguments[$arg]);
-                continue;
-            }
-
-            if (in_array($arg, $allowedArguments)) {
-                $this->arguments[$arg] = $value;
-            } else {
-                if (! isset($this->arguments["custom_attributes"])) {
-                    $this->arguments["custom_attributes"] = [];
-                }
-
-                unset($this->arguments[$arg]);
-                $this->arguments["custom_attributes"][$arg] = $value;
-            }
+            $this->arguments[$arg] = $value;
         }
     }
 
@@ -289,7 +321,7 @@ class SettingsFieldArguments
                 break;
             case "select":
                 // Set first option as default value.
-                $this->default = array_key_first($this->arguments["options"]);
+                $this->default = $this->arguments["options"][array_keys($this->arguments["options"])[0]];
                 break;
         }
     }
