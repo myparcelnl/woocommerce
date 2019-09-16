@@ -609,7 +609,7 @@ msgstr ""
 
 #: includes/class-wcmp-settings-data.php:720
 #: includes/class-wcmp-checkout.php:176
-msgid "Pickup"
+msgid "Pickup title"
 msgstr ""
 
 #: includes/class-wcmp-settings-data.php:731

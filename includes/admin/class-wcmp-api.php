@@ -242,7 +242,7 @@ class WCMP_API extends WCMP_Rest
     {
         $endpoint = "delivery_options";
 
-        if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_SATURDAY_DELIVERY_ENABLED)) {
+        if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED)) {
             $params["saturday_delivery"] = 1;
         }
 
