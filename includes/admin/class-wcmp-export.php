@@ -615,7 +615,7 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
 
         $consignment
             ->setApiKey($api_key)
-            ->setDeliveryType($delivery_options->mom())
+            ->setDeliveryType($delivery_options->getMoment())
             ->setCountry($recipient['cc'])
             ->setPerson($recipient['person'])
             ->setCompany($recipient['company'])

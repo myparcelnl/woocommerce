@@ -111,6 +111,11 @@ class WCMP_Admin
     {
         check_ajax_referer('wc_myparcelbe', 'security');
         extract($_POST); // order_id, shipment_id
+        /**
+         * @var $order_id
+         * @var $shipment_id
+         */
+
         $order    = wc_get_order($order_id);
         $shipment = WCMP()->export->get_shipment_data($shipment_id, $order);
         if (! empty($shipment['tracktrace'])) {
@@ -325,6 +330,10 @@ class WCMP_Admin
     {
         check_ajax_referer('wc_myparcelbe', 'security');
         extract($_POST);
+        /**
+         * @var $form_data
+         * @var $order_id
+         */
         parse_str($form_data, $form_data);
         $order = WCX::get_order($order_id);
 
@@ -509,7 +518,7 @@ class WCMP_Admin
         $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
 
         $deliveryDaysWindow = WCMP()->setting_collection->getByName(
-            $deliveryOptions->carrier . "_delivery_days_window"
+            $deliveryOptions->getCarrier() . "_delivery_days_window"
         );
 
         echo "<div class=\"delivery-options\">";
@@ -517,14 +526,14 @@ class WCMP_Admin
         /**
          * Show the delivery date if it is present.
          */
-        if ($deliveryOptions->date || $deliveryDaysWindow === 0) {
+        if ($deliveryOptions->getDate() || $deliveryDaysWindow === 0) {
             $this->printDeliveryDate($deliveryOptions);
         }
 
         /**
          * If the order will be sent to a pickup location show its address.
          */
-        if ("pickup" === $deliveryOptions->deliveryType) {
+        if ("pickup" === $deliveryOptions->getDeliveryType()) {
             $this->printPickupLocation($deliveryOptions);
         }
 
@@ -572,6 +581,11 @@ class WCMP_Admin
         return $tracktrace_url;
     }
 
+    /**
+     * @param $order_id
+     *
+     * @return array|bool
+     */
     public function get_tracktrace_links($order_id)
     {
         if ($consignments = $this->get_tracktrace_shipments($order_id)) {
@@ -585,6 +599,11 @@ class WCMP_Admin
         }
     }
 
+    /**
+     * @param $order_id
+     *
+     * @return array|bool|mixed|void
+     */
     public function get_tracktrace_shipments($order_id)
     {
         $order     = WCX::get_order($order_id);
@@ -693,16 +712,16 @@ class WCMP_Admin
      */
     private function printPickupLocation(DeliveryOptions $delivery_options)
     {
-        $pickup = $delivery_options->pickupLocation;
+        $pickup = $delivery_options->getPickupLocation();
 
         printf(
             "<div class=\"pickup-location\"><strong>%s:</strong> %s<br />%s %s<br />%s %s</div>",
             _wcmp('bpost Pickup'),
-            $pickup->location_name,
-            $pickup->street,
-            $pickup->number,
-            $pickup->postal_code,
-            $pickup->city
+            $pickup->getLocationName(),
+            $pickup->getStreet(),
+            $pickup->getNumber(),
+            $pickup->getPostalCode(),
+            $pickup->getCity()
         );
     }
 
@@ -715,7 +734,7 @@ class WCMP_Admin
     {
         $formatted_date = date_i18n(
             apply_filters('wcmyparcelbe_delivery_date_format', wc_date_format()),
-            strtotime($delivery_options->date)
+            strtotime($delivery_options->getDate())
         );
 
         $time_title = _wcmp('Standard delivery');
