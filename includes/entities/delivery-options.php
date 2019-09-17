@@ -67,6 +67,10 @@ class DeliveryOptions
         $this->carrier           = $carrier ?? BpostConsignment::CARRIER_NAME;
 
         if ($this->isPickup()) {
+            echo "<pre>";
+            print_r($delivery_options);
+            echo "</pre>";
+            exit();
             $this->pickupLocation = new PickupLocation($delivery_options["pickupLocation"]);
 
             $this->moment = $delivery_options["pickupMoment"];

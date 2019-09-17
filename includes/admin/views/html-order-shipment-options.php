@@ -7,6 +7,8 @@
  * @var array $myparcelbe_options_extra
  */
 
+use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
+
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
@@ -21,9 +23,18 @@ echo '<div class="wcmyparcelbe_change_order">';
 
 $isPackageTypeDisabled = count($package_types) === 1 || $deliveryOptions->isPickup();
 
-woocommerce_form_field(
-    "myparcelbe_options[$order_id][package_type]",
+$option_rows = [
     [
+        "name"              => "[carrier]",
+        "label"             => _wcmp("Carrier"),
+        "type"              => "select",
+        "custom_attributes" => [
+            "disabled" => true,
+        ],
+        "value"             => $deliveryOptions->getCarrier(),
+    ],
+    [
+        "name"              => "[$order_id][package_type]",
         "label"             => _wcmp("Shipment type"),
         "description"       => sprintf(
             _wcmp("Calculated weight: %s"),
@@ -35,13 +46,10 @@ woocommerce_form_field(
         "custom_attributes" => [
             "disabled" => $isPackageTypeDisabled ? "disabled" : null,
         ],
+        "value"             => $shipment_options["package_type"],
     ],
-    $shipment_options["package_type"]
-);
-
-woocommerce_form_field(
-    "myparcelbe_options[$order_id][extra_options][colli_amount]",
     [
+        "name"              => "[$order_id][extra_options][colli_amount]",
         "label"             => _wcmp("Number of labels"),
         "type"              => "number",
         "custom_attributes" => [
@@ -49,56 +57,49 @@ woocommerce_form_field(
             "min"  => "1",
             "max"  => "10",
         ],
+        "value"             => isset($myparcelbe_options_extra['colli_amount'])
+            ? $myparcelbe_options_extra['colli_amount'] : 1,
     ],
-    isset($myparcelbe_options_extra['colli_amount']) ? $myparcelbe_options_extra['colli_amount'] : 1
-);
-
-$option_rows = [
-    "[signature]" => [
-        "label" => _wcmp("Signature on delivery"),
-        "value" => isset($shipment_options["signature"]) ? $shipment_options["signature"] : 0,
+    [
+        "name"              => "[signature]",
+        "type"              => "toggle",
+        "label"             => _wcmp("Signature on delivery"),
+        "value"             => isset($shipment_options["signature"]) ? $shipment_options["signature"] : 0,
+        "custom_attributes" => [
+            "disabled" => isset($option_row['disabled']) ? "disabled" : null,
+        ],
     ],
-    "[insured]"   => [
-        "label" => _wcmp("Insured to &euro; 500"),
-        "value" => WCMP()->setting_collection->getByName("insured") ? 1 : 0,
-        "class" => "insured",
+    [
+        "name"              => "[insured]",
+        "type"              => "toggle",
+        "label"             => _wcmp("Insured to &euro; 500"),
+        "value"             => WCMP()->setting_collection->getByName("insured") ? 1 : 0,
+        "custom_attributes" => [
+            "disabled" => isset($option_row['disabled']) ? "disabled" : null,
+        ],
     ],
 ];
 
-if (isset($recipient['cc']) && $recipient['cc'] !== 'BE') {
+if (isset($recipient) && isset($recipient['cc']) && $recipient['cc'] !== 'BE') {
     unset($option_rows['[signature]']);
 }
 
-foreach ($option_rows as $option_name => $option_row) {
-    $isChecked = isset($option_row['checked'])
-        ? $option_row['checked']
-        : checked(
-            "1",
-            $option_row['value'],
-            false
-        );
+foreach ($option_rows as $option_row) {
+    $class = new SettingsFieldArguments($option_row);
 
     woocommerce_form_field(
-        "myparcelbe_options[$order_id]$option_name",
-        [
-            "label"             => $option_row['label'],
-            "type"              => isset($option_row['hidden']) ? 'hidden' : 'checkbox',
-            "class"             => [isset($option_row['class']) ? $option_row['class'] : ''],
-            "options"           => $package_types,
-            "selected"          => $shipment_options["package_type"],
-            "custom_attributes" => [
-                "checked"  => $isChecked,
-                "disabled" => isset($option_row['disabled']) ? "disabled" : null,
-            ],
-        ],
-        $option_row["value"]
+        "myparcelbe_options" . $class->name,
+        $class->getArguments(false),
+        $class->value
     );
 
     echo '</td>';
+
     echo '<td class="wcmp_option_cost">';
     if (! empty($option_row['cost'])) {
         echo "+ &euro; {$option_row['cost']}";
     }
+    echo '</td>';
 }
 
 echo '<div class="wcmp_save_shipment_settings">';

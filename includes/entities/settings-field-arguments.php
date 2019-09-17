@@ -23,6 +23,14 @@ class SettingsFieldArguments
         "type",
     ];
 
+    public const ALTERNATIVE_IGNORED_ARGUMENTS = [
+        "callback",
+        "condition",
+        "default",
+        "option_id",
+        "type",
+    ];
+
     public const ALLOWED_ARGUMENTS = [
         "autocomplete",
         "autofocus",
@@ -231,11 +239,12 @@ class SettingsFieldArguments
     /**
      * Return the arguments formatted for woocommerce_form_field()
      *
-     * @return array
+     * @param bool $ignore
      *
+     * @return array
      * @see \woocommerce_form_field
      */
-    public function getArguments(): array
+    public function getArguments(bool $ignore = true): array
     {
         $arguments = [
             "id"   => $this->id,
@@ -247,7 +256,9 @@ class SettingsFieldArguments
         }
 
         foreach ($this->arguments as $arg => $value) {
-            if (in_array($arg, self::IGNORED_ARGUMENTS)) {
+            $array = $ignore ? self::IGNORED_ARGUMENTS : self::ALTERNATIVE_IGNORED_ARGUMENTS;
+
+            if (in_array($arg, $array)) {
                 continue;
             }
 
@@ -321,7 +332,11 @@ class SettingsFieldArguments
                 break;
             case "select":
                 // Set first option as default value.
-                $this->default = $this->arguments["options"][array_keys($this->arguments["options"])[0]];
+                if ($this->arguments["options"]) {
+                    $this->default = $this->arguments["options"][array_keys($this->arguments["options"])[0]];
+                } else {
+                    $this->addArgument("options", []);
+                }
                 break;
         }
     }

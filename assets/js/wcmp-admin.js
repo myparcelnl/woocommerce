@@ -46,7 +46,7 @@ jQuery(function($) {
          * @type {Element} dependant
          */
         deps[relatedInputId].forEach(function(dependant) {
-          handleDependency(relatedInput, dependant);
+          handleDependency(relatedInput, dependant, null);
 
           if (relatedInput.hasAttribute('data-parent')) {
             var otherRelatedInput = document.querySelector('#' + relatedInput.getAttribute('data-parent'));
@@ -67,7 +67,7 @@ jQuery(function($) {
   /**
    * @param {Element} relatedInput - Parent of element.
    * @param {Element} element  - Element that will be handled.
-   * @param {Element} element2 - Optional extra dependency of element.
+   * @param {Element|null} element2 - Optional extra dependency of element.
    */
   function handleDependency(relatedInput, element, element2) {
     var easing = 300;
