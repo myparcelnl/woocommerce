@@ -134,7 +134,9 @@ window.addEventListener('load', function() {
      * @returns {string}
      */
     getSplitField: function() {
-      return this.isUsingSplitAddressFields ? MyParcelFrontend.houseNumberField : MyParcelFrontend.addressField;
+      return MyParcelFrontend.isUsingSplitAddressFields
+        ? MyParcelFrontend.houseNumberField
+        : MyParcelFrontend.addressField;
     },
 
     updateCountry: function() {
@@ -146,7 +148,7 @@ window.addEventListener('load', function() {
      */
     addListeners: function() {
       /* The fields to add listeners to. */
-      var fields = [MyParcelFrontend.countryField, MyParcelFrontend.postcodeField, this.getSplitField()];
+      var fields = [MyParcelFrontend.countryField, MyParcelFrontend.postcodeField, MyParcelFrontend.getSplitField()];
 
       /* If address type is already set, remove the existing listeners before adding new ones. */
       if (MyParcelFrontend.addressType) {
@@ -228,16 +230,20 @@ window.addEventListener('load', function() {
      * Get data from form fields and put it in the global MyParcelConfig.
      */
     updateAddress: function() {
-      var data = JSON.parse(window.MyParcelConfig);
+      if (!window.hasOwnProperty('MyParcelConfig')) {
+        throw 'window.MyParcelConfig not found!';
+      }
+      if (typeof window.MyParcelConfig === 'string') {
+        window.MyParcelConfig = JSON.parse(window.MyParcelConfig);
+      }
 
-      data.address = {
+      window.MyParcelConfig.address = {
         cc: MyParcelFrontend.getField(MyParcelFrontend.countryField).value,
         postalCode: MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value,
         number: MyParcelFrontend.getHouseNumber(),
         city: MyParcelFrontend.getField(MyParcelFrontend.cityField).value,
       };
 
-      window.MyParcelConfig = JSON.stringify(data);
       MyParcelFrontend.triggerEvent(MyParcelFrontend.updateDeliveryOptionsEvent);
     },
 
