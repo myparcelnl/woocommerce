@@ -49,7 +49,7 @@ class DeliveryOptions
     public $carrier;
 
     /**
-     * @var array
+     * @var PickupLocation
      * @deprecated
      */
     public $pickupLocation;
@@ -73,8 +73,9 @@ class DeliveryOptions
         $this->carrier           = $carrier ?? BpostConsignment::CARRIER_NAME;
 
         if ($this->isPickup()) {
-            $this->pickupLocation = (object) $delivery_options["pickupLocation"];
-            $this->time           = $delivery_options["pickupMoment"];
+            $this->pickupLocation = new PickupLocation($delivery_options["pickupLocation"]);
+
+            $this->time = $delivery_options["pickupMoment"];
         } else {
             $this->time = $delivery_options["deliveryMoment"];
         }
@@ -121,9 +122,9 @@ class DeliveryOptions
     }
 
     /**
-     * @return array
+     * @return PickupLocation
      */
-    public function getPickupLocation(): array
+    public function getPickupLocation(): PickupLocation
     {
         return $this->pickupLocation;
     }
@@ -135,6 +136,5 @@ class DeliveryOptions
     {
         return $this->deliveryType === "pickup";
     }
-
 }
 
