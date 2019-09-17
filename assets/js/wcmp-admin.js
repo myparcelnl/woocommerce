@@ -4,30 +4,6 @@
 
 // eslint-disable-next-line max-lines-per-function
 jQuery(function($) {
-  function handleDependency(relatedInput, element) {
-    var easing = 300;
-
-    var type = element.getAttribute('data-parent-type');
-    var wantedValue = element.getAttribute('data-parent-value') || '1';
-    var setValue = element.getAttribute('data-parent-set') || null;
-    var value = relatedInput.value;
-
-    var parentElement = $(element).closest('tr');
-
-    var matches = value === wantedValue;
-
-    switch (type) {
-      case 'show':
-        parentElement[matches ? 'show' : 'hide'](easing);
-        break;
-      case 'disable':
-        $(element).prop('disabled', matches);
-        if (matches && setValue) {
-          element.value = setValue;
-        }
-        break;
-    }
-  }
 
   // Get all nodes with a data-parent attribute.
   var nodesWithParent = document.querySelectorAll('[data-parent]');
@@ -53,25 +29,87 @@ jQuery(function($) {
     }
   });
 
+  addDependencies(dependencies);
+
   /**
    * Handle showing and hiding of settings.
    */
-  Object.keys(dependencies).forEach(function(dependency) {
-    var relatedInput = document.querySelector('#' + dependency);
+  function addDependencies(deps) {
+    Object.keys(deps).forEach(function(relatedInputId) {
+      var relatedInput = document.querySelector('[id="' + relatedInputId + '"]');
 
-    function handle() {
-      dependencies[dependency].forEach(function(el) {
-        handleDependency(relatedInput, el);
-      });
-    };
+      /**
+       * Loop through all the deps.
+       */
+      function handle() {
+        /**
+         * @type {Element} dependant
+         */
+        deps[relatedInputId].forEach(function(dependant) {
+          handleDependency(relatedInput, dependant);
 
-    relatedInput.addEventListener('change', handle);
+          if (relatedInput.hasAttribute('data-parent')) {
+            var otherRelatedInput = document.querySelector('#' + relatedInput.getAttribute('data-parent'));
+            otherRelatedInput.addEventListener('change', function() {
+              return handleDependency(otherRelatedInput, relatedInput, dependant);
+            });
+          }
+        });
+      };
 
-    // Do this on load too.
-    handle();
-  });
+      relatedInput.addEventListener('change', handle);
 
-  /* move shipment options to 'Ship to' column */
+      // Do this on load too.
+      handle();
+    });
+  }
+
+  /**
+   * @param {Element} relatedInput - Parent of element.
+   * @param {Element} element  - Element that will be handled.
+   * @param {Element} element2 - Optional extra dependency of element.
+   */
+  function handleDependency(relatedInput, element, element2) {
+    var easing = 300;
+
+    var type = element.getAttribute('data-parent-type');
+    var wantedValue = element.getAttribute('data-parent-value') || '1';
+    var setValue = element.getAttribute('data-parent-set') || null;
+    var value = relatedInput.value;
+
+    var elementContainer = $(element).closest('tr');
+
+    var matches = value === wantedValue;
+
+    switch (type) {
+      case 'child':
+        elementContainer[matches ? 'show' : 'hide'](easing);
+        break;
+      case 'show':
+        elementContainer[matches ? 'show' : 'hide'](easing);
+        break;
+      case 'disable':
+        $(element).prop('disabled', matches);
+        if (matches && setValue) {
+          element.value = setValue;
+        }
+        break;
+    }
+
+    if (element2) {
+      var showOrHide = element2.getAttribute('data-enabled') === 'true'
+        && element.getAttribute('data-enabled') === 'true';
+
+      $(element2).closest('tr')[showOrHide ? 'show' : 'hide']();
+      relatedInput.setAttribute('data-enabled', showOrHide.toString());
+    }
+
+    relatedInput.setAttribute('data-enabled', matches.toString());
+    element.setAttribute('data-enabled', matches.toString());
+  }
+
+  //
+
   $('.wp-list-table .wcmp_shipment_options, .wp-list-table .wcmp_shipment_summary').each(function(index) {
     var $ship_to_column = $(this).closest('tr').find('td.shipping_address');
     $(this).appendTo($ship_to_column);
