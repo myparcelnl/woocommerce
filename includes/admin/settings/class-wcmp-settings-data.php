@@ -639,7 +639,7 @@ class WCMP_Settings_Data
                 "label"     => _wcmp("Package types"),
                 "callback"  => [$this->callbacks, "shipping_methods_package_types"],
                 "default"   => [],
-                "options"   => WCMP()->export->get_package_types(),
+                "options"   => WCMP_Data::getPackageTypes(),
                 "help_text" => _wcmp("Select one or more shipping methods for each MyParcel BE package type"),
             ],
             [

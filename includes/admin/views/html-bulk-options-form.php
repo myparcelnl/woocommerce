@@ -82,8 +82,7 @@ $target_url =
             }
             $shipment_options         = WCMP()->export->get_options($order);
             $recipient                = WCMP()->export->get_recipient($order);
-            $myparcelbe_options_extra = WCX_Order::get_meta($order, '_myparcelbe_shipment_options_extra');
-            $package_types            = WCMP()->export->get_package_types($dialog);
+            $package_types            = WCMP_Data::getPackageTypes();
             ?>
             <tr class="order-row <?php echo(($c = ! $c) ? 'alternate' : ''); ?>">
                 <td>
@@ -123,7 +122,7 @@ $target_url =
                                         <td>&nbsp;</td>
                                         <td><?php _wcmpe('Total weight'); ?></td>
                                         <td align="right"><?php echo wc_format_weight(
-                                                $order->get_meta('_wcmp_order_weight')
+                                                $order->get_meta(WCMP_Admin::META_ORDER_WEIGHT)
                                             ); ?></td>
                                     </tr>
                                     </tfoot>

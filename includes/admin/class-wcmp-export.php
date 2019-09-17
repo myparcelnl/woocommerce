@@ -21,11 +21,16 @@ if (class_exists("WCMP_Export")) {
 class WCMP_Export
 {
     // Package types
-    const PACKAGE          = 1;
-    const INSURANCE_AMOUNT = 500;
+    public const PACKAGE          = 1;
+    public const INSURANCE_AMOUNT = 500;
 
     // Maximum characters length of item description.
-    const DESCRIPTION_MAX_LENGTH = 50;
+    public const DESCRIPTION_MAX_LENGTH = 50;
+
+    public const ADD_SHIPMENTS                = "add_shipments";
+    public const ADD_RETURN                   = "add_return";
+    public const GET_LABELS                   = "get_labels";
+    public const MODAL_DIALOG                 = "modal_dialog";
 
     public $order_id;
     public $success;
@@ -134,7 +139,7 @@ class WCMP_Export
         $order_ids = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : [];
 
         switch ($request) {
-            case "add_shipments":
+            case self::ADD_SHIPMENTS:
                 // filter out non-myparcel destinations
                 $order_ids = $this->filter_myparcelbe_destination_orders($order_ids);
                 if (empty($order_ids)) {
@@ -146,14 +151,14 @@ class WCMP_Export
                 $process = (isset($print) && $print == "yes") ? true : false;
                 $return  = $this->add_shipments($order_ids);
                 break;
-            case "add_return":
+            case self::ADD_RETURN:
                 if (empty($myparcelbe_options)) {
                     $this->errors[] = _wcmp("You have not selected any orders!");
                     break;
                 }
                 $return = $this->add_return($myparcelbe_options);
                 break;
-            case "get_labels":
+            case self::GET_LABELS:
                 exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
                 $offset = ! empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
                 if (empty($order_ids) && empty($shipment_ids)) {
@@ -171,7 +176,7 @@ class WCMP_Export
                     $return    = $this->get_labels($order_ids, $label_response_type, $offset);
                 }
                 break;
-            case "modal_dialog":
+            case self::MODAL_DIALOG:
                 if (empty($order_ids)) {
                     $errors[] = _wcmp("You have not selected any orders!");
                     break;
@@ -182,7 +187,7 @@ class WCMP_Export
         }
 
         // display errors directly if PDF requested or modal
-        if (in_array($request, ["add_return", "get_labels", "modal_dialog"]) && ! empty($this->errors)) {
+        if (in_array($request, [self::ADD_RETURN, self::GET_LABELS, self::MODAL_DIALOG]) && ! empty($this->errors)) {
             echo $this->parse_errors($this->errors);
             die();
         }
@@ -194,7 +199,7 @@ class WCMP_Export
 
         // When adding shipments, store $return for use in admin_notice
         // This way we can refresh the page (JS) to show all new buttons
-        if ($request == "add_shipments" && ! empty($print) && ($print == "no" || $print == "after_reload")) {
+        if ($request == self::ADD_SHIPMENTS && ! empty($print) && ($print == "no" || $print == "after_reload")) {
             update_option("wcmyparcelbe_admin_notices", $return);
             if ($print == "after_reload") {
                 $print_queue = [
@@ -249,16 +254,15 @@ class WCMP_Export
             $created_shipments = [];
             $order             = WCX::get_order($order_id);
 
-            $consignment         = $this->get_consignment_from_checkout_data($order_id);
+            $consignment = $this->get_consignment_from_checkout_data($order_id);
 
             $this->log("Shipment data for order {$order_id}.", true);
 
             // check colli amount
-            $extra_params = WCX_Order::get_meta($order, "_myparcelbe_shipment_options_extra");
+            $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $colli_amount = isset($extra_params["colli_amount"]) ? $extra_params["colli_amount"] : 1;
 
             $myParcelCollection->addMultiCollo($consignment, $colli_amount);
-
 
             // @todo save shipment
 //            for ($i = 0; $i < intval($colli_amount); $i++) {
@@ -281,7 +285,7 @@ class WCMP_Export
 //                            "shipment_id" => $shipment_id,
 //                        ];
 //
-                        // save shipment data in order meta
+            // save shipment data in order meta
 //                        $this->save_shipment_data($order, $shipment);
 //
 //                        // process directly setting
@@ -322,13 +326,12 @@ class WCMP_Export
 
         $myParcelCollection->downloadPdfOfLabels();
 
-
 //        if (! empty($this->success)) {
-            $return["success"]     = sprintf(
-                _wcmp("%s shipments successfully exported to MyParcel"),
-                count($this->success)
-            );
-            $return["success_ids"] = $myParcelCollection->getConsignmentIds();
+        $return["success"]     = sprintf(
+            _wcmp("%s shipments successfully exported to MyParcel"),
+            count($this->success)
+        );
+        $return["success_ids"] = $myParcelCollection->getConsignmentIds();
 //        }
 
         return $return;
@@ -360,61 +363,61 @@ class WCMP_Export
         // TODO: loop for multiple orders
         $consignment =
             (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))->setApiKey($this->init_api())
-                                                                                 ->setReferenceId($order_id)
-                                                                                 ->setPackageType(
-                                                                                     $shipmentOptions["package_type"]
-                                                                                 )
-                                                                                 ->setCountry(
-                                                                                     $shipmentRecipient["cc"]
-                                                                                 )
-                                                                                 ->setPerson(
-                                                                                     $shipmentRecipient["person"]
-                                                                                 )
-                                                                                 ->setFullStreet($fullStreet)
-                                                                                 ->setStreetAdditionalInfo(
-                                                                                     $shipmentRecipient["street_additional_info"]
-                                                                                 )
-                                                                                 ->setPostalCode(
-                                                                                     $shipmentRecipient["postal_code"]
-                                                                                 )
-                                                                                 ->setCity(
-                                                                                     $shipmentRecipient["city"]
-                                                                                 )
-                                                                                 ->setPhone(
-                                                                                     $shipmentRecipient["phone"]
-                                                                                 )
-                                                                                 ->setEmail(
-                                                                                     $shipmentRecipient["email"]
-                                                                                 )
-                                                                                 ->setLabelDescription(
-                                                                                     $shipmentOptions["label_description"]
-                                                                                 )
-                                                                                 ->setCompany(
-                                                                                     $shipmentRecipient["company"]
-                                                                                 )
+                ->setReferenceId($order_id)
+                ->setPackageType(
+                    $shipmentOptions["package_type"]
+                )
+                ->setCountry(
+                    $shipmentRecipient["cc"]
+                )
+                ->setPerson(
+                    $shipmentRecipient["person"]
+                )
+                ->setFullStreet($fullStreet)
+                ->setStreetAdditionalInfo(
+                    $shipmentRecipient["street_additional_info"]
+                )
+                ->setPostalCode(
+                    $shipmentRecipient["postal_code"]
+                )
+                ->setCity(
+                    $shipmentRecipient["city"]
+                )
+                ->setPhone(
+                    $shipmentRecipient["phone"]
+                )
+                ->setEmail(
+                    $shipmentRecipient["email"]
+                )
+                ->setLabelDescription(
+                    $shipmentOptions["label_description"]
+                )
+                ->setCompany(
+                    $shipmentRecipient["company"]
+                )
                 // Options
-                                                                                 ->setSignature(
+                ->setSignature(
                     $shipmentOptions["signature"]
                 )
-                                                                                 ->setInsurance(
-                                                                                     $this->getInsuranceAmount()
-                                                                                 )
+                ->setInsurance(
+                    $this->getInsuranceAmount()
+                )
                 // Pickup options
-                                                                                 ->setPickupLocationName(
+                ->setPickupLocationName(
                     $shipmentPickup["location_name"]
                 )
-                                                                                 ->setPickupStreet(
-                                                                                     $shipmentPickup["street"]
-                                                                                 )
-                                                                                 ->setPickupNumber(
-                                                                                     $shipmentPickup["number"]
-                                                                                 )
-                                                                                 ->setPickupPostalCode(
-                                                                                     $shipmentPickup["postal_code"]
-                                                                                 )
-                                                                                 ->setPickupCity(
-                                                                                     $shipmentPickup["city"]
-                                                                                 );
+                ->setPickupStreet(
+                    $shipmentPickup["street"]
+                )
+                ->setPickupNumber(
+                    $shipmentPickup["number"]
+                )
+                ->setPickupPostalCode(
+                    $shipmentPickup["postal_code"]
+                )
+                ->setPickupCity(
+                    $shipmentPickup["city"]
+                );
 
         return $consignment;
     }
@@ -598,7 +601,7 @@ class WCMP_Export
     }
 
     /**
-     * @param int $order_id
+     * @param int    $order_id
      * @param string $type
      *
      * @return AbstractConsignment
@@ -622,12 +625,16 @@ class WCMP_Export
 
         $recipient = $this->get_recipient($order);
 
-        $delivery_type = $delivery_options->getMoment() === 'pickup' ? AbstractConsignment::DELIVERY_TYPE_PICKUP : AbstractConsignment::DELIVERY_TYPE_PICKUP;
-        $consignment
-            ->setApiKey($api_key)
+        $delivery_type =
+            $delivery_options->getMoment() === 'pickup' ? AbstractConsignment::DELIVERY_TYPE_PICKUP
+                : AbstractConsignment::DELIVERY_TYPE_PICKUP;
+
+        $consignment->setApiKey($api_key)
             ->setDeliveryType($delivery_type)
             ->setCountry($recipient['cc'])
-            ->setPerson($recipient['person'])
+            ->setPerson(
+                $recipient['person']
+            )
             ->setCompany($recipient['company'])
             ->setStreet($recipient['street'])
             ->setNumber($recipient['number'])
@@ -644,18 +651,21 @@ class WCMP_Export
 
         if ($delivery_options->isPickup()) {
             $pickup = $delivery_options->getPickupLocation();
-            $consignment
-                ->setPickupCity($pickup->getCity())
+            /**
+             * @var AbstractConsignment $consignment
+             */
+            $consignment->setPickupCity($pickup->getCity())
                 ->setPickupLocationName($pickup->getLocationName())
                 ->setPickupStreet($pickup->getStreet())
                 ->setNumber($pickup->getNumber())
-                ->setPostalCode($pickup->getPostalCode());
+                ->setPostalCode($pickup->getPostalCode())
+                ->setPickupLocationCode($pickup->getLocationCode())
+                ->setPickupNetworkId($pickup->getNetworkId());
 
 //             @todo add location code
 //            "location_code"     => $pickup["location_code"],
 //            "retail_network_id" => $pickup["retail_network_id"],
         }
-
 
         // @todo set customs_declaration
 //        $shipping_country = WCX_Order::get_prop($order, "shipping_country");
@@ -765,7 +775,7 @@ class WCMP_Export
         $shipping_country = WCX_Order::get_prop($order, "shipping_country");
         if ($shipping_country == "BE") {
             // use billing address if old "pakjegemak" (1.5.6 and older)
-            if ($pgaddress = WCX_Order::get_meta($order, "_myparcelbe_pgaddress")) {
+            if ($pgaddress = WCX_Order::get_meta($order, WCMP_Admin::META_PGADDRESS)) {
                 $billing_name = method_exists($order, "get_formatted_billing_full_name")
                     ? $order->get_formatted_billing_full_name()
                     : trim(
@@ -854,7 +864,7 @@ class WCMP_Export
 
         foreach ($order_ids as $order_id) {
             $order           = WCX::get_order($order_id);
-            $order_shipments = WCX_Order::get_meta($order, "_myparcelbe_shipments");
+            $order_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
             foreach ($order_shipments as $shipment) {
                 $shipment_id = $shipment["shipment_id"];
                 $this->add_myparcelbe_note_to_shipment($selected_shipment_ids, $shipment_id, $order);
@@ -866,16 +876,17 @@ class WCMP_Export
 
     /**
      * @param $order
-     * @deprecated
      *
      * @return array
+     * @throws Exception
+     * @deprecated
      */
     public function get_options($order)
     {
         $description = $this->getLabelDescription($order);
 
         // use shipment options from order when available
-        $shipment_options = WCX_Order::get_meta($order, "_myparcelbe_shipment_options");
+        $shipment_options = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS);
         if (! empty($shipment_options)) {
             $empty_defaults = [
                 "package_type"      => 1,
@@ -913,7 +924,7 @@ class WCMP_Export
         $myparcelbe_delivery_options = WCX_Order::get_meta($order, DeliveryOptions::FIELD_DELIVERY_OPTIONS);
 
         // set delivery type
-        $options["delivery_type"] = $this->get_delivery_type($order, $myparcelbe_delivery_options);
+        $options["delivery_type"] = $this->get_delivery_type($order, $deliveryOptions);
 
         // Options for Pickup and Pickup express delivery types:
         // always enable signature on receipt
@@ -922,7 +933,7 @@ class WCMP_Export
         }
 
         // options signature & recipient only
-        $myparcelbe_signature = WCX_Order::get_meta($order, "_myparcelbe_signature");
+        $myparcelbe_signature = WCX_Order::get_meta($order, WCMP_Admin::META_SIGNATURE);
         if (! empty($myparcelbe_signature)) {
             $options["signature"] = 1;
         }
@@ -987,7 +998,7 @@ class WCMP_Export
 
         if ($this->isActiveSetting("insured", "insured_amount", "insured_amount_custom")) {
             $insured_amount = $this->getSetting("insured_amount_custom");
-        } else if ($this->isActiveSetting("insured", "insured_amount")) {
+        } elseif ($this->isActiveSetting("insured", "insured_amount")) {
             $insured_amount = $this->getSetting("insured_amount");
         }
 
@@ -1018,7 +1029,7 @@ class WCMP_Export
      */
     public function get_customs_declaration(WC_Order $order): array
     {
-        $weight   = (int) round($order->get_meta("_wcmp_order_weight"));
+        $weight   = (int) round($order->get_meta(WCMP_Admin::META_ORDER_WEIGHT));
         $invoice  = $this->get_invoice_number($order);
         $contents = (int) ($this->getSetting("package_contents") ? $this->getSetting("package_contents") : 1);
 
@@ -1057,7 +1068,7 @@ class WCMP_Export
         $shipment_ids = [];
         foreach ($order_ids as $order_id) {
             $order           = WCX::get_order($order_id);
-            $order_shipments = WCX_Order::get_meta($order, "_myparcelbe_shipments");
+            $order_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
             if (! empty($order_shipments)) {
                 $order_shipment_ids = [];
                 // exclude concepts or only concepts
@@ -1073,7 +1084,7 @@ class WCMP_Export
                 }
 
                 if (isset($args["only_last"])) {
-                    $last_shipment_ids = WCX_Order::get_meta($order, "_myparcelbe_last_shipment_ids");
+                    $last_shipment_ids = WCX_Order::get_meta($order, WCMP_Admin::META_LAST_SHIPMENT_IDS);
                     if (! empty($last_shipment_ids) && is_array($last_shipment_ids)) {
                         foreach ($order_shipment_ids as $order_shipment_id) {
                             if (in_array($order_shipment_id, $last_shipment_ids)) {
@@ -1108,7 +1119,7 @@ class WCMP_Export
         $new_shipments[$shipment["shipment_id"]] = $shipment;
 
         if ($this->getSetting("keep_shipments")) {
-            if ($old_shipments = WCX_Order::get_meta($order, "_myparcelbe_shipments")) {
+            if ($old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS)) {
                 $shipments = $old_shipments;
                 foreach ($new_shipments as $shipment_id => $shipment) {
                     $shipments[$shipment_id] = $shipment;
@@ -1118,7 +1129,7 @@ class WCMP_Export
 
         $shipments = isset($shipments) ? $shipments : $new_shipments;
 
-        WCX_Order::update_meta_data($order, "_myparcelbe_shipments", $shipments);
+        WCX_Order::update_meta_data($order, WCMP_Admin::META_SHIPMENTS, $shipments);
 
         return;
     }
@@ -1168,18 +1179,13 @@ class WCMP_Export
     }
 
     /**
-     * @return array
+     * @param $package_type
+     *
+     * @return string|void
      */
-    public function get_package_types(): array
-    {
-        return [
-            self::PACKAGE => _wcmp("Parcel"),
-        ];
-    }
-
     public function get_package_name($package_type)
     {
-        $package_types = $this->get_package_types();
+        $package_types = WCMP_Data::getPackageTypes();
         $package_name  = isset($package_types[$package_type]) ? $package_types[$package_type] : _wcmp("Unknown");
 
         return $package_name;
@@ -1317,7 +1323,7 @@ class WCMP_Export
      */
     public function replace_shortcodes($description, $order)
     {
-        $myparcelbe_delivery_options = WCX_Order::get_meta($order, DeliveryOptions::FIELD_DELIVERY_OPTIONS);
+        $myparcelbe_delivery_options = WCX_Order::get_meta($order, WCMP_Admin::META_DELIVERY_OPTIONS);
         $replacements                = [
             "[ORDER_NR]"      => $order->get_order_number(),
             "[DELIVERY_DATE]" => isset($myparcelbe_delivery_options) && isset($myparcelbe_delivery_options["date"])
@@ -1374,7 +1380,7 @@ class WCMP_Export
     public function is_pickup($order, $myparcelbe_delivery_options = "")
     {
         if (empty($myparcelbe_delivery_options)) {
-            $myparcelbe_delivery_options = WCX_Order::get_meta($order, DeliveryOptions::FIELD_DELIVERY_OPTIONS);
+            $myparcelbe_delivery_options = WCX_Order::get_meta($order, WCMP_Admin::META_DELIVERY_OPTIONS);
         }
 
         $pickup_types = ["retail"];
@@ -1387,7 +1393,7 @@ class WCMP_Export
         }
 
         // Backwards compatibility for pakjegemak data
-        $pgaddress = WCX_Order::get_meta($order, "_myparcelbe_pgaddress");
+        $pgaddress = WCX_Order::get_meta($order, WCMP_Admin::META_PGADDRESS);
         if (! empty($pgaddress) && ! empty($pgaddress["postcode"])) {
             $pickup = [
                 "postal_code"   => $pgaddress["postcode"],
@@ -1407,8 +1413,9 @@ class WCMP_Export
 
     /**
      * @param        $order
-     * @param string $myparcelbe_delivery_options
+     * @param string $deliveryOptions
      *
+     * @deprecated
      * @return int|mixed|string
      */
     public function get_delivery_type($order, $myparcelbe_delivery_options = "")
@@ -2079,7 +2086,7 @@ class WCMP_Export
         }
 
         return $description;
-}
+    }
 
     /**
      * @return int

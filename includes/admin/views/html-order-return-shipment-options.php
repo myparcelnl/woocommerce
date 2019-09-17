@@ -9,7 +9,7 @@
             <?php _wcmpe('Shipment type') ?>:<br/> <small class="calculated_weight">
                 <?php printf(
                     _wcmp('Calculated weight: %s'),
-                    wc_format_weight($order->get_meta('_wcmp_order_weight'))
+                    wc_format_weight($order->get_meta(WCMP_Admin::META_ORDER_WEIGHT))
                 ) ?>
             </small>
         </td>

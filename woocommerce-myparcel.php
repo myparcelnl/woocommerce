@@ -11,10 +11,6 @@ License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 */
 
-use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
-use WPO\WC\MyParcelBE\Collections\SettingsCollection;
-
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
@@ -177,6 +173,7 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/compatibility/class-wc-order-compatibility.php");
             require_once($this->includes . "/compatibility/class-wc-product-compatibility.php");
 
+            require_once($this->includes . "/class-wcmp-data.php");
             require_once($this->includes . "/collections/settings-collection.php");
             require_once($this->includes . "/entities/delivery-options.php");
             require_once($this->includes . "/entities/pickup-location.php");
@@ -359,43 +356,10 @@ if (! class_exists('WCMP')) :
                 return;
             }
 
-            $this->initializeSettingCollection();
-        }
-
-        /**
-         * Initialize the PHP 7.1+ settings collection.
-         */
-        public function initializeSettingCollection()
-        {
-            if ($this->setting_collection) {
-                return;
-            }
-            // Load settings
-            $settings = new SettingsCollection();
-            function getOption($option)
-            {
-                $option = get_option($option);
-                if (! $option) {
-                    return [];
-                }
-
-                return $option;
-            }
-
-            $settings->setSettingsByType(getOption('woocommerce_myparcelbe_general_settings'), 'general');
-            $settings->setSettingsByType(getOption('woocommerce_myparcelbe_export_defaults_settings'), 'export');
-            $settings->setSettingsByType(
-                getOption('woocommerce_myparcelbe_bpost_settings'),
-                'carrier',
-                BpostConsignment::CARRIER_NAME
-            );
-            $settings->setSettingsByType(
-                getOption('woocommerce_myparcelbe_dpd_settings'),
-                'carrier',
-                DPDConsignment::CARRIER_NAME
-            );
-
-            $this->setting_collection = $settings;
+            // Create the settings collection by importing this function, because we can't use the sdk
+            // imports in the legacy version.
+            include('includes/wcmp-initialize-settings-collection.php');
+            $this->setting_collection = $this->setting_collection ?? (new WCMP_Initialize_Settings_Collection())->initialize();
         }
 
         /**

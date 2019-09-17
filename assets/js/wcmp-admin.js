@@ -553,9 +553,7 @@ jQuery(function($) {
         /* load PDF */
         myparcelbe_print(order_ids, offset);
       }
-
     });
-
   }
 
   function myparcelbe_modal_dialog(order_ids, dialog) {

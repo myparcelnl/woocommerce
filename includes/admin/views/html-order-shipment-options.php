@@ -1,12 +1,11 @@
 <?php
 
 /**
- * @var int   $order_id
- * @var array $package_types
- * @var array $shipment_options
- * @var array $myparcelbe_options_extra
+ * @var int      $order_id
+ * @var WC_Order $order
  */
 
+use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
 
 if (! defined('ABSPATH')) {
@@ -19,31 +18,50 @@ try {
     exit();
 }
 
+// todo fix shipment extra options?
+$extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+
 echo '<div class="wcmp wcmp__change-order">';
 
-$isPackageTypeDisabled = count($package_types) === 1 || $deliveryOptions->isPickup();
+if ($deliveryOptions->isPickup()) {
+    $pickup = $deliveryOptions->getPickupLocation();
+
+    printf(
+        "<div class=\"pickup-location\"><strong>%s:</strong><br /> %s<br />%s %s<br />%s %s</div>",
+        _wcmp("Pickup location"),
+        $pickup->getLocationName(),
+        $pickup->getStreet(),
+        $pickup->getNumber(),
+        $pickup->getPostalCode(),
+        $pickup->getCity()
+    );
+
+    echo "<hr>";
+}
+
+$isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
 
 $option_rows = [
     [
         "name"              => "[carrier]",
         "label"             => _wcmp("Carrier"),
         "type"              => "select",
-        "options"           => [$deliveryOptions->getCarrier()],
+        "options"           => WCMP_Data::getCarriers(),
         "custom_attributes" => [
             "disabled" => "disabled",
         ],
-        //        "value"             => $deliveryOptions->getCarrier(),
+        "value"             => $deliveryOptions->getCarrier(),
     ],
     [
         "name"              => "[$order_id][package_type]",
         "label"             => _wcmp("Shipment type"),
         "description"       => sprintf(
             _wcmp("Calculated weight: %s"),
-            wc_format_weight($order->get_meta("_wcmp_order_weight"))
+            wc_format_weight($order->get_meta(WCMP_Admin::META_ORDER_WEIGHT))
         ),
         "type"              => "select",
-        "options"           => $package_types,
-        "value"             => $shipment_options["package_type"],
+        "options"           => WCMP_Data::getPackageTypes(),
+        "value"             => $deliveryOptions->getDeliveryType(),
         "custom_attributes" => [
             "disabled" => $isPackageTypeDisabled ? "disabled" : null,
         ],
@@ -52,8 +70,7 @@ $option_rows = [
         "name"              => "[$order_id][extra_options][colli_amount]",
         "label"             => _wcmp("Number of labels"),
         "type"              => "number",
-        "value"             => isset($myparcelbe_options_extra['colli_amount'])
-            ? $myparcelbe_options_extra['colli_amount'] : 1,
+        "value"             => isset($extraOptions['colli_amount']) ? $extraOptions['colli_amount'] : 1,
         "custom_attributes" => [
             "step" => "1",
             "min"  => "1",

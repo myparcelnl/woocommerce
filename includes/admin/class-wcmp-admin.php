@@ -17,29 +17,41 @@ if (class_exists('WCMP_Admin')) {
  */
 class WCMP_Admin
 {
+    public const META_CONSIGNMENTS           = "_myparcelbe_consignments";
+    public const META_CONSIGNMENT_ID         = "_myparcelbe_consignment_id";
+    public const META_DELIVERY_OPTIONS       = "_myparcelbe_delivery_options";
+    public const META_HIGHEST_SHIPPING_CLASS = "_myparcelbe_highest_shipping_class";
+    public const META_LAST_SHIPMENT_IDS      = "_myparcelbe_last_shipment_ids";
+    public const META_ORDER_WEIGHT           = "_myparcelbe_order_weight";
+    public const META_PGADDRESS              = "_myparcelbe_pgaddress";
+    public const META_SHIPMENTS              = "_myparcelbe_shipments";
+    public const META_SHIPMENT_OPTIONS       = "_myparcelbe_shipment_options";
+    public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcelbe_shipment_options_extra";
+    public const META_SIGNATURE              = "_myparcelbe_signature";
+    public const META_TRACK_TRACE            = "_myparcelbe_tracktrace";
 
     function __construct()
     {
-        add_action('woocommerce_admin_order_actions_end', [$this, 'showMyParcelSettings'], 9999);
-        add_action('admin_footer', [$this, 'bulk_actions']);
+        add_action("woocommerce_admin_order_actions_end", [$this, "showMyParcelSettings"], 9999);
+        add_action("admin_footer", [$this, "bulk_actions"]);
 
-        add_action('admin_footer', [$this, 'offset_dialog']);
-        add_action('woocommerce_admin_order_actions_end', [$this, 'admin_wc_actions'], 20);
-        add_action('add_meta_boxes_shop_order', [$this, 'shop_order_metabox']);
-        add_action('woocommerce_admin_order_data_after_shipping_address', [$this, 'single_order_shipment_options']);
+        add_action("admin_footer", [$this, "offset_dialog"]);
+        add_action("woocommerce_admin_order_actions_end", [$this, "admin_wc_actions"], 20);
+        add_action("add_meta_boxes_shop_order", [$this, "shop_order_metabox"]);
+        add_action("woocommerce_admin_order_data_after_shipping_address", [$this, "single_order_shipment_options"]);
 
-        add_action('wp_ajax_wcmp_save_shipment_options', [$this, 'save_shipment_options_ajax']);
-        add_action('wp_ajax_wcmp_get_shipment_summary_status', [$this, 'order_list_ajax_get_shipment_summary']);
+        add_action("wp_ajax_wcmp_save_shipment_options", [$this, "save_shipment_options_ajax"]);
+        add_action("wp_ajax_wcmp_get_shipment_summary_status", [$this, "order_list_ajax_get_shipment_summary"]);
 
         // HS code in product shipping options tab
-        add_action('woocommerce_product_options_shipping', [$this, 'product_hs_code_field']);
-        add_action('woocommerce_process_product_meta', [$this, 'product_hs_code_field_save']);
+        add_action("woocommerce_product_options_shipping", [$this, "product_hs_code_field"]);
+        add_action("woocommerce_process_product_meta", [$this, "product_hs_code_field_save"]);
 
         // Add barcode in order grid
-        add_filter('manage_edit-shop_order_columns', [$this, 'barcode_add_new_order_admin_list_column'], 10, 1);
+        add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
         add_action(
-            'manage_shop_order_posts_custom_column',
-            [$this, 'barcode_add_new_order_admin_list_column_content'],
+            "manage_shop_order_posts_custom_column",
+            [$this, "barcode_add_new_order_admin_list_column_content"],
             10,
             2
         );
@@ -59,9 +71,9 @@ class WCMP_Admin
             return;
         }
 
-        $order_id         = WCX_Order::get_id($order);
-        $shipment_options = WCMP()->export->get_options($order);
-        $package_types    = WCMP()->export->get_package_types();
+        $order_id = WCX_Order::get_id($order);
+//        $shipment_options = WCMP()->export->get_options($order);
+//        $package_types    = WCMP()->export->get_package_types();
 
         $consignments         = $this->get_order_shipments($order, true);
 
@@ -93,7 +105,7 @@ class WCMP_Admin
         <div class="wcmp_shipment_options">
             <?php printf(
                 '<a href="#" class="wcmp_show_shipment_options"><span class="wcpm_package_type">%s</span> &#x25BE;</a>',
-                $package_types[$shipment_options['package_type']]
+                _wcmp("Details")
             ); ?>
             <div class="wcmp_shipment_options_form" style="display: none;">
                 <a class="wcmp-display--block">
@@ -122,7 +134,6 @@ class WCMP_Admin
             $order_has_shipment = true;
             $tracktrace_url     = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
         }
-        $package_types = WCMP()->export->get_package_types();
 
         include('views/html-order-shipment-summary.php');
         die();
@@ -174,13 +185,11 @@ class WCMP_Admin
         if ('shop_order' == $post_type) {
             ?>
             <div id="wcmyparcelbe_offset_dialog" style="display:none;">
-                <?php _wcmpe('Labels to skip'); ?>: <input type="text"
-                                                                                 size="2"
-                                                                                 class="wc_myparcelbe_offset">
+                <?php _wcmpe('Labels to skip'); ?>: <input type="text" size="2" class="wc_myparcelbe_offset">
                 <img src="<?php echo WCMP()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>"
                      id="wcmyparcelbe-offset-icon"
                      style="vertical-align: middle;">
-                <button class="button" style="display:none; margin-top: 4px"><?php  _wcmpe('Print'); ?></button>
+                <button class="button" style="display:none; margin-top: 4px"><?php _wcmpe('Print'); ?></button>
             </div>
             <?php
         }
@@ -286,18 +295,18 @@ class WCMP_Admin
             return;
         }
 
-        $consignments = WCX_Order::get_meta($order, '_myparcelbe_shipments');
+        $consignments = WCX_Order::get_meta($order, self::META_SHIPMENTS);
         // fallback to legacy consignment data (v1.X)
         if (empty($consignments)) {
-            if ($consignment_id = WCX_Order::get_meta($order, '_myparcelbe_consignment_id')) {
+            if ($consignment_id = WCX_Order::get_meta($order, self::META_CONSIGNMENT_ID)) {
                 $consignments = [
                     [
                         'shipment_id' => $consignment_id,
-                        'tracktrace'  => WCX_Order::get_meta($order, '_myparcelbe_tracktrace'),
+                        'tracktrace'  => WCX_Order::get_meta($order, self::META_TRACK_TRACE),
                     ],
                 ];
             } else {
-                if ($legacy_consignments = WCX_Order::get_meta($order, '_myparcelbe_consignments')) {
+                if ($legacy_consignments = WCX_Order::get_meta($order, self::META_CONSIGNMENTS)) {
                     $consignments = [];
                     foreach ($legacy_consignments as $consignment) {
                         if (isset($consignment['consignment_id'])) {
@@ -354,13 +363,13 @@ class WCMP_Admin
             if (isset($shipment_options['extra_options'])) {
                 WCX_Order::update_meta_data(
                     $order,
-                    '_myparcelbe_shipment_options_extra',
+                    self::META_SHIPMENT_OPTIONS_EXTRA,
                     $shipment_options['extra_options']
                 );
                 unset($shipment_options['extra_options']);
             }
 
-            WCX_Order::update_meta_data($order, '_myparcelbe_shipment_options', $shipment_options);
+            WCX_Order::update_meta_data($order, self::META_SHIPMENT_OPTIONS, $shipment_options);
         }
 
         // Quit out
@@ -374,7 +383,7 @@ class WCMP_Admin
     {
         add_meta_box(
             'myparcelbe',                               //$id
-            _wcmp('MyParcelBE'), //$title
+            _wcmp('MyParcelBE'),                        //$title
             [$this, 'create_box_content'],              //$callback
             'shop_order',                               //$post_type
             'side',                                     //$context
@@ -500,10 +509,6 @@ class WCMP_Admin
             return;
         }
 
-        echo '<div style="clear: both;"><strong>'
-             . _wcmp('MyParcel BE shipment:')
-             . '</strong><br/>';
-
         $this->showMyParcelSettings($order);
         echo '</div>';
     }
@@ -521,23 +526,12 @@ class WCMP_Admin
             $deliveryOptions->getCarrier() . "_delivery_days_window"
         );
 
-        echo "<div class=\"delivery-options\">";
-
         /**
          * Show the delivery date if it is present.
          */
         if ($deliveryOptions->getDate() || $deliveryDaysWindow === 0) {
             $this->printDeliveryDate($deliveryOptions);
         }
-
-        /**
-         * If the order will be sent to a pickup location show its address.
-         */
-        if ("pickup" === $deliveryOptions->getDeliveryType()) {
-            $this->printPickupLocation($deliveryOptions);
-        }
-
-        echo "</div>";
     }
 
     /**
@@ -701,27 +695,7 @@ class WCMP_Admin
     public static function getDeliveryOptionsFromOrder(WC_Order $order): DeliveryOptions
     {
         return new DeliveryOptions(
-            (array) json_decode(stripslashes(WCX_Order::get_meta($order, DeliveryOptions::FIELD_DELIVERY_OPTIONS)))
-        );
-    }
-
-    /**
-     * Output the pickup location address.
-     *
-     * @param DeliveryOptions $delivery_options
-     */
-    private function printPickupLocation(DeliveryOptions $delivery_options)
-    {
-        $pickup = $delivery_options->getPickupLocation();
-
-        printf(
-            "<div class=\"pickup-location\"><strong>%s:</strong> %s<br />%s %s<br />%s %s</div>",
-            _wcmp('bpost Pickup'),
-            $pickup->getLocationName(),
-            $pickup->getStreet(),
-            $pickup->getNumber(),
-            $pickup->getPostalCode(),
-            $pickup->getCity()
+            (array) json_decode(stripslashes(WCX_Order::get_meta($order, WCMP_Admin::META_DELIVERY_OPTIONS)))
         );
     }
 
@@ -729,21 +703,18 @@ class WCMP_Admin
      * Output the delivery date.
      *
      * @param DeliveryOptions $delivery_options
+     *
+     * @throws Exception
      */
-    private function printDeliveryDate(DeliveryOptions $delivery_options)
+    private function printDeliveryDate(DeliveryOptions $delivery_options): void
     {
-        $formatted_date = date_i18n(
-            apply_filters('wcmyparcelbe_delivery_date_format', wc_date_format()),
-            strtotime($delivery_options->getDate())
-        );
-
-        $time_title = _wcmp('Standard delivery');
+        $string = $delivery_options->isPickup() ? _wcmp("Pickup") : _wcmp("Standard delivery");
 
         printf(
-            '<div class="delivery-date"><strong>%s: </strong>%s %s</div>',
-            _wcmp("Delivery date"),
-            $formatted_date,
-            $time_title
+            '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
+            _wcmp("MyParcel BE shipment:"),
+            $string,
+            wc_format_datetime(new WC_DateTime(strtotime($delivery_options->getDate())), 'D d-m')
         );
     }
 

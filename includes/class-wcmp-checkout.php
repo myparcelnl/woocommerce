@@ -94,7 +94,7 @@ class WCMP_Checkout
             [
                 "shippingMethods" => $this->get_delivery_options_shipping_methods(),
                 "alwaysDisplay"   => (int) $this->get_delivery_options_always_display(),
-                "hiddenInputName" => DeliveryOptions::FIELD_DELIVERY_OPTIONS,
+                "hiddenInputName" => WCMP_Admin::META_DELIVERY_OPTIONS,
             ]
         );
 
@@ -260,19 +260,19 @@ class WCMP_Checkout
          * @see https://businessbloomer.com/woocommerce-save-display-order-total-weight/
          */
         $weight = WC()->cart->get_cart_contents_weight();
-        Order::update_meta_data($order, '_wcmp_order_weight', $weight);
+        Order::update_meta_data($order, WCMP_Admin::META_ORDER_WEIGHT, $weight);
 
         if ($_POST["myparcelbe_highest_shipping_class"] !== null) {
             Order::update_meta_data(
                 $order,
-                "_myparcelbe_highest_shipping_class",
+                WCMP_Admin::META_HIGHEST_SHIPPING_CLASS,
                 $_POST["myparcelbe_highest_shipping_class"]
             );
         } else {
             if (isset($_POST["shipping_method"])) {
                 Order::update_meta_data(
                     $order,
-                    "_myparcelbe_highest_shipping_class",
+                    WCMP_Admin::META_HIGHEST_SHIPPING_CLASS,
                     $_POST["shipping_method"][0]
                 );
             }
@@ -281,16 +281,16 @@ class WCMP_Checkout
         if (isset($_POST["myparcelbe-signature-selector"])) {
             Order::update_meta_data(
                 $order,
-                "_myparcelbe_signature",
+                WCMP_Admin::META_SIGNATURE,
                 'on'
             );
         }
 
-        if (isset($_POST[DeliveryOptions::FIELD_DELIVERY_OPTIONS])) {
+        if (isset($_POST[WCMP_Admin::META_DELIVERY_OPTIONS])) {
             Order::update_meta_data(
                 $order,
-                DeliveryOptions::FIELD_DELIVERY_OPTIONS,
-                $_POST[DeliveryOptions::FIELD_DELIVERY_OPTIONS]
+                WCMP_Admin::META_DELIVERY_OPTIONS,
+                $_POST[WCMP_Admin::META_DELIVERY_OPTIONS]
             );
         }
     }

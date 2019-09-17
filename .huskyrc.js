@@ -1,14 +1,16 @@
-var preCommit = [
-  'npm i @myparcel/checkout@latest',
-  'cp node_modules/@myparcel/checkout/dist/myparcel.js assets/js',
+const packageName = '@myparcel/checkout';
+
+const preCommit = [
+  `npm i ${packageName}@latest`,
+  `cp node_modules/${packageName}/dist/myparcel.js assets/js`,
   'git add package-lock.json',
   'git add assets/js/myparcel.js',
-  'git commit -m "Updated checkout"',
+  'git commit -m "Updated delivery options"',
   'git push --no-verify',
 ].join(' && ');
 
 module.exports = {
   hooks: {
-    'pre-push': preCommit
+    'pre-commit': preCommit
   },
 };

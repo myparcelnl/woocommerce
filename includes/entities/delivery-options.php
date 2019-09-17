@@ -14,11 +14,6 @@ if (class_exists('\\WPO\\WC\\MyParcelBE\\Entity\\DeliveryOptions')) {
 class DeliveryOptions
 {
     /**
-     * For hidden input field and database field
-     */
-    const FIELD_DELIVERY_OPTIONS = "_wcmp_delivery_options";
-
-    /**
      * @var string
      */
     private $date;
