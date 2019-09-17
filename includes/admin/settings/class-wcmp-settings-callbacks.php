@@ -53,8 +53,6 @@ class WCMP_Settings_Callbacks
     {
         include("class-wcmp-settings-callbacks-package-types.php");
 
-        $class = new SettingsFieldArguments($args);
-
         new WCMP_Settings_Callbacks_Package_Types($args);
 
         // Displays option description.
@@ -98,11 +96,18 @@ class WCMP_Settings_Callbacks
             unset ($arguments["description"]);
         }
 
+        if (isset($arguments["parent"])) {
+            echo "<hr>";
+        }
+
         woocommerce_form_field(
             "{$optionId}[{$args->id}]",
             $arguments,
             get_option($optionId)[$args->id]
         );
+        if (isset($arguments["parent"])) {
+            echo "<hr>";
+        }
 
         // Render the description here instead of inside the above function.
         if (isset($description)) {
