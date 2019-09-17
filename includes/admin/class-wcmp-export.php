@@ -613,9 +613,10 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
 
         $recipient = $this->get_recipient($order);
 
+        $delivery_type = $delivery_options->getMoment() === 'pickup' ? AbstractConsignment::DELIVERY_TYPE_PICKUP : AbstractConsignment::DELIVERY_TYPE_PICKUP;
         $consignment
             ->setApiKey($api_key)
-            ->setDeliveryType($delivery_options->getMoment())
+            ->setDeliveryType($delivery_type)
             ->setCountry($recipient['cc'])
             ->setPerson($recipient['person'])
             ->setCompany($recipient['company'])
