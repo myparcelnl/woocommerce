@@ -235,6 +235,7 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
      * @return WCMP_Export
      * @throws ApiException
      * @throws MissingFieldException
+     * @throws Exception
      */
     public function add_shipments($order_ids)
     {
@@ -250,7 +251,7 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
 
             $consignment         = $this->get_consignment_from_checkout_data($order_id);
 
-            $this->log("Shipment data for order {$order_id}:\n" . var_export($shipments, true));
+            $this->log("Shipment data for order {$order_id}.", true);
 
             // check colli amount
             $extra_params = WCX_Order::get_meta($order, "_myparcelbe_shipment_options_extra");
@@ -263,7 +264,6 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
 
 
                     $myParcelCollection->addConsignment($consignment);
-
 
                     $response = $api->add_shipments($shipments);
                     $this->log("API response (order {$order_id}):\n" . var_export($response, true));
@@ -587,20 +587,53 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
         return $key;
     }
 
+    /**
+     * @param int $order_id
+     * @param string $type
+     *
+     * @return AbstractConsignment
+     * @throws Exception
+     */
     public function get_consignment_from_checkout_data(int $order_id, string $type = "standard"): AbstractConsignment
     {
         $order = WCX::get_order($order_id);
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
+        $api_key = $this->init_api();
+
+        if (! $api_key) {
+            throw new ErrorException("No API key found in MyParcel BE settings");
+        }
 
         $myparcelbe_delivery_options = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-        $myparcelbe_delivery_options->carrier
-        var_dump($myparcelbe_delivery_options['carrier']);
-        exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
+        $carrier                     = $myparcelbe_delivery_options->getCarrier();
 
-        $shipment = [
-            "recipient" => $this->get_recipient($order),
+        $consignment = ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID);
+//        $consignment = ConsignmentFactory::createByCarrierId($carrier ?? BpostConsignment::CARRIER_NAME);
+
+        $recipient = $this->get_recipient($order);
+
+        $consignment
+            ->setApiKey($api_key)
+            ->setCountry($recipient['cc'])
+            ->setPerson($recipient['person'])
+            ->setCompany($recipient['company'])
+            ->setStreet($recipient['street'])
+            ->setNumber($recipient['number'])
+            ->setNumberSuffix($recipient['number_suffix'] ?? null)
+            ->setStreetAdditionalInfo($recipient['street_additional_info'] ?? null)
+            ->setPostalCode($recipient['postal_code'])
+            ->setCity($recipient['city'])
+            ->setEmail($recipient['email'])
+            ->setPhone($recipient['phone']);
+
+        return $consignment;
+
+
+
+        $shipment  = [
+            "recipient" => $recipient,
             "options"   => $this->get_options($order),
             "carrier"   => BpostConsignment::CARRIER_NAME, // default to bpost for now
         ];
@@ -826,6 +859,7 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
 
     /**
      * @param $order
+     * @deprecated
      *
      * @return array
      */
