@@ -20,39 +20,33 @@ class DeliveryOptions
 
     /**
      * @var string
-     * @deprecated
      */
-    public $date;
+    private $date;
 
     /**
      * @var string
-     * @deprecated
      */
-    public $time;
+    private $time;
 
     /**
      * @var string
-     * @deprecated
      */
-    public $deliveryType;
+    private $deliveryType;
 
     /**
      * @var array
-     * @deprecated
      */
-    public $additionalOptions;
+    private $additionalOptions;
 
     /**
      * @var string
-     * @deprecated
      */
-    public $carrier;
+    private $carrier;
 
     /**
      * @var PickupLocation
-     * @deprecated
      */
-    public $pickupLocation;
+    private $pickupLocation;
 
     /**
      * DeliveryOptions constructor.
