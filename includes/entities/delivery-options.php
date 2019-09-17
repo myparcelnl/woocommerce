@@ -13,35 +13,44 @@ if (class_exists('\\WPO\\WC\\MyParcelBE\\Entity\\DeliveryOptions')) {
 
 class DeliveryOptions
 {
-    const HIDDEN_INPUT_NAME = "_wcmp_delivery_options";
+    /**
+     * For hidden input field and database field
+     */
+    const FIELD_DELIVERY_OPTIONS = "_wcmp_delivery_options";
 
     /**
      * @var string
+     * @deprecated
      */
     public $date;
 
     /**
      * @var string
+     * @deprecated
      */
     public $time;
 
     /**
      * @var string
+     * @deprecated
      */
     public $deliveryType;
 
     /**
      * @var array
+     * @deprecated
      */
     public $additionalOptions;
 
     /**
      * @var string
+     * @deprecated
      */
     public $carrier;
 
     /**
      * @var array
+     * @deprecated
      */
     public $pickupLocation;
 
@@ -72,11 +81,60 @@ class DeliveryOptions
     }
 
     /**
+     * @return string
+     */
+    public function getDate(): string
+    {
+        return $this->date;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTime(): string
+    {
+        return $this->time;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeliveryType(): string
+    {
+        return $this->deliveryType;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdditionalOptions(): array
+    {
+        return $this->additionalOptions;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCarrier(): string
+    {
+        return $this->carrier;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPickupLocation(): array
+    {
+        return $this->pickupLocation;
+    }
+
+    /**
      * @return bool
      */
     public function isPickup(): bool
     {
         return $this->deliveryType === "pickup";
     }
+
 }
 

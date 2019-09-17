@@ -44,6 +44,8 @@ class WCMP_API extends WCMP_Rest
     /**
      * Add shipment
      *
+     * @deprecated Use MyParcel SDK instead
+     *
      * @param array  $shipments array of shipments
      * @param string $type      shipment type: standard/return/unrelated_return
      *
