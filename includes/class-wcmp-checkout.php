@@ -163,7 +163,7 @@ class WCMP_Checkout
             "config"  => [
                 "carriers" => $carriers,
                 "platform" => "belgie",
-                "locale"   => get_locale(),
+                "locale"   => "nl-BE",
                 "currency" => get_woocommerce_currency(),
             ],
             "strings" => [
