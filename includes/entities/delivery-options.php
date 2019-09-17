@@ -28,7 +28,7 @@ class DeliveryOptions
      * @var string
      * @deprecated
      */
-    public $time;
+    public $moment;
 
     /**
      * @var string
@@ -75,9 +75,9 @@ class DeliveryOptions
         if ($this->isPickup()) {
             $this->pickupLocation = new PickupLocation($delivery_options["pickupLocation"]);
 
-            $this->time = $delivery_options["pickupMoment"];
+            $this->moment = $delivery_options["pickupMoment"];
         } else {
-            $this->time = $delivery_options["deliveryMoment"];
+            $this->moment = $delivery_options["deliveryMoment"];
         }
     }
 
@@ -92,9 +92,9 @@ class DeliveryOptions
     /**
      * @return string
      */
-    public function getTime(): string
+    public function getMoment(): string
     {
-        return $this->time;
+        return $this->moment;
     }
 
     /**

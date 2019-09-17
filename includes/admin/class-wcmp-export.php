@@ -606,9 +606,8 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
             throw new ErrorException("No API key found in MyParcel BE settings");
         }
 
-        $myparcelbe_delivery_options = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-        $carrier                     = $myparcelbe_delivery_options->getCarrier();
-
+        $delivery_options = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+        $carrier                     = $delivery_options->getCarrier();
         $consignment = ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID);
 //        $consignment = ConsignmentFactory::createByCarrierId($carrier ?? BpostConsignment::CARRIER_NAME);
 
@@ -616,6 +615,7 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
 
         $consignment
             ->setApiKey($api_key)
+            ->setDeliveryType($delivery_options->mom())
             ->setCountry($recipient['cc'])
             ->setPerson($recipient['person'])
             ->setCompany($recipient['company'])
@@ -626,7 +626,26 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
             ->setPostalCode($recipient['postal_code'])
             ->setCity($recipient['city'])
             ->setEmail($recipient['email'])
-            ->setPhone($recipient['phone']);
+            ->setPhone($recipient['phone'])
+            ->setLabelDescription($this->getLabelDescription($order))
+            ->setPackageType(self::PACKAGE)
+            ->setSignature($this->isSignature())
+            ->setInsurance($this->getInsuranceAmount())
+        ;
+
+        if ($delivery_options->isPickup()) {
+            $pickup = $delivery_options->getPickupLocation();
+            $consignment
+                ->setPickupCity($pickup->getCity())
+                ->setPickupLocationName($pickup->getLocationName())
+                ->setPickupStreet($pickup->getStreet())
+                ->setNumber($pickup->getNumber())
+                ->setPostalCode($pickup->getPostalCode());
+
+//             @todo add location code
+//            "location_code"     => $pickup["location_code"],
+//            "retail_network_id" => $pickup["retail_network_id"],
+        }
 
         return $consignment;
 
@@ -638,17 +657,6 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
             "carrier"   => BpostConsignment::CARRIER_NAME, // default to bpost for now
         ];
 
-        if ($pickup = $this->is_pickup($order)) {
-            $shipment["pickup"] = [
-                "postal_code"       => $pickup["postal_code"],
-                "street"            => $pickup["street"],
-                "city"              => $pickup["city"],
-                "number"            => $pickup["number"],
-                "location_code"     => $pickup["location_code"],
-                "retail_network_id" => $pickup["retail_network_id"],
-                "location_name"     => $pickup["location"],
-            ];
-        }
 
         $shipping_country = WCX_Order::get_prop($order, "shipping_country");
         if ($this->is_world_shipment_country($shipping_country)) {
@@ -865,11 +873,7 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
      */
     public function get_options($order)
     {
-        $description = "";
-        // parse description
-        if ($this->getSetting("label_description")) {
-            $description = $this->replace_shortcodes($this->getSetting("label_description"), $order);
-        }
+        $description = $this->getLabelDescription($order);
 
         // use shipment options from order when available
         $shipment_options = WCX_Order::get_meta($order, "_myparcelbe_shipment_options");
@@ -886,7 +890,7 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
 
             $options = [
                 "package_type"      => self::PACKAGE,
-                "signature"         => ($this->getSetting("signature")) ? 1 : 0,
+                "signature"         => $this->isSignature(),
                 "label_description" => $description,
                 "insured_amount"    => $insured_amount,
             ];
@@ -2060,6 +2064,30 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
         }
 
         return false;
+    }
+
+    /**
+     * @param $order
+     *
+     * @return mixed|string
+     */
+    private function getLabelDescription($order)
+    {
+        $description = "";
+        // parse description
+        if ($this->getSetting("label_description")) {
+            $description = $this->replace_shortcodes($this->getSetting("label_description"), $order);
+        }
+
+        return $description;
+}
+
+    /**
+     * @return int
+     */
+    private function isSignature(): int
+    {
+        return ($this->getSetting("signature")) ? 1 : 0;
     }
 }
 
