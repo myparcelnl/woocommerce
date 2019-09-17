@@ -78,7 +78,7 @@ class DeliveryOptions
     /**
      * @return string
      */
-    public function getDate(): string
+    public function getDate(): ?string
     {
         return $this->date;
     }
@@ -86,7 +86,7 @@ class DeliveryOptions
     /**
      * @return string
      */
-    public function getMoment(): string
+    public function getMoment(): ?string
     {
         return $this->moment;
     }
@@ -94,7 +94,7 @@ class DeliveryOptions
     /**
      * @return string
      */
-    public function getDeliveryType(): string
+    public function getDeliveryType(): ?string
     {
         return $this->deliveryType;
     }
@@ -102,7 +102,7 @@ class DeliveryOptions
     /**
      * @return array
      */
-    public function getAdditionalOptions(): array
+    public function getAdditionalOptions(): ?array
     {
         return $this->additionalOptions;
     }
@@ -118,7 +118,7 @@ class DeliveryOptions
     /**
      * @return PickupLocation
      */
-    public function getPickupLocation(): PickupLocation
+    public function getPickupLocation(): ?PickupLocation
     {
         return $this->pickupLocation;
     }
@@ -126,7 +126,7 @@ class DeliveryOptions
     /**
      * @return bool
      */
-    public function isPickup(): bool
+    public function isPickup(): ?bool
     {
         return $this->deliveryType === "pickup";
     }

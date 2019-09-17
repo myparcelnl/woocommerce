@@ -180,7 +180,7 @@ class WCMP_Export
                 $this->modal_dialog($order_ids, $dialog);
                 break;
         }
-exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
+
         // display errors directly if PDF requested or modal
         if (in_array($request, ["add_return", "get_labels", "modal_dialog"]) && ! empty($this->errors)) {
             echo $this->parse_errors($this->errors);
@@ -257,69 +257,79 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
             $extra_params = WCX_Order::get_meta($order, "_myparcelbe_shipment_options_extra");
             $colli_amount = isset($extra_params["colli_amount"]) ? $extra_params["colli_amount"] : 1;
 
-            for ($i = 0; $i < intval($colli_amount); $i++) {
-                try {
-                    $api      = $this->init_api();
+            $myParcelCollection->addMultiCollo($consignment, $colli_amount);
 
 
-
-                    $myParcelCollection->addConsignment($consignment);
-
-                    $response = $api->add_shipments($shipments);
-                    $this->log("API response (order {$order_id}):\n" . var_export($response, true));
-                    if (isset($response["body"]["data"]["ids"])) {
-                        $ids                      = array_shift($response["body"]["data"]["ids"]);
-                        $shipment_id              = $ids["id"];
-                        $this->success[$order_id] = $shipment_id;
-
-                        $created_shipments[] = $shipment_id;
-                        $shipment            = [
-                            "shipment_id" => $shipment_id,
-                        ];
-
+            // @todo save shipment
+//            for ($i = 0; $i < intval($colli_amount); $i++) {
+//                try {
+//                    $api      = $this->init_api();
+//
+//
+//
+//                    $myParcelCollection->addConsignment($consignment);
+//
+//                    $response = $api->add_shipments($shipments);
+//                    $this->log("API response (order {$order_id}):\n" . var_export($response, true));
+//                    if (isset($response["body"]["data"]["ids"])) {
+//                        $ids                      = array_shift($response["body"]["data"]["ids"]);
+//                        $shipment_id              = $ids["id"];
+//                        $this->success[$order_id] = $shipment_id;
+//
+//                        $created_shipments[] = $shipment_id;
+//                        $shipment            = [
+//                            "shipment_id" => $shipment_id,
+//                        ];
+//
                         // save shipment data in order meta
-                        $this->save_shipment_data($order, $shipment);
-
-                        // process directly setting
-                        if ($this->getSetting("process_directly") || $process === true) {
-                            // flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
-                            if (method_exists($order, "save")) {
-                                $order->save();
-                            }
-                            $this->get_labels((array) $order_id, "url");
-                            $this->get_shipment_data($shipment_id, $order);
-                        }
-
-                        // status automation
-                        if ($this->getSetting("order_status_automation")
-                            && $this->getSetting(
-                                "automatic_order_status"
-                            )) {
-                            $order->update_status(
-                                $this->getSetting("automatic_order_status"),
-                                _wcmp("MyParcel shipment created:")
-                            );
-                        }
-                    } else {
-                        $this->errors[$order_id] = _wcmp("Unknown error");
-                    }
-                } catch (Exception $e) {
-                    $this->errors[$order_id] = $e->getMessage();
-                }
-            }
-
-            // store shipment ids from this export
-            if (! empty($created_shipments)) {
-                WCX_Order::update_meta_data($order, "_myparcelbe_last_shipment_ids", $created_shipments);
-            }
+//                        $this->save_shipment_data($order, $shipment);
+//
+//                        // process directly setting
+//                        if ($this->getSetting("process_directly") || $process === true) {
+//                            // flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
+//                            if (method_exists($order, "save")) {
+//                                $order->save();
+//                            }
+//                            $this->get_labels((array) $order_id, "url");
+//                            $this->get_shipment_data($shipment_id, $order);
+//                        }
+//
+//                        // status automation
+//                        if ($this->getSetting("order_status_automation")
+//                            && $this->getSetting(
+//                                "automatic_order_status"
+//                            )) {
+//                            $order->update_status(
+//                                $this->getSetting("automatic_order_status"),
+//                                _wcmp("MyParcel shipment created:")
+//                            );
+//                        }
+//                    } else {
+//                        $this->errors[$order_id] = _wcmp("Unknown error");
+//                    }
+//                } catch (Exception $e) {
+//                    $this->errors[$order_id] = $e->getMessage();
+//                }
+//            }
+//
+//            // store shipment ids from this export
+//            if (! empty($created_shipments)) {
+//                WCX_Order::update_meta_data($order, "_myparcelbe_last_shipment_ids", $created_shipments);
+//            }
         }
-        if (! empty($this->success)) {
+
+        $myParcelCollection->createConcepts()->setPdfOfLabels();
+
+        $myParcelCollection->downloadPdfOfLabels();
+
+
+//        if (! empty($this->success)) {
             $return["success"]     = sprintf(
                 _wcmp("%s shipments successfully exported to MyParcel"),
                 count($this->success)
             );
-            $return["success_ids"] = $this->success;
-        }
+            $return["success_ids"] = $myParcelCollection->getConsignmentIds();
+//        }
 
         return $return;
         /*
@@ -607,9 +617,8 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
         }
 
         $delivery_options = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-        $carrier                     = $delivery_options->getCarrier();
-        $consignment = ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID);
-//        $consignment = ConsignmentFactory::createByCarrierId($carrier ?? BpostConsignment::CARRIER_NAME);
+        $carrier          = $delivery_options->getCarrier();
+        $consignment      = ConsignmentFactory::createByCarrierName($carrier ?? BpostConsignment::CARRIER_ID);
 
         $recipient = $this->get_recipient($order);
 
@@ -631,8 +640,7 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
             ->setLabelDescription($this->getLabelDescription($order))
             ->setPackageType(self::PACKAGE)
             ->setSignature($this->isSignature())
-            ->setInsurance($this->getInsuranceAmount())
-        ;
+            ->setInsurance($this->getInsuranceAmount());
 
         if ($delivery_options->isPickup()) {
             $pickup = $delivery_options->getPickupLocation();
@@ -648,29 +656,19 @@ exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
 //            "retail_network_id" => $pickup["retail_network_id"],
         }
 
+
+        // @todo set customs_declaration
+//        $shipping_country = WCX_Order::get_prop($order, "shipping_country");
+//        if ($this->is_world_shipment_country($shipping_country)) {
+//            $customs_declaration             = $this->get_customs_declaration($order);
+//
+//            $shipment["customs_declaration"] = $customs_declaration;
+//            $shipment["physical_properties"] = [
+//                "weight" => $customs_declaration["weight"],
+//            ];
+//        }
+
         return $consignment;
-
-
-
-        $shipment  = [
-            "recipient" => $recipient,
-            "options"   => $this->get_options($order),
-            "carrier"   => BpostConsignment::CARRIER_NAME, // default to bpost for now
-        ];
-
-
-        $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-        if ($this->is_world_shipment_country($shipping_country)) {
-            $customs_declaration             = $this->get_customs_declaration($order);
-            $shipment["customs_declaration"] = $customs_declaration;
-            $shipment["physical_properties"] = [
-                "weight" => $customs_declaration["weight"],
-            ];
-        }
-
-        $shipments[] = apply_filters("wc_myparcelbe_order_shipment", $shipment, $order, $type, $this);
-
-        return $shipments;
     }
 
     public function prepare_return_shipment_data($order_id, $options)

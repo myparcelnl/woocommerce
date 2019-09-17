@@ -509,7 +509,7 @@ class WCMP_Admin
         $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
 
         $deliveryDaysWindow = WCMP()->setting_collection->getByName(
-            $deliveryOptions->carrier . "_delivery_days_window"
+            $deliveryOptions->getCarrier() . "_delivery_days_window"
         );
 
         echo "<div class=\"delivery-options\">";
@@ -517,14 +517,14 @@ class WCMP_Admin
         /**
          * Show the delivery date if it is present.
          */
-        if ($deliveryOptions->date || $deliveryDaysWindow === 0) {
+        if ($deliveryOptions->getDate() || $deliveryDaysWindow === 0) {
             $this->printDeliveryDate($deliveryOptions);
         }
 
         /**
          * If the order will be sent to a pickup location show its address.
          */
-        if ("pickup" === $deliveryOptions->deliveryType) {
+        if ("pickup" === $deliveryOptions->getDeliveryType()) {
             $this->printPickupLocation($deliveryOptions);
         }
 
@@ -715,7 +715,7 @@ class WCMP_Admin
     {
         $formatted_date = date_i18n(
             apply_filters('wcmyparcelbe_delivery_date_format', wc_date_format()),
-            strtotime($delivery_options->date)
+            strtotime($delivery_options->getDate())
         );
 
         $time_title = _wcmp('Standard delivery');
