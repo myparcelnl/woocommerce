@@ -19,7 +19,7 @@ try {
     exit();
 }
 
-echo '<div class="wcmyparcelbe_change_order">';
+echo '<div class="wcmp wcmp__change-order">';
 
 $isPackageTypeDisabled = count($package_types) === 1 || $deliveryOptions->isPickup();
 
@@ -28,10 +28,11 @@ $option_rows = [
         "name"              => "[carrier]",
         "label"             => _wcmp("Carrier"),
         "type"              => "select",
+        "options"           => [$deliveryOptions->getCarrier()],
         "custom_attributes" => [
-            "disabled" => true,
+            "disabled" => "disabled",
         ],
-        "value"             => $deliveryOptions->getCarrier(),
+        //        "value"             => $deliveryOptions->getCarrier(),
     ],
     [
         "name"              => "[$order_id][package_type]",
@@ -41,24 +42,23 @@ $option_rows = [
             wc_format_weight($order->get_meta("_wcmp_order_weight"))
         ),
         "type"              => "select",
-        "class"             => ["package_type"],
         "options"           => $package_types,
+        "value"             => $shipment_options["package_type"],
         "custom_attributes" => [
             "disabled" => $isPackageTypeDisabled ? "disabled" : null,
         ],
-        "value"             => $shipment_options["package_type"],
     ],
     [
         "name"              => "[$order_id][extra_options][colli_amount]",
         "label"             => _wcmp("Number of labels"),
         "type"              => "number",
+        "value"             => isset($myparcelbe_options_extra['colli_amount'])
+            ? $myparcelbe_options_extra['colli_amount'] : 1,
         "custom_attributes" => [
             "step" => "1",
             "min"  => "1",
             "max"  => "10",
         ],
-        "value"             => isset($myparcelbe_options_extra['colli_amount'])
-            ? $myparcelbe_options_extra['colli_amount'] : 1,
     ],
     [
         "name"              => "[signature]",
@@ -90,16 +90,8 @@ foreach ($option_rows as $option_row) {
     woocommerce_form_field(
         "myparcelbe_options" . $class->name,
         $class->getArguments(false),
-        $class->value
+        $option_row["value"] ?? null
     );
-
-    echo '</td>';
-
-    echo '<td class="wcmp_option_cost">';
-    if (! empty($option_row['cost'])) {
-        echo "+ &euro; {$option_row['cost']}";
-    }
-    echo '</td>';
 }
 
 echo '<div class="wcmp_save_shipment_settings">';

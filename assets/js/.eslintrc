@@ -9,7 +9,10 @@
   ],
   "overrides": [
     {
-      "files": ["wcmp-admin.js"],
+      "files": [
+        "wcmp-admin.js",
+        "be-checkout.js"
+      ],
       "env": {
         "jquery": true
       },

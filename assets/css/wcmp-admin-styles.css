@@ -215,3 +215,9 @@ body.woocommerce_page_wcmp_settings select {
 .woocommerce table.form-table th {
   width: 280px;
 }
+
+
+/* Hide the "(optional)" spans on form labels */
+.wcmp label span.optional {
+  display: none;
+}

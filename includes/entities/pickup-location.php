@@ -2,6 +2,8 @@
 
 namespace WPO\WC\MyParcelBE\Entity;
 
+use stdClass;
+
 /**
  * Class PickupLocation
  *
@@ -34,13 +36,13 @@ class PickupLocation
      */
     private $city;
 
-    public function __construct(array $data)
+    public function __construct(stdClass $data)
     {
-        $this->location_name = $data["location_name"];
-        $this->street        = $data["street"];
-        $this->number        = $data["number"];
-        $this->postal_code   = $data["postal_code"];
-        $this->city          = $data["city"];
+        $this->location_name = $data->location_name;
+        $this->street        = $data->street;
+        $this->number        = $data->number;
+        $this->postal_code   = $data->postal_code;
+        $this->city          = $data->city;
     }
 
     /**

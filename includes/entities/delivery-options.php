@@ -36,7 +36,7 @@ class DeliveryOptions
     /**
      * @var array
      */
-    private $additionalOptions;
+    private $shipmentOptions;
 
     /**
      * @var string
@@ -51,31 +51,27 @@ class DeliveryOptions
     /**
      * DeliveryOptions constructor.
      *
-     * @param array|mixed|object $delivery_options
+     * @param array $deliveryOptions
      *
      * @throws Exception
      */
-    public function __construct(array $delivery_options)
+    public function __construct(array $deliveryOptions)
     {
-        if (array_key_exists("carrier", $delivery_options)) {
-            $carrier = $delivery_options["carrier"];
+        if (array_key_exists("carrier", $deliveryOptions)) {
+            $carrier = $deliveryOptions["carrier"];
         }
 
-        $this->deliveryType      = $delivery_options["delivery"];
-        $this->date              = $delivery_options["deliveryDate"];
-        $this->additionalOptions = $delivery_options["additionalOptions"];
-        $this->carrier           = $carrier ?? BpostConsignment::CARRIER_NAME;
+        $this->deliveryType    = $deliveryOptions["delivery"];
+        $this->date            = $deliveryOptions["deliveryDate"];
+        $this->shipmentOptions = $deliveryOptions["shipmentOptions"] ?? [];
+        $this->carrier         = $carrier ?? BpostConsignment::CARRIER_NAME;
 
         if ($this->isPickup()) {
-            echo "<pre>";
-            print_r($delivery_options);
-            echo "</pre>";
-            exit();
-            $this->pickupLocation = new PickupLocation($delivery_options["pickupLocation"]);
+            $this->pickupLocation = new PickupLocation($deliveryOptions["pickupLocation"]);
 
-            $this->moment = $delivery_options["pickupMoment"];
+            $this->moment = $deliveryOptions["pickupMoment"];
         } else {
-            $this->moment = $delivery_options["deliveryMoment"];
+            $this->moment = $deliveryOptions["deliveryMoment"];
         }
     }
 
@@ -106,9 +102,9 @@ class DeliveryOptions
     /**
      * @return array
      */
-    public function getAdditionalOptions(): ?array
+    public function getShipmentOptions(): ?array
     {
-        return $this->additionalOptions;
+        return $this->shipmentOptions;
     }
 
     /**

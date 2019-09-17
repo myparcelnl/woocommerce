@@ -179,6 +179,7 @@ if (! class_exists('WCMP')) :
 
             require_once($this->includes . "/collections/settings-collection.php");
             require_once($this->includes . "/entities/delivery-options.php");
+            require_once($this->includes . "/entities/pickup-location.php");
             require_once($this->includes . "/entities/setting.php");
             require_once($this->includes . "/entities/settings-field-arguments.php");
 
