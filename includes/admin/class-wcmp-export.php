@@ -8,6 +8,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Entity\DeliveryOptions;
 
 if (! defined("ABSPATH")) {
     exit;
@@ -109,7 +110,6 @@ class WCMP_Export
         if (! is_user_logged_in()) {
             wp_die(_wcmp("You do not have sufficient permissions to access this page."));
         }
-
         $return = [];
 
         // Check the user privileges (maybe use order ids for filter?)
@@ -137,7 +137,6 @@ class WCMP_Export
             case "add_shipments":
                 // filter out non-myparcel destinations
                 $order_ids = $this->filter_myparcelbe_destination_orders($order_ids);
-
                 if (empty($order_ids)) {
                     $this->errors[] = _wcmp("You have not selected any orders!");
                     break;
@@ -155,6 +154,7 @@ class WCMP_Export
                 $return = $this->add_return($myparcelbe_options);
                 break;
             case "get_labels":
+                exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
                 $offset = ! empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
                 if (empty($order_ids) && empty($shipment_ids)) {
                     $this->errors[] = _wcmp("You have not selected any orders!");
@@ -180,7 +180,7 @@ class WCMP_Export
                 $this->modal_dialog($order_ids, $dialog);
                 break;
         }
-
+exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
         // display errors directly if PDF requested or modal
         if (in_array($request, ["add_return", "get_labels", "modal_dialog"]) && ! empty($this->errors)) {
             echo $this->parse_errors($this->errors);
@@ -238,44 +238,17 @@ class WCMP_Export
      */
     public function add_shipments($order_ids)
     {
-        foreach ($order_ids as $order_id) {
-            $created_shipments = [];
-            $order             = WCX::get_order($order_id);
-            $shipments         = $this->get_order_shipment_data((array) $order_id);
-            if (empty($shipments)) {
-                $this->log("Export for order {$order_id} skipped (missing or invalidated shipment data)");
-                continue;
-            }
-
-            $this->log("Shipment data for order {$order_id}:\n" . var_export($shipments, true));
-
-            $myParcelCollection = (new MyParcelCollection())->setUserAgent("test dit moet nog nagekeken worden", "1.0");
-
-            $consignment = $this->getConsignmentData($shipments, $order_id);
-
-            $myParcelCollection->addConsignment($consignment);
-
-            $consignment = $myParcelCollection->createConcepts()->setLatestData()->first();
-            $consignment = $myParcelCollection->getOneConsignment();
-        }
-
-        return $this;
-
-        /*
-         * old code
-         */
         $return = [];
+
+        $myParcelCollection = new MyParcelCollection();
 
         $this->log("*** Creating shipments started ***");
 
         foreach ($order_ids as $order_id) {
             $created_shipments = [];
             $order             = WCX::get_order($order_id);
-            $shipments         = $this->get_order_shipment_data((array) $order_id);
-            if (empty($shipments)) {
-                $this->log("Export for order {$order_id} skipped (missing or invalidated shipment data)");
-                continue;
-            }
+
+            $consignment         = $this->get_consignment_from_checkout_data($order_id);
 
             $this->log("Shipment data for order {$order_id}:\n" . var_export($shipments, true));
 
@@ -286,6 +259,12 @@ class WCMP_Export
             for ($i = 0; $i < intval($colli_amount); $i++) {
                 try {
                     $api      = $this->init_api();
+
+
+
+                    $myParcelCollection->addConsignment($consignment);
+
+
                     $response = $api->add_shipments($shipments);
                     $this->log("API response (order {$order_id}):\n" . var_export($response, true));
                     if (isset($response["body"]["data"]["ids"])) {
@@ -608,41 +587,46 @@ class WCMP_Export
         return $key;
     }
 
-    public function get_order_shipment_data($order_ids, $type = "standard")
+    public function get_consignment_from_checkout_data(int $order_id, string $type = "standard"): AbstractConsignment
     {
-        foreach ($order_ids as $order_id) {
-            // get order
-            $order = WCX::get_order($order_id);
+        $order = WCX::get_order($order_id);
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
 
-            $shipment = [
-                "recipient" => $this->get_recipient($order),
-                "options"   => $this->get_options($order),
-                "carrier"   => BpostConsignment::CARRIER_NAME, // default to bpost for now
+
+        $myparcelbe_delivery_options = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+        $myparcelbe_delivery_options->carrier
+        var_dump($myparcelbe_delivery_options['carrier']);
+        exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
+
+        $shipment = [
+            "recipient" => $this->get_recipient($order),
+            "options"   => $this->get_options($order),
+            "carrier"   => BpostConsignment::CARRIER_NAME, // default to bpost for now
+        ];
+
+        if ($pickup = $this->is_pickup($order)) {
+            $shipment["pickup"] = [
+                "postal_code"       => $pickup["postal_code"],
+                "street"            => $pickup["street"],
+                "city"              => $pickup["city"],
+                "number"            => $pickup["number"],
+                "location_code"     => $pickup["location_code"],
+                "retail_network_id" => $pickup["retail_network_id"],
+                "location_name"     => $pickup["location"],
             ];
-
-            if ($pickup = $this->is_pickup($order)) {
-                $shipment["pickup"] = [
-                    "postal_code"       => $pickup["postal_code"],
-                    "street"            => $pickup["street"],
-                    "city"              => $pickup["city"],
-                    "number"            => $pickup["number"],
-                    "location_code"     => $pickup["location_code"],
-                    "retail_network_id" => $pickup["retail_network_id"],
-                    "location_name"     => $pickup["location"],
-                ];
-            }
-
-            $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-            if ($this->is_world_shipment_country($shipping_country)) {
-                $customs_declaration             = $this->get_customs_declaration($order);
-                $shipment["customs_declaration"] = $customs_declaration;
-                $shipment["physical_properties"] = [
-                    "weight" => $customs_declaration["weight"],
-                ];
-            }
-
-            $shipments[] = apply_filters("wc_myparcelbe_order_shipment", $shipment, $order, $type, $this);
         }
+
+        $shipping_country = WCX_Order::get_prop($order, "shipping_country");
+        if ($this->is_world_shipment_country($shipping_country)) {
+            $customs_declaration             = $this->get_customs_declaration($order);
+            $shipment["customs_declaration"] = $customs_declaration;
+            $shipment["physical_properties"] = [
+                "weight" => $customs_declaration["weight"],
+            ];
+        }
+
+        $shipments[] = apply_filters("wc_myparcelbe_order_shipment", $shipment, $order, $type, $this);
 
         return $shipments;
     }
@@ -889,7 +873,7 @@ class WCMP_Export
         }
 
         // load delivery options
-        $myparcelbe_delivery_options = WCX_Order::get_meta($order, "_myparcelbe_delivery_options");
+        $myparcelbe_delivery_options = WCX_Order::get_meta($order, DeliveryOptions::FIELD_DELIVERY_OPTIONS);
 
         // set delivery type
         $options["delivery_type"] = $this->get_delivery_type($order, $myparcelbe_delivery_options);
@@ -1296,7 +1280,7 @@ class WCMP_Export
      */
     public function replace_shortcodes($description, $order)
     {
-        $myparcelbe_delivery_options = WCX_Order::get_meta($order, "_myparcelbe_delivery_options");
+        $myparcelbe_delivery_options = WCX_Order::get_meta($order, DeliveryOptions::FIELD_DELIVERY_OPTIONS);
         $replacements                = [
             "[ORDER_NR]"      => $order->get_order_number(),
             "[DELIVERY_DATE]" => isset($myparcelbe_delivery_options) && isset($myparcelbe_delivery_options["date"])
@@ -1353,7 +1337,7 @@ class WCMP_Export
     public function is_pickup($order, $myparcelbe_delivery_options = "")
     {
         if (empty($myparcelbe_delivery_options)) {
-            $myparcelbe_delivery_options = WCX_Order::get_meta($order, "_myparcelbe_delivery_options");
+            $myparcelbe_delivery_options = WCX_Order::get_meta($order, DeliveryOptions::FIELD_DELIVERY_OPTIONS);
         }
 
         $pickup_types = ["retail"];
@@ -1401,7 +1385,7 @@ class WCMP_Export
         ];
 
         if (empty($myparcelbe_delivery_options)) {
-            $myparcelbe_delivery_options = WCX_Order::get_meta($order, "_myparcelbe_delivery_options");
+            $myparcelbe_delivery_options = WCX_Order::get_meta($order, DeliveryOptions::FIELD_DELIVERY_OPTIONS);
         }
 
         // standard = default, overwrite if options found

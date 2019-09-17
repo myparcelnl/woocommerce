@@ -682,7 +682,7 @@ class WCMP_Admin
     public static function getDeliveryOptionsFromOrder(WC_Order $order): DeliveryOptions
     {
         return new DeliveryOptions(
-            (array) json_decode(stripslashes(WCX_Order::get_meta($order, DeliveryOptions::HIDDEN_INPUT_NAME)))
+            (array) json_decode(stripslashes(WCX_Order::get_meta($order, DeliveryOptions::FIELD_DELIVERY_OPTIONS)))
         );
     }
 

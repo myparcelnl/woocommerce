@@ -94,7 +94,7 @@ class WCMP_Checkout
             [
                 "shippingMethods" => $this->get_delivery_options_shipping_methods(),
                 "alwaysDisplay"   => (int) $this->get_delivery_options_always_display(),
-                "hiddenInputName" => DeliveryOptions::HIDDEN_INPUT_NAME,
+                "hiddenInputName" => DeliveryOptions::FIELD_DELIVERY_OPTIONS,
             ]
         );
 
@@ -291,11 +291,11 @@ class WCMP_Checkout
             );
         }
 
-        if (isset($_POST[DeliveryOptions::HIDDEN_INPUT_NAME])) {
+        if (isset($_POST[DeliveryOptions::FIELD_DELIVERY_OPTIONS])) {
             Order::update_meta_data(
                 $order,
-                DeliveryOptions::HIDDEN_INPUT_NAME,
-                $_POST[DeliveryOptions::HIDDEN_INPUT_NAME]
+                DeliveryOptions::FIELD_DELIVERY_OPTIONS,
+                $_POST[DeliveryOptions::FIELD_DELIVERY_OPTIONS]
             );
         }
     }
