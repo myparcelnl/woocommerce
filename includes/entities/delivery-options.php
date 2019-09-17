@@ -115,7 +115,7 @@ class DeliveryOptions
     /**
      * @return string
      */
-    public function getCarrier(): string
+    public function getCarrier(): ?string
     {
         return $this->carrier;
     }
