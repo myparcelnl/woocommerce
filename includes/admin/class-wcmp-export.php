@@ -661,14 +661,11 @@ class WCMP_Export
         $consignment      = ConsignmentFactory::createByCarrierName($carrier ?? BpostConsignment::CARRIER_ID);
 
         $recipient = $this->get_recipient($order, $connectEmail);
-        $delivery_type =
-            $delivery_options->getMoment() === 'pickup' ? AbstractConsignment::DELIVERY_TYPE_PICKUP
-                : AbstractConsignment::DELIVERY_TYPE_STANDARD;
 
         $consignment
             ->setApiKey($api_key)
             ->setReferenceId($order_id)
-            ->setDeliveryType($delivery_type)
+            ->setDeliveryType($this->getPickupTypeByDeliveryOptions($delivery_options))
             ->setCountry($recipient['cc'])
             ->setPerson(
                 $recipient['person']
@@ -680,7 +677,7 @@ class WCMP_Export
             ->setStreetAdditionalInfo($recipient['street_additional_info'] ?? null)
             ->setPostalCode($recipient['postal_code'])
             ->setCity($recipient['city'])
-            ->setEmail($recipient['email'])
+            ->setEmail('test@test.nl'/*$recipient['email']*/)
             ->setPhone($recipient['phone'])
             ->setLabelDescription($this->getLabelDescription($order))
             ->setPackageType(self::PACKAGE)
@@ -695,8 +692,8 @@ class WCMP_Export
             $consignment->setPickupCity($pickup->getCity())
                 ->setPickupLocationName($pickup->getLocationName())
                 ->setPickupStreet($pickup->getStreet())
-                ->setNumber($pickup->getNumber())
-                ->setPostalCode($pickup->getPostalCode())
+                ->setPickupNumber($pickup->getNumber())
+                ->setPickupPostalCode($pickup->getPostalCode())
                 ->setPickupLocationCode($pickup->getLocationCode());
 //                ->setPickupNetworkId($pickup->getNetworkId());
 
@@ -2134,6 +2131,20 @@ class WCMP_Export
     private function isSignature(): int
     {
         return ($this->getSetting("signature")) ? 1 : 0;
+    }
+
+    /**
+     * @param DeliveryOptions $delivery_options
+     *
+     * @return int
+     */
+    private function getPickupTypeByDeliveryOptions(DeliveryOptions $delivery_options): int
+    {
+        if ($delivery_options->isPickup()) {
+            return AbstractConsignment::DELIVERY_TYPE_PICKUP;
+        }
+
+        return AbstractConsignment::DELIVERY_TYPE_STANDARD;
     }
 }
 
