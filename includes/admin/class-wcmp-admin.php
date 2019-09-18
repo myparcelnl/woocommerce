@@ -92,9 +92,7 @@ class WCMP_Admin
                      data-shipment_id="<?php echo $last_shipment_id; ?>"
                      data-order_id="<?php echo $order_id; ?>"
                      style="display: none;">
-                    <img alt="loading"
-                         src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
-                         class="wcmp_spinner"/>
+                    <?php self::renderSpinner(); ?>
                 </div>
             </div>
         <?php else : ?>
@@ -166,10 +164,13 @@ class WCMP_Admin
                 .appendTo('select[name=\'action\'], select[name=\'action2\']');
                 <?php }    ?>
             });
-            </script><img src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
-                          class="wcmp_bulk_spinner waiting"
-                          style="display:none;"/>
-            <?php
+            </script>
+            <?php self::renderSpinner(
+                [
+                    "class" => ["wcmp_bulk_spinner", "waiting"],
+                    "style" => "display: none;",
+                ]
+            );
         }
     }
 
@@ -202,15 +203,17 @@ class WCMP_Admin
      *
      * @param $order
      */
-    public function admin_wc_actions($order)
+    public function admin_wc_actions($order): void
     {
-        return $this->admin_order_actions($order);
+        $this->admin_order_actions($order);
     }
 
     /**
      * Add print actions to the orders listing
+     *
+     * @param $order
      */
-    public function admin_order_actions($order)
+    public function admin_order_actions($order): void
     {
         if (empty($order)) {
             return;
@@ -224,45 +227,60 @@ class WCMP_Admin
         $order_id = WCX_Order::get_id($order);
 
         $listing_actions = [
-            'add_shipment' => [
-                'url' => wp_nonce_url(
-                    admin_url('admin-ajax.php?action=wc_myparcelbe&request=add_shipment&order_ids=' . $order_id),
-                    'wc_myparcelbe'
+            WCMP_Export::ADD_SHIPMENT => [
+                "url" => wp_nonce_url(
+                    admin_url(
+                        "admin-ajax.php?action=wc_myparcelbe&request="
+                        . WCMP_Export::ADD_SHIPMENT
+                        . "&order_ids="
+                        . $order_id
+                    ),
+                    "wc_myparcelbe"
                 ),
-                'img' => WCMP()->plugin_url() . '/assets/img/myparcelbe-up.png',
-                'alt' => esc_attr__('Export to MyParcel BE', 'woocommerce-myparcelbe'),
+                "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-up.png",
+                "alt" => esc_attr__("Export to MyParcel BE", "woocommerce-myparcelbe"),
             ],
-            'get_labels'   => [
-                'url' => wp_nonce_url(
-                    admin_url('admin-ajax.php?action=wc_myparcelbe&request=get_labels&order_ids=' . $order_id),
-                    'wc_myparcelbe'
+            WCMP_Export::GET_LABELS   => [
+                "url" => wp_nonce_url(
+                    admin_url(
+                        "admin-ajax.php?action=wc_myparcelbe&request="
+                        . WCMP_Export::GET_LABELS
+                        . "&order_ids="
+                        . $order_id
+                    ),
+                    "wc_myparcelbe"
                 ),
-                'img' => WCMP()->plugin_url() . '/assets/img/myparcelbe-pdf.png',
-                'alt' => esc_attr__('Print MyParcel BE label', 'woocommerce-myparcelbe'),
+                "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png",
+                "alt" => esc_attr__("Print MyParcel BE label", "woocommerce-myparcelbe"),
             ],
-            'add_return'   => [
-                'url' => wp_nonce_url(
-                    admin_url('admin-ajax.php?action=wc_myparcelbe&request=add_return&order_ids=' . $order_id),
-                    'wc_myparcelbe'
+            WCMP_Export::ADD_RETURN   => [
+                "url" => wp_nonce_url(
+                    admin_url(
+                        "admin-ajax.php?action=wc_myparcelbe&request="
+                        . WCMP_Export::ADD_RETURN
+                        . "&order_ids="
+                        . $order_id
+                    ),
+                    "wc_myparcelbe"
                 ),
-                'img' => WCMP()->plugin_url() . '/assets/img/myparcelbe-retour.png',
-                'alt' => esc_attr__('Email return label', 'woocommerce-myparcelbe'),
+                "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-retour.png",
+                "alt" => esc_attr__("Email return label", "woocommerce-myparcelbe"),
             ],
         ];
 
         $consignments = $this->get_order_shipments($order);
 
         if (empty($consignments)) {
-            unset($listing_actions['get_labels']);
+            unset($listing_actions[WCMP_Export::GET_LABELS]);
         }
 
         $processed_shipments = $this->get_order_shipments($order, true);
         if (empty($processed_shipments) || $shipping_country != 'BE') {
-            unset($listing_actions['add_return']);
+            unset($listing_actions[WCMP_Export::ADD_RETURN]);
         }
 
         $target = (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY)
-                   && WCMP()->setting_collection->get(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) == 'display')
+                   && WCMP()->setting_collection->get(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display')
             ? 'target="_blank"' : '';
         $nonce  = wp_create_nonce('wc_myparcelbe');
         foreach ($listing_actions as $action => $data) {
@@ -282,13 +300,20 @@ class WCMP_Admin
                  class="wcmp_button_img"></a>
             <?php
         }
-        ?>
-        <img src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
-             style="width: 17px; margin: 5px 3px;"
-             class="wcmp_spinner waiting"/>
-        <?php
+        self::renderSpinner(
+            [
+                "class" => ["wcmp_spinner", "waiting"],
+                "style" => "width: 17px; margin: 5px 3px;",
+            ]
+        );
     }
 
+    /**
+     * @param      $order
+     * @param bool $exclude_concepts
+     *
+     * @return array|bool|mixed|void
+     */
     public function get_order_shipments($order, $exclude_concepts = false)
     {
         if (empty($order)) {
@@ -305,16 +330,14 @@ class WCMP_Admin
                         'tracktrace'  => WCX_Order::get_meta($order, self::META_TRACK_TRACE),
                     ],
                 ];
-            } else {
-                if ($legacy_consignments = WCX_Order::get_meta($order, self::META_CONSIGNMENTS)) {
-                    $consignments = [];
-                    foreach ($legacy_consignments as $consignment) {
-                        if (isset($consignment['consignment_id'])) {
-                            $consignments[] = [
-                                'shipment_id' => $consignment['consignment_id'],
-                                'tracktrace'  => $consignment['tracktrace'],
-                            ];
-                        }
+            } elseif ($legacy_consignments = WCX_Order::get_meta($order, self::META_CONSIGNMENTS)) {
+                $consignments = [];
+                foreach ($legacy_consignments as $consignment) {
+                    if (isset($consignment['consignment_id'])) {
+                        $consignments[] = [
+                            'shipment_id' => $consignment['consignment_id'],
+                            'tracktrace'  => $consignment['tracktrace'],
+                        ];
                     }
                 }
             }
@@ -435,7 +458,7 @@ class WCMP_Admin
                 </thead>
                 <tbody>
                 <?php
-                $action            = 'get_labels';
+                $action            = WCMP_Export::GET_LABELS;
                 $target            = (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY)
                                       && WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY)
                                          == 'display') ? 'target="_blank"' : '';
@@ -445,7 +468,10 @@ class WCMP_Admin
                     $shipment = WCMP()->export->get_shipment_data($shipment_id, $order);
                     $label_url     = wp_nonce_url(
                         admin_url(
-                            'admin-ajax.php?action=wc_myparcelbe&request=get_labels&shipment_ids=' . $shipment_id
+                            'admin-ajax.php?action=wc_myparcelbe&request='
+                            . WCMP_Export::GET_LABELS
+                            . '&shipment_ids='
+                            . $shipment_id
                         ),
                         'wc_myparcelbe'
                     );
@@ -456,14 +482,12 @@ class WCMP_Admin
                             $tracktrace_url,
                             $shipment['tracktrace']
                         );
+                    } elseif (isset($shipment['shipment']) && isset($shipment['shipment']['options'])) {
+                        $tracktrace_link = '(' . WCMP()->export->get_package_name(
+                                $shipment['shipment']['options']['package_type']
+                            ) . ')';
                     } else {
-                        if (isset($shipment['shipment']) && isset($shipment['shipment']['options'])) {
-                            $tracktrace_link = '(' . WCMP()->export->get_package_name(
-                                    $shipment['shipment']['options']['package_type']
-                                ) . ')';
-                        } else {
-                            $tracktrace_link = '(Unknown)';
-                        }
+                        $tracktrace_link = '(Unknown)';
                     }
                     $status = isset($shipment['status']) ? $shipment['status'] : '-';
                     ?>
@@ -522,14 +546,10 @@ class WCMP_Admin
     {
         $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
 
-        $deliveryDaysWindow = WCMP()->setting_collection->getByName(
-            $deliveryOptions->getCarrier() . "_delivery_days_window"
-        );
-
         /**
          * Show the delivery date if it is present.
          */
-        if ($deliveryOptions->getDate() || $deliveryDaysWindow === 0) {
+        if ($deliveryOptions->getDate()) {
             $this->printDeliveryDate($deliveryOptions);
         }
     }
@@ -551,7 +571,7 @@ class WCMP_Admin
         $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'shipping_postcode'));
 
         // set url for NL or foreign orders
-        if ($country == 'BE') {
+        if ($country === 'BE') {
             // use billing postcode for pickup/pakjegemak
             if (WCMP()->export->is_pickup($order)) {
                 $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
@@ -695,7 +715,7 @@ class WCMP_Admin
     public static function getDeliveryOptionsFromOrder(WC_Order $order): DeliveryOptions
     {
         return new DeliveryOptions(
-            (array) json_decode(stripslashes(WCX_Order::get_meta($order, WCMP_Admin::META_DELIVERY_OPTIONS)))
+            (array) json_decode(stripslashes(WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS)))
         );
     }
 
@@ -720,14 +740,25 @@ class WCMP_Admin
 
     /**
      * Output a spinner.
+     *
+     * @param array $args
      */
-    private function showSpinner(): void
+    public static function renderSpinner(array $args = ["class" => "wcmp_spinner"]): void
     {
+        $arguments = [];
+        foreach ($args as $arg => $value) {
+            if (is_array($value)) {
+                $value = implode(" ", $value);
+            }
+            $arguments[] = "$arg=\"$value\"";
+        }
+
         printf(
             '<img alt="loading"
                  src="%s"
-                 class="wcmp_spinner waiting"/>',
-            WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'
+                 %s />',
+            WCMP()->plugin_url() . '/assets/img/wpspin_light.gif',
+            implode(" ", $arguments)
         );
     }
 }

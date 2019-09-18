@@ -27,10 +27,11 @@ class WCMP_Export
     // Maximum characters length of item description.
     public const DESCRIPTION_MAX_LENGTH = 50;
 
-    public const ADD_SHIPMENTS                = "add_shipments";
-    public const ADD_RETURN                   = "add_return";
-    public const GET_LABELS                   = "get_labels";
-    public const MODAL_DIALOG                 = "modal_dialog";
+    public const ADD_SHIPMENTS = "add_shipments";
+    public const ADD_SHIPMENT  = "add_shipment";
+    public const ADD_RETURN    = "add_return";
+    public const GET_LABELS    = "get_labels";
+    public const MODAL_DIALOG  = "modal_dialog";
 
     public $order_id;
     public $success;
@@ -1415,8 +1416,8 @@ class WCMP_Export
      * @param        $order
      * @param string $deliveryOptions
      *
-     * @deprecated
      * @return int|mixed|string
+     * @deprecated
      */
     public function get_delivery_type($order, $myparcelbe_delivery_options = "")
     {

@@ -61,7 +61,10 @@ if (! defined('ABSPATH')) {
 <body>
 <?php
 $target_url =
-    wp_nonce_url(admin_url('admin-ajax.php?action=wc_myparcelbe&request=add_return&modal=true'), 'wc_myparcelbe');
+    wp_nonce_url(
+        admin_url('admin-ajax.php?action=wc_myparcelbe&request=' . WCMP_Export::ADD_RETURN . '&modal=true'),
+        'wc_myparcelbe'
+    );
 ?>
 <form method="post" class="page-form wcmp_bulk_options_form" action="<?php echo $target_url; ?>">
     <table class="widefat">
@@ -177,7 +180,7 @@ $target_url =
         }
         ?>
         <input type="submit" value="<?php echo $button_text; ?>" class="button save wcmp_export">
-        <img src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>" class="wcmp_spinner"/>
+        <?php WCMP_Admin::renderSpinner() ?>
     </div>
 </form>
 <script type="text/javascript">

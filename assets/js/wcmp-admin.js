@@ -1,5 +1,14 @@
 /**
  * @var {Object} wc_myparcelbe
+ *
+ * @property {Object} wc_myparcelbe.actions
+ * @property {{add_shipment: String, add_shipments: String, add_return: String, get_labels: String}}
+ *   wc_myparcelbe.actions
+ * @property {String} wc_myparcelbe.ajax_url
+ * @property {String} wc_myparcelbe.nonce
+ * @property {String} wc_myparcelbe.download_display
+ * @property {String} wc_myparcelbe.offset
+ * @property {String} wc_myparcelbe.offset_icon
  */
 
 // eslint-disable-next-line max-lines-per-function
@@ -33,6 +42,8 @@ jQuery(function($) {
 
   /**
    * Handle showing and hiding of settings.
+   *
+   * @param {Object<String, Node[]>} deps - Dependency names and all the nodes that depend on them.
    */
   function addDependencies(deps) {
     Object.keys(deps).forEach(function(relatedInputId) {
@@ -65,9 +76,9 @@ jQuery(function($) {
   }
 
   /**
-   * @param {Element} relatedInput - Parent of element.
-   * @param {Element} element  - Element that will be handled.
-   * @param {Element|null} element2 - Optional extra dependency of element.
+   * @param {Element|Node} relatedInput - Parent of element.
+   * @param {Element|Node} element  - Element that will be handled.
+   * @param {Element|Node|null} element2 - Optional extra dependency of element.
    */
   function handleDependency(relatedInput, element, element2) {
     var easing = 300;
@@ -402,19 +413,19 @@ jQuery(function($) {
 
       /* execute action */
       switch (button_action) {
-        case 'add_shipment':
+        case wc_myparcelbe.actions.add_shipment:
           var button = this;
           button_spinner(button, 'show');
           myparcelbe_export(order_ids);
           break;
-        case 'get_labels':
+        case wc_myparcelbe.actions.get_labels:
           if (wc_myparcelbe.offset === 1) {
             contextual_offset_dialog(order_ids, event);
           } else {
             myparcelbe_print(order_ids);
           }
           break;
-        case 'add_return':
+        case wc_myparcelbe.actions.add_return:
           myparcelbe_modal_dialog(order_ids, 'return');
           break;
       }
@@ -525,7 +536,7 @@ jQuery(function($) {
     var offset = wc_myparcelbe.offset === 1 ? $('.wc_myparcelbe_offset').val() : 0;
     var data = {
       action: 'wc_myparcelbe',
-      request: 'add_shipments',
+      request: wc_myparcelbe.actions.add_shipments,
       order_ids: order_ids,
       offset: offset,
       print: print,
@@ -579,7 +590,7 @@ jQuery(function($) {
   function myparcelbe_return(order_ids) {
     var data = {
       action: 'wc_myparcelbe',
-      request: 'add_return',
+      request: wc_myparcelbe.actions.add_return,
       order_ids: order_ids,
       security: wc_myparcelbe.nonce,
     };
@@ -603,7 +614,9 @@ jQuery(function($) {
     var request_prefix = (wc_myparcelbe.ajax_url.indexOf('?') !== -1) ? '&' : '?';
     var url = wc_myparcelbe.ajax_url
       + request_prefix
-      + 'action=wc_myparcelbe&request=get_labels&security='
+      + 'action=wc_myparcelbe&request='
+      + wc_myparcelbe.actions.get_labels
+      + '&security='
       + wc_myparcelbe.nonce;
 
     /* create form to send order_ids via POST */

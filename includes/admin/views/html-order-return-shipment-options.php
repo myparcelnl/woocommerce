@@ -33,7 +33,6 @@
 <?php if (! isset($skip_save)): ?>
     <div class="wcmp_save_shipment_settings">
         <a class="button save" data-order="<?php echo $order_id; ?>"><?php _wcmpe('Save') ?></a>
-        <img src="<?php echo WCMP()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>"
-             class="wcmp_spinner waiting"/>
+        <?php WCMP_Admin::renderSpinner(["class" => ["wcmp_spinner", "waiting"]]) ?>
     </div>
 <?php endif ?>

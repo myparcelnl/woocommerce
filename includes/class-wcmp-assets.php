@@ -62,6 +62,12 @@ class WCMP_Assets
                 "wcmyparcelbe-export",
                 "wc_myparcelbe",
                 [
+                    "actions"          => [
+                        "add_return"    => WCMP_Export::ADD_RETURN,
+                        "add_shipment"  => WCMP_Export::ADD_SHIPMENT,
+                        "add_shipments" => WCMP_Export::ADD_SHIPMENTS,
+                        "get_labels"    => WCMP_Export::GET_LABELS,
+                    ],
                     "ajax_url"         => admin_url("admin-ajax.php"),
                     "nonce"            => wp_create_nonce("wc_myparcelbe"),
                     "download_display" => WCMP()->setting_collection->getByName(
