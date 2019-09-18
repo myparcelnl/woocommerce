@@ -18,6 +18,7 @@ class SettingsFieldArguments
         "default",
         "id",
         "label",
+        "loop",
         "name",
         "option_id",
         "type",
@@ -112,7 +113,12 @@ class SettingsFieldArguments
     /**
      * @var string
      */
-    public $default;
+    public  $default;
+
+    /**
+     * @var mixed|null
+     */
+    private $option_id;
 
     /**
      * SettingsFieldArguments constructor.
@@ -121,7 +127,8 @@ class SettingsFieldArguments
      */
     public function __construct(array $args)
     {
-        $this->input = $args;
+        $this->input     = $args;
+        $this->option_id = $args["option_id"] ?? null;
 
         $this->name        = $this->getArgument("name");
         $this->id          = $this->getArgument("id");
@@ -333,11 +340,19 @@ class SettingsFieldArguments
             case "select":
                 // Set first option as default value.
                 if ($this->arguments["options"]) {
-                    $this->default = $this->arguments["options"][array_keys($this->arguments["options"])[0]];
+                    $this->default = Arr::first($this->arguments["options"]);
                 } else {
                     $this->addArgument("options", []);
                 }
                 break;
         }
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOptionId(): ?string
+    {
+        return $this->option_id;
     }
 }

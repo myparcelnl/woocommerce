@@ -112,7 +112,6 @@ class WCMP_Settings_Data
                         $this->callbacks->renderField($class, $optionIdentifier);
                     };
 
-                    $args     = $class->getArguments();
                     $callback = $setting["callback"] ?? $defaultCallback;
 
                     add_settings_field(
@@ -121,7 +120,9 @@ class WCMP_Settings_Data
                         $callback,
                         $optionIdentifier,
                         $sectionName,
-                        $args
+                        // If a custom callback is used, send the $setting as arguments. Otherwise use the created
+                        // arguments from the class.
+                        isset($setting["callback"]) ? $setting : $class->getArguments()
                     );
                 }
             }
@@ -481,7 +482,7 @@ class WCMP_Settings_Data
                 "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Drop-off days"),
-                "type"      => "multi_select",
+                "callback"  => [$this->callbacks, "enhanced_select"],
                 "options"   => (new WP_Locale())->weekday,
                 "help_text" => _wcmp("Days of the week on which you hand over parcels to bpost"),
             ],
@@ -512,10 +513,8 @@ class WCMP_Settings_Data
                 "label"     => _wcmp("Signature on delivery"),
                 "type"      => "toggle",
                 "has_price" => true,
-                "help_text" => sprintf(
-                    _wcmp(
-                        "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
-                    )
+                "help_text" => _wcmp(
+                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
                 ),
             ],
             [
@@ -577,7 +576,7 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
                 "label"     => _wcmp("Drop-off days"),
-                "type"      => "multi_select",
+                "callback"  => [$this->callbacks, "enhanced_select"],
                 "options"   => (new WP_Locale())->weekday,
                 "help_text" => _wcmp("Days of the week on which you hand over parcels to dpd"),
             ],
@@ -637,9 +636,9 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES,
                 "label"     => _wcmp("Package types"),
-                "callback"  => [$this->callbacks, "shipping_methods_package_types"],
-                "default"   => [],
-                "options"   => WCMP_Data::getPackageTypes(),
+                "callback"  => [$this->callbacks, "enhanced_select"],
+                "loop"      => WCMP_Data::getPackageTypesHuman(),
+                "options"   => WCMP_Settings_Callbacks::getShippingMethods(),
                 "help_text" => _wcmp("Select one or more shipping methods for each MyParcel BE package type"),
             ],
             [
