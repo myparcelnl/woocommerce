@@ -3,6 +3,7 @@
 namespace WPO\WC\MyParcelBE\Entity;
 
 use Exception;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 
 defined('ABSPATH') or exit;
@@ -56,8 +57,8 @@ class DeliveryOptions
             $carrier = $deliveryOptions["carrier"];
         }
 
-        $this->deliveryType    = $deliveryOptions["delivery"];
-        $this->date            = $deliveryOptions["deliveryDate"];
+        $this->deliveryType    = $deliveryOptions["delivery"] ?? AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME;
+        $this->date            = $deliveryOptions["deliveryDate"] ?? null;
         $this->shipmentOptions = $deliveryOptions["shipmentOptions"] ?? [];
         $this->carrier         = $carrier ?? BpostConsignment::CARRIER_NAME;
 
@@ -66,7 +67,7 @@ class DeliveryOptions
 
             $this->moment = $deliveryOptions["pickupMoment"];
         } else {
-            $this->moment = $deliveryOptions["deliveryMoment"];
+            $this->moment = $deliveryOptions["deliveryMoment"] ?? AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME;
         }
     }
 

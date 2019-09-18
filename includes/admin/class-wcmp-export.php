@@ -7,6 +7,7 @@ use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Entity\DeliveryOptions;
@@ -662,24 +663,27 @@ class WCMP_Export
 
         $recipient = $this->get_recipient($order, $connectEmail);
 
+        $label_description = $this->getLabelDescription($order);
+        if (empty($label_description)) {
+            $label_description = 'Order: ' . $order_id;
+        }
+
         $consignment
             ->setApiKey($api_key)
             ->setReferenceId($order_id)
             ->setDeliveryType($this->getPickupTypeByDeliveryOptions($delivery_options))
             ->setCountry($recipient['cc'])
-            ->setPerson(
-                $recipient['person']
-            )
+            ->setPerson($recipient['person'])
             ->setCompany($recipient['company'])
             ->setStreet($recipient['street'])
-            ->setNumber($recipient['number'])
+            ->setNumber($recipient['number'] ?? null)
             ->setNumberSuffix($recipient['number_suffix'] ?? null)
             ->setStreetAdditionalInfo($recipient['street_additional_info'] ?? null)
             ->setPostalCode($recipient['postal_code'])
             ->setCity($recipient['city'])
             ->setEmail('test@test.nl'/*$recipient['email']*/)
             ->setPhone($recipient['phone'])
-            ->setLabelDescription($this->getLabelDescription($order))
+            ->setLabelDescription($label_description)
             ->setPackageType(self::PACKAGE)
             ->setSignature($this->isSignature())
             ->setInsurance($this->getInsuranceAmount());
@@ -695,23 +699,13 @@ class WCMP_Export
                 ->setPickupNumber($pickup->getNumber())
                 ->setPickupPostalCode($pickup->getPostalCode())
                 ->setPickupLocationCode($pickup->getLocationCode());
-//                ->setPickupNetworkId($pickup->getNetworkId());
-
-//             @todo add location code
-//            "location_code"     => $pickup["location_code"],
-//            "retail_network_id" => $pickup["retail_network_id"],
         }
 
         // @todo set customs_declaration
-//        $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-//        if ($this->is_world_shipment_country($shipping_country)) {
-//            $customs_declaration             = $this->get_customs_declaration($order);
-//
-//            $shipment["customs_declaration"] = $customs_declaration;
-//            $shipment["physical_properties"] = [
-//                "weight" => $customs_declaration["weight"],
-//            ];
-//        }
+        $shipping_country = WCX_Order::get_prop($order, "shipping_country");
+        if ($this->is_world_shipment_country($shipping_country)) {
+            $consignment = $this->setCustomItems($consignment, $order);
+        }
 
         return $consignment;
     }
@@ -1060,44 +1054,50 @@ class WCMP_Export
     }
 
     /**
+     * @param AbstractConsignment $consignment
      * @param WC_Order $order
      *
-     * @return array
+     * @return AbstractConsignment
+     * @throws MissingFieldException
      */
-    public function get_customs_declaration(WC_Order $order): array
+    public function setCustomItems(AbstractConsignment $consignment, WC_Order $order): AbstractConsignment
     {
-        $weight   = (int) round($order->get_meta(WCMP_Admin::META_ORDER_WEIGHT));
-        $invoice  = $this->get_invoice_number($order);
+//        $weight   = (int) round($order->get_meta(WCMP_Admin::META_ORDER_WEIGHT));
+//        $invoice  = $this->get_invoice_number($order);
         $contents = (int) ($this->getSetting("package_contents") ? $this->getSetting("package_contents") : 1);
 
         $country = WC()->countries->get_base_country();
 
-        $items = [];
         foreach ($order->get_items() as $item_id => $item) {
             $product = $order->get_product_from_item($item);
             if (! empty($product)) {
+
                 // Description
                 $description = $item["name"];
+
                 // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
                 if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH) {
                     $description = substr($item["name"], 0, 47) . "...";
                 }
                 // Amount
                 $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
+
                 // Weight (total item weight in grams)
                 $weight = (int) round($this->get_item_weight_kg($item, $order) * 1000);
-                // Item value (in cents)
-                $item_value = [
-                    "amount"   => (int) round(($item["line_total"] + $item["line_tax"]) * 100),
-                    "currency" => WCX_Order::get_prop($order, "currency"),
-                ];
 
-                // add item to item list
-                $items[] = compact("description", "amount", "weight", "item_value", "country");
+                $myParcelItem = (new MyParcelCustomsItem())
+                    ->setDescription($description)
+                    ->setAmount($amount)
+                    ->setWeight($weight)
+                    ->setItemValue((int) round(($item["line_total"] + $item["line_tax"]) * 100))
+                    ->setCountry($country)
+                    ->setClassification($contents);
+
+                $consignment->addItem($myParcelItem);
             }
         }
 
-        return compact("weight", "invoice", "contents", "items");
+        return $consignment;
     }
 
     public function get_shipment_ids($order_ids, $args)
