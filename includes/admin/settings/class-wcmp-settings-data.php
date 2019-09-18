@@ -106,7 +106,7 @@ class WCMP_Settings_Data
                     $class = new SettingsFieldArguments($setting);
 
                     // Add the setting's default value to the defaults array.
-                    $defaults[$setting["id"]] = $class->default;
+                    $defaults[$setting["id"]] = $class->getDefault();
 
                     $defaultCallback = function () use ($class, $optionIdentifier) {
                         $this->callbacks->renderField($class, $optionIdentifier);
@@ -519,10 +519,8 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE,
-                "condition" => [
-                    "name" => WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
-                    "type" => "child",
-                ],
+                "condition" => WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                "class"     => ["wcmp__child"],
                 "label"     => _wcmp("Fee (optional)"),
                 "type"      => "currency",
                 "help_text" => _wcmp(
@@ -545,10 +543,8 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_FEE,
-                "condition" => [
-                    "name" => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                    "type" => "child",
-                ],
+                "condition" => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "class"     => ["wcmp__child"],
                 "label"     => _wcmp("Fee (optional)"),
                 "type"      => "currency",
                 "help_text" => _wcmp(
@@ -575,6 +571,7 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Drop-off days"),
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "options"   => (new WP_Locale())->weekday,
@@ -582,17 +579,20 @@ class WCMP_Settings_Data
             ],
             [
                 "name"        => WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME,
+                "condition"   => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"       => _wcmp("Cut-off time"),
                 "placeholder" => "17:00",
                 "help_text"   => _wcmp("Time at which you stop processing orders for the day (format: hh:mm)"),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Drop-off delay"),
                 "help_text" => _wcmp("Number of days you need to process an order."),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Delivery days window"),
                 "type"      => "toggle",
                 "help_text" => _wcmp("Show the delivery date inside the checkout."),

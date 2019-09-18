@@ -46,23 +46,35 @@ jQuery(function($) {
    * @param {Object<String, Node[]>} deps - Dependency names and all the nodes that depend on them.
    */
   function addDependencies(deps) {
+    var baseEasing = 400;
+
     Object.keys(deps).forEach(function(relatedInputId) {
       var relatedInput = document.querySelector('[id="' + relatedInputId + '"]');
 
       /**
        * Loop through all the deps.
+       *
+       * @param {Event|null} event - Event.
+       * @param {Number} easing - Amount of easing.
        */
-      function handle() {
+      function handle(event, easing) {
+        if (easing === undefined) {
+          easing = baseEasing;
+        }
+
         /**
          * @type {Element} dependant
          */
         deps[relatedInputId].forEach(function(dependant) {
-          handleDependency(relatedInput, dependant, null);
+          handleDependency(relatedInput, dependant, null, easing);
 
           if (relatedInput.hasAttribute('data-parent')) {
             var otherRelatedInput = document.querySelector('#' + relatedInput.getAttribute('data-parent'));
+
+            handleDependency(otherRelatedInput, relatedInput, dependant, easing);
+
             otherRelatedInput.addEventListener('change', function() {
-              return handleDependency(otherRelatedInput, relatedInput, dependant);
+              return handleDependency(otherRelatedInput, relatedInput, dependant, easing);
             });
           }
         });
@@ -71,7 +83,7 @@ jQuery(function($) {
       relatedInput.addEventListener('change', handle);
 
       // Do this on load too.
-      handle();
+      handle(null, 0);
     });
   }
 
@@ -79,10 +91,9 @@ jQuery(function($) {
    * @param {Element|Node} relatedInput - Parent of element.
    * @param {Element|Node} element  - Element that will be handled.
    * @param {Element|Node|null} element2 - Optional extra dependency of element.
+   * @param {Number} easing - Amount of easing on the transitions.
    */
-  function handleDependency(relatedInput, element, element2) {
-    var easing = 300;
-
+  function handleDependency(relatedInput, element, element2, easing) {
     var type = element.getAttribute('data-parent-type');
     var wantedValue = element.getAttribute('data-parent-value') || '1';
     var setValue = element.getAttribute('data-parent-set') || null;
@@ -107,16 +118,16 @@ jQuery(function($) {
         break;
     }
 
+    relatedInput.setAttribute('data-enabled', matches.toString());
+    element.setAttribute('data-enabled', matches.toString());
+
     if (element2) {
       var showOrHide = element2.getAttribute('data-enabled') === 'true'
         && element.getAttribute('data-enabled') === 'true';
 
-      $(element2).closest('tr')[showOrHide ? 'show' : 'hide']();
+      $(element2).closest('tr')[showOrHide ? 'show' : 'hide'](easing);
       relatedInput.setAttribute('data-enabled', showOrHide.toString());
     }
-
-    relatedInput.setAttribute('data-enabled', matches.toString());
-    element.setAttribute('data-enabled', matches.toString());
   }
 
   //

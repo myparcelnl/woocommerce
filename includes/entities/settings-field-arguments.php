@@ -59,29 +59,19 @@ class SettingsFieldArguments
     private $input = [];
 
     /**
-     * @var array
-     */
-    public $class = [];
-
-    /**
      * @var string
      */
-    public $type;
-
-    /**
-     * @var mixed|null
-     */
-    public $parent;
+    private $type;
 
     /**
      * @var mixed
      */
-    public $name;
+    private $name;
 
     /**
      * @var mixed
      */
-    public $id;
+    private $id;
 
     /**
      * @var array
@@ -92,28 +82,31 @@ class SettingsFieldArguments
      * @var array
      */
     private $defaults = [
-        "type"  => "text",
-        "class" => [],
+        "type"        => "text",
+        "class"       => [],
+        "input_class" => [],
+        "label_class" => [],
     ];
 
     /**
      * @var string|array
      */
     private $condition;
+
     /**
      * @var string
      */
-    public $description;
+    private $description;
 
     /**
      * @var mixed
      */
-    public $value;
+    private $value;
 
     /**
      * @var string
      */
-    public  $default;
+    private $default;
 
     /**
      * @var mixed|null
@@ -183,10 +176,16 @@ class SettingsFieldArguments
 
     private function setClass(): void
     {
-        $class = $this->getArgument("class");
+        $arr = [
+            "class"       => $this->getArgument("class"),
+            "input_class" => $this->getArgument("input_class"),
+            "label_class" => $this->getArgument("label_class"),
+        ];
 
-        if ($class) {
-            $this->class = is_array($class) ? $class : [$class];
+        foreach ($arr as $class => $value) {
+            if ($value) {
+                $this->addArgument($class, is_array($value) ? $value : [$value]);
+            }
         }
     }
 
@@ -258,10 +257,6 @@ class SettingsFieldArguments
             "type" => $this->type,
         ];
 
-        if ($this->class) {
-            $arguments["class"] = $this->class;
-        }
-
         foreach ($this->arguments as $arg => $value) {
             $array = $ignore ? self::IGNORED_ARGUMENTS : self::ALTERNATIVE_IGNORED_ARGUMENTS;
 
@@ -281,6 +276,23 @@ class SettingsFieldArguments
         }
 
         return $arguments;
+    }
+
+    /**
+     * Get the custom attributes as a string.
+     *
+     * @return string
+     */
+    public function getCustomAttributes(): string
+    {
+        $arguments  = $this->getArguments();
+        $attributes = [];
+
+        foreach ($arguments["custom_attributes"] ?? [] as $att => $value) {
+            $attributes[] = "$att=\"$value\"";
+        }
+
+        return implode(" ", $attributes);
     }
 
     /**
@@ -354,5 +366,61 @@ class SettingsFieldArguments
     public function getOptionId(): ?string
     {
         return $this->option_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaults(): array
+    {
+        return $this->defaults;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefault(): ?string
+    {
+        return $this->default;
     }
 }

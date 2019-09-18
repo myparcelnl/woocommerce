@@ -60,6 +60,7 @@ class AbstractConsignment
     ];
 
     public const DEFAULT_DELIVERY_TYPE = self::DELIVERY_TYPE_STANDARD;
+    public const DEFAULT_DELIVERY_TYPE_NAME = self::DELIVERY_TYPE_STANDARD;
 
     /**
      * Package types
@@ -89,6 +90,7 @@ class AbstractConsignment
     ];
 
     public const DEFAULT_PACKAGE_TYPE = self::PACKAGE_TYPE_PACKAGE;
+    public const DEFAULT_PACKAGE_TYPE_NAME = self::PACKAGE_TYPE_PACKAGE_NAME;
 
     /**
      * Regular expression used to make sure the date is correct.

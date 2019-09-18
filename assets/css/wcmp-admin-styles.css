@@ -1,4 +1,6 @@
-/* Order actions button styling */
+/*
+ * Order actions button styling
+ */
 .widefat .column-order_actions .column-wc_actions a.button.myparcelbe {
   float: left;
   width: 26px;
@@ -15,6 +17,9 @@
   height: auto;
 }
 
+/*
+ * Shipment summary
+ */
 .wcmp_shipment_summary, .wcmp_shipment_options {
   display: inline;
 }
@@ -33,7 +38,9 @@ ul.wcmyparcelbe_shipment_summary li:before {
   margin-right: 4px;
 }
 
-/* shipment options form styling */
+/*
+ * Shipment options form styling
+ */
 .wcmp_shipment_options_form table {
   width: 100%;
 }
@@ -76,6 +83,9 @@ ul.wcmyparcelbe_shipment_summary li:before {
   margin-top: 8px;
 }
 
+/*
+ * Spinner
+ */
 .wcmp_spinner,
 .wcmp_bulk_spinner {
   display: none;
@@ -111,6 +121,9 @@ ul.wcmyparcelbe_shipment_summary li:before {
   text-align: center;
 }
 
+/*
+ * Track & Trace status
+ */
 table.tracktrace_status {
   width: 100%;
   margin-top: 10px;
@@ -133,7 +146,9 @@ table.tracktrace_status td.wcmp-create-label {
   vertical-align: middle;
 }
 
-/* bulk export options styling */
+/*
+ * Bulk export options styling
+ */
 .wcmp_bulk_options_form .wcmyparcelbe_settings_table td {
   border: none;
   padding: 0 7px 2px !important;
@@ -158,7 +173,9 @@ table.tracktrace_status td.wcmp-create-label {
   float: right;
 }
 
-/* chosen delivery options styling */
+/*
+ * Chosen delivery options styling
+ */
 #order_data .delivery-options {
   margin-top: 10px;
 }
@@ -167,7 +184,9 @@ table.tracktrace_status td.wcmp-create-label {
   display: block;
 }
 
-/* settings styling */
+/*
+ * Delivery options
+ */
 .wcmp_delivery_option_details {
   margin-top: 5px;
 }
@@ -181,7 +200,9 @@ table.tracktrace_status td.wcmp-create-label {
   text-decoration: none;
 }
 
-/* Order settings table inside expanding div on order list and order detail page */
+/*
+ * Order settings table inside expanding div on order list and order detail page
+ */
 .wcmyparcelbe_change_order .wcmyparcelbe_settings_table td,
 .wcmyparcelbe_change_order .wcmyparcelbe_settings_table th {
   padding: 0 0 6px 0 !important;
@@ -198,12 +219,9 @@ table.tracktrace_status td.wcmp-create-label {
   }
 }
 
-body.woocommerce_page_wcmp_settings input,
-body.woocommerce_page_wcmp_settings select {
-  max-width: 360px;
-}
-
-/*Helpers*/
+/*
+ * Helpers
+ */
 .wcmp-display--block {
   display: block;
 }
@@ -212,12 +230,37 @@ body.woocommerce_page_wcmp_settings select {
   white-space: nowrap;
 }
 
-.woocommerce table.form-table th {
-  width: 280px;
-}
-
-
-/* Hide the "(optional)" spans on form labels */
+/* Hide the "(optional)" spans on wcmp form labels in settings page and others*/
 .wcmp label span.optional {
   display: none;
 }
+
+/*
+ * WCMP Settings page
+ */
+.woocommerce_page_wcmp_settings tr.wcmp__child {
+  background: #e5e5e5;
+}
+
+.woocommerce_page_wcmp_settings tr.wcmp__child * {
+  font-size: .95em !important;
+}
+
+.woocommerce_page_wcmp_settings tr.wcmp__child th {
+  padding: 12.5px 15px;
+}
+
+.woocommerce_page_wcmp_settings tr.wcmp__child td {
+  padding-top: 5px;
+  padding-bottom: 10px;
+}
+
+.woocommerce_page_wcmp_settings input,
+.woocommerce_page_wcmp_settings select {
+  max-width: 360px;
+}
+
+.woocommerce_page_wcmp_settings table.form-table th {
+  width: 280px;
+}
+
