@@ -82,8 +82,8 @@ class SettingsFieldArguments
      * @var array
      */
     private $defaults = [
-        "type"  => "text",
-        "class" => [],
+        "type"        => "text",
+        "class"       => [],
         "input_class" => [],
         "label_class" => [],
     ];
@@ -276,6 +276,23 @@ class SettingsFieldArguments
         }
 
         return $arguments;
+    }
+
+    /**
+     * Get the custom attributes as a string.
+     *
+     * @return string
+     */
+    public function getCustomAttributes(): string
+    {
+        $arguments  = $this->getArguments();
+        $attributes = [];
+
+        foreach ($arguments["custom_attributes"] ?? [] as $att => $value) {
+            $attributes[] = "$att=\"$value\"";
+        }
+
+        return implode(" ", $attributes);
     }
 
     /**

@@ -61,10 +61,12 @@ class WCMP_Settings_Callbacks_Enhanced_Select
                 style="width: 50%%;"
                 class="wc-enhanced-select"
                 multiple="multiple"
-                data-placeholder="%s">',
+                data-placeholder="%s"
+                %s>',
             $args["id"],
             $class->getOptionId() . $name . "[]",
-            $args["placeholder"] ?? ""
+            $args["placeholder"] ?? "",
+            $class->getCustomAttributes()
         );
 
         foreach ($args["options"] as $key => $label) {

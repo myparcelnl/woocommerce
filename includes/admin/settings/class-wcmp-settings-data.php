@@ -571,6 +571,7 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Drop-off days"),
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "options"   => (new WP_Locale())->weekday,
@@ -578,17 +579,20 @@ class WCMP_Settings_Data
             ],
             [
                 "name"        => WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME,
+                "condition"   => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"       => _wcmp("Cut-off time"),
                 "placeholder" => "17:00",
                 "help_text"   => _wcmp("Time at which you stop processing orders for the day (format: hh:mm)"),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Drop-off delay"),
                 "help_text" => _wcmp("Number of days you need to process an order."),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Delivery days window"),
                 "type"      => "toggle",
                 "help_text" => _wcmp("Show the delivery date inside the checkout."),
