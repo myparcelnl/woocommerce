@@ -697,8 +697,8 @@ class WCMP_Export
                 ->setPickupStreet($pickup->getStreet())
                 ->setNumber($pickup->getNumber())
                 ->setPostalCode($pickup->getPostalCode())
-                ->setPickupLocationCode($pickup->getLocationCode())
-                ->setPickupNetworkId($pickup->getNetworkId());
+                ->setPickupLocationCode($pickup->getLocationCode());
+//                ->setPickupNetworkId($pickup->getNetworkId());
 
 //             @todo add location code
 //            "location_code"     => $pickup["location_code"],
