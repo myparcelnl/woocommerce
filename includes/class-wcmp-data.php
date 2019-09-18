@@ -36,11 +36,11 @@ class WCMP_Data
         ];
 
         self::$packageTypes = [
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE,
+            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
         ];
 
         self::$packageTypesHuman = [
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE => _wcmp("Parcel"),
+            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME => _wcmp("Parcel"),
         ];
     }
 
