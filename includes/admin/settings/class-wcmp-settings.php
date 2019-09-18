@@ -283,7 +283,9 @@ class WCMP_Settings
             $class    = '';
 
             if (! empty($field['args']['class'])) {
-                $class = ' class="' . esc_attr($field['args']['class']) . '"';
+                $class = $field['args']['class'];
+                $class = is_array($class) ? implode(" ", $class) : $class;
+                $class = ' class="' . esc_attr($class) . '"';
             }
 
             echo "<tr{$class}>";

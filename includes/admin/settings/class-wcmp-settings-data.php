@@ -519,10 +519,8 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE,
-                "condition" => [
-                    "name" => WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
-                    "type" => "child",
-                ],
+                "condition" => WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                "class"     => ["wcmp__child"],
                 "label"     => _wcmp("Fee (optional)"),
                 "type"      => "currency",
                 "help_text" => _wcmp(
@@ -545,10 +543,8 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_FEE,
-                "condition" => [
-                    "name" => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                    "type" => "child",
-                ],
+                "condition" => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "class"     => ["wcmp__child"],
                 "label"     => _wcmp("Fee (optional)"),
                 "type"      => "currency",
                 "help_text" => _wcmp(

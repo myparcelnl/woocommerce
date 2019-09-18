@@ -105,7 +105,7 @@ foreach ($option_rows as $option_row) {
     $class = new SettingsFieldArguments($option_row);
 
     woocommerce_form_field(
-        "myparcelbe_options" . $class->name,
+        "myparcelbe_options" . $class->getName(),
         $class->getArguments(false),
         $option_row["value"] ?? null
     );
