@@ -24,9 +24,9 @@ class WCMP_Settings_Callbacks_Enhanced_Select
         if (isset($args["loop"])) {
             $this->createMultipleSearchBoxes($args["loop"], $class);
         } else {
-            $value = get_option($class->getOptionId())[$class->id];
+            $value = get_option($class->getOptionId())[$class->getId()];
 
-            $this->createSearchBox($class, "[$class->id]", $value);
+            $this->createSearchBox($class, "[{$class->getId()}]", $value);
         }
     }
 
@@ -38,9 +38,9 @@ class WCMP_Settings_Callbacks_Enhanced_Select
     {
         foreach ($loop as $id => $human) {
             printf('<h4 class="title">%s:</h4>', $human);
-            $value = get_option($class->getOptionId())[$class->id][$id];
+            $value = get_option($class->getOptionId())[$class->getId()][$id];
 
-            $this->createSearchBox($class, "[$class->id][$id]", $value);
+            $this->createSearchBox($class, "[{$class->getId()}][$id]", $value);
         }
     }
 

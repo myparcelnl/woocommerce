@@ -106,7 +106,7 @@ class WCMP_Settings_Data
                     $class = new SettingsFieldArguments($setting);
 
                     // Add the setting's default value to the defaults array.
-                    $defaults[$setting["id"]] = $class->default;
+                    $defaults[$setting["id"]] = $class->getDefault();
 
                     $defaultCallback = function () use ($class, $optionIdentifier) {
                         $this->callbacks->renderField($class, $optionIdentifier);

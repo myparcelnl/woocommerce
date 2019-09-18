@@ -190,12 +190,12 @@ class WCMP_Settings_Callbacks
     /**
      * Output a WooCommerce style form field.
      *
-     * @param SettingsFieldArguments $args
+     * @param SettingsFieldArguments $class
      * @param string                 $optionId
      */
-    public function renderField(SettingsFieldArguments $args, string $optionId): void
+    public function renderField(SettingsFieldArguments $class, string $optionId): void
     {
-        $arguments = $args->getArguments();
+        $arguments = $class->getArguments();
 
         if (isset($arguments["description"])) {
             $description = $arguments["description"];
@@ -207,9 +207,9 @@ class WCMP_Settings_Callbacks
         }
 
         woocommerce_form_field(
-            "{$optionId}[{$args->id}]",
+            "{$optionId}[{$class->getId()}]",
             $arguments,
-            get_option($optionId)[$args->id]
+            get_option($optionId)[$class->getId()]
         );
         if (isset($arguments["parent"])) {
             echo "<hr>";
