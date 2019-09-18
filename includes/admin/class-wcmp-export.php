@@ -150,7 +150,7 @@ class WCMP_Export
 
                 // if we"re going to print directly, we need to process the orders first, regardless of the settings
                 $process = (isset($print) && $print == "yes") ? true : false;
-                $return  = $this->add_shipments($order_ids);
+                $return  = $this->add_shipments($order_ids, $process);
                 break;
             case self::ADD_RETURN:
                 if (empty($myparcelbe_options)) {
@@ -160,7 +160,6 @@ class WCMP_Export
                 $return = $this->add_return($myparcelbe_options);
                 break;
             case self::GET_LABELS:
-                exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
                 $offset = ! empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
                 if (empty($order_ids) && empty($shipment_ids)) {
                     $this->errors[] = _wcmp("You have not selected any orders!");
@@ -238,22 +237,22 @@ class WCMP_Export
     /**
      * @param $order_ids
      *
-     * @return WCMP_Export
+     * @param $process
+     *
+     * @return array
      * @throws ApiException
      * @throws MissingFieldException
-     * @throws Exception
      */
-    public function add_shipments($order_ids)
+    public function add_shipments($order_ids, $process)
     {
         $return = [];
 
-        $myParcelCollection = new MyParcelCollection();
+        $consignments = new MyParcelCollection();
 
         $this->log("*** Creating shipments started ***");
 
         foreach ($order_ids as $order_id) {
-            $created_shipments = [];
-            $order             = WCX::get_order($order_id);
+            $order = WCX::get_order($order_id);
 
             $consignment = $this->get_consignment_from_checkout_data($order_id);
 
@@ -263,16 +262,54 @@ class WCMP_Export
             $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $colli_amount = isset($extra_params["colli_amount"]) ? $extra_params["colli_amount"] : 1;
 
-            $myParcelCollection->addMultiCollo($consignment, $colli_amount);
+            $consignments->addMultiCollo($consignment, $colli_amount);
+        }
 
-            // @todo save shipment
+        $consignments = $consignments->createConcepts();
+
+        foreach ($order_ids as $order_id) {
+            $order      = WCX::get_order($order_id);
+            $idsByOrder = $consignments->getConsignmentsByReferenceId($order_id)->getConsignmentIds();
+
+            foreach ($idsByOrder as $shipment_id) {
+                $shipment['shipment_id'] = $shipment_id;
+                $this->save_shipment_data($order, $shipment);
+
+                // process directly setting
+                if ($this->getSetting("process_directly") || $process === true) {
+                    // flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
+                    if (method_exists($order, "save")) {
+                        $order->save();
+                    }
+                    $this->get_labels((array) $order_id, "url");
+                    $this->get_shipment_data($shipment_id, $order);
+                }
+
+                // status automation
+                if ($this->getSetting("order_status_automation")
+                    && $this->getSetting(
+                        "automatic_order_status"
+                    )) {
+                    $order->update_status(
+                        $this->getSetting("automatic_order_status"),
+                        _wcmp("MyParcel shipment created:")
+                    );
+                }
+
+                $this->success[$order_id] = $shipment_id;
+            }
+
+            WCX_Order::update_meta_data($order, "_myparcelbe_last_shipment_ids", $idsByOrder);
+        }
+
+
 //            for ($i = 0; $i < intval($colli_amount); $i++) {
 //                try {
 //                    $api      = $this->init_api();
 //
 //
 //
-//                    $myParcelCollection->addConsignment($consignment);
+//                    $consignments->addConsignment($consignment);
 //
 //                    $response = $api->add_shipments($shipments);
 //                    $this->log("API response (order {$order_id}):\n" . var_export($response, true));
@@ -321,18 +358,15 @@ class WCMP_Export
 //            if (! empty($created_shipments)) {
 //                WCX_Order::update_meta_data($order, "_myparcelbe_last_shipment_ids", $created_shipments);
 //            }
-        }
+//        }
 
-        $myParcelCollection->createConcepts()->setPdfOfLabels();
-
-        $myParcelCollection->downloadPdfOfLabels();
 
 //        if (! empty($this->success)) {
         $return["success"]     = sprintf(
             _wcmp("%s shipments successfully exported to MyParcel"),
             count($this->success)
         );
-        $return["success_ids"] = $myParcelCollection->getConsignmentIds();
+        $return["success_ids"] = $consignments->getConsignmentIds();
 //        }
 
         return $return;
@@ -588,7 +622,7 @@ class WCMP_Export
     }
 
     /**
-     * @return bool|WCMP_API
+     * @return WCMP_API
      * @throws Exception
      */
     public function init_api()
@@ -598,7 +632,7 @@ class WCMP_Export
             return false;
         }
 
-        return $key;
+        return new WCMP_API($key);
     }
 
     /**
@@ -614,7 +648,7 @@ class WCMP_Export
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
-        $api_key = $this->init_api();
+        $api_key = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
 
         if (! $api_key) {
             throw new ErrorException("No API key found in MyParcel BE settings");
@@ -630,7 +664,9 @@ class WCMP_Export
             $delivery_options->getMoment() === 'pickup' ? AbstractConsignment::DELIVERY_TYPE_PICKUP
                 : AbstractConsignment::DELIVERY_TYPE_PICKUP;
 
-        $consignment->setApiKey($api_key)
+        $consignment
+            ->setApiKey($api_key)
+            ->setReferenceId($order_id)
             ->setDeliveryType($delivery_type)
             ->setCountry($recipient['cc'])
             ->setPerson(
