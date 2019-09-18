@@ -124,6 +124,6 @@ submit_button(
     ]
 );
 
-$this->showSpinner();
+$this->renderSpinner();
 
 echo '</div></div>';

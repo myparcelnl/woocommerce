@@ -6,6 +6,7 @@ use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Entity\DeliveryOptions;
@@ -656,13 +657,13 @@ class WCMP_Export
 
         $delivery_options = WCMP_Admin::getDeliveryOptionsFromOrder($order);
         $carrier          = $delivery_options->getCarrier();
+        $connectEmail     = $carrier === DPDConsignment::CARRIER_NAME;
         $consignment      = ConsignmentFactory::createByCarrierName($carrier ?? BpostConsignment::CARRIER_ID);
 
-        $recipient = $this->get_recipient($order);
-
+        $recipient = $this->get_recipient($order, $connectEmail);
         $delivery_type =
             $delivery_options->getMoment() === 'pickup' ? AbstractConsignment::DELIVERY_TYPE_PICKUP
-                : AbstractConsignment::DELIVERY_TYPE_PICKUP;
+                : AbstractConsignment::DELIVERY_TYPE_STANDARD;
 
         $consignment
             ->setApiKey($api_key)
@@ -780,11 +781,13 @@ class WCMP_Export
     }
 
     /**
-     * @param $order
+     * @param WC_Order $order
+     *
+     * @param null $connectEmail
      *
      * @return mixed|void
      */
-    public function get_recipient(WC_Order $order)
+    public function get_recipient(WC_Order $order, $connectEmail = null)
     {
         $is_using_old_fields = (string) WCX_Order::get_meta($order, "_billing_street_name") != ""
                                || (string) WCX_Order::get_meta(
@@ -796,7 +799,7 @@ class WCMP_Export
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
                 : trim($order->shipping_first_name . " " . $order->shipping_last_name);
 
-        $connectEmail = $this->getSetting("connect_email");
+        $connectEmail = $connectEmail ?? $this->getSetting("connect_email");
         $connectPhone = $this->getSetting("connect_phone");
 
         $address = [
