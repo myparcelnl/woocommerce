@@ -314,6 +314,12 @@ class AbstractConsignment
      * @internal
      * @var string
      */
+    public $pickup_cc;
+
+    /**
+     * @internal
+     * @var string
+     */
     public $pickup_postal_code;
 
     /**
@@ -1416,6 +1422,26 @@ class AbstractConsignment
         $item->ensureFilled();
 
         $this->items[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPickupCountry(): string
+    {
+        return $this->pickup_cc;
+    }
+
+    /**
+     * @param string $pickupCountry
+     *
+     * @return AbstractConsignment
+     */
+    public function setPickupCountry(string $pickupCountry): self
+    {
+        $this->pickup_cc = $pickupCountry;
 
         return $this;
     }

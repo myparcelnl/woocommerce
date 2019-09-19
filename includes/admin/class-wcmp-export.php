@@ -694,12 +694,14 @@ class WCMP_Export
             /**
              * @var AbstractConsignment $consignment
              */
-            $consignment->setPickupCity($pickup->getCity())
-                        ->setPickupLocationName($pickup->getLocationName())
-                        ->setPickupStreet($pickup->getStreet())
-                        ->setPickupNumber($pickup->getNumber())
-                        ->setPickupPostalCode($pickup->getPostalCode())
-                        ->setPickupLocationCode($pickup->getLocationCode());
+            $consignment
+                ->setPickupCountry($pickup->getCountry())
+                ->setPickupCity($pickup->getCity())
+                ->setPickupLocationName($pickup->getLocationName())
+                ->setPickupStreet($pickup->getStreet())
+                ->setPickupNumber($pickup->getNumber())
+                ->setPickupPostalCode($pickup->getPostalCode())
+                ->setPickupLocationCode($pickup->getLocationCode());
         }
 
         // @todo set customs_declaration (HS code)

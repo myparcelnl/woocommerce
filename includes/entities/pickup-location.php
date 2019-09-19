@@ -41,6 +41,11 @@ class PickupLocation
      */
     private $city;
 
+    /**
+     * @var string
+     */
+    private $cc;
+
     public function __construct(stdClass $data)
     {
         $this->location_name = $data->location_name;
@@ -49,6 +54,7 @@ class PickupLocation
         $this->number        = $data->number;
         $this->postal_code   = $data->postal_code;
         $this->city          = $data->city;
+        $this->cc          = $data->cc;
     }
 
     /**
@@ -97,5 +103,21 @@ class PickupLocation
     public function getCity(): string
     {
         return $this->city;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountry(): ?string
+    {
+        return $this->cc;
+    }
+
+    /**
+     * @param string $cc
+     */
+    public function setCountry(string $cc): void
+    {
+        $this->cc = $cc;
     }
 }

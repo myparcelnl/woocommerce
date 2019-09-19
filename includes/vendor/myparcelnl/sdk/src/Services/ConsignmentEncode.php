@@ -152,6 +152,7 @@ class ConsignmentEncode
      */
     private function encodePickup()
     {
+        /** @var AbstractConsignment $consignment */
         $consignment = Arr::first($this->consignments);
         if (
             $this->hasOptions() !== false &&
@@ -162,6 +163,7 @@ class ConsignmentEncode
             $consignment->getPickupLocationName() !== null
         ) {
             $this->consignmentEncoded['pickup'] = [
+                'cc'                => $consignment->getPickupCountry(),
                 'postal_code'       => $consignment->getPickupPostalCode(),
                 'street'            => $consignment->getPickupStreet(),
                 'city'              => $consignment->getPickupCity(),
