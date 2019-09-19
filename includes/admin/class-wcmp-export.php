@@ -681,7 +681,7 @@ class WCMP_Export
             ->setStreetAdditionalInfo($recipient['street_additional_info'] ?? null)
             ->setPostalCode($recipient['postal_code'])
             ->setCity($recipient['city'])
-            ->setEmail('test@test.nl'/*$recipient['email']*/)
+            ->setEmail($recipient['email'])
             ->setPhone($recipient['phone'])
             ->setLabelDescription($label_description)
             ->setPackageType(self::PACKAGE)
