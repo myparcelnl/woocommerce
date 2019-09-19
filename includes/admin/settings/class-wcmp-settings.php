@@ -19,6 +19,7 @@ class WCMP_Settings
     public const SETTINGS_MENU_SLUG = "wcmp_settings";
 
     public const SETTINGS_GENERAL         = "general";
+    public const SETTINGS_CHECKOUT        = "checkout";
     public const SETTINGS_EXPORT_DEFAULTS = "export_defaults";
     public const SETTINGS_BPOST           = BpostConsignment::CARRIER_NAME;
     public const SETTINGS_DPD             = DPDConsignment::CARRIER_NAME;
@@ -31,7 +32,7 @@ class WCMP_Settings
     public const SETTING_AUTOMATIC_ORDER_STATUS         = "automatic_order_status";
     public const SETTING_BARCODE_IN_NOTE                = "barcode_in_note";
     public const SETTING_BARCODE_IN_NOTE_TITLE          = "barcode_in_note_title";
-    public const SETTING_CHECKOUT_POSITION              = "checkout_position";
+    public const SETTING_DELIVERY_OPTIONS_POSITION      = "delivery_options_position";
     public const SETTING_CONNECT_EMAIL                  = "connect_email";
     public const SETTING_CONNECT_PHONE                  = "connect_phone";
     public const SETTING_DELIVERY_OPTIONS_CUSTOM_CSS    = "delivery_options_custom_css";
@@ -140,12 +141,7 @@ class WCMP_Settings
     {
         $settings_tabs = apply_filters(
             self::SETTINGS_MENU_SLUG . '_tabs',
-            [
-                self::SETTINGS_GENERAL         => _wcmp('General'),
-                self::SETTINGS_EXPORT_DEFAULTS => _wcmp('Default export settings'),
-                self::SETTINGS_BPOST           => _wcmp('bpost'),
-                self::SETTINGS_DPD             => _wcmp('DPD'),
-            ]
+            WCMP_Settings_Data::getTabs()
         );
 
         $active_tab = isset($_GET['tab']) ? $_GET['tab'] : self::SETTINGS_GENERAL;
