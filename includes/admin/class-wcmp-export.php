@@ -685,7 +685,7 @@ class WCMP_Export
             ->setPhone($recipient['phone'])
             ->setLabelDescription($label_description)
             ->setPackageType(self::PACKAGE)
-            ->setSignature($this->isSignature())
+            ->setSignature($this->isSignatureByDeliveryOptions($delivery_options))
             ->setInsurance($this->getInsuranceAmount());
 
         if ($delivery_options->isPickup()) {
@@ -2123,6 +2123,33 @@ class WCMP_Export
         }
 
         return $description;
+    }
+
+    /**
+     * @param DeliveryOptions $delivery_options
+     *
+     * @return bool
+     */
+    private function isSignatureByDeliveryOptions(DeliveryOptions $delivery_options): bool
+    {
+        if (DPDConsignment::CARRIER_NAME === $delivery_options->getCarrier()) {
+            return false;
+        }
+
+        if (in_array('signature', $delivery_options->getShipmentOptions())) {
+            return true;
+        }
+
+        return false;
+
+        // @todo MY-14882 Er zou een instellingen moeten zijn om alle zendingen bijvoorbeeld standaard met handtekening
+        // voor ontvangst aan te maken. Als er geen optie is gekozen, dan moeten we kijken of het volgende de instelling wel moet.
+        // gekozen nee, auto hvo aan?
+        // gekozen nee, auto hvo uit?
+
+        var_dump(WCMP()->setting_collection);
+        exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
+        ($this->getSetting("signature")) ? 1 : 0;
     }
 
     /**
