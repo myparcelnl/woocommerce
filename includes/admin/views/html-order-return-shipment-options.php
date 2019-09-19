@@ -1,6 +1,11 @@
-<?php if (! defined('ABSPATH')) {
+<?php use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+
+if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
+
+/** @noinspection PhpUnhandledExceptionInspection */
+$deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 
 ?>
 <table class="wcmyparcelbe_settings_table" style="width: auto">
@@ -19,9 +24,8 @@
             printf('<select name="%s" class="package_type">', $name);
             foreach ($package_types as $key => $label) {
                 printf(
-                    '<option value="%s"%s>%s</option>',
-                    $key,
-                    selected($shipment_options['package_type'], $key, false),
+                    '<option value="%s">%s</option>',
+                    AbstractConsignment::PACKAGE_TYPE_PACKAGE,
                     $label
                 );
             }

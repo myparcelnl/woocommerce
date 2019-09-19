@@ -83,9 +83,8 @@ $target_url =
             if (! WCMP()->export->is_myparcelbe_destination($shipping_country)) {
                 continue;
             }
-            $shipment_options         = WCMP()->export->get_options($order);
-            $recipient                = WCMP()->export->get_recipient($order);
-            $package_types            = WCMP_Data::getPackageTypes();
+            $recipient       = WCMP()->export->get_recipient($order);
+            $package_types   = WCMP_Data::getPackageTypes();
             ?>
             <tr class="order-row <?php echo(($c = ! $c) ? 'alternate' : ''); ?>">
                 <td>

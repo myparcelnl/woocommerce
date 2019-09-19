@@ -142,8 +142,6 @@ class MyParcelRequest
         $request->close();
 
         if ($this->getError()) {
-            echo($this->body);
-            exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
             throw new ApiException('Error in MyParcel API request: ' . $this->getError() . 'Method: ' . $method . ' Url: ' . $url . ' Request: ' . $this->body);
         }
 

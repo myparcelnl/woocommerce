@@ -12,11 +12,8 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-try {
-    $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-} catch (Exception $e) {
-    exit();
-}
+/** @noinspection PhpUnhandledExceptionInspection */
+$deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 
 // todo fix shipment extra options?
 $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);

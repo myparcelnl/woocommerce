@@ -47,8 +47,8 @@ class WCMP_Export
         $this->success = [];
         $this->errors  = [];
 
-        include("class-wcmp-rest.php");
-        include("class-wcmp-api.php");
+        require("class-wcmp-rest.php");
+        require("class-wcmp-api.php");
 
         add_action("admin_notices", [$this, "admin_notices"]);
         add_action("wp_ajax_wc_myparcelbe", [$this, "export"]);
@@ -578,14 +578,13 @@ class WCMP_Export
 
         // cast as array for single exports
         $order_ids = (array) $order_ids;
-
-        include("views / wcmp - bulk - options - form . php");
+        require("views/html-bulk-options-form.php");
         die();
     }
 
     public function modal_success_page($request, $result)
     {
-        include("views / html - modal - result - page . php");
+        require("views/html-modal-result-page.php");
         die();
     }
 
@@ -660,6 +659,9 @@ class WCMP_Export
         $delivery_options = WCMP_Admin::getDeliveryOptionsFromOrder($order);
         $carrier          = $delivery_options->getCarrier();
         $connectEmail     = $carrier === DPDConsignment::CARRIER_NAME;
+        /**
+         * @var AbstractConsignment $consignment
+         */
         $consignment      = ConsignmentFactory::createByCarrierName($carrier ?? BpostConsignment::CARRIER_ID);
 
         $recipient = $this->get_recipient($order, $connectEmail);
@@ -691,9 +693,6 @@ class WCMP_Export
 
         if ($delivery_options->isPickup()) {
             $pickup = $delivery_options->getPickupLocation();
-            /**
-             * @var AbstractConsignment $consignment
-             */
             $consignment
                 ->setPickupCountry($pickup->getCountry())
                 ->setPickupCity($pickup->getCity())
@@ -955,10 +954,10 @@ class WCMP_Export
         }
 
         // load delivery options
-        $myparcelbe_delivery_options = WCX_Order::get_meta($order, DeliveryOptions::FIELD_DELIVERY_OPTIONS);
+        $myparcelbe_delivery_options = WCX_Order::get_meta($order, WCMP_Admin::META_DELIVERY_OPTIONS);
 
         // set delivery type
-        $options["delivery_type"] = $this->get_delivery_type($order, $deliveryOptions);
+        $options["delivery_type"] = $this->get_delivery_type($order, $myparcelbe_delivery_options);
 
         // Options for Pickup and Pickup express delivery types:
         // always enable signature on receipt
@@ -1468,7 +1467,7 @@ class WCMP_Export
         ];
 
         if (empty($myparcelbe_delivery_options)) {
-            $myparcelbe_delivery_options = WCX_Order::get_meta($order, DeliveryOptions::FIELD_DELIVERY_OPTIONS);
+            $myparcelbe_delivery_options = WCX_Order::get_meta($order, WCMP_Admin::META_DELIVERY_OPTIONS);
         }
 
         // standard = default, overwrite if options found
@@ -1999,6 +1998,20 @@ class WCMP_Export
     public function get_invoice_number($order)
     {
         return (string) apply_filters("wc_myparcelbe_invoice_number", $order->get_order_number());
+    }
+
+    public function get_item_display_name($item, $order)
+    {
+        // set base name
+        $name = $item['name'];
+
+        // add variation name if available
+        $product = $order->get_product_from_item($item);
+        if ($product && isset($item['variation_id']) && $item['variation_id'] > 0 && method_exists($product, 'get_variation_attributes')) {
+            $name .= woocommerce_get_formatted_variation($product->get_variation_attributes());
+        }
+
+        return $name;
     }
 
     /**
