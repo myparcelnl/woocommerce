@@ -111,7 +111,7 @@ jQuery(function($) {
         elementContainer[matches ? 'show' : 'hide'](easing);
         break;
       case 'disable':
-        $(element).prop('disabled', matches);
+        $(element).prop('disabled', !matches);
         if (matches && setValue) {
           element.value = setValue;
         }
@@ -172,36 +172,38 @@ jQuery(function($) {
   });
 
   /* show summary when clicked */
-  $('.wcmp_show_shipment_summary').click(function(event) {
-    $summary_list = $(this).next('.wcmp_shipment_summary_list');
-    if ($summary_list.is(':visible') || $summary_list.data('loaded') != '') {
+  $('.wcmp_show_shipment_summary').click(function() {
+    var summaryList = $(this).next('.wcmp_shipment_summary_list');
+
+    if (summaryList.is(':visible') || summaryList.data('loaded') !== '') {
       /* just open / close */
-      $summary_list.slideToggle();
-    } else if ($summary_list.is(':hidden') && $summary_list.data('loaded') === '') {
-      $summary_list.addClass('ajax-waiting');
-      $summary_list.find('.wcmp_spinner').show();
-      $summary_list.slideToggle();
+      summaryList.slideToggle();
+    } else if (summaryList.is(':hidden') && summaryList.data('loaded') === '') {
+      summaryList.addClass('ajax-waiting');
+      summaryList.find('.wcmp_spinner').show();
+      summaryList.slideToggle();
+
       var data = {
         security: wc_myparcelbe.nonce,
         action: 'wcmp_get_shipment_summary_status',
-        order_id: $summary_list.data('order_id'),
-        shipment_id: $summary_list.data('shipment_id'),
+        order_id: summaryList.data('order_id'),
+        shipment_id: summaryList.data('shipment_id'),
       };
-      xhr = $.ajax({
+
+      var xhr = $.ajax({
         type: 'POST',
         url: wc_myparcelbe.ajax_url,
         data: data,
-        context: $summary_list,
+        context: summaryList,
         success: function(response) {
           this.removeClass('ajax-waiting');
           this.html(response);
           this.data('loaded', 'yes');
         },
       });
-
     }
-
   });
+
   /* hide summary when click outside */
   $(document).click(function(event) {
     if (!$(event.target).closest('.wcmp_shipment_summary_list').length) {
@@ -226,16 +228,16 @@ jQuery(function($) {
   });
 
   /* hide automatic barcode in note title if barcode in note is not enabled */
-  $('.wcmp_shipment_options input#barcode_in_note').change(function() {
-    var barcode_in_note_select = $('.wcmp_shipment_options select.barcode_in_note_title');
-    if (this.checked) {
-      $(barcode_in_note_select).prop('disabled', false);
-      $('.wcmp_shipment_options tr.barcode_in_note_title').show();
-    } else {
-      $(barcode_in_note_select).prop('disabled', true);
-      $('.wcmp_shipment_options tr.barcode_in_note_title').hide();
-    }
-  });
+  // $('.wcmp_shipment_options input#barcode_in_note').change(function() {
+  //   var barcode_in_note_select = $('.wcmp_shipment_options select.barcode_in_note_title');
+  //   if (this.checked) {
+  //     $(barcode_in_note_select).prop('disabled', false);
+  //     $('.wcmp_shipment_options tr.barcode_in_note_title').show();
+  //   } else {
+  //     $(barcode_in_note_select).prop('disabled', true);
+  //     $('.wcmp_shipment_options tr.barcode_in_note_title').hide();
+  //   }
+  // });
 
   /* select > 500 if insured amount input is >499 */
   $('.wcmp_shipment_options input.insured_amount').each(function(index) {

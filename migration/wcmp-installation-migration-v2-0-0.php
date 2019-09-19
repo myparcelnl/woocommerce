@@ -1,19 +1,25 @@
 <?php
 
-if (! defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) {
+    exit;
+}
 
-if ( ! class_exists('wcmp_installation_migration_v2_0_0')) :
+if (class_exists('WCMP_Installation_Migration_v2_0_0')) {
+    return new WCMP_Installation_Migration_v2_0_0();
+}
 
 /**
  * Migrates pre v2.0 settings
  */
-class wcmp_installation_migration_v2_0_0
+class WCMP_Installation_Migration_v2_0_0
 {
     /**
      * Copy old settings if available (pre 2.0 didn't store the version, so technically, this is a new install)
      */
     public function __construct()
     {
+        $old_settings = get_option('wcmyparcelbe_settings');
+
         // map old key => new_key
         $general_settings_keys = [
             'api_key'              => WCMP_Settings::SETTING_API_KEY,
@@ -67,6 +73,4 @@ class wcmp_installation_migration_v2_0_0
     }
 }
 
-endif;
-
-new wcmp_installation_migration_v2_0_0();
+new WCMP_Installation_Migration_v2_0_0();

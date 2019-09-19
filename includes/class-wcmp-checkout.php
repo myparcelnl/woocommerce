@@ -108,7 +108,7 @@ class WCMP_Checkout
         add_action(
             apply_filters(
                 'wc_wcmp_delivery_options_location',
-                WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_CHECKOUT_POSITION)
+                WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DELIVERY_OPTIONS_POSITION)
             ),
             [$this, 'output_delivery_options'],
             10

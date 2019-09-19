@@ -42,9 +42,15 @@ class WCMP_Settings_Data
             $this->get_sections_general(),
             WCMP_Settings::SETTINGS_GENERAL
         );
+
         $this->generate_settings(
             $this->get_sections_export_defaults(),
             WCMP_Settings::SETTINGS_EXPORT_DEFAULTS
+        );
+
+        $this->generate_settings(
+            $this->get_sections_checkout(),
+            WCMP_Settings::SETTINGS_CHECKOUT
         );
 
         $this->generate_settings(
@@ -52,11 +58,28 @@ class WCMP_Settings_Data
             WCMP_Settings::SETTINGS_BPOST,
             true
         );
+
         $this->generate_settings(
             $this->get_sections_carrier_dpd(),
             WCMP_Settings::SETTINGS_DPD,
             true
         );
+    }
+
+    public static function getTabs()
+    {
+        $array = [
+            WCMP_Settings::SETTINGS_GENERAL         => _wcmp("General"),
+            WCMP_Settings::SETTINGS_EXPORT_DEFAULTS => _wcmp("Default export settings"),
+            WCMP_Settings::SETTINGS_CHECKOUT        => _wcmp("Checkout settings"),
+        ];
+
+        if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
+            $array[WCMP_Settings::SETTINGS_BPOST] = _wcmp("bpost");
+            $array[WCMP_Settings::SETTINGS_DPD]   = _wcmp("DPD");
+        }
+
+        return $array;
     }
 
     /**
@@ -161,11 +184,6 @@ class WCMP_Settings_Data
                     "settings" => $this->get_section_general_general(),
                 ],
                 [
-                    "name"     => "checkout_options",
-                    "label"    => _wcmp("Checkout options"),
-                    "settings" => $this->get_section_general_checkout_options(),
-                ],
-                [
                     "name"     => "diagnostics",
                     "label"    => _wcmp("Diagnostic tools"),
                     "settings" => $this->get_section_general_diagnostics(),
@@ -182,9 +200,22 @@ class WCMP_Settings_Data
         return [
             WCMP_Settings::SETTINGS_EXPORT_DEFAULTS => [
                 [
-                    "name"     => "export_defaults",
-                    "label"    => _wcmp('Default export settings'),
-                    "settings" => $this->get_section_export_defaults_defaults(),
+                    "name"     => "main",
+                    "label"    => _wcmp("Default export settings"),
+                    "settings" => $this->get_section_export_defaults_main(),
+                ],
+            ],
+        ];
+    }
+
+    private function get_sections_checkout()
+    {
+        return [
+            WCMP_Settings::SETTINGS_CHECKOUT => [
+                [
+                    "name"     => "main",
+                    "label"    => _wcmp("Checkout settings"),
+                    "settings" => $this->get_section_checkout_main(),
                 ],
             ],
         ];
@@ -317,11 +348,13 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"    => WCMP_Settings::SETTING_AUTOMATIC_ORDER_STATUS,
+                "name"      => WCMP_Settings::SETTING_AUTOMATIC_ORDER_STATUS,
+                "condition" => WCMP_Settings::SETTING_ORDER_STATUS_AUTOMATION,
+                "class"     => ["wcmp__child"],
                 //                    "default" => "", // todo
-                "label"   => _wcmp("Automatic order status"),
-                "type"    => "select",
-                "options" => $this->callbacks->get_order_status_options(),
+                "label"     => _wcmp("Automatic order status"),
+                "type"      => "select",
+                "options"   => $this->callbacks->get_order_status_options(),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_KEEP_SHIPMENTS,
@@ -339,109 +372,11 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMP_Settings::SETTING_BARCODE_IN_NOTE_TITLE,
+                "condition" => WCMP_Settings::SETTING_BARCODE_IN_NOTE,
+                "class"     => ["wcmp__child"],
                 "label"     => _wcmp("Title before the barcode"),
                 "default"   => _wcmp("Track & trace code:"),
                 "help_text" => _wcmp("You can change the text before the barcode inside an note"),
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function get_section_general_checkout_options(): array
-    {
-        return [
-            [
-                "name"      => WCMP_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS,
-                "label"     => _wcmp("MyParcel BE address fields"),
-                "type"      => "toggle",
-                "help_text" => _wcmp(
-                    "When enabled the checkout will use the MyParcel BE address fields. This means there will be three separate fields for street name, number and suffix. Want to use the WooCommerce default fields? Leave this option unchecked."
-                ),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Enable MyParcel BE delivery options"),
-                "type"      => "toggle",
-                "help_text" => _wcmp(
-                    "The MyParcel delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery."
-                ),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Delivery options title"),
-                "title"     => "Delivery options title",
-                "help_text" => _wcmp(
-                    "You can place a delivery title above the MyParcel BE options. When there is no title, it will not be visible."
-                ),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_DELIVERY_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Delivery options title"),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_STANDARD_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Standard delivery title"),
-                "help_text" => _wcmp("When there is no title, the delivery time will automatically be visible."),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_SIGNATURE_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Signature on delivery"),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_PICKUP_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Pickup title"),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Display for"),
-                "type"      => "select",
-                "options"   => [
-                    "selected_methods" => _wcmp("Shipping methods associated with Parcels"),
-                    "all_methods"      => _wcmp("All shipping methods"),
-                ],
-                "help_text" => _wcmp(
-                    "You can link the delivery options to specific shipping methods by adding them to the package types under \"Standard export settings\". The delivery options are not visible at foreign addresses."
-                ),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_CHECKOUT_POSITION,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Checkout position"),
-                "type"      => "select",
-                "default"   => "woocommerce_after_checkout_billing_form",
-                "options"   => [
-                    "woocommerce_after_checkout_billing_form"  => _wcmp(
-                        "Show checkout options after billing details"
-                    ),
-                    "woocommerce_after_checkout_shipping_form" => _wcmp(
-                        "Show checkout options after shipping details"
-                    ),
-                    "woocommerce_after_order_notes"            => _wcmp(
-                        "Show checkout options after notes"
-                    ),
-                ],
-                "help_text" => _wcmp(
-                    "You can change the place of the checkout options on the checkout page. By default it will be placed after shipping details."
-                ),
-            ],
-            [
-                "name"              => WCMP_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
-                "condition"         => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"             => _wcmp("Custom styles"),
-                "type"              => "textarea",
-                "custom_attributes" => [
-                    "style" => "font-family: monospace;",
-                    "rows"  => "8",
-                    "cols"  => "12",
-                ],
             ],
         ];
     }
@@ -630,7 +565,7 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_section_export_defaults_defaults()
+    private function get_section_export_defaults_main()
     {
         return [
             [
@@ -665,6 +600,106 @@ class WCMP_Settings_Data
                 "help_text" => _wcmp(
                     "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments."
                 ),
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function get_section_checkout_main(): array
+    {
+        return [
+            [
+                "name"      => WCMP_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS,
+                "label"     => _wcmp("MyParcel BE address fields"),
+                "type"      => "toggle",
+                "help_text" => _wcmp(
+                    "When enabled the checkout will use the MyParcel BE address fields. This means there will be three separate fields for street name, number and suffix. Want to use the WooCommerce default fields? Leave this option unchecked."
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Enable MyParcel BE delivery options"),
+                "type"      => "toggle",
+                "help_text" => _wcmp(
+                    "The MyParcel delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery."
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Delivery options title"),
+                "title"     => "Delivery options title",
+                "help_text" => _wcmp(
+                    "You can place a delivery title above the MyParcel BE options. When there is no title, it will not be visible."
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_DELIVERY_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Delivery options title"),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_STANDARD_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Standard delivery title"),
+                "help_text" => _wcmp("When there is no title, the delivery time will automatically be visible."),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_SIGNATURE_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Signature on delivery"),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_PICKUP_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Pickup title"),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Display for"),
+                "type"      => "select",
+                "options"   => [
+                    "selected_methods" => _wcmp("Shipping methods associated with Parcels"),
+                    "all_methods"      => _wcmp("All shipping methods"),
+                ],
+                "help_text" => _wcmp(
+                    "You can link the delivery options to specific shipping methods by adding them to the package types under \"Standard export settings\". The delivery options are not visible at foreign addresses."
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_POSITION,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Checkout position"),
+                "type"      => "select",
+                "default"   => "woocommerce_after_checkout_billing_form",
+                "options"   => [
+                    "woocommerce_after_checkout_billing_form"  => _wcmp(
+                        "Show checkout options after billing details"
+                    ),
+                    "woocommerce_after_checkout_shipping_form" => _wcmp(
+                        "Show checkout options after shipping details"
+                    ),
+                    "woocommerce_after_order_notes"            => _wcmp(
+                        "Show checkout options after notes"
+                    ),
+                ],
+                "help_text" => _wcmp(
+                    "You can change the place of the checkout options on the checkout page. By default it will be placed after shipping details."
+                ),
+            ],
+            [
+                "name"              => WCMP_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
+                "condition"         => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"             => _wcmp("Custom styles"),
+                "type"              => "textarea",
+                "custom_attributes" => [
+                    "style" => "font-family: monospace;",
+                    "rows"  => "8",
+                    "cols"  => "12",
+                ],
             ],
         ];
     }

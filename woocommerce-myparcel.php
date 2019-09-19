@@ -359,7 +359,8 @@ if (! class_exists('WCMP')) :
             // Create the settings collection by importing this function, because we can't use the sdk
             // imports in the legacy version.
             include('includes/wcmp-initialize-settings-collection.php');
-            $this->setting_collection = $this->setting_collection ?? (new WCMP_Initialize_Settings_Collection())->initialize();
+            $this->setting_collection =
+                $this->setting_collection ?? (new WCMP_Initialize_Settings_Collection())->initialize();
         }
 
         /**

@@ -263,6 +263,7 @@ class SettingsFieldArguments
             if (in_array($arg, $array)) {
                 continue;
             }
+
             if (in_array($arg, self::ALLOWED_ARGUMENTS)) {
                 $arguments[$arg] = $value;
             } else {
