@@ -39,6 +39,7 @@ if ($deliveryOptions->isPickup()) {
     echo "<hr>";
 }
 
+$isCarrierDisabled = $deliveryOptions->isPickup();
 $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
 
 $option_rows = [
@@ -48,7 +49,7 @@ $option_rows = [
         "type"              => "select",
         "options"           => WCMP_Data::getCarriers(),
         "custom_attributes" => [
-            "disabled" => "disabled",
+            "disabled" => $isCarrierDisabled ? "disabled" : null,
         ],
         "value"             => $deliveryOptions->getCarrier(),
     ],
