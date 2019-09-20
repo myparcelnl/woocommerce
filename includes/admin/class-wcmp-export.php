@@ -2152,7 +2152,7 @@ class WCMP_Export
             return false;
         }
 
-        if (in_array('signature', $delivery_options->getShipmentOptions())) {
+        if (! empty($delivery_options->getShipmentOptions()->signature)) {
             return true;
         }
 

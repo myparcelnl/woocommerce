@@ -40,8 +40,8 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
 
     $isCarrierDisabled     = $deliveryOptions->isPickup();
     $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
-
-    $option_rows = [
+    $shipment_options      = $deliveryOptions->getShipmentOptions();
+    $option_rows           = [
         [
             "name"              => "[carrier]",
             "label"             => _wcmp("Carrier"),
@@ -79,7 +79,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "name"              => "[shipment_options][signature]",
             "type"              => "toggle",
             "label"             => _wcmp("Signature on delivery"),
-            "value"             => isset($shipment_options["signature"]) ? $shipment_options["signature"] : 0,
+            "value"             => ! empty($shipment_options->signature) ? $shipment_options->signature : 0,
             "custom_attributes" => [
                 "disabled" => isset($option_row['disabled']) ? "disabled" : null,
             ],

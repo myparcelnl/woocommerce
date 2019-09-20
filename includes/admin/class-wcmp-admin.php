@@ -386,8 +386,6 @@ class WCMP_Admin
         parse_str($form_data, $form_data);
         $order = WCX::get_order($order_id);
 
-        var_dump("form_data");
-        var_dump($form_data);
         if (isset($form_data[self::SHIPMENT_OPTIONS_FORM_NAME][$order_id])) {
             $shipment_options = $form_data[self::SHIPMENT_OPTIONS_FORM_NAME][$order_id];
 
@@ -411,11 +409,10 @@ class WCMP_Admin
                 unset($shipment_options['extra_options']);
             }
 
-            var_dump(self::META_DELIVERY_OPTIONS);
-            var_dump(self::decodeDeliveryOptionsMeta($order));
-
             $deliveryOptions = self::decodeDeliveryOptionsMeta($order);
-
+//            var_dump($deliveryOptions);
+//            var_dump($shipment_options);
+//            exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
             $deliveryOptions["carrier"] = $shipment_options["carrier"];
             $deliveryOptions["shipmentOptions"] = $shipment_options["shipment_options"];
 

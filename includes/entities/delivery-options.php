@@ -29,7 +29,7 @@ class DeliveryOptions
     private $deliveryType;
 
     /**
-     * @var array
+     * @var object
      */
     private $shipmentOptions;
 
@@ -95,9 +95,9 @@ class DeliveryOptions
     }
 
     /**
-     * @return array
+     * @return object
      */
-    public function getShipmentOptions(): ?array
+    public function getShipmentOptions()
     {
         return $this->shipmentOptions;
     }
