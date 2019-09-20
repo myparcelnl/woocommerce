@@ -304,72 +304,13 @@ class WCMP_Export
             WCX_Order::update_meta_data($order, "_myparcelbe_last_shipment_ids", $idsByOrder);
         }
 
-
-//            for ($i = 0; $i < intval($collo_amount); $i++) {
-//                try {
-//                    $api      = $this->init_api();
-//
-//
-//
-//                    $consignments->addConsignment($consignment);
-//
-//                    $response = $api->add_shipments($shipments);
-//                    $this->log("API response (order {$order_id}):\n" . var_export($response, true));
-//                    if (isset($response["body"]["data"]["ids"])) {
-//                        $ids                      = array_shift($response["body"]["data"]["ids"]);
-//                        $shipment_id              = $ids["id"];
-//                        $this->success[$order_id] = $shipment_id;
-//
-//                        $created_shipments[] = $shipment_id;
-//                        $shipment            = [
-//                            "shipment_id" => $shipment_id,
-//                        ];
-//
-        // save shipment data in order meta
-//                        $this->save_shipment_data($order, $shipment);
-//
-//                        // process directly setting
-//                        if ($this->getSetting("process_directly") || $process === true) {
-//                            // flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
-//                            if (method_exists($order, "save")) {
-//                                $order->save();
-//                            }
-//                            $this->get_labels((array) $order_id, "url");
-//                            $this->get_shipment_data($shipment_id, $order);
-//                        }
-//
-//                        // status automation
-//                        if ($this->getSetting("order_status_automation")
-//                            && $this->getSetting(
-//                                "automatic_order_status"
-//                            )) {
-//                            $order->update_status(
-//                                $this->getSetting("automatic_order_status"),
-//                                _wcmp("MyParcel shipment created:")
-//                            );
-//                        }
-//                    } else {
-//                        $this->errors[$order_id] = _wcmp("Unknown error");
-//                    }
-//                } catch (Exception $e) {
-//                    $this->errors[$order_id] = $e->getMessage();
-//                }
-//            }
-//
-//            // store shipment ids from this export
-//            if (! empty($created_shipments)) {
-//                WCX_Order::update_meta_data($order, "_myparcelbe_last_shipment_ids", $created_shipments);
-//            }
-//        }
-
-
-//        if (! empty($this->success)) {
-        $return["success"]     = sprintf(
-            _wcmp("%s shipments successfully exported to MyParcel"),
-            count($this->success)
-        );
-        $return["success_ids"] = $consignments->getConsignmentIds();
-//        }
+        if (! empty($this->success)) {
+            $return["success"]     = sprintf(
+                _wcmp("%s shipments successfully exported to MyParcel"),
+                count($this->success)
+            );
+            $return["success_ids"] = $consignments->getConsignmentIds();
+        }
 
         return $return;
         /*
@@ -636,6 +577,13 @@ class WCMP_Export
         if (empty($label_description)) {
             $label_description = 'Order: ' . $order_id;
         }
+        $shipment_options = $delivery_options->getShipmentOptions();
+
+        if (DPDConsignment::CARRIER_NAME === $delivery_options->getCarrier()) {
+            $insurance = 0;
+        } else {
+            $insurance = ! empty($shipment_options->insured) ? WCMP_Export::INSURANCE_AMOUNT : $this->getInsuranceAmount();
+         }
 
         $consignment
             ->setApiKey($api_key)
@@ -655,7 +603,7 @@ class WCMP_Export
             ->setLabelDescription($label_description)
             ->setPackageType(self::PACKAGE)
             ->setSignature($this->isSignatureByDeliveryOptions($delivery_options))
-            ->setInsurance($this->getInsuranceAmount());
+            ->setInsurance($insurance);
 
         if ($delivery_options->isPickup()) {
             $pickup = $delivery_options->getPickupLocation();
