@@ -262,9 +262,9 @@ class WCMP_Export
 
             // check colli amount
             $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
-            $colli_amount = isset($extra_params["colli_amount"]) ? $extra_params["colli_amount"] : 1;
+            $collo_amount = isset($extra_params["collo_amount"]) ? $extra_params["collo_amount"] : 1;
 
-            $consignments->addMultiCollo($consignment, $colli_amount);
+            $consignments->addMultiCollo($consignment, $collo_amount);
         }
 
         $consignments = $consignments->createConcepts();
@@ -305,7 +305,7 @@ class WCMP_Export
         }
 
 
-//            for ($i = 0; $i < intval($colli_amount); $i++) {
+//            for ($i = 0; $i < intval($collo_amount); $i++) {
 //                try {
 //                    $api      = $this->init_api();
 //
@@ -920,6 +920,7 @@ class WCMP_Export
 
         // use shipment options from order when available
         $shipment_options = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS);
+
         if (! empty($shipment_options)) {
             $empty_defaults = [
                 "package_type"      => 1,

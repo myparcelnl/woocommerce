@@ -30,6 +30,8 @@ class WCMP_Admin
     public const META_SIGNATURE              = "_myparcelbe_signature";
     public const META_TRACK_TRACE            = "_myparcelbe_tracktrace";
 
+    public const SHIPMENT_OPTIONS_FORM_NAME = "myparcelbe_options";
+
     function __construct()
     {
         add_action("woocommerce_admin_order_actions_end", [$this, "showMyParcelSettings"], 9999);
@@ -96,7 +98,7 @@ class WCMP_Admin
                 </div>
             </div>
         <?php else : ?>
-            <div class="wcmp_shipment_options">
+            <div class="wcmp_shipment_options wcmp__has-consignments">
                 <?php $this->showDeliveryOptionsForOrder($order); ?>
             </div>
         <?php endif; ?>
@@ -156,14 +158,14 @@ class WCMP_Admin
         if ('shop_order' == $post_type) {
             ?>
             <script type="text/javascript">
-            jQuery(document).ready(function() {
-                <?php foreach ($bulk_actions as $action => $title) { ?>
-              jQuery('<option>')
-                .val('<?php echo $action; ?>')
-                .html('<?php echo esc_attr($title); ?>')
-                .appendTo('select[name=\'action\'], select[name=\'action2\']');
-                <?php }    ?>
-            });
+                jQuery(document).ready(function () {
+                    <?php foreach ($bulk_actions as $action => $title) { ?>
+                    jQuery('<option>')
+                        .val('<?php echo $action; ?>')
+                        .html('<?php echo esc_attr($title); ?>')
+                        .appendTo('select[name=\'action\'], select[name=\'action2\']');
+                    <?php }    ?>
+                });
             </script>
             <?php self::renderSpinner(
                 [
@@ -358,10 +360,25 @@ class WCMP_Admin
         return $consignments;
     }
 
+    /**
+     * On saving shipment options from the bulk options form.
+     *
+     * @see admin/views/html-order-shipment-options.php
+     */
     public function save_shipment_options_ajax()
     {
-        check_ajax_referer('wc_myparcelbe', 'security');
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+//        check_ajax_referer('wc_myparcelbe', 'security');
         extract($_POST);
+
+//        action=wcmp_save_shipment_options
+//        order_id=80
+//        form_data[myparcelbe_options][80][carrier]=0
+//        form_data[myparcelbe_options][80][extra_options][collo_amount]=10
+//        form_data[myparcelbe_options][80][shipment_options][signature]=0
+//        form_data[myparcelbe_options][80][shipment_options][insured]=0
+
         /**
          * @var $form_data
          * @var $order_id
@@ -369,11 +386,13 @@ class WCMP_Admin
         parse_str($form_data, $form_data);
         $order = WCX::get_order($order_id);
 
-        if (isset($form_data['myparcelbe_options'][$order_id])) {
-            $shipment_options = $form_data['myparcelbe_options'][$order_id];
+        var_dump("form_data");
+        var_dump($form_data);
+        if (isset($form_data[self::SHIPMENT_OPTIONS_FORM_NAME][$order_id])) {
+            $shipment_options = $form_data[self::SHIPMENT_OPTIONS_FORM_NAME][$order_id];
 
             // convert insurance option
-            if (isset($shipment_options['insured'])) {
+            if (isset($shipment_options['insured']) && isset($shipment_options['insured_amount'])) {
                 unset($shipment_options['insured']);
                 $shipment_options['insurance'] = [
                     'amount'   => (int) $shipment_options['insured_amount'] * 100,
@@ -392,7 +411,15 @@ class WCMP_Admin
                 unset($shipment_options['extra_options']);
             }
 
-            WCX_Order::update_meta_data($order, self::META_SHIPMENT_OPTIONS, $shipment_options);
+            var_dump(self::META_DELIVERY_OPTIONS);
+            var_dump(self::decodeDeliveryOptionsMeta($order));
+
+            $deliveryOptions = self::decodeDeliveryOptionsMeta($order);
+
+            $deliveryOptions["carrier"] = $shipment_options["carrier"];
+            $deliveryOptions["shipmentOptions"] = $shipment_options["shipment_options"];
+
+            WCX_Order::update_meta_data($order, self::META_DELIVERY_OPTIONS, self::encodeDeliveryOptionsMeta($deliveryOptions));
         }
 
         // Quit out
@@ -714,9 +741,27 @@ class WCMP_Admin
      */
     public static function getDeliveryOptionsFromOrder(WC_Order $order): DeliveryOptions
     {
-        return new DeliveryOptions(
-            (array) json_decode(stripslashes(WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS)))
-        );
+        return new DeliveryOptions(self::decodeDeliveryOptionsMeta($order));
+    }
+
+    /**
+     * @param WC_Order $order
+     *
+     * @return array
+     */
+    public static function decodeDeliveryOptionsMeta(WC_Order $order): array
+    {
+        return (array) json_decode(stripslashes(WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS)));
+    }
+
+    /**
+     * @param array $metaData
+     *
+     * @return string
+     */
+    public static function encodeDeliveryOptionsMeta(array $metaData): string
+    {
+        return json_encode($metaData);
     }
 
     /**
