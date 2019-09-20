@@ -402,60 +402,26 @@ class WCMP_Export
             (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))
                 ->setApiKey($this->init_api())
                 ->setReferenceId($order_id)
-                ->setPackageType(
-                    $shipmentOptions["package_type"]
-                )
-                ->setCountry(
-                    $shipmentRecipient["cc"]
-                )
-                ->setPerson(
-                    $shipmentRecipient["person"]
-                )
+                ->setPackageType($shipmentOptions["package_type"])
+                ->setCountry($shipmentRecipient["cc"])
+                ->setPerson($shipmentRecipient["person"])
                 ->setFullStreet($fullStreet)
-                ->setStreetAdditionalInfo(
-                    $shipmentRecipient["street_additional_info"]
-                )
-                ->setPostalCode(
-                    $shipmentRecipient["postal_code"]
-                )
-                ->setCity(
-                    $shipmentRecipient["city"]
-                )
-                ->setPhone(
-                    $shipmentRecipient["phone"]
-                )
-                ->setEmail(
-                    $shipmentRecipient["email"]
-                )
-                ->setLabelDescription(
-                    $shipmentOptions["label_description"]
-                )
-                ->setCompany(
-                    $shipmentRecipient["company"]
-                )
+                ->setStreetAdditionalInfo($shipmentRecipient["street_additional_info"])
+                ->setPostalCode($shipmentRecipient["postal_code"])
+                ->setCity($shipmentRecipient["city"])
+                ->setPhone($shipmentRecipient["phone"])
+                ->setEmail($shipmentRecipient["email"])
+                ->setLabelDescription($shipmentOptions["label_description"])
+                ->setCompany($shipmentRecipient["company"])
                 // Options
-                ->setSignature(
-                    $shipmentOptions["signature"]
-                )
-                ->setInsurance(
-                    $this->getInsuranceAmount()
-                )
+                ->setSignature($shipmentOptions["signature"])
+                ->setInsurance($this->getInsuranceAmount())
                 // Pickup options
-                ->setPickupLocationName(
-                    $shipmentPickup["location_name"]
-                )
-                ->setPickupStreet(
-                    $shipmentPickup["street"]
-                )
-                ->setPickupNumber(
-                    $shipmentPickup["number"]
-                )
-                ->setPickupPostalCode(
-                    $shipmentPickup["postal_code"]
-                )
-                ->setPickupCity(
-                    $shipmentPickup["city"]
-                );
+                ->setPickupLocationName($shipmentPickup["location_name"])
+                ->setPickupStreet($shipmentPickup["street"])
+                ->setPickupNumber($shipmentPickup["number"])
+                ->setPickupPostalCode($shipmentPickup["postal_code"])
+                ->setPickupCity($shipmentPickup["city"]);
 
         return $consignment;
     }
