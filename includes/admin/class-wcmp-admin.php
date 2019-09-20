@@ -410,9 +410,6 @@ class WCMP_Admin
             }
 
             $deliveryOptions = self::decodeDeliveryOptionsMeta($order);
-//            var_dump($deliveryOptions);
-//            var_dump($shipment_options);
-//            exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
             $deliveryOptions["carrier"] = $shipment_options["carrier"];
             $deliveryOptions["shipmentOptions"] = $shipment_options["shipment_options"];
 

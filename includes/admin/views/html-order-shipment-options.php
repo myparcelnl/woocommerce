@@ -87,6 +87,12 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         [
             "name"              => "[shipment_options][insured]",
             "type"              => "toggle",
+            "condition"         => [
+                "name"         => "[carrier]",
+                "type"         => "disable",
+                "parent_value" => "dpd",
+                "set_value"    => WCMP_Settings_Data::DISABLED,
+            ],
             "label"             => _wcmp("Insured to &euro; 500"),
             "value"             => WCMP()->setting_collection->getByName("insured") ? 1 : 0,
             "custom_attributes" => [
@@ -100,10 +106,15 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     }
 
     foreach ($option_rows as $option_row) {
+        $name = WCMP_Admin::SHIPMENT_OPTIONS_FORM_NAME . "[$order_id]" . $option_row["name"];
+        if (isset($option_row["condition"])) {
+            $option_row["condition"]["name"] = $name;
+        }
+
         $class = new SettingsFieldArguments($option_row);
 
         woocommerce_form_field(
-            WCMP_Admin::SHIPMENT_OPTIONS_FORM_NAME . "[$order_id]" . $class->getName(),
+            $name,
             $class->getArguments(false),
             $option_row["value"] ?? null
         );
