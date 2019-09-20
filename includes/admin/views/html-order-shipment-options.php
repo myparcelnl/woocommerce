@@ -46,7 +46,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "name"              => "[carrier]",
             "label"             => _wcmp("Carrier"),
             "type"              => "select",
-            "options"           => WCMP_Data::getCarriers(),
+            "options"           => WCMP_Data::CARRIERS_HUMAN,
             "custom_attributes" => $isCarrierDisabled ? ["disabled" => "disabled"] : [],
             "value"             => $deliveryOptions->getCarrier(),
         ],
