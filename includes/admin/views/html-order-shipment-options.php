@@ -41,6 +41,13 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $isCarrierDisabled     = $deliveryOptions->isPickup();
     $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
     $shipment_options      = $deliveryOptions->getShipmentOptions();
+
+    if (! empty($shipment_options->insured)) {
+        $insured = $shipment_options->insured;
+    } else {
+        $insured = WCMP()->setting_collection->getByName("insured");
+    }
+
     $option_rows           = [
         [
             "name"              => "[carrier]",
@@ -94,7 +101,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
                 "set_value"    => WCMP_Settings_Data::DISABLED,
             ],
             "label"             => _wcmp("Insured to &euro; 500"),
-            "value"             => WCMP()->setting_collection->getByName("insured") ? 1 : 0,
+            "value"             => $insured ? 1 : 0,
             "custom_attributes" => [
                 "disabled" => isset($option_row['disabled']) ? "disabled" : null,
             ],
