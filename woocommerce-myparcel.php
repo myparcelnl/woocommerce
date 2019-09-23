@@ -317,8 +317,14 @@ if (! class_exists('WCMP')) :
                 require_once('migration/wcmp-upgrade-migration-v3-0-4.php');
             }
 
-            if (version_compare($installed_version, '4.0.0', '<=')) {
-                require_once('migration/wcmp-upgrade-migration-v4-0-0.php');
+            if ($this->phpVersionMeets($this->legacySettingsPhpVersion)) {
+                // Import the migration class base
+                require_once('migration/wcmp-upgrade-migration.php');
+
+                // Migrate php 7.1+ only version settings
+                if (version_compare($installed_version, '4.0.0', '<=')) {
+                    require_once('migration/wcmp-upgrade-migration-v4-0-0.php');
+                }
             }
         }
 
