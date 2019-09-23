@@ -74,10 +74,8 @@ class WCMP_Settings_Data
             WCMP_Settings::SETTINGS_CHECKOUT        => _wcmp("Checkout settings"),
         ];
 
-        if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
-            $array[WCMP_Settings::SETTINGS_BPOST] = _wcmp("bpost");
-            $array[WCMP_Settings::SETTINGS_DPD]   = _wcmp("DPD");
-        }
+        $array[WCMP_Settings::SETTINGS_BPOST] = _wcmp("bpost");
+        $array[WCMP_Settings::SETTINGS_DPD]   = _wcmp("DPD");
 
         return $array;
     }
@@ -230,6 +228,12 @@ class WCMP_Settings_Data
     {
         return [
             BpostConsignment::CARRIER_NAME => [
+                [
+                    "name"        => "export_defaults",
+                    "label"       => _wcmp("Default export settings"),
+                    "description" => _wcmp("These settings will be applied to bpost shipments you create in the backend."),
+                    "settings"    => $this->get_section_carrier_bpost_export_defaults(),
+                ],
                 [
                     "name"     => "delivery_options",
                     "label"    => _wcmp("bpost delivery options"),
@@ -700,6 +704,25 @@ class WCMP_Settings_Data
                     "rows"  => "8",
                     "cols"  => "12",
                 ],
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function get_section_carrier_bpost_export_defaults(): array
+    {
+        return [
+            [
+                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label" => _wcmp("Insured shipment (to €500)"),
+                "type"  => "toggle",
+            ],
+            [
+                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+                "label" => _wcmp("Signature on delivery"),
+                "type"  => "toggle",
             ],
         ];
     }
