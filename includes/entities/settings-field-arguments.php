@@ -417,9 +417,9 @@ class SettingsFieldArguments
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getDefault(): ?string
+    public function getDefault()
     {
         return $this->default;
     }

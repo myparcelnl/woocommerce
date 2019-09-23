@@ -231,7 +231,9 @@ class WCMP_Settings_Data
                 [
                     "name"        => "export_defaults",
                     "label"       => _wcmp("Default export settings"),
-                    "description" => _wcmp("These settings will be applied to bpost shipments you create in the backend."),
+                    "description" => _wcmp(
+                        "These settings will be applied to bpost shipments you create in the backend."
+                    ),
                     "settings"    => $this->get_section_carrier_bpost_export_defaults(),
                 ],
                 [
@@ -403,6 +405,27 @@ class WCMP_Settings_Data
     }
 
     /**
+     * Export defaults specifically for bpost.
+     *
+     * @return array
+     */
+    private function get_section_carrier_bpost_export_defaults(): array
+    {
+        return [
+            [
+                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label" => _wcmp("Insured shipment (to €500)"),
+                "type"  => "toggle",
+            ],
+            [
+                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+                "label" => _wcmp("Signature on delivery"),
+                "type"  => "toggle",
+            ],
+        ];
+    }
+
+    /**
      * These are the unprefixed settings for bpost.
      * After the settings are generated every name will be prefixed with "bpost_"
      * Example: delivery_enabled => bpost_delivery_enabled
@@ -422,7 +445,8 @@ class WCMP_Settings_Data
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Drop-off days"),
                 "callback"  => [$this->callbacks, "enhanced_select"],
-                "options"   => (new WP_Locale())->weekday,
+                "options"   => $this->getWeekdays(),
+                "default"   => [1, 2, 3, 4, 5],
                 "help_text" => _wcmp("Days of the week on which you hand over parcels to bpost"),
             ],
             [
@@ -430,6 +454,7 @@ class WCMP_Settings_Data
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Cut-off time"),
                 "help_text" => _wcmp("Time at which you stop processing orders for the day (format: hh:mm)"),
+                "default"   => "17:00",
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
@@ -443,8 +468,14 @@ class WCMP_Settings_Data
                 "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Delivery days window"),
-                "type"      => "toggle",
-                "help_text" => _wcmp("Show the delivery date inside the checkout."),
+                "type"      => "number",
+                "step"      => 1,
+                "min"       => 0,
+                "max"       => 14,
+                "default"   => "1",
+                "help_text" => _wcmp(
+                    "The number of days into the future in which your customer can select a delivery date."
+                ),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
@@ -513,7 +544,8 @@ class WCMP_Settings_Data
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Drop-off days"),
                 "callback"  => [$this->callbacks, "enhanced_select"],
-                "options"   => (new WP_Locale())->weekday,
+                "options"   => $this->getWeekdays(),
+                "default"   => $this->getWeekdays(0, 5),
                 "help_text" => _wcmp("Days of the week on which you hand over parcels to dpd"),
             ],
             [
@@ -521,20 +553,30 @@ class WCMP_Settings_Data
                 "condition"   => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"       => _wcmp("Cut-off time"),
                 "placeholder" => "17:00",
+                "default"     => "17:00",
                 "help_text"   => _wcmp("Time at which you stop processing orders for the day (format: hh:mm)"),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Drop-off delay"),
+                "step"      => 1,
+                "min"       => 0,
+                "max"       => 14,
                 "help_text" => _wcmp("Number of days you need to process an order."),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Delivery days window"),
-                "type"      => "toggle",
-                "help_text" => _wcmp("Show the delivery date inside the checkout."),
+                "type"      => "number",
+                "step"      => 1,
+                "min"       => 0,
+                "max"       => 14,
+                "default"   => "1",
+                "help_text" => _wcmp(
+                    "The number of days into the future in which your customer can select a delivery date."
+                ),
             ],
         ];
     }
@@ -643,35 +685,39 @@ class WCMP_Settings_Data
                 "name"      => WCMP_Settings::SETTING_DELIVERY_TITLE,
                 "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => _wcmp("Delivery options title"),
+                "default"   => _wcmp("Delivery options"),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_STANDARD_TITLE,
                 "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => _wcmp("Standard delivery title"),
                 "help_text" => _wcmp("When there is no title, the delivery time will automatically be visible."),
+                "default"   => _wcmp("Standard delivery"),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_SIGNATURE_TITLE,
                 "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => _wcmp("Signature on delivery"),
+                "default"   => _wcmp("Signature on delivery"),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_PICKUP_TITLE,
                 "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => _wcmp("Pickup title"),
+                "default"   => _wcmp("Pickup"),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY,
                 "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => _wcmp("Display for"),
                 "type"      => "select",
+                "help_text" => _wcmp(
+                    "You can link the delivery options to specific shipping methods by adding them to the package types under \"Standard export settings\". The delivery options are not visible at foreign addresses."
+                ),
                 "options"   => [
                     "selected_methods" => _wcmp("Shipping methods associated with Parcels"),
                     "all_methods"      => _wcmp("All shipping methods"),
                 ],
-                "help_text" => _wcmp(
-                    "You can link the delivery options to specific shipping methods by adding them to the package types under \"Standard export settings\". The delivery options are not visible at foreign addresses."
-                ),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_POSITION,
@@ -709,22 +755,24 @@ class WCMP_Settings_Data
     }
 
     /**
+     * Get the weekdays from WP_Locale and remove any entries. Sunday is removed by default unless `null` is passed.
+     *
+     * @param int|null ...$remove
+     *
      * @return array
      */
-    private function get_section_carrier_bpost_export_defaults(): array
+    private function getWeekdays(...$remove): array
     {
-        return [
-            [
-                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                "label" => _wcmp("Insured shipment (to €500)"),
-                "type"  => "toggle",
-            ],
-            [
-                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
-                "label" => _wcmp("Signature on delivery"),
-                "type"  => "toggle",
-            ],
-        ];
+        $weekdays = (new WP_Locale())->weekday;
+
+        if ($remove !== null) {
+            $remove = count($remove) ? $remove : [0];
+            foreach ($remove as $index) {
+                unset($weekdays[$index]);
+            }
+        }
+
+        return $weekdays;
     }
 }
 

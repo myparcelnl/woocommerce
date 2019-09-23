@@ -38,9 +38,12 @@ class WCMP_Settings_Callbacks_Enhanced_Select
     {
         foreach ($loop as $id => $human) {
             printf('<h4 class="title">%s:</h4>', $human);
-            $value = get_option($class->getOptionId())[$class->getId()][$id];
 
-            $this->createSearchBox($class, "[{$class->getId()}][$id]", $value);
+            if (array_key_exists($id, get_option($class->getOptionId())[$class->getId()])) {
+                $value = get_option($class->getOptionId())[$class->getId()][$id];
+            }
+
+            $this->createSearchBox($class, "[{$class->getId()}][$id]", $value ?? []);
         }
     }
 
