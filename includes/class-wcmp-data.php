@@ -14,11 +14,14 @@ if (class_exists('WCMP_Data')) {
 
 class WCMP_Data
 {
-
     /**
      * @var array
      */
-    private static $carriers;
+    const CARRIERS_HUMAN = [
+        DPDConsignment::CARRIER_NAME => 'DPD',
+        BpostConsignment::CARRIER_NAME => 'bpost',
+    ];
+
     /**
      * @var array
      */
@@ -30,11 +33,6 @@ class WCMP_Data
 
     public function __construct()
     {
-        self::$carriers = [
-            DPDConsignment::CARRIER_NAME,
-            BpostConsignment::CARRIER_NAME,
-        ];
-
         self::$packageTypes = [
             AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
         ];
@@ -42,14 +40,6 @@ class WCMP_Data
         self::$packageTypesHuman = [
             AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME => _wcmp("Parcel"),
         ];
-    }
-
-    /**
-     * @return array
-     */
-    public static function getCarriers(): array
-    {
-        return self::$carriers;
     }
 
     /**

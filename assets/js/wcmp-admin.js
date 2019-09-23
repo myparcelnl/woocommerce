@@ -140,7 +140,7 @@ jQuery(function($) {
   });
 
   /* disable ALL shipment options form fields to avoid conflicts with order search field */
-  $('.wp-list-table .wcmp_shipment_options_form :input').prop('disabled', true);
+  // $('.wp-list-table .wcmp_shipment_options_form :input').prop('disabled', true); @todo remove this
 
   /* show and enable options when clicked */
   $('.wcmp_show_shipment_options').click(function(event) {
@@ -332,39 +332,31 @@ jQuery(function($) {
 
   /* myparcelbe_checkout */
 
-  /* saving shipment options via AJAX */
-  $('.wcmp_save_shipment_settings')
-    .on('click', 'a.button.save', function() {
-      var order_id = $(this).data().order;
-      var $form = $(this).closest('.wcmp_shipment_options').find('.wcmp_shipment_options_form');
-      var package_type = $form.find('select.package_type option:selected').text();
-      var $package_type_text_element = $(this).closest('.wcmp_shipment_options').find('.wcpm_package_type');
+  /**
+   * Save the shipment options in the bulk form.
+   */
+  function saveShipmentOptions() {
+    var order_id = $(this).data().order;
+    var $form = $(this).closest('.wcmp_shipment_options').find('.wcmp_shipment_options_form');
+    $(this).find('.wcmp_spinner').show();
 
-      /* show spinner */
-      $form.find('.wcmp_save_shipment_settings .waiting').show();
+    var form_data = $form.find(':input').serialize();
+    var data = {
+      action: 'wcmp_save_shipment_options',
+      order_id: order_id,
+      form_data: form_data,
+      security: wc_myparcelbe.nonce,
+    };
 
-      var form_data = $form.find(':input').serialize();
-      var data = {
-        action: 'wcmp_save_shipment_options',
-        order_id: order_id,
-        form_data: form_data,
-        security: wc_myparcelbe.nonce,
-      };
+    $.post(wc_myparcelbe.ajax_url, data, function() {
+      $(this).find('.wcmp_spinner').hide();
 
-      $.post(wc_myparcelbe.ajax_url, data, function() {
-        /* set main text to selection */
-        $package_type_text_element.text(package_type);
-
-        /* hide spinner */
-        $form.find('.wcmp_save_shipment_settings .waiting').hide();
-
-        /* disable all input fields again */
-        $form.find(':input').prop('disabled', true);
-
-        /* hide the form */
-        $form.slideUp();
-      });
+      /* hide the form */
+      $form.slideUp();
     });
+  }
+
+  document.querySelector('.wcmp__js-save-shipment-settings').addEventListener('click', saveShipmentOptions);
 
   /* Print queued labels */
   var print_queue = $('#wcmp_printqueue').val();

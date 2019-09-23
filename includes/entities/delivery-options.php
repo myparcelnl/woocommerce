@@ -21,15 +21,10 @@ class DeliveryOptions
     /**
      * @var string
      */
-    private $moment;
-
-    /**
-     * @var string
-     */
     private $deliveryType;
 
     /**
-     * @var array
+     * @var object|null
      */
     private $shipmentOptions;
 
@@ -56,17 +51,13 @@ class DeliveryOptions
             $carrier = $deliveryOptions["carrier"];
         }
 
-        $this->deliveryType    = $deliveryOptions["delivery"];
+        $this->deliveryType    = $deliveryOptions["deliveryType"];
         $this->date            = $deliveryOptions["deliveryDate"];
-        $this->shipmentOptions = $deliveryOptions["shipmentOptions"] ?? [];
+        $this->shipmentOptions = $deliveryOptions["shipmentOptions"] ?? null;
         $this->carrier         = $carrier ?? BpostConsignment::CARRIER_NAME;
 
         if ($this->isPickup()) {
             $this->pickupLocation = new PickupLocation($deliveryOptions["pickupLocation"]);
-
-            $this->moment = $deliveryOptions["pickupMoment"];
-        } else {
-            $this->moment = $deliveryOptions["deliveryMoment"];
         }
     }
 
@@ -81,23 +72,15 @@ class DeliveryOptions
     /**
      * @return string
      */
-    public function getMoment(): ?string
-    {
-        return $this->moment;
-    }
-
-    /**
-     * @return string
-     */
     public function getDeliveryType(): ?string
     {
         return $this->deliveryType;
     }
 
     /**
-     * @return array
+     * @return object|null
      */
-    public function getShipmentOptions(): ?array
+    public function getShipmentOptions()
     {
         return $this->shipmentOptions;
     }
