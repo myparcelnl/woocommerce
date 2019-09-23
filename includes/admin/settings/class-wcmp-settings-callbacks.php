@@ -160,11 +160,6 @@ class WCMP_Settings_Callbacks
         include("class-wcmp-settings-callbacks-enhanced-select.php");
 
         new WCMP_Settings_Callbacks_Enhanced_Select($args);
-
-        // Displays option description.
-        if (isset($args["help_text"])) {
-            $this->renderTooltip($args["help_text"]);
-        }
     }
 
     /**

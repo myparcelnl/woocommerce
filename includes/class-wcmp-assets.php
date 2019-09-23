@@ -13,13 +13,13 @@ class WCMP_Assets
 
     function __construct()
     {
-        add_action("admin_enqueue_scripts", [$this, "backend_scripts_styles"]);
+        add_action("admin_enqueue_scripts", [$this, "enqueue_admin_scripts_and_styles"], 9999);
     }
 
     /**
      * Load styles & scripts
      */
-    public function backend_scripts_styles()
+    public function enqueue_admin_scripts_and_styles()
     {
         global $post_type;
         $screen = get_current_screen();

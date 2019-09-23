@@ -140,8 +140,13 @@ class SettingsFieldArguments
         $type = $this->getArgument("type");
 
         switch ($type) {
+            case "number":
+                $this->addArgument("min", 0);
+                $this->addArgument("step", 1);
+                break;
             case "currency":
-                $type = "text";
+                $type = "number";
+                $this->addArgument("step", 0.01);
                 $this->addArgument("placeholder", "0,00");
                 break;
             case "multi_select":
@@ -296,6 +301,8 @@ class SettingsFieldArguments
     }
 
     /**
+     * Add an argument by key => value.
+     *
      * @param string $key
      * @param        $value
      */
@@ -330,7 +337,7 @@ class SettingsFieldArguments
     }
 
     /**
-     * Set the default value based on the type.
+     * Set default arguments based on the type.
      */
     private function setDefault(): void
     {
@@ -345,6 +352,9 @@ class SettingsFieldArguments
         }
 
         switch ($this->type) {
+            case "number":
+                $this->default = 0;
+                break;
             case "text":
             case "textarea":
                 $this->default = "";

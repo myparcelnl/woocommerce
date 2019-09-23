@@ -461,7 +461,7 @@ class WCMP_Settings_Data
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Drop-off delay"),
                 "type"      => "number",
-                "step"      => 1,
+                "max"       => 14,
                 "help_text" => _wcmp("Number of days you need to process an order."),
             ],
             [
@@ -469,8 +469,6 @@ class WCMP_Settings_Data
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Delivery days window"),
                 "type"      => "number",
-                "step"      => 1,
-                "min"       => 0,
                 "max"       => 14,
                 "default"   => "1",
                 "help_text" => _wcmp(
@@ -482,7 +480,6 @@ class WCMP_Settings_Data
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Signature on delivery"),
                 "type"      => "toggle",
-                "has_price" => true,
                 "help_text" => _wcmp(
                     "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
                 ),
@@ -560,8 +557,7 @@ class WCMP_Settings_Data
                 "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Drop-off delay"),
-                "step"      => 1,
-                "min"       => 0,
+                "type"      => "number",
                 "max"       => 14,
                 "help_text" => _wcmp("Number of days you need to process an order."),
             ],
@@ -570,10 +566,8 @@ class WCMP_Settings_Data
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => _wcmp("Delivery days window"),
                 "type"      => "number",
-                "step"      => 1,
-                "min"       => 0,
                 "max"       => 14,
-                "default"   => "1",
+                "default"   => 1,
                 "help_text" => _wcmp(
                     "The number of days into the future in which your customer can select a delivery date."
                 ),
@@ -591,7 +585,6 @@ class WCMP_Settings_Data
                 "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
                 "label"     => _wcmp("Enable dpd pickup"),
                 "type"      => "toggle",
-                "has_price" => true,
                 "help_text" => _wcmp(
                     "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
                 ),
