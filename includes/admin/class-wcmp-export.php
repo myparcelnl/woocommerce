@@ -56,6 +56,29 @@ class WCMP_Export
         add_action("wp_ajax_nopriv_wc_myparcelbe_frontend", [$this, "frontend_api_request"]);
     }
 
+    /**
+     * @param DeliveryOptions $delivery_options
+     *
+     * @return bool
+     */
+    public static function isSignatureByDeliveryOptions(DeliveryOptions $delivery_options): bool
+    {
+        if (DPDConsignment::CARRIER_NAME === $delivery_options->getCarrier()) {
+            return false;
+        }
+
+        if (WCMP()->setting_collection->isEnabled('bpost_export_signature')) {
+            return true;
+        }
+
+        $signatureFromCheckout = $delivery_options->getShipmentOptions()->signature;
+        if (null !== $signatureFromCheckout) {
+            return $signatureFromCheckout;
+        }
+
+        return false;
+    }
+
     public function admin_notices()
     {
         if (isset($_GET["myparcelbe_done"])) { // only do this when for the user that initiated this
@@ -602,7 +625,7 @@ class WCMP_Export
             ->setPhone($recipient['phone'])
             ->setLabelDescription($label_description)
             ->setPackageType(self::PACKAGE)
-            ->setSignature($this->isSignatureByDeliveryOptions($delivery_options))
+            ->setSignature(WCMP_Export::isSignatureByDeliveryOptions($delivery_options))
             ->setInsurance($insurance);
 
         if ($delivery_options->isPickup()) {
@@ -2053,33 +2076,6 @@ class WCMP_Export
         }
 
         return $description;
-    }
-
-    /**
-     * @param DeliveryOptions $delivery_options
-     *
-     * @return bool
-     */
-    private function isSignatureByDeliveryOptions(DeliveryOptions $delivery_options): bool
-    {
-        if (DPDConsignment::CARRIER_NAME === $delivery_options->getCarrier()) {
-            return false;
-        }
-
-        if (! empty($delivery_options->getShipmentOptions()->signature)) {
-            return true;
-        }
-
-        return false;
-
-        // @todo MY-14882 Er zou een instellingen moeten zijn om alle zendingen bijvoorbeeld standaard met handtekening
-        // voor ontvangst aan te maken. Als er geen optie is gekozen, dan moeten we kijken of het volgende de instelling wel moet.
-        // gekozen nee, auto hvo aan?
-        // gekozen nee, auto hvo uit?
-
-        var_dump(WCMP()->setting_collection);
-        exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
-        ($this->getSetting("signature")) ? 1 : 0;
     }
 
     /**
