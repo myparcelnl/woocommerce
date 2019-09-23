@@ -86,7 +86,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "name"              => "[shipment_options][signature]",
             "type"              => "toggle",
             "label"             => _wcmp("Signature on delivery"),
-            "value"             => ! empty($shipment_options->signature) ? $shipment_options->signature : 0,
+            "value"             => WCMP_Export::isSignatureByDeliveryOptions($deliveryOptions),
             "custom_attributes" => [
                 "disabled" => isset($option_row['disabled']) ? "disabled" : null,
             ],
