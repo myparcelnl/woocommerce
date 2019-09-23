@@ -322,7 +322,7 @@ class WCMP_Settings_Data
                 "help_text" => _wcmp("This option enables you to continue printing where you left off last time"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_EMAIL_TRACK_TRACE,
+                "name"      => WCMP_Settings::SETTING_TRACK_TRACE_EMAIL,
                 "label"     => _wcmp("Track & Trace in email"),
                 "type"      => "toggle",
                 "help_text" => _wcmp(
@@ -330,7 +330,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_MY_ACCOUNT_TRACK_TRACE,
+                "name"      => WCMP_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT,
                 "label"     => _wcmp("Track & Trace in My Account"),
                 "type"      => "toggle",
                 "help_text" => _wcmp("Show Track & Trace trace code and link in My Account."),
