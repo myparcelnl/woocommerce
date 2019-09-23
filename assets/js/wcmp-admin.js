@@ -356,7 +356,7 @@ jQuery(function($) {
     });
   }
 
-  document.querySelector('.wcmp__js-save-shipment-settings').addEventListener('click', saveShipmentOptions);
+  $('.wcmp__js-save-shipment-settings').click(saveShipmentOptions);
 
   /* Print queued labels */
   var print_queue = $('#wcmp_printqueue').val();
