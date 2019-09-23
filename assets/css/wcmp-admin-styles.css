@@ -256,8 +256,14 @@ table.tracktrace_status td.wcmp-create-label {
 }
 
 .woocommerce_page_wcmp_settings input,
+.woocommerce_page_wcmp_settings table.form-table .select2-container,
 .woocommerce_page_wcmp_settings select {
   max-width: 360px;
+}
+
+.woocommerce_page_wcmp_settings table.form-table .select2-container {
+  min-width: auto !important;
+  width: 100% !important;
 }
 
 .woocommerce_page_wcmp_settings table.form-table th {
