@@ -48,7 +48,13 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         $insured = WCMP()->setting_collection->getByName("insured");
     }
 
-    $option_rows           = [
+    if ($shipment_options->signature !== false) {
+        $signature = $shipment_options->signature;
+    } else {
+        $signature = (int) WCMP_Export::isSignatureByDeliveryOptions($deliveryOptions);
+    }
+
+    $option_rows = [
         [
             "name"              => "[carrier]",
             "label"             => _wcmp("Carrier"),
@@ -86,7 +92,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "name"              => "[shipment_options][signature]",
             "type"              => "toggle",
             "label"             => _wcmp("Signature on delivery"),
-            "value"             => WCMP_Export::isSignatureByDeliveryOptions($deliveryOptions),
+            "value"             => $signature,
             "custom_attributes" => [
                 "disabled" => isset($option_row['disabled']) ? "disabled" : null,
             ],
