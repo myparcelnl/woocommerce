@@ -467,12 +467,11 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => _wcmp("Delivery days window"),
-                "type"      => "number",
-                "max"       => 14,
-                "default"   => "1",
+                "label"     => _wcmp("Show delivery date"),
+                "type"      => "toggle",
+                "default"   => self::ENABLED,
                 "help_text" => _wcmp(
-                    "The number of days into the future in which your customer can select a delivery date."
+                    "Show the delivery date inside the delivery options."
                 ),
             ],
             [
@@ -564,12 +563,11 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => _wcmp("Delivery days window"),
-                "type"      => "number",
-                "max"       => 14,
-                "default"   => 1,
+                "label"     => _wcmp("Show delivery date"),
+                "type"      => "toggle",
+                "default"   => self::ENABLED,
                 "help_text" => _wcmp(
-                    "The number of days into the future in which your customer can select a delivery date."
+                    "Show the delivery date inside the delivery options."
                 ),
             ],
         ];
