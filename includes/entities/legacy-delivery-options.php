@@ -54,8 +54,11 @@ class LegacyDeliveryOptions
                 "signature" => (bool) $deliveryOptions["signature"],
             ],
             "isPickup"        => $this->migrateIsPickup($priceComment),
-            "pickupLocation"  => $this->migratePickupLocation(),
         ];
+
+        if ($this->migratedDeliveryOptions["isPickup"]) {
+            $this->migratedDeliveryOptions["pickupLocation"] = $this->migratePickupLocation();
+        }
     }
 
     /**
@@ -66,6 +69,9 @@ class LegacyDeliveryOptions
      */
     public function getDeliveryOptions(): DeliveryOptions
     {
+        echo "<pre>";
+        var_dump($this->migratedDeliveryOptions);
+        echo "</pre>";
         return new DeliveryOptions($this->migratedDeliveryOptions);
     }
 
