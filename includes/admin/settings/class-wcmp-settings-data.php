@@ -215,6 +215,11 @@ class WCMP_Settings_Data
                     "label"    => _wcmp("Checkout settings"),
                     "settings" => $this->get_section_checkout_main(),
                 ],
+                [
+                    "name"     => "strings",
+                    "label"    => _wcmp("Translations"),
+                    "settings" => $this->get_section_checkout_strings(),
+                ],
             ],
         ];
     }
@@ -357,7 +362,6 @@ class WCMP_Settings_Data
                 "name"      => WCMP_Settings::SETTING_AUTOMATIC_ORDER_STATUS,
                 "condition" => WCMP_Settings::SETTING_ORDER_STATUS_AUTOMATION,
                 "class"     => ["wcmp__child"],
-                //                    "default" => "", // todo
                 "label"     => _wcmp("Automatic order status"),
                 "type"      => "select",
                 "options"   => $this->callbacks->get_order_status_options(),
@@ -541,7 +545,7 @@ class WCMP_Settings_Data
                 "label"     => _wcmp("Drop-off days"),
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "options"   => $this->getWeekdays(),
-                "default"   => $this->getWeekdays(0, 5),
+                "default"   => [1, 2, 3, 4, 5],
                 "help_text" => _wcmp("Days of the week on which you hand over parcels to dpd"),
             ],
             [
@@ -590,6 +594,7 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_FEE,
                 "condition" => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "class"     => ["wcmp__child"],
                 "label"     => _wcmp("Fee (optional)"),
                 "type"      => "currency",
                 "help_text" => _wcmp(
@@ -664,40 +669,6 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Delivery options title"),
-                "title"     => "Delivery options title",
-                "help_text" => _wcmp(
-                    "You can place a delivery title above the MyParcel BE options. When there is no title, it will not be visible."
-                ),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_DELIVERY_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Delivery options title"),
-                "default"   => _wcmp("Delivery options"),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_STANDARD_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Standard delivery title"),
-                "help_text" => _wcmp("When there is no title, the delivery time will automatically be visible."),
-                "default"   => _wcmp("Standard delivery"),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_SIGNATURE_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Signature on delivery"),
-                "default"   => _wcmp("Signature on delivery"),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_PICKUP_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => _wcmp("Pickup title"),
-                "default"   => _wcmp("Pickup"),
-            ],
-            [
                 "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY,
                 "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => _wcmp("Display for"),
@@ -764,6 +735,46 @@ class WCMP_Settings_Data
         }
 
         return $weekdays;
+    }
+
+    private function get_section_checkout_strings(): array
+    {
+        return [
+            [
+                "name"      => WCMP_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Delivery options title"),
+                "title"     => "Delivery options title",
+                "help_text" => _wcmp(
+                    "You can place a delivery title above the MyParcel BE options. When there is no title, it will not be visible."
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_DELIVERY_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Delivery title"),
+                "default"   => _wcmp("Delivered at home or at work"),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_STANDARD_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Standard delivery title"),
+                "help_text" => _wcmp("When there is no title, the delivery time will automatically be visible."),
+                "default"   => _wcmp("Standard delivery"),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_SIGNATURE_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Signature on delivery"),
+                "default"   => _wcmp("Signature on delivery"),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_PICKUP_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => _wcmp("Pickup title"),
+                "default"   => _wcmp("Pickup"),
+            ],
+        ];
     }
 }
 
