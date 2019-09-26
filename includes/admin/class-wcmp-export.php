@@ -57,21 +57,21 @@ class WCMP_Export
     }
 
     /**
-     * @param DeliveryOptions $delivery_options
+     * Get the value of a shipment option. Check if it was set manually, through the delivery options for example,
+     *  if not get the value of the default export setting for given settingName.
+     *
+     * @param bool|null $option Condition to check.
+     * @param string $settingName Name of the setting to fall back to.
      *
      * @return bool
      */
-    public static function isSignatureByDeliveryOptions(DeliveryOptions $delivery_options): bool
+    public static function getChosenOrDefaultShipmentOption($option, $settingName): bool
     {
-        if (DPDConsignment::CARRIER_NAME === $delivery_options->getCarrier()) {
-            return false;
+        if ($option !== null) {
+            return $option;
         }
 
-        if (WCMP()->setting_collection->isEnabled('bpost_export_signature')) {
-            return true;
-        }
-
-        return $delivery_options->getShipmentOptions()->hasSignature();
+        return WCMP()->setting_collection->isEnabled($settingName);
     }
 
     public function admin_notices()
@@ -357,7 +357,8 @@ class WCMP_Export
 
         // TODO: loop for multiple orders
         $consignment =
-            (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))->setApiKey($this->init_api())
+            (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))
+                ->setApiKey($this->init_api())
                 ->setReferenceId($order_id)
                 ->setPackageType($shipmentOptions["package_type"])
                 ->setCountry($shipmentRecipient["cc"])
@@ -561,7 +562,7 @@ class WCMP_Export
     }
 
     /**
-     * @param int    $order_id
+     * @param int $order_id
      * @param string $type
      *
      * @return AbstractConsignment
@@ -593,16 +594,22 @@ class WCMP_Export
         if (empty($label_description)) {
             $label_description = 'Order: ' . $order_id;
         }
+
         $shipment_options = $delivery_options->getShipmentOptions();
+        $bpost            = BpostConsignment::CARRIER_NAME;
 
-        if (DPDConsignment::CARRIER_NAME === $delivery_options->getCarrier()) {
-            $insurance = 0;
-        } else {
-            $insurance =
-                ! empty($shipment_options->insured) ? WCMP_Export::INSURANCE_AMOUNT : $this->getInsuranceAmount();
-        }
+        $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
+            $shipment_options->hasSignature(),
+            "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
+        );
 
-        $consignment->setApiKey($api_key)
+        $signature = WCMP_Export::getChosenOrDefaultShipmentOption(
+            $shipment_options->hasSignature(),
+            "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
+        );
+
+        $consignment
+            ->setApiKey($api_key)
             ->setReferenceId($order_id)
             ->setDeliveryType(
                 $this->getPickupTypeByDeliveryOptions($delivery_options)
@@ -620,12 +627,13 @@ class WCMP_Export
             ->setPhone($recipient['phone'])
             ->setLabelDescription($label_description)
             ->setPackageType(self::PACKAGE)
-            ->setSignature(WCMP_Export::isSignatureByDeliveryOptions($delivery_options))
-            ->setInsurance($insurance);
+            ->setSignature($signature)
+            ->setInsurance((int) $insurance);
 
         if ($delivery_options->isPickup()) {
             $pickup = $delivery_options->getPickupLocation();
-            $consignment->setPickupCountry($pickup->getCountry())
+            $consignment
+                ->setPickupCountry($pickup->getCountry())
                 ->setPickupCity($pickup->getCity())
                 ->setPickupLocationName($pickup->getLocationName())
                 ->setPickupStreet($pickup->getStreet())
@@ -706,7 +714,7 @@ class WCMP_Export
 
     /**
      * @param WC_Order $order
-     * @param null     $connectEmail
+     * @param null $connectEmail
      *
      * @return mixed|void
      */
@@ -988,7 +996,7 @@ class WCMP_Export
 
     /**
      * @param AbstractConsignment $consignment
-     * @param WC_Order            $order
+     * @param WC_Order $order
      *
      * @return AbstractConsignment
      * @throws MissingFieldException
@@ -1017,10 +1025,13 @@ class WCMP_Export
                 $weight = (int) round($this->get_item_weight_kg($item, $order) * 1000);
 
                 $myParcelItem =
-                    (new MyParcelCustomsItem())->setDescription($description)
+                    (new MyParcelCustomsItem())
+                        ->setDescription($description)
                         ->setAmount($amount)
                         ->setWeight($weight)
-                        ->setItemValue((int) round(($item["line_total"] + $item["line_tax"]) * 100))
+                        ->setItemValue((int) round(($item["line_total"] + $item["line_tax"]) * 100
+                        )
+                        )
                         ->setCountry($country)
                         ->setClassification($contents);
 
@@ -1129,8 +1140,10 @@ class WCMP_Export
         $shipping_class}";
                 }
             }
-            foreach ($this->getSetting("shipping_methods_package_types") as $package_type_key =>
-                     $package_type_shipping_methods) {
+            foreach (
+                $this->getSetting("shipping_methods_package_types") as $package_type_key =>
+                $package_type_shipping_methods
+            ) {
                 if ($this->isActiveMethod(
                     $shipping_method_id,
                     $package_type_shipping_methods,
@@ -1429,7 +1442,7 @@ class WCMP_Export
 
     /**
      * @param WC_Order $order
-     * @param string   $shipping_method_id
+     * @param string $shipping_method_id
      *
      * @return bool
      */
@@ -1580,7 +1593,7 @@ class WCMP_Export
      * Evaluate a cost from a sum/string.
      *
      * @param string $sum
-     * @param array  $args
+     * @param array $args
      * @param        $flat_rate_method
      *
      * @return string

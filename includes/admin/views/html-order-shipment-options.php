@@ -1,10 +1,11 @@
 <?php
 
 /**
- * @var int      $order_id
+ * @var int $order_id
  * @var WC_Order $order
  */
 
+use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
 
@@ -41,16 +42,16 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
     $shipment_options      = $deliveryOptions->getShipmentOptions();
 
-    if (! empty($shipment_options->insured)) {
-        $insured = $shipment_options->insured;
-    } else {
-        $insured = WCMP()->setting_collection->getByName("insured");
-    }
+    $bpost = DPDConsignment::CARRIER_NAME;
 
-    if ($shipment_options->hasSignature()) {
-        $signature = $shipment_options->hasSignature();
-    } else {
-        $signature = WCMP_Export::isSignatureByDeliveryOptions($deliveryOptions);
+    if (DPDConsignment::CARRIER_NAME !== $deliveryOptions->getCarrier()) {
+        $insured = WCMP_Export::getChosenOrDefaultShipmentOption($shipment_options->hasInsurance(),
+            "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
+        );
+
+        $signature = WCMP_Export::getChosenOrDefaultShipmentOption($shipment_options->hasSignature(),
+            "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
+        );
     }
 
     $option_rows = [
@@ -97,7 +98,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             ],
         ],
         [
-            "name"              => "[shipment_options][insured]",
+            "name"              => "[shipment_options][insurance]",
             "type"              => "toggle",
             "condition"         => [
                 "name"         => "[carrier]",
@@ -106,9 +107,9 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
                 "set_value"    => WCMP_Settings_Data::DISABLED,
             ],
             "label"             => _wcmp("Insured to &euro; 500"),
-            "value"             => $insured ? 1 : 0,
+            "value"             => (int) $insured,
             "custom_attributes" => [
-                "disabled" => isset($option_row['disabled']) ? "disabled" : null,
+                "disabled" => $insured ? "disabled" : null,
             ],
         ],
     ];
