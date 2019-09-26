@@ -1,8 +1,9 @@
 <?php
 
+use MyParcelNL\Sdk\src\Model\DeliveryOptions;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcelBE\Entity\DeliveryOptions;
+use WPO\WC\MyParcelBE\Entity\LegacyDeliveryOptions;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -409,11 +410,15 @@ class WCMP_Admin
                 unset($shipment_options['extra_options']);
             }
 
-            $deliveryOptions = self::decodeDeliveryOptionsMeta($order);
-            $deliveryOptions["carrier"] = $shipment_options["carrier"];
+            $deliveryOptions                    = self::decodeDeliveryOptionsMeta($order);
+            $deliveryOptions["carrier"]         = $shipment_options["carrier"];
             $deliveryOptions["shipmentOptions"] = $shipment_options["shipment_options"];
 
-            WCX_Order::update_meta_data($order, self::META_DELIVERY_OPTIONS, self::encodeDeliveryOptionsMeta($deliveryOptions));
+            WCX_Order::update_meta_data(
+                $order,
+                self::META_DELIVERY_OPTIONS,
+                self::encodeDeliveryOptionsMeta($deliveryOptions)
+            );
         }
 
         // Quit out
@@ -735,7 +740,14 @@ class WCMP_Admin
      */
     public static function getDeliveryOptionsFromOrder(WC_Order $order): DeliveryOptions
     {
-        return new DeliveryOptions(self::decodeDeliveryOptionsMeta($order));
+        $meta = self::decodeDeliveryOptionsMeta($order);
+
+        // This attribute always exists if the order has 4.0.0+ delivery options. If it doesn't, migrate them first.
+        if (! array_key_exists("carrier", $meta)) {
+            return (new LegacyDeliveryOptions($meta, $order))->getDeliveryOptions();
+        }
+
+        return new DeliveryOptions($meta);
     }
 
     /**
@@ -745,7 +757,13 @@ class WCMP_Admin
      */
     public static function decodeDeliveryOptionsMeta(WC_Order $order): array
     {
-        return (array) json_decode(stripslashes(WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS)));
+        $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
+
+        if (is_array($meta)) {
+            return $meta;
+        }
+
+        return (array) json_decode(stripslashes($meta));
     }
 
     /**
@@ -773,7 +791,7 @@ class WCMP_Admin
             '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
             _wcmp("MyParcel BE shipment:"),
             $string,
-            wc_format_datetime(new WC_DateTime(strtotime($delivery_options->getDate())), 'D d-m')
+            wc_format_datetime(new WC_DateTime($delivery_options->getDate()), 'l d-m')
         );
     }
 

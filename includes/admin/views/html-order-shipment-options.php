@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var int $order_id
+ * @var int      $order_id
  * @var WC_Order $order
  */
 
@@ -19,7 +19,6 @@ $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
 
 ?>
-
 <div class="wcmp wcmp__change-order">
     <?php
     if ($deliveryOptions->isPickup()) {
@@ -48,8 +47,8 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         $insured = WCMP()->setting_collection->getByName("insured");
     }
 
-    if ($shipment_options->signature !== null && $shipment_options->signature !== false) {
-        $signature = $shipment_options->signature;
+    if ($shipment_options->hasSignature()) {
+        $signature = $shipment_options->hasSignature();
     } else {
         $signature = WCMP_Export::isSignatureByDeliveryOptions($deliveryOptions);
     }
@@ -133,12 +132,11 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         );
     }
     ?>
-
     <div class="wcmp_save_shipment_settings">
-        <?php printf('<div class="button wcmp__js-save-shipment-settings" data-order="%s">%s</div>',
+        <?php printf(
+            '<div class="button wcmp__js-save-shipment-settings" data-order="%s">%s</div>',
             $order_id,
             _wcmp('Save')
-        ) ?>
-        <?php $this->renderSpinner() ?>
+        ) ?><?php $this->renderSpinner() ?>
     </div>
 </div>

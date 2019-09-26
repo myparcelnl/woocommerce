@@ -7,10 +7,10 @@ use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\DeliveryOptions;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcelBE\Entity\DeliveryOptions;
 
 if (! defined("ABSPATH")) {
     exit;
@@ -71,12 +71,7 @@ class WCMP_Export
             return true;
         }
 
-        $signatureFromCheckout = $delivery_options->getShipmentOptions()->signature;
-        if (null !== $signatureFromCheckout) {
-            return $signatureFromCheckout;
-        }
-
-        return false;
+        return $delivery_options->getShipmentOptions()->hasSignature();
     }
 
     public function admin_notices()
@@ -261,7 +256,6 @@ class WCMP_Export
 
     /**
      * @param $order_ids
-     *
      * @param $process
      *
      * @return array
@@ -363,8 +357,7 @@ class WCMP_Export
 
         // TODO: loop for multiple orders
         $consignment =
-            (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))
-                ->setApiKey($this->init_api())
+            (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))->setApiKey($this->init_api())
                 ->setReferenceId($order_id)
                 ->setPackageType($shipmentOptions["package_type"])
                 ->setCountry($shipmentRecipient["cc"])
@@ -592,7 +585,7 @@ class WCMP_Export
         /**
          * @var AbstractConsignment $consignment
          */
-        $consignment      = ConsignmentFactory::createByCarrierName($carrier ?? BpostConsignment::CARRIER_ID);
+        $consignment = ConsignmentFactory::createByCarrierName($carrier ?? BpostConsignment::CARRIER_ID);
 
         $recipient = $this->get_recipient($order, $connectEmail);
 
@@ -605,13 +598,15 @@ class WCMP_Export
         if (DPDConsignment::CARRIER_NAME === $delivery_options->getCarrier()) {
             $insurance = 0;
         } else {
-            $insurance = ! empty($shipment_options->insured) ? WCMP_Export::INSURANCE_AMOUNT : $this->getInsuranceAmount();
-         }
+            $insurance =
+                ! empty($shipment_options->insured) ? WCMP_Export::INSURANCE_AMOUNT : $this->getInsuranceAmount();
+        }
 
-        $consignment
-            ->setApiKey($api_key)
+        $consignment->setApiKey($api_key)
             ->setReferenceId($order_id)
-            ->setDeliveryType($this->getPickupTypeByDeliveryOptions($delivery_options))
+            ->setDeliveryType(
+                $this->getPickupTypeByDeliveryOptions($delivery_options)
+            )
             ->setCountry($recipient['cc'])
             ->setPerson($recipient['person'])
             ->setCompany($recipient['company'])
@@ -630,8 +625,7 @@ class WCMP_Export
 
         if ($delivery_options->isPickup()) {
             $pickup = $delivery_options->getPickupLocation();
-            $consignment
-                ->setPickupCountry($pickup->getCountry())
+            $consignment->setPickupCountry($pickup->getCountry())
                 ->setPickupCity($pickup->getCity())
                 ->setPickupLocationName($pickup->getLocationName())
                 ->setPickupStreet($pickup->getStreet())
@@ -712,8 +706,7 @@ class WCMP_Export
 
     /**
      * @param WC_Order $order
-     *
-     * @param null $connectEmail
+     * @param null     $connectEmail
      *
      * @return mixed|void
      */
@@ -995,7 +988,7 @@ class WCMP_Export
 
     /**
      * @param AbstractConsignment $consignment
-     * @param WC_Order $order
+     * @param WC_Order            $order
      *
      * @return AbstractConsignment
      * @throws MissingFieldException
@@ -1010,7 +1003,6 @@ class WCMP_Export
         foreach ($order->get_items() as $item_id => $item) {
             $product = $order->get_product_from_item($item);
             if (! empty($product)) {
-
                 // Description
                 $description = $item["name"];
 
@@ -1024,13 +1016,13 @@ class WCMP_Export
                 // Weight (total item weight in grams)
                 $weight = (int) round($this->get_item_weight_kg($item, $order) * 1000);
 
-                $myParcelItem = (new MyParcelCustomsItem())
-                    ->setDescription($description)
-                    ->setAmount($amount)
-                    ->setWeight($weight)
-                    ->setItemValue((int) round(($item["line_total"] + $item["line_tax"]) * 100))
-                    ->setCountry($country)
-                    ->setClassification($contents);
+                $myParcelItem =
+                    (new MyParcelCustomsItem())->setDescription($description)
+                        ->setAmount($amount)
+                        ->setWeight($weight)
+                        ->setItemValue((int) round(($item["line_total"] + $item["line_tax"]) * 100))
+                        ->setCountry($country)
+                        ->setClassification($contents);
 
                 $consignment->addItem($myParcelItem);
             }
@@ -1573,7 +1565,7 @@ class WCMP_Export
                 }
                 // normally this should pass the $product object, but only in the checkout this contains
                 // quantity & line_total (which is all we need), so we pass data from the $item instead
-                $item_product                                   = new stdClass;
+                $item_product                                   = new stdClass();
                 $item_product->quantity                         = $item["qty"];
                 $item_product->line_total                       = $item["line_total"];
                 $found_shipping_classes[$found_class][$item_id] = $item_product;
@@ -1945,7 +1937,11 @@ class WCMP_Export
 
         // add variation name if available
         $product = $order->get_product_from_item($item);
-        if ($product && isset($item['variation_id']) && $item['variation_id'] > 0 && method_exists($product, 'get_variation_attributes')) {
+        if ($product && isset($item['variation_id']) && $item['variation_id'] > 0
+            && method_exists(
+                $product,
+                'get_variation_attributes'
+            )) {
             $name .= woocommerce_get_formatted_variation($product->get_variation_attributes());
         }
 
@@ -2029,7 +2025,8 @@ class WCMP_Export
         $package_type_shipping_methods,
         $shipping_method_id_class,
         $shipping_class
-    ) {
+    )
+    {
         //support WooCommerce flat rate
         // check if we have a match with the predefined methods
         if (in_array($shipping_method_id, $package_type_shipping_methods)) {
