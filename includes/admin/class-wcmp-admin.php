@@ -763,7 +763,7 @@ class WCMP_Admin
             return $meta;
         }
 
-        return (array) json_decode(stripslashes($meta));
+        return json_decode(stripslashes($meta), true);
     }
 
     /**
