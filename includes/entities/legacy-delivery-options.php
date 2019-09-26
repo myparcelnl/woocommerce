@@ -2,6 +2,7 @@
 
 namespace WPO\WC\MyParcelBE\Entity;
 
+use DateTime;
 use Exception;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\DeliveryOptions;
@@ -93,10 +94,11 @@ class LegacyDeliveryOptions
      * @param $date
      *
      * @return false|string
+     * @throws Exception
      */
     private function migrateDate($date)
     {
-        return date("d-m-Y", strtotime($date));
+        return (new DateTime($date))->format(DateTime::ATOM);
     }
 
     private function migratePickupLocation()
