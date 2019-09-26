@@ -121,6 +121,10 @@ class WCMP_Checkout
     public function get_delivery_options_shipping_methods()
     {
         $packageTypes = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+        if (! is_array($packageTypes)) {
+            $packageTypes = [];
+        }
+
         $shipping_methods = [];
 
         if (array_key_exists(WCMP_Export::PACKAGE, $packageTypes ?? [])) {
