@@ -219,8 +219,13 @@ class SettingsFieldArguments
         $this->addArgument("data-parent-type", $condition["type"]);
 
         if (isset($condition["parent_value"])) {
-            $this->addArgument("data-parent-value", $condition["parent_value"]);
+            if (is_array($condition["parent_value"])) {
+                $this->addArgument("data-parent-value", implode(';', $condition["parent_value"]));
+            } else {
+                $this->addArgument("data-parent-value", $condition["parent_value"]);
+            }
         }
+
         if (isset($condition["set_value"])) {
             $this->addArgument("data-parent-set", $condition["set_value"]);
         }
@@ -265,7 +270,14 @@ class SettingsFieldArguments
             }
 
             if (in_array($arg, self::ALLOWED_ARGUMENTS)) {
-                $arguments[$arg] = $value;
+                if (array_key_exists($arg, $arguments)) {
+                    $arguments[$arg] = array_replace_recursive(
+                        $arguments[$arg],
+                        $value
+                    );
+                } else {
+                    $arguments[$arg] = $value;
+                }
             } else {
                 if (! isset($arguments["custom_attributes"])) {
                     $arguments["custom_attributes"] = [];

@@ -105,10 +105,10 @@ class WCMP_Admin
         <?php endif; ?>
         <div class="wcmp_shipment_options">
             <?php printf(
-                '<a href="#" class="wcmp_show_shipment_options"><span class="wcpm_package_type">%s</span> &#x25BE;</a>',
+                '<a href="#" class="wcmp__shipment-options--show">%s &#x25BE;</a>',
                 _wcmp("Details")
             ); ?>
-            <div class="wcmp_shipment_options_form" style="display: none;">
+            <div class="wcmp__shipment-options--form" style="display: none;">
                 <a class="wcmp-display--block">
                     <?php include('views/html-order-shipment-options.php'); ?>
                 </a>

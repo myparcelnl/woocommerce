@@ -70,9 +70,6 @@ class LegacyDeliveryOptions
      */
     public function getDeliveryOptions(): DeliveryOptions
     {
-        echo "<pre>";
-        var_dump($this->migratedDeliveryOptions);
-        echo "</pre>";
         return new DeliveryOptions($this->migratedDeliveryOptions);
     }
 

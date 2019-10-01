@@ -654,7 +654,6 @@ class WCMP_BE_Postcode_Fields
     public function merge_street_number_suffix($order_id)
     {
         $order = WCX::get_order($order_id);
-        // file_put_contents('postdata.txt', print_r($_POST,true)); // for debugging
         if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
             // old versions use 'shiptobilling'
             $ship_to_different_address = isset($_POST['shiptobilling']) ? false : true;
