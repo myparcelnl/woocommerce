@@ -4,7 +4,6 @@ use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use WPO\WC\MyParcelBE\Compatibility\Order;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core;
-use WPO\WC\MyParcelBE\Entity\DeliveryOptions;
 
 if (! defined('ABSPATH')) {
     exit;

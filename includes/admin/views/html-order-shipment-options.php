@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var int $order_id
+ * @var int      $order_id
  * @var WC_Order $order
  */
 
@@ -13,7 +13,6 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-/** @noinspection PhpUnhandledExceptionInspection */
 $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 
 // todo fix shipment extra options?
@@ -42,14 +41,18 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
     $shipment_options      = $deliveryOptions->getShipmentOptions();
 
-    $bpost = DPDConsignment::CARRIER_NAME;
+    $bpost     = DPDConsignment::CARRIER_NAME;
+    $insured   = false;
+    $signature = false;
 
     if (DPDConsignment::CARRIER_NAME !== $deliveryOptions->getCarrier()) {
-        $insured = WCMP_Export::getChosenOrDefaultShipmentOption($shipment_options->hasInsurance(),
+        $insured = WCMP_Export::getChosenOrDefaultShipmentOption(
+            $shipment_options->hasInsurance(),
             "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
         );
 
-        $signature = WCMP_Export::getChosenOrDefaultShipmentOption($shipment_options->hasSignature(),
+        $signature = WCMP_Export::getChosenOrDefaultShipmentOption(
+            $shipment_options->hasSignature(),
             "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
         );
     }
@@ -93,6 +96,12 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "type"              => "toggle",
             "label"             => _wcmp("Signature on delivery"),
             "value"             => (int) $signature,
+            "condition"         => [
+                "name"         => "[carrier]",
+                "type"         => "disable",
+                "parent_value" => "dpd",
+                "set_value"    => WCMP_Settings_Data::DISABLED,
+            ],
             "custom_attributes" => [
                 "disabled" => $signature ? "disabled" : null,
             ],
