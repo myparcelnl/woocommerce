@@ -89,11 +89,6 @@ class SettingsFieldArguments
     ];
 
     /**
-     * @var string|array
-     */
-    private $condition;
-
-    /**
      * @var string
      */
     private $description;
@@ -199,9 +194,9 @@ class SettingsFieldArguments
      */
     private function setCondition(): void
     {
-        $condition = $this->getArgument("condition");
+        $conditionArgument = $this->getArgument("condition");
 
-        if (! $condition) {
+        if (! $conditionArgument) {
             return;
         }
 
@@ -209,25 +204,25 @@ class SettingsFieldArguments
             "type" => "show",
         ];
 
-        if (is_array($condition)) {
-            $this->condition = array_replace_recursive($conditionDefaults, $condition);
+        if (is_array($conditionArgument)) {
+            $condition = array_replace_recursive($conditionDefaults, $conditionArgument);
         } else {
-            $this->condition = array_merge(
+            $condition = array_merge(
                 $conditionDefaults,
                 [
-                    "name" => $condition,
+                    "name" => $conditionArgument,
                 ]
             );
         }
 
-        $this->addArgument("data-parent", $this->condition["name"]);
-        $this->addArgument("data-parent-type", $this->condition["type"]);
+        $this->addArgument("data-parent", $condition["name"]);
+        $this->addArgument("data-parent-type", $condition["type"]);
 
-        if (isset($this->condition["parent_value"])) {
-            $this->addArgument("data-parent-value", $this->condition["parent_value"]);
+        if (isset($condition["parent_value"])) {
+            $this->addArgument("data-parent-value", $condition["parent_value"]);
         }
-        if (isset($this->condition["set_value"])) {
-            $this->addArgument("data-parent-set", $this->condition["set_value"]);
+        if (isset($condition["set_value"])) {
+            $this->addArgument("data-parent-set", $condition["set_value"]);
         }
     }
 
