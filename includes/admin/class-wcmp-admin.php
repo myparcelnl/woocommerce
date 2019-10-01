@@ -744,7 +744,7 @@ class WCMP_Admin
 
         // This attribute always exists if the order has 4.0.0+ delivery options. If it doesn't, migrate them first.
         if (! array_key_exists("carrier", $meta)) {
-            return (new LegacyDeliveryOptions($meta, $order))->getDeliveryOptions();
+            return (new LegacyDeliveryOptions($meta))->getDeliveryOptions();
         }
 
         return new DeliveryOptions($meta);
@@ -763,7 +763,7 @@ class WCMP_Admin
             return $meta;
         }
 
-        return json_decode(stripslashes($meta), true);
+        return json_decode(stripslashes($meta), true) ?? [];
     }
 
     /**
