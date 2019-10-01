@@ -60,8 +60,8 @@ class WCMP_Export
      * Get the value of a shipment option. Check if it was set manually, through the delivery options for example,
      *  if not get the value of the default export setting for given settingName.
      *
-     * @param bool|null $option Condition to check.
-     * @param string $settingName Name of the setting to fall back to.
+     * @param bool|null $option      Condition to check.
+     * @param string    $settingName Name of the setting to fall back to.
      *
      * @return bool
      */
@@ -261,6 +261,7 @@ class WCMP_Export
      * @return array
      * @throws ApiException
      * @throws MissingFieldException
+     * @throws Exception
      */
     public function add_shipments($order_ids, $process)
     {
@@ -275,7 +276,7 @@ class WCMP_Export
 
             $consignment = $this->get_consignment_from_checkout_data($order_id);
 
-            $this->log("Shipment data for order {$order_id}.", true);
+            $this->log("Shipment data for order {$order_id}.");
 
             // check colli amount
             $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
@@ -432,12 +433,8 @@ class WCMP_Export
             $api    = $this->init_api();
             $params = [];
             if (! empty($offset) && is_numeric($offset)) {
-                $portrait_positions  = [
-                    2,
-                    4,
-                    1,
-                    3,
-                ]; // positions are defined on landscape, but paper is filled portrait-wise
+                // positions are defined on landscape, but paper is filled portrait-wise
+                $portrait_positions  = [2, 4, 1, 3];
                 $params["positions"] = implode(";", array_slice($portrait_positions, $offset));
             }
 
@@ -562,7 +559,7 @@ class WCMP_Export
     }
 
     /**
-     * @param int $order_id
+     * @param int    $order_id
      * @param string $type
      *
      * @return AbstractConsignment
@@ -608,8 +605,7 @@ class WCMP_Export
             "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
         );
 
-        $consignment
-            ->setApiKey($api_key)
+        $consignment->setApiKey($api_key)
             ->setReferenceId($order_id)
             ->setDeliveryType(
                 $this->getPickupTypeByDeliveryOptions($delivery_options)
@@ -632,8 +628,7 @@ class WCMP_Export
 
         if ($delivery_options->isPickup()) {
             $pickup = $delivery_options->getPickupLocation();
-            $consignment
-                ->setPickupCountry($pickup->getCountry())
+            $consignment->setPickupCountry($pickup->getCountry())
                 ->setPickupCity($pickup->getCity())
                 ->setPickupLocationName($pickup->getLocationName())
                 ->setPickupStreet($pickup->getStreet())
@@ -714,7 +709,7 @@ class WCMP_Export
 
     /**
      * @param WC_Order $order
-     * @param null $connectEmail
+     * @param null     $connectEmail
      *
      * @return mixed|void
      */
@@ -996,14 +991,13 @@ class WCMP_Export
 
     /**
      * @param AbstractConsignment $consignment
-     * @param WC_Order $order
+     * @param WC_Order            $order
      *
      * @return AbstractConsignment
      * @throws MissingFieldException
      */
     public function setCustomItems(AbstractConsignment $consignment, WC_Order $order): AbstractConsignment
     {
-//        $invoice  = $this->get_invoice_number($order);
         $contents = (int) ($this->getSetting("package_contents") ? $this->getSetting("package_contents") : 1);
 
         $country = WC()->countries->get_base_country();
@@ -1025,12 +1019,13 @@ class WCMP_Export
                 $weight = (int) round($this->get_item_weight_kg($item, $order) * 1000);
 
                 $myParcelItem =
-                    (new MyParcelCustomsItem())
-                        ->setDescription($description)
+                    (new MyParcelCustomsItem())->setDescription($description)
                         ->setAmount($amount)
                         ->setWeight($weight)
-                        ->setItemValue((int) round(($item["line_total"] + $item["line_tax"]) * 100
-                        )
+                        ->setItemValue(
+                            (int) round(
+                                ($item["line_total"] + $item["line_tax"]) * 100
+                            )
                         )
                         ->setCountry($country)
                         ->setClassification($contents);
@@ -1140,10 +1135,8 @@ class WCMP_Export
         $shipping_class}";
                 }
             }
-            foreach (
-                $this->getSetting("shipping_methods_package_types") as $package_type_key =>
-                $package_type_shipping_methods
-            ) {
+            foreach ($this->getSetting("shipping_methods_package_types") as $package_type_key =>
+                     $package_type_shipping_methods) {
                 if ($this->isActiveMethod(
                     $shipping_method_id,
                     $package_type_shipping_methods,
@@ -1220,8 +1213,7 @@ class WCMP_Export
 
     public function get_filename($order_ids)
     {
-        $filename = "MyParcelBE";
-        $filename .= " - " . date("Y - m - d") . " . pdf";
+        $filename = "MyParcelBE-" . date("Y-m-d") . ".pdf";
 
         return apply_filters("wcmyparcelbe_filename", $filename, $order_ids);
     }
@@ -1301,14 +1293,15 @@ class WCMP_Export
      * @param $order
      *
      * @return mixed
+     * @throws Exception
      */
-    public function replace_shortcodes($description, $order)
+    public function replace_shortcodes($description, WC_Order $order)
     {
-        $myparcelbe_delivery_options = WCX_Order::get_meta($order, WCMP_Admin::META_DELIVERY_OPTIONS);
-        $replacements                = [
+        $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+
+        $replacements = [
             "[ORDER_NR]"      => $order->get_order_number(),
-            "[DELIVERY_DATE]" => isset($myparcelbe_delivery_options) && isset($myparcelbe_delivery_options["date"])
-                ? $myparcelbe_delivery_options["date"] : "",
+            "[DELIVERY_DATE]" => $deliveryOptions->getDate(),
         ];
 
         $description = str_replace(array_keys($replacements), array_values($replacements), $description);
@@ -1442,7 +1435,7 @@ class WCMP_Export
 
     /**
      * @param WC_Order $order
-     * @param string $shipping_method_id
+     * @param string   $shipping_method_id
      *
      * @return bool
      */
@@ -1593,7 +1586,7 @@ class WCMP_Export
      * Evaluate a cost from a sum/string.
      *
      * @param string $sum
-     * @param array $args
+     * @param array  $args
      * @param        $flat_rate_method
      *
      * @return string
