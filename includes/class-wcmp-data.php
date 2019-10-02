@@ -17,8 +17,8 @@ class WCMP_Data
     /**
      * @var array
      */
-    const CARRIERS_HUMAN = [
-        DPDConsignment::CARRIER_NAME => 'DPD',
+    public const CARRIERS_HUMAN = [
+        DPDConsignment::CARRIER_NAME   => 'DPD',
         BpostConsignment::CARRIER_NAME => 'bpost',
     ];
 
@@ -58,6 +58,36 @@ class WCMP_Data
         return self::$packageTypesHuman;
     }
 
+    /**
+     * @return array
+     */
+    public static function getCarriersWithInsurance(): array
+    {
+        return [
+            BpostConsignment::CARRIER_NAME,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getCarriersWithSignature(): array
+    {
+        return [
+            BpostConsignment::CARRIER_NAME,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getCarriersHuman(): array
+    {
+        return [
+            BpostConsignment::CARRIER_NAME => _wcmp('bpost'),
+            DPDConsignment::CARRIER_NAME   => _wcmp('dpd'),
+        ];
+    }
 }
 
 return new WCMP_Data();

@@ -1,21 +1,24 @@
 <?php
 
+use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
+
 /**
  * @var int      $order_id
  * @var WC_Order $order
  */
 
-use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
-use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
-
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-$deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+try {
+    $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+} catch (Exception $e) {
+    return;
+}
 
-// todo fix shipment extra options?
 $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
 
 ?>
@@ -84,7 +87,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "name"              => "[extra_options][collo_amount]",
             "label"             => _wcmp("Number of labels"),
             "type"              => "number",
-            "value"             => isset($extraOptions['collo_amount']) ? $extraOptions['collo_amount'] : 1,
+            "value"             => isset($extraOptions["collo_amount"]) ? $extraOptions["collo_amount"] : 1,
             "custom_attributes" => [
                 "step" => "1",
                 "min"  => "1",
@@ -99,7 +102,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "condition"         => [
                 "name"         => "[carrier]",
                 "type"         => "disable",
-                "parent_value" => "dpd",
+                "parent_value" => WCMP_Data::getCarriersWithSignature(),
                 "set_value"    => WCMP_Settings_Data::DISABLED,
             ],
             "custom_attributes" => [
@@ -112,7 +115,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "condition"         => [
                 "name"         => "[carrier]",
                 "type"         => "disable",
-                "parent_value" => "dpd",
+                "parent_value" => WCMP_Data::getCarriersWithInsurance(),
                 "set_value"    => WCMP_Settings_Data::DISABLED,
             ],
             "label"             => _wcmp("Insured to &euro; 500"),
@@ -123,30 +126,35 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         ],
     ];
 
-    if (isset($recipient) && isset($recipient['cc']) && $recipient['cc'] !== 'BE') {
-        unset($option_rows['[signature]']);
+    if (isset($recipient) && isset($recipient["cc"]) && $recipient["cc"] !== "BE") {
+        unset($option_rows["[signature]"]);
     }
 
+    $namePrefix = WCMP_Admin::SHIPMENT_OPTIONS_FORM_NAME . "[$order_id]";
+
     foreach ($option_rows as $option_row) {
-        $name = WCMP_Admin::SHIPMENT_OPTIONS_FORM_NAME . "[$order_id]" . $option_row["name"];
         if (isset($option_row["condition"])) {
-            $option_row["condition"]["name"] = $name;
+            $option_row["condition"]["name"] = $namePrefix . $option_row["condition"]["name"];
         }
 
         $class = new SettingsFieldArguments($option_row);
 
         woocommerce_form_field(
-            $name,
+            $namePrefix . $option_row["name"],
             $class->getArguments(false),
             $option_row["value"] ?? null
         );
     }
     ?>
-    <div class="wcmp_save_shipment_settings">
+    <div class="wcmp__shipment-settings__save">
         <?php printf(
-            '<div class="button wcmp__js-save-shipment-settings" data-order="%s">%s</div>',
+            '<div class="button wcmp__shipment-settings__save" data-order="%s">%s</div>',
             $order_id,
-            _wcmp('Save')
-        ) ?><?php $this->renderSpinner() ?>
+            _wcmp("Save")
+        );
+
+        $this->renderSpinner()
+
+        ?>
     </div>
 </div>

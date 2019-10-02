@@ -17,7 +17,17 @@
         "jquery": true
       },
       "rules": {
-        "vars-on-top": "off"
+        "vars-on-top": "off",
+        "multiline-comment-style": [
+          "error",
+          "starred-block"
+        ],
+        "newline-per-chained-call": [
+          "warn",
+          {
+            "ignoreChainWithDepth": 2
+          }
+        ]
       },
       "globals": {
         "wc_myparcelbe": "readonly"

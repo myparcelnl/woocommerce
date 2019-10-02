@@ -1,18 +1,18 @@
 /*
  * Order actions button styling
  */
-.widefat .column-order_actions .column-wc_actions a.button.myparcelbe {
+.wcmp__action {
   float: left;
   width: 26px;
   height: 26px;
   padding: 3px 2px;
 }
 
-#myparcelbe.postbox a.button.myparcelbe {
+#myparcelbe.postbox .wcmp__action {
   padding: 2px 5px 0;
 }
 
-.widefat .column-order_actions .column-wc_actions a.button.myparcelbe img {
+.wcmp__action__img {
   width: 16px;
   height: auto;
 }
@@ -20,42 +20,55 @@
 /*
  * Shipment summary
  */
-.wcmp_shipment_summary, .wcmp_shipment_options {
+.wcmp__shipment-summary, .wcmp__shipment-options {
   display: inline;
 }
 
-.wcmp_shipment_summary .delivery-date,
-.wcmp_shipment_summary .delivery-options {
+.wcmp__shipment-summary .delivery-date,
+.wcmp__shipment-summary .delivery-options {
   display: block;
 }
 
-ul.wcmyparcelbe_shipment_summary {
+.wcmp__shipment-summary {
   list-style: none;
 }
 
-ul.wcmyparcelbe_shipment_summary li:before {
+.wcmp__shipment-summary li:before {
   content: "+";
   margin-right: 4px;
 }
 
 /*
+ * The print offset dialog
+ */
+.wcmp__offset-dialog {
+  position: absolute;
+  background-color: white;
+  padding: 6px;
+  width: 100px;
+  border: 1px solid #ccc;
+  margin-left: -100px;
+}
+
+/*
  * Shipment options form styling
  */
-.wcmp_shipment_options_form table {
+.wcmp__shipment-options__form table {
   width: 100%;
 }
 
-.wcmp_shipment_options_form input[type="checkbox"],
-.wcmp_shipment_options_form input[type="radio"] {
+.wcmp__shipment-options__form input[type="checkbox"],
+.wcmp__shipment-options__form input[type="radio"] {
   margin-right: 8px;
 }
 
-.wcmp_shipment_options_form .wcmyparcelbe_settings_table td {
+.wcmp__shipment-options__form .wcmp_settings-table td {
   padding-bottom: 6px;
   vertical-align: middle;
 }
 
-.wcmp_shipment_options_form, .wcmp_shipment_summary_list {
+.wcmp__shipment-options__form,
+.wcmp__shipment-summary__list {
   width: 450px;
   border: 1px solid #ccc;
   background: white;
@@ -64,47 +77,47 @@ ul.wcmyparcelbe_shipment_summary li:before {
   padding: 10px;
 }
 
-.wcmp_shipment_summary_list {
+.wcmp__shipment-summary__list {
   width: auto;
 }
 
-.wcmp_shipment_options_form td.wcmp_option_cost {
+.wcmp__shipment-options__form td.wcmp_option_cost {
   width: 60px;
   text-align: right;
   font-weight: bold;
 }
 
-.wcmp_shipment_options_form .calculated_weight {
+.wcmp__shipment-options__form .calculated_weight {
   font-size: 80%;
   color: #999;
 }
 
-.wcmp_save_shipment_settings {
+.wcmp__shipment-settings__save {
   margin-top: 8px;
 }
 
 /*
  * Spinner
  */
-.wcmp_spinner,
-.wcmp_bulk_spinner {
+.wcmp__spinner,
+.wcmp__bulk-spinner {
   display: none;
 }
 
-.wcmp_bulk_spinner {
+.wcmp__bulk-spinner {
   margin-top: 6px;
 }
 
-.widefat .column-order_actions .column-wc_actions .wcmp_spinner {
+.widefat .column-order_actions .column-wc_actions .wcmp__spinner {
   position: absolute;
 }
 
-.wcmp_spinner,
-.wcmp_save_shipment_settings input {
+.wcmp__spinner,
+.wcmp__shipment-settings__save input {
   vertical-align: middle;
 }
 
-.encircle {
+.wcmp__encircle {
   display: inline-block;
   text-decoration: none;
 
@@ -124,51 +137,51 @@ ul.wcmyparcelbe_shipment_summary li:before {
 /*
  * Track & Trace status
  */
-table.tracktrace_status {
+.wcmp__table--track-trace {
   width: 100%;
   margin-top: 10px;
   margin-bottom: 10px;
   border-collapse: collapse;
 }
 
-table.tracktrace_status th {
+.wcmp__table--track-trace th {
   text-align: left
 }
 
-table.tracktrace_status th,
-table.tracktrace_status td {
+.wcmp__table--track-trace th,
+.wcmp__table--track-trace td {
   vertical-align: top;
   padding: 5px 2px;
   border-bottom: 1px solid #ccc;
 }
 
-table.tracktrace_status td.wcmp-create-label {
+.wcmp__table--track-trace td.wcmp__td--create-label {
   vertical-align: middle;
 }
 
 /*
  * Bulk export options styling
  */
-.wcmp_bulk_options_form .wcmyparcelbe_settings_table td {
+.wcmp__bulk-options .wcmp_settings-table td {
   border: none;
   padding: 0 7px 2px !important;
   vertical-align: middle !important;
 }
 
-.wcmp_bulk_options_form td.ordercell {
+.wcmp__bulk-options td.ordercell {
   width: 60%;
 }
 
-.wcmp_bulk_options_form input[type="checkbox"], input[type="radio"] {
+.wcmp__bulk-options input[type="checkbox"], input[type="radio"] {
   margin-right: 8px;
 }
 
-.wcmp_bulk_options_form {
+.wcmp__bulk-options {
   width: 96%;
   margin: 10px auto;
 }
 
-.wcmp_bulk_options_form .wcmp_save_shipment_settings {
+.wcmp__bulk-options .wcmp__shipment-settings__save {
   margin-top: 8px;
   float: right;
 }
@@ -195,21 +208,9 @@ table.tracktrace_status td.wcmp-create-label {
   padding: 0;
 }
 
-.wcmp_shipment_options_form > a {
+.wcmp__shipment-options__form > a {
   color: inherit;
   text-decoration: none;
-}
-
-/*
- * Order settings table inside expanding div on order list and order detail page
- */
-.wcmyparcelbe_change_order .wcmyparcelbe_settings_table td,
-.wcmyparcelbe_change_order .wcmyparcelbe_settings_table th {
-  padding: 0 0 6px 0 !important;
-}
-
-.wcmyparcelbe_change_order:hover {
-  color: inherit;
 }
 
 /* fix woocommerce column float */
