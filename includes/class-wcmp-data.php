@@ -77,6 +77,17 @@ class WCMP_Data
             BpostConsignment::CARRIER_NAME,
         ];
     }
+
+    /**
+     * @return array
+     */
+    public static function getCarriersHuman(): array
+    {
+        return [
+            BpostConsignment::CARRIER_NAME => _wcmp('bpost'),
+            DPDConsignment::CARRIER_NAME   => _wcmp('dpd'),
+        ];
+    }
 }
 
 return new WCMP_Data();

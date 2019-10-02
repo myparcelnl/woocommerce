@@ -27,19 +27,19 @@ class WCMP_Settings
     /**
      * General
      */
-    public const SETTING_API_KEY                        = "api_key";
-    public const SETTING_AUTOMATIC_ORDER_STATUS         = "automatic_order_status";
-    public const SETTING_BARCODE_IN_NOTE                = "barcode_in_note";
-    public const SETTING_BARCODE_IN_NOTE_TITLE          = "barcode_in_note_title";
-    public const SETTING_DOWNLOAD_DISPLAY               = "download_display";
-    public const SETTING_ERROR_LOGGING                  = "error_logging";
-    public const SETTING_KEEP_SHIPMENTS                 = "keep_shipments";
-    public const SETTING_LABEL_FORMAT                   = "label_format";
-    public const SETTING_ORDER_STATUS_AUTOMATION        = "order_status_automation";
-    public const SETTING_PRINT_POSITION_OFFSET          = "print_position_offset";
-    public const SETTING_PROCESS_DIRECTLY               = "process_directly";
-    public const SETTING_TRACK_TRACE_EMAIL              = "track_trace_email";
-    public const SETTING_TRACK_TRACE_MY_ACCOUNT         = "track_trace_my_account";
+    public const SETTING_API_KEY                 = "api_key";
+    public const SETTING_AUTOMATIC_ORDER_STATUS  = "automatic_order_status";
+    public const SETTING_BARCODE_IN_NOTE         = "barcode_in_note";
+    public const SETTING_BARCODE_IN_NOTE_TITLE   = "barcode_in_note_title";
+    public const SETTING_DOWNLOAD_DISPLAY        = "download_display";
+    public const SETTING_ERROR_LOGGING           = "error_logging";
+    public const SETTING_KEEP_SHIPMENTS          = "keep_shipments";
+    public const SETTING_LABEL_FORMAT            = "label_format";
+    public const SETTING_ORDER_STATUS_AUTOMATION = "order_status_automation";
+    public const SETTING_PRINT_POSITION_OFFSET   = "print_position_offset";
+    public const SETTING_PROCESS_DIRECTLY        = "process_directly";
+    public const SETTING_TRACK_TRACE_EMAIL       = "track_trace_email";
+    public const SETTING_TRACK_TRACE_MY_ACCOUNT  = "track_trace_my_account";
 
     /**
      * Export defaults
@@ -52,16 +52,16 @@ class WCMP_Settings
     /**
      * Checkout
      */
-    public const SETTING_DELIVERY_OPTIONS_CUSTOM_CSS    = "delivery_options_custom_css";
-    public const SETTING_DELIVERY_OPTIONS_DISPLAY       = "delivery_options_display";
-    public const SETTING_DELIVERY_OPTIONS_ENABLED       = "delivery_options_enabled";
-    public const SETTING_DELIVERY_OPTIONS_POSITION      = "delivery_options_position";
-    public const SETTING_DELIVERY_TITLE                 = "at_home_delivery";
-    public const SETTING_HEADER_DELIVERY_OPTIONS_TITLE  = "header_delivery_options_title";
-    public const SETTING_PICKUP_TITLE                   = "pickup_title";
-    public const SETTING_SIGNATURE_TITLE                = "signature_title";
-    public const SETTING_STANDARD_TITLE                 = "standard_title";
-    public const SETTING_USE_SPLIT_ADDRESS_FIELDS       = "use_split_address_fields";
+    public const SETTING_DELIVERY_OPTIONS_CUSTOM_CSS   = "delivery_options_custom_css";
+    public const SETTING_DELIVERY_OPTIONS_DISPLAY      = "delivery_options_display";
+    public const SETTING_DELIVERY_OPTIONS_ENABLED      = "delivery_options_enabled";
+    public const SETTING_DELIVERY_OPTIONS_POSITION     = "delivery_options_position";
+    public const SETTING_DELIVERY_TITLE                = "at_home_delivery";
+    public const SETTING_HEADER_DELIVERY_OPTIONS_TITLE = "header_delivery_options_title";
+    public const SETTING_PICKUP_TITLE                  = "pickup_title";
+    public const SETTING_SIGNATURE_TITLE               = "signature_title";
+    public const SETTING_STANDARD_TITLE                = "standard_title";
+    public const SETTING_USE_SPLIT_ADDRESS_FIELDS      = "use_split_address_fields";
 
     /*
      * Carrier settings, these will be prefixed with carrier names.
@@ -88,6 +88,16 @@ class WCMP_Settings
     // TODO; Currently not implemented:
     public const SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED = "saturday_delivery_enabled";
     public const SETTING_CARRIER_SATURDAY_DELIVERY_FEE     = "saturday_delivery_fee";
+
+    // Preparation for NL (or more delivery options becoming available for BE)
+    public const SETTING_CARRIER_ONLY_RECIPIENT_ENABLED       = "only_recipient_enabled";
+    public const SETTING_CARRIER_ONLY_RECIPIENT_FEE       = "only_recipient_fee";
+    public const SETTING_CARRIER_PICKUP_EXPRESS_ENABLED   = "pickup_express_enabled";
+    public const SETTING_CARRIER_PICKUP_EXPRESS_FEE       = "pickup_express_fee";
+    public const SETTING_CARRIER_DELIVERY_MORNING_ENABLED = "delivery_morning_enabled";
+    public const SETTING_CARRIER_DELIVERY_MORNING_FEE     = "delivery_morning_fee";
+    public const SETTING_CARRIER_DELIVERY_EVENING_ENABLED = "delivery_evening_enabled";
+    public const SETTING_CARRIER_DELIVERY_EVENING_FEE     = "delivery_evening_fee";
 
     public function __construct()
     {

@@ -7,7 +7,7 @@ printf('%1$s: <a href="%2$s" class="myparcelbe_tracktrace_link" target="_blank" 
 // Shipment type
 printf('%s: %s', _wcmp('Shipment type'), $package_types[$shipment['shipment']['options']['package_type']]);
 ?>
-<ul class="wcmyparcelbe_shipment_summary">
+<ul class="wcmp__shipment-summary">
     <?php
     // Options
     $option_strings = array(

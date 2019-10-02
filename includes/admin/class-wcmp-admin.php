@@ -87,7 +87,7 @@ class WCMP_Admin
             <div class="wcmp__shipment-summary">
                 <?php $this->showDeliveryOptionsForOrder($order); ?>
                 <h1>wcmp__shipment-summary</h1>
-                <a class="wcmp__shipment-summary__show"><span class="encircle wcmp__shipment-summary__show">i</span></a>
+                <a class="wcmp__shipment-summary__show"><span class="wcmp__encircle wcmp__shipment-summary__show">i</span></a>
                 <div class="wcmp__shipment-summary__list"
                      data-loaded=""
                      data-shipment_id="<?php echo $last_shipment_id; ?>"
@@ -478,7 +478,7 @@ class WCMP_Admin
         // show shipments if available
         if (! empty($consignments)) {
             ?>
-            <table class="tracktrace_status">
+            <table class="wcmp__table--track-trace">
                 <thead>
                 <tr>
                     <th>&nbsp;</th>
