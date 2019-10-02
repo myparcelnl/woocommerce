@@ -66,7 +66,7 @@ $target_url =
         'wc_myparcelbe'
     );
 ?>
-<form method="post" class="page-form wcmp_bulk_options_form" action="<?php echo $target_url; ?>">
+<form method="post" class="page-form wcmp__bulk-options" action="<?php echo $target_url; ?>">
     <table class="widefat">
         <thead>
         <tr>
@@ -150,7 +150,7 @@ $target_url =
                             ?>
                             </td></tr>
                             <tr>
-                                <td colspan="2" class="wcmp_shipment_options">
+                                <td colspan="2" class="wcmp__shipment-options">
                                     <?php
                                     $skip_save = true; // dont show save button for each order
                                     if ($dialog === 'shipment') {
@@ -170,7 +170,7 @@ $target_url =
         </tbody>
     </table>
     <input type="hidden" name="action" value="wc_myparcelbe">
-    <div class="wcmp_save_shipment_settings">
+    <div class="wcmp__shipment-settings__save">
         <?php
         if ($dialog == 'shipment') {
             $button_text = _wcmp('Export to MyParcel BE');
@@ -185,7 +185,7 @@ $target_url =
 <script type="text/javascript">
 jQuery(document).ready(function($) {
   $('.button-wcmyparcelbe').click(function() {
-    $('.waiting').show();
+    $('.wcmp__spinner--waiting').show();
   });
 });
 </script>

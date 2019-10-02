@@ -146,9 +146,9 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         );
     }
     ?>
-    <div class="wcmp_save_shipment_settings">
+    <div class="wcmp__shipment-settings__save">
         <?php printf(
-            '<div class="button wcmp__js-save-shipment-settings" data-order="%s">%s</div>',
+            '<div class="button wcmp__shipment-settings__save" data-order="%s">%s</div>',
             $order_id,
             _wcmp("Save")
         );

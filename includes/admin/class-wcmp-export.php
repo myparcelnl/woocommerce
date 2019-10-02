@@ -84,18 +84,18 @@ class WCMP_Export
                     if (in_array($type, ["success", "error"])) {
                         if ($type == "success" && ! empty($print_queue)) {
                             $print_queue_store        = sprintf(
-                                '<input type="hidden" value="%s" id="wcmp_printqueue">',
+                                '<input type="hidden" value="%s" class="wcmp__print-queue">',
                                 json_encode(array_keys($print_queue['order_ids']))
                             );
                             $print_queue_offset_store = sprintf(
-                                '<input type="hidden" value="%s" id="wcmp_printqueue_offset">',
+                                '<input type="hidden" value="%s" class="wcmp__print-queue__offset">',
                                 $print_queue['offset']
                             );
                             // dequeue
                             delete_option("wcmyparcelbe_print_queue");
                         }
                         printf(
-                            '<div class="myparcelbe_notice notice notice-%s"><p>%s</p>%s</div>',
+                            '<div class="wcmp__notice notice notice-%s"><p>%s</p>%s</div>',
                             $type,
                             $message,
                             isset($print_queue_store) ? $print_queue_store . $print_queue_offset_store : ""
@@ -112,7 +112,7 @@ class WCMP_Export
             switch ($_GET["myparcelbe"]) {
                 case "no_consignments":
                     $message = _wcmp("You have to export the orders to MyParcel before you can print the labels!");
-                    printf('<div class="myparcelbe_notice notice notice-error"><p>%s</p></div>', $message);
+                    printf('<div class="wcmp__notice notice notice-error"><p>%s</p></div>', $message);
                     break;
                 default:
                     break;
@@ -1963,14 +1963,14 @@ class WCMP_Export
             // Starting with WooCommerce 3.0, logging can be grouped by context and severity.
             if (class_exists("WC_Logger") && version_compare(WOOCOMMERCE_VERSION, "3.0", " >= ")) {
                 $logger = wc_get_logger();
-                $logger->debug($message, ["source" => "wc - myparcelbe"]);
+                $logger->debug($message, ["source" => "wc-myparcelbe"]);
 
                 return;
             }
 
             if (class_exists("WC_Logger")) {
                 $wc_logger = function_exists("wc_get_logger") ? wc_get_logger() : new WC_Logger();
-                $wc_logger->add("wc - myparcelbe", $message);
+                $wc_logger->add("wc-myparcelbe", $message);
 
                 return;
             }

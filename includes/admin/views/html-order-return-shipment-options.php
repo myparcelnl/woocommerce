@@ -8,7 +8,7 @@ if (! defined('ABSPATH')) {
 $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 
 ?>
-<table class="wcmyparcelbe_settings_table" style="width: auto">
+<table class="wcmp_settings-table" style="width: auto">
     <tr>
         <td>
             <?php _wcmpe('Shipment type') ?>:<br/> <small class="calculated_weight">
@@ -35,8 +35,8 @@ $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
     </tr>
 </table><br>
 <?php if (! isset($skip_save)): ?>
-    <div class="wcmp_save_shipment_settings">
+    <div class="wcmp__shipment-settings__save">
         <a class="button save" data-order="<?php echo $order_id; ?>"><?php _wcmpe('Save') ?></a>
-        <?php WCMP_Admin::renderSpinner(["class" => ["wcmp_spinner", "waiting"]]) ?>
+        <?php WCMP_Admin::renderSpinner(["class" => ["wcmp__spinner", "wcmp__spinner--waiting"]]) ?>
     </div>
 <?php endif ?>
