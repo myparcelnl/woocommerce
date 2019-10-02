@@ -176,20 +176,15 @@ class WCMP_Cart_Fees
      */
     private function addFees(WC_Cart $cart)
     {
-        $fees = [];
-        $tax  = $this->get_shipping_tax_class();
+        $tax = $this->get_shipping_tax_class();
+
         foreach ($this->fees as $name) {
             [$string, $fee] = $this->getFee($name);
-
-            $fees[] = [$name, $string, $fee];
 
             if ($string) {
                 $cart->add_fee($string, $fee, ! ! $tax, $tax ?? "");
             }
         }
-
-        file_put_contents(time() . '_fees_log.json', json_encode($fees));
-        file_put_contents(time() . '_tax_log.json', json_encode([$tax]));
     }
 
     /**
@@ -218,7 +213,8 @@ class WCMP_Cart_Fees
         return [
             "delivery_evening"        => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE),
             "delivery_morning"        => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE),
-            "delivery_pickup_express" => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE),
+            "delivery_pickup"         => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_PICKUP_FEE),
+            "delivery_pickup_express" => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_PICKUP_EXPRESS_FEE),
             "only_recipient"          => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE),
             "signature"               => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE),
         ];
