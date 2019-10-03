@@ -114,13 +114,15 @@ class WCMP_Settings_Data
                     $setting["id"] = $prefix ? "{$name}_{$setting["name"]}" : $setting["name"];
 
                     // Add the prefix to the name in the condition array
-                    if (isset($setting["condition"]) && $prefix) {
+                    if (isset($setting["condition"])) {
                         if (is_array($setting["condition"])) {
                             $related                      = $setting["condition"]["name"];
-                            $setting["condition"]["name"] = "{$optionIdentifier}[{$name}_{$related}]";
+                            $related                      = $prefix ? "{$name}_{$related}" : $related;
+                            $setting["condition"]["name"] = "{$optionIdentifier}[$related]";
                         } else {
                             $related              = $setting["condition"];
-                            $setting["condition"] = "{$optionIdentifier}[{$name}_{$related}]";
+                            $related              = $prefix ? "{$name}_{$related}" : $related;
+                            $setting["condition"] = "{$optionIdentifier}[$related]";
                         }
                     }
 
