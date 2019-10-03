@@ -90,7 +90,7 @@ class WCMP_Settings
     public const SETTING_CARRIER_SATURDAY_DELIVERY_FEE     = "saturday_delivery_fee";
 
     // Preparation for NL (or more delivery options becoming available for BE)
-    public const SETTING_CARRIER_ONLY_RECIPIENT_ENABLED       = "only_recipient_enabled";
+    public const SETTING_CARRIER_ONLY_RECIPIENT_ENABLED   = "only_recipient_enabled";
     public const SETTING_CARRIER_ONLY_RECIPIENT_FEE       = "only_recipient_fee";
     public const SETTING_CARRIER_PICKUP_EXPRESS_ENABLED   = "pickup_express_enabled";
     public const SETTING_CARRIER_PICKUP_EXPRESS_FEE       = "pickup_express_fee";
@@ -263,7 +263,7 @@ class WCMP_Settings
 
         foreach ((array) $wp_settings_sections[$page] as $section) {
             if ($section['title']) {
-                echo "<h2>{$section['title']}</h2>\n";
+                printf('<h2 id="%s">%s</h2>', $section["id"], $section['title']);
             }
 
             if ($section['callback']) {

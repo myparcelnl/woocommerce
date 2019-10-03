@@ -1,5 +1,6 @@
-.wcmp__action {
-  display: flex;
+.post-type-shop_order .wp-list-table .column-wc_actions .button.wcmp__action,
+.button.wcmp__action {
+  display: inline-flex;
 }
 
 .wcmp__action .wcmp__action__img {
@@ -89,6 +90,7 @@
  */
 .wcmp__spinner {
   display: inline-flex;
+  margin: auto;
 }
 
 .wcmp__spinner > img {
@@ -100,6 +102,10 @@
 .wcmp__spinner--success .wcmp__spinner__success,
 .wcmp__spinner--failed .wcmp__spinner__failed {
   display: block !important;
+}
+
+.button > .wcmp__spinner {
+  margin-left: 4px;
 }
 
 .button + .wcmp__spinner, input + .wcmp__spinner {

@@ -50,7 +50,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
 
     if (DPDConsignment::CARRIER_NAME !== $deliveryOptions->getCarrier()) {
         $insured = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->hasInsurance(),
+            $shipment_options->getInsurance(),
             "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
         );
 
@@ -116,7 +116,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
                 "set_value"    => WCMP_Settings_Data::ENABLED,
             ],
             "label"     => _wcmp("Insured to &euro; 500"),
-            "value"     => $insured,
+            "value"     => (bool) $insured,
         ],
     ];
 

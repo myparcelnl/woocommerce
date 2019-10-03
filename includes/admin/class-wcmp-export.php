@@ -29,6 +29,8 @@ class WCMP_Export
     // Maximum characters length of item description.
     public const DESCRIPTION_MAX_LENGTH = 50;
 
+    public const EXPORT = "wcmp_export";
+
     public const ADD_SHIPMENTS = "add_shipments";
     public const ADD_SHIPMENT  = "add_shipment";
     public const ADD_RETURN    = "add_return";
@@ -51,7 +53,7 @@ class WCMP_Export
         require("class-wcmp-api.php");
 
         add_action("admin_notices", [$this, "admin_notices"]);
-        add_action("wp_ajax_wc_myparcelbe", [$this, "export"]);
+        add_action("wp_ajax_" . self::EXPORT, [$this, "export"]);
         add_action("wp_ajax_wc_myparcelbe_frontend", [$this, "frontend_api_request"]);
         add_action("wp_ajax_nopriv_wc_myparcelbe_frontend", [$this, "frontend_api_request"]);
     }
@@ -131,11 +133,14 @@ class WCMP_Export
     public function export()
     {
         // Check the nonce
-        check_ajax_referer("wc_myparcelbe", "security");
+        if (! check_ajax_referer("wc_myparcelbe", "security", false)) {
+            die("Ajax security check failed. Did you pass a valid nonce in \$_REQUEST['security']?");
+        };
 
         if (! is_user_logged_in()) {
             wp_die(_wcmp("You do not have sufficient permissions to access this page."));
         }
+
         $return = [];
 
         // Check the user privileges (maybe use order ids for filter?)
@@ -149,12 +154,10 @@ class WCMP_Export
             die();
         }
 
-        /**
-         * @var       $request
-         * @var array $order_ids
-         * @var       $dialog
-         */
-        extract($_REQUEST);
+        $request   = $_REQUEST["request"];
+        $order_ids = $_REQUEST["order_ids"];
+        $dialog    = $_REQUEST["dialog"];
+        $print     = $_REQUEST["print"];
 
         // make sure $order_ids is a proper array
         $order_ids = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : [];
@@ -169,7 +172,7 @@ class WCMP_Export
                 }
 
                 // if we"re going to print directly, we need to process the orders first, regardless of the settings
-                $process = (isset($print) && $print == "yes") ? true : false;
+                $process = $print === "yes" ? true : false;
                 $return  = $this->add_shipments($order_ids, $process);
                 break;
             case self::ADD_RETURN:
@@ -206,6 +209,7 @@ class WCMP_Export
                 break;
         }
 
+        die(json_encode($this->errors));
         // display errors directly if PDF requested or modal
         if (in_array($request, [self::ADD_RETURN, self::GET_LABELS, self::MODAL_DIALOG]) && ! empty($this->errors)) {
             echo $this->parse_errors($this->errors);
@@ -219,7 +223,7 @@ class WCMP_Export
 
         // When adding shipments, store $return for use in admin_notice
         // This way we can refresh the page (JS) to show all new buttons
-        if ($request == self::ADD_SHIPMENTS && ! empty($print) && ($print == "no" || $print == "after_reload")) {
+        if ($request == self::ADD_SHIPMENTS && ($print === "no" || $print === "after_reload")) {
             update_option("wcmyparcelbe_admin_notices", $return);
             if ($print == "after_reload") {
                 $print_queue = [
@@ -274,7 +278,7 @@ class WCMP_Export
         foreach ($order_ids as $order_id) {
             $order = WCX::get_order($order_id);
 
-            $consignment = $this->get_consignment_from_checkout_data($order_id);
+            $consignment = $this->getConsignmentFromCheckoutData($order_id);
 
             $this->log("Shipment data for order {$order_id}.");
 
@@ -331,58 +335,6 @@ class WCMP_Export
         }
 
         return $return;
-        /*
-         * end old code
-         */
-    }
-
-    /**
-     * @param $shipments
-     * @param $order_id
-     *
-     * @return AbstractConsignment
-     * @throws MissingFieldException
-     * @throws Exception
-     */
-    public function getConsignmentData($shipments, $order_id)
-    {
-        $shipmentRecipient = $shipments[0]["recipient"];
-        $fullStreet        =
-            $shipmentRecipient["street"]
-            . " "
-            . $shipmentRecipient["number"]
-            . " "
-            . $shipmentRecipient["number_suffix"];
-        $shipmentOptions   = $shipments[0]["options"];
-        $shipmentPickup    = $shipments[0]["pickup"];
-
-        // TODO: loop for multiple orders
-        $consignment =
-            (ConsignmentFactory::createByCarrierId(BpostConsignment::CARRIER_ID))
-                ->setApiKey($this->init_api())
-                ->setReferenceId($order_id)
-                ->setPackageType($shipmentOptions["package_type"])
-                ->setCountry($shipmentRecipient["cc"])
-                ->setPerson($shipmentRecipient["person"])
-                ->setFullStreet($fullStreet)
-                ->setStreetAdditionalInfo($shipmentRecipient["street_additional_info"])
-                ->setPostalCode($shipmentRecipient["postal_code"])
-                ->setCity($shipmentRecipient["city"])
-                ->setPhone($shipmentRecipient["phone"])
-                ->setEmail($shipmentRecipient["email"])
-                ->setLabelDescription($shipmentOptions["label_description"])
-                ->setCompany($shipmentRecipient["company"])
-                // Options
-                ->setSignature($shipmentOptions["signature"])
-                ->setInsurance($this->getInsuranceAmount())
-                // Pickup options
-                ->setPickupLocationName($shipmentPickup["location_name"])
-                ->setPickupStreet($shipmentPickup["street"])
-                ->setPickupNumber($shipmentPickup["number"])
-                ->setPickupPostalCode($shipmentPickup["postal_code"])
-                ->setPickupCity($shipmentPickup["city"]);
-
-        return $consignment;
     }
 
     public function add_return($myparcelbe_options)
@@ -565,16 +517,13 @@ class WCMP_Export
      * @return AbstractConsignment
      * @throws Exception
      */
-    public function get_consignment_from_checkout_data(int $order_id, string $type = "standard"): AbstractConsignment
+    public function getConsignmentFromCheckoutData(int $order_id, string $type = "standard"): AbstractConsignment
     {
-        $order = WCX::get_order($order_id);
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-
+        $order   = WCX::get_order($order_id);
         $api_key = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
 
         if (! $api_key) {
-            throw new ErrorException("No API key found in MyParcel BE settings");
+            throw new ErrorException(_wcmp("No API key found in MyParcel BE settings"));
         }
 
         $delivery_options = WCMP_Admin::getDeliveryOptionsFromOrder($order);
@@ -595,8 +544,9 @@ class WCMP_Export
         $shipment_options = $delivery_options->getShipmentOptions();
         $bpost            = BpostConsignment::CARRIER_NAME;
 
+
         $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->hasSignature(),
+            $shipment_options->getInsurance(),
             "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
         );
 
@@ -624,7 +574,8 @@ class WCMP_Export
             ->setLabelDescription($label_description)
             ->setPackageType(self::PACKAGE)
             ->setSignature($signature)
-            ->setInsurance((int) $insurance);
+            // Override insurance to be either 500 (on) or 0 (off)
+            ->setInsurance($insurance ? 500 : 0);
 
         if ($delivery_options->isPickup()) {
             $pickup = $delivery_options->getPickupLocation();

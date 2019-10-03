@@ -284,7 +284,8 @@ class WCMP_Admin
                 $data['alt'],
                 $order_id,
                 (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display')
-                    ? 'target="_blank"' : ''
+                    ? 'target="_blank"' : '',
+                $data["img"]
             );
         }
         self::renderSpinner();
@@ -478,7 +479,8 @@ class WCMP_Admin
                                 WCMP_Export::GET_LABELS,
                                 _wcmp('Print MyParcel BE label'),
                                 $order_id,
-                                $downloadDisplay ? 'target="_blank"' : ''
+                                $downloadDisplay ? 'target="_blank"' : '',
+                                WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png"
                             );
 
                             ?>
@@ -750,9 +752,9 @@ class WCMP_Admin
     public static function renderSpinner(string $state = "", array $args = []): void
     {
         $spinners = [
-            "loading" => "/wp-admin/images/spinner.gif",
-            "success" => "/wp-admin/images/yes.png",
-            "failed"  => "/wp-admin/images/no.png",
+            "loading" => get_site_url() . "/wp-admin/images/spinner.gif",
+            "success" => get_site_url() . "/wp-admin/images/yes.png",
+            "failed"  => get_site_url() . "/wp-admin/images/no.png",
         ];
 
         $arguments = [];
@@ -784,32 +786,43 @@ class WCMP_Admin
         echo '</div>';
     }
 
+    /**
+     * @param $url
+     * @param $request
+     * @param $alt
+     * @param $orderId
+     * @param $extraAtts
+     * @param $icon
+     */
     private function renderAction(
         $url,
         $request,
         $alt,
         $orderId,
-        $extraAtts
+        $extraAtts,
+        $icon
     ): void
     {
         printf(
             '<a href="%1$s" 
-                    class="button tips wcmp__action" 
+                    class="button tips wcmp__action wcmp__d--flex" 
                     data-tip="%3$s" 
                     data-order-id="%4$s" 
                     data-request="%2$s" 
                     data-nonce="%5$s" 
                     %6$s>
-                <img class="wcmp__action__img" src="%7$s" alt="%2$s" />
-            </a>',
+                <img class="wcmp__action__img" src="%7$s" alt="%3$s" />',
             $url,
             $request,
             $alt,
             $orderId,
             wp_create_nonce('wc_myparcelbe'),
             $extraAtts,
-            WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png"
+            $icon
         );
+
+        self::renderSpinner();
+        echo "</a>";
     }
 }
 

@@ -64,6 +64,7 @@ class WCMP_Assets
                 "wcmp",
                 [
                     "actions"          => [
+                        "export"        => WCMP_Export::EXPORT,
                         "add_return"    => WCMP_Export::ADD_RETURN,
                         "add_shipment"  => WCMP_Export::ADD_SHIPMENT,
                         "add_shipments" => WCMP_Export::ADD_SHIPMENTS,
