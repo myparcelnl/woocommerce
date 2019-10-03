@@ -6,7 +6,6 @@ use DateTime;
 use Exception;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\DeliveryOptions\DeliveryOptions;
-use WC_Order;
 
 defined('ABSPATH') or exit;
 
@@ -38,11 +37,16 @@ class LegacyDeliveryOptions
     /**
      * LegacyDeliveryOptions constructor.
      *
-     * @param array    $deliveryOptions
-     * @param WC_Order $order
+     * @param array $deliveryOptions
+     *
+     * @throws Exception
      */
-    public function __construct(array $deliveryOptions, WC_Order $order = null)
+    public function __construct(array $deliveryOptions)
     {
+        if (! count($deliveryOptions)) {
+            return;
+        }
+
         $this->legacyDeliveryOptions = $deliveryOptions;
 
         $priceComment = $this->legacyDeliveryOptions["time"][0]["price_comment"];
@@ -65,10 +69,10 @@ class LegacyDeliveryOptions
     /**
      * Create and return the new DeliveryOptions class with the migrated options.
      *
-     * @return DeliveryOptions
+     * @return DeliveryOptions|null
      * @throws Exception
      */
-    public function getDeliveryOptions(): DeliveryOptions
+    public function getDeliveryOptions()
     {
         return new DeliveryOptions($this->migratedDeliveryOptions);
     }
