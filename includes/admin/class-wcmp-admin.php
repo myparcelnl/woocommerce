@@ -343,55 +343,46 @@ class WCMP_Admin
     /**
      * On saving shipment options from the bulk options form.
      *
+     * @throws Exception
      * @see admin/views/html-order-shipment-options.php
      */
     public function save_shipment_options_ajax()
     {
-        extract($_POST);
+        parse_str($_POST["form_data"], $form_data);
 
-        /**
-         * @var $form_data
-         * @var $order_id
-         */
-        parse_str($form_data, $form_data);
-        $order = WCX::get_order($order_id);
+        foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
+            $order              = WCX::get_order($order_id);
+            $newShipmentOptions = [];
 
-        if (isset($form_data[self::SHIPMENT_OPTIONS_FORM_NAME][$order_id])) {
-            $shipment_options = $form_data[self::SHIPMENT_OPTIONS_FORM_NAME][$order_id];
-
-            // convert insurance option
-            if (isset($shipment_options['insured']) && isset($shipment_options['insured_amount'])) {
-                unset($shipment_options['insured']);
-                $shipment_options['insurance'] = [
-                    'amount'   => (int) $shipment_options['insured_amount'] * 100,
-                    'currency' => 'EUR',
-                ];
-                unset($shipment_options['insured_amount']);
+            // Cast the option values to booleans
+            foreach ($data["shipment_options"] as $option => $value) {
+                $newShipmentOptions[$option] = (bool) $value;
             }
 
-            // separate extra options
-            if (isset($shipment_options['extra_options'])) {
-                WCX_Order::update_meta_data(
-                    $order,
-                    self::META_SHIPMENT_OPTIONS_EXTRA,
-                    $shipment_options['extra_options']
-                );
-                unset($shipment_options['extra_options']);
-            }
+            $meta = self::decodeDeliveryOptionsMeta($order);
 
-            $deliveryOptions                    = self::decodeDeliveryOptionsMeta($order);
-            $deliveryOptions["carrier"]         = $shipment_options["carrier"];
-            $deliveryOptions["shipmentOptions"] = $shipment_options["shipment_options"];
+            $meta["carrier"] = $data["carrier"] ?? $meta["carrier"];
+
+            $meta["shipmentOptions"] = array_replace_recursive(
+                $meta["shipmentOptions"],
+                $newShipmentOptions
+            );
+
+            $newDeliveryOptions = (new DeliveryOptions($meta))->toArray();
 
             WCX_Order::update_meta_data(
                 $order,
                 self::META_DELIVERY_OPTIONS,
-                self::encodeDeliveryOptionsMeta($deliveryOptions)
+                self::encodeDeliveryOptionsMeta($newDeliveryOptions)
+            );
+
+            // Save extra options
+            WCX_Order::update_meta_data(
+                $order,
+                self::META_SHIPMENT_OPTIONS_EXTRA,
+                $form_data["extra_options"]
             );
         }
-
-        // Quit out
-        die();
     }
 
     /**

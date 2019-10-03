@@ -198,18 +198,11 @@ class WCMP_Settings_Callbacks
             unset ($arguments["description"]);
         }
 
-        if (isset($arguments["parent"])) {
-            echo "<hr>";
-        }
-
         woocommerce_form_field(
             "{$optionId}[{$class->getId()}]",
             $arguments,
             get_option($optionId)[$class->getId()]
         );
-        if (isset($arguments["parent"])) {
-            echo "<hr>";
-        }
 
         // Render the description here instead of inside the above function.
         if (isset($description)) {

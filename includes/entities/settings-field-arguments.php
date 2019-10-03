@@ -209,7 +209,7 @@ class SettingsFieldArguments
 
         if (isset($condition["parent_value"])) {
             if (is_array($condition["parent_value"])) {
-                $this->addArgument("data-parent-value", implode(';', $condition["parent_value"]));
+                $this->addArgument("data-parent-value", implode(';', $condition["parent_value"]) . ";");
             } else {
                 $this->addArgument("data-parent-value", $condition["parent_value"]);
             }

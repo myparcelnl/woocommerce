@@ -95,34 +95,28 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             ],
         ],
         [
-            "name"              => "[shipment_options][signature]",
-            "type"              => "toggle",
-            "label"             => _wcmp("Signature on delivery"),
-            "value"             => (int) $signature,
-            "condition"         => [
+            "name"      => "[shipment_options][signature]",
+            "type"      => "toggle",
+            "condition" => [
                 "name"         => "[carrier]",
                 "type"         => "disable",
                 "parent_value" => WCMP_Data::getCarriersWithSignature(),
                 "set_value"    => WCMP_Settings_Data::DISABLED,
             ],
-            "custom_attributes" => [
-                "disabled" => $signature ? "disabled" : null,
-            ],
+            "label"     => _wcmp("Signature on delivery"),
+            "value"     => $signature,
         ],
         [
-            "name"              => "[shipment_options][insurance]",
-            "type"              => "toggle",
-            "condition"         => [
+            "name"      => "[shipment_options][insurance]",
+            "type"      => "toggle",
+            "condition" => [
                 "name"         => "[carrier]",
                 "type"         => "disable",
                 "parent_value" => WCMP_Data::getCarriersWithInsurance(),
-                "set_value"    => WCMP_Settings_Data::DISABLED,
+                "set_value"    => WCMP_Settings_Data::ENABLED,
             ],
-            "label"             => _wcmp("Insured to &euro; 500"),
-            "value"             => (int) $insured,
-            "custom_attributes" => [
-                "disabled" => $insured ? "disabled" : null,
-            ],
+            "label"     => _wcmp("Insured to &euro; 500"),
+            "value"     => $insured,
         ],
     ];
 
@@ -139,6 +133,11 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
 
         $class = new SettingsFieldArguments($option_row);
 
+        // Cast boolean values to the correct enabled/disabled values.
+        if (is_bool($option_row["value"])) {
+            $option_row["value"] = $option_row["value"] ? WCMP_Settings_Data::ENABLED : WCMP_Settings_Data::DISABLED;
+        }
+
         woocommerce_form_field(
             $namePrefix . $option_row["name"],
             $class->getArguments(false),
@@ -148,8 +147,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     ?>
     <div class="wcmp__shipment-settings__save">
         <?php printf(
-            '<div class="button wcmp__shipment-settings__save" data-order="%s">%s</div>',
-            $order_id,
+            '<div class="button wcmp__shipment-settings__save">%s</div>',
             _wcmp("Save")
         );
 

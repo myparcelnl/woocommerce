@@ -225,7 +225,9 @@ jQuery(function($) {
      */
     var matches;
 
-    // If the data-parent-value contains any semicolons it's an array, check it as an array instead.
+    /*
+     * If the data-parent-value contains any semicolons it's an array, check it as an array instead.
+     */
     if (dataParentValue && dataParentValue.indexOf(';') > -1) {
       matches = dataParentValue
         .split(';')
@@ -243,7 +245,7 @@ jQuery(function($) {
         break;
       case 'disable':
         $(element).prop('disabled', !matches);
-        if (matches && setValue) {
+        if (!matches && setValue) {
           element.value = setValue;
         }
         break;
@@ -331,7 +333,6 @@ jQuery(function($) {
       url: wcmp.ajax_url,
       data: {
         action: 'wcmp_save_shipment_options',
-        order_id: $(button).data().order,
         form_data: form.find(':input').serialize(),
         security: wcmp.nonce,
       },
@@ -395,9 +396,6 @@ jQuery(function($) {
    * @param order_ids
    */
   function doRequest(request) {
-    console.log(this);
-    console.log(request);
-
     var button = this;
     setSpinner(this, spinner.loading);
 
@@ -435,7 +433,6 @@ jQuery(function($) {
           request.afterAlways();
         }
       });
-
   }
 
   /**
