@@ -3,6 +3,10 @@
   display: inline-flex;
 }
 
+.wcmp__action + .wcmp__action {
+  margin-left: .3em;
+}
+
 .wcmp__action .wcmp__action__img {
   margin: auto;
 }
@@ -284,3 +288,6 @@
   width: 280px;
 }
 
+.wcmp__order__track-trace {
+  word-break: break-all;
+}

@@ -32,7 +32,6 @@ class WCMP_Export
     public const EXPORT = "wcmp_export";
 
     public const ADD_SHIPMENTS = "add_shipments";
-    public const ADD_SHIPMENT  = "add_shipment";
     public const ADD_RETURN    = "add_return";
     public const GET_LABELS    = "get_labels";
     public const MODAL_DIALOG  = "modal_dialog";
@@ -53,6 +52,7 @@ class WCMP_Export
         require("class-wcmp-api.php");
 
         add_action("admin_notices", [$this, "admin_notices"]);
+
         add_action("wp_ajax_" . self::EXPORT, [$this, "export"]);
         add_action("wp_ajax_wc_myparcelbe_frontend", [$this, "frontend_api_request"]);
         add_action("wp_ajax_nopriv_wc_myparcelbe_frontend", [$this, "frontend_api_request"]);
@@ -123,7 +123,7 @@ class WCMP_Export
     }
 
     /**
-     * Export selected orders
+     * Export selected orders.
      *
      * @access public
      * @return void
@@ -154,27 +154,45 @@ class WCMP_Export
             die();
         }
 
-        $request   = $_REQUEST["request"];
-        $order_ids = $_REQUEST["order_ids"];
-        $dialog    = $_REQUEST["dialog"];
-        $print     = $_REQUEST["print"];
+        $dialog       = $_REQUEST["dialog"];
+        $order_ids    = $_REQUEST["order_ids"];
+        $print        = $_REQUEST["print"];
+        $request      = $_REQUEST["request"];
+        $shipment_ids = $_REQUEST["shipment_ids"];
 
         // make sure $order_ids is a proper array
         $order_ids = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : [];
 
         switch ($request) {
+            // Creating consignments.
             case self::ADD_SHIPMENTS:
                 // filter out non-myparcel destinations
                 $order_ids = $this->filter_myparcelbe_destination_orders($order_ids);
+
                 if (empty($order_ids)) {
                     $this->errors[] = _wcmp("You have not selected any orders!");
                     break;
                 }
 
-                // if we"re going to print directly, we need to process the orders first, regardless of the settings
+                // if we're going to print directly, we need to process the orders first, regardless of the settings
                 $process = $print === "yes" ? true : false;
                 $return  = $this->add_shipments($order_ids, $process);
+
+                // When adding shipments, store $return for use in admin_notice
+                // This way we can refresh the page (JS) to show all new buttons
+                if ($print === "no" || $print === "after_reload") {
+                    update_option("wcmyparcelbe_admin_notices", $return);
+                    if ($print === "after_reload") {
+                        $print_queue = [
+                            "order_ids" => $return["success_ids"],
+                            "offset"    => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
+                        ];
+                        update_option("wcmyparcelbe_print_queue", $print_queue);
+                    }
+                }
                 break;
+
+            // Creating a return shipment.
             case self::ADD_RETURN:
                 if (empty($myparcelbe_options)) {
                     $this->errors[] = _wcmp("You have not selected any orders!");
@@ -182,23 +200,32 @@ class WCMP_Export
                 }
                 $return = $this->add_return($myparcelbe_options);
                 break;
+
+            // Downloading labels.
             case self::GET_LABELS:
                 $offset = ! empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
+
                 if (empty($order_ids) && empty($shipment_ids)) {
                     $this->errors[] = _wcmp("You have not selected any orders!");
                     break;
                 }
                 $label_response_type = isset($label_response_type) ? $label_response_type : null;
+
                 if (! empty($shipment_ids)) {
                     $order_ids    = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : [];
                     $shipment_ids = $this->sanitize_posted_array($shipment_ids);
-                    $return       =
-                        $this->get_shipment_labels($shipment_ids, $order_ids, $label_response_type, $offset);
+                    $return       = $this->get_shipment_labels(
+                        $shipment_ids,
+                        $order_ids,
+                        $label_response_type,
+                        $offset
+                    );
                 } else {
                     $order_ids = $this->filter_myparcelbe_destination_orders($order_ids);
                     $return    = $this->get_labels($order_ids, $label_response_type, $offset);
                 }
                 break;
+
             case self::MODAL_DIALOG:
                 if (empty($order_ids)) {
                     $errors[] = _wcmp("You have not selected any orders!");
@@ -209,7 +236,6 @@ class WCMP_Export
                 break;
         }
 
-        die(json_encode($this->errors));
         // display errors directly if PDF requested or modal
         if (in_array($request, [self::ADD_RETURN, self::GET_LABELS, self::MODAL_DIALOG]) && ! empty($this->errors)) {
             echo $this->parse_errors($this->errors);
@@ -221,28 +247,13 @@ class WCMP_Export
             $return["error"] = $this->parse_errors($this->errors);
         }
 
-        // When adding shipments, store $return for use in admin_notice
-        // This way we can refresh the page (JS) to show all new buttons
-        if ($request == self::ADD_SHIPMENTS && ($print === "no" || $print === "after_reload")) {
-            update_option("wcmyparcelbe_admin_notices", $return);
-            if ($print == "after_reload") {
-                $print_queue = [
-                    "order_ids" => $return["success_ids"],
-                    "offset"    => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
-                ];
-                update_option("wcmyparcelbe_print_queue", $print_queue);
-            }
-        }
-
-        // if we"re directed here from modal, show proper result page
+        // if we're directed here from modal, show proper result page
         if (isset($modal)) {
             $this->modal_success_page($request, $return);
         } else {
             // return JSON response
             echo json_encode($return);
         }
-
-        die();
     }
 
     public function sanitize_posted_array($array)
@@ -267,36 +278,61 @@ class WCMP_Export
      * @throws MissingFieldException
      * @throws Exception
      */
-    public function add_shipments($order_ids, $process)
+    public function add_shipments(array $order_ids, bool $process)
     {
         $return = [];
 
-        $consignments = new MyParcelCollection();
+        $collection = new MyParcelCollection();
 
         $this->log("*** Creating shipments started ***");
 
+        /**
+         * Loop over the order ids and create consignments for each order.
+         */
         foreach ($order_ids as $order_id) {
             $order = WCX::get_order($order_id);
 
-            $consignment = $this->getConsignmentFromCheckoutData($order_id);
-
-            $this->log("Shipment data for order {$order_id}.");
-
-            // check colli amount
+            // check collo amount
             $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $collo_amount = isset($extra_params["collo_amount"]) ? $extra_params["collo_amount"] : 1;
 
-            $consignments->addMultiCollo($consignment, $collo_amount);
+            /**
+             * Create a real multi collo shipment if available, otherwise loop over the collo_amount and add separate
+             * consignments to the collection.
+             */
+            if (WCMP_Data::HAS_MULTI_COLLO) {
+                $consignment = $this->createConsignmentFromCheckoutData($order_id);
+
+                $collection->addMultiCollo($consignment, $collo_amount);
+            } else {
+                for ($i = 0; $i < $collo_amount; $i++) {
+                    $consignment = $this->createConsignmentFromCheckoutData($order_id);
+
+                    $collection->addConsignment($consignment);
+                }
+            }
+
+            $this->log("Shipment data for order {$order_id}.");
         }
 
-        $consignments = $consignments->createConcepts();
+        file_put_contents(
+            date('YmdHis') . "_collection.json",
+            json_encode($collection->toArray())
+        );
+
+
+        $collection = $collection->createConcepts();
+        file_put_contents(
+            date('YmdHis') . "_collection2the_reckoning.json",
+            json_encode($collection->toArray())
+        );
 
         foreach ($order_ids as $order_id) {
-            $order      = WCX::get_order($order_id);
-            $idsByOrder = $consignments->getConsignmentsByReferenceId($order_id)->getConsignmentIds();
+            $order        = WCX::get_order($order_id);
+            $consignments = $collection->getConsignmentsByReferenceId($order_id)->getConsignmentIds();
 
-            foreach ($idsByOrder as $shipment_id) {
-                $shipment['shipment_id'] = $shipment_id;
+            foreach ($consignments as $consignmentId) {
+                $shipment['shipment_id'] = $consignmentId;
                 $this->save_shipment_data($order, $shipment);
 
                 // process directly setting
@@ -306,7 +342,7 @@ class WCMP_Export
                         $order->save();
                     }
                     $this->get_labels((array) $order_id, "url");
-                    $this->get_shipment_data($shipment_id, $order);
+                    $this->get_shipment_data($consignmentId, $order);
                 }
 
                 // status automation
@@ -320,10 +356,10 @@ class WCMP_Export
                     );
                 }
 
-                $this->success[$order_id] = $shipment_id;
+                $this->success[$order_id] = $consignmentId;
             }
 
-            WCX_Order::update_meta_data($order, "_myparcelbe_last_shipment_ids", $idsByOrder);
+            WCX_Order::update_meta_data($order, "_myparcelbe_last_shipment_ids", $consignments);
         }
 
         if (! empty($this->success)) {
@@ -331,7 +367,7 @@ class WCMP_Export
                 _wcmp("%s shipments successfully exported to MyParcel"),
                 count($this->success)
             );
-            $return["success_ids"] = $consignments->getConsignmentIds();
+            $return["success_ids"] = $collection->getConsignmentIds();
         }
 
         return $return;
@@ -517,18 +553,19 @@ class WCMP_Export
      * @return AbstractConsignment
      * @throws Exception
      */
-    public function getConsignmentFromCheckoutData(int $order_id, string $type = "standard"): AbstractConsignment
+    public function createConsignmentFromCheckoutData(int $order_id, string $type = "standard"): AbstractConsignment
     {
-        $order   = WCX::get_order($order_id);
         $api_key = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
-
         if (! $api_key) {
             throw new ErrorException(_wcmp("No API key found in MyParcel BE settings"));
         }
 
+        $order            = WCX::get_order($order_id);
         $delivery_options = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-        $carrier          = $delivery_options->getCarrier();
-        $connectEmail     = $carrier === DPDConsignment::CARRIER_NAME;
+
+        $carrier      = $delivery_options->getCarrier();
+        $connectEmail = $carrier === DPDConsignment::CARRIER_NAME;
+
         /**
          * @var AbstractConsignment $consignment
          */
@@ -543,7 +580,6 @@ class WCMP_Export
 
         $shipment_options = $delivery_options->getShipmentOptions();
         $bpost            = BpostConsignment::CARRIER_NAME;
-
 
         $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
             $shipment_options->getInsurance(),
@@ -1200,42 +1236,50 @@ class WCMP_Export
         }
     }
 
-    public function get_shipment_data($id, $order)
+    /**
+     * @param int      $id
+     * @param WC_Order $order
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function get_shipment_data(int $id, WC_Order $order)
     {
-        try {
-            $api      = $this->init_api();
-            $response = $api->get_shipments($id);
+        $api      = $this->init_api();
+        $response = $api->get_shipments($id);
 
-            if (! empty($response["body"]["data"]["shipments"])) {
-                $shipments = $response["body"]["data"]["shipments"];
-                $shipment  = array_shift($shipments);
+        if (! empty($response["body"]["data"]["shipments"])) {
+            $shipments = $response["body"]["data"]["shipments"];
+            $shipment  = array_shift($shipments);
 
-                // if shipment id matches and status is not concept, get tracktrace barcode and status name
-                if (isset($shipment["id"]) && $shipment["id"] == $id && $shipment["status"] >= 2) {
-                    $status        = $this->get_shipment_status_name($shipment["status"]);
-                    $tracktrace    = $shipment["barcode"];
-                    $shipment_id   = $id;
-                    $shipment_data = compact("shipment_id", "status", "tracktrace", "shipment");
-                    $this->save_shipment_data($order, $shipment_data);
-                    // If Channel Engine is active, add the created Track & Trace code and set shipping method to bpost in their meta data
-                    if (WC_CHANNEL_ENGINE_ACTIVE and ! WCX_Order::get_meta(
-                            $order,
-                            "_shipping_ce_track_and_trace"
-                        )) {
-                        WCX_Order::update_meta_data($order, "_shipping_ce_track_and_trace", $tracktrace);
-                        WCX_Order::update_meta_data($order, "_shipping_ce_shipping_method", "Bpost");
-                    }
-
-                    return $shipment_data;
-                } else {
-                    return false;
-                }
-            } else {
-                // No shipments found with this ID
-                return false;
+            if (! isset($shipment["id"]) || $shipment["id"] !== $id) {
+                return [];
             }
-        } catch (Exception $e) {
-            return false;
+
+            if ($shipment["status"] < 2) {
+                throw new Exception(_wcmp("No label(s) created yet."));
+            }
+
+            // if shipment id matches and status is not concept, get track trace barcode and status name
+            $status        = $this->get_shipment_status_name($shipment["status"]);
+            $track_trace   = $shipment["barcode"];
+            $shipment_id   = $id;
+            $shipment_data = compact("shipment_id", "status", "track_trace", "shipment");
+
+            $this->save_shipment_data($order, $shipment_data);
+
+            // If Channel Engine is active, add the created Track & Trace code and set shipping method to bpost in their meta data
+            if (WC_CHANNEL_ENGINE_ACTIVE and ! WCX_Order::get_meta(
+                    $order,
+                    "_shipping_ce_track_and_trace"
+                )) {
+                WCX_Order::update_meta_data($order, "_shipping_ce_track_and_trace", $track_trace);
+                WCX_Order::update_meta_data($order, "_shipping_ce_shipping_method", "Bpost");
+            }
+
+            return $shipment_data;
+        } else {
+            return [];
         }
     }
 
@@ -1930,8 +1974,8 @@ class WCMP_Export
             // log file in upload folder - wp-content/uploads
             $upload_dir        = wp_upload_dir();
             $upload_base       = trailingslashit($upload_dir["basedir"]);
-            $log_file          = $upload_base . "myparcelbe_log . txt";
-            $current_date_time = date("Y - m - d H:i:s");
+            $log_file          = $upload_base . "myparcelbe_log.txt";
+            $current_date_time = date("Y-m-d H:i:s");
             $message           = $current_date_time . " " . $message . "n";
             file_put_contents($log_file, $message, FILE_APPEND);
 
@@ -1939,6 +1983,13 @@ class WCMP_Export
         }
     }
 
+    /**
+     * @param $shipment_id
+     *
+     * @return mixed
+     * @throws ErrorException
+     * @throws Exception
+     */
     private function get_shipment_barcode_from_myparcelbe_api($shipment_id)
     {
         $api      = $this->init_api();

@@ -4,7 +4,9 @@ if (! defined("ABSPATH")) {
     exit;
 } // Exit if accessed directly
 
-if (!class_exists( 'WCMP_API')):
+if (class_exists('WCMP_API')) {
+    return;
+}
 
 class WCMP_API extends WCMP_Rest
 {
@@ -42,13 +44,12 @@ class WCMP_API extends WCMP_Rest
     /**
      * Add shipment
      *
-     * @param array $shipments array of shipments
-     * @param string $type shipment type: standard/return/unrelated_return
+     * @param array  $shipments array of shipments
+     * @param string $type      shipment type: standard/return/unrelated_return
      *
      * @return array
      * @throws Exception
      * @deprecated Use MyParcel SDK instead
-     *
      */
     public function add_shipments(array $shipments, string $type = "standard"): array
     {
@@ -56,11 +57,6 @@ class WCMP_API extends WCMP_Rest
 
         // define content type
         switch ($type) {
-            case "standard":
-            default:
-                $content_type = "application/vnd.shipment+json";
-                $data_key     = "shipments";
-                break;
             case "return":
                 $content_type = "application/vnd.return_shipment+json";
                 $data_key     = "return_shipments";
@@ -68,6 +64,10 @@ class WCMP_API extends WCMP_Rest
             case "unrelated_return":
                 $content_type = "application/vnd.unrelated_return_shipment+json";
                 $data_key     = "unrelated_return_shipments";
+                break;
+            default:
+                $content_type = "application/vnd.shipment+json";
+                $data_key     = "shipments";
                 break;
         }
 
@@ -86,9 +86,8 @@ class WCMP_API extends WCMP_Rest
         ];
 
         $request_url = $this->apiUrl . $endpoint;
-        $response    = $this->post($request_url, $json, $headers);
 
-        return $response;
+        return $this->post($request_url, $json, $headers);
     }
 
     /**
@@ -140,8 +139,8 @@ class WCMP_API extends WCMP_Rest
     /**
      * Get shipments
      *
-     * @param int|array     $ids
-     * @param array $params request parameters
+     * @param int|array $ids
+     * @param array     $params request parameters
      *
      * @return array          response
      * @throws Exception
@@ -160,16 +159,15 @@ class WCMP_API extends WCMP_Rest
 
         $request_url = $this->apiUrl . $endpoint . "/" . implode(";", (array) $ids);
         $request_url = add_query_arg($params, $request_url);
-        $response    = $this->get($request_url, $headers);
 
-        return $response;
+        return $this->get($request_url, $headers);
     }
 
     /**
      * Get shipment labels
      *
-     * @param array $ids shipment ids
-     * @param array $params request parameters
+     * @param array  $ids    shipment ids
+     * @param array  $params request parameters
      * @param string $return pdf or json
      *
      * @return array          response
@@ -206,7 +204,7 @@ class WCMP_API extends WCMP_Rest
     /**
      * Track shipments
      *
-     * @param array $ids shipment ids
+     * @param array $ids    shipment ids
      * @param array $params request parameters
      *
      * @return array          response
@@ -233,7 +231,7 @@ class WCMP_API extends WCMP_Rest
      * Get delivery options
      *
      * @param array $params
-     * @param bool $raw
+     * @param bool  $raw
      *
      * @return array          response
      * @throws Exception
@@ -292,4 +290,3 @@ class WCMP_API extends WCMP_Rest
         return $value;
     }
 }
-endif; // class_exists

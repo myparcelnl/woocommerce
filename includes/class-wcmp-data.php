@@ -22,6 +22,8 @@ class WCMP_Data
         BpostConsignment::CARRIER_NAME => 'bpost',
     ];
 
+    public const HAS_MULTI_COLLO = false;
+
     /**
      * @var array
      */

@@ -2,8 +2,7 @@
  * @var {Object} wcmp
  *
  * @property {Object} wcmp.actions
- * @property {{export: String, add_shipment: String, add_shipments: String, add_return: String, get_labels: String}}
- *   wcmp.actions
+ * @property {{export: String, add_shipments: String, add_return: String, get_labels: String}} wcmp.actions
  * @property {String} wcmp.ajax_url
  * @property {String} wcmp.nonce
  * @property {String} wcmp.download_display
@@ -30,13 +29,13 @@ jQuery(function($) {
     notice: '.wcmp__notice',
     orderAction: '.wcmp__action',
     bulkSpinner: '.wcmp__bulk-spinner',
-    orderActionImage: '.wcmp__action__img'
+    orderActionImage: '.wcmp__action__img',
   };
 
   var spinner = {
     loading: 'loading',
     success: 'success',
-    failed: 'failed'
+    failed: 'failed',
   };
 
   addListeners();
@@ -331,13 +330,13 @@ jQuery(function($) {
       data: {
         action: 'wcmp_save_shipment_options',
         form_data: form.find(':input').serialize(),
-        security: wcmp.nonce
+        security: wcmp.nonce,
       },
       afterDone: function() {
         setTimeout(function() {
           form.slideUp();
         }, timeoutAfterRequest);
-      }
+      },
     });
   }
 
@@ -407,7 +406,7 @@ jQuery(function($) {
     $.ajax({
       url: request.url,
       method: request.method || 'POST',
-      data: request.data
+      data: request.data,
     })
       .done(function() {
         setSpinner(button, spinner.success);
@@ -445,7 +444,7 @@ jQuery(function($) {
 
     /* execute action */
     switch ($(this).data('request')) {
-      case wcmp.actions.add_shipment:
+      case wcmp.actions.add_shipments:
         exportToMyParcel.bind(this)(order_ids);
         break;
       case wcmp.actions.get_labels:
@@ -509,7 +508,7 @@ jQuery(function($) {
       .appendTo('body')
       .css({
         top: event.pageY,
-        left: event.pageX
+        left: event.pageX,
       });
 
     offsetDialog.find('button')
@@ -576,7 +575,7 @@ jQuery(function($) {
         request: wcmp.actions.add_shipments,
         offset: offset,
         order_ids: order_ids,
-        print: print
+        print: print,
       },
       afterDone: function(response) {
         var redirect_url = updateUrlParameter(window.location.href, 'myparcelbe_done', 'true');
@@ -599,7 +598,7 @@ jQuery(function($) {
           /* load PDF */
           printLabel(order_ids, offset);
         }
-      }
+      },
     });
   }
 
@@ -635,7 +634,7 @@ jQuery(function($) {
       action: 'wcmp',
       request: wcmp.actions.add_return,
       order_ids: order_ids,
-      security: wcmp.nonce
+      security: wcmp.nonce,
     };
 
     $.post(wcmp.ajax_url, data, function(response) {
@@ -665,16 +664,15 @@ jQuery(function($) {
       + wcmp.nonce;
 
     /* create form to send order_ids via POST */
-    $('body').append('<form action="' + url + '" method="post" target="_blank" id="myparcelbe_post_data"></form>');
-    $('#myparcelbe_post_data').append('<input type="hidden" name="offset" class="offset"/>');
-    $('#myparcelbe_post_data input.offset').val(offset);
-    $('#myparcelbe_post_data').append('<input type="hidden" name="order_ids" class="order_ids"/>');
-    $('#myparcelbe_post_data input.order_ids').val(JSON.stringify(order_ids));
+    $('body').append('<form action="' + url + '" method="post" target="_blank" id="wcmp_post_data"></form>');
+    var postData = $('#wcmp_post_data');
+    postData.append('<input type="hidden" name="offset" class="offset" value="' + offset + '"/>');
+    postData.append('<input type="hidden" name="order_ids" class="order_ids" value="'
+      + JSON.stringify(order_ids)
+      + '"/>');
 
     /* submit data to open or download pdf */
-    $('#myparcelbe_post_data').submit();
-
-    showBulkSpinner('', false);
+    postData.submit();
   }
 
   function myparcelbe_admin_notice(message, type) {
@@ -720,7 +718,7 @@ jQuery(function($) {
         security: wcmp.nonce,
         action: 'wcmp_get_shipment_summary_status',
         order_id: summaryList.data('order_id'),
-        shipment_id: summaryList.data('shipment_id')
+        shipment_id: summaryList.data('shipment_id'),
       };
 
       $.ajax({
@@ -732,7 +730,7 @@ jQuery(function($) {
           this.removeClass('ajax-waiting');
           this.html(response);
           this.data('loaded', 'yes');
-        }
+        },
       });
     }
   }

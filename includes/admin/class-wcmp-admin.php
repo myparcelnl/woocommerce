@@ -98,7 +98,6 @@ class WCMP_Admin
             ?>
             <div class="wcmp__shipment-summary">
                 <?php $this->showDeliveryOptionsForOrder($order); ?>
-                <h1>wcmp__shipment-summary</h1>
                 <a class="wcmp__shipment-summary__show"><span class="wcmp__encircle wcmp__shipment-summary__show">i</span></a>
                 <div class="wcmp__shipment-summary__list"
                      data-loaded=""
@@ -224,71 +223,63 @@ class WCMP_Admin
 
         $order_id = WCX_Order::get_id($order);
 
+        $baseUrl      = "admin-ajax.php?action=" . WCMP_Export::EXPORT;
+        $addShipments = WCMP_Export::ADD_SHIPMENTS;
+        $getLabels    = WCMP_Export::GET_LABELS;
+        $addReturn    = WCMP_Export::ADD_RETURN;
+
         $listing_actions = [
-            WCMP_Export::ADD_SHIPMENT => [
+            $addShipments => [
                 "url" => wp_nonce_url(
-                    admin_url(
-                        "admin-ajax.php?action=wc_myparcelbe&request="
-                        . WCMP_Export::ADD_SHIPMENT
-                        . "&order_ids="
-                        . $order_id
-                    ),
+                    admin_url("$baseUrl&request=$addShipments&order_ids=$order_id"),
                     "wc_myparcelbe"
                 ),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-up.png",
                 "alt" => _wcmp("Export to MyParcel BE"),
             ],
-            WCMP_Export::GET_LABELS   => [
+            $getLabels    => [
                 "url" => wp_nonce_url(
-                    admin_url(
-                        "admin-ajax.php?action=wc_myparcelbe&request="
-                        . WCMP_Export::GET_LABELS
-                        . "&order_ids="
-                        . $order_id
-                    ),
+                    admin_url("$baseUrl&request=$getLabels&order_ids=$order_id"),
                     "wc_myparcelbe"
                 ),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png",
                 "alt" => _wcmp("Print MyParcel BE label"),
             ],
-            WCMP_Export::ADD_RETURN   => [
+            $addReturn    => [
                 "url" => wp_nonce_url(
-                    admin_url(
-                        "admin-ajax.php?action=wc_myparcelbe&request="
-                        . WCMP_Export::ADD_RETURN
-                        . "&order_ids="
-                        . $order_id
-                    ),
+                    admin_url("$baseUrl&request=$addReturn&order_ids=$order_id"),
                     "wc_myparcelbe"
                 ),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-retour.png",
-                "alt" => esc_attr__("Email return label", "woocommerce-myparcelbe"),
+                "alt" => _wcmp("Email return label"),
             ],
         ];
 
         $consignments = $this->get_order_shipments($order);
 
         if (empty($consignments)) {
-            unset($listing_actions[WCMP_Export::GET_LABELS]);
+            unset($listing_actions[$getLabels]);
         }
 
         $processed_shipments = $this->get_order_shipments($order, true);
         if (empty($processed_shipments) || $shipping_country != 'BE') {
-            unset($listing_actions[WCMP_Export::ADD_RETURN]);
+            unset($listing_actions[$addReturn]);
         }
 
-        foreach ($listing_actions as $action => $data) {
+        $atts =
+            (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display')
+                ? 'target="_blank"' : '';
+
+        foreach ($listing_actions as $request => $data) {
             $this->renderAction(
                 $data['url'],
-                $action,
+                $request,
                 $data['alt'],
                 $order_id,
-                (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display')
-                    ? 'target="_blank"' : '',
+                $atts,
                 $data["img"]
             );
         }
-        self::renderSpinner();
     }
 
     /**
@@ -304,6 +295,7 @@ class WCMP_Admin
         }
 
         $consignments = WCX_Order::get_meta($order, self::META_SHIPMENTS);
+
         // fallback to legacy consignment data (v1.X)
         if (empty($consignments)) {
             if ($consignment_id = WCX_Order::get_meta($order, self::META_CONSIGNMENT_ID)) {
@@ -381,7 +373,7 @@ class WCMP_Admin
             WCX_Order::update_meta_data(
                 $order,
                 self::META_SHIPMENT_OPTIONS_EXTRA,
-                $form_data["extra_options"]
+                $data["extra_options"]
             );
         }
     }
@@ -436,46 +428,45 @@ class WCMP_Admin
             <table class="wcmp__table--track-trace">
                 <thead>
                 <tr>
-                    <th>&nbsp;</th>
                     <th><?php _wcmpe('Track & Trace'); ?></th>
                     <th><?php _wcmpe('Status'); ?></th>
+                    <th>&nbsp;</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php
+
                 foreach ($consignments as $shipment_id => $shipment):
-                    $shipment = WCMP()->export->get_shipment_data($shipment_id, $order);
-                    $label_url = wp_nonce_url(
-                        admin_url(
-                            'admin-ajax.php?action=wc_myparcelbe&request='
-                            . WCMP_Export::GET_LABELS
-                            . '&shipment_ids='
-                            . $shipment_id
-                        ),
-                        'wc_myparcelbe'
-                    );
-                    if (isset($shipment['tracktrace'])) {
-                        $track_trace_url  = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
-                        $track_trace_link = sprintf(
-                            '<a href="%s" target="_blank">%s</a>',
-                            $track_trace_url,
-                            $shipment['tracktrace']
-                        );
-                    } elseif (isset($shipment['shipment']) && isset($shipment['shipment']['options'])) {
-                        $track_trace_link = '(' . WCMP()->export->get_package_name(
-                                $shipment['shipment']['options']['package_type']
-                            ) . ')';
-                    } else {
-                        $track_trace_link = '(Unknown)';
+                    try {
+                        $shipment = WCMP()->export->get_shipment_data($shipment_id, $order);
+                    } catch (Exception $e) {
+                        $message = $e->getMessage();
                     }
-                    $status = isset($shipment['status']) ? $shipment['status'] : '-';
+
+                    if (isset($message)) {
+                        echo "<p>$message</p>";
+                    }
+
                     ?>
                     <tr>
+                        <td class="wcmp__order__track-trace">
+                            <?php $this->renderTrackTraceLink($shipment, $order_id); ?>
+                        </td>
+                        <td class="wcmp__order__status">
+                            <?php $this->renderStatus($shipment) ?>
+                        </td>
                         <td class="wcmp__td--create-label">
                             <?php
+                            $action  = WCMP_Export::EXPORT;
+                            $request = WCMP_Export::GET_LABELS;
 
                             $this->renderAction(
-                                $label_url,
+                                wp_nonce_url(
+                                    admin_url(
+                                        "admin-ajax.php?action=$action&request=$request&shipment_ids=$shipment_id"
+                                    ),
+                                    'wc_myparcelbe'
+                                ),
                                 WCMP_Export::GET_LABELS,
                                 _wcmp('Print MyParcel BE label'),
                                 $order_id,
@@ -485,8 +476,6 @@ class WCMP_Admin
 
                             ?>
                         </td>
-                        <td class="wcmp-track-trace"><?php echo $track_trace_link; ?></td>
-                        <td class="wcmp-status"><?php echo $status; ?></td>
                     </tr>
                 <?php endforeach ?>
                 </tbody>
@@ -787,20 +776,20 @@ class WCMP_Admin
     }
 
     /**
-     * @param $url
-     * @param $request
-     * @param $alt
-     * @param $orderId
-     * @param $extraAtts
-     * @param $icon
+     * @param string $url
+     * @param string $request
+     * @param string $alt
+     * @param string $orderId
+     * @param string $extraAtts
+     * @param string $icon
      */
     private function renderAction(
-        $url,
-        $request,
-        $alt,
-        $orderId,
-        $extraAtts,
-        $icon
+        string $url,
+        string $request,
+        string $alt,
+        string $orderId,
+        string $extraAtts,
+        string $icon
     ): void
     {
         printf(
@@ -823,6 +812,40 @@ class WCMP_Admin
 
         self::renderSpinner();
         echo "</a>";
+    }
+
+    /**
+     * @param array $shipment
+     * @param int   $order_id
+     * @param null  $message
+     */
+    private function renderTrackTraceLink(array $shipment, int $order_id): void
+    {
+        if (isset($shipment['tracktrace'])) {
+            $track_trace_url  = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
+            $track_trace_link = sprintf(
+                '<a href="%s" target="_blank">%s</a>',
+                $track_trace_url,
+                $shipment['tracktrace']
+            );
+        } elseif (isset($shipment['shipment']) && isset($shipment['shipment']['options'])) {
+            $track_trace_link =
+                '(' . WCMP()->export->get_package_name($shipment['shipment']['options']['package_type']) . ')';
+        } else {
+            $track_trace_link = '(Unknown)';
+        }
+
+        echo $track_trace_link;
+    }
+
+    /**
+     * @param array $shipment
+     */
+    private function renderStatus(array $shipment): void
+    {
+        $status = isset($shipment['status']) ? $shipment['status'] : '-';
+
+        echo $status;
     }
 }
 
