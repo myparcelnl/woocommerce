@@ -409,7 +409,8 @@ jQuery(function($) {
 
     $.ajax({
       url: request.url,
-      data: request,
+      method: request.method || 'POST',
+      data: request.data,
     })
       .done(function() {
         setSpinner(button, spinner.success);
@@ -789,7 +790,7 @@ jQuery(function($) {
 
     [selectors.shipmentOptionsForm, selectors.showShipmentOptionsForm].forEach(function(cls) {
       if ((clickedOutside && event.target.matches(cls))
-        || document.querySelector(selectors.shipmentOptionsForm).contains(event.target)) {
+        || event.target.closest(selectors.shipmentOptionsForm)) {
         clickedOutside = false;
       }
     });

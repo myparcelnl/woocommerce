@@ -30,7 +30,7 @@
         ]
       },
       "globals": {
-        "wc_myparcelbe": "readonly"
+        "wcmp": "readonly"
       }
     }
   ]
