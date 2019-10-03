@@ -29,6 +29,7 @@ class WCMP_Assets
             if (version_compare(WOOCOMMERCE_VERSION, "2.3", ">=")) {
                 wp_enqueue_script("woocommerce_admin");
                 wp_enqueue_script("iris");
+
                 if (! wp_script_is("wc-enhanced-select", "registered")) {
                     $suffix = defined("SCRIPT_DEBUG") && SCRIPT_DEBUG ? "" : ".min";
                     wp_register_script(
@@ -52,15 +53,15 @@ class WCMP_Assets
             wp_enqueue_script("thickbox");
             wp_enqueue_style("thickbox");
             wp_enqueue_script(
-                "wcmyparcelbe-export",
+                "wcmp-admin",
                 WCMP()->plugin_url() . "/assets/js/wcmp-admin.js",
                 ["jquery", "thickbox"],
                 WC_MYPARCEL_BE_VERSION
             );
 
             wp_localize_script(
-                "wcmyparcelbe-export",
-                "wc_myparcelbe",
+                "wcmp-admin",
+                "wcmp",
                 [
                     "actions"          => [
                         "add_return"    => WCMP_Export::ADD_RETURN,

@@ -70,7 +70,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "value"             => $deliveryOptions->getCarrier(),
         ],
         [
-            "name"              => "[$order_id][package_type]",
+            "name"              => "[package_type]",
             "label"             => _wcmp("Shipment type"),
             "description"       => sprintf(
                 _wcmp("Calculated weight: %s"),

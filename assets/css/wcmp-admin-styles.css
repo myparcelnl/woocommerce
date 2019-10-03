@@ -1,20 +1,9 @@
-/*
- * Order actions button styling
- */
 .wcmp__action {
-  float: left;
-  width: 26px;
-  height: 26px;
-  padding: 3px 2px;
+  display: flex;
 }
 
-#myparcelbe.postbox .wcmp__action {
-  padding: 2px 5px 0;
-}
-
-.wcmp__action__img {
-  width: 16px;
-  height: auto;
+.wcmp__action .wcmp__action__img {
+  margin: auto;
 }
 
 /*
@@ -99,9 +88,24 @@
 /*
  * Spinner
  */
-.wcmp__spinner,
-.wcmp__bulk-spinner {
+.wcmp__spinner {
+  display: inline-flex;
+}
+
+.wcmp__spinner > img {
+  width: 16px;
   display: none;
+}
+
+.wcmp__spinner--loading .wcmp__spinner__loading,
+.wcmp__spinner--success .wcmp__spinner__success,
+.wcmp__spinner--failed .wcmp__spinner__failed {
+  display: block !important;
+}
+
+.button + .wcmp__spinner, input + .wcmp__spinner {
+  margin-left: 5px;
+  margin-top: 5px;
 }
 
 .wcmp__bulk-spinner {
@@ -223,11 +227,15 @@
 /*
  * Helpers
  */
-.wcmp-display--block {
+.wcmp__d--block {
   display: block;
 }
 
-.wcmp-white-space--nowrap {
+.wcmp__d--flex {
+  display: flex;
+}
+
+.wcmp__white-space--nowrap {
   white-space: nowrap;
 }
 

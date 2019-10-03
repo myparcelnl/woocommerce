@@ -314,11 +314,11 @@ class WCMP_Settings
             }
 
             if (! empty($field['args']['label_for'])) {
-                echo '<th scope="row""><label class="wcmp-white-space--nowrap" for="' . esc_attr(
+                echo '<th scope="row""><label class="wcmp__white-space--nowrap" for="' . esc_attr(
                         $field['args']['label_for']
                     ) . '">' . $field['title'] . $help_tip . '</label></th>';
             } else {
-                echo '<th scope="row"><span class="wcmp-white-space--nowrap">'
+                echo '<th scope="row"><span class="wcmp__white-space--nowrap">'
                      . $field['title']
                      . $help_tip
                      . '</span></th>';

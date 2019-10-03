@@ -144,17 +144,6 @@ class SettingsFieldArguments
                 $this->addArgument("step", 0.01);
                 $this->addArgument("placeholder", "0,00");
                 break;
-            case "multi_select":
-                $type = "select";
-                $this->addArgument("multiple", "multiple");
-                $this->pushArgument("input_class", "wc-enhanced-select");
-                $this->addArgument("options", $this->getArgument("options") ?? []);
-
-                if (isset($this->input["placeholder"])) {
-                    $this->addArgument("data-placeholder", $this->getArgument("placeholder"));
-                    unset($this->input["placeholder"]);
-                }
-                break;
             case "toggle" :
                 $type = "select";
 

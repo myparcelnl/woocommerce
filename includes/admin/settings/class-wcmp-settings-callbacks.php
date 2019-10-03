@@ -18,12 +18,12 @@ class WCMP_Settings_Callbacks
     public static function getShippingMethods(): array
     {
         $shippingMethods     = [];
-        $wc_shipping_methods = WC()->shipping->load_shipping_methods();
+        $wc_shipping_methods = WC()->shipping()->load_shipping_methods();
 
         if ($wc_shipping_methods) {
             foreach ($wc_shipping_methods as $key => $shipping_method) {
                 // Automattic / WooCommerce Table Rate Shipping
-                if ($key == 'table_rate' && class_exists('WC_Table_Rate_Shipping')
+                if ($key === 'table_rate' && class_exists('WC_Table_Rate_Shipping')
                     && class_exists('WC_Shipping_Zones')) {
                     $zones = WC_Shipping_Zones::get_zones();
                     foreach ($zones as $zone_data) {
@@ -58,7 +58,7 @@ class WCMP_Settings_Callbacks
                 }
 
                 // Bolder Elements Table Rate Shipping
-                if ($key == 'betrs_shipping' && is_a($shipping_method, 'BE_Table_Rate_Method')
+                if ($key === 'betrs_shipping' && is_a($shipping_method, 'BE_Table_Rate_Method')
                     && class_exists('WC_Shipping_Zones')) {
                     $zones = WC_Shipping_Zones::get_zones();
 
@@ -98,9 +98,10 @@ class WCMP_Settings_Callbacks
                 $shippingMethods[$key] = $method_title;
 
                 // split flat rate by shipping class
-                if (($key == 'flat_rate' || $key == 'legacy_flat_rate')
+                if (($key === 'flat_rate' || $key === 'legacy_flat_rate')
                     && version_compare(WOOCOMMERCE_VERSION, '2.4', '>=')) {
-                    $shipping_classes = WC()->shipping->get_shipping_classes();
+                    $shipping_classes = WC()->shipping()->get_shipping_classes();
+
                     foreach ($shipping_classes as $shipping_class) {
                         if (! isset($shipping_class->term_id)) {
                             continue;

@@ -117,10 +117,10 @@ class WCMP_Settings_Data
                     if (isset($setting["condition"]) && $prefix) {
                         if (is_array($setting["condition"])) {
                             $related                      = $setting["condition"]["name"];
-                            $setting["condition"]["name"] = "{$name}_{$related}";
+                            $setting["condition"]["name"] = "{$optionIdentifier}[{$name}_{$related}]";
                         } else {
                             $related              = $setting["condition"];
-                            $setting["condition"] = "{$name}_{$related}";
+                            $setting["condition"] = "{$optionIdentifier}[{$name}_{$related}]";
                         }
                     }
 
@@ -616,6 +616,7 @@ class WCMP_Settings_Data
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "loop"      => WCMP_Data::getPackageTypesHuman(),
                 "options"   => WCMP_Settings_Callbacks::getShippingMethods(),
+                "default"   => [],
                 "help_text" => _wcmp("Select one or more shipping methods for each MyParcel BE package type"),
             ],
             [

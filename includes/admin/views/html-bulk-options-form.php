@@ -14,19 +14,20 @@ if (! defined('ABSPATH')) {
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <?php
     wp_enqueue_script(
-        'wcmyparcelbe-export',
+        'wcmp-admin',
         WCMP()->plugin_url() . '/assets/js/wcmp-admin.js',
         ['jquery', 'thickbox', 'wp-color-picker'],
         WC_MYPARCEL_BE_VERSION
     );
     wp_localize_script(
-        'wcmyparcelbe-export',
+        'wcmp-admin',
         'wc_myparcelbe',
         [
-            'ajax_url'         => admin_url('admin-ajax.php'),
-            'nonce'            => wp_create_nonce('wc_myparcelbe'),
-            WCMP_Settings::SETTING_DOWNLOAD_DISPLAY => WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) ? WCMP(
-            )->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) : '',
+            'ajax_url'                              => admin_url('admin-ajax.php'),
+            'nonce'                                 => wp_create_nonce('wc_myparcelbe'),
+            WCMP_Settings::SETTING_DOWNLOAD_DISPLAY => WCMP()->setting_collection->getByName(
+                WCMP_Settings::SETTING_DOWNLOAD_DISPLAY
+            ) ? WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) : '',
         ]
     );
 
@@ -60,11 +61,12 @@ if (! defined('ABSPATH')) {
 </head>
 <body>
 <?php
-$target_url =
-    wp_nonce_url(
-        admin_url('admin-ajax.php?action=wc_myparcelbe&request=' . WCMP_Export::ADD_RETURN . '&modal=true'),
-        'wc_myparcelbe'
-    );
+
+$target_url = wp_nonce_url(
+    admin_url('admin-ajax.php?action=wc_myparcelbe&request=' . WCMP_Export::ADD_RETURN . '&modal=true'),
+    'wc_myparcelbe'
+);
+
 ?>
 <form method="post" class="page-form wcmp__bulk-options" action="<?php echo $target_url; ?>">
     <table class="widefat">
@@ -83,8 +85,8 @@ $target_url =
             if (! WCMP()->export->is_myparcelbe_destination($shipping_country)) {
                 continue;
             }
-            $recipient       = WCMP()->export->get_recipient($order);
-            $package_types   = WCMP_Data::getPackageTypes();
+            $recipient     = WCMP()->export->get_recipient($order);
+            $package_types = WCMP_Data::getPackageTypes();
             ?>
             <tr class="order-row <?php echo(($c = ! $c) ? 'alternate' : ''); ?>">
                 <td>
@@ -155,7 +157,7 @@ $target_url =
                                     $skip_save = true; // dont show save button for each order
                                     if ($dialog === 'shipment') {
                                         include('html-order-shipment-options.php');
-                                    } else if ($dialog === 'return') {
+                                    } elseif ($dialog === 'return') {
                                         include('html-order-return-shipment-options.php');
                                     }
                                     ?>
@@ -174,12 +176,14 @@ $target_url =
         <?php
         if ($dialog == 'shipment') {
             $button_text = _wcmp('Export to MyParcel BE');
-        } else if ($dialog == 'return') {
+        } elseif ($dialog == 'return') {
             $button_text = _wcmp('Send email');
         }
         ?>
-        <input type="submit" value="<?php echo $button_text; ?>" class="button save wcmp_export">
-        <?php WCMP_Admin::renderSpinner() ?>
+        <div class="wcmp__d--flex">
+            <input type="submit" value="<?php echo $button_text; ?>" class="button save wcmp__action">
+            <?php WCMP_Admin::renderSpinner() ?>
+        </div>
     </div>
 </form>
 <script type="text/javascript">

@@ -7,13 +7,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <?php
     wp_enqueue_script(
-        'wcmyparcelbe-export',
+        'wcmp-admin',
         WCMP()->plugin_url() . '/assets/js/wcmp-admin.js',
         ['jquery', 'thickbox'],
         WC_MYPARCEL_BE_VERSION
     );
     wp_localize_script(
-        'wcmyparcelbe-export',
+        'wcmp-admin',
         'wc_myparcelbe',
         [
             'ajax_url'                              => admin_url('admin-ajax.php'),

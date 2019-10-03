@@ -35,8 +35,8 @@ $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
     </tr>
 </table><br>
 <?php if (! isset($skip_save)): ?>
-    <div class="wcmp__shipment-settings__save">
+    <div class="wcmp__shipment-settings__save wcmp__d--flex">
         <a class="button save" data-order="<?php echo $order_id; ?>"><?php _wcmpe('Save') ?></a>
-        <?php WCMP_Admin::renderSpinner(["class" => ["wcmp__spinner", "wcmp__spinner--waiting"]]) ?>
+        <?php WCMP_Admin::renderSpinner() ?>
     </div>
 <?php endif ?>

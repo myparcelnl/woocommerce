@@ -61,7 +61,6 @@ class WCMP_Settings_Callbacks_Enhanced_Select
         printf(
             '<select id="%s"
                 name="%s"
-                style="width: 50%%;"
                 class="wc-enhanced-select"
                 multiple="multiple"
                 data-placeholder="%s"

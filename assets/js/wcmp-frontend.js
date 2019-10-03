@@ -16,7 +16,7 @@ window.addEventListener('load', function() {
    * @var {Object} MyParcelDeliveryOptions
    *
    * @property {Array} MyParcelDeliveryOptions.shippingMethods
-   * @property {Boolean} MyParcelDeliveryOptions.alwaysDisplay
+   * @property {String} MyParcelDeliveryOptions.alwaysDisplay
    * @property {String} MyParcelDeliveryOptions.hiddenInputName
    *
    * @see \wcmp_checkout::inject_delivery_options_variables
@@ -139,10 +139,6 @@ window.addEventListener('load', function() {
         : MyParcelFrontend.addressField;
     },
 
-    updateCountry: function() {
-      MyParcelFrontend.updatedCountry = MyParcelFrontend.getField(MyParcelFrontend.countryField).value;
-    },
-
     /**
      * Add event listeners to the address fields. Remove them first if they already exist.
      */
@@ -152,23 +148,12 @@ window.addEventListener('load', function() {
 
       /* If address type is already set, remove the existing listeners before adding new ones. */
       if (MyParcelFrontend.addressType) {
-        MyParcelFrontend.getField(MyParcelFrontend.countryField).removeEventListener(
-          'change',
-          MyParcelFrontend.updateCountry
-        );
-
         fields.forEach(function(field) {
           MyParcelFrontend.getField(field).removeEventListener('change', MyParcelFrontend.updateAddress);
         });
       }
 
       MyParcelFrontend.getAddressType();
-      MyParcelFrontend.selectedCountry = MyParcelFrontend.getField(MyParcelFrontend.countryField).value;
-
-      MyParcelFrontend.getField(MyParcelFrontend.countryField).addEventListener(
-        'change',
-        MyParcelFrontend.updateCountry
-      );
 
       fields.forEach(function(field) {
         MyParcelFrontend.getField(field).addEventListener('change', MyParcelFrontend.updateAddress);
@@ -229,7 +214,8 @@ window.addEventListener('load', function() {
     /**
      * Get data from form fields and put it in the global MyParcelConfig.
      */
-    updateAddress: function() {
+    updateAddress: function(e) {
+      console.log('updated', e);
       if (!window.hasOwnProperty('MyParcelConfig')) {
         throw 'window.MyParcelConfig not found!';
       }

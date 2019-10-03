@@ -35,11 +35,23 @@ class WCMP_Admin
 
     function __construct()
     {
-        add_action("woocommerce_admin_order_actions_end", [$this, "showMyParcelSettings"], 9999);
         add_action("admin_footer", [$this, "bulk_actions"]);
-
         add_action("admin_footer", [$this, "offset_dialog"]);
-        add_action("woocommerce_admin_order_actions_end", [$this, "admin_wc_actions"], 20);
+
+        /**
+         * Orders page
+         * --
+         * showMyParcelSettings is on the woocommerce_admin_order_actions_end hook because there is no hook to put it
+         * in the shipping address column... It is put in the right place after loading using JavaScript.
+         *
+         * @see wcmp-admin.js -> runTriggers()
+         */
+        add_action("woocommerce_admin_order_actions_end", [$this, "showMyParcelSettings"], 9999);
+        add_action("woocommerce_admin_order_actions_end", [$this, "showOrderActions"], 20);
+
+        /*
+         * Single order page
+         */
         add_action("add_meta_boxes_shop_order", [$this, "add_order_meta_box"]);
         add_action("woocommerce_admin_order_data_after_shipping_address", [$this, "single_order_shipment_options"]);
 
@@ -66,7 +78,7 @@ class WCMP_Admin
      *
      * @throws Exception
      */
-    public function showMyParcelSettings($order): void
+    public function showMyParcelSettings(WC_Order $order): void
     {
         if (! WCMP()->export->is_myparcelbe_destination(
             WCX_Order::get_prop($order, 'shipping_country')
@@ -97,17 +109,17 @@ class WCMP_Admin
                 </div>
             </div>
         <?php else : ?>
-            <div class="wcmp__shipment-options wcmp__has-consignments">
+            <div class="wcmp__shipment-options wcmp__has-consignments" style="display: none;">
                 <?php $this->showDeliveryOptionsForOrder($order); ?>
             </div>
         <?php endif; ?>
-        <div class="wcmp__shipment-options">
+        <div class="wcmp__shipment-options" style="display: none;">
             <?php printf(
                 '<a href="#" class="wcmp__shipment-options__show">%s &#x25BE;</a>',
                 _wcmp("Details")
             ); ?>
             <div class="wcmp__shipment-options__form" style="display: none;">
-                <a class="wcmp-display--block">
+                <a class="wcmp__d--flex">
                     <?php include('views/html-order-shipment-options.php'); ?>
                 </a>
             </div>
@@ -166,12 +178,8 @@ class WCMP_Admin
                 <?php }    ?>
             });
             </script>
-            <?php self::renderSpinner(
-                [
-                    "class" => ["wcmp__bulk-spinner", "wcmp__spinner--waiting"],
-                    "style" => "display: none;",
-                ]
-            );
+            <?php
+            self::renderSpinner();
         }
     }
 
@@ -200,22 +208,10 @@ class WCMP_Admin
 
     /**
      * Add print actions to the orders listing
-     * Support wc > 3.3.0
-     * Call the function admin_order_actions for the same settings
      *
      * @param $order
      */
-    public function admin_wc_actions($order): void
-    {
-        $this->admin_order_actions($order);
-    }
-
-    /**
-     * Add print actions to the orders listing
-     *
-     * @param $order
-     */
-    public function admin_order_actions($order): void
+    public function showOrderActions($order): void
     {
         if (empty($order)) {
             return;
@@ -240,7 +236,7 @@ class WCMP_Admin
                     "wc_myparcelbe"
                 ),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-up.png",
-                "alt" => esc_attr__("Export to MyParcel BE", "woocommerce-myparcelbe"),
+                "alt" => _wcmp("Export to MyParcel BE"),
             ],
             WCMP_Export::GET_LABELS   => [
                 "url" => wp_nonce_url(
@@ -253,7 +249,7 @@ class WCMP_Admin
                     "wc_myparcelbe"
                 ),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png",
-                "alt" => esc_attr__("Print MyParcel BE label", "woocommerce-myparcelbe"),
+                "alt" => _wcmp("Print MyParcel BE label"),
             ],
             WCMP_Export::ADD_RETURN   => [
                 "url" => wp_nonce_url(
@@ -282,37 +278,16 @@ class WCMP_Admin
         }
 
         foreach ($listing_actions as $action => $data) {
-            printf(
-                '<a 
-                    href="%1$s" 
-                    class="button tips wcmp__action %2$s"
-                    data-tip="%3$s"
-                    data-order-id="%4$s"
-                    data-request="%2$s"
-                    data-nonce="%5$s"
-                    %6$s>
-                 <img 
-                    src="%7$s"
-                    alt="%3$s"
-                    style="width:17px; margin: 5px 3px; pointer-events: none;"
-                    class="wcmp__action__img"></a>',
+            $this->renderAction(
                 $data['url'],
                 $action,
                 $data['alt'],
                 $order_id,
-                wp_create_nonce('wc_myparcelbe'),
                 (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display')
-                    ? 'target="_blank"' : '',
-                $data['img']
+                    ? 'target="_blank"' : ''
             );
-            ?><?php
         }
-        self::renderSpinner(
-            [
-                "class" => ["wcmp__spinner", "wcmp__spinner--waiting"],
-                "style" => "width: 17px; margin: 5px 3px;",
-            ]
-        );
+        self::renderSpinner();
     }
 
     /**
@@ -372,17 +347,7 @@ class WCMP_Admin
      */
     public function save_shipment_options_ajax()
     {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-//        check_ajax_referer('wc_myparcelbe', 'security');
         extract($_POST);
-
-//        action=wcmp_save_shipment_options
-//        order_id=80
-//        form_data[myparcelbe_options][80][carrier]=0
-//        form_data[myparcelbe_options][80][extra_options][collo_amount]=10
-//        form_data[myparcelbe_options][80][shipment_options][signature]=0
-//        form_data[myparcelbe_options][80][shipment_options][insured]=0
 
         /**
          * @var $form_data
@@ -437,7 +402,7 @@ class WCMP_Admin
         add_meta_box(
             "myparcelbe",
             _wcmp("MyParcelBE"),
-            [$this, "create_box_content"],
+            [$this, "createMetaBox"],
             "shop_order",
             "side",
             "default"
@@ -447,7 +412,7 @@ class WCMP_Admin
     /**
      * Callback: Create the meta box content on the single order page
      */
-    public function create_box_content(): void
+    public function createMetaBox(): void
     {
         global $post_id;
         // get order
@@ -464,17 +429,15 @@ class WCMP_Admin
             return;
         }
 
+        $class = version_compare(WOOCOMMERCE_VERSION, '3.3.0', '>=') ? "single_wc_actions" : "single_order_actions";
         // show buttons and check if WooCommerce > 3.3.0 is used and select the correct function and class
-        if (version_compare(WOOCOMMERCE_VERSION, '3.3.0', '>=')) {
-            echo '<div class="single_wc_actions">';
-            $this->admin_wc_actions($order);
-        } else {
-            echo '<div class="single_order_actions">';
-            $this->admin_order_actions($order);
-        }
+        echo "<div class=\"$class\">";
+        $this->showOrderActions($order);
         echo '</div>';
 
-        $consignments = $this->get_order_shipments($order);
+        $downloadDisplay = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
+        $consignments    = $this->get_order_shipments($order);
+
         // show shipments if available
         if (! empty($consignments)) {
             ?>
@@ -488,15 +451,9 @@ class WCMP_Admin
                 </thead>
                 <tbody>
                 <?php
-                $action            = WCMP_Export::GET_LABELS;
-                $target            = (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY)
-                                      && WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY)
-                                         == 'display') ? 'target="_blank"' : '';
-                $nonce             = wp_create_nonce('wc_myparcelbe');
-                $label_button_text = esc_attr__('Print MyParcel BE label', 'woocommerce-myparcelbe');
                 foreach ($consignments as $shipment_id => $shipment):
                     $shipment = WCMP()->export->get_shipment_data($shipment_id, $order);
-                    $label_url     = wp_nonce_url(
+                    $label_url = wp_nonce_url(
                         admin_url(
                             'admin-ajax.php?action=wc_myparcelbe&request='
                             . WCMP_Export::GET_LABELS
@@ -506,42 +463,36 @@ class WCMP_Admin
                         'wc_myparcelbe'
                     );
                     if (isset($shipment['tracktrace'])) {
-                        $tracktrace_url  = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
-                        $tracktrace_link = sprintf(
+                        $track_trace_url  = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
+                        $track_trace_link = sprintf(
                             '<a href="%s" target="_blank">%s</a>',
-                            $tracktrace_url,
+                            $track_trace_url,
                             $shipment['tracktrace']
                         );
                     } elseif (isset($shipment['shipment']) && isset($shipment['shipment']['options'])) {
-                        $tracktrace_link = '(' . WCMP()->export->get_package_name(
+                        $track_trace_link = '(' . WCMP()->export->get_package_name(
                                 $shipment['shipment']['options']['package_type']
                             ) . ')';
                     } else {
-                        $tracktrace_link = '(Unknown)';
+                        $track_trace_link = '(Unknown)';
                     }
                     $status = isset($shipment['status']) ? $shipment['status'] : '-';
                     ?>
                     <tr>
                         <td class="wcmp__td--create-label">
                             <?php
-                            printf(
-                                '<a href="%1$s" class="button tips wcmp__action %2$s" alt="%3$s" data-tip="%3$s" data-order-id="%4$s" data-request="%2$s" data-nonce="%5$s" %6$s>',
+
+                            $this->renderAction(
                                 $label_url,
-                                $action,
-                                $label_button_text,
+                                WCMP_Export::GET_LABELS,
+                                _wcmp('Print MyParcel BE label'),
                                 $order_id,
-                                $nonce,
-                                $target
+                                $downloadDisplay ? 'target="_blank"' : ''
                             );
-                            printf(
-                                '<img class="wcmp__action__img" src="%1$s" alt="%2$s" width="16" />',
-                                WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png",
-                                $label_button_text
-                            );
-                            printf("</a>");
+
                             ?>
                         </td>
-                        <td class="wcmp-tracktrace"><?php echo $tracktrace_link; ?></td>
+                        <td class="wcmp-track-trace"><?php echo $track_trace_link; ?></td>
                         <td class="wcmp-status"><?php echo $status; ?></td>
                     </tr>
                 <?php endforeach ?>
@@ -556,15 +507,15 @@ class WCMP_Admin
      *
      * @throws Exception
      */
-    public function single_order_shipment_options($order)
+    public function single_order_shipment_options(WC_Order $order)
     {
-        $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
+        $shipping_country = WCX_Order::get_prop($order, "shipping_country");
+
         if (! WCMP()->export->is_myparcelbe_destination($shipping_country)) {
             return;
         }
 
         $this->showMyParcelSettings($order);
-        echo '</div>';
     }
 
     /**
@@ -802,11 +753,25 @@ class WCMP_Admin
     /**
      * Output a spinner.
      *
-     * @param array $args
+     * @param string $state
+     * @param array  $args
      */
-    public static function renderSpinner(array $args = ["class" => "wcmp__spinner"]): void
+    public static function renderSpinner(string $state = "", array $args = []): void
     {
+        $spinners = [
+            "loading" => "/wp-admin/images/spinner.gif",
+            "success" => "/wp-admin/images/yes.png",
+            "failed"  => "/wp-admin/images/no.png",
+        ];
+
         $arguments = [];
+
+        $args["class"][] = "wcmp__spinner";
+
+        if ($state) {
+            $args["class"][] = "wcmp__spinner--$state";
+        }
+
         foreach ($args as $arg => $value) {
             if (is_array($value)) {
                 $value = implode(" ", $value);
@@ -814,12 +779,45 @@ class WCMP_Admin
             $arguments[] = "$arg=\"$value\"";
         }
 
+        $attributes = implode(" ", $arguments);
+
+        echo "<div $attributes>";
+        foreach ($spinners as $spinnerState => $icon) {
+            printf(
+                '<img class="wcmp__spinner__%1$s" alt="%1$s" src="%2$s" style="display: %3$s;" />',
+                $spinnerState,
+                $icon,
+                $state === $spinnerState ? "block" : "none"
+            );
+        }
+        echo '</div>';
+    }
+
+    private function renderAction(
+        $url,
+        $request,
+        $alt,
+        $orderId,
+        $extraAtts
+    ): void
+    {
         printf(
-            '<img alt="loading"
-                 src="%s"
-                 %s />',
-            WCMP()->plugin_url() . '/assets/img/wpspin_light.gif',
-            implode(" ", $arguments)
+            '<a href="%1$s" 
+                    class="button tips wcmp__action" 
+                    data-tip="%3$s" 
+                    data-order-id="%4$s" 
+                    data-request="%2$s" 
+                    data-nonce="%5$s" 
+                    %6$s>
+                <img class="wcmp__action__img" src="%7$s" alt="%2$s" />
+            </a>',
+            $url,
+            $request,
+            $alt,
+            $orderId,
+            wp_create_nonce('wc_myparcelbe'),
+            $extraAtts,
+            WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png"
         );
     }
 }
