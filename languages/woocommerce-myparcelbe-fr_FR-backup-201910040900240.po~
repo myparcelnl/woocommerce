@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcelBE\n"
 "POT-Creation-Date: 2019-09-11 11:59+0000\n"
-"PO-Revision-Date: 2019-10-04 09:00+0000\n"
-"Last-Translator: wordpress2 <adem@myparcel.nl>\n"
+"PO-Revision-Date: 2019-09-11 12:01+0000\n"
+"Last-Translator: edie <edie@myparcel.nl>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -231,7 +231,7 @@ msgstr "Collecte chez bpost"
 
 #: includes/class-wcmp-settings-data.php:170
 msgid "Enable bpost delivery"
-msgstr "Activer la livraison bpost"
+msgstr ""
 
 #: includes/class-wcmp-settings-data.php:175
 #: includes/class-wcmp-settings-data.php:420
@@ -339,7 +339,7 @@ msgstr "samedi"
 
 #: includes/class-wcmp-settings-data.php:267
 msgid "Enable bpost pickup"
-msgstr "Activer le ramassage bpost"
+msgstr ""
 
 #: includes/class-wcmp-settings-data.php:293
 #: includes_php56/class-wcmp-settings.php:142
@@ -353,7 +353,7 @@ msgstr "Paramètres généraux"
 
 #: includes/class-wcmp-settings-data.php:303
 msgid "Checkout options"
-msgstr "Options de caisse"
+msgstr ""
 
 #: includes/class-wcmp-settings-data.php:308
 #: includes_php56/class-wcmp-settings.php:324
@@ -373,7 +373,7 @@ msgstr "Options de livraison bpost"
 
 #: includes/class-wcmp-settings-data.php:344
 msgid "bpost pickup options"
-msgstr "Options de ramassage bpost"
+msgstr ""
 
 #: includes/class-wcmp-settings-data.php:362
 msgid "dpd delivery options"
@@ -381,11 +381,11 @@ msgstr "Options de livraison dpd"
 
 #: includes/class-wcmp-settings-data.php:367
 msgid "dpd pickup options"
-msgstr "options de ramassage dpd"
+msgstr ""
 
 #: includes/class-wcmp-settings-data.php:415
 msgid "Enable DPD delivery"
-msgstr "Activer la distribution DPD"
+msgstr ""
 
 #: includes/class-wcmp-settings-data.php:424
 msgid "Days of the week on which you hand over parcels to dpd"
@@ -393,7 +393,7 @@ msgstr "Jours de la semaine durant lesquels vous déposez des colis chez dpd"
 
 #: includes/class-wcmp-settings-data.php:478
 msgid "Enable dpd pickup"
-msgstr "Activer le ramassage dpd"
+msgstr ""
 
 #: includes/class-wcmp-settings-data.php:503
 #: includes_php56/class-wcmp-settings.php:149
@@ -573,10 +573,6 @@ msgid ""
 "settings you can allow them to select a date, time and even options like "
 "requiring a signature on delivery."
 msgstr ""
-"Les options de livraison MyParcel permettent à vos clients de choisir s’ils "
-"souhaitent que leur colis soit livré à domicile ou à un point de retrait. En "
-"fonction des paramètres, vous pouvez leur permettre de sélectionner une date,"
-" une heure et même des options telles que la signature d'une signature."
 
 #: includes/class-wcmp-settings-data.php:672
 #: includes_php56/class-wcmp-settings.php:634
@@ -614,7 +610,7 @@ msgstr ""
 #: includes/class-wcmp-settings-data.php:720
 #: includes/class-wcmp-checkout.php:176
 msgid "Pickup title"
-msgstr "Titre du ramassage"
+msgstr ""
 
 #: includes/class-wcmp-settings-data.php:731
 #: includes_php56/class-wcmp-settings.php:526
@@ -1058,23 +1054,23 @@ msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:465
 msgid "Customs shipment type"
-msgstr "Type d'expédition sous douane"
+msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:473
 msgid "Commercial goods"
-msgstr "Biens commerciaux"
+msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:474
 msgid "Commercial samples"
-msgstr "Échantillons commerciaux"
+msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:475
 msgid "Documents"
-msgstr "Les documents"
+msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:476
 msgid "Gifts"
-msgstr "Cadeaux"
+msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:477
 msgid "Return shipment"

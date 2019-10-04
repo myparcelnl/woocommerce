@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcelBE\n"
 "POT-Creation-Date: 2019-09-11 11:59+0000\n"
-"PO-Revision-Date: 2019-09-11 12:00+0000\n"
-"Last-Translator: edie <edie@myparcel.nl>\n"
-"Language-Team: Dutch\n"
+"PO-Revision-Date: 2019-10-04 08:53+0000\n"
+"Last-Translator: wordpress2 <adem@myparcel.nl>\n"
+"Language-Team: Nederlands\n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1047,23 +1047,23 @@ msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:465
 msgid "Customs shipment type"
-msgstr ""
+msgstr "Type douanezending"
 
 #: includes_php56/class-wcmp-settings.php:473
 msgid "Commercial goods"
-msgstr ""
+msgstr "Commerciële goederen"
 
 #: includes_php56/class-wcmp-settings.php:474
 msgid "Commercial samples"
-msgstr ""
+msgstr "Commerciële monsters"
 
 #: includes_php56/class-wcmp-settings.php:475
 msgid "Documents"
-msgstr ""
+msgstr "Documenten"
 
 #: includes_php56/class-wcmp-settings.php:476
 msgid "Gifts"
-msgstr ""
+msgstr "Geschenken"
 
 #: includes_php56/class-wcmp-settings.php:477
 msgid "Return shipment"
