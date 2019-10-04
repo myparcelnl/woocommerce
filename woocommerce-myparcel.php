@@ -236,9 +236,7 @@ if (! class_exists('WCMP')) :
         public function need_woocommerce()
         {
             $error = sprintf(
-                _wcmp(
-                    'WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!'
-                ),
+                __("WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!", "woocommerce-myparcelbe"),
                 '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
                 '</a>'
             );
@@ -254,8 +252,8 @@ if (! class_exists('WCMP')) :
 
         public function required_php_version()
         {
-            $error         = _wcmp('WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended).');
-            $how_to_update = _wcmp('How to update your PHP version');
+            $error         = __("WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended).", "woocommerce-myparcelbe");
+            $how_to_update = __("How to update your PHP version", "woocommerce-myparcelbe");
             $message       = sprintf(
                 '<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>',
                 $error,
