@@ -960,6 +960,8 @@ class WCMP_Export
     }
 
     /**
+     * TODO: For MyParcel NL, currently not necessary for BE.
+     *
      * @param $shipping_method
      * @param $shipping_class
      * @param $shipping_country
@@ -968,9 +970,12 @@ class WCMP_Export
      */
     public function get_package_type_from_shipping_method($shipping_method, $shipping_class, $shipping_country)
     {
+        $packageTypes = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+
         $package_type             = self::PACKAGE;
         $shipping_method_id_class = "";
-        if (WCMP()->setting_collection->getByName("shipping_methods_package_types")) {
+
+        if ($packageTypes) {
             if (strpos($shipping_method, "table_rate:") === 0 && class_exists("WC_Table_Rate_Shipping")) {
                 // Automattic / WooCommerce table rate
                 // use full method = method_id:instance_id:rate_id
@@ -988,20 +993,18 @@ class WCMP_Export
 
                 // add class if we have one
                 if (! empty($shipping_class)) {
-                    $shipping_method_id_class = "{
-        $shipping_method_id}:{
-        $shipping_class}";
+                    $shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
                 }
             }
-            foreach (WCMP()->setting_collection->getByName("shipping_methods_package_types") as $package_type_key =>
-                     $package_type_shipping_methods) {
+
+            foreach ($packageTypes as $packageType => $shippingMethods) {
                 if ($this->isActiveMethod(
                     $shipping_method_id,
-                    $package_type_shipping_methods,
+                    $shippingMethods,
                     $shipping_method_id_class,
                     $shipping_class
                 )) {
-                    $package_type = $package_type_key;
+                    $package_type = $packageType;
                     break;
                 }
             }
