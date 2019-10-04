@@ -1296,7 +1296,8 @@ class WCMP_Export
             if (! in_array($chosen_method, ["flat_rate", "legacy_flat_rate"])) {
                 return false;
             }
-            $shipping_methods = WC()->shipping->load_shipping_methods($package);
+
+            $shipping_methods = WC()->shipping()->load_shipping_methods();
 
             if (! isset($shipping_methods[$chosen_method])) {
                 return false;
