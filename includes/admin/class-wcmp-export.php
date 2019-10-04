@@ -322,16 +322,7 @@ class WCMP_Export
             $this->log("Shipment data for order {$order_id}.");
         }
 
-        file_put_contents(
-            date('YmdHis') . "_collection.json",
-            json_encode($collection->toArray())
-        );
-
         $collection = $collection->createConcepts();
-        file_put_contents(
-            date('YmdHis') . "_collection2the_reckoning.json",
-            json_encode($collection->toArray())
-        );
 
         foreach ($order_ids as $order_id) {
             $order        = WCX::get_order($order_id);
