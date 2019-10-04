@@ -236,7 +236,13 @@ if (! class_exists('WCMP')) :
         public function need_woocommerce()
         {
             $error = sprintf(
+<<<<<<< HEAD
                 __("WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!", "woocommerce-myparcelbe"),
+=======
+                __(
+                    'WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!'
+                ),
+>>>>>>> f7c68bbc82cf34719e93e1377b4a71581d10b563
                 '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
                 '</a>'
             );
@@ -382,28 +388,6 @@ if (! class_exists('WCMP')) :
     }
 
 endif;
-
-/**
- * Returns translated string.
- *
- * @param $string
- *
- * @return string|void
- */
-function _wcmp($string)
-{
-    return __($string, WCMP::DOMAIN);
-}
-
-/**
- * Echoes translated string.
- *
- * @param $string
- */
-function _wcmpe($string)
-{
-    _e($string, WCMP::DOMAIN);
-}
 
 /**
  * Returns the main instance of the plugin class to prevent the need to use globals.
