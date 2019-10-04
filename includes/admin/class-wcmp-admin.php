@@ -80,7 +80,7 @@ class WCMP_Admin
      */
     public function showMyParcelSettings(WC_Order $order): void
     {
-        if (! WCMP()->export->is_myparcelbe_destination(
+        if (! WCMP_Country_Codes::isMyParcelBeDestination(
             WCX_Order::get_prop($order, 'shipping_country')
         )) {
             return;
@@ -217,7 +217,8 @@ class WCMP_Admin
         }
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-        if (! WCMP()->export->is_myparcelbe_destination($shipping_country)) {
+
+        if (! WCMP_Country_Codes::isMyParcelBeDestination($shipping_country)) {
             return;
         }
 
@@ -409,7 +410,7 @@ class WCMP_Admin
         $order_id = WCX_Order::get_id($order);
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-        if (! WCMP()->export->is_myparcelbe_destination($shipping_country)) {
+        if (! WCMP_Country_Codes::isMyParcelBeDestination($shipping_country)) {
             return;
         }
 
@@ -493,7 +494,7 @@ class WCMP_Admin
     {
         $shipping_country = WCX_Order::get_prop($order, "shipping_country");
 
-        if (! WCMP()->export->is_myparcelbe_destination($shipping_country)) {
+        if (! WCMP_Country_Codes::isMyParcelBeDestination($shipping_country)) {
             return;
         }
 

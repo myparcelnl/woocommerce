@@ -131,9 +131,7 @@ class WCMP_API extends WCMP_Rest
         ];
 
         $request_url = $this->apiUrl . $endpoint;
-        $response    = $this->post($request_url, "", $headers);
-
-        return $response;
+        return $this->post($request_url, "", $headers);
     }
 
     /**

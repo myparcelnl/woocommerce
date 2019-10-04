@@ -26,9 +26,6 @@ class WCMP_Export
     public const PACKAGE          = 1;
     public const INSURANCE_AMOUNT = 500;
 
-    // Maximum characters length of item description.
-    public const DESCRIPTION_MAX_LENGTH = 50;
-
     public const EXPORT = "wcmp_export";
 
     public const ADD_SHIPMENTS = "add_shipments";
@@ -162,6 +159,11 @@ class WCMP_Export
 
         // make sure $order_ids is a proper array
         $order_ids = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : [];
+
+        /**
+         * Get the consignments class.
+         */
+        require_once(WCMP()->includes . "/admin/class-wcmp-export-consignments.php");
 
         switch ($request) {
             // Creating consignments.
@@ -301,12 +303,17 @@ class WCMP_Export
              * consignments to the collection.
              */
             if (WCMP_Data::HAS_MULTI_COLLO) {
-                $consignment = $this->createConsignmentFromCheckoutData($order_id);
+                $consignment = (new WCMP_Export_Consignments($order_id))->getConsignment();
 
                 $collection->addMultiCollo($consignment, $collo_amount);
             } else {
                 for ($i = 0; $i < $collo_amount; $i++) {
-                    $consignment = $this->createConsignmentFromCheckoutData($order_id);
+                    $consignment = (new WCMP_Export_Consignments($order_id))->getConsignment();
+
+                    file_put_contents(
+                        date('YmdHis') . "_consignment_$i.json",
+                        serialize($consignment)
+                    );
 
                     $collection->addConsignment($consignment);
                 }
@@ -319,7 +326,6 @@ class WCMP_Export
             date('YmdHis') . "_collection.json",
             json_encode($collection->toArray())
         );
-
 
         $collection = $collection->createConcepts();
         file_put_contents(
@@ -336,7 +342,7 @@ class WCMP_Export
                 $this->save_shipment_data($order, $shipment);
 
                 // process directly setting
-                if ($this->getSetting("process_directly") || $process === true) {
+                if (WCMP()->setting_collection->getByName("process_directly") || $process === true) {
                     // flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
                     if (method_exists($order, "save")) {
                         $order->save();
@@ -346,12 +352,12 @@ class WCMP_Export
                 }
 
                 // status automation
-                if ($this->getSetting("order_status_automation")
-                    && $this->getSetting(
+                if (WCMP()->setting_collection->getByName("order_status_automation")
+                    && WCMP()->setting_collection->getByName(
                         "automatic_order_status"
                     )) {
                     $order->update_status(
-                        $this->getSetting("automatic_order_status"),
+                        WCMP()->setting_collection->getByName("automatic_order_status"),
                         _wcmp("MyParcel shipment created:")
                     );
                 }
@@ -444,7 +450,9 @@ class WCMP_Export
                 if (isset($response["body"])) {
                     $this->log("PDF data received");
                     $pdf_data    = $response["body"];
-                    $output_mode = $this->getSetting(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) ? $this->getSetting(
+                    $output_mode = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) ?
+                        WCMP()
+                        ->setting_collection->getByName(
                         WCMP_Settings::SETTING_DOWNLOAD_DISPLAY
                     ) : "";
                     if ($output_mode == "display") {
@@ -538,99 +546,12 @@ class WCMP_Export
      */
     public function init_api()
     {
-        $key = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
+        $key = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_API_KEY);
         if (! ($key)) {
             return false;
         }
 
         return new WCMP_API($key);
-    }
-
-    /**
-     * @param int    $order_id
-     * @param string $type
-     *
-     * @return AbstractConsignment
-     * @throws Exception
-     */
-    public function createConsignmentFromCheckoutData(int $order_id, string $type = "standard"): AbstractConsignment
-    {
-        $api_key = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
-        if (! $api_key) {
-            throw new ErrorException(_wcmp("No API key found in MyParcel BE settings"));
-        }
-
-        $order            = WCX::get_order($order_id);
-        $delivery_options = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-
-        $carrier      = $delivery_options->getCarrier();
-        $connectEmail = $carrier === DPDConsignment::CARRIER_NAME;
-
-        /**
-         * @var AbstractConsignment $consignment
-         */
-        $consignment = ConsignmentFactory::createByCarrierName($carrier ?? BpostConsignment::CARRIER_ID);
-
-        $recipient = $this->get_recipient($order, $connectEmail);
-
-        $label_description = $this->getLabelDescription($order);
-        if (empty($label_description)) {
-            $label_description = 'Order: ' . $order_id;
-        }
-
-        $shipment_options = $delivery_options->getShipmentOptions();
-        $bpost            = BpostConsignment::CARRIER_NAME;
-
-        $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->getInsurance(),
-            "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
-        );
-
-        $signature = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->hasSignature(),
-            "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
-        );
-
-        $consignment->setApiKey($api_key)
-            ->setReferenceId($order_id)
-            ->setDeliveryType(
-                $this->getPickupTypeByDeliveryOptions($delivery_options)
-            )
-            ->setCountry($recipient['cc'])
-            ->setPerson($recipient['person'])
-            ->setCompany($recipient['company'])
-            ->setStreet($recipient['street'])
-            ->setNumber($recipient['number'] ?? null)
-            ->setNumberSuffix($recipient['number_suffix'] ?? null)
-            ->setStreetAdditionalInfo($recipient['street_additional_info'] ?? null)
-            ->setPostalCode($recipient['postal_code'])
-            ->setCity($recipient['city'])
-            ->setEmail($recipient['email'])
-            ->setPhone($recipient['phone'])
-            ->setLabelDescription($label_description)
-            ->setPackageType(self::PACKAGE)
-            ->setSignature($signature)
-            // Override insurance to be either 500 (on) or 0 (off)
-            ->setInsurance($insurance ? 500 : 0);
-
-        if ($delivery_options->isPickup()) {
-            $pickup = $delivery_options->getPickupLocation();
-            $consignment->setPickupCountry($pickup->getCountry())
-                ->setPickupCity($pickup->getCity())
-                ->setPickupLocationName($pickup->getLocationName())
-                ->setPickupStreet($pickup->getStreet())
-                ->setPickupNumber($pickup->getNumber())
-                ->setPickupPostalCode($pickup->getPostalCode())
-                ->setPickupLocationCode($pickup->getLocationCode());
-        }
-
-        // @todo set customs_declaration (HS code)
-        $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-        if ($this->is_world_shipment_country($shipping_country)) {
-            $consignment = $this->setCustomItems($consignment, $order);
-        }
-
-        return $consignment;
     }
 
     public function prepare_return_shipment_data($order_id, $options)
@@ -644,7 +565,8 @@ class WCMP_Export
         // set name & email
         $return_shipment_data = [
             "name"    => $shipping_name,
-            "email"   => ($this->getSetting("connect_email")) ? WCX_Order::get_prop($order, "billing_email") : "",
+            "email"   => (WCMP()->setting_collection->getByName("connect_email")) ? WCX_Order::get_prop($order, "billing_email") :
+                "",
             "carrier" => BpostConsignment::CARRIER_ID, // default to Bpost for now
         ];
 
@@ -700,7 +622,7 @@ class WCMP_Export
      *
      * @return mixed|void
      */
-    public function get_recipient(WC_Order $order, $connectEmail = null)
+    public static function getRecipientFromOrder(WC_Order $order, $connectEmail = null)
     {
         $is_using_old_fields = (string) WCX_Order::get_meta($order, "_billing_street_name") != ""
                                || (string) WCX_Order::get_meta(
@@ -712,8 +634,8 @@ class WCMP_Export
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
                 : trim($order->shipping_first_name . " " . $order->shipping_last_name);
 
-        $connectEmail = $connectEmail ?? $this->getSetting("connect_email");
-        $connectPhone = $this->getSetting("connect_phone");
+        $connectEmail = $connectEmail ?? WCMP()->setting_collection->getByName("connect_email");
+        $connectPhone = WCMP()->setting_collection->getByName("connect_phone");
 
         $address = [
             "cc"                     => (string) WCX_Order::get_prop($order, "shipping_country"),
@@ -726,7 +648,7 @@ class WCMP_Export
         ];
 
         $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-        if ($shipping_country == "BE") {
+        if ($shipping_country === "BE") {
             // use billing address if old "pakjegemak" (1.5.6 and older)
             if ($pgaddress = WCX_Order::get_meta($order, WCMP_Admin::META_PGADDRESS)) {
                 $billing_name = method_exists($order, "get_formatted_billing_full_name")
@@ -808,12 +730,12 @@ class WCMP_Export
      */
     public function add_myparcelbe_note_to_shipments($selected_shipment_ids, $order_ids)
     {
-        if ($this->getSetting("barcode_in_note")) {
+        if (WCMP()->setting_collection->getByName("barcode_in_note")) {
             return;
         }
 
         // Select the barcode text of the MyParcel settings
-        $this->prefix_message = $this->getSetting("barcode_in_note_title");
+        $this->prefix_message = WCMP()->setting_collection->getByName("barcode_in_note_title");
 
         foreach ($order_ids as $order_id) {
             $order           = WCX::get_order($order_id);
@@ -925,22 +847,12 @@ class WCMP_Export
     private function isActiveSetting(string ...$settings): bool
     {
         foreach ($settings as $setting) {
-            if (! $this->getSetting($setting)) {
+            if (! WCMP()->setting_collection->getByName($setting)) {
                 return false;
             }
         }
 
         return true;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return mixed
-     */
-    private function getSetting(string $name)
-    {
-        return WCMP()->setting_collection->getByName($name);
     }
 
     /**
@@ -951,9 +863,9 @@ class WCMP_Export
         $insured_amount = 0;
 
         if ($this->isActiveSetting("insured", "insured_amount", "insured_amount_custom")) {
-            $insured_amount = $this->getSetting("insured_amount_custom");
+            $insured_amount = WCMP()->setting_collection->getByName("insured_amount_custom");
         } elseif ($this->isActiveSetting("insured", "insured_amount")) {
-            $insured_amount = $this->getSetting("insured_amount");
+            $insured_amount = WCMP()->setting_collection->getByName("insured_amount");
         }
 
         return $insured_amount;
@@ -974,54 +886,6 @@ class WCMP_Export
         }
 
         return $new_timestamp;
-    }
-
-    /**
-     * @param AbstractConsignment $consignment
-     * @param WC_Order            $order
-     *
-     * @return AbstractConsignment
-     * @throws MissingFieldException
-     */
-    public function setCustomItems(AbstractConsignment $consignment, WC_Order $order): AbstractConsignment
-    {
-        $contents = (int) ($this->getSetting("package_contents") ? $this->getSetting("package_contents") : 1);
-
-        $country = WC()->countries->get_base_country();
-
-        foreach ($order->get_items() as $item_id => $item) {
-            $product = $order->get_product_from_item($item);
-            if (! empty($product)) {
-                // Description
-                $description = $item["name"];
-
-                // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
-                if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH) {
-                    $description = substr($item["name"], 0, 47) . "...";
-                }
-                // Amount
-                $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
-
-                // Weight (total item weight in grams)
-                $weight = (int) round($this->get_item_weight_kg($item, $order) * 1000);
-
-                $myParcelItem =
-                    (new MyParcelCustomsItem())->setDescription($description)
-                        ->setAmount($amount)
-                        ->setWeight($weight)
-                        ->setItemValue(
-                            (int) round(
-                                ($item["line_total"] + $item["line_tax"]) * 100
-                            )
-                        )
-                        ->setCountry($country)
-                        ->setClassification($contents);
-
-                $consignment->addItem($myParcelItem);
-            }
-        }
-
-        return $consignment;
     }
 
     public function get_shipment_ids($order_ids, $args)
@@ -1079,7 +943,7 @@ class WCMP_Export
         $new_shipments                           = [];
         $new_shipments[$shipment["shipment_id"]] = $shipment;
 
-        if ($this->getSetting("keep_shipments")) {
+        if (WCMP()->setting_collection->getByName("keep_shipments")) {
             if ($old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS)) {
                 $shipments = $old_shipments;
                 foreach ($new_shipments as $shipment_id => $shipment) {
@@ -1095,11 +959,18 @@ class WCMP_Export
         return;
     }
 
+    /**
+     * @param $shipping_method
+     * @param $shipping_class
+     * @param $shipping_country
+     *
+     * @return int|string
+     */
     public function get_package_type_from_shipping_method($shipping_method, $shipping_class, $shipping_country)
     {
         $package_type             = self::PACKAGE;
         $shipping_method_id_class = "";
-        if ($this->getSetting("shipping_methods_package_types")) {
+        if (WCMP()->setting_collection->getByName("shipping_methods_package_types")) {
             if (strpos($shipping_method, "table_rate:") === 0 && class_exists("WC_Table_Rate_Shipping")) {
                 // Automattic / WooCommerce table rate
                 // use full method = method_id:instance_id:rate_id
@@ -1122,7 +993,7 @@ class WCMP_Export
         $shipping_class}";
                 }
             }
-            foreach ($this->getSetting("shipping_methods_package_types") as $package_type_key =>
+            foreach (WCMP()->setting_collection->getByName("shipping_methods_package_types") as $package_type_key =>
                      $package_type_shipping_methods) {
                 if ($this->isActiveMethod(
                     $shipping_method_id,
@@ -1281,63 +1152,6 @@ class WCMP_Export
         } else {
             return [];
         }
-    }
-
-    /**
-     * @param $description
-     * @param $order
-     *
-     * @return mixed
-     * @throws Exception
-     */
-    public function replace_shortcodes($description, WC_Order $order)
-    {
-        $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-
-        $replacements = [
-            "[ORDER_NR]"      => $order->get_order_number(),
-            "[DELIVERY_DATE]" => $deliveryOptions->getDate(),
-        ];
-
-        $description = str_replace(array_keys($replacements), array_values($replacements), $description);
-
-        return $description;
-    }
-
-    /**
-     * @param $item
-     * @param $order
-     *
-     * @return float
-     */
-    public function get_item_weight_kg($item, WC_Order $order): float
-    {
-        $product = $order->get_product_from_item($item);
-
-        if (empty($product)) {
-            return 0;
-        }
-
-        $weight      = (int) $product->get_weight();
-        $weight_unit = get_option("woocommerce_weight_unit");
-        switch ($weight_unit) {
-            case "g":
-                $product_weight = $weight / 1000;
-                break;
-            case "lbs":
-                $product_weight = $weight * 0.45359237;
-                break;
-            case "oz":
-                $product_weight = $weight * 0.0283495231;
-                break;
-            default:
-                $product_weight = $weight;
-                break;
-        }
-
-        $item_weight = (float) $product_weight * (int) $item["qty"];
-
-        return (float) $item_weight;
     }
 
     /**
@@ -1505,7 +1319,7 @@ class WCMP_Export
      *
      * @return bool|int
      */
-    public function get_shipping_class($shipping_method, $found_shipping_classes)
+    public function get_shipping_class(WC_Shipping_Method $shipping_method, $found_shipping_classes)
     {
         // get most expensive class
         // adapted from $shipping_method->calculate_shipping()
@@ -1673,7 +1487,7 @@ class WCMP_Export
             $order            = WCX::get_order($order_id);
             $shipping_country = WCX_Order::get_prop($order, "shipping_country");
             // skip non-myparcel destination orders
-            if (! $this->is_myparcelbe_destination($shipping_country)) {
+            if (! WCMP_Country_Codes::isMyParcelBeDestination($shipping_country)) {
                 unset($order_ids[$key]);
             }
         }
@@ -1681,257 +1495,23 @@ class WCMP_Export
         return $order_ids;
     }
 
-    public function is_myparcelbe_destination($country_code)
-    {
-        return ($country_code == "BE" || $this->is_eu_country($country_code)
-                || $this->is_world_shipment_country(
-                $country_code
-            ));
-    }
-
-    public function is_eu_country($country_code)
-    {
-        $euro_countries = [
-            "AT",
-            "NL",
-            "BG",
-            "CZ",
-            "DK",
-            "EE",
-            "FI",
-            "FR",
-            "DE",
-            "GR",
-            "HU",
-            "IE",
-            "IT",
-            "LV",
-            "LT",
-            "LU",
-            "PL",
-            "PT",
-            "RO",
-            "SK",
-            "SI",
-            "ES",
-            "SE",
-            "MC",
-            "AL",
-            "AD",
-            "BA",
-            "IC",
-            "FO",
-            "GI",
-            "GL",
-            "GG",
-            "JE",
-            "HR",
-            "LI",
-            "MK",
-            "MD",
-            "ME",
-            "UA",
-            "SM",
-            "RS",
-            "VA",
-            "BY",
-        ];
-
-        return in_array($country_code, $euro_countries);
-    }
-
-    public function is_world_shipment_country($country_code)
-    {
-        $world_shipment_countries = [
-            "AF",
-            "AQ",
-            "DZ",
-            "VI",
-            "AO",
-            "AG",
-            "AR",
-            "AM",
-            "AW",
-            "AU",
-            "AZ",
-            "BS",
-            "BH",
-            "BD",
-            "BB",
-            "BZ",
-            "BJ",
-            "BM",
-            "BT",
-            "BO",
-            "BW",
-            "BR",
-            "VG",
-            "BN",
-            "BF",
-            "BI",
-            "KH",
-            "CA",
-            "KY",
-            "CF",
-            "CL",
-            "CN",
-            "CO",
-            "KM",
-            "CG",
-            "CD",
-            "CR",
-            "CU",
-            "DJ",
-            "DM",
-            "DO",
-            "EC",
-            "EG",
-            "SV",
-            "GQ",
-            "ER",
-            "ET",
-            "FK",
-            "FJ",
-            "PH",
-            "GF",
-            "PF",
-            "GA",
-            "GB",
-            "GM",
-            "GE",
-            "GH",
-            "GD",
-            "GP",
-            "GT",
-            "GN",
-            "GW",
-            "GY",
-            "HT",
-            "HN",
-            "HK",
-            "IN",
-            "ID",
-            "IS",
-            "IQ",
-            "IR",
-            "IL",
-            "CI",
-            "JM",
-            "JP",
-            "YE",
-            "JO",
-            "CV",
-            "CM",
-            "KZ",
-            "KE",
-            "KG",
-            "KI",
-            "KW",
-            "LA",
-            "LS",
-            "LB",
-            "LR",
-            "LY",
-            "MO",
-            "MG",
-            "MW",
-            "MV",
-            "MY",
-            "ML",
-            "MA",
-            "MQ",
-            "MR",
-            "MU",
-            "MX",
-            "MN",
-            "MS",
-            "MZ",
-            "MM",
-            "NA",
-            "NR",
-            "NP",
-            "NI",
-            "NC",
-            "NZ",
-            "NE",
-            "NG",
-            "KP",
-            "UZ",
-            "OM",
-            "TL",
-            "PK",
-            "PA",
-            "PG",
-            "PY",
-            "PE",
-            "PN",
-            "PR",
-            "QA",
-            "RE",
-            "RU",
-            "RW",
-            "KN",
-            "LC",
-            "VC",
-            "PM",
-            "WS",
-            "ST",
-            "SA",
-            "SN",
-            "SC",
-            "SL",
-            "SG",
-            "SO",
-            "LK",
-            "SD",
-            "SR",
-            "SZ",
-            "SY",
-            "TJ",
-            "TW",
-            "TZ",
-            "TH",
-            "TG",
-            "TO",
-            "TT",
-            "TD",
-            "TN",
-            "TM",
-            "TC",
-            "TV",
-            "UG",
-            "UY",
-            "VU",
-            "VE",
-            "AE",
-            "US",
-            "VN",
-            "ZM",
-            "ZW",
-            "ZA",
-            "KR",
-            "AN",
-            "BQ",
-            "CW",
-            "SX",
-            "XK",
-            "IM",
-            "MT",
-            "CY",
-            "CH",
-            "TR",
-            "NO",
-        ];
-
-        return in_array($country_code, $world_shipment_countries);
-    }
-
+    /**
+     * @param $order
+     *
+     * @return string
+     */
     public function get_invoice_number($order)
     {
         return (string) apply_filters("wc_myparcelbe_invoice_number", $order->get_order_number());
     }
 
-    public function get_item_display_name($item, $order)
+    /**
+     * @param          $item
+     * @param WC_Order $order
+     *
+     * @return mixed|string
+     */
+    public function get_item_display_name($item, WC_Order $order)
     {
         // set base name
         $name = $item['name'];
@@ -1954,7 +1534,7 @@ class WCMP_Export
      */
     public function log(string $message): void
     {
-        if ($this->getSetting("error_logging")) {
+        if (WCMP()->setting_collection->getByName("error_logging")) {
             // Starting with WooCommerce 3.0, logging can be grouped by context and severity.
             if (class_exists("WC_Logger") && version_compare(WOOCOMMERCE_VERSION, "3.0", " >= ")) {
                 $logger = wc_get_logger();
@@ -2003,13 +1583,17 @@ class WCMP_Export
     }
 
     /**
-     * @param $selected_shipment_ids
-     * @param $shipment_id
-     * @param $order
+     * @param array    $selected_shipment_ids
+     * @param int      $shipment_id
+     * @param WC_Order $order
      *
      * @throws ErrorException
      */
-    private function add_myparcelbe_note_to_shipment($selected_shipment_ids, $shipment_id, $order)
+    private function add_myparcelbe_note_to_shipment(
+        array $selected_shipment_ids,
+        int $shipment_id,
+        WC_Order $order
+    )
     {
         if (! in_array($shipment_id, $selected_shipment_ids)) {
             return;
@@ -2065,44 +1649,6 @@ class WCMP_Export
         }
 
         return false;
-    }
-
-    /**
-     * @param $order
-     *
-     * @return mixed|string
-     */
-    private function getLabelDescription($order)
-    {
-        $description = "";
-        // parse description
-        if ($this->getSetting("label_description")) {
-            $description = $this->replace_shortcodes($this->getSetting("label_description"), $order);
-        }
-
-        return $description;
-    }
-
-    /**
-     * @return int
-     */
-    private function isSignature(): int
-    {
-        return ($this->getSetting("signature")) ? 1 : 0;
-    }
-
-    /**
-     * @param DeliveryOptions $delivery_options
-     *
-     * @return int
-     */
-    private function getPickupTypeByDeliveryOptions(DeliveryOptions $delivery_options): int
-    {
-        if ($delivery_options->isPickup()) {
-            return AbstractConsignment::DELIVERY_TYPE_PICKUP;
-        }
-
-        return AbstractConsignment::DELIVERY_TYPE_STANDARD;
     }
 }
 
