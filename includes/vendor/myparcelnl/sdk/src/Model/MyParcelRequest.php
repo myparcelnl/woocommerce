@@ -142,7 +142,7 @@ class MyParcelRequest
         $request->close();
 
         if ($this->getError()) {
-            throw new ApiException('Error in MyParcel API request: ' . $this->getError() . 'Method: ' . $method . ' Url: ' . $url . ' Request: ' . $this->body);
+            throw new ApiException('Error in MyParcel API request: ' . $this->getError() . ' Url: ' . $url . ' Request: ' . $this->body);
         }
 
         return $this;

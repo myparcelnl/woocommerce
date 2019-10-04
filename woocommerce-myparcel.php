@@ -420,7 +420,7 @@ function WCMP()
 
 /**
  * For PHP < 7.1 support.
- *
+
  * @return WCMP
  */
 function WooCommerce_MyParcelBE()
