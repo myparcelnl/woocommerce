@@ -135,8 +135,8 @@ class WCMP_Settings
     {
         add_submenu_page(
             'woocommerce',
-            _wcmp('MyParcel BE'),
-            _wcmp('MyParcel BE'),
+            __("MyParcel BE", "woocommerce-myparcelbe"),
+            __("MyParcel BE", "woocommerce-myparcelbe"),
             'manage_options',
             self::SETTINGS_MENU_SLUG,
             [$this, 'settings_page']
@@ -149,9 +149,7 @@ class WCMP_Settings
     public function add_settings_link($links)
     {
         $settings_link =
-            '<a href="../../../../../../wp-admin/admin.php?page=' . self::SETTINGS_MENU_SLUG . '">' . _wcmp(
-                'Settings'
-            ) . '</a>';
+            '<a href="../../../../../../wp-admin/admin.php?page=' . self::SETTINGS_MENU_SLUG . '">' . __("Settings", "woocommerce-myparcelbe") . '</a>';
         array_push($links, $settings_link);
 
         return $links;
@@ -170,7 +168,7 @@ class WCMP_Settings
         $active_tab = isset($_GET['tab']) ? $_GET['tab'] : self::SETTINGS_GENERAL;
         ?>
         <div class="wrap woocommerce">
-            <h1><?php _wcmpe('WooCommerce MyParcel BE Settings'); ?></h1>
+            <h1><?php _e("WooCommerce MyParcel BE Settings", "woocommerce-myparcelbe"); ?></h1>
             <h2 class="nav-tab-wrapper">
                 <?php
                 foreach ($settings_tabs as $tab_slug => $tab_title) :
@@ -221,15 +219,13 @@ class WCMP_Settings
             $myparcel_nl_link =
                 '<a href="https://wordpress.org/plugins/woocommerce-myparcel/" target="blank">WC MyParcel Netherlands</a>';
             $text             = sprintf(
-                _wcmp(
-                    'It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium. If you are using MyParcel Netherlands, download the %s plugin instead!'
-                ),
+                __("It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium. If you are using MyParcel Netherlands, download the %s plugin instead!", "woocommerce-myparcelbe"),
                 $myparcel_nl_link
             );
             $dismiss_button   = sprintf(
                 '<a href="%s" style="display:inline-block; margin-top: 10px;">%s</a>',
                 add_query_arg('myparcelbe_hide_be_notice', 'true'),
-                _wcmp('Hide this message')
+                __("Hide this message", "woocommerce-myparcelbe")
             );
             printf('<div class="notice notice-warning"><p>%s %s</p></div>', $text, $dismiss_button);
         }

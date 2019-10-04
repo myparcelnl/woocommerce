@@ -113,7 +113,7 @@ class WCMP_Export
         if (isset($_GET["myparcelbe"])) {
             switch ($_GET["myparcelbe"]) {
                 case "no_consignments":
-                    $message = _wcmp("You have to export the orders to MyParcel before you can print the labels!");
+                    $message = __("You have to export the orders to MyParcel before you can print the labels!", "woocommerce-myparcelbe");
                     printf('<div class="wcmp__notice notice notice-error"><p>%s</p></div>', $message);
                     break;
                 default:
@@ -138,7 +138,7 @@ class WCMP_Export
         };
 
         if (! is_user_logged_in()) {
-            wp_die(_wcmp("You do not have sufficient permissions to access this page."));
+            wp_die(__("You do not have sufficient permissions to access this page.", "woocommerce-myparcelbe"));
         }
 
         $return = [];
@@ -148,7 +148,7 @@ class WCMP_Export
             "wc_myparcelbe_check_privs",
             ! current_user_can("manage_woocommerce_orders") && ! current_user_can("edit_shop_orders")
         )) {
-            $return["error"] = _wcmp("You do not have sufficient permissions to access this page.");
+            $return["error"] = __("You do not have sufficient permissions to access this page.", "woocommerce-myparcelbe");
             $json            = json_encode($return);
             echo $json;
             die();
@@ -170,7 +170,7 @@ class WCMP_Export
                 $order_ids = $this->filter_myparcelbe_destination_orders($order_ids);
 
                 if (empty($order_ids)) {
-                    $this->errors[] = _wcmp("You have not selected any orders!");
+                    $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
                     break;
                 }
 
@@ -195,7 +195,7 @@ class WCMP_Export
             // Creating a return shipment.
             case self::ADD_RETURN:
                 if (empty($myparcelbe_options)) {
-                    $this->errors[] = _wcmp("You have not selected any orders!");
+                    $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
                     break;
                 }
                 $return = $this->add_return($myparcelbe_options);
@@ -206,7 +206,7 @@ class WCMP_Export
                 $offset = ! empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
 
                 if (empty($order_ids) && empty($shipment_ids)) {
-                    $this->errors[] = _wcmp("You have not selected any orders!");
+                    $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
                     break;
                 }
                 $label_response_type = isset($label_response_type) ? $label_response_type : null;
@@ -228,7 +228,7 @@ class WCMP_Export
 
             case self::MODAL_DIALOG:
                 if (empty($order_ids)) {
-                    $errors[] = _wcmp("You have not selected any orders!");
+                    $errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
                     break;
                 }
                 $order_ids = $this->filter_myparcelbe_destination_orders($order_ids);
@@ -352,7 +352,7 @@ class WCMP_Export
                     )) {
                     $order->update_status(
                         $this->getSetting("automatic_order_status"),
-                        _wcmp("MyParcel shipment created:")
+                        __("MyParcel shipment created:", "woocommerce-myparcelbe")
                     );
                 }
 
@@ -364,7 +364,7 @@ class WCMP_Export
 
         if (! empty($this->success)) {
             $return["success"]     = sprintf(
-                _wcmp("%s shipments successfully exported to MyParcel"),
+                __("%s shipments successfully exported to MyParcel", "woocommerce-myparcelbe"),
                 count($this->success)
             );
             $return["success_ids"] = $collection->getConsignmentIds();
@@ -400,7 +400,7 @@ class WCMP_Export
                     // save shipment data in order meta
                     $this->save_shipment_data($order, $shipment);
                 } else {
-                    $this->errors[$order_id] = _wcmp("Unknown error");
+                    $this->errors[$order_id] = __("Unknown error", "woocommerce-myparcelbe");
                 }
             } catch (Exception $e) {
                 $this->errors[$order_id] = $e->getMessage();
@@ -435,7 +435,7 @@ class WCMP_Export
                     $url           = untrailingslashit($api->apiUrl) . $response["body"]["data"]["pdfs"]["url"];
                     $return["url"] = $url;
                 } else {
-                    $this->errors[] = _wcmp("Unknown error");
+                    $this->errors[] = __("Unknown error", "woocommerce-myparcelbe");
                 }
             } else {
                 $response = $api->get_shipment_labels($shipment_ids, $params, "pdf");
@@ -454,7 +454,7 @@ class WCMP_Export
                     }
                 } else {
                     $this->log("Unknown error, API response:n" . var_export($response, true));
-                    $this->errors[] = _wcmp("Unknown error");
+                    $this->errors[] = __("Unknown error", "woocommerce-myparcelbe");
                 }
             }
         } catch (Exception $e) {
@@ -470,7 +470,7 @@ class WCMP_Export
 
         if (empty($shipment_ids)) {
             $this->log(" *** Failed label request(not exported yet) ***");
-            $this->errors[] = _wcmp("The selected orders have not been exported to MyParcel yet! ");
+            $this->errors[] = __("The selected orders have not been exported to MyParcel yet! ", "woocommerce-myparcelbe");
 
             return [];
         }
@@ -557,7 +557,7 @@ class WCMP_Export
     {
         $api_key = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
         if (! $api_key) {
-            throw new ErrorException(_wcmp("No API key found in MyParcel BE settings"));
+            throw new ErrorException(__("No API key found in MyParcel BE settings", "woocommerce-myparcelbe"));
         }
 
         $order            = WCX::get_order($order_id);
@@ -1147,7 +1147,7 @@ class WCMP_Export
     public function get_package_name($package_type)
     {
         $package_types = WCMP_Data::getPackageTypes();
-        $package_name  = isset($package_types[$package_type]) ? $package_types[$package_type] : _wcmp("Unknown");
+        $package_name  = isset($package_types[$package_type]) ? $package_types[$package_type] : __("Unknown", "woocommerce-myparcelbe");
 
         return $package_name;
     }
@@ -1158,7 +1158,7 @@ class WCMP_Export
         foreach ($errors as $key => $error) {
             // check if we have an order_id
             if ($key > 10) {
-                $parsed_errors[] = sprintf("<strong>%s %s:</strong> %s", _wcmp('Order'), $key, $error);
+                $parsed_errors[] = sprintf("<strong>%s %s:</strong> %s", __("Order", "woocommerce-myparcelbe"), $key, $error);
             } else {
                 $parsed_errors[] = $error;
             }
@@ -1208,31 +1208,31 @@ class WCMP_Export
     public function get_shipment_status_name($status_code)
     {
         $shipment_statuses = [
-            1  => _wcmp("pending - concept"),
-            2  => _wcmp("pending - registered"),
-            3  => _wcmp("enroute - handed to carrier"),
-            4  => _wcmp("enroute - sorting"),
-            5  => _wcmp("enroute - distribution"),
-            6  => _wcmp("enroute - customs"),
-            7  => _wcmp("delivered - at recipient"),
-            8  => _wcmp("delivered - ready for pickup"),
-            9  => _wcmp("delivered - package picked up"),
-            30 => _wcmp("inactive - concept"),
-            31 => _wcmp("inactive - registered"),
-            32 => _wcmp("inactive - enroute - handed to carrier"),
-            33 => _wcmp("inactive - enroute - sorting"),
-            34 => _wcmp("inactive - enroute - distribution"),
-            35 => _wcmp("inactive - enroute - customs"),
-            36 => _wcmp("inactive - delivered - at recipient"),
-            37 => _wcmp("inactive - delivered - ready for pickup"),
-            38 => _wcmp("inactive - delivered - package picked up"),
-            99 => _wcmp("inactive - unknown"),
+            1  => __("pending - concept", "woocommerce-myparcelbe"),
+            2  => __("pending - registered", "woocommerce-myparcelbe"),
+            3  => __("enroute - handed to carrier", "woocommerce-myparcelbe"),
+            4  => __("enroute - sorting", "woocommerce-myparcelbe"),
+            5  => __("enroute - distribution", "woocommerce-myparcelbe"),
+            6  => __("enroute - customs", "woocommerce-myparcelbe"),
+            7  => __("delivered - at recipient", "woocommerce-myparcelbe"),
+            8  => __("delivered - ready for pickup", "woocommerce-myparcelbe"),
+            9  => __("delivered - package picked up", "woocommerce-myparcelbe"),
+            30 => __("inactive - concept", "woocommerce-myparcelbe"),
+            31 => __("inactive - registered", "woocommerce-myparcelbe"),
+            32 => __("inactive - enroute - handed to carrier", "woocommerce-myparcelbe"),
+            33 => __("inactive - enroute - sorting", "woocommerce-myparcelbe"),
+            34 => __("inactive - enroute - distribution", "woocommerce-myparcelbe"),
+            35 => __("inactive - enroute - customs", "woocommerce-myparcelbe"),
+            36 => __("inactive - delivered - at recipient", "woocommerce-myparcelbe"),
+            37 => __("inactive - delivered - ready for pickup", "woocommerce-myparcelbe"),
+            38 => __("inactive - delivered - package picked up", "woocommerce-myparcelbe"),
+            99 => __("inactive - unknown", "woocommerce-myparcelbe"),
         ];
 
         if (isset($shipment_statuses[$status_code])) {
             return $shipment_statuses[$status_code];
         } else {
-            return _wcmp("Unknown status");
+            return __("Unknown status", "woocommerce-myparcelbe");
         }
     }
 
@@ -1257,7 +1257,7 @@ class WCMP_Export
             }
 
             if ($shipment["status"] < 2) {
-                throw new Exception(_wcmp("No label(s) created yet."));
+                throw new Exception(__("No label(s) created yet.", "woocommerce-myparcelbe"));
             }
 
             // if shipment id matches and status is not concept, get track trace barcode and status name

@@ -40,7 +40,7 @@ class WCMP_Data
         ];
 
         self::$packageTypesHuman = [
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME => _wcmp("Parcel"),
+            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME => __("Parcel", "woocommerce-myparcelbe"),
         ];
     }
 
@@ -86,8 +86,8 @@ class WCMP_Data
     public static function getCarriersHuman(): array
     {
         return [
-            BpostConsignment::CARRIER_NAME => _wcmp('bpost'),
-            DPDConsignment::CARRIER_NAME   => _wcmp('dpd'),
+            BpostConsignment::CARRIER_NAME => __("bpost", "woocommerce-myparcelbe"),
+            DPDConsignment::CARRIER_NAME   => __("dpd", "woocommerce-myparcelbe"),
         ];
     }
 }

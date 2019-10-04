@@ -78,7 +78,7 @@ class WCMP_Assets
                         WCMP_Settings::SETTING_PRINT_POSITION_OFFSET
                     ),
                     "offset_icon"      => WCMP()->plugin_url() . "/assets/img/print-offset-icon.png",
-                    "offset_label"     => _wcmp("Labels to skip"),
+                    "offset_label"     => __("Labels to skip", "woocommerce-myparcelbe"),
                 ]
             );
 

@@ -115,7 +115,7 @@ class WCMP_Admin
         <div class="wcmp__shipment-options" style="display: none;">
             <?php printf(
                 '<a href="#" class="wcmp__shipment-options__show">%s &#x25BE;</a>',
-                _wcmp("Details")
+                __("Details", "woocommerce-myparcelbe")
             ); ?>
             <div class="wcmp__shipment-options__form" style="display: none;">
                 <a class="wcmp__d--flex">
@@ -160,9 +160,9 @@ class WCMP_Admin
     {
         global $post_type;
         $bulk_actions = [
-            'wcmp_export'       => _wcmp('MyParcel BE: Export'),
-            'wcmp_print'        => _wcmp('MyParcel BE: Print'),
-            'wcmp_export_print' => _wcmp('MyParcel BE: Export & Print'),
+            'wcmp_export'       => __("MyParcel BE: Export", "woocommerce-myparcelbe"),
+            'wcmp_print'        => __("MyParcel BE: Print", "woocommerce-myparcelbe"),
+            'wcmp_export_print' => __("MyParcel BE: Export & Print", "woocommerce-myparcelbe"),
         ];
 
         if ('shop_order' == $post_type) {
@@ -195,11 +195,11 @@ class WCMP_Admin
         if ('shop_order' == $post_type) {
             ?>
             <div class="wcmp__offset-dialog" style="display:none;">
-                <?php _wcmpe('Labels to skip'); ?>: <input type="text" size="2" class="wcmp__offset-dialog__offset">
+                <?php _e("Labels to skip", "woocommerce-myparcelbe"); ?>: <input type="text" size="2" class="wcmp__offset-dialog__offset">
                 <img src="<?php echo WCMP()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>"
                      class="wcmp__offset-dialog__icon"
                      style="vertical-align: middle;">
-                <button class="button" style="display:none; margin-top: 4px"><?php _wcmpe('Print'); ?></button>
+                <button class="button" style="display:none; margin-top: 4px"><?php _e("Print", "woocommerce-myparcelbe"); ?></button>
             </div>
             <?php
         }
@@ -235,7 +235,7 @@ class WCMP_Admin
                     "wc_myparcelbe"
                 ),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-up.png",
-                "alt" => _wcmp("Export to MyParcel BE"),
+                "alt" => __("Export to MyParcel BE", "woocommerce-myparcelbe"),
             ],
             $getLabels    => [
                 "url" => wp_nonce_url(
@@ -243,7 +243,7 @@ class WCMP_Admin
                     "wc_myparcelbe"
                 ),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png",
-                "alt" => _wcmp("Print MyParcel BE label"),
+                "alt" => __("Print MyParcel BE label", "woocommerce-myparcelbe"),
             ],
             $addReturn    => [
                 "url" => wp_nonce_url(
@@ -251,7 +251,7 @@ class WCMP_Admin
                     "wc_myparcelbe"
                 ),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-retour.png",
-                "alt" => _wcmp("Email return label"),
+                "alt" => __("Email return label", "woocommerce-myparcelbe"),
             ],
         ];
 
@@ -385,7 +385,7 @@ class WCMP_Admin
     {
         add_meta_box(
             "myparcelbe",
-            _wcmp("MyParcelBE"),
+            __("MyParcelBE", "woocommerce-myparcelbe"),
             [$this, "createMetaBox"],
             "shop_order",
             "side",
@@ -428,8 +428,8 @@ class WCMP_Admin
             <table class="wcmp__table--track-trace">
                 <thead>
                 <tr>
-                    <th><?php _wcmpe('Track & Trace'); ?></th>
-                    <th><?php _wcmpe('Status'); ?></th>
+                    <th><?php _e("Track & Trace", "woocommerce-myparcelbe"); ?></th>
+                    <th><?php _e("Status", "woocommerce-myparcelbe"); ?></th>
                     <th>&nbsp;</th>
                 </tr>
                 </thead>
@@ -468,7 +468,7 @@ class WCMP_Admin
                                     'wc_myparcelbe'
                                 ),
                                 WCMP_Export::GET_LABELS,
-                                _wcmp('Print MyParcel BE label'),
+                                __("Print MyParcel BE label", "woocommerce-myparcelbe"),
                                 $order_id,
                                 $downloadDisplay ? 'target="_blank"' : '',
                                 WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png"
@@ -652,7 +652,7 @@ class WCMP_Admin
         $shipments = $this->get_order_shipments($order, true);
 
         if (empty($shipments)) {
-            return _wcmp('No label has created yet');
+            return __("No label has created yet", "woocommerce-myparcelbe");
         }
 
         foreach ($shipments as $shipment_id => $shipment) {
@@ -722,11 +722,11 @@ class WCMP_Admin
      */
     private function printDeliveryDate(DeliveryOptions $delivery_options): void
     {
-        $string = $delivery_options->isPickup() ? _wcmp("Pickup") : _wcmp("Standard delivery");
+        $string = $delivery_options->isPickup() ? __("Pickup") : __("Standard delivery", "woocommerce-myparcelbe", "woocommerce-myparcelbe");
 
         printf(
             '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
-            _wcmp("MyParcel BE shipment:"),
+            __("MyParcel BE shipment:", "woocommerce-myparcelbe"),
             $string,
             wc_format_datetime(new WC_DateTime($delivery_options->getDate()), 'l d-m')
         );

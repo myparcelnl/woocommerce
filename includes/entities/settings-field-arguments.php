@@ -150,8 +150,8 @@ class SettingsFieldArguments
                 $this->addArgument(
                     "options",
                     [
-                        "1" => _wcmp("Enabled"),
-                        "0" => _wcmp("Disabled"),
+                        "1" => __("Enabled", "woocommerce-myparcelbe"),
+                        "0" => __("Disabled", "woocommerce-myparcelbe"),
                     ]
                 );
                 break;

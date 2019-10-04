@@ -29,7 +29,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
 
         printf(
             "<div class=\"pickup-location\"><strong>%s:</strong><br /> %s<br />%s %s<br />%s %s</div>",
-            _wcmp("Pickup location"),
+            __("Pickup location", "woocommerce-myparcelbe"),
             $pickup->getLocationName(),
             $pickup->getStreet(),
             $pickup->getNumber(),
@@ -63,7 +63,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $option_rows = [
         [
             "name"              => "[carrier]",
-            "label"             => _wcmp("Carrier"),
+            "label"             => __("Carrier", "woocommerce-myparcelbe"),
             "type"              => "select",
             "options"           => WCMP_Data::CARRIERS_HUMAN,
             "custom_attributes" => $isCarrierDisabled ? ["disabled" => "disabled"] : [],
@@ -71,9 +71,9 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         ],
         [
             "name"              => "[package_type]",
-            "label"             => _wcmp("Shipment type"),
+            "label"             => __("Shipment type", "woocommerce-myparcelbe"),
             "description"       => sprintf(
-                _wcmp("Calculated weight: %s"),
+                __("Calculated weight: %s", "woocommerce-myparcelbe"),
                 wc_format_weight($order->get_meta(WCMP_Admin::META_ORDER_WEIGHT))
             ),
             "type"              => "select",
@@ -85,7 +85,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         ],
         [
             "name"              => "[extra_options][collo_amount]",
-            "label"             => _wcmp("Number of labels"),
+            "label"             => __("Number of labels", "woocommerce-myparcelbe"),
             "type"              => "number",
             "value"             => isset($extraOptions["collo_amount"]) ? $extraOptions["collo_amount"] : 1,
             "custom_attributes" => [
@@ -103,7 +103,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
                 "parent_value" => WCMP_Data::getCarriersWithSignature(),
                 "set_value"    => WCMP_Settings_Data::DISABLED,
             ],
-            "label"     => _wcmp("Signature on delivery"),
+            "label"     => __("Signature on delivery", "woocommerce-myparcelbe"),
             "value"     => $signature,
         ],
         [
@@ -115,7 +115,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
                 "parent_value" => WCMP_Data::getCarriersWithInsurance(),
                 "set_value"    => WCMP_Settings_Data::ENABLED,
             ],
-            "label"     => _wcmp("Insured to &euro; 500"),
+            "label"     => __("Insured to &euro; 500", "woocommerce-myparcelbe"),
             "value"     => (bool) $insured,
         ],
     ];
@@ -148,7 +148,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     <div class="wcmp__shipment-settings__save">
         <?php printf(
             '<div class="button wcmp__shipment-settings__save">%s</div>',
-            _wcmp("Save")
+            __("Save", "woocommerce-myparcelbe")
         );
 
         $this->renderSpinner()

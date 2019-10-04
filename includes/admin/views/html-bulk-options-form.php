@@ -72,7 +72,7 @@ $target_url = wp_nonce_url(
     <table class="widefat">
         <thead>
         <tr>
-            <th><?php _wcmpe('Export options'); ?></th>
+            <th><?php _e("Export options", "woocommerce-myparcelbe"); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -94,7 +94,7 @@ $target_url = wp_nonce_url(
                         <tr>
                             <td colspan="2">
                                 <strong>
-                                    <?php echo _wcmp('Order') . $order->get_order_number(); ?>
+                                    <?php echo __("Order", "woocommerce-myparcelbe") . $order->get_order_number(); ?>
                                 </strong>
                             </td>
                         </tr>
@@ -104,8 +104,8 @@ $target_url = wp_nonce_url(
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th><?php _wcmpe('Product name'); ?></th>
-                                        <th align="right"><?php _wcmpe('Weight (kg)'); ?></th>
+                                        <th><?php _e("Product name", "woocommerce-myparcelbe"); ?></th>
+                                        <th align="right"><?php _e("Weight (kg)", "woocommerce-myparcelbe"); ?></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -124,7 +124,7 @@ $target_url = wp_nonce_url(
                                     <tfoot>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td><?php _wcmpe('Total weight'); ?></td>
+                                        <td><?php _e("Total weight", "woocommerce-myparcelbe"); ?></td>
                                         <td align="right"><?php echo wc_format_weight(
                                                 $order->get_meta(WCMP_Admin::META_ORDER_WEIGHT)
                                             ); ?></td>
@@ -137,9 +137,7 @@ $target_url = wp_nonce_url(
                                 if ($shipping_country == 'BE'
                                     && (empty($recipient['street'])
                                         || empty($recipient['number']))) { ?>
-                                <p><span style="color:red"><?php _wcmp(
-                                            'This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcel BE plugin was activated. The address data can still be manually entered in the order screen.'
-                                        ); ?></span></p>
+                                <p><span style="color:red"><?php __("This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcel BE plugin was activated. The address data can still be manually entered in the order screen.", "woocommerce-myparcelbe"); ?></span></p>
                             </td>
                         </tr> <!-- last row -->
                         <?php
@@ -175,9 +173,9 @@ $target_url = wp_nonce_url(
     <div class="wcmp__shipment-settings__save">
         <?php
         if ($dialog == 'shipment') {
-            $button_text = _wcmp('Export to MyParcel BE');
+            $button_text = __("Export to MyParcel BE", "woocommerce-myparcelbe");
         } elseif ($dialog == 'return') {
-            $button_text = _wcmp('Send email');
+            $button_text = __("Send email", "woocommerce-myparcelbe");
         }
         ?>
         <div class="wcmp__d--flex">

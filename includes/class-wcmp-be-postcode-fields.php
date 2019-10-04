@@ -302,7 +302,7 @@ class WCMP_BE_Postcode_Fields
 
         // Add street name
         $fields[$form . '_street_name'] = [
-            'label'    => _wcmp('Street name'),
+            'label'    => __("Street name", "woocommerce-myparcelbe"),
             'class'    => apply_filters('be_custom_address_field_class', ['form-row-third first']),
             'required' => $required, // Only required for BE
             'priority' => 60,
@@ -310,7 +310,7 @@ class WCMP_BE_Postcode_Fields
 
         // Add house number
         $fields[$form . '_house_number'] = [
-            'label'    => _wcmp('No.'),
+            'label'    => __("No.", "woocommerce-myparcelbe"),
             'class'    => apply_filters('be_custom_address_field_class', ['form-row-third']),
             'required' => $required, // Only required for BE
             'type'     => 'number',
@@ -319,7 +319,7 @@ class WCMP_BE_Postcode_Fields
 
         // Add house number suffix
         $fields[$form . '_house_number_suffix'] = [
-            'label'     => _wcmp('Suffix'),
+            'label'     => __("Suffix", "woocommerce-myparcelbe"),
             'class'     => apply_filters('be_custom_address_field_class', ['form-row-third last']),
             'required'  => false,
             'maxlength' => 4,
@@ -483,17 +483,17 @@ class WCMP_BE_Postcode_Fields
     public function admin_billing_fields($fields)
     {
         $fields['street_name'] = [
-            'label' => _wcmp('Street name'),
+            'label' => __("Street name", "woocommerce-myparcelbe"),
             'show'  => true,
         ];
 
         $fields['house_number'] = [
-            'label' => _wcmp('Number'),
+            'label' => __("Number", "woocommerce-myparcelbe"),
             'show'  => true,
         ];
 
         $fields['house_number_suffix'] = [
-            'label' => _wcmp('Suffix'),
+            'label' => __("Suffix", "woocommerce-myparcelbe"),
             'show'  => true,
         ];
 
@@ -510,17 +510,17 @@ class WCMP_BE_Postcode_Fields
     public function admin_shipping_fields($fields)
     {
         $fields['street_name'] = [
-            'label' => _wcmp('Street name'),
+            'label' => __("Street name", "woocommerce-myparcelbe"),
             'show'  => true,
         ];
 
         $fields['house_number'] = [
-            'label' => _wcmp('Number'),
+            'label' => __("Number", "woocommerce-myparcelbe"),
             'show'  => true,
         ];
 
         $fields['house_number_suffix'] = [
-            'label' => _wcmp('Suffix'),
+            'label' => __("Suffix", "woocommerce-myparcelbe"),
             'show'  => true,
         ];
 
@@ -534,29 +534,29 @@ class WCMP_BE_Postcode_Fields
     {
         $myparcelbe_billing_fields  = [
             'billing_street_name'         => [
-                'label'       => _wcmp('Street'),
+                'label'       => __("Street", "woocommerce-myparcelbe"),
                 'description' => '',
             ],
             'billing_house_number'        => [
-                'label'       => _wcmp('Number'),
+                'label'       => __("Number", "woocommerce-myparcelbe"),
                 'description' => '',
             ],
             'billing_house_number_suffix' => [
-                'label'       => _wcmp('Suffix'),
+                'label'       => __("Suffix", "woocommerce-myparcelbe"),
                 'description' => '',
             ],
         ];
         $myparcelbe_shipping_fields = [
             'shipping_street_name'         => [
-                'label'       => _wcmp('Street'),
+                'label'       => __("Street", "woocommerce-myparcelbe"),
                 'description' => '',
             ],
             'shipping_house_number'        => [
-                'label'       => _wcmp('Number'),
+                'label'       => __("Number", "woocommerce-myparcelbe"),
                 'description' => '',
             ],
             'shipping_house_number_suffix' => [
-                'label'       => _wcmp('Suffix'),
+                'label'       => __("Suffix", "woocommerce-myparcelbe"),
                 'description' => '',
             ],
         ];
@@ -718,7 +718,7 @@ class WCMP_BE_Postcode_Fields
                     $address['billing_address_1']
                 )
             )) {
-            $errors->add('address', _wcmp('Please enter a valid billing address.'));
+            $errors->add('address', __("Please enter a valid billing address.", "woocommerce-myparcelbe"));
         }
 
         if ($address['shipping_country'] == 'BE'
@@ -729,7 +729,7 @@ class WCMP_BE_Postcode_Fields
                     $address['shipping_address_1']
                 )
             )) {
-            $errors->add('address', _wcmp('Please enter a valid shipping address.'));
+            $errors->add('address', __("Please enter a valid shipping address.", "woocommerce-myparcelbe"));
         }
     }
 
@@ -830,15 +830,15 @@ class WCMP_BE_Postcode_Fields
     function required_field_notices($notice, $field_label)
     {
         // concatenate translations
-        $billing_nr  = sprintf(_wcmp('Billing %s', 'woocommerce'), __('No.'));
-        $shipping_nr = sprintf(_wcmp('Shipping %s', 'woocommerce'), __('No.'));
+        $billing_nr  = sprintf(__("Billing %s', 'woocommerce'), __('No.", "woocommerce-myparcelbe"));
+        $shipping_nr = sprintf(__("Shipping %s', 'woocommerce'), __('No.", "woocommerce-myparcelbe"));
 
         switch ($field_label) {
             case $billing_nr:
-                $notice = _wcmp('<b>Billing No.</b> is a required field');
+                $notice = __("<b>Billing No.</b> is a required field", "woocommerce-myparcelbe");
                 break;
             case $shipping_nr:
-                $notice = _wcmp('<b>Shipping No.</b> is a required field');
+                $notice = __("<b>Shipping No.</b> is a required field", "woocommerce-myparcelbe");
                 break;
             default:
                 break;
