@@ -40,7 +40,7 @@ class WCMP_Frontend
         new WCMP_Cart_Fees();
 
         // Output most expensive shipping class in frontend data
-        add_action("woocommerce_checkout_after_order_review", [$this, "inject_shipping_class"], 100);
+        add_action("woocommerce_checkout_after_order_review", [$this, "injectShippingClassInput"], 100);
         add_action("woocommerce_update_order_review_fragments", [$this, "order_review_fragments"]);
     }
 
@@ -84,13 +84,13 @@ class WCMP_Frontend
     /**
      * Output the highest shipping class input
      */
-    public function inject_shipping_class(): void
+    public function injectShippingClassInput(): void
     {
         printf('<div class="wcmp__shipping-data">%s</div>', $this->renderHighestShippingClassInput());
     }
 
     /**
-     * @return bool|string
+     * @return string|void
      */
     public function renderHighestShippingClassInput()
     {
@@ -102,8 +102,6 @@ class WCMP_Frontend
                 $shipping_class
             );
         }
-
-        return false;
     }
 
     /**

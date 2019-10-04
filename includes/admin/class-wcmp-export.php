@@ -26,9 +26,6 @@ class WCMP_Export
     public const PACKAGE          = 1;
     public const INSURANCE_AMOUNT = 500;
 
-    // Maximum characters length of item description.
-    public const DESCRIPTION_MAX_LENGTH = 50;
-
     public const EXPORT = "wcmp_export";
 
     public const ADD_SHIPMENTS = "add_shipments";

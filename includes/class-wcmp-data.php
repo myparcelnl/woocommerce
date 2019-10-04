@@ -24,6 +24,9 @@ class WCMP_Data
 
     public const HAS_MULTI_COLLO = false;
 
+    public const DEFAULT_COUNTRY_CODE = "BE";
+    public const DEFAULT_CARRIER = BpostConsignment::CARRIER_NAME;
+
     /**
      * @var array
      */

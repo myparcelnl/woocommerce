@@ -82,10 +82,10 @@ $target_url = wp_nonce_url(
             $order = WCX::get_order($order_id);
             // skip non-myparcelbe destinations
             $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-            if (! WCMP()->export->is_myparcelbe_destination($shipping_country)) {
+            if (! WCMP_Country_Codes::isMyParcelBeDestination($shipping_country)) {
                 continue;
             }
-            $recipient     = WCMP()->export->get_recipient($order);
+            $recipient     = WCMP_Export::getRecipientFromOrder($order);
             $package_types = WCMP_Data::getPackageTypes();
             ?>
             <tr class="order-row <?php echo(($c = ! $c) ? 'alternate' : ''); ?>">

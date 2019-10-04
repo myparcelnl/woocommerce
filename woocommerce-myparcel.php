@@ -186,6 +186,7 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/frontend/class-wcmp-frontend.php");
             $this->admin = require_once($this->includes . "/admin/class-wcmp-admin.php");
             require_once($this->includes . "/admin/settings/class-wcmp-settings.php");
+            require_once($this->includes . "/admin/class-wcmp-country-codes.php");
             $this->export = require_once($this->includes . "/admin/class-wcmp-export.php");
             require_once($this->includes . "/class-wcmp-be-postcode-fields.php");
         }
