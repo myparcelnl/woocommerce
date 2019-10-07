@@ -845,9 +845,7 @@ class WCMP_Admin
      */
     private function renderStatus(array $shipment): void
     {
-        $status = isset($shipment["status"]) ? $shipment["status"] : "-";
-
-        echo $status;
+        echo $shipment["status"] ?? "–";
     }
 }
 

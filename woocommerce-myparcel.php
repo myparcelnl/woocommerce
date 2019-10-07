@@ -236,13 +236,7 @@ if (! class_exists('WCMP')) :
         public function need_woocommerce()
         {
             $error = sprintf(
-<<<<<<< HEAD
                 __("WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!", "woocommerce-myparcelbe"),
-=======
-                __(
-                    'WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!'
-                ),
->>>>>>> f7c68bbc82cf34719e93e1377b4a71581d10b563
                 '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
                 '</a>'
             );
