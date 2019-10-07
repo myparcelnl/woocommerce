@@ -9,9 +9,10 @@ if (! defined('ABSPATH')) {
 
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="<?php get_locale(); ?>">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title></title>
     <?php
     wp_enqueue_script(
         'wcmp-admin',
@@ -115,7 +116,7 @@ $target_url = wp_nonce_url(
                                             <td><?php echo $this->get_item_display_name($item, $order) ?></td>
                                             <td align="right">
                                                 <?php echo wc_format_weight(
-                                                    $this->get_item_weight_kg($item, $order)
+                                                    WCMP_Export::get_item_weight_kg($item, $order)
                                                 ); ?>
                                             </td>
                                         </tr>
@@ -184,12 +185,5 @@ $target_url = wp_nonce_url(
         </div>
     </div>
 </form>
-<script type="text/javascript">
-jQuery(document).ready(function($) {
-  $('.button-wcmyparcelbe').click(function() {
-    $('.wcmp__spinner--waiting').show();
-  });
-});
-</script>
 </body>
 </html>

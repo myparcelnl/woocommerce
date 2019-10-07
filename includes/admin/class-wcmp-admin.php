@@ -818,22 +818,23 @@ class WCMP_Admin
     /**
      * @param array $shipment
      * @param int   $order_id
-     * @param null  $message
      */
     private function renderTrackTraceLink(array $shipment, int $order_id): void
     {
-        if (isset($shipment['tracktrace'])) {
-            $track_trace_url  = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
+        $track_trace = $shipment["track_trace"] ?? null;
+
+        if ($track_trace) {
+            $track_trace_url  = $this->get_tracktrace_url($order_id, $track_trace);
             $track_trace_link = sprintf(
                 '<a href="%s" target="_blank">%s</a>',
                 $track_trace_url,
-                $shipment['tracktrace']
+                $track_trace
             );
-        } elseif (isset($shipment['shipment']) && isset($shipment['shipment']['options'])) {
-            $track_trace_link =
-                '(' . WCMP()->export->get_package_name($shipment['shipment']['options']['package_type']) . ')';
+        } elseif (isset($shipment["shipment"]) && isset($shipment["shipment"]["options"])) {
+            $package_type     = WCMP()->export->get_package_name($shipment["shipment"]["options"]["package_type"]);
+            $track_trace_link = "($package_type)";
         } else {
-            $track_trace_link = '(Unknown)';
+            $track_trace_link = __("(Unknown)", "woocommerce-myparcelbe");
         }
 
         echo $track_trace_link;
@@ -844,7 +845,7 @@ class WCMP_Admin
      */
     private function renderStatus(array $shipment): void
     {
-        $status = isset($shipment['status']) ? $shipment['status'] : '-';
+        $status = isset($shipment["status"]) ? $shipment["status"] : "-";
 
         echo $status;
     }

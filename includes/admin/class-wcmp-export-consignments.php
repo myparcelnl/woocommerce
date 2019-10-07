@@ -147,7 +147,7 @@ class WCMP_Export_Consignments
                 $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
 
                 // Weight (total item weight in grams)
-                $weight = (int) round($this->get_item_weight_kg($item, $this->order) * 1000);
+                $weight = (int) round(WCMP_Export::get_item_weight_kg($item, $this->order) * 1000);
 
                 $myParcelItem =
                     (new MyParcelCustomsItem())->setDescription($description)
@@ -164,42 +164,6 @@ class WCMP_Export_Consignments
                 $this->consignment->addItem($myParcelItem);
             }
         }
-    }
-
-    /**
-     * @param $item
-     * @param $order
-     *
-     * @return float
-     */
-    public function get_item_weight_kg($item, WC_Order $order): float
-    {
-        $product = $order->get_product_from_item($item);
-
-        if (empty($product)) {
-            return 0;
-        }
-
-        $weight      = (int) $product->get_weight();
-        $weight_unit = get_option("woocommerce_weight_unit");
-        switch ($weight_unit) {
-            case "g":
-                $product_weight = $weight / 1000;
-                break;
-            case "lbs":
-                $product_weight = $weight * 0.45359237;
-                break;
-            case "oz":
-                $product_weight = $weight * 0.0283495231;
-                break;
-            default:
-                $product_weight = $weight;
-                break;
-        }
-
-        $item_weight = (float) $product_weight * (int) $item["qty"];
-
-        return (float) $item_weight;
     }
 
     /**
@@ -243,18 +207,8 @@ class WCMP_Export_Consignments
         $this->apiKey = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
 
         if (!$this->apiKey) {
-            throw new ErrorException(_wcmp("No API key found in MyParcel BE settings"));
+            throw new ErrorException(__("No API key found in MyParcel BE settings", "woocommerce-myparcelbe"));
         }
-    }
-
-    /**
-     * @return mixed|string
-     */
-    private function setLabelDescription()
-    {
-        $label_description = $this->getLabelDescription();
-
-        $this->consignment->setLabelDescription($label_description);
     }
 
     /**

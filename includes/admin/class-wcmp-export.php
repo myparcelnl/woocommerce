@@ -536,98 +536,12 @@ class WCMP_Export
     public function init_api()
     {
         $key = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
+
         if (! ($key)) {
-            return false;
-        }
-
-        return new WCMP_API($key);
-    }
-
-    /**
-     * @param int    $order_id
-     * @param string $type
-     *
-     * @return AbstractConsignment
-     * @throws Exception
-     */
-    public function createConsignmentFromCheckoutData(int $order_id, string $type = "standard"): AbstractConsignment
-    {
-        $api_key = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
-        if (! $api_key) {
             throw new ErrorException(__("No API key found in MyParcel BE settings", "woocommerce-myparcelbe"));
         }
 
-        $order            = WCX::get_order($order_id);
-        $delivery_options = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-
-        $carrier      = $delivery_options->getCarrier();
-        $connectEmail = $carrier === DPDConsignment::CARRIER_NAME;
-
-        /**
-         * @var AbstractConsignment $consignment
-         */
-        $consignment = ConsignmentFactory::createByCarrierName($carrier ?? BpostConsignment::CARRIER_ID);
-
-        $recipient = $this->get_recipient($order, $connectEmail);
-
-        $label_description = $this->getLabelDescription($order);
-        if (empty($label_description)) {
-            $label_description = 'Order: ' . $order_id;
-        }
-
-        $shipment_options = $delivery_options->getShipmentOptions();
-        $bpost            = BpostConsignment::CARRIER_NAME;
-
-        $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->getInsurance(),
-            "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
-        );
-
-        $signature = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->hasSignature(),
-            "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
-        );
-
-        $consignment->setApiKey($api_key)
-            ->setReferenceId($order_id)
-            ->setDeliveryType(
-                $this->getPickupTypeByDeliveryOptions($delivery_options)
-            )
-            ->setCountry($recipient['cc'])
-            ->setPerson($recipient['person'])
-            ->setCompany($recipient['company'])
-            ->setStreet($recipient['street'])
-            ->setNumber($recipient['number'] ?? null)
-            ->setNumberSuffix($recipient['number_suffix'] ?? null)
-            ->setStreetAdditionalInfo($recipient['street_additional_info'] ?? null)
-            ->setPostalCode($recipient['postal_code'])
-            ->setCity($recipient['city'])
-            ->setEmail($recipient['email'])
-            ->setPhone($recipient['phone'])
-            ->setLabelDescription($label_description)
-            ->setPackageType(self::PACKAGE)
-            ->setSignature($signature)
-            // Override insurance to be either 500 (on) or 0 (off)
-            ->setInsurance($insurance ? 500 : 0);
-
-        if ($delivery_options->isPickup()) {
-            $pickup = $delivery_options->getPickupLocation();
-            $consignment->setPickupCountry($pickup->getCountry())
-                ->setPickupCity($pickup->getCity())
-                ->setPickupLocationName($pickup->getLocationName())
-                ->setPickupStreet($pickup->getStreet())
-                ->setPickupNumber($pickup->getNumber())
-                ->setPickupPostalCode($pickup->getPostalCode())
-                ->setPickupLocationCode($pickup->getLocationCode());
-        }
-
-        // @todo set customs_declaration (HS code)
-        $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-        if ($this->is_world_shipment_country($shipping_country)) {
-            $consignment = $this->setCustomItems($consignment, $order);
-        }
-
-        return $consignment;
+        return new WCMP_API($key);
     }
 
     public function prepare_return_shipment_data($order_id, $options)
@@ -697,20 +611,20 @@ class WCMP_Export
      *
      * @return mixed|void
      */
-    public function get_recipient(WC_Order $order, $connectEmail = null)
+    public static function getRecipientFromOrder(WC_Order $order, bool $connectEmail = null)
     {
-        $is_using_old_fields = (string) WCX_Order::get_meta($order, "_billing_street_name") != ""
-                               || (string) WCX_Order::get_meta(
+        $is_using_old_fields = (string) WCX_Order::get_meta($order, "_billing_street_name") !== ""
+            || (string) WCX_Order::get_meta(
                 $order,
                 "_billing_house_number"
-            ) != "";
+            ) !== "";
 
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
-                : trim($order->shipping_first_name . " " . $order->shipping_last_name);
+                : trim($order->get_shipping_first_name() . " " . $order->get_shipping_last_name());
 
-        $connectEmail = $connectEmail ?? $this->getSetting("connect_email");
-        $connectPhone = $this->getSetting("connect_phone");
+        $connectEmail = $connectEmail ?? WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_CONNECT_EMAIL);
+        $connectPhone = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_CONNECT_PHONE);
 
         $address = [
             "cc"                     => (string) WCX_Order::get_prop($order, "shipping_country"),
@@ -723,13 +637,15 @@ class WCMP_Export
         ];
 
         $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-        if ($shipping_country == "BE") {
+        if ($shipping_country === "BE") {
             // use billing address if old "pakjegemak" (1.5.6 and older)
-            if ($pgaddress = WCX_Order::get_meta($order, WCMP_Admin::META_PGADDRESS)) {
+            $pgAddress = WCX_Order::get_meta($order, WCMP_Admin::META_PGADDRESS);
+
+            if ($pgAddress) {
                 $billing_name = method_exists($order, "get_formatted_billing_full_name")
                     ? $order->get_formatted_billing_full_name()
                     : trim(
-                        $order->billing_first_name . " " . $order->billing_last_name
+                        $order->get_billing_first_name() . " " . $order->get_billing_last_name()
                     );
                 $address_intl = [
                     "city"        => (string) WCX_Order::get_prop($order, "billing_city"),
@@ -739,7 +655,12 @@ class WCMP_Export
                 ];
 
                 // If not using old fields
-                if (! $is_using_old_fields) {
+                if ($is_using_old_fields) {
+                    $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_billing_street_name");
+                    $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_billing_house_number");
+                    $address_intl["number_suffix"] =
+                        (string) WCX_Order::get_meta($order, "_billing_house_number_suffix");
+                } else {
                     // Split the address line 1 into three parts
                     preg_match(
                         WCMP_BE_Postcode_Fields::SPLIT_STREET_REGEX,
@@ -752,18 +673,18 @@ class WCMP_Export
                         array_key_exists("number_suffix", $address_parts) // optional
                             ? (string) $address_parts["number_suffix"] : "";
                     $address_intl["street_additional_info"] = WCX_Order::get_prop($order, "billing_address_2");
-                } else {
-                    $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_billing_street_name");
-                    $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_billing_house_number");
-                    $address_intl["number_suffix"] =
-                        (string) WCX_Order::get_meta($order, "_billing_house_number_suffix");
                 }
             } else {
                 $address_intl = [
                     "postal_code" => (string) WCX_Order::get_prop($order, "shipping_postcode"),
                 ];
                 // If not using old fields
-                if (! $is_using_old_fields) {
+                if ($is_using_old_fields) {
+                    $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_shipping_street_name");
+                    $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_shipping_house_number");
+                    $address_intl["number_suffix"] =
+                        (string) WCX_Order::get_meta($order, "_shipping_house_number_suffix");
+                } else {
                     // Split the address line 1 into three parts
                     preg_match(
                         WCMP_BE_Postcode_Fields::SPLIT_STREET_REGEX,
@@ -775,11 +696,6 @@ class WCMP_Export
                     $address_intl["number"]        = (string) $address_parts["number"];
                     $address_intl["number_suffix"] = array_key_exists("number_suffix", $address_parts) // optional
                         ? (string) $address_parts["number_suffix"] : "";
-                } else {
-                    $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_shipping_street_name");
-                    $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_shipping_house_number");
-                    $address_intl["number_suffix"] =
-                        (string) WCX_Order::get_meta($order, "_shipping_house_number_suffix");
                 }
             }
         } else {
@@ -1307,7 +1223,7 @@ class WCMP_Export
      *
      * @return float
      */
-    public function get_item_weight_kg($item, WC_Order $order): float
+    public static function get_item_weight_kg($item, WC_Order $order): float
     {
         $product = $order->get_product_from_item($item);
 
