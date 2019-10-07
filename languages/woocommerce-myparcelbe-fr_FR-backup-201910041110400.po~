@@ -352,7 +352,7 @@ msgid "General settings"
 msgstr "Paramètres généraux"
 
 #: includes/class-wcmp-settings-data.php:303
-msgid "Checkout options"
+msgid "Checkout settings"
 msgstr "Options de caisse"
 
 #: includes/class-wcmp-settings-data.php:308

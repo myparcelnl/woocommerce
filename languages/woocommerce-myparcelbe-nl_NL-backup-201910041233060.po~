@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WC MyParcel Belgium\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-04 11:39+0000\n"
-"PO-Revision-Date: 2019-10-04 12:33+0000\n"
+"PO-Revision-Date: 2019-10-04 12:23+0000\n"
 "Last-Translator: wordpress2 <adem@myparcel.nl>\n"
 "Language-Team: Nederlands\n"
 "Language: nl_NL\n"
@@ -19,15 +19,12 @@ msgstr ""
 msgid ""
 "WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!"
 msgstr ""
-"WooCommerce MyParcel BE heeft% WooCommerce% s nodig om te worden "
-"geïnstalleerd en geactiveerd!"
 
 #: woocommerce-myparcel.php:254
 msgid ""
 "WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended)"
 "."
 msgstr ""
-"WooCommerce MyParcel BE vereist PHP 5.4 of hoger (5.6 of hoger aanbevolen)."
 
 #: woocommerce-myparcel.php:255
 msgid "How to update your PHP version"
@@ -1044,25 +1041,24 @@ msgstr " Ochtendbezorging"
 
 #: includes/frontend/class-wcmp-cart-fees.php:235
 msgid "Pick up at"
-msgstr "Afhalen bij"
+msgstr ""
 
 #: includes/frontend/class-wcmp-cart-fees.php:236
 msgid "Pickup express"
-msgstr "Vroeg afhalen"
+msgstr ""
 
 #: includes/frontend/class-wcmp-cart-fees.php:237
 msgid "Only recipient"
-msgstr "Alleen ontvanger"
+msgstr ""
 
 #: includes/frontend/class-wcmp-checkout.php:178
 #: includes/admin/settings/class-wcmp-settings-data.php:732
 msgid "Pickup"
-msgstr "Afhalen"
+msgstr ""
 
 #: includes/admin/class-wcmp-export.php:473
 msgid "The selected orders have not been exported to MyParcel yet! "
 msgstr ""
-"De geselecteerde bestellingen zijn nog niet geëxporteerd naar MyParcel!"
 
 #: includes/admin/class-wcmp-export.php:560
 msgid "No API key found in MyParcel BE settings"
@@ -1070,7 +1066,7 @@ msgstr "Geen API key gevonden in MyParcel BE instellingen"
 
 #: includes/admin/class-wcmp-export.php:1260
 msgid "No label(s) created yet."
-msgstr "Er is nog geen label aangemaakt"
+msgstr ""
 
 #: includes/admin/class-wcmp-admin.php:118
 msgid "Details"
@@ -1166,14 +1162,12 @@ msgstr "DPD"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:222
 msgid "Translations"
-msgstr "Titels"
+msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:241
 msgid ""
 "These settings will be applied to bpost shipments you create in the backend."
 msgstr ""
-"Deze instellingen worden toegepast op bpost zendingen die u in de backend "
-"aanmaakt."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:246
 msgid "bpost delivery options"
@@ -1197,7 +1191,7 @@ msgstr "api key"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:380
 msgid "Track & trace code:"
-msgstr "Track & trace code:"
+msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:436
 msgid "Enable bpost delivery"
@@ -1206,12 +1200,12 @@ msgstr "bpost bezorging inschakelen"
 #: includes/admin/settings/class-wcmp-settings-data.php:466
 #: includes/admin/settings/class-wcmp-settings-data.php:554
 msgid "Show delivery date"
-msgstr "Toon bezorgdatum "
+msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:469
 #: includes/admin/settings/class-wcmp-settings-data.php:557
 msgid "Show the delivery date inside the delivery options."
-msgstr "Toon de bezorgdatum bij de bezorgopties"
+msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:497
 msgid "Enable bpost pickup"
@@ -1236,10 +1230,6 @@ msgid ""
 "settings you can allow them to select a date, time and even options like "
 "requiring a signature on delivery."
 msgstr ""
-"Met de bezorgopties van MyParcel kunnen uw klanten kiezen of ze hun pakket "
-"thuis of bij een afhaalpunt willen laten bezorgen. Afhankelijk van de "
-"instellingen kunt u ze een datum, tijd en zelfs opties laten selecteren, "
-"zoals een handtekening bij aflevering."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:645
 msgid ""
@@ -1247,9 +1237,6 @@ msgid ""
 "them to the package types under \"Standard export settings\". The delivery "
 "options are not visible at foreign addresses."
 msgstr ""
-"U kunt de bezorgopties koppelen aan specifieke verzendmethoden door ze toe "
-"te voegen aan de pakkettypen onder \"Standaard exportinstellingen\". De "
-"bezorgopties zijn niet zichtbaar op buitenlandse adressen."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:712
 msgid "Delivery title"
@@ -1261,11 +1248,11 @@ msgstr "Thuis of op het werk bezorgd"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:731
 msgid "Pickup title"
-msgstr "Afhalen titel"
+msgstr ""
 
 #: includes/admin/views/html-order-shipment-options.php:32
 msgid "Pickup location"
-msgstr "Afhaallocatie"
+msgstr ""
 
 #: includes/admin/views/html-order-shipment-options.php:66
 msgid "Carrier"
