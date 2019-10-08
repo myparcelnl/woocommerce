@@ -165,6 +165,8 @@ class WCMP_Export
         // make sure $order_ids is a proper array
         $order_ids = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : [];
 
+        include_once("class-wcmp-export-consignments.php");
+
         switch ($request) {
             // Creating consignments.
             case self::ADD_SHIPMENTS:
