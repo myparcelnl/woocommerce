@@ -25,7 +25,7 @@ class ShipmentOptions
     private $only_recipient;
 
     /**
-     * @var bool|null
+     * @var int
      */
     private $insurance;
 
@@ -39,7 +39,7 @@ class ShipmentOptions
         $this->input          = $shipmentOptions;
         $this->signature      = $this->getOption("signature");
         $this->only_recipient = $this->getOption("only_recipient");
-        $this->insurance      = $this->getOption("insurance");
+        $this->insurance      = $this->input["insurance"] ?? 0;
     }
 
     /**
@@ -59,9 +59,9 @@ class ShipmentOptions
     }
 
     /**
-     * @return bool|null
+     * @return int
      */
-    public function hasInsurance()
+    public function getInsurance(): int
     {
         return $this->insurance;
     }
@@ -89,7 +89,7 @@ class ShipmentOptions
     {
         return [
             'signature'      => $this->hasSignature(),
-            'insurance'      => $this->hasInsurance(),
+            'insurance'      => $this->getInsurance(),
             'only_recipient' => $this->hasOnlyRecipient(),
         ];
     }
