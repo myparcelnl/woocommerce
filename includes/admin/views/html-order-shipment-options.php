@@ -1,5 +1,6 @@
 <?php
 
+use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
@@ -44,12 +45,12 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
     $shipment_options      = $deliveryOptions->getShipmentOptions();
 
-    $bpost     = DPDConsignment::CARRIER_NAME;
-    $insured   = false;
+    $bpost     = BpostConsignment::CARRIER_NAME;
+    $insurance = false;
     $signature = false;
 
     if (DPDConsignment::CARRIER_NAME !== $deliveryOptions->getCarrier()) {
-        $insured = WCMP_Export::getChosenOrDefaultShipmentOption(
+        $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
             $shipment_options->getInsurance(),
             "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
         );
@@ -116,7 +117,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
                 "set_value"    => WCMP_Settings_Data::ENABLED,
             ],
             "label"     => __("Insured to &euro; 500", "woocommerce-myparcelbe"),
-            "value"     => (bool) $insured,
+            "value"     => (bool) $insurance,
         ],
     ];
 

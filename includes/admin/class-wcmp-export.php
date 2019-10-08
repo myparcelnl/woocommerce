@@ -69,7 +69,7 @@ class WCMP_Export
      *
      * @return bool
      */
-    public static function getChosenOrDefaultShipmentOption($option, $settingName): bool
+    public static function getChosenOrDefaultShipmentOption($option, string $settingName): bool
     {
         if ($option !== null) {
             return $option;
