@@ -115,7 +115,9 @@ class WCMP_Export
         if (isset($_GET["myparcelbe"])) {
             switch ($_GET["myparcelbe"]) {
                 case "no_consignments":
-                    $message = __("You have to export the orders to MyParcel before you can print the labels!", "woocommerce-myparcelbe");
+                    $message = __("You have to export the orders to MyParcel before you can print the labels!",
+                        "woocommerce-myparcelbe"
+                    );
                     printf('<div class="wcmp__notice notice notice-error"><p>%s</p></div>', $message);
                     break;
                 default:
@@ -150,7 +152,9 @@ class WCMP_Export
             "wc_myparcelbe_check_privs",
             ! current_user_can("manage_woocommerce_orders") && ! current_user_can("edit_shop_orders")
         )) {
-            $return["error"] = __("You do not have sufficient permissions to access this page.", "woocommerce-myparcelbe");
+            $return["error"] = __("You do not have sufficient permissions to access this page.",
+                "woocommerce-myparcelbe"
+            );
             $json            = json_encode($return);
             echo $json;
             die();
@@ -412,8 +416,8 @@ class WCMP_Export
     /**
      * @param       $shipment_ids
      * @param array $order_ids
-     * @param null  $label_response_type
-     * @param int   $offset
+     * @param null $label_response_type
+     * @param int $offset
      *
      * @return array
      */
@@ -474,7 +478,7 @@ class WCMP_Export
     /**
      * @param      $order_ids
      * @param null $label_response_type
-     * @param int  $offset
+     * @param int $offset
      *
      * @return array
      */
@@ -484,7 +488,9 @@ class WCMP_Export
 
         if (empty($shipment_ids)) {
             $this->log(" *** Failed label request(not exported yet) ***");
-            $this->errors[] = __("The selected orders have not been exported to MyParcel yet! ", "woocommerce-myparcelbe");
+            $this->errors[] = __("The selected orders have not been exported to MyParcel yet! ",
+                "woocommerce-myparcelbe"
+            );
 
             return [];
         }
@@ -634,14 +640,14 @@ class WCMP_Export
 
     /**
      * @param WC_Order $order
-     * @param bool     $connectEmail
+     * @param bool $connectEmail
      *
      * @return mixed|void
      */
     public static function getRecipientFromOrder(WC_Order $order, bool $connectEmail = null)
     {
         $is_using_old_fields = (string) WCX_Order::get_meta($order, "_billing_street_name") !== ""
-            || (string) WCX_Order::get_meta(
+                               || (string) WCX_Order::get_meta(
                 $order,
                 "_billing_house_number"
             ) !== "";
@@ -921,7 +927,7 @@ class WCMP_Export
 
     /**
      * @param AbstractConsignment $consignment
-     * @param WC_Order            $order
+     * @param WC_Order $order
      *
      * @return AbstractConsignment
      * @throws MissingFieldException
@@ -1113,7 +1119,11 @@ class WCMP_Export
         foreach ($errors as $key => $error) {
             // check if we have an order_id
             if ($key > 10) {
-                $parsed_errors[] = sprintf("<strong>%s %s:</strong> %s", __("Order", "woocommerce-myparcelbe"), $key, $error);
+                $parsed_errors[] = sprintf("<strong>%s %s:</strong> %s",
+                    __("Order", "woocommerce-myparcelbe"),
+                    $key,
+                    $error
+                );
             } else {
                 $parsed_errors[] = $error;
             }
@@ -1192,7 +1202,7 @@ class WCMP_Export
     }
 
     /**
-     * @param int      $id
+     * @param int $id
      * @param WC_Order $order
      *
      * @return array
@@ -1385,7 +1395,7 @@ class WCMP_Export
 
     /**
      * @param WC_Order $order
-     * @param string   $shipping_method_id
+     * @param string $shipping_method_id
      *
      * @return bool
      */
@@ -1536,7 +1546,7 @@ class WCMP_Export
      * Evaluate a cost from a sum/string.
      *
      * @param string $sum
-     * @param array  $args
+     * @param array $args
      * @param        $flat_rate_method
      *
      * @return string
@@ -1988,8 +1998,7 @@ class WCMP_Export
         $package_type_shipping_methods,
         $shipping_method_id_class,
         $shipping_class
-    )
-    {
+    ) {
         //support WooCommerce flat rate
         // check if we have a match with the predefined methods
         if (in_array($shipping_method_id, $package_type_shipping_methods)) {
