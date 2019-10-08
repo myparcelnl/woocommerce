@@ -86,7 +86,9 @@ class WCMP_Frontend
      */
     public function injectShippingClassInput(): void
     {
-        printf('<div class="wcmp__shipping-data">%s</div>', $this->renderHighestShippingClassInput());
+        echo '<div class="wcmp__shipping-data">';
+        $this->renderHighestShippingClassInput();
+        echo '</div>';
     }
 
     /**
@@ -94,7 +96,7 @@ class WCMP_Frontend
      */
     public function renderHighestShippingClassInput()
     {
-        $shipping_class = $this->get_cart_shipping_class();
+        $shipping_class = WCMP_Frontend::get_cart_shipping_class();
 
         if ($shipping_class) {
             return sprintf(
@@ -111,7 +113,7 @@ class WCMP_Frontend
      *
      * @return bool|int
      */
-    public function get_cart_shipping_class()
+    public static function get_cart_shipping_class()
     {
         if (version_compare(WOOCOMMERCE_VERSION, '2.4', '<')) {
             return false;
@@ -123,7 +125,7 @@ class WCMP_Frontend
         $packages = WC()->shipping()->get_packages();
         $package  = current($packages);
 
-        $shipping_method = WCMP()->export->get_shipping_method($chosen_method);
+        $shipping_method = WCMP_Export::get_shipping_method($chosen_method);
 
         if (empty($shipping_method)) {
             return false;

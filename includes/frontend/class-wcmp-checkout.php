@@ -5,7 +5,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use WPO\WC\MyParcelBE\Compatibility\Order;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core;
 
-if (! defined('ABSPATH')) {
+if (!defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
@@ -23,7 +23,7 @@ class WCMP_Checkout
      */
     public function __construct()
     {
-        add_action("wp_enqueue_scripts", [$this, "enqueue_frontend_scripts"]);
+        add_action("wp_enqueue_scripts", [$this, "enqueue_frontend_scripts"], 100);
 
         // Save delivery options data
         add_action("woocommerce_checkout_update_order_meta", [$this, "save_delivery_options"], 10, 2);
@@ -35,37 +35,53 @@ class WCMP_Checkout
     public function enqueue_frontend_scripts()
     {
         // return if not checkout or order received page
-        if (! is_checkout() && ! is_order_received_page()) {
+        if (!is_checkout() && !is_order_received_page()) {
             return;
         }
 
         // if using split address fields
-        if (WCMP()->setting_collection->isEnabled('use_split_address_fields')) {
+        $useSplitAddressFields = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS);
+        if ($useSplitAddressFields) {
             wp_enqueue_script(
-                'wcmp-checkout-fields',
-                WCMP()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
-                ['wc-checkout'],
-                WC_MYPARCEL_BE_VERSION
+                "wcmp-checkout-fields",
+                WCMP()->plugin_url() . "/assets/js/wcmp-checkout-fields.js",
+                ["wc-checkout"],
+                WC_MYPARCEL_BE_VERSION,
+                true
             );
         }
 
-        // Don't load the delivery options scripts if it's disabled
-        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
+        // Don"t load the delivery options scripts if it"s disabled
+        if (!WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
             return;
         }
 
+        /**
+         * JS dependencies array
+         */
+        $deps = ["wc-checkout"];
+
+        /**
+         * If split address fields are enabled add the checkout fields script as an additional dependency.
+         */
+        if ($useSplitAddressFields) {
+            array_push($deps, "wcmp-checkout-fields");
+        }
+
         wp_enqueue_script(
-            'wc-myparcelbe',
-            WCMP()->plugin_url() . '/assets/js/myparcel.js',
-            [],
-            WC_MYPARCEL_BE_VERSION
+            "wc-myparcelbe",
+            WCMP()->plugin_url() . "/assets/js/myparcel.js",
+            $deps,
+            WC_MYPARCEL_BE_VERSION,
+            true
         );
 
         wp_enqueue_script(
-            'wc-myparcelbe-frontend',
-            WCMP()->plugin_url() . '/assets/js/wcmp-frontend.js',
-            ['wc-myparcelbe'],
-            WC_MYPARCEL_BE_VERSION
+            "wc-myparcelbe-frontend",
+            WCMP()->plugin_url() . "/assets/js/wcmp-frontend.js",
+            array_merge($deps, ["wc-myparcelbe"]),
+            WC_MYPARCEL_BE_VERSION,
+            true
         );
 
         $this->inject_delivery_options_variables();
@@ -91,9 +107,9 @@ class WCMP_Checkout
             "wc-myparcelbe",
             "MyParcelDeliveryOptions",
             [
-                "shippingMethods" => $this->get_delivery_options_shipping_methods(),
-                "alwaysDisplay"   => (int) $this->get_delivery_options_always_display(),
-                "hiddenInputName" => WCMP_Admin::META_DELIVERY_OPTIONS,
+                "allowedShippingMethods" => json_encode($this->getShippingMethodsForDeliveryOptions()),
+                "alwaysShow"             => $this->alwaysDisplayDeliveryOptions(),
+                "hiddenInputName"        => WCMP_Admin::META_DELIVERY_OPTIONS,
             ]
         );
 
@@ -120,7 +136,8 @@ class WCMP_Checkout
     public function get_delivery_options_shipping_methods()
     {
         $packageTypes = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
-        if (! is_array($packageTypes)) {
+
+        if (!is_array($packageTypes)) {
             $packageTypes = [];
         }
 
@@ -132,18 +149,6 @@ class WCMP_Checkout
         }
 
         return json_encode($shipping_methods);
-    }
-
-    /**
-     * @return bool
-     */
-    public function get_delivery_options_always_display(): bool
-    {
-        if (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY) === 'all_methods') {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -296,6 +301,52 @@ class WCMP_Checkout
                 $_POST[WCMP_Admin::META_DELIVERY_OPTIONS]
             );
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getShippingMethodsForDeliveryOptions(): array
+    {
+        $allowed = [];
+
+        $shippingClass = WCMP_Frontend::get_cart_shipping_class();
+        $packageTypes  = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+        $displayFor    = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
+
+        if ($displayFor === WCMP_Settings_Data::DISPLAY_FOR_SELECTED_METHODS) {
+            /**
+             *
+             */
+            foreach ($packageTypes as $packageType => $shippingMethods) {
+                /**
+                 *
+                 */
+                foreach ($shippingMethods as $shippingMethod) {
+                    if ($shippingClass) {
+                        $shippingMethodAndClass = "$shippingMethod:$shippingClass";
+
+                        if (in_array($shippingMethodAndClass, $shippingMethods)) {
+                            $allowed[] = $shippingMethodAndClass;
+                        }
+                    } elseif (in_array($shippingMethod, $shippingMethods)) {
+                        $allowed[] = $shippingMethod;
+                    }
+                }
+            }
+        }
+
+        return $allowed;
+    }
+
+    /**
+     * @return bool
+     */
+    private function alwaysDisplayDeliveryOptions(): bool
+    {
+        $display = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
+
+        return $display === WCMP_Settings_Data::DISPLAY_FOR_ALL_METHODS;
     }
 }
 
