@@ -20,11 +20,6 @@ if (class_exists("WCMP_Export_Consignments")) {
 class WCMP_Export_Consignments
 {
     /**
-     * Maximum characters length of item description.
-     */
-    public const DESCRIPTION_MAX_LENGTH = 50;
-
-    /**
      * @var AbstractConsignment
      */
     private $consignment;
@@ -140,7 +135,7 @@ class WCMP_Export_Consignments
                 $description = $item["name"];
 
                 // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
-                if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH) {
+                if (strlen($description) >= WCMP_Export::DESCRIPTION_MAX_LENGTH) {
                     $description = substr($item["name"], 0, 47) . "...";
                 }
                 // Amount

@@ -33,6 +33,11 @@ class WCMP_Export
     public const GET_LABELS    = "get_labels";
     public const MODAL_DIALOG  = "modal_dialog";
 
+    /**
+     * Maximum characters length of item description.
+     */
+    public const DESCRIPTION_MAX_LENGTH = 50;
+
     public $order_id;
     public $success;
     public $errors;
@@ -298,12 +303,12 @@ class WCMP_Export
              * consignments to the collection.
              */
             if (WCMP_Data::HAS_MULTI_COLLO) {
-                $consignment = $this->createConsignmentFromCheckoutData($order_id);
+                $consignment = (new WCMP_Export_Consignments($order_id))->getConsignment();;
 
                 $collection->addMultiCollo($consignment, $collo_amount);
             } else {
                 for ($i = 0; $i < $collo_amount; $i++) {
-                    $consignment = $this->createConsignmentFromCheckoutData($order_id);
+                    $consignment = (new WCMP_Export_Consignments($order_id))->getConsignment();
 
                     $collection->addConsignment($consignment);
                 }
@@ -312,17 +317,7 @@ class WCMP_Export
             $this->log("Shipment data for order {$order_id}.");
         }
 
-        file_put_contents(
-            date('YmdHis') . "_collection.json",
-            json_encode($collection->toArray())
-        );
-
-
         $collection = $collection->createConcepts();
-        file_put_contents(
-            date('YmdHis') . "_collection2the_reckoning.json",
-            json_encode($collection->toArray())
-        );
 
         foreach ($order_ids as $order_id) {
             $order        = WCX::get_order($order_id);
@@ -343,12 +338,12 @@ class WCMP_Export
                 }
 
                 // status automation
-                if ($this->getSetting("order_status_automation")
+                if ($this->getSetting(WCMP_Settings::SETTING_ORDER_STATUS_AUTOMATION)
                     && $this->getSetting(
-                        "automatic_order_status"
+                        WCMP_Settings::SETTING_AUTOMATIC_ORDER_STATUS
                     )) {
                     $order->update_status(
-                        $this->getSetting("automatic_order_status"),
+                        $this->getSetting(WCMP_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
                         __("MyParcel shipment created:", "woocommerce-myparcelbe")
                     );
                 }
@@ -370,6 +365,11 @@ class WCMP_Export
         return $return;
     }
 
+    /**
+     * @param $myparcelbe_options
+     *
+     * @return array
+     */
     public function add_return($myparcelbe_options)
     {
         $return = [];
@@ -407,6 +407,14 @@ class WCMP_Export
         return $return;
     }
 
+    /**
+     * @param       $shipment_ids
+     * @param array $order_ids
+     * @param null  $label_response_type
+     * @param int   $offset
+     *
+     * @return array
+     */
     public function get_shipment_labels($shipment_ids, $order_ids = [], $label_response_type = null, $offset = 0)
     {
         $return = [];
@@ -461,6 +469,13 @@ class WCMP_Export
         return $return;
     }
 
+    /**
+     * @param      $order_ids
+     * @param null $label_response_type
+     * @param int  $offset
+     *
+     * @return array
+     */
     public function get_labels($order_ids, $label_response_type = null, $offset = 0)
     {
         $shipment_ids = $this->get_shipment_ids($order_ids, ["only_last" => true]);
@@ -475,6 +490,10 @@ class WCMP_Export
         return $this->get_shipment_labels($shipment_ids, $order_ids, $label_response_type, $offset);
     }
 
+    /**
+     * @param $order_ids
+     * @param $dialog
+     */
     public function modal_dialog($order_ids, $dialog)
     {
         // check for JSON
@@ -544,6 +563,12 @@ class WCMP_Export
         return new WCMP_API($key);
     }
 
+    /**
+     * @param $order_id
+     * @param $options
+     *
+     * @return array
+     */
     public function prepare_return_shipment_data($order_id, $options)
     {
         $order = WCX::get_order($order_id);
@@ -607,7 +632,7 @@ class WCMP_Export
 
     /**
      * @param WC_Order $order
-     * @param null     $connectEmail
+     * @param bool     $connectEmail
      *
      * @return mixed|void
      */
@@ -623,7 +648,10 @@ class WCMP_Export
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
                 : trim($order->get_shipping_first_name() . " " . $order->get_shipping_last_name());
 
-        $connectEmail = $connectEmail ?? WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_CONNECT_EMAIL);
+        if ($connectEmail === null) {
+            $connectEmail = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_CONNECT_EMAIL);
+        }
+
         $connectPhone = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_CONNECT_PHONE);
 
         $address = [
@@ -1008,11 +1036,23 @@ class WCMP_Export
         return;
     }
 
+    /**
+     * TODO: For MyParcel NL, currently not necessary for BE.
+     *
+     * @param $shipping_method
+     * @param $shipping_class
+     * @param $shipping_country
+     *
+     * @return int|string
+     */
     public function get_package_type_from_shipping_method($shipping_method, $shipping_class, $shipping_country)
     {
+        $packageTypes = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+
         $package_type             = self::PACKAGE;
         $shipping_method_id_class = "";
-        if ($this->getSetting("shipping_methods_package_types")) {
+
+        if ($packageTypes) {
             if (strpos($shipping_method, "table_rate:") === 0 && class_exists("WC_Table_Rate_Shipping")) {
                 // Automattic / WooCommerce table rate
                 // use full method = method_id:instance_id:rate_id
@@ -1030,20 +1070,18 @@ class WCMP_Export
 
                 // add class if we have one
                 if (! empty($shipping_class)) {
-                    $shipping_method_id_class = "{
-        $shipping_method_id}:{
-        $shipping_class}";
+                    $shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
                 }
             }
-            foreach ($this->getSetting("shipping_methods_package_types") as $package_type_key =>
-                     $package_type_shipping_methods) {
+
+            foreach ($packageTypes as $packageType => $shippingMethods) {
                 if ($this->isActiveMethod(
                     $shipping_method_id,
-                    $package_type_shipping_methods,
+                    $shippingMethods,
                     $shipping_method_id_class,
                     $shipping_class
                 )) {
-                    $package_type = $package_type_key;
+                    $package_type = $packageType;
                     break;
                 }
             }
@@ -1053,18 +1091,20 @@ class WCMP_Export
     }
 
     /**
-     * @param $package_type
+     * @param string $package_type
      *
-     * @return string|void
+     * @return string
      */
-    public function get_package_name($package_type)
+    public function get_package_type(string $package_type): string
     {
-        $package_types = WCMP_Data::getPackageTypes();
-        $package_name  = isset($package_types[$package_type]) ? $package_types[$package_type] : __("Unknown", "woocommerce-myparcelbe");
-
-        return $package_name;
+        return WCMP_Data::getPackageTypes()[$package_type] ?? __("Unknown", "woocommerce-myparcelbe");
     }
 
+    /**
+     * @param $errors
+     *
+     * @return mixed|string
+     */
     public function parse_errors($errors)
     {
         $parsed_errors = [];
@@ -1361,7 +1401,7 @@ class WCMP_Export
             }
         }
 
-        $shipping_method = $this->get_shipping_method($shipping_method_id);
+        $shipping_method = self::get_shipping_method($shipping_method_id);
 
         if (empty($shipping_method)) {
             return false;
@@ -1380,7 +1420,7 @@ class WCMP_Export
      *
      * @return bool|WC_Shipping_Method
      */
-    public function get_shipping_method($chosen_method)
+    public static function get_shipping_method($chosen_method)
     {
         if (version_compare(WOOCOMMERCE_VERSION, "2.6", " >= ") && $chosen_method !== "legacy_flat_rate") {
             $chosen_method = explode(":", $chosen_method); // slug:instance
@@ -1401,7 +1441,7 @@ class WCMP_Export
             if (! in_array($chosen_method, ["flat_rate", "legacy_flat_rate"])) {
                 return false;
             }
-            $shipping_methods = WC()->shipping->load_shipping_methods($package);
+            $shipping_methods = WC()->shipping()->load_shipping_methods();
 
             if (! isset($shipping_methods[$chosen_method])) {
                 return false;
