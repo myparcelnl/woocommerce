@@ -5,7 +5,9 @@
 
 namespace WPO\WC\MyParcelBE\Compatibility;
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use DateTime;
+
+if ( ! defined('ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Compatibility\\WC_DateTime' ) ) :
 
@@ -19,7 +21,7 @@ if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Compatibility\\WC_DateTime' ) ) :
  * @category Class
  * @author   WooThemes
  */
-class WC_DateTime extends \DateTime {
+class WC_DateTime extends DateTime {
 
 	/**
 	 * Output an ISO 8601 date string in local timezone.

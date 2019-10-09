@@ -5,7 +5,9 @@
 
 namespace WPO\WC\MyParcelBE\Compatibility;
 
-defined( 'ABSPATH' ) or exit;
+use WC_Order;
+
+defined('ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Compatibility\\WC_Core' ) ) :
 
@@ -32,7 +34,7 @@ class WC_Core {
 	 * Backports wc_get_order() to pre-2.2.0
 	 *
 	 * @since 4.3.0
-	 * @return \WC_Order $order order object
+	 * @return WC_Order $order order object
 	 */
 	public static function get_order( $order_id ) {
 
@@ -42,7 +44,7 @@ class WC_Core {
 
 		} else {
 
-			return new \WC_Order( $order_id );
+			return new WC_Order( $order_id );
 		}
 	}
 
@@ -190,13 +192,14 @@ class WC_Core {
 		return self::get_wc_version() && version_compare( self::get_wc_version(), '3.0', '<' );
 	}
 
-	/**
-	 * Returns true if the installed version of WooCommerce is greater than $version
-	 *
-	 * @since 2.0.0
-	 * @param string $version the version to compare
-	 * @return boolean true if the installed version of WooCommerce is > $version
-	 */
+    /**
+     * Returns true if the installed version of WooCommerce is greater than $version
+     *
+     * @param string $version the version to compare
+     *
+     * @return bool true if the installed version of WooCommerce is > $version
+     * @since 2.0.0
+     */
 	public static function is_wc_version_gt( $version ) {
 		return self::get_wc_version() && version_compare( self::get_wc_version(), $version, '>' );
 	}

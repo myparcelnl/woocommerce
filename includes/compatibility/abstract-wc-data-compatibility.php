@@ -5,7 +5,9 @@
 
 namespace WPO\WC\MyParcelBE\Compatibility;
 
-defined( 'ABSPATH' ) or exit;
+use WC_Data;
+
+defined('ABSPATH' ) or exit;
 
 if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Compatibility\\Data' ) ) :
 
@@ -24,7 +26,7 @@ abstract class Data {
 	 */
 	public static function __callStatic( $name, $arguments ) {
 		if ( substr( $name, -strlen('_meta') ) == '_meta' && method_exists( __CLASS__, $name.'_data' ) ) {
-			call_user_func_array( array( __CLASS__, $name.'_data' ), $arguments );
+			call_user_func_array([__CLASS__, $name.'_data'], $arguments );
 		}
 	}
 
@@ -33,19 +35,19 @@ abstract class Data {
 	 * Gets an object property.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
+	 * @param WC_Data $object the data object, likely \WC_Order or \WC_Product
 	 * @param string $prop the property name
 	 * @param string $context if 'view' then the value will be filtered
 	 * @param array $compat_props Compatibility properties.
 	 * @return mixed
 	 */
-	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = array() ) {
+	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = []) {
 
 		$value = '';
 
 		if ( WC_Core::is_wc_version_gte_3_0() ) {
 
-			if ( is_callable( array( $object, "get_{$prop}" ) ) ) {
+			if ( is_callable([$object, "get_{$prop}"]) ) {
 				$value = $object->{"get_{$prop}"}( $context );
 			}
 
@@ -57,7 +59,7 @@ abstract class Data {
 			}
 
 			// if this is the 'view' context and there is an accessor method, use it
-			if ( is_callable( array( $object, "get_{$prop}" ) ) && 'view' === $context ) {
+			if ( is_callable([$object, "get_{$prop}"]) && 'view' === $context ) {
 				$value = $object->{"get_{$prop}"}();
 			} else {
 				$value = $object->$prop;
@@ -74,12 +76,12 @@ abstract class Data {
 	 * Note that this does not save any data to the database.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
+	 * @param WC_Data $object the data object, likely \WC_Order or \WC_Product
 	 * @param array $props the new properties as $key => $value
 	 * @param array $compat_props Compatibility properties.
-	 * @return \WC_Data
+	 * @return WC_Data
 	 */
-	public static function set_props( $object, $props, $compat_props = array() ) {
+	public static function set_props( $object, $props, $compat_props = []) {
 
 		if ( WC_Core::is_wc_version_gte_3_0() ) {
 
@@ -105,7 +107,7 @@ abstract class Data {
 	 * Gets an object's stored meta value.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
+	 * @param WC_Data $object the data object, likely \WC_Order or \WC_Product
 	 * @param string $key the meta key
 	 * @param bool $single whether to get the meta as a single item. Defaults to `true`
 	 * @param string $context if 'view' then the value will be filtered
@@ -132,7 +134,7 @@ abstract class Data {
 	 * Stores an object meta value.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
+	 * @param WC_Data $object the data object, likely \WC_Order or \WC_Product
 	 * @param string $key the meta key
 	 * @param string $value the meta value
 	 * @param string $meta_id Optional. The specific meta ID to update
@@ -147,7 +149,7 @@ abstract class Data {
 			$object->save_meta_data();
 
 		} else {
-			$object_id = is_callable( array( $object, 'get_id' ) ) ? $object->get_id() : $object->id;
+			$object_id = is_callable([$object, 'get_id']) ? $object->get_id() : $object->id;
 			add_post_meta( $object_id, $key, maybe_serialize($value), $unique );
 		}
 	}
@@ -155,7 +157,7 @@ abstract class Data {
     /**
      * Updates an object's stored meta value.
      *
-     * @param \WC_Data     $object  the data object, likely \WC_Order or \WC_Product
+     * @param WC_Data     $object  the data object, likely \WC_Order or \WC_Product
      * @param string       $key     the meta key
      * @param string|array $value   the meta value, will be encoded if it's an array
      * @param int|string   $meta_id Optional. The specific meta ID to update
@@ -184,7 +186,7 @@ abstract class Data {
 	 * Deletes an object's stored meta value.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
+	 * @param WC_Data $object the data object, likely \WC_Order or \WC_Product
 	 * @param string $key the meta key
 	 */
 	public static function delete_meta_data( $object, $key ) {
@@ -197,7 +199,7 @@ abstract class Data {
 
 		} else {
 
-			$object_id = is_callable( array( $object, 'get_id' ) ) ? $object->get_id() : $object->id;
+			$object_id = is_callable([$object, 'get_id']) ? $object->get_id() : $object->id;
 			delete_post_meta( $object_id, $key );
 		}
 	}

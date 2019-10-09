@@ -528,6 +528,9 @@ class WCMP_Export
         die();
     }
 
+    /**
+     * @throws Exception
+     */
     public function frontend_api_request()
     {
         // TODO: check nonce
@@ -1336,7 +1339,7 @@ class WCMP_Export
         // Backwards compatibility for pakjegemak data
         $pgaddress = WCX_Order::get_meta($order, WCMP_Admin::META_PGADDRESS);
         if (! empty($pgaddress) && ! empty($pgaddress["postcode"])) {
-            $pickup = [
+            return [
                 "postal_code"   => $pgaddress["postcode"],
                 "street"        => $pgaddress["street"],
                 "city"          => $pgaddress["town"],
@@ -1344,8 +1347,6 @@ class WCMP_Export
                 "location"      => $pgaddress["name"],
                 "price_comment" => "retail",
             ];
-
-            return $pickup;
         }
 
         // no pickup
@@ -1429,9 +1430,7 @@ class WCMP_Export
         // get shipping classes from order
         $found_shipping_classes = $this->find_order_shipping_classes($order);
 
-        $highest_class = $this->get_shipping_class($shipping_method, $found_shipping_classes);
-
-        return $highest_class;
+        return $this->get_shipping_class($shipping_method, $found_shipping_classes);
     }
 
     /**
@@ -2046,6 +2045,7 @@ class WCMP_Export
      * @param $order
      *
      * @return mixed|string
+     * @throws Exception
      */
     private function getLabelDescription($order)
     {

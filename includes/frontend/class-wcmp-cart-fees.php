@@ -70,22 +70,6 @@ class WCMP_Cart_Fees
     /**
      * @param string $name
      *
-     * @return string
-     */
-    private static function getFeeTitle(string $name): string
-    {
-        $titles = self::getFeeTitles();
-
-        if (array_key_exists($name, $titles)) {
-            return $titles[$name];
-        }
-
-        return "";
-    }
-
-    /**
-     * @param string $name
-     *
      * @return array
      */
     private function getFee(string $name): array

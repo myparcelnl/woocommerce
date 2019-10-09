@@ -51,7 +51,7 @@ class WCMP_Rest
      * @return void
      * @throws Exception
      */
-    function __construct()
+    public function __construct()
     {
         if (! function_exists("curl_init")) {
             throw new Exception("cURL is not installed on this system");
@@ -84,7 +84,7 @@ class WCMP_Rest
         @curl_close($this->curl);
     }
 
-    function __destruct()
+    public function __destruct()
     {
         $this->close();
     }
@@ -215,7 +215,7 @@ class WCMP_Rest
 
             if (! empty($body["errors"])) {
                 $error = $this->parse_errors($body);
-            } else if (! empty($body["message"])) {
+            }     elseif (! empty($body["message"])) {
                 $error = $body["message"];
             } else {
                 $error = "Unknown error";
@@ -244,7 +244,7 @@ class WCMP_Rest
                 foreach ($error['human'] as $key => $human_error) {
                     $parsed_errors[$code] = "{$human_error} (<strong>Code {$code}</strong>)";
                 }
-            } else if (isset($error['message'])) {
+            }     elseif (isset($error['message'])) {
                 $parsed_errors[$code] = "{$error['message']} (<strong>Code {$code}</strong>)";
             } else {
                 $parsed_errors[$code] = "{$message} (<strong>Code {$code}</strong>)";

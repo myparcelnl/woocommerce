@@ -11,7 +11,7 @@ if (class_exists("WCMP_Assets")) {
 class WCMP_Assets
 {
 
-    function __construct()
+    public function __construct()
     {
         add_action("admin_enqueue_scripts", [$this, "enqueue_admin_scripts_and_styles"], 9999);
     }

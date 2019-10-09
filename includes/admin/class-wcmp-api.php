@@ -32,7 +32,7 @@ class WCMP_API extends WCMP_Rest
      *
      * @throws Exception
      */
-    function __construct($key)
+    public function __construct($key)
     {
         parent::__construct();
 
@@ -111,9 +111,7 @@ class WCMP_API extends WCMP_Rest
         ];
 
         $request_url = $this->apiUrl . $endpoint . "/" . implode(";", $ids);
-        $response    = $this->delete($request_url, $headers);
-
-        return $response;
+        return $this->delete($request_url, $headers);
     }
 
     /**
@@ -220,9 +218,7 @@ class WCMP_API extends WCMP_Rest
         ];
 
         $request_url = add_query_arg($params, $this->apiUrl . $endpoint . "/" . implode(";", $ids));
-        $response    = $this->get($request_url, $headers, false);
-
-        return $response;
+        return $this->get($request_url, $headers, false);
     }
 
     /**

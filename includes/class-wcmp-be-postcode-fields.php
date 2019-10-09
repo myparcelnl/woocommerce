@@ -20,7 +20,8 @@ class WCMP_BE_Postcode_Fields
      * Contains php keys to store the data in an array
      * Taken from https://github.com/myparcelbe/sdk
      */
-    const SPLIT_STREET_REGEX = '~(?P<street>.*?)\s?(?P<street_suffix>(?P<number>[\d]+)[\s-]{0,2}(?P<extension>[a-zA-Z/\s]{0,5}$|[0-9/]{0,5}$|\s[a-zA-Z]{1}[0-9]{0,3}$|\s[0-9]{2}[a-zA-Z]{0,3}$))$~';
+    public const SPLIT_STREET_REGEX = '~(?P<street>.*?)\s?(?P<street_suffix>(?P<number>[\d]+)[\s-]{0,2}
+    (?P<extension>[a-zA-Z/\s]{0,5}$|[0-9/]{0,5}$|\s[a-zA-Z]{1}[0-9]{0,3}$|\s[0-9]{2}[a-zA-Z]{0,3}$))$~';
 
     public function __construct()
     {
@@ -397,9 +398,7 @@ class WCMP_BE_Postcode_Fields
             'SE' => [],
             'VN' => [],
         ];
-        $states        = $hidden_states + $allowed_states;
-
-        return $states;
+        return $hidden_states + $allowed_states;
     }
 
     /**
@@ -773,7 +772,7 @@ class WCMP_BE_Postcode_Fields
     {
         $order = WCX::get_order($order_id);
         // get default address fields with their placeholders
-        $countries = new WC_Countries;
+        $countries = new WC_Countries();
         $fields    = $countries->get_default_address_fields();
 
         // define order_comments placeholder
@@ -827,7 +826,7 @@ class WCMP_BE_Postcode_Fields
      * WooCommerce concatenates translations for required field notices that result in
      * confusing messages, so we translate the full notice to prevent this
      */
-    function required_field_notices($notice, $field_label)
+    public function required_field_notices($notice, $field_label)
     {
         // concatenate translations
         $billing_nr  = sprintf(__("Billing %s', 'woocommerce'), __('No.", "woocommerce-myparcelbe"));
@@ -1004,7 +1003,7 @@ class WCMP_BE_Postcode_Fields
             || (! $posted['ship_to_different_address']
                 && $this->cart_needs_shipping_address())) {
             $return = isset($posted['billing_' . $key]) ? $posted['billing_' . $key] : '';
-        } else if ('shipping' === $type && ! $this->cart_needs_shipping_address()) {
+        }     elseif ('shipping' === $type && ! $this->cart_needs_shipping_address()) {
             $return = '';
         } else {
             $return = isset($posted['shipping_' . $key]) ? $posted['shipping_' . $key] : '';
@@ -1107,14 +1106,12 @@ class WCMP_BE_Postcode_Fields
             $move_to_pos = array_search($reference_key, array_keys($array)) + 1;
         }
 
-        $new_array = array_slice($array, 0, $move_to_pos, true) + $move + array_slice(
+        return array_slice($array, 0, $move_to_pos, true) + $move + array_slice(
                 $array,
                 $move_to_pos,
                 null,
                 true
             );
-
-        return $new_array;
     }
 }
 

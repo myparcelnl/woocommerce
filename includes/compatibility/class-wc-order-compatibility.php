@@ -5,7 +5,13 @@
 
 namespace WPO\WC\MyParcelBE\Compatibility;
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+use DateTimeZone;
+use WC_Order;
+use WC_Order_Item;
+use WC_Order_Item_Coupon;
+use WC_Order_Item_Fee;
+
+if ( ! defined('ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Compatibility\\Order' ) ) :
 
@@ -18,7 +24,7 @@ class Order extends Data {
 
 
 	/** @var array mapped compatibility properties, as `$new_prop => $old_prop` */
-	protected static $compat_props = array(
+	protected static $compat_props = [
 		'date_completed' => 'completed_date',
 		'date_paid'      => 'paid_date',
 		'date_modified'  => 'modified_date',
@@ -30,14 +36,14 @@ class Order extends Data {
 		'type'           => 'order_type',
 		'currency'       => 'order_currency',
 		'version'        => 'order_version',
-	);
+    ];
 
 
 	/**
 	 * Backports WC_Order::get_id() method to pre-2.6.0
 	 *
 	 * @since 4.2.0
-	 * @param \WC_Order $order order object
+	 * @param WC_Order $order order object
 	 * @return string|int order ID
 	 */
 	public static function get_id( $order ) {
@@ -52,17 +58,19 @@ class Order extends Data {
 		}
 	}
 
-
-	/**
-	 * Gets an order property.
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $object the order object
-	 * @param string $prop the property name
-	 * @param string $context if 'view' then the value will be filtered
-	 * @return mixed
-	 */
-	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = array() ) {
+    /**
+     * Gets an order property.
+     *
+     * @param WC_Order $object  the order object
+     * @param string   $prop    the property name
+     * @param string   $context if 'view' then the value will be filtered
+     *
+     * @return mixed
+     * @throws \Exception
+     * @throws \Exception
+     * @since 4.6.0-dev
+     */
+	public static function get_prop( $object, $prop, $context = 'edit', $compat_props = []) {
 
 		// backport a few specific properties to pre-3.0
 		if ( WC_Core::is_wc_version_lt_3_0() ) {
@@ -82,13 +90,13 @@ class Order extends Data {
 		$value = parent::get_prop( $object, $prop, $context, self::$compat_props );
 
 		// 3.0+ date getters return a DateTime object, where previously MySQL date strings were returned
-		if ( WC_Core::is_wc_version_lt_3_0() && in_array( $prop, array( 'date_completed', 'date_paid', 'date_modified', 'date_created' ), true ) && !empty( $value ) ) {
+		if ( WC_Core::is_wc_version_lt_3_0() && in_array($prop, ['date_completed', 'date_paid', 'date_modified', 'date_created'], true ) && !empty( $value ) ) {
 			if ( is_numeric( $value ) ) {
-				$value = new WC_DateTime( "@{$value}", new \DateTimeZone( 'UTC' ) );
-				$value->setTimezone( new \DateTimeZone( wc_timezone_string() ) );
+				$value = new WC_DateTime( "@{$value}", new DateTimeZone( 'UTC' ) );
+				$value->setTimezone( new DateTimeZone( wc_timezone_string() ) );
 			} else {
-				$value = new WC_DateTime( $value, new \DateTimeZone( wc_timezone_string() ) );
-				$value->setTimezone( new \DateTimeZone( wc_timezone_string() ) );
+				$value = new WC_DateTime( $value, new DateTimeZone( wc_timezone_string() ) );
+				$value->setTimezone( new DateTimeZone( wc_timezone_string() ) );
 			}
 		}
 
@@ -102,11 +110,11 @@ class Order extends Data {
 	 * Note that this does not save any data to the database.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Order $object the order object
+	 * @param WC_Order $object the order object
 	 * @param array $props the new properties as $key => $value
-	 * @return \WC_Order
+	 * @return WC_Order
 	 */
-	public static function set_props( $object, $props, $compat_props = array() ) {
+	public static function set_props( $object, $props, $compat_props = []) {
 
 		return parent::set_props( $object, $props, self::$compat_props );
 	}
@@ -116,16 +124,16 @@ class Order extends Data {
 	 * Saves by default.
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
+	 * @param WC_Order $order the order object
 	 * @param string $prop Name of prop to set.
 	 * @param string $address Name of address to set. billing or shipping.
 	 * @param mixed  $value Value of the prop.
 	 * @param bool   $save whether to save the order/property
-	 * @return \WC_Order
+	 * @return WC_Order
 	 */
-	public static function set_address_prop( \WC_Order $order, $prop, $address = 'billing', $value, $save = true ) {
+	public static function set_address_prop( WC_Order $order, $prop, $address = 'billing', $value, $save = true ) {
 		if ( WC_Core::is_wc_version_gte_3_0() ) {
-			if ( is_callable( array( $order, "set_{$address}_{$prop}" ) ) ) {
+			if ( is_callable([$order, "set_{$address}_{$prop}"]) ) {
 				$order->{"set_{$address}_{$prop}"}( $value );
 				if ($save === true) {
 					$order->save();
@@ -145,14 +153,18 @@ class Order extends Data {
 		return $order;
 	}
 
-	/**
-	 * Implements WC_Order::get_item_meta for 3.0+
-	 * @param  \WC_Order $order the order object
-	 * @param  int     $item_id the item id
-	 * @param  int     $key     the meta key
-	 * @param  boolean $single  single or multiple
-	 * @return mixed            item meta
-	 */
+    /**
+     * Implements WC_Order::get_item_meta for 3.0+
+     *
+     * @param        $object
+     * @param int    $item_id the item id
+     * @param string $key     the meta key
+     * @param bool   $single  single or multiple
+     *
+     * @return mixed            item meta
+     * @throws \Exception
+     * @throws \Exception
+     */
 	public static function get_item_meta( $object, $item_id, $key = '', $single = false ) {
 		if (function_exists('wc_get_order_item_meta')) {
 			$item_meta = wc_get_order_item_meta( $item_id, $key, $single );
@@ -166,10 +178,10 @@ class Order extends Data {
 	 * Backports WC_Order::get_status() to pre-3.0.0
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
+	 * @param WC_Order $order the order object
 	 * @return string order status
 	 */
-	public static function get_status( \WC_Order $order ) {
+	public static function get_status( WC_Order $order ) {
 
 		if ( method_exists( $order, 'get_status' ) ) {
 			return $order->get_status();
@@ -178,28 +190,31 @@ class Order extends Data {
 		}
 	}
 
-	/**
-	 * Order item CRUD compatibility method to add a coupon to an order.
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @param array $code the coupon code
-	 * @param int $discount the discount amount.
-	 * @param int $discount_tax the discount tax amount.
-	 * @return int the order item ID
-	 */
-	public static function add_coupon( \WC_Order $order, $code = array(), $discount = 0, $discount_tax = 0 ) {
+    /**
+     * Order item CRUD compatibility method to add a coupon to an order.
+     *
+     * @param WC_Order $order        the order object
+     * @param array    $code         the coupon code
+     * @param int      $discount     the discount amount.
+     * @param int      $discount_tax the discount tax amount.
+     *
+     * @return int the order item ID
+     * @throws \WC_Data_Exception
+     * @since 4.6.0-dev
+     */
+	public static function add_coupon(WC_Order $order, $code = [], $discount = 0, $discount_tax = 0 ) {
 
 		if ( WC_Core::is_wc_version_gte_3_0() ) {
 
-			$item = new \WC_Order_Item_Coupon();
+			$item = new WC_Order_Item_Coupon();
 
-			$item->set_props( array(
+			$item->set_props([
 				'code'         => $code,
 				'discount'     => $discount,
 				'discount_tax' => $discount_tax,
 				'order_id'     => $order->get_id(),
-			) );
+                             ]
+            );
 
 			$item->save();
 
@@ -213,31 +228,33 @@ class Order extends Data {
 		}
 	}
 
-
-	/**
-	 * Order item CRUD compatibility method to add a fee to an order.
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @param object $fee the fee to add
-	 * @return int|\WC_Order_Item the order item ID
-	 */
-	public static function add_fee( \WC_Order $order, $fee ) {
+    /**
+     * Order item CRUD compatibility method to add a fee to an order.
+     *
+     * @param WC_Order $order the order object
+     * @param object   $fee   the fee to add
+     *
+     * @return int|WC_Order_Item the order item ID
+     * @throws \WC_Data_Exception
+     * @since 4.6.0-dev
+     */
+	public static function add_fee( WC_Order $order, $fee ) {
 
 		if ( WC_Core::is_wc_version_gte_3_0() ) {
 
-			$item = new \WC_Order_Item_Fee();
+			$item = new WC_Order_Item_Fee();
 
-			$item->set_props( array(
-				'name'      => $fee->name,
-				'tax_class' => $fee->taxable ? $fee->tax_class : 0,
-				'total'     => $fee->amount,
-				'total_tax' => $fee->tax,
-				'taxes'     => array(
+			$item->set_props([
+                                 'name'      => $fee->name,
+                                 'tax_class' => $fee->taxable ? $fee->tax_class : 0,
+                                 'total'     => $fee->amount,
+                                 'total_tax' => $fee->tax,
+                                 'taxes'     => [
 					'total' => $fee->tax_data,
-				),
-				'order_id'  => $order->get_id(),
-			) );
+                                 ],
+                                 'order_id'  => $order->get_id(),
+                             ]
+            );
 
 			$item->save();
 
@@ -251,23 +268,23 @@ class Order extends Data {
 		}
 	}
 
-
-	/**
-	 * Order item CRUD compatibility method to update an order coupon.
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @param int|\WC_Order_Item $item the order item ID
-	 * @param array $args {
-	 *     The coupon item args.
-	 *
-	 *     @type string $code         the coupon code
-	 *     @type float  $discount     the coupon discount amount
-	 *     @type float  $discount_tax the coupon discount tax amount
-	 * }
-	 * @return int|bool the order item ID or false on failure
-	 */
-	public static function update_coupon( \WC_Order $order, $item, $args ) {
+    /**
+     * Order item CRUD compatibility method to update an order coupon.
+     *
+     * @param WC_Order          $order        the order object
+     * @param int|WC_Order_Item $item         the order item ID
+     * @param array             $args         {
+     *                                        The coupon item args.
+     *
+     * @type string             $code         the coupon code
+     * @type float              $discount     the coupon discount amount
+     * @type float              $discount_tax the coupon discount tax amount
+     * }
+     * @return int|bool the order item ID or false on failure
+     * @throws \WC_Data_Exception
+     * @since 4.6.0-dev
+     */
+	public static function update_coupon( WC_Order $order, $item, $args ) {
 
 		if ( WC_Core::is_wc_version_gte_3_0() ) {
 
@@ -303,24 +320,24 @@ class Order extends Data {
 		}
 	}
 
-
-	/**
-	 * Order item CRUD compatibility method to update an order fee.
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
-	 * @param int $item the order item ID
-	 * @param array $args {
-	 *     The fee item args.
-	 *
-	 *     @type string $name       the fee name
-	 *     @type string $tax_class  the fee's tax class
-	 *     @type float  $line_total the fee total amount
-	 *     @type float  $line_tax   the fee tax amount
-	 * }
-	 * @return int|bool the order item ID or false on failure
-	 */
-	public static function update_fee( \WC_Order $order, $item, $args ) {
+    /**
+     * Order item CRUD compatibility method to update an order fee.
+     *
+     * @param WC_Order $order      the order object
+     * @param int      $item       the order item ID
+     * @param array    $args       {
+     *                             The fee item args.
+     *
+     * @type string    $name       the fee name
+     * @type string    $tax_class  the fee's tax class
+     * @type float     $line_total the fee total amount
+     * @type float     $line_tax   the fee tax amount
+     * }
+     * @return int|bool the order item ID or false on failure
+     * @throws \WC_Data_Exception
+     * @since 4.6.0-dev
+     */
+	public static function update_fee( WC_Order $order, $item, $args ) {
 
 		if ( WC_Core::is_wc_version_gte_3_0() ) {
 
@@ -353,9 +370,9 @@ class Order extends Data {
 	 * Backports wc_reduce_stock_levels() to pre-3.0.0
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
+	 * @param WC_Order $order the order object
 	 */
-	public static function reduce_stock_levels( \WC_Order $order ) {
+	public static function reduce_stock_levels( WC_Order $order ) {
 
 		if ( WC_Core::is_wc_version_gte_3_0() ) {
 			wc_reduce_stock_levels( $order->get_id() );
@@ -369,9 +386,9 @@ class Order extends Data {
 	 * Backports wc_update_total_sales_counts() to pre-3.0.0
 	 *
 	 * @since 4.6.0-dev
-	 * @param \WC_Order $order the order object
+	 * @param WC_Order $order the order object
 	 */
-	public static function update_total_sales_counts( \WC_Order $order ) {
+	public static function update_total_sales_counts( WC_Order $order ) {
 
 		if ( WC_Core::is_wc_version_gte_3_0() ) {
 			wc_update_total_sales_counts( $order->get_id() );

@@ -10,9 +10,9 @@ printf('%s: %s', __("Shipment type", "woocommerce-myparcelbe"), $package_types[$
 <ul class="wcmp__shipment-summary">
     <?php
     // Options
-    $option_strings = array(
+    $option_strings = [
         'signature'      => __("Signature on delivery", "woocommerce-myparcelbe")
-    );
+    ];
 
     foreach ($option_strings as $key => $label) {
         if (isset($shipment['shipment']['options'][$key]) && (int) $shipment['shipment']['options'][$key] == 1) {

@@ -34,7 +34,7 @@ class WCMP_Admin
 
     public const SHIPMENT_OPTIONS_FORM_NAME = "myparcelbe_options";
 
-    function __construct()
+    public function __construct()
     {
         add_action("admin_footer", [$this, "bulk_actions"]);
         add_action("admin_footer", [$this, "offset_dialog"]);
@@ -129,6 +129,8 @@ class WCMP_Admin
 
     /**
      * Get shipment status + Track & Trace link via AJAX
+     *
+     * @throws Exception
      */
     public function order_list_ajax_get_shipment_summary()
     {
