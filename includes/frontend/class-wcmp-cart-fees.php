@@ -59,7 +59,7 @@ class WCMP_Cart_Fees
 
         $this->deliveryOptions = new DeliveryOptions(
             json_decode(stripslashes($post_data[WCMP_Admin::META_DELIVERY_OPTIONS]), true)
-        );;
+        );
 
         $this->addDeliveryFee();
         $this->addShipmentOptionFees();
