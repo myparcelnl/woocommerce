@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace MyParcelNL\Sdk\src\Model\DeliveryOptions;
+namespace MyParcelNL\Sdk\src\Adapter\DeliveryOptions;
 
 use Exception;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Support\Arr;
 
 /**
  * Class DeliveryOptions
@@ -62,15 +63,13 @@ class DeliveryOptions
      */
     public function __construct($deliveryOptions = [])
     {
+        $deliveryOptions = Arr::fromObject($deliveryOptions);
+
         if (! count($deliveryOptions)) {
             $deliveryOptions = self::DEFAULTS;
         }
 
-        if (array_key_exists("carrier", $deliveryOptions)) {
-            $carrier = $deliveryOptions["carrier"];
-        }
-
-        $this->carrier         = $carrier ?? BpostConsignment::CARRIER_NAME;
+        $this->carrier         = $deliveryOptions["carrier"] ?? BpostConsignment::CARRIER_NAME;
         $this->date            = $deliveryOptions["date"];
         $this->deliveryType    = $deliveryOptions["deliveryType"];
         $this->isPickup        = $deliveryOptions["isPickup"] ?? false;
