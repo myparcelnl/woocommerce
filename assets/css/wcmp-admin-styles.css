@@ -1,6 +1,12 @@
+/*
+ * Action buttons
+ */
 .post-type-shop_order .wp-list-table .column-wc_actions .button.wcmp__action,
 .button.wcmp__action {
+  width: auto;
+  min-width: 2em;
   display: inline-flex;
+  padding: 0 0.3em !important
 }
 
 .wcmp__action + .wcmp__action {

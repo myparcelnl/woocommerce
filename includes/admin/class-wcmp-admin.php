@@ -751,7 +751,7 @@ class WCMP_Admin
 
         $attributes = implode(" ", $arguments);
 
-        echo "<div $attributes>";
+        echo "<span $attributes>";
         foreach ($spinners as $spinnerState => $icon) {
             printf(
                 '<img class="wcmp__spinner__%1$s" alt="%1$s" src="%2$s" style="display: %3$s;" />',
@@ -760,7 +760,7 @@ class WCMP_Admin
                 $state === $spinnerState ? "block" : "none"
             );
         }
-        echo '</div>';
+        echo '</span>';
     }
 
     /**
