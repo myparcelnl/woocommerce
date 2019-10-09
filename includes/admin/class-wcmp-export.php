@@ -2,13 +2,10 @@
 
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
-use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
-use MyParcelNL\Sdk\src\Model\DeliveryOptions\DeliveryOptions;
-use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptions;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 
@@ -24,7 +21,6 @@ class WCMP_Export
 {
     // Package types
     public const PACKAGE          = 1;
-    public const INSURANCE_AMOUNT = 500;
 
     public const EXPORT = "wcmp_export";
 
@@ -115,7 +111,8 @@ class WCMP_Export
         if (isset($_GET["myparcelbe"])) {
             switch ($_GET["myparcelbe"]) {
                 case "no_consignments":
-                    $message = __("You have to export the orders to MyParcel before you can print the labels!",
+                    $message = __(
+                        "You have to export the orders to MyParcel before you can print the labels!",
                         "woocommerce-myparcelbe"
                     );
                     printf('<div class="wcmp__notice notice notice-error"><p>%s</p></div>', $message);
@@ -152,7 +149,8 @@ class WCMP_Export
             "wc_myparcelbe_check_privs",
             ! current_user_can("manage_woocommerce_orders") && ! current_user_can("edit_shop_orders")
         )) {
-            $return["error"] = __("You do not have sufficient permissions to access this page.",
+            $return["error"] = __(
+                "You do not have sufficient permissions to access this page.",
                 "woocommerce-myparcelbe"
             );
             $json            = json_encode($return);
@@ -332,6 +330,8 @@ class WCMP_Export
 
             foreach ($consignments->toArray() as $consignmentId) {
                 $shipment['shipment_id'] = $consignmentId;
+                var_dump($shipment);
+                exit();
                 $this->save_shipment_data($order, $shipment);
 
                 // Get the "process directly" setting
@@ -367,7 +367,7 @@ class WCMP_Export
             );
         }
 
-        if (!empty($this->success)) {
+        if (! empty($this->success)) {
             $return["success"]     = sprintf(
                 __("%s shipments successfully exported to MyParcel", "woocommerce-myparcelbe"),
                 count($collection->getConsignmentIds())
@@ -382,6 +382,7 @@ class WCMP_Export
      * @param $myparcelbe_options
      *
      * @return array
+     * @throws Exception
      */
     public function add_return($myparcelbe_options)
     {
@@ -423,8 +424,8 @@ class WCMP_Export
     /**
      * @param       $shipment_ids
      * @param array $order_ids
-     * @param null $label_response_type
-     * @param int $offset
+     * @param null  $label_response_type
+     * @param int   $offset
      *
      * @return array
      */
@@ -485,7 +486,7 @@ class WCMP_Export
     /**
      * @param      $order_ids
      * @param null $label_response_type
-     * @param int $offset
+     * @param int  $offset
      *
      * @return array
      */
@@ -495,7 +496,8 @@ class WCMP_Export
 
         if (empty($shipment_ids)) {
             $this->log(" *** Failed label request(not exported yet) ***");
-            $this->errors[] = __("The selected orders have not been exported to MyParcel yet! ",
+            $this->errors[] = __(
+                "The selected orders have not been exported to MyParcel yet! ",
                 "woocommerce-myparcelbe"
             );
 
@@ -509,7 +511,7 @@ class WCMP_Export
      * @param $order_ids
      * @param $dialog
      */
-    public function modal_dialog($order_ids, $dialog)
+    public function modal_dialog($order_ids)
     {
         // check for JSON
         if (is_string($order_ids) && strpos($order_ids, "[") !== false) {
@@ -522,7 +524,7 @@ class WCMP_Export
         die();
     }
 
-    public function modal_success_page($request, $result)
+    public function modal_success_page()
     {
         require("views/html-modal-result-page.php");
         die();
@@ -586,6 +588,7 @@ class WCMP_Export
      * @param $options
      *
      * @return array
+     * @throws Exception
      */
     public function prepare_return_shipment_data($order_id, $options)
     {
@@ -598,7 +601,10 @@ class WCMP_Export
         // set name & email
         $return_shipment_data = [
             "name"    => $shipping_name,
-            "email"   => ($this->getSetting("connect_email")) ? WCX_Order::get_prop($order, "billing_email") : "",
+            "email"   => ($this->getSetting(WCMP_Settings::SETTING_CONNECT_EMAIL)) ? WCX_Order::get_prop(
+                $order,
+                "billing_email"
+            ) : "",
             "carrier" => BpostConsignment::CARRIER_ID, // default to Bpost for now
         ];
 
@@ -650,27 +656,25 @@ class WCMP_Export
 
     /**
      * @param WC_Order $order
-     * @param bool $connectEmail
+     * @param bool     $connectEmail
      *
      * @return mixed|void
+     * @throws Exception
      */
     public static function getRecipientFromOrder(WC_Order $order, bool $connectEmail = null)
     {
-        $is_using_old_fields = (string) WCX_Order::get_meta($order, "_billing_street_name") !== ""
-                               || (string) WCX_Order::get_meta(
-                $order,
-                "_billing_house_number"
-            ) !== "";
+        $is_using_old_fields = WCX_Order::has_meta($order, "_billing_street_name")
+            || WCX_Order::has_meta($order, "_billing_house_number");
 
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
                 : trim($order->get_shipping_first_name() . " " . $order->get_shipping_last_name());
 
         if ($connectEmail === null) {
-            $connectEmail = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_CONNECT_EMAIL);
+            $connectEmail = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_CONNECT_EMAIL);
         }
 
-        $connectPhone = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_CONNECT_PHONE);
+        $connectPhone = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_CONNECT_PHONE);
 
         $address = [
             "cc"                     => (string) WCX_Order::get_prop($order, "shipping_country"),
@@ -700,7 +704,6 @@ class WCMP_Export
                     "postal_code" => (string) WCX_Order::get_prop($order, "billing_postcode"),
                 ];
 
-                // If not using old fields
                 if ($is_using_old_fields) {
                     $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_billing_street_name");
                     $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_billing_house_number");
@@ -767,12 +770,12 @@ class WCMP_Export
      */
     public function add_myparcelbe_note_to_shipments($selected_shipment_ids, $order_ids)
     {
-        if ($this->getSetting("barcode_in_note")) {
+        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_BARCODE_IN_NOTE)) {
             return;
         }
 
         // Select the barcode text of the MyParcel settings
-        $this->prefix_message = $this->getSetting("barcode_in_note_title");
+        $this->prefix_message = $this->getSetting(WCMP_Settings::SETTING_BARCODE_IN_NOTE_TITLE);
 
         foreach ($order_ids as $order_id) {
             $order           = WCX::get_order($order_id);
@@ -787,112 +790,6 @@ class WCMP_Export
     }
 
     /**
-     * @param $order
-     *
-     * @return array
-     * @throws Exception
-     * @deprecated
-     */
-    public function get_options($order)
-    {
-        $description = $this->getLabelDescription($order);
-
-        // use shipment options from order when available
-        $shipment_options = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS);
-
-        if (! empty($shipment_options)) {
-            $empty_defaults = [
-                "package_type"      => 1,
-                "signature"         => 0,
-                "label_description" => "",
-                "insured_amount"    => 0,
-            ];
-            $options        = array_merge($empty_defaults, $shipment_options);
-        } else {
-            $insured_amount = $this->getInsuranceAmount();
-
-            $options = [
-                "package_type"      => self::PACKAGE,
-                "signature"         => $this->isSignature(),
-                "label_description" => $description,
-                "insured_amount"    => $insured_amount,
-            ];
-        }
-
-        // set insurance amount to int if already set
-        if (isset($options["insurance"])) {
-            $options["insurance"]["amount"] = self::INSURANCE_AMOUNT * 100;
-        }
-
-        // remove frontend insurance option values
-        if (isset($options["insured_amount"])) {
-            unset($options["insured_amount"]);
-        }
-
-        if (isset($options["insured"])) {
-            unset($options["insured"]);
-        }
-
-        // load delivery options
-        $myparcelbe_delivery_options = WCX_Order::get_meta($order, WCMP_Admin::META_DELIVERY_OPTIONS);
-
-        // set delivery type
-        $options["delivery_type"] = $this->get_delivery_type($order, $myparcelbe_delivery_options);
-
-        // Options for Pickup and Pickup express delivery types:
-        // always enable signature on receipt
-        if ($this->is_pickup($order, $myparcelbe_delivery_options)) {
-            $options["signature"] = 0;
-        }
-
-        // options signature & recipient only
-        $myparcelbe_signature = WCX_Order::get_meta($order, WCMP_Admin::META_SIGNATURE);
-        if (! empty($myparcelbe_signature)) {
-            $options["signature"] = 1;
-        }
-
-        // allow prefiltering consignment data
-        $options = apply_filters("wc_myparcelbe_order_shipment_options", $options, $order);
-
-        // PREVENT ILLEGAL SETTINGS
-        // convert numeric strings to int
-        $int_options = ["package_type", "delivery_type", "signature", "return "];
-        foreach ($options as $key => &$value) {
-            if (in_array($key, $int_options)) {
-                $value = (int) $value;
-            }
-        }
-
-        // disable options
-        if ($options["package_type"] != self::PACKAGE) {
-            $illegal_options = ["delivery_type", "signature", "return ", "insurance", "delivery_date"];
-            foreach ($options as $key => $option) {
-                if (in_array($key, $illegal_options)) {
-                    unset($options[$key]);
-                }
-            }
-        }
-
-        return $options;
-    }
-
-    /**
-     * @param string ...$settings
-     *
-     * @return bool
-     */
-    private function isActiveSetting(string ...$settings): bool
-    {
-        foreach ($settings as $setting) {
-            if (! $this->getSetting($setting)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * @param string $name
      *
      * @return mixed
@@ -900,87 +797,6 @@ class WCMP_Export
     private function getSetting(string $name)
     {
         return WCMP()->setting_collection->getByName($name);
-    }
-
-    /**
-     * @return int
-     */
-    public function getInsuranceAmount(): int
-    {
-        $insured_amount = 0;
-
-        if ($this->isActiveSetting("insured", "insured_amount", "insured_amount_custom")) {
-            $insured_amount = $this->getSetting("insured_amount_custom");
-        } elseif ($this->isActiveSetting("insured", "insured_amount")) {
-            $insured_amount = $this->getSetting("insured_amount");
-        }
-
-        return $insured_amount;
-    }
-
-    /**
-     * @param int $timestamp
-     *
-     * @return false|string
-     */
-    private function get_next_delivery_day($timestamp)
-    {
-        $weekDay       = date("w", $timestamp);
-        $new_timestamp = strtotime(" + 1 day", $timestamp);
-
-        if ($weekDay == 0 || $weekDay == 1 || $new_timestamp < time()) {
-            $new_timestamp = $this->get_next_delivery_day($new_timestamp);
-        }
-
-        return $new_timestamp;
-    }
-
-    /**
-     * @param AbstractConsignment $consignment
-     * @param WC_Order $order
-     *
-     * @return AbstractConsignment
-     * @throws MissingFieldException
-     */
-    public function setCustomItems(AbstractConsignment $consignment, WC_Order $order): AbstractConsignment
-    {
-        $contents = (int) ($this->getSetting("package_contents") ? $this->getSetting("package_contents") : 1);
-
-        $country = WC()->countries->get_base_country();
-
-        foreach ($order->get_items() as $item_id => $item) {
-            $product = $order->get_product_from_item($item);
-            if (! empty($product)) {
-                // Description
-                $description = $item["name"];
-
-                // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
-                if (strlen($description) >= self::DESCRIPTION_MAX_LENGTH) {
-                    $description = substr($item["name"], 0, 47) . "...";
-                }
-                // Amount
-                $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
-
-                // Weight (total item weight in grams)
-                $weight = (int) round($this->get_item_weight_kg($item, $order) * 1000);
-
-                $myParcelItem =
-                    (new MyParcelCustomsItem())->setDescription($description)
-                        ->setAmount($amount)
-                        ->setWeight($weight)
-                        ->setItemValue(
-                            (int) round(
-                                ($item["line_total"] + $item["line_tax"]) * 100
-                            )
-                        )
-                        ->setCountry($country)
-                        ->setClassification($contents);
-
-                $consignment->addItem($myParcelItem);
-            }
-        }
-
-        return $consignment;
     }
 
     public function get_shipment_ids($order_ids, $args)
@@ -1081,7 +897,6 @@ class WCMP_Export
                     // means we have method_id:instance_id
                     $shipping_method          = explode(":", $shipping_method);
                     $shipping_method_id       = $shipping_method[0];
-                    $shipping_method_instance = $shipping_method[1];
                 } else {
                     $shipping_method_id = $shipping_method;
                 }
@@ -1129,7 +944,8 @@ class WCMP_Export
         foreach ($errors as $key => $error) {
             // check if we have an order_id
             if ($key > 10) {
-                $parsed_errors[] = sprintf("<strong>%s %s:</strong> %s",
+                $parsed_errors[] = sprintf(
+                    "<strong>%s %s:</strong> %s",
                     __("Order", "woocommerce-myparcelbe"),
                     $key,
                     $error
@@ -1212,7 +1028,7 @@ class WCMP_Export
     }
 
     /**
-     * @param int $id
+     * @param int      $id
      * @param WC_Order $order
      *
      * @return array
@@ -1403,7 +1219,7 @@ class WCMP_Export
 
     /**
      * @param WC_Order $order
-     * @param string $shipping_method_id
+     * @param string   $shipping_method_id
      *
      * @return bool
      */
@@ -1552,7 +1368,7 @@ class WCMP_Export
      * Evaluate a cost from a sum/string.
      *
      * @param string $sum
-     * @param array $args
+     * @param array  $args
      * @param        $flat_rate_method
      *
      * @return string
@@ -1655,7 +1471,7 @@ class WCMP_Export
     public function is_myparcelbe_destination($country_code)
     {
         return ($country_code == "BE" || $this->is_eu_country($country_code)
-                || $this->is_world_shipment_country(
+            || $this->is_world_shipment_country(
                 $country_code
             ));
     }
@@ -1927,7 +1743,7 @@ class WCMP_Export
      */
     public function log(string $message): void
     {
-        if (!WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ERROR_LOGGING)) {
+        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ERROR_LOGGING)) {
             return;
         }
 

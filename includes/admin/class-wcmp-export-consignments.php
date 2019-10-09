@@ -4,9 +4,8 @@ use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
-use MyParcelNL\Sdk\src\Model\DeliveryOptions\DeliveryOptions;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptions;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
-use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 
 if (!defined("ABSPATH")) {
@@ -181,6 +180,8 @@ class WCMP_Export_Consignments
 
     /**
      * Gets the recipient and puts its data in the consignment.
+     *
+     * @throws Exception
      */
     private function setRecipient(): void
     {

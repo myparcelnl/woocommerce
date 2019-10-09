@@ -1,6 +1,5 @@
 <?php
 
-use MyParcelNL\Sdk\src\Model\DeliveryOptions\DeliveryOptions;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 
 if (! defined('ABSPATH')) {
