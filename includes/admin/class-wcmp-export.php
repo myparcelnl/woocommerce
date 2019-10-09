@@ -309,7 +309,7 @@ class WCMP_Export
              * consignments to the collection.
              */
             if (WCMP_Data::HAS_MULTI_COLLO) {
-                $consignment = (new WCMP_Export_Consignments($order_id))->getConsignment();
+                $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
 
                 $collection->addMultiCollo($consignment, $collo_amount);
             } else {
