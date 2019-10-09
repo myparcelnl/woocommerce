@@ -1,11 +1,30 @@
 <?php
 
-if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
+if (! defined('ABSPATH')) {
+    exit;
+} // Exit if accessed directly
+
+/**
+ * @var string $tracktrace_url
+ * @var array  $shipment
+ * @var array  $package_types
+ */
 
 // Status
-printf('%1$s: <a href="%2$s" class="myparcelbe_tracktrace_link" target="_blank" title="%3$s">%4$s</a><br/>', __("Status", "woocommerce-myparcelbe"), $tracktrace_url, $shipment['tracktrace'], $shipment['status']);
+printf(
+    '%1$s: <a href="%2$s" class="myparcelbe_tracktrace_link" target="_blank" title="%3$s">%4$s</a><br/>',
+    __("Status", "woocommerce-myparcelbe"),
+    $tracktrace_url,
+    $shipment['tracktrace'],
+    $shipment['status']
+);
+
 // Shipment type
-printf('%s: %s', __("Shipment type", "woocommerce-myparcelbe"), $package_types[$shipment['shipment']['options']['package_type']]);
+printf(
+    '%s: %s',
+    __("Shipment type", "woocommerce-myparcelbe"),
+    $package_types[$shipment['shipment']['options']['package_type']]
+);
 ?>
 <ul class="wcmp__shipment-summary">
     <?php

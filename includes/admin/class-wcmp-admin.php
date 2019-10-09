@@ -426,65 +426,11 @@ class WCMP_Admin
         $consignments    = $this->get_order_shipments($order);
 
         // show shipments if available
-        if (! empty($consignments)) {
-            ?>
-            <table class="wcmp__table--track-trace">
-                <thead>
-                <tr>
-                    <th><?php _e("Track & Trace", "woocommerce-myparcelbe"); ?></th>
-                    <th><?php _e("Status", "woocommerce-myparcelbe"); ?></th>
-                    <th>&nbsp;</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-
-                foreach ($consignments as $shipment_id => $shipment):
-                    try {
-                        $shipment = WCMP()->export->get_shipment_data($shipment_id, $order);
-                    } catch (Exception $e) {
-                        $message = $e->getMessage();
-                    }
-
-                    if (isset($message)) {
-                        echo "<p>$message</p>";
-                    }
-
-                    ?>
-                    <tr>
-                        <td class="wcmp__order__track-trace">
-                            <?php $this->renderTrackTraceLink($shipment, $order_id); ?>
-                        </td>
-                        <td class="wcmp__order__status">
-                            <?php $this->renderStatus($shipment) ?>
-                        </td>
-                        <td class="wcmp__td--create-label">
-                            <?php
-                            $action  = WCMP_Export::EXPORT;
-                            $request = WCMP_Export::GET_LABELS;
-
-                            $this->renderAction(
-                                wp_nonce_url(
-                                    admin_url(
-                                        "admin-ajax.php?action=$action&request=$request&shipment_ids=$shipment_id"
-                                    ),
-                                    'wc_myparcelbe'
-                                ),
-                                WCMP_Export::GET_LABELS,
-                                __("Print MyParcel BE label", "woocommerce-myparcelbe"),
-                                $order_id,
-                                $downloadDisplay ? 'target="_blank"' : '',
-                                WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png"
-                            );
-
-                            ?>
-                        </td>
-                    </tr>
-                <?php endforeach ?>
-                </tbody>
-            </table>
-            <?php
+        if (empty($consignments)) {
+            return;
         }
+
+        include('views/html-order-track-trace-table.php');
     }
 
     /**
