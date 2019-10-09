@@ -27,7 +27,6 @@ class WCMP_Admin
     public const META_ORDER_WEIGHT           = "_myparcelbe_order_weight";
     public const META_PGADDRESS              = "_myparcelbe_pgaddress";
     public const META_SHIPMENTS              = "_myparcelbe_shipments";
-    public const META_SHIPMENT_OPTIONS       = "_myparcelbe_shipment_options";
     public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcelbe_shipment_options_extra";
     public const META_SIGNATURE              = "_myparcelbe_signature";
     public const META_TRACK_TRACE            = "_myparcelbe_tracktrace";

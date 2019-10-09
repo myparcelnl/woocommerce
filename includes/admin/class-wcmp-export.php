@@ -1,11 +1,13 @@
 <?php
 
+use includes\compatibility\WCMP_ChannelEngine_Compatibility;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptions;
+use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 
@@ -130,6 +132,7 @@ class WCMP_Export
      * @return void
      * @throws ApiException
      * @throws MissingFieldException
+     * @throws Exception
      */
     public function export()
     {
@@ -325,45 +328,38 @@ class WCMP_Export
         $collection = $collection->createConcepts();
 
         foreach ($order_ids as $order_id) {
-            $order        = WCX::get_order($order_id);
-            $consignments = $collection->getConsignmentsByReferenceIdGroup($order_id);
+            $order          = WCX::get_order($order_id);
+            $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
 
-            foreach ($consignments->toArray() as $consignmentId) {
-                $shipment['shipment_id'] = $consignmentId;
-                var_dump($shipment);
-                exit();
+            foreach ($consignmentIds as $consignmentId) {
+                $shipment["shipment_id"] = $consignmentId;
+
                 $this->save_shipment_data($order, $shipment);
-
                 // Get the "process directly" setting
                 $processEnabled = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY);
 
+                $process = true;
                 if ($processEnabled || $process === true) {
                     // flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
 //                    if (method_exists($order, "save")) {
 //                        $order->save();
 //                    }
                     $this->get_labels((array) $order_id, "url");
-                    $this->get_shipment_data($consignmentId, $order);
                 }
 
-                // status automation
-                if ($this->getSetting(WCMP_Settings::SETTING_ORDER_STATUS_AUTOMATION)
-                    && $this->getSetting(
-                        WCMP_Settings::SETTING_AUTOMATIC_ORDER_STATUS
-                    )) {
-                    $order->update_status(
-                        $this->getSetting(WCMP_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
-                        __("MyParcel shipment created:", "woocommerce-myparcelbe")
-                    );
-                }
+                $this->updateOrderStatus($order);
 
                 $this->success[$order_id] = $consignmentId;
+            }
+
+            if ($processEnabled || $process === true) {
+                $this->get_shipment_data($consignmentIds, $order);
             }
 
             WCX_Order::update_meta_data(
                 $order,
                 WCMP_Admin::META_LAST_SHIPMENT_IDS,
-                $consignments->getConsignmentIds()
+                $consignmentIds
             );
         }
 
@@ -373,6 +369,9 @@ class WCMP_Export
                 count($collection->getConsignmentIds())
             );
             $return["success_ids"] = $collection->getConsignmentIds();
+
+            $this->log($return["success"]);
+            $this->log("ids: " . implode(", ", $return["success_ids"]));
         }
 
         return $return;
@@ -780,8 +779,7 @@ class WCMP_Export
         foreach ($order_ids as $order_id) {
             $order           = WCX::get_order($order_id);
             $order_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
-            foreach ($order_shipments as $shipment) {
-                $shipment_id = $shipment["shipment_id"];
+            foreach ($order_shipments as $shipment_id => $shipment) {
                 $this->add_myparcelbe_note_to_shipment($selected_shipment_ids, $shipment_id, $order);
             }
         }
@@ -799,40 +797,51 @@ class WCMP_Export
         return WCMP()->setting_collection->getByName($name);
     }
 
-    public function get_shipment_ids($order_ids, $args)
+    /**
+     * @param array $order_ids
+     * @param array $args
+     *
+     * @return array
+     */
+    public function get_shipment_ids(array $order_ids, array $args): array
     {
         $shipment_ids = [];
+
         foreach ($order_ids as $order_id) {
             $order           = WCX::get_order($order_id);
             $order_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
-            if (! empty($order_shipments)) {
-                $order_shipment_ids = [];
-                // exclude concepts or only concepts
-                foreach ($order_shipments as $key => $shipment) {
-                    if (isset($args["exclude_concepts"]) && empty($shipment["tracktrace"])) {
-                        continue;
-                    }
-                    if (isset($args["only_concepts"]) && ! empty($shipment["tracktrace"])) {
-                        continue;
-                    }
 
-                    $order_shipment_ids[] = $shipment["shipment_id"];
+            if (empty($order_shipments)) {
+                continue;
+            }
+
+            $order_shipment_ids = [];
+            // exclude concepts or only concepts
+            foreach ($order_shipments as $shipment_id => $shipment) {
+                if (isset($args["exclude_concepts"]) && empty($shipment["tracktrace"])) {
+                    continue;
+                }
+                if (isset($args["only_concepts"]) && ! empty($shipment["tracktrace"])) {
+                    continue;
                 }
 
-                if (isset($args["only_last"])) {
-                    $last_shipment_ids = WCX_Order::get_meta($order, WCMP_Admin::META_LAST_SHIPMENT_IDS);
-                    if (! empty($last_shipment_ids) && is_array($last_shipment_ids)) {
-                        foreach ($order_shipment_ids as $order_shipment_id) {
-                            if (in_array($order_shipment_id, $last_shipment_ids)) {
-                                $shipment_ids[] = $order_shipment_id;
-                            }
+                $order_shipment_ids[] = $shipment_id;
+            }
+
+            if (isset($args["only_last"])) {
+                $last_shipment_ids = WCX_Order::get_meta($order, WCMP_Admin::META_LAST_SHIPMENT_IDS);
+
+                if (! empty($last_shipment_ids) && is_array($last_shipment_ids)) {
+                    foreach ($order_shipment_ids as $order_shipment_id) {
+                        if (in_array($order_shipment_id, $last_shipment_ids)) {
+                            $shipment_ids[] = $order_shipment_id;
                         }
-                    } else {
-                        $shipment_ids[] = array_pop($order_shipment_ids);
                     }
                 } else {
-                    $shipment_ids[] = array_merge($shipment_ids, $order_shipment_ids);
+                    $shipment_ids[] = array_pop($order_shipment_ids);
                 }
+            } else {
+                $shipment_ids[] = array_merge($shipment_ids, $order_shipment_ids);
             }
         }
 
@@ -845,7 +854,7 @@ class WCMP_Export
      *
      * @return bool|void
      */
-    public function save_shipment_data($order, $shipment)
+    public function save_shipment_data(WC_Order $order, array $shipment)
     {
         if (empty($shipment)) {
             return false;
@@ -855,19 +864,14 @@ class WCMP_Export
         $new_shipments[$shipment["shipment_id"]] = $shipment;
 
         if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS)) {
-            if ($old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS)) {
-                $shipments = $old_shipments;
-                foreach ($new_shipments as $shipment_id => $shipment) {
-                    $shipments[$shipment_id] = $shipment;
-                }
+            $old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
+
+            if (count($old_shipments)) {
+                $new_shipments = array_replace_recursive($old_shipments, $new_shipments);
             }
         }
 
-        $shipments = $shipments ?? $new_shipments;
-
-        WCX_Order::update_meta_data($order, WCMP_Admin::META_SHIPMENTS, $shipments);
-
-        return;
+        WCX_Order::update_meta_data($order, WCMP_Admin::META_SHIPMENTS, $new_shipments);
     }
 
     /**
@@ -1028,21 +1032,28 @@ class WCMP_Export
     }
 
     /**
-     * @param int      $id
+     * @param array      $id
      * @param WC_Order $order
      *
      * @return array
      * @throws Exception
      */
-    public function get_shipment_data(int $id, WC_Order $order)
+    public function get_shipment_data($id, WC_Order $order): array
     {
+        $data = [];
         $api      = $this->init_api();
         $response = $api->get_shipments($id);
 
-        if (! empty($response["body"]["data"]["shipments"])) {
-            $shipments = $response["body"]["data"]["shipments"];
-            $shipment  = array_shift($shipments);
+        var_dump($response);
+        exit();
 
+        $shipments = Arr::get($response, "body.data.shipments");
+
+        if (! $shipments) {
+            return [];
+        }
+
+        foreach ($shipments as $shipment) {
             if (! isset($shipment["id"]) || $shipment["id"] !== $id) {
                 return [];
             }
@@ -1056,22 +1067,14 @@ class WCMP_Export
             $track_trace   = $shipment["barcode"];
             $shipment_id   = $id;
             $shipment_data = compact("shipment_id", "status", "track_trace", "shipment");
-
             $this->save_shipment_data($order, $shipment_data);
 
-            // If Channel Engine is active, add the created Track & Trace code and set shipping method to bpost in their meta data
-            if (WC_CHANNEL_ENGINE_ACTIVE and ! WCX_Order::get_meta(
-                    $order,
-                    "_shipping_ce_track_and_trace"
-                )) {
-                WCX_Order::update_meta_data($order, "_shipping_ce_track_and_trace", $track_trace);
-                WCX_Order::update_meta_data($order, "_shipping_ce_shipping_method", "Bpost");
-            }
+            WCMP_ChannelEngine_Compatibility::updateMetaOnExport($order, $track_trace);
 
-            return $shipment_data;
-        } else {
-            return [];
+            $data[$shipment_id] = $shipment_data;
         }
+
+        return $data;
     }
 
     /**
@@ -1894,6 +1897,21 @@ class WCMP_Export
         }
 
         return AbstractConsignment::DELIVERY_TYPE_STANDARD;
+    }
+
+    /**
+     * Update the status of given order based on the automatic order status settings.
+     *
+     * @param WC_Order $order
+     */
+    private function updateOrderStatus(WC_Order $order): void
+    {
+        if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ORDER_STATUS_AUTOMATION)) {
+            $order->update_status(
+                $this->getSetting(WCMP_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
+                __("MyParcel shipment created:", "woocommerce-myparcelbe")
+            );
+        }
     }
 }
 
