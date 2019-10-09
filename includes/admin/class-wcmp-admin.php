@@ -1,6 +1,7 @@
 <?php
 
 use MyParcelNL\Sdk\src\Model\DeliveryOptions\DeliveryOptions;
+use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Entity\LegacyDeliveryOptions;
@@ -302,17 +303,17 @@ class WCMP_Admin
             if ($consignment_id = WCX_Order::get_meta($order, self::META_CONSIGNMENT_ID)) {
                 $consignments = [
                     [
-                        'shipment_id' => $consignment_id,
-                        'tracktrace'  => WCX_Order::get_meta($order, self::META_TRACK_TRACE),
+                        "shipment_id" => $consignment_id,
+                        "tracktrace"  => WCX_Order::get_meta($order, self::META_TRACK_TRACE),
                     ],
                 ];
             } elseif ($legacy_consignments = WCX_Order::get_meta($order, self::META_CONSIGNMENTS)) {
                 $consignments = [];
                 foreach ($legacy_consignments as $consignment) {
-                    if (isset($consignment['consignment_id'])) {
+                    if (isset($consignment["consignment_id"])) {
                         $consignments[] = [
-                            'shipment_id' => $consignment['consignment_id'],
-                            'tracktrace'  => $consignment['tracktrace'],
+                            "shipment_id" => $consignment["consignment_id"],
+                            "tracktrace"  => $consignment["tracktrace"],
                         ];
                     }
                 }
@@ -325,7 +326,7 @@ class WCMP_Admin
 
         if (! empty($consignments) && $exclude_concepts) {
             foreach ($consignments as $key => $consignment) {
-                if (empty($consignment['tracktrace'])) {
+                if (empty($consignment["tracktrace"])) {
                     unset($consignments[$key]);
                 }
             }
@@ -353,7 +354,7 @@ class WCMP_Admin
                 $newShipmentOptions[$option] = (bool) $value;
             }
 
-            $meta = self::decodeDeliveryOptionsMeta($order);
+            $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
 
             $meta["carrier"] = $data["carrier"] ?? $meta["carrier"];
 
@@ -367,7 +368,7 @@ class WCMP_Admin
             WCX_Order::update_meta_data(
                 $order,
                 self::META_DELIVERY_OPTIONS,
-                self::encodeDeliveryOptionsMeta($newDeliveryOptions)
+                $newDeliveryOptions
             );
 
             // Save extra options
@@ -668,7 +669,8 @@ class WCMP_Admin
     }
 
     /**
-     * Get delivery options array from the given order's meta data.
+     * Get DeliveryOptions object from the given order's meta data. Uses legacy delivery options if found, if that data
+     * is invalid it falls back to defaults.
      *
      * @param WC_Order $order
      *
@@ -678,40 +680,23 @@ class WCMP_Admin
      */
     public static function getDeliveryOptionsFromOrder(WC_Order $order): DeliveryOptions
     {
-        $meta = self::decodeDeliveryOptionsMeta($order);
+        $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
+        $meta = Arr::fromObject($meta);
 
         // This attribute always exists if the order has 4.0.0+ delivery options. If it doesn't, migrate them first.
-        if (! array_key_exists("carrier", $meta)) {
-            return (new LegacyDeliveryOptions($meta))->getDeliveryOptions();
+        if (!array_key_exists("carrier", $meta)) {
+            try {
+                return (new LegacyDeliveryOptions($meta))->getDeliveryOptions();
+            } catch (Exception $e) {
+                /**
+                 * If we weren't able to create a LegacyDeliveryOptions object, create a new DeliveryOptions object
+                 *  with default values set.
+                 */
+                return new DeliveryOptions();
+            }
         }
 
         return new DeliveryOptions($meta);
-    }
-
-    /**
-     * @param WC_Order $order
-     *
-     * @return array
-     */
-    public static function decodeDeliveryOptionsMeta(WC_Order $order): array
-    {
-        $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
-
-        if (is_array($meta)) {
-            return $meta;
-        }
-
-        return json_decode(stripslashes($meta), true) ?? [];
-    }
-
-    /**
-     * @param array $metaData
-     *
-     * @return string
-     */
-    public static function encodeDeliveryOptionsMeta(array $metaData): string
-    {
-        return json_encode($metaData);
     }
 
     /**

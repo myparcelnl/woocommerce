@@ -56,7 +56,10 @@ class WCMP_Cart_Fees
         if (empty($post_data[WCMP_Admin::META_DELIVERY_OPTIONS])) {
             return;
         }
-        $this->deliveryOptions = $this->getDeliveryOptions($post_data);
+
+        $this->deliveryOptions = new DeliveryOptions(
+            json_decode(stripslashes($post_data[WCMP_Admin::META_DELIVERY_OPTIONS]), true)
+        );;
 
         $this->addDeliveryFee();
         $this->addShipmentOptionFees();
@@ -245,20 +248,5 @@ class WCMP_Cart_Fees
     private function addDeliveryFee(): void
     {
         $this->addFee("delivery_{$this->deliveryOptions->getDeliveryType()}");
-    }
-
-    /**
-     * Create a DeliveryOptions object from given post data, which must contain delivery options metadata.
-     *
-     * @param array $post_data
-     *
-     * @return DeliveryOptions
-     * @throws Exception
-     */
-    private function getDeliveryOptions(array $post_data): DeliveryOptions
-    {
-        return new DeliveryOptions(
-            json_decode(stripslashes($post_data[WCMP_Admin::META_DELIVERY_OPTIONS]), true)
-        );
     }
 }

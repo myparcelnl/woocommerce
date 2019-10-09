@@ -112,15 +112,19 @@ abstract class Data {
 	 * @return mixed
 	 */
 	public static function get_meta( $object, $key = '', $single = true, $context = 'edit' ) {
-
 		if ( WC_Core::is_wc_version_gte_3_0() ) {
 			$value = $object->get_meta( $key, $single, $context );
 		} else {
-			$object_id = is_callable( array( $object, 'get_id' ) ) ? $object->get_id() : $object->id;
+			$object_id = is_callable([$object, 'get_id']) ? $object->get_id() : $object->id;
 			$value = get_post_meta( $object_id, $key, $single );
-		}
+        }
 
-		return $value;
+        if (is_string($value) && is_array(json_decode(stripslashes($value), true))) {
+            self::update_meta_data($object, $key, json_decode(stripslashes($value)));
+            return self::get_meta($object, $key);
+        }
+
+		return maybe_unserialize($value);
 	}
 
 
@@ -143,39 +147,40 @@ abstract class Data {
 			$object->save_meta_data();
 
 		} else {
-
 			$object_id = is_callable( array( $object, 'get_id' ) ) ? $object->get_id() : $object->id;
-			add_post_meta( $object_id, $key, $value, $unique );
+			add_post_meta( $object_id, $key, maybe_serialize($value), $unique );
 		}
 	}
 
+    /**
+     * Updates an object's stored meta value.
+     *
+     * @param \WC_Data     $object  the data object, likely \WC_Order or \WC_Product
+     * @param string       $key     the meta key
+     * @param string|array $value   the meta value, will be encoded if it's an array
+     * @param int|string   $meta_id Optional. The specific meta ID to update
+     *
+     * @since 4.6.0-dev
+     */
+    public static function update_meta_data($object, $key, $value, $meta_id = '')
+    {
+        $value = maybe_serialize($value);
 
-	/**
-	 * Updates an object's stored meta value.
-	 *
-	 * @since 4.6.0-dev
-	 * @param \WC_Data $object the data object, likely \WC_Order or \WC_Product
-	 * @param string $key the meta key
-	 * @param string $value the meta value
-	 * @param int|string $meta_id Optional. The specific meta ID to update
-	 */
-	public static function update_meta_data( $object, $key, $value, $meta_id = '' ) {
+        echo "<pre>";
+        var_dump("saving: $key : ", $value);
+        echo "</pre>";
+        if (WC_Core::is_wc_version_gte_3_0()) {
+            $object->update_meta_data($key, $value, $meta_id);
 
-		if ( WC_Core::is_wc_version_gte_3_0() ) {
+            $object->save_meta_data();
+        } else {
+            $object_id = is_callable([$object, 'get_id']) ? $object->get_id() : $object->id;
 
-			$object->update_meta_data( $key, $value, $meta_id );
+            update_post_meta($object_id, $key, $value);
+        }
+    }
 
-			$object->save_meta_data();
-
-		} else {
-
-			$object_id = is_callable( array( $object, 'get_id' ) ) ? $object->get_id() : $object->id;
-			update_post_meta( $object_id, $key, $value );
-		}
-	}
-
-
-	/**
+    /**
 	 * Deletes an object's stored meta value.
 	 *
 	 * @since 4.6.0-dev
@@ -197,7 +202,15 @@ abstract class Data {
 		}
 	}
 
+    private static function fixMetaType($object, string $key, $value)
+    {
+        if (is_string($value) && is_array(json_decode($value, true))) {
+            self::update_meta_data($object, $key, json_decode($value));
+            return self::get_meta($object, $key);
+        }
 
+        return $value;
+    }
 }
 
 

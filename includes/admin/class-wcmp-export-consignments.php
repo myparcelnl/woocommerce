@@ -19,6 +19,8 @@ if (class_exists("WCMP_Export_Consignments")) {
 
 class WCMP_Export_Consignments
 {
+    private static $i = 0;
+
     /**
      * @var AbstractConsignment
      */
@@ -49,19 +51,24 @@ class WCMP_Export_Consignments
      */
     private $carrier;
 
+    private $referenceId;
+
     /**
      * WCMP_Export_Consignments constructor.
      *
-     * @param int $orderId
+     * @param WC_Order $order
      *
+     * @throws ErrorException
+     * @throws MissingFieldException
      * @throws Exception
      */
-    public function __construct(int $orderId)
+    public function __construct(WC_Order $order)
     {
+        self::$i++;
         $this->getApiKey();
 
-        $this->order           = WCX::get_order($orderId);
-        $this->deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($this->order);
+        $this->order           = $order;
+        $this->deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
         $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
 
         $this->createConsignment();
@@ -313,9 +320,11 @@ class WCMP_Export_Consignments
 
     private function setBaseData(): void
     {
+        $index = self::$i;
+
         $this->consignment
             ->setApiKey($this->apiKey)
-            ->setReferenceId($this->order->get_id())
+            ->setReferenceId("{$this->order->get_id()}[$index]")
             ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
             ->setLabelDescription($this->getLabelDescription())
             ->setPackageType(WCMP_Export::PACKAGE);

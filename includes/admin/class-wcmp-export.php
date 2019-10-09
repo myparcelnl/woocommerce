@@ -139,7 +139,7 @@ class WCMP_Export
         // Check the nonce
         if (! check_ajax_referer("wc_myparcelbe", "security", false)) {
             die("Ajax security check failed. Did you pass a valid nonce in \$_REQUEST['security']?");
-        };
+        }
 
         if (! is_user_logged_in()) {
             wp_die(__("You do not have sufficient permissions to access this page.", "woocommerce-myparcelbe"));
@@ -309,36 +309,39 @@ class WCMP_Export
              * consignments to the collection.
              */
             if (WCMP_Data::HAS_MULTI_COLLO) {
-                $consignment = (new WCMP_Export_Consignments($order_id))->getConsignment();;
+                $consignment = (new WCMP_Export_Consignments($order_id))->getConsignment();
 
                 $collection->addMultiCollo($consignment, $collo_amount);
             } else {
                 for ($i = 0; $i < $collo_amount; $i++) {
-                    $consignment = (new WCMP_Export_Consignments($order_id))->getConsignment();
+                    $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
 
                     $collection->addConsignment($consignment);
                 }
             }
 
             $this->log("Shipment data for order {$order_id}.");
+            $this->log(json_encode($collection->toArray()));
         }
 
         $collection = $collection->createConcepts();
 
         foreach ($order_ids as $order_id) {
             $order        = WCX::get_order($order_id);
-            $consignments = $collection->getConsignmentsByReferenceId($order_id)->getConsignmentIds();
+            $consignments = $collection->getConsignmentsByReferenceIdGroup($order_id);
 
-            foreach ($consignments as $consignmentId) {
+            foreach ($consignments->toArray() as $consignmentId) {
                 $shipment['shipment_id'] = $consignmentId;
                 $this->save_shipment_data($order, $shipment);
 
-                // process directly setting
-                if ($this->getSetting("process_directly") || $process === true) {
+                // Get the "process directly" setting
+                $processEnabled = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY);
+
+                if ($processEnabled || $process === true) {
                     // flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
-                    if (method_exists($order, "save")) {
-                        $order->save();
-                    }
+//                    if (method_exists($order, "save")) {
+//                        $order->save();
+//                    }
                     $this->get_labels((array) $order_id, "url");
                     $this->get_shipment_data($consignmentId, $order);
                 }
@@ -357,13 +360,17 @@ class WCMP_Export
                 $this->success[$order_id] = $consignmentId;
             }
 
-            WCX_Order::update_meta_data($order, "_myparcelbe_last_shipment_ids", $consignments);
+            WCX_Order::update_meta_data(
+                $order,
+                WCMP_Admin::META_LAST_SHIPMENT_IDS,
+                $consignments->getConsignmentIds()
+            );
         }
 
-        if (! empty($this->success)) {
+        if (!empty($this->success)) {
             $return["success"]     = sprintf(
                 __("%s shipments successfully exported to MyParcel", "woocommerce-myparcelbe"),
-                count($this->success)
+                count($collection->getConsignmentIds())
             );
             $return["success_ids"] = $collection->getConsignmentIds();
         }
@@ -1028,7 +1035,7 @@ class WCMP_Export
         $new_shipments                           = [];
         $new_shipments[$shipment["shipment_id"]] = $shipment;
 
-        if ($this->getSetting("keep_shipments")) {
+        if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS)) {
             if ($old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS)) {
                 $shipments = $old_shipments;
                 foreach ($new_shipments as $shipment_id => $shipment) {
@@ -1037,7 +1044,7 @@ class WCMP_Export
             }
         }
 
-        $shipments = isset($shipments) ? $shipments : $new_shipments;
+        $shipments = $shipments ?? $new_shipments;
 
         WCX_Order::update_meta_data($order, WCMP_Admin::META_SHIPMENTS, $shipments);
 
@@ -1915,37 +1922,41 @@ class WCMP_Export
     }
 
     /**
+     * Log data if the error logging setting is enabled.
+     *
      * @param string $message
      */
     public function log(string $message): void
     {
-        if ($this->getSetting("error_logging")) {
-            // Starting with WooCommerce 3.0, logging can be grouped by context and severity.
-            if (class_exists("WC_Logger") && version_compare(WOOCOMMERCE_VERSION, "3.0", " >= ")) {
-                $logger = wc_get_logger();
-                $logger->debug($message, ["source" => "wc-myparcelbe"]);
+        if (!WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ERROR_LOGGING)) {
+            return;
+        }
 
-                return;
-            }
-
-            if (class_exists("WC_Logger")) {
-                $wc_logger = function_exists("wc_get_logger") ? wc_get_logger() : new WC_Logger();
-                $wc_logger->add("wc-myparcelbe", $message);
-
-                return;
-            }
-
-            // Old WC versions didn't have a logger
-            // log file in upload folder - wp-content/uploads
-            $upload_dir        = wp_upload_dir();
-            $upload_base       = trailingslashit($upload_dir["basedir"]);
-            $log_file          = $upload_base . "myparcelbe_log.txt";
-            $current_date_time = date("Y-m-d H:i:s");
-            $message           = $current_date_time . " " . $message . "n";
-            file_put_contents($log_file, $message, FILE_APPEND);
+        // Starting with WooCommerce 3.0, logging can be grouped by context and severity.
+        if (class_exists("WC_Logger") && version_compare(WOOCOMMERCE_VERSION, "3.0", " >= ")) {
+            $logger = wc_get_logger();
+            $logger->debug($message, ["source" => "wc-myparcelbe"]);
 
             return;
         }
+
+        if (class_exists("WC_Logger")) {
+            $wc_logger = function_exists("wc_get_logger") ? wc_get_logger() : new WC_Logger();
+            $wc_logger->add("wc-myparcelbe", $message);
+
+            return;
+        }
+
+        // Old WC versions didn't have a logger
+        // log file in upload folder - wp-content/uploads
+        $upload_dir        = wp_upload_dir();
+        $upload_base       = trailingslashit($upload_dir["basedir"]);
+        $log_file          = $upload_base . "myparcelbe_log.txt";
+        $current_date_time = date("Y-m-d H:i:s");
+        $message           = $current_date_time . " " . $message . "n";
+        file_put_contents($log_file, $message, FILE_APPEND);
+
+        return;
     }
 
     /**

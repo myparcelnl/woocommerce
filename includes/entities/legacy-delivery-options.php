@@ -43,8 +43,11 @@ class LegacyDeliveryOptions
      */
     public function __construct(array $deliveryOptions)
     {
-        if (! count($deliveryOptions)) {
-            return;
+        /**
+         * Check if the array is usable, otherwise throw an error.
+         */
+        if (!count($deliveryOptions) || !array_key_exists("time", $deliveryOptions)) {
+            throw new Exception("Not a valid legacy delivery options array.");
         }
 
         $this->legacyDeliveryOptions = $deliveryOptions;
