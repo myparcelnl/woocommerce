@@ -1,6 +1,6 @@
 <?php
 
-use includes\compatibility\WCMP_ChannelEngine_Compatibility;
+use WPO\WC\MyParcelBE\Compatibility\WCMP_ChannelEngine_Compatibility;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;

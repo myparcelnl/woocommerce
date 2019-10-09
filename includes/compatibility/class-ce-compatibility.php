@@ -1,6 +1,6 @@
 <?php
 
-namespace includes\compatibility;
+namespace WPO\WC\MyParcelBE\Compatibility;
 
 use WC_Order;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
