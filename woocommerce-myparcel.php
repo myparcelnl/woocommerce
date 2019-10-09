@@ -85,7 +85,6 @@ if (! class_exists('WCMP')) :
         public function __construct()
         {
             $this->define('WC_MYPARCEL_BE_VERSION', $this->version);
-            $this->define('WC_CHANNEL_ENGINE_ACTIVE', class_exists('Channel_Engine'));
             $this->plugin_basename = plugin_basename(__FILE__);
 
             // load the localisation & classes
@@ -172,6 +171,7 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/compatibility/class-wc-core-compatibility.php");
             require_once($this->includes . "/compatibility/class-wc-order-compatibility.php");
             require_once($this->includes . "/compatibility/class-wc-product-compatibility.php");
+            require_once($this->includes . "/compatibility/class-ce-compatibility.php");
 
             require_once($this->includes . "/class-wcmp-data.php");
             require_once($this->includes . "/collections/settings-collection.php");
