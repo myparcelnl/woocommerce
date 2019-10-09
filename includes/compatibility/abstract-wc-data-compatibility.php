@@ -209,14 +209,4 @@ abstract class Data
             delete_post_meta($object_id, $key);
         }
     }
-
-    private static function fixMetaType($object, string $key, $value)
-    {
-        if (is_string($value) && is_array(json_decode($value, true))) {
-            self::update_meta_data($object, $key, json_decode($value));
-            return self::get_meta($object, $key);
-        }
-
-        return $value;
-    }
 }
