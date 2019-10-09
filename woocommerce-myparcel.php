@@ -23,7 +23,7 @@ if (! class_exists('WCMP')) :
         /**
          * Translations domain
          */
-        const DOMAIN = 'woocommerce-myparcelbe';
+        public const DOMAIN = 'woocommerce-myparcelbe';
 
         public $version = '4.0.0';
 
