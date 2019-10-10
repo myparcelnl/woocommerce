@@ -5,7 +5,7 @@ use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptions;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;

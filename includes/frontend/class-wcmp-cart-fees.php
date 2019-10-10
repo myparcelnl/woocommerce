@@ -1,6 +1,6 @@
 <?php
 
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptions;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter as DeliveryOptions;
 
 if (! defined('ABSPATH')) {
     exit;

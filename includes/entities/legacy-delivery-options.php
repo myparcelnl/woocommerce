@@ -5,7 +5,7 @@ namespace WPO\WC\MyParcelBE\Entity;
 use DateTime;
 use Exception;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptions;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter as DeliveryOptions;
 
 defined('ABSPATH') or exit;
 

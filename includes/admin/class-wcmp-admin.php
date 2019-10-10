@@ -1,6 +1,6 @@
 <?php
 
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptions;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
