@@ -1,6 +1,5 @@
 <?php
 
-use WPO\WC\MyParcelBE\Compatibility\WCMP_ChannelEngine_Compatibility;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
@@ -10,6 +9,7 @@ use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptions;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
 
 if (! defined("ABSPATH")) {
     exit;
@@ -218,6 +218,7 @@ class WCMP_Export
                     $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
                     break;
                 }
+
                 $label_response_type = isset($label_response_type) ? $label_response_type : null;
 
                 if (! empty($shipment_ids)) {
@@ -241,7 +242,7 @@ class WCMP_Export
                     break;
                 }
                 $order_ids = $this->filter_myparcelbe_destination_orders($order_ids);
-                $this->modal_dialog($order_ids, $dialog);
+                $this->modal_dialog($order_ids);
                 break;
         }
 
@@ -290,10 +291,11 @@ class WCMP_Export
     public function add_shipments(array $order_ids, bool $process)
     {
         $return = [];
-
         $collection = new MyParcelCollection();
+        $processDirectly = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY)
+            || $process === true;
 
-        $this->log("*** Creating shipments started ***");
+        WCMP_Log::add("*** Creating shipments started ***");
 
         /**
          * Loop over the order ids and create consignments for each order.
@@ -321,8 +323,8 @@ class WCMP_Export
                 }
             }
 
-            $this->log("Shipment data for order {$order_id}.");
-            $this->log(json_encode($collection->toArray()));
+            WCMP_Log::add("Shipment data for order {$order_id}.");
+            WCMP_Log::add(json_encode($collection->toArray()));
         }
 
         $collection = $collection->createConcepts();
@@ -331,19 +333,20 @@ class WCMP_Export
             $order          = WCX::get_order($order_id);
             $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
 
+            /**
+             * If "Keep shipments" is disabled, delete the shipments meta key before adding new ones. Otherwise the
+             * new ones will be appended to the existing ones.
+             */
+            if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS)) {
+                WCX_Order::delete_meta_data($order, WCMP_Admin::META_SHIPMENTS);
+            }
+
             foreach ($consignmentIds as $consignmentId) {
                 $shipment["shipment_id"] = $consignmentId;
 
                 $this->save_shipment_data($order, $shipment);
-                // Get the "process directly" setting
-                $processEnabled = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY);
 
-                $process = true;
-                if ($processEnabled || $process === true) {
-                    // flush cache until WC issue #13439 is fixed https://github.com/woocommerce/woocommerce/issues/13439
-//                    if (method_exists($order, "save")) {
-//                        $order->save();
-//                    }
+                if ($processDirectly) {
                     $this->get_labels((array) $order_id, "url");
                 }
 
@@ -352,7 +355,7 @@ class WCMP_Export
                 $this->success[$order_id] = $consignmentId;
             }
 
-            if ($processEnabled || $process === true) {
+            if ($processDirectly) {
                 $this->get_shipment_data($consignmentIds, $order);
             }
 
@@ -370,8 +373,8 @@ class WCMP_Export
             );
             $return["success_ids"] = $collection->getConsignmentIds();
 
-            $this->log($return["success"]);
-            $this->log("ids: " . implode(", ", $return["success_ids"]));
+            WCMP_Log::add($return["success"]);
+            WCMP_Log::add("ids: " . implode(", ", $return["success_ids"]));
         }
 
         return $return;
@@ -387,16 +390,16 @@ class WCMP_Export
     {
         $return = [];
 
-        $this->log("*** Creating return shipments started ***");
+        WCMP_Log::add("*** Creating return shipments started ***");
 
         foreach ($myparcelbe_options as $order_id => $options) {
             $return_shipments = [$this->prepare_return_shipment_data($order_id, $options)];
-            $this->log("Return shipment data for order {$order_id}:\n" . var_export($return_shipments, true));
+            WCMP_Log::add("Return shipment data for order {$order_id}:\n" . var_export($return_shipments, true));
 
             try {
                 $api      = $this->init_api();
                 $response = $api->add_shipments($return_shipments, "return");
-                $this->log("API response (order {$order_id}):\n" . var_export($response, true));
+                WCMP_Log::add("API response (order {$order_id}):\n" . var_export($response, true));
                 if (isset($response["body"]["data"]["ids"])) {
                     $order                    = WCX::get_order($order_id);
                     $ids                      = array_shift($response["body"]["data"]["ids"]);
@@ -428,50 +431,48 @@ class WCMP_Export
      *
      * @return array
      */
-    public function get_shipment_labels($shipment_ids, $order_ids = [], $label_response_type = null, $offset = 0)
-    {
+    public function get_shipment_labels(
+        array $shipment_ids,
+        array $order_ids = [],
+        $label_response_type = null,
+        int $offset = 0
+    ) {
         $return = [];
 
-        $this->log("*** Label request started ***");
-        $this->log("Shipment IDs: " . implode(", ", $shipment_ids));
+        WCMP_Log::add("*** Label request started ***");
+        WCMP_Log::add("Shipment IDs: " . implode(", ", $shipment_ids));
 
         try {
             $api    = $this->init_api();
             $params = [];
+
             if (! empty($offset) && is_numeric($offset)) {
                 // positions are defined on landscape, but paper is filled portrait-wise
                 $portrait_positions  = [2, 4, 1, 3];
                 $params["positions"] = implode(";", array_slice($portrait_positions, $offset));
             }
 
-            if (isset($label_response_type) && $label_response_type == "url") {
+            if (isset($label_response_type) && $label_response_type === "url") {
                 $response = $api->get_shipment_labels($shipment_ids, $params, "link");
                 $this->add_myparcelbe_note_to_shipments($shipment_ids, $order_ids);
-                $this->log("API response:n" . var_export($response, true));
+                WCMP_Log::add("API response:n" . var_export($response, true));
 
-                if (isset($response["body"]["data"]["pdfs"]["url"])) {
-                    $url           = untrailingslashit($api->apiUrl) . $response["body"]["data"]["pdfs"]["url"];
+                $pdfUrl = Arr::get($response, "body.data.pdfs.url");
+                if ($pdfUrl) {
+                    $url           = untrailingslashit($api->apiUrl) . $pdfUrl;
                     $return["url"] = $url;
                 } else {
-                    $this->errors[] = __("Unknown error", "woocommerce-myparcelbe");
+                    $this->errors[] = __("No PDF present in response", "woocommerce-myparcelbe");
                 }
             } else {
                 $response = $api->get_shipment_labels($shipment_ids, $params, "pdf");
                 $this->add_myparcelbe_note_to_shipments($shipment_ids, $order_ids);
 
                 if (isset($response["body"])) {
-                    $this->log("PDF data received");
-                    $pdf_data    = $response["body"];
-                    $output_mode = $this->getSetting(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) ? $this->getSetting(
-                        WCMP_Settings::SETTING_DOWNLOAD_DISPLAY
-                    ) : "";
-                    if ($output_mode == "display") {
-                        $this->stream_pdf($pdf_data, $order_ids);
-                    } else {
-                        $this->download_pdf($pdf_data, $order_ids);
-                    }
+                    WCMP_Log::add("PDF data received");
+                    new WCMP_Export_Pdf($response["body"], $order_ids);
                 } else {
-                    $this->log("Unknown error, API response:n" . var_export($response, true));
+                    WCMP_Log::add("Unknown error, API response:n" . var_export($response, true));
                     $this->errors[] = __("Unknown error", "woocommerce-myparcelbe");
                 }
             }
@@ -489,12 +490,12 @@ class WCMP_Export
      *
      * @return array
      */
-    public function get_labels($order_ids, $label_response_type = null, $offset = 0)
+    public function get_labels(array $order_ids, $label_response_type = null, int $offset = 0)
     {
         $shipment_ids = $this->get_shipment_ids($order_ids, ["only_last" => true]);
 
         if (empty($shipment_ids)) {
-            $this->log(" *** Failed label request(not exported yet) ***");
+            WCMP_Log::add(" *** Failed label request(not exported yet) ***");
             $this->errors[] = __(
                 "The selected orders have not been exported to MyParcel yet! ",
                 "woocommerce-myparcelbe"
@@ -503,7 +504,12 @@ class WCMP_Export
             return [];
         }
 
-        return $this->get_shipment_labels($shipment_ids, $order_ids, $label_response_type, $offset);
+        return $this->get_shipment_labels(
+            $shipment_ids,
+            $order_ids,
+            $label_response_type,
+            $offset
+        );
     }
 
     /**
@@ -523,7 +529,11 @@ class WCMP_Export
         die();
     }
 
-    public function modal_success_page()
+    /**
+     * @param $request
+     * @param $result
+     */
+    public function modal_success_page($request, $result)
     {
         require("views/html-modal-result-page.php");
         die();
@@ -863,12 +873,10 @@ class WCMP_Export
         $new_shipments                           = [];
         $new_shipments[$shipment["shipment_id"]] = $shipment;
 
-        if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS)) {
-            $old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
+        $old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
 
-            if (count($old_shipments)) {
-                $new_shipments = array_replace_recursive($old_shipments, $new_shipments);
-            }
+        if ($old_shipments) {
+            $new_shipments = array_replace_recursive($old_shipments, $new_shipments);
         }
 
         WCX_Order::update_meta_data($order, WCMP_Admin::META_SHIPMENTS, $new_shipments);
@@ -971,35 +979,6 @@ class WCMP_Export
         return $html;
     }
 
-    public function stream_pdf($pdf_data, $order_ids)
-    {
-        header("Content-type: application/pdf");
-        header("Content-Disposition: inline; filename=\"{$this->get_filename($order_ids)}\"");
-        echo $pdf_data;
-        die();
-    }
-
-    public function download_pdf($pdf_data, $order_ids)
-    {
-        header("Content-Description: File Transfer");
-        header("Content-Type: application/octet-stream");
-        header("Content-Disposition: attachment; filename=\"{$this->get_filename($order_ids)}\"");
-        header("Content-Transfer-Encoding: binary");
-        header("Connection: Keep-Alive");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Pragma: public");
-        echo $pdf_data;
-        die();
-    }
-
-    public function get_filename($order_ids)
-    {
-        $filename = "MyParcelBE-" . date("Y-m-d") . ".pdf";
-
-        return apply_filters("wcmyparcelbe_filename", $filename, $order_ids);
-    }
-
     public function get_shipment_status_name($status_code)
     {
         $shipment_statuses = [
@@ -1032,20 +1011,19 @@ class WCMP_Export
     }
 
     /**
-     * @param array      $id
+     * Retrieves, updates and returns shipment data for given id.
+     *
+     * @param array    $ids
      * @param WC_Order $order
      *
      * @return array
      * @throws Exception
      */
-    public function get_shipment_data($id, WC_Order $order): array
+    public function get_shipment_data($ids, WC_Order $order): array
     {
         $data = [];
         $api      = $this->init_api();
-        $response = $api->get_shipments($id);
-
-        var_dump($response);
-        exit();
+        $response = $api->get_shipments($ids);
 
         $shipments = Arr::get($response, "body.data.shipments");
 
@@ -1054,7 +1032,7 @@ class WCMP_Export
         }
 
         foreach ($shipments as $shipment) {
-            if (! isset($shipment["id"]) || $shipment["id"] !== $id) {
+            if (! isset($shipment["id"])) {
                 return [];
             }
 
@@ -1065,11 +1043,11 @@ class WCMP_Export
             // if shipment id matches and status is not concept, get track trace barcode and status name
             $status        = $this->get_shipment_status_name($shipment["status"]);
             $track_trace   = $shipment["barcode"];
-            $shipment_id   = $id;
+            $shipment_id   = $shipment["id"];
             $shipment_data = compact("shipment_id", "status", "track_trace", "shipment");
             $this->save_shipment_data($order, $shipment_data);
 
-            WCMP_ChannelEngine_Compatibility::updateMetaOnExport($order, $track_trace);
+            ChannelEngine::updateMetaOnExport($order, $track_trace);
 
             $data[$shipment_id] = $shipment_data;
         }
@@ -1457,324 +1435,24 @@ class WCMP_Export
         return $calculated_fee;
     }
 
+    /**
+     * @param $order_ids
+     *
+     * @return mixed
+     * @throws Exception
+     */
     public function filter_myparcelbe_destination_orders($order_ids)
     {
         foreach ($order_ids as $key => $order_id) {
             $order            = WCX::get_order($order_id);
             $shipping_country = WCX_Order::get_prop($order, "shipping_country");
             // skip non-myparcel destination orders
-            if (! $this->is_myparcelbe_destination($shipping_country)) {
+            if (! WCMP_Country_Codes::isMyParcelBeDestination($shipping_country)) {
                 unset($order_ids[$key]);
             }
         }
 
         return $order_ids;
-    }
-
-    public function is_myparcelbe_destination($country_code)
-    {
-        return ($country_code == "BE" || $this->is_eu_country($country_code)
-            || $this->is_world_shipment_country(
-                $country_code
-            ));
-    }
-
-    public function is_eu_country($country_code)
-    {
-        $euro_countries = [
-            "AT",
-            "NL",
-            "BG",
-            "CZ",
-            "DK",
-            "EE",
-            "FI",
-            "FR",
-            "DE",
-            "GR",
-            "HU",
-            "IE",
-            "IT",
-            "LV",
-            "LT",
-            "LU",
-            "PL",
-            "PT",
-            "RO",
-            "SK",
-            "SI",
-            "ES",
-            "SE",
-            "MC",
-            "AL",
-            "AD",
-            "BA",
-            "IC",
-            "FO",
-            "GI",
-            "GL",
-            "GG",
-            "JE",
-            "HR",
-            "LI",
-            "MK",
-            "MD",
-            "ME",
-            "UA",
-            "SM",
-            "RS",
-            "VA",
-            "BY",
-        ];
-
-        return in_array($country_code, $euro_countries);
-    }
-
-    public function is_world_shipment_country($country_code)
-    {
-        $world_shipment_countries = [
-            "AF",
-            "AQ",
-            "DZ",
-            "VI",
-            "AO",
-            "AG",
-            "AR",
-            "AM",
-            "AW",
-            "AU",
-            "AZ",
-            "BS",
-            "BH",
-            "BD",
-            "BB",
-            "BZ",
-            "BJ",
-            "BM",
-            "BT",
-            "BO",
-            "BW",
-            "BR",
-            "VG",
-            "BN",
-            "BF",
-            "BI",
-            "KH",
-            "CA",
-            "KY",
-            "CF",
-            "CL",
-            "CN",
-            "CO",
-            "KM",
-            "CG",
-            "CD",
-            "CR",
-            "CU",
-            "DJ",
-            "DM",
-            "DO",
-            "EC",
-            "EG",
-            "SV",
-            "GQ",
-            "ER",
-            "ET",
-            "FK",
-            "FJ",
-            "PH",
-            "GF",
-            "PF",
-            "GA",
-            "GB",
-            "GM",
-            "GE",
-            "GH",
-            "GD",
-            "GP",
-            "GT",
-            "GN",
-            "GW",
-            "GY",
-            "HT",
-            "HN",
-            "HK",
-            "IN",
-            "ID",
-            "IS",
-            "IQ",
-            "IR",
-            "IL",
-            "CI",
-            "JM",
-            "JP",
-            "YE",
-            "JO",
-            "CV",
-            "CM",
-            "KZ",
-            "KE",
-            "KG",
-            "KI",
-            "KW",
-            "LA",
-            "LS",
-            "LB",
-            "LR",
-            "LY",
-            "MO",
-            "MG",
-            "MW",
-            "MV",
-            "MY",
-            "ML",
-            "MA",
-            "MQ",
-            "MR",
-            "MU",
-            "MX",
-            "MN",
-            "MS",
-            "MZ",
-            "MM",
-            "NA",
-            "NR",
-            "NP",
-            "NI",
-            "NC",
-            "NZ",
-            "NE",
-            "NG",
-            "KP",
-            "UZ",
-            "OM",
-            "TL",
-            "PK",
-            "PA",
-            "PG",
-            "PY",
-            "PE",
-            "PN",
-            "PR",
-            "QA",
-            "RE",
-            "RU",
-            "RW",
-            "KN",
-            "LC",
-            "VC",
-            "PM",
-            "WS",
-            "ST",
-            "SA",
-            "SN",
-            "SC",
-            "SL",
-            "SG",
-            "SO",
-            "LK",
-            "SD",
-            "SR",
-            "SZ",
-            "SY",
-            "TJ",
-            "TW",
-            "TZ",
-            "TH",
-            "TG",
-            "TO",
-            "TT",
-            "TD",
-            "TN",
-            "TM",
-            "TC",
-            "TV",
-            "UG",
-            "UY",
-            "VU",
-            "VE",
-            "AE",
-            "US",
-            "VN",
-            "ZM",
-            "ZW",
-            "ZA",
-            "KR",
-            "AN",
-            "BQ",
-            "CW",
-            "SX",
-            "XK",
-            "IM",
-            "MT",
-            "CY",
-            "CH",
-            "TR",
-            "NO",
-        ];
-
-        return in_array($country_code, $world_shipment_countries);
-    }
-
-    public function get_invoice_number($order)
-    {
-        return (string) apply_filters("wc_myparcelbe_invoice_number", $order->get_order_number());
-    }
-
-    public function get_item_display_name($item, $order)
-    {
-        // set base name
-        $name = $item['name'];
-
-        // add variation name if available
-        $product = $order->get_product_from_item($item);
-        if ($product && isset($item['variation_id']) && $item['variation_id'] > 0
-            && method_exists(
-                $product,
-                'get_variation_attributes'
-            )) {
-            $name .= woocommerce_get_formatted_variation($product->get_variation_attributes());
-        }
-
-        return $name;
-    }
-
-    /**
-     * Log data if the error logging setting is enabled.
-     *
-     * @param string $message
-     */
-    public function log(string $message): void
-    {
-        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ERROR_LOGGING)) {
-            return;
-        }
-
-        // Starting with WooCommerce 3.0, logging can be grouped by context and severity.
-        if (class_exists("WC_Logger") && version_compare(WOOCOMMERCE_VERSION, "3.0", " >= ")) {
-            $logger = wc_get_logger();
-            $logger->debug($message, ["source" => "wc-myparcelbe"]);
-
-            return;
-        }
-
-        if (class_exists("WC_Logger")) {
-            $wc_logger = function_exists("wc_get_logger") ? wc_get_logger() : new WC_Logger();
-            $wc_logger->add("wc-myparcelbe", $message);
-
-            return;
-        }
-
-        // Old WC versions didn't have a logger
-        // log file in upload folder - wp-content/uploads
-        $upload_dir        = wp_upload_dir();
-        $upload_base       = trailingslashit($upload_dir["basedir"]);
-        $log_file          = $upload_base . "myparcelbe_log.txt";
-        $current_date_time = date("Y-m-d H:i:s");
-        $message           = $current_date_time . " " . $message . "n";
-        file_put_contents($log_file, $message, FILE_APPEND);
-
-        return;
     }
 
     /**
@@ -1803,7 +1481,7 @@ class WCMP_Export
      *
      * @throws ErrorException
      */
-    private function add_myparcelbe_note_to_shipment($selected_shipment_ids, $shipment_id, $order)
+    private function add_myparcelbe_note_to_shipment($selected_shipment_ids, $shipment_id, WC_Order $order)
     {
         if (! in_array($shipment_id, $selected_shipment_ids)) {
             return;

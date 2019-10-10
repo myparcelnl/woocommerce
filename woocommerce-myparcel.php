@@ -174,6 +174,7 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/compatibility/class-ce-compatibility.php");
 
             require_once($this->includes . "/class-wcmp-data.php");
+            require_once($this->includes . "/class-wcmp-add.php");
             require_once($this->includes . "/collections/settings-collection.php");
             require_once($this->includes . "/entities/legacy-delivery-options.php");
             require_once($this->includes . "/entities/setting.php");
@@ -187,6 +188,7 @@ if (! class_exists('WCMP')) :
             $this->admin = require_once($this->includes . "/admin/class-wcmp-admin.php");
             require_once($this->includes . "/admin/settings/class-wcmp-settings.php");
             require_once($this->includes . "/admin/class-wcmp-country-codes.php");
+            require_once($this->includes . "/admin/class-wcmp-export-pdf.php");
             $this->export = require_once($this->includes . "/admin/class-wcmp-export.php");
             require_once($this->includes . "/class-wcmp-be-postcode-fields.php");
         }

@@ -1,0 +1,51 @@
+<?php
+
+if (! defined('ABSPATH')) {
+    exit;
+} // Exit if accessed directly
+
+if (class_exists('WCMP_Log')) {
+    return;
+}
+
+class WCMP_Log
+{
+
+    /**
+     * Log data if the error logging setting is enabled.
+     *
+     * @param string $message
+     */
+    public static function add(string $message): void
+    {
+        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ERROR_LOGGING)) {
+            return;
+        }
+
+        // Starting with WooCommerce 3.0, logging can be grouped by context and severity.
+        if (class_exists("WC_Logger") && version_compare(WOOCOMMERCE_VERSION, "3.0", " >= ")) {
+            $logger = wc_get_logger();
+            $logger->debug($message, ["source" => "wc-myparcelbe"]);
+
+            return;
+        }
+
+        if (class_exists("WC_Logger")) {
+            $wc_logger = function_exists("wc_get_logger") ? wc_get_logger() : new WC_Logger();
+            $wc_logger->add("wc-myparcelbe", $message);
+
+            return;
+        }
+
+        // Old WC versions didn't have a logger
+        // add file in upload folder - wp-content/uploads
+        $upload_dir        = wp_upload_dir();
+        $upload_base       = trailingslashit($upload_dir["basedir"]);
+        $log_file          = $upload_base . "myparcelbe_log.txt";
+        $current_date_time = date("Y-m-d H:i:s");
+        $message           = $current_date_time . " " . $message . "n";
+        file_put_contents($log_file, $message, FILE_APPEND);
+
+        return;
+    }
+}

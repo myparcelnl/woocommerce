@@ -258,11 +258,12 @@ class WCMP_Settings
         }
 
         foreach ((array) $wp_settings_sections[$page] as $section) {
-            if ($section['title']) {
+            echo "<div class='wcmp__settings-section'>";
+            if (isset($section['title'])) {
                 printf('<h2 id="%s">%s</h2>', $section["id"], $section['title']);
             }
 
-            if ($section['callback']) {
+            if (isset($section['callback'])) {
                 call_user_func($section['callback'], $section);
             }
 
@@ -274,6 +275,7 @@ class WCMP_Settings
             echo '<table class="form-table" role="presentation">';
             $this->render_settings_fields($page, $section['id']);
             echo '</table>';
+            echo "</div>";
         }
     }
 

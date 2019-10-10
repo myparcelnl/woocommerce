@@ -42,10 +42,6 @@ if (! count($shipments)) {
   <tbody>
   <?php
 
-  echo "<pre>";
-  //  var_dump($consignments);
-  //  var_dump($shipments);
-  echo "</pre>";
   foreach ($shipments as $shipment_id => $shipment):
       $consignment = $shipments[$shipment_id];
 

@@ -141,7 +141,8 @@ class WCMP_Admin
          */
 
         $order    = wc_get_order($order_id);
-        $shipment = WCMP()->export->get_shipment_data($shipment_id, $order);
+        $shipment = WCMP()->export->get_shipment_data([$shipment_id], $order)[$shipment_id];
+
         if (! empty($shipment['tracktrace'])) {
             $order_has_shipment = true;
             $tracktrace_url     = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
@@ -265,12 +266,12 @@ class WCMP_Admin
         }
 
         $processed_shipments = $this->get_order_shipments($order, true);
-        if (empty($processed_shipments) || $shipping_country != 'BE') {
+        if (empty($processed_shipments) || $shipping_country !== 'BE') {
             unset($listing_actions[$addReturn]);
         }
 
         $atts =
-            (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display')
+            (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'download')
                 ? 'target="_blank"' : '';
 
         foreach ($listing_actions as $request => $data) {
@@ -289,12 +290,12 @@ class WCMP_Admin
      * @param WC_Order $order
      * @param bool     $exclude_concepts
      *
-     * @return array|bool|mixed|void
+     * @return array
      */
-    public function get_order_shipments(WC_Order $order, bool $exclude_concepts = false)
+    public function get_order_shipments(WC_Order $order, bool $exclude_concepts = false): array
     {
         if (empty($order)) {
-            return;
+            return [];
         }
 
         $consignments = WCX_Order::get_meta($order, self::META_SHIPMENTS);
@@ -322,7 +323,7 @@ class WCMP_Admin
         }
 
         if (empty($consignments) || ! is_array($consignments)) {
-            return false;
+            return [];
         }
 
         if (! empty($consignments) && $exclude_concepts) {
