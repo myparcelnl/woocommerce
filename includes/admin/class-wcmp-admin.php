@@ -603,7 +603,7 @@ class WCMP_Admin
         $shipments = $this->get_order_shipments($order, true);
 
         if (empty($shipments)) {
-            return __("No label has created yet", "woocommerce-myparcelbe");
+            return __("No label has been created yet.", "woocommerce-myparcelbe");
         }
 
         foreach ($shipments as $shipment_id => $shipment) {
