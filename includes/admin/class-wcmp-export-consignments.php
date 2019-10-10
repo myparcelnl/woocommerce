@@ -117,11 +117,7 @@ class WCMP_Export_Consignments
      */
     private function getPickupTypeByDeliveryOptions(DeliveryOptions $delivery_options): int
     {
-        if ($delivery_options->isPickup()) {
-            return AbstractConsignment::DELIVERY_TYPE_PICKUP;
-        }
-
-        return AbstractConsignment::DELIVERY_TYPE_STANDARD;
+        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$delivery_options->getDeliveryType()];
     }
 
     /**
