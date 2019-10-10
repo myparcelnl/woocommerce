@@ -335,7 +335,7 @@ class WCMP_Export
                 }
             }
 
-            WCMP_Log::add("Shipment data for order {$order_id}.", var_export($collection->toArray(), true));
+            WCMP_Log::add("Shipment data for order {$order_id}.");
         }
 
         $collection = $collection->createConcepts();
@@ -405,12 +405,12 @@ class WCMP_Export
 
         foreach ($myparcelbe_options as $order_id => $options) {
             $return_shipments = [$this->prepare_return_shipment_data($order_id, $options)];
-            WCMP_Log::add("Return shipment data for order {$order_id}:\n" . var_export($return_shipments, true));
+            WCMP_Log::add("Return shipment data for order {$order_id}:", print_r($return_shipments, true));
 
             try {
                 $api      = $this->init_api();
                 $response = $api->add_shipments($return_shipments, "return");
-                WCMP_Log::add("API response (order {$order_id}):\n" . var_export($response, true));
+                WCMP_Log::add("API response (order {$order_id}):\n" . print_r($response, true));
                 if (Arr::get($response, "body.data.ids")) {
                     $order                    = WCX::get_order($order_id);
                     $ids                      = array_shift($response["body"]["data"]["ids"]);
@@ -424,7 +424,7 @@ class WCMP_Export
                     // save shipment data in order meta
                     $this->save_shipment_data($order, $shipment);
                 } else {
-                    WCMP_Log::add("\$response\[\"body.data.ids\"] not found.", var_export($response, true));
+                    WCMP_Log::add("\$response\[\"body.data.ids\"] not found.", print_r($response, true));
                     $this->errors[$order_id] = "\$response\[\"body.data.ids\"] not found.";
                 }
             } catch (Exception $e) {
@@ -451,7 +451,8 @@ class WCMP_Export
     ) {
         $return = [];
 
-        WCMP_Log::add("*** Label request started ***");
+        WCMP_Log::add("*** getShipmentLabels() ***");
+        WCMP_Log::add("getShipmentLabels(" . print_r(func_get_args(), true) . "):");
         WCMP_Log::add("Shipment IDs: " . implode(", ", $shipment_ids));
 
         try {
@@ -468,7 +469,6 @@ class WCMP_Export
                 $response = $api->get_shipment_labels($shipment_ids, $params, "link");
 
                 $this->addNoteToShipments($shipment_ids, $order_ids);
-                WCMP_Log::add("API response: ", var_export($response, true));
 
                 $pdfUrl = Arr::get($response, "body.data.pdfs.url");
 
@@ -480,9 +480,9 @@ class WCMP_Export
                 }
             } else {
                 $response = $api->get_shipment_labels($shipment_ids, $params, "pdf");
-                $this->addNoteToShipments($shipment_ids, $order_ids);
 
                 if (isset($response["body"])) {
+                    $this->addNoteToShipments($shipment_ids, $order_ids);
                     WCMP_Log::add("PDF data received");
                     new WCMP_Export_Pdf($response["body"], $order_ids);
                 } else {

@@ -265,7 +265,7 @@ class WCMP_API extends WCMP_Rest
      *
      * @return string
      */
-    private function get_label_format_url_parameters($positions): string
+    private function get_label_format_url_parameters($positions = [2, 1, 3, 4]): string
     {
         $labelFormat = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_LABEL_FORMAT);
 

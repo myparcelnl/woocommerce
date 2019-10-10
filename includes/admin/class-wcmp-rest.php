@@ -178,8 +178,6 @@ class WCMP_Rest
      */
     public function request($url, $method = "GET", $headers = [], $post, $body = null, $raw = false)
     {
-        WCMP_Log::add("Request: " . var_export(func_get_args(), true));
-
         // Set the method and related options
         switch ($method) {
             case "PUT":
@@ -206,7 +204,7 @@ class WCMP_Rest
         }
 
         $status = Arr::get($response, "response.code");
-        $body   = Arr::get($response, "body");;
+        $body   = Arr::get($response, "body");
 
         if ($raw !== true) {
             $body = json_decode($body, true); // The second parameter set to true returns objects as associative arrays
@@ -227,10 +225,7 @@ class WCMP_Rest
             throw new Exception($error, $status);
         }
 
-        $response = ["code" => $status, "body" => $body, "headers" => Arr::get($response, "headers")];
-        WCMP_Log::add("Response: " . var_export($response, true));
-
-        return $response;
+        return ["code" => $status, "body" => $body, "headers" => Arr::get($response, "headers")];
     }
 
     /**

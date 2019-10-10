@@ -36,10 +36,12 @@ class WCMP_Frontend_Track_Trace
     /**
      * @param WC_Order $order
      * @param          $sent_to_admin
+     *
+     * @throws Exception
      */
     public function track_trace_email(WC_Order $order, $sent_to_admin): void
     {
-        if (! WCMP()->setting_collection->isEnabled('email_tracktrace')) {
+        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_TRACK_TRACE_EMAIL)) {
             return;
         }
 
@@ -47,18 +49,19 @@ class WCMP_Frontend_Track_Trace
             return;
         }
 
-        if (WCX_Order::get_status($order) != 'completed') {
+        if (WCX_Order::get_status($order) !== 'completed') {
             return;
         }
 
         $order_id = WCX_Order::get_id($order);
 
-        $tracktrace_links = WCMP()->admin->get_tracktrace_links($order_id);
-        if (! empty($tracktrace_links)) {
+        $track_trace_links = WCMP()->admin->get_tracktrace_links($order_id);
+
+        if (! empty($track_trace_links)) {
             $email_text = __("You can track your order with the following bpost Track & Trace code:", "woocommerce-myparcelbe");
             $email_text = apply_filters("wcmyparcelbe_email_text", $email_text, $order);
             ?>
-            <p><?php echo $email_text . ' ' . implode(', ', $tracktrace_links); ?></p>
+            <p><?php echo $email_text . ' ' . implode(', ', $track_trace_links); ?></p>
             <?php
         }
     }
@@ -68,10 +71,11 @@ class WCMP_Frontend_Track_Trace
      * @param WC_Order $order
      *
      * @return array
+     * @throws Exception
      */
     public function track_trace_myaccount(array $actions, WC_Order $order): array
     {
-        if (! WCMP()->setting_collection->isEnabled('myaccount_tracktrace')) {
+        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT)) {
             return $actions;
         }
 

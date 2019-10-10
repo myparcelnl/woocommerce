@@ -467,6 +467,7 @@ class WCMP_Admin
      * @param $tracktrace
      *
      * @return string|void
+     * @throws Exception
      */
     public function get_tracktrace_url($order_id, $tracktrace)
     {
@@ -480,8 +481,10 @@ class WCMP_Admin
 
         // set url for NL or foreign orders
         if ($country === 'BE') {
+            $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
+
             // use billing postcode for pickup/pakjegemak
-            if (WCMP()->export->is_pickup($order)) {
+            if ($deliveryOptions->isPickup()) {
                 $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
             }
 
@@ -507,6 +510,7 @@ class WCMP_Admin
      * @param $order_id
      *
      * @return array|bool
+     * @throws Exception
      */
     public function get_tracktrace_links($order_id)
     {
@@ -525,6 +529,7 @@ class WCMP_Admin
      * @param $order_id
      *
      * @return array|bool|mixed|void
+     * @throws Exception
      */
     public function get_tracktrace_shipments($order_id)
     {
@@ -546,6 +551,7 @@ class WCMP_Admin
                 $order_id,
                 $shipment['tracktrace']
             );
+
             $shipments[$shipment_id]['tracktrace_link'] = sprintf(
                 '<a href="%s">%s</a>',
                 $tracktrace_url,
