@@ -174,7 +174,7 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/compatibility/class-ce-compatibility.php");
 
             require_once($this->includes . "/class-wcmp-data.php");
-            require_once($this->includes . "/class-wcmp-add.php");
+            require_once($this->includes . "/class-wcmp-log.php");
             require_once($this->includes . "/collections/settings-collection.php");
             require_once($this->includes . "/entities/legacy-delivery-options.php");
             require_once($this->includes . "/entities/setting.php");
