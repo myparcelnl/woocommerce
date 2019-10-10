@@ -470,7 +470,7 @@ msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:608
 #: includes/admin/class-wcmp-admin.php:655
-msgid "No label has created yet"
+msgid "No label has been created yet."
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:38
