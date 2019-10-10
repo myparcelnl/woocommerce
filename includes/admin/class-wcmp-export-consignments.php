@@ -215,29 +215,6 @@ class WCMP_Export_Consignments
     }
 
     /**
-     * @param $description
-     * @param $order
-     *
-     * @return mixed
-     * @throws Exception
-     */
-    public function replace_shortcodes($description, WC_Order $order)
-    {
-        $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-
-        $replacements = [
-            "[ORDER_NR]"      => $order->get_order_number(),
-            "[DELIVERY_DATE]" => $deliveryOptions->getDate(),
-        ];
-
-        $description = str_replace(array_keys($replacements), array_values($replacements), $description);
-
-        return $description;
-    }
-
-    /**
-     * @param $order
-     *
      * @return mixed|string
      */
     private function getLabelDescription()

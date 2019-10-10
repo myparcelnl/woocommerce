@@ -454,7 +454,7 @@ class WCMP_Export
 
             if (isset($label_response_type) && $label_response_type === "url") {
                 $response = $api->get_shipment_labels($shipment_ids, $params, "link");
-                $this->add_myparcelbe_note_to_shipments($shipment_ids, $order_ids);
+                $this->addNoteToShipments($shipment_ids, $order_ids);
                 WCMP_Log::add("API response:n" . var_export($response, true));
 
                 $pdfUrl = Arr::get($response, "body.data.pdfs.url");
@@ -466,7 +466,7 @@ class WCMP_Export
                 }
             } else {
                 $response = $api->get_shipment_labels($shipment_ids, $params, "pdf");
-                $this->add_myparcelbe_note_to_shipments($shipment_ids, $order_ids);
+                $this->addNoteToShipments($shipment_ids, $order_ids);
 
                 if (isset($response["body"])) {
                     WCMP_Log::add("PDF data received");
@@ -771,13 +771,13 @@ class WCMP_Export
     }
 
     /**
-     * @param $selected_shipment_ids
-     * @param $order_ids
+     * @param array $selected_shipment_ids
+     * @param array $order_ids
      *
      * @throws ErrorException
      * @internal param $shipment_ids
      */
-    public function add_myparcelbe_note_to_shipments($selected_shipment_ids, $order_ids)
+    public function addNoteToShipments(array $selected_shipment_ids, array $order_ids)
     {
         if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_BARCODE_IN_NOTE)) {
             return;
@@ -789,8 +789,9 @@ class WCMP_Export
         foreach ($order_ids as $order_id) {
             $order           = WCX::get_order($order_id);
             $order_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
+
             foreach ($order_shipments as $shipment_id => $shipment) {
-                $this->add_myparcelbe_note_to_shipment($selected_shipment_ids, $shipment_id, $order);
+                $this->addNoteToShipment($selected_shipment_ids, $shipment_id, $order);
             }
         }
 
@@ -1056,27 +1057,6 @@ class WCMP_Export
     }
 
     /**
-     * @param $description
-     * @param $order
-     *
-     * @return mixed
-     * @throws Exception
-     */
-    public function replace_shortcodes($description, WC_Order $order)
-    {
-        $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-
-        $replacements = [
-            "[ORDER_NR]"      => $order->get_order_number(),
-            "[DELIVERY_DATE]" => $deliveryOptions->getDate(),
-        ];
-
-        $description = str_replace(array_keys($replacements), array_values($replacements), $description);
-
-        return $description;
-    }
-
-    /**
      * @param $item
      * @param $order
      *
@@ -1148,86 +1128,6 @@ class WCMP_Export
 
         // no pickup
         return false;
-    }
-
-    /**
-     * @param        $order
-     * @param string $deliveryOptions
-     *
-     * @return int|mixed|string
-     * @deprecated
-     */
-    public function get_delivery_type($order, $myparcelbe_delivery_options = "")
-    {
-        // delivery types
-        $delivery_types = [
-            "morning"  => 1,
-            "standard" => 2, // "default in JS API"
-            "avond"    => 3,
-            "retail"   => 4, // "pickup"
-        ];
-
-        if (empty($myparcelbe_delivery_options)) {
-            $myparcelbe_delivery_options = WCX_Order::get_meta($order, WCMP_Admin::META_DELIVERY_OPTIONS);
-        }
-
-        // standard = default, overwrite if options found
-        $delivery_type = "standard";
-        if (! empty($myparcelbe_delivery_options)) {
-            // pickup & pickup express store the delivery type in the delivery options,
-            if (empty($myparcelbe_delivery_options["price_comment"])
-                && ! empty($myparcelbe_delivery_options["time"])) {
-                // check if we have a price_comment in the time option
-                $delivery_time = array_shift($myparcelbe_delivery_options["time"]); // take first element in time array
-                if (isset($delivery_time["price_comment"])) {
-                    $delivery_type = $delivery_time["price_comment"];
-                }
-            } else {
-                $delivery_type = $myparcelbe_delivery_options["price_comment"];
-            }
-        }
-
-        // backwards compatibility for pakjegemak
-        if ($pgaddress = WCX_Order::get_meta($order, "_myparcelbe_pgaddress")) {
-            $delivery_type = "retail";
-        }
-
-        // convert to int (default to 2 = standard for unknown types)
-        $delivery_type = isset($delivery_types[$delivery_type]) ? $delivery_types[$delivery_type] : 2;
-
-        return $delivery_type;
-    }
-
-    /**
-     * @param WC_Order $order
-     * @param string   $shipping_method_id
-     *
-     * @return bool
-     */
-    public function get_order_shipping_class(WC_Order $order, string $shipping_method_id = "")
-    {
-        if (empty($shipping_method_id)) {
-            $order_shipping_methods = $order->get_items("shipping");
-
-            if (! empty($order_shipping_methods)) {
-                // we"re taking the first(we"re not handling multiple shipping methods as of yet)
-                $order_shipping_method = array_shift($order_shipping_methods);
-                $shipping_method_id    = $order_shipping_method["method_id"];
-            } else {
-                return false;
-            }
-        }
-
-        $shipping_method = self::get_shipping_method($shipping_method_id);
-
-        if (empty($shipping_method)) {
-            return false;
-        }
-
-        // get shipping classes from order
-        $found_shipping_classes = $this->find_order_shipping_classes($order);
-
-        return $this->get_shipping_class($shipping_method, $found_shipping_classes);
     }
 
     /**
@@ -1462,7 +1362,7 @@ class WCMP_Export
      * @throws ErrorException
      * @throws Exception
      */
-    private function get_shipment_barcode_from_myparcelbe_api($shipment_id)
+    private function getShipmentBarcodeFromApi($shipment_id)
     {
         $api      = $this->init_api();
         $response = $api->get_shipments($shipment_id);
@@ -1475,19 +1375,19 @@ class WCMP_Export
     }
 
     /**
-     * @param $selected_shipment_ids
-     * @param $shipment_id
-     * @param $order
+     * @param array    $selected_shipment_ids
+     * @param int      $shipment_id
+     * @param WC_Order $order
      *
      * @throws ErrorException
      */
-    private function add_myparcelbe_note_to_shipment($selected_shipment_ids, $shipment_id, WC_Order $order)
+    private function addNoteToShipment(array $selected_shipment_ids, int $shipment_id, WC_Order $order)
     {
         if (! in_array($shipment_id, $selected_shipment_ids)) {
             return;
         }
 
-        $barcode = $this->get_shipment_barcode_from_myparcelbe_api($shipment_id);
+        $barcode = $this->getShipmentBarcodeFromApi($shipment_id);
 
         $order->add_order_note($this->prefix_message . sprintf($barcode));
     }
@@ -1536,45 +1436,6 @@ class WCMP_Export
         }
 
         return false;
-    }
-
-    /**
-     * @param $order
-     *
-     * @return mixed|string
-     * @throws Exception
-     */
-    private function getLabelDescription($order)
-    {
-        $description = "";
-        // parse description
-        if ($this->getSetting("label_description")) {
-            $description = $this->replace_shortcodes($this->getSetting("label_description"), $order);
-        }
-
-        return $description;
-    }
-
-    /**
-     * @return int
-     */
-    private function isSignature(): int
-    {
-        return ($this->getSetting("signature")) ? 1 : 0;
-    }
-
-    /**
-     * @param DeliveryOptions $delivery_options
-     *
-     * @return int
-     */
-    private function getPickupTypeByDeliveryOptions(DeliveryOptions $delivery_options): int
-    {
-        if ($delivery_options->isPickup()) {
-            return AbstractConsignment::DELIVERY_TYPE_PICKUP;
-        }
-
-        return AbstractConsignment::DELIVERY_TYPE_STANDARD;
     }
 
     /**
