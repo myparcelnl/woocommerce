@@ -21,10 +21,10 @@ jQuery(function($) {
     saveShipmentSettings: '.wcmp__shipment-settings__save',
     shipmentOptions: '.wcmp__shipment-options',
     shipmentOptionsForm: '.wcmp__shipment-options__form',
-    shipmentSummary: 'wcmp__shipment-summary',
+    shipmentSummary: '.wcmp__shipment-summary',
     shipmentSummaryList: '.wcmp__shipment-summary__list',
     showShipmentOptionsForm: '.wcmp__shipment-options__show',
-    showShipmentSummary: '.wcmp__shipment-summary__show',
+    showShipmentSummaryList: '.wcmp__shipment-summary__show',
     spinner: '.wcmp__spinner',
     notice: '.wcmp__notice',
     orderAction: '.wcmp__action',
@@ -66,7 +66,7 @@ jQuery(function($) {
     /**
      * Show summary when clicked.
      */
-    $(selectors.showShipmentSummary).click(showShipmentSummary);
+    $(selectors.showShipmentSummaryList).click(showShipmentSummaryList);
 
     /**
      * Bulk actions.
@@ -272,27 +272,13 @@ jQuery(function($) {
       form.slideUp();
 
       // Remove the listener to close the form.
-      document.addEventListener('click', hideShipmentOptionsForm);
+      document.removeEventListener('click', hideShipmentOptionsForm);
     } else {
       // Form is invisible, show it
       form.find(':input').change();
       form.slideDown();
       // Add the listener to close the form.
       document.addEventListener('click', hideShipmentOptionsForm);
-    }
-  }
-
-  /**
-   * @param {Event} event - Click event.
-   * @property {Element} event.target
-   */
-  function hideShipmentSummary(event) {
-    if (!$(event.target).closest(selectors.shipmentSummaryList).length) {
-      if (!($(event.target).hasClass(selectors.showShipmentSummary) || $(event.target)
-        .parent()
-        .hasClass(selectors.shipmentSummary)) && $(selectors.shipmentSummaryList).is(':visible')) {
-        $(selectors.shipmentSummaryList).slideUp();
-      }
     }
   }
 
@@ -796,18 +782,18 @@ jQuery(function($) {
     return uri + hash; /* finally append the hash as well */
   }
 
-  function showShipmentSummary() {
-    var summaryList = $(this).next('.wcmp__shipment-summary__list');
+  function showShipmentSummaryList() {
+    var summaryList = $(this).next(selectors.shipmentSummaryList);
 
-    if (summaryList.is(':visible') || summaryList.data('loaded') !== '') {
-      summaryList.slideUp();
-    } else if (summaryList.is(':hidden') && summaryList.data('loaded') === '') {
+    if (summaryList.is(':hidden')) {
+      summaryList.slideDown();
+      document.addEventListener('click', hideShipmentSummaryList);
+    } else {
+    }
+
+    if (summaryList.data('loaded') === '') {
       summaryList.addClass('ajax-waiting');
       summaryList.find(selectors.spinner).show();
-      summaryList.slideDown();
-
-      /* hide summary when click outside */
-      document.addEventListener('click', hideShipmentSummary);
 
       var data = {
         security: wcmp.nonce,
@@ -824,34 +810,58 @@ jQuery(function($) {
         success: function(response) {
           this.removeClass('ajax-waiting');
           this.html(response);
-          this.data('loaded', 'yes');
+          this.data('loaded', true);
         },
       });
     }
   }
 
   /**
-   * Hide any shipment options form(s) by checking if the element clicked is not in the list of allowed elements and
-   *  not inside the shipment options form.
-   *
    * @param {MouseEvent} event - The click event.
    * @param {Element} event.target - Click target.
    */
   function hideShipmentOptionsForm(event) {
-    event.preventDefault();
+    handleClickOutside.bind(hideShipmentOptionsForm)(event, {
+      main: selectors.shipmentOptionsForm,
+      wrappers: [selectors.shipmentOptionsForm, selectors.showShipmentOptionsForm],
+    });
+  }
 
+  /**
+   * @param {MouseEvent} event - Click event.
+   * @property {Element} event.target
+   */
+  function hideShipmentSummaryList(event) {
+    handleClickOutside.bind(hideShipmentSummaryList)(event, {
+      main: selectors.shipmentSummaryList,
+      wrappers: [selectors.shipmentSummaryList, selectors.showShipmentSummaryList],
+    });
+  }
+
+  /**
+   * Hide any element by checking if the element clicked is not in the list of wrapper elements and not inside the
+   *  element itself.
+   *
+   * @param {MouseEvent} event - The click event.
+   * @param {Object} elements - The elements to show/hide and check inside.
+   * @property {Node[]} elements.wrappers
+   * @property {Node} elements.main
+   */
+  function handleClickOutside(event, elements) {
+    event.preventDefault();
+    var listener = this;
     var clickedOutside = true;
 
-    [selectors.shipmentOptionsForm, selectors.showShipmentOptionsForm].forEach(function(cls) {
-      if ((clickedOutside && event.target.matches(cls))
-        || event.target.closest(selectors.shipmentOptionsForm)) {
+    elements.wrappers.forEach(function(cls) {
+      if ((clickedOutside && event.target.matches(cls)) || event.target.closest(elements.main)) {
         clickedOutside = false;
       }
     });
 
     if (clickedOutside) {
-      document.removeEventListener('click', hideShipmentOptionsForm);
-      $(selectors.shipmentOptionsForm).slideUp();
+      $(elements.main).slideUp();
+      document.removeEventListener('click', listener);
     }
   }
 });
+

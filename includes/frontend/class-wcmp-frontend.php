@@ -1,5 +1,8 @@
 <?php
 
+use MyParcelNL\Sdk\src\Support\Arr;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
+
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
@@ -150,6 +153,64 @@ class WCMP_Frontend
         return $fragments;
     }
 
+    /**
+     * @param $order_id
+     *
+     * @return array|bool|mixed|void
+     * @throws Exception
+     */
+    public function get_track_trace_shipments($order_id): array
+    {
+        $order     = WCX::get_order($order_id);
+        $shipments = WCMP_Admin::get_order_shipments($order, true);
+        $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+
+        if (empty($shipments)) {
+            return [];
+        }
+
+        foreach ($shipments as $shipment_id => $shipment) {
+            // skip concepts
+            if (empty($shipment['track_trace'])) {
+                unset($shipments[$shipment_id]);
+                continue;
+            }
+
+            $track_trace_url = WCMP_Admin::get_track_trace_url(
+                $order_id,
+                $shipment['track_trace']
+            );
+
+            // add links & urls
+            Arr::set($shipments, "$shipment_id.track_trace_url", $track_trace_url);
+            Arr::set($shipments, "$shipment_id.track_trace_link", sprintf(
+                '<<a href="%s">%s</a>',
+                $track_trace_url,
+                $shipment['track_trace']
+            ));
+        }
+
+        return $shipments;
+    }
+
+    /**
+     * @param $order_id
+     *
+     * @return array|bool
+     * @throws Exception
+     */
+    public function get_track_trace_links($order_id): array
+    {
+        $track_trace_links = [];
+
+        $consignments = $this->get_track_trace_shipments($order_id);
+
+        foreach ($consignments as $key => $consignment) {
+            $track_trace_links[] = $consignment['track_trace_link'];
+        }
+
+        return $track_trace_links;
+    }
 }
 
 return new WCMP_Frontend();

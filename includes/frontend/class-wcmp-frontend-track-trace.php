@@ -1,6 +1,7 @@
 <?php
 
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\WCMP_WCPDF_Compatibility;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -23,14 +24,7 @@ class WCMP_Frontend_Track_Trace
         // Track & Trace in my account
         add_filter("woocommerce_my_account_my_orders_actions", [$this, "track_trace_myaccount"], 10, 2);
 
-        // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
-        add_filter("wpo_wcpdf_templates_replace_myparcelbe_tracktrace", [$this, "wpo_wcpdf_tracktrace"], 10, 2);
-        add_filter(
-            "wpo_wcpdf_templates_replace_myparcelbe_tracktrace_link",
-            [$this, "wpo_wcpdf_tracktrace_link"],
-            10,
-            2
-        );
+        WCMP_WCPDF_Compatibility::add_filters();
     }
 
     /**
@@ -55,7 +49,7 @@ class WCMP_Frontend_Track_Trace
 
         $order_id = WCX_Order::get_id($order);
 
-        $track_trace_links = WCMP()->admin->get_tracktrace_links($order_id);
+        $track_trace_links = WCMP()->admin->get_track_trace_links($order_id);
 
         if (! empty($track_trace_links)) {
             $email_text = __("You can track your order with the following bpost Track & Trace code:", "woocommerce-myparcelbe");
@@ -81,56 +75,19 @@ class WCMP_Frontend_Track_Trace
 
         $order_id = WCX_Order::get_id($order);
 
-        if ($consignments = WCMP()->admin->get_tracktrace_shipments($order_id)) {
-            foreach ($consignments as $key => $consignment) {
-                $actions['myparcelbe_tracktrace_' . $consignment['tracktrace']] = [
-                    'url'  => $consignment['tracktrace_url'],
-                    'name' => apply_filters(
-                        'wcmyparcelbe_myaccount_tracktrace_button',
-                        __('Track & Trace', 'wooocommerce-myparcelbe')
-                    ),
-                ];
-            }
+        $consignments = WCMP()->admin->get_track_trace_shipments($order_id);
+
+        foreach ($consignments as $key => $consignment) {
+            $actions['myparcelbe_tracktrace_' . $consignment['track_trace']] = [
+                'url'  => $consignment['track_trace_url'],
+                'name' => apply_filters(
+                    'wcmyparcelbe_myaccount_tracktrace_button',
+                    __('Track & Trace', 'wooocommerce-myparcelbe')
+                ),
+            ];
         }
 
         return $actions;
-    }
-
-    /**
-     * @param $replacement
-     * @param $order
-     *
-     * @return string
-     */
-    public function wpo_wcpdf_tracktrace($replacement, $order)
-    {
-        if ($shipments = WCMP()->admin->get_tracktrace_shipments(WCX_Order::get_id($order))) {
-            $tracktrace = [];
-            foreach ($shipments as $shipment) {
-                if (! empty($shipment['tracktrace'])) {
-                    $tracktrace[] = $shipment['tracktrace'];
-                }
-            }
-            $replacement = implode(', ', $tracktrace);
-        }
-
-        return $replacement;
-    }
-
-    /**
-     * @param $replacement
-     * @param $order
-     *
-     * @return string
-     */
-    public function wpo_wcpdf_tracktrace_link($replacement, $order)
-    {
-        $tracktrace_links = WCMP()->admin->get_tracktrace_links(WCX_Order::get_id($order));
-        if (! empty($tracktrace_links)) {
-            $replacement = implode(', ', $tracktrace_links);
-        }
-
-        return $replacement;
     }
 }
 

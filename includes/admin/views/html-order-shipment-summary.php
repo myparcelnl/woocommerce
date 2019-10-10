@@ -1,53 +1,74 @@
 <?php
 
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\Sdk\src\Support\Arr;
+
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-/**
- * @var string $tracktrace_url
- * @var array  $shipment
- * @var array  $package_types
- */
+$order_id    = $_POST["order_id"];
+$shipment_id = $_POST["shipment_id"];
 
-// Status
+$order           = wc_get_order($order_id);
+$shipment        = WCMP()->export->get_shipment_data([$shipment_id], $order)[$shipment_id];
+$deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+
+if (! empty($shipment['track_trace'])) {
+    $order_has_shipment = true;
+    $track_trace_url    = WCMP_Admin::get_track_trace_url($order_id, $shipment['track_trace']);
+}
+
+/**
+ * Status
+ */
 printf(
-    '%1$s: <a href="%2$s" class="myparcelbe_tracktrace_link" target="_blank" title="%3$s">%4$s</a><br/>',
+    '%1$s: <a href="%2$s" target="_blank" title="%3$s">%4$s</a><br/>',
     __("Status", "woocommerce-myparcelbe"),
-    $tracktrace_url,
-    $shipment['tracktrace'],
-    $shipment['status']
+    $track_trace_url,
+    Arr::get($shipment, "track_trace"),
+    Arr::get($shipment, "status")
 );
 
-// Shipment type
+/**
+ *  Package type
+ */
 printf(
     '%s: %s',
     __("Shipment type", "woocommerce-myparcelbe"),
-    $package_types[$shipment['shipment']['options']['package_type']]
+    WCMP_Data::getPackageTypeHuman(Arr::get($shipment, "shipment.options.package_type"))
 );
 ?>
+
 <ul class="wcmp__shipment-summary">
     <?php
     // Options
     $option_strings = [
-        'signature'      => __("Signature on delivery", "woocommerce-myparcelbe")
+        'signature' => __("Signature on delivery", "woocommerce-myparcelbe"),
     ];
+    $insurance = Arr::get($shipment, "shipment.options.insurance");
+    $labelDescription = Arr::get($shipment, 'shipment.options.label_description');
 
     foreach ($option_strings as $key => $label) {
-        if (isset($shipment['shipment']['options'][$key]) && (int) $shipment['shipment']['options'][$key] == 1) {
+        if (Arr::get($shipment, "shipment.options.$key")
+            && (int) Arr::get($shipment, "shipment.options.$key") === 1) {
             printf('<li class="%s">%s</li>', $key, $label);
         }
     }
 
-    // Insurance
-    if ( ! empty($shipment['shipment']['options']['insurance'])) {
-        $price = number_format($shipment['shipment']['options']['insurance']['amount'] / 100, 2);
+
+    if ($insurance) {
+        $price = number_format(Arr::get($insurance, "amount") / 100, 2);
         printf('<li>%s: € %s</li>', __("Insured for", "woocommerce-myparcelbe"), $price);
     }
 
-    // Custom ID
-    if ( ! empty($shipment['shipment']['options']['label_description'])) {
-        printf('<li>%s: %s</li>', __("Custom ID (top left on label)", "woocommerce-myparcelbe"), $shipment['shipment']['options']['label_description']);
+
+    if ($labelDescription) {
+        printf(
+            '<li>%s: %s</li>',
+            __("Custom ID (top left on label)", "woocommerce-myparcelbe"),
+            $labelDescription
+        );
     }
     ?>
 </ul>

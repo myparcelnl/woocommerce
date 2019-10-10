@@ -87,7 +87,7 @@ class WCMP_Admin
         }
 
         $order_id             = WCX_Order::get_id($order);
-        $consignments         = $this->get_order_shipments($order, true);
+        $consignments         = WCMP_Admin::get_order_shipments($order, true);
 
         // if we have shipments, then we show status & link to Track & Trace, settings under i
         if (! empty($consignments)) :
@@ -133,23 +133,9 @@ class WCMP_Admin
      */
     public function order_list_ajax_get_shipment_summary()
     {
-        check_ajax_referer('wc_myparcelbe', 'security');
-        extract($_POST); // order_id, shipment_id
-        /**
-         * @var $order_id
-         * @var $shipment_id
-         */
-
-        $order    = wc_get_order($order_id);
-        $shipment = WCMP()->export->get_shipment_data([$shipment_id], $order)[$shipment_id];
-
-        if (! empty($shipment['tracktrace'])) {
-            $order_has_shipment = true;
-            $tracktrace_url     = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
-        }
+        check_ajax_referer(WCMP::NONCE_ACTION, 'security');
 
         include('views/html-order-shipment-summary.php');
-        die();
     }
 
     /**
@@ -252,13 +238,13 @@ class WCMP_Admin
             ],
         ];
 
-        $consignments = $this->get_order_shipments($order);
+        $consignments = WCMP_Admin::get_order_shipments($order);
 
         if (empty($consignments)) {
             unset($listing_actions[$getLabels]);
         }
 
-        $processed_shipments = $this->get_order_shipments($order, true);
+        $processed_shipments = WCMP_Admin::get_order_shipments($order, true);
         if (empty($processed_shipments) || $shipping_country !== 'BE') {
             unset($listing_actions[$addReturn]);
         }
@@ -287,12 +273,8 @@ class WCMP_Admin
      *
      * @return array
      */
-    public function get_order_shipments(WC_Order $order, bool $exclude_concepts = false): array
+    public static function get_order_shipments(WC_Order $order, bool $exclude_concepts = false): array
     {
-        if (empty($order)) {
-            return [];
-        }
-
         $consignments = WCX_Order::get_meta($order, self::META_SHIPMENTS);
 
         // fallback to legacy consignment data (v1.X)
@@ -301,7 +283,7 @@ class WCMP_Admin
                 $consignments = [
                     [
                         "shipment_id" => $consignment_id,
-                        "tracktrace"  => WCX_Order::get_meta($order, self::META_TRACK_TRACE),
+                        "track_trace"  => WCX_Order::get_meta($order, self::META_TRACK_TRACE),
                     ],
                 ];
             } elseif ($legacy_consignments = WCX_Order::get_meta($order, self::META_CONSIGNMENTS)) {
@@ -310,7 +292,7 @@ class WCMP_Admin
                     if (isset($consignment["consignment_id"])) {
                         $consignments[] = [
                             "shipment_id" => $consignment["consignment_id"],
-                            "tracktrace"  => $consignment["tracktrace"],
+                            "track_trace"  => $consignment["track_trace"],
                         ];
                     }
                 }
@@ -321,12 +303,13 @@ class WCMP_Admin
             return [];
         }
 
-        if (! empty($consignments) && $exclude_concepts) {
-            foreach ($consignments as $key => $consignment) {
-                if (empty($consignment["tracktrace"])) {
-                    unset($consignments[$key]);
-                }
-            }
+        /**
+         * Filter out concepts.
+         */
+        if ($exclude_concepts) {
+          $consignments = array_filter($consignments, function ($consignment) {
+            return isset($consignment["track_trace"]);
+          });
         }
 
         return $consignments;
@@ -419,7 +402,7 @@ class WCMP_Admin
         echo '</div>';
 
         $downloadDisplay = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
-        $consignments    = $this->get_order_shipments($order);
+        $consignments    = WCMP_Admin::get_order_shipments($order);
 
         // show shipments if available
         if (empty($consignments)) {
@@ -464,12 +447,12 @@ class WCMP_Admin
 
     /**
      * @param $order_id
-     * @param $tracktrace
+     * @param $track_trace
      *
      * @return string|void
      * @throws Exception
      */
-    public function get_tracktrace_url($order_id, $tracktrace)
+    public static function get_track_trace_url($order_id, $track_trace)
     {
         if (empty($order_id)) {
             return;
@@ -488,82 +471,22 @@ class WCMP_Admin
                 $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
             }
 
-            $tracktrace_url = sprintf(
+            $track_trace_url = sprintf(
                 'https://sendmyparcel.me/track-trace/%s/%s/%s',
-                $tracktrace,
+                $track_trace,
                 $postcode,
                 $country
             );
         } else {
-            $tracktrace_url = sprintf(
+            $track_trace_url = sprintf(
                 'https://track.bpost.be/btr/web/#/search?itemCode=',
-                $tracktrace,
+                $track_trace,
                 $country,
                 $postcode
             );
         }
 
-        return $tracktrace_url;
-    }
-
-    /**
-     * @param $order_id
-     *
-     * @return array|bool
-     * @throws Exception
-     */
-    public function get_tracktrace_links($order_id)
-    {
-        if ($consignments = $this->get_tracktrace_shipments($order_id)) {
-            foreach ($consignments as $key => $consignment) {
-                $tracktrace_links[] = $consignment['tracktrace_link'];
-            }
-
-            return $tracktrace_links;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * @param $order_id
-     *
-     * @return array|bool|mixed|void
-     * @throws Exception
-     */
-    public function get_tracktrace_shipments($order_id)
-    {
-        $order     = WCX::get_order($order_id);
-        $shipments = $this->get_order_shipments($order, true);
-
-        if (empty($shipments)) {
-            return false;
-        }
-
-        foreach ($shipments as $shipment_id => $shipment) {
-            // skip concepts
-            if (empty($shipment['tracktrace'])) {
-                unset($shipments[$shipment_id]);
-                continue;
-            }
-            // add links & urls
-            $shipments[$shipment_id]['tracktrace_url']  = $tracktrace_url = $this->get_tracktrace_url(
-                $order_id,
-                $shipment['tracktrace']
-            );
-
-            $shipments[$shipment_id]['tracktrace_link'] = sprintf(
-                '<a href="%s">%s</a>',
-                $tracktrace_url,
-                $shipment['tracktrace']
-            );
-        }
-
-        if (empty($shipments)) {
-            return false;
-        }
-
-        return $shipments;
+        return $track_trace_url;
     }
 
     /**
@@ -597,10 +520,11 @@ class WCMP_Admin
      * @param null $barcode
      *
      * @return string|null
+     * @throws Exception
      */
     public function get_barcode($order, $barcode = null)
     {
-        $shipments = $this->get_order_shipments($order, true);
+        $shipments = WCMP_Admin::get_order_shipments($order, true);
 
         if (empty($shipments)) {
             return __("No label has been created yet.", "woocommerce-myparcelbe");
@@ -608,10 +532,10 @@ class WCMP_Admin
 
         foreach ($shipments as $shipment_id => $shipment) {
             $barcode .= "<a target='_blank' href="
-                        . $this->get_tracktrace_url($order, $shipment['tracktrace'])
-                        . ">"
-                        . $shipment['tracktrace']
-                        . "</a> <br>";
+                . WCMP_Admin::get_track_trace_url($order, $shipment['track_trace'])
+                . ">"
+                . $shipment['track_trace']
+                . "</a> <br>";
         }
 
         return $barcode;
@@ -747,7 +671,7 @@ class WCMP_Admin
         $track_trace = $shipment["track_trace"] ?? null;
 
         if ($track_trace) {
-            $track_trace_url  = $this->get_tracktrace_url($order_id, $track_trace);
+            $track_trace_url  = WCMP_Admin::get_track_trace_url($order_id, $track_trace);
             $track_trace_link = sprintf(
                 '<a href="%s" target="_blank">%s</a>',
                 $track_trace_url,

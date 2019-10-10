@@ -3,6 +3,7 @@
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Support\Arr;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -25,7 +26,7 @@ class WCMP_Data
     public const HAS_MULTI_COLLO = false;
 
     public const DEFAULT_COUNTRY_CODE = "BE";
-    public const DEFAULT_CARRIER = BpostConsignment::CARRIER_NAME;
+    public const DEFAULT_CARRIER      = BpostConsignment::CARRIER_NAME;
 
     /**
      * @var array
@@ -61,6 +62,31 @@ class WCMP_Data
     public static function getPackageTypesHuman(): array
     {
         return self::$packageTypesHuman;
+    }
+
+    /**
+     * @param int|string $packageType
+     *
+     * @return string
+     */
+    public static function getPackageTypeHuman($packageType): string
+    {
+        if (is_numeric($packageType)) {
+            $integerMap = array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP);
+            $packageType = (int) $packageType;
+
+            if (! array_key_exists($packageType, $integerMap)) {
+                return (string) $packageType;
+            }
+
+            $packageType = $integerMap[$packageType];
+        }
+
+        if (! array_key_exists($packageType, self::$packageTypesHuman)) {
+            return $packageType;
+        }
+
+        return self::$packageTypesHuman[$packageType];
     }
 
     /**

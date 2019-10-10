@@ -1034,7 +1034,7 @@ class WCMP_Export
      * @return array
      * @throws Exception
      */
-    public function get_shipment_data($ids, WC_Order $order): array
+    public function get_shipment_data(array $ids, WC_Order $order): array
     {
         $data = [];
         $api      = $this->init_api();
