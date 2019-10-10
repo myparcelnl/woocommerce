@@ -173,7 +173,7 @@ class WCMP_API extends WCMP_Rest
     {
         $endpoint = "shipment_labels";
 
-        if ($return == "pdf") {
+        if ($return === "pdf") {
             $accept = "application/pdf"; // (For the PDF binary. This is the default.)
             $raw    = true;
         } else {

@@ -1,5 +1,7 @@
 <?php
 
+use MyParcelNL\Sdk\src\Support\Arr;
+
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
@@ -176,6 +178,8 @@ class WCMP_Rest
      */
     public function request($url, $method = "GET", $headers = [], $post, $body = null, $raw = false)
     {
+        WCMP_Log::add("Request: " . var_export(func_get_args(), true));
+
         // Set the method and related options
         switch ($method) {
             case "PUT":
@@ -201,8 +205,8 @@ class WCMP_Rest
             @fclose($f);
         }
 
-        $status = $response["response"]["code"];
-        $body   = $response['body'];
+        $status = Arr::get($response, "response.code");
+        $body   = Arr::get($response, "body");;
 
         if ($raw !== true) {
             $body = json_decode($body, true); // The second parameter set to true returns objects as associative arrays
@@ -215,7 +219,7 @@ class WCMP_Rest
 
             if (! empty($body["errors"])) {
                 $error = $this->parse_errors($body);
-            }     elseif (! empty($body["message"])) {
+            } elseif (! empty($body["message"])) {
                 $error = $body["message"];
             } else {
                 $error = "Unknown error";
@@ -223,7 +227,10 @@ class WCMP_Rest
             throw new Exception($error, $status);
         }
 
-        return ["code" => $status, "body" => $body, "headers" => $response["headers"]];
+        $response = ["code" => $status, "body" => $body, "headers" => Arr::get($response, "headers")];
+        WCMP_Log::add("Response: " . var_export($response, true));
+
+        return $response;
     }
 
     /**

@@ -137,8 +137,8 @@ class WCMP_Export
     public function export()
     {
         // Check the nonce
-        if (! check_ajax_referer("wc_myparcelbe", "security", false)) {
-            die("Ajax security check failed. Did you pass a valid nonce in \$_REQUEST['security']?");
+        if (! check_ajax_referer(WCMP::NONCE_ACTION, "_wpnonce", false)) {
+            die("Ajax security check failed. Did you pass a valid nonce in \$_REQUEST['_wpnonce']?");
         }
 
         if (! is_user_logged_in()) {
@@ -161,11 +161,11 @@ class WCMP_Export
             die();
         }
 
-        $dialog       = $_REQUEST["dialog"];
-        $order_ids    = $_REQUEST["order_ids"];
-        $print        = $_REQUEST["print"];
+        $dialog       = $_REQUEST["dialog"] ?? null;
+        $order_ids    = $_REQUEST["order_ids"] ?? [];
+        $print        = $_REQUEST["print"] ?? null;
         $request      = $_REQUEST["request"];
-        $shipment_ids = $_REQUEST["shipment_ids"];
+        $shipment_ids = $_REQUEST["shipment_ids"] ?? [];
 
         // make sure $order_ids is a proper array
         $order_ids = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : [];
@@ -176,10 +176,19 @@ class WCMP_Export
             // Creating consignments.
             case self::ADD_SHIPMENTS:
                 // filter out non-myparcel destinations
-                $order_ids = $this->filter_myparcelbe_destination_orders($order_ids);
-
                 if (empty($order_ids)) {
                     $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
+                    break;
+                }
+
+                $order_ids = $this->filterOrderDestinations($order_ids);
+
+                if (empty($order_ids)) {
+                    $this->errors[] =
+                        __(
+                            "The order(s) you have selected have invalid shipping countries.",
+                            "woocommerce-myparcelbe"
+                        );
                     break;
                 }
 
@@ -222,17 +231,18 @@ class WCMP_Export
                 $label_response_type = isset($label_response_type) ? $label_response_type : null;
 
                 if (! empty($shipment_ids)) {
-                    $order_ids    = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : [];
+                    $order_ids    = $this->sanitize_posted_array($order_ids);
                     $shipment_ids = $this->sanitize_posted_array($shipment_ids);
-                    $return       = $this->get_shipment_labels(
+
+                    $return = $this->getShipmentLabels(
                         $shipment_ids,
                         $order_ids,
                         $label_response_type,
                         $offset
                     );
                 } else {
-                    $order_ids = $this->filter_myparcelbe_destination_orders($order_ids);
-                    $return    = $this->get_labels($order_ids, $label_response_type, $offset);
+                    $order_ids = $this->filterOrderDestinations($order_ids);
+                    $return    = $this->getOrderLabels($order_ids, $label_response_type, $offset);
                 }
                 break;
 
@@ -241,7 +251,7 @@ class WCMP_Export
                     $errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
                     break;
                 }
-                $order_ids = $this->filter_myparcelbe_destination_orders($order_ids);
+                $order_ids = $this->filterOrderDestinations($order_ids);
                 $this->modal_dialog($order_ids);
                 break;
         }
@@ -266,17 +276,19 @@ class WCMP_Export
         }
     }
 
-    public function sanitize_posted_array($array)
+    /**
+     * @param string|array $array
+     *
+     * @return array
+     */
+    public function sanitize_posted_array($array): array
     {
         // check for JSON
         if (is_string($array) && strpos($array, "[") !== false) {
             $array = json_decode(stripslashes($array));
         }
 
-        // cast as array for single exports
-        $array = (array) $array;
-
-        return $array;
+        return (array) $array;
     }
 
     /**
@@ -323,8 +335,7 @@ class WCMP_Export
                 }
             }
 
-            WCMP_Log::add("Shipment data for order {$order_id}.");
-            WCMP_Log::add(json_encode($collection->toArray()));
+            WCMP_Log::add("Shipment data for order {$order_id}.", var_export($collection->toArray(), true));
         }
 
         $collection = $collection->createConcepts();
@@ -347,7 +358,7 @@ class WCMP_Export
                 $this->save_shipment_data($order, $shipment);
 
                 if ($processDirectly) {
-                    $this->get_labels((array) $order_id, "url");
+                    $this->getOrderLabels((array) $order_id, "url");
                 }
 
                 $this->updateOrderStatus($order);
@@ -400,7 +411,7 @@ class WCMP_Export
                 $api      = $this->init_api();
                 $response = $api->add_shipments($return_shipments, "return");
                 WCMP_Log::add("API response (order {$order_id}):\n" . var_export($response, true));
-                if (isset($response["body"]["data"]["ids"])) {
+                if (Arr::get($response, "body.data.ids")) {
                     $order                    = WCX::get_order($order_id);
                     $ids                      = array_shift($response["body"]["data"]["ids"]);
                     $shipment_id              = $ids["id"];
@@ -413,7 +424,8 @@ class WCMP_Export
                     // save shipment data in order meta
                     $this->save_shipment_data($order, $shipment);
                 } else {
-                    $this->errors[$order_id] = __("Unknown error", "woocommerce-myparcelbe");
+                    WCMP_Log::add("\$response\[\"body.data.ids\"] not found.", var_export($response, true));
+                    $this->errors[$order_id] = "\$response\[\"body.data.ids\"] not found.";
                 }
             } catch (Exception $e) {
                 $this->errors[$order_id] = $e->getMessage();
@@ -424,14 +436,14 @@ class WCMP_Export
     }
 
     /**
-     * @param       $shipment_ids
+     * @param array $shipment_ids
      * @param array $order_ids
      * @param null  $label_response_type
      * @param int   $offset
      *
      * @return array
      */
-    public function get_shipment_labels(
+    public function getShipmentLabels(
         array $shipment_ids,
         array $order_ids = [],
         $label_response_type = null,
@@ -454,10 +466,12 @@ class WCMP_Export
 
             if (isset($label_response_type) && $label_response_type === "url") {
                 $response = $api->get_shipment_labels($shipment_ids, $params, "link");
+
                 $this->addNoteToShipments($shipment_ids, $order_ids);
-                WCMP_Log::add("API response:n" . var_export($response, true));
+                WCMP_Log::add("API response: ", var_export($response, true));
 
                 $pdfUrl = Arr::get($response, "body.data.pdfs.url");
+
                 if ($pdfUrl) {
                     $url           = untrailingslashit($api->apiUrl) . $pdfUrl;
                     $return["url"] = $url;
@@ -472,8 +486,8 @@ class WCMP_Export
                     WCMP_Log::add("PDF data received");
                     new WCMP_Export_Pdf($response["body"], $order_ids);
                 } else {
-                    WCMP_Log::add("Unknown error, API response:n" . var_export($response, true));
-                    $this->errors[] = __("Unknown error", "woocommerce-myparcelbe");
+                    WCMP_Log::add("Failed to get \$response[\"body\"], API response: \n" . var_export($response, true));
+                    $this->errors[] = "failed to get response";
                 }
             }
         } catch (Exception $e) {
@@ -490,9 +504,9 @@ class WCMP_Export
      *
      * @return array
      */
-    public function get_labels(array $order_ids, $label_response_type = null, int $offset = 0)
+    public function getOrderLabels(array $order_ids, $label_response_type = null, int $offset = 0)
     {
-        $shipment_ids = $this->get_shipment_ids($order_ids, ["only_last" => true]);
+        $shipment_ids = $this->getShipmentIds($order_ids, ["only_last" => true]);
 
         if (empty($shipment_ids)) {
             WCMP_Log::add(" *** Failed label request(not exported yet) ***");
@@ -504,7 +518,7 @@ class WCMP_Export
             return [];
         }
 
-        return $this->get_shipment_labels(
+        return $this->getShipmentLabels(
             $shipment_ids,
             $order_ids,
             $label_response_type,
@@ -649,7 +663,7 @@ class WCMP_Export
         }
 
         // get parent
-        $shipment_ids = $this->get_shipment_ids(
+        $shipment_ids = $this->getShipmentIds(
             (array) $order_id,
             [
                 "exclude_concepts" => true,
@@ -814,7 +828,7 @@ class WCMP_Export
      *
      * @return array
      */
-    public function get_shipment_ids(array $order_ids, array $args): array
+    public function getShipmentIds(array $order_ids, array $args): array
     {
         $shipment_ids = [];
 
@@ -1336,18 +1350,20 @@ class WCMP_Export
     }
 
     /**
+     * Filter out orders shipping to country codes that are not in the allowed list.
+     *
      * @param $order_ids
      *
      * @return mixed
      * @throws Exception
      */
-    public function filter_myparcelbe_destination_orders($order_ids)
+    public function filterOrderDestinations(array $order_ids): array
     {
         foreach ($order_ids as $key => $order_id) {
             $order            = WCX::get_order($order_id);
             $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-            // skip non-myparcel destination orders
-            if (! WCMP_Country_Codes::isMyParcelBeDestination($shipping_country)) {
+
+            if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
                 unset($order_ids[$key]);
             }
         }

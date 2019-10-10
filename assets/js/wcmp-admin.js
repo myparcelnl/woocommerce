@@ -146,13 +146,9 @@ jQuery(function($) {
    */
   function printQueuedLabels() {
     var print_queue = $(selectors.printQueue).val();
-
     var print_queue_offset = $(selectors.printQueueOffset).val();
 
     if (typeof print_queue !== 'undefined') {
-      if (typeof print_queue_offset === 'undefined') {
-        print_queue_offset = 0;
-      }
       printLabel($.parseJSON(print_queue), print_queue_offset);
     }
   }
@@ -344,43 +340,62 @@ jQuery(function($) {
    * @param {Event} event - Click event.
    */
   function doBulkAction(event) {
-    var button = event.target;
-    var actionselected = $(this).attr('id')
+    var prefixLength = 5;
+
+    var selectedAction = $(this)
+      .attr('id')
       .substr(2);
+
+    /*
+     * Get related select with actions
+     */
+    var element = $('select[name="' + selectedAction + '"]');
+
     /* check if action starts with 'wcmp_' */
-    var element = $('select[name="' + actionselected + '"]');
-    if (element.val().substring(0, 5) === 'wcmp_') {
+    if (element.val().substring(0, prefixLength) === 'wcmp_') {
       event.preventDefault();
-      /* remove notices */
+
+      /*
+       * Remove notices
+       */
       $(selectors.notice).remove();
 
       /* strip 'wcmp_' from action */
-      var action = element.val().substring(5);
+      var action = element.val().substring(prefixLength);
 
       /* Get array of checked orders (order_ids) */
       var order_ids = [];
+      var rows = [];
+
       $('tbody th.check-column input[type="checkbox"]:checked').each(
         function() {
           order_ids.push($(this).val());
+          rows.push('.post-' + $(this).val());
         }
       );
 
-      // showBulkSpinner(this, true);
+      $(rows.join(', ')).addClass('wcmp__loading');
 
-      /* execute action */
       switch (action) {
+        /**
+         * Export orders.
+         */
         case 'export':
-          exportToMyParcel(order_ids).bind(button);
+          exportToMyParcel(order_ids);
           break;
 
+        /**
+         * Print labels.
+         */
         case 'print':
-          var offset = wcmp.offset === 1 ? $(selectors.offsetDialogInput).val() : 0;
-          printLabel(order_ids, offset).bind(button);
+          printLabel(order_ids, wcmp.offset === 1 ? $(selectors.offsetDialogInput).val() : 0, rows);
           break;
 
+        /**
+         * Export and print.
+         */
         case 'export_print':
-          /* 'yes' initializes print mode and disables refresh */
-          exportToMyParcel(order_ids, 'after_reload').bind(button);
+          exportToMyParcel(order_ids, 'after_reload');
           break;
       }
     }
@@ -397,8 +412,6 @@ jQuery(function($) {
     $(button).prop('disabled', true);
     setSpinner(button, spinner.loading);
 
-    request.data.security = wcmp.nonce;
-
     if (!request.url) {
       request.url = wcmp.ajax_url;
     }
@@ -408,29 +421,49 @@ jQuery(function($) {
       method: request.method || 'POST',
       data: request.data,
     })
-      .done(function() {
+      .done(function(res) {
         setSpinner(button, spinner.success);
 
         if (request.hasOwnProperty('afterDone') && typeof request.afterDone === 'function') {
-          request.afterDone();
+          request.afterDone(res);
         }
       })
 
-      .fail(function() {
+      .fail(function(res) {
         setSpinner(button, spinner.failed);
 
         if (request.hasOwnProperty('afterFail') && typeof request.afterFail === 'function') {
-          request.afterFail();
+          request.afterFail(res);
         }
       })
 
-      .always(function() {
+      .always(function(res) {
         $(button).prop('disabled', false);
 
         if (request.hasOwnProperty('afterAlways') && typeof request.afterAlways === 'function') {
-          request.afterAlways();
+          request.afterAlways(res);
         }
       });
+  }
+
+  function getParameterByName(name, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, '\\$&');
+
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    var results = regex.exec(url);
+
+    if (!results) {
+      return null;
+    }
+
+    if (!results[2]) {
+      return '';
+    }
+
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
   }
 
   /**
@@ -439,22 +472,27 @@ jQuery(function($) {
    * @param {Event} event - Click event.
    */
   function onActionClick(event) {
-    event.preventDefault();
-    var order_ids = [$(this).data('order-id')];
+    var button = this;
 
-    /* execute action */
-    switch ($(this).data('request')) {
+    var request = getParameterByName('request', button.href);
+    var order_ids = getParameterByName('order_ids', button.href);
+
+    switch (request) {
       case wcmp.actions.add_shipments:
-        exportToMyParcel.bind(this)(order_ids);
+        event.preventDefault();
+        exportToMyParcel.bind(button)();
         break;
-      case wcmp.actions.get_labels:
-        if (wcmp.offset === 1) {
-          contextual_offset_dialog(order_ids, event);
-        } else {
-          printLabel.bind(this)(order_ids);
-        }
-        break;
+      /*
+       * case wcmp.actions.get_labels:
+       *   if (wcmp.offset === 1) {
+       *     contextual_offset_dialog(order_ids, event);
+       *   } else {
+       *     printLabel.bind(button)();
+       *   }
+       *   break;
+       */
       case wcmp.actions.add_return:
+        event.preventDefault();
         myparcelbe_modal_dialog(order_ids, 'return');
         break;
     }
@@ -564,27 +602,34 @@ jQuery(function($) {
   /* export orders to MyParcel via AJAX */
   function exportToMyParcel(order_ids, print) {
     var offset = wcmp.offset === 1 ? $(selectors.offsetDialogInput).val() : 0;
+    var url;
+    var data;
 
     if (typeof print === 'undefined') {
       print = 'no';
     }
 
-    doRequest.bind(this)({
-      data: {
-        action: wcmp.actions.export,
-        request: wcmp.actions.add_shipments,
+    if (this.href) {
+      url = this.href;
+    } else {
+      data = {
+        action: wcmp.actions.add_shipments,
         offset: offset,
         order_ids: order_ids,
         print: print,
-      },
+      };
+    }
+
+    doRequest.bind(this)({
+      url: url,
+      data: data || {},
       afterDone: function(response) {
         var redirect_url = updateUrlParameter(window.location.href, 'myparcelbe_done', 'true');
-        response = $.parseJSON(response);
+        // response = $.parseJSON(response);
 
         if (print === 'no' || print === 'after_reload') {
           /* refresh page, admin notices are stored in options and will be displayed automatically */
           window.location.href = redirect_url;
-
         } else {
           /* when printing, output notices directly so that we can init print in the same run */
           if (response !== null && typeof response === 'object' && 'error' in response) {
@@ -647,29 +692,79 @@ jQuery(function($) {
 
   }
 
+  /**
+   *
+   * @param pdf
+   */
+  function displayPdf(pdf) {
+    var string = 'data:application/pdf;base64, ' + pdf;
+
+    var file = new Blob(['base64, ' + pdf], {type: 'application/pdf'});
+    var fileURL = URL.createObjectURL(file);
+    console.log(fileURL);
+    throw 'die';
+    window.open(fileURL);
+
+    /*
+     * var iframe = '<object '
+     *   + 'width=\'100%\' '
+     *   + 'height=\'100%\' '
+     *   + 'style="border: 0;" '
+     *   + 'data=\''
+     *   + string
+     *   + '\' />';
+     * var newWindow = window.open();
+     * newWindow.document.title = "pdf file";
+     * newWindow.document.open();
+     * newWindow.document.write(iframe);
+     * newWindow.document.querySelector('body').style.padding = '0';
+     * newWindow.document.querySelector('body').style.margin = '0';
+     * newWindow.document.close();
+     */
+  };
+
+  /**
+   * @param {String} pdf - The created pdf as a string.
+   */
+  function downloadPdf(pdf) {
+    console.log('downloading');
+
+    $.post('');
+    /*
+     * if (window.navigator && window.navigator.msSaveOrOpenBlob) { // IE workaround
+     *   var byteCharacters = atob(pdf, true);
+     *   var byteNumbers = new Array(byteCharacters.length);
+     *   for (var i = 0; i < byteCharacters.length; i++) {
+     *     byteNumbers[i] = byteCharacters.charCodeAt(i);
+     *   }
+     *
+     *   var byteArray = new Uint8Array(byteNumbers);
+     *   var blob = new Blob([byteArray], {type: 'application/pdf'});
+     *   window.navigator.msSaveOrOpenBlob(blob, your_file_name);
+     * } else { // much easier if not IE
+     *   window.open('data:application/pdf;base64, ' + pdf, '', 'height=600,width=800');
+     * }
+     */
+  }
+
   /* Request MyParcel BE labels */
-  function printLabel(order_ids, offset) {
-    if (typeof offset === 'undefined') {
-      offset = 0;
+  function printLabel(order_ids) {
+    var offset = offset || 0;
+    var request = '';
+
+    if (this.href) {
+      request = this.href;
+    } else {
+      var request_prefix = (wcmp.ajax_url.indexOf('?') !== -1) ? '&' : '?';
+      request = wcmp.ajax_url + request_prefix + 'action=wc_myparcel&request=get_labels&security=' + wcmp.nonce;
     }
 
-    var request_prefix = (wcmp.ajax_url.indexOf('?') === -1) ? '?' : '&';
-    var url = wcmp.ajax_url
-      + request_prefix
-      + 'action='
-      + wcmp.actions.export
-      + '&request='
-      + wcmp.actions.get_labels
-      + '&security='
-      + wcmp.nonce;
-
     /* create form to send order_ids via POST */
-    $('body').append('<form action="' + url + '" method="post" target="_blank" id="wcmp_post_data"></form>');
-    var postData = $('#wcmp_post_data');
+    $('body').append('<form action="' + request + '" method="post" target="_blank" id="wcmp__post_data"></form>');
+    var postData = $('#wcmp__post_data');
+    // postData.append('<input type="hidden" name="pdf" value="' + result + '"/>');
     postData.append('<input type="hidden" name="offset" class="offset" value="' + offset + '"/>');
-    postData.append('<input type="hidden" name="order_ids" class="order_ids" value="'
-      + JSON.stringify(order_ids)
-      + '"/>');
+    postData.append('<input type="hidden" name="order_ids" class="order_ids" value="' + order_ids + '" />');
 
     /* submit data to open or download pdf */
     postData.submit();

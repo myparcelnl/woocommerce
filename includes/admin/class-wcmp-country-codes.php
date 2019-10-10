@@ -263,7 +263,7 @@ class WCMP_Country_Codes
      *
      * @return bool
      */
-    public static function isMyParcelBeDestination(string $country_code): bool
+    public static function isAllowedDestination(string $country_code): bool
     {
         return ($country_code === WCMP_Data::DEFAULT_COUNTRY_CODE
                 || WCMP_Country_Codes::isEuCountry($country_code)

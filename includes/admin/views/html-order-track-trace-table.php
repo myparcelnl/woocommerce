@@ -55,23 +55,14 @@ if (! count($shipments)) {
       </td>
       <td class="wcmp__td--create-label">
           <?php
-          $action  = WCMP_Export::EXPORT;
-          $request = WCMP_Export::GET_LABELS;
+          $action    = WCMP_Export::EXPORT;
+          $getLabels = WCMP_Export::GET_LABELS;
 
           $this->renderAction(
-              wp_nonce_url(
-                  admin_url(
-                      "admin-ajax.php?action=$action&request=$request&shipment_ids=$shipment_id"
-                  ),
-                  'wc_myparcelbe'
-              ),
-              WCMP_Export::GET_LABELS,
+              admin_url("admin-ajax.php?action=$action&request=$getLabels&shipment_ids=$shipment_id"),
               __("Print MyParcel BE label", "woocommerce-myparcelbe"),
-              $order_id,
-              $downloadDisplay ? 'target="_blank"' : '',
               WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png"
           );
-
           ?>
       </td>
     </tr>

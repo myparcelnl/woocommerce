@@ -9,7 +9,7 @@ include('html-start.php');
 
 $target_url = wp_nonce_url(
     admin_url('admin-ajax.php?action=wc_myparcelbe&request=' . WCMP_Export::ADD_RETURN . '&modal=true'),
-    'wc_myparcelbe'
+    WCMP::NONCE_ACTION
 );
 
 /**
@@ -34,7 +34,7 @@ $target_url = wp_nonce_url(
           $order = WCX::get_order($order_id);
           // skip non-myparcelbe destinations
           $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-          if (! WCMP_Country_Codes::isMyParcelBeDestination($shipping_country)) {
+          if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
               continue;
           }
 

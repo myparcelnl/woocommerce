@@ -80,7 +80,7 @@ class WCMP_Admin
      */
     public function showMyParcelSettings(WC_Order $order): void
     {
-        if (! WCMP_Country_Codes::isMyParcelBeDestination(
+        if (! WCMP_Country_Codes::isAllowedDestination(
             WCX_Order::get_prop($order, 'shipping_country')
         )) {
             return;
@@ -212,6 +212,8 @@ class WCMP_Admin
      * Add print actions to the orders listing
      *
      * @param $order
+     *
+     * @throws Exception
      */
     public function showOrderActions($order): void
     {
@@ -221,7 +223,7 @@ class WCMP_Admin
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
 
-        if (! WCMP_Country_Codes::isMyParcelBeDestination($shipping_country)) {
+        if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
             return;
         }
 
@@ -234,26 +236,17 @@ class WCMP_Admin
 
         $listing_actions = [
             $addShipments => [
-                "url" => wp_nonce_url(
-                    admin_url("$baseUrl&request=$addShipments&order_ids=$order_id"),
-                    "wc_myparcelbe"
-                ),
+                "url" => admin_url("$baseUrl&request=$addShipments&order_ids=$order_id"),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-up.png",
                 "alt" => __("Export to MyParcel BE", "woocommerce-myparcelbe"),
             ],
             $getLabels    => [
-                "url" => wp_nonce_url(
-                    admin_url("$baseUrl&request=$getLabels&order_ids=$order_id"),
-                    "wc_myparcelbe"
-                ),
+                "url" => admin_url("$baseUrl&request=$getLabels&order_ids=$order_id"),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png",
                 "alt" => __("Print MyParcel BE label", "woocommerce-myparcelbe"),
             ],
             $addReturn    => [
-                "url" => wp_nonce_url(
-                    admin_url("$baseUrl&request=$addReturn&order_ids=$order_id"),
-                    "wc_myparcelbe"
-                ),
+                "url" => admin_url("$baseUrl&request=$addReturn&order_ids=$order_id"),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-retour.png",
                 "alt" => __("Email return label", "woocommerce-myparcelbe"),
             ],
@@ -270,18 +263,20 @@ class WCMP_Admin
             unset($listing_actions[$addReturn]);
         }
 
-        $atts =
-            (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'download')
-                ? 'target="_blank"' : '';
+        $display = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
+
+        $attributes = [];
+
+        if ($display) {
+          $attributes["target"] = "_blank";
+        }
 
         foreach ($listing_actions as $request => $data) {
             $this->renderAction(
                 $data['url'],
-                $request,
                 $data['alt'],
-                $order_id,
-                $atts,
-                $data["img"]
+                $data["img"],
+                $attributes
             );
         }
     }
@@ -413,7 +408,7 @@ class WCMP_Admin
         $order_id = WCX_Order::get_id($order);
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-        if (! WCMP_Country_Codes::isMyParcelBeDestination($shipping_country)) {
+        if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
             return;
         }
 
@@ -443,7 +438,7 @@ class WCMP_Admin
     {
         $shipping_country = WCX_Order::get_prop($order, "shipping_country");
 
-        if (! WCMP_Country_Codes::isMyParcelBeDestination($shipping_country)) {
+        if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
             return;
         }
 
@@ -711,37 +706,26 @@ class WCMP_Admin
 
     /**
      * @param string $url
-     * @param string $request
      * @param string $alt
-     * @param string $orderId
-     * @param string $extraAtts
      * @param string $icon
+     * @param array  $rawAttributes
      */
     private function renderAction(
         string $url,
-        string $request,
         string $alt,
-        string $orderId,
-        string $extraAtts,
-        string $icon
-    ): void
-    {
+        string $icon,
+        array $rawAttributes = []
+    ): void {
         printf(
             '<a href="%1$s" 
                     class="button tips wcmp__action wcmp__d--flex" 
-                    data-tip="%3$s" 
-                    data-order-id="%4$s" 
-                    data-request="%2$s" 
-                    data-nonce="%5$s" 
-                    %6$s>
-                <img class="wcmp__action__img" src="%7$s" alt="%3$s" />',
-            $url,
-            $request,
+                    data-tip="%2$s" 
+                    %4$s>
+                <img class="wcmp__action__img" src="%3$s" alt="%2$s" />',
+            wp_nonce_url($url, WCMP::NONCE_ACTION),
             $alt,
-            $orderId,
-            wp_create_nonce('wc_myparcelbe'),
-            $extraAtts,
-            $icon
+            $icon,
+            wc_implode_html_attributes($rawAttributes)
         );
 
         self::renderSpinner();

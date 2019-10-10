@@ -14,19 +14,23 @@ class WCMP_Log
     /**
      * Log data if the error logging setting is enabled.
      *
-     * @param string $message
+     * @param string ...$messages
      */
-    public static function add(string $message): void
+    public static function add(string ...$messages): void
     {
         if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ERROR_LOGGING)) {
             return;
         }
 
-        // Starting with WooCommerce 3.0, logging can be grouped by context and severity.
-        if (class_exists("WC_Logger") && version_compare(WOOCOMMERCE_VERSION, "3.0", " >= ")) {
-            $logger = wc_get_logger();
-            $logger->debug($message, ["source" => "wc-myparcelbe"]);
+        $message = implode("\n", $messages);
 
+        // Starting with WooCommerce 2.7, logging can be grouped by context and severity.
+        if (class_exists("WC_Logger") && version_compare(WOOCOMMERCE_VERSION, "2.7", ">=")) {
+            try {
+                (wc_get_logger())->debug($message, ["source" => "wc-myparcelbe"]);
+            } catch (Exception $e) {
+                exit($e);
+            }
             return;
         }
 

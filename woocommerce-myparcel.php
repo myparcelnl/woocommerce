@@ -15,6 +15,10 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
+@ini_set('log_errors', 'On');
+@ini_set('display_errors', 'On');
+@ini_set('error_log','/php-errors.log');
+
 if (! class_exists('WCMP')) :
 
     class WCMP
@@ -23,7 +27,8 @@ if (! class_exists('WCMP')) :
         /**
          * Translations domain
          */
-        public const DOMAIN = 'woocommerce-myparcelbe';
+        public const DOMAIN       = 'woocommerce-myparcelbe';
+        public const NONCE_ACTION = 'wc_myparcelbe';
 
         public $version = '4.0.0';
 
@@ -174,7 +179,6 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/compatibility/class-ce-compatibility.php");
 
             require_once($this->includes . "/class-wcmp-data.php");
-            require_once($this->includes . "/class-wcmp-log.php");
             require_once($this->includes . "/collections/settings-collection.php");
             require_once($this->includes . "/entities/legacy-delivery-options.php");
             require_once($this->includes . "/entities/setting.php");
@@ -187,6 +191,7 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/frontend/class-wcmp-frontend.php");
             $this->admin = require_once($this->includes . "/admin/class-wcmp-admin.php");
             require_once($this->includes . "/admin/settings/class-wcmp-settings.php");
+            require_once($this->includes . "/class-wcmp-log.php");
             require_once($this->includes . "/admin/class-wcmp-country-codes.php");
             require_once($this->includes . "/admin/class-wcmp-export-pdf.php");
             $this->export = require_once($this->includes . "/admin/class-wcmp-export.php");

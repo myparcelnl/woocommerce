@@ -70,7 +70,7 @@ class WCMP_Assets
                         "get_labels"    => WCMP_Export::GET_LABELS,
                     ],
                     "ajax_url"         => admin_url("admin-ajax.php"),
-                    "nonce"            => wp_create_nonce("wc_myparcelbe"),
+                    "nonce"            => wp_create_nonce(WCMP::NONCE_ACTION),
                     "download_display" => WCMP()->setting_collection->getByName(
                         WCMP_Settings::SETTING_DOWNLOAD_DISPLAY
                     ),
