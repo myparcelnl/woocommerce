@@ -16,30 +16,28 @@ $shipment_id = $_POST["shipment_id"];
 $order           = wc_get_order($order_id);
 $shipment        = WCMP()->export->get_shipment_data([$shipment_id], $order)[$shipment_id];
 $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-
-$trackTrace = Arr::get($shipment, "track_trace'");
-
-if ($trackTrace) {
-    $order_has_shipment = true;
-    $track_trace_url    = WCMP_Admin::getTrackTraceUrl($order_id, $trackTrace);
-}
-
 $option_strings   = [
     "signature" => __("Signature on delivery", "woocommerce-myparcelbe"),
 ];
 $insurance        = Arr::get($shipment, "shipment.options.insurance");
 $labelDescription = Arr::get($shipment, "shipment.options.label_description");
 
+$trackTrace = Arr::get($shipment, "track_trace'");
+
 /**
- * Status
+ * Show Track & Trace status.
  */
-printf(
-    '%1$s: <a href="%2$s" target="_blank" title="%3$s">%4$s</a><br/>',
-    __("Status", "woocommerce-myparcelbe"),
-    $track_trace_url,
-    Arr::get($shipment, "track_trace"),
-    Arr::get($shipment, "status")
-);
+if ($trackTrace) {
+    $order_has_shipment = true;
+    $track_trace_url    = WCMP_Admin::getTrackTraceUrl($order_id, $trackTrace);
+    printf(
+        '%1$s: <a href="%2$s" target="_blank" title="%3$s">%4$s</a><br/>',
+        __("Status", "woocommerce-myparcelbe"),
+        $track_trace_url,
+        Arr::get($shipment, "track_trace"),
+        Arr::get($shipment, "status")
+    );
+}
 
 /**
  *  Package type

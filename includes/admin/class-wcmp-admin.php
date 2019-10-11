@@ -137,6 +137,7 @@ class WCMP_Admin
         check_ajax_referer(WCMP::NONCE_ACTION, 'security');
 
         include('views/html-order-shipment-summary.php');
+        die();
     }
 
     /**
