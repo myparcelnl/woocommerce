@@ -3,6 +3,7 @@
 namespace WPO\WC\MyParcelBE\Compatibility;
 
 use Exception;
+use WCMP_Frontend;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 
 /**
@@ -61,7 +62,7 @@ class WCMP_WCPDF_Compatibility
      */
     public function track_trace_link($replacement, $order)
     {
-        $track_trace_links = WCMP()->admin->get_track_trace_links(WCX_Order::get_id($order));
+        $track_trace_links = WCMP_Frontend::getTrackTraceLinks(WCX_Order::get_id($order));
 
         if (! empty($track_trace_links)) {
             $replacement = implode(', ', $track_trace_links);

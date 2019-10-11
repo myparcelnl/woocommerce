@@ -1,6 +1,9 @@
 <?php
 
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+/**
+ * The shipment summary that shows when you click (i) in an order.
+ */
+
 use MyParcelNL\Sdk\src\Support\Arr;
 
 if (! defined('ABSPATH')) {
@@ -14,10 +17,18 @@ $order           = wc_get_order($order_id);
 $shipment        = WCMP()->export->get_shipment_data([$shipment_id], $order)[$shipment_id];
 $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 
-if (! empty($shipment['track_trace'])) {
+$trackTrace = Arr::get($shipment, "track_trace'");
+
+if ($trackTrace) {
     $order_has_shipment = true;
-    $track_trace_url    = WCMP_Admin::get_track_trace_url($order_id, $shipment['track_trace']);
+    $track_trace_url    = WCMP_Admin::getTrackTraceUrl($order_id, $trackTrace);
 }
+
+$option_strings   = [
+    "signature" => __("Signature on delivery", "woocommerce-myparcelbe"),
+];
+$insurance        = Arr::get($shipment, "shipment.options.insurance");
+$labelDescription = Arr::get($shipment, "shipment.options.label_description");
 
 /**
  * Status
@@ -38,37 +49,26 @@ printf(
     __("Shipment type", "woocommerce-myparcelbe"),
     WCMP_Data::getPackageTypeHuman(Arr::get($shipment, "shipment.options.package_type"))
 );
-?>
 
-<ul class="wcmp__shipment-summary">
-    <?php
-    // Options
-    $option_strings = [
-        'signature' => __("Signature on delivery", "woocommerce-myparcelbe"),
-    ];
-    $insurance = Arr::get($shipment, "shipment.options.insurance");
-    $labelDescription = Arr::get($shipment, 'shipment.options.label_description');
-
-    foreach ($option_strings as $key => $label) {
-        if (Arr::get($shipment, "shipment.options.$key")
-            && (int) Arr::get($shipment, "shipment.options.$key") === 1) {
-            printf('<li class="%s">%s</li>', $key, $label);
-        }
+echo '<ul class="wcmp__shipment-summary">';
+foreach ($option_strings as $key => $label) {
+    if (Arr::get($shipment, "shipment.options.$key")
+        && (int) Arr::get($shipment, "shipment.options.$key") === 1) {
+        printf('<li class="%s">%s</li>', $key, $label);
     }
+}
 
+if ($insurance) {
+    $price = number_format(Arr::get($insurance, "amount") / 100, 2);
+    printf('<li>%s: € %s</li>', __("Insured for", "woocommerce-myparcelbe"), $price);
+}
 
-    if ($insurance) {
-        $price = number_format(Arr::get($insurance, "amount") / 100, 2);
-        printf('<li>%s: € %s</li>', __("Insured for", "woocommerce-myparcelbe"), $price);
-    }
+if ($labelDescription) {
+    printf(
+        '<li>%s: %s</li>',
+        __("Label description", "woocommerce-myparcelbe"),
+        $labelDescription
+    );
+}
 
-
-    if ($labelDescription) {
-        printf(
-            '<li>%s: %s</li>',
-            __("Label description", "woocommerce-myparcelbe"),
-            $labelDescription
-        );
-    }
-    ?>
-</ul>
+echo '</ul>';

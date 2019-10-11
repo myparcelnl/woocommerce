@@ -49,7 +49,7 @@ class WCMP_Frontend_Track_Trace
 
         $order_id = WCX_Order::get_id($order);
 
-        $track_trace_links = WCMP()->admin->get_track_trace_links($order_id);
+        $track_trace_links = WCMP_Frontend::getTrackTraceLinks($order_id);
 
         if (! empty($track_trace_links)) {
             $email_text = __("You can track your order with the following bpost Track & Trace code:", "woocommerce-myparcelbe");

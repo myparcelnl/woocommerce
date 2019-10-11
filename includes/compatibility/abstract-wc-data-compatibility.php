@@ -117,11 +117,6 @@ abstract class Data
             $value     = get_post_meta($object_id, $key, $single);
         }
 
-        if (is_string($value) && is_array(json_decode(stripslashes($value), true))) {
-            self::update_meta_data($object, $key, json_decode(stripslashes($value)));
-            return self::get_meta($object, $key);
-        }
-
         return maybe_unserialize($value);
     }
 

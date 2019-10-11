@@ -159,7 +159,7 @@ class WCMP_Frontend
      * @return array|bool|mixed|void
      * @throws Exception
      */
-    public function get_track_trace_shipments($order_id): array
+    public static function getTrackTraceShipments($order_id): array
     {
         $order     = WCX::get_order($order_id);
         $shipments = WCMP_Admin::get_order_shipments($order, true);
@@ -170,24 +170,30 @@ class WCMP_Frontend
         }
 
         foreach ($shipments as $shipment_id => $shipment) {
+            $trackTrace = Arr::get($shipment, "track_trace'");
+
             // skip concepts
-            if (empty($shipment['track_trace'])) {
+            if (! $trackTrace) {
                 unset($shipments[$shipment_id]);
                 continue;
             }
 
-            $track_trace_url = WCMP_Admin::get_track_trace_url(
+            $track_trace_url = WCMP_Admin::getTrackTraceUrl(
                 $order_id,
-                $shipment['track_trace']
+                $trackTrace
             );
 
             // add links & urls
             Arr::set($shipments, "$shipment_id.track_trace_url", $track_trace_url);
-            Arr::set($shipments, "$shipment_id.track_trace_link", sprintf(
-                '<<a href="%s">%s</a>',
-                $track_trace_url,
-                $shipment['track_trace']
-            ));
+            Arr::set(
+                $shipments,
+                "$shipment_id.track_trace_link",
+                sprintf(
+                    '<<a href="%s">%s</a>',
+                    $track_trace_url,
+                    $trackTrace
+                )
+            );
         }
 
         return $shipments;
@@ -199,11 +205,11 @@ class WCMP_Frontend
      * @return array|bool
      * @throws Exception
      */
-    public function get_track_trace_links($order_id): array
+    public static function getTrackTraceLinks($order_id): array
     {
         $track_trace_links = [];
 
-        $consignments = $this->get_track_trace_shipments($order_id);
+        $consignments = self::getTrackTraceShipments($order_id);
 
         foreach ($consignments as $key => $consignment) {
             $track_trace_links[] = $consignment['track_trace_link'];

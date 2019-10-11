@@ -146,8 +146,12 @@ class WCMP_Settings
 
     /**
      * Add settings link to plugins page
+     *
+     * @param array $links
+     *
+     * @return array
      */
-    public function add_settings_link($links)
+    public function add_settings_link(array $links): array
     {
         $url = admin_url("admin.php?page=" . self::SETTINGS_MENU_SLUG);
 

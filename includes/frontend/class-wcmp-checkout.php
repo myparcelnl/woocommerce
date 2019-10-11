@@ -1,9 +1,11 @@
 <?php
 
+use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
-use WPO\WC\MyParcelBE\Compatibility\Order;
-use WPO\WC\MyParcelBE\Compatibility\WC_Core;
+use MyParcelNL\Sdk\src\Support\Arr;
+use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -257,48 +259,55 @@ class WCMP_Checkout
      * @param array $posted
      *
      * @return void
+     * @throws Exception
      */
     public static function save_delivery_options($order_id)
     {
-        $order = WC_Core::get_order($order_id);
+        $order                = WCX::get_order($order_id);
+
+        $highestShippingClass = Arr::get($_POST, "myparcelbe_highest_shipping_class");
+        $shippingMethod       = Arr::get($_POST, "shipping_method");
 
         /**
          * Save the order weight here because it's easier than digging through order data after creating it.
          *
          * @see https://businessbloomer.com/woocommerce-save-display-order-total-weight/
          */
-        $weight = WC()->cart->get_cart_contents_weight();
-        Order::update_meta_data($order, WCMP_Admin::META_ORDER_WEIGHT, $weight);
+        WCX_Order::update_meta_data(
+            $order,
+            WCMP_Admin::META_ORDER_WEIGHT,
+            WC()->cart->get_cart_contents_weight()
+        );
 
-        if ($_POST["myparcelbe_highest_shipping_class"] !== null) {
-            Order::update_meta_data(
+        if ($highestShippingClass) {
+            WCX_Order::update_meta_data(
                 $order,
                 WCMP_Admin::META_HIGHEST_SHIPPING_CLASS,
-                $_POST["myparcelbe_highest_shipping_class"]
+                $highestShippingClass
             );
-        } else {
-            if (isset($_POST["shipping_method"])) {
-                Order::update_meta_data(
-                    $order,
-                    WCMP_Admin::META_HIGHEST_SHIPPING_CLASS,
-                    $_POST["shipping_method"][0]
-                );
-            }
-        }
-
-        if (isset($_POST["myparcelbe-signature-selector"])) {
-            Order::update_meta_data(
+        } elseif ($shippingMethod) {
+            WCX_Order::update_meta_data(
                 $order,
-                WCMP_Admin::META_SIGNATURE,
-                'on'
+                WCMP_Admin::META_HIGHEST_SHIPPING_CLASS,
+                $shippingMethod[0]
             );
         }
 
-        if (isset($_POST[WCMP_Admin::META_DELIVERY_OPTIONS])) {
-            Order::update_meta_data(
+        $deliveryOptions = stripslashes(Arr::get($_POST, WCMP_Admin::META_DELIVERY_OPTIONS));
+
+        if ($deliveryOptions) {
+            /*
+             * Create a new DeliveryOptions class from the data.
+             */
+            $deliveryOptions = DeliveryOptionsAdapterFactory::create($deliveryOptions);
+
+            /*
+             * Store it in the meta data. It will be serialized so class references will be kept.
+             */
+            WCX_Order::update_meta_data(
                 $order,
                 WCMP_Admin::META_DELIVERY_OPTIONS,
-                $_POST[WCMP_Admin::META_DELIVERY_OPTIONS]
+                $deliveryOptions
             );
         }
     }

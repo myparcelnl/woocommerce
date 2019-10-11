@@ -1,10 +1,11 @@
 <?php
 
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter as DeliveryOptions;
-use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter as ShipmentOptions;
+use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
+use MyParcelNL\Sdk\src\Factory\ShipmentOptionsAdapterFactory;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcelBE\Entity\LegacyDeliveryOptions;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -334,21 +335,18 @@ class WCMP_Admin
                 $newShipmentOptions[$option] = (bool) $value;
             }
 
-            $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
+            /**
+             * @var DeliveryOptions $deliveryOptions
+             */
+            $deliveryOptions = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
 
-            $meta["carrier"] = $data["carrier"] ?? $meta["carrier"];
-
-            $meta["shipmentOptions"] = array_replace_recursive(
-                $meta["shipmentOptions"],
-                $newShipmentOptions
-            );
-
-            $newDeliveryOptions = (new DeliveryOptions($meta))->toArray();
+            $deliveryOptions->setCarrier($data["carrier"]);
+            $deliveryOptions->setShipmentOptions(ShipmentOptionsAdapterFactory::create($newShipmentOptions));
 
             WCX_Order::update_meta_data(
                 $order,
                 self::META_DELIVERY_OPTIONS,
-                $newDeliveryOptions
+                $deliveryOptions
             );
 
             // Save extra options
@@ -452,7 +450,7 @@ class WCMP_Admin
      * @return string|void
      * @throws Exception
      */
-    public static function get_track_trace_url($order_id, $track_trace)
+    public static function getTrackTraceUrl($order_id, $track_trace)
     {
         if (empty($order_id)) {
             return;
@@ -471,22 +469,21 @@ class WCMP_Admin
                 $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
             }
 
-            $track_trace_url = sprintf(
+            $trackTraceUrl = sprintf(
                 'https://sendmyparcel.me/track-trace/%s/%s/%s',
                 $track_trace,
                 $postcode,
                 $country
             );
         } else {
-            $track_trace_url = sprintf(
-                'https://track.bpost.be/btr/web/#/search?itemCode=',
+            $trackTraceUrl = sprintf(
+                "https://track.bpost.be/btr/web/#/search?itemCode=%s&postalCode=%s",
                 $track_trace,
-                $country,
                 $postcode
             );
         }
 
-        return $track_trace_url;
+        return $trackTraceUrl;
     }
 
     /**
@@ -532,7 +529,7 @@ class WCMP_Admin
 
         foreach ($shipments as $shipment_id => $shipment) {
             $barcode .= "<a target='_blank' href="
-                . WCMP_Admin::get_track_trace_url($order, $shipment['track_trace'])
+                . WCMP_Admin::getTrackTraceUrl($order, $shipment['track_trace'])
                 . ">"
                 . $shipment['track_trace']
                 . "</a> <br>";
@@ -554,22 +551,12 @@ class WCMP_Admin
     public static function getDeliveryOptionsFromOrder(WC_Order $order): DeliveryOptions
     {
         $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
-        $meta = Arr::fromObject($meta);
 
-        // This attribute always exists if the order has 4.0.0+ delivery options. If it doesn't, migrate them first.
-        if (!array_key_exists("carrier", $meta)) {
-            try {
-                return (new LegacyDeliveryOptions($meta))->getDeliveryOptions();
-            } catch (Exception $e) {
-                /**
-                 * If we weren't able to create a LegacyDeliveryOptions object, create a new DeliveryOptions object
-                 *  with default values set.
-                 */
-                return new DeliveryOptions();
-            }
+        if (! is_object($meta) || ! $meta instanceof DeliveryOptions) {
+            $meta = DeliveryOptionsAdapterFactory::create($meta);
         }
 
-        return new DeliveryOptions($meta);
+        return $meta;
     }
 
     /**
@@ -671,7 +658,7 @@ class WCMP_Admin
         $track_trace = $shipment["track_trace"] ?? null;
 
         if ($track_trace) {
-            $track_trace_url  = WCMP_Admin::get_track_trace_url($order_id, $track_trace);
+            $track_trace_url  = WCMP_Admin::getTrackTraceUrl($order_id, $track_trace);
             $track_trace_link = sprintf(
                 '<a href="%s" target="_blank">%s</a>',
                 $track_trace_url,
