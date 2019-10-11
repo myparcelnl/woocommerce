@@ -1,6 +1,7 @@
 <?php
 
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter as DeliveryOptions;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
+use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -19,6 +20,7 @@ class WCMP_Cart_Fees
      * @var array
      */
     private $fees;
+
     /**
      * @var DeliveryOptions
      */
@@ -56,8 +58,8 @@ class WCMP_Cart_Fees
             return;
         }
 
-        $this->deliveryOptions = new DeliveryOptions(
-            json_decode(stripslashes($post_data[WCMP_Admin::META_DELIVERY_OPTIONS]), true)
+        $this->deliveryOptions = DeliveryOptionsAdapterFactory::create(
+            stripslashes($post_data[WCMP_Admin::META_DELIVERY_OPTIONS])
         );
 
         $this->addDeliveryFee();

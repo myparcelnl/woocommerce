@@ -3,9 +3,7 @@
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
@@ -1104,44 +1102,6 @@ class WCMP_Export
         $item_weight = (float) $product_weight * (int) $item["qty"];
 
         return (float) $item_weight;
-    }
-
-    /**
-     * @param        $order
-     * @param string $myparcelbe_delivery_options
-     *
-     * @return array|bool|mixed|string
-     */
-    public function is_pickup($order, $myparcelbe_delivery_options = "")
-    {
-        if (empty($myparcelbe_delivery_options)) {
-            $myparcelbe_delivery_options = WCX_Order::get_meta($order, WCMP_Admin::META_DELIVERY_OPTIONS);
-        }
-
-        $pickup_types = ["retail"];
-        if (! empty($myparcelbe_delivery_options["price_comment"])
-            && in_array(
-                $myparcelbe_delivery_options["price_comment"],
-                $pickup_types
-            )) {
-            return $myparcelbe_delivery_options;
-        }
-
-        // Backwards compatibility for pakjegemak data
-        $pgaddress = WCX_Order::get_meta($order, WCMP_Admin::META_PGADDRESS);
-        if (! empty($pgaddress) && ! empty($pgaddress["postcode"])) {
-            return [
-                "postal_code"   => $pgaddress["postcode"],
-                "street"        => $pgaddress["street"],
-                "city"          => $pgaddress["town"],
-                "number"        => $pgaddress["house_number"],
-                "location"      => $pgaddress["name"],
-                "price_comment" => "retail",
-            ];
-        }
-
-        // no pickup
-        return false;
     }
 
     /**
