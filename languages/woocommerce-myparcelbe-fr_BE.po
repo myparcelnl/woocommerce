@@ -1171,7 +1171,7 @@ msgstr "Montant assuré"
 
 #: includes_php56/views/wcmp-order-shipment-summary.php:31
 #: includes/admin/views/html-order-shipment-summary.php:50
-msgid "Custom ID (top left on label)"
+msgid "Label description"
 msgstr "Référence personnalisée (en haut à gauche de l'étiquette)"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:77

@@ -1161,7 +1161,7 @@ msgstr "Verzekerd voor"
 
 #: includes_php56/views/wcmp-order-shipment-summary.php:31
 #: includes/admin/views/html-order-shipment-summary.php:50
-msgid "Custom ID (top left on label)"
+msgid "Label description"
 msgstr "Custom-ID (bovenaan op het label links)"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:77

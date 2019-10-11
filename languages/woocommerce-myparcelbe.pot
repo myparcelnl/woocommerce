@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC MyParcel Belgium\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-10 14:45+0000\n"
+"POT-Creation-Date: 2019-10-11 07:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -15,24 +15,24 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.3.0; wp-5.2.3"
 
-#: woocommerce-myparcel.php:246
+#: woocommerce-myparcel.php:247
 #, php-format
 msgid ""
 "WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!"
 msgstr ""
 
-#: woocommerce-myparcel.php:262
+#: woocommerce-myparcel.php:263
 msgid ""
 "WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended)"
 "."
 msgstr ""
 
-#: woocommerce-myparcel.php:263
+#: woocommerce-myparcel.php:264
 msgid "How to update your PHP version"
 msgstr ""
 
 #: includes/class-wcmp-assets.php:81 includes_php56/class-wcmp-admin.php:154
-#: includes/admin/class-wcmp-admin.php:201
+#: includes/admin/class-wcmp-admin.php:187
 msgid "Labels to skip"
 msgstr ""
 
@@ -113,16 +113,16 @@ msgstr ""
 msgid "<b>Shipping No.</b> is a required field"
 msgstr ""
 
-#: includes/class-wcmp-data.php:46 includes_php56/class-wcmp-export.php:995
+#: includes/class-wcmp-data.php:47 includes_php56/class-wcmp-export.php:995
 msgid "Parcel"
 msgstr ""
 
-#: includes/class-wcmp-data.php:92
+#: includes/class-wcmp-data.php:118
 #: includes/admin/settings/class-wcmp-settings-data.php:80
 msgid "bpost"
 msgstr ""
 
-#: includes/class-wcmp-data.php:93
+#: includes/class-wcmp-data.php:119
 msgid "dpd"
 msgstr ""
 
@@ -285,7 +285,7 @@ msgid "Unknown status"
 msgstr ""
 
 #: includes_php56/class-wcmp-frontend.php:100
-#: includes/frontend/class-wcmp-frontend-track-trace.php:61
+#: includes/frontend/class-wcmp-frontend-track-trace.php:55
 msgid "You can track your order with the following bpost Track & Trace code:"
 msgstr ""
 
@@ -300,7 +300,7 @@ msgstr ""
 #: includes/admin/settings/class-wcmp-settings-data.php:813
 #: includes/admin/settings/class-wcmp-settings-data.php:814
 #: includes/admin/views/html-order-shipment-options.php:107
-#: includes/admin/views/html-order-shipment-summary.php:33
+#: includes/admin/views/html-order-shipment-summary.php:47
 msgid "Signature on delivery"
 msgstr ""
 
@@ -390,27 +390,27 @@ msgid "Saturday"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:125
-#: includes/admin/class-wcmp-admin.php:166
+#: includes/admin/class-wcmp-admin.php:152
 msgid "MyParcel BE: Export"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:126
-#: includes/admin/class-wcmp-admin.php:167
+#: includes/admin/class-wcmp-admin.php:153
 msgid "MyParcel BE: Print"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:127
-#: includes/admin/class-wcmp-admin.php:168
+#: includes/admin/class-wcmp-admin.php:154
 msgid "MyParcel BE: Export & Print"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:157
-#: includes/admin/class-wcmp-admin.php:205
+#: includes/admin/class-wcmp-admin.php:191
 msgid "Print"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:193
-#: includes/admin/class-wcmp-admin.php:241
+#: includes/admin/class-wcmp-admin.php:227
 #: includes_php56/views/wcmp-bulk-options-form.php:158
 #: includes/admin/views/html-bulk-options-form.php:137
 msgid "Export to MyParcel BE"
@@ -418,19 +418,19 @@ msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:198
 #: includes_php56/class-wcmp-admin.php:386
-#: includes/admin/class-wcmp-admin.php:246
+#: includes/admin/class-wcmp-admin.php:232
 #: includes/admin/views/html-order-track-trace-table.php:63
 msgid "Print MyParcel BE label"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:203
-#: includes/admin/class-wcmp-admin.php:251
+#: includes/admin/class-wcmp-admin.php:237
 msgid "Email return label"
 msgstr ""
 
 #. $id
 #: includes_php56/class-wcmp-admin.php:329
-#: includes/admin/class-wcmp-admin.php:387
+#: includes/admin/class-wcmp-admin.php:370
 msgid "MyParcelBE"
 msgstr ""
 
@@ -442,17 +442,17 @@ msgstr ""
 #: includes_php56/class-wcmp-admin.php:375
 #: includes_php56/views/wcmp-order-shipment-summary.php:6
 #: includes/admin/views/html-order-track-trace-table.php:38
-#: includes/admin/views/html-order-shipment-summary.php:16
+#: includes/admin/views/html-order-shipment-summary.php:27
 msgid "Status"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:438
-#: includes/admin/class-wcmp-admin.php:664
+#: includes/admin/class-wcmp-admin.php:588
 msgid "MyParcel BE shipment:"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:463
-#: includes/admin/class-wcmp-admin.php:660
+#: includes/admin/class-wcmp-admin.php:584
 #: includes/admin/settings/class-wcmp-settings-data.php:808
 msgid "Standard delivery"
 msgstr ""
@@ -463,6 +463,10 @@ msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:481
 msgid "bpost Pickup"
+msgstr ""
+
+#: includes_php56/class-wcmp-admin.php:608
+msgid "No label has created yet"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:38
@@ -686,7 +690,7 @@ msgstr ""
 #: includes_php56/views/wcmp-order-shipment-options.php:12
 #: includes_php56/views/wcmp-order-shipment-summary.php:8
 #: includes/admin/views/html-order-shipment-options.php:75
-#: includes/admin/views/html-order-shipment-summary.php:25
+#: includes/admin/views/html-order-shipment-summary.php:38
 #: includes/admin/views/html-order-return-shipment-options.php:14
 msgid "Shipment type"
 msgstr ""
@@ -739,6 +743,7 @@ msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:451
 #: includes/admin/settings/class-wcmp-settings-data.php:671
+#: includes/admin/views/html-order-shipment-summary.php:69
 msgid "Label description"
 msgstr ""
 
@@ -1019,11 +1024,11 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: includes/admin/class-wcmp-admin.php:606
+#: includes/admin/class-wcmp-admin.php:530
 msgid "No label has been created yet."
 msgstr ""
 
-#: includes/admin/class-wcmp-admin.php:760
+#: includes/admin/class-wcmp-admin.php:684
 msgid "(Unknown)"
 msgstr ""
 
@@ -1093,13 +1098,8 @@ msgid "Insured to &euro; 500"
 msgstr ""
 
 #: includes_php56/views/wcmp-order-shipment-summary.php:26
-#: includes/admin/views/html-order-shipment-summary.php:45
+#: includes/admin/views/html-order-shipment-summary.php:62
 msgid "Insured for"
-msgstr ""
-
-#: includes_php56/views/wcmp-order-shipment-summary.php:31
-#: includes/admin/views/html-order-shipment-summary.php:50
-msgid "Custom ID (top left on label)"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:77
