@@ -66,7 +66,7 @@ printf(
     if ($labelDescription) {
         printf(
             '<li>%s: %s</li>',
-            __("Custom ID (top left on label)", "woocommerce-myparcelbe"),
+            __("Label description", "woocommerce-myparcelbe"),
             $labelDescription
         );
     }
