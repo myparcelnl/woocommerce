@@ -196,6 +196,8 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/admin/class-wcmp-export-pdf.php");
             $this->export = require_once($this->includes . "/admin/class-wcmp-export.php");
             require_once($this->includes . "/class-wcmp-be-postcode-fields.php");
+            require_once($this->includes . "/adapter/delivery-options-from-order-adapter.php");
+            require_once($this->includes . "/adapter/shipment-options-from-order-adapter.php");
         }
 
         /**

@@ -58,6 +58,7 @@ class WCMP_Cart_Fees
             return;
         }
 
+        exit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
         $this->deliveryOptions = DeliveryOptionsAdapterFactory::create(
             stripslashes($post_data[WCMP_Admin::META_DELIVERY_OPTIONS])
         );

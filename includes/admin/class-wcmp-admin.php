@@ -1,7 +1,6 @@
 <?php
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter as ShipmentOptions;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Factory\ShipmentOptionsAdapterFactory;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
@@ -329,17 +328,10 @@ class WCMP_Admin
 
         foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
             $order              = WCX::get_order($order_id);
-            $newShipmentOptions = [];
-
-            // Cast the option values to booleans
-            foreach ($data["shipment_options"] as $option => $value) {
-                $newShipmentOptions[$option] = (bool) $value;
-            }
-
             /**
              * @var DeliveryOptions $deliveryOptions
              */
-            $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
+            $deliveryOptions = self::getDeliveryOptionsFromOrder($order, $data);
 
             WCX_Order::update_meta_data(
                 $order,
@@ -542,16 +534,26 @@ class WCMP_Admin
      *
      * @param WC_Order $order
      *
+     * @param array    $inputData
+     *
      * @return DeliveryOptions
      * @throws Exception
      * @see \WCMP_Checkout::save_delivery_options
      */
-    public static function getDeliveryOptionsFromOrder(WC_Order $order): DeliveryOptions
+    public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptions
     {
         $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
 
-        if (! is_object($meta) || ! $meta instanceof DeliveryOptions) {
+        // $meta is a json string, create an instance
+        if (! empty($meta) && is_string($meta) || ! $meta instanceof DeliveryOptions) {
+            $meta = json_decode($meta, true);
             $meta = DeliveryOptionsAdapterFactory::create($meta);
+        }
+
+        // Create new adapter from empty order
+        // or update adapter from order with a instanceof DeliveryOptionsAdapter
+        if (empty($meta) || $meta instanceof DeliveryOptions) {
+            $meta = new WCMP_DeliveryOptionsFromOrderAdapter($meta, $inputData);
         }
 
         return $meta;
