@@ -555,7 +555,7 @@ class WCMP_Admin
                 $meta = DeliveryOptionsAdapterFactory::create((array) $meta);
             } catch (BadMethodCallException $e) {
                 // create new instance from unknown json data
-                $meta = new WCMP_DeliveryOptionsFromOrderAdapter(null, $meta);
+                $meta = new WCMP_DeliveryOptionsFromOrderAdapter(null, (array) $meta);
             }
         }
 
