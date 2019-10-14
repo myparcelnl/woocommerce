@@ -341,9 +341,6 @@ class WCMP_Admin
              */
             $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
 
-            $deliveryOptions->setCarrier($data["carrier"]);
-            $deliveryOptions->setShipmentOptions(ShipmentOptionsAdapterFactory::create($newShipmentOptions));
-
             WCX_Order::update_meta_data(
                 $order,
                 self::META_DELIVERY_OPTIONS,
@@ -554,7 +551,7 @@ class WCMP_Admin
         $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
 
         if (! is_object($meta) || ! $meta instanceof DeliveryOptions) {
-            $meta = DeliveryOptionsAdapterFactory::create(json_encode($meta));
+            $meta = DeliveryOptionsAdapterFactory::create($meta);
         }
 
         return $meta;
