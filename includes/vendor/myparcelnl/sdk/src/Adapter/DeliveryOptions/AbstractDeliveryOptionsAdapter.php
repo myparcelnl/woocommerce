@@ -17,7 +17,7 @@ abstract class AbstractDeliveryOptionsAdapter
     protected $deliveryType;
 
     /**
-     * @var AbstractShipmentOptionsAdapter|null
+     * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter|null
      */
     protected $shipmentOptions;
 
@@ -27,7 +27,7 @@ abstract class AbstractDeliveryOptionsAdapter
     protected $carrier;
 
     /**
-     * @var AbstractPickupLocationAdapter
+     * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractPickupLocationAdapter
      */
     protected $pickupLocation;
 
@@ -76,7 +76,7 @@ abstract class AbstractDeliveryOptionsAdapter
     }
 
     /**
-     * @return AbstractPickupLocationAdapter|null
+     * @return \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractPickupLocationAdapter|null
      */
     public function getPickupLocation(): ?AbstractPickupLocationAdapter
     {
@@ -88,35 +88,10 @@ abstract class AbstractDeliveryOptionsAdapter
      */
     public function isPickup(): bool
     {
-        return in_array(
-            $this->deliveryType,
-            [
-                AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME,
-                AbstractConsignment::DELIVERY_TYPE_PICKUP_EXPRESS_NAME,
-            ]
-        );
-    }
-
-    /**
-     * @param string $carrier
-     *
-     * @return self
-     */
-    public function setCarrier(string $carrier): self
-    {
-        $this->carrier = $carrier;
-        return $this;
-    }
-
-    /**
-     * @param AbstractShipmentOptionsAdapter $shipmentOptions
-     *
-     * @return self
-     */
-    public function setShipmentOptions(AbstractShipmentOptionsAdapter $shipmentOptions): self
-    {
-        $this->shipmentOptions = $shipmentOptions;
-        return $this;
+        return in_array($this->deliveryType, [
+            AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME,
+            AbstractConsignment::DELIVERY_TYPE_PICKUP_EXPRESS_NAME,
+        ]);
     }
 
     /**
