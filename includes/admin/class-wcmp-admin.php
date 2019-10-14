@@ -545,16 +545,26 @@ class WCMP_Admin
         $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
 
         // $meta is a json string, create an instance
-        if (! empty($meta) && is_string($meta) || ! $meta instanceof DeliveryOptions) {
-            $meta = json_decode($meta, true);
-            $meta = DeliveryOptionsAdapterFactory::create($meta);
+        if (! empty($meta) && ! $meta instanceof DeliveryOptions) {
+            if (is_string($meta)) {
+                $meta = json_decode(stripslashes($meta), true);
+            }
+
+            try {
+                // create new instance from known json
+                $meta = DeliveryOptionsAdapterFactory::create((array) $meta);
+            } catch (BadMethodCallException $e) {
+                // create new instance from unknown json data
+                $meta = new WCMP_DeliveryOptionsFromOrderAdapter(null, $meta);
+            }
         }
 
-        // Create new adapter from empty order
-        // or update adapter from order with a instanceof DeliveryOptionsAdapter
-        if (empty($meta) || $meta instanceof DeliveryOptions) {
-            $meta = new WCMP_DeliveryOptionsFromOrderAdapter($meta, $inputData);
+        if (empty($meta)) {
+            $meta = null;
         }
+
+        // Create or update immutable adapter from order with a instanceof DeliveryOptionsAdapter
+        $meta = new WCMP_DeliveryOptionsFromOrderAdapter($meta, $inputData);
 
         return $meta;
     }

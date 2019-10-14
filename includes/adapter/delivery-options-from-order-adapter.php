@@ -12,10 +12,10 @@ class WCMP_DeliveryOptionsFromOrderAdapter extends AbstractDeliveryOptionsAdapte
      */
     public function __construct(?AbstractDeliveryOptionsAdapter $originAdapter, array $inputData = [])
     {
-        $this->carrier         = $inputData['carrier'] ?? $originAdapter->getCarrier() ?? null;
-        $this->date            = $originAdapter->getDate() ?? null;
-        $this->deliveryType    = $originAdapter->getDeliveryType() ?? null;
+        $this->carrier         = $inputData['carrier'] ?? ($originAdapter ? $originAdapter->getCarrier() : null);
+        $this->date            = $originAdapter ? $originAdapter->getDate() : null;
+        $this->deliveryType    = $originAdapter ? $originAdapter->getDeliveryType() : null;
         $this->shipmentOptions = new WCMP_ShipmentOptionsFromOrderAdapter($originAdapter, $inputData);
-        $this->pickupLocation  = $originAdapter->getPickupLocation() ?? null;
+        $this->pickupLocation  = $originAdapter ? $originAdapter->getPickupLocation() : null;
     }
 }
