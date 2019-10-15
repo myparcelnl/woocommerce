@@ -296,6 +296,8 @@ class WCMP_Checkout
         $deliveryOptions = stripslashes(Arr::get($_POST, WCMP_Admin::META_DELIVERY_OPTIONS));
 
         if ($deliveryOptions) {
+
+            $deliveryOptions = json_decode($deliveryOptions, true);
             /*
              * Create a new DeliveryOptions class from the data.
              */

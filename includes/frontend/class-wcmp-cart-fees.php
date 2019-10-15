@@ -58,9 +58,9 @@ class WCMP_Cart_Fees
             return;
         }
 
-        $this->deliveryOptions = DeliveryOptionsAdapterFactory::create(
-            json_decode($post_data[WCMP_Admin::META_DELIVERY_OPTIONS], true)
-        );
+        $delivery_options_data = $post_data[WCMP_Admin::META_DELIVERY_OPTIONS];
+        $delivery_options_data = json_decode(stripslashes($delivery_options_data), true);
+        $this->deliveryOptions = DeliveryOptionsAdapterFactory::create($delivery_options_data);
 
         $this->addDeliveryFee();
         $this->addShipmentOptionFees();
