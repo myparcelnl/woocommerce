@@ -338,6 +338,10 @@ class WCMP_Export
 
         $collection = $collection->createConcepts();
 
+        if ($processDirectly) {
+            $collection->setLinkOfLabels();
+        }
+
         foreach ($order_ids as $order_id) {
             $order          = WCX::get_order($order_id);
             $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
