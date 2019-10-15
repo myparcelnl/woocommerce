@@ -294,11 +294,9 @@ class WCMP_Export_Consignments
 
     private function setBaseData(): void
     {
-        $index = self::$i;
-
         $this->consignment
             ->setApiKey($this->apiKey)
-            ->setReferenceId("{$this->order->get_id()}[$index]")
+            ->setReferenceId((string) $this->order->get_id())
             ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
             ->setLabelDescription($this->getLabelDescription())
             ->setPackageType(WCMP_Export::PACKAGE);

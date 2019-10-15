@@ -87,7 +87,7 @@ class WCMP_Admin
         }
 
         $order_id             = WCX_Order::get_id($order);
-        $consignments         = WCMP_Admin::get_order_shipments($order, true);
+        $consignments         = WCMP_Admin::get_order_shipments($order);
 
         // if we have shipments, then we show status & link to Track & Trace, settings under i
         if (! empty($consignments)) :
@@ -245,7 +245,7 @@ class WCMP_Admin
             unset($listing_actions[$getLabels]);
         }
 
-        $processed_shipments = WCMP_Admin::get_order_shipments($order, true);
+        $processed_shipments = WCMP_Admin::get_order_shipments($order);
         if (empty($processed_shipments) || $shipping_country !== 'BE') {
             unset($listing_actions[$addReturn]);
         }
@@ -308,9 +308,9 @@ class WCMP_Admin
          * Filter out concepts.
          */
         if ($exclude_concepts) {
-          $consignments = array_filter($consignments, function ($consignment) {
-            return isset($consignment["track_trace"]);
-          });
+            $consignments = array_filter($consignments, function ($consignment) {
+                return isset($consignment["track_trace"]);
+            });
         }
 
         return $consignments;

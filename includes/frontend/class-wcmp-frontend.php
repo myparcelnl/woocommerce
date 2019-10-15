@@ -162,7 +162,7 @@ class WCMP_Frontend
     public static function getTrackTraceShipments($order_id): array
     {
         $order     = WCX::get_order($order_id);
-        $shipments = WCMP_Admin::get_order_shipments($order, true);
+        $shipments = WCMP_Admin::get_order_shipments($order);
         $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 
         if (empty($shipments)) {
