@@ -7,7 +7,7 @@ use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 
-if (!defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
@@ -37,7 +37,7 @@ class WCMP_Checkout
     public function enqueue_frontend_scripts()
     {
         // return if not checkout or order received page
-        if (!is_checkout() && !is_order_received_page()) {
+        if (! is_checkout() && ! is_order_received_page()) {
             return;
         }
 
@@ -54,7 +54,7 @@ class WCMP_Checkout
         }
 
         // Don"t load the delivery options scripts if it"s disabled
-        if (!WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
+        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
             return;
         }
 
@@ -139,7 +139,7 @@ class WCMP_Checkout
     {
         $packageTypes = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
 
-        if (!is_array($packageTypes)) {
+        if (! is_array($packageTypes)) {
             $packageTypes = [];
         }
 
@@ -175,18 +175,17 @@ class WCMP_Checkout
                 "addressNotFound"       => __("Address details are not entered", "woocommerce-myparcelbe"),
                 "city"                  => __("City", "woocommerce-myparcelbe"),
                 "closed"                => __("Closed", "woocommerce-myparcelbe"),
-                "deliveryTitle"         => __("Standard delivery title", "woocommerce-myparcelbe"),
-                "headerDeliveryOptions" => strip_tags(
-                    $settings->getStringByName(WCMP_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE)
-                ),
+                "deliveryStandardTitle" => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_STANDARD_TITLE),
+                "deliveryTitle"         => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_DELIVERY_TITLE),
+                "headerDeliveryOptions" => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE),
                 "houseNumber"           => __("House number", "woocommerce-myparcelbe"),
                 "openingHours"          => __("Opening hours", "woocommerce-myparcelbe"),
                 "pickUpFrom"            => __("Pick up from", "woocommerce-myparcelbe"),
-                "pickupTitle"           => __("Pickup", "woocommerce-myparcelbe"),
+                "pickupTitle"           => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_PICKUP_TITLE),
                 "postcode"              => __("Postcode", "woocommerce-myparcelbe"),
                 "retry"                 => __("Retry", "woocommerce-myparcelbe"),
                 "wrongHouseNumberCity"  => __("Postcode/city combination unknown", "woocommerce-myparcelbe"),
-                "signatureTitle"        => $settings->getStringByName(WCMP_Settings::SETTING_SIGNATURE_TITLE),
+                "signatureTitle"        => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_SIGNATURE_TITLE)
             ],
         ];
 
@@ -218,6 +217,18 @@ class WCMP_Checkout
         }
 
         return json_encode($myParcelConfig, JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return string
+     */
+    public function getDeliveryOptionsTitle(string $title): string
+    {
+        $settings = WCMP()->setting_collection;
+
+        return __(strip_tags($settings->getStringByName($title)), "woocommerce-myparcelbe");
     }
 
     /**
@@ -263,7 +274,7 @@ class WCMP_Checkout
      */
     public static function save_delivery_options($order_id)
     {
-        $order                = WCX::get_order($order_id);
+        $order = WCX::get_order($order_id);
 
         $highestShippingClass = Arr::get($_POST, "myparcelbe_highest_shipping_class");
         $shippingMethod       = Arr::get($_POST, "shipping_method");
