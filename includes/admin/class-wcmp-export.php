@@ -320,7 +320,7 @@ class WCMP_Export
              * new ones will be appended to the existing ones.
              */
             if (
-                count($order_shipments) > 0 &&
+                ! empty($order_shipments) &&
                 ! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS)
             ) {
                 continue;
