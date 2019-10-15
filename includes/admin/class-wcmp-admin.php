@@ -304,15 +304,6 @@ class WCMP_Admin
             return [];
         }
 
-        /**
-         * Filter out concepts.
-         */
-        if ($exclude_concepts) {
-          $consignments = array_filter($consignments, function ($consignment) {
-            return isset($consignment["track_trace"]);
-          });
-        }
-
         return $consignments;
     }
 

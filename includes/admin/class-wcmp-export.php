@@ -307,11 +307,26 @@ class WCMP_Export
 
         WCMP_Log::add("*** Creating shipments started ***");
 
+        $order_ids_with_new_shipments = [];
         /**
          * Loop over the order ids and create consignments for each order.
          */
         foreach ($order_ids as $order_id) {
             $order = WCX::get_order($order_id);
+            $order_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
+
+            /**
+             * If "Keep shipments" is disabled, don't create new shipments. Otherwise the
+             * new ones will be appended to the existing ones.
+             */
+            if (
+                count($order_shipments) > 0 &&
+                ! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS)
+            ) {
+                continue;
+            } else {
+                $order_ids_with_new_shipments[] = $order_id;
+            }
 
             // check collo amount
             $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
@@ -342,17 +357,9 @@ class WCMP_Export
             $collection->setLinkOfLabels();
         }
 
-        foreach ($order_ids as $order_id) {
+        foreach ($order_ids_with_new_shipments as $order_id) {
             $order          = WCX::get_order($order_id);
             $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
-
-            /**
-             * If "Keep shipments" is disabled, delete the shipments meta key before adding new ones. Otherwise the
-             * new ones will be appended to the existing ones.
-             */
-            if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS)) {
-                WCX_Order::delete_meta_data($order, WCMP_Admin::META_SHIPMENTS);
-            }
 
             foreach ($consignmentIds as $consignmentId) {
                 $shipment["shipment_id"] = $consignmentId;
@@ -892,9 +899,7 @@ class WCMP_Export
 
         $old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
 
-        if ($old_shipments) {
-            $new_shipments = array_replace_recursive($old_shipments, $new_shipments);
-        }
+        $new_shipments = array_replace_recursive((array) $old_shipments, $new_shipments);
 
         WCX_Order::update_meta_data($order, WCMP_Admin::META_SHIPMENTS, $new_shipments);
     }
@@ -1051,10 +1056,6 @@ class WCMP_Export
         foreach ($shipments as $shipment) {
             if (! isset($shipment["id"])) {
                 return [];
-            }
-
-            if ($shipment["status"] < 2) {
-                throw new Exception(__("No label(s) created yet.", "woocommerce-myparcelbe"));
             }
 
             // if shipment id matches and status is not concept, get track trace barcode and status name
