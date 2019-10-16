@@ -11,7 +11,7 @@
  */
 
 // eslint-disable-next-line max-lines-per-function
-jQuery(function($) {
+jQuery(function ($) {
 
   var selectors = {
     offsetDialog: '.wcmp__offset-dialog',
@@ -99,7 +99,7 @@ jQuery(function($) {
      *
      * @see includes/admin/class-wcmp-admin.php:49
      */
-    $([selectors.shipmentOptions, selectors.shipmentSummary].join(',')).each(function() {
+    $([selectors.shipmentOptions, selectors.shipmentSummary].join(',')).each(function () {
       var shippingAddressColumn = $(this).closest('tr')
         .find('td.shipping_address');
 
@@ -127,7 +127,7 @@ jQuery(function($) {
     /**
      * Loop through the classes to create a dependency like this: { [parent]: node[] }.
      */
-    nodesWithParent.forEach(function(node) {
+    nodesWithParent.forEach(function (node) {
       var parent = node.getAttribute('data-parent');
 
       if (dependencies.hasOwnProperty(parent)) {
@@ -159,7 +159,7 @@ jQuery(function($) {
    * @param {Object<String, Node[]>} deps - Dependency names and all the nodes that depend on them.
    */
   function createDependencies(deps) {
-    Object.keys(deps).forEach(function(relatedInputId) {
+    Object.keys(deps).forEach(function (relatedInputId) {
       var relatedInput = document.querySelector('[name="' + relatedInputId + '"]');
 
       /**
@@ -176,7 +176,7 @@ jQuery(function($) {
         /**
          * @type {Element} dependant
          */
-        deps[relatedInputId].forEach(function(dependant) {
+        deps[relatedInputId].forEach(function (dependant) {
           handleDependency(relatedInput, dependant, null, easing);
 
           if (relatedInput.hasAttribute('data-parent')) {
@@ -184,12 +184,12 @@ jQuery(function($) {
 
             handleDependency(otherRelatedInput, relatedInput, dependant, easing);
 
-            otherRelatedInput.addEventListener('change', function() {
+            otherRelatedInput.addEventListener('change', function () {
               return handleDependency(otherRelatedInput, relatedInput, dependant, easing);
             });
           }
         });
-      };
+      }
 
       relatedInput.addEventListener('change', handle);
 
@@ -213,6 +213,7 @@ jQuery(function($) {
     var value = relatedInput.value;
 
     var elementContainer = $(element).closest('tr');
+    var elementCheckoutStringsTitleContainer = $('#checkout_strings');
 
     /**
      * @type {Boolean}
@@ -229,13 +230,13 @@ jQuery(function($) {
     } else {
       matches = value === wantedValue;
     }
-
     switch (type) {
       case 'child':
         elementContainer[matches ? 'show' : 'hide'](easing);
         break;
       case 'show':
         elementContainer[matches ? 'show' : 'hide'](easing);
+        elementCheckoutStringsTitleContainer[matches ? 'show' : 'hide'](easing);
         break;
       case 'disable':
         $(element).prop('disabled', !matches);
@@ -314,8 +315,8 @@ jQuery(function($) {
         form_data: form.find(':input').serialize(),
         security: wcmp.nonce,
       },
-      afterDone: function() {
-        setTimeout(function() {
+      afterDone: function () {
+        setTimeout(function () {
           form.slideUp();
         }, timeoutAfterRequest);
       },
@@ -354,7 +355,7 @@ jQuery(function($) {
       var rows = [];
 
       $('tbody th.check-column input[type="checkbox"]:checked').each(
-        function() {
+        function () {
           order_ids.push($(this).val());
           rows.push('.post-' + $(this).val());
         }
@@ -407,7 +408,7 @@ jQuery(function($) {
       method: request.method || 'POST',
       data: request.data,
     })
-      .done(function(res) {
+      .done(function (res) {
         setSpinner(button, spinner.success);
 
         if (request.hasOwnProperty('afterDone') && typeof request.afterDone === 'function') {
@@ -415,7 +416,7 @@ jQuery(function($) {
         }
       })
 
-      .fail(function(res) {
+      .fail(function (res) {
         setSpinner(button, spinner.failed);
 
         if (request.hasOwnProperty('afterFail') && typeof request.afterFail === 'function') {
@@ -423,7 +424,7 @@ jQuery(function($) {
         }
       })
 
-      .always(function(res) {
+      .always(function (res) {
         $(button).prop('disabled', false);
 
         if (request.hasOwnProperty('afterAlways') && typeof request.afterAlways === 'function') {
@@ -609,7 +610,7 @@ jQuery(function($) {
     doRequest.bind(this)({
       url: url,
       data: data || {},
-      afterDone: function(response) {
+      afterDone: function (response) {
         var redirect_url = updateUrlParameter(window.location.href, 'myparcelbe_done', 'true');
         // response = $.parseJSON(response);
 
@@ -668,7 +669,7 @@ jQuery(function($) {
       security: wcmp.nonce,
     };
 
-    $.post(wcmp.ajax_url, data, function(response) {
+    $.post(wcmp.ajax_url, data, function (response) {
       response = $.parseJSON(response);
       if (response !== null && typeof response === 'object' && 'error' in response) {
         myparcelbe_admin_notice(response.error, 'error');
@@ -807,7 +808,7 @@ jQuery(function($) {
         url: wcmp.ajax_url,
         data: data,
         context: summaryList,
-        success: function(response) {
+        success: function (response) {
           this.removeClass('ajax-waiting');
           this.html(response);
           this.data('loaded', true);
@@ -852,7 +853,7 @@ jQuery(function($) {
     var listener = this;
     var clickedOutside = true;
 
-    elements.wrappers.forEach(function(cls) {
+    elements.wrappers.forEach(function (cls) {
       if ((clickedOutside && event.target.matches(cls)) || event.target.closest(elements.main)) {
         clickedOutside = false;
       }
