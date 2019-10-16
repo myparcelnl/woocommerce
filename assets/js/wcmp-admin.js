@@ -230,6 +230,7 @@ jQuery(function($) {
     } else {
       matches = value === wantedValue;
     }
+    
     switch (type) {
       case 'child':
         elementContainer[matches ? 'show' : 'hide'](easing);
