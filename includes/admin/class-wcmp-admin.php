@@ -160,7 +160,7 @@ class WCMP_Admin
      *
      * @return array
      */
-    public function addBulkActions($actions): array
+    public function addBulkActions(array $actions): array
     {
         $actions = array_merge(
             $actions,
@@ -541,7 +541,7 @@ class WCMP_Admin
         global $post;
 
         if ("barcode" === $column) {
-            $this->get_barcode(WCX::get_order($post->ID));
+            $this->renderBarcodes(WCX::get_order($post->ID));
         }
     }
 
@@ -551,7 +551,7 @@ class WCMP_Admin
      * @return void
      * @throws Exception
      */
-    public function get_barcode(WC_Order $order): void
+    public function renderBarcodes(WC_Order $order): void
     {
         $shipments = WCMP_Admin::get_order_shipments($order, true);
 
@@ -733,24 +733,6 @@ class WCMP_Admin
     private function renderStatus(array $shipment): void
     {
         echo $shipment["status"] ?? "–";
-    }
-
-    /**
-     * @param string $redirect_to
-     * @param string $action_name
-     * @param array  $post_ids
-     *
-     * @return string
-     */
-    public function handleBulkActions(string $redirect_to, string $action_name, array $post_ids): string
-    {
-        file_put_contents(
-            date('YmdHis') . "_handleBulkActions.json",
-            json_encode([$redirect_to, $action_name, $post_ids])
-        );
-
-        $redirect_to = add_query_arg('other_bulk_posts_precessed', count($post_ids), $redirect_to);
-        return $redirect_to;
     }
 }
 
