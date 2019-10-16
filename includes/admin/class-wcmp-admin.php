@@ -405,6 +405,8 @@ class WCMP_Admin
 
     /**
      * Callback: Create the meta box content on the single order page
+     *
+     * @throws Exception
      */
     public function createMetaBox(): void
     {
@@ -539,34 +541,34 @@ class WCMP_Admin
         global $post;
 
         if ("barcode" === $column) {
-            echo $this->get_barcode(WCX::get_order($post->ID));
+            $this->get_barcode(WCX::get_order($post->ID));
         }
     }
 
     /**
-     * @param      $order
-     * @param null $barcode
+     * @param WC_Order $order
      *
-     * @return string|null
+     * @return void
      * @throws Exception
      */
-    public function get_barcode(WC_Order $order, $barcode = null)
+    public function get_barcode(WC_Order $order): void
     {
         $shipments = WCMP_Admin::get_order_shipments($order, true);
 
         if (empty($shipments)) {
-            return __("No label has been created yet.", "woocommerce-myparcelbe");
+            echo __("No label has been created yet.", "woocommerce-myparcelbe");
+            return;
         }
 
+        echo '<div class="wcmp__barcodes">';
         foreach ($shipments as $shipment_id => $shipment) {
-            $barcode .= "<a target='_blank' href="
-                . WCMP_Admin::getTrackTraceUrl($order, $shipment['track_trace'])
-                . ">"
-                . $shipment['track_trace']
-                . "</a> <br>";
+            printf(
+                '<a target="_blank" class="wcmp__barcode-link" title="%2$s" href="%1$s">%2$s</a><br>',
+                WCMP_Admin::getTrackTraceUrl($order, $shipment["track_trace"]),
+                $shipment["track_trace"]
+            );
         }
-
-        return $barcode;
+        echo "</div>";
     }
 
     /**

@@ -15,10 +15,6 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-@ini_set('log_errors', 'On');
-@ini_set('display_errors', 'On');
-@ini_set('error_log','/php-errors.log');
-
 if (! class_exists('WCMP')) :
 
     class WCMP

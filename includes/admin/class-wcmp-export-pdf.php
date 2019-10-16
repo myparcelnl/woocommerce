@@ -1,7 +1,5 @@
 <?php
 
-use MyParcelNL\Sdk\src\Support\Arr;
-
 if (! defined("ABSPATH")) {
     exit;
 } // Exit if accessed directly
@@ -20,31 +18,17 @@ class WCMP_Export_Pdf
     /**
      * WCMP_Export_Pdf constructor.
      *
-     * @param array $response
-     * @param bool  $download
+     * @param string $response
      */
-    public function __construct(array $response, bool $download = true)
+    public function __construct(string $response)
     {
         self::$data = $response;
-
-        if ($download) {
-            self::outputPdfUrl();
-        } else {
-            self::outputPdf();
-        }
+        self::outputPdfUrl();
     }
 
     private static function outputPdfUrl(): void
     {
-        $url = Arr::get(self::$data, "body.data.pdfs.url");
-
-        echo $url;
-        die();
-    }
-
-    private static function outputPdf(): void
-    {
-        echo json_decode(self::$data);
+        echo self::$data;
         die();
     }
 }

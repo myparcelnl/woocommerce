@@ -1,5 +1,7 @@
 <?php
 
+use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
+
 if (! defined("ABSPATH")) {
     exit;
 } // Exit if accessed directly
@@ -91,48 +93,6 @@ class WCMP_API extends WCMP_Rest
     }
 
     /**
-     * Delete Shipment
-     *
-     * @param array $ids shipment ids
-     *
-     * @return array       response
-     * @throws Exception
-     */
-    public function delete_shipments(array $ids): array
-    {
-        $endpoint = "shipments";
-
-        $headers = [
-            "headers" => [
-                "Accept"        => "application/json; charset=UTF-8",
-                "Authorization" => "basic " . base64_encode("{$this->key}"),
-                "user-agent"    => $this->userAgent,
-            ],
-        ];
-
-        $request_url = $this->apiUrl . $endpoint . "/" . implode(";", $ids);
-        return $this->delete($request_url, $headers);
-    }
-
-    /**
-     * Unrelated return shipments
-     *
-     * @return array       response
-     * @throws Exception
-     */
-    public function unrelated_return_shipments(): array
-    {
-        $endpoint = "return_shipments";
-
-        $headers = [
-            "Authorization: basic " . base64_encode("{$this->key}"),
-        ];
-
-        $request_url = $this->apiUrl . $endpoint;
-        return $this->post($request_url, "", $headers);
-    }
-
-    /**
      * Get shipments
      *
      * @param int|array $ids
@@ -162,85 +122,26 @@ class WCMP_API extends WCMP_Rest
     /**
      * Get shipment labels
      *
-     * @param array $ids    shipment ids
-     * @param array $params request parameters
-     * @param bool  $download
+     * @param array $ids       Shipment ids.
+     * @param array $positions Print position(s).
+     * @param bool  $display   Download or display.
      *
-     * @return array          response
      * @throws Exception
      */
-    public function get_shipment_labels(array $ids, array $params = [], $download = true)
+    public function getShipmentLabels(array $ids, array $positions = [], $display = true)
     {
-        $endpoint = "shipment_labels";
+        $collection = MyParcelCollection::findMany($ids, $this->key);
 
-        if ($download) {
-            // For shipment download link.
-            $accept = "application/json";
+        if ($display) {
+            $collection
+                ->setPdfOfLabels($positions)
+                ->downloadPdfOfLabels($display);
         } else {
-            // For the PDF binary.
-            $accept = "application/pdf";
+            echo $collection
+                ->setLinkOfLabels($positions)
+                ->getLinkOfLabels();
+            die();
         }
-
-        $headers = [
-            "headers" => [
-                "Accept"        => $accept,
-                "Authorization" => "basic " . base64_encode("{$this->key}"),
-                "user-agent"    => $this->userAgent,
-            ],
-        ];
-
-        $positions = isset($params["positions"]) ? $params["positions"] : null;
-
-        $label_format_url = $this->get_label_format_url_parameters($positions);
-        $request_url      = $this->apiUrl . $endpoint . "/" . implode(";", $ids) . "?" . $label_format_url;
-
-        return $this->get($request_url, $headers);
-    }
-
-    /**
-     * Track shipments
-     *
-     * @param array $ids    shipment ids
-     * @param array $params request parameters
-     *
-     * @return array          response
-     * @throws Exception
-     */
-    public function get_tracktraces(array $ids, array $params = []): array
-    {
-        $endpoint = "tracktraces";
-
-        $headers = [
-            "headers" => [
-                "Authorization" => "basic " . base64_encode($this->key),
-                "user-agent"    => $this->userAgent,
-            ],
-        ];
-
-        $request_url = add_query_arg($params, $this->apiUrl . $endpoint . "/" . implode(";", $ids));
-        return $this->get($request_url, $headers, false);
-    }
-
-    /**
-     * Get delivery options
-     *
-     * @param array $params
-     * @param bool  $raw
-     *
-     * @return array          response
-     * @throws Exception
-     */
-    public function get_delivery_options(array $params = [], bool $raw = false): array
-    {
-        $endpoint = "delivery_options";
-
-        if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED)) {
-            $params["saturday_delivery"] = 1;
-        }
-
-        $request_url = add_query_arg($params, $this->apiUrl . $endpoint);
-
-        return $this->get($request_url, null, $raw);
     }
 
     /**
@@ -258,29 +159,5 @@ class WCMP_API extends WCMP_Rest
 
         // Place white space between the array elements
         return implode(" ", $userAgents);
-    }
-
-    /**
-     * @param $positions
-     *
-     * @return string
-     */
-    private function get_label_format_url_parameters($positions = [2, 1, 3, 4]): string
-    {
-        $labelFormat = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_LABEL_FORMAT);
-
-        switch ($labelFormat) {
-            case "A4":
-                $value = "format=A4&positions=" . $positions;
-                break;
-            case "A6":
-                $value = "format=A6";
-                break;
-            default:
-                $value = "";
-                break;
-        }
-
-        return $value;
     }
 }

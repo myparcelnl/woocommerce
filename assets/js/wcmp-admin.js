@@ -14,7 +14,7 @@
  */
 
 // eslint-disable-next-line max-lines-per-function
-jQuery(function($) {
+jQuery(function ($) {
   /**
    * @type {Boolean}
    */
@@ -105,7 +105,7 @@ jQuery(function($) {
      *
      * @see includes/admin/class-wcmp-admin.php:49
      */
-    $([selectors.shipmentOptions, selectors.shipmentSummary].join(',')).each(function() {
+    $([selectors.shipmentOptions, selectors.shipmentSummary].join(',')).each(function () {
       var shippingAddressColumn = $(this).closest('tr')
         .find('td.shipping_address');
 
@@ -133,7 +133,7 @@ jQuery(function($) {
     /**
      * Loop through the classes to create a dependency like this: { [parent]: node[] }.
      */
-    nodesWithParent.forEach(function(node) {
+    nodesWithParent.forEach(function (node) {
       var parent = node.getAttribute('data-parent');
 
       if (dependencies.hasOwnProperty(parent)) {
@@ -164,7 +164,7 @@ jQuery(function($) {
    * @param {Object<String, Node[]>} deps - Dependency names and all the nodes that depend on them.
    */
   function createDependencies(deps) {
-    Object.keys(deps).forEach(function(relatedInputId) {
+    Object.keys(deps).forEach(function (relatedInputId) {
       var relatedInput = document.querySelector('[name="' + relatedInputId + '"]');
 
       /**
@@ -181,7 +181,7 @@ jQuery(function($) {
         /**
          * @type {Element} dependant
          */
-        deps[relatedInputId].forEach(function(dependant) {
+        deps[relatedInputId].forEach(function (dependant) {
           handleDependency(relatedInput, dependant, null, easing);
 
           if (relatedInput.hasAttribute('data-parent')) {
@@ -189,7 +189,7 @@ jQuery(function($) {
 
             handleDependency(otherRelatedInput, relatedInput, dependant, easing);
 
-            otherRelatedInput.addEventListener('change', function() {
+            otherRelatedInput.addEventListener('change', function () {
               return handleDependency(otherRelatedInput, relatedInput, dependant, easing);
             });
           }
@@ -321,8 +321,8 @@ jQuery(function($) {
         form_data: form.find(':input').serialize(),
         security: wcmp.nonce,
       },
-      afterDone: function() {
-        setTimeout(function() {
+      afterDone: function () {
+        setTimeout(function () {
           form.slideUp();
         }, timeoutAfterRequest);
       },
@@ -355,10 +355,10 @@ jQuery(function($) {
      * Get array of selected order_ids
      */
     $('tbody th.check-column input[type="checkbox"]:checked').each(
-      function() {
+      function () {
         order_ids.push($(this).val());
         rows.push('.post-' + $(this).val());
-      }
+      },
     );
 
     $(rows.join(', ')).addClass('wcmp__loading');
@@ -376,7 +376,10 @@ jQuery(function($) {
        * Print labels.
        */
       case wcmp.bulk_actions.print:
-        printLabel({order_ids: order_ids, offset: askForPrintPosition ? $(selectors.offsetDialogInput).val() : 0});
+        printLabel({
+          order_ids: order_ids,
+          offset: askForPrintPosition ? $(selectors.offsetDialogInput).val() : 0,
+        });
         break;
 
       /**
@@ -387,6 +390,7 @@ jQuery(function($) {
         break;
     }
   }
+
   /**
    * Do an ajax request.
    *
@@ -407,7 +411,7 @@ jQuery(function($) {
       method: request.method || 'POST',
       data: request.data || {},
     })
-      .done(function(res) {
+      .done(function (res) {
         setSpinner(button, spinner.success);
 
         if (request.hasOwnProperty('afterDone') && typeof request.afterDone === 'function') {
@@ -415,7 +419,7 @@ jQuery(function($) {
         }
       })
 
-      .fail(function(res) {
+      .fail(function (res) {
         setSpinner(button, spinner.failed);
 
         if (request.hasOwnProperty('afterFail') && typeof request.afterFail === 'function') {
@@ -423,7 +427,7 @@ jQuery(function($) {
         }
       })
 
-      .always(function(res) {
+      .always(function (res) {
         $(button).prop('disabled', false);
 
         if (request.hasOwnProperty('afterAlways') && typeof request.afterAlways === 'function') {
@@ -516,7 +520,10 @@ jQuery(function($) {
     dialog.hide();
 
     /* print labels */
-    printLabel({order_ids: order_ids, offset: offset});
+    printLabel({
+      order_ids: order_ids,
+      offset: offset,
+    });
   }
 
   /**
@@ -609,7 +616,7 @@ jQuery(function($) {
     doRequest.bind(this)({
       url: url,
       data: data || {},
-      afterDone: function(response) {
+      afterDone: function (response) {
         var redirect_url = updateUrlParameter(window.location.href, 'myparcelbe_done', 'true');
 
         if (print === 'no' || print === 'after_reload') {
@@ -626,7 +633,10 @@ jQuery(function($) {
           }
 
           /* load PDF */
-          printLabel({order_ids: order_ids, offset: offset});
+          printLabel({
+            order_ids: order_ids,
+            offset: offset,
+          });
         }
       },
     });
@@ -648,7 +658,7 @@ jQuery(function($) {
     var url = wcmp.ajax_url + '?' + $.param(data);
 
     /* disable background scrolling */
-    $('body').css({overflow: 'hidden'});
+    $('body').css({ overflow: 'hidden' });
 
     tb_show('', url);
   }
@@ -657,7 +667,7 @@ jQuery(function($) {
    *  Re-enable scrolling after closing thickbox.
    */
   function onThickBoxUnload() {
-    $('body').css({overflow: 'inherit'});
+    $('body').css({ overflow: 'inherit' });
   }
 
   /* export orders to MyParcel via AJAX */
@@ -669,7 +679,7 @@ jQuery(function($) {
       security: wcmp.nonce,
     };
 
-    $.post(wcmp.ajax_url, data, function(response) {
+    $.post(wcmp.ajax_url, data, function (response) {
       response = $.parseJSON(response);
       if (response !== null && typeof response === 'object' && 'error' in response) {
         myparcelbe_admin_notice(response.error, 'error');
@@ -680,10 +690,9 @@ jQuery(function($) {
 
   /**
    * @param {String} pdfUrl - The url of the created pdf.
-   * @param {String} target - Null if not set..
    */
-  function openPdf(pdfUrl, target) {
-    window.open(wcmp.api_url + pdfUrl, target || null);
+  function openPdf(pdfUrl) {
+    window.open(pdfUrl);
   }
 
   /* Request MyParcel BE labels */
@@ -705,23 +714,39 @@ jQuery(function($) {
       };
     }
 
-    request.afterDone = function(response) {
-      if (wcmp.download_display === 'download') {
-        openPdf(response, '_blank');
-      } else {
-        openPdf(response);
-      }
+    request.afterDone = function (response) {
+      openPdf(response);
       window.location.reload();
     };
 
-    doRequest.bind(button)(request);
+    if (wcmp.download_display === 'download') {
+      doRequest.bind(button)(request);
+    } else {
+      var url;
+
+      if (request.hasOwnProperty('url')) {
+        url = request.url;
+      } else {
+        url = wcmp.ajax_url + '?' + $.param(request.data);
+      }
+
+      var pdfWindow = window.open(url, '_blank');
+
+      /**
+       * When the pdf window is loaded reload the main window. If we reload earlier the track & trace code won't be
+       * ready yet and can't be shown.
+       */
+      pdfWindow.onload = function () {
+        window.location.reload();
+      };
+    }
   }
 
   function myparcelbe_admin_notice(message, type) {
     var mainHeader = $('#wpbody-content > .wrap > h1:first');
     var notice = '<div class="' + selectors.notice + ' notice notice-' + type + '"><p>' + message + '</p></div>';
     mainHeader.after(notice);
-    $('html, body').animate({scrollTop: 0}, 'slow');
+    $('html, body').animate({ scrollTop: 0 }, 'slow');
   }
 
   /* Add / Update a key-value pair in the URL query parameters */
@@ -768,7 +793,7 @@ jQuery(function($) {
         url: wcmp.ajax_url,
         data: data,
         context: summaryList,
-        success: function(response) {
+        success: function (response) {
           this.removeClass('ajax-waiting');
           this.html(response);
           this.data('loaded', true);
@@ -813,7 +838,7 @@ jQuery(function($) {
     var listener = this;
     var clickedOutside = true;
 
-    elements.wrappers.forEach(function(cls) {
+    elements.wrappers.forEach(function (cls) {
       if ((clickedOutside && event.target.matches(cls)) || event.target.closest(elements.main)) {
         clickedOutside = false;
       }
