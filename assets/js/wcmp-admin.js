@@ -151,11 +151,10 @@ jQuery(function($) {
    * Print queued labels.
    */
   function printQueuedLabels() {
-    var print_queue = $(selectors.printQueue).val();
-    var print_queue_offset = $(selectors.printQueueOffset).val();
+    var printData = $(selectors.printQueue).val();
 
-    if (typeof print_queue !== 'undefined') {
-      printLabel($.parseJSON(print_queue), print_queue_offset);
+    if (printData) {
+      printLabel(JSON.parse(printData));
     }
   }
 
@@ -337,11 +336,11 @@ jQuery(function($) {
     /**
      * Check if our action is the selected one.
      */
-    if (wcmp.bulk_actions.indexOf(action) === -1) {
+    if (wcmp.bulk_actions.hasOwnProperty(action)) {
       return;
     }
 
-    event.preventDefault(); ;
+    event.preventDefault();
 
     /*
      * Remove notices
@@ -362,6 +361,7 @@ jQuery(function($) {
 
     $(rows.join(', ')).addClass('wcmp__loading');
 
+    console.log(action);
     switch (action) {
       /**
        * Export orders.
@@ -374,7 +374,7 @@ jQuery(function($) {
        * Print labels.
        */
       case wcmp.bulk_actions.print:
-        printLabel(order_ids, askForPrintPosition ? $(selectors.offsetDialogInput).val() : 0, rows);
+        printLabel({order_ids: order_ids, offset: askForPrintPosition ? $(selectors.offsetDialogInput).val() : 0});
         break;
 
       /**
@@ -461,7 +461,6 @@ jQuery(function($) {
     var request = getParameterByName('request', button.href);
     var order_ids = getParameterByName('order_ids', button.href);
 
-    console.log(request);
     if (!wcmp.actions.hasOwnProperty(request)) {
       return;
     }
@@ -515,7 +514,7 @@ jQuery(function($) {
     dialog.hide();
 
     /* print labels */
-    printLabel(order_ids, offset);
+    printLabel({order_ids: order_ids, offset: offset});
   }
 
   /**
@@ -596,10 +595,12 @@ jQuery(function($) {
       url = this.href;
     } else {
       data = {
-        action: wcmp.actions.add_shipments,
+        action: wcmp.actions.export,
+        request: wcmp.actions.add_shipments,
         offset: offset,
         order_ids: order_ids,
         print: print,
+        _wpnonce: wcmp.nonce,
       };
     }
 
@@ -608,7 +609,6 @@ jQuery(function($) {
       data: data || {},
       afterDone: function(response) {
         var redirect_url = updateUrlParameter(window.location.href, 'myparcelbe_done', 'true');
-        // response = $.parseJSON(response);
 
         if (print === 'no' || print === 'after_reload') {
           /* refresh page, admin notices are stored in options and will be displayed automatically */
@@ -624,7 +624,7 @@ jQuery(function($) {
           }
 
           /* load PDF */
-          printLabel(order_ids, offset);
+          printLabel({order_ids: order_ids, offset: offset});
         }
       },
     });
@@ -683,11 +683,9 @@ jQuery(function($) {
   }
 
   /* Request MyParcel BE labels */
-  function printLabel(order_ids) {
+  function printLabel(data) {
     var button = this;
     var request;
-
-    // showOffsetDialog();
 
     if (button.href) {
       request = {
@@ -695,10 +693,11 @@ jQuery(function($) {
       };
     } else {
       request = {
-        data: {
-          action: wcmp.actions.get_labels,
-          order_ids: order_ids,
-        },
+        data: Object.assign({
+          action: wcmp.actions.export,
+          request: wcmp.actions.get_labels,
+          _wpnonce: wcmp.nonce,
+        }, data),
       };
     }
 
@@ -822,4 +821,37 @@ jQuery(function($) {
     }
   }
 });
+
+/**
+ * Object.assign() polyfill.
+ */
+if (typeof Object.assign !== 'function') {
+  // Must be writable: true, enumerable: false, configurable: true
+  Object.defineProperty(Object, 'assign', {
+    value: function assign(target, varArgs) { // .length of function is 2
+      'use strict';
+      if (target === null || target === undefined) {
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+
+      var to = Object(target);
+
+      for (var index = 1; index < arguments.length; index++) {
+        var nextSource = arguments[index];
+
+        if (nextSource !== null && nextSource !== undefined) {
+          for (var nextKey in nextSource) {
+            // Avoid bugs when hasOwnProperty is shadowed
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+              to[nextKey] = nextSource[nextKey];
+            }
+          }
+        }
+      }
+      return to;
+    },
+    writable: true,
+    configurable: true,
+  });
+}
 
