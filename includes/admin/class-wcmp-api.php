@@ -23,7 +23,7 @@ class WCMP_API extends WCMP_Rest
     /**
      * @var string
      */
-    private $user_agent;
+    private $userAgent;
 
     /**
      * Default constructor
@@ -36,9 +36,9 @@ class WCMP_API extends WCMP_Rest
     {
         parent::__construct();
 
-        $this->user_agent = $this->getUserAgent();
-
-        $this->key = (string) $key;
+        $this->apiUrl    = WCMP_Data::API_URL;
+        $this->userAgent = $this->getUserAgent();
+        $this->key       = (string) $key;
     }
 
     /**
@@ -82,7 +82,7 @@ class WCMP_API extends WCMP_Rest
         $headers = [
             "Content-type"  => $content_type . "; charset=UTF-8",
             "Authorization" => "basic " . base64_encode("{$this->key}"),
-            "user-agent"    => $this->user_agent,
+            "user-agent"    => $this->userAgent,
         ];
 
         $request_url = $this->apiUrl . $endpoint;
@@ -106,7 +106,7 @@ class WCMP_API extends WCMP_Rest
             "headers" => [
                 "Accept"        => "application/json; charset=UTF-8",
                 "Authorization" => "basic " . base64_encode("{$this->key}"),
-                "user-agent"    => $this->user_agent,
+                "user-agent"    => $this->userAgent,
             ],
         ];
 
@@ -149,7 +149,7 @@ class WCMP_API extends WCMP_Rest
             "headers" => [
                 "Accept"        => "application/json; charset=UTF-8",
                 "Authorization" => "basic " . base64_encode("{$this->key}"),
-                "user-agent"    => $this->user_agent,
+                "user-agent"    => $this->userAgent,
             ],
         ];
 
@@ -162,30 +162,30 @@ class WCMP_API extends WCMP_Rest
     /**
      * Get shipment labels
      *
-     * @param array  $ids    shipment ids
-     * @param array  $params request parameters
-     * @param string $return pdf or json
+     * @param array $ids    shipment ids
+     * @param array $params request parameters
+     * @param bool  $download
      *
      * @return array          response
      * @throws Exception
      */
-    public function get_shipment_labels(array $ids, array $params = [], string $return = "pdf"): array
+    public function get_shipment_labels(array $ids, array $params = [], $download = true)
     {
         $endpoint = "shipment_labels";
 
-        if ($return === "pdf") {
-            $accept = "application/pdf"; // (For the PDF binary. This is the default.)
-            $raw    = true;
+        if ($download) {
+            // For shipment download link.
+            $accept = "application/json";
         } else {
-            $accept = "application/json; charset=UTF-8"; // (For shipment download link)
-            $raw    = false;
+            // For the PDF binary.
+            $accept = "application/pdf";
         }
 
         $headers = [
             "headers" => [
                 "Accept"        => $accept,
                 "Authorization" => "basic " . base64_encode("{$this->key}"),
-                "user-agent"    => $this->user_agent,
+                "user-agent"    => $this->userAgent,
             ],
         ];
 
@@ -194,7 +194,7 @@ class WCMP_API extends WCMP_Rest
         $label_format_url = $this->get_label_format_url_parameters($positions);
         $request_url      = $this->apiUrl . $endpoint . "/" . implode(";", $ids) . "?" . $label_format_url;
 
-        return $this->get($request_url, $headers, $raw);
+        return $this->get($request_url, $headers);
     }
 
     /**
@@ -213,7 +213,7 @@ class WCMP_API extends WCMP_Rest
         $headers = [
             "headers" => [
                 "Authorization" => "basic " . base64_encode($this->key),
-                "user-agent"    => $this->user_agent,
+                "user-agent"    => $this->userAgent,
             ],
         ];
 
