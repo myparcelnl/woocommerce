@@ -869,7 +869,7 @@ if (typeof Object.assign !== 'function') {
 
         if (nextSource !== null && nextSource !== undefined) {
           for (var nextKey in nextSource) {
-            // Avoid bugs when hasOwnProperty is shadowed
+            /* Avoid bugs when hasOwnProperty is shadowed */
             if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
               to[nextKey] = nextSource[nextKey];
             }
