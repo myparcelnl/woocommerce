@@ -39,6 +39,15 @@
 }
 
 /*
+ * Track & Trace in shipment overview
+ */
+.wcmp__barcodes {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
  * The print offset dialog
  */
 .wcmp__offset-dialog {

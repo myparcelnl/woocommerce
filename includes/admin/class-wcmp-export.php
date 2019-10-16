@@ -34,6 +34,8 @@ class WCMP_Export
      */
     public const DESCRIPTION_MAX_LENGTH = 50;
 
+    public const DEFAULT_POSITIONS      = [2, 4, 1, 3];
+
     public $order_id;
     public $success;
     public $errors;
@@ -52,8 +54,6 @@ class WCMP_Export
         add_action("admin_notices", [$this, "admin_notices"]);
 
         add_action("wp_ajax_" . self::EXPORT, [$this, "export"]);
-        add_action("wp_ajax_wc_myparcelbe_frontend", [$this, "frontend_api_request"]);
-        add_action("wp_ajax_nopriv_wc_myparcelbe_frontend", [$this, "frontend_api_request"]);
     }
 
     /**
@@ -255,23 +255,32 @@ class WCMP_Export
      */
     public function add_shipments(array $order_ids, bool $process)
     {
-        $return = [];
-        $collection = new MyParcelCollection();
-        $processDirectly = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY)
-            || $process === true;
-        $keepOldShipments = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS);
+        $return                   = [];
+        $orderIdsWithNewShipments = [];
+        $collection               = new MyParcelCollection();
+        $processDirectly          = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY) || $process === true;
+        $keepOldShipments         = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS);
 
         WCMP_Log::add("*** Creating shipments started ***");
 
-        $order_ids_with_new_shipments = [];
+
         /**
          * Loop over the order ids and create consignments for each order.
          */
         foreach ($order_ids as $order_id) {
-            $order = WCX::get_order($order_id);
+            $order           = WCX::get_order($order_id);
             $order_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
 
-            // check collo amount
+            /**
+             * If "Keep shipments" is disabled, don't create new shipments. Otherwise the
+             * new ones will be appended to the existing ones.
+             */
+            if (! empty($order_shipments) && $keepOldShipments) {
+                continue;
+            } else {
+                $orderIdsWithNewShipments[] = $order_id;
+            }
+
             $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $collo_amount = isset($extra_params["collo_amount"]) ? $extra_params["collo_amount"] : 1;
 
@@ -300,19 +309,14 @@ class WCMP_Export
             $collection->setLinkOfLabels();
         }
 
-        foreach ($order_ids as $order_id) {
+        foreach ($orderIdsWithNewShipments as $order_id) {
             $order          = WCX::get_order($order_id);
             $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
 
             foreach ($consignmentIds as $consignmentId) {
                 $shipment["shipment_id"] = $consignmentId;
 
-                $this->save_shipment_data($order, $shipment, $keepOldShipments);
-
-                if ($processDirectly) {
-                    $this->getOrderLabels((array) $order_id, "url");
-                }
-
+                $this->saveShipmentData($order, $shipment);
                 $this->updateOrderStatus($order);
 
                 $this->success[$order_id] = $consignmentId;
@@ -327,6 +331,10 @@ class WCMP_Export
                 WCMP_Admin::META_LAST_SHIPMENT_IDS,
                 $consignmentIds
             );
+        }
+
+        if ($processDirectly) {
+            $this->getOrderLabels($orderIdsWithNewShipments, "url");
         }
 
         if (! empty($this->success)) {
@@ -374,7 +382,7 @@ class WCMP_Export
                     ];
 
                     // save shipment data in order meta
-                    $this->save_shipment_data($order, $shipment);
+                    $this->saveShipmentData($order, $shipment);
                 } else {
                     WCMP_Log::add("\$response\[\"body.data.ids\"] not found.", print_r($response, true));
                     $this->errors[$order_id] = "\$response\[\"body.data.ids\"] not found.";
@@ -408,24 +416,16 @@ class WCMP_Export
 
         try {
             $api    = $this->init_api();
-            $params = [];
+            $positions = self::DEFAULT_POSITIONS;
 
             if (! empty($offset) && is_numeric($offset)) {
                 // positions are defined on landscape, but paper is filled portrait-wise
-                $portrait_positions  = [2, 4, 1, 3];
-                $params["positions"] = implode(";", array_slice($portrait_positions, $offset));
+                $positions = array_slice(self::DEFAULT_POSITIONS, $offset);
             }
 
-            $download = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY) === "download";
-            $response = $api->get_shipment_labels($shipment_ids, $params);
-
-            if (Arr::get($response, "body")) {
-                $this->addNoteToShipments($shipment_ids, $order_ids);
-                new WCMP_Export_Pdf($response);
-            } else {
-                $this->errors[] = __("No PDF present in response", "woocommerce-myparcelbe");
-            }
-
+            $display = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === "display";
+            $api->getShipmentLabels($shipment_ids, $positions, $display);
+            $this->addNoteToShipments($shipment_ids, $order_ids);
         } catch (Exception $e) {
             $this->errors[] = $e->getMessage();
         }
@@ -486,44 +486,6 @@ class WCMP_Export
     public function modal_success_page($request, $result)
     {
         require("views/html-modal-result-page.php");
-        die();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function frontend_api_request()
-    {
-        // TODO: check nonce
-        $params = $_REQUEST;
-
-        // filter non API params
-        $api_params = [
-            "cc"                    => "",
-            "postal_code"           => "",
-            "number"                => "",
-            "carrier"               => "",
-            "delivery_time"         => "",
-            "delivery_date"         => "",
-            "cutoff_time"           => "",
-            "dropoff_days"          => "",
-            "dropoff_delay"         => "",
-            "deliverydays_window"   => "",
-            "exclude_delivery_type" => "",
-        ];
-        $params     = array_intersect_key($params, $api_params);
-
-        $api = $this->init_api();
-
-        try {
-            $response = $api->get_delivery_options($params, true);
-
-            @header("Content - type: application / json; charset = utf - 8");
-
-            echo $response["body"];
-        } catch (Exception $e) {
-            @header("HTTP / 1.1 503 service unavailable");
-        }
         die();
     }
 
@@ -812,20 +774,19 @@ class WCMP_Export
     /**
      * @param WC_Order $order
      * @param array    $shipment
-     * @param bool     $keepOld
      *
      * @return bool|void
      */
-    public function save_shipment_data(WC_Order $order, array $shipment, bool $keepOld = true)
+    public function saveShipmentData(WC_Order $order, array $shipment): void
     {
         if (empty($shipment)) {
-            return false;
+            return;
         }
 
         $new_shipments                           = [];
         $new_shipments[$shipment["shipment_id"]] = $shipment;
 
-        $old_shipments = $keepOld ? WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS) : [];
+        $old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
         $new_shipments = array_replace_recursive((array) $old_shipments, $new_shipments);
 
         WCX_Order::update_meta_data($order, WCMP_Admin::META_SHIPMENTS, $new_shipments);
@@ -990,7 +951,7 @@ class WCMP_Export
             $track_trace   = $shipment["barcode"];
             $shipment_id   = $shipment["id"];
             $shipment_data = compact("shipment_id", "status", "track_trace", "shipment");
-            $this->save_shipment_data($order, $shipment_data);
+            $this->saveShipmentData($order, $shipment_data);
 
             ChannelEngine::updateMetaOnExport($order, $track_trace);
 
@@ -1375,12 +1336,6 @@ class WCMP_Export
 
         $label_response_type = isset($label_response_type) ? $label_response_type : null;
 
-
-        file_put_contents(
-            date('YmdHis') . "_shipments_orders.json",
-            json_encode(["oi" => $order_ids, "si" => $shipment_ids])
-        );
-
         if (! empty($shipment_ids)) {
             $return = $this->getShipmentLabels(
                 $shipment_ids,
@@ -1425,9 +1380,6 @@ class WCMP_Export
         // When adding shipments, store $return for use in admin_notice
         // This way we can refresh the page (JS) to show all new buttons
         if ($print === "no" || $print === "after_reload") {
-            echo "<pre>";
-            var_dump($return);
-            echo "</pre>";
             update_option("wcmyparcelbe_admin_notices", $return);
             if ($print === "after_reload") {
                 $print_queue = [
