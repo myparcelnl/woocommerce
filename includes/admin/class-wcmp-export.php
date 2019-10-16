@@ -253,6 +253,7 @@ class WCMP_Export
         $collection = new MyParcelCollection();
         $processDirectly = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY)
             || $process === true;
+        $keepOldShipments = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS);
 
         WCMP_Log::add("*** Creating shipments started ***");
 
@@ -263,19 +264,6 @@ class WCMP_Export
         foreach ($order_ids as $order_id) {
             $order = WCX::get_order($order_id);
             $order_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
-
-            /**
-             * If "Keep shipments" is disabled, don't create new shipments. Otherwise the
-             * new ones will be appended to the existing ones.
-             */
-            if (
-                ! empty($order_shipments) &&
-                ! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS)
-            ) {
-                continue;
-            } else {
-                $order_ids_with_new_shipments[] = $order_id;
-            }
 
             // check collo amount
             $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
@@ -306,14 +294,14 @@ class WCMP_Export
             $collection->setLinkOfLabels();
         }
 
-        foreach ($order_ids_with_new_shipments as $order_id) {
+        foreach ($order_ids as $order_id) {
             $order          = WCX::get_order($order_id);
             $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
 
             foreach ($consignmentIds as $consignmentId) {
                 $shipment["shipment_id"] = $consignmentId;
 
-                $this->save_shipment_data($order, $shipment);
+                $this->save_shipment_data($order, $shipment, $keepOldShipments);
 
                 if ($processDirectly) {
                     $this->getOrderLabels((array) $order_id, "url");
@@ -817,12 +805,13 @@ class WCMP_Export
     }
 
     /**
-     * @param $order
-     * @param $shipment
+     * @param WC_Order $order
+     * @param array    $shipment
+     * @param bool     $keepOld
      *
      * @return bool|void
      */
-    public function save_shipment_data(WC_Order $order, array $shipment)
+    public function save_shipment_data(WC_Order $order, array $shipment, bool $keepOld = true)
     {
         if (empty($shipment)) {
             return false;
@@ -831,8 +820,7 @@ class WCMP_Export
         $new_shipments                           = [];
         $new_shipments[$shipment["shipment_id"]] = $shipment;
 
-        $old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
-
+        $old_shipments = $keepOld ? WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS) : [];
         $new_shipments = array_replace_recursive((array) $old_shipments, $new_shipments);
 
         WCX_Order::update_meta_data($order, WCMP_Admin::META_SHIPMENTS, $new_shipments);

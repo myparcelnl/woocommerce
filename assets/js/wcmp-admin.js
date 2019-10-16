@@ -473,13 +473,7 @@ jQuery(function($) {
         exportToMyParcel.bind(button)();
         break;
       case wcmp.actions.get_labels:
-        /*
-         * if (askForPrintPosition) {
-         *   showContextualOffsetDialog(order_ids, event);
-         * } else {
-         */
         printLabel.bind(button)();
-        // }
         break;
       case wcmp.actions.add_return:
         myparcelbe_modal_dialog(order_ids, 'return');
