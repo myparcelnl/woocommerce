@@ -90,31 +90,37 @@ class WCMP_Export
 
     public function admin_notices()
     {
-        if (isset($_GET["myparcelbe_done"])) { // only do this when for the user that initiated this
+        // only do this when the user that initiated this
+        if (isset($_GET["myparcelbe_done"])) {
             $action_return = get_option("wcmyparcelbe_admin_notices");
             $print_queue   = get_option("wcmyparcelbe_print_queue", []);
             if (! empty($action_return)) {
                 foreach ($action_return as $type => $message) {
-                    if (in_array($type, ["success", "error"])) {
-                        if ($type == "success" && ! empty($print_queue)) {
-                            $print_queue_store        = sprintf(
-                                '<input type="hidden" value="%s" class="wcmp__print-queue">',
-                                json_encode(array_keys($print_queue['order_ids']))
-                            );
-                            $print_queue_offset_store = sprintf(
-                                '<input type="hidden" value="%s" class="wcmp__print-queue__offset">',
-                                $print_queue['offset']
-                            );
-                            // dequeue
-                            delete_option("wcmyparcelbe_print_queue");
-                        }
-                        printf(
-                            '<div class="wcmp__notice notice notice-%s"><p>%s</p>%s</div>',
-                            $type,
-                            $message,
-                            isset($print_queue_store) ? $print_queue_store . $print_queue_offset_store : ""
-                        );
+                    if (! in_array($type, ["success", "error"])) {
+                        continue;
                     }
+
+                    if ($type === "success" && ! empty($print_queue)) {
+                        $print_queue_store = sprintf(
+                            '<input type="hidden" value=\'%s\' class="wcmp__print-queue">',
+                            json_encode(
+                                [
+                                    "shipment_ids" => $print_queue["order_ids"],
+                                    "offset"       => $print_queue["offset"],
+                                ]
+                            )
+                        );
+
+                        // Empty queue
+                        delete_option("wcmyparcelbe_print_queue");
+                    }
+
+                    printf(
+                        '<div class="wcmp__notice notice notice-%s"><p>%s</p>%s</div>',
+                        $type,
+                        $message,
+                        $print_queue_store ?? ""
+                    );
                 }
                 // destroy after reading
                 delete_option("wcmyparcelbe_admin_notices");
@@ -169,13 +175,13 @@ class WCMP_Export
                 "You do not have sufficient permissions to access this page.",
                 "woocommerce-myparcelbe"
             );
-            $json            = json_encode($return);
-            echo $json;
+            echo json_encode($return);
             die();
         }
 
         $dialog  = $_REQUEST["dialog"] ?? null;
         $print   = $_REQUEST["print"] ?? null;
+        $offset  = $_REQUEST["offset"] ?? null;
         $request = $_REQUEST["request"];
 
         $order_ids    = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
@@ -183,11 +189,15 @@ class WCMP_Export
 
         include_once("class-wcmp-export-consignments.php");
 
-        switch ($request) {
-            // Creating consignments.
-            case self::ADD_SHIPMENTS:
-                $this->addShipments($order_ids, $shipment_ids, $_REQUEST["offset"] ?? null, $print);
-                break;
+        if (empty($shipment_ids) && empty($order_ids)) {
+            $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
+        } else {
+            switch ($request) {
+                // Creating consignments.
+                case self::ADD_SHIPMENTS:
+
+                    $this->addShipments($order_ids, $shipment_ids, $offset, $print);
+                    break;
 
             // Creating a return shipment.
             case self::ADD_RETURN:
@@ -199,20 +209,16 @@ class WCMP_Export
                 $return = $this->add_return($order_ids);
                 break;
 
-            // Downloading labels.
-            case self::GET_LABELS:
-                if (empty($shipment_ids) && empty($order_ids)) {
-                    $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
+                // Downloading labels.
+                case self::GET_LABELS:
+                    $return = $this->printLabels($order_ids, $shipment_ids, $offset);
                     break;
-                }
 
-                $return = $this->printLabels($order_ids, $shipment_ids, $_REQUEST["offset"] ?? null);
-                break;
-
-            case self::MODAL_DIALOG:
-                $order_ids = $this->filterOrderDestinations($order_ids);
-                $this->modal_dialog($order_ids);
-                break;
+                case self::MODAL_DIALOG:
+                    $order_ids = $this->filterOrderDestinations($order_ids);
+                    $this->modal_dialog($order_ids);
+                    break;
+            }
         }
 
         // display errors directly if PDF requested or modal
@@ -419,7 +425,6 @@ class WCMP_Export
         $return = [];
 
         WCMP_Log::add("*** getShipmentLabels() ***");
-        WCMP_Log::add("getShipmentLabels(" . print_r(func_get_args(), true) . "):");
         WCMP_Log::add("Shipment IDs: " . implode(", ", $shipment_ids));
 
         try {
@@ -1401,6 +1406,12 @@ class WCMP_Export
 
         $label_response_type = isset($label_response_type) ? $label_response_type : null;
 
+
+        file_put_contents(
+            date('YmdHis') . "_shipments_orders.json",
+            json_encode(["oi" => $order_ids, "si" => $shipment_ids])
+        );
+
         if (! empty($shipment_ids)) {
             $return = $this->getShipmentLabels(
                 $shipment_ids,
@@ -1445,6 +1456,9 @@ class WCMP_Export
         // When adding shipments, store $return for use in admin_notice
         // This way we can refresh the page (JS) to show all new buttons
         if ($print === "no" || $print === "after_reload") {
+            echo "<pre>";
+            var_dump($return);
+            echo "</pre>";
             update_option("wcmyparcelbe_admin_notices", $return);
             if ($print === "after_reload") {
                 $print_queue = [
