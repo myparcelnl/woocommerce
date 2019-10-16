@@ -13,8 +13,8 @@
  * @property {String} wcmp.offset_icon
  */
 
-// eslint-disable-next-line max-lines-per-function
-jQuery(function($) {
+/* eslint-disable-next-line max-lines-per-function */
+jQuery(function ($) {
   /**
    * @type {Boolean}
    */
@@ -852,9 +852,9 @@ jQuery(function($) {
  * Object.assign() polyfill.
  */
 if (typeof Object.assign !== 'function') {
-  // Must be writable: true, enumerable: false, configurable: true
+  /* Must be writable: true, enumerable: false, configurable: true */
   Object.defineProperty(Object, 'assign', {
-    value: function assign(target, varArgs) { // .length of function is 2
+    value: function assign(target, varArgs) { /* .length of function is 2 */
       'use strict';
       if (target === null || target === undefined) {
         throw new TypeError('Cannot convert undefined or null to object');
@@ -867,7 +867,7 @@ if (typeof Object.assign !== 'function') {
 
         if (nextSource !== null && nextSource !== undefined) {
           for (var nextKey in nextSource) {
-            // Avoid bugs when hasOwnProperty is shadowed
+            /* Avoid bugs when hasOwnProperty is shadowed */
             if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
               to[nextKey] = nextSource[nextKey];
             }
