@@ -40,7 +40,7 @@ class WCMP_Admin
     public function __construct()
     {
         if (is_wp_version_compatible("4.7.0")) {
-          add_action("bulk_actions-edit-shop_order", [$this, "addBulkActions"], 100);
+            add_action("bulk_actions-edit-shop_order", [$this, "addBulkActions"], 100);
         } else {
             add_action("admin_footer", [$this, "bulk_actions"]);
         }
