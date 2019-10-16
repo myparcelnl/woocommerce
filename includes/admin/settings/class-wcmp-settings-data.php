@@ -222,7 +222,7 @@ class WCMP_Settings_Data
                 ],
                 [
                     "name"     => "strings",
-                    "label"    => __("Translations", "woocommerce-myparcelbe"),
+                    "label"    => __("Titles", "woocommerce-myparcelbe"),
                     "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                     "settings" => $this->get_section_checkout_strings(),
                 ],
