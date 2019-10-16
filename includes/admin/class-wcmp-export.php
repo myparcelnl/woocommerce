@@ -398,7 +398,6 @@ class WCMP_Export
     /**
      * @param array $shipment_ids
      * @param array $order_ids
-     * @param null  $label_response_type
      * @param int   $offset
      *
      * @return array
@@ -406,7 +405,6 @@ class WCMP_Export
     public function getShipmentLabels(
         array $shipment_ids,
         array $order_ids = [],
-        $label_response_type = null,
         int $offset = 0
     ) {
         $return = [];
@@ -415,7 +413,7 @@ class WCMP_Export
         WCMP_Log::add("Shipment IDs: " . implode(", ", $shipment_ids));
 
         try {
-            $api    = $this->init_api();
+            $api       = $this->init_api();
             $positions = self::DEFAULT_POSITIONS;
 
             if (! empty($offset) && is_numeric($offset)) {
@@ -435,12 +433,11 @@ class WCMP_Export
 
     /**
      * @param      $order_ids
-     * @param null $label_response_type
      * @param int  $offset
      *
      * @return array
      */
-    public function getOrderLabels(array $order_ids, $label_response_type = null, int $offset = 0)
+    public function getOrderLabels(array $order_ids, int $offset = 0)
     {
         $shipment_ids = $this->getShipmentIds($order_ids, ["only_last" => true]);
 
@@ -457,16 +454,14 @@ class WCMP_Export
         return $this->getShipmentLabels(
             $shipment_ids,
             $order_ids,
-            $label_response_type,
             $offset
         );
     }
 
     /**
      * @param $order_ids
-     * @param $dialog
      */
-    public function modal_dialog($order_ids)
+    public function modal_dialog($order_ids): void
     {
         // check for JSON
         if (is_string($order_ids) && strpos($order_ids, "[") !== false) {
@@ -1334,18 +1329,15 @@ class WCMP_Export
     {
         $offset = ! empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
 
-        $label_response_type = isset($label_response_type) ? $label_response_type : null;
-
         if (! empty($shipment_ids)) {
             $return = $this->getShipmentLabels(
                 $shipment_ids,
                 $order_ids,
-                $label_response_type,
                 $offset
             );
         } else {
             $order_ids = $this->filterOrderDestinations($order_ids);
-            $return    = $this->getOrderLabels($order_ids, $label_response_type, $offset);
+            $return    = $this->getOrderLabels($order_ids, $offset);
         }
 
         return $return;
