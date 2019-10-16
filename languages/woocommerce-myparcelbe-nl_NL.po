@@ -1174,7 +1174,7 @@ msgid "DPD"
 msgstr "DPD"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:225
-msgid "Translations"
+msgid "Titles"
 msgstr "Titels"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:245
