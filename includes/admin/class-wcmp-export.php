@@ -74,6 +74,20 @@ class WCMP_Export
         return (bool) $option;
     }
 
+    public function get_item_display_name($item, $order)
+    {
+        // set base name
+        $name = $item['name'];
+
+        // add variation name if available
+        $product = $order->get_product_from_item($item);
+        if ($product && isset($item['variation_id']) && $item['variation_id'] > 0 && method_exists($product, 'get_variation_attributes')) {
+            $name .= woocommerce_get_formatted_variation($product->get_variation_attributes());
+        }
+
+        return $name;
+    }
+
     public function admin_notices()
     {
         if (isset($_GET["myparcelbe_done"])) { // only do this when for the user that initiated this

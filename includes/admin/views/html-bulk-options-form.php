@@ -111,9 +111,9 @@ $target_url = wp_nonce_url(
                       class="wcmp__shipment-options">
                         <?php
                         $skip_save = true; // dont show save button for each order
-                        if ($dialog === 'shipment') {
+                        if (isset($dialog) && $dialog === 'shipment') {
                             include('html-order-shipment-options.php');
-                        } elseif ($dialog === 'return') {
+                        } else {
                             include('html-order-return-shipment-options.php');
                         }
                         ?>
@@ -130,12 +130,12 @@ $target_url = wp_nonce_url(
     <input
       type="hidden"
       name="action"
-      value="wc_myparcelbe">
+      value="wcmp_export">
     <div class="wcmp__shipment-settings__save">
         <?php
-        if ($dialog == 'shipment') {
+        if (isset($dialog) && $dialog == 'shipment') {
             $button_text = __("Export to MyParcel BE", "woocommerce-myparcelbe");
-        } elseif ($dialog == 'return') {
+        } else {
             $button_text = __("Send email", "woocommerce-myparcelbe");
         }
         ?>

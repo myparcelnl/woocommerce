@@ -640,9 +640,9 @@ jQuery(function($) {
       + request_prefix
       + 'order_ids='
       + order_ids
-      + '&action=wcmp&request=modal_dialog&dialog='
+      + '&action=wcmp_export&request=modal_dialog&dialog='
       + dialog
-      + '&security='
+      + '&_wpnonce='
       + wcmp.nonce
       + thickbox_parameters;
 
