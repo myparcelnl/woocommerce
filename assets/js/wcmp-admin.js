@@ -235,7 +235,7 @@ jQuery(function ($) {
     } else {
       matches = value === wantedValue;
     }
-    
+
     switch (type) {
       case 'child':
         elementContainer[matches ? 'show' : 'hide'](easing);
@@ -358,12 +358,11 @@ jQuery(function ($) {
       function () {
         order_ids.push($(this).val());
         rows.push('.post-' + $(this).val());
-      },
+      }
     );
 
     $(rows.join(', ')).addClass('wcmp__loading');
 
-    console.log(action);
     switch (action) {
       /**
        * Export orders.
