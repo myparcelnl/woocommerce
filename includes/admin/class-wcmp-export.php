@@ -402,14 +402,14 @@ class WCMP_Export
      *
      * @return array
      */
-    public function getShipmentLabels(
+    public function downloadOrGetUrlOfLabels(
         array $shipment_ids,
         array $order_ids = [],
         int $offset = 0
     ) {
         $return = [];
 
-        WCMP_Log::add("*** getShipmentLabels() ***");
+        WCMP_Log::add("*** downloadOrGetUrlOfLabels() ***");
         WCMP_Log::add("Shipment IDs: " . implode(", ", $shipment_ids));
 
         try {
@@ -451,7 +451,7 @@ class WCMP_Export
             return [];
         }
 
-        return $this->getShipmentLabels(
+        return $this->downloadOrGetUrlOfLabels(
             $shipment_ids,
             $order_ids,
             $offset
@@ -1330,7 +1330,7 @@ class WCMP_Export
         $offset = ! empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
 
         if (! empty($shipment_ids)) {
-            $return = $this->getShipmentLabels(
+            $return = $this->downloadOrGetUrlOfLabels(
                 $shipment_ids,
                 $order_ids,
                 $offset
