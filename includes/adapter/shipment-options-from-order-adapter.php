@@ -16,10 +16,47 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
     public function __construct(?AbstractDeliveryOptionsAdapter $originAdapter, array $inputData)
     {
         $shipmentOptionsAdapter = $originAdapter ? $originAdapter->getShipmentOptions() : null;
-        $options                = $inputData['shipment_options'] ?? [];
+        $options                = $inputData['shipment_options'] ?? $inputData;
 
-        $this->signature      = (bool) ($options['signature'] ?? $shipmentOptionsAdapter ? $shipmentOptionsAdapter->hasSignature() : false);
-        $this->only_recipient = (bool) ($options['only_recipient'] ?? $shipmentOptionsAdapter ? $shipmentOptionsAdapter->hasOnlyRecipient() : false);
-        $this->insurance      = (int) ($options['insurance'] ?? $shipmentOptionsAdapter ? $shipmentOptionsAdapter->getInsurance() : self::DEFAULT_INSURANCE);
+        $this->signature = $this->isSignatureFromOptions($options, $shipmentOptionsAdapter);
+        $this->insurance = $this->isInsuranceFromOptions($options, $shipmentOptionsAdapter);
+    }
+
+    /**
+     * @param array                               $options
+     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
+     *
+     * @return bool|null
+     */
+    private function isSignatureFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
+    {
+        if (key_exists('signature', $options)) {
+            return (bool) $options['signature'];
+        }
+
+        if ($shipmentOptionsAdapter) {
+            return $shipmentOptionsAdapter->hasSignature();
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array                               $options
+     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
+     *
+     * @return int|null
+     */
+    private function isInsuranceFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?int
+    {
+        if (key_exists('insurance', $options)) {
+            return (int) $options['insurance'];
+        }
+
+        if ($shipmentOptionsAdapter) {
+            return $shipmentOptionsAdapter->getInsurance();
+        }
+
+        return self::DEFAULT_INSURANCE;
     }
 }
