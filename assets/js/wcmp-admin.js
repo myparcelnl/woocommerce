@@ -854,7 +854,7 @@ jQuery(function ($) {
  * Object.assign() polyfill.
  */
 if (typeof Object.assign !== 'function') {
-  // Must be writable: true, enumerable: false, configurable: true
+  /* Must be writable: true, enumerable: false, configurable: true */
   Object.defineProperty(Object, 'assign', {
     value: function assign(target, varArgs) { // .length of function is 2
       'use strict';
