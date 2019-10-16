@@ -3,15 +3,22 @@
  *
  * @property {Object} wcmp.actions
  * @property {{export: String, add_shipments: String, add_return: String, get_labels: String}} wcmp.actions
+ * @property {String} wcmp.api_url - The API Url we use in MyParcel requests.
  * @property {String} wcmp.ajax_url
- * @property {String} wcmp.nonce
+ * @property {String} wcmp.ask_for_print_position
+ * @property {Object} wcmp.bulk_actions
+ * @property {{export: String, print: String, export_print: String}} wcmp.bulk_actions
  * @property {String} wcmp.download_display
- * @property {String} wcmp.offset
+ * @property {String} wcmp.nonce
  * @property {String} wcmp.offset_icon
  */
 
 // eslint-disable-next-line max-lines-per-function
 jQuery(function($) {
+  /**
+   * @type {Boolean}
+   */
+  var askForPrintPosition = Boolean(parseInt(wcmp.ask_for_print_position));
 
   var selectors = {
     offsetDialog: '.wcmp__offset-dialog',
@@ -81,8 +88,7 @@ jQuery(function($) {
     /**
      * Single actions click. The .wc_actions .single_wc_actions for support wc > 3.3.0.
      */
-    $('.order_actions, .single_order_actions, .wc_actions, .single_wc_actions')
-      .on('click', selectors.orderAction, onActionClick);
+    $(selectors.orderAction).click(onActionClick);
 
     $(window).bind('tb_unload', onThickBoxUnload);
   }
@@ -326,67 +332,59 @@ jQuery(function($) {
    * @param {Event} event - Click event.
    */
   function doBulkAction(event) {
-    var prefixLength = 5;
+    var action = document.querySelector('[name="action"]').value;
 
-    var selectedAction = $(this)
-      .attr('id')
-      .substr(2);
+    /**
+     * Check if our action is the selected one.
+     */
+    if (wcmp.bulk_actions.indexOf(action) === -1) {
+      return;
+    }
+
+    event.preventDefault(); ;
 
     /*
-     * Get related select with actions
+     * Remove notices
      */
-    var element = $('select[name="' + selectedAction + '"]');
+    $(selectors.notice).remove();
+    var order_ids = [];
+    var rows = [];
 
-    /* check if action starts with 'wcmp_' */
-    if (element.val().substring(0, prefixLength) === 'wcmp_') {
-      event.preventDefault();
-
-      /*
-       * Remove notices
-       */
-      $(selectors.notice).remove();
-
-      /* strip 'wcmp_' from action */
-      var action = element.val().substring(prefixLength);
-
-      /* Get array of checked orders (order_ids) */
-      var order_ids = [];
-      var rows = [];
-
-      $('tbody th.check-column input[type="checkbox"]:checked').each(
-        function() {
-          order_ids.push($(this).val());
-          rows.push('.post-' + $(this).val());
-        }
-      );
-
-      $(rows.join(', ')).addClass('wcmp__loading');
-
-      switch (action) {
-        /**
-         * Export orders.
-         */
-        case 'export':
-          exportToMyParcel(order_ids);
-          break;
-
-        /**
-         * Print labels.
-         */
-        case 'print':
-          printLabel(order_ids, wcmp.offset === 1 ? $(selectors.offsetDialogInput).val() : 0, rows);
-          break;
-
-        /**
-         * Export and print.
-         */
-        case 'export_print':
-          exportToMyParcel(order_ids, 'after_reload');
-          break;
+    /*
+     * Get array of selected order_ids
+     */
+    $('tbody th.check-column input[type="checkbox"]:checked').each(
+      function() {
+        order_ids.push($(this).val());
+        rows.push('.post-' + $(this).val());
       }
+    );
+
+    $(rows.join(', ')).addClass('wcmp__loading');
+
+    switch (action) {
+      /**
+       * Export orders.
+       */
+      case wcmp.bulk_actions.export:
+        exportToMyParcel(order_ids);
+        break;
+
+      /**
+       * Print labels.
+       */
+      case wcmp.bulk_actions.print:
+        printLabel(order_ids, askForPrintPosition ? $(selectors.offsetDialogInput).val() : 0, rows);
+        break;
+
+      /**
+       * Export and print.
+       */
+      case wcmp.bulk_actions.export_print:
+        exportToMyParcel(order_ids, 'after_reload');
+        break;
     }
   }
-
   /**
    * Do an ajax request.
    *
@@ -405,7 +403,7 @@ jQuery(function($) {
     $.ajax({
       url: request.url,
       method: request.method || 'POST',
-      data: request.data,
+      data: request.data || {},
     })
       .done(function(res) {
         setSpinner(button, spinner.success);
@@ -463,32 +461,37 @@ jQuery(function($) {
     var request = getParameterByName('request', button.href);
     var order_ids = getParameterByName('order_ids', button.href);
 
+    console.log(request);
+    if (!wcmp.actions.hasOwnProperty(request)) {
+      return;
+    }
+
+    event.preventDefault();
+
     switch (request) {
       case wcmp.actions.add_shipments:
-        event.preventDefault();
         exportToMyParcel.bind(button)();
         break;
-      /*
-       * case wcmp.actions.get_labels:
-       *   if (wcmp.offset === 1) {
-       *     contextual_offset_dialog(order_ids, event);
-       *   } else {
-       *     printLabel.bind(button)();
-       *   }
-       *   break;
-       */
+      case wcmp.actions.get_labels:
+        /*
+         * if (askForPrintPosition) {
+         *   showContextualOffsetDialog(order_ids, event);
+         * } else {
+         */
+        printLabel.bind(button)();
+        // }
+        break;
       case wcmp.actions.add_return:
-        event.preventDefault();
         myparcelbe_modal_dialog(order_ids, 'return');
         break;
     }
   }
 
   function showOffsetDialog() {
-    var actionselected = $(this).val();
+    var selectedAction = $(this).val();
     var offsetDialog = $(selectors.offsetDialog);
 
-    if ((actionselected === 'wcmp_print' || actionselected === 'wcmp_export_print') && wcmp.offset === 1) {
+    if ((selectedAction === 'wcmp_print' || selectedAction === 'wcmp_export_print') && askForPrintPosition) {
       var insert_position = $(this).attr('name') === 'action' ? 'top' : 'bottom';
 
       offsetDialog
@@ -524,7 +527,7 @@ jQuery(function($) {
   /**
    * Place offset dialog at mouse tip.
    */
-  function contextual_offset_dialog(order_ids, event) {
+  function showContextualOffsetDialog(order_ids, event) {
     var offsetDialog = $(selectors.offsetDialog);
 
     offsetDialog
@@ -587,7 +590,7 @@ jQuery(function($) {
 
   /* export orders to MyParcel via AJAX */
   function exportToMyParcel(order_ids, print) {
-    var offset = wcmp.offset === 1 ? $(selectors.offsetDialogInput).val() : 0;
+    var offset = askForPrintPosition ? $(selectors.offsetDialogInput).val() : 0;
     var url;
     var data;
 
@@ -673,87 +676,48 @@ jQuery(function($) {
       if (response !== null && typeof response === 'object' && 'error' in response) {
         myparcelbe_admin_notice(response.error, 'error');
       }
-
     });
 
   }
 
   /**
-   *
-   * @param pdf
+   * @param {String} pdfUrl - The url of the created pdf.
+   * @param {String} target - Null if not set..
    */
-  function displayPdf(pdf) {
-    var string = 'data:application/pdf;base64, ' + pdf;
-
-    var file = new Blob(['base64, ' + pdf], {type: 'application/pdf'});
-    var fileURL = URL.createObjectURL(file);
-    console.log(fileURL);
-    throw 'die';
-    window.open(fileURL);
-
-    /*
-     * var iframe = '<object '
-     *   + 'width=\'100%\' '
-     *   + 'height=\'100%\' '
-     *   + 'style="border: 0;" '
-     *   + 'data=\''
-     *   + string
-     *   + '\' />';
-     * var newWindow = window.open();
-     * newWindow.document.title = "pdf file";
-     * newWindow.document.open();
-     * newWindow.document.write(iframe);
-     * newWindow.document.querySelector('body').style.padding = '0';
-     * newWindow.document.querySelector('body').style.margin = '0';
-     * newWindow.document.close();
-     */
-  };
-
-  /**
-   * @param {String} pdf - The created pdf as a string.
-   */
-  function downloadPdf(pdf) {
-    console.log('downloading');
-
-    $.post('');
-    /*
-     * if (window.navigator && window.navigator.msSaveOrOpenBlob) { // IE workaround
-     *   var byteCharacters = atob(pdf, true);
-     *   var byteNumbers = new Array(byteCharacters.length);
-     *   for (var i = 0; i < byteCharacters.length; i++) {
-     *     byteNumbers[i] = byteCharacters.charCodeAt(i);
-     *   }
-     *
-     *   var byteArray = new Uint8Array(byteNumbers);
-     *   var blob = new Blob([byteArray], {type: 'application/pdf'});
-     *   window.navigator.msSaveOrOpenBlob(blob, your_file_name);
-     * } else { // much easier if not IE
-     *   window.open('data:application/pdf;base64, ' + pdf, '', 'height=600,width=800');
-     * }
-     */
+  function openPdf(pdfUrl, target) {
+    window.open(wcmp.api_url + pdfUrl, target || null);
   }
 
   /* Request MyParcel BE labels */
   function printLabel(order_ids) {
-    var offset = offset || 0;
-    var request = '';
+    var button = this;
+    var request;
 
-    if (this.href) {
-      request = this.href;
+    // showOffsetDialog();
+
+    if (button.href) {
+      request = {
+        url: button.href,
+      };
     } else {
-      var request_prefix = (wcmp.ajax_url.indexOf('?') !== -1) ? '&' : '?';
-      request = wcmp.ajax_url + request_prefix + 'action=wc_myparcel&request=get_labels&security=' + wcmp.nonce;
+      request = {
+        data: {
+          action: wcmp.actions.get_labels,
+          order_ids: order_ids,
+        },
+      };
     }
 
-    /* create form to send order_ids via POST */
-    $('body').append('<form action="' + request + '" method="post" target="_blank" id="wcmp__post_data"></form>');
-    var postData = $('#wcmp__post_data');
-    // postData.append('<input type="hidden" name="pdf" value="' + result + '"/>');
-    postData.append('<input type="hidden" name="offset" class="offset" value="' + offset + '"/>');
-    postData.append('<input type="hidden" name="order_ids" class="order_ids" value="' + order_ids + '" />');
+    request.afterDone = function(response) {
+      if (wcmp.download_display === 'download') {
+        openPdf(response, '_blank');
+      } else {
+        openPdf(response);
+      }
+      window.location.reload();
+    };
 
-    /* submit data to open or download pdf */
-    postData.submit();
+    doRequest.bind(button)(request);
   }
 
   function myparcelbe_admin_notice(message, type) {

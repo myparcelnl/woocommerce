@@ -159,53 +159,19 @@ class WCMP_Export
             die();
         }
 
-        $dialog       = $_REQUEST["dialog"] ?? null;
-        $order_ids    = $_REQUEST["order_ids"] ?? [];
-        $print        = $_REQUEST["print"] ?? null;
-        $request      = $_REQUEST["request"];
-        $shipment_ids = $_REQUEST["shipment_ids"] ?? [];
+        $dialog  = $_REQUEST["dialog"] ?? null;
+        $print   = $_REQUEST["print"] ?? null;
+        $request = $_REQUEST["request"];
 
-        // make sure $order_ids is a proper array
-        $order_ids = ! empty($order_ids) ? $this->sanitize_posted_array($order_ids) : [];
+        $order_ids    = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
+        $shipment_ids = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
 
         include_once("class-wcmp-export-consignments.php");
 
         switch ($request) {
             // Creating consignments.
             case self::ADD_SHIPMENTS:
-                // filter out non-myparcel destinations
-                if (empty($order_ids)) {
-                    $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
-                    break;
-                }
-
-                $order_ids = $this->filterOrderDestinations($order_ids);
-
-                if (empty($order_ids)) {
-                    $this->errors[] =
-                        __(
-                            "The order(s) you have selected have invalid shipping countries.",
-                            "woocommerce-myparcelbe"
-                        );
-                    break;
-                }
-
-                // if we're going to print directly, we need to process the orders first, regardless of the settings
-                $process = $print === "yes" ? true : false;
-                $return  = $this->add_shipments($order_ids, $process);
-
-                // When adding shipments, store $return for use in admin_notice
-                // This way we can refresh the page (JS) to show all new buttons
-                if ($print === "no" || $print === "after_reload") {
-                    update_option("wcmyparcelbe_admin_notices", $return);
-                    if ($print === "after_reload") {
-                        $print_queue = [
-                            "order_ids" => $return["success_ids"],
-                            "offset"    => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
-                        ];
-                        update_option("wcmyparcelbe_print_queue", $print_queue);
-                    }
-                }
+                $this->addShipments($order_ids, $shipment_ids, $_REQUEST["offset"] ?? null, $print);
                 break;
 
             // Creating a return shipment.
@@ -219,36 +185,15 @@ class WCMP_Export
 
             // Downloading labels.
             case self::GET_LABELS:
-                $offset = ! empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
-
-                if (empty($order_ids) && empty($shipment_ids)) {
+                if (empty($shipment_ids) && empty($order_ids)) {
                     $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
                     break;
                 }
 
-                $label_response_type = isset($label_response_type) ? $label_response_type : null;
-
-                if (! empty($shipment_ids)) {
-                    $order_ids    = $this->sanitize_posted_array($order_ids);
-                    $shipment_ids = $this->sanitize_posted_array($shipment_ids);
-
-                    $return = $this->getShipmentLabels(
-                        $shipment_ids,
-                        $order_ids,
-                        $label_response_type,
-                        $offset
-                    );
-                } else {
-                    $order_ids = $this->filterOrderDestinations($order_ids);
-                    $return    = $this->getOrderLabels($order_ids, $label_response_type, $offset);
-                }
+                $return = $this->printLabels($order_ids, $shipment_ids, $_REQUEST["offset"] ?? null);
                 break;
 
             case self::MODAL_DIALOG:
-                if (empty($order_ids)) {
-                    $errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
-                    break;
-                }
                 $order_ids = $this->filterOrderDestinations($order_ids);
                 $this->modal_dialog($order_ids);
                 break;
@@ -281,6 +226,10 @@ class WCMP_Export
      */
     public function sanitize_posted_array($array): array
     {
+        if (is_array($array)) {
+            return $array;
+        }
+
         // check for JSON
         if (is_string($array) && strpos($array, "[") !== false) {
             $array = json_decode(stripslashes($array));
@@ -401,18 +350,18 @@ class WCMP_Export
     }
 
     /**
-     * @param $myparcelbe_options
+     * @param $orders
      *
      * @return array
      * @throws Exception
      */
-    public function add_return($myparcelbe_options)
+    public function add_return($orders)
     {
         $return = [];
 
         WCMP_Log::add("*** Creating return shipments started ***");
 
-        foreach ($myparcelbe_options as $order_id => $options) {
+        foreach ($orders as $order_id => $options) {
             $return_shipments = [$this->prepare_return_shipment_data($order_id, $options)];
             WCMP_Log::add("Return shipment data for order {$order_id}:", print_r($return_shipments, true));
 
@@ -474,31 +423,16 @@ class WCMP_Export
                 $params["positions"] = implode(";", array_slice($portrait_positions, $offset));
             }
 
-            if (isset($label_response_type) && $label_response_type === "url") {
-                $response = $api->get_shipment_labels($shipment_ids, $params, "link");
+            $download = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY) === "download";
+            $response = $api->get_shipment_labels($shipment_ids, $params);
 
+            if (Arr::get($response, "body")) {
                 $this->addNoteToShipments($shipment_ids, $order_ids);
-
-                $pdfUrl = Arr::get($response, "body.data.pdfs.url");
-
-                if ($pdfUrl) {
-                    $url           = untrailingslashit($api->apiUrl) . $pdfUrl;
-                    $return["url"] = $url;
-                } else {
-                    $this->errors[] = __("No PDF present in response", "woocommerce-myparcelbe");
-                }
+                new WCMP_Export_Pdf($response);
             } else {
-                $response = $api->get_shipment_labels($shipment_ids, $params, "pdf");
-
-                if (isset($response["body"])) {
-                    $this->addNoteToShipments($shipment_ids, $order_ids);
-                    WCMP_Log::add("PDF data received");
-                    new WCMP_Export_Pdf($response["body"], $order_ids);
-                } else {
-                    WCMP_Log::add("Failed to get \$response[\"body\"], API response: \n" . var_export($response, true));
-                    $this->errors[] = "failed to get response";
-                }
+                $this->errors[] = __("No PDF present in response", "woocommerce-myparcelbe");
             }
+
         } catch (Exception $e) {
             $this->errors[] = $e->getMessage();
         }
@@ -1432,6 +1366,77 @@ class WCMP_Export
                 __("MyParcel shipment created:", "woocommerce-myparcelbe")
             );
         }
+    }
+
+    /**
+     * @param $order_ids
+     * @param $shipment_ids
+     * @param $offset
+     *
+     * @return array
+     * @throws Exception
+     */
+    private function printLabels($order_ids, $shipment_ids, $offset)
+    {
+        $offset = ! empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
+
+        $label_response_type = isset($label_response_type) ? $label_response_type : null;
+
+        if (! empty($shipment_ids)) {
+            $return = $this->getShipmentLabels(
+                $shipment_ids,
+                $order_ids,
+                $label_response_type,
+                $offset
+            );
+        } else {
+            $order_ids = $this->filterOrderDestinations($order_ids);
+            $return    = $this->getOrderLabels($order_ids, $label_response_type, $offset);
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param $order_ids
+     * @param $shipment_ids
+     *
+     * @return array|void
+     * @throws ApiException
+     * @throws MissingFieldException
+     * @throws Exception
+     */
+    private function addShipments($order_ids, $shipment_ids, $offset, $print)
+    {
+        $order_ids = $this->filterOrderDestinations($order_ids);
+
+        if (empty($order_ids)) {
+            $this->errors[] =
+                __(
+                    "The order(s) you have selected have invalid shipping countries.",
+                    "woocommerce-myparcelbe"
+                );
+            return;
+        }
+
+        // if we're going to print directly, we need to process the orders first, regardless of the settings
+        $process = $print === "yes" ? true : false;
+        $return  = $this->add_shipments($order_ids, $process);
+
+        // When adding shipments, store $return for use in admin_notice
+        // This way we can refresh the page (JS) to show all new buttons
+        if ($print === "no" || $print === "after_reload") {
+            update_option("wcmyparcelbe_admin_notices", $return);
+            if ($print === "after_reload") {
+                $print_queue = [
+                    "order_ids" => $return["success_ids"],
+                    "offset"    => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
+                ];
+                update_option("wcmyparcelbe_print_queue", $print_queue);
+            }
+        }
+
+        return $return;
     }
 }
 
