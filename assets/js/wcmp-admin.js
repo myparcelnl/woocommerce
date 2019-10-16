@@ -13,7 +13,7 @@
  * @property {String} wcmp.offset_icon
  */
 
-// eslint-disable-next-line max-lines-per-function
+/* eslint-disable-next-line max-lines-per-function */
 jQuery(function ($) {
   /**
    * @type {Boolean}
