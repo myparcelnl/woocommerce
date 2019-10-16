@@ -67,11 +67,11 @@ class WCMP_Export
      */
     public static function getChosenOrDefaultShipmentOption($option, string $settingName): bool
     {
-        if ($option !== null) {
-            return $option;
+        if ($valueFromSetting = WCMP()->setting_collection->isEnabled($settingName)) {
+            return $valueFromSetting;
         }
 
-        return WCMP()->setting_collection->isEnabled($settingName);
+        return (bool) $option;
     }
 
     public function admin_notices()
