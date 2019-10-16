@@ -194,7 +194,7 @@ jQuery(function ($) {
             });
           }
         });
-      };
+      }
 
       relatedInput.addEventListener('change', handle);
 
@@ -218,6 +218,7 @@ jQuery(function ($) {
     var value = relatedInput.value;
 
     var elementContainer = $(element).closest('tr');
+    var elementCheckoutStringsTitleContainer = $('#checkout_strings');
 
     /**
      * @type {Boolean}
@@ -234,13 +235,14 @@ jQuery(function ($) {
     } else {
       matches = value === wantedValue;
     }
-
+    
     switch (type) {
       case 'child':
         elementContainer[matches ? 'show' : 'hide'](easing);
         break;
       case 'show':
         elementContainer[matches ? 'show' : 'hide'](easing);
+        elementCheckoutStringsTitleContainer[matches ? 'show' : 'hide'](easing);
         break;
       case 'disable':
         $(element).prop('disabled', !matches);
