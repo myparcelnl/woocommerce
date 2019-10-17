@@ -68,7 +68,7 @@ class WCMP_Assets
                         "add_return"    => WCMP_Export::ADD_RETURN,
                         "add_shipments" => WCMP_Export::ADD_SHIPMENTS,
                         "get_labels"    => WCMP_Export::GET_LABELS,
-                        "modal_dialog"    => WCMP_Export::MODAL_DIALOG,
+                        "modal_dialog"   => WCMP_Export::MODAL_DIALOG,
                     ],
                     "ajax_url"         => admin_url("admin-ajax.php"),
                     "nonce"            => wp_create_nonce(WCMP::NONCE_ACTION),
