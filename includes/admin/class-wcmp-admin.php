@@ -45,7 +45,7 @@ class WCMP_Admin
             add_action("admin_footer", [$this, "bulk_actions"]);
         }
 
-        add_action("admin_footer", [$this, "renderOffsetDialog"]);
+        add_action("woocommerce_after_account_orders", [$this, "renderOffsetDialog"]);
 
         /**
          * Orders page

@@ -483,7 +483,6 @@ class WCMP_Export
 
     /**
      * @param $order_ids
-     * @param $dialog
      */
     public function modal_dialog($order_ids, $dialog): void
     {

@@ -3,6 +3,7 @@
  *
  * @property {Object} wcmp.actions
  * @property {{export: String, add_shipments: String, add_return: String, get_labels: String, modal_dialog: String}} wcmp.actions
+ * @property {String} wcmp.api_url - The API Url we use in MyParcel requests.
  * @property {String} wcmp.ajax_url
  * @property {String} wcmp.ask_for_print_position
  * @property {Object} wcmp.bulk_actions
