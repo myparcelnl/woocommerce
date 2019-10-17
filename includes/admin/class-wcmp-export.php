@@ -797,7 +797,7 @@ class WCMP_Export
      * @param WC_Order $order
      * @param array    $shipment
      *
-     * @return bool|void
+     * @return void
      * @throws Exception
      */
     public function saveShipmentData(WC_Order $order, array $shipment): void
