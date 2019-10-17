@@ -21,10 +21,6 @@ $target_url = wp_nonce_url(
     WCMP::NONCE_ACTION
 );
 
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
-
 ?>
   <form
     method="post"
