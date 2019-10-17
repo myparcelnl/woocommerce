@@ -259,7 +259,7 @@ class WCMP_Admin
         }
 
         foreach ($listing_actions as $request => $data) {
-            $this->renderAction(
+            self::renderAction(
                 $data['url'],
                 $data['alt'],
                 $data["img"],
@@ -637,7 +637,7 @@ class WCMP_Admin
      * @param string $icon
      * @param array  $rawAttributes
      */
-    private function renderAction(
+    public static function renderAction(
         string $url,
         string $alt,
         string $icon,

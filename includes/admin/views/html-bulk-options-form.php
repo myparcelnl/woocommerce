@@ -7,19 +7,24 @@ defined('ABSPATH') or die();
 
 include('html-start.php');
 
-$target_url = wp_nonce_url(
-    admin_url('admin-ajax.php?action=wc_myparcelbe&request=' . WCMP_Export::ADD_RETURN . '&modal=true'),
-    WCMP::NONCE_ACTION
-);
-
 /**
  * @var array $order_ids
  */
 
+$add_return = WCMP_Export::ADD_RETURN;
+$export     = WCMP_Export::EXPORT;
+
+$order_ids_string = implode(';', $order_ids);
+
+$target_url = wp_nonce_url(
+    admin_url("admin-ajax.php?action=$export&request=$add_return&modal=true&order_ids=$order_ids_string"),
+    WCMP::NONCE_ACTION
+);
+
 ?>
   <form
     method="post"
-    class="page-form wcmp__bulk-options"
+    class="page-form wcmp__bulk-options wcmp__return-dialog"
     action="<?php echo $target_url; ?>">
     <table class="widefat">
       <thead>
@@ -87,7 +92,7 @@ $target_url = wp_nonce_url(
                 </td>
                 <td>
                     <?php
-                    if ($shipping_country == 'BE'
+                    if ($shipping_country === 'BE'
                     && (empty($recipient['street'])
                         || empty($recipient['number']))) { ?>
                   <p><span style="color:red"><?php __(
@@ -127,13 +132,9 @@ $target_url = wp_nonce_url(
       <?php endforeach; ?>
       </tbody>
     </table>
-    <input
-      type="hidden"
-      name="action"
-      value="wcmp_export">
-    <div class="wcmp__shipment-settings__save">
+    <div>
         <?php
-        if (isset($dialog) && $dialog == 'shipment') {
+        if (isset($dialog) && $dialog === 'shipment') {
             $button_text = __("Export to MyParcel BE", "woocommerce-myparcelbe");
         } else {
             $button_text = __("Send email", "woocommerce-myparcelbe");
@@ -143,7 +144,7 @@ $target_url = wp_nonce_url(
         <input
           type="submit"
           value="<?php echo $button_text; ?>"
-          class="button save wcmp__action">
+          class="button wcmp__return-dialog__save">
           <?php WCMP_Admin::renderSpinner() ?>
       </div>
     </div>

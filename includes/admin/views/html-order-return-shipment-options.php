@@ -8,7 +8,7 @@ if (! defined('ABSPATH')) {
 $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 
 ?>
-<table class="wcmp_settings-table" style="width: auto">
+<table class="wcmp__settings-table" style="width: auto">
     <tr>
         <td>
             <?php _e("Shipment type", "woocommerce-myparcelbe") ?>:<br/> <small class="calculated_weight">
@@ -35,7 +35,7 @@ $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
     </tr>
 </table><br>
 <?php if (! isset($skip_save)): ?>
-    <div class="wcmp__shipment-settings__save wcmp__d--flex">
+    <div class="wcmp__d--flex">
         <a class="button save" data-order="<?php echo $order_id; ?>"><?php _e("Save", "woocommerce-myparcelbe") ?></a>
         <?php WCMP_Admin::renderSpinner() ?>
     </div>
