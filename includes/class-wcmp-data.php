@@ -15,6 +15,8 @@ if (class_exists('WCMP_Data')) {
 
 class WCMP_Data
 {
+    public const API_URL              = "https://api.sendmyparcel.be/";
+
     /**
      * @var array
      */

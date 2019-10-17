@@ -24,19 +24,28 @@ class WCMP_Admin
     public const META_DELIVERY_OPTIONS       = "_myparcelbe_delivery_options";
     public const META_HIGHEST_SHIPPING_CLASS = "_myparcelbe_highest_shipping_class";
     public const META_LAST_SHIPMENT_IDS      = "_myparcelbe_last_shipment_ids";
+    public const META_ORDER_VERSION          = "_myparcelbe_order_version";
     public const META_ORDER_WEIGHT           = "_myparcelbe_order_weight";
     public const META_PGADDRESS              = "_myparcelbe_pgaddress";
     public const META_SHIPMENTS              = "_myparcelbe_shipments";
     public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcelbe_shipment_options_extra";
-    public const META_SIGNATURE              = "_myparcelbe_signature";
     public const META_TRACK_TRACE            = "_myparcelbe_tracktrace";
 
     public const SHIPMENT_OPTIONS_FORM_NAME = "myparcelbe_options";
 
+    public const BULK_ACTION_EXPORT       = "wcmp_export";
+    public const BULK_ACTION_PRINT        = "wcmp_print";
+    public const BULK_ACTION_EXPORT_PRINT = "wcmp_export_print";
+
     public function __construct()
     {
-        add_action("admin_footer", [$this, "bulk_actions"]);
-        add_action("admin_footer", [$this, "offset_dialog"]);
+        if (is_wp_version_compatible("4.7.0")) {
+            add_action("bulk_actions-edit-shop_order", [$this, "addBulkActions"], 100);
+        } else {
+            add_action("admin_footer", [$this, "bulk_actions"]);
+        }
+
+        add_action("woocommerce_after_account_orders", [$this, "renderOffsetDialog"]);
 
         /**
          * Orders page
@@ -66,7 +75,7 @@ class WCMP_Admin
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
         add_action(
             "manage_shop_order_posts_custom_column",
-            [$this, "barcode_add_new_order_admin_list_column_content"],
+            [$this, "addBarcodeToOrderColumn"],
             10,
             2
         );
@@ -144,15 +153,43 @@ class WCMP_Admin
      * Using Javascript until WordPress core fixes: http://core.trac.wordpress.org/ticket/16031
      *
      * @access public
+     *
+     * @param array $actions
+     *
+     * @since WordPress 4.7.0
+     *
+     * @return array
+     */
+    public function addBulkActions(array $actions): array
+    {
+        $actions = array_merge(
+            $actions,
+            [
+                self::BULK_ACTION_EXPORT       => __("MyParcel BE: Export", "woocommerce-myparcelbe"),
+                self::BULK_ACTION_PRINT        => __("MyParcel BE: Print", "woocommerce-myparcelbe"),
+                self::BULK_ACTION_EXPORT_PRINT => __("MyParcel BE: Export & Print", "woocommerce-myparcelbe"),
+            ]
+        );
+
+        return $actions;
+    }
+
+    /**
+     * Add export option to bulk action drop down menu
+     * Using Javascript until WordPress core fixes: http://core.trac.wordpress.org/ticket/16031
+     *
+     * Used pre WordPress 4.7.0
+     *
+     * @access public
      * @return void
      */
     public function bulk_actions()
     {
         global $post_type;
         $bulk_actions = [
-            'wcmp_export'       => __("MyParcel BE: Export", "woocommerce-myparcelbe"),
-            'wcmp_print'        => __("MyParcel BE: Print", "woocommerce-myparcelbe"),
-            'wcmp_export_print' => __("MyParcel BE: Export & Print", "woocommerce-myparcelbe"),
+            self::BULK_ACTION_EXPORT       => __("MyParcel BE: Export", "woocommerce-myparcelbe"),
+            self::BULK_ACTION_PRINT        => __("MyParcel BE: Print", "woocommerce-myparcelbe"),
+            self::BULK_ACTION_EXPORT_PRINT => __("MyParcel BE: Export & Print", "woocommerce-myparcelbe"),
         ];
 
         if ('shop_order' == $post_type) {
@@ -178,21 +215,24 @@ class WCMP_Admin
      * @access public
      * @return void
      */
-    public function offset_dialog()
+    public function renderOffsetDialog()
     {
-        global $post_type;
-
-        if ('shop_order' == $post_type) {
-            ?>
-            <div class="wcmp__offset-dialog" style="display:none;">
-                <?php _e("Labels to skip", "woocommerce-myparcelbe"); ?>: <input type="text" size="2" class="wcmp__offset-dialog__offset">
-                <img src="<?php echo WCMP()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>"
-                     class="wcmp__offset-dialog__icon"
-                     style="vertical-align: middle;">
-                <button class="button" style="display:none; margin-top: 4px"><?php _e("Print", "woocommerce-myparcelbe"); ?></button>
-            </div>
-            <?php
-        }
+        ?>
+        <div
+            class="wcmp__offset-dialog"
+            style="display:none;">
+            <?php _e("Labels to skip", "woocommerce-myparcelbe"); ?>: <input
+                type="text"
+                size="2"
+                class="wcmp__offset-dialog__offset"> <img
+                src="<?php echo WCMP()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>"
+                class="wcmp__offset-dialog__icon"
+                style="vertical-align: middle;">
+            <button
+                class="button"
+                style="display:none; margin-top: 4px"><?php _e("Print", "woocommerce-myparcelbe"); ?></button>
+        </div>
+        <?php
     }
 
     /**
@@ -259,7 +299,7 @@ class WCMP_Admin
         }
 
         foreach ($listing_actions as $request => $data) {
-            $this->renderAction(
+            self::renderAction(
                 $data['url'],
                 $data['alt'],
                 $data["img"],
@@ -365,6 +405,8 @@ class WCMP_Admin
 
     /**
      * Callback: Create the meta box content on the single order page
+     *
+     * @throws Exception
      */
     public function createMetaBox(): void
     {
@@ -491,41 +533,42 @@ class WCMP_Admin
 
     /**
      * @param $column
+     *
+     * @throws Exception
      */
-    public function barcode_add_new_order_admin_list_column_content($column)
+    public function addBarcodeToOrderColumn($column)
     {
         global $post;
 
-        if ('barcode' === $column) {
-            $order = WCX::get_order($post->ID);
-            echo $this->get_barcode($order);
+        if ("barcode" === $column) {
+            $this->renderBarcodes(WCX::get_order($post->ID));
         }
     }
 
     /**
-     * @param      $order
-     * @param null $barcode
+     * @param WC_Order $order
      *
-     * @return string|null
+     * @return void
      * @throws Exception
      */
-    public function get_barcode($order, $barcode = null)
+    public function renderBarcodes(WC_Order $order): void
     {
         $shipments = WCMP_Admin::get_order_shipments($order, true);
 
         if (empty($shipments)) {
-            return __("No label has been created yet.", "woocommerce-myparcelbe");
+            echo __("No label has been created yet.", "woocommerce-myparcelbe");
+            return;
         }
 
+        echo '<div class="wcmp__barcodes">';
         foreach ($shipments as $shipment_id => $shipment) {
-            $barcode .= "<a target='_blank' href="
-                . WCMP_Admin::getTrackTraceUrl($order, $shipment['track_trace'])
-                . ">"
-                . $shipment['track_trace']
-                . "</a> <br>";
+            printf(
+                '<a target="_blank" class="wcmp__barcode-link" title="%2$s" href="%1$s">%2$s</a><br>',
+                WCMP_Admin::getTrackTraceUrl($order, $shipment["track_trace"]),
+                $shipment["track_trace"]
+            );
         }
-
-        return $barcode;
+        echo "</div>";
     }
 
     /**
@@ -637,7 +680,7 @@ class WCMP_Admin
      * @param string $icon
      * @param array  $rawAttributes
      */
-    private function renderAction(
+    public static function renderAction(
         string $url,
         string $alt,
         string $icon,

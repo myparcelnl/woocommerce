@@ -39,6 +39,15 @@
 }
 
 /*
+ * Track & Trace in shipment overview
+ */
+.wcmp__barcodes {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
  * The print offset dialog
  */
 .wcmp__offset-dialog {
@@ -62,7 +71,7 @@
   margin-right: 8px;
 }
 
-.wcmp__shipment-options__form .wcmp_settings-table td {
+.wcmp__shipment-options__form .wcmp__settings-table td {
   padding-bottom: 6px;
   vertical-align: middle;
 }
@@ -181,7 +190,7 @@
 /*
  * Bulk export options styling
  */
-.wcmp__bulk-options .wcmp_settings-table td {
+.wcmp__bulk-options .wcmp__settings-table td {
   border: none;
   padding: 0 7px 2px !important;
   vertical-align: middle !important;
