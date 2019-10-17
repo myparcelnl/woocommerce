@@ -23,33 +23,19 @@ if (! class_exists('WCMP')) :
 
     class WCMP
     {
-
         /**
          * Translations domain
          */
-        public const DOMAIN       = 'woocommerce-myparcelbe';
-        public const NONCE_ACTION = 'wc_myparcelbe';
+        const DOMAIN          = 'woocommerce-myparcelbe';
+        const NONCE_ACTION    = 'wc_myparcelbe';
+        const MINIMUM_PHP_VERSION_5_4 = '5.4';
+        const PHP_VERSION_7_1 = '7.1';
 
         public $version = '4.0.0';
 
         public $plugin_basename;
 
         protected static $_instance = null;
-
-        /**
-         * @var string
-         */
-        private $minimumPhpVersion = '5.4';
-
-        /**
-         * @var string
-         */
-        private $legacySettingsPhpVersion = '7.1';
-
-        /**
-         * @var string
-         */
-        private $recommendedPhpVersion = '7.1';
 
         /**
          * @var WPO\WC\MyParcelBE\Collections\SettingsCollection
@@ -145,7 +131,7 @@ if (! class_exists('WCMP')) :
         public function includes()
         {
             // Use php version 5.6
-            if (! $this->phpVersionMeets($this->legacySettingsPhpVersion)) {
+            if (! $this->phpVersionMeets(\WCMP::PHP_VERSION_7_1)) {
                 $this->includes = $this->plugin_path() . "/includes_php56";
 
                 // include compatibility classes
@@ -211,16 +197,17 @@ if (! class_exists('WCMP')) :
                 return;
             }
 
-            if (! $this->phpVersionMeets($this->minimumPhpVersion)) {
+            if (! $this->phpVersionMeets(self::MINIMUM_PHP_VERSION_5_4)) {
                 add_action('admin_notices', [$this, 'required_php_version']);
 
                 return;
             }
 
+            // initSettings must be for file includes
+            $this->initSettings();
+
             // all systems ready - GO!
             $this->includes();
-
-            $this->initSettings();
         }
 
         /**
@@ -327,7 +314,7 @@ if (! class_exists('WCMP')) :
                 require_once('migration/wcmp-upgrade-migration-v3-0-4.php');
             }
 
-            if ($this->phpVersionMeets($this->legacySettingsPhpVersion)) {
+            if ($this->phpVersionMeets(\WCMP::PHP_VERSION_7_1)) {
                 // Import the migration class base
                 require_once('migration/wcmp-upgrade-migration.php');
 
@@ -364,7 +351,7 @@ if (! class_exists('WCMP')) :
          */
         public function initSettings()
         {
-            if (! $this->phpVersionMeets($this->legacySettingsPhpVersion)) {
+            if (! $this->phpVersionMeets(\WCMP::PHP_VERSION_7_1)) {
                 $this->general_settings  = get_option('woocommerce_myparcelbe_general_settings');
                 $this->export_defaults   = get_option('woocommerce_myparcelbe_export_defaults_settings');
                 $this->checkout_settings = get_option('woocommerce_myparcelbe_checkout_settings');
@@ -376,7 +363,7 @@ if (! class_exists('WCMP')) :
             // imports in the legacy version.
             include('includes/wcmp-initialize-settings-collection.php');
             $this->setting_collection =
-                $this->setting_collection ?? (new WCMP_Initialize_Settings_Collection())->initialize();
+                $this->setting_collection ? (new WCMP_Initialize_Settings_Collection())->initialize() : '';
         }
 
         /**
@@ -405,7 +392,7 @@ function WCMP()
 
 /**
  * For PHP < 7.1 support.
-
+ *
  * @return WCMP
  */
 function WooCommerce_MyParcelBE()

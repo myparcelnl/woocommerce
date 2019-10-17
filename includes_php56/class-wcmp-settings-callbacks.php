@@ -25,7 +25,7 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
      *   description - description (optional)
      * @return void.
      */
-    public function checkbox($args) {
+    public function checkbox($args, $disabled = "", $style = "") {
         extract($this->normalize_settings_args($args));
 
         // output checkbox
