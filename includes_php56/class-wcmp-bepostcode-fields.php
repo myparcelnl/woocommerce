@@ -115,7 +115,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
         // Enqueue styles for delivery options
         wp_enqueue_style(
             'be-checkout',
-            WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/be-checkout.css',
+            WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/css/be-checkout.css',
             false,
             WC_MYPARCEL_BE_VERSION
         );
@@ -126,7 +126,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
             // Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
             wp_register_script(
                 'be-checkout',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/be-checkout.js',
+                WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/js/be-checkout.js',
                 array('wc-checkout'),
                 WC_MYPARCEL_BE_VERSION
             );
@@ -137,7 +137,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
             // Disable regular address fields for BE on account page - Fixed in WC 2.1 but not on init...
             wp_register_script(
                 'be-account-page',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/be-account-page.js',
+                WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/js/be-account-page.js',
                 array('jquery'),
                 WC_MYPARCEL_BE_VERSION
             );
@@ -153,7 +153,7 @@ class Woocommerce_MyParcelBE_Postcode_Fields {
         if ($post_type == 'shop_order') {
             wp_enqueue_style(
                 'be-checkout-admin',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/be-checkout-admin.css',
+                WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/css/be-checkout-admin.css',
                 array(), // deps
                 WC_MYPARCEL_BE_VERSION
             );
