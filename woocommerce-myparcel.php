@@ -15,10 +15,6 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-@ini_set('log_errors', 'On');
-@ini_set('display_errors', 'On');
-@ini_set('error_log','/php-errors.log');
-
 if (! class_exists('WCMP')) :
 
     class WCMP
@@ -193,7 +189,6 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/admin/settings/class-wcmp-settings.php");
             require_once($this->includes . "/class-wcmp-log.php");
             require_once($this->includes . "/admin/class-wcmp-country-codes.php");
-            require_once($this->includes . "/admin/class-wcmp-export-pdf.php");
             $this->export = require_once($this->includes . "/admin/class-wcmp-export.php");
             require_once($this->includes . "/class-wcmp-be-postcode-fields.php");
             require_once($this->includes . "/adapter/delivery-options-from-order-adapter.php");

@@ -324,7 +324,7 @@ class WCMP_Settings_Data
                 ],
             ],
             [
-                "name"      => WCMP_Settings::SETTING_PRINT_POSITION_OFFSET,
+                "name"      => WCMP_Settings::SETTING_ASK_FOR_PRINT_POSITION,
                 "label"     => __("Ask for print start position", "woocommerce-myparcelbe"),
                 "condition" => [
                     "name"         => WCMP_Settings::SETTING_LABEL_FORMAT,

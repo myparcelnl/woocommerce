@@ -3,15 +3,22 @@
  *
  * @property {Object} wcmp.actions
  * @property {{export: String, add_shipments: String, add_return: String, get_labels: String, modal_dialog: String}} wcmp.actions
+ * @property {String} wcmp.api_url - The API Url we use in MyParcel requests.
  * @property {String} wcmp.ajax_url
- * @property {String} wcmp.nonce
+ * @property {String} wcmp.ask_for_print_position
+ * @property {Object} wcmp.bulk_actions
+ * @property {{export: String, print: String, export_print: String}} wcmp.bulk_actions
  * @property {String} wcmp.download_display
- * @property {String} wcmp.offset
+ * @property {String} wcmp.nonce
  * @property {String} wcmp.offset_icon
  */
 
-// eslint-disable-next-line max-lines-per-function
-jQuery(function($) {
+/* eslint-disable-next-line max-lines-per-function */
+jQuery(function ($) {
+  /**
+   * @type {Boolean}
+   */
+  var askForPrintPosition = Boolean(parseInt(wcmp.ask_for_print_position));
 
   var selectors = {
     offsetDialog: '.wcmp__offset-dialog',
@@ -81,8 +88,7 @@ jQuery(function($) {
     /**
      * Single actions click. The .wc_actions .single_wc_actions for support wc > 3.3.0.
      */
-    $('.order_actions, .single_order_actions, .wc_actions, .single_wc_actions')
-      .on('click', selectors.orderAction, onActionClick);
+    $(selectors.orderAction).click(onActionClick);
 
     $(window).bind('tb_unload', onThickBoxUnload);
   }
@@ -145,11 +151,10 @@ jQuery(function($) {
    * Print queued labels.
    */
   function printQueuedLabels() {
-    var print_queue = $(selectors.printQueue).val();
-    var print_queue_offset = $(selectors.printQueueOffset).val();
+    var printData = $(selectors.printQueue).val();
 
-    if (typeof print_queue !== 'undefined') {
-      printLabel($.parseJSON(print_queue), print_queue_offset);
+    if (printData) {
+      printLabel(JSON.parse(printData));
     }
   }
 
@@ -230,7 +235,7 @@ jQuery(function($) {
     } else {
       matches = value === wantedValue;
     }
-    
+
     switch (type) {
       case 'child':
         elementContainer[matches ? 'show' : 'hide'](easing);
@@ -328,64 +333,60 @@ jQuery(function($) {
    * @param {Event} event - Click event.
    */
   function doBulkAction(event) {
-    var prefixLength = 5;
+    var action = document.querySelector('[name="action"]').value;
 
-    var selectedAction = $(this)
-      .attr('id')
-      .substr(2);
+    /**
+     * Check if our action is the selected one.
+     */
+    if (wcmp.bulk_actions.hasOwnProperty(action)) {
+      return;
+    }
+
+    event.preventDefault();
 
     /*
-     * Get related select with actions
+     * Remove notices
      */
-    var element = $('select[name="' + selectedAction + '"]');
+    $(selectors.notice).remove();
+    var order_ids = [];
+    var rows = [];
 
-    /* check if action starts with 'wcmp_' */
-    if (element.val().substring(0, prefixLength) === 'wcmp_') {
-      event.preventDefault();
-
-      /*
-       * Remove notices
-       */
-      $(selectors.notice).remove();
-
-      /* strip 'wcmp_' from action */
-      var action = element.val().substring(prefixLength);
-
-      /* Get array of checked orders (order_ids) */
-      var order_ids = [];
-      var rows = [];
-
-      $('tbody th.check-column input[type="checkbox"]:checked').each(
-        function() {
-          order_ids.push($(this).val());
-          rows.push('.post-' + $(this).val());
-        }
-      );
-
-      $(rows.join(', ')).addClass('wcmp__loading');
-
-      switch (action) {
-        /**
-         * Export orders.
-         */
-        case 'export':
-          exportToMyParcel(order_ids);
-          break;
-
-        /**
-         * Print labels.
-         */
-        case 'print':
-          printLabel(order_ids, wcmp.offset === 1 ? $(selectors.offsetDialogInput).val() : 0, rows);
-          break;
-
-        /**
-         * Export and print.
-         */
-        case 'export_print':
-          exportToMyParcel(order_ids, 'after_reload');
-          break;
+    /*
+     * Get array of selected order_ids
+     */
+    $('tbody th.check-column input[type="checkbox"]:checked').each(
+      function() {
+        order_ids.push($(this).val());
+        rows.push('.post-' + $(this).val());
       }
+    );
+
+    $(rows.join(', ')).addClass('wcmp__loading');
+
+    switch (action) {
+      /**
+       * Export orders.
+       */
+      case wcmp.bulk_actions.export:
+        exportToMyParcel(order_ids);
+        break;
+
+      /**
+       * Print labels.
+       */
+      case wcmp.bulk_actions.print:
+        printLabel({
+          order_ids: order_ids,
+          offset: askForPrintPosition ? $(selectors.offsetDialogInput).val() : 0,
+        });
+        break;
+
+      /**
+       * Export and print.
+       */
+      case wcmp.bulk_actions.export_print:
+        exportToMyParcel(order_ids, 'after_reload');
+        break;
     }
   }
 
@@ -407,7 +408,7 @@ jQuery(function($) {
     $.ajax({
       url: request.url,
       method: request.method || 'POST',
-      data: request.data,
+      data: request.data || {},
     })
       .done(function(res) {
         setSpinner(button, spinner.success);
@@ -465,32 +466,30 @@ jQuery(function($) {
     var request = getParameterByName('request', button.href);
     var order_ids = getParameterByName('order_ids', button.href);
 
+    if (!wcmp.actions.hasOwnProperty(request)) {
+      return;
+    }
+
+    event.preventDefault();
+
     switch (request) {
       case wcmp.actions.add_shipments:
-        event.preventDefault();
         exportToMyParcel.bind(button)();
         break;
-      /*
-       * case wcmp.actions.get_labels:
-       *   if (wcmp.offset === 1) {
-       *     contextual_offset_dialog(order_ids, event);
-       *   } else {
-       *     printLabel.bind(button)();
-       *   }
-       *   break;
-       */
+      case wcmp.actions.get_labels:
+        printLabel.bind(button)();
+        break;
       case wcmp.actions.add_return:
-        event.preventDefault();
         myparcelbe_modal_dialog(order_ids, 'return');
         break;
     }
   }
 
   function showOffsetDialog() {
-    var actionselected = $(this).val();
+    var selectedAction = $(this).val();
     var offsetDialog = $(selectors.offsetDialog);
 
-    if ((actionselected === 'wcmp_print' || actionselected === 'wcmp_export_print') && wcmp.offset === 1) {
+    if ((selectedAction === 'wcmp_print' || selectedAction === 'wcmp_export_print') && askForPrintPosition) {
       var insert_position = $(this).attr('name') === 'action' ? 'top' : 'bottom';
 
       offsetDialog
@@ -520,13 +519,16 @@ jQuery(function($) {
     dialog.hide();
 
     /* print labels */
-    printLabel(order_ids, offset);
+    printLabel({
+      order_ids: order_ids,
+      offset: offset,
+    });
   }
 
   /**
    * Place offset dialog at mouse tip.
    */
-  function contextual_offset_dialog(order_ids, event) {
+  function showContextualOffsetDialog(order_ids, event) {
     var offsetDialog = $(selectors.offsetDialog);
 
     offsetDialog
@@ -589,7 +591,7 @@ jQuery(function($) {
 
   /* export orders to MyParcel via AJAX */
   function exportToMyParcel(order_ids, print) {
-    var offset = wcmp.offset === 1 ? $(selectors.offsetDialogInput).val() : 0;
+    var offset = askForPrintPosition ? $(selectors.offsetDialogInput).val() : 0;
     var url;
     var data;
 
@@ -601,10 +603,12 @@ jQuery(function($) {
       url = this.href;
     } else {
       data = {
-        action: wcmp.actions.add_shipments,
+        action: wcmp.actions.export,
+        request: wcmp.actions.add_shipments,
         offset: offset,
         order_ids: order_ids,
         print: print,
+        _wpnonce: wcmp.nonce,
       };
     }
 
@@ -613,7 +617,6 @@ jQuery(function($) {
       data: data || {},
       afterDone: function(response) {
         var redirect_url = updateUrlParameter(window.location.href, 'myparcelbe_done', 'true');
-        // response = $.parseJSON(response);
 
         if (print === 'no' || print === 'after_reload') {
           /* refresh page, admin notices are stored in options and will be displayed automatically */
@@ -629,7 +632,10 @@ jQuery(function($) {
           }
 
           /* load PDF */
-          printLabel(order_ids, offset);
+          printLabel({
+            order_ids: order_ids,
+            offset: offset,
+          });
         }
       },
     });
@@ -677,87 +683,62 @@ jQuery(function($) {
       if (response !== null && typeof response === 'object' && 'error' in response) {
         myparcelbe_admin_notice(response.error, 'error');
       }
-
     });
 
   }
 
   /**
-   *
-   * @param pdf
+   * @param {String} pdfUrl - The url of the created pdf.
    */
-  function displayPdf(pdf) {
-    var string = 'data:application/pdf;base64, ' + pdf;
-
-    var file = new Blob(['base64, ' + pdf], {type: 'application/pdf'});
-    var fileURL = URL.createObjectURL(file);
-    console.log(fileURL);
-    throw 'die';
-    window.open(fileURL);
-
-    /*
-     * var iframe = '<object '
-     *   + 'width=\'100%\' '
-     *   + 'height=\'100%\' '
-     *   + 'style="border: 0;" '
-     *   + 'data=\''
-     *   + string
-     *   + '\' />';
-     * var newWindow = window.open();
-     * newWindow.document.title = "pdf file";
-     * newWindow.document.open();
-     * newWindow.document.write(iframe);
-     * newWindow.document.querySelector('body').style.padding = '0';
-     * newWindow.document.querySelector('body').style.margin = '0';
-     * newWindow.document.close();
-     */
-  };
-
-  /**
-   * @param {String} pdf - The created pdf as a string.
-   */
-  function downloadPdf(pdf) {
-    console.log('downloading');
-
-    $.post('');
-    /*
-     * if (window.navigator && window.navigator.msSaveOrOpenBlob) { // IE workaround
-     *   var byteCharacters = atob(pdf, true);
-     *   var byteNumbers = new Array(byteCharacters.length);
-     *   for (var i = 0; i < byteCharacters.length; i++) {
-     *     byteNumbers[i] = byteCharacters.charCodeAt(i);
-     *   }
-     *
-     *   var byteArray = new Uint8Array(byteNumbers);
-     *   var blob = new Blob([byteArray], {type: 'application/pdf'});
-     *   window.navigator.msSaveOrOpenBlob(blob, your_file_name);
-     * } else { // much easier if not IE
-     *   window.open('data:application/pdf;base64, ' + pdf, '', 'height=600,width=800');
-     * }
-     */
+  function openPdf(pdfUrl) {
+    window.open(pdfUrl);
   }
 
   /* Request MyParcel BE labels */
-  function printLabel(order_ids) {
-    var offset = offset || 0;
-    var request = '';
+  function printLabel(data) {
+    var button = this;
+    var request;
 
-    if (this.href) {
-      request = this.href;
+    if (button.href) {
+      request = {
+        url: button.href,
+      };
     } else {
-      var request_prefix = (wcmp.ajax_url.indexOf('?') !== -1) ? '&' : '?';
-      request = wcmp.ajax_url + request_prefix + 'action=wc_myparcel&request=get_labels&security=' + wcmp.nonce;
+      request = {
+        data: Object.assign({
+          action: wcmp.actions.export,
+          request: wcmp.actions.get_labels,
+          _wpnonce: wcmp.nonce,
+        }, data),
+      };
     }
 
-    /* create form to send order_ids via POST */
-    $('body').append('<form action="' + request + '" method="post" target="_blank" id="wcmp__post_data"></form>');
-    var postData = $('#wcmp__post_data');
-    // postData.append('<input type="hidden" name="pdf" value="' + result + '"/>');
-    postData.append('<input type="hidden" name="offset" class="offset" value="' + offset + '"/>');
-    postData.append('<input type="hidden" name="order_ids" class="order_ids" value="' + order_ids + '" />');
+    request.afterDone = function(response) {
+      openPdf(response);
+      window.location.reload();
+    };
 
-    /* submit data to open or download pdf */
-    postData.submit();
+    if (wcmp.download_display === 'download') {
+      doRequest.bind(button)(request);
+    } else {
+      var url;
+
+      if (request.hasOwnProperty('url')) {
+        url = request.url;
+      } else {
+        url = wcmp.ajax_url + '?' + $.param(request.data);
+      }
+
+      var pdfWindow = window.open(url, '_blank');
+
+      /**
+       * When the pdf window is loaded reload the main window. If we reload earlier the track & trace code won't be
+       * ready yet and can't be shown.
+       */
+      pdfWindow.onload = function() {
+        window.location.reload();
+      };
+    }
   }
 
   function myparcelbe_admin_notice(message, type) {
@@ -868,4 +849,37 @@ jQuery(function($) {
     }
   }
 });
+
+/**
+ * Object.assign() polyfill.
+ */
+if (typeof Object.assign !== 'function') {
+  /* Must be writable: true, enumerable: false, configurable: true */
+  Object.defineProperty(Object, 'assign', {
+    value: function assign(target, varArgs) { /* .length of function is 2 */
+      'use strict';
+      if (target === null || target === undefined) {
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+
+      var to = Object(target);
+
+      for (var index = 1; index < arguments.length; index++) {
+        var nextSource = arguments[index];
+
+        if (nextSource !== null && nextSource !== undefined) {
+          for (var nextKey in nextSource) {
+            /* Avoid bugs when hasOwnProperty is shadowed */
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+              to[nextKey] = nextSource[nextKey];
+            }
+          }
+        }
+      }
+      return to;
+    },
+    writable: true,
+    configurable: true,
+  });
+}
 

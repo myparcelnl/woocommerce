@@ -37,7 +37,7 @@ class WCMP_Settings
     public const SETTING_KEEP_SHIPMENTS          = "keep_shipments";
     public const SETTING_LABEL_FORMAT            = "label_format";
     public const SETTING_ORDER_STATUS_AUTOMATION = "order_status_automation";
-    public const SETTING_PRINT_POSITION_OFFSET   = "print_position_offset";
+    public const SETTING_ASK_FOR_PRINT_POSITION  = "ask_for_print_position";
     public const SETTING_PROCESS_DIRECTLY        = "process_directly";
     public const SETTING_TRACK_TRACE_EMAIL       = "track_trace_email";
     public const SETTING_TRACK_TRACE_MY_ACCOUNT  = "track_trace_my_account";

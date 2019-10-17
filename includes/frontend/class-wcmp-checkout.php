@@ -280,6 +280,15 @@ class WCMP_Checkout
         $shippingMethod       = Arr::get($_POST, "shipping_method");
 
         /**
+         * Save the current version of our plugin to the order.
+         */
+        WCX_Order::update_meta_data(
+            $order,
+            WCMP_Admin::META_ORDER_VERSION,
+            WCMP()->version
+        );
+
+        /**
          * Save the order weight here because it's easier than digging through order data after creating it.
          *
          * @see https://businessbloomer.com/woocommerce-save-display-order-total-weight/
