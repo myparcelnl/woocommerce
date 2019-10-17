@@ -2,7 +2,7 @@
  * @var {Object} wcmp
  *
  * @property {Object} wcmp.actions
- * @property {{export: String, add_shipments: String, add_return: String, get_labels: String}} wcmp.actions
+ * @property {{export: String, add_shipments: String, add_return: String, get_labels: String, modal_dialog: String}} wcmp.actions
  * @property {String} wcmp.ajax_url
  * @property {String} wcmp.nonce
  * @property {String} wcmp.download_display
@@ -636,17 +636,19 @@ jQuery(function($) {
   }
 
   function myparcelbe_modal_dialog(order_ids, dialog) {
-    var request_prefix = (wcmp.ajax_url.indexOf('?') !== -1) ? '&' : '?';
-    var thickbox_parameters = '&TB_iframe=true&height=380&width=720';
-    var url = wcmp.ajax_url
-      + request_prefix
-      + 'order_ids='
-      + order_ids
-      + '&action=wcmp&request=modal_dialog&dialog='
-      + dialog
-      + '&security='
-      + wcmp.nonce
-      + thickbox_parameters;
+    var data = {
+      action: wcmp.actions.export,
+      request: wcmp.actions.modal_dialog,
+      height: 380,
+      width: 720,
+      order_ids: order_ids,
+      dialog: dialog,
+      _wpnonce: wcmp.nonce,
+      // LEAVE THIS AT THE BOTTOM! The awful code behind the thickbox splits the url on "TB_" for some reason.
+      TB_iframe: true,
+    };
+
+    var url = wcmp.ajax_url + '?' + $.param(data);
 
     /* disable background scrolling */
     $('body').css({overflow: 'hidden'});

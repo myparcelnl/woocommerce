@@ -74,6 +74,20 @@ class WCMP_Export
         return (bool) $option;
     }
 
+    public function get_item_display_name($item, $order)
+    {
+        // set base name
+        $name = $item['name'];
+
+        // add variation name if available
+        $product = $order->get_product_from_item($item);
+        if ($product && isset($item['variation_id']) && $item['variation_id'] > 0 && method_exists($product, 'get_variation_attributes')) {
+            $name .= woocommerce_get_formatted_variation($product->get_variation_attributes());
+        }
+
+        return $name;
+    }
+
     public function admin_notices()
     {
         if (isset($_GET["myparcelbe_done"])) { // only do this when for the user that initiated this
@@ -134,6 +148,7 @@ class WCMP_Export
      */
     public function export()
     {
+//        die("request: {$_REQUEST["request"]}");
         // Check the nonce
         if (! check_ajax_referer(WCMP::NONCE_ACTION, "_wpnonce", false)) {
             die("Ajax security check failed. Did you pass a valid nonce in \$_REQUEST['_wpnonce']?");
@@ -210,11 +225,12 @@ class WCMP_Export
 
             // Creating a return shipment.
             case self::ADD_RETURN:
-                if (empty($myparcelbe_options)) {
+                if (empty($order_ids)) {
                     $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
                     break;
                 }
-                $return = $this->add_return($myparcelbe_options);
+
+                $return = $this->add_return($order_ids);
                 break;
 
             // Downloading labels.
@@ -266,11 +282,12 @@ class WCMP_Export
         }
 
         // if we're directed here from modal, show proper result page
-        if (isset($modal)) {
+        if (isset($_REQUEST["modal"])) {
             $this->modal_success_page($request, $return);
         } else {
             // return JSON response
             echo json_encode($return);
+            die();
         }
     }
 
@@ -401,26 +418,30 @@ class WCMP_Export
     }
 
     /**
-     * @param $myparcelbe_options
+     * @param $order_ids
      *
      * @return array
      * @throws Exception
      */
-    public function add_return($myparcelbe_options)
+    public function add_return($order_ids)
     {
         $return = [];
 
         WCMP_Log::add("*** Creating return shipments started ***");
 
-        foreach ($myparcelbe_options as $order_id => $options) {
-            $return_shipments = [$this->prepare_return_shipment_data($order_id, $options)];
-            WCMP_Log::add("Return shipment data for order {$order_id}:", print_r($return_shipments, true));
-
+        foreach ($order_ids as $order_id) {
             try {
+                $return_shipments = [$this->prepare_return_shipment_data($order_id)];
+                WCMP_Log::add("Return shipment data for order {$order_id}:", print_r($return_shipments, true));
+
                 $api      = $this->init_api();
                 $response = $api->add_shipments($return_shipments, "return");
+
                 WCMP_Log::add("API response (order {$order_id}):\n" . print_r($response, true));
-                if (Arr::get($response, "body.data.ids")) {
+
+                $ids = Arr::get($response, "body.data.ids");
+
+                if ($ids && !empty($ids)) {
                     $order                    = WCX::get_order($order_id);
                     $ids                      = array_shift($response["body"]["data"]["ids"]);
                     $shipment_id              = $ids["id"];
@@ -433,8 +454,8 @@ class WCMP_Export
                     // save shipment data in order meta
                     $this->save_shipment_data($order, $shipment);
                 } else {
-                    WCMP_Log::add("\$response\[\"body.data.ids\"] not found.", print_r($response, true));
-                    $this->errors[$order_id] = "\$response\[\"body.data.ids\"] not found.";
+                    WCMP_Log::add("\$response\[\"body.data.ids\"] empty or not found.", print_r($response, true));
+                    throw new Exception("\$response\[\"body.data.ids\"] empty or not found.");
                 }
             } catch (Exception $e) {
                 $this->errors[$order_id] = $e->getMessage();
@@ -616,29 +637,32 @@ class WCMP_Export
     }
 
     /**
+     * TODO: There are no options being passed right now but these will be necessary for NL.
+     *
      * @param $order_id
      * @param $options
      *
      * @return array
      * @throws Exception
      */
-    public function prepare_return_shipment_data($order_id, $options)
+    public function prepare_return_shipment_data($order_id, $options = [])
     {
         $order = WCX::get_order($order_id);
 
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
-                : trim($order->shipping_first_name . " " . $order->shipping_last_name);
+                : trim($order->get_shipping_first_name() . " " . $order->get_shipping_last_name());
 
         // set name & email
         $return_shipment_data = [
             "name"    => $shipping_name,
-            "email"   => ($this->getSetting(WCMP_Settings::SETTING_CONNECT_EMAIL)) ? WCX_Order::get_prop(
-                $order,
-                "billing_email"
-            ) : "",
+            "email"   => WCX_Order::get_prop($order, "billing_email"),
             "carrier" => BpostConsignment::CARRIER_ID, // default to Bpost for now
         ];
+
+        if (!Arr::get($return_shipment_data, "email")) {
+            throw new Exception(__("No e-mail address found in order.", "woocommerce-myparcelbe"));
+        }
 
         // add options if available
         if (! empty($options)) {
@@ -679,6 +703,7 @@ class WCMP_Export
                 "only_last"        => true,
             ]
         );
+
         if (! empty($shipment_ids)) {
             $return_shipment_data["parent"] = (int) array_pop($shipment_ids);
         }
@@ -852,10 +877,10 @@ class WCMP_Export
             $order_shipment_ids = [];
             // exclude concepts or only concepts
             foreach ($order_shipments as $shipment_id => $shipment) {
-                if (isset($args["exclude_concepts"]) && empty($shipment["tracktrace"])) {
+                if (isset($args["exclude_concepts"]) && empty($shipment["track_trace"])) {
                     continue;
                 }
-                if (isset($args["only_concepts"]) && ! empty($shipment["tracktrace"])) {
+                if (isset($args["only_concepts"]) && ! empty($shipment["track_trace"])) {
                     continue;
                 }
 
@@ -886,20 +911,24 @@ class WCMP_Export
      * @param $order
      * @param $shipment
      *
-     * @return bool|void
+     * @return void
+     * @throws Exception
      */
-    public function save_shipment_data(WC_Order $order, array $shipment)
+    public function save_shipment_data(WC_Order $order, array $shipment): void
     {
         if (empty($shipment)) {
-            return false;
+            throw new Exception(__("save_shipment_data requires a valid \$shipment.", "woocommerce-myparcelbe"));
         }
 
+        $old_shipments                           = [];
         $new_shipments                           = [];
         $new_shipments[$shipment["shipment_id"]] = $shipment;
 
-        $old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
+        if (WCX_Order::has_meta($order, WCMP_Admin::META_SHIPMENTS)) {
+            $old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
+        }
 
-        $new_shipments = array_replace_recursive((array) $old_shipments, $new_shipments);
+        $new_shipments = array_replace_recursive($old_shipments, $new_shipments);
 
         WCX_Order::update_meta_data($order, WCMP_Admin::META_SHIPMENTS, $new_shipments);
     }
@@ -975,6 +1004,7 @@ class WCMP_Export
     public function parse_errors($errors)
     {
         $parsed_errors = [];
+
         foreach ($errors as $key => $error) {
             // check if we have an order_id
             if ($key > 10) {
