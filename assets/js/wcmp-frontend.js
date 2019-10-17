@@ -12,11 +12,9 @@
 
 /**
  * @var {Object} MyParcelDeliveryOptions
- *
  * @property {String} MyParcelDeliveryOptions.allowedShippingMethods
  * @property {String} MyParcelDeliveryOptions.alwaysShow
  * @property {String} MyParcelDeliveryOptions.hiddenInputName
- *
  * @see \wcmp_checkout::inject_delivery_options_variables
  */
 
@@ -93,6 +91,7 @@ var MyParcelFrontend = {
 
   addressField: 'address_1',
   cityField: 'city',
+  countryRow: 'country_field',
   countryField: 'country',
   houseNumberField: 'house_number',
   postcodeField: 'postcode',
@@ -297,17 +296,24 @@ var MyParcelFrontend = {
     var shippingMethodField = document.querySelector('#order_review .shipping_method');
     var selectedShippingMethodField = document.querySelector('#order_review .shipping_method:checked');
 
-    /* check if shipping is user choice or fixed */
-    shipping_method = selectedShippingMethodField ? selectedShippingMethodField.value : shippingMethodField.value;
+    /**
+     * Check if shipping method field exists. It doesn't exist if there are no shipping methods available for the
+     *  current address/product combination or in general.
+     *
+     * If there is no shipping method the delivery options will always be hidden.
+     */
+    if (shippingMethodField) {
+      shipping_method = selectedShippingMethodField ? selectedShippingMethodField.value : shippingMethodField.value;
 
-    MyParcelFrontend.selectedShippingMethod = shipping_method;
+      MyParcelFrontend.selectedShippingMethod = shipping_method;
+    }
 
     MyParcelFrontend.toggleDeliveryOptions();
   },
 
   /**
-   * Hides/shows the delivery options based on the current shipping method. Makes sure to not update the checkout unless
-   *  necessary by checking if hasDeliveryOptions is true or false.
+   * Hides/shows the delivery options based on the current shipping method. Makes sure to not update the checkout
+   * unless necessary by checking if hasDeliveryOptions is true or false.
    */
   toggleDeliveryOptions: function() {
     if (!MyParcelFrontend.selectedShippingMethod) {
@@ -377,22 +383,42 @@ var MyParcelFrontend = {
 
   /**
    * Add listeners to the address fields, then update shipping method and delivery options if needed.
+   *
+   * Uses the country field's parent row because there is no better way to catch the select2 (or selectWoo) events as
+   *  we never know when the select is loaded and can't add a normal change event. The delivery options has a debounce
+   *  function on the update event so it doesn't matter if we send 5 updates at once.
    */
   addAddressListeners: function() {
-    /* The fields to add listeners to. */
-    var fields = [MyParcelFrontend.countryField, MyParcelFrontend.postcodeField, MyParcelFrontend.getSplitField()];
+    /*
+     * The fields to add listeners to.
+     */
+    var fields = [MyParcelFrontend.countryRow, MyParcelFrontend.postcodeField, MyParcelFrontend.getSplitField()];
 
     /* If address type is already set, remove the existing listeners before adding new ones. */
     if (MyParcelFrontend.addressType) {
       fields.forEach(function(field) {
-        MyParcelFrontend.getField(field).removeEventListener('change', MyParcelFrontend.updateAddress);
+        var element = MyParcelFrontend.getField(field);
+
+        if (MyParcelFrontend.countryRow === field) {
+          element.removeEventListener('DOMSubtreeModified', MyParcelFrontend.updateCountry);
+          return;
+        }
+
+        element.removeEventListener('change', MyParcelFrontend.updateAddress);
       });
     }
 
     MyParcelFrontend.getAddressType();
 
     fields.forEach(function(field) {
-      MyParcelFrontend.getField(field).addEventListener('change', MyParcelFrontend.updateAddress);
+      var element = MyParcelFrontend.getField(field);
+
+      if (MyParcelFrontend.countryRow === field) {
+        element.addEventListener('DOMSubtreeModified', MyParcelFrontend.updateCountry);
+        return;
+      }
+
+      element.addEventListener('change', MyParcelFrontend.updateAddress);
     });
 
     /**
@@ -417,6 +443,14 @@ var MyParcelFrontend = {
     shippingMethod = shippingMethod.substring(0, indexOfSemicolon === -1 ? shippingMethod.length : indexOfSemicolon);
 
     return shippingMethod;
+  },
+
+  /**
+   * When country updates, check the shipping methods before updating the address.
+   */
+  updateCountry: function() {
+    MyParcelFrontend.updateShippingMethod();
+    MyParcelFrontend.updateAddress();
   },
 };
 
