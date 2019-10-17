@@ -21,6 +21,10 @@ $target_url = wp_nonce_url(
     WCMP::NONCE_ACTION
 );
 
+error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
+
 ?>
   <form
     method="post"
@@ -70,7 +74,7 @@ $target_url = wp_nonce_url(
                     <?php foreach ($order->get_items() as $item_id => $item) : ?>
                       <tr>
                         <td><?php echo $item['qty'] . 'x'; ?></td>
-                        <td><?php echo $this->get_item_display_name($item, $order) ?></td>
+                        <td><?php echo WCMP_Export::get_item_display_name($item, $order) ?></td>
                         <td align="right">
                             <?php echo wc_format_weight(
                                 WCMP_Export::get_item_weight_kg($item, $order)

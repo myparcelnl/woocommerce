@@ -63,23 +63,30 @@ class WCMP_Assets
                 "wcmp-admin",
                 "wcmp",
                 [
-                    "actions"          => [
+                    "api_url"                => WCMP_Data::API_URL,
+                    "actions"                => [
                         "export"        => WCMP_Export::EXPORT,
                         "add_return"    => WCMP_Export::ADD_RETURN,
                         "add_shipments" => WCMP_Export::ADD_SHIPMENTS,
                         "get_labels"    => WCMP_Export::GET_LABELS,
-                        "modal_dialog"   => WCMP_Export::MODAL_DIALOG,
+                        "modal_dialog"  => WCMP_Export::MODAL_DIALOG,
                     ],
-                    "ajax_url"         => admin_url("admin-ajax.php"),
-                    "nonce"            => wp_create_nonce(WCMP::NONCE_ACTION),
-                    "download_display" => WCMP()->setting_collection->getByName(
+                    "bulk_actions"           => [
+                        "export"       => WCMP_Admin::BULK_ACTION_EXPORT,
+                        "print"        => WCMP_Admin::BULK_ACTION_PRINT,
+                        "export_print" => WCMP_Admin::BULK_ACTION_EXPORT_PRINT,
+                    ],
+                    "ajax_url"               => admin_url("admin-ajax.php"),
+                    "nonce"                  => wp_create_nonce(WCMP::NONCE_ACTION),
+                    "download_display"       => WCMP()->setting_collection->getByName(
                         WCMP_Settings::SETTING_DOWNLOAD_DISPLAY
                     ),
-                    "offset"           => WCMP()->setting_collection->getByName(
-                        WCMP_Settings::SETTING_PRINT_POSITION_OFFSET
+                    "ask_for_print_position" => WCMP()->setting_collection->isEnabled(
+                        WCMP_Settings::SETTING_ASK_FOR_PRINT_POSITION
                     ),
-                    "offset_icon"      => WCMP()->plugin_url() . "/assets/img/print-offset-icon.png",
-                    "offset_label"     => __("Labels to skip", "woocommerce-myparcelbe"),
+                    "strings"                => [
+                        "no_orders_selected" => __("You have not selected any orders!", "woocommerce-myparcelbe"),
+                    ],
                 ]
             );
 
