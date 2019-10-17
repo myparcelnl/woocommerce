@@ -7,6 +7,9 @@
   "extends": [
     "@myparcel/eslint-config/preset-default"
   ],
+  "rules": {
+    "no-console": "error"
+  },
   "overrides": [
     {
       "files": [
