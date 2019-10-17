@@ -683,24 +683,6 @@ jQuery(function($) {
     $('body').css({overflow: 'inherit'});
   }
 
-  /* export orders to MyParcel via AJAX */
-  function myparcelbe_return(order_ids) {
-    var data = {
-      action: 'wcmp',
-      request: wcmp.actions.add_return,
-      order_ids: order_ids,
-      security: wcmp.nonce,
-    };
-
-    $.post(wcmp.ajax_url, data, function(response) {
-      response = $.parseJSON(response);
-      if (response !== null && typeof response === 'object' && 'error' in response) {
-        myparcelbe_admin_notice(response.error, 'error');
-      }
-    });
-
-  }
-
   /**
    * Open given pdf link. Depending on the link it will be either downloaded or viewed. Refreshes the original window.
    *
