@@ -191,7 +191,7 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
         public function output_delivery_options()
         {
             do_action('woocommerce_myparcelbe_before_delivery_options');
-            require_once(WooCommerce_MyParcelBE()->plugin_path() . '/templates/wcmp-delivery-options-template.php');
+            require_once(WooCommerce_MyParcelBE()->plugin_path() . '/includes_php56/templates/wcmp-delivery-options-template.php');
             do_action('woocommerce_myparcelbe_after_delivery_options');
         }
 

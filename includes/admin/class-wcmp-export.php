@@ -154,7 +154,6 @@ class WCMP_Export
      */
     public function export()
     {
-//        die("request: {$_REQUEST["request"]}");
         // Check the nonce
         if (! check_ajax_referer(WCMP::NONCE_ACTION, "_wpnonce", false)) {
             die("Ajax security check failed. Did you pass a valid nonce in \$_REQUEST['_wpnonce']?");
