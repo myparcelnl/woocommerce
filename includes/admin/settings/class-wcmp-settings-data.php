@@ -726,24 +726,24 @@ class WCMP_Settings_Data
                 "default"   => "woocommerce_after_checkout_billing_form",
                 "options" => [
                     "woocommerce_after_checkout_billing_form"     => __(
-                        "Show checkout options after billing details",
+                        "Show after billing details",
                         "woocommerce-myparcelbe"
                     ),
                     "woocommerce_after_checkout_shipping_form"    => __(
-                        "Show checkout options after shipping details",
+                        "Show after shipping details",
                         "woocommerce-myparcelbe"
                     ),
                     "woocommerce_checkout_after_customer_details" => __(
-                        "Show checkout options after customer details",
+                        "Show after customer details",
                         "woocommerce-myparcelbe"
                     ),
                     "woocommerce_after_order_notes"               => __(
-                        "Show checkout options after notes",
+                        "Show after notes",
                         "woocommerce-myparcelbe"
                     ),
                 ],
                 "help_text" => __(
-                    "You can change the place of the checkout options on the checkout page. By default it will be placed after shipping details.",
+                    "You can change the place of the delivery options on the checkout page. By default it will be placed after shipping details.",
                     "woocommerce-myparcelbe"
                 ),
             ],
