@@ -22,10 +22,10 @@ if (! class_exists('WCMP')) :
         /**
          * Translations domain
          */
-        const DOMAIN          = 'woocommerce-myparcelbe';
-        const NONCE_ACTION    = 'wc_myparcelbe';
+        const DOMAIN                  = 'woocommerce-myparcelbe';
+        const NONCE_ACTION            = 'wc_myparcelbe';
         const MINIMUM_PHP_VERSION_5_4 = '5.4';
-        const PHP_VERSION_7_1 = '7.1';
+        const PHP_VERSION_7_1         = '7.1';
 
         public $version = '4.0.0';
 
@@ -145,7 +145,6 @@ if (! class_exists('WCMP')) :
                 $this->export = require_once($this->includes . "/class-wcmp-export.php");
                 require_once($this->includes . "/class-wcmp-bepostcode-fields.php");
 
-
                 return;
             }
 
@@ -199,11 +198,15 @@ if (! class_exists('WCMP')) :
                 return;
             }
 
-            // initSettings must be for file includes
-            $this->initSettings();
-
-            // all systems ready - GO!
-            $this->includes();
+            if (! $this->phpVersionMeets(\WCMP::PHP_VERSION_7_1)) {
+                // php 5.6
+                $this->initSettings();
+                $this->includes();
+            } else {
+                // php 7.1
+                $this->includes();
+                $this->initSettings();
+            }
         }
 
         /**
@@ -228,7 +231,9 @@ if (! class_exists('WCMP')) :
         public function need_woocommerce()
         {
             $error = sprintf(
-                __("WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!", "woocommerce-myparcelbe"),
+                __("WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!",
+                    "woocommerce-myparcelbe"
+                ),
                 '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
                 '</a>'
             );
@@ -244,7 +249,9 @@ if (! class_exists('WCMP')) :
 
         public function required_php_version()
         {
-            $error         = __("WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended).", "woocommerce-myparcelbe");
+            $error         = __("WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended).",
+                "woocommerce-myparcelbe"
+            );
             $how_to_update = __("How to update your PHP version", "woocommerce-myparcelbe");
             $message       = sprintf(
                 '<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>',
@@ -357,7 +364,7 @@ if (! class_exists('WCMP')) :
 
             // Create the settings collection by importing this function, because we can't use the sdk
             // imports in the legacy version.
-            include('includes/wcmp-initialize-settings-collection.php');
+            require_once('includes/wcmp-initialize-settings-collection.php');
             if (empty($this->setting_collection)) {
                 $this->setting_collection = (new WCMP_Initialize_Settings_Collection())->initialize();
             }
