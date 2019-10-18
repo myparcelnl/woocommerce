@@ -7,7 +7,7 @@
 	<?php
 		wp_enqueue_script(
 			'wcmyparcelbe-export',
-			WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-admin.js',
+			WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/js/wcmp-admin.js',
 			array( 'jquery', 'thickbox' ),
 			WC_MYPARCEL_BE_VERSION
 		);
@@ -25,7 +25,7 @@
 
 		wp_enqueue_style(
 			'wcmp-admin-styles',
-			WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
+			WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/css/wcmp-admin-styles.css',
 			array(),
 			WC_MYPARCEL_BE_VERSION,
 			'all'
@@ -35,7 +35,7 @@
 		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 			wp_enqueue_style(
 				'wcmp-admin-styles-legacy',
-				WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
+				WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/css/wcmp-admin-styles-legacy.css',
 				array(),
 				WC_MYPARCEL_BE_VERSION,
 				'all'
