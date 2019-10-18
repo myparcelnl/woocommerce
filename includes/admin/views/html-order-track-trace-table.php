@@ -48,17 +48,17 @@ if (! count($shipments)) {
       ?>
     <tr>
       <td class="wcmp__order__track-trace">
-          <?php $this->renderTrackTraceLink($shipment, $order_id); ?>
+          <?php WCMP_Admin::renderTrackTraceLink($shipment, $order_id); ?>
       </td>
       <td class="wcmp__order__status">
-          <?php $this->renderStatus($shipment) ?>
+          <?php WCMP_Admin::renderStatus($shipment) ?>
       </td>
       <td class="wcmp__td--create-label">
           <?php
           $action    = WCMP_Export::EXPORT;
           $getLabels = WCMP_Export::GET_LABELS;
 
-          $this->renderAction(
+          WCMP_Admin::renderAction(
               admin_url("admin-ajax.php?action=$action&request=$getLabels&shipment_ids=$shipment_id"),
               __("Print MyParcel BE label", "woocommerce-myparcelbe"),
               WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png"

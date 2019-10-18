@@ -2,9 +2,9 @@
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
-use MyParcelNL\Sdk\src\Factory\ShipmentOptionsAdapterFactory;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -45,7 +45,7 @@ class WCMP_Admin
             add_action("admin_footer", [$this, "bulk_actions"]);
         }
 
-        add_action("woocommerce_after_account_orders", [$this, "renderOffsetDialog"]);
+        add_action("admin_footer", [$this, "renderOffsetDialog"]);
 
         /**
          * Orders page
@@ -82,8 +82,7 @@ class WCMP_Admin
     }
 
     /**
-     * @param      $order
-     * @param bool $hide
+     * @param WC_Order $order
      *
      * @throws Exception
      */
@@ -108,7 +107,7 @@ class WCMP_Admin
             <div class="wcmp__shipment-summary">
                 <?php $this->showDeliveryOptionsForOrder($order); ?>
                 <a class="wcmp__shipment-summary__show"><span class="wcmp__encircle wcmp__shipment-summary__show">i</span></a>
-                <div class="wcmp__shipment-summary__list"
+                <div class="wcmp__box wcmp__shipment-summary__list"
                      data-loaded=""
                      data-shipment_id="<?php echo $last_shipment_id; ?>"
                      data-order_id="<?php echo $order_id; ?>"
@@ -126,7 +125,7 @@ class WCMP_Admin
                 '<a href="#" class="wcmp__shipment-options__show">%s &#x25BE;</a>',
                 __("Details", "woocommerce-myparcelbe")
             ); ?>
-            <div class="wcmp__shipment-options__form" style="display: none;">
+            <div class="wcmp__box wcmp__shipment-options__form" style="display: none;">
                 <a class="wcmp__d--flex">
                     <?php include('views/html-order-shipment-options.php'); ?>
                 </a>
@@ -149,10 +148,7 @@ class WCMP_Admin
     }
 
     /**
-     * Add export option to bulk action drop down menu
-     * Using Javascript until WordPress core fixes: http://core.trac.wordpress.org/ticket/16031
-     *
-     * @access public
+     * Add export option to bulk action drop down menu.
      *
      * @param array $actions
      *
@@ -215,22 +211,51 @@ class WCMP_Admin
      * @access public
      * @return void
      */
-    public function renderOffsetDialog()
+    public function renderOffsetDialog(): void
     {
+        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ASK_FOR_PRINT_POSITION)) {
+            return;
+        }
+
+        $field = [
+            "name"              => "offset",
+            "class"             => ["wcmp__d--inline-block"],
+            "input_class"        => ["wcmp__offset-dialog__offset"],
+            "type"              => "number",
+            "label"             => __("Labels to skip", "woocommerce-myparcelbe"),
+            "custom_attributes" => [
+                "step" => "1",
+                "min"  => "0",
+                "max"  => "4",
+                "size" => "2",
+            ],
+        ];
+
+        $class = new SettingsFieldArguments($field);
         ?>
+
         <div
-            class="wcmp__offset-dialog"
-            style="display:none;">
-            <?php _e("Labels to skip", "woocommerce-myparcelbe"); ?>: <input
-                type="text"
-                size="2"
-                class="wcmp__offset-dialog__offset"> <img
-                src="<?php echo WCMP()->plugin_url() . '/assets/img/print-offset-icon.png'; ?>"
-                class="wcmp__offset-dialog__icon"
-                style="vertical-align: middle;">
-            <button
-                class="button"
-                style="display:none; margin-top: 4px"><?php _e("Print", "woocommerce-myparcelbe"); ?></button>
+            class="wcmp wcmp__box wcmp__offset-dialog"
+            style="display: none;">
+            <div class="wcmp__offset-dialog__inner wcmp__d--flex">
+                <div>
+                    <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
+
+                    <img
+                        src="<?php echo WCMP()->plugin_url() . "/assets/img/print-offset-icon.png"; ?>"
+                        alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
+                        class="wcmp__offset-dialog__icon"/>
+                    <div>
+                        <a
+                            href="#"
+                            class="wcmp__action wcmp__offset-dialog__button button">
+                            <?php _e("Print", "woocommerce-myparcelbe"); ?>
+                            <?php WCMP_Admin::renderSpinner(); ?>
+                        </a>
+                    </div>
+                </div>
+                <div class="wcmp__close-button dashicons dashicons-no-alt wcmp__offset-dialog__close"></div>
+            </div>
         </div>
         <?php
     }
@@ -705,8 +730,10 @@ class WCMP_Admin
     /**
      * @param array $shipment
      * @param int   $order_id
+     *
+     * @throws Exception
      */
-    private function renderTrackTraceLink(array $shipment, int $order_id): void
+    public static function renderTrackTraceLink(array $shipment, int $order_id): void
     {
         $track_trace = $shipment["track_trace"] ?? null;
 
@@ -730,7 +757,7 @@ class WCMP_Admin
     /**
      * @param array $shipment
      */
-    private function renderStatus(array $shipment): void
+    public static function renderStatus(array $shipment): void
     {
         echo $shipment["status"] ?? "–";
     }

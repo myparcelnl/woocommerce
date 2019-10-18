@@ -10,11 +10,11 @@
  * @property {{export: String, print: String, export_print: String}} wcmp.bulk_actions
  * @property {String} wcmp.download_display
  * @property {String} wcmp.nonce
- * @property {String} wcmp.offset_icon
+ * @property {Object.<String, String>} wcmp.strings
  */
 
 /* eslint-disable-next-line max-lines-per-function */
-jQuery(function ($) {
+jQuery(function($) {
   /**
    * @type {Boolean}
    */
@@ -22,7 +22,9 @@ jQuery(function ($) {
 
   var selectors = {
     offsetDialog: '.wcmp__offset-dialog',
-    offsetDialogInput: '.wcmp__offset-dialog__offset',
+    offsetDialogButton: '.wcmp__offset-dialog__button',
+    offsetDialogClose: '.wcmp__offset-dialog__close',
+    offsetDialogInputOffset: '.wcmp__offset-dialog__offset',
     printQueue: '.wcmp__print-queue',
     printQueueOffset: '.wcmp__print-queue__offset',
     saveShipmentSettings: '.wcmp__shipment-settings__save',
@@ -62,6 +64,8 @@ jQuery(function ($) {
      */
     $(selectors.offsetDialog + ' button').click(printOrder);
 
+    $(selectors.offsetDialogClose).click(hideOffsetDialog);
+
     /**
      * Show and enable options when clicked.
      */
@@ -83,7 +87,7 @@ jQuery(function ($) {
     /**
      * Add offset dialog when address labels option is selected.
      */
-    $('select[name=\'action\'], select[name=\'action2\']').change(showOffsetDialog);
+    $('select[name=\'action\'], select[name=\'action2\']').change(showBulkOffsetDialog);
 
     /**
      * Single actions click. The .wc_actions .single_wc_actions for support wc > 3.3.0.
@@ -363,6 +367,11 @@ jQuery(function ($) {
 
     $(rows.join(', ')).addClass('wcmp__loading');
 
+    if (!order_ids.length) {
+      alert(wcmp.strings.no_orders_selected);
+      return;
+    }
+
     switch (action) {
       /**
        * Export orders.
@@ -377,7 +386,6 @@ jQuery(function ($) {
       case wcmp.bulk_actions.print:
         printLabel({
           order_ids: order_ids,
-          offset: askForPrintPosition ? $(selectors.offsetDialogInput).val() : 0,
         });
         break;
 
@@ -477,7 +485,11 @@ jQuery(function ($) {
         exportToMyParcel.bind(button)();
         break;
       case wcmp.actions.get_labels:
-        printLabel.bind(button)();
+        if (askForPrintPosition && !$(button).hasClass('wcmp__offset-dialog__button')) {
+          showOffsetDialog.bind(button)();
+        } else {
+          printLabel.bind(button)();
+        }
         break;
       case wcmp.actions.add_return:
         myparcelbe_modal_dialog(order_ids, 'return');
@@ -485,27 +497,95 @@ jQuery(function ($) {
     }
   }
 
-  function showOffsetDialog() {
-    var selectedAction = $(this).val();
+  /**
+   * Show the offset dialog before printing.
+   *
+   * @param {String?} position - To position the dialog `left` or `right` relative to the bound element.
+   * @param {String?} context - Context in which the dialog was created. Ex. 'bulk'.
+   */
+  function showOffsetDialog(position, context) {
+    position = position || 'left';
+
+    var parent = this;
     var offsetDialog = $(selectors.offsetDialog);
+    var dialogButton = $(selectors.offsetDialogButton);
+    var parentOffset = $(parent).offset();
 
-    if ((selectedAction === 'wcmp_print' || selectedAction === 'wcmp_export_print') && askForPrintPosition) {
-      var insert_position = $(this).attr('name') === 'action' ? 'top' : 'bottom';
-
-      offsetDialog
-        .attr('style', 'clear:both') /* reset styles */
-        .insertAfter('div.tablenav.' + insert_position)
-        .show();
-
-      /* make sure button is not shown */
-      offsetDialog.find('button').hide();
-      /* clear input */
-      offsetDialog.find('input').val('');
+    /**
+     * Position it to the bottom left or right of the clicked button.
+     */
+    if (position === 'left') {
+      offsetDialog.css({
+        left: parentOffset.left - offsetDialog.width(),
+        top: parentOffset.top,
+      });
     } else {
-      offsetDialog
-        .appendTo('body')
-        .hide();
+      offsetDialog.css(parentOffset);
     }
+
+    dialogButton.attr('href', parent.href);
+
+    /**
+     * Reset input(s).
+     */
+    offsetDialog.find('input').val(0);
+
+    /**
+     * Make sure button is not shown and there is no input listener to update it if context is bulk.
+     */
+    if (context === 'bulk') {
+      dialogButton.hide();
+      $(selectors.offsetDialogInputOffset).off('blur update change', onUpdateOffset);
+    } else {
+      dialogButton.show();
+      $(selectors.offsetDialogInputOffset).on('blur update change', onUpdateOffset);
+    }
+
+    /**
+     * Finally, show the dialog.
+     */
+    offsetDialog.slideDown();
+  }
+
+  /**
+   * Hide the offset dialog and remove the input listener.
+   *
+   * @param {Event?} event - Click event if called from a button.
+   */
+  function hideOffsetDialog(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    $(selectors.offsetDialogInputOffset).off('blur update change', onUpdateOffset);
+    $(selectors.offsetDialog).slideUp();
+  }
+
+  /**
+   * On changing the offset value in the dialog, update the offset parameter in the dialog button's href attribute.
+   */
+  function onUpdateOffset() {
+    var dialogButton = $(selectors.offsetDialogButton);
+    var hasOffset = dialogButton.attr('href').indexOf('offset=') > -1;
+    var newOffset = this.value;
+
+    if (hasOffset) {
+      dialogButton.attr('href', dialogButton.attr('href').replace(/([?&]offset=)\d*/, '$1' + newOffset));
+    } else {
+      dialogButton.attr('href', dialogButton.attr('href') + '&offset=' + newOffset);
+    }
+  };
+
+  /**
+   * Show the offset dialog for bulk options that allow it.
+   */
+  function showBulkOffsetDialog() {
+    if ([wcmp.bulk_actions.print, wcmp.bulk_actions.export_print].indexOf(this.value) === -1) {
+      hideOffsetDialog();
+      return;
+    }
+
+    showOffsetDialog.bind(this)('right', 'bulk');
   }
 
   function printOrder() {
@@ -513,7 +593,7 @@ jQuery(function ($) {
 
     /* set print variables */
     var order_ids = [dialog.find('input.order_id').val()];
-    var offset = dialog.find(selectors.offsetDialogInput).val();
+    var offset = dialog.find(selectors.offsetDialogInputOffset).val();
 
     /* hide dialog */
     dialog.hide();
@@ -525,73 +605,8 @@ jQuery(function ($) {
     });
   }
 
-  /**
-   * Place offset dialog at mouse tip.
-   */
-  function showContextualOffsetDialog(order_ids, event) {
-    var offsetDialog = $(selectors.offsetDialog);
-
-    offsetDialog
-      .show()
-      .appendTo('body')
-      .css({
-        top: event.pageY,
-        left: event.pageX,
-      });
-
-    offsetDialog.find('button')
-      .show()
-      .data('order_id', order_ids);
-
-    /* clear input */
-    offsetDialog.find('input').val('');
-
-    offsetDialog.append('<input type="hidden" class="order_id"/>');
-    $(selectors.offsetDialog + ' input.order_id').val(order_ids);
-  }
-
-  /**
-   * @param {Element} button - The button that was clicked.
-   * @param {Boolean} display - To display or not to display.
-   */
-  function showButtonSpinner(button, display) {
-    if (display) {
-      var buttonImage = $(button).find(selectors.orderActionImage);
-      buttonImage.hide();
-      $(button).parent()
-        .find(selectors.spinner)
-        .insertAfter(buttonImage)
-        .show();
-    } else {
-      $(button).parent()
-        .find(selectors.spinner)
-        .hide();
-      $(button).find(selectors.orderActionImage)
-        .show();
-    }
-  }
-
-  /**
-   * @param {Element} action - The action that was clicked.
-   * @param {Boolean} display - To display or not to display.
-   */
-  function showBulkSpinner(action, display) {
-    var submit_button = $(action)
-      .parent()
-      .find('.button.action');
-
-    if (display) {
-      $(selectors.bulkSpinner)
-        .insertAfter(submit_button)
-        .show();
-    } else {
-      $(selectors.bulkSpinner).hide();
-    }
-  }
-
   /* export orders to MyParcel via AJAX */
   function exportToMyParcel(order_ids, print) {
-    var offset = askForPrintPosition ? $(selectors.offsetDialogInput).val() : 0;
     var url;
     var data;
 
@@ -605,7 +620,7 @@ jQuery(function ($) {
       data = {
         action: wcmp.actions.export,
         request: wcmp.actions.add_shipments,
-        offset: offset,
+        offset: getPrintOffset(),
         order_ids: order_ids,
         print: print,
         _wpnonce: wcmp.nonce,
@@ -634,7 +649,6 @@ jQuery(function ($) {
           /* load PDF */
           printLabel({
             order_ids: order_ids,
-            offset: offset,
           });
         }
       },
@@ -669,29 +683,37 @@ jQuery(function ($) {
     $('body').css({overflow: 'inherit'});
   }
 
-  /* export orders to MyParcel via AJAX */
-  function myparcelbe_return(order_ids) {
-    var data = {
-      action: 'wcmp',
-      request: wcmp.actions.add_return,
-      order_ids: order_ids,
-      security: wcmp.nonce,
-    };
+  /**
+   * Open given pdf link. Depending on the link it will be either downloaded or viewed. Refreshes the original window.
+   *
+   * @param {String} pdfUrl - The url of the created pdf.
+   * @param {Boolean?} waitForOnload - Wait for onload to refresh the original window. Refreshes immediately if false.
+   *
+   */
+  function openPdf(pdfUrl, waitForOnload) {
+    var pdfWindow = window.open(pdfUrl, '_blank');
 
-    $.post(wcmp.ajax_url, data, function(response) {
-      response = $.parseJSON(response);
-      if (response !== null && typeof response === 'object' && 'error' in response) {
-        myparcelbe_admin_notice(response.error, 'error');
-      }
-    });
-
+    if (waitForOnload) {
+      /*
+       * When the pdf window is loaded reload the main window. If we reload earlier the track & trace code won't be
+       * ready yet and can't be shown.
+       */
+      pdfWindow.onload = function() {
+        window.location.reload();
+      };
+    } else {
+      /* For when there is no onload event or there is no need to wait. */
+      window.location.reload();
+    }
   }
 
   /**
-   * @param {String} pdfUrl - The url of the created pdf.
+   * Get the offset from the offset dialog if it's present. Otherwise return 0.
+   *
+   * @returns {Number}
    */
-  function openPdf(pdfUrl) {
-    window.open(pdfUrl);
+  function getPrintOffset() {
+    return parseInt(askForPrintPosition ? $(selectors.offsetDialogInputOffset).val() : 0);
   }
 
   /* Request MyParcel BE labels */
@@ -708,6 +730,7 @@ jQuery(function ($) {
         data: Object.assign({
           action: wcmp.actions.export,
           request: wcmp.actions.get_labels,
+          offset: getPrintOffset(),
           _wpnonce: wcmp.nonce,
         }, data),
       };
@@ -715,7 +738,6 @@ jQuery(function ($) {
 
     request.afterDone = function(response) {
       openPdf(response);
-      window.location.reload();
     };
 
     if (wcmp.download_display === 'download') {
@@ -729,15 +751,7 @@ jQuery(function ($) {
         url = wcmp.ajax_url + '?' + $.param(request.data);
       }
 
-      var pdfWindow = window.open(url, '_blank');
-
-      /**
-       * When the pdf window is loaded reload the main window. If we reload earlier the track & trace code won't be
-       * ready yet and can't be shown.
-       */
-      pdfWindow.onload = function() {
-        window.location.reload();
-      };
+      openPdf(url, true);
     }
   }
 

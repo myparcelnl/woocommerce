@@ -74,7 +74,13 @@ class WCMP_Export
         return (bool) $option;
     }
 
-    public function get_item_display_name($item, $order)
+    /**
+     * @param $item
+     * @param $order
+     *
+     * @return mixed|string
+     */
+    public static function get_item_display_name($item, $order)
     {
         // set base name
         $name = $item['name'];
@@ -180,7 +186,7 @@ class WCMP_Export
 
         $dialog  = $_REQUEST["dialog"] ?? null;
         $print   = $_REQUEST["print"] ?? null;
-        $offset  = $_REQUEST["offset"] ?? null;
+        $offset  = (bool) $_REQUEST["offset"] ?? 0;
         $request = $_REQUEST["request"];
 
         $order_ids    = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
@@ -198,15 +204,15 @@ class WCMP_Export
                     $this->addShipments($order_ids, $shipment_ids, $offset, $print);
                     break;
 
-            // Creating a return shipment.
-            case self::ADD_RETURN:
-                if (empty($order_ids)) {
-                    $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
-                    break;
-                }
+                // Creating a return shipment.
+                case self::ADD_RETURN:
+                    if (empty($order_ids)) {
+                        $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
+                        break;
+                    }
 
-                $return = $this->add_return($order_ids);
-                break;
+                    $return = $this->add_return($order_ids);
+                    break;
 
                 // Downloading labels.
                 case self::GET_LABELS:
@@ -215,7 +221,7 @@ class WCMP_Export
 
                 case self::MODAL_DIALOG:
                     $order_ids = $this->filterOrderDestinations($order_ids);
-                    $this->modal_dialog($order_ids);
+                    $this->modal_dialog($order_ids, $dialog);
                     break;
             }
         }
@@ -368,12 +374,12 @@ class WCMP_Export
     }
 
     /**
-     * @param $order_ids
+     * @param array $order_ids
      *
      * @return array
      * @throws Exception
      */
-    public function add_return($order_ids)
+    public function add_return(array $order_ids)
     {
         $return = [];
 
@@ -433,13 +439,10 @@ class WCMP_Export
         WCMP_Log::add("Shipment IDs: " . implode(", ", $shipment_ids));
 
         try {
-            $api       = $this->init_api();
-            $positions = self::DEFAULT_POSITIONS;
+            $api = $this->init_api();
 
-            if (! empty($offset) && is_numeric($offset)) {
-                // positions are defined on landscape, but paper is filled portrait-wise
-                $positions = array_slice(self::DEFAULT_POSITIONS, $offset);
-            }
+            // positions are defined on landscape, but paper is filled portrait-wise
+            $positions = array_slice(self::DEFAULT_POSITIONS, $offset % 4);
 
             $display = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === "display";
             $api->getShipmentLabels($shipment_ids, $positions, $display);
@@ -481,7 +484,7 @@ class WCMP_Export
     /**
      * @param $order_ids
      */
-    public function modal_dialog($order_ids): void
+    public function modal_dialog($order_ids, $dialog): void
     {
         // check for JSON
         if (is_string($order_ids) && strpos($order_ids, "[") !== false) {
@@ -797,7 +800,7 @@ class WCMP_Export
      * @return void
      * @throws Exception
      */
-    public function save_shipment_data(WC_Order $order, array $shipment): void
+    public function saveShipmentData(WC_Order $order, array $shipment): void
     {
         if (empty($shipment)) {
             throw new Exception(__("save_shipment_data requires a valid \$shipment.", "woocommerce-myparcelbe"));
@@ -1108,35 +1111,6 @@ class WCMP_Export
     }
 
     /**
-     * @param $order
-     *
-     * @return array
-     */
-    public function find_order_shipping_classes(WC_Order $order)
-    {
-        $found_shipping_classes = [];
-        $order_items            = $order->get_items();
-        foreach ($order_items as $item_id => $item) {
-            $product = $order->get_product_from_item($item);
-            if ($product && $product->needs_shipping()) {
-                $found_class = $product->get_shipping_class();
-
-                if (! isset($found_shipping_classes[$found_class])) {
-                    $found_shipping_classes[$found_class] = [];
-                }
-                // normally this should pass the $product object, but only in the checkout this contains
-                // quantity & line_total (which is all we need), so we pass data from the $item instead
-                $item_product                                   = new stdClass();
-                $item_product->quantity                         = $item["qty"];
-                $item_product->line_total                       = $item["line_total"];
-                $found_shipping_classes[$found_class][$item_id] = $item_product;
-            }
-        }
-
-        return $found_shipping_classes;
-    }
-
-    /**
      * Adapted from WC_Shipping_Flat_Rate - Protected method
      * Evaluate a cost from a sum/string.
      *
@@ -1348,17 +1322,15 @@ class WCMP_Export
     }
 
     /**
-     * @param $order_ids
-     * @param $shipment_ids
-     * @param $offset
+     * @param array $order_ids
+     * @param array $shipment_ids
+     * @param int   $offset
      *
      * @return array
      * @throws Exception
      */
-    private function printLabels($order_ids, $shipment_ids, $offset)
+    private function printLabels(array $order_ids, array $shipment_ids, int $offset)
     {
-        $offset = ! empty($offset) && is_numeric($offset) ? $offset % 4 : 0;
-
         if (! empty($shipment_ids)) {
             $return = $this->downloadOrGetUrlOfLabels(
                 $shipment_ids,
