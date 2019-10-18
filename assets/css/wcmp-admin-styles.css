@@ -5,6 +5,8 @@
 .button.wcmp__action {
   width: auto;
   min-width: 2em;
+  display: -ms-inline-flexbox;
+  display: -webkit-inline-box;
   display: inline-flex;
   padding: 0 0.3em !important
 }
@@ -29,14 +31,16 @@
  */
 .wcmp__barcodes {
   overflow: hidden;
-  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+     text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .wcmp__box {
   background-color: white;
   border: 1px solid #ccc;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   padding: 10px;
   position: absolute;
   z-index: 999;
@@ -124,6 +128,8 @@
  * Spinner
  */
 .wcmp__spinner {
+  display: -ms-inline-flexbox;
+  display: -webkit-inline-box;
   display: inline-flex;
   margin: auto;
 }
@@ -142,6 +148,8 @@
 
 .button > .wcmp__spinner {
   margin-left: 0;
+  -webkit-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
 
@@ -278,6 +286,8 @@
 }
 
 .wcmp__d--flex {
+  display: -ms-flexbox;
+  display: -webkit-box;
   display: flex;
 }
 
