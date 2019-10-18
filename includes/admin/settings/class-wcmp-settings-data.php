@@ -221,10 +221,10 @@ class WCMP_Settings_Data
                     "settings" => $this->get_section_checkout_main(),
                 ],
                 [
-                    "name"     => "strings",
-                    "label"    => __("Titles", "woocommerce-myparcelbe"),
+                    "name"      => "strings",
+                    "label"     => __("Titles", "woocommerce-myparcelbe"),
                     "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                    "settings" => $this->get_section_checkout_strings(),
+                    "settings"  => $this->get_section_checkout_strings(),
                 ],
             ],
         ];
@@ -724,16 +724,20 @@ class WCMP_Settings_Data
                 "label"     => __("Checkout position", "woocommerce-myparcelbe"),
                 "type"      => "select",
                 "default"   => "woocommerce_after_checkout_billing_form",
-                "options"   => [
-                    "woocommerce_after_checkout_billing_form"  => __(
+                "options" => [
+                    "woocommerce_after_checkout_billing_form"     => __(
                         "Show checkout options after billing details",
                         "woocommerce-myparcelbe"
                     ),
-                    "woocommerce_after_checkout_shipping_form" => __(
+                    "woocommerce_after_checkout_shipping_form"    => __(
                         "Show checkout options after shipping details",
                         "woocommerce-myparcelbe"
                     ),
-                    "woocommerce_after_order_notes"            => __(
+                    "woocommerce_checkout_after_customer_details" => __(
+                        "Show checkout options after customer details",
+                        "woocommerce-myparcelbe"
+                    ),
+                    "woocommerce_after_order_notes"               => __(
                         "Show checkout options after notes",
                         "woocommerce-myparcelbe"
                     ),
@@ -748,6 +752,7 @@ class WCMP_Settings_Data
                 "condition"         => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"             => __("Custom styles", "woocommerce-myparcelbe"),
                 "type"              => "textarea",
+                "append"            => $this->getCustomCssAddition(),
                 "custom_attributes" => [
                     "style" => "font-family: monospace;",
                     "rows"  => "8",
