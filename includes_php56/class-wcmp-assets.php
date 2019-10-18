@@ -22,7 +22,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
             if (isset(WooCommerce_MyParcelBE()->checkout_settings['use_split_address_fields'])) {
                 wp_enqueue_script(
                     'wcmp-checkout-fields',
-                    WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
+                    WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/js/wcmp-checkout-fields.js',
                     array('jquery', 'wc-checkout'),
                     WC_MYPARCEL_BE_VERSION
                 );
@@ -33,14 +33,14 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
 
             wp_enqueue_script(
                 'wc-myparcelbe',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/legacy/myparcelbe.js',
+                WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/js/myparcelbe.js',
                 array('jquery'),
                 WC_MYPARCEL_BE_VERSION
             );
 
             wp_enqueue_script(
                 'wc-myparcelbe-frontend',
-                WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/legacy/wcmp-frontend.js',
+                WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/js/wcmp-frontend.js',
                 array('wc-myparcelbe'),
                 WC_MYPARCEL_BE_VERSION
             );
@@ -71,7 +71,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
                         $suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
                         wp_register_script(
                             'wc-enhanced-select',
-                            WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js',
+                            WC()->plugin_url() . '/includes_php56/assets/js/admin/wc-enhanced-select' . $suffix . '.js',
                             array('jquery', version_compare(WC()->version, '3.2.0', '>=') ? 'selectWoo' : 'select2'),
                             WC_VERSION
                         );
@@ -81,7 +81,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
                     wp_enqueue_script('jquery-ui-autocomplete');
                     wp_enqueue_style(
                         'woocommerce_admin_styles',
-                        WC()->plugin_url() . '/assets/css/admin.css',
+                        WC()->plugin_url() . '/includes_php56/assets/css/admin.css',
                         array(),
                         WC_VERSION
                     );
@@ -93,7 +93,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
                 wp_enqueue_style('thickbox');
                 wp_enqueue_script(
                     'wcmyparcelbe-export',
-                    WooCommerce_MyParcelBE()->plugin_url() . '/assets/js/wcmp-admin.js',
+                    WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/js/wcmp-admin.js',
                     array('jquery', 'thickbox', 'wp-color-picker'),
                     WC_MYPARCEL_BE_VERSION
                 );
@@ -114,7 +114,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
 
                 wp_enqueue_style(
                     'wcmp-admin-styles',
-                    WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
+                    WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/css/wcmp-admin-styles.css',
                     array(),
                     WC_MYPARCEL_BE_VERSION,
                     'all'
@@ -123,7 +123,7 @@ if ( ! class_exists('WooCommerce_MyParcelBE_Assets')) :
                 // Legacy styles (WC 2.1+ introduced MP6 style with larger buttons)
                 if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
                     wp_enqueue_style(
-                        'wcmp-admin-styles-legacy', WooCommerce_MyParcelBE()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css', array(), WC_MYPARCEL_BE_VERSION, 'all'
+                        'wcmp-admin-styles-legacy', WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/css/wcmp-admin-styles-legacy.css', array(), WC_MYPARCEL_BE_VERSION, 'all'
                     );
                 }
             }

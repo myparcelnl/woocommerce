@@ -63,13 +63,13 @@ class WCMP_Assets
                 "wcmp-admin",
                 "wcmp",
                 [
-                    "api_url" => WCMP_Data::API_URL,
+                    "api_url"                => WCMP_Data::API_URL,
                     "actions"                => [
                         "export"        => WCMP_Export::EXPORT,
                         "add_return"    => WCMP_Export::ADD_RETURN,
                         "add_shipments" => WCMP_Export::ADD_SHIPMENTS,
                         "get_labels"    => WCMP_Export::GET_LABELS,
-                        "modal_dialog"   => WCMP_Export::MODAL_DIALOG,
+                        "modal_dialog"  => WCMP_Export::MODAL_DIALOG,
                     ],
                     "bulk_actions"           => [
                         "export"       => WCMP_Admin::BULK_ACTION_EXPORT,
@@ -84,8 +84,9 @@ class WCMP_Assets
                     "ask_for_print_position" => WCMP()->setting_collection->isEnabled(
                         WCMP_Settings::SETTING_ASK_FOR_PRINT_POSITION
                     ),
-                    "offset_icon"            => WCMP()->plugin_url() . "/assets/img/print-offset-icon.png",
-                    "offset_label"           => __("Labels to skip", "woocommerce-myparcelbe"),
+                    "strings"                => [
+                        "no_orders_selected" => __("You have not selected any orders!", "woocommerce-myparcelbe"),
+                    ],
                 ]
             );
 
