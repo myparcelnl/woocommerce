@@ -826,6 +826,30 @@ class WCMP_Settings_Data
             ],
         ];
     }
+
+    /**
+     * Get the html string to render after the custom css select.
+     *
+     * @return string
+     */
+    private function getCustomCssAddition(): string
+    {
+        $currentTheme = wp_get_theme();
+
+        $preset  = sanitize_title($currentTheme);
+        $cssPath = WCMP()->plugin_path() . "/assets/css/delivery-options/delivery-options-preset-$preset.css";
+
+        if (! file_exists($cssPath)) {
+            return "";
+        }
+
+        return sprintf(
+            '<p>%s <a class="" href="#" onclick="document.querySelector(`#delivery_options_custom_css`).value = `%s`">%s</a></p>',
+            sprintf(__("Theme \"%s\" detected.", "woocommerce-myparcelbe"), $currentTheme),
+            file_get_contents($cssPath),
+            __("Apply preset.", "woocommerce-myparcelbe")
+        );
+    }
 }
 
 new WCMP_Settings_Data();
