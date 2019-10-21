@@ -1,5 +1,5 @@
 /* Storefront preset */
-.woocommerce-myparcel__delivery-options {
+.woocommerce-myparcel__delivery-options > .myparcel-delivery-options {
   background-color: #fafafa;
   clear: both;
   margin-bottom: 1rem;
