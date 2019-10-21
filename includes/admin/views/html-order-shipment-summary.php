@@ -16,12 +16,8 @@ $shipment_id = $_POST["shipment_id"];
 
 $order = WCX::get_order($order_id);
 
-try {
-    $shipments       = WCMP()->export->get_shipment_data([$shipment_id], $order);
-    $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-} catch (Exception $e) {
-    exit();
-}
+$shipments       = WCMP()->export->get_shipment_data([$shipment_id], $order);
+$deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 
 $option_strings = [
     "signature" => __("Signature on delivery", "woocommerce-myparcelbe"),
