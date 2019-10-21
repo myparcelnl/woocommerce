@@ -5,6 +5,7 @@
  */
 
 use MyParcelNL\Sdk\src\Support\Arr;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -13,31 +14,24 @@ if (! defined('ABSPATH')) {
 $order_id    = $_POST["order_id"];
 $shipment_id = $_POST["shipment_id"];
 
-$order           = wc_get_order($order_id);
-$shipment        = WCMP()->export->get_shipment_data([$shipment_id], $order)[$shipment_id];
+$order = WCX::get_order($order_id);
+
+$shipments       = WCMP()->export->get_shipment_data([$shipment_id], $order);
 $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-$option_strings   = [
+
+$option_strings = [
     "signature" => __("Signature on delivery", "woocommerce-myparcelbe"),
 ];
-$insurance        = Arr::get($shipment, "shipment.options.insurance");
-$labelDescription = Arr::get($shipment, "shipment.options.label_description");
 
-$trackTrace = Arr::get($shipment, "track_trace'");
+$firstShipment = $shipments[$shipment_id];
 
 /**
- * Show Track & Trace status.
+ * Show options only for the first shipment as they are all the same.
  */
-if ($trackTrace) {
-    $order_has_shipment = true;
-    $track_trace_url    = WCMP_Admin::getTrackTraceUrl($order_id, $trackTrace);
-    printf(
-        '%1$s: <a href="%2$s" target="_blank" title="%3$s">%4$s</a><br/>',
-        __("Status", "woocommerce-myparcelbe"),
-        $track_trace_url,
-        Arr::get($shipment, "track_trace"),
-        Arr::get($shipment, "status")
-    );
-}
+$insurance        = Arr::get($firstShipment, "shipment.options.insurance");
+$labelDescription = Arr::get($firstShipment, "shipment.options.label_description");
+
+echo '<ul class="wcmp__shipment-summary">';
 
 /**
  *  Package type
@@ -45,13 +39,12 @@ if ($trackTrace) {
 printf(
     '%s: %s',
     __("Shipment type", "woocommerce-myparcelbe"),
-    WCMP_Data::getPackageTypeHuman(Arr::get($shipment, "shipment.options.package_type"))
+    WCMP_Data::getPackageTypeHuman(Arr::get($firstShipment, "shipment.options.package_type"))
 );
 
-echo '<ul class="wcmp__shipment-summary">';
 foreach ($option_strings as $key => $label) {
-    if (Arr::get($shipment, "shipment.options.$key")
-        && (int) Arr::get($shipment, "shipment.options.$key") === 1) {
+    if (Arr::get($firstShipment, "shipment.options.$key")
+        && (int) Arr::get($firstShipment, "shipment.options.$key") === 1) {
         printf('<li class="%s">%s</li>', $key, $label);
     }
 }
@@ -68,5 +61,28 @@ if ($labelDescription) {
         $labelDescription
     );
 }
-
 echo '</ul>';
+
+echo "<hr>";
+
+/**
+ * Do show the Track & Trace status for all shipments.
+ */
+foreach ($shipments as $shipment_id => $shipment) {
+    $trackTrace = Arr::get($shipment, "track_trace");
+
+    /**
+     * Show Track & Trace status.
+     */
+    if (! $trackTrace) {
+        continue;
+    }
+
+    printf(
+        '<a href="%2$s" target="_blank" title="%3$s">%3$s</a><br/> %1$s: %4$s<br/>',
+        __("Status", "woocommerce-myparcelbe"),
+        WCMP_Admin::getTrackTraceUrl($order_id, $trackTrace),
+        $trackTrace,
+        Arr::get($shipment, "status")
+    );
+}
