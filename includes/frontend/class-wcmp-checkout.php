@@ -81,7 +81,7 @@ class WCMP_Checkout
         wp_enqueue_script(
             "wc-myparcelbe-frontend",
             WCMP()->plugin_url() . "/assets/js/wcmp-frontend.js",
-            array_merge($deps, ["wc-myparcelbe"]),
+            array_merge($deps, ["wc-myparcelbe", "jquery"]),
             WC_MYPARCEL_BE_VERSION,
             true
         );
@@ -109,9 +109,10 @@ class WCMP_Checkout
             "wc-myparcelbe",
             "MyParcelDeliveryOptions",
             [
-                "allowedShippingMethods" => json_encode($this->getShippingMethodsForDeliveryOptions()),
-                "alwaysShow"             => $this->alwaysDisplayDeliveryOptions(),
-                "hiddenInputName"        => WCMP_Admin::META_DELIVERY_OPTIONS,
+                "allowedShippingMethods"    => json_encode($this->getShippingMethodsForDeliveryOptions()),
+                "disallowedShippingMethods" => json_encode(["local_pickup"]),
+                "alwaysShow"                => $this->alwaysDisplayDeliveryOptions(),
+                "hiddenInputName"           => WCMP_Admin::META_DELIVERY_OPTIONS,
             ]
         );
 
