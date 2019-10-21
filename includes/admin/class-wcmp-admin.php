@@ -618,6 +618,8 @@ class WCMP_Admin
                 $meta = json_decode(stripslashes($meta), true);
             }
 
+            $meta["carrier"] = WCMP_Data::DEFAULT_CARRIER;
+
             try {
                 // create new instance from known json
                 $meta = DeliveryOptionsAdapterFactory::create((array) $meta);
