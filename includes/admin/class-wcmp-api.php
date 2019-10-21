@@ -120,6 +120,38 @@ class WCMP_API extends WCMP_Rest
     }
 
     /**
+     * Get shipment labels
+     *
+     * @param array $ids       Shipment ids.
+     * @param array $positions Print position(s).
+     * @param bool  $display   Download or display.
+     *
+     * @throws Exception
+     */
+    public function getShipmentLabels(array $ids, array $positions = [], $display = true)
+    {
+        $collection = MyParcelCollection::findMany($ids, $this->key);
+
+        /**
+         * @see https://github.com/myparcelnl/sdk#label-format-and-position
+         */
+        if (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_LABEL_FORMAT) === "A6") {
+            $positions = false;
+        }
+
+        if ($display) {
+            $collection
+                ->setPdfOfLabels($positions)
+                ->downloadPdfOfLabels($display);
+        } else {
+            echo $collection
+                ->setLinkOfLabels($positions)
+                ->getLinkOfLabels();
+            die();
+        }
+    }
+
+    /**
      * Get Wordpress, WooCommerce, MyParcel version and place theme in a array. Implode the array to get an UserAgent.
      *
      * @return string
@@ -134,31 +166,5 @@ class WCMP_API extends WCMP_Rest
 
         // Place white space between the array elements
         return implode(" ", $userAgents);
-    }
-
-    /**
-     * Get shipment labels, save them to the orders before showing them.
-     *
-     * @param array $shipment_ids Shipment ids.
-     * @param array $order_ids
-     * @param array $positions    Print position(s).
-     * @param bool  $display      Download or display.
-     *
-     * @throws Exception
-     */
-    public function getShipmentLabels(array $shipment_ids, array $order_ids, array $positions = [], $display = true)
-    {
-        $collection = MyParcelCollection::findMany($shipment_ids, $this->key);
-
-        if ($display) {
-            $collection->setPdfOfLabels($positions);
-            WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
-            $collection->downloadPdfOfLabels($display);
-        } else {
-            $collection->setLinkOfLabels($positions);
-            WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
-            echo $collection->getLinkOfLabels();
-            die();
-        }
     }
 }
