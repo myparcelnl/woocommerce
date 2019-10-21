@@ -162,7 +162,7 @@ class WCMP_Data
     {
         return [
             BpostConsignment::CARRIER_NAME => __("bpost", "woocommerce-myparcelbe"),
-            DPDConsignment::CARRIER_NAME   => __("dpd", "woocommerce-myparcelbe"),
+            DPDConsignment::CARRIER_NAME   => __("DPD", "woocommerce-myparcelbe"),
         ];
     }
 }

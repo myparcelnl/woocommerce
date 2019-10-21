@@ -273,12 +273,12 @@ class WCMP_Settings_Data
             DPDConsignment::CARRIER_NAME => [
                 [
                     "name"     => "delivery_options",
-                    "label"    => __("dpd delivery options", "woocommerce-myparcelbe"),
+                    "label"    => __("DPD delivery options", "woocommerce-myparcelbe"),
                     "settings" => $this->get_section_carrier_dpd_delivery_options(),
                 ],
                 [
                     "name"     => "pickup_options",
-                    "label"    => __("dpd pickup options", "woocommerce-myparcelbe"),
+                    "label"    => __("DPD pickup options", "woocommerce-myparcelbe"),
                     "settings" => $this->get_section_carrier_dpd_pickup_options(),
                 ],
             ],
@@ -567,7 +567,7 @@ class WCMP_Settings_Data
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "options"   => $this->getWeekdays(),
                 "default"   => [1, 2, 3, 4, 5],
-                "help_text" => __("Days of the week on which you hand over parcels to dpd", "woocommerce-myparcelbe"),
+                "help_text" => __("Days of the week on which you hand over parcels to DPD", "woocommerce-myparcelbe"),
             ],
             [
                 "name"        => WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME,
@@ -607,7 +607,7 @@ class WCMP_Settings_Data
         return [
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                "label"     => __("Enable dpd pickup", "woocommerce-myparcelbe"),
+                "label"     => __("Enable DPD pickup", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
                     "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
