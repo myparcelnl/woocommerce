@@ -601,11 +601,9 @@ class WCMP_Admin
      * is invalid it falls back to defaults.
      *
      * @param WC_Order $order
-     *
      * @param array    $inputData
      *
      * @return DeliveryOptions
-     * @throws Exception
      * @see \WCMP_Checkout::save_delivery_options
      */
     public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptions

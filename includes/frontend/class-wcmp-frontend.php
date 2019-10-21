@@ -163,14 +163,13 @@ class WCMP_Frontend
     {
         $order     = WCX::get_order($order_id);
         $shipments = WCMP_Admin::get_order_shipments($order);
-        $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 
         if (empty($shipments)) {
             return [];
         }
 
         foreach ($shipments as $shipment_id => $shipment) {
-            $trackTrace = Arr::get($shipment, "track_trace'");
+            $trackTrace = Arr::get($shipment, "track_trace");
 
             // skip concepts
             if (! $trackTrace) {
@@ -189,7 +188,7 @@ class WCMP_Frontend
                 $shipments,
                 "$shipment_id.track_trace_link",
                 sprintf(
-                    '<<a href="%s">%s</a>',
+                    '<a href="%s">%s</a>',
                     $track_trace_url,
                     $trackTrace
                 )
@@ -212,7 +211,10 @@ class WCMP_Frontend
         $consignments = self::getTrackTraceShipments($order_id);
 
         foreach ($consignments as $key => $consignment) {
-            $track_trace_links[] = $consignment['track_trace_link'];
+            $track_trace_links[] = [
+                "link" => $consignment["track_trace_link"],
+                "url"  => $consignment["track_trace_url"],
+            ];
         }
 
         return $track_trace_links;
