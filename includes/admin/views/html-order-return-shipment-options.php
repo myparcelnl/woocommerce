@@ -36,7 +36,8 @@ $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 </table><br>
 <?php if (! isset($skip_save)): ?>
     <div class="wcmp__d--flex">
-        <a class="button save" data-order="<?php echo $order_id; ?>"><?php _e("Save", "woocommerce-myparcelbe") ?></a>
-        <?php WCMP_Admin::renderSpinner() ?>
+        <a class="button save" data-order="<?php echo $order_id; ?>"><?php _e("Save", "woocommerce-myparcelbe") ?>
+            <?php WCMP_Admin::renderSpinner() ?>
+        </a>
     </div>
 <?php endif ?>

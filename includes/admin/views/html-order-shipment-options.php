@@ -147,13 +147,11 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     }
     ?>
     <div>
-        <?php printf(
-            '<div class="button wcmp__shipment-settings__save">%s</div>',
-            __("Save", "woocommerce-myparcelbe")
-        );
-
-        WCMP_Admin::renderSpinner();
-
-        ?>
+        <div class="button wcmp__shipment-settings__save">
+            <?php
+            _e("Save", "woocommerce-myparcelbe");
+            WCMP_Admin::renderSpinner();
+            ?>
+        </div>
     </div>
 </div>
