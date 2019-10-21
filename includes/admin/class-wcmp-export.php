@@ -3,6 +3,7 @@
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
@@ -445,8 +446,7 @@ class WCMP_Export
             $positions = array_slice(self::DEFAULT_POSITIONS, $offset % 4);
 
             $display = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === "display";
-            $api->getShipmentLabels($shipment_ids, $positions, $display);
-            $this->addNoteToShipments($shipment_ids, $order_ids);
+            $api->getShipmentLabels($shipment_ids, $order_ids, $positions, $display);
         } catch (Exception $e) {
             $this->errors[] = $e->getMessage();
         }
@@ -705,31 +705,24 @@ class WCMP_Export
     }
 
     /**
-     * @param array $selected_shipment_ids
-     * @param array $order_ids
+     * @param array $order_id
+     * @param array $track_traces
      *
-     * @throws ErrorException
      * @internal param $shipment_ids
      */
-    public function addNoteToShipments(array $selected_shipment_ids, array $order_ids)
+    public static function addTrackTraceNoteToOrder(int $order_id, array $track_traces): void
     {
         if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_BARCODE_IN_NOTE)) {
             return;
         }
 
+        $prefix_message = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_BARCODE_IN_NOTE_TITLE);
+
         // Select the barcode text of the MyParcel settings
-        $this->prefix_message = $this->getSetting(WCMP_Settings::SETTING_BARCODE_IN_NOTE_TITLE);
+        $prefix_message = $prefix_message ? $prefix_message . " " : "";
 
-        foreach ($order_ids as $order_id) {
-            $order           = WCX::get_order($order_id);
-            $order_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
-
-            foreach ($order_shipments as $shipment_id => $shipment) {
-                $this->addNoteToShipment($selected_shipment_ids, $shipment_id, $order);
-            }
-        }
-
-        return;
+        $order = WCX::get_order($order_id);
+        $order->add_order_note($prefix_message . implode(", ", $track_traces));
     }
 
     /**
@@ -1243,24 +1236,6 @@ class WCMP_Export
     }
 
     /**
-     * @param array    $selected_shipment_ids
-     * @param int      $shipment_id
-     * @param WC_Order $order
-     *
-     * @throws ErrorException
-     */
-    private function addNoteToShipment(array $selected_shipment_ids, int $shipment_id, WC_Order $order)
-    {
-        if (! in_array($shipment_id, $selected_shipment_ids)) {
-            return;
-        }
-
-        $barcode = $this->getShipmentBarcodeFromApi($shipment_id);
-
-        $order->add_order_note($this->prefix_message . sprintf($barcode));
-    }
-
-    /**
      * @param $shipping_method_id
      * @param $package_type_shipping_methods
      * @param $shipping_method_id_class
@@ -1385,6 +1360,28 @@ class WCMP_Export
         }
 
         return $return;
+    }
+
+    /**
+     * Save created track & trace information as meta data to the corresponding order(s).
+     *
+     * @param MyParcelCollection $collection
+     * @param array              $order_ids
+     */
+    public static function saveTrackTracesToOrders(MyParcelCollection $collection, array $order_ids): void
+    {
+        foreach ($order_ids as $order_id) {
+            $trackTraces = [];
+
+            foreach ($collection->getConsignmentsByReferenceId($order_id) as $consignment) {
+                /**
+                 * @var AbstractConsignment $consignment
+                 */
+                array_push($trackTraces, $consignment->getBarcode());
+            }
+
+            WCMP_Export::addTrackTraceNoteToOrder($order_id, $trackTraces);
+        }
     }
 }
 

@@ -204,6 +204,10 @@ class WCMP_Settings_Callbacks
             get_option($optionId)[$class->getId()]
         );
 
+        if (isset($arguments["append"])) {
+            echo $arguments["append"];
+        }
+
         // Render the description here instead of inside the above function.
         if (isset($description)) {
             $this->renderDescription($description);

@@ -33,6 +33,7 @@ class SettingsFieldArguments
     ];
 
     public const ALLOWED_ARGUMENTS = [
+        "append",
         "autocomplete",
         "autofocus",
         "class",

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC MyParcel Belgium\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-21 08:33+0000\n"
+"POT-Creation-Date: 2019-10-18 13:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -278,6 +278,7 @@ msgid "Unknown status"
 msgstr ""
 
 #: includes_php56/class-wcmp-frontend.php:100
+#: includes/frontend/class-wcmp-frontend-track-trace.php:55
 msgid "You can track your order with the following bpost Track & Trace code:"
 msgstr ""
 
@@ -289,8 +290,8 @@ msgstr ""
 #: includes_php56/views/wcmp-order-shipment-summary.php:14
 #: includes/admin/settings/class-wcmp-settings-data.php:443
 #: includes/admin/settings/class-wcmp-settings-data.php:502
-#: includes/admin/settings/class-wcmp-settings-data.php:813
-#: includes/admin/settings/class-wcmp-settings-data.php:814
+#: includes/admin/settings/class-wcmp-settings-data.php:818
+#: includes/admin/settings/class-wcmp-settings-data.php:819
 #: includes/admin/views/html-order-shipment-options.php:107
 #: includes/admin/views/html-order-shipment-summary.php:20
 msgid "Signature on delivery"
@@ -453,7 +454,7 @@ msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:463
 #: includes/admin/class-wcmp-admin.php:649
-#: includes/admin/settings/class-wcmp-settings-data.php:808
+#: includes/admin/settings/class-wcmp-settings-data.php:813
 msgid "Standard delivery"
 msgstr ""
 
@@ -463,10 +464,6 @@ msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:481
 msgid "bpost Pickup"
-msgstr ""
-
-#: includes_php56/class-wcmp-admin.php:608
-msgid "No label has created yet"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:38
@@ -829,28 +826,6 @@ msgstr ""
 msgid "Checkout position"
 msgstr ""
 
-#: includes_php56/class-wcmp-settings.php:558
-#: includes/admin/settings/class-wcmp-settings-data.php:728
-msgid "Show checkout options after billing details"
-msgstr ""
-
-#: includes_php56/class-wcmp-settings.php:559
-#: includes/admin/settings/class-wcmp-settings-data.php:732
-msgid "Show checkout options after shipping details"
-msgstr ""
-
-#: includes_php56/class-wcmp-settings.php:560
-#: includes/admin/settings/class-wcmp-settings-data.php:736
-msgid "Show checkout options after notes"
-msgstr ""
-
-#: includes_php56/class-wcmp-settings.php:562
-#: includes/admin/settings/class-wcmp-settings-data.php:741
-msgid ""
-"You can change the place of the checkout options on the checkout page. By "
-"default it will be placed after shipping details."
-msgstr ""
-
 #: includes_php56/class-wcmp-settings.php:577
 #: includes/admin/settings/class-wcmp-settings-data.php:467
 #: includes/admin/settings/class-wcmp-settings-data.php:566
@@ -899,12 +874,12 @@ msgid "Delivery options"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:634
-#: includes/admin/settings/class-wcmp-settings-data.php:787
+#: includes/admin/settings/class-wcmp-settings-data.php:792
 msgid "Delivery options title"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:643
-#: includes/admin/settings/class-wcmp-settings-data.php:789
+#: includes/admin/settings/class-wcmp-settings-data.php:794
 msgid ""
 "You can place a delivery title above the MyParcel BE options. When there is "
 "no title, it will not be visible."
@@ -915,12 +890,12 @@ msgid "Home delivery title"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:661
-#: includes/admin/settings/class-wcmp-settings-data.php:803
+#: includes/admin/settings/class-wcmp-settings-data.php:808
 msgid "Standard delivery title"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:670
-#: includes/admin/settings/class-wcmp-settings-data.php:804
+#: includes/admin/settings/class-wcmp-settings-data.php:809
 msgid ""
 "When there is no title, the delivery time will automatically be visible."
 msgstr ""
@@ -942,7 +917,7 @@ msgid "Customizations"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:730
-#: includes/admin/settings/class-wcmp-settings-data.php:749
+#: includes/admin/settings/class-wcmp-settings-data.php:753
 msgid "Custom styles"
 msgstr ""
 
@@ -971,10 +946,6 @@ msgstr ""
 
 #: includes_php56/class-wcmp-settings-callbacks.php:508
 msgid "Description"
-msgstr ""
-
-#: includes/frontend/class-wcmp-frontend-track-trace.php:63
-msgid "You can track your order with the following Track & Trace link:"
 msgstr ""
 
 #: includes/frontend/class-wcmp-cart-fees.php:221
@@ -1030,11 +1001,11 @@ msgstr ""
 msgid "(Unknown)"
 msgstr ""
 
-#: includes/entities/settings-field-arguments.php:153
+#: includes/entities/settings-field-arguments.php:154
 msgid "Enabled"
 msgstr ""
 
-#: includes/entities/settings-field-arguments.php:154
+#: includes/entities/settings-field-arguments.php:155
 msgid "Disabled"
 msgstr ""
 
@@ -1191,20 +1162,51 @@ msgid ""
 "options are not visible at foreign addresses."
 msgstr ""
 
-#: includes/admin/settings/class-wcmp-settings-data.php:797
+#: includes/admin/settings/class-wcmp-settings-data.php:728
+msgid "Show after billing details"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:732
+msgid "Show after shipping details"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:736
+msgid "Show after customer details"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:740
+msgid "Show after notes"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:745
+msgid ""
+"You can change the place of the delivery options on the checkout page. By "
+"default it will be placed after shipping details."
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:802
 msgid "Delivery title"
 msgstr ""
 
-#: includes/admin/settings/class-wcmp-settings-data.php:798
+#: includes/admin/settings/class-wcmp-settings-data.php:803
 msgid "Delivered at home or at work"
 msgstr ""
 
-#: includes/admin/settings/class-wcmp-settings-data.php:819
+#: includes/admin/settings/class-wcmp-settings-data.php:824
 msgid "Pickup title"
 msgstr ""
 
-#: includes/admin/settings/class-wcmp-settings-data.php:820
+#: includes/admin/settings/class-wcmp-settings-data.php:825
 msgid "Pickup"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:848
+#, php-format
+msgid "Theme \"%s\" detected."
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:850
+msgid "Apply preset."
 msgstr ""
 
 #: includes/admin/views/html-order-shipment-options.php:33

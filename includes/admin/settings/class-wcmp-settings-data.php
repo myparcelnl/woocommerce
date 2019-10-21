@@ -221,10 +221,10 @@ class WCMP_Settings_Data
                     "settings" => $this->get_section_checkout_main(),
                 ],
                 [
-                    "name"     => "strings",
-                    "label"    => __("Titles", "woocommerce-myparcelbe"),
+                    "name"      => "strings",
+                    "label"     => __("Titles", "woocommerce-myparcelbe"),
                     "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                    "settings" => $this->get_section_checkout_strings(),
+                    "settings"  => $this->get_section_checkout_strings(),
                 ],
             ],
         ];
@@ -724,22 +724,26 @@ class WCMP_Settings_Data
                 "label"     => __("Checkout position", "woocommerce-myparcelbe"),
                 "type"      => "select",
                 "default"   => "woocommerce_after_checkout_billing_form",
-                "options"   => [
-                    "woocommerce_after_checkout_billing_form"  => __(
-                        "Show checkout options after billing details",
+                "options" => [
+                    "woocommerce_after_checkout_billing_form"     => __(
+                        "Show after billing details",
                         "woocommerce-myparcelbe"
                     ),
-                    "woocommerce_after_checkout_shipping_form" => __(
-                        "Show checkout options after shipping details",
+                    "woocommerce_after_checkout_shipping_form"    => __(
+                        "Show after shipping details",
                         "woocommerce-myparcelbe"
                     ),
-                    "woocommerce_after_order_notes"            => __(
-                        "Show checkout options after notes",
+                    "woocommerce_checkout_after_customer_details" => __(
+                        "Show after customer details",
+                        "woocommerce-myparcelbe"
+                    ),
+                    "woocommerce_after_order_notes"               => __(
+                        "Show after notes",
                         "woocommerce-myparcelbe"
                     ),
                 ],
                 "help_text" => __(
-                    "You can change the place of the checkout options on the checkout page. By default it will be placed after shipping details.",
+                    "You can change the place of the delivery options on the checkout page. By default it will be placed after shipping details.",
                     "woocommerce-myparcelbe"
                 ),
             ],
@@ -748,6 +752,7 @@ class WCMP_Settings_Data
                 "condition"         => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"             => __("Custom styles", "woocommerce-myparcelbe"),
                 "type"              => "textarea",
+                "append"            => $this->getCustomCssAddition(),
                 "custom_attributes" => [
                     "style" => "font-family: monospace;",
                     "rows"  => "8",
@@ -820,6 +825,30 @@ class WCMP_Settings_Data
                 "default"   => __("Pickup", "woocommerce-myparcelbe"),
             ],
         ];
+    }
+
+    /**
+     * Get the html string to render after the custom css select.
+     *
+     * @return string
+     */
+    private function getCustomCssAddition(): string
+    {
+        $currentTheme = wp_get_theme();
+
+        $preset  = sanitize_title($currentTheme);
+        $cssPath = WCMP()->plugin_path() . "/assets/css/delivery-options/delivery-options-preset-$preset.css";
+
+        if (! file_exists($cssPath)) {
+            return "";
+        }
+
+        return sprintf(
+            '<p>%s <a class="" href="#" onclick="document.querySelector(`#delivery_options_custom_css`).value = `%s`">%s</a></p>',
+            sprintf(__("Theme \"%s\" detected.", "woocommerce-myparcelbe"), $currentTheme),
+            file_get_contents($cssPath),
+            __("Apply preset.", "woocommerce-myparcelbe")
+        );
     }
 }
 
