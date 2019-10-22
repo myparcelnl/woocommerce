@@ -78,8 +78,9 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
                 wc_format_weight($order->get_meta(WCMP_Admin::META_ORDER_WEIGHT))
             ),
             "type"              => "select",
-            "options"           => WCMP_Data::getPackageTypes(),
-            "value"             => $deliveryOptions->getDeliveryType(),
+            "options"           => array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman()),
+            // TODO for NL: set "value" correctly.
+            "value"             => null,
             "custom_attributes" => [
                 "disabled" => $isPackageTypeDisabled ? "disabled" : null,
             ],
@@ -147,13 +148,11 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     }
     ?>
     <div>
-        <?php printf(
-            '<div class="button wcmp__shipment-settings__save">%s</div>',
-            __("Save", "woocommerce-myparcelbe")
-        );
-
-        WCMP_Admin::renderSpinner();
-
-        ?>
+        <div class="button wcmp__shipment-settings__save">
+            <?php
+            _e("Save", "woocommerce-myparcelbe");
+            WCMP_Admin::renderSpinner();
+            ?>
+        </div>
     </div>
 </div>

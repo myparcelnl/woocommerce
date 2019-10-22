@@ -15,7 +15,7 @@ if (class_exists('WCMP_Data')) {
 
 class WCMP_Data
 {
-    public const API_URL              = "https://api.sendmyparcel.be/";
+    public const API_URL = "https://api.sendmyparcel.be/";
 
     /**
      * @var array
@@ -34,10 +34,16 @@ class WCMP_Data
      * @var array
      */
     private static $packageTypes;
+
     /**
      * @var array
      */
     private static $packageTypesHuman;
+
+    /**
+     * @var array
+     */
+    private static $deliveryTypesHuman;
 
     public function __construct()
     {
@@ -47,6 +53,14 @@ class WCMP_Data
 
         self::$packageTypesHuman = [
             AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME => __("Parcel", "woocommerce-myparcelbe"),
+        ];
+
+        self::$deliveryTypesHuman = [
+            AbstractConsignment::DELIVERY_TYPE_MORNING        => __("Morning delivery", "woocommerce-myparcelbe"),
+            AbstractConsignment::DELIVERY_TYPE_STANDARD       => __("Standard delivery", "woocommerce-myparcelbe"),
+            AbstractConsignment::DELIVERY_TYPE_EVENING        => __("Evening delivery", "woocommerce-myparcelbe"),
+            AbstractConsignment::DELIVERY_TYPE_PICKUP         => __("Pickup", "woocommerce-myparcelbe"),
+            AbstractConsignment::DELIVERY_TYPE_PICKUP_EXPRESS => __("Pickup express", "woocommerce-myparcelbe"),
         ];
     }
 
@@ -73,22 +87,52 @@ class WCMP_Data
      */
     public static function getPackageTypeHuman($packageType): string
     {
-        if (is_numeric($packageType)) {
-            $integerMap = array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP);
-            $packageType = (int) $packageType;
+        return self::getHuman(
+            $packageType,
+            AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP,
+            self::$packageTypesHuman
+        );
+    }
 
-            if (! array_key_exists($packageType, $integerMap)) {
-                return (string) $packageType;
+    /**
+     * @param int|string $deliveryType
+     *
+     * @return string
+     */
+    public static function getDeliveryTypeHuman($deliveryType): string
+    {
+        return self::getHuman(
+            $deliveryType,
+            AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP,
+            self::$deliveryTypesHuman
+        );
+    }
+
+    /**
+     * @param string|int $key
+     * @param array      $map
+     * @param array      $humanMap
+     *
+     * @return string
+     */
+    private static function getHuman($key, array $map, array $humanMap): string
+    {
+        if (is_numeric($key)) {
+            $integerMap = array_flip($map);
+            $key        = (int) $key;
+
+            if (! array_key_exists($key, $integerMap)) {
+                return (string) $key;
             }
 
-            $packageType = $integerMap[$packageType];
+            $key = $integerMap[$key];
         }
 
-        if (! array_key_exists($packageType, self::$packageTypesHuman)) {
-            return $packageType;
+        if (! array_key_exists($key, $humanMap)) {
+            return $key;
         }
 
-        return self::$packageTypesHuman[$packageType];
+        return $humanMap[$key];
     }
 
     /**
@@ -118,7 +162,7 @@ class WCMP_Data
     {
         return [
             BpostConsignment::CARRIER_NAME => __("bpost", "woocommerce-myparcelbe"),
-            DPDConsignment::CARRIER_NAME   => __("dpd", "woocommerce-myparcelbe"),
+            DPDConsignment::CARRIER_NAME   => __("DPD", "woocommerce-myparcelbe"),
         ];
     }
 }
