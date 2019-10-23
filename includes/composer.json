@@ -1,6 +1,6 @@
 {
     "minimum-stability": "dev",
     "require": {
-        "myparcelnl/sdk": "v3.0.0-beta.1"
+        "myparcelnl/sdk": "~3.0"
     }
 }

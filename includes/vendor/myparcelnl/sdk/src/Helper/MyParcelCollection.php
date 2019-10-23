@@ -287,8 +287,9 @@ class MyParcelCollection extends Collection
              * Loop through the returned ids and add each consignment id to a consignment.
              */
             foreach ($request->getResult('data.ids') as $responseShipment) {
-                $consignments      = clone $this->getConsignmentsByReferenceId($responseShipment['reference_identifier']);
-                $newConsignments[] = $consignments->pop()->setConsignmentId($responseShipment['id']);
+                $consignments      = $this->getConsignmentsByReferenceId($responseShipment['reference_identifier']);
+                $consignment       = clone $consignments->pop();
+                $newConsignments[] = $consignment->setConsignmentId($responseShipment['id']);
             }
         }
 
@@ -414,6 +415,7 @@ class MyParcelCollection extends Collection
             ->setLabelFormat($positions);
 
         $conceptIds = $this->getConsignmentIds($key);
+
         if ($key) {
             $request = (new MyParcelRequest())
                 ->setUserAgent($this->getUserAgent())
@@ -744,11 +746,10 @@ class MyParcelCollection extends Collection
             $newCollection->addConsignment($consignmentAdapter->getConsignment()->setMultiCollo($isMultiCollo));
 
             foreach ($shipment['secondary_shipments'] as $secondaryShipment) {
-
                 $secondaryShipment  = Arr::arrayMergeRecursiveDistinct($shipment, $secondaryShipment);
-                $consignmentAdapter = new ConsignmentAdapter($secondaryShipment, $this->getConsignmentsByReferenceId($secondaryShipment['reference_identifier'])->first());
+                $consignment        = ConsignmentFactory::createByCarrierId($shipment['carrier_id'])->setApiKey($apiKey);
+                $consignmentAdapter = new ConsignmentAdapter($secondaryShipment, $consignment);
                 $newCollection->addConsignment($consignmentAdapter->getConsignment()->setMultiCollo($isMultiCollo));
-
             }
         }
 
