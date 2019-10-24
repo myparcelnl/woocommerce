@@ -360,7 +360,7 @@ class WCMP_Export
         }
 
         if ($processDirectly) {
-            $this->getOrderLabels($orderIdsWithNewShipments, null, "download");
+            $this->getOrderLabels($orderIdsWithNewShipments, 0, "download");
         }
 
         if (! empty($this->success)) {
@@ -1332,9 +1332,12 @@ class WCMP_Export
     /**
      * @param $order_ids
      * @param $shipment_ids
+     * @param $offset
+     * @param $print
      *
      * @return array|void
      * @throws ApiException
+     * @throws ErrorException
      * @throws MissingFieldException
      * @throws Exception
      */
