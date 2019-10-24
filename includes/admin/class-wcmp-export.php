@@ -35,7 +35,7 @@ class WCMP_Export
      */
     public const DESCRIPTION_MAX_LENGTH = 50;
 
-    public const DEFAULT_POSITIONS      = [2, 4, 1, 3];
+    public const DEFAULT_POSITIONS = [2, 4, 1, 3];
 
     public $order_id;
     public $success;
@@ -198,32 +198,35 @@ class WCMP_Export
         if (empty($shipment_ids) && empty($order_ids)) {
             $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
         } else {
-            switch ($request) {
-                // Creating consignments.
-                case self::ADD_SHIPMENTS:
-
-                    $this->addShipments($order_ids, $shipment_ids, $offset, $print);
-                    break;
-
-                // Creating a return shipment.
-                case self::ADD_RETURN:
-                    if (empty($order_ids)) {
-                        $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
+            try {
+                switch ($request) {
+                    // Creating consignments.
+                    case self::ADD_SHIPMENTS:
+                        $this->addShipments($order_ids, $shipment_ids, $offset, $print);
                         break;
-                    }
 
-                    $return = $this->add_return($order_ids);
-                    break;
+                    // Creating a return shipment.
+                    case self::ADD_RETURN:
+                        if (empty($order_ids)) {
+                            $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
+                            break;
+                        }
 
-                // Downloading labels.
-                case self::GET_LABELS:
-                    $return = $this->printLabels($order_ids, $shipment_ids, $offset);
-                    break;
+                        $return = $this->add_return($order_ids);
+                        break;
 
-                case self::MODAL_DIALOG:
-                    $order_ids = $this->filterOrderDestinations($order_ids);
-                    $this->modal_dialog($order_ids, $dialog);
-                    break;
+                    // Downloading labels.
+                    case self::GET_LABELS:
+                        $return = $this->printLabels($order_ids, $shipment_ids, $offset);
+                        break;
+
+                    case self::MODAL_DIALOG:
+                        $order_ids = $this->filterOrderDestinations($order_ids);
+                        $this->modal_dialog($order_ids, $dialog);
+                        break;
+                }
+            } catch (Exception $e) {
+                $this->errors[] = "$request: {$e->getMessage()}";
             }
         }
 
@@ -274,6 +277,7 @@ class WCMP_Export
      * @return array
      * @throws ApiException
      * @throws MissingFieldException
+     * @throws ErrorException
      * @throws Exception
      */
     public function add_shipments(array $order_ids, bool $process)
@@ -285,7 +289,6 @@ class WCMP_Export
         $keepOldShipments         = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS);
 
         WCMP_Log::add("*** Creating shipments started ***");
-
 
         /**
          * Loop over the order ids and create consignments for each order.
@@ -357,7 +360,7 @@ class WCMP_Export
         }
 
         if ($processDirectly) {
-            $this->getOrderLabels($orderIdsWithNewShipments, "url");
+            $this->getOrderLabels($orderIdsWithNewShipments, null, "download");
         }
 
         if (! empty($this->success)) {
@@ -423,16 +426,19 @@ class WCMP_Export
     }
 
     /**
-     * @param array $shipment_ids
-     * @param array $order_ids
-     * @param int   $offset
+     * @param array       $shipment_ids
+     * @param array       $order_ids
+     * @param int         $offset
+     * @param string|null $displayOverride - Overrides display setting.
      *
      * @return array
+     * @throws Exception
      */
     public function downloadOrGetUrlOfLabels(
         array $shipment_ids,
         array $order_ids = [],
-        int $offset = 0
+        int $offset = 0,
+        string $displayOverride = null
     ) {
         $return = [];
 
@@ -445,39 +451,42 @@ class WCMP_Export
             // positions are defined on landscape, but paper is filled portrait-wise
             $positions = array_slice(self::DEFAULT_POSITIONS, $offset % 4);
 
-            $display = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === "display";
+            $displaySetting = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY);
+            $display        = ($displayOverride ?? $displaySetting) === "display";
             $api->getShipmentLabels($shipment_ids, $order_ids, $positions, $display);
         } catch (Exception $e) {
-            $this->errors[] = $e->getMessage();
+            throw new Exception($e->getMessage());
         }
 
         return $return;
     }
 
     /**
-     * @param      $order_ids
-     * @param int  $offset
+     * @param array       $order_ids
+     * @param int         $offset
+     * @param string|null $display
      *
      * @return array
+     * @throws Exception
      */
-    public function getOrderLabels(array $order_ids, int $offset = 0)
+    public function getOrderLabels(array $order_ids, int $offset = 0, string $display = null)
     {
         $shipment_ids = $this->getShipmentIds($order_ids, ["only_last" => true]);
 
         if (empty($shipment_ids)) {
             WCMP_Log::add(" *** Failed label request(not exported yet) ***");
-            $this->errors[] = __(
+
+            throw new Exception(__(
                 "The selected orders have not been exported to MyParcel yet! ",
                 "woocommerce-myparcelbe"
-            );
-
-            return [];
+            ));
         }
 
         return $this->downloadOrGetUrlOfLabels(
             $shipment_ids,
             $order_ids,
-            $offset
+            $offset,
+            $display
         );
     }
 
@@ -796,7 +805,7 @@ class WCMP_Export
     public function saveShipmentData(WC_Order $order, array $shipment): void
     {
         if (empty($shipment)) {
-            throw new Exception(__("save_shipment_data requires a valid \$shipment.", "woocommerce-myparcelbe"));
+            throw new Exception("save_shipment_data requires a valid \$shipment.");
         }
 
         $old_shipments                           = [];
@@ -837,8 +846,8 @@ class WCMP_Export
 
                 if (strpos($shipping_method, ":") !== false) {
                     // means we have method_id:instance_id
-                    $shipping_method          = explode(":", $shipping_method);
-                    $shipping_method_id       = $shipping_method[0];
+                    $shipping_method    = explode(":", $shipping_method);
+                    $shipping_method_id = $shipping_method[0];
                 } else {
                     $shipping_method_id = $shipping_method;
                 }
@@ -952,7 +961,7 @@ class WCMP_Export
      */
     public function get_shipment_data(array $ids, WC_Order $order): array
     {
-        $data = [];
+        $data     = [];
         $api      = $this->init_api();
         $response = $api->get_shipments($ids);
 
