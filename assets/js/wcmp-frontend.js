@@ -363,13 +363,6 @@ jQuery(function($) {
       } else {
         MyParcelFrontend.hasDeliveryOptions = false;
         MyParcelFrontend.triggerEvent(MyParcelFrontend.hideDeliveryOptionsEvent, document);
-
-        /**
-         * Empty the hidden data input's value if it exists.
-         */
-        if (MyParcelFrontend.hiddenDataInput) {
-          MyParcelFrontend.hiddenDataInput.value = '';
-        }
       }
     },
 
