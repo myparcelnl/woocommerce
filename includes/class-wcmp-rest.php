@@ -137,8 +137,7 @@ class WC_MyParcel_REST_Client {
         if ($raw !== true) {
             $body = json_decode($body, true); // The second parameter set to true returns objects as associative arrays
         }
-
-        if ($status > 400) {
+        if ($status > 500) {
             if ($raw === true) {
                 $body = json_decode($body, true);
             }
