@@ -18,8 +18,6 @@ if (class_exists("WCMP_Export_Consignments")) {
 
 class WCMP_Export_Consignments
 {
-    private static $i = 0;
-
     /**
      * @var AbstractConsignment
      */
@@ -63,7 +61,6 @@ class WCMP_Export_Consignments
      */
     public function __construct(WC_Order $order)
     {
-        self::$i++;
         $this->getApiKey();
 
         $this->order           = $order;
