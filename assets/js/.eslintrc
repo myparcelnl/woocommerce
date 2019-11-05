@@ -1,178 +1,38 @@
 {
   "globals": {
+    "wcmp": "readonly",
     "MyParcel": "readonly",
-    "wcmp_display_settings": "readonly",
-    "wcmp_delivery_options": "readonly"
+    "MyParcelFrontend": "readonly",
+    "MyParcelDisplaySettings": "readonly",
+    "MyParcelDeliveryOptions": "readonly"
   },
-  "env": {
-    "browser": true
-  },
+  "extends": [
+    "@myparcel/eslint-config/preset-default"
+  ],
   "rules": {
-    "array-bracket-newline": [
-      "warn", "consistent"
+    "no-console": "error",
+    "vars-on-top": "off",
+    "multiline-comment-style": [
+      "error",
+      "starred-block"
     ],
-    "array-bracket-spacing": [
-      "warn", "never"
-    ],
-    "array-element-newline": [
-      "warn", "consistent"
-    ],
-    "block-spacing": "warn",
-    "brace-style": [
-      "warn", "1tbs"
-    ],
-    "comma-dangle": [
-      "warn", "always-multiline"
-    ],
-    "comma-spacing": [
-      "warn", {
-        "before": false, "after": true
+    "newline-per-chained-call": [
+      "warn",
+      {
+        "ignoreChainWithDepth": 2
       }
-    ],
-    "comma-style": "warn",
-    "computed-property-spacing": [
-      "warn", "never"
-    ],
-    "curly": "warn",
-    "dot-location": [
-      "warn", "property"
-    ],
-    "eol-last": "warn",
-    "eqeqeq": [
-      "warn", "smart"
-    ],
-    "func-call-spacing": [
-      "warn", "never"
-    ],
-    "func-style": [
-      "warn", "declaration", {
-        "allowArrowFunctions": true
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "be-checkout.js",
+        "wcmp-admin.js",
+        "wcmp-frontend.js"
+      ],
+      "env": {
+        "jquery": true
       }
-    ],
-    "function-paren-newline": [
-      "warn", "consistent"
-    ],
-    "id-length": [
-      "warn", {
-        "exceptions": [
-          "$", "_", "i", "e"
-        ]
-      }
-    ],
-    "implicit-arrow-linebreak": [
-      "warn", "beside"
-    ],
-    "indent": [
-      "warn", 2, {
-        "SwitchCase": 1
-      }
-    ],
-    "key-spacing": "warn",
-    "keyword-spacing": [
-      "warn", {
-        "before": true, "after": true
-      }
-    ],
-    "linebreak-style": [
-      "warn", "unix"
-    ],
-    "lines-between-class-members": [
-      "warn", "always", {
-        "exceptAfterSingleLine": true
-      }
-    ],
-    "max-len": [
-      "warn", 120
-    ],
-    "max-lines-per-function": [
-      "warn", {
-        "max": 50, "skipComments": true
-      }
-    ],
-    "max-params": [
-      "warn", 4
-    ],
-    "no-array-constructor": "warn",
-    "no-async-promise-executor": "warn",
-    "no-compare-neg-zero": "warn",
-    "no-console": "warn",
-    "no-fallthrough": "warn",
-    "no-lonely-if": "warn",
-    "no-mixed-operators": "warn",
-    "no-mixed-spaces-and-tabs": "warn",
-    "no-multi-assign": "warn",
-    "no-multi-spaces": "warn",
-    "no-multiple-empty-lines": [
-      "warn", {
-        "max": 1, "maxBOF": 0
-      }
-    ],
-    "no-negated-condition": "warn",
-    "no-nested-ternary": "warn",
-    "no-new-object": "warn",
-    "no-regex-spaces": "warn",
-    "no-return-assign": "warn",
-    "no-return-await": "warn",
-    "no-sequences": "warn",
-    "no-tabs": "warn",
-    "no-trailing-spaces": "warn",
-    "no-undef": "warn",
-    "no-underscore-dangle": "warn",
-    "no-unneeded-ternary": "warn",
-    "no-unused-labels": "warn",
-    "no-unused-vars": [
-      "warn", {
-        "ignoreRestSiblings": true
-      }
-    ],
-    "no-useless-call": "warn",
-    "no-useless-catch": "warn",
-    "no-useless-concat": "warn",
-    "no-useless-escape": "warn",
-    "no-useless-return": "warn",
-    "no-whitespace-before-property": "warn",
-    "object-curly-newline": [
-      "warn", {
-        "ObjectExpression": {
-          "consistent": true
-        }, "ObjectPattern": {
-          "consistent": true
-        }, "ImportDeclaration": {
-          "consistent": true
-        }, "ExportDeclaration": "never"
-      }
-    ],
-    "quote-props": [
-      "warn", "as-needed"
-    ],
-    "require-await": "warn",
-    "space-before-blocks": [
-      "warn", "always"
-    ],
-    "space-before-function-paren": [
-      "warn", "never"
-    ],
-    "space-in-parens": [
-      "warn", "never"
-    ],
-    "space-infix-ops": "warn",
-    "space-unary-ops": [
-      "warn", {
-        "words": true, "nonwords": false
-      }
-    ],
-    "spaced-comment": [
-      "warn", "always", {
-        "markers": [
-          "/"
-        ]
-      }
-    ],
-    "switch-colon-spacing": "warn",
-    "wrap-regex": "warn",
-    "yoda": [
-      "warn", "never"
-    ],
-    "multiline-comment-style": ["warn", "starred-block"]
-  }
+    }
+  ]
 }
