@@ -133,7 +133,7 @@ class WC_MyParcel_REST_Client {
 
         if (! empty($response->errors) && array_key_exists('http_request_failed', $response->errors)){
             echo 'There is a technical problem with connecting to MyParcel. We are working hard to resolve the problem.';
-            return array("code" => 404, "body" => $response->errors);
+            return array("code" => 400, "body" => $response->errors);
         }
 
         $status = $response["response"]["code"];
