@@ -131,14 +131,18 @@ class WC_MyParcel_REST_Client {
             @fclose($f);
         }
 
+        if (! empty($response->errors) && array_key_exists('http_request_failed', $response->errors)){
+            echo 'There is a technical problem with connecting to MyParcel. We are working hard to resolve the problem.';
+            return array("code" => 400, "body" => $response->errors);
+        }
+
         $status = $response["response"]["code"];
         $body = $response['body'];
 
         if ($raw !== true) {
             $body = json_decode($body, true); // The second parameter set to true returns objects as associative arrays
         }
-
-        if ($status > 400) {
+        if ($status > 500) {
             if ($raw === true) {
                 $body = json_decode($body, true);
             }
