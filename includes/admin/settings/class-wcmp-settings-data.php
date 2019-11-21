@@ -222,7 +222,7 @@ class WCMP_Settings_Data
                 ],
                 [
                     "name"      => "strings",
-                    "label"     => __("Titles", "woocommerce-myparcelbe"),
+                    "label"     => __("Texts", "woocommerce-myparcelbe"),
                     "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                     "settings"  => $this->get_section_checkout_strings(),
                 ],
@@ -464,7 +464,7 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Drop-off days", "woocommerce-myparcelbe"),
+                "label"     => __("Delivery days at bpost", "woocommerce-myparcelbe"),
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "options"   => $this->getWeekdays(),
                 "default"   => [1, 2, 3, 4, 5],
@@ -563,7 +563,7 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Drop-off days", "woocommerce-myparcelbe"),
+                "label"     => __("Delivery days at DPD", "woocommerce-myparcelbe"),
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "options"   => $this->getWeekdays(),
                 "default"   => [1, 2, 3, 4, 5],
@@ -685,19 +685,19 @@ class WCMP_Settings_Data
         return [
             [
                 "name"      => WCMP_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS,
-                "label"     => __("MyParcel BE address fields", "woocommerce-myparcelbe"),
+                "label"     => __("Alternative address fields", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
-                    "When enabled the checkout will use the MyParcel BE address fields. This means there will be three separate fields for street name, number and suffix. Want to use the WooCommerce default fields? Leave this option unchecked.",
+                    "When enabled the checkout will use the Alternative address fields. This means there will be three separate fields for street name, number and suffix. Want to use the WooCommerce default fields? Leave this option unchecked.",
                     "woocommerce-myparcelbe"
                 ),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Enable MyParcel BE delivery options", "woocommerce-myparcelbe"),
+                "label"     => __("Enable delivery options", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
-                    "The MyParcel delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery.",
+                    "Delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery.",
                     "woocommerce-myparcelbe"
                 ),
             ],

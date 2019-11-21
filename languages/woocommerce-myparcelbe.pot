@@ -806,7 +806,7 @@ msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:514
 #: includes/admin/settings/class-wcmp-settings-data.php:697
-msgid "Enable MyParcel BE delivery options"
+msgid "Enable delivery options"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:526
@@ -861,7 +861,13 @@ msgstr ""
 #: includes_php56/class-wcmp-settings.php:577
 #: includes/admin/settings/class-wcmp-settings-data.php:467
 #: includes/admin/settings/class-wcmp-settings-data.php:566
-msgid "Drop-off days"
+msgid "Delivery days at bpost"
+msgstr ""
+
+#: includes_php56/class-wcmp-settings.php:577
+#: includes/admin/settings/class-wcmp-settings-data.php:467
+#: includes/admin/settings/class-wcmp-settings-data.php:566
+msgid "Delivery days at DPD"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:584
@@ -1105,7 +1111,7 @@ msgid "Checkout settings"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:225
-msgid "Titles"
+msgid "Texts"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:245

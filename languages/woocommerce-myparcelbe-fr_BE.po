@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WC MyParcel Belgium\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-21 12:28+0000\n"
-"PO-Revision-Date: 2019-10-21 12:42+0000\n"
+"PO-Revision-Date: 2019-11-21 13:32+0100\n"
 "Last-Translator: edie <edie@myparcel.nl>\n"
 "Language-Team: French (Belgium)\n"
 "Language: fr_BE\n"
@@ -11,19 +11,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.3.1; wp-5.2.3"
+"X-Generator: Poedit 2.2.4\n"
+"X-Loco-Version: 2.3.1; wp-5.2.3\n"
 
 #: woocommerce-myparcel.php:234
 #, php-format
 msgid ""
 "WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!"
-msgstr "WooCommerce MyParcel BE requiert% WooCommerce% s installé et activé!"
+msgstr "WooCommerce MyParcel BE requiert %sWooCommerce%s installé et activé!"
 
 #: woocommerce-myparcel.php:252
 msgid ""
-"WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended)"
-"."
+"WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later "
+"recommended)."
 msgstr ""
 "WooCommerce MyParcel BE requiert PHP 5.4 ou supérieur (5.6 ou plus récent "
 "recommandé)."
@@ -603,13 +603,13 @@ msgstr "Track & Trace dans l'e-mail"
 #: includes_php56/class-wcmp-settings.php:221
 #: includes/admin/settings/class-wcmp-settings-data.php:345
 msgid ""
-"Add the Track & Trace code to emails to the customer.<br/><strong>Note!"
-"</strong> When you select this option, make sure you have not enabled the "
+"Add the Track & Trace code to emails to the customer.<br/><strong>Note!</"
+"strong> When you select this option, make sure you have not enabled the "
 "Track & Trace email in your MyParcel BE backend."
 msgstr ""
-"Ajouter un code Track & Trace aux e-mails envoyés au client.<br/> <strong>"
-"Attention !</strong> Lorsque vous choisissez cette option, veillez à ce que "
-"l'e-mail Track & Trace n'est pas activé dans le back-end MyParcel BE."
+"Ajouter un code Track & Trace aux e-mails envoyés au client.<br/> "
+"<strong>Attention !</strong> Lorsque vous choisissez cette option, veillez à "
+"ce que l'e-mail Track & Trace n'est pas activé dans le back-end MyParcel BE."
 
 #: includes_php56/class-wcmp-settings.php:227
 #: includes/admin/settings/class-wcmp-settings-data.php:352
@@ -644,10 +644,10 @@ msgstr "Automatisation du statut de la commande"
 #: includes/admin/settings/class-wcmp-settings-data.php:369
 msgid ""
 "Automatically set order status to a predefined status after successful "
-"MyParcel BE export.<br/>Make sure <strong>Process shipments directly</strong>"
-" is enabled when you use this option together with the <strong>Track & Trace "
-"in email</strong> option, otherwise the Track & Trace code will not be "
-"included in the customer email."
+"MyParcel BE export.<br/>Make sure <strong>Process shipments directly</"
+"strong> is enabled when you use this option together with the <strong>Track "
+"& Trace in email</strong> option, otherwise the Track & Trace code will not "
+"be included in the customer email."
 msgstr ""
 "Modifier automatiquement le statut de la commande après l'exportation "
 "réussie d'une commande vers MyParcel BE.<br/>Veillez à ce que "
@@ -846,8 +846,9 @@ msgstr "Champs adresse MyParcel BE"
 #: includes/admin/settings/class-wcmp-settings-data.php:690
 msgid ""
 "When enabled the checkout will use the MyParcel BE address fields. This "
-"means there will be three separate fields for street name, number and suffix."
-" Want to use the WooCommerce default fields? Leave this option unchecked."
+"means there will be three separate fields for street name, number and "
+"suffix. Want to use the WooCommerce default fields? Leave this option "
+"unchecked."
 msgstr ""
 "Si vous cochez cette option, les champs adresse de MyParcel BE seront "
 "utilisés. Il y aura donc trois champs séparés pour la rue, le numéro et "
@@ -856,7 +857,7 @@ msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:514
 #: includes/admin/settings/class-wcmp-settings-data.php:697
-msgid "Enable MyParcel BE delivery options"
+msgid "Enable delivery options"
 msgstr "Activer les options de livraison MyParcel BE"
 
 #: includes_php56/class-wcmp-settings.php:526
@@ -918,7 +919,13 @@ msgstr ""
 #: includes_php56/class-wcmp-settings.php:577
 #: includes/admin/settings/class-wcmp-settings-data.php:467
 #: includes/admin/settings/class-wcmp-settings-data.php:566
-msgid "Drop-off days"
+msgid "Delivery days at bpost"
+msgstr "Jours de livraison"
+
+#: includes_php56/class-wcmp-settings.php:577
+#: includes/admin/settings/class-wcmp-settings-data.php:467
+#: includes/admin/settings/class-wcmp-settings-data.php:566
+msgid "Delivery days at DPD"
 msgstr "Jours de livraison"
 
 #: includes_php56/class-wcmp-settings.php:584
@@ -1176,7 +1183,7 @@ msgid "Checkout settings"
 msgstr "Paramètres de caisse"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:225
-msgid "Titles"
+msgid "Texts"
 msgstr "Titres"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:245
@@ -1249,8 +1256,8 @@ msgid ""
 msgstr ""
 "Les options de livraison MyParcel permettent à vos clients de choisir s’ils "
 "souhaitent que leur colis soit livré à domicile ou à un point de retrait. En "
-"fonction des paramètres, vous pouvez leur permettre de sélectionner une date,"
-" une heure et même des options telles que la signature d'une signature."
+"fonction des paramètres, vous pouvez leur permettre de sélectionner une "
+"date, une heure et même des options telles que la signature d'une signature."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:709
 msgid ""
