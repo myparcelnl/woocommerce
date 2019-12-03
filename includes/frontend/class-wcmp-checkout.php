@@ -167,7 +167,6 @@ class WCMP_Checkout
 
         $myParcelConfig = [
             "config"  => [
-                "carriers" => $carriers,
                 "platform" => "belgie",
                 "locale"   => "nl-BE",
                 "currency" => get_woocommerce_currency(),
