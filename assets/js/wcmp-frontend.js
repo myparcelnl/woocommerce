@@ -1,176 +1,499 @@
+/**
+ * The following jsdoc blocks are for declaring the types of the injected variables from php.
+ */
+
+/**
+ * @var {Object} MyParcelDisplaySettings
+ *
+ * @property {String} MyParcelDisplaySettings.isUsingSplitAddressFields
+ *
+ * @see \wcmp_checkout::inject_delivery_options_variables
+ */
+
+/**
+ * @var {Object} MyParcelDeliveryOptions
+ * @property {String} MyParcelDeliveryOptions.allowedShippingMethods
+ * @property {String} MyParcelDeliveryOptions.disallowedShippingMethods
+ * @property {String} MyParcelDeliveryOptions.hiddenInputName
+ * @see \wcmp_checkout::inject_delivery_options_variables
+ */
+/* eslint-disable-next-line max-lines-per-function */
 jQuery(function($) {
-    window.myparcel_is_using_split_address_fields = wcmp_display_settings.isUsingSplitAddressFields;
+  var MyParcelFrontend = {
+    /**
+     * Whether the delivery options are currently shown or not. Defaults to true and can be set to false depending on
+     *  shipping methods.
+     *
+     * @type {Boolean}
+     */
+    hasDeliveryOptions: true,
 
-    /* The timeout is necessary, otherwise the order summary is going to flash */
-    setTimeout(function() {
-        $(':input.country_to_state').change();
-    }, 100);
+    /**
+     * @type {RegExp}
+     */
+    splitStreetRegex: /(.*?)\s?(\d{1,4})[/\s-]{0,2}([A-z]\d{1,3}|-\d{1,4}|\d{2}\w{1,2}|[A-z][A-z\s]{0,3})?$/,
 
-    var MyParcel_Frontend = {
-        checkout_updating: false,
-        shipping_method_changed: false,
-        force_update:      false,
+    /**
+     * @type {Boolean}
+     */
+    isUsingSplitAddressFields: !!parseInt(MyParcelDisplaySettings.isUsingSplitAddressFields),
 
-        selected_shipping_method: false,
-        updated_shipping_method:  false,
-        selected_country:         false,
-        updated_country:          false,
+    /**
+     * @type {Array}
+     */
+    allowedShippingMethods: JSON.parse(MyParcelDeliveryOptions.allowedShippingMethods),
 
-        shipping_methods:              JSON.parse(wcmp_delivery_options.shipping_methods),
-        always_display:                wcmp_delivery_options.always_display,
+    /**
+     * @type {Array}
+     */
+    disallowedShippingMethods: JSON.parse(MyParcelDeliveryOptions.disallowedShippingMethods),
 
-        init: function() {
-            MyParcel_Frontend.selected_country = MyParcel_Frontend.get_shipping_country();
+    /**
+     * @type {Boolean}
+     */
+    alwaysShow: Boolean(parseInt(MyParcelDeliveryOptions.alwaysShow)),
 
-            $('#shipping_country, #billing_country').change(function() {
-                MyParcel_Frontend.updated_country = MyParcel_Frontend.get_shipping_country();
-            });
+    /**
+     * @type {String}
+     */
+    selectedShippingMethod: null,
 
-            /* hide checkout options for non parcel shipments */
-            function showOrHideCheckoutOptions() {
-                MyParcel_Frontend.checkout_updating = false; /* done updating */
+    /**
+     * @type {Element}
+     */
+    hiddenDataInput: null,
 
-                if (!MyParcel_Frontend.check_country()) return;
+    /**
+     * @type {String}
+     */
+    addressType: null,
 
-                if (MyParcel_Frontend.always_display) {
-                    MyParcel_Frontend.force_update = true;
-                    MyParcel.showAllDeliveryOptions();
-                } else if (MyParcel_Frontend.shipping_methods.length > 0) {
-                    var shipping_method = MyParcel_Frontend.get_shipping_method();
+    /**
+     * Ship to different address checkbox.
+     *
+     * @type {String}
+     */
+    shipToDifferentAddressField: '#ship-to-different-address-checkbox',
 
-                    /* no shipping method selected, hide by default */
-                    if (typeof shipping_method === 'undefined') {
-                        MyParcel_Frontend.hide_delivery_options();
-                        return;
-                    }
+    /**
+     * Shipping method radio buttons.
+     *
+     * @type {String}
+     */
+    shippingMethodField: '[name="shipping_method[0]"]',
 
-                    if (shipping_method.indexOf('table_rate:') !== -1 || shipping_method.indexOf('betrs_shipping:') !== -1) {
-                        /* WC Table Rates
-                         * use shipping_method = method_id:instance_id:rate_id */
-                        if (shipping_method.indexOf('betrs_shipping:') !== -1) {
-                            shipping_method = shipping_method.replace(":", "_");
-                        }
-                    } else {
-                        /* none table rates
-                         * strip instance_id if present */
-                        if (shipping_method.indexOf(':') !== -1) {
-                            shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
-                        }
-                        var shipping_class = $('#myparcel_highest_shipping_class').val();
-                        /* add class refinement if we have a shipping class */
-                        if (shipping_class) {
-                            shipping_method_class = shipping_method + ':' + shipping_class;
-                        }
-                    }
+    addressField: 'address_1',
+    cityField: 'city',
+    countryRow: 'country_field',
+    countryField: 'country',
+    houseNumberField: 'house_number',
+    postcodeField: 'postcode',
 
-                    if (shipping_class && $.inArray(shipping_method_class, MyParcel_Frontend.shipping_methods) > -1) {
-                        MyParcel_Frontend.updated_shipping_method = shipping_method_class;
-                        MyParcel.showAllDeliveryOptions();
-                        MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_class;
-                    } else if ($.inArray(shipping_method, MyParcel_Frontend.shipping_methods) > -1) {
-                        /* fallback to bare method if selected in settings */
-                        MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method;
-                        MyParcel.showAllDeliveryOptions();
-                        MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method;
-                    } else {
-                        var shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
-                        MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method_now;
-                        MyParcel_Frontend.hide_delivery_options();
-                        jQuery('#mypa-input').val(JSON.stringify(''));
-                        MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_now;
+    /**
+     * Delivery options events.
+     */
+    updateDeliveryOptionsEvent: 'myparcel_update_delivery_options',
+    updatedDeliveryOptionsEvent: 'myparcel_updated_delivery_options',
+    updatedAddressEvent: 'myparcel_updated_address',
 
-                        /* Hide extra fees when selecting local pickup */
-                        if (MyParcel_Frontend.shipping_method_changed == false) {
-                            MyParcel_Frontend.shipping_method_changed = true;
+    showDeliveryOptionsEvent: 'myparcel_show_delivery_options',
+    hideDeliveryOptionsEvent: 'myparcel_hide_delivery_options',
 
-                            /* Update checkout when selecting other method */
-                            jQuery('body').trigger('update_checkout');
+    /**
+     * WooCommerce checkout events.
+     */
+    countryToStateChangedEvent: 'country_to_state_changed',
+    updateWooCommerceCheckoutEvent: 'update_checkout',
+    updatedWooCommerceCheckoutEvent: 'updated_checkout',
 
-                            /* Onyl update when the method change after 2seconds */
-                            setTimeout(function () {
-                                MyParcel_Frontend.shipping_method_changed = false;
-                            }, 2000);
-                        }
-                    }
-                } else {
+    /**
+     * Initialize the script.
+     */
+    init: function() {
+      MyParcelFrontend.addListeners();
+      MyParcelFrontend.injectHiddenInput();
+    },
 
-                    /* not sure if we should already hide by default? */
-                    MyParcel_Frontend.hide_delivery_options();
-                    jQuery('#mypa-input').val(JSON.stringify(''));
-                }
-            }
+    /**
+     * When the delivery options are updated, fill the hidden input with the new data and trigger the WooCommerce
+     *  update_checkout event.
+     *
+     * @param {CustomEvent} event - The update event.
+     */
+    onDeliveryOptionsUpdate: function(event) {
+      MyParcelFrontend.hiddenDataInput.value = JSON.stringify(event.detail);
 
-            /* hide checkout options for non parcel shipments */
-            $(document).on('updated_checkout', function () {
-                showOrHideCheckoutOptions();
-            });
-            /* any delivery option selected/changed - update checkout for fees */
-            $('#mypa-chosen-delivery-options').on('change', 'input', function () {
-                MyParcel_Frontend.checkout_updating = true;
-                /* disable signature & recipient only when switching to pickup location */
-                var mypa_postnl_data = JSON.parse($('#mypa-chosen-delivery-options #mypa-input').val());
-                if (typeof mypa_postnl_data.location !== 'undefined') {
-                    $('#mypa-signature, #mypa-recipient-only').prop("checked", false);
-                }
-                $('body').trigger('update_checkout');
-            });
-        },
+      /**
+       * Remove this event before triggering and re-add it after because it will cause an infinite loop otherwise.
+       */
+      $(document.body).off(MyParcelFrontend.updatedWooCommerceCheckoutEvent, MyParcelFrontend.updateShippingMethod);
+      MyParcelFrontend.triggerEvent(MyParcelFrontend.updateWooCommerceCheckoutEvent);
 
-        check_country: function() {
-            if (MyParcel_Frontend.updated_country !== false
-                && MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country
-                && $.isEmptyObject(MyParcel.data) === false
-            ) {
-                MyParcel.callDeliveryOptions();
-                MyParcel.showAllDeliveryOptions();
-                MyParcel_Frontend.selected_country = MyParcel_Frontend.updated_country;
-            }
+      /**
+       * After the "updated_checkout" event the shipping methods will be rendered, restore the event listener and delete
+       *  this one in the process.
+       */
+      $(document.body).on(MyParcelFrontend.updatedWooCommerceCheckoutEvent, restoreEventListener);
 
-            if (MyParcel_Frontend.selected_country !== 'NL' && MyParcel_Frontend.selected_country !== 'BE') {
+      function restoreEventListener() {
+        $(document.body).on(MyParcelFrontend.updatedWooCommerceCheckoutEvent, MyParcelFrontend.updateShippingMethod);
+        $(document.body).off(MyParcelFrontend.updatedWooCommerceCheckoutEvent, restoreEventListener);
+      };
+    },
 
-                MyParcel_Frontend.hide_delivery_options();
-                return false;
-            }
+    /**
+     * If split fields are used add house number to the fields. Otherwise use address line 1.
+     *
+     * @returns {string}
+     */
+    getSplitField: function() {
+      return MyParcelFrontend.isUsingSplitAddressFields
+        ? MyParcelFrontend.houseNumberField
+        : MyParcelFrontend.addressField;
+    },
 
-            return true;
-        },
+    /**
+     * Add all event listeners.
+     */
+    addListeners: function() {
+      MyParcelFrontend.addAddressListeners();
+      MyParcelFrontend.updateShippingMethod();
 
-        get_shipping_method: function() {
-            var shipping_method;
-            /* check if shipping is user choice or fixed */
-            if ($('#order_review .shipping_method').length > 1) {
-                shipping_method = $('#order_review .shipping_method:checked').val();
-            } else {
-                shipping_method = $('#order_review .shipping_method').val();
-            }
-            return shipping_method;
-        },
+      document.querySelector(MyParcelFrontend.shipToDifferentAddressField)
+        .addEventListener('change', MyParcelFrontend.addAddressListeners);
 
-        get_shipping_country: function() {
-            var country;
-            if ($('#ship-to-different-address-checkbox').is(':checked')) {
-                country = $('#shipping_country').val();
-            } else {
-                country = $('#billing_country').val();
-            }
-            return country;
-        },
+      document.addEventListener(MyParcelFrontend.updatedAddressEvent, MyParcelFrontend.onDeliveryOptionsAddressUpdate);
+      document.addEventListener(MyParcelFrontend.updatedDeliveryOptionsEvent, MyParcelFrontend.onDeliveryOptionsUpdate);
 
-        hide_delivery_options: function() {
-            MyParcel.hideAllDeliveryOptions();
-            if (MyParcel_Frontend.is_updated()) {
-                jQuery('body').trigger('update_checkout');
-            }
-        },
+      /*
+       * jQuery events.
+       */
+      $(document.body).on(MyParcelFrontend.countryToStateChangedEvent, MyParcelFrontend.updateAddress);
+      $(document.body).on(MyParcelFrontend.updatedWooCommerceCheckoutEvent, MyParcelFrontend.updateShippingMethod);
+    },
 
-        is_updated: function() {
-            if (MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country || MyParcel_Frontend.force_update === true) {
-                MyParcel_Frontend.force_update = false; /* only force once */
-                return true;
-            }
-            return false;
+    /**
+     * Get field by name. Will return element with MyParcelFrontend selector: "#<billing|shipping>_<name>".
+     *
+     * @param {string} name - The part after `shipping/billing` in the id of an element in WooCommerce.
+     *
+     * @returns {Element}
+     */
+    getField: function(name) {
+      if (!MyParcelFrontend.addressType) {
+        MyParcelFrontend.getAddressType();
+      }
+
+      return document.querySelector('#' + MyParcelFrontend.addressType + '_' + name);
+    },
+
+    /**
+     * Update address type.
+     */
+    getAddressType: function() {
+      var useShipping = document.querySelector(MyParcelFrontend.shipToDifferentAddressField).checked;
+
+      MyParcelFrontend.addressType = useShipping ? 'shipping' : 'billing';
+    },
+
+    /**
+     * Get the house number from either the house_number field or the address_1 field. If it's the address field use
+     * the split street regex to extract the house number.
+     *
+     * @returns {String}
+     */
+    getHouseNumber: function() {
+      var address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
+      var result = MyParcelFrontend.splitStreetRegex.exec(address);
+      var numberIndex = 2;
+
+      if (MyParcelFrontend.isUsingSplitAddressFields) {
+        return MyParcelFrontend.getField(MyParcelFrontend.houseNumberField).value;
+      }
+
+      return result ? result[numberIndex] : null;
+    },
+
+    /**
+     * Trigger an event on a given element. Defaults to body.
+     *
+     * @param {String} identifier - Name of the event.
+     * @param {String|HTMLElement|Document} [element] - Element to trigger from. Defaults to 'body'.
+     */
+    triggerEvent: function(identifier, element) {
+      var event = document.createEvent('HTMLEvents');
+      event.initEvent(identifier, true, false);
+      element = !element || typeof element === 'string' ? document.querySelector(element || 'body') : element;
+      element.dispatchEvent(event);
+    },
+
+    /**
+     * Check if the country changed by comparing the old value with the new value before overwriting the MyParcelConfig
+     *  with the new value. Returns true if none was set yet.
+     *
+     * @returns {Boolean}
+     */
+    countryHasChanged: function() {
+      if (window.MyParcelConfig.address && window.MyParcelConfig.address.hasOwnProperty('cc')) {
+        return window.MyParcelConfig.address.cc !== MyParcelFrontend.getField(MyParcelFrontend.countryField).value;
+      }
+
+      return true;
+    },
+
+    /**
+     * Get data from form fields, put it in the global MyParcelConfig, then trigger updating the delivery options.
+     */
+    updateAddress: function() {
+      if (!window.hasOwnProperty('MyParcelConfig')) {
+        throw 'window.MyParcelConfig not found!';
+      }
+
+      if (typeof window.MyParcelConfig === 'string') {
+        window.MyParcelConfig = JSON.parse(window.MyParcelConfig);
+      }
+
+      window.MyParcelConfig.address = {
+        cc: MyParcelFrontend.getField(MyParcelFrontend.countryField).value,
+        postalCode: MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value,
+        number: MyParcelFrontend.getHouseNumber(),
+        city: MyParcelFrontend.getField(MyParcelFrontend.cityField).value,
+      };
+
+      if (MyParcelFrontend.hasDeliveryOptions) {
+        MyParcelFrontend.triggerEvent(MyParcelFrontend.updateDeliveryOptionsEvent);
+      }
+    },
+
+    /**
+     * Set the values of the WooCommerce fields.
+     *
+     * @param {Object} address - The new address.
+     */
+    setAddress: function(address) {
+      if (address.postalCode) {
+        MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value = address.postalCode;
+      }
+
+      if (address.city) {
+        MyParcelFrontend.getField(MyParcelFrontend.cityField).value = address.city;
+      }
+
+      if (address.number) {
+        MyParcelFrontend.setHouseNumber(address.number);
+      }
+    },
+
+    /**
+     * Set the house number.
+     *
+     * @param {String|Number} number - New house number to set.
+     */
+    setHouseNumber: function(number) {
+      var address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
+      var oldHouseNumber = MyParcelFrontend.getHouseNumber();
+
+      if (MyParcelFrontend.isUsingSplitAddressFields) {
+        if (oldHouseNumber) {
+          MyParcelFrontend.getField(MyParcelFrontend.addressField).value = address.replace(oldHouseNumber, number);
+        } else {
+          MyParcelFrontend.getField(MyParcelFrontend.addressField).value = address + number;
         }
-    };
+      } else {
+        MyParcelFrontend.getField(MyParcelFrontend.houseNumberField).value = number;
+      }
+    },
 
-    MyParcel_Frontend.init();
+    /**
+     * Create an input field in the checkout form to be able to pass the checkout data to the $_POST variable when
+     * placing the order.
+     *
+     * @see includes/class-wcmp-checkout.php::save_delivery_options();
+     */
+    injectHiddenInput: function() {
+      MyParcelFrontend.hiddenDataInput = document.createElement('input');
+      MyParcelFrontend.hiddenDataInput.setAttribute('hidden', 'hidden');
+      MyParcelFrontend.hiddenDataInput.setAttribute('name', MyParcelDeliveryOptions.hiddenInputName);
+
+      document.querySelector('form[name="checkout"]').appendChild(MyParcelFrontend.hiddenDataInput);
+    },
+
+    /**
+     * When the delivery options module has updated the address, using the "retry" option.
+     *
+     * @param {CustomEvent} event - The event containing the new address.
+     */
+    onDeliveryOptionsAddressUpdate: function(event) {
+      MyParcelFrontend.setAddress(event.detail);
+    },
+
+    /**
+     * Update the shipping method to the new selections. Triggers hiding/showing of the delivery options.
+     */
+    updateShippingMethod: function() {
+      var shipping_method;
+      var shippingMethodField = document.querySelectorAll(MyParcelFrontend.shippingMethodField);
+      var selectedShippingMethodField = document.querySelector(MyParcelFrontend.shippingMethodField + ':checked');
+
+      /**
+       * Check if shipping method field exists. It doesn't exist if there are no shipping methods available for the
+       *  current address/product combination or in general.
+       *
+       * If there is no shipping method the delivery options will always be hidden.
+       */
+      if (shippingMethodField.length) {
+        shipping_method = selectedShippingMethodField ? selectedShippingMethodField.value : shippingMethodField.value;
+        MyParcelFrontend.selectedShippingMethod = shipping_method;
+      } else {
+        MyParcelFrontend.selectedShippingMethod = null;
+      }
+
+      MyParcelFrontend.toggleDeliveryOptions();
+    },
+
+    /**
+     * Hides/shows the delivery options based on the current shipping method. Makes sure to not update the checkout
+     * unless necessary by checking if hasDeliveryOptions is true or false.
+     */
+    toggleDeliveryOptions: function() {
+      if (MyParcelFrontend.currentShippingMethodHasDeliveryOptions()) {
+        MyParcelFrontend.hasDeliveryOptions = true;
+        MyParcelFrontend.triggerEvent(MyParcelFrontend.showDeliveryOptionsEvent, document);
+        MyParcelFrontend.updateAddress();
+      } else {
+        MyParcelFrontend.hasDeliveryOptions = false;
+        MyParcelFrontend.triggerEvent(MyParcelFrontend.hideDeliveryOptionsEvent, document);
+      }
+    },
+
+    /**
+     * Check if the currently selected shipping method is allowed to have delivery options.
+     *
+     * @returns {Boolean}
+     */
+    currentShippingMethodHasDeliveryOptions: function() {
+      var currentClass;
+      var display = false;
+      var invert = false;
+      var list = MyParcelFrontend.allowedShippingMethods;
+
+      if (MyParcelFrontend.selectedShippingMethod) {
+        currentClass = MyParcelFrontend.getShippingMethodWithoutClass();
+      } else {
+        return false;
+      }
+
+      /**
+       * If "all" is selected for allowed shipping methods check if the current method is NOT in the
+       *  disallowedShippingMethods array.
+       */
+      if (MyParcelFrontend.alwaysShow) {
+        list = MyParcelFrontend.disallowedShippingMethods;
+        invert = true;
+      }
+
+      list.forEach(function(method) {
+        /**
+         * If the type of the given method is enabled in its entirety.
+         */
+        var currentMethodGroupIsAllowed = method.indexOf(currentClass) > -1;
+
+        /**
+         * If the specific method is enabled.
+         *
+         * @type {boolean}
+         */
+        var currentMethodIsAllowed = method.indexOf(MyParcelFrontend.selectedShippingMethod) > -1;
+
+        if (currentMethodGroupIsAllowed || currentMethodIsAllowed) {
+          display = true;
+        }
+      });
+
+      if (invert) {
+        display = !display;
+      }
+
+      return display;
+    },
+
+    /**
+     * Add listeners to the address fields remove them before adding new ones if they already exist, then update
+     *  shipping method and delivery options if needed.
+     *
+     * Uses the country field's parent row because there is no better way to catch the select2 (or selectWoo) events as
+     *  we never know when the select is loaded and can't add a normal change event. The delivery options has a debounce
+     *  function on the update event so it doesn't matter if we send 5 updates at once.
+     */
+    addAddressListeners: function() {
+      var fields = [MyParcelFrontend.countryField, MyParcelFrontend.postcodeField, MyParcelFrontend.getSplitField()];
+
+      /* If address type is already set, remove the existing listeners before adding new ones. */
+      if (MyParcelFrontend.addressType) {
+        fields.forEach(function(field) {
+          MyParcelFrontend.getField(field).removeEventListener('change', MyParcelFrontend.updateAddress);
+        });
+      }
+
+      MyParcelFrontend.getAddressType();
+
+      fields.forEach(function(field) {
+        MyParcelFrontend.getField(field).addEventListener('change', MyParcelFrontend.updateAddress);
+      });
+
+      MyParcelFrontend.updateAddress();
+    },
+
+    /**
+     * Get the current shipping method without the shipping class.
+     *
+     * @returns {String}
+     */
+    getShippingMethodWithoutClass: function() {
+      var shippingMethod = MyParcelFrontend.selectedShippingMethod;
+      var indexOfSemicolon = shippingMethod.indexOf(':');
+
+      shippingMethod = shippingMethod.substring(0, indexOfSemicolon === -1 ? shippingMethod.length : indexOfSemicolon);
+
+      return shippingMethod;
+    },
+  };
+
+  /**
+   * Debounce function. Copied from below link.
+   *
+   * @see https://stackoverflow.com/a/6658537/10225966
+   *
+   * @param {Function} func - Function to debounce.
+   * @param {Number?} threshold - Timing.
+   * @param {Boolean?} execAsap - Skips the timeout.
+   *
+   * @returns {function}
+   */
+  function debounce(func, threshold, execAsap) {
+    var timeout;
+
+    return function debounced() {
+      var obj = this;
+      var args = arguments;
+
+      function delayed() {
+        if (!execAsap) {
+          func.apply(obj, args);
+        }
+        timeout = null;
+      };
+
+      if (timeout) {
+        clearTimeout(timeout);
+      } else if (execAsap) {
+        func.apply(obj, args);
+      }
+
+      timeout = setTimeout(delayed, threshold || 100);
+    };
+  }
+
+  window.MyParcelFrontend = MyParcelFrontend;
+  MyParcelFrontend.init();
 });

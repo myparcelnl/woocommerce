@@ -1,0 +1,11 @@
+/* Twenty Seventeen preset */
+.woocommerce-myparcel__delivery-options > .myparcel-delivery-options label {
+  font-weight: normal;
+}
+
+.woocommerce-myparcel__delivery-options > .myparcel-delivery-options {
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  display: block;
+  padding: 0.7em;
+}
