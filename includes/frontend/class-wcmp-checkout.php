@@ -167,26 +167,28 @@ class WCMP_Checkout
 
         $myParcelConfig = [
             "config"  => [
-                "carriers" => $carriers,
                 "platform" => "belgie",
                 "locale"   => "nl-BE",
                 "currency" => get_woocommerce_currency(),
             ],
             "strings" => [
-                "addressNotFound"       => __("Address details are not entered", "woocommerce-myparcelbe"),
-                "city"                  => __("City", "woocommerce-myparcelbe"),
-                "closed"                => __("Closed", "woocommerce-myparcelbe"),
-                "deliveryStandardTitle" => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_STANDARD_TITLE),
-                "deliveryTitle"         => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_DELIVERY_TITLE),
-                "headerDeliveryOptions" => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE),
-                "houseNumber"           => __("House number", "woocommerce-myparcelbe"),
-                "openingHours"          => __("Opening hours", "woocommerce-myparcelbe"),
-                "pickUpFrom"            => __("Pick up from", "woocommerce-myparcelbe"),
-                "pickupTitle"           => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_PICKUP_TITLE),
-                "postcode"              => __("Postcode", "woocommerce-myparcelbe"),
-                "retry"                 => __("Retry", "woocommerce-myparcelbe"),
-                "wrongHouseNumberCity"  => __("Postcode/city combination unknown", "woocommerce-myparcelbe"),
-                "signatureTitle"        => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_SIGNATURE_TITLE)
+                "addressNotFound"         => __("Address details are not entered", "woocommerce-myparcelbe"),
+                "city"                    => __("City", "woocommerce-myparcelbe"),
+                "closed"                  => __("Closed", "woocommerce-myparcelbe"),
+                "deliveryStandardTitle"   => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_STANDARD_TITLE),
+                "deliveryTitle"           => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_DELIVERY_TITLE),
+                "headerDeliveryOptions"   => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE),
+                "houseNumber"             => __("House number", "woocommerce-myparcelbe"),
+                "openingHours"            => __("Opening hours", "woocommerce-myparcelbe"),
+                "pickUpFrom"              => __("Pick up from", "woocommerce-myparcelbe"),
+                "pickupTitle"             => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_PICKUP_TITLE),
+                "postcode"                => __("Postcode", "woocommerce-myparcelbe"),
+                "retry"                   => __("Retry", "woocommerce-myparcelbe"),
+                "wrongHouseNumberCity"    => __("Postcode/city combination unknown", "woocommerce-myparcelbe"),
+                "signatureTitle"          => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_SIGNATURE_TITLE),
+
+                "pickupLocationsListButton" => $this->getDeliveryOptionsTitle(WCMP_Settings::PICKUP_LOCATIONS_LIST_BUTTON),
+                "pickupLocationsMapButton"  => $this->getDeliveryOptionsTitle(WCMP_Settings::PICKUP_LOCATIONS_MAP_BUTTON),
             ],
         ];
 

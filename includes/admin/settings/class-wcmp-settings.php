@@ -85,6 +85,9 @@ class WCMP_Settings
     public const SETTING_CARRIER_PICKUP_TITLE         = "pickup_title";
     public const SETTING_CARRIER_SIGNATURE_ENABLED    = "signature_enabled";
     public const SETTING_CARRIER_SIGNATURE_FEE        = "signature_fee";
+    public const SETTING_DELIVERY_OPTIONS_PICKUP_VIEW     = "delivery_options_pickup_view";
+    public const PICKUP_LOCATIONS_LIST_BUTTON         = "pickup_locations_list_button";
+    public const PICKUP_LOCATIONS_MAP_BUTTON          = "pickup_locations_map_button";
 
     // TODO; Currently not implemented:
     public const SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED = "saturday_delivery_enabled";
