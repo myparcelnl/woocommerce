@@ -748,6 +748,20 @@ class WCMP_Settings_Data
                 ),
             ],
             [
+                "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_PICKUP_VIEW,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => __("Preferred pickup locations view", "woocommerce-myparcelbe"),
+                "type"      => "select",
+                "help_text" => __(
+                    "When pickup locations are enabled, the user can choose between \"map\" or \"list\" view. This setting decides which option will be selected first, upon opening the pickup locations.",
+                    "woocommerce-myparcelbe"
+                ),
+                "options"   => [
+                    "map"  => __("Show map first", "woocommerce-myparcelbe"),
+                    "list" => __("Show list first", "woocommerce-myparcelbe"),
+                ],
+            ],
+            [
                 "name"              => WCMP_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
                 "condition"         => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"             => __("Custom styles", "woocommerce-myparcelbe"),
@@ -823,6 +837,26 @@ class WCMP_Settings_Data
                 "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Pickup title", "woocommerce-myparcelbe"),
                 "default"   => __("Pickup", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMP_Settings::PICKUP_LOCATIONS_LIST_BUTTON,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "help_text" => __(
+                    "The text on the \"list\" button when viewing pickup locations.",
+                    "woocommerce-myparcelbe"
+                ),
+                "label"     => __("Pickup list button text", "woocommerce-myparcelbe"),
+                "default"   => __("List", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMP_Settings::PICKUP_LOCATIONS_MAP_BUTTON,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "help_text" => __(
+                    "The text on the \"map\" button when viewing pickup locations.",
+                    "woocommerce-myparcelbe"
+                ),
+                "label"     => __("Pickup map button text", "woocommerce-myparcelbe"),
+                "default"   => __("Map", "woocommerce-myparcelbe"),
             ],
         ];
     }
