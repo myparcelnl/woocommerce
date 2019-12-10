@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: WooCommerce MyParcel
-Plugin URI: https://sendmyparcel.be/
-Description: Export your WooCommerce orders to MyParcel BE (https://sendmyparcel.be/) and print labels directly from the WooCommerce admin
+Plugin URI: https://myparcel.nl/
+Description: Export your WooCommerce orders to MyParcel (https://myparcel.nl/) and print labels directly from the WooCommerce admin
 Author: Richard Perdaan
 Version: 4.0.0
-Text Domain: woocommerce-myparcelbe
+Text Domain: woocommerce-myparcel
 
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -22,8 +22,8 @@ if (! class_exists('WCMP')) :
         /**
          * Translations domain
          */
-        const DOMAIN                  = 'woocommerce-myparcelbe';
-        const NONCE_ACTION            = 'wc_myparcelbe';
+        const DOMAIN                  = 'woocommerce-myparcel';
+        const NONCE_ACTION            = 'wc_myparcel';
         const MINIMUM_PHP_VERSION_5_4 = '5.4';
         const PHP_VERSION_7_1         = '7.1';
 
@@ -34,7 +34,7 @@ if (! class_exists('WCMP')) :
         protected static $_instance = null;
 
         /**
-         * @var WPO\WC\MyParcelBE\Collections\SettingsCollection
+         * @var WPO\WC\MyParcel\Collections\SettingsCollection
          */
         public $setting_collection;
 
@@ -108,14 +108,14 @@ if (! class_exists('WCMP')) :
 
             /**
              * Frontend/global Locale. Looks in:
-             *        - WP_LANG_DIR/woocommerce-myparcelbe/woocommerce-myparcelbe-LOCALE.mo
-             *        - WP_LANG_DIR/plugins/woocommerce-myparcelbe-LOCALE.mo
-             *        - woocommerce-myparcelbe/languages/woocommerce-myparcelbe-LOCALE.mo (which if not found falls back to:)
-             *        - WP_LANG_DIR/plugins/woocommerce-myparcelbe-LOCALE.mo
+             *        - WP_LANG_DIR/woocommerce-myparcel/woocommerce-myparcel-LOCALE.mo
+             *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
+             *        - woocommerce-myparcel/languages/woocommerce-myparcel-LOCALE.mo (which if not found falls back to:)
+             *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
              */
             load_textdomain(
                 self::DOMAIN,
-                $dir . 'woocommerce-myparcelbe/' . self::DOMAIN . '-' . $locale . '.mo'
+                $dir . 'woocommerce-myparcel/' . self::DOMAIN . '-' . $locale . '.mo'
             );
             load_textdomain(self::DOMAIN, $dir . 'plugins/' . self::DOMAIN . '-' . $locale . '.mo');
             load_plugin_textdomain(self::DOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages');
@@ -143,7 +143,7 @@ if (! class_exists('WCMP')) :
                 require_once($this->includes . "/class-wcmp-frontend.php");
                 require_once($this->includes . "/class-wcmp-settings.php");
                 $this->export = require_once($this->includes . "/class-wcmp-export.php");
-                require_once($this->includes . "/class-wcmp-bepostcode-fields.php");
+                require_once($this->includes . "/class-wcmp-nl-postcode-fields.php");
 
                 return;
             }
@@ -176,7 +176,7 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/class-wcmp-log.php");
             require_once($this->includes . "/admin/class-wcmp-country-codes.php");
             $this->export = require_once($this->includes . "/admin/class-wcmp-export.php");
-            require_once($this->includes . "/class-wcmp-be-postcode-fields.php");
+            require_once($this->includes . "/class-wcmp-postcode-fields.php");
             require_once($this->includes . "/adapter/delivery-options-from-order-adapter.php");
             require_once($this->includes . "/adapter/shipment-options-from-order-adapter.php");
         }
@@ -231,8 +231,8 @@ if (! class_exists('WCMP')) :
         public function need_woocommerce()
         {
             $error = sprintf(
-                __("WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!",
-                    "woocommerce-myparcelbe"
+                __("WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!",
+                    "woocommerce-myparcel"
                 ),
                 '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
                 '</a>'
@@ -249,10 +249,10 @@ if (! class_exists('WCMP')) :
 
         public function required_php_version()
         {
-            $error         = __("WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended).",
-                "woocommerce-myparcelbe"
+            $error         = __("WooCommerce MyParcel requires PHP 5.4 or higher (5.6 or later recommended).",
+                "woocommerce-myparcel"
             );
-            $how_to_update = __("How to update your PHP version", "woocommerce-myparcelbe");
+            $how_to_update = __("How to update your PHP version", "woocommerce-myparcel");
             $message       = sprintf(
                 '<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>',
                 $error,
@@ -274,7 +274,7 @@ if (! class_exists('WCMP')) :
          */
         public function do_install()
         {
-            $version_setting   = "woocommerce_myparcelbe_version";
+            $version_setting   = "woocommerce_myparcel_version";
             $installed_version = get_option($version_setting);
 
             // installed version lower than plugin version?
@@ -296,7 +296,7 @@ if (! class_exists('WCMP')) :
         protected function install()
         {
             // Pre 2.0.0
-            if (! empty(get_option('wcmyparcelbe_settings'))) {
+            if (! empty(get_option('wcmyparcel_settings'))) {
                 require_once('migration/wcmp-installation-migration-v2-0-0.php');
             }
             // todo: Pre 4.0.0?
@@ -355,9 +355,9 @@ if (! class_exists('WCMP')) :
         public function initSettings()
         {
             if (! $this->phpVersionMeets(\WCMP::PHP_VERSION_7_1)) {
-                $this->general_settings  = get_option('woocommerce_myparcelbe_general_settings');
-                $this->export_defaults   = get_option('woocommerce_myparcelbe_export_defaults_settings');
-                $this->checkout_settings = get_option('woocommerce_myparcelbe_checkout_settings');
+                $this->general_settings  = get_option('woocommerce_myparcel_general_settings');
+                $this->export_defaults   = get_option('woocommerce_myparcel_export_defaults_settings');
+                $this->checkout_settings = get_option('woocommerce_myparcel_checkout_settings');
 
                 return;
             }
@@ -399,7 +399,7 @@ function WCMP()
  *
  * @return WCMP
  */
-function WooCommerce_MyParcelBE()
+function WooCommerce_MyParcel()
 {
     return WCMP();
 }

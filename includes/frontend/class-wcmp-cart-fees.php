@@ -218,12 +218,12 @@ class WCMP_Cart_Fees
         $carrierName = WCMP_Data::getCarriersHuman()[$this->deliveryOptions->getCarrier()];
 
         return [
-            "delivery_evening"        => __("Evening delivery", "woocommerce-myparcelbe"),
-            "delivery_morning"        => __("Morning delivery", "woocommerce-myparcelbe"),
-            "delivery_pickup"         => __("Pick up at", "woocommerce-myparcelbe") . " $carrierName",
-            "delivery_pickup_express" => __("Pickup express", "woocommerce-myparcelbe"),
-            "only_recipient"          => __("Only recipient", "woocommerce-myparcelbe"),
-            "signature"               => __("Signature on delivery", "woocommerce-myparcelbe"),
+            "delivery_evening"        => __("Evening delivery", "woocommerce-myparcel"),
+            "delivery_morning"        => __("Morning delivery", "woocommerce-myparcel"),
+            "delivery_pickup"         => __("Pick up at", "woocommerce-myparcel") . " $carrierName",
+            "delivery_pickup_express" => __("Pickup express", "woocommerce-myparcel"),
+            "only_recipient"          => __("Only recipient", "woocommerce-myparcel"),
+            "signature"               => __("Signature on delivery", "woocommerce-myparcel"),
         ];
     }
 

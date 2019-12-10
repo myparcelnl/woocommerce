@@ -1,16 +1,16 @@
 <?php
 
-namespace WPO\WC\MyParcelBE\Compatibility;
+namespace WPO\WC\MyParcel\Compatibility;
 
 use WC_Order;
-use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 
 /**
  * Class for compatibility with the ChannelEngine plugin.
  *
  * @see     https://wordpress.org/plugins/channelengine-woocommerce
  * @see     https://github.com/channelengine/woocommerce
- * @package WPO\WC\MyParcelBE\Compatibility
+ * @package WPO\WC\MyParcel\Compatibility
  */
 class WCMP_ChannelEngine_Compatibility
 {

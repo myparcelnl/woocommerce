@@ -1,7 +1,7 @@
 <?php
 
 use MyParcelNL\Sdk\src\Support\Arr;
-use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -30,7 +30,7 @@ class WCMP_Frontend
         add_action("woocommerce_thankyou", [$this, "thankyou_pickup_html"], 10, 1);
 
         add_filter(
-            "wpo_wcpdf_templates_replace_myparcelbe_delivery_options",
+            "wpo_wcpdf_templates_replace_myparcel_delivery_options",
             [$this, "wpo_wcpdf_delivery_options"],
             10,
             2
@@ -100,7 +100,7 @@ class WCMP_Frontend
 
         if ($shipping_class) {
             return sprintf(
-                '<input type="hidden" value="%s" name="myparcelbe_highest_shipping_class">',
+                '<input type="hidden" value="%s" name="myparcel_highest_shipping_class">',
                 $shipping_class
             );
         }
@@ -147,8 +147,8 @@ class WCMP_Frontend
      */
     public function order_review_fragments($fragments)
     {
-        $myparcelbe_shipping_data          = $this->renderHighestShippingClassInput();
-        $fragments['.wcmp__shipping-data'] = $myparcelbe_shipping_data;
+        $myparcel_shipping_data          = $this->renderHighestShippingClassInput();
+        $fragments['.wcmp__shipping-data'] = $myparcel_shipping_data;
 
         return $fragments;
     }

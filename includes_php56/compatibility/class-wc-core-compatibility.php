@@ -3,11 +3,11 @@
  * Derived from SkyVerge WooCommerce Plugin Framework https://github.com/skyverge/wc-plugin-framework/
  */
 
-namespace WPO\WC\MyParcelBE\Compatibility;
+namespace WPO\WC\MyParcel\Compatibility;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Compatibility\\WC_Core' ) ) :
+if ( ! class_exists( '\\WPO\\WC\\MyParcel\\Compatibility\\WC_Core' ) ) :
 
 /**
  * WooCommerce Compatibility Utility Class

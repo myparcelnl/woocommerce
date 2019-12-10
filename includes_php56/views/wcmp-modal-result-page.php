@@ -6,26 +6,26 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<?php
 		wp_enqueue_script(
-			'wcmyparcelbe-export',
-			WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/js/wcmp-admin.js',
+			'wcmyparcel-export',
+			WooCommerce_MyParcel()->plugin_url() . '/includes_php56/assets/js/wcmp-admin.js',
 			array( 'jquery', 'thickbox' ),
 			WC_MYPARCEL_BE_VERSION
 		);
         wp_localize_script(
-            'wcmyparcelbe-export',
-            'wc_myparcelbe',
+            'wcmyparcel-export',
+            'wc_myparcel',
             array(
                 'ajax_url'         => admin_url('admin-ajax.php'),
-                'nonce'            => wp_create_nonce('wc_myparcelbe'),
-                'download_display' => isset(WooCommerce_MyParcelBE()->general_settings['download_display'])
-                    ? WooCommerce_MyParcelBE()->general_settings['download_display']
+                'nonce'            => wp_create_nonce('wc_myparcel'),
+                'download_display' => isset(WooCommerce_MyParcel()->general_settings['download_display'])
+                    ? WooCommerce_MyParcel()->general_settings['download_display']
                     : '',
             )
         );
 
 		wp_enqueue_style(
 			'wcmp-admin-styles',
-			WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/css/wcmp-admin-styles.css',
+			WooCommerce_MyParcel()->plugin_url() . '/includes_php56/assets/css/wcmp-admin-styles.css',
 			array(),
 			WC_MYPARCEL_BE_VERSION,
 			'all'
@@ -35,14 +35,14 @@
 		if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<=' ) ) {
 			wp_enqueue_style(
 				'wcmp-admin-styles-legacy',
-				WooCommerce_MyParcelBE()->plugin_url() . '/includes_php56/assets/css/wcmp-admin-styles-legacy.css',
+				WooCommerce_MyParcel()->plugin_url() . '/includes_php56/assets/css/wcmp-admin-styles-legacy.css',
 				array(),
 				WC_MYPARCEL_BE_VERSION,
 				'all'
 			);
 		}
 
-		wp_enqueue_style( 'wcmyparcelbe-admin-styles' );
+		wp_enqueue_style( 'wcmyparcel-admin-styles' );
 		wp_enqueue_style( 'colors' );
 		wp_enqueue_style( 'media' );
 		wp_enqueue_script( 'jquery' );

@@ -2,9 +2,9 @@
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( ! class_exists('WooCommerce_MyParcelBE_Settings_Callbacks')) :
+if ( ! class_exists('WooCommerce_MyParcel_Settings_Callbacks')) :
 
-class WooCommerce_MyParcelBE_Settings_Callbacks {
+class WooCommerce_MyParcel_Settings_Callbacks {
 
     const extra_width_for_number_input = 200;
     const steps_number_input_fields = "0.01";
@@ -466,7 +466,7 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
             <?php if ($args['has_title']): ?>
                 <tr>
                     <td style="min-width: 215px;">
-                        <?php _e($args['title'] . ' title', 'woocommerce-myparcelbe') ?>:
+                        <?php _e($args['title'] . ' title', 'woocommerce-myparcel') ?>:
                     </td>
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input(
                             array_merge($args, $default_delivery_text)
@@ -475,13 +475,13 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
             <?php endif; ?>
             <?php if (isset($args['has_cutoff_time'])): ?>
                 <tr>
-                    <td><?php _e('Cut-off time on Saturday', 'woocommerce-myparcelbe') ?>:</td>
+                    <td><?php _e('Cut-off time on Saturday', 'woocommerce-myparcel') ?>:</td>
                     <td>&nbsp;&nbsp;&nbsp;<?php $this->text_input(array_merge($args, $cutoff_time_args)); ?></td>
                 </tr>
             <?php endif; ?>
             <?php if ($args['has_price']): ?>
                 <tr>
-                    <td><?php _e('Additional fee (ex VAT, optional)', 'woocommerce-myparcelbe') ?>:</td>
+                    <td><?php _e('Additional fee (ex VAT, optional)', 'woocommerce-myparcel') ?>:</td>
                     <td>&euro; <?php $this->text_input(array_merge($args, $fee_args)); ?></td>
                 </tr>
             <?php endif; ?>
@@ -502,10 +502,10 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
         <table>
             <thead>
             <tr>
-                <th style="width: 2.2em"><?php // _e( 'Enabled', 'woocommerce-myparcelbe' )?></th>
-                <th><?php _e('Option', 'woocommerce-myparcelbe') ?></th>
-                <th><?php _e('Fee (optional)', 'woocommerce-myparcelbe') ?></th>
-                <th><?php _e('Description', 'woocommerce-myparcelbe') ?></th>
+                <th style="width: 2.2em"><?php // _e( 'Enabled', 'woocommerce-myparcel' )?></th>
+                <th><?php _e('Option', 'woocommerce-myparcel') ?></th>
+                <th><?php _e('Fee (optional)', 'woocommerce-myparcel') ?></th>
+                <th><?php _e('Description', 'woocommerce-myparcel') ?></th>
             </tr>
             </thead>
             <tbody>
@@ -676,10 +676,10 @@ class WooCommerce_MyParcelBE_Settings_Callbacks {
         }
 
         // Return the array processing any additional functions filtered by this action.
-        return apply_filters('woocommerce_myparcelbe_settings_validate_input', $input, $input);
+        return apply_filters('woocommerce_myparcel_settings_validate_input', $input, $input);
     }
 }
 
 endif; // class_exists
 
-return new WooCommerce_MyParcelBE_Settings_Callbacks();
+return new WooCommerce_MyParcel_Settings_Callbacks();

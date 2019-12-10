@@ -15,7 +15,7 @@ if (class_exists('WCMP_Data')) {
 
 class WCMP_Data
 {
-    public const API_URL = "https://api.sendmyparcel.be/";
+    public const API_URL = "https://api.myparcel.nl/";
 
     /**
      * @var array
@@ -52,15 +52,15 @@ class WCMP_Data
         ];
 
         self::$packageTypesHuman = [
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME => __("Parcel", "woocommerce-myparcelbe"),
+            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME => __("Parcel", "woocommerce-myparcel"),
         ];
 
         self::$deliveryTypesHuman = [
-            AbstractConsignment::DELIVERY_TYPE_MORNING        => __("Morning delivery", "woocommerce-myparcelbe"),
-            AbstractConsignment::DELIVERY_TYPE_STANDARD       => __("Standard delivery", "woocommerce-myparcelbe"),
-            AbstractConsignment::DELIVERY_TYPE_EVENING        => __("Evening delivery", "woocommerce-myparcelbe"),
-            AbstractConsignment::DELIVERY_TYPE_PICKUP         => __("Pickup", "woocommerce-myparcelbe"),
-            AbstractConsignment::DELIVERY_TYPE_PICKUP_EXPRESS => __("Pickup express", "woocommerce-myparcelbe"),
+            AbstractConsignment::DELIVERY_TYPE_MORNING        => __("Morning delivery", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_STANDARD       => __("Standard delivery", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_EVENING        => __("Evening delivery", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_PICKUP         => __("Pickup", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_PICKUP_EXPRESS => __("Pickup express", "woocommerce-myparcel"),
         ];
     }
 
@@ -161,8 +161,8 @@ class WCMP_Data
     public static function getCarriersHuman(): array
     {
         return [
-            BpostConsignment::CARRIER_NAME => __("bpost", "woocommerce-myparcelbe"),
-            DPDConsignment::CARRIER_NAME   => __("DPD", "woocommerce-myparcelbe"),
+            BpostConsignment::CARRIER_NAME => __("bpost", "woocommerce-myparcel"),
+            DPDConsignment::CARRIER_NAME   => __("DPD", "woocommerce-myparcel"),
         ];
     }
 }

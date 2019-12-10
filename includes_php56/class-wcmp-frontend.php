@@ -1,18 +1,18 @@
 <?php
 
-use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
-use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
+if (! class_exists('WooCommerce_MyParcel_Frontend')) :
 
     /**
      * Frontend views
      */
-    class WooCommerce_MyParcelBE_Frontend
+    class WooCommerce_MyParcel_Frontend
     {
 
         const RADIO_CHECKED = 'on';
@@ -21,12 +21,12 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
         function __construct()
         {
             // Customer Emails
-            if (isset(WooCommerce_MyParcelBE()->general_settings['email_tracktrace'])) {
+            if (isset(WooCommerce_MyParcel()->general_settings['email_tracktrace'])) {
                 add_action('woocommerce_email_before_order_table', array($this, 'track_trace_email'), 10, 2);
             }
 
             // Track & Trace in my account
-            if (isset(WooCommerce_MyParcelBE()->general_settings['myaccount_tracktrace'])) {
+            if (isset(WooCommerce_MyParcel()->general_settings['myaccount_tracktrace'])) {
                 add_filter('woocommerce_my_account_my_orders_actions', array($this, 'track_trace_myaccount'), 10, 2);
             }
 
@@ -40,31 +40,31 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
             add_action('woocommerce_thankyou', array($this, 'thankyou_pickup_html'), 10, 1);
 
             // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
-            //add_filter('wpo_wcpdf_templates_replace_myparcelbe_delivery_date', array($this, 'wpo_wcpdf_delivery_date'), 10, 2); options.delivery_date custom delivery date not supported for carrier bpost
-            add_filter('wpo_wcpdf_templates_replace_myparcelbe_tracktrace', array(
+            //add_filter('wpo_wcpdf_templates_replace_myparcel_delivery_date', array($this, 'wpo_wcpdf_delivery_date'), 10, 2); options.delivery_date custom delivery date not supported for carrier bpost
+            add_filter('wpo_wcpdf_templates_replace_myparcel_tracktrace', array(
                 $this,
                 'wpo_wcpdf_tracktrace'
             ), 10, 2);
-            add_filter('wpo_wcpdf_templates_replace_myparcelbe_tracktrace_link', array(
+            add_filter('wpo_wcpdf_templates_replace_myparcel_tracktrace_link', array(
                 $this,
                 'wpo_wcpdf_tracktrace_link'
             ), 10, 2);
-            add_filter('wpo_wcpdf_templates_replace_myparcelbe_delivery_options', array(
+            add_filter('wpo_wcpdf_templates_replace_myparcel_delivery_options', array(
                 $this,
                 'wpo_wcpdf_delivery_options'
             ), 10, 2);
 
             // Delivery options
-            if (isset(WooCommerce_MyParcelBE()->checkout_settings['myparcelbe_checkout'])) {
+            if (isset(WooCommerce_MyParcel()->checkout_settings['myparcel_checkout'])) {
                 // Change the position of the checkout
-                if (isset(WooCommerce_MyParcelBE()->checkout_settings['checkout_position'])) {
-                    $checkout_position = WooCommerce_MyParcelBE()->checkout_settings['checkout_position'];
+                if (isset(WooCommerce_MyParcel()->checkout_settings['checkout_position'])) {
+                    $checkout_position = WooCommerce_MyParcel()->checkout_settings['checkout_position'];
                 } else {
                     $checkout_position = 'woocommerce_after_checkout_billing_form';
                 }
 
                 add_action('wp_enqueue_scripts', array($this, 'inject_delivery_options_variables'), 9999);
-                add_action(apply_filters('wc_myparcelbe_delivery_options_location', $checkout_position), array(
+                add_action(apply_filters('wc_myparcel_delivery_options_location', $checkout_position), array(
                     $this,
                     'output_delivery_options'
                 ), 10);
@@ -80,7 +80,7 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
             add_action('woocommerce_checkout_after_order_review', array($this, 'output_shipping_data'));
             add_action('woocommerce_update_order_review_fragments', array($this, 'order_review_fragments'));
 
-            $this->frontend_settings = new WooCommerce_MyParcelBE_Frontend_Settings();
+            $this->frontend_settings = new WooCommerce_MyParcel_Frontend_Settings();
         }
 
         public function track_trace_email($order, $sent_to_admin)
@@ -95,13 +95,13 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
 
             $order_id = WCX_Order::get_id($order);
 
-            $tracktrace_links = WooCommerce_MyParcelBE()->admin->get_tracktrace_links($order_id);
+            $tracktrace_links = WooCommerce_MyParcel()->admin->get_tracktrace_links($order_id);
             if (! empty($tracktrace_links)) {
                 $email_text = __(
                     'You can track your order with the following bpost Track & Trace code:',
-                    'woocommerce-myparcelbe'
+                    'woocommerce-myparcel'
                 );
-                $email_text = apply_filters('wcmyparcelbe_email_text', $email_text, $order);
+                $email_text = apply_filters('wcmyparcel_email_text', $email_text, $order);
                 ?>
                 <p><?php echo $email_text . ' ' . implode(', ', $tracktrace_links); ?></p>
 
@@ -111,25 +111,25 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
 
         public function email_pickup_html($order, $sent_to_admin = false, $plain_text = false)
         {
-            WooCommerce_MyParcelBE()->admin->show_order_delivery_options($order);
+            WooCommerce_MyParcel()->admin->show_order_delivery_options($order);
         }
 
         public function thankyou_pickup_html($order_id)
         {
             $order = wc_get_order($order_id);
-            WooCommerce_MyParcelBE()->admin->show_order_delivery_options($order);
+            WooCommerce_MyParcel()->admin->show_order_delivery_options($order);
         }
 
         public function track_trace_myaccount($actions, $order)
         {
             $order_id = WCX_Order::get_id($order);
-            if ($consignments = WooCommerce_MyParcelBE()->admin->get_tracktrace_shipments($order_id)) {
+            if ($consignments = WooCommerce_MyParcel()->admin->get_tracktrace_shipments($order_id)) {
                 foreach ($consignments as $key => $consignment) {
-                    $actions['myparcelbe_tracktrace_' . $consignment['tracktrace']] = array(
+                    $actions['myparcel_tracktrace_' . $consignment['tracktrace']] = array(
                         'url'  => $consignment['tracktrace_url'],
                         'name' => apply_filters(
-                            'wcmyparcelbe_myaccount_tracktrace_button',
-                            __('Track & Trace', 'wooocommerce-myparcelbe')
+                            'wcmyparcel_myaccount_tracktrace_button',
+                            __('Track & Trace', 'wooocommerce-myparcel')
                         )
                     );
                 }
@@ -141,15 +141,15 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
         public function wpo_wcpdf_delivery_options($replacement, $order)
         {
             ob_start();
-            WooCommerce_MyParcelBE()->admin->show_order_delivery_options($order);
+            WooCommerce_MyParcel()->admin->show_order_delivery_options($order);
 
             return ob_get_clean();
         }
         // options.delivery_date custom delivery date not supported for carrier bpost
         //    public function wpo_wcpdf_delivery_date($replacement, $order) {
-        //        if ($delivery_date = WooCommerce_MyParcelBE()->export->get_delivery_date($order)) {
+        //        if ($delivery_date = WooCommerce_MyParcel()->export->get_delivery_date($order)) {
         //            $formatted_date = date_i18n(
-        //                apply_filters('wcmyparcelbe_delivery_date_format', wc_date_format()),
+        //                apply_filters('wcmyparcel_delivery_date_format', wc_date_format()),
         //                strtotime($delivery_date)
         //            );
         //
@@ -161,7 +161,7 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
 
         public function wpo_wcpdf_tracktrace($replacement, $order)
         {
-            if ($shipments = WooCommerce_MyParcelBE()->admin->get_tracktrace_shipments(WCX_Order::get_id($order))) {
+            if ($shipments = WooCommerce_MyParcel()->admin->get_tracktrace_shipments(WCX_Order::get_id($order))) {
                 $tracktrace = array();
                 foreach ($shipments as $shipment) {
                     if (! empty($shipment['tracktrace'])) {
@@ -176,7 +176,7 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
 
         public function wpo_wcpdf_tracktrace_link($replacement, $order)
         {
-            $tracktrace_links = WooCommerce_MyParcelBE()->admin->get_tracktrace_links(WCX_Order::get_id($order));
+            $tracktrace_links = WooCommerce_MyParcel()->admin->get_tracktrace_links(WCX_Order::get_id($order));
             if (! empty($tracktrace_links)) {
                 $replacement = implode(', ', $tracktrace_links);
             }
@@ -190,9 +190,9 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
          */
         public function output_delivery_options()
         {
-            do_action('woocommerce_myparcelbe_before_delivery_options');
-            require_once(WooCommerce_MyParcelBE()->plugin_path() . '/includes_php56/templates/wcmp-delivery-options-template.php');
-            do_action('woocommerce_myparcelbe_after_delivery_options');
+            do_action('woocommerce_myparcel_before_delivery_options');
+            require_once(WooCommerce_MyParcel()->plugin_path() . '/includes_php56/templates/wcmp-delivery-options-template.php');
+            do_action('woocommerce_myparcel_after_delivery_options');
         }
 
         /**
@@ -201,16 +201,16 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
         public function inject_delivery_options_variables()
         {
             wp_localize_script(
-                'wc-myparcelbe',
+                'wc-myparcel',
                 'wcmp_delivery_options',
                 array(
                     'shipping_methods' => $this->get_delivery_options_shipping_methods(),
-                    'always_display'   => $this->myparcelbe_delivery_options_always_display()
+                    'always_display'   => $this->myparcel_delivery_options_always_display()
                 )
             );
 
             wp_localize_script(
-                'wc-myparcelbe',
+                'wc-myparcel',
                 'wcmp_config',
                 $this->get_checkout_config()
             );
@@ -219,14 +219,14 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
         public function output_shipping_data()
         {
             $shipping_data = $this->get_shipping_data();
-            printf('<div class="myparcelbe-shipping-data">%s</div>', $shipping_data);
+            printf('<div class="myparcel-shipping-data">%s</div>', $shipping_data);
         }
 
         public function get_shipping_data()
         {
             if ($shipping_class = $this->get_cart_shipping_class()) {
                 $shipping_data = sprintf(
-                    '<input type="hidden" value="%s" id="myparcelbe_highest_shipping_class" name="myparcelbe_highest_shipping_class">',
+                    '<input type="hidden" value="%s" id="myparcel_highest_shipping_class" name="myparcel_highest_shipping_class">',
                     $shipping_class
                 );
 
@@ -248,29 +248,29 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
         {
             $order = WCX::get_order($order_id);
 
-            if ($_POST['myparcelbe_highest_shipping_class'] != null) {
+            if ($_POST['myparcel_highest_shipping_class'] != null) {
                 WCX_Order::update_meta_data(
                     $order,
-                    '_myparcelbe_highest_shipping_class',
-                    $_POST['myparcelbe_highest_shipping_class']
+                    '_myparcel_highest_shipping_class',
+                    $_POST['myparcel_highest_shipping_class']
                 );
             } else {
                 if (isset($_POST['shipping_method'])) {
                     WCX_Order::update_meta_data(
                         $order,
-                        '_myparcelbe_highest_shipping_class',
+                        '_myparcel_highest_shipping_class',
                         $_POST['shipping_method'][0]
                     );
                 }
             }
 
-            if (isset($_POST['myparcelbe-signature-selector'])) {
-                WCX_Order::update_meta_data($order, '_myparcelbe_signature', self::RADIO_CHECKED);
+            if (isset($_POST['myparcel-signature-selector'])) {
+                WCX_Order::update_meta_data($order, '_myparcel_signature', self::RADIO_CHECKED);
             }
 
             if (! empty($_POST['mypabe-post-nl-data'])) {
                 $delivery_options = json_decode(stripslashes($_POST['mypabe-post-nl-data']), true);
-                WCX_Order::update_meta_data($order, '_myparcelbe_delivery_options', $delivery_options);
+                WCX_Order::update_meta_data($order, '_myparcel_delivery_options', $delivery_options);
             }
         }
 
@@ -304,7 +304,7 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                         switch ($time['price_comment']) {
                             case 'standard':
                                 $this->add_fee_signature($delivery_options, 'Signature on delivery');
-                                $fee_name = __('Signature on delivery', 'woocommerce-myparcelbe');
+                                $fee_name = __('Signature on delivery', 'woocommerce-myparcel');
                                 break;
                         }
 
@@ -312,8 +312,8 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                             $this->add_fee($fee_name, $fee);
                         }
 //                    if (date('w', strtotime($delivery_options['date'])) == 6){
-//                        $fee = WooCommerce_MyParcelBE()->checkout_settings['saturday_cutoff_fee'];
-//                        $fee_name = __('Saturday delivery', 'woocommerce-myparcelbe');
+//                        $fee = WooCommerce_MyParcel()->checkout_settings['saturday_cutoff_fee'];
+//                        $fee_name = __('Saturday delivery', 'woocommerce-myparcel');
 //                        $this->add_fee($fee_name, $fee);
 //                    }
                     }
@@ -323,9 +323,9 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                 if (isset($delivery_options['price_comment'])) {
                     switch ($delivery_options['price_comment']) {
                         case 'retail':
-                            if (! empty(WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'])) {
-                                $fee      = WooCommerce_MyParcelBE()->checkout_settings['pickup_fee'];
-                                $fee_name = __('bpost pickup', 'woocommerce-myparcelbe');
+                            if (! empty(WooCommerce_MyParcel()->checkout_settings['pickup_fee'])) {
+                                $fee      = WooCommerce_MyParcel()->checkout_settings['pickup_fee'];
+                                $fee_name = __('bpost pickup', 'woocommerce-myparcel');
                             }
                             break;
                     }
@@ -416,7 +416,7 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
             $packages = WC()->shipping->get_packages();
             $package  = current($packages);
 
-            $shipping_method = WooCommerce_MyParcelBE()->export->get_shipping_method($chosen_method);
+            $shipping_method = WooCommerce_MyParcel()->export->get_shipping_method($chosen_method);
             if (empty($shipping_method)) {
                 return false;
             }
@@ -425,7 +425,7 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
             $found_shipping_classes = $shipping_method->find_shipping_classes($package);
             // return print_r( $found_shipping_classes, true );
 
-            $highest_class = WooCommerce_MyParcelBE()->export->get_shipping_class(
+            $highest_class = WooCommerce_MyParcel()->export->get_shipping_class(
                 $shipping_method,
                 $found_shipping_classes
             );
@@ -435,8 +435,8 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
 
         public function order_review_fragments($fragments)
         {
-            $myparcelbe_shipping_data               = $this->get_shipping_data();
-            $fragments['.myparcelbe-shipping-data'] = $myparcelbe_shipping_data;
+            $myparcel_shipping_data               = $this->get_shipping_data();
+            $fragments['.myparcel-shipping-data'] = $myparcel_shipping_data;
 
             return $fragments;
         }
@@ -470,7 +470,7 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                     'Zaterdag'
                 ],
                 "config"          => [
-                    "apiBaseUrl" => WooCommerce_MyParcelBE_Frontend_Settings::BASE_URL,
+                    "apiBaseUrl" => WooCommerce_MyParcel_Frontend_Settings::BASE_URL,
                     "carrier"    => "2",
 
                     "priceNormalDelivery" => "",
@@ -478,11 +478,11 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                     "pricePickup"         => $this->frontend_settings->get_price('pickup'),
 //                "priceSaturdayDelivery" => $this->frontend_settings->is_enabled('saturday_cutoff_fee'),
 
-                    "headerDeliveryOptions" => __($this->frontend_settings->get_title('header_delivery_options'), 'woocommerce-myparcelbe'),
-                    "deliveryTitle"         => __($this->frontend_settings->get_title('at_home_delivery'), 'woocommerce-myparcelbe'),
-                    "pickupTitle"           => __($this->frontend_settings->get_title('pickup'), 'woocommerce-myparcelbe'),
-                    "deliveryStandardTitle" => __($this->frontend_settings->get_title('standard'), 'woocommerce-myparcelbe'),
-                    "signatureTitle"        => __($this->frontend_settings->get_title('signature'), 'woocommerce-myparcelbe'),
+                    "headerDeliveryOptions" => __($this->frontend_settings->get_title('header_delivery_options'), 'woocommerce-myparcel'),
+                    "deliveryTitle"         => __($this->frontend_settings->get_title('at_home_delivery'), 'woocommerce-myparcel'),
+                    "pickupTitle"           => __($this->frontend_settings->get_title('pickup'), 'woocommerce-myparcel'),
+                    "deliveryStandardTitle" => __($this->frontend_settings->get_title('standard'), 'woocommerce-myparcel'),
+                    "signatureTitle"        => __($this->frontend_settings->get_title('signature'), 'woocommerce-myparcel'),
 
 //                "allowSaturdayDelivery" => $this->frontend_settings->is_enabled('saturday_cutoff'),
                     "allowSignature"        => $this->frontend_settings->is_enabled('signature'),
@@ -494,23 +494,23 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                     "dropoffDelay"       => $this->frontend_settings->get_dropoff_delay(),
                 ],
                 "textToTranslate" => [
-                    "addressNotFound"      => __('Address details are not entered', 'woocommerce-myparcelbe'),
-                    "pickUpFrom"           => __('Pick up from', 'woocommerce-myparcelbe'),
-                    "openingHours"         => __('Opening hours', 'woocommerce-myparcelbe'),
-                    "closed"               => __('Closed', 'woocommerce-myparcelbe'),
-                    "postcode"             => __('Postcode', 'woocommerce-myparcelbe'),
-                    "houseNumber"          => __('House number', 'woocommerce-myparcelbe'),
-                    "city"                 => __('City', 'woocommerce-myparcelbe'),
-                    "retry"                => __('Retry', 'woocommerce-myparcelbe'),
-                    "wrongHouseNumberCity" => __('Postcode/city combination unknown', 'woocommerce-myparcelbe'),
+                    "addressNotFound"      => __('Address details are not entered', 'woocommerce-myparcel'),
+                    "pickUpFrom"           => __('Pick up from', 'woocommerce-myparcel'),
+                    "openingHours"         => __('Opening hours', 'woocommerce-myparcel'),
+                    "closed"               => __('Closed', 'woocommerce-myparcel'),
+                    "postcode"             => __('Postcode', 'woocommerce-myparcel'),
+                    "houseNumber"          => __('House number', 'woocommerce-myparcel'),
+                    "city"                 => __('City', 'woocommerce-myparcel'),
+                    "retry"                => __('Retry', 'woocommerce-myparcel'),
+                    "wrongHouseNumberCity" => __('Postcode/city combination unknown', 'woocommerce-myparcel'),
 
-                    "sunday"    => __('Sunday', 'woocommerce-myparcelbe'),
-                    "monday"    => __('Monday', 'woocommerce-myparcelbe'),
-                    "tuesday"   => __('Tuesday', 'woocommerce-myparcelbe'),
-                    "wednesday" => __('Wednesday', 'woocommerce-myparcelbe'),
-                    "thursday"  => __('Thursday', 'woocommerce-myparcelbe'),
-                    "friday"    => __('Friday', 'woocommerce-myparcelbe'),
-                    "saturday"  => __('Saturday', 'woocommerce-myparcelbe'),
+                    "sunday"    => __('Sunday', 'woocommerce-myparcel'),
+                    "monday"    => __('Monday', 'woocommerce-myparcel'),
+                    "tuesday"   => __('Tuesday', 'woocommerce-myparcel'),
+                    "wednesday" => __('Wednesday', 'woocommerce-myparcel'),
+                    "thursday"  => __('Thursday', 'woocommerce-myparcel'),
+                    "friday"    => __('Friday', 'woocommerce-myparcel'),
+                    "saturday"  => __('Saturday', 'woocommerce-myparcel'),
                 ]
             ];
 
@@ -548,9 +548,9 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
         {
             // Fee for "delivery" option
             if (isset($post_data[$post_data_value]) && $post_data[$post_data_value] == $delivery_type) {
-                if (! empty(WooCommerce_MyParcelBE()->checkout_settings[$backend_setting])) {
-                    $fee      = WooCommerce_MyParcelBE()->checkout_settings[$backend_setting];
-                    $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
+                if (! empty(WooCommerce_MyParcel()->checkout_settings[$backend_setting])) {
+                    $fee      = WooCommerce_MyParcel()->checkout_settings[$backend_setting];
+                    $fee_name = __($delivery_title, 'woocommerce-myparcel');
                     $this->add_fee($fee_name, $fee);
 
                     return true;
@@ -566,10 +566,10 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
                 return;
             }
 
-            $fee = WooCommerce_MyParcelBE()->checkout_settings['signature_fee'];
+            $fee = WooCommerce_MyParcel()->checkout_settings['signature_fee'];
 
             if (! empty($fee)) {
-                $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
+                $fee_name = __($delivery_title, 'woocommerce-myparcel');
                 $this->add_fee($fee_name, $fee);
             }
         }
@@ -579,10 +579,10 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
 //            return;
 //        }
 //
-//        $fee = WooCommerce_MyParcelBE()->checkout_settings['saturday_cutoff_fee'];
+//        $fee = WooCommerce_MyParcel()->checkout_settings['saturday_cutoff_fee'];
 //
 //        if ( ! empty($fee)) {
-//            $fee_name = __($delivery_title, 'woocommerce-myparcelbe');
+//            $fee_name = __($delivery_title, 'woocommerce-myparcel');
 //            $this->add_fee($fee_name, $fee);
 //        }
 //    }
@@ -593,11 +593,11 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
         private function get_delivery_options_shipping_methods()
         {
             if (isset(
-                    WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types']
+                    WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types']
                 )
-                && isset(WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'][WooCommerce_MyParcelBE_Export::PACKAGE])) {
+                && isset(WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][WooCommerce_MyParcel_Export::PACKAGE])) {
                 // Shipping methods associated with parcels = enable delivery options
-                $delivery_options_shipping_methods = WooCommerce_MyParcelBE()->export_defaults['shipping_methods_package_types'][WooCommerce_MyParcelBE_Export::PACKAGE];
+                $delivery_options_shipping_methods = WooCommerce_MyParcel()->export_defaults['shipping_methods_package_types'][WooCommerce_MyParcel_Export::PACKAGE];
             } else {
                 $delivery_options_shipping_methods = array();
             }
@@ -605,10 +605,10 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
             return json_encode($delivery_options_shipping_methods);
         }
 
-        private function myparcelbe_delivery_options_always_display()
+        private function myparcel_delivery_options_always_display()
         {
-            if (isset(WooCommerce_MyParcelBE()->checkout_settings['checkout_display'])
-                && WooCommerce_MyParcelBE()->checkout_settings['checkout_display'] == 'all_methods') {
+            if (isset(WooCommerce_MyParcel()->checkout_settings['checkout_display'])
+                && WooCommerce_MyParcel()->checkout_settings['checkout_display'] == 'all_methods') {
                 return true;
             }
 
@@ -618,4 +618,4 @@ if (! class_exists('WooCommerce_MyParcelBE_Frontend')) :
 
 endif; // class_exists
 
-return new WooCommerce_MyParcelBE_Frontend();
+return new WooCommerce_MyParcel_Frontend();

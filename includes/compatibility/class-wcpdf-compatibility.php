@@ -1,15 +1,15 @@
 <?php
 
-namespace WPO\WC\MyParcelBE\Compatibility;
+namespace WPO\WC\MyParcel\Compatibility;
 
 use Exception;
 use WCMP_Frontend;
-use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 
 /**
  * Class for compatibility with the WooCommerce PDF Invoices & Packing Slips Premium Templates plugin.
  *
- * @package WPO\WC\MyParcelBE\Compatibility
+ * @package WPO\WC\MyParcel\Compatibility
  */
 class WCMP_WCPDF_Compatibility
 {
@@ -17,14 +17,14 @@ class WCMP_WCPDF_Compatibility
     {
         // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
         add_filter(
-            "wpo_wcpdf_templates_replace_myparcelbe_track_trace",
+            "wpo_wcpdf_templates_replace_myparcel_track_trace",
             ["WCMP_WCPDF_Compatibility", "track_trace"],
             10,
             2
         );
 
         add_filter(
-            "wpo_wcpdf_templates_replace_myparcelbe_track_trace_link",
+            "wpo_wcpdf_templates_replace_myparcel_track_trace_link",
             ["WCMP_WCPDF_Compatibility", "track_trace_link"],
             10,
             2

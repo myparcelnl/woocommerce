@@ -6,9 +6,9 @@ use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
-use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
-use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcelBE\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
 
 if (! defined("ABSPATH")) {
     exit;
@@ -98,9 +98,9 @@ class WCMP_Export
     public function admin_notices()
     {
         // only do this when the user that initiated this
-        if (isset($_GET["myparcelbe_done"])) {
-            $action_return = get_option("wcmyparcelbe_admin_notices");
-            $print_queue   = get_option("wcmyparcelbe_print_queue", []);
+        if (isset($_GET["myparcel_done"])) {
+            $action_return = get_option("wcmyparcel_admin_notices");
+            $print_queue   = get_option("wcmyparcel_print_queue", []);
             if (! empty($action_return)) {
                 foreach ($action_return as $type => $message) {
                     if (! in_array($type, ["success", "error"])) {
@@ -119,7 +119,7 @@ class WCMP_Export
                         );
 
                         // Empty queue
-                        delete_option("wcmyparcelbe_print_queue");
+                        delete_option("wcmyparcel_print_queue");
                     }
 
                     printf(
@@ -130,17 +130,17 @@ class WCMP_Export
                     );
                 }
                 // destroy after reading
-                delete_option("wcmyparcelbe_admin_notices");
-                wp_cache_delete("wcmyparcelbe_admin_notices", "options");
+                delete_option("wcmyparcel_admin_notices");
+                wp_cache_delete("wcmyparcel_admin_notices", "options");
             }
         }
 
-        if (isset($_GET["myparcelbe"])) {
-            switch ($_GET["myparcelbe"]) {
+        if (isset($_GET["myparcel"])) {
+            switch ($_GET["myparcel"]) {
                 case "no_consignments":
                     $message = __(
                         "You have to export the orders to MyParcel before you can print the labels!",
-                        "woocommerce-myparcelbe"
+                        "woocommerce-myparcel"
                     );
                     printf('<div class="wcmp__notice notice notice-error"><p>%s</p></div>', $message);
                     break;
@@ -167,19 +167,19 @@ class WCMP_Export
         }
 
         if (! is_user_logged_in()) {
-            wp_die(__("You do not have sufficient permissions to access this page.", "woocommerce-myparcelbe"));
+            wp_die(__("You do not have sufficient permissions to access this page.", "woocommerce-myparcel"));
         }
 
         $return = [];
 
         // Check the user privileges (maybe use order ids for filter?)
         if (apply_filters(
-            "wc_myparcelbe_check_privs",
+            "wc_myparcel_check_privs",
             ! current_user_can("manage_woocommerce_orders") && ! current_user_can("edit_shop_orders")
         )) {
             $return["error"] = __(
                 "You do not have sufficient permissions to access this page.",
-                "woocommerce-myparcelbe"
+                "woocommerce-myparcel"
             );
             echo json_encode($return);
             die();
@@ -196,7 +196,7 @@ class WCMP_Export
         include_once("class-wcmp-export-consignments.php");
 
         if (empty($shipment_ids) && empty($order_ids)) {
-            $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
+            $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcel");
         } else {
             try {
                 switch ($request) {
@@ -208,7 +208,7 @@ class WCMP_Export
                     // Creating a return shipment.
                     case self::ADD_RETURN:
                         if (empty($order_ids)) {
-                            $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcelbe");
+                            $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcel");
                             break;
                         }
 
@@ -365,7 +365,7 @@ class WCMP_Export
 
         if (! empty($this->success)) {
             $return["success"]     = sprintf(
-                __("%s shipments successfully exported to MyParcel", "woocommerce-myparcelbe"),
+                __("%s shipments successfully exported to MyParcel", "woocommerce-myparcel"),
                 count($collection->getConsignmentIds())
             );
             $return["success_ids"] = $collection->getConsignmentIds();
@@ -478,7 +478,7 @@ class WCMP_Export
 
             throw new Exception(__(
                 "The selected orders have not been exported to MyParcel yet! ",
-                "woocommerce-myparcelbe"
+                "woocommerce-myparcel"
             ));
         }
 
@@ -525,7 +525,7 @@ class WCMP_Export
         $key = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
 
         if (! ($key)) {
-            throw new ErrorException(__("No API key found in MyParcel BE settings", "woocommerce-myparcelbe"));
+            throw new ErrorException(__("No API key found in MyParcel settings", "woocommerce-myparcel"));
         }
 
         return new WCMP_API($key);
@@ -556,7 +556,7 @@ class WCMP_Export
         ];
 
         if (!Arr::get($return_shipment_data, "email")) {
-            throw new Exception(__("No e-mail address found in order.", "woocommerce-myparcelbe"));
+            throw new Exception(__("No e-mail address found in order.", "woocommerce-myparcel"));
         }
 
         // add options if available
@@ -710,7 +710,7 @@ class WCMP_Export
 
         $address = array_merge($address, $address_intl);
 
-        return apply_filters("wc_myparcelbe_recipient", $address, $order);
+        return apply_filters("wc_myparcel_recipient", $address, $order);
     }
 
     /**
@@ -881,7 +881,7 @@ class WCMP_Export
      */
     public function get_package_type(string $package_type): string
     {
-        return WCMP_Data::getPackageTypes()[$package_type] ?? __("Unknown", "woocommerce-myparcelbe");
+        return WCMP_Data::getPackageTypes()[$package_type] ?? __("Unknown", "woocommerce-myparcel");
     }
 
     /**
@@ -898,7 +898,7 @@ class WCMP_Export
             if ($key > 10) {
                 $parsed_errors[] = sprintf(
                     "<strong>%s %s:</strong> %s",
-                    __("Order", "woocommerce-myparcelbe"),
+                    __("Order", "woocommerce-myparcel"),
                     $key,
                     $error
                 );
@@ -922,31 +922,31 @@ class WCMP_Export
     public function get_shipment_status_name($status_code)
     {
         $shipment_statuses = [
-            1  => __("pending - concept", "woocommerce-myparcelbe"),
-            2  => __("pending - registered", "woocommerce-myparcelbe"),
-            3  => __("enroute - handed to carrier", "woocommerce-myparcelbe"),
-            4  => __("enroute - sorting", "woocommerce-myparcelbe"),
-            5  => __("enroute - distribution", "woocommerce-myparcelbe"),
-            6  => __("enroute - customs", "woocommerce-myparcelbe"),
-            7  => __("delivered - at recipient", "woocommerce-myparcelbe"),
-            8  => __("delivered - ready for pickup", "woocommerce-myparcelbe"),
-            9  => __("delivered - package picked up", "woocommerce-myparcelbe"),
-            30 => __("inactive - concept", "woocommerce-myparcelbe"),
-            31 => __("inactive - registered", "woocommerce-myparcelbe"),
-            32 => __("inactive - enroute - handed to carrier", "woocommerce-myparcelbe"),
-            33 => __("inactive - enroute - sorting", "woocommerce-myparcelbe"),
-            34 => __("inactive - enroute - distribution", "woocommerce-myparcelbe"),
-            35 => __("inactive - enroute - customs", "woocommerce-myparcelbe"),
-            36 => __("inactive - delivered - at recipient", "woocommerce-myparcelbe"),
-            37 => __("inactive - delivered - ready for pickup", "woocommerce-myparcelbe"),
-            38 => __("inactive - delivered - package picked up", "woocommerce-myparcelbe"),
-            99 => __("inactive - unknown", "woocommerce-myparcelbe"),
+            1  => __("pending - concept", "woocommerce-myparcel"),
+            2  => __("pending - registered", "woocommerce-myparcel"),
+            3  => __("enroute - handed to carrier", "woocommerce-myparcel"),
+            4  => __("enroute - sorting", "woocommerce-myparcel"),
+            5  => __("enroute - distribution", "woocommerce-myparcel"),
+            6  => __("enroute - customs", "woocommerce-myparcel"),
+            7  => __("delivered - at recipient", "woocommerce-myparcel"),
+            8  => __("delivered - ready for pickup", "woocommerce-myparcel"),
+            9  => __("delivered - package picked up", "woocommerce-myparcel"),
+            30 => __("inactive - concept", "woocommerce-myparcel"),
+            31 => __("inactive - registered", "woocommerce-myparcel"),
+            32 => __("inactive - enroute - handed to carrier", "woocommerce-myparcel"),
+            33 => __("inactive - enroute - sorting", "woocommerce-myparcel"),
+            34 => __("inactive - enroute - distribution", "woocommerce-myparcel"),
+            35 => __("inactive - enroute - customs", "woocommerce-myparcel"),
+            36 => __("inactive - delivered - at recipient", "woocommerce-myparcel"),
+            37 => __("inactive - delivered - ready for pickup", "woocommerce-myparcel"),
+            38 => __("inactive - delivered - package picked up", "woocommerce-myparcel"),
+            99 => __("inactive - unknown", "woocommerce-myparcel"),
         ];
 
         if (isset($shipment_statuses[$status_code])) {
             return $shipment_statuses[$status_code];
         } else {
-            return __("Unknown status", "woocommerce-myparcelbe");
+            return __("Unknown status", "woocommerce-myparcel");
         }
     }
 
@@ -1300,7 +1300,7 @@ class WCMP_Export
         if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ORDER_STATUS_AUTOMATION)) {
             $order->update_status(
                 $this->getSetting(WCMP_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
-                __("MyParcel shipment created:", "woocommerce-myparcelbe")
+                __("MyParcel shipment created:", "woocommerce-myparcel")
             );
         }
     }
@@ -1349,7 +1349,7 @@ class WCMP_Export
             $this->errors[] =
                 __(
                     "The order(s) you have selected have invalid shipping countries.",
-                    "woocommerce-myparcelbe"
+                    "woocommerce-myparcel"
                 );
             return;
         }
@@ -1361,13 +1361,13 @@ class WCMP_Export
         // When adding shipments, store $return for use in admin_notice
         // This way we can refresh the page (JS) to show all new buttons
         if ($print === "no" || $print === "after_reload") {
-            update_option("wcmyparcelbe_admin_notices", $return);
+            update_option("wcmyparcel_admin_notices", $return);
             if ($print === "after_reload") {
                 $print_queue = [
                     "order_ids" => $return["success_ids"],
                     "offset"    => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
                 ];
-                update_option("wcmyparcelbe_print_queue", $print_queue);
+                update_option("wcmyparcel_print_queue", $print_queue);
             }
         }
 

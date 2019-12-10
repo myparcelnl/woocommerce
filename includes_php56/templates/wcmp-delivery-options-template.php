@@ -1,16 +1,16 @@
 <!-- Add the Custom styles to the checkout -->
-<?php if ( ! empty(WooCommerce_MyParcelBE()->checkout_settings['custom_css'])) {
+<?php if ( ! empty(WooCommerce_MyParcel()->checkout_settings['custom_css'])) {
     echo "<style>";
-    echo WooCommerce_MyParcelBE()->checkout_settings['custom_css'];
+    echo WooCommerce_MyParcel()->checkout_settings['custom_css'];
     echo "</style>";
 } ?>
 
-<div id="mypabe-load" class="myparcelbe-delivery-options">
+<div id="mypabe-load" class="myparcel-delivery-options">
     <input style="display:none;" name='mypabe-post-nl-data' id="mypabe-input" />
 
     <div id="mypabe-spinner-model">
         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 99" enable-background="new 0 0 100 99" xml:space="preserve">
-            <image id="bpost-logo" width="100" height="99" href="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wcmp-bpost-logo.png' ?>" />
+            <image id="bpost-logo" width="100" height="99" href="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wcmp-bpost-logo.png' ?>" />
         </svg>
         <div id="mypabe-spinner"></div>
     </div>
@@ -50,12 +50,12 @@
                     <div name="mypabe-delivery-date-text" id="mypabe-date" title="Delivery date"></div>
                 </td>
             </tr>
-            <tr id="mypabe-delivery-option method-myparcelbe-normal-div">
+            <tr id="mypabe-delivery-option method-myparcel-normal-div">
                 <td></td>
                 <td>
                     <div id="mypabe-delivery" class="mypabe-delivery-option">
-                        <input name="shipping-method" id="method-myparcelbe-normal" type="radio" value="myparcelbe-normal">
-                        <label for="method-myparcelbe-normal"><span id="mypabe-standard-title"></span></label>
+                        <input name="shipping-method" id="method-myparcel-normal" type="radio" value="myparcel-normal">
+                        <label for="method-myparcel-normal"><span id="mypabe-standard-title"></span></label>
                     </div>
                 </td>
                 <td>
@@ -68,7 +68,7 @@
                 <td></td>
                 <td id="mypabe-signature" class=" mypabe-extra-delivery-options-padding-top">
                     <div class="mypabe-delivery-option">
-                        <input name="myparcelbe-signature-selector" id="mypabe-signature-selector" type="checkbox" value="myparcelbe-signature-selector">
+                        <input name="myparcel-signature-selector" id="mypabe-signature-selector" type="checkbox" value="myparcel-signature-selector">
                         <label for="mypabe-signature-selector"><span id="mypabe-signature-title"></span></label>
                     </div>
                 </td>
@@ -99,7 +99,7 @@
             <tr id="mypabe-pickup" class="mypabe-is-pickup-element">
                 <td></td>
                 <td>
-                    <input name="method-myparcelbe-pickup-selector" id="mypabe-pickup-selector" type="radio" value="myparcelbe-pickup-selector">
+                    <input name="method-myparcel-pickup-selector" id="mypabe-pickup-selector" type="radio" value="myparcel-pickup-selector">
                     <label for="mypabe-pickup-selector"><span class="mypabe-pickup-delivery-title"></span></label>
                 </td>
                 <td>

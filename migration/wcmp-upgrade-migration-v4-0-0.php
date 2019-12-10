@@ -69,9 +69,9 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
 
     protected function migrate(): void
     {
-        $this->oldCheckoutSettings       = get_option("woocommerce_myparcelbe_checkout_settings");
-        $this->oldExportDefaultsSettings = get_option("woocommerce_myparcelbe_export_defaults_settings");
-        $this->oldGeneralSettings        = get_option("woocommerce_myparcelbe_general_settings");
+        $this->oldCheckoutSettings       = get_option("woocommerce_myparcel_checkout_settings");
+        $this->oldExportDefaultsSettings = get_option("woocommerce_myparcel_export_defaults_settings");
+        $this->oldGeneralSettings        = get_option("woocommerce_myparcel_general_settings");
 
         $this->newCheckoutSettings       = $this->oldCheckoutSettings;
         $this->newExportDefaultsSettings = $this->oldExportDefaultsSettings;
@@ -85,10 +85,10 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
     protected function setOptionSettingsMap(): void
     {
         $this->optionSettingsMap = [
-            "woocommerce_myparcelbe_checkout_settings"        => $this->newCheckoutSettings,
-            "woocommerce_myparcelbe_export_defaults_settings" => $this->newExportDefaultsSettings,
-            "woocommerce_myparcelbe_general_settings"         => $this->newGeneralSettings,
-            "woocommerce_myparcelbe_bpost_settings"           => $this->newBpostSettings,
+            "woocommerce_myparcel_checkout_settings"        => $this->newCheckoutSettings,
+            "woocommerce_myparcel_export_defaults_settings" => $this->newExportDefaultsSettings,
+            "woocommerce_myparcel_general_settings"         => $this->newGeneralSettings,
+            "woocommerce_myparcel_bpost_settings"           => $this->newBpostSettings,
         ];
     }
 
@@ -174,7 +174,7 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
         return [
             "checkout_position"   => WCMP_Settings::SETTING_DELIVERY_OPTIONS_POSITION,
             "custom_css"          => WCMP_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
-            "myparcelbe_checkout" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+            "myparcel_checkout" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
         ];
     }
 

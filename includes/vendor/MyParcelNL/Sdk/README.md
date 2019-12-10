@@ -30,20 +30,20 @@ Do you want to be kept informed of new functionalities or do you just need help?
 The MyParcel SDK works with PHP version >= 7.1.0.
 
 If you have a php version lower than 7.1.0 then we would like to advise you to update your PHP version to a [supported versions](https://www.php.net/supported-versions.php).
-For support for PHP version 5.6 you can use release [2.x.](https://github.com/myparcelnl/sdk/releases).
+For support for PHP version 5.6 you can use release [2.x.](https://github.com/MyParcelNL/Sdk/releases).
 
 ### Installation with Composer
 This SDK uses Composer. Composer is a tool for dependency management in PHP. It allows you to declare the libraries your project depends on and it will manage (install/update) them for you. For more information on how to use/install composer, please visit https://getcomposer.org/
 
 To install the MyParcel SDK into your project, simply use
 ```
-$ composer require myparcelnl/sdk
+$ composer require MyParcelNL/Sdk
 ```
 	
 ### Installation without Composer
 It's also possible to use the SDK without installing it with Composer.
 
-You can download the zip on the project's [releases page](https://github.com/myparcelnl/sdk/releases).
+You can download the zip on the project's [releases page](https://github.com/MyParcelNL/Sdk/releases).
 
 1. Download the package (SDKvx.x.x.zip).
 2. Extract the downloaded .zip file and upload the vendor directory to your server.

@@ -2,9 +2,9 @@
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
-use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
-use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -19,19 +19,19 @@ if (class_exists('WCMP_Admin')) {
  */
 class WCMP_Admin
 {
-    public const META_CONSIGNMENTS           = "_myparcelbe_consignments";
-    public const META_CONSIGNMENT_ID         = "_myparcelbe_consignment_id";
-    public const META_DELIVERY_OPTIONS       = "_myparcelbe_delivery_options";
-    public const META_HIGHEST_SHIPPING_CLASS = "_myparcelbe_highest_shipping_class";
-    public const META_LAST_SHIPMENT_IDS      = "_myparcelbe_last_shipment_ids";
-    public const META_ORDER_VERSION          = "_myparcelbe_order_version";
-    public const META_ORDER_WEIGHT           = "_myparcelbe_order_weight";
-    public const META_PGADDRESS              = "_myparcelbe_pgaddress";
-    public const META_SHIPMENTS              = "_myparcelbe_shipments";
-    public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcelbe_shipment_options_extra";
-    public const META_TRACK_TRACE            = "_myparcelbe_tracktrace";
+    public const META_CONSIGNMENTS           = "_myparcel_consignments";
+    public const META_CONSIGNMENT_ID         = "_myparcel_consignment_id";
+    public const META_DELIVERY_OPTIONS       = "_myparcel_delivery_options";
+    public const META_HIGHEST_SHIPPING_CLASS = "_myparcel_highest_shipping_class";
+    public const META_LAST_SHIPMENT_IDS      = "_myparcel_last_shipment_ids";
+    public const META_ORDER_VERSION          = "_myparcel_order_version";
+    public const META_ORDER_WEIGHT           = "_myparcel_order_weight";
+    public const META_PGADDRESS              = "_myparcel_pgaddress";
+    public const META_SHIPMENTS              = "_myparcel_shipments";
+    public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcel_shipment_options_extra";
+    public const META_TRACK_TRACE            = "_myparcel_tracktrace";
 
-    public const SHIPMENT_OPTIONS_FORM_NAME = "myparcelbe_options";
+    public const SHIPMENT_OPTIONS_FORM_NAME = "myparcel_options";
 
     public const BULK_ACTION_EXPORT       = "wcmp_export";
     public const BULK_ACTION_PRINT        = "wcmp_print";
@@ -123,7 +123,7 @@ class WCMP_Admin
         <div class="wcmp__shipment-options" style="display: none;">
             <?php printf(
                 '<a href="#" class="wcmp__shipment-options__show">%s &#x25BE;</a>',
-                __("Details", "woocommerce-myparcelbe")
+                __("Details", "woocommerce-myparcel")
             ); ?>
             <div class="wcmp__box wcmp__shipment-options__form" style="display: none;">
                 <a class="wcmp__d--flex">
@@ -161,9 +161,9 @@ class WCMP_Admin
         $actions = array_merge(
             $actions,
             [
-                self::BULK_ACTION_EXPORT       => __("MyParcel BE: Export", "woocommerce-myparcelbe"),
-                self::BULK_ACTION_PRINT        => __("MyParcel BE: Print", "woocommerce-myparcelbe"),
-                self::BULK_ACTION_EXPORT_PRINT => __("MyParcel BE: Export & Print", "woocommerce-myparcelbe"),
+                self::BULK_ACTION_EXPORT       => __("MyParcel: Export", "woocommerce-myparcel"),
+                self::BULK_ACTION_PRINT        => __("MyParcel: Print", "woocommerce-myparcel"),
+                self::BULK_ACTION_EXPORT_PRINT => __("MyParcel: Export & Print", "woocommerce-myparcel"),
             ]
         );
 
@@ -183,9 +183,9 @@ class WCMP_Admin
     {
         global $post_type;
         $bulk_actions = [
-            self::BULK_ACTION_EXPORT       => __("MyParcel BE: Export", "woocommerce-myparcelbe"),
-            self::BULK_ACTION_PRINT        => __("MyParcel BE: Print", "woocommerce-myparcelbe"),
-            self::BULK_ACTION_EXPORT_PRINT => __("MyParcel BE: Export & Print", "woocommerce-myparcelbe"),
+            self::BULK_ACTION_EXPORT       => __("MyParcel: Export", "woocommerce-myparcel"),
+            self::BULK_ACTION_PRINT        => __("MyParcel: Print", "woocommerce-myparcel"),
+            self::BULK_ACTION_EXPORT_PRINT => __("MyParcel: Export & Print", "woocommerce-myparcel"),
         ];
 
         if ('shop_order' == $post_type) {
@@ -222,7 +222,7 @@ class WCMP_Admin
             "class"             => ["wcmp__d--inline-block"],
             "input_class"        => ["wcmp__offset-dialog__offset"],
             "type"              => "number",
-            "label"             => __("Labels to skip", "woocommerce-myparcelbe"),
+            "label"             => __("Labels to skip", "woocommerce-myparcel"),
             "custom_attributes" => [
                 "step" => "1",
                 "min"  => "0",
@@ -249,7 +249,7 @@ class WCMP_Admin
                         <a
                             href="#"
                             class="wcmp__action wcmp__offset-dialog__button button">
-                            <?php _e("Print", "woocommerce-myparcelbe"); ?>
+                            <?php _e("Print", "woocommerce-myparcel"); ?>
                             <?php WCMP_Admin::renderSpinner(); ?>
                         </a>
                     </div>
@@ -289,18 +289,18 @@ class WCMP_Admin
         $listing_actions = [
             $addShipments => [
                 "url" => admin_url("$baseUrl&request=$addShipments&order_ids=$order_id"),
-                "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-up.png",
-                "alt" => __("Export to MyParcel BE", "woocommerce-myparcelbe"),
+                "img" => WCMP()->plugin_url() . "/assets/img/myparcel-up.png",
+                "alt" => __("Export to MyParcel", "woocommerce-myparcel"),
             ],
             $getLabels    => [
                 "url" => admin_url("$baseUrl&request=$getLabels&order_ids=$order_id"),
-                "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png",
-                "alt" => __("Print MyParcel BE label", "woocommerce-myparcelbe"),
+                "img" => WCMP()->plugin_url() . "/assets/img/myparcel-pdf.png",
+                "alt" => __("Print MyParcel label", "woocommerce-myparcel"),
             ],
             $addReturn    => [
                 "url" => admin_url("$baseUrl&request=$addReturn&order_ids=$order_id"),
-                "img" => WCMP()->plugin_url() . "/assets/img/myparcelbe-retour.png",
-                "alt" => __("Email return label", "woocommerce-myparcelbe"),
+                "img" => WCMP()->plugin_url() . "/assets/img/myparcel-retour.png",
+                "alt" => __("Email return label", "woocommerce-myparcel"),
             ],
         ];
 
@@ -419,8 +419,8 @@ class WCMP_Admin
     public function add_order_meta_box(): void
     {
         add_meta_box(
-            "myparcelbe",
-            __("MyParcelBE", "woocommerce-myparcelbe"),
+            "myparcel",
+            __("MyParcel", "woocommerce-myparcel"),
             [$this, "createMetaBox"],
             "shop_order",
             "side",
@@ -581,7 +581,7 @@ class WCMP_Admin
         $shipments = WCMP_Admin::get_order_shipments($order, true);
 
         if (empty($shipments)) {
-            echo __("No label has been created yet.", "woocommerce-myparcelbe");
+            echo __("No label has been created yet.", "woocommerce-myparcel");
             return;
         }
 
@@ -646,11 +646,11 @@ class WCMP_Admin
      */
     private function printDeliveryDate(DeliveryOptions $delivery_options): void
     {
-        $string = $delivery_options->isPickup() ? __("Pickup") : __("Standard delivery", "woocommerce-myparcelbe", "woocommerce-myparcelbe");
+        $string = $delivery_options->isPickup() ? __("Pickup") : __("Standard delivery", "woocommerce-myparcel", "woocommerce-myparcel");
 
         printf(
             '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
-            __("MyParcel BE shipment:", "woocommerce-myparcelbe"),
+            __("MyParcel shipment:", "woocommerce-myparcel"),
             $string,
             wc_format_datetime(new WC_DateTime($delivery_options->getDate()), 'l d-m')
         );
@@ -748,7 +748,7 @@ class WCMP_Admin
             $package_type     = WCMP()->export->get_package_type($shipment["shipment"]["options"]["package_type"]);
             $track_trace_link = "($package_type)";
         } else {
-            $track_trace_link = __("(Unknown)", "woocommerce-myparcelbe");
+            $track_trace_link = __("(Unknown)", "woocommerce-myparcel");
         }
 
         echo $track_trace_link;

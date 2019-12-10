@@ -1,13 +1,13 @@
 <?php
 
-namespace WPO\WC\MyParcelBE\Collections;
+namespace WPO\WC\MyParcel\Collections;
 
 use MyParcelNL\Sdk\src\Support\Collection;
-use WPO\WC\MyParcelBE\Entity\Setting;
+use WPO\WC\MyParcel\Entity\Setting;
 
 defined('ABSPATH') or exit;
 
-if (class_exists('\\WPO\\WC\\MyParcelBE\\Collections\\SettingsCollection')) {
+if (class_exists('\\WPO\\WC\\MyParcel\\Collections\\SettingsCollection')) {
     return;
 }
 

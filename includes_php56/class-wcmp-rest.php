@@ -5,7 +5,7 @@ if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 /**
  * A simple JSON REST request abstraction layer
  */
-class wc_myparcelbe_REST_Client {
+class wc_myparcel_REST_Client {
 
     /**
      * Handle for the current cURL session
@@ -109,7 +109,7 @@ class wc_myparcelbe_REST_Client {
         // Set the method and related options
         switch($method) {
             case "PUT":
-                throw new Exception('Can not put MyParcel BE shipment', 500);
+                throw new Exception('Can not put MyParcel shipment', 500);
             break;
 
             case "POST":
@@ -117,7 +117,7 @@ class wc_myparcelbe_REST_Client {
             break;
 
             case "DELETE":
-                throw new Exception('Can not delete MyParcel BE shipment', 500);
+                throw new Exception('Can not delete MyParcel shipment', 500);
             break;
 
             case "GET":

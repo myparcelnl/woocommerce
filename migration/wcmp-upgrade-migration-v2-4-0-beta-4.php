@@ -18,7 +18,7 @@ class WCMP_Upgrade_Migration_v2_4_0_beta_4
         // remove log file (now uses WC logger)
         $upload_dir  = wp_upload_dir();
         $upload_base = trailingslashit($upload_dir['basedir']);
-        $log_file    = $upload_base . 'myparcelbe_log.txt';
+        $log_file    = $upload_base . 'myparcel_log.txt';
         if (@file_exists($log_file)) {
             @unlink($log_file);
         }

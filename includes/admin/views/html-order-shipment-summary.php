@@ -5,7 +5,7 @@
  */
 
 use MyParcelNL\Sdk\src\Support\Arr;
-use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -20,7 +20,7 @@ $shipments       = WCMP()->export->get_shipment_data([$shipment_id], $order);
 $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 
 $option_strings = [
-    "signature" => __("Signature on delivery", "woocommerce-myparcelbe"),
+    "signature" => __("Signature on delivery", "woocommerce-myparcel"),
 ];
 
 $firstShipment = $shipments[$shipment_id];
@@ -38,7 +38,7 @@ echo '<ul class="wcmp__shipment-summary">';
  */
 printf(
     '%s: %s',
-    __("Shipment type", "woocommerce-myparcelbe"),
+    __("Shipment type", "woocommerce-myparcel"),
     WCMP_Data::getPackageTypeHuman(Arr::get($firstShipment, "shipment.options.package_type"))
 );
 
@@ -51,13 +51,13 @@ foreach ($option_strings as $key => $label) {
 
 if ($insurance) {
     $price = number_format(Arr::get($insurance, "amount") / 100, 2);
-    printf('<li>%s: € %s</li>', __("Insured for", "woocommerce-myparcelbe"), $price);
+    printf('<li>%s: € %s</li>', __("Insured for", "woocommerce-myparcel"), $price);
 }
 
 if ($labelDescription) {
     printf(
         '<li>%s: %s</li>',
-        __("Label description", "woocommerce-myparcelbe"),
+        __("Label description", "woocommerce-myparcel"),
         $labelDescription
     );
 }
@@ -80,7 +80,7 @@ foreach ($shipments as $shipment_id => $shipment) {
 
     printf(
         '<a href="%2$s" target="_blank" title="%3$s">%3$s</a><br/> %1$s: %4$s<br/>',
-        __("Status", "woocommerce-myparcelbe"),
+        __("Status", "woocommerce-myparcel"),
         WCMP_Admin::getTrackTraceUrl($order_id, $trackTrace),
         $trackTrace,
         Arr::get($shipment, "status")

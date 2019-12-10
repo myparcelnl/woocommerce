@@ -1,7 +1,7 @@
 <?php
 
-use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcelBE\Compatibility\WCMP_WCPDF_Compatibility;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\WCMP_WCPDF_Compatibility;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -59,8 +59,8 @@ class WCMP_Frontend_Track_Trace
         printf(
             '<p>%s %s</p>',
             apply_filters(
-                "wcmyparcelbe_email_text",
-                __("You can track your order with the following Track & Trace link:", "woocommerce-myparcelbe"),
+                "wcmyparcel_email_text",
+                __("You can track your order with the following Track & Trace link:", "woocommerce-myparcel"),
                 $order
             ),
             implode(
@@ -88,11 +88,11 @@ class WCMP_Frontend_Track_Trace
         $consignments = WCMP_Frontend::getTrackTraceLinks($order_id);
 
         foreach ($consignments as $key => $consignment) {
-            $actions['myparcelbe_tracktrace_' . $consignment['link']] = [
+            $actions['myparcel_tracktrace_' . $consignment['link']] = [
                 'url'  => $consignment['url'],
                 'name' => apply_filters(
-                    'wcmyparcelbe_myaccount_tracktrace_button',
-                    __('Track & Trace', 'wooocommerce-myparcelbe')
+                    'wcmyparcel_myaccount_tracktrace_button',
+                    __('Track & Trace', 'wooocommerce-myparcel')
                 ),
             ];
         }

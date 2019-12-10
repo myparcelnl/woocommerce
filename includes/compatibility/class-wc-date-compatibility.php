@@ -3,7 +3,7 @@
  * Copy of WC3.0 WC_DateTime class
  */
 
-namespace WPO\WC\MyParcelBE\Compatibility;
+namespace WPO\WC\MyParcel\Compatibility;
 
 use DateTime;
 
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('\\WPO\\WC\\MyParcelbe\\Compatibility\\WC_DateTime')) {
+if (class_exists('\\WPO\\WC\\MyParcel\\Compatibility\\WC_DateTime')) {
     return;
 }
 

@@ -18,12 +18,12 @@ msgstr ""
 #: woocommerce-myparcel.php:234
 #, php-format
 msgid ""
-"WooCommerce MyParcel BE requires %sWooCommerce%s to be installed & activated!"
+"WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!"
 msgstr ""
 
 #: woocommerce-myparcel.php:252
 msgid ""
-"WooCommerce MyParcel BE requires PHP 5.4 or higher (5.6 or later recommended)"
+"WooCommerce MyParcel requires PHP 5.4 or higher (5.6 or later recommended)"
 "."
 msgstr ""
 
@@ -40,70 +40,70 @@ msgstr ""
 msgid "You have not selected any orders!"
 msgstr ""
 
-#: includes/class-wcmp-be-postcode-fields.php:305
-#: includes/class-wcmp-be-postcode-fields.php:484
-#: includes/class-wcmp-be-postcode-fields.php:511
-#: includes_php56/class-wcmp-bepostcode-fields.php:230
-#: includes_php56/class-wcmp-bepostcode-fields.php:406
-#: includes_php56/class-wcmp-bepostcode-fields.php:432
+#: includes/class-wcmp-postcode-fields.php:305
+#: includes/class-wcmp-postcode-fields.php:484
+#: includes/class-wcmp-postcode-fields.php:511
+#: includes_php56/class-wcmp-nl-postcode-fields.php:230
+#: includes_php56/class-wcmp-nl-postcode-fields.php:406
+#: includes_php56/class-wcmp-nl-postcode-fields.php:432
 msgid "Street name"
 msgstr ""
 
-#: includes/class-wcmp-be-postcode-fields.php:313
-#: includes_php56/class-wcmp-bepostcode-fields.php:238
-#: includes_php56/class-wcmp-bepostcode-fields.php:719
-#: includes_php56/class-wcmp-bepostcode-fields.php:720
+#: includes/class-wcmp-postcode-fields.php:313
+#: includes_php56/class-wcmp-nl-postcode-fields.php:238
+#: includes_php56/class-wcmp-nl-postcode-fields.php:719
+#: includes_php56/class-wcmp-nl-postcode-fields.php:720
 msgid "No."
 msgstr ""
 
-#: includes/class-wcmp-be-postcode-fields.php:322
-#: includes/class-wcmp-be-postcode-fields.php:494
-#: includes/class-wcmp-be-postcode-fields.php:521
-#: includes/class-wcmp-be-postcode-fields.php:543
-#: includes/class-wcmp-be-postcode-fields.php:557
-#: includes_php56/class-wcmp-bepostcode-fields.php:247
-#: includes_php56/class-wcmp-bepostcode-fields.php:416
-#: includes_php56/class-wcmp-bepostcode-fields.php:442
-#: includes_php56/class-wcmp-bepostcode-fields.php:463
-#: includes_php56/class-wcmp-bepostcode-fields.php:477
+#: includes/class-wcmp-postcode-fields.php:322
+#: includes/class-wcmp-postcode-fields.php:494
+#: includes/class-wcmp-postcode-fields.php:521
+#: includes/class-wcmp-postcode-fields.php:543
+#: includes/class-wcmp-postcode-fields.php:557
+#: includes_php56/class-wcmp-nl-postcode-fields.php:247
+#: includes_php56/class-wcmp-nl-postcode-fields.php:416
+#: includes_php56/class-wcmp-nl-postcode-fields.php:442
+#: includes_php56/class-wcmp-nl-postcode-fields.php:463
+#: includes_php56/class-wcmp-nl-postcode-fields.php:477
 msgid "Suffix"
 msgstr ""
 
-#: includes/class-wcmp-be-postcode-fields.php:489
-#: includes/class-wcmp-be-postcode-fields.php:516
-#: includes/class-wcmp-be-postcode-fields.php:539
-#: includes/class-wcmp-be-postcode-fields.php:553
-#: includes_php56/class-wcmp-bepostcode-fields.php:411
-#: includes_php56/class-wcmp-bepostcode-fields.php:437
-#: includes_php56/class-wcmp-bepostcode-fields.php:459
-#: includes_php56/class-wcmp-bepostcode-fields.php:473
+#: includes/class-wcmp-postcode-fields.php:489
+#: includes/class-wcmp-postcode-fields.php:516
+#: includes/class-wcmp-postcode-fields.php:539
+#: includes/class-wcmp-postcode-fields.php:553
+#: includes_php56/class-wcmp-nl-postcode-fields.php:411
+#: includes_php56/class-wcmp-nl-postcode-fields.php:437
+#: includes_php56/class-wcmp-nl-postcode-fields.php:459
+#: includes_php56/class-wcmp-nl-postcode-fields.php:473
 msgid "Number"
 msgstr ""
 
-#: includes/class-wcmp-be-postcode-fields.php:535
-#: includes/class-wcmp-be-postcode-fields.php:549
-#: includes_php56/class-wcmp-bepostcode-fields.php:455
-#: includes_php56/class-wcmp-bepostcode-fields.php:469
+#: includes/class-wcmp-postcode-fields.php:535
+#: includes/class-wcmp-postcode-fields.php:549
+#: includes_php56/class-wcmp-nl-postcode-fields.php:455
+#: includes_php56/class-wcmp-nl-postcode-fields.php:469
 msgid "Street"
 msgstr ""
 
-#: includes/class-wcmp-be-postcode-fields.php:719
-#: includes_php56/class-wcmp-bepostcode-fields.php:615
+#: includes/class-wcmp-postcode-fields.php:719
+#: includes_php56/class-wcmp-nl-postcode-fields.php:615
 msgid "Please enter a valid billing address."
 msgstr ""
 
-#: includes/class-wcmp-be-postcode-fields.php:730
-#: includes_php56/class-wcmp-bepostcode-fields.php:624
+#: includes/class-wcmp-postcode-fields.php:730
+#: includes_php56/class-wcmp-nl-postcode-fields.php:624
 msgid "Please enter a valid shipping address."
 msgstr ""
 
-#: includes/class-wcmp-be-postcode-fields.php:836
-#: includes_php56/class-wcmp-bepostcode-fields.php:724
+#: includes/class-wcmp-postcode-fields.php:836
+#: includes_php56/class-wcmp-nl-postcode-fields.php:724
 msgid "<b>Billing No.</b> is a required field"
 msgstr ""
 
-#: includes/class-wcmp-be-postcode-fields.php:839
-#: includes_php56/class-wcmp-bepostcode-fields.php:727
+#: includes/class-wcmp-postcode-fields.php:839
+#: includes_php56/class-wcmp-nl-postcode-fields.php:727
 msgid "<b>Shipping No.</b> is a required field"
 msgstr ""
 
@@ -401,19 +401,19 @@ msgstr ""
 #: includes_php56/class-wcmp-admin.php:125
 #: includes/admin/class-wcmp-admin.php:164
 #: includes/admin/class-wcmp-admin.php:186
-msgid "MyParcel BE: Export"
+msgid "MyParcel: Export"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:126
 #: includes/admin/class-wcmp-admin.php:165
 #: includes/admin/class-wcmp-admin.php:187
-msgid "MyParcel BE: Print"
+msgid "MyParcel: Print"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:127
 #: includes/admin/class-wcmp-admin.php:166
 #: includes/admin/class-wcmp-admin.php:188
-msgid "MyParcel BE: Export & Print"
+msgid "MyParcel: Export & Print"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:154
@@ -430,14 +430,14 @@ msgstr ""
 #: includes/admin/class-wcmp-admin.php:293
 #: includes_php56/views/wcmp-bulk-options-form.php:158
 #: includes/admin/views/html-bulk-options-form.php:138
-msgid "Export to MyParcel BE"
+msgid "Export to MyParcel"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:198
 #: includes_php56/class-wcmp-admin.php:386
 #: includes/admin/class-wcmp-admin.php:298
 #: includes/admin/views/html-order-track-trace-table.php:63
-msgid "Print MyParcel BE label"
+msgid "Print MyParcel label"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:203
@@ -448,7 +448,7 @@ msgstr ""
 #. $id
 #: includes_php56/class-wcmp-admin.php:329
 #: includes/admin/class-wcmp-admin.php:423
-msgid "MyParcelBE"
+msgid "MyParcel"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:374
@@ -465,7 +465,7 @@ msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:438
 #: includes/admin/class-wcmp-admin.php:653
-msgid "MyParcel BE shipment:"
+msgid "MyParcel shipment:"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:472
@@ -484,7 +484,7 @@ msgstr ""
 #: includes_php56/class-wcmp-settings.php:39
 #: includes/admin/settings/class-wcmp-settings.php:139
 #: includes/admin/settings/class-wcmp-settings.php:140
-msgid "MyParcel BE"
+msgid "MyParcel"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:50
@@ -511,7 +511,7 @@ msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:69
 #: includes/admin/settings/class-wcmp-settings.php:183
-msgid "WooCommerce MyParcel BE Settings"
+msgid "WooCommerce MyParcel Settings"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:112
@@ -594,7 +594,7 @@ msgstr ""
 msgid ""
 "Add the Track & Trace code to emails to the customer.<br/><strong>Note!"
 "</strong> When you select this option, make sure you have not enabled the "
-"Track & Trace email in your MyParcel BE backend."
+"Track & Trace email in your MyParcel backend."
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:227
@@ -616,7 +616,7 @@ msgstr ""
 #: includes/admin/settings/class-wcmp-settings-data.php:360
 msgid ""
 "When you enable this option, shipments will be directly processed when sent "
-"to MyParcel BE."
+"to MyParcel."
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:253
@@ -628,7 +628,7 @@ msgstr ""
 #: includes/admin/settings/class-wcmp-settings-data.php:369
 msgid ""
 "Automatically set order status to a predefined status after successful "
-"MyParcel BE export.<br/>Make sure <strong>Process shipments directly</strong>"
+"MyParcel export.<br/>Make sure <strong>Process shipments directly</strong>"
 " is enabled when you use this option together with the <strong>Track & Trace "
 "in email</strong> option, otherwise the Track & Trace code will not be "
 "included in the customer email."
@@ -693,7 +693,7 @@ msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:377
 #: includes/admin/settings/class-wcmp-settings-data.php:644
-msgid "Select one or more shipping methods for each MyParcel BE package type"
+msgid "Select one or more shipping methods for each MyParcel package type"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:383
@@ -715,8 +715,8 @@ msgstr ""
 #: includes/admin/settings/class-wcmp-settings-data.php:653
 #, php-format
 msgid ""
-"When you connect the customer email, MyParcel BE can send a Track & Trace "
-"email to this address. In your %sMyParcel BE backend%s you can enable or "
+"When you connect the customer email, MyParcel can send a Track & Trace "
+"email to this address. In your %sMyParcel backend%s you can enable or "
 "disable this email and format it in your own style."
 msgstr ""
 
@@ -762,7 +762,7 @@ msgstr ""
 msgid ""
 "With this option, you can add a description to the shipment. This will be "
 "printed on the top left of the label, and you can use this to search or sort "
-"shipments in the MyParcel BE Backend. Use <strong>[ORDER_NR]</strong> to "
+"shipments in the MyParcel Backend. Use <strong>[ORDER_NR]</strong> to "
 "include the order number, <strong>[DELIVERY_DATE]</strong> to include the "
 "delivery date."
 msgstr ""
@@ -793,20 +793,20 @@ msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:500
 #: includes/admin/settings/class-wcmp-settings-data.php:688
-msgid "MyParcel BE address fields"
+msgid "MyParcel address fields"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:508
 #: includes/admin/settings/class-wcmp-settings-data.php:690
 msgid ""
-"When enabled the checkout will use the MyParcel BE address fields. This "
+"When enabled the checkout will use the MyParcel address fields. This "
 "means there will be three separate fields for street name, number and suffix."
 " Want to use the WooCommerce default fields? Leave this option unchecked."
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:514
 #: includes/admin/settings/class-wcmp-settings-data.php:697
-msgid "Enable MyParcel BE delivery options"
+msgid "Enable MyParcel delivery options"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:526
@@ -913,7 +913,7 @@ msgstr ""
 #: includes_php56/class-wcmp-settings.php:643
 #: includes/admin/settings/class-wcmp-settings-data.php:794
 msgid ""
-"You can place a delivery title above the MyParcel BE options. When there is "
+"You can place a delivery title above the MyParcel options. When there is "
 "no title, it will not be visible."
 msgstr ""
 
@@ -998,7 +998,7 @@ msgstr ""
 
 #: includes/admin/class-wcmp-export.php:519
 #: includes/admin/class-wcmp-export-consignments.php:209
-msgid "No API key found in MyParcel BE settings"
+msgid "No API key found in MyParcel settings"
 msgstr ""
 
 #: includes/admin/class-wcmp-export.php:550
@@ -1245,12 +1245,12 @@ msgstr ""
 
 #. Description of the plugin
 msgid ""
-"Export your WooCommerce orders to MyParcel BE (https://sendmyparcel.be/) and "
+"Export your WooCommerce orders to MyParcel (https://myparcel.nl/) and "
 "print labels directly from the WooCommerce admin"
 msgstr ""
 
 #. URI of the plugin
-msgid "https://sendmyparcel.be/"
+msgid "https://myparcel.nl/"
 msgstr ""
 
 #. Author of the plugin

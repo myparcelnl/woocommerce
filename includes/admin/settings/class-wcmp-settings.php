@@ -126,7 +126,7 @@ class WCMP_Settings
         require_once("class-wcmp-settings-data.php");
 
         // notice for WooCommerce MyParcel plugin
-        add_action("woocommerce_myparcelbe_before_settings_page", [$this, "myparcelbe_country_notice"], 10, 1);
+        add_action("woocommerce_myparcel_before_settings_page", [$this, "myparcel_country_notice"], 10, 1);
     }
 
     /**
@@ -136,8 +136,8 @@ class WCMP_Settings
     {
         add_submenu_page(
             "woocommerce",
-            __("MyParcel BE", "woocommerce-myparcelbe"),
-            __("MyParcel BE", "woocommerce-myparcelbe"),
+            __("MyParcel", "woocommerce-myparcel"),
+            __("MyParcel", "woocommerce-myparcel"),
             "manage_options",
             self::SETTINGS_MENU_SLUG,
             [$this, "settings_page"]
@@ -160,7 +160,7 @@ class WCMP_Settings
             sprintf(
                 '<a href="%s">%s</a>',
                 $url,
-                __("Settings", "woocommerce-myparcelbe")
+                __("Settings", "woocommerce-myparcel")
             )
         );
 
@@ -180,7 +180,7 @@ class WCMP_Settings
         $active_tab = isset($_GET["tab"]) ? $_GET["tab"] : self::SETTINGS_GENERAL;
         ?>
       <div class="wrap woocommerce">
-        <h1><?php _e("WooCommerce MyParcel BE Settings", "woocommerce-myparcelbe"); ?></h1>
+        <h1><?php _e("WooCommerce MyParcel Settings", "woocommerce-myparcel"); ?></h1>
         <h2 class="nav-tab-wrapper">
             <?php
             foreach ($settings_tabs as $tab_slug => $tab_title) :
@@ -195,21 +195,21 @@ class WCMP_Settings
             endforeach;
             ?>
         </h2>
-          <?php do_action("woocommerce_myparcelbe_before_settings_page", $active_tab); ?>
+          <?php do_action("woocommerce_myparcel_before_settings_page", $active_tab); ?>
         <form
           method="post"
           action="options.php"
           id="<?php echo self::SETTINGS_MENU_SLUG; ?>">
             <?php
-            do_action("woocommerce_myparcelbe_before_settings", $active_tab);
+            do_action("woocommerce_myparcel_before_settings", $active_tab);
             settings_fields(self::getOptionId($active_tab));
             $this->render_settings_sections(self::getOptionId($active_tab));
-            do_action("woocommerce_myparcelbe_after_settings", $active_tab);
+            do_action("woocommerce_myparcel_after_settings", $active_tab);
 
             submit_button();
             ?>
         </form>
-          <?php do_action("woocommerce_myparcelbe_after_settings_page", $active_tab); ?>
+          <?php do_action("woocommerce_myparcel_after_settings_page", $active_tab); ?>
       </div>
         <?php
     }
@@ -217,16 +217,16 @@ class WCMP_Settings
     /**
      * Show the user a notice if they might be using the wrong plugin.
      */
-    public function myparcelbe_country_notice()
+    public function myparcel_country_notice()
     {
         $base_country = WC()->countries->get_base_country();
 
         // save or check option to hide notice
-        if (Arr::get($_GET, "myparcelbe_hide_be_notice")) {
-            update_option("myparcelbe_hide_be_notice", true);
+        if (Arr::get($_GET, "myparcel_hide_be_notice")) {
+            update_option("myparcel_hide_be_notice", true);
             $hide_notice = true;
         } else {
-            $hide_notice = get_option("myparcelbe_hide_be_notice");
+            $hide_notice = get_option("myparcel_hide_be_notice");
         }
 
         // link to hide message when one of the premium extensions is installed
@@ -235,15 +235,15 @@ class WCMP_Settings
                 '<a href="https://wordpress.org/plugins/woocommerce-myparcel/" target="blank">WC MyParcel Netherlands</a>';
             $text             = sprintf(
                 __(
-                    "It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium. If you are using MyParcel Netherlands, download the %s plugin instead!",
-                    "woocommerce-myparcelbe"
+                    "It looks like your shop is based in Netherlands. This plugin is for MyParcel. If you are using MyParcel Netherlands, download the %s plugin instead!",
+                    "woocommerce-myparcel"
                 ),
                 $myparcel_nl_link
             );
             $dismiss_button   = sprintf(
                 '<a href="%s" style="display:inline-block; margin-top: 10px;">%s</a>',
-                add_query_arg('myparcelbe_hide_be_notice', 'true'),
-                __("Hide this message", "woocommerce-myparcelbe")
+                add_query_arg('myparcel_hide_be_notice', 'true'),
+                __("Hide this message", "woocommerce-myparcel")
             );
             printf('<div class="notice notice-warning"><p>%s %s</p></div>', $text, $dismiss_button);
         }
@@ -256,7 +256,7 @@ class WCMP_Settings
      */
     public static function getOptionId(string $option)
     {
-        return "woocommerce_myparcelbe_{$option}_settings";
+        return "woocommerce_myparcel_{$option}_settings";
     }
 
     /**

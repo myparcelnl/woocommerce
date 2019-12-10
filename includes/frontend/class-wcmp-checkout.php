@@ -4,8 +4,8 @@ use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
-use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -71,7 +71,7 @@ class WCMP_Checkout
         }
 
         wp_enqueue_script(
-            "wc-myparcelbe",
+            "wc-myparcel",
             WCMP()->plugin_url() . "/assets/js/myparcel.js",
             $deps,
             WC_MYPARCEL_BE_VERSION,
@@ -79,9 +79,9 @@ class WCMP_Checkout
         );
 
         wp_enqueue_script(
-            "wc-myparcelbe-frontend",
+            "wc-myparcel-frontend",
             WCMP()->plugin_url() . "/assets/js/wcmp-frontend.js",
-            array_merge($deps, ["wc-myparcelbe", "jquery"]),
+            array_merge($deps, ["wc-myparcel", "jquery"]),
             WC_MYPARCEL_BE_VERSION,
             true
         );
@@ -95,7 +95,7 @@ class WCMP_Checkout
     public function inject_delivery_options_variables()
     {
         wp_localize_script(
-            "wc-myparcelbe-frontend",
+            "wc-myparcel-frontend",
             "MyParcelDisplaySettings",
             [
                 // Convert true/false to int for JavaScript
@@ -106,7 +106,7 @@ class WCMP_Checkout
         );
 
         wp_localize_script(
-            "wc-myparcelbe",
+            "wc-myparcel",
             "MyParcelDeliveryOptions",
             [
                 "allowedShippingMethods"    => json_encode($this->getShippingMethodsForDeliveryOptions()),
@@ -117,7 +117,7 @@ class WCMP_Checkout
         );
 
         wp_localize_script(
-            'wc-myparcelbe',
+            'wc-myparcel',
             'MyParcelConfig',
             $this->get_delivery_options_config()
         );
@@ -169,23 +169,23 @@ class WCMP_Checkout
             "config"  => [
                 "carriers" => $carriers,
                 "platform" => "belgie",
-                "locale"   => "nl-BE",
+                "locale"   => "nl-NL",
                 "currency" => get_woocommerce_currency(),
             ],
             "strings" => [
-                "addressNotFound"       => __("Address details are not entered", "woocommerce-myparcelbe"),
-                "city"                  => __("City", "woocommerce-myparcelbe"),
-                "closed"                => __("Closed", "woocommerce-myparcelbe"),
+                "addressNotFound"       => __("Address details are not entered", "woocommerce-myparcel"),
+                "city"                  => __("City", "woocommerce-myparcel"),
+                "closed"                => __("Closed", "woocommerce-myparcel"),
                 "deliveryStandardTitle" => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_STANDARD_TITLE),
                 "deliveryTitle"         => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_DELIVERY_TITLE),
                 "headerDeliveryOptions" => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE),
-                "houseNumber"           => __("House number", "woocommerce-myparcelbe"),
-                "openingHours"          => __("Opening hours", "woocommerce-myparcelbe"),
-                "pickUpFrom"            => __("Pick up from", "woocommerce-myparcelbe"),
+                "houseNumber"           => __("House number", "woocommerce-myparcel"),
+                "openingHours"          => __("Opening hours", "woocommerce-myparcel"),
+                "pickUpFrom"            => __("Pick up from", "woocommerce-myparcel"),
                 "pickupTitle"           => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_PICKUP_TITLE),
-                "postcode"              => __("Postcode", "woocommerce-myparcelbe"),
-                "retry"                 => __("Retry", "woocommerce-myparcelbe"),
-                "wrongHouseNumberCity"  => __("Postcode/city combination unknown", "woocommerce-myparcelbe"),
+                "postcode"              => __("Postcode", "woocommerce-myparcel"),
+                "retry"                 => __("Retry", "woocommerce-myparcel"),
+                "wrongHouseNumberCity"  => __("Postcode/city combination unknown", "woocommerce-myparcel"),
                 "signatureTitle"        => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_SIGNATURE_TITLE)
             ],
         ];
@@ -229,7 +229,7 @@ class WCMP_Checkout
     {
         $settings = WCMP()->setting_collection;
 
-        return __(strip_tags($settings->getStringByName($title)), "woocommerce-myparcelbe");
+        return __(strip_tags($settings->getStringByName($title)), "woocommerce-myparcel");
     }
 
     /**
@@ -237,9 +237,9 @@ class WCMP_Checkout
      */
     public function output_delivery_options()
     {
-        do_action('woocommerce_myparcelbe_before_delivery_options');
+        do_action('woocommerce_myparcel_before_delivery_options');
         require_once(WCMP()->includes . '/views/html-delivery-options-template.php');
-        do_action('woocommerce_myparcelbe_after_delivery_options');
+        do_action('woocommerce_myparcel_after_delivery_options');
     }
 
     /**
@@ -277,7 +277,7 @@ class WCMP_Checkout
     {
         $order = WCX::get_order($order_id);
 
-        $highestShippingClass = Arr::get($_POST, "myparcelbe_highest_shipping_class");
+        $highestShippingClass = Arr::get($_POST, "myparcel_highest_shipping_class");
         $shippingMethod       = Arr::get($_POST, "shipping_method");
 
         /**

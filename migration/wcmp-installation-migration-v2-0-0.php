@@ -18,7 +18,7 @@ class WCMP_Installation_Migration_v2_0_0
      */
     public function __construct()
     {
-        $old_settings = get_option('wcmyparcelbe_settings');
+        $old_settings = get_option('wcmyparcel_settings');
 
         // map old key => new_key
         $general_settings_keys = [
@@ -68,8 +68,8 @@ class WCMP_Installation_Migration_v2_0_0
         }
 
         // add options
-        update_option('woocommerce_myparcelbe_general_settings', $general_settings);
-        update_option('woocommerce_myparcelbe_export_defaults_settings', $defaults_settings);
+        update_option('woocommerce_myparcel_general_settings', $general_settings);
+        update_option('woocommerce_myparcel_export_defaults_settings', $defaults_settings);
     }
 }
 

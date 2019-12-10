@@ -2,9 +2,9 @@
 
 if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
-if ( !class_exists( 'wc_myparcelbe_API' ) ) :
+if ( !class_exists( 'wc_myparcel_API' ) ) :
 
-class wc_myparcelbe_API extends wc_myparcelbe_REST_Client {
+class wc_myparcel_API extends wc_myparcel_REST_Client {
 
     public $APIURL = "https://api.myparcel.nl/";
     private $key;
@@ -204,7 +204,7 @@ class wc_myparcelbe_API extends wc_myparcelbe_REST_Client {
      */
     public function get_delivery_options($params = array(), $raw = false) {
         $endpoint = 'delivery_options';
-        if (isset(WooCommerce_MyParcelBE()->checkout_settings['saturday_delivery'])) {
+        if (isset(WooCommerce_MyParcel()->checkout_settings['saturday_delivery'])) {
             $params['saturday_delivery'] = 1;
         }
 
@@ -222,7 +222,7 @@ class wc_myparcelbe_API extends wc_myparcelbe_REST_Client {
         $userAgents = array(
             'Wordpress/' . get_bloginfo('version'),
             'WooCommerce/' . WOOCOMMERCE_VERSION,
-            'MyParcelBE-WooCommerce/' . WC_MYPARCEL_BE_VERSION,
+            'MyParcel-WooCommerce/' . WC_MYPARCEL_BE_VERSION,
         );
 
         //Place white space between the array elements
@@ -232,7 +232,7 @@ class wc_myparcelbe_API extends wc_myparcelbe_REST_Client {
     }
 
     private function get_label_format_url($positions) {
-        $generalSettings = WooCommerce_MyParcelBE()->general_settings;
+        $generalSettings = WooCommerce_MyParcel()->general_settings;
 
         if ($generalSettings['label_format'] == 'A4') {
             return 'format=A4&positions=' . $positions;

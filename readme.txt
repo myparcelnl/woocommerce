@@ -1,6 +1,6 @@
 === Plugin Name ===
 Contributors: richardperdaan
-Tags: woocommerce, export, myparcel Belgium
+Tags: woocommerce, export, MyParcel
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 5.0.0
 Stable tag: trunk
@@ -8,33 +8,33 @@ Requires PHP: 5.4
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
-Export your WooCommerce orders to MyParcel Belgium (https://sendmyparcel.be/) and print labels directly from the WooCommerce admin.
+Export your WooCommerce orders to MyParcel (https://myparcel.nl/) and print labels directly from the WooCommerce admin.
 
 == Description ==
 
-This WooCommerce extension allows you to export your orders to the MyParcel Belgium service (https://sendmyparcel.be/).
+This WooCommerce extension allows you to export your orders to the MyParcel service (https://myparcel.nl/).
 
-**Online Manual (in Dutch):** https://myparcelbe.github.io/woocommerce/
+**Online Manual (in Dutch):** https://myparcel.github.io/woocommerce/
 
 = Main features =
 - Delivery options integrated in your checkout
-- Export your WooCommerce orders to MyParcel Belgium with a simple click, single orders or in batch
+- Export your WooCommerce orders to MyParcel with a simple click, single orders or in batch
 - Print shipping labels directly (PDF)
 - Create multiple shipments for the same order
-- Define preset MyParcel Belgium shipping options (signature required, extra insurance, Saturday delivery)
-- Modify the MyParcel Belgium shipping options per order before exporting
+- Define preset MyParcel shipping options (signature required, extra insurance, Saturday delivery)
+- Modify the MyParcel shipping options per order before exporting
 - Extra checkout fields to separate street name, house number and box number for more precise address data
 - View the status of the shipment in the order details page
 - Add Track & Trace link to the order confirmation email
 
-A MyParcel Belgium API account is required for this plugin! You can create this in your account or contact MyParcel Belgium at info@sendmyparcel.be
+A MyParcel API account is required for this plugin! You can create this in your account or contact MyParcel at info@myparcel.nl
 
 == Installation ==
 
 = Automatic installation =
-Automatic installation is the easiest option as WordPress handles the file transfers itself and you don't even need to leave your web browser. To do an automatic install of WooCommerce MyParcel BE, log in to your WordPress admin panel, navigate to the Plugins menu and click Add New.
+Automatic installation is the easiest option as WordPress handles the file transfers itself and you don't even need to leave your web browser. To do an automatic install of WooCommerce MyParcel, log in to your WordPress admin panel, navigate to the Plugins menu and click Add New.
 
-In the search field type "WooCommerce MyParcel BE" and click Search Plugins. You can install it by simply clicking Install Now. After clicking that link you will be asked if you're sure you want to install the plugin. Click yes and WordPress will automatically complete the installation.
+In the search field type "WooCommerce MyParcel" and click Search Plugins. You can install it by simply clicking Install Now. After clicking that link you will be asked if you're sure you want to install the plugin. Click yes and WordPress will automatically complete the installation.
 
 = Manual installation via the WordPress interface =
 1. Download the plugin zip file to your computer
@@ -49,30 +49,30 @@ In the search field type "WooCommerce MyParcel BE" and click Search Plugins. You
 3. Activate the plugin from the Plugins menu within the WordPress admin.
 
 = Setting up the plugin =
-1. Go to the menu `WooCommerce > MyParcel BE`.
-2. Fill in your API Details. If you don't have API details, log into your MyParcel BE account at [backoffice.sendmyparcel.be](http://backoffice.sendmyparcel.be) where you can find your API key under Instellingen → Algemeen.
+1. Go to the menu `WooCommerce > MyParcel`.
+2. Fill in your API Details. If you don't have API details, log into your MyParcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) where you can find your API key under Instellingen → Algemeen.
 3. Under 'Default export settings' you can set options that should be set by default for the export. You can change these settings per order at the time of export.
 4. The plugin is ready to be used!
 
 = Testing =
 We advise you to test the whole checkout procedure once to see if everything works as it should. Pay special attention to the following:
 
-The MyParcel BE plugin adds extra fields to the checkout of your webshop, to make it possible for the client to add street name, number and optional additions separately. This way you can be sure that everything is entered correctly. Because not all checkouts are configured alike, it's possible that the positioning/alignment of these extra fields have to be adjusted.
+The MyParcel plugin adds extra fields to the checkout of your webshop, to make it possible for the client to add street name, number and optional additions separately. This way you can be sure that everything is entered correctly. Because not all checkouts are configured alike, it's possible that the positioning/alignment of these extra fields have to be adjusted.
 
 Moreover, after a label is created, a Track & Trace code is added to the order. When the order is completed from WooCommerce, this Track & Trace code is added to the email (when this is enabled in the settings). Check that the code is correctly displayed in your template. You can read how to change the text in the FAQ section.
 
 == Frequently Asked Questions ==
 
-**Online Manual (in Dutch):** https://myparcelbe.github.io/woocommerce/
+**Online Manual (in Dutch):** https://myparcel.github.io/woocommerce/
 
 = How do I get an API key? =
-When logged in on your myparcel account at [http://backoffice.sendmyparcel.be/](http://backoffice.sendmyparcel.be) you can find your API key under Instellingen → Algemeen.
+When logged in on your myparcel account at [http://backoffice.myparcel.nl/](http://backoffice.myparcel.nl) you can find your API key under Instellingen → Algemeen.
 
 = How do I change the Track & Trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
 `
-add_filter( 'wcmyparcelbe_email_text', 'wcmyparcelbe_new_email_text' );
-function wcmyparcelbe_new_email_text($track_trace_tekst) {
+add_filter( 'wcmyparcel_email_text', 'wcmyparcel_new_email_text' );
+function wcmyparcel_new_email_text($track_trace_tekst) {
 	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende Bpost track&trace nummer:';
 	return $nieuwe_tekst;
 }
@@ -80,11 +80,11 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 == Screenshots ==
 
-1. Export or print MyParcel BE label per order
-2. Bulk export or print MyParcel BE labels
+1. Export or print MyParcel label per order
+2. Bulk export or print MyParcel labels
 3. Change the shipment options for an order
-4. MyParcel BE actions on the order overview page
-5. MyParcel BE information on the order details page
+4. MyParcel actions on the order overview page
+5. MyParcel information on the order details page
 
 == Changelog ==
 
@@ -148,7 +148,7 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 = 3.0.2 (2018-10-09) =
 * Fix: Error a non-numeric value encountered in class-wcmp-frontend-settings.php
 * Fix: Notice Undefined index: checkout_position
-* Fix: Add version number after the be-checkout.css call
+* Fix: Add version number after the checkout.css call
 
 = 3.0.0 (2018-10-09) =
 * Changes: The whole checkout has a new look. A choice has been made to go back to the basic checkout. The checkout is designed so that he will take the styling of the website.
@@ -214,7 +214,7 @@ These are the biggest changes:
       ```des/class-wcmp-rest-api-integration.php): failed to open stream```
 
 = 2.4.3 (2018-01-05) =
-* Fix: Add MyParcel BE fields to REST api to create order request
+* Fix: Add MyParcel fields to REST api to create order request
 * Fix: Hide days when the pickup delivery is selected
 
 = 2.4.2 (2017-10-29) =
@@ -301,7 +301,7 @@ These are the biggest changes:
 = 2.0.5 =
 * Fix default insurance selection
 * Tweak: Show shipping 'method title' instead of 'title' in settings (with fallback to title)
-* Tweak: added `$order` object to `wcmyparcelbe_email_text` filter
+* Tweak: added `$order` object to `wcmyparcel_email_text` filter
 
 = 2.0.4 =
 * Improved theme compatibility
@@ -324,7 +324,7 @@ These are the biggest changes:
 	* bpost Pickup & Early bpost Pickup
 	* Possibility to assign cost to the above delivery options
 * Create return labels from the WooCommerce backend
-* Uses new MyParcel BE API
+* Uses new MyParcel API
 
 = 1.5.6 =
 * Fix: Disable pakjegemak if 'ship to different address' is disabled after selecting Pakjegemak location
@@ -334,11 +334,11 @@ These are the biggest changes:
 * Fix: Foreign postcodes validation fix.
 
 = 1.5.4 =
-* Fix: Various Pakjegemak related issues (now saves & sends pakjegemak address separately to MyParcelbe)
+* Fix: Various Pakjegemak related issues (now saves & sends pakjegemak address separately to MyParcel)
 * Fix: Postcode validation issues with Portugal
 
 = 1.5.3 =
-* Feature: Edit myparcelbe address fields on user profile page
+* Feature: Edit myparcel address fields on user profile page
 * Fix: Bug with automatic order completion
 
 = 1.5.2 =
@@ -428,14 +428,14 @@ These are the biggest changes:
 * Fix: button image width
 
 = 1.3.0 =
-* New MyParcel BE icons
+* New MyParcel icons
 * Export & PDF buttons compatible with WC2.1 / MP6 styles
 * Button styles are now in CSS instead of inline
 
 = 1.2.0 =
-* Feature: The MyParcel BE checkout fields (street name / house number) can now also be modified on the my account page
+* Feature: The MyParcel checkout fields (street name / house number) can now also be modified on the my account page
 * Fix: WooCommerce 2.1 compatibility (checkout field localisation is now in WC core)
-* Updated MyParcel BE tariffs
+* Updated MyParcel tariffs
 
 = 1.1.1 =
 * Fix: Labels for Custom id ('Eigen kenmerk') & Message ('Optioneel bericht') in the export window were reversed

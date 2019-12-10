@@ -18,7 +18,7 @@
     );
     wp_localize_script(
         'wcmp-admin',
-        'wc_myparcelbe',
+        'wc_myparcel',
         [
             'ajax_url'                              => admin_url('admin-ajax.php'),
             'nonce'                                 => wp_create_nonce(WCMP::NONCE_ACTION),
@@ -47,7 +47,7 @@
         );
     }
 
-    wp_enqueue_style('wcmyparcelbe-admin-styles');
+    wp_enqueue_style('wcmyparcel-admin-styles');
     wp_enqueue_style('colors');
     wp_enqueue_style('media');
     wp_enqueue_script('jquery');

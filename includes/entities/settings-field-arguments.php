@@ -1,12 +1,12 @@
 <?php
 
-namespace WPO\WC\MyParcelBE\Entity;
+namespace WPO\WC\MyParcel\Entity;
 
 use MyParcelNL\Sdk\src\Support\Arr;
 
 defined('ABSPATH') or exit;
 
-if (class_exists('\\WPO\\WC\\MyParcelbe\\Entity\\SettingsFieldArguments')) {
+if (class_exists('\\WPO\\WC\\MyParcel\\Entity\\SettingsFieldArguments')) {
     return;
 }
 
@@ -151,8 +151,8 @@ class SettingsFieldArguments
                 $this->addArgument(
                     "options",
                     [
-                        "1" => __("Enabled", "woocommerce-myparcelbe"),
-                        "0" => __("Disabled", "woocommerce-myparcelbe"),
+                        "1" => __("Enabled", "woocommerce-myparcel"),
+                        "0" => __("Disabled", "woocommerce-myparcel"),
                     ]
                 );
                 break;

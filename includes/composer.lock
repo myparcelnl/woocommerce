@@ -7,16 +7,16 @@
     "content-hash": "ed5429cd1d5143cd362a06225f0de129",
     "packages": [
         {
-            "name": "myparcelnl/sdk",
+            "name": "MyParcelNL/Sdk",
             "version": "v3.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/myparcelnl/sdk.git",
+                "url": "https://github.com/MyParcelNL/Sdk.git",
                 "reference": "0c3360c4e8e01fff9d417ea400f5a8e3253576c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/0c3360c4e8e01fff9d417ea400f5a8e3253576c4",
+                "url": "https://api.github.com/repos/MyParcelNL/Sdk/zipball/0c3360c4e8e01fff9d417ea400f5a8e3253576c4",
                 "reference": "0c3360c4e8e01fff9d417ea400f5a8e3253576c4",
                 "shasum": ""
             },

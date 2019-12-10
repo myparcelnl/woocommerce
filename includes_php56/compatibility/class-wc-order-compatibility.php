@@ -3,11 +3,11 @@
  * Derived from SkyVerge WooCommerce Plugin Framework https://github.com/skyverge/wc-plugin-framework/
  */
 
-namespace WPO\WC\MyParcelBE\Compatibility;
+namespace WPO\WC\MyParcel\Compatibility;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! class_exists( '\\WPO\\WC\\MyParcelbe\\Compatibility\\Order' ) ) :
+if ( ! class_exists( '\\WPO\\WC\\MyParcel\\Compatibility\\Order' ) ) :
 
 /**
  * WooCommerce order compatibility class.

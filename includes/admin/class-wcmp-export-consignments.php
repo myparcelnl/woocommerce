@@ -6,7 +6,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
-use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 
 if (!defined("ABSPATH")) {
     exit;
@@ -203,7 +203,7 @@ class WCMP_Export_Consignments
         $this->apiKey = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
 
         if (!$this->apiKey) {
-            throw new ErrorException(__("No API key found in MyParcel BE settings", "woocommerce-myparcelbe"));
+            throw new ErrorException(__("No API key found in MyParcel settings", "woocommerce-myparcel"));
         }
     }
 

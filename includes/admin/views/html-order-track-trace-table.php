@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This template is for the Track & Trace information in the MyParcelBE meta box in a single order/
+ * This template is for the Track & Trace information in the MyParcel meta box in a single order/
  */
 
 /**
@@ -34,8 +34,8 @@ if (! count($shipments)) {
 <table class="wcmp__table--track-trace">
   <thead>
   <tr>
-    <th><?php _e("Track & Trace", "woocommerce-myparcelbe"); ?></th>
-    <th><?php _e("Status", "woocommerce-myparcelbe"); ?></th>
+    <th><?php _e("Track & Trace", "woocommerce-myparcel"); ?></th>
+    <th><?php _e("Status", "woocommerce-myparcel"); ?></th>
     <th>&nbsp;</th>
   </tr>
   </thead>
@@ -60,8 +60,8 @@ if (! count($shipments)) {
 
           WCMP_Admin::renderAction(
               admin_url("admin-ajax.php?action=$action&request=$getLabels&shipment_ids=$shipment_id"),
-              __("Print MyParcel BE label", "woocommerce-myparcelbe"),
-              WCMP()->plugin_url() . "/assets/img/myparcelbe-pdf.png"
+              __("Print MyParcel label", "woocommerce-myparcel"),
+              WCMP()->plugin_url() . "/assets/img/myparcel-pdf.png"
           );
           ?>
       </td>

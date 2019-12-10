@@ -492,7 +492,7 @@ jQuery(function($) {
         }
         break;
       case wcmp.actions.add_return:
-        myparcelbe_modal_dialog(order_ids, 'return');
+        myparcel_modal_dialog(order_ids, 'return');
         break;
     }
   }
@@ -631,7 +631,7 @@ jQuery(function($) {
       url: url,
       data: data || {},
       afterDone: function(response) {
-        var redirect_url = updateUrlParameter(window.location.href, 'myparcelbe_done', 'true');
+        var redirect_url = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
 
         if (print === 'no' || print === 'after_reload') {
           /* refresh page, admin notices are stored in options and will be displayed automatically */
@@ -639,11 +639,11 @@ jQuery(function($) {
         } else {
           /* when printing, output notices directly so that we can init print in the same run */
           if (response !== null && typeof response === 'object' && 'error' in response) {
-            myparcelbe_admin_notice(response.error, 'error');
+            myparcel_admin_notice(response.error, 'error');
           }
 
           if (response !== null && typeof response === 'object' && 'success' in response) {
-            myparcelbe_admin_notice(response.success, 'success');
+            myparcel_admin_notice(response.success, 'success');
           }
 
           /* load PDF */
@@ -655,7 +655,7 @@ jQuery(function($) {
     });
   }
 
-  function myparcelbe_modal_dialog(order_ids, dialog) {
+  function myparcel_modal_dialog(order_ids, dialog) {
     var data = {
       action: wcmp.actions.export,
       request: wcmp.actions.modal_dialog,
@@ -716,7 +716,7 @@ jQuery(function($) {
     return parseInt(askForPrintPosition ? $(selectors.offsetDialogInputOffset).val() : 0);
   }
 
-  /* Request MyParcel BE labels */
+  /* Request MyParcel labels */
   function printLabel(data) {
     var button = this;
     var request;
@@ -755,7 +755,7 @@ jQuery(function($) {
     }
   }
 
-  function myparcelbe_admin_notice(message, type) {
+  function myparcel_admin_notice(message, type) {
     var mainHeader = $('#wpbody-content > .wrap > h1:first');
     var notice = '<div class="' + selectors.notice + ' notice notice-' + type + '"><p>' + message + '</p></div>';
     mainHeader.after(notice);

@@ -27,9 +27,9 @@ jQuery(function($) {
         $('#' + type + '_house_number').val(address[1]);
         $('#' + type + '_house_number_suffix').val(address[2]);
 
-        // Update delivery options after filling if myparcelbe.js is loaded and initialized
-        if (typeof MyParcelBE != 'undefined' && MyParcelBE.data.length === 0) {
-            MyParcelBE.callDeliveryOptions();
+        // Update delivery options after filling if myparcel.js is loaded and initialized
+        if (typeof MyParcel != 'undefined' && MyParcel.data.length === 0) {
+            MyParcel.callDeliveryOptions();
         }
     }
 });

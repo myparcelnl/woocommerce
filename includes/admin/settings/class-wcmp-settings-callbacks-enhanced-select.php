@@ -1,6 +1,6 @@
 <?php
 
-use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
+use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
 if (! defined('ABSPATH')) {
     exit;

@@ -1,12 +1,12 @@
 jQuery(function ($) {
-    window.myparcelbe_is_using_split_address_fields = wcmp_display_settings.isUsingSplitAddressFields;
+    window.myparcel_is_using_split_address_fields = wcmp_display_settings.isUsingSplitAddressFields;
 
     /* The timeout is necessary, otherwise the order summary is going to flash */
     setTimeout(function () {
         $(':input.country_to_state').change();
     }, 100);
 
-    var MyParcelBE_Frontend = {
+    var MyParcel_Frontend = {
         checkout_updating: false,
         shipping_method_changed: false,
         force_update: false,
@@ -20,27 +20,27 @@ jQuery(function ($) {
         always_display: wcmp_delivery_options.always_display,
 
         init: function () {
-            MyParcelBE_Frontend.selected_country = MyParcelBE_Frontend.get_shipping_country();
+            MyParcel_Frontend.selected_country = MyParcel_Frontend.get_shipping_country();
 
             $('#shipping_country, #billing_country').change(function () {
-                MyParcelBE_Frontend.updated_country = MyParcelBE_Frontend.get_shipping_country();
+                MyParcel_Frontend.updated_country = MyParcel_Frontend.get_shipping_country();
             });
 
             /* hide checkout options for non parcel shipments */
             function showOrHideCheckoutOptions() {
-                MyParcelBE_Frontend.checkout_updating = false; /* done updating */
+                MyParcel_Frontend.checkout_updating = false; /* done updating */
 
-                if (!MyParcelBE_Frontend.check_country()) return;
+                if (!MyParcel_Frontend.check_country()) return;
 
-                if (MyParcelBE_Frontend.always_display) {
-                    MyParcelBE_Frontend.force_update = true;
-                    MyParcelBE.showAllDeliveryOptions();
-                } else if (MyParcelBE_Frontend.shipping_methods.length > 0) {
-                    var shipping_method = MyParcelBE_Frontend.get_shipping_method();
+                if (MyParcel_Frontend.always_display) {
+                    MyParcel_Frontend.force_update = true;
+                    MyParcel.showAllDeliveryOptions();
+                } else if (MyParcel_Frontend.shipping_methods.length > 0) {
+                    var shipping_method = MyParcel_Frontend.get_shipping_method();
 
                     /* no shipping method selected, hide by default */
                     if (typeof shipping_method === 'undefined') {
-                        MyParcelBE_Frontend.hide_delivery_options();
+                        MyParcel_Frontend.hide_delivery_options();
                         return;
                     }
 
@@ -56,46 +56,46 @@ jQuery(function ($) {
                         if (shipping_method.indexOf(':') !== -1) {
                             shipping_method = shipping_method.substring(0, shipping_method.indexOf(':'));
                         }
-                        var shipping_class = $('#myparcelbe_highest_shipping_class').val();
+                        var shipping_class = $('#myparcel_highest_shipping_class').val();
                         /* add class refinement if we have a shipping class */
                         if (shipping_class) {
                             shipping_method_class = shipping_method + ':' + shipping_class;
                         }
                     }
 
-                    if (shipping_class && $.inArray(shipping_method_class, MyParcelBE_Frontend.shipping_methods) > -1) {
-                        MyParcelBE_Frontend.updated_shipping_method = shipping_method_class;
-                        MyParcelBE.showAllDeliveryOptions();
-                        MyParcelBE_Frontend.myparcelbe_selected_shipping_method = shipping_method_class;
-                    } else if ($.inArray(shipping_method, MyParcelBE_Frontend.shipping_methods) > -1) {
+                    if (shipping_class && $.inArray(shipping_method_class, MyParcel_Frontend.shipping_methods) > -1) {
+                        MyParcel_Frontend.updated_shipping_method = shipping_method_class;
+                        MyParcel.showAllDeliveryOptions();
+                        MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_class;
+                    } else if ($.inArray(shipping_method, MyParcel_Frontend.shipping_methods) > -1) {
                         /* fallback to bare method if selected in settings */
-                        MyParcelBE_Frontend.myparcelbe_updated_shipping_method = shipping_method;
-                        MyParcelBE.showAllDeliveryOptions();
-                        MyParcelBE_Frontend.myparcelbe_selected_shipping_method = shipping_method;
+                        MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method;
+                        MyParcel.showAllDeliveryOptions();
+                        MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method;
                     } else {
                         var shipping_method_now = typeof shipping_method_class !== 'undefined' ? shipping_method_class : shipping_method;
-                        MyParcelBE_Frontend.myparcelbe_updated_shipping_method = shipping_method_now;
-                        MyParcelBE_Frontend.hide_delivery_options();
+                        MyParcel_Frontend.myparcel_updated_shipping_method = shipping_method_now;
+                        MyParcel_Frontend.hide_delivery_options();
                         jQuery('#mypabe-input').val(JSON.stringify(''));
-                        MyParcelBE_Frontend.myparcelbe_selected_shipping_method = shipping_method_now;
+                        MyParcel_Frontend.myparcel_selected_shipping_method = shipping_method_now;
 
                         /* Hide extra fees when selecting local pickup */
-                        if (MyParcelBE_Frontend.shipping_method_changed == false) {
-                            MyParcelBE_Frontend.shipping_method_changed = true;
+                        if (MyParcel_Frontend.shipping_method_changed == false) {
+                            MyParcel_Frontend.shipping_method_changed = true;
 
                             /* Update checkout when selecting other method */
                             jQuery('body').trigger('update_checkout');
 
                             /* Onyl update when the method change after 2seconds */
                             setTimeout(function () {
-                                MyParcelBE_Frontend.shipping_method_changed = false;
+                                MyParcel_Frontend.shipping_method_changed = false;
                             }, 2000);
                         }
                     }
                 } else {
 
                     /* not sure if we should already hide by default? */
-                    MyParcelBE_Frontend.hide_delivery_options();
+                    MyParcel_Frontend.hide_delivery_options();
                     jQuery('#mypabe-input').val(JSON.stringify(''));
                 }
             }
@@ -106,7 +106,7 @@ jQuery(function ($) {
             });
             /* any delivery option selected/changed - update checkout for fees */
             $('#mypabe-chosen-delivery-options').on('change', 'input', function () {
-                MyParcelBE_Frontend.checkout_updating = true;
+                MyParcel_Frontend.checkout_updating = true;
                 /* disable signature & recipient only when switching to pickup location */
                 var mypabe_bpost_data = JSON.parse($('#mypabe-chosen-delivery-options #mypabe-input').val());
                 if (typeof mypabe_bpost_data.location !== 'undefined') {
@@ -117,18 +117,18 @@ jQuery(function ($) {
         },
 
         check_country: function () {
-            if (MyParcelBE_Frontend.updated_country !== false
-                && MyParcelBE_Frontend.updated_country !== MyParcelBE_Frontend.selected_country
-                && $.isEmptyObject(MyParcelBE.data) === false
+            if (MyParcel_Frontend.updated_country !== false
+                && MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country
+                && $.isEmptyObject(MyParcel.data) === false
             ) {
-                MyParcelBE.callDeliveryOptions();
-                MyParcelBE.showAllDeliveryOptions();
-                MyParcelBE_Frontend.selected_country = MyParcelBE_Frontend.updated_country;
+                MyParcel.callDeliveryOptions();
+                MyParcel.showAllDeliveryOptions();
+                MyParcel_Frontend.selected_country = MyParcel_Frontend.updated_country;
             }
 
-            if (MyParcelBE_Frontend.selected_country !== 'BE') {
+            if (MyParcel_Frontend.selected_country !== 'BE') {
 
-                MyParcelBE_Frontend.hide_delivery_options();
+                MyParcel_Frontend.hide_delivery_options();
                 return false;
             }
 
@@ -157,20 +157,20 @@ jQuery(function ($) {
         },
 
         hide_delivery_options: function () {
-            MyParcelBE.hideAllDeliveryOptions();
-            if (MyParcelBE_Frontend.is_updated()) {
+            MyParcel.hideAllDeliveryOptions();
+            if (MyParcel_Frontend.is_updated()) {
                 jQuery('body').trigger('update_checkout');
             }
         },
 
         is_updated: function () {
-            if (MyParcelBE_Frontend.updated_country !== MyParcelBE_Frontend.selected_country || MyParcelBE_Frontend.force_update === true) {
-                MyParcelBE_Frontend.force_update = false; /* only force once */
+            if (MyParcel_Frontend.updated_country !== MyParcel_Frontend.selected_country || MyParcel_Frontend.force_update === true) {
+                MyParcel_Frontend.force_update = false; /* only force once */
                 return true;
             }
             return false;
         }
     };
 
-    MyParcelBE_Frontend.init();
+    MyParcel_Frontend.init();
 });

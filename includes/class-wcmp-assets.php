@@ -85,7 +85,7 @@ class WCMP_Assets
                         WCMP_Settings::SETTING_ASK_FOR_PRINT_POSITION
                     ),
                     "strings"                => [
-                        "no_orders_selected" => __("You have not selected any orders!", "woocommerce-myparcelbe"),
+                        "no_orders_selected" => __("You have not selected any orders!", "woocommerce-myparcel"),
                     ],
                 ]
             );

@@ -1,22 +1,22 @@
 <?php if ( ! defined('ABSPATH')) exit; // Exit if accessed directly
 
 // get parcel weight in grams
-$parcel_weight = WooCommerce_MyParcelBE()->export->get_parcel_weight($order);
-$parcel_weight_gram = WooCommerce_MyParcelBE()->export->get_parcel_weight($order, 'g');
+$parcel_weight = WooCommerce_MyParcel()->export->get_parcel_weight($order);
+$parcel_weight_gram = WooCommerce_MyParcel()->export->get_parcel_weight($order, 'g');
 
 ?>
-<a href="#" class="wcmyparcelbe_change_order">
-    <table class="wcmyparcelbe_settings_table" onclick="return false;">
+<a href="#" class="wcmyparcel_change_order">
+    <table class="wcmyparcel_settings_table" onclick="return false;">
         <tr>
             <td>
-                <?php _e('Shipment type', 'woocommerce-myparcelbe') ?>:<br />
-                <?php $parcel_weight = WooCommerce_MyParcelBE()->export->get_parcel_weight($order); ?>
-                <small class="calculated_weight"><?php printf(__('Calculated weight: %s kg', 'woocommerce-myparcelbe'), number_format($parcel_weight, 3, ',', ' ')); ?></small>
+                <?php _e('Shipment type', 'woocommerce-myparcel') ?>:<br />
+                <?php $parcel_weight = WooCommerce_MyParcel()->export->get_parcel_weight($order); ?>
+                <small class="calculated_weight"><?php printf(__('Calculated weight: %s kg', 'woocommerce-myparcel'), number_format($parcel_weight, 3, ',', ' ')); ?></small>
             </td>
             <td>
                 <?php
 
-                $name = "myparcelbe_options[{$order_id}][package_type]";
+                $name = "myparcel_options[{$order_id}][package_type]";
                 printf('<select name="%s" class="package_type">', $name);
                 foreach ($package_types as $key => $label) {
                     printf(
@@ -32,12 +32,12 @@ $parcel_weight_gram = WooCommerce_MyParcelBE()->export->get_parcel_weight($order
         </tr>
         <tr>
             <td>
-                <?php _e('Number of labels', 'woocommerce-myparcelbe') ?>:
+                <?php _e('Number of labels', 'woocommerce-myparcel') ?>:
             </td>
             <td>
                 <?php
-                $name = "myparcelbe_options[{$order_id}][extra_options][colli_amount]";
-                $colli_amount = isset($myparcelbe_options_extra['colli_amount']) ? $myparcelbe_options_extra['colli_amount']
+                $name = "myparcel_options[{$order_id}][extra_options][colli_amount]";
+                $colli_amount = isset($myparcel_options_extra['colli_amount']) ? $myparcel_options_extra['colli_amount']
                     : 1;
                 printf('<input type="number" step="1" min="0" name="%s" value="%s" size="2">', $name, $colli_amount);
                 ?>
@@ -47,12 +47,12 @@ $parcel_weight_gram = WooCommerce_MyParcelBE()->export->get_parcel_weight($order
 
         $option_rows = array(
             '[signature]'      => array(
-                'label' => __('Signature on delivery', 'woocommerce-myparcelbe'),
+                'label' => __('Signature on delivery', 'woocommerce-myparcel'),
                 'value' => isset($shipment_options['signature']) ? $shipment_options['signature'] : 0,
             ),
             '[insured]'        => array(
-                'label' => __('Insured to &euro; 500', 'woocommerce-myparcelbe'),
-                'value' => isset(WooCommerce_MyParcelBE()->export_defaults['insured']) ? 1 : 0,
+                'label' => __('Insured to &euro; 500', 'woocommerce-myparcel'),
+                'value' => isset(WooCommerce_MyParcel()->export_defaults['insured']) ? 1 : 0,
                 'class' => 'insured',
             ),
         );
@@ -61,12 +61,12 @@ $parcel_weight_gram = WooCommerce_MyParcelBE()->export->get_parcel_weight($order
             unset($option_rows['[signature]']);
         } ?>
     </table>
-    <table class="wcmyparcelbe_settings_table parcel_options">
+    <table class="wcmyparcel_settings_table parcel_options">
         <?php foreach ($option_rows as $name => $option_row): ?>
             <tr>
                 <td>
                     <?php
-                    $name = "myparcelbe_options[{$order_id}]{$name}";
+                    $name = "myparcel_options[{$order_id}]{$name}";
                     $class = isset($option_row['class']) ? $option_row['class'] : '';
                     $checked = isset($option_row['checked'])
                         ? $option_row['checked']
@@ -93,7 +93,7 @@ $parcel_weight_gram = WooCommerce_MyParcelBE()->export->get_parcel_weight($order
     </table>
 
     <div class="wcmp_save_shipment_settings">
-        <a class="button save" data-order="<?php echo $order_id; ?>"><?php _e('Save', 'woocommerce-myparcelbe') ?></a>
-        <img src="<?php echo WooCommerce_MyParcelBE()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>" class="wcmp_spinner waiting" />
+        <a class="button save" data-order="<?php echo $order_id; ?>"><?php _e('Save', 'woocommerce-myparcel') ?></a>
+        <img src="<?php echo WooCommerce_MyParcel()->plugin_url() . '/assets/img/wpspin_light.gif'; ?>" class="wcmp_spinner waiting" />
     </div>
 </a>
