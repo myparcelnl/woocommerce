@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @author      Richard Perdaan <support@myparcel.nl>
  * @copyright   2010-2019 MyParcel
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US  CC BY-NC-ND 3.0 NL
- * @link        https://github.com/MyParcelNL/Sdk
+ * @link        https://github.com/myparcelnl/sdk
  * @since       File available since Release v3.0.0
  */
 

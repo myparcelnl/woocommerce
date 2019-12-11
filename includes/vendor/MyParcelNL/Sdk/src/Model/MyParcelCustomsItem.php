@@ -8,7 +8,7 @@
  * @author      Reindert Vetter <reindert@myparcel.nl>
  * @copyright   2010-2017 MyParcel
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US  CC BY-NC-ND 3.0 NL
- * @link        https://github.com/MyParcelNL/Sdk
+ * @link        https://github.com/myparcelnl/sdk
  * @since       File available since Release v0.1.0
  */
 
@@ -156,11 +156,17 @@ class MyParcelCustomsItem
      *
      * @link https://www.cbs.nl/nl-nl/deelnemers-enquetes/deelnemers-enquetes/bedrijven/onderzoek/lopend/internationale-handel-in-goederen/idep-codelijsten
      *
-     * @param int $classification
+     * @param null|int $classification
+     *
      * @return $this
+     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
-    public function setClassification($classification)
+    public function setClassification(?int $classification): self
     {
+        if (! $classification) {
+            throw new MissingFieldException('Classification must be set for a MyParcel product');
+        }
+
         $this->classification = substr("$classification", 0, 4);
 
         return $this;

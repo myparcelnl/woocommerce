@@ -1,6 +1,6 @@
 {
-    "name": "MyParcelNL/Sdk",
-    "version": "v3.1.1",
+    "name": "myparcelnl/sdk",
+    "version": "v3.1.2-beta.1",
     "description": "This package is designed to send and receive data from MyParcel by means of an API.",
     "homepage": "https://www.myparcel.nl",
     "keywords": ["MyParcel", "My Parcel", "Flespakket", "Post NL", "PostNL"],
@@ -27,10 +27,10 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/MyParcelNL/Sdk"
+        "url": "https://github.com/myparcelnl/sdk"
     },
     "bugs": {
-        "url": "https://github.com/MyParcelNL/Sdk/issues"
+        "url": "https://github.com/myparcelnl/sdk/issues"
     },
     "require": {
         "php": ">=7.1.0"

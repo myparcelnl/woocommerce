@@ -6,7 +6,7 @@
  *
  * @author      Reindert Vetter <reindert@myparcel.nl>
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US  CC BY-NC-ND 3.0 NL
- * @link        https://github.com/MyParcelNL/Sdk
+ * @link        https://github.com/myparcelnl/sdk
  * @copyright   2010-2017 MyParcel
  * @since       File available since Release v0.1.0
  */

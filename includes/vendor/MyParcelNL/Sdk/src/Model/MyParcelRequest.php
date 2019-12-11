@@ -10,7 +10,7 @@
  * @author      Reindert Vetter <reindert@myparcel.nl>
  * @copyright   2010-2017 MyParcel
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US  CC BY-NC-ND 3.0 NL
- * @link        https://github.com/MyParcelNL/Sdk
+ * @link        https://github.com/myparcelnl/sdk
  * @since       File available since Release v0.1.0
  */
 
@@ -181,7 +181,7 @@ class MyParcelRequest
         $composerData = $this->getComposerContents();
 
         if ($composerData && ! empty($composerData['name'])
-            && $composerData['name'] == 'MyParcelNL/Sdk'
+            && $composerData['name'] == 'myparcelnl/sdk'
             && ! empty($composerData['version'])
         ) {
             $version = str_replace('v', '', $composerData['version']);
@@ -272,7 +272,7 @@ class MyParcelRequest
     private function getComposerContents()
     {
         $composer_locations = [
-            'vendor/MyParcelNL/Sdk/composer.json',
+            'vendor/myparcelnl/sdk/composer.json',
             './composer.json'
         ];
 
