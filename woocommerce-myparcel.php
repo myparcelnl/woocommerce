@@ -27,7 +27,7 @@ if (! class_exists('WCMP')) :
         const MINIMUM_PHP_VERSION_5_4 = '5.4';
         const PHP_VERSION_7_1         = '7.1';
 
-        public $version = '4.0.0';
+        public $version = '4.0.1';
 
         public $plugin_basename;
 
