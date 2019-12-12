@@ -187,7 +187,7 @@ class WCMP_Export_Consignments
             ->setCompany($this->recipient['company'])
             ->setStreet($this->recipient['street'])
             ->setNumber($this->recipient['number'] ?? null)
-            ->setNumberSuffix($this->recipient['number_suffix'] ?? null)
+            ->setBoxNumber($this->recipient['number_suffix'] ?? null)
             ->setStreetAdditionalInfo($this->recipient['street_additional_info'] ?? null)
             ->setPostalCode($this->recipient['postal_code'])
             ->setCity($this->recipient['city'])
