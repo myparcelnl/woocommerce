@@ -146,16 +146,6 @@
                     <span id="mypa-pickup-price"></span>
                 </td>
             </tr>
-            <tr id="mypa-pickup-express" class="mypa-is-pickup-element">
-                <td></td>
-                <td>
-                    <input name="method-myparcel-pickup-selector" id="mypa-pickup-express-selector" type="radio" value="myparcel-pickup-express-selector">
-                    <label for="mypa-pickup-express-selector"><span class="mypa-pickup-delivery-titel"></span> 09:00</label>
-                </td>
-                <td>
-                    <span id="mypa-pickup-express-price"></span>
-                </td>
-            </tr>
             </tbody>
         </table>
     </div>

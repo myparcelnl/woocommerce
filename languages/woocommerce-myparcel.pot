@@ -89,10 +89,6 @@ msgstr ""
 msgid "PostNL Pickup"
 msgstr ""
 
-#: includes/class-wcmp-admin.php:489 includes/class-wcmp-frontend.php:318
-msgid "PostNL Pickup Express"
-msgstr ""
-
 #: includes/class-wcmp-admin.php:582
 msgid "HS Code"
 msgstr ""
