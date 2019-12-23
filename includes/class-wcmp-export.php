@@ -18,8 +18,6 @@ class WooCommerce_MyParcel_Export {
 
     // Delivery types
     const PICKUP          = 4;
-    const PICKUP_EXPRESS  = 5;
-
     // Maximum characters length of item description.
     const DESCRIPTION_MAX_LENGTH = 50;
 
@@ -727,7 +725,7 @@ class WooCommerce_MyParcel_Export {
                 'package_type' => $package_type,
                 'only_recipient' => (isset(WooCommerce_MyParcel()->export_defaults['only_recipient'])) ? 1 : 0,
                 'signature' => (isset(WooCommerce_MyParcel()->export_defaults['signature'])) ? 1 : 0,
-                'return' => (isset(WooCommerce_MyParcel()->export_defaults['return']) && ($delivery_type != self::PICKUP && $delivery_type != self::PICKUP_EXPRESS)) ? 1 : 0,
+                'return' => (isset(WooCommerce_MyParcel()->export_defaults['return']) && $delivery_type != self::PICKUP) ? 1 : 0,
                 'large_format' => (isset(WooCommerce_MyParcel()->export_defaults['large_format'])) ? 1 : 0,
                 'label_description' => $description,
                 'insured_amount' => $insured_amount,
@@ -776,7 +774,7 @@ class WooCommerce_MyParcel_Export {
             $options['only_recipient'] = $age_check_options[2];
         }
 
-        // Options for Pickup and Pickup express delivery types:
+        // Options for Pickup delivery types:
         // always enable signature on receipt
         if ($this->is_pickup($order, $myparcel_delivery_options)) {
             $options['signature'] = 1;
@@ -1086,7 +1084,7 @@ class WooCommerce_MyParcel_Export {
             }
         }
 
-        // always parcel for Pickup and Pickup express delivery types.
+        // always parcel for Pickup delivery types.
         if ($this->is_pickup($order)) {
             $package_type = self::PACKAGE;
         }
@@ -1322,7 +1320,7 @@ class WooCommerce_MyParcel_Export {
             $myparcel_delivery_options = WCX_Order::get_meta($order, '_myparcel_delivery_options');
         }
 
-        $pickup_types = array('retail', 'retailexpress');
+        $pickup_types = array('retail');
         if ( ! empty($myparcel_delivery_options['price_comment']) && in_array($myparcel_delivery_options['price_comment'],$pickup_types)) {
             return $myparcel_delivery_options;
         }
@@ -1353,7 +1351,6 @@ class WooCommerce_MyParcel_Export {
             'standard' => 2, // 'default in JS API'
             'avond' => 3,
             'retail' => 4, // 'pickup'
-            'retailexpress' => 5, // 'pickup_express'
         );
 
         if (empty($myparcel_delivery_options)) {
@@ -1363,7 +1360,7 @@ class WooCommerce_MyParcel_Export {
         // standard = default, overwrite if options found
         $delivery_type = 'standard';
         if ( ! empty($myparcel_delivery_options)) {
-            // pickup & pickup express store the delivery type in the delivery options,
+            // pickup store the delivery type in the delivery options,
             // morning & night store it in the time data (...)
             if (empty($myparcel_delivery_options['price_comment']) && ! empty($myparcel_delivery_options['time'])) {
                 // check if we have a price_comment in the time option

@@ -491,9 +491,6 @@ class WooCommerce_MyParcel_Admin {
                 case 'retail':
                     $title = __('PostNL Pickup', 'woocommerce-myparcel');
                 break;
-                case 'retailexpress':
-                    $title = __('PostNL Pickup Express', 'woocommerce-myparcel');
-                break;
             }
 
             echo "<div class='pickup-location'><strong>{$title}: </strong>{$pickup['location']}, {$pickup['street']} {$pickup['number']}, {$pickup['postal_code']} {$pickup['city']}</div>";
@@ -625,7 +622,7 @@ class WooCommerce_MyParcel_Admin {
                + array('barcode' => 'Barcode')
                + array_slice($columns, 6, null, true);
     }
-    
+
     /**
      * @param $column
      */

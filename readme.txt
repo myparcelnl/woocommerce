@@ -91,6 +91,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 3.2.0 (2019-12-23) =
+* Fix: Since November is it no longer possible to use pickup express.
+
 = 3.1.8 (2019-11-12) =
 * Fix: Check if there is connection with MyParcel
 

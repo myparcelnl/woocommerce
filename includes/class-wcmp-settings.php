@@ -873,22 +873,6 @@ class WooCommerce_MyParcel_Settings {
         );
 
         add_settings_field(
-            'pickup_express', __('Early PostNL pickup', 'woocommerce-myparcel'), array(
-            $this->callbacks,
-            'delivery_option_enable'
-        ), $option_group, 'delivery_options', array(
-                'has_title'   => false,
-                'has_price'   => true,
-                'option_name' => $option_name,
-                'id'          => 'pickup_express',
-                'class'       => 'pickup_express',
-                'title'       => 'Pickup express',
-                'current'     => __('Early PostNL pickup', 'woocommerce-myparcel'),
-                'size'        => 30,
-            )
-        );
-
-        add_settings_field(
             'saturday_cutoff', __('Enable monday delivery', 'woocommerce-myparcel'), array(
             $this->callbacks,
             'delivery_option_enable'
