@@ -4,7 +4,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
-if (!defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -22,6 +22,11 @@ class WCMP_Settings_Data
 
     public const DISPLAY_FOR_SELECTED_METHODS = "selected_methods";
     public const DISPLAY_FOR_ALL_METHODS      = "all_methods";
+    public const INSURED_HUNDRED              = "100";
+    public const INSURED_TWO_HUNDRED_FIFTY    = "250";
+    public const INSURED_FIVE_HUNDRED         = "500";
+    public const INSURED_MORE_THAN_HUNDRED    = "";
+
 
     /**
      * @var WCMP_Settings_Callbacks
@@ -87,8 +92,8 @@ class WCMP_Settings_Data
      * Generate settings sections and fields by the given $settingsArray.
      *
      * @param array  $settingsArray - Array of settings to loop through.
-     * @param string $optionName    - Name to use in the identifier.
-     * @param bool   $prefix        - Add the key of the top level settings as prefix before every setting or not.
+     * @param string $optionName - Name to use in the identifier.
+     * @param bool   $prefix - Add the key of the top level settings as prefix before every setting or not.
      */
     private function generate_settings(array $settingsArray, string $optionName, bool $prefix = false): void
     {
@@ -105,7 +110,7 @@ class WCMP_Settings_Data
                 add_settings_section(
                     $sectionName,
                     $section["label"],
-                    function () use ($section) {
+                    function() use ($section) {
                         // Allows a description to be shown with a section title.
                         /** @noinspection PhpVoidFunctionResultUsedInspection */
                         return $this->callbacks->renderSection($section);
@@ -134,7 +139,7 @@ class WCMP_Settings_Data
                     // Add the setting's default value to the defaults array.
                     $defaults[$setting["id"]] = $class->getDefault();
 
-                    $defaultCallback = function () use ($class, $optionIdentifier) {
+                    $defaultCallback = function() use ($class, $optionIdentifier) {
                         $this->callbacks->renderField($class, $optionIdentifier);
                     };
 
@@ -651,11 +656,9 @@ class WCMP_Settings_Data
                 "label"     => __("Connect customer email", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
-                    "When you connect the customer email, MyParcel can send a Track & Trace email to this address. In your %sMyParcel backend%s you can enable or disable this email and format it in your own style.",
+                    "When you connect the customer email, MyParcel can send a Track & Trace email to this address. In your MyParcel backend you can enable or disable this email and format it in your own style.",
                     "woocommerce-myparcel"
                 ),
-                '<a href="https://backoffice.myparcel.nl/settings/account" target="_blank">',
-                '</a>',
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CONNECT_PHONE,
@@ -667,12 +670,107 @@ class WCMP_Settings_Data
                 ),
             ],
             [
+                "name"      => WCMP_Settings::SETTING_LARGE_FORMAT,
+                "label"     => __("Extra large size", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee will be charged. Note! If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate will be charged.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_ONLY_RECIPIENT,
+                "label"     => __("Home address only", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "If you don't want the parcel to be delivered at the neighbours, choose this option.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_SIGNATURE,
+                "label"     => __("Signature on delivery", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signature will be required.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_AGE_CHECK,
+                "label"     => __("Age check 18+", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "The age check is intended for parcel shipments for which the recipient must show 18+ by means of a proof of identity. With this shipping option Signature for receipt and Delivery only at recipient are included. The age 18+ is further excluded from the delivery options morning and evening delivery.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_RETURN,
+                "label"     => __("Return if no answer", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "By default, a parcel will be offered twice. After two unsuccessful delivery attempts, the parcel will be available at the nearest pickup point for two weeks. There it can be picked up by the recipient with the note that was left by the courier. If you want to receive the parcel back directly and NOT forward it to the pickup point, enable this option.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_INSURED,
+                "label"     => __("Insured shipment", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that. We insure the purchase value of the shipment, with a maximum insured value of € 5.000. Insured parcels always contain the options 'Home address only' en 'Signature for delivery'",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_INSURED_AMOUNT,
+                "condition" => WCMP_Settings::SETTING_INSURED,
+                "label"     => __("Insured amount", "woocommerce-myparcel"),
+                "type"      => "select",
+                "options"   => [
+                    self::INSURED_HUNDRED           => __("Insured up to € 100", "woocommerce-myparcel"),
+                    self::INSURED_TWO_HUNDRED_FIFTY => __("Insured up to € 250", "woocommerce-myparcel"),
+                    self::INSURED_FIVE_HUNDRED      => __("Insured up to € 500", "woocommerce-myparcel"),
+                    self::INSURED_MORE_THAN_HUNDRED => __("> € 500", "woocommerce-myparcel"),
+                ],
+            ],
+            [
                 "name"      => WCMP_Settings::SETTING_LABEL_DESCRIPTION,
                 "label"     => __("Label description", "woocommerce-myparcel"),
                 "help_text" => __(
-                    "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments.",
+                    "With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in your backoffice. Use [ORDER_NR] to include the order number, [DELIVERY_DATE] to include the delivery date.",
                     "woocommerce-myparcel"
                 ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT,
+                "label"     => __("Empty parcel weight (grams)", "woocommerce-myparcel"),
+                "help_text" => __(
+                    "Default weight of your empty parcel, rounded to grams.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_HS_CODE,
+                "label"     => __("Default HS Code", "woocommerce-myparcel"),
+                "help_text" => __(
+                    "HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Dutch Customs.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+
+            [
+                "name"    => WCMP_Settings::SETTING_PACKAGE_CONTENT,
+                "label"   => __("Customs shipment type", "woocommerce-myparcel"),
+                "type"    => "select",
+                "options" => [
+                    1 => __("Commercial goods", "woocommerce-myparcel"),
+                    2 => __("Commercial samples", "woocommerce-myparcel"),
+                    3 => __("Documents", "woocommerce-myparcel"),
+                    4 => __("Gifts", "woocommerce-myparcel"),
+                    5 => __("Return shipment", "woocommerce-myparcel"),
+                ],
             ],
         ];
     }
@@ -724,7 +822,7 @@ class WCMP_Settings_Data
                 "label"     => __("Checkout position", "woocommerce-myparcel"),
                 "type"      => "select",
                 "default"   => "woocommerce_after_checkout_billing_form",
-                "options" => [
+                "options"   => [
                     "woocommerce_after_checkout_billing_form"     => __(
                         "Show after billing details",
                         "woocommerce-myparcel"

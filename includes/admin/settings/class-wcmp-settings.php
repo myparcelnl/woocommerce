@@ -45,10 +45,20 @@ class WCMP_Settings
     /**
      * Export defaults
      */
+    public const SETTING_SHIPPING_METHODS_PACKAGE_TYPES = "shipping_methods_package_types";
     public const SETTING_CONNECT_EMAIL                  = "connect_email";
     public const SETTING_CONNECT_PHONE                  = "connect_phone";
+    public const SETTING_LARGE_FORMAT                   = "large_format";
+    public const SETTING_ONLY_RECIPIENT                 = "only_recipient";
+    public const SETTING_SIGNATURE                      = "signature";
+    public const SETTING_AGE_CHECK                      = "age_check";
+    public const SETTING_RETURN                         = "return";
+    public const SETTING_INSURED                        = "insured";
+    public const SETTING_INSURED_AMOUNT                 = "insured_amount";
     public const SETTING_LABEL_DESCRIPTION              = "label_description";
-    public const SETTING_SHIPPING_METHODS_PACKAGE_TYPES = "shipping_methods_package_types";
+    public const SETTING_EMPTY_PARCEL_WEIGHT            = "empty_parcel_weight";
+    public const SETTING_HS_CODE                        = "hs_code";
+    public const SETTING_PACKAGE_CONTENT                = "package_contents";
 
     /**
      * Checkout
