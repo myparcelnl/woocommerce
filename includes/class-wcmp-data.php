@@ -54,8 +54,6 @@ class WCMP_Data
             AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
         ];
 
-
-
         self::$packageTypesHuman = [
             AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME => __("Parcel", "woocommerce-myparcel"),
             AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME => __("Mailbox package", "woocommerce-myparcel"),
