@@ -149,7 +149,7 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
      */
     private static function getCheckoutBpostMap(): array
     {
-        $bpost = WCMP_Settings::SETTINGS_BPOST;
+        $bpost = WCMP_Settings::SETTINGS_POSTNL;
 
         return [
             "dropoff_days"        => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
@@ -196,7 +196,7 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
      */
     private static function getExportDefaultsBpostMap(): array
     {
-        $bpost = WCMP_Settings::SETTINGS_BPOST;
+        $bpost = WCMP_Settings::SETTINGS_POSTNL;
 
         return [
             "insured"   => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,

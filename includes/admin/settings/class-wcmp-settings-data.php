@@ -1,6 +1,6 @@
 <?php
 
-use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
@@ -62,8 +62,8 @@ class WCMP_Settings_Data
         );
 
         $this->generate_settings(
-            $this->get_sections_carrier_bpost(),
-            WCMP_Settings::SETTINGS_BPOST,
+            $this->get_sections_carrier_postnl(),
+            WCMP_Settings::SETTINGS_POSTNL,
             true
         );
 
@@ -82,8 +82,8 @@ class WCMP_Settings_Data
             WCMP_Settings::SETTINGS_CHECKOUT        => __("Checkout settings", "woocommerce-myparcel"),
         ];
 
-        $array[WCMP_Settings::SETTINGS_BPOST] = __("bpost", "woocommerce-myparcel");
-        $array[WCMP_Settings::SETTINGS_DPD]   = __("DPD", "woocommerce-myparcel");
+        $array[WCMP_Settings::SETTINGS_POSTNL] = __("PostNL", "woocommerce-myparcel");
+//        $array[WCMP_Settings::SETTINGS_DPD]    = __("DPD", "woocommerce-myparcel");
 
         return $array;
     }
@@ -236,32 +236,32 @@ class WCMP_Settings_Data
     }
 
     /**
-     * Get the array of bpost sections and their settings to be added to WordPress.
+     * Get the array of PostNL sections and their settings to be added to WordPress.
      *
      * @return array
      */
-    private function get_sections_carrier_bpost()
+    private function get_sections_carrier_postnl()
     {
         return [
-            BpostConsignment::CARRIER_NAME => [
+            PostNLConsignment::CARRIER_NAME => [
                 [
                     "name"        => "export_defaults",
                     "label"       => __("Default export settings", "woocommerce-myparcel"),
                     "description" => __(
-                        "These settings will be applied to bpost shipments you create in the backend.",
+                        "These settings will be applied to PostNL shipments you create in the backend.",
                         "woocommerce-myparcel"
                     ),
-                    "settings"    => $this->get_section_carrier_bpost_export_defaults(),
+                    "settings"    => $this->get_section_carrier_postnl_export_defaults(),
                 ],
                 [
                     "name"     => "delivery_options",
-                    "label"    => __("bpost delivery options", "woocommerce-myparcel"),
-                    "settings" => $this->get_section_carrier_bpost_delivery_options(),
+                    "label"    => __("PostNL delivery options", "woocommerce-myparcel"),
+                    "settings" => $this->get_section_carrier_postnl_delivery_options(),
                 ],
                 [
                     "name"     => "pickup_options",
-                    "label"    => __("bpost pickup options", "woocommerce-myparcel"),
-                    "settings" => $this->get_section_carrier_bpost_pickup_options(),
+                    "label"    => __("PostNL pickup options", "woocommerce-myparcel"),
+                    "settings" => $this->get_section_carrier_postnl_pickup_options(),
                 ],
             ],
         ];
@@ -431,11 +431,11 @@ class WCMP_Settings_Data
     }
 
     /**
-     * Export defaults specifically for bpost.
+     * Export defaults specifically for postnl.
      *
      * @return array
      */
-    private function get_section_carrier_bpost_export_defaults(): array
+    private function get_section_carrier_postnl_export_defaults(): array
     {
         return [
             [
@@ -452,18 +452,18 @@ class WCMP_Settings_Data
     }
 
     /**
-     * These are the unprefixed settings for bpost.
-     * After the settings are generated every name will be prefixed with "bpost_"
-     * Example: delivery_enabled => bpost_delivery_enabled
+     * These are the unprefixed settings for postnl.
+     * After the settings are generated every name will be prefixed with "postnl_"
+     * Example: delivery_enabled => postnl_delivery_enabled
      *
      * @return array
      */
-    private function get_section_carrier_bpost_delivery_options(): array
+    private function get_section_carrier_postnl_delivery_options(): array
     {
         return [
             [
                 "name"  => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label" => __("Enable bpost delivery", "woocommerce-myparcel"),
+                "label" => __("Enable PostNL delivery", "woocommerce-myparcel"),
                 "type"  => "toggle",
             ],
             [
@@ -473,7 +473,7 @@ class WCMP_Settings_Data
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "options"   => $this->getWeekdays(),
                 "default"   => [1, 2, 3, 4, 5],
-                "help_text" => __("Days of the week on which you hand over parcels to bpost", "woocommerce-myparcel"),
+                "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcel"),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME,
@@ -528,12 +528,12 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_section_carrier_bpost_pickup_options(): array
+    private function get_section_carrier_postnl_pickup_options(): array
     {
         return [
             [
                 "name"  => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                "label" => __("Enable bpost pickup", "woocommerce-myparcel"),
+                "label" => __("Enable PostNL pickup", "woocommerce-myparcel"),
                 "type"  => "toggle",
             ],
             [

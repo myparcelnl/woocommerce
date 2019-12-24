@@ -1,6 +1,6 @@
 <?php
 
-use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 
@@ -22,7 +22,7 @@ class WCMP_Settings
     public const SETTINGS_GENERAL         = "general";
     public const SETTINGS_CHECKOUT        = "checkout";
     public const SETTINGS_EXPORT_DEFAULTS = "export_defaults";
-    public const SETTINGS_BPOST           = BpostConsignment::CARRIER_NAME;
+    public const SETTINGS_POSTNL          = PostNLConsignment::CARRIER_NAME;
     public const SETTINGS_DPD             = DPDConsignment::CARRIER_NAME;
 
     /**
@@ -80,7 +80,7 @@ class WCMP_Settings
     /*
      * Carrier settings, these will be prefixed with carrier names.
      *
-     * e.g. cutoff_time => bpost_cutoff_time/dpd_cutoff_time
+     * e.g. cutoff_time => postnl_cutoff_time/dpd_cutoff_time
      */
 
     // Defaults
@@ -129,8 +129,9 @@ class WCMP_Settings
          */
         add_filter(
             "woocommerce_screen_ids",
-            function ($ids) {
+            function($ids) {
                 $ids[] = "woocommerce_page_" . self::SETTINGS_MENU_SLUG;
+
                 return $ids;
             }
         );
@@ -192,38 +193,38 @@ class WCMP_Settings
 
         $active_tab = isset($_GET["tab"]) ? $_GET["tab"] : self::SETTINGS_GENERAL;
         ?>
-      <div class="wrap woocommerce">
-        <h1><?php _e("WooCommerce MyParcel Settings", "woocommerce-myparcel"); ?></h1>
-        <h2 class="nav-tab-wrapper">
-            <?php
-            foreach ($settings_tabs as $tab_slug => $tab_title) :
-                printf(
-                    '<a href="?page='
-                    . self::SETTINGS_MENU_SLUG
-                    . '&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>',
-                    $tab_slug,
-                    (($active_tab === $tab_slug) ? "nav-tab-active" : ""),
-                    $tab_title
-                );
-            endforeach;
-            ?>
-        </h2>
-          <?php do_action("woocommerce_myparcel_before_settings_page", $active_tab); ?>
-        <form
-          method="post"
-          action="options.php"
-          id="<?php echo self::SETTINGS_MENU_SLUG; ?>">
-            <?php
-            do_action("woocommerce_myparcel_before_settings", $active_tab);
-            settings_fields(self::getOptionId($active_tab));
-            $this->render_settings_sections(self::getOptionId($active_tab));
-            do_action("woocommerce_myparcel_after_settings", $active_tab);
+        <div class="wrap woocommerce">
+            <h1><?php _e("WooCommerce MyParcel Settings", "woocommerce-myparcel"); ?></h1>
+            <h2 class="nav-tab-wrapper">
+                <?php
+                foreach ($settings_tabs as $tab_slug => $tab_title) :
+                    printf(
+                        '<a href="?page='
+                        . self::SETTINGS_MENU_SLUG
+                        . '&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>',
+                        $tab_slug,
+                        (($active_tab === $tab_slug) ? "nav-tab-active" : ""),
+                        $tab_title
+                    );
+                endforeach;
+                ?>
+            </h2>
+            <?php do_action("woocommerce_myparcel_before_settings_page", $active_tab); ?>
+            <form
+                    method="post"
+                    action="options.php"
+                    id="<?php echo self::SETTINGS_MENU_SLUG; ?>">
+                <?php
+                do_action("woocommerce_myparcel_before_settings", $active_tab);
+                settings_fields(self::getOptionId($active_tab));
+                $this->render_settings_sections(self::getOptionId($active_tab));
+                do_action("woocommerce_myparcel_after_settings", $active_tab);
 
-            submit_button();
-            ?>
-        </form>
-          <?php do_action("woocommerce_myparcel_after_settings_page", $active_tab); ?>
-      </div>
+                submit_button();
+                ?>
+            </form>
+            <?php do_action("woocommerce_myparcel_after_settings_page", $active_tab); ?>
+        </div>
         <?php
     }
 
@@ -290,8 +291,8 @@ class WCMP_Settings
 
         foreach ((array) $wp_settings_sections[$page] as $section) {
             echo '<div class="wcmp__settings-section">';
-            $id = Arr::get($section, "id");
-            $title = Arr::get($section, "title");
+            $id       = Arr::get($section, "id");
+            $title    = Arr::get($section, "title");
             $callback = Arr::get($section, "callback");
 
             if ($title) {
@@ -341,12 +342,12 @@ class WCMP_Settings
             echo "<tr {$class}>";
 
             $helpText = Arr::get($field, "args.help_text");
-            $label = Arr::get($field, "args.label_for");
+            $label    = Arr::get($field, "args.label_for");
 
             printf('<th scope="row""><label class="wcmp__white-space--nowrap" %s>%s%s</label></th>',
-                   $label ? "for=\"" . esc_attr($label) . "\"" : "",
-                   Arr::get($field, "title"),
-                   $helpText ? wc_help_tip($helpText) : ""
+                $label ? "for=\"" . esc_attr($label) . "\"" : "",
+                Arr::get($field, "title"),
+                $helpText ? wc_help_tip($helpText) : ""
             );
 
             // Pass the option id as argument
@@ -355,7 +356,7 @@ class WCMP_Settings
             echo '<td>';
             call_user_func(
                 Arr::get($field, "callback"),
-              Arr::get($field, "args")
+                Arr::get($field, "args")
             );
             echo '</td>';
             echo '</tr>';
