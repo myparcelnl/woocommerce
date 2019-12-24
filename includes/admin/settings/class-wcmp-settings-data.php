@@ -901,6 +901,12 @@ class WCMP_Settings_Data
                 "default"   => __("Delivered at home or at work", "woocommerce-myparcel"),
             ],
             [
+                "name"      => WCMP_Settings::SETTING_MORNING_DELIVERY_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => __("Morning delivery title", "woocommerce-myparcel"),
+                "default"   => __("Morning delivery", "woocommerce-myparcel"),
+            ],
+            [
                 "name"      => WCMP_Settings::SETTING_STANDARD_TITLE,
                 "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Standard delivery title", "woocommerce-myparcel"),
@@ -911,9 +917,21 @@ class WCMP_Settings_Data
                 "default"   => __("Standard delivery", "woocommerce-myparcel"),
             ],
             [
+                "name"      => WCMP_Settings::SETTING_EVENING_DELIVERY_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => __("Evening delivery title", "woocommerce-myparcel"),
+                "default"   => __("Evening delivery", "woocommerce-myparcel"),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_ONLY_RECIPIENT_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => __("Home address only title", "woocommerce-myparcel"),
+                "default"   => __("Home address only", "woocommerce-myparcel"),
+            ],
+            [
                 "name"      => WCMP_Settings::SETTING_SIGNATURE_TITLE,
                 "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Signature on delivery", "woocommerce-myparcel"),
+                "label"     => __("Signature on delivery title", "woocommerce-myparcel"),
                 "default"   => __("Signature on delivery", "woocommerce-myparcel"),
             ],
             [

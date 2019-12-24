@@ -70,6 +70,9 @@ class WCMP_Settings
     public const SETTING_DELIVERY_TITLE                = "at_home_delivery";
     public const SETTING_HEADER_DELIVERY_OPTIONS_TITLE = "header_delivery_options_title";
     public const SETTING_PICKUP_TITLE                  = "pickup_title";
+    public const SETTING_MORNING_DELIVERY_TITLE        = "morning_title";
+    public const SETTING_EVENING_DELIVERY_TITLE        = "evening_title";
+    public const SETTING_ONLY_RECIPIENT_TITLE          = "only_recipient_title";
     public const SETTING_SIGNATURE_TITLE               = "signature_title";
     public const SETTING_STANDARD_TITLE                = "standard_title";
     public const SETTING_USE_SPLIT_ADDRESS_FIELDS      = "use_split_address_fields";
