@@ -86,30 +86,29 @@ class WCMP_Settings
 
 
     // Delivery options settings
-    public const SETTING_CARRIER_CUTOFF_TIME          = "cutoff_time";
-    public const SETTING_CARRIER_DELIVERY_DAYS_WINDOW = "delivery_days_window";
-    public const SETTING_CARRIER_DELIVERY_ENABLED     = "delivery_enabled";
-    public const SETTING_CARRIER_DROP_OFF_DAYS        = "drop_off_days";
-    public const SETTING_CARRIER_DROP_OFF_DELAY       = "drop_off_delay";
-    public const SETTING_CARRIER_PICKUP_ENABLED       = "pickup_enabled";
-    public const SETTING_CARRIER_PICKUP_FEE           = "pickup_fee";
-    public const SETTING_CARRIER_PICKUP_TITLE         = "pickup_title";
-    public const SETTING_CARRIER_SIGNATURE_ENABLED    = "signature_enabled";
-    public const SETTING_CARRIER_SIGNATURE_FEE        = "signature_fee";
-
-    // TODO; Currently not implemented:
-    public const SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED = "saturday_delivery_enabled";
-    public const SETTING_CARRIER_SATURDAY_DELIVERY_FEE     = "saturday_delivery_fee";
-
-    // Preparation for NL (or more delivery options becoming available for BE)
-    public const SETTING_CARRIER_ONLY_RECIPIENT_ENABLED   = "only_recipient_enabled";
-    public const SETTING_CARRIER_ONLY_RECIPIENT_FEE       = "only_recipient_fee";
-    public const SETTING_CARRIER_PICKUP_EXPRESS_ENABLED   = "pickup_express_enabled";
-    public const SETTING_CARRIER_PICKUP_EXPRESS_FEE       = "pickup_express_fee";
+    public const SETTING_CARRIER_CUTOFF_TIME            = "cutoff_time";
+    public const SETTING_CARRIER_DELIVERY_DAYS_WINDOW   = "delivery_days_window";
+    public const SETTING_CARRIER_DELIVERY_ENABLED       = "delivery_enabled";
+    public const SETTING_CARRIER_DROP_OFF_DAYS          = "drop_off_days";
+    public const SETTING_CARRIER_DROP_OFF_DELAY         = "drop_off_delay";
+    public const SETTING_CARRIER_PICKUP_ENABLED         = "pickup_enabled";
+    public const SETTING_CARRIER_PICKUP_FEE             = "pickup_fee";
+    public const SETTING_CARRIER_PICKUP_TITLE           = "pickup_title";
+    public const SETTING_CARRIER_ONLY_RECIPIENT_ENABLED = "only_recipient_enabled";
+    public const SETTING_CARRIER_ONLY_RECIPIENT_FEE     = "only_recipient_fee";
+    public const SETTING_CARRIER_SIGNATURE_ENABLED      = "signature_enabled";
+    public const SETTING_CARRIER_SIGNATURE_FEE          = "signature_fee";
     public const SETTING_CARRIER_DELIVERY_MORNING_ENABLED = "delivery_morning_enabled";
     public const SETTING_CARRIER_DELIVERY_MORNING_FEE     = "delivery_morning_fee";
     public const SETTING_CARRIER_DELIVERY_EVENING_ENABLED = "delivery_evening_enabled";
     public const SETTING_CARRIER_DELIVERY_EVENING_FEE     = "delivery_evening_fee";
+
+    // TODO; Currently not implemented:
+    public const SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED = "saturday_delivery_enabled";
+    public const SETTING_CARRIER_SATURDAY_DELIVERY_FEE     = "saturday_delivery_fee";
+    public const SETTING_CARRIER_MONDAY_DELIVERY_ENABLED = "saturday_delivery_enabled";
+    public const SETTING_CARRIER_MONDAY_CUTOFF_TIME        = "monday_cutoff_time";
+
 
     public function __construct()
     {

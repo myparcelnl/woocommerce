@@ -558,6 +558,57 @@ class WCMP_Settings_Data
                 "help_text" => __("Show the delivery date inside the delivery options.", "woocommerce-myparcel"),
             ],
             [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Morning delivery", "woocommerce-myparcel"),
+                "type"      => "toggle",
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
+                "class"     => ["wcmp__child"],
+                "label"     => __("Fee (optional)", "woocommerce-myparcel"),
+                "type"      => "currency",
+                "help_text" => __(
+                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Evening delivery", "woocommerce-myparcel"),
+                "type"      => "toggle",
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
+                "class"     => ["wcmp__child"],
+                "label"     => __("Fee (optional)", "woocommerce-myparcel"),
+                "type"      => "currency",
+                "help_text" => __(
+                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Home address only", "woocommerce-myparcel"),
+                "type"      => "toggle",
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
+                "condition" => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+                "class"     => ["wcmp__child"],
+                "label"     => __("Fee (optional)", "woocommerce-myparcel"),
+                "type"      => "currency",
+                "help_text" => __(
+                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
                 "name"      => WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Signature on delivery", "woocommerce-myparcel"),
@@ -575,6 +626,24 @@ class WCMP_Settings_Data
                 "type"      => "currency",
                 "help_text" => __(
                     "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Monday delivery", "woocommerce-myparcel"),
+                "type"      => "toggle",
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_MONDAY_CUTOFF_TIME,
+                "condition" => WCMP_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
+                "class"     => ["wcmp__child"],
+                "label"     => __("Fee (optional)", "woocommerce-myparcel"),
+                "placeholder" => "14:30",
+                "default"     => "15:00",
+                "help_text" => __(
+                    "Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended).",
                     "woocommerce-myparcel"
                 ),
             ],
