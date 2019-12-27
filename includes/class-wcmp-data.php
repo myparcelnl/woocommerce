@@ -1,7 +1,7 @@
 <?php
 
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 
@@ -22,13 +22,13 @@ class WCMP_Data
      */
     public const CARRIERS_HUMAN = [
         DPDConsignment::CARRIER_NAME   => 'DPD',
-        BpostConsignment::CARRIER_NAME => 'bpost',
+        PostNLConsignment::CARRIER_NAME => 'PostNL',
     ];
 
     public const HAS_MULTI_COLLO = false;
 
     public const DEFAULT_COUNTRY_CODE = "BE";
-    public const DEFAULT_CARRIER      = BpostConsignment::CARRIER_NAME;
+    public const DEFAULT_CARRIER      = PostNLConsignment::CARRIER_NAME;
 
     /**
      * @var array
@@ -146,7 +146,7 @@ class WCMP_Data
     public static function getCarriersWithInsurance(): array
     {
         return [
-            BpostConsignment::CARRIER_NAME,
+            PostNLConsignment::CARRIER_NAME,
         ];
     }
 
@@ -156,7 +156,7 @@ class WCMP_Data
     public static function getCarriersWithSignature(): array
     {
         return [
-            BpostConsignment::CARRIER_NAME,
+            PostNLConsignment::CARRIER_NAME,
         ];
     }
 
@@ -166,7 +166,7 @@ class WCMP_Data
     public static function getCarriersHuman(): array
     {
         return [
-            BpostConsignment::CARRIER_NAME => __("bpost", "woocommerce-myparcel"),
+            PostNLConsignment::CARRIER_NAME => __("bpost", "woocommerce-myparcel"),
             DPDConsignment::CARRIER_NAME   => __("DPD", "woocommerce-myparcel"),
         ];
     }

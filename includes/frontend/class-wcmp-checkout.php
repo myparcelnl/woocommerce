@@ -1,7 +1,7 @@
 <?php
 
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
-use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -252,7 +252,7 @@ class WCMP_Checkout
         $settings = WCMP()->setting_collection;
         $carriers = [];
 
-        foreach ([BpostConsignment::CARRIER_NAME, DPDConsignment::CARRIER_NAME] as $carrier) {
+        foreach ([PostNLConsignment::CARRIER_NAME, DPDConsignment::CARRIER_NAME] as $carrier) {
             if ($settings->getByName("{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED)
                 || $settings->getByName(
                     "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED

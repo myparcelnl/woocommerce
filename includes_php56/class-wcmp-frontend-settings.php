@@ -11,7 +11,7 @@ class WooCommerce_MyParcel_Frontend_Settings {
 
     const DAYS_SATURDAY = 6;
     const CARRIER_CODE = 2;
-    const CARRIER_NAME = "Bpost";
+    const CARRIER_NAME = "postnl";
     const BASE_URL = "https://api.myparcel.nl/";
     private static $settings;
 

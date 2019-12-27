@@ -4,7 +4,7 @@ use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -552,7 +552,7 @@ class WCMP_Export
         $return_shipment_data = [
             "name"    => $shipping_name,
             "email"   => WCX_Order::get_prop($order, "billing_email"),
-            "carrier" => BpostConsignment::CARRIER_ID, // default to Bpost for now
+            "carrier" => PostNLConsignment::CARRIER_ID, // default to Bpost for now
         ];
 
         if (!Arr::get($return_shipment_data, "email")) {
