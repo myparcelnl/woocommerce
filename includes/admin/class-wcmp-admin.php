@@ -106,7 +106,8 @@ class WCMP_Admin
             ?>
             <div class="wcmp__shipment-summary">
                 <?php $this->showDeliveryOptionsForOrder($order); ?>
-                <a class="wcmp__shipment-summary__show"><span class="wcmp__encircle wcmp__shipment-summary__show">i</span></a>
+                <a class="wcmp__shipment-summary__show"><span
+                            class="wcmp__encircle wcmp__shipment-summary__show">i</span></a>
                 <div class="wcmp__box wcmp__shipment-summary__list"
                      data-loaded=""
                      data-shipment_id="<?php echo $last_shipment_id; ?>"
@@ -152,9 +153,9 @@ class WCMP_Admin
      *
      * @param array $actions
      *
+     * @return array
      * @since WordPress 4.7.0
      *
-     * @return array
      */
     public function addBulkActions(array $actions): array
     {
@@ -191,14 +192,14 @@ class WCMP_Admin
         if ('shop_order' == $post_type) {
             ?>
             <script type="text/javascript">
-            jQuery(document).ready(function() {
-                <?php foreach ($bulk_actions as $action => $title) { ?>
-              jQuery('<option>')
-                .val('<?php echo $action; ?>')
-                .html('<?php echo esc_attr($title); ?>')
-                .appendTo('select[name=\'action\'], select[name=\'action2\']');
-                <?php }    ?>
-            });
+              jQuery(document).ready(function () {
+                  <?php foreach ($bulk_actions as $action => $title) { ?>
+                jQuery('<option>')
+                  .val('<?php echo $action; ?>')
+                  .html('<?php echo esc_attr($title); ?>')
+                  .appendTo('select[name=\'action\'], select[name=\'action2\']');
+                  <?php }    ?>
+              });
             </script>
             <?php
             self::renderSpinner();
@@ -220,7 +221,7 @@ class WCMP_Admin
         $field = [
             "name"              => "offset",
             "class"             => ["wcmp__d--inline-block"],
-            "input_class"        => ["wcmp__offset-dialog__offset"],
+            "input_class"       => ["wcmp__offset-dialog__offset"],
             "type"              => "number",
             "label"             => __("Labels to skip", "woocommerce-myparcel"),
             "custom_attributes" => [
@@ -235,20 +236,20 @@ class WCMP_Admin
         ?>
 
         <div
-            class="wcmp wcmp__box wcmp__offset-dialog"
-            style="display: none;">
+                class="wcmp wcmp__box wcmp__offset-dialog"
+                style="display: none;">
             <div class="wcmp__offset-dialog__inner wcmp__d--flex">
                 <div>
                     <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
 
                     <img
-                        src="<?php echo WCMP()->plugin_url() . "/assets/img/print-offset-icon.png"; ?>"
-                        alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
-                        class="wcmp__offset-dialog__icon"/>
+                            src="<?php echo WCMP()->plugin_url() . "/assets/img/print-offset-icon.png"; ?>"
+                            alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
+                            class="wcmp__offset-dialog__icon"/>
                     <div>
                         <a
-                            href="#"
-                            class="wcmp__action wcmp__offset-dialog__button button">
+                                href="#"
+                                class="wcmp__action wcmp__offset-dialog__button button">
                             <?php _e("Print", "woocommerce-myparcel"); ?>
                             <?php WCMP_Admin::renderSpinner(); ?>
                         </a>
@@ -320,7 +321,7 @@ class WCMP_Admin
         $attributes = [];
 
         if ($display) {
-          $attributes["target"] = "_blank";
+            $attributes["target"] = "_blank";
         }
 
         foreach ($listing_actions as $request => $data) {
@@ -349,7 +350,7 @@ class WCMP_Admin
                 $consignments = [
                     [
                         "shipment_id" => $consignment_id,
-                        "track_trace"  => WCX_Order::get_meta($order, self::META_TRACK_TRACE),
+                        "track_trace" => WCX_Order::get_meta($order, self::META_TRACK_TRACE),
                     ],
                 ];
             } elseif ($legacy_consignments = WCX_Order::get_meta($order, self::META_CONSIGNMENTS)) {
@@ -358,7 +359,7 @@ class WCMP_Admin
                     if (isset($consignment["consignment_id"])) {
                         $consignments[] = [
                             "shipment_id" => $consignment["consignment_id"],
-                            "track_trace"  => $consignment["track_trace"],
+                            "track_trace" => $consignment["track_trace"],
                         ];
                     }
                 }
@@ -373,7 +374,7 @@ class WCMP_Admin
          * Filter out concepts.
          */
         if ($exclude_concepts) {
-            $consignments = array_filter($consignments, function ($consignment) {
+            $consignments = array_filter($consignments, function($consignment) {
                 return isset($consignment["track_trace"]);
             });
         }
@@ -392,7 +393,7 @@ class WCMP_Admin
         parse_str($_POST["form_data"], $form_data);
 
         foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
-            $order              = WCX::get_order($order_id);
+            $order = WCX::get_order($order_id);
             /**
              * @var DeliveryOptions $deliveryOptions
              */
@@ -534,8 +535,9 @@ class WCMP_Admin
             );
         } else {
             $trackTraceUrl = sprintf(
-                "https://track.postnl.be/btr/web/#/search?itemCode=%s&postalCode=%s",
+                'https://www.internationalparceltracking.com/Main.aspx#/track/%s/%s/%s',
                 $track_trace,
+                $country,
                 $postcode
             );
         }
@@ -582,6 +584,7 @@ class WCMP_Admin
 
         if (empty($shipments)) {
             echo __("No label has been created yet.", "woocommerce-myparcel");
+
             return;
         }
 
