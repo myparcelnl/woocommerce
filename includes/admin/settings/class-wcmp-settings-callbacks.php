@@ -58,7 +58,7 @@ class WCMP_Settings_Callbacks
                 }
 
                 // Bolder Elements Table Rate Shipping
-                if ($key === 'betrs_shipping' && is_a($shipping_method, 'BE_Table_Rate_Method')
+                if ($key === 'betrs_shipping' && is_a($shipping_method, 'NL_Table_Rate_Method')
                     && class_exists('WC_Shipping_Zones')) {
                     $zones = WC_Shipping_Zones::get_zones();
 

@@ -464,7 +464,7 @@ if ( ! class_exists('WooCommerce_MyParcel_Export')) :
                     'reference_identifier' => $this->replace_shortcodes(WooCommerce_MyParcel()->export_defaults['label_description'], $order),
                     'recipient'            => $this->get_recipient($order),
                     'options'              => $this->get_options($order),
-                    'carrier'              => 2, // default to bpost for now
+                    'carrier'              => 2, // default to postnl for now
                 );
 
                 if ($pickup = $this->is_pickup($order)) {
@@ -508,7 +508,7 @@ if ( ! class_exists('WooCommerce_MyParcel_Export')) :
                 'email'   => isset(WooCommerce_MyParcel()->export_defaults['connect_email'])
                     ? WCX_Order::get_prop($order, 'billing_email')
                     : '',
-                'carrier' => 2, // default to Bpost for now
+                'carrier' => 2, // default to PostNL for now
             );
 
             // add options if available
@@ -729,7 +729,7 @@ if ( ! class_exists('WooCommerce_MyParcel_Export')) :
             if ($this->is_pickup($order, $myparcel_delivery_options)) {
                 $options['signature'] = 0;
             }
-            //options.delivery_date custom delivery date not supported for carrier bpost
+            //options.delivery_date custom delivery date not supported for carrier postnl
             //if ($delivery_date = $this->get_delivery_date($order, $myparcel_delivery_options)) {
             //    $date_time = explode(' ', $delivery_date); // split date and time
             //    // only add if date is in the future
@@ -1110,10 +1110,10 @@ if ( ! class_exists('WooCommerce_MyParcel_Export')) :
                         $shipment_id   = $id;
                         $shipment_data = compact('shipment_id', 'status', 'tracktrace', 'shipment');
                         $this->save_shipment_data($order, $shipment_data);
-                        // If Channel Engine is active, add the created Track & Trace code and set shipping method to bpost in their meta data
+                        // If Channel Engine is active, add the created Track & Trace code and set shipping method to postnl in their meta data
                         if (WC_CHANNEL_ENGINE_ACTIVE and ! WCX_Order::get_meta($order, '_shipping_ce_track_and_trace')) {
                             WCX_Order::update_meta_data($order, '_shipping_ce_track_and_trace', $tracktrace);
-                            WCX_Order::update_meta_data($order, '_shipping_ce_shipping_method', 'Bpost');
+                            WCX_Order::update_meta_data($order, '_shipping_ce_shipping_method', 'PostNL');
                         }
 
                         return $shipment_data;
@@ -1286,7 +1286,7 @@ if ( ! class_exists('WooCommerce_MyParcel_Export')) :
 
             return $delivery_type;
         }
-        //options.delivery_date custom delivery date not supported for carrier bpost
+        //options.delivery_date custom delivery date not supported for carrier postnl
         //public function get_delivery_date($order, $myparcel_delivery_options = '') {
         //    if (empty($myparcel_delivery_options)) {
         //        $myparcel_delivery_options = WCX_Order::get_meta($order, '_myparcel_delivery_options');
@@ -1916,7 +1916,7 @@ if ( ! class_exists('WooCommerce_MyParcel_Export')) :
                 )
             );
 
-            // round values for display according to bpost standard
+            // round values for display according to postnl standard
             if ($round) {
                 foreach ($tier_ranges as &$tier_range) {
                     $tier_range['min'] = $tier_range['min'] > 0 ? $tier_range['min'] - 1 : $tier_range['min'];

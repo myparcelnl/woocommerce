@@ -311,7 +311,7 @@ class WCMP_Admin
         }
 
         $processed_shipments = WCMP_Admin::get_order_shipments($order);
-        if (empty($processed_shipments) || $shipping_country !== 'BE') {
+        if (empty($processed_shipments) || $shipping_country !== 'NL') {
             unset($listing_actions[$addReturn]);
         }
 
@@ -518,7 +518,7 @@ class WCMP_Admin
         $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'shipping_postcode'));
 
         // set url for NL or foreign orders
-        if ($country === 'BE') {
+        if ($country === 'NL') {
             $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
 
             // use billing postcode for pickup/pakjegemak
@@ -527,14 +527,14 @@ class WCMP_Admin
             }
 
             $trackTraceUrl = sprintf(
-                'https://sendmyparcel.me/track-trace/%s/%s/%s',
+                'https://myparcel.me/track-trace/%s/%s/%s',
                 $track_trace,
                 $postcode,
                 $country
             );
         } else {
             $trackTraceUrl = sprintf(
-                "https://track.bpost.be/btr/web/#/search?itemCode=%s&postalCode=%s",
+                "https://track.postnl.be/btr/web/#/search?itemCode=%s&postalCode=%s",
                 $track_trace,
                 $postcode
             );

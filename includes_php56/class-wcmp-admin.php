@@ -478,7 +478,7 @@ class WooCommerce_MyParcel_Admin {
         if ($pickup = WooCommerce_MyParcel()->export->is_pickup($order, $delivery_options)) {
             switch($pickup['price_comment']) {
                 case 'retail':
-                    $title = __('bpost Pickup', 'woocommerce-myparcel');
+                    $title = __('postnl Pickup', 'woocommerce-myparcel');
                 break;
             }
 
@@ -511,7 +511,7 @@ class WooCommerce_MyParcel_Admin {
             );
         } else {
             $tracktrace_url = sprintf(
-                'https://track.bpost.be/btr/web/#/search?itemCode=',
+                'https://track.postnl.be/btr/web/#/search?itemCode=',
                 $tracktrace,
                 $country,
                 $postcode

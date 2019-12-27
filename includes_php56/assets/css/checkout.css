@@ -208,7 +208,7 @@ input:-webkit-autofill {
     vertical-align: top;
 }
 
-.mypabe-bpost-logo {
+.mypabe-postnl-logo {
     width: 100px;
     float: right;
     margin: 45px 8px 0 0;
@@ -222,7 +222,7 @@ input:-webkit-autofill {
     background-color: white;
 }
 
-#mypabe-list-bpost-pickup option {
+#mypabe-list-postnl-pickup option {
     padding: 5px 0 5px 0;
 }
 
@@ -270,7 +270,7 @@ input:-webkit-autofill {
         height: 30px !important;
     }
 
-    .mypabe-bpost-logo {
+    .mypabe-postnl-logo {
         float: none;
         margin: 0 100% 0 0;
 

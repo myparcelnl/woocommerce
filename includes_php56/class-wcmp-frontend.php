@@ -40,7 +40,7 @@ if (! class_exists('WooCommerce_MyParcel_Frontend')) :
             add_action('woocommerce_thankyou', array($this, 'thankyou_pickup_html'), 10, 1);
 
             // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
-            //add_filter('wpo_wcpdf_templates_replace_myparcel_delivery_date', array($this, 'wpo_wcpdf_delivery_date'), 10, 2); options.delivery_date custom delivery date not supported for carrier bpost
+            //add_filter('wpo_wcpdf_templates_replace_myparcel_delivery_date', array($this, 'wpo_wcpdf_delivery_date'), 10, 2); options.delivery_date custom delivery date not supported for carrier postnl
             add_filter('wpo_wcpdf_templates_replace_myparcel_tracktrace', array(
                 $this,
                 'wpo_wcpdf_tracktrace'
@@ -98,7 +98,7 @@ if (! class_exists('WooCommerce_MyParcel_Frontend')) :
             $tracktrace_links = WooCommerce_MyParcel()->admin->get_tracktrace_links($order_id);
             if (! empty($tracktrace_links)) {
                 $email_text = __(
-                    'You can track your order with the following bpost Track & Trace code:',
+                    'You can track your order with the following postnl Track & Trace code:',
                     'woocommerce-myparcel'
                 );
                 $email_text = apply_filters('wcmyparcel_email_text', $email_text, $order);
@@ -145,7 +145,7 @@ if (! class_exists('WooCommerce_MyParcel_Frontend')) :
 
             return ob_get_clean();
         }
-        // options.delivery_date custom delivery date not supported for carrier bpost
+        // options.delivery_date custom delivery date not supported for carrier postnl
         //    public function wpo_wcpdf_delivery_date($replacement, $order) {
         //        if ($delivery_date = WooCommerce_MyParcel()->export->get_delivery_date($order)) {
         //            $formatted_date = date_i18n(
@@ -325,7 +325,7 @@ if (! class_exists('WooCommerce_MyParcel_Frontend')) :
                         case 'retail':
                             if (! empty(WooCommerce_MyParcel()->checkout_settings['pickup_fee'])) {
                                 $fee      = WooCommerce_MyParcel()->checkout_settings['pickup_fee'];
-                                $fee_name = __('bpost pickup', 'woocommerce-myparcel');
+                                $fee_name = __('postnl pickup', 'woocommerce-myparcel');
                             }
                             break;
                     }

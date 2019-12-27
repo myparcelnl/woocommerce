@@ -141,8 +141,8 @@ msgstr "Vroeg afhalen"
 
 #: includes/class-wcmp-data.php:164
 #: includes/admin/settings/class-wcmp-settings-data.php:80
-msgid "bpost"
-msgstr "bpost"
+msgid "postnl"
+msgstr "postnl"
 
 #: includes/class-wcmp-data.php:165
 #: includes/admin/settings/class-wcmp-settings-data.php:81
@@ -180,7 +180,7 @@ msgstr "Onbekende fout"
 #: includes/admin/class-wcmp-export.php:365
 #, php-format
 msgid "%s shipments successfully exported to MyParcel"
-msgstr "%s zendingen met succes geëxporteerd naar Myparcel BE"
+msgstr "%s zendingen met succes geëxporteerd naar Myparcel"
 
 #: includes_php56/class-wcmp-export.php:381
 msgid "The selected orders have not been exported to MyParcel yet!"
@@ -299,7 +299,7 @@ msgid "Unknown status"
 msgstr "Onbekende status"
 
 #: includes_php56/class-wcmp-frontend.php:100
-msgid "You can track your order with the following bpost Track & Trace code:"
+msgid "You can track your order with the following postnl Track & Trace code:"
 msgstr "Je kunt je order met de volgende Track & Trace code volgen:"
 
 #: includes_php56/class-wcmp-frontend.php:307
@@ -319,8 +319,8 @@ msgstr "Handtekening voor ontvangst"
 
 #: includes_php56/class-wcmp-frontend.php:328
 #: includes_php56/class-wcmp-settings.php:690
-msgid "bpost pickup"
-msgstr "Afhalen bij bpost"
+msgid "postnl pickup"
+msgstr "Afhalen bij postnl"
 
 #: includes_php56/class-wcmp-frontend.php:497
 #: includes/frontend/class-wcmp-checkout.php:176
@@ -477,8 +477,8 @@ msgid "Delivery date"
 msgstr "Bezorgdatum"
 
 #: includes_php56/class-wcmp-admin.php:481
-msgid "bpost Pickup"
-msgstr "Afhalen bij bpost"
+msgid "postnl Pickup"
+msgstr "Afhalen bij postnl"
 
 #: includes_php56/class-wcmp-admin.php:608
 msgid "No label has created yet"
@@ -914,8 +914,8 @@ msgstr "Afleverdagen"
 
 #: includes_php56/class-wcmp-settings.php:584
 #: includes/admin/settings/class-wcmp-settings-data.php:471
-msgid "Days of the week on which you hand over parcels to bpost"
-msgstr "Dagen van de week waarop je de pakketten bij bpost aflevert"
+msgid "Days of the week on which you hand over parcels to postnl"
+msgstr "Dagen van de week waarop je de pakketten bij postnl aflevert"
 
 #: includes_php56/class-wcmp-settings.php:589
 #: includes/admin/settings/class-wcmp-settings-data.php:476
@@ -1012,7 +1012,7 @@ msgstr "Aangepaste stijlen (CSS)"
 
 #: includes_php56/class-wcmp-settings-callbacks.php:469
 msgid " title"
-msgstr "Afhalen bij bpost titel"
+msgstr "Afhalen bij postnl titel"
 
 #: includes_php56/class-wcmp-settings-callbacks.php:478
 msgid "Cut-off time on Saturday"
@@ -1131,7 +1131,7 @@ msgstr "Totaal gewicht"
 msgid ""
 "This order does not contain valid street and house number data and cannot be "
 "exported because of this! This order was probably placed before the MyParcel "
-"BE plugin was activated. The address data can still be manually entered in "
+"NL plugin was activated. The address data can still be manually entered in "
 "the order screen."
 msgstr ""
 "Deze order bevat geen geldige straatnaam- en huisnummergegevens, en kan "
@@ -1174,18 +1174,18 @@ msgstr "Titels"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:245
 msgid ""
-"These settings will be applied to bpost shipments you create in the backend."
+"These settings will be applied to postnl shipments you create in the backend."
 msgstr ""
-"Deze instellingen worden toegepast op bpost zendingen die u in de backend "
+"Deze instellingen worden toegepast op postnl zendingen die u in de backend "
 "aanmaakt."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:253
-msgid "bpost delivery options"
-msgstr "bpost bezorgopties "
+msgid "postnl delivery options"
+msgstr "postnl bezorgopties "
 
 #: includes/admin/settings/class-wcmp-settings-data.php:258
-msgid "bpost pickup options"
-msgstr "bpost afhaalopties"
+msgid "postnl pickup options"
+msgstr "postnl afhaalopties"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:276
 msgid "DPD delivery options"
@@ -1204,8 +1204,8 @@ msgid "Track & trace code:"
 msgstr "Track & trace code:"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:461
-msgid "Enable bpost delivery"
-msgstr "bpost bezorging inschakelen"
+msgid "Enable postnl delivery"
+msgstr "postnl bezorging inschakelen"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:494
 #: includes/admin/settings/class-wcmp-settings-data.php:594
@@ -1218,8 +1218,8 @@ msgid "Show the delivery date inside the delivery options."
 msgstr "Toon de bezorgdatum bij de bezorgopties"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:531
-msgid "Enable bpost pickup"
-msgstr "bpost afhalen inschakelen"
+msgid "Enable postnl pickup"
+msgstr "postnl afhalen inschakelen"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:560
 msgid "Enable DPD delivery"

@@ -1,10 +1,10 @@
 jQuery(document).ready(function($) {
 
   function localize_address_fields(address_type) {
-   /* Hide custom BE fields by default when country not BE */
+   /* Hide custom NL fields by default when country not NL */
     var country = $('#' + address_type + '_country').val();
     if (typeof country != 'undefined') {
-      if (country != 'BE') {
+      if (country != 'NL') {
         $('#' + address_type + '_street_name_field').hide();
         $('#' + address_type + '_house_number_field').hide();
         $('#' + address_type + '_box_number_field').hide();

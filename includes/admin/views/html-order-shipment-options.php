@@ -122,7 +122,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         ],
     ];
 
-    if (isset($recipient) && isset($recipient["cc"]) && $recipient["cc"] !== "BE") {
+    if (isset($recipient) && isset($recipient["cc"]) && $recipient["cc"] !== "NL") {
         unset($option_rows["[signature]"]);
     }
 

@@ -581,7 +581,7 @@ class WooCommerce_MyParcel_Settings {
                 'option_name' => $option_name,
                 'id'          => 'dropoff_days',
                 'options'     => $days_of_the_week,
-                'description' => __('Days of the week on which you hand over parcels to bpost', 'woocommerce-myparcel'),
+                'description' => __('Days of the week on which you hand over parcels to postnl', 'woocommerce-myparcel'),
             )
         );
 
@@ -687,7 +687,7 @@ class WooCommerce_MyParcel_Settings {
         );
 
         add_settings_field(
-            'pickup', __('bpost pickup', 'woocommerce-myparcel'), array(
+            'pickup', __('postnl pickup', 'woocommerce-myparcel'), array(
             $this->callbacks,
             'delivery_option_enable'
         ), $option_group, 'delivery_options', array(
@@ -714,7 +714,7 @@ class WooCommerce_MyParcel_Settings {
 //                'option_name'        => $option_name,
 //                'id'                 => 'saturday_cutoff',
 //                'size'               => 30,
-//                'option_description' => sprintf(__('<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended). </strong> More information about the Saturday delivery service of bpost can be found %s here%s.', 'woocommerce-myparcel'), '<a href="https://blog.myparcel.nl/maandagbezorging/" target="_blank">', '</a>'),
+//                'option_description' => sprintf(__('<strong>Note: Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended). </strong> More information about the Saturday delivery service of postnl can be found %s here%s.', 'woocommerce-myparcel'), '<a href="https://blog.myparcel.nl/maandagbezorging/" target="_blank">', '</a>'),
 //            )
 //        );
 
@@ -793,7 +793,7 @@ class WooCommerce_MyParcel_Settings {
             'at_home_delivery_title'         => 'Delivered at home or at work',
             'standard_title'                 => 'Standard delivery',
             'signature_title'                => 'Signature on delivery',
-            'pickup_title'                   => 'bpost Pickup',
+            'pickup_title'                   => 'postnl Pickup',
             'use_split_address_fields'       => '0',
         );
     }

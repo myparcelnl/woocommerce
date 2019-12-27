@@ -92,7 +92,7 @@ $target_url = wp_nonce_url(
                 </td>
                 <td>
                     <?php
-                    if ($shipping_country === 'BE'
+                    if ($shipping_country === 'NL'
                     && (empty($recipient['street'])
                         || empty($recipient['number']))) { ?>
                   <p><span style="color:red"><?php __(

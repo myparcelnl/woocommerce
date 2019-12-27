@@ -48,7 +48,7 @@ class WCMP_Checkout
                 "wcmp-checkout-fields",
                 WCMP()->plugin_url() . "/assets/js/wcmp-checkout-fields.js",
                 ["wc-checkout"],
-                WC_MYPARCEL_BE_VERSION,
+                WC_MYPARCEL_NL_VERSION,
                 true
             );
         }
@@ -74,7 +74,7 @@ class WCMP_Checkout
             "wc-myparcel",
             WCMP()->plugin_url() . "/assets/js/myparcel.js",
             $deps,
-            WC_MYPARCEL_BE_VERSION,
+            WC_MYPARCEL_NL_VERSION,
             true
         );
 
@@ -82,7 +82,7 @@ class WCMP_Checkout
             "wc-myparcel-frontend",
             WCMP()->plugin_url() . "/assets/js/wcmp-frontend.js",
             array_merge($deps, ["wc-myparcel", "jquery"]),
-            WC_MYPARCEL_BE_VERSION,
+            WC_MYPARCEL_NL_VERSION,
             true
         );
 
@@ -168,7 +168,7 @@ class WCMP_Checkout
         $myParcelConfig = [
             "config"  => [
                 "carriers" => $carriers,
-                "platform" => "belgie",
+                "platform" => "myparcel",
                 "locale"   => "nl-NL",
                 "currency" => get_woocommerce_currency(),
             ],

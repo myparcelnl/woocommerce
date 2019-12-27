@@ -3,15 +3,15 @@
 
 jQuery(document).ready(function($) {
 
-  /* Hide custom BE fields by default when country not BE */
+  /* Hide custom NL fields by default when country not NL */
   var billing_country = $('#billing_country').val();
   var shipping_country = $('#shipping_country').val();
-  if (billing_country != 'BE') {
+  if (billing_country != 'NL') {
     $('#billing_street_name_field').hide();
     $('#billing_house_number_field').hide();
     $('#billing_house_number_suffix_field').hide();
   }
-  if (shipping_country != 'BE') {
+  if (shipping_country != 'NL') {
     $('#shipping_street_name_field').hide();
     $('#shipping_house_number_field').hide();
     $('#shipping_house_number_suffix_field').hide();
@@ -36,8 +36,8 @@ jQuery(document).ready(function($) {
         $numberfield = thisform.find('#billing_house_number_field, #shipping_house_number_field'),
         $suffixfield = thisform.find('#billing_house_number_suffix_field, #shipping_house_number_suffix_field');
 
-      if (country == 'BE') {
-        /* show custom BE fields */
+      if (country == 'NL') {
+        /* show custom NL fields */
         $streetfield.show();
         $numberfield.show();
         $suffixfield.show();
@@ -63,7 +63,7 @@ jQuery(document).ready(function($) {
         $streetfield.addClass('validate-required');
         $numberfield.addClass('validate-required');
       } else {
-        /* Hide custom BE fields */
+        /* Hide custom NL fields */
         $streetfield.hide();
         $numberfield.hide();
         $suffixfield.hide();

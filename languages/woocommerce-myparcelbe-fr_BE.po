@@ -142,8 +142,8 @@ msgstr "Ramassage express"
 
 #: includes/class-wcmp-data.php:164
 #: includes/admin/settings/class-wcmp-settings-data.php:80
-msgid "bpost"
-msgstr "bpost"
+msgid "postnl"
+msgstr "postnl"
 
 #: includes/class-wcmp-data.php:165
 #: includes/admin/settings/class-wcmp-settings-data.php:81
@@ -181,7 +181,7 @@ msgstr "Erreur inconnue"
 #: includes/admin/class-wcmp-export.php:365
 #, php-format
 msgid "%s shipments successfully exported to MyParcel"
-msgstr "%s envois exportés avec succès vers Myparcel BE"
+msgstr "%s envois exportés avec succès vers Myparcel"
 
 #: includes_php56/class-wcmp-export.php:381
 msgid "The selected orders have not been exported to MyParcel yet!"
@@ -301,7 +301,7 @@ msgid "Unknown status"
 msgstr "Statut inconnu"
 
 #: includes_php56/class-wcmp-frontend.php:100
-msgid "You can track your order with the following bpost Track & Trace code:"
+msgid "You can track your order with the following postnl Track & Trace code:"
 msgstr "Vous pouvez suivre votre commande via le code Track & Trace suivant :"
 
 #: includes_php56/class-wcmp-frontend.php:307
@@ -321,8 +321,8 @@ msgstr "Signature pour réception"
 
 #: includes_php56/class-wcmp-frontend.php:328
 #: includes_php56/class-wcmp-settings.php:690
-msgid "bpost pickup"
-msgstr "Collecte chez bpost"
+msgid "postnl pickup"
+msgstr "Collecte chez postnl"
 
 #: includes_php56/class-wcmp-frontend.php:497
 #: includes/frontend/class-wcmp-checkout.php:176
@@ -479,8 +479,8 @@ msgid "Delivery date"
 msgstr "Date de livraison"
 
 #: includes_php56/class-wcmp-admin.php:481
-msgid "bpost Pickup"
-msgstr "Collecte chez bpost"
+msgid "postnl Pickup"
+msgstr "Collecte chez postnl"
 
 #: includes_php56/class-wcmp-admin.php:608
 msgid "No label has created yet"
@@ -923,8 +923,8 @@ msgstr "Jours de livraison"
 
 #: includes_php56/class-wcmp-settings.php:584
 #: includes/admin/settings/class-wcmp-settings-data.php:471
-msgid "Days of the week on which you hand over parcels to bpost"
-msgstr "Jours de la semaine durant lesquels vous déposez des colis chez bpost"
+msgid "Days of the week on which you hand over parcels to postnl"
+msgstr "Jours de la semaine durant lesquels vous déposez des colis chez postnl"
 
 #: includes_php56/class-wcmp-settings.php:589
 #: includes/admin/settings/class-wcmp-settings-data.php:476
@@ -1021,7 +1021,7 @@ msgstr "Styles personnalisés (CSS)"
 
 #: includes_php56/class-wcmp-settings-callbacks.php:469
 msgid " title"
-msgstr "Collecte chez bpost - titre"
+msgstr "Collecte chez postnl - titre"
 
 #: includes_php56/class-wcmp-settings-callbacks.php:478
 msgid "Cut-off time on Saturday"
@@ -1138,7 +1138,7 @@ msgstr "Poids total"
 msgid ""
 "This order does not contain valid street and house number data and cannot be "
 "exported because of this! This order was probably placed before the MyParcel "
-"BE plugin was activated. The address data can still be manually entered in "
+"NL plugin was activated. The address data can still be manually entered in "
 "the order screen."
 msgstr ""
 "Cette commande ne présente pas de données valides pour le nom et le numéro "
@@ -1181,18 +1181,18 @@ msgstr "Titres"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:245
 msgid ""
-"These settings will be applied to bpost shipments you create in the backend."
+"These settings will be applied to postnl shipments you create in the backend."
 msgstr ""
-"Ces paramètres seront appliqués aux envois bpost que vous créez dans le "
+"Ces paramètres seront appliqués aux envois postnl que vous créez dans le "
 "backend."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:253
-msgid "bpost delivery options"
-msgstr "Options de livraison bpost"
+msgid "postnl delivery options"
+msgstr "Options de livraison postnl"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:258
-msgid "bpost pickup options"
-msgstr "Options de ramassage bpost"
+msgid "postnl pickup options"
+msgstr "Options de ramassage postnl"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:276
 msgid "DPD delivery options"
@@ -1211,8 +1211,8 @@ msgid "Track & trace code:"
 msgstr "Track & Trace Code:"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:461
-msgid "Enable bpost delivery"
-msgstr "Activer la livraison bpost"
+msgid "Enable postnl delivery"
+msgstr "Activer la livraison postnl"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:494
 #: includes/admin/settings/class-wcmp-settings-data.php:594
@@ -1225,8 +1225,8 @@ msgid "Show the delivery date inside the delivery options."
 msgstr "Affiche la date de livraison dans les options de livraison."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:531
-msgid "Enable bpost pickup"
-msgstr "Activer le ramassage bpost"
+msgid "Enable postnl pickup"
+msgstr "Activer le ramassage postnl"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:560
 msgid "Enable DPD delivery"

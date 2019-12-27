@@ -27,7 +27,7 @@ class WCMP_Data
 
     public const HAS_MULTI_COLLO = false;
 
-    public const DEFAULT_COUNTRY_CODE = "BE";
+    public const DEFAULT_COUNTRY_CODE = "NL";
     public const DEFAULT_CARRIER      = PostNLConsignment::CARRIER_NAME;
 
     /**
@@ -166,7 +166,7 @@ class WCMP_Data
     public static function getCarriersHuman(): array
     {
         return [
-            PostNLConsignment::CARRIER_NAME => __("bpost", "woocommerce-myparcel"),
+            PostNLConsignment::CARRIER_NAME => __("PostNL", "woocommerce-myparcel"),
             DPDConsignment::CARRIER_NAME   => __("DPD", "woocommerce-myparcel"),
         ];
     }

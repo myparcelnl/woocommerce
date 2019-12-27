@@ -19,7 +19,7 @@ class WCMP_Initialize_Settings_Collection
         $settings->setSettingsByType($this->getOption("woocommerce_myparcel_export_defaults_settings"), "export");
 
         $settings->setSettingsByType(
-            $this->getOption("woocommerce_myparcel_bpost_settings"),
+            $this->getOption("woocommerce_myparcel_postnl_settings"),
             "carrier",
             PostNLConsignment::CARRIER_NAME
         );
