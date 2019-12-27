@@ -34,7 +34,7 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
     /**
      * @var array
      */
-    private $newBpostSettings = [];
+    private $newPostnlSettings = [];
 
     /**
      * @var array
@@ -88,7 +88,7 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
             "woocommerce_myparcel_checkout_settings"        => $this->newCheckoutSettings,
             "woocommerce_myparcel_export_defaults_settings" => $this->newExportDefaultsSettings,
             "woocommerce_myparcel_general_settings"         => $this->newGeneralSettings,
-            "woocommerce_myparcel_bpost_settings"           => $this->newBpostSettings,
+            "woocommerce_myparcel_postnl_settings"           => $this->newPostnlSettings,
         ];
     }
 
@@ -100,16 +100,16 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
             $this->newCheckoutSettings
         );
 
-        // Migrate old checkout settings to bpost
-        $this->newBpostSettings = $this->migrateSettings(
-            self::getCheckoutBpostMap(),
-            $this->newBpostSettings,
+        // Migrate old checkout settings to PostNL
+        $this->newPostnlSettings = $this->migrateSettings(
+            self::getCheckoutPostnlMap(),
+            $this->newPostnlSettings,
             $this->oldCheckoutSettings
         );
 
-        // Remove the settings that were moved to bpost from checkout
+        // Remove the settings that were moved to PostNL from checkout
         $this->newCheckoutSettings = $this->removeOldSettings(
-            self::getCheckoutBpostMap(),
+            self::getCheckoutPostnlMap(),
             $this->newCheckoutSettings
         );
     }
@@ -123,14 +123,14 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
                 $this->newExportDefaultsSettings[WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES]
             );
 
-        $this->newBpostSettings = $this->migrateSettings(
-            self::getExportDefaultsBpostMap(),
-            $this->newBpostSettings,
+        $this->newPostnlSettings = $this->migrateSettings(
+            self::getExportDefaultsPostnlMap(),
+            $this->newPostnlSettings,
             $this->oldExportDefaultsSettings
         );
 
         $this->newExportDefaultsSettings = $this->removeOldSettings(
-            self::getExportDefaultsBpostMap(),
+            self::getExportDefaultsPostnlMap(),
             $this->newExportDefaultsSettings
         );
     }
@@ -147,22 +147,22 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
     /**
      * @return array
      */
-    private static function getCheckoutBpostMap(): array
+    private static function getCheckoutPostnlMap(): array
     {
-        $bpost = WCMP_Settings::SETTINGS_POSTNL;
+        $postnl = WCMP_Settings::SETTINGS_POSTNL;
 
         return [
-            "dropoff_days"        => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
-            "cutoff_time"         => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME,
-            "dropoff_delay"       => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
-            "deliverydays_window" => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
-            "signature_enabled"   => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
-            "signature_title"     => "{$bpost}_" . WCMP_Settings::SETTING_SIGNATURE_TITLE,
-            "signature_fee"       => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE,
-            "delivery_enabled"    => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-            "pickup_enabled"      => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-            "pickup_title"        => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_TITLE,
-            "pickup_fee"          => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_FEE,
+            "dropoff_days"        => "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
+            "cutoff_time"         => "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME,
+            "dropoff_delay"       => "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
+            "deliverydays_window" => "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+            "signature_enabled"   => "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+            "signature_title"     => "{$postnl}_" . WCMP_Settings::SETTING_SIGNATURE_TITLE,
+            "signature_fee"       => "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE,
+            "delivery_enabled"    => "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+            "pickup_enabled"      => "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+            "pickup_title"        => "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_TITLE,
+            "pickup_fee"          => "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_FEE,
         ];
     }
 
@@ -190,17 +190,17 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
     }
 
     /**
-     * Move insured and signature to bpost because these settings are bpost specific and there is no dpd equivalent.
+     * Move insured and signature to PostNL because these settings are PostNL specific and there is no dpd equivalent.
      *
      * @return array
      */
-    private static function getExportDefaultsBpostMap(): array
+    private static function getExportDefaultsPostnlMap(): array
     {
-        $bpost = WCMP_Settings::SETTINGS_POSTNL;
+        $postnl = WCMP_Settings::SETTINGS_POSTNL;
 
         return [
-            "insured"   => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-            "signature" => "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+            "insured"   => "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+            "signature" => "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
         ];
     }
 

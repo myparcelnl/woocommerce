@@ -439,14 +439,70 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                "label" => __("Insured shipment (to €500)", "woocommerce-myparcel"),
-                "type"  => "toggle",
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
+                "label"     => __("Home address only", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "If you don't want the parcel to be delivered at the neighbours, choose this option.",
+                    "woocommerce-myparcel"
+                ),
             ],
             [
-                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
-                "label" => __("Signature on delivery", "woocommerce-myparcel"),
-                "type"  => "toggle",
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+                "label"     => __("Signature on delivery", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signature will be required.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
+                "label"     => __("Extra large size", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee will be charged. Note! If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate will be charged.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
+                "label"     => __("Age check 18+", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "The age check is intended for parcel shipments for which the recipient must show 18+ by means of a proof of identity. With this shipping option Signature for receipt and Delivery only at recipient are included. The age 18+ is further excluded from the delivery options morning and evening delivery.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
+                "label"     => __("Return if no answer", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "By default, a parcel will be offered twice. After two unsuccessful delivery attempts, the parcel will be available at the nearest pickup point for two weeks. There it can be picked up by the recipient with the note that was left by the courier. If you want to receive the parcel back directly and NOT forward it to the pickup point, enable this option.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label"     => __("Insured shipment", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that. We insure the purchase value of the shipment, with a maximum insured value of € 5.000. Insured parcels always contain the options 'Home address only' en 'Signature for delivery'",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label"     => __("Insured amount", "woocommerce-myparcel"),
+                "type"      => "select",
+                "options"   => [
+                    self::INSURED_HUNDRED           => __("Insured up to € 100", "woocommerce-myparcel"),
+                    self::INSURED_TWO_HUNDRED_FIFTY => __("Insured up to € 250", "woocommerce-myparcel"),
+                    self::INSURED_FIVE_HUNDRED      => __("Insured up to € 500", "woocommerce-myparcel"),
+                    self::INSURED_MORE_THAN_HUNDRED => __("> € 500", "woocommerce-myparcel"),
+                ],
             ],
         ];
     }
@@ -669,72 +725,7 @@ class WCMP_Settings_Data
                     "woocommerce-myparcel"
                 ),
             ],
-            [
-                "name"      => WCMP_Settings::SETTING_LARGE_FORMAT,
-                "label"     => __("Extra large size", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee will be charged. Note! If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate will be charged.",
-                    "woocommerce-myparcel"
-                ),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_ONLY_RECIPIENT,
-                "label"     => __("Home address only", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "If you don't want the parcel to be delivered at the neighbours, choose this option.",
-                    "woocommerce-myparcel"
-                ),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_SIGNATURE,
-                "label"     => __("Signature on delivery", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signature will be required.",
-                    "woocommerce-myparcel"
-                ),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_AGE_CHECK,
-                "label"     => __("Age check 18+", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "The age check is intended for parcel shipments for which the recipient must show 18+ by means of a proof of identity. With this shipping option Signature for receipt and Delivery only at recipient are included. The age 18+ is further excluded from the delivery options morning and evening delivery.",
-                    "woocommerce-myparcel"
-                ),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_RETURN,
-                "label"     => __("Return if no answer", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "By default, a parcel will be offered twice. After two unsuccessful delivery attempts, the parcel will be available at the nearest pickup point for two weeks. There it can be picked up by the recipient with the note that was left by the courier. If you want to receive the parcel back directly and NOT forward it to the pickup point, enable this option.",
-                    "woocommerce-myparcel"
-                ),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_INSURED,
-                "label"     => __("Insured shipment", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that. We insure the purchase value of the shipment, with a maximum insured value of € 5.000. Insured parcels always contain the options 'Home address only' en 'Signature for delivery'",
-                    "woocommerce-myparcel"
-                ),
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_INSURED_AMOUNT,
-                "condition" => WCMP_Settings::SETTING_INSURED,
-                "label"     => __("Insured amount", "woocommerce-myparcel"),
-                "type"      => "select",
-                "options"   => [
-                    self::INSURED_HUNDRED           => __("Insured up to € 100", "woocommerce-myparcel"),
-                    self::INSURED_TWO_HUNDRED_FIFTY => __("Insured up to € 250", "woocommerce-myparcel"),
-                    self::INSURED_FIVE_HUNDRED      => __("Insured up to € 500", "woocommerce-myparcel"),
-                    self::INSURED_MORE_THAN_HUNDRED => __("> € 500", "woocommerce-myparcel"),
-                ],
-            ],
+
             [
                 "name"      => WCMP_Settings::SETTING_LABEL_DESCRIPTION,
                 "label"     => __("Label description", "woocommerce-myparcel"),

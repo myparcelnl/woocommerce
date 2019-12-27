@@ -48,13 +48,6 @@ class WCMP_Settings
     public const SETTING_SHIPPING_METHODS_PACKAGE_TYPES = "shipping_methods_package_types";
     public const SETTING_CONNECT_EMAIL                  = "connect_email";
     public const SETTING_CONNECT_PHONE                  = "connect_phone";
-    public const SETTING_LARGE_FORMAT                   = "large_format";
-    public const SETTING_ONLY_RECIPIENT                 = "only_recipient";
-    public const SETTING_SIGNATURE                      = "signature";
-    public const SETTING_AGE_CHECK                      = "age_check";
-    public const SETTING_RETURN                         = "return";
-    public const SETTING_INSURED                        = "insured";
-    public const SETTING_INSURED_AMOUNT                 = "insured_amount";
     public const SETTING_LABEL_DESCRIPTION              = "label_description";
     public const SETTING_EMPTY_PARCEL_WEIGHT            = "empty_parcel_weight";
     public const SETTING_HS_CODE                        = "hs_code";
@@ -82,10 +75,15 @@ class WCMP_Settings
      *
      * e.g. cutoff_time => postnl_cutoff_time/dpd_cutoff_time
      */
-
     // Defaults
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED   = "export_insured";
-    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE = "export_signature";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE      = "export_signature";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT = "export_only_recipient";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT   = "export_large_format";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK      = "export_age_check";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN         = "export_return";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED        = "export_insured";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT = "export_insured_amount";
+
 
     // Delivery options settings
     public const SETTING_CARRIER_CUTOFF_TIME          = "cutoff_time";
