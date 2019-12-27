@@ -375,7 +375,7 @@ class WCMP_NL_Postcode_Fields
         $hidden_states = [
             'AF' => [],
             'AT' => [],
-            'NL' => [],
+            'BE' => [],
             'BI' => [],
             'CZ' => [],
             'DE' => [],
