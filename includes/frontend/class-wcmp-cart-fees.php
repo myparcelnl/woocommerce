@@ -202,7 +202,6 @@ class WCMP_Cart_Fees
             "delivery_evening"        => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE),
             "delivery_morning"        => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE),
             "delivery_pickup"         => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_PICKUP_FEE),
-            "delivery_pickup_express" => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_PICKUP_EXPRESS_FEE),
             "only_recipient"          => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE),
             "signature"               => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE),
         ];
@@ -221,7 +220,6 @@ class WCMP_Cart_Fees
             "delivery_evening"        => __("Evening delivery", "woocommerce-myparcel"),
             "delivery_morning"        => __("Morning delivery", "woocommerce-myparcel"),
             "delivery_pickup"         => __("Pick up at", "woocommerce-myparcel") . " $carrierName",
-            "delivery_pickup_express" => __("Pickup express", "woocommerce-myparcel"),
             "only_recipient"          => __("Only recipient", "woocommerce-myparcel"),
             "signature"               => __("Signature on delivery", "woocommerce-myparcel"),
         ];
