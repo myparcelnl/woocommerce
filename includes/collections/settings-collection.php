@@ -42,14 +42,7 @@ class SettingsCollection extends Collection
      */
     public function isEnabled(string $name): bool
     {
-        /** @var Setting|null $setting */
-        $setting = $this->where('name', $name)->first();
-
-        if (! $setting) {
-            return false;
-        }
-
-        return $setting->value;
+        return $this->getByName($name) ?? false;
     }
 
     /**
@@ -124,15 +117,5 @@ class SettingsCollection extends Collection
     public function getStringByName(string $name): string
     {
         return $this->getByName($name) ?? '';
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function getBooleanByName(string $name): bool
-    {
-        return $this->getByName($name) ?? false;
     }
 }

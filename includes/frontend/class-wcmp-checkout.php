@@ -191,21 +191,31 @@ class WCMP_Checkout
         ];
 
         foreach ($carriers as $carrier) {
-            $allowDeliveryOptions  = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED;
-            $allowPickupLocations  = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED;
-            $allowSignature        = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED;
-            $cutoffTime            = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME;
-            $deliveryDaysWindow    = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW;
-            $dropOffDays           = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS;
-            $dropOffDelay          = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY;
-            $pricePickup           = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_FEE;
-            $priceSignature        = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE;
-            $priceSaturdayDelivery = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE;
+            $allowMorningDeliveryOptions = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED;
+            $allowDeliveryOptions        = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED;
+            $allowEveningDeliveryOptions = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED;
+            $allowPickupLocations        = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED;
+            $allowSignature              = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED;
+            $allowOnlyRecipient          = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED;
+            $allowMondayDelivery         = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED;
+            $cutoffTime                  = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME;
+            $deliveryDaysWindow          = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW;
+            $dropOffDays                 = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS;
+            $dropOffDelay                = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY;
+            $pricePickup                 = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_FEE;
+            $priceSignature              = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE;
+            $priceSaturdayDelivery       = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE;
+
 
             $myParcelConfig["config"]["carrierSettings"][$carrier] = [
                 "allowDeliveryOptions" => $settings->isEnabled($allowDeliveryOptions),
+                "allowEveningDelivery" => $settings->isEnabled($allowEveningDeliveryOptions),
+                "allowMorningDelivery" => $settings->isEnabled($allowMorningDeliveryOptions),
                 "allowPickupLocations" => $settings->isEnabled($allowPickupLocations),
-                "allowSignature"       => $settings->getBooleanByName($allowSignature),
+                "allowSignature"       => $settings->isEnabled($allowSignature),
+                "allowOnlyRecipient"   => $settings->isEnabled($allowOnlyRecipient),
+                "allowMondayDelivery"  => $settings->isEnabled($allowMondayDelivery),
+
                 "cutoffTime"           => $settings->getStringByName($cutoffTime),
                 "deliveryDaysWindow"   => $settings->getIntegerByName($deliveryDaysWindow),
                 "dropOffDays"          => $settings->getByName($dropOffDays),
