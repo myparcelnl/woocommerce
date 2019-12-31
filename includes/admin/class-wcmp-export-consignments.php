@@ -266,18 +266,35 @@ class WCMP_Export_Consignments
      */
     private function getInsurance(): int
     {
-        $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
+        $isInsuranceActive = WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->getInsurance(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
         );
 
-        return $insurance ? 500 : 0;
+        $insuranceAmount = $this->getInsuranceAmount($isInsuranceActive);
+
+        return $insuranceAmount;
     }
+
+    /**
+     * @param $isInsuranceActive
+     *
+     * @return int|mixed
+     */
+    private function getInsuranceAmount($isInsuranceActive){
+
+        if ($isInsuranceActive){
+            return $this->getSetting("{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
+        }
+
+        return 0;
+    }
+
 
     /**
      * Sets a customs declaration for the consignment if necessary.
      *
-     * @throws MissingFieldException
+     * @throws \Exception
      */
     private function setCustomsDeclaration()
     {
