@@ -8,7 +8,7 @@ use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 
-if (!defined("ABSPATH")) {
+if (! defined("ABSPATH")) {
     exit;
 } // Exit if accessed directly
 
@@ -124,12 +124,12 @@ class WCMP_Export_Consignments
     public function setCustomItems(): void
     {
         $contents = (int) ($this->getSetting("package_contents") ? $this->getSetting("package_contents") : 1);
-        $country = WC()->countries->get_base_country();
+        $country  = WC()->countries->get_base_country();
 
         foreach ($this->order->get_items() as $item_id => $item) {
             $product = $this->order->get_product_from_item($item);
 
-            if (!empty($product)) {
+            if (! empty($product)) {
                 // Description
                 $description = $item["name"];
 
@@ -145,15 +145,15 @@ class WCMP_Export_Consignments
 
                 $myParcelItem =
                     (new MyParcelCustomsItem())->setDescription($description)
-                        ->setAmount($amount)
-                        ->setWeight($weight)
-                        ->setItemValue(
-                            (int) round(
-                                ($item["line_total"] + $item["line_tax"]) * 100
-                            )
-                        )
-                        ->setCountry($country)
-                        ->setClassification($contents);
+                                               ->setAmount($amount)
+                                               ->setWeight($weight)
+                                               ->setItemValue(
+                                                   (int) round(
+                                                       ($item["line_total"] + $item["line_tax"]) * 100
+                                                   )
+                                               )
+                                               ->setCountry($country)
+                                               ->setClassification($contents);
 
                 $this->consignment->addItem($myParcelItem);
             }
@@ -178,7 +178,7 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $connectEmail = $this->carrier === DPDConsignment::CARRIER_NAME;
+        $connectEmail    = $this->carrier === DPDConsignment::CARRIER_NAME;
         $this->recipient = WCMP_Export::getRecipientFromOrder($this->order, $connectEmail);
 
         $this->consignment
@@ -202,7 +202,7 @@ class WCMP_Export_Consignments
     {
         $this->apiKey = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
 
-        if (!$this->apiKey) {
+        if (! $this->apiKey) {
             throw new ErrorException(__("No API key found in MyParcel settings", "woocommerce-myparcel"));
         }
     }
@@ -232,19 +232,19 @@ class WCMP_Export_Consignments
      */
     private function setPickupLocation(): void
     {
-        if (!$this->deliveryOptions->isPickup()) {
+        if (! $this->deliveryOptions->isPickup()) {
             return;
         }
 
         $pickupLocation = $this->deliveryOptions->getPickupLocation();
 
         $this->consignment->setPickupCountry($pickupLocation->getCountry())
-            ->setPickupCity($pickupLocation->getCity())
-            ->setPickupLocationName($pickupLocation->getLocationName())
-            ->setPickupStreet($pickupLocation->getStreet())
-            ->setPickupNumber($pickupLocation->getNumber())
-            ->setPickupPostalCode($pickupLocation->getPostalCode())
-            ->setPickupLocationCode($pickupLocation->getLocationCode());
+                          ->setPickupCity($pickupLocation->getCity())
+                          ->setPickupLocationName($pickupLocation->getLocationName())
+                          ->setPickupStreet($pickupLocation->getStreet())
+                          ->setPickupNumber($pickupLocation->getNumber())
+                          ->setPickupPostalCode($pickupLocation->getPostalCode())
+                          ->setPickupLocationCode($pickupLocation->getLocationCode());
     }
 
     /**
@@ -281,15 +281,14 @@ class WCMP_Export_Consignments
      *
      * @return int|mixed
      */
-    private function getInsuranceAmount($isInsuranceActive){
-
-        if ($isInsuranceActive){
+    private function getInsuranceAmount($isInsuranceActive)
+    {
+        if ($isInsuranceActive) {
             return $this->getSetting("{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
         }
 
         return 0;
     }
-
 
     /**
      * Sets a customs declaration for the consignment if necessary.
