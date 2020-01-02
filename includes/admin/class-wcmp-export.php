@@ -64,15 +64,16 @@ class WCMP_Export
      * @param bool|null $option      Condition to check.
      * @param string    $settingName Name of the setting to fall back to.
      *
-     * @return bool
+     * @return mixed
      */
-    public static function getChosenOrDefaultShipmentOption($option, string $settingName): bool
+    public static function getChosenOrDefaultShipmentOption($option, string $settingName)
     {
-        if ($valueFromSetting = WCMP()->setting_collection->isEnabled($settingName)) {
+        if ($valueFromSetting = WCMP()->setting_collection->getByName($settingName)) {
             return $valueFromSetting;
         }
 
-        return (bool) $option;
+
+        return $option;
     }
 
     /**
