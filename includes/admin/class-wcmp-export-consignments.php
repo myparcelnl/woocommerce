@@ -205,6 +205,17 @@ class WCMP_Export_Consignments
     }
 
     /**
+     * @return bool
+     */
+    private function getReturnShipment(): bool
+    {
+        return WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->deliveryOptions->getShipmentOptions()->hasReturnShipments(),
+            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
+        );
+    }
+
+    /**
      * Get the value of the insurance setting. Changes true/false to either 500 or 0 because the API expects an amount.
      *
      * @return int
@@ -323,7 +334,8 @@ class WCMP_Export_Consignments
             ->setOnlyRecipient($this->getOnlyRecipient())
             ->setInsurance($this->getInsurance())
             ->setAgeCheck($this->getAgeCheck())
-            ->setLargeFormat($this->getLargeFormat());
+            ->setLargeFormat($this->getLargeFormat())
+            ->setReturn($this->getReturnShipment());
     }
 
     /**
