@@ -20,6 +20,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
 
         $this->signature      = $this->isSignatureFromOptions($options, $shipmentOptionsAdapter);
         $this->only_recipient = $this->isOnlyRecipientFromOptions($options, $shipmentOptionsAdapter);
+        $this->age_check      = $this->isAgeCheckFromOptions($options, $shipmentOptionsAdapter);
         $this->insurance      = $this->isInsuranceFromOptions($options, $shipmentOptionsAdapter);
     }
 
@@ -56,6 +57,25 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
 
         if ($shipmentOptionsAdapter) {
             return $shipmentOptionsAdapter->hasOnlyRecipient();
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array                               $options
+     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
+     *
+     * @return bool|null
+     */
+    private function isAgeCheckFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
+    {
+        if (key_exists('age_check', $options)) {
+            return (bool) $options['age_check'];
+        }
+
+        if ($shipmentOptionsAdapter) {
+            return $shipmentOptionsAdapter->hasAgeCheck();
         }
 
         return false;

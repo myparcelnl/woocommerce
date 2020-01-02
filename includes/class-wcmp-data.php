@@ -160,27 +160,7 @@ class WCMP_Data
     /**
      * @return array
      */
-    public static function getCarriersWithSignature(): array
-    {
-        return [
-            PostNLConsignment::CARRIER_NAME,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public static function getCarriersWithOnlyRecipient(): array
-    {
-        return [
-            PostNLConsignment::CARRIER_NAME,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public static function getCarriersWithInsurance(): array
+    public static function getPostnlName(): array
     {
         return [
             PostNLConsignment::CARRIER_NAME,
