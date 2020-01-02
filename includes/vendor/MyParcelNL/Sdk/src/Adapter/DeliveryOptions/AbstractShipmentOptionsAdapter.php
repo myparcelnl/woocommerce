@@ -15,6 +15,11 @@ abstract class AbstractShipmentOptionsAdapter
     protected $only_recipient;
 
     /**
+     * @var bool|null
+     */
+    protected $age_check;
+
+    /**
      * @var int|null
      */
     protected $insurance;
@@ -36,6 +41,14 @@ abstract class AbstractShipmentOptionsAdapter
     }
 
     /**
+     * @return bool|null
+     */
+    public function hasAgeCheck(): ?bool
+    {
+        return $this->age_check;
+    }
+
+    /**
      * @return int|null
      */
     public function getInsurance(): ?int
@@ -50,8 +63,9 @@ abstract class AbstractShipmentOptionsAdapter
     {
         return [
             'signature'      => $this->hasSignature(),
-            'insurance'      => $this->getInsurance(),
             'only_recipient' => $this->hasOnlyRecipient(),
+            'age_check'      => $this->hasAgeCheck(),
+            'insurance'      => $this->getInsurance(),
         ];
     }
 }
