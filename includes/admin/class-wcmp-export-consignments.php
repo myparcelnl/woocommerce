@@ -172,6 +172,17 @@ class WCMP_Export_Consignments
     }
 
     /**
+     * @return bool
+     */
+    private function getAgeCheck(): bool
+    {
+        return WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->deliveryOptions->getShipmentOptions()->hasAgeCheck(),
+            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
+        );
+    }
+
+    /**
      * Get the value of the insurance setting. Changes true/false to either 500 or 0 because the API expects an amount.
      *
      * @return int
@@ -289,7 +300,7 @@ class WCMP_Export_Consignments
         $this->consignment
             ->setSignature($this->getSignature())
             ->setInsurance($this->getInsurance())
-            ->setAgeCheck($this->getInsurance());
+            ->setAgeCheck($this->getAgeCheck());
     }
 
     /**
