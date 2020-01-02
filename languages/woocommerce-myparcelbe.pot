@@ -139,7 +139,7 @@ msgstr ""
 
 #: includes/class-wcmp-data.php:164
 #: includes/admin/settings/class-wcmp-settings-data.php:80
-msgid "bpost"
+msgid "postnl"
 msgstr ""
 
 #: includes/class-wcmp-data.php:165
@@ -295,7 +295,7 @@ msgid "Unknown status"
 msgstr ""
 
 #: includes_php56/class-wcmp-frontend.php:100
-msgid "You can track your order with the following bpost Track & Trace code:"
+msgid "You can track your order with the following postnl Track & Trace code:"
 msgstr ""
 
 #: includes_php56/class-wcmp-frontend.php:307
@@ -315,7 +315,7 @@ msgstr ""
 
 #: includes_php56/class-wcmp-frontend.php:328
 #: includes_php56/class-wcmp-settings.php:690
-msgid "bpost pickup"
+msgid "postnl pickup"
 msgstr ""
 
 #: includes_php56/class-wcmp-frontend.php:497
@@ -473,7 +473,7 @@ msgid "Delivery date"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:481
-msgid "bpost Pickup"
+msgid "postnl Pickup"
 msgstr ""
 
 #: includes_php56/class-wcmp-admin.php:608
@@ -866,7 +866,7 @@ msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:584
 #: includes/admin/settings/class-wcmp-settings-data.php:471
-msgid "Days of the week on which you hand over parcels to bpost"
+msgid "Days of the week on which you hand over parcels to postnl"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:589
@@ -1071,7 +1071,7 @@ msgstr ""
 msgid ""
 "This order does not contain valid street and house number data and cannot be "
 "exported because of this! This order was probably placed before the MyParcel "
-"BE plugin was activated. The address data can still be manually entered in "
+"NL plugin was activated. The address data can still be manually entered in "
 "the order screen."
 msgstr ""
 
@@ -1110,15 +1110,15 @@ msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:245
 msgid ""
-"These settings will be applied to bpost shipments you create in the backend."
+"These settings will be applied to postnl shipments you create in the backend."
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:253
-msgid "bpost delivery options"
+msgid "postnl delivery options"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:258
-msgid "bpost pickup options"
+msgid "postnl pickup options"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:276
@@ -1138,7 +1138,7 @@ msgid "Track & trace code:"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:461
-msgid "Enable bpost delivery"
+msgid "Enable postnl delivery"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:494
@@ -1152,7 +1152,7 @@ msgid "Show the delivery date inside the delivery options."
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:531
-msgid "Enable bpost pickup"
+msgid "Enable postnl pickup"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:560

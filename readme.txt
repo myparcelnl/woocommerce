@@ -73,7 +73,7 @@ You can change the text (which is placed above the order details table by defaul
 `
 add_filter( 'wcmyparcel_email_text', 'wcmyparcel_new_email_text' );
 function wcmyparcel_new_email_text($track_trace_tekst) {
-	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende Bpost track&trace nummer:';
+	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende PostNL track&trace nummer:';
 	return $nieuwe_tekst;
 }
 `
@@ -127,7 +127,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 = 3.0.5 (2018-11-15) =
 * Fix: Error message about money_format
 * Fix: Add the priority to the checkout field for support WooCommerce 3.5.1
-* Fix: The bpost logo is not visible with all browsers
+* Fix: The postnl logo is not visible with all browsers
 * Improvement: Support Channel Engine
 * Improvement: Information inside the checkout and the translations
 * Improvement: Support WooCommerce default shipping fields (_address_1 and _address_2)
@@ -240,7 +240,7 @@ These are the biggest changes:
 = 2.3.2 (2017-06-26) =
 * Fix: Delivery options header order
 * Feature: Support for region (=state) in international addresses
-* Feature: Hide Delivery options if bpost service is unavailable
+* Feature: Hide Delivery options if postnl service is unavailable
 
 = 2.3.1 (2017-06-12) =
 * Fix: Table Rate Shipping + WooCommerce 2.6 (error in settings)
@@ -321,7 +321,7 @@ These are the biggest changes:
 	* Postponed delivery (pick a delivery date)
 	* Signature on delivery option
 	* Evening or morning delivery option
-	* bpost Pickup & Early bpost Pickup
+	* postnl Pickup & Early postnl Pickup
 	* Possibility to assign cost to the above delivery options
 * Create return labels from the WooCommerce backend
 * Uses new MyParcel API

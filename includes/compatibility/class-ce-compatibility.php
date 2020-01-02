@@ -15,7 +15,7 @@ use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 class WCMP_ChannelEngine_Compatibility
 {
     /**
-     * Add the created Track & Trace code and set shipping method to bpost in ChannelEngine's meta data
+     * Add the created Track & Trace code and set shipping method to postnl in ChannelEngine's meta data
      *
      * @param WC_Order $order
      * @param          $data
@@ -29,6 +29,6 @@ class WCMP_ChannelEngine_Compatibility
         WCX_Order::update_meta_data($order, "_shipping_ce_track_and_trace", $data);
 
         // Todo: Check if this has to be changed
-        WCX_Order::update_meta_data($order, "_shipping_ce_shipping_method", "Bpost");
+        WCX_Order::update_meta_data($order, "_shipping_ce_shipping_method", "PostNL");
     }
 }

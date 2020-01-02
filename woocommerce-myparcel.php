@@ -71,7 +71,7 @@ if (! class_exists('WCMP')) :
          */
         public function __construct()
         {
-            $this->define('WC_MYPARCEL_BE_VERSION', $this->version);
+            $this->define('WC_MYPARCEL_NL_VERSION', $this->version);
             $this->plugin_basename = plugin_basename(__FILE__);
 
             // load the localisation & classes

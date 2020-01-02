@@ -14,7 +14,7 @@
         'wcmp-admin',
         WCMP()->plugin_url() . '/assets/js/wcmp-admin.js',
         ['jquery', 'thickbox'],
-        WC_MYPARCEL_BE_VERSION
+        WC_MYPARCEL_NL_VERSION
     );
     wp_localize_script(
         'wcmp-admin',
@@ -32,7 +32,7 @@
         'wcmp-admin-styles',
         WCMP()->plugin_url() . '/assets/css/wcmp-admin-styles.css',
         [],
-        WC_MYPARCEL_BE_VERSION,
+        WC_MYPARCEL_NL_VERSION,
         'all'
     );
 
@@ -42,7 +42,7 @@
             'wcmp-admin-styles-legacy',
             WCMP()->plugin_url() . '/assets/css/wcmp-admin-styles-legacy.css',
             [],
-            WC_MYPARCEL_BE_VERSION,
+            WC_MYPARCEL_NL_VERSION,
             'all'
         );
     }

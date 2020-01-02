@@ -4,7 +4,7 @@ use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -552,7 +552,7 @@ class WCMP_Export
         $return_shipment_data = [
             "name"    => $shipping_name,
             "email"   => WCX_Order::get_prop($order, "billing_email"),
-            "carrier" => BpostConsignment::CARRIER_ID, // default to Bpost for now
+            "carrier" => PostNLConsignment::CARRIER_ID, // default to PostNL for now
         ];
 
         if (!Arr::get($return_shipment_data, "email")) {
@@ -639,7 +639,7 @@ class WCMP_Export
         ];
 
         $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-        if ($shipping_country === "BE") {
+        if ($shipping_country === "NL") {
             // use billing address if old "pakjegemak" (1.5.6 and older)
             $pgAddress = WCX_Order::get_meta($order, WCMP_Admin::META_PGADDRESS);
 
@@ -664,7 +664,7 @@ class WCMP_Export
                 } else {
                     // Split the address line 1 into three parts
                     preg_match(
-                        WCMP_BE_Postcode_Fields::SPLIT_STREET_REGEX,
+                        WCMP_NL_Postcode_Fields::SPLIT_STREET_REGEX,
                         WCX_Order::get_prop($order, "billing_address_1"),
                         $address_parts
                     );
@@ -688,7 +688,7 @@ class WCMP_Export
                 } else {
                     // Split the address line 1 into three parts
                     preg_match(
-                        WCMP_BE_Postcode_Fields::SPLIT_STREET_REGEX,
+                        WCMP_NL_Postcode_Fields::SPLIT_STREET_REGEX,
                         WCX_Order::get_prop($order, "shipping_address_1"),
                         $address_parts
                     );

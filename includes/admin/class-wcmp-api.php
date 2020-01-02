@@ -129,7 +129,7 @@ class WCMP_API extends WCMP_Rest
         $userAgents = [
             "Wordpress/" . get_bloginfo("version"),
             "WooCommerce/" . WOOCOMMERCE_VERSION,
-            "MyParcel-WooCommerce/" . WC_MYPARCEL_BE_VERSION,
+            "MyParcel-WooCommerce/" . WC_MYPARCEL_NL_VERSION,
         ];
 
         // Place white space between the array elements
