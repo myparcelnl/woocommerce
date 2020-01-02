@@ -174,6 +174,17 @@ class WCMP_Export_Consignments
     /**
      * @return bool
      */
+    private function getOnlyRecipient(): bool
+    {
+        return WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->deliveryOptions->getShipmentOptions()->hasOnlyRecipient(),
+            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
+        );
+    }
+
+    /**
+     * @return bool
+     */
     private function getAgeCheck(): bool
     {
         return WCMP_Export::getChosenOrDefaultShipmentOption(
@@ -212,7 +223,6 @@ class WCMP_Export_Consignments
 
         return 0;
     }
-
 
     /**
      * Gets the recipient and puts its data in the consignment.
@@ -299,6 +309,7 @@ class WCMP_Export_Consignments
     {
         $this->consignment
             ->setSignature($this->getSignature())
+            ->setOnlyRecipient($this->getOnlyRecipient())
             ->setInsurance($this->getInsurance())
             ->setAgeCheck($this->getAgeCheck());
     }
