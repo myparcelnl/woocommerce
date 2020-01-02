@@ -118,8 +118,8 @@ class WCMP_Export_Consignments
     }
 
     /**
-     * @return AbstractConsignment
-     * @throws MissingFieldException
+     * @return void
+     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
     public function setCustomItems(): void
     {
@@ -288,7 +288,8 @@ class WCMP_Export_Consignments
     {
         $this->consignment
             ->setSignature($this->getSignature())
-            ->setInsurance($this->getInsurance());
+            ->setInsurance($this->getInsurance())
+            ->setAgeCheck($this->getInsurance());
     }
 
     /**
