@@ -206,8 +206,10 @@ class WCMP_Checkout
             $dropOffDelay                = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY;
             $pricePickup                 = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_FEE;
             $priceSignature              = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE;
+            $priceOnlyRecipient          = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE;
+            $priceEveningDelivery        = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE;
+            $priceMorningDelivery        = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE;
             $priceSaturdayDelivery       = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE;
-
 
             $myParcelConfig["config"]["carrierSettings"][$carrier] = [
                 "allowDeliveryOptions" => $settings->isEnabled($allowDeliveryOptions),
@@ -223,8 +225,11 @@ class WCMP_Checkout
                 "dropOffDays"        => $settings->getByName($dropOffDays),
                 "dropOffDelay"       => $settings->getIntegerByName($dropOffDelay),
 
-                "pricePickup"           => $settings->getFloatByName($pricePickup),
-                "priceSignature"        => $settings->getFloatByName($priceSignature),
+                "pricePickup"    => $settings->getFloatByName($pricePickup),
+                "priceSignature" => $settings->getFloatByName($priceSignature),
+                "priceOnlyRecipient"   => $settings->getFloatByName($priceOnlyRecipient),
+                "priceEveningDelivery" => $settings->getFloatByName($priceEveningDelivery),
+                "priceMorningDelivery" => $settings->getFloatByName($priceMorningDelivery),
                 "priceSaturdayDelivery" => $settings->getFloatByName($priceSaturdayDelivery),
             ];
         }
