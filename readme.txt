@@ -1,10 +1,11 @@
 === Plugin Name ===
 Contributors: richardperdaan
+Contributors: ademdemir
 Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, MyParcel, myparcel, Flespakket, flespakket, PostNL, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 5.2.0
+Tested up to: 5.2.4
 Stable tag: trunk
-Requires PHP: 5.4
+Requires PHP: 5.6
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -90,6 +91,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 3.2.0 (2019-12-23) =
+* Fix: Since November is it no longer possible to use pickup express.
+
+= 3.1.8 (2019-11-12) =
+* Fix: Check if there is connection with MyParcel
+
 = 3.1.7 (2019-07-16) =
 * Fix: Search in order grid myparcel shipment
 * Fix: More than 5 products for World shipments
@@ -129,9 +136,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 = 3.1.1 (2019-01-30) =
 * Fix: Remove some styling code
 * Fix: Text changes
-* Fix: Hide delivery options 
+* Fix: Hide delivery options
 * Fix: Get the total weight on a later moment
-* Fix: Unset weight by mailbox package 
+* Fix: Unset weight by mailbox package
 * Fix: Since WooCommerce 3.0, logging can be grouped by context (error code 0 when exporting / printing)
 * Fix: The checkout is still loading when change the country.
 
@@ -173,7 +180,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 = 3.0.4 (2018-10-23) =
 * Fix: mollie payments
-* Improvement: Check for minimum php version (php 5.4) 
+* Improvement: Check for minimum php version (php 5.4)
 * Improvement: Hide automatic pickup express if pickup is not enabled
 
 = 3.0.3 (2018-10-09) =
@@ -181,7 +188,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: error about "Bewaar barcode in een notitie" size
 * Fix: Turn of the option allow Pickup Express
 * Fix: Save settings with a new update
-* Improvement: MyParcel delivery header titel 
+* Improvement: MyParcel delivery header titel
 * Improvement: Support WooCommerce 3.5.0
 * Improvement: add preliminary support for "digitale postzegel"
 
