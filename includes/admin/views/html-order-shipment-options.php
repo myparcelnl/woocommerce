@@ -51,7 +51,8 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $insuranceAmount = 0;
     $signature       = false;
     $onlyRecipient   = false;
-    $ageCheck   = false;
+    $ageCheck        = false;
+    $returnShipment  = false;
 
     if ($postnl === $deliveryOptions->getCarrier()) {
         $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
@@ -72,6 +73,16 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         $ageCheck = WCMP_Export::getChosenOrDefaultShipmentOption(
             $shipment_options->hasAgeCheck(),
             "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
+        );
+
+        $largeFormat = WCMP_Export::getChosenOrDefaultShipmentOption(
+            $shipment_options->hasLargeFormat(),
+            "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
+        );
+
+        $returnShipment = WCMP_Export::getChosenOrDefaultShipmentOption(
+            $shipment_options->hasReturnShipments(),
+            "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
         );
 
         $insuranceAmount = WCMP_Export::getChosenOrDefaultShipmentOption(
@@ -140,6 +151,18 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "value"     => $signature,
         ],
         [
+            "name"      => "[shipment_options][large_format]",
+            "type"      => "toggle",
+            "condition" => [
+                "name"         => "[carrier]",
+                "type"         => "disable",
+                "parent_value" => WCMP_Data::getPostnlName(),
+                "set_value"    => WCMP_Settings_Data::DISABLED,
+            ],
+            "label"     => __("Large format", "woocommerce-myparcel"),
+            "value"     => $largeFormat,
+        ],
+        [
             "name"      => "[shipment_options][age_check]",
             "type"      => "toggle",
             "condition" => [
@@ -150,6 +173,18 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             ],
             "label"     => __("Age check", "woocommerce-myparcel"),
             "value"     => $ageCheck,
+        ],
+        [
+            "name"      => "[shipment_options][return_shipment]",
+            "type"      => "toggle",
+            "condition" => [
+                "name"         => "[carrier]",
+                "type"         => "disable",
+                "parent_value" => WCMP_Data::getPostnlName(),
+                "set_value"    => WCMP_Settings_Data::DISABLED,
+            ],
+            "label"     => __("Return shipment", "woocommerce-myparcel"),
+            "value"     => $returnShipment,
         ],
         [
             "name"      => "[shipment_options][insured]",
@@ -164,11 +199,11 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "value"     => (bool) $insurance,
         ],
         [
-            "name"      => "[shipment_options][insured_amount]",
-            "type"      => "select",
-            "options"   => WCMP_Data::getInsuranceAmount(),
-            "label"     => __("Insurance amount", "woocommerce-myparcel"),
-            "value"     => (int) $insuranceAmount,
+            "name"    => "[shipment_options][insured_amount]",
+            "type"    => "select",
+            "options" => WCMP_Data::getInsuranceAmount(),
+            "label"   => __("Insurance amount", "woocommerce-myparcel"),
+            "value"   => (int) $insuranceAmount,
         ],
     ];
 

@@ -18,10 +18,12 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
         $shipmentOptionsAdapter = $originAdapter ? $originAdapter->getShipmentOptions() : null;
         $options                = $inputData['shipment_options'] ?? $inputData;
 
-        $this->signature      = $this->isSignatureFromOptions($options, $shipmentOptionsAdapter);
-        $this->only_recipient = $this->isOnlyRecipientFromOptions($options, $shipmentOptionsAdapter);
-        $this->age_check      = $this->isAgeCheckFromOptions($options, $shipmentOptionsAdapter);
-        $this->insurance      = $this->isInsuranceFromOptions($options, $shipmentOptionsAdapter);
+        $this->signature        = $this->isSignatureFromOptions($options, $shipmentOptionsAdapter);
+        $this->only_recipient   = $this->isOnlyRecipientFromOptions($options, $shipmentOptionsAdapter);
+        $this->large_format     = $this->isLargeFormatFromOptions($options, $shipmentOptionsAdapter);
+        $this->return_shipments = $this->isReturnShipmentFromOptions($options, $shipmentOptionsAdapter);
+        $this->age_check        = $this->isAgeCheckFromOptions($options, $shipmentOptionsAdapter);
+        $this->insurance        = $this->isInsuranceFromOptions($options, $shipmentOptionsAdapter);
     }
 
     /**
@@ -54,9 +56,46 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
         if (key_exists('only_recipient', $options)) {
             return (bool) $options['only_recipient'];
         }
-
         if ($shipmentOptionsAdapter) {
             return $shipmentOptionsAdapter->hasOnlyRecipient();
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array                               $options
+     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
+     *
+     * @return bool|null
+     */
+    private function isLargeFormatFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
+    {
+        if (key_exists('large_format', $options)) {
+            return (bool) $options['large_format'];
+        }
+
+        if ($shipmentOptionsAdapter) {
+            return $shipmentOptionsAdapter->hasLargeFormat();
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array                               $options
+     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
+     *
+     * @return bool|null
+     */
+    private function isReturnShipmentFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
+    {
+        if (key_exists('return_shipment', $options)) {
+            return (bool) $options['return_shipment'];
+        }
+
+        if ($shipmentOptionsAdapter) {
+            return $shipmentOptionsAdapter->hasReturnShipments();
         }
 
         return false;

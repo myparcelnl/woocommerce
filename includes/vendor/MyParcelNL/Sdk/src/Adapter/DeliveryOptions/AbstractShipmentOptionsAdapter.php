@@ -20,6 +20,16 @@ abstract class AbstractShipmentOptionsAdapter
     protected $age_check;
 
     /**
+     * @var bool|null
+     */
+    protected $large_format;
+
+    /**
+     * @var bool|null
+     */
+    protected $return_shipments;
+
+    /**
      * @var int|null
      */
     protected $insurance;
@@ -35,6 +45,14 @@ abstract class AbstractShipmentOptionsAdapter
     /**
      * @return bool|null
      */
+    public function hasOnlyRecipient(): ?bool
+    {
+        return $this->only_recipient;
+    }
+
+    /**
+     * @return bool|null
+     */
     public function hasAgeCheck(): ?bool
     {
         return $this->age_check;
@@ -43,9 +61,17 @@ abstract class AbstractShipmentOptionsAdapter
     /**
      * @return bool|null
      */
-    public function hasOnlyRecipient(): ?bool
+    public function hasLargeFormat(): ?bool
     {
-        return $this->only_recipient;
+        return $this->large_format;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function hasReturnShipments(): ?bool
+    {
+        return $this->return_shipments;
     }
 
     /**
@@ -62,10 +88,11 @@ abstract class AbstractShipmentOptionsAdapter
     public function toArray(): array
     {
         return [
-            'signature'      => $this->hasSignature(),
-            'insurance'      => $this->getInsurance(),
-            'age_check'      => $this->hasAgeCheck(),
-            'only_recipient' => $this->hasOnlyRecipient(),
+            'signature'        => $this->hasSignature(),
+            'insurance'        => $this->getInsurance(),
+            'age_check'        => $this->hasAgeCheck(),
+            'only_recipient'   => $this->hasOnlyRecipient(),
+            'return_shipments' => $this->hasReturnShipments(),
         ];
     }
 }
