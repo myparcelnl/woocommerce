@@ -1,33 +1,35 @@
 === Plugin Name ===
 Contributors: richardperdaan
-Tags: woocommerce, export, MyParcel
+Contributors: ademdemir
+Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, MyParcel, myparcel, Flespakket, flespakket, PostNL, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 5.0.0
+Tested up to: 5.2.4
 Stable tag: trunk
-Requires PHP: 5.4
+Requires PHP: 5.6
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
-Export your WooCommerce orders to MyParcel (https://myparcel.nl/) and print labels directly from the WooCommerce admin.
+Export your WooCommerce orders to MyParcel (www.myparcel.nl) or to Flespakket (www.flespakket.nl) and print labels directly from the WooCommerce admin
 
 == Description ==
+[vimeo https://vimeo.com/241571840]
+This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl) & Flespakket service (www.flespakket.nl). The products are delivered by PostNL.
 
-This WooCommerce extension allows you to export your orders to the MyParcel service (https://myparcel.nl/).
-
-**Online Manual (in Dutch):** https://myparcel.github.io/woocommerce/
+**Online Manual (in Dutch):** [https://myparcelnl.github.io/woocommerce/](https://myparcelnl.github.io/woocommerce/)
 
 = Main features =
 - Delivery options integrated in your checkout
 - Export your WooCommerce orders to MyParcel with a simple click, single orders or in batch
 - Print shipping labels directly (PDF)
 - Create multiple shipments for the same order
-- Define preset MyParcel shipping options (signature required, extra insurance, Saturday delivery)
+- Choose your package type (Parcel, mailbox package or unpaid letter)
+- Define preset MyParcel shipping options (signature required, extra insurance, etc.)
 - Modify the MyParcel shipping options per order before exporting
-- Extra checkout fields to separate street name, house number and box number for more precise address data
+- Extra checkout fields to separate street name, house number and house number suffix for more precise address data
 - View the status of the shipment in the order details page
 - Add Track & Trace link to the order confirmation email
 
-A MyParcel API account is required for this plugin! You can create this in your account or contact MyParcel at info@myparcel.nl
+An API-key is required for this plugin! You can create this in your backoffice account.
 
 == Installation ==
 
@@ -50,7 +52,7 @@ In the search field type "WooCommerce MyParcel" and click Search Plugins. You ca
 
 = Setting up the plugin =
 1. Go to the menu `WooCommerce > MyParcel`.
-2. Fill in your API Details. If you don't have API details, log into your MyParcel account at [backoffice.myparcel.nl](http://backoffice.myparcel.nl) where you can find your API key under Instellingen → Algemeen.
+2. Fill in your API Details. If you don't have API details, log into your MyParcel or Flespakket account, you can find your API key under Instellingen → Algemeen.
 3. Under 'Default export settings' you can set options that should be set by default for the export. You can change these settings per order at the time of export.
 4. The plugin is ready to be used!
 
@@ -63,52 +65,96 @@ Moreover, after a label is created, a Track & Trace code is added to the order. 
 
 == Frequently Asked Questions ==
 
-**Online Manual (in Dutch):** https://myparcel.github.io/woocommerce/
+**Online Manual (in Dutch):** [https://myparcelnl.github.io/woocommerce/](https://myparcelnl.github.io/woocommerce/)
 
 = How do I get an API key? =
-When logged in on your myparcel account at [http://backoffice.myparcel.nl/](http://backoffice.myparcel.nl) you can find your API key under Instellingen → Algemeen.
+When logged in on your MyParcel or Flespakket account, you can find your API key under Instellingen → Algemeen.
 
 = How do I change the Track & Trace email text? =
 You can change the text (which is placed above the order details table by default) by applying the following filter:
 `
 add_filter( 'wcmyparcel_email_text', 'wcmyparcel_new_email_text' );
 function wcmyparcel_new_email_text($track_trace_tekst) {
-	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende PostNL track&trace nummer:';
+	// Tutoyeren ipv vousvoyeren
+	$nieuwe_tekst = 'Je kunt je bestelling volgen met het volgende PostNL Track & Trace nummer:';
 	return $nieuwe_tekst;
 }
 `
 
 == Screenshots ==
 
-1. Export or print MyParcel label per order
-2. Bulk export or print MyParcel labels
+1. Export or print myparcel label per order
+2. Bulk export or print myparcel labels
 3. Change the shipment options for an order
 4. MyParcel actions on the order overview page
-5. MyParcel information on the order details page
+5. Myparcel information on the order details page
 
 == Changelog ==
 
-= 3.1.5 (2019-06-20) =
-* Fix: Scrolling of the order overview when an input is clicked
-* Fix: Showing delivery date in the order when consumer using safari
-* Fix: Delivery date from integer to String
-* Fix: Set default to 0 if there's no tax rate set up
-* Fix: Issue with shipping class term id
-* Fix: Error trying to get property of non-object
-* Improvement: Add the link for the personalized Track & Trace page (portal)
-* Improvement: Cut the product title after 50 characters (50 is the max for Non-eu shipments)
-* Improvement: Barcode in order grid
+= 3.2.0 (2019-12-23) =
+* Fix: Since November is it no longer possible to use pickup express.
 
-= 3.1.0 (2019-02-06) =
-* Improvement: Improved checkout
-* Improvement: Return delivery
-* Improvement: Barcode in notes
-* Improvement: Checkout position
-* Improvement: Show and hide delivery day
-* Fix: Check if postcode and city are filled in
+= 3.1.8 (2019-11-12) =
+* Fix: Check if there is connection with MyParcel
+
+= 3.1.7 (2019-07-16) =
+* Fix: Search in order grid myparcel shipment
+* Fix: More than 5 products for World shipments
+
+= 3.1.6 (2019-07-04) =
+* Fix: Use constants for delivery_type
+* Fix: Saturday cutoff time
+* Fix: Shipping method issue with pickup
+* Fix: Digital stamp weight issue
+
+= 3.1.5 (2019-05-14) =
+* Improvement: Add the link for the personalized Track & Trace page (portal)
+* Improvement: Show deliverday only for NL shipments
+* Improvement: Cut the product title after 50 characters
+* Improvement: Barcode in order grid
+* Fix: Translation house number again button
+* Fix: Set default to 0 if there's no tax rate set up
+* Fix: fix issue with shipping class term id
+* Fix: Correct amount on the digital stamp
+* Fix: trying to get property of non-object
+* Fix: Shipment validation error (PakjeGemak)
+
+= 3.1.4 (2019-03-18) =
+* Fix: Delivery date when deliveryday window is 0
+* Fix: Change `afgevinkt` to `uitgevinkt`
+* Preparation: Move Great Britain to world shipment for the Brexit
+
+= 3.1.3 (2019-02-26) =
+* Fix: Showing delivery date in the order when consumer using safari
+* Fix: Scrolling of the order overview when an input is clicked.
+
+= 3.1.2 (2019-02-19) =
+* Improvement: 18+ check
+* Fix: Standard delivery text
+* Fix: showing checkout
+
+= 3.1.1 (2019-01-30) =
+* Fix: Remove some styling code
+* Fix: Text changes
+* Fix: Hide delivery options
+* Fix: Get the total weight on a later moment
+* Fix: Unset weight by mailbox package
+* Fix: Since WooCommerce 3.0, logging can be grouped by context (error code 0 when exporting / printing)
+* Fix: The checkout is still loading when change the country.
+
+* Improvement: Add maxlength to number suffix field
+* Improvement: Translate all text inside the checkout
+* Improvement: The option to give a discount on the shipping method ( negative amounts)
+
+= 3.1.0 (2018-12-12) =
+* Hotfix: Show delivery options when checkout form already filled in.
+* Improvement: Add Digital stamp
 
 = 3.0.10 (2018-12-05) =
 * Hotfix: Flashing of the order summary.
+
+= 3.0.9 (2018-12-04) =
+* Hotfix: Get mailbox delivery option and save it into the order.
 
 = 3.0.8 (2018-12-04) =
 * Fix: The multiple calls that are made to retrieve the shipping data.
@@ -127,7 +173,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 = 3.0.5 (2018-11-15) =
 * Fix: Error message about money_format
 * Fix: Add the priority to the checkout field for support WooCommerce 3.5.1
-* Fix: The postnl logo is not visible with all browsers
+* Fix: The PostNL logo is not visible with all browsers
 * Improvement: Support Channel Engine
 * Improvement: Information inside the checkout and the translations
 * Improvement: Support WooCommerce default shipping fields (_address_1 and _address_2)
@@ -144,11 +190,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: Save settings with a new update
 * Improvement: MyParcel delivery header titel
 * Improvement: Support WooCommerce 3.5.0
+* Improvement: add preliminary support for "digitale postzegel"
 
 = 3.0.2 (2018-10-09) =
 * Fix: Error a non-numeric value encountered in class-wcmp-frontend-settings.php
 * Fix: Notice Undefined index: checkout_position
-* Fix: Add version number after the checkout.css call
+* Fix: Add version number after the nl-checkout.css call
 
 = 3.0.0 (2018-10-09) =
 * Changes: The whole checkout has a new look. A choice has been made to go back to the basic checkout. The checkout is designed so that he will take the styling of the website.
@@ -214,7 +261,7 @@ These are the biggest changes:
       ```des/class-wcmp-rest-api-integration.php): failed to open stream```
 
 = 2.4.3 (2018-01-05) =
-* Fix: Add MyParcel fields to REST api to create order request
+* Fix: Add myparcel fields to REST api to create order request
 * Fix: Hide days when the pickup delivery is selected
 
 = 2.4.2 (2017-10-29) =
@@ -240,14 +287,14 @@ These are the biggest changes:
 = 2.3.2 (2017-06-26) =
 * Fix: Delivery options header order
 * Feature: Support for region (=state) in international addresses
-* Feature: Hide Delivery options if postnl service is unavailable
+* Feature: Hide Delivery options if PostNL service is unavailable
 
 = 2.3.1 (2017-06-12) =
 * Fix: Table Rate Shipping + WooCommerce 2.6 (error in settings)
 
 = 2.3.0 (2017-06-12) =
 * Feature: WooCommerce Table Rate Shipping support (woocommerce.com & Bolder Elements 4.0)
-* Feature: Support for saturday delivery
+* Feature: Support for monday delivery
 * Feature: Start print position
 * Feature: Individual label printing from the order details page
 * Fix: Delivery options checkout in Edge browser
@@ -293,6 +340,7 @@ These are the biggest changes:
 * Feature: Pick colors for the delivery options
 * Feature: Set custom styles (CSS) for delivery options
 * Feature: Enter '0' for the delivery days window to hide dates in the delivery options
+* Fix: Don't apply 'only recipient' fee for morning & night delivery (already included)
 * Fix: Order search issues
 * Fix: 404 header on delivery options
 * Tweak: Several delivery options style adjustments
@@ -319,9 +367,10 @@ These are the biggest changes:
 * Completely revamped settings & export interface
 * New delivery options replaces old 'Pakjegemak':
 	* Postponed delivery (pick a delivery date)
+	* Home address only option
 	* Signature on delivery option
 	* Evening or morning delivery option
-	* postnl Pickup & Early postnl Pickup
+	* PostNL Pickup & Early PostNL Pickup
 	* Possibility to assign cost to the above delivery options
 * Create return labels from the WooCommerce backend
 * Uses new MyParcel API
@@ -419,7 +468,7 @@ These are the biggest changes:
 = 1.3.3 =
 * Fix: Checks for required fields
 * Tweak: Improved address formatting
-* Tweak: Removed placeholders on house number & box number for better compatibility with old browsers
+* Tweak: Removed placeholders on house number & suffix for better compatibility with old browsers
 
 = 1.3.2 =
 * Fix: Description labels for Custom ID ('Eigen kenmerk') & Message ('Optioneel bericht')
@@ -433,7 +482,7 @@ These are the biggest changes:
 * Button styles are now in CSS instead of inline
 
 = 1.2.0 =
-* Feature: The MyParcel checkout fields (street name / house number) can now also be modified on the my account page
+* Feature: The myparcel checkout fields (street name / house number) can now also be modified on the my account page
 * Fix: WooCommerce 2.1 compatibility (checkout field localisation is now in WC core)
 * Updated MyParcel tariffs
 
