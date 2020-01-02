@@ -172,6 +172,38 @@ class WCMP_Export_Consignments
     }
 
     /**
+     * Get the value of the insurance setting. Changes true/false to either 500 or 0 because the API expects an amount.
+     *
+     * @return int
+     */
+    private function getInsurance(): int
+    {
+        $isInsuranceActive = WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->deliveryOptions->getShipmentOptions()->getInsurance(),
+            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
+        );
+
+        $insuranceAmount = $this->getInsuranceAmount($isInsuranceActive);
+
+        return $insuranceAmount;
+    }
+
+    /**
+     * @param $isInsuranceActive
+     *
+     * @return int|mixed
+     */
+    private function getInsuranceAmount($isInsuranceActive)
+    {
+        if ($isInsuranceActive) {
+            return $this->getSetting("{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
+        }
+
+        return 0;
+    }
+
+
+    /**
      * Gets the recipient and puts its data in the consignment.
      *
      * @throws Exception
@@ -257,37 +289,6 @@ class WCMP_Export_Consignments
         $this->consignment
             ->setSignature($this->getSignature())
             ->setInsurance($this->getInsurance());
-    }
-
-    /**
-     * Get the value of the insurance setting. Changes true/false to either 500 or 0 because the API expects an amount.
-     *
-     * @return int
-     */
-    private function getInsurance(): int
-    {
-        $isInsuranceActive = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->deliveryOptions->getShipmentOptions()->getInsurance(),
-            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
-        );
-
-        $insuranceAmount = $this->getInsuranceAmount($isInsuranceActive);
-
-        return $insuranceAmount;
-    }
-
-    /**
-     * @param $isInsuranceActive
-     *
-     * @return int|mixed
-     */
-    private function getInsuranceAmount($isInsuranceActive)
-    {
-        if ($isInsuranceActive) {
-            return $this->getSetting("{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
-        }
-
-        return 0;
     }
 
     /**

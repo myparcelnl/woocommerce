@@ -1,5 +1,6 @@
 <?php
 
+use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
@@ -21,7 +22,7 @@ class WCMP_Data
      * @var array
      */
     public const CARRIERS_HUMAN = [
-        DPDConsignment::CARRIER_NAME   => 'DPD',
+        DPDConsignment::CARRIER_NAME    => 'DPD',
         PostNLConsignment::CARRIER_NAME => 'PostNL',
     ];
 
@@ -55,17 +56,17 @@ class WCMP_Data
         ];
 
         self::$packageTypesHuman = [
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME => __("Parcel", "woocommerce-myparcel"),
-            AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME => __("Mailbox package", "woocommerce-myparcel"),
-            AbstractConsignment::PACKAGE_TYPE_LETTER_NAME => __("Unpaid letter", "woocommerce-myparcel"),
+            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME       => __("Parcel", "woocommerce-myparcel"),
+            AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME       => __("Mailbox package", "woocommerce-myparcel"),
+            AbstractConsignment::PACKAGE_TYPE_LETTER_NAME        => __("Unpaid letter", "woocommerce-myparcel"),
             AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME => __("Digital stamp", "woocommerce-myparcel"),
         ];
 
         self::$deliveryTypesHuman = [
-            AbstractConsignment::DELIVERY_TYPE_MORNING        => __("Morning delivery", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_STANDARD       => __("Standard delivery", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_EVENING        => __("Evening delivery", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_PICKUP         => __("Pickup", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_MORNING  => __("Morning delivery", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_STANDARD => __("Standard delivery", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_EVENING  => __("Evening delivery", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_PICKUP   => __("Pickup", "woocommerce-myparcel"),
         ];
     }
 
@@ -151,9 +152,36 @@ class WCMP_Data
     }
 
     /**
+     *
+     * @return array
+     */
+    public static function getInsuranceAmount(): array
+    {
+        $carrier = ConsignmentFactory::createByCarrierName(WCMP_Settings::SETTINGS_POSTNL);
+        $amount2 = $carrier->insurance_possibilities_local;
+
+
+        foreach ($amount2 as $key => $value) {
+            $amount[$value] = $value;
+        }
+
+        return $amount;
+    }
+
+    /**
      * @return array
      */
     public static function getCarriersWithSignature(): array
+    {
+        return [
+            PostNLConsignment::CARRIER_NAME,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getCarriersWithOnlyRecipient(): array
     {
         return [
             PostNLConsignment::CARRIER_NAME,
@@ -167,7 +195,7 @@ class WCMP_Data
     {
         return [
             PostNLConsignment::CARRIER_NAME => __("PostNL", "woocommerce-myparcel"),
-            DPDConsignment::CARRIER_NAME   => __("DPD", "woocommerce-myparcel"),
+            DPDConsignment::CARRIER_NAME    => __("DPD", "woocommerce-myparcel"),
         ];
     }
 }

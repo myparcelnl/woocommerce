@@ -1,5 +1,6 @@
 <?php
 
+use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
@@ -22,10 +23,6 @@ class WCMP_Settings_Data
 
     public const DISPLAY_FOR_SELECTED_METHODS = "selected_methods";
     public const DISPLAY_FOR_ALL_METHODS      = "all_methods";
-    public const INSURED_HUNDRED              = "100";
-    public const INSURED_TWO_HUNDRED_FIFTY    = "250";
-    public const INSURED_FIVE_HUNDRED         = "500";
-    public const INSURED_MORE_THAN_HUNDRED    = "";
 
 
     /**
@@ -497,12 +494,7 @@ class WCMP_Settings_Data
                 "condition" => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
                 "label"     => __("Insured amount", "woocommerce-myparcel"),
                 "type"      => "select",
-                "options"   => [
-                    self::INSURED_HUNDRED           => __("Insured up to € 100", "woocommerce-myparcel"),
-                    self::INSURED_TWO_HUNDRED_FIFTY => __("Insured up to € 250", "woocommerce-myparcel"),
-                    self::INSURED_FIVE_HUNDRED      => __("Insured up to € 500", "woocommerce-myparcel"),
-                    self::INSURED_MORE_THAN_HUNDRED => __("> € 500", "woocommerce-myparcel"),
-                ],
+                "options"   => WCMP_Data::getInsuranceAmount(),
             ],
         ];
     }

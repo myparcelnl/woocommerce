@@ -178,17 +178,17 @@ class WCMP_Checkout
                 "closed"                => __("Closed", "woocommerce-myparcel"),
                 "deliveryStandardTitle" => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_STANDARD_TITLE),
                 "deliveryTitle"         => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_DELIVERY_TITLE),
-                "deliveryMorningTitle" => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_MORNING_DELIVERY_TITLE),
-                "deliveryEveningTitle" => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_EVENING_DELIVERY_TITLE),
+                "deliveryMorningTitle"  => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_MORNING_DELIVERY_TITLE),
+                "deliveryEveningTitle"  => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_EVENING_DELIVERY_TITLE),
                 "headerDeliveryOptions" => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE),
                 "houseNumber"           => __("House number", "woocommerce-myparcel"),
                 "openingHours"          => __("Opening hours", "woocommerce-myparcel"),
-                "pickUpFrom"           => __("Pick up from", "woocommerce-myparcel"),
-                "pickupTitle"          => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_PICKUP_TITLE),
-                "postcode"             => __("Postcode", "woocommerce-myparcel"),
-                "retry"                => __("Retry", "woocommerce-myparcel"),
-                "wrongHouseNumberCity" => __("Postcode/city combination unknown", "woocommerce-myparcel"),
-                "signatureTitle"       => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_SIGNATURE_TITLE)
+                "pickUpFrom"            => __("Pick up from", "woocommerce-myparcel"),
+                "pickupTitle"           => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_PICKUP_TITLE),
+                "postcode"              => __("Postcode", "woocommerce-myparcel"),
+                "retry"                 => __("Retry", "woocommerce-myparcel"),
+                "wrongHouseNumberCity"  => __("Postcode/city combination unknown", "woocommerce-myparcel"),
+                "signatureTitle"        => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_SIGNATURE_TITLE)
             ],
         ];
 
