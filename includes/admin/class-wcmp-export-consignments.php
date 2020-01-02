@@ -194,6 +194,17 @@ class WCMP_Export_Consignments
     }
 
     /**
+     * @return bool
+     */
+    private function getLargeFormat(): bool
+    {
+        return WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->deliveryOptions->getShipmentOptions()->hasLargeFormat(),
+            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
+        );
+    }
+
+    /**
      * Get the value of the insurance setting. Changes true/false to either 500 or 0 because the API expects an amount.
      *
      * @return int
@@ -311,7 +322,8 @@ class WCMP_Export_Consignments
             ->setSignature($this->getSignature())
             ->setOnlyRecipient($this->getOnlyRecipient())
             ->setInsurance($this->getInsurance())
-            ->setAgeCheck($this->getAgeCheck());
+            ->setAgeCheck($this->getAgeCheck())
+            ->setLargeFormat($this->getLargeFormat());
     }
 
     /**
