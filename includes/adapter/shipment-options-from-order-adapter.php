@@ -18,8 +18,9 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
         $shipmentOptionsAdapter = $originAdapter ? $originAdapter->getShipmentOptions() : null;
         $options                = $inputData['shipment_options'] ?? $inputData;
 
-        $this->signature = $this->isSignatureFromOptions($options, $shipmentOptionsAdapter);
-        $this->insurance = $this->isInsuranceFromOptions($options, $shipmentOptionsAdapter);
+        $this->signature      = $this->isSignatureFromOptions($options, $shipmentOptionsAdapter);
+        $this->only_recipient = $this->isOnlyRecipientFromOptions($options, $shipmentOptionsAdapter);
+        $this->insurance      = $this->isInsuranceFromOptions($options, $shipmentOptionsAdapter);
     }
 
     /**
@@ -36,6 +37,25 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
 
         if ($shipmentOptionsAdapter) {
             return $shipmentOptionsAdapter->hasSignature();
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array                               $options
+     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
+     *
+     * @return bool|null
+     */
+    private function isOnlyRecipientFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
+    {
+        if (key_exists('only_recipient', $options)) {
+            return (bool) $options['only_recipient'];
+        }
+
+        if ($shipmentOptionsAdapter) {
+            return $shipmentOptionsAdapter->hasOnlyRecipient();
         }
 
         return false;
