@@ -151,7 +151,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "type"      => "select",
             "options"   => WCMP_Data::getInsuranceAmount(),
             "label"     => __("Insurance amount", "woocommerce-myparcel"),
-            "value"     => (bool) $insuranceAmount,
+            "value"     => (int) $insuranceAmount,
         ],
     ];
 
