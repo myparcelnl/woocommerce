@@ -142,16 +142,6 @@ class WCMP_Data
     }
 
     /**
-     * @return array
-     */
-    public static function getCarriersWithInsurance(): array
-    {
-        return [
-            PostNLConsignment::CARRIER_NAME,
-        ];
-    }
-
-    /**
      *
      * @return array
      */
@@ -181,6 +171,16 @@ class WCMP_Data
      * @return array
      */
     public static function getCarriersWithOnlyRecipient(): array
+    {
+        return [
+            PostNLConsignment::CARRIER_NAME,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getCarriersWithInsurance(): array
     {
         return [
             PostNLConsignment::CARRIER_NAME,
