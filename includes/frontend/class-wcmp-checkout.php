@@ -225,11 +225,11 @@ class WCMP_Checkout
                 "dropOffDays"        => $settings->getByName($dropOffDays),
                 "dropOffDelay"       => $settings->getIntegerByName($dropOffDelay),
 
-                "pricePickup"    => $settings->getFloatByName($pricePickup),
-                "priceSignature" => $settings->getFloatByName($priceSignature),
-                "priceOnlyRecipient"   => $settings->getFloatByName($priceOnlyRecipient),
-                "priceEveningDelivery" => $settings->getFloatByName($priceEveningDelivery),
-                "priceMorningDelivery" => $settings->getFloatByName($priceMorningDelivery),
+                "pricePickup"           => $settings->getFloatByName($pricePickup),
+                "priceSignature"        => $settings->getFloatByName($priceSignature),
+                "priceOnlyRecipient"    => $settings->getFloatByName($priceOnlyRecipient),
+                "priceEveningDelivery"  => $settings->getFloatByName($priceEveningDelivery),
+                "priceMorningDelivery"  => $settings->getFloatByName($priceMorningDelivery),
                 "priceSaturdayDelivery" => $settings->getFloatByName($priceSaturdayDelivery),
             ];
         }
