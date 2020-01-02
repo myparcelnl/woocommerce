@@ -150,11 +150,6 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "name"      => "[shipment_options][insured_amount]",
             "type"      => "select",
             "options"   => WCMP_Data::getInsuranceAmount(),
-            "condition" => [
-                "name"         => "[shipment_options][insured]",
-                "type"         => "disable",
-                "parent_value" => 1,
-            ],
             "label"     => __("Insurance amount", "woocommerce-myparcel"),
             "value"     => (int) $insuranceAmount,
         ],
@@ -178,8 +173,6 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         if (is_bool($option_row["value"])) {
             $option_row["value"] = $option_row["value"] ? WCMP_Settings_Data::ENABLED : WCMP_Settings_Data::DISABLED;
         }
-
-
 
         woocommerce_form_field(
             $namePrefix . $option_row["name"],
