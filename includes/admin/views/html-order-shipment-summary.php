@@ -20,7 +20,8 @@ $shipments       = WCMP()->export->get_shipment_data([$shipment_id], $order);
 $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 
 $option_strings = [
-    "signature" => __("Signature on delivery", "woocommerce-myparcel"),
+    "signature"      => __("Signature on delivery", "woocommerce-myparcel"),
+    "only_recipient" => __("Only recipient", "woocommerce-myparcel"),
 ];
 
 $firstShipment = $shipments[$shipment_id];
