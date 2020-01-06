@@ -210,7 +210,7 @@ class WCMP_Export_Consignments
     private function getReturnShipment(): bool
     {
         return WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->deliveryOptions->getShipmentOptions()->hasReturnShipments(),
+            $this->deliveryOptions->getShipmentOptions()->isReturn(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
         );
     }

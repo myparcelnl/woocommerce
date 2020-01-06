@@ -81,7 +81,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         );
 
         $returnShipment = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->hasReturnShipments(),
+            $shipment_options->isReturn(),
             "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
         );
 

@@ -188,7 +188,8 @@ class WCMP_Checkout
                 "postcode"              => __("Postcode", "woocommerce-myparcel"),
                 "retry"                 => __("Retry", "woocommerce-myparcel"),
                 "wrongHouseNumberCity"  => __("Postcode/city combination unknown", "woocommerce-myparcel"),
-                "signatureTitle"        => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_SIGNATURE_TITLE)
+                "signatureTitle"        => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_SIGNATURE_TITLE),
+                "onlyRecipientTitle"    => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_ONLY_RECIPIENT_TITLE),
             ],
         ];
 

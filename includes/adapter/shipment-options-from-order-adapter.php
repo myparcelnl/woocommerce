@@ -18,12 +18,12 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
         $shipmentOptionsAdapter = $originAdapter ? $originAdapter->getShipmentOptions() : null;
         $options                = $inputData['shipment_options'] ?? $inputData;
 
-        $this->signature        = $this->isSignatureFromOptions($options, $shipmentOptionsAdapter);
-        $this->only_recipient   = $this->isOnlyRecipientFromOptions($options, $shipmentOptionsAdapter);
-        $this->large_format     = $this->isLargeFormatFromOptions($options, $shipmentOptionsAdapter);
-        $this->return_shipments = $this->isReturnShipmentFromOptions($options, $shipmentOptionsAdapter);
-        $this->age_check        = $this->isAgeCheckFromOptions($options, $shipmentOptionsAdapter);
-        $this->insurance        = $this->isInsuranceFromOptions($options, $shipmentOptionsAdapter);
+        $this->signature      = $this->isSignatureFromOptions($options, $shipmentOptionsAdapter);
+        $this->only_recipient = $this->isOnlyRecipientFromOptions($options, $shipmentOptionsAdapter);
+        $this->large_format   = $this->isLargeFormatFromOptions($options, $shipmentOptionsAdapter);
+        $this->return         = $this->isReturnShipmentFromOptions($options, $shipmentOptionsAdapter);
+        $this->age_check      = $this->isAgeCheckFromOptions($options, $shipmentOptionsAdapter);
+        $this->insurance      = $this->isInsuranceFromOptions($options, $shipmentOptionsAdapter);
     }
 
     /**
@@ -95,7 +95,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
         }
 
         if ($shipmentOptionsAdapter) {
-            return $shipmentOptionsAdapter->hasReturnShipments();
+            return $shipmentOptionsAdapter->isReturn();
         }
 
         return false;
