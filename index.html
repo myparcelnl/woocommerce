@@ -1,281 +1,387 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en-us">
-    <head>
-        <meta charset="UTF-8"/>
-        <title>WooCommerce plugin installatie- gebruikershandleiding</title>
-        <meta name="description" content="Installatie- gebruikershandleiding voor de WooCommerce MyParcel plug-in">
-        <meta content="width=device-width, initial-scale=1" name="viewport"/>
-        <link rel="shortcut icon" href="https://backoffice.myparcel.nl/images/favicon/favicon.ico">
-        <link href="css/normalize.css" media="screen" rel="stylesheet" type="text/css"/>
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css"/>
-        <link href="https://myparcelnl.github.io/magento1/css/stylesheet.css" media="screen" rel="stylesheet" type="text/css"/>
-        <link href="css/github-light.css" media="screen" rel="stylesheet" type="text/css"/>
-        <script src="js/jquery-3.0.0.min.js"></script>
-        <script src="js/auto_menu.js"></script>
-    </head>
-    <body>
-        <section class="page-header">
-            <p>
-                <img alt="" src="media/logo_myparcel.png"/>
-                <img height="185" src="media/woocommerce-logo.png" style="margin-left: -55px;"/>
-            </p>
-            <h1 class="project-name">Installatie- gebruikershandleiding</h1>
-            <h2 class="project-tagline">Woocommerce MyParcel plugin 3.0</h2>
+<head>
+    <meta charset="UTF-8" />
+    <title>MyParcel WooCommerce Handleiding</title>
+    <meta name="description" content="The documentation to make a connection with MyParcel">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="shortcut icon" href="https://backoffice.myparcel.nl/images/favicon/favicon.ico">
+    <link href="css/normalize.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css" />
+    <link href="css/stylesheet.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="css/github-light.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="js/jquery-3.0.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/auto_menu.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="menu col-xs-4 col-lg-3">
+            <nav class="navbar nav nav-pills nav-stacked">
+                <div class="menu-items">
+                </div>
+            </nav>
+        </div>
+        <section class="page-header col-xs-8 col-xs-offset-4 col-lg-9 col-lg-offset-3">
+            <img height="185" alt="" src="media/logo_myparcel.png">
+            <h1 class="project-name">
+                Handleiding WooCommerce
+            </h1>
+            <br />
+            <a target="_blank" class="btn" href="https://google.nl">Link 1</a>
+            <a target="_blank" class="btn" href="https://google.nl">Link 2</a>
         </section>
-
-        <section class="main-content">
+        <section class="main-content col-xs-8 col-xs-offset-4 col-lg-7 col-lg-offset-4">
             <h1>Inleiding</h1>
             <p>
-                Deze handleiding beschrijft de functionaliteiten van de MyParcel plugin en hoe je de MyParcel plugin in jouw
-                webwinkel kunt installeren. Wij adviseren om de plugin eerst in een testomgeving te installeren voordat je deze in jouw live webshop zet. De installatie kan op twee manieren worden uitgevoerd:
+            Met deze WooCommerce plugin kun je vijf soorten MyParcel zendingen aanmaken
             </p>
-            <ol>
-                <li>Via de WordPress plugin directory</li>
-                <li>Handmatig uploaden</li>
-            </ol>
-            <p>Met deze WooCommerce plugin kun je vier soorten MyParcel zendingen aanmaken:</p>
-            <ol>
+            <ul>
                 <li>Pakketten binnen Nederland (huisadres en ophaallocaties PostNL)</li>
                 <li>Pakketten zowel binnen de EU als buiten de EU</li>
                 <li>Brievenbuspakje</li>
                 <li>Ongefrankeerd label</li>
-            </ol>
-
-            <h1>Inhoud</h1>
-            <div class="menu"></div>
-
-            <h1 id="1">1 Installatie</h1>
-            <p>Wij adviseren de installatie altijd eerst op een testomgeving uit te voeren en een back-up te maken van jouw webshop voor je begint.</p>
-
-            <h2 id="1_1">1.1 Via de WordPress plugin directory</h2>
-            <p>Om de MyParcel plugin te installeren via de WordPress plugin directory volg je de volgende stappen:</p>
-            <ol>
-                <li>Ga in WordPress naar het menu <span class="nice">Plugins > Nieuwe plugin</span>. </li>
-                <li>Typ in <span class="nice">MyParcel</span> en klik op zoeken.</li>
-                <li>Kies de plugin <span class="nice">WooCommerce MyParcel export</span> en klik op <span class="nice">Nu installeren</span>. De plugin wordt nu gedownload. </li>
-                <li>Wanneer het downloaden voltooid is, klik je op <span class="nice">Plugin activeren</span>.</li>
-            </ol>
-
-            <h2 id="1_2">1.2 Handmatig uploaden</h2>
-            <ol>
-                <li>Download de zip file van de plugin vanaf de WordPress site: <a href="http://www.wordpress.org/plugins/woocommerce-myparcel/" target="_blank">http://www.wordpress.org/plugins/woocommerce-myparcel/</a></li>
-                <li>Ga in WordPress naar het menu Plugins > Nieuwe plugin. </li>
-                <li>Klik bovenin het scherm op <span class="nice">Uploaden</span>.  </li>
-                <li>Kies het bestand en klik op <span class="nice">Nu Installeren</span>.</li>
-                <li>Wanneer het installeren voltooid is, klikt u op ‘Plugin activeren’. </li>
-            </ol>
-            <h2 id="1_3">1.3 Testen</h2>
-            <p>
-                Met de plugin van MyParcel worden bepaalde bezorgopties toegevoegd aan jouw checkout. Welke bezorgopties je jouw klant aan wil bieden kun je instellen in de configuratie van de MyParcel plug-in.
-                Wij adviseren dan ook om na het installeren van de plugin jouw bestelproces goed door te lopen of alles naar wens is. Met de checkout is het namelijk mogelijk om bijvoorbeeld uitgestelde levering in te stellen, het is dan fijn voor jou om te zien wat jouw klanten ook zullen zien.<br><br>
-                Ook omdat niet alle checkouts in Woocommerce hetzelfde werken is het nogmaals goed om te kijken of alles naar wens staat. Staat alles op de juiste plaats en is het goed uitgelijnd? Onze tip is om hier naar te kijken voordat jouw klanten dit gebruiken.
-            </p>
-
-            <h1 id="2">2 Configuratie</h1>
-            <p>Ga naar het menu <span class="nice">WooCommerce  → MyParcel</span> om de MyParcel plugin te configureren.<br></p>
-
-            <h2 id="2_1">2.1 Algemeen</h2>
-
-            <h3 id="2_1_1">2.1.1 API instellingen</h3>
-            <p>
-                Om verbinding te kunnen maken met jouw MyParcel account is het noodzakelijk om hier jouw API-key in te vullen.
-                Als je ingelogd bent in jouw MyParcel account op <a href="https://backoffice.myparcel.nl" target="_blank">backoffice.myparcel.nl</a>
-                dan kun je deze vinden in menu <span class="nice">Instellingen → Algemeen.</span>
-            </p>
-
-            <h3 id="2_1_2">2.1.2 Label weergave</h3>
-            <p>Geef hier aan of je het label direct wilt downloaden of wilt openen in een nieuw scherm.</p>
-
-            <h3 id="2_1_3">2.1.3 Label formaat</h3>
-            <p>Geef hier aan of je het label op een standaard (A4) of op een labelprinter (A6) wilt printen.</p>
-
-            <h3 id="2_1_4">2.1.4 Vraag om startpositie bij printen</h3>
-            <p>Met deze optie kan je verder gaan met printen, waar je de laatste keer was gebleven. Hierdoor zullen er geen stikkers overblijven op de A4.</p>
-
-            <h3 id="2_1_5">2.1.5 Track&Trace instellingen</h3>
-            <p>Stel ’Email track&trace code’ in zodat het emailadres van de klant wordt meegestuurd naar MyParcel. Het emailadres kan door MyParcel worden gebruikt om de Track&Trace mail te versturen naar de klant.</p>
-
-            <h3 id="2_1_6">2.1.6 Verwerk zendingen direct</h3>
-            <p>Wanneer je deze optie inschakelt, zullen zendingen direct worden verwerkt wanneer deze verzonden zijn naar MyParcel.</p>
-
-            <h3 id="2_1_7">2.1.7 Orderstatus automatisering</h3>
-            <p>
-                Wijzig automatisch de order status na het succesvol exporteren van een order naar MyParcel.<br><br>
-                <i>Let op dat <b>Verwerk zendingen direct</b> is ingeschakeld wanneer u deze optie gebruikt in combinatie met de Track&trace in email optie, anders wordt de track&trace code niet opgenomen in de email naar de klant.</i>
-            </p>
-
-            <h3 id="2_1_8">2.1.8 Bewaar oude zendingen</h3>
-            <p>Wanneer deze optie is ingeschakeld, zullen de gegevens van de vorige zendingen (track&trace links) in de order worden bewaard wanneer je meer dan één keer exporteert.</p>
-
-            <h3 id="2_1_9">2.1.9 Bewaar barcode in een notitie</h3>
-            <p>Plaats de barcode in een notitie van een order, hierdoor is het mogelijk voor andere plugins om de barcode makkelijk te kunnen uitlezen.</p>
-
-            <h3 id="2_1_10">2.1.10 Diagnostische hulpmiddelen</h3>
-            <p>Je kunt de diagnostische hulpmiddelen inschakelen op het moment dat er problemen zijn met het exporteren van de zendingen. In dit bestand wordt de communicatie tussen WooCommerce en MyParcel beschreven.</p>
-
-            <img src="media/woocommerce1.png">
-            <h2 id="2_2">2.2 Standaard exportinstellingen</h2>
-
-            <h3 id="2_2_1">2.2.1 Pakkettype koppelen aan verzendtype</h3>
-            <p>
-            Je kunt verzendmethoden koppelen aan een pakkettype, zodat het juiste label wordt aangemaakt in jouw MyParcel account. Met onderstaand voorbeeld lichten we dit verder toe.<br><br>
-            <img src="media/woocommerce4.png">
-            <br><br>
-
-            In het voorbeeld is te zien dat de verzendmethode <span class="nice">Vast tarief</span> is gekoppeld aan het pakkettype <span class="nice">Pakket</span>
-
-            Daarnaast hebben we de naam van de verzendmethode <span class="nice">Flat rate NL</span> aangepast naar <span class="nice">Brievenbuspakket</span> en deze is gekoppeld aan <span class="nice">Brievenbuspakje</span>. Dit betekent dat orders met deze verzendmethode als brievenbuspakje doorgezet worden naar MyParcel.<br><br>
-                Naast pakketen en brievenbuspakjes is het ook mogelijk om <span class="nice">Ongefrankeerd</span> en <span class="nice">Digitale postzegel</span> aan te maken. In het bovenstaande voorbeeld is er te zien dat de verzendmethoden <span class="nice">Gratis verzenden</span> gekoppeld is aan <span class="nice">Ongefrankeerd</span> en <span class="nice">Digitale postzegel</span> aan <span class="nice">Digitale postzegel</span>.
-            Je kunt dit uiteraard ook weglaten of hier een andere verzendmethoden aan koppelen.
-             <br><br>
-             De checkout is nu ook gekoppeld aan deze verzendmethoden. Wanneer jouw klant voor de optie <span class="nice">Brievenbuspakket</span>, <span class="nice">Ongefrankeerd</span> of <span class="nice">Digitale postzegel</span> heeft gekozen zal de uitgebreide checkout niet getoond worden. Ook bij zendingen naar het buitenland wordt deze checkout dan niet getoond. De reden hiervoor is omdat de extra opties niet beschikbaar zijn in combinatie met een brievenbuspakket of een buitenlandse zending.
-            </p>
-            <p>
-              Wanneer er gebruik wordt gemaakt van <span class="nice">verzendklassen</span>, dan is het ook mogelijk om deze aan de checkout te koppelen.<br><br>
-              <img src="media/woo_verzendklassen_2.png">
-              <img src="media/woo_verzendklassen_1.png">
-              <img src="media/woo_verzendklassen_3.png"><br><br>
-              <i>Let op! Het gaat hier om de standaardinstelling. Uiteraard kan dit nog per order handmatig aangepast worden.</i>
-            </p>
-
-            <h3 id="2_2_2">2.2.2 Koppel emailadres klant</h3>
-            <p>Je kunt de keuze maken om wel of niet het e-mailadres vanuit jouw orders mee te sturen naar MyParcel. Wanneer je het emailadres van de klant koppelt, kan je instellen dat MyParcel jouw  Track&Trace emails verstuurd naar dit adres. In jouw MyParcel backend kun je zelf deze email in of uitschakelen en opmaken in jouw eigen stijl.</p>
-
-            <h3 id="2_2_3">2.2.3 Extra verzendopties</h3>
-            <p>Geef direct aan wat jouw standaard verzendopties zijn voor jouw Nederlandse pakket zendingen. Je kunt hier kiezen voor <span class="nice">extra groot formaat</span>, <span class="nice">alleen huisadres</span>, <span class="nice">handtekening voor ontvangst</span>, <span class="nice">leeftijdscheck 18+</span>, <span class="nice">retour bij geen gehoor</span> en <span class="nice">verzekerd verzenden</span>. Jouw zendingen krijgen hiermee standaard de verzendoptie mee wanneer je deze exporteerd. De opties die je hier aangeeft, kunnen bij het exporteren altijd nog per zending aangepast worden.</p>
-
-            <h3 id="2_2_4">2.2.4 Leeftijdscheck 18+</h3>
-            <p>De leeftijdscheck is bedoeld voor pakketzendingen waarvoor de ontvanger 18+ moet zijn en dit moet bewijzen door middel van een identiteitsbewijs. Met deze verzendoptie zijn handtekening voor ontvangst en alleen huisadres inbegrepen. De leeftijdscheck is verder uitgesloten van de bezorgopties in de ochtend- en avondlevering.</p>
-
-            <h3 id="2_2_5">2.2.5 Label omschrijving</h3>
-            <p>Met deze optie kun je een beschrijving toevoegen aan de zending. Dit zal worden afgedrukt op de linkerbovenhoek van het label en kun je gebruiken om de zending in het MyParcel zendingenoverzicht op te zoeken. Gebruik [ORDER_NR] om het ordernummer te vermelden.</p>
-
-            <h3 id="2_2_6">2.2.6 Leeg pakket gewicht</h3>
-            <p>Geef hier aan wat het gewicht van een leeg pakket is, afgerond op gram.</p>
-
-            <h2 id="2_3">2.3 Checkout</h2>
-            <p>
-                Via het tabblad ‘Checkout’ heb je de mogelijkheid om meer verzendopties toe te voegen in jouw checkout.
-                Ook is het mogelijk om ervoor te kiezen de checkout niet enkel bij pakketten te tonen maar ook voor alle verzendmethoden.
-            </p>
-
-            <h3 id="2_3_1">2.3.1 MyParcel adresvelden</h3>
-            <p>Wanneer de optie MyParcel adresvelden aangevinkt wordt er gebruik gemaakt van de MyParcel adresvelden. Dit houdt in dat straat, huisnummer en toevoeging los komen te staan. Als je gebruik wilt maken van de standaard WooCommerce adresvelden, vink deze optie dan uit.</p>
-
-            <h3 id="2_3_2">2.3.2 Verwerking van zendingen</h3>
-            <p>
-                Op basis van de opties <span class="nice">Afleverdagen</span>, <span class="nice">Sluitingstijd</span>, <span class="nice">Verwerkingstijd</span> en <span class="nice">Leverdagen venster</span>  worden de juiste levertijden en –dagen getoond aan jouw klanten via de checkout, gebaseerd op jouw manier van orderverwerking.
-                Daarnaast is het mogelijk om de checkout te verplaatsen via <span class="nice">Bezorgopties positie</span>, zodat hij op de gewenste positie komt te staan.<br><br>
-                <img src="media/woocommerce7.png"><br>
-            </p>
-            <p>
-                <b>Bezorgopties positie</b><br>
-                Zou je de checkout op een andere plek willen hebben dan is dat mogelijk via de <span class="nice">bezorgopties positie.</span> Je kan de MyParcel checkout op drie verschillende plekken zetten bijvoorbeeld <span class="nice">na factuurgegevens</span>,<span class="nice">na verzendgegevens</span> of <span class="nice">na notities</span>.<br><br>
-
-                <b>Afleverdagen</b><br>
-                Hiermee kun je aangeven op welke dagen jij het pakket afgeeft bij een PostNL locatie. Jouw klanten krijgen hiermee de juiste beschikbare bezorgdagen aangeboden.<br><br>
-
-                <b>Sluitingstijd</b><br>
-                Met de sluitingstijd kun je aangeven tot welk moment van de dag de orders nog verwerkt kunnen worden. Als je elke dag rond 17:00 de bestellingen naar een PostNL locatie brengt is het handig om de laatste order rond 16:00 te verwerken. Wanneer jouw klanten na dit tijdstip een bestelling plaatsen zien zij een latere levermogelijkheid. Bijvoorbeeld:
-                Sluitingstijd is om 16:00 en je kunt dezelfde dag de orders verwerken en op tijd inleveren. Dan zal jouw klant als eerste levermogelijkheid voor 16:00 de volgende dag zien. Wanneer jouw klant na 16:00 besteld zal het de dag erna zijn.<br><br>
-
-                <b>Verwerkingstijd</b><br>
-                Je kunt hier instellen hoeveel dagen jij nodig hebt om een order, die vóór jouw laatste besteltijd binnenkomt, te verwerken. Als je bijvoorbeeld 1 dag invult, zal er in de weergave in de check-out altijd rekening gehouden worden met het feit dat jij de pakketten dus niet morgen geleverd worden. Bijvoorbeeld:
-                De bestelling wordt geplaatst op 16 september voordat jij naar het PostNL punt gaat. Je hebt echter een verwerkingstijd van 1 dag ingesteld, dus de eerste mogelijkheid voor jou om het pakket in te leveren is dan 17 september. Jouw klant krijgt dan dus pas 18 september als eerst mogelijke leverdag te zien.<br><br>
-
-                <b>Leverdagen venster</b><br>
-                Met deze optie kun je aangeven tot hoever in de toekomst jouw klanten een leverdag kunnen kiezen. In dit geval staat het op 10 dagen, maar dit kan natuurlijk ook 2 of 5 dagen zijn. Het maximum is 14 dagen. Wanneer het leverdagenvenster op '0' wordt gezet, zullen de dagen niet meer worden getoond, waardoor de consument geen dag meer kan kiezen.<br><br>
-                <i>Let op: PostNL houdt geen rekening met de gekozen leverdag van jouw klant. Je dient zelf zorg te dragen voor het op de juiste dag inleveren van jouw pakket.</i>
-            </p>
-
-            <h3 id="2_3_3">2.3.3 Bezorgopties</h3>
-            <p>
-                Bij de verschillende bezorgopties is het mogelijk een toeslag in te stellen. Deze zal voor de desbetreffende bezorgoptie doorberekend wordt aan jouw klant, via de checkout. Het is mogelijk om min bedragen in te voeren ook deze zal dan in de checkout te zien zijn.
-                Het is dus een toeslag op de standaardtarieven die je al hebt ingevoerd. In onderstaand voorbeeld zie je hoe deze toeslagen in de checkout terugkomen.<br><br>
-                <img src="media/woocommerce6.png" style="width: 400px;">
-                <img src="media/checkout_posnl_locatie.png" style="width: 400px; position: absolute;"><br>
-                <i><b>Let op:</b> de MyParcel checkout kan er op iedere website er anders uit zien. De checkout zal de style van het thema overnemen.</i><br><br>
-
-                Bij de opties <span class="nice">ochtendlevering</span>, <span class="nice">avondlevering</span> en de <span class="nice">standaard bezorgtitel</span> is het mogelijk een titel mee te geven. Deze titel zal aan de voorkant van de website te zien zijn.
-                Zodra er geen titel is ingevuld zullen er tijden te zien zijn waartussen het pakket bezorg word.
-            </p>
-            <img src="media/checkoutpakketwoo.png">
-
-            <h3 id="2_3_4">2.3.4 België bezorgopties</h3>
-            <p>
-                Naast het feit dat het mogelijk is om jouw pakketten bij een Nederlandse PostNL punt te laten bezorgen, is het ook mogelijk om voor een Belgische PostNL punt te kiezen.<br><br>
-
-                <b>België thuislevering titel</b><br>
-                De titel die je wilt gebruiken voor het thuis late bezorgen is aan te passen ten optichte van een Nederlandse zending.<br><br>
-
-                <b>België standaard bezorgtitel</b><br>
-                De titel die je wilt gebruiken voor een standaard levering naar België is aan te passen ten optichte van een Nederlandse zending. Wanneer er geen titel is ingevuld, worden de bezorgtijden automatisch zichtbaar.<br><br>
-                <img src="media/belgieDeliveryOptions.png"><br>
-            </p>
-
-            <h1 id="3">3 Orderoverzicht</h1>
-            <p>In het orderoverzicht kun je eenvoudig zien wat voor zending de nieuwe bestelling betreft. Ook kun je makkelijk het pakkettype wijzigen indien dit gewenst is. Wanneer je op <span class="nice">Pakket</span> klikt verschijnt het venster eronder. Hierin is het mogelijk om verzendopties uit te schakelen of juist toe te voegen of het soort zending aan te passen.</p>
-            <p>Na het kiezen van jouw gewenste opties of het wijzigen van het <span class="nice">Soort zending</span> klik je op <span class="nice">Opslaan</span> en daarna kun je deze keuze exporteren naar MyParcel en het gewenste label aanmaken.<br><br></p>
-            <img src="media/woocommerce8.png"><br><br>
-
-            <p>
-                Je kunt op 2 manieren jouw orders doorzetten naar MyParcel en hier vervolgens een label voor uitprinten.
-                Namelijk door een order (of meerdere orders) te selecteren en vervolgens naar <span class="nice">Acties</span>
-                te gaan. Daar kun je jouw keuze maken <span class="nice">Exporteren</span>, <span class="nice">Printen</span> of
-                <span class="nice">Exporteren en Printen</span>. Zowel bij bulk als bij een enkele export wordt er een
-                laadicoontje zichtbaar. Vervolgens wordt de pagina ook direct ververst. (zie voorbeeld hieronder)<br><br>
-            </p>
-            <img src="media/laadicoontje.png">
-            <img src="media/woocommerce9.png"><br><br>
-
-            <h2 id="3_1">3.1 Retourlabel email</h2>
-            <p>
-                Vanuit het orderoverzicht kun je een retourlink naar jouw klant sturen. Jouw klant ontvangt een e-mail
-                met een link er in om eenvoudig een retourlabel te printen. In onderstaande afbeelding kun je zien welk
-                icoontje hiervoor gebruikt kan worden.
-            </p>
-            <img src="media/retourlabelmailbutton.png"><br><br>
-            <img src="media/retouremailwoo.png">
-
-            <h1 id="4">4 Orderdetails</h1>
-            <p>
-                Uiteraard is het ook mogelijk om zendingen vanuit de order detailpagina zendingen aan te maken.
-                Door op een order te klikken kom je op een pagina waar meer details over deze bestelling te vinden is.
-            </p>
-            <img src="media/woocommerce10.png">
-
-            <h1 id="5">5 Zending informatie</h1>
-            <p>
-                Als je informatie over jouw zending wilt zien is het niet nodig om dit te bekijken in jouw MyParcel
-                account. Je kunt deze informatie bekijken in jouw order overzicht in WooCommerce.<br><br>
-                Bij elke order die wordt doorgezet naar MyParcel en waarvoor een label is aangemaakt komt een
-                <span class="nice">i</span> te staan. Door hierop te klikken wordt er meer informatie getoond over de status van de zending.
-            </p>
-            <img src="media/woocommerce11.png">
-
-            <h1 id="6">6 Extra opties</h1>
-            <p>
-                Het is in Woocommerce ook mogelijk om verzendtarieven te hanteren voor producten of bepaalde
-                productgroepen. Om hier meer over te lezen kun je het volgende PDF bestand downloaden. Hierin staat
-                meer uitgelegd over de werking van de verzendklassen of het werken met table rates.<br><br>
-            </p>
-            <a href="https://github.com/myparcelnl/woocommerce-myparcel/raw/gh-pages/media/verzendtarieven.pdf"> Klik hier voor de uitleg</a>
-
-            <footer class="site-footer">
-                    <p><span class="site-footer-owner">MyParcel</span></p>
+                <li>Digitale Postzegel</li>
+            </ul>
+            <div class="box">
+                <p>
+                    Plugins van derden die we ondersteunen
+                </p>
+                <ul>
+                    <li><a href="https://woocommerce.com/products/table-rate-shipping/#" target="_blank" style="color: #0F5C47;">WooCommerce table rate plugin</a></li>
+                    <li><a href="https://bolderelements.net/" target="_blank" style="color: #0F5C47;">Bolder elements table rate plugin</a></li>
+                </ul>
+                <p>
+                    <b><i>Let op:</i></b> Wij leveren geen support op deze plugins!
+                </p>
+            </div>
+            <div style="margin-top:10px">
+                <h1 id="1">1. Installatie</h1>
+                <p>
+                    Deze handleiding beschrijft de functionaliteiten van de MyParcel plugin en hoe je de MyParcel plugin in jouw webwinkel kunt installeren. Wij adviseren de installatie altijd eerst op een testomgeving uit te voeren en een back-up te maken van jouw webshop voor je begint. De installatie kan op twee manieren worden uitgevoerd:
+                 </p>
+                <h2 id="1_A">1.1 Via de WordPress plugin directory</h2>
+                <p>
+                    Om de MyParcel plugin te installeren via de WordPress plugin directory volg je de volgende stappen:
+                </p>
+                <ol>
+                    <li>Ga in WordPress naar het menu Plugins > Nieuwe plugin.</li>
+                    <li>Typ in MyParcel en klik op zoeken.</li>
+                    <li>Kies de plugin WooCommerce MyParcel en klik op nu installeren. De plugin wordt nu gedownload.</li>
+                    <li>Wanneer het downloaden voltooid is, klik je op Plugin activeren.</li>
+                </ol>
+                <h2 id="1_B">1.2 Handmatig uploaden</h2>
+                <ol>
+                    <li>Download de zip file van de plugin vanaf de <a href="http://www.wordpress.org/plugins/woocommerce-myparcel/" target="_blank" style="color: #0F5C47;">WordPress site</a> </li>
+                    <li>Ga in WordPress naar het menu Plugins > Nieuwe plugin.</li>
+                    <li>Klik bovenin het scherm op Plugin Uploaden.</li>
+                    <li>Kies het bestand dat je net hebt gedownload en klik op nu installeren.</li>
+                    <li>Wanneer het installeren voltooid is, klik je op ‘Plugin activeren’.</li>
+                </ol>
+                <h2 id="1_C">1.3 Testen</h2>
+                <p>
+                    Met de plugin van MyParcel worden bepaalde bezorgopties toegevoegd aan jouw checkout. Welke bezorgopties je jouw klant aan wil bieden kun je instellen in de configuratie van de MyParcel plug-in. Wij adviseren dan ook om na het installeren van de plugin jouw bestelproces goed door te lopen of alles naar wens is. Met de checkout is het namelijk mogelijk om bijvoorbeeld uitgestelde levering in te stellen, het is dan fijn voor jou om te zien wat jouw klanten ook zullen zien.
+                    <br>
+                    <br>
+                    Ook omdat niet alle checkouts in Woocommerce hetzelfde werken is het nogmaals goed om te kijken of alles naar wens staat. Staat alles op de juiste plaats en is het goed uitgelijnd? Onze tip is om hier naar te kijken voordat jouw klanten dit gebruiken.
+                </p>
+                <h1 id="2">2. Configuratie</h1>
+                <p>
+                    Ga in het linker menu naar het kopje WooCommerce → MyParcel om de MyParcel plugin te configureren.
+                </p>
+                <h2 id="2_A">2.1 Algemeen</h2>
+                <img src="media/WOO_ALGEMEEN.jpg">
+                <h3>API instellingen</h3>
+                <p>
+                    Om verbinding te kunnen maken met jouw MyParcel account is het noodzakelijk om hier jouw API-key in te vullen. Als je ingelogd bent in jouw MyParcel account dan kun je deze vinden in menu <span class="nice">Shopinstellingen → Algemeen</span>.
+                </p>
+                <img src="media/WOO_APIKEY.jpg">
+                <h3>Label weergave</h3>
+                <p>
+                    Geef hier aan of je het label direct wilt downloaden of wilt openen in een nieuw scherm.
+                </p>
+                <img src="media/WOO_labelweergave.jpg">
+                <h3>Label formaat</h3>
+                <p>
+                    Geef hier aan of je het label op een standaard (A4) of op een labelprinter (A6) wilt printen.
+                </p>
+                <img src="media/WOO_LABELFORMAAT.jpg">
+                <h3>Vraag om startpositie bij printen</h3>
+                <p>
+                    Met deze optie kan je verder gaan met printen, waar je de laatste keer was gebleven. Hierdoor zullen er geen stickers overblijven op de A4.
+                </p>
+                <img src="media/WOO_STARTPOS.jpg">
+                <h3>Track&Trace instellingen</h3>
+                <p>
+                    Stel ’Email track&trace code’ in zodat het emailadres van de klant wordt meegestuurd naar MyParcel. Het emailadres kan door MyParcel worden gebruikt om de track&trace mail te versturen naar de klant. <b>Let op</b> dat ‘Verwerk zendingen direct’ is ingeschakeld wanneer u deze optie gebruikt in combinatie met de Track&trace in email optie, anders wordt de track&trace code niet opgenomen in de email    naar de klant.
+                </p>
+                <img src="media/WOO_T&TINEMAIL.jpg">
+                <p>
+                    Toon track&trace trace code & link in het account van de klant als deze aangemaakt kan worden in de webshop.
+                </p>
+                <img src="media/WOO_T&TACCOUNT.jpg">
+                <h3>Verwerk zendingen direct</h3>
+                <p>
+                    Wanneer je deze optie inschakelt, zullen zendingen direct worden verwerkt wanneer deze verzonden zijn naar MyParcel.
+                </p>
+                <img src="media/WOO_VERWERKZENDINGENDIRECT.jpg">
+                <h3>Orderstatus automatisering</h3>
+                <p>
+                    Wijzig automatisch de order status na het succesvol exporteren van een order naar MyParcel. Ons advies is om deze op afgerond te zetten.
+                </p>
+                <img src="media/WOO_ORDER_AUTO.jpg">
+                <h3>Bewaar oude zendingen</h3>
+                <p>
+                    Wanneer deze optie is ingeschakeld, zullen de gegevens van de vorige zendingen (track&trace links) in de order worden bewaard wanneer je meer dan één keer exporteert.
+                </p>
+                <img src="media/WOO_BEWAAROUDEZENDINGEN.jpg">
+                <h3>Bewaar barcode in een notitie</h3>
+                <p>
+                    Plaats de barcode in een notitie van een order, hierdoor is het mogelijk voor andere plugins om de barcode makkelijk te kunnen uitlezen.
+                </p>
+                <img src="media/WOO_BEWAARBARCODE.jpg">
+                <h3>Titel voor barcode</h3>
+                <p>
+                    Je kunt hier de tekst veranderen voor de barcode in een notitie.
+                </p>
+                <img src="media/WOO_TITELBARCODE.jpg">
+                <h3>Diagnostische hulpmiddelen</h3>
+                <p>
+                    Je kunt de diagnostische hulpmiddelen inschakelen op het moment dat er problemen zijn met het exporteren van de zendingen. In dit bestand wordt de communicatie tussen WooCommerce en MyParcel beschreven.
+                </p>
+                <img src="media/WOO_DIAGNOTISCHE.jpg">
+                <h2 id="2_B">2.2 Standaard exportinstellingen</h2>
+                <h3>Pakkettype koppelen aan verzendtype</h3>
+                <p>
+                    Je kunt verzendmethoden koppelen aan een pakkettype, zodat het juiste label wordt aangemaakt in jouw MyParcel account. Met onderstaand voorbeeld lichten we dit verder toe.
+                </p>
+                <img src="media/WOO_STANDAARDEXPORT_PAKKET.jpg">
+                <p>
+                    In het voorbeeld is te zien dat de verzendmethode Vast tarief is gekoppeld aan het pakkettype Pakket. Dit betekent dat orders met deze verzendmethode als pakket doorgezet worden naar MyParcel.
+                </p>
+                <img src="media/WOO_STANDAARDEXPORT_BBP.jpg">
+                <p>
+                   In het voorbeeld is te zien dat de verzendmethode Vast tarief is gekoppeld aan het pakkettype Brievenbuspakje.Dit betekent dat orders met deze verzendmethode als brievenbuspakje doorgezet worden naar MyParcel.
+                </p>
+                <img src="media/WOO_STANDAARDEXPORT_DPZ.jpg">
+                <p>
+                    In het voorbeeld is te zien dat de verzendmethode Vast tarief is gekoppeld aan het pakkettype Digitale postzegel. Dit betekent dat orders met deze verzendmethode als digitale postzegel doorgezet worden naar MyParcel.
+                </p>
+                <p>
+                    De checkout is nu ook gekoppeld aan deze verzendmethoden. Wanneer jij hebt gekozen om het vast tarief te koppelen aan een Brievenbuspakket, Ongefrankeerd of Digitale postzegel dan zal de uitgebreide checkout niet getoond worden. Ook bij zendingen naar het buitenland wordt deze checkout dan niet getoond. De reden hiervoor is omdat de extra opties niet beschikbaar zijn in combinatie met een brievenbuspakket of een buitenlandse zending.
+                </p>
+                    <p class=nice>
+                        <b>Let op!</b> Het gaat hier om de standaardinstelling. Uiteraard kan dit nog per order handmatig aangepast worden.
+                    </p>
+                <h3>Koppel emailadres klant</h3>
+                <p>
+                    Je kunt de keuze maken om wel of niet het e-mailadres vanuit jouw orders mee te sturen naar MyParcel. Wanneer je het emailadres van de klant koppelt, kan je instellen dat MyParcel jouw Track&Trace emails verstuurd naar dit adres vanuit het MyParcel account. In jouw MyParcel backend kun je zelf deze email in of uitschakelen en opmaken in jouw eigen stijl.
+                </p>
+                <img src="media/WOO_KOPPELEMAIL.jpg">
+                <h3>Koppel telefoonnummer klant</h3>
+                <p>
+                    Wanneer je het telefoonnummer van de klant koppelt met de zending, kan de koerier dit gebruiken ten behoeve van de aflevering van het pakket. De afleverkans voor buitenlandzendingen wordt hiermee aanzienlijk verhoogd.
+                </p>
+                <img src="media/WOO_KOPPELTELNUMMER.jpg">
+                <h3>Extra verzendopties</h3>
+                <p>
+                    Geef direct aan wat jouw standaard verzendopties zijn voor jouw Nederlandse pakket zendingen. Je kunt hier kiezen voor extra groot formaat, alleen huisadres, handtekening voor ontvangst, leeftijdscheck 18+, retour bij geen gehoor en verzekerd verzenden. Jouw zendingen krijgen hiermee standaard de verzendoptie mee wanneer je deze exporteert. De opties die je hier aangeeft, kunnen bij het exporteren altijd nog per zending aangepast worden.
+                </p>
+                <img src="media/WOO_EXTRASTANDAARD_OPTIES.jpg">
+                <h3>Leeftijdscheck 18+</h3>
+                <p>
+                    De leeftijdscheck is bedoeld voor pakketzendingen waarvoor de ontvanger 18+ moet zijn en dit moet bewijzen door middel van een identiteitsbewijs. Met deze verzendoptie zijn handtekening voor ontvangst en alleen huisadres inbegrepen. De leeftijdscheck is verder uitgesloten van de bezorgopties in de ochtend- en avondlevering.
+                </p>
+                <h3>Label omschrijving</h3>
+                <p>
+                    Met deze optie kun je een beschrijving toevoegen aan de zending. Dit zal worden afgedrukt op de linkerbovenhoek van het label en kun je gebruiken om de zending in het MyParcel zendingenoverzicht op te zoeken. Gebruik [ORDER_NR] om het ordernummer te vermelden.
+                </p>
+                <h3>Leeg pakket gewicht</h3>
+                <p>
+                    Geef hier aan wat het gewicht van een leeg pakket is, afgerond op gram.
+                </p>
+                <img src="media/WOO_LEEGPAKKET.jpg">
+                <h3>Wereld zendingen</h3>
+                <p>
+                    Vul hier de standaard HS code in en geef de inhoud van de zending aan.
+                    Wanneer en er order van buiten de EU wordt geplaatst dan zal er meteen een douaneformulier aangemaakt worden via deze HS code.
+                </p>
+                <img src="media/WOO_WERELDZENDINGEN.jpg">
+                <h2 id="2_C">2.3 Checkout</h2>
+                <img src="media/WOO_CHECKOUT.jpg">
+                <p>
+                    Via het tabblad ‘Checkout’ heb je de mogelijkheid om meer verzendopties toe te voegen in jouw checkout.
+                </p>
+                <h3>MyParcel adresvelden</h3>
+                <p>
+                    Wanneer de optie MyParcel adresvelden aangevinkt wordt er gebruik gemaakt van de MyParcel adresvelden. Dit houdt in dat straat, huisnummer en toevoeging los komen te staan. Als je gebruik wilt maken van de standaard WooCommerce adresvelden, vink deze optie dan uit.
+                </p>
+                <img src="media/WOO_MPADRESVELDEN.jpg">
+                <h3>Bezorgopties inschakelen</h3>
+                <p>
+                    Met deze functie schakel je de bezorgopties in en activeer je de MyParcel checkout.
+                </p>
+                <img src="media/WOO_MPBEZORGOPTIESINSCHAKELEN.jpg">
+                <h3>Toon bij</h3>
+                <p>
+                    Deze zal in alle gevallen op ‘Verzendmethoden gekoppeld aan pakket’ zijn.
+                    Dit omdat er enkel bezorgopties aan een pakket zending gegeven kunnen worden.
+                </p>
+                <img src="media/WOO_TOONBIJ.jpg">
+                <h3>Verwerking van zendingen</h3>
+                <p>
+                    Op basis van de opties Afleverdagen, Sluitingstijd, Verwerkingstijd en Leverdagen venster worden de juiste levertijden en –dagen getoond aan jouw klanten via de checkout, gebaseerd op jouw manier van orderverwerking. Daarnaast is het mogelijk om de checkout te verplaatsen via Bezorgopties positie, zodat hij op de gewenste positie komt te staan.
+                </p>
+                <h3>Bezorgopties positie</h3>
+                <p>
+                    Zou je de checkout op een andere plek willen hebben dan is dat mogelijk via de bezorgopties positie. Je kan de MyParcel checkout op drie verschillende plekken zetten bijvoorbeeld na factuurgegevens, na verzendgegevens of na notities.
+                </p>
+                <img src="media/WOO_BEZORGOPTIE_POSITIE.jpg">
+                <h3>Afleverdagen</h3>
+                <p>
+                    Hiermee kun je aangeven op welke dagen jij het pakket afgeeft bij een PostNL locatie. Jouw klanten krijgen hiermee de juiste beschikbare bezorgdagen aangeboden.
+                </p>
+                <img src="media/WOO_AFLEVERDAGEN.jpg">
+                <h3>Sluitingstijd</h3>
+                <p>
+                    Met de sluitingstijd kun je aangeven tot welk moment van de dag de orders nog verwerkt kunnen worden. Als je elke dag rond 17:00 de bestellingen naar een PostNL locatie brengt is het handig om de laatste order rond 16:00 te verwerken. Wanneer jouw klanten na dit tijdstip een bestelling plaatsen zien zij een latere levermogelijkheid. Bijvoorbeeld: Sluitingstijd is om 16:00 en je kunt dezelfde dag de orders verwerken en op tijd inleveren. Dan zal jouw klant als eerste levermogelijkheid voor 16:00 de volgende dag zien. Wanneer jouw klant na 16:00 besteld zal het de dag erna zijn.
+                </p>
+                <img src="media/WOO_SLUITINGSTIJD.jpg">
+                <h3>Verwerkingstijd</h3>
+                <p>
+                    Je kunt hier instellen hoeveel dagen jij nodig hebt om een order, die vóór jouw laatste besteltijd binnenkomt, te verwerken. Als je bijvoorbeeld 1 dag invult, zal er in de weergave in de check-out altijd rekening gehouden worden met het feit dat jij de pakketten dus niet morgen geleverd worden. Bijvoorbeeld: De bestelling wordt geplaatst op 16 september voordat jij naar het PostNL punt gaat. Je hebt echter een verwerkingstijd van 1 dag ingesteld, dus de eerste mogelijkheid voor jou om het pakket in te leveren is dan 17 september. Jouw klant krijgt dan dus pas 18 september als eerst mogelijke leverdag te zien.
+                    <br>
+                    <br>
+                    Bij geen verwerkingstijd vul je hier een ‘0’ (nul) in.
+                </p>
+                <img src="media/WOO_VERWERKINGTIJD.jpg">
+                <h3>Leverdagen venster</h3>
+                <p>
+                    Met deze optie kun je aangeven tot hoever in de toekomst jouw klanten een leverdag kunnen kiezen. In dit geval staat het op 10 dagen, maar dit kan natuurlijk ook 2 of 5 dagen zijn. Het maximum is 14 dagen. Wanneer het leverdagenvenster op '0' (nul) wordt gezet, zullen de dagen niet meer worden getoond, waardoor de consument geen dag meer kan kiezen.
+                </p>
+                <img src="media/WOO_LEVERDAGENVENSTER.jpg">
+                <p class=nice>
+                    <b>Let op!</b> PostNL houdt geen rekening met de gekozen leverdag van jouw klant. Je dient zelf zorg te dragen voor het op de juiste dag inleveren van jouw pakket.
+                </p>
+                <h3>Bezorgopties</h3>
+                <img src="media/WOO_BEZORGOPTIES.jpg">
+                <p>
+                    Bij de verschillende bezorgopties is het mogelijk een toeslag in te stellen. Deze zal voor de desbetreffende bezorgoptie doorberekend wordt aan jouw klant, via de checkout. Het is mogelijk om min bedragen in te voeren ook deze zal dan in de checkout te zien zijn. Het is dus een toeslag op de standaardtarieven die je al hebt ingevoerd. In onderstaand voorbeeld zie je hoe deze toeslagen in de checkout terugkomen.
+                </p>
+                <img src="media/WOO_BEDRAGEN%20OPTIES.jpg">
+                <p>
+                    Bij de opties ochtendlevering, avondlevering en de standaard bezorgtitel is het mogelijk een titel mee te geven. Deze titel zal aan de voorkant van de website te zien zijn. Zodra er geen titel is ingevuld zullen er tijden te zien zijn waartussen het pakket bezorgd wordt.
+                </p>
+                <p class=nice>
+                    <b>Let op!</b> de MyParcel checkout kan er op iedere website er anders uit zien. De checkout zal de style van het thema overnemen. Bedragen zijn fictief.
+                </p>
+                <h3>Maandag levering</h3>
+                <p>
+                    Ook is er een maandag levering mogelijk. <b>Let op:</b> Je moet zaterdag in je afleverdagen hebben en de sluitingstijd op zaterdag moet voor 15:00 zijn. (aanbevolen: 14:30)
+                </p>
+                <img src="media/WOO_MAANDAG.jpg">
+                <h3>België bezorgopties</h3>
+                <p>
+                    Naast het feit dat het mogelijk is om jouw pakketten bij een Nederlandse PostNL punt te laten bezorgen, is het ook mogelijk om voor een Belgisch PostNL punt te kiezen.
+                </p>
+                <h4>België thuislevering titel</h4>
+                <p>
+                    De titel die je wilt gebruiken voor het thuis laten bezorgen is aan te passen ten opzichte van een Nederlandse zending.
+                </p>
+                <h4>België standaard bezorgtitel</h4>
+                <p>
+                    De titel die je wilt gebruiken voor een standaard levering naar België is aan te passen ten opzichte van een Nederlandse zending. Wanneer er geen titel is ingevuld, worden de bezorgtijden automatisch zichtbaar.
+                </p>
+                <img src="media/WOO_BELGIEBEZORG.jpg">
+                <h2 id="2_E">2.5 Veelgestelde vragen over de configuratie</h2>
+                <p>
+                    Zet hier de veel gestelde vragen omtrent de configuratie.
+                </p>
+                <h1 id="3">3. Gebruik plugin</h1>
+                <p>
+                    Om de juiste informatie in het bestellingen overzicht te zien klik je rechtsboven op ‘Scherminstelingen’, er komt dan een dropdown naar beneden, en vink hier Bestemming, Barcode en Acties aan.
+                </p>
+                <img src="media/WOO_ACTIE&BESTEMMING.jpg">
+                <h2 id="3_A">3.1 Aanmaken van één verzendlabel</h2>
+                <p>
+                    Beschrijf hier hoe je een verzendlabel aanmaakt.
+                </p>
+                <img src='media/WOO_ENKEL_EXPORT.jpg'>
+                <h2 id="3_B">3.2 Aanmaken meerdere verzendlabels</h2>
+                <p>
+                    Beschrijf hier hoe je meerdere verzendlabels aanmaakt.
+                </p>
+                <img src='media/WOO_BULKPRINT.jpg'>
+                <h2 id="3_C">3.3 Aanpassen van een enkele zending</h2>
+                <p>
+                    In het orderoverzicht kun je eenvoudig zien wat voor zending de nieuwe bestelling betreft. Ook kun je makkelijk het pakkettype wijzigen indien dit gewenst is. Wanneer je op Pakket klikt verschijnt het venster eronder. Hierin is het mogelijk om verzendopties uit te schakelen of juist toe te voegen of het soort zending aan te passen.
+                </p>
+                <p>
+                    Na het kiezen van jouw gewenste opties of het wijzigen van het Soort zending klik je op Opslaan en daarna kun je deze keuze exporteren naar MyParcel en het gewenste label aanmaken.
+                </p>
+                <img src="media/WOO_AANPASSEN_ENK_ZENDING.jpg">
+                <h3>Orderdetails</h3>
+                <p>
+                    Uiteraard is het ook mogelijk om zendingen vanuit de order detailpagina zendingen aan te maken. Door op een order te klikken kom je op een pagina waar meer details over deze bestelling te vinden is.
+                </p>
+                <img src="media/WOO_ORDER_ZENDINGAANMAKEN.jpg">
+                <h2 id="3_D">3.4 Zending informatie</h2>
+                <p>
+                    Als je informatie over jouw zending wilt zien is het niet nodig om dit te bekijken in jouw MyParcel account. Je kunt deze informatie bekijken in jouw order overzicht in WooCommerce. Bij elke order die wordt doorgezet naar MyParcel en waarvoor een label is aangemaakt komt een ‘i’ te staan. Door hierop te klikken wordt er meer informatie getoond over de status van de zending. Mocht je meer gedetailleerde informatie willen dan kun je op de barcode klikken in de kolom barcode.
+                </p>
+                <img src='media/WOO_ORDERINFORMATIE.jpg'>
+                <h2 id="3_E">3.5 Checkout</h2>
+                <p>
+                    Beschrijf hier hoe de consument de checkout gebruikt.
+                </p>
+                <img src="media/WOO_BEZORG_CHECHOUT.jpg">
+                <img src="media/WOO_BEZORG_CHECKOU_OOPL.jpg">
+                <h2 id="3_F">3.6 Veelgestelde vragen over het gebruik van de plugin</h2>
+                <p>
+                    Zet hier de veel gestelde vragen omtrent het gebruik van de plugin.
+                </p>
+                <footer class="site-footer">
+                    <p>
+                        <span class="site-footer-owner">MyParcel</span>
+                    </p>
                     <p>
                         <span class="site-footer-credits">
-                            <strong>Adres </strong>Siriusdreef 66-68, 2132 WT Hoofddorp&nbsp;
+                            <strong>Adres </strong>Siriusdreef 66-68, 2132 WT Hoofddorp<br />
                             <strong>Telefoon </strong>023 30 30 315&nbsp;
-                            <strong>E-mail</strong> &nbsp;info@myparcel.nl<br/>
-                            <strong>Website </strong>www.myparcel.nl&nbsp;
+                            <strong>E-mail</strong> &nbsp;info@myparcel.nl<br />
+                            <strong>Website </strong><a href="https://www.myparcel.nl">www.myparcel.nl</a>&nbsp;
                             <strong>IBAN </strong>NL48ABNA0447850539&nbsp;
-                            <strong>KvK </strong>Amsterdam 34 09 97 58 <br/>
+                            <strong>KvK </strong>Amsterdam 34 09 97 58 <br />
                             <strong>BTW-nr. </strong>NL8045.33.258.B01
                         </span>
-
+                        <br />
+                        &nbsp;
                     </p>
                 </footer>
+            </div>
         </section>
-    </body>
+    </div>
+</div>
+<script>
+    // Set postman button attributes in one place
+    postman_buttons = document.getElementsByClassName('postman-run-button');
+
+    for (i = 0; i < postman_buttons.length; i++) {
+        postman_buttons[i].setAttribute('data-postman-action', 'collection/import');
+        postman_buttons[i].setAttribute('data-postman-var-1', '065786285c2e5ed75509');
+        postman_buttons[i].setAttribute('data-postman-param', 'env%5BMyParcel%20public%5D=W3siZW5hYmxlZCI6dHJ1ZSwia2V5IjoiYXBpX2tleSIsInZhbHVlIjoiIn0seyJrZXkiOiJVc2VyLUFnZW50IiwidmFsdWUiOiJ7e1VzZXItQWdlbnR9fSIsImRlc2NyaXB0aW9uIjoiIiwiZW5hYmxlZCI6dHJ1ZX0seyJrZXkiOiJhdXRoX3Rva2VuIiwidmFsdWUiOiIiLCJkZXNjcmlwdGlvbiI6IiIsImVuYWJsZWQiOnRydWV9XQ==');
+    }
+
+    (function (p,o,s,t,m,a,n) {
+        !p[s] && (p[s] = function () { (p[t] || (p[t] = [])).push(arguments); });
+        !o.getElementById(s+t) && o.getElementsByTagName("head")[0].appendChild((
+            (n = o.createElement("script")),
+                (n.id = s+t), (n.async = 1), (n.src = m), n
+        ));
+    }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
+</script>
+
+</body>
 </html>
