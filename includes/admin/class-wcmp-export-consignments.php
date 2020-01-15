@@ -3,6 +3,7 @@
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
@@ -253,7 +254,7 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $connectEmail    = $this->carrier === DPDConsignment::CARRIER_NAME;
+        $connectEmail    = $this->carrier === PostNLConsignment::CARRIER_NAME;
         $this->recipient = WCMP_Export::getRecipientFromOrder($this->order, $connectEmail);
 
         $this->consignment
@@ -355,12 +356,14 @@ class WCMP_Export_Consignments
 
     private function setBaseData(): void
     {
+        $name = WCMP_Export::get_package_type_for_order($this->order->get_id());
+
         $this->consignment
-            ->setApiKey($this->apiKey)
-            ->setReferenceId((string) $this->order->get_id())
-            ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
-            ->setLabelDescription($this->getLabelDescription())
-            ->setPackageType(WCMP_Export::PACKAGE);
+                ->setApiKey($this->apiKey)
+                ->setReferenceId((string) $this->order->get_id())
+                ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
+                ->setLabelDescription($this->getLabelDescription())
+                ->setPackageType($name);
     }
 
     /**

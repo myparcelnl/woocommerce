@@ -56,7 +56,7 @@ class WCMP_Data
         ];
 
         self::$packageTypesHuman = [
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME       => __("Parcel", "woocommerce-myparcel"),
+            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME       => __("Package", "woocommerce-myparcel"),
             AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME       => __("Mailbox package", "woocommerce-myparcel"),
             AbstractConsignment::PACKAGE_TYPE_LETTER_NAME        => __("Unpaid letter", "woocommerce-myparcel"),
             AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME => __("Digital stamp", "woocommerce-myparcel"),
@@ -112,6 +112,16 @@ class WCMP_Data
             AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP,
             self::$deliveryTypesHuman
         );
+    }
+
+    /**
+     * @param int|string $deliveryType
+     *
+     * @return string
+     */
+    public static function getPackageTypeId($deliveryType): string
+    {
+       return AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$deliveryType];
     }
 
     /**
