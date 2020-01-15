@@ -3,6 +3,7 @@
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
@@ -141,7 +142,7 @@ class WCMP_Export_Consignments
                 $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
 
                 // Weight (total item weight in grams)
-                $weight = (int) round(WCMP_Export::get_item_weight_kg($item, $this->order) * 1000);
+                $weight = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
 
                 $myParcelItem =
                     (new MyParcelCustomsItem())->setDescription($description)
@@ -253,7 +254,7 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $connectEmail    = $this->carrier === DPDConsignment::CARRIER_NAME;
+        $connectEmail    = $this->carrier === PostNLConsignment::CARRIER_NAME;
         $this->recipient = WCMP_Export::getRecipientFromOrder($this->order, $connectEmail);
 
         $this->consignment
@@ -356,11 +357,11 @@ class WCMP_Export_Consignments
     private function setBaseData(): void
     {
         $this->consignment
-            ->setApiKey($this->apiKey)
-            ->setReferenceId((string) $this->order->get_id())
-            ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
-            ->setLabelDescription($this->getLabelDescription())
-            ->setPackageType(WCMP_Export::PACKAGE);
+                ->setApiKey($this->apiKey)
+                ->setReferenceId((string) $this->order->get_id())
+                ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
+                ->setLabelDescription($this->getLabelDescription())
+                ->setPackageType(WCMP_Export::getPackageTypeForOrder($this->order->get_id()));
     }
 
     /**

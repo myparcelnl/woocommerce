@@ -13,7 +13,7 @@
 $shipments = [];
 
 try {
-    $shipments = WCMP()->export->get_shipment_data(array_keys($consignments), $order);
+    $shipments = WCMP()->export->getShipmentData(array_keys($consignments), $order);
 } catch (Exception $e) {
     $message = $e->getMessage();
 }
