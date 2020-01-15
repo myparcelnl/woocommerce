@@ -323,7 +323,7 @@ class WCMP_Export
 
                 $collection->addMultiCollo($consignment, $collo_amount);
             } else {
-                for ($i = 0; $i < $collo_amount; $i ++) {
+                for ($i = 0; $i < $collo_amount; $i++) {
                     $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
 
                     $collection->addConsignment($consignment);
@@ -827,35 +827,35 @@ class WCMP_Export
 
     /**
      * @param array  $order
-     * @param string $shipping_method_id
+     * @param string $shippingMethodId
      *
-     * @return bool|int
+     * @return int|null
      * @throws \Exception
      */
-    public function getOrderShippingClass($order, $shipping_method_id = '')
+    public function getOrderShippingClass($order, $shippingMethodId = '')
     {
-        if (empty($shipping_method_id)) {
-            $order_shipping_methods = $order->get_items('shipping');
+        if (empty($shippingMethodId)) {
+            $orderShippingMethods = $order->get_items('shipping');
 
-            if (! empty($order_shipping_methods)) {
+            if (! empty($orderShippingMethods)) {
                 // we're taking the first (we're not handling multiple shipping methods as of yet)
-                $order_shipping_method = array_shift($order_shipping_methods);
-                $shipping_method_id    = $order_shipping_method['method_id'];
+                $orderShippingMethod = array_shift($orderShippingMethods);
+                $shippingMethodId    = $orderShippingMethod['method_id'];
             } else {
-                return false;
+                return null;
             }
         }
 
-        $shipping_method = $this->getShippingMethod($shipping_method_id);
+        $shippingMethod = $this->getShippingMethod($shippingMethodId);
 
-        if (empty($shipping_method)) {
-            return false;
+        if (empty($shippingMethod)) {
+            return null;
         }
 
         // get shipping classes from order
-        $found_shipping_classes = $this->find_order_shipping_classes($order);
+        $foundShippingClasses = $this->find_order_shipping_classes($order);
 
-        $highest_class = $this->getShippingClass($shipping_method, $found_shipping_classes);
+        $highest_class = $this->getShippingClass($shippingMethod, $foundShippingClasses);
 
         return $highest_class;
     }
@@ -866,33 +866,34 @@ class WCMP_Export
      * @param $order
      *
      * @return int|string
+     * @throws \Exception
      */
     public function getPackageTypeForOrder($order)
     {
         $order            = wc_get_order($order);
         $shipping_country = $order->get_shipping_country();
-        $package_type     = self::PACKAGE;
+        $packageType      = self::PACKAGE;
 
         // get shipping methods from order
-        $order_shipping_methods = $order->get_items('shipping');
+        $orderShippingMethods = $order->get_items('shipping');
 
-        if (! empty($order_shipping_methods)) {
+        if (! empty($orderShippingMethods)) {
             // we're taking the first (we're not handling multiple shipping methods as of yet)
-            $order_shipping_method = array_shift($order_shipping_methods);
-            $order_shipping_method = $order_shipping_method['method_id'];
+            $orderShippingMethod = array_shift($orderShippingMethods);
+            $orderShippingMethod = $orderShippingMethod['method_id'];
 
-            $order_shipping_class = WCX_Order::get_meta($order, WCMP_Admin::META_HIGHEST_SHIPPING_CLASS);
-            if (empty($order_shipping_class)) {
-                $order_shipping_class = $this->getOrderShippingClass($order, $order_shipping_method);
+            $orderShippingClass = WCX_Order::get_meta($order, WCMP_Admin::META_HIGHEST_SHIPPING_CLASS);
+            if (empty($orderShippingClass)) {
+                $orderShippingClass = $this->getOrderShippingClass($order, $orderShippingMethod);
             }
 
-            $package_type = WCMP_Export::getPackageTypeFromShippingMethod(
-                $order_shipping_method,
-                $order_shipping_class
+            $packageType = WCMP_Export::getPackageTypeFromShippingMethod(
+                $orderShippingMethod,
+                $orderShippingClass
             );
         }
 
-        return $package_type;
+        return $packageType;
     }
 
     /**
@@ -1138,14 +1139,14 @@ class WCMP_Export
      * @param $shipping_method
      * @param $found_shipping_classes
      *
-     * @return bool|int
+     * @return int|null
      */
     public function getShippingClass($shipping_method, $found_shipping_classes)
     {
         // get most expensive class
         // adapted from $shipping_method->calculate_shipping()
         $highest_class_cost = 0;
-        $highest_class      = false;
+        $highest_class      = null;
         foreach ($found_shipping_classes as $shipping_class => $products) {
             // Also handles BW compatibility when slugs were used instead of ids
             $shipping_class_term    = get_term_by("slug", $shipping_class, "product_shipping_class");
@@ -1164,7 +1165,6 @@ class WCMP_Export
                 continue;
             }
 
-            $has_costs  = true;
             $class_cost = $this->wc_flat_rate_evaluate_cost(
                 $class_cost_string,
                 [
