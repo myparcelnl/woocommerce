@@ -112,6 +112,7 @@ class WCMP_Frontend
      * Only supports 1 package, takes the first
      *
      * @return bool|int
+     * @throws \Exception
      */
     public static function get_cart_shipping_class()
     {
@@ -122,7 +123,7 @@ class WCMP_Frontend
         $chosen_method = WC()->session->get('chosen_shipping_methods')[0] ?? '';
 
         // get package
-        $packages = WC()->shipping()->get_packages();
+        $packages = WC()->cart->get_shipping_packages();
         $package  = current($packages);
 
         $shipping_method = WCMP_Export::get_shipping_method($chosen_method);
