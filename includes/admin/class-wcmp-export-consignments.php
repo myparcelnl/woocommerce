@@ -142,7 +142,7 @@ class WCMP_Export_Consignments
                 $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
 
                 // Weight (total item weight in grams)
-                $weight = (int) round(WCMP_Export::get_item_weight_kg($item, $this->order) * 1000);
+                $weight = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
 
                 $myParcelItem =
                     (new MyParcelCustomsItem())->setDescription($description)
@@ -361,7 +361,7 @@ class WCMP_Export_Consignments
                 ->setReferenceId((string) $this->order->get_id())
                 ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
                 ->setLabelDescription($this->getLabelDescription())
-                ->setPackageType(WCMP_Export::get_package_type_for_order($this->order->get_id()));
+                ->setPackageType(WCMP_Export::getPackageTypeForOrder($this->order->get_id()));
     }
 
     /**

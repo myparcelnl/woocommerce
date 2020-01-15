@@ -216,7 +216,7 @@ class WCMP_Export
                             break;
                         }
 
-                        $return = $this->add_return($order_ids);
+                        $return = $this->addReturn($order_ids);
                         break;
 
                     // Downloading labels.
@@ -353,7 +353,7 @@ class WCMP_Export
             }
 
             if ($processDirectly) {
-                $this->get_shipment_data($consignmentIds, $order);
+                $this->getShipmentData($consignmentIds, $order);
             }
 
             WCX_Order::update_meta_data(
@@ -387,7 +387,7 @@ class WCMP_Export
      * @return array
      * @throws Exception
      */
-    public function add_return(array $order_ids)
+    public function addReturn(array $order_ids)
     {
         $return = [];
 
@@ -395,7 +395,7 @@ class WCMP_Export
 
         foreach ($order_ids as $order_id) {
             try {
-                $return_shipments = [$this->prepare_return_shipment_data($order_id)];
+                $return_shipments = [$this->prepareReturnShipmentData($order_id)];
                 WCMP_Log::add("Return shipment data for order {$order_id}:", print_r($return_shipments, true));
 
                 $api      = $this->init_api();
@@ -544,7 +544,7 @@ class WCMP_Export
      * @return array
      * @throws Exception
      */
-    public function prepare_return_shipment_data($order_id, $options = [])
+    public function prepareReturnShipmentData($order_id, $options = [])
     {
         $order = WCX::get_order($order_id);
 
@@ -825,11 +825,16 @@ class WCMP_Export
         WCX_Order::update_meta_data($order, WCMP_Admin::META_SHIPMENTS, $new_shipments);
     }
 
-
-    public function get_order_shipping_class($order, $shipping_method_id = '')
+    /**
+     * @param array  $order
+     * @param string $shipping_method_id
+     *
+     * @return bool|int
+     * @throws \Exception
+     */
+    public function getOrderShippingClass($order, $shipping_method_id = '')
     {
         if (empty($shipping_method_id)) {
-            var_dump($order);
             $order_shipping_methods = $order->get_items('shipping');
 
             if (! empty($order_shipping_methods)) {
@@ -841,7 +846,7 @@ class WCMP_Export
             }
         }
 
-        $shipping_method = $this->get_shipping_method($shipping_method_id);
+        $shipping_method = $this->getShippingMethod($shipping_method_id);
 
         if (empty($shipping_method)) {
             return false;
@@ -850,13 +855,19 @@ class WCMP_Export
         // get shipping classes from order
         $found_shipping_classes = $this->find_order_shipping_classes($order);
 
-        $highest_class = $this->get_shipping_class($shipping_method, $found_shipping_classes);
+        $highest_class = $this->getShippingClass($shipping_method, $found_shipping_classes);
 
         return $highest_class;
     }
 
-    // determine appropriate package type for this order
-    public function get_package_type_for_order($order)
+    /**
+     * determine appropriate package type for this order
+     *
+     * @param $order
+     *
+     * @return int|string
+     */
+    public function getPackageTypeForOrder($order)
     {
         $order            = wc_get_order($order);
         $shipping_country = $order->get_shipping_country();
@@ -872,10 +883,10 @@ class WCMP_Export
 
             $order_shipping_class = WCX_Order::get_meta($order, WCMP_Admin::META_HIGHEST_SHIPPING_CLASS);
             if (empty($order_shipping_class)) {
-                $order_shipping_class = $this->get_order_shipping_class($order, $order_shipping_method);
+                $order_shipping_class = $this->getOrderShippingClass($order, $order_shipping_method);
             }
 
-            $package_type = WCMP_Export::get_package_type_from_shipping_method(
+            $package_type = WCMP_Export::getPackageTypeFromShippingMethod(
                 $order_shipping_method,
                 $order_shipping_class
             );
@@ -885,14 +896,12 @@ class WCMP_Export
     }
 
     /**
-     * TODO: For MyParcel NL, currently not necessary for BE.
-     *
      * @param $shipping_method
      * @param $shipping_class
      *
      * @return int|string
      */
-    public function get_package_type_from_shipping_method($shipping_method, $shipping_class)
+    public function getPackageTypeFromShippingMethod($shipping_method, $shipping_class)
     {
         $package_type             = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME;
         $shipping_method_id_class = "";
@@ -940,7 +949,7 @@ class WCMP_Export
      *
      * @return string
      */
-    public function get_package_type(string $package_type): string
+    public function getPackageType(string $package_type): string
     {
         return WCMP_Data::getPackageTypeHuman($package_type) ?? __("Unknown", "woocommerce-myparcel");
     }
@@ -980,7 +989,7 @@ class WCMP_Export
         return $html;
     }
 
-    public function get_shipment_status_name($status_code)
+    public function getShipmentStatusName($status_code)
     {
         $shipment_statuses = [
             1  => __("pending - concept", "woocommerce-myparcel"),
@@ -1020,7 +1029,7 @@ class WCMP_Export
      * @return array
      * @throws Exception
      */
-    public function get_shipment_data(array $ids, WC_Order $order): array
+    public function getShipmentData(array $ids, WC_Order $order): array
     {
         $data     = [];
         $api      = $this->init_api();
@@ -1038,7 +1047,7 @@ class WCMP_Export
             }
 
             // if shipment id matches and status is not concept, get track trace barcode and status name
-            $status        = $this->get_shipment_status_name($shipment["status"]);
+            $status        = $this->getShipmentStatusName($shipment["status"]);
             $track_trace   = $shipment["barcode"];
             $shipment_id   = $shipment["id"];
             $shipment_data = compact("shipment_id", "status", "track_trace", "shipment");
@@ -1058,7 +1067,7 @@ class WCMP_Export
      *
      * @return float
      */
-    public static function get_item_weight_kg($item, WC_Order $order): float
+    public static function getItemWeight_kg($item, WC_Order $order): float
     {
         $product = $order->get_product_from_item($item);
 
@@ -1094,7 +1103,7 @@ class WCMP_Export
      * @return bool|WC_Shipping_Method
      * @throws \Exception
      */
-    public static function get_shipping_method($chosen_method)
+    public static function getShippingMethod($chosen_method)
     {
         if (version_compare(WOOCOMMERCE_VERSION, "2.6", ">=") && $chosen_method !== "legacy_flat_rate") {
             $chosen_method = explode(":", $chosen_method); // slug:instance
@@ -1131,7 +1140,7 @@ class WCMP_Export
      *
      * @return bool|int
      */
-    public function get_shipping_class($shipping_method, $found_shipping_classes)
+    public function getShippingClass($shipping_method, $found_shipping_classes)
     {
         // get most expensive class
         // adapted from $shipping_method->calculate_shipping()

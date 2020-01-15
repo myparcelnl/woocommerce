@@ -126,7 +126,7 @@ class WCMP_Frontend
         $packages = WC()->cart->get_shipping_packages();
         $package  = current($packages);
 
-        $shipping_method = WCMP_Export::get_shipping_method($chosen_method);
+        $shipping_method = WCMP_Export::getShippingMethod($chosen_method);
 
         if (empty($shipping_method)) {
             return false;
@@ -135,7 +135,7 @@ class WCMP_Frontend
         // get shipping classes from package
         $found_shipping_classes = $shipping_method->find_shipping_classes($package);
 
-        return WCMP()->export->get_shipping_class(
+        return WCMP()->export->getShippingClass(
             $shipping_method,
             $found_shipping_classes
         );

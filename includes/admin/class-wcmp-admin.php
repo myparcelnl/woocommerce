@@ -744,7 +744,7 @@ class WCMP_Admin
                 $track_trace
             );
         } elseif (isset($shipment["shipment"]) && isset($shipment["shipment"]["options"])) {
-            $package_type     = WCMP()->export->get_package_type($shipment["shipment"]["options"]["package_type"]);
+            $package_type     = WCMP()->export->getPackageType($shipment["shipment"]["options"]["package_type"]);
             $track_trace_link = "($package_type)";
         } else {
             $track_trace_link = __("(Unknown)", "woocommerce-myparcel");
