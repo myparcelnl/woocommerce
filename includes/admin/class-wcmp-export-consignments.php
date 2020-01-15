@@ -356,14 +356,12 @@ class WCMP_Export_Consignments
 
     private function setBaseData(): void
     {
-        $name = WCMP_Export::get_package_type_for_order($this->order->get_id());
-
         $this->consignment
                 ->setApiKey($this->apiKey)
                 ->setReferenceId((string) $this->order->get_id())
                 ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
                 ->setLabelDescription($this->getLabelDescription())
-                ->setPackageType($name);
+                ->setPackageType(WCMP_Export::get_package_type_for_order($this->order->get_id()));
     }
 
     /**
