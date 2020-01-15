@@ -832,7 +832,7 @@ class WCMP_Export
      * @return int|null
      * @throws \Exception
      */
-    public function getOrderShippingClass($order, $shippingMethodId = '')
+    public function getOrderShippingClass($order, $shippingMethodId = ''): ?int
     {
         if (empty($shippingMethodId)) {
             $orderShippingMethods = $order->get_items('shipping');
@@ -1141,7 +1141,7 @@ class WCMP_Export
      *
      * @return int|null
      */
-    public function getShippingClass($shipping_method, $found_shipping_classes)
+    public function getShippingClass($shipping_method, $found_shipping_classes): ?int
     {
         // get most expensive class
         // adapted from $shipping_method->calculate_shipping()
