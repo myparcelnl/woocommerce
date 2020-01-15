@@ -1096,7 +1096,7 @@ class WCMP_Export
      */
     public static function get_shipping_method($chosen_method)
     {
-        if (version_compare(WOOCOMMERCE_VERSION, "2.6", " >= ") && $chosen_method !== "legacy_flat_rate") {
+        if (version_compare(WOOCOMMERCE_VERSION, "2.6", ">=") && $chosen_method !== "legacy_flat_rate") {
             $chosen_method = explode(":", $chosen_method); // slug:instance
             // only for flat rate
             if ($chosen_method[0] !== "flat_rate") {
