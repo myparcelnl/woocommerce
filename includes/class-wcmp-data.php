@@ -22,8 +22,8 @@ class WCMP_Data
      * @var array
      */
     public const CARRIERS_HUMAN = [
-        DPDConsignment::CARRIER_NAME    => 'DPD',
         PostNLConsignment::CARRIER_NAME => 'PostNL',
+        DPDConsignment::CARRIER_NAME    => 'DPD',
     ];
 
     public const HAS_MULTI_COLLO = false;
@@ -57,7 +57,7 @@ class WCMP_Data
 
         self::$packageTypesHuman = [
             AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME       => __("Package", "woocommerce-myparcel"),
-            AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME       => __("Mailbox package", "woocommerce-myparcel"),
+            AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME       => __("Mailbox", "woocommerce-myparcel"),
             AbstractConsignment::PACKAGE_TYPE_LETTER_NAME        => __("Unpaid letter", "woocommerce-myparcel"),
             AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME => __("Digital stamp", "woocommerce-myparcel"),
         ];

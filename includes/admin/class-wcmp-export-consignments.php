@@ -361,7 +361,7 @@ class WCMP_Export_Consignments
                 ->setReferenceId((string) $this->order->get_id())
                 ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
                 ->setLabelDescription($this->getLabelDescription())
-                ->setPackageType(WCMP_Export::getPackageTypeForOrder($this->order->get_id()));
+                ->setPackageType(WCMP()->export->getPackageTypeForOrder($this->order->get_id()));
     }
 
     /**

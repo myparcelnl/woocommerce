@@ -1,6 +1,7 @@
 <?php
 
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -45,6 +46,9 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $isCarrierDisabled     = $deliveryOptions->getCarrier();
     $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
     $shipment_options      = $deliveryOptions->getShipmentOptions();
+
+    $packageTypes = array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP);
+    $selectedPackageType = WCMP()->export->getPackageTypeForOrder($order_id);
 
     $postnl          = PostNLConsignment::CARRIER_NAME;
     $insurance       = false;
@@ -91,14 +95,13 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         );
     }
 
-
     $option_rows = [
         [
             "name"              => "[carrier]",
             "label"             => __("Carrier", "woocommerce-myparcel"),
             "type"              => "select",
             "options"           => WCMP_Data::CARRIERS_HUMAN,
-            "custom_attributes" => $isCarrierDisabled ? ["disabled" => "disabled"] : [],
+            "custom_attributes" => ($isCarrierDisabled ?? $postnl) ? ["disabled" => "disabled"] : [],
             "value"             => $deliveryOptions->getCarrier(),
         ],
         [
@@ -110,7 +113,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             ),
             "type"              => "select",
             "options"           => array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman()),
-            "value"             => null,
+            "value"             => $packageTypes[$selectedPackageType],
             "custom_attributes" => [
                 "disabled" => $isPackageTypeDisabled ? "disabled" : null,
             ],
