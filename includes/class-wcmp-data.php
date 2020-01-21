@@ -26,6 +26,37 @@ class WCMP_Data
         DPDConsignment::CARRIER_NAME    => 'DPD',
     ];
 
+    /**
+     * @var array
+     */
+    public const DIGITAL_STAMP_RANGES = [
+        1 => [
+            'min'     => 0,
+            'max'     => 20,
+            'average' => 15
+        ],
+        2 => [
+            'min'     => 20,
+            'max'     => 50,
+            'average' => 35
+        ],
+        3 => [
+            'min'     => 50,
+            'max'     => 100,
+            'average' => 75
+        ],
+        4 => [
+            'min'     => 100,
+            'max'     => 350,
+            'average' => 225
+        ],
+        5 => [
+            'min'     => 350,
+            'max'     => 2000,
+            'average' => 1175
+        ],
+    ];
+
     public const HAS_MULTI_COLLO = false;
 
     public const DEFAULT_COUNTRY_CODE = "NL";
@@ -46,14 +77,6 @@ class WCMP_Data
      */
     private static $deliveryTypesHuman;
 
-    /**
-     * @var array
-     */
-    private static $digitalStampRanges;
-
-    /**
-     * WCMP_Data constructor.
-     */
     public function __construct()
     {
         self::$packageTypes = [
@@ -76,34 +99,6 @@ class WCMP_Data
             AbstractConsignment::DELIVERY_TYPE_EVENING  => __("Evening delivery", "woocommerce-myparcel"),
             AbstractConsignment::DELIVERY_TYPE_PICKUP   => __("Pickup", "woocommerce-myparcel"),
         ];
-
-        self::$digitalStampRanges = [
-            1 => [
-                'min'     => 0,
-                'max'     => 20,
-                'average' => 15
-            ],
-            2 => [
-                'min'     => 20,
-                'max'     => 50,
-                'average' => 35
-            ],
-            3 => [
-                'min'     => 50,
-                'max'     => 100,
-                'average' => 75
-            ],
-            4 => [
-                'min'     => 100,
-                'max'     => 350,
-                'average' => 225
-            ],
-            5 => [
-                'min'     => 350,
-                'max'     => 2000,
-                'average' => 1175
-            ],
-        ];
     }
 
     /**
@@ -125,17 +120,9 @@ class WCMP_Data
     /**
      * @return array
      */
-    public static function getDigitalStampHuman(): array
-    {
-        return self::$digitalStampHuman;
-    }
-
-    /**
-     * @return array
-     */
     public static function getDigitalStampWeight(): array
     {
-        return self::$digitalStampRanges;
+        return self::DIGITAL_STAMP_RANGES;
     }
 
     /**
