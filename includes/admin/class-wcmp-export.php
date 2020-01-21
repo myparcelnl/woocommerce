@@ -1106,7 +1106,7 @@ class WCMP_Export
     {
         foreach (WCMP_Data::getDigitalStampWeight() as $tierRange) {
             if ($weight > $tierRange['min'] && $weight <= $tierRange['max']) {
-                $weight =  $tierRange['average'];
+                $weight = $tierRange['average'];
             }
         }
 

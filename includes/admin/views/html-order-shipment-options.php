@@ -47,7 +47,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
     $shipment_options      = $deliveryOptions->getShipmentOptions();
 
-    $packageTypes = array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP);
+    $packageTypes        = array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP);
     $selectedPackageType = WCMP()->export->getPackageTypeForOrder($order_id);
 
     $postnl          = PostNLConsignment::CARRIER_NAME;
@@ -209,10 +209,10 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "value"   => (int) $insuranceAmount,
         ],
         [
-            "name"              => "[shipment_options][weight]",
-            "label"             => __("Weight", "woocommerce-myparcel"),
-            "type"              => "select",
-            "options"           => WCMP_Data::getDigitalStampHuman(),
+            "name"      => "[shipment_options][weight]",
+            "label"     => __("Weight", "woocommerce-myparcel"),
+            "type"      => "select",
+            "options"   => WCMP_Data::getDigitalStampHuman(),
             "condition" => [
                 "name"         => "[carrier]",
                 "type"         => "disable",

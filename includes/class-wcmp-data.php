@@ -80,37 +80,37 @@ class WCMP_Data
         ];
 
         self::$digitalStampHuman = [
-            15  => '0-20 gram',
-            35  => '20-50 gram',
-            75  => '50-100 gram',
+            15   => '0-20 gram',
+            35   => '20-50 gram',
+            75   => '50-100 gram',
             225  => '100-350 gram',
-            1175  => '350-2000 gram',
+            1175 => '350-2000 gram',
         ];
 
         self::$digitalStampRanges = [
             1 => [
-                'min' => 0,
-                'max' => 20,
+                'min'     => 0,
+                'max'     => 20,
                 'average' => 15
             ],
             2 => [
-                'min' => 20,
-                'max' => 50,
+                'min'     => 20,
+                'max'     => 50,
                 'average' => 35
             ],
             3 => [
-                'min' => 50,
-                'max' => 100,
+                'min'     => 50,
+                'max'     => 100,
                 'average' => 75
             ],
             4 => [
-                'min' => 100,
-                'max' => 350,
+                'min'     => 100,
+                'max'     => 350,
                 'average' => 225
             ],
             5 => [
-                'min' => 350,
-                'max' => 2000,
+                'min'     => 350,
+                'max'     => 2000,
                 'average' => 1175
             ],
         ];
