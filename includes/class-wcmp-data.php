@@ -26,6 +26,37 @@ class WCMP_Data
         DPDConsignment::CARRIER_NAME    => 'DPD',
     ];
 
+    /**
+     * @var array
+     */
+    public const DIGITAL_STAMP_RANGES = [
+        1 => [
+            'min'     => 0,
+            'max'     => 20,
+            'average' => 15
+        ],
+        2 => [
+            'min'     => 20,
+            'max'     => 50,
+            'average' => 35
+        ],
+        3 => [
+            'min'     => 50,
+            'max'     => 100,
+            'average' => 75
+        ],
+        4 => [
+            'min'     => 100,
+            'max'     => 350,
+            'average' => 225
+        ],
+        5 => [
+            'min'     => 350,
+            'max'     => 2000,
+            'average' => 1175
+        ],
+    ];
+
     public const HAS_MULTI_COLLO = false;
 
     public const DEFAULT_COUNTRY_CODE = "NL";
@@ -87,6 +118,14 @@ class WCMP_Data
     }
 
     /**
+     * @return array
+     */
+    public static function getDigitalStampWeight(): array
+    {
+        return self::DIGITAL_STAMP_RANGES;
+    }
+
+    /**
      * @param int|string $packageType
      *
      * @return string
@@ -101,27 +140,13 @@ class WCMP_Data
     }
 
     /**
-     * @param int|string $deliveryType
-     *
-     * @return string
-     */
-    public static function getDeliveryTypeHuman($deliveryType): string
-    {
-        return self::getHuman(
-            $deliveryType,
-            AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP,
-            self::$deliveryTypesHuman
-        );
-    }
-
-    /**
      * @param string $deliveryType
      *
      * @return string
      */
     public static function getPackageTypeId(string $deliveryType): string
     {
-       return AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$deliveryType];
+        return AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$deliveryType];
     }
 
     /**
@@ -157,7 +182,7 @@ class WCMP_Data
      */
     public static function getInsuranceAmount(): array
     {
-        $carrier = ConsignmentFactory::createByCarrierName(WCMP_Settings::SETTINGS_POSTNL);
+        $carrier             = ConsignmentFactory::createByCarrierName(WCMP_Settings::SETTINGS_POSTNL);
         $amountPossibilities = $carrier->getInsurancePossibilities();
 
         foreach ($amountPossibilities as $key => $value) {
@@ -166,6 +191,7 @@ class WCMP_Data
 
         return $amount;
     }
+
 
     /**
      * @return array

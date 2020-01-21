@@ -75,7 +75,6 @@ class WCMP_Export
             return $valueFromSetting;
         }
 
-
         return $option;
     }
 
@@ -1096,6 +1095,25 @@ class WCMP_Export
         $item_weight = (float) $product_weight * (int) $item["qty"];
 
         return (float) $item_weight;
+    }
+
+    /**
+     * @param int         $weight
+     * @param string|null $names
+     *
+     * @return array
+     */
+    public static function getDigitalStampRanges(int $weight, string $names = null): array
+    {
+        foreach (WCMP_Data::getDigitalStampWeight() as $tierRange) {
+            $names[$tierRange['average']] = $tierRange['min'] . " - " . $tierRange['max'] . " gram";
+
+            if ($weight > $tierRange['min'] && $weight <= $tierRange['max']) {
+                $weight = $tierRange['average'];
+            }
+        }
+
+        return ['names' => $names, 'weight' => $weight];
     }
 
     /**
