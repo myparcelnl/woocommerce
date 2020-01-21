@@ -322,7 +322,7 @@ class WCMP_Export
 
                 $collection->addMultiCollo($consignment, $collo_amount);
             } else {
-                for ($i = 0; $i < $collo_amount; $i ++) {
+                for ($i = 0; $i < $collo_amount; $i++) {
                     $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
 
                     $collection->addConsignment($consignment);
