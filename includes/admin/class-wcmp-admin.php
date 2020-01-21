@@ -4,7 +4,9 @@ use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
+
 
 if (! defined('ABSPATH')) {
     exit;
@@ -538,6 +540,37 @@ class WCMP_Admin
         }
 
         return $trackTraceUrl;
+    }
+
+    public function product_hs_code_field() {
+        echo '<div class="options_group">';
+        woocommerce_wp_text_input(
+            array(
+                'id'          => '_myparcel_hs_code',
+                'label'       => __('HS Code', 'woocommerce-myparcel'),
+                'description' => sprintf(
+                    __('HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcel'),
+                    '<a href="http://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',
+                    '</a>'
+                )
+            )
+        );
+        echo '</div>';
+    }
+
+    public function product_hs_code_field_save($post_id) {
+        // check if hs code is passed and not an array (=variation hs code)
+        if (isset($_POST['_myparcel_hs_code']) && ! is_array($_POST['_myparcel_hs_code'])) {
+            $product = wc_get_product($post_id);
+            $hs_code = $_POST['_myparcel_hs_code'];
+            if ( ! empty($hs_code)) {
+                WCX_Product::update_meta_data($product, '_myparcel_hs_code', esc_attr($hs_code));
+            } else {
+                if (isset($_POST['_myparcel_hs_code']) && empty($hs_code)) {
+                    WCX_Product::delete_meta_data($product, '_myparcel_hs_code');
+                }
+            }
+        }
     }
 
     /**
