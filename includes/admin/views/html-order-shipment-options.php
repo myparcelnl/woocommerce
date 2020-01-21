@@ -58,42 +58,42 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $ageCheck        = false;
     $returnShipment  = false;
 
-    if ($postnl === $deliveryOptions->getCarrier()) {
-        $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->getInsurance(),
-            "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
-        );
+    $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
+        $shipment_options->getInsurance(),
+        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
+    );
 
-        $signature = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->hasSignature(),
-            "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
-        );
+    $signature = WCMP_Export::getChosenOrDefaultShipmentOption(
+        $shipment_options->hasSignature(),
+        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
+    );
 
-        $onlyRecipient = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->hasOnlyRecipient(),
-            "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
-        );
+    $onlyRecipient = WCMP_Export::getChosenOrDefaultShipmentOption(
+        $shipment_options->hasOnlyRecipient(),
+        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
+    );
 
-        $ageCheck = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->hasAgeCheck(),
-            "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
-        );
+    $ageCheck = WCMP_Export::getChosenOrDefaultShipmentOption(
+        $shipment_options->hasAgeCheck(),
+        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
+    );
 
-        $largeFormat = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->hasLargeFormat(),
-            "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
-        );
+    $largeFormat = WCMP_Export::getChosenOrDefaultShipmentOption(
+        $shipment_options->hasLargeFormat(),
+        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
+    );
 
-        $returnShipment = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->isReturn(),
-            "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
-        );
+    $returnShipment = WCMP_Export::getChosenOrDefaultShipmentOption(
+        $shipment_options->isReturn(),
+        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
+    );
 
-        $insuranceAmount = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $shipment_options->getInsurance(),
-            "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT
-        );
-    }
+    $insuranceAmount = WCMP_Export::getChosenOrDefaultShipmentOption(
+        $shipment_options->getInsurance(),
+        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT
+    );
+
+    $digitalStampWeight = WCMP_Export::getDigitalStampRanges($order->get_meta(WCMP_Admin::META_ORDER_WEIGHT));
 
     $option_rows = [
         [
@@ -203,10 +203,23 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         ],
         [
             "name"    => "[shipment_options][insured_amount]",
+            "label"   => __("Insurance amount", "woocommerce-myparcel"),
             "type"    => "select",
             "options" => WCMP_Data::getInsuranceAmount(),
-            "label"   => __("Insurance amount", "woocommerce-myparcel"),
             "value"   => (int) $insuranceAmount,
+        ],
+        [
+            "name"              => "[shipment_options][weight]",
+            "label"             => __("Weight", "woocommerce-myparcel"),
+            "type"              => "select",
+            "options"           => WCMP_Data::getDigitalStampHuman(),
+            "condition" => [
+                "name"         => "[carrier]",
+                "type"         => "disable",
+                "parent_value" => WCMP_Data::getPostnlName(),
+                "set_value"    => WCMP_Settings_Data::DISABLED,
+            ],
+            "value"     => $digitalStampWeight,
         ],
     ];
 

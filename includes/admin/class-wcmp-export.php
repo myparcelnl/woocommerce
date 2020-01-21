@@ -75,7 +75,6 @@ class WCMP_Export
             return $valueFromSetting;
         }
 
-
         return $option;
     }
 
@@ -323,7 +322,7 @@ class WCMP_Export
 
                 $collection->addMultiCollo($consignment, $collo_amount);
             } else {
-                for ($i = 0; $i < $collo_amount; $i++) {
+                for ($i = 0; $i < $collo_amount; $i ++) {
                     $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
 
                     $collection->addConsignment($consignment);
@@ -1096,6 +1095,22 @@ class WCMP_Export
         $item_weight = (float) $product_weight * (int) $item["qty"];
 
         return (float) $item_weight;
+    }
+
+    /**
+     * @param int $weight
+     *
+     * @return int
+     */
+    public static function getDigitalStampRanges(int $weight): int
+    {
+        foreach (WCMP_Data::getDigitalStampWeight() as $tierRange) {
+            if ($weight > $tierRange['min'] && $weight <= $tierRange['max']) {
+                $weight =  $tierRange['average'];
+            }
+        }
+
+        return $weight;
     }
 
     /**

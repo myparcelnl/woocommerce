@@ -57,7 +57,6 @@ class WCMP_Export_Consignments
      * @param WC_Order $order
      *
      * @throws ErrorException
-     * @throws MissingFieldException
      * @throws Exception
      */
     public function __construct(WC_Order $order)
@@ -86,7 +85,6 @@ class WCMP_Export_Consignments
     /**
      * Set all the needed data for the consignment.
      *
-     * @throws MissingFieldException
      * @throws Exception
      */
     private function setConsignmentData(): void
@@ -96,6 +94,8 @@ class WCMP_Export_Consignments
         $this->setShipmentOptions();
         $this->setPickupLocation();
         $this->setCustomsDeclaration();
+        $this->consignment->setPhysicalProperties(["weight" => '21']);
+//        $this->setPhysicalProperties();
     }
 
     /**
@@ -247,6 +247,14 @@ class WCMP_Export_Consignments
         return 0;
     }
 
+//    /**
+//     * @return int
+//     */
+//    private function getTotalPackageWeight(): int
+//    {
+//       return 76;
+//    }
+
     /**
      * Gets the recipient and puts its data in the consignment.
      *
@@ -352,6 +360,16 @@ class WCMP_Export_Consignments
         if (WCMP_Country_Codes::isWorldShipmentCountry($shippingCountry)) {
             $this->setCustomItems();
         }
+    }
+
+    /**
+     * Sets a customs declaration for the consignment if necessary.
+     *
+     * @throws \Exception
+     */
+    private function setPhysicalProperties()
+    {
+        $this->consignment->setPhysicalProperties(["weight" => 21]);
     }
 
     private function setBaseData(): void

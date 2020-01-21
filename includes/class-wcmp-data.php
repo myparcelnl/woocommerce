@@ -46,6 +46,16 @@ class WCMP_Data
      */
     private static $deliveryTypesHuman;
 
+    /**
+     * @var array
+     */
+    private static $digitalStampHuman;
+
+    /**
+     * @var array
+     */
+    private static $digitalStampRanges;
+
     public function __construct()
     {
         self::$packageTypes = [
@@ -68,6 +78,42 @@ class WCMP_Data
             AbstractConsignment::DELIVERY_TYPE_EVENING  => __("Evening delivery", "woocommerce-myparcel"),
             AbstractConsignment::DELIVERY_TYPE_PICKUP   => __("Pickup", "woocommerce-myparcel"),
         ];
+
+        self::$digitalStampHuman = [
+            15  => '0-20 gram',
+            35  => '20-50 gram',
+            75  => '50-100 gram',
+            225  => '100-350 gram',
+            1175  => '350-2000 gram',
+        ];
+
+        self::$digitalStampRanges = [
+            1 => [
+                'min' => 0,
+                'max' => 20,
+                'average' => 15
+            ],
+            2 => [
+                'min' => 20,
+                'max' => 50,
+                'average' => 35
+            ],
+            3 => [
+                'min' => 50,
+                'max' => 100,
+                'average' => 75
+            ],
+            4 => [
+                'min' => 100,
+                'max' => 350,
+                'average' => 225
+            ],
+            5 => [
+                'min' => 350,
+                'max' => 2000,
+                'average' => 1175
+            ],
+        ];
     }
 
     /**
@@ -84,6 +130,22 @@ class WCMP_Data
     public static function getPackageTypesHuman(): array
     {
         return self::$packageTypesHuman;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getDigitalStampHuman(): array
+    {
+        return self::$digitalStampHuman;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getDigitalStampWeight(): array
+    {
+        return self::$digitalStampRanges;
     }
 
     /**
@@ -121,7 +183,7 @@ class WCMP_Data
      */
     public static function getPackageTypeId(string $deliveryType): string
     {
-       return AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$deliveryType];
+        return AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$deliveryType];
     }
 
     /**
@@ -157,7 +219,7 @@ class WCMP_Data
      */
     public static function getInsuranceAmount(): array
     {
-        $carrier = ConsignmentFactory::createByCarrierName(WCMP_Settings::SETTINGS_POSTNL);
+        $carrier             = ConsignmentFactory::createByCarrierName(WCMP_Settings::SETTINGS_POSTNL);
         $amountPossibilities = $carrier->getInsurancePossibilities();
 
         foreach ($amountPossibilities as $key => $value) {
@@ -166,6 +228,7 @@ class WCMP_Data
 
         return $amount;
     }
+
 
     /**
      * @return array
