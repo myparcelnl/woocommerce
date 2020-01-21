@@ -1099,7 +1099,6 @@ class WCMP_Export
 
     /**
      * @param int         $weight
-     *
      * @param string|null $names
      *
      * @return array
