@@ -49,13 +49,11 @@ class WCMP_Data
     /**
      * @var array
      */
-    private static $digitalStampHuman;
-
-    /**
-     * @var array
-     */
     private static $digitalStampRanges;
 
+    /**
+     * WCMP_Data constructor.
+     */
     public function __construct()
     {
         self::$packageTypes = [
@@ -77,14 +75,6 @@ class WCMP_Data
             AbstractConsignment::DELIVERY_TYPE_STANDARD => __("Standard delivery", "woocommerce-myparcel"),
             AbstractConsignment::DELIVERY_TYPE_EVENING  => __("Evening delivery", "woocommerce-myparcel"),
             AbstractConsignment::DELIVERY_TYPE_PICKUP   => __("Pickup", "woocommerce-myparcel"),
-        ];
-
-        self::$digitalStampHuman = [
-            15   => '0-20 gram',
-            35   => '20-50 gram',
-            75   => '50-100 gram',
-            225  => '100-350 gram',
-            1175 => '350-2000 gram',
         ];
 
         self::$digitalStampRanges = [
@@ -159,20 +149,6 @@ class WCMP_Data
             $packageType,
             AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP,
             self::$packageTypesHuman
-        );
-    }
-
-    /**
-     * @param int|string $deliveryType
-     *
-     * @return string
-     */
-    public static function getDeliveryTypeHuman($deliveryType): string
-    {
-        return self::getHuman(
-            $deliveryType,
-            AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP,
-            self::$deliveryTypesHuman
         );
     }
 

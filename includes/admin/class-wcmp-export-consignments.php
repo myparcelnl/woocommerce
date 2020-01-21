@@ -251,7 +251,7 @@ class WCMP_Export_Consignments
      */
     private function getTotalPackageWeight(): int
     {
-        return WCMP_Export::getDigitalStampRanges($this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT));
+        return $this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
     }
 
     /**

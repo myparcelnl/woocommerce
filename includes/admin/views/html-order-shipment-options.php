@@ -212,14 +212,14 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "name"      => "[shipment_options][weight]",
             "label"     => __("Weight", "woocommerce-myparcel"),
             "type"      => "select",
-            "options"   => WCMP_Data::getDigitalStampHuman(),
+            "options"   => $digitalStampWeight['names'],
             "condition" => [
                 "name"         => "[carrier]",
                 "type"         => "disable",
                 "parent_value" => WCMP_Data::getPostnlName(),
                 "set_value"    => WCMP_Settings_Data::DISABLED,
             ],
-            "value"     => $digitalStampWeight,
+            "value"     => $digitalStampWeight['weight'],
         ],
     ];
 
