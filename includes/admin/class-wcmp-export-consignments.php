@@ -94,8 +94,7 @@ class WCMP_Export_Consignments
         $this->setShipmentOptions();
         $this->setPickupLocation();
         $this->setCustomsDeclaration();
-        $this->consignment->setPhysicalProperties(["weight" => '21']);
-//        $this->setPhysicalProperties();
+        $this->setPhysicalProperties();
     }
 
     /**
@@ -247,13 +246,13 @@ class WCMP_Export_Consignments
         return 0;
     }
 
-//    /**
-//     * @return int
-//     */
-//    private function getTotalPackageWeight(): int
-//    {
-//       return 76;
-//    }
+    /**
+     * @return int
+     */
+    private function getTotalPackageWeight(): int
+    {
+       return WCMP_Export::getDigitalStampRanges($this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT));
+    }
 
     /**
      * Gets the recipient and puts its data in the consignment.
@@ -369,7 +368,7 @@ class WCMP_Export_Consignments
      */
     private function setPhysicalProperties()
     {
-        $this->consignment->setPhysicalProperties(["weight" => 21]);
+        $this->consignment->setPhysicalProperties(["weight" => $this->getTotalPackageWeight()]);
     }
 
     private function setBaseData(): void
