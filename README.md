@@ -17,4 +17,4 @@ This WooCommerce extension allows you to export your orders to the MyParcel serv
 
 A MyParcel BE API account is required for this plugin! You can create this in your account or contact MyParcel BE at info@sendmyparcel.be
 
-Voor de handleiding ga naar: https://myparcelbe.github.io/woocommerce/manual-4.0
+Voor de handleiding ga naar: https://myparcelbe.github.io/woocommerce/
