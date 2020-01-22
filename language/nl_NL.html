@@ -50,7 +50,7 @@
             Ook omdat niet alle checkouts in Woocommerce hetzelfde werken is het nogmaals goed om te kijken of alles naar wens staat. Staat alles op de juiste plaats en is het goed uitgelijnd? Onze tip is om hier naar te kijken voordat jouw klanten dit gebruiken.
         </p>
 
-        <h1 id="2">2 Configuratie</h1>
+        <h1 id="2">2 WooCommerce MyParcel BE Instellingen</h1>
         <p>Ga naar het menu <span class="nice">WooCommerce  → MyParcel BE</span> om de MyParcel plugin te configureren.<br></p>
 
         <h2 id="2_1">2.1 Algemeen</h2>
@@ -63,13 +63,33 @@
         <h3 id="2_1_2">2.1.2 Label weergave</h3>
         <p>Geef hier aan of je het label direct wilt downloaden of wilt openen in een nieuw scherm.</p>
 
-        <h3 id="2_1_3">2.1.3 Track&Trace instellingen</h3>
-        <p>Stel ’Email track&trace code’ in zodat het emailadres van de klant wordt meegestuurd naar MyParcel BE. Het emailadres kan door MyParcel BE worden gebruikt om de Track&Trace mail te versturen naar de klant.</p>
+        <h3 id="2_1_3">2.1.3 Label formaat</h3>
+        <p>Geef hier aan of je het label op een A6 of A4 formaat wilt hebben.</p>
 
-        <h3 id="2_1_4">2.1.4 Diagnostische hulpmiddelen</h3>
+        <h3 id="2_1_4">2.1.4 Vraag om startpositie bij printen</h3>
+        <p>Met deze optie kun je verder gaan met printen waar je de laatste keer gebleven.</p>
+
+        <h3 id="2_1_5">2.1.5 Track & Trace in e-mail</h3>
+        <p>Voeg de Track & Trace code toe aan e-mails aan de klant. Let op! Wanneer je voor deze optie kiest, zorg er dan voor dat je niet de Track & Trace e-mail in de backoffice hebt ingeschakeld.</p>
+
+        <h3 id="2_1_6">2.1.6 Track & Trace in Mijn Account</h3>
+        <p>Toon Track & Trace code en link in Mijn Account.</p>
+
+        <h3 id="2_1_7">2.1.7 Verwerk zendingen direct</h3>
+        <p>Wanneer je deze optie inschakelt, zullen zendingen direct worden verwerkt wanneer deze verzonden zijn naar MyParcel.</p>
+
+        <h3 id="2_1_8">2.1.8 Orderstatus automatisering</h3>
+        <p>Wijzig automatisch de orderstatus na het succesvol exporteren van een order. Let op dat Verwerk zendingen direct is ingeschakeld wanneer je deze optie gebruikt in combinatie met de Track & Trace in e-mail optie, anders wordt de Track & Trace code niet opgenomen in de e-mail naar de klant.</p>
+
+        <h3 id="2_1_9">2.1.9 Bewaar oude zendingen</h3>
+        <p>Wanneer deze optie is ingeschakeld, zullen de gegevens van de vorige zendingen (Track & Trace links) in de order worden bewaard wanneer je meer dan één keer exporteert.</p>
+
+        <h3 id="2_1_10">2.1.10 Bewaar barcode in een notitie</h3>
+        <p>Plaats de barcode in een notitie van een order.</p>
+
+        <h3 id="2_1_11">2.1.11 Diagnostische hulpmiddelen</h3>
         <p>Je kunt de diagnostische hulpmiddelen inschakelen op het moment dat er problemen zijn met het exporteren van de zendingen. In dit bestand wordt de communicatie tussen WooCommerce en MyParcel beschreven.</p>
 
-        <img src="media/woocommerceBE1.png">
         <h2 id="2_2">2.2 Standaard exportinstellingen</h2>
 
         <h3 id="2_2_1">2.2.1 Pakkettype koppelen aan verzendtype</h3>
@@ -81,66 +101,159 @@
         <h3 id="2_2_2">2.2.2 Koppel emailadres klant</h3>
         <p>Je kunt de keuze maken om wel of niet het e-mailadres vanuit jouw orders mee te sturen naar MyParcel BE. Wanneer je het emailadres van de klant koppelt, kan je instellen dat MyParcel BE jouw Track&Trace emails verstuurd naar dit adres. In jouw MyParcel BE backend kun je zelf deze email in of uitschakelen en opmaken in jouw eigen stijl.</p>
 
-        <h3 id="2_2_3">2.2.3 Label omschrijving</h3>
+        <h3 id="2_2_3">2.2.3 Koppel telefoonnummer klant</h3>
+        <p>Wanneer je het telefoonnummer van de klant koppelt met de zending, kan de koerier dit gebruiken ten behoeve van de aflevering van het pakket. De afleverkans voor buitenlandzendingen wordt hiermee aanzienlijk verhoogd.</p>
+
+        <h3 id="2_2_4">2.2.4 Label omschrijving</h3>
         <p>Met deze optie kun je een beschrijving toevoegen aan de zending. Dit zal worden afgedrukt op de linkerbovenhoek van het label en kun je gebruiken om de zending in het MyParcel BE zendingenoverzicht op te zoeken. Gebruik [ORDER_NR] om het ordernummer te vermelden.</p>
 
-        <h3 id="2_2_4">2.2.4 Leeg pakket gewicht</h3>
-        <p>Geef hier aan wat het gewicht van een leeg pakket is, afgerond op gram.</p>
-
-        <h2 id="2_3">2.3 Checkout</h2>
-        <p>Via het tabblad ‘Checkout’ heb je de mogelijkheid om meer verzendopties toe te voegen in jouw checkout. Ook is het mogelijk om ervoor te kiezen de checkout niet enkel bij pakketten te tonen maar ook voor alle verzendmethoden.</p>
+        <h2 id="2_3">2.3 Checkout instellingen</h2>
+        <p>Via het tabblad ‘Checkout instellingen’ heb je de mogelijkheid om meer verzendopties toe te voegen in jouw checkout. Ook is het mogelijk om ervoor te kiezen de checkout niet enkel bij pakketten te tonen maar ook voor alle verzendmethoden.</p>
         <img src="media/checkoutpakketwooBE.png">
 
-        <h3 id="2_3_1">2.3.1 Bezorgopties</h3>
+        <h3 id="2_3_1">2.3.1 MyParcel BE adresvelden</h3>
+        <p>Wanneer aangevinkt wordt er gebruikt gemaakt van de MyParcel BE adresvelden. Dit houdt in dat straat,  huisnummer en toevoeging los komen te staan. Wil je de standaard WooCommerce adresvelden gebruiken? Laat deze optie uitgevinkt staan.</p>
+
+        <h3 id="2_3_2">2.3.2 MyParcel BE Bezorgopties</h3>
         <p>
             Bij de verschillende bezorgopties is het mogelijk een toeslag in te stellen die voor de desbetreffende bezorgoptie doorberekend wordt aan jouw klant via de checkout.
             Het is dus een toeslag op de standaardtarieven die je al hebt ingevoerd. In onderstaand voorbeeld zie je hoe deze toeslagen in de check-out terugkomen.<br>
-            <img src="media/woocommerce6BE.png"><br>
-            Je ziet bij de checkout instellingen nog 3 andere instellingen. Dit zijn <span class="nice">afleverdagen</span>, <span class="nice">sluitingstijd</span> en <span class="nice">verwerkingstijd</span>. Op basis van deze instelling worden de juiste levertijden en –dagen getoond aan jouw klanten via de checkout, gebaseerd op jouw manier van orderverwerking.
-        </p>
-        <img src="media/woocommerce7BE.png"><br><br>
+            <img src="media/woocommerce6BE.png"><br></p>
 
-        <h3 id="2_3_2">2.3.2 Verwerking van zendingen</h3>
-        <p>
-            <b>Afleverdagen</b><br><br>
-            Hiermee kun je aangeven op welke dagen jij het pakket afgeeft bij een Bpost locatie. Jouw klanten krijgen hiermee de juiste beschikbare bezorgdagen aangeboden.<br><br>
+        <h3 id="2_3_3">2.3.3 Toon bij</h3>
+        <p>Je kunt de bezorgopties aan specifieke verzendmethoden koppelen door deze bij 'Standaard exportinstellingen' aan de pakkettypes toe te voegen. Bij buitenlandse adressen zijn de bezorgopties niet zichtbaar.</p>
 
-            <b>Sluitingstijd</b><br><br>
-            Met de sluitingstijd kun je aangeven tot welk moment van de dag de orders nog verwerkt kunnen worden. Als je elke dag rond 17:00 de bestellingen naar een Bpost locatie brengt is het handig om de laatste order rond 16:00 te verwerken. Wanneer jouw klanten na dit tijdstip een bestelling plaatsen zien zij een latere levermogelijkheid. Bijvoorbeeld:
-            Sluitingstijd is om 16:00 en je kunt dezelfde dag de orders verwerken en op tijd inleveren. Dan zal jouw klant als eerste levermogelijkheid voor 16:00 de volgende dag zien. Wanneer jouw klant na 16:00 besteld zal het de dag erna zijn.<br><br>
+        <h3 id="2_3_4">2.3.4 Bezorgopties positie</h3>
+        <p>Hier kun je de positie van de bezorgopties aanpassen. Standaard staat deze na de factuurgegevens.</p>
 
-            <b>Verwerkingstijd</b><br><br>
-            Je kunt hier instellen hoeveel dagen jij nodig hebt om een order, die vóór jouw laatste besteltijd binnenkomt, te verwerken. Als je bijvoorbeeld 1 dag invult, zal er in de weergave in de check-out altijd rekening gehouden worden met het feit dat jij de pakketten dus niet morgen geleverd worden. Bijvoorbeeld:
-            De bestelling wordt geplaatst op 16 september voordat jij naar het Bpost punt gaat. Je hebt echter een verwerkingstijd van 1 dag ingesteld, dus de eerste mogelijkheid voor jou om het pakket in te leveren is dan 17 september. Jouw klant krijgt dan dus pas 18 september als eerst mogelijke leverdag te zien.<br><br>
-        </p>
+        <h3 id="2_3_5">2.3.5 Titels</h3>
+        <p>Je kunt een bezorgopties titel boven de MyParcel opties plaatsen. Als er geen titel is, is deze niet zichtbaar. Wanneer er geen standaard bezorgtitel is ingevuld, worden de bezorgtijden automatisch zichtbaar.</p>
 
-        <h1 id="3">3 Orderoverzicht</h1>
-        <p>In het orderoverzicht kun je eenvoudig zien wat voor zending de nieuwe bestelling betreft. Ook kun je makkelijk het pakkettype wijzigen indien dit gewenst is. Wanneer je op <span class="nice">Pakket</span> klikt verschijnt het venster eronder. Hierin is het mogelijk om verzendopties uit te schakelen of juist toe te voegen of het soort zending aan te passen.</p>
-        <p>Na het kiezen van jouw gewenste opties of het wijzigen van het <span class="nice">Soort zending</span> klik je op <span class="nice">Opslaan</span> en daarna kun je deze keuze exporteren naar MyParcel BE en het gewenste label aanmaken.<br><br>
+        <h1 id="3">3 Bpost</h1>
+        <p>Via het tabblad 'bpost' heb je de mogelijkheid om de instellingen van de vervoerder bpost te inschakelen/uitschakelen.</p>
+        <img src="media/woocommerceBpost.png"><br><br>
+
+        <h2 id="3_1">3.1 Standaard exportinstellingen</h2>
+        <p>Deze instellingen worden toegepast op bpost zendingen die u in de backend aanmaakt.</p>
+
+        <h3 id="3_1_1">3.1.1 Verzekerde verzending (tot €500)</h3>
+        <p>Hiermee worden zendingen "standaard" met verzekerd verzonden. Er zit standaard geen verzekering op de zendingen. Indien je toch wilt verzekeren kun je dit doen. Wij verzekeren de inkoopwaarde van je product voor €500. Verzekerde pakketten bevatten altijd de optie "Handtekening voor ontvangst"</p>
+
+        <h3 id="3_1_2">3.1.2 Handtekening voor ontvangst</h3>
+        <p>Hiermee worden zendingen "standaard" met handtekening voor ontvangst verzonden. Het pakket wordt allereerst op het huisadres aangeboden. Mocht de geadresseerde niet thuis zijn, dan wordt het pakket bij de buren afgegeven. Er moet in beide gevallen voor worden getekend.</p>
+
+        <h2 id="3_2">3.2 bpost bezorgopties</h2>
+        <p>"bpost bezorging inschakelen" hiermee schakel je de vervoerder bpost in voor je bezorgopties</p>
+
+        <h3 id="3_2_1">3.2.1 Afleverdagen</h3>
+        <p>Hiermee kun je aangeven op welke dagen jij het pakket afgeeft bij een Bpost locatie. Jouw klanten krijgen hiermee de juiste beschikbare bezorgdagen aangeboden.</p>
+
+        <h3 id="3_2_2">3.2.2 Sluitingstijd</h3>
+        <p>Met de sluitingstijd kun je aangeven tot welk moment van de dag de orders nog verwerkt kunnen worden.
+            Als je elke dag rond 17:00 de bestellingen naar een Bpost locatie brengt is het handig om de laatste order rond 16:00 te verwerken.
+            Wanneer jouw klanten na dit tijdstip een bestelling plaatsen zien zij een latere levermogelijkheid.
+            Bijvoorbeeld: Sluitingstijd is om 16:00 en je kunt dezelfde dag de orders verwerken en op tijd inleveren.
+            Dan zal jouw klant als eerste levermogelijkheid voor 16:00 de volgende dag zien. Wanneer jouw klant na 16:00 besteld zal het de dag erna zijn.</p>
+
+        <h3 id="3_2_3">3.2.3 Verwerkingstijd</h3>
+        <p>Je kunt hier instellen hoeveel dagen jij nodig hebt om een order, die vóór jouw laatste besteltijd binnenkomt, te verwerken.
+            Als je bijvoorbeeld 1 dag invult, zal er in de weergave in de check-out altijd rekening gehouden worden met het feit dat jij de pakketten dus niet morgen geleverd worden.
+            Bijvoorbeeld: De bestelling wordt geplaatst op 16 september voordat jij naar het Bpost punt gaat.
+            Je hebt echter een verwerkingstijd van 1 dag ingesteld, dus de eerste mogelijkheid voor jou om het pakket in te leveren is dan 17 september.
+            Jouw klant krijgt dan dus pas 18 september als eerst mogelijke leverdag te zien. </p>
+
+        <h3 id="3_2_4">3.2.4 Toon bezorgdatum</h3>
+        <p>Toon de bezorgdatum bij de bezorgopties</p>
+
+        <h3 id="3_2_5">3.2.5 Handtekening voor ontvangst</h3>
+        <p>Hiermee zet je de opties aan voor je klanten om een "handtekening voor ontvangst" opties te kunnen kiezen in de bezorgopties.</p>
+
+        <h3 id="3_2_6">3.2.6 Kosten (optioneel)</h3>
+        <p>Vul hier een bedrag in dat zowel positief of negatief is. Wil je bijvoorbeeld korting geven voor het gebruiken van deze of wil je extra rekenen voor deze bezorgoptie.</p>
+
+        <h2 id="3_3">3.3 bpost afhaalopties</h2>
+
+        <h3 id="3_3_1">3.3.1 bpost afhalen inschakelen</h3>
+        <p>Hiermee schakel je de bpost afhaallocaties in. Je klanten kunnen kiezen voor een bpost pickup locatie.</p>
+
+        <h3 id="3_3_2">3.3.2 Kosten (optioneel)</h3>
+        <p>Vul hier een bedrag in dat zowel positief of negatief is. Wil je bijvoorbeeld korting geven voor het gebruiken van deze of wil je extra rekenen voor deze bezorgoptie.</p>
+
+        <h1 id="4">4 DPD</h1>
+        <p>Via het tabblad 'bpost' heb je de mogelijkheid om de instellingen van de vervoerder DPD te inschakelen/uitschakelen.</p>
+        <img src="media/woocommerceDPD.png"><br><br>
+
+        <h2 id="4_1">4.1 DPD bezorgopties</h2>
+        <p>"DPD bezorging inschakelen" hiermee schakel je de vervoerder DPD in voor je bezorgopties</p>
+
+        <h3 id="4_1_1">4.1.1 Afleverdagen</h3>
+        <p>Hiermee kun je aangeven op welke dagen jij het pakket afgeeft bij een DPD locatie. Jouw klanten krijgen hiermee de juiste beschikbare bezorgdagen aangeboden.</p>
+
+        <h3 id="4_1_2">4.1.2 Sluitingstijd</h3>
+        <p>Met de sluitingstijd kun je aangeven tot welk moment van de dag de orders nog verwerkt kunnen worden.
+            Als je elke dag rond 17:00 de bestellingen naar een DPD locatie brengt is het handig om de laatste order rond 16:00 te verwerken.
+            Wanneer jouw klanten na dit tijdstip een bestelling plaatsen zien zij een latere levermogelijkheid.
+            Bijvoorbeeld: Sluitingstijd is om 16:00 en je kunt dezelfde dag de orders verwerken en op tijd inleveren.
+            Dan zal jouw klant als eerste levermogelijkheid voor 16:00 de volgende dag zien. Wanneer jouw klant na 16:00 besteld zal het de dag erna zijn.</p>
+
+        <h3 id="4_1_3">4.1.3 Verwerkingstijd</h3>
+        <p>Je kunt hier instellen hoeveel dagen jij nodig hebt om een order, die vóór jouw laatste besteltijd binnenkomt, te verwerken.
+            Als je bijvoorbeeld 1 dag invult, zal er in de weergave in de check-out altijd rekening gehouden worden met het feit dat jij de pakketten dus niet morgen geleverd worden.
+            Bijvoorbeeld: De bestelling wordt geplaatst op 16 september voordat jij naar het DPD punt gaat.
+            Je hebt echter een verwerkingstijd van 1 dag ingesteld, dus de eerste mogelijkheid voor jou om het pakket in te leveren is dan 17 september.
+            Jouw klant krijgt dan dus pas 18 september als eerst mogelijke leverdag te zien. </p>
+
+        <h3 id="4_1_4">4.1.4 Toon bezorgdatum</h3>
+        <p>Toon de bezorgdatum bij de bezorgopties</p>
+
+        <h2 id="4_2">4.2 DPD afhaalopties</h2>
+
+        <h3 id="4_2_1">4.2.1 DPD afhalen inschakelen</h3>
+        <p>Hiermee schakel je de DPD afhaallocaties in. Je klanten kunnen kiezen voor een DPD pickup locatie.</p>
+
+        <h3 id="4_2_2">4.2.2 Kosten (optioneel)</h3>
+        <p>Vul hier een bedrag in dat zowel positief of negatief is. Wil je bijvoorbeeld korting geven voor het gebruiken van deze of wil je extra rekenen voor deze bezorgoptie.</p>
+
+
+                <h1 id="5">5 Orderoverzicht</h1>
+        <p>In het orderoverzicht kun je eenvoudig zien wat voor zending de nieuwe bestelling betreft. Ook kun je
+            makkelijk het pakkettype wijzigen indien dit gewenst is. Wanneer je op <span class="nice">Pakket</span>
+            klikt verschijnt het venster eronder. Hierin is het mogelijk om verzendopties uit te schakelen of juist toe
+            te voegen of het soort zending aan te passen.</p>
+        <p>Na het kiezen van jouw gewenste opties of het wijzigen van het <span class="nice">Soort zending</span> klik
+            je op <span class="nice">Opslaan</span> en daarna kun je deze keuze exporteren naar MyParcel BE en het
+            gewenste label aanmaken.<br><br>
             <img src="media/woocommerce8BE.png"><br><br>
-            Je kunt op 2 manieren jouw orders doorzetten naar MyParcel BE en hier vervolgens een label voor uitprinten. Namelijk door een order (of meerdere orders) te selecteren en vervolgens naar <span class="nice">Acties</span> te gaan. Daar kun je jouw keuze maken <span class="nice">Exporteren</span>, <span class="nice">Printen</span> of <span class="nice">Exporteren en Printen</span>.
+            Je kunt op 2 manieren jouw orders doorzetten naar MyParcel BE en hier vervolgens een label voor uitprinten.
+            Namelijk door een order (of meerdere orders) te selecteren en vervolgens naar <span
+                    class="nice">Acties</span> te gaan. Daar kun je jouw keuze maken <span
+                    class="nice">Exporteren</span>, <span class="nice">Printen</span> of <span class="nice">Exporteren en Printen</span>.
         </p>
-        <p>Zowel bij bulk als bij een enkele export wordt er een laadicoontje zichtbaar. Vervolgens wordt de pagina ook direct ververst. (zie voorbeeld hieronder)<br><br></p>
+        <p>Zowel bij bulk als bij een enkele export wordt er een laadicoontje zichtbaar. Vervolgens wordt de pagina ook
+            direct ververst. (zie voorbeeld hieronder)<br><br></p>
         <img src="media/laadicoontje.png">
         <img src="media/woocommerce9.png"><br><br>
 
-        <h2 id="3_1">3.1 Retourlabel email</h2>
-        <p>Vanuit het orderoverzicht kun je een retourlink naar jouw klant sturen. Jouw klant ontvangt een e-mail met een link er in om eenvoudig een retourlabel te printen. In onderstaande afbeelding kun je zien welk icoontje hiervoor gebruikt kan worden.</p>
+        <h2 id="5_1">5.1 Retourlabel email</h2>
+        <p>Vanuit het orderoverzicht kun je een retourlink naar jouw klant sturen. Jouw klant ontvangt een e-mail met
+            een link er in om eenvoudig een retourlabel te printen. In onderstaande afbeelding kun je zien welk icoontje
+            hiervoor gebruikt kan worden.</p>
         <img src="media/retourlabelmailbutton.png"><br><br>
 
-        <h1 id="4">4 Orderdetails</h1>
-        <p>Uiteraard is het ook mogelijk om zendingen vanuit de order detailpagina zendingen aan te maken. Door op een order te klikken kom je op een pagina waar meer details over deze bestelling te vinden is.</p>
+        <h1 id="6">6 Orderdetails</h1>
+        <p>Uiteraard is het ook mogelijk om zendingen vanuit de order detailpagina zendingen aan te maken. Door op een
+            order te klikken kom je op een pagina waar meer details over deze bestelling te vinden is.</p>
         <img src="media/woocommerceBE10.png">
 
         <footer class="site-footer">
             <p><span class="site-footer-owner">MyParcel België</span></p>
             <p>
-                <span class="site-footer-credits">
-                    <strong>Adres </strong>Adriaan Brouwerstraat 16, 2000 Antwerpen&nbsp;
-                    <strong>Telefoon </strong>03 808 18 20&nbsp;
-                    <strong>E-mail</strong> &nbsp;info@sendmyparcel.be<br/>
-                    <strong>Website </strong>www.sendmyparcel.be&nbsp;
-                </span><br>&nbsp;
+                            <span class="site-footer-credits">
+                                <strong>Adres </strong>Adriaan Brouwerstraat 16, 2000 Antwerpen&nbsp;
+                                <strong>Telefoon </strong>03 808 18 20&nbsp;
+                                <strong>E-mail</strong> &nbsp;info@sendmyparcel.be<br/>
+                                <strong>Website </strong>www.sendmyparcel.be&nbsp;
+                            </span><br>&nbsp;
             </p>
         </footer>
     </div>
