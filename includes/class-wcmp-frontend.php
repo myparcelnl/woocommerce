@@ -395,7 +395,7 @@ class WooCommerce_MyParcel_Frontend {
         $chosen_method = isset(WC()->session->chosen_shipping_methods[0]) ? WC()->session->chosen_shipping_methods[0] : '';
 
         // get package
-        $packages = WC()->cart->get_packages();
+        $packages = WC()->shipping->get_packages();
         $package = current($packages);
 
         $shipping_method = WooCommerce_MyParcel()->export->get_shipping_method($chosen_method);
