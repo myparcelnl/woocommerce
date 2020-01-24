@@ -71,8 +71,8 @@ class WCMP_Admin
         add_action("wp_ajax_wcmp_get_shipment_summary_status", [$this, "order_list_ajax_get_shipment_summary"]);
 
         // HS code in product shipping options tab
-        add_action("woocommerce_product_options_shipping", [$this, "product_hs_code_field"]);
-        add_action("woocommerce_process_product_meta", [$this, "product_hs_code_field_save"]);
+        add_action("woocommerce_product_options_shipping", [$this, "productHsCodeField"]);
+        add_action("woocommerce_process_product_meta", [$this, "productHsCodeFieldSave"]);
 
         // Add barcode in order grid
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
