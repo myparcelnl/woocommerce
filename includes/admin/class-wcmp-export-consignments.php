@@ -127,7 +127,7 @@ class WCMP_Export_Consignments
         $country  = WC()->countries->get_base_country();
 
         foreach ($this->order->get_items() as $item_id => $item) {
-            $product = $this->order->get_product_from_item($item);
+            $product = $item->get_product();
 
             if (! empty($product)) {
                 // Description
@@ -142,7 +142,6 @@ class WCMP_Export_Consignments
 
                 // Weight (total item weight in grams)
                 $weight = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
-
                 $myParcelItem =
                     (new MyParcelCustomsItem())->setDescription($description)
                                                ->setAmount($amount)
@@ -153,11 +152,19 @@ class WCMP_Export_Consignments
                                                    )
                                                )
                                                ->setCountry($country)
-                                               ->setClassification($contents);
+                                               ->setClassification($this->getHsCode());
 
                 $this->consignment->addItem($myParcelItem);
             }
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function getHsCode()
+    {
+        return 9876;
     }
 
     /**
