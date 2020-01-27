@@ -342,7 +342,7 @@ jQuery(function($) {
        * If there is no shipping method the delivery options will always be hidden.
        */
       if (shippingMethodField.length) {
-        shipping_method = selectedShippingMethodField ? selectedShippingMethodField.value : shippingMethodField.value;
+        shipping_method = selectedShippingMethodField ? selectedShippingMethodField.value : shippingMethodField[0].value;
         MyParcelFrontend.selectedShippingMethod = shipping_method;
       } else {
         MyParcelFrontend.selectedShippingMethod = null;
