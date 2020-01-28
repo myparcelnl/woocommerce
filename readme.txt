@@ -88,6 +88,9 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.0.2 (2020-01-28) =
+* Hotfix: show checkout when only one shipping method is activated
+
 = 3.1.5 (2019-06-20) =
 * Fix: Scrolling of the order overview when an input is clicked
 * Fix: Showing delivery date in the order when consumer using safari
