@@ -114,11 +114,11 @@ class WCMP_Export_Consignments
      */
     private function getPickupTypeByDeliveryOptions(DeliveryOptions $delivery_options): int
     {
-        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$delivery_options->getDeliveryType()];
+        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$delivery_options->getDeliveryType() ?? AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME];
     }
 
     /**
-     * @return AbstractConsignment
+     * @return void
      * @throws MissingFieldException
      */
     public function setCustomItems(): void
