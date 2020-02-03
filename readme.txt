@@ -88,6 +88,10 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.0.3 (2020-02-04) =
+* Fix: Customer mail doesn't show in the backoffice (sendmyparcel)
+* Fix: Hide carriers in the checkout when the option is turned off
+
 = 4.0.2 (2020-01-28) =
 * Hotfix: show checkout when only one shipping method is activated
 
