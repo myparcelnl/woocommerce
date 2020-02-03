@@ -608,12 +608,11 @@ class WCMP_Export
 
     /**
      * @param WC_Order $order
-     * @param bool     $connectEmail
      *
      * @return mixed|void
      * @throws Exception
      */
-    public static function getRecipientFromOrder(WC_Order $order, bool $connectEmail = null)
+    public static function getRecipientFromOrder(WC_Order $order)
     {
         $is_using_old_fields = WCX_Order::has_meta($order, "_billing_street_name")
             || WCX_Order::has_meta($order, "_billing_house_number");
@@ -622,9 +621,7 @@ class WCMP_Export
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
                 : trim($order->get_shipping_first_name() . " " . $order->get_shipping_last_name());
 
-        if ($connectEmail === null) {
-            $connectEmail = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_CONNECT_EMAIL);
-        }
+        $connectEmail = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_CONNECT_EMAIL);
 
         $connectPhone = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_CONNECT_PHONE);
 
