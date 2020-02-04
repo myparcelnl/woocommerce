@@ -834,18 +834,17 @@ class WooCommerce_MyParcel_Export {
     *
     * @return false|string
     */
-    private function get_next_delivery_day($timestamp)
-    {
-        $new_timestamp = strtotime('+1 day', $timestamp);
+    private function get_next_delivery_day($timestamp) {
+        $weekDay = date('w', $timestamp);
+        $new_timestamp = strtotime( '+1 day', $timestamp );
 
-        $today     = strtotime('now');
-        $todayDate = date('w', $today);
+        if ($new_timestamp < time()){
+            $new_timestamp = strtotime( '+1 day', 'now' );
+            $weekDay = date('w', $new_timestamp);
+        }
 
-        if ($todayDate >= $new_timestamp) {
-            if ($todayDate == 0 || $todayDate == 1 || $new_timestamp < time()) {
-                $new_timestamp = $this->get_next_delivery_day($new_timestamp);
-                $new_timestamp = strtotime('+1 day', $new_timestamp);
-            }
+        if ($weekDay == 0 || $weekDay == 1) {
+            $new_timestamp = $this->get_next_delivery_day( $new_timestamp );
         }
 
         return $new_timestamp;
