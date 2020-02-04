@@ -114,7 +114,7 @@ class WCMP_Export_Consignments
      */
     private function getPickupTypeByDeliveryOptions(DeliveryOptions $delivery_options): int
     {
-        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$delivery_options->getDeliveryType()];
+        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$delivery_options->getDeliveryType() ?? AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME];
     }
 
     /**
@@ -141,7 +141,7 @@ class WCMP_Export_Consignments
                 $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
 
                 // Weight (total item weight in grams)
-                $weight = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
+                $weight       = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
                 $myParcelItem =
                     (new MyParcelCustomsItem())->setDescription($description)
                                                ->setAmount($amount)
