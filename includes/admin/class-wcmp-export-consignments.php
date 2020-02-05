@@ -121,6 +121,7 @@ class WCMP_Export_Consignments
     /**
      * @return void
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
+     * @throws \ErrorException
      */
     public function setCustomItems(): void
     {
@@ -162,16 +163,23 @@ class WCMP_Export_Consignments
     }
 
     /**
-     * @param $product
+     * @param WC_Product $product
      *
      * @return int
+     * @throws \ErrorException
      */
-    public function getHsCode($product): int
+    public function getHsCode(WC_Product $product): int
     {
-        // TODO: select default hs-code
-        $classification = WCX_Product::get_meta($product, WCMP_Admin::META_HS_CODE, true);
+        $defaultHsCode = $this->getSetting(WCMP_Settings::SETTING_HS_CODE);
+        $productHsCode = WCX_Product::get_meta($product, WCMP_Admin::META_HS_CODE, true);
 
-        return (int) $classification;
+        $hsCode = $productHsCode ? $productHsCode : $defaultHsCode;
+
+        if (! $hsCode) {
+            throw new ErrorException(__("No HS code found in MyParcel settings", "woocommerce-myparcel"));
+        }
+
+        return (int) $hsCode;
     }
 
     /**
@@ -368,7 +376,6 @@ class WCMP_Export_Consignments
      */
     private function setCustomsDeclaration()
     {
-        // @todo set customs_declaration (HS code)
         $shippingCountry = WCX_Order::get_prop($this->order, "shipping_country");
 
         if (WCMP_Country_Codes::isWorldShipmentCountry($shippingCountry)) {
