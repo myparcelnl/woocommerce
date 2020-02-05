@@ -8,6 +8,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
 if (! defined("ABSPATH")) {
     exit;
@@ -142,17 +143,18 @@ class WCMP_Export_Consignments
 
                 // Weight (total item weight in grams)
                 $weight       = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
-                $myParcelItem =
-                    (new MyParcelCustomsItem())->setDescription($description)
-                                               ->setAmount($amount)
-                                               ->setWeight($weight)
-                                               ->setItemValue(
-                                                   (int) round(
-                                                       ($item["line_total"] + $item["line_tax"]) * 100
-                                                   )
-                                               )
-                                               ->setCountry($country)
-                                               ->setClassification($this->getHsCode());
+                $myParcelItem = (new MyParcelCustomsItem())
+                    ->setDescription($description)
+                    ->setAmount($amount)
+                    ->setWeight($weight)
+                    ->setItemValue(
+                        (int) round(
+                            ($item["line_total"] + $item["line_tax"]) * 100
+                        )
+                    )
+                    ->setCountry($country)
+                    ->setContents($contents)
+                    ->setClassification($this->getHsCode($product));
 
                 $this->consignment->addItem($myParcelItem);
             }
@@ -160,11 +162,16 @@ class WCMP_Export_Consignments
     }
 
     /**
+     * @param $product
+     *
      * @return int
      */
-    public function getHsCode()
+    public function getHsCode($product): int
     {
-        return 9876;
+        // TODO: select default hs-code
+        $classification = WCX_Product::get_meta($product, WCMP_Admin::META_HS_CODE, true);
+
+        return (int) $classification;
     }
 
     /**
@@ -350,6 +357,7 @@ class WCMP_Export_Consignments
             ->setInsurance($this->getInsurance())
             ->setAgeCheck($this->getAgeCheck())
             ->setLargeFormat($this->getLargeFormat())
+            ->setInvoice($this->order->get_id())
             ->setReturn($this->getReturnShipment());
     }
 
