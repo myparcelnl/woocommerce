@@ -44,8 +44,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $isCarrierDisabled     = $deliveryOptions->isPickup();
     $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
     $shipment_options      = $deliveryOptions->getShipmentOptions();
-
-    $shippingCountry         = WCX_Order::get_prop($order, "shipping_country");
+    $shippingCountry       = WCX_Order::get_prop($order, "shipping_country");
 
     $carrierHuman = WCMP_Data::CARRIERS_HUMAN;
     $bpost        = BpostConsignment::CARRIER_NAME;
@@ -64,12 +63,10 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         );
     }
 
-
     // If there are extra costs associated with DPD shipment, then DPD should not be used.
     if (in_array($shippingCountry, DPDConsignment::ADDITIONAL_COUNTRY_COSTS)) {
-        unset($carrierHuman['dpd']);
+        unset($carrierHuman[DPDConsignment::CARRIER_NAME]);
     }
-
 
     $option_rows = [
         [
