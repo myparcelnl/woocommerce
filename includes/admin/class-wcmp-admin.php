@@ -7,7 +7,6 @@ use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
-
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
