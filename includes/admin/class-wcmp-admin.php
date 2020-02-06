@@ -4,6 +4,7 @@ use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
 if (! defined('ABSPATH')) {
@@ -30,6 +31,7 @@ class WCMP_Admin
     public const META_SHIPMENTS              = "_myparcel_shipments";
     public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcel_shipment_options_extra";
     public const META_TRACK_TRACE            = "_myparcel_tracktrace";
+    public const META_HS_CODE                = "_myparcel_hs_code";
 
     public const SHIPMENT_OPTIONS_FORM_NAME = "myparcel_options";
 
@@ -68,8 +70,8 @@ class WCMP_Admin
         add_action("wp_ajax_wcmp_get_shipment_summary_status", [$this, "order_list_ajax_get_shipment_summary"]);
 
         // HS code in product shipping options tab
-        add_action("woocommerce_product_options_shipping", [$this, "product_hs_code_field"]);
-        add_action("woocommerce_process_product_meta", [$this, "product_hs_code_field_save"]);
+        add_action("woocommerce_product_options_shipping", [$this, "productHsCodeField"]);
+        add_action("woocommerce_process_product_meta", [$this, "productHsCodeFieldSave"]);
 
         // Add barcode in order grid
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
@@ -538,6 +540,39 @@ class WCMP_Admin
         }
 
         return $trackTraceUrl;
+    }
+
+    public function productHsCodeField()
+    {
+        echo '<div class="options_group">';
+        woocommerce_wp_text_input(
+            array(
+                'id'          => self::META_HS_CODE,
+                'label'       => __('HS Code', 'woocommerce-myparcel'),
+                'description' => sprintf(
+                    __('HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.', 'woocommerce-myparcel'),
+                    '<a href="http://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',
+                    '</a>'
+                )
+            )
+        );
+        echo '</div>';
+    }
+
+    public function productHsCodeFieldSave($post_id)
+    {
+        // check if hs code is passed and not an array (=variation hs code)
+        if (isset($_POST[self::META_HS_CODE]) && ! is_array($_POST[self::META_HS_CODE])) {
+            $product = wc_get_product($post_id);
+            $hs_code = $_POST[self::META_HS_CODE];
+            if (! empty($hs_code)) {
+                WCX_Product::update_meta_data($product, self::META_HS_CODE, esc_attr($hs_code));
+            } else {
+                if (isset($_POST[self::META_HS_CODE]) && empty($hs_code)) {
+                    WCX_Product::delete_meta_data($product, self::META_HS_CODE);
+                }
+            }
+        }
     }
 
     /**

@@ -8,6 +8,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
 if (! defined("ABSPATH")) {
     exit;
@@ -114,20 +115,20 @@ class WCMP_Export_Consignments
      */
     private function getPickupTypeByDeliveryOptions(DeliveryOptions $delivery_options): int
     {
-        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$delivery_options->getDeliveryType()];
+        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$delivery_options->getDeliveryType() ?? AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME];
     }
 
     /**
      * @return void
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
+     * @throws \ErrorException
      */
     public function setCustomItems(): void
     {
-        $contents = (int) ($this->getSetting("package_contents") ? $this->getSetting("package_contents") : 1);
-        $country  = WC()->countries->get_base_country();
+        $country = WC()->countries->get_base_country();
 
         foreach ($this->order->get_items() as $item_id => $item) {
-            $product = $this->order->get_product_from_item($item);
+            $product = $item->get_product();
 
             if (! empty($product)) {
                 // Description
@@ -141,23 +142,42 @@ class WCMP_Export_Consignments
                 $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
 
                 // Weight (total item weight in grams)
-                $weight = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
-
-                $myParcelItem =
-                    (new MyParcelCustomsItem())->setDescription($description)
-                                               ->setAmount($amount)
-                                               ->setWeight($weight)
-                                               ->setItemValue(
-                                                   (int) round(
-                                                       ($item["line_total"] + $item["line_tax"]) * 100
-                                                   )
-                                               )
-                                               ->setCountry($country)
-                                               ->setClassification($contents);
+                $weight       = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
+                $myParcelItem = (new MyParcelCustomsItem())
+                    ->setDescription($description)
+                    ->setAmount($amount)
+                    ->setWeight($weight)
+                    ->setItemValue(
+                        (int) round(
+                            ($item["line_total"] + $item["line_tax"]) * 100
+                        )
+                    )
+                    ->setCountry($country)
+                    ->setClassification($this->getHsCode($product));
 
                 $this->consignment->addItem($myParcelItem);
             }
         }
+    }
+
+    /**
+     * @param WC_Product $product
+     *
+     * @return int
+     * @throws \ErrorException
+     */
+    public function getHsCode(WC_Product $product): int
+    {
+        $defaultHsCode = $this->getSetting(WCMP_Settings::SETTING_HS_CODE);
+        $productHsCode = WCX_Product::get_meta($product, WCMP_Admin::META_HS_CODE, true);
+
+        $hsCode = $productHsCode ? $productHsCode : $defaultHsCode;
+
+        if (! $hsCode) {
+            throw new ErrorException(__("No HS code found in MyParcel settings", "woocommerce-myparcel"));
+        }
+
+        return (int) $hsCode;
     }
 
     /**
@@ -202,6 +222,14 @@ class WCMP_Export_Consignments
             $this->deliveryOptions->getShipmentOptions()->hasLargeFormat(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
         );
+    }
+
+    /**
+     * @return int
+     */
+    private function getContents(): int
+    {
+        return (int) ($this->getSetting("package_contents") ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
     }
 
     /**
@@ -343,6 +371,8 @@ class WCMP_Export_Consignments
             ->setInsurance($this->getInsurance())
             ->setAgeCheck($this->getAgeCheck())
             ->setLargeFormat($this->getLargeFormat())
+            ->setContents($this->getContents())
+            ->setInvoice($this->order->get_id())
             ->setReturn($this->getReturnShipment());
     }
 
@@ -353,7 +383,6 @@ class WCMP_Export_Consignments
      */
     private function setCustomsDeclaration()
     {
-        // @todo set customs_declaration (HS code)
         $shippingCountry = WCX_Order::get_prop($this->order, "shipping_country");
 
         if (WCMP_Country_Codes::isWorldShipmentCountry($shippingCountry)) {
