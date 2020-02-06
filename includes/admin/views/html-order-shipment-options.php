@@ -46,10 +46,10 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $shipment_options      = $deliveryOptions->getShipmentOptions();
     $shippingCountry       = WCX_Order::get_prop($order, "shipping_country");
 
-    $carrierHuman = WCMP_Data::CARRIERS_HUMAN;
-    $bpost        = BpostConsignment::CARRIER_NAME;
-    $insurance    = false;
-    $signature    = false;
+    $carriersHuman = WCMP_Data::CARRIERS_HUMAN;
+    $bpost         = BpostConsignment::CARRIER_NAME;
+    $insurance     = false;
+    $signature     = false;
 
     if (DPDConsignment::CARRIER_NAME !== $deliveryOptions->getCarrier()) {
         $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
@@ -65,7 +65,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
 
     // If there are extra costs associated with DPD shipment, then DPD should not be used.
     if (in_array($shippingCountry, DPDConsignment::ADDITIONAL_COUNTRY_COSTS)) {
-        unset($carrierHuman[DPDConsignment::CARRIER_NAME]);
+        unset($carriersHuman[DPDConsignment::CARRIER_NAME]);
     }
 
     $option_rows = [
@@ -73,7 +73,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "name"              => "[carrier]",
             "label"             => __("Carrier", "woocommerce-myparcelbe"),
             "type"              => "select",
-            "options"           => $carrierHuman,
+            "options"           => $carriersHuman,
             "custom_attributes" => $isCarrierDisabled ? ["disabled" => "disabled"] : [],
             "value"             => $deliveryOptions->getCarrier(),
         ],
