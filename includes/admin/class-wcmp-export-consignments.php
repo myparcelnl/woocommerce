@@ -125,8 +125,7 @@ class WCMP_Export_Consignments
      */
     public function setCustomItems(): void
     {
-        $contents = (int) ($this->getSetting("package_contents") ? $this->getSetting("package_contents") : 1);
-        $country  = WC()->countries->get_base_country();
+        $country = WC()->countries->get_base_country();
 
         foreach ($this->order->get_items() as $item_id => $item) {
             $product = $item->get_product();
@@ -154,7 +153,6 @@ class WCMP_Export_Consignments
                         )
                     )
                     ->setCountry($country)
-                    ->setContents($contents)
                     ->setClassification($this->getHsCode($product));
 
                 $this->consignment->addItem($myParcelItem);
@@ -224,6 +222,14 @@ class WCMP_Export_Consignments
             $this->deliveryOptions->getShipmentOptions()->hasLargeFormat(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
         );
+    }
+
+    /**
+     * @return int
+     */
+    private function getContents(): int
+    {
+        return (int) ($this->getSetting("package_contents") ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
     }
 
     /**
@@ -365,6 +371,7 @@ class WCMP_Export_Consignments
             ->setInsurance($this->getInsurance())
             ->setAgeCheck($this->getAgeCheck())
             ->setLargeFormat($this->getLargeFormat())
+            ->setContents($this->getContents())
             ->setInvoice($this->order->get_id())
             ->setReturn($this->getReturnShipment());
     }
