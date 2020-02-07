@@ -2,7 +2,7 @@
 
 namespace MyParcelNL\Sdk\src\Adapter\DeliveryOptions;
 
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use Exception;
 
 /**
  * Class DeliveryOptionsV3Adapter
@@ -31,7 +31,7 @@ class DeliveryOptionsV3Adapter extends AbstractDeliveryOptionsAdapter
 
         $this->carrier         = $deliveryOptions["carrier"] ?? null;
         $this->date            = $deliveryOptions["date"] ?? null;
-        $this->deliveryType    = $deliveryOptions["deliveryType"] ?? AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME;
+        $this->deliveryType    = $deliveryOptions["deliveryType"] ?? null;
         $this->shipmentOptions = new ShipmentOptionsV3Adapter($deliveryOptions["shipmentOptions"] ?? []);
 
         if ($this->isPickup()) {

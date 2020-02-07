@@ -1,24 +1,15 @@
-<?php declare(strict_types=1);
-/**
- * A model of a consignment
- * If you want to add improvements, please create a fork in our GitHub:
- * https://github.com/myparcelnl
- *
- * @author      Reindert Vetter <reindert@myparcel.nl>
- * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US  CC BY-NC-ND 3.0 NL
- * @link        https://github.com/myparcelnl/sdk
- * @copyright   2010-2017 MyParcel
- * @since       File available since Release v0.1.0
- */
+<?php
+
+declare(strict_types=1);
 
 namespace MyParcelNL\Sdk\src\Model\Consignment;
 
-use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Concerns\HasCheckoutFields;
+use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\SplitStreet;
-use MyParcelNL\Sdk\src\Support\Helpers;
-use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use MyParcelNL\Sdk\src\Helper\TrackTraceUrl;
+use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
+use MyParcelNL\Sdk\src\Support\Helpers;
 
 /**
  * A model of a consignment
@@ -31,16 +22,24 @@ class AbstractConsignment
     /**
      * Consignment types
      */
-    public const DELIVERY_TYPE_MORNING        = 1;
-    public const DELIVERY_TYPE_STANDARD       = 2;
-    public const DELIVERY_TYPE_EVENING        = 3;
-    public const DELIVERY_TYPE_PICKUP         = 4;
+    public const DELIVERY_TYPE_MORNING  = 1;
+    public const DELIVERY_TYPE_STANDARD = 2;
+    public const DELIVERY_TYPE_EVENING  = 3;
+    public const DELIVERY_TYPE_PICKUP   = 4;
+
+    /**
+     * @deprecated Since November 2019 is it no longer possible to use pickup express.
+     */
     public const DELIVERY_TYPE_PICKUP_EXPRESS = 5;
 
-    public const DELIVERY_TYPE_MORNING_NAME        = "morning";
-    public const DELIVERY_TYPE_STANDARD_NAME       = "standard";
-    public const DELIVERY_TYPE_EVENING_NAME        = "evening";
-    public const DELIVERY_TYPE_PICKUP_NAME         = "pickup";
+    public const DELIVERY_TYPE_MORNING_NAME  = "morning";
+    public const DELIVERY_TYPE_STANDARD_NAME = "standard";
+    public const DELIVERY_TYPE_EVENING_NAME  = "evening";
+    public const DELIVERY_TYPE_PICKUP_NAME   = "pickup";
+
+    /**
+     * @deprecated Since November 2019 is it no longer possible to use pickup express.
+     */
     public const DELIVERY_TYPE_PICKUP_EXPRESS_NAME = "pickup_express";
 
     public const DELIVERY_TYPES_IDS = [
@@ -69,6 +68,16 @@ class AbstractConsignment
 
     public const DEFAULT_DELIVERY_TYPE      = self::DELIVERY_TYPE_STANDARD;
     public const DEFAULT_DELIVERY_TYPE_NAME = self::DELIVERY_TYPE_STANDARD;
+
+
+    /**
+     * Customs declaration types
+     */
+    public const PACKAGE_CONTENTS_COMMERCIAL_GOODS   = 1;
+    public const PACKAGE_CONTENTS_COMMERCIAL_SAMPLES = 2;
+    public const PACKAGE_CONTENTS_DOCUMENTS          = 3;
+    public const PACKAGE_CONTENTS_GIFTS              = 4;
+    public const PACKAGE_CONTENTS_RETRUN_SHIPMENT    = 5;
 
     /**
      * Package types
@@ -306,7 +315,7 @@ class AbstractConsignment
      * @internal
      * @var int
      */
-    public $contents;
+    public $contents = self::PACKAGE_CONTENTS_COMMERCIAL_GOODS;
 
     /**
      * @internal
@@ -377,6 +386,11 @@ class AbstractConsignment
      * @var bool
      */
     private $auto_detect_pickup = true;
+
+    /**
+     * @var bool
+     */
+    private $save_recipient_address = true;
 
     /**
      * @internal
@@ -696,10 +710,17 @@ class AbstractConsignment
 
     /**
      * @return string|null
+     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      * @var bool
      */
-    public function getStreet($useStreetAdditionalInfo = false)
+    public function getStreet($useStreetAdditionalInfo = false): string
     {
+        if (null === $this->street) {
+            throw new MissingFieldException(
+                'First set the street with setStreet() before running getStreet()'
+            );
+        }
+
         if ($useStreetAdditionalInfo && strlen($this->street) >= self::MAX_STREET_LENGTH) {
             $streetParts = SplitStreet::getStreetParts($this->street);
 
@@ -727,11 +748,15 @@ class AbstractConsignment
     /**
      * Get additional information for the street that should not be included in the street field
      *
-     * @return string
+     * @return string|null
      * @todo move to hasStreet
      */
-    public function getStreetAdditionalInfo(): string
+    public function getStreetAdditionalInfo(): ?string
     {
+        if ($this->street === null) {
+            return null;
+        }
+
         $streetParts = SplitStreet::getStreetParts($this->street);
         $result      = '';
 
@@ -814,6 +839,26 @@ class AbstractConsignment
         $this->setBoxNumber($fullStreet->getBoxNumber());
 
         return $this;
+    }
+
+    /**
+     * @param bool $value
+     *
+     * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
+     */
+    public function setSaveRecipientAddress(bool $value): self
+    {
+        $this->save_recipient_address = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSaveRecipientAddress(): bool
+    {
+        return $this->save_recipient_address;
     }
 
     /**
@@ -1028,9 +1073,9 @@ class AbstractConsignment
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPhone(): string
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
@@ -1039,11 +1084,11 @@ class AbstractConsignment
      * The address phone
      * Required: no
      *
-     * @param string $phone
+     * @param string|null $phone
      *
      * @return $this
      */
-    public function setPhone(string $phone): self
+    public function setPhone(?string $phone): ?self
     {
         $this->phone = $phone;
 
@@ -1087,8 +1132,7 @@ class AbstractConsignment
     public function getDeliveryType(): int
     {
         return $this->delivery_type;
-    }/** @noinspection PhpUnusedParameterInspection */
-    /** @noinspection PhpUnusedParameterInspection */
+    }
 
     /**
      * The delivery type for the package
@@ -1420,7 +1464,7 @@ class AbstractConsignment
      *
      * @return $this
      */
-    public function setContents($contents): self
+    public function setContents(int $contents): self
     {
         $this->contents = $contents;
 
