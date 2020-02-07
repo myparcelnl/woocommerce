@@ -3,13 +3,7 @@
     "version": "v3.1.6",
     "description": "This package is designed to send and receive data from MyParcel by means of an API.",
     "homepage": "https://www.myparcel.nl",
-    "keywords": [
-        "MyParcel",
-        "My Parcel",
-        "Flespakket",
-        "Post NL",
-        "PostNL"
-    ],
+    "keywords": ["MyParcel", "My Parcel", "Flespakket", "Post NL", "PostNL"],
     "license": "GPL-3.0-or-later",
     "authors": [
         {
@@ -45,8 +39,6 @@
         "phpunit/phpunit": "^5.5"
     },
     "autoload": {
-        "files": [
-            "src/AutoLoader.php"
-        ]
+        "files": [ "src/AutoLoader.php" ]
     }
 }
