@@ -87,7 +87,7 @@ class WCMP_Settings
     public const SETTING_CARRIER_PICKUP_TITLE         = "pickup_title";
     public const SETTING_CARRIER_SIGNATURE_ENABLED    = "signature_enabled";
     public const SETTING_CARRIER_SIGNATURE_FEE        = "signature_fee";
-    public const SETTING_DELIVERY_OPTIONS_PICKUP_VIEW     = "delivery_options_pickup_view";
+    public const SETTING_DELIVERY_OPTIONS_PICKUP_VIEW = "delivery_options_pickup_view";
     public const PICKUP_LOCATIONS_LIST_BUTTON         = "pickup_locations_list_button";
     public const PICKUP_LOCATIONS_MAP_BUTTON          = "pickup_locations_map_button";
 
@@ -104,6 +104,8 @@ class WCMP_Settings
     public const SETTING_CARRIER_DELIVERY_MORNING_FEE     = "delivery_morning_fee";
     public const SETTING_CARRIER_DELIVERY_EVENING_ENABLED = "delivery_evening_enabled";
     public const SETTING_CARRIER_DELIVERY_EVENING_FEE     = "delivery_evening_fee";
+    public const SETTING_CARRIER_LARGE_FORMAT_ENABLED     = "large_format";
+    public const SETTING_CARRIER_LARGE_FORMAT_FEE         = "large_format_fee";
 
     public function __construct()
     {
