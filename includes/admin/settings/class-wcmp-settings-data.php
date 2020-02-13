@@ -760,6 +760,27 @@ class WCMP_Settings_Data
                     "woocommerce-myparcelbe"
                 ),
             ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Home address only", "woocommerce-myparcelbe"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "Delivery will be only to home address.",
+                    "woocommerce-myparcelbe"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
+                "condition" => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+                "class"     => ["wcmp__child"],
+                "label"     => __("Fee (optional)", "woocommerce-myparcelbe"),
+                "type"      => "currency",
+                "help_text" => __(
+                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                    "woocommerce-myparcelbe"
+                ),
+            ],
         ];
     }
 
