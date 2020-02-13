@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 
 if (! defined('ABSPATH')) {
@@ -24,6 +25,7 @@ class WCMP_Settings
     public const SETTINGS_EXPORT_DEFAULTS = "export_defaults";
     public const SETTINGS_BPOST           = BpostConsignment::CARRIER_NAME;
     public const SETTINGS_DPD             = DPDConsignment::CARRIER_NAME;
+    public const SETTINGS_POSTNL          = PostNLConsignment::CARRIER_NAME;
 
     /**
      * General
