@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
 
@@ -47,19 +48,19 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $shippingCountry       = WCX_Order::get_prop($order, "shipping_country");
 
     $carriersHuman = WCMP_Data::CARRIERS_HUMAN;
-    $bpost         = BpostConsignment::CARRIER_NAME;
     $insurance     = false;
     $signature     = false;
 
     if (DPDConsignment::CARRIER_NAME !== $deliveryOptions->getCarrier()) {
         $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
             $shipment_options->getInsurance(),
-            "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
+            "{$deliveryOptions->getCarrier()}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
+
         );
 
         $signature = WCMP_Export::getChosenOrDefaultShipmentOption(
             $shipment_options->hasSignature(),
-            "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
+            "{$deliveryOptions->getCarrier()}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
         );
     }
 

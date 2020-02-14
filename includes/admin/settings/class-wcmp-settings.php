@@ -73,8 +73,9 @@ class WCMP_Settings
      */
 
     // Defaults
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED   = "export_insured";
-    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE = "export_signature";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED      = "export_insured";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE    = "export_signature";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT = "large_format";
 
     // Delivery options settings
     public const SETTING_CARRIER_CUTOFF_TIME          = "cutoff_time";
@@ -104,8 +105,6 @@ class WCMP_Settings
     public const SETTING_CARRIER_DELIVERY_MORNING_FEE     = "delivery_morning_fee";
     public const SETTING_CARRIER_DELIVERY_EVENING_ENABLED = "delivery_evening_enabled";
     public const SETTING_CARRIER_DELIVERY_EVENING_FEE     = "delivery_evening_fee";
-    public const SETTING_CARRIER_LARGE_FORMAT_ENABLED     = "large_format";
-    public const SETTING_CARRIER_LARGE_FORMAT_FEE         = "large_format_fee";
 
     public function __construct()
     {
