@@ -3,6 +3,7 @@
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
@@ -203,10 +204,12 @@ class WCMP_Checkout
             $pricePickup           = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_FEE;
             $priceSignature        = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE;
             $priceSaturdayDelivery = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE;
+            $largeFormat           = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT;
 
             $myParcelConfig["config"]["carrierSettings"][$carrier] = [
                 "allowDeliveryOptions" => $settings->isEnabled($allowDeliveryOptions),
                 "allowPickupLocations" => $settings->isEnabled($allowPickupLocations),
+                "largeFormat"          => $settings->isEnabled($largeFormat),
                 "allowSignature"       => $settings->getBooleanByName($allowSignature),
                 "cutoffTime"           => $settings->getStringByName($cutoffTime),
                 "deliveryDaysWindow"   => $settings->getIntegerByName($deliveryDaysWindow),
@@ -254,7 +257,13 @@ class WCMP_Checkout
         $settings = WCMP()->setting_collection;
         $carriers = [];
 
-        foreach ([BpostConsignment::CARRIER_NAME, DPDConsignment::CARRIER_NAME] as $carrier) {
+        foreach (
+            [
+                BpostConsignment::CARRIER_NAME,
+                DPDConsignment::CARRIER_NAME,
+                PostNLConsignment::CARRIER_NAME
+            ] as $carrier
+        ) {
             if ($settings->getByName("{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED)
                 || $settings->getByName(
                     "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED

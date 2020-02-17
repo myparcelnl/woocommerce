@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 
 if (! defined('ABSPATH')) {
@@ -24,6 +25,7 @@ class WCMP_Settings
     public const SETTINGS_EXPORT_DEFAULTS = "export_defaults";
     public const SETTINGS_BPOST           = BpostConsignment::CARRIER_NAME;
     public const SETTINGS_DPD             = DPDConsignment::CARRIER_NAME;
+    public const SETTINGS_POSTNL          = PostNLConsignment::CARRIER_NAME;
 
     /**
      * General
@@ -71,8 +73,9 @@ class WCMP_Settings
      */
 
     // Defaults
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED   = "export_insured";
-    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE = "export_signature";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED      = "export_insured";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE    = "export_signature";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT = "large_format";
 
     // Delivery options settings
     public const SETTING_CARRIER_CUTOFF_TIME          = "cutoff_time";
@@ -85,7 +88,7 @@ class WCMP_Settings
     public const SETTING_CARRIER_PICKUP_TITLE         = "pickup_title";
     public const SETTING_CARRIER_SIGNATURE_ENABLED    = "signature_enabled";
     public const SETTING_CARRIER_SIGNATURE_FEE        = "signature_fee";
-    public const SETTING_DELIVERY_OPTIONS_PICKUP_VIEW     = "delivery_options_pickup_view";
+    public const SETTING_DELIVERY_OPTIONS_PICKUP_VIEW = "delivery_options_pickup_view";
     public const PICKUP_LOCATIONS_LIST_BUTTON         = "pickup_locations_list_button";
     public const PICKUP_LOCATIONS_MAP_BUTTON          = "pickup_locations_map_button";
 
