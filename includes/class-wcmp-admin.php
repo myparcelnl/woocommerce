@@ -91,7 +91,7 @@ class WooCommerce_PostNL_Admin {
         $shipment = WooCommerce_PostNL()->export->get_shipment_data($shipment_id, $order);
         if ( ! empty($shipment['tracktrace'])) {
             $order_has_shipment = true;
-            $tracktrace_url = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
+            $tracktrace_url = $this->getTrackTraceUrl($order_id, $shipment['tracktrace']);
         }
         $package_types = WooCommerce_PostNL()->export->get_package_types();
 
@@ -381,7 +381,7 @@ class WooCommerce_PostNL_Admin {
                     $shipment = WooCommerce_PostNL()->export->get_shipment_data($shipment_id, $order);
                     $label_url = wp_nonce_url(admin_url('admin-ajax.php?action=wc_postnl&request=get_labels&shipment_ids=' . $shipment_id),'wc_postnl');
                     if (isset($shipment['tracktrace'])) {
-                        $tracktrace_url = $this->get_tracktrace_url($order_id, $shipment['tracktrace']);
+                        $tracktrace_url = $this->getTrackTraceUrl($order_id, $shipment['tracktrace']);
                         $tracktrace_link = sprintf('<a href="%s">%s</a>', $tracktrace_url, $shipment['tracktrace']);
                     } else {
                         if (isset($shipment['shipment']) && isset($shipment['shipment']['options'])) {
@@ -494,7 +494,7 @@ class WooCommerce_PostNL_Admin {
         echo '</div>';
     }
 
-    public function get_tracktrace_url($order_id, $tracktrace) {
+    public function getTrackTraceUrl($order_id, $tracktrace) {
         if (empty($order_id)) {
             return;
         }
@@ -510,22 +510,24 @@ class WooCommerce_PostNL_Admin {
                 $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
             }
 
-            // $tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Inbox/Search?lang=nl&B=%s&P=%s', $tracktrace, $postcode);
-            $tracktrace_url = sprintf(
-                'https://mijnpakket.postnl.nl/Claim?Barcode=%s&Postalcode=%s',
-                $tracktrace,
-                $postcode
-            );
-        } else {
-            $tracktrace_url = sprintf(
-                'https://www.internationalparceltracking.com/Main.aspx#/track/%s/%s/%s',
+            $trackTraceUrlNl = sprintf(
+                'https://jouw.postnl.nl/#!/track-en-trace/%s/%s/%s',
                 $tracktrace,
                 $country,
                 $postcode
             );
+
+            return $trackTraceUrlNl;
         }
 
-        return $tracktrace_url;
+        $trackTraceUrl = sprintf(
+            'https://www.internationalparceltracking.com/Main.aspx#/track/%s/%s/%s',
+            $tracktrace,
+            $country,
+            $postcode
+        );
+
+        return $trackTraceUrl;
     }
 
     public function get_tracktrace_links($order_id) {
@@ -555,7 +557,7 @@ class WooCommerce_PostNL_Admin {
                 continue;
             }
             // add links & urls
-            $shipments[$shipment_id]['tracktrace_url'] = $tracktrace_url = $this->get_tracktrace_url(
+            $shipments[$shipment_id]['tracktrace_url'] = $tracktrace_url = $this->getTrackTraceUrl(
                 $order_id,
                 $shipment['tracktrace']
             );
@@ -643,7 +645,7 @@ class WooCommerce_PostNL_Admin {
             return __('No label has created yet', 'woocommerce-postnl');
         }
         foreach ($shipments as $shipment_id => $shipment) {
-            $barcode .= "<a target='_blank' href=" . $this->get_tracktrace_url($order, $shipment['tracktrace']) . ">" . $shipment['tracktrace'] . "</a> <br>";
+            $barcode .= "<a target='_blank' href=" . $this->getTrackTraceUrl($order, $shipment['tracktrace']) . ">" . $shipment['tracktrace'] . "</a> <br>";
         }
         return $barcode;
     }
