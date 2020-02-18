@@ -510,20 +510,22 @@ class WooCommerce_PostNL_Admin {
                 $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
             }
 
-            $tracktrace_url = sprintf(
+            $tracktrace_url_nl = sprintf(
                 'https://jouw.postnl.nl/#!/track-en-trace/%s/%s/%s',
                 $tracktrace,
                 $country,
                 $postcode
             );
-        } else {
-            $tracktrace_url = sprintf(
-                'https://www.internationalparceltracking.com/Main.aspx#/track/%s/%s/%s',
-                $tracktrace,
-                $country,
-                $postcode
-            );
+
+            return $tracktrace_url_nl;
         }
+
+        $tracktrace_url = sprintf(
+            'https://www.internationalparceltracking.com/Main.aspx#/track/%s/%s/%s',
+            $tracktrace,
+            $country,
+            $postcode
+        );
 
         return $tracktrace_url;
     }
