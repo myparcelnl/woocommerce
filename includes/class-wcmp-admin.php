@@ -511,9 +511,16 @@ class WooCommerce_PostNL_Admin {
             }
 
             // $tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Inbox/Search?lang=nl&B=%s&P=%s', $tracktrace, $postcode);
+            // $tracktrace_url = sprintf(
+            //   'https://mijnpakket.postnl.nl/Claim?Barcode=%s&Postalcode=%s',
+            //   $tracktrace,
+            //   $postcode
+            // );
+            //new url fix
             $tracktrace_url = sprintf(
-                'https://mijnpakket.postnl.nl/Claim?Barcode=%s&Postalcode=%s',
+                'https://jouw.postnl.nl/#!/track-en-trace/%s/%s/%s',
                 $tracktrace,
+                $country,
                 $postcode
             );
         } else {
