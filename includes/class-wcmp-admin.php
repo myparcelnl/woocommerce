@@ -510,13 +510,6 @@ class WooCommerce_PostNL_Admin {
                 $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
             }
 
-            // $tracktrace_url = sprintf('https://mijnpakket.postnl.nl/Inbox/Search?lang=nl&B=%s&P=%s', $tracktrace, $postcode);
-            // $tracktrace_url = sprintf(
-            //   'https://mijnpakket.postnl.nl/Claim?Barcode=%s&Postalcode=%s',
-            //   $tracktrace,
-            //   $postcode
-            // );
-            //new url fix
             $tracktrace_url = sprintf(
                 'https://jouw.postnl.nl/#!/track-en-trace/%s/%s/%s',
                 $tracktrace,
