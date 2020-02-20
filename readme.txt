@@ -89,6 +89,9 @@ function wcpostnl_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 3.1.7 (20-02-2020) =
+* Fix: Outdated barcode
+
 = 3.1.6 (2019-07-04) =
 * Fix: Trying to get property of non-object
 * Fix: Shipment validation error (PakjeGemak)
