@@ -610,7 +610,7 @@ class WooCommerce_MyParcel_Settings {
                 'option_name' => $option_name,
                 'id'          => 'country_of_origin',
                 'size'        => '5',
-                'description' => sprintf(__('Country of origin is required for world shipments. Default is NL, This field overrides product specific settings!'))
+                'description' => sprintf(__('Country of origin is required for world shipments, default is store location. Overrides product specific setting!'))
             )
         );
     }

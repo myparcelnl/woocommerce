@@ -619,7 +619,7 @@ class WooCommerce_MyParcel_Admin {
             array(
                 'id'            => '_myparcel_country_of_origin',
                 'label'         => __('Country of origin', 'woocommerce-myparcel'),
-                'description'   => sprintf('Default is NL.')
+                'description'   => sprintf('Country of origin is required for world shipments, default is store location. Overrides product specific setting!')
             )
         );
         echo '</div>';
