@@ -29,6 +29,10 @@ class WooCommerce_MyParcel_Admin {
         add_action('woocommerce_product_options_shipping', array($this, 'product_hs_code_field'));
         add_action('woocommerce_process_product_meta', array($this, 'product_hs_code_field_save'));
 
+        // Country of origin in product shipping options tab
+        add_action('woocommerce_product_options_shipping', array($this, 'product_country_of_origin'));
+        add_action('woocommerce_process_product_meta', array($this, 'product_country_of_origin_save'));
+
         // Add barcode in order grid
         add_filter('manage_edit-shop_order_columns', array($this, 'barcode_add_new_order_admin_list_column'), 10, 1);
         add_action('manage_shop_order_posts_custom_column', array($this, 'barcode_add_new_order_admin_list_column_content'), 10, 2);
@@ -603,6 +607,34 @@ class WooCommerce_MyParcel_Admin {
             } else {
                 if (isset($_POST['_myparcel_hs_code']) && empty($hs_code)) {
                     WCX_Product::delete_meta_data($product, '_myparcel_hs_code');
+                }
+            }
+        }
+    }
+
+    public function product_country_of_origin()
+    {
+        echo '<div class="options_group">';
+        woocommerce_wp_text_input(
+            array(
+                'id'            => '_myparcel_country_of_origin',
+                'label'         => __('Country of origin', 'woocommerce-myparcel'),
+                'description'   => sprintf('Default is NL.')
+            )
+        );
+        echo '</div>';
+    }
+
+    public function product_country_of_origin_save($post_id)
+    {
+        if (isset($_POST['_myparcel_country_of_origin']) && ! is_array($_POST['_myparcel_country_of_origin'])) {
+            $product = wc_get_product($post_id);
+            $country_of_origin = $_POST['_myparcel_country_of_origin'];
+            if ( ! empty($country_of_origin)) {
+                WCX_Product::update_meta_data($product, '_myparcel_country_of_origin', esc_attr($country_of_origin));
+            } else {
+                if (isset($_POST['_myparcel_country_of_origin']) && empty($country_of_origin)) {
+                    WCX_Product::delete_meta_data($product, '_myparcel_country_of_origin');
                 }
             }
         }

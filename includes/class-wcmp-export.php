@@ -856,9 +856,10 @@ class WooCommerce_MyParcel_Export {
         $default_hs_code = (isset(WooCommerce_MyParcel()->export_defaults['hs_code']))
             ? WooCommerce_MyParcel()->export_defaults['hs_code']
             : '';
-        // Country (=shop base)
-        $country = WC()->countries->get_base_country();
-
+        // Country
+        $country = (isset(WooCommerce_MyParcel()->export_defaults['country_of_origin']))
+            ? WooCommerce_MyParcel()->export_defaults['country_of_origin']
+            : null;
         $items = $this->get_item_data($order, $default_hs_code, $country);
         // Select first 5 arrays when you have more than 5 items
         if (count($items) > self::MAX_WORLD_SHIPMENT_ITEMS) {
@@ -899,6 +900,10 @@ class WooCommerce_MyParcel_Export {
                     'amount'   => (int) round(($item['line_total'] + $item['line_tax']) * 100),
                     'currency' => WCX_Order::get_prop($order, 'currency'),
                 );
+
+                if ($country == null) {
+                    $country = WCX_Product::get_meta($product, '_myparcel_country_of_origin', true);
+                }
                 // Classification / HS Code
                 $classification = WCX_Product::get_meta($product, '_myparcel_hs_code', true);
                 if (empty($classification)) {

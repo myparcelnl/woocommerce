@@ -599,6 +599,20 @@ class WooCommerce_MyParcel_Settings {
                 ),
             )
         );
+
+        add_settings_field(
+            'country_of_origin',
+            __('Default Country Of Origin', 'woocommerce-myparcel'),
+            array($this->callbacks, 'text_input'),
+            $option_group,
+            'world_shipments',
+            array(
+                'option_name' => $option_name,
+                'id'          => 'country_of_origin',
+                'size'        => '5',
+                'description' => sprintf(__('Country of origin is required for world shipments. Default is NL, This field overrides product specific settings!'))
+            )
+        );
     }
 
     /**
