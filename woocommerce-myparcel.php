@@ -24,7 +24,7 @@ if (! class_exists('WCMP')) :
          */
         const DOMAIN                  = 'woocommerce-myparcelbe';
         const NONCE_ACTION            = 'wc_myparcelbe';
-        const MINIMUM_PHP_VERSION_5_4 = '5.4';
+        const MINIMUM_PHP_VERSION_5_4 = '5.6';
         const PHP_VERSION_7_1         = '7.1';
 
         public $version = '4.0.4';
