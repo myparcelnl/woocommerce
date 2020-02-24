@@ -595,17 +595,17 @@ class WCMP_Admin
         echo '</div>';
     }
 
-    public function productCountryOfOriginFieldSave($post_id)
+    public function productCountryOfOriginFieldSave($postId)
     {
         if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && ! is_array($_POST[self::META_COUNTRY_OF_ORIGIN])) {
-            $product = wc_get_product($post_id);
+            $product = wc_get_product($postId);
             $countryOfOrigin = $_POST[self::META_COUNTRY_OF_ORIGIN];
             if (! empty($countryOfOrigin)) {
                 WCX_Product::update_meta_data($product, self::META_HS_CODE, esc_attr($countryOfOrigin));
-            } else {
-                if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && empty($countryOfOrigin)) {
-                    WCX_Product::delete_meta_data($product, self::META_COUNTRY_OF_ORIGIN);
-                }
+                return;
+            } 
+            if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && empty($countryOfOrigin)) {
+                WCX_Product::delete_meta_data($product, self::META_COUNTRY_OF_ORIGIN);
             }
         }
     }

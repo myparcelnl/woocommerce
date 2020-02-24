@@ -125,8 +125,6 @@ class WCMP_Export_Consignments
      */
     public function setCustomItems(): void
     {
-
-
         foreach ($this->order->get_items() as $item_id => $item) {
             $product = $item->get_product();
             $country = $this->getCountryOfOrigin($product);
@@ -190,10 +188,27 @@ class WCMP_Export_Consignments
         $defaultCountryOfOrigin = $this->getSetting(WCMP_Settings::SETTING_COUNTRY_OF_ORIGIN);
         $productCountryOfOrigin = WCX_Product::get_meta($product, WCMP_Admin::META_COUNTRY_OF_ORIGIN, true);
 
-        $countryOfOrigin = ($defaultCountryOfOrigin ? $defaultCountryOfOrigin : $productCountryOfOrigin) ?
-            ($defaultCountryOfOrigin ? $defaultCountryOfOrigin : $productCountryOfOrigin) :
-            WC()->countries->baseCountry();
+        $countryOfOrigin = getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin);
         return (string) $countryOfOrigin;
+    }
+
+    /**
+     * @param $defaultCountryOfOrigin
+     * @param $productCountryOfOrigin
+     * @return string
+     */
+    public function getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin): string
+    {   
+        if ($defaultCountryOfOrigin) {
+            return $defaultCountryOfOrigin;
+        } 
+
+        if (! $defaultCountryOfOrigin) {
+            if (! $productCountryOfOrigin) {
+                return WC()->countries->baseCountry();
+            }
+            return $productCountryOfOrigin;
+        }
     }
 
     /**

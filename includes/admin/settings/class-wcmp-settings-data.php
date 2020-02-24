@@ -787,7 +787,6 @@ class WCMP_Settings_Data
                     "woocommerce-myparcel"
                 ),
             ],
-
             [
                 "name"      => WCMP_Settings::SETTING_LABEL_DESCRIPTION,
                 "label"     => __("Label description", "woocommerce-myparcel"),
@@ -812,7 +811,6 @@ class WCMP_Settings_Data
                     "woocommerce-myparcel"
                 ),
             ],
-
             [
                 "name"    => WCMP_Settings::SETTING_PACKAGE_CONTENT,
                 "label"   => __("Customs shipment type", "woocommerce-myparcel"),
@@ -825,7 +823,6 @@ class WCMP_Settings_Data
                     5 => __("Return shipment", "woocommerce-myparcel"),
                 ],
             ],
-
             [
               "name"      => WCMP_Settings::SETTING_COUNTRY_OF_ORIGIN,
               "label"     => __("Default country of origin", "woocommerce-myparcel"),
