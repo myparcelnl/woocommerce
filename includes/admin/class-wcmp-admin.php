@@ -599,11 +599,11 @@ class WCMP_Admin
     {
         if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && ! is_array($_POST[self::META_COUNTRY_OF_ORIGIN])) {
             $product = wc_get_product($post_id);
-            $country_of_origin = $_POST[self::META_COUNTRY_OF_ORIGIN];
-            if (! empty($country_of_origin)) {
-                WCX_Product::update_meta_data($product, self::META_COUNTRY_OF_ORIGIN, esc_attr($country_of_origin));
+            $countryOfOrigin = $_POST[self::META_COUNTRY_OF_ORIGIN];
+            if (! empty($countryOfOrigin)) {
+                WCX_Product::update_meta_data($product, self::META_HS_CODE, esc_attr($countryOfOrigin));
             } else {
-                if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && empty($country_of_origin)) {
+                if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && empty($countryOfOrigin)) {
                     WCX_Product::delete_meta_data($product, self::META_COUNTRY_OF_ORIGIN);
                 }
             }
