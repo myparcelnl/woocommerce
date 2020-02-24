@@ -88,6 +88,13 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.0.5 (2020-02-25) =
+* Fix: Change path for the carrier images
+
+= 4.0.4 (2020-02-24) =
+* Fix: Can't ship DPD when there are additional costs
+* Fix: Hide carriers in the checkout when the option is turned off
+
 = 4.0.3 (2020-02-04) =
 * Fix: Customer mail doesn't show in the backoffice (sendmyparcel)
 * Fix: Hide carriers in the checkout when the option is turned off
