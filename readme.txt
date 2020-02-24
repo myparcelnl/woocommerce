@@ -89,7 +89,7 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 == Changelog ==
 
 = 4.0.5 (2020-02-25) =
-* Fix: change path for the carrier images
+* Fix: Change path for the carrier images
 
 = 4.0.4 (2020-02-24) =
 * Fix: Can't ship DPD when there are additional costs
