@@ -825,6 +825,14 @@ class WCMP_Settings_Data
                     5 => __("Return shipment", "woocommerce-myparcel"),
                 ],
             ],
+
+            [
+              "name"      => WCMP_Settings::SETTING_COUNTRY_OF_ORIGIN,
+              "label"     => __("Default country of origin", "woocommerce-myparcel"),
+              "help-text" => __(
+                  "Country of origin is required for world shipments. Defaults to shop base. Example: 'NL', 'BE', 'DE'"
+              ),
+            ],
         ];
     }
 

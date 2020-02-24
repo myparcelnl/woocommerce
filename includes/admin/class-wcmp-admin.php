@@ -32,6 +32,7 @@ class WCMP_Admin
     public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcel_shipment_options_extra";
     public const META_TRACK_TRACE            = "_myparcel_tracktrace";
     public const META_HS_CODE                = "_myparcel_hs_code";
+    public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
 
     public const SHIPMENT_OPTIONS_FORM_NAME = "myparcel_options";
 
@@ -72,6 +73,10 @@ class WCMP_Admin
         // HS code in product shipping options tab
         add_action("woocommerce_product_options_shipping", [$this, "productHsCodeField"]);
         add_action("woocommerce_process_product_meta", [$this, "productHsCodeFieldSave"]);
+
+        // Country of Origin in product shipping options tab
+        add_action("woocommerce_product_options_shipping", [$this, "productCountryOfOriginField"]);
+        add_action("woocommerce_process_product_meta", [$this, "productCountryOfOriginFieldSave"]);
 
         // Add barcode in order grid
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
@@ -570,6 +575,36 @@ class WCMP_Admin
             } else {
                 if (isset($_POST[self::META_HS_CODE]) && empty($hs_code)) {
                     WCX_Product::delete_meta_data($product, self::META_HS_CODE);
+                }
+            }
+        }
+    }
+
+    public function productCountryOfOriginField()
+    {
+        echo '<div class="options_group">';
+        woocommerce_wp_text_input(
+            array(
+                'id'          => self::META_COUNTRY_OF_ORIGIN,
+                'label'       => __('Country of Origin', 'woocommerce-myparcel'),
+                'description' => sprintf(
+                    __('Country of origin is required for world shipments. Defaults to shop base.')
+                )
+            )
+        );
+        echo '</div>';
+    }
+
+    public function productCountryOfOriginFieldSave($post_id)
+    {
+        if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && ! is_array($_POST[self::META_COUNTRY_OF_ORIGIN])) {
+            $product = wc_get_product($post_id);
+            $country_of_origin = $_POST[self::META_COUNTRY_OF_ORIGIN];
+            if (! empty($country_of_origin)) {
+                WCX_Product::update_meta_data($product, self::META_COUNTRY_OF_ORIGIN, esc_attr($country_of_origin));
+            } else {
+                if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && empty($country_of_origin)) {
+                    WCX_Product::delete_meta_data($product, self::META_COUNTRY_OF_ORIGIN);
                 }
             }
         }
