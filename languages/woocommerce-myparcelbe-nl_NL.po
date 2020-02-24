@@ -1308,6 +1308,14 @@ msgstr "Afhaallocatie"
 msgid "Carrier"
 msgstr "Vervoerder"
 
+#: includes/settings/class-wcmp-settings-data.php:828
+msgid "Default country of origin"
+msgstr "Standaard land van afkomst"
+
+#: includes/settings/class/wcmp-settings-data.php:830
+msgid "Country of origin is required for world shipments. Defaults to shop base or NL. Example: 'NL', 'BE', 'DE'"
+msgstr "Land van afkomst is verplicht voor wereldzendingen. Standaard is de webshop locatie of NL. Voorbeeld: 'NL', 'BE', 'DE'"
+
 #: includes/admin/views/html-order-shipment-options.php:77
 #: includes/admin/views/html-order-return-shipment-options.php:16
 #, php-format
