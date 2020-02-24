@@ -207,8 +207,8 @@ class WCMP_Export_Consignments
             if (! $productCountryOfOrigin) {
                 return WC()->countries->baseCountry() ?? 'NL';
             }
-            return $productCountryOfOrigin;
         }
+        return $productCountryOfOrigin;
     }
 
     /**

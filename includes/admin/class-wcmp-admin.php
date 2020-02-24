@@ -608,6 +608,7 @@ class WCMP_Admin
                 WCX_Product::delete_meta_data($product, self::META_COUNTRY_OF_ORIGIN);
             }
         }
+        return;
     }
 
     /**
