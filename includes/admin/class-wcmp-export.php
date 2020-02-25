@@ -286,7 +286,6 @@ class WCMP_Export
         $orderIdsWithNewShipments = [];
         $collection               = new MyParcelCollection();
         $processDirectly          = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY) || $process === true;
-        $keepOldShipments         = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS);
 
         WCMP_Log::add("*** Creating shipments started ***");
 
@@ -295,17 +294,7 @@ class WCMP_Export
          */
         foreach ($order_ids as $order_id) {
             $order           = WCX::get_order($order_id);
-            $order_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
-
-            /**
-             * If "Keep shipments" is disabled, don't create new shipments. Otherwise the
-             * new ones will be appended to the existing ones.
-             */
-            if (! empty($order_shipments) && $keepOldShipments) {
-                continue;
-            } else {
-                $orderIdsWithNewShipments[] = $order_id;
-            }
+            $orderIdsWithNewShipments[] = $order_id;
 
             $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $collo_amount = isset($extra_params["collo_amount"]) ? $extra_params["collo_amount"] : 1;

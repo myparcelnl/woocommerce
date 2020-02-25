@@ -34,7 +34,6 @@ class WCMP_Settings
     public const SETTING_BARCODE_IN_NOTE_TITLE   = "barcode_in_note_title";
     public const SETTING_DOWNLOAD_DISPLAY        = "download_display";
     public const SETTING_ERROR_LOGGING           = "error_logging";
-    public const SETTING_KEEP_SHIPMENTS          = "keep_shipments";
     public const SETTING_LABEL_FORMAT            = "label_format";
     public const SETTING_ORDER_STATUS_AUTOMATION = "order_status_automation";
     public const SETTING_ASK_FOR_PRINT_POSITION  = "ask_for_print_position";
