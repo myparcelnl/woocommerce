@@ -829,7 +829,7 @@ msgid "All shipping methods"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:691
-msgid "Show delivery day options allow your customers to see the delivery day in order confirmation and MyAccount."
+msgid "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account."
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:537

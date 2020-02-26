@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WC MyParcel Belgium\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-21 12:28+0000\n"
-"PO-Revision-Date: 2020-02-26 12:02+0100\n"
+"PO-Revision-Date: 2020-02-26 13:51+0100\n"
 "Last-Translator: edie <edie@myparcel.nl>\n"
 "Language-Team: French (Belgium)\n"
 "Language: fr_BE\n"
@@ -45,10 +45,9 @@ msgid "No."
 msgstr "Numéro"
 
 #: includes/class-wcmp-be-postcode-fields.php:322 includes/class-wcmp-be-postcode-fields.php:494 includes/class-wcmp-be-postcode-fields.php:521
-#: includes/class-wcmp-be-postcode-fields.php:543 includes/class-wcmp-be-postcode-fields.php:557
-#: includes_php56/class-wcmp-bepostcode-fields.php:247 includes_php56/class-wcmp-bepostcode-fields.php:416
-#: includes_php56/class-wcmp-bepostcode-fields.php:442 includes_php56/class-wcmp-bepostcode-fields.php:463
-#: includes_php56/class-wcmp-bepostcode-fields.php:477
+#: includes/class-wcmp-be-postcode-fields.php:543 includes/class-wcmp-be-postcode-fields.php:557 includes_php56/class-wcmp-bepostcode-fields.php:247
+#: includes_php56/class-wcmp-bepostcode-fields.php:416 includes_php56/class-wcmp-bepostcode-fields.php:442
+#: includes_php56/class-wcmp-bepostcode-fields.php:463 includes_php56/class-wcmp-bepostcode-fields.php:477
 msgid "Suffix"
 msgstr "Extension"
 
@@ -59,8 +58,8 @@ msgstr "Extension"
 msgid "Number"
 msgstr "Numéro"
 
-#: includes/class-wcmp-be-postcode-fields.php:535 includes/class-wcmp-be-postcode-fields.php:549
-#: includes_php56/class-wcmp-bepostcode-fields.php:455 includes_php56/class-wcmp-bepostcode-fields.php:469
+#: includes/class-wcmp-be-postcode-fields.php:535 includes/class-wcmp-be-postcode-fields.php:549 includes_php56/class-wcmp-bepostcode-fields.php:455
+#: includes_php56/class-wcmp-bepostcode-fields.php:469
 msgid "Street"
 msgstr "Rue"
 
@@ -466,8 +465,8 @@ msgid ""
 "Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the "
 "Track & Trace email in your MyParcel BE backend."
 msgstr ""
-"Ajouter un code Track & Trace aux e-mails envoyés au client.<br/> <strong>Attention !</strong> Lorsque vous choisissez cette option, veillez à "
-"ce que l'e-mail Track & Trace n'est pas activé dans le back-end MyParcel BE."
+"Ajouter un code Track & Trace aux e-mails envoyés au client.<br/> <strong>Attention !</strong> Lorsque vous choisissez cette option, veillez à ce "
+"que l'e-mail Track & Trace n'est pas activé dans le back-end MyParcel BE."
 
 #: includes_php56/class-wcmp-settings.php:227 includes/admin/settings/class-wcmp-settings-data.php:352
 msgid "Track & Trace in My Account"
@@ -510,8 +509,8 @@ msgstr "Conserver les anciens envois"
 #: includes_php56/class-wcmp-settings.php:287 includes/admin/settings/class-wcmp-settings-data.php:386
 msgid "With this option enabled, data from previous shipments (Track & Trace links) will be kept in the order when you export more than once."
 msgstr ""
-"Lorsque cette option est activée, les données des envois précédents (liens Track & Trace) seront concervés dans la commande si vous procédez "
-"plus d'une fois à l'exportation."
+"Lorsque cette option est activée, les données des envois précédents (liens Track & Trace) seront concervés dans la commande si vous procédez plus "
+"d'une fois à l'exportation."
 
 #: includes_php56/class-wcmp-settings.php:293 includes/admin/settings/class-wcmp-settings-data.php:393
 msgid "Place barcode inside note"
@@ -607,8 +606,8 @@ msgstr "Référence étiquette"
 
 #: includes_php56/class-wcmp-settings.php:459
 msgid ""
-"With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search "
-"or sort shipments in the MyParcel BE Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to "
+"With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or "
+"sort shipments in the MyParcel BE Backend. Use <strong>[ORDER_NR]</strong> to include the order number, <strong>[DELIVERY_DATE]</strong> to "
 "include the delivery date."
 msgstr ""
 "Cette option vous permet d'ajouter une référence relative à votre envoi. Celle-ci sera imprimée dans le coin supérieur gauche de l'étiquette. "
@@ -673,15 +672,15 @@ msgstr "Tous les modes d'expédition"
 
 #: includes_php56/class-wcmp-settings.php:537
 msgid ""
-"You can link the delivery options to specific shipping methods by adding them to the package types under 'Standard export settings'. The "
-"delivery options are not visible at foreign addresses."
+"You can link the delivery options to specific shipping methods by adding them to the package types under 'Standard export settings'. The delivery "
+"options are not visible at foreign addresses."
 msgstr ""
 "Vous pouvez coupler les options de livraison à des modes d'expédition spécifiques en les ajoutant aux types de colis sous 'Paramètres "
 "d'exportation standards'. Les options de livraison ne sont pas visibles pour les adresses étrangères."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:691
-msgid "Show delivery day options allow your customers to see the delivery day in order confirmation and MyAccount."
-msgstr "Afficher les options de jour de livraison permet à vos clients de voir le jour de livraison dans la confirmation de commande et MyAccount."
+msgid "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account."
+msgstr "Afficher les options de jour de livraison permet à vos clients de voir le jour de livraison dans la confirmation de commande et My Account."
 
 #: includes_php56/class-wcmp-settings.php:543
 msgid "Shipment processing parameters"
@@ -780,8 +779,8 @@ msgstr "Lorsqu'aucun titre n'est complété, les heures de livraison sont affich
 #: includes/admin/settings/class-wcmp-settings-data.php:515 includes/admin/settings/class-wcmp-settings-data.php:540
 #: includes/admin/settings/class-wcmp-settings-data.php:612 includes/admin/settings/class-wcmp-settings-data.php:623
 msgid ""
-"Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to "
-"charge extra for this delivery option."
+"Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge "
+"extra for this delivery option."
 msgstr ""
 "Introduisez ici un montant positif ou négatif. Si vous souhaitez par exemple proposer une réduction pour cette fonction ou décompter des frais "
 "supplémentaires pour cette option de livraison."

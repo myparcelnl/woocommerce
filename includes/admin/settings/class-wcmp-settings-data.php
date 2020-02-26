@@ -688,7 +688,7 @@ class WCMP_Settings_Data
                 "label"     => __("Show delivery day", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
-                    "Show delivery day options allow your customers to see the delivery day in order confirmation and MyAccount.",
+                    "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account.",
                     "woocommerce-myparcelbe"
                 ),
             ],
