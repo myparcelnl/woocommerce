@@ -382,15 +382,6 @@ class WCMP_Settings_Data
                 "options"   => $this->callbacks->get_order_status_options(),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_KEEP_SHIPMENTS,
-                "label"     => __("Keep old shipments", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "With this option enabled, data from previous shipments (Track & Trace links) will be kept in the order when you export more than once.",
-                    "woocommerce-myparcel"
-                ),
-            ],
-            [
                 "name"      => WCMP_Settings::SETTING_BARCODE_IN_NOTE,
                 "label"     => __("Place barcode inside note", "woocommerce-myparcel"),
                 "type"      => "toggle",
