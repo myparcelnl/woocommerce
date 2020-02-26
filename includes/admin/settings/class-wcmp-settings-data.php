@@ -684,11 +684,11 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Enable delivery options", "woocommerce-myparcelbe"),
+                "name"      => WCMP_Settings::SETTING_DELIVERY_DAY_ENABLED,
+                "label"     => __("Enable delivery day", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
-                    "Delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery.",
+                    "Enable delivery day options allow your customers to see the delivery dat in order confirmation and MyAccount.",
                     "woocommerce-myparcelbe"
                 ),
             ],
