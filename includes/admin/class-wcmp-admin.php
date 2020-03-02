@@ -656,6 +656,10 @@ class WCMP_Admin
 
         echo '<div class="wcmp__barcodes">';
         foreach ($shipments as $shipment_id => $shipment) {
+            if (empty($shipment["track_trace"])) {
+                echo __("No label has been created yet.", "woocommerce-myparcel");
+                return;
+            }
             printf(
                 '<a target="_blank" class="wcmp__barcode-link" title="%2$s" href="%1$s">%2$s</a><br>',
                 WCMP_Admin::getTrackTraceUrl($order, $shipment["track_trace"]),
