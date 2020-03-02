@@ -165,7 +165,7 @@ class WCMP_API extends WCMP_Rest
             $collection->setLinkOfLabels($positions);
             WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
             echo $collection->getLinkOfLabels();
-            die();
+            return $collection->getLinkOfLabels();
         }
     }
 }

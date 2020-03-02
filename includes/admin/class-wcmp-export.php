@@ -1391,17 +1391,64 @@ class WCMP_Export
     private function printLabels(array $order_ids, array $shipment_ids, int $offset)
     {
         if (! empty($shipment_ids)) {
+            die(var_dump('hmm'));
             $return = $this->downloadOrGetUrlOfLabels(
                 $shipment_ids,
                 $order_ids,
                 $offset
             );
         } else {
+            $orderIdsWithNewShipments = [];
+            $collection               = new MyParcelCollection();
+
+            /**
+             * Loop over the order ids and create consignments for each order.
+             */
+            foreach ($order_ids as $order_id) {
+                $order                      = WCX::get_order($order_id);
+                $orderIdsWithNewShipments[] = $order_id;
+
+                $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+                $collo_amount = isset($extra_params["collo_amount"]) ? $extra_params["collo_amount"] : 1;
+
+                /**
+                 * Create a real multi collo shipment if available, otherwise loop over the collo_amount and add separate
+                 * consignments to the collection.
+                 */
+                if (WCMP_Data::HAS_MULTI_COLLO) {
+                    $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
+
+                    $collection->addMultiCollo($consignment, $collo_amount);
+                } else {
+                    for ($i = 0; $i < $collo_amount; $i++) {
+                        $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
+
+                        $collection->addConsignment($consignment);
+                    }
+                }
+            }
+
+            $collection = $collection->createConcepts();
+            $collection->setLinkOfLabels();        
+
+            foreach ($orderIdsWithNewShipments as $order_id) {
+                $order          = WCX::get_order($order_id);
+                $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
+
+                $this->getShipmentData($consignmentIds, $order);
+
+                WCX_Order::update_meta_data(
+                    $order,
+                    WCMP_Admin::META_LAST_SHIPMENT_IDS,
+                    $consignmentIds
+                );
+            }
+            
+            $this->getOrderLabels($orderIdsWithNewShipments, 0, "download");
             $order_ids = $this->filterOrderDestinations($order_ids);
             $return    = $this->getOrderLabels($order_ids, $offset);
+            die();
         }
-
-        return $return;
     }
 
     /**
