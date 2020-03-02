@@ -657,7 +657,7 @@ class WCMP_Admin
         echo '<div class="wcmp__barcodes">';
         foreach ($shipments as $shipment_id => $shipment) {
             if (empty($shipment["track_trace"])) {
-                echo __("No label has been created yet.", "woocommerce-myparcel");
+                echo __("Concept created but not printed.", "woocommerce-myparcel");
                 return;
             }
             printf(
