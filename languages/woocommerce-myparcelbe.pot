@@ -1239,6 +1239,9 @@ msgstr ""
 msgid "Calculated weight: %s"
 msgstr ""
 
+#: includes/admin/wcmp-admin.php:660
+msgid "Concept created but not printed."
+
 #. Name of the plugin
 msgid "WooCommerce MyParcel"
 msgstr ""
