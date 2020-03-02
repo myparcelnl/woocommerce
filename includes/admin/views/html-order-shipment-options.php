@@ -93,7 +93,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT
     );
 
-    $digitalStampWeight = WCMP_Export::getDigitalStampRanges($order->get_meta(WCMP_Admin::META_ORDER_WEIGHT));
+    $digitalStampWeight = WCMP_Export::getDigitalStampRanges((int) $order->get_meta(WCMP_Admin::META_ORDER_WEIGHT));
 
     $option_rows = [
         [

@@ -1,14 +1,13 @@
 <?php
 
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
+use WPO\WC\MyParcel\Compatibility\WC_Core;
 
 if (! defined("ABSPATH")) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('WCMP_API')) {
-    return;
-}
+if (! class_exists('WCMP_API')) {
 
 class WCMP_API extends WCMP_Rest
 {
@@ -159,13 +158,26 @@ class WCMP_API extends WCMP_Rest
 
         if ($display) {
             $collection->setPdfOfLabels($positions);
+
             WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
+            foreach ($order_ids as $order_id) {
+                $order = WC_Core::get_order($order_id);
+                (new WCMP_Export())->getShipmentData($collection->getConsignmentIds(), $order);
+            }
+
             $collection->downloadPdfOfLabels($display);
         } else {
             $collection->setLinkOfLabels($positions);
+
             WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
+            foreach ($order_ids as $order_id) {
+                $order = WC_Core::get_order($order_id);
+                (new WCMP_Export())->getShipmentData($collection->getConsignmentIds(), $order);
+            }
+
             echo $collection->getLinkOfLabels();
-            return $collection->getLinkOfLabels();
+            die();
         }
     }
+}
 }
