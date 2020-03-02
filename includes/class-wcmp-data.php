@@ -183,7 +183,7 @@ class WCMP_Data
     public static function getInsuranceAmount(): array
     {
         $carrier             = ConsignmentFactory::createByCarrierName(WCMP_Settings::SETTINGS_POSTNL);
-        $amountPossibilities = $carrier->getInsurancePossibilities()
+        $amountPossibilities = $carrier->getInsurancePossibilities();
 
         foreach ($amountPossibilities as $key => $value) {
             $amount[$value] = $value;
