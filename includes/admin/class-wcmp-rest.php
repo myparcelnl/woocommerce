@@ -6,7 +6,9 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (! class_exists('WCMP_Rest')) {
+if (class_exists('WCMP_Rest')) {
+    return;
+}
 
 /**
  * A simple JSON REST request abstraction layer
@@ -260,7 +262,6 @@ class WCMP_Rest
             $html = sprintf("<ul>%s</ul>", implode("\n", $parsed_errors));
         }
 
-            return $html;
+        return $html;
     }
-}
 }

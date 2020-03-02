@@ -7,7 +7,9 @@ if (! defined("ABSPATH")) {
     exit;
 } // Exit if accessed directly
 
-if (! class_exists('WCMP_API')) {
+if (class_exists('WCMP_API')) {
+    return;
+}
 
 class WCMP_API extends WCMP_Rest
 {
@@ -179,5 +181,4 @@ class WCMP_API extends WCMP_Rest
             die();
         }
     }
-}
 }

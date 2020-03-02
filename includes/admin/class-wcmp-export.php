@@ -52,8 +52,8 @@ class WCMP_Export
         $this->success = [];
         $this->errors  = [];
 
-        require("class-wcmp-rest.php");
-        require("class-wcmp-api.php");
+        require_once("class-wcmp-rest.php");
+        require_once("class-wcmp-api.php");
 
         add_action("admin_notices", [$this, "admin_notices"]);
 
