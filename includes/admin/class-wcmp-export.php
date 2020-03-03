@@ -104,6 +104,7 @@ class WCMP_Export
         if (isset($_GET["myparcel_done"])) {
             $action_return = get_option("wcmyparcel_admin_notices");
             $print_queue   = get_option("wcmyparcel_print_queue", []);
+
             if (! empty($action_return)) {
                 foreach ($action_return as $type => $message) {
                     if (! in_array($type, ["success", "error"])) {
@@ -115,8 +116,9 @@ class WCMP_Export
                             '<input type="hidden" value=\'%s\' class="wcmp__print-queue">',
                             json_encode(
                                 [
-                                    "shipment_ids" => $print_queue["order_ids"],
-                                    "offset"       => $print_queue["offset"],
+	                                "shipment_ids" => $print_queue["shipment_ids"],
+	                                "order_ids"    => $print_queue["order_ids"],
+	                                "offset"       => $print_queue["offset"],
                                 ]
                             )
                         );
@@ -195,6 +197,15 @@ class WCMP_Export
 
         $order_ids    = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
         $shipment_ids = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
+
+	    file_put_contents( __DIR__ . '/log-' . $request . '-' . time() . '.json', json_encode( [
+		    'order_ids' => $order_ids,
+		    'shipment_ids' => $shipment_ids,
+		    'dialog' => $dialog,
+		    'print' => $print,
+		    'offset' => $offset,
+		    'request' => $request,
+	    ]));
 
         include_once("class-wcmp-export-consignments.php");
 
@@ -1439,10 +1450,11 @@ class WCMP_Export
         if ($print === "no" || $print === "after_reload") {
             update_option("wcmyparcel_admin_notices", $return);
             if ($print === "after_reload") {
-                $print_queue = [
-                    "order_ids" => $return["success_ids"],
-                    "offset"    => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
-                ];
+	            $print_queue = [
+		            "order_ids"    => $order_ids,
+		            "shipment_ids" => $return["success_ids"],
+		            "offset"       => isset( $offset ) && is_numeric( $offset ) ? $offset % 4 : 0,
+	            ];
                 update_option("wcmyparcel_print_queue", $print_queue);
             }
         }

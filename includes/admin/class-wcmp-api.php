@@ -2,6 +2,8 @@
 
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use WPO\WC\MyParcel\Compatibility\WC_Core;
+use WPO\WC\MyParcel\Compatibility\Order as WC_Order;
+use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
 
 if (! defined("ABSPATH")) {
     exit;
@@ -160,11 +162,11 @@ class WCMP_API extends WCMP_Rest
 
         if ($display) {
             $collection->setPdfOfLabels($positions);
-
-            WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
-            foreach ($order_ids as $order_id) {
-                $order = WC_Core::get_order($order_id);
-                (new WCMP_Export())->getShipmentData($collection->getConsignmentIds(), $order);
+	        foreach ($order_ids as $order_id) {
+	            $order = WC_Core::get_order( $order_id );
+	            $shipmentData = ( new WCMP_Export() )->getShipmentData( $collection->getConsignmentIds(), $order );
+	            $trackTrace = $shipmentData["track_trace"];
+	            ChannelEngine::updateMetaOnExport($order, $trackTrace);
             }
 
             $collection->downloadPdfOfLabels($display);
@@ -173,12 +175,15 @@ class WCMP_API extends WCMP_Rest
 
             WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
             foreach ($order_ids as $order_id) {
-                $order = WC_Core::get_order($order_id);
-                (new WCMP_Export())->getShipmentData($collection->getConsignmentIds(), $order);
-            }
+		        $order = WC_Core::get_order( $order_id );
+		        $shipmentData = ( new WCMP_Export() )->getShipmentData( $collection->getConsignmentIds(), $order );
+		        $trackTrace = $shipmentData["track_trace"];
+		        ChannelEngine::updateMetaOnExport($order, $trackTrace);
+	        }
 
             echo $collection->getLinkOfLabels();
             die();
         }
+	    WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
     }
 }
