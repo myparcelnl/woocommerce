@@ -198,15 +198,6 @@ class WCMP_Export
         $order_ids    = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
         $shipment_ids = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
 
-	    file_put_contents( __DIR__ . '/log-' . $request . '-' . time() . '.json', json_encode( [
-		    'order_ids' => $order_ids,
-		    'shipment_ids' => $shipment_ids,
-		    'dialog' => $dialog,
-		    'print' => $print,
-		    'offset' => $offset,
-		    'request' => $request,
-	    ]));
-
         include_once("class-wcmp-export-consignments.php");
 
         if (empty($shipment_ids) && empty($order_ids)) {
