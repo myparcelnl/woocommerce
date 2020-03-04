@@ -6,8 +6,8 @@ use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
-use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
 
 if (! defined("ABSPATH")) {
@@ -112,7 +112,8 @@ class WCMP_Export
                             '<input type="hidden" value=\'%s\' class="wcmp__print-queue">',
                             json_encode(
                                 [
-                                    "shipment_ids" => $print_queue["order_ids"],
+                                    "shipment_ids" => $print_queue["shipment_ids"],
+                                    "order_ids"    => $print_queue["order_ids"],
                                     "offset"       => $print_queue["offset"],
                                 ]
                             )
@@ -1350,8 +1351,9 @@ class WCMP_Export
             update_option("wcmyparcelbe_admin_notices", $return);
             if ($print === "after_reload") {
                 $print_queue = [
-                    "order_ids" => $return["success_ids"],
-                    "offset"    => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
+                    "order_ids"    => $order_ids,
+                    "shipment_ids" => $return["success_ids"],
+                    "offset"       => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
                 ];
                 update_option("wcmyparcelbe_print_queue", $print_queue);
             }
