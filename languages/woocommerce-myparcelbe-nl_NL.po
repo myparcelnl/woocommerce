@@ -1322,10 +1322,6 @@ msgstr "Land van afkomst is verplicht voor wereldzendingen. Standaard is de webs
 msgid "Calculated weight: %s"
 msgstr "Berekend gewicht: %s"
 
-#: includes/admin/wcmp-admin.php:660
-msgid "Concept created but not printed."
-msgstr "Concept aangemaakt maar niet geprint."
-
 #. Name of the plugin
 msgid "WooCommerce MyParcel"
 msgstr "WooCommerce MyParcel"
