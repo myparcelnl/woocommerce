@@ -247,7 +247,6 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             $class->getArguments(false),
             $option_row["value"] ?? null
         );
-        var_dump($shipment_options);
     }
     ?>
     <div>
