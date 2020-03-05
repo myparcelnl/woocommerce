@@ -2,30 +2,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-21 12:28+0000\n"
-"PO-Revision-Date: 2019-10-21 12:39+0000\n"
+"POT-Creation-Date: 2020-03-05 13:52+0000\n"
+"PO-Revision-Date: 2020-03-05 14:58+0100\n"
 "Last-Translator: edie <edie@myparcel.nl>\n"
 "Language-Team: Nederlands\n"
 "Language: nl_NL\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.3.1; wp-5.2.3"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 2.3\n"
+"X-Loco-Version: 2.3.1; wp-5.2.3\n"
 
 #: woocommerce-myparcel.php:234
 #, php-format
 msgid ""
 "WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!"
 msgstr ""
-"WooCommerce MyParcel heeft% WooCommerce% s nodig om te worden "
-"geïnstalleerd en geactiveerd!"
+"WooCommerce MyParcel heeft %sWooCommerce%s nodig om te worden geïnstalleerd "
+"en geactiveerd!"
 
 #: woocommerce-myparcel.php:252
 msgid ""
-"WooCommerce MyParcel requires PHP 5.4 or higher (5.6 or later recommended)"
-"."
+"WooCommerce MyParcel requires PHP 5.4 or higher (5.6 or later recommended)."
 msgstr ""
 "WooCommerce MyParcel vereist PHP 5.4 of hoger (5.6 of hoger aanbevolen)."
 
@@ -484,13 +483,6 @@ msgstr "Afhalen bij postnl"
 msgid "No label has created yet"
 msgstr "Er is nog geen label aangemaakt."
 
-#: includes_php56/class-wcmp-settings.php:38
-#: includes_php56/class-wcmp-settings.php:39
-#: includes/admin/settings/class-wcmp-settings.php:139
-#: includes/admin/settings/class-wcmp-settings.php:140
-msgid "MyParcel"
-msgstr "MyParcel"
-
 #: includes_php56/class-wcmp-settings.php:50
 #: includes/admin/settings/class-wcmp-settings.php:163
 msgid "Settings"
@@ -527,8 +519,8 @@ msgid ""
 "instead!"
 msgstr ""
 "Het lijkt erop dat je winkel is gevestigd in Nederland. Deze plugin is voor "
-"MyParcel. Als je van MyParcel Nederland gebruik maakt, dien je de %s "
-"plugin te downloaden (en de huidige plugin te verwijderen)!"
+"MyParcel. Als je van MyParcel Nederland gebruik maakt, dien je de %s plugin "
+"te downloaden (en de huidige plugin te verwijderen)!"
 
 #: includes_php56/class-wcmp-settings.php:118
 #: includes/admin/settings/class-wcmp-settings.php:246
@@ -601,8 +593,8 @@ msgstr "Track & Trace in e-mail"
 #: includes_php56/class-wcmp-settings.php:221
 #: includes/admin/settings/class-wcmp-settings-data.php:345
 msgid ""
-"Add the Track & Trace code to emails to the customer.<br/><strong>Note!"
-"</strong> When you select this option, make sure you have not enabled the "
+"Add the Track & Trace code to emails to the customer.<br/><strong>Note!</"
+"strong> When you select this option, make sure you have not enabled the "
 "Track & Trace email in your MyParcel backend."
 msgstr ""
 "Voeg de Track & Trace code toe aan e-mails aan de klant.<br/> <strong>Let op!"
@@ -642,16 +634,16 @@ msgstr "Orderstatus automatisering"
 #: includes/admin/settings/class-wcmp-settings-data.php:369
 msgid ""
 "Automatically set order status to a predefined status after successful "
-"MyParcel export.<br/>Make sure <strong>Process shipments directly</strong>"
-" is enabled when you use this option together with the <strong>Track & Trace "
+"MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> "
+"is enabled when you use this option together with the <strong>Track & Trace "
 "in email</strong> option, otherwise the Track & Trace code will not be "
 "included in the customer email."
 msgstr ""
 "Wijzig automatisch de orderstatus na het succesvol exporteren van een order "
-"naar MyParcel.<br/>Let op dat <strong>Verwerk zendingen direct</strong> "
-"is ingeschakeld wanneer je deze optie gebruikt in combinatie met de <strong>"
-"Track & Trace in e-mail</strong> optie, anders wordt de Track & Trace code "
-"niet opgenomen in de e-mail naar de klant."
+"naar MyParcel.<br/>Let op dat <strong>Verwerk zendingen direct</strong> is "
+"ingeschakeld wanneer je deze optie gebruikt in combinatie met de "
+"<strong>Track & Trace in e-mail</strong> optie, anders wordt de Track & "
+"Trace code niet opgenomen in de e-mail naar de klant."
 
 #: includes_php56/class-wcmp-settings.php:266
 #: includes/admin/settings/class-wcmp-settings-data.php:378
@@ -737,9 +729,9 @@ msgstr "Koppel e-mailadres klant"
 #: includes/admin/settings/class-wcmp-settings-data.php:653
 #, php-format
 msgid ""
-"When you connect the customer email, MyParcel can send a Track & Trace "
-"email to this address. In your %sMyParcel backend%s you can enable or "
-"disable this email and format it in your own style."
+"When you connect the customer email, MyParcel can send a Track & Trace email "
+"to this address. In your %sMyParcel backend%s you can enable or disable this "
+"email and format it in your own style."
 msgstr ""
 "Wanneer je het e-mailadres van de klant koppelt, kan MyParcel een Track & "
 "Trace e-mail versturen naar dit adres. In je %sMyParcel backend%s kun je "
@@ -838,13 +830,13 @@ msgstr "MyParcel adresvelden"
 #: includes_php56/class-wcmp-settings.php:508
 #: includes/admin/settings/class-wcmp-settings-data.php:690
 msgid ""
-"When enabled the checkout will use the MyParcel address fields. This "
-"means there will be three separate fields for street name, number and suffix."
-" Want to use the WooCommerce default fields? Leave this option unchecked."
+"When enabled the checkout will use the MyParcel address fields. This means "
+"there will be three separate fields for street name, number and suffix. Want "
+"to use the WooCommerce default fields? Leave this option unchecked."
 msgstr ""
-"Wanneer aangevinkt wordt er gebruik gemaakt van de MyParcel adresvelden. "
-"Dit houdt in dat straat, huisnummer en toevoeging los komen te staan. Wil je "
-"de standaard WooCommerce adresvelden gebruiken? Laat deze optie uitgevinkt "
+"Wanneer aangevinkt wordt er gebruik gemaakt van de MyParcel adresvelden. Dit "
+"houdt in dat straat, huisnummer en toevoeging los komen te staan. Wil je de "
+"standaard WooCommerce adresvelden gebruiken? Laat deze optie uitgevinkt "
 "staan."
 
 #: includes_php56/class-wcmp-settings.php:514
@@ -963,11 +955,11 @@ msgstr "Bezorgopties titel"
 #: includes_php56/class-wcmp-settings.php:643
 #: includes/admin/settings/class-wcmp-settings-data.php:794
 msgid ""
-"You can place a delivery title above the MyParcel options. When there is "
-"no title, it will not be visible."
+"You can place a delivery title above the MyParcel options. When there is no "
+"title, it will not be visible."
 msgstr ""
-"Je kunt een bezorgtitel boven de MyParcel opties plaatsen. Als er geen "
-"titel is, is deze niet zichtbaar."
+"Je kunt een bezorgtitel boven de MyParcel opties plaatsen. Als er geen titel "
+"is, is deze niet zichtbaar."
 
 #: includes_php56/class-wcmp-settings.php:648
 msgid "Home delivery title"
@@ -1294,7 +1286,7 @@ msgstr "Afhalen titel"
 #: includes/admin/settings/class-wcmp-settings-data.php:848
 #, php-format
 msgid "Theme \"%s\" detected."
-msgstr "Thema \"%\" gedetecteerd."
+msgstr "Thema “%s” gedetecteerd."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:850
 msgid "Apply preset."
@@ -1308,14 +1300,6 @@ msgstr "Afhaallocatie"
 msgid "Carrier"
 msgstr "Vervoerder"
 
-#: includes/settings/class-wcmp-settings-data.php:828
-msgid "Default country of origin"
-msgstr "Standaard land van afkomst"
-
-#: includes/settings/class/wcmp-settings-data.php:830
-msgid "Country of origin is required for world shipments. Defaults to shop base or NL. Example: 'NL', 'BE', 'DE'"
-msgstr "Land van afkomst is verplicht voor wereldzendingen. Standaard is de webshop locatie of NL. Voorbeeld: 'NL', 'BE', 'DE'"
-
 #: includes/admin/views/html-order-shipment-options.php:77
 #: includes/admin/views/html-order-return-shipment-options.php:16
 #, php-format
@@ -1328,16 +1312,29 @@ msgstr "WooCommerce MyParcel"
 
 #. Description of the plugin
 msgid ""
-"Export your WooCommerce orders to MyParcel (https://myparcel.nl/) and "
-"print labels directly from the WooCommerce admin"
+"Export your WooCommerce orders to MyParcel (https://myparcel.nl/) and print "
+"labels directly from the WooCommerce admin"
 msgstr ""
-"Exporteer je WooCommerce orders naar MyParcel (https://myparcel.nl) "
-"en print verzendlabels direct vanuit WooCommerce"
+"Exporteer je WooCommerce orders naar MyParcel (https://myparcel.nl) en print "
+"verzendlabels direct vanuit WooCommerce"
 
 #. URI of the plugin
 msgid "https://myparcel.nl/"
 msgstr "https://myparcel.nl/"
 
-#. Author of the plugin/theme
+#. Author of the plugin
 msgid "Richard Perdaan"
 msgstr "Richard Perdaan"
+
+msgid "Concept created but not printed."
+msgstr "Concept aangemaakt maar nog niet geprint."
+
+#~ msgid "Default country of origin"
+#~ msgstr "Standaard land van afkomst"
+
+#~ msgid ""
+#~ "Country of origin is required for world shipments. Defaults to shop base "
+#~ "or NL. Example: 'NL', 'BE', 'DE'"
+#~ msgstr ""
+#~ "Land van afkomst is verplicht voor wereldzendingen. Standaard is de "
+#~ "webshop locatie of NL. Voorbeeld: 'NL', 'BE', 'DE'"
