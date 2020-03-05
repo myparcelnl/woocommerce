@@ -162,6 +162,7 @@ class WCMP_API extends WCMP_Rest
 
         if ($display) {
             $collection->setPdfOfLabels($positions);
+
             foreach ($order_ids as $order_id) {
                 $order = WC_Core::get_order($order_id);
                 $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
@@ -174,11 +175,12 @@ class WCMP_API extends WCMP_Rest
         } else {
             $collection->setLinkOfLabels($positions);
 
-            WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
             foreach ($order_ids as $order_id) {
                 $order = WC_Core::get_order($order_id);
                 $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
-                (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
+                $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
+                $trackTrace = $shipmentData["track_trace"];
+                ChannelEngine::updateMetaOnExport($order, $trackTrace);
             }
 
             echo $collection->getLinkOfLabels();
