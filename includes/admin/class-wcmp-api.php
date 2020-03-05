@@ -162,11 +162,12 @@ class WCMP_API extends WCMP_Rest
 
         if ($display) {
             $collection->setPdfOfLabels($positions);
-	        foreach ($order_ids as $order_id) {
-	            $order = WC_Core::get_order( $order_id );
-	            $shipmentData = ( new WCMP_Export() )->getShipmentData( $collection->getConsignmentIds(), $order );
-	            $trackTrace = $shipmentData["track_trace"];
-	            ChannelEngine::updateMetaOnExport($order, $trackTrace);
+            foreach ($order_ids as $order_id) {
+                $order = WC_Core::get_order($order_id);
+                $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
+                $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
+                $trackTrace = $shipmentData["track_trace"];
+                ChannelEngine::updateMetaOnExport($order, $trackTrace);
             }
 
             $collection->downloadPdfOfLabels($display);
@@ -175,11 +176,10 @@ class WCMP_API extends WCMP_Rest
 
             WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
             foreach ($order_ids as $order_id) {
-		        $order = WC_Core::get_order( $order_id );
-		        $shipmentData = ( new WCMP_Export() )->getShipmentData( $collection->getConsignmentIds(), $order );
-		        $trackTrace = $shipmentData["track_trace"];
-		        ChannelEngine::updateMetaOnExport($order, $trackTrace);
-	        }
+                $order = WC_Core::get_order($order_id);
+                $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
+                (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
+            }
 
             echo $collection->getLinkOfLabels();
             die();
