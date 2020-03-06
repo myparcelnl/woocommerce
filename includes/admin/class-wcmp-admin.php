@@ -658,6 +658,7 @@ class WCMP_Admin
         foreach ($shipments as $shipment_id => $shipment) {
             if (empty($shipment["track_trace"])) {
                 echo __("Concept created but not printed.", "woocommerce-myparcel");
+                echo "</div>";
                 return;
             }
             printf(
