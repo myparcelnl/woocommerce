@@ -162,30 +162,32 @@ class WCMP_API extends WCMP_Rest
 
         if ($display) {
             $collection->setPdfOfLabels($positions);
-
-            foreach ($order_ids as $order_id) {
-                $order = WC_Core::get_order($order_id);
-                $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
-                $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
-                $trackTrace = $shipmentData["track_trace"];
-                ChannelEngine::updateMetaOnExport($order, $trackTrace);
-            }
-
+            $this->updateOrderBarcode($order_ids, $collection);
             $collection->downloadPdfOfLabels($display);
-        } else {
-            $collection->setLinkOfLabels($positions);
-
-            foreach ($order_ids as $order_id) {
-                $order = WC_Core::get_order($order_id);
-                $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
-                $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
-                $trackTrace = $shipmentData["track_trace"];
-                ChannelEngine::updateMetaOnExport($order, $trackTrace);
-            }
-
-            echo $collection->getLinkOfLabels();
-            die();
         }
-	    WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
+
+        if (! $display) {
+            $collection->setLinkOfLabels($positions);
+            $this->updateOrderBarcode($order_ids, $collection);
+            echo $collection->getLinkOfLabels();
+        }
+    }
+
+    /**
+     * @param array $orderIds
+     * @param MyParcelCollection $collection
+     * @throws Exception
+     */
+    private function updateOrderBarcode(array $orderIds, MyParcelCollection $collection) : void
+    {
+        foreach ($orderIds as $orderId) {
+            $order = WC_Core::get_order($orderId);
+            $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
+            $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
+            $trackTrace = $shipmentData["track_trace"];
+            ChannelEngine::updateMetaOnExport($order, $trackTrace);
+        }
+
+        WCMP_Export::saveTrackTracesToOrders($collection, $orderIds);
     }
 }
