@@ -1,6 +1,8 @@
 <?php
 
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core;
+use WPO\WC\MyParcelBE\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
 
 if (! defined("ABSPATH")) {
     exit;
@@ -151,7 +153,7 @@ class WCMP_API extends WCMP_Rest
         $collection = MyParcelCollection::findMany($shipment_ids, $this->key);
 
         /**
-         * @see https://github.com/myparcelnl/sdk#label-format-and-position
+         * @see https://github.com/MyParcelNL/Sdk#label-format-and-position
          */
         if (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_LABEL_FORMAT) === "A6") {
             $positions = false;
@@ -159,13 +161,29 @@ class WCMP_API extends WCMP_Rest
 
         if ($display) {
             $collection->setPdfOfLabels($positions);
-            WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
+            $this->updateOrderBarcode($order_ids, $collection);
             $collection->downloadPdfOfLabels($display);
         } else {
             $collection->setLinkOfLabels($positions);
-            WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
+            $this->updateOrderBarcode($order_ids, $collection);
             echo $collection->getLinkOfLabels();
-            die();
         }
+    }
+
+    /**
+     * @param array $orderIds
+     * @param MyParcelCollection $collection
+     * @throws Exception
+     */
+    private function updateOrderBarcode(array $orderIds, MyParcelCollection $collection) : void
+    {
+        foreach ($orderIds as $orderId) {
+            $order = WC_Core::get_order($orderId);
+            $lastShipmentIds = unserialize($order->get_meta('_myparcelbe_last_shipment_ids'));
+            $shipmentData = WCMP()->export->getShipmentData($lastShipmentIds, $order);
+            $trackTrace = $shipmentData["track_trace"];
+            ChannelEngine::updateMetaOnExport($order, $trackTrace);
+        }
+        WCMP_Export::saveTrackTracesToOrders($collection, $orderIds);
     }
 }

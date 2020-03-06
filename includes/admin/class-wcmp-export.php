@@ -339,7 +339,7 @@ class WCMP_Export
             }
 
             if ($processDirectly) {
-                $this->get_shipment_data($consignmentIds, $order);
+                $this->getShipmentData($consignmentIds, $order);
             }
 
             WCX_Order::update_meta_data(
@@ -946,7 +946,7 @@ class WCMP_Export
      * @return array
      * @throws Exception
      */
-    public function get_shipment_data(array $ids, WC_Order $order): array
+    public function getShipmentData(array $ids, WC_Order $order): array
     {
         $data     = [];
         $api      = $this->init_api();

@@ -16,7 +16,7 @@ $shipment_id = $_POST["shipment_id"];
 
 $order = WCX::get_order($order_id);
 
-$shipments       = WCMP()->export->get_shipment_data([$shipment_id], $order);
+$shipments       = WCMP()->export->getShipmentData([$shipment_id], $order);
 $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 
 $option_strings = [
