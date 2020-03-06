@@ -658,14 +658,13 @@ class WCMP_Admin
         foreach ($shipments as $shipment_id => $shipment) {
             if (empty($shipment["track_trace"])) {
                 echo __("Concept created but not printed.", "woocommerce-myparcel");
-                echo "</div>";
-                return;
+            } else {
+                printf(
+                    '<a target="_blank" class="wcmp__barcode-link" title="%2$s" href="%1$s">%2$s</a><br>',
+                    WCMP_Admin::getTrackTraceUrl($order, $shipment["track_trace"]),
+                    $shipment["track_trace"]
+                );
             }
-            printf(
-                '<a target="_blank" class="wcmp__barcode-link" title="%2$s" href="%1$s">%2$s</a><br>',
-                WCMP_Admin::getTrackTraceUrl($order, $shipment["track_trace"]),
-                $shipment["track_trace"]
-            );
         }
         echo "</div>";
     }
