@@ -488,7 +488,9 @@ jQuery(function($) {
         if (askForPrintPosition && !$(button).hasClass('wcmp__offset-dialog__button')) {
           showOffsetDialog.bind(button)();
         } else {
-          printLabel.bind(button)();
+          printLabel.bind(button)({
+            order_ids: order_ids
+          });
         }
         break;
       case wcmp.actions.add_return:

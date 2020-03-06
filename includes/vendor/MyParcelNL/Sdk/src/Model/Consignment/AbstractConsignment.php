@@ -409,6 +409,14 @@ class AbstractConsignment
     }
 
     /**
+     * @return array
+     */
+    public function getInsurancePossibilities(): array
+    {
+        return static::INSURANCE_POSSIBILITIES_LOCAL;
+    }
+
+    /**
      * @return string|null
      */
     public function getReferenceId()
@@ -1395,7 +1403,7 @@ class AbstractConsignment
             return $this;
         }
 
-        if (empty(self::INSURANCE_POSSIBILITIES_LOCAL)) {
+        if (empty(static::INSURANCE_POSSIBILITIES_LOCAL)) {
             throw new \BadMethodCallException('Property insurance_possibilities_local not found in ' . static::class);
         }
 
@@ -1403,9 +1411,9 @@ class AbstractConsignment
             throw new \BadMethodCallException('Property local_cc not found in ' . static::class);
         }
 
-        if (! in_array($insurance, self::INSURANCE_POSSIBILITIES_LOCAL) && $this->getCountry() == $this->local_cc) {
+        if (! in_array($insurance, static::INSURANCE_POSSIBILITIES_LOCAL) && $this->getCountry() == $this->local_cc) {
             throw new \BadMethodCallException(
-                'Insurance must be one of ' . implode(', ', self::INSURANCE_POSSIBILITIES_LOCAL)
+                'Insurance must be one of ' . implode(', ', static::INSURANCE_POSSIBILITIES_LOCAL)
             );
         }
 

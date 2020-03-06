@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ed5429cd1d5143cd362a06225f0de129",
+    "content-hash": "4b26cabbcfe951e08e3aa4fd9e907962",
     "packages": [
         {
-            "name": "MyParcelNL/Sdk",
-            "version": "v3.0.1",
+            "name": "myparcelnl/sdk",
+            "version": "v3.1.7",
             "source": {
                 "type": "git",
-                "url": "https://github.com/MyParcelNL/Sdk.git",
-                "reference": "0c3360c4e8e01fff9d417ea400f5a8e3253576c4"
+                "url": "https://github.com/myparcelnl/sdk.git",
+                "reference": "bca3a9571e2ecfff74f964b659fc0f9136c09e64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MyParcelNL/Sdk/zipball/0c3360c4e8e01fff9d417ea400f5a8e3253576c4",
-                "reference": "0c3360c4e8e01fff9d417ea400f5a8e3253576c4",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/bca3a9571e2ecfff74f964b659fc0f9136c09e64",
+                "reference": "bca3a9571e2ecfff74f964b659fc0f9136c09e64",
                 "shasum": ""
             },
             "require": {
@@ -65,7 +65,7 @@
                 "myparcel",
                 "postnl"
             ],
-            "time": "2019-10-23T12:47:41+00:00"
+            "time": "2020-03-06T10:18:42+00:00"
         }
     ],
     "packages-dev": [],
