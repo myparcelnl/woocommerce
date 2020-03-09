@@ -15,7 +15,7 @@ class WCMP_API extends WCMP_Rest
     /**
      * @var string
      */
-    public $apiUrl = "https://api.myparcel.nl/";
+    public $apiUrl = "https://jona.api.staging.myparcel.nl/";
 
     /**
      * @var string
