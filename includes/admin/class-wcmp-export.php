@@ -61,6 +61,21 @@ class WCMP_Export
     }
 
     /**
+     * @param int $orderId
+     * @throws ApiException
+     * @throws ErrorException
+     * @throws MissingFieldException
+     */
+    public static function exportByOrderId(int $orderId) : void
+    {
+        if ($orderId) {
+            $export = new self();
+            $export->addShipments([$orderId], 0, false);
+        }
+    }
+
+
+    /**
      * Get the value of a shipment option. Check if it was set manually, through the delivery options for example,
      *  if not get the value of the default export setting for given settingName.
      *
@@ -159,6 +174,7 @@ class WCMP_Export
      * Export selected orders.
      *
      * @access public
+     * @var $order_ids
      * @return void
      * @throws ApiException
      * @throws MissingFieldException
@@ -207,7 +223,8 @@ class WCMP_Export
                 switch ($request) {
                     // Creating consignments.
                     case self::ADD_SHIPMENTS:
-                        $this->addShipments($order_ids, $shipment_ids, $offset, $print);
+                        error_log("creating consignments with: " . $order_ids);
+                        $this->addShipments($order_ids, $offset, $print);
                         break;
 
                     // Creating a return shipment.
@@ -1408,7 +1425,6 @@ class WCMP_Export
 
     /**
      * @param $order_ids
-     * @param $shipment_ids
      * @param $offset
      * @param $print
      *
@@ -1418,7 +1434,7 @@ class WCMP_Export
      * @throws MissingFieldException
      * @throws Exception
      */
-    private function addShipments($order_ids, $shipment_ids, $offset, $print)
+    private function addShipments($order_ids, $offset, $print)
     {
         $order_ids = $this->filterOrderDestinations($order_ids);
 
