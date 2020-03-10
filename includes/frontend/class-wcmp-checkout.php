@@ -187,6 +187,7 @@ class WCMP_Checkout
                 "retry"                   => __("Retry", "woocommerce-myparcelbe"),
                 "wrongHouseNumberCity"    => __("Postcode/city combination unknown", "woocommerce-myparcelbe"),
                 "signatureTitle"          => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_SIGNATURE_TITLE),
+                "onlyRecipientTitle"      => $this->getDeliveryOptionsTitle(WCMP_Settings::SETTING_ONLY_RECIPIENT_TITLE),
 
                 "pickupLocationsListButton" => $this->getDeliveryOptionsTitle(WCMP_Settings::PICKUP_LOCATIONS_LIST_BUTTON),
                 "pickupLocationsMapButton"  => $this->getDeliveryOptionsTitle(WCMP_Settings::PICKUP_LOCATIONS_MAP_BUTTON),
@@ -197,12 +198,14 @@ class WCMP_Checkout
             $allowDeliveryOptions  = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED;
             $allowPickupLocations  = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED;
             $allowSignature        = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED;
+            $allowOnlyRecipient    = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED;
             $cutoffTime            = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME;
             $deliveryDaysWindow    = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW;
             $dropOffDays           = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS;
             $dropOffDelay          = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY;
             $pricePickup           = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_PICKUP_FEE;
             $priceSignature        = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE;
+            $priceOnlyRecipient    = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE;
             $priceSaturdayDelivery = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE;
             $largeFormat           = "{$carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT;
 
@@ -211,6 +214,7 @@ class WCMP_Checkout
                 "allowPickupLocations" => $settings->isEnabled($allowPickupLocations),
                 "largeFormat"          => $settings->isEnabled($largeFormat),
                 "allowSignature"       => $settings->getBooleanByName($allowSignature),
+                "allowOnlyRecipient"   => $settings->getBooleanByName($allowOnlyRecipient),
                 "cutoffTime"           => $settings->getStringByName($cutoffTime),
                 "deliveryDaysWindow"   => $settings->getIntegerByName($deliveryDaysWindow),
                 "dropOffDays"          => $settings->getByName($dropOffDays),
@@ -218,6 +222,7 @@ class WCMP_Checkout
 
                 "pricePickup"           => $settings->getFloatByName($pricePickup),
                 "priceSignature"        => $settings->getFloatByName($priceSignature),
+                "priceOnlyRecipient"    => $settings->getFloatByName($priceOnlyRecipient),
                 "priceSaturdayDelivery" => $settings->getFloatByName($priceSaturdayDelivery),
             ];
         }

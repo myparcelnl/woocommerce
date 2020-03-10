@@ -64,6 +64,7 @@ class WCMP_Settings
     public const SETTING_PICKUP_TITLE                  = "pickup_title";
     public const SETTING_SIGNATURE_TITLE               = "signature_title";
     public const SETTING_STANDARD_TITLE                = "standard_title";
+    public const SETTING_ONLY_RECIPIENT_TITLE          = "only_recipient_title";
     public const SETTING_USE_SPLIT_ADDRESS_FIELDS      = "use_split_address_fields";
 
     /*

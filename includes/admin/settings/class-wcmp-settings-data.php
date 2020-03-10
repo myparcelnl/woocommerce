@@ -691,7 +691,7 @@ class WCMP_Settings_Data
                 "label"     => __("Large format", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
-                    "Delivery will be only to home address.",
+                    "Large format package.",
                     "woocommerce-myparcelbe"
                 ),
             ],

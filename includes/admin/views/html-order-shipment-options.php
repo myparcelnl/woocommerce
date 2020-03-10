@@ -50,6 +50,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $carriersHuman = WCMP_Data::CARRIERS_HUMAN;
     $insurance     = false;
     $signature     = false;
+    $onlyRecipient = false;
 
     if (DPDConsignment::CARRIER_NAME !== $deliveryOptions->getCarrier()) {
         $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
@@ -127,6 +128,18 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             ],
             "label"     => __("Insured to &euro; 500", "woocommerce-myparcelbe"),
             "value"     => (bool) $insurance,
+        ],
+        [
+            "name"      => "[shipment_options][only_recipient]",
+            "type"      => "toggle",
+            "condition" => [
+                "name"         => "[carrier]",
+                "type"         => "disable",
+                "parent_value" => WCMP_Data::getCarriersWithOnlyRecipient(),
+                "set_value"    => WCMP_Settings_Data::ENABLED,
+            ],
+            "label"     => __("Home address only", "woocommerce-myparcelbe"),
+            "value"     => (bool) $onlyRecipient,
         ],
     ];
 

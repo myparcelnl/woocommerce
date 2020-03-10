@@ -172,6 +172,18 @@ class WCMP_Export_Consignments
     }
 
     /**
+     * @return bool
+     */
+    private function getOnlyRecipient(): bool
+    {
+        return WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->deliveryOptions->getShipmentOptions()->hasOnlyRecipient(),
+            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED
+        );
+
+    }
+
+    /**
      * Gets the recipient and puts its data in the consignment.
      *
      * @throws Exception
@@ -256,7 +268,8 @@ class WCMP_Export_Consignments
     {
         $this->consignment
             ->setSignature($this->getSignature())
-            ->setInsurance($this->getInsurance());
+            ->setInsurance($this->getInsurance())
+            ->setOnlyRecipient($this->getOnlyRecipient());
     }
 
     /**
