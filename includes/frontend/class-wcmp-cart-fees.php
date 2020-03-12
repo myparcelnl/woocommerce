@@ -53,13 +53,14 @@ class WCMP_Cart_Fees
             $post_data = $_POST;
         }
 
-        /*  check for delivery options & add fees*/
+        /* check for delivery options & add fees */
         if (empty($post_data[WCMP_Admin::META_DELIVERY_OPTIONS])) {
             return;
         }
 
         $delivery_options_data = $post_data[WCMP_Admin::META_DELIVERY_OPTIONS];
         $delivery_options_data = json_decode(stripslashes($delivery_options_data), true);
+
         $this->deliveryOptions = DeliveryOptionsAdapterFactory::create($delivery_options_data);
 
         $this->addDeliveryFee();
@@ -152,7 +153,7 @@ class WCMP_Cart_Fees
         foreach ($shipmentOptions as $shipmentOption => $enabled) {
             // Don't add the fee if it wasn't selected.
             if (! $enabled) {
-                return;
+                continue;
             }
 
             $this->addFee($shipmentOption);
