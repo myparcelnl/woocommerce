@@ -139,7 +139,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
                 "parent_value" => WCMP_Data::getCarriersWithOnlyRecipient(),
                 "set_value"    => WCMP_Settings_Data::ENABLED,
             ],
-            "label"     => __("Only recipient", "woocommerce-myparcelbe"),
+            "label"     => __("Home address only", "woocommerce-myparcelbe"),
             "value"     => (bool) $onlyRecipient,
         ],
     ];
