@@ -283,8 +283,7 @@ class WCMP_Checkout
     /**
      * Save delivery options to order when used
      *
-     * @param int   $order_id
-     * @param array $posted
+     * @param int $order_id
      *
      * @return void
      * @throws Exception

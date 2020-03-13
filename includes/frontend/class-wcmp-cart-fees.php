@@ -152,7 +152,7 @@ class WCMP_Cart_Fees
         foreach ($shipmentOptions as $shipmentOption => $enabled) {
             // Don't add the fee if it wasn't selected.
             if (! $enabled) {
-                return;
+                continue;
             }
 
             $this->addFee($shipmentOption);

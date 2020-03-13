@@ -772,7 +772,7 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
                 "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Home address only", "woocommerce-myparcelbe"),
+                "label"     => __("Only recipient", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
                     "Delivery will be only to home address.",
@@ -1021,6 +1021,12 @@ class WCMP_Settings_Data
                 "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Signature on delivery", "woocommerce-myparcelbe"),
                 "default"   => __("Signature on delivery", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_ONLY_RECIPIENT_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => __("Only recipient", "woocommerce-myparcelbe"),
+                "default"   => __("Only recipient", "woocommerce-myparcelbe"),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_PICKUP_TITLE,
