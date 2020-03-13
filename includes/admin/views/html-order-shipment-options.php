@@ -50,7 +50,8 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $carriersHuman = WCMP_Data::CARRIERS_HUMAN;
     $insurance     = false;
     $signature     = false;
-    $onlyRecipient = false;
+    $onlyRecipient = $shipment_options->hasOnlyRecipient();
+
 
     if (DPDConsignment::CARRIER_NAME !== $deliveryOptions->getCarrier()) {
         $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
