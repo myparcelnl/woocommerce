@@ -176,11 +176,8 @@ class WCMP_Export_Consignments
      */
     private function getOnlyRecipient(): bool
     {
-        return WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->deliveryOptions->getShipmentOptions()->hasOnlyRecipient(),
-            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED
-        );
-
+        $this->deliveryOptions->getShipmentOptions()->hasOnlyRecipient();
+        return false;
     }
 
     /**
