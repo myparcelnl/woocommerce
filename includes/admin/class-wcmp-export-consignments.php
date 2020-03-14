@@ -171,6 +171,9 @@ class WCMP_Export_Consignments
         );
     }
 
+    /**
+     * @return bool
+     */
     private function getLargeFormat(): bool
     {
         return WCMP_Export::getChosenOrDefaultShipmentOption(

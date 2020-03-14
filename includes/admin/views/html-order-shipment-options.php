@@ -51,7 +51,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $insurance     = false;
     $signature     = false;
     $onlyRecipient = $shipment_options->hasOnlyRecipient();
-    $largeFormat = $shipment_options->hasLargeFormat(); //hier moet de std export value komen
+    $largeFormat   = $shipment_options->hasLargeFormat();
 
     if (DPDConsignment::CARRIER_NAME !== $deliveryOptions->getCarrier()) {
         $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
