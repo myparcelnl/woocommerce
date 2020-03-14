@@ -21,6 +21,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
         $this->signature      = $this->isSignatureFromOptions($options, $shipmentOptionsAdapter);
         $this->insurance      = $this->isInsuranceFromOptions($options, $shipmentOptionsAdapter);
         $this->only_recipient = $this->isOnlyRecipientFromOptions($options, $shipmentOptionsAdapter);
+        $this->large_format   = $this->isLargeFormatFromOptions($options, $shipmentOptionsAdapter);
     }
 
     /**
@@ -36,6 +37,24 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
         }
         if ($shipmentOptionsAdapter) {
             return $shipmentOptionsAdapter->hasOnlyRecipient();
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array                               $options
+     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
+     *
+     * @return bool|null
+     */
+    private function isLargeFormatFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
+    {
+        if (key_exists('large_format', $options)) {
+            return (bool) $options['large_format'];
+        }
+        if ($shipmentOptionsAdapter) {
+           return $shipmentOptionsAdapter->hasLargeFormat();
         }
 
         return false;

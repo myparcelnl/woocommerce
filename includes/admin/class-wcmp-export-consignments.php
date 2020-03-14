@@ -171,6 +171,14 @@ class WCMP_Export_Consignments
         );
     }
 
+    private function getLargeFormat(): bool
+    {
+        return WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->deliveryOptions->getShipmentOptions()->hasLargeFormat(),
+            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
+        );
+    }
+
     /**
      * @return bool
      */
@@ -266,7 +274,9 @@ class WCMP_Export_Consignments
         $this->consignment
             ->setSignature($this->getSignature())
             ->setInsurance($this->getInsurance())
-            ->setOnlyRecipient($this->getOnlyRecipient());
+            ->setOnlyRecipient($this->getOnlyRecipient())
+            ->setLargeFormat($this->getLargeFormat());
+
     }
 
     /**

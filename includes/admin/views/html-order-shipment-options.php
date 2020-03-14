@@ -51,7 +51,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $insurance     = false;
     $signature     = false;
     $onlyRecipient = $shipment_options->hasOnlyRecipient();
-
+    $largeFormat = $shipment_options->hasLargeFormat(); //hier moet de std export value komen
 
     if (DPDConsignment::CARRIER_NAME !== $deliveryOptions->getCarrier()) {
         $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
@@ -141,6 +141,18 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             ],
             "label"     => __("Only recipient", "woocommerce-myparcelbe"),
             "value"     => (bool) $onlyRecipient,
+        ],
+        [
+            "name"      => "[shipment_options][large_format]",
+            "type"      => "toggle",
+            "condition" => [
+                "name"         => "[carrier]",
+                "type"         => "disable",
+                "parent_value" => WCMP_Data::getCarriersWithLargeFormat(),
+                "set_value"    => WCMP_Settings_Data::ENABLED,
+            ],
+            "label"     => __("Large format", "woocommerce-myparcelbe"),
+            "value"     => (bool) $largeFormat,
         ],
     ];
 

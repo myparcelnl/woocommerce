@@ -172,6 +172,16 @@ class WCMP_Data
     /**
      * @return array
      */
+    public static function getCarriersWithLargeFormat(): array
+    {
+        return [
+            PostNLConsignment::CARRIER_NAME,
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public static function getCarriersHuman(): array
     {
         return [
