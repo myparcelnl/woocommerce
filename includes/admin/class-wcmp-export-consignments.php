@@ -176,8 +176,8 @@ class WCMP_Export_Consignments
      */
     private function getOnlyRecipient(): bool
     {
-        $this->deliveryOptions->getShipmentOptions()->hasOnlyRecipient();
-        return false;
+        return $this->deliveryOptions->getShipmentOptions()->hasOnlyRecipient();
+
     }
 
     /**
