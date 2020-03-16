@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
 
@@ -47,19 +48,21 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $shippingCountry       = WCX_Order::get_prop($order, "shipping_country");
 
     $carriersHuman = WCMP_Data::CARRIERS_HUMAN;
-    $bpost         = BpostConsignment::CARRIER_NAME;
     $insurance     = false;
     $signature     = false;
+    $onlyRecipient = $shipment_options->hasOnlyRecipient();
+    $largeFormat   = $shipment_options->hasLargeFormat();
 
     if (DPDConsignment::CARRIER_NAME !== $deliveryOptions->getCarrier()) {
         $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
             $shipment_options->getInsurance(),
-            "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
+            "{$deliveryOptions->getCarrier()}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
+
         );
 
         $signature = WCMP_Export::getChosenOrDefaultShipmentOption(
             $shipment_options->hasSignature(),
-            "{$bpost}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
+            "{$deliveryOptions->getCarrier()}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
         );
     }
 
@@ -124,8 +127,32 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
                 "parent_value" => WCMP_Data::getCarriersWithInsurance(),
                 "set_value"    => WCMP_Settings_Data::ENABLED,
             ],
-            "label"     => __("Insured to &euro; 500", "woocommerce-myparcelbe"),
+            "label"     => __("Insured", "woocommerce-myparcelbe"),
             "value"     => (bool) $insurance,
+        ],
+        [
+            "name"      => "[shipment_options][only_recipient]",
+            "type"      => "toggle",
+            "condition" => [
+                "name"         => "[carrier]",
+                "type"         => "disable",
+                "parent_value" => WCMP_Data::getCarriersWithOnlyRecipient(),
+                "set_value"    => WCMP_Settings_Data::ENABLED,
+            ],
+            "label"     => __("Only recipient", "woocommerce-myparcelbe"),
+            "value"     => (bool) $onlyRecipient,
+        ],
+        [
+            "name"      => "[shipment_options][large_format]",
+            "type"      => "toggle",
+            "condition" => [
+                "name"         => "[carrier]",
+                "type"         => "disable",
+                "parent_value" => WCMP_Data::getCarriersWithLargeFormat(),
+                "set_value"    => WCMP_Settings_Data::ENABLED,
+            ],
+            "label"     => __("Large format", "woocommerce-myparcelbe"),
+            "value"     => (bool) $largeFormat,
         ],
     ];
 

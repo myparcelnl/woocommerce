@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
 
 if (!defined('ABSPATH')) {
@@ -67,6 +68,12 @@ class WCMP_Settings_Data
             WCMP_Settings::SETTINGS_DPD,
             true
         );
+
+        $this->generate_settings(
+            $this->get_sections_carrier_postnl(),
+            WCMP_Settings::SETTINGS_POSTNL,
+            true
+        );
     }
 
     public static function getTabs()
@@ -77,8 +84,9 @@ class WCMP_Settings_Data
             WCMP_Settings::SETTINGS_CHECKOUT        => __("Checkout settings", "woocommerce-myparcelbe"),
         ];
 
-        $array[WCMP_Settings::SETTINGS_BPOST] = __("bpost", "woocommerce-myparcelbe");
-        $array[WCMP_Settings::SETTINGS_DPD]   = __("DPD", "woocommerce-myparcelbe");
+        $array[WCMP_Settings::SETTINGS_BPOST]  = __("bpost", "woocommerce-myparcelbe");
+        $array[WCMP_Settings::SETTINGS_DPD]    = __("DPD", "woocommerce-myparcelbe");
+        $array[WCMP_Settings::SETTINGS_POSTNL] = __("PostNL", "woocommerce-myparcelbe");
 
         return $array;
     }
@@ -280,6 +288,38 @@ class WCMP_Settings_Data
                     "name"     => "pickup_options",
                     "label"    => __("DPD pickup options", "woocommerce-myparcelbe"),
                     "settings" => $this->get_section_carrier_dpd_pickup_options(),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get the array of postnl sections and their settings to be added to WordPress.
+     *
+     * @return array
+     */
+    private function get_sections_carrier_postnl()
+    {
+        return [
+            PostNLConsignment::CARRIER_NAME => [
+                [
+                    "name"        => "export_defaults",
+                    "label"       => __("Default export settings", "woocommerce-myparcelbe"),
+                    "description" => __(
+                        "These settings will be applied to postnl shipments you create in the backend.",
+                        "woocommerce-myparcelbe"
+                    ),
+                    "settings"    => $this->get_section_carrier_postnl_export_defaults(),
+                ],
+                [
+                    "name"     => "delivery_options",
+                    "label"    => __("PostNL delivery options", "woocommerce-myparcelbe"),
+                    "settings" => $this->get_section_carrier_postnl_delivery_options(),
+                ],
+                [
+                    "name"     => "pickup_options",
+                    "label"    => __("PostNL pickup options", "woocommerce-myparcelbe"),
+                    "settings" => $this->get_section_carrier_postnl_pickup_options(),
                 ],
             ],
         ];
@@ -620,6 +660,156 @@ class WCMP_Settings_Data
     }
 
     /**
+     * Export defaults specifically for PostNL.
+     *
+     * @return array
+     */
+    private function get_section_carrier_postnl_export_defaults(): array
+    {
+        return [
+            [
+                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label" => __("Insured shipment (to €500)", "woocommerce-myparcelbe"),
+                "type"  => "toggle",
+            ],
+            [
+                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+                "label" => __("Signature on delivery", "woocommerce-myparcelbe"),
+                "type"  => "toggle",
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
+                "label"     => __("Large format", "woocommerce-myparcelbe"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "Large format package.",
+                    "woocommerce-myparcelbe"
+                ),
+            ],
+        ];
+    }
+
+    /**
+     * These are the unprefixed settings for PostNL.
+     * After the settings are generated every name will be prefixed with "postnl_"
+     * Example: delivery_enabled => postnl_delivery_enabled
+     *
+     * @return array
+     */
+    private function get_section_carrier_postnl_delivery_options(): array
+    {
+        return [
+            [
+                "name"  => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label" => __("Enable PostNL delivery", "woocommerce-myparcelbe"),
+                "type"  => "toggle",
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Delivery days at PostNL", "woocommerce-myparcelbe"),
+                "callback"  => [$this->callbacks, "enhanced_select"],
+                "options"   => $this->getWeekdays(),
+                "default"   => [1, 2, 3, 4, 5],
+                "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Cut-off time", "woocommerce-myparcelbe"),
+                "help_text" => __(
+                    "Time at which you stop processing orders for the day (format: hh:mm)",
+                    "woocommerce-myparcelbe"
+                ),
+                "default"   => "17:00",
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Drop-off delay", "woocommerce-myparcelbe"),
+                "type"      => "number",
+                "max"       => 14,
+                "help_text" => __("Number of days you need to process an order.", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Show delivery date", "woocommerce-myparcelbe"),
+                "type"      => "toggle",
+                "default"   => self::ENABLED,
+                "help_text" => __("Show the delivery date inside the delivery options.", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Signature on delivery", "woocommerce-myparcelbe"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                    "woocommerce-myparcelbe"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE,
+                "condition" => WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                "class"     => ["wcmp__child"],
+                "label"     => __("Fee (optional)", "woocommerce-myparcelbe"),
+                "type"      => "currency",
+                "help_text" => __(
+                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                    "woocommerce-myparcelbe"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Only recipient", "woocommerce-myparcelbe"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "Delivery will be only to home address.",
+                    "woocommerce-myparcelbe"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
+                "condition" => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+                "class"     => ["wcmp__child"],
+                "label"     => __("Fee (optional)", "woocommerce-myparcelbe"),
+                "type"      => "currency",
+                "help_text" => __(
+                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                    "woocommerce-myparcelbe"
+                ),
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function get_section_carrier_postnl_pickup_options(): array
+    {
+        return [
+            [
+                "name"  => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "label" => __("Enable PostNL pickup", "woocommerce-myparcelbe"),
+                "type"  => "toggle",
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_FEE,
+                "condition" => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "class"     => ["wcmp__child"],
+                "label"     => __("Fee (optional)", "woocommerce-myparcelbe"),
+                "type"      => "currency",
+                "help_text" => __(
+                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                    "woocommerce-myparcelbe"
+                ),
+            ],
+        ];
+    }
+
+    /**
      * @return array
      */
     private function get_section_export_defaults_main()
@@ -831,6 +1021,12 @@ class WCMP_Settings_Data
                 "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Signature on delivery", "woocommerce-myparcelbe"),
                 "default"   => __("Signature on delivery", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_ONLY_RECIPIENT_TITLE,
+                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => __("Only recipient", "woocommerce-myparcelbe"),
+                "default"   => __("Only recipient", "woocommerce-myparcelbe"),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_PICKUP_TITLE,

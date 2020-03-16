@@ -175,6 +175,26 @@ class WCMP_Export_Consignments
     }
 
     /**
+     * @return bool
+     */
+    private function getLargeFormat(): bool
+    {
+        return WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->deliveryOptions->getShipmentOptions()->hasLargeFormat(),
+            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    private function getOnlyRecipient(): bool
+    {
+        return $this->deliveryOptions->getShipmentOptions()->hasOnlyRecipient();
+
+    }
+
+    /**
      * Gets the recipient and puts its data in the consignment.
      *
      * @throws Exception
@@ -259,7 +279,10 @@ class WCMP_Export_Consignments
     {
         $this->consignment
             ->setSignature($this->getSignature())
-            ->setInsurance($this->getInsurance());
+            ->setInsurance($this->getInsurance())
+            ->setOnlyRecipient($this->getOnlyRecipient())
+            ->setLargeFormat($this->getLargeFormat());
+
     }
 
     /**

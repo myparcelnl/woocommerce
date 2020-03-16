@@ -3,6 +3,7 @@
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 
 if (! defined('ABSPATH')) {
@@ -15,14 +16,15 @@ if (class_exists('WCMP_Data')) {
 
 class WCMP_Data
 {
-    public const API_URL = "https://api.sendmyparcel.be/";
+    public const API_URL = "https://api.myparcel.nl/";
 
     /**
      * @var array
      */
     public const CARRIERS_HUMAN = [
-        DPDConsignment::CARRIER_NAME   => 'DPD',
-        BpostConsignment::CARRIER_NAME => 'bpost',
+        DPDConsignment::CARRIER_NAME    => 'DPD',
+        BpostConsignment::CARRIER_NAME  => 'bpost',
+        PostNLConsignment::CARRIER_NAME => 'PostNL',
     ];
 
     public const HAS_MULTI_COLLO = false;
@@ -142,6 +144,7 @@ class WCMP_Data
     {
         return [
             BpostConsignment::CARRIER_NAME,
+            PostNLConsignment::CARRIER_NAME,
         ];
     }
 
@@ -152,6 +155,27 @@ class WCMP_Data
     {
         return [
             BpostConsignment::CARRIER_NAME,
+            PostNLConsignment::CARRIER_NAME,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getCarriersWithOnlyRecipient(): array
+    {
+        return [
+            PostNLConsignment::CARRIER_NAME,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getCarriersWithLargeFormat(): array
+    {
+        return [
+            PostNLConsignment::CARRIER_NAME,
         ];
     }
 
@@ -163,6 +187,7 @@ class WCMP_Data
         return [
             BpostConsignment::CARRIER_NAME => __("bpost", "woocommerce-myparcelbe"),
             DPDConsignment::CARRIER_NAME   => __("DPD", "woocommerce-myparcelbe"),
+            PostNLConsignment::CARRIER_NAME => __("PostNL", "woocommerce-myparcelbe"),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use WPO\WC\MyParcelBE\Collections\SettingsCollection;
 
 class WCMP_Initialize_Settings_Collection
@@ -27,6 +28,11 @@ class WCMP_Initialize_Settings_Collection
             $this->getOption("woocommerce_myparcelbe_dpd_settings"),
             "carrier",
             DPDConsignment::CARRIER_NAME
+        );
+        $settings->setSettingsByType(
+            $this->getOption("woocommerce_myparcelbe_postnl_settings"),
+            "carrier",
+            PostNLConsignment::CARRIER_NAME
         );
 
         return $settings;

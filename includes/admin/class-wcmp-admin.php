@@ -604,6 +604,7 @@ class WCMP_Admin
      * @param array    $inputData
      *
      * @return DeliveryOptions
+     * @throws Exception
      * @see \WCMP_Checkout::save_delivery_options
      */
     public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptions
