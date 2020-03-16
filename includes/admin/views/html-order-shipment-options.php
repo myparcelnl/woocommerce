@@ -127,7 +127,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
                 "parent_value" => WCMP_Data::getCarriersWithInsurance(),
                 "set_value"    => WCMP_Settings_Data::ENABLED,
             ],
-            "label"     => __("Insured to &euro; 500", "woocommerce-myparcelbe"),
+            "label"     => __("Insured", "woocommerce-myparcelbe"),
             "value"     => (bool) $insurance,
         ],
         [
