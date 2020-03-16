@@ -2,9 +2,9 @@
 Contributors: richardperdaan
 Tags: woocommerce, export, myparcel Belgium
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 5.0.0
+Tested up to: 5.3.1
 Stable tag: trunk
-Requires PHP: 5.4
+Requires PHP: 5.6
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -87,6 +87,13 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 5. MyParcel BE information on the order details page
 
 == Changelog ==
+
+= 4.0.5 (2020-02-25) =
+* Fix: Change path for the carrier images
+
+= 4.0.4 (2020-02-24) =
+* Fix: Can't ship DPD when there are additional costs
+* Fix: Hide carriers in the checkout when the option is turned off
 
 = 4.0.3 (2020-02-04) =
 * Fix: Customer mail doesn't show in the backoffice (sendmyparcel)

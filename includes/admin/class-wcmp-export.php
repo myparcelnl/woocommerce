@@ -6,8 +6,8 @@ use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
-use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
 
 if (! defined("ABSPATH")) {
@@ -112,7 +112,8 @@ class WCMP_Export
                             '<input type="hidden" value=\'%s\' class="wcmp__print-queue">',
                             json_encode(
                                 [
-                                    "shipment_ids" => $print_queue["order_ids"],
+                                    "shipment_ids" => $print_queue["shipment_ids"],
+                                    "order_ids"    => $print_queue["order_ids"],
                                     "offset"       => $print_queue["offset"],
                                 ]
                             )
@@ -286,7 +287,6 @@ class WCMP_Export
         $orderIdsWithNewShipments = [];
         $collection               = new MyParcelCollection();
         $processDirectly          = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY) || $process === true;
-        $keepOldShipments         = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_KEEP_SHIPMENTS);
 
         WCMP_Log::add("*** Creating shipments started ***");
 
@@ -295,17 +295,7 @@ class WCMP_Export
          */
         foreach ($order_ids as $order_id) {
             $order           = WCX::get_order($order_id);
-            $order_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
-
-            /**
-             * If "Keep shipments" is disabled, don't create new shipments. Otherwise the
-             * new ones will be appended to the existing ones.
-             */
-            if (! empty($order_shipments) && $keepOldShipments) {
-                continue;
-            } else {
-                $orderIdsWithNewShipments[] = $order_id;
-            }
+            $orderIdsWithNewShipments[] = $order_id;
 
             $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $collo_amount = isset($extra_params["collo_amount"]) ? $extra_params["collo_amount"] : 1;
@@ -349,7 +339,7 @@ class WCMP_Export
             }
 
             if ($processDirectly) {
-                $this->get_shipment_data($consignmentIds, $order);
+                $this->getShipmentData($consignmentIds, $order);
             }
 
             WCX_Order::update_meta_data(
@@ -956,7 +946,7 @@ class WCMP_Export
      * @return array
      * @throws Exception
      */
-    public function get_shipment_data(array $ids, WC_Order $order): array
+    public function getShipmentData(array $ids, WC_Order $order): array
     {
         $data     = [];
         $api      = $this->init_api();
@@ -1361,8 +1351,9 @@ class WCMP_Export
             update_option("wcmyparcelbe_admin_notices", $return);
             if ($print === "after_reload") {
                 $print_queue = [
-                    "order_ids" => $return["success_ids"],
-                    "offset"    => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
+                    "order_ids"    => $order_ids,
+                    "shipment_ids" => $return["success_ids"],
+                    "offset"       => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
                 ];
                 update_option("wcmyparcelbe_print_queue", $print_queue);
             }

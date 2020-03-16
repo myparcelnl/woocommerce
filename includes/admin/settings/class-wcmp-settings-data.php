@@ -420,15 +420,6 @@ class WCMP_Settings_Data
                 "options"   => $this->callbacks->get_order_status_options(),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_KEEP_SHIPMENTS,
-                "label"     => __("Keep old shipments", "woocommerce-myparcelbe"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "With this option enabled, data from previous shipments (Track & Trace links) will be kept in the order when you export more than once.",
-                    "woocommerce-myparcelbe"
-                ),
-            ],
-            [
                 "name"      => WCMP_Settings::SETTING_BARCODE_IN_NOTE,
                 "label"     => __("Place barcode inside note", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
@@ -879,6 +870,15 @@ class WCMP_Settings_Data
                 "type"      => "toggle",
                 "help_text" => __(
                     "When enabled the checkout will use the Alternative address fields. This means there will be three separate fields for street name, number and suffix. Want to use the WooCommerce default fields? Leave this option unchecked.",
+                    "woocommerce-myparcelbe"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_SHOW_DELIVERY_DAY,
+                "label"     => __("Show delivery day", "woocommerce-myparcelbe"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account.",
                     "woocommerce-myparcelbe"
                 ),
             ],

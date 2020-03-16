@@ -809,6 +809,10 @@ msgstr ""
 msgid "Enable delivery options"
 msgstr ""
 
+#: includes/admin/settings/class-wcmp-settings-data.php:687
+msgid "Show delivery day"
+msgstr ""
+
 #: includes_php56/class-wcmp-settings.php:526
 #: includes/admin/settings/class-wcmp-settings-data.php:707
 msgid "Display for"
@@ -822,6 +826,10 @@ msgstr ""
 #: includes_php56/class-wcmp-settings.php:535
 #: includes/admin/settings/class-wcmp-settings-data.php:718
 msgid "All shipping methods"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:691
+msgid "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account."
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:537

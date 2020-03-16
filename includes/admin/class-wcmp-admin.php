@@ -647,14 +647,18 @@ class WCMP_Admin
      */
     private function printDeliveryDate(DeliveryOptions $delivery_options): void
     {
-        $string = $delivery_options->isPickup() ? __("Pickup") : __("Standard delivery", "woocommerce-myparcelbe", "woocommerce-myparcelbe");
+        $shipmentType = $delivery_options->isPickup() ? __("Pickup", "woocommerce-myparcelbe") : __("Standard delivery", "woocommerce-myparcelbe");
 
-        printf(
-            '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
-            __("MyParcel BE shipment:", "woocommerce-myparcelbe"),
-            $string,
-            wc_format_datetime(new WC_DateTime($delivery_options->getDate()), 'l d-m')
-        );
+        // if show delivery day is enabled
+        $showDeliveryDay = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_SHOW_DELIVERY_DAY);
+        if ($showDeliveryDay) {
+            printf(
+                '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
+                __("MyParcel BE shipment:", "woocommerce-myparcelbe"),
+                $shipmentType,
+                wc_format_datetime(new WC_DateTime($delivery_options->getDate()), 'l d-m')
+            );
+        }
     }
 
     /**
