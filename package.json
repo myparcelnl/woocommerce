@@ -4,7 +4,7 @@
   "version": "4.0.0",
   "description": "Welcome to the WooCommerce MyParcel BE repository on GitHub. Here you can browse the source, look at open issues and keep track of development.",
   "scripts": {
-    "postinstall": "cp -f node_modules/@myparcel/checkout/dist/myparcel.js assets/js",
+    "postinstall": "node ./private/postinstall.js",
     "postcss": "node_modules/postcss-cli/bin/postcss assets/css --replace"
   },
   "repository": {
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@myparcel/eslint-config": "^1.2.2",
     "autoprefixer": "^9.7.3",
+    "cpx": "^1.5.0",
     "husky": "^3.1.0",
     "postcss-cli": "^6.1.3"
   },

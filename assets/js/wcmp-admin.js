@@ -1,5 +1,5 @@
 /**
- * @var {Object} wcmp
+ * @member {Object} wcmp
  *
  * @property {Object} wcmp.actions
  * @property {{export: String, add_shipments: String, add_return: String, get_labels: String, modal_dialog: String}} wcmp.actions
@@ -15,6 +15,21 @@
 
 /* eslint-disable-next-line max-lines-per-function */
 jQuery(function($) {
+  // Object.values polyfill
+  if (!Object.values) {
+    Object.values = function(obj) {
+      var values = [];
+
+      for (var i in obj) {
+        if (obj.hasOwnProperty(i)) {
+          values.push(obj[i]);
+        }
+      }
+
+      return values;
+    };
+  }
+
   /**
    * @type {Boolean}
    */
@@ -209,7 +224,7 @@ jQuery(function($) {
 
   /**
    * @param {Element|Node} relatedInput - Parent of element.
-   * @param {Element|Node} element  - Element that will be handled.
+   * @param {Element|Node} element - Element that will be handled.
    * @param {Element|Node|null} element2 - Optional extra dependency of element.
    * @param {Number} easing - Amount of easing on the transitions.
    */
@@ -340,9 +355,9 @@ jQuery(function($) {
     var action = document.querySelector('[name="action"]').value;
 
     /**
-     * Check if our action is the selected one.
+     * Check the selected action is ours.
      */
-    if (wcmp.bulk_actions.hasOwnProperty(action)) {
+    if (!Object.values(wcmp.bulk_actions).includes(action)) {
       return;
     }
 
@@ -574,7 +589,7 @@ jQuery(function($) {
     } else {
       dialogButton.attr('href', dialogButton.attr('href') + '&offset=' + newOffset);
     }
-  };
+  }
 
   /**
    * Show the offset dialog for bulk options that allow it.
@@ -896,4 +911,3 @@ if (typeof Object.assign !== 'function') {
     configurable: true,
   });
 }
-
