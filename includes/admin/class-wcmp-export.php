@@ -608,7 +608,7 @@ class WCMP_Export
      */
     public static function getRecipientFromOrder(WC_Order $order)
     {
-        $is_using_old_fields = WCX_Order::has_meta($order, "_billing_street_name")
+        $isUsingMyParcelFields = WCX_Order::has_meta($order, "_billing_street_name")
                                || WCX_Order::has_meta($order, "_billing_house_number");
 
         $shipping_name =
@@ -647,7 +647,7 @@ class WCMP_Export
                     "postal_code" => (string) WCX_Order::get_prop($order, "billing_postcode"),
                 ];
 
-                if ($is_using_old_fields) {
+                if ($isUsingMyParcelFields) {
                     $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_billing_street_name");
                     $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_billing_house_number");
                     $address_intl["number_suffix"] =
@@ -671,7 +671,7 @@ class WCMP_Export
                     "postal_code" => (string) WCX_Order::get_prop($order, "shipping_postcode"),
                 ];
                 // If not using old fields
-                if ($is_using_old_fields) {
+                if ($isUsingMyParcelFields) {
                     $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_shipping_street_name");
                     $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_shipping_house_number");
                     $address_intl["number_suffix"] =
