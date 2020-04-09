@@ -705,6 +705,7 @@ class WCMP_Export
         }
 
         $address = array_merge($address, $address_intl);
+
         return apply_filters("wc_myparcel_recipient", $address, $order);
     }
 
