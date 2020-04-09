@@ -689,7 +689,7 @@ class WCMP_Export
 
 
                     if (!$address_intl["number_suffix"]) {
-                       if (preg_match("~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3}?:\W|$)~i", $address["street_additional_info"])) {
+                       if (preg_match("~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3}(?:\W|$))~i", $address["street_additional_info"])) {
                            error_log('here');
                            $address_intl["number_suffix"] = $address["street_additional_info"];
                            $address["street_additional_info"] = "";
