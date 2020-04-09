@@ -661,8 +661,8 @@ class WCMP_Export
                     $address_intl["street"]                 = (string) $address_parts["street"];
                     $address_intl["number"]                 = (string) $address_parts["number"];
                     $address_intl["number_suffix"]          =
-                        array_key_exists("extension", $address_parts) // optional
-                            ? (string) $address_parts["extension"] : "";
+                        array_key_exists("number_suffix", $address_parts) // optional
+                            ? (string) $address_parts["number_suffix"] : "";
                     $address_intl["street_additional_info"] = WCX_Order::get_prop($order, "billing_address_2");
                 }
             } else {
