@@ -686,10 +686,11 @@ class WCMP_Export
                     $address_intl["street"]        = (string) $address_parts["street"];
                     $address_intl["number"]        = (string) $address_parts["number"];
                     $address_intl["number_suffix"] = (string) $address_parts["extension"] ?: "";
+
                     if (!$address_intl["number_suffix"]) {
                        if (preg_match("/^[a-zA-Z]$/", $address["street_additional_info"])) {
                            $address_intl["number_suffix"] = $address["street_additional_info"];
-                           $address["street_additional_info"];
+                           $address["street_additional_info"] = "";
                        }
                     }
                 }
