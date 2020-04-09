@@ -633,7 +633,6 @@ class WCMP_Export
         if ($shipping_country === "NL") {
             // use billing address if old "pakjegemak" (1.5.6 and older)
             $pgAddress = WCX_Order::get_meta($order, WCMP_Admin::META_PGADDRESS);
-
             if ($pgAddress) {
                 $billing_name = method_exists($order, "get_formatted_billing_full_name")
                     ? $order->get_formatted_billing_full_name()
@@ -662,8 +661,8 @@ class WCMP_Export
                     $address_intl["street"]                 = (string) $address_parts["street"];
                     $address_intl["number"]                 = (string) $address_parts["number"];
                     $address_intl["number_suffix"]          =
-                        array_key_exists("number_suffix", $address_parts) // optional
-                            ? (string) $address_parts["number_suffix"] : "";
+                        array_key_exists("extension", $address_parts) // optional
+                            ? (string) $address_parts["extension"] : "";
                     $address_intl["street_additional_info"] = WCX_Order::get_prop($order, "billing_address_2");
                 }
             } else {
@@ -686,8 +685,13 @@ class WCMP_Export
 
                     $address_intl["street"]        = (string) $address_parts["street"];
                     $address_intl["number"]        = (string) $address_parts["number"];
-                    $address_intl["number_suffix"] = array_key_exists("number_suffix", $address_parts) // optional
-                        ? (string) $address_parts["number_suffix"] : "";
+                    $address_intl["number_suffix"] = (string) $address_parts["extension"] ?: "";
+                    if (!$address_intl["number_suffix"]) {
+                       if (preg_match("/^[a-zA-Z]$/", $address["street_additional_info"])) {
+                           $address_intl["number_suffix"] = $address["street_additional_info"];
+                           $address["street_additional_info"];
+                       }
+                    }
                 }
             }
         } else {
@@ -700,7 +704,6 @@ class WCMP_Export
         }
 
         $address = array_merge($address, $address_intl);
-
         return apply_filters("wc_myparcel_recipient", $address, $order);
     }
 
