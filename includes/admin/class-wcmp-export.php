@@ -39,7 +39,6 @@ class WCMP_Export
     public const DESCRIPTION_MAX_LENGTH = 50;
 
     public const DEFAULT_POSITIONS = [2, 4, 1, 3];
-
     public const SUFFIX_CHECK_REG = "~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i";
 
     public $order_id;
@@ -635,6 +634,7 @@ class WCMP_Export
         if ($shipping_country === "NL") {
             // use billing address if old "pakjegemak" (1.5.6 and older)
             $pgAddress = WCX_Order::get_meta($order, WCMP_Admin::META_PGADDRESS);
+
             if ($pgAddress) {
                 $billing_name = method_exists($order, "get_formatted_billing_full_name")
                     ? $order->get_formatted_billing_full_name()
@@ -688,7 +688,6 @@ class WCMP_Export
                     $address_intl["street"]        = (string) $address_parts["street"];
                     $address_intl["number"]        = (string) $address_parts["number"];
                     $address_intl["number_suffix"] = (string) $address_parts["extension"] ?: "";
-
 
                     if (!$address_intl["number_suffix"]) {
                        if (preg_match(self::SUFFIX_CHECK_REG, $address["street_additional_info"])) {
