@@ -87,11 +87,13 @@ class WCMP_Admin
 
     /**
      * @param $orderId
+     *
      * @throws ErrorException
      * @throws \MyParcelNL\Sdk\src\Exception\ApiException
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
-    public function automaticExportOrder( $orderId ) {
+    public function automaticExportOrder( $orderId ): void
+    {
         (new WCMP_Export())::exportByOrderId($orderId);
     }
 
