@@ -40,6 +40,8 @@ class WCMP_Export
 
     public const DEFAULT_POSITIONS = [2, 4, 1, 3];
 
+    public const SUFFIX_CHECK_REG = "~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i";
+
     public $order_id;
     public $success;
     public $errors;
@@ -689,8 +691,7 @@ class WCMP_Export
 
 
                     if (!$address_intl["number_suffix"]) {
-                       if (preg_match("~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3}(?:\W|$))~i", $address["street_additional_info"])) {
-                           error_log('here');
+                       if (preg_match(self::SUFFIX_CHECK_REG, $address["street_additional_info"])) {
                            $address_intl["number_suffix"] = $address["street_additional_info"];
                            $address["street_additional_info"] = "";
                        }
