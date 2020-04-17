@@ -129,7 +129,7 @@ class WCMP_Export_Consignments
             $product = $item->get_product();
             $country = $this->getCountryOfOrigin($product);
 
-            if (!empty($product)) {
+            if (! empty($product)) {
                 // Description
                 $description = $item["name"];
 
@@ -138,7 +138,7 @@ class WCMP_Export_Consignments
                     $description = substr($item["name"], 0, 47) . "...";
                 }
                 // Amount
-                $amount = (int)(isset($item["qty"]) ? $item["qty"] : 1);
+                $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
 
                 // Weight (total item weight in grams)
                 $weight = (int)round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
@@ -203,7 +203,7 @@ class WCMP_Export_Consignments
             return $defaultCountryOfOrigin;
         }
 
-        if (!$defaultCountryOfOrigin) {
+        if (! $defaultCountryOfOrigin) {
             if (!$productCountryOfOrigin) {
                 return WC()->countries->baseCountry() ?? 'NL';
             }
@@ -260,7 +260,7 @@ class WCMP_Export_Consignments
      */
     private function getContents(): int
     {
-        return (int)($this->getSetting("package_contents") ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
+        return (int) ($this->getSetting("package_contents") ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
     }
 
     /**
@@ -344,7 +344,7 @@ class WCMP_Export_Consignments
     {
         $this->apiKey = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
 
-        if (!$this->apiKey) {
+        if (! $this->apiKey) {
             throw new ErrorException(__("No API key found in MyParcel settings", "woocommerce-myparcel"));
         }
     }
@@ -374,7 +374,7 @@ class WCMP_Export_Consignments
      */
     private function setPickupLocation(): void
     {
-        if (!$this->deliveryOptions->isPickup()) {
+        if (! $this->deliveryOptions->isPickup()) {
             return;
         }
 
