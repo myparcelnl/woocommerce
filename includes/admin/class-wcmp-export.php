@@ -66,7 +66,7 @@ class WCMP_Export
      * @throws ErrorException
      * @throws MissingFieldException
      */
-    public function exportByOrderId(int $orderId) : void
+    public function exportByOrderId(int $orderId): void
     {
         $automaticExport = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_AUTOMATIC_EXPORT);
 
