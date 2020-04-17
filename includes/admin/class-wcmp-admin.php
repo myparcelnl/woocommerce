@@ -33,7 +33,6 @@ class WCMP_Admin
     public const META_TRACK_TRACE            = "_myparcel_tracktrace";
     public const META_HS_CODE                = "_myparcel_hs_code";
     public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
-    public const META_AUTOMATIC_EXPORT       = "_myparcel_automatic_export";
 
     public const SHIPMENT_OPTIONS_FORM_NAME = "myparcel_options";
 
