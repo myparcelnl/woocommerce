@@ -289,6 +289,7 @@ class WCMP_Admin
         if (empty($order)) {
             return;
         }
+
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
 
         if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
@@ -592,7 +593,6 @@ class WCMP_Admin
             }
         }
     }
-    
 
     public function productCountryOfOriginField()
     {
