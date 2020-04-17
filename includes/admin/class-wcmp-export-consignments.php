@@ -344,7 +344,7 @@ class WCMP_Export_Consignments
     {
         $this->apiKey = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
 
-        if (!$this->apiKey) {
+        if (! $this->apiKey) {
             throw new ErrorException(__("No API key found in MyParcel settings", "woocommerce-myparcel"));
         }
     }
