@@ -94,7 +94,7 @@ class WCMP_Admin
      */
     public function automaticExportOrder( $orderId ): void
     {
-        (new WCMP_Export())::exportByOrderId($orderId);
+        (new WCMP_Export())->exportByOrderId($orderId);
     }
 
     /**
