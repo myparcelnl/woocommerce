@@ -224,7 +224,6 @@ class WCMP_Export
                 switch ($request) {
                     // Creating consignments.
                     case self::ADD_SHIPMENTS:
-                        error_log("creating consignments with: " . $order_ids);
                         $this->addShipments($order_ids, $offset, $print);
                         break;
 
