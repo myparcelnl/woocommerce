@@ -374,7 +374,7 @@ class WCMP_Export_Consignments
      */
     private function setPickupLocation(): void
     {
-        if (!$this->deliveryOptions->isPickup()) {
+        if (! $this->deliveryOptions->isPickup()) {
             return;
         }
 
