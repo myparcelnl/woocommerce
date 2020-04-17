@@ -52,7 +52,7 @@ class WCMP_Settings
     public const SETTING_HS_CODE                        = "hs_code";
     public const SETTING_PACKAGE_CONTENT                = "package_contents";
     public const SETTING_COUNTRY_OF_ORIGIN              = "country_of_origin";
-    public const SETTING_AUTOMATIC_EXPORT               = "automatic_export";
+    public const SETTING_AUTOMATIC_EXPORT               = "export_automatic";
 
     /**
      * Checkout

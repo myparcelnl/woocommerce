@@ -821,6 +821,15 @@ class WCMP_Settings_Data
                   "Country of origin is required for world shipments. Defaults to shop base or NL. Example: 'NL', 'BE', 'DE'", "woocommerce-myparcel"
               ),
             ],
+            [
+                "name"      => WCMP_Settings::SETTING_AUTOMATIC_EXPORT,
+                "label"     => __("Automatic export", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "Automatic exporting allows you to export an order to MyParcel directly after payment.",
+                    "woocommerce-myparcel"
+                ),
+            ],
         ];
     }
 

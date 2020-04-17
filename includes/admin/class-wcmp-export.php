@@ -68,12 +68,15 @@ class WCMP_Export
      */
     public static function exportByOrderId(int $orderId) : void
     {
+        $automaticExport = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_AUTOMATIC_EXPORT);
+
         if ($orderId) {
-            $export = new self();
-            $export->addShipments([$orderId], 0, false);
+            if ($automaticExport) {
+                $export = new self();
+                $export->addShipments([(string) $orderId], 0, false);
+            }
         }
     }
-
 
     /**
      * Get the value of a shipment option. Check if it was set manually, through the delivery options for example,
@@ -213,8 +216,6 @@ class WCMP_Export
 
         $order_ids    = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
         $shipment_ids = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
-
-        include_once("class-wcmp-export-consignments.php");
 
         if (empty($shipment_ids) && empty($order_ids)) {
             $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcel");
