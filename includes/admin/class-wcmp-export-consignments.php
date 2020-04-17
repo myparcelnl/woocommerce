@@ -129,7 +129,7 @@ class WCMP_Export_Consignments
             $product = $item->get_product();
             $country = $this->getCountryOfOrigin($product);
 
-            if (!empty($product)) {
+            if (! empty($product)) {
                 // Description
                 $description = $item["name"];
 
