@@ -826,7 +826,7 @@ class WCMP_Settings_Data
                 "label"     => __("Automatic export", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
-                    "Automatic exporting allows you to export an order to MyParcel directly after payment.",
+                    "With this setting enabled, orders are exported to MyParcel automatically after payment.",
                     "woocommerce-myparcel"
                 ),
             ],
