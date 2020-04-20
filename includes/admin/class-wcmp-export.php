@@ -175,7 +175,6 @@ class WCMP_Export
      * Export selected orders.
      *
      * @access public
-     * @var $order_ids
      * @return void
      * @throws ApiException
      * @throws MissingFieldException
@@ -212,6 +211,9 @@ class WCMP_Export
         $offset  = $_REQUEST["offset"] ?? 0;
         $request = $_REQUEST["request"];
 
+        /**
+         * @var $order_ids
+         */
         $order_ids    = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
         $shipment_ids = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
 
