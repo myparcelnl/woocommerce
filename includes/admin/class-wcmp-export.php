@@ -70,11 +70,9 @@ class WCMP_Export
     {
         $automaticExport = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_AUTOMATIC_EXPORT);
 
-        if ($orderId) {
-            if ($automaticExport) {
-                $export = new self();
-                $export->addShipments([(string) $orderId], 0, false);
-            }
+        if ($orderId && $automaticExport) {
+            $export = new self();
+            $export->addShipments([(string) $orderId], 0, false);
         }
     }
 
