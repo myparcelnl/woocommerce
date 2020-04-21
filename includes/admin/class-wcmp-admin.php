@@ -81,6 +81,47 @@ class WCMP_Admin
         // Add barcode in order grid
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
         add_action("manage_shop_order_posts_custom_column", [$this, "addBarcodeToOrderColumn"], 10, 2);
+
+        // Add delivered option to order statuses
+        add_action("init", [$this, "registerDeliveredOrderStatus"]);
+        add_filter('wc_order_statuses', [$this, 'addDeliveredToOrderStatuses']);
+    }
+
+    /**
+     * @return void
+     */
+    public function registerDeliveredOrderStatus(): void
+    {
+        register_post_status('wc-delivered',
+            [
+                'label'                     => 'Delivered',
+                'public'                    => true,
+                'exclude_from_search'       => false,
+                'show_in_admin_all_list'    => true,
+                'show_in_admin_status_list' => true,
+                'label_count'               => _n_noop('Delivered (%s)', 'Delivered (%s)'),
+            ]
+        );
+    }
+
+    /**
+     * @param $order_statuses
+     *
+     * @return array
+     */
+    public function addDeliveredToOrderStatuses( $order_statuses ): array
+    {
+        $new_order_statuses = [];
+
+        foreach ($order_statuses as $key => $status) {
+            $new_order_statuses[$key] = $status;
+
+            if ('wc-processing' === $key) {
+                $new_order_statuses['wc-delivered'] = 'Delivered';
+            }
+        }
+
+        return $new_order_statuses;
     }
 
     /**
