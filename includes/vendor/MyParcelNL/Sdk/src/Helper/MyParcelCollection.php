@@ -301,6 +301,17 @@ class MyParcelCollection extends Collection
     }
 
     /**
+     * Shipment v2 endpoint active from x number of orders
+     *
+     * @param $numberOfOrders
+     * @return bool
+     */
+    public function useShipmentV2($numberOfOrders)
+    {
+        return $numberOfOrders > MyParcelRequest::SHIPMENT_V2_ACTIVE_FROM ? true : false;
+    }
+
+    /**
      * Delete concepts in MyParcel
      *
      * @return  $this
@@ -418,6 +429,11 @@ class MyParcelCollection extends Collection
 
         $conceptIds = $this->getConsignmentIds($key);
 
+        $test = MyParcelRequest::REQUEST_TYPE_RETRIEVE_LABEL;
+        if ($this->useShipmentV2(count($conceptIds))) {
+            $test = MyParcelRequest::REQUEST_TYPE_SETUP_LABEL;
+        }
+
         if ($key) {
             $request = (new MyParcelRequest())
                 ->setUserAgent($this->getUserAgent())
@@ -426,7 +442,7 @@ class MyParcelCollection extends Collection
                     implode(';', $conceptIds) . '/' . $this->getRequestBody(),
                     MyParcelRequest::REQUEST_HEADER_RETRIEVE_LABEL_LINK
                 )
-                ->sendRequest('GET', MyParcelRequest::REQUEST_TYPE_RETRIEVE_LABEL);
+                ->sendRequest('GET', $test);
 
             $this->label_link = MyParcelRequest::REQUEST_URL . $request->getResult('data.pdfs.url');
         }
@@ -458,6 +474,11 @@ class MyParcelCollection extends Collection
             ->setLabelFormat($positions);
         $conceptIds = $this->getConsignmentIds($key);
 
+        $test = MyParcelRequest::REQUEST_TYPE_RETRIEVE_LABEL;
+        if ($this->useShipmentV2(count($conceptIds))) {
+            $test = MyParcelRequest::REQUEST_TYPE_SETUP_LABEL;
+        }
+
         if ($key) {
             $request = (new MyParcelRequest())
                 ->setUserAgent($this->getUserAgent())
@@ -466,7 +487,7 @@ class MyParcelCollection extends Collection
                     implode(';', $conceptIds) . '/' . $this->getRequestBody(),
                     MyParcelRequest::REQUEST_HEADER_RETRIEVE_LABEL_PDF
                 )
-                ->sendRequest('GET', MyParcelRequest::REQUEST_TYPE_RETRIEVE_LABEL);
+                ->sendRequest('GET', $test);
 
             $this->label_pdf = $request->getResult();
         }
