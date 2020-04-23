@@ -81,6 +81,20 @@ class WCMP_Admin
         // Add barcode in order grid
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
         add_action("manage_shop_order_posts_custom_column", [$this, "addBarcodeToOrderColumn"], 10, 2);
+
+        add_action( 'woocommerce_payment_complete', [$this, 'automaticExportOrder'], 1000);
+    }
+
+    /**
+     * @param $orderId
+     *
+     * @throws ErrorException
+     * @throws \MyParcelNL\Sdk\src\Exception\ApiException
+     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
+     */
+    public function automaticExportOrder($orderId): void
+    {
+        (new WCMP_Export())->exportByOrderId($orderId);
     }
 
     /**

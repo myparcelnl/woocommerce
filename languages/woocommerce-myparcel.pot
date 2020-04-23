@@ -1442,6 +1442,14 @@ msgstr ""
 msgid "Weight"
 msgstr ""
 
+#: includes/admin/class-wcmp-settings-data.php:826
+msgid "Automatic export"
+msgstr ""
+
+#: includes/admin/class-wcmp-settings-data.php:829
+msgid "Automatic exporting allows you to export an order to MyParcel directly after payment"
+msgstr ""
+
 #. Name of the plugin
 msgid "WooCommerce MyParcel"
 msgstr ""

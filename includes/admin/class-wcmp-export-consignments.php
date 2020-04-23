@@ -146,11 +146,7 @@ class WCMP_Export_Consignments
                     ->setDescription($description)
                     ->setAmount($amount)
                     ->setWeight($weight)
-                    ->setItemValue(
-                        (int) round(
-                            ($item["line_total"] + $item["line_tax"]) * 100
-                        )
-                    )
+                    ->setItemValue((int) round(($item["line_total"] + $item["line_tax"]) * 100))
                     ->setCountry($country)
                     ->setClassification($this->getHsCode($product));
 
@@ -181,6 +177,7 @@ class WCMP_Export_Consignments
 
     /**
      * @param WC_Product $product
+     *
      * @return string
      */
     public function getCountryOfOrigin(WC_Product $product): string
@@ -189,25 +186,28 @@ class WCMP_Export_Consignments
         $productCountryOfOrigin = WCX_Product::get_meta($product, WCMP_Admin::META_COUNTRY_OF_ORIGIN, true);
 
         $countryOfOrigin = getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin);
+
         return (string) $countryOfOrigin;
     }
 
     /**
      * @param $defaultCountryOfOrigin
      * @param $productCountryOfOrigin
+     *
      * @return string
      */
     public function getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin): string
-    {   
+    {
         if ($defaultCountryOfOrigin) {
             return $defaultCountryOfOrigin;
-        } 
+        }
 
         if (! $defaultCountryOfOrigin) {
             if (! $productCountryOfOrigin) {
                 return WC()->countries->baseCountry() ?? 'NL';
             }
         }
+
         return $productCountryOfOrigin;
     }
 
@@ -380,13 +380,14 @@ class WCMP_Export_Consignments
 
         $pickupLocation = $this->deliveryOptions->getPickupLocation();
 
-        $this->consignment->setPickupCountry($pickupLocation->getCountry())
-                          ->setPickupCity($pickupLocation->getCity())
-                          ->setPickupLocationName($pickupLocation->getLocationName())
-                          ->setPickupStreet($pickupLocation->getStreet())
-                          ->setPickupNumber($pickupLocation->getNumber())
-                          ->setPickupPostalCode($pickupLocation->getPostalCode())
-                          ->setPickupLocationCode($pickupLocation->getLocationCode());
+        $this->consignment
+            ->setPickupCountry($pickupLocation->getCountry())
+            ->setPickupCity($pickupLocation->getCity())
+            ->setPickupLocationName($pickupLocation->getLocationName())
+            ->setPickupStreet($pickupLocation->getStreet())
+            ->setPickupNumber($pickupLocation->getNumber())
+            ->setPickupPostalCode($pickupLocation->getPostalCode())
+            ->setPickupLocationCode($pickupLocation->getLocationCode());
     }
 
     /**
@@ -428,7 +429,8 @@ class WCMP_Export_Consignments
      */
     private function setPhysicalProperties()
     {
-        $this->consignment->setPhysicalProperties(["weight" => $this->getTotalPackageWeight()]);
+        $this->consignment
+            ->setPhysicalProperties(["weight" => $this->getTotalPackageWeight()]);
     }
 
     private function setBaseData(): void

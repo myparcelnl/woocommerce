@@ -62,6 +62,22 @@ class WCMP_Export
     }
 
     /**
+     * @param int $orderId
+     * @throws ApiException
+     * @throws ErrorException
+     * @throws MissingFieldException
+     */
+    public function exportByOrderId(int $orderId): void
+    {
+        $automaticExport = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_AUTOMATIC_EXPORT);
+
+        if ($orderId && $automaticExport) {
+            $export = new self();
+            $export->addShipments([(string) $orderId], 0, false);
+        }
+    }
+
+    /**
      * Get the value of a shipment option. Check if it was set manually, through the delivery options for example,
      *  if not get the value of the default export setting for given settingName.
      *
@@ -196,10 +212,11 @@ class WCMP_Export
         $offset  = $_REQUEST["offset"] ?? 0;
         $request = $_REQUEST["request"];
 
+        /**
+         * @var $order_ids
+         */
         $order_ids    = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
         $shipment_ids = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
-
-        include_once("class-wcmp-export-consignments.php");
 
         if (empty($shipment_ids) && empty($order_ids)) {
             $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcel");
@@ -208,7 +225,7 @@ class WCMP_Export
                 switch ($request) {
                     // Creating consignments.
                     case self::ADD_SHIPMENTS:
-                        $this->addShipments($order_ids, $shipment_ids, $offset, $print);
+                        $this->addShipments($order_ids, $offset, $print);
                         break;
 
                     // Creating a return shipment.
@@ -1415,7 +1432,6 @@ class WCMP_Export
 
     /**
      * @param $order_ids
-     * @param $shipment_ids
      * @param $offset
      * @param $print
      *
@@ -1425,7 +1441,7 @@ class WCMP_Export
      * @throws MissingFieldException
      * @throws Exception
      */
-    private function addShipments($order_ids, $shipment_ids, $offset, $print)
+    private function addShipments($order_ids, $offset, $print)
     {
         $order_ids = $this->filterOrderDestinations($order_ids);
 

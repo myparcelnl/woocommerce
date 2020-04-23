@@ -179,6 +179,7 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/class-wcmp-postcode-fields.php");
             require_once($this->includes . "/adapter/delivery-options-from-order-adapter.php");
             require_once($this->includes . "/adapter/shipment-options-from-order-adapter.php");
+            require_once($this->includes . "/admin/class-wcmp-export-consignments.php");
         }
 
         /**
