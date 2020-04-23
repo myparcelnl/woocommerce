@@ -143,10 +143,12 @@ class WCMP_Export_Consignments
 
                 // Weight (total item weight in grams)
                 $weight       = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
-                $myParcelItem = (new MyParcelCustomsItem())->setDescription($description)->setAmount($amount)
-                    ->setWeight($weight)->setItemValue((int) round(($item["line_total"] + $item["line_tax"]) * 100
-                    )
-                    )->setCountry($country)->setClassification($this->getHsCode($product));
+                $myParcelItem = (new MyParcelCustomsItem())->setDescription($description)
+                    ->setAmount($amount)
+                    ->setWeight($weight)
+                    ->setItemValue((int) round(($item["line_total"] + $item["line_tax"]) * 100))
+                    ->setCountry($country)
+                    ->setClassification($this->getHsCode($product));
 
                 $this->consignment->addItem($myParcelItem);
             }
@@ -212,8 +214,8 @@ class WCMP_Export_Consignments
      */
     private function getSignature(): bool
     {
-        return WCMP_Export::getChosenOrDefaultShipmentOption($this->deliveryOptions->getShipmentOptions()->hasSignature(
-        ),
+        return WCMP_Export::getChosenOrDefaultShipmentOption($this->deliveryOptions->getShipmentOptions()
+            ->hasSignature(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
         );
     }
@@ -234,8 +236,8 @@ class WCMP_Export_Consignments
      */
     private function getAgeCheck(): bool
     {
-        return WCMP_Export::getChosenOrDefaultShipmentOption($this->deliveryOptions->getShipmentOptions()->hasAgeCheck(
-        ),
+        return WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->deliveryOptions->getShipmentOptions()->hasAgeCheck(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
         );
     }
@@ -264,7 +266,8 @@ class WCMP_Export_Consignments
      */
     private function getReturnShipment(): bool
     {
-        return WCMP_Export::getChosenOrDefaultShipmentOption($this->deliveryOptions->getShipmentOptions()->isReturn(),
+        return WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->deliveryOptions->getShipmentOptions()->isReturn(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
         );
     }
@@ -276,8 +279,8 @@ class WCMP_Export_Consignments
      */
     private function getInsurance(): int
     {
-        $isInsuranceActive = WCMP_Export::getChosenOrDefaultShipmentOption($this->deliveryOptions->getShipmentOptions()
-            ->getInsurance(),
+        $isInsuranceActive = WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->deliveryOptions->getShipmentOptions()->getInsurance(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
         );
 
@@ -319,12 +322,17 @@ class WCMP_Export_Consignments
         $connectEmail    = $this->carrier === PostNLConsignment::CARRIER_NAME;
         $this->recipient = WCMP_Export::getRecipientFromOrder($this->order, $connectEmail);
 
-        $this->consignment->setCountry($this->recipient['cc'])->setPerson($this->recipient['person'])
-            ->setCompany($this->recipient['company'])->setStreet($this->recipient['street'])
-            ->setNumber($this->recipient['number'] ?? null)->setNumberSuffix($this->recipient['number_suffix'] ?? null)
+        $this->consignment->setCountry($this->recipient['cc'])
+            ->setPerson($this->recipient['person'])
+            ->setCompany($this->recipient['company'])
+            ->setStreet($this->recipient['street'])
+            ->setNumber($this->recipient['number'] ?? null)
+            ->setNumberSuffix($this->recipient['number_suffix'] ?? null)
             ->setStreetAdditionalInfo($this->recipient['street_additional_info'] ?? null)
-            ->setPostalCode($this->recipient['postal_code'])->setCity($this->recipient['city'])
-            ->setEmail($this->recipient['email'])->setPhone($this->recipient['phone']);
+            ->setPostalCode($this->recipient['postal_code'])
+            ->setCity($this->recipient['city'])
+            ->setEmail($this->recipient['email'])
+            ->setPhone($this->recipient['phone']);
     }
 
     /**
@@ -370,9 +378,12 @@ class WCMP_Export_Consignments
 
         $pickupLocation = $this->deliveryOptions->getPickupLocation();
 
-        $this->consignment->setPickupCountry($pickupLocation->getCountry())->setPickupCity($pickupLocation->getCity())
-            ->setPickupLocationName($pickupLocation->getLocationName())->setPickupStreet($pickupLocation->getStreet())
-            ->setPickupNumber($pickupLocation->getNumber())->setPickupPostalCode($pickupLocation->getPostalCode())
+        $this->consignment->setPickupCountry($pickupLocation->getCountry())
+            ->setPickupCity($pickupLocation->getCity())
+            ->setPickupLocationName($pickupLocation->getLocationName())
+            ->setPickupStreet($pickupLocation->getStreet())
+            ->setPickupNumber($pickupLocation->getNumber())
+            ->setPickupPostalCode($pickupLocation->getPostalCode())
             ->setPickupLocationCode($pickupLocation->getLocationCode());
     }
 
@@ -383,10 +394,14 @@ class WCMP_Export_Consignments
      */
     private function setShipmentOptions()
     {
-        $this->consignment->setSignature($this->getSignature())->setOnlyRecipient($this->getOnlyRecipient())
-            ->setInsurance($this->getInsurance())->setAgeCheck($this->getAgeCheck())
-            ->setLargeFormat($this->getLargeFormat())->setContents($this->getContents())
-            ->setInvoice($this->order->get_id())->setReturn($this->getReturnShipment());
+        $this->consignment->setSignature($this->getSignature())
+            ->setOnlyRecipient($this->getOnlyRecipient())
+            ->setInsurance($this->getInsurance())
+            ->setAgeCheck($this->getAgeCheck())
+            ->setLargeFormat($this->getLargeFormat())
+            ->setContents($this->getContents())
+            ->setInvoice($this->order->get_id())
+            ->setReturn($this->getReturnShipment());
     }
 
     /**
@@ -415,10 +430,11 @@ class WCMP_Export_Consignments
 
     private function setBaseData(): void
     {
-        $this->consignment->setApiKey($this->apiKey)->setReferenceId((string) $this->order->get_id())
+        $this->consignment->setApiKey($this->apiKey)
+            ->setReferenceId((string) $this->order->get_id())
             ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
-            ->setLabelDescription($this->getLabelDescription())->setPackageType(WCMP(
-            )->export->getPackageTypeForOrder($this->order->get_id())
+            ->setLabelDescription($this->getLabelDescription())
+            ->setPackageType(WCMP()->export->getPackageTypeForOrder($this->order->get_id())
             );
     }
 
