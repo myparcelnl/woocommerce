@@ -153,7 +153,7 @@ class WCMP_API extends WCMP_Rest
         $collection = MyParcelCollection::findMany($shipment_ids, $this->key);
 
         /**
-         * @see https://github.com/myparcelnl/sdk#label-format-and-position
+         * @see https://github.com/MyParcelNL/Sdk#label-format-and-position
          */
         if (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_LABEL_FORMAT) === "A6") {
             $positions = false;
@@ -161,12 +161,17 @@ class WCMP_API extends WCMP_Rest
 
         if ($display) {
             $collection->setPdfOfLabels($positions);
+            WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
             $this->updateOrderBarcode($order_ids, $collection);
             $collection->downloadPdfOfLabels($display);
-        } else {
+        }
+
+        if (! $display) {
             $collection->setLinkOfLabels($positions);
+            WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
             $this->updateOrderBarcode($order_ids, $collection);
             echo $collection->getLinkOfLabels();
+            die();
         }
     }
 
