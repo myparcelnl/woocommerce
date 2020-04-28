@@ -24,7 +24,7 @@ class WCMP_Data
     public const CARRIERS_HUMAN = [
         DPDConsignment::CARRIER_NAME    => 'DPD',
         BpostConsignment::CARRIER_NAME  => 'bpost',
-        PostNLConsignment::CARRIER_NAME => 'PostNL',
+//        PostNLConsignment::CARRIER_NAME => 'PostNL',
     ];
 
     public const HAS_MULTI_COLLO = false;
