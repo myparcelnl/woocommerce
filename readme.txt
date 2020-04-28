@@ -88,6 +88,9 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.0.6 (2020-04-29) =
+* Hotfix: Export and print orders
+
 = 4.0.6 (2020-04-28) =
 * Fix: Add delivery day option
 * Fix: remove option keep old shipments
