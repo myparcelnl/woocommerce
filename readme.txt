@@ -4,7 +4,7 @@ Tags: woocommerce, export, myparcel Belgium
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 5.3.1
 Stable tag: trunk
-Requires PHP: 5.6
+Requires PHP: 7.0
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -87,6 +87,12 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 5. MyParcel BE information on the order details page
 
 == Changelog ==
+
+= 4.0.6 (2020-04-28) =
+* Fix: Add delivery day option
+* Fix: remove option keep old shipments
+* Fix: set default weight to 1kg World Shipments
+* Fix: add shipments ids for bulk export
 
 = 4.0.5 (2020-02-25) =
 * Fix: Change path for the carrier images
