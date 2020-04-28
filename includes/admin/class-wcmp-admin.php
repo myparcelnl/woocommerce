@@ -887,13 +887,15 @@ class WCMP_Admin
 
     /**
      * @param array $shipment
+     * @param int $order_id
      */
     public static function renderStatus(array $shipment, $order_id): void
     {
         echo $shipment["status"] ?? "–";
 
-        if (strstr($shipment['status'], 'behandeling')) {
+        if (strstr($shipment['status'], 'afgeleverd')) {
             $order = WCX::get_order($order_id);
+            $order->update_status('wc-custom-delivered');
         }
     }
 }
