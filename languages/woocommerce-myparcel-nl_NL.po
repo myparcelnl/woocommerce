@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-06 08:36+0000\n"
-"PO-Revision-Date: 2020-03-06 09:04+0000\n"
-"Last-Translator: admin <robin.delaater+local@myparcel.nl>\n"
+"POT-Creation-Date: 2020-04-28 12:34+0000\n"
+"PO-Revision-Date: 2020-04-28 12:35+0000\n"
+"Last-Translator: \n"
 "Language-Team: Nederlands\n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.3.1; wp-5.2.3"
+"X-Loco-Version: 2.3.3; wp-5.4"
 
 #: woocommerce-myparcel.php:234
 #, php-format
@@ -1570,3 +1570,6 @@ msgstr "https://myparcel.nl/"
 #. Author of the plugin
 msgid "Richard Perdaan"
 msgstr "Richard Perdaan"
+
+msgid "Delivered"
+msgstr "Afgeleverd"
