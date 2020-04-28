@@ -235,14 +235,14 @@ class WCMP_Admin
         if ('shop_order' == $post_type) {
             ?>
             <script type="text/javascript">
-            jQuery(document).ready(function() {
-                <?php foreach ($bulk_actions as $action => $title) { ?>
-              jQuery('<option>')
-                .val('<?php echo $action; ?>')
-                .html('<?php echo esc_attr($title); ?>')
-                .appendTo('select[name=\'action\'], select[name=\'action2\']');
-                <?php }    ?>
-            });
+                jQuery(document).ready(function() {
+                    <?php foreach ($bulk_actions as $action => $title) { ?>
+                  jQuery('<option>')
+                    .val('<?php echo $action; ?>')
+                    .html('<?php echo esc_attr($title); ?>')
+                    .appendTo('select[name=\'action\'], select[name=\'action2\']');
+                    <?php }    ?>
+                });
             </script>
             <?php
             self::renderSpinner();
