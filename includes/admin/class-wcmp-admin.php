@@ -289,8 +289,7 @@ class WCMP_Admin
                         alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
                         class="wcmp__offset-dialog__icon" />
                     <div>
-                        <a
-                            href="#" class="wcmp__action wcmp__offset-dialog__button button">
+                        <a href="#" class="wcmp__action wcmp__offset-dialog__button button">
                             <?php _e("Print", "woocommerce-myparcel"); ?><?php WCMP_Admin::renderSpinner(); ?>
                         </a>
                     </div>
@@ -380,10 +379,8 @@ class WCMP_Admin
      *
      * @return array
      */
-    public static function get_order_shipments(
-        WC_Order $order,
-        bool $exclude_concepts = false
-    ): array {
+    public static function get_order_shipments(WC_Order $order, bool $exclude_concepts = false): array
+    {
         $consignments = WCX_Order::get_meta($order, self::META_SHIPMENTS);
 
         // fallback to legacy consignment data (v1.X)
@@ -501,8 +498,7 @@ class WCMP_Admin
         $this->showOrderActions($order);
         echo '</div>';
 
-        $downloadDisplay = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY
-            ) === 'display';
+        $downloadDisplay = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
         $consignments    = WCMP_Admin::get_order_shipments($order);
 
         // show shipments if available
@@ -725,10 +721,8 @@ class WCMP_Admin
      * @throws \Exception
      * @see \WCMP_Checkout::save_delivery_options
      */
-    public static function getDeliveryOptionsFromOrder(
-        WC_Order $order,
-        array $inputData = []
-    ): DeliveryOptions {
+    public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptions
+    {
         $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
 
         // $meta is a json string, create an instance
@@ -788,10 +782,8 @@ class WCMP_Admin
      * @param string $state
      * @param array  $args
      */
-    public static function renderSpinner(
-        string $state = "",
-        array $args = []
-    ): void {
+    public static function renderSpinner(string $state = "", array $args = []): void
+    {
         $spinners = [
             "loading" => get_site_url() . "/wp-admin/images/spinner.gif",
             "success" => get_site_url() . "/wp-admin/images/yes.png",
@@ -833,12 +825,8 @@ class WCMP_Admin
      * @param string $icon
      * @param array  $rawAttributes
      */
-    public static function renderAction(
-        string $url,
-        string $alt,
-        string $icon,
-        array $rawAttributes = []
-    ): void {
+    public static function renderAction(string $url, string $alt, string $icon, array $rawAttributes = []): void
+    {
         printf(
             '<a href="%1$s" 
                     class="button tips wcmp__action wcmp__d--flex" 
@@ -861,10 +849,8 @@ class WCMP_Admin
      *
      * @throws Exception
      */
-    public static function renderTrackTraceLink(
-        array $shipment,
-        int $order_id
-    ): void {
+    public static function renderTrackTraceLink(array $shipment, int $order_id): void
+    {
         $track_trace = $shipment["track_trace"] ?? null;
 
         if ($track_trace) {
@@ -888,10 +874,8 @@ class WCMP_Admin
      * @param array $shipment
      * @param int   $order_id
      */
-    public static function renderStatus(
-        array $shipment,
-        int $order_id
-    ): void {
+    public static function renderStatus(array $shipment, int $order_id): void
+    {
         echo $shipment["status"] ?? "–";
 
         if (strstr($shipment['status'], 'afgeleverd')) {
