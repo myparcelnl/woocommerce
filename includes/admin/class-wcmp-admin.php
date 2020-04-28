@@ -887,10 +887,12 @@ class WCMP_Admin
 
     /**
      * @param array $shipment
-     * @param int $order_id
+     * @param int   $order_id
      */
-    public static function renderStatus(array $shipment, $order_id): void
-    {
+    public static function renderStatus(
+        array $shipment,
+        int $order_id
+    ): void {
         echo $shipment["status"] ?? "–";
 
         if (strstr($shipment['status'], 'afgeleverd')) {
