@@ -18,8 +18,8 @@
   },
   "homepage": "https://github.com/myparcel/woocommerce#readme",
   "devDependencies": {
-    "@myparcel/eslint-config": "^1.0.2",
-    "autoprefixer": "^9.6.5",
+    "@myparcel/eslint-config": "^1.2.3",
+    "autoprefixer": "^9.7.6",
     "husky": "^3.1.0",
     "postcss-cli": "^6.1.3"
   },
