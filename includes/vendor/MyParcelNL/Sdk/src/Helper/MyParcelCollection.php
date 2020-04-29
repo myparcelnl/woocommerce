@@ -443,9 +443,8 @@ class MyParcelCollection extends Collection
                     MyParcelRequest::REQUEST_HEADER_RETRIEVE_LABEL_LINK
                 )
                 ->sendRequest('GET', $test);
-            $testURL = $request->getResult('data')['pdf']['url'];
-            $this->label_link = MyParcelRequest::REQUEST_URL . $testURL;
-            //$this->label_link = MyParcelRequest::REQUEST_URL . $request->getResult('data.pdfs.url');
+
+            $this->label_link = MyParcelRequest::REQUEST_URL . $request->getResult('data.pdfs.url');
 
         }
 

@@ -171,6 +171,19 @@ class WCMP_API extends WCMP_Rest
             $collection->setLinkOfLabels($positions);
             WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
             $this->updateOrderBarcode($order_ids, $collection);
+
+//            sleep(2);
+
+//            $ch = curl_init($collection->getLinkOfLabels());
+
+//            curl_setopt($ch, CURLOPT_NOBODY, true);
+//            curl_exec($ch);
+//            $retcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+////            var_dump($retcode);
+////            sddsdxit("\n|-------------\n" . __FILE__ . ':' . __LINE__ . "\n|-------------\n");
+//            // $retcode >= 400 -> not found, $retcode = 200, found.
+////            curl_close($ch);
+//sleep(3);
             echo $collection->getLinkOfLabels();
             die();
         }
