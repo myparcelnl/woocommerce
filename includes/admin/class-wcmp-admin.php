@@ -110,9 +110,10 @@ class WCMP_Admin
      *
      * @return array
      */
-    public function displayDeliveredPostStatus($order_statuses)
+    public function displayDeliveredPostStatus( $order_statuses ): array
     {
         $new_order_statuses = [];
+
         foreach ($order_statuses as $key => $status) {
             $new_order_statuses[$key] = $status;
 
