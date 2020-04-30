@@ -51,7 +51,7 @@ if (! count($shipments)) {
           <?php WCMP_Admin::renderTrackTraceLink($shipment, $order_id); ?>
       </td>
       <td class="wcmp__order__status">
-          <?php WCMP_Admin::renderStatus($shipment) ?>
+          <?php WCMP_Admin::renderStatus($shipment, $order_id) ?>
       </td>
       <td class="wcmp__td--create-label">
           <?php
