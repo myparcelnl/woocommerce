@@ -163,7 +163,7 @@ class WCMP_Admin
             ?>
             <div class="wcmp__shipment-summary">
                 <?php $this->showDeliveryOptionsForOrder($order); ?>
-                <a class="wcmp__shipment-summary__show">
+                <a class = "wcmp__shipment-summary__show">
                     <span
                         class="wcmp__encircle wcmp__shipment-summary__show">i
                     </span>
