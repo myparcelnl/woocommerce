@@ -164,17 +164,17 @@ class WCMP_Admin
             ?>
             <div class="wcmp__shipment-summary">
                 <?php $this->showDeliveryOptionsForOrder($order); ?>
-                <a class="wcmp__shipment-summary__show">
+                <a class = "wcmp__shipment-summary__show">
                     <span
-                        class="wcmp__encircle wcmp__shipment-summary__show">i
+                        class = "wcmp__encircle wcmp__shipment-summary__show">i
                     </span>
                 </a>
                 <div
-                    class="wcmp__box wcmp__shipment-summary__list"
-                    data-loaded=""
+                    class = "wcmp__box wcmp__shipment-summary__list"
+                    data-loaded = ""
                     data-shipment_id="<?php echo $last_shipment_id; ?>"
-                    data-order_id="<?php echo $order_id; ?>"
-                    style="display: none;">
+                    data-order_id = "<?php echo $order_id; ?>"
+                    style = "display: none;">
                     <?php self::renderSpinner(); ?>
                 </div>
             </div>
