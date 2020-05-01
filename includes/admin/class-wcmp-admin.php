@@ -172,7 +172,7 @@ class WCMP_Admin
                 <div
                     class = "wcmp__box wcmp__shipment-summary__list"
                     data-loaded = ""
-                    data-shipment_id="<?php echo $last_shipment_id; ?>"
+                    data-shipment_id = "<?php echo $last_shipment_id; ?>"
                     data-order_id = "<?php echo $order_id; ?>"
                     style = "display: none;">
                     <?php self::renderSpinner(); ?>
