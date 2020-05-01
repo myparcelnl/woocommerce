@@ -34,6 +34,8 @@ class WCMP_Admin
     public const META_HS_CODE                = "_myparcel_hs_code";
     public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
 
+    public const ORDER_STATUS_DELIVERED      = "afgeleverd";
+
     public const SHIPMENT_OPTIONS_FORM_NAME = "myparcel_options";
 
     public const BULK_ACTION_EXPORT       = "wcmp_export";
@@ -106,11 +108,11 @@ class WCMP_Admin
     }
 
     /**
-     * @param $order_statuses
+     * @param array $order_statuses
      *
      * @return array
      */
-    public function displayDeliveredPostStatus( $order_statuses ): array
+    public function displayDeliveredPostStatus(array $order_statuses): array
     {
         $new_order_statuses = [];
 
@@ -124,7 +126,6 @@ class WCMP_Admin
 
         return $new_order_statuses;
     }
-
 
     /**
      * @param $orderId
@@ -646,7 +647,7 @@ class WCMP_Admin
                 'label'       => __('Country of Origin', 'woocommerce-myparcel'),
                 'description' => sprintf(
                     __('Country of origin is required for world shipments. Defaults to shop base.')
-                ),
+                )
             ]
         );
         echo '</div>';
@@ -894,7 +895,7 @@ class WCMP_Admin
     {
         echo $shipment["status"] ?? "–";
 
-        if (strstr($shipment['status'], 'afgeleverd')) {
+        if (strstr($shipment['status'], self::ORDER_STATUS_DELIVERED)) {
             $order = WCX::get_order($order_id);
             $order->update_status('wc-custom-delivered');
         }
