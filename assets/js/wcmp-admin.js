@@ -693,20 +693,60 @@ jQuery(function($) {
    *
    */
   function openPdf(pdfUrl, waitForOnload) {
-    var pdfWindow = window.open(pdfUrl, '_blank');
 
-    if (waitForOnload) {
-      /*
-       * When the pdf window is loaded reload the main window. If we reload earlier the track & trace code won't be
-       * ready yet and can't be shown.
-       */
-      pdfWindow.onload = function() {
-        window.location.reload();
-      };
-    } else {
-      /* For when there is no onload event or there is no need to wait. */
-      window.location.reload();
-    }
+
+    console.log(pdfUrl);
+
+    fileExists(pdfUrl);
+
+
+    console.log('hallo hier kom ik in');
+    // throw new Error("Something went badly wrong!");
+
+    // if (waitForOnload) {
+    //   /*
+    //    * When the pdf window is loaded reload the main window. If we reload earlier the track & trace code won't be
+    //    * ready yet and can't be shown.
+    //    */
+    //   pdfWindow.onload = function() {
+    //     window.location.reload();
+    //   };
+    // } else {
+    //   /* For when there is no onload event or there is no need to wait. */
+    //   window.location.reload();
+    // }
+  }
+
+  function fileExists(pdfUrl) {
+    console.log('fileExists');
+    $.ajax({
+      type: 'GET',
+      url: pdfUrl,
+      success: function(response) {
+        console.log('success');
+        console.log(response);
+        window.open(pdfUrl, '_blank');
+      },
+      error: function (xhr){
+        if(xhr.status === 404) {
+          console.log('error');
+
+          checkLabel(pdfUrl);
+        }
+      }
+    });
+  }
+
+  function checkLabel(pdfUrl) {
+
+    console.log("pdfUrl before timeout");
+    console.log(pdfUrl);
+
+    setTimeout(function () {
+      console.log("pdfUrl after timeout");
+      fileExists(pdfUrl);
+    }, 3000);
+
   }
 
   /**

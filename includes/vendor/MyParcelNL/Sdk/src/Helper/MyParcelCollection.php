@@ -429,9 +429,9 @@ class MyParcelCollection extends Collection
 
         $conceptIds = $this->getConsignmentIds($key);
 
-        $test = MyParcelRequest::REQUEST_TYPE_RETRIEVE_LABEL;
+        $requestType = MyParcelRequest::REQUEST_TYPE_RETRIEVE_LABEL;
         if ($this->useShipmentV2(count($conceptIds))) {
-            $test = MyParcelRequest::REQUEST_TYPE_SETUP_LABEL;
+            $requestType = MyParcelRequest::REQUEST_TYPE_SETUP_LABEL;
         }
 
         if ($key) {
@@ -442,9 +442,12 @@ class MyParcelCollection extends Collection
                     implode(';', $conceptIds) . '/' . $this->getRequestBody(),
                     MyParcelRequest::REQUEST_HEADER_RETRIEVE_LABEL_LINK
                 )
-                ->sendRequest('GET', $test);
+                ->sendRequest('GET', $requestType);
 
-            $this->label_link = MyParcelRequest::REQUEST_URL . $request->getResult('data.pdfs.url');
+            $testURL = $request->getResult('data')['pdf']['url'];
+            $this->label_link = MyParcelRequest::REQUEST_URL . $testURL;
+
+//            $this->label_link = MyParcelRequest::REQUEST_URL . $request->getResult('data.pdfs.url');
 
         }
 
@@ -475,9 +478,9 @@ class MyParcelCollection extends Collection
             ->setLabelFormat($positions);
         $conceptIds = $this->getConsignmentIds($key);
 
-        $test = MyParcelRequest::REQUEST_TYPE_RETRIEVE_LABEL;
+        $requestType = MyParcelRequest::REQUEST_TYPE_RETRIEVE_LABEL;
         if ($this->useShipmentV2(count($conceptIds))) {
-            $test = MyParcelRequest::REQUEST_TYPE_SETUP_LABEL;
+            $requestType = MyParcelRequest::REQUEST_TYPE_SETUP_LABEL;
         }
 
         if ($key) {
@@ -488,7 +491,7 @@ class MyParcelCollection extends Collection
                     implode(';', $conceptIds) . '/' . $this->getRequestBody(),
                     MyParcelRequest::REQUEST_HEADER_RETRIEVE_LABEL_PDF
                 )
-                ->sendRequest('GET', $test);
+                ->sendRequest('GET', $requestType);
 
             $this->label_pdf = $request->getResult();
         }

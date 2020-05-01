@@ -40,7 +40,7 @@ class MyParcelRequest
     const REQUEST_TYPE_SETUP_LABEL          = 'v2/shipment_labels';
     const REQUEST_TYPE_RETRIEVE_V2_LABEL    = 'pdfs';
 
-    const SHIPMENT_V2_ACTIVE_FROM = 2;
+    const SHIPMENT_V2_ACTIVE_FROM = 25;
 
     /**
      * API headers
