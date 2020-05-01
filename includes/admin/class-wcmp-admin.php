@@ -169,7 +169,7 @@ class WCMP_Admin
                     </span>
                 </a>
                 <div
-                    class="wcmp__box wcmp__shipment-summary__list"
+                    class = "wcmp__box wcmp__shipment-summary__list"
                     data-loaded = ""
                     data-shipment_id="<?php echo $last_shipment_id; ?>"
                     data-order_id="<?php echo $order_id; ?>"
