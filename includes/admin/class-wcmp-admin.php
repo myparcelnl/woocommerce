@@ -173,7 +173,7 @@ class WCMP_Admin
                     data-loaded = ""
                     data-shipment_id="<?php echo $last_shipment_id; ?>"
                     data-order_id = "<?php echo $order_id; ?>"
-                    style="display: none;">
+                    style = "display: none;">
                     <?php self::renderSpinner(); ?>
                 </div>
             </div>
