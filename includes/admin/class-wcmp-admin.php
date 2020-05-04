@@ -149,7 +149,7 @@ class WCMP_Admin
      */
     public function showMyParcelSettings(WC_Order $order): void
     {
-        if (!WCMP_Country_Codes::isAllowedDestination(
+        if (! WCMP_Country_Codes::isAllowedDestination(
             WCX_Order::get_prop($order, 'shipping_country')
         )) {
             return;
