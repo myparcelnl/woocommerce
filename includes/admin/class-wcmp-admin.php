@@ -20,29 +20,29 @@ if (class_exists('WCMP_Admin')) {
  */
 class WCMP_Admin
 {
-    public const META_CONSIGNMENTS = "_myparcel_consignments";
-    public const META_CONSIGNMENT_ID = "_myparcel_consignment_id";
-    public const META_DELIVERY_OPTIONS = "_myparcel_delivery_options";
+    public const META_CONSIGNMENTS           = "_myparcel_consignments";
+    public const META_CONSIGNMENT_ID         = "_myparcel_consignment_id";
+    public const META_DELIVERY_OPTIONS       = "_myparcel_delivery_options";
     public const META_HIGHEST_SHIPPING_CLASS = "_myparcel_highest_shipping_class";
-    public const META_LAST_SHIPMENT_IDS = "_myparcel_last_shipment_ids";
-    public const META_ORDER_VERSION = "_myparcel_order_version";
-    public const META_ORDER_WEIGHT = "_myparcel_order_weight";
-    public const META_PGADDRESS = "_myparcel_pgaddress";
-    public const META_SHIPMENTS = "_myparcel_shipments";
+    public const META_LAST_SHIPMENT_IDS      = "_myparcel_last_shipment_ids";
+    public const META_ORDER_VERSION          = "_myparcel_order_version";
+    public const META_ORDER_WEIGHT           = "_myparcel_order_weight";
+    public const META_PGADDRESS              = "_myparcel_pgaddress";
+    public const META_SHIPMENTS              = "_myparcel_shipments";
     public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcel_shipment_options_extra";
-    public const META_TRACK_TRACE = "_myparcel_tracktrace";
-    public const META_HS_CODE = "_myparcel_hs_code";
-    public const META_COUNTRY_OF_ORIGIN = "_myparcel_country_of_origin";
+    public const META_TRACK_TRACE            = "_myparcel_tracktrace";
+    public const META_HS_CODE                = "_myparcel_hs_code";
+    public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
 
     // Id's refering to shipment statuses
-    public const ORDER_STATUS_DELIVERED_AT_RECIPIENT = 7;
-    public const ORDER_STATUS_DELIVERED_READY_FOR_PICKUP = 8;
+    public const ORDER_STATUS_DELIVERED_AT_RECIPIENT      = 7;
+    public const ORDER_STATUS_DELIVERED_READY_FOR_PICKUP  = 8;
     public const ORDER_STATUS_DELIVERED_PACKAGE_PICKED_UP = 9;
 
     public const SHIPMENT_OPTIONS_FORM_NAME = "myparcel_options";
 
-    public const BULK_ACTION_EXPORT = "wcmp_export";
-    public const BULK_ACTION_PRINT = "wcmp_print";
+    public const BULK_ACTION_EXPORT       = "wcmp_export";
+    public const BULK_ACTION_PRINT        = "wcmp_print";
     public const BULK_ACTION_EXPORT_PRINT = "wcmp_export_print";
 
     public function __construct()
