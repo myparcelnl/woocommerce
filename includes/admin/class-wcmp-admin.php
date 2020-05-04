@@ -159,7 +159,7 @@ class WCMP_Admin
         $consignments = WCMP_Admin::get_order_shipments($order);
 
         // if we have shipments, then we show status & link to Track & Trace, settings under i
-        if (!empty($consignments)) :
+        if (! empty($consignments)) :
             // only use last shipment
             $last_shipment = array_pop($consignments);
             $last_shipment_id = $last_shipment['shipment_id'];
