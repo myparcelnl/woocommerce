@@ -501,7 +501,7 @@ class WCMP_Admin
         // get order
         $order = WCX::get_order($post_id);
 
-        if (!$order) {
+        if (! $order) {
             return;
         }
 
