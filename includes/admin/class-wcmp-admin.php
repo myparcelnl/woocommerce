@@ -508,7 +508,7 @@ class WCMP_Admin
         $order_id = WCX_Order::get_id($order);
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-        if (!WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
+        if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
             return;
         }
 
