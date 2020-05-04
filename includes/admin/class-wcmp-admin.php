@@ -34,7 +34,9 @@ class WCMP_Admin
     public const META_HS_CODE                = "_myparcel_hs_code";
     public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
 
-    public const ORDER_STATUS_DELIVERED      = "afgeleverd";
+    public const ORDER_STATUS_DELIVERED_AT_RECIPIENT        = 7;
+    public const ORDER_STATUS_DELIVERED_READY_FOR_PICKUP    = 8;
+    public const ORDER_STATUS_DELIVERED_PACKAGE_PICKED_UP   = 9;
 
     public const SHIPMENT_OPTIONS_FORM_NAME = "myparcel_options";
 
@@ -895,7 +897,9 @@ class WCMP_Admin
     {
         echo $shipment["status"] ?? "–";
 
-        if (strstr($shipment['status'], self::ORDER_STATUS_DELIVERED)) {
+        if (strstr($shipment['status'], (new WCMP_Export())->getShipmentStatusName(self::ORDER_STATUS_DELIVERED_AT_RECIPIENT))
+        || strstr($shipment['status'], (new WCMP_Export())->getShipmentStatusName(self::ORDER_STATUS_DELIVERED_READY_FOR_PICKUP))
+        || strstr($shipment['status'], (new WCMP_Export())->getShipmentStatusName(self::ORDER_STATUS_DELIVERED_PACKAGE_PICKED_UP))) {
             $order = WCX::get_order($order_id);
             $order->update_status('wc-custom-delivered');
         }
