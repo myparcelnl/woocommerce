@@ -311,7 +311,7 @@ class MyParcelCollection extends Collection
      */
     public function useShipmentV2($numberOfOrders)
     {
-        return $numberOfOrders > MyParcelRequest::SHIPMENT_V2_ACTIVE_FROM ? true : false;
+        return $numberOfOrders > MyParcelRequest::SHIPMENT_V2_ACTIVE_FROM;
     }
 
     /**
