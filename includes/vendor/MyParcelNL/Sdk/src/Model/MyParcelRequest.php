@@ -248,6 +248,7 @@ class MyParcelRequest
     private function getRequestUrl($uri)
     {
         $url = self::REQUEST_URL . '/' . $uri;
+
         return $url;
     }
 

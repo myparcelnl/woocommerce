@@ -74,6 +74,9 @@ class MyParcelCollection extends Collection
      */
     private $user_agent = '';
 
+    /**
+     * @var bool
+     */
     private $use_v2_endpoint = false;
 
     /**
@@ -305,14 +308,15 @@ class MyParcelCollection extends Collection
     /**
      * Shipment v2 endpoint active from x number of orders
      *
-     * @param $numberOfOrders
+     * @param int $numberOfOrders
      *
      * @return bool
      */
-    public function useShipmentV2($numberOfOrders)
+    public function useShipmentV2(int $numberOfOrders): bool
     {
         return $numberOfOrders > MyParcelRequest::SHIPMENT_V2_ACTIVE_FROM;
     }
+
 
     /**
      * Delete concepts in MyParcel
