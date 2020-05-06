@@ -365,11 +365,15 @@ jQuery(function ($) {
       }
     );
 
-    $(rows.join(', ')).addClass('wcmp__loading');
+    $(rows.join(',')).addClass('wcmp__loading');
 
     if (!order_ids.length) {
       alert(wcmp.strings.no_orders_selected);
       return;
+    } else {
+      var button = this;
+      $(button).prop('disabled', true);
+      $('.wcmp__spinner--bulk > .wcmp__spinner__loading').show();
     }
 
     switch (action) {
@@ -405,9 +409,13 @@ jQuery(function ($) {
    */
   function doRequest(request) {
     var button = this;
-
     $(button).prop('disabled', true);
-    setSpinner(button, spinner.loading);
+
+    if (request.data.order_ids) {
+      $('.wcmp__spinner--bulkAction > .wcmp__spinner__loading').show();
+    } else {
+      setSpinner(button, spinner.loading);
+    }
 
     if (!request.url) {
       request.url = wcmp.ajax_url;
@@ -712,6 +720,7 @@ jQuery(function ($) {
         window.location.reload();
       }
     }
+    $('.wcmp__spinner--bulkAction > .wcmp__spinner__loading').hide();
   }
 
   function fileExists(pdfUrl) {
@@ -733,7 +742,6 @@ jQuery(function ($) {
     setTimeout(function () {
       fileExists(pdfUrl);
     }, 3000);
-
   }
 
   /**

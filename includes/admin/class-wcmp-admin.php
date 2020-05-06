@@ -170,6 +170,8 @@ class WCMP_Admin
             ]
         );
 
+        self::renderSpinner('bulkAction');
+
         return $actions;
     }
 
@@ -603,7 +605,7 @@ class WCMP_Admin
             if (! empty($countryOfOrigin)) {
                 WCX_Product::update_meta_data($product, self::META_HS_CODE, esc_attr($countryOfOrigin));
                 return;
-            } 
+            }
             if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && empty($countryOfOrigin)) {
                 WCX_Product::delete_meta_data($product, self::META_COUNTRY_OF_ORIGIN);
             }
