@@ -289,6 +289,7 @@ class MyParcelCollection extends Collection
                     MyParcelRequest::REQUEST_HEADER_SHIPMENT
                 )
                 ->sendRequest();
+
             /**
              * Loop through the returned ids and add each consignment id to a consignment.
              */
@@ -315,7 +316,6 @@ class MyParcelCollection extends Collection
     {
         return $numberOfOrders > MyParcelRequest::SHIPMENT_V2_ACTIVE_FROM;
     }
-
 
     /**
      * Delete concepts in MyParcel
@@ -440,6 +440,7 @@ class MyParcelCollection extends Collection
             $requestType           = MyParcelRequest::REQUEST_TYPE_SETUP_LABEL;
             $this->use_v2_endpoint = true;
         }
+
         if ($key) {
             $request = (new MyParcelRequest())
                 ->setUserAgent($this->getUserAgent())
@@ -478,6 +479,7 @@ class MyParcelCollection extends Collection
      */
     public function setPdfOfLabels($positions = self::DEFAULT_A4_POSITION)
     {
+        /** If $positions is not false, set paper size to A4 */
         $this
             ->createConcepts()
             ->setLabelFormat($positions);
