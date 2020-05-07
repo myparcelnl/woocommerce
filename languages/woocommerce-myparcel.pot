@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-06 08:36+0000\n"
+"POT-Creation-Date: 2020-04-28 12:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -1466,4 +1466,7 @@ msgstr ""
 
 #. Author of the plugin
 msgid "Richard Perdaan"
+msgstr ""
+
+msgid "Delivered"
 msgstr ""
