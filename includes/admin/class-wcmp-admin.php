@@ -226,8 +226,8 @@ class WCMP_Admin
         $actions = array_merge(
             $actions,
             [
-                self::BULK_ACTION_EXPORT => __("MyParcel: Export", "woocommerce-myparcel"),
-                self::BULK_ACTION_PRINT => __("MyParcel: Print", "woocommerce-myparcel"),
+                self::BULK_ACTION_EXPORT       => __("MyParcel: Export", "woocommerce-myparcel"),
+                self::BULK_ACTION_PRINT        => __("MyParcel: Print", "woocommerce-myparcel"),
                 self::BULK_ACTION_EXPORT_PRINT => __("MyParcel: Export & Print", "woocommerce-myparcel"),
             ]
         );
@@ -247,8 +247,8 @@ class WCMP_Admin
     {
         global $post_type;
         $bulk_actions = [
-            self::BULK_ACTION_EXPORT => __("MyParcel: Export", "woocommerce-myparcel"),
-            self::BULK_ACTION_PRINT => __("MyParcel: Print", "woocommerce-myparcel"),
+            self::BULK_ACTION_EXPORT       => __("MyParcel: Export", "woocommerce-myparcel"),
+            self::BULK_ACTION_PRINT        => __("MyParcel: Print", "woocommerce-myparcel"),
             self::BULK_ACTION_EXPORT_PRINT => __("MyParcel: Export & Print", "woocommerce-myparcel"),
         ];
 
@@ -282,15 +282,15 @@ class WCMP_Admin
         }
 
         $field = [
-            "name" => "offset",
-            "class" => ["wcmp__d--inline-block"],
-            "input_class" => ["wcmp__offset-dialog__offset"],
-            "type" => "number",
-            "label" => __("Labels to skip", "woocommerce-myparcel"),
+            "name"              => "offset",
+            "class"             => ["wcmp__d--inline-block"],
+            "input_class"       => ["wcmp__offset-dialog__offset"],
+            "type"              => "number",
+            "label"             => __("Labels to skip", "woocommerce-myparcel"),
             "custom_attributes" => [
                 "step" => "1",
-                "min" => "0",
-                "max" => "4",
+                "min"  => "0",
+                "max"  => "4",
                 "size" => "2",
             ],
         ];
@@ -341,10 +341,10 @@ class WCMP_Admin
 
         $order_id = WCX_Order::get_id($order);
 
-        $baseUrl = "admin-ajax.php?action=" . WCMP_Export::EXPORT;
+        $baseUrl      = "admin-ajax.php?action=" . WCMP_Export::EXPORT;
         $addShipments = WCMP_Export::ADD_SHIPMENTS;
-        $getLabels = WCMP_Export::GET_LABELS;
-        $addReturn = WCMP_Export::ADD_RETURN;
+        $getLabels    = WCMP_Export::GET_LABELS;
+        $addReturn    = WCMP_Export::ADD_RETURN;
 
         $listing_actions = [
             $addShipments => [
@@ -425,7 +425,7 @@ class WCMP_Admin
             }
         }
 
-        if (empty($consignments) || !is_array($consignments)) {
+        if (empty($consignments) || ! is_array($consignments)) {
             return [];
         }
 
@@ -646,11 +646,11 @@ class WCMP_Admin
         echo '<div class="options_group">';
         woocommerce_wp_text_input(
             [
-                'id' => self::META_COUNTRY_OF_ORIGIN,
-                'label' => __('Country of Origin', 'woocommerce-myparcel'),
+                'id'          => self::META_COUNTRY_OF_ORIGIN,
+                'label'       => __('Country of Origin', 'woocommerce-myparcel'),
                 'description' => sprintf(
                     __('Country of origin is required for world shipments. Defaults to shop base.')
-                )
+                ),
             ]
         );
         echo '</div>';
@@ -807,7 +807,7 @@ class WCMP_Admin
         $spinners = [
             "loading" => get_site_url() . "/wp-admin/images/spinner.gif",
             "success" => get_site_url() . "/wp-admin/images/yes.png",
-            "failed" => get_site_url() . "/wp-admin/images/no.png",
+            "failed"  => get_site_url() . "/wp-admin/images/no.png",
         ];
 
         $arguments = [];
