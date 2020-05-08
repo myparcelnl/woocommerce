@@ -392,11 +392,11 @@ class WooCommerce_MyParcel_Frontend {
             return false;
         }
 
-        $chosen_method = isset(WC()->session->chosen_shipping_methods[0]) ? WC()->session->chosen_shipping_methods[0] : '';
+        $chosen_method = WC()->session->get('chosen_shipping_methods')[0] ?? '';
 
         // get package
-        $packages = WC()->shipping->get_packages();
-        $package = current($packages);
+        $packages = WC()->cart->get_shipping_packages();
+        $package  = current($packages);
 
         $shipping_method = WooCommerce_MyParcel()->export->get_shipping_method($chosen_method);
         if (empty($shipping_method)) {

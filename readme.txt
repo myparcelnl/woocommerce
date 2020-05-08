@@ -91,8 +91,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.2.0 (2019-12-23) =
+= 3.2.1 (2020-02-04) =
+* Fix: The recursive delivery date loop and full cache
+
+= 3.2.0 (2020-01-27) =
 * Fix: Since November is it no longer possible to use pickup express.
+* Fix: Warning: invalid argument supplied .... class-wc-shipping-flat-rate.php.
 
 = 3.1.8 (2019-11-12) =
 * Fix: Check if there is connection with MyParcel
