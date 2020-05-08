@@ -232,6 +232,8 @@ class WCMP_Admin
             ]
         );
 
+        self::renderSpinner('bulkAction');
+
         return $actions;
     }
 

@@ -371,10 +371,6 @@ class WCMP_Export
             );
         }
 
-        if ($processDirectly) {
-            $this->getOrderLabels($orderIdsWithNewShipments, 0, "download");
-        }
-
         if (! empty($this->success)) {
             $return["success"]     = sprintf(
                 __("%s shipments successfully exported to MyParcel", "woocommerce-myparcel"),
