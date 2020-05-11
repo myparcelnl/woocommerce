@@ -411,7 +411,7 @@ jQuery(function ($) {
     var button = this;
     $(button).prop('disabled', true);
 
-    if (request.data.order_ids) {
+    if (typeof request.data !== 'undefined') {
       $('.wcmp__spinner--bulkAction > .wcmp__spinner__loading').show();
     } else {
       setSpinner(button, spinner.loading);
