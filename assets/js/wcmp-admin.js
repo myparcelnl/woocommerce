@@ -702,7 +702,7 @@ jQuery(function ($) {
    *
    */
   function openPdf(data, pdfUrl, waitForOnload) {
-    if (data['shipment_ids'].length > 25) {
+    if (data['shipment_ids'] && data['shipment_ids'].length > 25) {
       fileExists(pdfUrl);
     } else {
       var pdfWindow = window.open(pdfUrl, '_blank');
