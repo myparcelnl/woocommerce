@@ -790,12 +790,17 @@ class WCMP_Admin
                 "woocommerce-myparcel"
             );
 
-        printf(
-            '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
-            __("MyParcel shipment:", "woocommerce-myparcel"),
-            $string,
-            wc_format_datetime(new WC_DateTime($delivery_options->getDate()), 'l d-m')
-        );
+        // If show delivery day is enabled
+        $showDeliveryDay = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_SHOW_DELIVERY_DAY);
+
+        if ($showDeliveryDay) {
+            printf(
+                '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
+                __("MyParcel shipment:", "woocommerce-myparcel"),
+                $string,
+                wc_format_datetime(new WC_DateTime($delivery_options->getDate()), 'l d-m')
+            );
+        }
     }
 
     /**
