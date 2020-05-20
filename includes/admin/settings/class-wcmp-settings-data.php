@@ -69,11 +69,11 @@ class WCMP_Settings_Data
             true
         );
 
-//        $this->generate_settings(
-//            $this->get_sections_carrier_postnl(),
-//            WCMP_Settings::SETTINGS_POSTNL,
-//            true
-//        );
+        $this->generate_settings(
+            $this->get_sections_carrier_postnl(),
+            WCMP_Settings::SETTINGS_POSTNL,
+            true
+        );
     }
 
     public static function getTabs()
@@ -86,7 +86,7 @@ class WCMP_Settings_Data
 
         $array[WCMP_Settings::SETTINGS_BPOST]  = __("bpost", "woocommerce-myparcelbe");
         $array[WCMP_Settings::SETTINGS_DPD]    = __("DPD", "woocommerce-myparcelbe");
-//        $array[WCMP_Settings::SETTINGS_POSTNL] = __("PostNL", "woocommerce-myparcelbe");
+        $array[WCMP_Settings::SETTINGS_POSTNL] = __("PostNL", "woocommerce-myparcelbe");
 
         return $array;
     }
