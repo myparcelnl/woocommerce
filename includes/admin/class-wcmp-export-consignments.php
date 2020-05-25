@@ -119,6 +119,7 @@ class WCMP_Export_Consignments
 
     /**
      * @return void
+     * @throws ErrorException
      * @throws MissingFieldException
      */
     public function setCustomItems(): void
@@ -203,6 +204,14 @@ class WCMP_Export_Consignments
             $this->deliveryOptions->getShipmentOptions()->hasLargeFormat(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
         );
+    }
+
+    /**
+     * @return int
+     */
+    private function getContents(): int
+    {
+        return (int) ($this->getSetting("package_contents") ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
     }
 
     /**
@@ -301,7 +310,8 @@ class WCMP_Export_Consignments
             ->setSignature($this->getSignature())
             ->setInsurance($this->getInsurance())
             ->setOnlyRecipient($this->getOnlyRecipient())
-            ->setLargeFormat($this->getLargeFormat());
+            ->setLargeFormat($this->getLargeFormat())
+            ->setContents($this->getContents());
 
     }
 
@@ -323,6 +333,7 @@ class WCMP_Export_Consignments
     /**
      * Sets a customs declaration for the consignment if necessary.
      *
+     * @throws ErrorException
      * @throws MissingFieldException
      */
     private function setCustomsDeclaration()
