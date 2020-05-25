@@ -4,6 +4,7 @@ use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
 
 if (! defined('ABSPATH')) {
@@ -31,6 +32,7 @@ class WCMP_Admin
     public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcelbe_shipment_options_extra";
     public const META_TRACK_TRACE            = "_myparcelbe_tracktrace";
     public const META_HS_CODE                = "_myparcel_hs_code";
+    public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
 
     public const SHIPMENT_OPTIONS_FORM_NAME = "myparcelbe_options";
 
@@ -71,6 +73,10 @@ class WCMP_Admin
         // HS code in product shipping options tab
         add_action("woocommerce_product_options_shipping", [$this, "productHsCodeField"]);
         add_action("woocommerce_process_product_meta", [$this, "productHsCodeFieldSave"]);
+
+        // Country of Origin in product shipping options tab
+        add_action("woocommerce_product_options_shipping", [$this, "productCountryOfOriginField"]);
+        add_action("woocommerce_process_product_meta", [$this, "productCountryOfOriginFieldSave"]);
 
         // Add barcode in order grid
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
@@ -577,6 +583,37 @@ class WCMP_Admin
                 }
             }
         }
+    }
+
+    public function productCountryOfOriginField()
+    {
+        echo '<div class="options_group">';
+        woocommerce_wp_text_input(
+            [
+                'id'          => self::META_COUNTRY_OF_ORIGIN,
+                'label'       => __('Country of Origin', 'woocommerce-myparcelbe'),
+                'description' => sprintf(
+                    __('Country of origin is required for world shipments. Defaults to shop base.')
+                ),
+            ]
+        );
+        echo '</div>';
+    }
+
+    public function productCountryOfOriginFieldSave($postId)
+    {
+        if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && !is_array($_POST[self::META_COUNTRY_OF_ORIGIN])) {
+            $product = wc_get_product($postId);
+            $countryOfOrigin = $_POST[self::META_COUNTRY_OF_ORIGIN];
+            if (!empty($countryOfOrigin)) {
+                WCX_Product::update_meta_data($product, self::META_HS_CODE, esc_attr($countryOfOrigin));
+                return;
+            }
+            if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && empty($countryOfOrigin)) {
+                WCX_Product::delete_meta_data($product, self::META_COUNTRY_OF_ORIGIN);
+            }
+        }
+        return;
     }
 
     /**

@@ -73,7 +73,7 @@ $target_url = wp_nonce_url(
                         <td><?php echo WCMP_Export::get_item_display_name($item, $order) ?></td>
                         <td align="right">
                             <?php echo wc_format_weight(
-                                WCMP_Export::get_item_weight_kg($item, $order)
+                                WCMP_Export::getItemWeight_kg($item, $order)
                             ); ?>
                         </td>
                       </tr>
