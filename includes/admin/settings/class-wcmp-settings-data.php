@@ -855,6 +855,33 @@ class WCMP_Settings_Data
                     "woocommerce-myparcelbe"
                 ),
             ],
+            [
+                "name"      => WCMP_Settings::SETTING_HS_CODE,
+                "label"     => __("Default HS Code", "woocommerce-myparcelbe"),
+                "help_text" => __(
+                    "HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Dutch Customs.",
+                    "woocommerce-myparcelbe"
+                ),
+            ],
+            [
+                "name"    => WCMP_Settings::SETTING_PACKAGE_CONTENT,
+                "label"   => __("Customs shipment type", "woocommerce-myparcelbe"),
+                "type"    => "select",
+                "options" => [
+                    1 => __("Commercial goods", "woocommerce-myparcelbe"),
+                    2 => __("Commercial samples", "woocommerce-myparcelbe"),
+                    3 => __("Documents", "woocommerce-myparcelbe"),
+                    4 => __("Gifts", "woocommerce-myparcelbe"),
+                    5 => __("Return shipment", "woocommerce-myparcelbe"),
+                ],
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_COUNTRY_OF_ORIGIN,
+                "label"     => __("Default country of origin", "woocommerce-myparcelbe"),
+                "help-text" => __(
+                    "Country of origin is required for world shipments. Defaults to shop base or NL. Example: 'NL', 'BE', 'DE'", "woocommerce-myparcelbe"
+                ),
+            ],
         ];
     }
 
