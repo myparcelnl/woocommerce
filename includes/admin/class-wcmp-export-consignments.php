@@ -156,11 +156,31 @@ class WCMP_Export_Consignments
                             )
                         )
                         ->setCountry($country)
-                        ->setClassification($contents);
+                        ->setClassification($this->getHsCode($product));
 
                 $this->consignment->addItem($myParcelItem);
             }
         }
+    }
+
+    /**
+     * @param WC_Product $product
+     *
+     * @return int
+     * @throws \ErrorException
+     */
+    public function getHsCode(WC_Product $product): int
+    {
+        $defaultHsCode = $this->getSetting(WCMP_Settings::SETTING_HS_CODE);
+        $productHsCode = WCX_Product::get_meta($product, WCMP_Admin::META_HS_CODE, true);
+
+        $hsCode = $productHsCode ? $productHsCode : $defaultHsCode;
+
+        if (! $hsCode) {
+            throw new ErrorException(__("No HS code found in MyParcel settings", "woocommerce-myparcelbe"));
+        }
+
+        return (int) $hsCode;
     }
 
     /**
