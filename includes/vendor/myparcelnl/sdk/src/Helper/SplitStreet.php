@@ -18,8 +18,44 @@ use MyParcelNL\Sdk\src\Model\FullStreet;
 
 class SplitStreet
 {
-    const BOX_NL                        = 'bus';
-    const BOX_TRANSLATION_POSSIBILITIES = [' boîte', ' box', ' bte', ' Bus'];
+    const BOX_NL                 = 'bus';
+    const BOX_SEPARATOR          = [' boîte', ' box', ' bte', ' Bus'];
+    const BOX_SEPARATOR_BY_REGEX = ['\/'];
+
+    public const NUMBER_SUFFIX_ABBREVIATION = [
+        'apartment'  => '',
+        'gedempte'   => 'GED',
+        'groot'      => 'GRT',
+        'grote'      => 'GRT',
+        'greate'     => 'GRT',
+        'noordzijde' => 'NZ',
+        'oostzijde'  => 'OZ',
+        'zuidzijde'  => 'ZZ',
+        'westzijde'  => 'WZ',
+        'noord'      => 'N',
+        'oost'       => 'O',
+        'zuid'       => 'Z',
+        'west'       => 'W',
+        'hoog'       => 'HG',
+        'hoge'       => 'HG',
+        'hege'       => 'HG',
+        'kleine'     => 'KL',
+        'klein'      => 'KL',
+        'korte'      => 'K',
+        'kort'       => 'K',
+        'koarte'     => 'K',
+        'koart'      => 'K',
+        'kromme'     => 'KR',
+        'krom'       => 'KR',
+        'laag'       => 'LG',
+        'lage'       => 'LG',
+        'lege'       => 'LG',
+        'lange'      => 'L',
+        'lang'       => 'L',
+        'nieuwe'     => 'NW',
+        'nieuw'      => 'NW',
+        'verlengde'  => 'VERL',
+    ];
 
     /**
      * Regular expression used to split street name from house number for the Netherlands.
@@ -28,16 +64,16 @@ class SplitStreet
      * Contains php keys to store the data in an array
      */
     const SPLIT_STREET_REGEX_NL =
-        '~(?P<street>.*?)' .              // The rest belongs to the street
-        '\s?' .                           // Separator between street and number
+        '~(?P<street>.{2,78}?)' .         // The rest belongs to the street
+        '\s' .                            // Separator between street and number
         '(?P<number>\d{1,4})' .           // Number can contain a maximum of 4 numbers
         '[/\s\-]{0,2}' .                  // Separators between number and addition
         '(?P<number_suffix>' .
-        '[a-zA-Z]{1}\d{1,3}|' .           // Numbers suffix starts with a letter followed by numbers or
+        '[a-z]{1}\d{1,3}|' .              // Numbers suffix starts with a letter followed by numbers or
         '-\d{1,4}|' .                     // starts with - and has up to 4 numbers or
         '\d{2}\w{1,2}|' .                 // starts with 2 numbers followed by letters or
-        '[a-zA-Z]{1}[a-zA-Z\s]{0,3}' .    // has up to 4 letters with a space
-        ')?$~';
+        '[a-z]{1}[a-z\s]{0,3}' .          // has up to 4 letters with a space
+        ')?$~i';
 
     const SPLIT_STREET_REGEX_BE =
         '~(?P<street>.*?)\s(?P<street_suffix>(?P<number>\d{1,4})\s?(?P<box_separator>' . self::BOX_NL . '?)?[\s-]?(?P<box_number>\w{0,8}$))$~';
@@ -57,9 +93,25 @@ class SplitStreet
      */
     public static function splitStreet(string $fullStreet, string $local, string $destination): FullStreet
     {
-        $translateBoxSeparator = str_ireplace(self::BOX_TRANSLATION_POSSIBILITIES, ' ' . self::BOX_NL, $fullStreet);
-        $fullStreet            = trim(preg_replace('/(\r\n)|\n|\r/', ' ', $translateBoxSeparator));
-        $regex                 = self::getRegexByCountry($local, $destination);
+        // Replace house number suffix by an abbreviation, only possible for the Netherlands
+        if ($destination === AbstractConsignment::CC_NL) {
+            foreach (self::NUMBER_SUFFIX_ABBREVIATION as $from => $to) {
+                $fullStreet = preg_replace("/(\d.*-?)[\s]$from/", '$1' . $to, $fullStreet);
+            }
+        }
+
+        if ($destination === AbstractConsignment::CC_BE) {
+            // Replace box variants to bus
+            $fullStreet = str_ireplace(self::BOX_SEPARATOR, self::BOX_NL, $fullStreet);
+            // When a caracter is present at BOX_SEPARATOR_BY_REGEX and followed by a number, it must replaced by bus
+            foreach (self::BOX_SEPARATOR_BY_REGEX as $boxRegex) {
+                $fullStreet = preg_replace('#' . $boxRegex . '([0-9])#', self::BOX_NL . '$1', $fullStreet);
+            }
+
+            $fullStreet = trim(preg_replace('/(\r\n)|\n|\r/', ' ', $fullStreet));
+        }
+
+        $regex = self::getRegexByCountry($local, $destination);
 
         if (! $regex) {
             return new FullStreet($fullStreet, null, null, null);
@@ -134,7 +186,7 @@ class SplitStreet
         if (
             ($local === AbstractConsignment::CC_BE && $destination === AbstractConsignment::CC_BE) ||
             ($local === AbstractConsignment::CC_BE && $destination === AbstractConsignment::CC_NL)
-        ){
+        ) {
             return self::SPLIT_STREET_REGEX_BE;
         }
 
