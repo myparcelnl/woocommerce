@@ -339,7 +339,8 @@ class WCMP_Export_Consignments
             ->setInsurance($this->getInsurance())
             ->setOnlyRecipient($this->getOnlyRecipient())
             ->setLargeFormat($this->getLargeFormat())
-            ->setContents($this->getContents());
+            ->setContents($this->getContents())
+            ->setInvoice($this->order->get_id());
 
     }
 
