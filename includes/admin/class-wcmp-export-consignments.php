@@ -374,7 +374,6 @@ class WCMP_Export_Consignments
             ->setLargeFormat($this->getLargeFormat())
             ->setContents($this->getContents())
             ->setInvoice($this->order->get_id());
-            ->setLargeFormat($this->getLargeFormat());
     }
 
     /**
