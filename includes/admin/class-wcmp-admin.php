@@ -550,6 +550,9 @@ class WCMP_Admin
         return $trackTraceUrl;
     }
 
+    /**
+     *
+     */
     public function productHsCodeField()
     {
         echo '<div class="options_group">';
@@ -559,32 +562,42 @@ class WCMP_Admin
                 'label' => __('HS Code', 'woocommerce-myparcelbe'),
                 'description' => sprintf(
                     __('HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Belgium Customs%s.',
-                        'woocommerce-myparcelbe'
-                    ),
-                    '<a href="http://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',
-                    '</a>'
+                        'woocommerce-myparcelbe' , '<a href="http://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',
+                        '</a>'
+                    )
                 ),
             ]
         );
         echo '</div>';
     }
 
-    public function productHsCodeFieldSave($post_id)
+    /**
+     * @param int $post_id
+     */
+    public function productHsCodeFieldSave(int $post_id)
     {
         // check if hs code is passed and not an array (=variation hs code)
-        if (isset($_POST[self::META_HS_CODE]) && !is_array($_POST[self::META_HS_CODE])) {
+        if (isset($_POST[self::META_HS_CODE]) && ! is_array($_POST[self::META_HS_CODE])) {
             $product = wc_get_product($post_id);
             $hs_code = $_POST[self::META_HS_CODE];
-            if (!empty($hs_code)) {
+            if (! empty($hs_code)) {
                 WCX_Product::update_meta_data($product, self::META_HS_CODE, esc_attr($hs_code));
-            } else {
-                if (isset($_POST[self::META_HS_CODE]) && empty($hs_code)) {
-                    WCX_Product::delete_meta_data($product, self::META_HS_CODE);
-                }
+
+                return;
+            }
+            if (isset($_POST[self::META_HS_CODE]) && empty($hs_code)) {
+                WCX_Product::delete_meta_data($product, self::META_HS_CODE);
+
+                return;
             }
         }
+
+        return;
     }
 
+    /**
+     *
+     */
     public function productCountryOfOriginField()
     {
         echo '<div class="options_group">';
@@ -600,7 +613,10 @@ class WCMP_Admin
         echo '</div>';
     }
 
-    public function productCountryOfOriginFieldSave($postId)
+    /**
+     * @param int $postId
+     */
+    public function productCountryOfOriginFieldSave(int $postId)
     {
         if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && !is_array($_POST[self::META_COUNTRY_OF_ORIGIN])) {
             $product = wc_get_product($postId);
@@ -611,6 +627,7 @@ class WCMP_Admin
             }
             if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && empty($countryOfOrigin)) {
                 WCX_Product::delete_meta_data($product, self::META_COUNTRY_OF_ORIGIN);
+                return;
             }
         }
         return;
