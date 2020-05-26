@@ -69,7 +69,6 @@ class AbstractConsignment
     public const DEFAULT_DELIVERY_TYPE      = self::DELIVERY_TYPE_STANDARD;
     public const DEFAULT_DELIVERY_TYPE_NAME = self::DELIVERY_TYPE_STANDARD;
 
-
     /**
      * Customs declaration types
      */
@@ -128,14 +127,14 @@ class AbstractConsignment
     public const CC_BE = 'BE';
 
     /**
+     * @var array
+     */
+    public const INSURANCE_POSSIBILITIES_LOCAL = [];
+
+    /**
      * @var string
      */
     protected $local_cc = '';
-
-    /**
-     * @var array
-     */
-    protected $insurance_possibilities_local = [];
 
     /**
      * @internal
@@ -373,9 +372,9 @@ class AbstractConsignment
 
     /**
      * @internal
-     * @var string
+     * @var null|string
      */
-    public $pickup_network_id = '';
+    public $retail_network_id;
 
     /**
      * @var bool
@@ -393,12 +392,6 @@ class AbstractConsignment
     private $save_recipient_address = true;
 
     /**
-     * @internal
-     * @var null|string
-     */
-    private $retail_network_id;
-
-    /**
      * @var Helpers
      */
     private $helper;
@@ -406,6 +399,14 @@ class AbstractConsignment
     public function __construct()
     {
         $this->helper = new Helpers();
+    }
+
+    /**
+     * @return array
+     */
+    public function getInsurancePossibilities(): array
+    {
+        return static::INSURANCE_POSSIBILITIES_LOCAL;
     }
 
     /**
@@ -1395,7 +1396,7 @@ class AbstractConsignment
             return $this;
         }
 
-        if (empty($this->insurance_possibilities_local)) {
+        if (empty(static::INSURANCE_POSSIBILITIES_LOCAL)) {
             throw new \BadMethodCallException('Property insurance_possibilities_local not found in ' . static::class);
         }
 
@@ -1403,9 +1404,9 @@ class AbstractConsignment
             throw new \BadMethodCallException('Property local_cc not found in ' . static::class);
         }
 
-        if (! in_array($insurance, $this->insurance_possibilities_local) && $this->getCountry() == $this->local_cc) {
+        if (! in_array($insurance, static::INSURANCE_POSSIBILITIES_LOCAL) && $this->getCountry() == $this->local_cc) {
             throw new \BadMethodCallException(
-                'Insurance must be one of ' . implode(', ', $this->insurance_possibilities_local)
+                'Insurance must be one of ' . implode(', ', static::INSURANCE_POSSIBILITIES_LOCAL)
             );
         }
 
@@ -1685,11 +1686,21 @@ class AbstractConsignment
     }
 
     /**
-     * @return string
+     * @return null|string
+     * @deprecated Use getRetailNetworkId instead
+     *
      */
-    public function getPickupNetworkId(): string
+    public function getPickupNetworkId(): ?string
     {
-        return $this->pickup_network_id;
+        return $this->getRetailNetworkId();
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getRetailNetworkId(): ?string
+    {
+        return $this->retail_network_id;
     }
 
     /**
@@ -1697,14 +1708,33 @@ class AbstractConsignment
      * Example:  Albert Heijn
      * Required: Yes for pickup location
      *
-     * @param string $pickupNetworkId
+     * @param string $retailNetworkId
+     *
+     * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
+     * @deprecated Use setRetailNetworkId instead
+     */
+    public function setPickupNetworkId($retailNetworkId): self
+    {
+        if (! empty($retailNetworkId)) {
+            throw new \BadMethodCallException('Pickup network id has to be empty in ' . static::class);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Pattern:  [0-9A-Za-z]
+     * Example:  Albert Heijn
+     * Required: Yes for pickup location
+     *
+     * @param string $retailNetworkId
      *
      * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
      */
-    public function setPickupNetworkId($pickupNetworkId): self
+    public function setRetailNetworkId(string $retailNetworkId): self
     {
-        if (! empty($pickupNetworkId)) {
-            throw new \BadMethodCallException('Pickup network id has to be empty in ' . static::class);
+        if (! empty($retailNetworkId)) {
+            throw new \BadMethodCallException('Retail network id has to be empty in ' . static::class);
         }
 
         return $this;

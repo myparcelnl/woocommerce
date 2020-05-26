@@ -120,6 +120,36 @@ class WCMP_Export_Consignments
     }
 
     /**
+     * @param DeliveryOptions $delivery_options
+     *
+     * @return string
+     */
+    private function getDeliveryDate(DeliveryOptions $delivery_options): string
+    {
+        return $this->convertDeliveryDate($delivery_options->getDate());
+    }
+
+    /**
+     * Get date in YYYY-MM-DD HH:MM:SS format
+     *
+     * @param string|null $date
+     *
+     * @return string|null
+     */
+    public function convertDeliveryDate(?string $date): ?string
+    {
+        $date          = strtotime($date);
+        $delivery_date = date('Y-m-d H:i:s', $date);
+        $todayDate     = strtotime('now');
+
+        if ($date <= $todayDate) {
+            return date('Y-m-d H:i:s', strtotime('now +1 day'));
+        }
+
+        return $delivery_date;
+    }
+
+    /**
      * @return void
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      * @throws \ErrorException
@@ -317,7 +347,6 @@ class WCMP_Export_Consignments
         }
 
         $pickupLocation = $this->deliveryOptions->getPickupLocation();
-
         $this->consignment->setPickupCountry($pickupLocation->getCountry())
             ->setPickupCity($pickupLocation->getCity())
             ->setPickupLocationName($pickupLocation->getLocationName())
@@ -325,6 +354,10 @@ class WCMP_Export_Consignments
             ->setPickupNumber($pickupLocation->getNumber())
             ->setPickupPostalCode($pickupLocation->getPostalCode())
             ->setPickupLocationCode($pickupLocation->getLocationCode());
+
+        if ($pickupLocation->getPickupNetworkId()) {
+            $this->consignment->setPickupNetworkId($pickupLocation->getPickupNetworkId());
+        }
     }
 
     /**
@@ -341,7 +374,7 @@ class WCMP_Export_Consignments
             ->setLargeFormat($this->getLargeFormat())
             ->setContents($this->getContents())
             ->setInvoice($this->order->get_id());
-
+            ->setLargeFormat($this->getLargeFormat());
     }
 
     /**
@@ -379,6 +412,7 @@ class WCMP_Export_Consignments
         $this->consignment
             ->setApiKey($this->apiKey)
             ->setReferenceId((string) $this->order->get_id())
+            ->setDeliveryDate($this->getDeliveryDate($this->deliveryOptions))
             ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
             ->setLabelDescription($this->getLabelDescription())
             ->setPackageType(WCMP_Export::PACKAGE);
