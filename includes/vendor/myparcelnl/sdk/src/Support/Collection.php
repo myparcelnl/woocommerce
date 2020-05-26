@@ -478,13 +478,17 @@ class Collection extends CollectionProxy implements ArrayAccess, Countable, Iter
     /**
      * Apply the callback if the value is truthy.
      *
-     * @param  bool  $value
-     * @param  callable  $callback
-     * @param  callable  $default
-     * @return mixed
+     * @param  bool|mixed  $value
+     * @param  callable|null  $callback
+     * @param  callable|null  $default
+     * @return static|mixed
      */
-    public function when($value, callable $callback, callable $default = null)
+    public function when($value, callable $callback = null, callable $default = null)
     {
+        if (! $callback) {
+            return new HigherOrderWhenProxy($this, $value);
+        }
+
         if ($value) {
             return $callback($this, $value);
         } elseif ($default) {
@@ -1232,12 +1236,14 @@ class Collection extends CollectionProxy implements ArrayAccess, Countable, Iter
     /**
      * Push an item onto the end of the collection.
      *
-     * @param  mixed  $value
+     * @param  mixed  $values [optional]
      * @return $this
      */
-    public function push($value)
+    public function push(...$values)
     {
-        $this->offsetSet(null, $value);
+        foreach ($values as $value) {
+            $this->items[] = $value;
+        }
 
         return $this;
     }
@@ -1442,7 +1448,7 @@ class Collection extends CollectionProxy implements ArrayAccess, Countable, Iter
      * @param  callable|null  $callback
      * @return static
      */
-    public function sort(callable $callback = null)
+    public function sort($callback = null)
     {
         $items = $this->items;
 

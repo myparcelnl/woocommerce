@@ -17,6 +17,11 @@ abstract class AbstractDeliveryOptionsAdapter
     protected $deliveryType;
 
     /**
+     * @var string
+     */
+    protected $packageType;
+
+    /**
      * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter|null
      */
     protected $shipmentOptions;
@@ -60,6 +65,26 @@ abstract class AbstractDeliveryOptionsAdapter
     }
 
     /**
+     * @return string
+     */
+    public function getPackageType(): ?string
+    {
+        return $this->packageType;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getPackageTypeId(): ?int
+    {
+        if ($this->packageType === null) {
+            return null;
+        }
+
+        return AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$this->packageType];
+    }
+
+    /**
      * @return AbstractShipmentOptionsAdapter|null
      */
     public function getShipmentOptions(): ?AbstractShipmentOptionsAdapter
@@ -93,7 +118,8 @@ abstract class AbstractDeliveryOptionsAdapter
         }
 
         return in_array(
-            $this->deliveryType, [
+            $this->deliveryType,
+            [
                 AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME,
                 AbstractConsignment::DELIVERY_TYPE_PICKUP_EXPRESS_NAME,
             ]
