@@ -558,7 +558,7 @@ class WCMP_Admin
                 'id' => self::META_HS_CODE,
                 'label' => __('HS Code', 'woocommerce-myparcelbe'),
                 'description' => sprintf(
-                    __('HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.',
+                    __('HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Belgium Customs%s.',
                         'woocommerce-myparcelbe'
                     ),
                     '<a href="http://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',

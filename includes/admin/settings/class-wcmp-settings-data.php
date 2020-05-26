@@ -859,7 +859,7 @@ class WCMP_Settings_Data
                 "name"      => WCMP_Settings::SETTING_HS_CODE,
                 "label"     => __("Default HS Code", "woocommerce-myparcelbe"),
                 "help_text" => __(
-                    "HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Dutch Customs.",
+                    "HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Belgium Customs.",
                     "woocommerce-myparcelbe"
                 ),
             ],

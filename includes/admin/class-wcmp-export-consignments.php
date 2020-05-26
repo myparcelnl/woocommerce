@@ -186,7 +186,7 @@ class WCMP_Export_Consignments
         $defaultCountryOfOrigin = $this->getSetting(WCMP_Settings::SETTING_COUNTRY_OF_ORIGIN);
         $productCountryOfOrigin = WCX_Product::get_meta($product, WCMP_Admin::META_COUNTRY_OF_ORIGIN, true);
 
-        $countryOfOrigin = getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin);
+        $countryOfOrigin = $this->getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin);
 
         return (string) $countryOfOrigin;
     }
@@ -205,7 +205,7 @@ class WCMP_Export_Consignments
 
         if (! $defaultCountryOfOrigin) {
             if (! $productCountryOfOrigin) {
-                return WC()->countries->baseCountry() ?? 'NL';
+                return WC()->countries->get_base_country() ?? 'BE';
             }
         }
 
