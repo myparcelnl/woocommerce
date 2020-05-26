@@ -551,7 +551,7 @@ class WCMP_Admin
     }
 
     /**
-     *
+     * Add hs code from product when this is set
      */
     public function productHsCodeField()
     {
@@ -596,7 +596,7 @@ class WCMP_Admin
     }
 
     /**
-     *
+     * Add country of origin from the product when this is set
      */
     public function productCountryOfOriginField()
     {
