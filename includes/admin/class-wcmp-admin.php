@@ -4,6 +4,7 @@ use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
 
 if (! defined('ABSPATH')) {
@@ -30,6 +31,8 @@ class WCMP_Admin
     public const META_SHIPMENTS              = "_myparcelbe_shipments";
     public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcelbe_shipment_options_extra";
     public const META_TRACK_TRACE            = "_myparcelbe_tracktrace";
+    public const META_HS_CODE                = "_myparcel_hs_code";
+    public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
 
     public const SHIPMENT_OPTIONS_FORM_NAME = "myparcelbe_options";
 
@@ -66,7 +69,15 @@ class WCMP_Admin
 
         add_action("wp_ajax_wcmp_save_shipment_options", [$this, "save_shipment_options_ajax"]);
         add_action("wp_ajax_wcmp_get_shipment_summary_status", [$this, "order_list_ajax_get_shipment_summary"]);
-        
+
+        // HS code in product shipping options tab
+        add_action("woocommerce_product_options_shipping", [$this, "productHsCodeField"]);
+        add_action("woocommerce_process_product_meta", [$this, "productHsCodeFieldSave"]);
+
+        // Country of Origin in product shipping options tab
+        add_action("woocommerce_product_options_shipping", [$this, "productCountryOfOriginField"]);
+        add_action("woocommerce_process_product_meta", [$this, "productCountryOfOriginFieldSave"]);
+
         // Add barcode in order grid
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
         add_action(
@@ -537,6 +548,89 @@ class WCMP_Admin
         }
 
         return $trackTraceUrl;
+    }
+
+    /**
+     * Add hs code from product when this is set
+     */
+    public function productHsCodeField()
+    {
+        echo '<div class="options_group">';
+        woocommerce_wp_text_input(
+            [
+                'id' => self::META_HS_CODE,
+                'label' => __('HS Code', 'woocommerce-myparcelbe'),
+                'description' => sprintf(
+                    __('HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Belgium Customs%s.',
+                        'woocommerce-myparcelbe' , '<a href="http://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',
+                        '</a>'
+                    )
+                ),
+            ]
+        );
+        echo '</div>';
+    }
+
+    /**
+     * @param int $post_id
+     */
+    public function productHsCodeFieldSave(int $post_id)
+    {
+        // check if hs code is passed and not an array (=variation hs code)
+        if (isset($_POST[self::META_HS_CODE]) && ! is_array($_POST[self::META_HS_CODE])) {
+            $product = wc_get_product($post_id);
+            $hs_code = $_POST[self::META_HS_CODE];
+            if (! empty($hs_code)) {
+                WCX_Product::update_meta_data($product, self::META_HS_CODE, esc_attr($hs_code));
+
+                return;
+            }
+            if (isset($_POST[self::META_HS_CODE]) && empty($hs_code)) {
+                WCX_Product::delete_meta_data($product, self::META_HS_CODE);
+
+                return;
+            }
+        }
+
+        return;
+    }
+
+    /**
+     * Add country of origin from the product when this is set
+     */
+    public function productCountryOfOriginField()
+    {
+        echo '<div class="options_group">';
+        woocommerce_wp_text_input(
+            [
+                'id'          => self::META_COUNTRY_OF_ORIGIN,
+                'label'       => __('Country of Origin', 'woocommerce-myparcelbe'),
+                'description' => sprintf(
+                    __('Country of origin is required for world shipments. Defaults to shop base.')
+                ),
+            ]
+        );
+        echo '</div>';
+    }
+
+    /**
+     * @param int $postId
+     */
+    public function productCountryOfOriginFieldSave(int $postId)
+    {
+        if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && !is_array($_POST[self::META_COUNTRY_OF_ORIGIN])) {
+            $product = wc_get_product($postId);
+            $countryOfOrigin = $_POST[self::META_COUNTRY_OF_ORIGIN];
+            if (!empty($countryOfOrigin)) {
+                WCX_Product::update_meta_data($product, self::META_HS_CODE, esc_attr($countryOfOrigin));
+                return;
+            }
+            if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && empty($countryOfOrigin)) {
+                WCX_Product::delete_meta_data($product, self::META_COUNTRY_OF_ORIGIN);
+                return;
+            }
+        }
+        return;
     }
 
     /**

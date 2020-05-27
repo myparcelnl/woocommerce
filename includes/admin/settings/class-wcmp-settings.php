@@ -50,6 +50,9 @@ class WCMP_Settings
     public const SETTING_CONNECT_PHONE                  = "connect_phone";
     public const SETTING_LABEL_DESCRIPTION              = "label_description";
     public const SETTING_SHIPPING_METHODS_PACKAGE_TYPES = "shipping_methods_package_types";
+    public const SETTING_HS_CODE                        = "hs_code";
+    public const SETTING_PACKAGE_CONTENT                = "package_contents";
+    public const SETTING_COUNTRY_OF_ORIGIN              = "country_of_origin";
 
     /**
      * Checkout

@@ -348,7 +348,7 @@ class WCMP_Export
                 $consignmentIds
             );
         }
-        
+
         if (! empty($this->success)) {
             $return["success"]     = sprintf(
                 __("%s shipments successfully exported to MyParcel", "woocommerce-myparcelbe"),
@@ -980,7 +980,7 @@ class WCMP_Export
      *
      * @return float
      */
-    public static function get_item_weight_kg($item, WC_Order $order): float
+    public static function getItemWeightKg($item, WC_Order $order): float
     {
         $product = $order->get_product_from_item($item);
 
