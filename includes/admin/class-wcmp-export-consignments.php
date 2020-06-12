@@ -168,6 +168,11 @@ class WCMP_Export_Consignments
 
         $hsCode = $productHsCode ? $productHsCode : $defaultHsCode;
 
+        if (! $productHsCode) {
+            $variableProductParent = WCX_Product::get_parent($product);
+            $hsCode = WCX_Product::get_meta($variableProductParent, WCMP_Admin::META_HS_CODE, true);
+        }
+
         if (! $hsCode) {
             throw new ErrorException(__("No HS code found in MyParcel settings", "woocommerce-myparcel"));
         }
