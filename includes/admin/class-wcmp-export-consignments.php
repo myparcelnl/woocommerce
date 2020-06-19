@@ -173,7 +173,6 @@ class WCMP_Export_Consignments
             $hsCode = $variationHsCode;
         }
 
-
         if (! $hsCode) {
             throw new ErrorException(__("No HS code found in MyParcel settings", "woocommerce-myparcel"));
         }
