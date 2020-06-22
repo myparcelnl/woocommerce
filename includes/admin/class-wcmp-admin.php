@@ -32,6 +32,7 @@ class WCMP_Admin
     public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcel_shipment_options_extra";
     public const META_TRACK_TRACE            = "_myparcel_tracktrace";
     public const META_HS_CODE                = "_myparcel_hs_code";
+    public const META_HS_CODE_VARIATION      = "_myparcel_hs_code_variation";
     public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
 
     // Id's refering to shipment statuses
@@ -91,6 +92,55 @@ class WCMP_Admin
 
         add_action("init", [$this, "registerDeliveredPostStatus"], 10, 1);
         add_filter("wc_order_statuses", [$this, "displayDeliveredPostStatus"], 10, 2);
+
+        add_action('woocommerce_product_after_variable_attributes', array($this, 'variation_hs_code_field'), 10, 3);
+        add_action('woocommerce_save_product_variation', array($this, 'save_variation_hs_code_field'), 10, 2);
+        add_filter('woocommerce_available_variation', array($this, 'load_variation_hs_code_field'), 10, 1);
+    }
+
+    /**
+     * @param $loop
+     * @param $variationData
+     * @param $variation
+     */
+    public function variation_hs_code_field($loop, $variationData, $variation)
+    {
+        woocommerce_wp_text_input(
+            array(
+                'id'            => self::META_HS_CODE_VARIATION."[{$loop}]",
+                'name'          => self::META_HS_CODE_VARIATION."[{$loop}]",
+                'value'         => get_post_meta( $variation->ID, self::META_HS_CODE_VARIATION, true ),
+                'label'         => __( 'HS Code', 'woocommerce' ),
+                'desc_tip'      => true,
+                'description'   => __( 'This HS Code overwrites the parents HS Code.', 'woocommerce' ),
+                'wrapper_class' => 'form-row form-row-full',
+            )
+        );
+    }
+
+    /**
+     * @param $variationId
+     * @param $loop
+     */
+    public function save_variation_hs_code_field($variationId, $loop)
+    {
+        $hsCodeValue = $_POST[self::META_HS_CODE_VARIATION][ $loop ];
+
+        if ( ! empty( $hsCodeValue ) ) {
+            update_post_meta( $variationId, self::META_HS_CODE_VARIATION, esc_attr( $hsCodeValue ));
+        }
+    }
+
+    /**
+     * @param $variation
+     *
+     * @return mixed
+     */
+    public function load_variation_hs_code_field($variation)
+    {
+        $variation[self::META_HS_CODE_VARIATION] = get_post_meta( $variation[ 'variation_id' ], self::META_HS_CODE_VARIATION, true );
+
+        return $variation;
     }
 
     /**

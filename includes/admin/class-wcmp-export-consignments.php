@@ -165,12 +165,12 @@ class WCMP_Export_Consignments
     {
         $defaultHsCode = $this->getSetting(WCMP_Settings::SETTING_HS_CODE);
         $productHsCode = WCX_Product::get_meta($product, WCMP_Admin::META_HS_CODE, true);
+        $variationHsCode = WCX_Product::get_meta($product, WCMP_Admin::META_HS_CODE_VARIATION, true);
 
         $hsCode = $productHsCode ? $productHsCode : $defaultHsCode;
 
-        if (! $productHsCode) {
-            $variableProductParent = WCX_Product::get_parent($product);
-            $hsCode = WCX_Product::get_meta($variableProductParent, WCMP_Admin::META_HS_CODE, true);
+        if ($variationHsCode) {
+            $hsCode = $variationHsCode;
         }
 
         if (! $hsCode) {
