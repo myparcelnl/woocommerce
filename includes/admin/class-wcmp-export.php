@@ -348,7 +348,7 @@ class WCMP_Export
                 $consignmentIds
             );
         }
-        
+
         if (! empty($this->success)) {
             $return["success"]     = sprintf(
                 __("%s shipments successfully exported to MyParcel", "woocommerce-myparcelbe"),
@@ -622,7 +622,7 @@ class WCMP_Export
         ];
 
         $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-        if ($shipping_country === "BE") {
+        if ($shipping_country) {
             // use billing address if old "pakjegemak" (1.5.6 and older)
             $pgAddress = WCX_Order::get_meta($order, WCMP_Admin::META_PGADDRESS);
 

@@ -2,6 +2,8 @@
 
 namespace MyParcelNL\Sdk\src\Adapter\DeliveryOptions;
 
+use Exception;
+
 /**
  * Class DeliveryOptionsV3Adapter
  */
