@@ -53,18 +53,6 @@ abstract class AbstractDeliveryOptionsAdapter
     }
 
     /**
-     * @return int|null
-     */
-    public function getDeliveryTypeId(): ?int
-    {
-        if ($this->deliveryType === null) {
-            return null;
-        }
-
-        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$this->deliveryType];
-    }
-
-    /**
      * @return string
      */
     public function getPackageType(): ?string
@@ -75,13 +63,13 @@ abstract class AbstractDeliveryOptionsAdapter
     /**
      * @return int|null
      */
-    public function getPackageTypeId(): ?int
+    public function getDeliveryTypeId(): ?int
     {
-        if ($this->packageType === null) {
+        if ($this->deliveryType === null) {
             return null;
         }
 
-        return AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$this->packageType];
+        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$this->deliveryType];
     }
 
     /**
@@ -118,8 +106,7 @@ abstract class AbstractDeliveryOptionsAdapter
         }
 
         return in_array(
-            $this->deliveryType,
-            [
+            $this->deliveryType, [
                 AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME,
                 AbstractConsignment::DELIVERY_TYPE_PICKUP_EXPRESS_NAME,
             ]
@@ -135,6 +122,7 @@ abstract class AbstractDeliveryOptionsAdapter
             "carrier"         => $this->getCarrier(),
             "date"            => $this->getDate(),
             "deliveryType"    => $this->getDeliveryType(),
+            "packageType"     => $this->getPackageType(),
             "isPickup"        => $this->isPickup(),
             "pickupLocation"  => $this->getPickupLocation(),
             "shipmentOptions" => $this->getShipmentOptions()->toArray(),

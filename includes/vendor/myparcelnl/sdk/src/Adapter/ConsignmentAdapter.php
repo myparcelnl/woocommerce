@@ -192,6 +192,7 @@ class ConsignmentAdapter
                 'pickup_location_name' => null,
                 'pickup_location_code' => '',
                 'retail_network_id'    => '',
+
             ];
             /** @noinspection PhpInternalEntityUsedInspection */
             $this->clearFields($fields);
