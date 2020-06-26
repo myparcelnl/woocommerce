@@ -88,7 +88,17 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 4.0.6 (2020-04-29) =
+= 4.1.0 (2020-06-29) =
+* Fix: Export PostNL shipment with a number suffix
+
+= 4.1.0 (2020-06-23) =
+* Improvement: PostNL options
+
+= 4.0.7 (2020-04-29) =
+* Fix: Export order with the massactions
+* Fix: Error on order page about HS code
+
+= 4.0.6 (2020-04-28) =
 * Hotfix: Export and print orders
 
 = 4.0.6 (2020-04-28) =
