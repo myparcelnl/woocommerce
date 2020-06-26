@@ -10,7 +10,7 @@ use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
 
-if (!defined("ABSPATH")) {
+if (! defined("ABSPATH")) {
     exit;
 } // Exit if accessed directly
 
@@ -172,7 +172,7 @@ class WCMP_Export_Consignments
                 $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
 
                 // Weight (total item weight in grams)
-                $weight       = (int) round(WCMP_Export::getItemWeightKg($item, $this->order) * 1000);
+                $weight = (int) round(WCMP_Export::getItemWeightKg($item, $this->order) * 1000);
 
                 if ($weight == 0) {
                     $weight = 1000;
@@ -293,8 +293,8 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $connectEmail = $this->carrier === DPDConsignment::CARRIER_NAME || PostNLConsignment::CARRIER_NAME;
-        $this->recipient = WCMP_Export::getRecipientFromOrder($this->order, $connectEmail);
+        $carrier         = $this->carrier === DPDConsignment::CARRIER_NAME || PostNLConsignment::CARRIER_NAME;
+        $this->recipient = WCMP_Export::getRecipientFromOrder($this->order);
 
         $this->consignment
             ->setCountry($this->recipient['cc'])
@@ -302,12 +302,17 @@ class WCMP_Export_Consignments
             ->setCompany($this->recipient['company'])
             ->setStreet($this->recipient['street'])
             ->setNumber($this->recipient['number'] ?? null)
-            ->setBoxNumber($this->recipient['number_suffix'] ?? null)
             ->setStreetAdditionalInfo($this->recipient['street_additional_info'] ?? null)
             ->setPostalCode($this->recipient['postal_code'])
             ->setCity($this->recipient['city'])
             ->setEmail($this->recipient['email'])
             ->setPhone($this->recipient['phone']);
+
+        if ($carrier) {
+            $this->consignment->setNumberSuffix($this->recipient['number_suffix'] ?? null);
+        } else {
+            $this->consignment->setBoxNumber($this->recipient['number_suffix'] ?? null);
+        }
     }
 
     /**
@@ -317,7 +322,7 @@ class WCMP_Export_Consignments
     {
         $this->apiKey = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
 
-        if (!$this->apiKey) {
+        if (! $this->apiKey) {
             throw new ErrorException(__("No API key found in MyParcel BE settings", "woocommerce-myparcelbe"));
         }
     }
@@ -347,18 +352,18 @@ class WCMP_Export_Consignments
      */
     private function setPickupLocation(): void
     {
-        if (!$this->deliveryOptions->isPickup()) {
+        if (! $this->deliveryOptions->isPickup()) {
             return;
         }
 
         $pickupLocation = $this->deliveryOptions->getPickupLocation();
         $this->consignment->setPickupCountry($pickupLocation->getCountry())
-            ->setPickupCity($pickupLocation->getCity())
-            ->setPickupLocationName($pickupLocation->getLocationName())
-            ->setPickupStreet($pickupLocation->getStreet())
-            ->setPickupNumber($pickupLocation->getNumber())
-            ->setPickupPostalCode($pickupLocation->getPostalCode())
-            ->setPickupLocationCode($pickupLocation->getLocationCode());
+                          ->setPickupCity($pickupLocation->getCity())
+                          ->setPickupLocationName($pickupLocation->getLocationName())
+                          ->setPickupStreet($pickupLocation->getStreet())
+                          ->setPickupNumber($pickupLocation->getNumber())
+                          ->setPickupPostalCode($pickupLocation->getPostalCode())
+                          ->setPickupLocationCode($pickupLocation->getLocationCode());
 
         if ($pickupLocation->getPickupNetworkId()) {
             $this->consignment->setPickupNetworkId($pickupLocation->getPickupNetworkId());
