@@ -35,7 +35,6 @@ class WCMP_BE_Postcode_Fields
 
     public function initialize()
     {
-
         if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS)) {
             // Add street name & house number checkout fields.
             if (version_compare(WOOCOMMERCE_VERSION, '2.0') >= 0) {
