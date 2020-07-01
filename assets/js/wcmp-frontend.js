@@ -205,9 +205,10 @@ jQuery(function ($) {
     getHouseNumber: function () {
       var address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
       var result = MyParcelFrontend.splitStreetRegex.exec(address);
+      var numberField = $('#billing_house_number').val() !== '' && $('#shipping_house_number').val() !== '';
       var numberIndex = 2;
 
-      if (MyParcelFrontend.isUsingSplitAddressFields) {
+      if (MyParcelFrontend.isUsingSplitAddressFields && numberField) {
         return MyParcelFrontend.getField(MyParcelFrontend.houseNumberField).value;
       }
 

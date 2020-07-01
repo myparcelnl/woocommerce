@@ -88,8 +88,12 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 4.1.0 (2020-06-29) =
-* Fix: Export PostNL shipment with a number suffix
+= 4.1.2 (2020-07-01) =
+* Fix: Export shipment to the Netherlands
+* Fix: Select the correct house number on checkout page
+
+= 4.1.1 (2020-06-29) =
+* Fix: export PostNL of DPD shipment with a number suffix
 
 = 4.1.0 (2020-06-23) =
 * Improvement: PostNL options
