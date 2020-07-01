@@ -21,7 +21,7 @@ if (class_exists("WCMP_Export")) {
 class WCMP_Export
 {
     // Package types
-    public const PACKAGE          = 1;
+    public const PACKAGE = 1;
 
     public const EXPORT = "wcmp_export";
 
@@ -61,7 +61,7 @@ class WCMP_Export
      * Get the value of a shipment option. Check if it was set manually, through the delivery options for example,
      *  if not get the value of the default export setting for given settingName.
      *
-     * @param bool|null $option      Condition to check.
+     * @param bool|null $option Condition to check.
      * @param string    $settingName Name of the setting to fall back to.
      *
      * @return bool
@@ -294,7 +294,7 @@ class WCMP_Export
          * Loop over the order ids and create consignments for each order.
          */
         foreach ($order_ids as $order_id) {
-            $order           = WCX::get_order($order_id);
+            $order                      = WCX::get_order($order_id);
             $orderIdsWithNewShipments[] = $order_id;
 
             $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
@@ -387,7 +387,7 @@ class WCMP_Export
 
                 $ids = Arr::get($response, "body.data.ids");
 
-                if ($ids && !empty($ids)) {
+                if ($ids && ! empty($ids)) {
                     $order                    = WCX::get_order($order_id);
                     $ids                      = array_shift($response["body"]["data"]["ids"]);
                     $shipment_id              = $ids["id"];
@@ -541,7 +541,7 @@ class WCMP_Export
             "carrier" => BpostConsignment::CARRIER_ID, // default to Bpost for now
         ];
 
-        if (!Arr::get($return_shipment_data, "email")) {
+        if (! Arr::get($return_shipment_data, "email")) {
             throw new Exception(__("No e-mail address found in order.", "woocommerce-myparcelbe"));
         }
 
@@ -600,8 +600,7 @@ class WCMP_Export
      */
     public static function getRecipientFromOrder(WC_Order $order)
     {
-        $is_using_old_fields = WCX_Order::has_meta($order, "_billing_street_name")
-            || WCX_Order::has_meta($order, "_billing_house_number");
+        $is_using_old_fields = WCX_Order::get_meta($order, "_billing_street_name") || WCX_Order::get_meta($order, "_billing_house_number");
 
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
@@ -1334,6 +1333,7 @@ class WCMP_Export
                     "The order(s) you have selected have invalid shipping countries.",
                     "woocommerce-myparcelbe"
                 );
+
             return;
         }
 
