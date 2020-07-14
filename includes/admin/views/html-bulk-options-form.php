@@ -78,6 +78,11 @@ $target_url = wp_nonce_url(
                         </td>
                       </tr>
                     <?php endforeach; ?>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td><?php _e('Empty parcel weight', 'woocommerce-myparcel'); ?></td>
+                        <td align="right"><?php echo wc_format_weight($this->getSetting(WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT)) ; ?></td>
+                    </tr>
                     </tbody>
                     <tfoot>
                     <tr>
