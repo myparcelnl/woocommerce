@@ -1,13 +1,11 @@
 /**
  * @member {Object} wcmp
- *
  * @property {Object} wcmp.actions
  * @property {{export: String, add_shipments: String, add_return: String, get_labels: String, modal_dialog: String}} wcmp.actions
  * @property {String} wcmp.api_url - The API Url we use in MyParcel requests.
  * @property {String} wcmp.ajax_url
  * @property {String} wcmp.ask_for_print_position
  * @property {Object} wcmp.bulk_actions
- * @property {{export: String, print: String, export_print: String}} wcmp.bulk_actions
  * @property {String} wcmp.download_display
  * @property {String} wcmp.nonce
  * @property {Object.<String, String>} wcmp.strings
@@ -36,24 +34,26 @@ jQuery(function($) {
   var askForPrintPosition = Boolean(parseInt(wcmp.ask_for_print_position));
 
   var selectors = {
+    bulkSpinner: '.wcmp__bulk-spinner',
+    notice: '.wcmp__notice',
     offsetDialog: '.wcmp__offset-dialog',
     offsetDialogButton: '.wcmp__offset-dialog__button',
     offsetDialogClose: '.wcmp__offset-dialog__close',
     offsetDialogInputOffset: '.wcmp__offset-dialog__offset',
+    orderAction: '.wcmp__action',
+    orderActionImage: '.wcmp__action__img',
     printQueue: '.wcmp__print-queue',
     printQueueOffset: '.wcmp__print-queue__offset',
-    saveShipmentSettings: '.wcmp__shipment-settings__save',
     shipmentOptions: '.wcmp__shipment-options',
-    shipmentOptionsForm: '.wcmp__shipment-options__form',
+    shipmentOptionsDialog: '.wcmp__shipment-options-dialog',
+    shipmentOptionsSaveButton: '.wcmp__shipment-options__save',
+    shipmentOptionsShowButton: '.wcmp__shipment-options__show',
+    shipmentOptionsShowButtonWrapper: '.wcmp__shipment-options-wrapper',
+    shipmentSettingsWrapper: '.wcmp__shipment-settings-wrapper',
     shipmentSummary: '.wcmp__shipment-summary',
     shipmentSummaryList: '.wcmp__shipment-summary__list',
-    showShipmentOptionsForm: '.wcmp__shipment-options__show',
     showShipmentSummaryList: '.wcmp__shipment-summary__show',
     spinner: '.wcmp__spinner',
-    notice: '.wcmp__notice',
-    orderAction: '.wcmp__action',
-    bulkSpinner: '.wcmp__bulk-spinner',
-    orderActionImage: '.wcmp__action__img',
   };
 
   var spinner = {
@@ -67,7 +67,7 @@ jQuery(function($) {
   addDependencies();
   printQueuedLabels();
 
-  var timeoutAfterRequest = 500;
+  var timeoutAfterRequest = 200;
   var baseEasing = 400;
 
   /**
@@ -84,10 +84,7 @@ jQuery(function($) {
     /**
      * Show and enable options when clicked.
      */
-    $(selectors.showShipmentOptionsForm).click(showShipmentOptionsForm);
-
-    // Add listeners to save buttons in shipment options forms.
-    $(selectors.saveShipmentSettings).click(saveShipmentOptions);
+    $(selectors.shipmentOptionsShowButton).click(showShipmentOptionsForm);
 
     /**
      * Show summary when clicked.
@@ -124,12 +121,13 @@ jQuery(function($) {
      *
      * @see includes/admin/class-wcmp-admin.php:49
      */
-    $([selectors.shipmentOptions, selectors.shipmentSummary].join(',')).each(function() {
-      var shippingAddressColumn = $(this).closest('tr')
+    $(selectors.shipmentSettingsWrapper).each(function() {
+      var shippingAddressColumn = $(this)
+        .closest('tr')
         .find('td.shipping_address');
 
       $(this).appendTo(shippingAddressColumn);
-      $(this).show();
+      $(this).css('display', 'flex');
     });
   }
 
@@ -285,27 +283,63 @@ jQuery(function($) {
   }
 
   /**
-   * Show a shipment options form.
+   * Show the shipment options form on the Woo Orders page.
    *
    * @param {Event} event - Click event.
    */
   function showShipmentOptionsForm(event) {
     event.preventDefault();
-    var form = $(this).next(selectors.shipmentOptionsForm);
+    var button = $(this);
+    var orderId = button.data('order-id');
 
-    if (form.is(':visible')) {
-      // Form is already visible, hide it
-      form.slideUp();
+    var form = $(selectors.shipmentOptionsDialog);
+    var isSameAsLast = form.data('order-id') === orderId;
+    var isVisible = form.is(':visible');
 
-      // Remove the listener to close the form.
+    if (isVisible) {
       document.removeEventListener('click', hideShipmentOptionsForm);
-    } else {
-      // Form is invisible, show it
-      form.find(':input').change();
-      form.slideDown();
-      // Add the listener to close the form.
-      document.addEventListener('click', hideShipmentOptionsForm);
+
+      // Close form on second "details" click
+      if (isSameAsLast) {
+        form.slideUp(100);
+        return;
+      }
+
+      // Hide other opened form before opening new one
+      form.hide(0);
     }
+
+    // Set the position for the dialog to be under the clicked "Details" link.
+    var position = button.offset();
+    position.top -= button.height();
+    form.css(position);
+
+    // Set the data-order-id attribute on the dialog to keep track of which dialog was last opened.
+    form.data('order-id', orderId);
+
+    doRequest.bind(this)({
+      url: wcmp.ajax_url,
+      data: {
+        action: 'wcmp_get_shipment_options',
+        orderId: orderId,
+        security: wcmp.nonce,
+      },
+
+      /**
+       * Show the correct data in the form and add event listeners for handling saving and clicking outside the form.
+       *
+       * @param {String} response - Html to put in the form.
+       */
+      afterDone: function(response) {
+        form.html(response);
+        $(selectors.shipmentOptionsSaveButton).on('click', saveShipmentOptions);
+        document.addEventListener('click', hideShipmentOptionsForm);
+        form.slideDown(100);
+      },
+      afterFail: function() {
+        form.slideUp(100);
+      },
+    });
   }
 
   function setSpinner(element, state) {
@@ -330,10 +364,9 @@ jQuery(function($) {
    * Save the shipment options in the bulk form.
    */
   function saveShipmentOptions() {
-    var button = this;
-    var form = $(button).closest(selectors.shipmentOptionsForm);
+    var form = $(selectors.shipmentOptionsDialog);
 
-    doRequest.bind(button)({
+    doRequest.bind(this)({
       url: wcmp.ajax_url,
       data: {
         action: 'wcmp_save_shipment_options',
@@ -835,13 +868,17 @@ jQuery(function($) {
    * @param {Element} event.target - Click target.
    */
   function hideShipmentOptionsForm(event) {
+    console.log({event});
     handleClickOutside.bind(hideShipmentOptionsForm)(event, {
-      main: selectors.shipmentOptionsForm,
-      wrappers: [selectors.shipmentOptionsForm, selectors.showShipmentOptionsForm],
+      main: selectors.shipmentOptionsDialog,
+      wrappers: [selectors.shipmentOptions, selectors.shipmentOptionsShowButton],
     });
   }
 
   /**
+   * Main: The element that will be hidden.
+   * Wrappers: Elements which don't count as "outside" when clicked.
+   *
    * @param {MouseEvent} event - Click event.
    * @property {Element} event.target
    */
@@ -867,7 +904,7 @@ jQuery(function($) {
     var clickedOutside = true;
 
     elements.wrappers.forEach(function(cls) {
-      if ((clickedOutside && event.target.matches(cls)) || event.target.closest(elements.main)) {
+      if (clickedOutside && event.target.matches(cls) || event.target.closest(elements.main)) {
         clickedOutside = false;
       }
     });
@@ -885,8 +922,7 @@ jQuery(function($) {
 if (typeof Object.assign !== 'function') {
   /* Must be writable: true, enumerable: false, configurable: true */
   Object.defineProperty(Object, 'assign', {
-    value: function assign(target, varArgs) { /* .length of function is 2 */
-      'use strict';
+    value: function assign(target) {
       if (target === null || target === undefined) {
         throw new TypeError('Cannot convert undefined or null to object');
       }

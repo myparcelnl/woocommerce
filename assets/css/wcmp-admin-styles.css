@@ -81,6 +81,7 @@
 
 .wcmp__shipment-summary {
   list-style: none;
+  margin-right: .3em;
 }
 
 .wcmp__shipment-summary li:before {
@@ -120,7 +121,7 @@
   color: #999;
 }
 
-.wcmp__shipment-settings__save {
+.wcmp__shipment-options__save {
   margin-top: 8px;
 }
 
@@ -167,7 +168,7 @@
 }
 
 .wcmp__spinner,
-.wcmp__shipment-settings__save input {
+.wcmp__shipment-options__save input {
   vertical-align: middle;
 }
 
@@ -235,7 +236,7 @@
   margin: 10px auto;
 }
 
-.wcmp__bulk-options .wcmp__shipment-settings__save {
+.wcmp__bulk-options .wcmp__shipment-options__save {
   margin-top: 8px;
   float: right;
 }
