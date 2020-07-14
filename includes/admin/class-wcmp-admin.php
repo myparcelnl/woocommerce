@@ -714,7 +714,7 @@ class WCMP_Admin
             $product = wc_get_product($postId);
             $countryOfOrigin = $_POST[self::META_COUNTRY_OF_ORIGIN];
             if (!empty($countryOfOrigin)) {
-                WCX_Product::update_meta_data($product, self::META_HS_CODE, esc_attr($countryOfOrigin));
+                WCX_Product::update_meta_data($product, self::META_COUNTRY_OF_ORIGIN, esc_attr($countryOfOrigin));
                 return;
             }
             if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && empty($countryOfOrigin)) {
