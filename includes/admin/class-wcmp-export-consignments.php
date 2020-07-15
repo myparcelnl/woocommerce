@@ -318,7 +318,11 @@ class WCMP_Export_Consignments
      */
     private function getTotalPackageWeight(): int
     {
-        return $this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
+        $parcelWeight = $this->getSetting(WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+        $weight       = $this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
+        $totalWeight  = $parcelWeight + $weight;
+
+        return $totalWeight;
     }
 
     /**
