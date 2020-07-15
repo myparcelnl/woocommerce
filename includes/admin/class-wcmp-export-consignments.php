@@ -142,8 +142,7 @@ class WCMP_Export_Consignments
 
                 // Weight (total item weight in grams)
                 $weight       = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
-                $parcelWeight = $this->getSetting(WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
-                $totalWeight  = $parcelWeight + $weight;
+                $totalWeight = $this->getTotalWeight($weight);
 
                 $myParcelItem = (new MyParcelCustomsItem())
                     ->setDescription($description)
@@ -156,6 +155,17 @@ class WCMP_Export_Consignments
                 $this->consignment->addItem($myParcelItem);
             }
         }
+    }
+
+    /**
+     * @param int $weight
+     *
+     * @return int
+     */
+    private function getTotalWeight(int $weight): int
+    {
+        $parcelWeight = $this->getSetting(WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+        return $parcelWeight + $weight;
     }
 
     /**
@@ -314,18 +324,6 @@ class WCMP_Export_Consignments
     }
 
     /**
-     * @return int
-     */
-    private function getTotalPackageWeight(): int
-    {
-        $parcelWeight = $this->getSetting(WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
-        $weight       = $this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
-        $totalWeight  = $parcelWeight + $weight;
-
-        return $totalWeight;
-    }
-
-    /**
      * Gets the recipient and puts its data in the consignment.
      *
      * @throws Exception
@@ -441,8 +439,10 @@ class WCMP_Export_Consignments
      */
     private function setPhysicalProperties()
     {
+        $weight = $this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
+
         $this->consignment
-            ->setPhysicalProperties(["weight" => $this->getTotalPackageWeight()]);
+            ->setPhysicalProperties(["weight" => $this->getTotalWeight($weight)]);
     }
 
     private function setBaseData(): void
