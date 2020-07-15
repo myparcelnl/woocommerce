@@ -177,11 +177,12 @@ class WCMP_Export_Consignments
                 if ($weight == 0) {
                     $weight = 1000;
                 }
+                $totalWeight = $this->getTotalWeight($weight);
 
                 $myParcelItem = (new MyParcelCustomsItem())
                     ->setDescription($description)
                     ->setAmount($amount)
-                    ->setWeight($weight)
+                    ->setWeight($totalWeight)
                     ->setItemValue((int) round(($item["line_total"] + $item["line_tax"]) * 100))
                     ->setCountry($country)
                     ->setClassification($this->getHsCode($product));
@@ -189,6 +190,17 @@ class WCMP_Export_Consignments
                 $this->consignment->addItem($myParcelItem);
             }
         }
+    }
+
+    /**
+     * @param int $weight
+     *
+     * @return int
+     */
+    private function getTotalWeight(int $weight): int
+    {
+        $parcelWeight = $this->getSetting(WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+        return $parcelWeight + $weight;
     }
 
     /**

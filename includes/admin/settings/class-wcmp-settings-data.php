@@ -856,6 +856,14 @@ class WCMP_Settings_Data
                 ),
             ],
             [
+                "name"      => WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT,
+                "label"     => __("Empty parcel weight (grams)", "woocommerce-myparcelbe"),
+                "help_text" => __(
+                    "Default weight of your empty parcel, rounded to grams.",
+                    "woocommerce-myparcelbe"
+                ),
+            ],
+            [
                 "name"      => WCMP_Settings::SETTING_HS_CODE,
                 "label"     => __("Default HS Code", "woocommerce-myparcelbe"),
                 "help_text" => __(
