@@ -48,9 +48,7 @@ jQuery(function($) {
     shipmentOptionsDialog: '.wcmp__shipment-options-dialog',
     shipmentOptionsSaveButton: '.wcmp__shipment-options__save',
     shipmentOptionsShowButton: '.wcmp__shipment-options__show',
-    shipmentOptionsShowButtonWrapper: '.wcmp__shipment-options-wrapper',
     shipmentSettingsWrapper: '.wcmp__shipment-settings-wrapper',
-    shipmentSummary: '.wcmp__shipment-summary',
     shipmentSummaryList: '.wcmp__shipment-summary__list',
     showShipmentSummaryList: '.wcmp__shipment-summary__show',
     spinner: '.wcmp__spinner',
@@ -127,7 +125,7 @@ jQuery(function($) {
         .find('td.shipping_address');
 
       $(this).appendTo(shippingAddressColumn);
-      $(this).css('display', 'flex');
+      $(this).show();
     });
   }
 
@@ -868,7 +866,6 @@ jQuery(function($) {
    * @param {Element} event.target - Click target.
    */
   function hideShipmentOptionsForm(event) {
-    console.log({event});
     handleClickOutside.bind(hideShipmentOptionsForm)(event, {
       main: selectors.shipmentOptionsDialog,
       wrappers: [selectors.shipmentOptions, selectors.shipmentOptionsShowButton],

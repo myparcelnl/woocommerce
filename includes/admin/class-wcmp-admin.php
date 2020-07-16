@@ -115,30 +115,28 @@ class WCMP_Admin
             $last_shipment_id = $last_shipment['shipment_id'];
 
             ?>
-            <div class="wcmp__shipment-summary">
-                <?php $this->showDeliveryOptionsForOrder($order); ?>
-                <a class="wcmp__shipment-summary__show"><span class="wcmp__encircle wcmp__shipment-summary__show">i</span></a>
-                <div class="wcmp__box wcmp__shipment-summary__list"
-                    data-loaded=""
-                    data-shipment_id="<?php echo $last_shipment_id; ?>"
-                    data-order_id="<?php echo $order_id; ?>"
-                    style="display: none;">
-                    <?php self::renderSpinner(); ?>
-                </div>
+            <?php $this->showDeliveryOptionsForOrder($order); ?>
+            <a class="wcmp__shipment-summary__show">
+                <span class="wcmp__encircle wcmp__shipment-summary__show">i</span>
+            </a>
+            <div
+                class="wcmp__box wcmp__shipment-summary__list"
+                data-loaded=""
+                data-shipment_id="<?php echo $last_shipment_id; ?>"
+                data-order_id="<?php echo $order_id; ?>"
+                style="display: none;">
+                <?php self::renderSpinner(); ?>
             </div>
         <?php else : ?>
             <div class="wcmp__has-consignments" style="display: none;">
                 <?php $this->showDeliveryOptionsForOrder($order); ?>
             </div>
-        <?php endif; ?>
-        <div class="wcmp__shipment-options-wrapper">
-            <?php printf(
-                '<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
-                $order->get_id(),
-                __("Details", "woocommerce-myparcelbe")
-            ); ?>
-        </div>
-        <?php
+        <?php endif;
+
+        printf('<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
+            $order->get_id(),
+            __("Details", "woocommerce-myparcelbe")
+        );
 
         echo "</div>";
     }
