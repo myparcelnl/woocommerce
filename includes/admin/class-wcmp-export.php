@@ -326,7 +326,7 @@ class WCMP_Export
              * Create a real multi collo shipment if available, otherwise loop over the collo_amount and add separate
              * consignments to the collection.
              */
-            if (WCMP_Data::HAS_MULTI_COLLO) {
+            if ($collo_amount > 1) {
                 $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
 
                 $collection->addMultiCollo($consignment, $collo_amount);

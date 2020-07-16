@@ -57,8 +57,6 @@ class WCMP_Data
         ],
     ];
 
-    public const HAS_MULTI_COLLO = false;
-
     public const DEFAULT_COUNTRY_CODE = "NL";
     public const DEFAULT_CARRIER      = PostNLConsignment::CARRIER_NAME;
 
