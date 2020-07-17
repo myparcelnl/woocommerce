@@ -1450,6 +1450,14 @@ msgstr ""
 msgid "Automatic exporting allows you to export an order to MyParcel directly after payment"
 msgstr ""
 
+#: includes/admin/class-wcmp-settings-data.php:853
+msgid "Show delivery day"
+msgstr ""
+
+#: includes/admin/class-wcmp-settings-data.php:856
+msgid "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account."
+msgstr ""
+
 #. Name of the plugin
 msgid "WooCommerce MyParcel"
 msgstr ""

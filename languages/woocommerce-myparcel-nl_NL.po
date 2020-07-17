@@ -1525,6 +1525,22 @@ msgstr "Afhaallocatie"
 msgid "Carrier"
 msgstr "Vervoerder"
 
+#: includes/admin/class-wcmp-settings-data.php:826
+msgid "Automatic export"
+msgstr "Automatische export"
+
+#: includes/admin/class-wcmp-settings-data.php:829
+msgid "Automatic exporting allows you to export an order to MyParcel directly after payment"
+msgstr "Met automatisch exporteren kunt u een bestelling direct na betaling exporteren naar MyParcel"
+
+#: includes/admin/class-wcmp-settings-data.php:853
+msgid "Show delivery day"
+msgstr "Toon bezorgdag"
+
+#: includes/admin/class-wcmp-settings-data.php:856
+msgid "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account."
+msgstr "Toon bezorgdag zodat uw klanten de bezorgdag kunnen zien in de orderbevestiging en Mijn account."
+
 #: includes/admin/views/html-order-shipment-options.php:111
 #: includes/admin/views/html-order-return-shipment-options.php:16
 #, php-format
