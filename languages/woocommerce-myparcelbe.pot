@@ -933,6 +933,10 @@ msgstr ""
 msgid "Enable PostNL pickup"
 msgstr ""
 
+#: includes/admin/settings/class-wcmp-settings-data.php:309
+msgid "These settings will be applied to PostNL shipments you create in the backend."
+msgstr ""
+
 #: includes_php56/class-wcmp-settings.php:558
 msgid "Show checkout options after billing details"
 msgstr ""

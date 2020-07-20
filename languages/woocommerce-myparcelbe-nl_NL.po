@@ -791,6 +791,10 @@ msgstr "Ophalen bij PostNL opties"
 msgid "Enable PostNL pickup"
 msgstr "PostNL ophaal locaties"
 
+#: includes/admin/settings/class-wcmp-settings-data.php:309
+msgid "These settings will be applied to PostNL shipments you create in the backend."
+msgstr "Deze instellingen worden toegepast op PostNL zendingen die u in de backend maakt."
+
 #: includes_php56/class-wcmp-settings.php:558
 msgid "Show checkout options after billing details"
 msgstr "Toon na factuurgegevens"
