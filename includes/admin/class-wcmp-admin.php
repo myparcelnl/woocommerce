@@ -2,9 +2,9 @@
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
-use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
 
 if (! defined('ABSPATH')) {
@@ -49,6 +49,7 @@ class WCMP_Admin
         }
 
         add_action("admin_footer", [$this, "renderOffsetDialog"]);
+        add_action("admin_footer", [$this, "renderShipmentOptionsForm"]);
 
         /**
          * Orders page
@@ -69,6 +70,7 @@ class WCMP_Admin
 
         add_action("wp_ajax_wcmp_save_shipment_options", [$this, "save_shipment_options_ajax"]);
         add_action("wp_ajax_wcmp_get_shipment_summary_status", [$this, "order_list_ajax_get_shipment_summary"]);
+        add_action("wp_ajax_wcmp_get_shipment_options", [$this, "ajaxGetShipmentOptions"]);
 
         // HS code in product shipping options tab
         add_action("woocommerce_product_options_shipping", [$this, "productHsCodeField"]);
@@ -101,8 +103,10 @@ class WCMP_Admin
             return;
         }
 
-        $order_id             = WCX_Order::get_id($order);
-        $consignments         = WCMP_Admin::get_order_shipments($order);
+        $order_id     = WCX_Order::get_id($order);
+        $consignments = WCMP_Admin::get_order_shipments($order);
+
+        echo '<div class="wcmp__shipment-settings-wrapper" style="display: none;">';
 
         // if we have shipments, then we show status & link to Track & Trace, settings under i
         if (! empty($consignments)) :
@@ -111,34 +115,30 @@ class WCMP_Admin
             $last_shipment_id = $last_shipment['shipment_id'];
 
             ?>
-            <div class="wcmp__shipment-summary">
-                <?php $this->showDeliveryOptionsForOrder($order); ?>
-                <a class="wcmp__shipment-summary__show"><span class="wcmp__encircle wcmp__shipment-summary__show">i</span></a>
-                <div class="wcmp__box wcmp__shipment-summary__list"
-                     data-loaded=""
-                     data-shipment_id="<?php echo $last_shipment_id; ?>"
-                     data-order_id="<?php echo $order_id; ?>"
-                     style="display: none;">
-                    <?php self::renderSpinner(); ?>
-                </div>
+            <?php $this->showDeliveryOptionsForOrder($order); ?>
+            <a class="wcmp__shipment-summary__show">
+                <span class="wcmp__encircle wcmp__shipment-summary__show">i</span>
+            </a>
+            <div
+                class="wcmp__box wcmp__shipment-summary__list"
+                data-loaded=""
+                data-shipment_id="<?php echo $last_shipment_id; ?>"
+                data-order_id="<?php echo $order_id; ?>"
+                style="display: none;">
+                <?php self::renderSpinner(); ?>
             </div>
         <?php else : ?>
-            <div class="wcmp__shipment-options wcmp__has-consignments" style="display: none;">
+            <div class="wcmp__has-consignments" style="display: none;">
                 <?php $this->showDeliveryOptionsForOrder($order); ?>
             </div>
-        <?php endif; ?>
-        <div class="wcmp__shipment-options" style="display: none;">
-            <?php printf(
-                '<a href="#" class="wcmp__shipment-options__show">%s &#x25BE;</a>',
-                __("Details", "woocommerce-myparcelbe")
-            ); ?>
-            <div class="wcmp__box wcmp__shipment-options__form" style="display: none;">
-                <a class="wcmp__d--flex">
-                    <?php include('views/html-order-shipment-options.php'); ?>
-                </a>
-            </div>
-        </div>
-        <?php
+        <?php endif;
+
+        printf('<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
+            $order->get_id(),
+            __("Details", "woocommerce-myparcelbe")
+        );
+
+        echo "</div>";
     }
 
     /**
@@ -197,16 +197,16 @@ class WCMP_Admin
 
         if ('shop_order' == $post_type) {
             ?>
-            <script type="text/javascript">
-            jQuery(document).ready(function() {
-                <?php foreach ($bulk_actions as $action => $title) { ?>
-              jQuery('<option>')
-                .val('<?php echo $action; ?>')
-                .html('<?php echo esc_attr($title); ?>')
-                .appendTo('select[name=\'action\'], select[name=\'action2\']');
-                <?php }    ?>
-            });
-            </script>
+          <script type="text/javascript">
+          jQuery(document).ready(function() {
+              <?php foreach ($bulk_actions as $action => $title) { ?>
+            jQuery('<option>')
+              .val('<?php echo $action; ?>')
+              .html('<?php echo esc_attr($title); ?>')
+              .appendTo('select[name=\'action\'], select[name=\'action2\']');
+              <?php }    ?>
+          });
+          </script>
             <?php
             self::renderSpinner();
         }
@@ -241,30 +241,51 @@ class WCMP_Admin
         $class = new SettingsFieldArguments($field);
         ?>
 
-        <div
-            class="wcmp wcmp__box wcmp__offset-dialog"
-            style="display: none;">
-            <div class="wcmp__offset-dialog__inner wcmp__d--flex">
-                <div>
-                    <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
+      <div
+        class="wcmp wcmp__box wcmp__offset-dialog"
+        style="display: none;">
+        <div class="wcmp__offset-dialog__inner wcmp__d--flex">
+          <div>
+              <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
 
-                    <img
-                        src="<?php echo WCMP()->plugin_url() . "/assets/img/print-offset-icon.png"; ?>"
-                        alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
-                        class="wcmp__offset-dialog__icon"/>
-                    <div>
-                        <a
-                            href="#"
-                            class="wcmp__action wcmp__offset-dialog__button button">
-                            <?php _e("Print", "woocommerce-myparcelbe"); ?>
-                            <?php WCMP_Admin::renderSpinner(); ?>
-                        </a>
-                    </div>
-                </div>
-                <div class="wcmp__close-button dashicons dashicons-no-alt wcmp__offset-dialog__close"></div>
+            <img
+              src="<?php echo WCMP()->plugin_url() . "/assets/img/print-offset-icon.png"; ?>"
+              alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
+              class="wcmp__offset-dialog__icon"/>
+            <div>
+              <a
+                href="#"
+                class="wcmp__action wcmp__offset-dialog__button button">
+                  <?php _e("Print", "woocommerce-myparcelbe"); ?>
+                  <?php WCMP_Admin::renderSpinner(); ?>
+              </a>
             </div>
+          </div>
+          <div class="wcmp__close-button dashicons dashicons-no-alt wcmp__offset-dialog__close"></div>
         </div>
+      </div>
         <?php
+    }
+
+    /**
+     * Hide an empty shipment options form in the footer.
+     */
+    public function renderShipmentOptionsForm(): void
+    {
+        echo '<div class="wcmp__box wcmp__shipment-options-dialog" style="display: none; position: absolute;"></div>';
+    }
+
+    /**
+     * Get the new html content for the shipment options form based on the passed order id.
+     */
+    public function ajaxGetShipmentOptions(): void
+    {
+        // Order is used in views/html-order-shipment-options.php
+        $order = wc_get_order((int) $_POST['orderId']);
+
+        include('views/html-order-shipment-options.php');
+
+        die();
     }
 
     /**
@@ -327,7 +348,7 @@ class WCMP_Admin
         $attributes = [];
 
         if ($display) {
-          $attributes["target"] = "_blank";
+            $attributes["target"] = "_blank";
         }
 
         foreach ($listing_actions as $request => $data) {
@@ -399,10 +420,7 @@ class WCMP_Admin
         parse_str($_POST["form_data"], $form_data);
 
         foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
-            $order              = WCX::get_order($order_id);
-            /**
-             * @var DeliveryOptions $deliveryOptions
-             */
+            $order           = WCX::get_order($order_id);
             $deliveryOptions = self::getDeliveryOptionsFromOrder($order, $data);
 
             WCX_Order::update_meta_data(
@@ -418,6 +436,8 @@ class WCMP_Admin
                 $data["extra_options"]
             );
         }
+
+        die();
     }
 
     /**

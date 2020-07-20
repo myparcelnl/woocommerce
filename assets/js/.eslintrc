@@ -1,4 +1,8 @@
 {
+  "env": {
+    "browser": true,
+    "jquery": true
+  },
   "globals": {
     "wcmp": "readonly",
     "MyParcel": "readonly",
@@ -21,7 +25,10 @@
       {
         "ignoreChainWithDepth": 2
       }
-    ]
+    ],
+    "require-jsdoc": "off",
+    "jsdoc/require-jsdoc": "off",
+    "prefer-object-spread": "off"
   },
   "overrides": [
     {
