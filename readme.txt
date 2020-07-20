@@ -88,6 +88,11 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+
+= 4.1.3 (2020-07-21) =
+* Fix: Add option for empty parcel
+* Fix: WooCommerce overview search bug
+
 = 4.1.2 (2020-07-01) =
 * Fix: Export shipment to the Netherlands
 * Fix: Select the correct house number on checkout page
