@@ -758,6 +758,27 @@ msgstr ""
 msgid "Label description"
 msgstr ""
 
+#: includes/admin/settings/class-wcmp-settings-data.php:860
+msgid "Empty parcel weight (grams)"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:868
+msgid "Default HS Code"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:870
+msgid "HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Belgium Customs."
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:888
+msgid "Default country of origin"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:890
+msgid "Country of origin is required for world shipments. Defaults to shop base or NL. Example: 'NL', 'BE', 'DE'"
+msgstr ""
+
+
 #: includes_php56/class-wcmp-settings.php:459
 msgid ""
 "With this option, you can add a description to the shipment. This will be "
@@ -846,6 +867,70 @@ msgstr ""
 #: includes_php56/class-wcmp-settings.php:551
 #: includes/admin/settings/class-wcmp-settings-data.php:724
 msgid "Checkout position"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:978
+msgid "Preferred pickup locations view"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:981
+msgid "When pickup locations are enabled, the user can choose between \"map\" or \"list\" view. This setting decides which option will be selected first, upon opening the pickup locations."
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:985
+msgid "Show map first"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:986
+msgid "Show list first"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:1079
+msgid "Pickup list button text"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:1080
+msgid "List"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:1089
+msgid "Pickup map button text"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:1090
+msgid "Map"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:682
+msgid "Large format"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:685
+msgid "Large format package"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:704
+msgid "Enable PostNL delivery"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:710
+msgid "Delivery days at PostNL"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:714
+msgid "Days of the week on which you hand over parcels to PostNL"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:316
+msgid "PostNL delivery options"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:321
+msgid "PostNL pickup options"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:795
+msgid "Enable PostNL pickup"
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:558
