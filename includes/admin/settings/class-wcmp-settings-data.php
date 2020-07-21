@@ -306,7 +306,7 @@ class WCMP_Settings_Data
                     "name"        => "export_defaults",
                     "label"       => __("Default export settings", "woocommerce-myparcelbe"),
                     "description" => __(
-                        "These settings will be applied to postnl shipments you create in the backend.",
+                        "These settings will be applied to PostNL shipments you create in the backend.",
                         "woocommerce-myparcelbe"
                     ),
                     "settings"    => $this->get_section_carrier_postnl_export_defaults(),
