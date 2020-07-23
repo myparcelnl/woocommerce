@@ -346,6 +346,8 @@ jQuery(function ($) {
       return;
     }
 
+    event.preventDefault();
+
     /*
      * Remove notices
      */
@@ -369,6 +371,8 @@ jQuery(function ($) {
       alert(wcmp.strings.no_orders_selected);
       return;
     } else {
+      var button = this;
+      $(button).prop('disabled', true);
       $('.wcmp__spinner--bulk > .wcmp__spinner__loading').show();
     }
 
@@ -395,7 +399,6 @@ jQuery(function ($) {
       case wcmp.bulk_actions.export_print:
         exportToMyParcel(order_ids, 'after_reload');
         break;
-
     }
   }
 
