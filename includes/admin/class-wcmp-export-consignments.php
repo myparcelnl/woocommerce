@@ -119,6 +119,27 @@ class WCMP_Export_Consignments
     }
 
     /**
+     * Get date in YYYY-MM-DD HH:MM:SS format
+     *
+     * @param string|null $date
+     *
+     * @return string|null
+     */
+    public function convertDeliveryDate(?string $date): ?string
+    {
+        $date          = strtotime($date);
+        $delivery_date = date('Y-m-d H:i:s', $date);
+        $todayDate     = strtotime('now');
+
+        if ($date <= $todayDate) {
+            return date('Y-m-d H:i:s', strtotime('now +1 day'));
+        }
+
+        return $delivery_date;
+    }
+
+
+    /**
      * @return void
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      * @throws \ErrorException
@@ -397,6 +418,7 @@ class WCMP_Export_Consignments
             ->setPickupStreet($pickupLocation->getStreet())
             ->setPickupNumber($pickupLocation->getNumber())
             ->setPickupPostalCode($pickupLocation->getPostalCode())
+            ->setRetailNetworkId($pickupLocation->getRetailNetworkId())
             ->setPickupLocationCode($pickupLocation->getLocationCode());
     }
 
@@ -450,6 +472,7 @@ class WCMP_Export_Consignments
         $this->consignment
             ->setApiKey($this->apiKey)
             ->setReferenceId((string) $this->order->get_id())
+            ->setDeliveryDate($this->convertDeliveryDate($this->deliveryOptions->getDate()))
             ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
             ->setLabelDescription($this->getLabelDescription())
             ->setPackageType(WCMP()->export->getPackageTypeForOrder($this->order->get_id()));
