@@ -123,9 +123,9 @@ class WCMP_Export_Consignments
      *
      * @param string|null $date
      *
-     * @return string|null
+     * @return string
      */
-    public function convertDeliveryDate(?string $date): ?string
+    public function convertDeliveryDate(?string $date): string
     {
         $date          = strtotime($date);
         $delivery_date = date('Y-m-d H:i:s', $date);
