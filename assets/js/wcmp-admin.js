@@ -1,44 +1,57 @@
 /**
- * @var {Object} wcmp
- *
+ * @member {Object} wcmp
  * @property {Object} wcmp.actions
  * @property {{export: String, add_shipments: String, add_return: String, get_labels: String, modal_dialog: String}} wcmp.actions
  * @property {String} wcmp.api_url - The API Url we use in MyParcel requests.
  * @property {String} wcmp.ajax_url
  * @property {String} wcmp.ask_for_print_position
  * @property {Object} wcmp.bulk_actions
- * @property {{export: String, print: String, export_print: String}} wcmp.bulk_actions
  * @property {String} wcmp.download_display
  * @property {String} wcmp.nonce
  * @property {Object.<String, String>} wcmp.strings
  */
 
 /* eslint-disable-next-line max-lines-per-function */
-jQuery(function ($) {
+jQuery(function($) {
+  // Object.values polyfill
+  if (!Object.values) {
+    Object.values = function(obj) {
+      var values = [];
+
+      for (var i in obj) {
+        if (obj.hasOwnProperty(i)) {
+          values.push(obj[i]);
+        }
+      }
+
+      return values;
+    };
+  }
+
   /**
    * @type {Boolean}
    */
   var askForPrintPosition = Boolean(parseInt(wcmp.ask_for_print_position));
 
   var selectors = {
+    bulkSpinner: '.wcmp__bulk-spinner',
+    notice: '.wcmp__notice',
     offsetDialog: '.wcmp__offset-dialog',
     offsetDialogButton: '.wcmp__offset-dialog__button',
     offsetDialogClose: '.wcmp__offset-dialog__close',
     offsetDialogInputOffset: '.wcmp__offset-dialog__offset',
+    orderAction: '.wcmp__action',
+    orderActionImage: '.wcmp__action__img',
     printQueue: '.wcmp__print-queue',
     printQueueOffset: '.wcmp__print-queue__offset',
-    saveShipmentSettings: '.wcmp__shipment-settings__save',
     shipmentOptions: '.wcmp__shipment-options',
-    shipmentOptionsForm: '.wcmp__shipment-options__form',
-    shipmentSummary: '.wcmp__shipment-summary',
+    shipmentOptionsDialog: '.wcmp__shipment-options-dialog',
+    shipmentOptionsSaveButton: '.wcmp__shipment-options__save',
+    shipmentOptionsShowButton: '.wcmp__shipment-options__show',
+    shipmentSettingsWrapper: '.wcmp__shipment-settings-wrapper',
     shipmentSummaryList: '.wcmp__shipment-summary__list',
-    showShipmentOptionsForm: '.wcmp__shipment-options__show',
     showShipmentSummaryList: '.wcmp__shipment-summary__show',
     spinner: '.wcmp__spinner',
-    notice: '.wcmp__notice',
-    orderAction: '.wcmp__action',
-    bulkSpinner: '.wcmp__bulk-spinner',
-    orderActionImage: '.wcmp__action__img',
   };
 
   var spinner = {
@@ -52,7 +65,7 @@ jQuery(function ($) {
   addDependencies();
   printQueuedLabels();
 
-  var timeoutAfterRequest = 500;
+  var timeoutAfterRequest = 200;
   var baseEasing = 400;
 
   /**
@@ -69,10 +82,7 @@ jQuery(function ($) {
     /**
      * Show and enable options when clicked.
      */
-    $(selectors.showShipmentOptionsForm).click(showShipmentOptionsForm);
-
-    // Add listeners to save buttons in shipment options forms.
-    $(selectors.saveShipmentSettings).click(saveShipmentOptions);
+    $(selectors.shipmentOptionsShowButton).click(showShipmentOptionsForm);
 
     /**
      * Show summary when clicked.
@@ -109,8 +119,9 @@ jQuery(function ($) {
      *
      * @see includes/admin/class-wcmp-admin.php:49
      */
-    $([selectors.shipmentOptions, selectors.shipmentSummary].join(',')).each(function () {
-      var shippingAddressColumn = $(this).closest('tr')
+    $(selectors.shipmentSettingsWrapper).each(function() {
+      var shippingAddressColumn = $(this)
+        .closest('tr')
         .find('td.shipping_address');
 
       $(this).appendTo(shippingAddressColumn);
@@ -137,7 +148,7 @@ jQuery(function ($) {
     /**
      * Loop through the classes to create a dependency like this: { [parent]: node[] }.
      */
-    nodesWithParent.forEach(function (node) {
+    nodesWithParent.forEach(function(node) {
       var parent = node.getAttribute('data-parent');
 
       if (dependencies.hasOwnProperty(parent)) {
@@ -168,7 +179,7 @@ jQuery(function ($) {
    * @param {Object<String, Node[]>} deps - Dependency names and all the nodes that depend on them.
    */
   function createDependencies(deps) {
-    Object.keys(deps).forEach(function (relatedInputId) {
+    Object.keys(deps).forEach(function(relatedInputId) {
       var relatedInput = document.querySelector('[name="' + relatedInputId + '"]');
 
       /**
@@ -185,7 +196,7 @@ jQuery(function ($) {
         /**
          * @type {Element} dependant
          */
-        deps[relatedInputId].forEach(function (dependant) {
+        deps[relatedInputId].forEach(function(dependant) {
           handleDependency(relatedInput, dependant, null, easing);
 
           if (relatedInput.hasAttribute('data-parent')) {
@@ -193,7 +204,7 @@ jQuery(function ($) {
 
             handleDependency(otherRelatedInput, relatedInput, dependant, easing);
 
-            otherRelatedInput.addEventListener('change', function () {
+            otherRelatedInput.addEventListener('change', function() {
               return handleDependency(otherRelatedInput, relatedInput, dependant, easing);
             });
           }
@@ -209,7 +220,7 @@ jQuery(function ($) {
 
   /**
    * @param {Element|Node} relatedInput - Parent of element.
-   * @param {Element|Node} element  - Element that will be handled.
+   * @param {Element|Node} element - Element that will be handled.
    * @param {Element|Node|null} element2 - Optional extra dependency of element.
    * @param {Number} easing - Amount of easing on the transitions.
    */
@@ -270,27 +281,64 @@ jQuery(function ($) {
   }
 
   /**
-   * Show a shipment options form.
+   * Show the shipment options form on the Woo Orders page.
    *
    * @param {Event} event - Click event.
    */
   function showShipmentOptionsForm(event) {
     event.preventDefault();
-    var form = $(this).next(selectors.shipmentOptionsForm);
+    var button = $(this);
+    var orderId = button.data('order-id');
 
-    if (form.is(':visible')) {
-      // Form is already visible, hide it
-      form.slideUp();
+    var form = $(selectors.shipmentOptionsDialog);
+    var isSameAsLast = form.data('order-id') === orderId;
+    var isVisible = form.is(':visible');
 
-      // Remove the listener to close the form.
+    if (isVisible) {
       document.removeEventListener('click', hideShipmentOptionsForm);
-    } else {
-      // Form is invisible, show it
-      form.find(':input').change();
-      form.slideDown();
-      // Add the listener to close the form.
-      document.addEventListener('click', hideShipmentOptionsForm);
+
+      // Close form on second "details" click
+      if (isSameAsLast) {
+        form.slideUp(100);
+        return;
+      }
+
+      // Hide other opened form before opening new one
+      form.hide(0);
     }
+
+    // Set the position for the dialog to be under the clicked "Details" link.
+    var position = button.offset();
+    position.top -= button.height();
+    form.css(position);
+
+    // Set the data-order-id attribute on the dialog to keep track of which dialog was last opened.
+    form.data('order-id', orderId);
+
+    doRequest.bind(this)({
+      url: wcmp.ajax_url,
+      data: {
+        action: 'wcmp_get_shipment_options',
+        orderId: orderId,
+        security: wcmp.nonce,
+      },
+
+      /**
+       * Show the correct data in the form and add event listeners for handling saving and clicking outside the form.
+       *
+       * @param {String} response - Html to put in the form.
+       */
+      afterDone: function(response) {
+        console.log('jaaaaa');
+        form.html(response);
+        $(selectors.shipmentOptionsSaveButton).on('click', saveShipmentOptions);
+        document.addEventListener('click', hideShipmentOptionsForm);
+        form.slideDown(100);
+      },
+      afterFail: function() {
+        form.slideUp(100);
+      },
+    });
   }
 
   function setSpinner(element, state) {
@@ -315,18 +363,17 @@ jQuery(function ($) {
    * Save the shipment options in the bulk form.
    */
   function saveShipmentOptions() {
-    var button = this;
-    var form = $(button).closest(selectors.shipmentOptionsForm);
+    var form = $(selectors.shipmentOptionsDialog);
 
-    doRequest.bind(button)({
+    doRequest.bind(this)({
       url: wcmp.ajax_url,
       data: {
         action: 'wcmp_save_shipment_options',
         form_data: form.find(':input').serialize(),
         security: wcmp.nonce,
       },
-      afterDone: function () {
-        setTimeout(function () {
+      afterDone: function() {
+        setTimeout(function() {
           form.slideUp();
         }, timeoutAfterRequest);
       },
@@ -340,9 +387,9 @@ jQuery(function ($) {
     var action = document.querySelector('[name="action"]').value;
 
     /**
-     * Check if our action is the selected one.
+     * Check the selected action is ours.
      */
-    if (wcmp.bulk_actions.hasOwnProperty(action)) {
+    if (!Object.values(wcmp.bulk_actions).includes(action)) {
       return;
     }
 
@@ -359,21 +406,17 @@ jQuery(function ($) {
      * Get array of selected order_ids
      */
     $('tbody th.check-column input[type="checkbox"]:checked').each(
-      function () {
+      function() {
         order_ids.push($(this).val());
         rows.push('.post-' + $(this).val());
       }
     );
 
-    $(rows.join(',')).addClass('wcmp__loading');
+    $(rows.join(', ')).addClass('wcmp__loading');
 
     if (!order_ids.length) {
       alert(wcmp.strings.no_orders_selected);
       return;
-    } else {
-      var button = this;
-      $(button).prop('disabled', true);
-      $('.wcmp__spinner--bulk > .wcmp__spinner__loading').show();
     }
 
     switch (action) {
@@ -409,13 +452,9 @@ jQuery(function ($) {
    */
   function doRequest(request) {
     var button = this;
-    $(button).prop('disabled', true);
 
-    if (typeof request.data !== 'undefined') {
-      $('.wcmp__spinner--bulkAction > .wcmp__spinner__loading').show();
-    } else {
-      setSpinner(button, spinner.loading);
-    }
+    $(button).prop('disabled', true);
+    setSpinner(button, spinner.loading);
 
     if (!request.url) {
       request.url = wcmp.ajax_url;
@@ -426,7 +465,7 @@ jQuery(function ($) {
       method: request.method || 'POST',
       data: request.data || {},
     })
-      .done(function (res) {
+      .done(function(res) {
         setSpinner(button, spinner.success);
 
         if (request.hasOwnProperty('afterDone') && typeof request.afterDone === 'function') {
@@ -434,7 +473,7 @@ jQuery(function ($) {
         }
       })
 
-      .fail(function (res) {
+      .fail(function(res) {
         setSpinner(button, spinner.failed);
 
         if (request.hasOwnProperty('afterFail') && typeof request.afterFail === 'function') {
@@ -442,7 +481,7 @@ jQuery(function ($) {
         }
       })
 
-      .always(function (res) {
+      .always(function(res) {
         $(button).prop('disabled', false);
 
         if (request.hasOwnProperty('afterAlways') && typeof request.afterAlways === 'function') {
@@ -496,9 +535,7 @@ jQuery(function ($) {
         if (askForPrintPosition && !$(button).hasClass('wcmp__offset-dialog__button')) {
           showOffsetDialog.bind(button)();
         } else {
-          printLabel.bind(button)({
-            order_ids: order_ids
-          });
+          printLabel.bind(button)();
         }
         break;
       case wcmp.actions.add_return:
@@ -584,7 +621,7 @@ jQuery(function ($) {
     } else {
       dialogButton.attr('href', dialogButton.attr('href') + '&offset=' + newOffset);
     }
-  };
+  }
 
   /**
    * Show the offset dialog for bulk options that allow it.
@@ -640,7 +677,7 @@ jQuery(function ($) {
     doRequest.bind(this)({
       url: url,
       data: data || {},
-      afterDone: function (response) {
+      afterDone: function(response) {
         var redirect_url = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
 
         if (print === 'no' || print === 'after_reload') {
@@ -696,52 +733,25 @@ jQuery(function ($) {
   /**
    * Open given pdf link. Depending on the link it will be either downloaded or viewed. Refreshes the original window.
    *
-   * @param data
    * @param {String} pdfUrl - The url of the created pdf.
    * @param {Boolean?} waitForOnload - Wait for onload to refresh the original window. Refreshes immediately if false.
    *
    */
-  function openPdf(data, pdfUrl, waitForOnload) {
-    if (data['shipment_ids'] && data['shipment_ids'].length > 25) {
-      fileExists(pdfUrl);
-    } else {
-      var pdfWindow = window.open(pdfUrl, '_blank');
+  function openPdf(pdfUrl, waitForOnload) {
+    var pdfWindow = window.open(pdfUrl, '_blank');
 
-      if (waitForOnload) {
-        /*
-         * When the pdf window is loaded reload the main window. If we reload earlier the track & trace code won't be
-         * ready yet and can't be shown.
-         */
-        pdfWindow.onload = function () {
-          window.location.reload();
-        };
-      } else {
-        /* For when there is no onload event or there is no need to wait. */
+    if (waitForOnload) {
+      /*
+       * When the pdf window is loaded reload the main window. If we reload earlier the track & trace code won't be
+       * ready yet and can't be shown.
+       */
+      pdfWindow.onload = function() {
         window.location.reload();
-      }
+      };
+    } else {
+      /* For when there is no onload event or there is no need to wait. */
+      window.location.reload();
     }
-    $('.wcmp__spinner--bulkAction > .wcmp__spinner__loading').hide();
-  }
-
-  function fileExists(pdfUrl) {
-    $.ajax({
-      type: 'GET',
-      url: pdfUrl,
-      success: function (response) {
-        window.open(pdfUrl, '_blank');
-      },
-      error: function (xhr) {
-        if (xhr.status === 404) {
-          checkLabel(pdfUrl);
-        }
-      }
-    });
-  }
-
-  function checkLabel(pdfUrl) {
-    setTimeout(function () {
-      fileExists(pdfUrl);
-    }, 3000);
   }
 
   /**
@@ -773,8 +783,8 @@ jQuery(function ($) {
       };
     }
 
-    request.afterDone = function (response) {
-      openPdf(data, response);
+    request.afterDone = function(response) {
+      openPdf(response);
     };
 
     if (wcmp.download_display === 'download') {
@@ -788,7 +798,7 @@ jQuery(function ($) {
         url = wcmp.ajax_url + '?' + $.param(request.data);
       }
 
-      openPdf(data, url, true);
+      openPdf(url, true);
     }
   }
 
@@ -843,7 +853,7 @@ jQuery(function ($) {
         url: wcmp.ajax_url,
         data: data,
         context: summaryList,
-        success: function (response) {
+        success: function(response) {
           this.removeClass('ajax-waiting');
           this.html(response);
           this.data('loaded', true);
@@ -858,12 +868,15 @@ jQuery(function ($) {
    */
   function hideShipmentOptionsForm(event) {
     handleClickOutside.bind(hideShipmentOptionsForm)(event, {
-      main: selectors.shipmentOptionsForm,
-      wrappers: [selectors.shipmentOptionsForm, selectors.showShipmentOptionsForm],
+      main: selectors.shipmentOptionsDialog,
+      wrappers: [selectors.shipmentOptions, selectors.shipmentOptionsShowButton],
     });
   }
 
   /**
+   * Main: The element that will be hidden.
+   * Wrappers: Elements which don't count as "outside" when clicked.
+   *
    * @param {MouseEvent} event - Click event.
    * @property {Element} event.target
    */
@@ -888,8 +901,8 @@ jQuery(function ($) {
     var listener = this;
     var clickedOutside = true;
 
-    elements.wrappers.forEach(function (cls) {
-      if ((clickedOutside && event.target.matches(cls)) || event.target.closest(elements.main)) {
+    elements.wrappers.forEach(function(cls) {
+      if (clickedOutside && event.target.matches(cls) || event.target.closest(elements.main)) {
         clickedOutside = false;
       }
     });
@@ -907,8 +920,7 @@ jQuery(function ($) {
 if (typeof Object.assign !== 'function') {
   /* Must be writable: true, enumerable: false, configurable: true */
   Object.defineProperty(Object, 'assign', {
-    value: function assign(target, varArgs) { /* .length of function is 2 */
-      'use strict';
+    value: function assign(target) {
       if (target === null || target === undefined) {
         throw new TypeError('Cannot convert undefined or null to object');
       }
@@ -933,4 +945,3 @@ if (typeof Object.assign !== 'function') {
     configurable: true,
   });
 }
-

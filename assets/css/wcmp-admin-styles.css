@@ -32,7 +32,7 @@
 .wcmp__barcodes {
   overflow: hidden;
   -o-text-overflow: ellipsis;
-     text-overflow: ellipsis;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -40,7 +40,7 @@
   background-color: white;
   border: 1px solid #ccc;
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   padding: 10px;
   position: absolute;
   z-index: 999;
@@ -81,11 +81,15 @@
 
 .wcmp__shipment-summary {
   list-style: none;
+  margin-right: .3em;
 }
 
 .wcmp__shipment-summary li:before {
   content: "+";
   margin-right: 4px;
+}
+.wcmp__shipment-options-dialog {
+  width:  25em;
 }
 
 /*
@@ -120,7 +124,7 @@
   color: #999;
 }
 
-.wcmp__shipment-settings__save {
+.wcmp__shipment-options__save {
   margin-top: 8px;
 }
 
@@ -167,7 +171,7 @@
 }
 
 .wcmp__spinner,
-.wcmp__shipment-settings__save input {
+.wcmp__shipment-options__save input {
   vertical-align: middle;
 }
 
@@ -235,7 +239,7 @@
   margin: 10px auto;
 }
 
-.wcmp__bulk-options .wcmp__shipment-settings__save {
+.wcmp__bulk-options .wcmp__shipment-options__save {
   margin-top: 8px;
   float: right;
 }
