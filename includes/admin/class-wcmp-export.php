@@ -39,7 +39,7 @@ class WCMP_Export
     public const DESCRIPTION_MAX_LENGTH = 50;
 
     public const DEFAULT_POSITIONS = [2, 4, 1, 3];
-    public const SUFFIX_CHECK_REG = "~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i";
+    public const SUFFIX_CHECK_REG  = "~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i";
 
     public $order_id;
     public $success;
@@ -63,6 +63,7 @@ class WCMP_Export
 
     /**
      * @param int $orderId
+     *
      * @throws ApiException
      * @throws ErrorException
      * @throws MissingFieldException
@@ -133,9 +134,9 @@ class WCMP_Export
                             '<input type="hidden" value=\'%s\' class="wcmp__print-queue">',
                             json_encode(
                                 [
-	                                "shipment_ids" => $print_queue["shipment_ids"],
-	                                "order_ids"    => $print_queue["order_ids"],
-	                                "offset"       => $print_queue["offset"],
+                                    "shipment_ids" => $print_queue["shipment_ids"],
+                                    "order_ids"    => $print_queue["order_ids"],
+                                    "offset"       => $print_queue["offset"],
                                 ]
                             )
                         );
@@ -623,7 +624,7 @@ class WCMP_Export
     public static function getRecipientFromOrder(WC_Order $order)
     {
         $isUsingMyParcelFields = WCX_Order::has_meta($order, "_billing_street_name")
-                               || WCX_Order::has_meta($order, "_billing_house_number");
+                                 || WCX_Order::has_meta($order, "_billing_house_number");
 
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
@@ -702,11 +703,11 @@ class WCMP_Export
                     $address_intl["number"]        = (string) $address_parts["number"];
                     $address_intl["number_suffix"] = (string) $address_parts["extension"] ?: "";
 
-                    if (!$address_intl["number_suffix"]) {
-                       if (preg_match(self::SUFFIX_CHECK_REG, $address["street_additional_info"])) {
-                           $address_intl["number_suffix"] = $address["street_additional_info"];
-                           $address["street_additional_info"] = "";
-                       }
+                    if (! $address_intl["number_suffix"]) {
+                        if (preg_match(self::SUFFIX_CHECK_REG, $address["street_additional_info"])) {
+                            $address_intl["number_suffix"]     = $address["street_additional_info"];
+                            $address["street_additional_info"] = "";
+                        }
                     }
                 }
             }
@@ -1460,11 +1461,11 @@ class WCMP_Export
         if ($print === "no" || $print === "after_reload") {
             update_option("wcmyparcel_admin_notices", $return);
             if ($print === "after_reload") {
-	            $print_queue = [
-		            "order_ids"    => $order_ids,
-		            "shipment_ids" => $return["success_ids"],
-		            "offset"       => isset( $offset ) && is_numeric( $offset ) ? $offset % 4 : 0,
-	            ];
+                $print_queue = [
+                    "order_ids"    => $order_ids,
+                    "shipment_ids" => $return["success_ids"],
+                    "offset"       => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
+                ];
                 update_option("wcmyparcel_print_queue", $print_queue);
             }
         }

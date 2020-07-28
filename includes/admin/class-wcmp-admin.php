@@ -2,9 +2,9 @@
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
-use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
 if (! defined('ABSPATH')) {
@@ -55,6 +55,7 @@ class WCMP_Admin
         }
 
         add_action("admin_footer", [$this, "renderOffsetDialog"]);
+        add_action("admin_footer", [$this, "renderShipmentOptionsForm"]);
 
         /**
          * Orders page
@@ -75,6 +76,7 @@ class WCMP_Admin
 
         add_action("wp_ajax_wcmp_save_shipment_options", [$this, "save_shipment_options_ajax"]);
         add_action("wp_ajax_wcmp_get_shipment_summary_status", [$this, "order_list_ajax_get_shipment_summary"]);
+        add_action("wp_ajax_wcmp_get_shipment_options", [$this, "ajaxGetShipmentOptions"]);
 
         // HS code in product shipping options tab
         add_action("woocommerce_product_options_shipping", [$this, "productHsCodeField"]);
@@ -107,12 +109,12 @@ class WCMP_Admin
     {
         woocommerce_wp_text_input(
             array(
-                'id'            => self::META_HS_CODE_VARIATION."[{$loop}]",
-                'name'          => self::META_HS_CODE_VARIATION."[{$loop}]",
-                'value'         => get_post_meta( $variation->ID, self::META_HS_CODE_VARIATION, true ),
-                'label'         => __( 'HS Code', 'woocommerce' ),
+                'id'            => self::META_HS_CODE_VARIATION . "[{$loop}]",
+                'name'          => self::META_HS_CODE_VARIATION . "[{$loop}]",
+                'value'         => get_post_meta($variation->ID, self::META_HS_CODE_VARIATION, true),
+                'label'         => __('HS Code', 'woocommerce'),
                 'desc_tip'      => true,
-                'description'   => __( 'This HS Code overwrites the parents HS Code.', 'woocommerce' ),
+                'description'   => __('This HS Code overwrites the parents HS Code.', 'woocommerce'),
                 'wrapper_class' => 'form-row form-row-full',
             )
         );
@@ -124,10 +126,10 @@ class WCMP_Admin
      */
     public function save_variation_hs_code_field($variationId, $loop)
     {
-        $hsCodeValue = $_POST[self::META_HS_CODE_VARIATION][ $loop ];
+        $hsCodeValue = $_POST[self::META_HS_CODE_VARIATION][$loop];
 
-        if ( ! empty( $hsCodeValue ) ) {
-            update_post_meta( $variationId, self::META_HS_CODE_VARIATION, esc_attr( $hsCodeValue ));
+        if (! empty($hsCodeValue)) {
+            update_post_meta($variationId, self::META_HS_CODE_VARIATION, esc_attr($hsCodeValue));
         }
     }
 
@@ -138,7 +140,7 @@ class WCMP_Admin
      */
     public function load_variation_hs_code_field($variation)
     {
-        $variation[self::META_HS_CODE_VARIATION] = get_post_meta( $variation[ 'variation_id' ], self::META_HS_CODE_VARIATION, true );
+        $variation[self::META_HS_CODE_VARIATION] = get_post_meta($variation['variation_id'], self::META_HS_CODE_VARIATION, true);
 
         return $variation;
     }
@@ -150,12 +152,12 @@ class WCMP_Admin
     {
         register_post_status('wc-custom-delivered',
             [
-                'label' => 'Delivered',
-                'public' => true,
-                'exclude_from_search' => false,
-                'show_in_admin_all_list' => true,
+                'label'                     => 'Delivered',
+                'public'                    => true,
+                'exclude_from_search'       => false,
+                'show_in_admin_all_list'    => true,
                 'show_in_admin_status_list' => true,
-                'label_count' => _n_noop('Delivered (%s)', 'Delivered (%s)'),
+                'label_count'               => _n_noop('Delivered (%s)', 'Delivered (%s)'),
             ]
         );
     }
@@ -205,8 +207,10 @@ class WCMP_Admin
             return;
         }
 
-        $order_id = WCX_Order::get_id($order);
-        $consignments = WCMP_Admin::get_order_shipments($order);
+        $order_id             = WCX_Order::get_id($order);
+        $consignments         = WCMP_Admin::get_order_shipments($order);
+
+        echo '<div class="wcmp__shipment-settings-wrapper" style="display: none;">';
 
         // if we have shipments, then we show status & link to Track & Trace, settings under i
         if (! empty($consignments)) :
@@ -215,39 +219,30 @@ class WCMP_Admin
             $last_shipment_id = $last_shipment['shipment_id'];
 
             ?>
-            <div class="wcmp__shipment-summary">
-                <?php $this->showDeliveryOptionsForOrder($order); ?>
-                <a class="wcmp__shipment-summary__show">
-                    <span
-                            class="wcmp__encircle wcmp__shipment-summary__show">i
-                    </span>
-                </a>
-                <div
-                        class="wcmp__box wcmp__shipment-summary__list"
-                        data-loaded=""
-                        data-shipment_id="<?php echo $last_shipment_id; ?>"
-                        data-order_id="<?php echo $order_id; ?>"
-                        style="display: none;">
-                    <?php self::renderSpinner(); ?>
-                </div>
+            <?php $this->showDeliveryOptionsForOrder($order); ?>
+            <a class="wcmp__shipment-summary__show">
+                <span class="wcmp__encircle wcmp__shipment-summary__show">i</span>
+            </a>
+            <div
+                    class="wcmp__box wcmp__shipment-summary__list"
+                    data-loaded=""
+                    data-shipment_id="<?php echo $last_shipment_id; ?>"
+                    data-order_id="<?php echo $order_id; ?>"
+                    style="display: none;">
+                <?php self::renderSpinner(); ?>
             </div>
         <?php else : ?>
-            <div class="wcmp__shipment-options wcmp__has-consignments" style="display: none;">
+            <div class="wcmp__has-consignments" style="display: none;">
                 <?php $this->showDeliveryOptionsForOrder($order); ?>
             </div>
-        <?php endif; ?>
-        <div class="wcmp__shipment-options" style="display: none;">
-            <?php printf(
-                '<a href="#" class="wcmp__shipment-options__show">%s &#x25BE;</a>',
-                __("Details", "woocommerce-myparcel")
-            ); ?>
-            <div class="wcmp__box wcmp__shipment-options__form" style="display: none;">
-                <a class="wcmp__d--flex">
-                    <?php include('views/html-order-shipment-options.php'); ?>
-                </a>
-            </div>
-        </div>
-        <?php
+        <?php endif;
+
+        printf('<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
+            $order->get_id(),
+            __("Details", "woocommerce-myparcel")
+        );
+
+        echo "</div>";
     }
 
     /**
@@ -290,6 +285,7 @@ class WCMP_Admin
     /**
      * Add export option to bulk action drop down menu
      * Using Javascript until WordPress core fixes: http://core.trac.wordpress.org/ticket/16031
+     *
      * Used pre WordPress 4.7.0
      *
      * @access public
@@ -307,14 +303,14 @@ class WCMP_Admin
         if ('shop_order' == $post_type) {
             ?>
             <script type="text/javascript">
-                jQuery(document).ready(function () {
-                    <?php foreach ($bulk_actions as $action => $title) { ?>
-                    jQuery('<option>')
-                        .val('<?php echo $action; ?>')
-                        .html('<?php echo esc_attr($title); ?>')
-                        .appendTo('select[name=\'action\'], select[name=\'action2\']');
-                    <?php }    ?>
-                });
+              jQuery(document).ready(function () {
+                  <?php foreach ($bulk_actions as $action => $title) { ?>
+                jQuery('<option>')
+                  .val('<?php echo $action; ?>')
+                  .html('<?php echo esc_attr($title); ?>')
+                  .appendTo('select[name=\'action\'], select[name=\'action2\']');
+                  <?php }    ?>
+              });
             </script>
             <?php
             self::renderSpinner();
@@ -329,7 +325,7 @@ class WCMP_Admin
      */
     public function renderOffsetDialog(): void
     {
-        if (!WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ASK_FOR_PRINT_POSITION)) {
+        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ASK_FOR_PRINT_POSITION)) {
             return;
         }
 
@@ -351,7 +347,8 @@ class WCMP_Admin
         ?>
 
         <div
-                class="wcmp wcmp__box wcmp__offset-dialog" style="display: none;">
+                class="wcmp wcmp__box wcmp__offset-dialog"
+                style="display: none;">
             <div class="wcmp__offset-dialog__inner wcmp__d--flex">
                 <div>
                     <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
@@ -361,8 +358,11 @@ class WCMP_Admin
                             alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
                             class="wcmp__offset-dialog__icon"/>
                     <div>
-                        <a href="#" class="wcmp__action wcmp__offset-dialog__button button">
-                            <?php _e("Print", "woocommerce-myparcel"); ?><?php WCMP_Admin::renderSpinner(); ?>
+                        <a
+                                href="#"
+                                class="wcmp__action wcmp__offset-dialog__button button">
+                            <?php _e("Print", "woocommerce-myparcel"); ?>
+                            <?php WCMP_Admin::renderSpinner(); ?>
                         </a>
                     </div>
                 </div>
@@ -371,6 +371,28 @@ class WCMP_Admin
         </div>
         <?php
     }
+
+    /**
+     * Hide an empty shipment options form in the footer.
+     */
+    public function renderShipmentOptionsForm(): void
+    {
+        echo '<div class="wcmp__box wcmp__shipment-options-dialog" style="display: none; position: absolute;"></div>';
+    }
+
+    /**
+     * Get the new html content for the shipment options form based on the passed order id.
+     */
+    public function ajaxGetShipmentOptions(): void
+    {
+        // Order is used in views/html-order-shipment-options.php
+        $order = wc_get_order((int) $_POST['orderId']);
+
+        include('views/html-order-shipment-options.php');
+
+        die();
+    }
+
 
     /**
      * Add print actions to the orders listing
@@ -387,7 +409,7 @@ class WCMP_Admin
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
 
-        if (!WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
+        if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
             return;
         }
 
@@ -404,12 +426,12 @@ class WCMP_Admin
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcel-up.png",
                 "alt" => __("Export to MyParcel", "woocommerce-myparcel"),
             ],
-            $getLabels => [
+            $getLabels    => [
                 "url" => admin_url("$baseUrl&request=$getLabels&order_ids=$order_id"),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcel-pdf.png",
                 "alt" => __("Print MyParcel label", "woocommerce-myparcel"),
             ],
-            $addReturn => [
+            $addReturn    => [
                 "url" => admin_url("$baseUrl&request=$addReturn&order_ids=$order_id"),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcel-retour.png",
                 "alt" => __("Email return label", "woocommerce-myparcel"),
@@ -447,7 +469,7 @@ class WCMP_Admin
 
     /**
      * @param WC_Order $order
-     * @param bool $exclude_concepts
+     * @param bool     $exclude_concepts
      *
      * @return array
      */
@@ -486,7 +508,7 @@ class WCMP_Admin
          */
         if ($exclude_concepts) {
             $consignments = array_filter($consignments,
-                function ($consignment) {
+                function($consignment) {
                     return isset($consignment["track_trace"]);
                 }
             );
@@ -506,10 +528,7 @@ class WCMP_Admin
         parse_str($_POST["form_data"], $form_data);
 
         foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
-            $order = WCX::get_order($order_id);
-            /**
-             * @var DeliveryOptions $deliveryOptions
-             */
+            $order           = WCX::get_order($order_id);
             $deliveryOptions = self::getDeliveryOptionsFromOrder($order, $data);
 
             WCX_Order::update_meta_data(
@@ -525,6 +544,8 @@ class WCMP_Admin
                 $data["extra_options"]
             );
         }
+
+        die();
     }
 
     /**
@@ -571,7 +592,7 @@ class WCMP_Admin
         echo '</div>';
 
         $downloadDisplay = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
-        $consignments = WCMP_Admin::get_order_shipments($order);
+        $consignments    = WCMP_Admin::get_order_shipments($order);
 
         // show shipments if available
         if (empty($consignments)) {
@@ -627,8 +648,8 @@ class WCMP_Admin
             return;
         }
 
-        $order = WCX::get_order($order_id);
-        $country = WCX_Order::get_prop($order, 'shipping_country');
+        $order    = WCX::get_order($order_id);
+        $country  = WCX_Order::get_prop($order, 'shipping_country');
         $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'shipping_postcode'));
 
         // set url for NL or foreign orders
@@ -663,8 +684,8 @@ class WCMP_Admin
         echo '<div class="options_group">';
         woocommerce_wp_text_input(
             [
-                'id' => self::META_HS_CODE,
-                'label' => __('HS Code', 'woocommerce-myparcel'),
+                'id'          => self::META_HS_CODE,
+                'label'       => __('HS Code', 'woocommerce-myparcel'),
                 'description' => sprintf(
                     __('HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.',
                         'woocommerce-myparcel'
@@ -680,10 +701,10 @@ class WCMP_Admin
     public function productHsCodeFieldSave($post_id)
     {
         // check if hs code is passed and not an array (=variation hs code)
-        if (isset($_POST[self::META_HS_CODE]) && !is_array($_POST[self::META_HS_CODE])) {
+        if (isset($_POST[self::META_HS_CODE]) && ! is_array($_POST[self::META_HS_CODE])) {
             $product = wc_get_product($post_id);
             $hs_code = $_POST[self::META_HS_CODE];
-            if (!empty($hs_code)) {
+            if (! empty($hs_code)) {
                 WCX_Product::update_meta_data($product, self::META_HS_CODE, esc_attr($hs_code));
             } else {
                 if (isset($_POST[self::META_HS_CODE]) && empty($hs_code)) {
@@ -710,17 +731,19 @@ class WCMP_Admin
 
     public function productCountryOfOriginFieldSave($postId)
     {
-        if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && !is_array($_POST[self::META_COUNTRY_OF_ORIGIN])) {
-            $product = wc_get_product($postId);
+        if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && ! is_array($_POST[self::META_COUNTRY_OF_ORIGIN])) {
+            $product         = wc_get_product($postId);
             $countryOfOrigin = $_POST[self::META_COUNTRY_OF_ORIGIN];
-            if (!empty($countryOfOrigin)) {
+            if (! empty($countryOfOrigin)) {
                 WCX_Product::update_meta_data($product, self::META_COUNTRY_OF_ORIGIN, esc_attr($countryOfOrigin));
+
                 return;
             }
             if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && empty($countryOfOrigin)) {
                 WCX_Product::delete_meta_data($product, self::META_COUNTRY_OF_ORIGIN);
             }
         }
+
         return;
     }
 
@@ -787,7 +810,7 @@ class WCMP_Admin
      * data is invalid it falls back to defaults.
      *
      * @param WC_Order $order
-     * @param array $inputData
+     * @param array    $inputData
      *
      * @return DeliveryOptions
      * @throws \Exception
@@ -798,7 +821,7 @@ class WCMP_Admin
         $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
 
         // $meta is a json string, create an instance
-        if (!empty($meta) && !$meta instanceof DeliveryOptions) {
+        if (! empty($meta) && ! $meta instanceof DeliveryOptions) {
             if (is_string($meta)) {
                 $meta = json_decode(stripslashes($meta), true);
             }
@@ -807,10 +830,10 @@ class WCMP_Admin
 
             try {
                 // create new instance from known json
-                $meta = DeliveryOptionsAdapterFactory::create((array)$meta);
+                $meta = DeliveryOptionsAdapterFactory::create((array) $meta);
             } catch (BadMethodCallException $e) {
                 // create new instance from unknown json data
-                $meta = new WCMP_DeliveryOptionsFromOrderAdapter(null, (array)$meta);
+                $meta = new WCMP_DeliveryOptionsFromOrderAdapter(null, (array) $meta);
             }
         }
 
@@ -857,7 +880,7 @@ class WCMP_Admin
      * Output a spinner.
      *
      * @param string $state
-     * @param array $args
+     * @param array  $args
      */
     public static function renderSpinner(string $state = "", array $args = []): void
     {
@@ -900,7 +923,7 @@ class WCMP_Admin
      * @param string $url
      * @param string $alt
      * @param string $icon
-     * @param array $rawAttributes
+     * @param array  $rawAttributes
      */
     public static function renderAction(string $url, string $alt, string $icon, array $rawAttributes = []): void
     {
@@ -922,7 +945,7 @@ class WCMP_Admin
 
     /**
      * @param array $shipment
-     * @param int $order_id
+     * @param int   $order_id
      *
      * @throws Exception
      */
@@ -931,14 +954,14 @@ class WCMP_Admin
         $track_trace = $shipment["track_trace"] ?? null;
 
         if ($track_trace) {
-            $track_trace_url = WCMP_Admin::getTrackTraceUrl($order_id, $track_trace);
+            $track_trace_url  = WCMP_Admin::getTrackTraceUrl($order_id, $track_trace);
             $track_trace_link = sprintf(
                 '<a href="%s" target="_blank">%s</a>',
                 $track_trace_url,
                 $track_trace
             );
         } elseif (isset($shipment["shipment"]) && isset($shipment["shipment"]["options"])) {
-            $package_type = WCMP()->export->getPackageType($shipment["shipment"]["options"]["package_type"]);
+            $package_type     = WCMP()->export->getPackageType($shipment["shipment"]["options"]["package_type"]);
             $track_trace_link = "($package_type)";
         } else {
             $track_trace_link = __("(Unknown)", "woocommerce-myparcel");
@@ -949,15 +972,15 @@ class WCMP_Admin
 
     /**
      * @param array $shipment
-     * @param int $order_id
+     * @param int   $order_id
      */
     public static function renderStatus(array $shipment, int $order_id): void
     {
         echo $shipment["status"] ?? "–";
 
-        if (self::shipmentIsStatus($shipment,self::ORDER_STATUS_DELIVERED_AT_RECIPIENT)
-            || self::shipmentIsStatus($shipment,self::ORDER_STATUS_DELIVERED_READY_FOR_PICKUP)
-            || self::shipmentIsStatus($shipment,self::ORDER_STATUS_DELIVERED_PACKAGE_PICKED_UP)
+        if (self::shipmentIsStatus($shipment, self::ORDER_STATUS_DELIVERED_AT_RECIPIENT)
+            || self::shipmentIsStatus($shipment, self::ORDER_STATUS_DELIVERED_READY_FOR_PICKUP)
+            || self::shipmentIsStatus($shipment, self::ORDER_STATUS_DELIVERED_PACKAGE_PICKED_UP)
         ) {
             $order = WCX::get_order($order_id);
             $order->update_status('wc-custom-delivered');
@@ -966,7 +989,8 @@ class WCMP_Admin
 
     /**
      * @param array $shipment
-     * @param int $status
+     * @param int   $status
+     *
      * @return bool
      */
     public static function shipmentIsStatus(array $shipment, int $status): bool

@@ -1,14 +1,11 @@
 <?php
 
-use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
 /**
- * @var int      $order_id
  * @var WC_Order $order
  */
 
@@ -25,7 +22,7 @@ try {
 $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
 
 ?>
-<div class="wcmp wcmp__change-order">
+<div class="wcmp wcmp__shipment-options">
     <?php
     if ($deliveryOptions->isPickup()) {
         $pickup = $deliveryOptions->getPickupLocation();
@@ -48,7 +45,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     $shipment_options      = $deliveryOptions->getShipmentOptions();
 
     $packageTypes        = array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP);
-    $selectedPackageType = WCMP()->export->getPackageTypeForOrder($order_id);
+    $selectedPackageType = WCMP()->export->getPackageTypeForOrder($order->get_id());
 
     $postnl          = PostNLConsignment::CARRIER_NAME;
     $insurance       = false;
@@ -228,7 +225,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         unset($option_rows["[only_recipient]"]);
     }
 
-    $namePrefix = WCMP_Admin::SHIPMENT_OPTIONS_FORM_NAME . "[$order_id]";
+    $namePrefix = WCMP_Admin::SHIPMENT_OPTIONS_FORM_NAME . "[{$order->get_id()}]";
 
     foreach ($option_rows as $option_row) {
         if (isset($option_row["condition"])) {
@@ -250,7 +247,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
     }
     ?>
     <div>
-        <div class="button wcmp__shipment-settings__save">
+        <div class="button wcmp__shipment-options__save">
             <?php
             _e("Save", "woocommerce-myparcel");
             WCMP_Admin::renderSpinner();
