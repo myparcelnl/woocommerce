@@ -393,7 +393,6 @@ class WCMP_Admin
         die();
     }
 
-
     /**
      * Add print actions to the orders listing
      *
