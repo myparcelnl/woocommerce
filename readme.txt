@@ -12,7 +12,7 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 Export your WooCommerce orders to MyParcel (www.myparcel.nl) or to Flespakket (www.flespakket.nl) and print labels directly from the WooCommerce admin
 
 == Description ==
-[vimeo https://vimeo.com/243645291]
+[vimeo https://vimeo.com/241571840]
 This WooCommerce extension allows you to export your orders to the MyParcel service (www.myparcel.nl) & Flespakket service (www.flespakket.nl). The products are delivered by PostNL.
 
 **Online Manual (in Dutch):** [https://myparcelnl.github.io/woocommerce/](https://myparcelnl.github.io/woocommerce/)
@@ -91,8 +91,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 3.2.0 (2019-12-23) =
+= 3.2.1 (2020-02-04) =
+* Fix: The recursive delivery date loop and full cache
+
+= 3.2.0 (2020-01-27) =
 * Fix: Since November is it no longer possible to use pickup express.
+* Fix: Warning: invalid argument supplied .... class-wc-shipping-flat-rate.php.
 
 = 3.1.8 (2019-11-12) =
 * Fix: Check if there is connection with MyParcel

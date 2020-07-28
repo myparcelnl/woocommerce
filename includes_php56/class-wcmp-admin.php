@@ -478,7 +478,7 @@ class WooCommerce_MyParcel_Admin {
         if ($pickup = WooCommerce_MyParcel()->export->is_pickup($order, $delivery_options)) {
             switch($pickup['price_comment']) {
                 case 'retail':
-                    $title = __('postnl Pickup', 'woocommerce-myparcel');
+                    $title = __('PostNL Pickup', 'woocommerce-myparcel');
                 break;
             }
 
