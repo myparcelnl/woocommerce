@@ -83,11 +83,11 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Screenshots ==
 
-1. Export or print myparcel label per order
-2. Bulk export or print myparcel labels
+1. Export or print MyParcel label per order
+2. Bulk export or print MyParcel labels
 3. Change the shipment options for an order
 4. MyParcel actions on the order overview page
-5. Myparcel information on the order details page
+5. MyParcel information on the order details page
 
 == Changelog ==
 
@@ -102,7 +102,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: Check if there is connection with MyParcel
 
 = 3.1.7 (2019-07-16) =
-* Fix: Search in order grid myparcel shipment
+* Fix: Search in order grid MyParcel shipment
 * Fix: More than 5 products for World shipments
 
 = 3.1.6 (2019-07-04) =
@@ -163,7 +163,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 = 3.0.8 (2018-12-04) =
 * Fix: The multiple calls that are made to retrieve the shipping data.
 * Fix: The option for Pick up extra early
-* Fix: Wrong house number / postcode message and the possibility to adjust the address in the myparcel checkout
+* Fix: Wrong house number / postcode message and the possibility to adjust the address in the MyParcel checkout
 * Fix: Woocommerce tabel rates
 * Improvement: Better support the default WooCommerce checkout address fields
 
@@ -265,7 +265,7 @@ These are the biggest changes:
       ```des/class-wcmp-rest-api-integration.php): failed to open stream```
 
 = 2.4.3 (2018-01-05) =
-* Fix: Add myparcel fields to REST api to create order request
+* Fix: Add MyParcel fields to REST api to create order request
 * Fix: Hide days when the pickup delivery is selected
 
 = 2.4.2 (2017-10-29) =
@@ -391,7 +391,7 @@ These are the biggest changes:
 * Fix: Postcode validation issues with Portugal
 
 = 1.5.3 =
-* Feature: Edit myparcel address fields on user profile page
+* Feature: Edit MyParcel address fields on user profile page
 * Fix: Bug with automatic order completion
 
 = 1.5.2 =
@@ -486,7 +486,7 @@ These are the biggest changes:
 * Button styles are now in CSS instead of inline
 
 = 1.2.0 =
-* Feature: The myparcel checkout fields (street name / house number) can now also be modified on the my account page
+* Feature: The MyParcel checkout fields (street name / house number) can now also be modified on the my account page
 * Fix: WooCommerce 2.1 compatibility (checkout field localisation is now in WC core)
 * Updated MyParcel tariffs
 

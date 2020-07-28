@@ -1,0 +1,38 @@
+{
+  "globals": {
+    "wcmp": "readonly",
+    "MyParcel": "readonly",
+    "MyParcelFrontend": "readonly",
+    "MyParcelDisplaySettings": "readonly",
+    "MyParcelDeliveryOptions": "readonly"
+  },
+  "extends": [
+    "@myparcel/eslint-config/preset-default"
+  ],
+  "rules": {
+    "no-console": "error",
+    "vars-on-top": "off",
+    "multiline-comment-style": [
+      "error",
+      "starred-block"
+    ],
+    "newline-per-chained-call": [
+      "warn",
+      {
+        "ignoreChainWithDepth": 2
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "checkout.js",
+        "wcmp-admin.js",
+        "wcmp-frontend.js"
+      ],
+      "env": {
+        "jquery": true
+      }
+    }
+  ]
+}

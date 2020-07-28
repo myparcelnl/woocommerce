@@ -1,553 +1,947 @@
+/**
+ * @member {Object} wcmp
+ * @property {Object} wcmp.actions
+ * @property {{export: String, add_shipments: String, add_return: String, get_labels: String, modal_dialog: String}} wcmp.actions
+ * @property {String} wcmp.api_url - The API Url we use in MyParcel requests.
+ * @property {String} wcmp.ajax_url
+ * @property {String} wcmp.ask_for_print_position
+ * @property {Object} wcmp.bulk_actions
+ * @property {String} wcmp.download_display
+ * @property {String} wcmp.nonce
+ * @property {Object.<String, String>} wcmp.strings
+ */
+
+/* eslint-disable-next-line max-lines-per-function */
 jQuery(function($) {
-    /* enable color picker */
-    $('.wcmp-color-picker').wpColorPicker();
+  // Object.values polyfill
+  if (!Object.values) {
+    Object.values = function(obj) {
+      var values = [];
 
-    /* move shipment options to 'Ship to' column */
-    $('.wp-list-table .wcmp_shipment_options, .wp-list-table .wcmp_shipment_summary').each(function(index) {
-        var $ship_to_column = $(this).closest('tr').find('td.shipping_address');
-        $(this).appendTo($ship_to_column);
-        /* hidden by default - make visible */
-        $(this).show();
-    });
-
-    /* disable ALL shipment options form fields to avoid conflicts with order search field */
-    $('.wp-list-table .wcmp_shipment_options_form :input').prop('disabled', true);
-
-    /* show and enable options when clicked */
-    $('.wcmp_show_shipment_options').click(function(event) {
-        event.preventDefault();
-        $form = $(this).next('.wcmp_shipment_options_form');
-        if ($form.is(':visible')) {
-            /* disable all input fields again */
-            $form.find(':input').prop('disabled', true);
-            /* hide form */
-            $form.slideUp();
-        } else {
-            /* enable all fields on this form */
-            $form.find(':input').prop('disabled', false);
-            /* set init states according to change events */
-            $form.find(':input').change();
-            /* show form */
-            $form.slideDown();
+      for (var i in obj) {
+        if (obj.hasOwnProperty(i)) {
+          values.push(obj[i]);
         }
-    });
-    /* hide options form when click outside */
-    $(document).click(function(event) {
-        if (!$(event.target).closest('.wcmp_shipment_options_form').length) {
-            if (!($(event.target).hasClass('wcmp_show_shipment_options') || $(event.target).parent().hasClass('wcmp_show_shipment_options')) && $('.wcmp_shipment_options_form').is(":visible")) {
-                /* disable all input fields again */
-                $('.wcmp_shipment_options_form :input').prop('disabled', true);
-                /* hide form */
-                $('.wcmp_shipment_options_form').slideUp();
-            }
-        }
-    });
+      }
 
-    /* show summary when clicked */
-    $('.wcmp_show_shipment_summary').click(function(event) {
-        $summary_list = $(this).next('.wcmp_shipment_summary_list');
-        if ($summary_list.is(":visible") || $summary_list.data('loaded') != '') {
-            /* just open / close */
-            $summary_list.slideToggle();
-        } else if ($summary_list.is(":hidden") && $summary_list.data('loaded') == '') {
-            $summary_list.addClass('ajax-waiting');
-            $summary_list.find('.wcmp_spinner').show();
-            $summary_list.slideToggle();
-            var data = {
-                security:    wc_myparcel.nonce,
-                action:      "wcmp_get_shipment_summary_status",
-                order_id:    $summary_list.data('order_id'),
-                shipment_id: $summary_list.data('shipment_id'),
-            };
-            xhr = $.ajax({
-                type:    'POST',
-                url:     wc_myparcel.ajax_url,
-                data:    data,
-                context: $summary_list,
-                success: function(response) {
-                    this.removeClass('ajax-waiting');
-                    this.html(response);
-                    this.data('loaded', 'yes');
-                }
-            });
+      return values;
+    };
+  }
 
-        }
+  /**
+   * @type {Boolean}
+   */
+  var askForPrintPosition = Boolean(parseInt(wcmp.ask_for_print_position));
 
-    });
-    /* hide summary when click outside */
-    $(document).click(function(event) {
-        if (!$(event.target).closest('.wcmp_shipment_summary_list').length) {
-            if (!($(event.target).hasClass('wcmp_show_shipment_summary') || $(event.target).parent().hasClass('wcmp_shipment_summary')) && $('.wcmp_shipment_summary_list').is(":visible")) {
-                $('.wcmp_shipment_summary_list').slideUp();
-            }
-        }
-    });
+  var selectors = {
+    bulkSpinner: '.wcmp__bulk-spinner',
+    notice: '.wcmp__notice',
+    offsetDialog: '.wcmp__offset-dialog',
+    offsetDialogButton: '.wcmp__offset-dialog__button',
+    offsetDialogClose: '.wcmp__offset-dialog__close',
+    offsetDialogInputOffset: '.wcmp__offset-dialog__offset',
+    orderAction: '.wcmp__action',
+    orderActionImage: '.wcmp__action__img',
+    printQueue: '.wcmp__print-queue',
+    printQueueOffset: '.wcmp__print-queue__offset',
+    shipmentOptions: '.wcmp__shipment-options',
+    shipmentOptionsDialog: '.wcmp__shipment-options-dialog',
+    shipmentOptionsSaveButton: '.wcmp__shipment-options__save',
+    shipmentOptionsShowButton: '.wcmp__shipment-options__show',
+    shipmentSettingsWrapper: '.wcmp__shipment-settings-wrapper',
+    shipmentSummaryList: '.wcmp__shipment-summary__list',
+    showShipmentSummaryList: '.wcmp__shipment-summary__show',
+    spinner: '.wcmp__spinner',
+  };
 
-    /* hide automatic order status if automation not enabled */
-    $('.wcmp_shipment_options input#order_status_automation').change(function() {
-        var order_status_select = $('.wcmp_shipment_options select.automatic_order_status');
-        if (this.checked) {
-            $(order_status_select).prop('disabled', false);
-            $('.wcmp_shipment_options tr.automatic_order_status').show();
-        } else {
-            $(order_status_select).prop('disabled', true);
-            $('.wcmp_shipment_options tr.automatic_order_status').hide();
-        }
-    });
+  var spinner = {
+    loading: 'loading',
+    success: 'success',
+    failed: 'failed',
+  };
 
-    /* hide automatic barcode in note title if barcode in note is not enabled */
-    $('.wcmp_shipment_options input#barcode_in_note').change(function() {
-        var barcode_in_note_select = $('.wcmp_shipment_options select.barcode_in_note_title');
-        if (this.checked) {
-            $(barcode_in_note_select).prop('disabled', false);
-            $('.wcmp_shipment_options tr.barcode_in_note_title').show();
-        } else {
-            $(barcode_in_note_select).prop('disabled', true);
-            $('.wcmp_shipment_options tr.barcode_in_note_title').hide();
-        }
-    });
+  addListeners();
+  runTriggers();
+  addDependencies();
+  printQueuedLabels();
 
-    /* select > 500 if insured amount input is >499 */
-    $('.wcmp_shipment_options input.insured_amount').each(function(index) {
-        if ($(this).val() > 499) {
-            var insured_select = $(this).closest('table').parent().find('select.insured_amount');
-            $(insured_select).val('');
-        }
-    });
+  var timeoutAfterRequest = 200;
+  var baseEasing = 400;
 
-    /* hide insurance options if insured not checked */
-    $('.wcmp_shipment_options input.insured').change(function() {
-        var insured_select = $(this).closest('table').parent().find('select.insured_amount');
-        var insured_input = $(this).closest('table').parent().find('input.insured_amount');
-        if (this.checked) {
-            $(insured_select).prop('disabled', false);
-            $(insured_select).closest('tr').show();
-            $('select.insured_amount').change();
-        } else {
-            $(insured_select).prop('disabled', true);
-            $(insured_select).closest('tr').hide();
-            $(insured_input).closest('tr').hide();
-        }
-    });
+  /**
+   * Add event listeners.
+   */
+  function addListeners() {
+    /**
+     * Click offset dialog button (single export).
+     */
+    $(selectors.offsetDialog + ' button').click(printOrder);
 
-    /* hide & disable insured amount input if not needed */
-    $('.wcmp_shipment_options select.insured_amount').change(function() {
-        var insured_check = $(this).closest('table').parent().find('input.insured');
-        var insured_select = $(this).closest('table').parent().find('select.insured_amount');
-        var insured_input = $(this).closest('table').find('input.insured_amount');
-        if ($(insured_select).val()) {
-            $(insured_input).val('');
-            $(insured_input).prop('disabled', true);
-            $(insured_input).closest('tr').hide();
-        } else {
-            $(insured_input).prop('disabled', false);
-            $(insured_input).closest('tr').show();
-        }
-    });
+    $(selectors.offsetDialogClose).click(hideOffsetDialog);
 
-    /* hide all options if not a parcel */
-    $('.wcmp_shipment_options select.package_type').change(function() {
-        var $package_type = $(this).val();
-        var parcel_options = $('.wcmyparcel_settings_table.parcel_options');
-        var digital_stamp_options = $('.wcmyparcel_settings_table.digital_stamp_options');
+    /**
+     * Show and enable options when clicked.
+     */
+    $(selectors.shipmentOptionsShowButton).click(showShipmentOptionsForm);
 
-        enable_options = function(div) {
-            $(div).find('input, textarea, button, select').prop('disabled', false);
-            $(div).show();
-        };
+    /**
+     * Show summary when clicked.
+     */
+    $(selectors.showShipmentSummaryList).click(showShipmentSummaryList);
 
-        disable_options = function(div) {
-            $(div).find('input, textarea, button, select').prop('disabled', true);
-            $(div).hide();
-        };
+    /**
+     * Bulk actions.
+     */
+    $('#doaction, #doaction2').click(doBulkAction);
 
-        if ($package_type == '1') {
-            enable_options(parcel_options);
-        } else {
-            disable_options(parcel_options);
-            $(parcel_options).find('.insured').prop('checked', false).change();
-        }
+    /**
+     * Add offset dialog when address labels option is selected.
+     */
+    $('select[name=\'action\'], select[name=\'action2\']').change(showBulkOffsetDialog);
 
-        $package_type == '4' ? enable_options(digital_stamp_options) : disable_options(digital_stamp_options);
-    });
+    /**
+     * Single actions click. The .wc_actions .single_wc_actions for support wc > 3.3.0.
+     */
+    $(selectors.orderAction).click(onActionClick);
 
-    /* hide delivery options details if disabled */
-    $('input.wcmp_delivery_option').change(function() {
-        if ($(this).is(':checked')) {
-            $(this).parent().find('.wcmp_delivery_option_details').show();
-        } else {
-            $(this).parent().find('.wcmp_delivery_option_details').hide();
-        }
-    });
+    $(window).bind('tb_unload', onThickBoxUnload);
+  }
 
-    /* check witch radio button of A4 or A6 is activated and disable/enable print position */
-    $('input[id^=\'label_format\']').change(function() {
-
-        /* when the options are not selected */
-        if (!$(this).is(':checked')) {
-            return;
-        }
-
-        var parent_offset = $("#print_position_offset").parent().parent();
-
-        if ($(this).attr("value") == "A4") {
-            parent_offset.show();
-            return;
-        }
-
-        /* Always A6 */
-        parent_offset.hide();
-        $("#print_position_offset").prop("checked", false);
-    });
-
-    /* Hide all checkout options if disabled */
-    $('#woocommerce-myparcel-settings #myparcel_checkout').change(function() {
-        $next_settings_rows = $(this).closest('tr').nextAll('tr');
-        $next_settings_headers = $(this).closest('table').nextAll('h2');
-        $next_settings_forms = $(this).closest('table').nextAll('table');
-        if ($(this).is(':checked')) {
-            $next_settings_rows.show();
-            $next_settings_forms.show();
-            $next_settings_headers.show();
-        } else {
-            $next_settings_rows.hide();
-            $next_settings_forms.hide();
-            $next_settings_headers.hide();
-        }
-    });
-
+  /**
+   * Run the things that need to be done on load.
+   */
+  function runTriggers() {
     /* init options on settings page and in bulk form */
-    $('#woocommerce-myparcel-settings :input, .wcmp_bulk_options_form :input').change();
+    $('#wcmp_settings :input, .wcmp__bulk-options :input').change();
 
-    /* myparcel_checkout */
+    /**
+     * Move the shipment options form and the shipment summary from the actions column to the shipping address column.
+     *
+     * @see includes/admin/class-wcmp-admin.php:49
+     */
+    $(selectors.shipmentSettingsWrapper).each(function() {
+      var shippingAddressColumn = $(this)
+        .closest('tr')
+        .find('td.shipping_address');
 
-    /* saving shipment options via AJAX */
-    $('.wcmp_save_shipment_settings')
-    .on('click', 'a.button.save', function() {
-        var order_id = $(this).data().order;
-        var $form = $(this).closest('.wcmp_shipment_options').find('.wcmp_shipment_options_form');
-        var package_type = $form.find('select.package_type option:selected').text();
-        var $package_type_text_element = $(this).closest('.wcmp_shipment_options').find('.wcpm_package_type');
+      $(this).appendTo(shippingAddressColumn);
+      $(this).show();
+    });
+  }
 
-        /* show spinner */
-        $form.find('.wcmp_save_shipment_settings .waiting').show();
+  /**
+   * Add dependencies for form elements with conditions.
+   */
+  function addDependencies() {
+    /**
+     * Get all nodes with a data-parent attribute.
+     */
+    var nodesWithParent = document.querySelectorAll('[data-parent]');
 
-        var form_data = $form.find(":input").serialize();
-        var data = {
-            action:    'wcmp_save_shipment_options',
-            order_id:  order_id,
-            form_data: form_data,
-            security:  wc_myparcel.nonce,
-        };
+    /**
+     * Dependency object.
+     *
+     * @type {Object.<String, Node[]>}
+     */
+    var dependencies = {};
 
-        $.post(wc_myparcel.ajax_url, data, function(response) {
-            /* console.log(response); */
+    /**
+     * Loop through the classes to create a dependency like this: { [parent]: node[] }.
+     */
+    nodesWithParent.forEach(function(node) {
+      var parent = node.getAttribute('data-parent');
 
-            /* set main text to selection */
-            $package_type_text_element.text(package_type);
+      if (dependencies.hasOwnProperty(parent)) {
+        dependencies[parent].push(node);
+      } else {
+        // Or create the list with the node inside it
+        dependencies[parent] = [node];
+      }
+    });
 
-            /* hide spinner */
-            $form.find('.wcmp_save_shipment_settings .waiting').hide();
+    createDependencies(dependencies);
+  }
 
-            /* disable all input fields again */
-            $form.find(':input').prop('disabled', true);
+  /**
+   * Print queued labels.
+   */
+  function printQueuedLabels() {
+    var printData = $(selectors.printQueue).val();
 
-            /* hide the form */
-            $form.slideUp();
+    if (printData) {
+      printLabel(JSON.parse(printData));
+    }
+  }
+
+  /**
+   * Handle showing and hiding of settings.
+   *
+   * @param {Object<String, Node[]>} deps - Dependency names and all the nodes that depend on them.
+   */
+  function createDependencies(deps) {
+    Object.keys(deps).forEach(function(relatedInputId) {
+      var relatedInput = document.querySelector('[name="' + relatedInputId + '"]');
+
+      /**
+       * Loop through all the deps.
+       *
+       * @param {Event|null} event - Event.
+       * @param {Number} easing - Amount of easing.
+       */
+      function handle(event, easing) {
+        if (easing === undefined) {
+          easing = baseEasing;
+        }
+
+        /**
+         * @type {Element} dependant
+         */
+        deps[relatedInputId].forEach(function(dependant) {
+          handleDependency(relatedInput, dependant, null, easing);
+
+          if (relatedInput.hasAttribute('data-parent')) {
+            var otherRelatedInput = document.querySelector('[name="' + relatedInput.getAttribute('data-parent') + '"]');
+
+            handleDependency(otherRelatedInput, relatedInput, dependant, easing);
+
+            otherRelatedInput.addEventListener('change', function() {
+              return handleDependency(otherRelatedInput, relatedInput, dependant, easing);
+            });
+          }
         });
-    });
+      }
 
-    /* Print queued labels */
-    var print_queue = $("#wcmp_printqueue").val();
-    var print_queue_offset = $("#wcmp_printqueue_offset").val();
-    if (typeof print_queue !== 'undefined') {
-        if (typeof print_queue_offset === 'undefined') {
-            print_queue_offset = 0;
-        }
-        myparcel_print($.parseJSON(print_queue), print_queue_offset);
+      relatedInput.addEventListener('change', handle);
+
+      // Do this on load too.
+      handle(null, 0);
+    });
+  }
+
+  /**
+   * @param {Element|Node} relatedInput - Parent of element.
+   * @param {Element|Node} element - Element that will be handled.
+   * @param {Element|Node|null} element2 - Optional extra dependency of element.
+   * @param {Number} easing - Amount of easing on the transitions.
+   */
+  function handleDependency(relatedInput, element, element2, easing) {
+    var dataParentValue = element.getAttribute('data-parent-value');
+
+    var type = element.getAttribute('data-parent-type');
+    var wantedValue = dataParentValue || '1';
+    var setValue = element.getAttribute('data-parent-set') || null;
+    var value = relatedInput.value;
+
+    var elementContainer = $(element).closest('tr');
+    var elementCheckoutStringsTitleContainer = $('#checkout_strings');
+
+    /**
+     * @type {Boolean}
+     */
+    var matches;
+
+    /*
+     * If the data-parent-value contains any semicolons it's an array, check it as an array instead.
+     */
+    if (dataParentValue && dataParentValue.indexOf(';') > -1) {
+      matches = dataParentValue
+        .split(';')
+        .indexOf(value) > -1;
+    } else {
+      matches = value === wantedValue;
     }
 
-    /* Bulk actions */
-    $("#doaction, #doaction2").click(function(event) {
-        var actionselected = $(this).attr("id").substr(2);
-        /* check if action starts with 'wcmp_' */
-        if ($('select[name="' + actionselected + '"]').val().substring(0, 5) == "wcmp_") {
-            event.preventDefault();
-            /* remove notices */
-            $('.myparcel_notice').remove();
-
-            /* strip 'wcmp_' from action */
-            var action = $('select[name="' + actionselected + '"]').val().substring(5);
-
-            /* Get array of checked orders (order_ids) */
-            var order_ids = [];
-            $('tbody th.check-column input[type="checkbox"]:checked').each(
-                function() {
-                    order_ids.push($(this).val());
-                }
-            );
-
-            /* execute action */
-            switch (action) {
-                case 'export':
-                    bulk_spinner(this, 'show');
-                    myparcel_export(order_ids);
-                    break;
-                case 'print':
-                    bulk_spinner(this, 'show');
-                    var offset = wc_myparcel.offset == 1 ? $('.wc_myparcel_offset').val() : 0;
-                    myparcel_print(order_ids, offset);
-                    break;
-                case 'export_print':
-                    bulk_spinner(this, 'show');
-                    myparcel_export(order_ids, 'after_reload'); /* 'yes' initializes print mode and disables refresh */
-                    break;
-            }
-
-            return;
+    switch (type) {
+      case 'child':
+        elementContainer[matches ? 'show' : 'hide'](easing);
+        break;
+      case 'show':
+        elementContainer[matches ? 'show' : 'hide'](easing);
+        elementCheckoutStringsTitleContainer[matches ? 'show' : 'hide'](easing);
+        break;
+      case 'disable':
+        $(element).prop('disabled', !matches);
+        if (!matches && setValue) {
+          element.value = setValue;
         }
+        break;
+    }
+
+    relatedInput.setAttribute('data-enabled', matches.toString());
+    element.setAttribute('data-enabled', matches.toString());
+
+    if (element2) {
+      var showOrHide = element2.getAttribute('data-enabled') === 'true'
+        && element.getAttribute('data-enabled') === 'true';
+
+      $(element2).closest('tr')
+        [showOrHide ? 'show' : 'hide'](easing);
+      relatedInput.setAttribute('data-enabled', showOrHide.toString());
+    }
+  }
+
+  /**
+   * Show the shipment options form on the Woo Orders page.
+   *
+   * @param {Event} event - Click event.
+   */
+  function showShipmentOptionsForm(event) {
+    event.preventDefault();
+    var button = $(this);
+    var orderId = button.data('order-id');
+
+    var form = $(selectors.shipmentOptionsDialog);
+    var isSameAsLast = form.data('order-id') === orderId;
+    var isVisible = form.is(':visible');
+
+    if (isVisible) {
+      document.removeEventListener('click', hideShipmentOptionsForm);
+
+      // Close form on second "details" click
+      if (isSameAsLast) {
+        form.slideUp(100);
+        return;
+      }
+
+      // Hide other opened form before opening new one
+      form.hide(0);
+    }
+
+    // Set the position for the dialog to be under the clicked "Details" link.
+    var position = button.offset();
+    position.top -= button.height();
+    form.css(position);
+
+    // Set the data-order-id attribute on the dialog to keep track of which dialog was last opened.
+    form.data('order-id', orderId);
+
+    doRequest.bind(this)({
+      url: wcmp.ajax_url,
+      data: {
+        action: 'wcmp_get_shipment_options',
+        orderId: orderId,
+        security: wcmp.nonce,
+      },
+
+      /**
+       * Show the correct data in the form and add event listeners for handling saving and clicking outside the form.
+       *
+       * @param {String} response - Html to put in the form.
+       */
+      afterDone: function(response) {
+        console.log('jaaaaa');
+        form.html(response);
+        $(selectors.shipmentOptionsSaveButton).on('click', saveShipmentOptions);
+        document.addEventListener('click', hideShipmentOptionsForm);
+        form.slideDown(100);
+      },
+      afterFail: function() {
+        form.slideUp(100);
+      },
     });
+  }
 
-    /* Single actions click. The .wc_actions .single_wc_actions for support wc > 3.3.0 */
-    $(".order_actions, .single_order_actions, .wc_actions, .single_wc_actions")
-    .on('click', 'a.button.myparcel', function(event) {
-        event.preventDefault();
-        var button_action = $(this).data('request');
-        var order_ids = [$(this).data('order-id')];
+  function setSpinner(element, state) {
+    var baseSelector = selectors.spinner.replace('.', '');
+    var spinner = $(element).find(selectors.spinner);
 
-        /* execute action */
-        switch (button_action) {
-            case 'add_shipment':
-                var button = this;
-                button_spinner(button, 'show');
-                myparcel_export(order_ids);
-                break;
-            case 'get_labels':
-                if (wc_myparcel.offset == 1) {
-                    contextual_offset_dialog(order_ids, event);
-                } else {
-                    myparcel_print(order_ids);
-                }
-                break;
-            case 'add_return':
-                myparcel_modal_dialog(order_ids, 'return');
-                break;
-        }
+    if (state) {
+      spinner
+        .removeClass()
+        .addClass(baseSelector)
+        .addClass(baseSelector + '--' + state)
+        .show();
+    } else {
+      spinner
+        .removeClass()
+        .addClass(baseSelector)
+        .hide();
+    }
+  }
+
+  /**
+   * Save the shipment options in the bulk form.
+   */
+  function saveShipmentOptions() {
+    var form = $(selectors.shipmentOptionsDialog);
+
+    doRequest.bind(this)({
+      url: wcmp.ajax_url,
+      data: {
+        action: 'wcmp_save_shipment_options',
+        form_data: form.find(':input').serialize(),
+        security: wcmp.nonce,
+      },
+      afterDone: function() {
+        setTimeout(function() {
+          form.slideUp();
+        }, timeoutAfterRequest);
+      },
     });
+  }
 
-    $(window).bind('tb_unload', function() {
-        /* re-enable scrolling after closing thickbox */
-        $("body").css({overflow: 'inherit'})
-    });
+  /**
+   * @param {Event} event - Click event.
+   */
+  function doBulkAction(event) {
+    var action = document.querySelector('[name="action"]').value;
 
-    /* Add offset dialog when address labels option is selected */
-    $("select[name='action'], select[name='action2']").change(function() {
-        var actionselected = $(this).val();
-        /* alert(actionselected); */
-        if ((actionselected == 'wcmp_print' || actionselected == 'wcmp_export_print') && wc_myparcel.offset == 1) {
-            var insert_position = $(this).attr("name") == 'action' ? 'top' : 'bottom';
-            $('#wcmyparcel_offset_dialog')
-            .attr('style', 'clear:both') /* reset styles */
-            .insertAfter('div.tablenav.' + insert_position)
-            .show();
+    /**
+     * Check the selected action is ours.
+     */
+    if (!Object.values(wcmp.bulk_actions).includes(action)) {
+      return;
+    }
 
-            /* make sure button is not shown */
-            $('#wcmyparcel_offset_dialog').find('button').hide();
-            /* clear input */
-            $('#wcmyparcel_offset_dialog').find('input').val('');
-        } else {
-            $('#wcmyparcel_offset_dialog')
-            .appendTo('body')
-            .hide();
-        }
-    });
+    event.preventDefault();
 
-    /* Click offset dialog button (single export) */
-    $("#wcmyparcel_offset_dialog button").click(function(event) {
-        $dialog = $(this).parent();
+    /*
+     * Remove notices
+     */
+    $(selectors.notice).remove();
+    var order_ids = [];
+    var rows = [];
 
-        /* set print variables */
-        var order_ids = [$dialog.find('input.order_id').val()];
-        var offset = $dialog.find('input.wc_myparcel_offset').val();
+    /*
+     * Get array of selected order_ids
+     */
+    $('tbody th.check-column input[type="checkbox"]:checked').each(
+      function() {
+        order_ids.push($(this).val());
+        rows.push('.post-' + $(this).val());
+      }
+    );
 
-        /* hide dialog */
-        $dialog.hide();
+    $(rows.join(', ')).addClass('wcmp__loading');
 
-        /* print labels */
-        myparcel_print(order_ids, offset);
-    });
+    if (!order_ids.length) {
+      alert(wcmp.strings.no_orders_selected);
+      return;
+    }
 
-    function contextual_offset_dialog(order_ids, event) {
-        /* place offset dialog at mouse tip */
-        $('#wcmyparcel_offset_dialog')
-        .show()
-        .appendTo('body')
-        .css({
-            position:           "absolute",
-            "background-color": "white",
-            padding:            "6px",
-            width:              "100px",
-            border:             "1px solid #ccc",
-            top:                event.pageY,
-            left:               event.pageX,
-            "margin-left":      "-100px",
+    switch (action) {
+      /**
+       * Export orders.
+       */
+      case wcmp.bulk_actions.export:
+        exportToMyParcel(order_ids);
+        break;
+
+      /**
+       * Print labels.
+       */
+      case wcmp.bulk_actions.print:
+        printLabel({
+          order_ids: order_ids,
         });
+        break;
 
-        $('#wcmyparcel_offset_dialog').find('button')
-        .show()
-        .data('order_id', order_ids);
+      /**
+       * Export and print.
+       */
+      case wcmp.bulk_actions.export_print:
+        exportToMyParcel(order_ids, 'after_reload');
+        break;
+    }
+  }
 
-        /* clear input */
-        $('#wcmyparcel_offset_dialog').find('input').val('');
+  /**
+   * Do an ajax request.
+   *
+   * @param {Object} request - Request object.
+   */
+  function doRequest(request) {
+    var button = this;
 
-        $('#wcmyparcel_offset_dialog').append('<input type=hidden class="order_id"/>');
-        $('#wcmyparcel_offset_dialog input.order_id').val(order_ids);
+    $(button).prop('disabled', true);
+    setSpinner(button, spinner.loading);
+
+    if (!request.url) {
+      request.url = wcmp.ajax_url;
     }
 
-    function button_spinner(button, display) {
-        if (display === 'show') {
-            $button_img = $(button).find('.wcmp_button_img');
-            $button_img.hide();
-            /* console.log($( button ).parent().find('.wcmp_spinner')); */
-            $(button).parent().find('.wcmp_spinner')
-            .insertAfter($button_img)
-            .show();
+    $.ajax({
+      url: request.url,
+      method: request.method || 'POST',
+      data: request.data || {},
+    })
+      .done(function(res) {
+        setSpinner(button, spinner.success);
+
+        if (request.hasOwnProperty('afterDone') && typeof request.afterDone === 'function') {
+          request.afterDone(res);
+        }
+      })
+
+      .fail(function(res) {
+        setSpinner(button, spinner.failed);
+
+        if (request.hasOwnProperty('afterFail') && typeof request.afterFail === 'function') {
+          request.afterFail(res);
+        }
+      })
+
+      .always(function(res) {
+        $(button).prop('disabled', false);
+
+        if (request.hasOwnProperty('afterAlways') && typeof request.afterAlways === 'function') {
+          request.afterAlways(res);
+        }
+      });
+  }
+
+  function getParameterByName(name, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, '\\$&');
+
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    var results = regex.exec(url);
+
+    if (!results) {
+      return null;
+    }
+
+    if (!results[2]) {
+      return '';
+    }
+
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
+
+  /**
+   * On clicking the actions in a single order.
+   *
+   * @param {Event} event - Click event.
+   */
+  function onActionClick(event) {
+    var button = this;
+
+    var request = getParameterByName('request', button.href);
+    var order_ids = getParameterByName('order_ids', button.href);
+
+    if (!wcmp.actions.hasOwnProperty(request)) {
+      return;
+    }
+
+    event.preventDefault();
+
+    switch (request) {
+      case wcmp.actions.add_shipments:
+        exportToMyParcel.bind(button)();
+        break;
+      case wcmp.actions.get_labels:
+        if (askForPrintPosition && !$(button).hasClass('wcmp__offset-dialog__button')) {
+          showOffsetDialog.bind(button)();
         } else {
-            $(button).parent().find('.wcmp_spinner').hide();
-            $(button).find('.wcmp_button_img').show();
+          printLabel.bind(button)();
         }
+        break;
+      case wcmp.actions.add_return:
+        myparcel_modal_dialog(order_ids, 'return');
+        break;
+    }
+  }
+
+  /**
+   * Show the offset dialog before printing.
+   *
+   * @param {String?} position - To position the dialog `left` or `right` relative to the bound element.
+   * @param {String?} context - Context in which the dialog was created. Ex. 'bulk'.
+   */
+  function showOffsetDialog(position, context) {
+    position = position || 'left';
+
+    var parent = this;
+    var offsetDialog = $(selectors.offsetDialog);
+    var dialogButton = $(selectors.offsetDialogButton);
+    var parentOffset = $(parent).offset();
+
+    /**
+     * Position it to the bottom left or right of the clicked button.
+     */
+    if (position === 'left') {
+      offsetDialog.css({
+        left: parentOffset.left - offsetDialog.width(),
+        top: parentOffset.top,
+      });
+    } else {
+      offsetDialog.css(parentOffset);
     }
 
-    function bulk_spinner(action, display) {
-        if (display === 'show') {
-            $submit_button = $(action).parent().find('.button.action');
-            $('.wcmp_bulk_spinner').insertAfter($submit_button).show();
+    dialogButton.attr('href', parent.href);
+
+    /**
+     * Reset input(s).
+     */
+    offsetDialog.find('input').val(0);
+
+    /**
+     * Make sure button is not shown and there is no input listener to update it if context is bulk.
+     */
+    if (context === 'bulk') {
+      dialogButton.hide();
+      $(selectors.offsetDialogInputOffset).off('blur update change', onUpdateOffset);
+    } else {
+      dialogButton.show();
+      $(selectors.offsetDialogInputOffset).on('blur update change', onUpdateOffset);
+    }
+
+    /**
+     * Finally, show the dialog.
+     */
+    offsetDialog.slideDown();
+  }
+
+  /**
+   * Hide the offset dialog and remove the input listener.
+   *
+   * @param {Event?} event - Click event if called from a button.
+   */
+  function hideOffsetDialog(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    $(selectors.offsetDialogInputOffset).off('blur update change', onUpdateOffset);
+    $(selectors.offsetDialog).slideUp();
+  }
+
+  /**
+   * On changing the offset value in the dialog, update the offset parameter in the dialog button's href attribute.
+   */
+  function onUpdateOffset() {
+    var dialogButton = $(selectors.offsetDialogButton);
+    var hasOffset = dialogButton.attr('href').indexOf('offset=') > -1;
+    var newOffset = this.value;
+
+    if (hasOffset) {
+      dialogButton.attr('href', dialogButton.attr('href').replace(/([?&]offset=)\d*/, '$1' + newOffset));
+    } else {
+      dialogButton.attr('href', dialogButton.attr('href') + '&offset=' + newOffset);
+    }
+  }
+
+  /**
+   * Show the offset dialog for bulk options that allow it.
+   */
+  function showBulkOffsetDialog() {
+    if ([wcmp.bulk_actions.print, wcmp.bulk_actions.export_print].indexOf(this.value) === -1) {
+      hideOffsetDialog();
+      return;
+    }
+
+    showOffsetDialog.bind(this)('right', 'bulk');
+  }
+
+  function printOrder() {
+    var dialog = $(this).parent();
+
+    /* set print variables */
+    var order_ids = [dialog.find('input.order_id').val()];
+    var offset = dialog.find(selectors.offsetDialogInputOffset).val();
+
+    /* hide dialog */
+    dialog.hide();
+
+    /* print labels */
+    printLabel({
+      order_ids: order_ids,
+      offset: offset,
+    });
+  }
+
+  /* export orders to MyParcel via AJAX */
+  function exportToMyParcel(order_ids, print) {
+    var url;
+    var data;
+
+    if (typeof print === 'undefined') {
+      print = 'no';
+    }
+
+    if (this.href) {
+      url = this.href;
+    } else {
+      data = {
+        action: wcmp.actions.export,
+        request: wcmp.actions.add_shipments,
+        offset: getPrintOffset(),
+        order_ids: order_ids,
+        print: print,
+        _wpnonce: wcmp.nonce,
+      };
+    }
+
+    doRequest.bind(this)({
+      url: url,
+      data: data || {},
+      afterDone: function(response) {
+        var redirect_url = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
+
+        if (print === 'no' || print === 'after_reload') {
+          /* refresh page, admin notices are stored in options and will be displayed automatically */
+          window.location.href = redirect_url;
         } else {
-            $('.wcmp_bulk_spinner').hide();
-        }
-    }
+          /* when printing, output notices directly so that we can init print in the same run */
+          if (response !== null && typeof response === 'object' && 'error' in response) {
+            myparcel_admin_notice(response.error, 'error');
+          }
 
-    /* export orders to MyParcel via AJAX */
-    function myparcel_export(order_ids, print) {
-        if (typeof print === 'undefined') {
-            print = 'no';
-        }
-        var offset = wc_myparcel.offset === 1 ? $('.wc_myparcel_offset').val() : 0;
-        var data = {
-            action:    'wc_myparcel',
-            request:   'add_shipments',
+          if (response !== null && typeof response === 'object' && 'success' in response) {
+            myparcel_admin_notice(response.success, 'success');
+          }
+
+          /* load PDF */
+          printLabel({
             order_ids: order_ids,
-            offset:    offset,
-            print:     print,
-            security:  wc_myparcel.nonce,
-        };
-
-        $.post(wc_myparcel.ajax_url, data, function(response) {
-            response = $.parseJSON(response);
-
-            if (print === 'no' || print === 'after_reload') {
-                /* refresh page, admin notices are stored in options and will be displayed automatically */
-                redirect_url = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
-                window.location.href = redirect_url;
-                return;
-            } else {
-                /* when printing, output notices directly so that we can init print in the same run */
-                if (response !== null && typeof response === 'object' && 'error' in response) {
-                    myparcel_admin_notice(response.error, 'error');
-                }
-
-                if (response !== null && typeof response === 'object' && 'success' in response) {
-                    myparcel_admin_notice(response.success, 'success');
-                }
-
-                /* load PDF */
-                myparcel_print(order_ids, offset);
-            }
-
-            return;
-        });
-
-    }
-
-    function myparcel_modal_dialog(order_ids, dialog) {
-        var request_prefix = (wc_myparcel.ajax_url.indexOf("?") !== -1) ? '&' : '?';
-        var thickbox_height = $(window).height() - 120;
-        var thickbox_parameters = '&TB_iframe=true&height=' + thickbox_height + '&width=720';
-        var url = wc_myparcel.ajax_url + request_prefix + 'order_ids=' + order_ids + '&action=wc_myparcel&request=modal_dialog&dialog=' + dialog + '&security=' + wc_myparcel.nonce + thickbox_parameters;
-
-        /* disable background scrolling */
-        $("body").css({overflow: 'hidden'});
-
-        tb_show('', url);
-    }
-
-    /* export orders to MyParcel via AJAX */
-    function myparcel_return(order_ids) {
-        var data = {
-            action:    'wc_myparcel',
-            request:   'add_return',
-            order_ids: order_ids,
-            security:  wc_myparcel.nonce,
-        };
-
-        $.post(wc_myparcel.ajax_url, data, function(response) {
-            response = $.parseJSON(response);
-            if (response !== null && typeof response === 'object' && 'error' in response) {
-                myparcel_admin_notice(response.error, 'error');
-            }
-            return;
-        });
-
-    }
-
-    /* Request MyParcel labels */
-    function myparcel_print(order_ids, offset) {
-        if (typeof offset === 'undefined') {
-            offset = 0;
+          });
         }
+      },
+    });
+  }
 
-        var request_prefix = (wc_myparcel.ajax_url.indexOf("?") !== -1) ? '&' : '?';
-        var url = wc_myparcel.ajax_url + request_prefix + 'action=wc_myparcel&request=get_labels&security=' + wc_myparcel.nonce;
+  function myparcel_modal_dialog(order_ids, dialog) {
+    var data = {
+      action: wcmp.actions.export,
+      request: wcmp.actions.modal_dialog,
+      height: 380,
+      width: 720,
+      order_ids: order_ids,
+      dialog: dialog,
+      _wpnonce: wcmp.nonce,
+      // LEAVE THIS AT THE BOTTOM! The awful code behind the thickbox splits the url on "TB_" for some reason.
+      TB_iframe: true,
+    };
 
-        /* create form to send order_ids via POST */
-        $('body').append('<form action="' + url + '" method="post" target="_blank" id="myparcel_post_data"></form>');
-        $('#myparcel_post_data').append('<input type="hidden" name="offset" class="offset"/>');
-        $('#myparcel_post_data input.offset').val(offset);
-        $('#myparcel_post_data').append('<input type="hidden" name="order_ids" class="order_ids"/>');
-        $('#myparcel_post_data input.order_ids').val(JSON.stringify(order_ids));
+    var url = wcmp.ajax_url + '?' + $.param(data);
 
-        /* submit data to open or download pdf */
-        $('#myparcel_post_data').submit();
+    /* disable background scrolling */
+    $('body').css({overflow: 'hidden'});
 
-        bulk_spinner('', 'hide');
+    tb_show('', url);
+  }
+
+  /**
+   *  Re-enable scrolling after closing thickbox.
+   */
+  function onThickBoxUnload() {
+    $('body').css({overflow: 'inherit'});
+  }
+
+  /**
+   * Open given pdf link. Depending on the link it will be either downloaded or viewed. Refreshes the original window.
+   *
+   * @param {String} pdfUrl - The url of the created pdf.
+   * @param {Boolean?} waitForOnload - Wait for onload to refresh the original window. Refreshes immediately if false.
+   *
+   */
+  function openPdf(pdfUrl, waitForOnload) {
+    var pdfWindow = window.open(pdfUrl, '_blank');
+
+    if (waitForOnload) {
+      /*
+       * When the pdf window is loaded reload the main window. If we reload earlier the track & trace code won't be
+       * ready yet and can't be shown.
+       */
+      pdfWindow.onload = function() {
+        window.location.reload();
+      };
+    } else {
+      /* For when there is no onload event or there is no need to wait. */
+      window.location.reload();
+    }
+  }
+
+  /**
+   * Get the offset from the offset dialog if it's present. Otherwise return 0.
+   *
+   * @returns {Number}
+   */
+  function getPrintOffset() {
+    return parseInt(askForPrintPosition ? $(selectors.offsetDialogInputOffset).val() : 0);
+  }
+
+  /* Request MyParcel labels */
+  function printLabel(data) {
+    var button = this;
+    var request;
+
+    if (button.href) {
+      request = {
+        url: button.href,
+      };
+    } else {
+      request = {
+        data: Object.assign({
+          action: wcmp.actions.export,
+          request: wcmp.actions.get_labels,
+          offset: getPrintOffset(),
+          _wpnonce: wcmp.nonce,
+        }, data),
+      };
     }
 
-    function myparcel_admin_notice(message, type) {
-        $main_header = $('#wpbody-content > .wrap > h1:first');
-        var notice = '<div class="myparcel_notice notice notice-' + type + '"><p>' + message + '</p></div>';
-        $main_header.after(notice);
-        $('html, body').animate({scrollTop: 0}, 'slow');
+    request.afterDone = function(response) {
+      openPdf(response);
+    };
+
+    if (wcmp.download_display === 'download') {
+      doRequest.bind(button)(request);
+    } else {
+      var url;
+
+      if (request.hasOwnProperty('url')) {
+        url = request.url;
+      } else {
+        url = wcmp.ajax_url + '?' + $.param(request.data);
+      }
+
+      openPdf(url, true);
+    }
+  }
+
+  function myparcel_admin_notice(message, type) {
+    var mainHeader = $('#wpbody-content > .wrap > h1:first');
+    var notice = '<div class="' + selectors.notice + ' notice notice-' + type + '"><p>' + message + '</p></div>';
+    mainHeader.after(notice);
+    $('html, body').animate({scrollTop: 0}, 'slow');
+  }
+
+  /* Add / Update a key-value pair in the URL query parameters */
+
+  /* https://gist.github.com/niyazpk/f8ac616f181f6042d1e0 */
+  function updateUrlParameter(uri, key, value) {
+    /* remove the hash part before operating on the uri */
+    var i = uri.indexOf('#');
+    var hash = i === -1 ? '' : uri.substr(i);
+    uri = i === -1 ? uri : uri.substr(0, i);
+
+    var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+    var separator = uri.indexOf('?') !== -1 ? '&' : '?';
+    if (uri.match(re)) {
+      uri = uri.replace(re, '$1' + key + '=' + value + '$2');
+    } else {
+      uri = uri + separator + key + '=' + value;
+    }
+    return uri + hash; /* finally append the hash as well */
+  }
+
+  function showShipmentSummaryList() {
+    var summaryList = $(this).next(selectors.shipmentSummaryList);
+
+    if (summaryList.is(':hidden')) {
+      summaryList.slideDown();
+      document.addEventListener('click', hideShipmentSummaryList);
+    } else {
     }
 
-    /* Add / Update a key-value pair in the URL query parameters */
+    if (summaryList.data('loaded') === '') {
+      summaryList.addClass('ajax-waiting');
+      summaryList.find(selectors.spinner).show();
 
-    /* https://gist.github.com/niyazpk/f8ac616f181f6042d1e0 */
-    function updateUrlParameter(uri, key, value) {
-        /* remove the hash part before operating on the uri */
-        var i = uri.indexOf('#');
-        var hash = i === -1 ? '' : uri.substr(i);
-        uri = i === -1 ? uri : uri.substr(0, i);
+      var data = {
+        security: wcmp.nonce,
+        action: 'wcmp_get_shipment_summary_status',
+        order_id: summaryList.data('order_id'),
+        shipment_id: summaryList.data('shipment_id'),
+      };
 
-        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
-        if (uri.match(re)) {
-            uri = uri.replace(re, '$1' + key + "=" + value + '$2');
-        } else {
-            uri = uri + separator + key + "=" + value;
-        }
-        return uri + hash;  /* finally append the hash as well */
+      $.ajax({
+        type: 'POST',
+        url: wcmp.ajax_url,
+        data: data,
+        context: summaryList,
+        success: function(response) {
+          this.removeClass('ajax-waiting');
+          this.html(response);
+          this.data('loaded', true);
+        },
+      });
     }
+  }
 
-    $(document.body).trigger('wc-enhanced-select-init');
+  /**
+   * @param {MouseEvent} event - The click event.
+   * @param {Element} event.target - Click target.
+   */
+  function hideShipmentOptionsForm(event) {
+    handleClickOutside.bind(hideShipmentOptionsForm)(event, {
+      main: selectors.shipmentOptionsDialog,
+      wrappers: [selectors.shipmentOptions, selectors.shipmentOptionsShowButton],
+    });
+  }
+
+  /**
+   * Main: The element that will be hidden.
+   * Wrappers: Elements which don't count as "outside" when clicked.
+   *
+   * @param {MouseEvent} event - Click event.
+   * @property {Element} event.target
+   */
+  function hideShipmentSummaryList(event) {
+    handleClickOutside.bind(hideShipmentSummaryList)(event, {
+      main: selectors.shipmentSummaryList,
+      wrappers: [selectors.shipmentSummaryList, selectors.showShipmentSummaryList],
+    });
+  }
+
+  /**
+   * Hide any element by checking if the element clicked is not in the list of wrapper elements and not inside the
+   *  element itself.
+   *
+   * @param {MouseEvent} event - The click event.
+   * @param {Object} elements - The elements to show/hide and check inside.
+   * @property {Node[]} elements.wrappers
+   * @property {Node} elements.main
+   */
+  function handleClickOutside(event, elements) {
+    event.preventDefault();
+    var listener = this;
+    var clickedOutside = true;
+
+    elements.wrappers.forEach(function(cls) {
+      if (clickedOutside && event.target.matches(cls) || event.target.closest(elements.main)) {
+        clickedOutside = false;
+      }
+    });
+
+    if (clickedOutside) {
+      $(elements.main).slideUp();
+      document.removeEventListener('click', listener);
+    }
+  }
 });
 
+/**
+ * Object.assign() polyfill.
+ */
+if (typeof Object.assign !== 'function') {
+  /* Must be writable: true, enumerable: false, configurable: true */
+  Object.defineProperty(Object, 'assign', {
+    value: function assign(target) {
+      if (target === null || target === undefined) {
+        throw new TypeError('Cannot convert undefined or null to object');
+      }
+
+      var to = Object(target);
+
+      for (var index = 1; index < arguments.length; index++) {
+        var nextSource = arguments[index];
+
+        if (nextSource !== null && nextSource !== undefined) {
+          for (var nextKey in nextSource) {
+            /* Avoid bugs when hasOwnProperty is shadowed */
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+              to[nextKey] = nextSource[nextKey];
+            }
+          }
+        }
+      }
+      return to;
+    },
+    writable: true,
+    configurable: true,
+  });
+}
