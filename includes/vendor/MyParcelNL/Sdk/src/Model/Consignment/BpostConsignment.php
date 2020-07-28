@@ -93,6 +93,22 @@ class BpostConsignment extends AbstractConsignment
      *
      * Required: no
      *
+     * @param string $numberSuffix
+     *
+     * @return $this
+     */
+    public function setNumberSuffix(?string $numberSuffix): AbstractConsignment
+    {
+        $this->number_suffix = $numberSuffix;
+
+        return $this;
+    }
+
+    /**
+     * Street number suffix.
+     *
+     * Required: no
+     *
      * @param string $boxNumber
      *
      * @return $this
@@ -192,8 +208,18 @@ class BpostConsignment extends AbstractConsignment
 
     /**
      * @return string
+     * @deprecated Use setRetailNetworkId instead
+     *
      */
     public function getPickupNetworkId(): string
+    {
+        return $this->getRetailNetworkId();
+    }
+
+    /**
+     * @return string
+     */
+    public function getRetailNetworkId(): string
     {
         return "";
     }
@@ -203,13 +229,29 @@ class BpostConsignment extends AbstractConsignment
      * Example:  Albert Heijn
      * Required: Yes for pickup location
      *
-     * @param string $pickupNetworkId
+     * @param string $retailNetworkId
+     *
+     * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
+     * @deprecated Use setRetailNetworkId instead
+     *
+     */
+    public function setPickupNetworkId($retailNetworkId): AbstractConsignment
+    {
+        return $this->setRetailNetworkId((string) $retailNetworkId);
+    }
+
+    /**
+     * Pattern:  [0-9A-Za-z]
+     * Example:  Albert Heijn
+     * Required: Yes for pickup location
+     *
+     * @param string $retailNetworkId
      *
      * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
      */
-    public function setPickupNetworkId($pickupNetworkId): AbstractConsignment
+    public function setRetailNetworkId(string $retailNetworkId): AbstractConsignment
     {
-        $this->pickup_network_id = $pickupNetworkId;
+        $this->retail_network_id = $retailNetworkId;
 
         return $this;
     }
