@@ -138,7 +138,6 @@ class WCMP_Export_Consignments
         return $delivery_date;
     }
 
-
     /**
      * @return void
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
