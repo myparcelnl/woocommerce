@@ -91,6 +91,28 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.0.1 (2020-07-29) =
+* Fix: Wrong meta variable country of origin
+* Fix: Html layout of shipment summary settings and searching in WooCommerce orders overview
+* Fix: Translations
+* Fix: Export pickup locations
+* Fix: When deliveryType is empty use default package
+* Fix: Html layout of shipment summary and searching in WooCommerce orders overview
+* Improvement: Add empty parcel weight option
+* Improvement: Add multicollo option
+
+= 4.0.0 (2020-06-24) =
+* Fix: HS code
+* Fix: Delete options keep old shipments
+* Fix: Insurance possibilities
+* Fix: Barcode in orderview
+* Fix: Housenumber and suffix
+* Improvement: Country of origin
+* Improvement: New checkout and SDK
+* Improvement: Automatic export after payment
+* Improvement: V2 shipment endpoint
+* Improvement: HS code for variable product
+
 = 3.2.1 (2020-02-04) =
 * Fix: The recursive delivery date loop and full cache
 
