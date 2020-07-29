@@ -3,9 +3,9 @@ Contributors: richardperdaan
 Contributors: ademdemir
 Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, MyParcel, myparcel, Flespakket, flespakket, PostNL, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 5.2.4
+Tested up to: 5.4.2
 Stable tag: trunk
-Requires PHP: 5.6
+Requires PHP: 7.0
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -527,3 +527,6 @@ These are the biggest changes:
 == Upgrade Notice ==
 = 2.1 =
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
+
+= 4.0.0 =
+**Important!** Version 4.0.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
