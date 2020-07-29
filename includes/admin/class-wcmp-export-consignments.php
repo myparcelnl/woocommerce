@@ -161,7 +161,7 @@ class WCMP_Export_Consignments
                 $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
 
                 // Weight (total item weight in grams)
-                $weight       = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
+                $weight      = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
                 $totalWeight = $this->getTotalWeight($weight);
 
                 $myParcelItem = (new MyParcelCustomsItem())
@@ -185,6 +185,7 @@ class WCMP_Export_Consignments
     private function getTotalWeight(int $weight): int
     {
         $parcelWeight = $this->getSetting(WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+
         return $parcelWeight + $weight;
     }
 
@@ -196,8 +197,8 @@ class WCMP_Export_Consignments
      */
     public function getHsCode(WC_Product $product): int
     {
-        $defaultHsCode = $this->getSetting(WCMP_Settings::SETTING_HS_CODE);
-        $productHsCode = WCX_Product::get_meta($product, WCMP_Admin::META_HS_CODE, true);
+        $defaultHsCode   = $this->getSetting(WCMP_Settings::SETTING_HS_CODE);
+        $productHsCode   = WCX_Product::get_meta($product, WCMP_Admin::META_HS_CODE, true);
         $variationHsCode = WCX_Product::get_meta($product, WCMP_Admin::META_HS_CODE_VARIATION, true);
 
         $hsCode = $productHsCode ? $productHsCode : $defaultHsCode;
@@ -254,7 +255,7 @@ class WCMP_Export_Consignments
      */
     private function getSignature(): bool
     {
-        return WCMP_Export::getChosenOrDefaultShipmentOption(
+        return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->hasSignature(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
         );
@@ -265,7 +266,7 @@ class WCMP_Export_Consignments
      */
     private function getOnlyRecipient(): bool
     {
-        return WCMP_Export::getChosenOrDefaultShipmentOption(
+        return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->hasOnlyRecipient(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
         );
@@ -276,7 +277,7 @@ class WCMP_Export_Consignments
      */
     private function getAgeCheck(): bool
     {
-        return WCMP_Export::getChosenOrDefaultShipmentOption(
+        return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->hasAgeCheck(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
         );
@@ -287,7 +288,7 @@ class WCMP_Export_Consignments
      */
     private function getLargeFormat(): bool
     {
-        return WCMP_Export::getChosenOrDefaultShipmentOption(
+        return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->hasLargeFormat(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
         );
@@ -306,7 +307,7 @@ class WCMP_Export_Consignments
      */
     private function getReturnShipment(): bool
     {
-        return WCMP_Export::getChosenOrDefaultShipmentOption(
+        return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->isReturn(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
         );
@@ -460,7 +461,7 @@ class WCMP_Export_Consignments
      */
     private function setPhysicalProperties()
     {
-        $weight = $this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
+        $weight = (int) $this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
 
         $this->consignment
             ->setPhysicalProperties(["weight" => $this->getTotalWeight($weight)]);
