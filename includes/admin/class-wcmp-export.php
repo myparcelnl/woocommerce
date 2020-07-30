@@ -899,6 +899,8 @@ class WCMP_Export
                 $orderShippingMethod,
                 $orderShippingClass
             );
+
+            $packageType = WCMP_Data::getPackageTypeId($packageType);
         }
 
         return $packageType;
