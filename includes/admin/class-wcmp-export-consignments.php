@@ -184,7 +184,7 @@ class WCMP_Export_Consignments
      */
     private function getTotalWeight(int $weight): int
     {
-        $parcelWeight = $this->getSetting(WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+        $parcelWeight = (int) $this->getSetting(WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
 
         return $parcelWeight + $weight;
     }
