@@ -481,11 +481,22 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_CHECK_ALL,
                 "condition" => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label"     => __("Insure all parcels?", "woocommerce-myparcel"),
+                "type"      => "checkbox",
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_CHECK_ALL,
                 "label"     => __("Insured amount", "woocommerce-myparcel"),
                 "type"      => "select",
                 "options"   => WCMP_Data::getInsuranceAmount(),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
+                "condition" => !WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_CHECK_ALL,
+                "label"     => __("Insure from price", "woocommerce-myparcel"),
             ],
         ];
     }
