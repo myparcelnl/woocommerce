@@ -34,6 +34,7 @@ class WCMP_Admin
     public const META_HS_CODE                = "_myparcel_hs_code";
     public const META_HS_CODE_VARIATION      = "_myparcel_hs_code_variation";
     public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
+    public const META_ORDER_TOTAL            = "_order_version";
 
     // Id's refering to shipment statuses
     public const ORDER_STATUS_DELIVERED_AT_RECIPIENT      = 7;
