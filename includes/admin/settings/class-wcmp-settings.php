@@ -85,7 +85,6 @@ class WCMP_Settings
     public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN             = "export_return_shipments";
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED            = "export_insured";
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT     = "export_insured_amount";
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_CHECK_ALL  = "export_all_insured";
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE = "export_insured_from_price";
 
 

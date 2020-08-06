@@ -325,53 +325,30 @@ class WCMP_Export_Consignments
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
         );
 
-        $isAllParcelsActive = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->deliveryOptions->getShipmentOptions()->getInsurance(),
-            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_CHECK_ALL
-        );
-
-        return $this->getInsuranceAmount($isInsuranceActive, $isAllParcelsActive);
+        return $this->getInsuranceAmount($isInsuranceActive);
     }
 
     /**
      * @param $isInsuranceActive
-     * @param $isAllParcelsActive
      *
      * @return int|mixed
      */
-    private function getInsuranceAmount($isInsuranceActive, $isAllParcelsActive)
+    private function getInsuranceAmount($isInsuranceActive)
     {
         // Checks if all parcels must be insured
-        if ($isInsuranceActive && $isAllParcelsActive) {
-            // returns max insured amount.
-            return $this->getSetting("{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
-        }
-
-        // If not all parcels need insurance
-        if ($isInsuranceActive && !$isAllParcelsActive) {
-            // Get the price point from which insurance needs to be added
+        if ($isInsuranceActive) {
+            // get min price for insurance
             $insuranceFromPrice = (int) $this->getSetting("{$this->carrier}_" .
-                WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE);
+                WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE
+            );
+
             // get the order's total price
             $orderPrice = (int) $this->order->get_total();
 
-            // if the orders total price is higher than the given price point return its insurance
             if ($insuranceFromPrice <= $orderPrice) {
-                $insurancePossibilities = ConsignmentFactory::createByCarrierName($this->carrier)::INSURANCE_POSSIBILITIES_LOCAL;
-                $maxInsurance =  array_pop($insurancePossibilities);
-
-                // if the orders total price is higher than the maximum insurance return the max
-                if ($orderPrice > $maxInsurance) {
-                    return $maxInsurance;
-                }
-
-                foreach ($insurancePossibilities as $insurancePossibility){
-                    if ($insurancePossibility < $orderPrice){
-                        continue;
-                    }
-
-                    return $insurancePossibility;
-                }
+                // returns max insured amount.
+                return $this->getSetting("{$this->carrier}_" .
+                    WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
             }
         }
 
