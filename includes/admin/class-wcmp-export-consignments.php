@@ -331,9 +331,9 @@ class WCMP_Export_Consignments
     /**
      * @param $isInsuranceActive
      *
-     * @return int|mixed
+     * @return int
      */
-    private function getInsuranceAmount($isInsuranceActive)
+    private function getInsuranceAmount($isInsuranceActive): int
     {
         // Checks if all parcels must be insured
         if ($isInsuranceActive) {
