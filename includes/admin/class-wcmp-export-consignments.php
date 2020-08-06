@@ -325,20 +325,33 @@ class WCMP_Export_Consignments
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
         );
 
-        $insuranceAmount = $this->getInsuranceAmount($isInsuranceActive);
-
-        return $insuranceAmount;
+        return $this->getInsuranceAmount($isInsuranceActive);
     }
 
     /**
      * @param $isInsuranceActive
      *
-     * @return int|mixed
+     * @return int
      */
-    private function getInsuranceAmount($isInsuranceActive)
+    private function getInsuranceAmount($isInsuranceActive): int
     {
+        // Checks if all parcels must be insured
         if ($isInsuranceActive) {
-            return $this->getSetting("{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
+            // get min price for insurance
+            $insuranceFromPrice = (float) $this->getSetting("{$this->carrier}_" .
+                WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE
+            );
+
+            $insuranceMaxPrice = (int) $this->getSetting("{$this->carrier}_" .
+                WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
+
+            // get the order's total price
+            $orderPrice = (float) $this->order->get_total();
+
+            if ($insuranceFromPrice <= $orderPrice) {
+                // returns max allowed insured amount.
+                return $insuranceMaxPrice;
+            }
         }
 
         return 0;
