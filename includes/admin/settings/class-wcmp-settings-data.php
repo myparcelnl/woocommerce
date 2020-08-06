@@ -486,7 +486,7 @@ class WCMP_Settings_Data
                 "label"     => __("Insure from price", "woocommerce-myparcel"),
                 "type"      => "number",
                 "help_text" => __(
-                    "The total price of an order from which insurance will be added.",
+                    "Insure all orders that exceed this price point.",
                     "woocommerce-myparcel"
                 ),
             ],
@@ -497,7 +497,7 @@ class WCMP_Settings_Data
                 "type"      => "select",
                 "options"   => WCMP_Data::getInsuranceAmount(),
                 "help_text" => __(
-                    "Insure all parcels up to the selected amount",
+                    "Insure all parcels up to the selected amount.",
                     "woocommerce-myparcel"
                 ),
             ],
