@@ -6,8 +6,8 @@ use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
-use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
 
 if (! defined("ABSPATH")) {
@@ -40,6 +40,18 @@ class WCMP_Export
 
     public const DEFAULT_POSITIONS = [2, 4, 1, 3];
     public const SUFFIX_CHECK_REG  = "~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i";
+
+    public const SHIPPING_METHOD_FLAT_RATE        = "flat_rate";
+    public const SHIPPING_METHOD_LEGACY_FLAT_RATE = "legacy_flat_rate";
+    public const SHIPPING_METHOD_TABLE_RATE       = "table_rate";
+    public const SHIPPING_METHOD_LOCAL_PICKUP     = "local_pickup";
+
+    /**
+     * Shipping methods that can never have delivery options.
+     */
+    public const DISALLOWED_SHIPPING_METHODS = [
+        self::SHIPPING_METHOD_LOCAL_PICKUP,
+    ];
 
     public $order_id;
     public $success;
@@ -1126,40 +1138,48 @@ class WCMP_Export
     }
 
     /**
-     * @param $chosen_method
+     * @param $chosenMethod
      *
-     * @return bool|WC_Shipping_Method
+     * @return null|WC_Shipping_Method
      * @throws \Exception
      */
-    public static function getShippingMethod($chosen_method)
+    public static function getShippingMethod(string $chosenMethod): ?WC_Shipping_Method
     {
-        if (version_compare(WOOCOMMERCE_VERSION, "2.6", ">=") && $chosen_method !== "legacy_flat_rate") {
-            $chosen_method = explode(":", $chosen_method); // slug:instance
-            // only for flat rate
-            if ($chosen_method[0] !== "flat_rate") {
-                return false;
-            }
-            if (empty($chosen_method[1])) {
-                return false; // no instance known (=probably manual order)
-            }
-
-            $method_slug     = $chosen_method[0];
-            $method_instance = $chosen_method[1];
-            $shipping_method = WC_Shipping_Zones::get_shipping_method($method_instance);
-        } else {
-            // only for flat rate or legacy flat rate
-            if (! in_array($chosen_method, ["flat_rate", "legacy_flat_rate"])) {
-                return false;
-            }
-            $shipping_methods = WC()->shipping()->load_shipping_methods();
-
-            if (! isset($shipping_methods[$chosen_method])) {
-                return false;
-            }
-            $shipping_method = $shipping_methods[$chosen_method];
+        if (version_compare(WOOCOMMERCE_VERSION, "2.6", "<") || $chosenMethod === self::SHIPPING_METHOD_LEGACY_FLAT_RATE) {
+            return self::getLegacyShippingMethod($chosenMethod);
         }
 
-        return $shipping_method;
+        [$methodSlug, $methodInstance] = WCMP_Checkout::splitShippingMethodString($chosenMethod);
+
+        $isDisallowedShippingMethod = in_array($methodSlug, self::DISALLOWED_SHIPPING_METHODS);
+        $isManualOrder              = empty($methodInstance);
+
+        if ($isDisallowedShippingMethod || $isManualOrder) {
+            return null;
+        }
+
+        return WC_Shipping_Zones::get_shipping_method($methodInstance) ?? null;
+    }
+
+    /**
+     * @param string $chosen_method
+     *
+     * @return null|WC_Shipping_Method
+     */
+    private static function getLegacyShippingMethod(string $chosen_method): ?WC_Shipping_Method
+    {
+        // only for flat rate or legacy flat rate
+        if (! in_array($chosen_method, [self::SHIPPING_METHOD_FLAT_RATE, self::SHIPPING_METHOD_LEGACY_FLAT_RATE])) {
+            return null;
+        }
+
+        $shipping_methods = WC()->shipping()->load_shipping_methods();
+
+        if (! isset($shipping_methods[$chosen_method])) {
+            return null;
+        }
+
+        return $shipping_methods[$chosen_method];
     }
 
     /**

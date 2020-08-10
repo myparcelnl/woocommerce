@@ -111,33 +111,36 @@ class WCMP_Frontend
      * Requires WC2.4+
      * Only supports 1 package, takes the first
      *
-     * @return bool|int
+     * @return null|int
      * @throws \Exception
      */
-    public static function get_cart_shipping_class()
+    public static function get_cart_shipping_class(): ?int
     {
         if (version_compare(WOOCOMMERCE_VERSION, '2.4', '<')) {
-            return false;
+            return null;
         }
 
-        $chosen_method = WC()->session->get('chosen_shipping_methods')[0] ?? '';
+        $shippingMethodString = WC()->session->get('chosen_shipping_methods')[0] ?? '';
+        $shippingMethod = WCMP_Export::getShippingMethod($shippingMethodString);
 
-        // get package
-        $packages = WC()->cart->get_shipping_packages();
-        $package  = current($packages);
-
-        $shipping_method = WCMP_Export::getShippingMethod($chosen_method);
-
-        if (empty($shipping_method)) {
-            return false;
+        if (empty($shippingMethod)) {
+            return null;
         }
 
-        // get shipping classes from package
-        $found_shipping_classes = $shipping_method->find_shipping_classes($package);
+        if (method_exists($shippingMethod, 'find_shipping_classes')) {
+            // get package
+            $packages = WC()->cart->get_shipping_packages();
+            $package  = current($packages);
+
+            // get shipping classes from package
+            $shippingClasses = $shippingMethod->find_shipping_classes($package);
+        } else {
+            $shippingClasses = [];
+        }
 
         return WCMP()->export->getShippingClass(
-            $shipping_method,
-            $found_shipping_classes
+            $shippingMethod,
+            $shippingClasses
         );
     }
 
