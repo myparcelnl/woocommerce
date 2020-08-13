@@ -506,7 +506,6 @@ class WCMP_Export
                 "The selected orders have not been exported to MyParcel yet! ",
                 "woocommerce-myparcel"
             ));
-            // add_option('wcmyparcel_admin_error_notice', "The selected orders have not been exported to MyParcel yet!");
         }
 
         return $this->downloadOrGetUrlOfLabels(
