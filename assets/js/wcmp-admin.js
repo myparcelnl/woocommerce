@@ -783,7 +783,7 @@ jQuery(function($) {
     }
 
     request.afterDone = function(response) {
-      if (response.includes("api.myparcel.nl")) {
+      if (response.includes('api.myparcel.nl')) {
         openPdf(response);
       } else {
         window.location.reload();
