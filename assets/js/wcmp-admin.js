@@ -329,7 +329,6 @@ jQuery(function($) {
        * @param {String} response - Html to put in the form.
        */
       afterDone: function(response) {
-        console.log('jaaaaa');
         form.html(response);
         $(selectors.shipmentOptionsSaveButton).on('click', saveShipmentOptions);
         document.addEventListener('click', hideShipmentOptionsForm);
@@ -784,7 +783,11 @@ jQuery(function($) {
     }
 
     request.afterDone = function(response) {
-      openPdf(response);
+      if (response.includes("api.myparcel.nl")) {
+        openPdf(response);
+      } else {
+        window.location.reload();
+      }
     };
 
     if (wcmp.download_display === 'download') {

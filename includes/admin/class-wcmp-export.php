@@ -122,6 +122,7 @@ class WCMP_Export
         if (isset($_GET["myparcel_done"])) {
             $action_return = get_option("wcmyparcel_admin_notices");
             $print_queue   = get_option("wcmyparcel_print_queue", []);
+            $error_notice = get_option("wcmyparcel_admin_error_notices");
 
             if (! empty($action_return)) {
                 foreach ($action_return as $type => $message) {
@@ -146,7 +147,7 @@ class WCMP_Export
                     }
 
                     printf(
-                        '<div class="wcmp__notice notice notice-%s"><p>%s</p>%s</div>',
+                        '<div class="wcmp__notice is-dismissible notice notice-%s"><p>%s</p>%s</div>',
                         $type,
                         $message,
                         $print_queue_store ?? ""
@@ -158,6 +159,17 @@ class WCMP_Export
             }
         }
 
+        if (! empty($error_notice)) {
+            printf(
+                '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p>%s</div>',
+                $error_notice,
+                $print_queue_store ?? ""
+            );   
+            // destroy after reading
+            delete_option("wcmyparcel_admin_error_notices");
+            wp_cache_delete("wcmyparcel_admin_error_notices", "options");
+        }
+
         if (isset($_GET["myparcel"])) {
             switch ($_GET["myparcel"]) {
                 case "no_consignments":
@@ -165,7 +177,7 @@ class WCMP_Export
                         "You have to export the orders to MyParcel before you can print the labels!",
                         "woocommerce-myparcel"
                     );
-                    printf('<div class="wcmp__notice notice notice-error"><p>%s</p></div>', $message);
+                    printf('<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p></div>', $message);
                     break;
                 default:
                     break;
@@ -250,7 +262,9 @@ class WCMP_Export
                         break;
                 }
             } catch (Exception $e) {
-                $this->errors[] = "$request: {$e->getMessage()}";
+                $errorMessage = $e->getMessage();
+                $this->errors[] = "$request: {$errorMessage}";
+                add_option("wcmyparcel_admin_error_notices", $errorMessage);
             }
         }
 
@@ -427,7 +441,9 @@ class WCMP_Export
                     throw new Exception("\$response\[\"body.data.ids\"] empty or not found.");
                 }
             } catch (Exception $e) {
-                $this->errors[$order_id] = $e->getMessage();
+                $errorMessage = $e->getMessage();
+                $this->errors[$order_id] = $errorMessage;
+                add_option('wcmyparcel_admin_error_notices', $errorMessage);
             }
         }
 
@@ -465,6 +481,7 @@ class WCMP_Export
             $api->getShipmentLabels($shipment_ids, $order_ids, $positions, $display);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
+            add_option('wcmyparcel_admin_error_notice', $e->getMessage());
         }
 
         return $return;
@@ -489,6 +506,7 @@ class WCMP_Export
                 "The selected orders have not been exported to MyParcel yet! ",
                 "woocommerce-myparcel"
             ));
+            // add_option('wcmyparcel_admin_error_notice', "The selected orders have not been exported to MyParcel yet!");
         }
 
         return $this->downloadOrGetUrlOfLabels(
