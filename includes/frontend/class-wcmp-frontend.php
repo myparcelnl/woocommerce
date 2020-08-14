@@ -42,6 +42,9 @@ class WCMP_Frontend
         // Output most expensive shipping class in frontend data
         add_action("woocommerce_checkout_after_order_review", [$this, "injectShippingClassInput"], 100);
         add_action("woocommerce_update_order_review_fragments", [$this, "order_review_fragments"]);
+
+        // Ajax
+        add_action('wp_ajax_get_highest_shipping_class', [$this, 'ajaxGetHighestShippingClass']);
     }
 
     /**
@@ -83,6 +86,8 @@ class WCMP_Frontend
 
     /**
      * Output the highest shipping class input
+     *
+     * @throws Exception
      */
     public function injectShippingClassInput(): void
     {
@@ -93,6 +98,7 @@ class WCMP_Frontend
 
     /**
      * @return string|void
+     * @throws Exception
      */
     public function renderHighestShippingClassInput()
     {
@@ -222,6 +228,16 @@ class WCMP_Frontend
         }
 
         return $track_trace_links;
+    }
+
+    /**
+     * @return int|null
+     * @throws Exception
+     */
+    public function ajaxGetHighestShippingClass(): ?int
+    {
+        echo WCMP_Frontend::get_cart_shipping_class();
+        die();
     }
 }
 

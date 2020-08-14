@@ -1,8 +1,7 @@
 <?php
 
-use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
-use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
 if (! defined('ABSPATH')) {
@@ -767,7 +766,7 @@ class WCMP_Settings_Data
                 "label"     => __("Package types", "woocommerce-myparcel"),
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "loop"      => WCMP_Data::getPackageTypesHuman(),
-                "options"   => WCMP_Settings_Callbacks::getShippingMethods(),
+                "options"   => (new WCMP_Shipping_Methods())->getShippingMethods(),
                 "default"   => [],
                 "help_text" => __(
                     "Select one or more shipping methods for each MyParcel package type",

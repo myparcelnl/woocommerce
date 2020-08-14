@@ -10,6 +10,13 @@
  */
 
 /**
+ * @property {Object} wcmp
+ * @property {String} wcmp.ajax_url
+ *
+ * @see \wcmp_checkout::inject_delivery_options_variables
+ */
+
+/**
  * @property {Object} MyParcelDeliveryOptions
  * @property {String} MyParcelDeliveryOptions.allowedShippingMethods
  * @property {String} MyParcelDeliveryOptions.disallowedShippingMethods
@@ -80,6 +87,13 @@ jQuery(function($) {
      * @type {String}
      */
     shippingMethodField: '[name="shipping_method[0]"]',
+
+    /**
+     * Highest shipping class field.
+     *
+     * @type {String}
+     */
+    highestShippingClassField: '[name="myparcel_highest_shipping_class"]',
 
     addressField: 'address_1',
     cityField: 'city',
@@ -344,6 +358,21 @@ jQuery(function($) {
        */
       if (shippingMethodField.length) {
         shippingMethod = selectedShippingMethodField ? selectedShippingMethodField.value : shippingMethodField[0].value;
+
+        /**
+         * This shipping method will have a suffix in the checkout, but this is not present in the array of
+         *  selected shipping methods from the SETTING_DELIVERY_OPTIONS_DISPLAY setting.
+         *
+         * All variants of flat_rate (including shipping classes) do already have their suffix set properly.
+         */
+        if (shippingMethod.indexOf('flat_rate') === 0) {
+          var shippingClass = MyParcelFrontend.getHighestShippingClass();
+
+          if (shippingClass) {
+            shippingMethod = 'flat_rate:' + shippingClass;
+          }
+        }
+
         MyParcelFrontend.selectedShippingMethod = shippingMethod;
       } else {
         MyParcelFrontend.selectedShippingMethod = null;
@@ -354,7 +383,7 @@ jQuery(function($) {
 
     /**
      * Hides/shows the delivery options based on the current shipping method. Makes sure to not update the checkout
-     * unless necessary by checking if hasDeliveryOptions is true or false.
+     *  unless necessary by checking if hasDeliveryOptions is true or false.
      */
     toggleDeliveryOptions: function() {
       if (MyParcelFrontend.currentShippingMethodHasDeliveryOptions()) {
@@ -368,7 +397,11 @@ jQuery(function($) {
     },
 
     /**
-     * Check if the currently selected shipping method is allowed to have delivery options.
+     * Check if the currently selected shipping method is allowed to have delivery options by checking if the name
+     *  starts with any value in a list of shipping methods.
+     *
+     * Most of the values in this list will be full shipping method names, with an instance id, but some can't have one.
+     *  That's the reason we're checking if it starts with this value instead of whether it's equal.
      *
      * @returns {Boolean}
      */
@@ -376,8 +409,9 @@ jQuery(function($) {
       var display = false;
       var invert = false;
       var list = MyParcelFrontend.allowedShippingMethods;
+      var shippingMethod = MyParcelFrontend.getSelectedShippingMethod();
 
-      if (!MyParcelFrontend.selectedShippingMethod) {
+      if (!shippingMethod) {
         return false;
       }
 
@@ -391,12 +425,7 @@ jQuery(function($) {
       }
 
       list.forEach(function(method) {
-        /**
-         * If the specific method is enabled.
-         *
-         * @type {Boolean}
-         */
-        var currentMethodIsAllowed = method.indexOf(MyParcelFrontend.getSelectedShippingMethod()) > -1;
+        var currentMethodIsAllowed = method.indexOf(shippingMethod) > -1;
 
         if (currentMethodIsAllowed) {
           display = true;
@@ -438,39 +467,6 @@ jQuery(function($) {
     },
 
     /**
-     * Gets the current shipping method.
-     *
-     * @returns {String}
-     */
-    getSelectedShippingMethod: function() {
-      var shippingMethod = MyParcelFrontend.selectedShippingMethod;
-
-      var overrides = [
-        /**
-         * This shipping method will have the suffix ":1", but this is not present in the array of selected shipping
-         * methods from the SETTING_DELIVERY_OPTIONS_DISPLAY setting.
-         */
-        'flat_rate',
-
-        /**
-         * For compatibility with Bolder Elements WooCommerce Table Rate Shipping, their format is different from the
-         * other shipping methods.
-         *
-         * @see https://bolderelements.net/plugins/table-rate-shipping-woocommerce/
-         */
-        'betrs_shipping',
-      ];
-
-      overrides.forEach(function(override) {
-        if (shippingMethod.indexOf(override) === 0) {
-          shippingMethod = override;
-        }
-      });
-
-      return shippingMethod;
-    },
-
-    /**
      * Get the current shipping method without the shipping class.
      *
      * @returns {String}
@@ -480,6 +476,44 @@ jQuery(function($) {
       var indexOfSemicolon = shippingMethod.indexOf(':');
 
       shippingMethod = shippingMethod.substring(0, indexOfSemicolon === -1 ? shippingMethod.length : indexOfSemicolon);
+
+      return shippingMethod;
+    },
+
+    /**
+     * Get the highest shipping class by doing a call to WordPress. We're getting it this way and not from the
+     *  highest_shipping_class input because that causes some kind of timing issue which makes the delivery options not
+     *  show up.
+     *
+     * @returns {String|null}
+     */
+    getHighestShippingClass: function() {
+      var shippingClass = null;
+
+      jQuery.ajax({
+        type: 'POST',
+        url: wcmp.ajax_url,
+        async: false,
+        data: {
+          action: 'get_highest_shipping_class',
+        },
+        success: function(data) {
+          shippingClass = data;
+        },
+      });
+
+      return shippingClass;
+    },
+
+    /**
+     * @returns {String}
+     */
+    getSelectedShippingMethod: function() {
+      var shippingMethod = MyParcelFrontend.selectedShippingMethod;
+
+      if (shippingMethod === 'flat_rate') {
+        shippingMethod += ':' + document.querySelectorAll(MyParcelFrontend.highestShippingClassField).length;
+      }
 
       return shippingMethod;
     },

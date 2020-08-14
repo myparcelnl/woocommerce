@@ -41,16 +41,11 @@ class WCMP_Export
     public const DEFAULT_POSITIONS = [2, 4, 1, 3];
     public const SUFFIX_CHECK_REG  = "~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i";
 
-    public const SHIPPING_METHOD_FLAT_RATE        = "flat_rate";
-    public const SHIPPING_METHOD_LEGACY_FLAT_RATE = "legacy_flat_rate";
-    public const SHIPPING_METHOD_TABLE_RATE       = "table_rate";
-    public const SHIPPING_METHOD_LOCAL_PICKUP     = "local_pickup";
-
     /**
      * Shipping methods that can never have delivery options.
      */
     public const DISALLOWED_SHIPPING_METHODS = [
-        self::SHIPPING_METHOD_LOCAL_PICKUP,
+        WCMP_Shipping_Methods::LOCAL_PICKUP,
     ];
 
     public $order_id;
@@ -1145,7 +1140,8 @@ class WCMP_Export
      */
     public static function getShippingMethod(string $chosenMethod): ?WC_Shipping_Method
     {
-        if (version_compare(WOOCOMMERCE_VERSION, "2.6", "<") || $chosenMethod === self::SHIPPING_METHOD_LEGACY_FLAT_RATE) {
+        if (version_compare(WOOCOMMERCE_VERSION, "2.6", "<") || $chosenMethod ===
+            WCMP_Shipping_Methods::LEGACY_FLAT_RATE) {
             return self::getLegacyShippingMethod($chosenMethod);
         }
 
@@ -1169,7 +1165,13 @@ class WCMP_Export
     private static function getLegacyShippingMethod(string $chosen_method): ?WC_Shipping_Method
     {
         // only for flat rate or legacy flat rate
-        if (! in_array($chosen_method, [self::SHIPPING_METHOD_FLAT_RATE, self::SHIPPING_METHOD_LEGACY_FLAT_RATE])) {
+        if (! in_array(
+            $chosen_method,
+            [
+                WCMP_Shipping_Methods::FLAT_RATE,
+                WCMP_Shipping_Methods::LEGACY_FLAT_RATE,
+            ]
+        )) {
             return null;
         }
 

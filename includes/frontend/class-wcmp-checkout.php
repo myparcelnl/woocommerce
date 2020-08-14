@@ -98,6 +98,14 @@ class WCMP_Checkout
     public function inject_delivery_options_variables()
     {
         wp_localize_script(
+            'wc-myparcel-frontend',
+            'wcmp',
+            [
+                "ajax_url" => admin_url("admin-ajax.php"),
+            ]
+        );
+
+        wp_localize_script(
             "wc-myparcel-frontend",
             "MyParcelDisplaySettings",
             [

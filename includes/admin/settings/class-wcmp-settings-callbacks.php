@@ -14,6 +14,7 @@ class WCMP_Settings_Callbacks
 {
     /**
      * @return array
+     * @deprecated use WCMP_Shipping_Methods
      */
     public static function getShippingMethods(): array
     {
@@ -98,7 +99,7 @@ class WCMP_Settings_Callbacks
                 $shippingMethods[$key] = $method_title;
 
                 // split flat rate by shipping class
-                if (($key === 'flat_rate' || $key === 'legacy_flat_rate')
+                if (in_array($key, [WCMP_Shipping_Methods::FLAT_RATE, WCMP_Shipping_Methods::LEGACY_FLAT_RATE])
                     && version_compare(WOOCOMMERCE_VERSION, '2.4', '>=')) {
                     $shipping_classes = WC()->shipping()->get_shipping_classes();
 
