@@ -24,7 +24,8 @@
  * @see \wcmp_checkout::inject_delivery_options_variables
  */
 /* eslint-disable-next-line max-lines-per-function */
-jQuery(function($) {
+jQuery(($) => {
+  // eslint-disable-next-line no-var
   var MyParcelFrontend = {
     /**
      * Whether the delivery options are currently shown or not. Defaults to true and can be set to false depending on
@@ -122,7 +123,7 @@ jQuery(function($) {
     /**
      * Initialize the script.
      */
-    init: function() {
+    init() {
       MyParcelFrontend.addListeners();
       MyParcelFrontend.injectHiddenInput();
     },
@@ -133,7 +134,7 @@ jQuery(function($) {
      *
      * @param {CustomEvent} event - The update event.
      */
-    onDeliveryOptionsUpdate: function(event) {
+    onDeliveryOptionsUpdate(event) {
       MyParcelFrontend.hiddenDataInput.value = JSON.stringify(event.detail);
 
       /**
@@ -142,16 +143,18 @@ jQuery(function($) {
       $(document.body).off(MyParcelFrontend.updatedWooCommerceCheckoutEvent, MyParcelFrontend.updateShippingMethod);
       MyParcelFrontend.triggerEvent(MyParcelFrontend.updateWooCommerceCheckoutEvent);
 
+      const restoreEventListener = () => {
+        $(document.body).on(MyParcelFrontend.updatedWooCommerceCheckoutEvent, MyParcelFrontend.updateShippingMethod);
+        $(document.body).off(MyParcelFrontend.updatedWooCommerceCheckoutEvent, restoreEventListener);
+      };
+
       $(document.body).on(MyParcelFrontend.updatedWooCommerceCheckoutEvent, restoreEventListener);
 
       /**
        * After the "updated_checkout" event the shipping methods will be rendered, restore the event listener and delete
        *  this one in the process.
        */
-      function restoreEventListener() {
-        $(document.body).on(MyParcelFrontend.updatedWooCommerceCheckoutEvent, MyParcelFrontend.updateShippingMethod);
-        $(document.body).off(MyParcelFrontend.updatedWooCommerceCheckoutEvent, restoreEventListener);
-      }
+      $(document.body).on(MyParcelFrontend.updatedWooCommerceCheckoutEvent, restoreEventListener);
     },
 
     /**
@@ -159,7 +162,7 @@ jQuery(function($) {
      *
      * @returns {String}
      */
-    getSplitField: function() {
+    getSplitField() {
       return MyParcelFrontend.isUsingSplitAddressFields
         ? MyParcelFrontend.houseNumberField
         : MyParcelFrontend.addressField;
@@ -168,7 +171,7 @@ jQuery(function($) {
     /**
      * Add all event listeners.
      */
-    addListeners: function() {
+    addListeners() {
       MyParcelFrontend.addAddressListeners();
       MyParcelFrontend.updateShippingMethod();
 
@@ -192,19 +195,19 @@ jQuery(function($) {
      *
      * @returns {Element}
      */
-    getField: function(name) {
+    getField(name) {
       if (!MyParcelFrontend.addressType) {
         MyParcelFrontend.getAddressType();
       }
 
-      return document.querySelector('#' + MyParcelFrontend.addressType + '_' + name);
+      return document.querySelector(`#${MyParcelFrontend.addressType}_${name}`);
     },
 
     /**
      * Update address type.
      */
-    getAddressType: function() {
-      var useShipping = document.querySelector(MyParcelFrontend.shipToDifferentAddressField).checked;
+    getAddressType() {
+      const useShipping = document.querySelector(MyParcelFrontend.shipToDifferentAddressField).checked;
 
       MyParcelFrontend.addressType = useShipping ? 'shipping' : 'billing';
     },
@@ -215,10 +218,10 @@ jQuery(function($) {
      *
      * @returns {String}
      */
-    getHouseNumber: function() {
-      var address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
-      var result = MyParcelFrontend.splitStreetRegex.exec(address);
-      var numberIndex = 2;
+    getHouseNumber() {
+      const address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
+      const result = MyParcelFrontend.splitStreetRegex.exec(address);
+      const numberIndex = 2;
 
       if (MyParcelFrontend.isUsingSplitAddressFields) {
         return MyParcelFrontend.getField(MyParcelFrontend.houseNumberField).value;
@@ -233,8 +236,8 @@ jQuery(function($) {
      * @param {String} identifier - Name of the event.
      * @param {String|HTMLElement|Document} [element] - Element to trigger from. Defaults to 'body'.
      */
-    triggerEvent: function(identifier, element) {
-      var event = document.createEvent('HTMLEvents');
+    triggerEvent(identifier, element) {
+      const event = document.createEvent('HTMLEvents');
       event.initEvent(identifier, true, false);
       element = !element || typeof element === 'string' ? document.querySelector(element || 'body') : element;
       element.dispatchEvent(event);
@@ -246,7 +249,7 @@ jQuery(function($) {
      *
      * @returns {Boolean}
      */
-    countryHasChanged: function() {
+    countryHasChanged() {
       if (window.MyParcelConfig.address && window.MyParcelConfig.address.hasOwnProperty('cc')) {
         return window.MyParcelConfig.address.cc !== MyParcelFrontend.getField(MyParcelFrontend.countryField).value;
       }
@@ -257,7 +260,7 @@ jQuery(function($) {
     /**
      * Get data from form fields, put it in the global MyParcelConfig, then trigger updating the delivery options.
      */
-    updateAddress: function() {
+    updateAddress() {
       if (!window.hasOwnProperty('MyParcelConfig')) {
         throw 'window.MyParcelConfig not found!';
       }
@@ -282,10 +285,11 @@ jQuery(function($) {
      * Set the values of the WooCommerce fields.
      *
      * @param {Object} address - The new address.
+     * @param {String} address.postalCode
+     * @param {String} address.city
+     * @param {String} address.number
      */
-    setAddress: function(address) {
-      address = address || {};
-
+    setAddress(address = {}) {
       if (address.postalCode) {
         MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value = address.postalCode;
       }
@@ -304,9 +308,9 @@ jQuery(function($) {
      *
      * @param {String|Number} number - New house number to set.
      */
-    setHouseNumber: function(number) {
-      var address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
-      var oldHouseNumber = MyParcelFrontend.getHouseNumber();
+    setHouseNumber(number) {
+      const address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
+      const oldHouseNumber = MyParcelFrontend.getHouseNumber();
 
       if (MyParcelFrontend.isUsingSplitAddressFields) {
         if (oldHouseNumber) {
@@ -325,7 +329,7 @@ jQuery(function($) {
      *
      * @see includes/class-wcmp-checkout.php::save_delivery_options();
      */
-    injectHiddenInput: function() {
+    injectHiddenInput() {
       MyParcelFrontend.hiddenDataInput = document.createElement('input');
       MyParcelFrontend.hiddenDataInput.setAttribute('hidden', 'hidden');
       MyParcelFrontend.hiddenDataInput.setAttribute('name', MyParcelDeliveryOptions.hiddenInputName);
@@ -338,17 +342,17 @@ jQuery(function($) {
      *
      * @param {CustomEvent} event - The event containing the new address.
      */
-    onDeliveryOptionsAddressUpdate: function(event) {
+    onDeliveryOptionsAddressUpdate(event) {
       MyParcelFrontend.setAddress(event.detail);
     },
 
     /**
      * Update the shipping method to the new selections. Triggers hiding/showing of the delivery options.
      */
-    updateShippingMethod: function() {
-      var shippingMethod;
-      var shippingMethodField = document.querySelectorAll(MyParcelFrontend.shippingMethodField);
-      var selectedShippingMethodField = document.querySelector(MyParcelFrontend.shippingMethodField + ':checked');
+    updateShippingMethod() {
+      let shippingMethod;
+      const shippingMethodField = document.querySelectorAll(MyParcelFrontend.shippingMethodField);
+      const selectedShippingMethodField = document.querySelector(`${MyParcelFrontend.shippingMethodField}:checked`);
 
       /**
        * Check if shipping method field exists. It doesn't exist if there are no shipping methods available for the
@@ -366,10 +370,10 @@ jQuery(function($) {
          * All variants of flat_rate (including shipping classes) do already have their suffix set properly.
          */
         if (shippingMethod.indexOf('flat_rate') === 0) {
-          var shippingClass = MyParcelFrontend.getHighestShippingClass();
+          const shippingClass = MyParcelFrontend.getHighestShippingClass();
 
           if (shippingClass) {
-            shippingMethod = 'flat_rate:' + shippingClass;
+            shippingMethod = `flat_rate:${shippingClass}`;
           }
         }
 
@@ -385,7 +389,7 @@ jQuery(function($) {
      * Hides/shows the delivery options based on the current shipping method. Makes sure to not update the checkout
      *  unless necessary by checking if hasDeliveryOptions is true or false.
      */
-    toggleDeliveryOptions: function() {
+    toggleDeliveryOptions() {
       if (MyParcelFrontend.currentShippingMethodHasDeliveryOptions()) {
         MyParcelFrontend.hasDeliveryOptions = true;
         MyParcelFrontend.triggerEvent(MyParcelFrontend.showDeliveryOptionsEvent, document);
@@ -405,11 +409,11 @@ jQuery(function($) {
      *
      * @returns {Boolean}
      */
-    currentShippingMethodHasDeliveryOptions: function() {
-      var display = false;
-      var invert = false;
-      var list = MyParcelFrontend.allowedShippingMethods;
-      var shippingMethod = MyParcelFrontend.getSelectedShippingMethod();
+    currentShippingMethodHasDeliveryOptions() {
+      let display = false;
+      let invert = false;
+      let list = MyParcelFrontend.allowedShippingMethods;
+      const shippingMethod = MyParcelFrontend.getSelectedShippingMethod();
 
       if (!shippingMethod) {
         return false;
@@ -424,8 +428,8 @@ jQuery(function($) {
         invert = true;
       }
 
-      list.forEach(function(method) {
-        var currentMethodIsAllowed = method.indexOf(shippingMethod) > -1;
+      list.forEach((method) => {
+        const currentMethodIsAllowed = method.includes(shippingMethod);
 
         if (currentMethodIsAllowed) {
           display = true;
@@ -447,19 +451,19 @@ jQuery(function($) {
      *  we never know when the select is loaded and can't add a normal change event. The delivery options has a debounce
      *  function on the update event so it doesn't matter if we send 5 updates at once.
      */
-    addAddressListeners: function() {
-      var fields = [MyParcelFrontend.countryField, MyParcelFrontend.postcodeField, MyParcelFrontend.getSplitField()];
+    addAddressListeners() {
+      const fields = [MyParcelFrontend.countryField, MyParcelFrontend.postcodeField, MyParcelFrontend.getSplitField()];
 
       /* If address type is already set, remove the existing listeners before adding new ones. */
       if (MyParcelFrontend.addressType) {
-        fields.forEach(function(field) {
+        fields.forEach((field) => {
           MyParcelFrontend.getField(field).removeEventListener('change', MyParcelFrontend.updateAddress);
         });
       }
 
       MyParcelFrontend.getAddressType();
 
-      fields.forEach(function(field) {
+      fields.forEach((field) => {
         MyParcelFrontend.getField(field).addEventListener('change', MyParcelFrontend.updateAddress);
       });
 
@@ -471,9 +475,9 @@ jQuery(function($) {
      *
      * @returns {String}
      */
-    getShippingMethodWithoutClass: function() {
-      var shippingMethod = MyParcelFrontend.getSelectedShippingMethod();
-      var indexOfSemicolon = shippingMethod.indexOf(':');
+    getShippingMethodWithoutClass() {
+      let shippingMethod = MyParcelFrontend.selectedShippingMethod;
+      const indexOfSemicolon = shippingMethod.indexOf(':');
 
       shippingMethod = shippingMethod.substring(0, indexOfSemicolon === -1 ? shippingMethod.length : indexOfSemicolon);
 
@@ -487,17 +491,17 @@ jQuery(function($) {
      *
      * @returns {String|null}
      */
-    getHighestShippingClass: function() {
-      var shippingClass = null;
+    getHighestShippingClass() {
+      let shippingClass = null;
 
-      jQuery.ajax({
+      $.ajax({
         type: 'POST',
         url: wcmp.ajax_url,
         async: false,
         data: {
           action: 'get_highest_shipping_class',
         },
-        success: function(data) {
+        success(data) {
           shippingClass = data;
         },
       });
@@ -508,11 +512,11 @@ jQuery(function($) {
     /**
      * @returns {String}
      */
-    getSelectedShippingMethod: function() {
-      var shippingMethod = MyParcelFrontend.selectedShippingMethod;
+    getSelectedShippingMethod() {
+      let shippingMethod = MyParcelFrontend.selectedShippingMethod;
 
       if (shippingMethod === 'flat_rate') {
-        shippingMethod += ':' + document.querySelectorAll(MyParcelFrontend.highestShippingClassField).length;
+        shippingMethod += `:${document.querySelectorAll(MyParcelFrontend.highestShippingClassField).length}`;
       }
 
       return shippingMethod;
