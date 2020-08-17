@@ -844,6 +844,20 @@ class WCMP_Settings_Data
                     "woocommerce-myparcel"
                 ),
             ],
+            [
+                "name"      => WCMP_Settings::SETTING_RETURN_IN_THE_BOX,
+                "label"     => __("Return in the box", "woocommerce-myparcel"),
+                "type"      => "select",
+                "options" => [
+                    1 => __("No", "woocommerce-myparcel"),
+                    2 => __("No options", "woocommerce-myparcel"),
+                    3 => __("Equal to shipment", "woocommerce-myparcel"),
+                ],
+                "help_text" => __(
+                    "With this setting you create automatic an return shipment.",
+                    "woocommerce-myparcel"
+                ),
+            ],
         ];
     }
 

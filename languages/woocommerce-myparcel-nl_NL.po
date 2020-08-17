@@ -1439,6 +1439,31 @@ msgid ""
 "after payment."
 msgstr "Orders automatisch exporteren naar MyParcel, direct na betaling."
 
+#: includes/admin/settings/class-wcmp-settings-data.php:849
+msgid ""
+"Return in the box"
+msgstr "Retour in de box"
+
+#: includes/admin/settings/class-wcmp-settings-data.php:852
+msgid ""
+"No"
+msgstr "Nee"
+
+#: includes/admin/settings/class-wcmp-settings-data.php:853
+msgid ""
+"No options"
+msgstr "Geen opties"
+
+#: includes/admin/settings/class-wcmp-settings-data.php:854
+msgid ""
+"Equal to shipment"
+msgstr "Zelfde als zending"
+
+#: includes/admin/settings/class-wcmp-settings-data.php:857
+msgid ""
+"With this setting you create automatic an return shipment."
+msgstr "Met deze instelling creëer je automatisch een retourzending."
+
 #: includes/admin/settings/class-wcmp-settings-data.php:867
 msgid "Show delivery day"
 msgstr "Toon bezorgdag"
