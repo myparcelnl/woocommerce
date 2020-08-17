@@ -786,6 +786,7 @@ jQuery(function($) {
       if (response.includes('api.myparcel.nl')) {
         openPdf(response);
       } else {
+        myparcel_admin_notice(response, 'error');
         window.location.reload();
       }
     };
