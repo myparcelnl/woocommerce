@@ -53,6 +53,7 @@ class WCMP_Settings
     public const SETTING_PACKAGE_CONTENT                = "package_contents";
     public const SETTING_COUNTRY_OF_ORIGIN              = "country_of_origin";
     public const SETTING_AUTOMATIC_EXPORT               = "export_automatic";
+    public const SETTING_RETURN_IN_THE_BOX              = "return_in_the_box";
 
     /**
      * Checkout
