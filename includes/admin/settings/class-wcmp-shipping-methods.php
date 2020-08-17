@@ -172,10 +172,16 @@ class WCMP_Shipping_Methods
             $optionId = $zoneShippingRate['option_id'];
             $label    = $zoneShippingRate['title'] ?? "{$zoneShippingMethod->title} ({$optionId})";
 
-            $this->addShippingMethod(
-                self::TABLE_RATES_BOLDER_ELEMENTS . "_{$zoneShippingMethod->instance_id}-{$optionId}",
-                "{$zone->get_zone_name()} - {$label}"
-            );
+            /*
+             * It appears that after version 4.0.0 the separator changed from "_" to ":". We're adding both variants
+             * here for compatibility.
+             */
+            foreach ([':', '_'] as $separator) {
+                $this->addShippingMethod(
+                    self::TABLE_RATES_BOLDER_ELEMENTS . "$separator{$zoneShippingMethod->instance_id}-{$optionId}",
+                    "{$zone->get_zone_name()} - {$label}"
+                );
+            }
         }
     }
 }
