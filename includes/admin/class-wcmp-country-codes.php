@@ -55,6 +55,7 @@ class WCMP_Country_Codes
         "RS",
         "VA",
         "BY",
+        "BE",
     ];
 
     private const WORLD_COUNTRIES = [
