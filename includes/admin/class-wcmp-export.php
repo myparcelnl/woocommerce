@@ -44,6 +44,10 @@ class WCMP_Export
     public $order_id;
     public $success;
     public $errors;
+
+    /**
+     * @var MyParcelCollection
+     */
     public $myParcelCollection;
 
     private $prefix_message;
@@ -82,7 +86,7 @@ class WCMP_Export
      * Get the value of a shipment option. Check if it was set manually, through the delivery options for example,
      *  if not get the value of the default export setting for given settingName.
      *
-     * @param bool|null $option Condition to check.
+     * @param bool|null $option      Condition to check.
      * @param string    $settingName Name of the setting to fall back to.
      *
      * @return mixed
@@ -340,6 +344,13 @@ class WCMP_Export
             }
 
             WCMP_Log::add("Shipment data for order {$order_id}.");
+        }
+
+        $this->myParcelCollection = $collection;
+        $returnInTheBox = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_RETURN_IN_THE_BOX);
+
+        if (WCMP_Settings_Data::NO_OPTIONS === $returnInTheBox || WCMP_Settings_Data::EQUAL_TO_SHIPMENT === $returnInTheBox) {
+            $this->addReturnInTheBox($returnInTheBox);
         }
 
         $collection = $collection->createConcepts();
@@ -629,7 +640,6 @@ class WCMP_Export
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
                 : trim($order->get_shipping_first_name() . " " . $order->get_shipping_last_name());
-
 
         $connectEmail = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_CONNECT_EMAIL);
         $connectPhone = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_CONNECT_PHONE);
@@ -1493,6 +1503,40 @@ class WCMP_Export
 
             WCMP_Export::addTrackTraceNoteToOrder($order_id, $trackTraces);
         }
+    }
+
+    /**
+     * @param string $returnOptions
+     *
+     * @throws ApiException
+     * @throws MissingFieldException
+     */
+    public function addReturnInTheBox(string $returnOptions)
+    {
+        $this->myParcelCollection
+            ->generateReturnConsignments(
+            false,
+            function(
+                AbstractConsignment $returnConsignment,
+                AbstractConsignment $parent
+            ) use ($returnOptions): AbstractConsignment {
+                $returnConsignment->setLabelDescription(
+                    'Return: ' . $parent->getLabelDescription() .
+                    ' This label is valid until: ' . date("d-m-Y", strtotime("+ 28 days"))
+                );
+
+                if ($returnOptions === WCMP_Settings_Data::NO_OPTIONS) {
+                    $returnConsignment->setOnlyRecipient(false);
+                    $returnConsignment->setSignature(false);
+                    $returnConsignment->setAgeCheck(false);
+                    $returnConsignment->setReturn(false);
+                    $returnConsignment->setLargeFormat(false);
+                    $returnConsignment->setInsurance(false);
+                }
+
+                return $returnConsignment;
+            }
+        );
     }
 }
 
