@@ -24,6 +24,10 @@ class WCMP_Settings_Data
     public const DISPLAY_FOR_SELECTED_METHODS = "selected_methods";
     public const DISPLAY_FOR_ALL_METHODS      = "all_methods";
 
+    public const NOT_ACTIVE        = 'notActive';
+    public const NO_OPTIONS        = 'noOptions';
+    public const EQUAL_TO_SHIPMENT = 'equalToShipment';
+
 
     /**
      * @var WCMP_Settings_Callbacks
@@ -848,10 +852,10 @@ class WCMP_Settings_Data
                 "name"      => WCMP_Settings::SETTING_RETURN_IN_THE_BOX,
                 "label"     => __("Return in the box", "woocommerce-myparcel"),
                 "type"      => "select",
-                "options" => [
-                    1 => __("No", "woocommerce-myparcel"),
-                    2 => __("No options", "woocommerce-myparcel"),
-                    3 => __("Equal to shipment", "woocommerce-myparcel"),
+                "options"   => [
+                    self::NOT_ACTIVE        => __("No", "woocommerce-myparcel"),
+                    self::NO_OPTIONS        => __("No options", "woocommerce-myparcel"),
+                    self::EQUAL_TO_SHIPMENT => __("Equal to shipment", "woocommerce-myparcel"),
                 ],
                 "help_text" => __(
                     "With this setting you create automatic an return shipment.",
