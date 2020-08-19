@@ -27,7 +27,6 @@ class WCMP_Settings_Data
     public const NO_OPTIONS        = 'noOptions';
     public const EQUAL_TO_SHIPMENT = 'equalToShipment';
 
-
     /**
      * @var WCMP_Settings_Callbacks
      */
