@@ -347,7 +347,7 @@ class WCMP_Export
         }
 
         $this->myParcelCollection = $collection;
-        $returnInTheBox = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_RETURN_IN_THE_BOX);
+        $returnInTheBox           = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_RETURN_IN_THE_BOX);
 
         if (WCMP_Settings_Data::NO_OPTIONS === $returnInTheBox || WCMP_Settings_Data::EQUAL_TO_SHIPMENT === $returnInTheBox) {
             $this->addReturnInTheBox($returnInTheBox);
@@ -1515,28 +1515,28 @@ class WCMP_Export
     {
         $this->myParcelCollection
             ->generateReturnConsignments(
-            false,
-            function(
-                AbstractConsignment $returnConsignment,
-                AbstractConsignment $parent
-            ) use ($returnOptions): AbstractConsignment {
-                $returnConsignment->setLabelDescription(
-                    'Return: ' . $parent->getLabelDescription() .
-                    ' This label is valid until: ' . date("d-m-Y", strtotime("+ 28 days"))
-                );
+                false,
+                function(
+                    AbstractConsignment $returnConsignment,
+                    AbstractConsignment $parent
+                ) use ($returnOptions): AbstractConsignment {
+                    $returnConsignment->setLabelDescription(
+                        'Return: ' . $parent->getLabelDescription() .
+                        ' This label is valid until: ' . date("d-m-Y", strtotime("+ 28 days"))
+                    );
 
-                if ($returnOptions === WCMP_Settings_Data::NO_OPTIONS) {
-                    $returnConsignment->setOnlyRecipient(false);
-                    $returnConsignment->setSignature(false);
-                    $returnConsignment->setAgeCheck(false);
-                    $returnConsignment->setReturn(false);
-                    $returnConsignment->setLargeFormat(false);
-                    $returnConsignment->setInsurance(false);
+                    if ($returnOptions === WCMP_Settings_Data::NO_OPTIONS) {
+                        $returnConsignment->setOnlyRecipient(false);
+                        $returnConsignment->setSignature(false);
+                        $returnConsignment->setAgeCheck(false);
+                        $returnConsignment->setReturn(false);
+                        $returnConsignment->setLargeFormat(false);
+                        $returnConsignment->setInsurance(false);
+                    }
+
+                    return $returnConsignment;
                 }
-
-                return $returnConsignment;
-            }
-        );
+            );
     }
 }
 
