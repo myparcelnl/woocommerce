@@ -783,27 +783,32 @@ jQuery(function($) {
     }
 
     request.afterDone = function(response) {
-      if (response.includes('api.myparcel.nl')) {
+      if (response.includes('PDF') && wcmp.download_display === 'display') {
+        handlePDF(request);
+      }
+
+      if (response.includes('api.myparcel.nl') && wcmp.download_display === 'download') {
         openPdf(response);
-      } else {
-        myparcel_admin_notice(response, 'error');
+      }
+
+      if (! response.includes('PDF') || ! response.includes('api.myparcel.nl')) {
         window.location.reload();
       }
     };
 
-    if (wcmp.download_display === 'download') {
-      doRequest.bind(button)(request);
+    doRequest.bind(button)(request);
+  }
+
+  function handlePDF(request) {
+    var url;
+
+    if (request.hasOwnProperty('url')) {
+      url = request.url;
     } else {
-      var url;
-
-      if (request.hasOwnProperty('url')) {
-        url = request.url;
-      } else {
-        url = wcmp.ajax_url + '?' + $.param(request.data);
-      }
-
-      openPdf(url, true);
+      url = wcmp.ajax_url + '?' + $.param(request.data);
     }
+    
+    openPdf(url, true);
   }
 
   function myparcel_admin_notice(message, type) {
