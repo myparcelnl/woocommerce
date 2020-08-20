@@ -766,7 +766,7 @@ jQuery(function($) {
   function printLabel(data) {
     var button = this;
     var request;
-
+    
     if (button.href) {
       request = {
         url: button.href,
@@ -783,17 +783,20 @@ jQuery(function($) {
     }
 
     request.afterDone = function(response) {
-      if (response.includes('PDF') && wcmp.download_display === 'display') {
+      var isDisplay = wcmp.download_display === 'display';
+      var isDownload = wcmp.download_display === 'download';
+      var isPdf = response.includes('PDF');
+      var isApi = response.includes('api.myparcel.nl');
+
+      if (isDisplay && isPdf) {
         handlePDF(request);
       }
 
-      if (response.includes('api.myparcel.nl') && wcmp.download_display === 'download') {
+      if (isDownload && isApi) {
         openPdf(response);
       }
 
-      if (! response.includes('PDF') || ! response.includes('api.myparcel.nl')) {
-        window.location.reload();
-      }
+      window.location.reload();
     };
 
     doRequest.bind(button)(request);
