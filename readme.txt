@@ -91,6 +91,10 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.0.2 (2020-08-21) =
+* Fix:  Show delivery options with a shipping class and with tablerates
+* Improvement: Automatic insurance
+
 = 4.0.1 (2020-07-29) =
 * Fix: Wrong meta variable country of origin
 * Fix: Html layout of shipment summary settings and searching in WooCommerce orders overview
