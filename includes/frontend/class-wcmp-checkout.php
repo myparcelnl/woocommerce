@@ -1,8 +1,9 @@
 <?php
 
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
-use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -91,9 +92,19 @@ class WCMP_Checkout
 
     /**
      * Localize variables into the delivery options scripts.
+     *
+     * @throws Exception
      */
     public function inject_delivery_options_variables()
     {
+        wp_localize_script(
+            'wc-myparcel-frontend',
+            'wcmp',
+            [
+                "ajax_url" => admin_url("admin-ajax.php"),
+            ]
+        );
+
         wp_localize_script(
             "wc-myparcel-frontend",
             "MyParcelDisplaySettings",
@@ -109,8 +120,8 @@ class WCMP_Checkout
             "wc-myparcel",
             "MyParcelDeliveryOptions",
             [
-                "allowedShippingMethods"    => json_encode($this->getShippingMethodsForDeliveryOptions()),
-                "disallowedShippingMethods" => json_encode(["local_pickup"]),
+                "allowedShippingMethods"    => json_encode($this->getShippingMethodsAllowingDeliveryOptions()),
+                "disallowedShippingMethods" => json_encode(WCMP_Export::DISALLOWED_SHIPPING_METHODS),
                 "alwaysShow"                => $this->alwaysDisplayDeliveryOptions(),
                 "hiddenInputName"           => WCMP_Admin::META_DELIVERY_OPTIONS,
             ]
@@ -354,37 +365,34 @@ class WCMP_Checkout
     }
 
     /**
-     * @return array
+     * Return the names of shipping methods that will show delivery options. If DISPLAY_FOR_ALL_METHODS is enabled it'll
+     * return an empty array and the frontend will allow any shipping except any that are specifically disallowed.
+     *
+     * @return string[]
+     * @throws Exception
+     * @see WCMP_Export::DISALLOWED_SHIPPING_METHODS
      */
-    private function getShippingMethodsForDeliveryOptions(): array
+    private function getShippingMethodsAllowingDeliveryOptions(): array
     {
-        $allowed = [];
+        $allowedMethods = [];
+        $displayFor     = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
 
-        $shippingClass = WCMP_Frontend::get_cart_shipping_class();
-        $packageTypes  = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
-        $displayFor    = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
+        if ($displayFor === WCMP_Settings_Data::DISPLAY_FOR_ALL_METHODS) {
+            return $allowedMethods;
+        }
 
-        if ($displayFor === WCMP_Settings_Data::DISPLAY_FOR_SELECTED_METHODS) {
-            foreach ($packageTypes as $packageType => $shippingMethods) {
-                foreach ($shippingMethods as $shippingMethod) {
-                    $class = explode(':', $shippingMethod);
+        $shippingMethodsByPackageType = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+        $shippingMethodsForPackage    = $shippingMethodsByPackageType[AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME];
 
-                    if (end($class) == $shippingClass) {
-                        $shippingMethodAndClass = "$shippingMethod";
+        foreach ($shippingMethodsForPackage as $shippingMethod) {
+            [$methodId] = self::splitShippingMethodString($shippingMethod);
 
-                        if (in_array($shippingMethodAndClass, $shippingMethods)) {
-                            $allowed[] = $shippingMethodAndClass;
-                        }
-                    }
-                    
-                    if (! is_numeric(array_pop($class))) {
-                        $allowed[] = $shippingMethod;
-                    }
-                }
+            if (!in_array($methodId, WCMP_Export::DISALLOWED_SHIPPING_METHODS)) {
+                $allowedMethods[] = $shippingMethod;
             }
         }
 
-        return $allowed;
+        return $allowedMethods;
     }
 
     /**
@@ -395,6 +403,25 @@ class WCMP_Checkout
         $display = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
 
         return $display === WCMP_Settings_Data::DISPLAY_FOR_ALL_METHODS;
+    }
+
+    /**
+     * Split a <rateId>:<instanceId> string into an array. If there is no instanceId, the second array element will be
+     * null.
+     *
+     * @param $shippingMethod
+     *
+     * @return array
+     */
+    public static function splitShippingMethodString(string $shippingMethod): array
+    {
+        $split = explode(':', $shippingMethod, 2);
+
+        if (count($split) === 1) {
+            $split[] = null;
+        }
+
+        return $split;
     }
 }
 

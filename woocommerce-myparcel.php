@@ -175,6 +175,7 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/admin/settings/class-wcmp-settings.php");
             require_once($this->includes . "/class-wcmp-log.php");
             require_once($this->includes . "/admin/class-wcmp-country-codes.php");
+            require_once($this->includes . '/admin/settings/class-wcmp-shipping-methods.php');
             $this->export = require_once($this->includes . "/admin/class-wcmp-export.php");
             require_once($this->includes . "/class-wcmp-postcode-fields.php");
             require_once($this->includes . "/adapter/delivery-options-from-order-adapter.php");
