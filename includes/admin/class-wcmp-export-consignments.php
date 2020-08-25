@@ -305,7 +305,7 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $carrier         = $this->carrier === DPDConsignment::CARRIER_NAME || PostNLConsignment::CARRIER_NAME;
+        $postnl          = $this->carrier === PostNLConsignment::CARRIER_NAME;
         $this->recipient = WCMP_Export::getRecipientFromOrder($this->order);
 
         $this->consignment
@@ -320,7 +320,7 @@ class WCMP_Export_Consignments
             ->setEmail($this->recipient['email'])
             ->setPhone($this->recipient['phone']);
 
-        if ($carrier) {
+        if ($postnl) {
             $this->consignment->setNumberSuffix($this->recipient['number_suffix'] ?? null);
         } else {
             $this->consignment->setBoxNumber($this->recipient['number_suffix'] ?? null);
