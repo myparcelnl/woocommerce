@@ -377,8 +377,8 @@ class WCMP_Export_Consignments
                           ->setPickupPostalCode($pickupLocation->getPostalCode())
                           ->setPickupLocationCode($pickupLocation->getLocationCode());
 
-        if ($pickupLocation->getPickupNetworkId()) {
-            $this->consignment->setPickupNetworkId($pickupLocation->getPickupNetworkId());
+        if ($pickupLocation->getRetailNetworkId()) {
+            $this->consignment->setRetailNetworkId($pickupLocation->getRetailNetworkId());
         }
     }
 
