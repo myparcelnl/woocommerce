@@ -5,6 +5,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -189,6 +190,26 @@ class WCMP_Data
             DPDConsignment::CARRIER_NAME   => __("DPD", "woocommerce-myparcelbe"),
             PostNLConsignment::CARRIER_NAME => __("PostNL", "woocommerce-myparcelbe"),
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getInsuranceAmount($carrier): array
+    {
+        $amount = [];
+
+        // /**
+        //  * @type PostNLConsignment
+        //  */
+        $carrier             = ConsignmentFactory::createByCarrierName($carrier);
+        $amountPossibilities = $carrier::INSURANCE_POSSIBILITIES_LOCAL;
+
+        foreach ($amountPossibilities as $key => $value) {
+            $amount[$value] = $value;
+        }
+
+        return $amount;
     }
 }
 
