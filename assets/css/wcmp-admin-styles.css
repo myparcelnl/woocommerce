@@ -32,7 +32,7 @@
 .wcmp__barcodes {
   overflow: hidden;
   -o-text-overflow: ellipsis;
-     text-overflow: ellipsis;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -40,7 +40,7 @@
   background-color: white;
   border: 1px solid #ccc;
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   padding: 10px;
   position: absolute;
   z-index: 999;
@@ -87,6 +87,10 @@
 .wcmp__shipment-summary li:before {
   content: "+";
   margin-right: 4px;
+}
+
+.wcmp__shipment-options-dialog {
+  width:  25em;
 }
 
 /*
