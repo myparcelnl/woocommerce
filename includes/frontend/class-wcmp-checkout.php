@@ -362,21 +362,19 @@ class WCMP_Checkout
         $displayFor    = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
 
         if ($displayFor === WCMP_Settings_Data::DISPLAY_FOR_SELECTED_METHODS) {
-            /**
-             *
-             */
             foreach ($packageTypes as $packageType => $shippingMethods) {
-                /**
-                 *
-                 */
                 foreach ($shippingMethods as $shippingMethod) {
-                    if ($shippingClass) {
-                        $shippingMethodAndClass = "$shippingMethod:$shippingClass";
+                    $class = explode(':', $shippingMethod);
+
+                    if (end($class) == $shippingClass) {
+                        $shippingMethodAndClass = "$shippingMethod";
 
                         if (in_array($shippingMethodAndClass, $shippingMethods)) {
                             $allowed[] = $shippingMethodAndClass;
                         }
-                    } elseif (in_array($shippingMethod, $shippingMethods)) {
+                    }
+
+                    if (! is_numeric(array_pop($class))) {
                         $allowed[] = $shippingMethod;
                     }
                 }
