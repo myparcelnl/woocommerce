@@ -421,9 +421,12 @@ class WCMP_Export_Consignments
             $insuranceFromPrice = (float) $this->getSetting("{$this->carrier}_" .
                 WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE
             );
+            
+            $insuranceMaxPrice = 500;
 
-            $insuranceMaxPrice = (int) $this->getSetting("{$this->carrier}_" .
-                WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
+            if ($this->carrier === 'dpd') {
+                $insuranceMaxPrice === 520;
+            }
 
             // get the order's total price
             $orderPrice = (float) $this->order->get_total();

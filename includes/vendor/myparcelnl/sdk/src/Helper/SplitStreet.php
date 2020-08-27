@@ -4,7 +4,7 @@
  * https://github.com/myparcelnl
  *
  * @author      Reindert Vetter <reindert@myparcel.nl>
- * @copyright   2010-2017 MyParcel
+ * @copyright   2010-2020 MyParcel
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US  CC BY-NC-ND 3.0 NL
  * @link        https://github.com/myparcelnl/sdk
  * @since       File available since Release v2.0.0
@@ -12,15 +12,15 @@
 
 namespace MyParcelNL\Sdk\src\Helper;
 
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Exception\InvalidConsignmentException;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\FullStreet;
 
 class SplitStreet
 {
     const BOX_NL                 = 'bus';
-    const BOX_SEPARATOR          = [' boîte', ' box', ' bte', ' Bus'];
-    const BOX_SEPARATOR_BY_REGEX = ['\/'];
+    const BOX_SEPARATOR          = ['boîte', 'box', 'bte', 'Bus'];
+    const BOX_SEPARATOR_BY_REGEX = ['\/','-'];
 
     public const NUMBER_SUFFIX_ABBREVIATION = [
         'apartment'  => '',
@@ -146,7 +146,6 @@ class SplitStreet
     {
         return ValidateStreet::getStreetRegexByCountry($local, $destination);
     }
-
 
     /**
      * @param string $fullStreet

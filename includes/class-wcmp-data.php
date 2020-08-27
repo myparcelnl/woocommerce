@@ -191,26 +191,6 @@ class WCMP_Data
             PostNLConsignment::CARRIER_NAME => __("PostNL", "woocommerce-myparcelbe"),
         ];
     }
-
-    /**
-     * @return array
-     */
-    public static function getInsuranceAmount($carrier): array
-    {
-        $amount = [];
-
-        // /**
-        //  * @type PostNLConsignment
-        //  */
-        $carrier             = ConsignmentFactory::createByCarrierName($carrier);
-        $amountPossibilities = $carrier::INSURANCE_POSSIBILITIES_LOCAL;
-
-        foreach ($amountPossibilities as $key => $value) {
-            $amount[$value] = $value;
-        }
-
-        return $amount;
-    }
 }
 
 return new WCMP_Data();

@@ -801,12 +801,12 @@ class AbstractConsignment
             $fullStreet .= ' ' . $this->getNumber();
         }
 
-        if ($this->getNumberSuffix()) {
-            $fullStreet .= ' ' . $this->getNumberSuffix();
-        }
-
         if ($this->getBoxNumber()) {
             $fullStreet .= ' ' . splitstreet::BOX_NL . ' ' . $this->getBoxNumber();
+        }
+
+        if ($this->getNumberSuffix()) {
+            $fullStreet .= ' ' . $this->getNumberSuffix();
         }
 
         return trim($fullStreet);
@@ -1201,7 +1201,7 @@ class AbstractConsignment
      * @param string|null $delivery_date
      *
      * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
-     * @throws \Exception
+     * @throws \BadMethodCallException
      */
     public function setDeliveryDate(?string $delivery_date): self
     {
