@@ -17,21 +17,7 @@ class PostNLConsignment extends AbstractConsignment
     /**
      * @var array
      */
-    public const INSURANCE_POSSIBILITIES_LOCAL = [
-        0,
-        100,
-        250,
-        500,
-        1000,
-        1500,
-        2000,
-        2500,
-        3000,
-        3500,
-        4000,
-        4500,
-        5000
-    ];
+    public const INSURANCE_POSSIBILITIES_LOCAL = [0, 100, 250, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000];
 
     /**
      * @var array
@@ -48,14 +34,15 @@ class PostNLConsignment extends AbstractConsignment
      */
     protected $local_cc = self::CC_NL;
 
+
     /**
      * The id of the consignment
      *
      * Save this id in your database
      *
-     * @return int
      * @deprecated Use getConsignmentId instead
      *
+     * @return int
      */
     public function getMyParcelConsignmentId(): int
     {
@@ -63,15 +50,15 @@ class PostNLConsignment extends AbstractConsignment
     }
 
     /**
-     * @param int $id
-     *
-     * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
      * @internal
      *
      * The id of the consignment
      *
      * @deprecated Use getConsignmentId instead
      *
+     * @param int $id
+     *
+     * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
      */
     public function setMyParcelConsignmentId(int $id): AbstractConsignment
     {
@@ -314,29 +301,13 @@ class PostNLConsignment extends AbstractConsignment
      * Example:  Albert Heijn
      * Required: Yes for pickup location
      *
-     * @param string $retailNetworkId
-     *
-     * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
-     * @deprecated Use setRetailNetworkId instead
-     *
-     */
-    public function setPickupNetworkId($retailNetworkId): AbstractConsignment
-    {
-        return $this->setRetailNetworkId((string) $retailNetworkId);
-    }
-
-    /**
-     * Pattern:  [0-9A-Za-z]
-     * Example:  Albert Heijn
-     * Required: Yes for pickup location
-     *
-     * @param string $retailNetworkId
+     * @param string $pickupNetworkId
      *
      * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
      */
-    public function setRetailNetworkId(string $retailNetworkId): AbstractConsignment
+    public function setPickupNetworkId($pickupNetworkId): AbstractConsignment
     {
-        $this->retail_network_id = $retailNetworkId;
+        $this->pickup_network_id = $pickupNetworkId;
 
         return $this;
     }

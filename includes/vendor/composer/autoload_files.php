@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    '3480d8f702c8d1d51e7b6bdf09c0b045' => $vendorDir . '/MyParcelNL/Sdk/src/AutoLoader.php',
+    '3480d8f702c8d1d51e7b6bdf09c0b045' => $vendorDir . '/myparcelnl/sdk/src/AutoLoader.php',
 );

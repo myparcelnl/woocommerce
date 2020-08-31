@@ -1,17 +1,17 @@
 [
     {
-        "name": "MyParcelNL/Sdk",
-        "version": "v3.1.7",
-        "version_normalized": "3.1.7.0",
+        "name": "myparcelnl/sdk",
+        "version": "3.x-dev",
+        "version_normalized": "3.9999999.9999999.9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/myparcelnl/sdk.git",
-            "reference": "bca3a9571e2ecfff74f964b659fc0f9136c09e64"
+            "reference": "5745256d4369c0c51537658ed822dfaa7fe36c3e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/bca3a9571e2ecfff74f964b659fc0f9136c09e64",
-            "reference": "bca3a9571e2ecfff74f964b659fc0f9136c09e64",
+            "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/5745256d4369c0c51537658ed822dfaa7fe36c3e",
+            "reference": "5745256d4369c0c51537658ed822dfaa7fe36c3e",
             "shasum": ""
         },
         "require": {
@@ -20,9 +20,9 @@
         "require-dev": {
             "phpunit/phpunit": "^5.5"
         },
-        "time": "2020-03-06T10:18:42+00:00",
+        "time": "2020-03-18T15:25:25+00:00",
         "type": "library",
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "files": [
                 "src/AutoLoader.php"
