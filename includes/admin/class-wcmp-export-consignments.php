@@ -1,11 +1,9 @@
 <?php
 
-use MyParcelNL\Sdk\src\Exception\MissingFieldException;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
@@ -394,20 +392,43 @@ class WCMP_Export_Consignments
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
-    private function getLabelDescription()
+    private function getLabelDescription(): string
     {
         $default = "Order: " . $this->order->get_id();
         $setting = $this->getSetting(WCMP_Settings::SETTING_LABEL_DESCRIPTION);
 
         if ($setting) {
-            $replacements = [
-                "[ORDER_NR]"      => $this->order->get_order_number(),
-                "[DELIVERY_DATE]" => $this->deliveryOptions->getDate(),
-            ];
+            $productIds   = [];
+            $productNames = [];
+            $productSkus  = [];
 
-            $description = str_replace(array_keys($replacements), array_values($replacements), $setting);
+            foreach ($this->order->get_items() as $item) {
+                if (! method_exists($item, 'get_product')) {
+                    continue;
+                }
+
+                /** @var WC_Product $product */
+                $product = $item->get_product();
+                $sku     = $product->get_sku();
+
+                $productIds[]   = $product->get_id();
+                $productNames[] = $product->get_name();
+                $productSkus[]  = empty($sku) ? '–' : $sku;
+            }
+
+            $description = strtr(
+                $setting,
+                [
+                    '[DELIVERY_DATE]' => $this->deliveryOptions->getDate(),
+                    '[ORDER_NR]'      => $this->order->get_order_number(),
+                    '[PRODUCT_ID]'    => implode(', ', $productIds),
+                    '[PRODUCT_NAME]'  => implode(', ', $productNames),
+                    '[PRODUCT_QTY]'   => count($this->order->get_items()),
+                    '[PRODUCT_SKU]'   => implode(', ', $productSkus),
+                ]
+            );
         }
 
         return $description ?? $default;

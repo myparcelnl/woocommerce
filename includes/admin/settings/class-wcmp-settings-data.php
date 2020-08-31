@@ -795,9 +795,10 @@ class WCMP_Settings_Data
                 "name"      => WCMP_Settings::SETTING_LABEL_DESCRIPTION,
                 "label"     => __("Label description", "woocommerce-myparcel"),
                 "help_text" => __(
-                    "With this option, you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in your backoffice. Use [ORDER_NR] to include the order number, [DELIVERY_DATE] to include the delivery date.",
+                    "With this option you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in your backoffice.",
                     "woocommerce-myparcel"
                 ),
+                "append"  => $this->getLabelDescriptionAddition(),
             ],
             [
                 "name"      => WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT,
@@ -1045,6 +1046,30 @@ class WCMP_Settings_Data
             file_get_contents($cssPath),
             __("Apply preset.", "woocommerce-myparcel")
         );
+    }
+
+    /**
+     * Created html for clickable hints for the variables that can be used in the label description.
+     *
+     * @return string
+     */
+    private function getLabelDescriptionAddition(): string
+    {
+        $output = '';
+        $variables = [
+            '[DELIVERY_DATE]' => __('Delivery date', 'woocommerce-myparcel'),
+            '[ORDER_NR]'      => __('Order number', 'woocommerce-myparcel'),
+            '[PRODUCT_ID]'    => __('Product id', 'woocommerce-myparcel'),
+            '[PRODUCT_NAME]'  => __('Product name', 'woocommerce-myparcel'),
+            '[PRODUCT_QTY]'   => __('Product quantity', 'woocommerce-myparcel'),
+            '[PRODUCT_SKU]'   => __('Product SKU', 'woocommerce-myparcel'),
+        ];
+
+        foreach ($variables as $variable => $description) {
+            $output .= "<br><a onclick=\"var el = document.querySelector('#label_description_field input');el.value += '$variable';el.focus();\">$variable</a>: $description";
+        }
+
+        return sprintf("<div class=\"label-description-variables\"><p>Available variables: %s</p>", $output);
     }
 }
 
