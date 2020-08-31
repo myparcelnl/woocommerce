@@ -17,11 +17,6 @@ abstract class AbstractDeliveryOptionsAdapter
     protected $deliveryType;
 
     /**
-     * @var string
-     */
-    protected $packageType;
-
-    /**
      * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter|null
      */
     protected $shipmentOptions;
@@ -50,14 +45,6 @@ abstract class AbstractDeliveryOptionsAdapter
     public function getDeliveryType(): ?string
     {
         return $this->deliveryType;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPackageType(): ?string
-    {
-        return $this->packageType;
     }
 
     /**
@@ -122,7 +109,6 @@ abstract class AbstractDeliveryOptionsAdapter
             "carrier"         => $this->getCarrier(),
             "date"            => $this->getDate(),
             "deliveryType"    => $this->getDeliveryType(),
-            "packageType"     => $this->getPackageType(),
             "isPickup"        => $this->isPickup(),
             "pickupLocation"  => $this->getPickupLocation(),
             "shipmentOptions" => $this->getShipmentOptions()->toArray(),

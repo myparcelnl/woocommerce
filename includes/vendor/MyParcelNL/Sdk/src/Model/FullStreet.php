@@ -8,6 +8,7 @@
 
 namespace MyParcelNL\Sdk\src\Model;
 
+
 class FullStreet
 {
     /**
