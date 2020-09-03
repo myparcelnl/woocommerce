@@ -87,7 +87,8 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 5. MyParcel BE information on the order details page
 
 == Changelog ==
-
+= 4.1.4 (2020-08-26) =
+* Fix: busnumber and number suffix
 
 = 4.1.3 (2020-07-21) =
 * Fix: Add option for empty parcel
