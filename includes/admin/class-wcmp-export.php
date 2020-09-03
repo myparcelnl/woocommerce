@@ -101,6 +101,7 @@ class WCMP_Export
         if (isset($_GET["myparcelbe_done"])) {
             $action_return = get_option("wcmyparcelbe_admin_notices");
             $print_queue   = get_option("wcmyparcelbe_print_queue", []);
+            $error_notice = get_option("wcmyparcel_admin_error_notices");
             if (! empty($action_return)) {
                 foreach ($action_return as $type => $message) {
                     if (! in_array($type, ["success", "error"])) {
@@ -124,7 +125,7 @@ class WCMP_Export
                     }
 
                     printf(
-                        '<div class="wcmp__notice notice notice-%s"><p>%s</p>%s</div>',
+                        '<div class="wcmp__notice is-dismissible notice notice-%s"><p>%s</p>%s</div>',
                         $type,
                         $message,
                         $print_queue_store ?? ""
@@ -227,7 +228,9 @@ class WCMP_Export
                         break;
                 }
             } catch (Exception $e) {
-                $this->errors[] = "$request: {$e->getMessage()}";
+                $errorMessage = $e->getMessage();
+                $this->errors[] = "$request: {$errorMessage}";
+                add_option("wcmyparcel_admin_error_notices", $errorMessage);
             }
         }
 
@@ -404,7 +407,9 @@ class WCMP_Export
                     throw new Exception("\$response\[\"body.data.ids\"] empty or not found.");
                 }
             } catch (Exception $e) {
-                $this->errors[$order_id] = $e->getMessage();
+                $errorMessage = $e->getMessage();
+                $this->errors[$order_id] = $errorMessage;
+                add_option('wcmyparcel_admin_error_notices', $errorMessage);
             }
         }
 
@@ -441,7 +446,7 @@ class WCMP_Export
             $display        = ($displayOverride ?? $displaySetting) === "display";
             $api->getShipmentLabels($shipment_ids, $order_ids, $positions, $display);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            add_option('wcmyparcel_admin_error_notice', $e->getMessage());
         }
 
         return $return;
