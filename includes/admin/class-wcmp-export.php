@@ -37,6 +37,13 @@ class WCMP_Export
 
     public const DEFAULT_POSITIONS = [2, 4, 1, 3];
 
+    /**
+     * Shipping methods that can never have delivery options.
+     */
+    public const DISALLOWED_SHIPPING_METHODS = [
+        WCMP_Shipping_Methods::LOCAL_PICKUP,
+    ];
+
     public $order_id;
     public $success;
     public $errors;
@@ -1015,40 +1022,54 @@ class WCMP_Export
     }
 
     /**
-     * @param $chosen_method
+     * @param $chosenMethod
      *
-     * @return bool|WC_Shipping_Method
+     * @return null|WC_Shipping_Method
      */
-    public static function get_shipping_method($chosen_method)
+    public static function getShippingMethod(string $chosenMethod): ?WC_Shipping_Method
     {
-        if (version_compare(WOOCOMMERCE_VERSION, "2.6", " >= ") && $chosen_method !== "legacy_flat_rate") {
-            $chosen_method = explode(":", $chosen_method); // slug:instance
-            // only for flat rate
-            if ($chosen_method[0] !== "flat_rate") {
-                return false;
-            }
-            if (empty($chosen_method[1])) {
-                return false; // no instance known (=probably manual order)
-            }
-
-            $method_slug     = $chosen_method[0];
-            $method_instance = $chosen_method[1];
-
-            $shipping_method = WC_Shipping_Zones::get_shipping_method($method_instance);
-        } else {
-            // only for flat rate or legacy flat rate
-            if (! in_array($chosen_method, ["flat_rate", "legacy_flat_rate"])) {
-                return false;
-            }
-            $shipping_methods = WC()->shipping()->load_shipping_methods();
-
-            if (! isset($shipping_methods[$chosen_method])) {
-                return false;
-            }
-            $shipping_method = $shipping_methods[$chosen_method];
+        if (version_compare(WOOCOMMERCE_VERSION, "2.6", "<") || $chosenMethod ===
+            WCMP_Shipping_Methods::LEGACY_FLAT_RATE) {
+            return self::getLegacyShippingMethod($chosenMethod);
         }
 
-        return $shipping_method;
+        [$methodSlug, $methodInstance] = WCMP_Checkout::splitShippingMethodString($chosenMethod);
+
+        $isDisallowedShippingMethod = in_array($methodSlug, self::DISALLOWED_SHIPPING_METHODS);
+        $isManualOrder              = empty($methodInstance);
+
+        if ($isDisallowedShippingMethod || $isManualOrder) {
+            return null;
+        }
+
+        return WC_Shipping_Zones::get_shipping_method($methodInstance) ?? null;
+    }
+
+     /**
+     * @param string $chosen_method
+     *
+     * @return null|WC_Shipping_Method
+     */
+    private static function getLegacyShippingMethod(string $chosen_method): ?WC_Shipping_Method
+    {
+        // only for flat rate or legacy flat rate
+        if (! in_array(
+            $chosen_method,
+            [
+                WCMP_Shipping_Methods::FLAT_RATE,
+                WCMP_Shipping_Methods::LEGACY_FLAT_RATE,
+            ]
+        )) {
+            return null;
+        }
+
+        $shipping_methods = WC()->shipping()->load_shipping_methods();
+
+        if (! isset($shipping_methods[$chosen_method])) {
+            return null;
+        }
+
+        return $shipping_methods[$chosen_method];
     }
 
     /**
@@ -1057,7 +1078,7 @@ class WCMP_Export
      *
      * @return bool|int
      */
-    public function get_shipping_class($shipping_method, $found_shipping_classes)
+    public function getShippingClass($shipping_method, $found_shipping_classes)
     {
         // get most expensive class
         // adapted from $shipping_method->calculate_shipping()
