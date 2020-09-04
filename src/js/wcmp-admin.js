@@ -766,7 +766,7 @@ jQuery(function($) {
   function printLabel(data) {
     var button = this;
     var request;
-    
+
     if (button.href) {
       request = {
         url: button.href,
@@ -803,14 +803,8 @@ jQuery(function($) {
   }
 
   function handlePDF(request) {
-    var url;
+    var url = wcmp.ajax_url + '?' + $.param(request.data);
 
-    if (request.hasOwnProperty('url')) {
-      url = request.url;
-    } else {
-      url = wcmp.ajax_url + '?' + $.param(request.data);
-    }
-    
     openPdf(url, true);
   }
 
