@@ -421,7 +421,7 @@ class WCMP_Export_Consignments
             $description = strtr(
                 $setting,
                 [
-                    '[DELIVERY_DATE]' => $this->deliveryOptions->getDate(),
+                    '[DELIVERY_DATE]' => date('d-m-Y', strtotime($this->deliveryOptions->getDate())),
                     '[ORDER_NR]'      => $this->order->get_order_number(),
                     '[PRODUCT_ID]'    => implode(', ', $productIds),
                     '[PRODUCT_NAME]'  => implode(', ', $productNames),
