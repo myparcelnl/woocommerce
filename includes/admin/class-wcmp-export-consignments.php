@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
+use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
@@ -48,7 +49,10 @@ class WCMP_Export_Consignments
      */
     private $carrier;
 
-    private $referenceId;
+    /**
+     * @var MyParcelCollection
+     */
+    public $myParcelCollection;
 
     /**
      * WCMP_Export_Consignments constructor.
@@ -62,9 +66,14 @@ class WCMP_Export_Consignments
     {
         $this->getApiKey();
 
-        $this->order           = $order;
-        $this->deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-        $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
+        $this->order              = $order;
+        $this->deliveryOptions    = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+        $this->carrier            = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
+        $this->myParcelCollection = (new MyParcelCollection())->setUserAgent(
+            "Wordpress/" . get_bloginfo("version") .
+            ' WooCommerce/' . WOOCOMMERCE_VERSION,
+            ' MyParcel-WooCommerce/' . WC_MYPARCEL_NL_VERSION);
+
 
         $this->createConsignment();
         $this->setConsignmentData();
