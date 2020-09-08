@@ -28,9 +28,9 @@ This WooCommerce extension allows you to export your orders to the MyParcel [Bac
 [Plugin Manual](https://myparcel.github.io/woocommerce)
 
 ## Installation
-You can download the .zip file of the latest release from here: [Latest] ![GitHub release](https://img.shields.io/github/v/release/myparcelnl/woocommerce)
+You can download the .zip file of the latest release from here: [Latest] [![GitHub release](https://img.shields.io/github/v/release/myparcelnl/woocommerce?logo=github)](https://github.com/myparcelnl/woocommerce/releases/latest)
 
-Or install it on your website from the [WordPress plugin repository].
+Or install it on your website from the [WordPress plugin repository]. [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/woocommerce-myparcel?logo=wordpress)](https://wordpress.org/plugins/woocommerce-myparcel/)
 
 ## Contributing
 - Clone or download the source code
