@@ -627,17 +627,23 @@ class MyParcelCollection extends Collection
     }
 
     /**
-     * @param array $userAgent
+     * @param array $userAgentMap
      *
      * @return self
-     * @internal param string $user_agent
      */
-    public function setCustomUserAgent(array $userAgent): self
+    public function setUserAgentArray(array $userAgentMap): self
     {
-        foreach ($userAgent as $key => $value) {
-            $this::$user_agent .= $key;
-            $this::$user_agent .= '/' . str_replace('v', '', $value);
+        $userAgents = [];
+
+        foreach ($userAgentMap as $key => $value) {
+            if (Str::startsWith($value, 'v')) {
+                $value = str_replace('v', '', $value);
+            }
+
+            $userAgents[] = $key . '/' . $value;
         }
+
+        self::$user_agent = implode(' ', $userAgents);
 
         return $this;
     }
