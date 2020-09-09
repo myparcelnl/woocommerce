@@ -4,9 +4,8 @@
   "version": "4.0.0",
   "description": "Welcome to the WooCommerce MyParcel repository on GitHub. Here you can browse the source, look at open issues and keep track of development.",
   "scripts": {
-    "build": "gulp",
-    "watch": "gulp watch",
-    "zip": "gulp build:zip"
+    "postinstall": "cp -f node_modules/@myparcel/delivery-options/dist/myparcel.js assets/js",
+    "postcss": "node_modules/postcss-cli/bin/postcss assets/css --replace"
   },
   "repository": {
     "type": "git",
@@ -22,21 +21,9 @@
     "@myparcel/delivery-options": "^3.3.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.1",
-    "@babel/preset-env": "^7.11.0",
     "@myparcel/eslint-config": "^3.0.0",
     "autoprefixer": "^9.8.6",
-    "babelify": "^10.0.0",
-    "browserify": "^16.5.2",
-    "core-js": "^3.6.5",
-    "gulp": "^4.0.2",
-    "gulp-clean": "^0.4.0",
-    "gulp-postcss": "^8.0.0",
-    "gulp-sass": "^4.1.0",
-    "gulp-sourcemaps": "^2.6.5",
-    "gulp-tap": "^2.0.0",
-    "gulp-uglify": "^3.0.2",
-    "gulp-zip": "^5.0.2",
-    "vinyl-buffer": "^1.0.1"
+    "husky": "^4.2.5",
+    "postcss-cli": "^7.1.1"
   }
 }

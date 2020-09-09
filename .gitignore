@@ -1,6 +1,4 @@
 .idea
-assets
-*.zip
 .DS_Store
 node_modules
 languages/*-backup-*
