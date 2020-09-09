@@ -616,7 +616,7 @@ class MyParcelCollection extends Collection
      * @internal param string $user_agent
      * @deprecated Use setCustomUserAgent instead
      */
-    public function setUserAgent($platform, $version = null)
+    public function setUserAgent($platform, $version = null): self
     {
         $this::$user_agent = 'MyParcel-' . $platform;
         if ($version !== null) {
