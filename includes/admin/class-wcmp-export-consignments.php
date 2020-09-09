@@ -73,7 +73,7 @@ class WCMP_Export_Consignments
             [
                 'Wordpress'            => get_bloginfo('version'),
                 'WooCommerce'          => WOOCOMMERCE_VERSION,
-                'MyParcel-WooCommerce' => WC_MYPARCEL_NL_VERSION,
+                'MyParcelNL-WooCommerce' => WC_MYPARCEL_NL_VERSION,
             ]
         );
 
