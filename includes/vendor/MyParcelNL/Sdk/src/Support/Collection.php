@@ -33,9 +33,9 @@ use IteratorAggregate;
  * @property-read HigherOrderCollectionProxy $unique
  *
  * Class Collection
- * @see https://laravel.com/docs/7.x
+ * @example https://laravel.com/docs/5.7/collections
  */
-class Collection implements ArrayAccess, Countable, IteratorAggregate
+class Collection extends CollectionProxy implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * @var Helpers
@@ -478,17 +478,13 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Apply the callback if the value is truthy.
      *
-     * @param  bool|mixed  $value
-     * @param  callable|null  $callback
-     * @param  callable|null  $default
-     * @return static|mixed
+     * @param  bool  $value
+     * @param  callable  $callback
+     * @param  callable  $default
+     * @return mixed
      */
-    public function when($value, callable $callback = null, callable $default = null)
+    public function when($value, callable $callback, callable $default = null)
     {
-        if (! $callback) {
-            return new HigherOrderWhenProxy($this, $value);
-        }
-
         if ($value) {
             return $callback($this, $value);
         } elseif ($default) {
@@ -1236,14 +1232,12 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Push an item onto the end of the collection.
      *
-     * @param  mixed  $values [optional]
+     * @param  mixed  $value
      * @return $this
      */
-    public function push(...$values)
+    public function push($value)
     {
-        foreach ($values as $value) {
-            $this->items[] = $value;
-        }
+        $this->offsetSet(null, $value);
 
         return $this;
     }
@@ -1448,7 +1442,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      * @param  callable|null  $callback
      * @return static
      */
-    public function sort($callback = null)
+    public function sort(callable $callback = null)
     {
         $items = $this->items;
 
