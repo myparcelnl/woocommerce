@@ -71,8 +71,8 @@ class WCMP_Export_Consignments
         $this->carrier            = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
         $this->myParcelCollection = (new MyParcelCollection())->setCustomUserAgent(
             [
-                'Wordpress'            => get_bloginfo('version'),
-                'WooCommerce'          => WOOCOMMERCE_VERSION,
+                'Wordpress'              => get_bloginfo('version'),
+                'WooCommerce'            => WOOCOMMERCE_VERSION,
                 'MyParcelNL-WooCommerce' => WC_MYPARCEL_NL_VERSION,
             ]
         );
