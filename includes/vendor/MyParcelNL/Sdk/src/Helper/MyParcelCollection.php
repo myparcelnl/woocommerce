@@ -627,7 +627,7 @@ class MyParcelCollection extends Collection
     }
 
     /**
-     * @param array $userAgentMap
+     * @param  array $userAgentMap
      *
      * @return self
      */
