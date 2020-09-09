@@ -18,7 +18,6 @@ class DeliveryOptionsV3Adapter extends AbstractDeliveryOptionsAdapter
         "shipmentOptions" => [],
         "isPickup"        => false,
     ];
-
     /**
      * DeliveryOptions constructor.
      *
@@ -33,7 +32,6 @@ class DeliveryOptionsV3Adapter extends AbstractDeliveryOptionsAdapter
         $this->carrier         = $deliveryOptions["carrier"] ?? null;
         $this->date            = $deliveryOptions["date"] ?? null;
         $this->deliveryType    = $deliveryOptions["deliveryType"] ?? null;
-        $this->packageType     = $deliveryOptions["packageType"] ?? null;
         $this->shipmentOptions = new ShipmentOptionsV3Adapter($deliveryOptions["shipmentOptions"] ?? []);
 
         if ($this->isPickup()) {
