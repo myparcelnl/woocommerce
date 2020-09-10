@@ -8,7 +8,7 @@
  * https://github.com/myparcelnl
  *
  * @author      Reindert Vetter <reindert@myparcel.nl>
- * @copyright   2010-2020 MyParcel
+ * @copyright   2010-2017 MyParcel
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US  CC BY-NC-ND 3.0 NL
  * @link        https://github.com/myparcelnl/sdk
  * @since       File available since Release v0.1.0
@@ -16,14 +16,13 @@
 
 namespace MyParcelNL\Sdk\src\Model;
 
-use MyParcelNL\Sdk\src\Exception\AccountNotActiveException;
+use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
+use MyParcelNL\Sdk\src\Helper\RequestError;
+use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\Sdk\src\Helper\MyParcelCurl;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
-use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
-use MyParcelNL\Sdk\src\Helper\MyParcelCurl;
-use MyParcelNL\Sdk\src\Helper\RequestError;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Support\Arr;
 
 class MyParcelRequest
 {
@@ -35,11 +34,8 @@ class MyParcelRequest
     /**
      * Supported request types.
      */
-    const REQUEST_TYPE_SHIPMENTS               = 'shipments';
-    const REQUEST_TYPE_RETRIEVE_LABEL          = 'shipment_labels';
-    const REQUEST_TYPE_RETRIEVE_PREPARED_LABEL = 'v2/shipment_labels';
-
-    const SHIPMENT_LABEL_PREPARE_ACTIVE_FROM = 25;
+    const REQUEST_TYPE_SHIPMENTS      = 'shipments';
+    const REQUEST_TYPE_RETRIEVE_LABEL = 'shipment_labels';
 
     /**
      * API headers
@@ -52,29 +48,14 @@ class MyParcelRequest
     const REQUEST_HEADER_DELETE              = 'Accept: application/json; charset=utf8';
 
     /**
-     * Error codes
-     */
-    const ERROR_CODE_ACCOUNT_NOT_ACTIVATED = 3716;
-
-    /**
      * @var string
      */
     private $api_key = '';
     private $header = [];
-
-    /**
-     * @var string|null
-     */
-    private $body       = '';
-    private $error      = null;
-    private $errorCodes = [];
-    private $result     = null;
-    private $userAgent  = null;
-
-    /**
-     * @var array|null
-     */
-    private $query;
+    private $body = '';
+    private $error = null;
+    private $result = null;
+    private $userAgent = null;
 
     /**
      * Get an item from tje result using "dot" notation.
@@ -106,37 +87,26 @@ class MyParcelRequest
         return $this->error;
     }
 
+
     /**
      * Sets the parameters for an API call based on a string with all required request parameters and the requested API
      * method.
      *
-     * @param string      $apiKey
-     * @param string|null $body
-     * @param string      $requestHeader
+     * @param string $apiKey
+     * @param string $body
+     * @param string $requestHeader
      *
      * @return $this
      */
-    public function setRequestParameters(string $apiKey, ?string $body, string $requestHeader): MyParcelRequest
+    public function setRequestParameters($apiKey, $body, $requestHeader): MyParcelRequest
     {
         $this->api_key = $apiKey;
         $this->body    = $body;
 
         $header[] = $requestHeader;
         $header[] = 'Authorization: basic ' . base64_encode($this->api_key);
-        $header[] = 'User-Agent: ' . $this->getUserAgent();
+
         $this->header = $header;
-
-        return $this;
-    }
-
-    /**
-     * @param array $parameters
-     *
-     * @return \MyParcelNL\Sdk\src\Model\MyParcelRequest
-     */
-    public function setQuery(array $parameters)
-    {
-        $this->query = $parameters;
 
         return $this;
     }
@@ -167,21 +137,12 @@ class MyParcelRequest
             $url .= '/' . $this->body;
         }
 
-        if ($this->query) {
-            $url .= '?' . http_build_query($this->query);
-        }
-
         $request->write($method, $url, $header, $this->body);
         $this->setResult($request);
         $request->close();
 
         if ($this->getError()) {
-            switch (Arr::first($this->errorCodes)) {
-                case self::ERROR_CODE_ACCOUNT_NOT_ACTIVATED:
-                    throw new AccountNotActiveException('Error ' . Arr::first($this->errorCodes) . ' Your account needs to be activated by MyParcel.');
-                default:
-                    throw new ApiException('Error in MyParcel API request: ' . $this->getError() . ' Url: ' . $url . ' Request: ' . $this->body);
-            }
+            throw new ApiException('Error in MyParcel API request: ' . $this->getError() . ' Url: ' . $url . ' Request: ' . $this->body);
         }
 
         return $this;
@@ -267,10 +228,10 @@ class MyParcelRequest
         }
 
         $error = reset($this->result['errors']);
-        $this->errorCodes = array_keys($error);
         if ((int) key($error) > 0) {
             $error = current($error);
         }
+
         $this->error = RequestError::getTotalMessage($error, $this->result);
     }
 
