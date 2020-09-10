@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ed5429cd1d5143cd362a06225f0de129",
+    "content-hash": "0450e064f5b0bcb6c5edfa4f78a0c092",
     "packages": [
         {
             "name": "myparcelnl/sdk",
-            "version": "3.x-dev",
+            "version": "v5.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "5745256d4369c0c51537658ed822dfaa7fe36c3e"
+                "reference": "e64ede79dac28fcbf0453d7aba017e6481dbb66b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/5745256d4369c0c51537658ed822dfaa7fe36c3e",
-                "reference": "5745256d4369c0c51537658ed822dfaa7fe36c3e",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/e64ede79dac28fcbf0453d7aba017e6481dbb66b",
+                "reference": "e64ede79dac28fcbf0453d7aba017e6481dbb66b",
                 "shasum": ""
             },
             "require": {
@@ -65,7 +65,7 @@
                 "myparcel",
                 "postnl"
             ],
-            "time": "2020-03-18T15:25:25+00:00"
+            "time": "2020-09-09T09:51:16+00:00"
         }
     ],
     "packages-dev": [],
