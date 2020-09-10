@@ -8,6 +8,7 @@ use MyParcelNL\Sdk\src\Concerns\HasCheckoutFields;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\SplitStreet;
 use MyParcelNL\Sdk\src\Helper\TrackTraceUrl;
+use MyParcelNL\Sdk\src\Helper\ValidatePostalCode;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use MyParcelNL\Sdk\src\Support\Helpers;
 
@@ -68,7 +69,6 @@ class AbstractConsignment
 
     public const DEFAULT_DELIVERY_TYPE      = self::DELIVERY_TYPE_STANDARD;
     public const DEFAULT_DELIVERY_TYPE_NAME = self::DELIVERY_TYPE_STANDARD;
-
 
     /**
      * Customs declaration types
@@ -373,9 +373,9 @@ class AbstractConsignment
 
     /**
      * @internal
-     * @var string
+     * @var null|string
      */
-    public $pickup_network_id = '';
+    public $retail_network_id;
 
     /**
      * @var bool
@@ -391,12 +391,6 @@ class AbstractConsignment
      * @var bool
      */
     private $save_recipient_address = true;
-
-    /**
-     * @internal
-     * @var null|string
-     */
-    private $retail_network_id;
 
     /**
      * @var Helpers
@@ -807,12 +801,12 @@ class AbstractConsignment
             $fullStreet .= ' ' . $this->getNumber();
         }
 
-        if ($this->getNumberSuffix()) {
-            $fullStreet .= ' ' . $this->getNumberSuffix();
-        }
-
         if ($this->getBoxNumber()) {
             $fullStreet .= ' ' . splitstreet::BOX_NL . ' ' . $this->getBoxNumber();
+        }
+
+        if ($this->getNumberSuffix()) {
+            $fullStreet .= ' ' . $this->getNumberSuffix();
         }
 
         return trim($fullStreet);
@@ -997,16 +991,28 @@ class AbstractConsignment
     }
 
     /**
-     * The address postal code
-     * Required: Yes for NL and EU destinations except for IE
+     * @param string $postalCode
      *
-     * @param string $postal_code
-     *
-     * @return $this
+     * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
+     * @throws \BadMethodCallException
+     * @throws \Exception
      */
-    public function setPostalCode(string $postal_code): self
+    public function setPostalCode(string $postalCode): self
     {
-        $this->postal_code = $postal_code;
+        if ($this->getCountry() === null) {
+            throw new MissingFieldException(
+                'First set the country code with setCountry() before running setPostalCode()'
+            );
+        }
+        if (empty($this->local_cc)) {
+            throw new \BadMethodCallException('Can not create a shipment when the local country code is empty.');
+        }
+
+        if (! ValidatePostalCode::validate($postalCode, $this->getCountry())) {
+            throw new \BadMethodCallException('Invalid postal code');
+        }
+
+        $this->postal_code = $postalCode;
 
         return $this;
     }
@@ -1195,7 +1201,7 @@ class AbstractConsignment
      * @param string|null $delivery_date
      *
      * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
-     * @throws \Exception
+     * @throws \BadMethodCallException
      */
     public function setDeliveryDate(?string $delivery_date): self
     {
@@ -1693,11 +1699,21 @@ class AbstractConsignment
     }
 
     /**
-     * @return string
+     * @return null|string
+     * @deprecated Use getRetailNetworkId instead
+     *
      */
-    public function getPickupNetworkId(): string
+    public function getPickupNetworkId(): ?string
     {
-        return $this->pickup_network_id;
+        return $this->getRetailNetworkId();
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getRetailNetworkId(): ?string
+    {
+        return $this->retail_network_id;
     }
 
     /**
@@ -1705,14 +1721,33 @@ class AbstractConsignment
      * Example:  Albert Heijn
      * Required: Yes for pickup location
      *
-     * @param string $pickupNetworkId
+     * @param string $retailNetworkId
+     *
+     * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
+     * @deprecated Use setRetailNetworkId instead
+     */
+    public function setPickupNetworkId($retailNetworkId): self
+    {
+        if (! empty($retailNetworkId)) {
+            throw new \BadMethodCallException('Pickup network id has to be empty in ' . static::class);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Pattern:  [0-9A-Za-z]
+     * Example:  Albert Heijn
+     * Required: Yes for pickup location
+     *
+     * @param string $retailNetworkId
      *
      * @return \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
      */
-    public function setPickupNetworkId($pickupNetworkId): self
+    public function setRetailNetworkId(string $retailNetworkId): self
     {
-        if (! empty($pickupNetworkId)) {
-            throw new \BadMethodCallException('Pickup network id has to be empty in ' . static::class);
+        if (! empty($retailNetworkId)) {
+            throw new \BadMethodCallException('Retail network id has to be empty in ' . static::class);
         }
 
         return $this;
