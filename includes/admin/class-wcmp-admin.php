@@ -717,7 +717,7 @@ class WCMP_Admin
     /**
      * Go through all getProductOptions and show them on the screen
      */
-    public function productOptionsFields()
+    public function productOptionsFields(): void
     {
         echo '<div class="options_group">';
         foreach ($this->getProductOptions() as $productOption) {
