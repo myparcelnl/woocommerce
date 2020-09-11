@@ -286,10 +286,28 @@ class WCMP_Export_Consignments
      */
     private function getAgeCheck(): bool
     {
-        return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
+        $ageCheckOfProduct = $this->getAgeCheckOfProduct();
+        $defaultAgeCheck   = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->hasAgeCheck(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
         );
+
+        return $ageCheckOfProduct ? $ageCheckOfProduct : $defaultAgeCheck;
+    }
+
+    /**
+     * @return bool
+     */
+    private function getAgeCheckOfProduct(): bool
+    {
+        foreach ($this->order->get_items() as $item_id => $item) {
+            $product         = $item->get_product();
+            $productAgeCheck = WCX_Product::get_meta($product, WCMP_Admin::META_AGE_CHECK, true);
+            if ($productAgeCheck){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
