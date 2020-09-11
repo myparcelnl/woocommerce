@@ -292,7 +292,7 @@ class WCMP_Export_Consignments
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
         );
 
-        return $ageCheckOfProduct ? $ageCheckOfProduct : $defaultAgeCheck;
+        return $ageCheckOfProduct ?: $defaultAgeCheck;
     }
 
     /**
