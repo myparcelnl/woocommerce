@@ -707,7 +707,7 @@ class WCMP_Admin
                 'type'        => 'select',
                 'description' => sprintf(
                     wc_help_tip(__(
-                            "The age check is intended for parcel shipments for which the recipient must show they are 18+ years old by means of a proof of identity. With this option "signature for receipt" and "delivery only at recipient" are included. This option can't be combined with morning or evening delivery.",
+                            "The age check is intended for parcel shipments for which the recipient must show they are 18+ years old by means of a proof of identity. With this option 'signature for receipt' and 'delivery only at recipient' are included. This option can't be combined with morning or evening delivery.",
                             "woocommerce-myparcel"))
                 ),
             ]
@@ -749,12 +749,15 @@ class WCMP_Admin
         echo '</div>';
     }
 
-    public function productOptionsFieldSave($post_id)
+    /**
+     * @param int $postId
+     */
+    public function productOptionsFieldSave(int $postId): void
     {
         foreach ($this->getProductOptions() as $productOption) {
             // check if hs code is passed and not an array (=variation hs code)
             if (isset($_POST[$productOption['id']]) && ! is_array($_POST[$productOption['id']])) {
-                $product   = wc_get_product($post_id);
+                $product   = wc_get_product($postId);
                 $productId = $_POST[$productOption['id']];
                 if (! empty($productId)) {
                     WCX_Product::update_meta_data($product, $productOption['id'], esc_attr($productId));

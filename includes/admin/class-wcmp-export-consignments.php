@@ -300,14 +300,15 @@ class WCMP_Export_Consignments
      */
     private function getAgeCheckOfProduct(): bool
     {
-        foreach ($this->order->get_items() as $item_id => $item) {
+        foreach ($this->order->get_items() as $item) {
             $product         = $item->get_product();
             $productAgeCheck = WCX_Product::get_meta($product, WCMP_Admin::META_AGE_CHECK, true);
 
-            if ($productAgeCheck){
+            if ($productAgeCheck) {
                 return true;
             }
         }
+
         return false;
     }
 
