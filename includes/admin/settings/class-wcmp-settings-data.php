@@ -1063,6 +1063,7 @@ class WCMP_Settings_Data
             '[PRODUCT_NAME]'  => __('Product name', 'woocommerce-myparcel'),
             '[PRODUCT_QTY]'   => __('Product quantity', 'woocommerce-myparcel'),
             '[PRODUCT_SKU]'   => __('Product SKU', 'woocommerce-myparcel'),
+            '[CUSTOMER_NOTE]' =>__('Customer note', 'woocommerce-myparcel'),
         ];
 
         foreach ($variables as $variable => $description) {

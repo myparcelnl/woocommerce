@@ -442,6 +442,7 @@ class WCMP_Export_Consignments
                     '[PRODUCT_NAME]'  => implode(', ', $productNames),
                     '[PRODUCT_QTY]'   => count($this->order->get_items()),
                     '[PRODUCT_SKU]'   => implode(', ', $productSkus),
+                    '[CUSTOMER_NOTE]' => $this->order->get_customer_note(),
                 ]
             );
         }
