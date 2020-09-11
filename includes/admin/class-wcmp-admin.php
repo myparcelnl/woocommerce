@@ -707,7 +707,7 @@ class WCMP_Admin
                 'type'        => 'select',
                 'description' => sprintf(
                     wc_help_tip(__(
-                            "The age check is intended for parcel shipments for which the recipient must show 18+ by means of a proof of identity. With this shipping option Signature for receipt and Delivery only at recipient are included. The age 18+ is further excluded from the delivery options morning and evening delivery.",
+                            "The age check is intended for parcel shipments for which the recipient must show they are 18+ years old by means of a proof of identity. With this option "signature for receipt" and "delivery only at recipient" are included. This option can't be combined with morning or evening delivery.",
                             "woocommerce-myparcel"))
                 ),
             ]
