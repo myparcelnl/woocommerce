@@ -303,6 +303,7 @@ class WCMP_Export_Consignments
         foreach ($this->order->get_items() as $item_id => $item) {
             $product         = $item->get_product();
             $productAgeCheck = WCX_Product::get_meta($product, WCMP_Admin::META_AGE_CHECK, true);
+
             if ($productAgeCheck){
                 return true;
             }
