@@ -3,7 +3,7 @@ Contributors: richardperdaan
 Contributors: ademdemir
 Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, MyParcel, myparcel, Flespakket, flespakket, PostNL, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 5.4.2
+Tested up to: 5.5.1
 Stable tag: trunk
 Requires PHP: 7.0
 License: GPLv3 or later
