@@ -222,7 +222,15 @@ class WCMP_Export
          */
         $order_ids         = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
         $shipment_ids      = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
-        $returnShipmentIds = $this->sanitize_posted_array($_REQUEST["return_shipment_id"] ?? []);
+        $returnShipmentIds = [];
+
+        $returnInTheBox = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_RETURN_IN_THE_BOX);
+
+        if (WCMP_Settings_Data::NO_OPTIONS === $returnInTheBox || WCMP_Settings_Data::EQUAL_TO_SHIPMENT ===
+            $returnInTheBox) {
+            $returnShipmentIds = $this->sanitize_posted_array($_REQUEST["return_shipment_id"] ?? []);
+        }
+
 
         if (empty($shipment_ids) && empty($order_ids)) {
             $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcel");
@@ -231,7 +239,7 @@ class WCMP_Export
                 switch ($request) {
                     // Creating consignments.
                     case self::ADD_SHIPMENTS:
-                        $this->addShipments($order_ids, $offset, $print);
+                        $this->addShipments($order_ids, $offset, $print, $returnInTheBox);
                         break;
 
                     // Creating a return shipment.
@@ -246,7 +254,7 @@ class WCMP_Export
 
                     // Downloading labels.
                     case self::GET_LABELS:
-                        $return = $this->printLabels($order_ids, $shipment_ids, $returnShipmentIds, $offset);
+                        $return = $this->printLabels($order_ids, $shipment_ids, $returnShipmentIds, $offset, $returnInTheBox);
                         break;
 
                     case self::MODAL_DIALOG:
@@ -302,6 +310,7 @@ class WCMP_Export
     /**
      * @param $order_ids
      * @param $process
+     * @param $returnInTheBox
      *
      * @return array
      * @throws ApiException
@@ -309,7 +318,7 @@ class WCMP_Export
      * @throws ErrorException
      * @throws Exception
      */
-    public function add_shipments(array $order_ids, bool $process)
+    public function add_shipments(array $order_ids, bool $process, string $returnInTheBox)
     {
         $return                   = [];
         $orderIdsWithNewShipments = [];
@@ -348,7 +357,6 @@ class WCMP_Export
         }
 
         $this->myParcelCollection = $collection;
-        $returnInTheBox           = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_RETURN_IN_THE_BOX);
 
         if (WCMP_Settings_Data::NO_OPTIONS === $returnInTheBox || WCMP_Settings_Data::EQUAL_TO_SHIPMENT === $returnInTheBox) {
             $this->addReturnInTheBox($returnInTheBox);
@@ -458,6 +466,7 @@ class WCMP_Export
      * @param array        $returnShipmentIds
      * @param int          $offset
      * @param string|null  $displayOverride - Overrides display setting.
+     * @param string|null  $returnInTheBox
      *
      * @return array
      * @throws Exception
@@ -467,11 +476,15 @@ class WCMP_Export
         array $order_ids = [],
         array $returnShipmentIds,
         int $offset = 0,
+        string $returnInTheBox = null,
         string $displayOverride = null
     ) {
         $return = [];
 
-        $shipment_ids = array_merge($shipment_ids, $returnShipmentIds);
+        if (WCMP_Settings_Data::NO_OPTIONS === $returnInTheBox || WCMP_Settings_Data::EQUAL_TO_SHIPMENT ===
+            $returnInTheBox) {
+            $shipment_ids = array_merge($shipment_ids, $returnShipmentIds);
+        }
 
         WCMP_Log::add("*** downloadOrGetUrlOfLabels() ***");
         WCMP_Log::add("Shipment IDs: " . implode(", ", $shipment_ids));
@@ -504,6 +517,13 @@ class WCMP_Export
     public function getOrderLabels(array $order_ids, array $returnShipmentIds, int $offset = 0, string $display = null)
     {
         $shipment_ids = $this->getShipmentIds($order_ids, ["only_last" => true]);
+
+        if (empty($returnShipmentIds)) {
+            foreach ($order_ids as $orderId) {
+                $order = WCX::get_order($orderId);
+                $returnShipmentIds[] = $order->get_meta(WCMP_Admin::META_RETURN_SHIPMENT_IDS);
+            }
+        }
 
         if (empty($shipment_ids)) {
             WCMP_Log::add(" *** Failed label request(not exported yet) ***");
@@ -1427,22 +1447,25 @@ class WCMP_Export
     }
 
     /**
-     * @param array $order_ids
-     * @param array $shipment_ids
-     * @param array $returnShipmentIds
-     * @param int   $offset
+     * @param array  $order_ids
+     * @param array  $shipment_ids
+     * @param array  $returnShipmentIds
+     * @param int    $offset
+     * @param string $returnInTheBox
      *
      * @return array
      * @throws Exception
      */
-    private function printLabels(array $order_ids, array $shipment_ids, array $returnShipmentIds, int $offset)
+    private function printLabels(array $order_ids, array $shipment_ids, array $returnShipmentIds, int $offset,
+                                 string $returnInTheBox)
     {
         if (! empty($shipment_ids)) {
             $return = $this->downloadOrGetUrlOfLabels(
                 $shipment_ids,
                 $order_ids,
                 $returnShipmentIds,
-                $offset
+                $offset,
+                $returnInTheBox
             );
         } else {
             $order_ids = $this->filterOrderDestinations($order_ids);
@@ -1456,6 +1479,7 @@ class WCMP_Export
      * @param $order_ids
      * @param $offset
      * @param $print
+     * @param $returnInTheBox
      *
      * @return array|void
      * @throws ApiException
@@ -1463,7 +1487,7 @@ class WCMP_Export
      * @throws MissingFieldException
      * @throws Exception
      */
-    private function addShipments($order_ids, $offset, $print)
+    private function addShipments($order_ids, $offset, $print, $returnInTheBox)
     {
         $order_ids = $this->filterOrderDestinations($order_ids);
 
@@ -1479,7 +1503,7 @@ class WCMP_Export
 
         // if we're going to print directly, we need to process the orders first, regardless of the settings
         $process = $print === "yes" ? true : false;
-        $return  = $this->add_shipments($order_ids, $process);
+        $return  = $this->add_shipments($order_ids, $process, $returnInTheBox);
 
         // When adding shipments, store $return for use in admin_notice
         // This way we can refresh the page (JS) to show all new buttons
