@@ -220,8 +220,9 @@ class WCMP_Export
         /**
          * @var $order_ids
          */
-        $order_ids    = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
-        $shipment_ids = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
+        $order_ids         = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
+        $shipment_ids      = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
+        $returnShipmentIds = $this->sanitize_posted_array($_REQUEST["return_shipment_id"] ?? []);
 
         if (empty($shipment_ids) && empty($order_ids)) {
             $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcel");
@@ -245,7 +246,7 @@ class WCMP_Export
 
                     // Downloading labels.
                     case self::GET_LABELS:
-                        $return = $this->printLabels($order_ids, $shipment_ids, $offset);
+                        $return = $this->printLabels($order_ids, $shipment_ids, $returnShipmentIds, $offset);
                         break;
 
                     case self::MODAL_DIALOG:
@@ -351,6 +352,12 @@ class WCMP_Export
 
         if (WCMP_Settings_Data::NO_OPTIONS === $returnInTheBox || WCMP_Settings_Data::EQUAL_TO_SHIPMENT === $returnInTheBox) {
             $this->addReturnInTheBox($returnInTheBox);
+
+            WCX_Order::update_meta_data(
+                $order,
+                WCMP_Admin::META_RETURN_SHIPMENT_IDS,
+                (string) $this->myParcelCollection->getConsignmentIds()[1]
+            );
         }
 
         $collection = $collection->createConcepts();
@@ -446,10 +453,11 @@ class WCMP_Export
     }
 
     /**
-     * @param array       $shipment_ids
-     * @param array       $order_ids
-     * @param int         $offset
-     * @param string|null $displayOverride - Overrides display setting.
+     * @param array        $shipment_ids
+     * @param array        $order_ids
+     * @param array        $returnShipmentIds
+     * @param int          $offset
+     * @param string|null  $displayOverride - Overrides display setting.
      *
      * @return array
      * @throws Exception
@@ -457,10 +465,13 @@ class WCMP_Export
     public function downloadOrGetUrlOfLabels(
         array $shipment_ids,
         array $order_ids = [],
+        array $returnShipmentIds,
         int $offset = 0,
         string $displayOverride = null
     ) {
         $return = [];
+
+        $shipment_ids = array_merge($shipment_ids, $returnShipmentIds);
 
         WCMP_Log::add("*** downloadOrGetUrlOfLabels() ***");
         WCMP_Log::add("Shipment IDs: " . implode(", ", $shipment_ids));
@@ -483,13 +494,14 @@ class WCMP_Export
 
     /**
      * @param array       $order_ids
+     * @param array       $returnShipmentIds
      * @param int         $offset
      * @param string|null $display
      *
      * @return array
      * @throws Exception
      */
-    public function getOrderLabels(array $order_ids, int $offset = 0, string $display = null)
+    public function getOrderLabels(array $order_ids, array $returnShipmentIds, int $offset = 0, string $display = null)
     {
         $shipment_ids = $this->getShipmentIds($order_ids, ["only_last" => true]);
 
@@ -505,6 +517,7 @@ class WCMP_Export
         return $this->downloadOrGetUrlOfLabels(
             $shipment_ids,
             $order_ids,
+            $returnShipmentIds,
             $offset,
             $display
         );
@@ -1416,22 +1429,24 @@ class WCMP_Export
     /**
      * @param array $order_ids
      * @param array $shipment_ids
+     * @param array $returnShipmentIds
      * @param int   $offset
      *
      * @return array
      * @throws Exception
      */
-    private function printLabels(array $order_ids, array $shipment_ids, int $offset)
+    private function printLabels(array $order_ids, array $shipment_ids, array $returnShipmentIds, int $offset)
     {
         if (! empty($shipment_ids)) {
             $return = $this->downloadOrGetUrlOfLabels(
                 $shipment_ids,
                 $order_ids,
+                $returnShipmentIds,
                 $offset
             );
         } else {
             $order_ids = $this->filterOrderDestinations($order_ids);
-            $return    = $this->getOrderLabels($order_ids, $offset);
+            $return    = $this->getOrderLabels($order_ids, $returnShipmentIds, $offset);
         }
 
         return $return;
@@ -1537,6 +1552,21 @@ class WCMP_Export
                     return $returnConsignment;
                 }
             );
+    }
+
+    /**
+     * @param $order
+     * @param array $consignmentIds
+     */
+    public function addReturnShipmentIds($order, array $consignmentIds): void
+    {
+        if (empty($order->get_meta('_myparcel_shipment_parent_id'))) {
+            WCX_Order::update_meta_data(
+                $order,
+                WCMP_Admin::META_SHIPMENT_PARENT_ID,
+                $consignmentIds
+            );
+        }
     }
 }
 
