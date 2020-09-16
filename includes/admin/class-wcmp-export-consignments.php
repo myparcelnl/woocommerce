@@ -161,7 +161,6 @@ class WCMP_Export_Consignments
         foreach ($this->order->get_items() as $item_id => $item) {
             $product = $item->get_product();
             $country = $this->getCountryOfOrigin($product);
-
             if (! empty($product)) {
                 // Description
                 $description = $item["name"];
@@ -467,7 +466,7 @@ class WCMP_Export_Consignments
             );
         }
 
-        return $description ?? $default;
+        return ! empty($description) ? $description : $default;
     }
 
     /**
