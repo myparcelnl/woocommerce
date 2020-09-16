@@ -803,7 +803,13 @@ jQuery(function($) {
   }
 
   function handlePDF(request) {
-    var url = wcmp.ajax_url + '?' + $.param(request.data);
+    var url;
+    
+    if (request.hasOwnProperty('data')) {
+      url = wcmp.ajax_url + '?' + $.param(request.data);
+    } else {
+      url = request.url;
+    }
 
     openPdf(url, true);
   }
