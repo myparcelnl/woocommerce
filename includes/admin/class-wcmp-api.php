@@ -64,7 +64,7 @@ class WCMP_API extends WCMP_Rest
         switch ($type) {
             case "return":
                 $content_type = "application/vnd.return_shipment+json";
-                $data_key     = "return";
+                $data_key     = "return_shipments";
                 break;
             case "unrelated_return":
                 $content_type = "application/vnd.unrelated_return_shipment+json";
