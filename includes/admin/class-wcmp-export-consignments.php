@@ -64,10 +64,7 @@ class WCMP_Export_Consignments
      */
     public function __construct(WC_Order $order)
     {
-
-
         $this->getApiKey();
-
 
         $this->order              = $order;
         $this->deliveryOptions    = WCMP_Admin::getDeliveryOptionsFromOrder($order);
@@ -122,33 +119,29 @@ class WCMP_Export_Consignments
     }
 
     /**
-     * @param DeliveryOptions $delivery_options
-     *
      * @return int
      */
-    private function getPickupTypeByDeliveryOptions(DeliveryOptions $delivery_options): int
+    private function getDeliveryType(): int
     {
-        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$delivery_options->getDeliveryType() ?? AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME];
+        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$this->deliveryOptions->getDeliveryType() ?? AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME];
     }
 
     /**
      * Get date in YYYY-MM-DD HH:MM:SS format
      *
-     * @param string|null $date
-     *
      * @return string
      */
-    public function convertDeliveryDate(?string $date): string
+    public function getDeliveryDate(): string
     {
-        $date          = strtotime($date);
-        $delivery_date = date('Y-m-d H:i:s', $date);
-        $todayDate     = strtotime('now');
+        $date         = strtotime($this->deliveryOptions->getDate());
+        $deliveryDate = date('Y-m-d H:i:s', $date);
+        $todayDate    = strtotime('now');
 
         if ($date <= $todayDate) {
             return date('Y-m-d H:i:s', strtotime('now +1 day'));
         }
 
-        return $delivery_date;
+        return $deliveryDate;
     }
 
     /**
@@ -258,6 +251,23 @@ class WCMP_Export_Consignments
         }
 
         return WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
+    }
+
+    /**
+     * @return AbstractConsignment
+     */
+    public function getConsignment(): AbstractConsignment
+    {
+        return $this->consignment;
+    }
+
+    /**
+     * @return int
+     * @throws Exception
+     */
+    private function getPackageType(): int
+    {
+        return WCMP()->export->getPackageTypeFromOrder($this->order, $this->deliveryOptions);
     }
 
     /**
@@ -394,8 +404,7 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $connectEmail    = $this->carrier === PostNLConsignment::CARRIER_NAME;
-        $this->recipient = WCMP_Export::getRecipientFromOrder($this->order, $connectEmail);
+        $this->recipient = WCMP_Export::getRecipientFromOrder($this->order);
 
         $this->consignment
             ->setCountry($this->recipient['cc'])
@@ -494,7 +503,7 @@ class WCMP_Export_Consignments
      *
      * @throws Exception
      */
-    private function setShipmentOptions()
+    private function setShipmentOptions(): void
     {
         $this->consignment
             ->setSignature($this->getSignature())
@@ -512,7 +521,7 @@ class WCMP_Export_Consignments
      *
      * @throws \Exception
      */
-    private function setCustomsDeclaration()
+    private function setCustomsDeclaration(): void
     {
         $shippingCountry = WCX_Order::get_prop($this->order, "shipping_country");
 
@@ -526,7 +535,7 @@ class WCMP_Export_Consignments
      *
      * @throws \Exception
      */
-    private function setPhysicalProperties()
+    private function setPhysicalProperties(): void
     {
         $weight = (int) $this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
 
@@ -534,22 +543,17 @@ class WCMP_Export_Consignments
             ->setPhysicalProperties(["weight" => $this->getTotalWeight($weight)]);
     }
 
+    /**
+     * @throws Exception
+     */
     private function setBaseData(): void
     {
         $this->consignment
             ->setApiKey($this->apiKey)
             ->setReferenceId((string) $this->order->get_id())
-            ->setDeliveryDate($this->convertDeliveryDate($this->deliveryOptions->getDate()))
-            ->setDeliveryType($this->getPickupTypeByDeliveryOptions($this->deliveryOptions))
-            ->setLabelDescription($this->getLabelDescription())
-            ->setPackageType(WCMP()->export->getPackageTypeForOrder($this->order->get_id()));
-    }
-
-    /**
-     * @return AbstractConsignment
-     */
-    public function getConsignment(): AbstractConsignment
-    {
-        return $this->consignment;
+            ->setPackageType($this->getPackageType())
+            ->setDeliveryDate($this->getDeliveryDate())
+            ->setDeliveryType($this->getDeliveryType())
+            ->setLabelDescription($this->getLabelDescription());
     }
 }

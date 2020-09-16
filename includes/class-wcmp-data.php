@@ -138,13 +138,13 @@ class WCMP_Data
     }
 
     /**
-     * @param string $deliveryType
+     * @param string $packageType
      *
-     * @return string
+     * @return int
      */
-    public static function getPackageTypeId(string $deliveryType): string
+    public static function getPackageTypeId(string $packageType): int
     {
-        return AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$deliveryType] ?? AbstractConsignment::PACKAGE_TYPE_PACKAGE;
+        return AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$packageType] ?? AbstractConsignment::PACKAGE_TYPE_PACKAGE;
     }
 
     /**
