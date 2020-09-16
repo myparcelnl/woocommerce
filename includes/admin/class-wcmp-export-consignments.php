@@ -240,14 +240,14 @@ class WCMP_Export_Consignments
 
         return (string) $countryOfOrigin;
     }
-
+    
     /**
-     * @param $defaultCountryOfOrigin
-     * @param $productCountryOfOrigin
+     * @param string|null $defaultCountryOfOrigin
+     * @param string|null  $productCountryOfOrigin
      *
      * @return string
      */
-    public function getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin): string
+    public function getPriorityOrigin(?string $defaultCountryOfOrigin, ?string $productCountryOfOrigin): string
     {
         if ($productCountryOfOrigin) {
             return $productCountryOfOrigin;
@@ -257,7 +257,7 @@ class WCMP_Export_Consignments
             return $defaultCountryOfOrigin;
         }
 
-        return WC()->countries->get_base_country() ?? 'NL';
+        return WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
     }
 
     /**
