@@ -1,5 +1,6 @@
 <?php
 
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
@@ -171,7 +172,7 @@ class WCMP_Export
                 '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p>%s</div>',
                 $error_notice,
                 $print_queue_store ?? ""
-            );   
+            );
             // destroy after reading
             delete_option("wcmyparcel_admin_error_notices");
             wp_cache_delete("wcmyparcel_admin_error_notices", "options");
@@ -858,13 +859,13 @@ class WCMP_Export
     }
 
     /**
-     * @param array  $order
-     * @param string $shippingMethodId
+     * @param WC_Order $order
+     * @param string   $shippingMethodId
      *
      * @return int|null
-     * @throws \Exception
+     * @throws Exception
      */
-    public function getOrderShippingClass($order, $shippingMethodId = ''): ?int
+    public function getOrderShippingClass(WC_Order $order, string $shippingMethodId = ''): ?int
     {
         if (empty($shippingMethodId)) {
             $orderShippingMethods = $order->get_items('shipping');
@@ -893,18 +894,27 @@ class WCMP_Export
     }
 
     /**
-     * determine appropriate package type for this order
+     * Determine appropriate package type for this order.
      *
-     * @param $order
+     * @param WC_Order                            $order
+     * @param AbstractDeliveryOptionsAdapter|null $deliveryOptions
      *
-     * @return int|string
-     * @throws \Exception
+     * @return int
+     * @throws Exception
      */
-    public function getPackageTypeForOrder($order)
-    {
-        $order            = wc_get_order($order);
-        $shipping_country = $order->get_shipping_country();
-        $packageType      = self::PACKAGE;
+    public function getPackageTypeFromOrder(
+        WC_Order $order,
+        AbstractDeliveryOptionsAdapter $deliveryOptions = null
+    ): int {
+        $packageTypeFromDeliveryOptions = $deliveryOptions
+            ? $deliveryOptions->getPackageType()
+            : null;
+
+        if ($packageTypeFromDeliveryOptions) {
+            return WCMP_Data::getPackageTypeId($packageTypeFromDeliveryOptions);
+        }
+
+        $packageType = self::PACKAGE;
 
         // get shipping methods from order
         $orderShippingMethods = $order->get_items('shipping');
@@ -972,9 +982,7 @@ class WCMP_Export
             }
         }
 
-        $package_type = WCMP_Data::getPackageTypeId($package_type);
-
-        return $package_type;
+        return WCMP_Data::getPackageTypeId($package_type);
     }
 
     /**

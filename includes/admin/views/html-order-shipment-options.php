@@ -46,10 +46,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
 
     $packageTypes                   = array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP);
     $packageTypeFromDeliveryOptions = $deliveryOptions->getPackageType();
-    $packageTypeFromOrder           = WCMP()->export->getPackageTypeForOrder($order->get_id());
-    $selectedPackageType            = $packageTypeFromDeliveryOptions
-        ? AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$packageTypeFromDeliveryOptions]
-        : $packageTypeFromOrder;
+    $selectedPackageType            = WCMP()->export->getPackageTypeFromOrder($order, $deliveryOptions);
 
     $postnl          = PostNLConsignment::CARRIER_NAME;
     $insurance       = false;
