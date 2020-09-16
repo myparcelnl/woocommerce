@@ -633,14 +633,14 @@ class WCMP_Settings_Data
                 "type"      => "toggle",
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_MONDAY_CUTOFF_TIME,
-                "condition" => WCMP_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
-                "class"     => ["wcmp__child"],
-                "label"     => __("Cut-off time", "woocommerce-myparcel"),
+                "name"        => WCMP_Settings::SETTING_CARRIER_MONDAY_CUTOFF_TIME,
+                "condition"   => WCMP_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
+                "class"       => ["wcmp__child"],
+                "label"       => __("Cut-off time", "woocommerce-myparcel"),
                 "placeholder" => "14:30",
                 "default"     => "15:00",
-                "help_text" => __(
-                    "Your drop-off days must include Saturday and cut-off time on Saturday must be before 15:00 (14:30 recommended).",
+                "help_text"   => __(
+                    "Time at which you stop processing orders for the day (format: hh:mm)",
                     "woocommerce-myparcel"
                 ),
             ],
