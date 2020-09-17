@@ -58,7 +58,7 @@ if (! count($shipments)) {
           $action    = WCMP_Export::EXPORT;
           $getLabels = WCMP_Export::GET_LABELS;
 
-          $order = wc_get_order($order_id);
+          $order            = wc_get_order($order_id);
           $returnShipmentId = $order->get_meta(WCMP_Admin::META_RETURN_SHIPMENT_IDS);
 
           WCMP_Admin::renderAction(
