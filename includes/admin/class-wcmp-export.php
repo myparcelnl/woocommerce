@@ -120,7 +120,10 @@ class WCMP_Export
 
         // add variation name if available
         $product = $order->get_product_from_item($item);
-        if ($product && isset($item['variation_id']) && $item['variation_id'] > 0 && method_exists($product, 'get_variation_attributes')) {
+        if ($product && isset($item['variation_id']) && $item['variation_id'] > 0
+            && method_exists($product,
+                'get_variation_attributes'
+            )) {
             $name .= woocommerce_get_formatted_variation($product->get_variation_attributes());
         }
 
@@ -133,7 +136,7 @@ class WCMP_Export
         if (isset($_GET["myparcel_done"])) {
             $action_return = get_option("wcmyparcel_admin_notices");
             $print_queue   = get_option("wcmyparcel_print_queue", []);
-            $error_notice = get_option("wcmyparcel_admin_error_notices");
+            $error_notice  = get_option("wcmyparcel_admin_error_notices");
 
             if (! empty($action_return)) {
                 foreach ($action_return as $type => $message) {
@@ -175,7 +178,7 @@ class WCMP_Export
                 '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p>%s</div>',
                 $error_notice,
                 $print_queue_store ?? ""
-            );   
+            );
             // destroy after reading
             delete_option("wcmyparcel_admin_error_notices");
             wp_cache_delete("wcmyparcel_admin_error_notices", "options");
@@ -249,7 +252,6 @@ class WCMP_Export
             $returnShipmentIds = $this->sanitize_posted_array($_REQUEST["return_shipment_id"] ?? []);
         }
 
-
         if (empty($shipment_ids) && empty($order_ids)) {
             $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcel");
         } else {
@@ -272,7 +274,12 @@ class WCMP_Export
 
                     // Downloading labels.
                     case self::GET_LABELS:
-                        $return = $this->printLabels($order_ids, $shipment_ids, $returnShipmentIds, $offset, $returnInTheBox);
+                        $return = $this->printLabels($order_ids,
+                            $shipment_ids,
+                            $returnShipmentIds,
+                            $offset,
+                            $returnInTheBox
+                        );
                         break;
 
                     case self::MODAL_DIALOG:
@@ -281,7 +288,7 @@ class WCMP_Export
                         break;
                 }
             } catch (Exception $e) {
-                $errorMessage = $e->getMessage();
+                $errorMessage   = $e->getMessage();
                 $this->errors[] = "$request: {$errorMessage}";
                 add_option("wcmyparcel_admin_error_notices", $errorMessage);
             }
@@ -343,7 +350,9 @@ class WCMP_Export
         $return                   = [];
         $orderIdsWithNewShipments = [];
         $collection               = new MyParcelCollection();
-        $processDirectly          = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY) || $process === true;
+        $processDirectly          = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY
+            )
+            || $process === true;
 
         WCMP_Log::add("*** Creating shipments started ***");
 
@@ -473,7 +482,7 @@ class WCMP_Export
                     throw new Exception("\$response\[\"body.data.ids\"] empty or not found.");
                 }
             } catch (Exception $e) {
-                $errorMessage = $e->getMessage();
+                $errorMessage            = $e->getMessage();
                 $this->errors[$order_id] = $errorMessage;
                 add_option('wcmyparcel_admin_error_notices', $errorMessage);
             }
@@ -483,12 +492,12 @@ class WCMP_Export
     }
 
     /**
-     * @param array        $shipment_ids
-     * @param array        $order_ids
-     * @param array        $returnShipmentIds
-     * @param string|null  $returnInTheBox
-     * @param int          $offset
-     * @param string|null  $displayOverride - Overrides display setting.
+     * @param array       $shipment_ids
+     * @param array       $order_ids
+     * @param array       $returnShipmentIds
+     * @param string|null $returnInTheBox
+     * @param int         $offset
+     * @param string|null $displayOverride - Overrides display setting.
      *
      * @return array
      * @throws Exception
@@ -532,7 +541,7 @@ class WCMP_Export
      * @param array       $returnShipmentIds
      * @param int         $offset
      * @param string|null $display
-     * @param string $returnInTheBox
+     * @param string      $returnInTheBox
      *
      * @return array
      * @throws Exception
@@ -543,7 +552,7 @@ class WCMP_Export
 
         if (empty($returnShipmentIds)) {
             foreach ($order_ids as $orderId) {
-                $order = WCX::get_order($orderId);
+                $order               = WCX::get_order($orderId);
                 $returnShipmentIds[] = $order->get_meta(WCMP_Admin::META_RETURN_SHIPMENT_IDS);
             }
         }
@@ -554,7 +563,8 @@ class WCMP_Export
             throw new Exception(__(
                 "The selected orders have not been exported to MyParcel yet! ",
                 "woocommerce-myparcel"
-            ));
+            )
+            );
         }
 
         return $this->downloadOrGetUrlOfLabels(
@@ -692,7 +702,7 @@ class WCMP_Export
     public static function getRecipientFromOrder(WC_Order $order)
     {
         $isUsingMyParcelFields = WCX_Order::has_meta($order, "_billing_street_name")
-                                 || WCX_Order::has_meta($order, "_billing_house_number");
+            || WCX_Order::has_meta($order, "_billing_house_number");
 
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
@@ -1002,14 +1012,14 @@ class WCMP_Export
                 $shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
             }
         }
-        foreach (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES) as $package_type_key => $package_type_shipping_methods) {
-
+        foreach (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES) as
+                 $package_type_key => $package_type_shipping_methods) {
             if (WCMP_Export::isActiveMethod(
                 $shipping_method_id,
                 $package_type_shipping_methods,
                 $shipping_method_id_class,
-                $shipping_class)) {
-
+                $shipping_class
+            )) {
                 $package_type = $package_type_key;
                 break;
             }
@@ -1200,7 +1210,8 @@ class WCMP_Export
      */
     public static function getShippingMethod(string $chosenMethod): ?WC_Shipping_Method
     {
-        if (version_compare(WOOCOMMERCE_VERSION, "2.6", "<") || $chosenMethod ===
+        if (version_compare(WOOCOMMERCE_VERSION, "2.6", "<")
+            || $chosenMethod ===
             WCMP_Shipping_Methods::LEGACY_FLAT_RATE) {
             return self::getLegacyShippingMethod($chosenMethod);
         }
@@ -1235,7 +1246,9 @@ class WCMP_Export
             return null;
         }
 
-        $shipping_methods = WC()->shipping()->load_shipping_methods();
+        $shipping_methods = WC()
+            ->shipping()
+            ->load_shipping_methods();
 
         if (! isset($shipping_methods[$chosen_method])) {
             return null;
@@ -1593,7 +1606,7 @@ class WCMP_Export
         $this->myParcelCollection
             ->generateReturnConsignments(
                 false,
-                function(
+                function (
                     AbstractConsignment $returnConsignment,
                     AbstractConsignment $parent
                 ) use ($returnOptions): AbstractConsignment {
@@ -1614,21 +1627,6 @@ class WCMP_Export
                     return $returnConsignment;
                 }
             );
-    }
-
-    /**
-     * @param $order
-     * @param array $consignmentIds
-     */
-    public function addReturnShipmentIds($order, array $consignmentIds): void
-    {
-        if (empty($order->get_meta('_myparcel_shipment_parent_id'))) {
-            WCX_Order::update_meta_data(
-                $order,
-                WCMP_Admin::META_SHIPMENT_PARENT_ID,
-                $consignmentIds
-            );
-        }
     }
 }
 
