@@ -245,8 +245,7 @@ class WCMP_Export
 
         $returnInTheBox = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_RETURN_IN_THE_BOX);
 
-        if (WCMP_Settings_Data::NO_OPTIONS === $returnInTheBox || WCMP_Settings_Data::EQUAL_TO_SHIPMENT ===
-            $returnInTheBox) {
+        if (WCMP_Settings_Data::NO_OPTIONS === $returnInTheBox || WCMP_Settings_Data::EQUAL_TO_SHIPMENT === $returnInTheBox) {
             $returnShipmentIds = $this->sanitize_posted_array($_REQUEST["return_shipment_id"] ?? []);
         }
 
@@ -487,9 +486,9 @@ class WCMP_Export
      * @param array        $shipment_ids
      * @param array        $order_ids
      * @param array        $returnShipmentIds
+     * @param string|null  $returnInTheBox
      * @param int          $offset
      * @param string|null  $displayOverride - Overrides display setting.
-     * @param string|null  $returnInTheBox
      *
      * @return array
      * @throws Exception
@@ -498,14 +497,13 @@ class WCMP_Export
         array $shipment_ids,
         array $order_ids = [],
         array $returnShipmentIds,
+        string $returnInTheBox,
         int $offset = 0,
-        string $returnInTheBox = null,
         string $displayOverride = null
     ) {
         $return = [];
 
-        if (WCMP_Settings_Data::NO_OPTIONS === $returnInTheBox || WCMP_Settings_Data::EQUAL_TO_SHIPMENT ===
-            $returnInTheBox) {
+        if (WCMP_Settings_Data::NO_OPTIONS === $returnInTheBox || WCMP_Settings_Data::EQUAL_TO_SHIPMENT === $returnInTheBox) {
             $shipment_ids = array_merge($shipment_ids, $returnShipmentIds);
         }
 
@@ -522,8 +520,8 @@ class WCMP_Export
             $display        = ($displayOverride ?? $displaySetting) === "display";
             $api->getShipmentLabels($shipment_ids, $order_ids, $positions, $display);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
             add_option('wcmyparcel_admin_error_notice', $e->getMessage());
+            throw new Exception($e->getMessage());
         }
 
         return $return;
@@ -534,11 +532,12 @@ class WCMP_Export
      * @param array       $returnShipmentIds
      * @param int         $offset
      * @param string|null $display
+     * @param string $returnInTheBox
      *
      * @return array
      * @throws Exception
      */
-    public function getOrderLabels(array $order_ids, array $returnShipmentIds, int $offset = 0, string $display = null)
+    public function getOrderLabels(array $order_ids, array $returnShipmentIds, string $returnInTheBox, int $offset = 0, string $display = null)
     {
         $shipment_ids = $this->getShipmentIds($order_ids, ["only_last" => true]);
 
@@ -562,6 +561,7 @@ class WCMP_Export
             $shipment_ids,
             $order_ids,
             $returnShipmentIds,
+            $returnInTheBox,
             $offset,
             $display
         );
@@ -1495,20 +1495,19 @@ class WCMP_Export
      * @return array
      * @throws Exception
      */
-    private function printLabels(array $order_ids, array $shipment_ids, array $returnShipmentIds, int $offset,
-                                 string $returnInTheBox)
+    private function printLabels(array $order_ids, array $shipment_ids, array $returnShipmentIds, int $offset, string $returnInTheBox)
     {
         if (! empty($shipment_ids)) {
             $return = $this->downloadOrGetUrlOfLabels(
                 $shipment_ids,
                 $order_ids,
                 $returnShipmentIds,
-                $offset,
-                $returnInTheBox
+                $returnInTheBox,
+                $offset
             );
         } else {
             $order_ids = $this->filterOrderDestinations($order_ids);
-            $return    = $this->getOrderLabels($order_ids, $returnShipmentIds, $offset);
+            $return    = $this->getOrderLabels($order_ids, $returnShipmentIds, $returnInTheBox, $offset);
         }
 
         return $return;
@@ -1603,7 +1602,7 @@ class WCMP_Export
                         ' This label is valid until: ' . date("d-m-Y", strtotime("+ 28 days"))
                     );
 
-                    if (WCMP_Settings_Data::NO_OPTIONS === $returnOptions) {
+                    if ($returnOptions === WCMP_Settings_Data::NO_OPTIONS) {
                         $returnConsignment->setOnlyRecipient(false);
                         $returnConsignment->setSignature(false);
                         $returnConsignment->setAgeCheck(false);
