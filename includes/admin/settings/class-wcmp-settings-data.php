@@ -23,9 +23,9 @@ class WCMP_Settings_Data
     public const DISPLAY_FOR_SELECTED_METHODS = "selected_methods";
     public const DISPLAY_FOR_ALL_METHODS      = "all_methods";
 
-    public const NOT_ACTIVE        = 'notActive';
-    public const NO_OPTIONS        = 'noOptions';
-    public const EQUAL_TO_SHIPMENT = 'equalToShipment';
+    public const NOT_ACTIVE        = "notActive";
+    public const NO_OPTIONS        = "noOptions";
+    public const EQUAL_TO_SHIPMENT = "equalToShipment";
 
     /**
      * @var WCMP_Settings_Callbacks
@@ -853,8 +853,8 @@ class WCMP_Settings_Data
                 "type"      => "select",
                 "options"   => [
                     self::NOT_ACTIVE        => __("No", "woocommerce-myparcel"),
-                    self::NO_OPTIONS        => __("No options", "woocommerce-myparcel"),
-                    self::EQUAL_TO_SHIPMENT => __("Equal to shipment", "woocommerce-myparcel"),
+                    self::NO_OPTIONS        => __("Without options", "woocommerce-myparcel"),
+                    self::EQUAL_TO_SHIPMENT => __("Options equal to shipment", "woocommerce-myparcel"),
                 ],
                 "help_text" => __(
                     "Enabling this setting automatically creates a related return shipment for any shipment you export. When downloading the shipment labels the the corresponding return shipment labels will be included.",
