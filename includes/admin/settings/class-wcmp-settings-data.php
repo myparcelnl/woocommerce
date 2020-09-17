@@ -636,7 +636,7 @@ class WCMP_Settings_Data
                 "name"      => WCMP_Settings::SETTING_CARRIER_MONDAY_CUTOFF_TIME,
                 "condition" => WCMP_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
                 "class"     => ["wcmp__child"],
-                "label"     => __("Fee (optional)", "woocommerce-myparcel"),
+                "label"     => __("Cut-off time", "woocommerce-myparcel"),
                 "placeholder" => "14:30",
                 "default"     => "15:00",
                 "help_text" => __(
