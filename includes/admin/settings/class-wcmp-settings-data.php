@@ -849,7 +849,7 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMP_Settings::SETTING_RETURN_IN_THE_BOX,
-                "label"     => __("Return in the box", "woocommerce-myparcel"),
+                "label"     => __("Print return label directly", "woocommerce-myparcel"),
                 "type"      => "select",
                 "options"   => [
                     self::NOT_ACTIVE        => __("No", "woocommerce-myparcel"),
@@ -857,7 +857,7 @@ class WCMP_Settings_Data
                     self::EQUAL_TO_SHIPMENT => __("Equal to shipment", "woocommerce-myparcel"),
                 ],
                 "help_text" => __(
-                    "With this setting you create automatic an return shipment.",
+                    "Enabling this setting automatically creates a related return shipment for any shipment you export. When downloading the shipment labels the the corresponding return shipment labels will be included.",
                     "woocommerce-myparcel"
                 ),
             ],
