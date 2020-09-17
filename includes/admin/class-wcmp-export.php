@@ -1603,7 +1603,7 @@ class WCMP_Export
                         ' This label is valid until: ' . date("d-m-Y", strtotime("+ 28 days"))
                     );
 
-                    if ($returnOptions === WCMP_Settings_Data::NO_OPTIONS) {
+                    if (WCMP_Settings_Data::NO_OPTIONS === $returnOptions) {
                         $returnConsignment->setOnlyRecipient(false);
                         $returnConsignment->setSignature(false);
                         $returnConsignment->setAgeCheck(false);
