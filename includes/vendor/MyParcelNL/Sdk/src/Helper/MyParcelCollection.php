@@ -905,7 +905,11 @@ class MyParcelCollection extends Collection
         $returnConsignments = [];
 
         foreach ($parentConsignments as $parentConsignment) {
+<<<<<<< HEAD
             $returnConsignment = clone $parentConsignment;
+=======
+            $returnConsignment = $parentConsignment;
+>>>>>>> 753f556a652203e5a0268b57e9cf563dc89e2483
             $returnConsignment->setDeliveryDate(null);
             if ($modifier) {
                 $returnConsignment = $modifier($returnConsignment, $parentConsignment);
