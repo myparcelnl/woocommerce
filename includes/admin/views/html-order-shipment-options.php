@@ -40,7 +40,6 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         echo "<hr>";
     }
 
-    $isCarrierDisabled     = $deliveryOptions->getCarrier();
     $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
     $shipment_options      = $deliveryOptions->getShipmentOptions();
 
@@ -91,7 +90,8 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT
     );
 
-    $digitalStampWeight = WCMP_Export::getDigitalStampRanges((int) $order->get_meta(WCMP_Admin::META_ORDER_WEIGHT));
+    $orderWeight        = (float) $order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
+    $digitalStampWeight = $extraOptions["weight"] ?? WCMP_Export::getDigitalStampRangeFromWeight($orderWeight);
 
     $option_rows = [
         [
@@ -99,33 +99,44 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "label"             => __("Carrier", "woocommerce-myparcel"),
             "type"              => "select",
             "options"           => WCMP_Data::CARRIERS_HUMAN,
-            "custom_attributes" => ($isCarrierDisabled ?? $postnl) ? ["disabled" => "disabled"] : [],
-            "value"             => $deliveryOptions->getCarrier(),
+            "custom_attributes" => ["disabled" => "disabled"],
+            "value"             => $deliveryOptions->getCarrier() ?? PostNLConsignment::CARRIER_NAME,
         ],
         [
             "name"              => "[package_type]",
             "label"             => __("Shipment type", "woocommerce-myparcel"),
-            "description"       => sprintf(
-                __("Calculated weight: %s", "woocommerce-myparcel"),
-                wc_format_weight($order->get_meta(WCMP_Admin::META_ORDER_WEIGHT))
-            ),
             "type"              => "select",
             "options"           => array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman()),
             "value"             => $packageTypes[$selectedPackageType],
-            "custom_attributes" => [
-                "disabled" => $isPackageTypeDisabled ? "disabled" : null,
-            ],
+            "custom_attributes" => $isPackageTypeDisabled ? ["disabled" => "disabled"] : [],
         ],
         [
             "name"              => "[extra_options][collo_amount]",
             "label"             => __("Number of labels", "woocommerce-myparcel"),
             "type"              => "number",
-            "value"             => isset($extraOptions["collo_amount"]) ? $extraOptions["collo_amount"] : 1,
+            "value"             => $extraOptions["collo_amount"] ?? 1,
             "custom_attributes" => [
                 "step" => "1",
                 "min"  => "1",
                 "max"  => "10",
             ],
+        ],
+        [
+            "name"        => "[extra_options][weight]",
+            "label"       => __("Weight", "woocommerce-myparcel"),
+            "description" => sprintf(
+                __("Calculated weight: %s", "woocommerce-myparcel"),
+                wc_format_weight($orderWeight)
+            ),
+            "type"        => "select",
+            "options"     => WCMP_Export::getDigitalStampRangeOptions(),
+            "condition"   => [
+                "name"         => "[carrier]",
+                "type"         => "disable",
+                "parent_value" => WCMP_Data::getPostnlName(),
+                "set_value"    => WCMP_Settings_Data::DISABLED,
+            ],
+            "value"       => $digitalStampWeight,
         ],
         [
             "name"      => "[shipment_options][only_recipient]",
@@ -205,19 +216,6 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
             "type"    => "select",
             "options" => WCMP_Data::getInsuranceAmount(),
             "value"   => (int) $insuranceAmount,
-        ],
-        [
-            "name"      => "[shipment_options][weight]",
-            "label"     => __("Weight", "woocommerce-myparcel"),
-            "type"      => "select",
-            "options"   => $digitalStampWeight['names'],
-            "condition" => [
-                "name"         => "[carrier]",
-                "type"         => "disable",
-                "parent_value" => WCMP_Data::getPostnlName(),
-                "set_value"    => WCMP_Settings_Data::DISABLED,
-            ],
-            "value"     => $digitalStampWeight['weight'],
         ],
     ];
 
