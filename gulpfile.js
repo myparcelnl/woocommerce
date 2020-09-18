@@ -3,11 +3,14 @@ const browserify = require('browserify');
 const buffer = require('vinyl-buffer');
 const clean = require('gulp-clean');
 const gulp = require('gulp');
+const gulpPoSync = require('gulp-po-sync');
+const po2mo = require('gulp-po2mo');
 const postcss = require('gulp-postcss');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const tap = require('gulp-tap');
 const uglify = require('gulp-uglify');
+const wpPot = require('gulp-wp-pot');
 const zip = require('gulp-zip');
 
 /**
@@ -74,6 +77,38 @@ gulp.task('zip', () => gulp.src([
   .pipe(gulp.dest('./')));
 
 /**
+ * Sync .pot file with source code.
+ */
+gulp.task('translations:pot', () => gulp.src('includes/**/*.php', {read: false})
+  .pipe(wpPot({
+    domain: 'woocommerce-myparcel',
+    package: 'WooCommerce MyParcel',
+    team: 'MyParcel <support@myparcel.nl>',
+    bugReport: 'https://github.com/myparcelnl/woocommerce/issues',
+  }))
+  .pipe(gulp.dest('languages/woocommerce-myparcel.pot')));
+
+/**
+ * Sync .po files with .pot file.
+ */
+gulp.task('translations:po', () => gulp.src('languages/**/*.po', {read: false})
+  .pipe(gulpPoSync('languages/woocommerce-myparcel.pot'))
+  .pipe(gulp.dest('languages')));
+
+/**
+ * Create .mo files from .po files.
+ */
+gulp.task('translations:mo', () => gulp.src('languages/**/*.po', {read: false})
+  .pipe(po2mo())
+  .pipe(gulp.dest('languages')));
+
+gulp.task('translations', gulp.series(
+  'translations:pot',
+  'translations:po',
+  'translations:mo',
+));
+
+/**
  * The default task.
  */
 const build = gulp.series(
@@ -83,6 +118,7 @@ const build = gulp.series(
     'build:scss',
     'copy',
     'copy:delivery-options',
+    'translations',
   ),
 );
 
