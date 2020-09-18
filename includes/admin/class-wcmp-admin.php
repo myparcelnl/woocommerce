@@ -420,7 +420,6 @@ class WCMP_Admin
 
         $returnShipmentId = $order->get_meta(WCMP_Admin::META_RETURN_SHIPMENT_IDS);
 
-        // URL HIER AANPASSEN.
         $listing_actions = [
             $addShipments => [
                 "url" => admin_url("$baseUrl&request=$addShipments&order_ids=$order_id"),

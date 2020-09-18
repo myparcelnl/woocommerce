@@ -701,8 +701,7 @@ class WCMP_Export
      */
     public static function getRecipientFromOrder(WC_Order $order)
     {
-        $isUsingMyParcelFields = WCX_Order::has_meta($order, "_billing_street_name")
-            || WCX_Order::has_meta($order, "_billing_house_number");
+        $isUsingMyParcelFields = WCX_Order::has_meta($order, "_billing_street_name") || WCX_Order::has_meta($order, "_billing_house_number");
 
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
@@ -1210,9 +1209,8 @@ class WCMP_Export
      */
     public static function getShippingMethod(string $chosenMethod): ?WC_Shipping_Method
     {
-        if (version_compare(WOOCOMMERCE_VERSION, "2.6", "<")
-            || $chosenMethod ===
-            WCMP_Shipping_Methods::LEGACY_FLAT_RATE) {
+        if (version_compare(WOOCOMMERCE_VERSION, "2.6", "<") ||
+            $chosenMethod === WCMP_Shipping_Methods::LEGACY_FLAT_RATE) {
             return self::getLegacyShippingMethod($chosenMethod);
         }
 
