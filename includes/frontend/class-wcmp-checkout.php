@@ -331,6 +331,15 @@ class WCMP_Checkout
             WC()->cart->get_cart_contents_weight()
         );
 
+        WCX_Order::update_meta_data(
+            $order,
+            WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA,
+            [
+                'collo_amount' => 1,
+                'weight'       => WC()->cart->get_cart_contents_weight(),
+            ]
+        );
+
         if ($highestShippingClass) {
             WCX_Order::update_meta_data(
                 $order,

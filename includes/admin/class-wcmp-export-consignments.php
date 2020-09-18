@@ -4,7 +4,6 @@ use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
@@ -66,9 +65,9 @@ class WCMP_Export_Consignments
     {
         $this->getApiKey();
 
-        $this->order              = $order;
-        $this->deliveryOptions    = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-        $this->carrier            = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
+        $this->order           = $order;
+        $this->deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+        $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
 
         $this->myParcelCollection = (new MyParcelCollection())->setUserAgentArray(
             [
@@ -233,7 +232,7 @@ class WCMP_Export_Consignments
 
         return (string) $countryOfOrigin;
     }
-    
+
     /**
      * @param string|null $defaultCountryOfOrigin
      * @param string|null  $productCountryOfOrigin
@@ -360,20 +359,26 @@ class WCMP_Export_Consignments
      */
     private function getInsurance(): int
     {
-        $isInsuranceActive = WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->deliveryOptions->getShipmentOptions()->getInsurance(),
+        $deliveryOptionsInsurance = $this->deliveryOptions->getShipmentOptions()->getInsurance();
+
+        if ($deliveryOptionsInsurance) {
+            return $deliveryOptionsInsurance;
+        }
+
+        $insured = WCMP_Export::getChosenOrDefaultShipmentOption(
+            null,
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
         );
 
-        return $this->getInsuranceAmount($isInsuranceActive);
+        return $this->getInsuranceAmount($insured);
     }
 
     /**
-     * @param $isInsuranceActive
+     * @param bool $isInsuranceActive
      *
      * @return int
      */
-    private function getInsuranceAmount($isInsuranceActive): int
+    private function getInsuranceAmount(bool $isInsuranceActive): int
     {
         // Checks if all parcels must be insured
         if ($isInsuranceActive) {
@@ -537,10 +542,15 @@ class WCMP_Export_Consignments
      */
     private function setPhysicalProperties(): void
     {
-        $weight = (int) $this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
+        $extraOptions       = WCX_Order::get_meta($this->order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+        $digitalStampWeight = $extraOptions['weight'];
+        $orderWeight        = $this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
 
-        $this->consignment
-            ->setPhysicalProperties(["weight" => $this->getTotalWeight($weight)]);
+        $this->consignment->setPhysicalProperties(
+            [
+                "weight" => $this->getTotalWeight((int) ($digitalStampWeight ?? $orderWeight)),
+            ]
+        );
     }
 
     /**

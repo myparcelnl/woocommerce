@@ -351,9 +351,7 @@ class WCMP_Export
         $return                   = [];
         $orderIdsWithNewShipments = [];
         $collection               = new MyParcelCollection();
-        $processDirectly          = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY
-            )
-            || $process === true;
+        $processDirectly          = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY) || $process === true;
 
         WCMP_Log::add("*** Creating shipments started ***");
 
@@ -361,26 +359,16 @@ class WCMP_Export
          * Loop over the order ids and create consignments for each order.
          */
         foreach ($order_ids as $order_id) {
-            $order                      = WCX::get_order($order_id);
-            $orderIdsWithNewShipments[] = $order_id;
+            $order        = WCX::get_order($order_id);
+            $consignment  = (new WCMP_Export_Consignments($order))->getConsignment();
 
-            $extra_params = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
-            $collo_amount = isset($extra_params["collo_amount"]) ? $extra_params["collo_amount"] : 1;
+            $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+            $colloAmount  = $extraOptions["collo_amount"] ?? 1;
 
-            /**
-             * Create a real multi collo shipment if available, otherwise loop over the collo_amount and add separate
-             * consignments to the collection.
-             */
-            if ($collo_amount > 1) {
-                $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
-
-                $collection->addMultiCollo($consignment, $collo_amount);
+            if ($colloAmount > 1) {
+                $collection->addMultiCollo($consignment, $colloAmount);
             } else {
-                for ($i = 0; $i < $collo_amount; $i++) {
-                    $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
-
-                    $collection->addConsignment($consignment);
-                }
+                $collection->addConsignment($consignment);
             }
 
             WCMP_Log::add("Shipment data for order {$order_id}.");
@@ -404,7 +392,7 @@ class WCMP_Export
             $collection->setLinkOfLabels();
         }
 
-        foreach ($orderIdsWithNewShipments as $order_id) {
+        foreach ($order_ids as $order_id) {
             $order          = WCX::get_order($order_id);
             $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
 
@@ -1191,22 +1179,40 @@ class WCMP_Export
     }
 
     /**
-     * @param int         $weight
-     * @param string|null $names
-     *
      * @return array
      */
-    public static function getDigitalStampRanges(int $weight, string $names = null): array
+    public static function getDigitalStampRangeOptions(): array
     {
-        foreach (WCMP_Data::getDigitalStampWeight() as $tierRange) {
-            $names[$tierRange['average']] = $tierRange['min'] . " - " . $tierRange['max'] . " gram";
+        $options = [];
 
-            if ($weight > $tierRange['min'] && $weight <= $tierRange['max']) {
-                $weight = $tierRange['average'];
-            }
+        foreach (WCMP_Data::getDigitalStampRanges() as $key => $tierRange) {
+            $options[$tierRange['average']] = $tierRange['min'] . " - " . $tierRange['max'] . " gram";
         }
 
-        return ['names' => $names, 'weight' => $weight];
+        return $options;
+    }
+
+    /**
+     * @param float $weight
+     *
+     * @return int
+     */
+    public static function getDigitalStampRangeFromWeight(float $weight): int
+    {
+        $weight = (int) ($weight * 1000);
+
+        $results = Arr::where(
+            WCMP_Data::getDigitalStampRanges(),
+            function ($range) use ($weight) {
+                return $weight > $range['min'];
+            }
+        );
+
+        if (empty($results)) {
+            return Arr::first(WCMP_Data::getDigitalStampRanges())['average'];
+        }
+
+        return Arr::last($results)['average'];
     }
 
     /**
