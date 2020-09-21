@@ -736,28 +736,17 @@ class WCMYPA_Admin
                 );
             }
 
-            if ($productOption['type'] === 'select' && empty($productOption['options'])) {
+            if ($productOption['type'] === 'select') {
                 woocommerce_wp_select(
                     array(
                         'id'          => $productOption['id'],
                         'label'       => $productOption['label'],
-                        'options'     => [
+                        'options'     => $productOption['options'] ?? [
                             __("Disabled", "woocommerce-myparcel"),
                             __("Enabled", "woocommerce-myparcel"),
                         ],
                         'description' => $productOption['description'],
                     )
-                );
-            }
-
-            if ($productOption['type'] === 'select' && !empty($productOption['options'])) {
-                woocommerce_wp_select(
-                    [
-                        'id'          => $productOption['id'],
-                        'label'       => $productOption['label'],
-                        'options'     => $productOption['options'],
-                        'description' => $productOption['description'],
-                    ]
                 );
             }
         }
