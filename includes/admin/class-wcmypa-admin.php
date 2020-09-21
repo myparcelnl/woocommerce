@@ -699,7 +699,8 @@ class WCMYPA_Admin
             'Country-of-origin' => [
                 'id'          => self::META_COUNTRY_OF_ORIGIN,
                 'label'       => __('Country of origin', 'woocommerce-myparcel'),
-                'type'        => 'text',
+                'type'        => 'select',
+                'options'     => (new WC_Countries())->get_countries(),
                 'description' => sprintf(
                     wc_help_tip(__('Country of origin is required for world shipments. Defaults to shop base.'))
                 ),
@@ -735,7 +736,7 @@ class WCMYPA_Admin
                 );
             }
 
-            if ($productOption['type'] === 'select') {
+            if ($productOption['type'] === 'select' && empty($productOption['options'])) {
                 woocommerce_wp_select(
                     array(
                         'id'          => $productOption['id'],
@@ -746,6 +747,17 @@ class WCMYPA_Admin
                         ],
                         'description' => $productOption['description'],
                     )
+                );
+            }
+
+            if ($productOption['type'] === 'select' && !empty($productOption['options'])) {
+                woocommerce_wp_select(
+                    [
+                        'id'          => $productOption['id'],
+                        'label'       => $productOption['label'],
+                        'options'     => $productOption['options'],
+                        'description' => $productOption['description'],
+                    ]
                 );
             }
         }
