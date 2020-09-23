@@ -350,7 +350,7 @@ class WCMP_Export_Consignments
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
         );
 
-        return $this->getInsuranceAmount($insured);
+        return $this->getInsuranceAmount((bool) $insured);
     }
 
     /**
