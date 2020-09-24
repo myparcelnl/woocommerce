@@ -89,22 +89,6 @@ class BpostConsignment extends AbstractConsignment
     }
 
     /**
-     * Street number suffix.
-     *
-     * Required: no
-     *
-     * @param string $boxNumber
-     *
-     * @return $this
-     */
-    public function setBoxNumber(?string $boxNumber): AbstractConsignment
-    {
-        $this->box_number = $boxNumber;
-
-        return $this;
-    }
-
-    /**
      * The package type
      *
      * For international shipment only package type 1 is allowed

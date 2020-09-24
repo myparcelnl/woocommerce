@@ -106,22 +106,6 @@ class PostNLConsignment extends AbstractConsignment
     }
 
     /**
-     * Street number suffix.
-     *
-     * Required: no
-     *
-     * @param string $numberSuffix
-     *
-     * @return $this
-     */
-    public function setNumberSuffix(?string $numberSuffix): AbstractConsignment
-    {
-        $this->number_suffix = $numberSuffix;
-
-        return $this;
-    }
-
-    /**
      * The package type
      *
      * For international shipment only package type 1 is allowed
