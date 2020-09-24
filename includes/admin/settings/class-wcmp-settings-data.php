@@ -245,7 +245,7 @@ class WCMP_Settings_Data
             PostNLConsignment::CARRIER_NAME => [
                 [
                     "name"        => "export_defaults",
-                    "label"       => __("Default export settings", "woocommerce-myparcel"),
+                    "label"       => __("PostNL export settings", "woocommerce-myparcel"),
                     "description" => __(
                         "These settings will be applied to PostNL shipments you create in the backend.",
                         "woocommerce-myparcel"
@@ -881,7 +881,7 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMP_Settings::SETTING_SHOW_DELIVERY_DAY,
-                "label"     => __("Show delivery day", "woocommerce-myparcel"),
+                "label"     => __("Number of days you wish to show", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
                     "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account.",
