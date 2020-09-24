@@ -1133,6 +1133,10 @@ msgstr ""
 msgid "Titles"
 msgstr ""
 
+# includes/admin/settings/class-wcmp-settings-data.php:245
+msgid "PostNL export settings"
+msgstr ""
+
 #: includes/admin/settings/class-wcmp-settings-data.php:246
 msgid ""
 "These settings will be applied to PostNL shipments you create in the backend."
@@ -1345,7 +1349,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:867
-msgid "Show delivery day"
+msgid "Number of days you wish to show"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:869

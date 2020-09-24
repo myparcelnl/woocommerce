@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-31 11:09+0000\n"
-"PO-Revision-Date: 2020-08-31 11:13+0000\n"
+"POT-Creation-Date: 2020-08-31 11:15+0000\n"
+"PO-Revision-Date: 2020-09-24 07:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: Dutch\n"
 "Language: nl_NL\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.4.1; wp-5.4.2"
+"X-Loco-Version: 2.4.3; wp-5.5.1"
 
 #: woocommerce-myparcel.php:236
 #, php-format
@@ -1193,6 +1193,10 @@ msgstr "Checkout instellingen"
 msgid "Titles"
 msgstr "Titels"
 
+# includes/admin/settings/class-wcmp-settings-data.php:245
+msgid "PostNL export settings"
+msgstr "PostNL export instellingen"
+
 #: includes/admin/settings/class-wcmp-settings-data.php:246
 msgid ""
 "These settings will be applied to PostNL shipments you create in the backend."
@@ -1275,10 +1279,6 @@ msgid ""
 "18+ is further excluded from the delivery options morning and evening "
 "delivery."
 msgstr ""
-"De leeftijdscheck is bedoeld voor pakket zendingen welke de ontvangende moet "
-"kunnen aantonen dat hij/zij 18+ is. Met deze optie wordt handtekening bij "
-"ontvangst en levering alleen bij aangetekende geactiveerd. De leeftijdscheck "
-"18+ is verder afgezonderd van de leverings opties. "
 
 #: includes/admin/settings/class-wcmp-settings-data.php:466
 msgid "Return if no answer"
@@ -1440,8 +1440,8 @@ msgid ""
 msgstr "Orders automatisch exporteren naar MyParcel, direct na betaling."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:867
-msgid "Show delivery day"
-msgstr "Toon bezorgdag"
+msgid "Number of days you wish to show"
+msgstr "Aantal dagen die je wilt tonen"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:869
 msgid ""
