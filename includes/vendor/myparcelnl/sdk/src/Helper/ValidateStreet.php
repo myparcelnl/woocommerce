@@ -36,7 +36,7 @@ class ValidateStreet
      */
     public static function validate(string $fullStreet, string $localCountry, ?string $destinationCountry): bool
     {
-        $result = preg_match(ValidateStreet::getStreetRegexByCountry($localCountry, $destinationCountry), $fullStreet, $matches);
+        $result = preg_match(ValidateStreet::getStreetRegexByCountry($destinationCountry), $fullStreet, $matches);
 
         if (! $result || ! is_array($matches)) {
             // Invalid full street supplied
@@ -53,21 +53,17 @@ class ValidateStreet
     }
 
     /**
-     * @param string $local
      * @param string $destination
      *
      * @return null|string
      */
-    public static function getStreetRegexByCountry(string $local, string $destination): ?string
+    public static function getStreetRegexByCountry(string $destination): ?string
     {
-        if (
-            ($local === AbstractConsignment::CC_NL && $destination === AbstractConsignment::CC_NL) ||
-            ($local === AbstractConsignment::CC_BE && $destination === AbstractConsignment::CC_NL)
-        ) {
+        if ($destination === AbstractConsignment::CC_NL) {
             return self::SPLIT_STREET_REGEX_NL;
         }
 
-        if ($local === AbstractConsignment::CC_BE && $destination === AbstractConsignment::CC_BE) {
+        if ($destination === AbstractConsignment::CC_BE) {
             return self::SPLIT_STREET_REGEX_BE;
         }
 
