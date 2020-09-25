@@ -940,13 +940,15 @@ class AbstractConsignment
      * Street number suffix.
      * Required: no
      *
-     * @param string|null $boxNumber
+     * @param string $boxNumber
      *
      * @return $this
      */
     public function setBoxNumber(?string $boxNumber): self
     {
-        $this->box_number = $boxNumber;
+        if ($boxNumber) {
+            throw new \BadMethodCallException('Box number has to be empty in ' . static::class);
+        }
 
         return $this;
     }
