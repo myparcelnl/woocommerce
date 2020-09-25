@@ -838,7 +838,7 @@ class AbstractConsignment
         $this->setStreet($fullStreet->getStreet());
         $this->setNumber($fullStreet->getNumber());
 
-        if ($this->getCountry() === 'BE') {
+        if ($this->getCountry() === AbstractConsignment::CC_BE) {
             $this->setBoxNumber($fullStreet->getBoxNumber());
         } else {
             $this->setNumberSuffix($fullStreet->getNumberSuffix());
