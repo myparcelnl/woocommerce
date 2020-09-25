@@ -90,7 +90,7 @@ class SplitStreet
             $fullStreet = trim(preg_replace('/(\r\n)|\n|\r/', ' ', $fullStreet));
         }
 
-        $regex = ValidateStreet::getStreetRegexByCountry($destination);
+        $regex = ValidateStreet::getStreetRegexByCountry($local, $destination);
 
         if (! $regex) {
             return new FullStreet($fullStreet, null, null, null);
@@ -144,7 +144,7 @@ class SplitStreet
      */
     public static function getRegexByCountry(string $local, string $destination): ?string
     {
-        return ValidateStreet::getStreetRegexByCountry($destination);
+        return ValidateStreet::getStreetRegexByCountry($local, $destination);
     }
 
 
