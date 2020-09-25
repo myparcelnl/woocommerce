@@ -837,12 +837,8 @@ class AbstractConsignment
         $fullStreet = SplitStreet::splitStreet($fullStreet, $this->local_cc, $this->getCountry());
         $this->setStreet($fullStreet->getStreet());
         $this->setNumber($fullStreet->getNumber());
-
-        if ($this->getCountry() === AbstractConsignment::CC_BE) {
-            $this->setBoxNumber($fullStreet->getBoxNumber());
-        } else {
-            $this->setNumberSuffix($fullStreet->getNumberSuffix());
-        }
+        $this->setNumberSuffix($fullStreet->getNumberSuffix());
+        $this->setBoxNumber($fullStreet->getBoxNumber());
 
         return $this;
     }
@@ -925,7 +921,9 @@ class AbstractConsignment
      */
     public function setNumberSuffix(?string $numberSuffix): self
     {
-        $this->number_suffix = $numberSuffix;
+        if ($numberSuffix) {
+            throw new \BadMethodCallException('Number suffix has to be empty in ' . static::class);
+        }
 
         return $this;
     }
