@@ -312,12 +312,19 @@ class WCMP_Export_Consignments
             ->setCountry($this->recipient['cc'])
             ->setPerson($this->recipient['person'])
             ->setCompany($this->recipient['company'])
-            ->setFullStreet($this->recipient['street'])
+            ->setStreet($this->recipient['street'])
+            ->setNumber($this->recipient['number'] ?? null)
             ->setStreetAdditionalInfo($this->recipient['street_additional_info'] ?? null)
             ->setPostalCode($this->recipient['postal_code'])
             ->setCity($this->recipient['city'])
             ->setEmail($this->recipient['email'])
             ->setPhone($this->recipient['phone']);
+
+        if ($postnl) {
+            $this->consignment->setNumberSuffix($this->recipient['number_suffix'] ?? null);
+        } else {
+            $this->consignment->setBoxNumber($this->recipient['number_suffix'] ?? null);
+        }
     }
 
     /**

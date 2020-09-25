@@ -600,7 +600,7 @@ class WCMP_Export
      */
     public static function getRecipientFromOrder(WC_Order $order)
     {
-        $isUsingSplitAddressFields = WCX_Order::get_meta($order, "_billing_street_name") || WCX_Order::get_meta($order, "_billing_house_number");
+        $is_using_old_fields = WCX_Order::get_meta($order, "_billing_street_name") || WCX_Order::get_meta($order, "_billing_house_number");
 
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
@@ -638,7 +638,7 @@ class WCMP_Export
                     "postal_code" => (string) WCX_Order::get_prop($order, "billing_postcode"),
                 ];
 
-                if ($isUsingSplitAddressFields) {
+                if ($is_using_old_fields) {
                     $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_billing_street_name");
                     $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_billing_house_number");
                     $address_intl["number_suffix"] =
@@ -662,14 +662,23 @@ class WCMP_Export
                     "postal_code" => (string) WCX_Order::get_prop($order, "shipping_postcode"),
                 ];
                 // If not using old fields
-                if ($isUsingSplitAddressFields) {
-                    $street        = (string) WCX_Order::get_meta($order, "_shipping_street_name");
-                    $number        = (string) WCX_Order::get_meta($order, "_shipping_house_number");
-                    $number_suffix = (string) WCX_Order::get_meta($order, "_shipping_house_number_suffix");
-
-                    $address_intl['street'] = "{$street} {$number} {$number_suffix}";
+                if ($is_using_old_fields) {
+                    $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_shipping_street_name");
+                    $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_shipping_house_number");
+                    $address_intl["number_suffix"] =
+                        (string) WCX_Order::get_meta($order, "_shipping_house_number_suffix");
                 } else {
-                    $address_intl['street'] = WCX_Order::get_prop($order, "shipping_address_1");
+                    // Split the address line 1 into three parts
+                    preg_match(
+                        WCMP_BE_Postcode_Fields::SPLIT_STREET_REGEX,
+                        WCX_Order::get_prop($order, "shipping_address_1"),
+                        $address_parts
+                    );
+
+                    $address_intl["street"]        = (string) $address_parts["street"];
+                    $address_intl["number"]        = (string) $address_parts["number"];
+                    $address_intl["number_suffix"] = array_key_exists("number_suffix", $address_parts) // optional
+                        ? (string) $address_parts["number_suffix"] : "";
                 }
             }
         } else {
