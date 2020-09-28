@@ -377,8 +377,8 @@ class WCMP_Export_Consignments
                           ->setPickupPostalCode($pickupLocation->getPostalCode())
                           ->setPickupLocationCode($pickupLocation->getLocationCode());
 
-        if ($pickupLocation->getPickupNetworkId()) {
-            $this->consignment->setPickupNetworkId($pickupLocation->getPickupNetworkId());
+        if ($pickupLocation->getRetailNetworkId()) {
+            $this->consignment->setRetailNetworkId($pickupLocation->getRetailNetworkId());
         }
     }
 
@@ -405,12 +405,39 @@ class WCMP_Export_Consignments
      */
     private function getInsurance(): int
     {
-        $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
+        $isInsuranceActive = WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->getInsurance(),
             "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
         );
 
-        return $insurance ? 500 : 0;
+        return $this->getInsuranceAmount($isInsuranceActive);
+    }
+
+    private function getInsuranceAmount($isInsuranceActive): int
+    {
+        // Checks if all parcels must be insured
+        if ($isInsuranceActive) {
+            // get min price for insurance
+            $insuranceFromPrice = (float) $this->getSetting("{$this->carrier}_" .
+                WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE
+            );
+            
+            $insuranceMaxPrice = 500;
+
+            if ($this->carrier === 'dpd') {
+                $insuranceMaxPrice === 520;
+            }
+
+            // get the order's total price
+            $orderPrice = (float) $this->order->get_total();
+
+            if ($insuranceFromPrice <= $orderPrice) {
+                // returns max allowed insured amount.
+                return $insuranceMaxPrice;
+            }
+        }
+
+        return 0;
     }
 
     /**

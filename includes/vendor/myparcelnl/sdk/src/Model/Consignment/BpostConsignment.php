@@ -24,7 +24,7 @@ class BpostConsignment extends AbstractConsignment
     /**
      * @var array
      */
-    public const INSURANCE_POSSIBILITIES_LOCAL = [0, 500, 1000, 1500, 2000];
+    public const INSURANCE_POSSIBILITIES_LOCAL = [0, 500];
 
     /**
      * @var array
@@ -86,6 +86,22 @@ class BpostConsignment extends AbstractConsignment
         }
 
         return parent::encodeStreet($consignmentEncoded);
+    }
+
+    /**
+     * Street number suffix.
+     *
+     * Required: no
+     *
+     * @param string $numberSuffix
+     *
+     * @return $this
+     */
+    public function setNumberSuffix(?string $numberSuffix): AbstractConsignment
+    {
+        $this->number_suffix = $numberSuffix;
+
+        return $this;
     }
 
     /**

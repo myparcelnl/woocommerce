@@ -465,14 +465,23 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                "label" => __("Insured shipment (to €500)", "woocommerce-myparcelbe"),
-                "type"  => "toggle",
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label"     => __("Insured shipment", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that. We insure the purchase value of the shipment, with a maximum insured value of € 5.000. Insured parcels always contain the options 'Home address only' en 'Signature for delivery'",
+                    "woocommerce-myparcel"
+                ),
             ],
             [
-                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
-                "label" => __("Signature on delivery", "woocommerce-myparcelbe"),
-                "type"  => "toggle",
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label"     => __("Insure from price", "woocommerce-myparcel"),
+                "type"      => "number",
+                "help_text" => __(
+                    "Insure all orders that exceed this price point.",
+                    "woocommerce-myparcel"
+                ),
             ],
         ];
     }
@@ -668,22 +677,22 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                "label" => __("Insured shipment (to €500)", "woocommerce-myparcelbe"),
-                "type"  => "toggle",
-            ],
-            [
-                "name"  => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
-                "label" => __("Signature on delivery", "woocommerce-myparcelbe"),
-                "type"  => "toggle",
-            ],
-            [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
-                "label"     => __("Large format", "woocommerce-myparcelbe"),
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label"     => __("Insured shipment", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
-                    "Large format package.",
-                    "woocommerce-myparcelbe"
+                    "By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that. We insure the purchase value of the shipment, with a maximum insured value of € 5.000. Insured parcels always contain the options 'Home address only' en 'Signature for delivery'",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE,
+                "condition" => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label"     => __("Insure from price", "woocommerce-myparcel"),
+                "type"      => "number",
+                "help_text" => __(
+                    "Insure all orders that exceed this price point.",
+                    "woocommerce-myparcel"
                 ),
             ],
         ];
@@ -820,7 +829,7 @@ class WCMP_Settings_Data
                 "label"     => __("Package types", "woocommerce-myparcelbe"),
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "loop"      => WCMP_Data::getPackageTypesHuman(),
-                "options"   => WCMP_Settings_Callbacks::getShippingMethods(),
+                "options"   => (new WCMP_Shipping_Methods())->getShippingMethods(),
                 "default"   => [],
                 "help_text" => __(
                     "Select one or more shipping methods for each MyParcel BE package type",

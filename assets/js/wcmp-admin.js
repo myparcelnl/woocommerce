@@ -783,22 +783,35 @@ jQuery(function($) {
     }
 
     request.afterDone = function(response) {
-      openPdf(response);
-    };
+      var isDisplay = wcmp.download_display === 'display';
+      var isDownload = wcmp.download_display === 'download';
+      var isPdf = response.includes('PDF');
+      var isApi = response.includes('api.myparcel.nl');
 
-    if (wcmp.download_display === 'download') {
-      doRequest.bind(button)(request);
-    } else {
-      var url;
 
-      if (request.hasOwnProperty('url')) {
-        url = request.url;
-      } else {
-        url = wcmp.ajax_url + '?' + $.param(request.data);
+      if (isDisplay && isPdf) {
+        handlePDF(request);
       }
 
-      openPdf(url, true);
+      if (isDownload && isApi) {
+        openPdf(response);
+      }
+        window.location.reload();
+    };  
+
+    doRequest.bind(button)(request);
+  }
+
+  function handlePDF(request) {
+    var url;
+
+    if (request.hasOwnProperty('url')) {
+      url = request.url;
+    } else {
+      url = wcmp.ajax_url + '?' + $.param(request.data);
     }
+
+    openPdf(url, true);
   }
 
   function myparcelbe_admin_notice(message, type) {

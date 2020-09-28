@@ -5,6 +5,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 
 if (! defined('ABSPATH')) {
     exit;
