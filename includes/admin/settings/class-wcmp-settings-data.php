@@ -23,6 +23,9 @@ class WCMP_Settings_Data
     public const DISPLAY_FOR_SELECTED_METHODS = "selected_methods";
     public const DISPLAY_FOR_ALL_METHODS      = "all_methods";
 
+    public const NOT_ACTIVE        = "notActive";
+    public const NO_OPTIONS        = "noOptions";
+    public const EQUAL_TO_SHIPMENT = "equalToShipment";
 
     /**
      * @var WCMP_Settings_Callbacks
@@ -457,7 +460,7 @@ class WCMP_Settings_Data
                 "label"     => __("Age check 18+", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
-                    "The age check is intended for parcel shipments for which the recipient must show 18+ by means of a proof of identity. With this shipping option Signature for receipt and Delivery only at recipient are included. The age 18+ is further excluded from the delivery options morning and evening delivery.",
+                    "The age check is intended for parcel shipments for which the recipient must show they are 18+ years old by means of a proof of identity. With this option 'signature for receipt' and 'delivery only at recipient' are included. This option can't be combined with morning or evening delivery.",
                     "woocommerce-myparcel"
                 ),
             ],
@@ -778,7 +781,7 @@ class WCMP_Settings_Data
                 "label"     => __("Connect customer email", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
-                    "When you connect the customer email, MyParcel can send a Track & Trace email to this address. In your MyParcel backend you can enable or disable this email and format it in your own style.",
+                    "When you connect the customer's email, MyParcel can send a Track & Trace email to this address. In your MyParcel backend you can enable or disable this email and format it in your own style.",
                     "woocommerce-myparcel"
                 ),
             ],
@@ -840,7 +843,21 @@ class WCMP_Settings_Data
                 "label"     => __("Automatic export", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
-                    "With this setting enabled, orders are exported to MyParcel automatically after payment.",
+                    "With this setting enabled orders are exported to MyParcel automatically after payment.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMP_Settings::SETTING_RETURN_IN_THE_BOX,
+                "label"     => __("Print return label directly", "woocommerce-myparcel"),
+                "type"      => "select",
+                "options"   => [
+                    self::NOT_ACTIVE        => __("No", "woocommerce-myparcel"),
+                    self::NO_OPTIONS        => __("Without options", "woocommerce-myparcel"),
+                    self::EQUAL_TO_SHIPMENT => __("Options equal to shipment", "woocommerce-myparcel"),
+                ],
+                "help_text" => __(
+                    "Enabling this setting automatically creates a related return shipment for any shipment you export. When downloading the shipment labels the corresponding return shipment labels will be included.",
                     "woocommerce-myparcel"
                 ),
             ],

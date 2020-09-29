@@ -58,8 +58,11 @@ if (! count($shipments)) {
           $action    = WCMP_Export::EXPORT;
           $getLabels = WCMP_Export::GET_LABELS;
 
+          $order            = wc_get_order($order_id);
+          $returnShipmentId = $order->get_meta(WCMP_Admin::META_RETURN_SHIPMENT_IDS);
+
           WCMP_Admin::renderAction(
-              admin_url("admin-ajax.php?action=$action&request=$getLabels&shipment_ids=$shipment_id"),
+              admin_url("admin-ajax.php?action=$action&request=$getLabels&shipment_ids=$shipment_id&return_shipment_id=$returnShipmentId"),
               __("Print MyParcel label", "woocommerce-myparcel"),
               WCMP()->plugin_url() . "/assets/img/myparcel-pdf.png"
           );

@@ -25,6 +25,7 @@ class WCMP_Admin
     public const META_DELIVERY_OPTIONS       = "_myparcel_delivery_options";
     public const META_HIGHEST_SHIPPING_CLASS = "_myparcel_highest_shipping_class";
     public const META_LAST_SHIPMENT_IDS      = "_myparcel_last_shipment_ids";
+    public const META_RETURN_SHIPMENT_IDS    = "_myparcel_return_shipment_ids";
     public const META_ORDER_VERSION          = "_myparcel_order_version";
     public const META_ORDER_WEIGHT           = "_myparcel_order_weight";
     public const META_PGADDRESS              = "_myparcel_pgaddress";
@@ -417,6 +418,8 @@ class WCMP_Admin
         $getLabels    = WCMP_Export::GET_LABELS;
         $addReturn    = WCMP_Export::ADD_RETURN;
 
+        $returnShipmentId = $order->get_meta(WCMP_Admin::META_RETURN_SHIPMENT_IDS);
+
         $listing_actions = [
             $addShipments => [
                 "url" => admin_url("$baseUrl&request=$addShipments&order_ids=$order_id"),
@@ -424,7 +427,7 @@ class WCMP_Admin
                 "alt" => __("Export to MyParcel", "woocommerce-myparcel"),
             ],
             $getLabels    => [
-                "url" => admin_url("$baseUrl&request=$getLabels&order_ids=$order_id"),
+                "url" => admin_url("$baseUrl&request=$getLabels&order_ids=$order_id&return_shipment_id=$returnShipmentId"),
                 "img" => WCMP()->plugin_url() . "/assets/img/myparcel-pdf.png",
                 "alt" => __("Print MyParcel label", "woocommerce-myparcel"),
             ],
