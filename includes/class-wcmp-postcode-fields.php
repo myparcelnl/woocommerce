@@ -35,7 +35,7 @@ class WCMP_NL_Postcode_Fields
 
     public function initialize()
     {
-        if (WCMP()->setting_collection->isEnabled('use_split_address_fields')) {
+        if (WCMYPA()->setting_collection->isEnabled('use_split_address_fields')) {
             // Add street name & house number checkout fields.
             if (version_compare(WOOCOMMERCE_VERSION, '2.0') >= 0) {
                 // WC 2.0 or newer is used, the filter got a $country parameter, yay!
@@ -184,12 +184,12 @@ class WCMP_NL_Postcode_Fields
         // Enqueue styles for delivery options
         wp_enqueue_style(
             'checkout',
-            WCMP()->plugin_url() . '/assets/css/checkout.css',
+            WCMYPA()->plugin_url() . '/assets/css/checkout.css',
             false,
             WC_MYPARCEL_NL_VERSION
         );
 
-        if (! WCMP()->setting_collection->isEnabled('use_split_address_fields')) {
+        if (! WCMYPA()->setting_collection->isEnabled('use_split_address_fields')) {
             return;
         }
 
@@ -197,7 +197,7 @@ class WCMP_NL_Postcode_Fields
             // Backwards compatibility for https://github.com/woothemes/woocommerce/issues/4239
             wp_register_script(
                 'checkout',
-                WCMP()->plugin_url() . '/assets/js/checkout.js',
+                WCMYPA()->plugin_url() . '/assets/js/checkout.js',
                 ['jquery', 'wc-checkout'],
                 WC_MYPARCEL_NL_VERSION
             );
@@ -208,7 +208,7 @@ class WCMP_NL_Postcode_Fields
             // Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
             wp_register_script(
                 'account-page',
-                WCMP()->plugin_url() . '/assets/js/account-page.js',
+                WCMYPA()->plugin_url() . '/assets/js/account-page.js',
                 ['jquery'],
                 WC_MYPARCEL_NL_VERSION
             );
@@ -225,7 +225,7 @@ class WCMP_NL_Postcode_Fields
         if ($post_type == 'shop_order') {
             wp_enqueue_style(
                 'checkout-admin',
-                WCMP()->plugin_url() . '/assets/css/checkout-admin.css',
+                WCMYPA()->plugin_url() . '/assets/css/checkout-admin.css',
                 [], // deps
                 WC_MYPARCEL_NL_VERSION
             );

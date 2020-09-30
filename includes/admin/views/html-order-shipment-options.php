@@ -14,12 +14,12 @@ if (! defined('ABSPATH')) {
 } // Exit if accessed directly
 
 try {
-    $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+    $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
 } catch (Exception $e) {
     return;
 }
 
-$extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+$extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
 
 ?>
 <div class="wcmp wcmp__shipment-options">
@@ -45,7 +45,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
 
     $packageTypes                   = array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP);
     $packageTypeFromDeliveryOptions = $deliveryOptions->getPackageType();
-    $selectedPackageType            = WCMP()->export->getPackageTypeFromOrder($order, $deliveryOptions);
+    $selectedPackageType            = WCMYPA()->export->getPackageTypeFromOrder($order, $deliveryOptions);
 
     $postnl          = PostNLConsignment::CARRIER_NAME;
     $insurance       = false;
@@ -57,40 +57,40 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
 
     $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
         $shipment_options->getInsurance(),
-        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
+        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
     );
 
     $signature = WCMP_Export::getChosenOrDefaultShipmentOption(
         $shipment_options->hasSignature(),
-        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
+        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
     );
 
     $onlyRecipient = WCMP_Export::getChosenOrDefaultShipmentOption(
         $shipment_options->hasOnlyRecipient(),
-        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
+        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
     );
 
     $ageCheck = WCMP_Export::getChosenOrDefaultShipmentOption(
         $shipment_options->hasAgeCheck(),
-        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
+        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
     );
 
     $largeFormat = WCMP_Export::getChosenOrDefaultShipmentOption(
         $shipment_options->hasLargeFormat(),
-        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
+        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
     );
 
     $returnShipment = WCMP_Export::getChosenOrDefaultShipmentOption(
         $shipment_options->isReturn(),
-        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
+        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
     );
 
     $insuranceAmount = WCMP_Export::getChosenOrDefaultShipmentOption(
         $shipment_options->getInsurance(),
-        "{$postnl}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT
+        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT
     );
 
-    $orderWeight        = (float) $order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
+    $orderWeight        = (float) $order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
     $digitalStampWeight = $extraOptions["weight"] ?? WCMP_Export::getDigitalStampRangeFromWeight($orderWeight);
 
     $option_rows = [
@@ -224,7 +224,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         unset($option_rows["[only_recipient]"]);
     }
 
-    $namePrefix = WCMP_Admin::SHIPMENT_OPTIONS_FORM_NAME . "[{$order->get_id()}]";
+    $namePrefix = WCMYPA_Admin::SHIPMENT_OPTIONS_FORM_NAME . "[{$order->get_id()}]";
 
     foreach ($option_rows as $option_row) {
         if (isset($option_row["condition"])) {
@@ -249,7 +249,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EX
         <div class="button wcmp__shipment-options__save">
             <?php
             _e("Save", "woocommerce-myparcel");
-            WCMP_Admin::renderSpinner();
+            WCMYPA_Admin::renderSpinner();
             ?>
         </div>
     </div>

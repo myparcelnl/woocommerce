@@ -44,28 +44,28 @@ class WCMP_Settings_Data
     {
         $this->generate_settings(
             $this->get_sections_general(),
-            WCMP_Settings::SETTINGS_GENERAL
+            WCMYPA_Settings::SETTINGS_GENERAL
         );
 
         $this->generate_settings(
             $this->get_sections_export_defaults(),
-            WCMP_Settings::SETTINGS_EXPORT_DEFAULTS
+            WCMYPA_Settings::SETTINGS_EXPORT_DEFAULTS
         );
 
         $this->generate_settings(
             $this->get_sections_checkout(),
-            WCMP_Settings::SETTINGS_CHECKOUT
+            WCMYPA_Settings::SETTINGS_CHECKOUT
         );
 
         $this->generate_settings(
             $this->get_sections_carrier_postnl(),
-            WCMP_Settings::SETTINGS_POSTNL,
+            WCMYPA_Settings::SETTINGS_POSTNL,
             true
         );
 
         $this->generate_settings(
             $this->get_sections_carrier_dpd(),
-            WCMP_Settings::SETTINGS_DPD,
+            WCMYPA_Settings::SETTINGS_DPD,
             true
         );
     }
@@ -73,12 +73,12 @@ class WCMP_Settings_Data
     public static function getTabs()
     {
         $array = [
-            WCMP_Settings::SETTINGS_GENERAL         => __("General", "woocommerce-myparcel"),
-            WCMP_Settings::SETTINGS_EXPORT_DEFAULTS => __("Default export settings", "woocommerce-myparcel"),
-            WCMP_Settings::SETTINGS_CHECKOUT        => __("Checkout settings", "woocommerce-myparcel"),
+            WCMYPA_Settings::SETTINGS_GENERAL         => __("General", "woocommerce-myparcel"),
+            WCMYPA_Settings::SETTINGS_EXPORT_DEFAULTS => __("Default export settings", "woocommerce-myparcel"),
+            WCMYPA_Settings::SETTINGS_CHECKOUT        => __("Checkout settings", "woocommerce-myparcel"),
         ];
 
-        $array[WCMP_Settings::SETTINGS_POSTNL] = __("PostNL", "woocommerce-myparcel");
+        $array[WCMYPA_Settings::SETTINGS_POSTNL] = __("PostNL", "woocommerce-myparcel");
 //        $array[WCMP_Settings::SETTINGS_DPD]    = __("DPD", "woocommerce-myparcel");
 
         return $array;
@@ -93,7 +93,7 @@ class WCMP_Settings_Data
      */
     private function generate_settings(array $settingsArray, string $optionName, bool $prefix = false): void
     {
-        $optionIdentifier = WCMP_Settings::getOptionId($optionName);
+        $optionIdentifier = WCMYPA_Settings::getOptionId($optionName);
         $defaults         = [];
 
         // Register settings.
@@ -176,7 +176,7 @@ class WCMP_Settings_Data
     private function get_sections_general()
     {
         return [
-            WCMP_Settings::SETTINGS_GENERAL => [
+            WCMYPA_Settings::SETTINGS_GENERAL => [
                 [
                     "name"     => "api",
                     "label"    => __("API settings", "woocommerce-myparcel"),
@@ -202,7 +202,7 @@ class WCMP_Settings_Data
     private function get_sections_export_defaults()
     {
         return [
-            WCMP_Settings::SETTINGS_EXPORT_DEFAULTS => [
+            WCMYPA_Settings::SETTINGS_EXPORT_DEFAULTS => [
                 [
                     "name"     => "main",
                     "label"    => __("Default export settings", "woocommerce-myparcel"),
@@ -215,7 +215,7 @@ class WCMP_Settings_Data
     private function get_sections_checkout()
     {
         return [
-            WCMP_Settings::SETTINGS_CHECKOUT => [
+            WCMYPA_Settings::SETTINGS_CHECKOUT => [
                 [
                     "name"     => "main",
                     "label"    => __("Checkout settings", "woocommerce-myparcel"),
@@ -224,7 +224,7 @@ class WCMP_Settings_Data
                 [
                     "name"      => "strings",
                     "label"     => __("Titles", "woocommerce-myparcel"),
-                    "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                    "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                     "settings"  => $this->get_section_checkout_strings(),
                 ],
             ],
@@ -293,7 +293,7 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"      => WCMP_Settings::SETTING_API_KEY,
+                "name"      => WCMYPA_Settings::SETTING_API_KEY,
                 "label"     => __("Key", "woocommerce-myparcel"),
                 "help_text" => __("api key", "woocommerce-myparcel"),
             ],
@@ -307,7 +307,7 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"    => WCMP_Settings::SETTING_DOWNLOAD_DISPLAY,
+                "name"    => WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY,
                 "label"   => __("Label display", "woocommerce-myparcel"),
                 "type"    => "select",
                 "options" => [
@@ -316,7 +316,7 @@ class WCMP_Settings_Data
                 ],
             ],
             [
-                "name"    => WCMP_Settings::SETTING_LABEL_FORMAT,
+                "name"    => WCMYPA_Settings::SETTING_LABEL_FORMAT,
                 "label"   => __("Label format", "woocommerce-myparcel"),
                 "type"    => "select",
                 "options" => [
@@ -325,10 +325,10 @@ class WCMP_Settings_Data
                 ],
             ],
             [
-                "name"      => WCMP_Settings::SETTING_ASK_FOR_PRINT_POSITION,
+                "name"      => WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION,
                 "label"     => __("Ask for print start position", "woocommerce-myparcel"),
                 "condition" => [
-                    "name"         => WCMP_Settings::SETTING_LABEL_FORMAT,
+                    "name"         => WCMYPA_Settings::SETTING_LABEL_FORMAT,
                     "type"         => "disable",
                     "parent_value" => "A4",
                     "set_value"    => self::DISABLED,
@@ -340,7 +340,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_TRACK_TRACE_EMAIL,
+                "name"      => WCMYPA_Settings::SETTING_TRACK_TRACE_EMAIL,
                 "label"     => __("Track & Trace in email", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -349,13 +349,13 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT,
+                "name"      => WCMYPA_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT,
                 "label"     => __("Track & Trace in My Account", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __("Show Track & Trace trace code and link in My Account.", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_PROCESS_DIRECTLY,
+                "name"      => WCMYPA_Settings::SETTING_PROCESS_DIRECTLY,
                 "label"     => __("Process shipments directly", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -364,7 +364,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_ORDER_STATUS_AUTOMATION,
+                "name"      => WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION,
                 "label"     => __("Order status automation", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -373,22 +373,22 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_AUTOMATIC_ORDER_STATUS,
-                "condition" => WCMP_Settings::SETTING_ORDER_STATUS_AUTOMATION,
+                "name"      => WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS,
+                "condition" => WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION,
                 "class"     => ["wcmp__child"],
                 "label"     => __("Automatic order status", "woocommerce-myparcel"),
                 "type"      => "select",
                 "options"   => $this->callbacks->get_order_status_options(),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_BARCODE_IN_NOTE,
+                "name"      => WCMYPA_Settings::SETTING_BARCODE_IN_NOTE,
                 "label"     => __("Place barcode inside note", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __("Place the barcode inside a note of the order", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_BARCODE_IN_NOTE_TITLE,
-                "condition" => WCMP_Settings::SETTING_BARCODE_IN_NOTE,
+                "name"      => WCMYPA_Settings::SETTING_BARCODE_IN_NOTE_TITLE,
+                "condition" => WCMYPA_Settings::SETTING_BARCODE_IN_NOTE,
                 "class"     => ["wcmp__child"],
                 "label"     => __("Title before the barcode", "woocommerce-myparcel"),
                 "default"   => __("Track & trace code:", "woocommerce-myparcel"),
@@ -407,7 +407,7 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"        => WCMP_Settings::SETTING_ERROR_LOGGING,
+                "name"        => WCMYPA_Settings::SETTING_ERROR_LOGGING,
                 "label"       => __("Log API communication", "woocommerce-myparcel"),
                 "type"        => "toggle",
                 "description" => '<a href="' . esc_url_raw(
@@ -426,7 +426,7 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
                 "label"     => __("Home address only", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -435,7 +435,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
                 "label"     => __("Signature on delivery", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -444,7 +444,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
                 "label"     => __("Extra large size", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -453,7 +453,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
                 "label"     => __("Age check 18+", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -462,7 +462,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
                 "label"     => __("Return if no answer", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -471,7 +471,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
                 "label"     => __("Insured shipment", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -480,8 +480,8 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
                 "label"     => __("Insure from price", "woocommerce-myparcel"),
                 "type"      => "number",
                 "help_text" => __(
@@ -490,8 +490,8 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
                 "label"     => __("Max insured amount", "woocommerce-myparcel"),
                 "type"      => "select",
                 "options"   => WCMP_Data::getInsuranceAmount(),
@@ -514,13 +514,13 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"  => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"  => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label" => __("Enable PostNL delivery", "woocommerce-myparcel"),
                 "type"  => "toggle",
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Drop-off days", "woocommerce-myparcel"),
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "options"   => $this->getWeekdays(),
@@ -528,8 +528,8 @@ class WCMP_Settings_Data
                 "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Cut-off time", "woocommerce-myparcel"),
                 "help_text" => __(
                     "Time at which you stop processing orders for the day (format: hh:mm)",
@@ -538,16 +538,16 @@ class WCMP_Settings_Data
                 "default"   => "17:00",
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Drop-off delay", "woocommerce-myparcel"),
                 "type"      => "number",
                 "max"       => 14,
                 "help_text" => __("Number of days you need to process an order.", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Show delivery date", "woocommerce-myparcel"),
                 "type"      => "number",
                 "max"       => 14,
@@ -555,14 +555,14 @@ class WCMP_Settings_Data
                 "help_text" => __("Show the delivery date inside the delivery options.", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Morning delivery", "woocommerce-myparcel"),
                 "type"      => "toggle",
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
                 "class"     => ["wcmp__child"],
                 "label"     => __("Fee (optional)", "woocommerce-myparcel"),
                 "type"      => "currency",
@@ -572,14 +572,14 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Evening delivery", "woocommerce-myparcel"),
                 "type"      => "toggle",
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
                 "class"     => ["wcmp__child"],
                 "label"     => __("Fee (optional)", "woocommerce-myparcel"),
                 "type"      => "currency",
@@ -589,14 +589,14 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Home address only", "woocommerce-myparcel"),
                 "type"      => "toggle",
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
-                "condition" => WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
                 "class"     => ["wcmp__child"],
                 "label"     => __("Fee (optional)", "woocommerce-myparcel"),
                 "type"      => "currency",
@@ -606,8 +606,8 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Signature on delivery", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -616,8 +616,8 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE,
-                "condition" => WCMP_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
                 "class"     => ["wcmp__child"],
                 "label"     => __("Fee (optional)", "woocommerce-myparcel"),
                 "type"      => "currency",
@@ -627,14 +627,14 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Monday delivery", "woocommerce-myparcel"),
                 "type"      => "toggle",
             ],
             [
-                "name"        => WCMP_Settings::SETTING_CARRIER_MONDAY_CUTOFF_TIME,
-                "condition"   => WCMP_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
+                "name"        => WCMYPA_Settings::SETTING_CARRIER_MONDAY_CUTOFF_TIME,
+                "condition"   => WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
                 "class"       => ["wcmp__child"],
                 "label"       => __("Cut-off time", "woocommerce-myparcel"),
                 "placeholder" => "14:30",
@@ -654,13 +654,13 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"  => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "name"  => WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
                 "label" => __("Enable PostNL pickup", "woocommerce-myparcel"),
                 "type"  => "toggle",
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_FEE,
-                "condition" => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
                 "class"     => ["wcmp__child"],
                 "label"     => __("Fee (optional)", "woocommerce-myparcel"),
                 "type"      => "currency",
@@ -683,13 +683,13 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"  => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"  => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label" => __("Enable DPD delivery", "woocommerce-myparcel"),
                 "type"  => "toggle",
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Drop-off days", "woocommerce-myparcel"),
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "options"   => $this->getWeekdays(),
@@ -697,8 +697,8 @@ class WCMP_Settings_Data
                 "help_text" => __("Days of the week on which you hand over parcels to DPD", "woocommerce-myparcel"),
             ],
             [
-                "name"        => WCMP_Settings::SETTING_CARRIER_CUTOFF_TIME,
-                "condition"   => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"        => WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME,
+                "condition"   => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"       => __("Cut-off time", "woocommerce-myparcel"),
                 "placeholder" => "17:00",
                 "default"     => "17:00",
@@ -708,16 +708,16 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Drop-off delay", "woocommerce-myparcel"),
                 "type"      => "number",
                 "max"       => 14,
                 "help_text" => __("Number of days you need to process an order.", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
-                "condition" => WCMP_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Show delivery date", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "default"   => self::ENABLED,
@@ -733,7 +733,7 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
                 "label"     => __("Enable DPD pickup", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -742,8 +742,8 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CARRIER_PICKUP_FEE,
-                "condition" => WCMP_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
                 "class"     => ["wcmp__child"],
                 "label"     => __("Fee (optional)", "woocommerce-myparcel"),
                 "type"      => "currency",
@@ -762,7 +762,7 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"      => WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES,
+                "name"      => WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES,
                 "label"     => __("Package types", "woocommerce-myparcel"),
                 "callback"  => [$this->callbacks, "enhanced_select"],
                 "loop"      => WCMP_Data::getPackageTypesHuman(),
@@ -774,7 +774,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CONNECT_EMAIL,
+                "name"      => WCMYPA_Settings::SETTING_CONNECT_EMAIL,
                 "label"     => __("Connect customer email", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -783,7 +783,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_CONNECT_PHONE,
+                "name"      => WCMYPA_Settings::SETTING_CONNECT_PHONE,
                 "label"     => __("Connect customer phone", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -792,7 +792,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_LABEL_DESCRIPTION,
+                "name"      => WCMYPA_Settings::SETTING_LABEL_DESCRIPTION,
                 "label"     => __("Label description", "woocommerce-myparcel"),
                 "help_text" => __(
                     "With this option you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in your backoffice.",
@@ -801,7 +801,7 @@ class WCMP_Settings_Data
                 "append"  => $this->getLabelDescriptionAddition(),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT,
+                "name"      => WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT,
                 "label"     => __("Empty parcel weight (grams)", "woocommerce-myparcel"),
                 "help_text" => __(
                     "Default weight of your empty parcel, rounded to grams.",
@@ -809,7 +809,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_HS_CODE,
+                "name"      => WCMYPA_Settings::SETTING_HS_CODE,
                 "label"     => __("Default HS Code", "woocommerce-myparcel"),
                 "help_text" => __(
                     "HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Dutch Customs.",
@@ -817,7 +817,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"    => WCMP_Settings::SETTING_PACKAGE_CONTENT,
+                "name"    => WCMYPA_Settings::SETTING_PACKAGE_CONTENT,
                 "label"   => __("Customs shipment type", "woocommerce-myparcel"),
                 "type"    => "select",
                 "options" => [
@@ -829,14 +829,14 @@ class WCMP_Settings_Data
                 ],
             ],
             [
-              "name"      => WCMP_Settings::SETTING_COUNTRY_OF_ORIGIN,
-              "label"     => __("Default country of origin", "woocommerce-myparcel"),
-              "help-text" => __(
+                "name"      => WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN,
+                "label"     => __("Default country of origin", "woocommerce-myparcel"),
+                "help-text" => __(
                   "Country of origin is required for world shipments. Defaults to shop base or NL. Example: 'NL', 'BE', 'DE'", "woocommerce-myparcel"
               ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_AUTOMATIC_EXPORT,
+                "name"      => WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT,
                 "label"     => __("Automatic export", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -854,7 +854,7 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"      => WCMP_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS,
+                "name"      => WCMYPA_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS,
                 "label"     => __("MyParcel address fields", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -863,7 +863,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_SHOW_DELIVERY_DAY,
+                "name"      => WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY,
                 "label"     => __("Number of days you wish to show", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -872,7 +872,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Enable MyParcel delivery options", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -881,8 +881,8 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Display for", "woocommerce-myparcel"),
                 "type"      => "select",
                 "help_text" => __(
@@ -898,8 +898,8 @@ class WCMP_Settings_Data
                 ],
             ],
             [
-                "name"      => WCMP_Settings::SETTING_DELIVERY_OPTIONS_POSITION,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_POSITION,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Checkout position", "woocommerce-myparcel"),
                 "type"      => "select",
                 "default"   => "woocommerce_after_checkout_billing_form",
@@ -927,8 +927,8 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"              => WCMP_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
-                "condition"         => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"              => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
+                "condition"         => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"             => __("Custom styles", "woocommerce-myparcel"),
                 "type"              => "textarea",
                 "append"            => $this->getCustomCssAddition(),
@@ -966,8 +966,8 @@ class WCMP_Settings_Data
     {
         return [
             [
-                "name"      => WCMP_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Delivery options title", "woocommerce-myparcel"),
                 "title"     => "Delivery options title",
                 "help_text" => __(
@@ -976,20 +976,20 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_DELIVERY_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_DELIVERY_TITLE,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Delivery title", "woocommerce-myparcel"),
                 "default"   => __("Delivered at home or at work", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_MORNING_DELIVERY_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Morning delivery title", "woocommerce-myparcel"),
                 "default"   => __("Morning delivery", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_STANDARD_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_STANDARD_TITLE,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Standard delivery title", "woocommerce-myparcel"),
                 "help_text" => __(
                     "When there is no title, the delivery time will automatically be visible.",
@@ -998,26 +998,26 @@ class WCMP_Settings_Data
                 "default"   => __("Standard delivery", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_EVENING_DELIVERY_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Evening delivery title", "woocommerce-myparcel"),
                 "default"   => __("Evening delivery", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_ONLY_RECIPIENT_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Home address only title", "woocommerce-myparcel"),
                 "default"   => __("Home address only", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_SIGNATURE_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_SIGNATURE_TITLE,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Signature on delivery title", "woocommerce-myparcel"),
                 "default"   => __("Signature on delivery", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_PICKUP_TITLE,
-                "condition" => WCMP_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMYPA_Settings::SETTING_PICKUP_TITLE,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Pickup title", "woocommerce-myparcel"),
                 "default"   => __("Pickup", "woocommerce-myparcel"),
             ],
@@ -1034,7 +1034,7 @@ class WCMP_Settings_Data
         $currentTheme = wp_get_theme();
 
         $preset  = sanitize_title($currentTheme);
-        $cssPath = WCMP()->plugin_path() . "/assets/css/delivery-options/delivery-options-preset-$preset.css";
+        $cssPath = WCMYPA()->plugin_path() . "/assets/css/delivery-options/delivery-options-preset-$preset.css";
 
         if (! file_exists($cssPath)) {
             return "";

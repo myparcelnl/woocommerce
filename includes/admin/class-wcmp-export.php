@@ -78,7 +78,7 @@ class WCMP_Export
      */
     public function exportByOrderId(int $orderId): void
     {
-        $automaticExport = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_AUTOMATIC_EXPORT);
+        $automaticExport = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT);
 
         if ($orderId && $automaticExport) {
             $export = new self();
@@ -97,7 +97,7 @@ class WCMP_Export
      */
     public static function getChosenOrDefaultShipmentOption($option, string $settingName)
     {
-        if ($valueFromSetting = WCMP()->setting_collection->getByName($settingName)) {
+        if ($valueFromSetting = WCMYPA()->setting_collection->getByName($settingName)) {
             return $valueFromSetting;
         }
 
@@ -205,7 +205,7 @@ class WCMP_Export
     public function export()
     {
         // Check the nonce
-        if (! check_ajax_referer(WCMP::NONCE_ACTION, "_wpnonce", false)) {
+        if (! check_ajax_referer(WCMYPA::NONCE_ACTION, "_wpnonce", false)) {
             die("Ajax security check failed. Did you pass a valid nonce in \$_REQUEST['_wpnonce']?");
         }
 
@@ -330,7 +330,7 @@ class WCMP_Export
     {
         $return          = [];
         $collection      = new MyParcelCollection();
-        $processDirectly = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY) || $process === true;
+        $processDirectly = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_PROCESS_DIRECTLY) || $process === true;
 
         WCMP_Log::add("*** Creating shipments started ***");
 
@@ -341,7 +341,7 @@ class WCMP_Export
             $order        = WCX::get_order($order_id);
             $consignment  = (new WCMP_Export_Consignments($order))->getConsignment();
 
-            $extraOptions = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+            $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $colloAmount  = $extraOptions["collo_amount"] ?? 1;
 
             if ($colloAmount > 1) {
@@ -378,7 +378,7 @@ class WCMP_Export
 
             WCX_Order::update_meta_data(
                 $order,
-                WCMP_Admin::META_LAST_SHIPMENT_IDS,
+                WCMYPA_Admin::META_LAST_SHIPMENT_IDS,
                 $consignmentIds
             );
         }
@@ -473,7 +473,7 @@ class WCMP_Export
             // positions are defined on landscape, but paper is filled portrait-wise
             $positions = array_slice(self::DEFAULT_POSITIONS, $offset % 4);
 
-            $displaySetting = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY);
+            $displaySetting = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY);
             $display        = ($displayOverride ?? $displaySetting) === "display";
             $api->getShipmentLabels($shipment_ids, $order_ids, $positions, $display);
         } catch (Exception $e) {
@@ -545,7 +545,7 @@ class WCMP_Export
      */
     public function init_api()
     {
-        $key = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
+        $key = $this->getSetting(WCMYPA_Settings::SETTING_API_KEY);
 
         if (! ($key)) {
             throw new ErrorException(__("No API key found in MyParcel settings", "woocommerce-myparcel"));
@@ -645,8 +645,8 @@ class WCMP_Export
                 : trim($order->get_shipping_first_name() . " " . $order->get_shipping_last_name());
 
 
-        $connectEmail = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_CONNECT_EMAIL);
-        $connectPhone = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_CONNECT_PHONE);
+        $connectEmail = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_EMAIL);
+        $connectPhone = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_PHONE);
 
         $address = [
             "cc"                     => (string) WCX_Order::get_prop($order, "shipping_country"),
@@ -661,7 +661,7 @@ class WCMP_Export
         $shipping_country = WCX_Order::get_prop($order, "shipping_country");
         if ($shipping_country === "NL") {
             // use billing address if old "pakjegemak" (1.5.6 and older)
-            $pgAddress = WCX_Order::get_meta($order, WCMP_Admin::META_PGADDRESS);
+            $pgAddress = WCX_Order::get_meta($order, WCMYPA_Admin::META_PGADDRESS);
 
             if ($pgAddress) {
                 $billing_name = method_exists($order, "get_formatted_billing_full_name")
@@ -747,11 +747,11 @@ class WCMP_Export
      */
     public static function addTrackTraceNoteToOrder(int $order_id, array $track_traces): void
     {
-        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_BARCODE_IN_NOTE)) {
+        if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_BARCODE_IN_NOTE)) {
             return;
         }
 
-        $prefix_message = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_BARCODE_IN_NOTE_TITLE);
+        $prefix_message = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_BARCODE_IN_NOTE_TITLE);
 
         // Select the barcode text of the MyParcel settings
         $prefix_message = $prefix_message ? $prefix_message . " " : "";
@@ -767,7 +767,7 @@ class WCMP_Export
      */
     private function getSetting(string $name)
     {
-        return WCMP()->setting_collection->getByName($name);
+        return WCMYPA()->setting_collection->getByName($name);
     }
 
     /**
@@ -782,7 +782,7 @@ class WCMP_Export
 
         foreach ($order_ids as $order_id) {
             $order           = WCX::get_order($order_id);
-            $order_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
+            $order_shipments = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENTS);
 
             if (empty($order_shipments)) {
                 continue;
@@ -802,7 +802,7 @@ class WCMP_Export
             }
 
             if (isset($args["only_last"])) {
-                $last_shipment_ids = WCX_Order::get_meta($order, WCMP_Admin::META_LAST_SHIPMENT_IDS);
+                $last_shipment_ids = WCX_Order::get_meta($order, WCMYPA_Admin::META_LAST_SHIPMENT_IDS);
 
                 if (! empty($last_shipment_ids) && is_array($last_shipment_ids)) {
                     foreach ($order_shipment_ids as $order_shipment_id) {
@@ -838,13 +838,13 @@ class WCMP_Export
         $new_shipments                           = [];
         $new_shipments[$shipment["shipment_id"]] = $shipment;
 
-        if (WCX_Order::has_meta($order, WCMP_Admin::META_SHIPMENTS)) {
-            $old_shipments = WCX_Order::get_meta($order, WCMP_Admin::META_SHIPMENTS);
+        if (WCX_Order::has_meta($order, WCMYPA_Admin::META_SHIPMENTS)) {
+            $old_shipments = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENTS);
         }
 
         $new_shipments = array_replace_recursive($old_shipments, $new_shipments);
 
-        WCX_Order::update_meta_data($order, WCMP_Admin::META_SHIPMENTS, $new_shipments);
+        WCX_Order::update_meta_data($order, WCMYPA_Admin::META_SHIPMENTS, $new_shipments);
     }
 
     /**
@@ -913,7 +913,7 @@ class WCMP_Export
             $orderShippingMethod = array_shift($orderShippingMethods);
             $orderShippingMethod = $orderShippingMethod['method_id'];
 
-            $orderShippingClass = WCX_Order::get_meta($order, WCMP_Admin::META_HIGHEST_SHIPPING_CLASS);
+            $orderShippingClass = WCX_Order::get_meta($order, WCMYPA_Admin::META_HIGHEST_SHIPPING_CLASS);
             if (empty($orderShippingClass)) {
                 $orderShippingClass = $this->getOrderShippingClass($order, $orderShippingMethod);
             }
@@ -958,7 +958,7 @@ class WCMP_Export
                 $shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
             }
         }
-        foreach (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES) as $package_type_key => $package_type_shipping_methods) {
+        foreach (WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES) as $package_type_key => $package_type_shipping_methods) {
 
             if (WCMP_Export::isActiveMethod(
                 $shipping_method_id,
@@ -1449,9 +1449,9 @@ class WCMP_Export
      */
     private function updateOrderStatus(WC_Order $order): void
     {
-        if (WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ORDER_STATUS_AUTOMATION)) {
+        if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION)) {
             $order->update_status(
-                $this->getSetting(WCMP_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
+                $this->getSetting(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
                 __("MyParcel shipment created:", "woocommerce-myparcel")
             );
         }

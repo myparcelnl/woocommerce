@@ -16,8 +16,8 @@ $shipment_id = $_POST["shipment_id"];
 
 $order = WCX::get_order($order_id);
 
-$shipments       = WCMP()->export->getShipmentData([$shipment_id], $order);
-$deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+$shipments       = WCMYPA()->export->getShipmentData([$shipment_id], $order);
+$deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
 
 $option_strings = [
     "signature"      => __("Signature on delivery", "woocommerce-myparcel"),
@@ -82,7 +82,7 @@ foreach ($shipments as $shipment_id => $shipment) {
     printf(
         '<a href="%2$s" target="_blank" title="%3$s">%3$s</a><br/> %1$s: %4$s<br/>',
         __("Status", "woocommerce-myparcel"),
-        WCMP_Admin::getTrackTraceUrl($order_id, $trackTrace),
+        WCMYPA_Admin::getTrackTraceUrl($order_id, $trackTrace),
         $trackTrace,
         Arr::get($shipment, "status")
     );

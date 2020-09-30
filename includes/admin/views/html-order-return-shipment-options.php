@@ -5,7 +5,7 @@ if (! defined('ABSPATH')) {
 } // Exit if accessed directly
 
 /** @noinspection PhpUnhandledExceptionInspection */
-$deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+$deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
 
 ?>
 <table class="wcmp__settings-table" style="width: auto">
@@ -14,7 +14,7 @@ $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
             <?php _e("Shipment type", "woocommerce-myparcel") ?>:<br/> <small class="calculated_weight">
                 <?php printf(
                     __("Calculated weight: %s", "woocommerce-myparcel"),
-                    wc_format_weight($order->get_meta(WCMP_Admin::META_ORDER_WEIGHT))
+                    wc_format_weight($order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT))
                 ) ?>
             </small>
         </td>
@@ -37,7 +37,7 @@ $deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
 <?php if (! isset($skip_save)): ?>
     <div class="wcmp__d--flex">
         <a class="button save" data-order="<?php echo $order_id; ?>"><?php _e("Save", "woocommerce-myparcel") ?>
-            <?php WCMP_Admin::renderSpinner() ?>
+            <?php WCMYPA_Admin::renderSpinner() ?>
         </a>
     </div>
 <?php endif ?>

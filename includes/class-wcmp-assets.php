@@ -54,7 +54,7 @@ class WCMP_Assets
             wp_enqueue_style("thickbox");
             wp_enqueue_script(
                 "wcmp-admin",
-                WCMP()->plugin_url() . "/assets/js/wcmp-admin.js",
+                WCMYPA()->plugin_url() . "/assets/js/wcmp-admin.js",
                 ["jquery", "thickbox"],
                 WC_MYPARCEL_NL_VERSION
             );
@@ -72,17 +72,17 @@ class WCMP_Assets
                         "modal_dialog"  => WCMP_Export::MODAL_DIALOG,
                     ],
                     "bulk_actions"           => [
-                        "export"       => WCMP_Admin::BULK_ACTION_EXPORT,
-                        "print"        => WCMP_Admin::BULK_ACTION_PRINT,
-                        "export_print" => WCMP_Admin::BULK_ACTION_EXPORT_PRINT,
+                        "export"       => WCMYPA_Admin::BULK_ACTION_EXPORT,
+                        "print"        => WCMYPA_Admin::BULK_ACTION_PRINT,
+                        "export_print" => WCMYPA_Admin::BULK_ACTION_EXPORT_PRINT,
                     ],
                     "ajax_url"               => admin_url("admin-ajax.php"),
-                    "nonce"                  => wp_create_nonce(WCMP::NONCE_ACTION),
-                    "download_display"       => WCMP()->setting_collection->getByName(
-                        WCMP_Settings::SETTING_DOWNLOAD_DISPLAY
+                    "nonce"                  => wp_create_nonce(WCMYPA::NONCE_ACTION),
+                    "download_display"       => WCMYPA()->setting_collection->getByName(
+                        WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY
                     ),
-                    "ask_for_print_position" => WCMP()->setting_collection->isEnabled(
-                        WCMP_Settings::SETTING_ASK_FOR_PRINT_POSITION
+                    "ask_for_print_position" => WCMYPA()->setting_collection->isEnabled(
+                        WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION
                     ),
                     "strings"                => [
                         "no_orders_selected" => __("You have not selected any orders!", "woocommerce-myparcel"),
@@ -92,7 +92,7 @@ class WCMP_Assets
 
             wp_enqueue_style(
                 "wcmp-admin-styles",
-                WCMP()->plugin_url() . "/assets/css/wcmp-admin-styles.css",
+                WCMYPA()->plugin_url() . "/assets/css/wcmp-admin-styles.css",
                 [],
                 WC_MYPARCEL_NL_VERSION,
                 "all"
@@ -102,7 +102,7 @@ class WCMP_Assets
             if (version_compare(WOOCOMMERCE_VERSION, "2.1", "<=")) {
                 wp_enqueue_style(
                     "wcmp-admin-styles-legacy",
-                    WCMP()->plugin_url() . "/assets/css/wcmp-admin-styles-legacy.css",
+                    WCMYPA()->plugin_url() . "/assets/css/wcmp-admin-styles-legacy.css",
                     [],
                     WC_MYPARCEL_NL_VERSION,
                     "all"

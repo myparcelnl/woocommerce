@@ -13,7 +13,7 @@
 $shipments = [];
 
 try {
-    $shipments = WCMP()->export->getShipmentData(array_keys($consignments), $order);
+    $shipments = WCMYPA()->export->getShipmentData(array_keys($consignments), $order);
 } catch (Exception $e) {
     $message = $e->getMessage();
 }
@@ -48,20 +48,20 @@ if (! count($shipments)) {
       ?>
     <tr>
       <td class="wcmp__order__track-trace">
-          <?php WCMP_Admin::renderTrackTraceLink($shipment, $order_id); ?>
+          <?php WCMYPA_Admin::renderTrackTraceLink($shipment, $order_id); ?>
       </td>
       <td class="wcmp__order__status">
-          <?php WCMP_Admin::renderStatus($shipment, $order_id) ?>
+          <?php WCMYPA_Admin::renderStatus($shipment, $order_id) ?>
       </td>
       <td class="wcmp__td--create-label">
           <?php
           $action    = WCMP_Export::EXPORT;
           $getLabels = WCMP_Export::GET_LABELS;
 
-          WCMP_Admin::renderAction(
+          WCMYPA_Admin::renderAction(
               admin_url("admin-ajax.php?action=$action&request=$getLabels&shipment_ids=$shipment_id"),
               __("Print MyParcel label", "woocommerce-myparcel"),
-              WCMP()->plugin_url() . "/assets/img/myparcel-pdf.png"
+              WCMYPA()->plugin_url() . "/assets/img/myparcel-pdf.png"
           );
           ?>
       </td>

@@ -184,7 +184,7 @@ class WCMP_Data
         /**
          * @type PostNLConsignment
          */
-        $carrier             = ConsignmentFactory::createByCarrierName(WCMP_Settings::SETTINGS_POSTNL);
+        $carrier             = ConsignmentFactory::createByCarrierName(WCMYPA_Settings::SETTINGS_POSTNL);
         $amountPossibilities = $carrier::INSURANCE_POSSIBILITIES_LOCAL;
 
         foreach ($amountPossibilities as $key => $value) {

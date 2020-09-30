@@ -15,9 +15,9 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (! class_exists('WCMP')) :
+if (! class_exists('WCMYPA')) :
 
-    class WCMP
+    class WCMYPA
     {
         /**
          * Translations domain
@@ -49,7 +49,7 @@ if (! class_exists('WCMP')) :
         public $export;
 
         /**
-         * @var WCMP_Admin
+         * @var WCMYPA_Admin
          */
         public $admin;
 
@@ -127,7 +127,7 @@ if (! class_exists('WCMP')) :
         public function includes()
         {
             // Use php version 5.6
-            if (! $this->phpVersionMeets(\WCMP::PHP_VERSION_7_1)) {
+            if (! $this->phpVersionMeets(WCMYPA::PHP_VERSION_7_1)) {
                 $this->includes = $this->plugin_path() . "/includes_php56";
 
                 // include compatibility classes
@@ -171,8 +171,8 @@ if (! class_exists('WCMP')) :
             require_once($this->includes . "/frontend/class-wcmp-frontend-track-trace.php");
             require_once($this->includes . "/frontend/class-wcmp-checkout.php");
             require_once($this->includes . "/frontend/class-wcmp-frontend.php");
-            $this->admin = require_once($this->includes . "/admin/class-wcmp-admin.php");
-            require_once($this->includes . "/admin/settings/class-wcmp-settings.php");
+            $this->admin = require_once($this->includes . "/admin/class-wcmypa-admin.php");
+            require_once($this->includes . "/admin/settings/class-wcmypa-settings.php");
             require_once($this->includes . "/class-wcmp-log.php");
             require_once($this->includes . "/admin/class-wcmp-country-codes.php");
             require_once($this->includes . '/admin/settings/class-wcmp-shipping-methods.php');
@@ -200,7 +200,7 @@ if (! class_exists('WCMP')) :
                 return;
             }
 
-            if (! $this->phpVersionMeets(\WCMP::PHP_VERSION_7_1)) {
+            if (! $this->phpVersionMeets(\WCMYPA::PHP_VERSION_7_1)) {
                 // php 5.6
                 $this->initSettings();
                 $this->includes();
@@ -319,7 +319,7 @@ if (! class_exists('WCMP')) :
                 require_once('migration/wcmp-upgrade-migration-v3-0-4.php');
             }
 
-            if ($this->phpVersionMeets(\WCMP::PHP_VERSION_7_1)) {
+            if ($this->phpVersionMeets(\WCMYPA::PHP_VERSION_7_1)) {
                 // Import the migration class base
                 require_once('migration/wcmp-upgrade-migration.php');
 
@@ -356,7 +356,7 @@ if (! class_exists('WCMP')) :
          */
         public function initSettings()
         {
-            if (! $this->phpVersionMeets(\WCMP::PHP_VERSION_7_1)) {
+            if (! $this->phpVersionMeets(\WCMYPA::PHP_VERSION_7_1)) {
                 $this->general_settings  = get_option('woocommerce_myparcel_general_settings');
                 $this->export_defaults   = get_option('woocommerce_myparcel_export_defaults_settings');
                 $this->checkout_settings = get_option('woocommerce_myparcel_checkout_settings');
@@ -388,22 +388,22 @@ endif;
 /**
  * Returns the main instance of the plugin class to prevent the need to use globals.
  *
- * @return WCMP
+ * @return WCMYPA
  * @since  2.0
  */
-function WCMP()
+function WCMYPA()
 {
-    return WCMP::instance();
+    return WCMYPA::instance();
 }
 
 /**
  * For PHP < 7.1 support.
  *
- * @return WCMP
+ * @return WCMYPA
  */
 function WooCommerce_MyParcel()
 {
-    return WCMP();
+    return WCMYPA();
 }
 
-WCMP(); // load plugin
+WCMYPA(); // load plugin

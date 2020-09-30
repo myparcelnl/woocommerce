@@ -56,7 +56,7 @@ class WCMP_Frontend
      */
     public function email_pickup_html($order, $sent_to_admin = false, $plain_text = false)
     {
-        WCMP()->admin->showDeliveryOptionsForOrder($order);
+        WCMYPA()->admin->showDeliveryOptionsForOrder($order);
     }
 
     /**
@@ -67,7 +67,7 @@ class WCMP_Frontend
     public function thankyou_pickup_html(int $order_id)
     {
         $order = wc_get_order($order_id);
-        WCMP()->admin->showDeliveryOptionsForOrder($order);
+        WCMYPA()->admin->showDeliveryOptionsForOrder($order);
     }
 
     /**
@@ -80,7 +80,7 @@ class WCMP_Frontend
     public function wpo_wcpdf_delivery_options($replacement, WC_Order $order)
     {
         ob_start();
-        WCMP()->admin->showDeliveryOptionsForOrder($order);
+        WCMYPA()->admin->showDeliveryOptionsForOrder($order);
         return ob_get_clean();
     }
 
@@ -144,7 +144,7 @@ class WCMP_Frontend
             $shippingClasses = [];
         }
 
-        return WCMP()->export->getShippingClass(
+        return WCMYPA()->export->getShippingClass(
             $shippingMethod,
             $shippingClasses
         );
@@ -172,7 +172,7 @@ class WCMP_Frontend
     public static function getTrackTraceShipments($order_id): array
     {
         $order     = WCX::get_order($order_id);
-        $shipments = WCMP_Admin::get_order_shipments($order);
+        $shipments = WCMYPA_Admin::get_order_shipments($order);
 
         if (empty($shipments)) {
             return [];
@@ -187,7 +187,7 @@ class WCMP_Frontend
                 continue;
             }
 
-            $track_trace_url = WCMP_Admin::getTrackTraceUrl(
+            $track_trace_url = WCMYPA_Admin::getTrackTraceUrl(
                 $order_id,
                 $trackTrace
             );

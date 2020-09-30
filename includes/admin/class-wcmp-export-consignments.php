@@ -66,7 +66,7 @@ class WCMP_Export_Consignments
         $this->getApiKey();
 
         $this->order           = $order;
-        $this->deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
+        $this->deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
         $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
 
         $this->myParcelCollection = (new MyParcelCollection())->setUserAgentArray(
@@ -114,7 +114,7 @@ class WCMP_Export_Consignments
      */
     private function getSetting(string $name)
     {
-        return WCMP()->setting_collection->getByName($name);
+        return WCMYPA()->setting_collection->getByName($name);
     }
 
     /**
@@ -188,7 +188,7 @@ class WCMP_Export_Consignments
      */
     private function getTotalWeight(int $weight): int
     {
-        $parcelWeight = (int) $this->getSetting(WCMP_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+        $parcelWeight = (int) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
 
         return $parcelWeight + $weight;
     }
@@ -201,9 +201,9 @@ class WCMP_Export_Consignments
      */
     public function getHsCode(WC_Product $product): int
     {
-        $defaultHsCode   = $this->getSetting(WCMP_Settings::SETTING_HS_CODE);
-        $productHsCode   = WCX_Product::get_meta($product, WCMP_Admin::META_HS_CODE, true);
-        $variationHsCode = WCX_Product::get_meta($product, WCMP_Admin::META_HS_CODE_VARIATION, true);
+        $defaultHsCode   = $this->getSetting(WCMYPA_Settings::SETTING_HS_CODE);
+        $productHsCode   = WCX_Product::get_meta($product, WCMYPA_Admin::META_HS_CODE, true);
+        $variationHsCode = WCX_Product::get_meta($product, WCMYPA_Admin::META_HS_CODE_VARIATION, true);
 
         $hsCode = $productHsCode ? $productHsCode : $defaultHsCode;
 
@@ -225,8 +225,8 @@ class WCMP_Export_Consignments
      */
     public function getCountryOfOrigin(WC_Product $product): string
     {
-        $defaultCountryOfOrigin = $this->getSetting(WCMP_Settings::SETTING_COUNTRY_OF_ORIGIN);
-        $productCountryOfOrigin = WCX_Product::get_meta($product, WCMP_Admin::META_COUNTRY_OF_ORIGIN, true);
+        $defaultCountryOfOrigin = $this->getSetting(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
+        $productCountryOfOrigin = WCX_Product::get_meta($product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
 
         $countryOfOrigin = $this->getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin);
 
@@ -266,7 +266,7 @@ class WCMP_Export_Consignments
      */
     private function getPackageType(): int
     {
-        return WCMP()->export->getPackageTypeFromOrder($this->order, $this->deliveryOptions);
+        return WCMYPA()->export->getPackageTypeFromOrder($this->order, $this->deliveryOptions);
     }
 
     /**
@@ -276,7 +276,7 @@ class WCMP_Export_Consignments
     {
         return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->hasSignature(),
-            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
+            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
         );
     }
 
@@ -287,7 +287,7 @@ class WCMP_Export_Consignments
     {
         return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->hasOnlyRecipient(),
-            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
+            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
         );
     }
 
@@ -298,7 +298,7 @@ class WCMP_Export_Consignments
     {
         return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->hasAgeCheck(),
-            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
+            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
         );
     }
 
@@ -309,7 +309,7 @@ class WCMP_Export_Consignments
     {
         return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->hasLargeFormat(),
-            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
+            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
         );
     }
 
@@ -328,7 +328,7 @@ class WCMP_Export_Consignments
     {
         return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->deliveryOptions->getShipmentOptions()->isReturn(),
-            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
+            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
         );
     }
 
@@ -347,7 +347,7 @@ class WCMP_Export_Consignments
 
         $insured = WCMP_Export::getChosenOrDefaultShipmentOption(
             null,
-            "{$this->carrier}_" . WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
+            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
         );
 
         return $this->getInsuranceAmount((bool) $insured);
@@ -364,11 +364,11 @@ class WCMP_Export_Consignments
         if ($isInsuranceActive) {
             // get min price for insurance
             $insuranceFromPrice = (float) $this->getSetting("{$this->carrier}_" .
-                WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE
+                WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE
             );
 
             $insuranceMaxPrice = (int) $this->getSetting("{$this->carrier}_" .
-                WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
+                WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
 
             // get the order's total price
             $orderPrice = (float) $this->order->get_total();
@@ -410,7 +410,7 @@ class WCMP_Export_Consignments
      */
     private function getApiKey(): void
     {
-        $this->apiKey = $this->getSetting(WCMP_Settings::SETTING_API_KEY);
+        $this->apiKey = $this->getSetting(WCMYPA_Settings::SETTING_API_KEY);
 
         if (! $this->apiKey) {
             throw new ErrorException(__("No API key found in MyParcel settings", "woocommerce-myparcel"));
@@ -423,7 +423,7 @@ class WCMP_Export_Consignments
     private function getLabelDescription(): string
     {
         $default = "Order: " . $this->order->get_id();
-        $setting = $this->getSetting(WCMP_Settings::SETTING_LABEL_DESCRIPTION);
+        $setting = $this->getSetting(WCMYPA_Settings::SETTING_LABEL_DESCRIPTION);
 
         if ($setting) {
             $productIds   = [];
@@ -522,9 +522,9 @@ class WCMP_Export_Consignments
      */
     private function setPhysicalProperties(): void
     {
-        $extraOptions       = WCX_Order::get_meta($this->order, WCMP_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+        $extraOptions       = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
         $digitalStampWeight = $extraOptions['weight'];
-        $orderWeight        = $this->order->get_meta(WCMP_Admin::META_ORDER_WEIGHT);
+        $orderWeight        = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
 
         $this->consignment->setPhysicalProperties(
             [
