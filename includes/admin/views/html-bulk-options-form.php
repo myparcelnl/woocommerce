@@ -18,7 +18,7 @@ $order_ids_string = implode(';', $order_ids);
 
 $target_url = wp_nonce_url(
     admin_url("admin-ajax.php?action=$export&request=$add_return&modal=true&order_ids=$order_ids_string"),
-    WCMP::NONCE_ACTION
+    WCMYPA::NONCE_ACTION
 );
 
 ?>
@@ -84,7 +84,7 @@ $target_url = wp_nonce_url(
                       <td>&nbsp;</td>
                       <td><?php _e("Total weight", "woocommerce-myparcel"); ?></td>
                       <td align="right"><?php echo wc_format_weight(
-                              $order->get_meta(WCMP_Admin::META_ORDER_WEIGHT)
+                              $order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT)
                           ); ?></td>
                     </tr>
                     </tfoot>
@@ -145,7 +145,7 @@ $target_url = wp_nonce_url(
           type="submit"
           value="<?php echo $button_text; ?>"
           class="button wcmp__return-dialog__save">
-          <?php WCMP_Admin::renderSpinner() ?>
+          <?php WCMYPA_Admin::renderSpinner() ?>
       </div>
     </div>
   </form>

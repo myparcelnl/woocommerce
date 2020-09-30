@@ -37,7 +37,7 @@ class WCMP_Frontend_Track_Trace
      */
     public function addTrackTraceToEmail(WC_Order $order, bool $sentToAdmin): void
     {
-        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_TRACK_TRACE_EMAIL)) {
+        if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_TRACK_TRACE_EMAIL)) {
             return;
         }
 
@@ -79,7 +79,7 @@ class WCMP_Frontend_Track_Trace
      */
     public function showTrackTraceActionInMyAccount(array $actions, WC_Order $order): array
     {
-        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT)) {
+        if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT)) {
             return $actions;
         }
 
