@@ -54,11 +54,11 @@ class WCMP_Cart_Fees
         }
         
         /*  check for delivery options & add fees*/
-        if (empty($post_data[WCMP_Admin::META_DELIVERY_OPTIONS])) {
+        if (empty($post_data[WCMYPA_Admin::META_DELIVERY_OPTIONS])) {
             return;
         }
 
-        $delivery_options_data = $post_data[WCMP_Admin::META_DELIVERY_OPTIONS];
+        $delivery_options_data = $post_data[WCMYPA_Admin::META_DELIVERY_OPTIONS];
         $delivery_options_data = json_decode(stripslashes($delivery_options_data), true);
         $this->deliveryOptions = DeliveryOptionsAdapterFactory::create($delivery_options_data);
 
@@ -196,15 +196,15 @@ class WCMP_Cart_Fees
         $carrier = $this->deliveryOptions->getCarrier();
 
         $getCarrierFee = function(string $setting) use ($carrier): float {
-            return WCMP()->setting_collection->getFloatByName("{$carrier}_{$setting}");
+            return WCMYPA()->setting_collection->getFloatByName("{$carrier}_{$setting}");
         };
 
         return [
-            "delivery_evening" => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE),
-            "delivery_morning" => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE),
-            "delivery_pickup"  => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_PICKUP_FEE),
-            "only_recipient"   => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE),
-            "signature"        => $getCarrierFee(WCMP_Settings::SETTING_CARRIER_SIGNATURE_FEE),
+            "delivery_evening" => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE),
+            "delivery_morning" => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE),
+            "delivery_pickup"  => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE),
+            "only_recipient"   => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE),
+            "signature"        => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE),
         ];
     }
 

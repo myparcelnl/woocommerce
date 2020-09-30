@@ -11,14 +11,14 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('WCMP_Admin')) {
-    return new WCMP_Admin();
+if (class_exists('WCMYPA_Admin')) {
+    return new WCMYPA_Admin();
 }
 
 /**
  * Admin options, buttons & data
  */
-class WCMP_Admin
+class WCMYPA_Admin
 {
     public const META_CONSIGNMENTS           = "_myparcel_consignments";
     public const META_CONSIGNMENT_ID         = "_myparcel_consignment_id";
@@ -207,7 +207,7 @@ class WCMP_Admin
         }
 
         $order_id             = WCX_Order::get_id($order);
-        $consignments         = WCMP_Admin::get_order_shipments($order);
+        $consignments         = self::get_order_shipments($order);
 
         echo '<div class="wcmp__shipment-settings-wrapper" style="display: none;">';
 
@@ -251,7 +251,7 @@ class WCMP_Admin
      */
     public function order_list_ajax_get_shipment_summary()
     {
-        check_ajax_referer(WCMP::NONCE_ACTION, 'security');
+        check_ajax_referer(WCMYPA::NONCE_ACTION, 'security');
 
         include('views/html-order-shipment-summary.php');
         die();
@@ -324,7 +324,7 @@ class WCMP_Admin
      */
     public function renderOffsetDialog(): void
     {
-        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ASK_FOR_PRINT_POSITION)) {
+        if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION)) {
             return;
         }
 
@@ -353,7 +353,7 @@ class WCMP_Admin
                     <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
 
                     <img
-                            src="<?php echo WCMP()->plugin_url() . "/assets/img/print-offset-icon.png"; ?>"
+                            src="<?php echo WCMYPA()->plugin_url() . "/assets/img/print-offset-icon.png"; ?>"
                             alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
                             class="wcmp__offset-dialog__icon"/>
                     <div>
@@ -361,7 +361,7 @@ class WCMP_Admin
                                 href="#"
                                 class="wcmp__action wcmp__offset-dialog__button button">
                             <?php _e("Print", "woocommerce-myparcel"); ?>
-                            <?php WCMP_Admin::renderSpinner(); ?>
+                            <?php self::renderSpinner(); ?>
                         </a>
                     </div>
                 </div>
@@ -418,38 +418,38 @@ class WCMP_Admin
         $getLabels    = WCMP_Export::GET_LABELS;
         $addReturn    = WCMP_Export::ADD_RETURN;
 
-        $returnShipmentId = $order->get_meta(WCMP_Admin::META_RETURN_SHIPMENT_IDS);
+        $returnShipmentId = $order->get_meta(self::META_RETURN_SHIPMENT_IDS);
 
         $listing_actions = [
             $addShipments => [
                 "url" => admin_url("$baseUrl&request=$addShipments&order_ids=$order_id"),
-                "img" => WCMP()->plugin_url() . "/assets/img/myparcel-up.png",
+                "img" => WCMYPA()->plugin_url() . "/assets/img/myparcel-up.png",
                 "alt" => __("Export to MyParcel", "woocommerce-myparcel"),
             ],
             $getLabels    => [
-                "url" => admin_url("$baseUrl&request=$getLabels&order_ids=$order_id&return_shipment_id=$returnShipmentId"),
-                "img" => WCMP()->plugin_url() . "/assets/img/myparcel-pdf.png",
+                "url" => admin_url("$baseUrl&request=$getLabels&order_ids=$order_id"),
+                "img" => WCMYPA()->plugin_url() . "/assets/img/myparcel-pdf.png",
                 "alt" => __("Print MyParcel label", "woocommerce-myparcel"),
             ],
             $addReturn    => [
                 "url" => admin_url("$baseUrl&request=$addReturn&order_ids=$order_id"),
-                "img" => WCMP()->plugin_url() . "/assets/img/myparcel-retour.png",
+                "img" => WCMYPA()->plugin_url() . "/assets/img/myparcel-retour.png",
                 "alt" => __("Email return label", "woocommerce-myparcel"),
             ],
         ];
 
-        $consignments = WCMP_Admin::get_order_shipments($order);
+        $consignments = self::get_order_shipments($order);
 
         if (empty($consignments)) {
             unset($listing_actions[$getLabels]);
         }
 
-        $processed_shipments = WCMP_Admin::get_order_shipments($order);
+        $processed_shipments = self::get_order_shipments($order);
         if (empty($processed_shipments) || $shipping_country !== 'NL') {
             unset($listing_actions[$addReturn]);
         }
 
-        $display = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
+        $display = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
 
         $attributes = [];
 
@@ -591,8 +591,8 @@ class WCMP_Admin
         $this->showOrderActions($order);
         echo '</div>';
 
-        $downloadDisplay = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
-        $consignments    = WCMP_Admin::get_order_shipments($order);
+        $downloadDisplay = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
+        $consignments    = self::get_order_shipments($order);
 
         // show shipments if available
         if (empty($consignments)) {
@@ -808,7 +808,7 @@ class WCMP_Admin
      */
     public function renderBarcodes(WC_Order $order): void
     {
-        $shipments = WCMP_Admin::get_order_shipments($order, true);
+        $shipments = self::get_order_shipments($order, true);
 
         if (empty($shipments)) {
             echo __("No label has been created yet.", "woocommerce-myparcel");
@@ -823,7 +823,7 @@ class WCMP_Admin
             } else {
                 printf(
                     '<a target="_blank" class="wcmp__barcode-link" title="%2$s" href="%1$s">%2$s</a><br>',
-                    WCMP_Admin::getTrackTraceUrl($order, $shipment["track_trace"]),
+                    self::getTrackTraceUrl($order, $shipment["track_trace"]),
                     $shipment["track_trace"]
                 );
             }
@@ -890,7 +890,7 @@ class WCMP_Admin
             );
 
         // If show delivery day is enabled
-        $showDeliveryDay = WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_SHOW_DELIVERY_DAY);
+        $showDeliveryDay = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY);
 
         if ($showDeliveryDay) {
             printf(
@@ -959,7 +959,7 @@ class WCMP_Admin
                     data-tip="%2$s" 
                     %4$s>
                 <img class="wcmp__action__img" src="%3$s" alt="%2$s" />',
-            wp_nonce_url($url, WCMP::NONCE_ACTION),
+            wp_nonce_url($url, WCMYPA::NONCE_ACTION),
             $alt,
             $icon,
             wc_implode_html_attributes($rawAttributes)
@@ -980,14 +980,14 @@ class WCMP_Admin
         $track_trace = $shipment["track_trace"] ?? null;
 
         if ($track_trace) {
-            $track_trace_url  = WCMP_Admin::getTrackTraceUrl($order_id, $track_trace);
+            $track_trace_url  = self::getTrackTraceUrl($order_id, $track_trace);
             $track_trace_link = sprintf(
                 '<a href="%s" target="_blank">%s</a>',
                 $track_trace_url,
                 $track_trace
             );
         } elseif (isset($shipment["shipment"]) && isset($shipment["shipment"]["options"])) {
-            $package_type     = WCMP()->export->getPackageType($shipment["shipment"]["options"]["package_type"]);
+            $package_type     = WCMYPA()->export->getPackageType($shipment["shipment"]["options"]["package_type"]);
             $track_trace_link = "($package_type)";
         } else {
             $track_trace_link = __("(Unknown)", "woocommerce-myparcel");
@@ -1025,4 +1025,4 @@ class WCMP_Admin
     }
 }
 
-return new WCMP_Admin();
+return new WCMYPA_Admin();

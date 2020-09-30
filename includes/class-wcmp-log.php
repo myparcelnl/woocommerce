@@ -18,7 +18,7 @@ class WCMP_Log
      */
     public static function add(string ...$messages): void
     {
-        if (! WCMP()->setting_collection->isEnabled(WCMP_Settings::SETTING_ERROR_LOGGING)) {
+        if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_ERROR_LOGGING)) {
             return;
         }
 

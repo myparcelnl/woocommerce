@@ -8,14 +8,14 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('WCMP_Settings')) {
-    return new WCMP_Settings();
+if (class_exists('WCMYPA_Settings')) {
+    return new WCMYPA_Settings();
 }
 
 /**
  * Create & render settings page
  */
-class WCMP_Settings
+class WCMYPA_Settings
 {
     public const SETTINGS_MENU_SLUG = "wcmp_settings";
 
@@ -117,7 +117,7 @@ class WCMP_Settings
     {
         add_action("admin_menu", [$this, "menu"]);
         add_filter(
-            "plugin_action_links_" . WCMP()->plugin_basename,
+            "plugin_action_links_" . WCMYPA()->plugin_basename,
             [
                 $this,
                 "add_settings_link",
@@ -364,4 +364,4 @@ class WCMP_Settings
     }
 }
 
-return new WCMP_Settings();
+return new WCMYPA_Settings();

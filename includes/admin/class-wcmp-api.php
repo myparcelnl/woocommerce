@@ -156,7 +156,7 @@ class WCMP_API extends WCMP_Rest
         /**
          * @see https://github.com/MyParcelNL/Sdk#label-format-and-position
          */
-        if (WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_LABEL_FORMAT) === "A6") {
+        if (WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_LABEL_FORMAT) === "A6") {
             $positions = false;
         }
 
