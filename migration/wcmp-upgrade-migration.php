@@ -34,14 +34,18 @@ abstract class WCMP_Upgrade_Migration
 
     /**
      * @param array      $map
-     * @param array      $newSettings
+     * @param array|null $newSettings
      * @param array|null $oldSettings
      *
-     * @return array
+     * @return array|null
      */
-    protected function migrateSettings(array $map, array $newSettings, array $oldSettings = null): array
+    protected function migrateSettings(array $map, ?array $newSettings, array $oldSettings = null): ?array
     {
         $oldSettings = $oldSettings ?? $newSettings;
+
+        if (! $oldSettings) {
+            return null;
+        }
 
         foreach ($map as $oldSetting => $newSetting) {
             if (array_key_exists($oldSetting, $oldSettings)) {
