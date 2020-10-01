@@ -90,6 +90,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. MyParcel information on the order details page
 
 == Changelog ==
+= 4.0.4 (2020-10-01) =
+* Fix: Failed opening class-wcmypa-settings.php
+
+= 4.0.3 (2020-10-01) =
+* Fix: Old settings non existent error
+* Fix: Class naming for theme compatibility
 
 = 4.0.2 (2020-08-21) =
 * Fix:  Show delivery options with a shipping class and with tablerates
