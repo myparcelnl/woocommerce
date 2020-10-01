@@ -954,6 +954,11 @@ class WCMP_Export
             return WCMP_Data::getPackageTypeId($packageTypeFromDeliveryOptions);
         }
 
+        // Get pre 4.0.0 package type if it exists.
+        if (WCX_Order::has_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0)) {
+            return (int) WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0)['package_type'];
+        }
+
         $packageType = self::PACKAGE;
 
         // get shipping methods from order
