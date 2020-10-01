@@ -58,16 +58,11 @@ if (! count($shipments)) {
           $action    = WCMP_Export::EXPORT;
           $getLabels = WCMP_Export::GET_LABELS;
 
-<<<<<<< HEAD
           $order            = wc_get_order($order_id);
-          $returnShipmentId = $order->get_meta(WCMP_Admin::META_RETURN_SHIPMENT_IDS);
+          $returnShipmentId = $order->get_meta(WCMYPA_Admin::META_RETURN_SHIPMENT_IDS);
 
-          WCMP_Admin::renderAction(
-              admin_url("admin-ajax.php?action=$action&request=$getLabels&shipment_ids=$shipment_id&return_shipment_id=$returnShipmentId"),
-=======
           WCMYPA_Admin::renderAction(
-              admin_url("admin-ajax.php?action=$action&request=$getLabels&shipment_ids=$shipment_id"),
->>>>>>> 7543b14... rename `WCMP`, `WCMP()`, `WCMP_Admin` and `WCMP_Settings` to use WCMYPA instead of WCMP
+              admin_url("admin-ajax.php?action=$action&request=$getLabels&shipment_ids=$shipment_id&return_shipment_id=$returnShipmentId"),
               __("Print MyParcel label", "woocommerce-myparcel"),
               WCMYPA()->plugin_url() . "/assets/img/myparcel-pdf.png"
           );

@@ -1,7 +1,8 @@
 /**
  * @member {Object} wcmp
  * @property {Object} wcmp.actions
- * @property {{export: String, add_shipments: String, add_return: String, get_labels: String, modal_dialog: String}} wcmp.actions
+ * @property {{export: String, add_shipments: String, add_return: String, get_labels: String, modal_dialog: String}}
+ *   wcmp.actions
  * @property {String} wcmp.api_url - The API Url we use in MyParcel requests.
  * @property {String} wcmp.ajax_url
  * @property {String} wcmp.ask_for_print_position
@@ -423,7 +424,7 @@ jQuery(function($) {
        * Export orders.
        */
       case wcmp.bulk_actions.export:
-        exportToMyParcel(order_ids);
+        exportToMyParcel.bind(this)(order_ids);
         break;
 
       /**
@@ -439,7 +440,7 @@ jQuery(function($) {
        * Export and print.
        */
       case wcmp.bulk_actions.export_print:
-        exportToMyParcel(order_ids, 'after_reload');
+        exportToMyParcel.bind(this)(order_ids, 'after_reload');
         break;
     }
   }

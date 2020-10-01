@@ -699,7 +699,8 @@ class WCMYPA_Admin
             'Country-of-origin' => [
                 'id'          => self::META_COUNTRY_OF_ORIGIN,
                 'label'       => __('Country of origin', 'woocommerce-myparcel'),
-                'type'        => 'text',
+                'type'        => 'select',
+                'options'     => (new WC_Countries())->get_countries(),
                 'description' => sprintf(
                     wc_help_tip(__('Country of origin is required for world shipments. Defaults to shop base.'))
                 ),
@@ -740,7 +741,7 @@ class WCMYPA_Admin
                     array(
                         'id'          => $productOption['id'],
                         'label'       => $productOption['label'],
-                        'options'     => [
+                        'options'     => $productOption['options'] ?? [
                             __("Disabled", "woocommerce-myparcel"),
                             __("Enabled", "woocommerce-myparcel"),
                         ],
