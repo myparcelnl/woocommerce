@@ -5,7 +5,7 @@ Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestelling
 Requires at least: 3.5.1 & WooCommerce 2.0+
 Tested up to: 5.5.1
 Stable tag: trunk
-Requires PHP: 7.0
+Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
