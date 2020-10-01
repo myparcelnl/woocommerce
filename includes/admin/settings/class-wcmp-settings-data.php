@@ -82,7 +82,7 @@ class WCMP_Settings_Data
         ];
 
         $array[WCMYPA_Settings::SETTINGS_POSTNL] = __("PostNL", "woocommerce-myparcel");
-//        $array[WCMP_Settings::SETTINGS_DPD]    = __("DPD", "woocommerce-myparcel");
+//        $array[WCMYPA_Settings::SETTINGS_DPD]    = __("DPD", "woocommerce-myparcel");
 
         return $array;
     }
@@ -835,7 +835,7 @@ class WCMP_Settings_Data
                 "name"      => WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN,
                 "label"     => __("Default country of origin", "woocommerce-myparcel"),
                 "type"      => "select",
-                "options"   => (new WC_Countries)->get_countries(),
+                "options"   => (new WC_Countries())->get_countries(),
                 "help-text" => __(
                   "Country of origin is required for world shipments. Defaults to shop base or NL. Example: 'NL', 'BE', 'DE'", "woocommerce-myparcel"
               ),
@@ -850,7 +850,7 @@ class WCMP_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMP_Settings::SETTING_RETURN_IN_THE_BOX,
+                "name"      => WCMYPA_Settings::SETTING_RETURN_IN_THE_BOX,
                 "label"     => __("Print return label directly", "woocommerce-myparcel"),
                 "type"      => "select",
                 "options"   => [
