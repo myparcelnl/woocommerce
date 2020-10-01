@@ -36,7 +36,12 @@ class WCMYPA_Admin
     public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
     public const META_ORDER_TOTAL            = "_order_version";
 
-    // Id's refering to shipment statuses
+    /**
+     * Legacy meta keys.
+     */
+    public const META_SHIPMENT_OPTIONS_LT_4_0_0 = "_myparcel_shipment_options";
+
+    // Ids referring to shipment statuses.
     public const ORDER_STATUS_DELIVERED_AT_RECIPIENT      = 7;
     public const ORDER_STATUS_DELIVERED_READY_FOR_PICKUP  = 8;
     public const ORDER_STATUS_DELIVERED_PACKAGE_PICKED_UP = 9;
