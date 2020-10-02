@@ -88,7 +88,7 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
             "woocommerce_myparcel_checkout_settings"        => $this->newCheckoutSettings,
             "woocommerce_myparcel_export_defaults_settings" => $this->newExportDefaultsSettings,
             "woocommerce_myparcel_general_settings"         => $this->newGeneralSettings,
-            "woocommerce_myparcel_postnl_settings"           => $this->newPostnlSettings,
+            "woocommerce_myparcel_postnl_settings"          => $this->newPostnlSettings,
         ];
     }
 
@@ -119,7 +119,7 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
         // Migrate array value of shipping_methods_package_types
         $this->newExportDefaultsSettings[WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES] =
             $this->migrateSettings(
-                self::getPackageTypesMap(),
+                array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP),
                 $this->newExportDefaultsSettings[WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES]
             );
 
@@ -172,8 +172,8 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
     private static function getCheckoutMap(): array
     {
         return [
-            "checkout_position"   => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_POSITION,
-            "custom_css"          => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
+            "checkout_position" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_POSITION,
+            "custom_css"        => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
             "myparcel_checkout" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
         ];
     }
@@ -201,13 +201,6 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
         return [
             "insured"   => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
             "signature" => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
-        ];
-    }
-
-    private static function getPackageTypesMap()
-    {
-        return [
-            1 => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
         ];
     }
 }
