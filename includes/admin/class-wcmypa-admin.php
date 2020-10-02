@@ -988,7 +988,8 @@ class WCMYPA_Admin
             || self::shipmentIsStatus($shipment, self::ORDER_STATUS_DELIVERED_PACKAGE_PICKED_UP)
         ) {
             $order = WCX::get_order($order_id);
-            $order->update_status('wc-custom-delivered');
+//            This will be addressed in MY-24881
+//            $order->update_status('wc-custom-delivered');
         }
     }
 
