@@ -90,6 +90,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. MyParcel information on the order details page
 
 == Changelog ==
+
+= 4.0.5 (2020-10-05) =
+* Fix: Disable order status delivered
+* Fix: Package type not being recognized
+* Fix: migrate all package types in export defaults settings
+
 = 4.0.4 (2020-10-01) =
 * Fix: Failed opening class-wcmypa-settings.php
 
