@@ -894,6 +894,15 @@ msgstr ""
 msgid "Enable MyParcel delivery options"
 msgstr ""
 
+#: includes/admin/settings/class-wcmp-settings-data.php:902
+msgid "Enable delivery options for backorders"
+msgstr ""
+
+#: includes/admin/settings/class-wcmp-settings-data.php:905
+msgid "When this option is enabled, delivery options and delivery day will be also shown for backorders."
+msgstr ""
+
+
 #: includes/admin/settings/class-wcmp-settings-data.php:895
 msgid ""
 "The MyParcel delivery options allow your customers to select whether they "

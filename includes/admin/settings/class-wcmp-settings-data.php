@@ -883,7 +883,7 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY,
-                "label"     => __("Number of days you wish to show", "woocommerce-myparcel"),
+                "label"     => __("Show delivery date", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
                     "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account.",
@@ -896,6 +896,15 @@ class WCMP_Settings_Data
                 "type"      => "toggle",
                 "help_text" => __(
                     "The MyParcel delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
+                "name"      => WCMYPA_Settings::SETTING_BACKORDERS,
+                "label"     => __("Enable delivery options for backorders", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "When this option is enabled, delivery options and delivery day will be also shown for backorders.",
                     "woocommerce-myparcel"
                 ),
             ],

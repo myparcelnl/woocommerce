@@ -62,6 +62,7 @@ class WCMYPA_Settings
     public const SETTING_DELIVERY_OPTIONS_DISPLAY      = "delivery_options_display";
     public const SETTING_DELIVERY_OPTIONS_ENABLED      = "delivery_options_enabled";
     public const SETTING_DELIVERY_OPTIONS_POSITION     = "delivery_options_position";
+    public const SETTING_BACKORDERS                    = "delivery_options_enabled_for_backorders";
     public const SETTING_SHOW_DELIVERY_DAY             = "show_delivery_day";
     public const SETTING_DELIVERY_TITLE                = "at_home_delivery";
     public const SETTING_HEADER_DELIVERY_OPTIONS_TITLE = "header_delivery_options_title";
