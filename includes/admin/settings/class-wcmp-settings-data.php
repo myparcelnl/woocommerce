@@ -123,9 +123,9 @@ class WCMP_Settings_Data
                     // Add the prefix to the name in the condition array
                     if (isset($setting["condition"])) {
                         if (is_array($setting["condition"])) {
-                            $related                      = $setting["condition"]["name"];
-                            $related                      = $prefix ? "{$name}_{$related}" : $related;
-                            $setting["condition"]["name"] = "{$optionIdentifier}[$related]";
+                            $related                             = $setting["condition"]["name"];
+                            $related                             = $prefix ? "{$name}_{$related}" : $related;
+                            $setting["condition"]["parent_name"] = "{$optionIdentifier}[$related]";
                         } else {
                             $related              = $setting["condition"];
                             $related              = $prefix ? "{$name}_{$related}" : $related;
@@ -138,8 +138,10 @@ class WCMP_Settings_Data
                     // Add the setting's default value to the defaults array.
                     $defaults[$setting["id"]] = $class->getDefault();
 
-                    $defaultCallback = function() use ($class, $optionIdentifier) {
-                        $this->callbacks->renderField($class, $optionIdentifier);
+                    $defaultCallback = function() use ($setting, $class, $optionIdentifier) {
+                        $class->setValue(get_option($optionIdentifier)[$class->getId()]);
+                        $class->setName("{$optionIdentifier}[{$class->getId()}]");
+                        $this->callbacks::renderField($class);
                     };
 
                     $callback = $setting["callback"] ?? $defaultCallback;

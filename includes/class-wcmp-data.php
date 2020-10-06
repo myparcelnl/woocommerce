@@ -2,9 +2,8 @@
 
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
-use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -92,10 +91,10 @@ class WCMP_Data
         ];
 
         self::$deliveryTypesHuman = [
-            AbstractConsignment::DELIVERY_TYPE_MORNING  => __("Morning delivery", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_STANDARD => __("Standard delivery", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_EVENING  => __("Evening delivery", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_PICKUP   => __("Pickup", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_MORNING_NAME  => __("Morning delivery", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME => __("Standard delivery", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_EVENING_NAME  => __("Evening delivery", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME   => __("Pickup", "woocommerce-myparcel"),
         ];
     }
 
@@ -113,6 +112,14 @@ class WCMP_Data
     public static function getPackageTypesHuman(): array
     {
         return self::$packageTypesHuman;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getDeliveryTypesHuman(): array
+    {
+        return self::$deliveryTypesHuman;
     }
 
     /**

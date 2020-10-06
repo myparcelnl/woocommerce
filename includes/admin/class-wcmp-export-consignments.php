@@ -441,10 +441,13 @@ class WCMP_Export_Consignments
      */
     private function getLabelDescription(): string
     {
-        $default = "Order: " . $this->order->get_id();
-        $setting = $this->getSetting(WCMYPA_Settings::SETTING_LABEL_DESCRIPTION);
+        $defaultValue     = "Order: " . $this->order->get_id();
+        $valueFromSetting = $this->getSetting(WCMYPA_Settings::SETTING_LABEL_DESCRIPTION);
+        $valueFromOrder   = $this->deliveryOptions->getShipmentOptions()->getLabelDescription();
 
-        if ($setting) {
+        if ($valueFromOrder) {
+            $description = $valueFromOrder;
+        } elseif ($valueFromSetting) {
             $productIds   = [];
             $productNames = [];
             $productSkus  = [];
@@ -464,7 +467,7 @@ class WCMP_Export_Consignments
             }
 
             $description = strtr(
-                $setting,
+                $valueFromSetting,
                 [
                     '[DELIVERY_DATE]' => date('d-m-Y', strtotime($this->deliveryOptions->getDate())),
                     '[ORDER_NR]'      => $this->order->get_order_number(),
@@ -477,7 +480,7 @@ class WCMP_Export_Consignments
             );
         }
 
-        return ! empty($description) ? $description : $default;
+        return ! empty($description) ? $description : $defaultValue;
     }
 
     /**

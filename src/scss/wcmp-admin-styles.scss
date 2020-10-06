@@ -47,10 +47,6 @@
   border-radius: 3px;
 }
 
-.wcmp__box .form-row {
-  margin: 0.3rem 0 !important;
-}
-
 /*
  * Shipment overview: Print offset dialog
  */
@@ -70,8 +66,8 @@
 /*
  * Shipment summary (overview and single order)
  */
-.wcmp__shipment-summary, .wcmp__shipment-options {
-  display: inline;
+.wcmp__shipment-summary {
+  white-space: nowrap;
 }
 
 .wcmp__shipment-summary .delivery-date,
@@ -88,44 +84,48 @@
   content: "+";
   margin-right: 4px;
 }
+
 .wcmp__shipment-options-dialog {
-  width:  25em;
+  width: 25em;
 }
 
 /*
  * Shipment options form styling
  */
-.wcmp__shipment-options__form table {
+.wcmp__shipment-options table {
   width: 100%;
 }
 
-.wcmp__shipment-options__form input[type="checkbox"],
-.wcmp__shipment-options__form input[type="radio"] {
-  margin-right: 8px;
+.wcmp__shipment-options table,
+.wcmp__shipment-options select {
+  font-size: 90%;
 }
 
-.wcmp__shipment-options__form .wcmp_settings-table td {
-  padding-bottom: 6px;
-  vertical-align: middle;
+.wcmp__shipment-options select,
+.wcmp__shipment-options input {
+  height: auto;
+  padding: 0 8px !important;
+}
+
+.wcmp__shipment-options select,
+.wcmp__shipment-options input,
+.wcmp__shipment-options .form-row {
+  margin: 0;
 }
 
 .wcmp__shipment-summary__list {
   width: auto;
 }
 
-.wcmp__shipment-options__form td.wcmp_option_cost {
+.wcmp__shipment-options td.wcmp_option_cost {
   width: 60px;
   text-align: right;
   font-weight: bold;
 }
 
-.wcmp__shipment-options__form .calculated_weight {
-  font-size: 80%;
-  color: #999;
-}
-
-.wcmp__shipment-options__save {
-  margin-top: 8px;
+.wcmp__shipment-options > a {
+  color: inherit;
+  text-decoration: none;
 }
 
 /*
@@ -266,11 +266,6 @@
   padding: 0;
 }
 
-.wcmp__shipment-options__form > a {
-  color: inherit;
-  text-decoration: none;
-}
-
 /* fix woocommerce column float */
 @media only screen and (min-width: 1280px) {
   #order_data .order_data_column {
@@ -281,6 +276,10 @@
 /*
  * Helpers
  */
+.wcmp__d--none {
+  display: none;
+}
+
 .wcmp__d--block {
   display: block;
 }
@@ -311,12 +310,19 @@
   background: #e5e5e5;
 }
 
+.woocommerce_page_wcmp_settings table.form-table select,
+.woocommerce_page_wcmp_settings table.form-table input {
+  height: auto;
+  line-height: 1.8;
+}
+
 .woocommerce_page_wcmp_settings tr.wcmp__child * {
   font-size: .95em !important;
 }
 
 .woocommerce_page_wcmp_settings tr.wcmp__child th {
-  padding: 12.5px 15px;
+  padding-left: 10px;
+  padding-left: 10px;
 }
 
 .woocommerce_page_wcmp_settings tr.wcmp__child td {
@@ -341,4 +347,60 @@
 
 .wcmp__close-button {
   cursor: pointer;
+}
+
+/* Toggle element */
+.wcmp__toggle {
+  cursor: pointer;
+}
+
+[data-disabled="true"] .wcmp__toggle,
+[data-readonly="true"] .wcmp__toggle {
+  opacity: 65%;
+  cursor: not-allowed;
+}
+/* Skeleton loader (Styles copied from Delivery Options) */
+.wcmp__skeleton-loader {
+  width: 100%;
+}
+
+.wcmp__skeleton-loader div {
+  height: 1.5em;
+  margin-top: 8px;
+  -webkit-animation: shimmer 2s infinite linear;
+  animation: shimmer 2s infinite linear;
+  background: rgba(0, 0, 0, .05) -o-linear-gradient(left, transparent 25%, rgba(0, 0, 0, .05) 50%, transparent 75%);
+  background: rgba(0, 0, 0, .05) -webkit-gradient(linear, left top, right top, color-stop(25%, transparent), color-stop(50%, rgba(0, 0, 0, .05)), color-stop(75%, transparent));
+  background: rgba(0, 0, 0, .05) linear-gradient(to right, transparent 25%, rgba(0, 0, 0, .05) 50%, transparent 75%);
+  background-size: 400% 400%;
+}
+
+.wcmp__skeleton-loader tr:nth-child(1) td:first-child div { width: 60%; }
+.wcmp__skeleton-loader tr:nth-child(2) td:first-child div { width: 80%; }
+.wcmp__skeleton-loader tr:nth-child(3) td:first-child div { width: 75%; }
+.wcmp__skeleton-loader tr:nth-child(4) td:first-child div { width: 77%; }
+.wcmp__skeleton-loader tr:nth-child(5) td:first-child div { width: 64%; }
+
+@-webkit-keyframes shimmer {
+  0% {
+    background-position: 0 50%
+  }
+  50% {
+    background-position: 100% 50%
+  }
+  100% {
+    background-position: 0 50%
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0 50%
+  }
+  50% {
+    background-position: 100% 50%
+  }
+  100% {
+    background-position: 0 50%
+  }
 }

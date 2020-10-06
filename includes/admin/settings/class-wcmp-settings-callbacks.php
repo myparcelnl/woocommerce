@@ -49,7 +49,7 @@ class WCMP_Settings_Callbacks
     /**
      * @param array $args
      */
-    public function enhanced_select(array $args): void
+    public static function enhanced_select(array $args): void
     {
         include("class-wcmp-settings-callbacks-enhanced-select.php");
 
@@ -61,7 +61,7 @@ class WCMP_Settings_Callbacks
      *
      * @param string $content - Can contain HTML.
      */
-    private function renderTooltip(string $content): void
+    private static function renderTooltip(string $content): void
     {
         echo wc_help_tip($content, true);
     }
@@ -69,7 +69,7 @@ class WCMP_Settings_Callbacks
     /**
      * @param array $args
      */
-    public function renderSection(array $args): void
+    public static function renderSection(array $args): void
     {
         if (isset($args["description"])) {
             echo "<p>{$args["description"]}</p>";
@@ -80,22 +80,26 @@ class WCMP_Settings_Callbacks
      * Output a WooCommerce style form field.
      *
      * @param SettingsFieldArguments $class
-     * @param string                 $optionId
      */
-    public function renderField(SettingsFieldArguments $class, string $optionId): void
+    public static function renderField(SettingsFieldArguments $class): void
     {
-        $arguments = $class->getArguments();
+        $arguments  = $class->getArguments();
+        $attributes = $class->getCustomAttributes();
 
         if (isset($arguments["description"])) {
             $description = $arguments["description"];
             unset ($arguments["description"]);
         }
 
-        woocommerce_form_field(
-            "{$optionId}[{$class->getId()}]",
-            $arguments,
-            get_option($optionId)[$class->getId()]
-        );
+        if (isset($attributes['data-type']) && $attributes['data-type'] === 'toggle') {
+            self::renderToggle($class);
+        } else {
+            woocommerce_form_field(
+                $class->getName(),
+                $arguments,
+                $class->getValue()
+            );
+        }
 
         if (isset($arguments["append"])) {
             echo $arguments["append"];
@@ -103,7 +107,7 @@ class WCMP_Settings_Callbacks
 
         // Render the description here instead of inside the above function.
         if (isset($description)) {
-            $this->renderDescription($description);
+            WCMP_Settings_Callbacks::renderDescription($description);
         }
     }
 
@@ -112,7 +116,7 @@ class WCMP_Settings_Callbacks
      *
      * @return array
      */
-    public function get_order_status_options(): array
+    public static function get_order_status_options(): array
     {
         $order_statuses = [];
 
@@ -136,9 +140,45 @@ class WCMP_Settings_Callbacks
     /**
      * @param $description
      */
-    private function renderDescription($description)
+    private static function renderDescription($description): void
     {
-        echo "<p>$description</p>";
+        echo "<p class=\"description\">$description</p>";
+    }
+
+    /**
+     * Render a custom toggle element. Uses classes from WooCommerce but has a custom JS implementation.
+     *
+     * @param \WPO\WC\MyParcel\Entity\SettingsFieldArguments $class
+     */
+    private static function renderToggle(SettingsFieldArguments $class): void
+    {
+        $arguments                = $class->getArguments();
+        $arguments['type']        = ['hidden'];
+        $arguments['input_class'] = ['wcmp__input--toggle'];
+        unset($arguments['description']);
+
+        echo '<a class="wcmp__toggle wcmp__d--inline-block">';
+
+        printf(
+            '<input type="hidden" name="%s" value="%s" %s>',
+            $class->getName(),
+            $class->getValue(),
+            $class->getCustomAttributesString()
+        );
+
+        if (wc_string_to_bool($class->getValue())) {
+            printf(
+                "<span class=\"woocommerce-input-toggle woocommerce-input-toggle--enabled\">%s</span>",
+                esc_attr__('Yes', 'woocommerce')
+            );
+        } else {
+            printf(
+                "<span class=\"woocommerce-input-toggle woocommerce-input-toggle--disabled\">%s</span>",
+                esc_attr__('No', 'woocommerce')
+            );
+        }
+
+        echo "</a>";
     }
 }
 
