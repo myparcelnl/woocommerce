@@ -872,14 +872,6 @@ msgstr ""
 "laten bezorgen. Afhankelijk van de instellingen kunt u ze een datum, tijd en zelfs opties laten selecteren, zoals "
 "een handtekening bij aflevering."
 
-#: includes/admin/settings/class-wcmp-settings-data.php:902
-msgid "Enable delivery options for backorders"
-msgstr "Inschakelen bezorgopties voor nabestellingen"
-
-#: includes/admin/settings/class-wcmp-settings-data.php:905
-msgid "When this option is enabled, delivery options and delivery day will be also shown for backorders."
-msgstr "Als deze optie is ingeschakeld, worden de bezorgopties en de bezorgdag ook weergegeven voor nabestellingen."
-
 #: includes/admin/settings/class-wcmp-settings-data.php:903
 msgid "Display for"
 msgstr "Toon bij"
