@@ -448,10 +448,11 @@ class WCMP_Checkout
      */
     private function shouldShowDeliveryOptions(): bool
     {
-        $showAnyway = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_BACKORDERS);
+        // $backorderDeliveryOptions causes the options to be displayed also when product is in backorder
+        $backorderDeliveryOptions = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_BACKORDERS);
         $show       = true;
 
-        if ($showAnyway) {
+        if ($backorderDeliveryOptions) {
             return $show;
         }
 
