@@ -71,13 +71,10 @@ class WCMP_Checkout
             array_push($deps, "wcmp-checkout-fields");
         }
 
-
         /*
          * Show delivery options also for shipments on backorder
          */
-        $shouldShow = $this->shouldShowDeliveryOptions();
-
-        if (! $shouldShow) {
+        if (! $this->shouldShowDeliveryOptions()) {
             return;
         }
 
