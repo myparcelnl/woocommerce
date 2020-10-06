@@ -117,6 +117,25 @@ abstract class Data
             $value     = get_post_meta($object_id, $key, $single);
         }
 
+        if (class_exists('\MyParcelNL\WooCommerce\Includes\Adapter\DeliveryOptionsFromOrderAdapter')) {
+            $value = str_replace(
+                '"WCMP_DeliveryOptionsFromOrderAdapter',
+                '"DeliveryOptionsFromOrderAdapter',
+                $value
+            );
+        } else {
+            $value = str_replace(
+                'MyParcelNL\WooCommerce\Includes\Adapter\DeliveryOptionsFromOrderAdapter',
+                'WCMP_DeliveryOptionsFromOrderAdapter',
+                $value
+            );
+            $value = str_replace(
+                '"DeliveryOptionsFromOrderAdapter',
+                '"WCMP_DeliveryOptionsFromOrderAdapter',
+                $value
+            );
+        }
+
         return maybe_unserialize($value);
     }
 

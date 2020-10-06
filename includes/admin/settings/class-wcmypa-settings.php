@@ -1,7 +1,7 @@
 <?php
 
-use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 
 if (! defined('ABSPATH')) {
@@ -335,7 +335,7 @@ class WCMYPA_Settings
 
             if ($class) {
                 $class = is_array($class) ? implode(" ", $class) : $class;
-                $class = wc_implode_html_attributes(["class", esc_attr($class)]);
+                $class = wc_implode_html_attributes(["class" => esc_attr($class)]);
             }
 
             echo "<tr {$class}>";

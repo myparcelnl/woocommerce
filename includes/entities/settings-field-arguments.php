@@ -12,6 +12,10 @@ if (class_exists('\\WPO\\WC\\MyParcel\\Entity\\SettingsFieldArguments')) {
 
 class SettingsFieldArguments
 {
+    private const CONDITION_DEFAULTS = [
+        "type" => "show",
+    ];
+
     public const IGNORED_ARGUMENTS = [
         "callback",
         "condition",
@@ -57,7 +61,12 @@ class SettingsFieldArguments
     /**
      * @var array
      */
-    private $input = [];
+    private $input;
+
+    /**
+     * @var string
+     */
+    private $prefix;
 
     /**
      * @var string
@@ -90,7 +99,7 @@ class SettingsFieldArguments
     ];
 
     /**
-     * @var string
+     * @var string|null
      */
     private $description;
 
@@ -112,21 +121,23 @@ class SettingsFieldArguments
     /**
      * SettingsFieldArguments constructor.
      *
-     * @param array $args - The setting's arguments.
+     * @param array  $args   - The setting's arguments.
+     * @param string $prefix - Optional prefix for name and conditions.
      */
-    public function __construct(array $args)
+    public function __construct(array $args, string $prefix = '')
     {
         $this->input     = $args;
+        $this->prefix    = $prefix;
         $this->option_id = $args["option_id"] ?? null;
 
-        $this->name        = $this->getArgument("name");
+        $this->name        = $this->prefix . $this->getArgument("name");
         $this->id          = $this->getArgument("id");
         $this->description = $this->getArgument("description");
 
         $this->setClass();
         $this->setType();
         $this->setDefault();
-        $this->setCondition();
+        $this->setConditions();
 
         $this->setArguments($this->input);
     }
@@ -145,9 +156,10 @@ class SettingsFieldArguments
                 $this->addArgument("step", 0.01);
                 $this->addArgument("placeholder", "0,00");
                 break;
-            case "toggle" :
+            case "toggle":
                 $type = "select";
 
+                $this->addArgument("data-type", "toggle");
                 $this->addArgument(
                     "options",
                     [
@@ -182,43 +194,24 @@ class SettingsFieldArguments
     /**
      * If the setting has a condition array set up the attributes so the JS can use them.
      */
-    private function setCondition(): void
+    private function setConditions(): void
     {
-        $conditionArgument = $this->getArgument("condition");
+        $conditionArgument  = $this->getArgument("condition");
+        $conditionsArgument = $this->getArgument("conditions") ?? [];
 
-        if (! $conditionArgument) {
+        if (! $conditionArgument && ! $conditionsArgument) {
             return;
         }
 
-        $conditionDefaults = [
-            "type" => "show",
-        ];
-
-        if (is_array($conditionArgument)) {
-            $condition = array_replace_recursive($conditionDefaults, $conditionArgument);
-        } else {
-            $condition = array_merge(
-                $conditionDefaults,
-                [
-                    "name" => $conditionArgument,
-                ]
-            );
+        if ($conditionArgument) {
+            array_push($conditionsArgument, $conditionArgument);
         }
 
-        $this->addArgument("data-parent", $condition["name"]);
-        $this->addArgument("data-parent-type", $condition["type"]);
+        $conditionData = array_map([$this, "createCondition"], $conditionsArgument);
 
-        if (isset($condition["parent_value"])) {
-            if (is_array($condition["parent_value"])) {
-                $this->addArgument("data-parent-value", implode(';', $condition["parent_value"]) . ";");
-            } else {
-                $this->addArgument("data-parent-value", $condition["parent_value"]);
-            }
-        }
-
-        if (isset($condition["set_value"])) {
-            $this->addArgument("data-parent-set", $condition["set_value"]);
-        }
+        $this->addArgument("data-conditions", $conditionData);
+        // Delete the original condition argument(s).
+        Arr::forget($this->arguments, ["condition", "conditions"]);
     }
 
     /**
@@ -226,7 +219,7 @@ class SettingsFieldArguments
      *
      * @return mixed|null
      */
-    private function getArgument(string $name)
+    public function getArgument(string $name)
     {
         if (isset($this->input[$name])) {
             return $this->input[$name];
@@ -273,6 +266,10 @@ class SettingsFieldArguments
                     $arguments["custom_attributes"] = [];
                 }
 
+                if (is_array($value)) {
+                    $value = htmlspecialchars(json_encode($value));
+                }
+
                 $arguments["custom_attributes"][$arg] = $value;
             }
         }
@@ -281,20 +278,28 @@ class SettingsFieldArguments
     }
 
     /**
-     * Get the custom attributes as a string.
+     * Get the custom attributes as an array or a string for use in HTML.
      *
      * @return string
      */
-    public function getCustomAttributes(): string
+    public function getCustomAttributesString(): string
     {
-        $arguments  = $this->getArguments();
         $attributes = [];
 
-        foreach ($arguments["custom_attributes"] ?? [] as $att => $value) {
+        foreach ($this->getCustomAttributes() ?? [] as $att => $value) {
             $attributes[] = "$att=\"$value\"";
         }
 
         return implode(" ", $attributes);
+    }
+
+    /**
+     * @return array
+     */
+    public function getCustomAttributes(): array
+    {
+        $arguments = $this->getArguments();
+        return $arguments['custom_attributes'] ?? [];
     }
 
     /**
@@ -410,7 +415,7 @@ class SettingsFieldArguments
     /**
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -429,5 +434,47 @@ class SettingsFieldArguments
     public function getDefault()
     {
         return $this->default;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param $value
+     */
+    public function setValue($value): void
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * @param string|array $condition
+     *
+     * @return array
+     */
+    private function createCondition($condition): array
+    {
+        if (is_array($condition)) {
+            $condition['parent_name'] = $this->prefix . $condition['parent_name'];
+
+            $newCondition = array_replace_recursive(
+                self::CONDITION_DEFAULTS,
+                $condition
+            );
+        } else {
+            $newCondition = array_merge(
+                self::CONDITION_DEFAULTS,
+                [
+                    "parent_name" => $this->prefix . $condition,
+                ]
+            );
+        }
+
+        return $newCondition;
     }
 }

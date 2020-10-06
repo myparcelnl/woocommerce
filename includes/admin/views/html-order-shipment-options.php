@@ -23,6 +23,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_
 
 ?>
 <div class="wcmp wcmp__shipment-options">
+    <table>
     <?php
     if ($deliveryOptions->isPickup()) {
         $pickup = $deliveryOptions->getPickupLocation();
@@ -41,57 +42,81 @@ $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_
     }
 
     $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
-    $shipment_options      = $deliveryOptions->getShipmentOptions();
+    $shipmentOptions       = $deliveryOptions->getShipmentOptions();
 
     $packageTypes                   = array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP);
     $packageTypeFromDeliveryOptions = $deliveryOptions->getPackageType();
     $selectedPackageType            = WCMYPA()->export->getPackageTypeFromOrder($order, $deliveryOptions);
+    $carrier                        = $deliveryOptions->getCarrier();
 
-    $postnl          = PostNLConsignment::CARRIER_NAME;
-    $insurance       = false;
-    $insuranceAmount = 0;
-    $signature       = false;
-    $onlyRecipient   = false;
-    $ageCheck        = false;
-    $returnShipment  = false;
-
-    $insurance = WCMP_Export::getChosenOrDefaultShipmentOption(
-        $shipment_options->getInsurance(),
-        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
-    );
-
-    $signature = WCMP_Export::getChosenOrDefaultShipmentOption(
-        $shipment_options->hasSignature(),
-        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
-    );
-
-    $onlyRecipient = WCMP_Export::getChosenOrDefaultShipmentOption(
-        $shipment_options->hasOnlyRecipient(),
-        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
-    );
-
-    $ageCheck = WCMP_Export::getChosenOrDefaultShipmentOption(
-        $shipment_options->hasAgeCheck(),
-        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
-    );
-
-    $largeFormat = WCMP_Export::getChosenOrDefaultShipmentOption(
-        $shipment_options->hasLargeFormat(),
-        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
-    );
-
-    $returnShipment = WCMP_Export::getChosenOrDefaultShipmentOption(
-        $shipment_options->isReturn(),
-        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
-    );
-
-    $insuranceAmount = WCMP_Export::getChosenOrDefaultShipmentOption(
-        $shipment_options->getInsurance(),
-        "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT
+    /**
+     *
+     */
+    $data = array_map(
+        function ($item) {
+            return WCMP_Export::getChosenOrDefaultShipmentOption($item[0], $item[1]);
+        },
+        [
+            'hasSignature'        => [
+                $shipmentOptions->hasSignature(),
+                "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+            ],
+            'hasOnlyRecipient' => [
+                $shipmentOptions->hasOnlyRecipient(),
+                "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
+            ],
+            'hasAgeCheck'      => [
+                $shipmentOptions->hasAgeCheck(),
+                "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
+            ],
+            'hasLargeFormat'   => [
+                $shipmentOptions->hasLargeFormat(),
+                "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
+            ],
+            'isReturn'         => [
+                $shipmentOptions->isReturn(),
+                "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
+            ],
+            'insurance'        => [
+                $shipmentOptions->getInsurance(),
+                "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
+            ],
+        ]
     );
 
     $orderWeight        = (float) $order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
     $digitalStampWeight = $extraOptions["weight"] ?? WCMP_Export::getDigitalStampRangeFromWeight($orderWeight);
+
+    $conditionCarrierPostNl = [
+        "parent_name"  => "[carrier]",
+        "type"         => "show",
+        "parent_value" => WCMP_Data::getPostnlName(),
+        "set_value"    => WCMP_Settings_Data::DISABLED,
+    ];
+
+    $conditionDeliveryTypeDelivery = [
+        "parent_name"  => "[delivery_type]",
+        "type"         => "show",
+        "parent_value" => [
+            AbstractConsignment::DELIVERY_TYPE_MORNING_NAME,
+            AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME,
+            AbstractConsignment::DELIVERY_TYPE_EVENING_NAME,
+        ],
+        "set_value"    => WCMP_Settings_Data::DISABLED,
+    ];
+
+    $conditionPackageTypePackage = [
+        "parent_name"  => "[package_type]",
+        "type"         => "show",
+        "parent_value" => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
+    ];
+
+    $conditionForceEnabledOnAgeCheck = [
+        "parent_name"  => "[shipment_options][age_check]",
+        "type"         => "disable",
+        "set_value"    => WCMP_Settings_Data::ENABLED,
+        "parent_value" => WCMP_Settings_Data::DISABLED,
+    ];
 
     $option_rows = [
         [
@@ -103,12 +128,22 @@ $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_
             "value"             => $deliveryOptions->getCarrier() ?? PostNLConsignment::CARRIER_NAME,
         ],
         [
+            "name"              => "[delivery_type]",
+            "label"             => __("Delivery type", "woocommerce-myparcel"),
+            "type"              => "select",
+            "options"           => WCMP_Data::getDeliveryTypesHuman(),
+            "custom_attributes" => ["disabled" => "disabled"],
+            "value"             => $deliveryOptions->getDeliveryType(),
+        ],
+        [
             "name"              => "[package_type]",
             "label"             => __("Shipment type", "woocommerce-myparcel"),
             "type"              => "select",
             "options"           => array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman()),
             "value"             => $packageTypes[$selectedPackageType],
-            "custom_attributes" => $isPackageTypeDisabled ? ["disabled" => "disabled"] : [],
+            "custom_attributes" => $isPackageTypeDisabled
+                ? ["disabled" => "disabled"]
+                : [],
         ],
         [
             "name"              => "[extra_options][collo_amount]",
@@ -123,99 +158,115 @@ $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_
         ],
         [
             "name"        => "[extra_options][weight]",
-            "label"       => __("Weight", "woocommerce-myparcel"),
-            "description" => sprintf(
-                __("Calculated weight: %s", "woocommerce-myparcel"),
-                wc_format_weight($orderWeight)
-            ),
             "type"        => "select",
+            "label"       => __("Weight", "woocommerce-myparcel"),
+            "description" => $orderWeight
+                ? sprintf(
+                    __("Calculated weight: %s", "woocommerce-myparcel"),
+                    wc_format_weight($orderWeight)
+                )
+                : null,
             "options"     => WCMP_Export::getDigitalStampRangeOptions(),
-            "condition"   => [
-                "name"         => "[carrier]",
-                "type"         => "disable",
-                "parent_value" => WCMP_Data::getPostnlName(),
-                "set_value"    => WCMP_Settings_Data::DISABLED,
-            ],
             "value"       => $digitalStampWeight,
-        ],
-        [
-            "name"      => "[shipment_options][only_recipient]",
-            "type"      => "toggle",
-            "condition" => [
-                "name"         => "[carrier]",
-                "type"         => "disable",
-                "parent_value" => WCMP_Data::getPostnlName(),
-                "set_value"    => WCMP_Settings_Data::DISABLED,
+            "conditions"  => [
+                $conditionCarrierPostNl,
+                [
+                    "parent_name"  => "[package_type]",
+                    "type"         => "show",
+                    "parent_value" => AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
+                ],
             ],
-            "label"     => __("Home address only", "woocommerce-myparcel"),
-            "value"     => $onlyRecipient,
         ],
         [
-            "name"      => "[shipment_options][signature]",
-            "type"      => "toggle",
-            "condition" => [
-                "name"         => "[carrier]",
-                "type"         => "disable",
-                "parent_value" => WCMP_Data::getPostnlName(),
-                "set_value"    => WCMP_Settings_Data::DISABLED,
+            "name"       => "[shipment_options][only_recipient]",
+            "type"       => "toggle",
+            "label"      => __("Home address only", "woocommerce-myparcel"),
+            "value"      => $data['hasOnlyRecipient'],
+            "conditions" => [
+                $conditionDeliveryTypeDelivery,
+                $conditionPackageTypePackage,
+                $conditionCarrierPostNl,
+                $conditionForceEnabledOnAgeCheck,
             ],
-            "label"     => __("Signature on delivery", "woocommerce-myparcel"),
-            "value"     => $signature,
         ],
         [
-            "name"      => "[shipment_options][large_format]",
-            "type"      => "toggle",
-            "condition" => [
-                "name"         => "[carrier]",
-                "type"         => "disable",
-                "parent_value" => WCMP_Data::getPostnlName(),
-                "set_value"    => WCMP_Settings_Data::DISABLED,
+            "name"       => "[shipment_options][signature]",
+            "type"       => "toggle",
+            "label"      => __("Signature on delivery", "woocommerce-myparcel"),
+            "value"      => $data['hasSignature'],
+            "conditions" => [
+                $conditionDeliveryTypeDelivery,
+                $conditionPackageTypePackage,
+                $conditionCarrierPostNl,
+                $conditionForceEnabledOnAgeCheck,
             ],
-            "label"     => __("Large format", "woocommerce-myparcel"),
-            "value"     => $largeFormat,
         ],
         [
-            "name"      => "[shipment_options][age_check]",
-            "type"      => "toggle",
-            "condition" => [
-                "name"         => "[carrier]",
-                "type"         => "disable",
-                "parent_value" => WCMP_Data::getPostnlName(),
-                "set_value"    => WCMP_Settings_Data::DISABLED,
+            "name"       => "[shipment_options][age_check]",
+            "type"       => "toggle",
+            "label"      => __("Age check", "woocommerce-myparcel"),
+            "value"      => $data['hasAgeCheck'],
+            "conditions" => [
+                $conditionDeliveryTypeDelivery,
+                $conditionPackageTypePackage,
+                $conditionCarrierPostNl,
             ],
-            "label"     => __("Age check", "woocommerce-myparcel"),
-            "value"     => $ageCheck,
         ],
         [
-            "name"      => "[shipment_options][return_shipment]",
-            "type"      => "toggle",
-            "condition" => [
-                "name"         => "[carrier]",
-                "type"         => "disable",
-                "parent_value" => WCMP_Data::getPostnlName(),
-                "set_value"    => WCMP_Settings_Data::DISABLED,
+            "name"       => "[shipment_options][large_format]",
+            "type"       => "toggle",
+            "label"      => __("Large format", "woocommerce-myparcel"),
+            "value"      => $data['hasLargeFormat'],
+            "conditions" => [
+                $conditionDeliveryTypeDelivery,
+                $conditionPackageTypePackage,
+                $conditionCarrierPostNl,
             ],
-            "label"     => __("Return shipment", "woocommerce-myparcel"),
-            "value"     => $returnShipment,
         ],
         [
-            "name"      => "[shipment_options][insured]",
-            "type"      => "toggle",
-            "condition" => [
-                "name"         => "[carrier]",
-                "type"         => "disable",
-                "parent_value" => WCMP_Data::getPostnlName(),
-                "set_value"    => WCMP_Settings_Data::ENABLED,
+            "name"       => "[shipment_options][return_shipment]",
+            "type"       => "toggle",
+            "label"      => __("Return shipment", "woocommerce-myparcel"),
+            "value"      => $data['isReturn'],
+            "conditions" => [
+                $conditionDeliveryTypeDelivery,
+                $conditionPackageTypePackage,
+                $conditionCarrierPostNl,
             ],
-            "label"     => __("Insured", "woocommerce-myparcel"),
-            "value"     => (bool) $insurance,
         ],
         [
-            "name"    => "[shipment_options][insured_amount]",
-            "label"   => __("Insurance amount", "woocommerce-myparcel"),
-            "type"    => "select",
-            "options" => WCMP_Data::getInsuranceAmount(),
-            "value"   => (int) $insuranceAmount,
+            "name"       => "[shipment_options][insured]",
+            "type"       => "toggle",
+            "label"      => __("Insured", "woocommerce-myparcel"),
+            "value"      => (bool) $data['insurance'],
+            "conditions" => [
+                $conditionDeliveryTypeDelivery,
+                $conditionPackageTypePackage,
+                [
+                    "parent_name"  => "[carrier]",
+                    "type"         => "disable",
+                    "parent_value" => WCMP_Data::getPostnlName(),
+                    "set_value"    => WCMP_Settings_Data::ENABLED,
+                ],
+            ],
+        ],
+        [
+            "name"       => "[shipment_options][insured_amount]",
+            "type"       => "select",
+            "label"      => __("Insurance amount", "woocommerce-myparcel"),
+            "options"    => WCMP_Data::getInsuranceAmount(),
+            "value"      => (int) $data['insurance'],
+            "conditions" => [
+                $conditionDeliveryTypeDelivery,
+                $conditionPackageTypePackage,
+                "[shipment_options][insured]",
+            ],
+        ],
+        [
+            "name"  => "[shipment_options][label_description]",
+            "type"  => "text",
+            "label" => __("Custom ID (top left on label)", "woocommerce-myparcel"),
+            "value" => $shipmentOptions->getLabelDescription() ?? null,
         ],
     ];
 
@@ -226,31 +277,38 @@ $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_
 
     $namePrefix = WCMYPA_Admin::SHIPMENT_OPTIONS_FORM_NAME . "[{$order->get_id()}]";
 
-    foreach ($option_rows as $option_row) {
-        if (isset($option_row["condition"])) {
-            $option_row["condition"]["name"] = $namePrefix . $option_row["condition"]["name"];
-        }
-
-        $class = new SettingsFieldArguments($option_row);
+    foreach ($option_rows as $option_row) :
+        $class = new SettingsFieldArguments($option_row, $namePrefix);
 
         // Cast boolean values to the correct enabled/disabled values.
         if (is_bool($option_row["value"])) {
             $option_row["value"] = $option_row["value"] ? WCMP_Settings_Data::ENABLED : WCMP_Settings_Data::DISABLED;
         }
 
-        woocommerce_form_field(
-            $namePrefix . $option_row["name"],
-            $class->getArguments(false),
-            $option_row["value"] ?? null
-        );
-    }
-    ?>
-    <div>
-        <div class="button wcmp__shipment-options__save">
-            <?php
-            _e("Save", "woocommerce-myparcel");
-            WCMYPA_Admin::renderSpinner();
-            ?>
-        </div>
-    </div>
+        $class->setValue($option_row["value"]);
+
+        ?>
+
+        <tr>
+            <td>
+                <label for="<?php echo $class->getName() ?>">
+                    <?php echo $class->getArgument('label') ?>
+                </label>
+            </td>
+            <td>
+                <?php WCMP_Settings_Callbacks::renderField($class); ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    <tr>
+        <td colspan="2">
+            <div class="button wcmp__shipment-options__save">
+                <?php
+                _e("Save", "woocommerce-myparcel");
+                WCMYPA_Admin::renderSpinner();
+                ?>
+            </div>
+        </td>
+    </tr>
+    </table>
 </div>

@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -213,8 +214,9 @@ class WCMYPA_Admin
             return;
         }
 
-        $order_id             = WCX_Order::get_id($order);
-        $consignments         = WCMYPA_Admin::get_order_shipments($order);
+        $order_id        = WCX_Order::get_id($order);
+        $consignments    = WCMYPA_Admin::get_order_shipments($order);
+        $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
 
         echo '<div class="wcmp__shipment-settings-wrapper" style="display: none;">';
 
@@ -225,7 +227,7 @@ class WCMYPA_Admin
             $last_shipment_id = $last_shipment['shipment_id'];
 
             ?>
-            <?php $this->showDeliveryOptionsForOrder($order); ?>
+            <?php $this->showDeliveryOptions($deliveryOptions); ?>
             <a class="wcmp__shipment-summary__show">
                 <span class="wcmp__encircle wcmp__shipment-summary__show">i</span>
             </a>
@@ -239,13 +241,13 @@ class WCMYPA_Admin
             </div>
         <?php else : ?>
             <div class="wcmp__has-consignments" style="display: none;">
-                <?php $this->showDeliveryOptionsForOrder($order); ?>
+                <?php $this->showDeliveryOptions($deliveryOptions); ?>
             </div>
         <?php endif;
 
         printf('<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
             $order->get_id(),
-            __("Details", "woocommerce-myparcel")
+            WCMP_Data::getPackageTypeHuman($deliveryOptions->getPackageType() ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE)
         );
 
         echo "</div>";
@@ -624,17 +626,25 @@ class WCMYPA_Admin
     }
 
     /**
-     * @param WC_Order $order
+     * @param \WC_Order $order
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function showDeliveryOptionsForOrder(WC_Order $order): void
     {
         $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
+        $this->showDeliveryOptions($deliveryOptions);
+    }
 
-        /**
-         * Show the delivery date if it is present.
-         */
+    /**
+     * Show the delivery date if it is present.
+     *
+     * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
+     *
+     * @throws \Exception
+     */
+    public function showDeliveryOptions(DeliveryOptions $deliveryOptions): void
+    {
         if ($deliveryOptions->getDate()) {
             $this->printDeliveryDate($deliveryOptions);
         }
@@ -823,7 +833,7 @@ class WCMYPA_Admin
      */
     public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptions
     {
-        $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
+        $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS) ?: null;
 
         // $meta is a json string, create an instance
         if (! empty($meta) && ! $meta instanceof DeliveryOptions) {
@@ -842,12 +852,10 @@ class WCMYPA_Admin
             }
         }
 
-        if (empty($meta)) {
-            $meta = null;
-        }
-
         // Create or update immutable adapter from order with a instanceof DeliveryOptionsAdapter
-        $meta = new WCMP_DeliveryOptionsFromOrderAdapter($meta, $inputData);
+        if (empty($meta) || ! empty($inputData)) {
+            $meta = new WCMP_DeliveryOptionsFromOrderAdapter($meta, $inputData);
+        }
 
         return $meta;
     }

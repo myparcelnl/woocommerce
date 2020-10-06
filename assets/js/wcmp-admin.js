@@ -1,7 +1,9 @@
+/* eslint-disable prefer-object-spread */
 /**
  * @member {Object} wcmp
  * @property {Object} wcmp.actions
- * @property {{export: String, add_shipments: String, add_return: String, get_labels: String, modal_dialog: String}} wcmp.actions
+ * @property {{export: String, add_shipments: String, add_return: String, get_labels: String, modal_dialog: String}}
+ *   wcmp.actions
  * @property {String} wcmp.api_url - The API Url we use in MyParcel requests.
  * @property {String} wcmp.ajax_url
  * @property {String} wcmp.ask_for_print_position
@@ -11,27 +13,137 @@
  * @property {Object.<String, String>} wcmp.strings
  */
 
-/* eslint-disable-next-line max-lines-per-function */
-jQuery(function($) {
-  // Object.values polyfill
-  if (!Object.values) {
-    Object.values = function(obj) {
-      var values = [];
+/**
+ * @typedef {Object} Dependency
+ * @property {String} name
+ * @property {Condition} condition
+ * @property {HTMLInputElement} node
+ */
 
-      for (var i in obj) {
-        if (obj.hasOwnProperty(i)) {
-          values.push(obj[i]);
-        }
+/**
+ * @typedef {Object} Condition
+ * @property {String} parent_name
+ * @property {String|Number} parent_value
+ * @property {String|Number} set_value
+ */
+
+/**
+ * Object.assign() polyfill.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
+ */
+if (typeof Object.assign !== 'function') {
+  /* Must be writable: true, enumerable: false, configurable: true */
+  Object.defineProperty(Object, 'assign', {
+    value: function assign(target) {
+      if (target === null || target === undefined) {
+        throw new TypeError('Cannot convert undefined or null to object');
       }
 
-      return values;
-    };
-  }
+      var to = Object(target);
 
+      for (var index = 1; index < arguments.length; index++) {
+        var nextSource = arguments[index];
+
+        if (nextSource !== null && nextSource !== undefined) {
+          for (var nextKey in nextSource) {
+            /* Avoid bugs when hasOwnProperty is shadowed */
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+              to[nextKey] = nextSource[nextKey];
+            }
+          }
+        }
+      }
+      return to;
+    },
+    writable: true,
+    configurable: true,
+  });
+}
+
+/**
+ * Array.find() polyfill.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find#Polyfill
+ */
+if (!Array.prototype.find) {
+  Object.defineProperty(Array.prototype, 'find', {
+    value: function(predicate) {
+      // 1. Let O be ? ToObject(this value).
+      if (this == null) {
+        throw TypeError('"this" is null or not defined');
+      }
+
+      var o = Object(this);
+
+      // 2. Let len be ? ToLength(? Get(O, "length")).
+      var len = o.length >>> 0;
+
+      // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+      if (typeof predicate !== 'function') {
+        throw TypeError('predicate must be a function');
+      }
+
+      // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+      var thisArg = arguments[1];
+
+      // 5. Let k be 0.
+      var k = 0;
+
+      // 6. Repeat, while k < len
+      while (k < len) {
+        /*
+         * a. Let Pk be ! ToString(k).
+         * b. Let kValue be ? Get(O, Pk).
+         * c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+         * d. If testResult is true, return kValue.
+         */
+        var kValue = o[k];
+        if (predicate.call(thisArg, kValue, k, o)) {
+          return kValue;
+        }
+        // e. Increase k by 1.
+        k++;
+      }
+
+      // 7. Return undefined.
+      return undefined;
+    },
+    configurable: true,
+    writable: true,
+  });
+}
+
+/**
+ * Object.values() polyfill.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values#Polyfill
+ */
+if (!Object.values) {
+  Object.values = function(obj) {
+    var values = [];
+
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        values.push(obj[i]);
+      }
+    }
+
+    return values;
+  };
+}
+
+/* eslint-disable-next-line max-lines-per-function */
+jQuery(function($) {
   /**
    * @type {Boolean}
    */
   var askForPrintPosition = Boolean(parseInt(wcmp.ask_for_print_position));
+
+  var skeletonHtml
+    = '<table class="wcmp__skeleton-loader">'
+    + '<tr><td><div></div></td><td><div></div></td></tr>'.repeat(5)
+    + '</table>';
 
   var selectors = {
     bulkSpinner: '.wcmp__bulk-spinner',
@@ -52,6 +164,7 @@ jQuery(function($) {
     shipmentSummaryList: '.wcmp__shipment-summary__list',
     showShipmentSummaryList: '.wcmp__shipment-summary__show',
     spinner: '.wcmp__spinner',
+    toggle: '.wcmp__toggle',
   };
 
   var spinner = {
@@ -105,6 +218,8 @@ jQuery(function($) {
     $(selectors.orderAction).click(onActionClick);
 
     $(window).bind('tb_unload', onThickBoxUnload);
+
+    addToggleListeners();
   }
 
   /**
@@ -131,35 +246,88 @@ jQuery(function($) {
 
   /**
    * Add dependencies for form elements with conditions.
+   *
+   * @param {String} name
    */
-  function addDependencies() {
+  function addDependencies(name) {
     /**
-     * Get all nodes with a data-parent attribute.
+     * Get all nodes with a data-conditions attribute.
      */
-    var nodesWithParent = document.querySelectorAll('[data-parent]');
+    var nodesWithConditions = document.querySelectorAll('[data-conditions]');
 
     /**
      * Dependency object.
      *
-     * @type {Object.<String, Node[]>}
+     * @type {Object.<String, Dependency[]>}
      */
     var dependencies = {};
 
     /**
-     * Loop through the classes to create a dependency like this: { [parent]: node[] }.
+     * Loop through the classes to create a dependency like this: { [parent]: [{condition: Condition, node: Node}] }.
      */
-    nodesWithParent.forEach(function(node) {
-      var parent = node.getAttribute('data-parent');
+    nodesWithConditions.forEach(function(node) {
+      var conditions = node.getAttribute('data-conditions');
+      conditions = JSON.parse(conditions);
 
-      if (dependencies.hasOwnProperty(parent)) {
-        dependencies[parent].push(node);
-      } else {
-        // Or create the list with the node inside it
-        dependencies[parent] = [node];
-      }
+      conditions
+        .forEach(
+
+          /**
+           * @param {Condition} condition
+           */
+          function(condition) {
+            /**
+             * @type {Dependency}
+             */
+            var data = {
+              name: node.getAttribute('name'),
+              condition: condition,
+              node: node,
+            };
+
+            if (dependencies.hasOwnProperty(condition.parent_name)) {
+              dependencies[condition.parent_name].push(data);
+            } else {
+              // Or create the list with the node inside it
+              dependencies[condition.parent_name] = [data];
+            }
+          }
+        );
     });
 
     createDependencies(dependencies);
+  }
+
+  /**
+   * @param {Object<String, Dependency[]>} dependencies
+   * @param {HTMLInputElement|Node} input
+   * @param {Number} easing
+   * @param level
+   */
+  function recursiveDep(dependencies, input, easing, level) {
+    level = level || 1;
+
+    if (level >= 20) {
+      throw new Error('Depth limit of ' + level + ' exceeded (probably an infinite loop)');
+    }
+
+    if (!dependencies.hasOwnProperty(input.name)) {
+      return;
+    }
+
+    dependencies[input.name]
+      .forEach(function(dependency) {
+        var banner = ' => '.repeat(level);
+
+        var dependantName = dependency.name;
+        handleDependency(input, dependency, easing);
+
+        if (dependencies.hasOwnProperty(dependantName)) {
+          var dependantInput = document.querySelector('[name="' + dependantName + '"]');
+
+          recursiveDep(dependencies, dependantInput, easing, level + 1);
+        }
+      });
   }
 
   /**
@@ -174,110 +342,124 @@ jQuery(function($) {
   }
 
   /**
-   * Handle showing and hiding of settings.
-   *
-   * @param {Object<String, Node[]>} deps - Dependency names and all the nodes that depend on them.
+   * @param {EventTarget} target
    */
-  function createDependencies(deps) {
-    Object.keys(deps).forEach(function(relatedInputId) {
-      var relatedInput = document.querySelector('[name="' + relatedInputId + '"]');
+  function syncToggle(target) {
+    var element = $(target);
+    var toggle = element.siblings('.woocommerce-input-toggle');
 
-      /**
-       * Loop through all the deps.
-       *
-       * @param {Event|null} event - Event.
-       * @param {Number} easing - Amount of easing.
-       */
-      function handle(event, easing) {
-        if (easing === undefined) {
-          easing = baseEasing;
-        }
+    if (element.attr('data-type') !== 'toggle') {
+      return;
+    }
 
-        /**
-         * @type {Element} dependant
-         */
-        deps[relatedInputId].forEach(function(dependant) {
-          handleDependency(relatedInput, dependant, null, easing);
+    var mismatch0 = element.val() === '0' && toggle.hasClass('woocommerce-input-toggle--enabled');
+    var mismatch1 = element.val() === '1' && toggle.hasClass('woocommerce-input-toggle--disabled');
 
-          if (relatedInput.hasAttribute('data-parent')) {
-            var otherRelatedInput = document.querySelector('[name="' + relatedInput.getAttribute('data-parent') + '"]');
-
-            handleDependency(otherRelatedInput, relatedInput, dependant, easing);
-
-            otherRelatedInput.addEventListener('change', function() {
-              return handleDependency(otherRelatedInput, relatedInput, dependant, easing);
-            });
-          }
-        });
-      }
-
-      relatedInput.addEventListener('change', handle);
-
-      // Do this on load too.
-      handle(null, 0);
-    });
+    if (mismatch0 || mismatch1) {
+      toggle.toggleClass('woocommerce-input-toggle--disabled');
+      toggle.toggleClass('woocommerce-input-toggle--enabled');
+    }
   }
 
   /**
-   * @param {Element|Node} relatedInput - Parent of element.
-   * @param {Element|Node} element - Element that will be handled.
-   * @param {Element|Node|null} element2 - Optional extra dependency of element.
+   * Handle showing and hiding of settings.
+   *
+   * @param {Object<String, Dependency[]>} dependencies - Dependency names and all the nodes that depend on them.
+   */
+  function createDependencies(dependencies) {
+    Object
+      .keys(dependencies)
+      .forEach(function(name) {
+        var input = document.querySelector('[name="' + name + '"]');
+
+        /**
+         * Loop through all the dependencies.
+         *
+         * @param {Event|null} event - Event.
+         * @param {Number} easing - Amount of easing.
+         */
+        function handle(event, easing) {
+          if (easing === undefined) {
+            easing = baseEasing;
+          }
+
+          if (event) {
+            syncToggle(event.target);
+          }
+
+          recursiveDep(dependencies, input, easing);
+        }
+
+        input.addEventListener('change', handle);
+
+        // Do this on load too.
+        handle(null, 0);
+      });
+  }
+
+  /**
+   * @param {Element|HTMLInputElement} relatedInput - Parent of element.
+   * @param {Dependency} dependant
+   *
    * @param {Number} easing - Amount of easing on the transitions.
    */
-  function handleDependency(relatedInput, element, element2, easing) {
-    var dataParentValue = element.getAttribute('data-parent-value');
-
-    var type = element.getAttribute('data-parent-type');
-    var wantedValue = dataParentValue || '1';
-    var setValue = element.getAttribute('data-parent-set') || null;
-    var value = relatedInput.value;
-
-    var elementContainer = $(element).closest('tr');
-    var elementCheckoutStringsTitleContainer = $('#checkout_strings');
+  function handleDependency(relatedInput, dependant, easing) {
+    var parentValue = dependant.condition.parent_value;
+    var setValue = dependant.condition.set_value || null;
+    var wantedValue = parentValue || '1';
+    var elementContainer = $(dependant.node).closest('tr');
 
     /**
+     * To make the item disabled/disappear/readonly or any other option in the switch statement.
+     *
      * @type {Boolean}
      */
-    var matches;
+    var toggle;
 
-    /*
-     * If the data-parent-value contains any semicolons it's an array, check it as an array instead.
-     */
-    if (dataParentValue && dataParentValue.indexOf(';') > -1) {
-      matches = dataParentValue
-        .split(';')
-        .indexOf(value) > -1;
+    var parentToggled = relatedInput.getAttribute('data-toggled') === 'true';
+    var dependantToggled = dependant.node.getAttribute('data-toggled') === 'true';
+
+    console.log(parentToggled, dependantToggled);
+    if (parentToggled && !dependantToggled) {
+      toggle = true;
+    } else if (typeof wantedValue === 'string') {
+      console.log(relatedInput.value, wantedValue);
+      toggle = relatedInput.value !== wantedValue;
     } else {
-      matches = value === wantedValue;
+      toggle = parentValue.indexOf(relatedInput.value) === -1;
     }
 
-    switch (type) {
+    switch (dependant.condition.type) {
       case 'child':
-        elementContainer[matches ? 'show' : 'hide'](easing);
-        break;
       case 'show':
-        elementContainer[matches ? 'show' : 'hide'](easing);
-        elementCheckoutStringsTitleContainer[matches ? 'show' : 'hide'](easing);
+        elementContainer[toggle ? 'hide' : 'show'](easing);
+        break;
+      case 'readonly':
+        $(elementContainer).attr('data-readonly', toggle);
+        $(dependant.node).prop('readonly', toggle);
         break;
       case 'disable':
-        $(element).prop('disabled', !matches);
-        if (!matches && setValue) {
-          element.value = setValue;
-        }
+        $(elementContainer).attr('data-disabled', toggle);
+        $(dependant.node).prop('disabled', toggle);
         break;
     }
 
-    relatedInput.setAttribute('data-enabled', matches.toString());
-    element.setAttribute('data-enabled', matches.toString());
-
-    if (element2) {
-      var showOrHide = element2.getAttribute('data-enabled') === 'true'
-        && element.getAttribute('data-enabled') === 'true';
-
-      $(element2).closest('tr')
-        [showOrHide ? 'show' : 'hide'](easing);
-      relatedInput.setAttribute('data-enabled', showOrHide.toString());
+    if (toggle && setValue) {
+      dependant.node.value = setValue;
+      dependant.node.dispatchEvent(new Event('change'));
     }
+
+    relatedInput.setAttribute('data-toggled', toggle.toString());
+    dependant.node.setAttribute('data-toggled', toggle.toString());
+  }
+
+  /**
+   * Add event listeners to all toggle elements.
+   */
+  function addToggleListeners() {
+    $(selectors.toggle).each(function() {
+      $(this).on('click', handleToggle);
+    });
   }
 
   /**
@@ -322,6 +504,10 @@ jQuery(function($) {
         orderId: orderId,
         security: wcmp.nonce,
       },
+      onStart: function() {
+        form.html(skeletonHtml);
+        form.slideDown(100);
+      },
 
       /**
        * Show the correct data in the form and add event listeners for handling saving and clicking outside the form.
@@ -330,9 +516,11 @@ jQuery(function($) {
        */
       afterDone: function(response) {
         form.html(response);
+
+        addDependencies();
+        addToggleListeners();
         $(selectors.shipmentOptionsSaveButton).on('click', saveShipmentOptions);
         document.addEventListener('click', hideShipmentOptionsForm);
-        form.slideDown(100);
       },
       afterFail: function() {
         form.slideUp(100);
@@ -340,6 +528,10 @@ jQuery(function($) {
     });
   }
 
+  /**
+   * @param {Node} element
+   * @param {String} state
+   */
   function setSpinner(element, state) {
     var baseSelector = selectors.spinner.replace('.', '');
     var spinner = $(element).find(selectors.spinner);
@@ -419,6 +611,7 @@ jQuery(function($) {
     }
 
     switch (action) {
+
       /**
        * Export orders.
        */
@@ -459,6 +652,10 @@ jQuery(function($) {
       request.url = wcmp.ajax_url;
     }
 
+    if (request.hasOwnProperty('onStart') && typeof request.onStart === 'function') {
+      request.onStart();
+    }
+
     $.ajax({
       url: request.url,
       method: request.method || 'POST',
@@ -489,6 +686,10 @@ jQuery(function($) {
       });
   }
 
+  /**
+   * @param name
+   * @param url
+   */
   function getParameterByName(name, url) {
     if (!url) {
       url = window.location.href;
@@ -634,6 +835,9 @@ jQuery(function($) {
     showOffsetDialog.bind(this)('right', 'bulk');
   }
 
+  /**
+   *
+   */
   function printOrder() {
     var dialog = $(this).parent();
 
@@ -652,6 +856,10 @@ jQuery(function($) {
   }
 
   /* export orders to MyParcel via AJAX */
+  /**
+   * @param order_ids
+   * @param print
+   */
   function exportToMyParcel(order_ids, print) {
     var url;
     var data;
@@ -701,6 +909,10 @@ jQuery(function($) {
     });
   }
 
+  /**
+   * @param order_ids
+   * @param dialog
+   */
   function myparcel_modal_dialog(order_ids, dialog) {
     var data = {
       action: wcmp.actions.export,
@@ -763,6 +975,9 @@ jQuery(function($) {
   }
 
   /* Request MyParcel labels */
+  /**
+   * @param data
+   */
   function printLabel(data) {
     var button = this;
     var request;
@@ -802,9 +1017,12 @@ jQuery(function($) {
     doRequest.bind(button)(request);
   }
 
+  /**
+   * @param request
+   */
   function handlePDF(request) {
     var url;
-    
+
     if (request.hasOwnProperty('data')) {
       url = wcmp.ajax_url + '?' + $.param(request.data);
     } else {
@@ -814,6 +1032,10 @@ jQuery(function($) {
     openPdf(url, true);
   }
 
+  /**
+   * @param message
+   * @param type
+   */
   function myparcel_admin_notice(message, type) {
     var mainHeader = $('#wpbody-content > .wrap > h1:first');
     var notice = '<div class="' + selectors.notice + ' notice notice-' + type + '"><p>' + message + '</p></div>';
@@ -824,6 +1046,11 @@ jQuery(function($) {
   /* Add / Update a key-value pair in the URL query parameters */
 
   /* https://gist.github.com/niyazpk/f8ac616f181f6042d1e0 */
+  /**
+   * @param uri
+   * @param key
+   * @param value
+   */
   function updateUrlParameter(uri, key, value) {
     /* remove the hash part before operating on the uri */
     var i = uri.indexOf('#');
@@ -840,6 +1067,9 @@ jQuery(function($) {
     return uri + hash; /* finally append the hash as well */
   }
 
+  /**
+   *
+   */
   function showShipmentSummaryList() {
     var summaryList = $(this).next(selectors.shipmentSummaryList);
 
@@ -924,36 +1154,29 @@ jQuery(function($) {
       document.removeEventListener('click', listener);
     }
   }
+
+  /**
+   * On clicking a toggle. Doesn't do anything if the parent row has data-readonly or data-disabled set to true.
+   */
+  function handleToggle() {
+    var disabledClass = 'woocommerce-input-toggle--disabled';
+    var enabledClass = 'woocommerce-input-toggle--enabled';
+    var row = $(this).closest('tr');
+    var input = $(this).find('input')[0];
+    var toggle = $(this).find('.woocommerce-input-toggle');
+
+    var rowReadOnly = row.attr('data-readonly') === 'true';
+    var rowDisabled = row.attr('data-disabled') === 'true';
+
+    if (rowReadOnly || rowDisabled) {
+      return;
+    }
+
+    input.value = toggle.hasClass(disabledClass) ? '1' : '0';
+    toggle.toggleClass(disabledClass);
+    toggle.toggleClass(enabledClass);
+
+    // To trigger event listeners
+    input.dispatchEvent(new Event('change'));
+  }
 });
-
-/**
- * Object.assign() polyfill.
- */
-if (typeof Object.assign !== 'function') {
-  /* Must be writable: true, enumerable: false, configurable: true */
-  Object.defineProperty(Object, 'assign', {
-    value: function assign(target) {
-      if (target === null || target === undefined) {
-        throw new TypeError('Cannot convert undefined or null to object');
-      }
-
-      var to = Object(target);
-
-      for (var index = 1; index < arguments.length; index++) {
-        var nextSource = arguments[index];
-
-        if (nextSource !== null && nextSource !== undefined) {
-          for (var nextKey in nextSource) {
-            /* Avoid bugs when hasOwnProperty is shadowed */
-            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-              to[nextKey] = nextSource[nextKey];
-            }
-          }
-        }
-      }
-      return to;
-    },
-    writable: true,
-    configurable: true,
-  });
-}
