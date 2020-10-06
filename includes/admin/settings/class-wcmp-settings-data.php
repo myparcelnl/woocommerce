@@ -904,7 +904,7 @@ class WCMP_Settings_Data
                 "label"     => __("Enable delivery options for backorders", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
-                    "When this option is enabled, delivery options and delivery day will be also shown for backorders.",
+                    "When this option is enabled, delivery options and delivery day will be also shown for backorders   .",
                     "woocommerce-myparcel"
                 ),
             ],
