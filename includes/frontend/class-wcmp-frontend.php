@@ -48,23 +48,21 @@ class WCMP_Frontend
     }
 
     /**
-     * @param      $order
-     * @param bool $sent_to_admin
-     * @param bool $plain_text
+     * @param \WC_Order $order
      *
-     * @throws Exception
+     * @throws \Exception
      */
-    public function email_pickup_html($order, $sent_to_admin = false, $plain_text = false)
+    public function email_pickup_html(WC_Order $order): void
     {
         WCMYPA()->admin->showDeliveryOptionsForOrder($order);
     }
 
     /**
-     * @param $order_id
+     * @param int $order_id
      *
      * @throws Exception
      */
-    public function thankyou_pickup_html(int $order_id)
+    public function thankyou_pickup_html(int $order_id): void
     {
         $order = wc_get_order($order_id);
         WCMYPA()->admin->showDeliveryOptionsForOrder($order);

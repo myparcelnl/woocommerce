@@ -90,18 +90,18 @@ class WCMP_Export
      * Get the value of a shipment option. Check if it was set manually, through the delivery options for example,
      *  if not get the value of the default export setting for given settingName.
      *
-     * @param bool|null $option Condition to check.
-     * @param string    $settingName Name of the setting to fall back to.
+     * @param mixed  $option      Chosen value.
+     * @param string $settingName Name of the setting to fall back to if there is no chosen value.
      *
      * @return mixed
      */
     public static function getChosenOrDefaultShipmentOption($option, string $settingName)
     {
-        if ($valueFromSetting = WCMYPA()->setting_collection->getByName($settingName)) {
-            return $valueFromSetting;
+        if (isset($option)) {
+            return $option;
         }
 
-        return $option;
+        return WCMYPA()->setting_collection->getByName($settingName);
     }
 
     /**
