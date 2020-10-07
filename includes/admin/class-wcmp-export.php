@@ -247,7 +247,7 @@ class WCMP_Export
         $shipment_ids      = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
         $returnShipmentIds = [];
 
-        $returnInTheBox = WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_RETURN_IN_THE_BOX);
+        $returnInTheBox = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_RETURN_IN_THE_BOX);
 
         if (WCMP_Settings_Data::NO_OPTIONS === $returnInTheBox || WCMP_Settings_Data::EQUAL_TO_SHIPMENT === $returnInTheBox) {
             $returnShipmentIds = $this->sanitize_posted_array($_REQUEST["return_shipment_id"] ?? []);
@@ -351,7 +351,7 @@ class WCMP_Export
         $return                   = [];
         $orderIdsWithNewShipments = [];
         $collection               = new MyParcelCollection();
-        $processDirectly          = WCMYPA()->setting_collection->isEnabled(WCMP_Settings::SETTING_PROCESS_DIRECTLY) || $process === true;
+        $processDirectly          = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_PROCESS_DIRECTLY) || $process === true;
 
         WCMP_Log::add("*** Creating shipments started ***");
 
@@ -381,7 +381,7 @@ class WCMP_Export
 
             WCX_Order::update_meta_data(
                 $order,
-                WCMP_Admin::META_RETURN_SHIPMENT_IDS,
+                WCMYPA_Admin::META_RETURN_SHIPMENT_IDS,
                 (string) $this->myParcelCollection->getConsignmentIds()[1]
             );
         }
@@ -542,7 +542,7 @@ class WCMP_Export
         if (empty($returnShipmentIds)) {
             foreach ($order_ids as $orderId) {
                 $order               = WCX::get_order($orderId);
-                $returnShipmentIds[] = $order->get_meta(WCMP_Admin::META_RETURN_SHIPMENT_IDS);
+                $returnShipmentIds[] = $order->get_meta(WCMYPA_Admin::META_RETURN_SHIPMENT_IDS);
             }
         }
 

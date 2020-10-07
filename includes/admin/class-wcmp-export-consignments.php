@@ -312,7 +312,7 @@ class WCMP_Export_Consignments
     {
         foreach ($this->order->get_items() as $item) {
             $product         = $item->get_product();
-            $productAgeCheck = WCX_Product::get_meta($product, WCMP_Admin::META_AGE_CHECK, true);
+            $productAgeCheck = WCX_Product::get_meta($product, WCMYPA_Admin::META_AGE_CHECK, true);
 
             if ($productAgeCheck) {
                 return true;
@@ -543,6 +543,11 @@ class WCMP_Export_Consignments
     private function setPhysicalProperties(): void
     {
         $extraOptions       = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+
+        if (!$extraOptions){
+            return;
+        }
+
         $digitalStampWeight = $extraOptions['weight'];
         $orderWeight        = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
 
