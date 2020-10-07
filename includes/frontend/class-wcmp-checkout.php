@@ -450,7 +450,7 @@ class WCMP_Checkout
     {
         // $backorderDeliveryOptions causes the options to be displayed also when product is in backorder
         $backorderDeliveryOptions = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_BACKORDERS);
-        $show       = true;
+        $show                     = true;
 
         if ($backorderDeliveryOptions) {
             return $show;
