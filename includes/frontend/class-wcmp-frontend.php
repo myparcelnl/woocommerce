@@ -29,12 +29,9 @@ class WCMP_Frontend
         // pickup address on thank you page
         add_action("woocommerce_thankyou", [$this, "thankyou_pickup_html"], 10, 1);
 
-        add_filter(
-            "wpo_wcpdf_templates_replace_myparcel_delivery_options",
-            [$this, "wpo_wcpdf_delivery_options"],
-            10,
-            2
-        );
+        // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
+        add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_options", [$this, "wpo_wcpdf_delivery_options"], 10, 2);
+        add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_date", [$this, "wpo_wcpdf_delivery_date"], 10, 2);
 
         // Initialize delivery options fees
         new WCMP_Cart_Fees();
@@ -82,6 +79,23 @@ class WCMP_Frontend
         ob_start();
         WCMYPA()->admin->showDeliveryOptionsForOrder($order);
         return ob_get_clean();
+    }
+
+    /**
+     * @param $replacement
+     * @param $order
+     *
+     * @return false|string
+     * @throws Exception
+     */
+    public function wpo_wcpdf_delivery_date($replacement, WC_Order $order)
+    {
+        $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
+        if ( $deliveryDate = $deliveryOptions->getDate() ) {
+            return wc_format_datetime(new WC_DateTime($deliveryDate), 'l d-m');
+        }
+
+        return $replacement;
     }
 
     /**
