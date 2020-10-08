@@ -1143,14 +1143,14 @@ class WCMP_Export
     }
 
     /**
+     *
      * @param $item
-     * @param $order
      *
      * @return float
      */
-    public static function getItemWeight_kg($item, WC_Order $order): float
+    public static function getItemWeight_kg($item): float
     {
-        $product = $order->get_product_from_item($item);
+        $product = wc_get_product($item['product_id']);
 
         if (empty($product)) {
             return 0;

@@ -165,7 +165,7 @@ class WCMP_Export_Consignments
                 $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
 
                 // Weight (total item weight in grams)
-                $weight      = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
+                $weight      = (int) round(WCMP_Export::getItemWeight_kg($item) * 1000);
                 $totalWeight = $this->getTotalWeight($weight);
 
                 $myParcelItem = (new MyParcelCustomsItem())
