@@ -1179,6 +1179,32 @@ class WCMP_Export
     }
 
     /**
+     * @param $weight
+     *
+     * @return float
+     */
+    public function getItemWeight_gram($weight): float
+    {
+        $weight_unit = get_option("woocommerce_weight_unit");
+        switch ($weight_unit) {
+            case "kg":
+                $grams = $weight * 1000;
+                break;
+            case "lbs":
+                $grams = $weight / 0.45359237;
+                break;
+            case "oz":
+                $grams = $weight / 0.0283495231;
+                break;
+            default:
+                $grams = $weight;
+                break;
+        }
+        
+        return (float) $grams;
+    }
+
+    /**
      * @return array
      */
     public static function getDigitalStampRangeOptions(): array
