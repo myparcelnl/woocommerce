@@ -429,7 +429,7 @@ jQuery(function($) {
       }
 
       list.forEach(function(method) {
-        var currentMethodIsAllowed = method.indexOf(shippingMethod) > -1;
+        var currentMethodIsAllowed = shippingMethod.indexOf(method) > -1;
 
         if (currentMethodIsAllowed) {
           display = true;
