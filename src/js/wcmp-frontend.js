@@ -419,6 +419,10 @@ jQuery(($) => {
         return false;
       }
 
+      if (shippingMethod.indexOf('free_shipping') === 0) {
+        shippingMethod = 'free_shipping';
+      }
+
       /**
        * If "all" is selected for allowed shipping methods check if the current method is NOT in the
        *  disallowedShippingMethods array.
