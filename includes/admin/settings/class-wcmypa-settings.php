@@ -58,20 +58,21 @@ class WCMYPA_Settings
     /**
      * Checkout
      */
-    public const SETTING_DELIVERY_OPTIONS_CUSTOM_CSS   = "delivery_options_custom_css";
-    public const SETTING_DELIVERY_OPTIONS_DISPLAY      = "delivery_options_display";
-    public const SETTING_DELIVERY_OPTIONS_ENABLED      = "delivery_options_enabled";
-    public const SETTING_DELIVERY_OPTIONS_POSITION     = "delivery_options_position";
-    public const SETTING_SHOW_DELIVERY_DAY             = "show_delivery_day";
-    public const SETTING_DELIVERY_TITLE                = "at_home_delivery";
-    public const SETTING_HEADER_DELIVERY_OPTIONS_TITLE = "header_delivery_options_title";
-    public const SETTING_PICKUP_TITLE                  = "pickup_title";
-    public const SETTING_MORNING_DELIVERY_TITLE        = "morning_title";
-    public const SETTING_EVENING_DELIVERY_TITLE        = "evening_title";
-    public const SETTING_ONLY_RECIPIENT_TITLE          = "only_recipient_title";
-    public const SETTING_SIGNATURE_TITLE               = "signature_title";
-    public const SETTING_STANDARD_TITLE                = "standard_title";
-    public const SETTING_USE_SPLIT_ADDRESS_FIELDS      = "use_split_address_fields";
+    public const SETTING_DELIVERY_OPTIONS_CUSTOM_CSS           = "delivery_options_custom_css";
+    public const SETTING_DELIVERY_OPTIONS_DISPLAY              = "delivery_options_display";
+    public const SETTING_DELIVERY_OPTIONS_ENABLED              = "delivery_options_enabled";
+    public const SETTING_DELIVERY_OPTIONS_POSITION             = "delivery_options_position";
+    public const SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS = "delivery_options_enabled_for_backorders";
+    public const SETTING_SHOW_DELIVERY_DAY                     = "show_delivery_day";
+    public const SETTING_DELIVERY_TITLE                        = "at_home_delivery";
+    public const SETTING_HEADER_DELIVERY_OPTIONS_TITLE         = "header_delivery_options_title";
+    public const SETTING_PICKUP_TITLE                          = "pickup_title";
+    public const SETTING_MORNING_DELIVERY_TITLE                = "morning_title";
+    public const SETTING_EVENING_DELIVERY_TITLE                = "evening_title";
+    public const SETTING_ONLY_RECIPIENT_TITLE                  = "only_recipient_title";
+    public const SETTING_SIGNATURE_TITLE                       = "signature_title";
+    public const SETTING_STANDARD_TITLE                        = "standard_title";
+    public const SETTING_USE_SPLIT_ADDRESS_FIELDS              = "use_split_address_fields";
 
     /*
      * Carrier settings, these will be prefixed with carrier names.

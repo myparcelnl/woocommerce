@@ -71,6 +71,13 @@ class WCMP_Checkout
             array_push($deps, "wcmp-checkout-fields");
         }
 
+        /*
+         * Show delivery options also for shipments on backorder
+         */
+        if (! $this->shouldShowDeliveryOptions()) {
+            return;
+        }
+
         wp_enqueue_script(
             "wc-myparcel",
             WCMYPA()->plugin_url() . "/assets/js/myparcel.js",
@@ -433,6 +440,36 @@ class WCMP_Checkout
         }
 
         return $split;
+    }
+
+    /**
+     * Show delivery options also for shipments on backorder
+     * @return bool
+     */
+    private function shouldShowDeliveryOptions(): bool
+    {
+        // $backorderDeliveryOptions causes the options to be displayed also when product is in backorder
+        $backorderDeliveryOptions = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS);
+        $show                     = true;
+
+        if ($backorderDeliveryOptions) {
+            return $show;
+        }
+
+        foreach (WC()->cart->get_cart() as $cartItem) {
+            /**
+             * @var WC_Product $product
+             */
+            $product       = $cartItem['data'];
+            $isOnBackorder = $product->is_on_backorder($cartItem['quantity']);
+
+            if ($isOnBackorder) {
+                $show = false;
+                break;
+            }
+        }
+
+        return $show;
     }
 }
 
