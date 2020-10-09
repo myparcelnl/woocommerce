@@ -542,8 +542,7 @@ class WCMP_Export_Consignments
     private function setPhysicalProperties(): void
     {
         $extraOptions = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
-        $packageType  = $this->deliveryOptions->getPackageType();
-        // get packagetype
+        $packageType  = $this->getPackageType();
 
         if (! $extraOptions) {
             return;
