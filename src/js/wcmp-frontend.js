@@ -413,7 +413,7 @@ jQuery(($) => {
       let display = false;
       let invert = false;
       let list = MyParcelFrontend.allowedShippingMethods;
-      const shippingMethod = MyParcelFrontend.getSelectedShippingMethod();
+      let shippingMethod = MyParcelFrontend.getSelectedShippingMethod();
 
       if (!shippingMethod) {
         return false;
@@ -433,7 +433,7 @@ jQuery(($) => {
       }
 
       list.forEach((method) => {
-        const currentMethodIsAllowed = method.includes(shippingMethod);
+        const currentMethodIsAllowed = shippingMethod.indexOf(method) > -1;
 
         if (currentMethodIsAllowed) {
           display = true;
