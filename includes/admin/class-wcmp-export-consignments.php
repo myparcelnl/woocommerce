@@ -163,7 +163,6 @@ class WCMP_Export_Consignments
                 }
                 // Amount
                 $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
-
                 // Weight (total item weight in grams)
                 $weight      = (int) round(WCMP_Export::getItemWeight_kg($item) * 1000);
 
