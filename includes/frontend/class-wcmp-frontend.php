@@ -68,10 +68,10 @@ class WCMP_Frontend
     }
 
     /**
-     * @param $replacement
-     * @param $order
+     * @param string   $replacement
+     * @param WC_Order $order
      *
-     * @return false|string
+     * @return string
      * @throws Exception
      */
     public function wpo_wcpdf_delivery_options($replacement, WC_Order $order)
@@ -82,16 +82,17 @@ class WCMP_Frontend
     }
 
     /**
-     * @param $replacement
-     * @param $order
+     * @param string   $replacement
+     * @param WC_Order $order
      *
-     * @return false|string
+     * @return string
      * @throws Exception
      */
     public function wpo_wcpdf_delivery_date($replacement, WC_Order $order)
     {
         $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
-        if ( $deliveryDate = $deliveryOptions->getDate() ) {
+        $deliveryDate = $deliveryOptions->getDate()
+        if ($deliveryDate) {
             return wc_format_datetime(new WC_DateTime($deliveryDate), 'l d-m');
         }
 
