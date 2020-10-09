@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-06 14:33+0000\n"
+"POT-Creation-Date: 2020-10-09 08:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -1407,7 +1407,7 @@ msgstr ""
 #: includes/admin/settings/class-wcmp-settings-data.php:906
 msgid ""
 "When this option is enabled, delivery options and delivery day will be also "
-"shown for backorders   ."
+"shown for backorders."
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:916
