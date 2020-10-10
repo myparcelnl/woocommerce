@@ -16,19 +16,11 @@ class WCMP_WCPDF_Compatibility
     public static function add_filters()
     {
         // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
-        add_filter(
-            "wpo_wcpdf_templates_replace_myparcel_tracktrace",
-            [__CLASS__, "track_trace"],
-            10,
-            2
-        );
+        add_filter("wpo_wcpdf_templates_replace_myparcel_tracktrace", [__CLASS__, "track_trace"], 10, 2);
+        add_filter("wpo_wcpdf_templates_replace_myparcel_track_trace", [__CLASS__, "track_trace"], 10, 2);
 
-        add_filter(
-            "wpo_wcpdf_templates_replace_myparcel_tracktrace_link",
-            [__CLASS__, "track_trace_link"],
-            10,
-            2
-        );
+        add_filter("wpo_wcpdf_templates_replace_myparcel_tracktrace_link", [__CLASS__, "track_trace_link"], 10, 2);
+        add_filter("wpo_wcpdf_templates_replace_myparcel_track_trace_link", [__CLASS__, "track_trace_link"], 10, 2);
     }
 
     /**
