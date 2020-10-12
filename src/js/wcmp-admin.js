@@ -419,14 +419,12 @@ jQuery(function($) {
     var parentToggled = relatedInput.getAttribute('data-toggled') === 'true';
     var dependantToggled = dependant.node.getAttribute('data-toggled') === 'true';
 
-    console.log(parentToggled, dependantToggled);
     if (parentToggled && !dependantToggled) {
       toggle = true;
     } else if (typeof wantedValue === 'string') {
-      console.log(relatedInput.value, wantedValue);
       toggle = relatedInput.value !== wantedValue;
     } else {
-      toggle = parentValue.indexOf(relatedInput.value) === -1;
+      toggle = parentValue.indexOf(relatedInput.value) > -1;
     }
 
     switch (dependant.condition.type) {
