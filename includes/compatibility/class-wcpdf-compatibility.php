@@ -37,11 +37,10 @@ class WCMP_WCPDF_Compatibility
         $track_trace = [];
 
         foreach ($shipments as $shipment) {
-            if (! empty($shipment['link'])) {
-                $track_trace[] = $shipment['link'];
+            if (! empty($shipment['track_trace'])) {
+                $track_trace[] = $shipment['track_trace'];
             }
         }
-
         return implode(', ', $track_trace);
     }
 
@@ -54,7 +53,7 @@ class WCMP_WCPDF_Compatibility
      */
     public function track_trace_link($replacement, $order)
     {
-        $track_trace_links = WCMP_Frontend::getTrackTraceShipments(WCX_Order::get_id($order));
+        $track_trace_links = WCMP_Frontend::getTrackTraceLinks(WCX_Order::get_id($order));
 
         $track_trace_links = array_map(
             function ($link) {
