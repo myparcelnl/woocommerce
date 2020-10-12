@@ -1141,16 +1141,40 @@ class WCMP_Export
 
         return $data;
     }
-
     /**
-     * @param $item
-     * @param $order
+     * @param int $weight
      *
      * @return float
      */
-    public static function getItemWeight_kg($item, WC_Order $order): float
+    public function getItemWeightInGram(int $weight): float
     {
-        $product = $order->get_product_from_item($item);
+        $weightUnit = get_option("woocommerce_weight_unit");
+        switch ($weightUnit) {
+            default:
+                $grams = $weight;
+                break;
+            case "kg":
+                $grams = $weight * 1000;
+                break;
+            case "lbs":
+                $grams = $weight / 0.45359237;
+                break;
+            case "oz":
+                $grams = $weight / 0.0283495231;
+                break;
+        }
+
+        return (float) $grams;
+    }
+
+    /**
+     * @param int $item
+     *
+     * @return float
+     */
+    public static function getItemWeight_kg(int $item): float
+    {
+        $product = wc_get_product($item['product_id']);
 
         if (empty($product)) {
             return 0;
