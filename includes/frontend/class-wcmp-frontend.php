@@ -91,7 +91,7 @@ class WCMP_Frontend
     public function wpo_wcpdf_delivery_date($replacement, WC_Order $order)
     {
         $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
-        $deliveryDate = $deliveryOptions->getDate()
+        $deliveryDate = $deliveryOptions->getDate();
         if ($deliveryDate) {
             return wc_format_datetime(new WC_DateTime($deliveryDate), 'l d-m');
         }
