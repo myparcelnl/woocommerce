@@ -875,13 +875,6 @@ class WCMYPA_Admin
      */
     private function printDeliveryDate(DeliveryOptions $delivery_options): void
     {
-        $string = $delivery_options->isPickup()
-            ? __("Pickup")
-            : __("Standard delivery",
-                "woocommerce-myparcel",
-                "woocommerce-myparcel"
-            );
-
         // If show delivery day is enabled
         $showDeliveryDay = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY);
 
@@ -889,7 +882,7 @@ class WCMYPA_Admin
             printf(
                 '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
                 __("MyParcel shipment:", "woocommerce-myparcel"),
-                $string,
+                WCMP_Data::getDeliveryTypesHuman()[$delivery_options->getDeliveryType()],
                 wc_format_datetime(new WC_DateTime($delivery_options->getDate()), 'l d-m')
             );
         }
