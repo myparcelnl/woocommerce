@@ -1168,11 +1168,11 @@ class WCMP_Export
     }
 
     /**
-     * @param int $item
+     * @param object $item
      *
      * @return float
      */
-    public static function getItemWeight_kg(int $item): float
+    public static function getItemWeight_kg($item): float
     {
         $product = wc_get_product($item['product_id']);
 
