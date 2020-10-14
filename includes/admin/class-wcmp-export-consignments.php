@@ -552,7 +552,7 @@ class WCMP_Export_Consignments
         $totalWeight = $this->getTotalWeight($orderWeight);
 
         if ($packageType === AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP) {
-            $totalWeight = $extraOptions['weight'];
+            $totalWeight = $extraOptions['weight'] + (int) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
         }
 
         $this->consignment->setPhysicalProperties(
