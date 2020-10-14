@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-09 08:38+0000\n"
-"PO-Revision-Date: 2020-10-09 08:38+0000\n"
+"POT-Creation-Date: 2020-10-14 10:49+0000\n"
+"PO-Revision-Date: 2020-10-14 10:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: Nederlands\n"
 "Language: nl_NL\n"
@@ -174,7 +174,7 @@ msgid "You do not have sufficient permissions to access this page."
 msgstr "Je hebt onvoldoende rechten voor deze pagina."
 
 #: includes_php56/class-wcmp-export.php:257
-#: includes/admin/class-wcmp-export.php:1508
+#: includes/admin/class-wcmp-export.php:1532
 msgid "MyParcel shipment created:"
 msgstr "MyParcel zending aangemaakt:"
 
@@ -1071,7 +1071,7 @@ msgid "The selected orders have not been exported to MyParcel yet! "
 msgstr "De geselecteerde bestellingen zijn nog niet geëxporteerd naar MyParcel"
 
 #: includes/admin/class-wcmp-export.php:604
-#: includes/admin/class-wcmp-export-consignments.php:436
+#: includes/admin/class-wcmp-export-consignments.php:435
 msgid "No API key found in MyParcel settings"
 msgstr "Geen API key gevonden in MyParcel instellingen"
 
@@ -1079,7 +1079,7 @@ msgstr "Geen API key gevonden in MyParcel instellingen"
 msgid "No e-mail address found in order."
 msgstr "Geen e-mailadres gevonden in order."
 
-#: includes/admin/class-wcmp-export.php:1559
+#: includes/admin/class-wcmp-export.php:1583
 msgid "The order(s) you have selected have invalid shipping countries."
 msgstr ""
 "De orders die je hebt geselecteerd bevatten niet toegestane landen als "
@@ -1147,7 +1147,7 @@ msgstr "Concept aangemaakt maar nog niet geprint."
 msgid "(Unknown)"
 msgstr "(Onbekend)"
 
-#: includes/admin/class-wcmp-export-consignments.php:215
+#: includes/admin/class-wcmp-export-consignments.php:214
 msgid "No HS code found in MyParcel settings"
 msgstr "Geen HS code gevonden in de MyParcel instellingen"
 
@@ -1419,12 +1419,12 @@ msgstr ""
 "gebruiken om op zendingen in de MyParcel backoffice te zoeken of sorteren."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:808
-msgid "Empty parcel weight (grams)"
-msgstr "Leeg pakket gewicht (gram)"
+msgid "Empty parcel weight"
+msgstr "Leeg pakket gewicht"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:809
-msgid "Default weight of your empty parcel, rounded to grams."
-msgstr "Standaard gewicht van een leeg pakket, afgerond op gram."
+msgid "Default weight of your empty parcel."
+msgstr "Standaardgewicht van uw lege pakket."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:816
 msgid "Default HS Code"
@@ -1512,8 +1512,6 @@ msgstr "Bezorgopties voor naleveringen"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:906
 #, fuzzy
-#| "When this option is enabled, delivery options and delivery day will be "
-#| "also shown for backorders   ."
 msgid ""
 "When this option is enabled, delivery options and delivery day will be also "
 "shown for backorders."

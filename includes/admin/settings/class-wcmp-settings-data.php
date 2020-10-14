@@ -805,9 +805,9 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT,
-                "label"     => __("Empty parcel weight (grams)", "woocommerce-myparcel"),
+                "label"     => __("Empty parcel weight", "woocommerce-myparcel"),
                 "help_text" => __(
-                    "Default weight of your empty parcel, rounded to grams.",
+                    "Default weight of your empty parcel.",
                     "woocommerce-myparcel"
                 ),
             ],
