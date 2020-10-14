@@ -91,6 +91,11 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.0.6 (2020-10-14) =
+* Fix: Free_shipping linked to package then you should also see the delivery options
+* Fix: If you have a shipping method with flatrate: 181 and the method gives flatrate: 18 then you should not see the delivery options
+* Fix: Error CRITICAL Uncaught TypeError: Return value of WCMP_Export::getShippingMethod()
+
 = 4.0.5 (2020-10-05) =
 * Fix: Disable order status delivered
 * Fix: Package type not being recognized
