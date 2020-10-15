@@ -323,14 +323,8 @@ class WCMP_Export_Consignments
 
         $country = $this->consignment->getCountry();
 
-        if ($country === 'BE') {
-            if ($bpost) {
-                $this->consignment->setBoxNumber($this->recipient['number_suffix'] ?? null);
-                return;
-            }
-
-            $this->consignment->setNumberSuffix($this->recipient['number_suffix'] ?? null);
-            return;
+        if ($country === 'BE' && $bpost) {
+            $this->consignment->setBoxNumber($this->recipient['number_suffix'] ?? null);
         }
 
         $this->consignment->setNumberSuffix($this->recipient['number_suffix'] ?? null);
