@@ -1172,7 +1172,7 @@ class WCMP_Export
      *
      * @return float
      */
-    public static function getItemWeight_kg($item): float
+    public static function getItemWeightKg($item): float
     {
         $product = wc_get_product($item['product_id']);
 
