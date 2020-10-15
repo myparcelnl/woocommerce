@@ -3,6 +3,7 @@
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
@@ -305,7 +306,7 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $postnl          = $this->carrier === PostNLConsignment::CARRIER_NAME;
+        $bpost           = $this->carrier === BpostConsignment::CARRIER_NAME;
         $this->recipient = WCMP_Export::getRecipientFromOrder($this->order);
 
         $this->consignment
@@ -320,11 +321,13 @@ class WCMP_Export_Consignments
             ->setEmail($this->recipient['email'])
             ->setPhone($this->recipient['phone']);
 
-        if ($postnl) {
-            $this->consignment->setNumberSuffix($this->recipient['number_suffix'] ?? null);
-        } else {
+        $country = $this->consignment->getCountry();
+
+        if ($country === 'BE' && $bpost) {
             $this->consignment->setBoxNumber($this->recipient['number_suffix'] ?? null);
         }
+
+        $this->consignment->setNumberSuffix($this->recipient['number_suffix'] ?? null);
     }
 
     /**
