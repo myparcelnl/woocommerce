@@ -306,9 +306,7 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $postnl          = $this->carrier === PostNLConsignment::CARRIER_NAME;
         $bpost           = $this->carrier === BpostConsignment::CARRIER_NAME;
-        $dpd             = $this->carrier === DPDConsignment::CARRIER_NAME;
         $this->recipient = WCMP_Export::getRecipientFromOrder($this->order);
 
         $this->consignment
