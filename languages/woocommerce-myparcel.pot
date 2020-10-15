@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-09 08:38+0000\n"
+"POT-Creation-Date: 2020-10-14 10:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -170,7 +170,7 @@ msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
 #: includes_php56/class-wcmp-export.php:257
-#: includes/admin/class-wcmp-export.php:1508
+#: includes/admin/class-wcmp-export.php:1532
 msgid "MyParcel shipment created:"
 msgstr ""
 
@@ -1016,7 +1016,7 @@ msgid "The selected orders have not been exported to MyParcel yet! "
 msgstr ""
 
 #: includes/admin/class-wcmp-export.php:604
-#: includes/admin/class-wcmp-export-consignments.php:436
+#: includes/admin/class-wcmp-export-consignments.php:435
 msgid "No API key found in MyParcel settings"
 msgstr ""
 
@@ -1024,7 +1024,7 @@ msgstr ""
 msgid "No e-mail address found in order."
 msgstr ""
 
-#: includes/admin/class-wcmp-export.php:1559
+#: includes/admin/class-wcmp-export.php:1583
 msgid "The order(s) you have selected have invalid shipping countries."
 msgstr ""
 
@@ -1083,7 +1083,7 @@ msgstr ""
 msgid "(Unknown)"
 msgstr ""
 
-#: includes/admin/class-wcmp-export-consignments.php:215
+#: includes/admin/class-wcmp-export-consignments.php:214
 msgid "No HS code found in MyParcel settings"
 msgstr ""
 
@@ -1326,11 +1326,11 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:808
-msgid "Empty parcel weight (grams)"
+msgid "Empty parcel weight"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:809
-msgid "Default weight of your empty parcel, rounded to grams."
+msgid "Default weight of your empty parcel."
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:816
