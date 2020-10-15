@@ -1020,7 +1020,11 @@ msgstr "Toon na klantgegevens"
 msgid "Show after notes"
 msgstr "Toon na notities"
 
-#: includes/admin/settings/class-wcmp-settings-data.php:941
+#: includes/admin/settings/class-wcmp-settings-data.php:924
+msgid "Show after subtotal"
+msgstr "Toon na subtotalen"
+
+#: includes/admin/settings/class-wcmp-settings-data.php:924
 msgid ""
 "You can change the place of the delivery options on the checkout page. By "
 "default it will be placed after shipping details."

@@ -948,6 +948,10 @@ class WCMP_Settings_Data
                         "Show after notes",
                         "woocommerce-myparcel"
                     ),
+                    "woocommerce_review_order_before_payment"     => __(
+                        "Show after subtotal",
+                        "woocommerce-myparcel"
+                    ),
                 ],
                 "help_text" => __(
                     "You can change the place of the delivery options on the checkout page. By default it will be placed after shipping details.",
