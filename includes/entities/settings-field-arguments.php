@@ -19,6 +19,7 @@ class SettingsFieldArguments
     public const IGNORED_ARGUMENTS = [
         "callback",
         "condition",
+        "conditions",
         "default",
         "id",
         "label",
@@ -31,6 +32,7 @@ class SettingsFieldArguments
     public const ALTERNATIVE_IGNORED_ARGUMENTS = [
         "callback",
         "condition",
+        "conditions",
         "default",
         "option_id",
         "type",
@@ -210,8 +212,6 @@ class SettingsFieldArguments
         $conditionData = array_map([$this, "createCondition"], $conditionsArgument);
 
         $this->addArgument("data-conditions", $conditionData);
-        // Delete the original condition argument(s).
-        Arr::forget($this->arguments, ["condition", "conditions"]);
     }
 
     /**
@@ -246,9 +246,9 @@ class SettingsFieldArguments
         ];
 
         foreach ($this->arguments as $arg => $value) {
-            $array = $ignore ? self::IGNORED_ARGUMENTS : self::ALTERNATIVE_IGNORED_ARGUMENTS;
+            $ignoredArguments = $ignore ? self::IGNORED_ARGUMENTS : self::ALTERNATIVE_IGNORED_ARGUMENTS;
 
-            if (in_array($arg, $array)) {
+            if (in_array($arg, $ignoredArguments)) {
                 continue;
             }
 
