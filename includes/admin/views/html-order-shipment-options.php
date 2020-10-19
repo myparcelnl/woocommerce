@@ -44,14 +44,10 @@ $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_
     $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
     $shipmentOptions       = $deliveryOptions->getShipmentOptions();
 
-    $packageTypes                   = array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP);
     $packageTypeFromDeliveryOptions = $deliveryOptions->getPackageType();
     $selectedPackageType            = WCMYPA()->export->getPackageTypeFromOrder($order, $deliveryOptions);
     $carrier                        = $deliveryOptions->getCarrier();
 
-    /**
-     *
-     */
     $data = array_map(
         function ($item) {
             return WCMP_Export::getChosenOrDefaultShipmentOption($item[0], $item[1]);
@@ -140,7 +136,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_
             "label"             => __("Shipment type", "woocommerce-myparcel"),
             "type"              => "select",
             "options"           => array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman()),
-            "value"             => $packageTypes[$selectedPackageType],
+            "value"             => $selectedPackageType,
             "custom_attributes" => $isPackageTypeDisabled
                 ? ["disabled" => "disabled"]
                 : [],

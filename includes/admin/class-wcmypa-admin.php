@@ -2,7 +2,6 @@
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -217,6 +216,7 @@ class WCMYPA_Admin
         $order_id        = WCX_Order::get_id($order);
         $consignments    = WCMYPA_Admin::get_order_shipments($order);
         $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
+        $packageType     = $deliveryOptions->getPackageType() ?? WCMYPA()->export->getPackageTypeFromOrder($order);
 
         echo '<div class="wcmp__shipment-settings-wrapper" style="display: none;">';
 
@@ -247,7 +247,7 @@ class WCMYPA_Admin
 
         printf('<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
             $order->get_id(),
-            WCMP_Data::getPackageTypeHuman($deliveryOptions->getPackageType() ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE)
+            WCMP_Export::getPackageTypeHuman($packageType)
         );
 
         echo "</div>";
@@ -967,7 +967,7 @@ class WCMYPA_Admin
                 $track_trace
             );
         } elseif (isset($shipment["shipment"]) && isset($shipment["shipment"]["options"])) {
-            $package_type     = WCMYPA()->export->getPackageType($shipment["shipment"]["options"]["package_type"]);
+            $package_type     = WCMP_Export::getPackageTypeHuman($shipment["shipment"]["options"]["package_type"]);
             $track_trace_link = "($package_type)";
         } else {
             $track_trace_link = __("(Unknown)", "woocommerce-myparcel");
