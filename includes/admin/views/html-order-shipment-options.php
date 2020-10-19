@@ -242,7 +242,7 @@ $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_
                     "parent_name"  => "[carrier]",
                     "type"         => "disable",
                     "parent_value" => WCMP_Data::getPostnlName(),
-                    "set_value"    => WCMP_Settings_Data::ENABLED,
+                    "set_value"    => WCMP_Settings_Data::DISABLED,
                 ],
             ],
         ],
