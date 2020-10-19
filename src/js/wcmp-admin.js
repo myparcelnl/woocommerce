@@ -25,6 +25,7 @@
  * @property {String} parent_name
  * @property {String|Number} parent_value
  * @property {String|Number} set_value
+ * @property {Boolean} invert
  */
 
 /**
@@ -179,7 +180,7 @@ jQuery(function($) {
   printQueuedLabels();
 
   var timeoutAfterRequest = 200;
-  var baseEasing = 400;
+  var baseEasing = 300;
 
   /**
    * Add event listeners.
@@ -246,10 +247,8 @@ jQuery(function($) {
 
   /**
    * Add dependencies for form elements with conditions.
-   *
-   * @param {String} name
    */
-  function addDependencies(name) {
+  function addDependencies() {
     /**
      * Get all nodes with a data-conditions attribute.
      */
@@ -317,10 +316,8 @@ jQuery(function($) {
 
     dependencies[input.name]
       .forEach(function(dependency) {
-        var banner = ' => '.repeat(level);
-
         var dependantName = dependency.name;
-        handleDependency(input, dependency, easing);
+        handleDependency(input, dependency, easing, level);
 
         if (dependencies.hasOwnProperty(dependantName)) {
           var dependantInput = document.querySelector('[name="' + dependantName + '"]');
@@ -400,10 +397,11 @@ jQuery(function($) {
   /**
    * @param {Element|HTMLInputElement} relatedInput - Parent of element.
    * @param {Dependency} dependant
+   * @param {Number} level
    *
    * @param {Number} easing - Amount of easing on the transitions.
    */
-  function handleDependency(relatedInput, dependant, easing) {
+  function handleDependency(relatedInput, dependant, easing, level) {
     var parentValue = dependant.condition.parent_value;
     var setValue = dependant.condition.set_value || null;
     var wantedValue = parentValue || '1';
@@ -419,12 +417,12 @@ jQuery(function($) {
     var parentToggled = relatedInput.getAttribute('data-toggled') === 'true';
     var dependantToggled = dependant.node.getAttribute('data-toggled') === 'true';
 
-    if (parentToggled && !dependantToggled) {
+    if (parentToggled && !dependantToggled && level > 1) {
       toggle = true;
     } else if (typeof wantedValue === 'string') {
       toggle = relatedInput.value !== wantedValue;
     } else {
-      toggle = parentValue.indexOf(relatedInput.value) > -1;
+      toggle = parentValue.indexOf(relatedInput.value) === -1;
     }
 
     switch (dependant.condition.type) {
@@ -445,6 +443,8 @@ jQuery(function($) {
     if (toggle && setValue) {
       dependant.node.value = setValue;
       dependant.node.dispatchEvent(new Event('change'));
+      // Sync toggles here as well as in the createDependencies because not all inputs listen to the change event.
+      syncToggle(dependant.node);
     }
 
     relatedInput.setAttribute('data-toggled', toggle.toString());
