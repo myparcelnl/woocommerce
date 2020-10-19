@@ -122,7 +122,8 @@ class WCMP_Export_Consignments
      */
     private function getDeliveryType(): int
     {
-        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$this->deliveryOptions->getDeliveryType() ?? AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME];
+        $deliveryTypeId = WCMP_Data::getDeliveryTypeId($this->deliveryOptions->getDeliveryType());
+        return $deliveryTypeId ?? AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME;
     }
 
     /**
@@ -266,7 +267,8 @@ class WCMP_Export_Consignments
      */
     private function getPackageType(): int
     {
-        return WCMYPA()->export->getPackageTypeFromOrder($this->order, $this->deliveryOptions);
+        $packageType = WCMYPA()->export->getPackageTypeFromOrder($this->order, $this->deliveryOptions);
+        return WCMP_Data::getPackageTypeId($packageType);
     }
 
     /**
