@@ -244,7 +244,7 @@ class WCMYPA_Admin
 
         printf('<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
             $order->get_id(),
-            $deliveryOptions->getPackageType() ?? WCMP_Data::getPackageTypeHuman(AbstractConsignment::DEFAULT_PACKAGE_TYPE)
+            WCMP_Data::getPackageTypeHuman($deliveryOptions->getPackageType() ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE)
         );
 
         echo "</div>";
@@ -973,7 +973,7 @@ class WCMYPA_Admin
                 $track_trace
             );
         } elseif (isset($shipment["shipment"]) && isset($shipment["shipment"]["options"])) {
-            $package_type     = WCMYPA()->export->getPackageType($shipment["shipment"]["options"]["package_type"]);
+            $package_type     = WCMP_Export::getPackageTypeHuman($shipment["shipment"]["options"]["package_type"]);
             $track_trace_link = "($package_type)";
         } else {
             $track_trace_link = __("(Unknown)", "woocommerce-myparcel");

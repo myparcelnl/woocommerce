@@ -164,9 +164,9 @@ class WCMP_Checkout
 
         $shipping_methods = [];
 
-        if (array_key_exists(WCMP_Export::PACKAGE, $packageTypes ?? [])) {
+        if (array_key_exists(AbstractConsignment::PACKAGE_TYPE_PACKAGE, $packageTypes ?? [])) {
             // Shipping methods associated with parcels = enable delivery options
-            $shipping_methods = $packageTypes[WCMP_Export::PACKAGE];
+            $shipping_methods = $packageTypes[AbstractConsignment::PACKAGE_TYPE_PACKAGE];
         }
 
         return json_encode($shipping_methods);
@@ -315,8 +315,8 @@ class WCMP_Checkout
     {
         $order = WCX::get_order($order_id);
 
-        $highestShippingClass = Arr::get($_POST, "myparcel_highest_shipping_class");
         $shippingMethod       = Arr::get($_POST, "shipping_method");
+        $highestShippingClass = Arr::get($_POST, "myparcel_highest_shipping_class") ?? $shippingMethod[0];
 
         /**
          * Save the current version of our plugin to the order.
@@ -353,19 +353,23 @@ class WCMP_Checkout
                 WCMYPA_Admin::META_HIGHEST_SHIPPING_CLASS,
                 $highestShippingClass
             );
-        } elseif ($shippingMethod) {
-            WCX_Order::update_meta_data(
-                $order,
-                WCMYPA_Admin::META_HIGHEST_SHIPPING_CLASS,
-                $shippingMethod[0]
-            );
         }
 
-        $deliveryOptions = stripslashes(Arr::get($_POST, WCMYPA_Admin::META_DELIVERY_OPTIONS));
+        $deliveryOptionsFromPost = stripslashes(Arr::get($_POST, WCMYPA_Admin::META_DELIVERY_OPTIONS));
+        $deliveryOptionsFromShippingClass = $highestShippingClass
+            ? [
+                'packageType' => WCMP_Export::getPackageTypeFromShippingMethod(
+                    $shippingMethod[0],
+                    $highestShippingClass
+                ),
+            ]
+            : null;
+
+        $deliveryOptions = $deliveryOptionsFromPost ?? $deliveryOptionsFromShippingClass;
 
         if ($deliveryOptions) {
-
             $deliveryOptions = json_decode($deliveryOptions, true);
+
             /*
              * Create a new DeliveryOptions class from the data.
              */

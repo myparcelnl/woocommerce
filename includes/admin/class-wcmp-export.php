@@ -7,6 +7,7 @@ use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\Sdk\src\Support\Str;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
@@ -21,12 +22,6 @@ if (class_exists("WCMP_Export")) {
 
 class WCMP_Export
 {
-    // Package types
-    public const PACKAGE       = 1;
-    public const MAILBOX       = 2;
-    public const LETTER        = 3;
-    public const DIGITAL_STAMP = 4;
-
     public const EXPORT = "wcmp_export";
 
     public const ADD_SHIPMENTS = "add_shipments";
@@ -888,27 +883,28 @@ class WCMP_Export
      * @param WC_Order                            $order
      * @param AbstractDeliveryOptionsAdapter|null $deliveryOptions
      *
-     * @return int
+     * @return string
      * @throws Exception
      */
     public function getPackageTypeFromOrder(
         WC_Order $order,
         AbstractDeliveryOptionsAdapter $deliveryOptions = null
-    ): int {
+    ): string {
         $packageTypeFromDeliveryOptions = $deliveryOptions
             ? $deliveryOptions->getPackageType()
             : null;
 
         if ($packageTypeFromDeliveryOptions) {
-            return WCMP_Data::getPackageTypeId($packageTypeFromDeliveryOptions);
+            return $packageTypeFromDeliveryOptions;
         }
 
         // Get pre 4.0.0 package type if it exists.
         if (WCX_Order::has_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0)) {
-            return (int) WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0)['package_type'];
+            $shipmentOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0);
+            return WCMP_Data::getPackageTypeId($shipmentOptions['package_type']);
         }
 
-        $packageType = self::PACKAGE;
+        $packageType = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
 
         // get shipping methods from order
         $orderShippingMethods = $order->get_items('shipping');
@@ -933,60 +929,64 @@ class WCMP_Export
     }
 
     /**
-     * @param $shipping_method
-     * @param $shipping_class
+     * @param $shippingMethod
+     * @param $shippingClass
      *
-     * @return int|string
+     * @return string|null
      */
-    public function getPackageTypeFromShippingMethod($shipping_method, $shipping_class)
+    public static function getPackageTypeFromShippingMethod($shippingMethod, $shippingClass): ?string
     {
-        $package_type             = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME;
-        $shipping_method_id_class = "";
+        $package_type          = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME;
+        $shippingMethodIdClass = "";
 
-        if (strpos($shipping_method, "table_rate:") === 0 && class_exists('WC_Table_Rate_Shipping')) {
+        if (Str::startsWith($shippingMethod, 'table_rate:') && class_exists('WC_Table_Rate_Shipping')) {
             // Automattic / WooCommerce table rate
             // use full method = method_id:instance_id:rate_id
-            $shipping_method_id = $shipping_method;
-        } else { // non table rates
-
-            if (strpos($shipping_method, ':') !== false) {
+            $shippingMethodId = $shippingMethod;
+        } else {
+            // non table rates
+            if (Str::contains($shippingMethodIdClass, ':')) {
                 // means we have method_id:instance_id
-                $shipping_method          = explode(':', $shipping_method);
-                $shipping_method_id       = $shipping_method[0];
-                $shipping_method_instance = $shipping_method[1];
+                $shippingMethod   = explode(':', $shippingMethod);
+                $shippingMethodId = $shippingMethod[0];
             } else {
-                $shipping_method_id = $shipping_method;
+                $shippingMethodId = $shippingMethod;
             }
 
             // add class if we have one
-            if (! empty($shipping_class)) {
-                $shipping_method_id_class = "{$shipping_method_id}:{$shipping_class}";
+            if (! empty($shippingClass)) {
+                $shippingMethodIdClass = "{$shippingMethodId}:{$shippingClass}";
             }
         }
-        foreach (WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES) as $package_type_key => $package_type_shipping_methods) {
 
-            if (WCMP_Export::isActiveMethod(
-                $shipping_method_id,
-                $package_type_shipping_methods,
-                $shipping_method_id_class,
-                $shipping_class)) {
-
-                $package_type = $package_type_key;
+        $packageTypes = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+        foreach ($packageTypes as $packageTypeKey => $packageTypeShippingMethods) {
+            if (self::isActiveMethod(
+                $shippingMethodId,
+                $packageTypeShippingMethods,
+                $shippingMethodIdClass,
+                $shippingClass
+            )) {
+                $package_type = $packageTypeKey;
                 break;
             }
         }
 
-        return WCMP_Data::getPackageTypeId($package_type);
+        return $package_type;
     }
 
     /**
-     * @param string $package_type
+     * @param string|null $packageType
      *
      * @return string
      */
-    public function getPackageType(string $package_type): string
+    public static function getPackageTypeHuman(?string $packageType): string
     {
-        return WCMP_Data::getPackageTypeHuman($package_type) ?? __("Unknown", "woocommerce-myparcel");
+        if ($packageType) {
+            $packageType = WCMP_Data::getPackageTypeHuman($packageType);
+        }
+
+        return $packageType ?? __("Unknown", "woocommerce-myparcel");
     }
 
     /**
@@ -1407,7 +1407,7 @@ class WCMP_Export
      *
      * @return bool
      */
-    private function isActiveMethod(
+    private static function isActiveMethod(
         $shipping_method_id,
         $package_type_shipping_methods,
         $shipping_method_id_class,

@@ -133,9 +133,9 @@ class WCMP_Data
     /**
      * @param int|string $packageType
      *
-     * @return string
+     * @return string|null
      */
-    public static function getPackageTypeHuman($packageType): string
+    public static function getPackageTypeHuman($packageType): ?string
     {
         return self::getHuman(
             $packageType,
@@ -147,11 +147,21 @@ class WCMP_Data
     /**
      * @param string $packageType
      *
-     * @return int
+     * @return int|null
      */
-    public static function getPackageTypeId(string $packageType): int
+    public static function getPackageTypeId(string $packageType): ?int
     {
-        return AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$packageType] ?? AbstractConsignment::PACKAGE_TYPE_PACKAGE;
+        return AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$packageType];
+    }
+
+    /**
+     * @param string $deliveryType
+     *
+     * @return int|null
+     */
+    public static function getDeliveryTypeId(string $deliveryType): ?int
+    {
+        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$deliveryType];
     }
 
     /**
@@ -159,23 +169,23 @@ class WCMP_Data
      * @param array      $map
      * @param array      $humanMap
      *
-     * @return string
+     * @return string|null
      */
-    private static function getHuman($key, array $map, array $humanMap): string
+    private static function getHuman($key, array $map, array $humanMap): ?string
     {
         if (is_numeric($key)) {
             $integerMap = array_flip($map);
             $key        = (int) $key;
 
             if (! array_key_exists($key, $integerMap)) {
-                return (string) $key;
+                return null;
             }
 
             $key = $integerMap[$key];
         }
 
         if (! array_key_exists($key, $humanMap)) {
-            return $key;
+            return null;
         }
 
         return $humanMap[$key];
