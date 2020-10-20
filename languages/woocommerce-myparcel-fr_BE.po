@@ -1479,6 +1479,10 @@ msgid "Show after notes"
 msgstr "Afficher après les notes"
 
 #: includes/admin/settings/class-wcmp-settings-data.php:924
+msgid "Show after subtotal"
+msgstr "Afficher après le sous-total"
+
+#: includes/admin/settings/class-wcmp-settings-data.php:924
 msgid ""
 "You can change the place of the delivery options on the checkout page. By "
 "default it will be placed after shipping details."
