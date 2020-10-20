@@ -69,7 +69,7 @@ class WCMP_Export_Consignments
         $this->deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
         $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
 
-        $this->myParcelCollection = (new MyParcelCollection())->setUserAgentArray(
+        $this->myParcelCollection = (new MyParcelCollection())->setUserAgents(
             [
                 'Wordpress'              => get_bloginfo('version'),
                 'WooCommerce'            => WOOCOMMERCE_VERSION,
