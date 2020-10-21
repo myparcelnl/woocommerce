@@ -152,6 +152,8 @@ if (! class_exists('WCMYPA')) :
             // Use minimum php version 7.1
             require_once($this->includes . "/vendor/autoload.php");
 
+            require_once($this->includes . "/admin/ShipmentOptions.php");
+
             // include compatibility classes
             require_once($this->includes . "/compatibility/abstract-wc-data-compatibility.php");
             require_once($this->includes . "/compatibility/class-wc-date-compatibility.php");
