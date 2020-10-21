@@ -22,10 +22,8 @@
 
 /**
  * @typedef {Object} Condition
- * @property {String} parent_name
- * @property {String|Number} parent_value
+ * @property {Object<String,*>} parents
  * @property {String|Number} set_value
- * @property {Boolean} invert
  */
 
 /**
@@ -269,76 +267,155 @@ jQuery(function($) {
       conditions = JSON.parse(conditions);
 
       conditions
-        .forEach(
+        .forEach(function(condition) {
+          Object
+            .keys(condition.parents)
+            .forEach(function(parent) {
+              /**
+               * @type {Dependency}
+               */
+              var data = {
+                condition: condition,
+                node: node,
+              };
 
-          /**
-           * @param {Condition} condition
-           */
-          function(condition) {
-            /**
-             * @type {Dependency}
-             */
-            var data = {
-              name: node.getAttribute('name'),
-              condition: condition,
-              node: node,
-            };
-
-            if (dependencies.hasOwnProperty(condition.parent_name)) {
-              dependencies[condition.parent_name].push(data);
-            } else {
-              // Or create the list with the node inside it
-              dependencies[condition.parent_name] = [data];
-            }
-          }
-        );
+              if (dependencies.hasOwnProperty(parent)) {
+                dependencies[parent].push(data);
+              } else {
+                // Or create the list with the node inside it
+                dependencies[parent] = [data];
+              }
+            });
+        });
     });
 
     createDependencies(dependencies);
   }
 
   /**
+   * Loops through dependants and collects changes that need to be done in queue.
+   *
    * @param {Object<String, Dependency[]>} dependencies
    * @param {HTMLInputElement|Node} input
-   * @param {Number} easing
-   * @param level
+   * @param {?Number} level
+   * @param {?Object[]} queue
+   *
+   * @returns {Object[]} - Queue.
    */
-  function recursiveDep(dependencies, input, easing, level) {
-    level = level || 1;
-
+  function checkDependenciesRecursively(dependencies, input, level, queue) {
     if (level >= 20) {
       throw new Error('Depth limit of ' + level + ' exceeded (probably an infinite loop)');
     }
 
     if (!dependencies.hasOwnProperty(input.name)) {
-      return;
+      return queue;
     }
 
     dependencies[input.name]
       .forEach(function(dependency) {
-        var dependantName = dependency.name;
-        handleDependency(input, dependency, easing, level);
+        var data = handleDependency(dependency, level);
 
-        if (dependencies.hasOwnProperty(dependantName)) {
-          var dependantInput = document.querySelector('[name="' + dependantName + '"]');
+        queue.push({
+          name: dependency.node.name.replace(/myparcel_options\[\d+\]/, ''),
+          parent: input,
+          node: dependency.node,
+          type: dependency.condition.type,
+          setValue: data.setValue,
+          toggle: data.toggle,
+        });
 
-          recursiveDep(dependencies, dependantInput, easing, level + 1);
+        if (dependencies.hasOwnProperty(dependency.node.name)) {
+          var dependantInput = document.querySelector('[name="' + dependency.node.name + '"]');
+
+          queue = checkDependenciesRecursively(dependencies, dependantInput, level + 1, queue);
         }
       });
+
+    return queue;
   }
 
   /**
-   * Print queued labels.
+   * Executes a set of changes on an element and its parent.
+   *
+   * @param {Object} data
+   * @param {HTMLInputElement} data.node
+   * @param {HTMLInputElement} data.parent
+   * @param {*} data.setValue
+   * @param {Boolean} data.toggle
+   * @param {String} data.type
+   * @param {Number} easing
    */
-  function printQueuedLabels() {
-    var printData = $(selectors.printQueue).val();
+  function toggleElement(data, easing) {
+    var node = data.node;
+    var setValue = data.setValue;
+    var toggle = data.toggle;
+    var elementContainer = $(node).closest('tr');
 
-    if (printData) {
-      printLabel(JSON.parse(printData));
+    switch (data.type) {
+      case 'show':
+        elementContainer[toggle ? 'hide' : 'show'](easing);
+        break;
+      case 'readonly':
+        $(elementContainer).attr('data-readonly', toggle);
+        $(node).prop('readonly', toggle);
+        break;
+      case 'disable':
+        $(elementContainer).attr('data-disabled', toggle);
+        $(node).prop('disabled', toggle);
+        break;
+    }
+
+    if (toggle && setValue) {
+      node.value = setValue;
+      node.dispatchEvent(new Event('change'));
+      // Sync toggles here as well as in the createDependencies because not all inputs listen to the change event.
+      syncToggle(node);
+    }
+
+    data.parent.setAttribute('data-toggled', toggle.toString());
+    node.setAttribute('data-toggled', toggle.toString());
+  }
+
+  function toggleElement2(data, easing) {
+    var node = data.node;
+    var setValue = data.setValue;
+    // var toggle = data.toggle;
+    var elementContainer = $(node).closest('tr');
+
+    data.changes.forEach(function(change) {
+      var toggle = change.toggle;
+      var type = change.type;
+
+      switch (type) {
+        case 'show':
+          elementContainer[toggle ? 'hide' : 'show'](easing);
+          data.parent.setAttribute('data-toggled', toggle.toString());
+          node.setAttribute('data-toggled', toggle.toString());
+          break;
+        case 'readonly':
+          $(elementContainer).attr('data-readonly', toggle);
+          $(node).prop('readonly', toggle);
+          break;
+        case 'disable':
+          $(elementContainer).attr('data-disabled', toggle);
+          $(node).prop('disabled', toggle);
+          break;
+      }
+    })
+
+    // Hacky use of vars here
+    if (toggle && setValue) {
+      node.value = setValue;
+      node.dispatchEvent(new Event('change'));
+      // Sync toggles here as well as in the createDependencies because not all inputs listen to the change event.
+      syncToggle(node);
     }
   }
 
+
   /**
+   * Sync the appearance of toggle elements with the value their hidden input.
+   *
    * @param {EventTarget} target
    */
   function syncToggle(target) {
@@ -369,6 +446,8 @@ jQuery(function($) {
       .forEach(function(name) {
         var input = document.querySelector('[name="' + name + '"]');
 
+        console.warn(name.replace(/myparcel_options\[\d+\]/, ''));
+
         /**
          * Loop through all the dependencies.
          *
@@ -384,7 +463,13 @@ jQuery(function($) {
             syncToggle(event.target);
           }
 
-          recursiveDep(dependencies, input, easing);
+          var updateQueue = checkDependenciesRecursively(dependencies, input, 1, []);
+
+          console.log(updateQueue);
+          // Executes all needed updates gathered by checkDependenciesRecursively.
+          updateQueue.forEach(function(dependency) {
+            toggleElement(dependency, easing);
+          });
         }
 
         input.addEventListener('change', handle);
@@ -395,60 +480,45 @@ jQuery(function($) {
   }
 
   /**
-   * @param {Element|HTMLInputElement} relatedInput - Parent of element.
-   * @param {Dependency} dependant
+   * Determines if an element should be toggled and if its value should change by checking all parent elements' values.
+   *
+   * @param {Dependency} dependency
    * @param {Number} level
    *
-   * @param {Number} easing - Amount of easing on the transitions.
+   * @returns {Object}
    */
-  function handleDependency(relatedInput, dependant, easing, level) {
-    var parentValue = dependant.condition.parent_value;
-    var setValue = dependant.condition.set_value || null;
-    var wantedValue = parentValue || '1';
-    var elementContainer = $(dependant.node).closest('tr');
+  function handleDependency(dependency, level) {
+    var parents = dependency.condition.parents;
+    var setValue = dependency.condition.set_value || null;
+    var toggle = false;
 
-    /**
-     * To make the item disabled/disappear/readonly or any other option in the switch statement.
-     *
-     * @type {Boolean}
-     */
-    var toggle;
+    Object
+      .keys(parents)
+      .forEach(function(parent) {
+        var parentInput = document.getElementsByName(parent)[0];
+        var localToggle;
+        var wantedValue = parents[parent] || '1';
 
-    var parentToggled = relatedInput.getAttribute('data-toggled') === 'true';
-    var dependantToggled = dependant.node.getAttribute('data-toggled') === 'true';
+        var parentToggled = parentInput.getAttribute('data-toggled') === 'true';
+        var dependantToggled = dependency.node.getAttribute('data-toggled') === 'true';
 
-    if (parentToggled && !dependantToggled && level > 1) {
-      toggle = true;
-    } else if (typeof wantedValue === 'string') {
-      toggle = relatedInput.value !== wantedValue;
-    } else {
-      toggle = parentValue.indexOf(relatedInput.value) === -1;
-    }
+        if (parentToggled && !dependantToggled && level > 1) {
+          localToggle = true;
+        } else if (typeof wantedValue === 'string') {
+          localToggle = parentInput.value !== wantedValue;
+        } else {
+          localToggle = wantedValue.indexOf(parentInput.value) === -1;
+        }
 
-    switch (dependant.condition.type) {
-      case 'child':
-      case 'show':
-        elementContainer[toggle ? 'hide' : 'show'](easing);
-        break;
-      case 'readonly':
-        $(elementContainer).attr('data-readonly', toggle);
-        $(dependant.node).prop('readonly', toggle);
-        break;
-      case 'disable':
-        $(elementContainer).attr('data-disabled', toggle);
-        $(dependant.node).prop('disabled', toggle);
-        break;
-    }
+        if (localToggle === true) {
+          toggle = true;
+        }
+      });
 
-    if (toggle && setValue) {
-      dependant.node.value = setValue;
-      dependant.node.dispatchEvent(new Event('change'));
-      // Sync toggles here as well as in the createDependencies because not all inputs listen to the change event.
-      syncToggle(dependant.node);
-    }
-
-    relatedInput.setAttribute('data-toggled', toggle.toString());
-    dependant.node.setAttribute('data-toggled', toggle.toString());
+    return {
+      toggle: toggle,
+      setValue: setValue,
+    };
   }
 
   /**
@@ -458,6 +528,17 @@ jQuery(function($) {
     $(selectors.toggle).each(function() {
       $(this).on('click', handleToggle);
     });
+  }
+
+  /**
+   * Print queued labels.
+   */
+  function printQueuedLabels() {
+    var printData = $(selectors.printQueue).val();
+
+    if (printData) {
+      printLabel(JSON.parse(printData));
+    }
   }
 
   /**
@@ -517,8 +598,11 @@ jQuery(function($) {
 
         addDependencies();
         addToggleListeners();
+
         $(selectors.shipmentOptionsSaveButton).on('click', saveShipmentOptions);
         document.addEventListener('click', hideShipmentOptionsForm);
+        // Trigger WooCommerce's event to init any tipTips.
+        document.body.dispatchEvent(new Event('init_tooltips'));
       },
       afterFail: function() {
         form.slideUp(100);
