@@ -54,7 +54,7 @@ class WCMP_Frontend
      */
     public function email_pickup_html(WC_Order $order): void
     {
-        WCMYPA()->admin->showDeliveryOptionsForOrder($order);
+        WCMYPA()->admin->showDeliveryDateForOrder($order);
     }
 
     /**
@@ -65,7 +65,7 @@ class WCMP_Frontend
     public function thankyou_pickup_html(int $order_id): void
     {
         $order = wc_get_order($order_id);
-        WCMYPA()->admin->showDeliveryOptionsForOrder($order);
+        WCMYPA()->admin->showDeliveryDateForOrder($order);
     }
 
     /**
@@ -78,7 +78,7 @@ class WCMP_Frontend
     public function wpo_wcpdf_delivery_options($replacement, WC_Order $order)
     {
         ob_start();
-        WCMYPA()->admin->showDeliveryOptionsForOrder($order);
+        WCMYPA()->admin->showDeliveryDateForOrder($order);
         return ob_get_clean();
     }
 
