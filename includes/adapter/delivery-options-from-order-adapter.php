@@ -6,18 +6,28 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 class WCMP_DeliveryOptionsFromOrderAdapter extends AbstractDeliveryOptionsAdapter
 {
     /**
-     * WCMP_DeliveryOptionsFromOrderAdapter constructor.
+     * Creates delivery options but sets most missing data to null instead of default values.
      *
      * @param AbstractDeliveryOptionsAdapter|null $originAdapter
      * @param array                               $inputData
      */
     public function __construct(?AbstractDeliveryOptionsAdapter $originAdapter, array $inputData = [])
     {
-        $this->carrier         = $inputData['carrier'] ?? ($originAdapter ? $originAdapter->getCarrier() : null);
-        $this->date            = $originAdapter ? $originAdapter->getDate() : null;
-        $this->packageType     = $inputData['package_type'] ?? ($originAdapter ? $originAdapter->getPackageType() : null);
-        $this->deliveryType    = $originAdapter ? $originAdapter->getDeliveryType() : AbstractConsignment::DEFAULT_DELIVERY_TYPE_NAME;
+        $adapterCarrier        = $originAdapter ? $originAdapter->getCarrier() : null;
+        $adapterDate           = $originAdapter ? $originAdapter->getDate() : null;
+        $adapterDeliveryType   = $originAdapter ? $originAdapter->getDeliveryType() : AbstractConsignment::DEFAULT_DELIVERY_TYPE_NAME;
+        $adapterPackageType    = $originAdapter ? $originAdapter->getPackageType() : null;
+        $adapterPickupLocation = $originAdapter ? $originAdapter->getPickupLocation() : null;
+
+        $this->carrier         = $inputData['carrier'] ?? $adapterCarrier;
+        $this->date            = $inputData['date'] ?? $adapterDate;
+        $this->deliveryType    = $inputData['delivery_type'] ?? $adapterDeliveryType;
+        $this->packageType     = $inputData['package_type'] ?? $adapterPackageType;
         $this->shipmentOptions = new WCMP_ShipmentOptionsFromOrderAdapter($originAdapter, $inputData);
-        $this->pickupLocation  = $originAdapter ? $originAdapter->getPickupLocation() : null;
+
+        $hasInputPickupLocation = isset($inputData['pickup_location']) && ! empty($inputData['pickup_location']);
+        $this->pickupLocation   = $hasInputPickupLocation
+            ? new WCMP_PickupLocationFromOrderAdapter($originAdapter, $inputData)
+            : $adapterPickupLocation;
     }
 }
