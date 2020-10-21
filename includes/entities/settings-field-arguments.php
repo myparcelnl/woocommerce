@@ -3,6 +3,7 @@
 namespace WPO\WC\MyParcel\Entity;
 
 use MyParcelNL\Sdk\src\Support\Arr;
+use WCMP_Settings_Data;
 
 defined('ABSPATH') or exit;
 
@@ -200,8 +201,9 @@ class SettingsFieldArguments
     {
         $conditionArgument  = $this->getArgument("condition");
         $conditionsArgument = $this->getArgument("conditions") ?? [];
+        $matchesArgument    = $this->getArgument("matches") ?? [];
 
-        if (! $conditionArgument && ! $conditionsArgument) {
+        if (! $conditionArgument && ! $conditionsArgument && ! $matchesArgument) {
             return;
         }
 
@@ -210,6 +212,7 @@ class SettingsFieldArguments
         }
 
         $conditionData = array_map([$this, "createCondition"], $conditionsArgument);
+        $conditionData = $this->mergeConditions($conditionData);
 
         $this->addArgument("data-conditions", $conditionData);
     }
@@ -460,21 +463,68 @@ class SettingsFieldArguments
     private function createCondition($condition): array
     {
         if (is_array($condition)) {
-            $condition['parent_name'] = $this->prefix . $condition['parent_name'];
+            $parentName  = $this->prefix . $condition['parent_name'];
+            $parentValue = $condition['parent_value'] ?? WCMP_Settings_Data::ENABLED;
+
+            $condition['parents'] = [
+                $parentName => $parentValue,
+            ];
+
+            unset($condition['parent_name']);
+            unset($condition['parent_value']);
 
             $newCondition = array_replace_recursive(
                 self::CONDITION_DEFAULTS,
                 $condition
             );
         } else {
+            $parentName   = $this->prefix . $condition;
             $newCondition = array_merge(
                 self::CONDITION_DEFAULTS,
                 [
-                    "parent_name" => $this->prefix . $condition,
+                    "parents" => [
+                        $parentName => WCMP_Settings_Data::ENABLED,
+                    ],
                 ]
             );
         }
 
         return $newCondition;
+    }
+
+    /**
+     * @param array $conditionData
+     *
+     * @return array
+     */
+    private function mergeConditions(array $conditionData): array
+    {
+        $mergedConditions = [];
+
+        foreach ($conditionData as $condition) {
+            $foundMatch = false;
+
+            foreach ($mergedConditions as &$mergedCondition) {
+                $typeMatches     = $mergedCondition['type'] === $condition['type'];
+                $setValueMatches = $mergedCondition['set_value'] === $condition['set_value'];
+
+                if ($typeMatches && $setValueMatches) {
+                    $mergedCondition['parents'] = array_merge(
+                        $mergedCondition['parents'],
+                        $condition['parents']
+                    );
+
+                    $foundMatch = true;
+                }
+            }
+
+            if ($foundMatch) {
+                continue;
+            }
+
+            $mergedConditions[] = $condition;
+        }
+
+        return $mergedConditions;
     }
 }
