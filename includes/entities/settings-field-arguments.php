@@ -317,21 +317,6 @@ class SettingsFieldArguments
     }
 
     /**
-     * To push one or more values to an array type argument.
-     *
-     * @param string $argument
-     * @param string ...$items
-     */
-    private function pushArgument(string $argument, string ...$items): void
-    {
-        if (! isset($this->arguments[$argument])) {
-            $this->arguments[$argument] = [];
-        }
-
-        array_push($this->arguments[$argument], ...$items);
-    }
-
-    /**
      * @param array $args
      */
     private function setArguments(array $args): void
