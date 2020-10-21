@@ -106,6 +106,30 @@ class WCMYPA_Admin
     }
 
     /**
+     * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
+     */
+    public static function renderPickupLocation(DeliveryOptions $deliveryOptions): void
+    {
+        if (! $deliveryOptions->isPickup()) {
+            return;
+        }
+
+        $pickup = $deliveryOptions->getPickupLocation();
+
+        printf(
+            "<div class=\"pickup-location\"><strong>%s:</strong><br /> %s<br />%s %s<br />%s %s</div>",
+            __("Pickup location", "woocommerce-myparcel"),
+            $pickup->getLocationName(),
+            $pickup->getStreet(),
+            $pickup->getNumber(),
+            $pickup->getPostalCode(),
+            $pickup->getCity()
+        );
+
+        echo "<hr>";
+    }
+
+    /**
      * @param $loop
      * @param $variationData
      * @param $variation

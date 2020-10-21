@@ -21,21 +21,8 @@ try {
 <div class="wcmp wcmp__shipment-options">
     <table>
     <?php
-    if ($deliveryOptions->isPickup()) {
-        $pickup = $deliveryOptions->getPickupLocation();
 
-        printf(
-            "<div class=\"pickup-location\"><strong>%s:</strong><br /> %s<br />%s %s<br />%s %s</div>",
-            __("Pickup location", "woocommerce-myparcel"),
-            $pickup->getLocationName(),
-            $pickup->getStreet(),
-            $pickup->getNumber(),
-            $pickup->getPostalCode(),
-            $pickup->getCity()
-        );
-
-        echo "<hr>";
-    }
+    WCMYPA_Admin::renderPickupLocation($deliveryOptions);
 
     $optionRows = ShipmentOptions::getOptionsRows($deliveryOptions, $order);
     $optionRows = ShipmentOptions::filterRowsByCountry($order->get_shipping_country(), $optionRows);

@@ -43,7 +43,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
             return $shipmentOptionsAdapter->hasSignature();
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -61,7 +61,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
             return $shipmentOptionsAdapter->hasOnlyRecipient();
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -80,7 +80,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
             return $shipmentOptionsAdapter->hasLargeFormat();
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -99,7 +99,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
             return $shipmentOptionsAdapter->isReturn();
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -118,7 +118,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
             return $shipmentOptionsAdapter->hasAgeCheck();
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -141,7 +141,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
             return $shipmentOptionsAdapter->getInsurance();
         }
 
-        return self::DEFAULT_INSURANCE;
+        return null;
     }
 
     /**

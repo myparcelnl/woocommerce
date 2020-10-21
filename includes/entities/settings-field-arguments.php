@@ -14,7 +14,8 @@ if (class_exists('\\WPO\\WC\\MyParcel\\Entity\\SettingsFieldArguments')) {
 class SettingsFieldArguments
 {
     private const CONDITION_DEFAULTS = [
-        "type" => "show",
+        "type"      => "show",
+        "set_value" => null,
     ];
 
     public const IGNORED_ARGUMENTS = [
