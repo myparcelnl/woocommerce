@@ -206,9 +206,9 @@ class WCMYPA_Admin
      */
     public function showMyParcelSettings(WC_Order $order): void
     {
-        if (! WCMP_Country_Codes::isAllowedDestination(
-            WCX_Order::get_prop($order, 'shipping_country')
-        )) {
+        $isAllowedDestination = WCMP_Country_Codes::isAllowedDestination(WCX_Order::get_prop($order, 'shipping_country'));
+
+        if (! $isAllowedDestination) {
             return;
         }
 
@@ -217,32 +217,30 @@ class WCMYPA_Admin
 
         echo '<div class="wcmp__shipment-settings-wrapper" style="display: none;">';
 
+        $this->printDeliveryDate($deliveryOptions);
+
         // if we have shipments, then we show status & link to Track & Trace, settings under i
         if (! empty($consignments)) :
             // only use last shipment
-            $last_shipment = array_pop($consignments);
-            $last_shipment_id = $last_shipment['shipment_id'];
+            $lastShipment   = array_pop($consignments);
+            $lastShipmentId = $lastShipment['shipment_id'];
 
             ?>
-            <?php $this->showDeliveryOptions($deliveryOptions); ?>
             <a class="wcmp__shipment-summary__show">
                 <span class="wcmp__encircle wcmp__shipment-summary__show">i</span>
             </a>
             <div
-                    class="wcmp__box wcmp__shipment-summary__list"
-                    data-loaded=""
-                    data-shipment_id="<?php echo $last_shipment_id; ?>"
-                    data-order_id="<?php echo $order->get_id(); ?>"
-                    style="display: none;">
+                class="wcmp__box wcmp__shipment-summary__list"
+                data-loaded=""
+                data-shipment_id="<?php echo $lastShipmentId; ?>"
+                data-order_id="<?php echo $order->get_id(); ?>"
+                style="display: none;">
                 <?php self::renderSpinner(); ?>
-            </div>
-        <?php else : ?>
-            <div class="wcmp__has-consignments" style="display: none;">
-                <?php $this->showDeliveryOptions($deliveryOptions); ?>
             </div>
         <?php endif;
 
-        printf('<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
+        printf(
+            '<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
             $order->get_id(),
             WCMP_Data::getPackageTypeHuman($deliveryOptions->getPackageType() ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE)
         );
@@ -629,24 +627,10 @@ class WCMYPA_Admin
      *
      * @throws Exception
      */
-    public function showDeliveryOptionsForOrder(WC_Order $order): void
+    public function showDeliveryDateForOrder(WC_Order $order): void
     {
         $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
-        $this->showDeliveryOptions($deliveryOptions);
-    }
-
-    /**
-     * Show the delivery date if it is present.
-     *
-     * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
-     *
-     * @throws \Exception
-     */
-    public function showDeliveryOptions(DeliveryOptions $deliveryOptions): void
-    {
-        if ($deliveryOptions->getDate()) {
-            $this->printDeliveryDate($deliveryOptions);
-        }
+        $this->printDeliveryDate($deliveryOptions);
     }
 
     /**
@@ -867,23 +851,22 @@ class WCMYPA_Admin
     }
 
     /**
-     * Output the delivery date.
+     * Output the delivery date if there is a date and the show delivery day setting is enabled.
      *
-     * @param DeliveryOptions $delivery_options
+     * @param DeliveryOptions $deliveryOptions
      *
      * @throws Exception
      */
-    private function printDeliveryDate(DeliveryOptions $delivery_options): void
+    private function printDeliveryDate(DeliveryOptions $deliveryOptions): void
     {
-        // If show delivery day is enabled
         $showDeliveryDay = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY);
 
-        if ($showDeliveryDay) {
+        if ($deliveryOptions->getDate() && $showDeliveryDay) {
             printf(
                 '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
                 __("MyParcel shipment:", "woocommerce-myparcel"),
-                WCMP_Data::getDeliveryTypesHuman()[$delivery_options->getDeliveryType()],
-                wc_format_datetime(new WC_DateTime($delivery_options->getDate()), 'l d-m')
+                WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+                wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()), 'D d-m')
             );
         }
     }
