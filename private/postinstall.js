@@ -2,7 +2,7 @@ const path = require('path');
 const cpx = require('cpx');
 
 const files = [
-  ['@myparcel/checkout/dist/myparcel.js', 'assets/js'],
+  ['@myparcel/delivery-options/dist/myparcel.js', 'assets/js'],
 ];
 
 files.forEach(([origin, destination]) => {
