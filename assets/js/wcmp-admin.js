@@ -660,6 +660,7 @@ jQuery(function($) {
    */
   function doBulkAction(event) {
     var action = document.querySelector('[name="action"]').value;
+    var spinnerWrapper = $(this).parent('.bulkactions');
 
     /**
      * Check the selected action is ours.
@@ -700,14 +701,14 @@ jQuery(function($) {
        * Export orders.
        */
       case wcmp.bulk_actions.export:
-        exportToMyParcel(order_ids);
+        exportToMyParcel.bind(spinnerWrapper)(order_ids);
         break;
 
       /**
        * Print labels.
        */
       case wcmp.bulk_actions.print:
-        printLabel({
+        printLabel.bind(spinnerWrapper)({
           order_ids: order_ids,
         });
         break;
@@ -716,7 +717,7 @@ jQuery(function($) {
        * Export and print.
        */
       case wcmp.bulk_actions.export_print:
-        exportToMyParcel(order_ids, 'after_reload');
+        exportToMyParcel.bind(spinnerWrapper)(order_ids, 'after_reload');
         break;
     }
   }
