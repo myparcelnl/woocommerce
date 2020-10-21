@@ -865,7 +865,7 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY,
-                "label"     => __("Number of days you wish to show", "woocommerce-myparcel"),
+                "label"     => __("Show delivery day", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
                     "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account.",
