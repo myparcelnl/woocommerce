@@ -57,16 +57,6 @@ class WCMP_Settings_Callbacks
     }
 
     /**
-     * Echoes a woocommerce help tip.
-     *
-     * @param string $content - Can contain HTML.
-     */
-    private static function renderTooltip(string $content): void
-    {
-        echo wc_help_tip($content, true);
-    }
-
-    /**
      * @param array $args
      */
     public static function renderSection(array $args): void
