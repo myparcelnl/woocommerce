@@ -21,6 +21,20 @@ if (class_exists('WCMP_Checkout')) {
  */
 class WCMP_Checkout
 {
+    private const DELIVERY_OPTIONS_KEY_MAP = [
+        'deliveryType'                   => 'delivery_type',
+        'isPickup'                       => 'is_pickup',
+        'labelDescription'               => 'label_description',
+        'pickupLocation'                 => 'pickup_location',
+        'packageType'                    => 'package_type',
+        'shipmentOptions'                => 'shipment_options',
+        'shipmentOptions.ageCheck'       => 'shipment_options.age_check',
+        'shipmentOptions.insuredAmount'  => 'shipment_options.insured_amount',
+        'shipmentOptions.largeFormat'    => 'shipment_options.large_format',
+        'shipmentOptions.onlyRecipient'  => 'shipment_options.only_recipient',
+        'shipmentOptions.returnShipment' => 'shipment_options.return_shipment',
+    ];
+
     /**
      * WCMP_Checkout constructor.
      */
@@ -362,11 +376,12 @@ class WCMP_Checkout
 
         if ($deliveryOptions) {
             $deliveryOptions = json_decode($deliveryOptions, true);
+            $deliveryOptions = self::remapDeliveryOptionsKeys($deliveryOptions);
 
             /*
              * Create a new DeliveryOptions class from the data.
              */
-            $deliveryOptions = DeliveryOptionsAdapterFactory::create($deliveryOptions);
+            $deliveryOptions = new WCMP_DeliveryOptionsFromOrderAdapter(null, $deliveryOptions);
 
             /*
              * Store it in the meta data. It will be serialized so class references will be kept.
@@ -437,6 +452,26 @@ class WCMP_Checkout
         }
 
         return $split;
+    }
+
+    /**
+     * Map keys from the delivery options to the keys used in the adapters.
+     *
+     * @param array $deliveryOptions
+     *
+     * @return array
+     */
+    private static function remapDeliveryOptionsKeys(array $deliveryOptions): array
+    {
+        foreach (self::DELIVERY_OPTIONS_KEY_MAP as $camel => $snake) {
+            $value = Arr::get($deliveryOptions, $camel);
+            if (isset($value)) {
+                Arr::set($deliveryOptions, $snake, $value);
+                Arr::forget($deliveryOptions, $camel);
+            }
+        }
+
+        return $deliveryOptions;
     }
 }
 
