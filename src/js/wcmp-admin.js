@@ -164,6 +164,8 @@ jQuery(function($) {
     showShipmentSummaryList: '.wcmp__shipment-summary__show',
     spinner: '.wcmp__spinner',
     toggle: '.wcmp__toggle',
+    tipTipHolder: '#tiptip_holder',
+    tipTipContent: '#tiptip_content',
   };
 
   var spinner = {
@@ -1193,7 +1195,13 @@ jQuery(function($) {
   function hideShipmentOptionsForm(event) {
     handleClickOutside.bind(hideShipmentOptionsForm)(event, {
       main: selectors.shipmentOptionsDialog,
-      wrappers: [selectors.shipmentOptions, selectors.shipmentOptionsShowButton],
+      wrappers: [
+        selectors.shipmentOptions,
+        selectors.shipmentOptionsShowButton,
+        // Add the tipTip ids as well so clicking a tipTip inside shipment options won't close the form.
+        selectors.tipTipHolder,
+        selectors.tipTipContent,
+      ],
     });
   }
 
