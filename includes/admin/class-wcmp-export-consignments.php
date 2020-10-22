@@ -322,12 +322,15 @@ class WCMP_Export_Consignments
             ->setPhone($this->recipient['phone']);
 
         $country = $this->consignment->getCountry();
+        $numberSuffix = $this->recipient['number_suffix'];
 
         if ($country === 'BE' && $bpost) {
-            $this->consignment->setBoxNumber($this->recipient['number_suffix'] ?? null);
+            if ($numberSuffix && preg_match('/^[1-9][0-9]*$/', $numberSuffix)) {
+                $this->consignment->setBoxNumber($numberSuffix);
+            }
         }
 
-        $this->consignment->setNumberSuffix($this->recipient['number_suffix'] ?? null);
+        $this->consignment->setNumberSuffix($numberSuffix);
     }
 
     /**
