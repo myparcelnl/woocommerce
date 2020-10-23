@@ -153,7 +153,7 @@ class WCMP_Settings_Callbacks
             '<input type="hidden" name="%s" value="%s" %s>',
             $class->getName(),
             $class->getValue(),
-            $class->getCustomAttributesString()
+            $class->getCustomAttributesAsString()
         );
 
         if (wc_string_to_bool($class->getValue())) {

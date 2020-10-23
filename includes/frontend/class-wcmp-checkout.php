@@ -383,7 +383,7 @@ class WCMP_Checkout
 
         if ($deliveryOptions) {
             $deliveryOptions = json_decode($deliveryOptions, true);
-            $deliveryOptions = self::remapDeliveryOptionsKeys($deliveryOptions);
+            $deliveryOptions = self::convertDeliveryOptionsForAdapter($deliveryOptions);
 
             /*
              * Create a new DeliveryOptions class from the data.
@@ -468,7 +468,7 @@ class WCMP_Checkout
      *
      * @return array
      */
-    private static function remapDeliveryOptionsKeys(array $deliveryOptions): array
+    private static function convertDeliveryOptionsForAdapter(array $deliveryOptions): array
     {
         foreach (self::DELIVERY_OPTIONS_KEY_MAP as $camel => $snake) {
             $value = Arr::get($deliveryOptions, $camel);
