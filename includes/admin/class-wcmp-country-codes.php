@@ -266,7 +266,7 @@ class WCMP_Country_Codes
      */
     public static function isAllowedDestination(string $country_code): bool
     {
-        return ($country_code === WCMP_Data::DEFAULT_COUNTRY_CODE
+        return (WCMP_Data::DEFAULT_COUNTRY_CODE === $country_code
                 || WCMP_Country_Codes::isEuCountry($country_code)
                 || WCMP_Country_Codes::isWorldShipmentCountry(
                 $country_code

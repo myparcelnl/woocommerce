@@ -68,7 +68,7 @@ class WCMP_Settings_Callbacks_Enhanced_Select
             $args["id"],
             $class->getOptionId() . $name . "[]",
             $args["placeholder"] ?? "",
-            $class->getCustomAttributesString()
+            $class->getCustomAttributesAsString()
         );
 
         foreach ($args["options"] as $key => $label) {
