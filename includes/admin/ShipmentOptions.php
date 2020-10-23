@@ -19,10 +19,24 @@ use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 class ShipmentOptions
 {
     private const HOME_COUNTRY_ONLY_ROWS = [
-        '[shipment_options][age_check]',
-        '[shipment_options][only_recipient]',
-        '[shipment_options][signature]',
+        self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
+        self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
+        self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
     ];
+
+    private const OPTION_CARRIER                            = "[carrier]";
+    private const OPTION_DELIVERY_TYPE                      = "[delivery_type]";
+    private const OPTION_EXTRA_OPTIONS_COLLO_AMOUNT         = "[extra_options][collo_amount]";
+    private const OPTION_EXTRA_OPTIONS_WEIGHT               = "[extra_options][weight]";
+    private const OPTION_PACKAGE_TYPE                       = "[package_type]";
+    private const OPTION_SHIPMENT_OPTIONS_INSURED           = "[shipment_options][insured]";
+    private const OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT    = "[shipment_options][insured_amount]";
+    private const OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION = "[shipment_options][label_description]";
+    private const OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT      = "[shipment_options][large_format]";
+    private const OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT    = "[shipment_options][only_recipient]";
+    private const OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT   = "[shipment_options][return_shipment]";
+    private const OPTION_SHIPMENT_OPTIONS_SIGNATURE         = "[shipment_options][signature]";
+    private const OPTION_SHIPMENT_OPTIONS_AGE_CHECK         = "[shipment_options][age_check]";
 
     /**
      * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
@@ -50,14 +64,14 @@ class ShipmentOptions
         );
 
         $conditionCarrierDefault = [
-            "parent_name"  => "[carrier]",
+            "parent_name"  => self::OPTION_CARRIER,
             "type"         => "show",
             "parent_value" => WCMP_Data::DEFAULT_CARRIER,
             "set_value"    => WCMP_Settings_Data::DISABLED,
         ];
 
         $conditionDeliveryTypeDelivery = [
-            "parent_name"  => "[delivery_type]",
+            "parent_name"  => self::OPTION_DELIVERY_TYPE,
             "type"         => "show",
             "parent_value" => [
                 AbstractConsignment::DELIVERY_TYPE_MORNING_NAME,
@@ -68,14 +82,14 @@ class ShipmentOptions
         ];
 
         $conditionPackageTypePackage = [
-            "parent_name"  => "[package_type]",
+            "parent_name"  => self::OPTION_PACKAGE_TYPE,
             "type"         => "show",
             "parent_value" => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
             "set_value"    => WCMP_Settings_Data::DISABLED,
         ];
 
         $conditionForceEnabledOnAgeCheck = [
-            "parent_name"  => "[shipment_options][age_check]",
+            "parent_name"  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
             "type"         => "disable",
             "set_value"    => WCMP_Settings_Data::ENABLED,
             "parent_value" => WCMP_Settings_Data::DISABLED,
@@ -83,7 +97,7 @@ class ShipmentOptions
 
         return [
             [
-                "name"              => "[carrier]",
+                "name"              => self::OPTION_CARRIER,
                 "label"             => __("Carrier", "woocommerce-myparcel"),
                 "type"              => "select",
                 "options"           => WCMP_Data::CARRIERS_HUMAN,
@@ -91,7 +105,7 @@ class ShipmentOptions
                 "value"             => $deliveryOptions->getCarrier() ?? PostNLConsignment::CARRIER_NAME,
             ],
             [
-                "name"              => "[delivery_type]",
+                "name"              => self::OPTION_DELIVERY_TYPE,
                 "label"             => __("Delivery type", "woocommerce-myparcel"),
                 "type"              => "select",
                 "options"           => WCMP_Data::getDeliveryTypesHuman(),
@@ -99,7 +113,7 @@ class ShipmentOptions
                 "value"             => $deliveryOptions->getDeliveryType(),
             ],
             [
-                "name"              => "[package_type]",
+                "name"              => self::OPTION_PACKAGE_TYPE,
                 "label"             => __("Shipment type", "woocommerce-myparcel"),
                 "type"              => "select",
                 "options"           => array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman()),
@@ -109,7 +123,7 @@ class ShipmentOptions
                     : [],
             ],
             [
-                "name"              => "[extra_options][collo_amount]",
+                "name"              => self::OPTION_EXTRA_OPTIONS_COLLO_AMOUNT,
                 "label"             => __("Number of labels", "woocommerce-myparcel"),
                 "type"              => "number",
                 "value"             => $extraOptionsMeta["collo_amount"] ?? 1,
@@ -120,7 +134,7 @@ class ShipmentOptions
                 ],
             ],
             [
-                "name"        => "[extra_options][weight]",
+                "name"        => self::OPTION_EXTRA_OPTIONS_WEIGHT,
                 "type"        => "select",
                 "label"       => __("Weight", "woocommerce-myparcel"),
                 "description" => $orderWeight
@@ -134,14 +148,14 @@ class ShipmentOptions
                 "conditions"  => [
                     $conditionCarrierDefault,
                     [
-                        "parent_name"  => "[package_type]",
+                        "parent_name"  => self::OPTION_PACKAGE_TYPE,
                         "type"         => "show",
                         "parent_value" => AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
                     ],
                 ],
             ],
             [
-                "name"       => "[shipment_options][only_recipient]",
+                "name"       => self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
                 "type"       => "toggle",
                 "label"      => __("Home address only", "woocommerce-myparcel"),
                 "help_text"  => __(
@@ -157,7 +171,7 @@ class ShipmentOptions
                 ],
             ],
             [
-                "name"       => "[shipment_options][signature]",
+                "name"       => self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
                 "type"       => "toggle",
                 "label"      => __("Signature on delivery", "woocommerce-myparcel"),
                 "value"      => $shipmentOptions['hasSignature'],
@@ -173,7 +187,7 @@ class ShipmentOptions
                 ],
             ],
             [
-                "name"       => "[shipment_options][age_check]",
+                "name"       => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
                 "type"      => "toggle",
                 "label"     => __("Age check 18+", "woocommerce-myparcel"),
                 "help_text" => __(
@@ -188,7 +202,7 @@ class ShipmentOptions
                 ],
             ],
             [
-                "name"       => "[shipment_options][large_format]",
+                "name"       => self::OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT,
                 "type"       => "toggle",
                 "label"      => __("Extra large size", "woocommerce-myparcel"),
                 "help_text" => __(
@@ -203,7 +217,7 @@ class ShipmentOptions
                 ],
             ],
             [
-                "name"       => "[shipment_options][return_shipment]",
+                "name"       => self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT,
                 "type"       => "toggle",
                 "label"      => __("Return if no answer", "woocommerce-myparcel"),
                 "value"      => $shipmentOptions['isReturn'],
@@ -218,7 +232,7 @@ class ShipmentOptions
                 ],
             ],
             [
-                "name"       => "[shipment_options][insured]",
+                "name"       => self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 "type"       => "toggle",
                 "label"      => __("Insured", "woocommerce-myparcel"),
                 "value"      => (bool) $shipmentOptions['insurance'],
@@ -226,7 +240,7 @@ class ShipmentOptions
                     $conditionPackageTypePackage,
                     $conditionDeliveryTypeDelivery,
                     [
-                        "parent_name"  => "[carrier]",
+                        "parent_name"  => self::OPTION_CARRIER,
                         "type"         => "disable",
                         "parent_value" => WCMP_Data::DEFAULT_CARRIER,
                         "set_value"    => WCMP_Settings_Data::DISABLED,
@@ -234,7 +248,7 @@ class ShipmentOptions
                 ],
             ],
             [
-                "name"       => "[shipment_options][insured_amount]",
+                "name"       => self::OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT,
                 "type"       => "select",
                 "label"      => __("Insurance amount", "woocommerce-myparcel"),
                 "options"    => WCMP_Data::getInsuranceAmount(),
@@ -242,11 +256,11 @@ class ShipmentOptions
                 "conditions" => [
                     $conditionPackageTypePackage,
                     $conditionDeliveryTypeDelivery,
-                    "[shipment_options][insured]",
+                    self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 ],
             ],
             [
-                "name"  => "[shipment_options][label_description]",
+                "name"  => self::OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION,
                 "type"  => "text",
                 "label" => __("Custom ID (top left on label)", "woocommerce-myparcel"),
                 "value" => $shipmentOptions['label_description'] ?? null,
@@ -264,9 +278,7 @@ class ShipmentOptions
      */
     public static function filterRowsByCountry(string $cc, array $rows): array
     {
-        $isDefaultCountry = WCMP_Data::DEFAULT_COUNTRY_CODE === $cc;
-
-        if ($isDefaultCountry) {
+        if (WCMP_Data::DEFAULT_COUNTRY_CODE === $cc) {
             return $rows;
         }
 
@@ -281,7 +293,6 @@ class ShipmentOptions
     /**
      * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter $shipmentOptions
      * @param string|null                                                                $carrier
-     *
      * @param mixed                                                                      $orderMeta
      *
      * @return array
@@ -295,7 +306,7 @@ class ShipmentOptions
 
         return array_map(
             function ($item) use ($orderMeta) {
-                return WCMP_Export::getChosenOrDefaultShipmentOption($item[0], $item[1], $orderMeta);
+                return WCMP_Export::getChosenOrDefaultShipmentOption($item[0], $item[1]);
             },
             [
                 'hasSignature'      => [

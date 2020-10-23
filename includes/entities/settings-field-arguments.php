@@ -282,11 +282,11 @@ class SettingsFieldArguments
     }
 
     /**
-     * Get the custom attributes as an array or a string for use in HTML.
+     * Get the custom attributes as a string for use in HTML.
      *
      * @return string
      */
-    public function getCustomAttributesString(): string
+    public function getCustomAttributesAsString(): string
     {
         $attributes = [];
 
@@ -479,6 +479,9 @@ class SettingsFieldArguments
     }
 
     /**
+     * Merge multiple matching conditions (if their `type` and `set_value` are the same) into one condition, combining
+     * all `parents` properties.
+     *
      * @param array $conditionData
      *
      * @return array
@@ -488,24 +491,19 @@ class SettingsFieldArguments
         $mergedConditions = [];
 
         foreach ($conditionData as $condition) {
-            $foundMatch = false;
-
-            foreach ($mergedConditions as &$mergedCondition) {
+            foreach ($mergedConditions as $key => $mergedCondition) {
                 $typeMatches     = $mergedCondition['type'] === $condition['type'];
                 $setValueMatches = $mergedCondition['set_value'] === $condition['set_value'];
 
                 if ($typeMatches && $setValueMatches) {
-                    $mergedCondition['parents'] = array_merge(
+                    $mergedConditions[$key]['parents'] = array_merge(
                         $mergedCondition['parents'],
                         $condition['parents']
                     );
 
-                    $foundMatch = true;
+                    // Continue the outer loop as well
+                    continue 2;
                 }
-            }
-
-            if ($foundMatch) {
-                continue;
             }
 
             $mergedConditions[] = $condition;
