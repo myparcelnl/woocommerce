@@ -62,7 +62,7 @@ class WCMYPA_Settings
     public const SETTING_DELIVERY_OPTIONS_ENABLED      = "delivery_options_enabled";
     public const SETTING_DELIVERY_OPTIONS_POSITION     = "delivery_options_position";
     public const SETTING_SHOW_DELIVERY_DAY             = "show_delivery_day";
-    public const SETTING_DELIVERY_TITLE                = "at_home_delivery";
+    public const SETTING_DELIVERY_TITLE                = "delivery_title";
     public const SETTING_HEADER_DELIVERY_OPTIONS_TITLE = "header_delivery_options_title";
     public const SETTING_PICKUP_TITLE                  = "pickup_title";
     public const SETTING_MORNING_DELIVERY_TITLE        = "morning_title";
@@ -106,11 +106,16 @@ class WCMYPA_Settings
     public const SETTING_CARRIER_DELIVERY_EVENING_ENABLED = "delivery_evening_enabled";
     public const SETTING_CARRIER_DELIVERY_EVENING_FEE     = "delivery_evening_fee";
 
-    // TODO; Currently not implemented:
+    // Saturday delivery
+    // TODO; Currently not implemented
+    public const SETTING_CARRIER_FRIDAY_CUTOFF_TIME        = "friday_cutoff_time";
     public const SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED = "saturday_delivery_enabled";
     public const SETTING_CARRIER_SATURDAY_DELIVERY_FEE     = "saturday_delivery_fee";
-    public const SETTING_CARRIER_MONDAY_DELIVERY_ENABLED   = "monday_delivery_enabled";
-    public const SETTING_CARRIER_MONDAY_CUTOFF_TIME        = "monday_cutoff_time";
+
+    // Monday delivery
+    public const SETTING_CARRIER_MONDAY_DELIVERY_ENABLED = "monday_delivery_enabled";
+    public const SETTING_CARRIER_MONDAY_DELIVERY_FEE     = "monday_delivery_fee";
+    public const SETTING_CARRIER_SATURDAY_CUTOFF_TIME    = "saturday_cutoff_time";
 
     public function __construct()
     {
