@@ -66,11 +66,11 @@ class WCMP_Settings_Data
             true
         );
 
-        $this->generate_settings(
-            $this->get_sections_carrier_dpd(),
-            WCMYPA_Settings::SETTINGS_DPD,
-            true
-        );
+//        $this->generate_settings(
+//            $this->get_sections_carrier_dpd(),
+//            WCMYPA_Settings::SETTINGS_DPD,
+//            true
+//        );
     }
 
     public static function getTabs()
