@@ -597,13 +597,13 @@ class WCMP_Settings_Data
                 "type"      => "toggle",
             ],
             [
-                "name"        => WCMYPA_Settings::SETTING_CARRIER_MONDAY_CUTOFF_TIME,
-                "condition"  => [
+                "name"        => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME,
+                "condition"   => [
                     WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                     WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
                 ],
                 "class"       => ["wcmp__child"],
-                "label"       => __("Cut-off time", "woocommerce-myparcel"),
+                "label"       => __("Cut-off time on Saturday", "woocommerce-myparcel"),
                 "placeholder" => "14:30",
                 "default"     => "15:00",
                 "help_text"   => __(

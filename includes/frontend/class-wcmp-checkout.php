@@ -197,79 +197,42 @@ class WCMP_Checkout
     public function get_delivery_options_config()
     {
         $settings = WCMYPA()->setting_collection;
-
         $carriers = $this->get_carriers();
 
         $myParcelConfig = [
             "config"  => [
-                "carriers" => $carriers,
-                "platform" => "myparcel",
-                "locale"   => "nl-NL",
                 "currency" => get_woocommerce_currency(),
+                "locale"   => "nl-NL",
+                "platform" => "myparcel",
             ],
             "strings" => [
                 "addressNotFound"       => __("Address details are not entered", "woocommerce-myparcel"),
                 "city"                  => __("City", "woocommerce-myparcel"),
                 "closed"                => __("Closed", "woocommerce-myparcel"),
+                "deliveryEveningTitle"  => $this->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE),
+                "deliveryMorningTitle"  => $this->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE),
                 "deliveryStandardTitle" => $this->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_STANDARD_TITLE),
                 "deliveryTitle"         => $this->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_DELIVERY_TITLE),
-                "deliveryMorningTitle"  => $this->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE),
-                "deliveryEveningTitle"  => $this->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE),
                 "headerDeliveryOptions" => $this->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE),
                 "houseNumber"           => __("House number", "woocommerce-myparcel"),
+                "onlyRecipientTitle"    => $this->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE),
                 "openingHours"          => __("Opening hours", "woocommerce-myparcel"),
                 "pickUpFrom"            => __("Pick up from", "woocommerce-myparcel"),
                 "pickupTitle"           => $this->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_PICKUP_TITLE),
                 "postcode"              => __("Postcode", "woocommerce-myparcel"),
                 "retry"                 => __("Retry", "woocommerce-myparcel"),
-                "wrongHouseNumberCity"  => __("Postcode/city combination unknown", "woocommerce-myparcel"),
                 "signatureTitle"        => $this->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE),
-                "onlyRecipientTitle"    => $this->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE),
+                "wrongHouseNumberCity"  => __("Postcode/city combination unknown", "woocommerce-myparcel"),
             ],
         ];
 
         foreach ($carriers as $carrier) {
-            $allowMorningDeliveryOptions = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED;
-            $allowDeliveryOptions        = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED;
-            $allowEveningDeliveryOptions = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED;
-            $allowPickupLocations        = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED;
-            $allowSignature              = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED;
-            $allowOnlyRecipient          = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED;
-            $allowMondayDelivery         = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED;
-            $cutoffTime                  = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME;
-            $deliveryDaysWindow          = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW;
-            $dropOffDays                 = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS;
-            $dropOffDelay                = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY;
-            $pricePickup                 = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE;
-            $priceSignature              = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE;
-            $priceOnlyRecipient          = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE;
-            $priceEveningDelivery        = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE;
-            $priceMorningDelivery        = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE;
-            $priceSaturdayDelivery       = "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE;
+            foreach (self::getDeliveryOptionsConfigMap($carrier) as $key => $setting) {
+                [$settingName, $function] = $setting;
+                $value = $settings->{$function}($carrier . '_' . $settingName);
 
-            $myParcelConfig["config"] = [
-                "cutoffTime"         => $settings->getStringByName($cutoffTime),
-                "deliveryDaysWindow" => $settings->getIntegerByName($deliveryDaysWindow),
-                "dropOffDays"        => $settings->getByName($dropOffDays),
-                "dropOffDelay"       => $settings->getIntegerByName($dropOffDelay)
-            ];
-
-            $myParcelConfig["config"]["carrierSettings"][$carrier] = [
-                "allowDeliveryOptions" => $settings->isEnabled($allowDeliveryOptions),
-                "allowEveningDelivery" => $settings->isEnabled($allowEveningDeliveryOptions),
-                "allowMorningDelivery" => $settings->isEnabled($allowMorningDeliveryOptions),
-                "allowPickupLocations" => $settings->isEnabled($allowPickupLocations),
-                "allowSignature"       => $settings->isEnabled($allowSignature),
-                "allowOnlyRecipient"   => $settings->isEnabled($allowOnlyRecipient),
-                "allowMondayDelivery"  => $settings->isEnabled($allowMondayDelivery),
-
-                "pricePickup"           => $settings->getFloatByName($pricePickup),
-                "priceSignature"        => $settings->getFloatByName($priceSignature),
-                "priceOnlyRecipient"    => $settings->getFloatByName($priceOnlyRecipient),
-                "priceEveningDelivery"  => $settings->getFloatByName($priceEveningDelivery),
-                "priceMorningDelivery"  => $settings->getFloatByName($priceMorningDelivery),
-                "priceSaturdayDelivery" => $settings->getFloatByName($priceSaturdayDelivery),
-            ];
+                Arr::set($myParcelConfig, 'config.' . $key, $value);
+            }
         }
 
         return json_encode($myParcelConfig, JSON_UNESCAPED_SLASHES);
@@ -482,6 +445,38 @@ class WCMP_Checkout
         }
 
         return $deliveryOptions;
+    }
+
+    /**
+     * @param string $carrier
+     *
+     * @return array[]
+     */
+    private static function getDeliveryOptionsConfigMap(string $carrier): array
+    {
+        return [
+            "carrierSettings.$carrier.allowDeliveryOptions"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED, 'isEnabled'],
+            "carrierSettings.$carrier.allowEveningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED, 'isEnabled'],
+            "carrierSettings.$carrier.allowMondayDelivery"   => [WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED, 'isEnabled'],
+            "carrierSettings.$carrier.allowMorningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED, 'isEnabled'],
+            "carrierSettings.$carrier.allowOnlyRecipient"    => [WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED, 'isEnabled'],
+            "carrierSettings.$carrier.allowPickupLocations"  => [WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED, 'isEnabled'],
+            "carrierSettings.$carrier.allowSaturdayDelivery" => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED, 'isEnabled'],
+            "carrierSettings.$carrier.allowSignature"        => [WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED, 'isEnabled'],
+            "carrierSettings.$carrier.priceEveningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE, 'getFloatByName'],
+            "carrierSettings.$carrier.priceMondayDelivery"   => [WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_FEE, 'getFloatByName'],
+            "carrierSettings.$carrier.priceMorningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE, 'getFloatByName'],
+            "carrierSettings.$carrier.priceOnlyRecipient"    => [WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE, 'getFloatByName'],
+            "carrierSettings.$carrier.pricePickup"           => [WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE, 'getFloatByName'],
+            "carrierSettings.$carrier.priceSaturdayDelivery" => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE, 'getFloatByName'],
+            "carrierSettings.$carrier.priceSignature"        => [WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE, 'getFloatByName'],
+            "cutoffTime"                                     => [WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName'],
+            "deliveryDaysWindow"                             => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW, 'getIntegerByName'],
+            "dropOffDays"                                    => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS, 'getByName'],
+            "dropOffDelay"                                   => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName'],
+            "fridayCutoffTime"                               => [WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName'],
+            "saturdayCutoffTime"                             => [WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName'],
+        ];
     }
 
     /**
