@@ -63,11 +63,11 @@ class WCMP_Settings_Data
             true
         );
 
-        $this->generate_settings(
-            $this->get_sections_carrier_dpd(),
-            WCMYPA_Settings::SETTINGS_DPD,
-            true
-        );
+//        $this->generate_settings(
+//            $this->get_sections_carrier_dpd(),
+//            WCMYPA_Settings::SETTINGS_DPD,
+//            true
+//        );
     }
 
     public static function getTabs()
@@ -79,7 +79,6 @@ class WCMP_Settings_Data
         ];
 
         $array[WCMYPA_Settings::SETTINGS_POSTNL] = __("PostNL", "woocommerce-myparcel");
-//        $array[WCMP_Settings::SETTINGS_DPD]    = __("DPD", "woocommerce-myparcel");
 
         return $array;
     }

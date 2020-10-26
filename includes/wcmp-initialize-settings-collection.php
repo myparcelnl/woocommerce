@@ -23,11 +23,11 @@ class WCMP_Initialize_Settings_Collection
             "carrier",
             PostNLConsignment::CARRIER_NAME
         );
-        $settings->setSettingsByType(
-            $this->getOption("woocommerce_myparcel_dpd_settings"),
-            "carrier",
-            DPDConsignment::CARRIER_NAME
-        );
+//        $settings->setSettingsByType(
+//            $this->getOption("woocommerce_myparcel_dpd_settings"),
+//            "carrier",
+//            DPDConsignment::CARRIER_NAME
+//        );
 
         return $settings;
     }
