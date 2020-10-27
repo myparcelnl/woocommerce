@@ -1,0 +1,5 @@
+# Backend
+*                            @myparcelnl/plugin-developers
+
+# Frontend
+*.js *.jsx *.ts *.tsx *.vue  @myparcelnl/frontend-developers
