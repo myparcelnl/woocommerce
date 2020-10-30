@@ -125,12 +125,18 @@ const build = gulp.series(
 gulp.task('build', build);
 gulp.task('build:zip', gulp.series('build', 'zip'));
 
-gulp.task('watch', () => {
+const watch = () => {
   gulp.watch(['src/css/**/*', 'src/img/**/*'], null, gulp.series('copy'));
-  // Skip babel in watch mode
+  // Don't use babel in watch mode
   gulp.watch(['src/js/**/*'], null, () => gulp.src('src/js/**/*.js').pipe(gulp.dest('assets/js')));
   gulp.watch(['node_modules/@myparcel/delivery-options/**/*'], null, gulp.series('copy:delivery-options'));
   gulp.watch(['src/scss/**/*'], null, gulp.series('build:scss'));
-});
+  gulp.watch(['**/*.php'], null, gulp.series('translations'));
+};
+
+gulp.task('watch', gulp.series(
+  build,
+  watch,
+));
 
 exports.default = build;
