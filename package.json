@@ -25,13 +25,12 @@
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
     "@myparcel/eslint-config": "^3.0.0",
-    "autoprefixer": "^10.0.1",
+    "autoprefixer": "^10.0.2",
     "babelify": "^10.0.0",
     "browserify": "^17.0.0",
-    "core-js": "^3.6.5",
+    "core-js": "^3.7.0",
     "gulp": "^4.0.2",
     "gulp-clean": "^0.4.0",
-    "gulp-composer": "^0.4.5",
     "gulp-po-sync": "^0.1.0",
     "gulp-po2mo": "^1.0.3",
     "gulp-postcss": "^9.0.0",
@@ -41,7 +40,7 @@
     "gulp-uglify": "^3.0.2",
     "gulp-wp-pot": "^2.5.0",
     "gulp-zip": "^5.0.2",
-    "postcss": "^8.1.2",
+    "postcss": "^8.1.7",
     "vinyl-buffer": "^1.0.1"
   }
 }
