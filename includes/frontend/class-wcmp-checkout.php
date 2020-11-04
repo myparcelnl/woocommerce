@@ -47,12 +47,14 @@ class WCMP_Checkout
     }
 
     /**
-     * Load styles & scripts
+     * Load styles & scripts on the checkout page.
+     *
+     * @throws \Exception
      */
-    public function enqueue_frontend_scripts()
+    public function enqueue_frontend_scripts(): void
     {
-        // return if not checkout or order received page
-        if (! is_checkout() && ! is_order_received_page()) {
+        // The order received page has the same page id as the checkout so `is_checkout()` returns true on both...
+        if (! is_checkout() || is_order_received_page()) {
             return;
         }
 
@@ -82,7 +84,7 @@ class WCMP_Checkout
          * If split address fields are enabled add the checkout fields script as an additional dependency.
          */
         if ($useSplitAddressFields) {
-            array_push($deps, "wcmp-checkout-fields");
+            $deps[] = "wcmp-checkout-fields";
         }
 
         wp_enqueue_script(
@@ -109,7 +111,7 @@ class WCMP_Checkout
      *
      * @throws Exception
      */
-    public function inject_delivery_options_variables()
+    public function inject_delivery_options_variables(): void
     {
         wp_localize_script(
             'wc-myparcel-frontend',
