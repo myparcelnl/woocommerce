@@ -1,17 +1,17 @@
 [
     {
         "name": "myparcelnl/sdk",
-        "version": "v5.2.1",
-        "version_normalized": "5.2.1.0",
+        "version": "v5.2.2",
+        "version_normalized": "5.2.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/myparcelnl/sdk.git",
-            "reference": "e64ede79dac28fcbf0453d7aba017e6481dbb66b"
+            "reference": "fa6889d604e17121c9682ce768e9d6f68ff80d8d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/e64ede79dac28fcbf0453d7aba017e6481dbb66b",
-            "reference": "e64ede79dac28fcbf0453d7aba017e6481dbb66b",
+            "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/fa6889d604e17121c9682ce768e9d6f68ff80d8d",
+            "reference": "fa6889d604e17121c9682ce768e9d6f68ff80d8d",
             "shasum": ""
         },
         "require": {
@@ -20,7 +20,7 @@
         "require-dev": {
             "phpunit/phpunit": "^5.5"
         },
-        "time": "2020-09-09T09:51:16+00:00",
+        "time": "2020-10-22T15:15:22+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
