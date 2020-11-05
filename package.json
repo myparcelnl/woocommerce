@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/myparcel/woocommerce#readme",
   "dependencies": {
-    "@myparcel/delivery-options": "^3.3.7"
+    "@myparcel/delivery-options": "^3.3.8"
   },
   "devDependencies": {
     "@myparcel/eslint-config": "^3.0.0",
