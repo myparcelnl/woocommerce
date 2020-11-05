@@ -129,6 +129,7 @@ class WCMP_Checkout
                 "isUsingSplitAddressFields" => (int) WCMYPA()->setting_collection->isEnabled(
                     WCMYPA_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS
                 ),
+                "splitAddressFieldsCountries" => WCMP_NL_Postcode_Fields::COUNTRIES_WITH_SPLIT_ADDRESS_FIELDS,
             ]
         );
 
