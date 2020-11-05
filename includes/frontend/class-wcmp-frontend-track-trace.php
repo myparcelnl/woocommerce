@@ -92,7 +92,7 @@ class WCMP_Frontend_Track_Trace
                 'url'  => $consignment['url'],
                 'name' => apply_filters(
                     'wcmyparcel_myaccount_tracktrace_button',
-                    __('Track & Trace', 'wooocommerce-myparcel')
+                    __('Track & Trace', 'woocommerce-myparcel')
                 ),
             ];
         }
