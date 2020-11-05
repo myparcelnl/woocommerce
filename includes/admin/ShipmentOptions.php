@@ -49,50 +49,17 @@ class ShipmentOptions
         AbstractDeliveryOptionsAdapter $deliveryOptions,
         WC_Order $order
     ): array {
-        $extraOptionsMeta = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+        $isHomeCountry = WCMP_Data::isHomeCountry($order->get_shipping_country());
 
-        $isPackageTypeDisabled = count(WCMP_Data::getPackageTypes()) === 1 || $deliveryOptions->isPickup();
-        $selectedPackageType   = WCMYPA()->export->getPackageTypeFromOrder($order, $deliveryOptions);
-        $orderWeight           = (float) $order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
-        $digitalStampWeight    = $extraOptionsMeta["weight"] ?? WCMP_Export::getDigitalStampRangeFromWeight($orderWeight);
+        $hasMultiplePackageTypes = count(WCMP_Data::getPackageTypes()) > 1;
+        $isPackageTypeDisabled   = ! $hasMultiplePackageTypes || $deliveryOptions->isPickup() || ! $isHomeCountry;
 
         $shipmentOptions = self::getShipmentOptions(
             $deliveryOptions->getShipmentOptions(),
             $deliveryOptions->getCarrier()
         );
 
-        $conditionCarrierDefault = [
-            "parent_name"  => self::OPTION_CARRIER,
-            "type"         => "show",
-            "parent_value" => WCMP_Data::DEFAULT_CARRIER,
-            "set_value"    => WCMP_Settings_Data::DISABLED,
-        ];
-
-        $conditionDeliveryTypeDelivery = [
-            "parent_name"  => self::OPTION_DELIVERY_TYPE,
-            "type"         => "show",
-            "parent_value" => [
-                AbstractConsignment::DELIVERY_TYPE_MORNING_NAME,
-                AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME,
-                AbstractConsignment::DELIVERY_TYPE_EVENING_NAME,
-            ],
-            "set_value"    => WCMP_Settings_Data::DISABLED,
-        ];
-
-        $conditionPackageTypePackage = [
-            "parent_name"   => self::OPTION_PACKAGE_TYPE,
-            "type"          => "show",
-            "parent_value"  => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
-        ];
-
-        $conditionForceEnabledOnAgeCheck = [
-            "parent_name"  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
-            "type"         => "disable",
-            "set_value"    => WCMP_Settings_Data::ENABLED,
-            "parent_value" => WCMP_Settings_Data::DISABLED,
-        ];
-
-        return [
+        $rows = [
             [
                 "name"              => self::OPTION_CARRIER,
                 "label"             => __("Carrier", "woocommerce-myparcel"),
@@ -114,20 +81,152 @@ class ShipmentOptions
                 "label"             => __("Shipment type", "woocommerce-myparcel"),
                 "type"              => "select",
                 "options"           => array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman()),
-                "value"             => $selectedPackageType,
+                "value"             => WCMYPA()->export->getPackageTypeFromOrder($order, $deliveryOptions),
                 "custom_attributes" => $isPackageTypeDisabled
                     ? ["disabled" => "disabled"]
                     : [],
             ],
+        ];
+
+        // Only add extra options and shipment options to home country shipments.
+        if ($isHomeCountry) {
+            $rows = array_merge($rows, self::getAdditionalOptionsRows($order, $shipmentOptions));
+        }
+
+        $rows[] = [
+            "name"  => self::OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION,
+            "type"  => "text",
+            "label" => __("Custom ID (top left on label)", "woocommerce-myparcel"),
+            "value" => $shipmentOptions['label_description'] ?? null,
+        ];
+
+        return $rows;
+    }
+
+    /**
+     * Filters out rows that should not be shown if the shipment is sent to the home country.
+     *
+     * @param string $cc
+     * @param array  $rows
+     *
+     * @return array
+     */
+    public static function filterRowsByCountry(string $cc, array $rows): array
+    {
+        if (WCMP_Data::DEFAULT_COUNTRY_CODE === $cc) {
+            return $rows;
+        }
+
+        return array_filter(
+            $rows,
+            function ($row) {
+                return ! in_array($row['name'], self::HOME_COUNTRY_ONLY_ROWS);
+            }
+        );
+    }
+
+    /**
+     * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter $shipmentOptions
+     * @param string|null                                                                $carrier
+     *
+     * @return array
+     */
+    private static function getShipmentOptions(
+        AbstractShipmentOptionsAdapter $shipmentOptions,
+        ?string $carrier = null
+    ): array {
+        $carrier = $carrier ?? WCMP_Data::DEFAULT_CARRIER;
+
+        return array_map(
+            static function ($item) {
+                return WCMP_Export::getChosenOrDefaultShipmentOption($item[0], $item[1]);
+            },
+            [
+                'hasSignature'      => [
+                    $shipmentOptions->hasSignature(),
+                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+                ],
+                'hasOnlyRecipient'  => [
+                    $shipmentOptions->hasOnlyRecipient(),
+                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
+                ],
+                'hasAgeCheck'       => [
+                    $shipmentOptions->hasAgeCheck(),
+                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
+                ],
+                'hasLargeFormat'    => [
+                    $shipmentOptions->hasLargeFormat(),
+                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
+                ],
+                'isReturn'          => [
+                    $shipmentOptions->isReturn(),
+                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
+                ],
+                'insurance'         => [
+                    $shipmentOptions->getInsurance(),
+                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
+                ],
+                'label_description' => [
+                    $shipmentOptions->getLabelDescription(),
+                    WCMYPA_Settings::SETTING_LABEL_DESCRIPTION,
+                ],
+            ]
+        );
+    }
+
+    /**
+     * @param \WC_Order $order
+     * @param array     $shipmentOptions
+     *
+     * @return array[]
+     */
+    private static function getAdditionalOptionsRows(WC_Order $order, array $shipmentOptions): array
+    {
+        $extraOptionsMeta = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+
+        $orderWeight        = (float) $order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+        $digitalStampWeight = $extraOptionsMeta["weight"] ?? WCMP_Export::getDigitalStampRangeFromWeight($orderWeight);
+
+        $conditionCarrierDefault = [
+            "parent_name"  => self::OPTION_CARRIER,
+            "type"         => "show",
+            "parent_value" => WCMP_Data::DEFAULT_CARRIER,
+            "set_value"    => WCMP_Settings_Data::DISABLED,
+        ];
+
+        $conditionDeliveryTypeDelivery = [
+            "parent_name"  => self::OPTION_DELIVERY_TYPE,
+            "type"         => "show",
+            "parent_value" => [
+                AbstractConsignment::DELIVERY_TYPE_MORNING_NAME,
+                AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME,
+                AbstractConsignment::DELIVERY_TYPE_EVENING_NAME,
+            ],
+            "set_value"    => WCMP_Settings_Data::DISABLED,
+        ];
+
+        $conditionPackageTypePackage = [
+            "parent_name"  => self::OPTION_PACKAGE_TYPE,
+            "type"         => "show",
+            "parent_value" => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
+        ];
+
+        $conditionForceEnabledOnAgeCheck = [
+            "parent_name"  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
+            "type"         => "disable",
+            "set_value"    => WCMP_Settings_Data::ENABLED,
+            "parent_value" => WCMP_Settings_Data::DISABLED,
+        ];
+
+        return [
             [
                 "name"              => self::OPTION_EXTRA_OPTIONS_COLLO_AMOUNT,
                 "label"             => __("Number of labels", "woocommerce-myparcel"),
                 "type"              => "number",
                 "value"             => $extraOptionsMeta["collo_amount"] ?? 1,
                 "custom_attributes" => [
-                    "step" => "1",
-                    "min"  => "1",
-                    "max"  => "10",
+                    "min" => "1",
+                    "max" => "10",
                 ],
                 "condition"         => [
                     $conditionPackageTypePackage,
@@ -259,83 +358,6 @@ class ShipmentOptions
                     self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 ],
             ],
-            [
-                "name"  => self::OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION,
-                "type"  => "text",
-                "label" => __("Custom ID (top left on label)", "woocommerce-myparcel"),
-                "value" => $shipmentOptions['label_description'] ?? null,
-            ],
         ];
-    }
-
-    /**
-     * Filters out rows that should not be shown if the shipment is sent to the home country.
-     *
-     * @param string $cc
-     * @param array  $rows
-     *
-     * @return array
-     */
-    public static function filterRowsByCountry(string $cc, array $rows): array
-    {
-        if (WCMP_Data::DEFAULT_COUNTRY_CODE === $cc) {
-            return $rows;
-        }
-
-        return array_filter(
-            $rows,
-            function ($row) {
-                return ! in_array($row['name'], self::HOME_COUNTRY_ONLY_ROWS);
-            }
-        );
-    }
-
-    /**
-     * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter $shipmentOptions
-     * @param string|null                                                                $carrier
-     *
-     * @return array
-     */
-    private static function getShipmentOptions(
-        AbstractShipmentOptionsAdapter $shipmentOptions,
-        ?string $carrier = null
-    ): array {
-        $carrier = $carrier ?? WCMP_Data::DEFAULT_CARRIER;
-
-        return array_map(
-            static function ($item) {
-                return WCMP_Export::getChosenOrDefaultShipmentOption($item[0], $item[1]);
-            },
-            [
-                'hasSignature'      => [
-                    $shipmentOptions->hasSignature(),
-                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
-                ],
-                'hasOnlyRecipient'  => [
-                    $shipmentOptions->hasOnlyRecipient(),
-                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
-                ],
-                'hasAgeCheck'       => [
-                    $shipmentOptions->hasAgeCheck(),
-                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
-                ],
-                'hasLargeFormat'    => [
-                    $shipmentOptions->hasLargeFormat(),
-                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
-                ],
-                'isReturn'          => [
-                    $shipmentOptions->isReturn(),
-                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
-                ],
-                'insurance'         => [
-                    $shipmentOptions->getInsurance(),
-                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
-                ],
-                'label_description' => [
-                    $shipmentOptions->getInsurance(),
-                    WCMYPA_Settings::SETTING_LABEL_DESCRIPTION,
-                ],
-            ]
-        );
     }
 }

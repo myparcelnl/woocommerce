@@ -92,11 +92,7 @@ class WCMP_Export
      */
     public static function getChosenOrDefaultShipmentOption($option, string $settingName)
     {
-        if (isset($option)) {
-            return $option;
-        }
-
-        return WCMYPA()->setting_collection->getByName($settingName);
+        return $option ?? WCMYPA()->setting_collection->getByName($settingName);
     }
 
     /**

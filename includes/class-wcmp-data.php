@@ -221,6 +221,18 @@ class WCMP_Data
             DPDConsignment::CARRIER_NAME    => __("DPD", "woocommerce-myparcel"),
         ];
     }
+
+    /**
+     * Check if a given cc matches the default country code.
+     *
+     * @param string $country
+     *
+     * @return bool
+     */
+    public static function isHomeCountry(string $country): bool
+    {
+        return self::DEFAULT_COUNTRY_CODE === $country;
+    }
 }
 
 return new WCMP_Data();
