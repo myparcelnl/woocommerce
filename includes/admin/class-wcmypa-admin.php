@@ -559,7 +559,8 @@ class WCMYPA_Admin
 
         foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
             $order           = WCX::get_order($order_id);
-            $data            = self::removeDisallowedDeliveryOptions($data);
+            $shippingCountry = $order->get_shipping_country();
+            $data            = self::removeDisallowedDeliveryOptions($data, $shippingCountry);
             $deliveryOptions = self::getDeliveryOptionsFromOrder($order, $data);
 
             WCX_Order::update_meta_data(
@@ -1017,23 +1018,29 @@ class WCMYPA_Admin
     /**
      * Remove options that aren't allowed and return the edited array.
      *
-     * @param $data
+     * @param array  $data
+     * @param string $country
      *
      * @return mixed
      */
-    private static function removeDisallowedDeliveryOptions(array $data): array
+    private static function removeDisallowedDeliveryOptions(array $data, string $country): array
     {
+        $isHomeCountry  = WCMP_Data::isHomeCountry($country);
         $isPackage      = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $data['package_type'];
         $isDigitalStamp = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $data['package_type'];
 
-        if (! $isPackage) {
-            unset($data['shipment_options']['age_check']);
-            unset($data['shipment_options']['large_format']);
-            unset($data['shipment_options']['return_shipment']);
-            unset($data['shipment_options']['insured']);
-            unset($data['shipment_options']['insured_amount']);
+        if (! $isHomeCountry) {
+          $data['package_type'] = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
+        }
 
-            unset($data['extra_options']['collo_amount']);
+        if (! $isHomeCountry || ! $isPackage) {
+            $data['shipment_options']['age_check'] = false;
+            $data['shipment_options']['large_format'] = false;
+            $data['shipment_options']['return_shipment'] = false;
+            $data['shipment_options']['insured'] = false;
+            $data['shipment_options']['insured_amount'] = 0;
+
+            $data['extra_options']['collo_amount'] = 1;
         }
 
         if (! $isDigitalStamp) {
