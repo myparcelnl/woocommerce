@@ -446,9 +446,14 @@ jQuery(function($) {
     Object
       .keys(dependencies)
       .forEach(function(name) {
-        var input = document.querySelector('[name="' + name + '"]');
+        var inputSelector = '[name="' + name + '"]';
+        var input = document.querySelector(inputSelector);
 
-        console.warn(name.replace(/myparcel_options\[\d+\]/, ''));
+        if (!input) {
+          // eslint-disable-next-line no-console
+          console.error('Element ' + inputSelector + ' not found.');
+          return;
+        }
 
         /**
          * Loop through all the dependencies.
@@ -467,7 +472,6 @@ jQuery(function($) {
 
           var updateQueue = checkDependenciesRecursively(dependencies, input, 1, []);
 
-          console.log(updateQueue);
           // Executes all needed updates gathered by checkDependenciesRecursively.
           updateQueue.forEach(function(dependency) {
             toggleElement(dependency, easing);
