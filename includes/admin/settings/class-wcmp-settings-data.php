@@ -1,6 +1,5 @@
 <?php
 
-use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
@@ -39,6 +38,8 @@ class WCMP_Settings_Data
 
     /**
      * Create all settings sections.
+     *
+     * @throws \Exception
      */
     public function create_all_settings(): void
     {
@@ -62,15 +63,12 @@ class WCMP_Settings_Data
             WCMYPA_Settings::SETTINGS_POSTNL,
             true
         );
-
-//        $this->generate_settings(
-//            $this->get_sections_carrier_dpd(),
-//            WCMYPA_Settings::SETTINGS_DPD,
-//            true
-//        );
     }
 
-    public static function getTabs()
+    /**
+     * @return array
+     */
+    public static function getTabs(): array
     {
         $array = [
             WCMYPA_Settings::SETTINGS_GENERAL         => __("General", "woocommerce-myparcel"),
@@ -256,29 +254,6 @@ class WCMP_Settings_Data
                     "name"     => "pickup_options",
                     "label"    => __("PostNL pickup options", "woocommerce-myparcel"),
                     "settings" => $this->get_section_carrier_postnl_pickup_options(),
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * Get the array of dpd sections and their settings to be added to WordPress.
-     *
-     * @return array
-     */
-    private function get_sections_carrier_dpd()
-    {
-        return [
-            DPDConsignment::CARRIER_NAME => [
-                [
-                    "name"     => "delivery_options",
-                    "label"    => __("DPD delivery options", "woocommerce-myparcel"),
-                    "settings" => $this->get_section_carrier_dpd_delivery_options(),
-                ],
-                [
-                    "name"     => "pickup_options",
-                    "label"    => __("DPD pickup options", "woocommerce-myparcel"),
-                    "settings" => $this->get_section_carrier_dpd_pickup_options(),
                 ],
             ],
         ];
@@ -546,11 +521,14 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Show delivery date", "woocommerce-myparcel"),
+                "label"     => __("Delivery days window", "woocommerce-myparcel"),
                 "type"      => "number",
                 "max"       => 14,
                 "default"   => self::ENABLED,
-                "help_text" => __("Show the delivery date inside the delivery options.", "woocommerce-myparcel"),
+                "help_text" => __(
+                    "Amount of days a customer can postpone a shipment. Default is 0 days with a maximum value of 14 days.",
+                    "woocommerce-myparcel"
+                ),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
@@ -649,89 +627,6 @@ class WCMP_Settings_Data
                     WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
                 ]
             ),
-        ];
-    }
-
-    /**
-     * These are the unprefixed settings for dpd.
-     * After the settings are generated every name will be prefixed with "dpd_"
-     * Example: delivery_enabled => dpd_delivery_enabled
-     *
-     * @return array
-     */
-    private function get_section_carrier_dpd_delivery_options(): array
-    {
-        return [
-            [
-                "name"  => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label" => __("Enable DPD delivery", "woocommerce-myparcel"),
-                "type"  => "toggle",
-            ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Drop-off days", "woocommerce-myparcel"),
-                "callback"  => [WCMP_Settings_Callbacks::class, "enhanced_select"],
-                "options"   => $this->getWeekdays(),
-                "default"   => [1, 2, 3, 4, 5],
-                "help_text" => __("Days of the week on which you hand over parcels to DPD", "woocommerce-myparcel"),
-            ],
-            [
-                "name"        => WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME,
-                "condition"   => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"       => __("Cut-off time", "woocommerce-myparcel"),
-                "placeholder" => "17:00",
-                "default"     => "17:00",
-                "help_text"   => __(
-                    "Time at which you stop processing orders for the day (format: hh:mm)",
-                    "woocommerce-myparcel"
-                ),
-            ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Drop-off delay", "woocommerce-myparcel"),
-                "type"      => "number",
-                "max"       => 14,
-                "help_text" => __("Number of days you need to process an order.", "woocommerce-myparcel"),
-            ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Show delivery date", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "default"   => self::ENABLED,
-                "help_text" => __("Show the delivery date inside the delivery options.", "woocommerce-myparcel"),
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function get_section_carrier_dpd_pickup_options(): array
-    {
-        return [
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                "label"     => __("Enable DPD pickup", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                    "woocommerce-myparcel"
-                ),
-            ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                "class"     => ["wcmp__child"],
-                "label"     => __("Fee (optional)", "woocommerce-myparcel"),
-                "type"      => "currency",
-                "help_text" => __(
-                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                    "woocommerce-myparcel"
-                ),
-            ],
         ];
     }
 
