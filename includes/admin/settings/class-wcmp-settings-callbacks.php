@@ -47,12 +47,17 @@ class WCMP_Settings_Callbacks
     }
 
     /**
-     * @param array $args
+     * @param \WPO\WC\MyParcel\Entity\SettingsFieldArguments|array $args
+     *
+     * @throws \Exception
      */
-    public static function enhanced_select(array $args): void
+    public static function enhanced_select($args): void
     {
-        include("class-wcmp-settings-callbacks-enhanced-select.php");
+        if (is_array($args)) {
+            $args = new SettingsFieldArguments($args);
+        }
 
+        include("class-wcmp-settings-callbacks-enhanced-select.php");
         new WCMP_Settings_Callbacks_Enhanced_Select($args);
     }
 

@@ -15,14 +15,13 @@ class WCMP_Settings_Callbacks_Enhanced_Select
     /**
      * WCMP_Settings_Callbacks_Enhanced_Select constructor.
      *
-     * @param array $args
+     *
+     * @param \WPO\WC\MyParcel\Entity\SettingsFieldArguments $class
      */
-    public function __construct(array $args)
+    public function __construct(SettingsFieldArguments $class)
     {
-        $class = new SettingsFieldArguments($args);
-
-        if (isset($args["loop"])) {
-            $this->createMultipleSearchBoxes($args["loop"], $class);
+        if ($class->getArgument('loop')) {
+            $this->createMultipleSearchBoxes($class->getArgument('loop'), $class);
         } else {
             $value = get_option($class->getOptionId())[$class->getId()];
 

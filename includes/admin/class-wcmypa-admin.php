@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -552,12 +553,13 @@ class WCMYPA_Admin
      * @throws Exception
      * @see admin/views/html-order-shipment-options.php
      */
-    public function save_shipment_options_ajax()
+    public function save_shipment_options_ajax(): void
     {
         parse_str($_POST["form_data"], $form_data);
 
         foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
             $order           = WCX::get_order($order_id);
+            $data            = self::removeDisallowedDeliveryOptions($data);
             $deliveryOptions = self::getDeliveryOptionsFromOrder($order, $data);
 
             WCX_Order::update_meta_data(
@@ -1010,6 +1012,35 @@ class WCMYPA_Admin
     public static function shipmentIsStatus(array $shipment, int $status): bool
     {
         return strstr($shipment['status'], (new WCMP_Export())->getShipmentStatusName($status));
+    }
+
+    /**
+     * Remove options that aren't allowed and return the edited array.
+     *
+     * @param $data
+     *
+     * @return mixed
+     */
+    private static function removeDisallowedDeliveryOptions(array $data): array
+    {
+        $isPackage      = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $data['package_type'];
+        $isDigitalStamp = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $data['package_type'];
+
+        if (! $isPackage) {
+            unset($data['shipment_options']['age_check']);
+            unset($data['shipment_options']['large_format']);
+            unset($data['shipment_options']['return_shipment']);
+            unset($data['shipment_options']['insured']);
+            unset($data['shipment_options']['insured_amount']);
+
+            unset($data['extra_options']['collo_amount']);
+        }
+
+        if (! $isDigitalStamp) {
+            unset($data['extra_options']['weight']);
+        }
+
+        return $data;
     }
 }
 

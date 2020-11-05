@@ -87,8 +87,10 @@ class WCMP_Settings_Data
      * Generate settings sections and fields by the given $settingsArray.
      *
      * @param array  $settingsArray - Array of settings to loop through.
-     * @param string $optionName - Name to use in the identifier.
-     * @param bool   $prefix - Add the key of the top level settings as prefix before every setting or not.
+     * @param string $optionName    - Name to use in the identifier.
+     * @param bool   $prefix        - Add the key of the top level settings as prefix before every setting or not.
+     *
+     * @throws \Exception
      */
     private function generate_settings(array $settingsArray, string $optionName, bool $prefix = false): void
     {
@@ -105,42 +107,37 @@ class WCMP_Settings_Data
                 add_settings_section(
                     $sectionName,
                     $section["label"],
-                    function() use ($section) {
-                        // Allows a description to be shown with a section title.
-                        /** @noinspection PhpVoidFunctionResultUsedInspection */
-                        return $this->callbacks->renderSection($section);
+                    /**
+                     * Allows a description to be shown with a section title.
+                     */
+                    static function() use ($section) {
+                        WCMP_Settings_Callbacks::renderSection($section);
                     },
                     $optionIdentifier
                 );
 
                 foreach ($section["settings"] as $setting) {
-                    $setting["id"] = $prefix ? "{$name}_{$setting["name"]}" : $setting["name"];
+                    $namePrefix           = $prefix ? "{$name}_" : '';
+                    $setting["id"]        = $prefix ? "{$name}_{$setting["name"]}" : $setting["name"];
+                    $setting["option_id"] = $optionIdentifier;
 
-                    // Add the prefix to the name in the condition array
-                    if (isset($setting["condition"])) {
-                        if (is_array($setting["condition"])) {
-                            $related                             = $setting["condition"]["name"];
-                            $related                             = $prefix ? "{$name}_{$related}" : $related;
-                            $setting["condition"]["parent_name"] = "{$optionIdentifier}[$related]";
-                        } else {
-                            $related              = $setting["condition"];
-                            $related              = $prefix ? "{$name}_{$related}" : $related;
-                            $setting["condition"] = "{$optionIdentifier}[$related]";
-                        }
-                    }
-
-                    $class = new SettingsFieldArguments($setting);
+                    $class = new SettingsFieldArguments($setting, "{$optionIdentifier}[{$namePrefix}", ']');
 
                     // Add the setting's default value to the defaults array.
                     $defaults[$setting["id"]] = $class->getDefault();
+                    $class->setValue(get_option($optionIdentifier)[$class->getId()]);
 
-                    $defaultCallback = function() use ($setting, $class, $optionIdentifier) {
-                        $class->setValue(get_option($optionIdentifier)[$class->getId()]);
-                        $class->setName("{$optionIdentifier}[{$class->getId()}]");
-                        $this->callbacks::renderField($class);
+                    // Default callback
+                    $callback = static function() use ($class) {
+                        WCMP_Settings_Callbacks::renderField($class);
                     };
 
-                    $callback = $setting["callback"] ?? $defaultCallback;
+                    // Pass the class to custom callbacks as well.
+                    if (isset($setting['callback'])) {
+                        $callback = static function () use ($setting, $class) {
+                            call_user_func($setting["callback"], $class);
+                        };
+                    }
 
                     add_settings_field(
                         $setting["id"],
@@ -326,16 +323,16 @@ class WCMP_Settings_Data
                 ],
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION,
-                "label"     => __("Ask for print start position", "woocommerce-myparcel"),
+                "name"       => WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION,
+                "label"      => __("Ask for print start position", "woocommerce-myparcel"),
                 "condition" => [
-                    "name"         => WCMYPA_Settings::SETTING_LABEL_FORMAT,
+                    "parent_name"  => WCMYPA_Settings::SETTING_LABEL_FORMAT,
                     "type"         => "disable",
                     "parent_value" => "A4",
                     "set_value"    => self::DISABLED,
                 ],
-                "type"      => "toggle",
-                "help_text" => __(
+                "type"       => "toggle",
+                "help_text"  => __(
                     "This option enables you to continue printing where you left off last time",
                     "woocommerce-myparcel"
                 ),
@@ -379,7 +376,7 @@ class WCMP_Settings_Data
                 "class"     => ["wcmp__child"],
                 "label"     => __("Automatic order status", "woocommerce-myparcel"),
                 "type"      => "select",
-                "options"   => $this->callbacks->get_order_status_options(),
+                "options"   => WCMP_Settings_Callbacks::get_order_status_options(),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_BARCODE_IN_NOTE,
@@ -523,7 +520,7 @@ class WCMP_Settings_Data
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Drop-off days", "woocommerce-myparcel"),
-                "callback"  => [$this->callbacks, "enhanced_select"],
+                "callback"  => [WCMP_Settings_Callbacks::class, "enhanced_select"],
                 "options"   => $this->getWeekdays(),
                 "default"   => [1, 2, 3, 4, 5],
                 "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcel"),
@@ -561,51 +558,39 @@ class WCMP_Settings_Data
                 "label"     => __("Morning delivery", "woocommerce-myparcel"),
                 "type"      => "toggle",
             ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
-                "class"     => ["wcmp__child"],
-                "label"     => __("Fee (optional)", "woocommerce-myparcel"),
-                "type"      => "currency",
-                "help_text" => __(
-                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                    "woocommerce-myparcel"
-                ),
-            ],
+            self::getFeeField(
+                WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
+                [
+                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
+                ]
+            ),
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Evening delivery", "woocommerce-myparcel"),
                 "type"      => "toggle",
             ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
-                "class"     => ["wcmp__child"],
-                "label"     => __("Fee (optional)", "woocommerce-myparcel"),
-                "type"      => "currency",
-                "help_text" => __(
-                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                    "woocommerce-myparcel"
-                ),
-            ],
+            self::getFeeField(
+                WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
+                [
+                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
+                ]
+            ),
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Home address only", "woocommerce-myparcel"),
                 "type"      => "toggle",
             ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
-                "class"     => ["wcmp__child"],
-                "label"     => __("Fee (optional)", "woocommerce-myparcel"),
-                "type"      => "currency",
-                "help_text" => __(
-                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                    "woocommerce-myparcel"
-                ),
-            ],
+            self::getFeeField(
+                WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
+                [
+                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+                ]
+            ),
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
@@ -616,17 +601,13 @@ class WCMP_Settings_Data
                     "woocommerce-myparcel"
                 ),
             ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
-                "class"     => ["wcmp__child"],
-                "label"     => __("Fee (optional)", "woocommerce-myparcel"),
-                "type"      => "currency",
-                "help_text" => __(
-                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                    "woocommerce-myparcel"
-                ),
-            ],
+            self::getFeeField(
+                WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE,
+                [
+                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                ]
+            ),
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
@@ -635,7 +616,10 @@ class WCMP_Settings_Data
             ],
             [
                 "name"        => WCMYPA_Settings::SETTING_CARRIER_MONDAY_CUTOFF_TIME,
-                "condition"   => WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
+                "condition"  => [
+                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
+                ],
                 "class"       => ["wcmp__child"],
                 "label"       => __("Cut-off time", "woocommerce-myparcel"),
                 "placeholder" => "14:30",
@@ -659,17 +643,12 @@ class WCMP_Settings_Data
                 "label" => __("Enable PostNL pickup", "woocommerce-myparcel"),
                 "type"  => "toggle",
             ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                "class"     => ["wcmp__child"],
-                "label"     => __("Fee (optional)", "woocommerce-myparcel"),
-                "type"      => "currency",
-                "help_text" => __(
-                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                    "woocommerce-myparcel"
-                ),
-            ],
+            self::getFeeField(
+                WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE,
+                [
+                    WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                ]
+            ),
         ];
     }
 
@@ -692,7 +671,7 @@ class WCMP_Settings_Data
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Drop-off days", "woocommerce-myparcel"),
-                "callback"  => [$this->callbacks, "enhanced_select"],
+                "callback"  => [WCMP_Settings_Callbacks::class, "enhanced_select"],
                 "options"   => $this->getWeekdays(),
                 "default"   => [1, 2, 3, 4, 5],
                 "help_text" => __("Days of the week on which you hand over parcels to DPD", "woocommerce-myparcel"),
@@ -765,7 +744,7 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES,
                 "label"     => __("Package types", "woocommerce-myparcel"),
-                "callback"  => [$this->callbacks, "enhanced_select"],
+                "callback"  => [WCMP_Settings_Callbacks::class, "enhanced_select"],
                 "loop"      => WCMP_Data::getPackageTypesHuman(),
                 "options"   => (new WCMP_Shipping_Methods())->getShippingMethods(),
                 "default"   => [],
@@ -1076,6 +1055,27 @@ class WCMP_Settings_Data
         }
 
         return sprintf("<div class=\"label-description-variables\"><p>Available variables: %s</p>", $output);
+    }
+
+    /**
+     * @param string $name
+     * @param string|array  $conditions
+     *
+     * @return array
+     */
+    private static function getFeeField(string $name, array $conditions): array
+    {
+        return [
+            "name"       => $name,
+            "condition" => $conditions,
+            "class"      => ["wcmp__child"],
+            "label"      => __("Fee (optional)", "woocommerce-myparcel"),
+            "type"       => "currency",
+            "help_text"  => __(
+                "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                "woocommerce-myparcel"
+            ),
+        ];
     }
 }
 
