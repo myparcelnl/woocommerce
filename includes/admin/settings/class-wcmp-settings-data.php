@@ -903,7 +903,7 @@ class WCMP_Settings_Data
                 "name"      => WCMP_Settings::SETTING_DEFAULT_CARRIER,
                 "label"     => __("Default carrier", "woocommerce-myparcelbe"),
                 "help-text" => __(
-                    "You can select a default carrier for when something goes wrong.", "woocommerce-myparcelbe"
+                    "You can set a default carrier here which will be used when no other option overrides it.", "woocommerce-myparcelbe"
                 ),
                 "type"      => "select",
                 "options"   => WCMP_Data::getCarriersHuman(),

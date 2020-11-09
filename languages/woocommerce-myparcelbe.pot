@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WC MyParcel Belgium\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-03 10:28+0000\n"
+"POT-Creation-Date: 2020-11-09 11:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -767,7 +767,9 @@ msgid "Default HS Code"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:870
-msgid "HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Belgium Customs."
+msgid ""
+"HS Codes are used for MyParcel world shipments, you can find the appropriate "
+"code on the site of the Belgium Customs."
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:888
@@ -775,9 +777,10 @@ msgid "Default country of origin"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:890
-msgid "Country of origin is required for world shipments. Defaults to shop base or NL. Example: 'NL', 'BE', 'DE'"
+msgid ""
+"Country of origin is required for world shipments. Defaults to shop base or "
+"NL. Example: 'NL', 'BE', 'DE'"
 msgstr ""
-
 
 #: includes_php56/class-wcmp-settings.php:459
 msgid ""
@@ -850,7 +853,9 @@ msgid "All shipping methods"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:691
-msgid "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account."
+msgid ""
+"Show delivery day options allow your customers to see the delivery day in "
+"order confirmation and My Account."
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:537
@@ -874,7 +879,10 @@ msgid "Preferred pickup locations view"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:981
-msgid "When pickup locations are enabled, the user can choose between \"map\" or \"list\" view. This setting decides which option will be selected first, upon opening the pickup locations."
+msgid ""
+"When pickup locations are enabled, the user can choose between \"map\" or "
+"\"list\" view. This setting decides which option will be selected first, "
+"upon opening the pickup locations."
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:985
@@ -934,7 +942,8 @@ msgid "Enable PostNL pickup"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:309
-msgid "These settings will be applied to PostNL shipments you create in the backend."
+msgid ""
+"These settings will be applied to PostNL shipments you create in the backend."
 msgstr ""
 
 #: includes_php56/class-wcmp-settings.php:558
@@ -1303,25 +1312,6 @@ msgid ""
 "default it will be placed after shipping details."
 msgstr ""
 
-#: includes/admin/settings/class-wcmp-settings-data.php:753
-msgid "Preferred pickup locations view"
-msgstr ""
-
-#: includes/admin/settings/class-wcmp-settings-data.php:755
-msgid ""
-"When pickup locations are enabled, the user can choose between \"map\" or "
-"\"list\" view. This setting decides which option will be selected first, "
-"upon opening the pickup locations."
-msgstr ""
-
-#: includes/admin/settings/class-wcmp-settings-data.php:760
-msgid "Show map first"
-msgstr ""
-
-#: includes/admin/settings/class-wcmp-settings-data.php:761
-msgid "Show list first"
-msgstr ""
-
 #: includes/admin/settings/class-wcmp-settings-data.php:816
 msgid "Delivery title"
 msgstr ""
@@ -1338,24 +1328,8 @@ msgstr ""
 msgid "The text on the \"list\" button when viewing pickup locations."
 msgstr ""
 
-#: includes/admin/settings/class-wcmp-settings-data.php:848
-msgid "Pickup list button text"
-msgstr ""
-
-#: includes/admin/settings/class-wcmp-settings-data.php:849
-msgid "List"
-msgstr ""
-
 #: includes/admin/settings/class-wcmp-settings-data.php:854
 msgid "The text on the \"map\" button when viewing pickup locations."
-msgstr ""
-
-#: includes/admin/settings/class-wcmp-settings-data.php:858
-msgid "Pickup map button text"
-msgstr ""
-
-#: includes/admin/settings/class-wcmp-settings-data.php:859
-msgid "Map"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:882
@@ -1397,4 +1371,9 @@ msgstr ""
 
 #. Author of the plugin
 msgid "Richard Perdaan"
+msgstr ""
+
+msgid ""
+"You can set a default carrier here which will be used when no other option "
+"overrides it"
 msgstr ""
