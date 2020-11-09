@@ -68,8 +68,7 @@ class WCMP_Export_Consignments
 
         $this->order           = $order;
         $this->deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
-        $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
-
+        $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Settings::SETTING_DEFAULT_CARRIER;
         $this->createConsignment();
         $this->setConsignmentData();
     }
