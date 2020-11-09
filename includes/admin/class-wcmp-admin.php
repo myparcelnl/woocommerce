@@ -721,6 +721,7 @@ class WCMP_Admin
     public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptions
     {
         $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
+        $defaultCarrier = self::getDefaultCarrier();
 
         // $meta is a json string, create an instance
         if (! empty($meta) && ! $meta instanceof DeliveryOptions) {
@@ -728,7 +729,7 @@ class WCMP_Admin
                 $meta = json_decode(stripslashes($meta), true);
             }
 
-            $meta["carrier"] = WCMP_Settings::SETTING_DEFAULT_CARRIER;
+            $meta["carrier"] = $defaultCarrier;
 
             try {
                 // create new instance from known json
@@ -770,6 +771,14 @@ class WCMP_Admin
                 wc_format_datetime(new WC_DateTime($delivery_options->getDate()), 'l d-m')
             );
         }
+    }
+
+    /**
+     * @return string
+     */
+    public static function getDefaultCarrier(): string
+    {
+        return WCMP()->setting_collection->getByName(WCMP_Settings::SETTING_DEFAULT_CARRIER);
     }
 
     /**
