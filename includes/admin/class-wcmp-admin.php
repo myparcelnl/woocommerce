@@ -720,7 +720,7 @@ class WCMP_Admin
      */
     public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptions
     {
-        $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
+        $meta           = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
         $defaultCarrier = self::getDefaultCarrier();
 
         // $meta is a json string, create an instance
