@@ -194,9 +194,9 @@ class WCMP_Data
     /**
      * @return array
      */
-    public static function getInsuranceAmount(): array
+    public static function getInsuranceAmounts(): array
     {
-        $amount = [];
+        $amounts = [];
 
         /**
          * @type PostNLConsignment
@@ -205,10 +205,10 @@ class WCMP_Data
         $amountPossibilities = $carrier::INSURANCE_POSSIBILITIES_LOCAL;
 
         foreach ($amountPossibilities as $key => $value) {
-            $amount[$value] = $value;
+            $amounts[$value] = $value;
         }
 
-        return $amount;
+        return $amounts;
     }
 
     /**

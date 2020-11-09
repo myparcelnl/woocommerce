@@ -52,6 +52,10 @@ class WCMP_Export_Consignments
      * @var MyParcelCollection
      */
     public $myParcelCollection;
+    /**
+     * @var \OrderSettings
+     */
+    private $orderSettings;
 
     /**
      * WCMP_Export_Consignments constructor.
@@ -67,6 +71,8 @@ class WCMP_Export_Consignments
 
         $this->order           = $order;
         $this->deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
+        $this->orderSettings   = new OrderSettings($this->deliveryOptions, $order);
+
         $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
 
         $this->myParcelCollection = (new MyParcelCollection())->setUserAgents(
@@ -123,7 +129,8 @@ class WCMP_Export_Consignments
     private function getDeliveryType(): int
     {
         $deliveryTypeId = WCMP_Data::getDeliveryTypeId($this->deliveryOptions->getDeliveryType());
-        return $deliveryTypeId ?? AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME;
+
+        return $deliveryTypeId ?? AbstractConsignment::DELIVERY_TYPE_STANDARD;
     }
 
     /**
@@ -263,125 +270,10 @@ class WCMP_Export_Consignments
 
     /**
      * @return int
-     * @throws Exception
-     */
-    private function getPackageType(): int
-    {
-        $packageType = WCMYPA()->export->getPackageTypeFromOrder($this->order, $this->deliveryOptions);
-        return WCMP_Data::getPackageTypeId($packageType);
-    }
-
-    /**
-     * @return bool
-     */
-    private function getSignature(): bool
-    {
-        return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->deliveryOptions->getShipmentOptions()->hasSignature(),
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
-        );
-    }
-
-    /**
-     * @return bool
-     */
-    private function getOnlyRecipient(): bool
-    {
-        return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->deliveryOptions->getShipmentOptions()->hasOnlyRecipient(),
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
-        );
-    }
-
-    /**
-     * @return bool
-     */
-    private function getAgeCheck(): bool
-    {
-        return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->deliveryOptions->getShipmentOptions()->hasAgeCheck(),
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
-        );
-    }
-
-    /**
-     * @return bool
-     */
-    private function getLargeFormat(): bool
-    {
-        return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->deliveryOptions->getShipmentOptions()->hasLargeFormat(),
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
-        );
-    }
-
-    /**
-     * @return int
      */
     private function getContents(): int
     {
         return (int) ($this->getSetting("package_contents") ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
-    }
-
-    /**
-     * @return bool
-     */
-    private function getReturnShipment(): bool
-    {
-        return (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->deliveryOptions->getShipmentOptions()->isReturn(),
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
-        );
-    }
-
-    /**
-     * Get the value of the insurance setting. Changes true/false to either 500 or 0 because the API expects an amount.
-     *
-     * @return int
-     */
-    private function getInsurance(): int
-    {
-        $deliveryOptionsInsurance = $this->deliveryOptions->getShipmentOptions()->getInsurance();
-
-        if ($deliveryOptionsInsurance) {
-            return $deliveryOptionsInsurance;
-        }
-
-        $insured = WCMP_Export::getChosenOrDefaultShipmentOption(
-            null,
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
-        );
-
-        return $this->getInsuranceAmount((bool) $insured);
-    }
-
-    /**
-     * @param bool $isInsuranceActive
-     *
-     * @return int
-     */
-    private function getInsuranceAmount(bool $isInsuranceActive): int
-    {
-        // Checks if all parcels must be insured
-        if ($isInsuranceActive) {
-            // get min price for insurance
-            $insuranceFromPrice = (float) $this->getSetting("{$this->carrier}_" .
-                WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE
-            );
-
-            $insuranceMaxPrice = (int) $this->getSetting("{$this->carrier}_" .
-                WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
-
-            // get the order's total price
-            $orderPrice = (float) $this->order->get_total();
-
-            if ($insuranceFromPrice <= $orderPrice) {
-                // returns max allowed insured amount.
-                return $insuranceMaxPrice;
-            }
-        }
-
-        return 0;
     }
 
     /**
@@ -420,50 +312,42 @@ class WCMP_Export_Consignments
     }
 
     /**
+     * Get the label description from OrderSettings and replace any variables in it.
+     *
      * @return string
      */
-    private function getLabelDescription(): string
+    private function getFormattedLabelDescription(): string
     {
-        $defaultValue     = "Order: " . $this->order->get_id();
-        $valueFromSetting = $this->getSetting(WCMYPA_Settings::SETTING_LABEL_DESCRIPTION);
-        $valueFromOrder   = $this->deliveryOptions->getShipmentOptions()->getLabelDescription();
+        $productIds   = [];
+        $productNames = [];
+        $productSkus  = [];
 
-        if ($valueFromOrder) {
-            $description = $valueFromOrder;
-        } elseif ($valueFromSetting) {
-            $productIds   = [];
-            $productNames = [];
-            $productSkus  = [];
-
-            foreach ($this->order->get_items() as $item) {
-                if (! method_exists($item, 'get_product')) {
-                    continue;
-                }
-
-                /** @var WC_Product $product */
-                $product = $item->get_product();
-                $sku     = $product->get_sku();
-
-                $productIds[]   = $product->get_id();
-                $productNames[] = $product->get_name();
-                $productSkus[]  = empty($sku) ? '–' : $sku;
+        foreach ($this->order->get_items() as $item) {
+            if (! method_exists($item, 'get_product')) {
+                continue;
             }
 
-            $description = strtr(
-                $valueFromSetting,
-                [
-                    '[DELIVERY_DATE]' => date('d-m-Y', strtotime($this->deliveryOptions->getDate())),
-                    '[ORDER_NR]'      => $this->order->get_order_number(),
-                    '[PRODUCT_ID]'    => implode(', ', $productIds),
-                    '[PRODUCT_NAME]'  => implode(', ', $productNames),
-                    '[PRODUCT_QTY]'   => count($this->order->get_items()),
-                    '[PRODUCT_SKU]'   => implode(', ', $productSkus),
-                    '[CUSTOMER_NOTE]' => $this->order->get_customer_note(),
-                ]
-            );
+            /** @var WC_Product $product */
+            $product = $item->get_product();
+            $sku     = $product->get_sku();
+
+            $productIds[]   = $product->get_id();
+            $productNames[] = $product->get_name();
+            $productSkus[]  = empty($sku) ? '–' : $sku;
         }
 
-        return ! empty($description) ? $description : $defaultValue;
+        return strtr(
+            $this->orderSettings->getLabelDescription(),
+            [
+                '[DELIVERY_DATE]' => date('d-m-Y', strtotime($this->deliveryOptions->getDate())),
+                '[ORDER_NR]'      => $this->order->get_order_number(),
+                '[PRODUCT_ID]'    => implode(', ', $productIds),
+                '[PRODUCT_NAME]'  => implode(', ', $productNames),
+                '[PRODUCT_QTY]'   => count($this->order->get_items()),
+                '[PRODUCT_SKU]'   => implode(', ', $productSkus),
+                '[CUSTOMER_NOTE]' => $this->order->get_customer_note(),
+            ]
+        );
     }
 
     /**
@@ -496,14 +380,14 @@ class WCMP_Export_Consignments
     private function setShipmentOptions(): void
     {
         $this->consignment
-            ->setSignature($this->getSignature())
-            ->setOnlyRecipient($this->getOnlyRecipient())
-            ->setInsurance($this->getInsurance())
-            ->setAgeCheck($this->getAgeCheck())
-            ->setLargeFormat($this->getLargeFormat())
+            ->setAgeCheck($this->orderSettings->hasAgeCheck())
+            ->setInsurance($this->orderSettings->getInsuranceAmount())
+            ->setLargeFormat($this->orderSettings->hasLargeFormat())
+            ->setOnlyRecipient($this->orderSettings->hasOnlyRecipient())
+            ->setReturn($this->orderSettings->hasReturnShipment())
+            ->setSignature($this->orderSettings->hasSignature())
             ->setContents($this->getContents())
-            ->setInvoice($this->order->get_id())
-            ->setReturn($this->getReturnShipment());
+            ->setInvoice($this->order->get_id());
     }
 
     /**
@@ -528,7 +412,7 @@ class WCMP_Export_Consignments
     private function setPhysicalProperties(): void
     {
         $extraOptions       = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
-        $digitalStampWeight = $extraOptions['weight'];
+        $digitalStampWeight = $extraOptions['weight'] ?? null;
         $orderWeight        = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
 
         $this->consignment->setPhysicalProperties(
@@ -546,9 +430,9 @@ class WCMP_Export_Consignments
         $this->consignment
             ->setApiKey($this->apiKey)
             ->setReferenceId((string) $this->order->get_id())
-            ->setPackageType($this->getPackageType())
+            ->setPackageType($this->orderSettings->getPackageType())
             ->setDeliveryDate($this->getDeliveryDate())
             ->setDeliveryType($this->getDeliveryType())
-            ->setLabelDescription($this->getLabelDescription());
+            ->setLabelDescription($this->getFormattedLabelDescription());
     }
 }
