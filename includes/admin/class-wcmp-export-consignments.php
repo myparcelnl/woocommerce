@@ -64,7 +64,7 @@ class WCMP_Export_Consignments
      */
     public function __construct(WC_Order $order)
     {
-        $defaultCarrier = $this->getSetting(WCMP_Settings::SETTING_DEFAULT_CARRIER);
+        $defaultCarrier = $this->getSetting(WCMP_Settings::SETTING_DEFAULT_CARRIER) ?? WCMP_Data::DEFAULT_CARRIER;
         $this->getApiKey();
 
         $this->order           = $order;

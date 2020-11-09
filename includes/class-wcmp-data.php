@@ -32,6 +32,8 @@ class WCMP_Data
 
     public const DEFAULT_COUNTRY_CODE = "BE";
 
+    public const DEFAULT_CARRIER = BpostConsignment::CARRIER_NAME;
+
     /**
      * @var array
      */
