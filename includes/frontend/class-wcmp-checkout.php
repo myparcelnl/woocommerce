@@ -1,9 +1,9 @@
 <?php
 
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
@@ -111,9 +111,10 @@ class WCMP_Checkout
             "MyParcelDisplaySettings",
             [
                 // Convert true/false to int for JavaScript
-                "isUsingSplitAddressFields" => (int) WCMP()->setting_collection->isEnabled(
+                "isUsingSplitAddressFields"   => (int) WCMP()->setting_collection->isEnabled(
                     WCMP_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS
                 ),
+                "splitAddressFieldsCountries" => WCMP_BE_Postcode_Fields::COUNTRIES_WITH_SPLIT_ADDRESS_FIELDS,
             ]
         );
 

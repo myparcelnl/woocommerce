@@ -1,7 +1,7 @@
 <?php
 
-use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\WC_Core as WCX;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -21,6 +21,8 @@ class WCMP_BE_Postcode_Fields
      * Taken from https://github.com/myparcelbe/sdk
      */
     public const SPLIT_STREET_REGEX = '~(?P<street>.*?)\s?(?P<street_suffix>(?P<number>[\d]+)[\s-]{0,2}(?P<number_suffix>[a-zA-Z/\s]{0,5}$|[0-9/]{0,5}$|\s[a-zA-Z]{1}[0-9]{0,3}$|\s[0-9]{2}[a-zA-Z]{0,3}$))$~';
+
+    public const COUNTRIES_WITH_SPLIT_ADDRESS_FIELDS = ['NL', 'BE'];
 
     public function __construct()
     {
@@ -239,36 +241,38 @@ class WCMP_BE_Postcode_Fields
      *
      * @return array $locale
      */
-    public function woocommerce_locale_be($locale)
+    public function woocommerce_locale_be(array $locale): array
     {
-        $locale['BE']['address_1'] = [
-            'required' => false,
-            'hidden'   => true,
-        ];
+        foreach (self::COUNTRIES_WITH_SPLIT_ADDRESS_FIELDS as $cc) {
+            $locale[$cc]['address_1'] = [
+                'required' => false,
+                'hidden'   => true,
+            ];
 
-        $locale['BE']['address_2'] = [
-            'hidden' => true,
-        ];
+            $locale[$cc]['address_2'] = [
+                'hidden' => true,
+            ];
 
-        $locale['BE']['state'] = [
-            'required' => false,
-            'hidden'   => true,
-        ];
+            $locale[$cc]['state'] = [
+                'required' => false,
+                'hidden'   => true,
+            ];
 
-        $locale['BE']['street_name'] = [
-            'required' => true,
-            'hidden'   => false,
-        ];
+            $locale[$cc]['street_name'] = [
+                'required' => true,
+                'hidden'   => false,
+            ];
 
-        $locale['BE']['house_number'] = [
-            'required' => true,
-            'hidden'   => false,
-        ];
+            $locale[$cc]['house_number'] = [
+                'required' => true,
+                'hidden'   => false,
+            ];
 
-        $locale['BE']['house_number_suffix'] = [
-            'required' => false,
-            'hidden'   => false,
-        ];
+            $locale[$cc]['house_number_suffix'] = [
+                'required' => false,
+                'hidden'   => false,
+            ];
+        }
 
         return $locale;
     }
@@ -297,8 +301,8 @@ class WCMP_BE_Postcode_Fields
             $form = '';
         }
 
-        // Set required to true if country is BE
-        $required = ($country == 'BE') ? true : false;
+        // Set required to true if country is using custom address fields
+        $required = self::isCountryWithSplitAddressFields($country);
 
         // Add street name
         $fields[$form . '_street_name'] = [
@@ -638,8 +642,6 @@ class WCMP_BE_Postcode_Fields
                 }
             }
         }
-
-        return;
     }
 
     /**
@@ -651,43 +653,44 @@ class WCMP_BE_Postcode_Fields
      */
     public function merge_street_number_suffix($order_id)
     {
-        $order = WCX::get_order($order_id);
+        $order                          = WCX::get_order($order_id);
+        $billingHasCustomAddressFields  = self::isCountryWithSplitAddressFields($_POST['billing_country']);
+        $shippingHasCustomAddressFields = self::isCountryWithSplitAddressFields($_POST['shipping_country']);
+
         if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<=')) {
             // old versions use 'shiptobilling'
-            $ship_to_different_address = isset($_POST['shiptobilling']) ? false : true;
+            $shipToDifferentAddress = !isset($_POST['shiptobilling']);
         } else {
             // WC2.1
-            $ship_to_different_address = isset($_POST['ship_to_different_address']) ? true : false;
+            $shipToDifferentAddress = isset($_POST['ship_to_different_address']);
         }
 
-        // check if country is BE
-        if ($_POST['billing_country'] == 'BE') {
+        if ($billingHasCustomAddressFields) {
             // concatenate street & house number & copy to 'billing_address_1'
-            $billing_house_number =
-                $_POST['billing_house_number'] . (! empty($_POST['billing_house_number_suffix']) ? '-'
-                                                                                                   . $_POST['billing_house_number_suffix']
-                    : '');
-            $billing_address_1    = $_POST['billing_street_name'] . ' ' . $billing_house_number;
-            WCX_Order::set_address_prop($order, 'address_1', 'billing', $billing_address_1);
+            $suffix = ! empty($_POST['billing_house_number_suffix'])
+                ? '-' . $_POST['billing_house_number_suffix']
+                : '';
 
-            // check if 'ship to billing address' is checked
-            if ($ship_to_different_address == false && $this->cart_needs_shipping_address()) {
+            $billingHouseNumber = $_POST['billing_house_number'] . $suffix;
+            $billingAddress1    = $_POST['billing_street_name'] . ' ' . $billingHouseNumber;
+            WCX_Order::set_address_prop($order, 'address_1', 'billing', $billingAddress1);
+
+            if (!$shipToDifferentAddress && $this->cart_needs_shipping_address()) {
                 // use billing address
-                WCX_Order::set_address_prop($order, 'address_1', 'shipping', $billing_address_1);
+                WCX_Order::set_address_prop($order, 'address_1', 'shipping', $billingAddress1);
             }
         }
 
-        if (($_POST['shipping_country'] == 'BE') && $ship_to_different_address == true) {
+        if ($shippingHasCustomAddressFields && $shipToDifferentAddress) {
             // concatenate street & house number & copy to 'shipping_address_1'
-            $shipping_house_number =
-                $_POST['shipping_house_number'] . (! empty($_POST['shipping_house_number_suffix']) ? '-'
-                                                                                                     . $_POST['shipping_house_number_suffix']
-                    : '');
-            $shipping_address_1    = $_POST['shipping_street_name'] . ' ' . $shipping_house_number;
-            WCX_Order::set_address_prop($order, 'address_1', 'shipping', $shipping_address_1);
-        }
+            $suffix = ! empty($_POST['shipping_house_number_suffix'])
+                ? '-' . $_POST['shipping_house_number_suffix']
+                : '';
 
-        return;
+            $shippingHouseNumber = $_POST['shipping_house_number'] . $suffix;
+            $shippingAddress1    = $_POST['shipping_street_name'] . ' ' . $shippingHouseNumber;
+            WCX_Order::set_address_prop($order, 'address_1', 'shipping', $shippingAddress1);
+        }
     }
 
     /**
@@ -709,7 +712,7 @@ class WCMP_BE_Postcode_Fields
      */
     public function validate_address_fields($address, $errors)
     {
-        if ($address['billing_country'] == 'BE'
+        if (self::isCountryWithSplitAddressFields($address['billing_country'])
             && ! (bool) preg_match(
                 self::SPLIT_STREET_REGEX,
                 trim(
@@ -719,7 +722,7 @@ class WCMP_BE_Postcode_Fields
             $errors->add('address', __("Please enter a valid billing address.", "woocommerce-myparcelbe"));
         }
 
-        if ($address['shipping_country'] == 'BE'
+        if (self::isCountryWithSplitAddressFields($address['shipping_country'])
             && array_key_exists('ship_to_different_address', $address)
             && ! (bool) preg_match(
                 self::SPLIT_STREET_REGEX,
@@ -871,7 +874,7 @@ class WCMP_BE_Postcode_Fields
     {
         extract($args);
 
-        if (! empty($street_name) && ($country == 'BE')) {
+        if (! empty($street_name) && self::isCountryWithSplitAddressFields($country)) {
             $replacements['{address_1}'] = $street_name . ' ' . $house_number . $house_number_suffix;
         }
 
@@ -1111,6 +1114,16 @@ class WCMP_BE_Postcode_Fields
                 null,
                 true
             );
+    }
+
+    /**
+     * @param string $country
+     *
+     * @return bool
+     */
+    private static function isCountryWithSplitAddressFields(string $country): bool
+    {
+        return in_array($country, self::COUNTRIES_WITH_SPLIT_ADDRESS_FIELDS);
     }
 }
 

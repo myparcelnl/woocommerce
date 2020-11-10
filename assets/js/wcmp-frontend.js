@@ -3,22 +3,23 @@
  */
 
 /**
- * @var {Object} MyParcelDisplaySettings
+ * @property {Object} MyParcelDisplaySettings
  *
  * @property {String} MyParcelDisplaySettings.isUsingSplitAddressFields
+ * @property {String[]} MyParcelDisplaySettings.splitAddressFieldsCountries
  *
  * @see \wcmp_checkout::inject_delivery_options_variables
  */
 
 /**
- * @var {Object} MyParcelDeliveryOptions
+ * @property {Object} MyParcelDeliveryOptions
  * @property {String} MyParcelDeliveryOptions.allowedShippingMethods
  * @property {String} MyParcelDeliveryOptions.disallowedShippingMethods
  * @property {String} MyParcelDeliveryOptions.hiddenInputName
  * @see \wcmp_checkout::inject_delivery_options_variables
  */
 /* eslint-disable-next-line max-lines-per-function */
-jQuery(function ($) {
+jQuery(function($) {
   var MyParcelFrontend = {
     /**
      * Whether the delivery options are currently shown or not. Defaults to true and can be set to false depending on
@@ -36,7 +37,12 @@ jQuery(function ($) {
     /**
      * @type {Boolean}
      */
-    isUsingSplitAddressFields: !!parseInt(MyParcelDisplaySettings.isUsingSplitAddressFields),
+    isUsingSplitAddressFields: Boolean(Number(MyParcelDisplaySettings.isUsingSplitAddressFields)),
+
+    /**
+     * @type {String[]}
+     */
+    splitAddressFieldsCountries: MyParcelDisplaySettings.splitAddressFieldsCountries,
 
     /**
      * @type {Array}
@@ -51,7 +57,12 @@ jQuery(function ($) {
     /**
      * @type {Boolean}
      */
-    alwaysShow: Boolean(parseInt(MyParcelDeliveryOptions.alwaysShow)),
+    alwaysShow: Boolean(MyParcelDeliveryOptions.alwaysShow),
+
+    /**
+     * @type {Object<String, String>}
+     */
+    previousCountry: {},
 
     /**
      * @type {String}
@@ -84,10 +95,12 @@ jQuery(function ($) {
 
     addressField: 'address_1',
     cityField: 'city',
-    countryRow: 'country_field',
     countryField: 'country',
+    countryRow: 'country_field',
     houseNumberField: 'house_number',
+    houseNumberSuffixField: 'house_number_suffix',
     postcodeField: 'postcode',
+    streetNameField: 'street_name',
 
     /**
      * Delivery options events.
@@ -109,7 +122,7 @@ jQuery(function ($) {
     /**
      * Initialize the script.
      */
-    init: function () {
+    init: function() {
       MyParcelFrontend.addListeners();
       MyParcelFrontend.injectHiddenInput();
     },
@@ -120,7 +133,7 @@ jQuery(function ($) {
      *
      * @param {CustomEvent} event - The update event.
      */
-    onDeliveryOptionsUpdate: function (event) {
+    onDeliveryOptionsUpdate: function(event) {
       MyParcelFrontend.hiddenDataInput.value = JSON.stringify(event.detail);
 
       /**
@@ -138,16 +151,16 @@ jQuery(function ($) {
       function restoreEventListener() {
         $(document.body).on(MyParcelFrontend.updatedWooCommerceCheckoutEvent, MyParcelFrontend.updateShippingMethod);
         $(document.body).off(MyParcelFrontend.updatedWooCommerceCheckoutEvent, restoreEventListener);
-      };
+      }
     },
 
     /**
      * If split fields are used add house number to the fields. Otherwise use address line 1.
      *
-     * @returns {string}
+     * @returns {String}
      */
-    getSplitField: function () {
-      return MyParcelFrontend.isUsingSplitAddressFields
+    getSplitField: function() {
+      return MyParcelFrontend.hasSplitAddressFields()
         ? MyParcelFrontend.houseNumberField
         : MyParcelFrontend.addressField;
     },
@@ -155,7 +168,7 @@ jQuery(function ($) {
     /**
      * Add all event listeners.
      */
-    addListeners: function () {
+    addListeners: function() {
       MyParcelFrontend.addAddressListeners();
       MyParcelFrontend.updateShippingMethod();
 
@@ -168,6 +181,7 @@ jQuery(function ($) {
       /*
        * jQuery events.
        */
+      $(document.body).on(MyParcelFrontend.countryToStateChangedEvent, MyParcelFrontend.synchronizeAddress);
       $(document.body).on(MyParcelFrontend.countryToStateChangedEvent, MyParcelFrontend.updateAddress);
       $(document.body).on(MyParcelFrontend.updatedWooCommerceCheckoutEvent, MyParcelFrontend.updateShippingMethod);
     },
@@ -175,25 +189,34 @@ jQuery(function ($) {
     /**
      * Get field by name. Will return element with MyParcelFrontend selector: "#<billing|shipping>_<name>".
      *
-     * @param {string} name - The part after `shipping/billing` in the id of an element in WooCommerce.
+     * @param {String} name - The part after `shipping/billing` in the id of an element in WooCommerce.
+     * @param {?String} addressType - "shipping" or "billing".
      *
      * @returns {Element}
      */
-    getField: function (name) {
-      if (!MyParcelFrontend.addressType) {
-        MyParcelFrontend.getAddressType();
+    getField: function(name, addressType) {
+      if (!addressType) {
+        if (!MyParcelFrontend.addressType) {
+          MyParcelFrontend.getAddressType();
+        }
+
+        addressType = MyParcelFrontend.addressType;
       }
 
-      return document.querySelector('#' + MyParcelFrontend.addressType + '_' + name);
+      return document.querySelector('#' + addressType + '_' + name);
     },
 
     /**
-     * Update address type.
+     * Update and return address type.
+     *
+     * @returns {String}
      */
-    getAddressType: function () {
+    getAddressType: function() {
       var useShipping = document.querySelector(MyParcelFrontend.shipToDifferentAddressField).checked;
 
       MyParcelFrontend.addressType = useShipping ? 'shipping' : 'billing';
+
+      return MyParcelFrontend.addressType;
     },
 
     /**
@@ -202,17 +225,28 @@ jQuery(function ($) {
      *
      * @returns {String}
      */
-    getHouseNumber: function () {
-      var address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
-      var result = MyParcelFrontend.splitStreetRegex.exec(address);
-      var numberField = $('#billing_house_number').val() !== '' && $('#shipping_house_number').val() !== '';
-      var numberIndex = 2;
+    getHouseNumber: function() {
+      var hasNumber = $('#billing_house_number').val() !== '' || $('#shipping_house_number').val() !== '';
 
-      if (MyParcelFrontend.isUsingSplitAddressFields && numberField) {
+      if (MyParcelFrontend.hasSplitAddressFields() && hasNumber) {
         return MyParcelFrontend.getField(MyParcelFrontend.houseNumberField).value;
       }
 
-      return result ? result[numberIndex] : null;
+      return MyParcelFrontend.getAddressParts().houseNumber;
+    },
+
+    /**
+     * @returns {{streetName: ?String, houseNumberSuffix: ?String, houseNumber: ?String}}
+     */
+    getAddressParts: function() {
+      var address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
+      var result = MyParcelFrontend.splitStreetRegex.exec(address);
+
+      return {
+        streetName: result ? result[1] : null,
+        houseNumber: result ? result[2] : null,
+        houseNumberSuffix: result ? result[3] : null,
+      };
     },
 
     /**
@@ -221,7 +255,7 @@ jQuery(function ($) {
      * @param {String} identifier - Name of the event.
      * @param {String|HTMLElement|Document} [element] - Element to trigger from. Defaults to 'body'.
      */
-    triggerEvent: function (identifier, element) {
+    triggerEvent: function(identifier, element) {
       var event = document.createEvent('HTMLEvents');
       event.initEvent(identifier, true, false);
       element = !element || typeof element === 'string' ? document.querySelector(element || 'body') : element;
@@ -234,7 +268,7 @@ jQuery(function ($) {
      *
      * @returns {Boolean}
      */
-    countryHasChanged: function () {
+    countryHasChanged: function() {
       if (window.MyParcelConfig.address && window.MyParcelConfig.address.hasOwnProperty('cc')) {
         return window.MyParcelConfig.address.cc !== MyParcelFrontend.getField(MyParcelFrontend.countryField).value;
       }
@@ -245,7 +279,7 @@ jQuery(function ($) {
     /**
      * Get data from form fields, put it in the global MyParcelConfig, then trigger updating the delivery options.
      */
-    updateAddress: function () {
+    updateAddress: function() {
       if (!window.hasOwnProperty('MyParcelConfig')) {
         throw 'window.MyParcelConfig not found!';
       }
@@ -271,7 +305,11 @@ jQuery(function ($) {
      *
      * @param {Object} address - The new address.
      */
-    setAddress: function (address) {
+    setAddress: function(address) {
+      if (!address) {
+        return;
+      }
+
       if (address.postalCode) {
         MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value = address.postalCode;
       }
@@ -290,7 +328,7 @@ jQuery(function ($) {
      *
      * @param {String|Number} number - New house number to set.
      */
-    setHouseNumber: function (number) {
+    setHouseNumber: function(number) {
       var address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
       var oldHouseNumber = MyParcelFrontend.getHouseNumber();
 
@@ -311,7 +349,7 @@ jQuery(function ($) {
      *
      * @see includes/class-wcmp-checkout.php::save_delivery_options();
      */
-    injectHiddenInput: function () {
+    injectHiddenInput: function() {
       MyParcelFrontend.hiddenDataInput = document.createElement('input');
       MyParcelFrontend.hiddenDataInput.setAttribute('hidden', 'hidden');
       MyParcelFrontend.hiddenDataInput.setAttribute('name', MyParcelDeliveryOptions.hiddenInputName);
@@ -324,14 +362,14 @@ jQuery(function ($) {
      *
      * @param {CustomEvent} event - The event containing the new address.
      */
-    onDeliveryOptionsAddressUpdate: function (event) {
+    onDeliveryOptionsAddressUpdate: function(event) {
       MyParcelFrontend.setAddress(event.detail);
     },
 
     /**
      * Update the shipping method to the new selections. Triggers hiding/showing of the delivery options.
      */
-    updateShippingMethod: function () {
+    updateShippingMethod: function() {
       var shipping_method;
       var shippingMethodField = document.querySelectorAll(MyParcelFrontend.shippingMethodField);
       var selectedShippingMethodField = document.querySelector(MyParcelFrontend.shippingMethodField + ':checked');
@@ -356,7 +394,7 @@ jQuery(function ($) {
      * Hides/shows the delivery options based on the current shipping method. Makes sure to not update the checkout
      * unless necessary by checking if hasDeliveryOptions is true or false.
      */
-    toggleDeliveryOptions: function () {
+    toggleDeliveryOptions: function() {
       if (MyParcelFrontend.currentShippingMethodHasDeliveryOptions()) {
         MyParcelFrontend.hasDeliveryOptions = true;
         MyParcelFrontend.triggerEvent(MyParcelFrontend.showDeliveryOptionsEvent, document);
@@ -372,7 +410,7 @@ jQuery(function ($) {
      *
      * @returns {Boolean}
      */
-    currentShippingMethodHasDeliveryOptions: function () {
+    currentShippingMethodHasDeliveryOptions: function() {
       var currentClass;
       var display = false;
       var invert = false;
@@ -393,7 +431,7 @@ jQuery(function ($) {
         invert = true;
       }
 
-      list.forEach(function (method) {
+      list.forEach(function(method) {
         /**
          * If the type of the given method is enabled in its entirety.
          */
@@ -402,7 +440,7 @@ jQuery(function ($) {
         /**
          * If the specific method is enabled.
          *
-         * @type {boolean}
+         * @type {Boolean}
          */
         var currentMethodIsAllowed = method.indexOf(MyParcelFrontend.selectedShippingMethod) > -1;
 
@@ -426,19 +464,19 @@ jQuery(function ($) {
      *  we never know when the select is loaded and can't add a normal change event. The delivery options has a debounce
      *  function on the update event so it doesn't matter if we send 5 updates at once.
      */
-    addAddressListeners: function () {
+    addAddressListeners: function() {
       var fields = [MyParcelFrontend.countryField, MyParcelFrontend.postcodeField, MyParcelFrontend.getSplitField()];
 
       /* If address type is already set, remove the existing listeners before adding new ones. */
       if (MyParcelFrontend.addressType) {
-        fields.forEach(function (field) {
+        fields.forEach(function(field) {
           MyParcelFrontend.getField(field).removeEventListener('change', MyParcelFrontend.updateAddress);
         });
       }
 
       MyParcelFrontend.getAddressType();
 
-      fields.forEach(function (field) {
+      fields.forEach(function(field) {
         MyParcelFrontend.getField(field).addEventListener('change', MyParcelFrontend.updateAddress);
       });
 
@@ -450,13 +488,81 @@ jQuery(function ($) {
      *
      * @returns {String}
      */
-    getShippingMethodWithoutClass: function () {
+    getShippingMethodWithoutClass: function() {
       var shippingMethod = MyParcelFrontend.selectedShippingMethod;
       var indexOfSemicolon = shippingMethod.indexOf(':');
 
       shippingMethod = shippingMethod.substring(0, indexOfSemicolon === -1 ? shippingMethod.length : indexOfSemicolon);
 
       return shippingMethod;
+    },
+
+    /**
+     * Sync addresses between split and non-split address fields.
+     *
+     * @param {Event} event
+     * @param {String} newCountry
+     */
+    synchronizeAddress: function(event, newCountry) {
+      if (!MyParcelFrontend.isUsingSplitAddressFields) {
+        return;
+      }
+
+      var data = $('form').serializeArray();
+
+      ['shipping', 'billing'].forEach(function(addressType) {
+        var typeCountry = data.find(function(item) {
+          return item.name === addressType + '_country';
+        });
+        var hasAddressTypeCountry = MyParcelFrontend.previousCountry.hasOwnProperty(addressType);
+        var countryChanged = MyParcelFrontend.previousCountry[addressType] !== newCountry;
+
+        var addressField = MyParcelFrontend.getField(MyParcelFrontend.addressField, addressType);
+        var houseNumberField = MyParcelFrontend.getField(MyParcelFrontend.houseNumberField, addressType);
+        var houseNumberSuffixField = MyParcelFrontend.getField(MyParcelFrontend.houseNumberSuffixField, addressType);
+        var streetNameField = MyParcelFrontend.getField(MyParcelFrontend.streetNameField, addressType);
+
+        if (!hasAddressTypeCountry || countryChanged) {
+          MyParcelFrontend.previousCountry[addressType] = typeCountry.value;
+        }
+
+        if (!countryChanged) {
+          return;
+        }
+
+        if (MyParcelFrontend.hasSplitAddressFields(newCountry)) {
+          var parts = MyParcelFrontend.getAddressParts();
+
+          $(streetNameField).val(parts.streetName);
+          $(houseNumberField).val(parts.houseNumber);
+          $(houseNumberSuffixField).val(parts.houseNumberSuffix);
+        } else {
+          var number = houseNumberField.value || '';
+          var street = streetNameField.value || '';
+          var suffix = houseNumberSuffixField.value || '';
+
+          addressField.value = (street + ' ' + number + suffix).trim();
+        }
+
+        MyParcelFrontend.updateAddress();
+      });
+    },
+
+    /**
+     * @param {?String} country
+     *
+     * @returns {Boolean}
+     */
+    hasSplitAddressFields: function(country) {
+      if (!country) {
+        country = MyParcelFrontend.getField(MyParcelFrontend.countryField).value;
+      }
+
+      if (!MyParcelFrontend.isUsingSplitAddressFields) {
+        return false;
+      }
+
+      return MyParcelFrontend.splitAddressFieldsCountries.includes(country.toUpperCase());
     },
   };
 
@@ -469,7 +575,7 @@ jQuery(function ($) {
    * @param {Number?} threshold - Timing.
    * @param {Boolean?} execAsap - Skips the timeout.
    *
-   * @returns {function}
+   * @returns {Function}
    */
   function debounce(func, threshold, execAsap) {
     var timeout;
@@ -483,7 +589,7 @@ jQuery(function ($) {
           func.apply(obj, args);
         }
         timeout = null;
-      };
+      }
 
       if (timeout) {
         clearTimeout(timeout);
