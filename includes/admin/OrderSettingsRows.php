@@ -9,6 +9,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use OrderSettings;
 use WC_Order;
+use WCMP_Country_Codes;
 use WCMP_Data;
 use WCMP_Export;
 use WCMP_Settings_Data;
@@ -35,6 +36,37 @@ class OrderSettingsRows
     private const OPTION_SHIPMENT_OPTIONS_SIGNATURE         = "[shipment_options][signature]";
     private const OPTION_SHIPMENT_OPTIONS_AGE_CHECK         = "[shipment_options][age_check]";
 
+    private const CONDITION_CARRIER_DEFAULT = [
+        "parent_name"  => self::OPTION_CARRIER,
+        "type"         => "show",
+        "parent_value" => WCMP_Data::DEFAULT_CARRIER,
+        "set_value"    => WCMP_Settings_Data::DISABLED,
+    ];
+
+    private const CONDITION_DELIVERY_TYPE_DELIVERY = [
+        "parent_name"  => self::OPTION_DELIVERY_TYPE,
+        "type"         => "show",
+        "parent_value" => [
+            AbstractConsignment::DELIVERY_TYPE_MORNING_NAME,
+            AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME,
+            AbstractConsignment::DELIVERY_TYPE_EVENING_NAME,
+        ],
+        "set_value"    => WCMP_Settings_Data::DISABLED,
+    ];
+
+    private const CONDITION_PACKAGE_TYPE_PACKAGE = [
+        "parent_name"  => self::OPTION_PACKAGE_TYPE,
+        "type"         => "show",
+        "parent_value" => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
+    ];
+
+    private const CONDITION_FORCE_ENABLED_ON_AGE_CHECK = [
+        "parent_name"  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
+        "type"         => "disable",
+        "set_value"    => WCMP_Settings_Data::ENABLED,
+        "parent_value" => WCMP_Settings_Data::DISABLED,
+    ];
+
     /**
      * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
      * @param \WC_Order                                                                  $order
@@ -48,6 +80,7 @@ class OrderSettingsRows
     ): array {
         $orderSettings           = new OrderSettings($deliveryOptions, $order);
         $isHomeCountry           = WCMP_Data::isHomeCountry($order->get_shipping_country());
+        $isEuCountry             = WCMP_Country_Codes::isEuCountry($order->get_shipping_country());
         $hasMultiplePackageTypes = count(WCMP_Data::getPackageTypes()) > 1;
         $isPackageTypeDisabled   = ! $hasMultiplePackageTypes || $deliveryOptions->isPickup() || ! $isHomeCountry;
 
@@ -83,6 +116,24 @@ class OrderSettingsRows
         // Only add extra options and shipment options to home country shipments.
         if ($isHomeCountry) {
             $rows = array_merge($rows, self::getAdditionalOptionsRows($orderSettings));
+        }
+
+        if ($isHomeCountry || $isEuCountry) {
+            $rows[] = [
+                "name"      => self::OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT,
+                "type"      => "toggle",
+                "label"     => __("Extra large size", "woocommerce-myparcel"),
+                "help_text" => __(
+                    "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee will be charged. Note! If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate will be charged.",
+                    "woocommerce-myparcel"
+                ),
+                "value"     => $orderSettings->hasLargeFormat(),
+                "condition" => [
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
+                    self::CONDITION_CARRIER_DEFAULT,
+                ],
+            ];
         }
 
         $rows[] = [
@@ -124,37 +175,6 @@ class OrderSettingsRows
      */
     private static function getAdditionalOptionsRows(OrderSettings $orderSettings): array
     {
-        $conditionCarrierDefault = [
-            "parent_name"  => self::OPTION_CARRIER,
-            "type"         => "show",
-            "parent_value" => WCMP_Data::DEFAULT_CARRIER,
-            "set_value"    => WCMP_Settings_Data::DISABLED,
-        ];
-
-        $conditionDeliveryTypeDelivery = [
-            "parent_name"  => self::OPTION_DELIVERY_TYPE,
-            "type"         => "show",
-            "parent_value" => [
-                AbstractConsignment::DELIVERY_TYPE_MORNING_NAME,
-                AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME,
-                AbstractConsignment::DELIVERY_TYPE_EVENING_NAME,
-            ],
-            "set_value"    => WCMP_Settings_Data::DISABLED,
-        ];
-
-        $conditionPackageTypePackage = [
-            "parent_name"  => self::OPTION_PACKAGE_TYPE,
-            "type"         => "show",
-            "parent_value" => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
-        ];
-
-        $conditionForceEnabledOnAgeCheck = [
-            "parent_name"  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
-            "type"         => "disable",
-            "set_value"    => WCMP_Settings_Data::ENABLED,
-            "parent_value" => WCMP_Settings_Data::DISABLED,
-        ];
-
         return [
             [
                 "name"              => self::OPTION_EXTRA_OPTIONS_COLLO_AMOUNT,
@@ -166,7 +186,7 @@ class OrderSettingsRows
                     "max" => "10",
                 ],
                 "condition"         => [
-                    $conditionPackageTypePackage,
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
                 ],
             ],
             [
@@ -182,7 +202,7 @@ class OrderSettingsRows
                 "options"     => WCMP_Export::getDigitalStampRangeOptions(),
                 "value"       => $orderSettings->getDigitalStampRangeWeight(),
                 "condition"   => [
-                    $conditionCarrierDefault,
+                    self::CONDITION_CARRIER_DEFAULT,
                     [
                         "parent_name"  => self::OPTION_PACKAGE_TYPE,
                         "type"         => "show",
@@ -200,10 +220,10 @@ class OrderSettingsRows
                 ),
                 "value"     => $orderSettings->hasOnlyRecipient(),
                 "condition" => [
-                    $conditionPackageTypePackage,
-                    $conditionDeliveryTypeDelivery,
-                    $conditionCarrierDefault,
-                    $conditionForceEnabledOnAgeCheck,
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
+                    self::CONDITION_CARRIER_DEFAULT,
+                    self::CONDITION_FORCE_ENABLED_ON_AGE_CHECK,
                 ],
             ],
             [
@@ -216,10 +236,10 @@ class OrderSettingsRows
                     "woocommerce-myparcel"
                 ),
                 "condition" => [
-                    $conditionPackageTypePackage,
-                    $conditionDeliveryTypeDelivery,
-                    $conditionCarrierDefault,
-                    $conditionForceEnabledOnAgeCheck,
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
+                    self::CONDITION_CARRIER_DEFAULT,
+                    self::CONDITION_FORCE_ENABLED_ON_AGE_CHECK,
                 ],
             ],
             [
@@ -232,25 +252,10 @@ class OrderSettingsRows
                 ),
                 "value"     => $orderSettings->hasAgeCheck(),
                 "condition" => [
-                    $conditionPackageTypePackage,
-                    $conditionDeliveryTypeDelivery,
-                    $conditionCarrierDefault,
-                ],
-            ],
-            [
-                "name"      => self::OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT,
-                "type"      => "toggle",
-                "label"     => __("Extra large size", "woocommerce-myparcel"),
-                "help_text" => __(
-                    "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee will be charged. Note! If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate will be charged.",
-                    "woocommerce-myparcel"
-                ),
-                "value"     => $orderSettings->hasLargeFormat(),
-                "condition" => [
-                    $conditionPackageTypePackage,
-                    $conditionDeliveryTypeDelivery,
-                    $conditionCarrierDefault,
-                ],
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
+                    self::CONDITION_CARRIER_DEFAULT,
+                    ],
             ],
             [
                 "name"      => self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT,
@@ -262,9 +267,9 @@ class OrderSettingsRows
                     "woocommerce-myparcel"
                 ),
                 "condition" => [
-                    $conditionPackageTypePackage,
-                    $conditionDeliveryTypeDelivery,
-                    $conditionCarrierDefault,
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
+                    self::CONDITION_CARRIER_DEFAULT,
                 ],
             ],
             [
@@ -273,8 +278,8 @@ class OrderSettingsRows
                 "label"     => __("Insured", "woocommerce-myparcel"),
                 "value"     => $orderSettings->isInsured(),
                 "condition" => [
-                    $conditionPackageTypePackage,
-                    $conditionDeliveryTypeDelivery,
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     [
                         "parent_name"  => self::OPTION_CARRIER,
                         "type"         => "disable",
@@ -290,8 +295,8 @@ class OrderSettingsRows
                 "options"   => WCMP_Data::getInsuranceAmounts(),
                 "value"     => $orderSettings->getInsuranceAmount(),
                 "condition" => [
-                    $conditionPackageTypePackage,
-                    $conditionDeliveryTypeDelivery,
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 ],
             ],
