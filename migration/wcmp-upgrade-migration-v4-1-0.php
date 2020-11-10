@@ -18,6 +18,11 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
     /**
      * @var array
      */
+    private $newGeneralSettings = [];
+
+    /**
+     * @var array
+     */
     private $newExportDefaultsSettings = [];
 
     /**
@@ -31,12 +36,17 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
     private $newPostNlSettings = [];
 
     /**
-     * @var void
+     * @var array
+     */
+    private $oldGeneralSettings;
+
+    /**
+     * @var array
      */
     private $oldCheckoutSettings;
 
     /**
-     * @var void
+     * @var array
      */
     private $oldExportDefaultsSettings;
 
@@ -49,27 +59,45 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
     {
         require_once(WCMYPA()->plugin_path() . "/includes/vendor/autoload.php");
         require_once(WCMYPA()->plugin_path() . '/includes/admin/settings/class-wcmypa-settings.php');
+        require_once(WCMYPA()->plugin_path() . '/includes/class-wcmp-data.php');
     }
 
     protected function migrate(): void
     {
+        $this->oldGeneralSettings        = get_option("woocommerce_myparcel_general_settings");
         $this->oldCheckoutSettings       = get_option("woocommerce_myparcel_checkout_settings");
         $this->oldExportDefaultsSettings = get_option("woocommerce_myparcel_export_defaults_settings");
+        $oldPostNlSettings               = get_option("woocommerce_myparcel_postnl_settings");
 
+        $this->newGeneralSettings        = $this->oldGeneralSettings;
         $this->newCheckoutSettings       = $this->oldCheckoutSettings;
         $this->newExportDefaultsSettings = $this->oldExportDefaultsSettings;
+        $this->newPostNlSettings         = $oldPostNlSettings;
 
+        $this->migrateGeneralSettings();
         $this->migrateCheckoutSettings();
         $this->migrateExportDefaultsSettings();
+
+        $this->correctPostNlInsurance();
     }
 
     protected function setOptionSettingsMap(): void
     {
         $this->optionSettingsMap = [
+            "woocommerce_myparcel_general_settings"         => $this->newGeneralSettings,
             "woocommerce_myparcel_checkout_settings"        => $this->newCheckoutSettings,
             "woocommerce_myparcel_export_defaults_settings" => $this->newExportDefaultsSettings,
             "woocommerce_myparcel_postnl_settings"          => $this->newPostNlSettings,
         ];
+    }
+
+    private function migrateGeneralSettings(): void
+    {
+        $this->newGeneralSettings = $this->migrateSettings(
+            self::getGeneralMap(),
+            $this->newGeneralSettings,
+            $this->oldGeneralSettings
+        );
     }
 
     private function migrateCheckoutSettings(): void
@@ -77,7 +105,8 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
         // Migrate existing checkout settings to new keys
         $this->newCheckoutSettings = $this->migrateSettings(
             self::getCheckoutMap(),
-            $this->newCheckoutSettings
+            $this->newCheckoutSettings,
+            $this->oldCheckoutSettings
         );
 
         // Migrate old checkout settings to PostNL
@@ -85,12 +114,6 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
             self::getCheckoutPostnlMap(),
             $this->newPostNlSettings,
             $this->oldCheckoutSettings
-        );
-
-        // Remove the settings that were moved to PostNL from checkout
-        $this->newCheckoutSettings = $this->removeOldSettings(
-            self::getCheckoutPostnlMap(),
-            $this->newCheckoutSettings
         );
     }
 
@@ -111,20 +134,30 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
     /**
      * @return array
      */
+    private static function getGeneralMap(): array
+    {
+        return [
+            'print_position_offset' => WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION,
+        ];
+    }
+
+    /**
+     * @return array
+     */
     private static function getCheckoutPostnlMap(): array
     {
         $postnl = WCMYPA_Settings::SETTINGS_POSTNL;
 
         return [
-            "evening_enabled"         => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
-            "evening_fee"             => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
-            "monday_cutoff_time"      => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME,
-            "morning_enabled"         => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
-            "morning_fee"             => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
-            "myparcel_checkout"       => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-            "only_recipient_enabled"  => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
-            "only_recipient_fee"      => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
-            "saturday_cutoff_enabled" => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED,
+            "delivery_options_enabled" => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+            "evening_enabled"          => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
+            "evening_fee"              => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
+            "morning_enabled"          => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
+            "morning_fee"              => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
+            "myparcel_checkout"        => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+            "only_recipient_enabled"   => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+            "only_recipient_fee"       => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
+            "saturday_cutoff_enabled" =>  "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
         ];
     }
 
@@ -146,12 +179,50 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
         $postnl = WCMYPA_Settings::SETTINGS_POSTNL;
 
         return [
-            "age_check"           => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
-            "insured_amount"      => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
-            "large_format"        => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
-            "only_recipient"      => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
-            "return"              => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
+            "insured_amount" => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
+            "large_format"   => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
+            "only_recipient" => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
+            "return"         => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
         ];
+    }
+
+    /**
+     * In case the current amount is not valid, choose the closest value from the allowed values (rounded up).
+     */
+    private function correctPostNlInsurance(): void
+    {
+        $postnl           = WCMYPA_Settings::SETTINGS_POSTNL;
+        $key              = "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT;
+        $availableAmounts = WCMP_Data::getInsuranceAmounts();
+        $insuranceAmount  = $this->newPostNlSettings[$key];
+
+        if (! in_array($insuranceAmount, $availableAmounts)) {
+            $closestValue = $this->roundUpToMatch($insuranceAmount, $availableAmounts);
+
+            $this->newPostNlSettings[$key] = $closestValue;
+        }
+    }
+
+    /**
+     * @param int   $target
+     * @param int[] $possibleValues
+     *
+     * @return int
+     */
+    private function roundUpToMatch(int $target, array $possibleValues): int
+    {
+        rsort($possibleValues);
+        $match = 0;
+
+        foreach ($possibleValues as $i => $value) {
+            if ($value < $target) {
+                break;
+            }
+
+            $match = $i;
+        }
+
+        return $possibleValues[$match];
     }
 }
 
