@@ -563,6 +563,17 @@ class WCMYPA_Admin
             $data            = self::removeDisallowedDeliveryOptions($data, $shippingCountry);
             $deliveryOptions = self::getDeliveryOptionsFromOrder($order, $data);
 
+            error_log(
+                sprintf(
+                    "Saving delivery options for order %d\n%s",
+                    $order_id,
+                    json_encode(
+                        $deliveryOptions->toArray(),
+                        JSON_PRETTY_PRINT
+                    )
+                )
+            );
+
             WCX_Order::update_meta_data(
                 $order,
                 self::META_DELIVERY_OPTIONS,
@@ -1025,22 +1036,28 @@ class WCMYPA_Admin
      */
     private static function removeDisallowedDeliveryOptions(array $data, string $country): array
     {
-        $isHomeCountry  = WCMP_Data::isHomeCountry($country);
+        $data['package_type'] = $data['package_type'] ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
+        $isHomeCountry        = WCMP_Data::isHomeCountry($country);
+        $isEuCountry          = WCMP_Country_Codes::isEuCountry($country);
+
+        if (! $isHomeCountry) {
+            $data['package_type'] = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
+        }
+
         $isPackage      = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $data['package_type'];
         $isDigitalStamp = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $data['package_type'];
 
-        if (! $isHomeCountry) {
-          $data['package_type'] = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
-        }
-
         if (! $isHomeCountry || ! $isPackage) {
-            $data['shipment_options']['age_check'] = false;
-            $data['shipment_options']['large_format'] = false;
+            $data['shipment_options']['age_check']       = false;
             $data['shipment_options']['return_shipment'] = false;
-            $data['shipment_options']['insured'] = false;
-            $data['shipment_options']['insured_amount'] = 0;
+            $data['shipment_options']['insured']         = false;
+            $data['shipment_options']['insured_amount']  = 0;
 
             $data['extra_options']['collo_amount'] = 1;
+        }
+
+        if (! $isPackage || (! $isHomeCountry && ! $isEuCountry)) {
+            $data['shipment_options']['large_format'] = false;
         }
 
         if (! $isDigitalStamp) {
