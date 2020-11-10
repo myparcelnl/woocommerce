@@ -5,6 +5,7 @@
 /**
  * @property {Object} MyParcelDisplaySettings
  * @property {String} MyParcelDisplaySettings.isUsingSplitAddressFields
+ * @property {String[]} MyParcelDisplaySettings.splitAddressFieldsCountries
  *
  * @see \wcmp_checkout::inject_delivery_options_variables
  */
@@ -43,7 +44,12 @@ jQuery(($) => {
     /**
      * @type {Boolean}
      */
-    isUsingSplitAddressFields: !!parseInt(MyParcelDisplaySettings.isUsingSplitAddressFields),
+    isUsingSplitAddressFields: Boolean(Number(MyParcelDisplaySettings.isUsingSplitAddressFields)),
+
+    /**
+     * @type {String[]}
+     */
+    splitAddressFieldsCountries: MyParcelDisplaySettings.splitAddressFieldsCountries,
 
     /**
      * @type {Array}
@@ -59,6 +65,11 @@ jQuery(($) => {
      * @type {Boolean}
      */
     alwaysShow: Boolean(parseInt(MyParcelDeliveryOptions.alwaysShow)),
+
+    /**
+     * @type {Object<String, String>}
+     */
+    previousCountry: {},
 
     /**
      * @type {String}
@@ -98,10 +109,12 @@ jQuery(($) => {
 
     addressField: 'address_1',
     cityField: 'city',
-    countryRow: 'country_field',
     countryField: 'country',
+    countryRow: 'country_field',
     houseNumberField: 'house_number',
+    houseNumberSuffixField: 'house_number_suffix',
     postcodeField: 'postcode',
+    streetNameField: 'street_name',
 
     /**
      * Delivery options events.
@@ -163,7 +176,7 @@ jQuery(($) => {
      * @returns {String}
      */
     getSplitField() {
-      return MyParcelFrontend.isUsingSplitAddressFields
+      return MyParcelFrontend.hasSplitAddressFields()
         ? MyParcelFrontend.houseNumberField
         : MyParcelFrontend.addressField;
     },
@@ -184,6 +197,7 @@ jQuery(($) => {
       /*
        * jQuery events.
        */
+      $(document.body).on(MyParcelFrontend.countryToStateChangedEvent, MyParcelFrontend.synchronizeAddress);
       $(document.body).on(MyParcelFrontend.countryToStateChangedEvent, MyParcelFrontend.updateAddress);
       $(document.body).on(MyParcelFrontend.updatedWooCommerceCheckoutEvent, MyParcelFrontend.updateShippingMethod);
     },
@@ -192,24 +206,37 @@ jQuery(($) => {
      * Get field by name. Will return element with MyParcelFrontend selector: "#<billing|shipping>_<name>".
      *
      * @param {String} name - The part after `shipping/billing` in the id of an element in WooCommerce.
+     * @param {?String} addressType - "shipping" or "billing".
      *
      * @returns {Element}
      */
-    getField(name) {
-      if (!MyParcelFrontend.addressType) {
-        MyParcelFrontend.getAddressType();
+    getField(name, addressType = MyParcelFrontend.addressType) {
+      if (!addressType) {
+        addressType = MyParcelFrontend.getAddressType();
       }
 
-      return document.querySelector(`#${MyParcelFrontend.addressType}_${name}`);
+      const selector = `#${addressType}_${name}`;
+      const field = document.querySelector(selector);
+
+      if (!field) {
+        // eslint-disable-next-line no-console
+        console.warn(`Field ${selector} not found.`);
+      }
+
+      return field;
     },
 
     /**
      * Update address type.
+     *
+     * @returns {String}
      */
     getAddressType() {
       const useShipping = document.querySelector(MyParcelFrontend.shipToDifferentAddressField).checked;
 
       MyParcelFrontend.addressType = useShipping ? 'shipping' : 'billing';
+
+      return MyParcelFrontend.addressType;
     },
 
     /**
@@ -219,15 +246,31 @@ jQuery(($) => {
      * @returns {String}
      */
     getHouseNumber() {
-      const address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
-      const result = MyParcelFrontend.splitStreetRegex.exec(address);
-      const numberIndex = 2;
+      const hasBillingNumber = $(`#billing_${MyParcelFrontend.houseNumberField}`).val() !== '';
+      const hasShippingNumber = $(`#shipping_${MyParcelFrontend.houseNumberField}`).val() !== '';
+      const hasNumber = hasBillingNumber || hasShippingNumber;
 
-      if (MyParcelFrontend.isUsingSplitAddressFields) {
+      if (MyParcelFrontend.hasSplitAddressFields() && hasNumber) {
         return MyParcelFrontend.getField(MyParcelFrontend.houseNumberField).value;
       }
 
-      return result ? result[numberIndex] : null;
+      return MyParcelFrontend.getAddressParts().house_number;
+    },
+
+    /**
+     * @returns {{house_number_suffix: (String | null), house_number: (String | null), street_name: (String | null)}}
+     */
+    getAddressParts: function() {
+      const address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
+      const result = MyParcelFrontend.splitStreetRegex.exec(address);
+
+      const parts = {};
+
+      parts[MyParcelFrontend.streetNameField] = result ? result[1] : null;
+      parts[MyParcelFrontend.houseNumberField] = result ? result[2] : null;
+      parts[MyParcelFrontend.houseNumberSuffixField] = result ? result[3] : null;
+
+      return parts;
     },
 
     /**
@@ -282,14 +325,16 @@ jQuery(($) => {
     },
 
     /**
-     * Set the values of the WooCommerce fields.
+     * Set the values of the WooCommerce fields from delivery options data.
      *
-     * @param {Object} address - The new address.
+     * @param {?Object} address - The new address.
      * @param {String} address.postalCode
      * @param {String} address.city
      * @param {String} address.number
      */
-    setAddress(address = {}) {
+    setAddressFromDeliveryOptions: function(address = null) {
+      address = address || {};
+
       if (address.postalCode) {
         MyParcelFrontend.getField(MyParcelFrontend.postcodeField).value = address.postalCode;
       }
@@ -304,6 +349,30 @@ jQuery(($) => {
     },
 
     /**
+     * Set the values of the WooCommerce fields. Ignores empty values.
+     *
+     * @param {Object|null} address - The new address.
+     */
+    fillCheckoutFields: function(address) {
+      if (!address) {
+        return;
+      }
+
+      Object
+        .keys(address)
+        .forEach((fieldName) => {
+          const field = MyParcelFrontend.getField(fieldName);
+          const value = address[fieldName];
+
+          if (!field || !value) {
+            return;
+          }
+
+          field.value = value;
+        });
+    },
+
+    /**
      * Set the house number.
      *
      * @param {String|Number} number - New house number to set.
@@ -312,7 +381,7 @@ jQuery(($) => {
       const address = MyParcelFrontend.getField(MyParcelFrontend.addressField).value;
       const oldHouseNumber = MyParcelFrontend.getHouseNumber();
 
-      if (MyParcelFrontend.isUsingSplitAddressFields) {
+      if (MyParcelFrontend.hasSplitAddressFields()) {
         if (oldHouseNumber) {
           MyParcelFrontend.getField(MyParcelFrontend.addressField).value = address.replace(oldHouseNumber, number);
         } else {
@@ -342,8 +411,8 @@ jQuery(($) => {
      *
      * @param {CustomEvent} event - The event containing the new address.
      */
-    onDeliveryOptionsAddressUpdate(event) {
-      MyParcelFrontend.setAddress(event.detail);
+    onDeliveryOptionsAddressUpdate: function(event) {
+      MyParcelFrontend.setAddressFromDeliveryOptions(event.detail);
     },
 
     /**
@@ -524,6 +593,77 @@ jQuery(($) => {
       }
 
       return shippingMethod;
+    },
+
+    /**
+     * Sync addresses between split and non-split address fields.
+     *
+     * @param {Event} event
+     * @param {String} newCountry
+     */
+    synchronizeAddress: function(event, newCountry) {
+      if (!MyParcelFrontend.isUsingSplitAddressFields) {
+        return;
+      }
+
+      const data = $('form').serializeArray();
+
+      ['shipping', 'billing'].forEach((addressType) => {
+        const typeCountry = data.find((item) => item.name === `${addressType}_country`);
+        const hasAddressTypeCountry = MyParcelFrontend.previousCountry.hasOwnProperty(addressType);
+        const countryChanged = MyParcelFrontend.previousCountry[addressType] !== newCountry;
+
+        if (!hasAddressTypeCountry || countryChanged) {
+          MyParcelFrontend.previousCountry[addressType] = typeCountry.value;
+        }
+
+        if (!countryChanged) {
+          return;
+        }
+
+        if (MyParcelFrontend.hasSplitAddressFields(newCountry)) {
+          const parts = MyParcelFrontend.getAddressParts();
+
+          MyParcelFrontend.fillCheckoutFields(parts);
+        } else {
+          const [
+            houseNumberField,
+            houseNumberSuffixField,
+            streetNameField,
+          ] = [
+            MyParcelFrontend.houseNumberField,
+            MyParcelFrontend.houseNumberSuffixField,
+            MyParcelFrontend.streetNameField,
+          ].map((fieldName) => MyParcelFrontend.getField(fieldName));
+
+          const number = houseNumberField.value || '';
+          const street = streetNameField.value || '';
+          const suffix = houseNumberSuffixField.value || '';
+
+          MyParcelFrontend.fillCheckoutFields({
+            address_1: `${street} ${number}${suffix}`.trim(),
+          });
+        }
+
+        MyParcelFrontend.updateAddress();
+      });
+    },
+
+    /**
+     * @param {?String} country
+     *
+     * @returns {Boolean}
+     */
+    hasSplitAddressFields: function(country = null) {
+      if (!country) {
+        country = MyParcelFrontend.getField(MyParcelFrontend.countryField).value;
+      }
+
+      if (!MyParcelFrontend.isUsingSplitAddressFields) {
+        return false;
+      }
+
+      return MyParcelFrontend.splitAddressFieldsCountries.includes(country.toUpperCase());
     },
   };
 
