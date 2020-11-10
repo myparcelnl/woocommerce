@@ -1,6 +1,6 @@
 <?php
 
-use MyParcelNL\WooCommerce\Includes\Admin\ShipmentOptions;
+use MyParcelNL\WooCommerce\Includes\Admin\OrderSettingsRows;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
 /**
@@ -24,8 +24,8 @@ try {
 
     WCMYPA_Admin::renderPickupLocation($deliveryOptions);
 
-    $optionRows = ShipmentOptions::getOptionsRows($deliveryOptions, $order);
-    $optionRows = ShipmentOptions::filterRowsByCountry($order->get_shipping_country(), $optionRows);
+    $optionRows = OrderSettingsRows::getOptionsRows($deliveryOptions, $order);
+    $optionRows = OrderSettingsRows::filterRowsByCountry($order->get_shipping_country(), $optionRows);
 
     $namePrefix = WCMYPA_Admin::SHIPMENT_OPTIONS_FORM_NAME . "[{$order->get_id()}]";
 

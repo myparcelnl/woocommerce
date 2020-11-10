@@ -1149,12 +1149,12 @@ class WCMP_Export
      */
     public static function getDigitalStampRangeFromWeight(float $weight): int
     {
-        $weight = (int) ($weight * 1000);
+        $intWeight = (int) ($weight * 1000);
 
         $results = Arr::where(
             WCMP_Data::getDigitalStampRanges(),
-            function ($range) use ($weight) {
-                return $weight > $range['min'];
+            function ($range) use ($intWeight) {
+                return $intWeight > $range['min'];
             }
         );
 

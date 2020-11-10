@@ -471,7 +471,7 @@ class WCMP_Settings_Data
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
                 "label"     => __("Max insured amount", "woocommerce-myparcel"),
                 "type"      => "select",
-                "options"   => WCMP_Data::getInsuranceAmount(),
+                "options"   => WCMP_Data::getInsuranceAmounts(),
                 "help_text" => __(
                     "Insure all parcels up to the selected amount.",
                     "woocommerce-myparcel"
