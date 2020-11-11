@@ -1,0 +1,12 @@
+/* Twenty Sixteen preset */
+.woocommerce-myparcel__delivery-options > .myparcel-delivery-options {
+  background: #ebe9eb;
+  border-radius: 5px;
+  padding: 1em;
+  margin: 3px;
+}
+
+.woocommerce-myparcel__delivery-options > .myparcel-delivery-options table {
+  border: none;
+  table-layout: auto;
+}

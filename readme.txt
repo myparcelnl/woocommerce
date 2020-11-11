@@ -1,11 +1,10 @@
 === Plugin Name ===
-Contributors: richardperdaan
-Contributors: ademdemir
-Tags: woocommerce, WooCommerce, export, Orders, orders, Bestellingen, bestellingen, Delivery, delivery options, bezorgopties, Packages, packages, MyParcel, myparcel, Flespakket, flespakket, PostNL, postnl
+Contributors: richardperdaan, ademdemir, edielemoine
+Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 3.5.1 & WooCommerce 2.0+
-Tested up to: 5.2.4
+Tested up to: 5.5.1
 Stable tag: trunk
-Requires PHP: 5.6
+Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 
@@ -83,13 +82,72 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Screenshots ==
 
-1. Export or print myparcel label per order
-2. Bulk export or print myparcel labels
+1. Export or print MyParcel label per order
+2. Bulk export or print MyParcel labels
 3. Change the shipment options for an order
 4. MyParcel actions on the order overview page
-5. Myparcel information on the order details page
+5. MyParcel information on the order details page
 
 == Changelog ==
+
+= 4.1.0 (2020-11-11) =
+* Improvement: All enabled/disabled dropdowns replaced with clickable toggles.
+* Improvement: Show package type and delivery date instead of "details".
+* Improvement: Add label description for individual shipments.
+* Improvement: Loading speed/experience.
+* Improvement: Spinner for order grid bulk actions.
+* Improvement: make default export settings show up in shipment options.
+* Improvement: show delivery date in order grid for any order that has one (only when "show delivery day" setting is enabled).
+* Fix: Calculated weight is shown for digital stamps.
+* Fix: Wrong label for "show delivery day" setting.
+* Fix: Error on sending return email.
+* Fix: Allow split address field for Belgium as well.
+* Fix: Add options that were missing in 4.0.0
+* Fix: Rename at_home_delivery to delivery_title
+* Fix: Monday delivery
+
+= 4.0.6 (2020-10-14) =
+* Fix: Free_shipping linked to package then you should also see the delivery options
+* Fix: If you have a shipping method with flatrate: 181 and the method gives flatrate: 18 then you should not see the delivery options
+* Fix: Error CRITICAL Uncaught TypeError: Return value of WCMP_Export::getShippingMethod()
+
+= 4.0.5 (2020-10-05) =
+* Fix: Disable order status delivered
+* Fix: Package type not being recognized
+* Fix: migrate all package types in export defaults settings
+
+= 4.0.4 (2020-10-01) =
+* Fix: Failed opening class-wcmypa-settings.php
+
+= 4.0.3 (2020-10-01) =
+* Fix: Old settings non existent error
+* Fix: Class naming for theme compatibility
+
+= 4.0.2 (2020-08-21) =
+* Fix:  Show delivery options with a shipping class and with tablerates
+* Improvement: Automatic insurance
+
+= 4.0.1 (2020-07-29) =
+* Fix: Wrong meta variable country of origin
+* Fix: Html layout of shipment summary settings and searching in WooCommerce orders overview
+* Fix: Translations
+* Fix: Export pickup locations
+* Fix: When deliveryType is empty use default package
+* Fix: Html layout of shipment summary and searching in WooCommerce orders overview
+* Improvement: Add empty parcel weight option
+* Improvement: Add multicollo option
+
+= 4.0.0 (2020-06-24) =
+* Fix: HS code
+* Fix: Delete options keep old shipments
+* Fix: Insurance possibilities
+* Fix: Barcode in orderview
+* Fix: Housenumber and suffix
+* Improvement: Country of origin
+* Improvement: New checkout and SDK
+* Improvement: Automatic export after payment
+* Improvement: V2 shipment endpoint
+* Improvement: HS code for variable product
 
 = 3.2.1 (2020-02-04) =
 * Fix: The recursive delivery date loop and full cache
@@ -102,7 +160,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: Check if there is connection with MyParcel
 
 = 3.1.7 (2019-07-16) =
-* Fix: Search in order grid myparcel shipment
+* Fix: Search in order grid MyParcel shipment
 * Fix: More than 5 products for World shipments
 
 = 3.1.6 (2019-07-04) =
@@ -163,7 +221,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 = 3.0.8 (2018-12-04) =
 * Fix: The multiple calls that are made to retrieve the shipping data.
 * Fix: The option for Pick up extra early
-* Fix: Wrong house number / postcode message and the possibility to adjust the address in the myparcel checkout
+* Fix: Wrong house number / postcode message and the possibility to adjust the address in the MyParcel checkout
 * Fix: Woocommerce tabel rates
 * Improvement: Better support the default WooCommerce checkout address fields
 
@@ -265,7 +323,7 @@ These are the biggest changes:
       ```des/class-wcmp-rest-api-integration.php): failed to open stream```
 
 = 2.4.3 (2018-01-05) =
-* Fix: Add myparcel fields to REST api to create order request
+* Fix: Add MyParcel fields to REST api to create order request
 * Fix: Hide days when the pickup delivery is selected
 
 = 2.4.2 (2017-10-29) =
@@ -391,7 +449,7 @@ These are the biggest changes:
 * Fix: Postcode validation issues with Portugal
 
 = 1.5.3 =
-* Feature: Edit myparcel address fields on user profile page
+* Feature: Edit MyParcel address fields on user profile page
 * Fix: Bug with automatic order completion
 
 = 1.5.2 =
@@ -486,7 +544,7 @@ These are the biggest changes:
 * Button styles are now in CSS instead of inline
 
 = 1.2.0 =
-* Feature: The myparcel checkout fields (street name / house number) can now also be modified on the my account page
+* Feature: The MyParcel checkout fields (street name / house number) can now also be modified on the my account page
 * Fix: WooCommerce 2.1 compatibility (checkout field localisation is now in WC core)
 * Updated MyParcel tariffs
 
@@ -505,3 +563,6 @@ These are the biggest changes:
 == Upgrade Notice ==
 = 2.1 =
 **Important!** Version 2.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
+
+= 4.0.0 =
+**Important!** Version 4.0.0 was a big update for this plugin, we recommend testing in a test environment first, before updating on a live site!
