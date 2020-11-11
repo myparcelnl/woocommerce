@@ -90,6 +90,19 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.1.0 (2020-11-11) =
+* Improvement: All enabled/disabled dropdowns replaced with clickable toggles.
+* Improvement: Show package type and delivery date instead of "details".
+* Improvement: Add label description for individual shipments.
+* Improvement: Loading speed/experience.
+* Improvement: Spinner for order grid bulk actions.
+* Improvement: make default export settings show up in shipment options.
+* Improvement: show delivery date in order grid for any order that has one (only when "show delivery day" setting is enabled).
+* Fix: Calculated weight is shown for digital stamps.
+* Fix: Wrong label for "show delivery day" setting.
+* Fix: Error on sending return email.
+* Fix: Allow split address field for Belgium as well.
+
 = 4.0.6 (2020-10-14) =
 * Fix: Free_shipping linked to package then you should also see the delivery options
 * Fix: If you have a shipping method with flatrate: 181 and the method gives flatrate: 18 then you should not see the delivery options
