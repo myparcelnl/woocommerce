@@ -90,6 +90,10 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.1.1 (2020-11-11) =
+* Fix: 4.1.0 migration fatal errors
+* Fix: PHP Fatal error: Uncaught TypeError: Return value of WCMP_Export::getPackageTypeFromOrder()
+
 = 4.1.0 (2020-11-11) =
 * Improvement: All enabled/disabled dropdowns replaced with clickable toggles.
 * Improvement: Show package type and delivery date instead of "details".
