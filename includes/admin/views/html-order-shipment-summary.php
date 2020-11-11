@@ -32,7 +32,7 @@ $firstShipment = $shipments[$shipment_id];
 $insurance        = Arr::get($firstShipment, "shipment.options.insurance");
 $labelDescription = Arr::get($firstShipment, "shipment.options.label_description");
 
-echo '<ul class="wcmp__shipment-summary">';
+echo '<ul class="wcmp__shipment-summary wcmp__ws--nowrap">';
 
 /**
  *  Package type

@@ -1,23 +1,5 @@
-/*
- * Action buttons
- */
-.post-type-shop_order .wp-list-table .column-wc_actions .button.wcmp__action,
-.button.wcmp__action {
-  width: auto;
-  min-width: 2em;
-  display: -ms-inline-flexbox;
-  display: -webkit-inline-box;
-  display: inline-flex;
-  padding: 0 0.3em !important
-}
-
-.wcmp__action + .wcmp__action {
-  margin-left: .3em;
-}
-
-.wcmp__action .wcmp__action__img {
-  margin: auto;
-}
+@import "variables";
+@import "admin/index";
 
 /*
  * Shipment overview
@@ -39,7 +21,6 @@
 .wcmp__box {
   background-color: white;
   border: 1px solid #ccc;
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   padding: 10px;
   position: absolute;
@@ -48,28 +29,8 @@
 }
 
 /*
- * Shipment overview: Print offset dialog
- */
-.wcmp__offset-dialog {
-  position: absolute;
-}
-
-.wcmp__offset-dialog .button {
-  display: none;
-  margin-top: 4px;
-}
-
-.wcmp__offset-dialog__icon {
-  vertical-align: middle;
-}
-
-/*
  * Shipment summary (overview and single order)
  */
-.wcmp__shipment-summary {
-  white-space: nowrap;
-}
-
 .wcmp__shipment-summary .delivery-date,
 .wcmp__shipment-summary .delivery-options {
   display: block;
@@ -132,8 +93,6 @@
  * Spinner
  */
 .wcmp__spinner {
-  display: -ms-inline-flexbox;
-  display: -webkit-inline-box;
   display: inline-flex;
   margin: auto;
 }
@@ -271,31 +230,6 @@
   #order_data .order_data_column {
     max-width: 31% !important;
   }
-}
-
-/*
- * Helpers
- */
-.wcmp__d--none {
-  display: none;
-}
-
-.wcmp__d--block {
-  display: block;
-}
-
-.wcmp__d--inline-block {
-  display: inline-block;
-}
-
-.wcmp__d--flex {
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-}
-
-.wcmp__white-space--nowrap {
-  white-space: nowrap;
 }
 
 /* Hide the "(optional)" spans on wcmp form labels in settings page and others*/
