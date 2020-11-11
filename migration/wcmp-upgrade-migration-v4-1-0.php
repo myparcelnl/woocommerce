@@ -57,17 +57,17 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
 
     protected function import(): void
     {
-        require_once(WCMYPA()->plugin_path() . "/includes/vendor/autoload.php");
+        require_once(WCMYPA()->plugin_path() . '/includes/vendor/autoload.php');
         require_once(WCMYPA()->plugin_path() . '/includes/admin/settings/class-wcmypa-settings.php');
         require_once(WCMYPA()->plugin_path() . '/includes/class-wcmp-data.php');
     }
 
     protected function migrate(): void
     {
-        $this->oldGeneralSettings        = get_option("woocommerce_myparcel_general_settings");
-        $this->oldCheckoutSettings       = get_option("woocommerce_myparcel_checkout_settings");
-        $this->oldExportDefaultsSettings = get_option("woocommerce_myparcel_export_defaults_settings");
-        $oldPostNlSettings               = get_option("woocommerce_myparcel_postnl_settings");
+        $this->oldGeneralSettings        = $this->getSettings("woocommerce_myparcel_general_settings");
+        $this->oldCheckoutSettings       = $this->getSettings("woocommerce_myparcel_checkout_settings");
+        $this->oldExportDefaultsSettings = $this->getSettings("woocommerce_myparcel_export_defaults_settings");
+        $oldPostNlSettings               = $this->getSettings("woocommerce_myparcel_postnl_settings");
 
         $this->newGeneralSettings        = $this->oldGeneralSettings;
         $this->newCheckoutSettings       = $this->oldCheckoutSettings;

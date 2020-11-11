@@ -86,4 +86,17 @@ abstract class WCMP_Upgrade_Migration
             }
         }
     }
+
+    /**
+     * Get settings array. Falls back to empty array of get_option returns a falsy value. Not compatible with
+     * non-array settings.
+     *
+     * @param string $settingName
+     *
+     * @return array
+     */
+    protected function getSettings(string $settingName): array
+    {
+        return get_option($settingName) ?: [];
+    }
 }
