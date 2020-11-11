@@ -90,7 +90,7 @@ gulp.task('build', build);
 gulp.task('build:zip', gulp.series('build', 'zip'));
 
 gulp.task('watch', () => {
-  gulp.watch(['src/css/**/*', 'src/images/**/*'], null, gulp.series('copy'));
+  gulp.watch(['src/css/**/*', 'src/img/**/*'], null, gulp.series('copy'));
   // Skip babel in watch mode
   gulp.watch(['src/js/**/*'], null, () => gulp.src('src/js/**/*.js').pipe(gulp.dest('assets/js')));
   gulp.watch(['node_modules/@myparcel/delivery-options/**/*'], null, gulp.series('copy:delivery-options'));

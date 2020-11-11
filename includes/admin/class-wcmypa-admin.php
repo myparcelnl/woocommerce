@@ -361,7 +361,6 @@ class WCMYPA_Admin
             "class"             => ["wcmp__d--inline-block"],
             "input_class"       => ["wcmp__offset-dialog__offset"],
             "type"              => "number",
-            "label"             => __("Labels to skip", "woocommerce-myparcel"),
             "custom_attributes" => [
                 "step" => "1",
                 "min"  => "0",
@@ -370,30 +369,39 @@ class WCMYPA_Admin
             ],
         ];
 
-        $class = new SettingsFieldArguments($field);
+        $class = new SettingsFieldArguments($field, false);
         ?>
 
         <div
-                class="wcmp wcmp__box wcmp__offset-dialog"
-                style="display: none;">
+            class="wcmp wcmp__box wcmp__offset-dialog wcmp__ws--nowrap"
+            style="display: none;">
             <div class="wcmp__offset-dialog__inner wcmp__d--flex">
                 <div>
-                    <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
-
-                    <img
-                            src="<?php echo WCMYPA()->plugin_url() . "/assets/img/print-offset-icon.png"; ?>"
-                            alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
-                            class="wcmp__offset-dialog__icon"/>
+                    <div class="wcmp__pb--2">
+                        <?php printf(
+                            '<label for="%s">%s</label>',
+                            $class->getId(),
+                            __("Labels to skip", "woocommerce-myparcel")
+                        ); ?>
+                    </div>
+                    <div class="wcmp__d--flex wcmp__pb--2">
+                        <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
+                        <img
+                          src="<?php echo WCMYPA()->plugin_url() . "/assets/img/offset.svg"; ?>"
+                          alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
+                          class="wcmp__offset-dialog__icon wcmp__pl--1"/>
+                    </div>
                     <div>
                         <a
-                                href="#"
-                                class="wcmp__action wcmp__offset-dialog__button button">
+                            href="#"
+                            class="wcmp__offset-dialog__button button"
+                            style="display: none;">
                             <?php _e("Print", "woocommerce-myparcel"); ?>
                             <?php self::renderSpinner(); ?>
                         </a>
                     </div>
                 </div>
-                <div class="wcmp__close-button dashicons dashicons-no-alt wcmp__offset-dialog__close"></div>
+                <div class="wcmp__close-button dashicons dashicons-no-alt wcmp__offset-dialog__close wcmp__pl--2"></div>
             </div>
         </div>
         <?php
@@ -451,17 +459,17 @@ class WCMYPA_Admin
         $listing_actions = [
             $addShipments => [
                 "url" => admin_url("$baseUrl&request=$addShipments&order_ids=$order_id"),
-                "img" => WCMYPA()->plugin_url() . "/assets/img/myparcel-up.png",
+                "img" => WCMYPA()->plugin_url() . "/assets/img/export.svg",
                 "alt" => __("Export to MyParcel", "woocommerce-myparcel"),
             ],
             $getLabels    => [
                 "url" => admin_url("$baseUrl&request=$getLabels&order_ids=$order_id"),
-                "img" => WCMYPA()->plugin_url() . "/assets/img/myparcel-pdf.png",
+                "img" => WCMYPA()->plugin_url() . "/assets/img/print.svg",
                 "alt" => __("Print MyParcel label", "woocommerce-myparcel"),
             ],
             $addReturn    => [
                 "url" => admin_url("$baseUrl&request=$addReturn&order_ids=$order_id"),
-                "img" => WCMYPA()->plugin_url() . "/assets/img/myparcel-retour.png",
+                "img" => WCMYPA()->plugin_url() . "/assets/img/return.svg",
                 "alt" => __("Email return label", "woocommerce-myparcel"),
             ],
         ];
@@ -898,7 +906,7 @@ class WCMYPA_Admin
     {
         $showDeliveryDay = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY);
 
-        if ($deliveryOptions->getDate() && $showDeliveryDay) {
+        if ($showDeliveryDay && $deliveryOptions->getDate()) {
             printf(
                 '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
                 __("MyParcel shipment:", "woocommerce-myparcel"),
@@ -961,10 +969,10 @@ class WCMYPA_Admin
     {
         printf(
             '<a href="%1$s" 
-                    class="button tips wcmp__action wcmp__d--flex" 
-                    data-tip="%2$s" 
-                    %4$s>
-                <img class="wcmp__action__img" src="%3$s" alt="%2$s" />',
+                class="button tips wcmp__action" 
+                data-tip="%2$s" 
+                %4$s>
+                <img class="wcmp__action__img wcmp__m--auto" src="%3$s" alt="%2$s" />',
             wp_nonce_url($url, WCMYPA::NONCE_ACTION),
             $alt,
             $icon,
