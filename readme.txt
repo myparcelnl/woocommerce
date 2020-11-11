@@ -102,6 +102,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: Wrong label for "show delivery day" setting.
 * Fix: Error on sending return email.
 * Fix: Allow split address field for Belgium as well.
+* Fix: Add options that were missing in 4.0.0
+* Fix: Rename at_home_delivery to delivery_title
+* Fix: Monday delivery
 
 = 4.0.6 (2020-10-14) =
 * Fix: Free_shipping linked to package then you should also see the delivery options
