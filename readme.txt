@@ -90,6 +90,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.1.2 (2020-11-12) =
+* Fix: Crack down on invalid package types
+
 = 4.1.1 (2020-11-11) =
 * Fix: 4.1.0 migration fatal errors
 * Fix: PHP Fatal error: Uncaught TypeError: Return value of WCMP_Export::getPackageTypeFromOrder()
