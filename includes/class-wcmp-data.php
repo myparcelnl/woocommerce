@@ -4,6 +4,7 @@ use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
+use MyParcelNL\Sdk\src\Support\Arr;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -151,7 +152,17 @@ class WCMP_Data
      */
     public static function getPackageTypeId(string $packageType): ?int
     {
-        return AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP[$packageType];
+        return Arr::get(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP, $packageType, null);
+    }
+
+    /**
+     * @param int $packageType
+     *
+     * @return string|null
+     */
+    public static function getPackageTypeName(int $packageType): ?string
+    {
+        return Arr::get(array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP), (string) $packageType, null);
     }
 
     /**
@@ -161,7 +172,7 @@ class WCMP_Data
      */
     public static function getDeliveryTypeId(string $deliveryType): ?int
     {
-        return AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP[$deliveryType];
+        return Arr::get(AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP, $deliveryType, null);
     }
 
     /**
@@ -184,11 +195,7 @@ class WCMP_Data
             $key = $integerMap[$key];
         }
 
-        if (! array_key_exists($key, $humanMap)) {
-            return null;
-        }
-
-        return $humanMap[$key];
+        return $humanMap[$key] ?? null;
     }
 
     /**
