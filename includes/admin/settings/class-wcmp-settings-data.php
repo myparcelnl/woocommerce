@@ -501,7 +501,7 @@ class WCMP_Settings_Data
                 "label"     => __("Drop-off days", "woocommerce-myparcel"),
                 "callback"  => [WCMP_Settings_Callbacks::class, "enhanced_select"],
                 "options"   => $this->getWeekdays(),
-                "default"   => [1, 2, 3, 4, 5],
+                "default"   => $this->getWeekdays(),
                 "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcel"),
             ],
             [
