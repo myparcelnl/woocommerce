@@ -126,6 +126,14 @@ class WCMP_Export_Consignments
     /**
      * @return int
      */
+    private function getPackageType(): int
+    {
+        return WCMP_Data::getPackageTypeId($this->orderSettings->getPackageType());
+    }
+
+    /**
+     * @return int
+     */
     private function getDeliveryType(): int
     {
         $deliveryTypeId = WCMP_Data::getDeliveryTypeId($this->deliveryOptions->getDeliveryType());
@@ -430,7 +438,7 @@ class WCMP_Export_Consignments
         $this->consignment
             ->setApiKey($this->apiKey)
             ->setReferenceId((string) $this->order->get_id())
-            ->setPackageType($this->orderSettings->getPackageType())
+            ->setPackageType($this->getPackageType())
             ->setDeliveryDate($this->getDeliveryDate())
             ->setDeliveryType($this->getDeliveryType())
             ->setLabelDescription($this->getFormattedLabelDescription());

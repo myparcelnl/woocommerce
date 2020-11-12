@@ -897,7 +897,7 @@ class WCMP_Export
         // Get pre 4.0.0 package type if it exists.
         if (WCX_Order::has_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0)) {
             $shipmentOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0);
-            return (string) WCMP_Data::getPackageTypeId($shipmentOptions['package_type']);
+            return self::getPackageTypeAsString($shipmentOptions['package_type']);
         }
 
         $packageType = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
@@ -915,7 +915,7 @@ class WCMP_Export
                 $orderShippingClass = $this->getOrderShippingClass($order, $orderShippingMethod);
             }
 
-            $packageType = WCMP_Export::getPackageTypeFromShippingMethod(
+            $packageType = self::getPackageTypeFromShippingMethod(
                 $orderShippingMethod,
                 $orderShippingClass
             );
@@ -928,11 +928,11 @@ class WCMP_Export
      * @param $shippingMethod
      * @param $shippingClass
      *
-     * @return string|null
+     * @return string
      */
-    public static function getPackageTypeFromShippingMethod($shippingMethod, $shippingClass): ?string
+    public static function getPackageTypeFromShippingMethod($shippingMethod, $shippingClass): string
     {
-        $package_type          = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME;
+        $packageType           = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME;
         $shippingMethodIdClass = "";
 
         if (Str::startsWith($shippingMethod, 'table_rate:') && class_exists('WC_Table_Rate_Shipping')) {
@@ -963,12 +963,12 @@ class WCMP_Export
                 $shippingMethodIdClass,
                 $shippingClass
             )) {
-                $package_type = $packageTypeKey;
+                $packageType = $packageTypeKey;
                 break;
             }
         }
 
-        return $package_type;
+        return self::getPackageTypeAsString($packageType);
     }
 
     /**
@@ -983,6 +983,30 @@ class WCMP_Export
         }
 
         return $packageType ?? __("Unknown", "woocommerce-myparcel");
+    }
+
+    /**
+     * Will convert any package type to a valid string package type.
+     *
+     * @param mixed $packageType
+     *
+     * @return string
+     */
+    public static function getPackageTypeAsString($packageType): string
+    {
+        if (is_numeric($packageType)) {
+            $packageType = WCMP_Data::getPackageTypeName($packageType);
+        }
+
+        if (! is_string($packageType) || ! in_array($packageType, WCMP_Data::getPackageTypes())) {
+            // Log data when this occurs but don't actually throw an exception.
+            $type = gettype($packageType);
+            WCMP_Log::add(new Exception("Tried to convert invalid value to package type: $packageType ($type)"));
+
+            $packageType = null;
+        }
+
+        return $packageType ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
     }
 
     /**
