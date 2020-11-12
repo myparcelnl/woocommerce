@@ -69,7 +69,7 @@ class OrderSettings
     private $onlyRecipient;
 
     /**
-     * @var int|null
+     * @var string
      */
     private $packageType;
 
@@ -186,12 +186,13 @@ class OrderSettings
     }
 
     /**
-     * @return int|null
+     * @return string
      */
-    public function getPackageType(): ?int
+    public function getPackageType(): string
     {
         return $this->packageType;
     }
+
     /**
      * @return bool
      */
@@ -361,7 +362,7 @@ class OrderSettings
     private function setPackageType(): void
     {
         $packageType = WCMYPA()->export->getPackageTypeFromOrder($this->order, $this->deliveryOptions);
-        $this->packageType = WCMP_Data::getPackageTypeId($packageType);
+        $this->packageType = $packageType;
     }
 
     /**
