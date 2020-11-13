@@ -90,6 +90,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.1.3 (2020-11-13) =
+* Fix: Error on checkout when using custom address fields
+
 = 4.1.2 (2020-11-12) =
 * Fix: Crack down on invalid package types
 
