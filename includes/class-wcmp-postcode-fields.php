@@ -1135,11 +1135,11 @@ class WCMP_NL_Postcode_Fields
     }
 
     /**
-     * @param string $country
+     * @param string|null $country
      *
      * @return bool
      */
-    private static function isCountryWithSplitAddressFields(string $country): bool
+    private static function isCountryWithSplitAddressFields(?string $country): bool
     {
         return in_array($country, self::COUNTRIES_WITH_SPLIT_ADDRESS_FIELDS);
     }
