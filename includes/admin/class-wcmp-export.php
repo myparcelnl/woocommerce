@@ -630,7 +630,7 @@ class WCMP_Export
     public static function getRecipientFromOrder(WC_Order $order)
     {
         $isUsingMyParcelFields = WCX_Order::has_meta($order, "_billing_street_name")
-                                 || WCX_Order::has_meta($order, "_billing_house_number");
+                                 && WCX_Order::has_meta($order, "_billing_house_number");
 
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
