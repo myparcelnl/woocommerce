@@ -162,14 +162,12 @@ class WCMP_API extends WCMP_Rest
 
         if ($display) {
             $collection->setPdfOfLabels($positions);
-            WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
             $this->updateOrderBarcode($order_ids, $collection);
             $collection->downloadPdfOfLabels($display);
         }
 
         if (! $display) {
             $collection->setLinkOfLabels($positions);
-            WCMP_Export::saveTrackTracesToOrders($collection, $order_ids);
             $this->updateOrderBarcode($order_ids, $collection);
             echo $collection->getLinkOfLabels();
             die();
