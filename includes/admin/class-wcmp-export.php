@@ -733,7 +733,7 @@ class WCMP_Export
     }
 
     /**
-     * @param array $order_id
+     * @param int $order_id
      * @param array $track_traces
      *
      * @internal param $shipment_ids
