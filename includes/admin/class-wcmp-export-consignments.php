@@ -174,7 +174,7 @@ class WCMP_Export_Consignments
                 $description = $item["name"];
 
                 // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
-                if (strlen($description) >= WCMP_Export::DESCRIPTION_MAX_LENGTH) {
+                if (strlen($description) >= WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
                     $description = substr($item["name"], 0, 47) . "...";
                 }
                 // Amount
@@ -344,7 +344,7 @@ class WCMP_Export_Consignments
             $productSkus[]  = empty($sku) ? '–' : $sku;
         }
 
-        return strtr(
+        $formattedLabelDescription = strtr(
             $this->orderSettings->getLabelDescription(),
             [
                 '[DELIVERY_DATE]' => date('d-m-Y', strtotime($this->deliveryOptions->getDate())),
@@ -356,6 +356,12 @@ class WCMP_Export_Consignments
                 '[CUSTOMER_NOTE]' => $this->order->get_customer_note(),
             ]
         );
+
+        if (strlen($formattedLabelDescription) > WCMP_Export::ORDER_DESCRIPTION_MAX_LENGTH) {
+            return substr($formattedLabelDescription, 0, 42) . "...";
+        }
+
+        return $formattedLabelDescription;
     }
 
     /**

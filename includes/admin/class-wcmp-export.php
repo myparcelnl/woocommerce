@@ -32,7 +32,8 @@ class WCMP_Export
     /**
      * Maximum characters length of item description.
      */
-    public const DESCRIPTION_MAX_LENGTH = 50;
+    public const ITEM_DESCRIPTION_MAX_LENGTH = 50;
+    public const ORDER_DESCRIPTION_MAX_LENGTH = 45;
 
     public const DEFAULT_POSITIONS = [2, 4, 1, 3];
     public const SUFFIX_CHECK_REG  = "~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i";
