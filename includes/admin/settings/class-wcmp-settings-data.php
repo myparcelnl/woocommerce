@@ -899,6 +899,15 @@ class WCMP_Settings_Data
                     "Country of origin is required for world shipments. Defaults to shop base or NL. Example: 'NL', 'BE', 'DE'", "woocommerce-myparcelbe"
                 ),
             ],
+            [
+                "name"      => WCMP_Settings::SETTING_DEFAULT_CARRIER,
+                "label"     => __("Default carrier", "woocommerce-myparcelbe"),
+                "help-text" => __(
+                    "You can set a default carrier here which will be used when no other option overrides it.", "woocommerce-myparcelbe"
+                ),
+                "type"      => "select",
+                "options"   => WCMP_Data::getCarriersHuman(),
+            ],
         ];
     }
 
