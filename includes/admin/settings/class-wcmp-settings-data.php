@@ -119,7 +119,7 @@ class WCMP_Settings_Data
                 );
 
                 foreach ($section["settings"] as $setting) {
-                    $namePrefix           = $prefix ? "{$name}_" : '';
+                    $namePrefix            = $prefix ? "{$name}_" : '';
                     $setting["id"]        = $prefix ? "{$name}_{$setting["name"]}" : $setting["name"];
                     $setting["option_id"] = $optionIdentifier;
 
@@ -127,7 +127,10 @@ class WCMP_Settings_Data
 
                     // Add the setting's default value to the defaults array.
                     $defaults[$setting["id"]] = $class->getDefault();
-                    $class->setValue(get_option($optionIdentifier)[$class->getId()]);
+
+                    if (isset(get_option($optionIdentifier)[$class->getId()])) {
+                        $class->setValue(get_option($optionIdentifier)[$class->getId()]);
+                    }
 
                     // Default callback
                     $callback = static function() use ($class) {
