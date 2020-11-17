@@ -181,7 +181,7 @@ class WCMP_Export_Consignments
                 $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
 
                 // Weight (total item weight in grams)
-                $weight      = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
+                $weight      = (int) round(WCMP_Export::getItemWeightKg($item, $this->order) * 1000);
                 $totalWeight = $this->getTotalWeight($weight);
 
                 $myParcelItem = (new MyParcelCustomsItem())
@@ -419,13 +419,27 @@ class WCMP_Export_Consignments
      */
     private function setPhysicalProperties(): void
     {
-        $extraOptions       = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
-        $digitalStampWeight = $extraOptions['weight'] ?? null;
-        $orderWeight        = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+        $extraOptions = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+        $packageType  = $this->getPackageType();
+
+        if (! $extraOptions) {
+            return;
+        }
+
+        $orderWeight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+        $totalWeight = $this->getTotalWeight($orderWeight);
+
+        if ($packageType === AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP) {
+            $totalWeight = $extraOptions['weight'];
+        }
+
+        if ((float) $orderWeight === $extraOptions['weight']) {
+            $totalWeight = (new WCMP_Export())->calculatedKiloWeight($totalWeight * 1000);
+        }
 
         $this->consignment->setPhysicalProperties(
             [
-                "weight" => $this->getTotalWeight((int) ($digitalStampWeight ?? $orderWeight)),
+                "weight" => $totalWeight
             ]
         );
     }
