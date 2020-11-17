@@ -1123,7 +1123,7 @@ class WCMP_Export
      *
      * @return float
      */
-    public static function getItemWeight_kg($item, WC_Order $order): float
+    public static function getItemWeightKg($item, WC_Order $order): float
     {
         $product = $order->get_product_from_item($item);
 
@@ -1132,25 +1132,32 @@ class WCMP_Export
         }
 
         $weight      = (int) $product->get_weight();
-        $weight_unit = get_option("woocommerce_weight_unit");
-        switch ($weight_unit) {
-            case "g":
-                $product_weight = $weight / 1000;
-                break;
-            case "lbs":
-                $product_weight = $weight * 0.45359237;
-                break;
-            case "oz":
-                $product_weight = $weight * 0.0283495231;
-                break;
-            default:
-                $product_weight = $weight;
-                break;
-        }
+        $product_weight = WCMP_Export::calculatedKiloWeight($weight);
 
         $item_weight = (float) $product_weight * (int) $item["qty"];
 
         return (float) $item_weight;
+    }
+
+    public static function calculatedKiloWeight($weight): float
+    {
+        $weight_unit = get_option("woocommerce_weight_unit");
+        switch ($weight_unit) {
+            case "g":
+                $calculatedWeight = $weight / 1000;
+                break;
+            case "lbs":
+                $calculatedWeight = $weight * 0.45359237;
+                break;
+            case "oz":
+                $calculatedWeight = $weight * 0.0283495231;
+                break;
+            default:
+                $calculatedWeight = $weight;
+                break;
+        }
+
+        return $calculatedWeight;
     }
 
     /**
