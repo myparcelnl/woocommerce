@@ -151,11 +151,11 @@ class WCMP_Export_Consignments
         $date             = strtotime($this->deliveryOptions->getDate());
         $deliveryDateTime = date('Y-m-d H:i:s', $date);
         $deliveryDate     = date("Y-m-d", $date);
-        $todayDate        = date("Y-m-d", strtotime('now'));
-        $todayOfTomorrow  = date('Y-m-d H:i:s', strtotime('now +1 day'));
+        $dateOfToday      = date("Y-m-d", strtotime('now'));
+        $dateOfTomorrow   = date('Y-m-d H:i:s', strtotime('now +1 day'));
 
-        if ($deliveryDate <= $todayDate) {
-            return $todayOfTomorrow;
+        if ($deliveryDate <= $dateOfToday) {
+            return $dateOfTomorrow;
         }
 
         return $deliveryDateTime;
