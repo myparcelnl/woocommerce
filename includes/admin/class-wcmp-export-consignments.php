@@ -148,10 +148,10 @@ class WCMP_Export_Consignments
      */
     public function getDeliveryDate(): string
     {
-        $date         = strtotime($this->deliveryOptions->getDate());
+        $date             = strtotime($this->deliveryOptions->getDate());
         $deliveryDateTime = date('Y-m-d H:i:s', $date);
-        $deliveryDate = date("Y-m-d", $date);
-        $todayDate    = date("Y-m-d", strtotime('now'));
+        $deliveryDate     = date("Y-m-d", $date);
+        $todayDate        = date("Y-m-d", strtotime('now'));
 
         if ($deliveryDate <= $todayDate) {
             return date('Y-m-d H:i:s', strtotime('now +1 day'));
