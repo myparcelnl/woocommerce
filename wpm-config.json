@@ -1,0 +1,20 @@
+{
+  "admin_pages": [
+    "woocommerce_page_wcmp_settings"
+  ],
+  "options": {
+    "woocommerce_myparcel_checkout_settings": {
+      "barcode_in_note_title" : {},
+      "label_description" : {},
+
+      "header_delivery_options_title" : {},
+      "delivery_title" : {},
+      "morning_title" : {},
+      "standard_title" : {},
+      "evening_title" : {},
+      "only_recipient_title" : {},
+      "signature_title" : {},
+      "pickup_title" : {}
+    }
+  }
+}
