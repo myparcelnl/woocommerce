@@ -45,12 +45,10 @@ Or install it on your website from the [WordPress plugin repository]. [![WordPre
     $ npm i
     ```
 2. Make your changes
-   * Optional: Run the following command to rebuild assets on every code change:
+    * Optional: Run the following command to rebuild assets on every code change:
    ```shell script
    $ gulp watch
    ```
-   > :warning:️ **Note**: When building with `gulp watch` assets are **not** run through Babel. This type of build will not be compatible with older browsers.
-                                                                                                               
 3. Test your changes
     * Locally, if the source directory is inside your `<wordpress>/wp-content` folder.
         ```shell script
@@ -58,17 +56,17 @@ Or install it on your website from the [WordPress plugin repository]. [![WordPre
         ```
     * By uploading a `.zip` file
 
-        This builds all assets and puts all necessary files into `woocommerce-myparcel.zip`. Upload this file to your WordPress website to install the plugin.
+      This builds all assets and puts all necessary files into `woocommerce-myparcel.zip`. Upload this file to your WordPress website to install the plugin.
         ```shell script
         $ gulp zip
         ```
     * By uploading the source folder
-        
-        We don't recommend uploading the whole source folder to where your website is hosted, but it does work. Run the following command and copy the whole plugin folder to your website's `wp-content` folder.
+
+      We don't recommend uploading the whole source folder to where your website is hosted, but it does work. Run the following command and copy the whole plugin folder to your website's `wp-content` folder.
         ```shell script
         $ gulp
         ```
-        A better solution is to follow the instructions for installation using a `.zip` file, then extracting the zip yourself and uploading its contents to your website's `wp-content` folder.
+      A better solution is to follow the instructions for installation using a `.zip` file, then extracting the zip yourself and uploading its contents to your website's `wp-content` folder.
 
 [Delivery options]: https://github.com/myparcelnl/delivery-options
 [Backoffice]: https://backoffice.myparcel.nl/
