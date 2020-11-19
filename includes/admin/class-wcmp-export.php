@@ -1131,18 +1131,22 @@ class WCMP_Export
             return 0;
         }
 
-        $weight      = (int) $product->get_weight();
-        $product_weight = WCMP_Export::calculatedKiloWeight($weight);
+        $weight        = (float) $product->get_weight();
+        $productWeight = WCMP_Export::calculatedKiloWeight($weight);
 
-        $item_weight = (float) $product_weight * (int) $item["qty"];
-
-        return (float) $item_weight;
+        return  $productWeight * (int) $item["qty"];
     }
 
-    public static function calculatedKiloWeight($weight): float
+
+    /**
+     * @param float $weight
+     *
+     * @return float
+     */
+    public static function calculatedKiloWeight(float $weight): float
     {
-        $weight_unit = get_option("woocommerce_weight_unit");
-        switch ($weight_unit) {
+        $weightUnit = get_option("woocommerce_weight_unit");
+        switch ($weightUnit) {
             case "g":
                 $calculatedWeight = $weight / 1000;
                 break;
