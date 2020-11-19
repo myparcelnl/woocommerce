@@ -74,7 +74,7 @@ class WCMP_Settings_Callbacks_Enhanced_Select
                 data-placeholder="%s"
                 %s>',
             $class->getId(),
-            $class->getName() . $id ? "[$id][]" : "[]",
+            $class->getName() . ($id ? "[$id][]" : "[]"),
             $args["placeholder"] ?? "",
             $class->getCustomAttributesAsString()
         );
