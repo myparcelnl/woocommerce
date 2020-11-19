@@ -670,7 +670,7 @@ class WCMP_Settings_Data
                 "name"      => WCMYPA_Settings::SETTING_LABEL_DESCRIPTION,
                 "label"     => __("Label description", "woocommerce-myparcel"),
                 "help_text" => __(
-                    "With this option you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in your backoffice. Because of limited space on the label that varies per package type, we recommend that you keep a label description as short as possible.",
+                    "With this option you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in your backoffice. Because of limited space on the label which varies per package type, we recommend that you keep the label description as short as possible.",
                     "woocommerce-myparcel"
                 ),
                 "append"  => $this->getLabelDescriptionAddition(),
