@@ -1137,7 +1137,6 @@ class WCMP_Export
         return  $productWeight * (int) $item["qty"];
     }
 
-
     /**
      * @param float $weight
      *
