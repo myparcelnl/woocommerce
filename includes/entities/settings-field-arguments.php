@@ -26,7 +26,6 @@ class SettingsFieldArguments
         "label",
         "loop",
         "name",
-        "option_id",
         "type",
     ];
 
@@ -34,7 +33,6 @@ class SettingsFieldArguments
         "callback",
         "condition",
         "default",
-        "option_id",
         "type",
     ];
 
@@ -116,11 +114,6 @@ class SettingsFieldArguments
     private $default;
 
     /**
-     * @var mixed|null
-     */
-    private $option_id;
-
-    /**
      * @var string
      */
     private $suffix;
@@ -137,8 +130,8 @@ class SettingsFieldArguments
     public function __construct(array $args, string $prefix = '' , string $suffix = '')
     {
         $this->input     = $args;
-        $this->prefix    = $prefix;
-        $this->suffix    = $suffix;
+        $this->prefix     = $prefix;
+        $this->suffix     = $suffix;
         $this->option_id = $args["option_id"] ?? null;
 
         $this->name        = $this->wrap($this->getInputArgument("name"));
@@ -428,6 +421,14 @@ class SettingsFieldArguments
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId(string $id): void
+    {
+        $this->id = $id;
     }
 
     /**
