@@ -90,7 +90,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 4.1.4 (2020-11-23) =
+= 4.1.4 (2020-11-24) =
 * Fix: Shipping classes not saving
 * Fix: Drop off days
 * Fix: WooCommerce PDF Invoices & Packing Slips placeholders compatibility
