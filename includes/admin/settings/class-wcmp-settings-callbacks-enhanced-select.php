@@ -93,4 +93,20 @@ class WCMP_Settings_Callbacks_Enhanced_Select
 
         echo "</select>";
     }
+
+    /**
+     * @param SettingsFieldArguments $class
+     *
+     * @return string|null
+     */
+    private static function getOptionId(SettingsFieldArguments $class): ?string
+    {
+        preg_match('/(\w+)\[/', $class->getName(), $matches);
+
+        if (!isset($matches[1])) {
+            return $class->getName();
+        }
+
+        return $matches[1];
+    }
 }
