@@ -45,7 +45,6 @@ class WCMP_Frontend
 
         // Ajax
         add_action('wp_ajax_nopriv_get_highest_shipping_class', [$this, 'ajaxGetHighestShippingClass']);
-        add_action('wp_ajax_get_highest_shipping_class', [$this, 'ajaxGetHighestShippingClass']);
     }
 
     /**
