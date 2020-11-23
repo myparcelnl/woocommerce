@@ -572,7 +572,7 @@ jQuery(($) => {
         url: wcmp.ajax_url,
         async: false,
         data: {
-          action: 'get_highest_shipping_class',
+          action: 'nopriv_get_highest_shipping_class',
         },
         success(data) {
           shippingClass = data;
