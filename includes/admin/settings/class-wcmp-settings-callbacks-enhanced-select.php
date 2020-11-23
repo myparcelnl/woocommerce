@@ -15,7 +15,6 @@ class WCMP_Settings_Callbacks_Enhanced_Select
     /**
      * WCMP_Settings_Callbacks_Enhanced_Select constructor.
      *
-     *
      * @param \WPO\WC\MyParcel\Entity\SettingsFieldArguments $class
      */
     public function __construct(SettingsFieldArguments $class)
@@ -23,26 +22,35 @@ class WCMP_Settings_Callbacks_Enhanced_Select
         if ($class->getArgument('loop')) {
             $this->createMultipleSearchBoxes($class->getArgument('loop'), $class);
         } else {
-            $value = get_option($class->getOptionId())[$class->getId()];
+            $optionId = self::getOptionId($class);
+            $value    = get_option($optionId)[$class->getId()];
 
-            $this->createSearchBox($class, "[{$class->getId()}]", $value);
+            $this->createSearchBox($class, null, $value);
         }
     }
 
     /**
      * @param array                  $loop
      * @param SettingsFieldArguments $class
+     *
+     * @throws Exception
      */
     public function createMultipleSearchBoxes(array $loop, SettingsFieldArguments $class): void
     {
         foreach ($loop as $id => $human) {
+            $value       = null;
+            $newClass    = clone $class;
+            $optionId    = self::getOptionId($newClass);
+            $optionValue = get_option($optionId)[$newClass->getId()];
+
             printf('<h4 class="title">%s:</h4>', $human);
 
-            if (array_key_exists($id, get_option($class->getOptionId())[$class->getId()])) {
-                $value = get_option($class->getOptionId())[$class->getId()][$id];
+            if (array_key_exists($id, $optionValue)) {
+                $value = $optionValue[$id];
             }
 
-            $this->createSearchBox($class, "[{$class->getId()}][$id]", $value ?? []);
+            $newClass->setId($optionId . '_' . $id);
+            $this->createSearchBox($class, $id, $value ?? []);
         }
     }
 
@@ -50,10 +58,10 @@ class WCMP_Settings_Callbacks_Enhanced_Select
      * Shipping method search callback.
      *
      * @param SettingsFieldArguments $class
-     * @param string                 $name
+     * @param string|null            $id
      * @param                        $value
      */
-    public function createSearchBox(SettingsFieldArguments $class, string $name, $value): void
+    public function createSearchBox(SettingsFieldArguments $class, ?string $id, $value): void
     {
         $args = $class->getArguments();
 
@@ -64,8 +72,8 @@ class WCMP_Settings_Callbacks_Enhanced_Select
                 multiple="multiple"
                 data-placeholder="%s"
                 %s>',
-            $args["id"],
-            $class->getOptionId() . $name . "[]",
+            $class->getId(),
+            $class->getName() . ($id ? "[$id][]" : "[]"),
             $args["placeholder"] ?? "",
             $class->getCustomAttributesAsString()
         );
