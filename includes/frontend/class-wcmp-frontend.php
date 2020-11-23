@@ -29,12 +29,12 @@ class WCMP_Frontend
         // pickup address on thank you page
         add_action("woocommerce_thankyou", [$this, "thankyou_pickup_html"], 10, 1);
 
-        add_filter(
-            "wpo_wcpdf_templates_replace_myparcel_delivery_options",
-            [$this, "wpo_wcpdf_delivery_options"],
-            10,
-            2
-        );
+        // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
+        add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_options", [
+            $this,
+            "wpo_wcpdf_delivery_options"
+        ], 10, 2);
+        add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_date", [$this, "wpo_wcpdf_delivery_date"], 10, 2);
 
         // Initialize delivery options fees
         new WCMP_Cart_Fees();
@@ -69,17 +69,37 @@ class WCMP_Frontend
     }
 
     /**
-     * @param $replacement
-     * @param $order
+     * @param string   $replacement
+     * @param WC_Order $order
      *
-     * @return false|string
+     * @return string
      * @throws Exception
      */
-    public function wpo_wcpdf_delivery_options($replacement, WC_Order $order)
+    public function wpo_wcpdf_delivery_options(string $replacement, WC_Order $order): string
     {
         ob_start();
         WCMYPA()->admin->showDeliveryDateForOrder($order);
+
         return ob_get_clean();
+    }
+
+    /**
+     * @param string   $replacement
+     * @param WC_Order $order
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function wpo_wcpdf_delivery_date(string $replacement, WC_Order $order): string
+    {
+        $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
+        $deliveryDate    = $deliveryOptions->getDate();
+
+        if ($deliveryDate) {
+            return wc_format_datetime(new WC_DateTime($deliveryDate), 'l d-m');
+        }
+
+        return $replacement;
     }
 
     /**
@@ -125,7 +145,7 @@ class WCMP_Frontend
         }
 
         $shippingMethodString = WC()->session->get('chosen_shipping_methods')[0] ?? '';
-        $shippingMethod = WCMP_Export::getShippingMethod($shippingMethodString);
+        $shippingMethod       = WCMP_Export::getShippingMethod($shippingMethodString);
 
         if (empty($shippingMethod)) {
             return null;
@@ -155,7 +175,7 @@ class WCMP_Frontend
      */
     public function order_review_fragments($fragments)
     {
-        $myparcel_shipping_data          = $this->renderHighestShippingClassInput();
+        $myparcel_shipping_data            = $this->renderHighestShippingClassInput();
         $fragments['.wcmp__shipping-data'] = $myparcel_shipping_data;
 
         return $fragments;
