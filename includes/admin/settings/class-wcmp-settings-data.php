@@ -503,8 +503,8 @@ class WCMP_Settings_Data
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Drop-off days", "woocommerce-myparcel"),
                 "callback"  => [WCMP_Settings_Callbacks::class, "enhanced_select"],
-                "options"   => $this->getWeekdays(),
-                "default"   => [1, 2, 3, 4, 5],
+                "options"   => $this->getWeekdays(null),
+                "default"   => [2],
                 "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcel"),
             ],
             [
