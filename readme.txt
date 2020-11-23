@@ -90,6 +90,17 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.1.4 (2020-11-23) =
+* Fix: Shipping classes not saving
+* Fix: Drop off days
+* Fix: WooCommerce PDF Invoices & Packing Slips placeholders compatibility
+* Fix: Calculate DPZ weight
+* Fix: Error delivery_date is too early
+* Fix: Multiple barcode in order note
+* Fix: Maximum label description lenght of 45 characters
+* Improvement: support WP-Multilang
+
+
 = 4.1.3 (2020-11-13) =
 * Fix: Error on checkout when using custom address fields
 
