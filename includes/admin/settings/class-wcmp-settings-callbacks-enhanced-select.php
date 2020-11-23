@@ -40,10 +40,11 @@ class WCMP_Settings_Callbacks_Enhanced_Select
     public function createMultipleSearchBoxes(array $loop, SettingsFieldArguments $class): void
     {
         foreach ($loop as $id => $human) {
-            $value = null;
-            $newClass = clone $class;
-            $optionId = self::getOptionId($newClass);
+            $value       = null;
+            $newClass    = clone $class;
+            $optionId    = self::getOptionId($newClass);
             $optionValue = get_option($optionId)[$newClass->getId()];
+
             printf('<h4 class="title">%s:</h4>', $human);
 
             if (array_key_exists($id, $optionValue)) {

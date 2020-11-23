@@ -129,9 +129,9 @@ class SettingsFieldArguments
      */
     public function __construct(array $args, string $prefix = '' , string $suffix = '')
     {
-        $this->input     = $args;
-        $this->prefix     = $prefix;
-        $this->suffix     = $suffix;
+        $this->input  = $args;
+        $this->prefix = $prefix;
+        $this->suffix = $suffix;
 
         $this->name        = $this->wrap($this->getInputArgument("name"));
         $this->id          = $this->getInputArgument("id") ?? $this->name;
