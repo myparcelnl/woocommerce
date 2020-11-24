@@ -442,8 +442,8 @@ class WCMP_Export_Consignments
             $totalWeight = $weight;
         }
 
-        if ((float) $orderWeight === $weight) {
-            $totalWeight = (new WCMP_Export())->calculatedKiloWeight($totalWeight * 1000);
+        if ((float) $orderWeight != (float) $extraOptions['weight']) {
+            $totalWeight = (new WCMP_Export())->calculatedKiloWeight($extraOptions['weight']);
         }
 
         $this->consignment->setPhysicalProperties(
