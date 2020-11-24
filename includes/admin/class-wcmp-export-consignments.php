@@ -183,7 +183,7 @@ class WCMP_Export_Consignments
                 $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
 
                 // Weight (total item weight in grams)
-                $weight      = (int) round(WCMP_Export::getItemWeightKg($item, $this->order) * 1000);
+                $weight      = (float) round(WCMP_Export::getItemWeightKg($item, $this->order) * 1000);
                 $totalWeight = $this->getTotalWeight($weight);
 
                 $myParcelItem = (new MyParcelCustomsItem())
@@ -200,13 +200,13 @@ class WCMP_Export_Consignments
     }
 
     /**
-     * @param int $weight
+     * @param float $weight
      *
-     * @return int
+     * @return float
      */
-    private function getTotalWeight(int $weight): int
+    private function getTotalWeight(float $weight): float
     {
-        $parcelWeight = (int) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+        $parcelWeight = (float) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
 
         return $parcelWeight + $weight;
     }
