@@ -200,13 +200,13 @@ class WCMP_Export_Consignments
     }
 
     /**
-     * @param float $weight
+     * @param int $weight
      *
-     * @return float
+     * @return int
      */
-    private function getTotalWeight(float $weight): float
+    private function getTotalWeight(int $weight): int
     {
-        $parcelWeight = (float) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+        $parcelWeight = (int) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
 
         return $parcelWeight + $weight;
     }
@@ -446,7 +446,7 @@ class WCMP_Export_Consignments
             $weightUnit        = get_option("woocommerce_weight_unit");
             $weightCalculation = $weightUnit === 'g' ? $extraOptions['weight'] * 1000 : $extraOptions['weight'];
 
-            $totalWeight = (new WCMP_Export())->calculatedKiloWeight($weightCalculation);
+            $totalWeight = (new WCMP_Export())->calculatedKiloWeight($weightCalculation ?? $totalWeight);
         }
 
         $this->consignment->setPhysicalProperties(
