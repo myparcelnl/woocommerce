@@ -443,7 +443,10 @@ class WCMP_Export_Consignments
         }
 
         if ((float) $orderWeight != (float) $extraOptions['weight']) {
-            $totalWeight = (new WCMP_Export())->calculatedKiloWeight($extraOptions['weight']);
+            $weightUnit = get_option("woocommerce_weight_unit");
+            $weightCalculation = $weightUnit === 'g' ? $extraOptions['weight']* 1000 : $extraOptions['weight'];
+            
+            $totalWeight = (new WCMP_Export())->calculatedKiloWeight($weightCalculation);
         }
 
         $this->consignment->setPhysicalProperties(
