@@ -436,19 +436,17 @@ class WCMP_Export_Consignments
 
         $orderWeight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
         $totalWeight = $this->getTotalWeight($orderWeight);
-        $weight      = $this->orderSettings->getWeight();
+        $weight      = $extraOptions['weight'] ?? $this->orderSettings->getWeight();
 
         if ($packageType === AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP) {
-            $totalWeight = $weight;
+            $totalWeight = (float) $weight;
         }
-
         if ((float) $orderWeight === $weight) {
             $totalWeight = (new WCMP_Export())->calculatedKiloWeight($totalWeight * 1000);
         }
-
         $this->consignment->setPhysicalProperties(
             [
-                "weight" => $totalWeight
+                "weight" => round($totalWeight)
             ]
         );
     }
