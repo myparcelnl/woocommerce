@@ -199,7 +199,7 @@ class WCMP_Checkout
         $settings = WCMYPA()->setting_collection;
         $carriers = $this->get_carriers();
 
-        $myParcelConfig = [
+        $myParcelConfig            = [
             "config"  => [
                 "currency" => get_woocommerce_currency(),
                 "locale"   => "nl-NL",
@@ -225,15 +225,21 @@ class WCMP_Checkout
                 "wrongHouseNumberCity"  => __("Postcode/city combination unknown", "woocommerce-myparcel"),
             ],
         ];
+        $chosenShippingMethodPrice = (float) WC()->session->get('cart_totals')['shipping_total'];
 
         foreach ($carriers as $carrier) {
             foreach (self::getDeliveryOptionsConfigMap($carrier) as $key => $setting) {
-                [$settingName, $function] = $setting;
+                [$settingName, $function, $basePrice] = $setting;
                 $value = $settings->{$function}($carrier . '_' . $settingName);
+
+                if ($basePrice) {
+                    $value = $value + $chosenShippingMethodPrice;
+                }
 
                 Arr::set($myParcelConfig, 'config.' . $key, $value);
             }
         }
+        $myParcelConfig['config']['priceStandardDelivery'] = $chosenShippingMethodPrice;
 
         return json_encode($myParcelConfig, JSON_UNESCAPED_SLASHES);
     }
@@ -455,27 +461,27 @@ class WCMP_Checkout
     private static function getDeliveryOptionsConfigMap(string $carrier): array
     {
         return [
-            "carrierSettings.$carrier.allowDeliveryOptions"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED, 'isEnabled'],
-            "carrierSettings.$carrier.allowEveningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED, 'isEnabled'],
-            "carrierSettings.$carrier.allowMondayDelivery"   => [WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED, 'isEnabled'],
-            "carrierSettings.$carrier.allowMorningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED, 'isEnabled'],
-            "carrierSettings.$carrier.allowOnlyRecipient"    => [WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED, 'isEnabled'],
-            "carrierSettings.$carrier.allowPickupLocations"  => [WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED, 'isEnabled'],
-            "carrierSettings.$carrier.allowSaturdayDelivery" => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED, 'isEnabled'],
-            "carrierSettings.$carrier.allowSignature"        => [WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED, 'isEnabled'],
-            "carrierSettings.$carrier.priceEveningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE, 'getFloatByName'],
-            "carrierSettings.$carrier.priceMondayDelivery"   => [WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_FEE, 'getFloatByName'],
-            "carrierSettings.$carrier.priceMorningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE, 'getFloatByName'],
-            "carrierSettings.$carrier.priceOnlyRecipient"    => [WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE, 'getFloatByName'],
-            "carrierSettings.$carrier.pricePickup"           => [WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE, 'getFloatByName'],
-            "carrierSettings.$carrier.priceSaturdayDelivery" => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE, 'getFloatByName'],
-            "carrierSettings.$carrier.priceSignature"        => [WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE, 'getFloatByName'],
-            "cutoffTime"                                     => [WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName'],
-            "deliveryDaysWindow"                             => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW, 'getIntegerByName'],
-            "dropOffDays"                                    => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS, 'getByName'],
-            "dropOffDelay"                                   => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName'],
-            "fridayCutoffTime"                               => [WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName'],
-            "saturdayCutoffTime"                             => [WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName'],
+            "carrierSettings.$carrier.allowDeliveryOptions"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED, 'isEnabled', false],
+            "carrierSettings.$carrier.allowEveningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED, 'isEnabled', false],
+            "carrierSettings.$carrier.allowMondayDelivery"   => [WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED, 'isEnabled', false],
+            "carrierSettings.$carrier.allowMorningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED, 'isEnabled', false],
+            "carrierSettings.$carrier.allowOnlyRecipient"    => [WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED, 'isEnabled', false],
+            "carrierSettings.$carrier.allowPickupLocations"  => [WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED, 'isEnabled', false],
+            "carrierSettings.$carrier.allowSaturdayDelivery" => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED, 'isEnabled', false],
+            "carrierSettings.$carrier.allowSignature"        => [WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED, 'isEnabled', false],
+            "carrierSettings.$carrier.priceEveningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE, 'getFloatByName', true],
+            "carrierSettings.$carrier.priceMondayDelivery"   => [WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_FEE, 'getFloatByName', true],
+            "carrierSettings.$carrier.priceMorningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE, 'getFloatByName', true],
+            "carrierSettings.$carrier.priceOnlyRecipient"    => [WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE, 'getFloatByName', false],
+            "carrierSettings.$carrier.pricePickup"           => [WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE, 'getFloatByName', true],
+            "carrierSettings.$carrier.priceSaturdayDelivery" => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE, 'getFloatByName', true],
+            "carrierSettings.$carrier.priceSignature"        => [WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE, 'getFloatByName', false],
+            "cutoffTime"                                     => [WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName', false],
+            "deliveryDaysWindow"                             => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW, 'getIntegerByName', false],
+            "dropOffDays"                                    => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS, 'getByName', false],
+            "dropOffDelay"                                   => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName', false],
+            "fridayCutoffTime"                               => [WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName', false],
+            "saturdayCutoffTime"                             => [WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName', false],
         ];
     }
 
