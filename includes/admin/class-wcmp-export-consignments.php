@@ -434,7 +434,7 @@ class WCMP_Export_Consignments
             return;
         }
 
-        $orderWeight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+        $orderWeight = (int) $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
         $totalWeight = $this->getTotalWeight($orderWeight);
         $weight      = $extraOptions['weight'] ?? $this->orderSettings->getWeight();
 
