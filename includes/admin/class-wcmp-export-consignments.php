@@ -433,7 +433,7 @@ class WCMP_Export_Consignments
             return;
         }
 
-        $orderWeight  = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+        $orderWeight  = (int) $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
         $totalWeight  = $this->getTotalWeight($orderWeight);
         $parcelWeight = (int) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
 
