@@ -87,6 +87,10 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 5. MyParcel BE information on the order details page
 
 == Changelog ==
+= 4.1.5 (---) =
+* Fix: Switching between split and non-split address fields
+* Improvement: Default carrier
+
 = 4.1.4 (2020-08-26) =
 * Fix: busnumber and number suffix
 
