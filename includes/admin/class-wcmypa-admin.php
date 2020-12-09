@@ -772,6 +772,8 @@ class WCMYPA_Admin
             [
                 'id'          => self::META_COUNTRY_OF_ORIGIN,
                 'label'       => __('Country of Origin', 'woocommerce-myparcel'),
+                'type'        => 'select',
+                'options'     => (new WC_Countries())->get_countries(),
                 'description' => sprintf(
                     __('Country of origin is required for world shipments. Defaults to shop base.')
                 ),
