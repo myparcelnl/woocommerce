@@ -199,7 +199,7 @@ class WCMP_Checkout
         $settings = WCMYPA()->setting_collection;
         $carriers = $this->get_carriers();
 
-        $myParcelConfig            = [
+        $myParcelConfig = [
             "config"  => [
                 "currency" => get_woocommerce_currency(),
                 "locale"   => "nl-NL",
