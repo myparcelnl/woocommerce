@@ -90,6 +90,11 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.1.5 (2020) =
+* Fix: select box for country of origin
+* Fix: delivery options for not logged in users
+* Improvement: prices from the shipping method inside the delivery options
+
 = 4.1.4 (2020-11-24) =
 * Fix: Shipping classes not saving
 * Fix: Drop off days
