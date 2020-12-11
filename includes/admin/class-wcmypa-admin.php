@@ -573,17 +573,6 @@ class WCMYPA_Admin
             $data            = self::removeDisallowedDeliveryOptions($data, $shippingCountry);
             $deliveryOptions = self::getDeliveryOptionsFromOrder($order, $data);
 
-            error_log(
-                sprintf(
-                    "Saving delivery options for order %d\n%s",
-                    $order_id,
-                    json_encode(
-                        $deliveryOptions->toArray(),
-                        JSON_PRETTY_PRINT
-                    ),
-                )
-            );
-
             WCX_Order::update_meta_data(
                 $order,
                 self::META_DELIVERY_OPTIONS,
@@ -1053,7 +1042,7 @@ class WCMYPA_Admin
      *
      * @return mixed
      */
-    private static function removeDisallowedDeliveryOptions(array $data, string $country): array
+    public static function removeDisallowedDeliveryOptions(array $data, string $country): array
     {
         $data['package_type'] = $data['package_type'] ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
         $isHomeCountry        = WCMP_Data::isHomeCountry($country);
