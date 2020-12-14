@@ -44,7 +44,7 @@ class WCMP_Frontend
         add_action("woocommerce_update_order_review_fragments", [$this, "order_review_fragments"]);
 
         // Ajax
-	    add_action('wp_ajax_get_highest_shipping_class', [$this, 'ajaxGetHighestShippingClass']);
+        add_action('wp_ajax_get_highest_shipping_class', [$this, 'ajaxGetHighestShippingClass']);
         add_action('wp_ajax_nopriv_get_highest_shipping_class', [$this, 'ajaxGetHighestShippingClass']);
     }
 
