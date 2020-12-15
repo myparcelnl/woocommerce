@@ -184,9 +184,14 @@ class WCMP_API extends WCMP_Rest
         foreach ($orderIds as $orderId) {
             $order = WC_Core::get_order($orderId);
             $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
-            $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
-            $trackTrace = $shipmentData["track_trace"] ?? null;
-            ChannelEngine::updateMetaOnExport($order, $trackTrace);
+
+	        if (is_bool($lastShipmentIds)) {
+				continue;
+	        }
+
+	        $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
+	        $trackTrace = $shipmentData["track_trace"] ?? null;
+	        ChannelEngine::updateMetaOnExport($order, $trackTrace);
         }
 
         WCMP_Export::saveTrackTracesToOrders($collection, $orderIds);
