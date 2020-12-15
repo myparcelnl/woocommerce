@@ -90,7 +90,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 4.1.5 (2020) =
+= 4.1.5 (2020-12-15) =
 * Fix: select box for country of origin
 * Fix: delivery options for not logged in users
 * Improvement: prices from the shipping method inside the delivery options
