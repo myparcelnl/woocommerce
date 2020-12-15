@@ -331,14 +331,15 @@ class WCMP_Export
          */
         foreach ($order_ids as $order_id) {
             $order        = WCX::get_order($order_id);
-            try {
-	            $consignment  = (new WCMP_Export_Consignments($order))->getConsignment();
-            } catch (Exception $ex) {
-            	$errorMessage = "De volgende order kon niet verwerkt worden: {$order_id}. De order kon niet verwerkt worden om de volgende redenen: {$ex->getMessage()}";
-	            $this->errors[$order_id] = $errorMessage;
-	            add_option('wcmyparcel_admin_error_notices', $errorMessage);
-	            continue;
-            }
+
+	        try {
+		        $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
+	        } catch (Exception $ex) {
+		        $errorMessage            = "The following order could not be exported to MyParcel: {$order_id}. The order could not be exported to MyParcel because: {$ex->getMessage()}";
+		        $this->errors[$order_id] = $errorMessage;
+		        add_option('wcmyparcel_admin_error_notices', $errorMessage);
+		        continue;
+	        }
 
             $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $colloAmount  = $extraOptions["collo_amount"] ?? 1;
@@ -362,10 +363,10 @@ class WCMP_Export
             $order          = WCX::get_order($order_id);
             $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
 
-	        foreach ( $consignmentIds as $consignmentId ) {
+	        foreach ($consignmentIds as $consignmentId) {
 		        $shipment["shipment_id"] = $consignmentId;
-				$this->saveShipmentData( $order, $shipment );
-		        $this->updateOrderStatus( $order );
+		        $this->saveShipmentData($order, $shipment);
+		        $this->updateOrderStatus($order);
 
                 $this->success[$order_id] = $consignmentId;
             }
