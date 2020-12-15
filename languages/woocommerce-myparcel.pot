@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce MyParcel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-016 15:12+0000\n"
+"POT-Creation-Date: 2020-12-15 12:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -784,8 +784,9 @@ msgstr ""
 msgid ""
 "With this option you can add a description to the shipment. This will be "
 "printed on the top left of the label, and you can use this to search or sort "
-"shipments in your backoffice. Because of limited space on the label which varies "
-"per package type, we recommend that you keep the label description as short as possible."
+"shipments in your backoffice. Because of limited space on the label which "
+"varies per package type, we recommend that you keep the label description as "
+"short as possible."
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:680
@@ -1098,4 +1099,10 @@ msgstr ""
 
 #. Author of the plugin
 msgid "Richard Perdaan"
+msgstr ""
+
+msgid "The following order could not be exported to MyParcel"
+msgstr ""
+
+msgid "The order could not be exported to MyParcel because"
 msgstr ""
