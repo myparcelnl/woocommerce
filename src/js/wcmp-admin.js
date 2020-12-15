@@ -721,7 +721,7 @@ jQuery(function($) {
        * Export and print.
        */
       case wcmp.bulk_actions.export_print:
-        exportToMyParcel.bind(spinnerWrapper)(order_ids, 'after_reload');
+        exportToMyParcel.bind(spinnerWrapper)(order_ids, 'no_reload');
         break;
     }
   }
