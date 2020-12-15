@@ -2,7 +2,6 @@
 
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use WPO\WC\MyParcel\Compatibility\WC_Core;
-use WPO\WC\MyParcel\Compatibility\Order as WC_Order;
 use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
 
 if (! defined("ABSPATH")) {
@@ -130,9 +129,12 @@ class WCMP_API extends WCMP_Rest
     private function getUserAgent(): string
     {
         $userAgents = [
-            'Wordpress', get_bloginfo('version').
-            'WooCommerce/' . WOOCOMMERCE_VERSION .
-            'MyParcelNL-WooCommerce/' . WC_MYPARCEL_NL_VERSION,
+            'Wordpress',
+            get_bloginfo('version')
+            . 'WooCommerce/'
+            . WOOCOMMERCE_VERSION
+            . 'MyParcelNL-WooCommerce/'
+            . WC_MYPARCEL_NL_VERSION,
         ];
 
         // Place white space between the array elements
@@ -175,23 +177,24 @@ class WCMP_API extends WCMP_Rest
     }
 
     /**
-     * @param array $orderIds
+     * @param array              $orderIds
      * @param MyParcelCollection $collection
+     *
      * @throws Exception
      */
-    private function updateOrderBarcode(array $orderIds, MyParcelCollection $collection) : void
+    private function updateOrderBarcode(array $orderIds, MyParcelCollection $collection): void
     {
         foreach ($orderIds as $orderId) {
-            $order = WC_Core::get_order($orderId);
+            $order           = WC_Core::get_order($orderId);
             $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
 
-	        if (is_bool($lastShipmentIds)) {
-				continue;
-	        }
+            if (is_bool($lastShipmentIds)) {
+                continue;
+            }
 
-	        $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
-	        $trackTrace = $shipmentData["track_trace"] ?? null;
-	        ChannelEngine::updateMetaOnExport($order, $trackTrace);
+            $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
+            $trackTrace   = $shipmentData["track_trace"] ?? null;
+            ChannelEngine::updateMetaOnExport($order, $trackTrace);
         }
 
         WCMP_Export::saveTrackTracesToOrders($collection, $orderIds);
