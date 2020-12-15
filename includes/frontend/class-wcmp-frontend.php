@@ -30,17 +30,14 @@ class WCMP_Frontend
         add_action("woocommerce_thankyou", [$this, "thankyou_pickup_html"], 10, 1);
 
         // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
-        add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_options", [
-            $this,
-            "wpo_wcpdf_delivery_options"
-        ], 10, 2);
+        add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_options", [$this, "wpo_wcpdf_delivery_options"], 10, 2);
         add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_date", [$this, "wpo_wcpdf_delivery_date"], 10, 2);
 
         // Initialize delivery options fees
         new WCMP_Cart_Fees();
 
         // Output most expensive shipping class in frontend data
-        add_action("woocommerce_checkout_after_order_review", [$this, "injectShippingClassInput"], 100);
+        add_action("woocommerce_checkout_before_order_review", [$this, "injectShippingClassInput"], 100);
         add_action("woocommerce_update_order_review_fragments", [$this, "order_review_fragments"]);
 
         // Ajax
