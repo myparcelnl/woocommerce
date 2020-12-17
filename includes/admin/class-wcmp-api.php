@@ -182,16 +182,16 @@ class WCMP_API extends WCMP_Rest
     private function updateOrderBarcode(array $orderIds, MyParcelCollection $collection) : void
     {
         foreach ($orderIds as $orderId) {
-            $order = WC_Core::get_order($orderId);
+            $order           = WC_Core::get_order($orderId);
             $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
 
             if (is_bool($lastShipmentIds)) {
                 continue;
             }
 
-	        $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
-	        $trackTrace = $shipmentData["track_trace"] ?? null;
-	        ChannelEngine::updateMetaOnExport($order, $trackTrace);
+            $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
+            $trackTrace   = $shipmentData["track_trace"] ?? null;
+            ChannelEngine::updateMetaOnExport($order, $trackTrace);
         }
 
         WCMP_Export::saveTrackTracesToOrders($collection, $orderIds);
