@@ -185,9 +185,9 @@ class WCMP_API extends WCMP_Rest
             $order = WC_Core::get_order($orderId);
             $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
 
-	        if (is_bool($lastShipmentIds)) {
-				continue;
-	        }
+            if (is_bool($lastShipmentIds)) {
+                continue;
+            }
 
 	        $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
 	        $trackTrace = $shipmentData["track_trace"] ?? null;
