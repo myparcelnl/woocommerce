@@ -721,7 +721,7 @@ jQuery(function($) {
        * Export and print.
        */
       case wcmp.bulk_actions.export_print:
-        exportToMyParcel.bind(spinnerWrapper)(order_ids, 'no_reload');
+        exportToMyParcel.bind(spinnerWrapper)(order_ids, 'after_reload');
         break;
     }
   }
@@ -975,20 +975,16 @@ jQuery(function($) {
       data: data || {},
       afterDone: function(response) {
         var redirect_url = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
+        var responseError = JSON.parse(response).error;
+
+        if (response !== null && responseError !== null) {
+          document.cookie = 'response=' + responseError + ';expires=1';
+        }
 
         if (print === 'no' || print === 'after_reload') {
           /* refresh page, admin notices are stored in options and will be displayed automatically */
           window.location.href = redirect_url;
         } else {
-          /* when printing, output notices directly so that we can init print in the same run */
-          if (response !== null && typeof response === 'object' && 'error' in response) {
-            myparcel_admin_notice(response.error, 'error');
-          }
-
-          if (response !== null && typeof response === 'object' && 'success' in response) {
-            myparcel_admin_notice(response.success, 'success');
-          }
-
           /* load PDF */
           printLabel({
             order_ids: order_ids,

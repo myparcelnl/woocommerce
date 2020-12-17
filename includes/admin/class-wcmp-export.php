@@ -125,7 +125,7 @@ class WCMP_Export
         if (isset($_GET["myparcel_done"])) {
             $action_return = get_option("wcmyparcel_admin_notices");
             $print_queue   = get_option("wcmyparcel_print_queue", []);
-            $error_notice = get_option("wcmyparcel_admin_error_notices");
+            $error_notice  = get_option("wcmyparcel_admin_error_notices");
 
             if (! empty($action_return)) {
                 foreach ($action_return as $type => $message) {
@@ -162,6 +162,11 @@ class WCMP_Export
             }
         }
 
+        if (! isset($_GET['myparcel_done'])) {
+            unset($_COOKIE['response']);
+            setcookie('response', null, -1, '/');
+        }
+
         if (! empty($error_notice)) {
             printf(
                 '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p>%s</div>',
@@ -185,6 +190,14 @@ class WCMP_Export
                 default:
                     break;
             }
+        }
+
+        if (isset($_COOKIE['response'])) {
+            $response = $_COOKIE['response'];
+            printf(
+                '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p></div>',
+                $response
+            );
         }
     }
 
@@ -333,14 +346,14 @@ class WCMP_Export
          * Loop over the order ids and create consignments for each order.
          */
         foreach ($order_ids as $order_id) {
-            $order        = WCX::get_order($order_id);
+            $order = WCX::get_order($order_id);
+
             try {
-	            $consignment  = (new WCMP_Export_Consignments($order))->getConsignment();
+                $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
             } catch (Exception $ex) {
-            	$errorMessage = "De volgende order kon niet verwerkt worden: {$order_id}. De order kon niet verwerkt worden om de volgende redenen: {$ex->getMessage()}";
-	            $this->errors[$order_id] = $errorMessage;
-	            add_option('wcmyparcel_admin_error_notices', $errorMessage);
-	            continue;
+                $errorMessage            = "The order could not be exported to MyParcel because: {$ex->getMessage()}";
+                $this->errors[$order_id] = $errorMessage;
+                continue;
             }
 
             $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
