@@ -364,9 +364,9 @@ class WCMP_Export
             $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
 
 	        foreach ($consignmentIds as $consignmentId) {
-		        $shipment["shipment_id"] = $consignmentId;
-		        $this->saveShipmentData($order, $shipment);
-		        $this->updateOrderStatus($order);
+				$shipment["shipment_id"] = $consignmentId;
+				$this->saveShipmentData($order, $shipment);
+				$this->updateOrderStatus($order);
 
                 $this->success[$order_id] = $consignmentId;
             }

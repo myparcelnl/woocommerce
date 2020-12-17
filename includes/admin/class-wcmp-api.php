@@ -186,7 +186,7 @@ class WCMP_API extends WCMP_Rest
             $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
 
 	        if (is_bool($lastShipmentIds)) {
-		        continue;
+				continue;
 	        }
 
 	        $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
