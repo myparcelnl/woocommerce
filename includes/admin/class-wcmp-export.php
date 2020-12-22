@@ -316,7 +316,7 @@ class WCMP_Export
      * @throws ApiException
      * @throws MissingFieldException
      * @throws ErrorException
-     * @throws Exception
+     * @throws Excetaukption
      */
     public function add_shipments(array $order_ids, bool $process)
     {
@@ -335,8 +335,9 @@ class WCMP_Export
 
             $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $colloAmount  = $extraOptions["collo_amount"] ?? 1;
+            $isLocalOrder = ('NL' === $order->get_shipping_country());
 
-            if ($colloAmount > 1) {
+            if ($colloAmount > 1 && $isLocalOrder) {
                 $collection->addMultiCollo($consignment, $colloAmount);
             } else {
                 $collection->addConsignment($consignment);
