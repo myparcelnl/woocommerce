@@ -335,7 +335,9 @@ class WCMP_Export
             $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $colloAmount  = $extraOptions["collo_amount"] ?? 1;
 
-            if ($colloAmount > 1) {
+            $isLocalShipment = ('NL' === $order->get_shipping_country());
+
+            if ($colloAmount > 1 && $isLocalShipment) {
                 $collection->addMultiCollo($consignment, $colloAmount);
             } else {
                 $collection->addConsignment($consignment);
