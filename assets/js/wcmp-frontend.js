@@ -185,10 +185,11 @@ jQuery(function($) {
       MyParcelFrontend.addAddressListeners();
       MyParcelFrontend.updateShippingMethod();
 
-      var addressCheckbox = $(MyParcelFrontend.shipToDifferentAddressField).val();
+      var shippingAddressField = MyParcelFrontend.shipToDifferentAddressField;
+      var addressCheckbox = $(shippingAddressField).val();
 
       if (addressCheckbox) {
-        document.querySelector(MyParcelFrontend.shipToDifferentAddressField).addEventListener('change', MyParcelFrontend.addAddressListeners);
+        document.querySelector(shippingAddressField).addEventListener('change', MyParcelFrontend.addAddressListeners);
       }
 
       document.addEventListener(MyParcelFrontend.updatedAddressEvent, MyParcelFrontend.onDeliveryOptionsAddressUpdate);
@@ -237,13 +238,13 @@ jQuery(function($) {
      */
     getAddressType: function() {
 
+      var shippingAddressField = MyParcelFrontend.shipToDifferentAddressField;
+      var addressCheckbox = $(shippingAddressField).val();
       var useShipping = false;
-      var addressCheckbox = $(MyParcelFrontend.shipToDifferentAddressField).val();
 
       if (addressCheckbox) {
-        useShipping = document.querySelector(MyParcelFrontend.shipToDifferentAddressField).checked;
+        useShipping = document.querySelector(shippingAddressField).checked;
       }
-
 
       MyParcelFrontend.addressType = useShipping ? 'shipping' : 'billing';
 
