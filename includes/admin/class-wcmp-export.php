@@ -122,7 +122,7 @@ class WCMP_Export
         if (isset($_GET["myparcel_done"])) {
             $action_return = get_option("wcmyparcel_admin_notices");
             $print_queue   = get_option("wcmyparcel_print_queue", []);
-            $error_notice = get_option("wcmyparcel_admin_error_notices");
+            $error_notice  = get_option("wcmyparcel_admin_error_notices");
 
             if (! empty($action_return)) {
                 foreach ($action_return as $type => $message) {
@@ -351,7 +351,6 @@ class WCMP_Export
             } catch (Exception $ex) {
                 $errorMessage            = "The order could not be exported to MyParcel because: {$ex->getMessage()}";
                 $this->errors[$order_id] = $errorMessage;
-                add_option('wcmyparcel_admin_error_notices', $errorMessage);
                 continue;
             }
 
