@@ -349,7 +349,7 @@ class WCMP_Export
             try {
                 $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
             } catch (Exception $ex) {
-                $errorMessage            = "The following order could not be exported to MyParcel: {$order_id}. The order could not be exported to MyParcel because: {$ex->getMessage()}";
+                $errorMessage            = "The order could not be exported to MyParcel because: {$ex->getMessage()}";
                 $this->errors[$order_id] = $errorMessage;
                 add_option('wcmyparcel_admin_error_notices', $errorMessage);
                 continue;
