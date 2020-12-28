@@ -721,7 +721,7 @@ jQuery(function($) {
        * Export and print.
        */
       case wcmp.bulk_actions.export_print:
-        exportToMyParcel.bind(spinnerWrapper)(order_ids, 'no_reload');
+        exportToMyParcel.bind(spinnerWrapper)(order_ids, 'after_reload');
         break;
     }
   }
@@ -976,18 +976,25 @@ jQuery(function($) {
       afterDone: function(response) {
         var redirect_url = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
 
+        if (!response) {
+          Cookies.set('response', response, {
+            expires: 1,
+          });
+        }
+
         if (print === 'no' || print === 'after_reload') {
           /* refresh page, admin notices are stored in options and will be displayed automatically */
           window.location.href = redirect_url;
         } else {
           /* when printing, output notices directly so that we can init print in the same run */
-          if (response !== null && typeof response === 'object' && 'error' in response) {
-            myparcel_admin_notice(response.error, 'error');
-          }
+          // if (response !== null && typeof response === 'object' && 'error' in response) {
+          //   myparcel_admin_notice(response.error, 'error');
+          // }
 
-          if (response !== null && typeof response === 'object' && 'success' in response) {
-            myparcel_admin_notice(response.success, 'success');
-          }
+          // if (response !== null && typeof response === 'object' && 'success' in response) {
+          //   myparcel_admin_notice(response.success, 'success');
+          // }
+
 
           /* load PDF */
           printLabel({
@@ -1091,7 +1098,8 @@ jQuery(function($) {
       var isDownload = wcmp.download_display === 'download';
       var isPdf = response.includes('PDF');
       var isApi = response.includes('api.myparcel.nl');
-
+      var responseCookie = Cookies.get('response');
+      console.log(responseCookie);
       if (isDisplay && isPdf) {
         handlePDF(request);
       }
@@ -1273,5 +1281,11 @@ jQuery(function($) {
 
     // To trigger event listeners
     input.dispatchEvent(new Event('change'));
+  }
+
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
   }
 });
