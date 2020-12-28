@@ -977,10 +977,8 @@ jQuery(function($) {
         var redirect_url = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
         var responseError = JSON.parse(response).error;
 
-        if (response && responseError) {
-          Cookies.set('response', responseError, {
-            expires: 1,
-          });
+        if (response !== null && responseError !== null) {
+          document.cookie = 'response=' + responseError + ';expires=1';
         }
 
         if (print === 'no' || print === 'after_reload') {
@@ -988,13 +986,13 @@ jQuery(function($) {
           window.location.href = redirect_url;
         } else {
           /* when printing, output notices directly so that we can init print in the same run */
-          if (response !== null && typeof response === 'object' && 'error' in response) {
-            myparcel_admin_notice(response.error, 'error');
-          }
-
-          if (response !== null && typeof response === 'object' && 'success' in response) {
-            myparcel_admin_notice(response.success, 'success');
-          }
+          // if (response !== null && typeof response === 'object' && 'error' in response) {
+          //   myparcel_admin_notice(response.error, 'error');
+          // }
+          //
+          // if (response !== null && typeof response === 'object' && 'success' in response) {
+          //   myparcel_admin_notice(response.success, 'success');
+          // }
 
 
           /* load PDF */
