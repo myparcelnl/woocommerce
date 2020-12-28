@@ -159,7 +159,7 @@ class WCMP_Export
             }
         }
 
-        if (! isset($_GET['myparcel_done']) && isset($_COOKIE['response'])) {
+        if (! isset($_GET['myparcel_done'])) {
             unset($_COOKIE['response']);
             setcookie('response', null, -1, '/');
         }
