@@ -159,6 +159,11 @@ class WCMP_Export
             }
         }
 
+        if (! isset($_GET['myparcel_done']) && isset($_COOKIE['response'])) {
+            unset($_COOKIE['response']);
+            setcookie('response', null, -1, '/');
+        }
+
         if (! empty($error_notice)) {
             printf(
                 '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p>%s</div>',
@@ -182,6 +187,15 @@ class WCMP_Export
                 default:
                     break;
             }
+        }
+
+        if (isset($_COOKIE['response'])) {
+            $response = $_COOKIE['response'];
+            error_log($response);
+            printf(
+                '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p></div>',
+                $response
+            );
         }
     }
 
