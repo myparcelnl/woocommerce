@@ -44,6 +44,9 @@ class WCMP_Export
         WCMP_Shipping_Methods::LOCAL_PICKUP,
     ];
 
+    public const COUNTRY_CODE_NL = 'NL';
+    public const COUNTRY_CODE_BE = 'BE';
+
     public $order_id;
     public $success;
     public $errors;
@@ -335,9 +338,12 @@ class WCMP_Export
             $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $colloAmount  = $extraOptions["collo_amount"] ?? 1;
 
-            $isLocalShipment = (WCMP_Data::DEFAULT_COUNTRY_CODE === $order->get_shipping_country());
+            $isMultiColloAllowed = (
+                self::COUNTRY_CODE_NL === $order->get_shipping_country() ||
+                self::COUNTRY_CODE_BE === $order->get_shipping_country()
+            );
 
-            if ($colloAmount > 1 && $isLocalShipment) {
+            if ($colloAmount > 1 && $isMultiColloAllowed) {
                 $collection->addMultiCollo($consignment, $colloAmount);
             } else {
                 $collection->addConsignment($consignment);
