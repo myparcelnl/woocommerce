@@ -1270,10 +1270,4 @@ jQuery(function($) {
     // To trigger event listeners
     input.dispatchEvent(new Event('change'));
   }
-
-  function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  }
 });
