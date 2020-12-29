@@ -191,7 +191,6 @@ class WCMP_Export
 
         if (isset($_COOKIE['response'])) {
             $response = $_COOKIE['response'];
-            error_log($response);
             printf(
                 '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p></div>',
                 $response
