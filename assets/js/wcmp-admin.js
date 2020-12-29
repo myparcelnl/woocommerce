@@ -985,16 +985,6 @@ jQuery(function($) {
           /* refresh page, admin notices are stored in options and will be displayed automatically */
           window.location.href = redirect_url;
         } else {
-          /* when printing, output notices directly so that we can init print in the same run */
-          // if (response !== null && typeof response === 'object' && 'error' in response) {
-          //   myparcel_admin_notice(response.error, 'error');
-          // }
-          //
-          // if (response !== null && typeof response === 'object' && 'success' in response) {
-          //   myparcel_admin_notice(response.success, 'success');
-          // }
-
-
           /* load PDF */
           printLabel({
             order_ids: order_ids,
