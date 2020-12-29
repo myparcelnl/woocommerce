@@ -1094,6 +1094,26 @@ class WCMP_Export
         return $data;
     }
 
+    public static function getItemWeightInGram(int $totalWeight)
+    {
+        $weightUnit = get_option('woocommerce_weight_unit');
+
+        switch ($weightUnit) {
+            case 'lbs':
+                return $totalWeight * 0.45359237;
+                break;
+            case 'oz':
+               return $totalWeight * 0.0283495231;
+                break;
+            case 'kg':
+                return $totalWeight / 1000;
+                break;
+            default:
+                return $totalWeight;
+                break;
+        }
+    }
+
     /**
      * @param $item
      * @param $order
