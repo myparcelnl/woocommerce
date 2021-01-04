@@ -576,7 +576,7 @@ class WCMYPA_Admin
                     json_encode(
                         $deliveryOptions->toArray(),
                         JSON_PRETTY_PRINT
-                    )
+                    ),
                 )
             );
 
@@ -1065,8 +1065,6 @@ class WCMYPA_Admin
             $data['shipment_options']['return_shipment'] = false;
             $data['shipment_options']['insured']         = false;
             $data['shipment_options']['insured_amount']  = 0;
-
-            $data['extra_options']['collo_amount'] = 1;
         }
 
         if (! $isPackage || (! $isHomeCountry && ! $isEuCountry)) {

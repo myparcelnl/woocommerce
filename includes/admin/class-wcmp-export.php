@@ -337,14 +337,18 @@ class WCMP_Export
 
             $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $colloAmount  = $extraOptions["collo_amount"] ?? 1;
-
+            $isMailboxPackage  = 'mailbox' === $this->getPackageTypeFromOrder($order);
             $isMultiColloAllowed = (
                 self::COUNTRY_CODE_NL === $order->get_shipping_country() ||
                 self::COUNTRY_CODE_BE === $order->get_shipping_country()
             );
 
-            if ($colloAmount > 1 && $isMultiColloAllowed) {
+            if ($colloAmount > 1 && $isMultiColloAllowed && ! $isMailboxPackage) {
                 $collection->addMultiCollo($consignment, $colloAmount);
+            } else if ($isMailboxPackage && $colloAmount > 1) {
+                for ($i = 1; $i <= $colloAmount; $i++) {
+                    $collection->addConsignment($consignment);
+                }
             } else {
                 $collection->addConsignment($consignment);
             }

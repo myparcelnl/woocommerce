@@ -177,19 +177,6 @@ class OrderSettingsRows
     {
         return [
             [
-                "name"              => self::OPTION_EXTRA_OPTIONS_COLLO_AMOUNT,
-                "label"             => __("Number of labels", "woocommerce-myparcel"),
-                "type"              => "number",
-                "value"             => $orderSettings->getColloAmount(),
-                "custom_attributes" => [
-                    "min" => "1",
-                    "max" => "10",
-                ],
-                "condition"         => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                ],
-            ],
-            [
                 "name"        => self::OPTION_EXTRA_OPTIONS_WEIGHT,
                 "type"        => "select",
                 "label"       => __("Weight", "woocommerce-myparcel"),
@@ -298,6 +285,16 @@ class OrderSettingsRows
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     self::OPTION_SHIPMENT_OPTIONS_INSURED,
+                ],
+            ],
+            [
+                "name"              => self::OPTION_EXTRA_OPTIONS_COLLO_AMOUNT,
+                "label"             => __("Number of labels", "woocommerce-myparcel"),
+                "type"              => "number",
+                "value"             => $orderSettings->getColloAmount(),
+                "custom_attributes" => [
+                    "min" => "1",
+                    "max" => "10",
                 ],
             ],
         ];
