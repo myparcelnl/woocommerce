@@ -2,6 +2,7 @@ const babelify = require('babelify');
 const browserify = require('browserify');
 const buffer = require('vinyl-buffer');
 const clean = require('gulp-clean');
+const {exec} = require('child_process');
 const gulp = require('gulp');
 const gulpPoSync = require('gulp-po-sync');
 const po2mo = require('gulp-po2mo');
@@ -12,6 +13,24 @@ const tap = require('gulp-tap');
 const uglify = require('gulp-uglify');
 const wpPot = require('gulp-wp-pot');
 const zip = require('gulp-zip');
+
+const PHP_FILES = ['*.php', 'migration/**/*.php', 'templates/**/*.php', 'includes/**/*.php'];
+
+/**
+ * Callback for use with tasks using child_process.exec().
+ *
+ * @param {Function} callback
+ * @param {ExecException} err
+ * @param {String} stdout
+ * @param {String} stderr
+ */
+function execCallback(callback, err, stdout, stderr) {
+  /* eslint-disable no-console */
+  console.log(stdout);
+  console.warn(stderr);
+  /* eslint-enable no-console */
+  callback(err);
+}
 
 /**
  * Empty the dist folder.
@@ -71,6 +90,7 @@ gulp.task('zip', () => gulp.src([
   'migration/**/*',
   'readme.txt',
   'templates/**/*',
+  'vendor/**/*',
   'woocommerce-myparcel.php',
 ], {base: '.'})
   .pipe(zip('woocommerce-myparcel.zip'))
@@ -79,7 +99,7 @@ gulp.task('zip', () => gulp.src([
 /**
  * Sync .pot file with source code.
  */
-gulp.task('translations:pot', () => gulp.src('includes/**/*.php', {read: false})
+gulp.task('translations:pot', () => gulp.src(PHP_FILES, {read: false})
   .pipe(wpPot({
     domain: 'woocommerce-myparcel',
     package: 'WooCommerce MyParcel',
@@ -108,6 +128,10 @@ gulp.task('translations', gulp.series(
   'translations:mo',
 ));
 
+gulp.task('composer:update', (callback) => {
+  exec('composer update', (...params) => execCallback(callback, ...params));
+});
+
 /**
  * The default task.
  */
@@ -116,6 +140,7 @@ const build = gulp.series(
   gulp.parallel(
     'build:js',
     'build:scss',
+    'composer:update',
     'copy',
     'copy:delivery-options',
     'translations',
@@ -131,7 +156,8 @@ const watch = () => {
   gulp.watch(['src/js/**/*'], null, () => gulp.src('src/js/**/*.js').pipe(gulp.dest('assets/js')));
   gulp.watch(['node_modules/@myparcel/delivery-options/**/*'], null, gulp.series('copy:delivery-options'));
   gulp.watch(['src/scss/**/*'], null, gulp.series('build:scss'));
-  gulp.watch(['**/*.php'], null, gulp.series('translations'));
+  gulp.watch(PHP_FILES, null, gulp.series('translations'));
+  gulp.watch(['composer.json'], null, gulp.series('composer:update'));
 };
 
 gulp.task('watch', gulp.series(
