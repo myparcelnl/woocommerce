@@ -358,10 +358,7 @@ class WCMP_Export
 
             foreach ($consignmentIds as $consignmentId) {
                 $shipment["shipment_id"] = $consignmentId;
-
                 $this->saveShipmentData($order, $shipment);
-                $this->updateOrderStatus($order);
-
                 $this->success[$order_id] = $consignmentId;
             }
 
@@ -374,6 +371,8 @@ class WCMP_Export
                 WCMYPA_Admin::META_LAST_SHIPMENT_IDS,
                 $consignmentIds
             );
+
+            $this->updateOrderStatus($order);
         }
 
         if (! empty($this->success)) {
@@ -1514,10 +1513,13 @@ class WCMP_Export
     private function updateOrderStatus(WC_Order $order): void
     {
         if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION)) {
+            $newStatus = $this->getSetting(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
             $order->update_status(
-                $this->getSetting(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
+                $newStatus,
                 __("MyParcel shipment created:", "woocommerce-myparcel")
             );
+
+            WCMP_Log::add("Status of order {$order->get_id()} updated to \"$newStatus\"");
         }
     }
 
