@@ -168,9 +168,10 @@ class WCMP_Export_Consignments
      */
     public function setCustomItems(): void
     {
-        foreach ($this->order->get_items() as $item_id => $item) {
+        foreach ($this->order->get_items() as $itemId => $item) {
             $product = $item->get_product();
             $country = $this->getCountryOfOrigin($product);
+
             if (! empty($product)) {
                 // Description
                 $description = $item["name"];
@@ -180,34 +181,46 @@ class WCMP_Export_Consignments
                     $description = substr($item["name"], 0, 47) . "...";
                 }
                 // Amount
-                $amount = (int) (isset($item["qty"]) ? $item["qty"] : 1);
+                $amount = (int) ($item["qty"] ?? 1);
 
                 // Weight (total item weight in grams)
-                $weight = (int) round(WCMP_Export::getItemWeight_kg($item, $this->order) * 1000);
+                $weight = WCMP_Export::convertWeightToGrams($product->weight);
 
-                $myParcelItem = (new MyParcelCustomsItem())
-                    ->setDescription($description)
-                    ->setAmount($amount)
-                    ->setWeight($weight)
-                    ->setItemValue((int) round(($item["line_total"] + $item["line_tax"]) * 100))
-                    ->setCountry($country)
-                    ->setClassification($this->getHsCode($product));
+                $total = (int) $item["line_total"];
+                $tax   = (int) $item["line_tax"];
+                $value = round(($total + $tax) * 100);
 
-                $this->consignment->addItem($myParcelItem);
+                $this->consignment->addItem(
+                    (new MyParcelCustomsItem())
+                        ->setDescription($description)
+                        ->setAmount($amount)
+                        ->setWeight($weight)
+                        ->setItemValue($value)
+                        ->setCountry($country)
+                        ->setClassification($this->getHsCode($product))
+                );
             }
         }
     }
 
     /**
-     * @param int $weight
+     * Returns the weight of the order plus the empty parcel weight.
      *
      * @return int
      */
-    private function getTotalWeight(int $weight): int
+    private function getTotalWeight(): int
     {
-        $parcelWeight = (int) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+        $packageType       = $this->orderSettings->getPackageType();
+        $emptyParcelWeight = (int) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
 
-        return $parcelWeight + $weight;
+        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP === $packageType) {
+            $extraOptions = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+            $weight       = $extraOptions['weight'];
+        } else {
+            $weight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+        }
+
+        return WCMP_Export::convertWeightToGrams($emptyParcelWeight + $weight);
     }
 
     /**
@@ -420,30 +433,13 @@ class WCMP_Export_Consignments
     }
 
     /**
-     * Sets a customs declaration for the consignment if necessary.
-     *
      * @throws \Exception
      */
     private function setPhysicalProperties(): void
     {
-        $extraOptions = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
-        $packageType  = $this->orderSettings->getPackageType();
-
-        if (! $extraOptions) {
-            return;
-        }
-
-        $orderWeight  = (int) $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
-        $totalWeight  = $this->getTotalWeight($orderWeight);
-        $parcelWeight = (int) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
-
-        if ($packageType === AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP) {
-            $totalWeight = $extraOptions['weight'] + $parcelWeight;
-        }
-
         $this->consignment->setPhysicalProperties(
             [
-                "weight" => WCMP_Export::getItemWeightInGrams((int) $totalWeight)
+                'weight' => $this->getTotalWeight(),
             ]
         );
     }
