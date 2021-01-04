@@ -427,7 +427,7 @@ class WCMP_Export_Consignments
 
         $this->consignment->setPhysicalProperties(
             [
-                "weight" => (new WCMP_Export())->getItemWeightInGram((int) $totalWeight)
+                "weight" => (new WCMP_Export())->getItemWeightInGrams((int) $totalWeight)
             ]
         );
     }

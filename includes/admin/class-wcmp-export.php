@@ -1104,7 +1104,7 @@ class WCMP_Export
         return $data;
     }
 
-    public static function getItemWeightInGram(int $totalWeight)
+    public static function getItemWeightInGrams(int $totalWeight)
     {
         $weightUnit = get_option('woocommerce_weight_unit');
 
