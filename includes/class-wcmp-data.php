@@ -173,7 +173,7 @@ class WCMP_Data
     public static function getDeliveryTypeId(?string $deliveryType): ?int
     {
         if (! $deliveryType) {
-            $deliveryType = 1;
+            $deliveryType = AbstractConsignment::DELIVERY_TYPE_STANDARD;
         }
 
         return Arr::get(AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP, $deliveryType, null);
