@@ -1119,16 +1119,16 @@ class WCMP_Export
 
         switch ($weightUnit) {
             case 'lbs':
-                return $totalWeight * 0.45359237;
+                return (float) $totalWeight * 0.45359237;
                 break;
             case 'oz':
-               return $totalWeight * 0.0283495231;
+                return (float) $totalWeight * 0.0283495231;
                 break;
             case 'kg':
-                return $totalWeight / 1000;
+                return (float) $totalWeight / 1000;
                 break;
             default:
-                return $totalWeight;
+                return (float) $totalWeight;
                 break;
         }
     }
