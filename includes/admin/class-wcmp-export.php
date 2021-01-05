@@ -346,11 +346,8 @@ class WCMP_Export
             if ($colloAmount > 1) {
                 if ($isMultiColloCountry && $isPackage) {
                     $collection->addMultiCollo($consignment, $colloAmount);
-                }
-                if (! $isMultiColloCountry) {
-                    for ($i = 1; $i <= $colloAmount; $i++) {
-                        $collection->addConsignment($consignment);
-                    }
+                } else {
+                    $this->addFakeMultiCollo($colloAmount, $collection, $consignment);
                 }
             } else {
                 $collection->addConsignment($consignment);
@@ -1416,6 +1413,20 @@ class WCMP_Export
         }
 
         return $order_ids;
+    }
+
+    /**
+     * @param mixed               $colloAmount
+     * @param MyParcelCollection  $collection
+     * @param AbstractConsignment $consignment
+     *
+     * @throws MissingFieldException
+     */
+    public function addFakeMultiCollo(mixed $colloAmount, MyParcelCollection $collection, AbstractConsignment $consignment): void
+    {
+        for ($i = 1; $i <= $colloAmount; $i++) {
+            $collection->addConsignment($consignment);
+        }
     }
 
     /**
