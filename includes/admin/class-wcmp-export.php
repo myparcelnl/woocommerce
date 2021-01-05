@@ -335,20 +335,11 @@ class WCMP_Export
             $order        = WCX::get_order($order_id);
             $consignment  = (new WCMP_Export_Consignments($order))->getConsignment();
 
-            $packageType         = $this->getPackageTypeFromOrder($order);
             $extraOptions        = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $colloAmount         = $extraOptions["collo_amount"] ?? 1;
-            $isPackage           = 'package' === $packageType;
-            $isMultiColloCountry = in_array($order->get_shipping_country(),
-                [self::COUNTRY_CODE_NL, self::COUNTRY_CODE_BE]
-            );
 
             if ($colloAmount > 1) {
-                if ($isMultiColloCountry && $isPackage) {
-                    $collection->addMultiCollo($consignment, $colloAmount);
-                } else {
-                    $this->addFakeMultiCollo($colloAmount, $collection, $consignment);
-                }
+                $this->addMultiCollo($order, $collection, $consignment, $colloAmount);
             } else {
                 $collection->addConsignment($consignment);
             }
@@ -1426,6 +1417,29 @@ class WCMP_Export
     {
         for ($i = 1; $i <= $colloAmount; $i++) {
             $collection->addConsignment($consignment);
+        }
+    }
+
+    /**
+     * @param WC_Order            $order
+     * @param MyParcelCollection  $collection
+     * @param AbstractConsignment $consignment
+     * @param mixed               $colloAmount
+     *
+     * @throws MissingFieldException
+     */
+    public function addMultiCollo(WC_Order $order, MyParcelCollection $collection, AbstractConsignment $consignment, mixed $colloAmount): void
+    {
+        $packageType         = $this->getPackageTypeFromOrder($order);
+        $isPackage           = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $packageType;
+        $isMultiColloCountry = in_array($order->get_shipping_country(),
+            [self::COUNTRY_CODE_NL, self::COUNTRY_CODE_BE]
+        );
+
+        if ($isMultiColloCountry && $isPackage) {
+            $collection->addMultiCollo($consignment, $colloAmount);
+        } else {
+            $this->addFakeMultiCollo($colloAmount, $collection, $consignment);
         }
     }
 
