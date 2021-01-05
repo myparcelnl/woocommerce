@@ -334,9 +334,8 @@ class WCMP_Export
         foreach ($order_ids as $order_id) {
             $order        = WCX::get_order($order_id);
             $consignment  = (new WCMP_Export_Consignments($order))->getConsignment();
-
-            $extraOptions        = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
-            $colloAmount         = $extraOptions["collo_amount"] ?? 1;
+            $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+            $colloAmount  = $extraOptions["collo_amount"] ?? 1;
 
             if ($colloAmount > 1) {
                 $this->addMultiCollo($order, $collection, $consignment, $colloAmount);
