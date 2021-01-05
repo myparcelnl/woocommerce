@@ -338,7 +338,6 @@ class WCMP_Export
             $packageType         = $this->getPackageTypeFromOrder($order);
             $extraOptions        = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
             $colloAmount         = $extraOptions["collo_amount"] ?? 1;
-            $isMailboxPackage    = 'mailbox' === $packageType;
             $isPackage           = 'package' === $packageType;
             $isMultiColloCountry = in_array($order->get_shipping_country(),
                 [self::COUNTRY_CODE_NL, self::COUNTRY_CODE_BE]
@@ -348,7 +347,7 @@ class WCMP_Export
                 if ($isMultiColloCountry && $isPackage) {
                     $collection->addMultiCollo($consignment, $colloAmount);
                 }
-                if ($isMailboxPackage) {
+                if (! $isMultiColloCountry) {
                     for ($i = 1; $i <= $colloAmount; $i++) {
                         $collection->addConsignment($consignment);
                     }
