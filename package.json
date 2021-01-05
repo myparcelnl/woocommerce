@@ -19,28 +19,28 @@
   },
   "homepage": "https://github.com/myparcel/woocommerce#readme",
   "dependencies": {
-    "@myparcel/delivery-options": "^3.3.8"
+    "@myparcel/delivery-options": "^3.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.3",
-    "@babel/preset-env": "^7.12.1",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
     "@myparcel/eslint-config": "^3.0.0",
-    "autoprefixer": "^10.0.2",
+    "autoprefixer": "^10.1.0",
     "babelify": "^10.0.0",
     "browserify": "^17.0.0",
-    "core-js": "^3.7.0",
+    "core-js": "^3.8.2",
     "gulp": "^4.0.2",
     "gulp-clean": "^0.4.0",
     "gulp-po-sync": "^0.1.0",
     "gulp-po2mo": "^1.0.3",
     "gulp-postcss": "^9.0.0",
     "gulp-sass": "^4.1.0",
-    "gulp-sourcemaps": "^2.6.5",
+    "gulp-sourcemaps": "^3.0.0",
     "gulp-tap": "^2.0.0",
     "gulp-uglify": "^3.0.2",
     "gulp-wp-pot": "^2.5.0",
     "gulp-zip": "^5.0.2",
-    "postcss": "^8.1.7",
+    "postcss": "^8.2.2",
     "vinyl-buffer": "^1.0.1"
   }
 }
