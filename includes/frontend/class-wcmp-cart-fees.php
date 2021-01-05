@@ -41,26 +41,35 @@ class WCMP_Cart_Fees
      */
     public function get_delivery_options_fees(WC_Cart $cart): void
     {
-        if (is_admin() && ! defined('DOING_AJAX')) {
+        if (! defined('DOING_AJAX') && is_admin()) {
             return;
         }
 
         if (isset($_POST['post_data'])) {
             // non-default post data for AJAX calls
-            parse_str($_POST['post_data'], $post_data);
+            parse_str($_POST['post_data'], $postData);
         } else {
             // checkout finalization
-            $post_data = $_POST;
+            $postData = $_POST;
         }
-        
-        /*  check for delivery options & add fees*/
-        if (empty($post_data[WCMYPA_Admin::META_DELIVERY_OPTIONS])) {
+
+        // Check if delivery options exist at all.
+        if (empty($postData[WCMYPA_Admin::META_DELIVERY_OPTIONS])) {
             return;
         }
 
-        $delivery_options_data = $post_data[WCMYPA_Admin::META_DELIVERY_OPTIONS];
-        $delivery_options_data = json_decode(stripslashes($delivery_options_data), true);
-        $this->deliveryOptions = DeliveryOptionsAdapterFactory::create($delivery_options_data);
+        $deliveryOptionsData = $postData[WCMYPA_Admin::META_DELIVERY_OPTIONS];
+        $deliveryOptionsData = json_decode(stripslashes($deliveryOptionsData), true);
+
+        /*
+         * Check if delivery options is null. Happens when when switching to a shipping method that does not allow
+         * showing delivery options, for example.
+         */
+        if (!$deliveryOptionsData) {
+            return;
+        }
+
+        $this->deliveryOptions = DeliveryOptionsAdapterFactory::create($deliveryOptionsData);
 
         $this->addDeliveryFee();
         $this->addShipmentOptionFees();
@@ -154,16 +163,13 @@ class WCMP_Cart_Fees
             if ($enabled) {
                 $this->addFee($shipmentOption);
             }
-
         }
-
-        return;
     }
 
     /**
      * @param WC_Cart $cart
      */
-    private function addFees(WC_Cart $cart)
+    private function addFees(WC_Cart $cart): void
     {
         $tax = $this->get_shipping_tax_class();
 
@@ -171,7 +177,7 @@ class WCMP_Cart_Fees
             [$string, $fee] = $this->getFee($name);
 
             if ($string) {
-                $cart->add_fee($string, $fee, ! ! $tax, $tax ?? "");
+                $cart->add_fee($string, $fee, (bool) $tax, $tax ?? "");
             }
         }
     }
