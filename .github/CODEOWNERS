@@ -1,5 +1,17 @@
-# Backend
-*                            @myparcelnl/plugin-developers
+# Global
+*       @myparcelnl/plugin-developers
 
-# Frontend
-*.js *.jsx *.ts *.tsx *.vue  @myparcelnl/frontend-developers
+# Both plugin and frontend
+*.scss  @myparcelnl/plugin-developers @myparcelnl/frontend-developers
+*.css   @myparcelnl/plugin-developers @myparcelnl/frontend-developers
+*.png   @myparcelnl/plugin-developers @myparcelnl/frontend-developers
+*.svg   @myparcelnl/plugin-developers @myparcelnl/frontend-developers
+*.jpg   @myparcelnl/plugin-developers @myparcelnl/frontend-developers
+
+# Frontend only
+*.json  @myparcelnl/frontend-developers
+*.js    @myparcelnl/frontend-developers
+*.jsx   @myparcelnl/frontend-developers
+*.ts    @myparcelnl/frontend-developers
+*.tsx   @myparcelnl/frontend-developers  
+*.vue   @myparcelnl/frontend-developers
