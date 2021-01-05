@@ -1111,9 +1111,9 @@ class WCMP_Export
      * Returns the weight in grams.
      * @param int $totalWeight
      *
-     * @return float|int
+     * @return float
      */
-    public static function getItemWeightInGrams(int $totalWeight): float|int
+    public static function getItemWeightInGrams(int $totalWeight): float
     {
         $weightUnit = get_option('woocommerce_weight_unit');
 
