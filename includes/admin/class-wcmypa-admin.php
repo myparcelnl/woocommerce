@@ -672,6 +672,19 @@ class WCMYPA_Admin
         $this->printDeliveryDate($deliveryOptions);
     }
 
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @param bool      $mail
+	 *
+	 * @throws \Exception
+	 */
+	public function showShipmentConfirmation(WC_Order $order,bool $mail): void
+	{
+		$deliveryOptions = self::getDeliveryOptionsFromOrder($order);
+		$this->getConfirmationData($deliveryOptions, $mail);
+	}
+
     /**
      * @param $order_id
      * @param $track_trace
@@ -905,7 +918,82 @@ class WCMYPA_Admin
         }
     }
 
-    /**
+	/**
+	 * Output the delivery date if there is a date and the show delivery day setting is enabled.
+	 *
+	 * @param DeliveryOptions $deliveryOptions
+	 *
+	 * @param bool            $mail
+	 *
+	 * @throws \Exception
+	 */
+	private function getConfirmationData(DeliveryOptions $deliveryOptions, bool $mail): void
+	{
+		$signatureTitle     = (new WCMP_Checkout)->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
+		$onlyRecipientTitle = (new WCMP_Checkout)->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
+
+		if (! $deliveryOptions->getCarrier()) {
+			return;
+		}
+
+	  if ($deliveryOptions->getDeliveryType() === AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME) {
+		  $selectedDeliveryOptions = [
+			  __("Delivery type:", "woocommerce-myparcel")   => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+			  __("Pickup location:", "woocommerce-myparcel") => $deliveryOptions->getPickupLocation()->getLocationName() . '<br>' .
+			                                                    $deliveryOptions->getPickupLocation()->getStreet() . ' ' .
+			                                                    $deliveryOptions->getPickupLocation()->getNumber() . '<br>' .
+			                                                    $deliveryOptions->getPickupLocation()->getPostalCode() . ' ' .
+			                                                    $deliveryOptions->getPickupLocation()->getCity()
+		  ];
+
+		  printf($this->setConfirmationData($selectedDeliveryOptions, $mail));
+
+		  return;
+	  }
+
+
+	  $selectedDeliveryOptions = [
+		  __("Delivery type:", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+		  __("Date:", 'woocommerce')                   => wc_format_datetime(new WC_DateTime($deliveryOptions->getDate())),
+		  __("Extra options:", "woocommerce-myparcel") => ($deliveryOptions->getShipmentOptions()->hasSignature() ? $signatureTitle . '<br>' : null) .
+		                                                  ($deliveryOptions->getShipmentOptions()->hasOnlyRecipient() ? $onlyRecipientTitle : null)
+	  ];
+
+		printf($this->setConfirmationData($selectedDeliveryOptions, $mail));
+	}
+
+	/**
+	 * @param array $options
+	 *
+	 * @return string
+	 */
+	public function setConfirmationData(array $options, bool $mail): string
+	{
+	  $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2><table>";
+
+	  if ($mail){
+	    $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>
+                    <table cellspacing='0' style='border: 1px solid #e5e5e5; margin-bottom: 20px;>";
+    }
+
+		$html = $htmlHeader;
+		foreach ($options as $key => $option) {
+		  if ($option) {
+		  $test = "<tr'><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
+
+		  if ($mail){
+			  $test = "<tr style='border: 1px solid #d5d5d5;'><td style='border: 1px solid #e5e5e5;'>$key</td><td style='border: 1px solid #e5e5e5;'>" . __($option, "woocommerce-myparcel") . "</td></tr>";
+		  }
+
+		  $html .= $test;
+		  }
+		}
+		$html .= "</table>";
+
+		return $html;
+	}
+
+	/**
      * Output a spinner.
      *
      * @param string $state
@@ -957,9 +1045,9 @@ class WCMYPA_Admin
     public static function renderAction(string $url, string $alt, string $icon, array $rawAttributes = []): void
     {
         printf(
-            '<a href="%1$s" 
-                    class="button tips wcmp__action wcmp__d--flex" 
-                    data-tip="%2$s" 
+            '<a href="%1$s"
+                    class="button tips wcmp__action wcmp__d--flex"
+                    data-tip="%2$s"
                     %4$s>
                 <img class="wcmp__action__img" src="%3$s" alt="%2$s" />',
             wp_nonce_url($url, WCMYPA::NONCE_ACTION),

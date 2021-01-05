@@ -1,6 +1,7 @@
 <?php
 
 use MyParcelNL\Sdk\src\Support\Arr;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 
 if (! defined('ABSPATH')) {
@@ -26,7 +27,11 @@ class WCMP_Frontend
         // @20 = templates/email-addresses.php
         add_action("woocommerce_email_customer_details", [$this, "email_pickup_html"], 19, 3);
 
-        // pickup address on thank you page
+	    // Shipment information in my account
+	    add_action('woocommerce_view_order', [$this, "thankyou_pickup_html"] );
+	    add_filter('woocommerce_my_account_my_orders_actions', [$this, 'track_trace_myaccount'], 10, 2);
+
+	    // Pickup address on thank you page
         add_action("woocommerce_thankyou", [$this, "thankyou_pickup_html"], 10, 1);
 
         // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
@@ -52,7 +57,7 @@ class WCMP_Frontend
      */
     public function email_pickup_html(WC_Order $order): void
     {
-        WCMYPA()->admin->showDeliveryDateForOrder($order);
+	    WCMYPA()->admin->showShipmentConfirmation($order, true);
     }
 
     /**
@@ -63,8 +68,33 @@ class WCMP_Frontend
     public function thankyou_pickup_html(int $order_id): void
     {
         $order = wc_get_order($order_id);
-        WCMYPA()->admin->showDeliveryDateForOrder($order);
+        WCMYPA()->admin->showShipmentConfirmation($order, false);
     }
+
+	/**
+	 * @param array $actions
+	 * @param WC_Order $order
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function track_trace_myaccount(array $actions, WC_Order $order): array
+	{
+		$order_id = WCX_Order::get_id($order);
+		if ($consignments = WCMP_Frontend::getTrackTraceLinks($order_id)) {
+			foreach ($consignments as $key => $consignment) {
+				$actions['myparcel_tracktrace_' . $consignment['link']] = array(
+					'url'  => $consignment['url'],
+					'name' => apply_filters(
+						'wcmyparcel_myaccount_tracktrace_button',
+						__('Track & Trace', 'wooocommerce-myparcel')
+					)
+				);
+			}
+		}
+
+		return $actions;
+	}
 
     /**
      * @param string   $replacement

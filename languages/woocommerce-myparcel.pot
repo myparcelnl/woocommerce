@@ -186,6 +186,11 @@ msgstr ""
 msgid "Delivery type"
 msgstr ""
 
+#: includes/admin/class-wcmypa-admin.php:937
+#: includes/admin/class-wcmypa-admin.php:952
+msgid "Delivery type:"
+msgstr ""
+
 #: includes/admin/ShipmentOptions.php:114
 #: includes/admin/views/html-order-shipment-summary.php:42
 #: includes/admin/views/html-order-return-shipment-options.php:14
@@ -411,6 +416,14 @@ msgstr ""
 
 #: includes/admin/class-wcmypa-admin.php:123
 msgid "Pickup location"
+msgstr ""
+
+#: includes/admin/class-wcmypa-admin.php:938
+msgid "Pickup location:"
+msgstr ""
+
+#: includes/admin/class-wcmypa-admin.php:954
+msgid "Extra options:"
 msgstr ""
 
 #: includes/admin/class-wcmypa-admin.php:305
