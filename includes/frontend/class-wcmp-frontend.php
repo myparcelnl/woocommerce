@@ -32,10 +32,7 @@ class WCMP_Frontend
         add_action("woocommerce_thankyou", [$this, "ConfirmationOrderReceived"], 10, 1);
 
         // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
-        add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_options", [
-            $this,
-            "wpo_wcpdf_delivery_options"
-        ], 10, 2);
+        add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_options", [$this, "wpo_wcpdf_delivery_options"], 10, 2);
         add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_date", [$this, "wpo_wcpdf_delivery_date"], 10, 2);
 
         // Initialize delivery options fees
