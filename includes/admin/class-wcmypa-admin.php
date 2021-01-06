@@ -674,7 +674,6 @@ class WCMYPA_Admin
 
     /**
      * @param \WC_Order $order
-     *
      * @param bool      $mail
      *
      * @throws \Exception
