@@ -921,7 +921,6 @@ class WCMYPA_Admin
      * Output the delivery date if there is a date and the show delivery day setting is enabled.
      *
      * @param DeliveryOptions $deliveryOptions
-     *
      * @param bool            $mail
      *
      * @throws \Exception
@@ -965,7 +964,6 @@ class WCMYPA_Admin
 
     /**
      * @param array $options
-     *
      * @param bool  $mail
      *
      * @return string
