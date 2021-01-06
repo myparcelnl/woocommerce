@@ -21,21 +21,21 @@ class WCMP_Frontend
     {
         new WCMP_Frontend_Track_Trace();
 
-        // pickup address in email
-        // woocommerce_email_customer_details:
-        // @10 = templates/email-customer-details.php
-        // @20 = templates/email-addresses.php
-        add_action("woocommerce_email_customer_details", [$this, "email_pickup_html"], 19, 3);
+        // Shipment information in confirmation mail
+        add_action("woocommerce_email_customer_details", [$this, "ConfirmationEmail"], 19, 3);
 
-	    // Shipment information in my account
-	    add_action('woocommerce_view_order', [$this, "thankyou_pickup_html"] );
-	    add_filter('woocommerce_my_account_my_orders_actions', [$this, 'track_trace_myaccount'], 10, 2);
+        // Shipment information in my account
+        add_action('woocommerce_view_order', [$this, "ConfirmationOrderReceived"]);
+        add_filter('woocommerce_my_account_my_orders_actions', [$this, 'ConfirmationInMyAccount'], 10, 2);
 
-	    // Pickup address on thank you page
-        add_action("woocommerce_thankyou", [$this, "thankyou_pickup_html"], 10, 1);
+        // Shipment information on the thank you page
+        add_action("woocommerce_thankyou", [$this, "ConfirmationOrderReceived"], 10, 1);
 
         // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
-        add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_options", [$this, "wpo_wcpdf_delivery_options"], 10, 2);
+        add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_options", [
+            $this,
+            "wpo_wcpdf_delivery_options"
+        ], 10, 2);
         add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_date", [$this, "wpo_wcpdf_delivery_date"], 10, 2);
 
         // Initialize delivery options fees
@@ -55,9 +55,9 @@ class WCMP_Frontend
      *
      * @throws \Exception
      */
-    public function email_pickup_html(WC_Order $order): void
+    public function ConfirmationEmail(WC_Order $order): void
     {
-	    WCMYPA()->admin->showShipmentConfirmation($order, true);
+        WCMYPA()->admin->showShipmentConfirmation($order, true);
     }
 
     /**
@@ -65,36 +65,36 @@ class WCMP_Frontend
      *
      * @throws Exception
      */
-    public function thankyou_pickup_html(int $order_id): void
+    public function ConfirmationOrderReceived(int $order_id): void
     {
         $order = wc_get_order($order_id);
         WCMYPA()->admin->showShipmentConfirmation($order, false);
     }
 
-	/**
-	 * @param array $actions
-	 * @param WC_Order $order
-	 *
-	 * @return mixed
-	 * @throws \Exception
-	 */
-	public function track_trace_myaccount(array $actions, WC_Order $order): array
-	{
-		$order_id = WCX_Order::get_id($order);
-		if ($consignments = WCMP_Frontend::getTrackTraceLinks($order_id)) {
-			foreach ($consignments as $key => $consignment) {
-				$actions['myparcel_tracktrace_' . $consignment['link']] = array(
-					'url'  => $consignment['url'],
-					'name' => apply_filters(
-						'wcmyparcel_myaccount_tracktrace_button',
-						__('Track & Trace', 'wooocommerce-myparcel')
-					)
-				);
-			}
-		}
+    /**
+     * @param array    $actions
+     * @param WC_Order $order
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function ConfirmationInMyAccount(array $actions, WC_Order $order): array
+    {
+        $order_id = WCX_Order::get_id($order);
+        if ($consignments = WCMP_Frontend::getTrackTraceLinks($order_id)) {
+            foreach ($consignments as $key => $consignment) {
+                $actions['myparcel_tracktrace_' . $consignment['link']] = array(
+                    'url'  => $consignment['url'],
+                    'name' => apply_filters(
+                        'wcmyparcel_myaccount_tracktrace_button',
+                        __('Track & Trace', 'wooocommerce-myparcel')
+                    )
+                );
+            }
+        }
 
-		return $actions;
-	}
+        return $actions;
+    }
 
     /**
      * @param string   $replacement
