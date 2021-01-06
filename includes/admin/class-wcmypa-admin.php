@@ -983,20 +983,18 @@ class WCMYPA_Admin
 
         foreach ($options as $key => $option) {
             if ($option) {
-                $table .= "<tr'><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
-
                 if ($mail) {
                     $table .= "<tr style='border: 1px solid #d5d5d5;'>
                     <td style='border: 1px solid #e5e5e5;'>$key</td>
                     <td style='border: 1px solid #e5e5e5;'>" . __($option, "woocommerce-myparcel") . "</td>
                   </tr>";
+                } else {
+                    $table .= "<tr'><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
                 }
-
-                $htmlHeader .= $table;
             }
         }
 
-        $htmlHeader .= "</table>";
+        $htmlHeader .= $table . "</table>";
 
         return $htmlHeader;
     }
