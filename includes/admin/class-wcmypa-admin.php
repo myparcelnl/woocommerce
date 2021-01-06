@@ -965,32 +965,38 @@ class WCMYPA_Admin
 	/**
 	 * @param array $options
 	 *
+	 * @param bool  $mail
+	 *
 	 * @return string
 	 */
 	public function setConfirmationData(array $options, bool $mail): string
 	{
-	  $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2><table>";
+		$htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>";
+		$table =  "<table>";
 
-	  if ($mail){
-	    $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>
-                    <table cellspacing='0' style='border: 1px solid #e5e5e5; margin-bottom: 20px;>";
-    }
-
-		$html = $htmlHeader;
-		foreach ($options as $key => $option) {
-		  if ($option) {
-		  $test = "<tr'><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
-
-		  if ($mail){
-			  $test = "<tr style='border: 1px solid #d5d5d5;'><td style='border: 1px solid #e5e5e5;'>$key</td><td style='border: 1px solid #e5e5e5;'>" . __($option, "woocommerce-myparcel") . "</td></tr>";
-		  }
-
-		  $html .= $test;
-		  }
+		if ($mail) {
+			$htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>";
+			$table =  "<table cellspacing='0' style='border: 1px solid #e5e5e5; margin-bottom: 20px;>";
 		}
-		$html .= "</table>";
 
-		return $html;
+		foreach ($options as $key => $option) {
+			if ($option) {
+				$table .= "<tr'><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
+
+				if ($mail) {
+					$table .= "<tr style='border: 1px solid #d5d5d5;'>
+                    <td style='border: 1px solid #e5e5e5;'>$key</td>
+                    <td style='border: 1px solid #e5e5e5;'>" . __($option, "woocommerce-myparcel") . "</td>
+                  </tr>";
+				}
+
+				$htmlHeader .= $table;
+			}
+		}
+
+		$htmlHeader .= "</table>";
+
+		return $htmlHeader;
 	}
 
 	/**
