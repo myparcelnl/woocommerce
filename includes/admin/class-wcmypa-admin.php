@@ -238,10 +238,10 @@ class WCMYPA_Admin
             return;
         }
 
-        $order_id           = WCX_Order::get_id($order);
-        $consignments       = WCMYPA_Admin::get_order_shipments($order);
-        $deliveryOptions    = self::getDeliveryOptionsFromOrder($order);
-        $packageType        = $deliveryOptions->getPackageType() ?? WCMYPA()->export->getPackageTypeFromOrder($order);
+        $order_id        = WCX_Order::get_id($order);
+        $consignments    = WCMYPA_Admin::get_order_shipments($order);
+        $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
+        $packageType     = $deliveryOptions->getPackageType() ?? WCMYPA()->export->getPackageTypeFromOrder($order);
 
         echo '<div class="wcmp__shipment-settings-wrapper" style="display: none;">';
 
@@ -250,21 +250,21 @@ class WCMYPA_Admin
         // if we have shipments, then we show status & link to Track & Trace, settings under i
         if (! empty($consignments)) :
             // only use last shipment
-            $lastShipment = array_pop($consignments);
+            $lastShipment   = array_pop($consignments);
             $lastShipmentId = $lastShipment['shipment_id'];
 
             ?>
-          <a class="wcmp__shipment-summary__show">
-            <span class="wcmp__encircle wcmp__shipment-summary__show">i</span>
-          </a>
-          <div
-              class="wcmp__box wcmp__shipment-summary__list"
-              data-loaded=""
-              data-shipment_id="<?php echo $lastShipmentId; ?>"
-              data-order_id="<?php echo $order_id; ?>"
-              style="display: none;">
-              <?php self::renderSpinner(); ?>
-          </div>
+            <a class="wcmp__shipment-summary__show">
+                <span class="wcmp__encircle wcmp__shipment-summary__show">i</span>
+            </a>
+            <div
+                class="wcmp__box wcmp__shipment-summary__list"
+                data-loaded=""
+                data-shipment_id="<?php echo $lastShipmentId; ?>"
+                data-order_id="<?php echo $order_id; ?>"
+                style="display: none;">
+                <?php self::renderSpinner(); ?>
+            </div>
         <?php endif;
 
         printf(
@@ -333,16 +333,16 @@ class WCMYPA_Admin
 
         if ('shop_order' == $post_type) {
             ?>
-          <script type="text/javascript">
+            <script type="text/javascript">
               jQuery(document).ready(function () {
                   <?php foreach ($bulk_actions as $action => $title) { ?>
-                  jQuery('<option>')
-                      .val('<?php echo $action; ?>')
-                      .html('<?php echo esc_attr($title); ?>')
-                      .appendTo('select[name=\'action\'], select[name=\'action2\']');
+                jQuery('<option>')
+                  .val('<?php echo $action; ?>')
+                  .html('<?php echo esc_attr($title); ?>')
+                  .appendTo('select[name=\'action\'], select[name=\'action2\']');
                   <?php }    ?>
               });
-          </script>
+            </script>
             <?php
             self::renderSpinner();
         }
@@ -377,29 +377,29 @@ class WCMYPA_Admin
         $class = new SettingsFieldArguments($field);
         ?>
 
-      <div
-          class="wcmp wcmp__box wcmp__offset-dialog"
-          style="display: none;">
-        <div class="wcmp__offset-dialog__inner wcmp__d--flex">
-          <div>
-              <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
+        <div
+                class="wcmp wcmp__box wcmp__offset-dialog"
+                style="display: none;">
+            <div class="wcmp__offset-dialog__inner wcmp__d--flex">
+                <div>
+                    <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
 
-            <img
-                src="<?php echo WCMYPA()->plugin_url() . "/assets/img/print-offset-icon.png"; ?>"
-                alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
-                class="wcmp__offset-dialog__icon"/>
-            <div>
-              <a
-                  href="#"
-                  class="wcmp__action wcmp__offset-dialog__button button">
-                  <?php _e("Print", "woocommerce-myparcel"); ?>
-                  <?php WCMYPA_Admin::renderSpinner(); ?>
-              </a>
+                    <img
+                            src="<?php echo WCMYPA()->plugin_url() . "/assets/img/print-offset-icon.png"; ?>"
+                            alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
+                            class="wcmp__offset-dialog__icon"/>
+                    <div>
+                        <a
+                                href="#"
+                                class="wcmp__action wcmp__offset-dialog__button button">
+                            <?php _e("Print", "woocommerce-myparcel"); ?>
+                            <?php WCMYPA_Admin::renderSpinner(); ?>
+                        </a>
+                    </div>
+                </div>
+                <div class="wcmp__close-button dashicons dashicons-no-alt wcmp__offset-dialog__close"></div>
             </div>
-          </div>
-          <div class="wcmp__close-button dashicons dashicons-no-alt wcmp__offset-dialog__close"></div>
         </div>
-      </div>
         <?php
     }
 
@@ -672,18 +672,18 @@ class WCMYPA_Admin
         $this->printDeliveryDate($deliveryOptions);
     }
 
-    /**
-     * @param \WC_Order $order
-     *
-     * @param bool      $mail
-     *
-     * @throws \Exception
-     */
-    public function showShipmentConfirmation(WC_Order $order, bool $mail): void
-    {
-        $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
-        $this->getConfirmationData($deliveryOptions, $mail);
-    }
+	/**
+	 * @param \WC_Order $order
+	 *
+	 * @param bool      $mail
+	 *
+	 * @throws \Exception
+	 */
+	public function showShipmentConfirmation(WC_Order $order,bool $mail): void
+	{
+		$deliveryOptions = self::getDeliveryOptionsFromOrder($order);
+		$this->getConfirmationData($deliveryOptions, $mail);
+	}
 
     /**
      * @param $order_id
@@ -918,88 +918,88 @@ class WCMYPA_Admin
         }
     }
 
-    /**
-     * Output the delivery date if there is a date and the show delivery day setting is enabled.
-     *
-     * @param DeliveryOptions $deliveryOptions
-     *
-     * @param bool            $mail
-     *
-     * @throws \Exception
-     */
-    private function getConfirmationData(DeliveryOptions $deliveryOptions, bool $mail): void
-    {
-        $signatureTitle     = (new WCMP_Checkout)->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
-        $onlyRecipientTitle = (new WCMP_Checkout)->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
+	/**
+	 * Output the delivery date if there is a date and the show delivery day setting is enabled.
+	 *
+	 * @param DeliveryOptions $deliveryOptions
+	 *
+	 * @param bool            $mail
+	 *
+	 * @throws \Exception
+	 */
+	private function getConfirmationData(DeliveryOptions $deliveryOptions, bool $mail): void
+	{
+		$signatureTitle     = (new WCMP_Checkout)->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
+		$onlyRecipientTitle = (new WCMP_Checkout)->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
 
-        if (! $deliveryOptions->getCarrier()) {
-            return;
-        }
+		if (! $deliveryOptions->getCarrier()) {
+			return;
+		}
 
-        if ($deliveryOptions->getDeliveryType() === AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME) {
-            $selectedDeliveryOptions = [
-                __("Delivery type:", "woocommerce-myparcel")   => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
-                __("Pickup location:", "woocommerce-myparcel") => $deliveryOptions->getPickupLocation()->getLocationName() . '<br>' .
-                                                                  $deliveryOptions->getPickupLocation()->getStreet() . ' ' .
-                                                                  $deliveryOptions->getPickupLocation()->getNumber() . '<br>' .
-                                                                  $deliveryOptions->getPickupLocation()->getPostalCode() . ' ' .
-                                                                  $deliveryOptions->getPickupLocation()->getCity()
-            ];
+	  if ($deliveryOptions->getDeliveryType() === AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME) {
+		  $selectedDeliveryOptions = [
+			  __("Delivery type:", "woocommerce-myparcel")   => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+			  __("Pickup location:", "woocommerce-myparcel") => $deliveryOptions->getPickupLocation()->getLocationName() . '<br>' .
+			                                                    $deliveryOptions->getPickupLocation()->getStreet() . ' ' .
+			                                                    $deliveryOptions->getPickupLocation()->getNumber() . '<br>' .
+			                                                    $deliveryOptions->getPickupLocation()->getPostalCode() . ' ' .
+			                                                    $deliveryOptions->getPickupLocation()->getCity()
+		  ];
 
-            printf($this->setConfirmationData($selectedDeliveryOptions, $mail));
+		  printf($this->setConfirmationData($selectedDeliveryOptions, $mail));
 
-            return;
-        }
+		  return;
+	  }
 
 
-        $selectedDeliveryOptions = [
-            __("Delivery type:", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
-            __("Date:", 'woocommerce')                   => wc_format_datetime(new WC_DateTime($deliveryOptions->getDate())),
-            __("Extra options:", "woocommerce-myparcel") => ($deliveryOptions->getShipmentOptions()->hasSignature() ? $signatureTitle . '<br>' : null) .
-                                                            ($deliveryOptions->getShipmentOptions()->hasOnlyRecipient() ? $onlyRecipientTitle : null)
-        ];
+	  $selectedDeliveryOptions = [
+		  __("Delivery type:", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+		  __("Date:", 'woocommerce')                   => wc_format_datetime(new WC_DateTime($deliveryOptions->getDate())),
+		  __("Extra options:", "woocommerce-myparcel") => ($deliveryOptions->getShipmentOptions()->hasSignature() ? $signatureTitle . '<br>' : null) .
+		                                                  ($deliveryOptions->getShipmentOptions()->hasOnlyRecipient() ? $onlyRecipientTitle : null)
+	  ];
 
-        printf($this->setConfirmationData($selectedDeliveryOptions, $mail));
-    }
+		printf($this->setConfirmationData($selectedDeliveryOptions, $mail));
+	}
 
-    /**
-     * @param array $options
-     *
-     * @param bool  $mail
-     *
-     * @return string
-     */
-    public function setConfirmationData(array $options, bool $mail): string
-    {
-        $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>";
-        $table      = "<table>";
+	/**
+	 * @param array $options
+	 *
+	 * @param bool  $mail
+	 *
+	 * @return string
+	 */
+	public function setConfirmationData(array $options, bool $mail): string
+	{
+		$htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>";
+		$table =  "<table>";
 
-        if ($mail) {
-            $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>";
-            $table      = "<table cellspacing='0' style='border: 1px solid #e5e5e5; margin-bottom: 20px;>";
-        }
+		if ($mail) {
+			$htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>";
+			$table =  "<table cellspacing='0' style='border: 1px solid #e5e5e5; margin-bottom: 20px;>";
+		}
 
-        foreach ($options as $key => $option) {
-            if ($option) {
-                $table .= "<tr'><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
+		foreach ($options as $key => $option) {
+			if ($option) {
+				$table .= "<tr'><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
 
-                if ($mail) {
-                    $table .= "<tr style='border: 1px solid #d5d5d5;'>
+				if ($mail) {
+					$table .= "<tr style='border: 1px solid #d5d5d5;'>
                     <td style='border: 1px solid #e5e5e5;'>$key</td>
                     <td style='border: 1px solid #e5e5e5;'>" . __($option, "woocommerce-myparcel") . "</td>
                   </tr>";
-                }
+				}
 
-                $htmlHeader .= $table;
-            }
-        }
+				$htmlHeader .= $table;
+			}
+		}
 
-        $htmlHeader .= "</table>";
+		$htmlHeader .= "</table>";
 
-        return $htmlHeader;
-    }
+		return $htmlHeader;
+	}
 
-    /**
+	/**
      * Output a spinner.
      *
      * @param string $state
