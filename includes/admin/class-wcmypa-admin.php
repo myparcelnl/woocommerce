@@ -674,14 +674,14 @@ class WCMYPA_Admin
 
     /**
      * @param \WC_Order $order
-     * @param bool      $mail
+     * @param bool      $useInConfirmationMail
      *
      * @throws \Exception
      */
-    public function showShipmentConfirmation(WC_Order $order, bool $mail): void
+    public function showShipmentConfirmation(WC_Order $order, bool $useInConfirmationMail): void
     {
         $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
-        $this->getConfirmationData($deliveryOptions, $mail);
+        $this->getConfirmationData($deliveryOptions, $useInConfirmationMail);
     }
 
     /**
@@ -921,11 +921,11 @@ class WCMYPA_Admin
      * Output the delivery date if there is a date and the show delivery day setting is enabled.
      *
      * @param DeliveryOptions $deliveryOptions
-     * @param bool            $mail
+     * @param bool            $useInConfirmationMail
      *
      * @throws \Exception
      */
-    private function getConfirmationData(DeliveryOptions $deliveryOptions, bool $mail): void
+    private function getConfirmationData(DeliveryOptions $deliveryOptions, bool $useInConfirmationMail): void
     {
         $signatureTitle     = (new WCMP_Checkout)->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
         $onlyRecipientTitle = (new WCMP_Checkout)->getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
@@ -945,11 +945,10 @@ class WCMYPA_Admin
                     $deliveryOptions->getPickupLocation()->getCity()
             ];
 
-            printf($this->setConfirmationData($selectedDeliveryOptions, $mail));
+            printf($this->setConfirmationData($selectedDeliveryOptions, $useInConfirmationMail));
 
             return;
         }
-
 
         $selectedDeliveryOptions = [
             __("Delivery type:", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
@@ -959,28 +958,28 @@ class WCMYPA_Admin
                 ($deliveryOptions->getShipmentOptions()->hasOnlyRecipient() ? $onlyRecipientTitle : null)
         ];
 
-        printf($this->setConfirmationData($selectedDeliveryOptions, $mail));
+        printf($this->setConfirmationData($selectedDeliveryOptions, $useInConfirmationMail));
     }
 
     /**
-     * @param array $options
-     * @param bool  $mail
+     * @param array[] $options
+     * @param bool    $useInConfirmationMail
      *
      * @return string
      */
-    public function setConfirmationData(array $options, bool $mail): string
+    public function setConfirmationData(array $options, bool $useInConfirmationMail): string
     {
         $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>";
         $table      = "<table>";
 
-        if ($mail) {
+        if ($useInConfirmationMail) {
             $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>";
             $table      = "<table cellspacing='0' style='border: 1px solid #e5e5e5; margin-bottom: 20px;>";
         }
 
         foreach ($options as $key => $option) {
             if ($option) {
-                if ($mail) {
+                if ($useInConfirmationMail) {
                     $table .= "<tr style='border: 1px solid #d5d5d5;'>
                     <td style='border: 1px solid #e5e5e5;'>$key</td>
                     <td style='border: 1px solid #e5e5e5;'>" . __($option, "woocommerce-myparcel") . "</td>

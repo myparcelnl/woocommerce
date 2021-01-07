@@ -22,7 +22,7 @@ class WCMP_Frontend
         new WCMP_Frontend_Track_Trace();
 
         // Shipment information in confirmation mail
-        add_action("woocommerce_email_customer_details", [$this, "ConfirmationEmail"], 19, 3);
+        add_action("woocommerce_email_customer_details", [$this, "confirmationEmail"], 19, 3);
 
         // Shipment information in my account
         add_action('woocommerce_view_order', [$this, "ConfirmationOrderReceived"]);
@@ -52,7 +52,7 @@ class WCMP_Frontend
      *
      * @throws \Exception
      */
-    public function ConfirmationEmail(WC_Order $order): void
+    public function confirmationEmail(WC_Order $order): void
     {
         WCMYPA()->admin->showShipmentConfirmation($order, true);
     }
