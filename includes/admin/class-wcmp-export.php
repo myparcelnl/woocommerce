@@ -869,7 +869,6 @@ class WCMP_Export
 
         // get shipping classes from order
         $foundShippingClasses = $this->find_order_shipping_classes($order);
-
         $highest_class = $this->getShippingClass($shippingMethod, $foundShippingClasses);
 
         return $highest_class;
@@ -884,10 +883,8 @@ class WCMP_Export
      * @return string
      * @throws Exception
      */
-    public function getPackageTypeFromOrder(
-        WC_Order $order,
-        AbstractDeliveryOptionsAdapter $deliveryOptions = null
-    ): string {
+    public function getPackageTypeFromOrder(WC_Order $order, AbstractDeliveryOptionsAdapter $deliveryOptions = null): string
+    {
         $packageTypeFromDeliveryOptions = $deliveryOptions
             ? $deliveryOptions->getPackageType()
             : null;
@@ -899,6 +896,7 @@ class WCMP_Export
         // Get pre 4.0.0 package type if it exists.
         if (WCX_Order::has_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0)) {
             $shipmentOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0);
+
             return (string) WCMP_Data::getPackageTypeId($shipmentOptions['package_type']);
         }
 
@@ -1198,8 +1196,7 @@ class WCMP_Export
      */
     public static function getShippingMethod(string $chosenMethod)
     {
-        if (version_compare(WOOCOMMERCE_VERSION, "2.6", "<") || $chosenMethod ===
-            WCMP_Shipping_Methods::LEGACY_FLAT_RATE) {
+        if (version_compare(WOOCOMMERCE_VERSION, "2.6", "<") || $chosenMethod === WCMP_Shipping_Methods::LEGACY_FLAT_RATE) {
             return self::getLegacyShippingMethod($chosenMethod);
         }
 
@@ -1403,13 +1400,13 @@ class WCMP_Export
     }
 
     /**
-     * @param mixed               $colloAmount
+     * @param int               $colloAmount
      * @param MyParcelCollection  $collection
      * @param AbstractConsignment $consignment
      *
      * @throws MissingFieldException
      */
-    public function addFakeMultiCollo(mixed $colloAmount, MyParcelCollection $collection, AbstractConsignment $consignment): void
+    public function addFakeMultiCollo(int $colloAmount, MyParcelCollection $collection, AbstractConsignment $consignment): void
     {
         for ($i = 1; $i <= $colloAmount; $i++) {
             $collection->addConsignment($consignment);
@@ -1420,13 +1417,15 @@ class WCMP_Export
      * @param WC_Order            $order
      * @param MyParcelCollection  $collection
      * @param AbstractConsignment $consignment
-     * @param mixed               $colloAmount
+     * @param int               $colloAmount
      *
      * @throws MissingFieldException
+     * @throws \Exception
      */
-    public function addMultiCollo(WC_Order $order, MyParcelCollection $collection, AbstractConsignment $consignment, mixed $colloAmount): void
+    public function addMultiCollo(WC_Order $order, MyParcelCollection $collection, AbstractConsignment $consignment, int $colloAmount): void
     {
-        $packageType         = $this->getPackageTypeFromOrder($order);
+        $deliveryOptions     = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
+        $packageType         = $this->getPackageTypeFromOrder($order, $deliveryOptions);
         $isPackage           = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $packageType;
         $isMultiColloCountry = in_array($order->get_shipping_country(),
             [self::COUNTRY_CODE_NL, self::COUNTRY_CODE_BE]
@@ -1434,9 +1433,11 @@ class WCMP_Export
 
         if ($isMultiColloCountry && $isPackage) {
             $collection->addMultiCollo($consignment, $colloAmount);
-        } else {
-            $this->addFakeMultiCollo($colloAmount, $collection, $consignment);
+
+            return;
         }
+
+        $this->addFakeMultiCollo($colloAmount, $collection, $consignment);
     }
 
     /**
