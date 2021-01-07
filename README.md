@@ -1,5 +1,3 @@
-<h4>:heavy_exclamation_mark: Together we have processed a lot of extra parcels recently and we still see a huge increase for the coming period. In order to keep our network running, it is necessary to limit amount of packages for all sending customers. That is why we temporarily apply a maximum number of parcels that can be pre-notified per day as of December 21. The next day new labels and barcodes will be available. We understand very well that this adjustment is annoying for you and that it disrupts your process.</h4>
-
 # WooCommerce MyParcel
 Welcome to the WooCommerce MyParcel repository on GitHub. Here you can browse the source, look at open issues and keep track of development.
 
