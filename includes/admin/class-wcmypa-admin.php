@@ -395,7 +395,8 @@ class WCMYPA_Admin
                         <a
                             href="#"
                             class="wcmp__offset-dialog__button button"
-                            style="display: none;">
+                            style="display: none;"
+                            target="_blank">
                             <?php _e("Print", "woocommerce-myparcel"); ?>
                             <?php self::renderSpinner(); ?>
                         </a>
@@ -485,8 +486,7 @@ class WCMYPA_Admin
             unset($listing_actions[$addReturn]);
         }
 
-        $display = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
-
+        $display    = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
         $attributes = [];
 
         if ($display) {
