@@ -1,4 +1,4 @@
-# Copyright (C) 2020 WooCommerce MyParcel
+# Copyright (C) 2021 WooCommerce MyParcel
 # This file is distributed under the same license as the WooCommerce MyParcel package.
 msgid ""
 msgstr ""
@@ -16,47 +16,47 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.4.3; wp-5.5.1\n"
 
-#: includes/class-wcmp-assets.php:88, includes/admin/class-wcmp-export.php:246, includes/admin/class-wcmp-export.php:234
+#: includes/class-wcmp-assets.php:88, includes/admin/class-wcmp-export.php:250, includes/admin/class-wcmp-export.php:238
 msgid "You have not selected any orders!"
 msgstr "Vous n'avez sélectionné aucune commande !"
 
-#: includes/class-wcmp-data.php:87
+#: includes/class-wcmp-data.php:88
 msgid "Package"
 msgstr "Colis"
 
-#: includes/class-wcmp-data.php:88
+#: includes/class-wcmp-data.php:89
 msgid "Mailbox"
 msgstr ""
 
-#: includes/class-wcmp-data.php:89
+#: includes/class-wcmp-data.php:90
 msgid "Unpaid letter"
 msgstr ""
 
-#: includes/class-wcmp-data.php:90
+#: includes/class-wcmp-data.php:91
 msgid "Digital stamp"
 msgstr ""
 
-#: includes/class-wcmp-data.php:94, includes/frontend/class-wcmp-cart-fees.php:222, includes/admin/settings/class-wcmp-settings-data.php:543, includes/admin/settings/class-wcmp-settings-data.php:899
+#: includes/class-wcmp-data.php:95, includes/frontend/class-wcmp-cart-fees.php:228, includes/admin/settings/class-wcmp-settings-data.php:543, includes/admin/settings/class-wcmp-settings-data.php:899
 msgid "Morning delivery"
 msgstr "Livraison le matin"
 
-#: includes/class-wcmp-data.php:95, includes/admin/settings/class-wcmp-settings-data.php:909
+#: includes/class-wcmp-data.php:96, includes/admin/settings/class-wcmp-settings-data.php:909
 msgid "Standard delivery"
 msgstr "Livraison standard"
 
-#: includes/class-wcmp-data.php:96, includes/frontend/class-wcmp-cart-fees.php:221, includes/admin/settings/class-wcmp-settings-data.php:556, includes/admin/settings/class-wcmp-settings-data.php:915
+#: includes/class-wcmp-data.php:97, includes/frontend/class-wcmp-cart-fees.php:227, includes/admin/settings/class-wcmp-settings-data.php:556, includes/admin/settings/class-wcmp-settings-data.php:915
 msgid "Evening delivery"
 msgstr "Livraison en soirée"
 
-#: includes/class-wcmp-data.php:97, includes/admin/settings/class-wcmp-settings-data.php:933
+#: includes/class-wcmp-data.php:98, includes/admin/settings/class-wcmp-settings-data.php:933
 msgid "Pickup"
 msgstr "Ramasser"
 
-#: includes/class-wcmp-data.php:220, includes/admin/settings/class-wcmp-settings-data.php:82
+#: includes/class-wcmp-data.php:227, includes/admin/settings/class-wcmp-settings-data.php:82
 msgid "PostNL"
 msgstr "postnl"
 
-#: includes/class-wcmp-data.php:221
+#: includes/class-wcmp-data.php:228
 msgid "DPD"
 msgstr "DPD"
 
@@ -96,129 +96,129 @@ msgstr "<b>Le numéro de rue de l'adresse de facturation</b> est un champ obliga
 msgid "<b>Shipping No.</b> is a required field"
 msgstr "<b>Le numéro de rue de l'adresse d'expédition</b> est un champ obligatoire"
 
-#: includes/admin/class-wcmp-export-consignments.php:222
+#: includes/admin/class-wcmp-export-consignments.php:232
 msgid "No HS code found in MyParcel settings"
 msgstr ""
 
-#: includes/admin/class-wcmp-export-consignments.php:309, includes/admin/class-wcmp-export.php:544
+#: includes/admin/class-wcmp-export-consignments.php:319, includes/admin/class-wcmp-export.php:554
 msgid "No API key found in MyParcel settings"
 msgstr "Aucune clé API trouvée dans les paramètres MyParcel"
 
-#: includes/admin/class-wcmp-export.php:175
+#: includes/admin/class-wcmp-export.php:179
 msgid "You have to export the orders to MyParcel before you can print the labels!"
 msgstr ""
 "Vous devez d'abord exporter vos commandes vers MyParcel avant de pouvoir "
 "imprimer vos étiquettes !"
 
-#: includes/admin/class-wcmp-export.php:204, includes/admin/class-wcmp-export.php:214
+#: includes/admin/class-wcmp-export.php:208, includes/admin/class-wcmp-export.php:218
 msgid "You do not have sufficient permissions to access this page."
 msgstr "Vous n'avez pas les droits suffisants pour accéder à cette page."
 
-#: includes/admin/class-wcmp-export.php:381
+#: includes/admin/class-wcmp-export.php:391
 msgid "%s shipments successfully exported to MyParcel"
 msgstr "%s envois exportés avec succès vers Myparcel"
 
-#: includes/admin/class-wcmp-export.php:495
+#: includes/admin/class-wcmp-export.php:505
 msgid "The selected orders have not been exported to MyParcel yet! "
 msgstr "Les commandes sélectionnées n'ont pas encore été exportées vers MyParcel!"
 
-#: includes/admin/class-wcmp-export.php:575
+#: includes/admin/class-wcmp-export.php:585
 msgid "No e-mail address found in order."
 msgstr ""
 
-#: includes/admin/class-wcmp-export.php:987
+#: includes/admin/class-wcmp-export.php:994
 msgid "Unknown"
 msgstr "Inconnu"
 
-#: includes/admin/class-wcmp-export.php:1004, includes/admin/views/html-bulk-options-form.php:55
+#: includes/admin/class-wcmp-export.php:1035, includes/admin/views/html-bulk-options-form.php:55
 msgid "Order"
 msgstr "Commande"
 
-#: includes/admin/class-wcmp-export.php:1028
+#: includes/admin/class-wcmp-export.php:1059
 msgid "pending - concept"
 msgstr "en cours de traitement - concept"
 
-#: includes/admin/class-wcmp-export.php:1029
+#: includes/admin/class-wcmp-export.php:1060
 msgid "pending - registered"
 msgstr "en cours de traitement - enregistré"
 
-#: includes/admin/class-wcmp-export.php:1030
+#: includes/admin/class-wcmp-export.php:1061
 msgid "enroute - handed to carrier"
 msgstr "en route - remis au transporteur"
 
-#: includes/admin/class-wcmp-export.php:1031
+#: includes/admin/class-wcmp-export.php:1062
 msgid "enroute - sorting"
 msgstr "en route - trié"
 
-#: includes/admin/class-wcmp-export.php:1032
+#: includes/admin/class-wcmp-export.php:1063
 msgid "enroute - distribution"
 msgstr "en route - en cours de distribution"
 
-#: includes/admin/class-wcmp-export.php:1033
+#: includes/admin/class-wcmp-export.php:1064
 msgid "enroute - customs"
 msgstr "en route - à la douane"
 
-#: includes/admin/class-wcmp-export.php:1034
+#: includes/admin/class-wcmp-export.php:1065
 msgid "delivered - at recipient"
 msgstr "livré - chez le destinataire"
 
-#: includes/admin/class-wcmp-export.php:1035
+#: includes/admin/class-wcmp-export.php:1066
 msgid "delivered - ready for pickup"
 msgstr "livré - prêt à être collecté"
 
-#: includes/admin/class-wcmp-export.php:1036
+#: includes/admin/class-wcmp-export.php:1067
 msgid "delivered - package picked up"
 msgstr "livré - collecté"
 
-#: includes/admin/class-wcmp-export.php:1037
+#: includes/admin/class-wcmp-export.php:1068
 msgid "inactive - concept"
 msgstr "inactif - concept"
 
-#: includes/admin/class-wcmp-export.php:1038
+#: includes/admin/class-wcmp-export.php:1069
 msgid "inactive - registered"
 msgstr "inactif - enregistré"
 
-#: includes/admin/class-wcmp-export.php:1039
+#: includes/admin/class-wcmp-export.php:1070
 msgid "inactive - enroute - handed to carrier"
 msgstr "inactif - en route - remis au transporteur"
 
-#: includes/admin/class-wcmp-export.php:1040
+#: includes/admin/class-wcmp-export.php:1071
 msgid "inactive - enroute - sorting"
 msgstr "inactif - en route - trié"
 
-#: includes/admin/class-wcmp-export.php:1041
+#: includes/admin/class-wcmp-export.php:1072
 msgid "inactive - enroute - distribution"
 msgstr "inactif - en route - en cours de distribution"
 
-#: includes/admin/class-wcmp-export.php:1042
+#: includes/admin/class-wcmp-export.php:1073
 msgid "inactive - enroute - customs"
 msgstr "inactif - en route - à la douane"
 
-#: includes/admin/class-wcmp-export.php:1043
+#: includes/admin/class-wcmp-export.php:1074
 msgid "inactive - delivered - at recipient"
 msgstr "inactif - livré - chez le destinataire"
 
-#: includes/admin/class-wcmp-export.php:1044
+#: includes/admin/class-wcmp-export.php:1075
 msgid "inactive - delivered - ready for pickup"
 msgstr "inactif - livré - prêt à être collecté"
 
-#: includes/admin/class-wcmp-export.php:1045
+#: includes/admin/class-wcmp-export.php:1076
 msgid "inactive - delivered - package picked up"
 msgstr "inactif - livré - collecté"
 
-#: includes/admin/class-wcmp-export.php:1046
+#: includes/admin/class-wcmp-export.php:1077
 msgid "inactive - unknown"
 msgstr "inactif - inconnu"
 
-#: includes/admin/class-wcmp-export.php:1052
+#: includes/admin/class-wcmp-export.php:1083
 msgid "Unknown status"
 msgstr "Statut inconnu"
 
-#: includes/admin/class-wcmp-export.php:1457
+#: includes/admin/class-wcmp-export.php:1563
 msgid "MyParcel shipment created:"
 msgstr "Envoi MyParcel créé :"
 
-#: includes/admin/class-wcmp-export.php:1503
+#: includes/admin/class-wcmp-export.php:1611
 msgid "The order(s) you have selected have invalid shipping countries."
 msgstr ""
 
@@ -276,19 +276,19 @@ msgstr ""
 msgid "Country of Origin"
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:838
+#: includes/admin/class-wcmypa-admin.php:840
 msgid "No label has been created yet."
 msgstr "Label pas encore créé."
 
-#: includes/admin/class-wcmypa-admin.php:846
+#: includes/admin/class-wcmypa-admin.php:848
 msgid "Concept created but not printed."
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:912
+#: includes/admin/class-wcmypa-admin.php:914
 msgid "MyParcel shipment:"
 msgstr "Envoi MyParcel :"
 
-#: includes/admin/class-wcmypa-admin.php:1007
+#: includes/admin/class-wcmypa-admin.php:1009
 msgid "(Unknown)"
 msgstr "(Inconnu)"
 
@@ -304,11 +304,15 @@ msgstr ""
 msgid "Shipment type"
 msgstr "Types d'expédition"
 
-#: includes/admin/OrderSettingsRows.php:125, includes/admin/settings/class-wcmp-settings-data.php:428
+#: includes/admin/OrderSettingsRows.php:116
+msgid "Number of labels"
+msgstr "Nombre d'étiquettes"
+
+#: includes/admin/OrderSettingsRows.php:135, includes/admin/settings/class-wcmp-settings-data.php:428
 msgid "Extra large size"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:126, includes/admin/settings/class-wcmp-settings-data.php:430
+#: includes/admin/OrderSettingsRows.php:136, includes/admin/settings/class-wcmp-settings-data.php:430
 msgid ""
 "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
 "smaller than 175 x 78 x 58 cm. An extra fee will be charged. Note! If the "
@@ -316,48 +320,44 @@ msgid ""
 "rate will be charged."
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:142
+#: includes/admin/OrderSettingsRows.php:152
 msgid "Custom ID (top left on label)"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:181
-msgid "Number of labels"
-msgstr "Nombre d'étiquettes"
-
-#: includes/admin/OrderSettingsRows.php:195
+#: includes/admin/OrderSettingsRows.php:192
 msgid "Weight"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:198, includes/admin/views/html-order-return-shipment-options.php:16
+#: includes/admin/OrderSettingsRows.php:195, includes/admin/views/html-order-return-shipment-options.php:16
 msgid "Calculated weight: %s"
 msgstr "Poids calculé:% s"
 
-#: includes/admin/OrderSettingsRows.php:216, includes/admin/settings/class-wcmp-settings-data.php:410, includes/admin/settings/class-wcmp-settings-data.php:569, includes/admin/settings/class-wcmp-settings-data.php:921
+#: includes/admin/OrderSettingsRows.php:213, includes/admin/settings/class-wcmp-settings-data.php:410, includes/admin/settings/class-wcmp-settings-data.php:569, includes/admin/settings/class-wcmp-settings-data.php:921
 msgid "Home address only"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:217, includes/admin/settings/class-wcmp-settings-data.php:412
+#: includes/admin/OrderSettingsRows.php:214, includes/admin/settings/class-wcmp-settings-data.php:412
 msgid ""
 "If you don't want the parcel to be delivered at the neighbours, choose this "
 "option."
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:232, includes/frontend/class-wcmp-cart-fees.php:225, includes/admin/settings/class-wcmp-settings-data.php:419, includes/admin/settings/class-wcmp-settings-data.php:582, includes/admin/settings/class-wcmp-settings-data.php:927, includes/admin/views/html-order-shipment-summary.php:23
+#: includes/admin/OrderSettingsRows.php:229, includes/frontend/class-wcmp-cart-fees.php:231, includes/admin/settings/class-wcmp-settings-data.php:419, includes/admin/settings/class-wcmp-settings-data.php:582, includes/admin/settings/class-wcmp-settings-data.php:927, includes/admin/views/html-order-shipment-summary.php:23
 msgid "Signature on delivery"
 msgstr "Signature pour réception"
 
-#: includes/admin/OrderSettingsRows.php:234, includes/admin/settings/class-wcmp-settings-data.php:421
+#: includes/admin/OrderSettingsRows.php:231, includes/admin/settings/class-wcmp-settings-data.php:421
 msgid ""
 "The parcel will be offered at the delivery address. If the recipient is not "
 "at home, the parcel will be delivered to the neighbours. In both cases, a "
 "signature will be required."
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:248, includes/admin/settings/class-wcmp-settings-data.php:437
+#: includes/admin/OrderSettingsRows.php:245, includes/admin/settings/class-wcmp-settings-data.php:437
 msgid "Age check 18+"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:249
+#: includes/admin/OrderSettingsRows.php:246
 msgid ""
 "The age check is intended for parcel shipments for which the recipient must "
 "show 18+ by means of a proof of identity. With this shipping option "
@@ -366,11 +366,11 @@ msgid ""
 "delivery."
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:263, includes/admin/settings/class-wcmp-settings-data.php:446
+#: includes/admin/OrderSettingsRows.php:260, includes/admin/settings/class-wcmp-settings-data.php:446
 msgid "Return if no answer"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:265, includes/admin/settings/class-wcmp-settings-data.php:448
+#: includes/admin/OrderSettingsRows.php:262, includes/admin/settings/class-wcmp-settings-data.php:448
 msgid ""
 "By default, a parcel will be offered twice. After two unsuccessful delivery "
 "attempts, the parcel will be available at the nearest pickup point for two "
@@ -379,11 +379,11 @@ msgid ""
 "NOT forward it to the pickup point, enable this option."
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:278
+#: includes/admin/OrderSettingsRows.php:275
 msgid "Insured"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:294
+#: includes/admin/OrderSettingsRows.php:291
 msgid "Insurance amount"
 msgstr ""
 
@@ -395,11 +395,11 @@ msgstr "Activé"
 msgid "Disabled"
 msgstr "désactivé"
 
-#: includes/frontend/class-wcmp-cart-fees.php:223
+#: includes/frontend/class-wcmp-cart-fees.php:229
 msgid "Pick up at"
 msgstr "Ramasser à"
 
-#: includes/frontend/class-wcmp-cart-fees.php:224, includes/admin/views/html-order-shipment-summary.php:24
+#: includes/frontend/class-wcmp-cart-fees.php:230, includes/admin/views/html-order-shipment-summary.php:24
 msgid "Only recipient"
 msgstr "Seul destinataire"
 
@@ -764,12 +764,10 @@ msgstr "Référence étiquette"
 msgid ""
 "With this option you can add a description to the shipment. This will be "
 "printed on the top left of the label, and you can use this to search or "
-"sort shipments in your backoffice."
+"sort shipments in your backoffice. Because of limited space on the label "
+"which varies per package type, we recommend that you keep the label "
+"description as short as possible."
 msgstr ""
-"Cette option vous permet d'ajouter une référence relative à votre envoi. "
-"Celle-ci sera imprimée dans le coin supérieur gauche de l'étiquette. Vous "
-"pourrez ensuite utiliser cette référence pour retrouve ou trier vos envois "
-"dans le back-end MyParcel."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:687
 msgid "Empty parcel weight"
