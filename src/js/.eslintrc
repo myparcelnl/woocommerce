@@ -1,21 +1,13 @@
 {
-  "globals": {
-    "wcmp": "readonly",
-    "MyParcel": "readonly",
-    "MyParcelFrontend": "readonly",
-    "MyParcelDisplaySettings": "readonly",
-    "MyParcelDeliveryOptions": "readonly"
+  "env": {
+    "jquery": true
   },
-  "overrides": [
-    {
-      "files": [
-        "checkout.js",
-        "wcmp-admin.js",
-        "wcmp-frontend.js"
-      ],
-      "env": {
-        "jquery": true
-      }
-    }
-  ]
+  "globals": {
+    "MyParcel": "readonly",
+    "MyParcelDeliveryOptions": "readonly",
+    "MyParcelDisplaySettings": "readonly",
+    "MyParcelFrontend": "readonly",
+    "tb_show": "readonly",
+    "wcmp": "readonly"
+  }
 }
