@@ -684,12 +684,12 @@ class WCMYPA_Admin
 	 *
 	 * @throws \Exception
 	 */
-	public function showShipmentConfirmation(WC_Order $order, bool $isEmail): void
-	{
-		$deliveryOptions  = self::getDeliveryOptionsFromOrder($order);
-		$confirmationData = $this->getConfirmationData($deliveryOptions);
-		$isEmail ? $this->printEmailConfirmation($confirmationData) : $this->printThankYouConfirmation($confirmationData);
-	}
+    public function showShipmentConfirmation(WC_Order $order, bool $isEmail): void
+    {
+        $deliveryOptions  = self::getDeliveryOptionsFromOrder($order);
+        $confirmationData = $this->getConfirmationData($deliveryOptions);
+        $isEmail ? $this->printEmailConfirmation($confirmationData) : $this->printThankYouConfirmation($confirmationData);
+    }
 
     /**
      * @param $order_id
@@ -973,47 +973,47 @@ class WCMYPA_Admin
         ];
     }
 
-	/**
-	 * Print a table with the chosen delivery options on the confirmation page.
+    /**
+     * Print a table with the chosen delivery options on the confirmation page.
      *
-	 * @param array[]|null $selectedDeliveryOptions
-	 */
-	public function printThankYouConfirmation(?array $selectedDeliveryOptions): void
-	{
-		printf($this->generateThankYouConfirmation($selectedDeliveryOptions));
-	}
+     * @param array[]|null $selectedDeliveryOptions
+     */
+    public function printThankYouConfirmation(?array $selectedDeliveryOptions): void
+    {
+        printf($this->generateThankYouConfirmation($selectedDeliveryOptions));
+    }
 
-	/**
-	 * Print a table with the chosen delivery options in the confirmation email.
-	 *
-	 * @param array[]|null $selectedDeliveryOptions
-	 */
-	public function printEmailConfirmation(?array $selectedDeliveryOptions): void
-	{
-		printf($this->generateEmailConfirmation($selectedDeliveryOptions));
-	}
+    /**
+     * Print a table with the chosen delivery options in the confirmation email.
+     *
+     * @param array[]|null $selectedDeliveryOptions
+     */
+    public function printEmailConfirmation(?array $selectedDeliveryOptions): void
+    {
+        printf($this->generateEmailConfirmation($selectedDeliveryOptions));
+    }
 
-	/**
-	 * @param array[]|null $options
-	 *
-	 * @return string|null
-	 */
-	public function generateThankYouConfirmation(?array $options): ?string
-	{
-		if ($options) {
-			$htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2><table>";
+    /**
+     * @param array[]|null $options
+     *
+     * @return string|null
+     */
+    public function generateThankYouConfirmation(?array $options): ?string
+    {
+        if ($options) {
+            $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2><table>";
 
-			foreach ($options as $key => $option) {
-				if ($option) {
-					$htmlHeader .= "<tr'><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
-				}
-			}
+            foreach ($options as $key => $option) {
+                if ($option) {
+                    $htmlHeader .= "<tr'><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
+                }
+            }
 
-			return $htmlHeader . "</table>";
-		}
+            return $htmlHeader . "</table>";
+        }
 
-		return null;
-	}
+        return null;
+    }
 
     /**
      * @param array[]|null $options
@@ -1023,22 +1023,22 @@ class WCMYPA_Admin
     public function generateEmailConfirmation(?array $options): ?string
     {
         if ($options) {
-	        $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>";
-	        $htmlHeader .= "<table cellspacing='0' style='border: 1px solid #e5e5e5; margin-bottom: 20px;>";
+            $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>";
+            $htmlHeader .= "<table cellspacing='0' style='border: 1px solid #e5e5e5; margin-bottom: 20px;>";
 
-          foreach ($options as $key => $option) {
-              if ($option) {
-	              $htmlHeader .= "<tr style='border: 1px solid #d5d5d5;'>
+            foreach ($options as $key => $option) {
+                if ($option) {
+                    $htmlHeader .= "<tr style='border: 1px solid #d5d5d5;'>
                               <td style='border: 1px solid #e5e5e5;'>$key</td>
                               <td style='border: 1px solid #e5e5e5;'>" . __($option, "woocommerce-myparcel") . "</td>
                             </tr>";
-              }
-          }
+                }
+            }
 
-	        return $htmlHeader . "</table>";
+            return $htmlHeader . "</table>";
         }
 
-      return null;
+        return null;
     }
 
 		/**
