@@ -75,7 +75,9 @@ class WCMP_Frontend
 	public function confirmationInMyAccount(array $actions, WC_Order $order): array
 	{
 		$order_id = WCX_Order::get_id($order);
-		if ($consignments = WCMP_Frontend::getTrackTraceLinks($order_id)) {
+		$consignments = WCMP_Frontend::getTrackTraceLinks($order_id);
+
+		if ($consignments) {
 			foreach ($consignments as $key => $consignment) {
 				$actions['myparcel_tracktrace_' . $consignment['link']] = array(
 					'url'  => $consignment['url'],
