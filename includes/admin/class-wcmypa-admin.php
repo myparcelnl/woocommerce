@@ -678,12 +678,12 @@ class WCMYPA_Admin
         $this->printDeliveryDate($deliveryOptions);
     }
 
-	/**
-	 * @param \WC_Order $order
-	 * @param bool      $isEmail
-	 *
-	 * @throws \Exception
-	 */
+    /**
+     * @param \WC_Order $order
+     * @param bool      $isEmail
+     *
+     * @throws \Exception
+     */
     public function showShipmentConfirmation(WC_Order $order, bool $isEmail): void
     {
         $deliveryOptions  = self::getDeliveryOptionsFromOrder($order);
