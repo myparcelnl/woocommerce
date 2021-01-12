@@ -65,13 +65,13 @@ class WCMP_Frontend
         WCMYPA()->admin->showShipmentConfirmation($order, false);
     }
 
-	/**
-	 * @param array    $actions
-	 * @param WC_Order $order
-	 *
-	 * @return array[]
-	 * @throws \Exception
-	 */
+    /**
+     * @param array     $actions
+     * @param WC_Order  $order
+     *
+     * @return array[]
+     * @throws \Exception
+     */
     public function confirmationInMyAccount(array $actions, WC_Order $order): array
     {
         $order_id     = WCX_Order::get_id($order);
