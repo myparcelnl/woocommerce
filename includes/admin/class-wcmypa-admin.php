@@ -950,16 +950,16 @@ class WCMYPA_Admin
 
 		if (AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME === $deliveryOptions->getDeliveryType()) {
 			$pickupLocation = $deliveryOptions->getPickupLocation();
-		    return [
+			return [
 				__("Delivery type:", "woocommerce-myparcel")   => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
 				__("Pickup location:", "woocommerce-myparcel") =>
 					sprintf("%s<br>%s %s<br>%s %s",
 					        $pickupLocation->getLocationName(),
-                            $pickupLocation->getStreet(),
-                            $pickupLocation->getNumber(),
-                            $pickupLocation->getPostalCode(),
-                            $pickupLocation->getCity()
-                    )
+					        $pickupLocation->getStreet(),
+					        $pickupLocation->getNumber(),
+					        $pickupLocation->getPostalCode(),
+					        $pickupLocation->getCity()
+					)
 			];
 		}
 
