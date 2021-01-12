@@ -88,8 +88,12 @@ class WCMYPA_Admin
         add_action("wp_ajax_wcmp_get_shipment_options", [$this, "ajaxGetShipmentOptions"]);
 
         // HS code in product shipping options tab
-        add_action("woocommerce_product_options_shipping", [$this, "productOptionsFields"]);
-        add_action("woocommerce_process_product_meta", [$this, "productOptionsFieldSave"]);
+        add_action("woocommerce_product_options_shipping", [$this, "productHsCodeField"]);
+        add_action("woocommerce_process_product_meta", [$this, "productHsCodeFieldSave"]);
+
+        // Country of Origin in product shipping options tab
+        add_action("woocommerce_product_options_shipping", [$this, "productCountryOfOriginField"]);
+        add_action("woocommerce_process_product_meta", [$this, "productCountryOfOriginFieldSave"]);
 
         // Add barcode in order grid
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
