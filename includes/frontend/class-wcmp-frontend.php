@@ -72,25 +72,25 @@ class WCMP_Frontend
 	 * @return array[]
 	 * @throws \Exception
 	 */
-	public function confirmationInMyAccount(array $actions, WC_Order $order): array
-	{
-		$order_id = WCX_Order::get_id($order);
-		$consignments = WCMP_Frontend::getTrackTraceLinks($order_id);
+    public function confirmationInMyAccount(array $actions, WC_Order $order): array
+    {
+        $order_id     = WCX_Order::get_id($order);
+        $consignments = WCMP_Frontend::getTrackTraceLinks($order_id);
 
-		if ($consignments) {
-			foreach ($consignments as $key => $consignment) {
-				$actions['myparcel_tracktrace_' . $consignment['link']] = array(
-					'url'  => $consignment['url'],
-					'name' => apply_filters(
-						'wcmyparcel_myaccount_tracktrace_button',
-						__('Track & Trace', 'wooocommerce-myparcel')
-					)
-				);
-			}
-		}
+        if ($consignments) {
+            foreach ($consignments as $key => $consignment) {
+                $actions['myparcel_tracktrace_' . $consignment['link']] = array(
+                    'url'  => $consignment['url'],
+                    'name' => apply_filters(
+                        'wcmyparcel_myaccount_tracktrace_button',
+                        __('Track & Trace', 'wooocommerce-myparcel')
+                    )
+                );
+            }
+        }
 
-		return $actions;
-	}
+        return $actions;
+    }
 
     /**
      * @param string   $replacement
