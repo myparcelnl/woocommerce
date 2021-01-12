@@ -39,7 +39,7 @@ class Arr
         $merged = $array1;
 
         foreach ($array2 as $key => &$value) {
-            if (is_array($value) && isset ($merged[$key]) && is_array($merged[$key])) {
+            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
                 $merged[$key] = self::arrayMergeRecursiveDistinct($merged[$key], $value);
             } else {
                 $merged[$key] = $value;
@@ -58,6 +58,8 @@ class Arr
     public static function mergeAfterEachOther($array1, $array2): array
     {
         $result = [];
+        $array1 = array_values($array1);
+        $array2 = array_values($array2);
 
         foreach ($array1 as $index => $value1) {
             $result[] = $value1;
@@ -169,9 +171,9 @@ class Arr
 
         foreach ($array as $key => $value) {
             if (is_array($value) && ! empty($value)) {
-                $results = array_merge($results, static::dot($value, $prepend.$key.'.'));
+                $results = array_merge($results, static::dot($value, $prepend . $key . '.'));
             } else {
-                $results[$prepend.$key] = $value;
+                $results[$prepend . $key] = $value;
             }
         }
 

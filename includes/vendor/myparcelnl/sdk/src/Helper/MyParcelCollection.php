@@ -73,7 +73,7 @@ class MyParcelCollection extends Collection
     /**
      * @var string
      */
-    private $user_agent = '';
+    private static $user_agent;
 
     /**
      * @param bool $keepKeys
@@ -368,7 +368,7 @@ class MyParcelCollection extends Collection
         $result        = $request->getResult('data.shipments');
         $newCollection = $this->getNewCollectionFromResult($result);
 
-        $this->items = $newCollection->items;
+        $this->items = $newCollection->sortByCollection($this)->items;
 
         return $this;
     }
@@ -549,7 +549,7 @@ class MyParcelCollection extends Collection
             ->addConsignmentByConsignmentIds($returnIds, $apiKey)
             ->setLatestData();
 
-        $this->items = Arr::mergeAfterEachOther($this, $returnConsignments->toArray());
+        $this->items = Arr::mergeAfterEachOther($parentConsignments, $returnConsignments->toArray());
 
         return $this;
     }
@@ -605,22 +605,45 @@ class MyParcelCollection extends Collection
      */
     public function getUserAgent()
     {
-        return $this->user_agent;
+        return $this::$user_agent;
     }
 
     /**
-     * @param string $platform
-     * @param string $version
+     * @param string      $platform
+     * @param string|null $version
      *
      * @return self
      * @internal param string $user_agent
+     * @deprecated Use setCustomUserAgent instead
      */
-    public function setUserAgent($platform, $version = null)
+    public function setUserAgent(string $platform, string $version = null): self
     {
-        $this->user_agent = 'MyParcel-' . $platform;
+        $this::$user_agent = 'MyParcel-' . $platform;
         if ($version !== null) {
-            $this->user_agent .= '/' . str_replace('v', '', $version);
+            $this::$user_agent .= '/' . str_replace('v', '', $version);
         }
+
+        return $this;
+    }
+
+    /**
+     * @param  array $userAgentMap
+     *
+     * @return self
+     */
+    public function setUserAgents(array $userAgentMap): self
+    {
+        $userAgents = [];
+
+        foreach ($userAgentMap as $key => $value) {
+            if (Str::startsWith($value, 'v')) {
+                $value = str_replace('v', '', $value);
+            }
+
+            $userAgents[] = $key . '/' . $value;
+        }
+
+        self::$user_agent = implode(' ', $userAgents);
 
         return $this;
     }
@@ -753,6 +776,28 @@ class MyParcelCollection extends Collection
     }
 
     /**
+     * @param \MyParcelNL\Sdk\src\Helper\MyParcelCollection|\MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment[] $sortedCollection
+     *
+     * @return $this
+     */
+    public function sortByCollection(MyParcelCollection $sortedCollection): MyParcelCollection
+    {
+        $result = new MyParcelCollection();
+
+        foreach ($sortedCollection as $sorted) {
+            $consignment = $this->where('consignment_id', $sorted->getConsignmentId())->first();
+
+            if ($consignment) {
+                $result[] = $consignment;
+            }
+        }
+
+        $leftItems = $this->whereNotIn('consignment_id', $result->getConsignmentIds());
+
+        return $result->merge($leftItems);
+    }
+
+    /**
      * Set label format settings        The position of the label on an A4 sheet. You can specify multiple positions by
      *                                  using an array. E.g. [2,3,4]. If you do not specify an array, but specify a
      *                                  number, the following labels will fill the ascending positions. Positioning is
@@ -879,14 +924,15 @@ class MyParcelCollection extends Collection
      */
     private function getReturnConsignments(array $parentConsignments, ?\Closure $modifier): array
     {
-        $returnConsignments = $parentConsignments;
+        $returnConsignments = [];
 
-        foreach ($returnConsignments as $i => $returnConsignment) {
-            $parentConsignment = $parentConsignments[$i];
+        foreach ($parentConsignments as $parentConsignment) {
+            $returnConsignment = clone $parentConsignment;
             $returnConsignment->setDeliveryDate(null);
             if ($modifier) {
-                $modifier($returnConsignment, $parentConsignment);
+                $returnConsignment = $modifier($returnConsignment, $parentConsignment);
             }
+            $returnConsignments[] = $returnConsignment;
         }
 
         return $returnConsignments;
