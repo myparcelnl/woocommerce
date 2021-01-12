@@ -939,39 +939,39 @@ class WCMYPA_Admin
 	 * @return array[]|null
 	 * @throws \Exception
 	 */
-	private function getConfirmationData(DeliveryOptions $deliveryOptions): ?array
-	{
-		$signatureTitle     = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
-		$onlyRecipientTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
+    private function getConfirmationData(DeliveryOptions $deliveryOptions): ?array
+    {
+        $signatureTitle     = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
+        $onlyRecipientTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
 
-		if (! $deliveryOptions->getCarrier()) {
-			return null;
-		}
+        if (! $deliveryOptions->getCarrier()) {
+            return null;
+        }
 
-		if (AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME === $deliveryOptions->getDeliveryType()) {
-			$pickupLocation = $deliveryOptions->getPickupLocation();
-			return [
-				__("Delivery type:", "woocommerce-myparcel")   => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
-				__("Pickup location:", "woocommerce-myparcel") =>
-					sprintf("%s<br>%s %s<br>%s %s",
-					        $pickupLocation->getLocationName(),
-					        $pickupLocation->getStreet(),
-					        $pickupLocation->getNumber(),
-					        $pickupLocation->getPostalCode(),
-					        $pickupLocation->getCity()
-					)
-			];
-		}
+        if (AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME === $deliveryOptions->getDeliveryType()) {
+            $pickupLocation = $deliveryOptions->getPickupLocation();
+            return [
+                __("Delivery type:", "woocommerce-myparcel")   => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+                __("Pickup location:", "woocommerce-myparcel") =>
+                    sprintf("%s<br>%s %s<br>%s %s",
+                            $pickupLocation->getLocationName(),
+                            $pickupLocation->getStreet(),
+                            $pickupLocation->getNumber(),
+                            $pickupLocation->getPostalCode(),
+                            $pickupLocation->getCity()
+                    )
+            ];
+        }
 
-		return [
-			__("Delivery type:", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
-			__("Date:", 'woocommerce')                   => wc_format_datetime(new WC_DateTime($deliveryOptions->getDate())),
-			__("Extra options:", "woocommerce-myparcel") =>
-				sprintf("%s<br>%s",
+        return [
+            __("Delivery type:", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+            __("Date:", 'woocommerce')                   => wc_format_datetime(new WC_DateTime($deliveryOptions->getDate())),
+            __("Extra options:", "woocommerce-myparcel") =>
+                sprintf("%s<br>%s",
                         $deliveryOptions->getShipmentOptions()->hasSignature() ? $signatureTitle : null,
                         $deliveryOptions->getShipmentOptions()->hasOnlyRecipient() ? $onlyRecipientTitle : null)
-		];
-	}
+        ];
+    }
 
 	/**
 	 * Print a table with the chosen delivery options on the confirmation page.
