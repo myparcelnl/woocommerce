@@ -14,7 +14,9 @@ $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
             <?php _e("Shipment type", "woocommerce-myparcel") ?>:<br/> <small class="calculated_weight">
                 <?php printf(
                     __("Calculated weight: %s", "woocommerce-myparcel"),
-                    wc_format_weight($order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT))
+                    wc_format_weight(
+                        WCMP_Export::convertWeightToGrams($order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT))
+                    )
                 ) ?>
             </small>
         </td>
