@@ -148,7 +148,13 @@ jQuery(($) => {
      * @param {CustomEvent} event - The update event.
      */
     onDeliveryOptionsUpdate(event) {
-      MyParcelFrontend.hiddenDataInput.value = JSON.stringify(event.detail);
+      let value = '';
+
+      if (event.detail !== null) {
+        value = JSON.stringify(event.detail);
+      }
+
+      MyParcelFrontend.hiddenDataInput.value = value;
 
       /**
        * Remove this event before triggering and re-add it after because it will cause an infinite loop otherwise.
