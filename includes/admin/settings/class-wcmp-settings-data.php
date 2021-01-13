@@ -784,6 +784,7 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMYPA_Settings::SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Enable delivery options for backorders", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
