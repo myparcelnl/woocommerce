@@ -47,8 +47,6 @@ jQuery(($) => {
       '<tr><td><div></div></td><td><div></div></td></tr>'.repeat(5)
     }</table>`;
 
-  const noticeId = 0;
-
   const selectors = {
     bulkSpinner: '.wcmp__bulk-spinner',
     notice: '.wcmp__notice',
@@ -525,12 +523,19 @@ jQuery(($) => {
     });
   }
 
+  console.log('ugh');
+  function removeNotices() {
+    $(selectors.notice).remove();
+  }
+
   /**
    * @param {Event} event - Click event.
    */
   function doBulkAction(event) {
-    const action = document.querySelector('[name="action"]').value;
-    const spinnerWrapper = $(this).parent('.bulkactions');
+    const targetElement = $(event.target);
+    const action = targetElement.prev('select').val();
+    console.log(action);
+    const spinnerWrapper = targetElement.parent('.bulkactions');
 
     /**
      * Check the selected action is ours.
@@ -540,11 +545,8 @@ jQuery(($) => {
     }
 
     event.preventDefault();
+    removeNotices();
 
-    /*
-     * Remove notices
-     */
-    $(selectors.notice).remove();
     const checkedRowsSelector = '#the-list th.check-column input[type="checkbox"]:checked';
     const checkedRows = [...document.querySelectorAll(checkedRowsSelector)];
     const orderIds = checkedRows.map((element) => element.value);
