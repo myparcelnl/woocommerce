@@ -541,7 +541,7 @@ class WCMP_Export
 
         // cast as array for single exports
         $order_ids = (array) $order_ids;
-        require("views/html-bulk-options-form.php");
+        require("views/html-send-return-email-form.php");
         die();
     }
 
@@ -1160,52 +1160,6 @@ class WCMP_Export
             default:
                 return $floatWeight;
         }
-    }
-
-    /**
-     * @param $item
-     * @param $order
-     *
-     * @return float
-     */
-    public static function getItemWeightKg($item, WC_Order $order): float
-    {
-        $product = $order->get_product_from_item($item);
-
-        if (empty($product)) {
-            return 0;
-        }
-
-        $weight        = (float) $product->get_weight();
-        $productWeight = WCMP_Export::calculatedKiloWeight($weight);
-
-        return  $productWeight * (int) $item["qty"];
-    }
-
-    /**
-     * @param float $weight
-     *
-     * @return float
-     */
-    public static function calculatedKiloWeight(float $weight): float
-    {
-        $weightUnit = get_option("woocommerce_weight_unit");
-        switch ($weightUnit) {
-            case "g":
-                $calculatedWeight = $weight / 1000;
-                break;
-            case "lbs":
-                $calculatedWeight = $weight * 0.45359237;
-                break;
-            case "oz":
-                $calculatedWeight = $weight * 0.0283495231;
-                break;
-            default:
-                $calculatedWeight = $weight;
-                break;
-        }
-
-        return $calculatedWeight;
     }
 
     /**
