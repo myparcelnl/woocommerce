@@ -138,14 +138,16 @@ jQuery(($) => {
      *
      * @see includes/admin/class-wcmp-admin.php:49
      */
-    $(selectors.shipmentSettingsWrapper).each(() => {
-      const shippingAddressColumn = $(this)
-        .closest('tr')
-        .find('td.shipping_address');
+    document
+      .querySelectorAll(selectors.shipmentSettingsWrapper)
+      .forEach((element) => {
+        const shippingAddressColumn = $(element)
+          .closest('tr')
+          .find('td.shipping_address');
 
-      $(this).appendTo(shippingAddressColumn);
-      $(this).show();
-    });
+        $(element).appendTo(shippingAddressColumn);
+        $(element).show();
+      });
   }
 
   /**
@@ -397,9 +399,11 @@ jQuery(($) => {
    * Add event listeners to all toggle elements.
    */
   function addToggleListeners() {
-    $(selectors.toggle).each(() => {
-      $(this).on('click', handleToggle);
-    });
+    document
+      .querySelectorAll(selectors.toggle)
+      .forEach((element) => {
+        element.addEventListener('click', handleToggle);
+      });
   }
 
   /**
@@ -420,8 +424,8 @@ jQuery(($) => {
    */
   function showShipmentOptionsForm(event) {
     event.preventDefault();
-    const button = $(this);
-    const orderId = button.data('order-id');
+    const element = $(event.currentTarget);
+    const orderId = element.data('order-id');
 
     const form = $(selectors.shipmentOptionsDialog);
     const isSameAsLast = form.data('order-id') === orderId;
@@ -441,8 +445,8 @@ jQuery(($) => {
     }
 
     // Set the position for the dialog to be under the clicked "Details" link.
-    const position = button.offset();
-    position.top -= button.height();
+    const position = element.offset();
+    position.top -= element.height();
     form.css(position);
 
     // Set the data-order-id attribute on the dialog to keep track of which dialog was last opened.
@@ -518,12 +522,14 @@ jQuery(($) => {
         security: wcmp.nonce,
       },
       afterDone() {
-        setTimeout(form.slideUp, timeoutAfterRequest);
+        setTimeout(() => form.slideUp(), timeoutAfterRequest);
       },
     });
   }
 
-  console.log('ugh');
+  /**
+   *
+   */
   function removeNotices() {
     $(selectors.notice).remove();
   }
@@ -534,7 +540,6 @@ jQuery(($) => {
   function doBulkAction(event) {
     const targetElement = $(event.target);
     const action = targetElement.prev('select').val();
-    console.log(action);
     const spinnerWrapper = targetElement.parent('.bulkactions');
 
     /**
@@ -1099,13 +1104,15 @@ jQuery(($) => {
 
   /**
    * On clicking a toggle. Doesn't do anything if the parent row has data-readonly or data-disabled set to true.
+   *
+   * @param {MouseEvent} event
    */
-  function handleToggle() {
+  function handleToggle(event) {
     const disabledClass = 'woocommerce-input-toggle--disabled';
     const enabledClass = 'woocommerce-input-toggle--enabled';
-    const row = $(this).closest('tr');
-    const [input] = $(this).find('input');
-    const toggle = $(this).find('.woocommerce-input-toggle');
+    const row = $(event.currentTarget).closest('tr');
+    const [input] = $(event.currentTarget).find('input');
+    const toggle = $(event.currentTarget).find('.woocommerce-input-toggle');
 
     const rowReadOnly = row.attr('data-readonly') === 'true';
     const rowDisabled = row.attr('data-disabled') === 'true';
