@@ -192,7 +192,7 @@ class WCMP_Export
             }
         }
 
-        if (isset($_COOKIE['response'])) {
+        if (isset($_COOKIE['response']) && $_COOKIE['response'] !== 'undefined') {
             $response = $_COOKIE['response'];
             printf(
                 '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p></div>',

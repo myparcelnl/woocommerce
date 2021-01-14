@@ -833,7 +833,7 @@ jQuery(($) => {
         const redirectUrl = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
         const responseError = JSON.parse(response).error;
 
-        if (response !== null && responseError !== null) {
+        if (response !== null && responseError !== null && responseError !== undefined) {
           document.cookie = `response=${responseError};expires=1`;
         }
 
