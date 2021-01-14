@@ -318,7 +318,8 @@ class WCMP_Export_Consignments
             ->setPostalCode($this->recipient['postal_code'])
             ->setCity($this->recipient['city'])
             ->setEmail($this->recipient['email'])
-            ->setPhone($this->recipient['phone']);
+            ->setPhone($this->recipient['phone'])
+            ->setSaveRecipientAddress(false);
     }
 
     /**

@@ -25,7 +25,6 @@ if (! class_exists('WCMYPA')) :
          */
         const DOMAIN                  = 'woocommerce-myparcel';
         const NONCE_ACTION            = 'wc_myparcel';
-        const MINIMUM_PHP_VERSION_5_4 = '5.4';
         const PHP_VERSION_7_1         = '7.1';
 
         public $version = '4.1.5';
@@ -199,7 +198,7 @@ if (! class_exists('WCMYPA')) :
                 return;
             }
 
-            if (! $this->phpVersionMeets(self::MINIMUM_PHP_VERSION_5_4)) {
+            if (! $this->phpVersionMeets(self::PHP_VERSION_7_1)) {
                 add_action('admin_notices', [$this, 'required_php_version']);
 
                 return;
@@ -256,7 +255,7 @@ if (! class_exists('WCMYPA')) :
 
         public function required_php_version()
         {
-            $error         = __("WooCommerce MyParcel requires PHP 5.4 or higher (5.6 or later recommended).",
+            $error         = __("WooCommerce MyParcel requires PHP 7.1 or higher.",
                 "woocommerce-myparcel"
             );
             $how_to_update = __("How to update your PHP version", "woocommerce-myparcel");
