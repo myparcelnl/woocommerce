@@ -15,15 +15,15 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: woocommerce-myparcel.php:240
+#: woocommerce-myparcel.php:241
 msgid "WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!"
 msgstr ""
 
-#: woocommerce-myparcel.php:258
-msgid "WooCommerce MyParcel requires PHP 7.1 or higher."
+#: woocommerce-myparcel.php:259
+msgid "WooCommerce MyParcel requires PHP {PHP_VERSION} or higher."
 msgstr ""
 
-#: woocommerce-myparcel.php:261
+#: woocommerce-myparcel.php:262
 msgid "How to update your PHP version"
 msgstr ""
 
