@@ -17,17 +17,17 @@ msgstr ""
 "X-Loco-Version: 2.4.3; wp-5.5.1\n"
 "X-Loco-Template: languages/woocommerce-myparcel-nl_NL.po\n"
 
-#: woocommerce-myparcel.php:240
+#: woocommerce-myparcel.php:241
 msgid "WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!"
 msgstr ""
 "WooCommerce MyParcel vereist dat %sWooCommerce%s geïnstalleerd en "
 "geactiveerd is!"
 
-#: woocommerce-myparcel.php:258
-msgid "WooCommerce MyParcel requires PHP 7.1 or higher."
-msgstr "WooCommerce MyParcel vereist PHP 7.1 of hoger."
+#: woocommerce-myparcel.php:259
+msgid "WooCommerce MyParcel requires PHP {PHP_VERSION} or higher."
+msgstr "WooCommerce MyParcel vereist PHP {PHP_VERSION} of hoger."
 
-#: woocommerce-myparcel.php:261
+#: woocommerce-myparcel.php:262
 msgid "How to update your PHP version"
 msgstr "Hoe update je jouw PHP versie"
 
