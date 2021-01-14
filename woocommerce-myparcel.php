@@ -23,9 +23,9 @@ if (! class_exists('WCMYPA')) :
         /**
          * Translations domain
          */
-        const DOMAIN                  = 'woocommerce-myparcel';
-        const NONCE_ACTION            = 'wc_myparcel';
-        const PHP_VERSION_7_1         = '7.1';
+        const DOMAIN               = 'woocommerce-myparcel';
+        const NONCE_ACTION         = 'wc_myparcel';
+        const PHP_VERSION_7_1      = '7.1';
         const PHP_VERSION_REQUIRED = self::PHP_VERSION_7_1;
 
         public $version = '4.1.5';
