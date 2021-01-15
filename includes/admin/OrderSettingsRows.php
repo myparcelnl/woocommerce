@@ -78,11 +78,14 @@ class OrderSettingsRows
         AbstractDeliveryOptionsAdapter $deliveryOptions,
         WC_Order $order
     ): array {
-        $orderSettings           = new OrderSettings($deliveryOptions, $order);
-        $isHomeCountry           = WCMP_Data::isHomeCountry($order->get_shipping_country());
-        $isEuCountry             = WCMP_Country_Codes::isEuCountry($order->get_shipping_country());
-        $hasMultiplePackageTypes = count(WCMP_Data::getPackageTypes()) > 1;
-        $isPackageTypeDisabled   = ! $hasMultiplePackageTypes || $deliveryOptions->isPickup() || ! $isHomeCountry;
+        $orderSettings      = new OrderSettings($deliveryOptions, $order);
+        $isHomeCountry      = WCPN_Data::isHomeCountry($order->get_shipping_country());
+        $packageTypeOptions = array_combine(WCPN_Data::getPackageTypes(), WCPN_Data::getPackageTypesHuman());
+
+        // Remove mailbox because this is not possible for international shipments
+        if (! $isHomeCountry){
+            unset($packageTypeOptions['mailbox']);
+        }
 
         $rows = [
             [
@@ -105,11 +108,8 @@ class OrderSettingsRows
                 "name"              => self::OPTION_PACKAGE_TYPE,
                 "label"             => __("Shipment type", "woocommerce-myparcel"),
                 "type"              => "select",
-                "options"           => array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman()),
+                "options"           => $packageTypeOptions,
                 "value"             => WCMYPA()->export->getPackageTypeFromOrder($order, $deliveryOptions),
-                "custom_attributes" => $isPackageTypeDisabled
-                    ? ["disabled" => "disabled"]
-                    : [],
             ],
             [
                 "name"              => self::OPTION_EXTRA_OPTIONS_COLLO_AMOUNT,
