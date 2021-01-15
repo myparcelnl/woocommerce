@@ -88,8 +88,12 @@ class WCMYPA_Admin
         add_action("wp_ajax_wcmp_get_shipment_options", [$this, "ajaxGetShipmentOptions"]);
 
         // HS code in product shipping options tab
-        add_action("woocommerce_product_options_shipping", [$this, "productOptionsFields"]);
-        add_action("woocommerce_process_product_meta", [$this, "productOptionsFieldSave"]);
+        add_action("woocommerce_product_options_shipping", [$this, "productHsCodeField"]);
+        add_action("woocommerce_process_product_meta", [$this, "productHsCodeFieldSave"]);
+
+        // Country of Origin in product shipping options tab
+        add_action("woocommerce_product_options_shipping", [$this, "productCountryOfOriginField"]);
+        add_action("woocommerce_process_product_meta", [$this, "productCountryOfOriginFieldSave"]);
 
         // Add barcode in order grid
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
@@ -395,7 +399,8 @@ class WCMYPA_Admin
                         <a
                             href="#"
                             class="wcmp__offset-dialog__button button"
-                            style="display: none;">
+                            style="display: none;"
+                            target="_blank">
                             <?php _e("Print", "woocommerce-myparcel"); ?>
                             <?php self::renderSpinner(); ?>
                         </a>
@@ -485,8 +490,7 @@ class WCMYPA_Admin
             unset($listing_actions[$addReturn]);
         }
 
-        $display = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
-
+        $display    = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
         $attributes = [];
 
         if ($display) {
@@ -568,17 +572,6 @@ class WCMYPA_Admin
             $shippingCountry = $order->get_shipping_country();
             $data            = self::removeDisallowedDeliveryOptions($data, $shippingCountry);
             $deliveryOptions = self::getDeliveryOptionsFromOrder($order, $data);
-
-            error_log(
-                sprintf(
-                    "Saving delivery options for order %d\n%s",
-                    $order_id,
-                    json_encode(
-                        $deliveryOptions->toArray(),
-                        JSON_PRETTY_PRINT
-                    ),
-                )
-            );
 
             WCX_Order::update_meta_data(
                 $order,
@@ -1172,7 +1165,7 @@ class WCMYPA_Admin
      *
      * @return mixed
      */
-    private static function removeDisallowedDeliveryOptions(array $data, string $country): array
+    public static function removeDisallowedDeliveryOptions(array $data, string $country): array
     {
         $data['package_type'] = $data['package_type'] ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
         $isHomeCountry        = WCMP_Data::isHomeCountry($country);

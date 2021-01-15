@@ -1,6 +1,5 @@
 <?php
 
-use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
@@ -341,7 +340,7 @@ class WCMP_Checkout
             );
         }
 
-        $deliveryOptionsFromPost = stripslashes(Arr::get($_POST, WCMYPA_Admin::META_DELIVERY_OPTIONS));
+        $deliveryOptionsFromPost          = Arr::get($_POST, WCMYPA_Admin::META_DELIVERY_OPTIONS);
         $deliveryOptionsFromShippingClass = $highestShippingClass
             ? [
                 'packageType' => WCMP_Export::getPackageTypeFromShippingMethod(
@@ -351,11 +350,19 @@ class WCMP_Checkout
             ]
             : null;
 
-        $deliveryOptions = $deliveryOptionsFromPost ?? $deliveryOptionsFromShippingClass;
+        $deliveryOptions = empty($deliveryOptionsFromPost)
+            ? $deliveryOptionsFromShippingClass
+            : stripslashes($deliveryOptionsFromPost);
 
         if ($deliveryOptions) {
-            $deliveryOptions = json_decode($deliveryOptions, true);
+            if (! is_array($deliveryOptions)) {
+                $deliveryOptions = json_decode($deliveryOptions, true);
+            }
             $deliveryOptions = self::convertDeliveryOptionsForAdapter($deliveryOptions);
+            $deliveryOptions = WCMYPA_Admin::removeDisallowedDeliveryOptions(
+                $deliveryOptions,
+                $order->get_shipping_country()
+            );
 
             /*
              * Create a new DeliveryOptions class from the data.

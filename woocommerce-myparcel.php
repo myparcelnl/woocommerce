@@ -151,7 +151,7 @@ if (! class_exists('WCMYPA')) :
 
             $this->includes = $this->plugin_path() . '/includes';
             // Use minimum php version 7.1
-            require_once($this->includes . "/vendor/autoload.php");
+            require_once($this->plugin_path() . "/vendor/autoload.php");
 
             require_once($this->includes . "/admin/OrderSettings.php");
             require_once($this->includes . "/admin/OrderSettingsRows.php");
