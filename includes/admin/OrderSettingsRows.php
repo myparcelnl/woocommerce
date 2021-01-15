@@ -82,7 +82,7 @@ class OrderSettingsRows
         $isHomeCountry      = WCMP_Data::isHomeCountry($order->get_shipping_country());
         $packageTypeOptions = array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman());
 
-        // Remove mailbox because this is not possible for international shipments
+        // Remove mailbox and digital stamp, because this is not possible for international shipments
         if (! $isHomeCountry){
             unset($packageTypeOptions['mailbox']);
             unset($packageTypeOptions['digital_stamp']);
