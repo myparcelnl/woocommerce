@@ -79,12 +79,13 @@ class OrderSettingsRows
         WC_Order $order
     ): array {
         $orderSettings      = new OrderSettings($deliveryOptions, $order);
-        $isHomeCountry      = WCPN_Data::isHomeCountry($order->get_shipping_country());
-        $packageTypeOptions = array_combine(WCPN_Data::getPackageTypes(), WCPN_Data::getPackageTypesHuman());
+        $isHomeCountry      = WCMP_Data::isHomeCountry($order->get_shipping_country());
+        $packageTypeOptions = array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman());
 
         // Remove mailbox because this is not possible for international shipments
         if (! $isHomeCountry){
             unset($packageTypeOptions['mailbox']);
+            unset($packageTypeOptions['digital_stamp']);
         }
 
         $rows = [
