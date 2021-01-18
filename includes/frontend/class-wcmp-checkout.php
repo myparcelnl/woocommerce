@@ -350,7 +350,7 @@ class WCMP_Checkout
             ]
             : null;
 
-        $deliveryOptions = empty($deliveryOptionsFromPost)
+        $deliveryOptions = ! array($deliveryOptionsFromPost)
             ? $deliveryOptionsFromShippingClass
             : stripslashes($deliveryOptionsFromPost);
 
