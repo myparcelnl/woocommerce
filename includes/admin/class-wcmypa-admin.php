@@ -48,6 +48,8 @@ class WCMYPA_Admin
     public const ORDER_STATUS_DELIVERED_AT_RECIPIENT      = 7;
     public const ORDER_STATUS_DELIVERED_READY_FOR_PICKUP  = 8;
     public const ORDER_STATUS_DELIVERED_PACKAGE_PICKED_UP = 9;
+    public const ORDER_STATUS_PRINTED_LETTER              = 12;
+    public const ORDER_STATUS_PRINTED_DIGITAL_STAMP       = 14;
 
     public const SHIPMENT_OPTIONS_FORM_NAME = "myparcel_options";
 
@@ -837,15 +839,24 @@ class WCMYPA_Admin
 
         echo '<div class="wcmp__barcodes">';
         foreach ($shipments as $shipment_id => $shipment) {
+
+            $shipmentStatusId = $shipment['shipment']['status'];
+
+            if ($shipmentStatusId === WCMYPA_Admin::ORDER_STATUS_PRINTED_LETTER || $shipmentStatusId ===  WCMYPA_Admin::ORDER_STATUS_PRINTED_DIGITAL_STAMP){
+                echo __("The label has been printed.", "woocommerce-myparcel");
+                continue;
+            }
+
             if (empty($shipment["track_trace"])) {
                 echo __("Concept created but not printed.", "woocommerce-myparcel");
-            } else {
-                printf(
-                    '<a target="_blank" class="wcmp__barcode-link" title="%2$s" href="%1$s">%2$s</a><br>',
-                    self::getTrackTraceUrl($order, $shipment["track_trace"]),
-                    $shipment["track_trace"]
-                );
+                continue;
             }
+
+            printf(
+                '<a target="_blank" class="wcmp__barcode-link" title="%2$s" href="%1$s">%2$s</a><br>',
+                self::getTrackTraceUrl($order, $shipment["track_trace"]),
+                $shipment["track_trace"]
+            );
         }
         echo "</div>";
     }

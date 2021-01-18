@@ -1078,6 +1078,8 @@ class WCMP_Export
             7  => __("delivered - at recipient", "woocommerce-myparcel"),
             8  => __("delivered - ready for pickup", "woocommerce-myparcel"),
             9  => __("delivered - package picked up", "woocommerce-myparcel"),
+            12 => __("printed - letter", "woocommerce-myparcel"),
+            14 => __("printed - digital stamp", "woocommerce-myparcel"),
             30 => __("inactive - concept", "woocommerce-myparcel"),
             31 => __("inactive - registered", "woocommerce-myparcel"),
             32 => __("inactive - enroute - handed to carrier", "woocommerce-myparcel"),
