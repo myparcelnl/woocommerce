@@ -1,9 +1,15 @@
 /* eslint-disable prefer-object-spread */
 /**
- * @member {Object} wcmp
- * @property {Object} wcmp.actions
- * @property {{export: String, add_shipments: String, add_return: String, get_labels: String, modal_dialog: String}}
- *   wcmp.actions
+ * @property {Object} wcmp
+ * @property {
+ *  {
+ *    export: String,
+ *    add_shipments: String,
+ *    add_return: String,
+ *    get_labels: String,
+ *    modal_dialog: String
+ *  }
+ * } wcmp.actions
  * @property {String} wcmp.api_url - The API Url we use in MyParcel requests.
  * @property {String} wcmp.ajax_url
  * @property {String} wcmp.ask_for_print_position
@@ -25,126 +31,23 @@
  * @property {Object<String,*>} parents
  * @property {String|Number} set_value
  */
-
-/**
- * Object.assign() polyfill.
- *
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
- */
-if (typeof Object.assign !== 'function') {
-  /* Must be writable: true, enumerable: false, configurable: true */
-  Object.defineProperty(Object, 'assign', {
-    value: function assign(target) {
-      if (target === null || target === undefined) {
-        throw new TypeError('Cannot convert undefined or null to object');
-      }
-
-      var to = Object(target);
-
-      for (var index = 1; index < arguments.length; index++) {
-        var nextSource = arguments[index];
-
-        if (nextSource !== null && nextSource !== undefined) {
-          for (var nextKey in nextSource) {
-            /* Avoid bugs when hasOwnProperty is shadowed */
-            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-              to[nextKey] = nextSource[nextKey];
-            }
-          }
-        }
-      }
-      return to;
-    },
-    writable: true,
-    configurable: true,
-  });
-}
-
-/**
- * Array.find() polyfill.
- *
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find#Polyfill
- */
-if (!Array.prototype.find) {
-  Object.defineProperty(Array.prototype, 'find', {
-    value: function(predicate) {
-      // 1. Let O be ? ToObject(this value).
-      if (this == null) {
-        throw TypeError('"this" is null or not defined');
-      }
-
-      var o = Object(this);
-
-      // 2. Let len be ? ToLength(? Get(O, "length")).
-      var len = o.length >>> 0;
-
-      // 3. If IsCallable(predicate) is false, throw a TypeError exception.
-      if (typeof predicate !== 'function') {
-        throw TypeError('predicate must be a function');
-      }
-
-      // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-      var thisArg = arguments[1];
-
-      // 5. Let k be 0.
-      var k = 0;
-
-      // 6. Repeat, while k < len
-      while (k < len) {
-        /*
-         * a. Let Pk be ! ToString(k).
-         * b. Let kValue be ? Get(O, Pk).
-         * c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-         * d. If testResult is true, return kValue.
-         */
-        var kValue = o[k];
-        if (predicate.call(thisArg, kValue, k, o)) {
-          return kValue;
-        }
-        // e. Increase k by 1.
-        k++;
-      }
-
-      // 7. Return undefined.
-      return undefined;
-    },
-    configurable: true,
-    writable: true,
-  });
-}
-
-/**
- * Object.values() polyfill.
- *
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values#Polyfill
- */
-if (!Object.values) {
-  Object.values = function(obj) {
-    var values = [];
-
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        values.push(obj[i]);
-      }
-    }
-
-    return values;
-  };
-}
+const DIALOG_HEIGHT = 380;
+const DIALOG_WIDTH = 720;
+const RECURSIVE_DEPTH_LIMIT = 20;
 
 /* eslint-disable-next-line max-lines-per-function */
-jQuery(function($) {
+jQuery(($) => {
   /**
    * @type {Boolean}
    */
-  var askForPrintPosition = Boolean(parseInt(wcmp.ask_for_print_position));
+  const askForPrintPosition = Boolean(parseInt(wcmp.ask_for_print_position));
 
-  var skeletonHtml
-    = '<table class="wcmp__skeleton-loader">'
-    + '<tr><td><div></div></td><td><div></div></td></tr>'.repeat(5)
-    + '</table>';
+  const skeletonHtml
+    = `<table class="wcmp__skeleton-loader">${
+      '<tr><td><div></div></td><td><div></div></td></tr>'.repeat(5)
+    }</table>`;
 
-  var selectors = {
+  const selectors = {
     bulkSpinner: '.wcmp__bulk-spinner',
     notice: '.wcmp__notice',
     offsetDialog: '.wcmp__offset-dialog',
@@ -168,7 +71,7 @@ jQuery(function($) {
     tipTipContent: '#tiptip_content',
   };
 
-  var spinner = {
+  const spinner = {
     loading: 'loading',
     success: 'success',
     failed: 'failed',
@@ -179,8 +82,8 @@ jQuery(function($) {
   addDependencies();
   printQueuedLabels();
 
-  var timeoutAfterRequest = 200;
-  var baseEasing = 300;
+  const timeoutAfterRequest = 200;
+  const baseEasing = 300;
 
   /**
    * Add event listeners.
@@ -189,7 +92,7 @@ jQuery(function($) {
     /**
      * Click offset dialog button (single export).
      */
-    $(selectors.offsetDialog + ' button').click(printOrder);
+    $(`${selectors.offsetDialog} button`).click(printOrder);
 
     $(selectors.offsetDialogClose).click(hideOffsetDialog);
 
@@ -235,14 +138,16 @@ jQuery(function($) {
      *
      * @see includes/admin/class-wcmp-admin.php:49
      */
-    $(selectors.shipmentSettingsWrapper).each(function() {
-      var shippingAddressColumn = $(this)
-        .closest('tr')
-        .find('td.shipping_address');
+    document
+      .querySelectorAll(selectors.shipmentSettingsWrapper)
+      .forEach((element) => {
+        const shippingAddressColumn = $(element)
+          .closest('tr')
+          .find('td.shipping_address');
 
-      $(this).appendTo(shippingAddressColumn);
-      $(this).show();
-    });
+        $(element).appendTo(shippingAddressColumn);
+        $(element).show();
+      });
   }
 
   /**
@@ -252,31 +157,31 @@ jQuery(function($) {
     /**
      * Get all nodes with a data-conditions attribute.
      */
-    var nodesWithConditions = document.querySelectorAll('[data-conditions]');
+    const nodesWithConditions = document.querySelectorAll('[data-conditions]');
 
     /**
      * Dependency object.
      *
      * @type {Object.<String, Dependency[]>}
      */
-    var dependencies = {};
+    const dependencies = {};
 
     /**
      * Loop through the classes to create a dependency like this: { [parent]: [{condition: Condition, node: Node}] }.
      */
-    nodesWithConditions.forEach(function(node) {
-      var conditions = node.getAttribute('data-conditions');
+    nodesWithConditions.forEach((node) => {
+      let conditions = node.getAttribute('data-conditions');
       conditions = JSON.parse(conditions);
 
       conditions
-        .forEach(function(condition) {
+        .forEach((condition) => {
           Object
             .keys(condition.parents)
-            .forEach(function(parent) {
+            .forEach((parent) => {
               /**
                * @type {Dependency}
                */
-              var data = {
+              const data = {
                 condition: condition,
                 node: node,
               };
@@ -300,13 +205,13 @@ jQuery(function($) {
    * @param {Object<String, Dependency[]>} dependencies
    * @param {HTMLInputElement|Node} input
    * @param {?Number} level
-   * @param {?Object[]} queue
+   * @param {Object[]|null} queue
    *
    * @returns {Object[]} - Queue.
    */
   function checkDependenciesRecursively(dependencies, input, level, queue) {
-    if (level >= 20) {
-      throw new Error('Depth limit of ' + level + ' exceeded (probably an infinite loop)');
+    if (level >= RECURSIVE_DEPTH_LIMIT) {
+      throw new Error(`Depth limit of ${level} exceeded (probably an infinite loop)`);
     }
 
     if (!dependencies.hasOwnProperty(input.name)) {
@@ -314,8 +219,8 @@ jQuery(function($) {
     }
 
     dependencies[input.name]
-      .forEach(function(dependency) {
-        var data = handleDependency(dependency, level);
+      .forEach((dependency) => {
+        const data = handleDependency(dependency, level);
 
         queue.push({
           name: dependency.node.name.replace(/myparcel_options\[\d+\]/, ''),
@@ -327,7 +232,7 @@ jQuery(function($) {
         });
 
         if (dependencies.hasOwnProperty(dependency.node.name)) {
-          var dependantInput = document.querySelector('[name="' + dependency.node.name + '"]');
+          const dependantInput = document.querySelector(`[name="${dependency.node.name}"]`);
 
           queue = checkDependenciesRecursively(dependencies, dependantInput, level + 1, queue);
         }
@@ -348,10 +253,10 @@ jQuery(function($) {
    * @param {Number} easing
    */
   function toggleElement(data, easing) {
-    var node = data.node;
-    var setValue = data.setValue;
-    var toggle = data.toggle;
-    var elementContainer = $(node).closest('tr');
+    const {node} = data;
+    const {setValue} = data;
+    const {toggle} = data;
+    const elementContainer = $(node).closest('tr');
 
     switch (data.type) {
       case 'show':
@@ -378,58 +283,21 @@ jQuery(function($) {
     node.setAttribute('data-toggled', toggle.toString());
   }
 
-  function toggleElement2(data, easing) {
-    var node = data.node;
-    var setValue = data.setValue;
-    // var toggle = data.toggle;
-    var elementContainer = $(node).closest('tr');
-
-    data.changes.forEach(function(change) {
-      var toggle = change.toggle;
-      var type = change.type;
-
-      switch (type) {
-        case 'show':
-          elementContainer[toggle ? 'hide' : 'show'](easing);
-          data.parent.setAttribute('data-toggled', toggle.toString());
-          node.setAttribute('data-toggled', toggle.toString());
-          break;
-        case 'readonly':
-          $(elementContainer).attr('data-readonly', toggle);
-          $(node).prop('readonly', toggle);
-          break;
-        case 'disable':
-          $(elementContainer).attr('data-disabled', toggle);
-          $(node).prop('disabled', toggle);
-          break;
-      }
-    })
-
-    // Hacky use of vars here
-    if (toggle && setValue) {
-      node.value = setValue;
-      node.dispatchEvent(new Event('change'));
-      // Sync toggles here as well as in the createDependencies because not all inputs listen to the change event.
-      syncToggle(node);
-    }
-  }
-
-
   /**
    * Sync the appearance of toggle elements with the value their hidden input.
    *
    * @param {EventTarget} target
    */
   function syncToggle(target) {
-    var element = $(target);
-    var toggle = element.siblings('.woocommerce-input-toggle');
+    const element = $(target);
+    const toggle = element.siblings('.woocommerce-input-toggle');
 
     if (element.attr('data-type') !== 'toggle') {
       return;
     }
 
-    var mismatch0 = element.val() === '0' && toggle.hasClass('woocommerce-input-toggle--enabled');
-    var mismatch1 = element.val() === '1' && toggle.hasClass('woocommerce-input-toggle--disabled');
+    const mismatch0 = element.val() === '0' && toggle.hasClass('woocommerce-input-toggle--enabled');
+    const mismatch1 = element.val() === '1' && toggle.hasClass('woocommerce-input-toggle--disabled');
 
     if (mismatch0 || mismatch1) {
       toggle.toggleClass('woocommerce-input-toggle--disabled');
@@ -445,13 +313,13 @@ jQuery(function($) {
   function createDependencies(dependencies) {
     Object
       .keys(dependencies)
-      .forEach(function(name) {
-        var inputSelector = '[name="' + name + '"]';
-        var input = document.querySelector(inputSelector);
+      .forEach((name) => {
+        const inputSelector = `[name="${name}"]`;
+        const input = document.querySelector(inputSelector);
 
         if (!input) {
           // eslint-disable-next-line no-console
-          console.error('Element ' + inputSelector + ' not found.');
+          console.error(`Element ${inputSelector} not found.`);
           return;
         }
 
@@ -470,10 +338,10 @@ jQuery(function($) {
             syncToggle(event.target);
           }
 
-          var updateQueue = checkDependenciesRecursively(dependencies, input, 1, []);
+          const updateQueue = checkDependenciesRecursively(dependencies, input, 1, []);
 
           // Executes all needed updates gathered by checkDependenciesRecursively.
-          updateQueue.forEach(function(dependency) {
+          updateQueue.forEach((dependency) => {
             toggleElement(dependency, easing);
           });
         }
@@ -494,19 +362,19 @@ jQuery(function($) {
    * @returns {Object}
    */
   function handleDependency(dependency, level) {
-    var parents = dependency.condition.parents;
-    var setValue = dependency.condition.set_value || null;
-    var toggle = false;
+    const {parents} = dependency.condition;
+    const setValue = dependency.condition.set_value || null;
+    let toggle = false;
 
     Object
       .keys(parents)
-      .forEach(function(parent) {
-        var parentInput = document.getElementsByName(parent)[0];
-        var localToggle;
-        var wantedValue = parents[parent] || '1';
+      .forEach((parent) => {
+        const parentInput = document.getElementsByName(parent)[0];
+        let localToggle;
+        const wantedValue = parents[parent] || '1';
 
-        var parentToggled = parentInput.getAttribute('data-toggled') === 'true';
-        var dependantToggled = dependency.node.getAttribute('data-toggled') === 'true';
+        const parentToggled = parentInput.getAttribute('data-toggled') === 'true';
+        const dependantToggled = dependency.node.getAttribute('data-toggled') === 'true';
 
         if (parentToggled && !dependantToggled && level > 1) {
           localToggle = true;
@@ -531,16 +399,18 @@ jQuery(function($) {
    * Add event listeners to all toggle elements.
    */
   function addToggleListeners() {
-    $(selectors.toggle).each(function() {
-      $(this).on('click', handleToggle);
-    });
+    document
+      .querySelectorAll(selectors.toggle)
+      .forEach((element) => {
+        element.addEventListener('click', handleToggle);
+      });
   }
 
   /**
    * Print queued labels.
    */
   function printQueuedLabels() {
-    var printData = $(selectors.printQueue).val();
+    const printData = $(selectors.printQueue).val();
 
     if (printData) {
       printLabel(JSON.parse(printData));
@@ -554,12 +424,12 @@ jQuery(function($) {
    */
   function showShipmentOptionsForm(event) {
     event.preventDefault();
-    var button = $(this);
-    var orderId = button.data('order-id');
+    const element = $(event.currentTarget);
+    const orderId = element.data('order-id');
 
-    var form = $(selectors.shipmentOptionsDialog);
-    var isSameAsLast = form.data('order-id') === orderId;
-    var isVisible = form.is(':visible');
+    const form = $(selectors.shipmentOptionsDialog);
+    const isSameAsLast = form.data('order-id') === orderId;
+    const isVisible = form.is(':visible');
 
     if (isVisible) {
       document.removeEventListener('click', hideShipmentOptionsForm);
@@ -575,8 +445,8 @@ jQuery(function($) {
     }
 
     // Set the position for the dialog to be under the clicked "Details" link.
-    var position = button.offset();
-    position.top -= button.height();
+    const position = element.offset();
+    position.top -= element.height();
     form.css(position);
 
     // Set the data-order-id attribute on the dialog to keep track of which dialog was last opened.
@@ -589,7 +459,7 @@ jQuery(function($) {
         orderId: orderId,
         security: wcmp.nonce,
       },
-      onStart: function() {
+      onStart() {
         form.html(skeletonHtml);
         form.slideDown(100);
       },
@@ -599,7 +469,7 @@ jQuery(function($) {
        *
        * @param {String} response - Html to put in the form.
        */
-      afterDone: function(response) {
+      afterDone(response) {
         form.html(response);
 
         addDependencies();
@@ -610,7 +480,7 @@ jQuery(function($) {
         // Trigger WooCommerce's event to init any tipTips.
         document.body.dispatchEvent(new Event('init_tooltips'));
       },
-      afterFail: function() {
+      afterFail() {
         form.slideUp(100);
       },
     });
@@ -621,14 +491,14 @@ jQuery(function($) {
    * @param {String} state
    */
   function setSpinner(element, state) {
-    var baseSelector = selectors.spinner.replace('.', '');
-    var spinner = $(element).find(selectors.spinner);
+    const baseSelector = selectors.spinner.replace('.', '');
+    const spinner = $(element).find(selectors.spinner);
 
     if (state) {
       spinner
         .removeClass()
         .addClass(baseSelector)
-        .addClass(baseSelector + '--' + state)
+        .addClass(`${baseSelector}--${state}`)
         .show();
     } else {
       spinner
@@ -642,7 +512,7 @@ jQuery(function($) {
    * Save the shipment options in the bulk form.
    */
   function saveShipmentOptions() {
-    var form = $(selectors.shipmentOptionsDialog);
+    const form = $(selectors.shipmentOptionsDialog);
 
     doRequest.bind(this)({
       url: wcmp.ajax_url,
@@ -651,20 +521,26 @@ jQuery(function($) {
         form_data: form.find(':input').serialize(),
         security: wcmp.nonce,
       },
-      afterDone: function() {
-        setTimeout(function() {
-          form.slideUp();
-        }, timeoutAfterRequest);
+      afterDone() {
+        setTimeout(() => form.slideUp(), timeoutAfterRequest);
       },
     });
+  }
+
+  /**
+   *
+   */
+  function removeNotices() {
+    $(selectors.notice).remove();
   }
 
   /**
    * @param {Event} event - Click event.
    */
   function doBulkAction(event) {
-    var action = document.querySelector('[name="action"]').value;
-    var spinnerWrapper = $(this).parent('.bulkactions');
+    const targetElement = $(event.target);
+    const action = targetElement.prev('select').val();
+    const spinnerWrapper = targetElement.parent('.bulkactions');
 
     /**
      * Check the selected action is ours.
@@ -674,54 +550,36 @@ jQuery(function($) {
     }
 
     event.preventDefault();
+    removeNotices();
 
-    /*
-     * Remove notices
-     */
-    $(selectors.notice).remove();
-    var order_ids = [];
-    var rows = [];
+    const checkedRowsSelector = '#the-list th.check-column input[type="checkbox"]:checked';
+    const checkedRows = [...document.querySelectorAll(checkedRowsSelector)];
+    const orderIds = checkedRows.map((element) => element.value);
 
-    /*
-     * Get array of selected order_ids
-     */
-    $('tbody th.check-column input[type="checkbox"]:checked').each(
-      function() {
-        order_ids.push($(this).val());
-        rows.push('.post-' + $(this).val());
-      }
-    );
-
+    const rows = orderIds.map((id) => `.post-${id}`);
     $(rows.join(', ')).addClass('wcmp__loading');
 
-    if (!order_ids.length) {
-      alert(wcmp.strings.no_orders_selected);
+    if (!orderIds.length) {
+      showAdminNotice(wcmp.strings.no_orders_selected);
       return;
     }
 
     switch (action) {
-
-      /**
-       * Export orders.
-       */
+      // Export orders.
       case wcmp.bulk_actions.export:
-        exportToMyParcel.bind(spinnerWrapper)(order_ids);
+        exportToMyParcel.bind(spinnerWrapper)(orderIds);
         break;
 
-      /**
-       * Print labels.
-       */
+      // Print labels.
       case wcmp.bulk_actions.print:
         printLabel.bind(spinnerWrapper)({
-          order_ids: order_ids,
+          order_ids: orderIds,
         });
         break;
 
-      /**
-       * Export and print.
-       */
+      // Export and print.
       case wcmp.bulk_actions.export_print:
-        exportToMyParcel.bind(spinnerWrapper)(order_ids, 'after_reload');
+        exportToMyParcel.bind(spinnerWrapper)(orderIds, 'after_reload');
         break;
     }
   }
@@ -732,10 +590,8 @@ jQuery(function($) {
    * @param {Object} request - Request object.
    */
   function doRequest(request) {
-    var button = this;
-
-    $(button).prop('disabled', true);
-    setSpinner(button, spinner.loading);
+    $(this).prop('disabled', true);
+    setSpinner(this, spinner.loading);
 
     if (!request.url) {
       request.url = wcmp.ajax_url;
@@ -750,53 +606,55 @@ jQuery(function($) {
       method: request.method || 'POST',
       data: request.data || {},
     })
-      .done(function(res) {
-        setSpinner(button, spinner.success);
+      .done((response) => {
+        setSpinner(this, spinner.success);
 
         if (request.hasOwnProperty('afterDone') && typeof request.afterDone === 'function') {
-          request.afterDone(res);
+          request.afterDone(response);
         }
       })
 
-      .fail(function(res) {
-        setSpinner(button, spinner.failed);
+      .fail((response) => {
+        setSpinner(this, spinner.failed);
 
         if (request.hasOwnProperty('afterFail') && typeof request.afterFail === 'function') {
-          request.afterFail(res);
+          request.afterFail(response);
         }
       })
 
-      .always(function(res) {
-        $(button).prop('disabled', false);
+      .always((response) => {
+        $(this).prop('disabled', false);
 
         if (request.hasOwnProperty('afterAlways') && typeof request.afterAlways === 'function') {
-          request.afterAlways(res);
+          request.afterAlways(response);
         }
       });
   }
 
   /**
-   * @param name
-   * @param url
+   * @param {String} name
+   * @param {String} url
+   *
+   * @returns {String}
    */
   function getParameterByName(name, url) {
     if (!url) {
       url = window.location.href;
     }
-    name = name.replace(/[\[\]]/g, '\\$&');
+    name = name.replace(/[[]]/g, '\\$&');
 
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-    var results = regex.exec(url);
+    const regex = new RegExp(`[?&]${name}(?:=([^&#]*)|&|#|$)`);
+    const results = regex.exec(url);
 
     if (!results) {
       return null;
     }
 
-    if (!results[2]) {
+    if (!results[1]) {
       return '';
     }
 
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    return decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
   /**
@@ -805,10 +663,8 @@ jQuery(function($) {
    * @param {Event} event - Click event.
    */
   function onActionClick(event) {
-    var button = this;
-
-    var request = getParameterByName('request', button.href);
-    var order_ids = getParameterByName('order_ids', button.href);
+    const request = getParameterByName('request', this.href);
+    const orderIds = getParameterByName('order_ids', this.href);
 
     if (!wcmp.actions.hasOwnProperty(request)) {
       return;
@@ -818,17 +674,17 @@ jQuery(function($) {
 
     switch (request) {
       case wcmp.actions.add_shipments:
-        exportToMyParcel.bind(button)();
+        exportToMyParcel.bind(this)();
         break;
       case wcmp.actions.get_labels:
-        if (askForPrintPosition && !$(button).hasClass('wcmp__offset-dialog__button')) {
-          showOffsetDialog.bind(button)();
+        if (askForPrintPosition && !$(this).hasClass('wcmp__offset-dialog__button')) {
+          showOffsetDialog.bind(this)();
         } else {
-          printLabel.bind(button)();
+          printLabel.bind(this)();
         }
         break;
       case wcmp.actions.add_return:
-        myparcel_modal_dialog(order_ids, 'return');
+        showDialog(orderIds, 'return');
         break;
     }
   }
@@ -842,10 +698,9 @@ jQuery(function($) {
   function showOffsetDialog(position, context) {
     position = position || 'left';
 
-    var parent = this;
-    var offsetDialog = $(selectors.offsetDialog);
-    var dialogButton = $(selectors.offsetDialogButton);
-    var parentOffset = $(parent).offset();
+    const offsetDialog = $(selectors.offsetDialog);
+    const dialogButton = $(selectors.offsetDialogButton);
+    const parentOffset = $(this).offset();
 
     /**
      * Position it to the bottom left or right of the clicked button.
@@ -859,7 +714,7 @@ jQuery(function($) {
       offsetDialog.css(parentOffset);
     }
 
-    dialogButton.attr('href', parent.href);
+    dialogButton.attr('href', this.href);
 
     /**
      * Reset input(s).
@@ -901,14 +756,14 @@ jQuery(function($) {
    * On changing the offset value in the dialog, update the offset parameter in the dialog button's href attribute.
    */
   function onUpdateOffset() {
-    var dialogButton = $(selectors.offsetDialogButton);
-    var hasOffset = dialogButton.attr('href').indexOf('offset=') > -1;
-    var newOffset = this.value;
+    const dialogButton = $(selectors.offsetDialogButton);
+    const hasOffset = dialogButton.attr('href').indexOf('offset=') > -1;
+    const newOffset = this.value;
 
     if (hasOffset) {
-      dialogButton.attr('href', dialogButton.attr('href').replace(/([?&]offset=)\d*/, '$1' + newOffset));
+      dialogButton.attr('href', dialogButton.attr('href').replace(/([?&]offset=)\d*/, `$1${newOffset}`));
     } else {
-      dialogButton.attr('href', dialogButton.attr('href') + '&offset=' + newOffset);
+      dialogButton.attr('href', `${dialogButton.attr('href')}&offset=${newOffset}`);
     }
   }
 
@@ -928,30 +783,31 @@ jQuery(function($) {
    *
    */
   function printOrder() {
-    var dialog = $(this).parent();
+    const dialog = $(this).parent();
 
     /* set print variables */
-    var order_ids = [dialog.find('input.order_id').val()];
-    var offset = dialog.find(selectors.offsetDialogInputOffset).val();
+    const orderIds = [dialog.find('input.order_id').val()];
+    const offset = dialog.find(selectors.offsetDialogInputOffset).val();
 
     /* hide dialog */
     dialog.hide();
 
     /* print labels */
     printLabel({
-      order_ids: order_ids,
-      offset: offset,
+      order_ids: orderIds,
+      offset,
     });
   }
 
-  /* export orders to MyParcel via AJAX */
   /**
-   * @param order_ids
-   * @param print
+   * Export orders to MyParcel via AJAX.
+   *
+   * @param {String[]} orderIds
+   * @param {String} print
    */
-  function exportToMyParcel(order_ids, print) {
-    var url;
-    var data;
+  function exportToMyParcel(orderIds, print) {
+    let url;
+    let data;
 
     if (typeof print === 'undefined') {
       print = 'no';
@@ -964,7 +820,7 @@ jQuery(function($) {
         action: wcmp.actions.export,
         request: wcmp.actions.add_shipments,
         offset: getPrintOffset(),
-        order_ids: order_ids,
+        order_ids: orderIds,
         print: print,
         _wpnonce: wcmp.nonce,
       };
@@ -973,21 +829,21 @@ jQuery(function($) {
     doRequest.bind(this)({
       url: url,
       data: data || {},
-      afterDone: function(response) {
-        var redirect_url = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
-        var responseError = JSON.parse(response).error;
+      afterDone(response) {
+        const redirectUrl = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
+        const responseError = JSON.parse(response).error;
 
         if (response !== null && responseError !== null) {
-          document.cookie = 'response=' + responseError + ';expires=1';
+          document.cookie = `response=${responseError};expires=1`;
         }
 
         if (print === 'no' || print === 'after_reload') {
           /* refresh page, admin notices are stored in options and will be displayed automatically */
-          window.location.href = redirect_url;
+          window.location.href = redirectUrl;
         } else {
           /* load PDF */
           printLabel({
-            order_ids: order_ids,
+            order_ids: orderIds,
           });
         }
       },
@@ -995,23 +851,23 @@ jQuery(function($) {
   }
 
   /**
-   * @param order_ids
-   * @param dialog
+   * @param {String} orderIds
+   * @param {String} dialog
    */
-  function myparcel_modal_dialog(order_ids, dialog) {
-    var data = {
+  function showDialog(orderIds, dialog) {
+    const data = {
       action: wcmp.actions.export,
       request: wcmp.actions.modal_dialog,
-      height: 380,
-      width: 720,
-      order_ids: order_ids,
-      dialog: dialog,
+      height: DIALOG_HEIGHT,
+      width: DIALOG_WIDTH,
+      order_ids: orderIds,
+      dialog,
       _wpnonce: wcmp.nonce,
       // LEAVE THIS AT THE BOTTOM! The awful code behind the thickbox splits the url on "TB_" for some reason.
       TB_iframe: true,
     };
 
-    var url = wcmp.ajax_url + '?' + $.param(data);
+    const url = `${wcmp.ajax_url}?${$.param(data)}`;
 
     /* disable background scrolling */
     $('body').css({overflow: 'hidden'});
@@ -1034,15 +890,15 @@ jQuery(function($) {
    *
    */
   function openPdf(pdfUrl, waitForOnload) {
-    var pdfWindow = window.open(pdfUrl, '_blank');
+    const pdfWindow = window.open(pdfUrl, '_blank');
 
     if (waitForOnload) {
       /*
        * When the pdf window is loaded reload the main window. If we reload earlier the track & trace code won't be
        * ready yet and can't be shown.
        */
-      pdfWindow.onload = function() {
-        window.location.reload();
+      pdfWindow.onload = () => {
+        return window.location.reload();
       };
     } else {
       /* For when there is no onload event or there is no need to wait. */
@@ -1059,57 +915,56 @@ jQuery(function($) {
     return parseInt(askForPrintPosition ? $(selectors.offsetDialogInputOffset).val() : 0);
   }
 
-  /* Request MyParcel labels */
   /**
-   * @param data
+   * Request MyParcel labels.
+   *
+   * @param {Object} data
    */
   function printLabel(data) {
-    var button = this;
-    var request;
+    let request;
 
-    if (button.href) {
+    if (this && this.href) {
       request = {
-        url: button.href,
+        url: this.href,
       };
     } else {
       request = {
-        data: Object.assign({
+        data: {
           action: wcmp.actions.export,
           request: wcmp.actions.get_labels,
           offset: getPrintOffset(),
           _wpnonce: wcmp.nonce,
-        }, data),
+          ...data,
+        },
       };
     }
 
-    request.afterDone = function(response) {
-      var isDisplay = wcmp.download_display === 'display';
-      var isDownload = wcmp.download_display === 'download';
-      var isPdf = response.includes('PDF');
-      var isApi = response.includes('api.myparcel.nl');
+    request.afterDone = (response) => {
+      const isDisplay = wcmp.download_display === 'display';
+      const isDownload = wcmp.download_display === 'download';
+      const isPdf = response.includes('PDF');
+      const isApi = response.includes('api.myparcel.nl');
 
       if (isDisplay && isPdf) {
         handlePDF(request);
-      }
-
-      if (isDownload && isApi) {
+      } else if (isDownload && isApi) {
         openPdf(response);
+      } else {
+        window.location.reload();
       }
-
-      window.location.reload();
     };
 
-    doRequest.bind(button)(request);
+    doRequest.bind(this)(request);
   }
 
   /**
-   * @param request
+   * @param {Object} request
    */
   function handlePDF(request) {
-    var url;
+    let url;
 
     if (request.hasOwnProperty('data')) {
-      url = wcmp.ajax_url + '?' + $.param(request.data);
+      url = `${wcmp.ajax_url}?${$.param(request.data)}`;
     } else {
       url = request.url;
     }
@@ -1118,57 +973,60 @@ jQuery(function($) {
   }
 
   /**
-   * @param message
-   * @param type
+   * @param {String} message
+   * @param {String} type
    */
-  function myparcel_admin_notice(message, type) {
-    var mainHeader = $('#wpbody-content > .wrap > h1:first');
-    var notice = '<div class="' + selectors.notice + ' notice notice-' + type + '"><p>' + message + '</p></div>';
+  function showAdminNotice(message, type = 'warning') {
+    const mainHeader = $('#wpbody-content > .wrap > h1:first');
+    const notice = `<div class="${selectors.notice} notice notice-${type}"><p>${message}</p></div>`;
     mainHeader.after(notice);
     $('html, body').animate({scrollTop: 0}, 'slow');
   }
 
-  /* Add / Update a key-value pair in the URL query parameters */
-
-  /* https://gist.github.com/niyazpk/f8ac616f181f6042d1e0 */
   /**
-   * @param uri
-   * @param key
-   * @param value
+   * Add/update a key-value pair in the URL query parameters.
+   *
+   * @see https://gist.github.com/niyazpk/f8ac616f181f6042d1e0
+   *
+   * @param {String} uri
+   * @param {String} key
+   * @param {String} value
+   *
+   * @returns {String}
    */
   function updateUrlParameter(uri, key, value) {
     /* remove the hash part before operating on the uri */
-    var i = uri.indexOf('#');
-    var hash = i === -1 ? '' : uri.substr(i);
+    const i = uri.indexOf('#');
+    const hash = i === -1 ? '' : uri.substr(i);
     uri = i === -1 ? uri : uri.substr(0, i);
 
-    var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
-    var separator = uri.indexOf('?') !== -1 ? '&' : '?';
+    const re = new RegExp(`([?&])${key}=.*?(&|$)`, 'i');
+    const separator = uri.indexOf('?') === -1 ? '?' : '&';
     if (uri.match(re)) {
-      uri = uri.replace(re, '$1' + key + '=' + value + '$2');
+      uri = uri.replace(re, `$1${key}=${value}$2`);
     } else {
-      uri = uri + separator + key + '=' + value;
+      uri = `${uri + separator + key}=${value}`;
     }
-    return uri + hash; /* finally append the hash as well */
+    // finally append the hash as well
+    return uri + hash;
   }
 
   /**
    *
    */
   function showShipmentSummaryList() {
-    var summaryList = $(this).next(selectors.shipmentSummaryList);
+    const summaryList = $(this).next(selectors.shipmentSummaryList);
 
     if (summaryList.is(':hidden')) {
       summaryList.slideDown();
       document.addEventListener('click', hideShipmentSummaryList);
-    } else {
     }
 
     if (summaryList.data('loaded') === '') {
       summaryList.addClass('ajax-waiting');
       summaryList.find(selectors.spinner).show();
 
-      var data = {
+      const data = {
         security: wcmp.nonce,
         action: 'wcmp_get_shipment_summary_status',
         order_id: summaryList.data('order_id'),
@@ -1180,7 +1038,7 @@ jQuery(function($) {
         url: wcmp.ajax_url,
         data: data,
         context: summaryList,
-        success: function(response) {
+        success(response) {
           this.removeClass('ajax-waiting');
           this.html(response);
           this.data('loaded', true);
@@ -1211,7 +1069,6 @@ jQuery(function($) {
    * Wrappers: Elements which don't count as "outside" when clicked.
    *
    * @param {MouseEvent} event - Click event.
-   * @property {Element} event.target
    */
   function hideShipmentSummaryList(event) {
     handleClickOutside.bind(hideShipmentSummaryList)(event, {
@@ -1226,38 +1083,39 @@ jQuery(function($) {
    *
    * @param {MouseEvent} event - The click event.
    * @param {Object} elements - The elements to show/hide and check inside.
-   * @property {Node[]} elements.wrappers
-   * @property {Node} elements.main
+   * @param {Node[]} elements.wrappers
+   * @param {Node} elements.main
    */
   function handleClickOutside(event, elements) {
     event.preventDefault();
-    var listener = this;
-    var clickedOutside = true;
+    let clickedOutside = true;
 
-    elements.wrappers.forEach(function(cls) {
-      if (clickedOutside && event.target.matches(cls) || event.target.closest(elements.main)) {
+    elements.wrappers.forEach((className) => {
+      if (clickedOutside && event.target.matches(className) || event.target.closest(elements.main)) {
         clickedOutside = false;
       }
     });
 
     if (clickedOutside) {
       $(elements.main).slideUp();
-      document.removeEventListener('click', listener);
+      document.removeEventListener('click', this);
     }
   }
 
   /**
    * On clicking a toggle. Doesn't do anything if the parent row has data-readonly or data-disabled set to true.
+   *
+   * @param {MouseEvent} event
    */
-  function handleToggle() {
-    var disabledClass = 'woocommerce-input-toggle--disabled';
-    var enabledClass = 'woocommerce-input-toggle--enabled';
-    var row = $(this).closest('tr');
-    var input = $(this).find('input')[0];
-    var toggle = $(this).find('.woocommerce-input-toggle');
+  function handleToggle(event) {
+    const disabledClass = 'woocommerce-input-toggle--disabled';
+    const enabledClass = 'woocommerce-input-toggle--enabled';
+    const row = $(event.currentTarget).closest('tr');
+    const [input] = $(event.currentTarget).find('input');
+    const toggle = $(event.currentTarget).find('.woocommerce-input-toggle');
 
-    var rowReadOnly = row.attr('data-readonly') === 'true';
-    var rowDisabled = row.attr('data-disabled') === 'true';
+    const rowReadOnly = row.attr('data-readonly') === 'true';
+    const rowDisabled = row.attr('data-disabled') === 'true';
 
     if (rowReadOnly || rowDisabled) {
       return;

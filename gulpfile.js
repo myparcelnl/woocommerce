@@ -128,8 +128,12 @@ gulp.task('translations', gulp.series(
   'translations:mo',
 ));
 
-gulp.task('composer:update', (callback) => {
+gulp.task('update:composer', (callback) => {
   exec('composer update', (...params) => execCallback(callback, ...params));
+});
+
+gulp.task('update:npm', (callback) => {
+  exec('npm update', (...params) => execCallback(callback, ...params));
 });
 
 /**
@@ -140,10 +144,13 @@ const build = gulp.series(
   gulp.parallel(
     'build:js',
     'build:scss',
-    'composer:update',
+    'update:composer',
     'copy',
-    'copy:delivery-options',
     'translations',
+    gulp.series(
+      'update:npm',
+      'copy:delivery-options',
+    ),
   ),
 );
 
@@ -160,7 +167,8 @@ const watch = () => {
   gulp.watch(['languages/**/*.pot'], null, gulp.series('translations:po'));
   gulp.watch(['languages/**/*.po'], null, gulp.series('translations:mo'));
   gulp.watch(PHP_FILES, null, gulp.series('translations'));
-  gulp.watch(['composer.json'], null, gulp.series('composer:update'));
+  gulp.watch(['composer.json'], null, gulp.series('update:composer'));
+  gulp.watch(['package.json'], null, gulp.series('update:npm'));
 };
 
 gulp.task('watch', gulp.series(

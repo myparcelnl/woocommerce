@@ -207,10 +207,10 @@ class SettingsFieldArguments
             return;
         }
 
-        if (is_array($conditionArgument)) {
-            $conditions = $conditionArgument;
-        } else {
+        if (!is_array($conditionArgument) || Arr::isAssoc($conditionArgument)) {
             $conditions[] = $conditionArgument;
+        } else {
+            $conditions = $conditionArgument;
         }
 
         $conditionData = array_map([$this, "createCondition"], $conditions);
