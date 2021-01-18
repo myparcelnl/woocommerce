@@ -852,11 +852,10 @@ class WCMYPA_Admin
 
         echo '<div class="wcmp__barcodes">';
         foreach ($shipments as $shipment_id => $shipment) {
-
             $shipmentStatusId = $shipment['shipment']['status'];
-            $printedStatuses = [WCMYPA_Admin::ORDER_STATUS_PRINTED_DIGITAL_STAMP, WCMYPA_Admin::ORDER_STATUS_PRINTED_LETTER];
+            $printedStatuses  = [WCMYPA_Admin::ORDER_STATUS_PRINTED_DIGITAL_STAMP, WCMYPA_Admin::ORDER_STATUS_PRINTED_LETTER];
 
-            if (in_array($shipmentStatusId, $printedStatuses)){
+            if (in_array($shipmentStatusId, $printedStatuses)) {
                 echo __("The label has been printed.", "woocommerce-myparcel");
                 continue;
             }
