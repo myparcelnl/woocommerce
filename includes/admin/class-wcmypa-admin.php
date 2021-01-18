@@ -854,8 +854,9 @@ class WCMYPA_Admin
         foreach ($shipments as $shipment_id => $shipment) {
 
             $shipmentStatusId = $shipment['shipment']['status'];
+            $printedStatuses = [WCMYPA_Admin::ORDER_STATUS_PRINTED_DIGITAL_STAMP, WCMYPA_Admin::ORDER_STATUS_PRINTED_LETTER];
 
-            if ($shipmentStatusId === WCMYPA_Admin::ORDER_STATUS_PRINTED_LETTER || $shipmentStatusId ===  WCMYPA_Admin::ORDER_STATUS_PRINTED_DIGITAL_STAMP){
+            if (in_array($shipmentStatusId, $printedStatuses)){
                 echo __("The label has been printed.", "woocommerce-myparcel");
                 continue;
             }
