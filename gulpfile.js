@@ -163,6 +163,9 @@ const watch = () => {
   gulp.watch(['src/js/**/*'], null, () => gulp.src('src/js/**/*.js').pipe(gulp.dest('assets/js')));
   gulp.watch(['node_modules/@myparcel/delivery-options/**/*'], null, gulp.series('copy:delivery-options'));
   gulp.watch(['src/scss/**/*'], null, gulp.series('build:scss'));
+  gulp.watch(['**/*.php'], null, gulp.series('translations:pot'));
+  gulp.watch(['languages/**/*.pot'], null, gulp.series('translations:po'));
+  gulp.watch(['languages/**/*.po'], null, gulp.series('translations:mo'));
   gulp.watch(PHP_FILES, null, gulp.series('translations'));
   gulp.watch(['composer.json'], null, gulp.series('update:composer'));
   gulp.watch(['package.json'], null, gulp.series('update:npm'));

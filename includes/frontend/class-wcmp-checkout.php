@@ -248,7 +248,7 @@ class WCMP_Checkout
      *
      * @return string
      */
-    public function getDeliveryOptionsTitle(string $title): string
+    public static function getDeliveryOptionsTitle(string $title): string
     {
         $settings = WCMYPA()->setting_collection;
 

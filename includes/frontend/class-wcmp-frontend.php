@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -20,18 +21,16 @@ class WCMP_Frontend
     {
         new WCMP_Frontend_Track_Trace();
 
-        // pickup address in email
-        // woocommerce_email_customer_details:
-        // @10 = templates/email-customer-details.php
-        // @20 = templates/email-addresses.php
-        add_action("woocommerce_email_customer_details", [$this, "email_pickup_html"], 19, 3);
+		// Shipment information in confirmation mail
+	    add_action("woocommerce_email_customer_details", [$this, "confirmationEmail"], 19, 3);
 
-        // pickup address on thank you page
-        add_action("woocommerce_thankyou", [$this, "thankyou_pickup_html"], 10, 1);
+	    // Shipment information in my account
+	    add_action('woocommerce_view_order', [$this, "confirmationOrderReceived"]);
+	    add_filter('woocommerce_my_account_my_orders_actions', [$this, 'confirmationInMyAccount'], 10, 2);
 
-        // WooCommerce PDF Invoices & Packing Slips Premium Templates compatibility
+	    // Shipment information on the thank you page
+	    add_action("woocommerce_thankyou", [$this, "confirmationOrderReceived"], 10, 1);
         add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_options", [$this, "wpo_wcpdf_delivery_options"], 10, 2);
-        add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_date", [$this, "wpo_wcpdf_delivery_date"], 10, 2);
 
         // Initialize delivery options fees
         new WCMP_Cart_Fees();
@@ -50,9 +49,9 @@ class WCMP_Frontend
      *
      * @throws \Exception
      */
-    public function email_pickup_html(WC_Order $order): void
+    public function confirmationEmail(WC_Order $order): void
     {
-        WCMYPA()->admin->showDeliveryDateForOrder($order);
+	    WCMYPA()->admin->showShipmentConfirmation($order, true);
     }
 
     /**
@@ -60,10 +59,37 @@ class WCMP_Frontend
      *
      * @throws Exception
      */
-    public function thankyou_pickup_html(int $order_id): void
+    public function confirmationOrderReceived(int $order_id): void
     {
         $order = wc_get_order($order_id);
-        WCMYPA()->admin->showDeliveryDateForOrder($order);
+        WCMYPA()->admin->showShipmentConfirmation($order, false);
+    }
+
+    /**
+     * @param array     $actions
+     * @param WC_Order  $order
+     *
+     * @return array[]
+     * @throws \Exception
+     */
+    public function confirmationInMyAccount(array $actions, WC_Order $order): array
+    {
+        $order_id     = WCX_Order::get_id($order);
+        $consignments = WCMP_Frontend::getTrackTraceLinks($order_id);
+
+        if ($consignments) {
+            foreach ($consignments as $key => $consignment) {
+                $actions['myparcel_tracktrace_' . $consignment['link']] = array(
+                    'url'  => $consignment['url'],
+                    'name' => apply_filters(
+                        'wcmyparcel_myaccount_tracktrace_button',
+                        __('Track & Trace', 'wooocommerce-myparcel')
+                    )
+                );
+            }
+        }
+
+        return $actions;
     }
 
     /**

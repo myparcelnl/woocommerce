@@ -32,19 +32,19 @@ msgstr "Comment mettre à jour votre version PHP"
 msgid "You have not selected any orders!"
 msgstr "Vous n'avez sélectionné aucune commande !"
 
-#: includes/class-wcmp-data.php:88
+#: includes/class-wcmp-data.php:87
 msgid "Package"
 msgstr "Colis"
 
-#: includes/class-wcmp-data.php:89
+#: includes/class-wcmp-data.php:88
 msgid "Mailbox"
 msgstr ""
 
-#: includes/class-wcmp-data.php:90
+#: includes/class-wcmp-data.php:89
 msgid "Unpaid letter"
 msgstr ""
 
-#: includes/class-wcmp-data.php:91
+#: includes/class-wcmp-data.php:90
 msgid "Digital stamp"
 msgstr ""
 
@@ -61,14 +61,15 @@ msgid "Evening delivery"
 msgstr "Livraison en soirée"
 
 #: includes/class-wcmp-data.php:98, includes/admin/settings/class-wcmp-settings-data.php:938
+
 msgid "Pickup"
 msgstr "Ramasser"
 
-#: includes/class-wcmp-data.php:231, includes/admin/settings/class-wcmp-settings-data.php:82
+#: includes/class-wcmp-data.php:220, includes/admin/settings/class-wcmp-settings-data.php:82
 msgid "PostNL"
 msgstr "postnl"
 
-#: includes/class-wcmp-data.php:232
+#: includes/class-wcmp-data.php:221
 msgid "DPD"
 msgstr "DPD"
 
@@ -282,7 +283,7 @@ msgstr "E-mail étiquette de retour"
 msgid "MyParcel"
 msgstr "MyParcel"
 
-#: includes/admin/class-wcmypa-admin.php:729
+#: includes/admin/class-wcmypa-admin.php:748
 msgid "HS Code"
 msgstr ""
 
@@ -322,7 +323,7 @@ msgstr "Transporteur"
 
 #: includes/admin/OrderSettingsRows.php:102
 msgid "Delivery type"
-msgstr ""
+msgstr "Type de livraison"
 
 #: includes/admin/OrderSettingsRows.php:110, includes/admin/views/html-order-return-shipment-options.php:14, includes/admin/views/html-order-shipment-summary.php:42
 msgid "Shipment type"
@@ -788,10 +789,12 @@ msgstr "Référence étiquette"
 msgid ""
 "With this option you can add a description to the shipment. This will be "
 "printed on the top left of the label, and you can use this to search or "
-"sort shipments in your backoffice. Because of limited space on the label "
-"which varies per package type, we recommend that you keep the label "
-"description as short as possible."
+"sort shipments in your backoffice."
 msgstr ""
+"Cette option vous permet d'ajouter une référence relative à votre envoi. "
+"Celle-ci sera imprimée dans le coin supérieur gauche de l'étiquette. Vous "
+"pourrez ensuite utiliser cette référence pour retrouve ou trier vos envois "
+"dans le back-end MyParcel."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:689
 msgid "Empty parcel weight"

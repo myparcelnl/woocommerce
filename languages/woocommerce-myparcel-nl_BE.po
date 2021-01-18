@@ -35,19 +35,19 @@ msgstr "Hoe update je jouw PHP versie"
 msgid "You have not selected any orders!"
 msgstr "Je hebt geen orders geselecteerd!"
 
-#: includes/class-wcmp-data.php:88
+#: includes/class-wcmp-data.php:87
 msgid "Package"
 msgstr "Pakket"
 
-#: includes/class-wcmp-data.php:89
+#: includes/class-wcmp-data.php:88
 msgid "Mailbox"
 msgstr "Brievenbuspakje"
 
-#: includes/class-wcmp-data.php:90
+#: includes/class-wcmp-data.php:89
 msgid "Unpaid letter"
 msgstr "Ongefrankeerd"
 
-#: includes/class-wcmp-data.php:91
+#: includes/class-wcmp-data.php:90
 msgid "Digital stamp"
 msgstr "Digitale postzegel"
 
@@ -329,7 +329,7 @@ msgstr "Vervoerder"
 
 #: includes/admin/OrderSettingsRows.php:102
 msgid "Delivery type"
-msgstr ""
+msgstr "Soort levering:"
 
 #: includes/admin/OrderSettingsRows.php:110, includes/admin/views/html-order-return-shipment-options.php:14, includes/admin/views/html-order-shipment-summary.php:42
 msgid "Shipment type"
@@ -813,10 +813,11 @@ msgstr "Label omschrijving"
 msgid ""
 "With this option you can add a description to the shipment. This will be "
 "printed on the top left of the label, and you can use this to search or "
-"sort shipments in your backoffice. Because of limited space on the label "
-"which varies per package type, we recommend that you keep the label "
-"description as short as possible."
+"sort shipments in your backoffice."
 msgstr ""
+"Met deze optie kun je een beschrijving toevoegen aan de zending. Dit zal "
+"worden afgedrukt op de linkerbovenhoek van het label, en je kunt dit "
+"gebruiken om op zendingen in de MyParcel backoffice te zoeken of sorteren."
 
 #: includes/admin/settings/class-wcmp-settings-data.php:689
 msgid "Empty parcel weight"

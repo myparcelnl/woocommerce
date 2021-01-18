@@ -674,6 +674,19 @@ class WCMYPA_Admin
     }
 
     /**
+     * @param \WC_Order $order
+     * @param bool      $isEmail
+     *
+     * @throws \Exception
+     */
+    public function showShipmentConfirmation(WC_Order $order, bool $isEmail): void
+    {
+        $deliveryOptions  = self::getDeliveryOptionsFromOrder($order);
+        $confirmationData = $this->getConfirmationData($deliveryOptions);
+        $isEmail ? $this->printEmailConfirmation($confirmationData) : $this->printThankYouConfirmation($confirmationData);
+    }
+
+    /**
      * @param $order_id
      * @param $track_trace
      *
@@ -922,7 +935,117 @@ class WCMYPA_Admin
         }
     }
 
+	/**
+	 * Output the chosen delivery options or the chosen pickup options.
+	 *
+	 * @param DeliveryOptions $deliveryOptions
+	 *
+	 * @return array[]|null
+	 * @throws \Exception
+	 */
+    private function getConfirmationData(DeliveryOptions $deliveryOptions): ?array
+    {
+        $signatureTitle     = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
+        $onlyRecipientTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
+
+        if (! $deliveryOptions->getCarrier()) {
+            return null;
+        }
+
+        if (AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME === $deliveryOptions->getDeliveryType()) {
+            $pickupLocation = $deliveryOptions->getPickupLocation();
+            return [
+                __("Delivery type:", "woocommerce-myparcel")   => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+                __("Pickup location:", "woocommerce-myparcel") =>
+                    sprintf("%s<br>%s %s<br>%s %s",
+                            $pickupLocation->getLocationName(),
+                            $pickupLocation->getStreet(),
+                            $pickupLocation->getNumber(),
+                            $pickupLocation->getPostalCode(),
+                            $pickupLocation->getCity()
+                    )
+            ];
+        }
+
+        return [
+            __("Delivery type:", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+            __("Date:", 'woocommerce')                   => wc_format_datetime(new WC_DateTime($deliveryOptions->getDate())),
+            __("Extra options:", "woocommerce-myparcel") =>
+                sprintf("%s<br>%s",
+                        $deliveryOptions->getShipmentOptions()->hasSignature() ? $signatureTitle : null,
+                        $deliveryOptions->getShipmentOptions()->hasOnlyRecipient() ? $onlyRecipientTitle : null)
+        ];
+    }
+
     /**
+     * Print a table with the chosen delivery options on the confirmation page.
+     *
+     * @param array[]|null $selectedDeliveryOptions
+     */
+    public function printThankYouConfirmation(?array $selectedDeliveryOptions): void
+    {
+        printf($this->generateThankYouConfirmation($selectedDeliveryOptions));
+    }
+
+    /**
+     * Print a table with the chosen delivery options in the confirmation email.
+     *
+     * @param array[]|null $selectedDeliveryOptions
+     */
+    public function printEmailConfirmation(?array $selectedDeliveryOptions): void
+    {
+        printf($this->generateEmailConfirmation($selectedDeliveryOptions));
+    }
+
+    /**
+     * @param array[]|null $options
+     *
+     * @return string|null
+     */
+    public function generateThankYouConfirmation(?array $options): ?string
+    {
+        if ($options) {
+            $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2><table>";
+
+            foreach ($options as $key => $option) {
+                if ($option) {
+                    $htmlHeader .= "<tr'><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
+                }
+            }
+
+            return $htmlHeader . "</table>";
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array[]|null $options
+     *
+     * @return string|null
+     */
+    public function generateEmailConfirmation(?array $options): ?string
+    {
+        if ($options) {
+            $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>";
+            $htmlHeader .= "<table cellspacing='0' style='border: 1px solid #e5e5e5; margin-bottom: 20px;>";
+
+            foreach ($options as $key => $option) {
+                if ($option) {
+                    $htmlHeader .= "<tr style='border: 1px solid #d5d5d5;'>
+                              <td style='border: 1px solid #e5e5e5;'>$key</td>
+                              <td style='border: 1px solid #e5e5e5;'>" . __($option, "woocommerce-myparcel") . "</td>
+                            </tr>";
+                }
+            }
+
+            return $htmlHeader . "</table>";
+        }
+
+        return null;
+    }
+
+		/**
      * Output a spinner.
      *
      * @param string $state
