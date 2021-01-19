@@ -26,7 +26,6 @@ class WCMP_Frontend
 
 	    // Shipment information in my account
 	    add_action('woocommerce_view_order', [$this, "confirmationOrderReceived"]);
-	    add_filter('woocommerce_my_account_my_orders_actions', [$this, 'confirmationInMyAccount'], 10, 2);
 
 	    // Shipment information on the thank you page
 	    add_action("woocommerce_thankyou", [$this, "confirmationOrderReceived"], 10, 1);
@@ -63,33 +62,6 @@ class WCMP_Frontend
     {
         $order = wc_get_order($order_id);
         WCMYPA()->admin->showShipmentConfirmation($order, false);
-    }
-
-    /**
-     * @param array     $actions
-     * @param WC_Order  $order
-     *
-     * @return array[]
-     * @throws \Exception
-     */
-    public function confirmationInMyAccount(array $actions, WC_Order $order): array
-    {
-        $order_id     = WCX_Order::get_id($order);
-        $consignments = WCMP_Frontend::getTrackTraceLinks($order_id);
-
-        if ($consignments) {
-            foreach ($consignments as $key => $consignment) {
-                $actions['myparcel_tracktrace_' . $consignment['link']] = array(
-                    'url'  => $consignment['url'],
-                    'name' => apply_filters(
-                        'wcmyparcel_myaccount_tracktrace_button',
-                        __('Track & Trace', 'wooocommerce-myparcel')
-                    )
-                );
-            }
-        }
-
-        return $actions;
     }
 
     /**
