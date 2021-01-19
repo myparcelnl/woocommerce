@@ -9,7 +9,6 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use OrderSettings;
 use WC_Order;
-use WCMP_Country_Codes;
 use WCMP_Data;
 use WCMP_Export;
 use WCMP_Settings_Data;
@@ -200,7 +199,11 @@ class OrderSettingsRows
                 "options"     => WCMP_Export::getDigitalStampRangeOptions(),
                 "value"       => $orderSettings->getDigitalStampRangeWeight(),
                 "condition"   => [
-                    self::CONDITION_CARRIER_DEFAULT,
+                    [
+                        "parent_name"  => self::OPTION_CARRIER,
+                        "type"         => "show",
+                        "parent_value" => WCMP_Data::DEFAULT_CARRIER,
+                    ],
                     [
                         "parent_name"  => self::OPTION_PACKAGE_TYPE,
                         "type"         => "show",
