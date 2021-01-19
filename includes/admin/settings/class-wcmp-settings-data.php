@@ -732,20 +732,20 @@ class WCMP_Settings_Data
                     "woocommerce-myparcel"
                 ),
             ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_RETURN_IN_THE_BOX,
-                "label"     => __("Print return label directly", "woocommerce-myparcel"),
-                "type"      => "select",
-                "options"   => [
-                    self::NOT_ACTIVE        => __("No", "woocommerce-myparcel"),
-                    self::NO_OPTIONS        => __("Without options", "woocommerce-myparcel"),
-                    self::EQUAL_TO_SHIPMENT => __("Options equal to shipment", "woocommerce-myparcel"),
-                ],
-                "help_text" => __(
-                    "Enabling this setting automatically creates a related return shipment for any shipment you export. When downloading the shipment labels the corresponding return shipment labels will be included.",
-                    "woocommerce-myparcel"
-                ),
-            ],
+//            [
+//                "name"      => WCMYPA_Settings::SETTING_RETURN_IN_THE_BOX,
+//                "label"     => __("Print return label directly", "woocommerce-myparcel"),
+//                "type"      => "select",
+//                "options"   => [
+//                    self::NOT_ACTIVE        => __("No", "woocommerce-myparcel"),
+//                    self::NO_OPTIONS        => __("Without options", "woocommerce-myparcel"),
+//                    self::EQUAL_TO_SHIPMENT => __("Options equal to shipment", "woocommerce-myparcel"),
+//                ],
+//                "help_text" => __(
+//                    "Enabling this setting automatically creates a related return shipment for any shipment you export. When downloading the shipment labels the corresponding return shipment labels will be included.",
+//                    "woocommerce-myparcel"
+//                ),
+//            ],
         ];
     }
 
