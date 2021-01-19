@@ -78,6 +78,7 @@ class OrderSettingsRows
         WC_Order $order
     ): array {
         $orderSettings      = new OrderSettings($deliveryOptions, $order);
+        $isEuCountry        = WCMP_Country_Codes::isEuCountry($order->get_shipping_country());
         $isHomeCountry      = WCMP_Data::isHomeCountry($order->get_shipping_country());
         $packageTypeOptions = array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman());
 
