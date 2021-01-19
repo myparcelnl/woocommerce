@@ -210,17 +210,22 @@ class WCMP_Export_Consignments
      */
     private function getTotalWeight(): int
     {
-        $packageType       = $this->orderSettings->getPackageType();
-        $emptyParcelWeight = (int) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+        $weight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
 
-        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP === $packageType) {
-            $extraOptions = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
-            $weight       = $extraOptions['weight'];
-        } else {
-            $weight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+        switch ($this->orderSettings->getPackageType()) {
+            case AbstractConsignment::PACKAGE_TYPE_PACKAGE:
+                $extraOptions = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+
+                $weight = $extraOptions['weight'];
+                break;
+            case AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP:
+                $emptyParcelWeight = (int) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+
+                $weight += $emptyParcelWeight;
+                break;
         }
 
-        return WCMP_Export::convertWeightToGrams($emptyParcelWeight + $weight);
+        return WCMP_Export::convertWeightToGrams($weight);
     }
 
     /**
