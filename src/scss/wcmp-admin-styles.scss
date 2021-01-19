@@ -29,67 +29,6 @@
 }
 
 /*
- * Shipment summary (overview and single order)
- */
-.wcmp__shipment-summary .delivery-date,
-.wcmp__shipment-summary .delivery-options {
-  display: block;
-}
-
-.wcmp__shipment-summary {
-  list-style: none;
-  margin-right: .3em;
-}
-
-.wcmp__shipment-summary li:before {
-  content: "+";
-  margin-right: 4px;
-}
-
-.wcmp__shipment-options-dialog {
-  width: 28em;
-}
-
-/*
- * Shipment options form styling
- */
-.wcmp__shipment-options table {
-  width: 100%;
-}
-
-.wcmp__shipment-options table,
-.wcmp__shipment-options select {
-  font-size: 90%;
-}
-
-.wcmp__shipment-options select,
-.wcmp__shipment-options input {
-  height: auto;
-  padding: 0 8px !important;
-}
-
-.wcmp__shipment-options select,
-.wcmp__shipment-options input,
-.wcmp__shipment-options .form-row {
-  margin: 0;
-}
-
-.wcmp__shipment-summary__list {
-  width: auto;
-}
-
-.wcmp__shipment-options td.wcmp_option_cost {
-  width: 60px;
-  text-align: right;
-  font-weight: bold;
-}
-
-.wcmp__shipment-options > a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/*
  * Spinner
  */
 .wcmp__spinner {

@@ -684,7 +684,7 @@ jQuery(($) => {
         }
         break;
       case wcmp.actions.add_return:
-        showDialog(orderIds, 'return');
+        showDialog(orderIds, 'return', request);
         break;
     }
   }
@@ -858,8 +858,6 @@ jQuery(($) => {
     const data = {
       action: wcmp.actions.export,
       request: wcmp.actions.modal_dialog,
-      height: DIALOG_HEIGHT,
-      width: DIALOG_WIDTH,
       order_ids: orderIds,
       dialog,
       _wpnonce: wcmp.nonce,
@@ -872,7 +870,7 @@ jQuery(($) => {
     /* disable background scrolling */
     $('body').css({overflow: 'hidden'});
 
-    tb_show('', url);
+    tb_show(wcmp.strings.dialog[dialog], url);
   }
 
   /**

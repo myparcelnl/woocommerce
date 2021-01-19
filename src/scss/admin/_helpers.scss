@@ -5,6 +5,8 @@ $spacers: (
   3: 0.75em,
 );
 
+$directions: (left, top, right, bottom);
+
 /*
  * Generates helpers.
  *
@@ -40,6 +42,10 @@ $helpers: (
       nowrap,
     ),
   ),
+  text-align: (
+    alias: text,
+    variants: $directions
+  )
 );
 
 // This just renders everything. Only edit above map if you want to change the available helpers.
@@ -70,7 +76,7 @@ $helpers: (
       $directionVariants: map-get($options, 'directionVariants');
       $isMap: type-of($directionVariants) == 'map';
 
-      @each $direction in (left, top, right, bottom) {
+      @each $direction in $directions {
         &__#{$alias + str-slice($direction, 1,1)} {
           @each $key, $type in $directionVariants {
             @if $isMap == false {
