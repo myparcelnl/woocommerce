@@ -251,7 +251,7 @@ class OrderSettings
             "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
         );
 
-        $this->ageCheck = $ageCheckOfProduct ?? $ageCheckFromSettings;
+        $this->ageCheck = $ageCheckFromSettings ?? $ageCheckOfProduct;
     }
 
     /**
