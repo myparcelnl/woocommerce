@@ -287,7 +287,7 @@ class OrderSettings
         $orderWeight = $this->getWeight();
         $metaWeight  = $this->extraOptionsMeta["weight"] ?? null;
 
-        $this->digitalStampRangeWeight = (int) ($metaWeight ?? WCMP_Export::getDigitalStampRangeFromWeight($orderWeight));
+        $this->digitalStampRangeWeight = WCMP_Export::getDigitalStampRangeFromWeight($metaWeight ?? $orderWeight);
     }
 
     /**
