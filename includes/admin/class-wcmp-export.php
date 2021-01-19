@@ -381,8 +381,6 @@ class WCMP_Export
             foreach ($consignmentIds as $consignmentId) {
                 $shipment["shipment_id"] = $consignmentId;
                 $this->saveShipmentData($order, $shipment);
-                $this->updateOrderStatus($order);
-
                 $this->success[$order_id] = $consignmentId;
             }
 
