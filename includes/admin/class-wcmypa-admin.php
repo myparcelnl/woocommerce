@@ -1005,7 +1005,7 @@ class WCMYPA_Admin
     public function generateThankYouConfirmation(?array $options): ?string
     {
         if ($options) {
-            $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2><table>";
+            $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("Delivery information:", "woocommerce-myparcel") . "</h2><table>";
 
             foreach ($options as $key => $option) {
                 if ($option) {
@@ -1027,7 +1027,7 @@ class WCMYPA_Admin
     public function generateEmailConfirmation(?array $options): ?string
     {
         if ($options) {
-            $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("MyParcel shipment:", "woocommerce-myparcel") . "</h2>";
+            $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("Delivery information:", "woocommerce-myparcel") . "</h2>";
             $htmlHeader .= "<table cellspacing='0' style='border: 1px solid #e5e5e5; margin-bottom: 20px;>";
 
             foreach ($options as $key => $option) {
