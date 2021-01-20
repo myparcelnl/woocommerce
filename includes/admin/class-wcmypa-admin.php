@@ -89,14 +89,6 @@ class WCMYPA_Admin
         add_action("wp_ajax_wcmp_get_shipment_summary_status", [$this, "order_list_ajax_get_shipment_summary"]);
         add_action("wp_ajax_wcmp_get_shipment_options", [$this, "ajaxGetShipmentOptions"]);
 
-        // HS code in product shipping options tab
-        add_action("woocommerce_product_options_shipping", [$this, "productHsCodeField"]);
-        add_action("woocommerce_process_product_meta", [$this, "productHsCodeFieldSave"]);
-
-        // Country of Origin in product shipping options tab
-        add_action("woocommerce_product_options_shipping", [$this, "productCountryOfOriginField"]);
-        add_action("woocommerce_process_product_meta", [$this, "productCountryOfOriginFieldSave"]);
-
         // Add barcode in order grid
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
         add_action("manage_shop_order_posts_custom_column", [$this, "addBarcodeToOrderColumn"], 10, 2);
@@ -106,9 +98,12 @@ class WCMYPA_Admin
         add_action("init", [$this, "registerDeliveredPostStatus"], 10, 1);
         add_filter("wc_order_statuses", [$this, "displayDeliveredPostStatus"], 10, 2);
 
-        add_action('woocommerce_product_after_variable_attributes', array($this, 'variation_hs_code_field'), 10, 3);
-        add_action('woocommerce_save_product_variation', array($this, 'save_variation_hs_code_field'), 10, 2);
-        add_filter('woocommerce_available_variation', array($this, 'load_variation_hs_code_field'), 10, 1);
+        add_action('woocommerce_product_after_variable_attributes', [$this, 'variation_hs_code_field'], 10, 3);
+        add_action('woocommerce_save_product_variation', [$this, 'save_variation_hs_code_field'], 10, 2);
+        add_filter('woocommerce_available_variation', [$this, 'load_variation_hs_code_field'], 10, 1);
+
+        add_action("woocommerce_product_options_shipping", [$this, "productOptionsFields"]);
+        add_action("woocommerce_process_product_meta", [$this, "productOptionsFieldSave"]);
     }
 
     /**
@@ -683,7 +678,67 @@ class WCMYPA_Admin
     {
         $deliveryOptions  = self::getDeliveryOptionsFromOrder($order);
         $confirmationData = $this->getConfirmationData($deliveryOptions);
-        $isEmail ? $this->printEmailConfirmation($confirmationData) : $this->printThankYouConfirmation($confirmationData);
+        $isEmail
+            ? $this->printEmailConfirmation($confirmationData)
+            : $this->printThankYouConfirmation($confirmationData
+        );
+    }
+
+    /**
+     * Go through all getProductOptions and show them on the screen
+     */
+    public function productOptionsFields(): void
+    {
+        echo '<div class="options_group">';
+        foreach ($this->getProductOptions() as $productOption) {
+            if ($productOption['type'] === 'text') {
+                woocommerce_wp_text_input(
+                    [
+                        'id'          => $productOption['id'],
+                        'label'       => $productOption['label'],
+                        'description' => $productOption['description'],
+                    ]
+                );
+            }
+
+            if ($productOption['type'] === 'select') {
+                woocommerce_wp_select(
+                    [
+                        'id'          => $productOption['id'],
+                        'label'       => $productOption['label'],
+                        'options'     => [
+                            "null" => __("Default", "woocommerce-myparcel"),
+                            "0"    => __("Disabled", "woocommerce-myparcel"),
+                            "1"    => __("Enabled", "woocommerce-myparcel"),
+                        ],
+                        'description' => $productOption['description'],
+                    ]
+                );
+            }
+        }
+        echo '</div>';
+    }
+
+    /**
+     * @param int $postId
+     */
+    public function productOptionsFieldSave(int $postId): void
+    {
+        foreach ($this->getProductOptions() as $productOption) {
+            // check if hs code is passed and not an array (=variation hs code)
+            if (isset($_POST[$productOption['id']]) && ! is_array($_POST[$productOption['id']])) {
+                $product   = wc_get_product($postId);
+                $productId = $_POST[$productOption['id']];
+
+                if (! empty($productId)) {
+                    WCX_Product::update_meta_data($product, $productOption['id'], esc_attr($productId));
+                } else {
+                    if (isset($_POST[$productOption['id']]) && empty($productId)) {
+                        WCX_Product::delete_meta_data($product, $productOption['id']);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -731,80 +786,51 @@ class WCMYPA_Admin
     }
 
     /**
-     * @return void
+     * @return array
      */
-    public function productHsCodeField(): void
+    public function getProductOptions(): array
     {
-        echo '<div class="options_group">';
-        woocommerce_wp_text_input(
-            [
+        return [
+            'HS-Code'           => [
                 'id'          => self::META_HS_CODE,
                 'label'       => __('HS Code', 'woocommerce-myparcel'),
+                'type'        => 'text',
                 'description' => sprintf(
-                    __('HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s.',
-                        'woocommerce-myparcel'
+                    __('HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s',
+                       'woocommerce-myparcel'
                     ),
                     '<a href="http://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',
                     '</a>'
                 ),
-            ]
-        );
-        echo '</div>';
-    }
-
-    /**
-     * @param $post_id
-     */
-    public function productHsCodeFieldSave($post_id): void
-    {
-        // check if hs code is passed and not an array (=variation hs code)
-        if (isset($_POST[self::META_HS_CODE]) && ! is_array($_POST[self::META_HS_CODE])) {
-            $product = wc_get_product($post_id);
-            $hs_code = $_POST[self::META_HS_CODE];
-
-            if (! empty($hs_code)) {
-                WCX_Product::update_meta_data($product, self::META_HS_CODE, esc_attr($hs_code));
-            } else {
-                WCX_Product::delete_meta_data($product, self::META_HS_CODE);
-            }
-        }
-    }
-
-    /**
-     * @return void
-     */
-    public function productCountryOfOriginField(): void
-    {
-        echo '<div class="options_group">';
-        woocommerce_wp_text_input(
-            [
+            ],
+            'Country-of-origin' => [
                 'id'          => self::META_COUNTRY_OF_ORIGIN,
-                'label'       => __('Country of Origin', 'woocommerce-myparcel'),
-                'type'        => 'select',
-                'options'     => (new WC_Countries())->get_countries(),
+                'label'       => __('Country of origin', 'woocommerce-myparcel'),
+                'type'        => 'text',
                 'description' => sprintf(
-                    __('Country of origin is required for world shipments. Defaults to shop base.')
+                    wc_help_tip(
+                        __('Country of origin is required for world shipments. Defaults to shop base.')
+                    )
                 ),
-            ]
-        );
-        echo '</div>';
-    }
-
-    /**
-     * @param $postId
-     */
-    public function productCountryOfOriginFieldSave($postId): void
-    {
-        if (isset($_POST[self::META_COUNTRY_OF_ORIGIN]) && ! is_array($_POST[self::META_COUNTRY_OF_ORIGIN])) {
-            $product         = wc_get_product($postId);
-            $countryOfOrigin = $_POST[self::META_COUNTRY_OF_ORIGIN];
-
-            if (! empty($countryOfOrigin)) {
-                WCX_Product::update_meta_data($product, self::META_COUNTRY_OF_ORIGIN, esc_attr($countryOfOrigin));
-            } else {
-                WCX_Product::delete_meta_data($product, self::META_COUNTRY_OF_ORIGIN);
-            }
-        }
+            ],
+            'Age-check'         => [
+                'id'          => self::META_AGE_CHECK,
+                'label'       => __('Age check', 'woocommerce-myparcel'),
+                'type'        => 'select',
+                'options'     => [
+                    'Default',
+                    'Enabled',
+                    'Disabled',
+                ],
+                'description' => sprintf(
+                    wc_help_tip(
+                        __("The age check is intended for parcel shipments for which the recipient must show they are 18+ years old by means of a proof of identity. With this option 'signature for receipt' and 'delivery only at recipient' are included. This option can't be combined with morning or evening delivery.",
+                           "woocommerce-myparcel"
+                        )
+                    )
+                ),
+            ],
+        ];
     }
 
     /**

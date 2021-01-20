@@ -251,24 +251,34 @@ class OrderSettings
             "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
         );
 
-        $this->ageCheck = $ageCheckFromSettings ?? $ageCheckOfProduct;
+        $this->ageCheck = $ageCheckOfProduct ? $ageCheckOfProduct : $ageCheckFromSettings;
     }
 
     /**
-     * @return bool
+     * Gets product age check value based on if it was explicitly set to either true or false. It defaults to inheriting from the default export settings.
+     *
+     * @return ?bool
      */
-    private function getAgeCheckOfProduct(): bool
+    private function getAgeCheckOfProduct(): ?bool
     {
+        $hasAgeCheck = null;
+
         foreach ($this->order->get_items() as $item) {
+            if ($hasAgeCheck) {
+                continue;
+            }
+
             $product         = $item->get_product();
             $productAgeCheck = WCX_Product::get_meta($product, WCMYPA_Admin::META_AGE_CHECK, true);
 
-            if ($productAgeCheck) {
-                return true;
+            if ($productAgeCheck === "1") {
+                $hasAgeCheck = true;
+            } elseif ($productAgeCheck === "0") {
+                $hasAgeCheck = false;
             }
         }
 
-        return false;
+        return $hasAgeCheck;
     }
 
     /**
