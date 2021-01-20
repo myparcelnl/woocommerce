@@ -214,14 +214,14 @@ class WCMP_Export_Consignments
 
         switch ($this->orderSettings->getPackageType()) {
             case AbstractConsignment::PACKAGE_TYPE_PACKAGE:
-                $extraOptions = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
-
-                $weight = $extraOptions['weight'];
-                break;
-            case AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP:
                 $emptyParcelWeight = (int) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
 
                 $weight += $emptyParcelWeight;
+                break;
+            case AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP:
+                $extraOptions = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+
+                $weight = $extraOptions['weight'];
                 break;
         }
 
