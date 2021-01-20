@@ -245,13 +245,12 @@ class OrderSettings
      */
     private function setAgeCheck(): void
     {
-        $ageCheckOfProduct    = $this->getAgeCheckOfProduct();
-        $ageCheckFromSettings = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->shipmentOptions->hasAgeCheck(),
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
-        );
+        $settingName                 = "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK;
+        $ageCheckOfProduct           = $this->getAgeCheckOfProduct();
+        $ageCheckFromSettings        = WCMYPA()->setting_collection->getByName($settingName);
+        $ageCheckFromShipmentOptions = $this->shipmentOptions->hasAgeCheck();
 
-        $this->ageCheck = $ageCheckOfProduct ? $ageCheckOfProduct : $ageCheckFromSettings;
+        $this->ageCheck = $ageCheckFromShipmentOptions ?? $ageCheckOfProduct ?? $ageCheckFromSettings;
     }
 
     /**
