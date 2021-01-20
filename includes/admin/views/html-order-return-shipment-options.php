@@ -1,8 +1,15 @@
-<?php use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+<?php
+
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
+
+/**
+ * @var \WC_Order $order
+ * @var int       $order_id
+ */
 
 /** @noinspection PhpUnhandledExceptionInspection */
 $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
@@ -14,9 +21,7 @@ $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
             <?php _e("Shipment type", "woocommerce-myparcel") ?>:<br/> <small class="calculated_weight">
                 <?php printf(
                     __("Calculated weight: %s", "woocommerce-myparcel"),
-                    wc_format_weight(
-                        WCMP_Export::convertWeightToGrams($order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT))
-                    )
+                    wc_format_weight($order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT))
                 ) ?>
             </small>
         </td>
@@ -24,10 +29,22 @@ $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
             <?php
             $name = "myparcel_options[{$order_id}][package_type]";
             printf('<select name="%s" class="package_type">', $name);
-            foreach ($package_types as $key => $label) {
+            foreach (WCMP_Data::getPackageTypesHuman() as $key => $label) {
+                $isReturnPackageType = in_array(
+                    $key,
+                    [
+                        AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
+                        AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME,
+                    ]
+                );
+
+                if (! $isReturnPackageType) {
+                    return;
+                }
+
                 printf(
                     '<option value="%s">%s</option>',
-                    AbstractConsignment::PACKAGE_TYPE_PACKAGE,
+                    WCMP_Data::getPackageTypeId($key),
                     $label
                 );
             }

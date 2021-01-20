@@ -24,12 +24,7 @@ $target_url = wp_nonce_url(
 ?>
     <form
         method="post" class="page-form wcmp__bulk-options wcmp__return-dialog" action="<?php echo $target_url; ?>">
-        <table class="widefat">
-            <thead>
-            <tr>
-                <th><?php _e("Export options", "woocommerce-myparcel"); ?></th>
-            </tr>
-            </thead>
+        <table style="width: 100%">
             <tbody>
             <?php
             $c = true;
@@ -41,7 +36,7 @@ $target_url = wp_nonce_url(
                     continue;
                 }
 
-                $recipient = WCMP_Export::getRecipientFromOrder($order);
+                $recipient     = WCMP_Export::getRecipientFromOrder($order);
                 $package_types = WCMP_Data::getPackageTypes();
                 ?>
                 <tr
@@ -53,7 +48,11 @@ $target_url = wp_nonce_url(
                             <tr>
                                 <td colspan="2">
                                     <strong>
-                                        <?php echo __("Order", "woocommerce-myparcel") . $order->get_order_number(); ?>
+                                        <?php echo sprintf(
+                                            "%s %s",
+                                            __("Order", "woocommerce-myparcel"),
+                                            $order->get_order_number()
+                                        ); ?>
                                     </strong>
                                 </td>
                             </tr>
@@ -64,7 +63,8 @@ $target_url = wp_nonce_url(
                                         <tr>
                                             <th>#</th>
                                             <th><?php _e("Product name", "woocommerce-myparcel"); ?></th>
-                                            <th align="right"><?php __("Weight", "woocommerce-myparcel"); ?></th>
+                                            <th class="wcmp__text--right"><?php _e("Weight", "woocommerce-myparcel");
+                                                ?></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -72,16 +72,15 @@ $target_url = wp_nonce_url(
                                             <tr>
                                                 <td><?php echo $item['qty'] . 'x'; ?></td>
                                                 <td><?php echo WCMP_Export::get_item_display_name($item, $order) ?></td>
-                                                <td align="right">
+                                                <td class="wcmp__text--right">
                                                     <?php
+
                                                     $weight = $item->get_product()->weight;
 
                                                     if ($weight) {
-                                                        echo wc_format_weight(
-                                                            WCMP_Export::convertWeightToGrams($weight)
-                                                        );
+                                                        echo wc_format_weight($weight * $item['qty']);
                                                     } else {
-                                                        echo esc_html__( 'N/A', 'woocommerce' );
+                                                        echo esc_html__('N/A', 'woocommerce');
                                                     }
                                                     ?>
                                                 </td>
@@ -90,42 +89,38 @@ $target_url = wp_nonce_url(
                                         </tbody>
                                         <tfoot>
                                         <tr>
-                                            <td>&nbsp;</td>
-                                            <td><?php _e("Total weight", "woocommerce-myparcel"); ?></td>
-                                            <td align="right">
+                                            <th>&nbsp;</th>
+                                            <th><?php _e("Total weight", "woocommerce-myparcel"); ?></th>
+                                            <th class="wcmp__text--right">
                                                 <?php
                                                 $orderWeight = $order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
 
                                                 if ($orderWeight) {
-                                                    echo wc_format_weight(
-                                                        WCMP_Export::convertWeightToGrams(
-                                                            $orderWeight
-                                                        )
-                                                    );
+                                                    echo wc_format_weight($orderWeight);
                                                 } else {
                                                     echo esc_html__('N/A', 'woocommerce');
                                                 }
                                                 ?>
-                                            </td>
+                                            </th>
                                         </tr>
                                         </tfoot>
                                     </table>
                                 </td>
                                 <td>
                                     <?php
-                                    if ($shipping_country === 'NL'
-                                    && (empty($recipient['street'])
-                                        || empty($recipient['number']))) { ?>
+                                    if (WCMP_Data::isHomeCountry($shipping_country)
+                                    && (empty($recipient['street']) || empty($recipient['number']))): ?>
                                     <p>
-                                        <span style="color:red"><?php __(
+                                        <span style="color:red">
+                                            <?php __(
                                                 "This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcel plugin was activated. The address data can still be manually entered in the order screen.",
                                                 "woocommerce-myparcel"
-                                            ); ?></span>
+                                            ); ?>
+                                        </span>
                                     </p>
                                 </td>
                             </tr> <!-- last row -->
-                            <?php
-                            } else { // required address data is available
+                            <?php else: // required address data is available
                                 // print address
                                 echo '<p>' . $order->get_formatted_shipping_address() . '<br/>' . WCX_Order::get_prop(
                                         $order,
@@ -146,8 +141,7 @@ $target_url = wp_nonce_url(
                                         ?>
                                     </td>
                                 </tr>
-                            <?php } // end else
-                            ?>
+                            <?php endif; ?>
                         </table>
                     </td>
                 </tr>
@@ -163,8 +157,7 @@ $target_url = wp_nonce_url(
             }
             ?>
             <div class="wcmp__d--flex">
-                <input
-                    type="submit" value="<?php echo $button_text; ?>" class="button wcmp__return-dialog__save">
+                <input type="submit" value="<?php echo $button_text; ?>" class="button wcmp__return-dialog__save">
                 <?php WCMYPA_Admin::renderSpinner() ?>
             </div>
         </div>

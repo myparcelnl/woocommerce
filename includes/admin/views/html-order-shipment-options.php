@@ -7,9 +7,7 @@ use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
  * @var WC_Order $order
  */
 
-if (! defined('ABSPATH')) {
-    exit;
-} // Exit if accessed directly
+defined('ABSPATH') or die();
 
 try {
     $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);

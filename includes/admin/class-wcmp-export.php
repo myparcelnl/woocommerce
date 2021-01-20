@@ -259,12 +259,7 @@ class WCMP_Export
 
                     // Creating a return shipment.
                     case self::ADD_RETURN:
-                        if (empty($order_ids)) {
-                            $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcel");
-                            break;
-                        }
-
-                        $return = $this->addReturn($order_ids);
+                        $return = $this->addReturn($order_ids, $_REQUEST['myparcel_options']);
                         break;
 
                     // Downloading labels.
@@ -285,7 +280,7 @@ class WCMP_Export
         }
 
         // display errors directly if PDF requested or modal
-        if (in_array($request, [self::ADD_RETURN, self::GET_LABELS, self::MODAL_DIALOG]) && ! empty($this->errors)) {
+        if (! empty($this->errors) && in_array($request, [self::ADD_RETURN, self::GET_LABELS, self::MODAL_DIALOG])) {
             echo $this->parse_errors($this->errors);
             die();
         }
@@ -413,11 +408,11 @@ class WCMP_Export
 
     /**
      * @param array $order_ids
+     * @param array $options
      *
      * @return array
-     * @throws Exception
      */
-    public function addReturn(array $order_ids)
+    public function addReturn(array $order_ids, ?array $options = []): array
     {
         $return = [];
 
@@ -425,7 +420,15 @@ class WCMP_Export
 
         foreach ($order_ids as $order_id) {
             try {
-                $return_shipments = [$this->prepareReturnShipmentData($order_id)];
+                $return_shipments = [
+                    $this->prepareReturnShipmentData(
+                        $order_id,
+                        $options
+                            ? $options[$order_id]
+                            : null
+                    ),
+                ];
+
                 WCMP_Log::add("Return shipment data for order {$order_id}:", print_r($return_shipments, true));
 
                 $api      = $this->init_api();
@@ -435,7 +438,7 @@ class WCMP_Export
 
                 $ids = Arr::get($response, "body.data.ids");
 
-                if ($ids && ! empty($ids)) {
+                if ($ids) {
                     $order                    = WCX::get_order($order_id);
                     $ids                      = array_shift($response["body"]["data"]["ids"]);
                     $shipment_id              = $ids["id"];
@@ -572,12 +575,12 @@ class WCMP_Export
      * TODO: There are no options being passed right now but these will be necessary for NL.
      *
      * @param $order_id
-     * @param $options
+     * @param array|null $options
      *
      * @return array
      * @throws Exception
      */
-    public function prepareReturnShipmentData($order_id, $options = [])
+    public function prepareReturnShipmentData($order_id, ?array $options = []): array
     {
         $order = WCX::get_order($order_id);
 
@@ -624,6 +627,7 @@ class WCMP_Export
             if (isset($options["insured"])) {
                 unset($options["insured"]);
             }
+
             $return_shipment_data["options"] = $options;
         }
 
@@ -1141,11 +1145,11 @@ class WCMP_Export
     /**
      * Returns the weight in grams.
      *
-     * @param int $weight
+     * @param int|float $weight
      *
      * @return float
      */
-    public static function convertWeightToGrams(int $weight): float
+    public static function convertWeightToGrams($weight): float
     {
         $weightUnit  = get_option('woocommerce_weight_unit');
         $floatWeight = (float) $weight;
