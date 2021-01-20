@@ -9,6 +9,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use OrderSettings;
 use WC_Order;
+use WCMP_Country_Codes;
 use WCMP_Data;
 use WCMP_Export;
 use WCMP_Settings_Data;
