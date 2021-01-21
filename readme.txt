@@ -2,7 +2,7 @@
 Contributors: richardperdaan, ademdemir, edielemoine
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 3.5.1
-Tested up to: 5.5.1
+Tested up to: 5.6.0
 Stable tag: trunk
 Requires PHP: 7.1
 License: GPLv3 or later
@@ -89,6 +89,46 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. MyParcel information on the order details page
 
 == Changelog ==
+
+= 4.2.0 (2021-01-21) =
+* Fix: Rename `WCMP`, `WCMP()`, `WCMP_Admin` and `WCMP_Settings`
+* Fix: Weight calculation for all shipment types
+* Fix: Delivery options after woocommerce subtotal for solving conflicts with multiple themes
+* Fix: Error array_replace_recursive second parameter must be array
+* Fix: Show correct delivery type in orders grid
+* Fix: Package type from shipping method/class not shown in order grid
+* Fix: Unable to send return email
+* Fix: Send return email modal
+* Fix: Show delivery date in order grid for any order that has one
+* Fix: Don't load checkout scripts on order received page
+* Fix: Multicollo voor Dutch shipments and for international shipments can you create multiple labels
+* Fix: Missing barcode in emails of automatically processed orders
+* Fix: Properly add/remove cart fees when using delivery options
+* Fix: Error on checkout when using custom address fields
+* Fix: Maximum label description length of 45 characters
+* Fix: Multiple barcode in order note
+* Fix: Saving the correct days in the setting drop off days
+* Fix: Save the correct shipping class
+* Fix: Check if shipping address is selected on checkout page en use the correct address
+* Fix: Order confirmation on the thank you page, confirmation email and on the customer account
+* Fix: Do not save address in address book
+* Fix: Correct package type for international shipments
+* Fix: Only add empty parcel weight to packages
+* Fix: Export via actions at the bottom of the order-grid
+* Improvment: Set correct UserAgent
+* Improvment: More options for age verification at product level
+* Improvment: Better country of origin selection
+* Improvment: Improve shipment options dialog
+* Improvment: Spinner for order grid bulk actions
+* Improvment: Update icons
+* Improvment: Use base price for delivery options
+* Improvment: Error handling after exporting and printing a label
+* Improvment: Stabilizer code for opening a label in a new tab
+* Improvment: New status for letter and DPZ and show them on the barcode column
+* Improvment: Use gulp to allow es6 javascript and use sass.
+* Improvment: Use customer note for label description.
+* Improvment: Use the latest MyParcel SDK.
+* Improvment: Handle translations in gulp
 
 = 4.1.5 (2020-12-15) =
 * Fix: select box for country of origin
