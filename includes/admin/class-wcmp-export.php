@@ -1187,7 +1187,7 @@ class WCMP_Export
      */
     public static function getDigitalStampRangeFromWeight(float $weight): int
     {
-        $intWeight = (int) ($weight * 1000);
+        $intWeight = WCMP_Export::convertWeightToGrams($weight);
 
         $results = Arr::where(
             WCMP_Data::getDigitalStampRanges(),
