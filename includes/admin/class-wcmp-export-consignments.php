@@ -214,7 +214,7 @@ class WCMP_Export_Consignments
 
         switch ($this->orderSettings->getPackageType()) {
             case AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME:
-                $emptyParcelWeight = (int) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+                $emptyParcelWeight = (float) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
 
                 $weight += $emptyParcelWeight;
                 break;
