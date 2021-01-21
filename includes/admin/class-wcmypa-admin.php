@@ -706,10 +706,10 @@ class WCMYPA_Admin
                     [
                         'id'          => $productOption['id'],
                         'label'       => $productOption['label'],
-                        'options'     => [
-                            "null" => __("Default", "woocommerce-myparcel"),
-                            "0"    => __("Disabled", "woocommerce-myparcel"),
-                            "1"    => __("Enabled", "woocommerce-myparcel"),
+                        'options' => [
+                            null => __("Default", "woocommerce-myparcel"),
+                            0    => __("Disabled", "woocommerce-myparcel"),
+                            1    => __("Enabled", "woocommerce-myparcel"),
                         ],
                         'description' => $productOption['description'],
                     ]
