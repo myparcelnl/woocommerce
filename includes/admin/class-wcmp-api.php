@@ -1,6 +1,7 @@
 <?php
 
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core;
 use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
 
@@ -186,7 +187,7 @@ class WCMP_API extends WCMP_Rest
     {
         foreach ($orderIds as $orderId) {
             $order           = WC_Core::get_order($orderId);
-            $lastShipmentIds = unserialize($order->get_meta('_myparcel_last_shipment_ids'));
+            $lastShipmentIds = WCX_Order::get_meta($order, WCMYPA_Admin::META_LAST_SHIPMENT_IDS);
 
             if (is_bool($lastShipmentIds)) {
                 continue;

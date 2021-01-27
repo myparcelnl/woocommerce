@@ -106,6 +106,7 @@ abstract class Data
      * @param string  $context if 'view' then the value will be filtered
      *
      * @return mixed
+     * @throws \JsonException
      * @since 4.6.0-dev
      */
     public static function get_meta($object, $key = '', $single = true, $context = 'edit')
@@ -113,11 +114,21 @@ abstract class Data
         if (WC_Core::is_wc_version_gte_3_0()) {
             $value = $object->get_meta($key, $single, $context);
         } else {
-            $object_id = is_callable([$object, 'get_id']) ? $object->get_id() : $object->id;
+            $object_id = is_callable([$object, 'get_id'])
+                ? $object->get_id()
+                : $object->id;
             $value     = get_post_meta($object_id, $key, $single);
         }
 
-        return maybe_unserialize($value);
+        $value = self::removeSerialization($object, $key, $value);
+
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            // json_decode returns null if there was a syntax error, meaning input was not valid JSON.
+            $value = $decoded ?? $value;
+        }
+
+        return $value;
     }
 
     /**
@@ -132,10 +143,10 @@ abstract class Data
     {
         if (WC_Core::is_wc_version_gte_3_0()) {
             return $object->meta_exists($key);
-        } else {
-            $object_id = is_callable([$object, 'get_id']) ? $object->get_id() : $object->id;
-            return count(get_post_meta($object_id, $key)) > 0;
         }
+
+        $object_id = is_callable([$object, 'get_id']) ? $object->get_id() : $object->id;
+        return count(get_post_meta($object_id, $key)) > 0;
     }
 
     /**
@@ -168,11 +179,14 @@ abstract class Data
      * @param string|array $value   the meta value, will be encoded if it's an array
      * @param int|string   $meta_id Optional. The specific meta ID to update
      *
+     * @throws \JsonException
      * @since 4.6.0-dev
      */
-    public static function update_meta_data($object, $key, $value, $meta_id = '')
+    public static function update_meta_data($object, $key, $value, $meta_id = ''): void
     {
-        $value = maybe_serialize($value);
+        if (is_array($value)) {
+            $value = json_encode($value, JSON_THROW_ON_ERROR);
+        }
 
         if (WC_Core::is_wc_version_gte_3_0()) {
             $object->update_meta_data($key, $value, $meta_id);
@@ -203,5 +217,36 @@ abstract class Data
             $object_id = is_callable([$object, 'get_id']) ? $object->get_id() : $object->id;
             delete_post_meta($object_id, $key);
         }
+    }
+
+    /**
+     * Fix data stored as objects or serialized strings. Converts everything to array and updates it in the meta data.
+     *
+     * @param \WC_Data $object
+     * @param string   $key
+     * @param mixed    $value
+     *
+     * @return mixed
+     * @throws \JsonException
+     */
+    private static function removeSerialization(WC_Data $object, string $key, $value)
+    {
+        if (is_serialized($value)) {
+            $value = @unserialize(trim($value));
+
+            self::update_meta_data($object, $key, $value);
+        }
+
+        if (is_object($value)) {
+            if (is_callable([$value, 'toArray'])) {
+                $value = $value->toArray();
+            } else {
+                $value = (array) $value;
+            }
+
+            self::update_meta_data($object, $key, $value);
+        }
+
+        return $value;
     }
 }
