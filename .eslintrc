@@ -19,7 +19,8 @@
   "overrides": [
     {
       "files": [
-        "./*.js"
+        "./*.js",
+        "./private/**/*.js"
       ],
       "env": {
         "node": true
