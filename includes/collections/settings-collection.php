@@ -3,6 +3,7 @@
 namespace WPO\WC\MyParcel\Collections;
 
 use MyParcelNL\Sdk\src\Support\Collection;
+use WC_Tax;
 use WPO\WC\MyParcel\Entity\Setting;
 
 defined('ABSPATH') or exit;
@@ -95,7 +96,7 @@ class SettingsCollection extends Collection
      */
     public function getIntegerByName(string $name): int
     {
-        return (int) $this->getByName($name) ?? 0;
+        return (int) ($this->getByName($name) ?? 0);
     }
 
     /**
@@ -106,7 +107,7 @@ class SettingsCollection extends Collection
     public function getFloatByName(string $name): float
     {
         $value = str_replace(',', '.', $this->getByName($name));
-        return (float) $value ?? 0;
+        return (float) ($value ?? 0);
     }
 
     /**
@@ -117,5 +118,31 @@ class SettingsCollection extends Collection
     public function getStringByName(string $name): string
     {
         return $this->getByName($name) ?? '';
+    }
+
+    /**
+     * If prices are displayed with VAT/tax included, add the taxes to the price. Otherwise just pass the base price
+     * as all taxes will be combined and shown in separate "Tax" fees.
+     *
+     * Never use this as a base price, this is only for displaying a total price including taxes.
+     *
+     * @param string $name
+     *
+     * @return float
+     */
+    public function getPriceByName(string $name): float
+    {
+        $basePrice           = $this->getFloatByName($name);
+        $displayIncludingTax = WC()->cart->display_prices_including_tax();
+
+        if ($displayIncludingTax) {
+            $taxRates = WC_Tax::get_shipping_tax_rates();
+            $taxes    = WC_Tax::calc_shipping_tax($basePrice, $taxRates);
+            $sumTaxes = array_sum($taxes);
+
+            return $basePrice + $sumTaxes;
+        }
+
+        return $basePrice;
     }
 }
