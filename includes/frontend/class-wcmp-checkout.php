@@ -245,7 +245,7 @@ class WCMP_Checkout
 
         $myParcelConfig['config']['priceStandardDelivery'] = $chosenShippingMethodPrice;
 
-        return json_encode($myParcelConfig, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+        return json_encode($myParcelConfig, JSON_UNESCAPED_SLASHES);
     }
 
     /**
