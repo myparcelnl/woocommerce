@@ -1441,8 +1441,13 @@ class WCMP_Export
         $deliveryOptions     = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
         $packageType         = $this->getPackageTypeFromOrder($order, $deliveryOptions);
         $isPackage           = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $packageType;
-        $isMultiColloCountry = in_array($order->get_shipping_country(),
-            [self::COUNTRY_CODE_NL, self::COUNTRY_CODE_BE]
+        $isMultiColloCountry = in_array($order->get_shipping_country(), [self::COUNTRY_CODE_NL, self::COUNTRY_CODE_BE]);
+
+        // Divide the consignment weight by the amount of parcels.
+        $consignment->setPhysicalProperties(
+            [
+                'weight' => (int) round($consignment->getTotalWeight() / $colloAmount),
+            ]
         );
 
         if ($isMultiColloCountry && $isPackage) {
