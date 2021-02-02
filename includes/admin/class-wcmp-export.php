@@ -653,13 +653,9 @@ class WCMP_Export
      */
     public static function getRecipientFromOrder(WC_Order $order)
     {
-        $isUsingMyParcelFields = WCX_Order::has_meta($order, "_billing_street_name")
-                                 && WCX_Order::has_meta($order, "_billing_house_number");
-
-        $shippingName =
-            method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
-                : trim($order->get_shipping_first_name() . " " . $order->get_shipping_last_name());
-
+        $isUsingMyParcelFields = WCX_Order::has_meta($order, "_billing_street_name") && WCX_Order::has_meta($order, "_billing_house_number");
+        $shippingName = method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name() : trim($order->get_shipping_first_name() . " " . $order->get_shipping_last_name());
+        $shippingCountry = WCX_Order::get_prop($order, "shipping_country");
 
         $connectEmail = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_EMAIL);
         $connectPhone = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_PHONE);
@@ -674,7 +670,6 @@ class WCMP_Export
             "street_additional_info" => WCX_Order::get_prop($order, "shipping_address_2"),
         ];
 
-        $shippingCountry = WCX_Order::get_prop($order, "shipping_country");
         if ($shippingCountry === "NL") {
             $pickupAddress = WCX_Order::get_meta($order, WCMYPA_Admin::META_PGADDRESS);
 
