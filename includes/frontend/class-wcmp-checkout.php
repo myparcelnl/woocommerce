@@ -198,7 +198,8 @@ class WCMP_Checkout
     {
         $settings                  = WCMYPA()->setting_collection;
         $carriers                  = $this->get_carriers();
-        $chosenShippingMethodPrice = (float) WC()->session->get('cart_totals')['shipping_total'];
+        $cartTotals                = WC()->session->get('cart_totals');
+        $chosenShippingMethodPrice = (float) $cartTotals['shipping_total'] + (float) $cartTotals['shipping_tax'];
 
         $myParcelConfig = [
             "config"  => [
