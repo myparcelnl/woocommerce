@@ -63,7 +63,7 @@ class WCMP_Upgrade_Migration_v4_0_0 extends WCMP_Upgrade_Migration
 
     protected function import(): void
     {
-        require_once(WCMYPA()->plugin_path() . "/includes/vendor/autoload.php");
+        require_once(WCMYPA()->plugin_path() . "/vendor/autoload.php");
         require_once(WCMYPA()->plugin_path() . '/includes/admin/settings/class-wcmypa-settings.php');
     }
 
