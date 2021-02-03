@@ -6,6 +6,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
+use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
@@ -70,6 +71,15 @@ class WCMP_Export_Consignments
         $this->order           = $order;
         $this->deliveryOptions = WCMP_Admin::getDeliveryOptionsFromOrder($order);
         $this->carrier         = $this->deliveryOptions->getCarrier() ?? $defaultCarrier;
+
+        $this->myParcelCollection = (new MyParcelCollection())->setUserAgents(
+            [
+                'Wordpress'              => get_bloginfo('version'),
+                'WooCommerce'            => WOOCOMMERCE_VERSION,
+                'MyParcelBE-WooCommerce' => WC_MYPARCEL_BE_VERSION,
+            ]
+        );
+
         $this->createConsignment();
         $this->setConsignmentData();
     }
@@ -427,7 +437,7 @@ class WCMP_Export_Consignments
             $insuranceFromPrice = (float) $this->getSetting("{$this->carrier}_" .
                 WCMP_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE
             );
-            
+
             $insuranceMaxPrice = 500;
 
             if ($this->carrier === 'dpd') {
