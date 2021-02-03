@@ -617,7 +617,7 @@ jQuery(($) => {
      * @param {Event} event
      * @param {String} newCountry
      */
-    synchronizeAddress: function(event, newCountry) {
+    synchronizeAddress(event, newCountry) {
       if (!MyParcelFrontend.isUsingSplitAddressFields) {
         return;
       }
@@ -625,6 +625,10 @@ jQuery(($) => {
       const data = $('form').serializeArray();
 
       ['shipping', 'billing'].forEach((addressType) => {
+        if (!MyParcelFrontend.hasAddressType(addressType)) {
+          return;
+        }
+
         const typeCountry = data.find((item) => item.name === `${addressType}_country`);
         const hasAddressTypeCountry = MyParcelFrontend.previousCountry.hasOwnProperty(addressType);
         const countryChanged = MyParcelFrontend.previousCountry[addressType] !== newCountry;
@@ -680,6 +684,21 @@ jQuery(($) => {
       }
 
       return MyParcelFrontend.splitAddressFieldsCountries.includes(country.toUpperCase());
+    },
+
+    /**
+     * Checks if the inner wrapper of an address type form exists to determine if the address type is available.
+     *
+     * Does not check the outer div (.woocommerce-shipping-fields) because when the shipping form does not exist, it's
+     *  still rendered on the page.
+     *
+     * @param {String} addressType
+     * @returns {Boolean}
+     */
+    hasAddressType(addressType) {
+      const formWrapper = document.querySelector(`.woocommerce-${addressType}-fields__field-wrapper`);
+
+      return Boolean(formWrapper);
     },
   };
 
