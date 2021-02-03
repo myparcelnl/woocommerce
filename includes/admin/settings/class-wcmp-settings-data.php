@@ -798,7 +798,7 @@ class WCMP_Settings_Data
                 "label"     => __("Display for", "woocommerce-myparcel"),
                 "type"      => "select",
                 "help_text" => __(
-                    "You can link the delivery options to specific shipping methods by adding them to the package types under \"Standard export settings\". The delivery options are not visible at foreign addresses.",
+                    'You can link the delivery options to specific shipping methods by adding them to the package types under "Standard export settings". The delivery options are not visible at foreign addresses.',
                     "woocommerce-myparcel"
                 ),
                 "options"   => [
@@ -958,7 +958,7 @@ class WCMP_Settings_Data
 
         return sprintf(
             '<p>%s <a class="" href="#" onclick="document.querySelector(`#delivery_options_custom_css`).value = `%s`">%s</a></p>',
-            sprintf(__("Theme \"%s\" detected.", "woocommerce-myparcel"), $currentTheme),
+            sprintf(__('Theme "%s" detected.', "woocommerce-myparcel"), $currentTheme),
             file_get_contents($cssPath),
             __("Apply preset.", "woocommerce-myparcel")
         );

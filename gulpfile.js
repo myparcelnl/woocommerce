@@ -2,9 +2,9 @@ const babelify = require('babelify');
 const browserify = require('browserify');
 const buffer = require('vinyl-buffer');
 const clean = require('gulp-clean');
-const {exec} = require('child_process');
 const gulp = require('gulp');
 const gulpPoSync = require('gulp-po-sync');
+const path = require('path');
 const po2mo = require('gulp-po2mo');
 const postcss = require('gulp-postcss');
 const sass = require('gulp-sass');
@@ -13,6 +13,8 @@ const tap = require('gulp-tap');
 const uglify = require('gulp-uglify');
 const wpPot = require('gulp-wp-pot');
 const zip = require('gulp-zip');
+const {exec} = require('child_process');
+const {downloadTranslations} = require('./private/downloadTranslations');
 
 const PHP_FILES = ['*.php', 'migration/**/*.php', 'templates/**/*.php', 'includes/**/*.php'];
 
@@ -26,10 +28,17 @@ const PHP_FILES = ['*.php', 'migration/**/*.php', 'templates/**/*.php', 'include
  */
 function execCallback(callback, err, stdout, stderr) {
   /* eslint-disable no-console */
-  console.log(stdout);
-  console.warn(stderr);
+  if (stdout) {
+    console.log(stdout);
+  }
+
+  if (stderr) {
+    console.warn(stderr);
+  }
   /* eslint-enable no-console */
-  callback(err);
+  if (typeof callback === 'function') {
+    callback(err);
+  }
 }
 
 /**
@@ -101,12 +110,21 @@ gulp.task('zip', () => gulp.src([
  */
 gulp.task('translations:pot', () => gulp.src(PHP_FILES, {read: false})
   .pipe(wpPot({
+    bugReport: 'https://github.com/myparcelnl/woocommerce/issues',
     domain: 'woocommerce-myparcel',
+    noFilePaths: true,
     package: 'WooCommerce MyParcel',
     team: 'MyParcel <support@myparcel.nl>',
-    bugReport: 'https://github.com/myparcelnl/woocommerce/issues',
   }))
   .pipe(gulp.dest('languages/woocommerce-myparcel.pot')));
+
+/**
+ * Download translations as csv and convert them to .po files.
+ */
+gulp.task('translations:download', (callback) => {
+  downloadTranslations();
+  callback();
+});
 
 /**
  * Sync .po files with .pot file.
@@ -122,10 +140,28 @@ gulp.task('translations:mo', () => gulp.src('languages/**/*.po', {read: false})
   .pipe(po2mo())
   .pipe(gulp.dest('languages')));
 
-gulp.task('translations', gulp.series(
+/**
+ * Convert existing .po files to csv files.
+ */
+gulp.task('translations:po2csv', (callback) => {
+  exec('po2csv translations private/temp', (...params) => execCallback(callback, ...params));
+});
+
+/**
+ * Import translations and convert to .mo for use with WordPress.
+ */
+gulp.task('translations:import', gulp.series(
+  'translations:download',
+  'translations:mo',
+));
+
+/**
+ * Regenerate .pot files and export to csv for updating the external sheet with new or updated keys.
+ */
+gulp.task('translations:export', gulp.series(
   'translations:pot',
   'translations:po',
-  'translations:mo',
+  'translations:po2csv',
 ));
 
 gulp.task('update:composer', (callback) => {
@@ -146,7 +182,7 @@ const build = gulp.series(
     'build:scss',
     'update:composer',
     'copy',
-    'translations',
+    'translations:import',
     gulp.series(
       'update:npm',
       'copy:delivery-options',
@@ -163,10 +199,6 @@ const watch = () => {
   gulp.watch(['src/js/**/*'], null, () => gulp.src('src/js/**/*.js').pipe(gulp.dest('assets/js')));
   gulp.watch(['node_modules/@myparcel/delivery-options/**/*'], null, gulp.series('copy:delivery-options'));
   gulp.watch(['src/scss/**/*'], null, gulp.series('build:scss'));
-  gulp.watch(['**/*.php'], null, gulp.series('translations:pot'));
-  gulp.watch(['languages/**/*.pot'], null, gulp.series('translations:po'));
-  gulp.watch(['languages/**/*.po'], null, gulp.series('translations:mo'));
-  gulp.watch(PHP_FILES, null, gulp.series('translations'));
   gulp.watch(['composer.json'], null, gulp.series('update:composer'));
   gulp.watch(['package.json'], null, gulp.series('update:npm'));
 };

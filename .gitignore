@@ -2,6 +2,7 @@
 assets
 node_modules
 vendor
+private/temp
 
 *.zip
 .DS_Store
