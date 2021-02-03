@@ -1446,7 +1446,7 @@ class WCMP_Export
         // Divide the consignment weight by the amount of parcels.
         $consignment->setPhysicalProperties(
             [
-                'weight' => (int) round($consignment->getTotalWeight() / $colloAmount),
+                'weight' => (int) ceil($consignment->getTotalWeight() / $colloAmount),
             ]
         );
 
