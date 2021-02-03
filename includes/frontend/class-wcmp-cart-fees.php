@@ -221,14 +221,12 @@ class WCMP_Cart_Fees
      */
     private function getFeeTitles(): array
     {
-        $carrierName = WCMP_Data::getCarriersHuman()[$this->deliveryOptions->getCarrier()];
-
         return [
-            "delivery_evening" => __("Evening delivery", "woocommerce-myparcel"),
-            "delivery_morning" => __("Morning delivery", "woocommerce-myparcel"),
-            "delivery_pickup"  => __("Pick up at", "woocommerce-myparcel") . " $carrierName",
-            "only_recipient"   => __("Only recipient", "woocommerce-myparcel"),
-            "signature"        => __("Signature on delivery", "woocommerce-myparcel"),
+            "delivery_evening" => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE),
+            "delivery_morning" => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE),
+            "delivery_pickup"  => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_PICKUP_TITLE),
+            "only_recipient"   => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE),
+            "signature"        => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE),
         ];
     }
 
