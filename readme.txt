@@ -87,6 +87,9 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 5. MyParcel BE information on the order details page
 
 == Changelog ==
+= 4.1.6 (2021-02-03) =
+* Fix: The fields of shipping address can be empty
+
 = 4.1.5 (2021-01-13) =
 * Fix: Switching between split and non-split address fields
 * Improvement: Default carrier
