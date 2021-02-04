@@ -1147,23 +1147,29 @@ class WCMP_Export
      *
      * @param int|float $weight
      *
-     * @return float
+     * @return int
      */
-    public static function convertWeightToGrams($weight): float
+    public static function convertWeightToGrams($weight): int
     {
         $weightUnit  = get_option('woocommerce_weight_unit');
         $floatWeight = (float) $weight;
 
         switch ($weightUnit) {
             case 'kg':
-                return $floatWeight * 1000;
+                $weight = $floatWeight * 1000;
+                break;
             case 'lbs':
-                return $floatWeight / 0.45359237;
+                $weight = $floatWeight / 0.45359237;
+                break;
             case 'oz':
-                return $floatWeight / 0.0283495231;
+                $weight = $floatWeight / 0.0283495231;
+                break;
             default:
-                return $floatWeight;
+                $weight = $floatWeight;
+                break;
         }
+
+        return (int) ceil($weight);
     }
 
     /**
@@ -1187,7 +1193,7 @@ class WCMP_Export
      */
     public static function getDigitalStampRangeFromWeight(float $weight): int
     {
-        $intWeight = WCMP_Export::convertWeightToGrams($weight);
+        $intWeight = self::convertWeightToGrams($weight);
 
         $results = Arr::where(
             WCMP_Data::getDigitalStampRanges(),
