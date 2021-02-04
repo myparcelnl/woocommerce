@@ -1587,25 +1587,26 @@ class WCMP_Export
         if ($isUsingMyParcelFields) {
             $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_shipping_street_name");
             $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_shipping_house_number");
-            $address_intl["number_suffix"] =
-                (string) WCX_Order::get_meta($order, "_shipping_house_number_suffix");
-        } else {
-            // Split the address line 1 into three parts
-            preg_match(
-                WCMP_NL_Postcode_Fields::SPLIT_STREET_REGEX,
-                WCX_Order::get_prop($order, "shipping_address_1"),
-                $address_parts
-            );
+            $address_intl["number_suffix"]  = (string) WCX_Order::get_meta($order, "_shipping_house_number_suffix");
 
-            $address_intl["street"]        = (string) $address_parts["street"];
-            $address_intl["number"]        = (string) $address_parts["number"];
-            $address_intl["number_suffix"] = (string) $address_parts["extension"] ?: "";
+            return $address_intl;
+        }
 
-            if (! $address_intl["number_suffix"]) {
-                if (preg_match(self::SUFFIX_CHECK_REG, $address["street_additional_info"])) {
-                    $address_intl["number_suffix"]     = $address["street_additional_info"];
-                    $address["street_additional_info"] = "";
-                }
+        // Split the address line 1 into three parts
+        preg_match(
+            WCMP_NL_Postcode_Fields::SPLIT_STREET_REGEX,
+            WCX_Order::get_prop($order, "shipping_address_1"),
+            $address_parts
+        );
+
+        $address_intl["street"]        = (string) $address_parts["street"];
+        $address_intl["number"]        = (string) $address_parts["number"];
+        $address_intl["number_suffix"]  = (string) $address_parts["extension"] ?: "";
+
+        if (! $address_intl["number_suffix"]) {
+            if (preg_match(self::SUFFIX_CHECK_REG, $address["street_additional_info"])) {
+                $address_intl["number_suffix"]     = $address["street_additional_info"];
+                $address["street_additional_info"] = "";
             }
         }
 
