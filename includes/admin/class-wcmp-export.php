@@ -1624,9 +1624,7 @@ class WCMP_Export
     {
         $billing_name = method_exists($order, "get_formatted_billing_full_name")
             ? $order->get_formatted_billing_full_name()
-            : trim(
-                $order->get_billing_first_name() . " " . $order->get_billing_last_name()
-            );
+            : trim($order->get_billing_first_name() . " " . $order->get_billing_last_name());
         $address_intl = [
             "city"        => (string) WCX_Order::get_prop($order, "billing_city"),
             "person"      => $billing_name,
@@ -1637,22 +1635,21 @@ class WCMP_Export
         if ($isUsingMyParcelFields) {
             $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_billing_street_name");
             $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_billing_house_number");
-            $address_intl["number_suffix"] =
-                (string) WCX_Order::get_meta($order, "_billing_house_number_suffix");
-        } else {
-            // Split the address line 1 into three parts
-            preg_match(
-                WCMP_NL_Postcode_Fields::SPLIT_STREET_REGEX,
-                WCX_Order::get_prop($order, "billing_address_1"),
-                $address_parts
-            );
-            $address_intl["street"]                 = (string) $address_parts["street"];
-            $address_intl["number"]                 = (string) $address_parts["number"];
-            $address_intl["number_suffix"]          =
-                array_key_exists("number_suffix", $address_parts) // optional
-                    ? (string) $address_parts["number_suffix"] : "";
-            $address_intl["street_additional_info"] = WCX_Order::get_prop($order, "billing_address_2");
+            $address_intl["number_suffix"]  = (string) WCX_Order::get_meta($order, "_billing_house_number_suffix");
+
+            return $address_intl;
         }
+        // Split the address line 1 into three parts
+        preg_match(
+            WCMP_NL_Postcode_Fields::SPLIT_STREET_REGEX,
+            WCX_Order::get_prop($order, "billing_address_1"),
+            $address_parts
+        );
+        $address_intl["street"]                 = (string) $address_parts["street"];
+        $address_intl["number"]                 = (string) $address_parts["number"];
+        $address_intl["number_suffix"]           = array_key_exists("number_suffix", $address_parts)
+            ? (string) $address_parts["number_suffix"] : "";
+        $address_intl["street_additional_info"] = WCX_Order::get_prop($order, "billing_address_2");
 
         return $address_intl;
     }
