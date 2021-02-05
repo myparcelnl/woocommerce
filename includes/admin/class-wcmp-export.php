@@ -1583,13 +1583,11 @@ class WCMP_Export
         $address_intl = [
             "postal_code" => (string) WCX_Order::get_prop($order, "shipping_postcode"),
         ];
+        $billingOrShipping = "shipping";
+
         // If not using old fields
         if ($isUsingMyParcelFields) {
-            $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_shipping_street_name");
-            $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_shipping_house_number");
-            $address_intl["number_suffix"]  = (string) WCX_Order::get_meta($order, "_shipping_house_number_suffix");
-
-            return $address_intl;
+            return self::useMyParcelFields($order, $address_intl, $billingOrShipping);
         }
 
         // Split the address line 1 into three parts
@@ -1631,13 +1629,10 @@ class WCMP_Export
             "company"     => (string) WCX_Order::get_prop($order, "billing_company"),
             "postal_code" => (string) WCX_Order::get_prop($order, "billing_postcode"),
         ];
+        $billingOrShipping = "billing";
 
         if ($isUsingMyParcelFields) {
-            $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_billing_street_name");
-            $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_billing_house_number");
-            $address_intl["number_suffix"]  = (string) WCX_Order::get_meta($order, "_billing_house_number_suffix");
-
-            return $address_intl;
+            return self::useMyParcelFields($order, $address_intl, $billingOrShipping);
         }
         // Split the address line 1 into three parts
         preg_match(
@@ -1650,6 +1645,22 @@ class WCMP_Export
         $address_intl["number_suffix"]           = array_key_exists("number_suffix", $address_parts)
             ? (string) $address_parts["number_suffix"] : "";
         $address_intl["street_additional_info"] = WCX_Order::get_prop($order, "billing_address_2");
+
+        return $address_intl;
+    }
+
+    /**
+     * @param WC_Order $order
+     * @param array    $address_intl
+     * @param string   $billingOrShipping
+     *
+     * @return array
+     */
+    public static function useMyParcelFields(WC_Order $order, array $address_intl, string $billingOrShipping): array
+    {
+        $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_shipping_street_name");
+        $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_shipping_house_number");
+        $address_intl["number_suffix"]  = (string) WCX_Order::get_meta($order, "_shipping_house_number_suffix");
 
         return $address_intl;
     }
