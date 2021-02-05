@@ -664,7 +664,7 @@ class WCMP_Export
         $connectPhone = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_PHONE);
 
         $address = [
-            "cc"                     => (string) WCX_Order::get_prop($order, "shippingCountry"),
+            "cc"                     => (string) WCX_Order::get_prop($order, "shipping_country"),
             "city"                   => (string) WCX_Order::get_prop($order, "shipping_city"),
             "person"                 => $shippingName,
             "company"                => (string) WCX_Order::get_prop($order, "shipping_company"),
