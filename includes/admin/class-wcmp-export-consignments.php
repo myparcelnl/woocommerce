@@ -212,6 +212,9 @@ class WCMP_Export_Consignments
     {
         $weight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
 
+        // Divide the consignment weight by the amount of parcels.
+        $weight /= $this->orderSettings->getColloAmount();
+
         switch ($this->orderSettings->getPackageType()) {
             case AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME:
                 $emptyParcelWeight = (float) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
