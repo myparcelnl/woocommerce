@@ -945,9 +945,7 @@ class WCMP_Export
             );
         }
 
-        $packageType = $this->getAllowedPackageType($order, $packageType);
-
-        return $packageType;
+        return $this->getAllowedPackageType($order, $packageType);
     }
 
     /**
@@ -1045,12 +1043,13 @@ class WCMP_Export
      */
     public function getAllowedPackageType(WC_Order $order, string $packageType): string
     {
-        $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-        $mailbox          = AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME === $packageType;
-        $digitalStamp     = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType;
+        $shippingCountry      = WCX_Order::get_prop($order, "shipping_country");
+        $isMailbox            = AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME === $packageType;
+        $isDigitalStamp       = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType;
+        $isDefaultPackageType = AbstractConsignment::CC_NL !== $shippingCountry && ($isMailbox || $isDigitalStamp);
 
-        if (AbstractConsignment::CC_NL != $shipping_country && ($mailbox || $digitalStamp)) {
-            return AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
+        if ($isDefaultPackageType) {
+            $packageType = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
         }
 
         return $packageType;
