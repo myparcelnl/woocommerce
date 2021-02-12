@@ -57,6 +57,9 @@ class WCMYPA_Admin
     public const BULK_ACTION_PRINT        = "wcmp_print";
     public const BULK_ACTION_EXPORT_PRINT = "wcmp_export_print";
 
+    public const PRODUCT_OPTIONS_ENABLED  = "yes";
+    public const PRODUCT_OPTIONS_DISABLED = "no";
+
     public function __construct()
     {
         if (is_wp_version_compatible("4.7.0")) {
@@ -707,9 +710,9 @@ class WCMYPA_Admin
                         'id'          => $productOption['id'],
                         'label'       => $productOption['label'],
                         'options' => [
-                            null => __("Default", "woocommerce-myparcel"),
-                            0    => __("Disabled", "woocommerce-myparcel"),
-                            1    => __("Enabled", "woocommerce-myparcel"),
+                            null                           => __("Default", "woocommerce-myparcel"),
+                            self::PRODUCT_OPTIONS_DISABLED => __("Disabled", "woocommerce-myparcel"),
+                            self::PRODUCT_OPTIONS_ENABLED  => __("Enabled", "woocommerce-myparcel"),
                         ],
                         'description' => $productOption['description'],
                     ]
@@ -815,7 +818,7 @@ class WCMYPA_Admin
             ],
             'Age-check'         => [
                 'id'          => self::META_AGE_CHECK,
-                'label'       => __('Age check', 'woocommerce-myparcel'),
+                'label'       => __('Age csddsdsdsheck', 'woocommerce-myparcel'),
                 'type'        => 'select',
                 'options'     => [
                     'Default',
