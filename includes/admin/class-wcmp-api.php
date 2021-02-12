@@ -189,7 +189,7 @@ class WCMP_API extends WCMP_Rest
             $order           = WC_Core::get_order($orderId);
             $lastShipmentIds = WCX_Order::get_meta($order, WCMYPA_Admin::META_LAST_SHIPMENT_IDS);
 
-            if (is_bool($lastShipmentIds)) {
+            if (empty($lastShipmentIds)) {
                 continue;
             }
 

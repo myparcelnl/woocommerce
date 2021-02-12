@@ -370,6 +370,11 @@ class WCMP_Export
         }
 
         foreach ($order_ids as $order_id) {
+
+            if ($this->errors[$order_id]) {
+                continue;
+            }
+
             $order          = WCX::get_order($order_id);
             $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
 
