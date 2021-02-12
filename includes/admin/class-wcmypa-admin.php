@@ -818,7 +818,7 @@ class WCMYPA_Admin
             ],
             'Age-check'         => [
                 'id'          => self::META_AGE_CHECK,
-                'label'       => __('Age csddsdsdsheck', 'woocommerce-myparcel'),
+                'label'       => __('Age check', 'woocommerce-myparcel'),
                 'type'        => 'select',
                 'options'     => [
                     'Default',
