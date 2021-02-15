@@ -831,11 +831,6 @@ jQuery(($) => {
       data: data || {},
       afterDone(response) {
         const redirectUrl = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
-        const responseError = JSON.parse(response).error;
-
-        if (typeof responseError !== 'undefined' && response !== null) {
-          document.cookie = `response=${responseError};expires=1`;
-        }
 
         if (print === 'no' || print === 'after_reload') {
           /* refresh page, admin notices are stored in options and will be displayed automatically */
