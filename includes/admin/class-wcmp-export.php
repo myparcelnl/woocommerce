@@ -162,11 +162,6 @@ class WCMP_Export
             }
         }
 
-        if (! isset($_GET['myparcel_done'])) {
-            unset($_COOKIE['response']);
-            setcookie('response', null, -1, '/');
-        }
-
         if (! empty($error_notice)) {
             printf(
                 '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p>%s</div>',
@@ -192,8 +187,8 @@ class WCMP_Export
             }
         }
 
-        if (isset($_COOKIE['response']) && $_COOKIE['response'] !== 'undefined') {
-            $response = $_COOKIE['response'];
+        if (isset($_COOKIE['myparcel_response'])) {
+            $response = $_COOKIE['myparcel_response'];
             printf(
                 '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p></div>',
                 $response
@@ -346,8 +341,12 @@ class WCMP_Export
             try {
                 $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
             } catch (Exception $ex) {
-                $errorMessage            = "The order could not be exported to MyParcel because: {$ex->getMessage()}";
+                $errorMessage            = "Order {$order_id} could not be exported to MyParcel because: {$ex->getMessage()}";
                 $this->errors[$order_id] = $errorMessage;
+
+                setcookie('myparcel_response', $this->errors[$order_id], time() + 20, "/");
+                WCMP_Log::add($this->errors[$order_id]);
+
                 continue;
             }
 
