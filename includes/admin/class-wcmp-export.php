@@ -370,7 +370,7 @@ class WCMP_Export
         }
 
         foreach ($order_ids as $order_id) {
-            if ($this->errors[$order_id]) {
+            if (isset($this->errors[$order_id])) {
                 continue;
             }
 
