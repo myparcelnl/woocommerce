@@ -61,6 +61,8 @@ abstract class WCMP_Upgrade_Migration
     }
 
     /**
+     * Get settings array and replace the specified setting with a new value.
+     *
      * @param array  $map
      * @param string $settingName
      * @param mixed  $newValue
