@@ -499,7 +499,7 @@ class WCMP_Checkout
             "dropOffDays"                                    => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS, 'getByName'],
             "dropOffDelay"                                   => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName'],
             "fridayCutoffTime"                               => [WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName'],
-            "saturdayCutoffTime"                             => [WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName'],
+            "saturdayCutoffTime"                             => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME, 'getStringByName'],
         ];
     }
 
