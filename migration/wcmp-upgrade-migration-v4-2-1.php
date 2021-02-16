@@ -20,11 +20,6 @@ class WCMP_Upgrade_Migration_v4_2_1 extends WCMP_Upgrade_Migration
      */
     private $defaultExportSettings = [];
 
-    /**
-     * @var string
-     */
-    private $weightUnit;
-
     public function __construct()
     {
         parent::__construct();
@@ -40,7 +35,6 @@ class WCMP_Upgrade_Migration_v4_2_1 extends WCMP_Upgrade_Migration
     protected function migrate(): void
     {
         $this->defaultExportSettings = $this->getSettings("woocommerce_myparcel_export_defaults_settings");
-        $this->weightUnit            = get_option('woocommerce_weight_unit');
 
         $this->replaceEmptyParcelWeight();
     }
@@ -63,9 +57,10 @@ class WCMP_Upgrade_Migration_v4_2_1 extends WCMP_Upgrade_Migration
 
     protected function calculateNewWeight(): float
     {
-        $emptyParcelWeight = (float)$this->defaultExportSettings[WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT];
+        $emptyParcelWeight = (float) $this->defaultExportSettings[WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT];
+        $weightUnit        = get_option('woocommerce_weight_unit');
 
-        if ('kg' === $this->weightUnit) {
+        if ('kg' === $weightUnit) {
             return $emptyParcelWeight / 1000;
         }
 
