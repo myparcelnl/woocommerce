@@ -22,6 +22,9 @@ class WCMP_Settings_Data
     public const DISPLAY_FOR_SELECTED_METHODS = "selected_methods";
     public const DISPLAY_FOR_ALL_METHODS      = "all_methods";
 
+    public const DISPLAY_TOTAL_PRICE     = "total_price";
+    public const DISPLAY_SURCHARGE_PRICE = "surcharge";
+
     public const NOT_ACTIVE        = "notActive";
     public const NO_OPTIONS        = "noOptions";
     public const EQUAL_TO_SHIPMENT = "equalToShipment";
@@ -838,6 +841,23 @@ class WCMP_Settings_Data
                     "You can change the place of the delivery options on the checkout page. By default it will be placed after shipping details.",
                     "woocommerce-myparcel"
                 ),
+            ],
+           [
+                "name"      => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => __("Show prices as", "woocommerce-myparcel"),
+                "type"      => "select",
+                "default"   => "total_price",
+                "options" => [
+                    self::DISPLAY_TOTAL_PRICE     => __(
+                        "Total price",
+                        "woocommerce-myparcel"
+                    ),
+                    self::DISPLAY_SURCHARGE_PRICE => __(
+                        "Surcharge",
+                        "woocommerce-myparcel"
+                    ),
+                ],
             ],
             [
                 "name"              => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
