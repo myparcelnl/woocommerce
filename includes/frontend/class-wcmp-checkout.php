@@ -237,11 +237,10 @@ class WCMP_Checkout
         foreach ($carriers as $carrier) {
             foreach (self::getDeliveryOptionsConfigMap($carrier) as $key => $setting) {
                 [$settingName, $function] = $setting;
-                $addBasePrice = $setting[2] ?? false;
 
                 $value = $settings->{$function}($carrier . '_' . $settingName);
 
-                if ($addBasePrice) {
+                if (is_numeric($value) && $this->useTotalPrice()) {
                     $value += $chosenShippingMethodPrice;
                 }
 
@@ -249,9 +248,23 @@ class WCMP_Checkout
             }
         }
 
-        $myParcelConfig['config']['priceStandardDelivery'] = $chosenShippingMethodPrice;
+        $myParcelConfig['config']['priceStandardDelivery'] = $this->useTotalPrice() ? $chosenShippingMethodPrice : null;
 
         return json_encode($myParcelConfig, JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * @return bool
+     */
+    public function useTotalPrice(): bool
+    {
+        $priceFormat = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
+
+        if (! isset($priceFormat) || WCMP_Settings_Data::DISPLAY_TOTAL_PRICE === $priceFormat){
+            return true;
+        }
+
+        return false;
     }
 
     /**
