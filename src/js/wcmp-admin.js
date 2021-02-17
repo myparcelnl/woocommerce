@@ -92,7 +92,7 @@ jQuery(($) => {
     /**
      * Click offset dialog button (single export).
      */
-    $(`${selectors.offsetDialog} a`).click(printOrderFromOffsetDialog);
+    $(selectors.offsetDialogButton).click(printOrderFromOffsetDialog);
 
     /**
      * Close offset dialog.
