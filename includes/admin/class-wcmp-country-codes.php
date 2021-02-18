@@ -17,8 +17,7 @@ class WCMP_Country_Codes
      */
     public static function isEuCountry(): bool
     {
-        $AbstractConsignment = (new AbstractConsignment());
-        return  $AbstractConsignment->isEuCountry();
+        return (new AbstractConsignment())->isEuCountry();
     }
 
     /**
@@ -26,8 +25,7 @@ class WCMP_Country_Codes
      */
     public static function isWorldShipmentCountry(): bool
     {
-        $AbstractConsignment = (new AbstractConsignment());
-        return  $AbstractConsignment->isCdCountry();
+        return (new AbstractConsignment())->isCdCountry();
     }
 
     /**
