@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractPickupLocationAdapter;
 
@@ -32,7 +34,7 @@ class WCMP_PickupLocationFromOrderAdapter extends AbstractPickupLocationAdapter
      */
     private function countryFromOptions(array $inputData, ?AbstractPickupLocationAdapter $adapter): string
     {
-        if (key_exists('cc', $inputData)) {
+        if (array_key_exists('cc', $inputData)) {
             return (string) $inputData['cc'];
         }
 
@@ -47,7 +49,7 @@ class WCMP_PickupLocationFromOrderAdapter extends AbstractPickupLocationAdapter
      */
     private function cityFromOptions(array $inputData, ?AbstractPickupLocationAdapter $adapter): string
     {
-        if (key_exists('city', $inputData)) {
+        if (array_key_exists('city', $inputData)) {
             return (string) $inputData['city'];
         }
 
@@ -62,7 +64,7 @@ class WCMP_PickupLocationFromOrderAdapter extends AbstractPickupLocationAdapter
      */
     private function locationCodeFromOptions(array $inputData, ?AbstractPickupLocationAdapter $adapter): string
     {
-        if (key_exists('location_code', $inputData)) {
+        if (array_key_exists('location_code', $inputData)) {
             return (string) $inputData['location_code'];
         }
 
@@ -77,7 +79,7 @@ class WCMP_PickupLocationFromOrderAdapter extends AbstractPickupLocationAdapter
      */
     private function locationNameFromOptions(array $inputData, ?AbstractPickupLocationAdapter $adapter): string
     {
-        if (key_exists('location_name', $inputData)) {
+        if (array_key_exists('location_name', $inputData)) {
             return (string) $inputData['location_name'];
         }
 
@@ -92,7 +94,7 @@ class WCMP_PickupLocationFromOrderAdapter extends AbstractPickupLocationAdapter
      */
     private function numberFromOptions(array $inputData, ?AbstractPickupLocationAdapter $adapter): string
     {
-        if (key_exists('number', $inputData)) {
+        if (array_key_exists('number', $inputData)) {
             return (string) $inputData['number'];
         }
 
@@ -107,7 +109,7 @@ class WCMP_PickupLocationFromOrderAdapter extends AbstractPickupLocationAdapter
      */
     private function postalCodeFromOptions(array $inputData, ?AbstractPickupLocationAdapter $adapter): string
     {
-        if (key_exists('postal_code', $inputData)) {
+        if (array_key_exists('postal_code', $inputData)) {
             return (string) $inputData['postal_code'];
         }
 
@@ -122,7 +124,7 @@ class WCMP_PickupLocationFromOrderAdapter extends AbstractPickupLocationAdapter
      */
     private function retailNetworkIdFromOptions(array $inputData, ?AbstractPickupLocationAdapter $adapter): string
     {
-        if (key_exists('retail_network_id', $inputData)) {
+        if (array_key_exists('retail_network_id', $inputData)) {
             return (string) $inputData['retail_network_id'];
         }
 
@@ -137,7 +139,7 @@ class WCMP_PickupLocationFromOrderAdapter extends AbstractPickupLocationAdapter
      */
     private function streetFromOptions(array $inputData, ?AbstractPickupLocationAdapter $adapter): string
     {
-        if (key_exists('street', $inputData)) {
+        if (array_key_exists('street', $inputData)) {
             return (string) $inputData['street'];
         }
 

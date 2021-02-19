@@ -386,7 +386,7 @@ class WCMP_Checkout
             WCX_Order::update_meta_data(
                 $order,
                 WCMYPA_Admin::META_DELIVERY_OPTIONS,
-                $deliveryOptions
+                $deliveryOptions->toArray()
             );
         }
     }
