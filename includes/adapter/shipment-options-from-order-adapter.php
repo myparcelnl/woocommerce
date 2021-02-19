@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
 
 class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapter
 {
-    const DEFAULT_INSURANCE = 0;
+    private const DEFAULT_INSURANCE = 0;
 
     /**
      * WCMP_ShipmentOptionsFromOrderAdapter constructor.
@@ -35,7 +37,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isSignatureFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
     {
-        if (key_exists('signature', $options)) {
+        if (array_key_exists('signature', $options)) {
             return (bool) $options['signature'];
         }
 
@@ -54,7 +56,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isOnlyRecipientFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
     {
-        if (key_exists('only_recipient', $options)) {
+        if (array_key_exists('only_recipient', $options)) {
             return (bool) $options['only_recipient'];
         }
         if ($shipmentOptionsAdapter) {
@@ -72,7 +74,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isLargeFormatFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
     {
-        if (key_exists('large_format', $options)) {
+        if (array_key_exists('large_format', $options)) {
             return (bool) $options['large_format'];
         }
 
@@ -91,7 +93,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isReturnShipmentFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
     {
-        if (key_exists('return_shipment', $options)) {
+        if (array_key_exists('return_shipment', $options)) {
             return (bool) $options['return_shipment'];
         }
 
@@ -110,7 +112,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isAgeCheckFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
     {
-        if (key_exists('age_check', $options)) {
+        if (array_key_exists('age_check', $options)) {
             return (bool) $options['age_check'];
         }
 
@@ -129,7 +131,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isInsuranceFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?int
     {
-        if (key_exists('insured', $options)) {
+        if (array_key_exists('insured', $options)) {
             if ($options['insured']) {
                 return (int) $options['insured_amount'];
             }
@@ -154,7 +156,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
         array $options,
         ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter
     ): ?string {
-        if (key_exists('label_description', $options)) {
+        if (array_key_exists('label_description', $options)) {
             return $options['label_description'];
         }
 
