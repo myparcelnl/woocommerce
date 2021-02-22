@@ -195,9 +195,29 @@ class WCMP_API extends WCMP_Rest
 
             $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
             $trackTrace   = $shipmentData["track_trace"] ?? null;
+
+            $this->updateOrderStatus($order);
             ChannelEngine::updateMetaOnExport($order, $trackTrace);
         }
 
         WCMP_Export::saveTrackTracesToOrders($collection, $orderIds);
+    }
+
+    /**
+     * Update the status of given order based on the automatic order status settings.
+     *
+     * @param WC_Order $order
+     */
+    private function updateOrderStatus(WC_Order $order): void
+    {
+        if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION)) {
+            $newStatus = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
+            $order->update_status(
+                $newStatus,
+                __("MyParcel shipment created:", "woocommerce-myparcel")
+            );
+
+            WCMP_Log::add("Status of order {$order->get_id()} updated to \"$newStatus\"");
+        }
     }
 }
