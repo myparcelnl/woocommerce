@@ -1,8 +1,8 @@
-const {importTranslations} = require('./importTranslations');
+const {createGettextFiles} = require('./createGettextFiles');
 const {downloadFile} = require('./downloadFile');
 
 /**
- * Downloads translations from Google Sheets and run importTranslations with the received data.
+ * Downloads translations from Google Sheets and run createGettextFiles with the received data.
  *
  * @see https://docs.google.com/spreadsheets/d/1WSx25YNJRyOZpkuJZLLY6hrNufe25SJaGH4dgX_og4I/edit#gid=0
  */
@@ -12,7 +12,7 @@ function downloadTranslations() {
 
   downloadFile(
     `https://docs.google.com/spreadsheets/d/${documentId}/gviz/tq?tqx=out:csv&gid=${sheetId}`,
-    importTranslations,
+    createGettextFiles,
   );
 }
 

@@ -248,17 +248,14 @@ class OrderSettingsRows
             [
                 "name"      => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
                 "type"      => "toggle",
-                "label"     => __("Age check 18+", "woocommerce-myparcel"),
-                "help_text" => __(
-                    "The age check is intended for parcel shipments for which the recipient must show 18+ by means of a proof of identity. With this shipping option Signature for receipt and Delivery only at recipient are included. The age 18+ is further excluded from the delivery options morning and evening delivery.",
-                    "woocommerce-myparcel"
-                ),
+                "label"     => __("shipment_options_age_check", "woocommerce-myparcel"),
+                "help_text" => __("shipment_options_age_check_help_text", "woocommerce-myparcel"),
                 "value"     => $orderSettings->hasAgeCheck(),
                 "condition" => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     self::CONDITION_CARRIER_DEFAULT,
-                    ],
+                ],
             ],
             [
                 "name"      => self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT,
