@@ -179,13 +179,12 @@ abstract class Data
      * @param string|array $value   the meta value, will be encoded if it's an array
      * @param int|string   $meta_id Optional. The specific meta ID to update
      *
-     * @throws \JsonException
      * @since 4.6.0-dev
      */
     public static function update_meta_data($object, $key, $value, $meta_id = ''): void
     {
         if (is_array($value)) {
-            $value = json_encode($value, JSON_THROW_ON_ERROR);
+            $value = json_encode($value);
         }
 
         if (WC_Core::is_wc_version_gte_3_0()) {

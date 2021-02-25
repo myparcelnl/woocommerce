@@ -437,12 +437,9 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
-                "label"     => __("Age check 18+", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_age_check", "woocommerce-myparcel"),
                 "type"      => "toggle",
-                "help_text" => __(
-                    "The age check is intended for parcel shipments for which the recipient must show they are 18+ years old by means of a proof of identity. With this option 'signature for receipt' and 'delivery only at recipient' are included. This option can't be combined with morning or evening delivery.",
-                    "woocommerce-myparcel"
-                ),
+                "help_text" => __("shipment_options_age_check_help_text", "woocommerce-myparcel"),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,

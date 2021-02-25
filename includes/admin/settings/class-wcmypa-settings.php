@@ -351,7 +351,7 @@ class WCMYPA_Settings
             $helpText = Arr::get($field, "args.help_text");
             $label    = Arr::get($field, "args.label_for");
 
-            printf('<th scope="row""><label class="wcmp__ws--nowrap" %s>%s%s</label></th>',
+            printf('<th scope="row"><label class="wcmp__ws--nowrap" %s>%s%s</label></th>',
                 $label ? "for=\"" . esc_attr($label) . "\"" : "",
                 Arr::get($field, "title"),
                 $helpText ? wc_help_tip($helpText) : ""

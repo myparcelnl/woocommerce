@@ -798,40 +798,33 @@ class WCMYPA_Admin
                 'id'          => self::META_HS_CODE,
                 'label'       => __('HS Code', 'woocommerce-myparcel'),
                 'type'        => 'text',
-                'description' => sprintf(
-                    __('HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s',
-                       'woocommerce-myparcel'
-                    ),
-                    '<a href="http://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',
-                    '</a>'
+                'description' => wc_help_tip(
+                    sprintf(
+                        __(
+                            'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s',
+                            'woocommerce-myparcel'
+                        ),
+                        '<a href="https://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',
+                        '</a>'
+                    )
                 ),
             ],
             'Country-of-origin' => [
                 'id'          => self::META_COUNTRY_OF_ORIGIN,
                 'label'       => __('Country of origin', 'woocommerce-myparcel'),
                 'type'        => 'text',
-                'description' => sprintf(
-                    wc_help_tip(
-                        __('Country of origin is required for world shipments. Defaults to shop base.')
-                    )
-                ),
+                'description' => wc_help_tip(__('Country of origin is required for world shipments. Defaults to shop base.', 'woocommerce-myparcel')),
             ],
             'Age-check'         => [
                 'id'          => self::META_AGE_CHECK,
-                'label'       => __('Age check', 'woocommerce-myparcel'),
+                'label'       => __('shipment_options_age_check', 'woocommerce-myparcel'),
                 'type'        => 'select',
                 'options'     => [
                     'Default',
                     'Enabled',
                     'Disabled',
                 ],
-                'description' => sprintf(
-                    wc_help_tip(
-                        __("The age check is intended for parcel shipments for which the recipient must show they are 18+ years old by means of a proof of identity. With this option 'signature for receipt' and 'delivery only at recipient' are included. This option can't be combined with morning or evening delivery.",
-                           "woocommerce-myparcel"
-                        )
-                    )
-                ),
+                'description' => wc_help_tip(__('shipment_options_age_check_help_text', 'woocommerce-myparcel')),
             ],
         ];
     }
