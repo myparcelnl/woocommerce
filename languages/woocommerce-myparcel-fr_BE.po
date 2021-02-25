@@ -650,7 +650,7 @@ msgid ""
 "order confirmation and My Account."
 msgstr ""
 
-msgid "Show prices as"
+msgid "checkout_options_price_format"
 msgstr ""
 
 msgid "Show Track & Trace trace code and link in My Account."
@@ -683,7 +683,7 @@ msgstr "Rue"
 msgid "Suffix"
 msgstr "Extension"
 
-msgid "Surcharge"
+msgid "checkout_options_surcharge"
 msgstr ""
 
 msgid "The label has been printed."
@@ -745,7 +745,7 @@ msgstr "Titre pour le code-barres"
 msgid "Titles"
 msgstr "Titres"
 
-msgid "Total price"
+msgid "checkout_options_total_price"
 msgstr ""
 
 msgid "Total weight"

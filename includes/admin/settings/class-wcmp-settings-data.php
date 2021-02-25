@@ -845,16 +845,16 @@ class WCMP_Settings_Data
            [
                 "name"      => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Show prices as", "woocommerce-myparcel"),
+                "label"     => __("checkout_options_price_format", "woocommerce-myparcel"),
                 "type"      => "select",
-                "default"   => "total_price",
+                "default"   => self::DISPLAY_TOTAL_PRICE,
                 "options" => [
                     self::DISPLAY_TOTAL_PRICE     => __(
-                        "Total price",
+                        "checkout_options_total_price",
                         "woocommerce-myparcel"
                     ),
                     self::DISPLAY_SURCHARGE_PRICE => __(
-                        "Surcharge",
+                        "checkout_options_surcharge",
                         "woocommerce-myparcel"
                     ),
                 ],
