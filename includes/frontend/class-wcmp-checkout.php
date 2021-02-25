@@ -201,17 +201,19 @@ class WCMP_Checkout
         $cartTotals                = WC()->session->get('cart_totals');
         $chosenShippingMethodPrice = (float) $cartTotals['shipping_total'];
         $displayIncludingTax       = WC()->cart->display_prices_including_tax();
+        $priceFormat               = self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
 
         if ($displayIncludingTax) {
             $chosenShippingMethodPrice += (float) $cartTotals['shipping_tax'];
         }
 
         $myParcelConfig = [
-            "config"  => [
-                "currency"  => get_woocommerce_currency(),
-                "locale"    => "nl-NL",
-                "platform"  => "myparcel",
-                "basePrice" => $chosenShippingMethodPrice,
+            "config" => [
+                "currency"           => get_woocommerce_currency(),
+                "locale"             => "nl-NL",
+                "platform"           => "myparcel",
+                "basePrice"          => $chosenShippingMethodPrice,
+                "showPriceSurcharge" => $priceFormat === WCMP_Settings_Data::DISPLAY_SURCHARGE_PRICE,
             ],
             "strings" => [
                 "addressNotFound"       => __("Address details are not entered", "woocommerce-myparcel"),
