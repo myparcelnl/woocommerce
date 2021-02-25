@@ -666,7 +666,7 @@ msgstr ""
 "De optie \"Toon bezorgdatum\" laat je klanten de bezorgdag zien in "
 "orderbevestigingen en Mijn Account."
 
-msgid "Show prices as"
+msgid "checkout_options_price_format"
 msgstr "Prijzen tonen als"
 
 msgid "Show Track & Trace trace code and link in My Account."
@@ -699,7 +699,7 @@ msgstr "Straatnaam"
 msgid "Suffix"
 msgstr "Toev."
 
-msgid "Surcharge"
+msgid "checkout_options_surcharge"
 msgstr "Meerprijs"
 
 msgid "The label has been printed."
@@ -770,7 +770,7 @@ msgstr "Titel voor de barcode"
 msgid "Titles"
 msgstr "Titels"
 
-msgid "Total price"
+msgid "checkout_options_total_price"
 msgstr "Totaalprijs"
 
 msgid "Total weight"

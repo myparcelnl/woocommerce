@@ -669,7 +669,7 @@ msgstr ""
 "The \"Show delivery date\" option allows your customers to see the delivery "
 "date in order confirmations and My Account."
 
-msgid "Show prices as"
+msgid "checkout_options_price_format"
 msgstr "Show prices as"
 
 msgid "Show Track & Trace trace code and link in My Account."
@@ -702,7 +702,7 @@ msgstr "Street name"
 msgid "Suffix"
 msgstr "Suffix"
 
-msgid "Surcharge"
+msgid "checkout_options_surcharge"
 msgstr "Surcharge"
 
 msgid "The label has been printed."
@@ -767,7 +767,7 @@ msgstr "Title before the barcode"
 msgid "Titles"
 msgstr "Titles"
 
-msgid "Total price"
+msgid "checkout_options_total_price"
 msgstr "Total price"
 
 msgid "Total weight"
