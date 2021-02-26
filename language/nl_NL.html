@@ -133,6 +133,12 @@
 				
 				In het voorbeeld is te zien dat de verzendmethoden <span class="nice">Vast tarief</span> en <span class="nice">Gratis verzending</span> is gekoppeld aan het pakkettype <span class="nice">Pakket</span>.
 			</p>
+            
+            <p>
+            <b>Verzendmethoden:</b>
+
+            In WooCommerce is het nodig dat je verzendzones aanmaakt, met daarin verzendmethoden. Je beslist zelf wat het tarief is van een bepaalde verzendmethode. Dit kan je instellen via <span class="nice">Woocommerce > Instellingen > Verzendmethoden</span>. Wat MyParcel aan jou aanrekent voor een verzending staat dus los van het bedrag dat jij aan jouw klanten aanrekent.
+            </p>
 		
 		<h3 id="2_2_2">2.2.2 Koppel emailadres klant</h3>
 			<p>
@@ -179,7 +185,11 @@
 				Vul hier het land van herkomst van je producten in. Je kunt dit altijd nog aanpassen per zending in de backoffice van je MyParcel-account.<br><br>
 			
 			</p>
-		
+            <h3 id="2_2_9">2.2.9 Default carrier</h3>
+                <p>
+                Geef hier aan welke vervoerder je als standaard wil instellen. Als je meerdere vervoerders hebt geactiveerd en de bezorgopties (zie 2.3.2) zijn niet ingeschakeld, zal er steeds een label worden aangemaakt van de vervoerder die je hier kiest.
+                <br><br>
+                </p>
 		
 		<h2 id="2_3">2.3 Checkout instellingen</h2>
 			<p>
@@ -192,10 +202,9 @@
 			<p>
 				Wanneer aangevinkt wordt er gebruikt gemaakt van de MyParcel BE adresvelden. Dit houdt in dat straat, huisnummer en toevoeging los komen te staan. Wil je de standaard WooCommerce adresvelden gebruiken?
 				Laat deze optie uitgevinkt staan.<br><br>
-				
+                </p>
 				<img alt="" width="600px" src="media/WooCommerceBE_AlternatieveAdresvelden.png">
-			</p>
-		
+			
 		<h3 id="2_3_2">2.3.2 Toon bezorgdag</h3>
 			<p>
 				Toon de bezorgdag zodat klanten de bezorgdag kunnen zien in de orderbevestiging en Mijn Account.<br><br>
@@ -265,14 +274,14 @@
 		<h3 id="3_1_1">3.1.1 Verzekerde verzending (tot €500)</h3>
 		<p>
 			Hiermee worden zendingen "standaard" met verzekerd verzonden. Er zit standaard geen verzekering op de zendingen. Indien je toch wilt verzekeren kun je dit hier aanzetten.
-			Wij verzekeren de inkoopwaarde van je product voor €500. Verzekerde pakketten bevatten altijd de optie "Handtekening voor ontvangst".
+			Wij verzekeren de inkoopwaarde van je product voor €500. Verzekerde pakketten bevatten altijd de optie "Handtekening voor ontvangst". <br><br>
+            
+            *Er gelden verschillende voorwaarden bij een verzekerd pakket. Je kan alle voorwaarden van Bpost omtrent verzekerde pakketten via <a href="https://www.bpost.be/sites/default/files/free_form/GTC_Pakjes_contractuele_kant_current.pdf">deze link</a>. Claims moeten ook steeds via MyParcel verlopen.
 		</p>
 
-		<h3 id="3_1_2">3.1.2 Handtekening voor ontvangst</h3>
+		<h3 id="3_1_2">3.1.2 Verzekerd vanaf (optioneel)</h3>
 		<p>
-			Hiermee worden zendingen "standaard" met handtekening voor ontvangst verzonden.
-			Het pakket wordt allereerst op het huisadres aangeboden. Mocht de geadresseerde niet thuis zijn, dan wordt het pakket bij de buren afgegeven.
-			Er moet in beide gevallen voor worden getekend.
+        Eens 'Verzekerde verzending' ingeschakeld is kan je een minimum bedrag instellen om aan te geven wanneer het pakket verzekerd mag zijn.
 		</p>
 
 		<h2 id="3_2">3.2 bpost bezorgopties</h2>
@@ -336,9 +345,10 @@
 
 		<h2 id="4_1">4.1 DPD bezorgopties</h2>
 			<p>
-                "DPD bezorging inschakelen" hiermee schakel je de vervoerder DPD in voor je bezorgopties.<br><br>
+                "DPD bezorging inschakelen" hiermee schakel je de vervoerder DPD in voor je bezorgopties.DPD zendingen zijn standaard verzekerd tot 520€ dus hier is geen aparte optie voor. <br><br>
                 
-                <img alt="" width="600px" src="media/WooCommerceBE_DPDBezorgopties.png"> 
+                *Er gelden verschillende voorwaarden bij een verzekerd pakket. Je kan alle voorwaarden van Bpost omtrent verzekerde pakketten via <a href="https://www.dpd.com/be/nl/algemene-voorwaarden/">deze link</a>.
+                Claims moeten ook steeds via MyParcel verlopen.
 			</p>
 
 		<h3 id="4_1_1">4.1.1 Afleverdagen</h3>
@@ -387,6 +397,9 @@
 			<p>
 				Via het tabblad 'PostNL' heb je de mogelijkheid om de instellingen van de vervoerder PostNL te inschakelen/uitschakelen. 
 			</p>
+            <p>
+            *Er gelden verschillende voorwaarden bij een verzekerd pakket. Je kan alle voorwaarden van PostNL omtrent verzekerde pakketten via <a href="https://www.postnl.be/algemene-voorwaarden/">deze link</a> Claims moeten ook steeds via MyParcel verlopen.
+            </p>
 		   
 		<h2 id="5_1">5.1 Standaard exportinstellingen</h2>
 			<p>
@@ -402,17 +415,11 @@
 				Wij verzekeren de inkoopwaarde van je product voor €500. Verzekerde pakketten bevatten altijd de optie "Handtekening voor ontvangst".
 			</p>
 
-		<h3 id="5_1_2">5.1.2 Handtekening voor ontvangst</h3>
+		<h3 id="5_1_2">5.1.2 Verzeker vanaf (optioneel)</h3>
 			<p>
-				Hiermee worden zendingen "standaard" met handtekening voor ontvangst verzonden.
-				Het pakket wordt allereerst op het huisadres aangeboden. Mocht de geadresseerde niet thuis zijn, dan wordt het pakket bij de buren afgegeven.
-				Er moet in beide gevallen voor worden getekend.
+            Eens Verzekerde verzending ingeschakeld is kan je een minimum bedrag instellen om aan te geven wanneer het pakket verzekerd mag zijn.
 			</p>
-        
-        <h3 id="5_1_3">5.1.3 Groot pakket</h3>
-            <p>
-                Hiermee worden zendingen standaard een groot pakket. Schakel deze in als al jouw pakketten als groot pakket (XL-pakket) moeten worden verzonden. Je kunt dit ook altijd per bestelling instellen, mocht dat nodig zijn.
-            </p>
+    
         
         <h2 id="5_2">5.2 PostNL bezorgopties</h2>
             <p>
