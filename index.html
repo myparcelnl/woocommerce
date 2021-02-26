@@ -48,11 +48,17 @@
             <h1>Inhoud</h1>
             <div class="menu"></div>
             <div>
+                <h1 id="1">1 Registratie</h1>
+                <p>Om gebruik te kunnen maken van de PostNL plugin in WooCommerce, zul je je moeten registreren bij <a href="https://www.postnl-plugins.nl">PostNL-plugins.nl</a>. Maak hiervoor een API-key aan in <a href="https://mijn.postnl.nl/c/BP2_Mod_Login.app?inresponseto=&RelayState=&startURL=%2Fc%2FBP2_Mod_APIManagement.app">Mijn PostNL</a> voor WooCommerce (of via je accountmanager) en gebruik de gegevens die onder de API keys staan vermeld. <b> Gebruik de productiekey voor de registratie op PostNL-plugins.nl.</b>
+                </p>
+                <p><u>Let op! Voor het gebruik van de PostNL plug-in heb je een contract nodig.</u></p>
+                
+                <p></p>
 
-                <h1 id="1">1 Installatie</h1>
+                <h1 id="2">2 Installatie</h1>
                 <p>Wij adviseren de installatie altijd eerst op een testomgeving uit te voeren en een back-up te maken van uw webshop voordat u begint.</p>
 
-                <h2 id="1_1">1.1 Via de WordPress plugin directory</h2>
+                <h2 id="2_1">2.1 Via de WordPress plugin directory</h2>
                 <p>Om de PostNL plugin te installeren via de WordPress plugin directory volgt u de volgende stappen:</p>
                 <ol>
                     <li>Ga in WordPress naar het menu <span class="nice">Plugins > Nieuwe plugin</span>. </li>
@@ -61,7 +67,7 @@
                     <li>Wanneer het downloaden voltooid is, klikt u op <span class="nice">Plugin activeren</span>.</li>
                 </ol>
 
-                <h2 id="1_2">1.2 Handmatig uploaden</h2>
+                <h2 id="2_2">2.2 Handmatig uploaden</h2>
                 <ol>
                     <li>Download de zip file van de plugin vanaf de WordPress site:
                   <a href="http://www.wordpress.org/plugins/woocommerce-postnl/" target="_blank"> http://www.wordpress.org/plugins/woocommerce-postnl/</a>
@@ -71,7 +77,7 @@
                     <li>Kies het bestand en klik op <span class="nice">Nu Installeren</span>.</li>
                     <li>Wanneer het installeren voltooid is, klikt u op ‘Plugin activeren’. </li>
                 </ol>
-                 <h2 id="1_3">1.3 Testen</h2>
+                 <h2 id="2_3">2.3 Testen</h2>
                 <p>
                     Met de plugin van PostNL worden bepaalde bezorgopties toegevoegd aan uw checkout. Welke bezorgopties u wilt aanbieden aan uw klant, deze zijn terug te vinden in de configuratie van de PostNL plug-in.
                     Wij adviseren dan ook om na het installeren van de plugin uw bestelproces goed door te lopen of alles naar wens is. Met de checkout is het namelijk mogelijk om bijvoorbeeld uitgestelde levering in te stellen, het is dan fijn voor u om te zien wat uw klanten ook zullen zien.
@@ -79,123 +85,110 @@
                     Ook omdat niet alle checkouts in Woocommerce hetzelfde werken is het nogmaals goed om te kijken of alles naar wens staat. Staat alles op de juiste plaats en is het goed uitgelijnd? Onze tip is om hier naar te kijken voordat uw klanten dit gebruiken.
                 </p>
 
-                <h1 id="2">2 Configuratie</h1>
+                <h1 id="3">3 Configuratie</h1>
                 <p>Ga naar het menu <span class="nice">WooCommerce → PostNL</span> om de PostNL plugin te configureren.<br></p>
 
-                <h2 id="2_1">2.1 Algemeen</h2>
+                <h2 id="3_1">3.1 Algemeen</h2>
+                
+               
+                
+                <h3 id="3_1_1">API instellingen</h3>
+                <img alt="" src="media/PostNL_algemeen_instellingen1.png">
+                <p>Om verbinding te kunnen maken met uw PosNL account is het noodzakelijk om hier uw API-key in te vullen. Zie Hoofdstuk 1.</p>
+                
+                <h3 id="3_1_1_0">Algemene instellingen</h3>
+                <img alt="" src="media/PostNL_algemeen_instellingen2.png">
 
-                <h3 id="2_2_1">2.1.1 API instellingen</h3>
-                <p>Om verbinding te kunnen maken met uw PosNL account is het noodzakelijk om hier uw API-key in te vullen. Deze API-key krijgt u van uw PostNL account manager.</p>
 
-                <h3 id="2_1_2">2.1.2 Label weergave</h3>
+                <h4 id="3_1_2">Label weergave</h3>
                 <p>Geef hier aan of u het label direct wilt downloaden of wilt openen in een nieuw scherm.</p>
 
-                <h3 id="2_1_3">2.1.3 Label format</h3>
+                <h4 id="3_1_3">Label format</h3>
                 <p>Geef hier aan of u het label wilt printen op A4 formaat of op A6 formaat.</p>
 
-                <h3 id="2_1_4">2.1.4 Track&Trace instellingen</h3>
+                <h4 id="3_1_4">Track&Trace instellingen</h3>
                 <p>Stel ’track&trace in email’ in zodat de track&trace van de order wordt meegenomen in uw track&trace email."</p>
+                
+                <h4 id="3_1_5">Verwerk zendingen direct</h3>
+                <p>Als je wilt dat er direct een barcode wordt gegenereerd na exporteren van de zending, zet je deze instelling aan.</p>
+                
+                <p>Deze instelling <b>moet</b> aan staan als je wilt dat de track en trace-code wordt toegevoegd aan de mail 'Bestelling afgerond en/of verzonden' en daarbij ook gebruik maakt van de Orderstatus automatisering ('Afgerond'). Anders word de track en trace-code niet toegevoegd.</p>
+                
+                <h4 id="3_1_6">Orderstatus automatisering</h3>
+                <p>Je kunt de status van de zending door de plugin na exporteren direct laten wijzigen naar een gekozen status. Op het moment dat de zending de status 'Afgerond' krijgt, wordt er een mail naar je klant verstuurd. Door 'Track en trace in email' en 'Verwerk zendingen direct' aan te zetten, krijg je klanten een track en trace-code.</p>
+                
 
-                <h3 id="2_1_5">2.1.5 Diagnostische hulpmiddelen</h3>
-                <p> U kunt de diagnostische hulpmiddelen inschakelen op het moment dat er problemen zijn met het exporteren van de zendingen. In dit bestand wordt de communicatie tussen WooCommerce en PostNL beschreven.</p>
+                <h4 id="3_1_7">Diagnostische hulpmiddelen</h3>
+                <p> U kunt de diagnostische hulpmiddelen inschakelen op het moment dat er problemen zijn met het exporteren van de zendingen. In dit bestand wordt de communicatie tussen WooCommerce en PostNL beschreven. Support kan dit gebruiken om het probleem te identificeren en te verhelpen.</p>
 
-                <img src="media/PostNL_algemeen_instellingen.png">
-                <h2 id="2_2">2.2 Standaard exportinstellingen</h2>
+                <h2 id="3_2">3.2 Standaard exportinstellingen</h2>
 
-                <h3 id="2_2_1">2.2.1 Pakkettype koppelen aan verzendtype</h3>
+                <h3 id="3_2_1">Pakkettype koppelen aan verzendtype</h3>
                 <p>
-                    U kunt een verzendmethoden koppelen aan een pakkettype, zodat het juiste label wordt aangemaakt in uw PostNL account. Met onderstaand voorbeeld lichten we dit verder toe.<br><br>
-                    <img src="media/PostNL_pakkettype.png">
-                    <br><br>
+                    U kunt een verzendmethoden koppelen aan een pakkettype, zodat het juiste label wordt aangemaakt in uw PostNL account. Met onderstaand voorbeeld lichten we dit verder toe.In het voorbeeld is te zien dat de verzendmethode <span class="nice">Vast tarief</span> is gekoppeld aan het pakkettype <span class="nice">Pakket</span> Dit betekent dat orders met deze verzendmethode als pakke3t doorgezet worden naar PostNL.</p>
+             
+             <img alt="" src="media/postnl_standaardexportinstellingen.png"><br>
 
-                    In het voorbeeld is te zien dat de verzendmethode <span class="nice">Vast tarief</span> is gekoppeld aan het pakkettype <span class="nice">Pakket</span>
-
-                    Daarnaast hebben we de naam van de verzendmethode <span class="nice">Flat rate NL</span> aangepast naar <span class="nice">Brievenbuspakket</span> en deze is gekoppeld aan <span class="nice">Brievenbuspakje</span>. Dit betekent dat orders met deze verzendmethode als brievenbuspakje doorgezet worden naar PostNL.<br><br>
-                    Als laatste staat <span class="nice">gratis verzending</span>, met deze verzendmethode wordt een <span class="nice">ongefrankeerd label</span> aangemaakt. U kunt dit uiteraard ook weglaten of hier een andere verzendmethoden aan koppelen.
-                    <br><br>
-                    De checkout is nu ook gekoppeld aan deze verzendmethoden. Wanneer uw klant voor de optie <span class="nice">Brievenbuspakket</span> heeft gekozen zal de uitgebreide checkout niet getoond worden. Ook bij zendingen naar het buitenland wordt deze checkout dan niet getoond. De reden hiervoor is omdat de extra opties niet beschikbaar zijn in combinatie met een brievenbuspakket of een buitenlandse zending.
-                </p>
                 <p>
                   Wanneer er gebruik wordt gemaakt van <span class="nice">verzendklassen</span>, dan is het ook mogelijk om deze aan de checkout te koppelen.<br><br>
-                  <img src="media/PostNL_verzendzones.png">
-                  <img src="media/PostNL_verzendklassen.png">
-                  <img src="media/PostNL_pakkettype_met_verzendmethoden.png"><br><br>
                   <i>Let op! Het gaat hier om de standaardinstelling. Uiteraard kan dit nog per order handmatig aangepast worden.</i>
-                </p>
-
-                <h3 id="2_2_2">2.2.2 Extra verzendopties</h3>
-                <p>Geef direct aan wat uw standaard verzendopties zijn voor uw Nederlandse pakket zendingen. U kunt hier kiezen voor alleen huisadres, handtekening voor ontvangst, Leeftijdscheck 18+, retour bij geen gehoor en verzekerd verzenden. Uw zendingen krijgen hiermee standaard de verzendoptie mee wanneer u deze exporteerd. De opties die u hier aangeeft, kunnen bij het exporteren altijd nog per zending aangepast worden.</p>
-
-                <h3 id="2_2_3">2.2.3 Leeftijdscheck 18+</h3>
-                <p>De leeftijdscheck is bedoeld voor pakketzendingen waarvoor de ontvanger 18+ moet zijn en dit moet bewijzen door middel van een identiteitsbewijs. Met deze verzendoptie zijn handtekening voor ontvangst en alleen huisadres inbegrepen. De leeftijdscheck is verder uitgesloten van de bezorgopties in de ochtend- en avondlevering.</p>
-
-
-                <h3 id="2_2_4">2.2.4 Label omschrijving</h3>
-                <p>Met deze optie kunt u een beschrijving toevoegen aan de zending. Dit zal worden afgedrukt op de linkerbovenhoek van het label en kunt u gebruiken om de zending in uw zendingenoverzicht op te zoeken. Gebruik [ORDER_NR] om het ordernummer te vermelden.</p>
-
-                <h3 id="2_2_5">2.2.5 Leeg pakket gewicht</h3>
+                  </p>
+                  <img src="media/PostNL_verzendzones.png"><br><br>
+                  <img src="media/PostNL_verzendklassen.png"><br><br>
+                  <img src="media/PostNL_pakkettype_met_verzendmethoden.png"><br><br>
+                  
+                <h3 id="3_2_2">Leeg pakket gewicht</h3>
                 <p>Geef hier aan wat het gewicht van een leeg pakket is, afgerond op gram.</p>
 
-                <h2 id="2_3">2.3 Checkout</h2>
+                <h3 id="3_2_3">Label omschrijving</h3>
+                <p>Met deze optie kunt u een beschrijving toevoegen aan de zending. Dit zal worden afgedrukt op de linkerbovenhoek van het label en kunt u gebruiken om de zending in uw zendingenoverzicht op te zoeken. Er zijn hiervoor enkele variabelen beschikbaar die je kunt vermelden op je label.</p>
+                
+                <h3 id="3_2_4">Default HS Code</h3>
+                <p>Vul hier een default HS Code in. Deze wordt gebruikt als er geen goederencode is ingevuld bij je product. Je kunt goederencodes vinden op <a href="https://tarief.douane.nl/arctictariff-public-web/#!/taric/nomenclature/sbt">tarief.douane.nl</a>.</p>
+
+                <h3 id="3_2_5">Customs shipment type</h3>
+                <p>Geef hier aan of de producten worden verkocht als giften, commerciele goederen, documenten etc.</p>
+
+                <h3 id="3_2_6">Standaard land van herkomst</h3>
+                <p>Vul hier het standaard land van herkomst in.</p>
+                
+                <h2 id="3_3">3.3 Checkout</h2>
+                <h3 id="3_3_1">Checkout settings</h3>
                 <p>
-                    Via het tabblad ‘Checkout’ heb u de mogelijkheid om meer verzendopties toe te voegen in uw checkout.
-                    Ook is het mogelijk om ervoor te kiezen de checkout niet enkel bij pakketten te tonen maar ook voor alle verzendmethoden.
-                </p>
+                Wanneer de optie PostNL adresvelden aangevinkt wordt er gebruik gemaakt van de PostNL adresvelden. Dit houdt in dat straat, huisnummer en toevoeging los komen te staan. Als u gebruik wilt maken van de standaard WooCommerce adresvelden, vink deze optie dan uit.</p>
+                
+                    <p>Ook is het mogelijk om ervoor te kiezen de checkout niet enkel bij pakketten te tonen maar ook voor alle verzendmethoden. Daarnaast is het mogelijk om de checkout te verplaatsen via <span class="nice">Checkout positie</span>, zodat hij op de gewenste positie komt te staan.</p>
+                
+                <img src="media/postnl_checkoutsettings1.png"><br><br>
 
-                <h3 id="2_3_1">2.3.1 PostNL adresvelden</h3>
-                <p>Wanneer de optie PostNL adresvelden aangevinkt wordt er gebruik gemaakt van de PostNL adresvelden. Dit houdt in dat straat, huisnummer en toevoeging los komen te staan. Als u gebruik wilt maken van de standaard WooCommerce adresvelden, vink deze optie dan uit.</p>
 
-                <h3 id="2_3_2">2.3.2 Verwerking van zendingen</h3>
+                <h2 id="3_4">3.4 PostNL</h3>
+                
+                <h3 id="3_4_1">PostNL instellingen</h3>
+                <p>Geef direct aan wat uw standaard verzendopties zijn voor uw Nederlandse pakket zendingen. U kunt hier kiezen voor alleen huisadres, handtekening voor ontvangst, Leeftijdscheck 18+, retour bij geen gehoor en verzekerd verzenden. Uw zendingen krijgen hiermee standaard de verzendoptie mee wanneer u deze exporteerd. De opties die u hier aangeeft, kunnen bij het exporteren altijd nog per zending aangepast worden.</p>
                 <p>
-                    Op basis van de opties <span class="nice">Afleverdagen</span>, <span class="nice">Sluitingstijd</span>, <span class="nice">Verwerkingstijd</span> en <span class="nice">Leverdagen venster</span>  worden de juiste levertijden en –dagen getoond aan uw klanten via de checkout, gebaseerd op uw manier van orderverwerking.
-                    Daarnaast is het mogelijk om de checkout te verplaatsen via <span class="nice">Bezorgopties positie</span>, zodat hij op de gewenste positie komt te staan.<br><br>
-                    <img src="media/PostNL_checkout_instellingen.png"><br>
-                </p>
-                <p>
-                    <b>Bezorgopties positie</b><br>
-                    Zou u de checkout op een andere plek willen hebben dan is dat mogelijk via de <span class="nice">bezorgopties positie.</span> Je kan de PostNL checkout op drie verschillende plekken zetten bijvoorbeeld <span class="nice">na factuurgegevens</span>,<span class="nice">na verzendgegevens</span> of <span class="nice">na notities</span>.<br><br>
+                    Op basis van de opties <span class="nice">Afleverdagen</span>, <span class="nice">Sluitingstijd</span>, <span class="nice">Verwerkingstijd</span> en <span class="nice">Leverdagen venster</span>  worden de juiste levertijden en –dagen getoond aan uw klanten via de checkout, gebaseerd op uw manier van orderverwerking.</p>
+                    
+                    <img alt="PostNL delivery options" src="media/postnl_postnlsettings2.png">
 
-                    <b>Afleverdagen</b><br>
-                    Hiermee kun u aangeven op welke dagen jij het pakket afgeeft bij een PostNL locatie. Uw klanten krijgen hiermee de juiste beschikbare bezorgdagen aangeboden.<br><br>
+                    <p><b>Afleverdagen</b><br>
+                    Hiermee kun u aangeven op welke dagen jij het pakket afgeeft bij een PostNL locatie. Uw klanten krijgen hiermee de juiste beschikbare bezorgdagen aangeboden.</p>
 
-                    <b>Sluitingstijd</b><br>
+                    <b>Sluitingstijd</b><p>
                     Met de sluitingstijd kun u aangeven tot welk moment van de dag de orders nog verwerkt kunnen worden. Als u elke dag rond 17:00 de bestellingen naar een PostNL locatie brengt is het handig om de laatste order rond 16:00 te verwerken. Wanneer uw klanten na dit tijdstip een bestelling plaatsen zien zij een latere levermogelijkheid. Bijvoorbeeld:
-                    Sluitingstijd is om 16:00 en u kunt dezelfde dag de orders verwerken en op tijd inleveren. Dan zal uw klant als eerste levermogelijkheid voor 16:00 de volgende dag zien. Wanneer uw klant na 16:00 besteld zal het de dag erna zijn.<br><br>
+                    Sluitingstijd is om 16:00 en u kunt dezelfde dag de orders verwerken en op tijd inleveren. Dan zal uw klant als eerste levermogelijkheid voor 16:00 de volgende dag zien. Wanneer uw klant na 16:00 besteld zal het de dag erna zijn.</p>
 
-                    <b>Verwerkingstijd</b><br>
+                   <p><b>Verwerkingstijd</b><br>
                     U kunt hier instellen hoeveel dagen jij nodig hebt om een order, die vóór uw laatste besteltijd binnenkomt, te verwerken. Als u bijvoorbeeld 1 dag invult, zal er in de weergave in de check-out altijd rekening gehouden worden met het feit dat jij de pakketten dus niet morgen geleverd worden. Bijvoorbeeld:
-                    De bestelling wordt geplaatst op 16 september voordat jij naar het PostNL punt gaat. Je hebt echter een verwerkingstijd van 1 dag ingesteld, dus de eerste mogelijkheid voor jou om het pakket in te leveren is dan 17 september. Jouw klant krijgt dan dus pas 18 september als eerst mogelijke leverdag te zien.<br><br>
+                    De bestelling wordt geplaatst op 16 september voordat jij naar het PostNL punt gaat. Je hebt echter een verwerkingstijd van 1 dag ingesteld, dus de eerste mogelijkheid voor jou om het pakket in te leveren is dan 17 september. Jouw klant krijgt dan dus pas 18 september als eerst mogelijke leverdag te zien.</p>
 
-                    <b>Leverdagen venster</b><br>
+                    <p><b>Leverdagen venster</b><br>
                     Met deze optie kun u aangeven tot hoever in de toekomst uw klanten een leverdag kunnen kiezen. In dit geval staat het op 10 dagen, maar dit kan natuurlijk ook 2 of 5 dagen zijn. Het maximum is 14 dagen. Wanneer het leverdagenvenster op '0' wordt gezet, zullen de dagen niet meer worden getoond, waardoor de consument geen dag meer kan kiezen.<br><br>
-                    <i>Let op: PostNL houdt geen rekening met de gekozen leverdag van uw klant. Je dient zelf zorg te dragen voor het op de juiste dag inleveren van uw pakket.</i>
-                </p>
-
-                <h3 id="2_3_3">2.3.3 Bezorgopties</h3>
-                <p>
-                    Bij de verschillende bezorgopties is het mogelijk een toeslag in te stellen. Deze zal voor de desbetreffende bezorgoptie doorberekend wordt aan uw klant, via de checkout. Het is mogelijk om min bedragen in te voeren ook deze zal dan in de checkout te zien zijn.
-                    Het is dus een toeslag op de standaardtarieven die u al hebt ingevoerd. In onderstaand voorbeeld zie u hoe deze toeslagen in de checkout terugkomen.<br><br>
-                    <img src="media/PostNL_checkout.png" style="width: 400px;">
-                    <img src="media/PostNL_checkout_posnl_locatie.png" style="width: 400px; position: absolute;"><br>
-                    <i><b>Let op:</b> de PostNL checkout kan er op iedere website er anders uit zien. De checkout zal de style van het thema overnemen.</i><br><br>
-
-                    Bij de opties <span class="nice">ochtendlevering</span>, <span class="nice">avondlevering</span> en de <span class="nice">standaard bezorgtitel</span> is het mogelijk een titel mee te geven. Deze titel zal aan de voorkant van de website te zien zijn.
-                    Zodra er geen titel is ingevuld zullen er tijden te zien zijn waartussen het pakket bezorg word.
-                </p>
-                <img src="media/PostNL_bezorgopties.png">
-
-                <h3 id="2_3_4">2.3.4 België bezorgopties</h3>
-                <p>
-                    Naast het feit dat het mogelijk is om uw pakketten bij een Nederlandse PostNL punt te laten bezorgen, is het ook mogelijk om voor een Belgische PostNL punt te kiezen.<br><br>
-
-                    <b>België thuislevering titel</b><br>
-                    De titel die u wilt gebruiken voor het thuis late bezorgen is aan te passen ten optichte van een Nederlandse zending.<br><br>
-
-                    <b>België standaard bezorgtitel</b><br>
-                    De titel die u wilt gebruiken voor een standaard levering naar België is aan te passen ten optichte van een Nederlandse zending. Wanneer er geen titel is ingevuld, worden de bezorgtijden automatisch zichtbaar.<br><br>
-                    <img src="media/PostNL_belgie_bezorg_opties.png"><br>
-                </p>
-                <h1 id="3">3 Orderoverzicht</h1>
+                    <i>Let op: PostNL houdt geen rekening met de gekozen leverdag van uw klant. Je dient zelf zorg te dragen voor het op de juiste dag inleveren van uw pakket.</i></p>
+                    
+                    
+                
+                <h1 id="4">4 Orderoverzicht</h1>
                 <p>
                     In het orderoverzicht kunt u eenvoudig zien wat voor zending de nieuwe bestelling betreft. Ook kunt u makkelijk het pakkettype wijzigen indien dit gewenst is. Wanneer u op <span class="nice">Pakket</span> klikt verschijnt het venster eronder. Hierin is het mogelijk om verzendopties uit te schakelen of juist toe te voegen of het soort zending aan te passen.
                 </p>
@@ -215,11 +208,11 @@
 
                 <i>Let op! Als u de eerste keer het label probeert te printen, is het mogelijk dat een pop-up blocker de download blokkeert.</i>
 
-                <h1 id="4">4 Orderdetails</h1>
+                <h1 id="5">5 Orderdetails</h1>
                 <p>Uiteraard is het ook mogelijk om zendingen vanuit de order detailpagina zendingen aan te maken. Door op een order te klikken komt u op een pagina waar meer details over deze bestelling te vinden is.</p>
                 <img src="media/PostNL_orderdetails.png">
 
-                <h1 id="5">5 Zending informatie</h1>
+                <h1 id="6">6 Zending informatie</h1>
                 <p>
                     Als u informatie over uw zending wilt zien is het niet nodig om dit te bekijken in uw PostNL account. U kunt deze informatie bekijken in uw order overzicht in WooCommerce.<br><br>
                     Bij elke order die wordt doorgezet naar PostNL en waarvoor een label is aangemaakt komt een <span class="nice">ⓘ</span> te staan. Door hierop te klikken wordt er meer informatie getoond over de status van de zending.
@@ -227,7 +220,7 @@
 
                 <img src="media/PostNL_zening_informatie.png">
 
-                <h1 id="6">6 Extra opties</h1>
+                <h1 id="7">7 Extra opties</h1>
                 <p>Het is in Woocommerce ook mogelijk om verzendtarieven te hanteren voor producten of bepaalde productgroepen. Om hier meer over te lezen kun u het volgende PDF bestand downloaden. Hierin staat meer uitgelegd over de werking van de verzendklassen of het werken met table rates.<br><br>
                     <a href="media/PostNL_verzendtarieven.pdf"> Klik hier voor de uitleg</a>
                 </p>

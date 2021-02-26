@@ -187,14 +187,16 @@ ol > li, ul > li {
 }
 
 .main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.1rem;
     font-weight: normal;
     color: #ed8c00;
 }
 
 .main-content p {
     margin-bottom: 1em;
+    margin-top: 0.1em;
+    text-align: justify;
 }
 
 .main-content code {
