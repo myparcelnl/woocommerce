@@ -10,14 +10,17 @@ if (! defined('ABSPATH')) {
 class WCMP_Shipping_Methods
 {
     public const FLAT_RATE                   = 'flat_rate';
+    public const FLEXIBLE_SHIPPING           = 'flexible_shipping';
+    public const FLEXIBLE_SHIPPING_INFO      = 'flexible_shipping_info';
     public const FREE_SHIPPING               = 'free_shipping';
+    public const LEGACY_FLAT_RATE            = 'legacy_flat_rate';
     public const LOCAL_PICKUP                = 'local_pickup';
     public const TABLE_RATES_BOLDER_ELEMENTS = 'betrs_shipping';
     public const TABLE_RATES_WOOCOMMERCE     = 'table_rate';
-    public const LEGACY_FLAT_RATE            = 'legacy_flat_rate';
 
-    private const SHIPPING_METHOD_CLASS_BETRS = 'BE_Table_Rate_Method';
-    private const SHIPPING_METHOD_CLASS_WC    = 'WC_Shipping_Table_Rate';
+    private const SHIPPING_METHOD_CLASS_WOOCOMMERCE      = 'WC_Shipping_Table_Rate';
+    private const SHIPPING_METHOD_CLASS_BOLDER_ELEMENTS  = 'BE_Table_Rate_Method';
+    private const SHIPPING_METHOD_CLASS_WP_DESK_FLEXIBLE = 'WPDesk_Flexible_Shipping';
 
     /**
      * Items in this array will not be added to the shipping methods array. Useful for table rates because the base
@@ -25,6 +28,8 @@ class WCMP_Shipping_Methods
      * shouldn't be in this array.
      */
     private const DISALLOWED_SHIPPING_METHODS = [
+        self::FLEXIBLE_SHIPPING,
+        self::FLEXIBLE_SHIPPING_INFO,
         self::TABLE_RATES_BOLDER_ELEMENTS,
         self::TABLE_RATES_WOOCOMMERCE,
     ];
@@ -56,12 +61,11 @@ class WCMP_Shipping_Methods
         }
 
         foreach ($wooCommerceShippingMethods as $shippingMethodId => $zoneShippingMethod) {
-            $method      = $wooCommerceShippingMethods[$shippingMethodId];
+            $method      = $zoneShippingMethod;
             $methodTitle = $method->method_title ?? $method->title;
 
             $this->addShippingMethod($shippingMethodId, $methodTitle);
             $this->addFlatRateShippingMethods($shippingMethodId, $methodTitle);
-
             $this->addShippingMethodsFromShippingZones();
         }
     }
@@ -81,7 +85,7 @@ class WCMP_Shipping_Methods
         $this->shippingMethods[$key] = $value;
     }
 
-    private function addShippingMethodsFromShippingZones()
+    private function addShippingMethodsFromShippingZones(): void
     {
         $shippingZones = WC_Shipping_Zones::get_zones();
 
@@ -94,11 +98,10 @@ class WCMP_Shipping_Methods
 
             $zone = WC_Shipping_Zones::get_zone($zoneId);
             /* @var WC_Shipping_Method[] $zoneShippingMethods */
-            $zoneShippingMethods = $zone->get_shipping_methods(false);
+            $zoneShippingMethods = $zone->get_shipping_methods();
 
             foreach ($zoneShippingMethods as $zoneShippingMethod) {
-                $this->addWooCommerceZoneShippingMethods($zone, $zoneShippingMethod);
-                $this->addBetrsZoneShippingMethods($zone, $zoneShippingMethod);
+                $this->addZoneShippingMethodRates($zone, $zoneShippingMethod);
             }
         }
     }
@@ -133,15 +136,32 @@ class WCMP_Shipping_Methods
     }
 
     /**
+     * @param \WC_Shipping_Zone   $zone
+     * @param \WC_Shipping_Method $zoneShippingMethod
+     */
+    private function addZoneShippingMethodRates(WC_Shipping_Zone $zone, WC_Shipping_Method $zoneShippingMethod): void
+    {
+        switch (get_class($zoneShippingMethod)) {
+            case self::SHIPPING_METHOD_CLASS_WOOCOMMERCE:
+                $this->addWooCommerceZoneShippingMethodRates($zone, $zoneShippingMethod);
+                break;
+            case self::SHIPPING_METHOD_CLASS_BOLDER_ELEMENTS:
+                $this->addBolderElementsZoneShippingMethodRates($zone, $zoneShippingMethod);
+                break;
+            case self::SHIPPING_METHOD_CLASS_WP_DESK_FLEXIBLE:
+                $this->addWPDeskFlexibleZoneShippingMethodRates($zoneShippingMethod);
+                break;
+        }
+    }
+
+    /**
      * @param WC_Shipping_Zone   $zone
      * @param WC_Shipping_Method $zoneShippingMethod
      */
-    private function addWooCommerceZoneShippingMethods(WC_Shipping_Zone $zone, WC_Shipping_Method $zoneShippingMethod)
-    {
-        if (! is_a($zoneShippingMethod, self::SHIPPING_METHOD_CLASS_WC)) {
-            return;
-        }
-
+    private function addWooCommerceZoneShippingMethodRates(
+        WC_Shipping_Zone $zone,
+        WC_Shipping_Method $zoneShippingMethod
+    ): void {
         foreach ($zoneShippingMethod->get_shipping_rates() as $zoneShippingRate) {
             $label = $zoneShippingRate->rate_label ?? "{$zoneShippingMethod->title} ({$zoneShippingRate->rate_id})";
 
@@ -156,12 +176,10 @@ class WCMP_Shipping_Methods
      * @param WC_Shipping_Zone   $zone
      * @param WC_Shipping_Method $zoneShippingMethod
      */
-    private function addBetrsZoneShippingMethods(WC_Shipping_Zone $zone, WC_Shipping_Method $zoneShippingMethod)
-    {
-        if (! is_a($zoneShippingMethod, self::SHIPPING_METHOD_CLASS_BETRS)) {
-            return;
-        }
-
+    private function addBolderElementsZoneShippingMethodRates(
+        WC_Shipping_Zone $zone,
+        WC_Shipping_Method $zoneShippingMethod
+    ): void {
         $shippingMethodOption = get_option($zoneShippingMethod->id . '_options-' . $zoneShippingMethod->instance_id);
 
         if (! isset($shippingMethodOption['settings'])) {
@@ -182,6 +200,18 @@ class WCMP_Shipping_Methods
                     "{$zone->get_zone_name()} - {$label}"
                 );
             }
+        }
+    }
+
+    /**
+     * @param \WC_Shipping_Method $zoneShippingMethod
+     */
+    private function addWPDeskFlexibleZoneShippingMethodRates(WC_Shipping_Method $zoneShippingMethod): void
+    {
+        $shippingMethodOption = get_option($zoneShippingMethod->shipping_methods_option);
+
+        foreach ($shippingMethodOption as $item) {
+            $this->addShippingMethod($item['id_for_shipping'], $item['method_title']);
         }
     }
 }

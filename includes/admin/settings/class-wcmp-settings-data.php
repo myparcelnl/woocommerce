@@ -640,7 +640,7 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_section_export_defaults_main()
+    private function get_section_export_defaults_main(): array
     {
         return [
             [
@@ -795,18 +795,12 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Display for", "woocommerce-myparcel"),
+                "label"     => __("settings_checkout_display_for", "woocommerce-myparcel"),
                 "type"      => "select",
-                "help_text" => __(
-                    'You can link the delivery options to specific shipping methods by adding them to the package types under "Standard export settings". The delivery options are not visible at foreign addresses.',
-                    "woocommerce-myparcel"
-                ),
+                "help_text" => __("settings_checkout_display_for_help_text", "woocommerce-myparcel"),
                 "options"   => [
-                    self::DISPLAY_FOR_SELECTED_METHODS => __(
-                        "Shipping methods associated with Parcels",
-                        "woocommerce-myparcel"
-                    ),
-                    self::DISPLAY_FOR_ALL_METHODS      => __("All shipping methods", "woocommerce-myparcel"),
+                    self::DISPLAY_FOR_SELECTED_METHODS => __("settings_checkout_display_for_selected_methods", "woocommerce-myparcel"),
+                    self::DISPLAY_FOR_ALL_METHODS      => __("settings_checkout_display_for_all_methods", "woocommerce-myparcel"),
                 ],
             ],
             [
