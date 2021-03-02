@@ -738,7 +738,7 @@ class WCMP_NL_Postcode_Fields
         }
 
         if (self::isCountryWithSplitAddressFields($address['shipping_country'])
-            && array_key_exists('ship_to_different_address', $address)
+            && ! empty( $address['ship_to_different_address'] )
             && ! (bool) preg_match(
                 self::SPLIT_STREET_REGEX,
                 trim(
