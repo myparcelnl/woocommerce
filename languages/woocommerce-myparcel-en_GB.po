@@ -35,7 +35,7 @@ msgstr ""
 msgid "Address details are not entered"
 msgstr "Address details are not entered"
 
-msgid "All shipping methods"
+msgid "settings_checkout_display_for_all_methods"
 msgstr "All shipping methods"
 
 msgid ""
@@ -221,7 +221,7 @@ msgstr "Digital stamp"
 msgid "Disabled"
 msgstr "Disabled"
 
-msgid "Display for"
+msgid "settings_checkout_display_for"
 msgstr "Display for"
 
 msgid "Documents"
@@ -641,8 +641,8 @@ msgstr ""
 "receipt\" and \"Delivery only at recipient\" are included with this option. "
 "This option can't be combined with morning or evening delivery."
 
-msgid "Shipping methods associated with Parcels"
-msgstr "Shipping methods associated with Parcels"
+msgid "settings_checkout_display_for_selected_methods"
+msgstr "Shipping methods associated with package type"
 
 msgid "Show after billing details"
 msgstr "Show after billing details"
@@ -669,7 +669,7 @@ msgstr ""
 "The \"Show delivery date\" option allows your customers to see the delivery "
 "date in order confirmations and My Account."
 
-msgid "checkout_options_price_format"
+msgid "settings_checkout_price_format"
 msgstr "Show prices as"
 
 msgid "Show Track & Trace trace code and link in My Account."
@@ -702,7 +702,7 @@ msgstr "Street name"
 msgid "Suffix"
 msgstr "Suffix"
 
-msgid "checkout_options_surcharge"
+msgid "settings_checkout_surcharge"
 msgstr "Surcharge"
 
 msgid "The label has been printed."
@@ -767,7 +767,7 @@ msgstr "Title before the barcode"
 msgid "Titles"
 msgstr "Titles"
 
-msgid "checkout_options_total_price"
+msgid "settings_checkout_total_price"
 msgstr "Total price"
 
 msgid "Total weight"
@@ -883,10 +883,7 @@ msgstr ""
 msgid "You can change the text before the barcode inside an note"
 msgstr "You can change the text before the barcode inside an note"
 
-msgid ""
-"You can link the delivery options to specific shipping methods by adding "
-"them to the package types under \"Standard export settings\". The delivery "
-"options are not visible at foreign addresses."
+msgid "settings_checkout_display_for_help_text"
 msgstr ""
 "You can link the delivery options to specific shipping methods by adding "
 "them to the package types in \"Standard export settings\". The delivery "

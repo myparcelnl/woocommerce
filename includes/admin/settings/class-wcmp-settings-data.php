@@ -842,19 +842,19 @@ class WCMP_Settings_Data
                     "woocommerce-myparcel"
                 ),
             ],
-           [
+            [
                 "name"      => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("checkout_options_price_format", "woocommerce-myparcel"),
+                "label"     => __("settings_checkout_price_format", "woocommerce-myparcel"),
                 "type"      => "select",
                 "default"   => self::DISPLAY_TOTAL_PRICE,
-                "options" => [
+                "options"   => [
                     self::DISPLAY_TOTAL_PRICE     => __(
-                        "checkout_options_total_price",
+                        "settings_checkout_total_price",
                         "woocommerce-myparcel"
                     ),
                     self::DISPLAY_SURCHARGE_PRICE => __(
-                        "checkout_options_surcharge",
+                        "settings_checkout_surcharge",
                         "woocommerce-myparcel"
                     ),
                 ],

@@ -35,7 +35,7 @@ msgstr ""
 msgid "Address details are not entered"
 msgstr "Adresgegevens zijn niet ingevuld"
 
-msgid "All shipping methods"
+msgid "settings_checkout_display_for_all_methods"
 msgstr "Alle verzendmethoden"
 
 msgid ""
@@ -219,7 +219,7 @@ msgstr "Digitale postzegel"
 msgid "Disabled"
 msgstr "Uitschakelen"
 
-msgid "Display for"
+msgid "settings_checkout_display_for"
 msgstr "Toon bij"
 
 msgid "Documents"
@@ -638,8 +638,8 @@ msgstr ""
 "voor ontvangst\" en \"Alleen ontvanger\" geactiveerd. Deze optie kan niet "
 "worden gecombineerd met ochtend- of avondlevering."
 
-msgid "Shipping methods associated with Parcels"
-msgstr "Verzendmethoden gekoppeld aan Pakket"
+msgid "settings_checkout_display_for_selected_methods"
+msgstr "Verzendmethoden gekoppeld aan pakkettype"
 
 msgid "Show after billing details"
 msgstr "Toon na factuurgegevens"
@@ -666,7 +666,7 @@ msgstr ""
 "De optie \"Toon bezorgdatum\" laat je klanten de bezorgdag zien in "
 "orderbevestigingen en Mijn Account."
 
-msgid "checkout_options_price_format"
+msgid "settings_checkout_price_format"
 msgstr "Prijzen tonen als"
 
 msgid "Show Track & Trace trace code and link in My Account."
@@ -699,7 +699,7 @@ msgstr "Straatnaam"
 msgid "Suffix"
 msgstr "Toev."
 
-msgid "checkout_options_surcharge"
+msgid "settings_checkout_surcharge"
 msgstr "Meerprijs"
 
 msgid "The label has been printed."
@@ -770,7 +770,7 @@ msgstr "Titel voor de barcode"
 msgid "Titles"
 msgstr "Titels"
 
-msgid "checkout_options_total_price"
+msgid "settings_checkout_total_price"
 msgstr "Totaalprijs"
 
 msgid "Total weight"
@@ -889,12 +889,9 @@ msgstr ""
 msgid "You can change the text before the barcode inside an note"
 msgstr "Je kunt de tekst veranderen voor de barcode in een notitie"
 
-msgid ""
-"You can link the delivery options to specific shipping methods by adding "
-"them to the package types under \"Standard export settings\". The delivery "
-"options are not visible at foreign addresses."
+msgid "settings_checkout_display_for_help_text"
 msgstr ""
-"U kunt de bezorgopties koppelen aan specifieke verzendmethoden door ze toe "
+"Je kunt de bezorgopties koppelen aan specifieke verzendmethoden door ze toe "
 "te voegen aan de pakkettypen onder \"Standaard exportinstellingen\". De "
 "bezorgopties zijn niet zichtbaar op buitenlandse adressen."
 
