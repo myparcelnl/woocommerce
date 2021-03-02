@@ -35,7 +35,7 @@ msgstr ""
 msgid "Address details are not entered"
 msgstr "Les données relatives à l'adresse ne sont pas complétées"
 
-msgid "All shipping methods"
+msgid "settings_checkout_display_for_all_methods"
 msgstr "Tous les modes d'expédition"
 
 msgid ""
@@ -209,7 +209,7 @@ msgstr ""
 msgid "Disabled"
 msgstr "désactivé"
 
-msgid "Display for"
+msgid "settings_checkout_display_for"
 msgstr "Afficher pour"
 
 msgid "Documents"
@@ -624,8 +624,8 @@ msgstr ""
 "uniquement chez le destinataire' sont inclus. Cette option ne peut pas être "
 "combinée avec la livraison le matin ou le soir. "
 
-msgid "Shipping methods associated with Parcels"
-msgstr "Mode d'expédition couplé au Colis"
+msgid "settings_checkout_display_for_selected_methods"
+msgstr "Mode d'expédition couplé au type de colis"
 
 msgid "Show after billing details"
 msgstr "Afficher après les données de facturation"
@@ -650,7 +650,7 @@ msgid ""
 "order confirmation and My Account."
 msgstr ""
 
-msgid "checkout_options_price_format"
+msgid "settings_checkout_price_format"
 msgstr ""
 
 msgid "Show Track & Trace trace code and link in My Account."
@@ -683,7 +683,7 @@ msgstr "Rue"
 msgid "Suffix"
 msgstr "Extension"
 
-msgid "checkout_options_surcharge"
+msgid "settings_checkout_surcharge"
 msgstr ""
 
 msgid "The label has been printed."
@@ -745,7 +745,7 @@ msgstr "Titre pour le code-barres"
 msgid "Titles"
 msgstr "Titres"
 
-msgid "checkout_options_total_price"
+msgid "settings_checkout_total_price"
 msgstr ""
 
 msgid "Total weight"
@@ -854,10 +854,7 @@ msgstr ""
 msgid "You can change the text before the barcode inside an note"
 msgstr "Vous pouvez modifier le texte du code-barres dans une note"
 
-msgid ""
-"You can link the delivery options to specific shipping methods by adding "
-"them to the package types under \"Standard export settings\". The delivery "
-"options are not visible at foreign addresses."
+msgid "settings_checkout_display_for_help_text"
 msgstr ""
 "Vous pouvez lier les options de livraison à des méthodes d'expédition "
 "spécifiques en les ajoutant aux types de colis sous \"Paramètres "

@@ -213,7 +213,7 @@ class WCMP_Checkout
                 "locale"             => "nl-NL",
                 "platform"           => "myparcel",
                 "basePrice"          => $chosenShippingMethodPrice,
-                "showPriceSurcharge" => $priceFormat === WCMP_Settings_Data::DISPLAY_SURCHARGE_PRICE,
+                "showPriceSurcharge" => WCMP_Settings_Data::DISPLAY_SURCHARGE_PRICE === $priceFormat,
             ],
             "strings" => [
                 "addressNotFound"       => __("Address details are not entered", "woocommerce-myparcel"),
