@@ -72,7 +72,7 @@ jQuery(($) => {
     previousCountry: {},
 
     /**
-     * @type {String}
+     * @type {?String}
      */
     selectedShippingMethod: null,
 
@@ -125,6 +125,7 @@ jQuery(($) => {
 
     showDeliveryOptionsEvent: 'myparcel_show_delivery_options',
     hideDeliveryOptionsEvent: 'myparcel_hide_delivery_options',
+    updateConfigEvent: 'myparcel_update_config',
 
     /**
      * WooCommerce checkout events.
@@ -320,13 +321,7 @@ jQuery(($) => {
      * Get data from form fields, put it in the global MyParcelConfig, then trigger updating the delivery options.
      */
     updateAddress() {
-      if (!window.hasOwnProperty('MyParcelConfig')) {
-        throw 'window.MyParcelConfig not found!';
-      }
-
-      if (typeof window.MyParcelConfig === 'string') {
-        window.MyParcelConfig = JSON.parse(window.MyParcelConfig);
-      }
+      MyParcelFrontend.validateMyParcelConfig();
 
       window.MyParcelConfig.address = {
         cc: MyParcelFrontend.getField(MyParcelFrontend.countryField).value,
@@ -461,13 +456,14 @@ jQuery(($) => {
             shippingMethod = `flat_rate:${shippingClass}`;
           }
         }
-
-        MyParcelFrontend.selectedShippingMethod = shippingMethod;
       } else {
-        MyParcelFrontend.selectedShippingMethod = null;
+        shippingMethod = null;
       }
 
-      MyParcelFrontend.toggleDeliveryOptions();
+      if (shippingMethod !== MyParcelFrontend.selectedShippingMethod) {
+        MyParcelFrontend.onChangeShippingMethod(MyParcelFrontend.selectedShippingMethod, shippingMethod);
+        MyParcelFrontend.selectedShippingMethod = shippingMethod;
+      }
     },
 
     /**
@@ -475,7 +471,7 @@ jQuery(($) => {
      *  unless necessary by checking if hasDeliveryOptions is true or false.
      */
     toggleDeliveryOptions() {
-      if (MyParcelFrontend.currentShippingMethodHasDeliveryOptions()) {
+      if (MyParcelFrontend.shippingMethodHasDeliveryOptions()) {
         MyParcelFrontend.hasDeliveryOptions = true;
         MyParcelFrontend.triggerEvent(MyParcelFrontend.showDeliveryOptionsEvent, document);
         MyParcelFrontend.updateAddress();
@@ -485,20 +481,26 @@ jQuery(($) => {
       }
     },
 
+    updateConfig() {
+      if (MyParcelFrontend.hasDeliveryOptions) {
+        MyParcelFrontend.triggerEvent(MyParcelFrontend.updateConfigEvent);
+      }
+    },
+
     /**
-     * Check if the currently selected shipping method is allowed to have delivery options by checking if the name
-     *  starts with any value in a list of shipping methods.
+     * Check if the given shipping method is allowed to have delivery options by checking if the name starts with any
+     * value in a list of shipping methods.
      *
      * Most of the values in this list will be full shipping method names, with an instance id, but some can't have one.
-     *  That's the reason we're checking if it starts with this value instead of whether it's equal.
+     * That's the reason we're checking if it starts with this value instead of whether it's equal.
      *
+     * @param {?String} shippingMethod
      * @returns {Boolean}
      */
-    currentShippingMethodHasDeliveryOptions() {
+    shippingMethodHasDeliveryOptions(shippingMethod = MyParcelFrontend.getSelectedShippingMethod()) {
       let display = false;
       let invert = false;
       let list = MyParcelFrontend.allowedShippingMethods;
-      let shippingMethod = MyParcelFrontend.getSelectedShippingMethod();
 
       if (!shippingMethod) {
         return false;
@@ -599,7 +601,28 @@ jQuery(($) => {
     },
 
     /**
-     * @returns {String}
+     * Fetch and update the delivery options config. For use with changing shipping methods, for example, as doing so
+     *  changes the prices of delivery and any extra options.
+     */
+    updateDeliveryOptionsConfig() {
+      MyParcelFrontend.validateMyParcelConfig();
+      $.ajax({
+        type: 'GET',
+        url: wcmp.ajax_url,
+        async: false,
+        data: {
+          action: 'wcmp_get_delivery_options_config',
+        },
+        success(data) {
+          const {config} = JSON.parse(data);
+          window.MyParcelConfig.config = config;
+          MyParcelFrontend.updateConfig();
+        },
+      });
+    },
+
+    /**
+     * @returns {?String}
      */
     getSelectedShippingMethod() {
       let shippingMethod = MyParcelFrontend.selectedShippingMethod;
@@ -699,6 +722,26 @@ jQuery(($) => {
       const formWrapper = document.querySelector(`.woocommerce-${addressType}-fields__field-wrapper`);
 
       return Boolean(formWrapper);
+    },
+
+    /**
+     * @param {?String} oldShippingMethod
+     * @param {?String} newShippingMethod
+     */
+    onChangeShippingMethod(oldShippingMethod, newShippingMethod) {
+      if (MyParcelFrontend.shippingMethodHasDeliveryOptions(newShippingMethod)) {
+        MyParcelFrontend.updateDeliveryOptionsConfig();
+      }
+    },
+
+    validateMyParcelConfig() {
+      if (!window.hasOwnProperty('MyParcelConfig')) {
+        throw 'window.MyParcelConfig not found!';
+      }
+
+      if (typeof window.MyParcelConfig === 'string') {
+        window.MyParcelConfig = JSON.parse(window.MyParcelConfig);
+      }
     },
   };
 
