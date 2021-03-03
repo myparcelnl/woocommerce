@@ -183,19 +183,36 @@ ol > li, ul > li {
 }
 
 .main-content img {
-    max-width: 100%;
+    max-width: 75%;
 }
 
-.main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6 {
-    margin-top: 0.5rem;
-    margin-bottom: 0.1rem;
+.main-content h1
+{
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
     font-weight: normal;
     color: #ed8c00;
 }
 
+.main-content h2, .main-content h3
+    {
+    margin-top: 0.5rem;
+    margin-bottom: 0.2rem;
+    font-weight: normal;
+    color: #ed8c00;
+}
+
+.main-content h4, .main-content h5, .main-content h6
+    {
+        margin-top: 0.5rem;
+        margin-bottom: 0.2rem;
+        font-weight: normal;
+        color: #ed8c00;
+}
+
 .main-content p {
-    margin-bottom: 1em;
     margin-top: 0.1em;
+    margin-bottom: 1em;
     text-align: justify;
 }
 
