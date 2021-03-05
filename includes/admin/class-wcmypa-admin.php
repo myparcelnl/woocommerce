@@ -114,11 +114,11 @@ class WCMYPA_Admin
      */
     public static function renderPickupLocation(DeliveryOptions $deliveryOptions): void
     {
-        if (! $deliveryOptions->isPickup()) {
+        $pickup = $deliveryOptions->getPickupLocation();
+
+        if (! $pickup || ! $deliveryOptions->isPickup()) {
             return;
         }
-
-        $pickup = $deliveryOptions->getPickupLocation();
 
         printf(
             "<div class=\"pickup-location\"><strong>%s:</strong><br /> %s<br />%s %s<br />%s %s</div>",

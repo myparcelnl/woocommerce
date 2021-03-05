@@ -183,7 +183,7 @@ class WCMP_Checkout
         $shipping_methods = [];
 
         if (array_key_exists(AbstractConsignment::PACKAGE_TYPE_PACKAGE, $packageTypes ?? [])) {
-            // Shipping methods associated with parcels = enable delivery options
+            // settings_checkout_display_for_selected_methods = enable delivery options
             $shipping_methods = $packageTypes[AbstractConsignment::PACKAGE_TYPE_PACKAGE];
         }
 
@@ -429,7 +429,7 @@ class WCMP_Checkout
         $allowedMethods = [];
         $displayFor     = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
 
-        if ($displayFor === WCMP_Settings_Data::DISPLAY_FOR_ALL_METHODS) {
+        if (WCMP_Settings_Data::DISPLAY_FOR_ALL_METHODS === $displayFor) {
             return $allowedMethods;
         }
 
