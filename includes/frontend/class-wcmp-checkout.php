@@ -43,6 +43,8 @@ class WCMP_Checkout
 
         // Save delivery options data
         add_action("woocommerce_checkout_update_order_meta", [$this, "save_delivery_options"], 10, 2);
+
+        add_action("wp_ajax_wcmp_get_delivery_options_config", [$this, "getDeliveryOptionsConfigAjax"]);
     }
 
     /**
@@ -153,7 +155,7 @@ class WCMP_Checkout
         wp_localize_script(
             'wc-myparcel',
             'MyParcelConfig',
-            $this->get_delivery_options_config()
+            $this->getDeliveryOptionsConfig()
         );
 
         // Load the checkout template.
@@ -191,13 +193,12 @@ class WCMP_Checkout
     /**
      * Get the delivery options config in JSON for passing to JavaScript.
      *
-     * @return false|mixed|string|void
-     * @throws \JsonException
+     * @return array
      */
-    public function get_delivery_options_config()
+    public function getDeliveryOptionsConfig(): array
     {
         $settings                  = WCMYPA()->setting_collection;
-        $carriers                  = $this->get_carriers();
+        $carriers                  = $this->getCarriers();
         $cartTotals                = WC()->session->get('cart_totals');
         $chosenShippingMethodPrice = (float) $cartTotals['shipping_total'];
         $displayIncludingTax       = WC()->cart->display_prices_including_tax();
@@ -252,7 +253,16 @@ class WCMP_Checkout
 
         $myParcelConfig['config']['priceStandardDelivery'] = $this->useTotalPrice() ? $chosenShippingMethodPrice : null;
 
-        return json_encode($myParcelConfig, JSON_UNESCAPED_SLASHES);
+        return $myParcelConfig;
+    }
+
+    /**
+     * Echoes the delivery options config as a JSON string for use with AJAX.
+     */
+    public function getDeliveryOptionsConfigAjax(): void
+    {
+        echo json_encode($this->getDeliveryOptionsConfig(), JSON_UNESCAPED_SLASHES);
+        die();
     }
 
     /**
@@ -296,7 +306,7 @@ class WCMP_Checkout
      *
      * @return array
      */
-    private function get_carriers(): array
+    private function getCarriers(): array
     {
         $settings = WCMYPA()->setting_collection;
         $carriers = [];
