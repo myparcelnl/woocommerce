@@ -25,7 +25,7 @@ class OrderSettingsRows
     private const OPTION_CARRIER                            = "[carrier]";
     private const OPTION_DELIVERY_TYPE                      = "[delivery_type]";
     private const OPTION_EXTRA_OPTIONS_COLLO_AMOUNT         = "[extra_options][collo_amount]";
-    private const OPTION_EXTRA_OPTIONS_WEIGHT               = "[extra_options][weight]";
+    private const OPTION_EXTRA_OPTIONS_DIGITAL_STAMP_WEIGHT = "[extra_options][digital_stamp_weight]";
     private const OPTION_PACKAGE_TYPE                       = "[package_type]";
     private const OPTION_SHIPMENT_OPTIONS_INSURED           = "[shipment_options][insured]";
     private const OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT    = "[shipment_options][insured_amount]";
@@ -78,13 +78,14 @@ class OrderSettingsRows
         AbstractDeliveryOptionsAdapter $deliveryOptions,
         WC_Order $order
     ): array {
-        $orderSettings      = new OrderSettings($deliveryOptions, $order);
+        $orderSettings      = new OrderSettings($order, $deliveryOptions);;
+        $shippingCountry    = $orderSettings->getShippingCountry();
         $isEuCountry        = WCMP_Country_Codes::isEuCountry();
-        $isHomeCountry      = WCMP_Data::isHomeCountry($order->get_shipping_country());
+        $isHomeCountry      = WCMP_Data::isHomeCountry($shippingCountry);
         $packageTypeOptions = array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman());
 
         // Remove mailbox and digital stamp, because this is not possible for international shipments
-        if (! $isHomeCountry){
+        if (! $isHomeCountry) {
             unset($packageTypeOptions['mailbox']);
             unset($packageTypeOptions['digital_stamp']);
         }
@@ -189,15 +190,13 @@ class OrderSettingsRows
     {
         return [
             [
-                "name"        => self::OPTION_EXTRA_OPTIONS_WEIGHT,
+                "name"        => self::OPTION_EXTRA_OPTIONS_DIGITAL_STAMP_WEIGHT,
                 "type"        => "select",
                 "label"       => __("Weight", "woocommerce-myparcel"),
-                "description" => $orderSettings->getWeight()
-                    ? sprintf(
-                        __("Calculated weight: %s", "woocommerce-myparcel"),
-                        wc_format_weight($orderSettings->getWeight())
-                    )
-                    : null,
+                "description" => sprintf(
+                    __("Calculated weight: %s", "woocommerce-myparcel"),
+                    wc_format_weight($orderSettings->getWeight())
+                ),
                 "options"     => WCMP_Export::getDigitalStampRangeOptions(),
                 "value"       => $orderSettings->getDigitalStampRangeWeight(),
                 "condition"   => [

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
+use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
@@ -91,34 +92,46 @@ class OrderSettings
     /**
      * @var array
      */
-    private $extraOptionsMeta;
+    private $extraOptions;
 
     /**
-     * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
-     * @param WC_Order                                                                   $order
+     * @var string
+     */
+    private $shippingCountry;
+
+    /**
+     * @param WC_Order                                                                              $order
+     * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter|array|null $deliveryOptions
      *
+     * @throws \JsonException
      * @throws \Exception
      */
     public function __construct(
-        AbstractDeliveryOptionsAdapter $deliveryOptions,
-        WC_Order $order
-    ) {
-        $this->order           = $order;
-        $this->deliveryOptions = $deliveryOptions;
-        $this->carrier         = $deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
-        $this->shipmentOptions = $deliveryOptions->getShipmentOptions();
+        WC_Order $order,
+        $deliveryOptions = null
+    )
+    {
+        $this->order = $order;
 
-        $this->extraOptionsMeta = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+        $this->setDeliveryOptions($deliveryOptions);
+        $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
+        $this->shipmentOptions = $this->deliveryOptions->getShipmentOptions();
+        $this->shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
+        $this->extraOptions    = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
 
         $this->setAllData();
     }
 
     /**
+     * @param bool $inGrams
+     *
      * @return float
      */
-    public function getWeight(): float
+    public function getWeight($inGrams = false): float
     {
-        return $this->weight;
+        return $inGrams
+            ? WCMP_Export::convertWeightToGrams($this->weight)
+            : $this->weight;
     }
 
     /**
@@ -235,9 +248,13 @@ class OrderSettings
      */
     private function setWeight(): void
     {
-        $orderWeight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+        $weight = $this->extraOptions['weight'] ?? null;
 
-        $this->weight = (float) $orderWeight;
+        if (null === $weight && $this->order->meta_exists(WCMYPA_Admin::META_ORDER_WEIGHT)) {
+            $weight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+        }
+
+        $this->weight = (float) $weight;
     }
 
     /**
@@ -283,7 +300,7 @@ class OrderSettings
      */
     private function setColloAmount(): void
     {
-        $this->colloAmount = (int) ($this->extraOptionsMeta['collo_amount'] ?? 1);
+        $this->colloAmount = (int) ($this->extraOptions['collo_amount'] ?? 1);
     }
 
     /**
@@ -291,10 +308,23 @@ class OrderSettings
      */
     private function setDigitalStampRangeWeight(): void
     {
-        $orderWeight = $this->getWeight();
-        $metaWeight  = (float) $this->extraOptionsMeta["weight"];
+        $savedWeight = $this->extraOptions["digital_stamp_weight"] ?? null;
+        $orderWeight = $this->getWeight(true);
+        $weight      = (float) ($savedWeight ?? $orderWeight);
+        $results     = Arr::where(
+            WCMP_Data::getDigitalStampRanges(),
+            static function ($range) use ($weight) {
+                return $weight > $range['min'];
+            }
+        );
 
-        $this->digitalStampRangeWeight = WCMP_Export::getDigitalStampRangeFromWeight($metaWeight ?? $orderWeight);
+        if (empty($results)) {
+            $digitalStampRangeWeight = Arr::first(WCMP_Data::getDigitalStampRanges())['average'];
+        } else {
+            $digitalStampRangeWeight = Arr::last($results)['average'];
+        }
+
+        $this->digitalStampRangeWeight = $digitalStampRangeWeight;
     }
 
     /**
@@ -402,5 +432,43 @@ class OrderSettings
     private function getCarrierSetting(string $settingName)
     {
         return WCMYPA()->setting_collection->getByName("{$this->carrier}_" . $settingName);
+    }
+
+    /**
+     * @return string
+     */
+    public function getShippingCountry(): string
+    {
+        return $this->shippingCountry;
+    }
+
+    /**
+     * @return \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter
+     */
+    public function getDeliveryOptions(): AbstractDeliveryOptionsAdapter
+    {
+        return $this->deliveryOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExtraOptions(): array
+    {
+        return $this->extraOptions;
+    }
+
+    /**
+     * @param null $deliveryOptions
+     *
+     * @throws \Exception
+     */
+    private function setDeliveryOptions($deliveryOptions = null): void
+    {
+        if (is_a($deliveryOptions, AbstractDeliveryOptionsAdapter::class)) {
+            $this->deliveryOptions = $deliveryOptions;
+        } else {
+            $this->deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($this->order, (array) $deliveryOptions);
+        }
     }
 }

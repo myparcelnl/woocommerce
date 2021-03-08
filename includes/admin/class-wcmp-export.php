@@ -235,7 +235,7 @@ class WCMP_Export
 
         $dialog  = $_REQUEST["dialog"] ?? null;
         $print   = $_REQUEST["print"] ?? null;
-        $offset  = $_REQUEST["offset"] ?? 0;
+        $offset  = (int) ($_REQUEST["offset"] ?? 0);
         $request = $_REQUEST["request"];
 
         /**
@@ -341,7 +341,8 @@ class WCMP_Export
             $order = WCX::get_order($order_id);
 
             try {
-                $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
+                $exportConsignments = new WCMP_Export_Consignments($order);
+                $consignment        = $exportConsignments->getConsignment();
             } catch (Exception $ex) {
                 $errorMessage            = "Order {$order_id} could not be exported to MyParcel because: {$ex->getMessage()}";
                 $this->errors[$order_id] = $errorMessage;
@@ -352,15 +353,7 @@ class WCMP_Export
                 continue;
             }
 
-            $extraOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
-            $colloAmount  = (int) ($extraOptions["collo_amount"] ?? 1);
-
-            if ($colloAmount > 1) {
-                $this->addMultiCollo($order, $collection, $consignment, $colloAmount);
-            } else {
-                $collection->addConsignment($consignment);
-            }
-
+            $this->addConsignments($exportConsignments->getOrderSettings(), $collection, $consignment);
             WCMP_Log::add("Shipment data for order {$order_id}.");
         }
 
@@ -1212,29 +1205,6 @@ class WCMP_Export
     }
 
     /**
-     * @param float $weight
-     *
-     * @return int
-     */
-    public static function getDigitalStampRangeFromWeight(float $weight): int
-    {
-        $intWeight = self::convertWeightToGrams($weight);
-
-        $results = Arr::where(
-            WCMP_Data::getDigitalStampRanges(),
-            function ($range) use ($intWeight) {
-                return $intWeight > $range['min'];
-            }
-        );
-
-        if (empty($results)) {
-            return Arr::first(WCMP_Data::getDigitalStampRanges())['average'];
-        }
-
-        return Arr::last($results)['average'];
-    }
-
-    /**
      * @param $chosenMethod
      *
      * @throws \Exception
@@ -1459,28 +1429,30 @@ class WCMP_Export
     }
 
     /**
-     * @param WC_Order            $order
+     * @param \OrderSettings      $orderSettings
      * @param MyParcelCollection  $collection
      * @param AbstractConsignment $consignment
-     * @param int               $colloAmount
      *
-     * @throws MissingFieldException
-     * @throws \Exception
+     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
-    public function addMultiCollo(WC_Order $order, MyParcelCollection $collection, AbstractConsignment $consignment, int $colloAmount): void
+    public function addMultiCollo(
+        OrderSettings $orderSettings,
+        MyParcelCollection $collection,
+        AbstractConsignment $consignment
+    ): void
     {
-        $deliveryOptions     = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
-        $packageType         = $this->getPackageTypeFromOrder($order, $deliveryOptions);
-        $isPackage           = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $packageType;
-        $isMultiColloCountry = in_array($order->get_shipping_country(), [self::COUNTRY_CODE_NL, self::COUNTRY_CODE_BE]);
+        $isPackage           = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $orderSettings->getPackageType();
+        $isMultiColloCountry = in_array(
+            $orderSettings->getShippingCountry(),
+            [self::COUNTRY_CODE_NL, self::COUNTRY_CODE_BE]
+        );
 
         if ($isMultiColloCountry && $isPackage) {
-            $collection->addMultiCollo($consignment, $colloAmount);
-
+            $collection->addMultiCollo($consignment, $orderSettings->getColloAmount());
             return;
         }
 
-        $this->addFakeMultiCollo($colloAmount, $collection, $consignment);
+        $this->addFakeMultiCollo($orderSettings->getColloAmount(), $collection, $consignment);
     }
 
     /**
@@ -1639,6 +1611,30 @@ class WCMP_Export
 
             WCMP_Export::addTrackTraceNoteToOrder($order_id, $trackTraces);
         }
+    }
+
+    /**
+     * Adds one or more consignments to the collection, depending on the collo amount.
+     *
+     * @param \OrderSettings                                            $orderSettings
+     * @param \MyParcelNL\Sdk\src\Helper\MyParcelCollection             $collection
+     * @param \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment $consignment
+     *
+     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
+     */
+    private function addConsignments(
+        OrderSettings $orderSettings,
+        MyParcelCollection $collection,
+        AbstractConsignment $consignment
+    ): void {
+        $colloAmount = $orderSettings->getColloAmount();
+
+        if ($colloAmount > 1) {
+            $this->addMultiCollo($orderSettings, $collection, $consignment);
+            return;
+        }
+
+        $collection->addConsignment($consignment);
     }
 }
 

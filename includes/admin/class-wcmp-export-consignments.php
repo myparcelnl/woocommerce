@@ -5,7 +5,6 @@ use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
-use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
 if (! defined("ABSPATH")) {
@@ -29,11 +28,6 @@ class WCMP_Export_Consignments
     private $deliveryOptions;
 
     /**
-     * @var mixed
-     */
-    private $recipient;
-
-    /**
      * @var WC_Order
      */
     private $order;
@@ -52,6 +46,7 @@ class WCMP_Export_Consignments
      * @var MyParcelCollection
      */
     public $myParcelCollection;
+
     /**
      * @var \OrderSettings
      */
@@ -62,18 +57,19 @@ class WCMP_Export_Consignments
      *
      * @param WC_Order $order
      *
-     * @throws ErrorException
-     * @throws Exception
+     * @throws \ErrorException
+     * @throws \JsonException
+     * @throws \Exception
      */
     public function __construct(WC_Order $order)
     {
         $this->getApiKey();
 
         $this->order           = $order;
-        $this->deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
-        $this->orderSettings   = new OrderSettings($this->deliveryOptions, $order);
+        $this->orderSettings   = new OrderSettings($order);
+        $this->deliveryOptions = $this->orderSettings->getDeliveryOptions();
 
-        $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
+        $this->carrier = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
 
         $this->myParcelCollection = (new MyParcelCollection())->setUserAgents(
             [
@@ -169,37 +165,41 @@ class WCMP_Export_Consignments
     public function setCustomItems(): void
     {
         foreach ($this->order->get_items() as $itemId => $item) {
+            /**
+             * @var WC_Product|false $product
+             */
             $product = $item->get_product();
             $country = $this->getCountryOfOrigin($product);
 
-            if (! empty($product)) {
-                // Description
-                $description = $item["name"];
-
-                // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
-                if (strlen($description) >= WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
-                    $description = substr($item["name"], 0, 47) . "...";
-                }
-                // Amount
-                $amount = (int) ($item["qty"] ?? 1);
-
-                // Weight (total item weight in grams)
-                $weight = WCMP_Export::convertWeightToGrams($product->weight);
-
-                $total = (int) $item["line_total"];
-                $tax   = (int) $item["line_tax"];
-                $value = round(($total + $tax) * 100);
-
-                $this->consignment->addItem(
-                    (new MyParcelCustomsItem())
-                        ->setDescription($description)
-                        ->setAmount($amount)
-                        ->setWeight($weight)
-                        ->setItemValue($value)
-                        ->setCountry($country)
-                        ->setClassification($this->getHsCode($product))
-                );
+            if (! $product) {
+                return;
             }
+
+            // Description
+            $description = $item["name"];
+
+            // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
+            if (strlen($description) >= WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
+                $description = substr($item["name"], 0, 47) . "...";
+            }
+            // Amount
+            $amount = (int) ($item["qty"] ?? 1);
+
+            // Weight (total item weight in grams)
+            $weight = WCMP_Export::convertWeightToGrams($product->get_weight());
+
+            $total = (int) $item["line_total"];
+            $tax   = (int) $item["line_tax"];
+            $value = round(($total + $tax) * 100);
+
+            $this->consignment->addItem(
+                (new MyParcelCustomsItem())->setDescription($description)
+                    ->setAmount($amount)
+                    ->setWeight($weight)
+                    ->setItemValue($value)
+                    ->setCountry($country)
+                    ->setClassification($this->getHsCode($product))
+            );
         }
     }
 
@@ -210,7 +210,7 @@ class WCMP_Export_Consignments
      */
     private function getTotalWeight(): int
     {
-        $weight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+        $weight = $this->orderSettings->getWeight();
 
         // Divide the consignment weight by the amount of parcels.
         $weight /= $this->orderSettings->getColloAmount();
@@ -222,9 +222,8 @@ class WCMP_Export_Consignments
                 $weight += $emptyParcelWeight;
                 break;
             case AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME:
-                $extraOptions = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
-
-                $weight = $extraOptions['weight'];
+                $extraOptions = $this->orderSettings->getDigitalStampRangeWeight();
+                $weight       = $extraOptions['digital_stamp_weight'] ?? $extraOptions['weight'];
                 break;
         }
 
@@ -299,6 +298,14 @@ class WCMP_Export_Consignments
     }
 
     /**
+     * @return \OrderSettings
+     */
+    public function getOrderSettings(): OrderSettings
+    {
+        return $this->orderSettings;
+    }
+
+    /**
      * @return int
      */
     private function getContents(): int
@@ -313,20 +320,20 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $this->recipient = WCMP_Export::getRecipientFromOrder($this->order);
+        $recipient = WCMP_Export::getRecipientFromOrder($this->order);
 
         $this->consignment
-            ->setCountry($this->recipient['cc'])
-            ->setPerson($this->recipient['person'])
-            ->setCompany($this->recipient['company'])
-            ->setStreet($this->recipient['street'])
-            ->setNumber($this->recipient['number'] ?? null)
-            ->setNumberSuffix($this->recipient['number_suffix'] ?? null)
-            ->setStreetAdditionalInfo($this->recipient['street_additional_info'] ?? null)
-            ->setPostalCode($this->recipient['postal_code'])
-            ->setCity($this->recipient['city'])
-            ->setEmail($this->recipient['email'])
-            ->setPhone($this->recipient['phone'])
+            ->setCountry($recipient['cc'])
+            ->setPerson($recipient['person'])
+            ->setCompany($recipient['company'])
+            ->setStreet($recipient['street'])
+            ->setNumber($recipient['number'] ?? null)
+            ->setNumberSuffix($recipient['number_suffix'] ?? null)
+            ->setStreetAdditionalInfo($recipient['street_additional_info'] ?? null)
+            ->setPostalCode($recipient['postal_code'])
+            ->setCity($recipient['city'])
+            ->setEmail($recipient['email'])
+            ->setPhone($recipient['phone'])
             ->setSaveRecipientAddress(false);
     }
 
