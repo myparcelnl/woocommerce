@@ -380,6 +380,9 @@ class WCMP_Export_Consignments
             ]
         );
 
+        // Add filter to let plugins change the label description
+        $formattedLabelDescription = apply_filters('wcmp_formatted_label_description', $formattedLabelDescription, $this->order);
+
         if (strlen($formattedLabelDescription) > WCMP_Export::ORDER_DESCRIPTION_MAX_LENGTH) {
             return substr($formattedLabelDescription, 0, 42) . "...";
         }
