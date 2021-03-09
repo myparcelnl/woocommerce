@@ -32,8 +32,10 @@ class WCMP_Export
     /**
      * Maximum characters length of item description.
      */
-    public const ITEM_DESCRIPTION_MAX_LENGTH = 50;
+    public const ITEM_DESCRIPTION_MAX_LENGTH  = 50;
     public const ORDER_DESCRIPTION_MAX_LENGTH = 45;
+
+    public const COOKIE_EXPIRE_TIME = 20;
 
     public const DEFAULT_POSITIONS = [2, 4, 1, 3];
     public const SUFFIX_CHECK_REG  = "~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i";
@@ -162,11 +164,6 @@ class WCMP_Export
             }
         }
 
-        if (! isset($_GET['myparcel_done'])) {
-            unset($_COOKIE['response']);
-            setcookie('response', null, -1, '/');
-        }
-
         if (! empty($error_notice)) {
             printf(
                 '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p>%s</div>',
@@ -192,8 +189,8 @@ class WCMP_Export
             }
         }
 
-        if (isset($_COOKIE['response']) && $_COOKIE['response'] !== 'undefined') {
-            $response = $_COOKIE['response'];
+        if (isset($_COOKIE['myparcel_response'])) {
+            $response = $_COOKIE['myparcel_response'];
             printf(
                 '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p></div>',
                 $response
@@ -346,8 +343,12 @@ class WCMP_Export
             try {
                 $consignment = (new WCMP_Export_Consignments($order))->getConsignment();
             } catch (Exception $ex) {
-                $errorMessage            = "The order could not be exported to MyParcel because: {$ex->getMessage()}";
+                $errorMessage            = "Order {$order_id} could not be exported to MyParcel because: {$ex->getMessage()}";
                 $this->errors[$order_id] = $errorMessage;
+
+                setcookie('myparcel_response', $this->errors[$order_id], time() + self::COOKIE_EXPIRE_TIME, "/");
+                WCMP_Log::add($this->errors[$order_id]);
+
                 continue;
             }
 
@@ -370,6 +371,10 @@ class WCMP_Export
         }
 
         foreach ($order_ids as $order_id) {
+            if (isset($this->errors[$order_id])) {
+                continue;
+            }
+
             $order          = WCX::get_order($order_id);
             $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
 
@@ -388,8 +393,6 @@ class WCMP_Export
                 WCMYPA_Admin::META_LAST_SHIPMENT_IDS,
                 $consignmentIds
             );
-
-            $this->updateOrderStatus($order);
         }
 
         if (! empty($this->success)) {
@@ -1544,24 +1547,6 @@ class WCMP_Export
         }
 
         return false;
-    }
-
-    /**
-     * Update the status of given order based on the automatic order status settings.
-     *
-     * @param WC_Order $order
-     */
-    private function updateOrderStatus(WC_Order $order): void
-    {
-        if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION)) {
-            $newStatus = $this->getSetting(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
-            $order->update_status(
-                $newStatus,
-                __("MyParcel shipment created:", "woocommerce-myparcel")
-            );
-
-            WCMP_Log::add("Status of order {$order->get_id()} updated to \"$newStatus\"");
-        }
     }
 
     /**

@@ -22,6 +22,9 @@ class WCMP_Settings_Data
     public const DISPLAY_FOR_SELECTED_METHODS = "selected_methods";
     public const DISPLAY_FOR_ALL_METHODS      = "all_methods";
 
+    public const DISPLAY_TOTAL_PRICE     = "total_price";
+    public const DISPLAY_SURCHARGE_PRICE = "surcharge";
+
     public const NOT_ACTIVE        = "notActive";
     public const NO_OPTIONS        = "noOptions";
     public const EQUAL_TO_SHIPMENT = "equalToShipment";
@@ -434,12 +437,9 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
-                "label"     => __("Age check 18+", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_age_check", "woocommerce-myparcel"),
                 "type"      => "toggle",
-                "help_text" => __(
-                    "The age check is intended for parcel shipments for which the recipient must show they are 18+ years old by means of a proof of identity. With this option 'signature for receipt' and 'delivery only at recipient' are included. This option can't be combined with morning or evening delivery.",
-                    "woocommerce-myparcel"
-                ),
+                "help_text" => __("shipment_options_age_check_help_text", "woocommerce-myparcel"),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
@@ -640,7 +640,7 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_section_export_defaults_main()
+    private function get_section_export_defaults_main(): array
     {
         return [
             [
@@ -795,18 +795,12 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Display for", "woocommerce-myparcel"),
+                "label"     => __("settings_checkout_display_for", "woocommerce-myparcel"),
                 "type"      => "select",
-                "help_text" => __(
-                    'You can link the delivery options to specific shipping methods by adding them to the package types under "Standard export settings". The delivery options are not visible at foreign addresses.',
-                    "woocommerce-myparcel"
-                ),
+                "help_text" => __("settings_checkout_display_for_help_text", "woocommerce-myparcel"),
                 "options"   => [
-                    self::DISPLAY_FOR_SELECTED_METHODS => __(
-                        "Shipping methods associated with Parcels",
-                        "woocommerce-myparcel"
-                    ),
-                    self::DISPLAY_FOR_ALL_METHODS      => __("All shipping methods", "woocommerce-myparcel"),
+                    self::DISPLAY_FOR_SELECTED_METHODS => __("settings_checkout_display_for_selected_methods", "woocommerce-myparcel"),
+                    self::DISPLAY_FOR_ALL_METHODS      => __("settings_checkout_display_for_all_methods", "woocommerce-myparcel"),
                 ],
             ],
             [
@@ -841,6 +835,23 @@ class WCMP_Settings_Data
                     "You can change the place of the delivery options on the checkout page. By default it will be placed after shipping details.",
                     "woocommerce-myparcel"
                 ),
+            ],
+            [
+                "name"      => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => __("settings_checkout_price_format", "woocommerce-myparcel"),
+                "type"      => "select",
+                "default"   => self::DISPLAY_TOTAL_PRICE,
+                "options"   => [
+                    self::DISPLAY_TOTAL_PRICE     => __(
+                        "settings_checkout_total_price",
+                        "woocommerce-myparcel"
+                    ),
+                    self::DISPLAY_SURCHARGE_PRICE => __(
+                        "settings_checkout_surcharge",
+                        "woocommerce-myparcel"
+                    ),
+                ],
             ],
             [
                 "name"              => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,

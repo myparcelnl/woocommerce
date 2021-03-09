@@ -62,6 +62,7 @@ class WCMYPA_Settings
     public const SETTING_DELIVERY_OPTIONS_DISPLAY              = "delivery_options_display";
     public const SETTING_DELIVERY_OPTIONS_ENABLED              = "delivery_options_enabled";
     public const SETTING_DELIVERY_OPTIONS_POSITION             = "delivery_options_position";
+    public const SETTING_DELIVERY_OPTIONS_PRICE_FORMAT         = "delivery_options_price_format";
     public const SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS = "delivery_options_enabled_for_backorders";
     public const SETTING_SHOW_DELIVERY_DAY                     = "show_delivery_day";
     public const SETTING_DELIVERY_TITLE                        = "delivery_title";
@@ -350,7 +351,7 @@ class WCMYPA_Settings
             $helpText = Arr::get($field, "args.help_text");
             $label    = Arr::get($field, "args.label_for");
 
-            printf('<th scope="row""><label class="wcmp__ws--nowrap" %s>%s%s</label></th>',
+            printf('<th scope="row"><label class="wcmp__ws--nowrap" %s>%s%s</label></th>',
                 $label ? "for=\"" . esc_attr($label) . "\"" : "",
                 Arr::get($field, "title"),
                 $helpText ? wc_help_tip($helpText) : ""

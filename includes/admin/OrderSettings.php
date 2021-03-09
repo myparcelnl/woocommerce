@@ -266,11 +266,11 @@ class OrderSettings
             $product         = $item->get_product();
             $productAgeCheck = WCX_Product::get_meta($product, WCMYPA_Admin::META_AGE_CHECK, true);
 
-            if ($productAgeCheck === 1) {
+            if ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_ENABLED) {
                 return true;
             }
 
-            if ($productAgeCheck === 0) {
+            if ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_DISABLED) {
                 $hasAgeCheck = false;
             }
         }

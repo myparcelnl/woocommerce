@@ -61,6 +61,26 @@ abstract class WCMP_Upgrade_Migration
     }
 
     /**
+     * Get settings array and replace the specified setting with a new value.
+     *
+     * @param array  $map
+     * @param string $settingName
+     * @param mixed  $newValue
+     *
+     * @return array
+     */
+    protected function replaceValue(array $map, string $settingName, $newValue): array
+    {
+        foreach ($map as $name => $value) {
+            if ($name === $settingName) {
+                $map[$name] = $newValue;
+            }
+        }
+
+        return $map;
+    }
+
+    /**
      * @param array $map
      * @param array $newSettings
      *

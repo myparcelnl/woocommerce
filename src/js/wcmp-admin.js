@@ -92,8 +92,11 @@ jQuery(($) => {
     /**
      * Click offset dialog button (single export).
      */
-    $(`${selectors.offsetDialog} button`).click(printOrder);
+    $(selectors.offsetDialogButton).click(printOrderFromOffsetDialog);
 
+    /**
+     * Close offset dialog.
+     */
     $(selectors.offsetDialogClose).click(hideOffsetDialog);
 
     /**
@@ -585,6 +588,54 @@ jQuery(($) => {
   }
 
   /**
+   * Add a callback to request object in given key.
+   *
+   * @param {Object} request
+   * @param {String} key
+   * @param {Function} callback
+   */
+  function addCallback(request, key, callback) {
+    let requestCallback;
+
+    if (request[key] && typeof request[key] === 'function') {
+      requestCallback = [
+        request[key],
+        callback,
+      ];
+    } else if (Array.isArray(request[key])) {
+      requestCallback = request[key];
+      requestCallback.push(callback);
+    } else {
+      requestCallback = callback;
+    }
+
+    request[key] = requestCallback;
+  }
+
+  /**
+   * Execute a function or array of functions from given request, key and parameters to pass to the function.
+   *
+   * @param {Object} request
+   * @param {String} callbackKey
+   * @param {...any} parameters
+   */
+  function doCallback(request, callbackKey, ...parameters) {
+    if (!request.hasOwnProperty(callbackKey)) {
+      return;
+    }
+
+    const requestCallback = request[callbackKey];
+
+    if (typeof requestCallback === 'function') {
+      requestCallback(...parameters);
+    } else if (Array.isArray(requestCallback)) {
+      requestCallback.forEach((callback) => {
+        callback(...parameters);
+      });
+    }
+  }
+
+  /**
    * Do an ajax request.
    *
    * @param {Object} request - Request object.
@@ -597,9 +648,7 @@ jQuery(($) => {
       request.url = wcmp.ajax_url;
     }
 
-    if (request.hasOwnProperty('onStart') && typeof request.onStart === 'function') {
-      request.onStart();
-    }
+    doCallback(request, 'onStart', request);
 
     $.ajax({
       url: request.url,
@@ -608,26 +657,17 @@ jQuery(($) => {
     })
       .done((response) => {
         setSpinner(this, spinner.success);
-
-        if (request.hasOwnProperty('afterDone') && typeof request.afterDone === 'function') {
-          request.afterDone(response);
-        }
+        doCallback(request, 'afterDone', response);
       })
 
       .fail((response) => {
         setSpinner(this, spinner.failed);
-
-        if (request.hasOwnProperty('afterFail') && typeof request.afterFail === 'function') {
-          request.afterFail(response);
-        }
+        doCallback(request, 'afterFail', response);
       })
 
       .always((response) => {
         $(this).prop('disabled', false);
-
-        if (request.hasOwnProperty('afterAlways') && typeof request.afterAlways === 'function') {
-          request.afterAlways(response);
-        }
+        doCallback(request, 'afterAlways', response);
       });
   }
 
@@ -780,22 +820,16 @@ jQuery(($) => {
   }
 
   /**
-   *
+   * @param {MouseEvent} event
    */
-  function printOrder() {
-    const dialog = $(this).parent();
+  function printOrderFromOffsetDialog(event) {
+    event.preventDefault();
+    const dialog = $(this).closest(selectors.offsetDialog);
 
-    /* set print variables */
-    const orderIds = [dialog.find('input.order_id').val()];
-    const offset = dialog.find(selectors.offsetDialogInputOffset).val();
-
-    /* hide dialog */
-    dialog.hide();
-
-    /* print labels */
-    printLabel({
-      order_ids: orderIds,
-      offset,
+    printLabel.bind(this)({
+      afterDone() {
+        dialog.hide();
+      },
     });
   }
 
@@ -831,11 +865,6 @@ jQuery(($) => {
       data: data || {},
       afterDone(response) {
         const redirectUrl = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
-        const responseError = JSON.parse(response).error;
-
-        if (typeof responseError !== 'undefined' && response !== null) {
-          document.cookie = `response=${responseError};expires=1`;
-        }
 
         if (print === 'no' || print === 'after_reload') {
           /* refresh page, admin notices are stored in options and will be displayed automatically */
@@ -937,7 +966,7 @@ jQuery(($) => {
       };
     }
 
-    request.afterDone = (response) => {
+    addCallback(request, 'afterDone', (response) => {
       const isDisplay = wcmp.download_display === 'display';
       const isDownload = wcmp.download_display === 'download';
       const isPdf = response.includes('PDF');
@@ -950,7 +979,7 @@ jQuery(($) => {
       } else {
         window.location.reload();
       }
-    };
+    });
 
     doRequest.bind(this)(request);
   }

@@ -434,9 +434,7 @@ class WCMP_Export_Consignments
      */
     private function setCustomsDeclaration(): void
     {
-        $shippingCountry = WCX_Order::get_prop($this->order, "shipping_country");
-
-        if (WCMP_Country_Codes::isWorldShipmentCountry($shippingCountry)) {
+        if (WCMP_Country_Codes::isWorldShipmentCountry()) {
             $this->setCustomItems();
         }
     }
