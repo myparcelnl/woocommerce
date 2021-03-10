@@ -459,7 +459,8 @@ class OrderSettings
     }
 
     /**
-     * @param null $deliveryOptions
+     * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter|array|null
+
      *
      * @throws \Exception
      */
