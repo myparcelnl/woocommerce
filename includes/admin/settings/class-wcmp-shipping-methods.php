@@ -210,7 +210,7 @@ class WCMP_Shipping_Methods
     {
         $shippingMethodOption = get_option($zoneShippingMethod->shipping_methods_option);
 
-        if (!$shippingMethodOption) {
+        if (! $shippingMethodOption) {
             return;
         }
 
