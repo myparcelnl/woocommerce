@@ -65,8 +65,7 @@ $target_url = wp_nonce_url(
                                         <tr>
                                             <th>#</th>
                                             <th><?php _e("Product name", "woocommerce-myparcel"); ?></th>
-                                            <th class="wcmp__text--right"><?php _e("Weight", "woocommerce-myparcel");
-                                                ?></th>
+                                            <th class="wcmp__text--right"><?php _e("weight", "woocommerce-myparcel"); ?></th>
                                         </tr>
                                         </thead>
                                         <tbody>

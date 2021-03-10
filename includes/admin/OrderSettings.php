@@ -9,6 +9,8 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
 class OrderSettings
 {
+    private const DEFAULT_COLLO_AMOUNT = 1;
+
     /**
      * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter
      */
@@ -109,8 +111,7 @@ class OrderSettings
     public function __construct(
         WC_Order $order,
         $deliveryOptions = null
-    )
-    {
+    ) {
         $this->order = $order;
 
         $this->setDeliveryOptions($deliveryOptions);
@@ -300,7 +301,7 @@ class OrderSettings
      */
     private function setColloAmount(): void
     {
-        $this->colloAmount = (int) ($this->extraOptions['collo_amount'] ?? 1);
+        $this->colloAmount = (int) ($this->extraOptions['collo_amount'] ?? self::DEFAULT_COLLO_AMOUNT);
     }
 
     /**

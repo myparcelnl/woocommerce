@@ -410,30 +410,21 @@ class WCMP_Settings_Data
         return [
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
-                "label"     => __("Home address only", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_only_recipient", "woocommerce-myparcel"),
+                "help_text" => __("shipment_options_only_recipient_help_text", "woocommerce-myparcel"),
                 "type"      => "toggle",
-                "help_text" => __(
-                    "If you don't want the parcel to be delivered at the neighbours, choose this option.",
-                    "woocommerce-myparcel"
-                ),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
-                "label"     => __("Signature on delivery", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_signature", "woocommerce-myparcel"),
+                "help_text" => __("shipment_options_signature_help_text", "woocommerce-myparcel"),
                 "type"      => "toggle",
-                "help_text" => __(
-                    "The parcel will be offered at the delivery address. If the recipient is not at home, the parcel will be delivered to the neighbours. In both cases, a signature will be required.",
-                    "woocommerce-myparcel"
-                ),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
-                "label"     => __("Extra large size", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_large_format", "woocommerce-myparcel"),
+                "help_text" => __("shipment_options_large_format_help_text", "woocommerce-myparcel"),
                 "type"      => "toggle",
-                "help_text" => __(
-                    "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but smaller than 175 x 78 x 58 cm. An extra fee will be charged. Note! If the parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet rate will be charged.",
-                    "woocommerce-myparcel"
-                ),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
@@ -443,42 +434,30 @@ class WCMP_Settings_Data
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
-                "label"     => __("Return if no answer", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_return", "woocommerce-myparcel"),
+                "help_text" => __("shipment_options_return_help_text", "woocommerce-myparcel"),
                 "type"      => "toggle",
-                "help_text" => __(
-                    "By default, a parcel will be offered twice. After two unsuccessful delivery attempts, the parcel will be available at the nearest pickup point for two weeks. There it can be picked up by the recipient with the note that was left by the courier. If you want to receive the parcel back directly and NOT forward it to the pickup point, enable this option.",
-                    "woocommerce-myparcel"
-                ),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                "label"     => __("Insured shipment", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_insured", "woocommerce-myparcel"),
+                "help_text" => __("shipment_options_insured_help_text", "woocommerce-myparcel"),
                 "type"      => "toggle",
-                "help_text" => __(
-                    "By default, there is no insurance on the shipments. If you still want to insure the shipment, you can do that. We insure the purchase value of the shipment, with a maximum insured value of € 5.000. Insured parcels always contain the options 'Home address only' en 'Signature for delivery'",
-                    "woocommerce-myparcel"
-                ),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                "label"     => __("Insure from price", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_insured_from_price", "woocommerce-myparcel"),
+                "help_text" => __("shipment_options_insured_from_price_help_text", "woocommerce-myparcel"),
                 "type"      => "number",
-                "help_text" => __(
-                    "Insure all orders that exceed this price point.",
-                    "woocommerce-myparcel"
-                ),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                "label"     => __("Max insured amount", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_insured_amount", "woocommerce-myparcel"),
+                "help_text" => __("shipment_options_insured_amount_help_text", "woocommerce-myparcel"),
                 "type"      => "select",
                 "options"   => WCMP_Data::getInsuranceAmounts(),
-                "help_text" => __(
-                    "Insure all parcels up to the selected amount.",
-                    "woocommerce-myparcel"
-                ),
             ],
         ];
     }
@@ -566,7 +545,7 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Home address only", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_only_recipient", "woocommerce-myparcel"),
                 "type"      => "toggle",
             ],
             self::getFeeField(
@@ -579,7 +558,7 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Signature on delivery", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_signature", "woocommerce-myparcel"),
                 "type"      => "toggle",
                 "help_text" => __(
                     "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
@@ -934,13 +913,13 @@ class WCMP_Settings_Data
                 "name"      => WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Home address only title", "woocommerce-myparcel"),
-                "default"   => __("Home address only", "woocommerce-myparcel"),
+                "default"   => __("shipment_options_only_recipient", "woocommerce-myparcel"),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_SIGNATURE_TITLE,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Signature on delivery title", "woocommerce-myparcel"),
-                "default"   => __("Signature on delivery", "woocommerce-myparcel"),
+                "default"   => __("shipment_options_signature", "woocommerce-myparcel"),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_PICKUP_TITLE,

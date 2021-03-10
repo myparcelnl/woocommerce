@@ -17,6 +17,8 @@ if (class_exists("WCMP_Export_Consignments")) {
 
 class WCMP_Export_Consignments
 {
+    private const DEFAULT_PRODUCT_QUANTITY = 1;
+
     /**
      * @var AbstractConsignment
      */
@@ -183,7 +185,7 @@ class WCMP_Export_Consignments
                 $description = substr($item["name"], 0, 47) . "...";
             }
             // Amount
-            $amount = (int) ($item["qty"] ?? 1);
+            $amount = (int) ($item["qty"] ?? self::DEFAULT_PRODUCT_QUANTITY);
 
             // Weight (total item weight in grams)
             $weight = WCMP_Export::convertWeightToGrams($product->get_weight());

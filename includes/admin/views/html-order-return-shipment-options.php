@@ -22,7 +22,7 @@ $orderSettings = new OrderSettings($order);
         <td>
             <?php _e("Shipment type", "woocommerce-myparcel") ?>:<br/> <small class="calculated_weight">
                 <?php printf(
-                    __("Calculated weight: %s", "woocommerce-myparcel"),
+                    __("calculated_order_weight", "woocommerce-myparcel"),
                     wc_format_weight($orderSettings->getWeight())
                 ) ?>
             </small>
