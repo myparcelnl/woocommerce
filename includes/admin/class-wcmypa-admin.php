@@ -988,19 +988,22 @@ class WCMYPA_Admin
             ];
         }
 
-        $array  = [
+        $confirmationData = [
             __("Delivery type:", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
-            __("Extra options:", "woocommerce-myparcel") =>
-                sprintf("%s<br>%s",
-                    $deliveryOptions->getShipmentOptions()->hasSignature() ? $signatureTitle : null,
-                    $deliveryOptions->getShipmentOptions()->hasOnlyRecipient() ? $onlyRecipientTitle : null)
         ];
 
-        if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)){
+        if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
             $array[__("Date:", 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));;
         }
 
-        return $array;
+        if ($deliveryOptions->getShipmentOptions()->hasSignature() || $deliveryOptions->getShipmentOptions()->hasOnlyRecipient()) {
+            $array[__("Extra options:", "woocommerce-myparcel")] =
+                sprintf("%s<br>%s",
+                    $deliveryOptions->getShipmentOptions()->hasSignature() ? $signatureTitle : null,
+                    $deliveryOptions->getShipmentOptions()->hasOnlyRecipient() ? $onlyRecipientTitle : null);;
+        }
+
+        return $confirmationData;
     }
 
     /**
