@@ -968,6 +968,8 @@ class WCMYPA_Admin
     {
         $signatureTitle     = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
         $onlyRecipientTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
+        $hasSignature       = $deliveryOptions->getShipmentOptions()->hasSignature();
+        $hasOnlyRecipient   = $deliveryOptions->getShipmentOptions()->hasOnlyRecipient();
 
         if (! $deliveryOptions->getCarrier()) {
             return null;
@@ -996,11 +998,11 @@ class WCMYPA_Admin
             $array[__("Date:", 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));;
         }
 
-        if ($deliveryOptions->getShipmentOptions()->hasSignature() || $deliveryOptions->getShipmentOptions()->hasOnlyRecipient()) {
+        if ($hasSignature || $hasOnlyRecipient) {
             $array[__("Extra options:", "woocommerce-myparcel")] =
                 sprintf("%s<br>%s",
-                    $deliveryOptions->getShipmentOptions()->hasSignature() ? $signatureTitle : null,
-                    $deliveryOptions->getShipmentOptions()->hasOnlyRecipient() ? $onlyRecipientTitle : null);;
+                    $hasSignature ? $signatureTitle : null,
+                    $hasOnlyRecipient ? $onlyRecipientTitle : null);;
         }
 
         return $confirmationData;
