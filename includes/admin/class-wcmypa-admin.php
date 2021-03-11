@@ -995,11 +995,11 @@ class WCMYPA_Admin
         ];
 
         if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
-            $array[__("Date:", 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));;
+            $confirmationData[__("Date:", 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));;
         }
 
         if ($hasSignature || $hasOnlyRecipient) {
-            $array[__("Extra options:", "woocommerce-myparcel")] =
+            $confirmationData[__("Extra options:", "woocommerce-myparcel")] =
                 sprintf("%s<br>%s",
                     $hasSignature ? $signatureTitle : null,
                     $hasOnlyRecipient ? $onlyRecipientTitle : null);;
