@@ -1002,7 +1002,7 @@ class WCMYPA_Admin
             $confirmationData[__("Extra options:", "woocommerce-myparcel")] =
                 sprintf("%s<br>%s",
                     $hasSignature ? $signatureTitle : null,
-                    $hasOnlyRecipient ? $onlyRecipientTitle : null);;
+                    $hasOnlyRecipient ? $onlyRecipientTitle : null);
         }
 
         return $confirmationData;
