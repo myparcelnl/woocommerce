@@ -207,7 +207,7 @@ msgstr "bezorg titel"
 msgid "Delivery type"
 msgstr "Soort levering"
 
-msgid "Delivery type:"
+msgid "delivery_type"
 msgstr "Soort levering:"
 
 msgid "Diagnostic tools"
@@ -302,7 +302,7 @@ msgstr "Exporteer naar MyParcel"
 msgid "Extra large size"
 msgstr "Extra grote verpakking"
 
-msgid "Extra options:"
+msgid "extra_options"
 msgstr "Extra opties:"
 
 msgid "Fee (optional)"

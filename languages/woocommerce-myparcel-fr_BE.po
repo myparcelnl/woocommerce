@@ -197,7 +197,7 @@ msgstr "Titre de la livraison"
 msgid "Delivery type"
 msgstr "Type de livraison"
 
-msgid "Delivery type:"
+msgid "delivery_type"
 msgstr "Type de livraison:"
 
 msgid "Diagnostic tools"
@@ -288,7 +288,7 @@ msgstr "Exporter vers MyParcel"
 msgid "Extra large size"
 msgstr "Très grande taille"
 
-msgid "Extra options:"
+msgid "extra_options"
 msgstr "Options supplémentaires:"
 
 msgid "Fee (optional)"
