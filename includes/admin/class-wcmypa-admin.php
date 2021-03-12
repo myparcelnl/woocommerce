@@ -991,7 +991,7 @@ class WCMYPA_Admin
         }
 
         $confirmationData = [
-            __("Delivery type:", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+            __("delivery_type:", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
         ];
 
         if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
@@ -999,7 +999,7 @@ class WCMYPA_Admin
         }
 
         if ($hasSignature || $hasOnlyRecipient) {
-            $confirmationData[__("Extra options:", "woocommerce-myparcel")] =
+            $confirmationData[__("extra_options:", "woocommerce-myparcel")] =
                 sprintf("%s<br>%s",
                     $hasSignature ? $signatureTitle : null,
                     $hasOnlyRecipient ? $onlyRecipientTitle : null);
