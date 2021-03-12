@@ -348,17 +348,6 @@ class WCMP_Checkout
             WCMYPA()->version
         );
 
-        /**
-         * Save the order weight here because it's easier than digging through order data after creating it.
-         *
-         * @see https://businessbloomer.com/woocommerce-save-display-order-total-weight/
-         */
-        WCX_Order::update_meta_data(
-            $order,
-            WCMYPA_Admin::META_ORDER_WEIGHT,
-            WC()->cart->get_cart_contents_weight()
-        );
-
         WCX_Order::update_meta_data(
             $order,
             WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA,

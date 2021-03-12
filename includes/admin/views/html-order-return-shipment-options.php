@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 
 if (! defined('ABSPATH')) {
@@ -12,7 +14,7 @@ if (! defined('ABSPATH')) {
  */
 
 /** @noinspection PhpUnhandledExceptionInspection */
-$deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
+$orderSettings = new OrderSettings($order);
 
 ?>
 <table class="wcmp__settings-table" style="width: auto">
@@ -20,8 +22,8 @@ $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
         <td>
             <?php _e("Shipment type", "woocommerce-myparcel") ?>:<br/> <small class="calculated_weight">
                 <?php printf(
-                    __("Calculated weight: %s", "woocommerce-myparcel"),
-                    wc_format_weight($order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT))
+                    __("calculated_order_weight", "woocommerce-myparcel"),
+                    wc_format_weight($orderSettings->getWeight())
                 ) ?>
             </small>
         </td>

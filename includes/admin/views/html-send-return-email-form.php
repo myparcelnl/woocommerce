@@ -29,7 +29,9 @@ $target_url = wp_nonce_url(
             <?php
             $c = true;
             foreach ($order_ids as $order_id) :
-                $order = WCX::get_order($order_id);
+                $order         = WCX::get_order($order_id);
+                $orderSettings = new OrderSettings($order);
+
                 // skip non-myparcel destinations
                 $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
                 if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
@@ -63,8 +65,7 @@ $target_url = wp_nonce_url(
                                         <tr>
                                             <th>#</th>
                                             <th><?php _e("Product name", "woocommerce-myparcel"); ?></th>
-                                            <th class="wcmp__text--right"><?php _e("Weight", "woocommerce-myparcel");
-                                                ?></th>
+                                            <th class="wcmp__text--right"><?php _e("weight", "woocommerce-myparcel"); ?></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -93,10 +94,10 @@ $target_url = wp_nonce_url(
                                             <th><?php _e("Total weight", "woocommerce-myparcel"); ?></th>
                                             <th class="wcmp__text--right">
                                                 <?php
-                                                $orderWeight = $order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+                                                $weight = $orderSettings->getWeight();
 
-                                                if ($orderWeight) {
-                                                    echo wc_format_weight($orderWeight);
+                                                if ($weight) {
+                                                    echo wc_format_weight($weight);
                                                 } else {
                                                     echo esc_html__('N/A', 'woocommerce');
                                                 }

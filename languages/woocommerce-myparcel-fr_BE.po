@@ -35,9 +35,6 @@ msgstr ""
 msgid "Address details are not entered"
 msgstr "Les données relatives à l'adresse ne sont pas complétées"
 
-msgid "settings_checkout_display_for_all_methods"
-msgstr "Tous les modes d'expédition"
-
 msgid ""
 "Amount of days a customer can postpone a shipment. Default is 0 days with a "
 "maximum value of 14 days."
@@ -91,6 +88,9 @@ msgid ""
 msgstr ""
 
 msgid "Calculated weight: %s"
+msgstr "Poids calculé : %s"
+
+msgid "calculated_order_weight"
 msgstr "Poids calculé : %s"
 
 msgid "Carrier"
@@ -209,9 +209,6 @@ msgstr ""
 msgid "Disabled"
 msgstr "désactivé"
 
-msgid "settings_checkout_display_for"
-msgstr "Afficher pour"
-
 msgid "Documents"
 msgstr "Les documents"
 
@@ -240,10 +237,10 @@ msgid "Enable MyParcel delivery options"
 msgstr "Activer les options de livraison MyParcel"
 
 msgid "Enable PostNL delivery"
-msgstr "Activer la livraison postnl"
+msgstr "Activer la livraison PostNL"
 
 msgid "Enable PostNL pickup"
-msgstr "Activer le ramassage postnl"
+msgstr "Activer le ramassage PostNL"
 
 msgid ""
 "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
@@ -383,7 +380,7 @@ msgstr ""
 msgid "Insure from price"
 msgstr ""
 
-msgid "Insured"
+msgid "insured"
 msgstr ""
 
 msgid "Insured for"
@@ -391,6 +388,12 @@ msgstr "Montant assuré"
 
 msgid "Insured shipment"
 msgstr ""
+
+msgid "insured_amount"
+msgstr ""
+
+msgid "insured_for"
+msgstr "Montant assuré"
 
 msgid ""
 "It looks like your shop is based in Netherlands. This plugin is for "
@@ -516,7 +519,7 @@ msgid "Pick up at"
 msgstr "Ramasser à"
 
 msgid "Pick up from"
-msgstr "Collecte à partir de "
+msgstr "Collecte à partir de"
 
 msgid "Pickup"
 msgstr "Ramasser"
@@ -549,16 +552,16 @@ msgid "Postcode/city combination unknown"
 msgstr "Combinaison code postal / ville inconnue"
 
 msgid "PostNL"
-msgstr "postnl"
+msgstr "PostNL"
 
 msgid "PostNL delivery options"
-msgstr "Options de livraison postnl"
+msgstr "Options de livraison PostNL"
 
 msgid "PostNL export settings"
 msgstr ""
 
 msgid "PostNL pickup options"
-msgstr "Options de ramassage postnl"
+msgstr "Options de ramassage PostNL"
 
 msgid "Print"
 msgstr "Imprimer"
@@ -610,6 +613,31 @@ msgstr "Envoyer l'e-mail"
 msgid "Settings"
 msgstr "Paramètres"
 
+msgid "settings_checkout_display_for"
+msgstr "Afficher pour"
+
+msgid "settings_checkout_display_for_all_methods"
+msgstr "Tous les modes d'expédition"
+
+msgid "settings_checkout_display_for_help_text"
+msgstr ""
+"Vous pouvez lier les options de livraison à des méthodes d'expédition "
+"spécifiques en les ajoutant aux types de colis sous \"Paramètres "
+"d'exportation standard\". Les options de livraison ne sont pas visibles aux "
+"adresses étrangères."
+
+msgid "settings_checkout_display_for_selected_methods"
+msgstr "Mode d'expédition couplé au type de colis"
+
+msgid "settings_checkout_price_format"
+msgstr ""
+
+msgid "settings_checkout_surcharge"
+msgstr ""
+
+msgid "settings_checkout_total_price"
+msgstr ""
+
 msgid "Shipment type"
 msgstr "Types d'expédition"
 
@@ -622,10 +650,49 @@ msgstr ""
 "destinataire doit montrer qu'ils ont plus de 18 ans au moyen d'une preuve "
 "d'identité. Avec ceci L'option 'signature pour réception' et 'livraison "
 "uniquement chez le destinataire' sont inclus. Cette option ne peut pas être "
-"combinée avec la livraison le matin ou le soir. "
+"combinée avec la livraison le matin ou le soir."
 
-msgid "settings_checkout_display_for_selected_methods"
-msgstr "Mode d'expédition couplé au type de colis"
+msgid "shipment_options_insured"
+msgstr ""
+
+msgid "shipment_options_insured_amount"
+msgstr ""
+
+msgid "shipment_options_insured_amount_help_text"
+msgstr ""
+
+msgid "shipment_options_insured_from_price"
+msgstr ""
+
+msgid "shipment_options_insured_from_price_help_text"
+msgstr ""
+
+msgid "shipment_options_insured_help_text"
+msgstr ""
+
+msgid "shipment_options_large_format"
+msgstr "Très grande taille"
+
+msgid "shipment_options_large_format_help_text"
+msgstr ""
+
+msgid "shipment_options_only_recipient"
+msgstr "Seul destinataire"
+
+msgid "shipment_options_only_recipient_help_text"
+msgstr ""
+
+msgid "shipment_options_return"
+msgstr ""
+
+msgid "shipment_options_return_help_text"
+msgstr ""
+
+msgid "shipment_options_signature"
+msgstr "Signature pour réception"
+
+msgid "shipment_options_signature_help_text"
+msgstr ""
 
 msgid "Show after billing details"
 msgstr "Afficher après les données de facturation"
@@ -648,9 +715,6 @@ msgstr "Afficher la date de livraison"
 msgid ""
 "Show delivery day options allow your customers to see the delivery day in "
 "order confirmation and My Account."
-msgstr ""
-
-msgid "settings_checkout_price_format"
 msgstr ""
 
 msgid "Show Track & Trace trace code and link in My Account."
@@ -683,9 +747,6 @@ msgstr "Rue"
 msgid "Suffix"
 msgstr "Extension"
 
-msgid "settings_checkout_surcharge"
-msgstr ""
-
 msgid "The label has been printed."
 msgstr "L'étiquette est imprimée."
 
@@ -709,6 +770,9 @@ msgid ""
 "signature will be required."
 msgstr ""
 
+msgid "The selected orders have not been exported to MyParcel yet!"
+msgstr "Les commandes sélectionnées n'ont pas encore été exportées vers MyParcel!"
+
 msgid "The selected orders have not been exported to MyParcel yet! "
 msgstr "Les commandes sélectionnées n'ont pas encore été exportées vers MyParcel!"
 
@@ -719,7 +783,7 @@ msgid ""
 "These settings will be applied to PostNL shipments you create in the "
 "backend."
 msgstr ""
-"Ces paramètres seront appliqués aux envois postnl que vous créez dans le "
+"Ces paramètres seront appliqués aux envois PostNL que vous créez dans le "
 "backend."
 
 msgid "This option enables you to continue printing where you left off last time"
@@ -744,9 +808,6 @@ msgstr "Titre pour le code-barres"
 
 msgid "Titles"
 msgstr "Titres"
-
-msgid "settings_checkout_total_price"
-msgstr ""
 
 msgid "Total weight"
 msgstr "Poids total"
@@ -775,7 +836,7 @@ msgstr ""
 msgid "View logs"
 msgstr "Afficher les logs"
 
-msgid "Weight"
+msgid "weight"
 msgstr ""
 
 msgid ""
@@ -853,13 +914,6 @@ msgstr ""
 
 msgid "You can change the text before the barcode inside an note"
 msgstr "Vous pouvez modifier le texte du code-barres dans une note"
-
-msgid "settings_checkout_display_for_help_text"
-msgstr ""
-"Vous pouvez lier les options de livraison à des méthodes d'expédition "
-"spécifiques en les ajoutant aux types de colis sous \"Paramètres "
-"d'exportation standard\". Les options de livraison ne sont pas visibles aux "
-"adresses étrangères."
 
 msgid ""
 "You can place a delivery title above the MyParcel options. When there is no "
