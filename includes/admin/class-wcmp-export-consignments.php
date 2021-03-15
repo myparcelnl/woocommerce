@@ -220,12 +220,10 @@ class WCMP_Export_Consignments
         switch ($this->orderSettings->getPackageType()) {
             case AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME:
                 $emptyParcelWeight = (float) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
-
                 $weight += $emptyParcelWeight;
                 break;
             case AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME:
-                $extraOptions = $this->orderSettings->getDigitalStampRangeWeight();
-                $weight       = $extraOptions['digital_stamp_weight'] ?? $extraOptions['weight'];
+                $weight = $this->orderSettings->getDigitalStampRangeWeight();
                 break;
         }
 
