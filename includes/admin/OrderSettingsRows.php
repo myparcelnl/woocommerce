@@ -80,7 +80,7 @@ class OrderSettingsRows
     ): array {
         $orderSettings      = new OrderSettings($order, $deliveryOptions);;
         $shippingCountry    = $orderSettings->getShippingCountry();
-        $isEuCountry        = WCMP_Country_Codes::isEuCountry();
+        $isEuCountry        = WCMP_Country_Codes::isEuCountry($shippingCountry);
         $isHomeCountry      = WCMP_Data::isHomeCountry($shippingCountry);
         $packageTypeOptions = array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman());
 
@@ -131,7 +131,7 @@ class OrderSettingsRows
             $rows = array_merge($rows, self::getAdditionalOptionsRows($orderSettings));
         }
 
-        if ($isHomeCountry || $isEuCountry) {
+        if ($isEuCountry) {
             $rows[] = [
                 "name"      => self::OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT,
                 "type"      => "toggle",
