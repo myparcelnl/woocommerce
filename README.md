@@ -1,5 +1,3 @@
-<h4>:heavy_exclamation_mark: Together we have processed a lot of extra parcels recently, and we still see a huge increase for the coming period. In order to keep our network running, it is necessary to limit amount of packages for all sending customers. That is why we temporarily apply a maximum number of parcels that can be pre-notified per day as of December 21. The next day new labels and barcodes will be available. We understand very well that this adjustment is annoying for you and that it disrupts your process.</h4>
-
 # WooCommerce MyParcel
 Welcome to the WooCommerce MyParcel repository on GitHub. Here you can browse the source, look at open issues and keep track of development.
 
@@ -26,7 +24,7 @@ This WooCommerce extension allows you to export your orders to the MyParcel [Bac
 - Add Track & Trace URL to the order confirmation email
 
 ## Manual
-[Plugin Manual](https://myparcel.github.io/woocommerce)
+[Plugin Manual](https://myparcelnl.github.io/woocommerce)
 
 ## Installation
 You can download the .zip file of the latest release from here: [Latest] [![GitHub release](https://img.shields.io/github/v/release/myparcelnl/woocommerce?logo=github)](https://github.com/myparcelnl/woocommerce/releases/latest)
