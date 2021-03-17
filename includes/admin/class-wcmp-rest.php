@@ -176,7 +176,7 @@ class WCMP_Rest
      * @return array
      * @throws Exception
      */
-    public function request($url, $method = "GET", $headers = [], $post, $body = null, $raw = false)
+    public function request($url, $method = "GET", $headers = [], $post = '', $body = null, $raw = false)
     {
         // Set the method and related options
         switch ($method) {
