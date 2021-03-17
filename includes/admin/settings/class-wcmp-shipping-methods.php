@@ -210,6 +210,10 @@ class WCMP_Shipping_Methods
     {
         $shippingMethodOption = get_option($zoneShippingMethod->shipping_methods_option);
 
+        if (! $shippingMethodOption) {
+            return;
+        }
+
         foreach ($shippingMethodOption as $item) {
             $this->addShippingMethod($item['id_for_shipping'], $item['method_title']);
         }

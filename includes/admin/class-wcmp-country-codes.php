@@ -13,11 +13,16 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 class WCMP_Country_Codes
 {
     /**
+     * @param string $country
+     *
      * @return bool
      */
-    public static function isEuCountry(): bool
+    public static function isEuCountry(string $country): bool
     {
-        return (new AbstractConsignment())->isEuCountry();
+        $consignment = (new AbstractConsignment());
+        $consignment->setCountry($country);
+
+        return $consignment->isEuCountry();
     }
 
     /**
@@ -36,7 +41,7 @@ class WCMP_Country_Codes
     public static function isAllowedDestination(string $countryCode): bool
     {
         $isHomeCountry          = WCMP_Data::isHomeCountry($countryCode);
-        $isEuCountry            = self::isEuCountry();
+        $isEuCountry            = self::isEuCountry($countryCode);
         $isWorldShipmentCountry = self::isWorldShipmentCountry();
 
         return $isHomeCountry || $isEuCountry || $isWorldShipmentCountry;

@@ -28,7 +28,6 @@ class WCMYPA_Admin
     public const META_LAST_SHIPMENT_IDS      = "_myparcel_last_shipment_ids";
     public const META_RETURN_SHIPMENT_IDS    = "_myparcel_return_shipment_ids";
     public const META_ORDER_VERSION          = "_myparcel_order_version";
-    public const META_ORDER_WEIGHT           = "_myparcel_order_weight";
     public const META_PGADDRESS              = "_myparcel_pgaddress";
     public const META_SHIPMENTS              = "_myparcel_shipments";
     public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcel_shipment_options_extra";
@@ -37,7 +36,11 @@ class WCMYPA_Admin
     public const META_HS_CODE_VARIATION      = "_myparcel_hs_code_variation";
     public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
     public const META_AGE_CHECK              = "_myparcel_age_check";
-    public const META_ORDER_TOTAL            = "_order_version";
+
+    /**
+     * @deprecated use weight property in META_SHIPMENT_OPTIONS_EXTRA.
+     */
+    public const META_ORDER_WEIGHT = "_myparcel_order_weight";
 
     /**
      * Legacy meta keys.
@@ -568,22 +571,24 @@ class WCMYPA_Admin
         parse_str($_POST["form_data"], $form_data);
 
         foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
-            $order           = WCX::get_order($order_id);
-            $shippingCountry = $order->get_shipping_country();
-            $data            = self::removeDisallowedDeliveryOptions($data, $shippingCountry);
-            $deliveryOptions = self::getDeliveryOptionsFromOrder($order, $data);
+            $order         = WCX::get_order($order_id);
+            $data          = self::removeDisallowedDeliveryOptions($data, $order->get_shipping_country());
+            $orderSettings = new OrderSettings($order, $data);
 
             WCX_Order::update_meta_data(
                 $order,
                 self::META_DELIVERY_OPTIONS,
-                $deliveryOptions
+                $orderSettings->getDeliveryOptions()->toArray()
             );
 
             // Save extra options
             WCX_Order::update_meta_data(
                 $order,
                 self::META_SHIPMENT_OPTIONS_EXTRA,
-                $data["extra_options"]
+                array_merge(
+                    $orderSettings->getExtraOptions(),
+                    $data["extra_options"]
+                )
             );
         }
 

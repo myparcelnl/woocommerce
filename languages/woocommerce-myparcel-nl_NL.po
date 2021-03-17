@@ -35,9 +35,6 @@ msgstr ""
 msgid "Address details are not entered"
 msgstr "Adresgegevens zijn niet ingevuld"
 
-msgid "settings_checkout_display_for_all_methods"
-msgstr "Alle verzendmethoden"
-
 msgid ""
 "Amount of days a customer can postpone a shipment. Default is 0 days with a "
 "maximum value of 14 days."
@@ -99,6 +96,9 @@ msgstr ""
 "afgeleverd op het thuisadres en een handtekening is vereist."
 
 msgid "Calculated weight: %s"
+msgstr "Berekend gewicht: %s"
+
+msgid "calculated_order_weight"
 msgstr "Berekend gewicht: %s"
 
 msgid "Carrier"
@@ -207,7 +207,7 @@ msgstr "bezorg titel"
 msgid "Delivery type"
 msgstr "Soort levering"
 
-msgid "Delivery type:"
+msgid "delivery_type"
 msgstr "Soort levering:"
 
 msgid "Diagnostic tools"
@@ -218,9 +218,6 @@ msgstr "Digitale postzegel"
 
 msgid "Disabled"
 msgstr "Uitschakelen"
-
-msgid "settings_checkout_display_for"
-msgstr "Toon bij"
 
 msgid "Documents"
 msgstr "Documenten"
@@ -305,7 +302,7 @@ msgstr "Exporteer naar MyParcel"
 msgid "Extra large size"
 msgstr "Extra grote verpakking"
 
-msgid "Extra options:"
+msgid "extra_options"
 msgstr "Extra opties:"
 
 msgid "Fee (optional)"
@@ -401,7 +398,7 @@ msgstr "Verzeker alle orders tot het geselecteerde bedrag."
 msgid "Insure from price"
 msgstr "Verzeker vanaf bedrag"
 
-msgid "Insured"
+msgid "insured"
 msgstr "Verzekerd"
 
 msgid "Insured for"
@@ -409,6 +406,12 @@ msgstr "Verzekerd voor"
 
 msgid "Insured shipment"
 msgstr "Verzekerde zending"
+
+msgid "insured_amount"
+msgstr "Verzekerd bedrag"
+
+msgid "insured_for"
+msgstr "Verzekerd voor"
 
 msgid ""
 "It looks like your shop is based in Netherlands. This plugin is for "
@@ -569,7 +572,7 @@ msgid "PostNL"
 msgstr "PostNL"
 
 msgid "PostNL delivery options"
-msgstr "PostNL bezorgopties "
+msgstr "PostNL bezorgopties"
 
 msgid "PostNL export settings"
 msgstr "PostNL export instellingen"
@@ -625,6 +628,30 @@ msgstr "Verstuur e-mail"
 msgid "Settings"
 msgstr "Instellingen"
 
+msgid "settings_checkout_display_for"
+msgstr "Toon bij"
+
+msgid "settings_checkout_display_for_all_methods"
+msgstr "Alle verzendmethoden"
+
+msgid "settings_checkout_display_for_help_text"
+msgstr ""
+"Je kunt de bezorgopties koppelen aan specifieke verzendmethoden door ze toe "
+"te voegen aan de pakkettypen onder \"Standaard exportinstellingen\". De "
+"bezorgopties zijn niet zichtbaar op buitenlandse adressen."
+
+msgid "settings_checkout_display_for_selected_methods"
+msgstr "Verzendmethoden gekoppeld aan pakkettype"
+
+msgid "settings_checkout_price_format"
+msgstr "Prijzen tonen als"
+
+msgid "settings_checkout_surcharge"
+msgstr "Meerprijs"
+
+msgid "settings_checkout_total_price"
+msgstr "Totaalprijs"
+
 msgid "Shipment type"
 msgstr "Soort zending"
 
@@ -638,8 +665,65 @@ msgstr ""
 "voor ontvangst\" en \"Alleen ontvanger\" geactiveerd. Deze optie kan niet "
 "worden gecombineerd met ochtend- of avondlevering."
 
-msgid "settings_checkout_display_for_selected_methods"
-msgstr "Verzendmethoden gekoppeld aan pakkettype"
+msgid "shipment_options_insured"
+msgstr "Verzekerde zending"
+
+msgid "shipment_options_insured_amount"
+msgstr "Verzekeren tot maximaal"
+
+msgid "shipment_options_insured_amount_help_text"
+msgstr "Verzeker alle orders tot het geselecteerde bedrag."
+
+msgid "shipment_options_insured_from_price"
+msgstr "Verzeker vanaf bedrag"
+
+msgid "shipment_options_insured_from_price_help_text"
+msgstr "Verzeker alle orders met een totaal prijs hoger dan het ingevulde bedrag."
+
+msgid "shipment_options_insured_help_text"
+msgstr ""
+"Standaard zit er geen verzekering op zendingen. Als je alsnog een zending "
+"wilt verzekeren kan dat. Wij verzekeren het aankoopbedrag van een zending "
+"met een maximum van €5000. Verzekerde zendingen worden altijd alleen "
+"afgeleverd op het thuisadres en een handtekening is vereist."
+
+msgid "shipment_options_large_format"
+msgstr "Extra grote verpakking"
+
+msgid "shipment_options_large_format_help_text"
+msgstr ""
+"Activeer deze instelling als je zending groter is dan 100 x 70 x 50 cm, "
+"maar kleiner dan 175 x 78 x 58 cm. Dit kost meer. Let op! Als het pakket "
+"groter dan 175 x 78 x 58 cm of zwaarder dan 30kg is, wordt het gerekend als "
+"pallet."
+
+msgid "shipment_options_only_recipient"
+msgstr "Alleen thuisadres"
+
+msgid "shipment_options_only_recipient_help_text"
+msgstr ""
+"Als je je pakket niet bij de buren bezorgd wil hebben, kies dan voor deze "
+"optie."
+
+msgid "shipment_options_return"
+msgstr "Retour bij mislukte leverpoging"
+
+msgid "shipment_options_return_help_text"
+msgstr ""
+"Standaard wordt een pakket 2x aangeboden. Bij 2 mislukte afleverpogingen, "
+"wordt het pakket bij het dichtstbijzijnde pickup point beschikbaar voor 2 "
+"weken. Daar kan het worden opgehaald met het bewijs dat is achtergelaten "
+"door de bezorger. Als je het pakket meteen retour wilt en NIET afgeleverd "
+"wil laten worden bij een pickup point, zet deze optie dan aan."
+
+msgid "shipment_options_signature"
+msgstr "Handtekening voor ontvangst"
+
+msgid "shipment_options_signature_help_text"
+msgstr ""
+"Het pakket wordt aangeboden op het leveringsadres. Als de ontvangende niet "
+"thuis is, wordt het pakket bij de buren afgeleverd. In beide gevallen is "
+"een handtekening vereist."
 
 msgid "Show after billing details"
 msgstr "Toon na factuurgegevens"
@@ -665,9 +749,6 @@ msgid ""
 msgstr ""
 "De optie \"Toon bezorgdatum\" laat je klanten de bezorgdag zien in "
 "orderbevestigingen en Mijn Account."
-
-msgid "settings_checkout_price_format"
-msgstr "Prijzen tonen als"
 
 msgid "Show Track & Trace trace code and link in My Account."
 msgstr "Toon Track & Trace code en link in Mijn Account."
@@ -699,9 +780,6 @@ msgstr "Straatnaam"
 msgid "Suffix"
 msgstr "Toev."
 
-msgid "settings_checkout_surcharge"
-msgstr "Meerprijs"
-
 msgid "The label has been printed."
 msgstr "Het label is geprint."
 
@@ -730,11 +808,14 @@ msgstr ""
 "thuis is, wordt het pakket bij de buren afgeleverd. In beide gevallen is "
 "een handtekening vereist."
 
+msgid "The selected orders have not been exported to MyParcel yet!"
+msgstr "De geselecteerde bestellingen zijn nog niet geëxporteerd naar MyParcel!"
+
 msgid "The selected orders have not been exported to MyParcel yet! "
 msgstr "De geselecteerde bestellingen zijn nog niet geëxporteerd naar MyParcel!"
 
 msgid "Theme \"%s\" detected."
-msgstr "Thema “%s” gedetecteerd."
+msgstr "Thema \"%s\" gedetecteerd."
 
 msgid ""
 "These settings will be applied to PostNL shipments you create in the "
@@ -770,9 +851,6 @@ msgstr "Titel voor de barcode"
 msgid "Titles"
 msgstr "Titels"
 
-msgid "settings_checkout_total_price"
-msgstr "Totaalprijs"
-
 msgid "Total weight"
 msgstr "Totaal gewicht"
 
@@ -800,7 +878,7 @@ msgstr "Ongefrankeerd"
 msgid "View logs"
 msgstr "Logs weergeven"
 
-msgid "Weight"
+msgid "weight"
 msgstr "Gewicht"
 
 msgid ""
@@ -888,12 +966,6 @@ msgstr ""
 
 msgid "You can change the text before the barcode inside an note"
 msgstr "Je kunt de tekst veranderen voor de barcode in een notitie"
-
-msgid "settings_checkout_display_for_help_text"
-msgstr ""
-"Je kunt de bezorgopties koppelen aan specifieke verzendmethoden door ze toe "
-"te voegen aan de pakkettypen onder \"Standaard exportinstellingen\". De "
-"bezorgopties zijn niet zichtbaar op buitenlandse adressen."
 
 msgid ""
 "You can place a delivery title above the MyParcel options. When there is no "

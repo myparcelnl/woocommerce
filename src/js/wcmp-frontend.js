@@ -470,21 +470,19 @@ jQuery(($) => {
      * Hides/shows the delivery options based on the current shipping method. Makes sure to not update the checkout
      *  unless necessary by checking if hasDeliveryOptions is true or false.
      */
-    toggleDeliveryOptions() {
-      if (MyParcelFrontend.shippingMethodHasDeliveryOptions()) {
+    toggleDeliveryOptions(shippingMethod) {
+      if (MyParcelFrontend.shippingMethodHasDeliveryOptions(shippingMethod)) {
         MyParcelFrontend.hasDeliveryOptions = true;
         MyParcelFrontend.triggerEvent(MyParcelFrontend.showDeliveryOptionsEvent, document);
-        MyParcelFrontend.updateAddress();
+        MyParcelFrontend.updateDeliveryOptionsConfig();
       } else {
         MyParcelFrontend.hasDeliveryOptions = false;
         MyParcelFrontend.triggerEvent(MyParcelFrontend.hideDeliveryOptionsEvent, document);
       }
     },
 
-    updateConfig() {
-      if (MyParcelFrontend.hasDeliveryOptions) {
-        MyParcelFrontend.triggerEvent(MyParcelFrontend.updateConfigEvent);
-      }
+    sendUpdateConfigEvent() {
+      MyParcelFrontend.triggerEvent(MyParcelFrontend.updateConfigEvent);
     },
 
     /**
@@ -616,7 +614,7 @@ jQuery(($) => {
         success(data) {
           const {config} = JSON.parse(data);
           window.MyParcelConfig.config = config;
-          MyParcelFrontend.updateConfig();
+          MyParcelFrontend.sendUpdateConfigEvent();
         },
       });
     },
@@ -729,9 +727,10 @@ jQuery(($) => {
      * @param {?String} newShippingMethod
      */
     onChangeShippingMethod(oldShippingMethod, newShippingMethod) {
-      if (MyParcelFrontend.shippingMethodHasDeliveryOptions(newShippingMethod)) {
-        MyParcelFrontend.updateDeliveryOptionsConfig();
-      }
+      MyParcelFrontend.toggleDeliveryOptions(newShippingMethod);
+      // if (MyParcelFrontend.shippingMethodHasDeliveryOptions(newShippingMethod)) {
+      //   MyParcelFrontend.updateDeliveryOptionsConfig();
+      // }
     },
 
     validateMyParcelConfig() {

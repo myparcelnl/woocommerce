@@ -35,9 +35,6 @@ msgstr ""
 msgid "Address details are not entered"
 msgstr "Address details are not entered"
 
-msgid "settings_checkout_display_for_all_methods"
-msgstr "All shipping methods"
-
 msgid ""
 "Amount of days a customer can postpone a shipment. Default is 0 days with a "
 "maximum value of 14 days."
@@ -101,6 +98,9 @@ msgstr ""
 "contain the options 'Home address only' en 'Signature for delivery'"
 
 msgid "Calculated weight: %s"
+msgstr "Calculated weight: %s"
+
+msgid "calculated_order_weight"
 msgstr "Calculated weight: %s"
 
 msgid "Carrier"
@@ -209,7 +209,7 @@ msgstr "Delivery title"
 msgid "Delivery type"
 msgstr "Delivery type"
 
-msgid "Delivery type:"
+msgid "delivery_type"
 msgstr "Delivery type:"
 
 msgid "Diagnostic tools"
@@ -220,9 +220,6 @@ msgstr "Digital stamp"
 
 msgid "Disabled"
 msgstr "Disabled"
-
-msgid "settings_checkout_display_for"
-msgstr "Display for"
 
 msgid "Documents"
 msgstr "Documents"
@@ -307,7 +304,7 @@ msgstr "Export to MyParcel"
 msgid "Extra large size"
 msgstr "Extra large size"
 
-msgid "Extra options:"
+msgid "extra_options"
 msgstr "Extra options:"
 
 msgid "Fee (optional)"
@@ -403,7 +400,7 @@ msgstr "Insure all parcels up to the selected amount."
 msgid "Insure from price"
 msgstr "Insure from price"
 
-msgid "Insured"
+msgid "insured"
 msgstr "Insured"
 
 msgid "Insured for"
@@ -411,6 +408,12 @@ msgstr "Insured for"
 
 msgid "Insured shipment"
 msgstr "Insured shipment"
+
+msgid "insured_amount"
+msgstr "Insurance amount"
+
+msgid "insured_for"
+msgstr "Insured for"
 
 msgid ""
 "It looks like your shop is based in Netherlands. This plugin is for "
@@ -628,6 +631,30 @@ msgstr "Send email"
 msgid "Settings"
 msgstr "Settings"
 
+msgid "settings_checkout_display_for"
+msgstr "Display for"
+
+msgid "settings_checkout_display_for_all_methods"
+msgstr "All shipping methods"
+
+msgid "settings_checkout_display_for_help_text"
+msgstr ""
+"You can link the delivery options to specific shipping methods by adding "
+"them to the package types in \"Standard export settings\". The delivery "
+"options are not visible for foreign addresses."
+
+msgid "settings_checkout_display_for_selected_methods"
+msgstr "Shipping methods associated with package type"
+
+msgid "settings_checkout_price_format"
+msgstr "Show prices as"
+
+msgid "settings_checkout_surcharge"
+msgstr "Surcharge"
+
+msgid "settings_checkout_total_price"
+msgstr "Total price"
+
 msgid "Shipment type"
 msgstr "Shipment type"
 
@@ -641,8 +668,65 @@ msgstr ""
 "receipt\" and \"Delivery only at recipient\" are included with this option. "
 "This option can't be combined with morning or evening delivery."
 
-msgid "settings_checkout_display_for_selected_methods"
-msgstr "Shipping methods associated with package type"
+msgid "shipment_options_insured"
+msgstr "Insured shipment"
+
+msgid "shipment_options_insured_amount"
+msgstr "Max insured amount"
+
+msgid "shipment_options_insured_amount_help_text"
+msgstr "Insure all parcels up to the selected amount."
+
+msgid "shipment_options_insured_from_price"
+msgstr "Insure from price"
+
+msgid "shipment_options_insured_from_price_help_text"
+msgstr "Insure all orders that exceed this price point."
+
+msgid "shipment_options_insured_help_text"
+msgstr ""
+"By default, there is no insurance on the shipments. If you still want to "
+"insure the shipment, you can do that. We insure the purchase value of the "
+"shipment, with a maximum insured value of € 5.000. Insured parcels always "
+"contain the options 'Home address only' en 'Signature for delivery'"
+
+msgid "shipment_options_large_format"
+msgstr "Extra large size"
+
+msgid "shipment_options_large_format_help_text"
+msgstr ""
+"Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
+"smaller than 175 x 78 x 58 cm. An extra fee will be charged. Note! If the "
+"parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet "
+"rate will be charged."
+
+msgid "shipment_options_only_recipient"
+msgstr "Home address only"
+
+msgid "shipment_options_only_recipient_help_text"
+msgstr ""
+"If you don't want the parcel to be delivered at the neighbours, choose this "
+"option."
+
+msgid "shipment_options_return"
+msgstr "Return if no answer"
+
+msgid "shipment_options_return_help_text"
+msgstr ""
+"By default, a parcel will be offered twice. After two unsuccessful delivery "
+"attempts, the parcel will be available at the nearest pickup point for two "
+"weeks. There it can be picked up by the recipient with the note that was "
+"left by the courier. If you want to receive the parcel back directly and "
+"NOT forward it to the pickup point, enable this option."
+
+msgid "shipment_options_signature"
+msgstr "Signature on delivery"
+
+msgid "shipment_options_signature_help_text"
+msgstr ""
+"The parcel will be offered at the delivery address. If the recipient is not "
+"at home, the parcel will be delivered to the neighbours. In both cases, a "
+"signature will be required."
 
 msgid "Show after billing details"
 msgstr "Show after billing details"
@@ -668,9 +752,6 @@ msgid ""
 msgstr ""
 "The \"Show delivery date\" option allows your customers to see the delivery "
 "date in order confirmations and My Account."
-
-msgid "settings_checkout_price_format"
-msgstr "Show prices as"
 
 msgid "Show Track & Trace trace code and link in My Account."
 msgstr "Show Track & Trace code and link in My Account."
@@ -702,9 +783,6 @@ msgstr "Street name"
 msgid "Suffix"
 msgstr "Suffix"
 
-msgid "settings_checkout_surcharge"
-msgstr "Surcharge"
-
 msgid "The label has been printed."
 msgstr "The label has been printed."
 
@@ -730,6 +808,9 @@ msgstr ""
 "The parcel will be offered at the delivery address. If the recipient is not "
 "at home, the parcel will be delivered to the neighbours. In both cases, a "
 "signature will be required."
+
+msgid "The selected orders have not been exported to MyParcel yet!"
+msgstr "The selected orders have not been exported to MyParcel yet!"
 
 msgid "The selected orders have not been exported to MyParcel yet! "
 msgstr "The selected orders have not been exported to MyParcel yet! "
@@ -767,9 +848,6 @@ msgstr "Title before the barcode"
 msgid "Titles"
 msgstr "Titles"
 
-msgid "settings_checkout_total_price"
-msgstr "Total price"
-
 msgid "Total weight"
 msgstr "Total weight"
 
@@ -797,7 +875,7 @@ msgstr "Unpaid letter"
 msgid "View logs"
 msgstr "View logs"
 
-msgid "Weight"
+msgid "weight"
 msgstr "Weight"
 
 msgid ""
@@ -882,12 +960,6 @@ msgstr ""
 
 msgid "You can change the text before the barcode inside an note"
 msgstr "You can change the text before the barcode inside an note"
-
-msgid "settings_checkout_display_for_help_text"
-msgstr ""
-"You can link the delivery options to specific shipping methods by adding "
-"them to the package types in \"Standard export settings\". The delivery "
-"options are not visible for foreign addresses."
 
 msgid ""
 "You can place a delivery title above the MyParcel options. When there is no "
