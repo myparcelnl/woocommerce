@@ -115,11 +115,11 @@ msgstr ""
 msgid "MyParcel shipment created:"
 msgstr ""
 
-#: includes/admin/class-wcmp-export-consignments.php:254
+#: includes/admin/class-wcmp-export-consignments.php:253
 msgid "No HS code found in MyParcel settings"
 msgstr ""
 
-#: includes/admin/class-wcmp-export-consignments.php:350, includes/admin/class-wcmp-export.php:564
+#: includes/admin/class-wcmp-export-consignments.php:349, includes/admin/class-wcmp-export.php:564
 msgid "No API key found in MyParcel settings"
 msgstr ""
 
@@ -335,7 +335,7 @@ msgstr ""
 msgid "MyParcel shipment:"
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:985, includes/admin/class-wcmypa-admin.php:998
+#: includes/admin/class-wcmypa-admin.php:985
 msgid "Delivery type:"
 msgstr ""
 
@@ -343,8 +343,12 @@ msgstr ""
 msgid "Pickup location:"
 msgstr ""
 
+#: includes/admin/class-wcmypa-admin.php:998
+msgid "delivery_type"
+msgstr ""
+
 #: includes/admin/class-wcmypa-admin.php:1000
-msgid "Extra options:"
+msgid "extra_options"
 msgstr ""
 
 #: includes/admin/class-wcmypa-admin.php:1035, includes/admin/class-wcmypa-admin.php:1057
