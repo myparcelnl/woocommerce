@@ -115,11 +115,11 @@ msgstr ""
 msgid "MyParcel shipment created:"
 msgstr ""
 
-#: includes/admin/class-wcmp-export-consignments.php:254
+#: includes/admin/class-wcmp-export-consignments.php:252
 msgid "No HS code found in MyParcel settings"
 msgstr ""
 
-#: includes/admin/class-wcmp-export-consignments.php:350, includes/admin/class-wcmp-export.php:564
+#: includes/admin/class-wcmp-export-consignments.php:348, includes/admin/class-wcmp-export.php:564
 msgid "No API key found in MyParcel settings"
 msgstr ""
 

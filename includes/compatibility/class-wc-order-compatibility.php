@@ -137,7 +137,7 @@ class Order extends Data
      * @return WC_Order
      * @since 4.6.0-dev
      */
-    public static function set_address_prop(WC_Order $order, $prop, $address = 'billing', $value, $save = true)
+    public static function set_address_prop(WC_Order $order, $prop, $address = 'billing', $value = null, $save = true)
     {
         if (WC_Core::is_wc_version_gte_3_0()) {
             if (is_callable([$order, "set_{$address}_{$prop}"])) {
