@@ -995,9 +995,9 @@ class WCMYPA_Admin
         }
 
         return [
-            __("Delivery type:", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+            __("delivery_type", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
             __("Date:", 'woocommerce')                   => wc_format_datetime(new WC_DateTime($deliveryOptions->getDate())),
-            __("Extra options:", "woocommerce-myparcel") =>
+            __("extra_options", "woocommerce-myparcel") =>
                 sprintf("%s<br>%s",
                         $deliveryOptions->getShipmentOptions()->hasSignature() ? $signatureTitle : null,
                         $deliveryOptions->getShipmentOptions()->hasOnlyRecipient() ? $onlyRecipientTitle : null)
