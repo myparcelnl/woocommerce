@@ -212,7 +212,8 @@ class WCMP_Export_Consignments
      */
     private function getTotalWeight(): int
     {
-        $weight = $this->orderSettings->getWeight();
+        $digitalStampRangeWeight = null;
+        $weight                  = $this->orderSettings->getWeight();
 
         // Divide the consignment weight by the amount of parcels.
         $weight /= $this->orderSettings->getColloAmount();
@@ -223,11 +224,11 @@ class WCMP_Export_Consignments
                 $weight += $emptyParcelWeight;
                 break;
             case AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME:
-                $weight = $this->orderSettings->getDigitalStampRangeWeight();
+                $digitalStampRangeWeight = $this->orderSettings->getDigitalStampRangeWeight();
                 break;
         }
 
-        return WCMP_Export::convertWeightToGrams($weight);
+        return $digitalStampRangeWeight ?? WCMP_Export::convertWeightToGrams($weight);
     }
 
     /**
