@@ -547,7 +547,7 @@ msgstr "Pickup"
 msgid "Pickup location"
 msgstr "Pickup location"
 
-msgid "Pickup location:"
+msgid "pickup_location"
 msgstr "Pickup location:"
 
 msgid "Pickup title"

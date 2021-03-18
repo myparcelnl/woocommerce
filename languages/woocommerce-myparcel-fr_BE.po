@@ -527,7 +527,7 @@ msgstr "Ramasser"
 msgid "Pickup location"
 msgstr "Lieu de ramassage"
 
-msgid "Pickup location:"
+msgid "pickup_location"
 msgstr "Lieu de ramassage"
 
 msgid "Pickup title"

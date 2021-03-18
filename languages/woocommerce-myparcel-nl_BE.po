@@ -544,8 +544,8 @@ msgstr "Afhalen"
 msgid "Pickup location"
 msgstr "Afhaallocatie"
 
-msgid "Pickup location:"
-msgstr "OphaalLocatie:"
+msgid "pickup_location"
+msgstr "Afhaallocatie:"
 
 msgid "Pickup title"
 msgstr "Afhalen titel"
