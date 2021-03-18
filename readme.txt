@@ -87,6 +87,9 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 5. MyParcel BE information on the order details page
 
 == Changelog ==
+= 4.1.7 (2021-03-18) =
+* Fix: properly add/remove cart fees when using delivery options
+
 = 4.1.6 (2021-02-03) =
 * Fix: The fields of shipping address can be empty
 
