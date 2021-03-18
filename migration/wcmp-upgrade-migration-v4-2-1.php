@@ -59,12 +59,18 @@ class WCMP_Upgrade_Migration_v4_2_1 extends WCMP_Upgrade_Migration
     {
         $emptyParcelWeight = (float) $this->defaultExportSettings[WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT];
         $weightUnit        = get_option('woocommerce_weight_unit');
+        $weight            = $emptyParcelWeight;
 
         if ('kg' === $weightUnit) {
-            return $emptyParcelWeight / 1000;
+            $dividedWeight = $emptyParcelWeight / 1000;
+
+            // Don't allow the weight to go below 1 gram.
+            if ($dividedWeight > 0.001) {
+                $weight = $dividedWeight;
+            }
         }
 
-        return $emptyParcelWeight;
+        return $weight;
     }
 }
 
