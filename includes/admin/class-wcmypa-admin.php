@@ -237,19 +237,17 @@ class WCMYPA_Admin
      */
     public function showMyParcelSettings(WC_Order $order): void
     {
-        $isAllowedDestination = WCMP_Country_Codes::isAllowedDestination(WCX_Order::get_prop($order, 'shipping_country'));
+        $orderSettings        = new OrderSettings($order);
+        $isAllowedDestination = WCMP_Country_Codes::isAllowedDestination($orderSettings->getShippingCountry());
 
         if (! $isAllowedDestination) {
             return;
         }
 
-        $consignments    = self::get_order_shipments($order);
-        $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
-
         echo '<div class="wcmp__shipment-settings-wrapper" style="display: none;">';
+        $this->printDeliveryDate($orderSettings->getDeliveryOptions());
 
-        $this->printDeliveryDate($deliveryOptions);
-
+        $consignments  = self::get_order_shipments($order);
         // if we have shipments, then we show status & link to Track & Trace, settings under i
         if (! empty($consignments)) :
             // only use last shipment
@@ -273,7 +271,9 @@ class WCMYPA_Admin
         printf(
             '<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
             $order->get_id(),
-            WCMP_Data::getPackageTypeHuman($deliveryOptions->getPackageType() ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE)
+            WCMP_Data::getPackageTypeHuman(
+                $orderSettings->getPackageType() ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME
+            )
         );
 
         echo "</div>";
