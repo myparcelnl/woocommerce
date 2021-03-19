@@ -56,7 +56,7 @@ class WCMP_Country_Codes
      */
     public static function isWorldShipmentCountry(string $countryCode): bool
     {
-        return ! isEuCountry($countryCode);
+        return ! self::isEuCountry($countryCode);
     }
 
     /**
