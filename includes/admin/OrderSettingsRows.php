@@ -78,7 +78,7 @@ class OrderSettingsRows
         AbstractDeliveryOptionsAdapter $deliveryOptions,
         WC_Order $order
     ): array {
-        $orderSettings      = new OrderSettings($order, $deliveryOptions);;
+        $orderSettings      = new OrderSettings($order, $deliveryOptions);
         $shippingCountry    = $orderSettings->getShippingCountry();
         $isEuCountry        = WCMP_Country_Codes::isEuCountry($shippingCountry);
         $isHomeCountry      = WCMP_Data::isHomeCountry($shippingCountry);

@@ -5,6 +5,7 @@ use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
 if (! defined("ABSPATH")) {
@@ -442,7 +443,9 @@ class WCMP_Export_Consignments
      */
     private function setCustomsDeclaration(): void
     {
-        if (WCMP_Country_Codes::isWorldShipmentCountry()) {
+        $shippingCountry = WCX_Order::get_prop($this->order, "shipping_country");
+
+        if (WCMP_Country_Codes::isWorldShipmentCountry($shippingCountry)) {
             $this->setCustomItems();
         }
     }

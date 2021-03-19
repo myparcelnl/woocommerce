@@ -8,29 +8,55 @@ if (class_exists("WCMP_Country_Codes")) {
     return new WCMP_Country_Codes();
 }
 
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-
 class WCMP_Country_Codes
 {
+    private const EURO_COUNTRIES = [
+        'NL',
+        'BE',
+        'AT',
+        'BG',
+        'CZ',
+        'CY',
+        'DK',
+        'EE',
+        'FI',
+        'FR',
+        'DE',
+        'GR',
+        'HU',
+        'IE',
+        'IT',
+        'LV',
+        'LT',
+        'LU',
+        'PL',
+        'PT',
+        'RO',
+        'SK',
+        'SI',
+        'ES',
+        'SE',
+        'XK',
+    ];
+
     /**
-     * @param string $country
+     * @param string $countryCode
      *
      * @return bool
      */
-    public static function isEuCountry(string $country): bool
+    public static function isEuCountry(string $countryCode): bool
     {
-        $consignment = (new AbstractConsignment());
-        $consignment->setCountry($country);
-
-        return $consignment->isEuCountry();
+        return in_array($countryCode, self::EURO_COUNTRIES);
     }
 
     /**
+     * @param $countryCode
+     *
      * @return bool
      */
-    public static function isWorldShipmentCountry(): bool
+    public static function isWorldShipmentCountry(string $countryCode): bool
     {
-        return (new AbstractConsignment())->isCdCountry();
+        return ! in_array($countryCode, self::EURO_COUNTRIES);
     }
 
     /**
@@ -42,7 +68,7 @@ class WCMP_Country_Codes
     {
         $isHomeCountry          = WCMP_Data::isHomeCountry($countryCode);
         $isEuCountry            = self::isEuCountry($countryCode);
-        $isWorldShipmentCountry = self::isWorldShipmentCountry();
+        $isWorldShipmentCountry = self::isWorldShipmentCountry($countryCode);
 
         return $isHomeCountry || $isEuCountry || $isWorldShipmentCountry;
     }
