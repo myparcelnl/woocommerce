@@ -90,6 +90,16 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.3.0 (2021-03-23) =
+* Improvment: Export bulk order shipments although there is a wrong shipment
+* Improvment: Add option to show prices as surcharge
+* Improvment: Support WP Desk Flexible Shipping plugin
+* Fix: Calculate weight from grams to kilos during the migration
+* Fix: Set MyParcel response cookie with 20 sec expire
+* Fix: Use saturday cutoff time
+* Fix: Use country codes from the MyParcel SDK
+* Fix: Translation files not being generated properly
+
 = 4.2.0 (2021-01-21) =
 * Fix: Rename `WCMP`, `WCMP()`, `WCMP_Admin` and `WCMP_Settings`
 * Fix: Weight calculation for all shipment types
