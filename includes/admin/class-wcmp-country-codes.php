@@ -50,7 +50,7 @@ class WCMP_Country_Codes
     }
 
     /**
-     * @param $countryCode
+     * @param string $countryCode
      *
      * @return bool
      */
