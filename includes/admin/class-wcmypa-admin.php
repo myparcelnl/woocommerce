@@ -1036,7 +1036,7 @@ class WCMYPA_Admin
 
             foreach ($options as $key => $option) {
                 if ($option) {
-                    $htmlHeader .= "<tr'><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
+                    $htmlHeader .= "<tr><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
                 }
             }
 
