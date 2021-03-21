@@ -688,8 +688,7 @@ class WCMYPA_Admin
         $confirmationData = $this->getConfirmationData($deliveryOptions);
         $isEmail
             ? $this->printEmailConfirmation($confirmationData)
-            : $this->printThankYouConfirmation($confirmationData
-        );
+            : $this->printThankYouConfirmation($confirmationData);
     }
 
     /**
@@ -974,6 +973,8 @@ class WCMYPA_Admin
     {
         $signatureTitle     = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
         $onlyRecipientTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
+        $hasSignature       = $deliveryOptions->getShipmentOptions()->hasSignature();
+        $hasOnlyRecipient   = $deliveryOptions->getShipmentOptions()->hasOnlyRecipient();
 
         if (! $deliveryOptions->getCarrier()) {
             return null;
@@ -994,14 +995,22 @@ class WCMYPA_Admin
             ];
         }
 
-        return [
+        $confirmationData = [
             __("delivery_type", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
-            __("Date:", 'woocommerce')                   => wc_format_datetime(new WC_DateTime($deliveryOptions->getDate())),
-            __("extra_options", "woocommerce-myparcel") =>
-                sprintf("%s<br>%s",
-                        $deliveryOptions->getShipmentOptions()->hasSignature() ? $signatureTitle : null,
-                        $deliveryOptions->getShipmentOptions()->hasOnlyRecipient() ? $onlyRecipientTitle : null)
         ];
+
+        if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
+            $confirmationData[__("Date:", 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));;
+        }
+
+        if ($hasSignature || $hasOnlyRecipient) {
+            $confirmationData[__("extra_options", "woocommerce-myparcel")] =
+                sprintf("%s<br>%s",
+                    $hasSignature ? $signatureTitle : null,
+                    $hasOnlyRecipient ? $onlyRecipientTitle : null);
+        }
+
+        return $confirmationData;
     }
 
     /**
