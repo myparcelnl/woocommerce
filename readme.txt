@@ -2,7 +2,7 @@
 Contributors: richardperdaan, ademdemir, edielemoine
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 3.5.1
-Tested up to: 5.6.0
+Tested up to: 5.7.0
 Stable tag: trunk
 Requires PHP: 7.1
 License: GPLv3 or later
@@ -90,7 +90,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 4.3.0 (2021-03-23) =
+= 4.3.1 (2021-03-19) =
 * Improvment: Export bulk order shipments although there is a wrong shipment
 * Improvment: Add option to show prices as surcharge
 * Improvment: Support WP Desk Flexible Shipping plugin
