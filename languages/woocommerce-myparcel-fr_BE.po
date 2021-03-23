@@ -55,8 +55,20 @@ msgstr "Demander la position de démarrage de l'impression"
 msgid "Automatic export"
 msgstr ""
 
-msgid "Automatic order status"
+msgid "setting_automatic_order_status"
 msgstr "Statut de commande automatique"
+
+msgid "setting_change_order_status_after"
+msgstr ""
+
+msgid "setting_change_status_after_printing"
+msgstr ""
+
+msgid "setting_change_status_after_export"
+msgstr ""
+
+msgid "setting_change_status_after_help_text"
+msgstr ""
 
 msgid ""
 "Automatically set order status to a predefined status after successful "
@@ -446,7 +458,7 @@ msgstr "MyParcel"
 msgid "MyParcel address fields"
 msgstr "Champs adresse MyParcel"
 
-msgid "MyParcel shipment created:"
+msgid "myparcel_shipment_created"
 msgstr "Envoi MyParcel créé :"
 
 msgid "MyParcel shipment:"

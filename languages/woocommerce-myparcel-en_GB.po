@@ -57,8 +57,20 @@ msgstr "Ask for print start position"
 msgid "Automatic export"
 msgstr "Automatic export"
 
-msgid "Automatic order status"
+msgid "setting_automatic_order_status"
 msgstr "Automatic order status"
+
+msgid "setting_change_order_status_after"
+msgstr "Change order status after"
+
+msgid "setting_change_status_after_printing"
+msgstr "Printing label"
+
+msgid "setting_change_status_after_export"
+msgstr "Export order"
+
+msgid "setting_change_status_after_help_text"
+msgstr "Change the order status after export or after printing the shipping label."
 
 msgid ""
 "Automatically set order status to a predefined status after successful "
@@ -466,7 +478,7 @@ msgstr "MyParcel"
 msgid "MyParcel address fields"
 msgstr "MyParcel address fields"
 
-msgid "MyParcel shipment created:"
+msgid "myparcel_shipment_created"
 msgstr "MyParcel shipment created:"
 
 msgid "MyParcel shipment:"

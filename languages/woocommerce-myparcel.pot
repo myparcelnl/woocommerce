@@ -112,7 +112,7 @@ msgid "<b>Shipping No.</b> is a required field"
 msgstr ""
 
 #: includes/admin/class-wcmp-api.php:195
-msgid "MyParcel shipment created:"
+msgid "myparcel_shipment_created"
 msgstr ""
 
 #: includes/admin/class-wcmp-export-consignments.php:254
@@ -580,23 +580,23 @@ msgid "Automatically set order status to a predefined status after successful My
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:365
-msgid "Change order status after"
+msgid "setting_change_order_status_after"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:369
-msgid "Printing label"
+msgid "setting_change_status_after_printing"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:370
-msgid "Export order"
+msgid "setting_change_status_after_export"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:372
-msgid "Change the order status after export or after printing the shipping label."
+msgid "setting_change_status_after_help_text"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:381
-msgid "Automatic order status"
+msgid "setting_automatic_order_status"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:387
