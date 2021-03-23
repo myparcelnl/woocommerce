@@ -28,18 +28,19 @@ class WCMYPA_Settings
     /**
      * General
      */
-    public const SETTING_API_KEY                 = "api_key";
-    public const SETTING_AUTOMATIC_ORDER_STATUS  = "automatic_order_status";
-    public const SETTING_BARCODE_IN_NOTE         = "barcode_in_note";
-    public const SETTING_BARCODE_IN_NOTE_TITLE   = "barcode_in_note_title";
-    public const SETTING_DOWNLOAD_DISPLAY        = "download_display";
-    public const SETTING_ERROR_LOGGING           = "error_logging";
-    public const SETTING_LABEL_FORMAT            = "label_format";
-    public const SETTING_ORDER_STATUS_AUTOMATION = "order_status_automation";
-    public const SETTING_ASK_FOR_PRINT_POSITION  = "ask_for_print_position";
-    public const SETTING_PROCESS_DIRECTLY        = "process_directly";
-    public const SETTING_TRACK_TRACE_EMAIL       = "track_trace_email";
-    public const SETTING_TRACK_TRACE_MY_ACCOUNT  = "track_trace_my_account";
+    public const SETTING_API_KEY                   = "api_key";
+    public const SETTING_AUTOMATIC_ORDER_STATUS    = "automatic_order_status";
+    public const SETTING_BARCODE_IN_NOTE           = "barcode_in_note";
+    public const SETTING_BARCODE_IN_NOTE_TITLE     = "barcode_in_note_title";
+    public const SETTING_DOWNLOAD_DISPLAY          = "download_display";
+    public const SETTING_ERROR_LOGGING             = "error_logging";
+    public const SETTING_LABEL_FORMAT              = "label_format";
+    public const SETTING_ORDER_STATUS_AUTOMATION   = "order_status_automation";
+    public const SETTING_CHANGE_ORDER_STATUS_AFTER = "change_order_status_after";
+    public const SETTING_ASK_FOR_PRINT_POSITION    = "ask_for_print_position";
+    public const SETTING_PROCESS_DIRECTLY          = "process_directly";
+    public const SETTING_TRACK_TRACE_EMAIL         = "track_trace_email";
+    public const SETTING_TRACK_TRACE_MY_ACCOUNT    = "track_trace_my_account";
 
     /**
      * Export defaults

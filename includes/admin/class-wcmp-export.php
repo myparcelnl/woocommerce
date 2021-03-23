@@ -381,6 +381,9 @@ class WCMP_Export
                 $this->getShipmentData($consignmentIds, $order);
             }
 
+            $api = $this->init_api();
+            $api->updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
+
             WCX_Order::update_meta_data(
                 $order,
                 WCMYPA_Admin::META_LAST_SHIPMENT_IDS,
