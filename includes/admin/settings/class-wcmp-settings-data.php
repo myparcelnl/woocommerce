@@ -25,6 +25,9 @@ class WCMP_Settings_Data
     public const DISPLAY_TOTAL_PRICE     = "total_price";
     public const DISPLAY_SURCHARGE_PRICE = "surcharge";
 
+    public const CHANGE_STATUS_AFTER_PRINTING = "after_printing";
+    public const CHANGE_STATUS_AFTER_EXPORT   = "after_export";
+
     public const NOT_ACTIVE        = "notActive";
     public const NO_OPTIONS        = "noOptions";
     public const EQUAL_TO_SHIPMENT = "equalToShipment";
@@ -356,10 +359,26 @@ class WCMP_Settings_Data
                 ),
             ],
             [
+                "name"      => WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER,
+                "condition" => WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION,
+                "class"     => ["wcmp__child"],
+                "label"     => __("setting_change_order_status_after", "woocommerce-myparcel"),
+                "type"      => "select",
+                "default"   => self::CHANGE_STATUS_AFTER_PRINTING,
+                "options"   => [
+                    self::CHANGE_STATUS_AFTER_PRINTING => __("setting_change_status_after_printing", "woocommerce-myparcel"),
+                    self::CHANGE_STATUS_AFTER_EXPORT   => __("setting_change_status_after_export", "woocommerce-myparcel"),
+                ],
+                "help_text" => __(
+                    "setting_change_status_after_help_text",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
                 "name"      => WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS,
                 "condition" => WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION,
                 "class"     => ["wcmp__child"],
-                "label"     => __("Automatic order status", "woocommerce-myparcel"),
+                "label"     => __("setting_automatic_order_status", "woocommerce-myparcel"),
                 "type"      => "select",
                 "options"   => WCMP_Settings_Callbacks::get_order_status_options(),
             ],
