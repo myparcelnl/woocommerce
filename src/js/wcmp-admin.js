@@ -42,6 +42,8 @@ jQuery(($) => {
    */
   const askForPrintPosition = Boolean(parseInt(wcmp.ask_for_print_position));
 
+  console.log(wcmp)
+
   const skeletonHtml
     = `<table class="wcmp__skeleton-loader">${
       '<tr><td><div></div></td><td><div></div></td></tr>'.repeat(5)
