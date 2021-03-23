@@ -55,8 +55,22 @@ msgstr "Vraag om startpositie bij printen"
 msgid "Automatic export"
 msgstr "Automatische export"
 
-msgid "Automatic order status"
+msgid "setting_automatic_order_status"
 msgstr "Automatische orderstatus"
+
+msgid "setting_change_order_status_after"
+msgstr "Verander order status na"
+
+msgid "setting_change_status_after_printing"
+msgstr "Labels printen"
+
+msgid "setting_change_status_after_export"
+msgstr "Exporteren"
+
+msgid "setting_change_status_after_help_text"
+msgstr ""
+"Wijzig de bestelstatus na het exporteren of na het afdrukken van het "
+"verzendlabel."
 
 msgid ""
 "Automatically set order status to a predefined status after successful "
@@ -66,10 +80,11 @@ msgid ""
 "included in the customer email."
 msgstr ""
 "Wijzig automatisch de orderstatus na het succesvol exporteren van een order "
-"naar MyParcel.<br/>Let op dat <strong>Verwerk zendingen direct</strong> is "
-"ingeschakeld wanneer je deze optie gebruikt in combinatie met de "
-"<strong>Track & Trace in e-mail</strong> optie, anders wordt de Track & "
-"Trace code niet opgenomen in de e-mail naar de klant."
+"naar MyParcel of na het printen van een label.<br/>Zet je orders "
+"automatisch op afgerond na een export? Let dan op dat <strong>Verwerk "
+"zendingen direct</strong> is ingeschakeld wanneer je deze optie gebruikt in "
+"combinatie met de <strong>Track & Trace in e-mail</strong> optie, anders "
+"wordt de Track & Trace code niet opgenomen in de e-mail naar de klant."
 
 msgid ""
 "By default, a parcel will be offered twice. After two unsuccessful delivery "
@@ -463,7 +478,7 @@ msgstr "MyParcel"
 msgid "MyParcel address fields"
 msgstr "MyParcel adresvelden"
 
-msgid "MyParcel shipment created:"
+msgid "myparcel_shipment_created"
 msgstr "MyParcel zending aangemaakt"
 
 msgid "MyParcel shipment:"
