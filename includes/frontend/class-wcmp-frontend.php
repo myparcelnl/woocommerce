@@ -74,7 +74,7 @@ class WCMP_Frontend
     public function wpo_wcpdf_delivery_options(string $replacement, WC_Order $order): string
     {
         ob_start();
-        WCMYPA()->admin->showDeliveryDateForOrder($order);
+        WCMYPA()->admin->showShipmentConfirmation($order, false);
 
         return ob_get_clean();
     }
