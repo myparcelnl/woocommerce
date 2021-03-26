@@ -181,15 +181,15 @@ class WCMP_API extends WCMP_Rest
      * Update the status of given order based on the automatic order status settings.
      *
      * @param WC_Order $order
-     * @param string   $changeStatusAfter
+     * @param string   $changeStatusAtExportOrPrint
      */
-    public function updateOrderStatus(WC_Order $order, string $changeStatusAfter): void
+    public function updateOrderStatus(WC_Order $order, string $changeStatusAtExportOrPrint): void
     {
-        $statusAutomation  = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION);
-        $changeStatus      = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER);
-        $newStatus         = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
+        $statusAutomation     = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION);
+        $momentOfStatusChange = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER);
+        $newStatus            = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
 
-        if ($statusAutomation && $changeStatusAfter === $changeStatus) {
+        if ($statusAutomation && $changeStatusAtExportOrPrint === $momentOfStatusChange) {
             $order->update_status(
                 $newStatus,
                 __("myparcel_shipment_created", "woocommerce-myparcel")
