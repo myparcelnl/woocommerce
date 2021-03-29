@@ -356,7 +356,7 @@ class OrderSettings
         if ($insuranceFromDeliveryOptions && $insuranceFromDeliveryOptions >= $amountPossibilities[self::FIRST_INSURANCE]) {
             $isInsured       = (bool) $insuranceFromDeliveryOptions;
             $insuranceAmount = $insuranceFromDeliveryOptions;
-        } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice) {
+        } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && $insuranceFromDeliveryOptions !== 0) {
             $isInsured       = true;
             $insuranceAmount = $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
         }
