@@ -120,7 +120,7 @@ class OrderSettings
         $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
         $this->shipmentOptions = $this->deliveryOptions->getShipmentOptions();
         $this->shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
-        $this->extraOptions    = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+        $this->extraOptions    = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
 
         $this->setAllData();
     }
@@ -283,7 +283,12 @@ class OrderSettings
         $hasAgeCheck = null;
 
         foreach ($this->order->get_items() as $item) {
-            $product         = $item->get_product();
+            $product = $item->get_product();
+
+            if (! $product) {
+                continue;
+            }
+
             $productAgeCheck = WCX_Product::get_meta($product, WCMYPA_Admin::META_AGE_CHECK, true);
 
             if ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_ENABLED) {
