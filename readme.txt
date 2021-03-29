@@ -91,17 +91,17 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 == Changelog ==
 
 = 4.3.2 (2021-03-30) =
-* Improvment: wpm-config.json included (support WP-Multilang plugin)
-* Improvment: add translation files fr_FR
-* Improvment: Deactivate delivery date
-* Improvment: Option for automatic order status after exporting or printing
+* Improvement: wpm-config.json included (support WP-Multilang plugin)
+* Improvement: add translation files fr_FR
+* Improvement: Deactivate delivery date
+* Improvement: Option for automatic order status after exporting or printing
 * Fix: Saving options in the order grid model
 * Fix: Validation for sending to other address on checkout page
 
 = 4.3.1 (2021-03-19) =
-* Improvment: Export bulk order shipments although there is a wrong shipment
-* Improvment: Add option to show prices as surcharge
-* Improvment: Support WP Desk Flexible Shipping plugin
+* Improvement: Export bulk order shipments although there is a wrong shipment
+* Improvement: Add option to show prices as surcharge
+* Improvement: Support WP Desk Flexible Shipping plugin
 * Fix: Calculate weight from grams to kilos during the migration
 * Fix: Set MyParcel response cookie with 20 sec expire
 * Fix: Use saturday cutoff time
@@ -133,20 +133,20 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: Correct package type for international shipments
 * Fix: Only add empty parcel weight to packages
 * Fix: Export via actions at the bottom of the order-grid
-* Improvment: Set correct UserAgent
-* Improvment: More options for age verification at product level
-* Improvment: Better country of origin selection
-* Improvment: Improve shipment options dialog
-* Improvment: Spinner for order grid bulk actions
-* Improvment: Update icons
-* Improvment: Use base price for delivery options
-* Improvment: Error handling after exporting and printing a label
-* Improvment: Stabilizer code for opening a label in a new tab
-* Improvment: New status for letter and DPZ and show them on the barcode column
-* Improvment: Use gulp to allow es6 javascript and use sass.
-* Improvment: Use customer note for label description.
-* Improvment: Use the latest MyParcel SDK.
-* Improvment: Handle translations in gulp
+* Improvement: Set correct UserAgent
+* Improvement: More options for age verification at product level
+* Improvement: Better country of origin selection
+* Improvement: Improve shipment options dialog
+* Improvement: Spinner for order grid bulk actions
+* Improvement: Update icons
+* Improvement: Use base price for delivery options
+* Improvement: Error handling after exporting and printing a label
+* Improvement: Stabilizer code for opening a label in a new tab
+* Improvement: New status for letter and DPZ and show them on the barcode column
+* Improvement: Use gulp to allow es6 javascript and use sass.
+* Improvement: Use customer note for label description.
+* Improvement: Use the latest MyParcel SDK.
+* Improvement: Handle translations in gulp
 
 = 4.1.5 (2020-12-15) =
 * Fix: select box for country of origin
