@@ -25,6 +25,9 @@ class WCMP_Settings_Data
     public const DISPLAY_TOTAL_PRICE     = "total_price";
     public const DISPLAY_SURCHARGE_PRICE = "surcharge";
 
+    public const PICKUP_LOCATIONS_VIEW_MAP  = "map";
+    public const PICKUP_LOCATIONS_VIEW_LIST = "list";
+
     public const CHANGE_STATUS_AFTER_PRINTING = "after_printing";
     public const CHANGE_STATUS_AFTER_EXPORT   = "after_export";
 
@@ -849,6 +852,23 @@ class WCMP_Settings_Data
                     ),
                     self::DISPLAY_SURCHARGE_PRICE => __(
                         "settings_checkout_surcharge",
+                        "woocommerce-myparcel"
+                    ),
+                ],
+            ],
+            [
+                "name"      => WCMYPA_Settings::SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => __("settings_pickup_locations_default_view", "woocommerce-myparcel"),
+                "type"      => "select",
+                "default"   => self::PICKUP_LOCATIONS_VIEW_MAP,
+                "options"   => [
+                    self::PICKUP_LOCATIONS_VIEW_MAP     => __(
+                        "settings_pickup_locations_map",
+                        "woocommerce-myparcel"
+                    ),
+                    self::PICKUP_LOCATIONS_VIEW_LIST => __(
+                        "settings_pickup_locations_list",
                         "woocommerce-myparcel"
                     ),
                 ],

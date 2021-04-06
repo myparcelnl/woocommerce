@@ -151,7 +151,16 @@ msgstr ""
 "signature sera nécessaire."
 
 msgid "weight"
-msgstr "Poids"
+msgstr "Lester"
+
+msgid "settings_pickup_locations_default_view"
+msgstr "Lieux de ramassage vue défaut"
+
+msgid "settings_pickup_locations_map"
+msgstr "Carte"
+
+msgid "settings_pickup_locations_list"
+msgstr "Liste"
 
 msgid "(Unknown)"
 msgstr "(Inconnu)"
