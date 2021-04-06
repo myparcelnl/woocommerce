@@ -292,6 +292,10 @@ class WCMP_Checkout
 
         return __(strip_tags($settings->getStringByName($title)), "woocommerce-myparcel");
     }
+
+    /**
+     * @return string
+     */
     public static function getPickupLocationsDefaultView(): string
     {
         $settings = WCMYPA()->setting_collection;
