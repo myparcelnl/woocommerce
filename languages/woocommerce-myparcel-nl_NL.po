@@ -152,10 +152,10 @@ msgstr "Gewicht"
 msgid "settings_pickup_locations_default_view"
 msgstr "Pickup locaties standaard weergave"
 
-msgid "settings_pickup_locations_map"
+msgid "settings_pickup_locations_default_view_map"
 msgstr "Kaart"
 
-msgid "settings_pickup_locations_list"
+msgid "settings_pickup_locations_default_view_list"
 msgstr "Lijst"
 
 msgid "(Unknown)"

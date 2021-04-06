@@ -863,12 +863,12 @@ class WCMP_Settings_Data
                 "type"      => "select",
                 "default"   => self::PICKUP_LOCATIONS_VIEW_MAP,
                 "options"   => [
-                    self::PICKUP_LOCATIONS_VIEW_MAP     => __(
-                        "settings_pickup_locations_map",
+                    self::PICKUP_LOCATIONS_VIEW_MAP  => __(
+                        "settings_pickup_locations_default_view_map",
                         "woocommerce-myparcel"
                     ),
                     self::PICKUP_LOCATIONS_VIEW_LIST => __(
-                        "settings_pickup_locations_list",
+                        "settings_pickup_locations_default_view_list",
                         "woocommerce-myparcel"
                     ),
                 ],
