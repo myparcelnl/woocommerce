@@ -419,39 +419,39 @@ msgstr ""
 msgid "insured_amount"
 msgstr ""
 
-#: includes/frontend/class-wcmp-checkout.php:222
+#: includes/frontend/class-wcmp-checkout.php:221
 msgid "Address details are not entered"
 msgstr ""
 
-#: includes/frontend/class-wcmp-checkout.php:223
+#: includes/frontend/class-wcmp-checkout.php:222
 msgid "City"
 msgstr ""
 
-#: includes/frontend/class-wcmp-checkout.php:224
+#: includes/frontend/class-wcmp-checkout.php:223
 msgid "Closed"
 msgstr ""
 
-#: includes/frontend/class-wcmp-checkout.php:230
+#: includes/frontend/class-wcmp-checkout.php:229
 msgid "House number"
 msgstr ""
 
-#: includes/frontend/class-wcmp-checkout.php:232
+#: includes/frontend/class-wcmp-checkout.php:231
 msgid "Opening hours"
 msgstr ""
 
-#: includes/frontend/class-wcmp-checkout.php:233
+#: includes/frontend/class-wcmp-checkout.php:232
 msgid "Pick up from"
 msgstr ""
 
-#: includes/frontend/class-wcmp-checkout.php:235
+#: includes/frontend/class-wcmp-checkout.php:234
 msgid "Postcode"
 msgstr ""
 
-#: includes/frontend/class-wcmp-checkout.php:236
+#: includes/frontend/class-wcmp-checkout.php:235
 msgid "Retry"
 msgstr ""
 
-#: includes/frontend/class-wcmp-checkout.php:238
+#: includes/frontend/class-wcmp-checkout.php:237
 msgid "Postcode/city combination unknown"
 msgstr ""
 
@@ -884,11 +884,11 @@ msgid "settings_pickup_locations_default_view"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:866
-msgid "settings_pickup_locations_map"
+msgid "settings_pickup_locations_default_view_map"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:870
-msgid "settings_pickup_locations_list"
+msgid "settings_pickup_locations_default_view_list"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:879

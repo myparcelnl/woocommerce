@@ -15,7 +15,7 @@ msgid "setting_automatic_order_status"
 msgstr "Statut de commande automatique"
 
 msgid "setting_change_order_status_after"
-msgstr "Modification de l'état de la commande après"
+msgstr "Bezig met laden..."
 
 msgid "setting_change_status_after_printing"
 msgstr "impression d'étiquettes"
@@ -41,7 +41,7 @@ msgid "insured"
 msgstr "Assuré"
 
 msgid "insured_amount"
-msgstr "montant d'assurance"
+msgstr "Montant d'assurance"
 
 msgid "insured_for"
 msgstr "Montant assuré"
@@ -89,7 +89,7 @@ msgstr ""
 "combinée avec la livraison le matin ou le soir."
 
 msgid "shipment_options_insured"
-msgstr "expédition assuré"
+msgstr "Expédition assuré"
 
 msgid "shipment_options_insured_amount"
 msgstr "Max montant assuré"
@@ -151,15 +151,15 @@ msgstr ""
 "signature sera nécessaire."
 
 msgid "weight"
-msgstr "Lester"
+msgstr "Poids"
 
 msgid "settings_pickup_locations_default_view"
 msgstr "Lieux de ramassage vue défaut"
 
-msgid "settings_pickup_locations_map"
+msgid "settings_pickup_locations_default_view_map"
 msgstr "Carte"
 
-msgid "settings_pickup_locations_list"
+msgid "settings_pickup_locations_default_view_list"
 msgstr "Liste"
 
 msgid "(Unknown)"
@@ -206,7 +206,7 @@ msgid "Ask for print start position"
 msgstr "Demander la position de démarrage de l'impression"
 
 msgid "Automatic export"
-msgstr "exportation automatique"
+msgstr "Exportation automatique"
 
 msgid ""
 "Automatically set order status to a predefined status after successful "
@@ -316,7 +316,7 @@ msgid "Default"
 msgstr "Défaut"
 
 msgid "Default country of origin"
-msgstr "pays d'origine par défaut"
+msgstr "Pays d'origine par défaut"
 
 msgid "Default export settings"
 msgstr "Paramètres d'exportation standards"
@@ -325,7 +325,7 @@ msgid "Default HS Code"
 msgstr "Par défaut Code SH"
 
 msgid "Default weight of your empty parcel."
-msgstr "poids par défaut de votre colis vide."
+msgstr "Poids par défaut de votre colis vide."
 
 msgid "delivered - at recipient"
 msgstr "livré - chez le destinataire"
@@ -361,7 +361,7 @@ msgid "Diagnostic tools"
 msgstr "Outils de diagnostic"
 
 msgid "Digital stamp"
-msgstr "timbre numérique"
+msgstr "Timbre numérique"
 
 msgid "Disabled"
 msgstr "désactivé"
@@ -431,7 +431,7 @@ msgid ""
 "extra for this delivery option."
 msgstr ""
 "Introduisez ici un montant positif ou négatif. Si vous souhaitez par "
-"exemple proposer une r��duction pour cette fonction ou décompter des frais "
+"exemple proposer une réduction pour cette fonction ou décompter des frais "
 "supplémentaires pour cette option de livraison."
 
 msgid "Evening delivery"
@@ -465,7 +465,7 @@ msgid "Hide this message"
 msgstr "Masquez ce message"
 
 msgid "Home address only"
-msgstr "qu'adresse du domicile"
+msgstr "Qu'adresse du domicile"
 
 msgid "Home address only title"
 msgstr "Adresse du domicile seul titre"
@@ -531,7 +531,7 @@ msgid "inactive - unknown"
 msgstr "inactif - inconnu"
 
 msgid "Insurance amount"
-msgstr "montant d'assurance"
+msgstr "Montant d'assurance"
 
 msgid "Insure all orders that exceed this price point."
 msgstr "Assurer toutes les commandes qui dépassent ce prix."
@@ -546,7 +546,7 @@ msgid "Insured for"
 msgstr "Montant assuré"
 
 msgid "Insured shipment"
-msgstr "expédition assuré"
+msgstr "Expédition assuré"
 
 msgid ""
 "It looks like your shop is based in Netherlands. This plugin is for "
@@ -585,7 +585,7 @@ msgid "Max insured amount"
 msgstr "Max montant assuré"
 
 msgid "Monday delivery"
-msgstr "livraison lundi"
+msgstr "Livraison lundi"
 
 msgid "Morning delivery"
 msgstr "Livraison le matin"
