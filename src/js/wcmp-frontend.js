@@ -411,7 +411,7 @@ jQuery(($) => {
      */
     injectHiddenInput() {
       MyParcelFrontend.hiddenDataInput = document.createElement('input');
-      MyParcelFrontend.hiddenDataInput.setAttribute('hidden', 'hidden');
+      MyParcelFrontend.hiddenDataInput.setAttribute('type', 'hidden');
       MyParcelFrontend.hiddenDataInput.setAttribute('name', MyParcelDeliveryOptions.hiddenInputName);
 
       document.querySelector('form[name="checkout"]').appendChild(MyParcelFrontend.hiddenDataInput);
