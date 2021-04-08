@@ -698,27 +698,22 @@ class WCMYPA_Admin
     {
         echo '<div class="options_group">';
         foreach ($this->getProductOptions() as $productOption) {
-            if ($productOption['type'] === 'text') {
+            $type = $productOption["type"];
+            if ("text" === $type) {
                 woocommerce_wp_text_input(
                     [
-                        'id'          => $productOption['id'],
-                        'label'       => $productOption['label'],
-                        'description' => $productOption['description'],
+                        "id"          => $productOption["id"],
+                        "label"       => $productOption["label"],
+                        "description" => $productOption["description"],
                     ]
                 );
-            }
-
-            if ($productOption['type'] === 'select') {
+            } elseif ("select" === $type) {
                 woocommerce_wp_select(
                     [
-                        'id'          => $productOption['id'],
-                        'label'       => $productOption['label'],
-                        'options' => [
-                            null                           => __("Default", "woocommerce-myparcel"),
-                            self::PRODUCT_OPTIONS_DISABLED => __("Disabled", "woocommerce-myparcel"),
-                            self::PRODUCT_OPTIONS_ENABLED  => __("Enabled", "woocommerce-myparcel"),
-                        ],
-                        'description' => $productOption['description'],
+                        "id"          => $productOption["id"],
+                        "label"       => $productOption["label"],
+                        "options"     => $productOption["options"],
+                        "description" => $productOption["description"],
                     ]
                 );
             }
@@ -815,18 +810,26 @@ class WCMYPA_Admin
             ],
             'Country-of-origin' => [
                 'id'          => self::META_COUNTRY_OF_ORIGIN,
-                'label'       => __('Country of origin', 'woocommerce-myparcel'),
-                'type'        => 'text',
-                'description' => wc_help_tip(__('Country of origin is required for world shipments. Defaults to shop base.', 'woocommerce-myparcel')),
+                'label'       => __('country_of_origin', 'woocommerce-myparcel'),
+                'type'        => 'select',
+                'options'     => array_merge(
+                    [
+                      null => __("Default", "woocommerce-myparcel"),
+                    ],
+                    (new WC_Countries())->get_countries()
+                ),
+                'description' => wc_help_tip(
+                    __('setting_country_of_origin_help_text', 'woocommerce-myparcel')
+                ),
             ],
             'Age-check'         => [
                 'id'          => self::META_AGE_CHECK,
                 'label'       => __('shipment_options_age_check', 'woocommerce-myparcel'),
                 'type'        => 'select',
                 'options'     => [
-                    'Default',
-                    'Enabled',
-                    'Disabled',
+                    null                           => __("Default", "woocommerce-myparcel"),
+                    self::PRODUCT_OPTIONS_DISABLED => __("Disabled", "woocommerce-myparcel"),
+                    self::PRODUCT_OPTIONS_ENABLED  => __("Enabled", "woocommerce-myparcel"),
                 ],
                 'description' => wc_help_tip(__('shipment_options_age_check_help_text', 'woocommerce-myparcel')),
             ],

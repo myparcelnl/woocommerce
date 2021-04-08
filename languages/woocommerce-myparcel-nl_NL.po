@@ -149,6 +149,15 @@ msgstr ""
 msgid "weight"
 msgstr "Gewicht"
 
+msgid "settings_pickup_locations_default_view"
+msgstr "Pickup locaties standaard weergave"
+
+msgid "settings_pickup_locations_default_view_map"
+msgstr "Kaart"
+
+msgid "settings_pickup_locations_default_view_list"
+msgstr "Lijst"
+
 msgid "(Unknown)"
 msgstr "(Onbekend)"
 
@@ -264,15 +273,13 @@ msgstr "Koppel e-mailadres klant"
 msgid "Connect customer phone"
 msgstr "Koppel telefoonnummer klant"
 
-msgid "Country of origin"
+msgid "country_of_origin"
 msgstr "Land van herkomst"
 
-msgid ""
-"Country of origin is required for world shipments. Defaults to shop base or "
-"NL. Example: 'NL', 'BE', 'DE'"
+msgid "setting_country_of_origin_help_text"
 msgstr ""
 "Land van herkomst is verplicht voor wereldzendingen. Standaard wordt de "
-"shoplocatie gebruikt. Voorbeeld: 'NL', 'BE', 'DE'"
+"shoplocatie gebruikt."
 
 msgid "Custom ID (top left on label)"
 msgstr "Aangepast ID (linksboven op label)"
@@ -298,7 +305,7 @@ msgstr "Dagen van de week waarop je je pakket afgeeft bij PostNL"
 msgid "Default"
 msgstr "Standaard"
 
-msgid "Default country of origin"
+msgid "setting_country_of_origin_default"
 msgstr "Standaard land van herkomst"
 
 msgid "Default export settings"
