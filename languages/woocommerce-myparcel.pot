@@ -292,10 +292,10 @@ msgid "HS Codes are used for MyParcel world shipments, you can find the appropri
 msgstr ""
 
 #: includes/admin/class-wcmypa-admin.php:813
-msgid "country_of_origin"
+msgid "product_options_country_of_origin"
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:817, includes/admin/class-wcmypa-admin.php:838
+#: includes/admin/class-wcmypa-admin.php:817, includes/admin/class-wcmypa-admin.php:830
 msgid "Default"
 msgstr ""
 
@@ -303,51 +303,51 @@ msgstr ""
 msgid "setting_country_of_origin_help_text"
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:830, includes/admin/OrderSettingsRows.php:241, includes/admin/settings/class-wcmp-settings-data.php:450
+#: includes/admin/class-wcmypa-admin.php:827, includes/admin/OrderSettingsRows.php:241, includes/admin/settings/class-wcmp-settings-data.php:450
 msgid "shipment_options_age_check"
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:839, includes/entities/settings-field-arguments.php:170
+#: includes/admin/class-wcmypa-admin.php:831, includes/entities/settings-field-arguments.php:170
 msgid "Disabled"
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:840, includes/entities/settings-field-arguments.php:169
+#: includes/admin/class-wcmypa-admin.php:832, includes/entities/settings-field-arguments.php:169
 msgid "Enabled"
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:842, includes/admin/OrderSettingsRows.php:242, includes/admin/settings/class-wcmp-settings-data.php:452
+#: includes/admin/class-wcmypa-admin.php:834, includes/admin/OrderSettingsRows.php:242, includes/admin/settings/class-wcmp-settings-data.php:452
 msgid "shipment_options_age_check_help_text"
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:885
+#: includes/admin/class-wcmypa-admin.php:877
 msgid "No label has been created yet."
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:896
+#: includes/admin/class-wcmypa-admin.php:888
 msgid "The label has been printed."
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:901
+#: includes/admin/class-wcmypa-admin.php:893
 msgid "Concept created but not printed."
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:968
+#: includes/admin/class-wcmypa-admin.php:960
 msgid "MyParcel shipment:"
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:997, includes/admin/class-wcmypa-admin.php:1010
+#: includes/admin/class-wcmypa-admin.php:989, includes/admin/class-wcmypa-admin.php:1002
 msgid "delivery_type"
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:998
+#: includes/admin/class-wcmypa-admin.php:990
 msgid "pickup_location"
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:1055, includes/admin/class-wcmypa-admin.php:1077
+#: includes/admin/class-wcmypa-admin.php:1047, includes/admin/class-wcmypa-admin.php:1069
 msgid "Delivery information:"
 msgstr ""
 
-#: includes/admin/class-wcmypa-admin.php:1183
+#: includes/admin/class-wcmypa-admin.php:1175
 msgid "(Unknown)"
 msgstr ""
 
@@ -776,7 +776,7 @@ msgid "Return shipment"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:719
-msgid "setting_country_of_origin_default"
+msgid "setting_country_of_origin"
 msgstr ""
 
 #: includes/admin/settings/class-wcmp-settings-data.php:730

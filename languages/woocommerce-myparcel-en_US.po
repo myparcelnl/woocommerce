@@ -273,7 +273,7 @@ msgstr "Connect customer email"
 msgid "Connect customer phone"
 msgstr "Connect customer phone"
 
-msgid "country_of_origin"
+msgid "product_options_country_of_origin"
 msgstr "Country of origin"
 
 msgid "setting_country_of_origin_help_text"
@@ -303,7 +303,7 @@ msgstr "Days of the week on which you hand over parcels to PostNL"
 msgid "Default"
 msgstr "Default"
 
-msgid "setting_country_of_origin_default"
+msgid "setting_country_of_origin"
 msgstr "Default country of origin"
 
 msgid "Default export settings"

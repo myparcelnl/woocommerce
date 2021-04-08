@@ -715,14 +715,14 @@ class WCMP_Settings_Data
                 ],
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN,
-                "label"     => __("setting_country_of_origin_default", "woocommerce-myparcel"),
-                "type"      => "select",
-                "options"   => (new WC_Countries())->get_countries(),
-                "default"   => (new WC_Countries())->get_base_country(),
-                "help-text" => __(
-                    "setting_country_of_origin_help_text",
-                    "woocommerce-myparcel"
+                'name'      => WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN,
+                'label'     => __('setting_country_of_origin', 'woocommerce-myparcel'),
+                'type'      => 'select',
+                'options'   => (new WC_Countries())->get_countries(),
+                'default'   => (new WC_Countries())->get_base_country(),
+                'help-text' => __(
+                    'setting_country_of_origin_help_text',
+                    'woocommerce-myparcel'
                 ),
             ],
             [

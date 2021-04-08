@@ -273,7 +273,7 @@ msgstr "Koppel e-mailadres klant"
 msgid "Connect customer phone"
 msgstr "Koppel telefoonnummer klant"
 
-msgid "country_of_origin"
+msgid "product_options_country_of_origin"
 msgstr "Land van herkomst"
 
 msgid "setting_country_of_origin_help_text"
@@ -305,7 +305,7 @@ msgstr "Dagen van de week waarop je je pakket afgeeft bij PostNL"
 msgid "Default"
 msgstr "Standaard"
 
-msgid "setting_country_of_origin_default"
+msgid "setting_country_of_origin"
 msgstr "Standaard land van herkomst"
 
 msgid "Default export settings"
