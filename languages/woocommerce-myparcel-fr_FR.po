@@ -15,7 +15,7 @@ msgid "setting_automatic_order_status"
 msgstr "Statut de commande automatique"
 
 msgid "setting_change_order_status_after"
-msgstr "Bezig met laden..."
+msgstr "Modification de l'état de la commande après"
 
 msgid "setting_change_status_after_printing"
 msgstr "impression d'étiquettes"
