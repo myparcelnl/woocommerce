@@ -914,13 +914,13 @@ class WCMP_Export
             : null;
 
         if ($packageTypeFromDeliveryOptions) {
-            return $packageTypeFromDeliveryOptions;
+            return apply_filters("wc_myparcel_order_package_type", $packageTypeFromDeliveryOptions, $order, $this);
         }
 
         // Get pre 4.0.0 package type if it exists.
         if (WCX_Order::has_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0)) {
             $shipmentOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0);
-            return (string) WCMP_Data::getPackageTypeId($shipmentOptions['package_type']);
+            return apply_filters("wc_myparcel_order_package_type", (string) WCMP_Data::getPackageTypeId($shipmentOptions['package_type']), $order, $this);
         }
 
         $packageType = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
@@ -944,7 +944,7 @@ class WCMP_Export
             );
         }
 
-        return $this->getAllowedPackageType($order, $packageType);
+        return apply_filters("wc_myparcel_order_package_type", $this->getAllowedPackageType($order, $packageType), $order, $this);
     }
 
     /**

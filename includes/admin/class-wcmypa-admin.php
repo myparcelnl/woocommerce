@@ -937,7 +937,7 @@ class WCMYPA_Admin
             $meta = new WCMP_DeliveryOptionsFromOrderAdapter($meta, $inputData);
         }
 
-        return $meta;
+        return apply_filters("wc_myparcel_order_delivery_options", $meta, $order);
     }
 
     /**
