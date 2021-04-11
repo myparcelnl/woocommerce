@@ -527,24 +527,22 @@ class WCMP_Checkout
         $backorderDeliveryOptions = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS);
         $show                     = true;
 
-        if ($backorderDeliveryOptions) {
-            return $show;
-        }
-
-        foreach (WC()->cart->get_cart() as $cartItem) {
-            /**
-             * @var WC_Product $product
-             */
-            $product       = $cartItem['data'];
-            $isOnBackorder = $product->is_on_backorder($cartItem['quantity']);
-
-            if ($isOnBackorder) {
-                $show = false;
-                break;
+        if (! $backorderDeliveryOptions) {
+            foreach (WC()->cart->get_cart() as $cartItem) {
+                /**
+                 * @var WC_Product $product
+                 */
+                $product       = $cartItem['data'];
+                $isOnBackorder = $product->is_on_backorder($cartItem['quantity']);
+    
+                if ($isOnBackorder) {
+                    $show = false;
+                    break;
+                }
             }
         }
 
-        return $show;
+        return apply_filters("wc_myparcel_show_delivery_options", $show);
     }
 }
 
