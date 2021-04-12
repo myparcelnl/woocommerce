@@ -393,6 +393,7 @@ class WCMP_Checkout
              * Create a new DeliveryOptions class from the data.
              */
             $deliveryOptions = new WCMP_DeliveryOptionsFromOrderAdapter(null, $deliveryOptions);
+            $deliveryOptions = apply_filters("wc_myparcel_order_delivery_options", $deliveryOptions, $order);
 
             /*
              * Store it in the meta data.
