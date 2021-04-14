@@ -975,6 +975,7 @@ class WCMYPA_Admin
         $onlyRecipientTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
         $hasSignature       = $deliveryOptions->getShipmentOptions()->hasSignature();
         $hasOnlyRecipient   = $deliveryOptions->getShipmentOptions()->hasOnlyRecipient();
+        $confirmationData   = null;
 
         if (! $deliveryOptions->getCarrier()) {
             return null;
@@ -995,9 +996,12 @@ class WCMYPA_Admin
             ];
         }
 
-        $confirmationData = [
-            __("delivery_type", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
-        ];
+        if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
+            $confirmationData = [
+                __("delivery_type", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman(
+                )[$deliveryOptions->getDeliveryType()],
+            ];
+        }
 
         if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
             $confirmationData[__("Date:", 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));;
