@@ -998,9 +998,7 @@ class WCMYPA_Admin
             ];
         }
 
-        $confirmationData = [
-            __("delivery_type", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman(
-            )[$deliveryOptions->getDeliveryType()],
+        $confirmationData = [__("delivery_type", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
         ];
 
         if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
