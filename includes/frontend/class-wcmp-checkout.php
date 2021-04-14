@@ -426,20 +426,20 @@ class WCMP_Checkout
      */
     private function getShippingMethodsAllowingDeliveryOptions(): array
     {
-        $allowedMethods = [];
-        $displayFor     = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
+        $allowedMethods               = [];
+        $displayFor                   = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
+        $shippingMethodsByPackageType = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
 
-        if (WCMP_Settings_Data::DISPLAY_FOR_ALL_METHODS === $displayFor) {
+        if (WCMP_Settings_Data::DISPLAY_FOR_ALL_METHODS === $displayFor || ! $shippingMethodsByPackageType) {
             return $allowedMethods;
         }
 
-        $shippingMethodsByPackageType = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
-        $shippingMethodsForPackage    = $shippingMethodsByPackageType[AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME];
+        $shippingMethodsForPackage = $shippingMethodsByPackageType[AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME];
 
         foreach ($shippingMethodsForPackage as $shippingMethod) {
             [$methodId] = self::splitShippingMethodString($shippingMethod);
 
-            if (!in_array($methodId, WCMP_Export::DISALLOWED_SHIPPING_METHODS)) {
+            if (! in_array($methodId, WCMP_Export::DISALLOWED_SHIPPING_METHODS)) {
                 $allowedMethods[] = $shippingMethod;
             }
         }

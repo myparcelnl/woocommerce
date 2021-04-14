@@ -891,11 +891,7 @@ class WCMP_Export
             return null;
         }
 
-        // get shipping classes from order
-        $foundShippingClasses = $this->find_order_shipping_classes($order);
-        $highest_class = $this->getShippingClass($shippingMethod, $foundShippingClasses);
-
-        return $highest_class;
+        return $shippingMethodId;
     }
 
     /**
