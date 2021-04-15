@@ -197,12 +197,12 @@ class WCMP_Checkout
      */
     public function getDeliveryOptionsConfig(): array
     {
-        $settings                  = WCMYPA()->setting_collection;
-        $carriers                  = $this->getCarriers();
-        $cartTotals                = WC()->session->get('cart_totals');
-        $chosenShippingMethodPrice = (float) $cartTotals['shipping_total'];
-        $displayIncludingTax       = WC()->cart->display_prices_including_tax();
-        $priceFormat               = self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
+        $settings                   = WCMYPA()->setting_collection;
+        $carriers                   = $this->getCarriers();
+        $cartTotals                 = WC()->session->get('cart_totals');
+        $chosenShippingMethodPrice  = (float) $cartTotals['shipping_total'];
+        $displayIncludingTax        = WC()->cart->display_prices_including_tax();
+        $priceFormat                = self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
 
         if ($displayIncludingTax) {
             $chosenShippingMethodPrice += (float) $cartTotals['shipping_tax'];
@@ -210,11 +210,12 @@ class WCMP_Checkout
 
         $myParcelConfig = [
             "config" => [
-                "currency"           => get_woocommerce_currency(),
-                "locale"             => "nl-NL",
-                "platform"           => "myparcel",
-                "basePrice"          => $chosenShippingMethodPrice,
-                "showPriceSurcharge" => WCMP_Settings_Data::DISPLAY_SURCHARGE_PRICE === $priceFormat,
+                "currency"                   => get_woocommerce_currency(),
+                "locale"                     => "nl-NL",
+                "platform"                   => "myparcel",
+                "basePrice"                  => $chosenShippingMethodPrice,
+                "showPriceSurcharge"         => WCMP_Settings_Data::DISPLAY_SURCHARGE_PRICE === $priceFormat,
+                "pickupLocationsDefaultView" => self::getPickupLocationsDefaultView(),
             ],
             "strings" => [
                 "addressNotFound"       => __("Address details are not entered", "woocommerce-myparcel"),
@@ -289,6 +290,16 @@ class WCMP_Checkout
         $settings = WCMYPA()->setting_collection;
 
         return __(strip_tags($settings->getStringByName($title)), "woocommerce-myparcel");
+    }
+
+    /**
+     * @return string
+     */
+    public static function getPickupLocationsDefaultView(): string
+    {
+        $settings = WCMYPA()->setting_collection;
+
+        return $settings->getStringByName(WCMYPA_Settings::SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW);
     }
 
     /**
