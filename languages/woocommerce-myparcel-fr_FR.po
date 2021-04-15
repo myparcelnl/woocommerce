@@ -281,15 +281,13 @@ msgstr "Associer l'adresse e-mail du client"
 msgid "Connect customer phone"
 msgstr "Associer le numéro de téléphone du client"
 
-msgid "Country of origin"
+msgid "product_options_country_of_origin"
 msgstr "Pays d'origine"
 
-msgid ""
-"Country of origin is required for world shipments. Defaults to shop base or "
-"NL. Example: 'NL', 'BE', 'DE'"
+msgid "setting_country_of_origin_help_text"
 msgstr ""
 "Pays d'origine est requis pour les envois du monde. Par défaut pour faire "
-"du shopping base ou NL. Exemple: 'NL', 'BE', 'DE'"
+"du shopping base."
 
 msgid "Custom ID (top left on label)"
 msgstr "ID personnalisés (en haut à gauche sur l'étiquette)"
@@ -315,7 +313,7 @@ msgstr "Jours de la semaine où vous la main sur les colis à PostNL"
 msgid "Default"
 msgstr "Défaut"
 
-msgid "Default country of origin"
+msgid "setting_country_of_origin"
 msgstr "Pays d'origine par défaut"
 
 msgid "Default export settings"
