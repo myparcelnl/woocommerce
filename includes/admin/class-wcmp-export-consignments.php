@@ -397,11 +397,11 @@ class WCMP_Export_Consignments
      */
     private function setPickupLocation(): void
     {
-        if (! $this->deliveryOptions->isPickup()) {
+        $pickupLocation = $this->deliveryOptions->getPickupLocation();
+
+        if (! $this->deliveryOptions->isPickup() || ! $pickupLocation) {
             return;
         }
-
-        $pickupLocation = $this->deliveryOptions->getPickupLocation();
 
         $this->consignment
             ->setPickupCountry($pickupLocation->getCountry())

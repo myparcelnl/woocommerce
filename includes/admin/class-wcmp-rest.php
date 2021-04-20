@@ -15,11 +15,10 @@ if (class_exists('WCMP_Rest')) {
  */
 class WCMP_Rest
 {
-
     /**
      * Handle for the current cURL session
      *
-     * @var
+     * @var CurlHandle|resource
      */
     private $curl = null;
 
@@ -60,7 +59,7 @@ class WCMP_Rest
         }
 
         $this->curl = curl_init();
-        if (! is_resource($this->curl) || ! isset($this->curl)) {
+        if ((! is_resource($this->curl) && ! is_a($this->curl, 'CurlHandle')) || ! isset($this->curl)) {
             throw new Exception("Unable to create cURL session");
         }
 
@@ -83,7 +82,8 @@ class WCMP_Rest
      */
     public function close()
     {
-        @curl_close($this->curl);
+        curl_close($this->curl);
+        unset($this->curl);
     }
 
     public function __destruct()
@@ -109,7 +109,7 @@ class WCMP_Rest
     public function errno()
     {
         return curl_errno($this->curl);
-    } // end function
+    }
 
     /**
      * @param       $url
@@ -176,7 +176,7 @@ class WCMP_Rest
      * @return array
      * @throws Exception
      */
-    public function request($url, $method = "GET", $headers = [], $post, $body = null, $raw = false)
+    public function request($url, $method = "GET", $headers = [], $post = '', $body = null, $raw = false)
     {
         // Set the method and related options
         switch ($method) {
