@@ -11,6 +11,144 @@ msgstr ""
 "Last-Translator: \n"
 "Language: nl_BE\n"
 
+msgid "setting_automatic_order_status"
+msgstr "Automatische orderstatus"
+
+msgid "setting_change_order_status_after"
+msgstr "Verander order status na"
+
+msgid "setting_change_status_after_printing"
+msgstr "Labels printen"
+
+msgid "setting_change_status_after_export"
+msgstr "Exporteren"
+
+msgid "setting_change_status_after_help_text"
+msgstr ""
+"Wijzig de bestelstatus na het exporteren of na het afdrukken van het "
+"verzendlabel."
+
+msgid "calculated_order_weight"
+msgstr "Berekend gewicht: %s"
+
+msgid "delivery_type"
+msgstr "Soort levering:"
+
+msgid "extra_options"
+msgstr "Extra opties:"
+
+msgid "insured"
+msgstr "Verzekerd"
+
+msgid "insured_amount"
+msgstr "Verzekerd bedrag"
+
+msgid "insured_for"
+msgstr "Verzekerd voor"
+
+msgid "myparcel_shipment_created"
+msgstr "MyParcel zending aangemaakt"
+
+msgid "pickup_location"
+msgstr "Afhaallocatie:"
+
+msgid "settings_checkout_display_for"
+msgstr "Toon bij"
+
+msgid "settings_checkout_display_for_all_methods"
+msgstr "Alle verzendmethoden"
+
+msgid "settings_checkout_display_for_help_text"
+msgstr ""
+"Je kunt de bezorgopties koppelen aan specifieke verzendmethoden door ze toe "
+"te voegen aan de pakkettypen onder \"Standaard exportinstellingen\". De "
+"bezorgopties zijn niet zichtbaar op buitenlandse adressen."
+
+msgid "settings_checkout_display_for_selected_methods"
+msgstr "Verzendmethoden gekoppeld aan pakkettype"
+
+msgid "settings_checkout_price_format"
+msgstr "Prijzen tonen als"
+
+msgid "settings_checkout_surcharge"
+msgstr "Meerprijs"
+
+msgid "settings_checkout_total_price"
+msgstr "Totaalprijs"
+
+msgid "shipment_options_age_check"
+msgstr "Leeftijdscheck 18+"
+
+msgid "shipment_options_age_check_help_text"
+msgstr ""
+"De leeftijdscheck is bedoeld voor pakketzendingen waarbij de ontvanger moet "
+"kunnen aantonen dat hij/zij 18+ is. Met deze optie worden \"Handtekening "
+"voor ontvangst\" en \"Alleen ontvanger\" geactiveerd. Deze optie kan niet "
+"worden gecombineerd met ochtend- of avondlevering."
+
+msgid "shipment_options_insured"
+msgstr "Verzekerde zending"
+
+msgid "shipment_options_insured_amount"
+msgstr "Verzekeren tot maximaal"
+
+msgid "shipment_options_insured_amount_help_text"
+msgstr "Verzeker alle orders tot het geselecteerde bedrag."
+
+msgid "shipment_options_insured_from_price"
+msgstr "Verzeker vanaf bedrag"
+
+msgid "shipment_options_insured_from_price_help_text"
+msgstr "Verzeker alle orders met een totaal prijs hoger dan het ingevulde bedrag."
+
+msgid "shipment_options_insured_help_text"
+msgstr ""
+"Standaard zit er geen verzekering op zendingen. Als je alsnog een zending "
+"wilt verzekeren kan dat. Wij verzekeren het aankoopbedrag van een zending "
+"met een maximum van €5000. Verzekerde zendingen worden altijd alleen "
+"afgeleverd op het thuisadres en een handtekening is vereist."
+
+msgid "shipment_options_large_format"
+msgstr "Extra grote verpakking"
+
+msgid "shipment_options_large_format_help_text"
+msgstr ""
+"Activeer deze instelling als je zending groter is dan 100 x 70 x 50 cm, "
+"maar kleiner dan 175 x 78 x 58 cm. Dit kost meer. Let op! Als het pakket "
+"groter dan 175 x 78 x 58 cm of zwaarder dan 30kg is, wordt het gerekend als "
+"pallet."
+
+msgid "shipment_options_only_recipient"
+msgstr "Alleen thuisadres"
+
+msgid "shipment_options_only_recipient_help_text"
+msgstr ""
+"Als je je pakket niet bij de buren bezorgd wil hebben, kies dan voor deze "
+"optie."
+
+msgid "shipment_options_return"
+msgstr "Retour bij mislukte leverpoging"
+
+msgid "shipment_options_return_help_text"
+msgstr ""
+"Standaard wordt een pakket 2x aangeboden. Bij 2 mislukte afleverpogingen, "
+"wordt het pakket bij het dichtstbijzijnde pickup point beschikbaar voor 2 "
+"weken. Daar kan het worden opgehaald met het bewijs dat is achtergelaten "
+"door de bezorger. Als je het pakket meteen retour wilt en NIET afgeleverd "
+"wil laten worden bij een pickup point, zet deze optie dan aan."
+
+msgid "shipment_options_signature"
+msgstr "Handtekening voor ontvangst"
+
+msgid "shipment_options_signature_help_text"
+msgstr ""
+"Het pakket wordt aangeboden op het leveringsadres. Als de ontvangende niet "
+"thuis is, wordt het pakket bij de buren afgeleverd. In beide gevallen is "
+"een handtekening vereist."
+
+msgid "weight"
+msgstr "Gewicht"
+
 msgid "(Unknown)"
 msgstr "(Onbekend)"
 
@@ -55,9 +193,6 @@ msgstr "Vraag om startpositie bij printen"
 msgid "Automatic export"
 msgstr "Automatische export"
 
-msgid "Automatic order status"
-msgstr "Automatische orderstatus"
-
 msgid ""
 "Automatically set order status to a predefined status after successful "
 "MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> "
@@ -66,10 +201,11 @@ msgid ""
 "included in the customer email."
 msgstr ""
 "Wijzig automatisch de orderstatus na het succesvol exporteren van een order "
-"naar MyParcel.<br/>Let op dat <strong>Verwerk zendingen direct</strong> is "
-"ingeschakeld wanneer je deze optie gebruikt in combinatie met de "
-"<strong>Track & Trace in e-mail</strong> optie, anders wordt de Track & "
-"Trace code niet opgenomen in de e-mail naar de klant."
+"naar MyParcel of na het printen van een label.<br/>Zet je orders "
+"automatisch op afgerond na een export? Let dan op dat <strong>Verwerk "
+"zendingen direct</strong> is ingeschakeld wanneer je deze optie gebruikt in "
+"combinatie met de <strong>Track & Trace in e-mail</strong> optie, anders "
+"wordt de Track & Trace code niet opgenomen in de e-mail naar de klant."
 
 msgid ""
 "By default, a parcel will be offered twice. After two unsuccessful delivery "
@@ -96,9 +232,6 @@ msgstr ""
 "afgeleverd op het thuisadres en een handtekening is vereist."
 
 msgid "Calculated weight: %s"
-msgstr "Berekend gewicht: %s"
-
-msgid "calculated_order_weight"
 msgstr "Berekend gewicht: %s"
 
 msgid "Carrier"
@@ -207,9 +340,6 @@ msgstr "bezorg titel"
 msgid "Delivery type"
 msgstr "Soort levering"
 
-msgid "delivery_type"
-msgstr "Soort levering:"
-
 msgid "Diagnostic tools"
 msgstr "Diagnostische hulpmiddelen"
 
@@ -301,9 +431,6 @@ msgstr "Exporteer naar MyParcel"
 
 msgid "Extra large size"
 msgstr "Extra grote verpakking"
-
-msgid "extra_options"
-msgstr "Extra opties:"
 
 msgid "Fee (optional)"
 msgstr "Kosten (optioneel)"
@@ -398,20 +525,11 @@ msgstr "Verzeker alle orders tot het geselecteerde bedrag."
 msgid "Insure from price"
 msgstr "Verzeker vanaf bedrag"
 
-msgid "insured"
-msgstr "Verzekerd"
-
 msgid "Insured for"
 msgstr "Verzekerd voor"
 
 msgid "Insured shipment"
 msgstr "Verzekerde zending"
-
-msgid "insured_amount"
-msgstr "Verzekerd bedrag"
-
-msgid "insured_for"
-msgstr "Verzekerd voor"
 
 msgid ""
 "It looks like your shop is based in Netherlands. This plugin is for "
@@ -462,9 +580,6 @@ msgstr "MyParcel"
 
 msgid "MyParcel address fields"
 msgstr "MyParcel adresvelden"
-
-msgid "MyParcel shipment created:"
-msgstr "MyParcel zending aangemaakt"
 
 msgid "MyParcel shipment:"
 msgstr "MyParcel zending:"
@@ -543,9 +658,6 @@ msgstr "Afhalen"
 
 msgid "Pickup location"
 msgstr "Afhaallocatie"
-
-msgid "pickup_location"
-msgstr "Afhaallocatie:"
 
 msgid "Pickup title"
 msgstr "Afhalen titel"
@@ -628,102 +740,8 @@ msgstr "Verstuur e-mail"
 msgid "Settings"
 msgstr "Instellingen"
 
-msgid "settings_checkout_display_for"
-msgstr "Toon bij"
-
-msgid "settings_checkout_display_for_all_methods"
-msgstr "Alle verzendmethoden"
-
-msgid "settings_checkout_display_for_help_text"
-msgstr ""
-"Je kunt de bezorgopties koppelen aan specifieke verzendmethoden door ze toe "
-"te voegen aan de pakkettypen onder \"Standaard exportinstellingen\". De "
-"bezorgopties zijn niet zichtbaar op buitenlandse adressen."
-
-msgid "settings_checkout_display_for_selected_methods"
-msgstr "Verzendmethoden gekoppeld aan pakkettype"
-
-msgid "settings_checkout_price_format"
-msgstr "Prijzen tonen als"
-
-msgid "settings_checkout_surcharge"
-msgstr "Meerprijs"
-
-msgid "settings_checkout_total_price"
-msgstr "Totaalprijs"
-
 msgid "Shipment type"
 msgstr "Soort zending"
-
-msgid "shipment_options_age_check"
-msgstr "Leeftijdscheck 18+"
-
-msgid "shipment_options_age_check_help_text"
-msgstr ""
-"De leeftijdscheck is bedoeld voor pakketzendingen waarbij de ontvanger moet "
-"kunnen aantonen dat hij/zij 18+ is. Met deze optie worden \"Handtekening "
-"voor ontvangst\" en \"Alleen ontvanger\" geactiveerd. Deze optie kan niet "
-"worden gecombineerd met ochtend- of avondlevering."
-
-msgid "shipment_options_insured"
-msgstr "Verzekerde zending"
-
-msgid "shipment_options_insured_amount"
-msgstr "Verzekeren tot maximaal"
-
-msgid "shipment_options_insured_amount_help_text"
-msgstr "Verzeker alle orders tot het geselecteerde bedrag."
-
-msgid "shipment_options_insured_from_price"
-msgstr "Verzeker vanaf bedrag"
-
-msgid "shipment_options_insured_from_price_help_text"
-msgstr "Verzeker alle orders met een totaal prijs hoger dan het ingevulde bedrag."
-
-msgid "shipment_options_insured_help_text"
-msgstr ""
-"Standaard zit er geen verzekering op zendingen. Als je alsnog een zending "
-"wilt verzekeren kan dat. Wij verzekeren het aankoopbedrag van een zending "
-"met een maximum van €5000. Verzekerde zendingen worden altijd alleen "
-"afgeleverd op het thuisadres en een handtekening is vereist."
-
-msgid "shipment_options_large_format"
-msgstr "Extra grote verpakking"
-
-msgid "shipment_options_large_format_help_text"
-msgstr ""
-"Activeer deze instelling als je zending groter is dan 100 x 70 x 50 cm, "
-"maar kleiner dan 175 x 78 x 58 cm. Dit kost meer. Let op! Als het pakket "
-"groter dan 175 x 78 x 58 cm of zwaarder dan 30kg is, wordt het gerekend als "
-"pallet."
-
-msgid "shipment_options_only_recipient"
-msgstr "Alleen thuisadres"
-
-msgid "shipment_options_only_recipient_help_text"
-msgstr ""
-"Als je je pakket niet bij de buren bezorgd wil hebben, kies dan voor deze "
-"optie."
-
-msgid "shipment_options_return"
-msgstr "Retour bij mislukte leverpoging"
-
-msgid "shipment_options_return_help_text"
-msgstr ""
-"Standaard wordt een pakket 2x aangeboden. Bij 2 mislukte afleverpogingen, "
-"wordt het pakket bij het dichtstbijzijnde pickup point beschikbaar voor 2 "
-"weken. Daar kan het worden opgehaald met het bewijs dat is achtergelaten "
-"door de bezorger. Als je het pakket meteen retour wilt en NIET afgeleverd "
-"wil laten worden bij een pickup point, zet deze optie dan aan."
-
-msgid "shipment_options_signature"
-msgstr "Handtekening voor ontvangst"
-
-msgid "shipment_options_signature_help_text"
-msgstr ""
-"Het pakket wordt aangeboden op het leveringsadres. Als de ontvangende niet "
-"thuis is, wordt het pakket bij de buren afgeleverd. In beide gevallen is "
-"een handtekening vereist."
 
 msgid "Show after billing details"
 msgstr "Toon na factuurgegevens"
@@ -877,9 +895,6 @@ msgstr "Ongefrankeerd"
 
 msgid "View logs"
 msgstr "Logs weergeven"
-
-msgid "weight"
-msgstr "Gewicht"
 
 msgid ""
 "When enabled the checkout will use the MyParcel address fields. This means "

@@ -98,7 +98,7 @@ class WCMP_Export
      */
     public static function getChosenOrDefaultShipmentOption($option, string $settingName)
     {
-        return $option ?: WCMYPA()->setting_collection->getByName($settingName);
+        return $option ?? WCMYPA()->setting_collection->getByName($settingName);
     }
 
     /**
@@ -380,6 +380,9 @@ class WCMP_Export
             if ($processDirectly) {
                 $this->getShipmentData($consignmentIds, $order);
             }
+
+            $api = $this->init_api();
+            $api->updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
 
             WCX_Order::update_meta_data(
                 $order,

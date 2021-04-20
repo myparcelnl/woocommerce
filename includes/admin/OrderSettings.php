@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
+use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
@@ -10,6 +11,7 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 class OrderSettings
 {
     private const DEFAULT_COLLO_AMOUNT = 1;
+    private const FIRST_INSURANCE      = 1;
 
     /**
      * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter
@@ -118,7 +120,7 @@ class OrderSettings
         $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
         $this->shipmentOptions = $this->deliveryOptions->getShipmentOptions();
         $this->shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
-        $this->extraOptions    = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+        $this->extraOptions    = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
 
         $this->setAllData();
     }
@@ -281,7 +283,12 @@ class OrderSettings
         $hasAgeCheck = null;
 
         foreach ($this->order->get_items() as $item) {
-            $product         = $item->get_product();
+            $product = $item->get_product();
+
+            if (! $product) {
+                continue;
+            }
+
             $productAgeCheck = WCX_Product::get_meta($product, WCMYPA_Admin::META_AGE_CHECK, true);
 
             if ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_ENABLED) {
@@ -338,19 +345,18 @@ class OrderSettings
         $isInsured       = false;
         $insuranceAmount = 0;
 
-        $isDefaultInsured                  = $this->getCarrierSetting(
-            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
-        );
-        $isDefaultInsuredFromPrice         = $this->getCarrierSetting(
-            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE
-        );
-        $orderTotalExceedsInsuredFromPrice = $this->order->get_total() >= $isDefaultInsuredFromPrice;
+        $isDefaultInsured                  = (bool) $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED);
+        $isDefaultInsuredFromPrice         = $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE);
+        $orderTotalExceedsInsuredFromPrice = (float) $this->order->get_total() >= (float) $isDefaultInsuredFromPrice;
         $insuranceFromDeliveryOptions      = $this->shipmentOptions->getInsurance();
 
-        if ($insuranceFromDeliveryOptions) {
+        $carrier             = ConsignmentFactory::createByCarrierName($this->carrier);
+        $amountPossibilities = $carrier::INSURANCE_POSSIBILITIES_LOCAL;
+
+        if ($insuranceFromDeliveryOptions && $insuranceFromDeliveryOptions >= $amountPossibilities[self::FIRST_INSURANCE]) {
             $isInsured       = (bool) $insuranceFromDeliveryOptions;
             $insuranceAmount = $insuranceFromDeliveryOptions;
-        } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice) {
+        } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && $insuranceFromDeliveryOptions !== 0) {
             $isInsured       = true;
             $insuranceAmount = $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
         }
@@ -395,6 +401,17 @@ class OrderSettings
 
     /**
      * @return void
+     */
+    private function setSignature(): void
+    {
+        $this->signature = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->shipmentOptions->hasSignature(),
+            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
+        );
+    }
+
+    /**
+     * @return void
      * @throws \Exception
      */
     private function setPackageType(): void
@@ -411,17 +428,6 @@ class OrderSettings
         $this->returnShipment = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->shipmentOptions->isReturn(),
             "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
-        );
-    }
-
-    /**
-     * @return void
-     */
-    private function setSignature(): void
-    {
-        $this->signature = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->shipmentOptions->hasSignature(),
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
         );
     }
 

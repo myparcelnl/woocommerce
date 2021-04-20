@@ -11,6 +11,142 @@ msgstr ""
 "Last-Translator: \n"
 "Language: en_US\n"
 
+msgid "setting_automatic_order_status"
+msgstr "Automatic order status"
+
+msgid "setting_change_order_status_after"
+msgstr "Change order status after"
+
+msgid "setting_change_status_after_printing"
+msgstr "Printing label"
+
+msgid "setting_change_status_after_export"
+msgstr "Export order"
+
+msgid "setting_change_status_after_help_text"
+msgstr "Change the order status after export or after printing the shipping label."
+
+msgid "calculated_order_weight"
+msgstr "Calculated weight: %s"
+
+msgid "delivery_type"
+msgstr "Delivery type:"
+
+msgid "extra_options"
+msgstr "Extra options:"
+
+msgid "insured"
+msgstr "Insured"
+
+msgid "insured_amount"
+msgstr "Insurance amount"
+
+msgid "insured_for"
+msgstr "Insured for"
+
+msgid "myparcel_shipment_created"
+msgstr "MyParcel shipment created:"
+
+msgid "pickup_location"
+msgstr "Pickup location:"
+
+msgid "settings_checkout_display_for"
+msgstr "Display for"
+
+msgid "settings_checkout_display_for_all_methods"
+msgstr "All shipping methods"
+
+msgid "settings_checkout_display_for_help_text"
+msgstr ""
+"You can link the delivery options to specific shipping methods by adding "
+"them to the package types in \"Standard export settings\". The delivery "
+"options are not visible for foreign addresses."
+
+msgid "settings_checkout_display_for_selected_methods"
+msgstr "Shipping methods associated with package type"
+
+msgid "settings_checkout_price_format"
+msgstr "Show prices as"
+
+msgid "settings_checkout_surcharge"
+msgstr "Surcharge"
+
+msgid "settings_checkout_total_price"
+msgstr "Total price"
+
+msgid "shipment_options_age_check"
+msgstr "Age check 18+"
+
+msgid "shipment_options_age_check_help_text"
+msgstr ""
+"The age check is intended for parcel shipments for which the recipient must "
+"show 18+ by means of a proof of identity. The options \"Signature for "
+"receipt\" and \"Delivery only at recipient\" are included with this option. "
+"This option can't be combined with morning or evening delivery."
+
+msgid "shipment_options_insured"
+msgstr "Insured shipment"
+
+msgid "shipment_options_insured_amount"
+msgstr "Max insured amount"
+
+msgid "shipment_options_insured_amount_help_text"
+msgstr "Insure all parcels up to the selected amount."
+
+msgid "shipment_options_insured_from_price"
+msgstr "Insure from price"
+
+msgid "shipment_options_insured_from_price_help_text"
+msgstr "Insure all orders that exceed this price point."
+
+msgid "shipment_options_insured_help_text"
+msgstr ""
+"By default, there is no insurance on the shipments. If you still want to "
+"insure the shipment, you can do that. We insure the purchase value of the "
+"shipment, with a maximum insured value of € 5.000. Insured parcels always "
+"contain the options 'Home address only' en 'Signature for delivery'"
+
+msgid "shipment_options_large_format"
+msgstr "Extra large size"
+
+msgid "shipment_options_large_format_help_text"
+msgstr ""
+"Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
+"smaller than 175 x 78 x 58 cm. An extra fee will be charged. Note! If the "
+"parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet "
+"rate will be charged."
+
+msgid "shipment_options_only_recipient"
+msgstr "Home address only"
+
+msgid "shipment_options_only_recipient_help_text"
+msgstr ""
+"If you don't want the parcel to be delivered at the neighbours, choose this "
+"option."
+
+msgid "shipment_options_return"
+msgstr "Return if no answer"
+
+msgid "shipment_options_return_help_text"
+msgstr ""
+"By default, a parcel will be offered twice. After two unsuccessful delivery "
+"attempts, the parcel will be available at the nearest pickup point for two "
+"weeks. There it can be picked up by the recipient with the note that was "
+"left by the courier. If you want to receive the parcel back directly and "
+"NOT forward it to the pickup point, enable this option."
+
+msgid "shipment_options_signature"
+msgstr "Signature on delivery"
+
+msgid "shipment_options_signature_help_text"
+msgstr ""
+"The parcel will be offered at the delivery address. If the recipient is not "
+"at home, the parcel will be delivered to the neighbours. In both cases, a "
+"signature will be required."
+
+msgid "weight"
+msgstr "Weight"
+
 msgid "(Unknown)"
 msgstr "(Unknown)"
 
@@ -57,9 +193,6 @@ msgstr "Ask for print start position"
 msgid "Automatic export"
 msgstr "Automatic export"
 
-msgid "Automatic order status"
-msgstr "Automatic order status"
-
 msgid ""
 "Automatically set order status to a predefined status after successful "
 "MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> "
@@ -80,11 +213,12 @@ msgid ""
 "left by the courier. If you want to receive the parcel back directly and "
 "NOT forward it to the pickup point, enable this option."
 msgstr ""
-"By default, a parcel will be offered twice. After two unsuccessful delivery "
-"attempts, the parcel will be available at the nearest pickup point for two "
-"weeks. There it can be picked up by the recipient with the note that was "
-"left by the courier. If you want to receive the parcel back directly and "
-"NOT forward it to the pickup point, enable this option."
+"Automatically set order status to a predefined status after successful "
+"MyParcel export or after printing a label.<br/>Are orders automatically "
+"completed after a successful export? Make sure <strong>Process shipments "
+"directly</strong> is enabled when you use this option together with the "
+"<strong>Track & Trace in email</strong> option, otherwise the Track & Trace "
+"code will not be included in the customer email."
 
 msgid ""
 "By default, there is no insurance on the shipments. If you still want to "
@@ -98,9 +232,6 @@ msgstr ""
 "contain the options 'Home address only' en 'Signature for delivery'"
 
 msgid "Calculated weight: %s"
-msgstr "Calculated weight: %s"
-
-msgid "calculated_order_weight"
 msgstr "Calculated weight: %s"
 
 msgid "Carrier"
@@ -209,9 +340,6 @@ msgstr "Delivery title"
 msgid "Delivery type"
 msgstr "Delivery type"
 
-msgid "delivery_type"
-msgstr "Delivery type:"
-
 msgid "Diagnostic tools"
 msgstr "Diagnostic tools"
 
@@ -303,9 +431,6 @@ msgstr "Export to MyParcel"
 
 msgid "Extra large size"
 msgstr "Extra large size"
-
-msgid "extra_options"
-msgstr "Extra options:"
 
 msgid "Fee (optional)"
 msgstr "Fee (optional)"
@@ -400,20 +525,11 @@ msgstr "Insure all parcels up to the selected amount."
 msgid "Insure from price"
 msgstr "Insure from price"
 
-msgid "insured"
-msgstr "Insured"
-
 msgid "Insured for"
 msgstr "Insured for"
 
 msgid "Insured shipment"
 msgstr "Insured shipment"
-
-msgid "insured_amount"
-msgstr "Insurance amount"
-
-msgid "insured_for"
-msgstr "Insured for"
 
 msgid ""
 "It looks like your shop is based in Netherlands. This plugin is for "
@@ -465,9 +581,6 @@ msgstr "MyParcel"
 
 msgid "MyParcel address fields"
 msgstr "MyParcel address fields"
-
-msgid "MyParcel shipment created:"
-msgstr "MyParcel shipment created:"
 
 msgid "MyParcel shipment:"
 msgstr "MyParcel shipment:"
@@ -546,9 +659,6 @@ msgstr "Pickup"
 
 msgid "Pickup location"
 msgstr "Pickup location"
-
-msgid "pickup_location"
-msgstr "Pickup location:"
 
 msgid "Pickup title"
 msgstr "Pickup title"
@@ -631,102 +741,8 @@ msgstr "Send email"
 msgid "Settings"
 msgstr "Settings"
 
-msgid "settings_checkout_display_for"
-msgstr "Display for"
-
-msgid "settings_checkout_display_for_all_methods"
-msgstr "All shipping methods"
-
-msgid "settings_checkout_display_for_help_text"
-msgstr ""
-"You can link the delivery options to specific shipping methods by adding "
-"them to the package types in \"Standard export settings\". The delivery "
-"options are not visible for foreign addresses."
-
-msgid "settings_checkout_display_for_selected_methods"
-msgstr "Shipping methods associated with package type"
-
-msgid "settings_checkout_price_format"
-msgstr "Show prices as"
-
-msgid "settings_checkout_surcharge"
-msgstr "Surcharge"
-
-msgid "settings_checkout_total_price"
-msgstr "Total price"
-
 msgid "Shipment type"
 msgstr "Shipment type"
-
-msgid "shipment_options_age_check"
-msgstr "Age check 18+"
-
-msgid "shipment_options_age_check_help_text"
-msgstr ""
-"The age check is intended for parcel shipments for which the recipient must "
-"show 18+ by means of a proof of identity. The options \"Signature for "
-"receipt\" and \"Delivery only at recipient\" are included with this option. "
-"This option can't be combined with morning or evening delivery."
-
-msgid "shipment_options_insured"
-msgstr "Insured shipment"
-
-msgid "shipment_options_insured_amount"
-msgstr "Max insured amount"
-
-msgid "shipment_options_insured_amount_help_text"
-msgstr "Insure all parcels up to the selected amount."
-
-msgid "shipment_options_insured_from_price"
-msgstr "Insure from price"
-
-msgid "shipment_options_insured_from_price_help_text"
-msgstr "Insure all orders that exceed this price point."
-
-msgid "shipment_options_insured_help_text"
-msgstr ""
-"By default, there is no insurance on the shipments. If you still want to "
-"insure the shipment, you can do that. We insure the purchase value of the "
-"shipment, with a maximum insured value of € 5.000. Insured parcels always "
-"contain the options 'Home address only' en 'Signature for delivery'"
-
-msgid "shipment_options_large_format"
-msgstr "Extra large size"
-
-msgid "shipment_options_large_format_help_text"
-msgstr ""
-"Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
-"smaller than 175 x 78 x 58 cm. An extra fee will be charged. Note! If the "
-"parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet "
-"rate will be charged."
-
-msgid "shipment_options_only_recipient"
-msgstr "Home address only"
-
-msgid "shipment_options_only_recipient_help_text"
-msgstr ""
-"If you don't want the parcel to be delivered at the neighbours, choose this "
-"option."
-
-msgid "shipment_options_return"
-msgstr "Return if no answer"
-
-msgid "shipment_options_return_help_text"
-msgstr ""
-"By default, a parcel will be offered twice. After two unsuccessful delivery "
-"attempts, the parcel will be available at the nearest pickup point for two "
-"weeks. There it can be picked up by the recipient with the note that was "
-"left by the courier. If you want to receive the parcel back directly and "
-"NOT forward it to the pickup point, enable this option."
-
-msgid "shipment_options_signature"
-msgstr "Signature on delivery"
-
-msgid "shipment_options_signature_help_text"
-msgstr ""
-"The parcel will be offered at the delivery address. If the recipient is not "
-"at home, the parcel will be delivered to the neighbours. In both cases, a "
-"signature will be required."
 
 msgid "Show after billing details"
 msgstr "Show after billing details"
@@ -874,9 +890,6 @@ msgstr "Unpaid letter"
 
 msgid "View logs"
 msgstr "View logs"
-
-msgid "weight"
-msgstr "Weight"
 
 msgid ""
 "When enabled the checkout will use the MyParcel address fields. This means "
