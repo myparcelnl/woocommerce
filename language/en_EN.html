@@ -1,0 +1,277 @@
+<head>
+	<script src="js/auto_menu.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row">
+		<div class="menu col-xs-4 col-lg-3">
+			<nav class="navbar nav nav-pills nav-stacked">
+				<div class="menu-items">
+				</div>
+			</nav>
+		</div>
+		<section class="page-header col-xs-8 col-xs-offset-4 col-lg-9 col-lg-offset-3">
+			<img height="185" alt="" src="media/logo_myparcel.png">
+			<h1 class="project-name">
+				Manual WooCommerce
+			</h1>
+			<br />
+			<a target="_blank" class="btn" href="https://nl.wordpress.org/plugins/woocommerce-myparcel/">The MyParcel plugin</a>
+		</section>
+		<section class="main-content col-xs-8 col-xs-offset-4 col-lg-7 col-lg-offset-4">
+			<h1>Introduction</h1>
+			<p>Using this WooCommerce plug-in, you can create five types of MyParcel shipments:</p>
+			<ul>
+				<li>parcel within the Netherlands (home address and PostNL collection locations);</li>
+				<li>parcel within the EU and outside of the EU;</li>
+				<li>letterbox parcel;</li>
+				<li>digital stamp;</li>
+				<li>unfranked label.</li>
+			</ul>
+			<p>Third party plug-ins that we support:</p>
+			<ul>
+				<li><a href="https://woocommerce.com/products/table-rate-shipping/#">WooCommerce table rate plug-in</a>;</li>
+				<li><a href="https://bolderelements.net/">Bolder elements table rate plug-in</a>.</li>
+			</ul>
+			<p><strong><em>NB: </em></strong>We do not provide support for these plug-ins!</p>
+
+			<h1 id="1">1. Installation</h1>
+
+			<p>This manual describes the features of the MyParcel plug-in and how to install the MyParcel plug-in in your webshop. We recommend that you always perform the installation on a test environment and perform a back-up of your webshop before you start. There are two ways of performing the installation:</p>
+
+			<h2 id="1_A">1.1 Through the WordPress plug-in directory</h2>
+
+			<p>Take the following steps to install the MyParcel plug-in through the WordPress plug-in directory:</p>
+
+			<ol>
+				<li>In WordPress, go to the menu <span class="nice">Plug-ins > New plug-in</span>.</li>
+				<li>Type 'MyParcel’ into the search bar and click ‘Search’.</li>
+				<li>Select the WooCommerce MyParcel plug-in and click ‘Install now’. The plug-in will now be downloaded and installed.</li>
+				<li>Once the download is complete, click ‘Enable plug-in’.</li>
+			</ol>
+
+			<h2 id="1_B">1.2 Manual upload</h2>
+			<ol>
+				<li>Download the zip file for the plug-in from the <a href="http://www.wordpress.org/plugins/woocommerce-myparcel/">WordPress site</a>.</li>
+				<li>In WordPress, go to the menu <span class="nice">Plug-ins > New plug-in.</span></li>
+				<li>At the top of the screen, click ‘Upload plug-in’.</li>
+				<li>Select the file that you have just downloaded and click ‘Install now’.</li>
+				<li>Once the installation is complete, click ‘Enable plug-in’.</li>
+			</ol>
+
+			<h2 id="1_C">1.3 Testing</h2>
+			<p>You can add delivery options to the checkout, such as morning and evening delivery and ‘collect from a PostNL location’. You can configure the delivery options you want to offer in the settings for the MyParcel plug-in. Once you have installed the plug-in, we recommend that you go through the order process and place a test order. This allows you to check that the checkout has the correct settings. You can also export shipments once the plug-in has been configured and test label downloads. Testing is free of charge, as long as you don’t offer the labels to PostNL.</p>
+			<p><em>NB: you will be charged for digital stamps straight away.</em></p>
+			
+			<h1 id="2">2. Configuration</h1>
+			<p>In the left-hand menu, go to <span class="nice">WooCommerce’ > ‘MyParcel’</span> to configure the MyParcel plug-in.</p>
+
+			<h2 id="2_A">2.1 General</h2>
+
+			<img src="media/WOO_ALGEMEEN.png">
+
+			<h3 id="2_A_A">API settings</h3>
+			<p>For shipments to end up in the correct account, you will need to enter the API key from your MyParcel account. If you are logged into your MyParcel account, you can find it under the sign &gt; ‘Shop settings’ &gt; ‘General’. You may not be able to see the API key yet, because it needs to be ‘generated' first. Click ‘Generate API key’ and copy the API key.</p>
+			
+			<h3 id="2_A_B">Label display</h3>
+			<p>Specify here whether you want to download the label as a PDF or open it in a new tab.</p>
+			
+			<h3 id="2_A_C">Label size</h3>
+			<p>Here, you can specify whether you want to print the label on a standard A4 printer or on a label printer (A6).</p>
+			
+			<h3 id="2_A_D">Ask for start position when printing</h3>
+			<p>This option allows you to continue printing where you left off last time and means you can use all of stickers on the A4 sheet.</p>
+			
+			<h3 id="2_A_E">Track &amp; Trace link in email</h3>
+			<p>Enable ‘Track &amp; Trace in email’ to send the barcode and Track &amp; Trace link in the shipping confirmation to your customers. The Track &amp; Trace code will then be added to the 'Order completed and/or sent’ email sent from WooCommerce when an order receives the ‘Completed’ status. We recommend disabling the Track &amp; Trace option in your MyParcel account if you are using this option. Otherwise, you customers will receive multiple emails about their dispatched parcel.</p>
+
+			<p><strong>NB:</strong> Make sure 'Process shipments immediately' is enabled if you use this option in combination with the ‘Track &amp; Trace in email’ option. Otherwise, the Track &amp; Trace code will not be included in the email to your customer since no barcode was generated at the time of sending.</p>
+			
+			<h3 id="2_A_F">Track &amp; Trace in account</h3>			
+			<p>If your customers can create an account in your webshop, you can use this option to ensure that the link for the order barcode is displayed in the account.</p>
+			
+			<h3 id="2_A_G">Process shipments immediately</h3>
+			<p>If you enable this option, shipments will be processed immediately once they have been sent to MyParcel. They are then immediately pre-registered and the shipment can no longer be amended in your MyParcel back office. If this option is not enabled, the shipment will be entered as a draft. You can still amend the shipment in your MyParcel account after it has been exported.</p>
+			
+			<h3 id="2_A_H">Order status automation</h3>
+			<p>This option allows you to automatically change the status of the order when a shipment has been successfully exported. You can select the status your shipments will receive once they have been exported.</p>
+			
+			<h3 id="2_A_I">Save barcode in a note</h3>
+			<p>Placing the barcode in a note for an order allows other plug-ins to read the barcode easily.</p>
+			
+			<h3 id="2_A_J">Barcode title</h3>
+			<p>Here you can change the text that will appear before the shipment barcode in the order notes. This text will appear before the barcode in the notes. <strong>NB</strong>: if you use a link with Effect Connect to receive Bol.com orders in your WooCommerce environment, leave the default Tracking code: value in place to automatically link the barcode back to Bol.com.</p>
+			
+			<h3 id="2_A_K">Diagnostic tools</h3>
+			<p>You can use the diagnostic tools when there are problems exporting the shipments. This creates log files describing the communication between WooCommerce and MyParcel.</p>
+			
+			<h2 id="2_B">2.2 Default export settings</h2>
+			
+			<h3 id="2_B_A">Link parcel type to shipment method</h3>
+			<p>You can link a shipping method to a parcel type so that the correct label is created in your MyParcel account. We explain this further in the example below.</p>
+			<p>In the example, you can see that the shipping method, ‘fixed rate’, is linked to the parcel type, ‘parcel’. This means that orders with this shipping method are forwarded to MyParcel as a parcel by default.</p>
+			<p>In the example, you can see that the shipping method, ‘fixed rate’, is linked to the parcel type, ‘letterbox parcel’. This means that orders with this shipping method are forwarded to MyParcel as a letterbox parcel by default.</p>
+			<p>In the example, you can see that the shipping method, ‘fixed rate’, is linked to the parcel type, ‘digital stamp’. This means that orders with this shipping method are forwarded to MyParcel as a digital stamp by default.</p>
+			<p><strong>NB:</strong> this is a default setting. Of course, this can still be amended manually for each order.</p>
+			
+			<h3 id="2_B_B">Link customer email address</h3>
+			<p>You can choose to send the email address from the order to MyParcel. This option must be enabled if you are using MyParcel Track &amp; Trace emails. In your MyParcel account, you can enable or disable this email and customise it in your own style.</p>
+			
+			<h3 id="2_B_C">Link customer telephone number</h3>
+			<p>If you link the customer’s telephone number with the shipment, the courier can use it to deliver the parcel. This significantly increases the probability of foreign shipments being delivered.</p>
+			
+			<h3 id="2_B_D">Label description</h3>
+			<p>This options allows you to add a description to the shipment. The description will be printed in the top left-hand corner of the label. You can use it to search for the shipment in the MyParcel shipments summary. Use <strong>[ORDER_NR]</strong> to specify the order number.</p>
+			
+			<h3 id="2_B_E">Empty parcel weight</h3>
+			<p>Enter the weight of the empty parcel in grams.</p>
+			
+			<h3 id="2_B_F">Standard HS code</h3>
+			<p>Enter a goods code that can be used by default when exporting shipments to destinations outside of the EU. You can also enter this code per product. Go to ‘Products’ &gt; select product &gt; ‘Product information’ &gt; ‘Shipping methods’ and enter the code.</p>
+			
+			<h3 id="2_B_G">Customs shipment type</h3>
+			<p>Specify the type of shipments you are sending outside of the EU. As a general rule, these are commercial goods.</p>
+			
+			<h3 id="2_B_H">Default country of origin</h3>
+			<p>For shipments to destinations outside of the EU, you needed to specify the country from which your products originate. Enter the <strong>country code</strong> of the relevant country in this field. For the Netherlands, this is <strong>NL</strong>.</p>
+			
+			<h3 id="2_B_I">Automatic export</h3>
+			<p>Enable this feature if you want to automatically export your orders to MyParcel immediately after payment.</p>
+			
+			<h2 id="2_C">2.3 Checkout settings</h2>
+			
+			<h3 id="2_C_A">MyParcel address fields</h3>
+			<p>Enable the feature that allows you to split WooCommerce's standard <strong>Address line 1</strong> and <strong>Address line 2</strong> into three separate fields for <strong>Street</strong>, <strong>House number</strong> and <strong>Suffix</strong>.</p>
+			
+			<h3 id="2_C_B">Display delivery day</h3>
+			<p>Enable this feature to specify the expected delivery day for your customers in their order confirmation. You can enable displaying delivery days at the checkout under the PostNL tab.</p>
+			
+			<h3 id="2_C_C">Enable MyParcel delivery options</h3>
+			<p>Enable this feature to display delivery options at your checkout. You can select the delivery options you want to display under the PostNL tab. When you enable this feature, the settings below will become visible.</p>
+			
+			<h3 id="2_C_D">Display at</h3>
+			<p>Here you can select whether the delivery options are always displayed, even though some products ordered only fit into a letterbox parcel. This allows customers to select delayed delivery, for example, or delivery to a PostNL location, despite the fact that the shipment fits through the letterbox. Once a delivery option has been chosen, the shipment automatically becomes a parcel. A delivery option cannot be selected for a letterbox parcel.</p>
+			<p>If you would prefer to display these delivery options only for orders sent as parcels, select <strong>Shipping methods linked to parcel</strong>. Select the preferred shipping methods under ‘Default export settings’ &gt; ‘Parcel type’ &gt; ‘Parcel’.</p>
+			
+			<h3 id="2_C_E">Delivery options position</h3>
+			<p>If you would like the checkout to be in a different location, you can configure this through ‘Delivery options position’. You can place the MyParcel checkout after invoice information, shipping information or notes. By experimenting with all of the options and viewing them at your checkout, you can discover what works best for your webshop.</p>
+			
+			<h3 id="2_C_F">Custom styles (CSS)</h3>
+			<p>The checkout automatically adopts the style of your webshop. If you are familiar with writing code and you want to change the style of the checkout, amend this here by changing the CSS.</p>
+			
+			<h3 id="2_C_G">Titles</h3>
+			<p>Amend titles at the MyParcel checkout so that they match your webshop.</p>
+			
+			<h2 id="2_D">2.4 PostNL</h2>
+			
+			<h3 id="2_D_A">PostNL export settings</h3>
+			<p>Specify which shipping options you want to add to parcel shipments by default when exporting from WooCommerce. With the ‘insured shipment' shipping option, you can set the minimum sale price for which the shipment should be insured.</p>
+			
+			<h3 id="2_D_B">Enable PostNL delivery</h3>
+			<p>Enable this feature to offer customers the option of home delivery (morning, standard or evening) at your checkout. <strong>NB</strong>: if you disable this option and enable 'PostNL pick-up', all of your shipments will be sent to a pick-up location by default when the MyParcel checkout is visible for your customers.</p>
+			
+			<h3 id="2_D_B">Delivery days</h3>
+			<p>This feature allows you to specify the days on which you deliver parcels to a PostNL location. That way, your customers will be offered the correct delivery days.</p>
+			
+			<h3 id="2_D_C">Closing time</h3>
+			<p>The closing time feature allows you to specify up to which time orders can still be processed. If you take orders to a PostNL location every day around 5pm, it would be good to process the last order around 4pm. If your customers place an order after this time, they will see a later delivery option. Example: Closing time is at 4pm, meaning you can process the orders on the same day and hand them over on time. If an order is placed after 4pm, the checkout will not display next day delivery.</p>
+			
+			<h3 id="2_D_D">Processing time</h3>
+			<p>Here, you can configure the number of days you need in order to process an order. For example, if you enter '1', the checkout will not display the next working day but the day after that.</p>
+			<p>If there is no processing time, enter 0 here.</p>
+			
+			<h3 id="2_D_E">Delivery days window</h3>
+			<p>This option allows you to specify how far in the future your customers will be able to select a delivery day. In this case it is set to 0 days, but this could also be two or five days. The maximum is 14 days. If the delivery days window is set to 0, the days will no longer be displayed, meaning that the consumer will not be able to select a day.</p>
+			
+			<h3 id="2_D_F">Delivery options</h3>
+			<p>You can set a surcharge for the various delivery options. The surcharge for the delivery option in question will be charged to your customer through the checkout. You can enter a minus amount, which will also be displayed at the checkout. The surcharge therefore applies in addition to the standard rates that you have configured under 'Shipping methods' in your WooCommerce settings. The example below shows how these surcharges are displayed at the checkout.</p>
+			
+			<h3 id="2_D_G">Enable PostNL pick-up</h3>
+			<p>Enable this feature to offer ‘Collect from PostNL location' at your checkout. If you only want to offer the ‘Collect from PostNL location’ option, select this option without enabling ‘PostNL delivery’. <strong>NB:</strong> in this case, we recommend that you only display the checkout under 'Shipping methods linked to parcel' so that your customer only sees this option when they click a specific shipping method. If you do not do this, all of your shipments will be sent to a pick-up location.</p>
+			
+			<h2 id="2_E">2.5 Frequently Asked Questions about the configuration</h2>
+			
+			<h3 id="2_E_A">I have enabled the ‘Evening delivery' option, but this is not displayed at the checkout!</h3>
+			<p><em>You may have entered an address where PostNL does not offer this option, for example at a business park. Another possibility is that you performed the test on Friday with Saturday as the delivery day. Delivery options such as morning and evening delivery are not offered on Saturdays.</em></p>
+			
+			<h3 id="2_E_B">All of my shipments have been stored as 'Collect from PostNL location' by default!</h3>
+			<p><em>You can solve this by turning on </em><strong><em>Enable PostNL delivery </em></strong><em>under the PostNL tab or by making the checkout visible only for shipping methods that are linked to the parcel type 'Parcel' in the Default export settings. Please note that the ‘Display at' option under the Checkout settings tab is set to 'For shipping methods linked to parcel'.</em></p>
+			
+			<h1 id="3">3. Using plug-ins</h1>
+			<p>Once the plug-in is installed, you will see MyParcel icons in the table in your order summary. If you do not see the MyParcel icons, you can click 'Screen options' in the top right-hand corner and select 'Actions', 'Barcode' and 'Destination'. If the screen settings have changed, you will see new columns in the order summary.</p>
+			
+			<h2 id="3_A">3.1 Create one shipping label</h2>
+			<p>There are various ways to create shipping labels. First of all, you need to export your shipments. Select a shipment by clicking the checkbox for the relevant order. In the 'Actions' dropdown menu, select 'MyParcel: Export' and click 'Apply'.</p>
+			
+			
+			<p>In the 'Actions' column, you can also use the MyParcel buttons below.</p>
+			
+			
+			<p>Export the shipment to MyParcel</p>
+			
+			
+			<p>Download the label created</p>
+			
+			
+			<p>Send an email containing a return label from WooCommerce to your customer</p>
+			
+			<h2 id="3_B">3.2 Create multiple shipping labels</h2>
+			<p>If you want to print or export multiple shipments at the same time, you can do so by ticking the checkboxes in the order list. Once you have made a selection of orders to print, click ‘Actions’ and select ‘MyParcel: Export &amp; Print’ or ‘MyParcel: Export’ from the dropdown menu.</p>
+			<p>‘MyParcel: Export’ will export the selection to MyParcel. ‘MyParcel: Export &amp; Print’ will export all shipments to MyParcel and then download a PDF. If you have exported the shipments separately, you can print them in the WooCommerce environment using ‘MyParcel: Print’. If you try to print when you have not exported the shipments, nothing will be printed.</p>
+			
+			<h2 id="3_C">3.3 Make changes to one shipment</h2>
+			<p>To amend a shipment, click ‘Parcel’ (as in the screenshot below). When you click ‘Parcel’, a small menu will appear that allows you to edit the shipment.</p>
+			<p>After selecting your preferred options or changing the shipment type, click ‘Save’. You can then export the selection to MyParcel and create the label.</p>
+			
+			<h3 id="3_C_A">Order information</h3>
+			<p>You can also create shipments from the order information page. Click an order to go to a page containing more information about the order.</p>
+			
+			<h2 id="3_D">3.4 Shipping information</h2>
+			<p>To view information about your shipment, you do not need to go to your MyParcel account. You can view the information in your order summary in WooCommerce. An ‘i’ will appear next to every order forwarded to MyParcel for which a label has been created. Click the ‘i’ to view more information about the status of the shipment. For more detailed information, you can click the barcode in the barcode column.</p>
+			
+			<h2 id="3_E">3.5 Checkout</h2>
+			<p>Below you can see how the checkout will look in a standard WooCommerce environment. The options will become visible once all of the address information has been entered correctly. Some delivery options are not available for all addresses.</p>
+			<p>Only the available PostNL locations will be displayed. A location may be full and therefore unavailable due to the pressure on PostNL services, in which case it will not be displayed at the checkout.</p>
+			
+			<img width='70%' class='center' src="media/WOO_BEZORG_CHECKOU_OOPL.jpg">
+				<footer class="site-footer">
+					<p>
+						<span class="site-footer-owner">MyParcel</span>
+					</p>
+					<p>
+                        <span class="site-footer-credits">
+                            <strong>Adres </strong>Antareslaan 31, 2132 JE Hoofddorp<br />
+                            <strong>Telefoon </strong>023 30 30 315&nbsp;
+                            <strong>E-mail</strong> &nbsp;info@myparcel.nl<br />
+                            <strong>Website </strong><a href="https://www.myparcel.nl">www.myparcel.nl</a>&nbsp;
+                            <strong>IBAN </strong>NL48ABNA0447850539&nbsp;
+                            <strong>KvK </strong>Amsterdam 34 09 97 58 <br />
+                            <strong>BTW-nr. </strong>NL8045.33.258.B01
+                        </span>
+						<br />
+					</p>
+				</footer>
+			</div>
+		</section>
+	</div>
+</div>
+<script>
+	// Set postman button attributes in one place
+	postman_buttons = document.getElementsByClassName('postman-run-button');
+	
+	for (i = 0; i < postman_buttons.length; i++) {
+		postman_buttons[i].setAttribute('data-postman-action', 'collection/import');
+		postman_buttons[i].setAttribute('data-postman-var-1', '065786285c2e5ed75509');
+		postman_buttons[i].setAttribute('data-postman-param', 'env%5BMyParcel%20public%5D=W3siZW5hYmxlZCI6dHJ1ZSwia2V5IjoiYXBpX2tleSIsInZhbHVlIjoiIn0seyJrZXkiOiJVc2VyLUFnZW50IiwidmFsdWUiOiJ7e1VzZXItQWdlbnR9fSIsImRlc2NyaXB0aW9uIjoiIiwiZW5hYmxlZCI6dHJ1ZX0seyJrZXkiOiJhdXRoX3Rva2VuIiwidmFsdWUiOiIiLCJkZXNjcmlwdGlvbiI6IiIsImVuYWJsZWQiOnRydWV9XQ==');
+	}
+	
+	(function (p,o,s,t,m,a,n) {
+		!p[s] && (p[s] = function () { (p[t] || (p[t] = [])).push(arguments); });
+		!o.getElementById(s+t) && o.getElementsByTagName("head")[0].appendChild((
+				(n = o.createElement("script")),
+						(n.id = s+t), (n.async = 1), (n.src = m), n
+		));
+	}(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
+</script>
+
+</body>

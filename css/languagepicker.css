@@ -1,0 +1,62 @@
+/* language picker*/
+
+/*.languageTitel{*/
+/*    float: right;*/
+/*    margin: 15px 30px;*/
+/*    z-index: 300;*/
+/*    position: absolute;*/
+/*    right: 100px;*/
+/*    top: 30px;*/
+/*}*/
+
+.languagepicker {
+    background-color: transparent;
+    display: inline-block;
+    height: 41px;
+    margin: 20px;
+    overflow: hidden;
+    transition: all .3s ease;
+    vertical-align: top;
+    float: right;
+    z-index: 300;
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    /*border: 1px white solid;*/
+}
+
+#languagepicker {
+    padding: unset;
+    
+}
+
+.languagepicker ul {
+    overflow: hidden;
+    /*border: 1px;*/
+}
+
+.languagepicker li {
+    padding: 10px 18px;
+}
+
+.languagepicker:hover {
+    /* don't forget the 1px border */
+    height: auto;
+    background-color: #EEE;
+}
+
+.languagepicker img {
+    margin: auto 5px;
+    vertical-align: unset;
+}
+
+/*.languagepicker a{*/
+/*    color: #000;*/
+/*    margin: auto;*/
+/*    text-decoration: none;*/
+/*}*/
+
+.languagepicker > li:hover {
+    border: 1px rgba(255, 255, 255, 1) solid;
+    border-radius: 0.3rem;
+}
