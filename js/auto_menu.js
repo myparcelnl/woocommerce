@@ -1,7 +1,7 @@
 $( document ).ready(function() {
 
     var indexHtml = '';
-    window.location = indexHtml;
+
     indexHtml = indexHtml + '<ul class="nav">';
     $( "h1" ).each(function() {
         if(typeof $( this ).attr('id') != 'undefined'){
