@@ -19,6 +19,7 @@ if (class_exists("WCMP_Export_Consignments")) {
 class WCMP_Export_Consignments
 {
     private const DEFAULT_PRODUCT_QUANTITY = 1;
+    private const MAX_COLLO_WEIGHT_IN_GRAMS = 30000;
 
     /**
      * @var AbstractConsignment
@@ -470,5 +471,31 @@ class WCMP_Export_Consignments
             ->setDeliveryDate($this->getDeliveryDate())
             ->setDeliveryType($this->getDeliveryType())
             ->setLabelDescription($this->getFormattedLabelDescription());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function validate(): bool
+    {
+        if (! $this->consignment->validate()) {
+            return false;
+        }
+        $max_weights = [
+            AbstractConsignment::PACKAGE_TYPE_PACKAGE       => 30000,
+            AbstractConsignment::PACKAGE_TYPE_MAILBOX       => 10000,
+            AbstractConsignment::PACKAGE_TYPE_LETTER        => 300,
+            AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP => 300,
+        ];
+        // validate weight
+        $weight           = $this->getTotalWeight();
+        $max_collo_weight = $max_weights[$this->getPackageType()];
+
+        if (($weight / $this->orderSettings->getColloAmount()) > $max_collo_weight) {
+            throw new Exception('is te zwaar ouwe');
+        }
+        // todo pallet?
+
+        return true;
     }
 }
