@@ -1,4 +1,5 @@
 <?php
+use \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 
 if (! defined("ABSPATH")) {
     exit;
@@ -10,35 +11,6 @@ if (class_exists("WCMP_Country_Codes")) {
 
 class WCMP_Country_Codes
 {
-    private const EURO_COUNTRIES = [
-        'NL',
-        'BE',
-        'AT',
-        'BG',
-        'CZ',
-        'CY',
-        'DK',
-        'EE',
-        'FI',
-        'FR',
-        'DE',
-        'GR',
-        'HU',
-        'IE',
-        'IT',
-        'LV',
-        'LT',
-        'LU',
-        'PL',
-        'PT',
-        'RO',
-        'SK',
-        'SI',
-        'ES',
-        'SE',
-        'XK',
-    ];
-
     /**
      * @param string $countryCode
      *
@@ -46,7 +18,7 @@ class WCMP_Country_Codes
      */
     public static function isEuCountry(string $countryCode): bool
     {
-        return in_array($countryCode, self::EURO_COUNTRIES);
+        return in_array($countryCode, AbstractConsignment::EURO_COUNTRIES);
     }
 
     /**
@@ -56,6 +28,10 @@ class WCMP_Country_Codes
      */
     public static function isWorldShipmentCountry(string $countryCode): bool
     {
+        $countries = new WC_Countries();
+        if (! $countries->country_exists($countryCode)) {
+            return false;
+        }
         return ! self::isEuCountry($countryCode);
     }
 
