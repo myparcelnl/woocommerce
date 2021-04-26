@@ -147,6 +147,36 @@ msgstr ""
 msgid "weight"
 msgstr "Weight"
 
+msgid "export_orderid_%1$s_failed_because_%2$s"
+msgstr ""
+
+msgid "error_colli_weight_%1$s_but_max_%2$s"
+msgstr ""
+
+msgid "error_collo_weight_%1$s_but_max_%2$s"
+msgstr ""
+
+msgid "export_hint_change_parcel"
+msgstr "Change the parcel type or create multiple labels."
+
+msgid "error_invalid_postal_code"
+msgstr "Invalid postal code"
+
+msgid "error_missing_country"
+msgstr "Country is missing"
+
+msgid "error_missing_number"
+msgstr "Number is missing"
+
+msgid "error_api_refused_all_shipments"
+msgstr "API refused all shipments"
+
+msgid "error_api_at_order_id%s"
+msgstr "Error at order: %s"
+
+msgid "error_api_original_message"
+msgstr "Original API error message"
+
 msgid "settings_pickup_locations_default_view"
 msgstr "Pickup locations default view"
 

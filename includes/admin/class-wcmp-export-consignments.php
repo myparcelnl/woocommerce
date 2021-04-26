@@ -19,7 +19,6 @@ if (class_exists("WCMP_Export_Consignments")) {
 class WCMP_Export_Consignments
 {
     private const DEFAULT_PRODUCT_QUANTITY = 1;
-    private const MAX_COLLO_WEIGHT_IN_GRAMS = 30000;
 
     /**
      * @var AbstractConsignment
@@ -481,20 +480,24 @@ class WCMP_Export_Consignments
         if (! $this->consignment->validate()) {
             return false;
         }
-        $max_weights = [
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE       => 30000,
-            AbstractConsignment::PACKAGE_TYPE_MAILBOX       => 10000,
-            AbstractConsignment::PACKAGE_TYPE_LETTER        => 300,
-            AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP => 300,
-        ];
-        // validate weight
-        $weight           = $this->getTotalWeight();
-        $max_collo_weight = $max_weights[$this->getPackageType()];
 
-        if (($weight / $this->orderSettings->getColloAmount()) > $max_collo_weight) {
-            throw new Exception('is te zwaar ouwe');
+        $weight           = $this->getTotalWeight(); // NOTE this is already the weight per consignment (in grammes)
+        $max_collo_weight = WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_TYPE[$this->getPackageType()];
+
+        if ($weight > $max_collo_weight) {
+            $one_collo       = (1 === $this->orderSettings->getColloAmount());
+            $translation_key = $one_collo
+                ? 'error_collo_weight_%1$s_but_max_%2$s'
+                : 'error_colli_weight_%1$s_but_max_%2$s';
+            $message         = sprintf(
+                __($translation_key, 'woocommerce-myparcel'),
+                $weight / 1000,
+                $max_collo_weight / 1000
+            );
+            $message         .= ' ';
+            $message         .= __('export_hint_change_parcel', 'woocommerce-myparcel');
+            throw new Exception($message);
         }
-        // todo pallet?
 
         return true;
     }

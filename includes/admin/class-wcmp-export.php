@@ -345,7 +345,10 @@ class WCMP_Export
                 $consignment        = $exportConsignments->getConsignment();
                 $exportConsignments->validate();
             } catch (Exception $ex) {
-                $errorMessage            = "Order {$order_id} could not be exported to MyParcel because: {$ex->getMessage()}";
+                $errorMessage = sprintf(
+                    __('export_orderid_%1$s_failed_because_%2$s', 'woocommerce-myparcel'),
+                    $order_id, __($ex->getMessage(), 'woocommerce-myparcel') // some messages can be translated
+                );
                 $this->errors[$order_id] = $errorMessage;
 
                 WCMP_Log::add($this->errors[$order_id]);

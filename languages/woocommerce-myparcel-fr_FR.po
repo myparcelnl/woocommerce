@@ -153,6 +153,15 @@ msgstr ""
 msgid "weight"
 msgstr "Poids"
 
+msgid "error_invalid_postal_code"
+msgstr "Code postal incorrect"
+
+msgid "error_missing_country"
+msgstr "Pays manque"
+
+msgid "error_missing_number"
+msgstr "Numéro manque"
+
 msgid "settings_pickup_locations_default_view"
 msgstr "Lieux de ramassage vue défaut"
 
@@ -1022,3 +1031,24 @@ msgid "You have to export the orders to MyParcel before you can print the labels
 msgstr ""
 "Vous devez d'abord exporter vos commandes vers MyParcel avant de pouvoir "
 "imprimer vos étiquettes !"
+
+msgid "export_orderid_%1$s_failed_because_%2$s"
+msgstr ""
+
+msgid "error_colli_weight_%1$s_but_max_%2$s"
+msgstr ""
+
+msgid "error_collo_weight_%1$s_but_max_%2$s"
+msgstr ""
+
+msgid "export_hint_change_parcel"
+msgstr ""
+
+msgid "error_api_refused_all_shipments"
+msgstr ""
+
+msgid "error_api_at_order_id%s"
+msgstr ""
+
+msgid "error_api_original_message"
+msgstr ""

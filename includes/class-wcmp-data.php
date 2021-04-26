@@ -56,6 +56,12 @@ class WCMP_Data
             'average' => 1175
         ],
     ];
+    public const MAX_COLLO_WEIGHT_PER_PACKAGE_TYPE = [
+        AbstractConsignment::PACKAGE_TYPE_PACKAGE       => 30000,
+        AbstractConsignment::PACKAGE_TYPE_MAILBOX       => 2000,
+        AbstractConsignment::PACKAGE_TYPE_LETTER        => 2000,
+        AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP => 2000,
+    ];
 
     public const DEFAULT_COUNTRY_CODE = "NL";
     public const DEFAULT_CARRIER      = PostNLConsignment::CARRIER_NAME;
