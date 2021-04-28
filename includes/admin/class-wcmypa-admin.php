@@ -944,6 +944,23 @@ class WCMYPA_Admin
     }
 
     /**
+     * @param WC_Order $order
+     *
+     * @return array
+     * @throws JsonException
+     */
+    public static function getExtraOptionsFromOrder(WC_Order $order): array
+    {
+        $meta = WCX_Order::get_meta($order, self::META_SHIPMENT_OPTIONS_EXTRA) ?: null;
+
+        if (empty($meta)) {
+            $meta['collo_amount'] = OrderSettings::DEFAULT_COLLO_AMOUNT;
+        }
+
+        return $meta;
+    }
+
+    /**
      * Output the delivery date if there is a date and the show delivery day setting is enabled.
      *
      * @param DeliveryOptions $deliveryOptions

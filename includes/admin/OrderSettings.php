@@ -10,7 +10,7 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
 class OrderSettings
 {
-    private const DEFAULT_COLLO_AMOUNT = 1;
+    public const  DEFAULT_COLLO_AMOUNT = 1;
     private const FIRST_INSURANCE      = 1;
 
     /**
@@ -120,7 +120,7 @@ class OrderSettings
         $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
         $this->shipmentOptions = $this->deliveryOptions->getShipmentOptions();
         $this->shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
-        $this->extraOptions    = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+        $this->extraOptions    = WCMYPA_Admin::getExtraOptionsFromOrder($order);
 
         $this->setAllData();
     }
