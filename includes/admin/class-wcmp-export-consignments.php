@@ -481,22 +481,23 @@ class WCMP_Export_Consignments
             return false;
         }
 
-        $weight           = $this->getTotalWeight(); // NOTE this is already the weight per consignment (in grammes)
-        $max_collo_weight = WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_TYPE[$this->getPackageType()];
+        $weight         = $this->getTotalWeight(); // NOTE this is already the weight per consignment (in grammes)
+        $maxColloWeight = WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_TYPE[$this->getPackageType()];
+        if (! $maxColloWeight) {
+            $maxColloWeight = WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_DEFAULT;
+        }
 
-        if ($weight > $max_collo_weight) {
-            $one_collo       = (1 === $this->orderSettings->getColloAmount());
-            $translation_key = $one_collo
+        if ($weight > $maxColloWeight) {
+            $translationKey = (1 === $this->orderSettings->getColloAmount())
                 ? 'error_collo_weight_%1$s_but_max_%2$s'
                 : 'error_colli_weight_%1$s_but_max_%2$s';
-            $message         = sprintf(
-                __($translation_key, 'woocommerce-myparcel'),
+            $message        = sprintf(
+                __($translationKey, 'woocommerce-myparcel'),
                 $weight / 1000,
-                $max_collo_weight / 1000
+                $maxColloWeight / 1000
             );
-            $message         .= ' ';
-            $message         .= __('export_hint_change_parcel', 'woocommerce-myparcel');
-            throw new Exception($message);
+            $hint           = __('export_hint_change_parcel', 'woocommerce-myparcel');
+            throw new Exception("{$message} {$hint}");
         }
 
         return true;

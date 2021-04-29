@@ -364,6 +364,12 @@ class WCMP_Export
             setcookie('myparcel_response', implode('<br/>', $this->errors), time() + self::COOKIE_EXPIRE_TIME, "/");
         }
 
+        if (0 === count($collection)) {
+            WCMP_Log::add("No shipments exported to MyParcel.");
+
+            return [];
+        }
+
         $collection = $collection->createConcepts();
 
         if ($processDirectly) {
