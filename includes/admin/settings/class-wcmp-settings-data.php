@@ -737,6 +737,18 @@ class WCMP_Settings_Data
                     "woocommerce-myparcel"
                 ),
             ],
+            [
+                'name'      => WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT_STATUS,
+                'condition' => WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT,
+                'label'     => __('setting_export_automatic_status', 'woocommerce-myparcel'),
+                'class'     => ['wcmp__child'],
+                'type'      => 'select',
+                'default'   => self::NOT_ACTIVE,
+                'options'   =>
+                    [self::NOT_ACTIVE => __('not_active', 'woocommerce-myparcel')]
+                    + WCMP_Settings_Callbacks::get_order_status_options(),
+                'help_text' => __('setting_export_automatic_status_help_text', 'woocommerce-myparcel'),
+            ],
 //            [
 //                "name"      => WCMYPA_Settings::SETTING_RETURN_IN_THE_BOX,
 //                "label"     => __("Print return label directly", "woocommerce-myparcel"),

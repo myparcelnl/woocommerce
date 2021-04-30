@@ -79,11 +79,16 @@ class WCMP_Export
      */
     public function exportByOrderId(int $orderId): void
     {
-        $automaticExport = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT);
+        if (! $orderId) {
+            return;
+        }
 
-        if ($orderId && $automaticExport) {
-            $export = new self();
-            $export->addShipments([(string) $orderId], 0, false);
+        $order  = WCX::get_order($orderId);
+        $export = new self();
+        $return = $export->addShipments([(string) $orderId], 0, false);
+
+        if (isset($return['success'])) {
+            $order->add_order_note($return['success']);
         }
     }
 
