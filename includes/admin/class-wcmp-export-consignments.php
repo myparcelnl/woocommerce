@@ -477,15 +477,19 @@ class WCMP_Export_Consignments
      */
     public function validate(): bool
     {
-        if (! $this->consignment->validate()) {
-            return false;
-        }
+        $this->validateWeight();
 
-        $weight         = $this->getTotalWeight(); // NOTE this is already the weight per consignment (in grammes)
-        $maxColloWeight = WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_TYPE[$this->getPackageType()];
-        if (! $maxColloWeight) {
-            $maxColloWeight = WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_DEFAULT;
-        }
+        return $this->consignment->validate();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function validateWeight(): void
+    {
+        $weight         = $this->getTotalWeight();
+        $maxColloWeight = WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_TYPE[$this->getPackageType()] ??
+            WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_DEFAULT;
 
         if ($weight > $maxColloWeight) {
             $translationKey = (1 === $this->orderSettings->getColloAmount())
@@ -499,7 +503,5 @@ class WCMP_Export_Consignments
             $hint           = __('export_hint_change_parcel', 'woocommerce-myparcel');
             throw new Exception("{$message} {$hint}");
         }
-
-        return true;
     }
 }

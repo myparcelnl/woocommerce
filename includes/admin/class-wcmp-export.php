@@ -347,7 +347,7 @@ class WCMP_Export
             } catch (Exception $ex) {
                 $errorMessage = sprintf(
                     __('export_orderid_%1$s_failed_because_%2$s', 'woocommerce-myparcel'),
-                    $order_id, __($ex->getMessage(), 'woocommerce-myparcel') // some messages can be translated
+                    $order_id, __($ex->getMessage(), 'woocommerce-myparcel')
                 );
                 $this->errors[$order_id] = $errorMessage;
 
