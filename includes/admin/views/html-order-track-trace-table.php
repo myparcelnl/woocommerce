@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This template is for the Track & Trace information in the MyParcel meta box in a single order/
+ * This template is for the Track & Trace information in the MyParcelBE meta box in a single order/
  */
 
 /**
@@ -13,7 +13,7 @@
 $shipments = [];
 
 try {
-    $shipments = WCMYPA()->export->getShipmentData(array_keys($consignments), $order);
+    $shipments = WCMYPABE()->export->getShipmentData(array_keys($consignments), $order);
 } catch (Exception $e) {
     $message = $e->getMessage();
 }
@@ -31,11 +31,11 @@ if (! count($shipments)) {
 
 ?>
 
-<table class="wcmp__table--track-trace">
+<table class="wcmpbe__table--track-trace">
   <thead>
   <tr>
-    <th><?php _e("Track & Trace", "woocommerce-myparcel"); ?></th>
-    <th><?php _e("Status", "woocommerce-myparcel"); ?></th>
+    <th><?php _e("Track & Trace", "woocommerce-myparcelbe"); ?></th>
+    <th><?php _e("Status", "woocommerce-myparcelbe"); ?></th>
     <th>&nbsp;</th>
   </tr>
   </thead>
@@ -47,24 +47,24 @@ if (! count($shipments)) {
 
       ?>
     <tr>
-      <td class="wcmp__order__track-trace">
-          <?php WCMYPA_Admin::renderTrackTraceLink($shipment, $order_id); ?>
+      <td class="wcmpbe__order__track-trace">
+          <?php WCMYPABE_Admin::renderTrackTraceLink($shipment, $order_id); ?>
       </td>
-      <td class="wcmp__order__status">
-          <?php WCMYPA_Admin::renderStatus($shipment, $order_id) ?>
+      <td class="wcmpbe__order__status">
+          <?php WCMYPABE_Admin::renderStatus($shipment, $order_id) ?>
       </td>
-      <td class="wcmp__td--create-label">
+      <td class="wcmpbe__td--create-label">
           <?php
-          $action    = WCMP_Export::EXPORT;
-          $getLabels = WCMP_Export::GET_LABELS;
+          $action    = WCMPBE_Export::EXPORT;
+          $getLabels = WCMPBE_Export::GET_LABELS;
 
           $order            = wc_get_order($order_id);
-          $returnShipmentId = $order->get_meta(WCMYPA_Admin::META_RETURN_SHIPMENT_IDS);
+          $returnShipmentId = $order->get_meta(WCMYPABE_Admin::META_RETURN_SHIPMENT_IDS);
 
-          WCMYPA_Admin::renderAction(
+          WCMYPABE_Admin::renderAction(
               admin_url("admin-ajax.php?action=$action&request=$getLabels&shipment_ids=$shipment_id&return_shipment_id=$returnShipmentId"),
-              __("Print MyParcel label", "woocommerce-myparcel"),
-              WCMYPA()->plugin_url() . "/assets/img/print.svg"
+              __("Print MyParcel BE label", "woocommerce-myparcelbe"),
+              WCMYPABE()->plugin_url() . "/assets/img/sendmyparcel-print.svg"
           );
           ?>
       </td>

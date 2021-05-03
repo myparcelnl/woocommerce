@@ -98,10 +98,10 @@ gulp.task('zip', () => gulp.src([
   'readme.txt',
   'templates/**/*',
   'vendor/**/*',
-  'woocommerce-myparcel.php',
+  'woocommerce-myparcelbe.php',
   'wpm-config.json',
 ], {base: '.'})
-  .pipe(zip('woocommerce-myparcel.zip'))
+  .pipe(zip('woocommerce-myparcelbe.zip'))
   .pipe(gulp.dest('./')));
 
 /**
@@ -109,12 +109,12 @@ gulp.task('zip', () => gulp.src([
  */
 gulp.task('translations:pot', () => gulp.src(PHP_FILES, {read: false})
   .pipe(wpPot({
-    bugReport: 'https://github.com/myparcelnl/woocommerce/issues',
-    domain: 'woocommerce-myparcel',
-    package: 'WooCommerce MyParcel',
+    bugReport: 'https://github.com/myparcelbe/woocommerce/issues',
+    domain: 'woocommerce-myparcelbe',
+    package: 'WooCommerce MyParcel BE',
     team: 'MyParcel <support@myparcel.nl>',
   }))
-  .pipe(gulp.dest('languages/woocommerce-myparcel.pot')));
+  .pipe(gulp.dest('languages/woocommerce-myparcelbe.pot')));
 
 /**
  * Download translations as csv and convert them to .po files.
@@ -128,7 +128,7 @@ gulp.task('translations:import', (callback) => {
  * Sync .po files with .pot file.
  */
 gulp.task('translations:po', () => gulp.src('languages/**/*.po', {read: false})
-  .pipe(gulpPoSync('languages/woocommerce-myparcel.pot'))
+  .pipe(gulpPoSync('languages/woocommerce-myparcelbe.pot'))
   .pipe(gulp.dest('languages')));
 
 /**

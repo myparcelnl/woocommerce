@@ -8,6 +8,6 @@
     "MyParcelDisplaySettings": "readonly",
     "MyParcelFrontend": "readonly",
     "tb_show": "readonly",
-    "wcmp": "readonly"
+    "wcmpbe": "readonly"
   }
 }

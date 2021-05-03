@@ -3,7 +3,7 @@
  * Derived from SkyVerge WooCommerce Plugin Framework https://github.com/skyverge/wc-plugin-framework/
  */
 
-namespace WPO\WC\MyParcel\Compatibility;
+namespace WPO\WC\MyParcelBE\Compatibility;
 
 use WC_Product;
 
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('\\WPO\\WC\\MyParcel\\Compatibility\\Product')) {
+if (class_exists('\\WPO\\WC\\MyParcelbe\\Compatibility\\Product')) {
     return;
 }
 

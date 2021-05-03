@@ -1,8 +1,8 @@
 {
-  "name": "@myparcel/woocommerce",
+  "name": "@myparcel/woocommerce-be",
   "private": true,
   "version": "4.1.0",
-  "description": "Welcome to the WooCommerce MyParcel repository on GitHub. Here you can browse the source, look at open issues and keep track of development.",
+  "description": "Welcome to the WooCommerce MyParcel BE repository on GitHub. Here you can browse the source, look at open issues and keep track of development.",
   "scripts": {
     "build": "gulp",
     "watch": "gulp watch",

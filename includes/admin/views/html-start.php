@@ -8,7 +8,7 @@
         http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title></title>
     <?php
-    WCMP_Assets::enqueue_admin_scripts_and_styles();
+    WCMPBE_Assets::enqueue_admin_scripts_and_styles();
     wp_enqueue_style('colors');
     wp_enqueue_style('media');
     wp_enqueue_script('jquery');

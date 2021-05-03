@@ -9,12 +9,12 @@ const languagesDir = path.join(__dirname, '../', 'languages');
 const baseObject = {
   charset: 'utf-8',
   headers: {
-    'Project-Id-Version': 'WooCommerce MyParcel',
+    'Project-Id-Version': 'WooCommerce MyParcel BE',
     'MIME-Version': '1.0',
     'Content-Type': 'text/plain; charset=UTF-8',
     'Content-Transfer-Encoding': '8bit',
     'Language-Team': 'MyParcel <support@myparcel.nl>',
-    'Report-Msgid-Bugs-To': 'https://github.com/myparcelnl/woocommerce/issues',
+    'Report-Msgid-Bugs-To': 'https://github.com/myparcelbe/woocommerce/issues',
     'Plural-Forms': 'nplurals=1; plural=0;',
     'PO-Revision-Date': '',
     'Last-Translator': '',
@@ -35,8 +35,8 @@ function createGettextFiles(data) {
   const [, ...languageKeys] = keys;
 
   languageKeys.forEach((language, index) => {
-    const poFilePath = path.join(languagesDir, `woocommerce-myparcel-${language}.po`);
-    const moFilePath = path.join(languagesDir, `woocommerce-myparcel-${language}.mo`);
+    const poFilePath = path.join(languagesDir, `woocommerce-myparcelbe-${language}.po`);
+    const moFilePath = path.join(languagesDir, `woocommerce-myparcelbe-${language}.mo`);
 
     translationObject.headers.Language = language;
     strings.forEach((translation) => {

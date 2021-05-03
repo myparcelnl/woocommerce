@@ -1,21 +1,21 @@
 <?php
 
-namespace WPO\WC\MyParcel\Compatibility;
+namespace WPO\WC\MyParcelBE\Compatibility;
 
 use WC_Order;
-use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use WPO\WC\MyParcelBE\Compatibility\Order as WCX_Order;
 
 /**
  * Class for compatibility with the ChannelEngine plugin.
  *
  * @see     https://wordpress.org/plugins/channelengine-woocommerce
  * @see     https://github.com/channelengine/woocommerce
- * @package WPO\WC\MyParcel\Compatibility
+ * @package WPO\WC\MyParcelBE\Compatibility
  */
-class WCMP_ChannelEngine_Compatibility
+class WCMPBE_ChannelEngine_Compatibility
 {
     /**
-     * Add the created Track & Trace code and set shipping method to postnl in ChannelEngine's meta data
+     * Add the created Track & Trace code and set shipping method to bpost in ChannelEngine's meta data
      *
      * @param WC_Order $order
      * @param          $data
@@ -29,6 +29,6 @@ class WCMP_ChannelEngine_Compatibility
         WCX_Order::update_meta_data($order, "_shipping_ce_track_and_trace", $data);
 
         // Todo: Check if this has to be changed
-        WCX_Order::update_meta_data($order, "_shipping_ce_shipping_method", "PostNL");
+        WCX_Order::update_meta_data($order, "_shipping_ce_shipping_method", "Bpost");
     }
 }

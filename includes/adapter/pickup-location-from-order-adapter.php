@@ -5,7 +5,7 @@ declare(strict_types=1);
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractPickupLocationAdapter;
 
-class WCMP_PickupLocationFromOrderAdapter extends AbstractPickupLocationAdapter
+class WCMPBE_PickupLocationFromOrderAdapter extends AbstractPickupLocationAdapter
 {
     /**
      * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter|null $originAdapter

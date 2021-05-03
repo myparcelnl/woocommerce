@@ -17,7 +17,7 @@ $directions: (left, top, right, bottom);
  * directionVariants Values that will be set for left, top, right and bottom.
  */
 $helpers: (
-  // Example: Creates .wcmp__d--<variant> { display: <variant> } for each entry in variants.
+  // Example: Creates .wcmpbe__d--<variant> { display: <variant> } for each entry in variants.
   display: (
     alias: d,
     variants: (
@@ -49,7 +49,7 @@ $helpers: (
 );
 
 // This just renders everything. Only edit above map if you want to change the available helpers.
-.wcmp {
+.wcmpbe {
   @each $property, $options in $helpers {
     $alias: map-get($options, 'alias') or $property;
 

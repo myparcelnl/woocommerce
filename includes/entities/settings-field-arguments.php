@@ -1,13 +1,13 @@
 <?php
 
-namespace WPO\WC\MyParcel\Entity;
+namespace WPO\WC\MyParcelBE\Entity;
 
 use MyParcelNL\Sdk\src\Support\Arr;
-use WCMP_Settings_Data;
+use WCMPBE_Settings_Data;
 
 defined('ABSPATH') or exit;
 
-if (class_exists('\\WPO\\WC\\MyParcel\\Entity\\SettingsFieldArguments')) {
+if (class_exists('\\WPO\\WC\\MyParcelbe\\Entity\\SettingsFieldArguments')) {
     return;
 }
 
@@ -166,8 +166,8 @@ class SettingsFieldArguments
                 $this->addArgument(
                     "options",
                     [
-                        "1" => __("Enabled", "woocommerce-myparcel"),
-                        "0" => __("Disabled", "woocommerce-myparcel"),
+                        "1" => __("Enabled", "woocommerce-myparcelbe"),
+                        "0" => __("Disabled", "woocommerce-myparcelbe"),
                     ]
                 );
                 break;
@@ -455,7 +455,7 @@ class SettingsFieldArguments
     {
         if (is_array($condition)) {
             $parentName  = $this->wrap($condition['parent_name']);
-            $parentValue = $condition['parent_value'] ?? WCMP_Settings_Data::ENABLED;
+            $parentValue = $condition['parent_value'] ?? WCMPBE_Settings_Data::ENABLED;
 
             $condition['parents'] = [
                 $parentName => $parentValue,
@@ -474,7 +474,7 @@ class SettingsFieldArguments
                 self::CONDITION_DEFAULTS,
                 [
                     "parents" => [
-                        $parentName => WCMP_Settings_Data::ENABLED,
+                        $parentName => WCMPBE_Settings_Data::ENABLED,
                     ],
                 ]
             );

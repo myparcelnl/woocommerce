@@ -3,7 +3,7 @@
  * Derived from SkyVerge WooCommerce Plugin Framework https://github.com/skyverge/wc-plugin-framework/
  */
 
-namespace WPO\WC\MyParcel\Compatibility;
+namespace WPO\WC\MyParcelBE\Compatibility;
 
 use DateTimeZone;
 use WC_Order;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('\\WPO\\WC\\MyParcel\\Compatibility\\Order')) {
+if (class_exists('\\WPO\\WC\\MyParcelbe\\Compatibility\\Order')) {
     return;
 }
 

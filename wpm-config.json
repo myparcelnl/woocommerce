@@ -1,9 +1,9 @@
 {
   "admin_pages": [
-    "woocommerce_page_wcmp_settings"
+    "woocommerce_page_wcmpbe_settings"
   ],
   "options": {
-    "woocommerce_myparcel_checkout_settings": {
+    "woocommerce_myparcelbe_checkout_settings": {
       "barcode_in_note_title" : {},
       "label_description" : {},
 

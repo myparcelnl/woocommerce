@@ -1,10 +1,10 @@
 <?php
 
-namespace WPO\WC\MyParcel\Collections;
+namespace WPO\WC\MyParcelBE\Collections;
 
 use MyParcelNL\Sdk\src\Support\Collection;
 use WC_Tax;
-use WPO\WC\MyParcel\Entity\Setting;
+use WPO\WC\MyParcelBE\Entity\Setting;
 
 defined('ABSPATH') or exit;
 
