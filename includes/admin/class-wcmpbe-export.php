@@ -80,7 +80,7 @@ class WCMPBE_Export
      */
     public function exportByOrderId(int $orderId): void
     {
-        $automaticExport = WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_AUTOMATIC_EXPORT);
+        $automaticExport = WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_AUTOMATIC_EXPORT);
 
         if ($orderId && $automaticExport) {
             $export = new self();
@@ -331,7 +331,7 @@ class WCMPBE_Export
     {
         $return          = [];
         $collection      = new MyParcelCollection();
-        $processDirectly = WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_PROCESS_DIRECTLY) || $process === true;
+        $processDirectly = WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_PROCESS_DIRECTLY) || $process === true;
 
         WCMPBE_Log::add("*** Creating shipments started ***");
 
@@ -490,7 +490,7 @@ class WCMPBE_Export
             // positions are defined on landscape, but paper is filled portrait-wise
             $positions = array_slice(self::DEFAULT_POSITIONS, $offset % 4);
 
-            $displaySetting = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_DOWNLOAD_DISPLAY);
+            $displaySetting = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_DOWNLOAD_DISPLAY);
             $display        = ($displayOverride ?? $displaySetting) === "display";
             $api->getShipmentLabels($shipment_ids, $order_ids, $positions, $display);
         } catch (Exception $e) {
@@ -562,7 +562,7 @@ class WCMPBE_Export
      */
     public function init_api()
     {
-        $key = $this->getSetting(WCMYPABE_Settings::SETTING_API_KEY);
+        $key = $this->getSetting(WCMPBE_Settings::SETTING_API_KEY);
 
         if (! ($key)) {
             throw new ErrorException(__("No API key found in MyParcel settings", "woocommerce-myparcelbe"));
@@ -663,8 +663,8 @@ class WCMPBE_Export
                 : trim($order->get_shipping_first_name() . " " . $order->get_shipping_last_name());
 
 
-        $connectEmail = WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_CONNECT_EMAIL);
-        $connectPhone = WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_CONNECT_PHONE);
+        $connectEmail = WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_CONNECT_EMAIL);
+        $connectPhone = WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_CONNECT_PHONE);
 
         $address = [
             "cc"                     => (string) WCX_Order::get_prop($order, "shipping_country"),
@@ -765,11 +765,11 @@ class WCMPBE_Export
      */
     public static function addTrackTraceNoteToOrder(int $order_id, array $track_traces): void
     {
-        if (! WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_BARCODE_IN_NOTE)) {
+        if (! WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_BARCODE_IN_NOTE)) {
             return;
         }
 
-        $prefix_message = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_BARCODE_IN_NOTE_TITLE);
+        $prefix_message = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_BARCODE_IN_NOTE_TITLE);
 
         // Select the barcode text of the MyParcel settings
         $prefix_message = $prefix_message ? $prefix_message . " " : "";
@@ -975,7 +975,7 @@ class WCMPBE_Export
             }
         }
 
-        $packageTypes = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+        $packageTypes = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
         foreach ($packageTypes as $packageTypeKey => $packageTypeShippingMethods) {
             if (self::isActiveMethod(
                 $shippingMethodId,

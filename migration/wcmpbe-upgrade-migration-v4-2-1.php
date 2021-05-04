@@ -28,7 +28,7 @@ class WCMPBE_Upgrade_Migration_v4_2_1 extends WCMPBE_Upgrade_Migration
     protected function import(): void
     {
         require_once(WCMYPABE()->plugin_path() . '/vendor/autoload.php');
-        require_once(WCMYPABE()->plugin_path() . '/includes/admin/settings/class-wcmypabe-settings.php');
+        require_once(WCMYPABE()->plugin_path() . '/includes/admin/settings/class-wcmpbe-settings.php');
         require_once(WCMYPABE()->plugin_path() . '/includes/class-wcmpbe-data.php');
     }
 
@@ -43,7 +43,7 @@ class WCMPBE_Upgrade_Migration_v4_2_1 extends WCMPBE_Upgrade_Migration
     {
         $this->defaultExportSettings = $this->replaceValue(
             $this->defaultExportSettings,
-            WCMYPABE_Settings::SETTING_EMPTY_PARCEL_WEIGHT,
+            WCMPBE_Settings::SETTING_EMPTY_PARCEL_WEIGHT,
             $this->calculateNewWeight()
         );
     }
@@ -57,7 +57,7 @@ class WCMPBE_Upgrade_Migration_v4_2_1 extends WCMPBE_Upgrade_Migration
 
     protected function calculateNewWeight(): float
     {
-        $emptyParcelWeight = (float) $this->defaultExportSettings[WCMYPABE_Settings::SETTING_EMPTY_PARCEL_WEIGHT];
+        $emptyParcelWeight = (float) $this->defaultExportSettings[WCMPBE_Settings::SETTING_EMPTY_PARCEL_WEIGHT];
         $weightUnit        = get_option('woocommerce_weight_unit');
         $weight            = $emptyParcelWeight;
 

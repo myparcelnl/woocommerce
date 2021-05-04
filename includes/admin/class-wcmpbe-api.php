@@ -159,7 +159,7 @@ class WCMPBE_API extends WCMPBE_Rest
         /**
          * @see https://github.com/MyParcelNL/Sdk#label-format-and-position
          */
-        if (WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_LABEL_FORMAT) === "A6") {
+        if (WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_LABEL_FORMAT) === "A6") {
             $positions = false;
         }
 
@@ -185,9 +185,9 @@ class WCMPBE_API extends WCMPBE_Rest
      */
     public function updateOrderStatus(WC_Order $order, string $changeStatusAtExportOrPrint): void
     {
-        $statusAutomation     = WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_ORDER_STATUS_AUTOMATION);
-        $momentOfStatusChange = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER);
-        $newStatus            = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
+        $statusAutomation     = WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_ORDER_STATUS_AUTOMATION);
+        $momentOfStatusChange = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER);
+        $newStatus            = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
 
         if ($statusAutomation && $changeStatusAtExportOrPrint === $momentOfStatusChange) {
             $order->update_status(

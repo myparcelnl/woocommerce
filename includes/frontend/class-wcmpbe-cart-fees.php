@@ -206,11 +206,11 @@ class WCMPBE_Cart_Fees
         };
 
         return [
-            "delivery_evening" => $getCarrierFee(WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE),
-            "delivery_morning" => $getCarrierFee(WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE),
-            "delivery_pickup"  => $getCarrierFee(WCMYPABE_Settings::SETTING_CARRIER_PICKUP_FEE),
-            "only_recipient"   => $getCarrierFee(WCMYPABE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE),
-            "signature"        => $getCarrierFee(WCMYPABE_Settings::SETTING_CARRIER_SIGNATURE_FEE),
+            "delivery_evening" => $getCarrierFee(WCMPBE_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE),
+            "delivery_morning" => $getCarrierFee(WCMPBE_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE),
+            "delivery_pickup"  => $getCarrierFee(WCMPBE_Settings::SETTING_CARRIER_PICKUP_FEE),
+            "only_recipient"   => $getCarrierFee(WCMPBE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE),
+            "signature"        => $getCarrierFee(WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_FEE),
         ];
     }
 
@@ -222,11 +222,11 @@ class WCMPBE_Cart_Fees
     private function getFeeTitles(): array
     {
         return [
-            "delivery_evening" => WCMPBE_Checkout::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_EVENING_DELIVERY_TITLE),
-            "delivery_morning" => WCMPBE_Checkout::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_MORNING_DELIVERY_TITLE),
-            "delivery_pickup"  => WCMPBE_Checkout::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_PICKUP_TITLE),
-            "only_recipient"   => WCMPBE_Checkout::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_ONLY_RECIPIENT_TITLE),
-            "signature"        => WCMPBE_Checkout::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_SIGNATURE_TITLE),
+            "delivery_evening" => WCMPBE_Checkout::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_EVENING_DELIVERY_TITLE),
+            "delivery_morning" => WCMPBE_Checkout::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_MORNING_DELIVERY_TITLE),
+            "delivery_pickup"  => WCMPBE_Checkout::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_PICKUP_TITLE),
+            "only_recipient"   => WCMPBE_Checkout::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_ONLY_RECIPIENT_TITLE),
+            "signature"        => WCMPBE_Checkout::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_SIGNATURE_TITLE),
         ];
     }
 

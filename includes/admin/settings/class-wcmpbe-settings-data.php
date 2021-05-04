@@ -1,5 +1,7 @@
 <?php
 
+use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use WPO\WC\MyParcelBE\Entity\SettingsFieldArguments;
 
@@ -57,22 +59,32 @@ class WCMPBE_Settings_Data
     {
         $this->generate_settings(
             $this->get_sections_general(),
-            WCMYPABE_Settings::SETTINGS_GENERAL
+            WCMPBE_Settings::SETTINGS_GENERAL
         );
 
         $this->generate_settings(
             $this->get_sections_export_defaults(),
-            WCMYPABE_Settings::SETTINGS_EXPORT_DEFAULTS
+            WCMPBE_Settings::SETTINGS_EXPORT_DEFAULTS
         );
 
         $this->generate_settings(
             $this->get_sections_checkout(),
-            WCMYPABE_Settings::SETTINGS_CHECKOUT
+            WCMPBE_Settings::SETTINGS_CHECKOUT
         );
 
         $this->generate_settings(
             $this->get_sections_carrier_postnl(),
-            WCMYPABE_Settings::SETTINGS_POSTNL,
+            WCMPBE_Settings::SETTINGS_POSTNL,
+            true
+        );
+        $this->generate_settings(
+            $this->get_sections_carrier_bpost(),
+            WCMPBE_Settings::SETTINGS_BPOST,
+            true
+        );
+        $this->generate_settings(
+            $this->get_sections_carrier_dpd(),
+            WCMPBE_Settings::SETTINGS_DPD,
             true
         );
     }
@@ -83,13 +95,14 @@ class WCMPBE_Settings_Data
     public static function getTabs(): array
     {
         $array = [
-            WCMYPABE_Settings::SETTINGS_GENERAL         => __("General", "woocommerce-myparcelbe"),
-            WCMYPABE_Settings::SETTINGS_EXPORT_DEFAULTS => __("Default export settings", "woocommerce-myparcelbe"),
-            WCMYPABE_Settings::SETTINGS_CHECKOUT        => __("Checkout settings", "woocommerce-myparcelbe"),
+            WCMPBE_Settings::SETTINGS_GENERAL         => __("General", "woocommerce-myparcelbe"),
+            WCMPBE_Settings::SETTINGS_EXPORT_DEFAULTS => __("Default export settings", "woocommerce-myparcelbe"),
+            WCMPBE_Settings::SETTINGS_CHECKOUT        => __("Checkout settings", "woocommerce-myparcelbe"),
         ];
 
-        $array[WCMYPABE_Settings::SETTINGS_POSTNL] = __("PostNL", "woocommerce-myparcelbe");
-//        $array[WCMYPABE_Settings::SETTINGS_DPD]    = __("DPD", "woocommerce-myparcelbe");
+        $array[WCMPBE_Settings::SETTINGS_BPOST]  = __("bpost", "woocommerce-myparcelbe");
+        $array[WCMPBE_Settings::SETTINGS_DPD]    = __("DPD", "woocommerce-myparcelbe");
+        $array[WCMPBE_Settings::SETTINGS_POSTNL] = __("PostNL", "woocommerce-myparcelbe");
 
         return $array;
     }
@@ -105,7 +118,7 @@ class WCMPBE_Settings_Data
      */
     private function generate_settings(array $settingsArray, string $optionName, bool $prefix = false): void
     {
-        $optionIdentifier = WCMYPABE_Settings::getOptionId($optionName);
+        $optionIdentifier = WCMPBE_Settings::getOptionId($optionName);
         $defaults         = [];
 
         // Register settings.
@@ -188,7 +201,7 @@ class WCMPBE_Settings_Data
     private function get_sections_general()
     {
         return [
-            WCMYPABE_Settings::SETTINGS_GENERAL => [
+            WCMPBE_Settings::SETTINGS_GENERAL => [
                 [
                     "name"     => "api",
                     "label"    => __("API settings", "woocommerce-myparcelbe"),
@@ -214,7 +227,7 @@ class WCMPBE_Settings_Data
     private function get_sections_export_defaults()
     {
         return [
-            WCMYPABE_Settings::SETTINGS_EXPORT_DEFAULTS => [
+            WCMPBE_Settings::SETTINGS_EXPORT_DEFAULTS => [
                 [
                     "name"     => "main",
                     "label"    => __("Default export settings", "woocommerce-myparcelbe"),
@@ -227,7 +240,7 @@ class WCMPBE_Settings_Data
     private function get_sections_checkout()
     {
         return [
-            WCMYPABE_Settings::SETTINGS_CHECKOUT => [
+            WCMPBE_Settings::SETTINGS_CHECKOUT => [
                 [
                     "name"     => "main",
                     "label"    => __("Checkout settings", "woocommerce-myparcelbe"),
@@ -236,7 +249,7 @@ class WCMPBE_Settings_Data
                 [
                     "name"      => "strings",
                     "label"     => __("Titles", "woocommerce-myparcelbe"),
-                    "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                    "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                     "settings"  => $this->get_section_checkout_strings(),
                 ],
             ],
@@ -276,13 +289,68 @@ class WCMPBE_Settings_Data
     }
 
     /**
+     * Get the array of PostNL sections and their settings to be added to WordPress.
+     *
+     * @return array
+     */
+    private function get_sections_carrier_bpost()
+    {
+        return [
+            BpostConsignment::CARRIER_NAME => [
+                [
+                    "name"        => "export_defaults",
+                    "label"       => __("bpost export settings", "woocommerce-myparcelbe"),
+                    "description" => __(
+                        "These settings will be applied to bpost shipments you create in the backend.",
+                        "woocommerce-myparcelbe"
+                    ),
+                    "settings"    => $this->get_section_carrier_bpost_export_defaults(),
+                ],
+                [
+                    "name"     => "delivery_options",
+                    "label"    => __("PostNL delivery options", "woocommerce-myparcelbe"),
+                    "settings" => $this->get_section_carrier_bpost_delivery_options(),
+                ],
+                [
+                    "name"     => "pickup_options",
+                    "label"    => __("bpost pickup options", "woocommerce-myparcelbe"),
+                    "settings" => $this->get_section_carrier_bpost_pickup_options(),
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get the array of PostNL sections and their settings to be added to WordPress.
+     *
+     * @return array
+     */
+    private function get_sections_carrier_dpd()
+    {
+        return [
+            DPDConsignment::CARRIER_NAME => [
+                [
+                    "name"     => "delivery_options",
+                    "label"    => __("DPD delivery options", "woocommerce-myparcelbe"),
+                    "settings" => $this->get_section_carrier_dpd_delivery_options(),
+                ],
+                [
+                    "name"     => "pickup_options",
+                    "label"    => __("DPD pickup options", "woocommerce-myparcelbe"),
+                    "settings" => $this->get_section_carrier_dpd_pickup_options(),
+                ],
+            ],
+        ];
+    }
+
+    /**
      * @return array
      */
     private function get_section_general_api(): array
     {
         return [
             [
-                "name"      => WCMYPABE_Settings::SETTING_API_KEY,
+                "name"      => WCMPBE_Settings::SETTING_API_KEY,
                 "label"     => __("Key", "woocommerce-myparcelbe"),
                 "help_text" => __("api key", "woocommerce-myparcelbe"),
             ],
@@ -296,7 +364,7 @@ class WCMPBE_Settings_Data
     {
         return [
             [
-                "name"    => WCMYPABE_Settings::SETTING_DOWNLOAD_DISPLAY,
+                "name"    => WCMPBE_Settings::SETTING_DOWNLOAD_DISPLAY,
                 "label"   => __("Label display", "woocommerce-myparcelbe"),
                 "type"    => "select",
                 "options" => [
@@ -305,7 +373,7 @@ class WCMPBE_Settings_Data
                 ],
             ],
             [
-                "name"    => WCMYPABE_Settings::SETTING_LABEL_FORMAT,
+                "name"    => WCMPBE_Settings::SETTING_LABEL_FORMAT,
                 "label"   => __("Label format", "woocommerce-myparcelbe"),
                 "type"    => "select",
                 "options" => [
@@ -314,10 +382,10 @@ class WCMPBE_Settings_Data
                 ],
             ],
             [
-                "name"       => WCMYPABE_Settings::SETTING_ASK_FOR_PRINT_POSITION,
+                "name"       => WCMPBE_Settings::SETTING_ASK_FOR_PRINT_POSITION,
                 "label"      => __("Ask for print start position", "woocommerce-myparcelbe"),
                 "condition" => [
-                    "parent_name"  => WCMYPABE_Settings::SETTING_LABEL_FORMAT,
+                    "parent_name"  => WCMPBE_Settings::SETTING_LABEL_FORMAT,
                     "type"         => "disable",
                     "parent_value" => "A4",
                     "set_value"    => self::DISABLED,
@@ -329,7 +397,7 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_TRACK_TRACE_EMAIL,
+                "name"      => WCMPBE_Settings::SETTING_TRACK_TRACE_EMAIL,
                 "label"     => __("Track & Trace in email", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -338,13 +406,13 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT,
+                "name"      => WCMPBE_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT,
                 "label"     => __("Track & Trace in My Account", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __("Show Track & Trace trace code and link in My Account.", "woocommerce-myparcelbe"),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_PROCESS_DIRECTLY,
+                "name"      => WCMPBE_Settings::SETTING_PROCESS_DIRECTLY,
                 "label"     => __("Process shipments directly", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -353,7 +421,7 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_ORDER_STATUS_AUTOMATION,
+                "name"      => WCMPBE_Settings::SETTING_ORDER_STATUS_AUTOMATION,
                 "label"     => __("Order status automation", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -362,8 +430,8 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER,
-                "condition" => WCMYPABE_Settings::SETTING_ORDER_STATUS_AUTOMATION,
+                "name"      => WCMPBE_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER,
+                "condition" => WCMPBE_Settings::SETTING_ORDER_STATUS_AUTOMATION,
                 "class"     => ["wcmpbe__child"],
                 "label"     => __("setting_change_order_status_after", "woocommerce-myparcelbe"),
                 "type"      => "select",
@@ -378,22 +446,22 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_AUTOMATIC_ORDER_STATUS,
-                "condition" => WCMYPABE_Settings::SETTING_ORDER_STATUS_AUTOMATION,
+                "name"      => WCMPBE_Settings::SETTING_AUTOMATIC_ORDER_STATUS,
+                "condition" => WCMPBE_Settings::SETTING_ORDER_STATUS_AUTOMATION,
                 "class"     => ["wcmpbe__child"],
                 "label"     => __("setting_automatic_order_status", "woocommerce-myparcelbe"),
                 "type"      => "select",
                 "options"   => WCMPBE_Settings_Callbacks::get_order_status_options(),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_BARCODE_IN_NOTE,
+                "name"      => WCMPBE_Settings::SETTING_BARCODE_IN_NOTE,
                 "label"     => __("Place barcode inside note", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __("Place the barcode inside a note of the order", "woocommerce-myparcelbe"),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_BARCODE_IN_NOTE_TITLE,
-                "condition" => WCMYPABE_Settings::SETTING_BARCODE_IN_NOTE,
+                "name"      => WCMPBE_Settings::SETTING_BARCODE_IN_NOTE_TITLE,
+                "condition" => WCMPBE_Settings::SETTING_BARCODE_IN_NOTE,
                 "class"     => ["wcmpbe__child"],
                 "label"     => __("Title before the barcode", "woocommerce-myparcelbe"),
                 "default"   => __("Track & trace code:", "woocommerce-myparcelbe"),
@@ -412,12 +480,12 @@ class WCMPBE_Settings_Data
     {
         return [
             [
-                "name"        => WCMYPABE_Settings::SETTING_ERROR_LOGGING,
+                "name"        => WCMPBE_Settings::SETTING_ERROR_LOGGING,
                 "label"       => __("Log API communication", "woocommerce-myparcelbe"),
                 "type"        => "toggle",
                 "description" => '<a href="' . esc_url_raw(
                         admin_url("admin.php?page=wc-status&tab=logs")
-                    ) . '" target="_blank">' . __("View logs", "woocommerce-myparcelbe") . "</a> (wc-myparcel)",
+                    ) . '" target="_blank">' . __("View logs", "woocommerce-myparcelbe") . "</a> (wc-myparcelbe)",
             ],
         ];
     }
@@ -431,55 +499,53 @@ class WCMPBE_Settings_Data
     {
         return [
             [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
                 "label"     => __("shipment_options_only_recipient", "woocommerce-myparcelbe"),
                 "help_text" => __("shipment_options_only_recipient_help_text", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
                 "label"     => __("shipment_options_signature", "woocommerce-myparcelbe"),
                 "help_text" => __("shipment_options_signature_help_text", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
-                "label"     => __("shipment_options_large_format", "woocommerce-myparcelbe"),
-                "help_text" => __("shipment_options_large_format_help_text", "woocommerce-myparcelbe"),
-                "type"      => "toggle",
-            ],
-            [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
-                "label"     => __("shipment_options_age_check", "woocommerce-myparcelbe"),
-                "type"      => "toggle",
-                "help_text" => __("shipment_options_age_check_help_text", "woocommerce-myparcelbe"),
-            ],
-            [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
-                "label"     => __("shipment_options_return", "woocommerce-myparcelbe"),
-                "help_text" => __("shipment_options_return_help_text", "woocommerce-myparcelbe"),
-                "type"      => "toggle",
-            ],
-            [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
                 "label"     => __("shipment_options_insured", "woocommerce-myparcelbe"),
                 "help_text" => __("shipment_options_insured_help_text", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE,
-                "condition" => WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
                 "label"     => __("shipment_options_insured_from_price", "woocommerce-myparcelbe"),
                 "help_text" => __("shipment_options_insured_from_price_help_text", "woocommerce-myparcelbe"),
                 "type"      => "number",
             ],
+        ];
+    }
+
+    /**
+     * Export defaults specifically for bpost.
+     *
+     * @return array
+     */
+    private function get_section_carrier_bpost_export_defaults(): array
+    {
+        return [
             [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
-                "condition" => WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                "label"     => __("shipment_options_insured_amount", "woocommerce-myparcelbe"),
-                "help_text" => __("shipment_options_insured_amount_help_text", "woocommerce-myparcelbe"),
-                "type"      => "select",
-                "options"   => WCMPBE_Data::getInsuranceAmounts(),
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label"     => __("shipment_options_insured", "woocommerce-myparcelbe"),
+                "help_text" => __("shipment_options_insured_help_text", "woocommerce-myparcelbe"),
+                "type"      => "toggle",
+            ],
+            [
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label"     => __("shipment_options_insured_from_price", "woocommerce-myparcelbe"),
+                "help_text" => __("shipment_options_insured_from_price_help_text", "woocommerce-myparcelbe"),
+                "type"      => "number",
             ],
         ];
     }
@@ -495,13 +561,13 @@ class WCMPBE_Settings_Data
     {
         return [
             [
-                "name"  => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"  => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label" => __("Enable PostNL delivery", "woocommerce-myparcelbe"),
                 "type"  => "toggle",
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
-                "condition" => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Drop-off days", "woocommerce-myparcelbe"),
                 "callback"  => [WCMPBE_Settings_Callbacks::class, "enhanced_select"],
                 "options"   => $this->getWeekdays(null),
@@ -509,8 +575,8 @@ class WCMPBE_Settings_Data
                 "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcelbe"),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_CUTOFF_TIME,
-                "condition" => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_CUTOFF_TIME,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Cut-off time", "woocommerce-myparcelbe"),
                 "help_text" => __(
                     "Time at which you stop processing orders for the day (format: hh:mm)",
@@ -519,67 +585,37 @@ class WCMPBE_Settings_Data
                 "default"   => "17:00",
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
-                "condition" => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Drop-off delay", "woocommerce-myparcelbe"),
                 "type"      => "number",
                 "max"       => 14,
                 "help_text" => __("Number of days you need to process an order.", "woocommerce-myparcelbe"),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
-                "condition" => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Delivery days window", "woocommerce-myparcelbe"),
-                "type"      => "number",
-                "max"       => 14,
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Show delivery date", "woocommerce-myparcelbe"),
+                "type"      => "toggle",
                 "default"   => self::ENABLED,
-                "help_text" => __(
-                    "Amount of days a customer can postpone a shipment. Default is 0 days with a maximum value of 14 days.",
-                    "woocommerce-myparcelbe"
-                ),
+                "help_text" => __("Show the delivery date inside the delivery options.", "woocommerce-myparcelbe"),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
-                "condition" => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Morning delivery", "woocommerce-myparcelbe"),
-                "type"      => "toggle",
-            ],
-            self::getFeeField(
-                WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
-                [
-                    WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
-                ]
-            ),
-            [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
-                "condition" => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Evening delivery", "woocommerce-myparcelbe"),
-                "type"      => "toggle",
-            ],
-            self::getFeeField(
-                WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
-                [
-                    WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
-                ]
-            ),
-            [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
-                "condition" => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("shipment_options_only_recipient", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
             ],
             self::getFeeField(
-                WCMYPABE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
+                WCMPBE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
                 [
-                    WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    WCMYPABE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+                    WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    WCMPBE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
                 ]
             ),
             [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
-                "condition" => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("shipment_options_signature", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -588,33 +624,12 @@ class WCMPBE_Settings_Data
                 ),
             ],
             self::getFeeField(
-                WCMYPABE_Settings::SETTING_CARRIER_SIGNATURE_FEE,
+                WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_FEE,
                 [
-                    WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    WCMYPABE_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                    WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
                 ]
             ),
-            [
-                "name"      => WCMYPABE_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
-                "condition" => WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Monday delivery", "woocommerce-myparcelbe"),
-                "type"      => "toggle",
-            ],
-            [
-                "name"        => WCMYPABE_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME,
-                "condition"   => [
-                    WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    WCMYPABE_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
-                ],
-                "class"       => ["wcmpbe__child"],
-                "label"       => __("Cut-off time on Saturday", "woocommerce-myparcelbe"),
-                "placeholder" => "14:30",
-                "default"     => "15:00",
-                "help_text"   => __(
-                    "Time at which you stop processing orders for the day (format: hh:mm)",
-                    "woocommerce-myparcelbe"
-                ),
-            ],
         ];
     }
 
@@ -625,14 +640,178 @@ class WCMPBE_Settings_Data
     {
         return [
             [
-                "name"  => WCMYPABE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "name"  => WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
                 "label" => __("Enable PostNL pickup", "woocommerce-myparcelbe"),
                 "type"  => "toggle",
             ],
             self::getFeeField(
-                WCMYPABE_Settings::SETTING_CARRIER_PICKUP_FEE,
+                WCMPBE_Settings::SETTING_CARRIER_PICKUP_FEE,
                 [
-                    WCMYPABE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                    WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                ]
+            ),
+        ];
+    }
+
+    /**
+     * These are the unprefixed settings for postnl.
+     * After the settings are generated every name will be prefixed with "postnl_"
+     * Example: delivery_enabled => postnl_delivery_enabled
+     *
+     * @return array
+     */
+    private function get_section_carrier_bpost_delivery_options(): array
+    {
+        return [
+            [
+                "name"  => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label" => __("Enable bpost delivery", "woocommerce-myparcelbe"),
+                "type"  => "toggle",
+            ],
+            [
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Drop-off days", "woocommerce-myparcelbe"),
+                "callback"  => [WCMPBE_Settings_Callbacks::class, "enhanced_select"],
+                "options"   => $this->getWeekdays(null),
+                "default"   => [2],
+                "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_CUTOFF_TIME,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Cut-off time", "woocommerce-myparcelbe"),
+                "help_text" => __(
+                    "Time at which you stop processing orders for the day (format: hh:mm)",
+                    "woocommerce-myparcelbe"
+                ),
+                "default"   => "17:00",
+            ],
+            [
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Drop-off delay", "woocommerce-myparcelbe"),
+                "type"      => "number",
+                "max"       => 14,
+                "help_text" => __("Number of days you need to process an order.", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Show delivery date", "woocommerce-myparcelbe"),
+                "type"      => "toggle",
+                "default"   => self::ENABLED,
+                "help_text" => __("Show the delivery date inside the delivery options.", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("shipment_options_signature", "woocommerce-myparcelbe"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
+                    "woocommerce-myparcelbe"
+                ),
+            ],
+            self::getFeeField(
+                WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_FEE,
+                [
+                    WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+                ]
+            ),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function get_section_carrier_bpost_pickup_options(): array
+    {
+        return [
+            [
+                "name"  => WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "label" => __("Enable bpost pickup", "woocommerce-myparcelbe"),
+                "type"  => "toggle",
+            ],
+            self::getFeeField(
+                WCMPBE_Settings::SETTING_CARRIER_PICKUP_FEE,
+                [
+                    WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                ]
+            ),
+        ];
+    }
+
+
+    /**
+     * These are the unprefixed settings for postnl.
+     * After the settings are generated every name will be prefixed with "postnl_"
+     * Example: delivery_enabled => postnl_delivery_enabled
+     *
+     * @return array
+     */
+    private function get_section_carrier_dpd_delivery_options(): array
+    {
+        return [
+            [
+                "name"  => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label" => __("Enable DPD delivery", "woocommerce-myparcelbe"),
+                "type"  => "toggle",
+            ],
+            [
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Drop-off days", "woocommerce-myparcelbe"),
+                "callback"  => [WCMPBE_Settings_Callbacks::class, "enhanced_select"],
+                "options"   => $this->getWeekdays(null),
+                "default"   => [2],
+                "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_CUTOFF_TIME,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Cut-off time", "woocommerce-myparcelbe"),
+                "help_text" => __(
+                    "Time at which you stop processing orders for the day (format: hh:mm)",
+                    "woocommerce-myparcelbe"
+                ),
+                "default"   => "17:00",
+            ],
+            [
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Drop-off delay", "woocommerce-myparcelbe"),
+                "type"      => "number",
+                "max"       => 14,
+                "help_text" => __("Number of days you need to process an order.", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "label"     => __("Show delivery date", "woocommerce-myparcelbe"),
+                "type"      => "toggle",
+                "default"   => self::ENABLED,
+                "help_text" => __("Show the delivery date inside the delivery options.", "woocommerce-myparcelbe"),
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function get_section_carrier_dpd_pickup_options(): array
+    {
+        return [
+            [
+                "name"  => WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+                "label" => __("Enable bpost pickup", "woocommerce-myparcelbe"),
+                "type"  => "toggle",
+            ],
+            self::getFeeField(
+                WCMPBE_Settings::SETTING_CARRIER_PICKUP_FEE,
+                [
+                    WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
                 ]
             ),
         ];
@@ -645,7 +824,7 @@ class WCMPBE_Settings_Data
     {
         return [
             [
-                "name"      => WCMYPABE_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES,
+                "name"      => WCMPBE_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES,
                 "label"     => __("Package types", "woocommerce-myparcelbe"),
                 "callback"  => [WCMPBE_Settings_Callbacks::class, "enhanced_select"],
                 "loop"      => WCMPBE_Data::getPackageTypesHuman(),
@@ -657,7 +836,7 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_CONNECT_EMAIL,
+                "name"      => WCMPBE_Settings::SETTING_CONNECT_EMAIL,
                 "label"     => __("Connect customer email", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -666,7 +845,7 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_CONNECT_PHONE,
+                "name"      => WCMPBE_Settings::SETTING_CONNECT_PHONE,
                 "label"     => __("Connect customer phone", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -675,7 +854,7 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_LABEL_DESCRIPTION,
+                "name"      => WCMPBE_Settings::SETTING_LABEL_DESCRIPTION,
                 "label"     => __("Label description", "woocommerce-myparcelbe"),
                 "help_text" => __(
                     "With this option you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in your backoffice. Because of limited space on the label which varies per package type, we recommend that you keep the label description as short as possible.",
@@ -684,7 +863,7 @@ class WCMPBE_Settings_Data
                 "append"  => $this->getLabelDescriptionAddition(),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_EMPTY_PARCEL_WEIGHT,
+                "name"      => WCMPBE_Settings::SETTING_EMPTY_PARCEL_WEIGHT,
                 "type"      => "number",
                 "default"   => 0,
                 "label"     => sprintf(
@@ -698,7 +877,7 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_HS_CODE,
+                "name"      => WCMPBE_Settings::SETTING_HS_CODE,
                 "label"     => __("Default HS Code", "woocommerce-myparcelbe"),
                 "help_text" => __(
                     "HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Dutch Customs.",
@@ -706,7 +885,7 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"    => WCMYPABE_Settings::SETTING_PACKAGE_CONTENT,
+                "name"    => WCMPBE_Settings::SETTING_PACKAGE_CONTENT,
                 "label"   => __("Customs shipment type", "woocommerce-myparcelbe"),
                 "type"    => "select",
                 "options" => [
@@ -718,7 +897,7 @@ class WCMPBE_Settings_Data
                 ],
             ],
             [
-                'name'      => WCMYPABE_Settings::SETTING_COUNTRY_OF_ORIGIN,
+                'name'      => WCMPBE_Settings::SETTING_COUNTRY_OF_ORIGIN,
                 'label'     => __('setting_country_of_origin', 'woocommerce-myparcelbe'),
                 'type'      => 'select',
                 'options'   => (new WC_Countries())->get_countries(),
@@ -728,17 +907,26 @@ class WCMPBE_Settings_Data
                     'woocommerce-myparcelbe'
                 ),
             ],
+//            [
+//                "name"      => WCMPBE_Settings::SETTING_AUTOMATIC_EXPORT,
+//                "label"     => __("Automatic export", "woocommerce-myparcelbe"),
+//                "type"      => "toggle",
+//                "help_text" => __(
+//                    "With this setting enabled orders are exported to MyParcel automatically after payment.",
+//                    "woocommerce-myparcelbe"
+//                ),
+//            ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_AUTOMATIC_EXPORT,
-                "label"     => __("Automatic export", "woocommerce-myparcelbe"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "With this setting enabled orders are exported to MyParcel automatically after payment.",
-                    "woocommerce-myparcelbe"
+                "name"      => WCMPBE_Settings::SETTING_DEFAULT_CARRIER,
+                "label"     => __("Default carrier", "woocommerce-myparcelbe"),
+                "help-text" => __(
+                    "You can set a default carrier here which will be used when no other option overrides it.", "woocommerce-myparcelbe"
                 ),
+                "type"      => "select",
+                "options"   => WCMPBE_Data::getCarriersHuman(),
             ],
 //            [
-//                "name"      => WCMYPABE_Settings::SETTING_RETURN_IN_THE_BOX,
+//                "name"      => WCMPBE_Settings::SETTING_RETURN_IN_THE_BOX,
 //                "label"     => __("Print return label directly", "woocommerce-myparcelbe"),
 //                "type"      => "select",
 //                "options"   => [
@@ -761,7 +949,7 @@ class WCMPBE_Settings_Data
     {
         return [
             [
-                "name"      => WCMYPABE_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS,
+                "name"      => WCMPBE_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS,
                 "label"     => __("MyParcel address fields", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -770,7 +958,7 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_SHOW_DELIVERY_DAY,
+                "name"      => WCMPBE_Settings::SETTING_SHOW_DELIVERY_DAY,
                 "label"     => __("Show delivery date", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -779,7 +967,7 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Enable MyParcel delivery options", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -788,8 +976,8 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMPBE_Settings::SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Enable delivery options for backorders", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "help_text" => __(
@@ -798,8 +986,8 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("settings_checkout_display_for", "woocommerce-myparcelbe"),
                 "type"      => "select",
                 "help_text" => __("settings_checkout_display_for_help_text", "woocommerce-myparcelbe"),
@@ -809,8 +997,8 @@ class WCMPBE_Settings_Data
                 ],
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_POSITION,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_POSITION,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Checkout position", "woocommerce-myparcelbe"),
                 "type"      => "select",
                 "default"   => "woocommerce_after_checkout_billing_form",
@@ -842,8 +1030,8 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("settings_checkout_price_format", "woocommerce-myparcelbe"),
                 "type"      => "select",
                 "default"   => self::DISPLAY_TOTAL_PRICE,
@@ -859,8 +1047,8 @@ class WCMPBE_Settings_Data
                 ],
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("settings_pickup_locations_default_view", "woocommerce-myparcelbe"),
                 "type"      => "select",
                 "default"   => self::PICKUP_LOCATIONS_VIEW_MAP,
@@ -876,8 +1064,8 @@ class WCMPBE_Settings_Data
                 ],
             ],
             [
-                "name"              => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
-                "condition"         => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"              => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
+                "condition"         => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"             => __("Custom styles", "woocommerce-myparcelbe"),
                 "type"              => "textarea",
                 "append"            => $this->getCustomCssAddition(),
@@ -915,8 +1103,8 @@ class WCMPBE_Settings_Data
     {
         return [
             [
-                "name"      => WCMYPABE_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Delivery options title", "woocommerce-myparcelbe"),
                 "title"     => "Delivery options title",
                 "help_text" => __(
@@ -925,20 +1113,14 @@ class WCMPBE_Settings_Data
                 ),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_DELIVERY_TITLE,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_DELIVERY_TITLE,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Delivery title", "woocommerce-myparcelbe"),
                 "default"   => __("Delivered at home or at work", "woocommerce-myparcelbe"),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_MORNING_DELIVERY_TITLE,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Morning delivery title", "woocommerce-myparcelbe"),
-                "default"   => __("Morning delivery", "woocommerce-myparcelbe"),
-            ],
-            [
-                "name"      => WCMYPABE_Settings::SETTING_STANDARD_TITLE,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_STANDARD_TITLE,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Standard delivery title", "woocommerce-myparcelbe"),
                 "help_text" => __(
                     "When there is no title, the delivery time will automatically be visible.",
@@ -947,28 +1129,42 @@ class WCMPBE_Settings_Data
                 "default"   => __("Standard delivery", "woocommerce-myparcelbe"),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_EVENING_DELIVERY_TITLE,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Evening delivery title", "woocommerce-myparcelbe"),
-                "default"   => __("Evening delivery", "woocommerce-myparcelbe"),
-            ],
-            [
-                "name"      => WCMYPABE_Settings::SETTING_ONLY_RECIPIENT_TITLE,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_ONLY_RECIPIENT_TITLE,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Home address only title", "woocommerce-myparcelbe"),
                 "default"   => __("shipment_options_only_recipient", "woocommerce-myparcelbe"),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_SIGNATURE_TITLE,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_SIGNATURE_TITLE,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Signature on delivery title", "woocommerce-myparcelbe"),
                 "default"   => __("shipment_options_signature", "woocommerce-myparcelbe"),
             ],
             [
-                "name"      => WCMYPABE_Settings::SETTING_PICKUP_TITLE,
-                "condition" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "name"      => WCMPBE_Settings::SETTING_PICKUP_TITLE,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 "label"     => __("Pickup title", "woocommerce-myparcelbe"),
                 "default"   => __("Pickup", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMPBE_Settings::PICKUP_LOCATIONS_LIST_BUTTON,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "help_text" => __(
+                    "The text on the \"list\" button when viewing pickup locations.",
+                    "woocommerce-myparcelbe"
+                ),
+                "label"     => __("Pickup list button text", "woocommerce-myparcelbe"),
+                "default"   => __("List", "woocommerce-myparcelbe"),
+            ],
+            [
+                "name"      => WCMPBE_Settings::PICKUP_LOCATIONS_MAP_BUTTON,
+                "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "help_text" => __(
+                    "The text on the \"map\" button when viewing pickup locations.",
+                    "woocommerce-myparcelbe"
+                ),
+                "label"     => __("Pickup map button text", "woocommerce-myparcelbe"),
+                "default"   => __("Map", "woocommerce-myparcelbe"),
             ],
         ];
     }

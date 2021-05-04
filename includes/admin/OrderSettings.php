@@ -234,10 +234,8 @@ class OrderSettings
         $this->setColloAmount();
         $this->setLabelDescription();
 
-        $this->setAgeCheck();
         $this->setLargeFormat();
         $this->setOnlyRecipient();
-        $this->setReturnShipment();
         $this->setSignature();
 
         $this->setInsuranceData();
@@ -265,7 +263,7 @@ class OrderSettings
      */
     private function setAgeCheck(): void
     {
-        $settingName                 = "{$this->carrier}_" . WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK;
+        $settingName                 = "{$this->carrier}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK;
         $ageCheckFromShipmentOptions = $this->shipmentOptions->hasAgeCheck();
         $ageCheckOfProduct           = $this->getAgeCheckOfProduct();
         $ageCheckFromSettings        = (bool) WCMYPABE()->setting_collection->getByName($settingName);
@@ -345,8 +343,8 @@ class OrderSettings
         $isInsured       = false;
         $insuranceAmount = 0;
 
-        $isDefaultInsured                  = (bool) $this->getCarrierSetting(WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED);
-        $isDefaultInsuredFromPrice         = $this->getCarrierSetting(WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE);
+        $isDefaultInsured                  = (bool) $this->getCarrierSetting(WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED);
+        $isDefaultInsuredFromPrice         = $this->getCarrierSetting(WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE);
         $orderTotalExceedsInsuredFromPrice = (float) $this->order->get_total() >= (float) $isDefaultInsuredFromPrice;
         $insuranceFromDeliveryOptions      = $this->shipmentOptions->getInsurance();
 
@@ -358,7 +356,7 @@ class OrderSettings
             $insuranceAmount = $insuranceFromDeliveryOptions;
         } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && $insuranceFromDeliveryOptions !== 0) {
             $isInsured       = true;
-            $insuranceAmount = $this->getCarrierSetting(WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
+            $insuranceAmount = $this->getCarrierSetting(WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
         }
 
         $this->insured         = $isInsured;
@@ -371,7 +369,7 @@ class OrderSettings
     private function setLabelDescription(): void
     {
         $defaultValue     = "Order: " . $this->order->get_id();
-        $valueFromSetting = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_LABEL_DESCRIPTION);
+        $valueFromSetting = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_LABEL_DESCRIPTION);
         $valueFromOrder   = $this->shipmentOptions->getLabelDescription();
 
         $this->labelDescription = (string) ($valueFromOrder ?? $valueFromSetting ?? $defaultValue);
@@ -384,7 +382,7 @@ class OrderSettings
     {
         $this->largeFormat = (bool) WCMPBE_Export::getChosenOrDefaultShipmentOption(
             $this->shipmentOptions->hasLargeFormat(),
-            "{$this->carrier}_" . WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
+            "{$this->carrier}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
         );
     }
 
@@ -395,7 +393,7 @@ class OrderSettings
     {
         $this->onlyRecipient = (bool) WCMPBE_Export::getChosenOrDefaultShipmentOption(
             $this->shipmentOptions->hasOnlyRecipient(),
-            "{$this->carrier}_" . WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
+            "{$this->carrier}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
         );
     }
 
@@ -406,7 +404,7 @@ class OrderSettings
     {
         $this->signature = (bool) WCMPBE_Export::getChosenOrDefaultShipmentOption(
             $this->shipmentOptions->hasSignature(),
-            "{$this->carrier}_" . WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
+            "{$this->carrier}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
         );
     }
 
@@ -427,7 +425,7 @@ class OrderSettings
     {
         $this->returnShipment = (bool) WCMPBE_Export::getChosenOrDefaultShipmentOption(
             $this->shipmentOptions->isReturn(),
-            "{$this->carrier}_" . WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
+            "{$this->carrier}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
         );
     }
 

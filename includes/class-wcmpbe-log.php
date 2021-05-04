@@ -18,7 +18,7 @@ class WCMPBE_Log
      */
     public static function add(string ...$messages): void
     {
-        if (! WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_ERROR_LOGGING)) {
+        if (! WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_ERROR_LOGGING)) {
             return;
         }
 

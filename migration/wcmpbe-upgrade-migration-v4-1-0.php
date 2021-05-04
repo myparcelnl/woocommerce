@@ -58,7 +58,7 @@ class WCMPBE_Upgrade_Migration_v4_1_0 extends WCMPBE_Upgrade_Migration
     protected function import(): void
     {
         require_once(WCMYPABE()->plugin_path() . '/vendor/autoload.php');
-        require_once(WCMYPABE()->plugin_path() . '/includes/admin/settings/class-wcmypabe-settings.php');
+        require_once(WCMYPABE()->plugin_path() . '/includes/admin/settings/class-wcmpbe-settings.php');
         require_once(WCMYPABE()->plugin_path() . '/includes/class-wcmpbe-data.php');
     }
 
@@ -137,7 +137,7 @@ class WCMPBE_Upgrade_Migration_v4_1_0 extends WCMPBE_Upgrade_Migration
     private static function getGeneralMap(): array
     {
         return [
-            'print_position_offset' => WCMYPABE_Settings::SETTING_ASK_FOR_PRINT_POSITION,
+            'print_position_offset' => WCMPBE_Settings::SETTING_ASK_FOR_PRINT_POSITION,
         ];
     }
 
@@ -146,18 +146,17 @@ class WCMPBE_Upgrade_Migration_v4_1_0 extends WCMPBE_Upgrade_Migration
      */
     private static function getCheckoutPostnlMap(): array
     {
-        $bpost = WCMYPABE_Settings::SETTINGS_BPOST;
+        $bpost = WCMPBE_Settings::SETTINGS_BPOST;
 
         return [
-            "delivery_options_enabled" => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-            "evening_enabled"          => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
-            "evening_fee"              => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
-            "morning_enabled"          => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
-            "morning_fee"              => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
-            "myparcel_checkout"        => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-            "only_recipient_enabled"   => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
-            "only_recipient_fee"       => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
-            "saturday_cutoff_enabled"  =>  "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
+            "delivery_options_enabled" => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+            "evening_enabled"          => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
+            "evening_fee"              => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
+            "morning_enabled"          => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
+            "morning_fee"              => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
+            "myparcel_checkout"        => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+            "only_recipient_enabled"   => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+            "only_recipient_fee"       => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
         ];
     }
 
@@ -167,7 +166,7 @@ class WCMPBE_Upgrade_Migration_v4_1_0 extends WCMPBE_Upgrade_Migration
     private static function getCheckoutMap(): array
     {
         return [
-            "at_home_delivery" => WCMYPABE_Settings::SETTING_DELIVERY_TITLE,
+            "at_home_delivery" => WCMPBE_Settings::SETTING_DELIVERY_TITLE,
         ];
     }
 
@@ -176,13 +175,13 @@ class WCMPBE_Upgrade_Migration_v4_1_0 extends WCMPBE_Upgrade_Migration
      */
     private static function getExportDefaultsPostnlMap(): array
     {
-        $bpost = WCMYPABE_Settings::SETTINGS_POSTNL;
+        $bpost = WCMPBE_Settings::SETTINGS_POSTNL;
 
         return [
-            "insured_amount" => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
-            "large_format"   => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
-            "only_recipient" => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
-            "return"         => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
+            "insured_amount" => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
+            "large_format"   => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
+            "only_recipient" => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
+            "return"         => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
         ];
     }
 
@@ -191,8 +190,8 @@ class WCMPBE_Upgrade_Migration_v4_1_0 extends WCMPBE_Upgrade_Migration
      */
     private function correctBpostInsurance(): void
     {
-        $bpost            = WCMYPABE_Settings::SETTINGS_POSTNL;
-        $key              = "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT;
+        $bpost            = WCMPBE_Settings::SETTINGS_POSTNL;
+        $key              = "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT;
         $availableAmounts = WCMPBE_Data::getInsuranceAmounts();
         $insuranceAmount  = $this->newBpostSettings[$key];
 

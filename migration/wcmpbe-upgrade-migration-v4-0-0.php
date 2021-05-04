@@ -64,7 +64,7 @@ class WCMPBE_Upgrade_Migration_v4_0_0 extends WCMPBE_Upgrade_Migration
     protected function import(): void
     {
         require_once(WCMYPABE()->plugin_path() . "/vendor/autoload.php");
-        require_once(WCMYPABE()->plugin_path() . '/includes/admin/settings/class-wcmypabe-settings.php');
+        require_once(WCMYPABE()->plugin_path() . '/includes/admin/settings/class-wcmpbe-settings.php');
     }
 
     protected function migrate(): void
@@ -117,10 +117,10 @@ class WCMPBE_Upgrade_Migration_v4_0_0 extends WCMPBE_Upgrade_Migration
     private function migrateExportDefaultsSettings(): void
     {
         // Migrate array value of shipping_methods_package_types
-        $this->newExportDefaultsSettings[WCMYPABE_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES] =
+        $this->newExportDefaultsSettings[WCMPBE_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES] =
             $this->migrateSettings(
                 array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP),
-                $this->newExportDefaultsSettings[WCMYPABE_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES]
+                $this->newExportDefaultsSettings[WCMPBE_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES]
             );
 
         $this->newBpostSettings = $this->migrateSettings(
@@ -149,20 +149,20 @@ class WCMPBE_Upgrade_Migration_v4_0_0 extends WCMPBE_Upgrade_Migration
      */
     private static function getCheckoutBpostMap(): array
     {
-        $bpost = WCMYPABE_Settings::SETTINGS_BPOST;
+        $bpost = WCMPBE_Settings::SETTINGS_BPOST;
 
         return [
-            "dropoff_days"        => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
-            "cutoff_time"         => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_CUTOFF_TIME,
-            "dropoff_delay"       => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
-            "deliverydays_window" => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
-            "signature_enabled"   => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
-            "signature_title"     => "{$bpost}_" . WCMYPABE_Settings::SETTING_SIGNATURE_TITLE,
-            "signature_fee"       => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_SIGNATURE_FEE,
-            "delivery_enabled"    => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-            "pickup_enabled"      => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-            "pickup_title"        => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_PICKUP_TITLE,
-            "pickup_fee"          => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_PICKUP_FEE,
+            "dropoff_days"        => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
+            "cutoff_time"         => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_CUTOFF_TIME,
+            "dropoff_delay"       => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
+            "deliverydays_window" => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+            "signature_enabled"   => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
+            "signature_title"     => "{$bpost}_" . WCMPBE_Settings::SETTING_SIGNATURE_TITLE,
+            "signature_fee"       => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_FEE,
+            "delivery_enabled"    => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+            "pickup_enabled"      => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
+            "pickup_title"        => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_PICKUP_TITLE,
+            "pickup_fee"          => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_PICKUP_FEE,
         ];
     }
 
@@ -172,9 +172,9 @@ class WCMPBE_Upgrade_Migration_v4_0_0 extends WCMPBE_Upgrade_Migration
     private static function getCheckoutMap(): array
     {
         return [
-            "checkout_position" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_POSITION,
-            "custom_css"        => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
-            "myparcelbe_checkout" => WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+            "checkout_position" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_POSITION,
+            "custom_css"        => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_CUSTOM_CSS,
+            "myparcelbe_checkout" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
         ];
     }
 
@@ -184,8 +184,8 @@ class WCMPBE_Upgrade_Migration_v4_0_0 extends WCMPBE_Upgrade_Migration
     private static function getGeneralMap(): array
     {
         return [
-            "email_tracktrace"     => WCMYPABE_Settings::SETTING_TRACK_TRACE_EMAIL,
-            "myaccount_tracktrace" => WCMYPABE_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT,
+            "email_tracktrace"     => WCMPBE_Settings::SETTING_TRACK_TRACE_EMAIL,
+            "myaccount_tracktrace" => WCMPBE_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT,
         ];
     }
 
@@ -196,11 +196,11 @@ class WCMPBE_Upgrade_Migration_v4_0_0 extends WCMPBE_Upgrade_Migration
      */
     private static function getExportDefaultsPostnlMap(): array
     {
-        $bpost = WCMYPABE_Settings::SETTINGS_BPOST;
+        $bpost = WCMPBE_Settings::SETTINGS_BPOST;
 
         return [
-            "insured"   => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-            "signature" => "{$bpost}_" . WCMYPABE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+            "insured"   => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+            "signature" => "{$bpost}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
         ];
     }
 }

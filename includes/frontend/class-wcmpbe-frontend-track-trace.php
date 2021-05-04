@@ -37,7 +37,7 @@ class WCMPBE_Frontend_Track_Trace
      */
     public function addTrackTraceToEmail(WC_Order $order, bool $sentToAdmin): void
     {
-        if (! WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_TRACK_TRACE_EMAIL)) {
+        if (! WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_TRACK_TRACE_EMAIL)) {
             return;
         }
 
@@ -79,7 +79,7 @@ class WCMPBE_Frontend_Track_Trace
      */
     public function showTrackTraceActionInMyAccount(array $actions, WC_Order $order): array
     {
-        if (! WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT)) {
+        if (! WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT)) {
             return $actions;
         }
 

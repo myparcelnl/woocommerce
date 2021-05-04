@@ -153,7 +153,7 @@ if (! class_exists('WCMYPABE')) :
             require_once($this->includes . "/frontend/class-wcmpbe-checkout.php");
             require_once($this->includes . "/frontend/class-wcmpbe-frontend.php");
             $this->admin = require_once($this->includes . "/admin/class-wcmypabe-admin.php");
-            require_once($this->includes . "/admin/settings/class-wcmypabe-settings.php");
+            require_once($this->includes . "/admin/settings/class-wcmpbe-settings.php");
             require_once($this->includes . "/class-wcmpbe-log.php");
             require_once($this->includes . "/admin/class-wcmpbe-country-codes.php");
             require_once($this->includes . '/admin/settings/class-wcmpbe-shipping-methods.php');

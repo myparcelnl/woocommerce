@@ -66,13 +66,13 @@ class WCMPBE_Export_Consignments
      */
     public function __construct(WC_Order $order)
     {
+        $defaultCarrier = $this->getSetting(WCMPBE_Settings::SETTING_DEFAULT_CARRIER) ?? WCMPBE_Data::DEFAULT_CARRIER;
         $this->getApiKey();
 
         $this->order           = $order;
         $this->orderSettings   = new OrderSettings($order);
         $this->deliveryOptions = $this->orderSettings->getDeliveryOptions();
-
-        $this->carrier = $this->deliveryOptions->getCarrier() ?? WCMPBE_Data::DEFAULT_CARRIER;
+        $this->carrier         = $this->deliveryOptions->getCarrier() ?? $defaultCarrier;
 
         $this->myParcelCollection = (new MyParcelCollection())->setUserAgents(
             [
@@ -218,7 +218,7 @@ class WCMPBE_Export_Consignments
 
         switch ($this->orderSettings->getPackageType()) {
             case AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME:
-                $emptyParcelWeight = (float) $this->getSetting(WCMYPABE_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+                $emptyParcelWeight = (float) $this->getSetting(WCMPBE_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
                 $weight += $emptyParcelWeight;
                 break;
             case AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME:
@@ -237,7 +237,7 @@ class WCMPBE_Export_Consignments
      */
     public function getHsCode(WC_Product $product): int
     {
-        $defaultHsCode   = $this->getSetting(WCMYPABE_Settings::SETTING_HS_CODE);
+        $defaultHsCode   = $this->getSetting(WCMPBE_Settings::SETTING_HS_CODE);
         $productHsCode   = WCX_Product::get_meta($product, WCMYPABE_Admin::META_HS_CODE, true);
         $variationHsCode = WCX_Product::get_meta($product, WCMYPABE_Admin::META_HS_CODE_VARIATION, true);
 
@@ -262,7 +262,7 @@ class WCMPBE_Export_Consignments
      */
     public function getCountryOfOrigin(WC_Product $product): string
     {
-        $defaultCountryOfOrigin = $this->getSetting(WCMYPABE_Settings::SETTING_COUNTRY_OF_ORIGIN);
+        $defaultCountryOfOrigin = $this->getSetting(WCMPBE_Settings::SETTING_COUNTRY_OF_ORIGIN);
         $productCountryOfOrigin = WCX_Product::get_meta($product, WCMYPABE_Admin::META_COUNTRY_OF_ORIGIN, true);
 
         return $this->getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin);
@@ -340,7 +340,7 @@ class WCMPBE_Export_Consignments
      */
     private function getApiKey(): void
     {
-        $this->apiKey = $this->getSetting(WCMYPABE_Settings::SETTING_API_KEY);
+        $this->apiKey = $this->getSetting(WCMPBE_Settings::SETTING_API_KEY);
 
         if (! $this->apiKey) {
             throw new ErrorException(__("No API key found in MyParcel BE settings", "woocommerce-myparcelbe"));
@@ -422,11 +422,9 @@ class WCMPBE_Export_Consignments
     private function setShipmentOptions(): void
     {
         $this->consignment
-            ->setAgeCheck($this->orderSettings->hasAgeCheck())
             ->setInsurance($this->orderSettings->getInsuranceAmount())
             ->setLargeFormat($this->orderSettings->hasLargeFormat())
             ->setOnlyRecipient($this->orderSettings->hasOnlyRecipient())
-            ->setReturn($this->orderSettings->hasReturnShipment())
             ->setSignature($this->orderSettings->hasSignature())
             ->setContents($this->getContents())
             ->setInvoice($this->order->get_id());

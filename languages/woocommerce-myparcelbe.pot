@@ -39,31 +39,31 @@ msgstr ""
 msgid "Package"
 msgstr ""
 
-#: includes/class-wcmpbe-data.php:91, includes/admin/settings/class-wcmpbe-settings-data.php:544, includes/admin/settings/class-wcmpbe-settings-data.php:937
+#: includes/class-wcmpbe-data.php:91
 msgid "Morning delivery"
 msgstr ""
 
-#: includes/class-wcmpbe-data.php:92, includes/admin/settings/class-wcmpbe-settings-data.php:947
+#: includes/class-wcmpbe-data.php:92, includes/admin/settings/class-wcmpbe-settings-data.php:1129
 msgid "Standard delivery"
 msgstr ""
 
-#: includes/class-wcmpbe-data.php:93, includes/admin/settings/class-wcmpbe-settings-data.php:557, includes/admin/settings/class-wcmpbe-settings-data.php:953
+#: includes/class-wcmpbe-data.php:93
 msgid "Evening delivery"
 msgstr ""
 
-#: includes/class-wcmpbe-data.php:94, includes/admin/settings/class-wcmpbe-settings-data.php:971
+#: includes/class-wcmpbe-data.php:94, includes/admin/settings/class-wcmpbe-settings-data.php:1147
 msgid "Pickup"
 msgstr ""
 
-#: includes/class-wcmpbe-data.php:227
+#: includes/class-wcmpbe-data.php:227, includes/admin/settings/class-wcmpbe-settings-data.php:103
 msgid "bpost"
 msgstr ""
 
-#: includes/class-wcmpbe-data.php:228, includes/admin/settings/class-wcmpbe-settings-data.php:91
+#: includes/class-wcmpbe-data.php:228, includes/admin/settings/class-wcmpbe-settings-data.php:105
 msgid "PostNL"
 msgstr ""
 
-#: includes/class-wcmpbe-data.php:229
+#: includes/class-wcmpbe-data.php:229, includes/admin/settings/class-wcmpbe-settings-data.php:104
 msgid "DPD"
 msgstr ""
 
@@ -239,215 +239,199 @@ msgstr ""
 msgid "The order(s) you have selected have invalid shipping countries."
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:128
+#: includes/admin/class-wcmypabe-admin.php:127
 msgid "Pickup location"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:308, includes/admin/class-wcmypabe-admin.php:332
+#: includes/admin/class-wcmypabe-admin.php:307, includes/admin/class-wcmypabe-admin.php:331
 msgid "MyParcel BE: Export"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:309, includes/admin/class-wcmypabe-admin.php:333
+#: includes/admin/class-wcmypabe-admin.php:308, includes/admin/class-wcmypabe-admin.php:332
 msgid "MyParcel BE: Print"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:310, includes/admin/class-wcmypabe-admin.php:334
+#: includes/admin/class-wcmypabe-admin.php:309, includes/admin/class-wcmypabe-admin.php:333
 msgid "MyParcel BE: Export & Print"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:391
+#: includes/admin/class-wcmypabe-admin.php:390
 msgid "Labels to skip"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:407
+#: includes/admin/class-wcmypabe-admin.php:406
 msgid "Print"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:471
+#: includes/admin/class-wcmypabe-admin.php:470
 msgid "Export to MyParcel"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:476
+#: includes/admin/class-wcmypabe-admin.php:475
 msgid "Print MyParcel label"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:481
+#: includes/admin/class-wcmypabe-admin.php:480
 msgid "Email return label"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:605, includes/admin/settings/class-wcmypabe-settings.php:164, includes/admin/settings/class-wcmypabe-settings.php:165
+#: includes/admin/class-wcmypabe-admin.php:604, includes/admin/settings/class-wcmpbe-settings.php:166, includes/admin/settings/class-wcmpbe-settings.php:167
 msgid "MyParcel BE"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:798
+#: includes/admin/class-wcmypabe-admin.php:797
 msgid "HS Code"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:802
+#: includes/admin/class-wcmypabe-admin.php:801
 msgid "HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:813
+#: includes/admin/class-wcmypabe-admin.php:812
 msgid "product_options_country_of_origin"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:817, includes/admin/class-wcmypabe-admin.php:830
+#: includes/admin/class-wcmypabe-admin.php:816
 msgid "Default"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:822, includes/admin/settings/class-wcmpbe-settings-data.php:726
+#: includes/admin/class-wcmypabe-admin.php:821, includes/admin/settings/class-wcmpbe-settings-data.php:905
 msgid "setting_country_of_origin_help_text"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:827, includes/admin/OrderSettingsRows.php:241, includes/admin/settings/class-wcmpbe-settings-data.php:453
-msgid "shipment_options_age_check"
-msgstr ""
-
-#: includes/admin/class-wcmypabe-admin.php:831, includes/entities/settings-field-arguments.php:170
-msgid "Disabled"
-msgstr ""
-
-#: includes/admin/class-wcmypabe-admin.php:832, includes/entities/settings-field-arguments.php:169
-msgid "Enabled"
-msgstr ""
-
-#: includes/admin/class-wcmypabe-admin.php:834, includes/admin/OrderSettingsRows.php:242, includes/admin/settings/class-wcmpbe-settings-data.php:455
-msgid "shipment_options_age_check_help_text"
-msgstr ""
-
-#: includes/admin/class-wcmypabe-admin.php:877
+#: includes/admin/class-wcmypabe-admin.php:865
 msgid "No label has been created yet."
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:888
+#: includes/admin/class-wcmypabe-admin.php:876
 msgid "The label has been printed."
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:893
+#: includes/admin/class-wcmypabe-admin.php:881
 msgid "Concept created but not printed."
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:960
+#: includes/admin/class-wcmypabe-admin.php:949
 msgid "MyParcel BE shipment:"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:993, includes/admin/class-wcmypabe-admin.php:1006
+#: includes/admin/class-wcmypabe-admin.php:990, includes/admin/class-wcmypabe-admin.php:1003
 msgid "delivery_type"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:994
+#: includes/admin/class-wcmypabe-admin.php:991
 msgid "pickup_location"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:1051, includes/admin/class-wcmypabe-admin.php:1073
+#: includes/admin/class-wcmypabe-admin.php:1048, includes/admin/class-wcmypabe-admin.php:1070
 msgid "Delivery information:"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:1179
+#: includes/admin/class-wcmypabe-admin.php:1176
 msgid "(Unknown)"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:96
+#: includes/admin/OrderSettingsRows.php:90
 msgid "Carrier"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:104
+#: includes/admin/OrderSettingsRows.php:97
 msgid "Delivery type"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:112, includes/admin/views/html-order-return-shipment-options.php:23, includes/admin/views/html-order-shipment-summary.php:42
+#: includes/admin/OrderSettingsRows.php:105, includes/admin/views/html-order-return-shipment-options.php:23, includes/admin/views/html-order-shipment-summary.php:42
 msgid "Shipment type"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:119
+#: includes/admin/OrderSettingsRows.php:113
 msgid "Number of labels"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:138, includes/admin/settings/class-wcmpbe-settings-data.php:447
+#: includes/admin/OrderSettingsRows.php:132
 msgid "shipment_options_large_format"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:139, includes/admin/settings/class-wcmpbe-settings-data.php:448
+#: includes/admin/OrderSettingsRows.php:133
 msgid "shipment_options_large_format_help_text"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:152
+#: includes/admin/OrderSettingsRows.php:147
 msgid "Custom ID (top left on label)"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:192, includes/admin/views/html-send-return-email-form.php:68
+#: includes/admin/OrderSettingsRows.php:187, includes/admin/views/html-send-return-email-form.php:68
 msgid "weight"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:194, includes/admin/views/html-order-return-shipment-options.php:25
+#: includes/admin/OrderSettingsRows.php:189, includes/admin/views/html-order-return-shipment-options.php:25
 msgid "calculated_order_weight"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:215, includes/admin/settings/class-wcmpbe-settings-data.php:435, includes/admin/settings/class-wcmpbe-settings-data.php:570, includes/admin/settings/class-wcmpbe-settings-data.php:959, includes/admin/views/html-order-shipment-summary.php:24
+#: includes/admin/OrderSettingsRows.php:210, includes/admin/settings/class-wcmpbe-settings-data.php:503, includes/admin/settings/class-wcmpbe-settings-data.php:606, includes/admin/settings/class-wcmpbe-settings-data.php:1135, includes/admin/views/html-order-shipment-summary.php:24
 msgid "shipment_options_only_recipient"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:216, includes/admin/settings/class-wcmpbe-settings-data.php:436
+#: includes/admin/OrderSettingsRows.php:211, includes/admin/settings/class-wcmpbe-settings-data.php:504
 msgid "shipment_options_only_recipient_help_text"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:228, includes/admin/settings/class-wcmpbe-settings-data.php:441, includes/admin/settings/class-wcmpbe-settings-data.php:583, includes/admin/settings/class-wcmpbe-settings-data.php:965, includes/admin/views/html-order-shipment-summary.php:23
+#: includes/admin/OrderSettingsRows.php:222, includes/admin/settings/class-wcmpbe-settings-data.php:509, includes/admin/settings/class-wcmpbe-settings-data.php:619, includes/admin/settings/class-wcmpbe-settings-data.php:709, includes/admin/settings/class-wcmpbe-settings-data.php:1141, includes/admin/views/html-order-shipment-summary.php:23
 msgid "shipment_options_signature"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:229, includes/admin/settings/class-wcmpbe-settings-data.php:442
+#: includes/admin/OrderSettingsRows.php:223, includes/admin/settings/class-wcmpbe-settings-data.php:510
 msgid "shipment_options_signature_help_text"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:253, includes/admin/settings/class-wcmpbe-settings-data.php:459
-msgid "shipment_options_return"
-msgstr ""
-
-#: includes/admin/OrderSettingsRows.php:254, includes/admin/settings/class-wcmpbe-settings-data.php:460
-msgid "shipment_options_return_help_text"
-msgstr ""
-
-#: includes/admin/OrderSettingsRows.php:265
+#: includes/admin/OrderSettingsRows.php:234
 msgid "insured"
 msgstr ""
 
-#: includes/admin/OrderSettingsRows.php:281
+#: includes/admin/OrderSettingsRows.php:250
 msgid "insured_amount"
 msgstr ""
 
-#: includes/frontend/class-wcmpbe-checkout.php:222
+#: includes/entities/settings-field-arguments.php:169
+msgid "Enabled"
+msgstr ""
+
+#: includes/entities/settings-field-arguments.php:170
+msgid "Disabled"
+msgstr ""
+
+#: includes/frontend/class-wcmpbe-checkout.php:221
 msgid "Address details are not entered"
 msgstr ""
 
-#: includes/frontend/class-wcmpbe-checkout.php:223
+#: includes/frontend/class-wcmpbe-checkout.php:222
 msgid "City"
 msgstr ""
 
-#: includes/frontend/class-wcmpbe-checkout.php:224
+#: includes/frontend/class-wcmpbe-checkout.php:223
 msgid "Closed"
 msgstr ""
 
-#: includes/frontend/class-wcmpbe-checkout.php:230
+#: includes/frontend/class-wcmpbe-checkout.php:229
 msgid "House number"
 msgstr ""
 
-#: includes/frontend/class-wcmpbe-checkout.php:232
+#: includes/frontend/class-wcmpbe-checkout.php:231
 msgid "Opening hours"
 msgstr ""
 
-#: includes/frontend/class-wcmpbe-checkout.php:233
+#: includes/frontend/class-wcmpbe-checkout.php:232
 msgid "Pick up from"
 msgstr ""
 
-#: includes/frontend/class-wcmpbe-checkout.php:235
+#: includes/frontend/class-wcmpbe-checkout.php:234
 msgid "Postcode"
 msgstr ""
 
-#: includes/frontend/class-wcmpbe-checkout.php:236
+#: includes/frontend/class-wcmpbe-checkout.php:235
 msgid "Retry"
 msgstr ""
 
-#: includes/frontend/class-wcmpbe-checkout.php:238
+#: includes/frontend/class-wcmpbe-checkout.php:237
 msgid "Postcode/city combination unknown"
 msgstr ""
 
@@ -459,531 +443,559 @@ msgstr ""
 msgid "Track & Trace"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:86
+#: includes/admin/settings/class-wcmpbe-settings-data.php:98
 msgid "General"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:87, includes/admin/settings/class-wcmpbe-settings-data.php:220
+#: includes/admin/settings/class-wcmpbe-settings-data.php:99, includes/admin/settings/class-wcmpbe-settings-data.php:233
 msgid "Default export settings"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:88, includes/admin/settings/class-wcmpbe-settings-data.php:233
+#: includes/admin/settings/class-wcmpbe-settings-data.php:100, includes/admin/settings/class-wcmpbe-settings-data.php:246
 msgid "Checkout settings"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:194
+#: includes/admin/settings/class-wcmpbe-settings-data.php:207
 msgid "API settings"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:199
+#: includes/admin/settings/class-wcmpbe-settings-data.php:212
 msgid "General settings"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:204
+#: includes/admin/settings/class-wcmpbe-settings-data.php:217
 msgid "Diagnostic tools"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:238
+#: includes/admin/settings/class-wcmpbe-settings-data.php:251
 msgid "Titles"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:257
+#: includes/admin/settings/class-wcmpbe-settings-data.php:270
 msgid "PostNL export settings"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:258
+#: includes/admin/settings/class-wcmpbe-settings-data.php:271
 msgid "These settings will be applied to PostNL shipments you create in the backend."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:266
+#: includes/admin/settings/class-wcmpbe-settings-data.php:279, includes/admin/settings/class-wcmpbe-settings-data.php:311
 msgid "PostNL delivery options"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:271
+#: includes/admin/settings/class-wcmpbe-settings-data.php:284
 msgid "PostNL pickup options"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:286
-msgid "Key"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:287
-msgid "api key"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:300
-msgid "Label display"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:302
+msgid "bpost export settings"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:303
-msgid "Download PDF"
+msgid "These settings will be applied to bpost shipments you create in the backend."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:304
-msgid "Open the PDF in a new tab"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:316
+msgid "bpost pickup options"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:309
-msgid "Label format"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:334
+msgid "DPD delivery options"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:312
-msgid "Standard printer (A4)"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:339
+msgid "DPD pickup options"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:313
-msgid "Label Printer (A6)"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:354
+msgid "Key"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:318
-msgid "Ask for print start position"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:326
-msgid "This option enables you to continue printing where you left off last time"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:333
-msgid "Track & Trace in email"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:335
-msgid "Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel backend."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:342
-msgid "Track & Trace in My Account"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:344
-msgid "Show Track & Trace trace code and link in My Account."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:348
-msgid "Process shipments directly"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:350
-msgid "When you enable this option, shipments will be directly processed when sent to MyParcel."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:357
-msgid "Order status automation"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:359
-msgid "Automatically set order status to a predefined status after successful MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email."
+#: includes/admin/settings/class-wcmpbe-settings-data.php:355
+msgid "api key"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:368
-msgid "setting_change_order_status_after"
+msgid "Label display"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:371
+msgid "Download PDF"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:372
-msgid "setting_change_status_after_printing"
+msgid "Open the PDF in a new tab"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:373
-msgid "setting_change_status_after_export"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:377
+msgid "Label format"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:375
-msgid "setting_change_status_after_help_text"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:380
+msgid "Standard printer (A4)"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:384
-msgid "setting_automatic_order_status"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:381
+msgid "Label Printer (A6)"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:390
-msgid "Place barcode inside note"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:386
+msgid "Ask for print start position"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:392
-msgid "Place the barcode inside a note of the order"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:394
+msgid "This option enables you to continue printing where you left off last time"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:398
-msgid "Title before the barcode"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:401
+msgid "Track & Trace in email"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:399
-msgid "Track & trace code:"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:403
+msgid "Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel backend."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:400
-msgid "You can change the text before the barcode inside an note"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:410
+msgid "Track & Trace in My Account"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:412
+msgid "Show Track & Trace trace code and link in My Account."
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:416
-msgid "Log API communication"
+msgid "Process shipments directly"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:420
-msgid "View logs"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:418
+msgid "When you enable this option, shipments will be directly processed when sent to MyParcel."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:465
-msgid "shipment_options_insured"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:425
+msgid "Order status automation"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:427
+msgid "Automatically set order status to a predefined status after successful MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email."
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:436
+msgid "setting_change_order_status_after"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:440
+msgid "setting_change_status_after_printing"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:441
+msgid "setting_change_status_after_export"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:443
+msgid "setting_change_status_after_help_text"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:452
+msgid "setting_automatic_order_status"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:458
+msgid "Place barcode inside note"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:460
+msgid "Place the barcode inside a note of the order"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:466
+msgid "Title before the barcode"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:467
+msgid "Track & trace code:"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:468
+msgid "You can change the text before the barcode inside an note"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:484
+msgid "Log API communication"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:488
+msgid "View logs"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:515, includes/admin/settings/class-wcmpbe-settings-data.php:539
+msgid "shipment_options_insured"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:516, includes/admin/settings/class-wcmpbe-settings-data.php:540
 msgid "shipment_options_insured_help_text"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:472
+#: includes/admin/settings/class-wcmpbe-settings-data.php:522, includes/admin/settings/class-wcmpbe-settings-data.php:546
 msgid "shipment_options_insured_from_price"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:473
+#: includes/admin/settings/class-wcmpbe-settings-data.php:523, includes/admin/settings/class-wcmpbe-settings-data.php:547
 msgid "shipment_options_insured_from_price_help_text"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:479
-msgid "shipment_options_insured_amount"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:480
-msgid "shipment_options_insured_amount_help_text"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:499
+#: includes/admin/settings/class-wcmpbe-settings-data.php:565
 msgid "Enable PostNL delivery"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:505
+#: includes/admin/settings/class-wcmpbe-settings-data.php:571, includes/admin/settings/class-wcmpbe-settings-data.php:674, includes/admin/settings/class-wcmpbe-settings-data.php:765
 msgid "Drop-off days"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:509
+#: includes/admin/settings/class-wcmpbe-settings-data.php:575, includes/admin/settings/class-wcmpbe-settings-data.php:678, includes/admin/settings/class-wcmpbe-settings-data.php:769
 msgid "Days of the week on which you hand over parcels to PostNL"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:514
+#: includes/admin/settings/class-wcmpbe-settings-data.php:580, includes/admin/settings/class-wcmpbe-settings-data.php:683, includes/admin/settings/class-wcmpbe-settings-data.php:774
 msgid "Cut-off time"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:515, includes/admin/settings/class-wcmpbe-settings-data.php:613
+#: includes/admin/settings/class-wcmpbe-settings-data.php:581, includes/admin/settings/class-wcmpbe-settings-data.php:684, includes/admin/settings/class-wcmpbe-settings-data.php:775
 msgid "Time at which you stop processing orders for the day (format: hh:mm)"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:524
+#: includes/admin/settings/class-wcmpbe-settings-data.php:590, includes/admin/settings/class-wcmpbe-settings-data.php:693, includes/admin/settings/class-wcmpbe-settings-data.php:784
 msgid "Drop-off delay"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:527
+#: includes/admin/settings/class-wcmpbe-settings-data.php:593, includes/admin/settings/class-wcmpbe-settings-data.php:696, includes/admin/settings/class-wcmpbe-settings-data.php:787
 msgid "Number of days you need to process an order."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:532
-msgid "Delivery days window"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:536
-msgid "Amount of days a customer can postpone a shipment. Default is 0 days with a maximum value of 14 days."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:585, includes/admin/settings/class-wcmpbe-settings-data.php:1039
-msgid "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:600
-msgid "Monday delivery"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:610
-msgid "Cut-off time on Saturday"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:629
-msgid "Enable PostNL pickup"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:649
-msgid "Package types"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:654
-msgid "Select one or more shipping methods for each MyParcel package type"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:661
-msgid "Connect customer email"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:663
-msgid "When you connect the customer's email, MyParcel can send a Track & Trace email to this address. In your MyParcel backend you can enable or disable this email and format it in your own style."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:670
-msgid "Connect customer phone"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:672
-msgid "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:679, includes/admin/views/html-order-shipment-summary.php:61
-msgid "Label description"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:680
-msgid "With this option you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in your backoffice. Because of limited space on the label which varies per package type, we recommend that you keep the label description as short as possible."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:692
-msgid "Empty parcel weight"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:695
-msgid "Default weight of your empty parcel."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:702
-msgid "Default HS Code"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:703
-msgid "HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Dutch Customs."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:710
-msgid "Customs shipment type"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:713
-msgid "Commercial goods"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:714
-msgid "Commercial samples"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:715
-msgid "Documents"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:716
-msgid "Gifts"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:717
-msgid "Return shipment"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:722
-msgid "setting_country_of_origin"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:733
-msgid "Automatic export"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:735
-msgid "With this setting enabled orders are exported to MyParcel automatically after payment."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:765
-msgid "MyParcel address fields"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:767
-msgid "When enabled the checkout will use the MyParcel address fields. This means there will be three separate fields for street name, number and suffix. Want to use the WooCommerce default fields? Leave this option unchecked."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:774
+#: includes/admin/settings/class-wcmpbe-settings-data.php:598, includes/admin/settings/class-wcmpbe-settings-data.php:701, includes/admin/settings/class-wcmpbe-settings-data.php:792, includes/admin/settings/class-wcmpbe-settings-data.php:962
 msgid "Show delivery date"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:776
-msgid "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account."
+#: includes/admin/settings/class-wcmpbe-settings-data.php:601, includes/admin/settings/class-wcmpbe-settings-data.php:704, includes/admin/settings/class-wcmpbe-settings-data.php:795
+msgid "Show the delivery date inside the delivery options."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:783
-msgid "Enable MyParcel delivery options"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:621, includes/admin/settings/class-wcmpbe-settings-data.php:711, includes/admin/settings/class-wcmpbe-settings-data.php:1235
+msgid "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:785
-msgid "The MyParcel delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery."
+#: includes/admin/settings/class-wcmpbe-settings-data.php:644
+msgid "Enable PostNL pickup"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:793
-msgid "Enable delivery options for backorders"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:668
+msgid "Enable bpost delivery"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:795
-msgid "When this option is enabled, delivery options and delivery day will be also shown for backorders."
+#: includes/admin/settings/class-wcmpbe-settings-data.php:734, includes/admin/settings/class-wcmpbe-settings-data.php:808
+msgid "Enable bpost pickup"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:803
-msgid "settings_checkout_display_for"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:759
+msgid "Enable DPD delivery"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:805
-msgid "settings_checkout_display_for_help_text"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:828
+msgid "Package types"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:807
-msgid "settings_checkout_display_for_selected_methods"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:833
+msgid "Select one or more shipping methods for each MyParcel package type"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:808
-msgid "settings_checkout_display_for_all_methods"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:840
+msgid "Connect customer email"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:814
-msgid "Checkout position"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:842
+msgid "When you connect the customer's email, MyParcel can send a Track & Trace email to this address. In your MyParcel backend you can enable or disable this email and format it in your own style."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:818
-msgid "Show after billing details"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:822
-msgid "Show after shipping details"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:826
-msgid "Show after customer details"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:830
-msgid "Show after notes"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:834
-msgid "Show after subtotal"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:839
-msgid "You can change the place of the delivery options on the checkout page. By default it will be placed after shipping details."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:847
-msgid "settings_checkout_price_format"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:849
+msgid "Connect customer phone"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:851
-msgid "settings_checkout_total_price"
+msgid "When you connect the customer's phone number, the courier can use this for the delivery of the parcel. This greatly increases the delivery success rate for foreign shipments."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:855
-msgid "settings_checkout_surcharge"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:858, includes/admin/views/html-order-shipment-summary.php:61
+msgid "Label description"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:864
-msgid "settings_pickup_locations_default_view"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:859
+msgid "With this option you can add a description to the shipment. This will be printed on the top left of the label, and you can use this to search or sort shipments in your backoffice. Because of limited space on the label which varies per package type, we recommend that you keep the label description as short as possible."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:868
-msgid "settings_pickup_locations_default_view_map"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:871
+msgid "Empty parcel weight"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:872
-msgid "settings_pickup_locations_default_view_list"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:874
+msgid "Default weight of your empty parcel."
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:881
-msgid "Custom styles"
+msgid "Default HS Code"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:920
-msgid "Delivery options title"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:882
+msgid "HS Codes are used for MyParcel world shipments, you can find the appropriate code on the site of the Dutch Customs."
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:889
+msgid "Customs shipment type"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:892
+msgid "Commercial goods"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:893
+msgid "Commercial samples"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:894
+msgid "Documents"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:895
+msgid "Gifts"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:896
+msgid "Return shipment"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:901
+msgid "setting_country_of_origin"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:921
+msgid "Default carrier"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:922
-msgid "You can place a delivery title above the MyParcel options. When there is no title, it will not be visible."
+msgid "You can set a default carrier here which will be used when no other option overrides it."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:930
-msgid "Delivery title"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:953
+msgid "MyParcel address fields"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:931
-msgid "Delivered at home or at work"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:936
-msgid "Morning delivery title"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:942
-msgid "Standard delivery title"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:943
-msgid "When there is no title, the delivery time will automatically be visible."
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:952
-msgid "Evening delivery title"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:958
-msgid "Home address only title"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:955
+msgid "When enabled the checkout will use the MyParcel address fields. This means there will be three separate fields for street name, number and suffix. Want to use the WooCommerce default fields? Leave this option unchecked."
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:964
-msgid "Signature on delivery title"
+msgid "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:970
-msgid "Pickup title"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:971
+msgid "Enable MyParcel delivery options"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:994
-msgid "Theme \"%s\" detected."
+#: includes/admin/settings/class-wcmpbe-settings-data.php:973
+msgid "The MyParcel delivery options allow your customers to select whether they want their parcel delivered at home or to a pickup point. Depending on the settings you can allow them to select a date, time and even options like requiring a signature on delivery."
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:981
+msgid "Enable delivery options for backorders"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:983
+msgid "When this option is enabled, delivery options and delivery day will be also shown for backorders."
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:991
+msgid "settings_checkout_display_for"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:993
+msgid "settings_checkout_display_for_help_text"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:995
+msgid "settings_checkout_display_for_selected_methods"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:996
-msgid "Apply preset."
+msgid "settings_checkout_display_for_all_methods"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1009
-msgid "Delivery date"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1002
+msgid "Checkout position"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1006
+msgid "Show after billing details"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:1010
-msgid "Order number"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1011
-msgid "Product id"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1012, includes/admin/views/html-send-return-email-form.php:67
-msgid "Product name"
-msgstr ""
-
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1013
-msgid "Product quantity"
+msgid "Show after shipping details"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:1014
+msgid "Show after customer details"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1018
+msgid "Show after notes"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1022
+msgid "Show after subtotal"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1027
+msgid "You can change the place of the delivery options on the checkout page. By default it will be placed after shipping details."
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1035
+msgid "settings_checkout_price_format"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1039
+msgid "settings_checkout_total_price"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1043
+msgid "settings_checkout_surcharge"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1052
+msgid "settings_pickup_locations_default_view"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1056
+msgid "settings_pickup_locations_default_view_map"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1060
+msgid "settings_pickup_locations_default_view_list"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1069
+msgid "Custom styles"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1108
+msgid "Delivery options title"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1110
+msgid "You can place a delivery title above the MyParcel options. When there is no title, it will not be visible."
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1118
+msgid "Delivery title"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1119
+msgid "Delivered at home or at work"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1124
+msgid "Standard delivery title"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1125
+msgid "When there is no title, the delivery time will automatically be visible."
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1134
+msgid "Home address only title"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1140
+msgid "Signature on delivery title"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1146
+msgid "Pickup title"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1152
+msgid "The text on the \"list\" button when viewing pickup locations."
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1156
+msgid "Pickup list button text"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1157
+msgid "List"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1162
+msgid "The text on the \"map\" button when viewing pickup locations."
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1166
+msgid "Pickup map button text"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1167
+msgid "Map"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1190
+msgid "Theme \"%s\" detected."
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1192
+msgid "Apply preset."
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1205
+msgid "Delivery date"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1206
+msgid "Order number"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1207
+msgid "Product id"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1208, includes/admin/views/html-send-return-email-form.php:67
+msgid "Product name"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1209
+msgid "Product quantity"
+msgstr ""
+
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1210
 msgid "Product SKU"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1015
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1211
 msgid "Customer note"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1037
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1233
 msgid "Fee (optional)"
 msgstr ""
 
-#: includes/admin/settings/class-wcmypabe-settings.php:188
+#: includes/admin/settings/class-wcmpbe-settings.php:190
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/settings/class-wcmypabe-settings.php:208
+#: includes/admin/settings/class-wcmpbe-settings.php:210
 msgid "WooCommerce MyParcel BE Settings"
 msgstr ""
 
-#: includes/admin/settings/class-wcmypabe-settings.php:262
+#: includes/admin/settings/class-wcmpbe-settings.php:264
 msgid "It looks like your shop is based in Netherlands. This plugin is for MyParcel Belgium. If you are using MyParcel Netherlands, download the %s plugin instead!"
 msgstr ""
 
-#: includes/admin/settings/class-wcmypabe-settings.php:271
+#: includes/admin/settings/class-wcmpbe-settings.php:273
 msgid "Hide this message"
 msgstr ""
 

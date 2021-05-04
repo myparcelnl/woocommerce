@@ -84,10 +84,10 @@ class WCMPBE_Assets
                 "ajax_url"               => admin_url("admin-ajax.php"),
                 "nonce"                  => wp_create_nonce(WCMYPABE::NONCE_ACTION),
                 "download_display"       => WCMYPABE()->setting_collection->getByName(
-                    WCMYPABE_Settings::SETTING_DOWNLOAD_DISPLAY
+                    WCMPBE_Settings::SETTING_DOWNLOAD_DISPLAY
                 ),
                 "ask_for_print_position" => WCMYPABE()->setting_collection->isEnabled(
-                    WCMYPABE_Settings::SETTING_ASK_FOR_PRINT_POSITION
+                    WCMPBE_Settings::SETTING_ASK_FOR_PRINT_POSITION
                 ),
                 "strings"                => [
                     "no_orders_selected" => __("You have not selected any orders!", "woocommerce-myparcelbe"),

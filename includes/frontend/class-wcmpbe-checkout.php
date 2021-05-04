@@ -28,7 +28,6 @@ class WCMPBE_Checkout
         'pickupLocation'                 => 'pickup_location',
         'packageType'                    => 'package_type',
         'shipmentOptions'                => 'shipment_options',
-        'shipmentOptions.ageCheck'       => 'shipment_options.age_check',
         'shipmentOptions.insuredAmount'  => 'shipment_options.insured_amount',
         'shipmentOptions.largeFormat'    => 'shipment_options.large_format',
         'shipmentOptions.onlyRecipient'  => 'shipment_options.only_recipient',
@@ -61,7 +60,7 @@ class WCMPBE_Checkout
         }
 
         // if using split address fields
-        $useSplitAddressFields = WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS);
+        $useSplitAddressFields = WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS);
         if ($useSplitAddressFields) {
             wp_enqueue_script(
                 "wcmpbe-checkout-fields",
@@ -73,7 +72,7 @@ class WCMPBE_Checkout
         }
 
         // Don"t load the delivery options scripts if it"s disabled
-        if (! WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
+        if (! WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
             return;
         }
 
@@ -136,7 +135,7 @@ class WCMPBE_Checkout
             [
                 // Convert true/false to int for JavaScript
                 "isUsingSplitAddressFields" => (int) WCMYPABE()->setting_collection->isEnabled(
-                    WCMYPABE_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS
+                    WCMPBE_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS
                 ),
                 "splitAddressFieldsCountries" => WCMPBE_Postcode_Fields::COUNTRIES_WITH_SPLIT_ADDRESS_FIELDS,
             ]
@@ -163,7 +162,7 @@ class WCMPBE_Checkout
         add_action(
             apply_filters(
                 'wc_wcmpbe_delivery_options_location',
-                WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_POSITION)
+                WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_POSITION)
             ),
             [$this, 'output_delivery_options'],
             10
@@ -175,7 +174,7 @@ class WCMPBE_Checkout
      */
     public function get_delivery_options_shipping_methods()
     {
-        $packageTypes = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+        $packageTypes = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
 
         if (! is_array($packageTypes)) {
             $packageTypes = [];
@@ -203,7 +202,7 @@ class WCMPBE_Checkout
         $cartTotals                 = WC()->session->get('cart_totals');
         $chosenShippingMethodPrice  = (float) $cartTotals['shipping_total'];
         $displayIncludingTax        = WC()->cart->display_prices_including_tax();
-        $priceFormat                = self::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
+        $priceFormat                = self::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
 
         if ($displayIncludingTax) {
             $chosenShippingMethodPrice += (float) $cartTotals['shipping_tax'];
@@ -219,23 +218,25 @@ class WCMPBE_Checkout
                 "pickupLocationsDefaultView" => self::getPickupLocationsDefaultView(),
             ],
             "strings" => [
-                "addressNotFound"       => __("Address details are not entered", "woocommerce-myparcelbe"),
-                "city"                  => __("City", "woocommerce-myparcelbe"),
-                "closed"                => __("Closed", "woocommerce-myparcelbe"),
-                "deliveryEveningTitle"  => self::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_EVENING_DELIVERY_TITLE),
-                "deliveryMorningTitle"  => self::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_MORNING_DELIVERY_TITLE),
-                "deliveryStandardTitle" => self::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_STANDARD_TITLE),
-                "deliveryTitle"         => self::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_DELIVERY_TITLE),
-                "headerDeliveryOptions" => self::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE),
-                "houseNumber"           => __("House number", "woocommerce-myparcelbe"),
-                "onlyRecipientTitle"    => self::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_ONLY_RECIPIENT_TITLE),
-                "openingHours"          => __("Opening hours", "woocommerce-myparcelbe"),
-                "pickUpFrom"            => __("Pick up from", "woocommerce-myparcelbe"),
-                "pickupTitle"           => self::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_PICKUP_TITLE),
-                "postcode"              => __("Postcode", "woocommerce-myparcelbe"),
-                "retry"                 => __("Retry", "woocommerce-myparcelbe"),
-                "signatureTitle"        => self::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_SIGNATURE_TITLE),
-                "wrongHouseNumberCity"  => __("Postcode/city combination unknown", "woocommerce-myparcelbe"),
+                "addressNotFound"           => __("Address details are not entered", "woocommerce-myparcelbe"),
+                "city"                      => __("City", "woocommerce-myparcelbe"),
+                "closed"                    => __("Closed", "woocommerce-myparcelbe"),
+                "deliveryEveningTitle"      => self::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_EVENING_DELIVERY_TITLE),
+                "deliveryMorningTitle"      => self::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_MORNING_DELIVERY_TITLE),
+                "deliveryStandardTitle"     => self::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_STANDARD_TITLE),
+                "deliveryTitle"             => self::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_DELIVERY_TITLE),
+                "headerDeliveryOptions"     => self::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE),
+                "houseNumber"               => __("House number", "woocommerce-myparcelbe"),
+                "onlyRecipientTitle"        => self::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_ONLY_RECIPIENT_TITLE),
+                "openingHours"              => __("Opening hours", "woocommerce-myparcelbe"),
+                "pickUpFrom"                => __("Pick up from", "woocommerce-myparcelbe"),
+                "pickupTitle"               => self::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_PICKUP_TITLE),
+                "postcode"                  => __("Postcode", "woocommerce-myparcelbe"),
+                "retry"                     => __("Retry", "woocommerce-myparcelbe"),
+                "signatureTitle"            => self::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_SIGNATURE_TITLE),
+                "wrongHouseNumberCity"      => __("Postcode/city combination unknown", "woocommerce-myparcelbe"),
+                "pickupLocationsListButton" => $this->getDeliveryOptionsTitle(WCMPBE_Settings::PICKUP_LOCATIONS_LIST_BUTTON),
+                "pickupLocationsMapButton"  => $this->getDeliveryOptionsTitle(WCMPBE_Settings::PICKUP_LOCATIONS_MAP_BUTTON),
             ],
         ];
 
@@ -272,7 +273,7 @@ class WCMPBE_Checkout
      */
     public function useTotalPrice(): bool
     {
-        $priceFormat = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
+        $priceFormat = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
 
         if (! isset($priceFormat) || WCMPBE_Settings_Data::DISPLAY_TOTAL_PRICE === $priceFormat){
             return true;
@@ -300,7 +301,7 @@ class WCMPBE_Checkout
     {
         $settings = WCMYPABE()->setting_collection;
 
-        return $settings->getStringByName(WCMYPABE_Settings::SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW);
+        return $settings->getStringByName(WCMPBE_Settings::SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW);
     }
 
     /**
@@ -324,9 +325,9 @@ class WCMPBE_Checkout
         $carriers = [];
 
         foreach ([BpostConsignment::CARRIER_NAME, DPDConsignment::CARRIER_NAME, PostNLConsignment::CARRIER_NAME] as $carrier) {
-            if ($settings->getByName("{$carrier}_" . WCMYPABE_Settings::SETTING_CARRIER_PICKUP_ENABLED)
+            if ($settings->getByName("{$carrier}_" . WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED)
                 || $settings->getByName(
-                    "{$carrier}_" . WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED
+                    "{$carrier}_" . WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED
                 )) {
                 $carriers[] = $carrier;
             }
@@ -428,8 +429,8 @@ class WCMPBE_Checkout
     private function getShippingMethodsAllowingDeliveryOptions(): array
     {
         $allowedMethods               = [];
-        $displayFor                   = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
-        $shippingMethodsByPackageType = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+        $displayFor                   = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
+        $shippingMethodsByPackageType = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
 
         if (WCMPBE_Settings_Data::DISPLAY_FOR_ALL_METHODS === $displayFor || ! $shippingMethodsByPackageType) {
             return $allowedMethods;
@@ -453,7 +454,7 @@ class WCMPBE_Checkout
      */
     private function alwaysDisplayDeliveryOptions(): bool
     {
-        $display = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
+        $display = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
 
         return $display === WCMPBE_Settings_Data::DISPLAY_FOR_ALL_METHODS;
     }
@@ -505,27 +506,26 @@ class WCMPBE_Checkout
     private static function getDeliveryOptionsConfigMap(string $carrier): array
     {
         return [
-           "carrierSettings.$carrier.allowDeliveryOptions"  => [WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_ENABLED, 'isEnabled', false],
-           "carrierSettings.$carrier.allowEveningDelivery"  => [WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED, 'isEnabled', false],
-           "carrierSettings.$carrier.allowMondayDelivery"   => [WCMYPABE_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED, 'isEnabled', false],
-           "carrierSettings.$carrier.allowMorningDelivery"  => [WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED, 'isEnabled', false],
-           "carrierSettings.$carrier.allowOnlyRecipient"    => [WCMYPABE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED, 'isEnabled', false],
-           "carrierSettings.$carrier.allowPickupLocations"  => [WCMYPABE_Settings::SETTING_CARRIER_PICKUP_ENABLED, 'isEnabled', false],
-           "carrierSettings.$carrier.allowSaturdayDelivery" => [WCMYPABE_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED, 'isEnabled', false],
-           "carrierSettings.$carrier.allowSignature"        => [WCMYPABE_Settings::SETTING_CARRIER_SIGNATURE_ENABLED, 'isEnabled', false],
-           "carrierSettings.$carrier.priceEveningDelivery"  => [WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE, 'getPriceByName', true],
-           "carrierSettings.$carrier.priceMondayDelivery"   => [WCMYPABE_Settings::SETTING_CARRIER_MONDAY_DELIVERY_FEE, 'getPriceByName', true],
-           "carrierSettings.$carrier.priceMorningDelivery"  => [WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE, 'getPriceByName', true],
-           "carrierSettings.$carrier.priceOnlyRecipient"    => [WCMYPABE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE, 'getPriceByName', false],
-           "carrierSettings.$carrier.pricePickup"           => [WCMYPABE_Settings::SETTING_CARRIER_PICKUP_FEE, 'getPriceByName', true],
-           "carrierSettings.$carrier.priceSaturdayDelivery" => [WCMYPABE_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE, 'getPriceByName', true],
-           "carrierSettings.$carrier.priceSignature"        => [WCMYPABE_Settings::SETTING_CARRIER_SIGNATURE_FEE, 'getPriceByName', false],
-           "cutoffTime"                                     => [WCMYPABE_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName', false],
-           "deliveryDaysWindow"                             => [WCMYPABE_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW, 'getIntegerByName', false],
-           "dropOffDays"                                    => [WCMYPABE_Settings::SETTING_CARRIER_DROP_OFF_DAYS, 'getByName', false],
-           "dropOffDelay"                                   => [WCMYPABE_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName', false],
-           "fridayCutoffTime"                               => [WCMYPABE_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName', false],
-           "saturdayCutoffTime"                             => [WCMYPABE_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME, 'getStringByName', false],
+           "carrierSettings.$carrier.allowDeliveryOptions"  => [WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED, 'isEnabled', false],
+           "carrierSettings.$carrier.allowEveningDelivery"  => [WCMPBE_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED, 'isEnabled', false],
+           "carrierSettings.$carrier.allowMorningDelivery"  => [WCMPBE_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED, 'isEnabled', false],
+           "carrierSettings.$carrier.allowOnlyRecipient"    => [WCMPBE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED, 'isEnabled', false],
+           "carrierSettings.$carrier.allowPickupLocations"  => [WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED, 'isEnabled', false],
+           "carrierSettings.$carrier.allowSaturdayDelivery" => [WCMPBE_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED, 'isEnabled', false],
+           "carrierSettings.$carrier.allowSignature"        => [WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_ENABLED, 'isEnabled', false],
+           "carrierSettings.$carrier.priceEveningDelivery"  => [WCMPBE_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE, 'getPriceByName', true],
+           "carrierSettings.$carrier.priceMondayDelivery"   => [WCMPBE_Settings::SETTING_CARRIER_MONDAY_DELIVERY_FEE, 'getPriceByName', true],
+           "carrierSettings.$carrier.priceMorningDelivery"  => [WCMPBE_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE, 'getPriceByName', true],
+           "carrierSettings.$carrier.priceOnlyRecipient"    => [WCMPBE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE, 'getPriceByName', false],
+           "carrierSettings.$carrier.pricePickup"           => [WCMPBE_Settings::SETTING_CARRIER_PICKUP_FEE, 'getPriceByName', true],
+           "carrierSettings.$carrier.priceSaturdayDelivery" => [WCMPBE_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE, 'getPriceByName', true],
+           "carrierSettings.$carrier.priceSignature"        => [WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_FEE, 'getPriceByName', false],
+           "cutoffTime"                                     => [WCMPBE_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName', false],
+           "deliveryDaysWindow"                             => [WCMPBE_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW, 'getIntegerByName', false],
+           "dropOffDays"                                    => [WCMPBE_Settings::SETTING_CARRIER_DROP_OFF_DAYS, 'getByName', false],
+           "dropOffDelay"                                   => [WCMPBE_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName', false],
+           "fridayCutoffTime"                               => [WCMPBE_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName', false],
+           "saturdayCutoffTime"                             => [WCMPBE_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME, 'getStringByName', false],
        ];
     }
 
@@ -536,7 +536,7 @@ class WCMPBE_Checkout
     private function shouldShowDeliveryOptions(): bool
     {
         // $backorderDeliveryOptions causes the options to be displayed also when product is in backorder
-        $backorderDeliveryOptions = WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS);
+        $backorderDeliveryOptions = WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS);
         $show                     = true;
 
         if ($backorderDeliveryOptions) {

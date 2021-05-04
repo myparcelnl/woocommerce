@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\Includes\Admin;
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
 use OrderSettings;
 use WC_Order;
 use WCMPBE_Country_Codes;
@@ -60,12 +60,6 @@ class OrderSettingsRows
         "parent_value" => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
     ];
 
-    private const CONDITION_FORCE_ENABLED_ON_AGE_CHECK = [
-        "parent_name"  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
-        "type"         => "disable",
-        "set_value"    => WCMPBE_Settings_Data::ENABLED,
-        "parent_value" => WCMPBE_Settings_Data::DISABLED,
-    ];
 
     /**
      * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
@@ -96,8 +90,7 @@ class OrderSettingsRows
                 "label"             => __("Carrier", "woocommerce-myparcelbe"),
                 "type"              => "select",
                 "options"           => WCMPBE_Data::CARRIERS_HUMAN,
-                "custom_attributes" => ["disabled" => "disabled"],
-                "value"             => $deliveryOptions->getCarrier() ?? PostNLConsignment::CARRIER_NAME,
+                "value"             => $deliveryOptions->getCarrier() ?? BpostConsignment::CARRIER_NAME,
             ],
             [
                 "name"              => self::OPTION_DELIVERY_TYPE,
@@ -112,6 +105,7 @@ class OrderSettingsRows
                 "label"             => __("Shipment type", "woocommerce-myparcelbe"),
                 "type"              => "select",
                 "options"           => $packageTypeOptions,
+                "custom_attributes" => ["disabled" => "disabled"],
                 "value"             => WCMYPABE()->export->getPackageTypeFromOrder($order, $deliveryOptions),
             ],
             [
@@ -145,6 +139,7 @@ class OrderSettingsRows
                 ],
             ];
         }
+
 
         $rows[] = [
             "name"  => self::OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION,
@@ -219,7 +214,6 @@ class OrderSettingsRows
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     self::CONDITION_CARRIER_DEFAULT,
-                    self::CONDITION_FORCE_ENABLED_ON_AGE_CHECK,
                 ],
             ],
             [
@@ -228,31 +222,6 @@ class OrderSettingsRows
                 "label"     => __("shipment_options_signature", "woocommerce-myparcelbe"),
                 "help_text" => __("shipment_options_signature_help_text", "woocommerce-myparcelbe"),
                 "value"     => $orderSettings->hasSignature(),
-                "condition" => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    self::CONDITION_CARRIER_DEFAULT,
-                    self::CONDITION_FORCE_ENABLED_ON_AGE_CHECK,
-                ],
-            ],
-            [
-                "name"      => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
-                "type"      => "toggle",
-                "label"     => __("shipment_options_age_check", "woocommerce-myparcelbe"),
-                "help_text" => __("shipment_options_age_check_help_text", "woocommerce-myparcelbe"),
-                "value"     => $orderSettings->hasAgeCheck(),
-                "condition" => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    self::CONDITION_CARRIER_DEFAULT,
-                ],
-            ],
-            [
-                "name"      => self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT,
-                "type"      => "toggle",
-                "label"     => __("shipment_options_return", "woocommerce-myparcelbe"),
-                "help_text" => __("shipment_options_return_help_text", "woocommerce-myparcelbe"),
-                "value"     => $orderSettings->hasReturnShipment(),
                 "condition" => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,

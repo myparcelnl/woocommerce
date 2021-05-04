@@ -35,7 +35,6 @@ class WCMYPABE_Admin
     public const META_HS_CODE                = "_myparcelbe_hs_code";
     public const META_HS_CODE_VARIATION      = "_myparcelbe_hs_code_variation";
     public const META_COUNTRY_OF_ORIGIN      = "_myparcelbe_country_of_origin";
-    public const META_AGE_CHECK              = "_myparcelbe_age_check";
 
     /**
      * @deprecated use weight property in META_SHIPMENT_OPTIONS_EXTRA.
@@ -359,7 +358,7 @@ class WCMYPABE_Admin
      */
     public function renderOffsetDialog(): void
     {
-        if (! WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_ASK_FOR_PRINT_POSITION)) {
+        if (! WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_ASK_FOR_PRINT_POSITION)) {
             return;
         }
 
@@ -493,7 +492,7 @@ class WCMYPABE_Admin
             unset($listing_actions[$addReturn]);
         }
 
-        $display    = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
+        $display    = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
         $attributes = [];
 
         if ($display) {
@@ -638,7 +637,7 @@ class WCMYPABE_Admin
         $this->showOrderActions($order);
         echo '</div>';
 
-        $downloadDisplay = WCMYPABE()->setting_collection->getByName(WCMYPABE_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
+        $downloadDisplay = WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
         $consignments    = self::get_order_shipments($order);
 
         // show shipments if available
@@ -822,17 +821,6 @@ class WCMYPABE_Admin
                     __('setting_country_of_origin_help_text', 'woocommerce-myparcelbe')
                 ),
             ],
-            'Age-check'         => [
-                'id'          => self::META_AGE_CHECK,
-                'label'       => __('shipment_options_age_check', 'woocommerce-myparcelbe'),
-                'type'        => 'select',
-                'options'     => [
-                    null                           => __('Default', 'woocommerce-myparcelbe'),
-                    self::PRODUCT_OPTIONS_DISABLED => __('Disabled', 'woocommerce-myparcelbe'),
-                    self::PRODUCT_OPTIONS_ENABLED  => __('Enabled', 'woocommerce-myparcelbe'),
-                ],
-                'description' => wc_help_tip(__('shipment_options_age_check_help_text', 'woocommerce-myparcelbe')),
-            ],
         ];
     }
 
@@ -916,7 +904,8 @@ class WCMYPABE_Admin
      */
     public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptions
     {
-        $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS) ?: null;
+        $meta           = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
+        $defaultCarrier = self::getDefaultCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
 
         // $meta is a json string, create an instance
         if (! empty($meta) && ! $meta instanceof DeliveryOptions) {
@@ -924,7 +913,7 @@ class WCMYPABE_Admin
                 $meta = json_decode(stripslashes($meta), true);
             }
 
-            $meta["carrier"] = WCMPBE_Data::DEFAULT_CARRIER;
+            $meta["carrier"] = $defaultCarrier;
 
             try {
                 // create new instance from known json
@@ -952,7 +941,7 @@ class WCMYPABE_Admin
      */
     private function printDeliveryDate(DeliveryOptions $deliveryOptions): void
     {
-        $showDeliveryDay = WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_SHOW_DELIVERY_DAY);
+        $showDeliveryDay = WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_SHOW_DELIVERY_DAY);
 
         if ($showDeliveryDay && $deliveryOptions->getDate()) {
             printf(
@@ -964,7 +953,15 @@ class WCMYPABE_Admin
         }
     }
 
-	/**
+    /**
+     * @return string
+     */
+    public static function getDefaultCarrier(): string
+    {
+        return WCMYPABE()->setting_collection->getByName(WCMPBE_Settings::SETTING_DEFAULT_CARRIER);
+    }
+
+        /**
 	 * Output the chosen delivery options or the chosen pickup options.
 	 *
 	 * @param DeliveryOptions $deliveryOptions
@@ -975,15 +972,15 @@ class WCMYPABE_Admin
     private function getConfirmationData(DeliveryOptions $deliveryOptions): ?array
     {
         $deliveryOptionsEnabled = WCMYPABE()->setting_collection->isEnabled(
-            WCMYPABE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED
+            WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED
         );
 
         if (! $deliveryOptionsEnabled || ! $deliveryOptions->getCarrier()) {
             return null;
         }
 
-        $signatureTitle     = WCMPBE_Checkout::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_SIGNATURE_TITLE);
-        $onlyRecipientTitle = WCMPBE_Checkout::getDeliveryOptionsTitle(WCMYPABE_Settings::SETTING_ONLY_RECIPIENT_TITLE);
+        $signatureTitle     = WCMPBE_Checkout::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_SIGNATURE_TITLE);
+        $onlyRecipientTitle = WCMPBE_Checkout::getDeliveryOptionsTitle(WCMPBE_Settings::SETTING_ONLY_RECIPIENT_TITLE);
         $hasSignature       = $deliveryOptions->getShipmentOptions()->hasSignature();
         $hasOnlyRecipient   = $deliveryOptions->getShipmentOptions()->hasOnlyRecipient();
 
@@ -1006,7 +1003,7 @@ class WCMYPABE_Admin
             __("delivery_type", "woocommerce-myparcelbe") => WCMPBE_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
         ];
 
-        if (WCMYPABE()->setting_collection->isEnabled(WCMYPABE_Settings::SETTING_SHOW_DELIVERY_DAY)) {
+        if (WCMYPABE()->setting_collection->isEnabled(WCMPBE_Settings::SETTING_SHOW_DELIVERY_DAY)) {
             $confirmationData[__("Date:", 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));;
         }
 
@@ -1229,7 +1226,6 @@ class WCMYPABE_Admin
         $isDigitalStamp = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $data['package_type'];
 
         if (! $isHomeCountry || ! $isPackage) {
-            $data['shipment_options']['age_check']       = false;
             $data['shipment_options']['return_shipment'] = false;
             $data['shipment_options']['insured']         = false;
             $data['shipment_options']['insured_amount']  = 0;

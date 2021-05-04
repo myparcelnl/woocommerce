@@ -24,7 +24,6 @@ class WCMPBE_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdap
         $this->only_recipient    = $this->isOnlyRecipientFromOptions($options, $shipmentOptionsAdapter);
         $this->large_format      = $this->isLargeFormatFromOptions($options, $shipmentOptionsAdapter);
         $this->return            = $this->isReturnShipmentFromOptions($options, $shipmentOptionsAdapter);
-        $this->age_check         = $this->isAgeCheckFromOptions($options, $shipmentOptionsAdapter);
         $this->insurance         = $this->isInsuranceFromOptions($options, $shipmentOptionsAdapter);
         $this->label_description = $this->getLabelDescriptionFromOptions($options, $shipmentOptionsAdapter);
     }

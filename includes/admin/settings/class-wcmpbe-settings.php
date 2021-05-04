@@ -9,14 +9,14 @@ if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('WCMYPABE_Settings')) {
-    return new WCMYPABE_Settings();
+if (class_exists('WCMPBE_Settings')) {
+    return new WCMPBE_Settings();
 }
 
 /**
  * Create & render settings page
  */
-class WCMYPABE_Settings
+class WCMPBE_Settings
 {
     public const SETTINGS_MENU_SLUG = "wcmpbe_settings";
 
@@ -56,6 +56,7 @@ class WCMYPABE_Settings
     public const SETTING_PACKAGE_CONTENT                = "package_contents";
     public const SETTING_COUNTRY_OF_ORIGIN              = "country_of_origin";
     public const SETTING_AUTOMATIC_EXPORT               = "export_automatic";
+    public const SETTING_DEFAULT_CARRIER                = "default_carrier";
     public const SETTING_RETURN_IN_THE_BOX              = "return_in_the_box";
 
     /**
@@ -88,7 +89,6 @@ class WCMYPABE_Settings
     public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE          = "export_signature";
     public const SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT     = "export_only_recipient";
     public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT       = "export_large_format";
-    public const SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK          = "export_age_check";
     public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN             = "export_return_shipments";
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED            = "export_insured";
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT     = "export_insured_amount";
@@ -112,6 +112,8 @@ class WCMYPABE_Settings
     public const SETTING_CARRIER_DELIVERY_MORNING_FEE     = "delivery_morning_fee";
     public const SETTING_CARRIER_DELIVERY_EVENING_ENABLED = "delivery_evening_enabled";
     public const SETTING_CARRIER_DELIVERY_EVENING_FEE     = "delivery_evening_fee";
+    public const PICKUP_LOCATIONS_LIST_BUTTON             = "pickup_locations_list_button";
+    public const PICKUP_LOCATIONS_MAP_BUTTON              = "pickup_locations_map_button";
 
     // Saturday delivery
     // TODO; Currently not implemented
@@ -375,4 +377,4 @@ class WCMYPABE_Settings
     }
 }
 
-return new WCMYPABE_Settings();
+return new WCMPBE_Settings();

@@ -208,7 +208,7 @@ class WCMPBE_Data
         /**
          * @type BpostConsignment
          */
-        $carrier             = ConsignmentFactory::createByCarrierName(WCMYPABE_Settings::SETTINGS_BPOST);
+        $carrier             = ConsignmentFactory::createByCarrierName(WCMPBE_Settings::SETTINGS_BPOST);
         $amountPossibilities = $carrier::INSURANCE_POSSIBILITIES_LOCAL;
 
         foreach ($amountPossibilities as $key => $value) {
