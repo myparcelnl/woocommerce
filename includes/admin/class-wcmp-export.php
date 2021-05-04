@@ -905,12 +905,11 @@ class WCMP_Export
      */
     public function getPackageTypeFromOrder(WC_Order $order, AbstractDeliveryOptionsAdapter $deliveryOptions = null): string
     {
-        $packageTypeFromDeliveryOptions = $deliveryOptions
-            ? $deliveryOptions->getPackageType()
-            : null;
+        $packageTypeFromDeliveryOptions = $deliveryOptions ? $deliveryOptions->getPackageType() : null;
+        $correctPackageType             = $this->getAllowedPackageType($order, $packageTypeFromDeliveryOptions);
 
-        if ($packageTypeFromDeliveryOptions) {
-            return $packageTypeFromDeliveryOptions;
+        if ($correctPackageType) {
+            return $correctPackageType;
         }
 
         // Get pre 4.0.0 package type if it exists.
@@ -1029,14 +1028,14 @@ class WCMP_Export
     }
 
     /**
-     * @param WC_Order $order
-     * @param string   $packageType
+     * @param WC_Order    $order
+     * @param string|null $packageType
      *
-     * @return string
+     * @return string|null
      *
      * @throws Exception
      */
-    public function getAllowedPackageType(WC_Order $order, string $packageType): string
+    public function getAllowedPackageType(WC_Order $order, ?string $packageType): ?string
     {
         $shippingCountry      = WCX_Order::get_prop($order, "shipping_country");
         $isMailbox            = AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME === $packageType;
