@@ -341,7 +341,6 @@ class OrderSettings
     private function setInsuranceData(): void
     {
         $isInsured       = false;
-        $insuranceAmount = 0;
 
         $isDefaultInsured                  = (bool) $this->getCarrierSetting(WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED);
         $isDefaultInsuredFromPrice         = $this->getCarrierSetting(WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE);
@@ -353,14 +352,10 @@ class OrderSettings
 
         if ($insuranceFromDeliveryOptions && $insuranceFromDeliveryOptions >= $amountPossibilities[self::FIRST_INSURANCE]) {
             $isInsured       = (bool) $insuranceFromDeliveryOptions;
-            $insuranceAmount = $insuranceFromDeliveryOptions;
-        } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && $insuranceFromDeliveryOptions !== 0) {
+        } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice) {
             $isInsured       = true;
-            $insuranceAmount = $this->getCarrierSetting(WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
         }
-
         $this->insured         = $isInsured;
-        $this->insuranceAmount = (int) $insuranceAmount;
     }
 
     /**

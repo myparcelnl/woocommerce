@@ -77,11 +77,13 @@ class WCMPBE_Settings_Data
             WCMPBE_Settings::SETTINGS_POSTNL,
             true
         );
+
         $this->generate_settings(
             $this->get_sections_carrier_bpost(),
             WCMPBE_Settings::SETTINGS_BPOST,
             true
         );
+
         $this->generate_settings(
             $this->get_sections_carrier_dpd(),
             WCMPBE_Settings::SETTINGS_DPD,
@@ -308,7 +310,7 @@ class WCMPBE_Settings_Data
                 ],
                 [
                     "name"     => "delivery_options",
-                    "label"    => __("PostNL delivery options", "woocommerce-myparcelbe"),
+                    "label"    => __("bpost delivery options", "woocommerce-myparcelbe"),
                     "settings" => $this->get_section_carrier_bpost_delivery_options(),
                 ],
                 [
@@ -527,30 +529,6 @@ class WCMPBE_Settings_Data
     }
 
     /**
-     * Export defaults specifically for bpost.
-     *
-     * @return array
-     */
-    private function get_section_carrier_bpost_export_defaults(): array
-    {
-        return [
-            [
-                "name"      => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                "label"     => __("shipment_options_insured", "woocommerce-myparcelbe"),
-                "help_text" => __("shipment_options_insured_help_text", "woocommerce-myparcelbe"),
-                "type"      => "toggle",
-            ],
-            [
-                "name"      => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE,
-                "condition" => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                "label"     => __("shipment_options_insured_from_price", "woocommerce-myparcelbe"),
-                "help_text" => __("shipment_options_insured_from_price_help_text", "woocommerce-myparcelbe"),
-                "type"      => "number",
-            ],
-        ];
-    }
-
-    /**
      * These are the unprefixed settings for postnl.
      * After the settings are generated every name will be prefixed with "postnl_"
      * Example: delivery_enabled => postnl_delivery_enabled
@@ -654,9 +632,33 @@ class WCMPBE_Settings_Data
     }
 
     /**
-     * These are the unprefixed settings for postnl.
-     * After the settings are generated every name will be prefixed with "postnl_"
-     * Example: delivery_enabled => postnl_delivery_enabled
+     * Export defaults specifically for bpost.
+     *
+     * @return array
+     */
+    private function get_section_carrier_bpost_export_defaults(): array
+    {
+        return [
+            [
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label"     => __("shipment_options_insured", "woocommerce-myparcelbe"),
+                "help_text" => __("shipment_options_insured_help_text", "woocommerce-myparcelbe"),
+                "type"      => "toggle",
+            ],
+            [
+                "name"      => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE,
+                "condition" => WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                "label"     => __("shipment_options_insured_from_price", "woocommerce-myparcelbe"),
+                "help_text" => __("shipment_options_insured_from_price_help_text", "woocommerce-myparcelbe"),
+                "type"      => "number",
+            ],
+        ];
+    }
+
+    /**
+     * These are the unprefixed settings for bpost.
+     * After the settings are generated every name will be prefixed with "bpost_"
+     * Example: delivery_enabled => bpost_delivery_enabled
      *
      * @return array
      */
@@ -675,7 +677,7 @@ class WCMPBE_Settings_Data
                 "callback"  => [WCMPBE_Settings_Callbacks::class, "enhanced_select"],
                 "options"   => $this->getWeekdays(null),
                 "default"   => [2],
-                "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcelbe"),
+                "help_text" => __("Days of the week on which you hand over parcels to bpost", "woocommerce-myparcelbe"),
             ],
             [
                 "name"      => WCMPBE_Settings::SETTING_CARRIER_CUTOFF_TIME,
@@ -745,9 +747,9 @@ class WCMPBE_Settings_Data
 
 
     /**
-     * These are the unprefixed settings for postnl.
-     * After the settings are generated every name will be prefixed with "postnl_"
-     * Example: delivery_enabled => postnl_delivery_enabled
+     * These are the unprefixed settings for DPD.
+     * After the settings are generated every name will be prefixed with "dpd_"
+     * Example: delivery_enabled => dpd_delivery_enabled
      *
      * @return array
      */
@@ -766,7 +768,7 @@ class WCMPBE_Settings_Data
                 "callback"  => [WCMPBE_Settings_Callbacks::class, "enhanced_select"],
                 "options"   => $this->getWeekdays(null),
                 "default"   => [2],
-                "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcelbe"),
+                "help_text" => __("Days of the week on which you hand over parcels to DPD", "woocommerce-myparcelbe"),
             ],
             [
                 "name"      => WCMPBE_Settings::SETTING_CARRIER_CUTOFF_TIME,
@@ -805,7 +807,7 @@ class WCMPBE_Settings_Data
         return [
             [
                 "name"  => WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                "label" => __("Enable bpost pickup", "woocommerce-myparcelbe"),
+                "label" => __("Enable dpd pickup", "woocommerce-myparcelbe"),
                 "type"  => "toggle",
             ],
             self::getFeeField(

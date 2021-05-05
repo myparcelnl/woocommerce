@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\Includes\Admin;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\BpostConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use OrderSettings;
 use WC_Order;
 use WCMPBE_Country_Codes;
@@ -36,10 +37,17 @@ class OrderSettingsRows
     private const OPTION_SHIPMENT_OPTIONS_SIGNATURE         = "[shipment_options][signature]";
     private const OPTION_SHIPMENT_OPTIONS_AGE_CHECK         = "[shipment_options][age_check]";
 
-    private const CONDITION_CARRIER_DEFAULT = [
+    private const CONDITION_BPOST_DEFAULT = [
         "parent_name"  => self::OPTION_CARRIER,
         "type"         => "show",
         "parent_value" => WCMPBE_Data::DEFAULT_CARRIER,
+        "set_value"    => WCMPBE_Settings_Data::DISABLED,
+    ];
+
+    private const CONDITION_POSTNL_DEFAULT = [
+        "parent_name"  => self::OPTION_CARRIER,
+        "type"         => "show",
+        "parent_value" => PostNLConsignment::CARRIER_NAME,
         "set_value"    => WCMPBE_Settings_Data::DISABLED,
     ];
 
@@ -135,7 +143,7 @@ class OrderSettingsRows
                 "condition" => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    self::CONDITION_CARRIER_DEFAULT,
+                    self::CONDITION_POSTNL_DEFAULT,
                 ],
             ];
         }
@@ -144,7 +152,7 @@ class OrderSettingsRows
         $rows[] = [
             "name"  => self::OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION,
             "type"  => "text",
-            "label" => __("Custom ID (top left on label)", "woocommerce-myparcelbe"),
+            "label" => __("Custom ID", "woocommerce-myparcelbe"),
             "value" => $orderSettings->getLabelDescription(),
         ];
 
@@ -211,9 +219,7 @@ class OrderSettingsRows
                 "help_text" => __("shipment_options_only_recipient_help_text", "woocommerce-myparcelbe"),
                 "value"     => $orderSettings->hasOnlyRecipient(),
                 "condition" => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    self::CONDITION_CARRIER_DEFAULT,
+                    self::CONDITION_POSTNL_DEFAULT,
                 ],
             ],
             [
@@ -223,9 +229,14 @@ class OrderSettingsRows
                 "help_text" => __("shipment_options_signature_help_text", "woocommerce-myparcelbe"),
                 "value"     => $orderSettings->hasSignature(),
                 "condition" => [
+                    "parent_name"  => self::OPTION_CARRIER,
+                    "type"         => "show",
+                    "parent_value" => WCMPBE_Data::getCarriersWithSignature(),
+                    "set_value"    => WCMPBE_Settings_Data::DISABLED,
+                ],
+                [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    self::CONDITION_CARRIER_DEFAULT,
                 ],
             ],
             [
@@ -236,24 +247,6 @@ class OrderSettingsRows
                 "condition" => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    [
-                        "parent_name"  => self::OPTION_CARRIER,
-                        "type"         => "disable",
-                        "parent_value" => WCMPBE_Data::DEFAULT_CARRIER,
-                        "set_value"    => WCMPBE_Settings_Data::DISABLED,
-                    ],
-                ],
-            ],
-            [
-                "name"      => self::OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT,
-                "type"      => "select",
-                "label"     => __("insured_amount", "woocommerce-myparcelbe"),
-                "options"   => WCMPBE_Data::getInsuranceAmounts(),
-                "value"     => $orderSettings->getInsuranceAmount(),
-                "condition" => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 ],
             ],
         ];

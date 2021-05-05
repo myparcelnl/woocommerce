@@ -904,8 +904,8 @@ class WCMYPABE_Admin
      */
     public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptions
     {
-        $meta           = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
-        $defaultCarrier = self::getDefaultCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
+        $meta    = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
+        $carrier = $meta['carrier'] ?? self::getDefaultCarrier() ?? WCMPBE_Data::DEFAULT_CARRIER;
 
         // $meta is a json string, create an instance
         if (! empty($meta) && ! $meta instanceof DeliveryOptions) {
@@ -913,7 +913,7 @@ class WCMYPABE_Admin
                 $meta = json_decode(stripslashes($meta), true);
             }
 
-            $meta["carrier"] = $defaultCarrier;
+            $meta["carrier"] = $carrier;
 
             try {
                 // create new instance from known json

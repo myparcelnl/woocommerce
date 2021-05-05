@@ -217,6 +217,16 @@ class WCMPBE_Data
 
         return $amounts;
     }
+    /**
+     * @return array
+     */
+    public static function getCarriersWithSignature(): array
+    {
+        return [
+            BpostConsignment::CARRIER_NAME,
+            PostNLConsignment::CARRIER_NAME,
+        ];
+    }
 
     /**
      * @return array

@@ -53,18 +53,12 @@ class WCMPBE_Installation_Migration_v2_0_0
             'retourbgg'       => 'return',
             'kenmerk'         => 'label_description',
             'verzekerd'       => 'insured',
-            'verzekerdbedrag' => 'insured_amount',
         ];
         $defaults_settings      = [];
         foreach ($defaults_settings_keys as $old_key => $new_key) {
             if (! empty($old_settings[$old_key])) {
                 $defaults_settings[$new_key] = $old_settings[$old_key];
             }
-        }
-        // set custom insurance amount
-        if (! empty($defaults_settings['insured']) && (int) $defaults_settings['insured_amount'] > 249) {
-            $defaults_settings['insured_amount']        = 0;
-            $defaults_settings['insured_amount_custom'] = $old_settings['verzekerdbedrag'];
         }
 
         // add options

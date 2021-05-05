@@ -1441,17 +1441,6 @@ class WCMPBE_Export
         AbstractConsignment $consignment
     ): void
     {
-        $isPackage           = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $orderSettings->getPackageType();
-        $isMultiColloCountry = in_array(
-            $orderSettings->getShippingCountry(),
-            [self::COUNTRY_CODE_NL, self::COUNTRY_CODE_BE]
-        );
-
-        if ($isMultiColloCountry && $isPackage) {
-            $collection->addMultiCollo($consignment, $orderSettings->getColloAmount());
-            return;
-        }
-
         $this->addFakeMultiCollo($orderSettings->getColloAmount(), $collection, $consignment);
     }
 

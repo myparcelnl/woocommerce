@@ -422,12 +422,54 @@ class WCMPBE_Export_Consignments
     private function setShipmentOptions(): void
     {
         $this->consignment
-            ->setInsurance($this->orderSettings->getInsuranceAmount())
+            ->setInsurance($this->getInsurance())
             ->setLargeFormat($this->orderSettings->hasLargeFormat())
             ->setOnlyRecipient($this->orderSettings->hasOnlyRecipient())
             ->setSignature($this->orderSettings->hasSignature())
             ->setContents($this->getContents())
             ->setInvoice($this->order->get_id());
+    }
+
+    /**
+     * Get the value of the insurance setting. Changes true/false to either 500 or 0 because the API expects an amount.
+     *
+     * @return int
+     */
+    private function getInsurance(): int
+    {
+        $isInsuranceActive = WCMPBE_Export::getChosenOrDefaultShipmentOption(
+            $this->deliveryOptions->getShipmentOptions()->getInsurance(),
+            "{$this->carrier}_" . WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED
+        );
+
+        return $this->getInsuranceAmount($isInsuranceActive);
+    }
+
+    private function getInsuranceAmount($isInsuranceActive): int
+    {
+        // Checks if all parcels must be insured
+        if ($isInsuranceActive) {
+            // get min price for insurance
+            $insuranceFromPrice = (float)$this->getSetting("{$this->carrier}_" .
+                WCMPBE_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE
+            );
+
+            $insuranceMaxPrice = 500;
+
+            if ($this->carrier === 'dpd') {
+                $insuranceMaxPrice === 520;
+            }
+
+            // get the order's total price
+            $orderPrice = (float) $this->order->get_total();
+
+            if ($insuranceFromPrice <= $orderPrice) {
+                // returns max allowed insured amount.
+                return $insuranceMaxPrice;
+            }
+        }
+
+        return 0;
     }
 
     /**

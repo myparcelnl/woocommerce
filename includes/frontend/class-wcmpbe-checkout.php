@@ -244,8 +244,12 @@ class WCMPBE_Checkout
             foreach (self::getDeliveryOptionsConfigMap($carrier) as $key => $setting) {
                 [$settingName, $function, $addBasePrice] = $setting;
 
-                $value = $settings->{$function}($carrier . '_' . $settingName);
 
+
+                $value = $settings->{$function}($carrier . '_' . $settingName);
+                if ($settingName === WCMPBE_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW){
+                    var_dump($value);
+                }
                 if (is_numeric($value) && $this->useTotalPrice() && $addBasePrice) {
                     $value += $chosenShippingMethodPrice;
                 }
@@ -253,7 +257,6 @@ class WCMPBE_Checkout
                 Arr::set($myParcelConfig, 'config.' . $key, $value);
             }
         }
-
         $myParcelConfig['config']['priceStandardDelivery'] = $this->useTotalPrice() ? $chosenShippingMethodPrice : null;
 
         return $myParcelConfig;
@@ -323,7 +326,6 @@ class WCMPBE_Checkout
     {
         $settings = WCMYPABE()->setting_collection;
         $carriers = [];
-
         foreach ([BpostConsignment::CARRIER_NAME, DPDConsignment::CARRIER_NAME, PostNLConsignment::CARRIER_NAME] as $carrier) {
             if ($settings->getByName("{$carrier}_" . WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED)
                 || $settings->getByName(
@@ -332,7 +334,6 @@ class WCMPBE_Checkout
                 $carriers[] = $carrier;
             }
         }
-
         return $carriers;
     }
 
@@ -520,8 +521,8 @@ class WCMPBE_Checkout
            "carrierSettings.$carrier.pricePickup"           => [WCMPBE_Settings::SETTING_CARRIER_PICKUP_FEE, 'getPriceByName', true],
            "carrierSettings.$carrier.priceSaturdayDelivery" => [WCMPBE_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE, 'getPriceByName', true],
            "carrierSettings.$carrier.priceSignature"        => [WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_FEE, 'getPriceByName', false],
-           "cutoffTime"                                     => [WCMPBE_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName', false],
            "deliveryDaysWindow"                             => [WCMPBE_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW, 'getIntegerByName', false],
+           "cutoffTime"                                     => [WCMPBE_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName', false],
            "dropOffDays"                                    => [WCMPBE_Settings::SETTING_CARRIER_DROP_OFF_DAYS, 'getByName', false],
            "dropOffDelay"                                   => [WCMPBE_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName', false],
            "fridayCutoffTime"                               => [WCMPBE_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName', false],
