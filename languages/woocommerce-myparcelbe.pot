@@ -652,7 +652,7 @@ msgid "Drop-off days"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:553
-msgid "Days of the week on which you hand over parcels to PostNL"
+msgid "Drop_off_day_postnl_help_text"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:558, includes/admin/settings/class-wcmpbe-settings-data.php:685, includes/admin/settings/class-wcmpbe-settings-data.php:776
