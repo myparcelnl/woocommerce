@@ -1,9 +1,9 @@
 # WooCommerce MyParcel
-Welcome to the WooCommerce MyParcel repository on GitHub. Here you can browse the source, look at open issues and keep track of development.
+Welcome to the WooCommerce MyParcel BE repository on GitHub. Here you can browse the source, look at open issues and keep track of development.
 
 This WooCommerce extension allows you to export your orders to the MyParcel [Backoffice]. Single orders exports as well as batch exports are possible.
 
-> :warning: **Note**: A MyParcel API key is required for this plugin. You can [generate one](https://myparcelnl.github.io/woocommerce/#2_A:~:text=API%20instellingen) in your [Backoffice].
+> :warning: **Note**: A MyParcel API key is required for this plugin. You can [generate one](https://myparcelbe.github.io/woocommerce/#2_A:~:text=API%20instellingen) in your [Backoffice].
 
 * [Main features](#main-features)
 * [Manual](#manual)
@@ -24,12 +24,12 @@ This WooCommerce extension allows you to export your orders to the MyParcel [Bac
 - Add Track & Trace URL to the order confirmation email
 
 ## Manual
-[Plugin Manual](https://myparcelnl.github.io/woocommerce)
+[Plugin Manual](https://myparcelbe.github.io/woocommerce)
 
 ## Installation
-You can download the .zip file of the latest release from here: [Latest] [![GitHub release](https://img.shields.io/github/v/release/myparcelnl/woocommerce?logo=github)](https://github.com/myparcelbe/woocommerce/releases/latest)
+You can download the .zip file of the latest release from here: [Latest] [![GitHub release](https://img.shields.io/github/v/release/myparcelbe/woocommerce?logo=github)](https://github.com/myparcelbe/woocommerce/releases/latest)
 
-Or install it on your website from the [WordPress plugin repository]. [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/woocommerce-myparcel?logo=wordpress)](https://wordpress.org/plugins/woocommerce-myparcel/)
+Or install it on your website from the [WordPress plugin repository]. [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/wc-myparcel-belgium?logo=wordpress)](https://wordpress.org/plugins/wc-myparcel-belgium/)
 
 ## Contributing
 - Clone or download the source code
@@ -55,7 +55,7 @@ Or install it on your website from the [WordPress plugin repository]. [![WordPre
         ```
     * By uploading a `.zip` file
 
-      This builds all assets and puts all necessary files into `woocommerce-myparcel.zip`. Upload this file to your WordPress website to install the plugin.
+      This builds all assets and puts all necessary files into `woocommerce-myparcelbe.zip`. Upload this file to your WordPress website to install the plugin.
         ```shell script
         $ gulp zip
         ```
@@ -67,7 +67,7 @@ Or install it on your website from the [WordPress plugin repository]. [![WordPre
         ```
       A better solution is to follow the instructions for installation using a `.zip` file, then extracting the zip yourself and uploading its contents to your website's `wp-content` folder.
 
-[Delivery options]: https://github.com/myparcelbe/delivery-options
-[Backoffice]: https://backoffice.myparcel.nl/
+[Delivery options]: https://github.com/myparcelnl/delivery-options
+[Backoffice]: https://backoffice.sendmyparcel.be
 [Latest]: https://github.com/myparcelbe/woocommerce/releases/latest
-[WordPress plugin repository]: https://wordpress.org/plugins/woocommerce-myparcel/
+[WordPress plugin repository]: https://wordpress.org/plugins/wc-myparcel-belgium/
