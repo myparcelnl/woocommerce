@@ -69,6 +69,38 @@ msgstr ""
 "combinatie met de <strong>Track & Trace in e-mail</strong> optie, anders "
 "wordt de Track & Trace code niet opgenomen in de e-mail naar de klant."
 
+msgid "bpost_delivery_options_title"
+msgstr "bpost bezorgopties"
+
+msgid "DPD_delivery_options_title"
+msgstr "DPD bezorgopties"
+
+msgid "bpost_export_settings_title"
+msgstr "bpost exportinstellingen"
+
+msgid "bpost_pickup_options_title"
+msgstr "bpost afhaalopties"
+
+msgid "DPD_pickup_options_title"
+msgstr "DPD afhaalopties"
+
+msgid "bpost_export_settings_description"
+msgstr ""
+"Deze instellingen worden toegepast op zendingen van bpost die u aanmaakt in "
+"de backend."
+
+msgid "bpost_delivery_enabled_option_title"
+msgstr "bpost bezorging inschakelen"
+
+msgid "bpost_pickup_enabled_option_title"
+msgstr "bpost afhaalopties inschakelen"
+
+msgid "dpd_delivery_enabled_option_title"
+msgstr "DPD bezorging inschakelen"
+
+msgid "dpd_pickup_enabled_option_title"
+msgstr "DPD afhaalopties inschakelen"
+
 msgid ""
 "By default, a parcel will be offered twice. After two unsuccessful delivery "
 "attempts, the parcel will be available at the nearest pickup point for two "
@@ -147,8 +179,14 @@ msgstr "Sluitingstijd"
 msgid "Cut-off time on Saturday"
 msgstr "Sluitingstijd op zaterdag"
 
-msgid "Days of the week on which you hand over parcels to PostNL"
+msgid "Drop_off_day_postnl_help_text"
 msgstr "Dagen van de week waarop je je pakket afgeeft bij PostNL"
+
+msgid "Drop_off_day_bpost_help_text"
+msgstr "Dagen van de week waarop je je pakket afgeeft bij bpost"
+
+msgid "Drop_off_day_dpd_help_text"
+msgstr "Dagen van de week waarop je je pakket afgeeft bij DPD"
 
 msgid "Default"
 msgstr "Standaard"
@@ -187,7 +225,7 @@ msgid "Delivery options title"
 msgstr "Bezorgopties titel"
 
 msgid "Delivery title"
-msgstr "bezorg titel"
+msgstr "Bezorg titel"
 
 msgid "Delivery type"
 msgstr "Soort levering"
@@ -559,6 +597,24 @@ msgstr "Afhaallocatie"
 msgid "Pickup title"
 msgstr "Afhalen titel"
 
+msgid "Pickup_map_button_title"
+msgstr "Afhaal map titel"
+
+msgid "Pickup_list_button_title"
+msgstr "Afhaal lijst titel"
+
+msgid "Pickup_map_text"
+msgstr "Kaart"
+
+msgid "Pickup_list_text"
+msgstr "Lijst"
+
+msgid "Pickup_list_help_text"
+msgstr "De tekst op de knop lijst bij het bekijken van ophaallocaties."
+
+msgid "Pickup_map_help_text"
+msgstr "De tekst op de knop kaart bij het bekijken van ophaallocaties."
+
 msgid "pickup_location"
 msgstr "Afhaallocatie:"
 
@@ -722,6 +778,9 @@ msgstr ""
 "kunnen aantonen dat hij/zij 18+ is. Met deze optie worden \"Handtekening "
 "voor ontvangst\" en \"Alleen ontvanger\" geactiveerd. Deze optie kan niet "
 "worden gecombineerd met ochtend- of avondlevering."
+
+msgid "show_delivery_date_help_text"
+msgstr "Toon de leverdatum bij de bezorgopties."
 
 msgid "shipment_options_insured"
 msgstr "Verzekerde zending"
@@ -1012,8 +1071,8 @@ msgstr ""
 msgid "WooCommerce MyParcel requires PHP {PHP_VERSION} or higher."
 msgstr "WooCommerce MyParcel vereist PHP {PHP_VERSION} of hoger."
 
-msgid "WooCommerce MyParcel Settings"
-msgstr "WooCommerce MyParcel Instellingen"
+msgid "Settings_page_title"
+msgstr "WooCommerce MyParcel BE Instellingen"
 
 msgid ""
 "You can change the place of the delivery options on the checkout page. By "

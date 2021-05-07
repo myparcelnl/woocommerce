@@ -70,6 +70,36 @@ msgstr ""
 "in email</strong> option, otherwise the Track & Trace code will not be "
 "included in the customer email."
 
+msgid "bpost_delivery_options_title"
+msgstr "bpost delivery options"
+
+msgid "DPD_delivery_options_title"
+msgstr "DPD delivery options"
+
+msgid "bpost_export_settings_title"
+msgstr "bpost export settings"
+
+msgid "bpost_pickup_options_title"
+msgstr "bpost pickup options"
+
+msgid "DPD_pickup_options_title"
+msgstr "DPD pickup options"
+
+msgid "bpost_export_settings_description"
+msgstr "These settings will be applied to bpost shipments you create in the backend."
+
+msgid "bpost_delivery_enabled_option_title"
+msgstr "Enable bpost delivery"
+
+msgid "bpost_pickup_enabled_option_title"
+msgstr "Enable bpost pickup"
+
+msgid "dpd_delivery_enabled_option_title"
+msgstr "Enable DPD delivery"
+
+msgid "dpd_pickup_enabled_option_title"
+msgstr "Enable DPD pickup"
+
 msgid ""
 "By default, a parcel will be offered twice. After two unsuccessful delivery "
 "attempts, the parcel will be available at the nearest pickup point for two "
@@ -148,8 +178,14 @@ msgstr "Cut-off time"
 msgid "Cut-off time on Saturday"
 msgstr "Cut-off time on Saturday"
 
-msgid "Days of the week on which you hand over parcels to PostNL"
+msgid "Drop_off_day_postnl_help_text"
 msgstr "Days of the week on which you hand over parcels to PostNL"
+
+msgid "Drop_off_day_bpost_help_text"
+msgstr "Days of the week on which you hand over parcels to bpost"
+
+msgid "Drop_off_day_dpd_help_text"
+msgstr "Days of the week on which you hand over parcels to DPD"
 
 msgid "Default"
 msgstr "Default"
@@ -561,6 +597,24 @@ msgstr "Pickup location"
 msgid "Pickup title"
 msgstr "Pickup title"
 
+msgid "Pickup_map_button_title"
+msgstr "Pickup map title"
+
+msgid "Pickup_list_button_title"
+msgstr "Pickup list title"
+
+msgid "Pickup_map_text"
+msgstr "Map"
+
+msgid "Pickup_list_text"
+msgstr "List"
+
+msgid "Pickup_list_help_text"
+msgstr "The text on the list button when viewing pickup locations."
+
+msgid "Pickup_map_help_text"
+msgstr "The text on the map button when viewing pickup locations."
+
 msgid "pickup_location"
 msgstr "Pickup location:"
 
@@ -719,6 +773,9 @@ msgstr ""
 "show 18+ by means of a proof of identity. The options \"Signature for "
 "receipt\" and \"Delivery only at recipient\" are included with this option. "
 "This option can't be combined with morning or evening delivery."
+
+msgid "show_delivery_date_help_text"
+msgstr "Show the delivery date inside the delivery options."
 
 msgid "shipment_options_insured"
 msgstr "Insured shipment"
@@ -1000,8 +1057,8 @@ msgstr "WooCommerce MyParcel requires %sWooCommerce%s to be installed & activate
 msgid "WooCommerce MyParcel requires PHP {PHP_VERSION} or higher."
 msgstr "WooCommerce MyParcel requires PHP {PHP_VERSION} or higher."
 
-msgid "WooCommerce MyParcel Settings"
-msgstr "WooCommerce MyParcel Settings"
+msgid "Settings_page_title"
+msgstr "WooCommerce MyParcel BE Settings"
 
 msgid ""
 "You can change the place of the delivery options on the checkout page. By "

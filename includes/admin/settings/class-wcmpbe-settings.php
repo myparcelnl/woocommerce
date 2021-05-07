@@ -207,7 +207,7 @@ class WCMPBE_Settings
         $active_tab = isset($_GET["tab"]) ? $_GET["tab"] : self::SETTINGS_GENERAL;
         ?>
         <div class="wrap woocommerce">
-            <h1><?php _e("WooCommerce MyParcel BE Settings", "woocommerce-myparcelbe"); ?></h1>
+            <h1><?php _e("Settings_page_title", "woocommerce-myparcelbe"); ?></h1>
             <h2 class="nav-tab-wrapper">
                 <?php
                 foreach ($settings_tabs as $tab_slug => $tab_title) :

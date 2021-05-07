@@ -301,21 +301,21 @@ class WCMPBE_Settings_Data
             BpostConsignment::CARRIER_NAME => [
                 [
                     "name"        => "export_defaults",
-                    "label"       => __("bpost export settings", "woocommerce-myparcelbe"),
+                    "label"       => __("bpost_export_settings_title", "woocommerce-myparcelbe"),
                     "description" => __(
-                        "These settings will be applied to bpost shipments you create in the backend.",
+                        "bpost_export_settings_description",
                         "woocommerce-myparcelbe"
                     ),
                     "settings"    => $this->get_section_carrier_bpost_export_defaults(),
                 ],
                 [
                     "name"     => "delivery_options",
-                    "label"    => __("bpost delivery options", "woocommerce-myparcelbe"),
+                    "label"    => __("bpost_delivery_options_title", "woocommerce-myparcelbe"),
                     "settings" => $this->get_section_carrier_bpost_delivery_options(),
                 ],
                 [
                     "name"     => "pickup_options",
-                    "label"    => __("bpost pickup options", "woocommerce-myparcelbe"),
+                    "label"    => __("bpost_pickup_options_title", "woocommerce-myparcelbe"),
                     "settings" => $this->get_section_carrier_bpost_pickup_options(),
                 ],
             ],
@@ -333,12 +333,12 @@ class WCMPBE_Settings_Data
             DPDConsignment::CARRIER_NAME => [
                 [
                     "name"     => "delivery_options",
-                    "label"    => __("DPD delivery options", "woocommerce-myparcelbe"),
+                    "label"    => __("DPD_delivery_options_title", "woocommerce-myparcelbe"),
                     "settings" => $this->get_section_carrier_dpd_delivery_options(),
                 ],
                 [
                     "name"     => "pickup_options",
-                    "label"    => __("DPD pickup options", "woocommerce-myparcelbe"),
+                    "label"    => __("DPD_pickup_options_title", "woocommerce-myparcelbe"),
                     "settings" => $this->get_section_carrier_dpd_pickup_options(),
                 ],
             ],
@@ -550,7 +550,7 @@ class WCMPBE_Settings_Data
                 "callback"  => [WCMPBE_Settings_Callbacks::class, "enhanced_select"],
                 "options"   => $this->getWeekdays(null),
                 "default"   => [2],
-                "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcelbe"),
+                "help_text" => __("Drop_off_day_postnl_help_text", "woocommerce-myparcelbe"),
             ],
             [
                 "name"      => WCMPBE_Settings::SETTING_CARRIER_CUTOFF_TIME,
@@ -576,7 +576,7 @@ class WCMPBE_Settings_Data
                 "label"     => __("Show delivery date", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "default"   => self::ENABLED,
-                "help_text" => __("Show the delivery date inside the delivery options.", "woocommerce-myparcelbe"),
+                "help_text" => __("show_delivery_date_help_text", "woocommerce-myparcelbe"),
             ],
             [
                 "name"      => WCMPBE_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
@@ -667,7 +667,7 @@ class WCMPBE_Settings_Data
         return [
             [
                 "name"  => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label" => __("Enable bpost delivery", "woocommerce-myparcelbe"),
+                "label" => __("bpost_delivery_enabled_option_title", "woocommerce-myparcelbe"),
                 "type"  => "toggle",
             ],
             [
@@ -677,7 +677,7 @@ class WCMPBE_Settings_Data
                 "callback"  => [WCMPBE_Settings_Callbacks::class, "enhanced_select"],
                 "options"   => $this->getWeekdays(null),
                 "default"   => [2],
-                "help_text" => __("Days of the week on which you hand over parcels to bpost", "woocommerce-myparcelbe"),
+                "help_text" => __("Drop_off_day_bpost_help_text", "woocommerce-myparcelbe"),
             ],
             [
                 "name"      => WCMPBE_Settings::SETTING_CARRIER_CUTOFF_TIME,
@@ -703,7 +703,7 @@ class WCMPBE_Settings_Data
                 "label"     => __("Show delivery date", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "default"   => self::ENABLED,
-                "help_text" => __("Show the delivery date inside the delivery options.", "woocommerce-myparcelbe"),
+                "help_text" => __("show_delivery_date_help_text", "woocommerce-myparcelbe"),
             ],
             [
                 "name"      => WCMPBE_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
@@ -733,7 +733,7 @@ class WCMPBE_Settings_Data
         return [
             [
                 "name"  => WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                "label" => __("Enable bpost pickup", "woocommerce-myparcelbe"),
+                "label" => __("bpost_pickup_enabled_option_title", "woocommerce-myparcelbe"),
                 "type"  => "toggle",
             ],
             self::getFeeField(
@@ -758,7 +758,7 @@ class WCMPBE_Settings_Data
         return [
             [
                 "name"  => WCMPBE_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label" => __("Enable DPD delivery", "woocommerce-myparcelbe"),
+                "label" => __("dpd_delivery_enabled_option_title", "woocommerce-myparcelbe"),
                 "type"  => "toggle",
             ],
             [
@@ -768,7 +768,7 @@ class WCMPBE_Settings_Data
                 "callback"  => [WCMPBE_Settings_Callbacks::class, "enhanced_select"],
                 "options"   => $this->getWeekdays(null),
                 "default"   => [2],
-                "help_text" => __("Days of the week on which you hand over parcels to DPD", "woocommerce-myparcelbe"),
+                "help_text" => __("Drop_off_day_dpd_help_text", "woocommerce-myparcelbe"),
             ],
             [
                 "name"      => WCMPBE_Settings::SETTING_CARRIER_CUTOFF_TIME,
@@ -794,7 +794,7 @@ class WCMPBE_Settings_Data
                 "label"     => __("Show delivery date", "woocommerce-myparcelbe"),
                 "type"      => "toggle",
                 "default"   => self::ENABLED,
-                "help_text" => __("Show the delivery date inside the delivery options.", "woocommerce-myparcelbe"),
+                "help_text" => __("show_delivery_date_help_text", "woocommerce-myparcelbe"),
             ],
         ];
     }
@@ -807,7 +807,7 @@ class WCMPBE_Settings_Data
         return [
             [
                 "name"  => WCMPBE_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                "label" => __("Enable dpd pickup", "woocommerce-myparcelbe"),
+                "label" => __("dpd_pickup_enabled_option_title", "woocommerce-myparcelbe"),
                 "type"  => "toggle",
             ],
             self::getFeeField(
@@ -1151,22 +1151,16 @@ class WCMPBE_Settings_Data
             [
                 "name"      => WCMPBE_Settings::PICKUP_LOCATIONS_LIST_BUTTON,
                 "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "help_text" => __(
-                    "The text on the \"list\" button when viewing pickup locations.",
-                    "woocommerce-myparcelbe"
-                ),
-                "label"     => __("Pickup list button text", "woocommerce-myparcelbe"),
-                "default"   => __("List", "woocommerce-myparcelbe"),
+                "help_text" => __("Pickup_list_help_text", "woocommerce-myparcelbe"),
+                "label"     => __("Pickup_list_button_title", "woocommerce-myparcelbe"),
+                "default"   => __("Pickup_list_text", "woocommerce-myparcelbe"),
             ],
             [
                 "name"      => WCMPBE_Settings::PICKUP_LOCATIONS_MAP_BUTTON,
                 "condition" => WCMPBE_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "help_text" => __(
-                    "The text on the \"map\" button when viewing pickup locations.",
-                    "woocommerce-myparcelbe"
-                ),
-                "label"     => __("Pickup map button text", "woocommerce-myparcelbe"),
-                "default"   => __("Map", "woocommerce-myparcelbe"),
+                "help_text" => __("Pickup_map_help_text", "woocommerce-myparcelbe"),
+                "label"     => __("Pickup_map_button_title", "woocommerce-myparcelbe"),
+                "default"   => __("Pickup_map_text", "woocommerce-myparcelbe"),
             ],
         ];
     }

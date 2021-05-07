@@ -484,27 +484,27 @@ msgid "PostNL pickup options"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:304
-msgid "bpost export settings"
+msgid "bpost_export_settings_title"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:305
-msgid "These settings will be applied to bpost shipments you create in the backend."
+msgid "bpost_export_settings_description"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:313
-msgid "bpost delivery options"
+msgid "bpost_delivery_options_title"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:318
-msgid "bpost pickup options"
+msgid "bpost_pickup_options_title"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:336
-msgid "DPD delivery options"
+msgid "DPD_delivery_options_title"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:341
-msgid "DPD pickup options"
+msgid "DPD_pickup_options_title"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:356
@@ -676,10 +676,10 @@ msgid "Show delivery date"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:579, includes/admin/settings/class-wcmpbe-settings-data.php:706, includes/admin/settings/class-wcmpbe-settings-data.php:797
-msgid "Show the delivery date inside the delivery options."
+msgid "show_delivery_date_help_text"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:599, includes/admin/settings/class-wcmpbe-settings-data.php:713, includes/admin/settings/class-wcmpbe-settings-data.php:1237
+#: includes/admin/settings/class-wcmpbe-settings-data.php:599, includes/admin/settings/class-wcmpbe-settings-data.php:713, includes/admin/settings/class-wcmpbe-settings-data.php:1231
 msgid "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option."
 msgstr ""
 
@@ -688,27 +688,27 @@ msgid "Enable PostNL pickup"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:670
-msgid "Enable bpost delivery"
+msgid "bpost_delivery_enabled_option_title"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:680
-msgid "Days of the week on which you hand over parcels to bpost"
+msgid "Drop_off_day_bpost_help_text"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:736
-msgid "Enable bpost pickup"
+msgid "bpost_pickup_enabled_option_title"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:761
-msgid "Enable DPD delivery"
+msgid "dpd_delivery_enabled_option_title"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:771
-msgid "Days of the week on which you hand over parcels to DPD"
+msgid "Drop_off_day_dpd_help_text"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:810
-msgid "Enable dpd pickup"
+msgid "dpd_pickup_enabled_option_title"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:830
@@ -932,66 +932,66 @@ msgid "Pickup title"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings-data.php:1154
-msgid "The text on the \"list\" button when viewing pickup locations."
+msgid "Pickup_list_help_text"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1158
-msgid "Pickup list button text"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1155
+msgid "Pickup_list_button_title"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1159
-msgid "List"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1156
+msgid "Pickup_list_text"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1164
-msgid "The text on the \"map\" button when viewing pickup locations."
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1161
+msgid "Pickup_map_help_text"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1168
-msgid "Pickup map button text"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1162
+msgid "Pickup_map_button_title"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1169
-msgid "Map"
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1163
+msgid "Pickup_map_text"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1192
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1186
 msgid "Theme \"%s\" detected."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1194
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1188
 msgid "Apply preset."
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1207
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1201
 msgid "Delivery date"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1208
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1202
 msgid "Order number"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1209
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1203
 msgid "Product id"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1210, includes/admin/views/html-send-return-email-form.php:67
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1204, includes/admin/views/html-send-return-email-form.php:67
 msgid "Product name"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1211
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1205
 msgid "Product quantity"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1212
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1206
 msgid "Product SKU"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1213
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1207
 msgid "Customer note"
 msgstr ""
 
-#: includes/admin/settings/class-wcmpbe-settings-data.php:1235
+#: includes/admin/settings/class-wcmpbe-settings-data.php:1229
 msgid "Fee (optional)"
 msgstr ""
 
@@ -1000,7 +1000,7 @@ msgid "Settings"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings.php:210
-msgid "WooCommerce MyParcel BE Settings"
+msgid "Settings_page_title"
 msgstr ""
 
 #: includes/admin/settings/class-wcmpbe-settings.php:264

@@ -71,6 +71,38 @@ msgstr ""
 "dans l'e-mail</strong>. Si ce n'est pas le cas, le code Track & Trace ne "
 "sera pas repris dans l'e-mail envoyé au client."
 
+msgid "bpost_delivery_options_title"
+msgstr "Options de livraison bpost"
+
+msgid "DPD_delivery_options_title"
+msgstr "Options de livraison DPD"
+
+msgid "bpost_export_settings_title"
+msgstr "Paramètres d'exportation bpost"
+
+msgid "bpost_pickup_options_title"
+msgstr "Options de ramassage bpost"
+
+msgid "DPD_pickup_options_title"
+msgstr "Options de ramassage DPD"
+
+msgid "bpost_export_settings_description"
+msgstr ""
+"Ces paramètres seront appliqués aux envois bpost que vous créez dans le "
+"backend."
+
+msgid "bpost_delivery_enabled_option_title"
+msgstr "Activer la livraison bpost"
+
+msgid "bpost_pickup_enabled_option_title"
+msgstr "Activer le ramassage bpost"
+
+msgid "dpd_delivery_enabled_option_title"
+msgstr "Activer la livraison DPD"
+
+msgid "dpd_pickup_enabled_option_title"
+msgstr "Activer le ramassage DPD"
+
 msgid ""
 "By default, a parcel will be offered twice. After two unsuccessful delivery "
 "attempts, the parcel will be available at the nearest pickup point for two "
@@ -131,7 +163,7 @@ msgid "Connect customer email"
 msgstr "Associer l'adresse e-mail du client"
 
 msgid "Connect customer phone"
-msgstr "Associer le numéro de tél��phone du client"
+msgstr "Associer le numéro de téléphone du client"
 
 msgid "Custom ID (top left on label)"
 msgstr "ID personnalisés (en haut à gauche sur l'étiquette)"
@@ -151,8 +183,14 @@ msgstr "Heure de clôture"
 msgid "Cut-off time on Saturday"
 msgstr "Heure limite le samedi"
 
-msgid "Days of the week on which you hand over parcels to PostNL"
+msgid "Drop_off_day_postnl_help_text"
 msgstr "Jours de la semaine où vous la main sur les colis à PostNL"
+
+msgid "Drop_off_day_bpost_help_text"
+msgstr "Jours de la semaine pendant lesquels vous remettez des colis à bpost"
+
+msgid "Drop_off_day_dpd_help_text"
+msgstr "Jours de la semaine pendant lesquels vous remettez des colis à DPD"
 
 msgid "Default"
 msgstr "Défaut"
@@ -499,7 +537,7 @@ msgid "No e-mail address found in order."
 msgstr "Aucune adresse e-mail trouvée dans l'ordre."
 
 msgid "No HS code found in MyParcel settings"
-msgstr "Aucun code HS trouv�� dans les paramètres MyParcel"
+msgstr "Aucun code HS trouvé dans les paramètres MyParcel"
 
 msgid "No label has been created yet."
 msgstr "Label pas encore créé."
@@ -563,6 +601,28 @@ msgstr "Lieu de ramassage"
 
 msgid "Pickup title"
 msgstr "Titre du ramassage"
+
+msgid "Pickup_map_button_title"
+msgstr "Titre de la carte de ramassage"
+
+msgid "Pickup_list_button_title"
+msgstr "Titre de la liste de ramassage"
+
+msgid "Pickup_map_text"
+msgstr "Carte"
+
+msgid "Pickup_list_text"
+msgstr "Liste"
+
+msgid "Pickup_list_help_text"
+msgstr ""
+"Le texte sur le bouton de liste lors de l'affichage des emplacements de "
+"ramassage."
+
+msgid "Pickup_map_help_text"
+msgstr ""
+"Le texte sur le bouton de la carte lors de l'affichage des lieux de prise "
+"en charge."
 
 msgid "pickup_location"
 msgstr "Lieu de ramassage"
@@ -730,6 +790,9 @@ msgstr ""
 "d'identité. Avec ceci L'option 'signature pour réception' et 'livraison "
 "uniquement chez le destinataire' sont inclus. Cette option ne peut pas être "
 "combinée avec la livraison le matin ou le soir."
+
+msgid "show_delivery_date_help_text"
+msgstr "Affichez la date de livraison dans les options de livraison."
 
 msgid "shipment_options_insured"
 msgstr "Expédition assuré"
@@ -1023,8 +1086,8 @@ msgstr "WooCommerce MyParcel nécessite que %sWooCommerce%s soit installé et ac
 msgid "WooCommerce MyParcel requires PHP {PHP_VERSION} or higher."
 msgstr "WooCommerce MyParcel nécessite PHP {PHP_VERSION} ou supérieur."
 
-msgid "WooCommerce MyParcel Settings"
-msgstr "Paramètres WooCommerce MyParcel"
+msgid "Settings_page_title"
+msgstr "Paramètres WooCommerce MyParcel BE"
 
 msgid ""
 "You can change the place of the delivery options on the checkout page. By "
