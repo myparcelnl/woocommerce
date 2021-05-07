@@ -98,7 +98,7 @@ gulp.task('zip', () => gulp.src([
   'readme.txt',
   'templates/**/*',
   'vendor/**/*',
-  'woocommerce-myparcelbe.php',
+  'woocommerce-myparcel.php',
   'wpm-config.json',
 ], {base: '.'})
   .pipe(zip('woocommerce-myparcelbe.zip'))
