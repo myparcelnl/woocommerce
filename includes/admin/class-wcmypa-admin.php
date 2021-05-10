@@ -230,12 +230,16 @@ class WCMYPA_Admin
      */
     public function automaticExportOrder($orderId, ?string $oldStatus = null, ?string $newStatus = null): void
     {
-        if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT)){
+        if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT)) {
             return;
         }
 
-        $forStatus = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT_STATUS);
-        if ($forStatus === ($newStatus ?? WCMP_Settings_Data::NOT_ACTIVE)) {
+        $newStatus             = $newStatus ?? WCMP_Settings_Data::NOT_ACTIVE;
+        $automaticExportStatus = WCMYPA()->setting_collection->getByName(
+            WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT_STATUS
+        );
+
+        if ($automaticExportStatus === $newStatus) {
             (new WCMP_Export())->exportByOrderId($orderId);
         }
     }
