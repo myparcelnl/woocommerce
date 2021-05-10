@@ -50,6 +50,8 @@ class WCMP_Export
     public const COUNTRY_CODE_NL = 'NL';
     public const COUNTRY_CODE_BE = 'BE';
 
+    private const NO_CONSIGNMENTS = 0;
+
     public $order_id;
     public $success;
     public $errors;
@@ -364,7 +366,7 @@ class WCMP_Export
             setcookie('myparcel_response', implode('<br/>', $this->errors), time() + self::COOKIE_EXPIRE_TIME, "/");
         }
 
-        if (0 === count($collection)) {
+        if (self::NO_CONSIGNMENTS === count($collection)) {
             WCMP_Log::add("No shipments exported to MyParcel.");
 
             return [];

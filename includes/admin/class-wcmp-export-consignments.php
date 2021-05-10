@@ -487,15 +487,14 @@ class WCMP_Export_Consignments
      */
     public function validateWeight(): void
     {
-        $weight         = $this->getTotalWeight();
-        $maxColloWeight = WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_TYPE[$this->getPackageType()]
-            ??
-            WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_DEFAULT;
+        $colloWeight       = $this->getTotalWeight();
+        $maxForPackageType = WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_TYPE[$this->getPackageType()];
+        $maxColloWeight    = $maxForPackageType ?? WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_DEFAULT;
 
-        if ($weight > $maxColloWeight) {
+        if ($colloWeight > $maxColloWeight) {
             $message = sprintf(
                 __('error_collo_weight_%1$s_but_max_%2$s', 'woocommerce-myparcel'),
-                $weight / 1000,
+                $colloWeight / 1000,
                 $maxColloWeight / 1000
             );
             $hint    = __('export_hint_change_parcel', 'woocommerce-myparcel');
