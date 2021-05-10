@@ -83,11 +83,10 @@ class WCMP_Export
             return;
         }
 
-        $order  = WCX::get_order($orderId);
-        $export = new self();
-        $return = $export->addShipments([(string) $orderId], 0, false);
+        $return = $this->addShipments([(string) $orderId], 0, false);
 
         if (isset($return['success'])) {
+            $order = WCX::get_order($orderId);
             $order->add_order_note($return['success']);
         }
     }

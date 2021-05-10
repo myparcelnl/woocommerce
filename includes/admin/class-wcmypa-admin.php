@@ -221,29 +221,23 @@ class WCMYPA_Admin
 
     /**
      * @param             $orderId
-     * @param string|null $old_status
-     * @param string|null $new_status will be passed when order status change triggers this method
+     * @param string|null $oldStatus
+     * @param string|null $newStatus will be passed when order status change triggers this method
      *
      * @throws \ErrorException
      * @throws \MyParcelNL\Sdk\src\Exception\ApiException
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
-    public function automaticExportOrder($orderId, ?string $old_status = null, ?string $new_status = null): void
+    public function automaticExportOrder($orderId, ?string $oldStatus = null, ?string $newStatus = null): void
     {
         if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT)){
             return;
         }
 
-        $for_status = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT_STATUS);
-        if (isset($new_status)) {
-            if ($new_status !== $for_status) {
-                return;
-            }
-        } elseif (WCMP_Settings_Data::NOT_ACTIVE !== $for_status) {
-            return;
+        $forStatus = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT_STATUS);
+        if ($forStatus === ($newStatus ?? WCMP_Settings_Data::NOT_ACTIVE)) {
+            (new WCMP_Export())->exportByOrderId($orderId);
         }
-
-        (new WCMP_Export())->exportByOrderId($orderId);
     }
 
     /**
