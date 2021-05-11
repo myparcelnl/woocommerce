@@ -906,10 +906,10 @@ class WCMP_Export
     public function getPackageTypeFromOrder(WC_Order $order, AbstractDeliveryOptionsAdapter $deliveryOptions = null): string
     {
         $packageTypeFromDeliveryOptions = $deliveryOptions ? $deliveryOptions->getPackageType() : null;
-        $correctPackageType             = $this->getAllowedPackageType($order, $packageTypeFromDeliveryOptions);
+        $allowedPackageType             = $this->getAllowedPackageType($order, $packageTypeFromDeliveryOptions);
 
-        if ($correctPackageType) {
-            return $correctPackageType;
+        if ($allowedPackageType) {
+            return $allowedPackageType;
         }
 
         // Get pre 4.0.0 package type if it exists.
