@@ -272,7 +272,7 @@ class WCMYPA_Admin
             '<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
             $order->get_id(),
             WCMP_Data::getPackageTypeHuman(
-                $orderSettings->getPackageType() ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME
+                (new WCMP_Export())->getAllowedPackageType($order, $orderSettings->getPackageType())
             )
         );
 
