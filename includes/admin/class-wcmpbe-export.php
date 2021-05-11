@@ -655,8 +655,11 @@ class WCMPBE_Export
      */
     public static function getRecipientFromOrder(WC_Order $order)
     {
-        $isUsingMyParcelFields = WCX_Order::has_meta($order, "_billing_street_name")
-                                 && WCX_Order::has_meta($order, "_billing_house_number");
+        $hasBillingAddress = WCX_Order::has_meta($order, "_billing_street_name")
+            && WCX_Order::has_meta($order, "_billing_house_number");
+
+        $hasShippingAddress = WCX_Order::get_meta($order, "_shipping_street_name")
+            && WCX_Order::get_meta($order, "_shipping_house_number");
 
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
@@ -694,7 +697,7 @@ class WCMPBE_Export
                     "postal_code" => (string) WCX_Order::get_prop($order, "billing_postcode"),
                 ];
 
-                if ($isUsingMyParcelFields) {
+                if ($hasBillingAddress) {
                     $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_billing_street_name");
                     $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_billing_house_number");
                     $address_intl["number_suffix"] =
@@ -718,7 +721,7 @@ class WCMPBE_Export
                     "postal_code" => (string) WCX_Order::get_prop($order, "shipping_postcode"),
                 ];
                 // If not using old fields
-                if ($isUsingMyParcelFields) {
+                if ($hasShippingAddress) {
                     $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_shipping_street_name");
                     $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_shipping_house_number");
                     $address_intl["number_suffix"] =
