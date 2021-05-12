@@ -41,7 +41,7 @@ msgid "insured"
 msgstr "Assuré"
 
 msgid "insured_amount"
-msgstr "montant d'assurance"
+msgstr "Montant d'assurance"
 
 msgid "insured_for"
 msgstr "Montant assuré"
@@ -89,7 +89,7 @@ msgstr ""
 "combinée avec la livraison le matin ou le soir."
 
 msgid "shipment_options_insured"
-msgstr "expédition assuré"
+msgstr "Expédition assuré"
 
 msgid "shipment_options_insured_amount"
 msgstr "Max montant assuré"
@@ -153,6 +153,15 @@ msgstr ""
 msgid "weight"
 msgstr "Poids"
 
+msgid "settings_pickup_locations_default_view"
+msgstr "Lieux de ramassage vue défaut"
+
+msgid "settings_pickup_locations_default_view_map"
+msgstr "Carte"
+
+msgid "settings_pickup_locations_default_view_list"
+msgstr "Liste"
+
 msgid "(Unknown)"
 msgstr "(Inconnu)"
 
@@ -197,7 +206,7 @@ msgid "Ask for print start position"
 msgstr "Demander la position de démarrage de l'impression"
 
 msgid "Automatic export"
-msgstr "exportation automatique"
+msgstr "Exportation automatique"
 
 msgid ""
 "Automatically set order status to a predefined status after successful "
@@ -235,8 +244,8 @@ msgid ""
 msgstr ""
 "Par défaut, il n'y a pas d'assurance sur les livraisons. Si vous voulez "
 "toujours assurer l'expédition, vous pouvez le faire. Nous assurons la "
-"valeur d'achat de l'exp��dition, avec une valeur assurée maximum de € "
-"5.000. Les colis assurés contiennent toujours les options Adresse Accueil "
+"valeur d'achat de l'expédition, avec une valeur assurée maximum de € 5.000. "
+"Les colis assurés contiennent toujours les options Adresse Accueil "
 "uniquement 'en « Signature pour la livraison »"
 
 msgid "Calculated weight: %s"
@@ -272,15 +281,13 @@ msgstr "Associer l'adresse e-mail du client"
 msgid "Connect customer phone"
 msgstr "Associer le numéro de téléphone du client"
 
-msgid "Country of origin"
+msgid "product_options_country_of_origin"
 msgstr "Pays d'origine"
 
-msgid ""
-"Country of origin is required for world shipments. Defaults to shop base or "
-"NL. Example: 'NL', 'BE', 'DE'"
+msgid "setting_country_of_origin_help_text"
 msgstr ""
 "Pays d'origine est requis pour les envois du monde. Par défaut pour faire "
-"du shopping base ou NL. Exemple: 'NL', 'BE', 'DE'"
+"du shopping base."
 
 msgid "Custom ID (top left on label)"
 msgstr "ID personnalisés (en haut à gauche sur l'étiquette)"
@@ -306,8 +313,8 @@ msgstr "Jours de la semaine où vous la main sur les colis à PostNL"
 msgid "Default"
 msgstr "Défaut"
 
-msgid "Default country of origin"
-msgstr "pays d'origine par défaut"
+msgid "setting_country_of_origin"
+msgstr "Pays d'origine par défaut"
 
 msgid "Default export settings"
 msgstr "Paramètres d'exportation standards"
@@ -316,7 +323,7 @@ msgid "Default HS Code"
 msgstr "Par défaut Code SH"
 
 msgid "Default weight of your empty parcel."
-msgstr "poids par défaut de votre colis vide."
+msgstr "Poids par défaut de votre colis vide."
 
 msgid "delivered - at recipient"
 msgstr "livré - chez le destinataire"
@@ -352,7 +359,7 @@ msgid "Diagnostic tools"
 msgstr "Outils de diagnostic"
 
 msgid "Digital stamp"
-msgstr "timbre numérique"
+msgstr "Timbre numérique"
 
 msgid "Disabled"
 msgstr "désactivé"
@@ -456,7 +463,7 @@ msgid "Hide this message"
 msgstr "Masquez ce message"
 
 msgid "Home address only"
-msgstr "qu'adresse du domicile"
+msgstr "Qu'adresse du domicile"
 
 msgid "Home address only title"
 msgstr "Adresse du domicile seul titre"
@@ -522,7 +529,7 @@ msgid "inactive - unknown"
 msgstr "inactif - inconnu"
 
 msgid "Insurance amount"
-msgstr "montant d'assurance"
+msgstr "Montant d'assurance"
 
 msgid "Insure all orders that exceed this price point."
 msgstr "Assurer toutes les commandes qui dépassent ce prix."
@@ -537,7 +544,7 @@ msgid "Insured for"
 msgstr "Montant assuré"
 
 msgid "Insured shipment"
-msgstr "expédition assuré"
+msgstr "Expédition assuré"
 
 msgid ""
 "It looks like your shop is based in Netherlands. This plugin is for "
@@ -576,7 +583,7 @@ msgid "Max insured amount"
 msgstr "Max montant assuré"
 
 msgid "Monday delivery"
-msgstr "livraison lundi"
+msgstr "Livraison lundi"
 
 msgid "Morning delivery"
 msgstr "Livraison le matin"

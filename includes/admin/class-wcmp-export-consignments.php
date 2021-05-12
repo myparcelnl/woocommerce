@@ -167,24 +167,21 @@ class WCMP_Export_Consignments
      */
     public function setCustomItems(): void
     {
-        foreach ($this->order->get_items() as $itemId => $item) {
-            /**
-             * @var WC_Product|false $product
-             */
+        foreach ($this->order->get_items() as $item) {
             $product = $item->get_product();
-            $country = $this->getCountryOfOrigin($product);
 
             if (! $product) {
                 return;
             }
 
-            // Description
+            $country     = $this->getCountryOfOrigin($product);
             $description = $item["name"];
 
             // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
             if (strlen($description) >= WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
-                $description = substr($item["name"], 0, 47) . "...";
+                $description = substr($description, 0, 47) . "...";
             }
+
             // Amount
             $amount = (int) ($item["qty"] ?? self::DEFAULT_PRODUCT_QUANTITY);
 
@@ -244,7 +241,7 @@ class WCMP_Export_Consignments
         $productHsCode   = WCX_Product::get_meta($product, WCMYPA_Admin::META_HS_CODE, true);
         $variationHsCode = WCX_Product::get_meta($product, WCMYPA_Admin::META_HS_CODE_VARIATION, true);
 
-        $hsCode = $productHsCode ? $productHsCode : $defaultHsCode;
+        $hsCode = $productHsCode ?: $defaultHsCode;
 
         if ($variationHsCode) {
             $hsCode = $variationHsCode;
@@ -261,15 +258,14 @@ class WCMP_Export_Consignments
      * @param WC_Product $product
      *
      * @return string
+     * @throws \JsonException
      */
     public function getCountryOfOrigin(WC_Product $product): string
     {
         $defaultCountryOfOrigin = $this->getSetting(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
         $productCountryOfOrigin = WCX_Product::get_meta($product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
 
-        $countryOfOrigin = $this->getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin);
-
-        return (string) $countryOfOrigin;
+        return $this->getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin);
     }
 
     /**
@@ -401,11 +397,11 @@ class WCMP_Export_Consignments
      */
     private function setPickupLocation(): void
     {
-        if (! $this->deliveryOptions->isPickup()) {
+        $pickupLocation = $this->deliveryOptions->getPickupLocation();
+
+        if (! $this->deliveryOptions->isPickup() || ! $pickupLocation) {
             return;
         }
-
-        $pickupLocation = $this->deliveryOptions->getPickupLocation();
 
         $this->consignment
             ->setPickupCountry($pickupLocation->getCountry())

@@ -891,11 +891,7 @@ class WCMP_Export
             return null;
         }
 
-        // get shipping classes from order
-        $foundShippingClasses = $this->find_order_shipping_classes($order);
-        $highest_class = $this->getShippingClass($shippingMethod, $foundShippingClasses);
-
-        return $highest_class;
+        return $shippingMethodId;
     }
 
     /**
@@ -909,12 +905,11 @@ class WCMP_Export
      */
     public function getPackageTypeFromOrder(WC_Order $order, AbstractDeliveryOptionsAdapter $deliveryOptions = null): string
     {
-        $packageTypeFromDeliveryOptions = $deliveryOptions
-            ? $deliveryOptions->getPackageType()
-            : null;
+        $packageTypeFromDeliveryOptions = $deliveryOptions ? $deliveryOptions->getPackageType() : null;
+        $allowedPackageType             = $this->getAllowedPackageType($order, $packageTypeFromDeliveryOptions);
 
-        if ($packageTypeFromDeliveryOptions) {
-            return apply_filters("wc_myparcel_order_package_type", $packageTypeFromDeliveryOptions, $order, $this);
+        if ($allowedPackageType) {
+            return apply_filters("wc_myparcel_order_package_type", $allowedPackageType, $order, $this);
         }
 
         // Get pre 4.0.0 package type if it exists.
@@ -1033,14 +1028,14 @@ class WCMP_Export
     }
 
     /**
-     * @param WC_Order $order
-     * @param string   $packageType
+     * @param WC_Order    $order
+     * @param string|null $packageType
      *
-     * @return string
+     * @return string|null
      *
      * @throws Exception
      */
-    public function getAllowedPackageType(WC_Order $order, string $packageType): string
+    public function getAllowedPackageType(WC_Order $order, ?string $packageType): ?string
     {
         $shippingCountry      = WCX_Order::get_prop($order, "shipping_country");
         $isMailbox            = AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME === $packageType;

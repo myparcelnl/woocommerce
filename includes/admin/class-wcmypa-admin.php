@@ -272,7 +272,7 @@ class WCMYPA_Admin
             '<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
             $order->get_id(),
             WCMP_Data::getPackageTypeHuman(
-                $orderSettings->getPackageType() ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME
+                (new WCMP_Export())->getAllowedPackageType($order, $orderSettings->getPackageType())
             )
         );
 
@@ -698,7 +698,8 @@ class WCMYPA_Admin
     {
         echo '<div class="options_group">';
         foreach ($this->getProductOptions() as $productOption) {
-            if ($productOption['type'] === 'text') {
+            $type = $productOption['type'];
+            if ('text' === $type) {
                 woocommerce_wp_text_input(
                     [
                         'id'          => $productOption['id'],
@@ -706,18 +707,12 @@ class WCMYPA_Admin
                         'description' => $productOption['description'],
                     ]
                 );
-            }
-
-            if ($productOption['type'] === 'select') {
+            } elseif ('select' === $type) {
                 woocommerce_wp_select(
                     [
                         'id'          => $productOption['id'],
                         'label'       => $productOption['label'],
-                        'options' => [
-                            null                           => __("Default", "woocommerce-myparcel"),
-                            self::PRODUCT_OPTIONS_DISABLED => __("Disabled", "woocommerce-myparcel"),
-                            self::PRODUCT_OPTIONS_ENABLED  => __("Enabled", "woocommerce-myparcel"),
-                        ],
+                        'options'     => $productOption['options'],
                         'description' => $productOption['description'],
                     ]
                 );
@@ -815,18 +810,26 @@ class WCMYPA_Admin
             ],
             'Country-of-origin' => [
                 'id'          => self::META_COUNTRY_OF_ORIGIN,
-                'label'       => __('Country of origin', 'woocommerce-myparcel'),
-                'type'        => 'text',
-                'description' => wc_help_tip(__('Country of origin is required for world shipments. Defaults to shop base.', 'woocommerce-myparcel')),
+                'label'       => __('product_options_country_of_origin', 'woocommerce-myparcel'),
+                'type'        => 'select',
+                'options'     => array_merge(
+                    [
+                      null => __('Default', 'woocommerce-myparcel'),
+                    ],
+                    (new WC_Countries())->get_countries()
+                ),
+                'description' => wc_help_tip(
+                    __('setting_country_of_origin_help_text', 'woocommerce-myparcel')
+                ),
             ],
             'Age-check'         => [
                 'id'          => self::META_AGE_CHECK,
                 'label'       => __('shipment_options_age_check', 'woocommerce-myparcel'),
                 'type'        => 'select',
                 'options'     => [
-                    'Default',
-                    'Enabled',
-                    'Disabled',
+                    null                           => __('Default', 'woocommerce-myparcel'),
+                    self::PRODUCT_OPTIONS_DISABLED => __('Disabled', 'woocommerce-myparcel'),
+                    self::PRODUCT_OPTIONS_ENABLED  => __('Enabled', 'woocommerce-myparcel'),
                 ],
                 'description' => wc_help_tip(__('shipment_options_age_check_help_text', 'woocommerce-myparcel')),
             ],
@@ -941,6 +944,23 @@ class WCMYPA_Admin
     }
 
     /**
+     * @param WC_Order $order
+     *
+     * @return array
+     * @throws JsonException
+     */
+    public static function getExtraOptionsFromOrder(WC_Order $order): array
+    {
+        $meta = WCX_Order::get_meta($order, self::META_SHIPMENT_OPTIONS_EXTRA) ?: null;
+
+        if (empty($meta)) {
+            $meta['collo_amount'] = OrderSettings::DEFAULT_COLLO_AMOUNT;
+        }
+
+        return $meta;
+    }
+
+    /**
      * Output the delivery date if there is a date and the show delivery day setting is enabled.
      *
      * @param DeliveryOptions $deliveryOptions
@@ -971,14 +991,18 @@ class WCMYPA_Admin
 	 */
     private function getConfirmationData(DeliveryOptions $deliveryOptions): ?array
     {
+        $deliveryOptionsEnabled = WCMYPA()->setting_collection->isEnabled(
+            WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED
+        );
+
+        if (! $deliveryOptionsEnabled || ! $deliveryOptions->getCarrier()) {
+            return null;
+        }
+
         $signatureTitle     = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
         $onlyRecipientTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
         $hasSignature       = $deliveryOptions->getShipmentOptions()->hasSignature();
         $hasOnlyRecipient   = $deliveryOptions->getShipmentOptions()->hasOnlyRecipient();
-
-        if (! $deliveryOptions->getCarrier()) {
-            return null;
-        }
 
         if (AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME === $deliveryOptions->getDeliveryType()) {
             $pickupLocation = $deliveryOptions->getPickupLocation();

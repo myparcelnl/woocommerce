@@ -25,6 +25,9 @@ class WCMP_Settings_Data
     public const DISPLAY_TOTAL_PRICE     = "total_price";
     public const DISPLAY_SURCHARGE_PRICE = "surcharge";
 
+    public const PICKUP_LOCATIONS_VIEW_MAP  = "map";
+    public const PICKUP_LOCATIONS_VIEW_LIST = "list";
+
     public const CHANGE_STATUS_AFTER_PRINTING = "after_printing";
     public const CHANGE_STATUS_AFTER_EXPORT   = "after_export";
 
@@ -715,13 +718,15 @@ class WCMP_Settings_Data
                 ],
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN,
-                "label"     => __("Default country of origin", "woocommerce-myparcel"),
-                "type"      => "select",
-                "options"   => (new WC_Countries())->get_countries(),
-                "help-text" => __(
-                  "Country of origin is required for world shipments. Defaults to shop base or NL. Example: 'NL', 'BE', 'DE'", "woocommerce-myparcel"
-              ),
+                'name'      => WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN,
+                'label'     => __('setting_country_of_origin', 'woocommerce-myparcel'),
+                'type'      => 'select',
+                'options'   => (new WC_Countries())->get_countries(),
+                'default'   => (new WC_Countries())->get_base_country(),
+                'help-text' => __(
+                    'setting_country_of_origin_help_text',
+                    'woocommerce-myparcel'
+                ),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT,
@@ -849,6 +854,23 @@ class WCMP_Settings_Data
                     ),
                     self::DISPLAY_SURCHARGE_PRICE => __(
                         "settings_checkout_surcharge",
+                        "woocommerce-myparcel"
+                    ),
+                ],
+            ],
+            [
+                "name"      => WCMYPA_Settings::SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW,
+                "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                "label"     => __("settings_pickup_locations_default_view", "woocommerce-myparcel"),
+                "type"      => "select",
+                "default"   => self::PICKUP_LOCATIONS_VIEW_MAP,
+                "options"   => [
+                    self::PICKUP_LOCATIONS_VIEW_MAP  => __(
+                        "settings_pickup_locations_default_view_map",
+                        "woocommerce-myparcel"
+                    ),
+                    self::PICKUP_LOCATIONS_VIEW_LIST => __(
+                        "settings_pickup_locations_default_view_list",
                         "woocommerce-myparcel"
                     ),
                 ],

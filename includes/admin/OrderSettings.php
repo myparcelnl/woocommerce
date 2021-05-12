@@ -10,8 +10,8 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
 class OrderSettings
 {
-    private const DEFAULT_COLLO_AMOUNT = 1;
-    private const FIRST_INSURANCE      = 1;
+    public const DEFAULT_COLLO_AMOUNT = 1;
+    private const FIRST_INSURANCE     = 1;
 
     /**
      * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter
@@ -120,7 +120,7 @@ class OrderSettings
         $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
         $this->shipmentOptions = $this->deliveryOptions->getShipmentOptions();
         $this->shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
-        $this->extraOptions    = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+        $this->extraOptions    = WCMYPA_Admin::getExtraOptionsFromOrder($order);
 
         $this->setAllData();
     }
@@ -283,7 +283,12 @@ class OrderSettings
         $hasAgeCheck = null;
 
         foreach ($this->order->get_items() as $item) {
-            $product         = $item->get_product();
+            $product = $item->get_product();
+
+            if (! $product) {
+                continue;
+            }
+
             $productAgeCheck = WCX_Product::get_meta($product, WCMYPA_Admin::META_AGE_CHECK, true);
 
             if ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_ENABLED) {
@@ -351,7 +356,7 @@ class OrderSettings
         if ($insuranceFromDeliveryOptions && $insuranceFromDeliveryOptions >= $amountPossibilities[self::FIRST_INSURANCE]) {
             $isInsured       = (bool) $insuranceFromDeliveryOptions;
             $insuranceAmount = $insuranceFromDeliveryOptions;
-        } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice) {
+        } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && $insuranceFromDeliveryOptions !== 0) {
             $isInsured       = true;
             $insuranceAmount = $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
         }
