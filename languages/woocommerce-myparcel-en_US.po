@@ -147,6 +147,33 @@ msgstr ""
 msgid "weight"
 msgstr "Weight"
 
+msgid "error_api_for_order_%s_no_shipments_created"
+msgstr "MyParcel API error at order %s, no shipments created."
+
+msgid "error_api_no_shipments_created"
+msgstr "MyParcel API error, no shipments created."
+
+msgid "export_orderid_%1$s_failed_because_%2$s"
+msgstr "Order %1$s not exported to MyParcel. %2$s"
+
+msgid "error_colli_weight_%1$s_but_max_%2$s"
+msgstr "Packages weigh %1$s kg, maximum allowed is %2$s kg."
+
+msgid "error_collo_weight_%1$s_but_max_%2$s"
+msgstr "Shipment weighs %1$s kg, maximum allowed is %2$s kg."
+
+msgid "export_hint_change_parcel"
+msgstr "Change the parcel type or create multiple labels."
+
+msgid "Invalid postal code"
+msgstr "Invalid postal code"
+
+msgid "Missing country"
+msgstr "Country is missing"
+
+msgid "Missing number"
+msgstr "Number is missing"
+
 msgid "settings_pickup_locations_default_view"
 msgstr "Pickup locations default view"
 

@@ -342,12 +342,15 @@ class WCMP_Export
 
             try {
                 $exportConsignments = new WCMP_Export_Consignments($order);
+                $exportConsignments->validate();
                 $consignment        = $exportConsignments->getConsignment();
             } catch (Exception $ex) {
-                $errorMessage            = "Order {$order_id} could not be exported to MyParcel because: {$ex->getMessage()}";
+                $errorMessage = sprintf(
+                    __('export_orderid_%1$s_failed_because_%2$s', 'woocommerce-myparcel'),
+                    $order_id, __($ex->getMessage(), 'woocommerce-myparcel')
+                );
                 $this->errors[$order_id] = $errorMessage;
 
-                setcookie('myparcel_response', $this->errors[$order_id], time() + self::COOKIE_EXPIRE_TIME, "/");
                 WCMP_Log::add($this->errors[$order_id]);
 
                 continue;
@@ -355,6 +358,16 @@ class WCMP_Export
 
             $this->addConsignments($exportConsignments->getOrderSettings(), $collection, $consignment);
             WCMP_Log::add("Shipment data for order {$order_id}.");
+        }
+
+        if ($this->errors) {
+            setcookie('myparcel_response', implode('<br/>', $this->errors), time() + self::COOKIE_EXPIRE_TIME, "/");
+        }
+
+        if (0 === count($collection)) {
+            WCMP_Log::add("No shipments exported to MyParcel.");
+
+            return [];
         }
 
         $collection = $collection->createConcepts();

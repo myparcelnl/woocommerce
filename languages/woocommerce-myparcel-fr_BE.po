@@ -153,6 +153,33 @@ msgstr ""
 msgid "weight"
 msgstr "Poids"
 
+msgid "error_api_for_order_%s_no_shipments_created"
+msgstr ""
+
+msgid "error_api_no_shipments_created"
+msgstr ""
+
+msgid "export_orderid_%1$s_failed_because_%2$s"
+msgstr ""
+
+msgid "error_colli_weight_%1$s_but_max_%2$s"
+msgstr ""
+
+msgid "error_collo_weight_%1$s_but_max_%2$s"
+msgstr ""
+
+msgid "export_hint_change_parcel"
+msgstr ""
+
+msgid "Invalid postal code"
+msgstr "Code postal incorrect"
+
+msgid "Missing country"
+msgstr "Pays manque"
+
+msgid "Missing number"
+msgstr "Numéro manque"
+
 msgid "settings_pickup_locations_default_view"
 msgstr "Lieux de ramassage vue défaut"
 
