@@ -526,6 +526,9 @@ class WCMP_Checkout
     }
 
     /**
+     * Returns true if any product in the loop is:
+     *  - physical
+     *  - not on backorder OR user allows products on backorder to have delivery options
      * @return bool
      */
     private function shouldShowDeliveryOptions(): bool
@@ -539,21 +542,15 @@ class WCMP_Checkout
              */
             $product = $cartItem['data'];
 
-            // check if any product in the loop is real (not virtual), only then we need to show the delivery options
-            if (! $showDeliveryOptions && ! $product->is_virtual()) {
+            if (! $product->is_virtual()) {
+
+                $isOnBackOrder = $product->is_on_backorder($cartItem['quantity']);
+                if (! $showForBackorders && $isOnBackOrder) {
+                    $showDeliveryOptions = false;
+                    break;
+                }
+
                 $showDeliveryOptions = true;
-            }
-
-            // if we show the delivery options regardless of whether a product is on backorder and we have a real
-            // product ($showDeliveryOptions is set to true), we are done with the loop
-            if ($showDeliveryOptions && $showForBackorders) {
-                break;
-            }
-
-            // check if any product in the loop is on backorder, if so return false
-            if ($showDeliveryOptions && $product->is_on_backorder($cartItem['quantity'])) {
-                $showDeliveryOptions = false;
-                break;
             }
         }
 
