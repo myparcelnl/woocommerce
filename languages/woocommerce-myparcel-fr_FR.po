@@ -11,166 +11,6 @@ msgstr ""
 "Last-Translator: \n"
 "Language: fr_FR\n"
 
-msgid "setting_automatic_order_status"
-msgstr "Statut de commande automatique"
-
-msgid "setting_change_order_status_after"
-msgstr "Modification de l'état de la commande après"
-
-msgid "setting_change_status_after_printing"
-msgstr "impression d'étiquettes"
-
-msgid "setting_change_status_after_export"
-msgstr "pour l'exportation"
-
-msgid "setting_change_status_after_help_text"
-msgstr ""
-"Modifier l'état de la commande après l'exportation ou après l'impression de "
-"l'étiquette d'expédition."
-
-msgid "calculated_order_weight"
-msgstr "Poids calculé : %s"
-
-msgid "delivery_type"
-msgstr "Type de livraison:"
-
-msgid "extra_options"
-msgstr "Options supplémentaires:"
-
-msgid "insured"
-msgstr "Assuré"
-
-msgid "insured_amount"
-msgstr "Montant d'assurance"
-
-msgid "insured_for"
-msgstr "Montant assuré"
-
-msgid "myparcel_shipment_created"
-msgstr "Envoi MyParcel créé :"
-
-msgid "pickup_location"
-msgstr "Lieu de ramassage"
-
-msgid "settings_checkout_display_for"
-msgstr "Afficher pour"
-
-msgid "settings_checkout_display_for_all_methods"
-msgstr "Tous les modes d'expédition"
-
-msgid "settings_checkout_display_for_help_text"
-msgstr ""
-"Vous pouvez lier les options de livraison à des méthodes d'expédition "
-"spécifiques en les ajoutant aux types de colis sous \"Paramètres "
-"d'exportation standard\". Les options de livraison ne sont pas visibles aux "
-"adresses étrangères."
-
-msgid "settings_checkout_display_for_selected_methods"
-msgstr "Mode d'expédition couplé au type de colis"
-
-msgid "settings_checkout_price_format"
-msgstr "Afficher les prix en"
-
-msgid "settings_checkout_surcharge"
-msgstr "Surtaxe"
-
-msgid "settings_checkout_total_price"
-msgstr "Prix ​​total"
-
-msgid "shipment_options_age_check"
-msgstr "Vérification de l'âge"
-
-msgid "shipment_options_age_check_help_text"
-msgstr ""
-"Le contrôle d'âge est destiné aux envois de colis pour lesquels le "
-"destinataire doit montrer qu'ils ont plus de 18 ans au moyen d'une preuve "
-"d'identité. Avec ceci L'option 'signature pour réception' et 'livraison "
-"uniquement chez le destinataire' sont inclus. Cette option ne peut pas être "
-"combinée avec la livraison le matin ou le soir."
-
-msgid "shipment_options_insured"
-msgstr "Expédition assuré"
-
-msgid "shipment_options_insured_amount"
-msgstr "Max montant assuré"
-
-msgid "shipment_options_insured_amount_help_text"
-msgstr "Assurer tous les colis jusqu'à la quantité sélectionnée."
-
-msgid "shipment_options_insured_from_price"
-msgstr "Insure à partir des prix"
-
-msgid "shipment_options_insured_from_price_help_text"
-msgstr "Assurer toutes les commandes qui dépassent ce prix."
-
-msgid "shipment_options_insured_help_text"
-msgstr ""
-"Par défaut, il n'y a pas d'assurance sur les livraisons. Si vous voulez "
-"toujours assurer l'expédition, vous pouvez le faire. Nous assurons la "
-"valeur d'achat de l'expédition, avec une valeur assurée maximum de € 5.000. "
-"Les colis assurés contiennent toujours les options Adresse Accueil "
-"uniquement 'en « Signature pour la livraison »"
-
-msgid "shipment_options_large_format"
-msgstr "Très grande taille"
-
-msgid "shipment_options_large_format_help_text"
-msgstr ""
-"Activez cette option lorsque votre envoi est supérieure à 100 x 70 x 50 cm, "
-"mais plus petit que 175 x 78 x 58 cm. Des frais supplémentaires seront "
-"facturés. Noter! Si le colis est plus grand que 175 x 78 x 58 ou plus lourd "
-"que 30 kg, le taux palette sera facturé."
-
-msgid "shipment_options_only_recipient"
-msgstr "Seul destinataire"
-
-msgid "shipment_options_only_recipient_help_text"
-msgstr ""
-"Si vous ne voulez pas que le colis soit livré aux voisins, choisissez cette "
-"option."
-
-msgid "shipment_options_return"
-msgstr "Retour si aucune réponse"
-
-msgid "shipment_options_return_help_text"
-msgstr ""
-"Par défaut, une parcelle sera offert deux fois. Après deux tentatives "
-"infructueuses de livraison, le colis sera disponible au point le plus "
-"proche pick-up pendant deux semaines. Là, il peut être repris par le "
-"destinataire de la note qui a été laissé par le courrier. Si vous souhaitez "
-"recevoir le colis de retour directement et non en avant au point de "
-"ramassage, activez cette option."
-
-msgid "shipment_options_signature"
-msgstr "Signature pour réception"
-
-msgid "shipment_options_signature_help_text"
-msgstr ""
-"Le colis sera offert à l'adresse de livraison. Si le destinataire est pas à "
-"la maison, le colis sera livré aux voisins. Dans les deux cas, une "
-"signature sera nécessaire."
-
-msgid "weight"
-msgstr "Poids"
-
-msgid "Invalid postal code"
-msgstr "Code postal incorrect"
-
-msgid "Missing country"
-msgstr "Pays manque"
-
-msgid "Missing number"
-msgstr "Numéro manque"
-
-msgid "settings_pickup_locations_default_view"
-msgstr "Lieux de ramassage vue défaut"
-
-msgid "settings_pickup_locations_default_view_map"
-msgstr "Carte"
-
-msgid "settings_pickup_locations_default_view_list"
-msgstr "Liste"
-
 msgid "(Unknown)"
 msgstr "(Inconnu)"
 
@@ -260,6 +100,9 @@ msgstr ""
 msgid "Calculated weight: %s"
 msgstr "Poids calculé : %s"
 
+msgid "calculated_order_weight"
+msgstr "Poids calculé : %s"
+
 msgid "Carrier"
 msgstr "Transporteur"
 
@@ -288,18 +131,10 @@ msgid "Connect customer email"
 msgstr "Associer l'adresse e-mail du client"
 
 msgid "Connect customer phone"
-msgstr "Associer le numéro de téléphone du client"
-
-msgid "product_options_country_of_origin"
-msgstr "Pays d'origine"
-
-msgid "setting_country_of_origin_help_text"
-msgstr ""
-"Pays d'origine est requis pour les envois du monde. Par défaut pour faire "
-"du shopping base."
+msgstr "Associer le numéro de tél��phone du client"
 
 msgid "Custom ID (top left on label)"
-msgstr "ID personnalisés (en haut à gauche sur l'étiquette)"
+msgstr "ID personnalisés (angle supérieur gauche sur l 'étiquette)"
 
 msgid "Custom styles"
 msgstr "Styles personnalisés (CSS)"
@@ -321,9 +156,6 @@ msgstr "Jours de la semaine où vous la main sur les colis à PostNL"
 
 msgid "Default"
 msgstr "Défaut"
-
-msgid "setting_country_of_origin"
-msgstr "Pays d'origine par défaut"
 
 msgid "Default export settings"
 msgstr "Paramètres d'exportation standards"
@@ -363,6 +195,9 @@ msgstr "Titre de la livraison"
 
 msgid "Delivery type"
 msgstr "Type de livraison"
+
+msgid "delivery_type"
+msgstr "Type de livraison:"
 
 msgid "Diagnostic tools"
 msgstr "Outils de diagnostic"
@@ -441,6 +276,15 @@ msgstr ""
 "exemple proposer une réduction pour cette fonction ou décompter des frais "
 "supplémentaires pour cette option de livraison."
 
+msgid "error_api_for_order_%s_no_shipments_created"
+msgstr "MyParcel API erreur au commande %s, aucun envoi n'a été créé."
+
+msgid "error_api_no_shipments_created"
+msgstr "MyParcel API erreur, aucun envoi n'a été créé."
+
+msgid "error_collo_weight_%1$s_but_max_%2$s"
+msgstr "Poids par paquet est de %1$s kg, maximum est %2$s kg."
+
 msgid "Evening delivery"
 msgstr "Livraison en soirée"
 
@@ -453,8 +297,17 @@ msgstr "Options d'exportation"
 msgid "Export to MyParcel"
 msgstr "Exporter vers MyParcel"
 
+msgid "export_hint_change_parcel"
+msgstr "Modifiez le type de paquet ou générez plusieurs étiquettes."
+
+msgid "export_orderid_%1$s_failed_because_%2$s"
+msgstr "Commande %1$s non pas exporté vers MyParcel. %2$s"
+
 msgid "Extra large size"
 msgstr "Très grande taille"
+
+msgid "extra_options"
+msgstr "Options supplémentaires:"
 
 msgid "Fee (optional)"
 msgstr "Frais (optionnel)"
@@ -549,11 +402,23 @@ msgstr "Assurer tous les colis jusqu'à la quantité sélectionnée."
 msgid "Insure from price"
 msgstr "Insure à partir des prix"
 
+msgid "insured"
+msgstr "Assuré"
+
 msgid "Insured for"
 msgstr "Montant assuré"
 
 msgid "Insured shipment"
 msgstr "Expédition assuré"
+
+msgid "insured_amount"
+msgstr "Montant d'assurance"
+
+msgid "insured_for"
+msgstr "Montant assuré"
+
+msgid "Invalid postal code"
+msgstr "Code postal incorrect"
 
 msgid ""
 "It looks like your shop is based in Netherlands. This plugin is for "
@@ -591,6 +456,12 @@ msgstr "Boites aux lettres"
 msgid "Max insured amount"
 msgstr "Max montant assuré"
 
+msgid "Missing country"
+msgstr "Pays manque"
+
+msgid "Missing number"
+msgstr "Numéro manque"
+
 msgid "Monday delivery"
 msgstr "Livraison lundi"
 
@@ -608,6 +479,9 @@ msgstr "Champs adresse MyParcel"
 
 msgid "MyParcel shipment:"
 msgstr "Envoi MyParcel:"
+
+msgid "myparcel_shipment_created"
+msgstr "Envoi MyParcel créé :"
 
 msgid "MyParcel: Export"
 msgstr "MyParcel: Exporter"
@@ -632,6 +506,9 @@ msgstr "Label pas encore créé."
 
 msgid "No."
 msgstr "Numéro"
+
+msgid "not_active"
+msgstr "Non actif"
 
 msgid "Number"
 msgstr "Numéro"
@@ -686,6 +563,9 @@ msgstr "Lieu de ramassage"
 
 msgid "Pickup title"
 msgstr "Titre du ramassage"
+
+msgid "pickup_location"
+msgstr "Lieu de ramassage"
 
 msgid "Place barcode inside note"
 msgstr "Conserver le code-barres dans une note"
@@ -744,6 +624,9 @@ msgstr "La quantité de produit"
 msgid "Product SKU"
 msgstr "SKU du produit"
 
+msgid "product_options_country_of_origin"
+msgstr "Pays d'origine"
+
 msgid "Retry"
 msgstr "Réessayez"
 
@@ -764,11 +647,151 @@ msgstr ""
 msgid "Send email"
 msgstr "Envoyer l'e-mail"
 
+msgid "setting_automatic_order_status"
+msgstr "Statut de commande automatique"
+
+msgid "setting_change_order_status_after"
+msgstr "Modification de l'état de la commande après"
+
+msgid "setting_change_status_after_export"
+msgstr "pour l'exportation"
+
+msgid "setting_change_status_after_help_text"
+msgstr ""
+"Modifier l'état de la commande après l'exportation ou après l'impression de "
+"l'étiquette d'expédition."
+
+msgid "setting_change_status_after_printing"
+msgstr "impression d'étiquettes"
+
+msgid "setting_country_of_origin"
+msgstr "Pays d'origine par défaut"
+
+msgid "setting_country_of_origin_help_text"
+msgstr ""
+"Pays d'origine est requis pour les envois du monde. Par défaut pour faire "
+"du shopping base."
+
+msgid "setting_export_automatic_status"
+msgstr "Export automatique suivant l'état de commande"
+
+msgid "setting_export_automatic_status_help_text"
+msgstr ""
+"Crea un envoi dans MyParcel quand l'état du commande change. Pour recevoir "
+"le barcode sélectionnez 'Traiter immédiatement les envois' aussi."
+
 msgid "Settings"
 msgstr "Paramètres"
 
+msgid "settings_checkout_display_for"
+msgstr "Afficher pour"
+
+msgid "settings_checkout_display_for_all_methods"
+msgstr "Tous les modes d'expédition"
+
+msgid "settings_checkout_display_for_help_text"
+msgstr ""
+"Vous pouvez lier les options de livraison à des méthodes d'expédition "
+"spécifiques en les ajoutant aux types de colis sous \"Paramètres "
+"d'exportation standard\". Les options de livraison ne sont pas visibles aux "
+"adresses étrangères."
+
+msgid "settings_checkout_display_for_selected_methods"
+msgstr "Mode d'expédition couplé au type de colis"
+
+msgid "settings_checkout_price_format"
+msgstr "Afficher les prix en"
+
+msgid "settings_checkout_surcharge"
+msgstr "Surtaxe"
+
+msgid "settings_checkout_total_price"
+msgstr "Prix ​​total"
+
+msgid "settings_pickup_locations_default_view"
+msgstr "Lieux de ramassage vue défaut"
+
+msgid "settings_pickup_locations_default_view_list"
+msgstr "Liste"
+
+msgid "settings_pickup_locations_default_view_map"
+msgstr "Carte"
+
 msgid "Shipment type"
 msgstr "Types d'expédition"
+
+msgid "shipment_options_age_check"
+msgstr "Vérification de l'âge"
+
+msgid "shipment_options_age_check_help_text"
+msgstr ""
+"Le contrôle d'âge est destiné aux envois de colis pour lesquels le "
+"destinataire doit montrer qu'ils ont plus de 18 ans au moyen d'une preuve "
+"d'identité. Avec ceci L'option 'signature pour réception' et 'livraison "
+"uniquement chez le destinataire' sont inclus. Cette option ne peut pas être "
+"combinée avec la livraison le matin ou le soir."
+
+msgid "shipment_options_insured"
+msgstr "Expédition assuré"
+
+msgid "shipment_options_insured_amount"
+msgstr "Max montant assuré"
+
+msgid "shipment_options_insured_amount_help_text"
+msgstr "Assurer tous les colis jusqu'à la quantité sélectionnée."
+
+msgid "shipment_options_insured_from_price"
+msgstr "Insure à partir des prix"
+
+msgid "shipment_options_insured_from_price_help_text"
+msgstr "Assurer toutes les commandes qui dépassent ce prix."
+
+msgid "shipment_options_insured_help_text"
+msgstr ""
+"Par défaut, il n'y a pas d'assurance sur les livraisons. Si vous voulez "
+"toujours assurer l'expédition, vous pouvez le faire. Nous assurons la "
+"valeur d'achat de l'expédition, avec une valeur assurée maximum de € 5.000. "
+"Les colis assurés contiennent toujours les options Adresse Accueil "
+"uniquement 'en « Signature pour la livraison »"
+
+msgid "shipment_options_large_format"
+msgstr "Très grande taille"
+
+msgid "shipment_options_large_format_help_text"
+msgstr ""
+"Activez cette option lorsque votre envoi est supérieure à 100 x 70 x 50 cm, "
+"mais plus petit que 175 x 78 x 58 cm. Des frais supplémentaires seront "
+"facturés. Noter! Si le colis est plus grand que 175 x 78 x 58 ou plus lourd "
+"que 30 kg, le taux palette sera facturé."
+
+msgid "shipment_options_only_recipient"
+msgstr "Seul destinataire"
+
+msgid "shipment_options_only_recipient_help_text"
+msgstr ""
+"Si vous ne voulez pas que le colis soit livré aux voisins, choisissez cette "
+"option."
+
+msgid "shipment_options_return"
+msgstr "Retour si aucune réponse"
+
+msgid "shipment_options_return_help_text"
+msgstr ""
+"Par défaut, une parcelle sera offert deux fois. Après deux tentatives "
+"infructueuses de livraison, le colis sera disponible au point le plus "
+"proche pick-up pendant deux semaines. Là, il peut être repris par le "
+"destinataire de la note qui a été laissé par le courrier. Si vous souhaitez "
+"recevoir le colis de retour directement et non en avant au point de "
+"ramassage, activez cette option."
+
+msgid "shipment_options_signature"
+msgstr "Signature pour réception"
+
+msgid "shipment_options_signature_help_text"
+msgstr ""
+"Le colis sera offert à l'adresse de livraison. Si le destinataire est pas à "
+"la maison, le colis sera livré aux voisins. Dans les deux cas, une "
+"signature sera nécessaire."
 
 msgid "Show after billing details"
 msgstr "Afficher après les données de facturation"
@@ -921,6 +944,9 @@ msgstr "lettre sans solde"
 msgid "View logs"
 msgstr "Afficher les logs"
 
+msgid "weight"
+msgstr "Poids"
+
 msgid ""
 "When enabled the checkout will use the MyParcel address fields. This means "
 "there will be three separate fields for street name, number and suffix. "
@@ -1031,21 +1057,3 @@ msgid "You have to export the orders to MyParcel before you can print the labels
 msgstr ""
 "Vous devez d'abord exporter vos commandes vers MyParcel avant de pouvoir "
 "imprimer vos étiquettes !"
-
-msgid "error_api_for_order_%s_no_shipments_created"
-msgstr ""
-
-msgid "error_api_no_shipments_created"
-msgstr ""
-
-msgid "export_orderid_%1$s_failed_because_%2$s"
-msgstr ""
-
-msgid "error_colli_weight_%1$s_but_max_%2$s"
-msgstr ""
-
-msgid "error_collo_weight_%1$s_but_max_%2$s"
-msgstr ""
-
-msgid "export_hint_change_parcel"
-msgstr ""
