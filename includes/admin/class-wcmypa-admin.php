@@ -100,6 +100,7 @@ class WCMYPA_Admin
         add_action("manage_shop_order_posts_custom_column", [$this, "addBarcodeToOrderColumn"], 10, 2);
 
         add_action('woocommerce_payment_complete', [$this, 'automaticExportOrder'], 1000);
+        add_action('woocommerce_order_status_changed', [$this, 'automaticExportOrder'], 1000, 3);
 
         add_action("init", [$this, "registerDeliveredPostStatus"], 10, 1);
         add_filter("wc_order_statuses", [$this, "displayDeliveredPostStatus"], 10, 2);
@@ -219,15 +220,28 @@ class WCMYPA_Admin
     }
 
     /**
-     * @param $orderId
+     * @param             $orderId
+     * @param string|null $oldStatus
+     * @param string|null $newStatus will be passed when order status change triggers this method
      *
-     * @throws ErrorException
+     * @throws \ErrorException
      * @throws \MyParcelNL\Sdk\src\Exception\ApiException
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
-    public function automaticExportOrder($orderId): void
+    public function automaticExportOrder($orderId, ?string $oldStatus = null, ?string $newStatus = null): void
     {
-        (new WCMP_Export())->exportByOrderId($orderId);
+        if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT)) {
+            return;
+        }
+
+        $newStatus             = $newStatus ?? WCMP_Settings_Data::NOT_ACTIVE;
+        $automaticExportStatus = WCMYPA()->setting_collection->getByName(
+            WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT_STATUS
+        );
+
+        if ($automaticExportStatus === $newStatus) {
+            (new WCMP_Export())->exportByOrderId($orderId);
+        }
     }
 
     /**
