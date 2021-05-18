@@ -471,4 +471,34 @@ class WCMP_Export_Consignments
             ->setDeliveryType($this->getDeliveryType())
             ->setLabelDescription($this->getFormattedLabelDescription());
     }
+
+    /**
+     * @throws Exception
+     */
+    public function validate(): bool
+    {
+        $this->validateWeight();
+
+        return $this->consignment->validate();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function validateWeight(): void
+    {
+        $colloWeight       = $this->getTotalWeight();
+        $maxForPackageType = WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_TYPE[$this->getPackageType()];
+        $maxColloWeight    = $maxForPackageType ?? WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_DEFAULT;
+
+        if ($colloWeight > $maxColloWeight) {
+            $message = sprintf(
+                __('error_collo_weight_%1$s_but_max_%2$s', 'woocommerce-myparcel'),
+                $colloWeight / 1000,
+                $maxColloWeight / 1000
+            );
+            $hint    = __('export_hint_change_parcel', 'woocommerce-myparcel');
+            throw new Exception("{$message} {$hint}");
+        }
+    }
 }

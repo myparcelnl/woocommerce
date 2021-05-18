@@ -88,9 +88,6 @@ class WCMP_Checkout
             $deps[] = "wcmp-checkout-fields";
         }
 
-        /*
-         * Show delivery options also for shipments on backorder
-         */
         if (! $this->shouldShowDeliveryOptions()) {
             return;
         }
@@ -530,31 +527,35 @@ class WCMP_Checkout
     }
 
     /**
-     * Show delivery options also for shipments on backorder
+     * Returns true if any product in the loop is:
+     *  - physical
+     *  - not on backorder OR user allows products on backorder to have delivery options
      * @return bool
      */
     private function shouldShowDeliveryOptions(): bool
     {
-        // $backorderDeliveryOptions causes the options to be displayed also when product is in backorder
-        $backorderDeliveryOptions = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS);
-        $show                     = true;
+        $showForBackorders   = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS);
+        $showDeliveryOptions = false;
 
-        if (! $backorderDeliveryOptions) {
-            foreach (WC()->cart->get_cart() as $cartItem) {
-                /**
-                 * @var WC_Product $product
-                 */
-                $product       = $cartItem['data'];
-                $isOnBackorder = $product->is_on_backorder($cartItem['quantity']);
-    
-                if ($isOnBackorder) {
-                    $show = false;
+        foreach (WC()->cart->get_cart() as $cartItem) {
+            /**
+             * @var WC_Product $product
+             */
+            $product = $cartItem['data'];
+
+            if (! $product->is_virtual()) {
+
+                $isOnBackOrder = $product->is_on_backorder($cartItem['quantity']);
+                if (! $showForBackorders && $isOnBackOrder) {
+                    $showDeliveryOptions = false;
                     break;
                 }
+
+                $showDeliveryOptions = true;
             }
         }
 
-        return apply_filters("wc_myparcel_show_delivery_options", $show);
+        return apply_filters("wc_myparcel_show_delivery_options", $showDeliveryOptions);
     }
 }
 
