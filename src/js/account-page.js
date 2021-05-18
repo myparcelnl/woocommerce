@@ -1,32 +1,59 @@
-jQuery(document).ready(function($) {
+jQuery(document).ready(($) => {
+  /**
+   * Hide custom NL fields by default when country not NL.
+   *
+   * @param {String} addressType
+   */
+  function localizeAddressFields(addressType) {
+    const country = $(`#${addressType}_country`).val();
 
-  function localize_address_fields(address_type) {
-   /* Hide custom NL fields by default when country not NL */
-    var country = $('#' + address_type + '_country').val();
-    if (typeof country != 'undefined') {
-      if (country != 'NL') {
-        $('#' + address_type + '_street_name_field').hide();
-        $('#' + address_type + '_house_number_field').hide();
-        $('#' + address_type + '_box_number_field').hide();
-        $('#' + address_type + '_address_1_field').show();
-        $('#' + address_type + '_address_2_field').show();
-      } else {
-        $('#' + address_type + '_street_name_field').show();
-        $('#' + address_type + '_house_number_field').show();
-        $('#' + address_type + '_box_number_field').show();
-        $('#' + address_type + '_address_1_field').hide();
-        $('#' + address_type + '_address_2_field').hide();
-      }
+    if (!country) {
+      return;
+    }
+
+    const streetName = $(`#${addressType}_street_name_field`);
+    const houseNumber = $(`#${addressType}_house_number_field`);
+    const numberSuffix = $(`#${addressType}_number_suffix_field`);
+    const boxNumber = $(`#${addressType}_box_number_field`);
+    const addressLine1 = $(`#${addressType}_address_1_field`);
+    const addressLine2 = $(`#${addressType}_address_2_field`);
+
+    switch (country) {
+      case 'NL':
+        streetName.show();
+        houseNumber.show();
+        numberSuffix.show();
+        boxNumber.hide();
+        addressLine1.hide();
+        addressLine2.hide();
+        break;
+      case 'BE':
+        streetName.show();
+        houseNumber.show();
+        numberSuffix.hide();
+        boxNumber.show();
+        addressLine1.hide();
+        addressLine2.hide();
+        break;
+      default:
+        streetName.hide();
+        houseNumber.hide();
+        numberSuffix.hide();
+        boxNumber.hide();
+        addressLine1.show();
+        addressLine2.show();
+        break;
     }
   }
 
-  localize_address_fields('billing');
-  localize_address_fields('shipping');
+  localizeAddressFields('billing');
+  localizeAddressFields('shipping');
 
-  $('#billing_country, #shipping_country').change(function() {
-    id = $(this).attr('id');
-    address_type = id.replace('_country', '');
-    localize_address_fields(address_type);
-  });
-
+  document.querySelectorAll('select')
+    .forEach((select) => {
+      select.addEventListener('change', (event) => {
+        const addressType = event.target.id.replace('_country', '');
+        localizeAddressFields(addressType);
+      });
+    });
 });
