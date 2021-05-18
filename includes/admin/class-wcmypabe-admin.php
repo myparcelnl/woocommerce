@@ -759,31 +759,19 @@ class WCMYPABE_Admin
         $country  = WCX_Order::get_prop($order, 'shipping_country');
         $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'shipping_postcode'));
 
-        // set url for NL or foreign orders
-        if ($country === 'NL') {
-            $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
+        $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
 
-            // use billing postcode for pickup/pakjegemak
-            if ($deliveryOptions->isPickup()) {
-                $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
-            }
+        // use billing postcode for pickup/pakjegemak
+        if ($deliveryOptions->isPickup()) {
+            $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'billing_postcode'));
+        }
 
-            $trackTraceUrl = sprintf(
+        return sprintf(
                 'https://sendmyparcel.me/track-trace/%s/%s/%s',
                 $track_trace,
                 $postcode,
                 $country
             );
-        } else {
-            $trackTraceUrl = sprintf(
-                "https://track.bpost.be/btr/web/#/search?itemCode=%s&postalCode=%s",
-                $track_trace,
-                $postcode
-            );
-
-        }
-
-        return $trackTraceUrl;
     }
 
     /**

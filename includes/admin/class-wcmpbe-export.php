@@ -655,11 +655,8 @@ class WCMPBE_Export
      */
     public static function getRecipientFromOrder(WC_Order $order)
     {
-        $hasBillingAddress = WCX_Order::has_meta($order, "_billing_street_name")
+        $isUsingMyParcelBEFields = WCX_Order::has_meta($order, "_billing_street_name")
             && WCX_Order::has_meta($order, "_billing_house_number");
-
-        $hasShippingAddress = WCX_Order::get_meta($order, "_shipping_street_name")
-            && WCX_Order::get_meta($order, "_shipping_house_number");
 
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
@@ -680,7 +677,7 @@ class WCMPBE_Export
         ];
 
         $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-        if ($shipping_country) {
+        if ($shipping_country === "BE") {
             // use billing address if old "pakjegemak" (1.5.6 and older)
             $pgAddress = WCX_Order::get_meta($order, WCMYPABE_Admin::META_PGADDRESS);
 
@@ -697,7 +694,7 @@ class WCMPBE_Export
                     "postal_code" => (string) WCX_Order::get_prop($order, "billing_postcode"),
                 ];
 
-                if ($hasBillingAddress) {
+                if ($isUsingMyParcelBEFields) {
                     $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_billing_street_name");
                     $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_billing_house_number");
                     $address_intl["number_suffix"] =
@@ -721,7 +718,7 @@ class WCMPBE_Export
                     "postal_code" => (string) WCX_Order::get_prop($order, "shipping_postcode"),
                 ];
                 // If not using old fields
-                if ($hasShippingAddress) {
+                if ($isUsingMyParcelBEFields) {
                     $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_shipping_street_name");
                     $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_shipping_house_number");
                     $address_intl["number_suffix"] =
