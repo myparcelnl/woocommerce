@@ -19,6 +19,16 @@ class WCMP_Cart_Fees
     /**
      * @var array
      */
+    private $feeMap;
+
+    /**
+     * @var array
+     */
+    private $feeTitles;
+
+    /**
+     * @var array
+     */
     private $fees;
 
     /**
@@ -70,6 +80,8 @@ class WCMP_Cart_Fees
         }
 
         $this->deliveryOptions = DeliveryOptionsAdapterFactory::create($deliveryOptionsData);
+        $this->feeMap    = $this->getFeeMap();
+        $this->feeTitles = $this->getFeeTitles();
 
         $this->addDeliveryFee();
         $this->addShipmentOptionFees();
@@ -78,16 +90,16 @@ class WCMP_Cart_Fees
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      *
      * @return array
      */
     private function getFee(string $name): array
     {
-        $fees   = $this->getFeeMap();
-        $titles = $this->getFeeTitles();
-
-        return [$titles[$name] ?? null, $fees[$name] ?? 0];
+        return [
+            $this->feeTitles[$name] ?? null,
+            $this->feeMap[$name] ?? 0,
+        ];
     }
 
     /**
@@ -199,34 +211,35 @@ class WCMP_Cart_Fees
      */
     private function getFeeMap(): array
     {
-        $carrier = $this->deliveryOptions->getCarrier();
-
-        $getCarrierFee = function(string $setting) use ($carrier): float {
+        $carrier       = $this->deliveryOptions->getCarrier();
+        $getCarrierFee = static function (string $setting) use ($carrier): float {
             return WCMYPA()->setting_collection->getFloatByName("{$carrier}_{$setting}");
         };
 
         return [
-            "delivery_evening" => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE),
-            "delivery_morning" => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE),
-            "delivery_pickup"  => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE),
-            "only_recipient"   => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE),
-            "signature"        => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE),
+            'delivery_evening' => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE),
+            'delivery_morning' => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE),
+            'delivery_pickup'  => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE),
+            'only_recipient'   => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE),
+            'signature'        => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE),
         ];
     }
 
     /**
-     * Map items to strings for display in the checkout.
+     * Map items to strings for display in the checkout. Add fallback values for titles because it's possible to not
+     * have titles, if there is no fallback string the fee won't be added to the checkout.
      *
      * @return array
      */
     private function getFeeTitles(): array
     {
+
         return [
-            "delivery_evening" => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE),
-            "delivery_morning" => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE),
-            "delivery_pickup"  => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_PICKUP_TITLE),
-            "only_recipient"   => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE),
-            "signature"        => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE),
+            'delivery_evening' => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE) ?: __('shipment_options_delivery_evening', 'woocommerce-myparcel'),
+            'delivery_morning' => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE) ?: __('shipment_options_delivery_morning', 'woocommerce-myparcel'),
+            'delivery_pickup'  => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_PICKUP_TITLE) ?: __('shipment_options_delivery_pickup', 'woocommerce-myparcel'),
+            'only_recipient'   => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE) ?: __('shipment_options_only_recipient', 'woocommerce-myparcel'),
+            'signature'        => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE) ?: __('shipment_options_signature', 'woocommerce-myparcel'),
         ];
     }
 

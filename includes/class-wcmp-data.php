@@ -101,10 +101,10 @@ class WCMP_Data
         ];
 
         self::$deliveryTypesHuman = [
-            AbstractConsignment::DELIVERY_TYPE_MORNING_NAME  => __("Morning delivery", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME => __("Standard delivery", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_EVENING_NAME  => __("Evening delivery", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME   => __("Pickup", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_MORNING_NAME  => __("shipment_options_delivery_morning", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME => __("shipment_options_delivery_standard", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_EVENING_NAME  => __("shipment_options_delivery_evening", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME   => __("shipment_options_delivery_pickup", "woocommerce-myparcel"),
         ];
     }
 

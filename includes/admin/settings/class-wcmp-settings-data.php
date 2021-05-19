@@ -541,7 +541,7 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Morning delivery", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_delivery_morning", "woocommerce-myparcel"),
                 "type"      => "toggle",
             ],
             self::getFeeField(
@@ -554,7 +554,7 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Evening delivery", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_delivery_evening", "woocommerce-myparcel"),
                 "type"      => "toggle",
             ],
             self::getFeeField(
@@ -597,7 +597,7 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Monday delivery", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_delivery_monday", "woocommerce-myparcel"),
                 "type"      => "toggle",
             ],
             [
@@ -929,58 +929,53 @@ class WCMP_Settings_Data
             [
                 "name"      => WCMYPA_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Delivery options title", "woocommerce-myparcel"),
-                "title"     => "Delivery options title",
-                "help_text" => __(
-                    "You can place a delivery title above the MyParcel options. When there is no title, it will not be visible.",
-                    "woocommerce-myparcel"
-                ),
+                "label"     => __("shipment_options_delivery_options_title", "woocommerce-myparcel"),
+                "help_text" => __("shipment_options_delivery_options_title_description", "woocommerce-myparcel"),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_DELIVERY_TITLE,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Delivery title", "woocommerce-myparcel"),
-                "default"   => __("Delivered at home or at work", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_delivery_title", "woocommerce-myparcel"),
+                "default"   => __("shipment_options_delivery", "woocommerce-myparcel"),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Morning delivery title", "woocommerce-myparcel"),
-                "default"   => __("Morning delivery", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_delivery_morning_title", "woocommerce-myparcel"),
+                "help_text" => __("shipment_options_delivery_standard_description", "woocommerce-myparcel"),
+                "default"   => __("shipment_options_delivery_morning", "woocommerce-myparcel"),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_STANDARD_TITLE,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Standard delivery title", "woocommerce-myparcel"),
-                "help_text" => __(
-                    "When there is no title, the delivery time will automatically be visible.",
-                    "woocommerce-myparcel"
-                ),
-                "default"   => __("Standard delivery", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_delivery_standard_title", "woocommerce-myparcel"),
+                "help_text" => __("shipment_options_delivery_standard_description", "woocommerce-myparcel"),
+                "default"   => __("shipment_options_delivery_standard", "woocommerce-myparcel"),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Evening delivery title", "woocommerce-myparcel"),
-                "default"   => __("Evening delivery", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_delivery_evening_title", "woocommerce-myparcel"),
+                "help_text" => __("shipment_options_delivery_standard_description", "woocommerce-myparcel"),
+                "default"   => __("shipment_options_delivery_evening", "woocommerce-myparcel"),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Home address only title", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_only_recipient_title", "woocommerce-myparcel"),
                 "default"   => __("shipment_options_only_recipient", "woocommerce-myparcel"),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_SIGNATURE_TITLE,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Signature on delivery title", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_signature_title", "woocommerce-myparcel"),
                 "default"   => __("shipment_options_signature", "woocommerce-myparcel"),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_PICKUP_TITLE,
                 "condition" => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                "label"     => __("Pickup title", "woocommerce-myparcel"),
-                "default"   => __("Pickup", "woocommerce-myparcel"),
+                "label"     => __("shipment_options_delivery_pickup_title", "woocommerce-myparcel"),
+                "default"   => __("shipment_options_delivery_pickup", "woocommerce-myparcel"),
             ],
         ];
     }
