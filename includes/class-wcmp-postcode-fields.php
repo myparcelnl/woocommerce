@@ -26,15 +26,15 @@ class WCMP_NL_Postcode_Fields
     public function __construct()
     {
         // Load styles
-        add_action('wp_enqueue_scripts', [&$this, 'add_styles_scripts']);
+        add_action('wp_enqueue_scripts', [$this, 'add_styles_scripts']);
 
         // Load scripts
-        add_action('admin_enqueue_scripts', [&$this, 'admin_scripts_styles']);
+        add_action('admin_enqueue_scripts', [$this, 'admin_scripts_styles']);
 
         add_action("wp_loaded", [$this, "initialize"], 9999);
     }
 
-    public function initialize()
+    public function initialize(): void
     {
         if (WCMYPA()->setting_collection->isEnabled('use_split_address_fields')) {
             // Add street name & house number checkout fields.
@@ -42,77 +42,75 @@ class WCMP_NL_Postcode_Fields
                 // WC 2.0 or newer is used, the filter got a $country parameter, yay!
                 add_filter(
                     'woocommerce_billing_fields',
-                    [&$this, 'modifyBillingFields'],
+                    [$this, 'modifyBillingFields'],
                     apply_filters('wcmp_checkout_fields_priority', 10, 'billing'),
                     2
                 );
                 add_filter(
                     'woocommerce_shipping_fields',
-                    [&$this, 'modifyShippingFields'],
+                    [$this, 'modifyShippingFields'],
                     apply_filters('wcmp_checkout_fields_priority', 10, 'shipping'),
                     2
                 );
             } else {
                 // Backwards compatibility
-                add_filter('woocommerce_billing_fields', [&$this, 'modifyBillingFields']);
-                add_filter('woocommerce_shipping_fields', [&$this, 'modifyShippingFields']);
+                add_filter('woocommerce_billing_fields', [$this, 'modifyBillingFields']);
+                add_filter('woocommerce_shipping_fields', [$this, 'modifyShippingFields']);
             }
 
             // Localize checkout fields (limit custom checkout fields to NL and NL)
-            add_filter('woocommerce_country_locale_field_selectors', [&$this, 'country_locale_field_selectors']);
-            add_filter('woocommerce_default_address_fields', [&$this, 'default_address_fields']);
-            add_filter('woocommerce_get_country_locale', [&$this, 'woocommerce_locale_be'], 1, 1); // !
+            add_filter('woocommerce_country_locale_field_selectors', [$this, 'country_locale_field_selectors']);
+            add_filter('woocommerce_default_address_fields', [$this, 'default_address_fields']);
+            add_filter('woocommerce_get_country_locale', [$this, 'woocommerce_locale_be'], 1, 1); // !
 
             // Load custom order data.
-            add_filter('woocommerce_load_order_data', [&$this, 'load_order_data']);
+            add_filter('woocommerce_load_order_data', [$this, 'load_order_data']);
 
             // Custom shop_order details.
-            add_filter('woocommerce_admin_billing_fields', [&$this, 'admin_billing_fields']);
-            add_filter('woocommerce_admin_shipping_fields', [&$this, 'admin_shipping_fields']);
             add_filter('woocommerce_found_customer_details', [$this, 'customer_details_ajax']);
-            add_action('save_post', [&$this, 'save_custom_fields']);
+            add_action('save_post', [$this, 'save_custom_fields']);
 
             // add to user profile page
-            add_filter('woocommerce_customer_meta_fields', [&$this, 'user_profile_fields']);
+            add_filter('woocommerce_customer_meta_fields', [$this, 'user_profile_fields']);
 
             add_action(
                 'woocommerce_checkout_update_order_meta',
-                [&$this, 'merge_street_number_suffix'],
+                [$this, 'merge_street_number_suffix'],
                 20,
                 2
             );
             add_filter(
                 'woocommerce_process_checkout_field_billing_postcode',
-                [&$this, 'clean_billing_postcode']
+                [$this, 'clean_billing_postcode']
             );
             add_filter(
                 'woocommerce_process_checkout_field_shipping_postcode',
-                [&$this, 'clean_shipping_postcode']
+                [$this, 'clean_shipping_postcode']
             );
 
             // Save the order data in WooCommerce 2.2 or later.
             if (version_compare(WOOCOMMERCE_VERSION, '2.2') >= 0) {
-                add_action('woocommerce_checkout_update_order_meta', [&$this, 'save_order_data'], 10, 2);
+                add_action('woocommerce_checkout_update_order_meta', [$this, 'save_order_data'], 10, 2);
             }
 
             // Remove placeholder values (IE8 & 9)
-            add_action('woocommerce_checkout_update_order_meta', [&$this, 'remove_placeholders'], 10, 2);
+            add_action('woocommerce_checkout_update_order_meta', [$this, 'remove_placeholders'], 10, 2);
 
             // Fix weird required field translations
             add_filter(
                 'woocommerce_checkout_required_field_notice',
-                [&$this, 'required_field_notices'],
+                [$this, 'required_field_notices'],
                 10,
                 2
             );
 
             $this->load_woocommerce_filters();
         } else { // if NOT using old fields
-            add_action('woocommerce_after_checkout_validation', [&$this, 'validate_address_fields'], 10, 2);
+            add_action('woocommerce_after_checkout_validation', [$this, 'validate_address_fields'], 10, 2);
         }
 
         // Processing checkout
-        add_filter('woocommerce_validate_postcode', [&$this, 'validate_postcode'], 10, 3);
+        add_filter('woocommerce_validate_postcode', [$this, 'validate_postcode'], 10, 3);
 
         // set later priority for woocommerce_billing_fields / woocommerce_shipping_fields
         // when Checkout Field Editor is active
@@ -125,7 +123,7 @@ class WCMP_NL_Postcode_Fields
 
         // Hide state field for countries without states (backwards compatible fix for bug #4223)
         if (version_compare(WOOCOMMERCE_VERSION, '2.1', '<')) {
-            add_filter('woocommerce_countries_allowed_country_states', [&$this, 'hide_states']);
+            add_filter('woocommerce_countries_allowed_country_states', [$this, 'hide_states']);
         }
     }
 
@@ -204,17 +202,6 @@ class WCMP_NL_Postcode_Fields
             );
             wp_enqueue_script('checkout');
         }
-
-        if (is_account_page()) {
-            // Disable regular address fields for NL on account page - Fixed in WC 2.1 but not on init...
-            wp_register_script(
-                'account-page',
-                WCMYPA()->plugin_url() . '/assets/js/account-page.js',
-                ['jquery'],
-                WC_MYPARCEL_NL_VERSION
-            );
-            wp_enqueue_script('account-page');
-        }
     }
 
     /**
@@ -272,6 +259,7 @@ class WCMP_NL_Postcode_Fields
                 'hidden'   => false,
             ];
         }
+
         return $locale;
     }
 
@@ -283,7 +271,7 @@ class WCMP_NL_Postcode_Fields
      */
     public function modifyBillingFields(array $fields, string $country = ''): array
     {
-        return $this->modifyCheckoutFields($fields, $country, 'billing');
+        return $this->addSplitAddressFields($fields, $country, 'billing');
     }
 
     /**
@@ -294,90 +282,42 @@ class WCMP_NL_Postcode_Fields
      */
     public function modifyShippingFields(array $fields, string $country = ''): array
     {
-        return $this->modifyCheckoutFields($fields, $country, 'shipping');
+        return $this->addSplitAddressFields($fields, $country, 'shipping');
     }
 
     /**
-     * New checkout billing/shipping fields
+     * New checkout and account page billing/shipping fields
      *
-     * @param array  $fields Default fields.
+     * @param  array  $fields Default fields.
+     * @param  string $country
+     * @param  string $form
      *
-     * @param string $country
-     * @param string $form
-     *
-     * @return array $fields New fields.
+     * @return array
      */
-    public function modifyCheckoutFields(array $fields, string $country, string $form): array
+    public function addSplitAddressFields(array $fields, string $country, string $form): array
     {
-        if (isset($fields['_country'])) {
-            // some weird bug on the my account page
-            $form = '';
-        }
-
-        // Set required to true if country is using custom address fields
-        $required = self::isCountryWithSplitAddressFields($country);
-
-        // Add street name
-        $fields[$form . '_street_name'] = [
-            'label'    => __("Street name", "woocommerce-myparcel"),
-            'class'    => apply_filters('wcmp_custom_address_field_class', ['form-row-third first']),
-            'required' => $required, // Only required for NL
-            'priority' => 60,
-        ];
-
-        // Add house number
-        $fields[$form . '_house_number'] = [
-            'label'    => __("No.", "woocommerce-myparcel"),
-            'class'    => apply_filters('wcmp_custom_address_field_class', ['form-row-third']),
-            'required' => $required, // Only required for NL
-            'type'     => 'number',
-            'priority' => 61,
-        ];
-
-        // Add house number suffix
-        $fields[$form . '_house_number_suffix'] = [
-            'label'     => __("Suffix", "woocommerce-myparcel"),
-            'class'     => apply_filters('wcmp_custom_address_field_class', ['form-row-third last']),
-            'required'  => false,
-            'maxlength' => 4,
-            'priority'  => 62,
-        ];
-
-        // Create new ordering for checkout fields
-        $order_keys = [
-            $form . '_first_name',
-            $form . '_last_name',
-            $form . '_company',
-            $form . '_country',
-            $form . '_address_1',
-            $form . '_address_2',
-            $form . '_street_name',
-            $form . '_house_number',
-            $form . '_house_number_suffix',
-            $form . '_postcode',
-            $form . '_city',
-            $form . '_state',
-        ];
-
-        if ($form === 'billing') {
-            array_push(
-                $order_keys,
-                $form . '_email',
-                $form . '_phone'
-            );
-        }
-
-        $new_order = [];
-
-        // Create reordered array and fill with old array values
-        foreach ($order_keys as $key) {
-            $new_order[$key] = $fields[$key];
-        }
-
-        // Merge (&overwrite) field array
-        $fields = array_merge($new_order, $fields);
-
-        return $fields;
+        return array_merge_recursive(
+            $fields,
+            [
+                "{$form}_street_name"         => [
+                    'label'    => __("Street name", "woocommerce-myparcel"),
+                    'class'    => apply_filters('wcmp_custom_address_field_class', ['form-row-third first']),
+                    'priority' => 60,
+                ],
+                "{$form}_house_number"        => [
+                    'label'    => __("No.", "woocommerce-myparcel"),
+                    'class'    => apply_filters('wcmp_custom_address_field_class', ['form-row-third']),
+                    'type'     => 'number',
+                    'priority' => 61,
+                ],
+                "{$form}_house_number_suffix" => [
+                    'label'     => __("Suffix", "woocommerce-myparcel"),
+                    'class'     => apply_filters('wcmp_custom_address_field_class', ['form-row-third last']),
+                    'maxlength' => 4,
+                    'priority'  => 62,
+                ],
+            ]
+        );
     }
 
     /**
@@ -486,60 +426,6 @@ class WCMP_NL_Postcode_Fields
         $data['shipping_house_number_suffix'] = '';
 
         return $data;
-    }
-
-    /**
-     * Custom billing admin edit fields.
-     *
-     * @param array $fields Default WC_Order data.
-     *
-     * @return array         Custom WC_Order data.
-     */
-    public function admin_billing_fields($fields)
-    {
-        $fields['street_name'] = [
-            'label' => __("Street name", "woocommerce-myparcel"),
-            'show'  => true,
-        ];
-
-        $fields['house_number'] = [
-            'label' => __("Number", "woocommerce-myparcel"),
-            'show'  => true,
-        ];
-
-        $fields['house_number_suffix'] = [
-            'label' => __("Suffix", "woocommerce-myparcel"),
-            'show'  => true,
-        ];
-
-        return $fields;
-    }
-
-    /**
-     * Custom shipping admin edit fields.
-     *
-     * @param array $fields Default WC_Order data.
-     *
-     * @return array         Custom WC_Order data.
-     */
-    public function admin_shipping_fields($fields)
-    {
-        $fields['street_name'] = [
-            'label' => __("Street name", "woocommerce-myparcel"),
-            'show'  => true,
-        ];
-
-        $fields['house_number'] = [
-            'label' => __("Number", "woocommerce-myparcel"),
-            'show'  => true,
-        ];
-
-        $fields['house_number_suffix'] = [
-            'label' => __("Suffix", "woocommerce-myparcel"),
-            'show'  => true,
-        ];
-
-        return $fields;
     }
 
     /**
