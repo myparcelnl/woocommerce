@@ -10,7 +10,7 @@ use WPO\WC\MyParcelBE\Compatibility\Product as WCX_Product;
 
 class OrderSettings
 {
-    public const DEFAULT_COLLO_AMOUNT = 1;
+    public const DEFAULT_COLLO_AMOUNT  = 1;
     private const FIRST_INSURANCE      = 1;
 
     /**
