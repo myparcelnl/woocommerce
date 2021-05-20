@@ -5,7 +5,7 @@ declare(strict_types=1);
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 
-class WCMPBE_DeliveryOptionsFromOrderAdapter extends AbstractDeliveryOptionsAdapter
+class WCMP_DeliveryOptionsFromOrderAdapter extends AbstractDeliveryOptionsAdapter
 {
     /**
      * Creates delivery options but sets most missing data to null instead of default values.
@@ -25,7 +25,7 @@ class WCMPBE_DeliveryOptionsFromOrderAdapter extends AbstractDeliveryOptionsAdap
         $this->date            = $inputData['date'] ?? $adapterDate;
         $this->deliveryType    = $inputData['delivery_type'] ?? $adapterDeliveryType;
         $this->packageType     = $inputData['package_type'] ?? $adapterPackageType;
-        $this->shipmentOptions = new WCMPBE_ShipmentOptionsFromOrderAdapter($originAdapter, $inputData);
+        $this->shipmentOptions = new WCMP_ShipmentOptionsFromOrderAdapter($originAdapter, $inputData);
 
         $hasInputPickupLocation = isset($inputData['pickup_location']) && ! empty($inputData['pickup_location']);
         $this->pickupLocation   = $hasInputPickupLocation

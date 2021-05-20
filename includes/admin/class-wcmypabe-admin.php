@@ -908,13 +908,13 @@ class WCMYPABE_Admin
                 $meta = DeliveryOptionsAdapterFactory::create((array) $meta);
             } catch (BadMethodCallException $e) {
                 // create new instance from unknown json data
-                $meta = new WCMPBE_DeliveryOptionsFromOrderAdapter(null, (array) $meta);
+                $meta = new WCMP_DeliveryOptionsFromOrderAdapter(null, (array) $meta);
             }
         }
 
         // Create or update immutable adapter from order with a instanceof DeliveryOptionsAdapter
         if (empty($meta) || ! empty($inputData)) {
-            $meta = new WCMPBE_DeliveryOptionsFromOrderAdapter($meta, $inputData);
+            $meta = new WCMP_DeliveryOptionsFromOrderAdapter($meta, $inputData);
         }
 
         return $meta;

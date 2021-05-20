@@ -244,12 +244,7 @@ class WCMPBE_Checkout
             foreach (self::getDeliveryOptionsConfigMap($carrier) as $key => $setting) {
                 [$settingName, $function, $addBasePrice] = $setting;
 
-
-
                 $value = $settings->{$function}($carrier . '_' . $settingName);
-                if ($settingName === WCMPBE_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW){
-                    var_dump($value);
-                }
                 if (is_numeric($value) && $this->useTotalPrice() && $addBasePrice) {
                     $value += $chosenShippingMethodPrice;
                 }
@@ -406,7 +401,7 @@ class WCMPBE_Checkout
             /*
              * Create a new DeliveryOptions class from the data.
              */
-            $deliveryOptions = new WCMPBE_DeliveryOptionsFromOrderAdapter(null, $deliveryOptions);
+            $deliveryOptions = new WCMP_DeliveryOptionsFromOrderAdapter(null, $deliveryOptions);
 
             /*
              * Store it in the meta data.
