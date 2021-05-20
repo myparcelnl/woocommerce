@@ -120,7 +120,7 @@ class OrderSettings
         $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMPBE_Data::DEFAULT_CARRIER;
         $this->shipmentOptions = $this->deliveryOptions->getShipmentOptions();
         $this->shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
-        $this->extraOptions    = WCX_Order::get_meta($order, WCMYPABE_Admin::META_SHIPMENT_OPTIONS_EXTRA);
+        $this->extraOptions    = WCMYPABE_Admin::getExtraOptionsFromOrder($order);
 
         $this->setAllData();
     }
