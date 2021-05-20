@@ -1145,6 +1145,10 @@ class WCMP_Export
      */
     public function getShipmentData(array $ids, WC_Order $order): array
     {
+        if (empty($ids)) {
+            return [];
+        }
+        
         $data     = [];
         $api      = $this->init_api();
         $response = $api->get_shipments($ids);
