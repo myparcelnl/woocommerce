@@ -892,7 +892,7 @@ class WCMYPABE_Admin
      */
     public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptions
     {
-        $meta    = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS);
+        $meta    = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS) ?: null;
         $carrier = $meta['carrier'] ?? self::getDefaultCarrier() ?? WCMPBE_Data::DEFAULT_CARRIER;
 
         // $meta is a json string, create an instance
@@ -915,6 +915,23 @@ class WCMYPABE_Admin
         // Create or update immutable adapter from order with a instanceof DeliveryOptionsAdapter
         if (empty($meta) || ! empty($inputData)) {
             $meta = new WCMPBE_DeliveryOptionsFromOrderAdapter($meta, $inputData);
+        }
+
+        return $meta;
+    }
+
+    /**
+     * @param WC_Order $order
+     *
+     * @return array
+     * @throws JsonException
+     */
+    public static function getExtraOptionsFromOrder(WC_Order $order): array
+    {
+        $meta = WCX_Order::get_meta($order, self::META_SHIPMENT_OPTIONS_EXTRA) ?: null;
+
+        if (empty($meta)) {
+            $meta['collo_amount'] = OrderSettings::DEFAULT_COLLO_AMOUNT;
         }
 
         return $meta;

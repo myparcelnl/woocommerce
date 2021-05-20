@@ -87,6 +87,9 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 5. MyParcel BE information on the order details page
 
 == Changelog ==
+= 4.3.3 (2021-05-20) =
+* Fix: errors when meta key's are not present in the order
+
 = 4.3.2 (2021-03-30) =
 * Improvement: wpm-config.json included (support WP-Multilang plugin)
 * Improvement: add translation files fr_FR

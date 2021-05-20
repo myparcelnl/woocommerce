@@ -27,7 +27,7 @@ if (! class_exists('WCMYPABE')) :
         const PHP_VERSION_7_1      = '7.1';
         const PHP_VERSION_REQUIRED = self::PHP_VERSION_7_1;
 
-        public $version = '4.3.2';
+        public $version = '4.3.3';
 
         public $plugin_basename;
 
