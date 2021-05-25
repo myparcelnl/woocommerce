@@ -787,10 +787,10 @@ class WCMYPABE_Admin
                 'description' => wc_help_tip(
                     sprintf(
                         __(
-                            'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s',
+                            'HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Belgium Customs%s',
                             'woocommerce-myparcelbe'
                         ),
-                        '<a href="https://tarief.douane.nl/arctictariff-public-web/#!/home" target="_blank">',
+                        '<a href="https://eservices.minfin.fgov.be/extTariffBrowser/Browser" target="_blank">',
                         '</a>'
                     )
                 ),
