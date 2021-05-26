@@ -934,10 +934,10 @@ class WCMP_Export
             $shipmentOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0);
 
             if (isset($shipmentOptions['package_type'])) {
-                $packageType = (string) WCMP_Data::getPackageTypeId($shipmentOptions['package_type']);
+                $packageType = WCMP_Data::getPackageTypeId($shipmentOptions['package_type']);
             }
 
-            return $packageType ?? (string) AbstractConsignment::DEFAULT_PACKAGE_TYPE;
+            return (string) ($packageType ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE);
         }
 
         $packageType = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
