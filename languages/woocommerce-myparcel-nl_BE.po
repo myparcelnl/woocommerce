@@ -171,7 +171,7 @@ msgstr "afgeleverd - opgehaald"
 msgid "delivered - ready for pickup"
 msgstr "afgeleverd - klaar om opgehaald te worden"
 
-msgid "Delivered at home or at work"
+msgid "shipment_options_delivery"
 msgstr "Thuis of op het werk bezorgd"
 
 msgid "Delivery date"
@@ -183,10 +183,10 @@ msgstr "Leverdagen venster"
 msgid "Delivery information:"
 msgstr "Bezorginformatie:"
 
-msgid "Delivery options title"
+msgid "shipment_options_delivery_options_title"
 msgstr "Bezorgopties titel"
 
-msgid "Delivery title"
+msgid "shipment_options_delivery_title"
 msgstr "Bezorg titel"
 
 msgid "Delivery type"
@@ -281,12 +281,6 @@ msgstr "MyParcel API error, geen zendingen aangemaakt."
 msgid "error_collo_weight_%1$s_but_max_%2$s"
 msgstr "Gewicht per collo is %1$s kg, maximum toegestaan is %2$s kg."
 
-msgid "Evening delivery"
-msgstr "Avondlevering"
-
-msgid "Evening delivery title"
-msgstr "Avondlevering titel"
-
 msgid "Export options"
 msgstr "Export opties"
 
@@ -319,12 +313,6 @@ msgstr "Geschenken"
 
 msgid "Hide this message"
 msgstr "Verberg dit bericht"
-
-msgid "Home address only"
-msgstr "Alleen thuisadres"
-
-msgid "Home address only title"
-msgstr "Alleen thuisadres titel"
 
 msgid "House number"
 msgstr "Huisnummer"
@@ -460,10 +448,10 @@ msgstr "Nummer ontbreekt"
 msgid "Monday delivery"
 msgstr "Maandag levering"
 
-msgid "Morning delivery"
+msgid "shipment_options_delivery_morning"
 msgstr "Ochtendlevering"
 
-msgid "Morning delivery title"
+msgid "shipment_options_delivery_morning_title"
 msgstr "Ochtendlevering titel"
 
 msgid "MyParcel"
@@ -550,13 +538,13 @@ msgstr "Afhalen bij"
 msgid "Pick up from"
 msgstr "Ophalen vanaf"
 
-msgid "Pickup"
+msgid "shipment_options_delivery_pickup"
 msgstr "Afhalen"
 
 msgid "Pickup location"
 msgstr "Afhaallocatie"
 
-msgid "Pickup title"
+msgid "shipment_options_delivery_pickup_title"
 msgstr "Afhalen titel"
 
 msgid "pickup_location"
@@ -723,6 +711,20 @@ msgstr ""
 "voor ontvangst\" en \"Alleen ontvanger\" geactiveerd. Deze optie kan niet "
 "worden gecombineerd met ochtend- of avondlevering."
 
+msgid "shipment_options_delivery_evening"
+msgstr "Avondlevering"
+
+msgid "shipment_options_delivery_evening_title"
+msgstr "Avondlevering titel"
+
+msgid "shipment_options_delivery_standard_description"
+msgstr ""
+"Wanneer er geen titel is ingevuld, worden de bezorgtijden automatisch "
+"zichtbaar."
+
+msgid "shipment_options_delivery_standard_title"
+msgstr "Standaard bezorgtitel"
+
 msgid "shipment_options_insured"
 msgstr "Verzekerde zending"
 
@@ -763,6 +765,9 @@ msgstr ""
 "Als je je pakket niet bij de buren bezorgd wil hebben, kies dan voor deze "
 "optie."
 
+msgid "shipment_options_only_recipient_title"
+msgstr "Alleen thuisadres titel"
+
 msgid "shipment_options_return"
 msgstr "Retour bij mislukte leverpoging"
 
@@ -782,6 +787,9 @@ msgstr ""
 "Het pakket wordt aangeboden op het leveringsadres. Als de ontvangende niet "
 "thuis is, wordt het pakket bij de buren afgeleverd. In beide gevallen is "
 "een handtekening vereist."
+
+msgid "shipment_options_signature_title"
+msgstr "Handtekening bij levering titel"
 
 msgid "Show after billing details"
 msgstr "Toon na factuurgegevens"
@@ -811,17 +819,8 @@ msgstr ""
 msgid "Show Track & Trace trace code and link in My Account."
 msgstr "Toon Track & Trace code en link in Mijn Account."
 
-msgid "Signature on delivery"
-msgstr "Handtekening voor ontvangst"
-
-msgid "Signature on delivery title"
-msgstr "Handtekening bij levering titel"
-
 msgid "Standard delivery"
 msgstr "Standaardlevering"
-
-msgid "Standard delivery title"
-msgstr "Standaard bezorgtitel"
 
 msgid "Standard printer (A4)"
 msgstr "Standaard printer (A4)"
@@ -949,11 +948,6 @@ msgstr ""
 "je de standaard WooCommerce adresvelden gebruiken? Laat deze optie "
 "uitgevinkt staan."
 
-msgid "When there is no title, the delivery time will automatically be visible."
-msgstr ""
-"Wanneer er geen titel is ingevuld, worden de bezorgtijden automatisch "
-"zichtbaar."
-
 msgid ""
 "When this option is enabled, delivery options and delivery day will be also "
 "shown for backorders."
@@ -1025,9 +1019,7 @@ msgstr ""
 msgid "You can change the text before the barcode inside an note"
 msgstr "Je kunt de tekst veranderen voor de barcode in een notitie"
 
-msgid ""
-"You can place a delivery title above the MyParcel options. When there is no "
-"title, it will not be visible."
+msgid "shipment_options_delivery_options_title_description"
 msgstr ""
 "Je kunt een bezorgtitel boven de MyParcel opties plaatsen. Als er geen "
 "titel is, is deze niet zichtbaar."

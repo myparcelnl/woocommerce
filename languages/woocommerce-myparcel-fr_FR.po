@@ -134,7 +134,7 @@ msgid "Connect customer phone"
 msgstr "Associer le numéro de tél��phone du client"
 
 msgid "Custom ID (top left on label)"
-msgstr "ID personnalisés (angle supérieur gauche sur l 'étiquette)"
+msgstr "ID personnalisés (en haut à gauche sur l'étiquette)"
 
 msgid "Custom styles"
 msgstr "Styles personnalisés (CSS)"
@@ -175,7 +175,7 @@ msgstr "livré - collecté"
 msgid "delivered - ready for pickup"
 msgstr "livré - prêt à être collecté"
 
-msgid "Delivered at home or at work"
+msgid "shipment_options_delivery"
 msgstr "Livré à la maison ou au travail"
 
 msgid "Delivery date"
@@ -187,10 +187,10 @@ msgstr "Fenêtre jours de livraison"
 msgid "Delivery information:"
 msgstr "Informations de livraison:"
 
-msgid "Delivery options title"
+msgid "shipment_options_delivery_options_title"
 msgstr "Options de livraison - titre"
 
-msgid "Delivery title"
+msgid "shipment_options_delivery_title"
 msgstr "Titre de la livraison"
 
 msgid "Delivery type"
@@ -285,12 +285,6 @@ msgstr "MyParcel API erreur, aucun envoi n'a été créé."
 msgid "error_collo_weight_%1$s_but_max_%2$s"
 msgstr "Poids par paquet est de %1$s kg, maximum est %2$s kg."
 
-msgid "Evening delivery"
-msgstr "Livraison en soirée"
-
-msgid "Evening delivery title"
-msgstr "Titre de la livraison du soir"
-
 msgid "Export options"
 msgstr "Options d'exportation"
 
@@ -324,12 +318,6 @@ msgstr "Cadeaux"
 msgid "Hide this message"
 msgstr "Masquez ce message"
 
-msgid "Home address only"
-msgstr "Qu'adresse du domicile"
-
-msgid "Home address only title"
-msgstr "Adresse du domicile seul titre"
-
 msgid "House number"
 msgstr "Numéro de rue"
 
@@ -344,7 +332,7 @@ msgid ""
 "appropriate code on the %ssite of the Dutch Customs%s"
 msgstr ""
 "Les codes SH sont utilisés pour les envois dans le monde MyParcel, vous "
-"pouvez trouver le code approprié sur le %ssite de la douane néerlandaise%s"
+"pouvez trouver le code approprié sur le %ssite de la douane n��erlandaise%s"
 
 msgid ""
 "HS Codes are used for MyParcel world shipments, you can find the "
@@ -465,10 +453,10 @@ msgstr "Numéro manque"
 msgid "Monday delivery"
 msgstr "Livraison lundi"
 
-msgid "Morning delivery"
+msgid "shipment_options_delivery_morning"
 msgstr "Livraison le matin"
 
-msgid "Morning delivery title"
+msgid "shipment_options_delivery_morning_title"
 msgstr "Titre de la livraison du matin"
 
 msgid "MyParcel"
@@ -555,13 +543,13 @@ msgstr "Ramasser à"
 msgid "Pick up from"
 msgstr "Collecte à partir de"
 
-msgid "Pickup"
+msgid "shipment_options_delivery_pickup"
 msgstr "Ramasser"
 
 msgid "Pickup location"
 msgstr "Lieu de ramassage"
 
-msgid "Pickup title"
+msgid "shipment_options_delivery_pickup_title"
 msgstr "Titre du ramassage"
 
 msgid "pickup_location"
@@ -731,6 +719,20 @@ msgstr ""
 "uniquement chez le destinataire' sont inclus. Cette option ne peut pas être "
 "combinée avec la livraison le matin ou le soir."
 
+msgid "shipment_options_delivery_evening"
+msgstr "Livraison en soirée"
+
+msgid "shipment_options_delivery_evening_title"
+msgstr "Titre de la livraison du soir"
+
+msgid "shipment_options_delivery_standard_description"
+msgstr ""
+"Lorsqu'aucun titre n'est complété, les heures de livraison sont affichées "
+"automatiquement."
+
+msgid "shipment_options_delivery_standard_title"
+msgstr "Livraison standard - titre"
+
 msgid "shipment_options_insured"
 msgstr "Expédition assuré"
 
@@ -772,6 +774,9 @@ msgstr ""
 "Si vous ne voulez pas que le colis soit livré aux voisins, choisissez cette "
 "option."
 
+msgid "shipment_options_only_recipient_title"
+msgstr "Adresse du domicile seul titre"
+
 msgid "shipment_options_return"
 msgstr "Retour si aucune réponse"
 
@@ -792,6 +797,9 @@ msgstr ""
 "Le colis sera offert à l'adresse de livraison. Si le destinataire est pas à "
 "la maison, le colis sera livré aux voisins. Dans les deux cas, une "
 "signature sera nécessaire."
+
+msgid "shipment_options_signature_title"
+msgstr "Signature sur le titre de livraison"
 
 msgid "Show after billing details"
 msgstr "Afficher après les données de facturation"
@@ -821,17 +829,8 @@ msgstr ""
 msgid "Show Track & Trace trace code and link in My Account."
 msgstr "Montrer le code et le lien Track & Trace dans Mon Compte."
 
-msgid "Signature on delivery"
-msgstr "Signature pour réception"
-
-msgid "Signature on delivery title"
-msgstr "Signature sur le titre de livraison"
-
 msgid "Standard delivery"
 msgstr "Livraison standard"
-
-msgid "Standard delivery title"
-msgstr "Livraison standard - titre"
 
 msgid "Standard printer (A4)"
 msgstr "Imprimante standard (A4)"
@@ -957,11 +956,6 @@ msgstr ""
 "l'extension. Si vous souhaitez utiliser les champs adresse standards de "
 "WooCommerce, ne cochez pas cette option."
 
-msgid "When there is no title, the delivery time will automatically be visible."
-msgstr ""
-"Lorsqu'aucun titre n'est complété, les heures de livraison sont affichées "
-"automatiquement."
-
 msgid ""
 "When this option is enabled, delivery options and delivery day will be also "
 "shown for backorders."
@@ -1037,9 +1031,7 @@ msgstr ""
 msgid "You can change the text before the barcode inside an note"
 msgstr "Vous pouvez modifier le texte du code-barres dans une note"
 
-msgid ""
-"You can place a delivery title above the MyParcel options. When there is no "
-"title, it will not be visible."
+msgid "shipment_options_delivery_options_title_description"
 msgstr ""
 "Vous pouvez indiquer un titre pour la livraison au-dessus des options "
 "MyParcel. S'il n'y a pas de titre, cet élément ne sera pas visible."
