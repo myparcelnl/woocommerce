@@ -500,6 +500,14 @@ class WCMP_Settings_Data
                 "type"  => "toggle",
             ],
             [
+                'name'      => WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE,
+                'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                'label'     => __('feature_allow_show_delivery_date_title', 'woocommerce-myparcel'),
+                'type'      => 'toggle',
+                'help_text' => __('feature_allow_show_delivery_date_help_text', 'woocommerce-myparcel'),
+                'default'   => self::ENABLED,
+            ],
+            [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Drop-off days", "woocommerce-myparcel"),
