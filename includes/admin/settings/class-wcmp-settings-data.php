@@ -344,6 +344,15 @@ class WCMP_Settings_Data
                 "help_text" => __("Show Track & Trace trace code and link in My Account.", "woocommerce-myparcel"),
             ],
             [
+                "name"      => WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY,
+                "label"     => __("Show delivery date", "woocommerce-myparcel"),
+                "type"      => "toggle",
+                "help_text" => __(
+                    "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account.",
+                    "woocommerce-myparcel"
+                ),
+            ],
+            [
                 "name"      => WCMYPA_Settings::SETTING_PROCESS_DIRECTLY,
                 "label"     => __("Process shipments directly", "woocommerce-myparcel"),
                 "type"      => "toggle",
@@ -500,14 +509,6 @@ class WCMP_Settings_Data
                 "type"  => "toggle",
             ],
             [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE,
-                'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                'label'     => __('feature_allow_show_delivery_date_title', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-                'help_text' => __('feature_allow_show_delivery_date_help_text', 'woocommerce-myparcel'),
-                'default'   => self::ENABLED,
-            ],
-            [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
                 "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 "label"     => __("Drop-off days", "woocommerce-myparcel"),
@@ -535,10 +536,20 @@ class WCMP_Settings_Data
                 "help_text" => __("Number of days you need to process an order.", "woocommerce-myparcel"),
             ],
             [
+                'name'      => WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE,
+                'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                'label'     => __('feature_allow_show_delivery_date_title', 'woocommerce-myparcel'),
+                'type'      => 'toggle',
+                'default'   => self::ENABLED,
+                'help_text' => __('feature_allow_show_delivery_date_help_text', 'woocommerce-myparcel'),
+            ],
+            [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                "condition" => WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE,
+                'class'      => ['wcmp__child'],
                 "label"     => __("Delivery days window", "woocommerce-myparcel"),
                 "type"      => "number",
+                'min'       => 1,
                 "max"       => 14,
                 "default"   => self::ENABLED,
                 "help_text" => __(
@@ -786,15 +797,6 @@ class WCMP_Settings_Data
                 "type"      => "toggle",
                 "help_text" => __(
                     "When enabled the checkout will use the MyParcel address fields. This means there will be three separate fields for street name, number and suffix. Want to use the WooCommerce default fields? Leave this option unchecked.",
-                    "woocommerce-myparcel"
-                ),
-            ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY,
-                "label"     => __("Show delivery date", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account.",
                     "woocommerce-myparcel"
                 ),
             ],
