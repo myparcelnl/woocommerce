@@ -677,7 +677,7 @@ class WCMPBE_Export
         ];
 
         $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-        if ($shipping_country === "BE") {
+        if ($shipping_country === "BE" || $shipping_country === "NL" ) {
             // use billing address if old "pakjegemak" (1.5.6 and older)
             $pgAddress = WCX_Order::get_meta($order, WCMYPABE_Admin::META_PGADDRESS);
 
