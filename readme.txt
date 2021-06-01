@@ -90,6 +90,19 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.4.0 (2021-05-26) =
+* Improvement: Default option for deliveryoptions maps or list
+* Improvement: Display product country of origin as list
+* Improvement: Choose an order status that will automatically export a shipment to MyParcel
+* Improvement: Only show delivery options with non-virtual product in order
+* Fix: use `type hidden` to hide the delivery options input.
+* Fix: about empty shipping class
+* Fix: Show delivery type only when myparcel delivery options are enabled
+* Fix: isworldshipmentcountry returns false when country does not exist
+* Fix: More friendlier error messages
+* Fix: Error when changing the order when shipment_options_extra meta does not exist
+* Fix: Change mailbox shipments outside Netherlands to package
+
 = 4.3.2 (2021-03-30) =
 * Improvement: wpm-config.json included (support WP-Multilang plugin)
 * Improvement: add translation files fr_FR

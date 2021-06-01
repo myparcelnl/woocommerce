@@ -932,7 +932,12 @@ class WCMP_Export
         // Get pre 4.0.0 package type if it exists.
         if (WCX_Order::has_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0)) {
             $shipmentOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0);
-            return apply_filters("wc_myparcel_order_package_type", (string) WCMP_Data::getPackageTypeId($shipmentOptions['package_type']), $order, $this);
+
+            if (isset($shipmentOptions['package_type'])) {
+                $packageType = WCMP_Data::getPackageTypeId($shipmentOptions['package_type']);
+            }
+
+            return (string) apply_filters("wc_myparcel_order_package_type", ($packageType ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE), $order, $this);
         }
 
         $packageType = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;

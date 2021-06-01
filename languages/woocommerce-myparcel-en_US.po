@@ -173,7 +173,7 @@ msgstr "delivered - package picked up"
 msgid "delivered - ready for pickup"
 msgstr "delivered - ready for pickup"
 
-msgid "Delivered at home or at work"
+msgid "shipment_options_delivery"
 msgstr "Delivered at home or at work"
 
 msgid "Delivery date"
@@ -185,10 +185,10 @@ msgstr "Delivery days window"
 msgid "Delivery information:"
 msgstr "Delivery information:"
 
-msgid "Delivery options title"
+msgid "shipment_options_delivery_options_title"
 msgstr "Delivery options title"
 
-msgid "Delivery title"
+msgid "shipment_options_delivery_title"
 msgstr "Delivery title"
 
 msgid "Delivery type"
@@ -283,12 +283,6 @@ msgstr "MyParcel API error, no shipments created."
 msgid "error_collo_weight_%1$s_but_max_%2$s"
 msgstr "Weight per package is %1$s kg, maximum allowed is %2$s kg."
 
-msgid "Evening delivery"
-msgstr "Evening delivery"
-
-msgid "Evening delivery title"
-msgstr "Evening delivery title"
-
 msgid "Export options"
 msgstr "Export options"
 
@@ -321,12 +315,6 @@ msgstr "Gifts"
 
 msgid "Hide this message"
 msgstr "Hide this message"
-
-msgid "Home address only"
-msgstr "Home address only"
-
-msgid "Home address only title"
-msgstr "Home address only title"
 
 msgid "House number"
 msgstr "House number"
@@ -463,10 +451,10 @@ msgstr "Number is missing"
 msgid "Monday delivery"
 msgstr "Monday delivery"
 
-msgid "Morning delivery"
+msgid "shipment_options_delivery_morning"
 msgstr "Morning delivery"
 
-msgid "Morning delivery title"
+msgid "shipment_options_delivery_morning_title"
 msgstr "Morning delivery title"
 
 msgid "MyParcel"
@@ -553,13 +541,13 @@ msgstr "Pick up at"
 msgid "Pick up from"
 msgstr "Pick up from"
 
-msgid "Pickup"
+msgid "shipment_options_delivery_pickup"
 msgstr "Pickup"
 
 msgid "Pickup location"
 msgstr "Pickup location"
 
-msgid "Pickup title"
+msgid "shipment_options_delivery_pickup_title"
 msgstr "Pickup title"
 
 msgid "pickup_location"
@@ -721,6 +709,18 @@ msgstr ""
 "receipt\" and \"Delivery only at recipient\" are included with this option. "
 "This option can't be combined with morning or evening delivery."
 
+msgid "shipment_options_delivery_evening"
+msgstr "Evening delivery"
+
+msgid "shipment_options_delivery_evening_title"
+msgstr "Evening delivery title"
+
+msgid "shipment_options_delivery_standard_description"
+msgstr "When there is no title, the delivery time will automatically be visible."
+
+msgid "shipment_options_delivery_standard_title"
+msgstr "Standard delivery title"
+
 msgid "shipment_options_insured"
 msgstr "Insured shipment"
 
@@ -761,6 +761,9 @@ msgstr ""
 "If you don't want the parcel to be delivered at the neighbours, choose this "
 "option."
 
+msgid "shipment_options_only_recipient_title"
+msgstr "Home address only title"
+
 msgid "shipment_options_return"
 msgstr "Return if no answer"
 
@@ -780,6 +783,9 @@ msgstr ""
 "The parcel will be offered at the delivery address. If the recipient is not "
 "at home, the parcel will be delivered to the neighbours. In both cases, a "
 "signature will be required."
+
+msgid "shipment_options_signature_title"
+msgstr "Signature on delivery title"
 
 msgid "Show after billing details"
 msgstr "Show after billing details"
@@ -809,17 +815,8 @@ msgstr ""
 msgid "Show Track & Trace trace code and link in My Account."
 msgstr "Show Track & Trace code and link in My Account."
 
-msgid "Signature on delivery"
-msgstr "Signature on delivery"
-
-msgid "Signature on delivery title"
-msgstr "Signature on delivery title"
-
 msgid "Standard delivery"
 msgstr "Standard delivery"
-
-msgid "Standard delivery title"
-msgstr "Standard delivery title"
 
 msgid "Standard printer (A4)"
 msgstr "Standard printer (A4)"
@@ -940,9 +937,6 @@ msgstr ""
 "there will be three separate fields for street name, number and suffix. "
 "Want to use the WooCommerce default fields? Leave this option unchecked."
 
-msgid "When there is no title, the delivery time will automatically be visible."
-msgstr "When there is no title, the delivery time will automatically be visible."
-
 msgid ""
 "When this option is enabled, delivery options and delivery day will be also "
 "shown for backorders."
@@ -1014,9 +1008,7 @@ msgstr ""
 msgid "You can change the text before the barcode inside an note"
 msgstr "You can change the text before the barcode inside an note"
 
-msgid ""
-"You can place a delivery title above the MyParcel options. When there is no "
-"title, it will not be visible."
+msgid "shipment_options_delivery_options_title_description"
 msgstr ""
 "You can place a delivery title above the MyParcel options. When there is no "
 "title, it will not be visible."
