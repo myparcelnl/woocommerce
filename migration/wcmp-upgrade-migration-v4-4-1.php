@@ -6,14 +6,14 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-if (class_exists('WCMP_Upgrade_Migration_v4_3_2')) {
-    return new WCMP_Upgrade_Migration_v4_3_2();
+if (class_exists('WCMP_Upgrade_Migration_v4_4_1')) {
+    return new WCMP_Upgrade_Migration_v4_4_1();
 }
 
 /**
- * Migrates pre v4.3.2 settings
+ * Migrates pre v4.4.1 settings
  */
-class WCMP_Upgrade_Migration_v4_3_2 extends WCMP_Upgrade_Migration
+class WCMP_Upgrade_Migration_v4_4_1 extends WCMP_Upgrade_Migration
 {
     /**
      * @var array
@@ -85,4 +85,4 @@ class WCMP_Upgrade_Migration_v4_3_2 extends WCMP_Upgrade_Migration
     }
 }
 
-return new WCMP_Upgrade_Migration_v4_3_2();
+return new WCMP_Upgrade_Migration_v4_4_1();
