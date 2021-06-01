@@ -198,6 +198,11 @@ msgstr "Défaut"
 msgid "Default export settings"
 msgstr "Paramètres d'exportation standards"
 
+msgid "product_option_hs_code_help_text_tariff_website"
+msgstr ""
+"Codes SH sont utilisés pour les livraisons mondiales MyParcel, vous pouvez "
+"trouver le code approprié sur le %ssite de la douane Belge%s."
+
 msgid "Default HS Code"
 msgstr "Par défaut Code SH"
 
@@ -383,13 +388,6 @@ msgid ""
 msgstr ""
 "Les codes SH sont utilisés pour les envois dans le monde MyParcel, vous "
 "pouvez trouver le code approprié sur le %ssite de la douane néerlandaise%s"
-
-msgid ""
-"HS Codes are used for MyParcel world shipments, you can find the "
-"appropriate code on the site of the Dutch Customs."
-msgstr ""
-"Codes SH sont utilisés pour les livraisons mondiales MyParcel, vous pouvez "
-"trouver le code approprié sur le site de la douane néerlandaise."
 
 msgid ""
 "If you don't want the parcel to be delivered at the neighbours, choose this "
@@ -843,9 +841,9 @@ msgstr ""
 "Par défaut, une parcelle sera offert deux fois. Après deux tentatives "
 "infructueuses de livraison, le colis sera disponible au point le plus "
 "proche pick-up pendant deux semaines. Là, il peut être repris par le "
-"destinataire de la note qui a été laissé par le courrier. Si vous souhaitez "
-"recevoir le colis de retour directement et non en avant au point de "
-"ramassage, activez cette option."
+"destinataire de la note qui a ét�� laissé par le courrier. Si vous "
+"souhaitez recevoir le colis de retour directement et non en avant au point "
+"de ramassage, activez cette option."
 
 msgid "shipment_options_signature"
 msgstr "Signature pour réception"
@@ -870,6 +868,12 @@ msgstr "Afficher après les données d'expédition"
 
 msgid "Show after subtotal"
 msgstr "Afficher après le sous-total"
+
+msgid "feature_allow_show_delivery_date_title"
+msgstr "Afficher la date de livraison"
+
+msgid "feature_allow_show_delivery_date_help_text"
+msgstr "Affiche la date de livraison parmi les options à la caisse."
 
 msgid "Show delivery date"
 msgstr "Afficher la date de livraison"

@@ -194,6 +194,11 @@ msgstr "Default"
 msgid "Default export settings"
 msgstr "Default export settings"
 
+msgid "product_option_hs_code_help_text_tariff_website"
+msgstr ""
+"HS Codes are used for MyParcel world shipments, you can find the "
+"appropriate code on the %ssite of the Belgium Customs%s"
+
 msgid "Default HS Code"
 msgstr "Default HS Code"
 
@@ -379,13 +384,6 @@ msgid ""
 msgstr ""
 "HS Codes are used for MyParcel world shipments, you can find the "
 "appropriate code on the %ssite of the Dutch Customs%s"
-
-msgid ""
-"HS Codes are used for MyParcel world shipments, you can find the "
-"appropriate code on the site of the Dutch Customs."
-msgstr ""
-"HS Codes are used for MyParcel world shipments, you can find the "
-"appropriate code on the site of the Dutch Customs."
 
 msgid ""
 "If you don't want the parcel to be delivered at the neighbours, choose this "
@@ -852,6 +850,12 @@ msgstr "Show after shipping details"
 
 msgid "Show after subtotal"
 msgstr "Show after subtotal"
+
+msgid "feature_allow_show_delivery_date_title"
+msgstr "Show delivery date"
+
+msgid "feature_allow_show_delivery_date_help_text"
+msgstr "Shows delivery date at the options during checkout."
 
 msgid "Show delivery date"
 msgstr "Show delivery date"

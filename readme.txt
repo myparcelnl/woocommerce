@@ -87,6 +87,9 @@ function wcmyparcelbe_new_email_text($track_trace_tekst) {
 5. MyParcel BE information on the order details page
 
 == Changelog ==
+= 4.3.5 (2021-06-01) =
+* Fix: Export orders to Netherlands witch the MyParcel address fields
+
 = 4.3.4 (2021-05-20) =
 * Fix: CRITICAL error incomplete object in _myparcelbe_delivery_options meta
 

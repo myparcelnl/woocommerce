@@ -139,103 +139,103 @@ msgstr ""
 msgid "No e-mail address found in order."
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1008
+#: includes/admin/class-wcmpbe-export.php:1005
 msgid "Unknown"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1071, includes/admin/views/html-send-return-email-form.php:55
+#: includes/admin/class-wcmpbe-export.php:1068, includes/admin/views/html-send-return-email-form.php:55
 msgid "Order"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1095
+#: includes/admin/class-wcmpbe-export.php:1092
 msgid "pending - concept"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1096
+#: includes/admin/class-wcmpbe-export.php:1093
 msgid "pending - registered"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1097
+#: includes/admin/class-wcmpbe-export.php:1094
 msgid "enroute - handed to carrier"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1098
+#: includes/admin/class-wcmpbe-export.php:1095
 msgid "enroute - sorting"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1099
+#: includes/admin/class-wcmpbe-export.php:1096
 msgid "enroute - distribution"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1100
+#: includes/admin/class-wcmpbe-export.php:1097
 msgid "enroute - customs"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1101
+#: includes/admin/class-wcmpbe-export.php:1098
 msgid "delivered - at recipient"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1102
+#: includes/admin/class-wcmpbe-export.php:1099
 msgid "delivered - ready for pickup"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1103
+#: includes/admin/class-wcmpbe-export.php:1100
 msgid "delivered - package picked up"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1104
+#: includes/admin/class-wcmpbe-export.php:1101
 msgid "printed - letter"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1105
+#: includes/admin/class-wcmpbe-export.php:1102
 msgid "printed - digital stamp"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1106
+#: includes/admin/class-wcmpbe-export.php:1103
 msgid "inactive - concept"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1107
+#: includes/admin/class-wcmpbe-export.php:1104
 msgid "inactive - registered"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1108
+#: includes/admin/class-wcmpbe-export.php:1105
 msgid "inactive - enroute - handed to carrier"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1109
+#: includes/admin/class-wcmpbe-export.php:1106
 msgid "inactive - enroute - sorting"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1110
+#: includes/admin/class-wcmpbe-export.php:1107
 msgid "inactive - enroute - distribution"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1111
+#: includes/admin/class-wcmpbe-export.php:1108
 msgid "inactive - enroute - customs"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1112
+#: includes/admin/class-wcmpbe-export.php:1109
 msgid "inactive - delivered - at recipient"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1113
+#: includes/admin/class-wcmpbe-export.php:1110
 msgid "inactive - delivered - ready for pickup"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1114
+#: includes/admin/class-wcmpbe-export.php:1111
 msgid "inactive - delivered - package picked up"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1115
+#: includes/admin/class-wcmpbe-export.php:1112
 msgid "inactive - unknown"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1121
+#: includes/admin/class-wcmpbe-export.php:1118
 msgid "Unknown status"
 msgstr ""
 
-#: includes/admin/class-wcmpbe-export.php:1557
+#: includes/admin/class-wcmpbe-export.php:1554
 msgid "The order(s) you have selected have invalid shipping countries."
 msgstr ""
 
@@ -279,55 +279,55 @@ msgstr ""
 msgid "MyParcel BE"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:797
+#: includes/admin/class-wcmypabe-admin.php:785
 msgid "HS Code"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:801
+#: includes/admin/class-wcmypabe-admin.php:789
 msgid "HS Codes are used for MyParcel world shipments, you can find the appropriate code on the %ssite of the Dutch Customs%s"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:812
+#: includes/admin/class-wcmypabe-admin.php:800
 msgid "product_options_country_of_origin"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:816
+#: includes/admin/class-wcmypabe-admin.php:804
 msgid "Default"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:821, includes/admin/settings/class-wcmpbe-settings-data.php:907
+#: includes/admin/class-wcmypabe-admin.php:809, includes/admin/settings/class-wcmpbe-settings-data.php:907
 msgid "setting_country_of_origin_help_text"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:865
+#: includes/admin/class-wcmypabe-admin.php:853
 msgid "No label has been created yet."
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:876
+#: includes/admin/class-wcmypabe-admin.php:864
 msgid "The label has been printed."
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:881
+#: includes/admin/class-wcmypabe-admin.php:869
 msgid "Concept created but not printed."
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:949
+#: includes/admin/class-wcmypabe-admin.php:954
 msgid "MyParcel BE shipment:"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:990, includes/admin/class-wcmypabe-admin.php:1003
+#: includes/admin/class-wcmypabe-admin.php:995, includes/admin/class-wcmypabe-admin.php:1008
 msgid "delivery_type"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:991
+#: includes/admin/class-wcmypabe-admin.php:996
 msgid "pickup_location"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:1048, includes/admin/class-wcmypabe-admin.php:1070
+#: includes/admin/class-wcmypabe-admin.php:1053, includes/admin/class-wcmypabe-admin.php:1075
 msgid "Delivery information:"
 msgstr ""
 
-#: includes/admin/class-wcmypabe-admin.php:1176
+#: includes/admin/class-wcmypabe-admin.php:1181
 msgid "(Unknown)"
 msgstr ""
 
