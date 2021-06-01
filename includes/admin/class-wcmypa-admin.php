@@ -28,6 +28,7 @@ class WCMYPA_Admin
     public const META_LAST_SHIPMENT_IDS      = "_myparcel_last_shipment_ids";
     public const META_RETURN_SHIPMENT_IDS    = "_myparcel_return_shipment_ids";
     public const META_ORDER_VERSION          = "_myparcel_order_version";
+    public const META_DELIVERY_DATE          = "_myparcel_delivery_date";
     public const META_PGADDRESS              = "_myparcel_pgaddress";
     public const META_SHIPMENTS              = "_myparcel_shipments";
     public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcel_shipment_options_extra";
@@ -99,6 +100,9 @@ class WCMYPA_Admin
         add_filter("manage_edit-shop_order_columns", [$this, "barcode_add_new_order_admin_list_column"], 10, 1);
         add_action("manage_shop_order_posts_custom_column", [$this, "addBarcodeToOrderColumn"], 10, 2);
 
+        add_action('restrict_manage_posts', [$this, 'addDeliveryDayFilterToOrdergrid'], 10, 1);
+        add_filter('request', [$this, 'getDeliveryDateFromOrder'], 10, 1);
+
         add_action('woocommerce_payment_complete', [$this, 'automaticExportOrder'], 1000);
         add_action('woocommerce_order_status_changed', [$this, 'automaticExportOrder'], 1000, 3);
 
@@ -112,6 +116,83 @@ class WCMYPA_Admin
 
         add_action("woocommerce_product_options_shipping", [$this, "productOptionsFields"]);
         add_action("woocommerce_process_product_meta", [$this, "productOptionsFieldSave"]);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function addDeliveryDayFilterToOrdergrid(): void
+    {
+        global $typenow;
+
+        if (in_array($typenow, wc_get_order_types('order-meta-boxes'))
+            && (apply_filters('deliveryDayFilter', true))) {
+            $this->deliveryDayFilter();
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function deliveryDayFilter(): void
+    {
+        if (is_admin() && ! empty($_GET['post_type']) == 'shop_order') {
+            $selected = (isset($_GET['deliveryDate'])
+                ? sanitize_text_field($_GET['deliveryDate'])
+                : false);
+            ?>
+
+            <select name="deliveryDate">
+                <option value=""><?php _e('all_delivery_days', 'woocommerce-myparcel'); ?></option>
+                <?php
+                $carrierName       = WCMYPA_Settings::SETTINGS_POSTNL;
+                $deliveryDayWindow = (int) WCMYPA()->setting_collection->getByName(
+                    $carrierName . "_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW
+                );
+
+                foreach (range(1, $deliveryDayWindow) as $number) {
+                    $date       = date('Y-m-d', strtotime($number . 'days'));
+                    $dateString = wc_format_datetime(new WC_DateTime($date), 'D d-m');
+
+                    if (1 === $number) {
+                        $dateString = __('tomorrow', 'woocommerce-myparcel') . ' ' . $dateString;
+                    }
+
+                    printf(
+                        '<option value="%s""%s">%s</option>',
+                        $date,
+                        selected($date, $selected),
+                        $dateString
+                    );
+                }
+                ?>
+            </select>
+            <?php
+        }
+    }
+
+    /**
+     * @param array $deliveryDate
+     *
+     * @return array
+     */
+    public function getDeliveryDateFromOrder(array $deliveryDate): array
+    {
+        global $typenow;
+
+        $hasDeliveryDate = isset($_GET['deliveryDate']) && ! empty($_GET['deliveryDate']);
+
+        if (in_array($typenow, wc_get_order_types('order-meta-boxes')) && $hasDeliveryDate) {
+            $deliveryDate['meta_query'] = [
+                [
+                    'key'     => '_myparcel_delivery_date',
+                    'value'   => sanitize_text_field($_GET['deliveryDate']),
+                    'compare' => '=',
+                ],
+            ];
+        }
+
+        return $deliveryDate;
     }
 
     /**
@@ -138,6 +219,8 @@ class WCMYPA_Admin
         echo "<hr>";
     }
 
+
+
     /**
      * @param $loop
      * @param $variationData
@@ -150,9 +233,9 @@ class WCMYPA_Admin
                 'id'            => self::META_HS_CODE_VARIATION . "[{$loop}]",
                 'name'          => self::META_HS_CODE_VARIATION . "[{$loop}]",
                 'value'         => get_post_meta($variation->ID, self::META_HS_CODE_VARIATION, true),
-                'label'         => __('HS Code', 'woocommerce'),
+                'label'         => __('hs_code', 'woocommerce-myparcel'),
                 'desc_tip'      => true,
-                'description'   => __('This HS Code overwrites the parents HS Code.', 'woocommerce'),
+                'description'   => __('hs_code_variations', 'woocommerce-myparcel'),
                 'wrapper_class' => 'form-row form-row-full',
             ]
         );
