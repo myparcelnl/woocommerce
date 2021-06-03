@@ -19,6 +19,9 @@ class WCMP_Settings_Data
     public const ENABLED  = "1";
     public const DISABLED = "0";
 
+    public const MODUS_PPS         = 'pps';
+    public const MODUS_TRADITIONAL = 'traditional';
+
     public const DISPLAY_FOR_SELECTED_METHODS = "selected_methods";
     public const DISPLAY_FOR_ALL_METHODS      = "all_methods";
 
@@ -295,6 +298,16 @@ class WCMP_Settings_Data
     private function get_section_general_general(): array
     {
         return [
+            [
+                'name'    => WCMYPA_Settings::SETTING_MODUS,
+                'label'   => __('setting_modus_title', 'woocommerce-myparcel'),
+                'type'    => 'select',
+                'options' => [
+                    self::MODUS_PPS         => __('setting_modus_pps_title', 'woocommerce-myparcel'),
+                    self::MODUS_TRADITIONAL => __('setting_modus_traditional_title', 'woocommerce-myparcel'),
+                ],
+                'default' => self::MODUS_TRADITIONAL,
+            ],
             [
                 "name"    => WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY,
                 "label"   => __("Label display", "woocommerce-myparcel"),
