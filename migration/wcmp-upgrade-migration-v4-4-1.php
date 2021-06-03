@@ -12,6 +12,8 @@ if (class_exists('WCMP_Upgrade_Migration_v4_4_1')) {
 
 /**
  * Migrates pre v4.4.1 settings
+ *  - move show delivery day setting from checkout to general
+ *  - add per carrier feature allow show delivery date, set to on when delivery days window > 0, else off
  */
 class WCMP_Upgrade_Migration_v4_4_1 extends WCMP_Upgrade_Migration
 {

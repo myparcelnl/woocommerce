@@ -344,13 +344,10 @@ class WCMP_Settings_Data
                 "help_text" => __("Show Track & Trace trace code and link in My Account.", "woocommerce-myparcel"),
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY,
-                "label"     => __("Show delivery date", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "Show delivery day options allow your customers to see the delivery day in order confirmation and My Account.",
-                    "woocommerce-myparcel"
-                ),
+                'name'      => WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY,
+                'label'     => __('setting_show_delivery_day_title', 'woocommerce-myparcel'),
+                'type'      => 'toggle',
+                'help_text' => __('setting_show_delivery_day_help_text', 'woocommerce-myparcel'),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_PROCESS_DIRECTLY,

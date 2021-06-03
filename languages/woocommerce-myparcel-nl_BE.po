@@ -171,9 +171,6 @@ msgstr "afgeleverd - opgehaald"
 msgid "delivered - ready for pickup"
 msgstr "afgeleverd - klaar om opgehaald te worden"
 
-msgid "shipment_options_delivery"
-msgstr "Thuis of op het werk bezorgd"
-
 msgid "Delivery date"
 msgstr "Bezorgdatum"
 
@@ -182,12 +179,6 @@ msgstr "Leverdagen venster"
 
 msgid "Delivery information:"
 msgstr "Bezorginformatie:"
-
-msgid "shipment_options_delivery_options_title"
-msgstr "Bezorgopties titel"
-
-msgid "shipment_options_delivery_title"
-msgstr "Bezorg titel"
 
 msgid "Delivery type"
 msgstr "Soort levering"
@@ -448,12 +439,6 @@ msgstr "Nummer ontbreekt"
 msgid "Monday delivery"
 msgstr "Maandag levering"
 
-msgid "shipment_options_delivery_morning"
-msgstr "Ochtendlevering"
-
-msgid "shipment_options_delivery_morning_title"
-msgstr "Ochtendlevering titel"
-
 msgid "MyParcel"
 msgstr "MyParcel"
 
@@ -538,14 +523,8 @@ msgstr "Afhalen bij"
 msgid "Pick up from"
 msgstr "Ophalen vanaf"
 
-msgid "shipment_options_delivery_pickup"
-msgstr "Afhalen"
-
 msgid "Pickup location"
 msgstr "Afhaallocatie"
-
-msgid "shipment_options_delivery_pickup_title"
-msgstr "Afhalen titel"
 
 msgid "pickup_location"
 msgstr "Afhaallocatie:"
@@ -662,6 +641,12 @@ msgstr ""
 "wijzigt. Zorg dat je 'Verwerk zendingen direct' aan hebt staan om de "
 "barcode terug te krijgen."
 
+msgid "feature_allow_show_delivery_date_title"
+msgstr "Toon bezorgdatum"
+
+msgid "feature_allow_show_delivery_date_help_text"
+msgstr "Toont bezorgdatum bij verzendopties tijdens afrekenen."
+
 msgid "Settings"
 msgstr "Instellingen"
 
@@ -711,11 +696,34 @@ msgstr ""
 "voor ontvangst\" en \"Alleen ontvanger\" geactiveerd. Deze optie kan niet "
 "worden gecombineerd met ochtend- of avondlevering."
 
+msgid "shipment_options_delivery"
+msgstr "Thuis of op het werk bezorgd"
+
 msgid "shipment_options_delivery_evening"
 msgstr "Avondlevering"
 
 msgid "shipment_options_delivery_evening_title"
 msgstr "Avondlevering titel"
+
+msgid "shipment_options_delivery_morning"
+msgstr "Ochtendlevering"
+
+msgid "shipment_options_delivery_morning_title"
+msgstr "Ochtendlevering titel"
+
+msgid "shipment_options_delivery_options_title"
+msgstr "Bezorgopties titel"
+
+msgid "shipment_options_delivery_options_title_description"
+msgstr ""
+"Je kunt een bezorgtitel boven de MyParcel opties plaatsen. Als er geen "
+"titel is, is deze niet zichtbaar."
+
+msgid "shipment_options_delivery_pickup"
+msgstr "Afhalen"
+
+msgid "shipment_options_delivery_pickup_title"
+msgstr "Afhalen titel"
 
 msgid "shipment_options_delivery_standard_description"
 msgstr ""
@@ -724,6 +732,9 @@ msgstr ""
 
 msgid "shipment_options_delivery_standard_title"
 msgstr "Standaard bezorgtitel"
+
+msgid "shipment_options_delivery_title"
+msgstr "Bezorg titel"
 
 msgid "shipment_options_insured"
 msgstr "Verzekerde zending"
@@ -806,15 +817,13 @@ msgstr "Toon na verzendgegevens"
 msgid "Show after subtotal"
 msgstr "Toon na subtotalen"
 
-msgid "Show delivery date"
-msgstr "Toon bezorgdatum"
+msgid "setting_show_delivery_day_title"
+msgstr "Toon bezorgdatum in klantcommunicatie"
 
-msgid ""
-"Show delivery day options allow your customers to see the delivery day in "
-"order confirmation and My Account."
+msgid "setting_show_delivery_day_help_text"
 msgstr ""
-"De optie \"Toon bezorgdatum\" laat je klanten de bezorgdag zien in "
-"orderbevestigingen en Mijn Account."
+"Deze optie laat je klanten de bezorgdag zien in orderbevestigingen en Mijn "
+"Account."
 
 msgid "Show Track & Trace trace code and link in My Account."
 msgstr "Toon Track & Trace code en link in Mijn Account."
@@ -1019,11 +1028,6 @@ msgstr ""
 msgid "You can change the text before the barcode inside an note"
 msgstr "Je kunt de tekst veranderen voor de barcode in een notitie"
 
-msgid "shipment_options_delivery_options_title_description"
-msgstr ""
-"Je kunt een bezorgtitel boven de MyParcel opties plaatsen. Als er geen "
-"titel is, is deze niet zichtbaar."
-
 msgid "You can track your order with the following Track & Trace link:"
 msgstr "Je kunt je order met de volgende Track & Trace code volgen:"
 
@@ -1037,3 +1041,6 @@ msgid "You have to export the orders to MyParcel before you can print the labels
 msgstr ""
 "Je dient de orders eerst naar MyParcel te exporteren voordat je de labels "
 "kunt printen!"
+
+msgid "shipment_options_delivery_standard"
+msgstr "Standaard bezorging"

@@ -173,9 +173,6 @@ msgstr "delivered - package picked up"
 msgid "delivered - ready for pickup"
 msgstr "delivered - ready for pickup"
 
-msgid "shipment_options_delivery"
-msgstr "Delivered at home or at work"
-
 msgid "Delivery date"
 msgstr "Delivery date"
 
@@ -184,12 +181,6 @@ msgstr "Delivery days window"
 
 msgid "Delivery information:"
 msgstr "Delivery information:"
-
-msgid "shipment_options_delivery_options_title"
-msgstr "Delivery options title"
-
-msgid "shipment_options_delivery_title"
-msgstr "Delivery title"
 
 msgid "Delivery type"
 msgstr "Delivery type"
@@ -451,12 +442,6 @@ msgstr "Number is missing"
 msgid "Monday delivery"
 msgstr "Monday delivery"
 
-msgid "shipment_options_delivery_morning"
-msgstr "Morning delivery"
-
-msgid "shipment_options_delivery_morning_title"
-msgstr "Morning delivery title"
-
 msgid "MyParcel"
 msgstr "MyParcel"
 
@@ -541,14 +526,8 @@ msgstr "Pick up at"
 msgid "Pick up from"
 msgstr "Pick up from"
 
-msgid "shipment_options_delivery_pickup"
-msgstr "Pickup"
-
 msgid "Pickup location"
 msgstr "Pickup location"
-
-msgid "shipment_options_delivery_pickup_title"
-msgstr "Pickup title"
 
 msgid "pickup_location"
 msgstr "Pickup location:"
@@ -660,6 +639,12 @@ msgstr ""
 "Creates a shipment in MyParcel when the status of an order changes. Make "
 "sure to check 'Process shipments directly' to receive the barcode."
 
+msgid "feature_allow_show_delivery_date_title"
+msgstr "Show delivery date"
+
+msgid "feature_allow_show_delivery_date_help_text"
+msgstr "Shows delivery date at the options during checkout."
+
 msgid "Settings"
 msgstr "Settings"
 
@@ -709,17 +694,43 @@ msgstr ""
 "receipt\" and \"Delivery only at recipient\" are included with this option. "
 "This option can't be combined with morning or evening delivery."
 
+msgid "shipment_options_delivery"
+msgstr "Delivered at home or at work"
+
 msgid "shipment_options_delivery_evening"
 msgstr "Evening delivery"
 
 msgid "shipment_options_delivery_evening_title"
 msgstr "Evening delivery title"
 
+msgid "shipment_options_delivery_morning"
+msgstr "Morning delivery"
+
+msgid "shipment_options_delivery_morning_title"
+msgstr "Morning delivery title"
+
+msgid "shipment_options_delivery_options_title"
+msgstr "Delivery options title"
+
+msgid "shipment_options_delivery_options_title_description"
+msgstr ""
+"You can place a delivery title above the MyParcel options. When there is no "
+"title, it will not be visible."
+
+msgid "shipment_options_delivery_pickup"
+msgstr "Pickup"
+
+msgid "shipment_options_delivery_pickup_title"
+msgstr "Pickup title"
+
 msgid "shipment_options_delivery_standard_description"
 msgstr "When there is no title, the delivery time will automatically be visible."
 
 msgid "shipment_options_delivery_standard_title"
 msgstr "Standard delivery title"
+
+msgid "shipment_options_delivery_title"
+msgstr "Delivery title"
 
 msgid "shipment_options_insured"
 msgstr "Insured shipment"
@@ -802,15 +813,13 @@ msgstr "Show after shipping details"
 msgid "Show after subtotal"
 msgstr "Show after subtotal"
 
-msgid "Show delivery date"
-msgstr "Show delivery date"
+msgid "setting_show_delivery_day_title"
+msgstr "Delivery date in customer communication"
 
-msgid ""
-"Show delivery day options allow your customers to see the delivery day in "
-"order confirmation and My Account."
+msgid "setting_show_delivery_day_help_text"
 msgstr ""
-"The \"Show delivery date\" option allows your customers to see the delivery "
-"date in order confirmations and My Account."
+"This option allows your customers to see the delivery date in order "
+"confirmations and My Account."
 
 msgid "Show Track & Trace trace code and link in My Account."
 msgstr "Show Track & Trace code and link in My Account."
@@ -1008,11 +1017,6 @@ msgstr ""
 msgid "You can change the text before the barcode inside an note"
 msgstr "You can change the text before the barcode inside an note"
 
-msgid "shipment_options_delivery_options_title_description"
-msgstr ""
-"You can place a delivery title above the MyParcel options. When there is no "
-"title, it will not be visible."
-
 msgid "You can track your order with the following Track & Trace link:"
 msgstr "You can track your order with the following Track & Trace link:"
 
@@ -1024,3 +1028,6 @@ msgstr "You have not selected any orders!"
 
 msgid "You have to export the orders to MyParcel before you can print the labels!"
 msgstr "You have to export the orders to MyParcel before you can print the labels!"
+
+msgid "shipment_options_delivery_standard"
+msgstr "Standard delivery"
