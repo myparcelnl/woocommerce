@@ -23,10 +23,11 @@ if (! class_exists('WCMYPA')) :
         /**
          * Translations domain
          */
-        const DOMAIN               = 'woocommerce-myparcel';
-        const NONCE_ACTION         = 'wc_myparcel';
-        const PHP_VERSION_7_1      = '7.1';
-        const PHP_VERSION_REQUIRED = self::PHP_VERSION_7_1;
+        const DOMAIN                       = 'woocommerce-myparcel';
+        const NONCE_ACTION                 = 'wc_myparcel';
+        const PHP_VERSION_7_1              = '7.1';
+        const PHP_VERSION_REQUIRED         = self::PHP_VERSION_7_1;
+        const WOOCOMMERCE_VERSION_REQUIRED = '5.1.0';
 
         public $version = '4.4.0';
 
@@ -194,7 +195,7 @@ if (! class_exists('WCMYPA')) :
         public function load_classes()
         {
             if ($this->is_woocommerce_activated() === false) {
-                add_action('admin_notices', [$this, 'need_woocommerce']);
+                add_action('admin_notices', [$this, 'needWoocommerce']);
 
                 return;
             }
@@ -235,17 +236,17 @@ if (! class_exists('WCMYPA')) :
         /**
          * WooCommerce not active notice.
          */
-        public function need_woocommerce()
+        public function needWoocommerce()
         {
             $error = sprintf(
-                __("WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!",
-                    "woocommerce-myparcel"
-                ),
-                '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
-                '</a>'
+                esc_html__('%s requires WooCommerce be installed & activated!', 'woocommerce-myparcel'),
+                '<strong>' . esc_html__('WooCommerce MyParcel', 'woocommerce-myparcel') . '</strong>'
             );
 
-            $message = '<div class="error"><p>' . $error . '</p></div>';
+            $message = ' <div class="notice notice-error">
+                              <p>' . $error . '</p>
+                              <p>' . $this->isWooCommerceActive() . '</p>
+                          </div > ';
 
             echo $message;
         }
@@ -253,6 +254,77 @@ if (! class_exists('WCMYPA')) :
         /**
          * PHP version requirement notice
          */
+        public function isWooCommerceActive()
+        {
+            if (! is_plugin_active('woocommerce/woocommerce.php') && current_user_can('activate_plugin', 'woocommerce/woocommerce.php')) {
+                $message = $this->woocommerceNotActive();
+            }
+
+            $installed_plugins = get_plugins();
+            if (! isset($installed_plugins['woocommerce/woocommerce.php'])) {
+                $message .= $this->installWooCommerce();
+            }
+
+            if (current_user_can('deactivate_plugin', 'woocommerce-myparcel/woocommerce-myparcel.php')) {
+                $message .= $this->deactivatePlugin();
+            }
+
+            return $message;
+        }
+
+        /**
+         * @return string
+         */
+        public function woocommerceNotActive()
+        {
+            $installed_plugins = get_plugins();
+            if (isset($installed_plugins['woocommerce/woocommerce.php'])) {
+                $woocommercePath = 'plugins.php?action=activate&plugin=woocommerce/woocommerce.php&plugin_status=active';
+                $action          = 'activate-plugin_woocommerce/woocommerce.php';
+                $message         = __('Activate WooCommerce', 'woocommerce-myparcel');
+                $class           = ' class=button-primary';
+
+                $url = '<a href=' . esc_url(wp_nonce_url(self_admin_url($woocommercePath), $action)) . $class . '>' . $message . '</a>';
+
+                return $url;
+            }
+        }
+
+        /**
+         * @return string
+         */
+        public function deactivatePlugin()
+        {
+            if (current_user_can('deactivate_plugin', 'woocommerce-myparcel/woocommerce-myparcel.php')) {
+                $woocommercePath = 'plugins.php?action=deactivate&plugin=woocommerce-myparcel/woocommerce-myparcel.php&plugin_status=inactive';
+                $action          = 'deactivate-plugin_woocommerce-myparcel/woocommerce-myparcel.php';
+                $message         = __('Turn off MyParcel plugin', 'WooCommerce MyParcel');
+                $class           = ' class="button-secondary"';
+
+                $url = '<a href=' . esc_url(wp_nonce_url($woocommercePath, $action)) . $class . '>' . $message . '</a>';
+
+                return $url;
+            }
+        }
+
+        /**
+         * @return string
+         */
+        public function installWooCommerce()
+        {
+            $url = 'http://wordpress.org/plugins/woocommerce/';
+
+            if (current_user_can('install_plugins')) {
+                $url = wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=woocommerce'), 'install-plugin_woocommerce');
+            }
+
+            $message = __('Install WooCommerce', 'woocommerce-myparcel');
+            $class   = ' class="button-primary"';
+
+            $url = '<a href=' . esc_url($url) . $class . '>' . $message . '</a>';
+
+            return $url;
+        }
 
         public function required_php_version()
         {
