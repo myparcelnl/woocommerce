@@ -11,6 +11,15 @@ msgstr ""
 "Last-Translator: \n"
 "Language: en_GB\n"
 
+msgid "setting_modus_title"
+msgstr "Mode"
+
+msgid "setting_modus_traditional_title"
+msgstr "Export shipping details only"
+
+msgid "setting_modus_pps_title"
+msgstr "Export entire order"
+
 msgid "(Unknown)"
 msgstr "(Unknown)"
 
@@ -35,12 +44,8 @@ msgstr ""
 msgid "Address details are not entered"
 msgstr "Address details are not entered"
 
-msgid ""
-"Amount of days a customer can postpone a shipment. Default is 0 days with a "
-"maximum value of 14 days."
-msgstr ""
-"Amount of days a customer can postpone a shipment. Default is 0 days with a "
-"maximum value of 14 days."
+msgid "setting_carrier_delivery_days_window_help_text"
+msgstr "Amount of days a customer can postpone a shipment."
 
 msgid "api key"
 msgstr "API key"
@@ -175,7 +180,7 @@ msgstr "delivered - ready for pickup"
 msgid "Delivery date"
 msgstr "Delivery date"
 
-msgid "Delivery days window"
+msgid "setting_carrier_delivery_days_window_title"
 msgstr "Delivery days window"
 
 msgid "Delivery information:"
@@ -264,6 +269,9 @@ msgstr ""
 "want to give a discount for using this function or do you want to charge "
 "extra for this delivery option."
 
+msgid "error_order_has_invalid_shipment_country"
+msgstr "Order %s has an invalid shipping country."
+
 msgid "error_api_for_order_%s_no_shipments_created"
 msgstr "MyParcel API error at order %s, no shipments created."
 
@@ -312,7 +320,7 @@ msgstr "House number"
 msgid "How to update your PHP version"
 msgstr "How to update your PHP version"
 
-msgid "HS Code"
+msgid "hs_code"
 msgstr "HS Code"
 
 msgid ""
@@ -438,7 +446,7 @@ msgstr "Country is missing"
 msgid "Missing number"
 msgstr "Number is missing"
 
-msgid "Monday delivery"
+msgid "shipment_options_delivery_monday"
 msgstr "Monday delivery"
 
 msgid "MyParcel"
@@ -453,13 +461,13 @@ msgstr "MyParcel shipment:"
 msgid "myparcel_shipment_created"
 msgstr "MyParcel shipment created:"
 
-msgid "MyParcel: Export"
+msgid "myparcel_bulk_action_export"
 msgstr "MyParcel: Export"
 
-msgid "MyParcel: Export & Print"
+msgid "myparcel_bulk_action_export_print"
 msgstr "MyParcel: Export & Print"
 
-msgid "MyParcel: Print"
+msgid "myparcel_bulk_action_print"
 msgstr "MyParcel: Print"
 
 msgid "No API key found in MyParcel settings"
@@ -1030,3 +1038,12 @@ msgstr "You have to export the orders to MyParcel before you can print the label
 
 msgid "shipment_options_delivery_standard"
 msgstr "Standard delivery"
+
+msgid "hs_code_variations"
+msgstr "This HS Code overwrites the parents HS Code"
+
+msgid "all_delivery_days"
+msgstr "All delivery days"
+
+msgid "setting_modus_help_text"
+msgstr ""

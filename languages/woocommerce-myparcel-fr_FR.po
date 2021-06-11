@@ -35,12 +35,8 @@ msgstr ""
 msgid "Address details are not entered"
 msgstr "Les données relatives à l'adresse ne sont pas complétées"
 
-msgid ""
-"Amount of days a customer can postpone a shipment. Default is 0 days with a "
-"maximum value of 14 days."
-msgstr ""
-"Nombre de jours un client peut reporter une expédition. Par défaut est 0 "
-"jour avec une valeur maximale de 14 jours."
+msgid "setting_carrier_delivery_days_window_help_text"
+msgstr "Nombre de jours un client peut reporter une expédition."
 
 msgid "api key"
 msgstr "API key"
@@ -93,8 +89,8 @@ msgid ""
 msgstr ""
 "Par défaut, il n'y a pas d'assurance sur les livraisons. Si vous voulez "
 "toujours assurer l'expédition, vous pouvez le faire. Nous assurons la "
-"valeur d'achat de l'expédition, avec une valeur assurée maximum de € 5.000. "
-"Les colis assurés contiennent toujours les options Adresse Accueil "
+"valeur de l'achat de l'expédition, avec une valeur assurée maximum de € "
+"5.000. Les colis assurés contiennent toujours les options Adresse Accueil "
 "uniquement 'en « Signature pour la livraison »"
 
 msgid "Calculated weight: %s"
@@ -131,7 +127,7 @@ msgid "Connect customer email"
 msgstr "Associer l'adresse e-mail du client"
 
 msgid "Connect customer phone"
-msgstr "Associer le numéro de tél��phone du client"
+msgstr "Associer le numéro de téléphone du client"
 
 msgid "Custom ID (top left on label)"
 msgstr "ID personnalisés (en haut à gauche sur l'étiquette)"
@@ -178,7 +174,7 @@ msgstr "livré - prêt à être collecté"
 msgid "Delivery date"
 msgstr "Date de livraison"
 
-msgid "Delivery days window"
+msgid "setting_carrier_delivery_days_window_title"
 msgstr "Fenêtre jours de livraison"
 
 msgid "Delivery information:"
@@ -267,6 +263,9 @@ msgstr ""
 "exemple proposer une réduction pour cette fonction ou décompter des frais "
 "supplémentaires pour cette option de livraison."
 
+msgid "error_order_has_invalid_shipment_country"
+msgstr "L'ordre %s á un pays d'expédition invalide."
+
 msgid "error_api_for_order_%s_no_shipments_created"
 msgstr "MyParcel API erreur au commande %s, aucun envoi n'a été créé."
 
@@ -315,7 +314,7 @@ msgstr "Numéro de rue"
 msgid "How to update your PHP version"
 msgstr "Comment mettre à jour votre version PHP"
 
-msgid "HS Code"
+msgid "hs_code"
 msgstr "HS Code"
 
 msgid ""
@@ -441,7 +440,7 @@ msgstr "Pays manque"
 msgid "Missing number"
 msgstr "Numéro manque"
 
-msgid "Monday delivery"
+msgid "shipment_options_delivery_monday"
 msgstr "Livraison lundi"
 
 msgid "MyParcel"
@@ -456,13 +455,13 @@ msgstr "Envoi MyParcel:"
 msgid "myparcel_shipment_created"
 msgstr "Envoi MyParcel créé :"
 
-msgid "MyParcel: Export"
+msgid "myparcel_bulk_action_export"
 msgstr "MyParcel: Exporter"
 
-msgid "MyParcel: Export & Print"
+msgid "myparcel_bulk_action_export_print"
 msgstr "MyParcel: Exporter & Imprimer"
 
-msgid "MyParcel: Print"
+msgid "myparcel_bulk_action_print"
 msgstr "MyParcel: Imprimer"
 
 msgid "No API key found in MyParcel settings"
@@ -763,8 +762,8 @@ msgid "shipment_options_insured_help_text"
 msgstr ""
 "Par défaut, il n'y a pas d'assurance sur les livraisons. Si vous voulez "
 "toujours assurer l'expédition, vous pouvez le faire. Nous assurons la "
-"valeur d'achat de l'expédition, avec une valeur assurée maximum de € 5.000. "
-"Les colis assurés contiennent toujours les options Adresse Accueil "
+"valeur de l'achat de l'expédition, avec une valeur assurée maximum de € "
+"5.000. Les colis assurés contiennent toujours les options Adresse Accueil "
 "uniquement 'en « Signature pour la livraison »"
 
 msgid "shipment_options_large_format"
@@ -1056,3 +1055,21 @@ msgstr ""
 
 msgid "shipment_options_delivery_standard"
 msgstr "Livraison Standard"
+
+msgid "hs_code_variations"
+msgstr "Ce code SH remplace le code SH"
+
+msgid "all_delivery_days"
+msgstr "Tous les jours de livraison"
+
+msgid "setting_modus_title"
+msgstr ""
+
+msgid "setting_modus_traditional_title"
+msgstr ""
+
+msgid "setting_modus_pps_title"
+msgstr ""
+
+msgid "setting_modus_help_text"
+msgstr ""

@@ -541,18 +541,15 @@ class WCMP_Settings_Data
                 'help_text' => __('feature_allow_show_delivery_date_help_text', 'woocommerce-myparcel'),
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE,
+                'name'      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
+                'condition' => WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE,
                 'class'      => ['wcmp__child'],
-                "label"     => __("Delivery days window", "woocommerce-myparcel"),
-                "type"      => "number",
+                'label'     => __('setting_carrier_delivery_days_window_title', 'woocommerce-myparcel'),
+                'type'      => 'number',
                 'min'       => 1,
-                "max"       => 14,
-                "default"   => self::ENABLED,
-                "help_text" => __(
-                    "Amount of days a customer can postpone a shipment. Default is 0 days with a maximum value of 14 days.",
-                    "woocommerce-myparcel"
-                ),
+                'max'       => 14,
+                'default'   => self::ENABLED,
+                'help_text' => __('setting_carrier_delivery_days_window_help_text', 'woocommerce-myparcel'),
             ],
             [
                 "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,

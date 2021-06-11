@@ -11,6 +11,18 @@ msgstr ""
 "Last-Translator: \n"
 "Language: nl_BE\n"
 
+msgid "setting_modus_title"
+msgstr "Modus"
+
+msgid "setting_modus_traditional_title"
+msgstr "Exporteer alleen verzendinformatie"
+
+msgid "setting_modus_pps_title"
+msgstr "Exporteer volledige order"
+
+msgid "setting_modus_help_text"
+msgstr ""
+
 msgid "(Unknown)"
 msgstr "(Onbekend)"
 
@@ -35,9 +47,7 @@ msgstr ""
 msgid "Address details are not entered"
 msgstr "Adresgegevens zijn niet ingevuld"
 
-msgid ""
-"Amount of days a customer can postpone a shipment. Default is 0 days with a "
-"maximum value of 14 days."
+msgid "setting_carrier_delivery_days_window_help_text"
 msgstr "Aantal dagen dat een klant de bezorging kan uitstellen"
 
 msgid "api key"
@@ -174,7 +184,7 @@ msgstr "afgeleverd - klaar om opgehaald te worden"
 msgid "Delivery date"
 msgstr "Bezorgdatum"
 
-msgid "Delivery days window"
+msgid "setting_carrier_delivery_days_window_title"
 msgstr "Leverdagen venster"
 
 msgid "Delivery information:"
@@ -263,6 +273,9 @@ msgstr ""
 "bijvoorbeeld korting geven voor het gebruiken van deze functie of wil je "
 "extra kosten rekenen voor deze bezorgoptie."
 
+msgid "error_order_has_invalid_shipment_country"
+msgstr "Bestelling %s heeft een ongeldig land als bestemming."
+
 msgid "error_api_for_order_%s_no_shipments_created"
 msgstr "MyParcel API error bij order %s, geen zendingen aangemaakt."
 
@@ -311,7 +324,7 @@ msgstr "Huisnummer"
 msgid "How to update your PHP version"
 msgstr "Hoe update je jouw PHP versie"
 
-msgid "HS Code"
+msgid "hs_code"
 msgstr "HS Code"
 
 msgid ""
@@ -436,7 +449,7 @@ msgstr "Land ontbreekt"
 msgid "Missing number"
 msgstr "Nummer ontbreekt"
 
-msgid "Monday delivery"
+msgid "shipment_options_delivery_monday"
 msgstr "Maandag levering"
 
 msgid "MyParcel"
@@ -451,13 +464,13 @@ msgstr "MyParcel zending:"
 msgid "myparcel_shipment_created"
 msgstr "MyParcel zending aangemaakt"
 
-msgid "MyParcel: Export"
+msgid "myparcel_bulk_action_export"
 msgstr "MyParcel: Exporteren"
 
-msgid "MyParcel: Export & Print"
+msgid "myparcel_bulk_action_export_print"
 msgstr "MyParcel: Exporteren & Printen"
 
-msgid "MyParcel: Print"
+msgid "myparcel_bulk_action_print"
 msgstr "MyParcel: Printen"
 
 msgid "No API key found in MyParcel settings"
@@ -755,7 +768,7 @@ msgid "shipment_options_insured_help_text"
 msgstr ""
 "Standaard zit er geen verzekering op zendingen. Als je alsnog een zending "
 "wilt verzekeren kan dat. Wij verzekeren het aankoopbedrag van een zending "
-"met een maximum van €5000. Verzekerde zendingen worden altijd alleen "
+"met een maximum van ���5000. Verzekerde zendingen worden altijd alleen "
 "afgeleverd op het thuisadres en een handtekening is vereist."
 
 msgid "shipment_options_large_format"
@@ -1044,3 +1057,9 @@ msgstr ""
 
 msgid "shipment_options_delivery_standard"
 msgstr "Standaard bezorging"
+
+msgid "hs_code_variations"
+msgstr "Deze HS-code overschrijft de HS-code"
+
+msgid "all_delivery_days"
+msgstr "Alle bezorgdagen"
