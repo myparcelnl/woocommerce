@@ -548,7 +548,7 @@ class WCMP_Settings_Data
                 'type'      => 'number',
                 'min'       => 1,
                 'max'       => 14,
-                'default'   => self::ENABLED,
+                'default'   => 1,
                 'help_text' => __('setting_carrier_delivery_days_window_help_text', 'woocommerce-myparcel'),
             ],
             [
