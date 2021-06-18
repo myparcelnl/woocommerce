@@ -98,6 +98,7 @@ class WCMYPA_Settings
     public const SETTING_CARRIER_CUTOFF_TIME              = "cutoff_time";
     public const SETTING_CARRIER_DELIVERY_DAYS_WINDOW     = "delivery_days_window";
     public const SETTING_CARRIER_DELIVERY_ENABLED         = "delivery_enabled";
+    public const SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE = "allow_show_delivery_date";
     public const SETTING_CARRIER_DROP_OFF_DAYS            = "drop_off_days";
     public const SETTING_CARRIER_DROP_OFF_DELAY           = "drop_off_delay";
     public const SETTING_CARRIER_PICKUP_ENABLED           = "pickup_enabled";
