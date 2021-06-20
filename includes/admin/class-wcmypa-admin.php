@@ -21,21 +21,22 @@ if (class_exists('WCMYPA_Admin')) {
  */
 class WCMYPA_Admin
 {
-    public const META_CONSIGNMENTS           = "_myparcel_consignments";
-    public const META_CONSIGNMENT_ID         = "_myparcel_consignment_id";
-    public const META_DELIVERY_OPTIONS       = "_myparcel_delivery_options";
-    public const META_HIGHEST_SHIPPING_CLASS = "_myparcel_highest_shipping_class";
-    public const META_LAST_SHIPMENT_IDS      = "_myparcel_last_shipment_ids";
-    public const META_RETURN_SHIPMENT_IDS    = "_myparcel_return_shipment_ids";
-    public const META_ORDER_VERSION          = "_myparcel_order_version";
-    public const META_PGADDRESS              = "_myparcel_pgaddress";
-    public const META_SHIPMENTS              = "_myparcel_shipments";
-    public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcel_shipment_options_extra";
-    public const META_TRACK_TRACE            = "_myparcel_tracktrace";
-    public const META_HS_CODE                = "_myparcel_hs_code";
-    public const META_HS_CODE_VARIATION      = "_myparcel_hs_code_variation";
-    public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
-    public const META_AGE_CHECK              = "_myparcel_age_check";
+    public const META_CONSIGNMENTS                = "_myparcel_consignments";
+    public const META_CONSIGNMENT_ID              = "_myparcel_consignment_id";
+    public const META_DELIVERY_OPTIONS            = "_myparcel_delivery_options";
+    public const META_HIGHEST_SHIPPING_CLASS      = "_myparcel_highest_shipping_class";
+    public const META_LAST_SHIPMENT_IDS           = "_myparcel_last_shipment_ids";
+    public const META_RETURN_SHIPMENT_IDS         = "_myparcel_return_shipment_ids";
+    public const META_ORDER_VERSION               = "_myparcel_order_version";
+    public const META_PGADDRESS                   = "_myparcel_pgaddress";
+    public const META_SHIPMENTS                   = "_myparcel_shipments";
+    public const META_SHIPMENT_OPTIONS_EXTRA      = "_myparcel_shipment_options_extra";
+    public const META_TRACK_TRACE                 = "_myparcel_tracktrace";
+    public const META_HS_CODE                     = "_myparcel_hs_code";
+    public const META_HS_CODE_VARIATION           = "_myparcel_hs_code_variation";
+    public const META_COUNTRY_OF_ORIGIN           = "_myparcel_country_of_origin";
+    public const META_COUNTRY_OF_ORIGIN_VARIATION = "_myparcel_country_of_origin_variation";
+    public const META_AGE_CHECK                   = "_myparcel_age_check";
 
     /**
      * @deprecated use weight property in META_SHIPMENT_OPTIONS_EXTRA.
@@ -111,6 +112,10 @@ class WCMYPA_Admin
 
         add_action("woocommerce_product_options_shipping", [$this, "productOptionsFields"]);
         add_action("woocommerce_process_product_meta", [$this, "productOptionsFieldSave"]);
+
+        add_action('woocommerce_product_after_variable_attributes', [$this, 'variationCountryOfOriginField'], 10, 3);
+        add_action('woocommerce_save_product_variation', [$this, 'saveVariationCountryOfOriginField'], 10, 2);
+        add_filter('woocommerce_available_variation', [$this, 'loadVariationCountryOfOriginField'], 10, 1);
     }
 
     /**
@@ -136,6 +141,52 @@ class WCMYPA_Admin
 
         echo "<hr>";
     }
+
+    /**
+     * @param $loop
+     * @param $variationData
+     * @param $variation
+     */
+    public function variationCountryOfOriginField($loop, $variationData, $variation)
+    {
+        woocommerce_wp_text_input(
+            [
+                'id'            => self::META_COUNTRY_OF_ORIGIN_VARIATION . "[{$loop}]",
+                'name'          => self::META_COUNTRY_OF_ORIGIN_VARIATION . "[{$loop}]",
+                'value'         => get_post_meta($variation->ID, self::META_COUNTRY_OF_ORIGIN_VARIATION, true),
+                'label'         => __('country_of_origin_variable', 'woocommerce'),
+                'desc_tip'      => true,
+                'description'   => __('This country of origin overwrites the parents country of origin.', 'woocommerce'),
+                'wrapper_class' => 'form-row form-row-full',
+            ]
+        );
+    }
+
+    /**
+     * @param $variationId
+     * @param $loop
+     */
+    public function saveVariationCountryOfOriginField($variationId, $loop)
+    {
+        $countryOfOriginValue = $_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop];
+
+        if (! empty($countryOfOriginValue)) {
+            update_post_meta($variationId, self::META_COUNTRY_OF_ORIGIN_VARIATION, esc_attr($countryOfOriginValue));
+        }
+    }
+
+    /**
+     * @param $variation
+     *
+     * @return mixed
+     */
+    public function loadVariationCountryOfOriginField($variation)
+    {
+        $variation[self::META_COUNTRY_OF_ORIGIN_VARIATION] = get_post_meta($variation['variation_id'], self::META_COUNTRY_OF_ORIGIN_VARIATION, true);
+
+        return $variation;
+    }
+
 
     /**
      * @param $loop

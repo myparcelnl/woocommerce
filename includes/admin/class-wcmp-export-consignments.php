@@ -264,17 +264,19 @@ class WCMP_Export_Consignments
     {
         $defaultCountryOfOrigin = $this->getSetting(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
         $productCountryOfOrigin = WCX_Product::get_meta($product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
+        $variationCountryOfOrigin = WCX_Product::get_meta($product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN_VARIATION, true);
 
-        return $this->getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin);
+        return $this->getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin, $variationCountryOfOrigin);
     }
 
     /**
      * @param string|null $defaultCountryOfOrigin
      * @param string|null  $productCountryOfOrigin
+     * @param string|null  $variationCountryOfOrigin
      *
      * @return string
      */
-    public function getPriorityOrigin(?string $defaultCountryOfOrigin, ?string $productCountryOfOrigin): string
+    public function getPriorityOrigin(?string $defaultCountryOfOrigin, ?string $productCountryOfOrigin, ?string $variationCountryOfOrigin): string
     {
         if ($productCountryOfOrigin) {
             return $productCountryOfOrigin;
@@ -282,6 +284,10 @@ class WCMP_Export_Consignments
 
         if ($defaultCountryOfOrigin) {
             return $defaultCountryOfOrigin;
+        }
+
+        if ($variationCountryOfOrigin) {
+            return $variationCountryOfOrigin;
         }
 
         return WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
