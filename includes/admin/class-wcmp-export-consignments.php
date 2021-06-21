@@ -262,8 +262,8 @@ class WCMP_Export_Consignments
      */
     public function getCountryOfOrigin(WC_Product $product): string
     {
-        $defaultCountryOfOrigin = $this->getSetting(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
-        $productCountryOfOrigin = WCX_Product::get_meta($product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
+        $defaultCountryOfOrigin   = $this->getSetting(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
+        $productCountryOfOrigin   = WCX_Product::get_meta($product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
         $variationCountryOfOrigin = WCX_Product::get_meta($product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN_VARIATION, true);
 
         return $this->getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin, $variationCountryOfOrigin);
