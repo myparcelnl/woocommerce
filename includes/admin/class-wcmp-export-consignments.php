@@ -271,23 +271,23 @@ class WCMP_Export_Consignments
 
     /**
      * @param string|null $defaultCountryOfOrigin
-     * @param string|null  $productCountryOfOrigin
-     * @param string|null  $variationCountryOfOrigin
+     * @param string|null $productCountryOfOrigin
+     * @param string|null $variationCountryOfOrigin
      *
      * @return string
      */
     public function getPriorityOrigin(?string $defaultCountryOfOrigin, ?string $productCountryOfOrigin, ?string $variationCountryOfOrigin): string
     {
+        if ($variationCountryOfOrigin) {
+            return $variationCountryOfOrigin;
+        }
+
         if ($productCountryOfOrigin) {
             return $productCountryOfOrigin;
         }
 
         if ($defaultCountryOfOrigin) {
             return $defaultCountryOfOrigin;
-        }
-
-        if ($variationCountryOfOrigin) {
-            return $variationCountryOfOrigin;
         }
 
         return WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;

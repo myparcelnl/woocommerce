@@ -149,14 +149,19 @@ class WCMYPA_Admin
      */
     public function variationCountryOfOriginField($loop, $variationData, $variation)
     {
-        woocommerce_wp_text_input(
+        woocommerce_wp_select(
             [
                 'id'            => self::META_COUNTRY_OF_ORIGIN_VARIATION . "[{$loop}]",
                 'name'          => self::META_COUNTRY_OF_ORIGIN_VARIATION . "[{$loop}]",
+                'type'          => 'select',
+                'options'       => (new WC_Countries())->get_countries(),
                 'value'         => get_post_meta($variation->ID, self::META_COUNTRY_OF_ORIGIN_VARIATION, true),
-                'label'         => __('country_of_origin_variable', 'woocommerce'),
+                'label'         => __('country_of_origin_variable', 'woocommerce-myparcel'),
                 'desc_tip'      => true,
-                'description'   => __('This country of origin overwrites the parents country of origin.', 'woocommerce'),
+                'description'   => __(
+                    'country_of_origin_variable_description',
+                    'woocommerce-myparcel'
+                ),
                 'wrapper_class' => 'form-row form-row-full',
             ]
         );
@@ -186,7 +191,6 @@ class WCMYPA_Admin
 
         return $variation;
     }
-
 
     /**
      * @param $loop
