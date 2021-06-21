@@ -127,28 +127,6 @@ if (! class_exists('WCMYPA')) :
          */
         public function includes()
         {
-            // Use php version 5.6
-            if (! $this->phpVersionMeets(WCMYPA::PHP_VERSION_7_1)) {
-                $this->includes = $this->plugin_path() . "/includes_php56";
-
-                // include compatibility classes
-                require_once($this->includes . "/compatibility/abstract-wc-data-compatibility.php");
-                require_once($this->includes . "/compatibility/class-wc-date-compatibility.php");
-                require_once($this->includes . "/compatibility/class-wc-core-compatibility.php");
-                require_once($this->includes . "/compatibility/class-wc-order-compatibility.php");
-                require_once($this->includes . "/compatibility/class-wc-product-compatibility.php");
-
-                require_once($this->includes . "/class-wcmp-assets.php");
-                $this->admin = require_once($this->includes . "/class-wcmp-admin.php");
-                require_once($this->includes . "/class-wcmp-frontend-settings.php");
-                require_once($this->includes . "/class-wcmp-frontend.php");
-                require_once($this->includes . "/class-wcmp-settings.php");
-                $this->export = require_once($this->includes . "/class-wcmp-export.php");
-                require_once($this->includes . "/class-wcmp-nl-postcode-fields.php");
-
-                return;
-            }
-
             $this->includes = $this->plugin_path() . '/includes';
             // Use minimum php version 7.1
             require_once($this->plugin_path() . "/vendor/autoload.php");
@@ -185,6 +163,7 @@ if (! class_exists('WCMYPA')) :
             require_once($this->includes . "/adapter/delivery-options-from-order-adapter.php");
             require_once($this->includes . "/adapter/pickup-location-from-order-adapter.php");
             require_once($this->includes . "/adapter/shipment-options-from-order-adapter.php");
+            require_once($this->includes . "/adapter/OrderLineFromWooCommerce.php");
             require_once($this->includes . "/admin/class-wcmp-export-consignments.php");
         }
 

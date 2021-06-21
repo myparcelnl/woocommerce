@@ -4,8 +4,8 @@
  * @property {
  *  {
  *    export: String,
- *    add_shipments: String,
- *    add_return: String,
+ *    export_order: String,
+ *    export_return: String,
  *    get_labels: String,
  *    modal_dialog: String
  *  }
@@ -713,7 +713,7 @@ jQuery(($) => {
     event.preventDefault();
 
     switch (request) {
-      case wcmp.actions.add_shipments:
+      case wcmp.actions.export_order:
         exportToMyParcel.bind(this)();
         break;
       case wcmp.actions.get_labels:
@@ -723,7 +723,7 @@ jQuery(($) => {
           printLabel.bind(this)();
         }
         break;
-      case wcmp.actions.add_return:
+      case wcmp.actions.export_return:
         showDialog(orderIds, 'return', request);
         break;
     }
@@ -852,7 +852,7 @@ jQuery(($) => {
     } else {
       data = {
         action: wcmp.actions.export,
-        request: wcmp.actions.add_shipments,
+        request: wcmp.actions.export_order,
         offset: getPrintOffset(),
         order_ids: orderIds,
         print: print,

@@ -1,6 +1,7 @@
 <?php
 
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
+use MyParcelNL\Sdk\src\Model\MyParcelRequest;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core;
 use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
@@ -15,11 +16,6 @@ if (class_exists('WCMP_API')) {
 
 class WCMP_API extends WCMP_Rest
 {
-    /**
-     * @var string
-     */
-    public $apiUrl = "https://api.myparcel.nl/";
-
     /**
      * @var string
      */
@@ -41,7 +37,6 @@ class WCMP_API extends WCMP_Rest
     {
         parent::__construct();
 
-        $this->apiUrl    = WCMP_Data::API_URL;
         $this->userAgent = $this->getUserAgent();
         $this->key       = (string) $key;
     }
@@ -58,41 +53,41 @@ class WCMP_API extends WCMP_Rest
      */
     public function add_shipments(array $shipments, string $type = "standard"): array
     {
-        $endpoint = "shipments";
+        $endPoint = "shipments";
 
         // define content type
         switch ($type) {
             case "return":
-                $content_type = "application/vnd.return_shipment+json";
-                $data_key     = "return_shipments";
+                $contentType = "application/vnd.return_shipment+json";
+                $dataKey     = "return_shipments";
                 break;
             case "unrelated_return":
-                $content_type = "application/vnd.unrelated_return_shipment+json";
-                $data_key     = "unrelated_return_shipments";
+                $contentType = "application/vnd.unrelated_return_shipment+json";
+                $dataKey     = "unrelated_return_shipments";
                 break;
             default:
-                $content_type = "application/vnd.shipment+json";
-                $data_key     = "shipments";
+                $contentType = "application/vnd.shipment+json";
+                $dataKey     = "shipments";
                 break;
         }
 
         $data = [
             "data" => [
-                $data_key => $shipments,
+                $dataKey => $shipments,
             ],
         ];
 
         $json = json_encode($data);
 
         $headers = [
-            "Content-type"  => $content_type . "; charset=UTF-8",
-            "Authorization" => "basic " . base64_encode("{$this->key}"),
+            "Content-type"  => $contentType . "; charset=UTF-8",
+            "Authorization" => "basic " . base64_encode((string) ($this->key)),
             "user-agent"    => $this->userAgent,
         ];
 
-        $request_url = $this->apiUrl . $endpoint;
+        $requestUrl = MyParcelRequest::REQUEST_URL . '/' . $endPoint;
 
-        return $this->post($request_url, $json, $headers);
+        return $this->post($requestUrl, $json, $headers);
     }
 
     /**
@@ -116,7 +111,7 @@ class WCMP_API extends WCMP_Rest
             ],
         ];
 
-        $request_url = $this->apiUrl . $endpoint . "/" . implode(";", (array) $ids);
+        $request_url = MyParcelRequest::REQUEST_URL . '/' . $endpoint . '/' . implode(';', (array) $ids);
         $request_url = add_query_arg($params, $request_url);
 
         return $this->get($request_url, $headers);
@@ -181,18 +176,18 @@ class WCMP_API extends WCMP_Rest
      * Update the status of given order based on the automatic order status settings.
      *
      * @param WC_Order $order
-     * @param string   $changeStatusAtExportOrPrint
+     * @param string   $thisMoment
      */
-    public function updateOrderStatus(WC_Order $order, string $changeStatusAtExportOrPrint): void
+    public static function updateOrderStatus(WC_Order $order, string $thisMoment = ''): void
     {
         $statusAutomation     = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION);
         $momentOfStatusChange = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER);
         $newStatus            = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
 
-        if ($statusAutomation && $changeStatusAtExportOrPrint === $momentOfStatusChange) {
+        if ($statusAutomation && (! $thisMoment || $thisMoment === $momentOfStatusChange)) {
             $order->update_status(
                 $newStatus,
-                __("myparcel_shipment_created", "woocommerce-myparcel")
+                __('myparcel_export', 'woocommerce-myparcel')
             );
 
             WCMP_Log::add("Status of order {$order->get_id()} updated to \"$newStatus\"");
@@ -216,9 +211,9 @@ class WCMP_API extends WCMP_Rest
             }
 
             $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
-            $trackTrace   = $shipmentData["track_trace"] ?? null;
+            $trackTrace   = $shipmentData['track_trace'] ?? null;
 
-            $this->updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING);
+            self::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING);
 
             ChannelEngine::updateMetaOnExport($order, $trackTrace);
         }

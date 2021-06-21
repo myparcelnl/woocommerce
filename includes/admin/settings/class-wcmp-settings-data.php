@@ -19,8 +19,8 @@ class WCMP_Settings_Data
     public const ENABLED  = "1";
     public const DISABLED = "0";
 
-    public const MODUS_PPS         = 'pps';
-    public const MODUS_TRADITIONAL = 'traditional';
+    public const EXPORT_MODE_PPS       = 'pps';
+    public const EXPORT_MODE_SHIPMENTS = 'shipments';
 
     public const DISPLAY_FOR_SELECTED_METHODS = "selected_methods";
     public const DISPLAY_FOR_ALL_METHODS      = "all_methods";
@@ -299,62 +299,69 @@ class WCMP_Settings_Data
     {
         return [
             [
-                'name'    => WCMYPA_Settings::SETTING_MODUS,
-                'label'   => __('setting_modus_title', 'woocommerce-myparcel'),
+                'name'    => WCMYPA_Settings::SETTING_EXPORT_MODE,
+                'label'   => __('setting_mode_title', 'woocommerce-myparcel'),
                 'type'    => 'select',
                 'options' => [
-                    self::MODUS_PPS         => __('setting_modus_pps_title', 'woocommerce-myparcel'),
-                    self::MODUS_TRADITIONAL => __('setting_modus_traditional_title', 'woocommerce-myparcel'),
+                    self::EXPORT_MODE_SHIPMENTS => __('setting_mode_shipments_title', 'woocommerce-myparcel'),
+                    self::EXPORT_MODE_PPS       => __('setting_mode_pps_title', 'woocommerce-myparcel'),
                 ],
-                'default' => self::MODUS_TRADITIONAL,
+                'default' => self::EXPORT_MODE_SHIPMENTS,
             ],
             [
-                "name"    => WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY,
-                "label"   => __("Label display", "woocommerce-myparcel"),
-                "type"    => "select",
-                "options" => [
-                    "download" => __("Download PDF", "woocommerce-myparcel"),
-                    "display"  => __("Open the PDF in a new tab", "woocommerce-myparcel"),
-                ],
-            ],
-            [
-                "name"    => WCMYPA_Settings::SETTING_LABEL_FORMAT,
-                "label"   => __("Label format", "woocommerce-myparcel"),
-                "type"    => "select",
-                "options" => [
-                    "A4" => __("Standard printer (A4)", "woocommerce-myparcel"),
-                    "A6" => __("Label Printer (A6)", "woocommerce-myparcel"),
+                'name'    => WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY,
+                'label'   => __('Label display', 'woocommerce-myparcel'),
+                'condition' => $this->conditionForModeTraditionalOnly(),
+                'type'    => 'select',
+                'options' => [
+                    'download' => __('Download PDF', 'woocommerce-myparcel'),
+                    'display'  => __('Open the PDF in a new tab', 'woocommerce-myparcel'),
                 ],
             ],
             [
-                "name"       => WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION,
-                "label"      => __("Ask for print start position", "woocommerce-myparcel"),
-                "condition" => [
-                    "parent_name"  => WCMYPA_Settings::SETTING_LABEL_FORMAT,
-                    "type"         => "disable",
-                    "parent_value" => "A4",
-                    "set_value"    => self::DISABLED,
+                'name'    => WCMYPA_Settings::SETTING_LABEL_FORMAT,
+                'label'   => __('Label format', 'woocommerce-myparcel'),
+                'condition' => $this->conditionForModeTraditionalOnly(),
+                'type'    => 'select',
+                'options' => [
+                    'A4' => __('Standard printer (A4)', 'woocommerce-myparcel'),
+                    'A6' => __('Label Printer (A6)', 'woocommerce-myparcel'),
                 ],
-                "type"       => "toggle",
-                "help_text"  => __(
-                    "This option enables you to continue printing where you left off last time",
-                    "woocommerce-myparcel"
+            ],
+            [
+                'name'      => WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION,
+                'label'     => __('Ask for print start position', 'woocommerce-myparcel'),
+                'condition' => [
+                    $this->conditionForModeTraditionalOnly(),
+                    [
+                        'parent_name'  => WCMYPA_Settings::SETTING_LABEL_FORMAT,
+                        'type'         => 'disable',
+                        'parent_value' => 'A4',
+                        'set_value'    => self::DISABLED,
+                    ],
+                ],
+                'type'      => 'toggle',
+                'help_text' => __(
+                    'This option enables you to continue printing where you left off last time',
+                    'woocommerce-myparcel'
                 ),
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_TRACK_TRACE_EMAIL,
-                "label"     => __("Track & Trace in email", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel backend.",
-                    "woocommerce-myparcel"
+                'name'      => WCMYPA_Settings::SETTING_TRACK_TRACE_EMAIL,
+                'label'     => __('Track & Trace in email', 'woocommerce-myparcel'),
+                'condition' => $this->conditionForModeTraditionalOnly(),
+                'type'      => 'toggle',
+                'help_text' => __(
+                    'Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel backend.',
+                    'woocommerce-myparcel'
                 ),
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT,
-                "label"     => __("Track & Trace in My Account", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __("Show Track & Trace trace code and link in My Account.", "woocommerce-myparcel"),
+                'name'      => WCMYPA_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT,
+                'label'     => __('Track & Trace in My Account', 'woocommerce-myparcel'),
+                'condition' => $this->conditionForModeTraditionalOnly(),
+                'type'      => 'toggle',
+                'help_text' => __('Show Track & Trace trace code and link in My Account.', 'woocommerce-myparcel'),
             ],
             [
                 'name'      => WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY,
@@ -363,62 +370,75 @@ class WCMP_Settings_Data
                 'help_text' => __('setting_show_delivery_day_help_text', 'woocommerce-myparcel'),
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_PROCESS_DIRECTLY,
-                "label"     => __("Process shipments directly", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "When you enable this option, shipments will be directly processed when sent to MyParcel.",
-                    "woocommerce-myparcel"
+                'name'      => WCMYPA_Settings::SETTING_PROCESS_DIRECTLY,
+                'label'     => __('Process shipments directly', 'woocommerce-myparcel'),
+                'condition' => $this->conditionForModeTraditionalOnly(),
+                'type'      => 'toggle',
+                'help_text' => __(
+                    'When you enable this option, shipments will be directly processed when sent to MyParcel.',
+                    'woocommerce-myparcel'
                 ),
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION,
-                "label"     => __("Order status automation", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "Automatically set order status to a predefined status after successful MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.",
-                    "woocommerce-myparcel"
+                'name'      => WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION,
+                'label'     => __('Order status automation', 'woocommerce-myparcel'),
+                'type'      => 'toggle',
+                'help_text' => __(
+                    'Automatically set order status to a predefined status after successful MyParcel export.<br/>Make sure <strong>Process shipments directly</strong> is enabled when you use this option together with the <strong>Track & Trace in email</strong> option, otherwise the Track & Trace code will not be included in the customer email.',
+                    'woocommerce-myparcel'
                 ),
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER,
-                "condition" => WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION,
-                "class"     => ["wcmp__child"],
-                "label"     => __("setting_change_order_status_after", "woocommerce-myparcel"),
-                "type"      => "select",
-                "default"   => self::CHANGE_STATUS_AFTER_PRINTING,
-                "options"   => [
-                    self::CHANGE_STATUS_AFTER_PRINTING => __("setting_change_status_after_printing", "woocommerce-myparcel"),
-                    self::CHANGE_STATUS_AFTER_EXPORT   => __("setting_change_status_after_export", "woocommerce-myparcel"),
+                'name'      => WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER,
+                'condition' => [
+                        WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION,
+                        [
+                            'parent_name'  => WCMYPA_Settings::SETTING_EXPORT_MODE,
+                            'type'         => 'disable',
+                            'parent_value' => self::EXPORT_MODE_SHIPMENTS,
+                            'set_value'    => self::CHANGE_STATUS_AFTER_EXPORT,
+                        ],
+                    ],
+                'class'     => ['wcmp__child'],
+                'label'     => __('setting_change_order_status_after', 'woocommerce-myparcel'),
+                'type'      => 'select',
+                'default'   => self::CHANGE_STATUS_AFTER_PRINTING,
+                'options'   => [
+                    self::CHANGE_STATUS_AFTER_PRINTING => __('setting_change_status_after_printing', 'woocommerce-myparcel'),
+                    self::CHANGE_STATUS_AFTER_EXPORT   => __('setting_change_status_after_export', 'woocommerce-myparcel'),
                 ],
-                "help_text" => __(
-                    "setting_change_status_after_help_text",
-                    "woocommerce-myparcel"
+                'help_text' => __(
+                    'setting_change_status_after_help_text',
+                    'woocommerce-myparcel'
                 ),
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS,
-                "condition" => WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION,
-                "class"     => ["wcmp__child"],
-                "label"     => __("setting_automatic_order_status", "woocommerce-myparcel"),
-                "type"      => "select",
-                "options"   => WCMP_Settings_Callbacks::get_order_status_options(),
+                'name'      => WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS,
+                'label'     => __('setting_automatic_order_status', 'woocommerce-myparcel'),
+                'condition' => WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION,
+                'class'     => ['wcmp__child'],
+                'type'      => 'select',
+                'options'   => WCMP_Settings_Callbacks::get_order_status_options(),
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_BARCODE_IN_NOTE,
-                "label"     => __("Place barcode inside note", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __("Place the barcode inside a note of the order", "woocommerce-myparcel"),
+                'name'      => WCMYPA_Settings::SETTING_BARCODE_IN_NOTE,
+                'label'     => __('Place barcode inside note', 'woocommerce-myparcel'),
+                'condition' => $this->conditionForModeTraditionalOnly(),
+                'type'      => 'toggle',
+                'help_text' => __('Place the barcode inside a note of the order', 'woocommerce-myparcel'),
             ],
             [
-                "name"      => WCMYPA_Settings::SETTING_BARCODE_IN_NOTE_TITLE,
-                "condition" => WCMYPA_Settings::SETTING_BARCODE_IN_NOTE,
-                "class"     => ["wcmp__child"],
-                "label"     => __("Title before the barcode", "woocommerce-myparcel"),
-                "default"   => __("Track & trace code:", "woocommerce-myparcel"),
-                "help_text" => __(
-                    "You can change the text before the barcode inside an note",
-                    "woocommerce-myparcel"
+                'name'      => WCMYPA_Settings::SETTING_BARCODE_IN_NOTE_TITLE,
+                'condition' => [
+                    $this->conditionForModeTraditionalOnly(),
+                    WCMYPA_Settings::SETTING_BARCODE_IN_NOTE,
+                ],
+                'class'     => ['wcmp__child'],
+                'label'     => __('Title before the barcode', 'woocommerce-myparcel'),
+                'default'   => __('Track & trace code:', 'woocommerce-myparcel'),
+                'help_text' => __(
+                    'You can change the text before the barcode inside an note',
+                    'woocommerce-myparcel'
                 ),
             ],
         ];
@@ -1044,6 +1064,17 @@ class WCMP_Settings_Data
         }
 
         return sprintf("<div class=\"label-description-variables\"><p>Available variables: %s</p>", $output);
+    }
+
+    /**
+     * @return array
+     */
+    private function conditionForModeTraditionalOnly(): array
+    {
+        return [
+            'parent_name'  => WCMYPA_Settings::SETTING_EXPORT_MODE,
+            'parent_value' => self::EXPORT_MODE_SHIPMENTS,
+        ];
     }
 
     /**
