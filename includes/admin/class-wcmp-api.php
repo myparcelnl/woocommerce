@@ -53,7 +53,7 @@ class WCMP_API extends WCMP_Rest
      */
     public function add_shipments(array $shipments, string $type = "standard"): array
     {
-        $endPoint = 'shipments';
+        $endpoint = 'shipments';
 
         // define content type
         switch ($type) {
@@ -85,7 +85,7 @@ class WCMP_API extends WCMP_Rest
             'user-agent'    => $this->userAgent,
         ];
 
-        $requestUrl = MyParcelRequest::REQUEST_URL . '/' . $endPoint;
+        $requestUrl = MyParcelRequest::REQUEST_URL . '/' . $endpoint;
 
         return $this->post($requestUrl, $json, $headers);
     }
@@ -101,7 +101,7 @@ class WCMP_API extends WCMP_Rest
      */
     public function get_shipments($ids, array $params = []): array
     {
-        $endPoint = 'shipments';
+        $endpoint = 'shipments';
 
         $headers = [
             'headers' => [
@@ -111,7 +111,7 @@ class WCMP_API extends WCMP_Rest
             ],
         ];
 
-        $requestUrl = MyParcelRequest::REQUEST_URL . '/' . $endPoint . '/' . implode(';', (array) $ids);
+        $requestUrl = MyParcelRequest::REQUEST_URL . '/' . $endpoint . '/' . implode(';', (array) $ids);
         $requestUrl = add_query_arg($params, $requestUrl);
 
         return $this->get($requestUrl, $headers);

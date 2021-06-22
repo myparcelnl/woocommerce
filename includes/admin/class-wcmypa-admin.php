@@ -523,7 +523,7 @@ class WCMYPA_Admin
             unset($listingActions[WCMP_Export::GET_LABELS]);
         }
 
-        if (empty($consignments) || 'NL' !== $shippingCountry) {
+        if (empty($consignments) || WCMP_Data::DEFAULT_COUNTRY_CODE !== $shippingCountry) {
             unset($listingActions[WCMP_Export::EXPORT_RETURN]);
         }
 
@@ -1041,7 +1041,8 @@ class WCMYPA_Admin
                 $meta = json_decode(stripslashes($meta), true);
             }
 
-            $meta["carrier"] = WCMP_Data::DEFAULT_CARRIER;
+            $meta['carrier'] = WCMP_Data::DEFAULT_CARRIER;
+            $meta['date']    = '';
 
             try {
                 // create new instance from known json

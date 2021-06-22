@@ -543,7 +543,6 @@ class OrderSettings
 
     /**
      * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter|array|null
-
      *
      * @throws \Exception
      */
@@ -553,11 +552,6 @@ class OrderSettings
             $this->deliveryOptions = $deliveryOptions;
         } else {
             $this->deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($this->order, (array) $deliveryOptions);
-        }
-
-        if (null === $this->deliveryOptions->getDate()) {
-            $deliveryOptions = array_merge($this->deliveryOptions->toArray(), ['date'=>'']);
-            $this->deliveryOptions = new deliveryOptionsV3Adapter($deliveryOptions);
         }
     }
 }
