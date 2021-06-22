@@ -316,10 +316,16 @@ class OrderSettings
      */
     private function setDigitalStampRangeWeight(): void
     {
+        $emptyWeight  = (float) WCMYPA()->setting_collection->getByName(
+            WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
+        );
+        $this->weight += $emptyWeight;
+
         $savedWeight = $this->extraOptions["digital_stamp_weight"] ?? null;
         $orderWeight = $this->getWeight(true);
         $weight      = (float) ($savedWeight ?? $orderWeight);
-        $results     = Arr::where(
+
+        $results = Arr::where(
             WCMP_Data::getDigitalStampRanges(),
             static function ($range) use ($weight) {
                 return $weight > $range['min'];
