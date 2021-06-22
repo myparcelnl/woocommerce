@@ -50,6 +50,7 @@ class WCMYPA_Settings
     public const SETTING_CONNECT_PHONE                  = "connect_phone";
     public const SETTING_LABEL_DESCRIPTION              = "label_description";
     public const SETTING_EMPTY_PARCEL_WEIGHT            = "empty_parcel_weight";
+    public const SETTING_EMPTY_DIGITAL_STAMP_WEIGHT     = 'empty_digital_stamp_weight';
     public const SETTING_HS_CODE                        = "hs_code";
     public const SETTING_PACKAGE_CONTENT                = "package_contents";
     public const SETTING_COUNTRY_OF_ORIGIN              = "country_of_origin";

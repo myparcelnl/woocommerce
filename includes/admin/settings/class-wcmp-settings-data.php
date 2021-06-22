@@ -711,6 +711,20 @@ class WCMP_Settings_Data
                 ),
             ],
             [
+                'name'      => WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT,
+                'type'      => 'number',
+                'default'   => 0,
+                'label'     => sprintf(
+                    '%s (%s)',
+                    __('setting_empty_digital_stamp_weight', 'woocommerce-myparcel'),
+                    get_option('woocommerce_weight_unit')
+                ),
+                'help_text' => __(
+                    'setting_empty_digital_stamp_weight_description',
+                    'woocommerce-myparcel'
+                ),
+            ],
+            [
                 "name"      => WCMYPA_Settings::SETTING_HS_CODE,
                 "label"     => __("Default HS Code", "woocommerce-myparcel"),
                 "help_text" => __(
