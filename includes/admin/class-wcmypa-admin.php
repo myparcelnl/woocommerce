@@ -102,6 +102,7 @@ class WCMYPA_Admin
         add_action('woocommerce_payment_complete', [$this, 'automaticExportOrder'], 1000);
         add_action('woocommerce_order_status_changed', [$this, 'automaticExportOrder'], 1000, 3);
 
+        // At the moment this doens't work correctly. Shipment will disappear when status is delivered.
 //        add_action("init", [$this, "registerDeliveredPostStatus"], 10, 1);
 //        add_filter("wc_order_statuses", [$this, "displayDeliveredPostStatus"], 10, 2);
 
