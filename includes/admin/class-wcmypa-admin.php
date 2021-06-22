@@ -1041,7 +1041,7 @@ class WCMYPA_Admin
                 $meta = json_decode(stripslashes($meta), true);
             }
 
-            $meta['carrier'] = WCMP_Data::DEFAULT_CARRIER;
+            $meta['carrier'] = $meta['carrier'] ?: WCMP_Data::DEFAULT_CARRIER;
             $meta['date']    = $meta['date'] ?? '';
 
             try {
