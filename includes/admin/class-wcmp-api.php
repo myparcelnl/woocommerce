@@ -53,26 +53,26 @@ class WCMP_API extends WCMP_Rest
      */
     public function add_shipments(array $shipments, string $type = "standard"): array
     {
-        $endPoint = "shipments";
+        $endPoint = 'shipments';
 
         // define content type
         switch ($type) {
-            case "return":
-                $contentType = "application/vnd.return_shipment+json";
-                $dataKey     = "return_shipments";
+            case 'return':
+                $contentType = 'application/vnd.return_shipment+json';
+                $dataKey     = 'return_shipments';
                 break;
-            case "unrelated_return":
-                $contentType = "application/vnd.unrelated_return_shipment+json";
-                $dataKey     = "unrelated_return_shipments";
+            case 'unrelated_return':
+                $contentType = 'application/vnd.unrelated_return_shipment+json';
+                $dataKey     = 'unrelated_return_shipments';
                 break;
             default:
-                $contentType = "application/vnd.shipment+json";
-                $dataKey     = "shipments";
+                $contentType = 'application/vnd.shipment+json';
+                $dataKey     = 'shipments';
                 break;
         }
 
         $data = [
-            "data" => [
+            'data' => [
                 $dataKey => $shipments,
             ],
         ];
@@ -80,9 +80,9 @@ class WCMP_API extends WCMP_Rest
         $json = json_encode($data);
 
         $headers = [
-            "Content-type"  => $contentType . "; charset=UTF-8",
-            "Authorization" => "basic " . base64_encode((string) ($this->key)),
-            "user-agent"    => $this->userAgent,
+            'Content-type'  => $contentType . '; charset=UTF-8',
+            'Authorization' => 'basic ' . base64_encode($this->key),
+            'user-agent'    => $this->userAgent,
         ];
 
         $requestUrl = MyParcelRequest::REQUEST_URL . '/' . $endPoint;
@@ -96,25 +96,25 @@ class WCMP_API extends WCMP_Rest
      * @param int|array $ids
      * @param array     $params request parameters
      *
-     * @return array          response
+     * @return array            response
      * @throws Exception
      */
     public function get_shipments($ids, array $params = []): array
     {
-        $endpoint = "shipments";
+        $endPoint = 'shipments';
 
         $headers = [
-            "headers" => [
-                "Accept"        => "application/json; charset=UTF-8",
-                "Authorization" => "basic " . base64_encode("{$this->key}"),
-                "user-agent"    => $this->userAgent,
+            'headers' => [
+                'Accept'        => 'application/json; charset=UTF-8',
+                'Authorization' => 'basic ' . base64_encode($this->key),
+                'user-agent'    => $this->userAgent,
             ],
         ];
 
-        $request_url = MyParcelRequest::REQUEST_URL . '/' . $endpoint . '/' . implode(';', (array) $ids);
-        $request_url = add_query_arg($params, $request_url);
+        $requestUrl = MyParcelRequest::REQUEST_URL . '/' . $endPoint . '/' . implode(';', (array) $ids);
+        $requestUrl = add_query_arg($params, $requestUrl);
 
-        return $this->get($request_url, $headers);
+        return $this->get($requestUrl, $headers);
     }
 
     /**

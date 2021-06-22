@@ -318,17 +318,17 @@ class WCMYPA_Admin
      */
     public function getMyParcelBulkActions(): array
     {
-        $exportMode = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
-        $return     = [
+        $exportMode  = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
+        $returnValue = [
             self::BULK_ACTION_EXPORT => __('myparcel_bulk_action_export', 'woocommerce-myparcel'),
         ];
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-            $return[self::BULK_ACTION_PRINT]        = __('myparcel_bulk_action_print', 'woocommerce-myparcel');
-            $return[self::BULK_ACTION_EXPORT_PRINT] = __('myparcel_bulk_action_export_print', 'woocommerce-myparcel');
+            $returnValue[self::BULK_ACTION_PRINT]        = __('myparcel_bulk_action_print', 'woocommerce-myparcel');
+            $returnValue[self::BULK_ACTION_EXPORT_PRINT] = __('myparcel_bulk_action_export_print', 'woocommerce-myparcel');
         }
 
-        return $return;
+        return $returnValue;
     }
 
     /**
@@ -593,7 +593,7 @@ class WCMYPA_Admin
      */
     public static function updateExportButtonForPps(array $listingActions, array $metaPps): array
     {
-        if (!$metaPps) {
+        if (! $metaPps) {
             return $listingActions;
         }
 

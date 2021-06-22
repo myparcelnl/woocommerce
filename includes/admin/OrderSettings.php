@@ -274,22 +274,7 @@ class OrderSettings
             ->setCompany($this->order->get_shipping_company())
             ->setPerson(substr($this->order->get_formatted_shipping_full_name(), 0, 50))
             ->setPostalCode($this->order->get_shipping_postcode())
-            ->setStreet(
-                substr(
-                    trim(
-                        implode(
-                            ' ',
-                            [
-                                $this->order->get_billing_address_1(),
-                                $this->order->get_billing_address_2(),
-                            ]
-                        )
-                    ),
-                    0,
-                    40
-                )
-                    ?: ''
-            );
+            ->setStreet($this->makeStreet($this->order->get_billing_address_1(), $this->order->get_billing_address_2()));
 
         return $this;
     }
@@ -314,22 +299,7 @@ class OrderSettings
             ->setPerson(substr($this->order->get_formatted_billing_full_name(), 0, 50))
             ->setPhone($this->order->get_billing_phone())
             ->setPostalCode($this->order->get_billing_postcode())
-            ->setStreet(
-                substr(
-                    trim(
-                        implode(
-                            ' ',
-                            [
-                                $this->order->get_billing_address_1(),
-                                $this->order->get_billing_address_2(),
-                            ]
-                        )
-                    ),
-                    0,
-                    40
-                )
-                    ?: ''
-            );
+            ->setStreet($this->makeStreet($this->order->get_billing_address_1(), $this->order->get_billing_address_2()));
 
         return $this;
     }
@@ -340,6 +310,16 @@ class OrderSettings
     public function getBillingRecipient(): ?Recipient
     {
         return $this->shippingRecipient;
+    }
+
+    /**
+     * @param ...$parts
+     *
+     * @return string
+     */
+    private function makeStreet(...$parts): string
+    {
+        return (substr(trim(implode($parts)), 0, 40) ?: '');
     }
 
     /**

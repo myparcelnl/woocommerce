@@ -311,7 +311,7 @@ class WCMP_Settings_Data
             [
                 'name'    => WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY,
                 'label'   => __('Label display', 'woocommerce-myparcel'),
-                'condition' => $this->conditionForModeTraditionalOnly(),
+                'condition' => $this->conditionForModeShipmentsOnly(),
                 'type'    => 'select',
                 'options' => [
                     'download' => __('Download PDF', 'woocommerce-myparcel'),
@@ -321,7 +321,7 @@ class WCMP_Settings_Data
             [
                 'name'    => WCMYPA_Settings::SETTING_LABEL_FORMAT,
                 'label'   => __('Label format', 'woocommerce-myparcel'),
-                'condition' => $this->conditionForModeTraditionalOnly(),
+                'condition' => $this->conditionForModeShipmentsOnly(),
                 'type'    => 'select',
                 'options' => [
                     'A4' => __('Standard printer (A4)', 'woocommerce-myparcel'),
@@ -332,7 +332,7 @@ class WCMP_Settings_Data
                 'name'      => WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION,
                 'label'     => __('Ask for print start position', 'woocommerce-myparcel'),
                 'condition' => [
-                    $this->conditionForModeTraditionalOnly(),
+                    $this->conditionForModeShipmentsOnly(),
                     [
                         'parent_name'  => WCMYPA_Settings::SETTING_LABEL_FORMAT,
                         'type'         => 'disable',
@@ -349,7 +349,7 @@ class WCMP_Settings_Data
             [
                 'name'      => WCMYPA_Settings::SETTING_TRACK_TRACE_EMAIL,
                 'label'     => __('Track & Trace in email', 'woocommerce-myparcel'),
-                'condition' => $this->conditionForModeTraditionalOnly(),
+                'condition' => $this->conditionForModeShipmentsOnly(),
                 'type'      => 'toggle',
                 'help_text' => __(
                     'Add the Track & Trace code to emails to the customer.<br/><strong>Note!</strong> When you select this option, make sure you have not enabled the Track & Trace email in your MyParcel backend.',
@@ -359,7 +359,7 @@ class WCMP_Settings_Data
             [
                 'name'      => WCMYPA_Settings::SETTING_TRACK_TRACE_MY_ACCOUNT,
                 'label'     => __('Track & Trace in My Account', 'woocommerce-myparcel'),
-                'condition' => $this->conditionForModeTraditionalOnly(),
+                'condition' => $this->conditionForModeShipmentsOnly(),
                 'type'      => 'toggle',
                 'help_text' => __('Show Track & Trace trace code and link in My Account.', 'woocommerce-myparcel'),
             ],
@@ -372,7 +372,7 @@ class WCMP_Settings_Data
             [
                 'name'      => WCMYPA_Settings::SETTING_PROCESS_DIRECTLY,
                 'label'     => __('Process shipments directly', 'woocommerce-myparcel'),
-                'condition' => $this->conditionForModeTraditionalOnly(),
+                'condition' => $this->conditionForModeShipmentsOnly(),
                 'type'      => 'toggle',
                 'help_text' => __(
                     'When you enable this option, shipments will be directly processed when sent to MyParcel.',
@@ -423,14 +423,14 @@ class WCMP_Settings_Data
             [
                 'name'      => WCMYPA_Settings::SETTING_BARCODE_IN_NOTE,
                 'label'     => __('Place barcode inside note', 'woocommerce-myparcel'),
-                'condition' => $this->conditionForModeTraditionalOnly(),
+                'condition' => $this->conditionForModeShipmentsOnly(),
                 'type'      => 'toggle',
                 'help_text' => __('Place the barcode inside a note of the order', 'woocommerce-myparcel'),
             ],
             [
                 'name'      => WCMYPA_Settings::SETTING_BARCODE_IN_NOTE_TITLE,
                 'condition' => [
-                    $this->conditionForModeTraditionalOnly(),
+                    $this->conditionForModeShipmentsOnly(),
                     WCMYPA_Settings::SETTING_BARCODE_IN_NOTE,
                 ],
                 'class'     => ['wcmp__child'],
@@ -1069,7 +1069,7 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function conditionForModeTraditionalOnly(): array
+    private function conditionForModeShipmentsOnly(): array
     {
         return [
             'parent_name'  => WCMYPA_Settings::SETTING_EXPORT_MODE,
