@@ -1042,7 +1042,7 @@ class WCMYPA_Admin
             }
 
             $meta['carrier'] = WCMP_Data::DEFAULT_CARRIER;
-            $meta['date']    = '';
+            $meta['date']    = $meta['date'] ?? '';
 
             try {
                 // create new instance from known json
