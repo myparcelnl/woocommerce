@@ -27,13 +27,16 @@ msgid "error_order_has_invalid_shipment_country"
 msgstr "Order %s has an invalid shipping country."
 
 msgid "export_hint_how_many_times"
-msgstr "Order exported %s × to MyParcel"
+msgstr "Order exported %s × to MyParcel."
 
 msgid "export_hint_already_exported"
 msgstr "Entire order is available in MyParcel backoffice."
 
 msgid "export_hint_change_parcel"
 msgstr "Change the parcel type or create multiple labels."
+
+msgid "export_hint_not_exported"
+msgstr ""
 
 msgid "extra_options"
 msgstr "Extra options:"
@@ -543,7 +546,7 @@ msgstr "Export options"
 msgid "action_export_to_myparcel"
 msgstr "Export to MyParcel"
 
-msgid "error_export_orderid_failed_because"
+msgid "error_export_order_id_failed_because"
 msgstr "Order %1$s not exported to MyParcel. %2$s"
 
 msgid "Extra large size"
@@ -1060,11 +1063,17 @@ msgstr "You have not selected any orders!"
 msgid "You have to export the orders to MyParcel before you can print the labels!"
 msgstr "You have to export the orders to MyParcel before you can print the labels!"
 
-msgid "country_of_origin_variable"
+msgid "product_variable_country_of_origin"
 msgstr "Country of origin variable product"
 
-msgid "country_of_origin_variable_description"
+msgid "product_variable_country_of_origin_description"
 msgstr "This country of origin overwrites the product country of origin"
+
+msgid "setting_empty_digital_stamp_weight"
+msgstr "Empty digital stamp weight"
+
+msgid "setting_empty_digital_stamp_weight_description"
+msgstr "This weight is added to a shipment that is sent with a digital stamp."
 
 msgid "error_pps_export_feedback"
 msgstr ""

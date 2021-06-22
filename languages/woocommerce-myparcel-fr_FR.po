@@ -535,7 +535,7 @@ msgstr "Options d'exportation"
 msgid "action_export_to_myparcel"
 msgstr "Exporter vers MyParcel"
 
-msgid "error_export_orderid_failed_because"
+msgid "error_export_order_id_failed_because"
 msgstr "Commande %1$s non pas exporté vers MyParcel. %2$s"
 
 msgid "Extra large size"
@@ -1065,11 +1065,17 @@ msgstr ""
 "Vous devez d'abord exporter vos commandes vers MyParcel avant de pouvoir "
 "imprimer vos étiquettes !"
 
-msgid "country_of_origin_variable"
+msgid "product_variable_country_of_origin"
 msgstr "Pays d'origine variable produit"
 
-msgid "country_of_origin_variable_description"
+msgid "product_variable_country_of_origin_description"
 msgstr "Ce pays d'origine remplace le pays d'origine du produit"
+
+msgid "setting_empty_digital_stamp_weight"
+msgstr "Poids du timbre numérique vide"
+
+msgid "setting_empty_digital_stamp_weight_description"
+msgstr "Ce poids est ajouté à un envoi qui est envoyé avec un timbre numérique."
 
 msgid "error_pps_export_feedback"
 msgstr ""
@@ -1078,6 +1084,9 @@ msgid "export_hint_how_many_times"
 msgstr ""
 
 msgid "export_hint_already_exported"
+msgstr ""
+
+msgid "export_hint_not_exported"
 msgstr ""
 
 msgid "myparcel_export"

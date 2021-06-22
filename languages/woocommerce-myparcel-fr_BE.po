@@ -556,7 +556,7 @@ msgstr "Options d'exportation"
 msgid "action_export_to_myparcel"
 msgstr "Exporter vers MyParcel"
 
-msgid "error_export_orderid_failed_because"
+msgid "error_export_order_id_failed_because"
 msgstr "Commande %1$s non pas exporté vers MyParcel. %2$s"
 
 msgid "Extra large size"
@@ -595,7 +595,7 @@ msgid ""
 "appropriate code on the site of the Dutch Customs."
 msgstr ""
 "Codes SH sont utilisés pour les livraisons mondiales MyParcel, vous pouvez "
-"trouver le code approprié sur le site de la douane n��erlandaise."
+"trouver le code approprié sur le site de la douane néerlandaise."
 
 msgid ""
 "If you don't want the parcel to be delivered at the neighbours, choose this "
@@ -1086,13 +1086,22 @@ msgstr ""
 "Vous devez d'abord exporter vos commandes vers MyParcel avant de pouvoir "
 "imprimer vos étiquettes !"
 
-msgid "country_of_origin_variable"
+msgid "product_variable_country_of_origin"
 msgstr "Pays d'origine variable produit"
 
-msgid "country_of_origin_variable_description"
+msgid "product_variable_country_of_origin_description"
 msgstr "Ce pays d'origine remplace le pays d'origine du produit"
 
+msgid "setting_empty_digital_stamp_weight"
+msgstr "Poids du timbre numérique vide"
+
+msgid "setting_empty_digital_stamp_weight_description"
+msgstr "Ce poids est ajouté à un envoi qui est envoyé avec un timbre numérique."
+
 msgid "error_pps_export_feedback"
+msgstr ""
+
+msgid "export_hint_not_exported"
 msgstr ""
 
 msgid "setting_modus_help_text"
