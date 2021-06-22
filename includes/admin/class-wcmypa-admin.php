@@ -147,7 +147,7 @@ class WCMYPA_Admin
      * @param array  $variationData
      * @param object $variation
      */
-    public function renderVariationCountryOfOriginField(int $loop, array $variationData, object $variation)
+    public function renderVariationCountryOfOriginField(int $loop, array $variationData, object $variation): void
     {
         woocommerce_wp_select(
             [
@@ -171,7 +171,7 @@ class WCMYPA_Admin
      * @param int $variationId
      * @param int $loop
      */
-    public function saveVariationCountryOfOriginField(int $variationId, int $loop)
+    public function saveVariationCountryOfOriginField(int $variationId, int $loop): void
     {
         $countryOfOriginValue = $_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop];
 
@@ -183,7 +183,7 @@ class WCMYPA_Admin
     /**
      * @param array $variation
      *
-     * @return mixed
+     * @return array
      */
     public function loadVariationCountryOfOriginField(array $variation): array
     {
