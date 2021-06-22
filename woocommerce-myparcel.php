@@ -26,8 +26,8 @@ if (! class_exists('WCMYPA')) :
         const DOMAIN                       = 'woocommerce-myparcel';
         const NONCE_ACTION                 = 'wc_myparcel';
         const PHP_VERSION_7_1              = '7.1';
-        const PHP_VERSION_REQUIRED         = self::PHP_VERSION_7_1;
         const WOOCOMMERCE_VERSION_REQUIRED = '5.1.0';
+        const PHP_VERSION_REQUIRED         = self::PHP_VERSION_7_1;
 
         public $version = '4.4.0';
 
@@ -39,6 +39,8 @@ if (! class_exists('WCMYPA')) :
          * @var WPO\WC\MyParcel\Collections\SettingsCollection
          */
         public $setting_collection;
+
+        public $errorMessage = [];
 
         /**
          * @var string
@@ -194,7 +196,7 @@ if (! class_exists('WCMYPA')) :
          */
         public function load_classes()
         {
-            if ($this->is_woocommerce_activated() === false) {
+            if (! empty($this->isWooCommerceActive())) {
                 add_action('admin_notices', [$this, 'needWoocommerce']);
 
                 return;
@@ -238,17 +240,22 @@ if (! class_exists('WCMYPA')) :
          */
         public function needWoocommerce()
         {
-            $error = sprintf(
-                esc_html__('%s requires WooCommerce be installed & activated!', 'woocommerce-myparcel'),
-                '<strong>' . esc_html__('WooCommerce MyParcel', 'woocommerce-myparcel') . '</strong>'
-            );
+            $message          = $this->errorMessage['message'] ?? null;
+            $button           = $this->errorMessage['button'] ?? null;
+            $deactivateButton = $this->errorMessage['deactivateButton'] ?? null;
 
-            $message = ' <div class="notice notice-error">
-                              <p>' . $error . '</p>
-                              <p>' . $this->isWooCommerceActive() . '</p>
-                          </div > ';
+            if ($message) {
+                $error   = sprintf(
+                    $message,
+                    '<strong>' . esc_html__('WooCommerce MyParcel', 'woocommerce-myparcel') . '</strong>'
+                );
+                $message = ' <div class="notice notice-error">
+                          <p>' . $error . '</p>
+                          <p>' . $button . ' ' . $this->deactivatePlugin(). '</p>
+                      </div > ';
 
-            echo $message;
+                echo $message;
+            }
         }
 
         /**
@@ -256,20 +263,24 @@ if (! class_exists('WCMYPA')) :
          */
         public function isWooCommerceActive()
         {
-            if (! is_plugin_active('woocommerce/woocommerce.php') && current_user_can('activate_plugin', 'woocommerce/woocommerce.php')) {
-                $message = $this->woocommerceNotActive();
-            }
-
             $installed_plugins = get_plugins();
+
+            if (isset($installed_plugins['woocommerce/woocommerce.php']) && ! $this->woocommerceVersionMeets($installed_plugins['woocommerce/woocommerce.php']['Version'])) {
+                $this->errorMessage['message'] = esc_html__('%s requires a minimum WooCommerce 5.1.0 version!', 'woocommerce-myparcel');
+                $this->errorMessage['button']  = '';
+            }
+
+            if (! is_plugin_active('woocommerce/woocommerce.php') && current_user_can('activate_plugin', 'woocommerce/woocommerce.php')) {
+                $this->errorMessage['message'] = esc_html__('%s requires WooCommerce be activated!', 'woocommerce-myparcel');
+                $this->errorMessage['button']  = $this->woocommerceNotActive();
+            }
+
             if (! isset($installed_plugins['woocommerce/woocommerce.php'])) {
-                $message .= $this->installWooCommerce();
+                $this->errorMessage['message'] = esc_html__('%s requires WooCommerce be installed', 'woocommerce-myparcel');
+                $this->errorMessage['button']  = $this->installWooCommerce();
             }
 
-            if (current_user_can('deactivate_plugin', 'woocommerce-myparcel/woocommerce-myparcel.php')) {
-                $message .= $this->deactivatePlugin();
-            }
-
-            return $message;
+            return $this->errorMessage;
         }
 
         /**
@@ -455,6 +466,16 @@ if (! class_exists('WCMYPA')) :
             if (empty($this->setting_collection)) {
                 $this->setting_collection = (new WCMP_Initialize_Settings_Collection())->initialize();
             }
+        }
+
+        /**
+         * @param string $woocommerceVersion
+         *
+         * @return bool
+         */
+        private function woocommerceVersionMeets($woocommerceVersion)
+        {
+            return version_compare(self::WOOCOMMERCE_VERSION_REQUIRED, $woocommerceVersion, '<');
         }
 
         /**
