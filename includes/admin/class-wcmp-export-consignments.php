@@ -356,6 +356,7 @@ class WCMP_Export_Consignments
                 '[PRODUCT_QTY]'   => count($this->order->get_items()),
                 '[PRODUCT_SKU]'   => implode(', ', $productSkus),
                 '[CUSTOMER_NOTE]' => $this->order->get_customer_note(),
+                '[CUSTOM]'        => apply_filters('wcmp_custom_shortcode', '', $this->order),
             ]
         );
 
