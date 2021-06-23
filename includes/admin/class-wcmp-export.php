@@ -415,6 +415,9 @@ class WCMP_Export
             );
             $return["success_ids"] = $collection->getConsignmentIds();
 
+            // do action on successfully exporting the label
+            do_action("wcmp_labels_exported", $order_ids);
+
             WCMP_Log::add($return["success"]);
             WCMP_Log::add("ids: " . implode(", ", $return["success_ids"]));
         }
