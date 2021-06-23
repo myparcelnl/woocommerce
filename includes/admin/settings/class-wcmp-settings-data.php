@@ -941,14 +941,14 @@ class WCMP_Settings_Data
     {
         $output = '';
         $variables = [
-            '[DELIVERY_DATE]' => __('Delivery date', 'woocommerce-myparcel'),
-            '[ORDER_NR]'      => __('Order number', 'woocommerce-myparcel'),
-            '[PRODUCT_ID]'    => __('Product id', 'woocommerce-myparcel'),
-            '[PRODUCT_NAME]'  => __('Product name', 'woocommerce-myparcel'),
-            '[PRODUCT_QTY]'   => __('Product quantity', 'woocommerce-myparcel'),
-            '[PRODUCT_SKU]'   => __('Product SKU', 'woocommerce-myparcel'),
-            '[CUSTOMER_NOTE]' => __('Customer note', 'woocommerce-myparcel'),
-            '[CUSTOM]'        => __('setting_custom_label_description', 'woocommerce-myparcel'),
+            '[DELIVERY_DATE]'    => __('Delivery date', 'woocommerce-myparcel'),
+            '[ORDER_NR]'         => __('Order number', 'woocommerce-myparcel'),
+            '[PRODUCT_ID]'       => __('Product id', 'woocommerce-myparcel'),
+            '[PRODUCT_NAME]'     => __('Product name', 'woocommerce-myparcel'),
+            '[PRODUCT_QTY]'      => __('Product quantity', 'woocommerce-myparcel'),
+            '[PRODUCT_SKU]'      => __('Product SKU', 'woocommerce-myparcel'),
+            '[CUSTOMER_NOTE]'    => __('Customer note', 'woocommerce-myparcel'),
+            '[CUSTOM_SHORTCODE]' => __('setting_custom_shortcode_label_description', 'woocommerce-myparcel'),
         ];
 
         foreach ($variables as $variable => $description) {

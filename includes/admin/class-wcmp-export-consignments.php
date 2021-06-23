@@ -349,14 +349,14 @@ class WCMP_Export_Consignments
         $formattedLabelDescription = strtr(
             $this->orderSettings->getLabelDescription(),
             [
-                '[DELIVERY_DATE]' => date('d-m-Y', strtotime($this->deliveryOptions->getDate())),
-                '[ORDER_NR]'      => $this->order->get_order_number(),
-                '[PRODUCT_ID]'    => implode(', ', $productIds),
-                '[PRODUCT_NAME]'  => implode(', ', $productNames),
-                '[PRODUCT_QTY]'   => count($this->order->get_items()),
-                '[PRODUCT_SKU]'   => implode(', ', $productSkus),
-                '[CUSTOMER_NOTE]' => $this->order->get_customer_note(),
-                '[CUSTOM]'        => apply_filters('wcmp_custom_shortcode', '', $this->order),
+                '[DELIVERY_DATE]'    => date('d-m-Y', strtotime($this->deliveryOptions->getDate())),
+                '[ORDER_NR]'         => $this->order->get_order_number(),
+                '[PRODUCT_ID]'       => implode(', ', $productIds),
+                '[PRODUCT_NAME]'     => implode(', ', $productNames),
+                '[PRODUCT_QTY]'      => count($this->order->get_items()),
+                '[PRODUCT_SKU]'      => implode(', ', $productSkus),
+                '[CUSTOMER_NOTE]'    => $this->order->get_customer_note(),
+                '[CUSTOM_SHORTCODE]' => apply_filters('wcmp_custom_shortcode', '', $this->order),
             ]
         );
 
