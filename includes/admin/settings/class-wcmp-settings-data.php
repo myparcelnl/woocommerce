@@ -948,7 +948,7 @@ class WCMP_Settings_Data
             '[PRODUCT_QTY]'   => __('Product quantity', 'woocommerce-myparcel'),
             '[PRODUCT_SKU]'   => __('Product SKU', 'woocommerce-myparcel'),
             '[CUSTOMER_NOTE]' => __('Customer note', 'woocommerce-myparcel'),
-            '[CUSTOM]' => apply_filters('wc_myparcel_custom_shortcode', '', $this->order),
+            '[CUSTOM]'        => apply_filters('wc_myparcel_custom_shortcode', '', $this->order),
         ];
 
         foreach ($variables as $variable => $description) {
