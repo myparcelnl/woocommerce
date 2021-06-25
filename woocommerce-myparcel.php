@@ -290,7 +290,7 @@ if (! class_exists('WCMYPA')) :
         {
             $installed_plugins = get_plugins();
             if (isset($installed_plugins['woocommerce/woocommerce.php'])) {
-                $woocommercePath = 'plugins.php?action=activate&plugin=woocommerce/woocommerce.php&plugin_status=active';
+                $woocommercePath = 'plugins.php?action=activate&plugin=woocommerce/woocommerce.php';
                 $action          = 'activate-plugin_woocommerce/woocommerce.php';
                 $message         = __('Activate WooCommerce', 'woocommerce-myparcel');
                 $class           = ' class=button-primary';
@@ -307,7 +307,7 @@ if (! class_exists('WCMYPA')) :
         public function deactivatePlugin()
         {
             if (current_user_can('deactivate_plugin', 'woocommerce-myparcel/woocommerce-myparcel.php')) {
-                $woocommercePath = 'plugins.php?action=deactivate&plugin=woocommerce-myparcel/woocommerce-myparcel.php&plugin_status=inactive';
+                $woocommercePath = 'plugins.php?action=deactivate&plugin=woocommerce-myparcel/woocommerce-myparcel.php';
                 $action          = 'deactivate-plugin_woocommerce-myparcel/woocommerce-myparcel.php';
                 $message         = __('Turn off MyParcel plugin', 'WooCommerce MyParcel');
                 $class           = ' class="button-secondary"';
