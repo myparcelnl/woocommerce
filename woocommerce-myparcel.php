@@ -266,7 +266,7 @@ if (! class_exists('WCMYPA')) :
             $installed_plugins = get_plugins();
 
             if (isset($installed_plugins['woocommerce/woocommerce.php']) && ! $this->woocommerceVersionMeets($installed_plugins['woocommerce/woocommerce.php']['Version'])) {
-                $this->errorMessage['message'] = esc_html__('%s requires a minimum WooCommerce 5.1.0 version!', 'woocommerce-myparcel');
+                $this->errorMessage['message'] = esc_html__('%s requires a minimum WooCommerce '.self::WOOCOMMERCE_VERSION_REQUIRED.' version!', 'woocommerce-myparcel');
                 $this->errorMessage['button']  = '';
             }
 
