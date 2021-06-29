@@ -421,6 +421,9 @@ class WCMP_Export
             );
             $return["success_ids"] = $collection->getConsignmentIds();
 
+            // do action on successfully exporting the label
+            do_action("wcmp_labels_exported", $order_ids);
+
             WCMP_Log::add($return["success"]);
             WCMP_Log::add("ids: " . implode(", ", $return["success_ids"]));
         }
@@ -932,7 +935,7 @@ class WCMP_Export
         $allowedPackageType             = $this->getAllowedPackageType($order, $packageTypeFromDeliveryOptions);
 
         if ($allowedPackageType) {
-            return $allowedPackageType;
+            return apply_filters("wc_myparcel_order_package_type", $allowedPackageType, $order, $this);
         }
 
         // Get pre 4.0.0 package type if it exists.
@@ -943,7 +946,7 @@ class WCMP_Export
                 $packageType = WCMP_Data::getPackageTypeId($shipmentOptions['package_type']);
             }
 
-            return (string) ($packageType ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE);
+            return (string) apply_filters("wc_myparcel_order_package_type", ($packageType ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE), $order, $this);
         }
 
         $packageType = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
@@ -967,7 +970,7 @@ class WCMP_Export
             );
         }
 
-        return $this->getAllowedPackageType($order, $packageType);
+        return apply_filters("wc_myparcel_order_package_type", $this->getAllowedPackageType($order, $packageType), $order, $this);
     }
 
     /**
@@ -1156,6 +1159,10 @@ class WCMP_Export
      */
     public function getShipmentData(array $ids, WC_Order $order): array
     {
+        if (empty($ids)) {
+            return [];
+        }
+        
         $data     = [];
         $api      = $this->init_api();
         $response = $api->get_shipments($ids);
