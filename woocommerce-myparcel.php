@@ -221,8 +221,10 @@ if (! class_exists('WCMYPA')) :
 
         /**
          * Check if woocommerce is activated
+         *
+         * @return bool
          */
-        public function is_woocommerce_activated()
+        public function is_woocommerce_activated(): bool
         {
             $blog_plugins = get_option('active_plugins', []);
             $site_plugins = get_site_option('active_sitewide_plugins', []);
@@ -238,7 +240,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * WooCommerce not active notice.
          */
-        public function needWoocommerce()
+        public function needWoocommerce(): void
         {
             $message          = $this->errorMessage['message'] ?? null;
             $button           = $this->errorMessage['button'] ?? null;
@@ -259,8 +261,10 @@ if (! class_exists('WCMYPA')) :
 
         /**
          * PHP version requirement notice
+         *
+         * @return array
          */
-        public function isWooCommerceActive()
+        public function isWooCommerceActive(): array
         {
             $installed_plugins = get_plugins();
 
@@ -288,7 +292,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * @return string
          */
-        public function woocommerceNotActive()
+        public function woocommerceNotActive(): string
         {
             $installed_plugins = get_plugins();
             if (isset($installed_plugins['woocommerce/woocommerce.php'])) {
@@ -306,7 +310,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * @return string
          */
-        public function deactivatePlugin()
+        public function deactivatePlugin(): string
         {
             if (current_user_can('deactivate_plugin', 'woocommerce-myparcel/woocommerce-myparcel.php')) {
                 $woocommercePath = 'plugins.php?action=deactivate&plugin=woocommerce-myparcel/woocommerce-myparcel.php';
@@ -323,7 +327,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * @return string
          */
-        public function installWooCommerce()
+        public function installWooCommerce(): string
         {
             $url = 'http://wordpress.org/plugins/woocommerce/';
 
@@ -339,7 +343,7 @@ if (! class_exists('WCMYPA')) :
             return $url;
         }
 
-        public function required_php_version()
+        public function required_php_version(): void
         {
             $error = __("WooCommerce MyParcel requires PHP {PHP_VERSION} or higher.", "woocommerce-myparcel");
             $error = str_replace('{PHP_VERSION}', self::PHP_VERSION_REQUIRED, $error);
