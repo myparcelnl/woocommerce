@@ -401,6 +401,7 @@ class WCMP_Checkout
              * Create a new DeliveryOptions class from the data.
              */
             $deliveryOptions = new WCMP_DeliveryOptionsFromOrderAdapter(null, $deliveryOptions);
+            $deliveryOptions = apply_filters("wc_myparcel_order_delivery_options", $deliveryOptions, $order);
 
             /*
              * Store it in the meta data.
@@ -509,6 +510,7 @@ class WCMP_Checkout
            "carrierSettings.$carrier.allowPickupLocations"  => [WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED, 'isEnabled', false],
            "carrierSettings.$carrier.allowSaturdayDelivery" => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED, 'isEnabled', false],
            "carrierSettings.$carrier.allowSignature"        => [WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED, 'isEnabled', false],
+           "carrierSettings.$carrier.allowShowDeliveryDate" => [WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE, 'isEnabled', false],
            "carrierSettings.$carrier.priceEveningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE, 'getPriceByName', true],
            "carrierSettings.$carrier.priceMondayDelivery"   => [WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_FEE, 'getPriceByName', true],
            "carrierSettings.$carrier.priceMorningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE, 'getPriceByName', true],
@@ -554,7 +556,7 @@ class WCMP_Checkout
             }
         }
 
-        return $showDeliveryOptions;
+        return apply_filters("wc_myparcel_show_delivery_options", $showDeliveryOptions);
     }
 }
 
