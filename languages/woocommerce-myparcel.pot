@@ -15,35 +15,39 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: woocommerce-myparcel.php:250
-msgid "WooCommerce MyParcel"
+#: woocommerce-myparcel.php:249
+msgid "woocommerce_myparcel"
 msgstr ""
 
-#: woocommerce-myparcel.php:269
-msgid "%s requires a minimum WooCommerce 5.1.0 version!"
+#: woocommerce-myparcel.php:268
+msgid "error_woocommerce_minimum_version"
 msgstr ""
 
-#: woocommerce-myparcel.php:274
-msgid "%s requires WooCommerce be activated!"
+#: woocommerce-myparcel.php:276
+msgid "error_woocommerce_not_activated"
 msgstr ""
 
-#: woocommerce-myparcel.php:279
-msgid "%s requires WooCommerce be installed"
+#: woocommerce-myparcel.php:281
+msgid "error_woocommerce_not_installed"
 msgstr ""
 
-#: woocommerce-myparcel.php:295
-msgid "Activate WooCommerce"
+#: woocommerce-myparcel.php:297
+msgid "error_button_woocommerce_activate"
 msgstr ""
 
-#: woocommerce-myparcel.php:332
-msgid "Install WooCommerce"
+#: woocommerce-myparcel.php:314
+msgid "error_button_turn_off_myparcel_plugin"
 msgstr ""
 
-#: woocommerce-myparcel.php:342
+#: woocommerce-myparcel.php:334
+msgid "error_button_install_woocommerce"
+msgstr ""
+
+#: woocommerce-myparcel.php:344
 msgid "WooCommerce MyParcel requires PHP {PHP_VERSION} or higher."
 msgstr ""
 
-#: woocommerce-myparcel.php:345
+#: woocommerce-myparcel.php:347
 msgid "How to update your PHP version"
 msgstr ""
 

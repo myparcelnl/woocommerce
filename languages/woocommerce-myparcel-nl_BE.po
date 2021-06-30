@@ -29,6 +29,24 @@ msgstr "Bestelling %s heeft een ongeldig land als bestemming."
 msgid "error_pps_export_feedback"
 msgstr "Bestelling %s is geëxporteerd, maar niet als zodanig geregistreerd."
 
+msgid "error_woocommerce_not_activated"
+msgstr "%s vereist dat WooCommerce geactiveerd is!"
+
+msgid "error_woocommerce_not_installed"
+msgstr "%s vereist dat WooCommerce is geïnstalleerd!"
+
+msgid "error_woocommerce_minimum_version"
+msgstr "%s vereist een minimale WooCommerce {woocommerce_version} versie!"
+
+msgid "error_button_install_woocommerce"
+msgstr "Installeer WooCommerce"
+
+msgid "error_button_woocommerce_activate"
+msgstr "Activeer WooCommerce"
+
+msgid "error_button_turn_off_myparcel_plugin"
+msgstr "MyParcel plugin uitschakelen"
+
 msgid "export_hint_how_many_times"
 msgstr "Bestelling %s × geëxporteerd naar MyParcel."
 
@@ -260,7 +278,7 @@ msgid "shipment_options_insured_help_text"
 msgstr ""
 "Standaard zit er geen verzekering op zendingen. Als je alsnog een zending "
 "wilt verzekeren kan dat. Wij verzekeren het aankoopbedrag van een zending "
-"met een maximum van ���5000. Verzekerde zendingen worden altijd alleen "
+"met een maximum van €5000. Verzekerde zendingen worden altijd alleen "
 "afgeleverd op het thuisadres en een handtekening is vereist."
 
 msgid "shipment_options_large_format"
@@ -989,6 +1007,9 @@ msgstr "Ongefrankeerd"
 
 msgid "View logs"
 msgstr "Logs weergeven"
+
+msgid "woocommerce_myparcel"
+msgstr "WooCommerce MyParcel"
 
 msgid ""
 "When enabled the checkout will use the MyParcel address fields. This means "

@@ -242,12 +242,11 @@ if (! class_exists('WCMYPA')) :
         {
             $message          = $this->errorMessage['message'] ?? null;
             $button           = $this->errorMessage['button'] ?? null;
-            $deactivateButton = $this->errorMessage['deactivateButton'] ?? null;
 
             if ($message) {
                 $error   = sprintf(
                     $message,
-                    '<strong>' . esc_html__('WooCommerce MyParcel', 'woocommerce-myparcel') . '</strong>'
+                    '<strong>' . esc_html__('woocommerce_myparcel', 'woocommerce-myparcel') . '</strong>'
                 );
                 $message = ' <div class="notice notice-error">
                           <p>' . $error . '</p>
@@ -266,17 +265,20 @@ if (! class_exists('WCMYPA')) :
             $installed_plugins = get_plugins();
 
             if (isset($installed_plugins['woocommerce/woocommerce.php']) && ! $this->woocommerceVersionMeets($installed_plugins['woocommerce/woocommerce.php']['Version'])) {
-                $this->errorMessage['message'] = esc_html__('%s requires a minimum WooCommerce '.self::WOOCOMMERCE_VERSION_REQUIRED.' version!', 'woocommerce-myparcel');
+                $error = __("error_woocommerce_minimum_version", "woocommerce-myparcel");
+                $error = str_replace('{woocommerce_version}', self::WOOCOMMERCE_VERSION_REQUIRED, $error);
+
+                $this->errorMessage['message'] = esc_html__($error);
                 $this->errorMessage['button']  = '';
             }
 
             if (! is_plugin_active('woocommerce/woocommerce.php') && current_user_can('activate_plugin', 'woocommerce/woocommerce.php')) {
-                $this->errorMessage['message'] = esc_html__('%s requires WooCommerce be activated!', 'woocommerce-myparcel');
+                $this->errorMessage['message'] = esc_html__('error_woocommerce_not_activated', 'woocommerce-myparcel');
                 $this->errorMessage['button']  = $this->woocommerceNotActive();
             }
 
             if (! isset($installed_plugins['woocommerce/woocommerce.php'])) {
-                $this->errorMessage['message'] = esc_html__('%s requires WooCommerce be installed', 'woocommerce-myparcel');
+                $this->errorMessage['message'] = esc_html__('error_woocommerce_not_installed', 'woocommerce-myparcel');
                 $this->errorMessage['button']  = $this->installWooCommerce();
             }
 
@@ -292,7 +294,7 @@ if (! class_exists('WCMYPA')) :
             if (isset($installed_plugins['woocommerce/woocommerce.php'])) {
                 $woocommercePath = 'plugins.php?action=activate&plugin=woocommerce/woocommerce.php';
                 $action          = 'activate-plugin_woocommerce/woocommerce.php';
-                $message         = __('Activate WooCommerce', 'woocommerce-myparcel');
+                $message         = __('error_button_woocommerce_activate', 'woocommerce-myparcel');
                 $class           = ' class=button-primary';
 
                 $url = '<a href=' . esc_url(wp_nonce_url(self_admin_url($woocommercePath), $action)) . $class . '>' . $message . '</a>';
@@ -309,7 +311,7 @@ if (! class_exists('WCMYPA')) :
             if (current_user_can('deactivate_plugin', 'woocommerce-myparcel/woocommerce-myparcel.php')) {
                 $woocommercePath = 'plugins.php?action=deactivate&plugin=woocommerce-myparcel/woocommerce-myparcel.php';
                 $action          = 'deactivate-plugin_woocommerce-myparcel/woocommerce-myparcel.php';
-                $message         = __('Turn off MyParcel plugin', 'WooCommerce MyParcel');
+                $message         = __('error_button_turn_off_myparcel_plugin', 'woocommerce-myparcel');
                 $class           = ' class="button-secondary"';
 
                 $url = '<a href=' . esc_url(wp_nonce_url($woocommercePath, $action)) . $class . '>' . $message . '</a>';
@@ -329,7 +331,7 @@ if (! class_exists('WCMYPA')) :
                 $url = wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=woocommerce'), 'install-plugin_woocommerce');
             }
 
-            $message = __('Install WooCommerce', 'woocommerce-myparcel');
+            $message = __('error_button_install_woocommerce', 'woocommerce-myparcel');
             $class   = ' class="button-primary"';
 
             $url = '<a href=' . esc_url($url) . $class . '>' . $message . '</a>';
