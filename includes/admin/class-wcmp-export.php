@@ -350,7 +350,7 @@ class WCMP_Export
                 $consignment        = $exportConsignments->getConsignment();
             } catch (Exception $ex) {
                 $errorMessage = sprintf(
-                    __('export_orderid_%1$s_failed_because_%2$s', 'woocommerce-myparcel'),
+                    __('error_export_order_id_failed_because', 'woocommerce-myparcel'),
                     $order_id, __($ex->getMessage(), 'woocommerce-myparcel')
                 );
                 $this->errors[$order_id] = $errorMessage;
@@ -1156,7 +1156,7 @@ class WCMP_Export
         if (empty($ids)) {
             return [];
         }
-        
+
         $data     = [];
         $api      = $this->init_api();
         $response = $api->get_shipments($ids);
