@@ -240,7 +240,7 @@ msgid "shipment_options_insured_amount_help_text"
 msgstr "Assurer tous les colis au montant sélectionné."
 
 msgid "shipment_options_insured_from_price"
-msgstr "Assurer du prix"
+msgstr "Assurer de prix"
 
 msgid "shipment_options_insured_from_price_help_text"
 msgstr "Assurez toutes les commandes qui dépassent ce point de prix."
@@ -641,7 +641,7 @@ msgid "Insure all parcels up to the selected amount."
 msgstr "Assurer tous les colis au montant sélectionné."
 
 msgid "Insure from price"
-msgstr "Assurer du prix"
+msgstr "Assurer de prix"
 
 msgid "Insured for"
 msgstr "Montant assuré"
