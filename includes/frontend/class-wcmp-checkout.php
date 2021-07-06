@@ -401,6 +401,7 @@ class WCMP_Checkout
              * Create a new DeliveryOptions class from the data.
              */
             $deliveryOptions = new WCMP_DeliveryOptionsFromOrderAdapter(null, $deliveryOptions);
+            $deliveryOptions = apply_filters("wc_myparcel_order_delivery_options", $deliveryOptions, $order);
 
             /*
              * Store it in the meta data.
@@ -409,6 +410,15 @@ class WCMP_Checkout
                 $order,
                 WCMYPA_Admin::META_DELIVERY_OPTIONS,
                 $deliveryOptions->toArray()
+            );
+
+            /**
+             * Save delivery date in meta for use as order grid filter.
+             */
+            WCX_Order::update_meta_data(
+                $order,
+                WCMYPA_Admin::META_DELIVERY_DATE,
+                wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()), 'Y-m-d')
             );
         }
     }
@@ -555,7 +565,7 @@ class WCMP_Checkout
             }
         }
 
-        return $showDeliveryOptions;
+        return apply_filters("wc_myparcel_show_delivery_options", $showDeliveryOptions);
     }
 }
 

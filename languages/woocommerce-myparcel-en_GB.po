@@ -26,6 +26,24 @@ msgstr "MyParcel API error, no shipments created."
 msgid "error_order_has_invalid_shipment_country"
 msgstr "Order %s has an invalid shipping country."
 
+msgid "error_woocommerce_not_activated"
+msgstr "%s requires WooCommerce be activated!"
+
+msgid "error_woocommerce_not_installed"
+msgstr "%s requires WooCommerce be installed!"
+
+msgid "error_woocommerce_minimum_version"
+msgstr "%s requires a minimum WooCommerce {woocommerce_version} version!"
+
+msgid "error_button_install_woocommerce"
+msgstr "Install WooCommerce"
+
+msgid "error_button_woocommerce_activate"
+msgstr "Activate WooCommerce"
+
+msgid "error_button_turn_off_myparcel_plugin"
+msgstr "Turn off MyParcel plugin"
+
 msgid "export_hint_how_many_times"
 msgstr "Order exported %s × to MyParcel."
 
@@ -970,6 +988,9 @@ msgstr "Unpaid letter"
 
 msgid "View logs"
 msgstr "View logs"
+
+msgid "woocommerce_myparcel"
+msgstr "WooCommerce MyParcel"
 
 msgid ""
 "When enabled the checkout will use the MyParcel address fields. This means "
