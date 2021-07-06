@@ -270,7 +270,7 @@ class OrderSettings
         $ageCheckOfProduct           = $this->getAgeCheckOfProduct();
         $ageCheckFromSettings        = (bool) WCMYPA()->setting_collection->getByName($settingName);
 
-        $this->ageCheck = $ageCheckFromShipmentOptions ?? $ageCheckOfProduct ?? $ageCheckFromSettings;
+        $this->ageCheck = $ageCheckFromShipmentOptions ?? $ageCheckOfProduct ?: $ageCheckFromSettings;
     }
 
     /**
