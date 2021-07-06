@@ -35,6 +35,7 @@ class WCMYPA_Admin
     public const META_TRACK_TRACE            = "_myparcel_tracktrace";
     public const META_HS_CODE                = "_myparcel_hs_code";
     public const META_HS_CODE_VARIATION      = "_myparcel_hs_code_variation";
+    public const META_COUNTRY_OF_ORIGIN_VARIATION = "_myparcel_country_of_origin_variation";
     public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
     public const META_AGE_CHECK              = "_myparcel_age_check";
 
@@ -116,6 +117,10 @@ class WCMYPA_Admin
 
         add_action("woocommerce_product_options_shipping", [$this, "productOptionsFields"]);
         add_action("woocommerce_process_product_meta", [$this, "productOptionsFieldSave"]);
+
+        add_action('woocommerce_product_after_variable_attributes', [$this, 'renderVariationCountryOfOriginField'], 10, 3);
+        add_action('woocommerce_save_product_variation', [$this, 'saveVariationCountryOfOriginField'], 10, 2);
+        add_filter('woocommerce_available_variation', [$this, 'loadVariationCountryOfOriginField'], 10, 1);
     }
 
     /**
@@ -220,6 +225,56 @@ class WCMYPA_Admin
     }
 
 
+
+    /**
+     * @param int    $loop
+     * @param array  $variationData
+     * @param object $variation
+     */
+    public function renderVariationCountryOfOriginField(int $loop, array $variationData, object $variation): void
+    {
+        woocommerce_wp_select(
+            [
+                'id'            => self::META_COUNTRY_OF_ORIGIN_VARIATION . "[{$loop}]",
+                'name'          => self::META_COUNTRY_OF_ORIGIN_VARIATION . "[{$loop}]",
+                'type'          => 'select',
+                'options'       => (new WC_Countries())->get_countries(),
+                'value'         => get_post_meta($variation->ID, self::META_COUNTRY_OF_ORIGIN_VARIATION, true),
+                'label'         => __('product_variable_country_of_origin', 'woocommerce-myparcel'),
+                'desc_tip'      => true,
+                'description'   => __(
+                    'product_variable_country_of_origin_description',
+                    'woocommerce-myparcel'
+                ),
+                'wrapper_class' => 'form-row form-row-full',
+            ]
+        );
+    }
+
+    /**
+     * @param int $variationId
+     * @param int $loop
+     */
+    public function saveVariationCountryOfOriginField(int $variationId, int $loop): void
+    {
+        $countryOfOriginValue = $_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop];
+
+        if (! empty($countryOfOriginValue)) {
+            update_post_meta($variationId, self::META_COUNTRY_OF_ORIGIN_VARIATION, esc_attr($countryOfOriginValue));
+        }
+    }
+
+    /**
+     * @param array $variation
+     *
+     * @return array
+     */
+    public function loadVariationCountryOfOriginField(array $variation): array
+    {
+        $variation[self::META_COUNTRY_OF_ORIGIN_VARIATION] = get_post_meta($variation['variation_id'], self::META_COUNTRY_OF_ORIGIN_VARIATION, true);
+
+        return $variation;
+    }
 
     /**
      * @param $loop

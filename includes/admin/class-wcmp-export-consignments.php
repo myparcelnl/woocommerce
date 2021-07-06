@@ -262,29 +262,12 @@ class WCMP_Export_Consignments
      */
     public function getCountryOfOrigin(WC_Product $product): string
     {
-        $defaultCountryOfOrigin = $this->getSetting(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
-        $productCountryOfOrigin = WCX_Product::get_meta($product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
+        $defaultCountryOfOrigin   = $this->getSetting(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
+        $productCountryOfOrigin   = WCX_Product::get_meta($product,WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
+        $variationCountryOfOrigin = WCX_Product::get_meta($product,WCMYPA_Admin::META_COUNTRY_OF_ORIGIN_VARIATION, true);
+        $fallbackCountryOfOrigin  = WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
 
-        return $this->getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin);
-    }
-
-    /**
-     * @param string|null $defaultCountryOfOrigin
-     * @param string|null  $productCountryOfOrigin
-     *
-     * @return string
-     */
-    public function getPriorityOrigin(?string $defaultCountryOfOrigin, ?string $productCountryOfOrigin): string
-    {
-        if ($productCountryOfOrigin) {
-            return $productCountryOfOrigin;
-        }
-
-        if ($defaultCountryOfOrigin) {
-            return $defaultCountryOfOrigin;
-        }
-
-        return WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
+        return $variationCountryOfOrigin ?? $productCountryOfOrigin ?? $defaultCountryOfOrigin ?? $fallbackCountryOfOrigin;
     }
 
     /**
