@@ -281,8 +281,6 @@ class OrderSettings
      */
     private function getAgeCheckOfProduct(): ?bool
     {
-        $hasAgeCheck = [];
-
         foreach ($this->order->get_items() as $item) {
             $product = $item->get_product();
 
@@ -292,21 +290,13 @@ class OrderSettings
 
             $productAgeCheck = WCX_Product::get_meta($product, WCMYPA_Admin::META_AGE_CHECK, true);
 
+            if (empty($productAgeCheck)) {
+                return null;
+            }
+
             if ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_ENABLED) {
                 return true;
             }
-
-            if ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_DISABLED) {
-                $hasAgeCheck[] = false;
-            }
-
-            if (empty($productAgeCheck)) {
-                $hasAgeCheck[] = null;
-            }
-        }
-        // Check if there is a product that is set to "default" and has the value null
-        if (in_array(null, $hasAgeCheck, true)) {
-            return null;
         }
 
         return false;
