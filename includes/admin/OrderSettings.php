@@ -276,11 +276,12 @@ class OrderSettings
     /**
      * Gets product age check value based on if it was explicitly set to either true or false. It defaults to inheriting from the default export settings.
      *
-     * @return ?bool
+     * @return bool|null
+     * @throws JsonException
      */
     private function getAgeCheckOfProduct(): ?bool
     {
-        $hasAgeCheck = null;
+        $hasAgeCheck = [];
 
         foreach ($this->order->get_items() as $item) {
             $product = $item->get_product();
@@ -296,11 +297,19 @@ class OrderSettings
             }
 
             if ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_DISABLED) {
-                $hasAgeCheck = false;
+                $hasAgeCheck[] = false;
+            }
+
+            if (empty($productAgeCheck)) {
+                $hasAgeCheck[] = null;
             }
         }
+        // Check if there is a product that is set to "default" and has the value null
+        if (in_array(null, $hasAgeCheck, true)) {
+            return null;
+        }
 
-        return $hasAgeCheck;
+        return false;
     }
 
     /**
