@@ -520,7 +520,9 @@ jQuery(($) => {
    */
   function updateShipmentOptionsDialogPackageType(packageTypeSelect) {
     const element = packageTypeSelect[0];
-    const options = [...element.options].map(({value, innerText: label, selected}) => ({value, label, selected}));
+    const options = Array
+      .from(element.options)
+      .map(({value, innerText: label, selected}) => ({value, label, selected}));
 
     // Extract the order id from the element's name attribute.
     const match = element.name.match(/\d+/);
