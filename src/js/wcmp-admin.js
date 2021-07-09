@@ -1120,6 +1120,7 @@ jQuery(($) => {
       wrappers: [
         selectors.shipmentOptions,
         selectors.shipmentOptionsShowButton,
+        selectors.shipmentOptionsPackageType,
         // Add the tipTip ids as well so clicking a tipTip inside shipment options won't close the form.
         selectors.tipTipHolder,
         selectors.tipTipContent,
