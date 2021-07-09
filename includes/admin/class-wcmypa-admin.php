@@ -64,6 +64,7 @@ class WCMYPA_Admin
 
     public const PRODUCT_OPTIONS_ENABLED  = "yes";
     public const PRODUCT_OPTIONS_DISABLED = "no";
+    public const PRODUCT_OPTIONS_DEFAULT  = null;
 
     public function __construct()
     {
