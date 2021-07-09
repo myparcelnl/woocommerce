@@ -324,7 +324,7 @@ class WCMYPA_Admin
             self::BULK_ACTION_EXPORT => __('myparcel_bulk_action_export', 'woocommerce-myparcel'),
         ];
 
-        if (WCMP_Settings_Data::EXPORT_MODE_PPS != $exportMode) {
+        if (WCMP_Settings_Data::EXPORT_MODE_PPS !== $exportMode) {
             $returnValue[self::BULK_ACTION_PRINT]        = __('myparcel_bulk_action_print', 'woocommerce-myparcel');
             $returnValue[self::BULK_ACTION_EXPORT_PRINT] = __('myparcel_bulk_action_export_print', 'woocommerce-myparcel');
         }
