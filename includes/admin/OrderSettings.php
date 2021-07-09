@@ -294,9 +294,7 @@ class OrderSettings
 
             if (empty($productAgeCheck)) {
                 $hasAgeCheck = WCMYPA_Admin::PRODUCT_OPTIONS_DEFAULT;
-            }
-
-            if ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_ENABLED) {
+            } elseif ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_ENABLED) {
                 return true;
             }
         }
