@@ -90,6 +90,10 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.4.2 (2021-07-13) =
+* Fix:age check with different scenarios 
+* Fix: double export when using the bulk actions2
+
 = 4.4.1 (2021-07-06) =
 * Feat: Added setting to show or hide delivery date in frontend
 * Feat: Allow overriding delivery options via filter hooks
