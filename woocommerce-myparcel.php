@@ -99,6 +99,16 @@ if (! class_exists('WCMYPA')) :
         }
 
         /**
+         * This method is used internally, to be able to use the staging environment of MyParcel
+         */
+        private function useStagingEnvironment(): void
+        {
+            if (get_option('use_myparcel_staging_environment')) {
+                putenv('API_BASE_URL=' . get_option('myplugin_option_url'));
+            }
+        }
+
+        /**
          * Load the translation / text-domain files
          * Note: the first-loaded translation file overrides any following ones if the same translation is present
          */
@@ -184,15 +194,9 @@ if (! class_exists('WCMYPA')) :
                 return;
             }
 
-            if (! $this->phpVersionMeets(\WCMYPA::PHP_VERSION_7_1)) {
-                // php 5.6
-                $this->initSettings();
-                $this->includes();
-            } else {
-                // php 7.1
-                $this->includes();
-                $this->initSettings();
-            }
+            $this->useStagingEnvironment();
+            $this->includes();
+            $this->initSettings();
         }
 
         /**
