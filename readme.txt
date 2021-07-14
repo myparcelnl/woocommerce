@@ -90,6 +90,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.4.3 (2021-07-14) =
+* Fix: Being able to remove the delivery date from the delivery options
+
 = 4.4.2 (2021-07-13) =
 * Fix:age check with different scenarios 
 * Fix: double export when using the bulk actions2
