@@ -26,6 +26,24 @@ msgstr "MyParcel API erreur, aucun envoi n'a été créé."
 msgid "error_order_has_invalid_shipment_country"
 msgstr "L'ordre %s á un pays d'expédition invalide."
 
+msgid "error_woocommerce_not_activated"
+msgstr "%s nécessite que WooCommerce soit activé !"
+
+msgid "error_woocommerce_not_installed"
+msgstr "%s nécessite l'installation de WooCommerce !"
+
+msgid "error_woocommerce_minimum_version"
+msgstr "%s nécessite une version minimum de WooCommerce {woocommerce_version} !"
+
+msgid "error_button_install_woocommerce"
+msgstr "Installer WooCommerce"
+
+msgid "error_button_woocommerce_activate"
+msgstr "Activer WooCommerce"
+
+msgid "error_button_turn_off_myparcel_plugin"
+msgstr "Désactiver le plugin MyParcel"
+
 msgid "export_hint_change_parcel"
 msgstr "Modifiez le type de paquet ou générez plusieurs étiquettes."
 
@@ -620,7 +638,7 @@ msgid "Insure all orders that exceed this price point."
 msgstr "Assurez toutes les commandes qui dépassent ce point de prix."
 
 msgid "Insure all parcels up to the selected amount."
-msgstr "Assurer tous les colis au montant sélectionn��."
+msgstr "Assurer tous les colis au montant sélectionné."
 
 msgid "Insure from price"
 msgstr "Assurer de prix"
@@ -968,6 +986,9 @@ msgstr "Lettre non rémunérée"
 msgid "View logs"
 msgstr "Afficher les logs"
 
+msgid "woocommerce_myparcel"
+msgstr "WooCommerce MyParcel"
+
 msgid ""
 "When enabled the checkout will use the MyParcel address fields. This means "
 "there will be three separate fields for street name, number and suffix. "
@@ -1072,6 +1093,18 @@ msgstr "Pays d'origine variable produit"
 
 msgid "country_of_origin_variable_description"
 msgstr "Ce pays d'origine remplace le pays d'origine du produit"
+
+msgid "product_variable_country_of_origin"
+msgstr "Pays d'origine variable produit"
+
+msgid "product_variable_country_of_origin_description"
+msgstr "Ce pays d'origine remplace le pays d'origine du produit"
+
+msgid "setting_empty_digital_stamp_weight"
+msgstr "Poids du timbre numérique vide"
+
+msgid "setting_empty_digital_stamp_weight_description"
+msgstr "Ce poids est ajouté à un envoi qui est envoyé avec un timbre numérique."
 
 msgid "error_pps_export_feedback"
 msgstr ""

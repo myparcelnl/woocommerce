@@ -26,6 +26,24 @@ msgstr "MyParcel API erreur, aucun envoi n'a été créé."
 msgid "error_order_has_invalid_shipment_country"
 msgstr "L'ordre %s á un pays d'expédition invalide."
 
+msgid "error_woocommerce_not_activated"
+msgstr "%s nécessite que WooCommerce soit activé !"
+
+msgid "error_woocommerce_not_installed"
+msgstr "%s nécessite l'installation de WooCommerce !"
+
+msgid "error_woocommerce_minimum_version"
+msgstr "%s nécessite une version minimum de WooCommerce {woocommerce_version} !"
+
+msgid "error_button_install_woocommerce"
+msgstr "Installer WooCommerce"
+
+msgid "error_button_woocommerce_activate"
+msgstr "Activer WooCommerce"
+
+msgid "error_button_turn_off_myparcel_plugin"
+msgstr "Désactiver le plugin MyParcel"
+
 msgid "export_hint_how_many_times"
 msgstr ""
 
@@ -209,6 +227,7 @@ msgid "shipment_options_delivery_options_title"
 msgstr "Options de livraison - titre"
 
 msgid "shipment_options_delivery_options_title_description"
+
 msgstr ""
 "Vous pouvez indiquer un titre pour la livraison au-dessus des options "
 "MyParcel. S'il n'y a pas de titre, cet élément ne sera pas visible."
@@ -294,6 +313,93 @@ msgstr "Signature pour réception"
 
 msgid "shipment_options_signature_help_text"
 msgstr ""
+
+msgstr ""
+"Vous pouvez indiquer un titre pour la livraison au-dessus des options "
+"MyParcel. S'il n'y a pas de titre, cet élément ne sera pas visible."
+
+msgid "shipment_options_delivery_pickup"
+msgstr "Ramasser"
+
+msgid "shipment_options_delivery_pickup_title"
+msgstr "Titre du ramassage"
+
+msgid "shipment_options_delivery_standard"
+msgstr "Livraison Standard"
+
+msgid "shipment_options_delivery_standard_description"
+msgstr ""
+"Lorsqu'aucun titre n'est complété, les heures de livraison sont affichées "
+"automatiquement."
+
+msgid "shipment_options_delivery_standard_title"
+msgstr "Livraison standard - titre"
+
+msgid "shipment_options_delivery_title"
+msgstr "Titre de la livraison"
+
+msgid "shipment_options_insured"
+msgstr "Expédition assurée"
+
+msgid "shipment_options_insured_amount"
+msgstr "Montant assuré max"
+
+msgid "shipment_options_insured_amount_help_text"
+msgstr "Assurer tous les colis au montant sélectionné."
+
+msgid "shipment_options_insured_from_price"
+msgstr "Assurer de prix"
+
+msgid "shipment_options_insured_from_price_help_text"
+msgstr "Assurez toutes les commandes qui dépassent ce point de prix."
+
+msgid "shipment_options_insured_help_text"
+msgstr ""
+"Par défaut, il n'y a pas d'assurance sur les envois. Si vous voulez "
+"toujours assurer l'envoi, vous pouvez le faire. Nous assurons la valeur "
+"d'achat de l'envoi, avec une valeur assurée maximale de 5 000 €. Les colis "
+"assurés contiennent toujours les options 'Adresse domestique uniquement' FR "
+"'Signature pour la livraison'"
+
+msgid "shipment_options_large_format"
+msgstr "Très grande taille"
+
+msgid "shipment_options_large_format_help_text"
+msgstr ""
+"Activez cette option lorsque votre envoi est de plus de 100 x 70 x 50 cm, "
+"mais inférieur à 175 x 78 x 58 cm. Un supplément sera facturé. Noter! Si le "
+"colis est supérieur à 175 x 78 x 58 de ou plus lourd que 30 kg, la vitesse "
+"de palette sera chargée."
+
+msgid "shipment_options_only_recipient"
+msgstr "Seul destinataire"
+
+msgid "shipment_options_only_recipient_help_text"
+msgstr ""
+"Si vous ne voulez pas que le colis soit livré sur les voisins, choisissez "
+"cette option."
+
+msgid "shipment_options_only_recipient_title"
+msgstr "Adresse de la maison uniquement"
+
+msgid "shipment_options_return"
+msgstr "Retourner si aucune réponse"
+
+msgid "shipment_options_return_help_text"
+msgstr ""
+"Par défaut, une parcelle sera offerte deux fois. Après deux tentatives de "
+"livraison infructueuses, la parcelle sera disponible au point de ramassage "
+"le plus proche pendant deux semaines. Là, il peut être ramassé par le "
+"destinataire avec la note laissée par le courrier. Si vous souhaitez "
+"recevoir le colis directement et ne pas le transmettre au point de "
+"ramassage, activez cette option."
+
+msgid "shipment_options_signature"
+msgstr "Signature pour réception"
+
+msgid "shipment_options_signature_help_text"
+msgstr ""
+
 "Le colis sera offert à l'adresse de livraison. Si le destinataire n'est pas "
 "à la maison, le colis sera livré aux voisins. Dans les deux cas, une "
 "signature sera requise."
@@ -557,6 +663,7 @@ msgid "action_export_to_myparcel"
 msgstr "Exporter vers MyParcel"
 
 msgid "error_export_orderid_failed_because"
+
 msgstr "Commande %1$s non pas exporté vers MyParcel. %2$s"
 
 msgid "Extra large size"
@@ -989,6 +1096,9 @@ msgstr "Lettre non rémunérée"
 msgid "View logs"
 msgstr "Afficher les logs"
 
+msgid "woocommerce_myparcel"
+msgstr "WooCommerce MyParcel"
+
 msgid ""
 "When enabled the checkout will use the MyParcel address fields. This means "
 "there will be three separate fields for street name, number and suffix. "
@@ -1088,11 +1198,24 @@ msgstr ""
 "Vous devez d'abord exporter vos commandes vers MyParcel avant de pouvoir "
 "imprimer vos étiquettes !"
 
+
 msgid "country_of_origin_variable"
 msgstr "Pays d'origine variable produit"
 
 msgid "country_of_origin_variable_description"
 msgstr "Ce pays d'origine remplace le pays d'origine du produit"
+
+msgid "product_variable_country_of_origin"
+msgstr "Pays d'origine variable produit"
+
+msgid "product_variable_country_of_origin_description"
+msgstr "Ce pays d'origine remplace le pays d'origine du produit"
+
+msgid "setting_empty_digital_stamp_weight"
+msgstr "Poids du timbre numérique vide"
+
+msgid "setting_empty_digital_stamp_weight_description"
+msgstr "Ce poids est ajouté à un envoi qui est envoyé avec un timbre numérique."
 
 msgid "error_pps_export_feedback"
 msgstr ""

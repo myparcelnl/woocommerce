@@ -1162,7 +1162,7 @@ class WCMP_Export
         if (empty($ids)) {
             return [];
         }
-        
+
         $data     = [];
         $api      = $this->init_api();
         $response = $api->get_shipments($ids);

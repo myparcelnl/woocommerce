@@ -112,7 +112,7 @@ jQuery(($) => {
     /**
      * Bulk actions.
      */
-    $('#doaction, #doaction2').click(doBulkAction);
+    $('#doaction').click(doBulkAction);
 
     /**
      * Add offset dialog when address labels option is selected.

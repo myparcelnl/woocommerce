@@ -352,11 +352,12 @@ class OrderSettings
     /**
      * Gets product age check value based on if it was explicitly set to either true or false. It defaults to inheriting from the default export settings.
      *
-     * @return ?bool
+     * @return bool|null
+     * @throws JsonException
      */
     private function getAgeCheckOfProduct(): ?bool
     {
-        $hasAgeCheck = null;
+        $hasAgeCheck = false;
 
         foreach ($this->order->get_items() as $item) {
             $product = $item->get_product();
@@ -367,12 +368,10 @@ class OrderSettings
 
             $productAgeCheck = WCX_Product::get_meta($product, WCMYPA_Admin::META_AGE_CHECK, true);
 
-            if ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_ENABLED) {
+            if (empty($productAgeCheck)) {
+                $hasAgeCheck = WCMYPA_Admin::PRODUCT_OPTIONS_DEFAULT;
+            } elseif ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_ENABLED) {
                 return true;
-            }
-
-            if ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_DISABLED) {
-                $hasAgeCheck = false;
             }
         }
 
@@ -392,10 +391,16 @@ class OrderSettings
      */
     private function setDigitalStampRangeWeight(): void
     {
+        $emptyWeight  = (float) WCMYPA()->setting_collection->getByName(
+            WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
+        );
+        $this->weight += $emptyWeight;
+
         $savedWeight = $this->extraOptions["digital_stamp_weight"] ?? null;
         $orderWeight = $this->getWeight(true);
         $weight      = (float) ($savedWeight ?? $orderWeight);
-        $results     = Arr::where(
+
+        $results = Arr::where(
             WCMP_Data::getDigitalStampRanges(),
             static function ($range) use ($weight) {
                 return $weight > $range['min'];
