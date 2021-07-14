@@ -104,7 +104,7 @@ if (! class_exists('WCMYPA')) :
         private function useStagingEnvironment(): void
         {
             if (get_option('use_myparcel_staging_environment')) {
-                putenv('API_BASE_URL=' . get_option('myplugin_option_url'));
+                putenv('API_BASE_URL=' . get_option('myparcel_base_url'));
             }
         }
 
