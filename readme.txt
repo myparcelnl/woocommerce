@@ -2,7 +2,7 @@
 Contributors: richardperdaan, ademdemir, edielemoine
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
-Tested up to: 5.7.2
+Tested up to: 5.8.0
 Stable tag: trunk
 Requires PHP: 7.1
 License: GPLv3 or later
