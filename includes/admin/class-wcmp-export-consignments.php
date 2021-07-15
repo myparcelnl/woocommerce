@@ -267,7 +267,7 @@ class WCMP_Export_Consignments
         $variationCountryOfOrigin = WCX_Product::get_meta($product,WCMYPA_Admin::META_COUNTRY_OF_ORIGIN_VARIATION, true);
         $fallbackCountryOfOrigin  = WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
 
-        return $variationCountryOfOrigin ?? $productCountryOfOrigin ?? $defaultCountryOfOrigin ?? $fallbackCountryOfOrigin;
+        return $variationCountryOfOrigin ?: $productCountryOfOrigin ?: $defaultCountryOfOrigin ?: $fallbackCountryOfOrigin;
     }
 
     /**
