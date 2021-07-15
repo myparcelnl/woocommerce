@@ -170,8 +170,12 @@ class WCMP_Export_Consignments
         foreach ($this->order->get_items() as $item) {
             $product = $item->get_product();
 
-            if (! $product || $product->is_virtual()) {
+            if (! $product) {
                 return;
+            }
+
+            if ($product->is_virtual()) {
+                continue;
             }
 
             $country     = $this->getCountryOfOrigin($product);
