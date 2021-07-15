@@ -11,6 +11,18 @@ msgstr ""
 "Last-Translator: \n"
 "Language: en_GB\n"
 
+msgid "abbreviation_house_number"
+msgstr "No."
+
+msgid "action_email_return_label"
+msgstr "Email return label"
+
+msgid "action_export_to_myparcel"
+msgstr "Export to MyParcel"
+
+msgid "action_print_myparcel_label"
+msgstr "Print MyParcel label"
+
 msgid "all_delivery_days"
 msgstr "All delivery days"
 
@@ -20,32 +32,98 @@ msgstr "Calculated weight: %s"
 msgid "delivery_type"
 msgstr "Delivery type:"
 
+msgid "diagnostics_status_carrier_disabled"
+msgstr "Carrier is disabled. Go to %scarrier settings%s to enable it."
+
+msgid "diagnostics_status_carrier_ready"
+msgstr "Carrier is available."
+
+msgid "diagnostics_status_drop_off_point_manage"
+msgstr "Manage the active drop off point in the %sretail overview%s."
+
+msgid "diagnostics_status_drop_off_point_missing"
+msgstr ""
+"Default drop off point is missing. Go to the %sretail overview%s to pick "
+"one."
+
+msgid "diagnostics_status_shop_connection"
+msgstr "MyParcel connection"
+
+msgid "diagnostics_status_shop_connection_failure"
+msgstr "Can't connect to MyParcel. Check your API key."
+
+msgid "diagnostics_status_shop_connection_success"
+msgstr "Connected to shop \"%s\"."
+
+msgid "diagnostics_status_title"
+msgstr "Status"
+
+msgid "diagnostics_status_webhooks"
+msgstr "Webhooks"
+
+msgid "diagnostics_status_webhooks_error"
+msgstr "Webhooks could not be created. Check your API key."
+
+msgid "diagnostics_status_webhooks_set_up"
+msgstr "Webhooks are set up correctly."
+
+msgid "diagnostics_status_webhooks_unavailable"
+msgstr "Webhooks are unavailable."
+
 msgid "error_api_no_shipments_created"
 msgstr "MyParcel API error, no shipments created."
-
-msgid "error_order_has_invalid_shipment_country"
-msgstr "Order %s has an invalid shipping country."
-
-msgid "error_woocommerce_not_activated"
-msgstr "%s requires WooCommerce be activated!"
-
-msgid "error_woocommerce_not_installed"
-msgstr "%s requires WooCommerce be installed!"
-
-msgid "error_woocommerce_minimum_version"
-msgstr "%s requires a minimum WooCommerce {woocommerce_version} version!"
 
 msgid "error_button_install_woocommerce"
 msgstr "Install WooCommerce"
 
-msgid "error_button_woocommerce_activate"
-msgstr "Activate WooCommerce"
-
 msgid "error_button_turn_off_myparcel_plugin"
 msgstr "Turn off MyParcel plugin"
 
-msgid "export_hint_how_many_times"
-msgstr "Order exported %s × to MyParcel."
+msgid "error_button_woocommerce_activate"
+msgstr "Activate WooCommerce"
+
+msgid "error_export_order_id_failed_because"
+msgstr "Order %1$s not exported to MyParcel. %2$s"
+
+msgid "error_order_has_invalid_shipment_country"
+msgstr "Order %s has an invalid shipping country."
+
+msgid "error_settings_account_missing"
+msgstr ""
+"MyParcel account settings missing. Some functionality may therefore not be "
+"available. Check your API key."
+
+msgid "error_settings_api_key_missing"
+msgstr "MyParcel API key is missing or invalid. Please check your %ssettings%s."
+
+msgid "notice_admin_api_key_missing"
+msgstr "Please enter your API key in the %sMyParcel settings%s."
+
+msgid "notice_settings_fetched_from_api"
+msgstr "Settings fetched from backoffice."
+
+msgid "diagnostics_status_api_key_missing"
+msgstr "Please enter your MyParcel API key."
+
+msgid "settings_trigger_manual_update_button"
+msgstr "Refresh"
+
+msgid "settings_trigger_manual_update"
+msgstr "Refresh settings from backoffice"
+
+msgid "settings_trigger_manual_update_help_text"
+msgstr ""
+"Click the button to fetch the settings from your MyParcel backoffice anew. "
+"Only necessary once after you change settings for your shop there."
+
+msgid "error_woocommerce_minimum_version"
+msgstr "requires a minimum WooCommerce {woocommerce_version} version!"
+
+msgid "error_woocommerce_not_activated"
+msgstr "requires WooCommerce be activated!"
+
+msgid "error_woocommerce_not_installed"
+msgstr "requires WooCommerce be installed!"
 
 msgid "export_hint_already_exported"
 msgstr "Entire order is available in MyParcel backoffice."
@@ -53,8 +131,14 @@ msgstr "Entire order is available in MyParcel backoffice."
 msgid "export_hint_change_parcel"
 msgstr "Change the parcel type or create multiple labels."
 
+msgid "export_hint_how_many_times"
+msgstr "Order exported %s × to MyParcel."
+
+msgid "export_hint_no_label_created_yet"
+msgstr "No label has been created yet."
+
 msgid "export_hint_not_exported"
-msgstr ""
+msgstr "Order not exported to MyParcel."
 
 msgid "extra_options"
 msgstr "Extra options:"
@@ -64,6 +148,9 @@ msgstr "Shows delivery date at the options during checkout."
 
 msgid "feature_allow_show_delivery_date_title"
 msgstr "Show delivery date"
+
+msgid "house_number"
+msgstr "Number"
 
 msgid "hs_code"
 msgstr "HS Code"
@@ -80,6 +167,9 @@ msgstr "Insurance amount"
 msgid "insured_for"
 msgstr "Insured for"
 
+msgid "message_orders_exported_successfully"
+msgstr "%s orders now available in MyParcel Backoffice."
+
 msgid "myparcel_bulk_action_export"
 msgstr "MyParcel: Export"
 
@@ -89,14 +179,11 @@ msgstr "MyParcel: Export & Print"
 msgid "myparcel_bulk_action_print"
 msgstr "MyParcel: Print"
 
-msgid "myparcel_shipment_created"
-msgstr "MyParcel shipment created:"
-
 msgid "myparcel_export"
 msgstr "MyParcel export:"
 
-msgid "message_orders_exported_successfully"
-msgstr "%s orders now available in MyParcel Backoffice."
+msgid "myparcel_shipment_created"
+msgstr "MyParcel shipment created:"
 
 msgid "not_active"
 msgstr "Not active"
@@ -107,14 +194,52 @@ msgstr "Pickup location:"
 msgid "product_options_country_of_origin"
 msgstr "Country of origin"
 
+msgid "product_variable_country_of_origin"
+msgstr "Country of origin variable product"
+
+msgid "product_variable_country_of_origin_description"
+msgstr "This country of origin overwrites the product country of origin"
+
+msgid "setting_account_settings_manual_update_hint"
+msgstr ""
+"Your website needs a SSL connection (https://) to be able to automatically "
+"update settings."
+
+msgid "setting_activate_in_your_backoffice_hint"
+msgstr "Activate %s in your MyParcel backoffice to use it."
+
 msgid "setting_automatic_order_status"
 msgstr "Automatic order status"
+
+msgid "setting_carrier_cut_off_time_help_text"
+msgstr "Time at which you stop processing orders for the day (format: hh:mm)"
+
+msgid "setting_carrier_cut_off_time_title"
+msgstr "Cut-off time"
 
 msgid "setting_carrier_delivery_days_window_help_text"
 msgstr "Amount of days a customer can postpone a shipment."
 
 msgid "setting_carrier_delivery_days_window_title"
 msgstr "Delivery days window"
+
+msgid "setting_carrier_delivery_enabled"
+msgstr "Enable %s delivery"
+
+msgid "setting_carrier_drop_off_days_help_text"
+msgstr "Days of the week on which you hand over parcels to %s"
+
+msgid "setting_carrier_drop_off_days_title"
+msgstr "Drop-off days"
+
+msgid "setting_carrier_drop_off_delay_help_text"
+msgstr "Number of days you need to process an order."
+
+msgid "setting_carrier_drop_off_delay_title"
+msgstr "Drop-off delay"
+
+msgid "setting_carrier_pickup_enabled"
+msgstr "Enable %s pickup"
 
 msgid "setting_change_order_status_after"
 msgstr "Change order status after"
@@ -134,6 +259,18 @@ msgstr "Default country of origin"
 msgid "setting_country_of_origin_help_text"
 msgstr "Country of origin is required for world shipments. Defaults to shop base."
 
+msgid "setting_delivery_options"
+msgstr "%s delivery options"
+
+msgid "setting_drop_off_point"
+msgstr "Default %s drop off point"
+
+msgid "setting_empty_digital_stamp_weight"
+msgstr "Empty digital stamp weight"
+
+msgid "setting_empty_digital_stamp_weight_description"
+msgstr "This weight is added to a shipment that is sent with a digital stamp."
+
 msgid "setting_export_automatic_status"
 msgstr "Automatic export for order status"
 
@@ -142,14 +279,23 @@ msgstr ""
 "Creates a shipment in MyParcel when the status of an order changes. Make "
 "sure to check 'Process shipments directly' to receive the barcode."
 
+msgid "setting_export_settings"
+msgstr "%s export settings"
+
+msgid "setting_export_settings_description"
+msgstr "These settings will be applied to %s shipments you create in the backend."
+
 msgid "setting_mode_pps_title"
 msgstr "Export entire order"
+
+msgid "setting_mode_shipments_title"
+msgstr "Export shipping details only"
 
 msgid "setting_mode_title"
 msgstr "Mode"
 
-msgid "setting_mode_shipments_title"
-msgstr "Export shipping details only"
+msgid "setting_pickup_options"
+msgstr "%s pickup options"
 
 msgid "setting_show_delivery_day_help_text"
 msgstr ""
@@ -182,6 +328,24 @@ msgstr "Surcharge"
 
 msgid "settings_checkout_total_price"
 msgstr "Total price"
+
+msgid "settings_general_api_key"
+msgstr "API key"
+
+msgid "settings_general_api_key_help_text"
+msgstr "Enter your API key from the MyParcel backoffice here."
+
+msgid "settings_general_api_title"
+msgstr "API settings"
+
+msgid "settings_general_diagnostics_title"
+msgstr "Diagnostic tools"
+
+msgid "settings_general_general_title"
+msgstr "General"
+
+msgid "settings_general_title"
+msgstr "General settings"
 
 msgid "settings_pickup_locations_default_view"
 msgstr "Pickup locations default view"
@@ -278,6 +442,14 @@ msgstr ""
 "parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet "
 "rate will be charged."
 
+msgid "shipment_options_large_format_from_weight"
+msgstr "From weight (g) "
+
+msgid "shipment_options_large_format_from_weight_help_text"
+msgstr ""
+"Enter the weight in grams from which the Large package setting should be "
+"activated."
+
 msgid "shipment_options_only_recipient"
 msgstr "Home address only"
 
@@ -312,8 +484,23 @@ msgstr ""
 msgid "shipment_options_signature_title"
 msgstr "Signature on delivery title"
 
+msgid "street_name"
+msgstr "Street name"
+
+msgid "suffix"
+msgstr "Suffix"
+
+msgid "tomorrow"
+msgstr "Tomorrow"
+
+msgid "warning_webhook_has_error"
+msgstr "Webhook %s not active because of an error. See the logs."
+
 msgid "weight"
 msgstr "Weight"
+
+msgid "woocommerce_myparcel"
+msgstr "WooCommerce MyParcel"
 
 msgid "(Unknown)"
 msgstr "(Unknown)"
@@ -436,14 +623,8 @@ msgstr "Customer note"
 msgid "Customs shipment type"
 msgstr "Customs shipment type"
 
-msgid "Cut-off time"
-msgstr "Cut-off time"
-
 msgid "Cut-off time on Saturday"
 msgstr "Cut-off time on Saturday"
-
-msgid "Days of the week on which you hand over parcels to PostNL"
-msgstr "Days of the week on which you hand over parcels to PostNL"
 
 msgid "Default"
 msgstr "Default"
@@ -493,15 +674,6 @@ msgstr "Download PDF"
 msgid "DPD"
 msgstr "DPD"
 
-msgid "Drop-off days"
-msgstr "Drop-off days"
-
-msgid "Drop-off delay"
-msgstr "Drop-off delay"
-
-msgid "action_email_return_label"
-msgstr "Email return label"
-
 msgid "Empty parcel weight"
 msgstr "Empty parcel weight"
 
@@ -510,12 +682,6 @@ msgstr "Enable delivery options for backorders"
 
 msgid "Enable MyParcel delivery options"
 msgstr "Enable MyParcel delivery options"
-
-msgid "Enable PostNL delivery"
-msgstr "Enable PostNL delivery"
-
-msgid "Enable PostNL pickup"
-msgstr "Enable PostNL pickup"
 
 msgid ""
 "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
@@ -560,12 +726,6 @@ msgstr "Weight per package is %1$s kg, maximum allowed is %2$s kg."
 
 msgid "Export options"
 msgstr "Export options"
-
-msgid "action_export_to_myparcel"
-msgstr "Export to MyParcel"
-
-msgid "error_export_orderid_failed_because"
-msgstr "Order %1$s not exported to MyParcel. %2$s"
 
 msgid "Extra large size"
 msgstr "Extra large size"
@@ -723,18 +883,6 @@ msgstr "No e-mail address found in order."
 msgid "No HS code found in MyParcel settings"
 msgstr "No HS code found in MyParcel settings"
 
-msgid "export_hint_no_label_created_yet"
-msgstr "No label has been created yet."
-
-msgid "No."
-msgstr "No."
-
-msgid "Number"
-msgstr "Number"
-
-msgid "Number of days you need to process an order."
-msgstr "Number of days you need to process an order."
-
 msgid "Number of labels"
 msgstr "Number of labels"
 
@@ -798,20 +946,8 @@ msgstr "Postcode/city combination unknown"
 msgid "PostNL"
 msgstr "PostNL"
 
-msgid "PostNL delivery options"
-msgstr "PostNL delivery options"
-
-msgid "PostNL export settings"
-msgstr "PostNL export settings"
-
-msgid "PostNL pickup options"
-msgstr "PostNL pickup options"
-
 msgid "Print"
 msgstr "Print"
-
-msgid "action_print_myparcel_label"
-msgstr "Print MyParcel label"
 
 msgid "printed - digital stamp"
 msgstr "printed - digital stamp"
@@ -882,17 +1018,8 @@ msgstr "Standard delivery"
 msgid "Standard printer (A4)"
 msgstr "Standard printer (A4)"
 
-msgid "Status"
-msgstr "Status"
-
 msgid "Street"
 msgstr "Street"
-
-msgid "Street name"
-msgstr "Street name"
-
-msgid "Suffix"
-msgstr "Suffix"
 
 msgid "The label has been printed."
 msgstr "The label has been printed."
@@ -929,13 +1056,6 @@ msgstr "The selected orders have not been exported to MyParcel yet! "
 msgid "Theme \"%s\" detected."
 msgstr "Theme \"%s\" detected."
 
-msgid ""
-"These settings will be applied to PostNL shipments you create in the "
-"backend."
-msgstr ""
-"These settings will be applied to PostNL shipments you create in the "
-"backend."
-
 msgid "This option enables you to continue printing where you left off last time"
 msgstr "This option enables you to continue printing where you left off last time"
 
@@ -950,17 +1070,11 @@ msgstr ""
 "MyParcel plugin was activated. The address data can still be manually "
 "entered in the order screen."
 
-msgid "Time at which you stop processing orders for the day (format: hh:mm)"
-msgstr "Time at which you stop processing orders for the day (format: hh:mm)"
-
 msgid "Title before the barcode"
 msgstr "Title before the barcode"
 
 msgid "Titles"
 msgstr "Titles"
-
-msgid "tomorrow"
-msgstr "Tomorrow"
 
 msgid "Total weight"
 msgstr "Total weight"
@@ -988,9 +1102,6 @@ msgstr "Unpaid letter"
 
 msgid "View logs"
 msgstr "View logs"
-
-msgid "woocommerce_myparcel"
-msgstr "WooCommerce MyParcel"
 
 msgid ""
 "When enabled the checkout will use the MyParcel address fields. This means "
@@ -1083,24 +1194,6 @@ msgstr "You have not selected any orders!"
 
 msgid "You have to export the orders to MyParcel before you can print the labels!"
 msgstr "You have to export the orders to MyParcel before you can print the labels!"
-
-msgid "country_of_origin_variable"
-msgstr "Country of origin variable product"
-
-msgid "country_of_origin_variable_description"
-msgstr "This country of origin overwrites the product country of origin"
-
-msgid "product_variable_country_of_origin"
-msgstr "Country of origin variable product"
-
-msgid "product_variable_country_of_origin_description"
-msgstr "This country of origin overwrites the product country of origin"
-
-msgid "setting_empty_digital_stamp_weight"
-msgstr "Empty digital stamp weight"
-
-msgid "setting_empty_digital_stamp_weight_description"
-msgstr "This weight is added to a shipment that is sent with a digital stamp."
 
 msgid "error_pps_export_feedback"
 msgstr ""

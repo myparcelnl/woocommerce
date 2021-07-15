@@ -119,9 +119,9 @@ gulp.task('translations:pot', () => gulp.src(PHP_FILES, {read: false})
 /**
  * Download translations as csv and convert them to .po files.
  */
-gulp.task('translations:import', (callback) => {
-  downloadTranslations();
-  callback();
+gulp.task('translations:import', async(callback) => {
+  await downloadTranslations();
+  return callback;
 });
 
 /**

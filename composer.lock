@@ -4,34 +4,36 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f992f41eba739307e442392abf68d28f",
+    "content-hash": "9412007cd36dc3dc41b8c5ea17ae06ad",
     "packages": [
         {
             "name": "myparcelnl/sdk",
-            "version": "v5.3.0-beta.1",
+            "version": "v6.0.0-beta.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "9fd9f8e1340c0db8b5d11b8f664c27ab143d5631"
+                "reference": "ccc59f956694aa1601302599f8d38a18dde9f740"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/9fd9f8e1340c0db8b5d11b8f664c27ab143d5631",
-                "reference": "9fd9f8e1340c0db8b5d11b8f664c27ab143d5631",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/ccc59f956694aa1601302599f8d38a18dde9f740",
+                "reference": "ccc59f956694aa1601302599f8d38a18dde9f740",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1.0"
             },
             "require-dev": {
-                "fakerphp/faker": "^1.14",
-                "phpunit/phpunit": "^5.5"
+                "fakerphp/faker": "^1.15.0",
+                "phpunit/phpunit": "^5.5",
+                "psr/container": "~1.0.0"
             },
             "type": "library",
             "autoload": {
-                "files": [
-                    "src/AutoLoader.php"
-                ]
+                "psr-4": {
+                    "MyParcelNL\\Sdk\\src\\": "src",
+                    "MyParcelNL\\Sdk\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -66,7 +68,11 @@
                 "myparcel",
                 "postnl"
             ],
-            "time": "2021-06-11T09:00:39+00:00"
+            "support": {
+                "issues": "https://github.com/myparcelnl/sdk/issues",
+                "source": "https://github.com/myparcelnl/sdk/tree/v6.0.0-beta.5"
+            },
+            "time": "2021-11-10T14:06:46+00:00"
         }
     ],
     "packages-dev": [],
@@ -79,5 +85,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.1.0"
 }

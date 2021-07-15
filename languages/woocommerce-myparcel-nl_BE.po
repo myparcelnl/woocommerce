@@ -11,6 +11,18 @@ msgstr ""
 "Last-Translator: \n"
 "Language: nl_BE\n"
 
+msgid "abbreviation_house_number"
+msgstr "Nr."
+
+msgid "action_email_return_label"
+msgstr "E-mail retourlabel"
+
+msgid "action_export_to_myparcel"
+msgstr "Exporteer naar MyParcel"
+
+msgid "action_print_myparcel_label"
+msgstr "Print MyParcel label"
+
 msgid "all_delivery_days"
 msgstr "Alle bezorgdagen"
 
@@ -20,8 +32,60 @@ msgstr "Berekend gewicht: %s"
 msgid "delivery_type"
 msgstr "Soort levering:"
 
+msgid "diagnostics_status_carrier_disabled"
+msgstr ""
+"Vervoerder is uitgeschakeld. Ga naar %svervoerders%s om deze in te "
+"schakelen."
+
+msgid "diagnostics_status_carrier_ready"
+msgstr "Vervoerder is beschikbaar."
+
+msgid "diagnostics_status_drop_off_point_manage"
+msgstr "Beheer jouw standaard afleverpunt in de %slocatiewijzer%s."
+
+msgid "diagnostics_status_drop_off_point_missing"
+msgstr ""
+"Standaard drop off point mist. Ga naar de %slocatiewijzer%s om er een in te "
+"stellen."
+
+msgid "diagnostics_status_shop_connection"
+msgstr "Verbinding met MyParcel"
+
+msgid "diagnostics_status_shop_connection_failure"
+msgstr "Kan geen connectie maken met MyParcel. Controleer je API key."
+
+msgid "diagnostics_status_shop_connection_success"
+msgstr "Verbonden met shop \"%s\"."
+
+msgid "diagnostics_status_title"
+msgstr "Status"
+
+msgid "diagnostics_status_webhooks"
+msgstr "Webhooks"
+
+msgid "diagnostics_status_webhooks_error"
+msgstr "Webhooks kunnen niet aangemaakt worden"
+
+msgid "diagnostics_status_webhooks_set_up"
+msgstr "Webhooks zijn correct ingesteld"
+
+msgid "diagnostics_status_webhooks_unavailable"
+msgstr "Het is niet mogelijk om webhooks te gebruiken."
+
 msgid "error_api_no_shipments_created"
 msgstr "MyParcel API error, geen zendingen aangemaakt."
+
+msgid "error_button_install_woocommerce"
+msgstr "Installeer WooCommerce"
+
+msgid "error_button_turn_off_myparcel_plugin"
+msgstr "MyParcel plugin uitschakelen"
+
+msgid "error_button_woocommerce_activate"
+msgstr "Activeer WooCommerce"
+
+msgid "error_export_order_id_failed_because"
+msgstr "Bestelling %1$s niet geëxporteerd naar MyParcel. %2$s"
 
 msgid "error_order_has_invalid_shipment_country"
 msgstr "Bestelling %s heeft een ongeldig land als bestemming."
@@ -29,32 +93,55 @@ msgstr "Bestelling %s heeft een ongeldig land als bestemming."
 msgid "error_pps_export_feedback"
 msgstr "Bestelling %s is geëxporteerd, maar niet als zodanig geregistreerd."
 
-msgid "error_woocommerce_not_activated"
-msgstr "%s vereist dat WooCommerce geactiveerd is!"
+msgid "error_settings_account_missing"
+msgstr ""
+"MyParcel account instellingen ontbreken. Sommige functionaliteit is "
+"daardoor mogelijk niet beschikbaar. Controleer uw API key."
 
-msgid "error_woocommerce_not_installed"
-msgstr "%s vereist dat WooCommerce is geïnstalleerd!"
+msgid "error_settings_api_key_missing"
+msgstr "MyParcel API key mist of is ongeldig. Controleer je %sinstellingen%s."
+
+msgid "notice_admin_api_key_missing"
+msgstr "Vul je API key in in de %sMyParcel instellingen%s."
+
+msgid "notice_settings_fetched_from_api"
+msgstr "Instellingen opgehaald uit de backoffice."
+
+msgid "diagnostics_status_api_key_missing"
+msgstr "Vul je MyParcel API key in."
+
+msgid "settings_trigger_manual_update_button"
+msgstr "Verversen"
+
+msgid "settings_trigger_manual_update"
+msgstr "Ververs instellingen uit backoffice"
+
+msgid "settings_trigger_manual_update_help_text"
+msgstr ""
+"Druk op de knop om de instellingen uit je MyParcel backoffice opnieuw op te "
+"halen. Alleen nodig wanneer je je instellingen voor deze shop daar hebt "
+"aangepast."
 
 msgid "error_woocommerce_minimum_version"
-msgstr "%s vereist een minimale WooCommerce {woocommerce_version} versie!"
+msgstr "vereist een minimale WooCommerce {woocommerce_version} versie!"
 
-msgid "error_button_install_woocommerce"
-msgstr "Installeer WooCommerce"
+msgid "error_woocommerce_not_activated"
+msgstr "vereist dat WooCommerce geactiveerd is!"
 
-msgid "error_button_woocommerce_activate"
-msgstr "Activeer WooCommerce"
-
-msgid "error_button_turn_off_myparcel_plugin"
-msgstr "MyParcel plugin uitschakelen"
-
-msgid "export_hint_how_many_times"
-msgstr "Bestelling %s × geëxporteerd naar MyParcel."
+msgid "error_woocommerce_not_installed"
+msgstr "vereist dat WooCommerce is geïnstalleerd!"
 
 msgid "export_hint_already_exported"
 msgstr "Volledige order staat in MyParcel backoffice."
 
 msgid "export_hint_change_parcel"
 msgstr "Verander het pakkettype of maak meerdere labels aan."
+
+msgid "export_hint_how_many_times"
+msgstr "Bestelling %s × geëxporteerd naar MyParcel."
+
+msgid "export_hint_no_label_created_yet"
+msgstr "Er is nog geen label aangemaakt."
 
 msgid "export_hint_not_exported"
 msgstr "Bestelling niet geëxporteerd naar MyParcel."
@@ -67,6 +154,9 @@ msgstr "Toont bezorgdatum bij verzendopties tijdens afrekenen."
 
 msgid "feature_allow_show_delivery_date_title"
 msgstr "Toon bezorgdatum"
+
+msgid "house_number"
+msgstr "Nummer"
 
 msgid "hs_code"
 msgstr "HS Code"
@@ -83,6 +173,9 @@ msgstr "Verzekerd bedrag"
 msgid "insured_for"
 msgstr "Verzekerd voor"
 
+msgid "message_orders_exported_successfully"
+msgstr "%s bestellingen nu beschikbaar in MyParcel Backoffice."
+
 msgid "myparcel_bulk_action_export"
 msgstr "MyParcel: Exporteren"
 
@@ -92,14 +185,11 @@ msgstr "MyParcel: Exporteren & Printen"
 msgid "myparcel_bulk_action_print"
 msgstr "MyParcel: Printen"
 
-msgid "myparcel_shipment_created"
-msgstr "MyParcel zending aangemaakt"
-
 msgid "myparcel_export"
 msgstr "MyParcel export:"
 
-msgid "message_orders_exported_successfully"
-msgstr "%s bestellingen nu beschikbaar in MyParcel Backoffice."
+msgid "myparcel_shipment_created"
+msgstr "MyParcel zending aangemaakt"
 
 msgid "not_active"
 msgstr "Niet actief"
@@ -110,14 +200,54 @@ msgstr "Afhaallocatie:"
 msgid "product_options_country_of_origin"
 msgstr "Land van herkomst"
 
+msgid "product_variable_country_of_origin"
+msgstr "Land van herkomst variabel product"
+
+msgid "product_variable_country_of_origin_description"
+msgstr "Dit land van herkomst overschrijft het land van herkomst van het product"
+
+msgid "setting_account_settings_manual_update_hint"
+msgstr ""
+"Je website moet een SSL-verbinding (https://) hebben om automatisch "
+"gegevens bij te kunnen werken vanuit jouw account."
+
+msgid "setting_activate_in_your_backoffice_hint"
+msgstr "Activeer %s in uw MyParcel backoffice om te kunnen gebruiken."
+
 msgid "setting_automatic_order_status"
 msgstr "Automatische orderstatus"
+
+msgid "setting_carrier_cut_off_time_help_text"
+msgstr ""
+"Het tijdstip waarop je stopt met het verwerken van orders voor de dag "
+"(format: uu:mm)"
+
+msgid "setting_carrier_cut_off_time_title"
+msgstr "Sluitingstijd"
 
 msgid "setting_carrier_delivery_days_window_help_text"
 msgstr "Aantal dagen dat een klant de bezorging kan uitstellen"
 
 msgid "setting_carrier_delivery_days_window_title"
 msgstr "Leverdagen venster"
+
+msgid "setting_carrier_delivery_enabled"
+msgstr "%s bezorging inschakelen"
+
+msgid "setting_carrier_drop_off_days_help_text"
+msgstr "Dagen van de week waarop je je pakket afgeeft bij %s"
+
+msgid "setting_carrier_drop_off_days_title"
+msgstr "Afleverdagen"
+
+msgid "setting_carrier_drop_off_delay_help_text"
+msgstr "Aantal dagen dat je nodig hebt om een order te verwerken."
+
+msgid "setting_carrier_drop_off_delay_title"
+msgstr "Verwerkingstijd"
+
+msgid "setting_carrier_pickup_enabled"
+msgstr "%s afhalen inschakelen"
 
 msgid "setting_change_order_status_after"
 msgstr "Verander order status na"
@@ -141,6 +271,20 @@ msgstr ""
 "Land van herkomst is verplicht voor wereldzendingen. Standaard wordt de "
 "shoplocatie gebruikt."
 
+msgid "setting_delivery_options"
+msgstr "%s bezorgopties"
+
+msgid "setting_drop_off_point"
+msgstr "Standaard %s afleverpunt"
+
+msgid "setting_empty_digital_stamp_weight"
+msgstr "Leeg digitale postzegel gewicht"
+
+msgid "setting_empty_digital_stamp_weight_description"
+msgstr ""
+"Dit gewicht wordt opgeteld bij een zending die verstuurd wordt met een "
+"digitale postzegel."
+
 msgid "setting_export_automatic_status"
 msgstr "Automatische export bij besteling status"
 
@@ -150,17 +294,26 @@ msgstr ""
 "wijzigt. Zorg dat je 'Verwerk zendingen direct' aan hebt staan om de "
 "barcode terug te krijgen."
 
-msgid "setting_modus_help_text"
-msgstr ""
+msgid "setting_export_settings"
+msgstr "%s export instellingen"
+
+msgid "setting_export_settings_description"
+msgstr "Deze instellingen gelden voor %s zendingen die je aanmaakt in de backend."
 
 msgid "setting_mode_pps_title"
 msgstr "Exporteer volledige order"
 
+msgid "setting_mode_shipments_title"
+msgstr "Exporteer alleen verzendinformatie"
+
 msgid "setting_mode_title"
 msgstr "Modus"
 
-msgid "setting_mode_shipments_title"
-msgstr "Exporteer alleen verzendinformatie"
+msgid "setting_modus_help_text"
+msgstr ""
+
+msgid "setting_pickup_options"
+msgstr "%s afhaalopties"
 
 msgid "setting_show_delivery_day_help_text"
 msgstr ""
@@ -194,6 +347,24 @@ msgstr "Meerprijs"
 msgid "settings_checkout_total_price"
 msgstr "Totaalprijs"
 
+msgid "settings_general_api_key"
+msgstr "API key"
+
+msgid "settings_general_api_key_help_text"
+msgstr "Plak hier de API key uit de MyParcel backoffice."
+
+msgid "settings_general_api_title"
+msgstr "API instellingen"
+
+msgid "settings_general_diagnostics_title"
+msgstr "Diagnostische hulpmiddelen"
+
+msgid "settings_general_general_title"
+msgstr "Algemeen"
+
+msgid "settings_general_title"
+msgstr "Algemene instellingen"
+
 msgid "settings_pickup_locations_default_view"
 msgstr "Pickup locaties standaard weergave"
 
@@ -207,7 +378,6 @@ msgid "shipment_options_age_check"
 msgstr "Leeftijdscheck 18+"
 
 msgid "shipment_options_age_check_help_text"
-
 msgstr ""
 "De leeftijdscheck is bedoeld voor pakketzendingen waarbij de ontvanger moet "
 "kunnen aantonen dat hij/zij 18+ is. Met deze optie worden \"Handtekening "
@@ -277,7 +447,6 @@ msgstr "Verzeker alle orders met een totaal prijs hoger dan het ingevulde bedrag
 
 msgid "shipment_options_insured_help_text"
 msgstr ""
-
 "Standaard zit er geen verzekering op zendingen. Als je alsnog een zending "
 "wilt verzekeren kan dat. Wij verzekeren het aankoopbedrag van een zending "
 "met een maximum van €5000. Verzekerde zendingen worden altijd alleen "
@@ -292,6 +461,14 @@ msgstr ""
 "maar kleiner dan 175 x 78 x 58 cm. Dit kost meer. Let op! Als het pakket "
 "groter dan 175 x 78 x 58 cm of zwaarder dan 30kg is, wordt het gerekend als "
 "pallet."
+
+msgid "shipment_options_large_format_from_weight"
+msgstr "Vanaf gewicht (g)"
+
+msgid "shipment_options_large_format_from_weight_help_text"
+msgstr ""
+"Vul hier in gram in vanaf welk gewicht de instelling Groot pakket "
+"geactiveerd moet worden. "
 
 msgid "shipment_options_only_recipient"
 msgstr "Alleen thuisadres"
@@ -327,8 +504,23 @@ msgstr ""
 msgid "shipment_options_signature_title"
 msgstr "Handtekening bij levering titel"
 
+msgid "street_name"
+msgstr "Straatnaam"
+
+msgid "suffix"
+msgstr "Toev."
+
+msgid "tomorrow"
+msgstr "Morgen "
+
+msgid "warning_webhook_has_error"
+msgstr "Webhook %s niet actief vanwege een error. Zie hiervoor de logs."
+
 msgid "weight"
 msgstr "Gewicht"
+
+msgid "woocommerce_myparcel"
+msgstr "WooCommerce MyParcel"
 
 msgid "(Unknown)"
 msgstr "(Onbekend)"
@@ -452,14 +644,8 @@ msgstr "Opmerking klant"
 msgid "Customs shipment type"
 msgstr "Type douanezending"
 
-msgid "Cut-off time"
-msgstr "Sluitingstijd"
-
 msgid "Cut-off time on Saturday"
 msgstr "Sluitingstijd op zaterdag"
-
-msgid "Days of the week on which you hand over parcels to PostNL"
-msgstr "Dagen van de week waarop je je pakket afgeeft bij PostNL"
 
 msgid "Default"
 msgstr "Standaard"
@@ -509,15 +695,6 @@ msgstr "PDF downloaden"
 msgid "DPD"
 msgstr "DPD"
 
-msgid "Drop-off days"
-msgstr "Afleverdagen"
-
-msgid "Drop-off delay"
-msgstr "Verwerkingstijd"
-
-msgid "action_email_return_label"
-msgstr "E-mail retourlabel"
-
 msgid "Empty parcel weight"
 msgstr "Leeg pakket gewicht"
 
@@ -526,12 +703,6 @@ msgstr "Bezorgopties inschakelen voor backorders"
 
 msgid "Enable MyParcel delivery options"
 msgstr "MyParcel bezorgopties inschakelen"
-
-msgid "Enable PostNL delivery"
-msgstr "PostNL bezorging inschakelen"
-
-msgid "Enable PostNL pickup"
-msgstr "PostNL afhalen inschakelen"
 
 msgid ""
 "Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
@@ -576,12 +747,6 @@ msgstr "Gewicht per collo is %1$s kg, maximum toegestaan is %2$s kg."
 
 msgid "Export options"
 msgstr "Export opties"
-
-msgid "action_export_to_myparcel"
-msgstr "Exporteer naar MyParcel"
-
-msgid "error_export_orderid_failed_because"
-msgstr "Bestelling %1$s niet geëxporteerd naar MyParcel. %2$s"
 
 msgid "Extra large size"
 msgstr "Extra grote verpakking"
@@ -738,18 +903,6 @@ msgstr "Geen e-mailadres gevonden in order."
 msgid "No HS code found in MyParcel settings"
 msgstr "Geen HS code gevonden in de MyParcel instellingen"
 
-msgid "export_hint_no_label_created_yet"
-msgstr "Er is nog geen label aangemaakt."
-
-msgid "No."
-msgstr "Nr."
-
-msgid "Number"
-msgstr "Nummer"
-
-msgid "Number of days you need to process an order."
-msgstr "Aantal dagen dat je nodig hebt om een order te verwerken."
-
 msgid "Number of labels"
 msgstr "Aantal labels"
 
@@ -813,20 +966,8 @@ msgstr "Postcode/plaats combinatie onbekend"
 msgid "PostNL"
 msgstr "PostNL"
 
-msgid "PostNL delivery options"
-msgstr "PostNL bezorgopties"
-
-msgid "PostNL export settings"
-msgstr "PostNL export instellingen"
-
-msgid "PostNL pickup options"
-msgstr "PostNL afhaalopties"
-
 msgid "Print"
 msgstr "Print"
-
-msgid "action_print_myparcel_label"
-msgstr "Print MyParcel label"
 
 msgid "printed - digital stamp"
 msgstr "geprint - digitale postzegel"
@@ -897,17 +1038,8 @@ msgstr "Standaardlevering"
 msgid "Standard printer (A4)"
 msgstr "Standaard printer (A4)"
 
-msgid "Status"
-msgstr "Status"
-
 msgid "Street"
 msgstr "Straat"
-
-msgid "Street name"
-msgstr "Straatnaam"
-
-msgid "Suffix"
-msgstr "Toev."
 
 msgid "The label has been printed."
 msgstr "Het label is geprint."
@@ -946,13 +1078,6 @@ msgstr "De geselecteerde bestellingen zijn nog niet geëxporteerd naar MyParcel!
 msgid "Theme \"%s\" detected."
 msgstr "Thema \"%s\" gedetecteerd."
 
-msgid ""
-"These settings will be applied to PostNL shipments you create in the "
-"backend."
-msgstr ""
-"Deze instellingen gelden voor PostNL zendingen die je aanmaakt in de "
-"backend."
-
 msgid "This option enables you to continue printing where you left off last time"
 msgstr ""
 "Met deze optie kun je verder gaan met printen waar je de laatste keer was "
@@ -969,19 +1094,11 @@ msgstr ""
 "MyParcel plugin geactiveerd is. De adres gegevens kunnen handmatig worden "
 "toegevoegd in het order scherm."
 
-msgid "Time at which you stop processing orders for the day (format: hh:mm)"
-msgstr ""
-"Het tijdstip waarop je stopt met het verwerken van orders voor de dag "
-"(format: uu:mm)"
-
 msgid "Title before the barcode"
 msgstr "Titel voor de barcode"
 
 msgid "Titles"
 msgstr "Titels"
-
-msgid "tomorrow"
-msgstr "Morgen "
 
 msgid "Total weight"
 msgstr "Totaal gewicht"
@@ -1009,9 +1126,6 @@ msgstr "Ongefrankeerd"
 
 msgid "View logs"
 msgstr "Logs weergeven"
-
-msgid "woocommerce_myparcel"
-msgstr "WooCommerce MyParcel"
 
 msgid ""
 "When enabled the checkout will use the MyParcel address fields. This means "
@@ -1107,24 +1221,3 @@ msgid "You have to export the orders to MyParcel before you can print the labels
 msgstr ""
 "Je dient de orders eerst naar MyParcel te exporteren voordat je de labels "
 "kunt printen!"
-
-
-msgid "country_of_origin_variable"
-msgstr "Land van herkomst variabel product"
-
-msgid "country_of_origin_variable_description"
-msgstr "Dit land van herkomst overschrijft het land van herkomst van het product"
-
-msgid "product_variable_country_of_origin"
-msgstr "Land van herkomst variabel product"
-
-msgid "product_variable_country_of_origin_description"
-msgstr "Dit land van herkomst overschrijft het land van herkomst van het product"
-
-msgid "setting_empty_digital_stamp_weight"
-msgstr "Leeg digitale postzegel gewicht"
-
-msgid "setting_empty_digital_stamp_weight_description"
-msgstr ""
-"Dit gewicht wordt opgeteld bij een zending die verstuurd wordt met een "
-"digitale postzegel."
