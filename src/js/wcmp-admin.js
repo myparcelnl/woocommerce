@@ -970,7 +970,7 @@ jQuery(($) => {
       const isDisplay = wcmp.download_display === 'display';
       const isDownload = wcmp.download_display === 'download';
       const isPdf = response.includes('PDF');
-      const isApi = response.includes('api.myparcel.nl');
+      const isApi = response.includes('myparcel.nl/pdfs/');
 
       if (isDisplay && isPdf) {
         handlePDF(request);

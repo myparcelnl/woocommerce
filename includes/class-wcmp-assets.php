@@ -70,7 +70,7 @@ class WCMP_Assets
             "wcmp-admin",
             "wcmp",
             [
-                "api_url"                => MyParcelRequest::REQUEST_URL,
+                "api_url"                => (new MyParcelRequest())->getRequestUrl(),
                 "actions"                => [
                     "export"        => WCMP_Export::EXPORT,
                     "export_return" => WCMP_Export::EXPORT_RETURN,
