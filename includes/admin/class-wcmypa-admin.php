@@ -423,7 +423,7 @@ class WCMYPA_Admin
         <?php endif;
 
         printf(
-            '<a href="#" class="wcmp__shipment-options__show" data-order-id="%d">%s &#x25BE;</a>',
+            '<a href="#" class="wcmp__shipment-options__show" data-order-id="%d"><span class="wcmp__shipment-options__package-type">%s</span> &#x25BE;</a>',
             $order->get_id(),
             WCMP_Data::getPackageTypeHuman(
                 (new WCMP_Export())->getAllowedPackageType($order, $orderSettings->getPackageType())
