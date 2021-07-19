@@ -180,8 +180,8 @@ class WCMP_Export_Consignments
 
             // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
             if (strlen($description) >= WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
-                $length = WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH - 3;
-                $description = substr($description, 0, $length) . '...';
+                $maxLength   = WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH - 3;
+                $description = substr($description, 0, $maxLength) . '...';
             }
 
             $this->consignment->addItem(
