@@ -179,8 +179,7 @@ class WCMP_Export_Consignments
             $description = $item['name'];
 
             if (strlen($description) > WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
-                $maxLength   = WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH - 3;
-                $description = substr($description, 0, $maxLength) . '...';
+                $description = substr_replace($description, '...', WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH - 3);
             }
 
             $this->consignment->addItem(
