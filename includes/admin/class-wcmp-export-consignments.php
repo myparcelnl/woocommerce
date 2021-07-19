@@ -163,48 +163,49 @@ class WCMP_Export_Consignments
     /**
      * @return void
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
-     * @throws \ErrorException
+     * @throws \ErrorException|\JsonException
      */
     public function setCustomItems(): void
     {
         foreach ($this->order->get_items() as $item) {
             $product = $item->get_product();
 
-            if (! $product) {
-                return;
-            }
-
-            if ($product->is_virtual()) {
+            if (! $product || $product->is_virtual()) {
                 continue;
             }
 
-            $country     = $this->getCountryOfOrigin($product);
-            $description = $item["name"];
+            $amount      = (int) ($item['qty'] ?? self::DEFAULT_PRODUCT_QUANTITY);
+            $weight      = WCMP_Export::convertWeightToGrams($product->get_weight());
+            $description = $item['name'];
 
             // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
             if (strlen($description) >= WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
-                $description = substr($description, 0, 47) . "...";
+                $length = WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH - 3;
+                $description = substr($description, 0, $length) . '...';
             }
-
-            // Amount
-            $amount = (int) ($item["qty"] ?? self::DEFAULT_PRODUCT_QUANTITY);
-
-            // Weight (total item weight in grams)
-            $weight = WCMP_Export::convertWeightToGrams($product->get_weight());
-
-            $total = (int) $item["line_total"];
-            $tax   = (int) $item["line_tax"];
-            $value = round(($total + $tax) * 100);
 
             $this->consignment->addItem(
                 (new MyParcelCustomsItem())->setDescription($description)
                     ->setAmount($amount)
                     ->setWeight($weight)
-                    ->setItemValue($value)
-                    ->setCountry($country)
+                    ->setItemValue($this->getValueOfItem($item))
+                    ->setCountry($this->getCountryOfOrigin($product))
                     ->setClassification($this->getHsCode($product))
             );
         }
+    }
+
+    /**
+     * @param WC_Order_Item $item
+     *
+     * @return int
+     */
+    private function getValueOfItem(WC_Order_Item $item): int
+    {
+        $total = (int) $item['line_total'];
+        $tax   = (int) $item['line_tax'];
+
+        return round(($total + $tax) * 100);
     }
 
     /**
