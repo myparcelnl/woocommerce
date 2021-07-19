@@ -163,7 +163,7 @@ class WCMP_Export_Consignments
     /**
      * @return void
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
-     * @throws \ErrorException|\JsonException
+     * @throws \ErrorException
      */
     public function setCustomItems(): void
     {
@@ -178,8 +178,7 @@ class WCMP_Export_Consignments
             $weight      = WCMP_Export::convertWeightToGrams($product->get_weight());
             $description = $item['name'];
 
-            // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
-            if (strlen($description) >= WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
+            if (strlen($description) > WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
                 $maxLength   = WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH - 3;
                 $description = substr($description, 0, $maxLength) . '...';
             }
@@ -205,7 +204,7 @@ class WCMP_Export_Consignments
         $total = (int) $item['line_total'];
         $tax   = (int) $item['line_tax'];
 
-        return round(($total + $tax) * 100);
+        return ($total + $tax) * 100;
     }
 
     /**
