@@ -316,7 +316,7 @@ class OrderSettings
      */
     private function setDigitalStampRangeWeight(): void
     {
-        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $this->getPackageType()){
+        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $this->getPackageType()) {
             $emptyWeight  = (float) WCMYPA()->setting_collection->getByName(
                 WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
             );
