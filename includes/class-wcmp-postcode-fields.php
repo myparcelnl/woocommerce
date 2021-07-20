@@ -66,9 +66,8 @@ class WCMP_NL_Postcode_Fields
             // Load custom order data.
             add_filter('woocommerce_load_order_data', [$this, 'load_order_data']);
 
-            // Custom shop_order details.
-            add_filter('woocommerce_admin_billing_fields', [$this, 'addSeparateAdminAddressFields']);
-            add_filter('woocommerce_admin_shipping_fields', [$this, 'addSeparateAdminAddressFields']);
+            add_filter('woocommerce_admin_billing_fields', [$this, 'addAdminSplitAddressFields']);
+            add_filter('woocommerce_admin_shipping_fields', [$this, 'addAdminSplitAddressFields']);
             add_filter('woocommerce_found_customer_details', [$this, 'customer_details_ajax']);
             add_action('save_post', [$this, 'save_custom_fields']);
 
@@ -432,7 +431,7 @@ class WCMP_NL_Postcode_Fields
      *
      * @return array
      */
-    public function addSeparateAdminAddressFields(array $fields): array
+    public function addAdminSplitAddressFields(array $fields): array
     {
         return array_merge_recursive(
             $fields,
