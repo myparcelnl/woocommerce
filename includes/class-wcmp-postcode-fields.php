@@ -67,6 +67,8 @@ class WCMP_NL_Postcode_Fields
             add_filter('woocommerce_load_order_data', [$this, 'load_order_data']);
 
             // Custom shop_order details.
+            add_filter('woocommerce_admin_billing_fields', [$this, 'addSeparateAdminAddressFields']);
+            add_filter('woocommerce_admin_shipping_fields', [$this, 'addSeparateAdminAddressFields']);
             add_filter('woocommerce_found_customer_details', [$this, 'customer_details_ajax']);
             add_action('save_post', [$this, 'save_custom_fields']);
 
@@ -265,53 +267,50 @@ class WCMP_NL_Postcode_Fields
 
     /**
      * @param array  $fields
-     * @param string $country
      *
      * @return array
      */
-    public function modifyBillingFields(array $fields, string $country = ''): array
+    public function modifyBillingFields(array $fields): array
     {
-        return $this->addSplitAddressFields($fields, $country, 'billing');
+        return $this->addSplitAddressFields($fields, 'billing');
     }
 
     /**
-     * @param array  $fields
-     * @param string $country
+     * @param array $fields
      *
      * @return array
      */
-    public function modifyShippingFields(array $fields, string $country = ''): array
+    public function modifyShippingFields(array $fields): array
     {
-        return $this->addSplitAddressFields($fields, $country, 'shipping');
+        return $this->addSplitAddressFields($fields, 'shipping');
     }
 
     /**
      * New checkout and account page billing/shipping fields
      *
-     * @param  array  $fields Default fields.
-     * @param  string $country
-     * @param  string $form
+     * @param array  $fields Default fields.
+     * @param string $form
      *
      * @return array
      */
-    public function addSplitAddressFields(array $fields, string $country, string $form): array
+    public function addSplitAddressFields(array $fields, string $form): array
     {
         return array_merge_recursive(
             $fields,
             [
                 "{$form}_street_name"         => [
-                    'label'    => __("Street name", "woocommerce-myparcel"),
+                    'label'    => __("street_name", "woocommerce-myparcel"),
                     'class'    => apply_filters('wcmp_custom_address_field_class', ['form-row-third first']),
                     'priority' => 60,
                 ],
                 "{$form}_house_number"        => [
-                    'label'    => __("No.", "woocommerce-myparcel"),
+                    'label'    => __("abbreviation_house_number", "woocommerce-myparcel"),
                     'class'    => apply_filters('wcmp_custom_address_field_class', ['form-row-third']),
                     'type'     => 'number',
                     'priority' => 61,
                 ],
                 "{$form}_house_number_suffix" => [
-                    'label'     => __("Suffix", "woocommerce-myparcel"),
+                    'label'     => __("suffix", "woocommerce-myparcel"),
                     'class'     => apply_filters('wcmp_custom_address_field_class', ['form-row-third last']),
                     'maxlength' => 4,
                     'priority'  => 62,
@@ -426,6 +425,31 @@ class WCMP_NL_Postcode_Fields
         $data['shipping_house_number_suffix'] = '';
 
         return $data;
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return array
+     */
+    public function addSeparateAdminAddressFields(array $fields): array
+    {
+        return array_merge_recursive(
+            $fields,
+            [
+                'street_name'         => [
+                    'label' => __('street_name', 'woocommerce-myparcel'),
+                    'show'  => true,
+                ],
+                'house_number'        => [
+                    'label' => __('house_number', 'woocommerce-myparcel'),
+                    'show'  => true,
+                ],
+                'house_number_suffix' => [
+                    'label' => __('suffix', 'woocommerce-myparcel'),
+                    'show'  => true,
+                ]
+            ]);
     }
 
     /**
