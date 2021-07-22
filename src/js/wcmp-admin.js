@@ -60,6 +60,7 @@ jQuery(($) => {
     printQueueOffset: '.wcmp__print-queue__offset',
     shipmentOptions: '.wcmp__shipment-options',
     shipmentOptionsDialog: '.wcmp__shipment-options-dialog',
+    shipmentOptionsPackageType: '.wcmp__shipment-options__package-type',
     shipmentOptionsSaveButton: '.wcmp__shipment-options__save',
     shipmentOptionsShowButton: '.wcmp__shipment-options__show',
     shipmentSettingsWrapper: '.wcmp__shipment-settings-wrapper',
@@ -82,8 +83,8 @@ jQuery(($) => {
   addDependencies();
   printQueuedLabels();
 
-  const timeoutAfterRequest = 200;
-  const baseEasing = 300;
+  const TIMEOUT_AFTER_REQUEST = 200;
+  const ANIMATION_DURATION = 300;
 
   /**
    * Add event listeners.
@@ -112,7 +113,7 @@ jQuery(($) => {
     /**
      * Bulk actions.
      */
-    $('#doaction, #doaction2').click(doBulkAction);
+    $('#doaction').click(doBulkAction);
 
     /**
      * Add offset dialog when address labels option is selected.
@@ -334,7 +335,7 @@ jQuery(($) => {
          */
         function handle(event, easing) {
           if (easing === undefined) {
-            easing = baseEasing;
+            easing = ANIMATION_DURATION;
           }
 
           if (event) {
@@ -512,6 +513,38 @@ jQuery(($) => {
   }
 
   /**
+   * Updates the package type link that opens the shipment options dialog with the new package type. Determined by given
+   *  select with package type options.
+   *
+   * @param {jQuery} packageTypeSelect
+   */
+  function updateShipmentOptionsDialogPackageType(packageTypeSelect) {
+    const element = packageTypeSelect[0];
+    const options = Array
+      .from(element.options)
+      .map(({value, innerText: label, selected}) => ({value, label, selected}));
+
+    // Extract the order id from the element's name attribute.
+    const match = element.name.match(/\d+/);
+    const orderId = match ? match[0] : null;
+
+    if (!orderId) {
+      return;
+    }
+
+    const packageTypeSpan = $(`${selectors.shipmentOptionsShowButton}[data-order-id="${orderId}"] > ${selectors.shipmentOptionsPackageType}`);
+    const newPackageType = options.find(({selected}) => selected);
+
+    // Show a visual effect when swapping the text for the new package type.
+    packageTypeSpan.fadeOut(ANIMATION_DURATION);
+    setTimeout(() => {
+      packageTypeSpan
+        .text(newPackageType.label)
+        .fadeIn(ANIMATION_DURATION);
+    }, ANIMATION_DURATION);
+  }
+
+  /**
    * Save the shipment options in the bulk form.
    */
   function saveShipmentOptions() {
@@ -525,7 +558,10 @@ jQuery(($) => {
         security: wcmp.nonce,
       },
       afterDone() {
-        setTimeout(() => form.slideUp(), timeoutAfterRequest);
+        updateShipmentOptionsDialogPackageType(form.find('[name$="[package_type]"'));
+        setTimeout(() => {
+          form.slideUp();
+        }, TIMEOUT_AFTER_REQUEST);
       },
     });
   }
@@ -1084,6 +1120,7 @@ jQuery(($) => {
       wrappers: [
         selectors.shipmentOptions,
         selectors.shipmentOptionsShowButton,
+        selectors.shipmentOptionsPackageType,
         // Add the tipTip ids as well so clicking a tipTip inside shipment options won't close the form.
         selectors.tipTipHolder,
         selectors.tipTipContent,

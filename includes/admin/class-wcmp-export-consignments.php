@@ -170,37 +170,40 @@ class WCMP_Export_Consignments
         foreach ($this->order->get_items() as $item) {
             $product = $item->get_product();
 
-            if (! $product) {
-                return;
+            if (! $product || $product->is_virtual()) {
+                continue;
             }
 
-            $country     = $this->getCountryOfOrigin($product);
-            $description = $item["name"];
+            $amount      = (int) ($item['qty'] ?? self::DEFAULT_PRODUCT_QUANTITY);
+            $weight      = WCMP_Export::convertWeightToGrams($product->get_weight());
+            $description = $item['name'];
 
-            // GitHub issue https://github.com/myparcelnl/woocommerce/issues/190
-            if (strlen($description) >= WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
-                $description = substr($description, 0, 47) . "...";
+            if (strlen($description) > WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
+                $description = substr_replace($description, '...', WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH - 3);
             }
-
-            // Amount
-            $amount = (int) ($item["qty"] ?? self::DEFAULT_PRODUCT_QUANTITY);
-
-            // Weight (total item weight in grams)
-            $weight = WCMP_Export::convertWeightToGrams($product->get_weight());
-
-            $total = (int) $item["line_total"];
-            $tax   = (int) $item["line_tax"];
-            $value = round(($total + $tax) * 100);
 
             $this->consignment->addItem(
                 (new MyParcelCustomsItem())->setDescription($description)
                     ->setAmount($amount)
                     ->setWeight($weight)
-                    ->setItemValue($value)
-                    ->setCountry($country)
+                    ->setItemValue($this->getValueOfItem($item))
+                    ->setCountry($this->getCountryOfOrigin($product))
                     ->setClassification($this->getHsCode($product))
             );
         }
+    }
+
+    /**
+     * @param WC_Order_Item $item
+     *
+     * @return int
+     */
+    private function getValueOfItem(WC_Order_Item $item): int
+    {
+        $total = (int) $item['line_total'];
+        $tax   = (int) $item['line_tax'];
+
+        return ($total + $tax) * 100;
     }
 
     /**
@@ -262,29 +265,12 @@ class WCMP_Export_Consignments
      */
     public function getCountryOfOrigin(WC_Product $product): string
     {
-        $defaultCountryOfOrigin = $this->getSetting(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
-        $productCountryOfOrigin = WCX_Product::get_meta($product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
+        $defaultCountryOfOrigin   = $this->getSetting(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
+        $productCountryOfOrigin   = WCX_Product::get_meta($product,WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
+        $variationCountryOfOrigin = WCX_Product::get_meta($product,WCMYPA_Admin::META_COUNTRY_OF_ORIGIN_VARIATION, true);
+        $fallbackCountryOfOrigin  = WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
 
-        return $this->getPriorityOrigin($defaultCountryOfOrigin, $productCountryOfOrigin);
-    }
-
-    /**
-     * @param string|null $defaultCountryOfOrigin
-     * @param string|null  $productCountryOfOrigin
-     *
-     * @return string
-     */
-    public function getPriorityOrigin(?string $defaultCountryOfOrigin, ?string $productCountryOfOrigin): string
-    {
-        if ($productCountryOfOrigin) {
-            return $productCountryOfOrigin;
-        }
-
-        if ($defaultCountryOfOrigin) {
-            return $defaultCountryOfOrigin;
-        }
-
-        return WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
+        return $variationCountryOfOrigin ?: $productCountryOfOrigin ?: $defaultCountryOfOrigin ?: $fallbackCountryOfOrigin;
     }
 
     /**

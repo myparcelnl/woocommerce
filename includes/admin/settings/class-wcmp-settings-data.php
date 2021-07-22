@@ -700,6 +700,7 @@ class WCMP_Settings_Data
                 "name"      => WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT,
                 "type"      => "number",
                 "default"   => 0,
+                "step"      => 0.001,
                 "label"     => sprintf(
                     "%s (%s)",
                     __("Empty parcel weight", "woocommerce-myparcel"),
@@ -708,6 +709,21 @@ class WCMP_Settings_Data
                 "help_text" => __(
                     "Default weight of your empty parcel.",
                     "woocommerce-myparcel"
+                ),
+            ],
+            [
+                'name'      => WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT,
+                'type'      => 'number',
+                'default'   => 0,
+                "step"      => 0.001,
+                'label'     => sprintf(
+                    '%s (%s)',
+                    __('setting_empty_digital_stamp_weight', 'woocommerce-myparcel'),
+                    get_option('woocommerce_weight_unit')
+                ),
+                'help_text' => __(
+                    'setting_empty_digital_stamp_weight_description',
+                    'woocommerce-myparcel'
                 ),
             ],
             [
