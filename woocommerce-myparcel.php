@@ -36,7 +36,7 @@ if (! class_exists('WCMYPA')) :
         public $plugin_basename;
 
         /**
-         * @var null
+         * @var object|null
          */
         protected static $_instance = null;
 
@@ -206,7 +206,7 @@ if (! class_exists('WCMYPA')) :
          */
         public function load_classes(): void
         {
-            if (! empty($this->checkInstalledWooCommerceVersion())) {
+            if ($this->checkInstalledWooCommerceVersion()) {
                 add_action('admin_notices', [$this, 'showRequiredWooCommerceNotification']);
 
                 return;
@@ -273,15 +273,15 @@ if (! class_exists('WCMYPA')) :
                     __('woocommerce_myparcel', 'woocommerce-myparcel'),
                     $message,
                     $button,
-                    $this->getDeactivateMyParcelButton()
+                    $this->deactivatePlugin()
                 );
             }
         }
 
         /**
-         * @return array|null
+         * @return bool
          */
-        public function checkInstalledWooCommerceVersion(): ?array
+        public function checkInstalledWooCommerceVersion(): bool
         {
             if (! empty($this->getWooCommerceData()) && ! $this->woocommerceVersionMeets()) {
                 $errorMessage = __("error_woocommerce_minimum_version", "woocommerce-myparcel");
@@ -298,7 +298,7 @@ if (! class_exists('WCMYPA')) :
                 $this->setAdminErrorMessage(__('error_woocommerce_not_installed', 'woocommerce-myparcel'), $this->getInstallWooCommerceButton());
             }
 
-            return $this->errorMessage;
+            return (bool) $this->errorMessage;
         }
 
         /**
@@ -319,7 +319,7 @@ if (! class_exists('WCMYPA')) :
          *
          * @return string
          */
-        public function generateErrorButtons(string $path, string $action, string $message, string $class): string
+        public function generateButtons(string $path, string $action, string $message, string $class): string
         {
             return sprintf(
                 '<a href="%s" class="%s">%s</a>',
@@ -330,7 +330,7 @@ if (! class_exists('WCMYPA')) :
         }
 
         /**
-         * @return string
+         * @return string|null
          */
         public function getActivateWooCommerceButton(): ?string
         {
@@ -340,16 +340,16 @@ if (! class_exists('WCMYPA')) :
                 $message = __('error_button_woocommerce_activate', 'woocommerce-myparcel');
                 $class   = 'button-primary';
 
-                return $this->generateErrorButtons($path, $action, $message, $class);
+                return $this->generateButtons($path, $action, $message, $class);
             }
 
             return null;
         }
 
         /**
-         * @return string
+         * @return string|null
          */
-        public function getDeactivateMyParcelButton(): ?string
+        public function deactivatePlugin(): ?string
         {
             if (current_user_can('deactivate_plugin', 'woocommerce-myparcel/woocommerce-myparcel.php')) {
                 $path    = 'plugins.php?action=deactivate&plugin=woocommerce-myparcel/woocommerce-myparcel.php';
@@ -357,7 +357,7 @@ if (! class_exists('WCMYPA')) :
                 $message = __('error_button_turn_off_myparcel_plugin', 'woocommerce-myparcel');
                 $class   = 'button-secondary';
 
-                return $this->generateErrorButtons($path, $action, $message, $class);
+                return $this->generateButtons($path, $action, $message, $class);
             }
 
             return null;
@@ -378,7 +378,7 @@ if (! class_exists('WCMYPA')) :
             $message = __('error_button_install_woocommerce', 'woocommerce-myparcel');
             $class   = 'button-primary';
 
-            return $this->generateErrorButtons($path, $action, $message, $class);
+            return $this->generateButtons($path, $action, $message, $class);
         }
 
         /**
@@ -501,7 +501,7 @@ if (! class_exists('WCMYPA')) :
          */
         public function initSettings(): void
         {
-            if (! $this->phpVersionMeets(\WCMYPA::PHP_VERSION_REQUIRED)) {
+            if (! $this->phpVersionMeets(self::PHP_VERSION_REQUIRED)) {
                 $this->general_settings  = get_option('woocommerce_myparcel_general_settings');
                 $this->export_defaults   = get_option('woocommerce_myparcel_export_defaults_settings');
                 $this->checkout_settings = get_option('woocommerce_myparcel_checkout_settings');
