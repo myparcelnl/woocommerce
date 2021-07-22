@@ -20,19 +20,24 @@ if (! class_exists('WCMYPA')) :
 
     class WCMYPA
     {
-        /**
-         * Translations domain
-         */
-        const DOMAIN                       = 'woocommerce-myparcel';
-        const NONCE_ACTION                 = 'wc_myparcel';
-        const PHP_VERSION_7_1              = '7.1';
-        const WOOCOMMERCE_VERSION_REQUIRED = '5.1.0';
-        const PHP_VERSION_REQUIRED         = self::PHP_VERSION_7_1;
+        public const  NONCE_ACTION                 = 'wc_myparcel';
+        private const TRANSLATION_DOMAIN           = 'woocommerce-myparcel';
+        private const WOOCOMMERCE_VERSION_REQUIRED = '5.1.0';
+        private const PHP_VERSION_REQUIRED         = '7.1';
 
+        /**
+         * @var string
+         */
         public $version = '4.4.1';
 
+        /**
+         * @var string
+         */
         public $plugin_basename;
 
+        /**
+         * @var null
+         */
         protected static $_instance = null;
 
         /**
@@ -40,7 +45,10 @@ if (! class_exists('WCMYPA')) :
          */
         public $setting_collection;
 
-        public $errorMessage = [];
+        /**
+         * @var array|null
+         */
+        public $errorMessage = null;
 
         /**
          * @var string
@@ -60,8 +68,10 @@ if (! class_exists('WCMYPA')) :
         /**
          * Main Plugin Instance
          * Ensures only one instance of plugin is loaded or can be loaded.
+         *
+         * @return self|null
          */
-        public static function instance()
+        public static function instance(): ?self
         {
             if (is_null(self::$_instance)) {
                 self::$_instance = new self();
@@ -91,10 +101,10 @@ if (! class_exists('WCMYPA')) :
         /**
          * Define constant if not already set
          *
-         * @param string      $name
-         * @param string|bool $value
+         * @param string $name
+         * @param string $value
          */
-        private function define($name, $value)
+        private function define(string $name, string $value): void
         {
             if (! defined($name)) {
                 define($name, $value);
@@ -105,9 +115,9 @@ if (! class_exists('WCMYPA')) :
          * Load the translation / text-domain files
          * Note: the first-loaded translation file overrides any following ones if the same translation is present
          */
-        public function translations()
+        public function translations(): void
         {
-            $locale = apply_filters('plugin_locale', get_locale(), self::DOMAIN);
+            $locale = apply_filters('plugin_locale', get_locale(), self::TRANSLATION_DOMAIN);
             $dir    = trailingslashit(WP_LANG_DIR);
 
             /**
@@ -118,20 +128,20 @@ if (! class_exists('WCMYPA')) :
              *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
              */
             load_textdomain(
-                self::DOMAIN,
-                $dir . 'woocommerce-myparcel/' . self::DOMAIN . '-' . $locale . '.mo'
+                self::TRANSLATION_DOMAIN,
+                $dir . 'woocommerce-myparcel/' . self::TRANSLATION_DOMAIN . '-' . $locale . '.mo'
             );
-            load_textdomain(self::DOMAIN, $dir . 'plugins/' . self::DOMAIN . '-' . $locale . '.mo');
-            load_plugin_textdomain(self::DOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages');
+            load_textdomain(self::TRANSLATION_DOMAIN, $dir . 'plugins/' . self::TRANSLATION_DOMAIN . '-' . $locale . '.mo');
+            load_plugin_textdomain(self::TRANSLATION_DOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages');
         }
 
         /**
          * Load the main plugin classes and functions
          */
-        public function includes()
+        public function includes(): void
         {
             // Use php version 5.6
-            if (! $this->phpVersionMeets(WCMYPA::PHP_VERSION_7_1)) {
+            if (! $this->phpVersionMeets(WCMYPA::PHP_VERSION_REQUIRED)) {
                 $this->includes = $this->plugin_path() . "/includes_php56";
 
                 // include compatibility classes
@@ -194,21 +204,21 @@ if (! class_exists('WCMYPA')) :
         /**
          * Instantiate classes when WooCommerce is activated
          */
-        public function load_classes()
+        public function load_classes(): void
         {
-            if (! empty($this->isWooCommerceActive())) {
-                add_action('admin_notices', [$this, 'needWoocommerce']);
+            if (! empty($this->checkInstalledWooCommerceVersion())) {
+                add_action('admin_notices', [$this, 'showRequiredWooCommerceNotification']);
 
                 return;
             }
 
             if (! $this->phpVersionMeets(self::PHP_VERSION_REQUIRED)) {
-                add_action('admin_notices', [$this, 'required_php_version']);
+                add_action('admin_notices', [$this, 'showRequiredPhpNotification']);
 
                 return;
             }
 
-            if (! $this->phpVersionMeets(\WCMYPA::PHP_VERSION_7_1)) {
+            if (! $this->phpVersionMeets(\WCMYPA::PHP_VERSION_REQUIRED)) {
                 // php 5.6
                 $this->initSettings();
                 $this->includes();
@@ -220,130 +230,161 @@ if (! class_exists('WCMYPA')) :
         }
 
         /**
+         * @return bool
+         */
+        public function isWooCommerceInstalled(): bool
+        {
+            return isset(get_plugins()['woocommerce/woocommerce.php']);
+        }
+
+        /**
+         * @return array
+         */
+        public function getWooCommerceData(): array
+        {
+            if ($this->isWooCommerceInstalled()) {
+                return get_plugin_data(WP_PLUGIN_DIR . '/woocommerce/woocommerce.php');
+            }
+
+            return [];
+        }
+
+        /**
          * Check if woocommerce is activated
          *
          * @return bool
          */
-        public function is_woocommerce_activated(): bool
+        public function isWooCommerceActivated(): bool
         {
-            $blog_plugins = get_option('active_plugins', []);
-            $site_plugins = get_site_option('active_sitewide_plugins', []);
-
-            if (in_array('woocommerce/woocommerce.php', $blog_plugins)
-                || isset($site_plugins['woocommerce/woocommerce.php'])) {
-                return true;
-            } else {
-                return false;
-            }
+            return is_plugin_active('woocommerce/woocommerce.php');
         }
 
         /**
-         * WooCommerce not active notice.
+         * Notification for the minimum WooCommerce version
          */
-        public function needWoocommerce(): void
+        public function showRequiredWooCommerceNotification(): void
         {
-            $message          = $this->errorMessage['message'] ?? null;
-            $button           = $this->errorMessage['button'] ?? null;
+            $message = $this->errorMessage['message'];
+            $button  = $this->errorMessage['button'];
 
             if ($message) {
-                $error   = sprintf(
+                echo sprintf(
+                    '<div class="notice notice-error"><p><strong>%s</strong> %s</p><p>%s %s</p></div>',
+                    __('woocommerce_myparcel', 'woocommerce-myparcel'),
                     $message,
-                    '<strong>' . esc_html__('woocommerce_myparcel', 'woocommerce-myparcel') . '</strong>'
+                    $button,
+                    $this->getDeactivateMyParcelButton()
                 );
-                $message = ' <div class="notice notice-error">
-                          <p>' . $error . '</p>
-                          <p>' . $button . ' ' . $this->deactivatePlugin(). '</p>
-                      </div > ';
-
-                echo $message;
             }
         }
 
         /**
-         * PHP version requirement notice
-         *
-         * @return array
+         * @return array|null
          */
-        public function isWooCommerceActive(): array
+        public function checkInstalledWooCommerceVersion(): ?array
         {
-            $installed_plugins = get_plugins();
+            if (! empty($this->getWooCommerceData()) && ! $this->woocommerceVersionMeets()) {
+                $errorMessage = __("error_woocommerce_minimum_version", "woocommerce-myparcel");
+                $error        = str_replace('{woocommerce_version}', self::WOOCOMMERCE_VERSION_REQUIRED, $errorMessage);
 
-            if (isset($installed_plugins['woocommerce/woocommerce.php']) && ! $this->woocommerceVersionMeets($installed_plugins['woocommerce/woocommerce.php']['Version'])) {
-                $error = __("error_woocommerce_minimum_version", "woocommerce-myparcel");
-                $error = str_replace('{woocommerce_version}', self::WOOCOMMERCE_VERSION_REQUIRED, $error);
-
-                $this->errorMessage['message'] = esc_html__($error);
-                $this->errorMessage['button']  = '';
+                $this->setAdminErrorMessage(__($error), null);
             }
 
-            if (! is_plugin_active('woocommerce/woocommerce.php') && current_user_can('activate_plugin', 'woocommerce/woocommerce.php')) {
-                $this->errorMessage['message'] = esc_html__('error_woocommerce_not_activated', 'woocommerce-myparcel');
-                $this->errorMessage['button']  = $this->woocommerceNotActive();
+            if (! $this->isWooCommerceActivated()) {
+                $this->setAdminErrorMessage(__('error_woocommerce_not_activated', 'woocommerce-myparcel'), $this->getActivateWooCommerceButton());
             }
 
-            if (! isset($installed_plugins['woocommerce/woocommerce.php'])) {
-                $this->errorMessage['message'] = esc_html__('error_woocommerce_not_installed', 'woocommerce-myparcel');
-                $this->errorMessage['button']  = $this->installWooCommerce();
+            if (! $this->getWooCommerceData()) {
+                $this->setAdminErrorMessage(__('error_woocommerce_not_installed', 'woocommerce-myparcel'), $this->getInstallWooCommerceButton());
             }
 
             return $this->errorMessage;
         }
 
         /**
+         * @param string      $message
+         * @param string|null $button
+         */
+        public function setAdminErrorMessage(string $message, ?string $button): void
+        {
+            $this->errorMessage['message'] = $message;
+            $this->errorMessage['button']  = $button;
+        }
+
+        /**
+         * @param string $path
+         * @param string $action
+         * @param string $message
+         * @param string $class
+         *
          * @return string
          */
-        public function woocommerceNotActive(): string
+        public function generateErrorButtons(string $path, string $action, string $message, string $class): string
         {
-            $installed_plugins = get_plugins();
-            if (isset($installed_plugins['woocommerce/woocommerce.php'])) {
-                $woocommercePath = 'plugins.php?action=activate&plugin=woocommerce/woocommerce.php';
-                $action          = 'activate-plugin_woocommerce/woocommerce.php';
-                $message         = __('error_button_woocommerce_activate', 'woocommerce-myparcel');
-                $class           = ' class=button-primary';
-
-                $url = '<a href=' . esc_url(wp_nonce_url(self_admin_url($woocommercePath), $action)) . $class . '>' . $message . '</a>';
-
-                return $url;
-            }
+            return sprintf(
+                '<a href="%s" class="%s">%s</a>',
+                wp_nonce_url(self_admin_url($path), $action),
+                $class,
+                $message
+            );
         }
 
         /**
          * @return string
          */
-        public function deactivatePlugin(): string
+        public function getActivateWooCommerceButton(): ?string
+        {
+            if ($this->getWooCommerceData() && current_user_can('activate_plugin', 'woocommerce/woocommerce.php')) {
+                $path    = 'plugins.php?action=activate&plugin=woocommerce/woocommerce.php';
+                $action  = 'activate-plugin_woocommerce/woocommerce.php';
+                $message = __('error_button_woocommerce_activate', 'woocommerce-myparcel');
+                $class   = 'button-primary';
+
+                return $this->generateErrorButtons($path, $action, $message, $class);
+            }
+
+            return null;
+        }
+
+        /**
+         * @return string
+         */
+        public function getDeactivateMyParcelButton(): ?string
         {
             if (current_user_can('deactivate_plugin', 'woocommerce-myparcel/woocommerce-myparcel.php')) {
-                $woocommercePath = 'plugins.php?action=deactivate&plugin=woocommerce-myparcel/woocommerce-myparcel.php';
-                $action          = 'deactivate-plugin_woocommerce-myparcel/woocommerce-myparcel.php';
-                $message         = __('error_button_turn_off_myparcel_plugin', 'woocommerce-myparcel');
-                $class           = ' class="button-secondary"';
+                $path    = 'plugins.php?action=deactivate&plugin=woocommerce-myparcel/woocommerce-myparcel.php';
+                $action  = 'deactivate-plugin_woocommerce-myparcel/woocommerce-myparcel.php';
+                $message = __('error_button_turn_off_myparcel_plugin', 'woocommerce-myparcel');
+                $class   = 'button-secondary';
 
-                $url = '<a href=' . esc_url(wp_nonce_url($woocommercePath, $action)) . $class . '>' . $message . '</a>';
-
-                return $url;
+                return $this->generateErrorButtons($path, $action, $message, $class);
             }
+
+            return null;
         }
 
         /**
          * @return string
          */
-        public function installWooCommerce(): string
+        public function getInstallWooCommerceButton(): string
         {
-            $url = 'http://wordpress.org/plugins/woocommerce/';
+            $path = 'http://wordpress.org/plugins/woocommerce/';
 
             if (current_user_can('install_plugins')) {
-                $url = wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=woocommerce'), 'install-plugin_woocommerce');
+                $path = 'update.php?action=install-plugin&plugin=woocommerce';
             }
 
+            $action  = 'install-plugin_woocommerce';
             $message = __('error_button_install_woocommerce', 'woocommerce-myparcel');
-            $class   = ' class="button-primary"';
+            $class   = 'button-primary';
 
-            $url = '<a href=' . esc_url($url) . $class . '>' . $message . '</a>';
-
-            return $url;
+            return $this->generateErrorButtons($path, $action, $message, $class);
         }
 
-        public function required_php_version(): void
+        /**
+         * Notification for the minimum PHP version
+         */
+        public function showRequiredPhpNotification(): void
         {
             $error = __("WooCommerce MyParcel requires PHP {PHP_VERSION} or higher.", "woocommerce-myparcel");
             $error = str_replace('{PHP_VERSION}', self::PHP_VERSION_REQUIRED, $error);
@@ -368,7 +409,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * Handles version checking
          */
-        public function do_install()
+        public function do_install(): void
         {
             $version_setting   = "woocommerce_myparcel_version";
             $installed_version = get_option($version_setting);
@@ -389,13 +430,11 @@ if (! class_exists('WCMYPA')) :
         /**
          * Plugin install method. Perform any installation tasks here
          */
-        protected function install()
+        protected function install(): void
         {
-            // Pre 2.0.0
             if (! empty(get_option('wcmyparcel_settings'))) {
                 require_once('migration/wcmp-installation-migration-v2-0-0.php');
             }
-            // todo: Pre 4.0.0?
         }
 
         /**
@@ -403,7 +442,7 @@ if (! class_exists('WCMYPA')) :
          *
          * @param string $installed_version the currently installed ('old') version
          */
-        protected function upgrade($installed_version)
+        protected function upgrade(string $installed_version): void
         {
             if (version_compare($installed_version, '2.4.0-beta-4', '<')) {
                 require_once('migration/wcmp-upgrade-migration-v2-4-0-beta-4.php');
@@ -413,7 +452,7 @@ if (! class_exists('WCMYPA')) :
                 require_once('migration/wcmp-upgrade-migration-v3-0-4.php');
             }
 
-            if ($this->phpVersionMeets(\WCMYPA::PHP_VERSION_7_1)) {
+            if ($this->phpVersionMeets(\WCMYPA::PHP_VERSION_REQUIRED)) {
                 // Import the migration class base
                 require_once('migration/wcmp-upgrade-migration.php');
 
@@ -441,7 +480,7 @@ if (! class_exists('WCMYPA')) :
          *
          * @return string
          */
-        public function plugin_url()
+        public function plugin_url(): string
         {
             return untrailingslashit(plugins_url('/', __FILE__));
         }
@@ -451,7 +490,7 @@ if (! class_exists('WCMYPA')) :
          *
          * @return string
          */
-        public function plugin_path()
+        public function plugin_path(): string
         {
             return untrailingslashit(plugin_dir_path(__FILE__));
         }
@@ -460,9 +499,9 @@ if (! class_exists('WCMYPA')) :
          * Initialize the settings.
          * Legacy: Before PHP 7.1, use old settings structure.
          */
-        public function initSettings()
+        public function initSettings(): void
         {
-            if (! $this->phpVersionMeets(\WCMYPA::PHP_VERSION_7_1)) {
+            if (! $this->phpVersionMeets(\WCMYPA::PHP_VERSION_REQUIRED)) {
                 $this->general_settings  = get_option('woocommerce_myparcel_general_settings');
                 $this->export_defaults   = get_option('woocommerce_myparcel_export_defaults_settings');
                 $this->checkout_settings = get_option('woocommerce_myparcel_checkout_settings');
@@ -479,13 +518,11 @@ if (! class_exists('WCMYPA')) :
         }
 
         /**
-         * @param string $woocommerceVersion
-         *
          * @return bool
          */
-        private function woocommerceVersionMeets($woocommerceVersion)
+        private function woocommerceVersionMeets(): bool
         {
-            return version_compare(self::WOOCOMMERCE_VERSION_REQUIRED, $woocommerceVersion, '<');
+            return version_compare(self::WOOCOMMERCE_VERSION_REQUIRED, $this->getWooCommerceData()['Version'], '<');
         }
 
         /**
@@ -493,7 +530,7 @@ if (! class_exists('WCMYPA')) :
          *
          * @return bool
          */
-        private function phpVersionMeets($version)
+        private function phpVersionMeets(string $version): bool
         {
             return version_compare(PHP_VERSION, $version, '>=');
         }
