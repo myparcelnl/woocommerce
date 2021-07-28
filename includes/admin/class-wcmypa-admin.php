@@ -225,14 +225,12 @@ class WCMYPA_Admin
         echo "<hr>";
     }
 
-
-
     /**
      * @param int    $loop
      * @param array  $variationData
      * @param object $variation
      */
-    public function renderVariationCountryOfOriginField(int $loop, array $variationData, object $variation): void
+    public function renderVariationCountryOfOriginField(int $loop, array $variationData, $variation): void
     {
         woocommerce_wp_select(
             [
