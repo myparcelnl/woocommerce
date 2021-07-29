@@ -80,6 +80,9 @@
 				<p>
 					Ga in het linkermenu naar het kopje <span class="nice">WooCommerce</span> > <span class="nice">MyParcel</span> om de MyParcel plugin te configureren.
 				</p>
+				<p>
+					Wanneer "MyParcel" niet zichtbaar is in het linkermenu, dan is dat kans groot dat je niet genoeg rechten hebt. Je kan dan het beste jouw administrator vragen voor meer rechten of om het in te stellen.
+				</p>
 				<h2 id="2_A">2.1 Algemeen</h2>
 				<img src="media/WOO_ALGEMEEN.png">
 				<h3>API instellingen</h3>
@@ -124,6 +127,11 @@
 					getoond.
 				</p>
 				<img width='70%' class='center' src="media/WOO_T&TACCOUNT.jpg">
+				<h3>Bezorgdatum in klantcomminucatie</h3>
+				<p>
+					Deze optie laat je klanten de bezorgdag zien in orderbevestigingen en Mijn Account.
+				</p>
+				<img width='70%' class='center' src="media/WOO_BEZORGDATUM_IN_KLANTCOMMUNICATIE.jpg">
 				<h3>Verwerk zendingen direct</h3>
 				<p>
 					Wanneer je deze optie inschakelt, zullen zendingen direct worden verwerkt wanneer deze verzonden zijn naar MyParcel. Ze zijn dan direct voorgemeld en de zending is niet meer aan te passen in je MyParcel-backoffice.
@@ -132,8 +140,7 @@
 				<img width='70%' class='center' src="media/WOO_VERWERKZENDINGENDIRECT.jpg">
 				<h3>Orderstatus automatisering</h3>
 				<p>
-					Deze optie geeft je de mogelijkheid om de status van de order automatisch te laten wijzigen op het moment dat een zending succesvol is geëxporteerd.
-					Je kunt kiezen welke status je zendingen krijgen na het exporteren.
+					Met deze optie kan je kiezen wanneer je de status wilt veranderen. Je kan kiezen om dit na het exporteren of printen te doen. Hierna kan je kiezen welke status de zendingen moet krijgen na het exporteren of printen.
 				</p>
 				<img src="media/WOO_ORDER_AUTO.jpg">
 				<h3>Bewaar barcode in een notitie</h3>
@@ -207,7 +214,7 @@
 				<img src="media/WOO_LABELOMSCHRIJVING.jpg">
 				<h3>Leeg pakket gewicht</h3>
 				<p>
-					Geef hier aan wat het gewicht van een leeg pakket is, aangeduid in grammen.
+					Geef hier aan wat het gewicht van een leeg pakket is. Het ligt aan de instellingen van WooCommerce of dit in grammen of kilo's is.
 				</p>
 				<img src="media/WOO_LEEGPAKKET.jpg">
 				<h3>Standaard HS code</h3>
@@ -236,16 +243,15 @@
 					Zet de functie aan om de standaard velden <b>Adresveld 1</b> en <b>Adresveld 2</b> van WooCommerce op te splitsen in drie aparte velden voor <b>Straat</b>,<b>Huisnummer</b> en <b>Toevoeging</b>.
 				</p>
 				<img width='70%' class='center' src="media/WOO_MYPARCEL_ADRESVELDEN.jpg">
-				<h3>Toon afleverdag</h3>
-				<p>
-					Zet deze functie aan om jouw klanten in hun orderbevestiging te voorzien van de verwachte afleverdag. Het tonen van de afleverdagen in de checkout kan je aanzetten onder het tabje <span class=nice>PostNL</span>.
-				</p>
-				<img width='70%' class='center' src="media/WOO_TOON_AFLEVERDAG.jpg">
 				<h3>MyParcel bezorgopties inschakelen</h3>
 				<p>
-					Toon bezorgopties in jouw checkout door deze functie te activeren. De bezorgopties die je daadwerkelijk wilt tonen, kan je onder het tabje <span class=nice>PostNL</span> selecteren. Wanneer je deze functie aanzet, zullen de onderstaande instellingen zichtbaar worden.
+					Toon bezorgopties in jouw checkout door deze functie te activeren. De bezorgopties die je daadwerkelijk wilt tonen, kan je onder het tabje <span class=nice>PostNL</span> selecteren.
 				</p>
-				<img width='70%' class='center' src="media/WOO_BEZORGOPTIES.jpg">
+				<h3>Bezorgopties inschakelen voor backorders</h3>
+				<p>
+					Met deze optie kun je bepalen of de bezorgopties getoond worden bij backorders.
+				</p>
+				<img width='70%' class='center' src="media/WOO_BEZORGOPTIES_INSCH_BACKORD.jpg">
 				<h3>Toon bij</h3>
 				<p>
 					Hier kies je of de bezorgopties altijd worden getoond, ondanks dat er producten worden besteld die alleen in een brievenbuspakje passen.
@@ -256,31 +262,42 @@
 					Wanneer je deze bezorgopties liever alleen toont bij bestellingen die in een pakket zullen worden verstuurd, kies je voor <b>Bij verzendmethoden
 					gekoppeld aan Pakket</b>. Kies bij <span class=nice>Standaard exportinstellingen</span> > <span class=nice>Pakkettype</span> > <span class=nice>Pakket</span> voor de gewenste verzendmethoden.
 				</p>
-				<img src="media/WOO_TOONBIJ.jpg">
+				<img width='70%' class='center' src="media/WOO_TOONBIJ.jpg">
 				<h3>Bezorgopties positie</h3>
 				<p>
 					Zou je de checkout op een andere plek willen hebben dan is dat mogelijk via de bezorgopties positie.
 					Je kan de MyParcel checkout na factuurgegevens, verzendgegevens of notities neerzetten.
 					Door al deze opties uit te proberen en te bekijken in je checkout, kom je erachter wat voor jouw webshop het mooiste is.
 				</p>
-				<img src="media/WOO_BEZORGOPTIE_POSITIE.jpg">
+				<img width='70%' class='center' src="media/WOO_BEZORGOPTIE_POSITIE.jpg">
+				<h3>Prijzen tonen als</h3>
+				<p>
+					Deze optie geeft je de mogelijkheid om de bezorgoptie prijzen als totaal of meerprijs te tonen.
+				</p>
+				<img width='70%' class='center' src="media/WOO_PRIJZEN_TONEN_ALS.jpg">
+				<h3>Pickup locaties standaard weergave</h3>
+				<p>
+					Met deze optie kan je kiezen wat je eerst wilt tonen bij de pickup locatie optie. Je hebt de keuze tussen een kaart en lijst.
+				</p>
+				<img width='70%' class='center' src="media/WOO_PICKUP_LOCATIES_STANDAARD_WEERGAVE.jpg">
 				<h3>Aangepaste stijlen (CSS)</h3>
 				<p>
 					De checkout neemt automatisch de stijl van jouw webshop over. Ben je bekend met het schrijven van code en wil je de stijl van de checkout aanpassen? Verander dit dan hier door de CSS te wijzigen.
 				</p>
-				<img src="media/WOO_AANGEPASTE_STIJLEN.jpg">
+				<img width='70%' class='center' src="media/WOO_AANGEPASTE_STIJLEN.jpg">
 				<h3>Titels</h3>
 				<p>
 					Pas hier de titels in de MyParcel checkout naar wens aan, zodat deze perfect op jouw webshop aansluit.
 				</p>
 				<img width='70%' class='center' src="media/WOO_TITELS.jpg">
 				<h2 id="2_4">2.4 PostNL</h2>
+				<img width='70%' class='center' src="media/WOO_BEZORGOPTIES.jpg">
 				<h3>PostNL exportinstellingen</h3>
 				<p>
 					Geef hier aan welke verzendopties je standaard aan pakketzendingen wilt toevoegen wanneer je deze vanuit WooCommerce exporteert. Bij de verzendtoptie 'Verzekerde zending' kan je instellen vanaf welk verkoopbedrag de zending een verzekering moet krijgen.
 				</p>
 				<img width='70%' class='center' src="media/WOO_STANDAARD_EXPORT_POSTNL.jpg">
-				<h3>Activeer PostNL levering</h3>
+				<h3>PostNL bezorging inschakelen</h3>
 				<p>
 					Wil je in jouw checkout klanten de mogelijkheid bieden om voor thuislevering (ochtend, standaard of avond) te kiezen? Zet deze functie dan aan. <b>Let op:</b> wanneer je deze optie uit laat staan en 'PostNL pickup' aan, zullen al jouw zendingen standaard naar een postpunt worden verzonden als de MyParcel checkout voor jouw klanten zichtbaar is.
 				</p>
@@ -309,12 +326,11 @@
 					Bij geen verwerkingstijd vul je hier een ‘0’ (nul) in.
 				</p>
 				<img src="media/WOO_VERWERKINGTIJD.jpg">
-				<h3>Leverdagen venster</h3>
+				<h3>Toon bezorgdatum</h3>
 				<p>
 					Met deze optie kun je aangeven tot hoever in de toekomst jouw klanten een leverdag kunnen kiezen.
-					In dit geval staat het op 0 dagen, maar dit kan natuurlijk ook 2 of 5 dagen zijn.
-					Het maximum is 14 dagen. Wanneer het leverdagenvenster op '0' (nul) wordt gezet, zullen de dagen niet meer worden getoond,
-					waardoor de consument geen dag meer kan kiezen.
+					In dit geval staat het op 14 dagen, maar dit kan natuurlijk ook 2 of 5 dagen zijn.
+					Het minimum is 1 dag en het maximum is 14 dagen.
 				</p>
 				<img src="media/WOO_LEVERDAGENVENSTER.jpg">
 				<h3>Bezorgopties</h3>
@@ -326,9 +342,9 @@
 					In onderstaand voorbeeld zie je hoe deze toeslagen in de checkout terugkomen.
 				</p>
 				<img width='70%' class='center' src="media/WOO_BEZORGOPTIES.jpg">
-				<h3>Activeer PostNL pickup</h3>
+				<h3>PostNL afhalen inschakelen</h3>
 				<p>
-					Zet deze functie aan om 'Afhalen bij PostNL' in jouw checkout aan te bieden. Wil je enkel de optie 'Ophalen bij PostNL' aanbieden? Vink deze optie dan aan zonder 'PostNL levering' te activeren. <b>Let op:</b> We raden aan om in dit geval de checkout enkel te laten zien bij 'Verzendmethoden gekoppeld aan pakket' zodat jouw klant deze optie enkel ziet als hij/zij een specifieke verzendmethode aanklikt. Doe je dit niet dan zullen al jouw zendingen naar een postpunt worden gestuurd.
+					Zet deze functie aan om 'Afhalen bij PostNL' in jouw checkout aan te bieden. Wil je enkel de optie 'Ophalen bij PostNL' aanbieden? Vink deze optie dan aan zonder 'PostNL levering' in te schakelen. <b>Let op:</b> We raden aan om in dit geval de checkout enkel te laten zien bij 'Verzendmethoden gekoppeld aan pakket' zodat jouw klant deze optie enkel ziet als hij/zij een specifieke verzendmethode aanklikt. Doe je dit niet dan zullen al jouw zendingen naar een postpunt worden gestuurd.
 				</p>
 				<img width='70%' class='center' src="media/WOO_ACTIVEER_POSTNL_PICKUP.jpg">
 				<h2 id="2_5">2.5 Veelgestelde vragen over de configuratie</h2>
@@ -339,6 +355,10 @@
 				<p>
 				<h3>Al mijn zendingen worden standaard als 'Ophalen bij PostNL' opgeslagen!</h3>
 				<i>Je kunt dit oplossen door de optie <b>PostNL levering activeren</b> onder het tabje <span class="nice">PostNL</span> aan te zetten of door de checkout enkel zichtbaar te maken bij verzendmethoden die bij <span class="nice">Standaard exportinstellingen</span> aan het pakkettype 'Pakket' zijn gekoppeld. Let er wel op dat de optie 'Toon bij' onder het tabje <span class="nice">Checkout instellingen</span> staat ingesteld op 'Bij verzendmethoden gekoppeld aan pakket'.</i>
+				</p>
+				<h3>Al mijn bestellingen worden een pakket</h3>
+				<p>
+					Op het moment dat je brievenbuspakjes automatisch aan wilt maken, zal je dit bij de standaard exportinstellingen aan moeten geven. Let op dat als je vast tarief gebruikt dit niet onder pakket kan staan. Staat één verzendmethode bijvoorbeeld onder 'pakket' en 'brievenbuspakje', dan zal er een pakket aangemaakt worden. Dit komt omdat pakket voorrang heeft. Zorg dan in dit geval dat je jouw verzendmethode alleen onder 'brievenbuspakje' zet.
 				</p>
 				<h1 id="3">3. Gebruik plugin</h1>
 				<p>
