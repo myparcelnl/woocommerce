@@ -21,23 +21,23 @@ if (class_exists('WCMYPA_Admin')) {
  */
 class WCMYPA_Admin
 {
-    public const META_CONSIGNMENTS           = "_myparcel_consignments";
-    public const META_CONSIGNMENT_ID         = "_myparcel_consignment_id";
-    public const META_DELIVERY_OPTIONS       = "_myparcel_delivery_options";
-    public const META_HIGHEST_SHIPPING_CLASS = "_myparcel_highest_shipping_class";
-    public const META_LAST_SHIPMENT_IDS      = "_myparcel_last_shipment_ids";
-    public const META_RETURN_SHIPMENT_IDS    = "_myparcel_return_shipment_ids";
-    public const META_ORDER_VERSION          = "_myparcel_order_version";
-    public const META_DELIVERY_DATE          = "_myparcel_delivery_date";
-    public const META_PGADDRESS              = "_myparcel_pgaddress";
-    public const META_SHIPMENTS              = "_myparcel_shipments";
-    public const META_SHIPMENT_OPTIONS_EXTRA = "_myparcel_shipment_options_extra";
-    public const META_TRACK_TRACE            = "_myparcel_tracktrace";
-    public const META_HS_CODE                = "_myparcel_hs_code";
-    public const META_HS_CODE_VARIATION      = "_myparcel_hs_code_variation";
+    public const META_CONSIGNMENTS                = "_myparcel_consignments";
+    public const META_CONSIGNMENT_ID              = "_myparcel_consignment_id";
+    public const META_DELIVERY_OPTIONS            = "_myparcel_delivery_options";
+    public const META_HIGHEST_SHIPPING_CLASS      = "_myparcel_highest_shipping_class";
+    public const META_LAST_SHIPMENT_IDS           = "_myparcel_last_shipment_ids";
+    public const META_RETURN_SHIPMENT_IDS         = "_myparcel_return_shipment_ids";
+    public const META_ORDER_VERSION               = "_myparcel_order_version";
+    public const META_DELIVERY_DATE               = "_myparcel_delivery_date";
+    public const META_PGADDRESS                   = "_myparcel_pgaddress";
+    public const META_SHIPMENTS                   = "_myparcel_shipments";
+    public const META_SHIPMENT_OPTIONS_EXTRA      = "_myparcel_shipment_options_extra";
+    public const META_TRACK_TRACE                 = "_myparcel_tracktrace";
+    public const META_HS_CODE                     = "_myparcel_hs_code";
+    public const META_HS_CODE_VARIATION           = "_myparcel_hs_code_variation";
     public const META_COUNTRY_OF_ORIGIN_VARIATION = "_myparcel_country_of_origin_variation";
-    public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
-    public const META_AGE_CHECK              = "_myparcel_age_check";
+    public const META_COUNTRY_OF_ORIGIN           = "_myparcel_country_of_origin";
+    public const META_AGE_CHECK                   = "_myparcel_age_check";
 
     /**
      * @deprecated use weight property in META_SHIPMENT_OPTIONS_EXTRA.
@@ -237,7 +237,12 @@ class WCMYPA_Admin
                 'id'            => self::META_COUNTRY_OF_ORIGIN_VARIATION . "[{$loop}]",
                 'name'          => self::META_COUNTRY_OF_ORIGIN_VARIATION . "[{$loop}]",
                 'type'          => 'select',
-                'options'       => (new WC_Countries())->get_countries(),
+                'options'     => array_merge(
+                    [
+                        null => __('Default', 'woocommerce-myparcel'),
+                    ],
+                    (new WC_Countries())->get_countries()
+                ),
                 'value'         => get_post_meta($variation->ID, self::META_COUNTRY_OF_ORIGIN_VARIATION, true),
                 'label'         => __('product_variable_country_of_origin', 'woocommerce-myparcel'),
                 'desc_tip'      => true,
