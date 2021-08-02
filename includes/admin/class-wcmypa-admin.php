@@ -237,7 +237,7 @@ class WCMYPA_Admin
                 'id'            => self::META_COUNTRY_OF_ORIGIN_VARIATION . "[{$loop}]",
                 'name'          => self::META_COUNTRY_OF_ORIGIN_VARIATION . "[{$loop}]",
                 'type'          => 'select',
-                'options'     => array_merge(
+                'options'       => array_merge(
                     [
                         null => __('Default', 'woocommerce-myparcel'),
                     ],
