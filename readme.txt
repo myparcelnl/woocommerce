@@ -2,7 +2,7 @@
 Contributors: richardperdaan, ademdemir, edielemoine
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
-Tested up to: 5.7.2
+Tested up to: 5.8.0
 Stable tag: trunk
 Requires PHP: 7.1
 License: GPLv3 or later
@@ -90,9 +90,25 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.4.5 (2021-08-17) =
+* Fix: Update package type above shipment options dialog without refreshing page
+* Fix: Ignore virtual products when creating consignment
+* Fix: Check shipment type before empty DPZ is calculated
+* Fix: When a product is created, country of origin must be set to default
+* Fix: Woocommerce hooks for the address fields in the admin
+
+= 4.4.4 (2021-07-15) =
+* Hotfix: Minimum steps for empty weight
+* Hotfix: Export ROW shipments witch correct country of origin
+
+= 4.4.3 (2021-07-14) =
+* Fix: Being able to remove the delivery date from the delivery options
+
 = 4.4.2 (2021-07-13) =
-* Fix:age check with different scenarios 
-* Fix: double export when using the bulk actions2
+* Feat: Filter orders by delivery date
+* Feat: Add empty weight for digital stamp shipments
+* Fix: Age check with different scenarios
+* Fix: Double export when using the bulk actions2
 
 = 4.4.1 (2021-07-06) =
 * Feat: Added setting to show or hide delivery date in frontend

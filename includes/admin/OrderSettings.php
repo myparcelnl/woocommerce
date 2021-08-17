@@ -6,6 +6,7 @@ use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Recipient;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
@@ -391,10 +392,13 @@ class OrderSettings
      */
     private function setDigitalStampRangeWeight(): void
     {
-        $emptyWeight  = (float) WCMYPA()->setting_collection->getByName(
-            WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
-        );
-        $this->weight += $emptyWeight;
+        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $this->getPackageType()) {
+            $emptyWeight = (float) WCMYPA()->setting_collection->getByName(
+                WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
+            );
+
+            $this->weight += $emptyWeight;
+        }
 
         $savedWeight = $this->extraOptions["digital_stamp_weight"] ?? null;
         $orderWeight = $this->getWeight(true);
