@@ -90,10 +90,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 4.4.5 (2021-07-28) =
+= 4.4.5 (2021-08-17) =
 * Fix: Update package type above shipment options dialog without refreshing page
 * Fix: Ignore virtual products when creating consignment
 * Fix: Check shipment type before empty DPZ is calculated
+* Fix: When a product is created, country of origin must be set to default
+* Fix: Woocommerce hooks for the address fields in the admin
 
 = 4.4.4 (2021-07-15) =
 * Hotfix: Minimum steps for empty weight
