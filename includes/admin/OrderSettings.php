@@ -310,7 +310,7 @@ class OrderSettings
      */
     public function getBillingRecipient(): ?Recipient
     {
-        return $this->shippingRecipient;
+        return $this->billingRecipient;
     }
 
     /**
