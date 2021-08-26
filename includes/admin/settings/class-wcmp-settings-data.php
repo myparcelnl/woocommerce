@@ -297,10 +297,13 @@ class WCMP_Settings_Data
      */
     private function get_section_general_general(): array
     {
+        $exportMode = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE) ?? self::EXPORT_MODE_SHIPMENTS;
+
         return [
             [
                 'name'    => WCMYPA_Settings::SETTING_EXPORT_MODE,
                 'label'   => __('setting_mode_title', 'woocommerce-myparcel'),
+                'class'   => [(self::EXPORT_MODE_PPS !== $exportMode)?'hidden':''],
                 'type'    => 'select',
                 'options' => [
                     self::EXPORT_MODE_SHIPMENTS => __('setting_mode_shipments_title', 'woocommerce-myparcel'),
@@ -309,21 +312,21 @@ class WCMP_Settings_Data
                 'default' => self::EXPORT_MODE_SHIPMENTS,
             ],
             [
-                'name'    => WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY,
-                'label'   => __('Label display', 'woocommerce-myparcel'),
+                'name'      => WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY,
+                'label'     => __('Label display', 'woocommerce-myparcel'),
                 'condition' => $this->conditionForModeShipmentsOnly(),
-                'type'    => 'select',
-                'options' => [
+                'type'      => 'select',
+                'options'   => [
                     'download' => __('Download PDF', 'woocommerce-myparcel'),
                     'display'  => __('Open the PDF in a new tab', 'woocommerce-myparcel'),
                 ],
             ],
             [
-                'name'    => WCMYPA_Settings::SETTING_LABEL_FORMAT,
-                'label'   => __('Label format', 'woocommerce-myparcel'),
+                'name'      => WCMYPA_Settings::SETTING_LABEL_FORMAT,
+                'label'     => __('Label format', 'woocommerce-myparcel'),
                 'condition' => $this->conditionForModeShipmentsOnly(),
-                'type'    => 'select',
-                'options' => [
+                'type'      => 'select',
+                'options'   => [
                     'A4' => __('Standard printer (A4)', 'woocommerce-myparcel'),
                     'A6' => __('Label Printer (A6)', 'woocommerce-myparcel'),
                 ],
