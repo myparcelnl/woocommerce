@@ -298,7 +298,7 @@ class WCMP_Settings_Data
     private function get_section_general_general(): array
     {
         $exportMode   = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE) ?? self::EXPORT_MODE_SHIPMENTS;
-        $cssClassName = self::EXPORT_MODE_PPS !== $exportMode ? 'hidden' : '';
+        $exportModeClassName = self::EXPORT_MODE_PPS !== $exportMode ? 'hidden' : '';
 
         return [
             [
