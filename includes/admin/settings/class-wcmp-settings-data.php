@@ -304,7 +304,7 @@ class WCMP_Settings_Data
             [
                 'name'    => WCMYPA_Settings::SETTING_EXPORT_MODE,
                 'label'   => __('setting_mode_title', 'woocommerce-myparcel'),
-                'class'   => [ $cssClassName ],
+                'class'   => [$exportModeClassName],
                 'type'    => 'select',
                 'options' => [
                     self::EXPORT_MODE_SHIPMENTS => __('setting_mode_shipments_title', 'woocommerce-myparcel'),
