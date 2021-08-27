@@ -297,13 +297,14 @@ class WCMP_Settings_Data
      */
     private function get_section_general_general(): array
     {
-        $exportMode = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE) ?? self::EXPORT_MODE_SHIPMENTS;
+        $exportMode   = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE) ?? self::EXPORT_MODE_SHIPMENTS;
+        $cssClassName = self::EXPORT_MODE_PPS !== $exportMode ? 'hidden' : '';
 
         return [
             [
                 'name'    => WCMYPA_Settings::SETTING_EXPORT_MODE,
                 'label'   => __('setting_mode_title', 'woocommerce-myparcel'),
-                'class'   => [(self::EXPORT_MODE_PPS !== $exportMode)?'hidden':''],
+                'class'   => [ $cssClassName ],
                 'type'    => 'select',
                 'options' => [
                     self::EXPORT_MODE_SHIPMENTS => __('setting_mode_shipments_title', 'woocommerce-myparcel'),
