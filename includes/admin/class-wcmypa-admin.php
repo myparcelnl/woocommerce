@@ -1,6 +1,7 @@
 <?php
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -1138,14 +1139,14 @@ class WCMYPA_Admin
         }
     }
 
-	/**
-	 * Output the chosen delivery options or the chosen pickup options.
-	 *
-	 * @param DeliveryOptions $deliveryOptions
-	 *
-	 * @return array[]|null
-	 * @throws \Exception
-	 */
+    /**
+     * Output the chosen delivery options or the chosen pickup options.
+     *
+     * @param DeliveryOptions $deliveryOptions
+     *
+     * @return array[]|null
+     * @throws \Exception
+     */
     private function getConfirmationData(DeliveryOptions $deliveryOptions): ?array
     {
         $deliveryOptionsEnabled = WCMYPA()->setting_collection->isEnabled(
@@ -1156,42 +1157,59 @@ class WCMYPA_Admin
             return null;
         }
 
-        $signatureTitle     = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
-        $onlyRecipientTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
-        $hasSignature       = $deliveryOptions->getShipmentOptions()->hasSignature();
-        $hasOnlyRecipient   = $deliveryOptions->getShipmentOptions()->hasOnlyRecipient();
-
         if (AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME === $deliveryOptions->getDeliveryType()) {
             $pickupLocation = $deliveryOptions->getPickupLocation();
             return [
-                __("delivery_type", "woocommerce-myparcel")   => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
-                __("pickup_location", "woocommerce-myparcel") =>
-                    sprintf("%s<br>%s %s<br>%s %s",
-                            $pickupLocation->getLocationName(),
-                            $pickupLocation->getStreet(),
-                            $pickupLocation->getNumber(),
-                            $pickupLocation->getPostalCode(),
-                            $pickupLocation->getCity()
-                    )
+                __("delivery_type", "woocommerce-myparcel")   => WCMP_Data::getDeliveryTypesHuman(
+                )[$deliveryOptions->getDeliveryType()],
+                __("pickup_location", "woocommerce-myparcel") => sprintf(
+                    "%s<br>%s %s<br>%s %s",
+                    $pickupLocation->getLocationName(),
+                    $pickupLocation->getStreet(),
+                    $pickupLocation->getNumber(),
+                    $pickupLocation->getPostalCode(),
+                    $pickupLocation->getCity()
+                ),
             ];
         }
 
         $confirmationData = [
-            __("delivery_type", "woocommerce-myparcel") => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+            __('delivery_type', 'woocommerce-myparcel') => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
         ];
 
         if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
-            $confirmationData[__("Date:", 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));;
+            $confirmationData[__('Date:', 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));;
         }
 
-        if ($hasSignature || $hasOnlyRecipient) {
-            $confirmationData[__("extra_options", "woocommerce-myparcel")] =
-                sprintf("%s<br>%s",
-                    $hasSignature ? $signatureTitle : null,
-                    $hasOnlyRecipient ? $onlyRecipientTitle : null);
+        $extraOptions = $this->getExtraOptions($deliveryOptions->getShipmentOptions());
+        if ($extraOptions) {
+            $confirmationData[__('extra_options', 'woocommerce-myparcel')] = implode('<br/>', $extraOptions);
         }
 
         return $confirmationData;
+    }
+
+    /**
+     * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter|null $shipmentOptions
+     *
+     * @return array indexed array of strings holding the extra options, may be empty
+     */
+    private function getExtraOptions(?AbstractShipmentOptionsAdapter $shipmentOptions): array
+    {
+        $returnValue = [];
+
+        if (! $shipmentOptions) {
+            return $returnValue;
+        }
+
+        if ($shipmentOptions->hasSignature()) {
+            $returnValue[] = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE);
+        }
+        if ($shipmentOptions->hasOnlyRecipient()) {
+            $returnValue[] = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE);
+        }
+
+        return $returnValue;
     }
 
     /**
