@@ -1159,10 +1159,10 @@ class WCMYPA_Admin
 
         if (AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME === $deliveryOptions->getDeliveryType()) {
             $pickupLocation = $deliveryOptions->getPickupLocation();
+            $deliveryType   = $deliveryOptions->getDeliveryType();
             return [
-                __("delivery_type", "woocommerce-myparcel")   => WCMP_Data::getDeliveryTypesHuman(
-                )[$deliveryOptions->getDeliveryType()],
-                __("pickup_location", "woocommerce-myparcel") => sprintf(
+                __('delivery_type', 'woocommerce-myparcel')   => WCMP_Data::getDeliveryTypesHuman()[$deliveryType],
+                __('pickup_location', 'woocommerce-myparcel') => sprintf(
                     "%s<br>%s %s<br>%s %s",
                     $pickupLocation->getLocationName(),
                     $pickupLocation->getStreet(),
@@ -1178,7 +1178,7 @@ class WCMYPA_Admin
         ];
 
         if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
-            $confirmationData[__('Date:', 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));;
+            $confirmationData[__('Date:', 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));
         }
 
         $extraOptions = $this->getExtraOptions($deliveryOptions->getShipmentOptions());
