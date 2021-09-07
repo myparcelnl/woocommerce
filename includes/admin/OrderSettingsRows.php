@@ -140,7 +140,6 @@ class OrderSettingsRows
                 "value"     => $orderSettings->hasLargeFormat(),
                 "condition" => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     self::CONDITION_CARRIER_DEFAULT,
                 ],
             ];
@@ -243,7 +242,6 @@ class OrderSettingsRows
                 "value"     => $orderSettings->hasAgeCheck(),
                 "condition" => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     self::CONDITION_CARRIER_DEFAULT,
                 ],
             ],
@@ -266,7 +264,6 @@ class OrderSettingsRows
                 "value"     => $orderSettings->isInsured(),
                 "condition" => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     [
                         "parent_name"  => self::OPTION_CARRIER,
                         "type"         => "disable",
@@ -283,7 +280,6 @@ class OrderSettingsRows
                 "value"     => $orderSettings->getInsuranceAmount(),
                 "condition" => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 ],
             ],
