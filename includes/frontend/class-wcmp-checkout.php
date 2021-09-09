@@ -245,33 +245,8 @@ class WCMP_Checkout
                     $value += $chosenShippingMethodPrice;
                 }
 
-                if (in_array(
-                    $settingName,
-                    [
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
-                    ],
-                    true
-                )) {
-                    $ageCheckFromSettings = (bool) WCMYPA()->setting_collection->getByName(
-                        sprintf('%s_%s', $carrier, WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK)
-                    );
-                    $ageCheckFromProduct  = false;
-                    foreach (WC()->cart->get_cart() as $cartItem) {
-                        /**
-                         * @var WC_Product $product
-                         */
-                        $product = $cartItem['data'];
-                        $ageCheckMeta = $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true);
-                        if ($ageCheckMeta === 'yes') {
-                            $ageCheckFromProduct = true;
-                            break;
-                        }
-                    }
-
-                    if ($ageCheckFromSettings || $ageCheckFromProduct) {
-                        $value = 0;
-                    }
+                if($this->hasAgeRestrictions($settingName, $carrier)) {
+                    $value = false;
                 }
 
                 Arr::set($myParcelConfig, 'config.' . $key, $value);
@@ -595,6 +570,46 @@ class WCMP_Checkout
         }
 
         return apply_filters("wc_myparcel_show_delivery_options", $showDeliveryOptions);
+    }
+
+    /**
+     * Returns if the cart is b product or settings age restricted
+     *
+     * @param  string $settingName
+     * @param  string $carrier
+     *
+     * @return bool
+     */
+    private function hasAgeRestrictions(string $settingName, string $carrier): bool
+    {
+        $isHalfDayDelivery= [
+            WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
+            WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
+        ];
+
+        if (in_array($settingName, $isHalfDayDelivery, true)) {
+            $ageCheckFromSettings = (bool) WCMYPA()->setting_collection->getByName(
+                sprintf('%s_%s', $carrier, WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK)
+            );
+            $ageCheckFromProduct  = false;
+            foreach (WC()->cart->get_cart() as $cartItem) {
+                /**
+                 * @var WC_Product $product
+                 */
+                $product = $cartItem['data'];
+                $ageCheckMeta = $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true);
+                if ($ageCheckMeta === 'yes') {
+                    $ageCheckFromProduct = true;
+                    break;
+                }
+            }
+
+            if ($ageCheckFromSettings || $ageCheckFromProduct) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
