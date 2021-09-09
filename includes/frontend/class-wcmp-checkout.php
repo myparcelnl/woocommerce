@@ -245,22 +245,31 @@ class WCMP_Checkout
                     $value += $chosenShippingMethodPrice;
                 }
 
-                if(in_array($settingName, [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED, WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED], true)) {
-                    $ageCheckFromSettings = (bool) WCMYPA()->setting_collection->getByName(sprintf('%s_%s', $carrier, WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK));
-                    $ageCheckFromProduct = false;
+                if (in_array(
+                    $settingName,
+                    [
+                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
+                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
+                    ],
+                    true
+                )) {
+                    $ageCheckFromSettings = (bool) WCMYPA()->setting_collection->getByName(
+                        sprintf('%s_%s', $carrier, WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK)
+                    );
+                    $ageCheckFromProduct  = false;
                     foreach (WC()->cart->get_cart() as $cartItem) {
                         /**
                          * @var WC_Product $product
                          */
                         $product = $cartItem['data'];
                         $ageCheckMeta = $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true);
-                        if($ageCheckMeta === 'yes') {
+                        if ($ageCheckMeta === 'yes') {
                             $ageCheckFromProduct = true;
                             break;
                         }
                     }
 
-                    if($ageCheckFromSettings || $ageCheckFromProduct) {
+                    if ($ageCheckFromSettings || $ageCheckFromProduct) {
                         $value = 0;
                     }
                 }
