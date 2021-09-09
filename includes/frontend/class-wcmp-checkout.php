@@ -591,7 +591,7 @@ class WCMP_Checkout
             $ageCheckFromSettings = (bool) WCMYPA()->setting_collection->getByName(
                 sprintf('%s_%s', $carrier, WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK)
             );
-            $ageCheckFromProduct  = false;
+            $ageCheckFromProduct = false;
             foreach (WC()->cart->get_cart() as $cartItem) {
                 /**
                  * @var WC_Product $product
@@ -602,6 +602,15 @@ class WCMP_Checkout
                     $ageCheckFromProduct = true;
                     break;
                 }
+            }
+
+            $cartItemsNoAgeCheck = array_filter(WC()->cart->get_cart(), static function($element) {
+                $product = $element['data'];
+                return $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true) !== 'yes';
+            });
+
+            if(count($cartItemsNoAgeCheck) === count(WC()->cart->get_cart())) {
+                return false;
             }
 
             if ($ageCheckFromSettings || $ageCheckFromProduct) {
