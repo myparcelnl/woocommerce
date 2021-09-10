@@ -1,7 +1,6 @@
 <?php
 
-use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierRedJePakketje;
 use MyParcelNL\Sdk\src\Support\Arr;
 
 if (! defined('ABSPATH')) {
@@ -19,16 +18,15 @@ class WCMYPA_Settings
 {
     public const SETTINGS_MENU_SLUG = 'wcmp_settings';
 
-    public const SETTINGS_GENERAL         = 'general';
-    public const SETTINGS_CHECKOUT        = 'checkout';
-    public const SETTINGS_EXPORT_DEFAULTS = 'export_defaults';
-    public const SETTINGS_POSTNL          = PostNLConsignment::CARRIER_NAME;
-    public const SETTINGS_DPD             = DPDConsignment::CARRIER_NAME;
+    public const SETTINGS_GENERAL         = "general";
+    public const SETTINGS_CHECKOUT        = "checkout";
+    public const SETTINGS_EXPORT_DEFAULTS = "export_defaults";
 
     /**
      * General
      */
     public const SETTING_API_KEY                   = 'api_key';
+    public const SETTING_TRIGGER_MANUAL_UPDATE     = 'trigger_manual_update';
     public const SETTING_AUTOMATIC_ORDER_STATUS    = 'automatic_order_status';
     public const SETTING_BARCODE_IN_NOTE           = 'barcode_in_note';
     public const SETTING_BARCODE_IN_NOTE_TITLE     = 'barcode_in_note_title';
@@ -115,6 +113,7 @@ class WCMYPA_Settings
     public const SETTING_CARRIER_DELIVERY_MORNING_FEE     = 'delivery_morning_fee';
     public const SETTING_CARRIER_DELIVERY_EVENING_ENABLED = 'delivery_evening_enabled';
     public const SETTING_CARRIER_DELIVERY_EVENING_FEE     = 'delivery_evening_fee';
+    public const SETTING_CARRIER_DELIVERY_STANDARD_FEE    = 'delivery_standard_fee';
 
     // Saturday delivery
     // TODO; Currently not implemented
@@ -181,15 +180,11 @@ class WCMYPA_Settings
      */
     public function add_settings_link(array $links): array
     {
-        $url = admin_url("admin.php?page=" . self::SETTINGS_MENU_SLUG);
-
-        array_push(
-            $links,
-            sprintf(
-                '<a href="%s">%s</a>',
-                $url,
-                __("Settings", "woocommerce-myparcel")
-            )
+        $url     = WCMYPA_Settings::getSettingsUrl();
+        $links[] = sprintf(
+            '<a href="%s">%s</a>',
+            $url,
+            __("Settings", "woocommerce-myparcel")
         );
 
         return $links;
@@ -285,6 +280,22 @@ class WCMYPA_Settings
     public static function getOptionId(string $option)
     {
         return "woocommerce_myparcel_{$option}_settings";
+    }
+
+    /**
+     * @return bool whether the current script is running on one of this plugins own admin settings pages
+     */
+    public static function isViewingOwnSettingsPage(): bool
+    {
+        return (isset($_GET['page']) && 'wcmp_settings' === $_GET['page']);
+    }
+
+    /**
+     * @return string|void
+     */
+    public static function getSettingsUrl(): string
+    {
+        return admin_url("admin.php?page=" . self::SETTINGS_MENU_SLUG);
     }
 
     /**

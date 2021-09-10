@@ -1,14 +1,14 @@
 <?php
 
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
+use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierRedJePakketje;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 
-if (! defined('ABSPATH')) {
-    exit;
-} // Exit if accessed directly
+defined('ABSPATH') or die();
 
 if (class_exists('WCMP_Data')) {
     return new WCMP_Data();
@@ -16,14 +16,6 @@ if (class_exists('WCMP_Data')) {
 
 class WCMP_Data
 {
-    /**
-     * @var array
-     */
-    public const CARRIERS_HUMAN = [
-        PostNLConsignment::CARRIER_NAME => 'PostNL',
-        DPDConsignment::CARRIER_NAME    => 'DPD',
-    ];
-
     /**
      * @var array
      */
@@ -65,10 +57,11 @@ class WCMP_Data
     ];
 
     public const DEFAULT_COUNTRY_CODE = "NL";
-    public const DEFAULT_CARRIER      = PostNLConsignment::CARRIER_NAME;
+    public const DEFAULT_CARRIER       = CarrierPostNL::ID;
+    public const DEFAULT_CARRIER_CLASS = CarrierPostNL::class;
 
     /**
-     * @var array
+     * @var string[]
      */
     private static $packageTypes;
 
@@ -139,6 +132,17 @@ class WCMP_Data
     }
 
     /**
+     * @return class-string[]
+     */
+    public static function getCarriers(): array
+    {
+        return [
+            CarrierPostNL::class,
+            CarrierRedJePakketje::class,
+        ];
+    }
+
+    /**
      * @param int|string $packageType
      *
      * @return string|null
@@ -180,10 +184,20 @@ class WCMP_Data
     public static function getDeliveryTypeId(?string $deliveryType): ?int
     {
         if (! $deliveryType) {
-            $deliveryType = AbstractConsignment::DELIVERY_TYPE_STANDARD;
+            return AbstractConsignment::DELIVERY_TYPE_STANDARD;
         }
 
         return Arr::get(AbstractConsignment::DELIVERY_TYPES_NAMES_IDS_MAP, $deliveryType, null);
+    }
+
+    /**
+     * @param  \MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier $carrier
+     *
+     * @return bool
+     */
+    public static function hasCarrier(AbstractCarrier $carrier): bool
+    {
+        return in_array(get_class($carrier), self::getCarriers());
     }
 
     /**
@@ -211,6 +225,7 @@ class WCMP_Data
 
     /**
      * @return array
+     * @throws \Exception
      */
     public static function getInsuranceAmounts(): array
     {
@@ -219,25 +234,14 @@ class WCMP_Data
         /**
          * @type PostNLConsignment
          */
-        $carrier             = ConsignmentFactory::createByCarrierName(WCMYPA_Settings::SETTINGS_POSTNL);
-        $amountPossibilities = $carrier::INSURANCE_POSSIBILITIES_LOCAL;
+        $carrier             = ConsignmentFactory::createByCarrierName(CarrierPostNL::NAME);
+        $amountPossibilities = $carrier->getInsurancePossibilities();
 
         foreach ($amountPossibilities as $key => $value) {
             $amounts[$value] = $value;
         }
 
         return $amounts;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getCarriersHuman(): array
-    {
-        return [
-            PostNLConsignment::CARRIER_NAME => __("PostNL", "woocommerce-myparcel"),
-            DPDConsignment::CARRIER_NAME    => __("DPD", "woocommerce-myparcel"),
-        ];
     }
 
     /**

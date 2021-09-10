@@ -3,8 +3,11 @@
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
+use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
+use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -159,9 +162,10 @@ class WCMYPA_Admin
             <select name="deliveryDate">
                 <option value=""><?php _e('all_delivery_days', 'woocommerce-myparcel'); ?></option>
                 <?php
-                $carrierName       = WCMYPA_Settings::SETTINGS_POSTNL;
-                $deliveryDayWindow = (int) WCMYPA()->setting_collection->getByName(
-                    $carrierName . "_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW
+                $carrierName       = CarrierPostNL::NAME;
+                $deliveryDayWindow = (int) WCMYPA()->setting_collection->where('carrier', $carrierName)->getByName(
+                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW
+
                 );
 
                 foreach (range(1, $deliveryDayWindow) as $number) {
@@ -424,7 +428,7 @@ class WCMYPA_Admin
                 <span class="wcmp__encircle wcmp__shipment-summary__show">i</span>
             </a>
             <div
-                class="wcmp__box wcmp__shipment-summary__list"
+                class="wcmp__box wcmp__modal wcmp__shipment-summary__list"
                 data-loaded=""
                 data-shipment_id="<?php echo $lastShipmentId; ?>"
                 data-order_id="<?php echo $order->get_id(); ?>"
@@ -556,7 +560,7 @@ class WCMYPA_Admin
         ?>
 
         <div
-            class="wcmp wcmp__box wcmp__offset-dialog wcmp__ws--nowrap"
+            class="wcmp wcmp__box wcmp__modal wcmp__offset-dialog wcmp__ws--nowrap"
             style="display: none;">
             <div class="wcmp__offset-dialog__inner wcmp__d--flex">
                 <div>
@@ -596,7 +600,7 @@ class WCMYPA_Admin
      */
     public function renderShipmentOptionsForm(): void
     {
-        echo '<div class="wcmp__box wcmp__shipment-options-dialog" style="display: none; position: absolute;"></div>';
+        echo '<div class="wcmp__box wcmp__modal wcmp__shipment-options-dialog" style="display: none; position: absolute;"></div>';
     }
 
     /**
@@ -1185,8 +1189,10 @@ class WCMYPA_Admin
                 $meta = json_decode(stripslashes($meta), true);
             }
 
-            $meta['carrier'] = $meta['carrier'] ?? WCMP_Data::DEFAULT_CARRIER;
-            $meta['date']    = $meta['date'] ?? '';
+            if (! $meta['carrier'] || ! AccountSettings::getInstance()->isEnabledCarrier($meta['carrier'])) {
+                $meta['carrier'] = (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
+            }
+            $meta['date'] = $meta['date'] ?? '';
 
             try {
                 // create new instance from known json
@@ -1571,6 +1577,26 @@ class WCMYPA_Admin
         }
 
         return $data;
+    }
+
+    /**
+     * Whether the current site is capable of receiving webhooks. Checks for SSL connection.
+     *
+     * @return bool
+     */
+    public static function canUseWebhooks(): bool
+    {
+        $validator = new WebhookCallbackUrlValidator();
+        $validator->validateAll(get_rest_url());
+
+        try {
+            $validator->report();
+            return true;
+        } catch (Exception $e) {
+            // TODO: improve this when validator has a way to check if there are errors without throwing.
+        }
+
+        return false;
     }
 }
 

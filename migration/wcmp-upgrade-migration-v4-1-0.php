@@ -1,6 +1,7 @@
 <?php
 
 use migration\WCMP_Upgrade_Migration;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -146,7 +147,7 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
      */
     private static function getCheckoutPostnlMap(): array
     {
-        $postnl = WCMYPA_Settings::SETTINGS_POSTNL;
+        $postnl = CarrierPostNL::NAME;
 
         return [
             "delivery_options_enabled" => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
@@ -176,7 +177,7 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
      */
     private static function getExportDefaultsPostnlMap(): array
     {
-        $postnl = WCMYPA_Settings::SETTINGS_POSTNL;
+        $postnl = CarrierPostNL::NAME;
 
         return [
             "insured_amount" => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
@@ -191,7 +192,7 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
      */
     private function correctPostNlInsurance(): void
     {
-        $postnl           = WCMYPA_Settings::SETTINGS_POSTNL;
+        $postnl           = CarrierPostNL::NAME;
         $key              = "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT;
         $availableAmounts = WCMP_Data::getInsuranceAmounts();
         $insuranceAmount  = $this->newPostNlSettings[$key];

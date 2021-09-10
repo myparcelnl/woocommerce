@@ -59,12 +59,7 @@ class WCMP_Assets
 
         wp_enqueue_script("thickbox");
         wp_enqueue_style("thickbox");
-        wp_enqueue_script(
-            "wcmp-admin",
-            WCMYPA()->plugin_url() . "/assets/js/wcmp-admin.js",
-            ["jquery", "thickbox"],
-            WC_MYPARCEL_NL_VERSION
-        );
+        self::enqueueJs('wcmp-admin', 'wcmp-admin.js', ['jquery', 'thickbox']);
 
         wp_localize_script(
             "wcmp-admin",
@@ -118,6 +113,29 @@ class WCMP_Assets
                 "all"
             );
         }
+    }
+
+    /**
+     * @param  string $handle
+     * @param  string $file
+     * @param  array  $dependencies
+     *
+     * @return void
+     */
+    private static function enqueueJs(string $handle, string $file, array $dependencies = []): void
+    {
+        if (getenv('WP_ENV') === "development") {
+            $path = 'src';
+        } else {
+            $path = 'assets';
+        }
+
+        wp_enqueue_script(
+            $handle,
+            sprintf('%s/%s/js/%s', WCMYPA()->plugin_url(), $path, $file),
+            $dependencies,
+            WC_MYPARCEL_NL_VERSION
+        );
     }
 }
 
