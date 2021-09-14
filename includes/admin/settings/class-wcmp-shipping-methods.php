@@ -18,9 +18,10 @@ class WCMP_Shipping_Methods
     public const TABLE_RATES_BOLDER_ELEMENTS = 'betrs_shipping';
     public const TABLE_RATES_WOOCOMMERCE     = 'table_rate';
 
-    private const SHIPPING_METHOD_CLASS_WOOCOMMERCE      = 'WC_Shipping_Table_Rate';
-    private const SHIPPING_METHOD_CLASS_BOLDER_ELEMENTS  = 'BE_Table_Rate_Method';
-    private const SHIPPING_METHOD_CLASS_WP_DESK_FLEXIBLE = 'WPDesk_Flexible_Shipping';
+    private const SHIPPING_METHOD_CLASS_WOOCOMMERCE             = 'WC_Shipping_Table_Rate';
+    private const SHIPPING_METHOD_CLASS_BOLDER_ELEMENTS         = 'BE_Table_Rate_Method';
+    private const SHIPPING_METHOD_CLASS_WP_DESK_FLEXIBLE        = 'WPDesk_Flexible_Shipping';
+    private const SHIPPING_METHOD_CLASS_WP_DESK_FLEXIBLE_SINGLE = 'WPDesk\FS\TableRate\ShippingMethodSingle';
 
     /**
      * Items in this array will not be added to the shipping methods array. Useful for table rates because the base
@@ -151,6 +152,9 @@ class WCMP_Shipping_Methods
             case self::SHIPPING_METHOD_CLASS_WP_DESK_FLEXIBLE:
                 $this->addWPDeskFlexibleZoneShippingMethodRates($zoneShippingMethod);
                 break;
+            case self::SHIPPING_METHOD_CLASS_WP_DESK_FLEXIBLE_SINGLE:
+                $this->addWPDeskFlexibleSingleZoneShippingMethodRates($zoneShippingMethod);
+                break;
         }
     }
 
@@ -217,5 +221,21 @@ class WCMP_Shipping_Methods
         foreach ($shippingMethodOption as $item) {
             $this->addShippingMethod($item['id_for_shipping'], $item['method_title']);
         }
+    }
+
+    /**
+     * @param \WC_Shipping_Method $zoneShippingMethod
+     */
+    private function addWPDeskFlexibleSingleZoneShippingMethodRates(WC_Shipping_Method $zoneShippingMethod): void
+    {
+        if (! is_array($zoneShippingMethod->instance_settings)) {
+            return;
+        }
+        $instance = $zoneShippingMethod->instance_settings;
+        if (! (isset($instance['id_for_shipping']) && isset($instance['method_title']))) {
+            return;
+        }
+
+        $this->addShippingMethod($instance['id_for_shipping'], $instance['method_title']);
     }
 }
