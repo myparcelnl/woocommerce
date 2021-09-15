@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
+use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -103,6 +105,16 @@ class OrderSettings
      * @var string
      */
     private $shippingCountry;
+
+    /**
+     * @var Recipient
+     */
+    private $shippingRecipient;
+
+    /**
+     * @var Recipient
+     */
+    private $billingRecipient;
 
     /**
      * @param WC_Order                                                                              $order
@@ -231,6 +243,9 @@ class OrderSettings
      */
     private function setAllData(): void
     {
+        $this->setBillingRecipient();
+        $this->setShippingRecipient();
+
         $this->setPackageType();
         $this->setColloAmount();
         $this->setLabelDescription();
@@ -245,6 +260,67 @@ class OrderSettings
 
         $this->setWeight();
         $this->setDigitalStampRangeWeight();
+    }
+
+    /**
+     * @TODO MY-28781 refactor OrderSettings-> get and set Shipping and Billing Recipients
+     *
+     * @return self
+     */
+    public function setShippingRecipient(): self
+    {
+        $this->shippingRecipient = (new Recipient())
+            ->setCc($this->order->get_shipping_country())
+            ->setCity($this->order->get_shipping_city())
+            ->setCompany($this->order->get_shipping_company())
+            ->setPerson(substr($this->order->get_formatted_shipping_full_name(), 0, 50))
+            ->setPostalCode($this->order->get_shipping_postcode())
+            ->setStreet($this->makeStreet($this->order->get_billing_address_1(), $this->order->get_billing_address_2()));
+
+        return $this;
+    }
+
+    /**
+     * @return \MyParcelNL\Sdk\src\Model\Recipient|null
+     */
+    public function getShippingRecipient(): ?Recipient
+    {
+        return $this->shippingRecipient;
+    }
+
+    /**
+     * @return self
+     */
+    public function setBillingRecipient(): self
+    {
+        $this->billingRecipient = (new Recipient())->setCc($this->order->get_billing_country())
+            ->setCity($this->order->get_billing_city())
+            ->setCompany($this->order->get_billing_company())
+            ->setEmail($this->order->get_billing_email())
+            ->setPerson(substr($this->order->get_formatted_billing_full_name(), 0, 50))
+            ->setPhone($this->order->get_billing_phone())
+            ->setPostalCode($this->order->get_billing_postcode())
+            ->setStreet($this->makeStreet($this->order->get_billing_address_1(), $this->order->get_billing_address_2()));
+
+        return $this;
+    }
+
+    /**
+     * @return \MyParcelNL\Sdk\src\Model\Recipient|null
+     */
+    public function getBillingRecipient(): ?Recipient
+    {
+        return $this->billingRecipient;
+    }
+
+    /**
+     * @param ...$parts
+     *
+     * @return string
+     */
+    private function makeStreet(...$parts): string
+    {
+        return (substr(trim(implode($parts)), 0, 40) ?: '');
     }
 
     /**
@@ -476,7 +552,6 @@ class OrderSettings
 
     /**
      * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter|array|null
-
      *
      * @throws \Exception
      */

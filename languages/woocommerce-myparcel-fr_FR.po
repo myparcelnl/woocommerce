@@ -553,7 +553,7 @@ msgstr "Options d'exportation"
 msgid "action_export_to_myparcel"
 msgstr "Exporter vers MyParcel"
 
-msgid "error_export_order_id_failed_because"
+msgid "error_export_orderid_failed_because"
 msgstr "Commande %1$s non pas exporté vers MyParcel. %2$s"
 
 msgid "Extra large size"
@@ -1087,6 +1087,12 @@ msgid "You have to export the orders to MyParcel before you can print the labels
 msgstr ""
 "Vous devez d'abord exporter vos commandes vers MyParcel avant de pouvoir "
 "imprimer vos étiquettes !"
+
+msgid "country_of_origin_variable"
+msgstr "Pays d'origine variable produit"
+
+msgid "country_of_origin_variable_description"
+msgstr "Ce pays d'origine remplace le pays d'origine du produit"
 
 msgid "product_variable_country_of_origin"
 msgstr "Pays d'origine variable produit"

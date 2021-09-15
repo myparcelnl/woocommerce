@@ -33,6 +33,7 @@ class WCMYPA_Settings
     public const SETTING_BARCODE_IN_NOTE           = "barcode_in_note";
     public const SETTING_BARCODE_IN_NOTE_TITLE     = "barcode_in_note_title";
     public const SETTING_DOWNLOAD_DISPLAY          = "download_display";
+    public const SETTING_EXPORT_MODE               = 'export_mode';
     public const SETTING_ERROR_LOGGING             = "error_logging";
     public const SETTING_LABEL_FORMAT              = "label_format";
     public const SETTING_ORDER_STATUS_AUTOMATION   = "order_status_automation";

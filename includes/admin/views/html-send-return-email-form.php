@@ -11,13 +11,13 @@ include('html-start.php');
  * @var array $order_ids
  */
 
-$add_return = WCMP_Export::ADD_RETURN;
-$export     = WCMP_Export::EXPORT;
+$export_return = WCMP_Export::EXPORT_RETURN;
+$export        = WCMP_Export::EXPORT;
 
 $order_ids_string = implode(';', $order_ids);
 
 $target_url = wp_nonce_url(
-    admin_url("admin-ajax.php?action=$export&request=$add_return&modal=true&order_ids=$order_ids_string"),
+    admin_url("admin-ajax.php?action=$export&request=$export_return&modal=true&order_ids=$order_ids_string"),
     WCMYPA::NONCE_ACTION
 );
 
@@ -152,7 +152,7 @@ $target_url = wp_nonce_url(
         <div>
             <?php
             if (isset($dialog) && $dialog === 'shipment') {
-                $button_text = __("Export to MyParcel", "woocommerce-myparcel");
+                $button_text = __('action_export_to_myparcel', 'woocommerce-myparcel');
             } else {
                 $button_text = __("Send email", "woocommerce-myparcel");
             }

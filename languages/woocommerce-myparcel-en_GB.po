@@ -564,7 +564,7 @@ msgstr "Export options"
 msgid "action_export_to_myparcel"
 msgstr "Export to MyParcel"
 
-msgid "error_export_order_id_failed_because"
+msgid "error_export_orderid_failed_because"
 msgstr "Order %1$s not exported to MyParcel. %2$s"
 
 msgid "Extra large size"
@@ -1083,6 +1083,12 @@ msgstr "You have not selected any orders!"
 
 msgid "You have to export the orders to MyParcel before you can print the labels!"
 msgstr "You have to export the orders to MyParcel before you can print the labels!"
+
+msgid "country_of_origin_variable"
+msgstr "Country of origin variable product"
+
+msgid "country_of_origin_variable_description"
+msgstr "This country of origin overwrites the product country of origin"
 
 msgid "product_variable_country_of_origin"
 msgstr "Country of origin variable product"

@@ -4,9 +4,14 @@ use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
+use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
+use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
+use MyParcelNL\Sdk\src\Model\Fulfilment\Order;
+use MyParcelNL\WooCommerce\Includes\Adapter\OrderLineFromWooCommerce;
 use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\Sdk\src\Support\Str;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -22,12 +27,12 @@ if (class_exists("WCMP_Export")) {
 
 class WCMP_Export
 {
-    public const EXPORT = "wcmp_export";
+    public const EXPORT = 'wcmp_export';
 
-    public const ADD_SHIPMENTS = "add_shipments";
-    public const ADD_RETURN    = "add_return";
-    public const GET_LABELS    = "get_labels";
-    public const MODAL_DIALOG  = "modal_dialog";
+    public const EXPORT_ORDER  = 'export_order';
+    public const EXPORT_RETURN = 'export_return';
+    public const GET_LABELS    = 'get_labels';
+    public const MODAL_DIALOG  = 'modal_dialog';
 
     /**
      * Maximum characters length of item description.
@@ -49,6 +54,9 @@ class WCMP_Export
 
     public const COUNTRY_CODE_NL = 'NL';
     public const COUNTRY_CODE_BE = 'BE';
+    public const NO              = 'no';
+    public const AFTER_RELOAD    = 'after_reload';
+    public const YES             = 'yes';
 
     public $order_id;
     public $success;
@@ -83,7 +91,7 @@ class WCMP_Export
             return;
         }
 
-        $return = $this->addShipments([(string) $orderId], 0, false);
+        $return = $this->exportAccordingToMode([(string) $orderId], 0, false);
 
         if (isset($return['success'])) {
             $order = WCX::get_order($orderId);
@@ -237,10 +245,10 @@ class WCMP_Export
             die();
         }
 
-        $dialog  = $_REQUEST["dialog"] ?? null;
-        $print   = $_REQUEST["print"] ?? null;
-        $offset  = (int) ($_REQUEST["offset"] ?? 0);
-        $request = $_REQUEST["request"];
+        $dialog  = $_REQUEST['dialog'] ?? null;
+        $print   = $_REQUEST['print'] ?? null;
+        $offset  = (int) ($_REQUEST['offset'] ?? 0);
+        $request = $_REQUEST['request'];
 
         /**
          * @var $order_ids
@@ -254,13 +262,13 @@ class WCMP_Export
             try {
                 switch ($request) {
                     // Creating consignments.
-                    case self::ADD_SHIPMENTS:
-                        $this->addShipments($order_ids, $offset, $print);
+                    case self::EXPORT_ORDER:
+                        $return = $this->exportAccordingToMode($order_ids, $offset, $print);
                         break;
 
                     // Creating a return shipment.
-                    case self::ADD_RETURN:
-                        $return = $this->addReturn($order_ids, $_REQUEST['myparcel_options']);
+                    case self::EXPORT_RETURN:
+                        $return = $this->exportReturn($order_ids, $_REQUEST['myparcel_options']);
                         break;
 
                     // Downloading labels.
@@ -281,7 +289,7 @@ class WCMP_Export
         }
 
         // display errors directly if PDF requested or modal
-        if (! empty($this->errors) && in_array($request, [self::ADD_RETURN, self::GET_LABELS, self::MODAL_DIALOG])) {
+        if (! empty($this->errors) && in_array($request, [self::EXPORT_RETURN, self::GET_LABELS, self::MODAL_DIALOG])) {
             echo $this->parse_errors($this->errors);
             die();
         }
@@ -321,20 +329,19 @@ class WCMP_Export
     }
 
     /**
-     * @param $order_ids
-     * @param $process
+     * @param array $order_ids
+     * @param bool  $process
      *
      * @return array
      * @throws ApiException
      * @throws MissingFieldException
-     * @throws ErrorException
-     * @throws Exception
+     * @throws \MyParcelNL\Sdk\src\Exception\AccountNotActiveException
      */
-    public function add_shipments(array $order_ids, bool $process)
+    public function addShipments(array $order_ids, bool $process)
     {
         $return          = [];
         $collection      = new MyParcelCollection();
-        $processDirectly = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_PROCESS_DIRECTLY) || $process === true;
+        $processDirectly = $process || WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_PROCESS_DIRECTLY);
 
         WCMP_Log::add("*** Creating shipments started ***");
 
@@ -398,8 +405,7 @@ class WCMP_Export
                 $this->getShipmentData($consignmentIds, $order);
             }
 
-            $api = $this->init_api();
-            $api->updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
+            WCMP_API::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
 
             WCX_Order::update_meta_data(
                 $order,
@@ -426,12 +432,12 @@ class WCMP_Export
     }
 
     /**
-     * @param array $order_ids
-     * @param array $options
+     * @param array      $order_ids
+     * @param array|null $options
      *
      * @return array
      */
-    public function addReturn(array $order_ids, ?array $options = []): array
+    public function exportReturn(array $order_ids, ?array $options = []): array
     {
         $return = [];
 
@@ -1422,19 +1428,21 @@ class WCMP_Export
     /**
      * Filter out orders shipping to country codes that are not in the allowed list.
      *
-     * @param $order_ids
+     * @param array $order_ids
      *
-     * @return mixed
+     * @return array
      * @throws Exception
      */
     public function filterOrderDestinations(array $order_ids): array
     {
         foreach ($order_ids as $key => $order_id) {
             $order            = WCX::get_order($order_id);
-            $shipping_country = WCX_Order::get_prop($order, "shipping_country");
+            $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
 
             if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
                 unset($order_ids[$key]);
+                $this->errors[] =
+                    sprintf(__('error_order_has_invalid_shipment_country', 'woocommerce-myparcel'), $key);
             }
         }
 
@@ -1442,7 +1450,7 @@ class WCMP_Export
     }
 
     /**
-     * @param int               $colloAmount
+     * @param int                 $colloAmount
      * @param MyParcelCollection  $collection
      * @param AbstractConsignment $consignment
      *
@@ -1573,45 +1581,129 @@ class WCMP_Export
     }
 
     /**
-     * @param $order_ids
-     * @param $offset
-     * @param $print
+     * @param array         $orderIds
+     * @param int           $offset
+     * @param string | null $print
      *
-     * @return array|void
+     * @return array
      * @throws ApiException
-     * @throws ErrorException
      * @throws MissingFieldException
      * @throws Exception
      */
-    private function addShipments($order_ids, $offset, $print)
+    private function exportAccordingToMode(array $orderIds, int $offset, ?string $print): array
     {
-        $order_ids = $this->filterOrderDestinations($order_ids);
+        $exportMode = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
+        $orderIds   = $this->filterOrderDestinations($orderIds);
+        $print      = $print ?? self::NO;
 
-        if (empty($order_ids)) {
-            $this->errors[] =
-                __(
-                    "The order(s) you have selected have invalid shipping countries.",
-                    "woocommerce-myparcel"
-                );
-
-            return;
+        if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
+            $return = $this->saveOrderCollection($orderIds);
+        } else {
+            // if we're going to print directly, we need to process the orders first, regardless of the settings
+            $process = (self::YES === $print);
+            $return  = $this->addShipments($orderIds, $process);
         }
 
-        // if we're going to print directly, we need to process the orders first, regardless of the settings
-        $process = $print === "yes" ? true : false;
-        $return  = $this->add_shipments($order_ids, $process);
+        return $this->setFeedbackForClient($print, $offset, $orderIds, $return ?? []);
+    }
 
-        // When adding shipments, store $return for use in admin_notice
-        // This way we can refresh the page (JS) to show all new buttons
-        if ($print === "no" || $print === "after_reload") {
-            update_option("wcmyparcel_admin_notices", $return);
-            if ($print === "after_reload") {
+    /**
+     * @param array $orderIds
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
+    private function saveOrderCollection(array $orderIds): array
+    {
+        $apiKey          = $this->getSetting(WCMYPA_Settings::SETTING_API_KEY);
+        $orderCollection = (new OrderCollection())->setApiKey($apiKey);
+
+        foreach ($orderIds as $orderId) {
+            $wcOrder         = WCX::get_order($orderId);
+            $orderSettings   = new OrderSettings($wcOrder);
+            $deliveryOptions = $orderSettings->getDeliveryOptions();
+
+            $order = (new Order())
+                ->setStatus($wcOrder->get_status())
+                ->setDeliveryOptions($deliveryOptions)
+                ->setInvoiceAddress($orderSettings->getBillingRecipient())
+                ->setRecipient($orderSettings->getShippingRecipient())
+                ->setOrderDate($wcOrder->get_date_created() ?? new DateTime())
+                ->setExternalIdentifier($orderId);
+
+            $orderLines = new Collection();
+
+            foreach ($wcOrder->get_items() as $wcOrderItem) {
+                $orderLine = new OrderLineFromWooCommerce($wcOrderItem);
+
+                $orderLines->push($orderLine);
+            }
+
+            $order->setOrderLines($orderLines);
+            $orderCollection->push($order);
+        }
+
+        $savedOrderCollection = $orderCollection->save();
+
+        return $this->updateOrderMetaByCollection($savedOrderCollection);
+    }
+
+    /**
+     * @param \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection $orderCollection
+     *
+     * @return array
+     */
+    private function updateOrderMetaByCollection(OrderCollection $orderCollection): array
+    {
+        $currentDateTime = (new DateTime())->format(AbstractOrder::DATE_FORMAT_FULL);
+
+        foreach ($orderCollection as $order) {
+            $orderId = $order->getExternalIdentifier();
+            $wcOrder = WCX::get_order($orderId);
+            $value   = [
+                WCMYPA_Admin::META_PPS_EXPORTED    => true,
+                WCMYPA_Admin::META_PPS_UUID        => $order->getUuid(),
+                WCMYPA_Admin::META_PPS_EXPORT_DATE => $currentDateTime,
+            ];
+
+            if (! add_post_meta($orderId, WCMYPA_Admin::META_PPS, $value)) {
+                $this->errors[] = sprintf(__('error_pps_export_feedback', 'woocommerce-myparcel'), $orderId);
+            }
+
+            WCMP_API::updateOrderStatus($wcOrder);
+        }
+
+        return [
+            'success' => sprintf(
+                __('message_orders_exported_successfully', 'woocommerce-myparcel'),
+                count($orderCollection)
+            ),
+        ];
+    }
+
+    /**
+     * When adding shipments, store $return for use in admin_notice
+     * This way we can refresh the page (JS) to show all new buttons
+     *
+     * @param string $print
+     * @param int    $offset
+     * @param array  $orderIds
+     * @param array  $return
+     *
+     * @return array
+     */
+    private function setFeedbackForClient(string $print, int $offset, array $orderIds, array $return): array
+    {
+        if (in_array($print, [self::NO, self::AFTER_RELOAD])) {
+            update_option('wcmyparcel_admin_notices', $return);
+            if (self::AFTER_RELOAD === $print) {
                 $print_queue = [
-                    "order_ids"    => $order_ids,
-                    "shipment_ids" => $return["success_ids"],
-                    "offset"       => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
+                    'order_ids'    => $orderIds,
+                    'shipment_ids' => $return['success_ids'],
+                    'offset'       => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
                 ];
-                update_option("wcmyparcel_print_queue", $print_queue);
+                update_option('wcmyparcel_print_queue', $print_queue);
             }
         }
 

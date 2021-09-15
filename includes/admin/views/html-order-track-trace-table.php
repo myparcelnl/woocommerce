@@ -63,7 +63,7 @@ if (! count($shipments)) {
 
           WCMYPA_Admin::renderAction(
               admin_url("admin-ajax.php?action=$action&request=$getLabels&shipment_ids=$shipment_id&return_shipment_id=$returnShipmentId"),
-              __("Print MyParcel label", "woocommerce-myparcel"),
+              __('action_print_myparcel_label', 'woocommerce-myparcel'),
               WCMYPA()->plugin_url() . "/assets/img/print.svg"
           );
           ?>

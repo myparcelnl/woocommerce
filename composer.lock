@@ -4,26 +4,27 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4bfd5069039e00c77337ac28f6a9e24c",
+    "content-hash": "f992f41eba739307e442392abf68d28f",
     "packages": [
         {
             "name": "myparcelnl/sdk",
-            "version": "v5.2.10",
+            "version": "v5.3.0-beta.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "b1cd4185a49e1ab2b1c4f06c608d3ab5c97a4f11"
+                "reference": "9fd9f8e1340c0db8b5d11b8f664c27ab143d5631"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/b1cd4185a49e1ab2b1c4f06c608d3ab5c97a4f11",
-                "reference": "b1cd4185a49e1ab2b1c4f06c608d3ab5c97a4f11",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/9fd9f8e1340c0db8b5d11b8f664c27ab143d5631",
+                "reference": "9fd9f8e1340c0db8b5d11b8f664c27ab143d5631",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1.0"
             },
             "require-dev": {
+                "fakerphp/faker": "^1.14",
                 "phpunit/phpunit": "^5.5"
             },
             "type": "library",
@@ -65,13 +66,15 @@
                 "myparcel",
                 "postnl"
             ],
-            "time": "2021-04-19T13:48:03+00:00"
+            "time": "2021-06-11T09:00:39+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "myparcelnl/sdk": 10
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

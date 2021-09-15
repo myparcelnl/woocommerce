@@ -207,6 +207,7 @@ msgid "shipment_options_age_check"
 msgstr "Leeftijdscheck 18+"
 
 msgid "shipment_options_age_check_help_text"
+
 msgstr ""
 "De leeftijdscheck is bedoeld voor pakketzendingen waarbij de ontvanger moet "
 "kunnen aantonen dat hij/zij 18+ is. Met deze optie worden \"Handtekening "
@@ -276,6 +277,7 @@ msgstr "Verzeker alle orders met een totaal prijs hoger dan het ingevulde bedrag
 
 msgid "shipment_options_insured_help_text"
 msgstr ""
+
 "Standaard zit er geen verzekering op zendingen. Als je alsnog een zending "
 "wilt verzekeren kan dat. Wij verzekeren het aankoopbedrag van een zending "
 "met een maximum van €5000. Verzekerde zendingen worden altijd alleen "
@@ -578,7 +580,7 @@ msgstr "Export opties"
 msgid "action_export_to_myparcel"
 msgstr "Exporteer naar MyParcel"
 
-msgid "error_export_order_id_failed_because"
+msgid "error_export_orderid_failed_because"
 msgstr "Bestelling %1$s niet geëxporteerd naar MyParcel. %2$s"
 
 msgid "Extra large size"
@@ -1105,6 +1107,13 @@ msgid "You have to export the orders to MyParcel before you can print the labels
 msgstr ""
 "Je dient de orders eerst naar MyParcel te exporteren voordat je de labels "
 "kunt printen!"
+
+
+msgid "country_of_origin_variable"
+msgstr "Land van herkomst variabel product"
+
+msgid "country_of_origin_variable_description"
+msgstr "Dit land van herkomst overschrijft het land van herkomst van het product"
 
 msgid "product_variable_country_of_origin"
 msgstr "Land van herkomst variabel product"
