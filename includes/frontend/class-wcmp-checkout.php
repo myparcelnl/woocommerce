@@ -582,12 +582,12 @@ class WCMP_Checkout
      */
     private function hasAgeCheck(string $settingName, string $carrier): bool
     {
-        $isHalfDayDelivery= [
+        $isMorningOrEvening = [
             WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
             WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
         ];
 
-        if (in_array($settingName, $isHalfDayDelivery, true)) {
+        if (in_array($settingName, $isMorningOrEvening, true)) {
             $ageCheckFromSettings = (bool) WCMYPA()->setting_collection->getByName(
                 sprintf('%s_%s', $carrier, WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK)
             );
