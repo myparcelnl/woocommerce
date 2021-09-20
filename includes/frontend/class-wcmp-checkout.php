@@ -245,7 +245,7 @@ class WCMP_Checkout
                     $value += $chosenShippingMethodPrice;
                 }
 
-                if($this->hasAgeRestrictions($settingName, $carrier)) {
+                if ($this->hasAgeCheck($settingName, $carrier)) {
                     $value = false;
                 }
 
@@ -580,7 +580,7 @@ class WCMP_Checkout
      *
      * @return bool
      */
-    private function hasAgeRestrictions(string $settingName, string $carrier): bool
+    private function hasAgeCheck(string $settingName, string $carrier): bool
     {
         $isHalfDayDelivery= [
             WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
