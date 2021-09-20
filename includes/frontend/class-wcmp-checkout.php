@@ -606,7 +606,7 @@ class WCMP_Checkout
 
             $cartItemsNoAgeCheck = array_filter(WC()->cart->get_cart(), static function($element) {
                 $product = $element['data'];
-                return $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true) === 'no';
+                return 'no' === $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true);
             });
 
             if(count($cartItemsNoAgeCheck) === count(WC()->cart->get_cart())) {
