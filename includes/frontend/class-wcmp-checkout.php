@@ -596,7 +596,7 @@ class WCMP_Checkout
                 /**
                  * @var WC_Product $product
                  */
-                $product = $cartItem['data'];
+                $product      = $cartItem['data'];
                 $ageCheckMeta = $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true);
                 if ($ageCheckMeta === 'yes') {
                     $ageCheckFromProduct = true;
