@@ -573,7 +573,7 @@ class WCMP_Checkout
     }
 
     /**
-     * Returns if the cart is b product or settings age restricted
+     * Returns if the cart is by product or default settings age restricted
      *
      * @param  string $settingName
      * @param  string $carrier
@@ -582,43 +582,42 @@ class WCMP_Checkout
      */
     private function hasAgeCheck(string $settingName, string $carrier): bool
     {
-        $isMorningOrEvening = [
+        $morningAndEveningTypes = [
             WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
             WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
         ];
 
-        if (in_array($settingName, $isMorningOrEvening, true)) {
-            $ageCheckFromSettings = (bool) WCMYPA()->setting_collection->getByName(
-                sprintf('%s_%s', $carrier, WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK)
-            );
-            $ageCheckFromProduct = false;
-            foreach (WC()->cart->get_cart() as $cartItem) {
-                /**
-                 * @var WC_Product $product
-                 */
-                $product      = $cartItem['data'];
-                $ageCheckMeta = $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true);
-                if ($ageCheckMeta === 'yes') {
-                    $ageCheckFromProduct = true;
-                    break;
-                }
-            }
+        if (! in_array($settingName, $morningAndEveningTypes, true)) {
+            return false;
+        }
 
-            $cartItemsNoAgeCheck = array_filter(WC()->cart->get_cart(), static function($element) {
-                $product = $element['data'];
-                return 'no' === $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true);
-            });
+        $ageCheckFromSettings = (bool) WCMYPA()->setting_collection->getByName(
+            sprintf('%s_%s', $carrier, WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK)
+        );
+        $ageCheckFromProduct  = false;
 
-            if(count($cartItemsNoAgeCheck) === count(WC()->cart->get_cart())) {
-                return false;
-            }
-
-            if ($ageCheckFromSettings || $ageCheckFromProduct) {
-                return true;
+        foreach (WC()->cart->get_cart() as $cartItem) {
+            /**
+             * @var WC_Product $product
+             */
+            $product      = $cartItem['data'];
+            $ageCheckMeta = $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true);
+            if ($ageCheckMeta === 'yes') {
+                $ageCheckFromProduct = true;
+                break;
             }
         }
 
-        return false;
+        $cartItemsWithoutAgeCheck = array_filter(WC()->cart->get_cart(), static function ($element) {
+            $product = $element['data'];
+            return 'no' === $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true);
+        });
+
+        if (count($cartItemsWithoutAgeCheck) === count(WC()->cart->get_cart())) {
+            return false;
+        }
+
+        return $ageCheckFromSettings || $ageCheckFromProduct;
     }
 }
 
