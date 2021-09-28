@@ -62,7 +62,7 @@ if (! count($shipments)) {
           $returnShipmentId = $order->get_meta(WCMYPA_Admin::META_RETURN_SHIPMENT_IDS);
 
           WCMYPA_Admin::renderAction(
-              admin_url("admin-ajax.php?action=$action&request=$getLabels&order_ids=$order_id"),
+              admin_url("admin-ajax.php?action=$action&request=$getLabels&order_ids=$order_id&shipment_ids=$shipment_id&return_shipment_id=$returnShipmentId"),
               __('action_print_myparcel_label', 'woocommerce-myparcel'),
               WCMYPA()->plugin_url() . "/assets/img/print.svg"
           );
