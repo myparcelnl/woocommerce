@@ -40,8 +40,11 @@ class WCMP_Shipping_Methods
      */
     private $shippingMethods = [];
 
+    private $shippingZones;
+
     public function __construct()
     {
+        $this->shippingZones = WC_Shipping_Zones::get_zones();
         $this->gatherShippingMethods();
     }
 
@@ -67,8 +70,9 @@ class WCMP_Shipping_Methods
 
             $this->addShippingMethod($shippingMethodId, $methodTitle);
             $this->addFlatRateShippingMethods($shippingMethodId, $methodTitle);
-            $this->addShippingMethodsFromShippingZones();
         }
+
+        $this->addShippingMethodsFromShippingZones();
     }
 
     /**
@@ -88,9 +92,7 @@ class WCMP_Shipping_Methods
 
     private function addShippingMethodsFromShippingZones(): void
     {
-        $shippingZones = WC_Shipping_Zones::get_zones();
-
-        foreach ($shippingZones as $shippingZone) {
+        foreach ($this->shippingZones as $shippingZone) {
             $zoneId = $shippingZone['id'] ?? $shippingZone['zone_id'];
 
             if (! $zoneId) {
@@ -99,7 +101,11 @@ class WCMP_Shipping_Methods
 
             $zone = WC_Shipping_Zones::get_zone($zoneId);
             /* @var WC_Shipping_Method[] $zoneShippingMethods */
-            $zoneShippingMethods = $zone->get_shipping_methods();
+            $zoneShippingMethods = $this->shippingZones[$zone->get_id()]['shipping_methods'] ?? null;
+
+            if (null === $zoneShippingMethods) {
+                $zoneShippingMethods = $zone->get_shipping_methods();
+            }
 
             foreach ($zoneShippingMethods as $zoneShippingMethod) {
                 $this->addZoneShippingMethodRates($zone, $zoneShippingMethod);
