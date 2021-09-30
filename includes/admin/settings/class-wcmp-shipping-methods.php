@@ -1,5 +1,7 @@
 <?php
 
+use MyParcelNL\WooCommerce\ShippingZone;
+
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
@@ -90,6 +92,9 @@ class WCMP_Shipping_Methods
         $this->shippingMethods[$key] = $value;
     }
 
+    /**
+     * @throws \Exception
+     */
     private function addShippingMethodsFromShippingZones(): void
     {
         foreach ($this->shippingZones as $shippingZone) {
@@ -99,7 +104,7 @@ class WCMP_Shipping_Methods
                 continue;
             }
 
-            $zone = WC_Shipping_Zones::get_zone($zoneId);
+            $zone = new ShippingZone( $shippingZone );
             /* @var WC_Shipping_Method[] $zoneShippingMethods */
             $zoneShippingMethods = $this->shippingZones[$zone->get_id()]['shipping_methods'] ?? null;
 
@@ -143,10 +148,10 @@ class WCMP_Shipping_Methods
     }
 
     /**
-     * @param \WC_Shipping_Zone   $zone
+     * @param ShippingZone   $zone
      * @param \WC_Shipping_Method $zoneShippingMethod
      */
-    private function addZoneShippingMethodRates(WC_Shipping_Zone $zone, WC_Shipping_Method $zoneShippingMethod): void
+    private function addZoneShippingMethodRates(ShippingZone $zone, WC_Shipping_Method $zoneShippingMethod): void
     {
         switch (get_class($zoneShippingMethod)) {
             case self::SHIPPING_METHOD_CLASS_WOOCOMMERCE:
@@ -165,11 +170,11 @@ class WCMP_Shipping_Methods
     }
 
     /**
-     * @param WC_Shipping_Zone   $zone
+     * @param ShippingZone   $zone
      * @param WC_Shipping_Method $zoneShippingMethod
      */
     private function addWooCommerceZoneShippingMethodRates(
-        WC_Shipping_Zone $zone,
+        ShippingZone $zone,
         WC_Shipping_Method $zoneShippingMethod
     ): void {
         foreach ($zoneShippingMethod->get_shipping_rates() as $zoneShippingRate) {
@@ -183,11 +188,11 @@ class WCMP_Shipping_Methods
     }
 
     /**
-     * @param WC_Shipping_Zone   $zone
+     * @param ShippingZone   $zone
      * @param WC_Shipping_Method $zoneShippingMethod
      */
     private function addBolderElementsZoneShippingMethodRates(
-        WC_Shipping_Zone $zone,
+        ShippingZone $zone,
         WC_Shipping_Method $zoneShippingMethod
     ): void {
         $shippingMethodOption = get_option($zoneShippingMethod->id . '_options-' . $zoneShippingMethod->instance_id);
