@@ -152,6 +152,7 @@ if (! class_exists('WCMYPA')) :
             require_once($this->includes . "/compatibility/class-wc-product-compatibility.php");
             require_once($this->includes . "/compatibility/class-ce-compatibility.php");
             require_once($this->includes . "/compatibility/class-wcpdf-compatibility.php");
+            require_once($this->includes . "/compatibility/ShippingZone.php");
 
             require_once($this->includes . "/class-wcmp-data.php");
             require_once($this->includes . "/collections/settings-collection.php");
