@@ -104,7 +104,7 @@ class WCMP_Shipping_Methods
                 continue;
             }
 
-            $zone = new ShippingZone( $shippingZone );
+            $zone = new ShippingZone($shippingZone);
             /* @var WC_Shipping_Method[] $zoneShippingMethods */
             $zoneShippingMethods = $this->shippingZones[$zone->get_id()]['shipping_methods'] ?? null;
 
