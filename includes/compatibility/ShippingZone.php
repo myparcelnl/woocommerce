@@ -12,7 +12,7 @@ if (! defined('ABSPATH')) {
 class ShippingZone extends WC_Shipping_Zone
 {
     /**
-     * @param  int|object|array $zone Zone ID to load from the DB or zone object.
+     * @param int|object|array $zone Zone ID to load from the DB or zone object.
      */
     public function __construct($zone = null)
     {
@@ -24,7 +24,7 @@ class ShippingZone extends WC_Shipping_Zone
     }
 
     /**
-     * @param  array $zoneData
+     * @param array $zoneData
      */
     private function transformToObject(array $zoneData)
     {

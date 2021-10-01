@@ -191,7 +191,7 @@ class WCMP_Shipping_Methods
     }
 
     /**
-     * @param ShippingZone   $zone
+     * @param ShippingZone $zone
      * @param WC_Shipping_Method $zoneShippingMethod
      */
     private function addBolderElementsZoneShippingMethodRates(
