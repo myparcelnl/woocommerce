@@ -111,7 +111,7 @@ class WCMP_Shipping_Methods
             /* @var WC_Shipping_Method[] $zoneShippingMethods */
             $zoneShippingMethods = $this->shippingZones[$zone->get_id()]['shipping_methods'] ?? null;
 
-            if (null === $zoneShippingMethods) {
+            if (! $zoneShippingMethods) {
                 $zoneShippingMethods = $zone->get_shipping_methods();
             }
 
