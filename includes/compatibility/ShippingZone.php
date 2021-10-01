@@ -12,8 +12,6 @@ if (! defined('ABSPATH')) {
 class ShippingZone extends WC_Shipping_Zone
 {
     /**
-     * Constructor for zones.
-     *
      * @param  int|object|array $zone Zone ID to load from the DB or zone object.
      */
     public function __construct($zone = null)
