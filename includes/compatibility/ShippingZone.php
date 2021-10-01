@@ -5,10 +5,9 @@ namespace MyParcelNL\WooCommerce;
 use WC_Shipping_Zone;
 use WC_Data_Store;
 
-if (!defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
-
 
 class ShippingZone extends WC_Shipping_Zone
 {
