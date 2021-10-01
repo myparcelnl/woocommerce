@@ -18,19 +18,10 @@ class ShippingZone extends WC_Shipping_Zone
      */
     public function __construct($zone = null)
     {
-        if (is_numeric($zone) && ! empty($zone)) {
-            $this->set_id($zone);
-            $this->call_wc_shipping_zone();
-        } elseif (is_object($zone)) {
-            $this->set_id($zone->zone_id);
-            $this->call_wc_shipping_zone();
-        } elseif (is_array($zone)) {
+        if (is_array($zone) && count($zone) > 0) {
             $this->transformToObject($zone);
-        } elseif (0 === $zone || '0' === $zone) {
-            $this->set_id(0);
-            $this->call_wc_shipping_zone();
         } else {
-            $this->set_object_read(true);
+            parent::__construct($zone);
         }
     }
 
@@ -47,17 +38,5 @@ class ShippingZone extends WC_Shipping_Zone
         }
         $this->set_meta_data($zoneData['meta_data']);
         $this->set_object_read(true);
-    }
-
-    /**
-     *
-     * @throws \Exception
-     */
-    private function call_wc_shipping_zone(): void
-    {
-        $this->data_store = WC_Data_Store::load('shipping-zone');
-        if (false === $this->get_object_read()) {
-            $this->data_store->read($this);
-        }
     }
 }
