@@ -43,7 +43,7 @@ class WCMP_Shipping_Methods
     private $shippingMethods = [];
 
     /**
-     * @var array Holds on the shipping zones so it;s not needed to reload on every call
+     * @var array[] Holds on to the shipping zones, so reloading is not needed
      */
     private $shippingZones;
 
