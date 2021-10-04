@@ -147,7 +147,7 @@ class WCMP_Shipping_Methods
     }
 
     /**
-     * @param MyParcelNL\WooCommerce\ShippingZone $zone
+     * @param MyParcelNL\WooCommerce\Includes\Compatibility\ShippingZone $zone
      * @param \WC_Shipping_Method $zoneShippingMethod
      */
     private function addZoneShippingMethodRates(ShippingZone $zone, WC_Shipping_Method $zoneShippingMethod): void
@@ -169,7 +169,7 @@ class WCMP_Shipping_Methods
     }
 
     /**
-     * @param MyParcelNL\WooCommerce\ShippingZone $zone
+     * @param MyParcelNL\WooCommerce\Includes\Compatibility\ShippingZone $zone
      * @param WC_Shipping_Method $zoneShippingMethod
      */
     private function addWooCommerceZoneShippingMethodRates(
@@ -187,7 +187,7 @@ class WCMP_Shipping_Methods
     }
 
     /**
-     * @param MyParcelNL\WooCommerce\ShippingZone $zone
+     * @param MyParcelNL\WooCommerce\Includes\Compatibility\ShippingZone $zone
      * @param WC_Shipping_Method $zoneShippingMethod
      */
     private function addBolderElementsZoneShippingMethodRates(
