@@ -1,6 +1,6 @@
 <?php
 
-use MyParcelNL\WooCommerce\ShippingZone;
+use MyParcelNL\WooCommerce\Includes\Compatibility\ShippingZone;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -109,11 +109,7 @@ class WCMP_Shipping_Methods
 
             $zone = new ShippingZone($shippingZone);
             /* @var WC_Shipping_Method[] $zoneShippingMethods */
-            $zoneShippingMethods = $this->shippingZones[$zone->get_id()]['shipping_methods'] ?? null;
-
-            if (! $zoneShippingMethods) {
-                $zoneShippingMethods = $zone->get_shipping_methods();
-            }
+            $zoneShippingMethods = $this->shippingZones[$zone->get_id()]['shipping_methods'] ?? $zone->get_shipping_methods();
 
             foreach ($zoneShippingMethods as $zoneShippingMethod) {
                 $this->addZoneShippingMethodRates($zone, $zoneShippingMethod);
@@ -151,7 +147,7 @@ class WCMP_Shipping_Methods
     }
 
     /**
-     * @param ShippingZone   $zone
+     * @param MyParcelNL\WooCommerce\ShippingZone $zone
      * @param \WC_Shipping_Method $zoneShippingMethod
      */
     private function addZoneShippingMethodRates(ShippingZone $zone, WC_Shipping_Method $zoneShippingMethod): void
@@ -173,7 +169,7 @@ class WCMP_Shipping_Methods
     }
 
     /**
-     * @param ShippingZone   $zone
+     * @param MyParcelNL\WooCommerce\ShippingZone $zone
      * @param WC_Shipping_Method $zoneShippingMethod
      */
     private function addWooCommerceZoneShippingMethodRates(
@@ -191,7 +187,7 @@ class WCMP_Shipping_Methods
     }
 
     /**
-     * @param ShippingZone $zone
+     * @param MyParcelNL\WooCommerce\ShippingZone $zone
      * @param WC_Shipping_Method $zoneShippingMethod
      */
     private function addBolderElementsZoneShippingMethodRates(

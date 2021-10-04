@@ -1,6 +1,6 @@
 <?php
 
-namespace MyParcelNL\WooCommerce;
+namespace MyParcelNL\WooCommerce\Includes\Compatibility;
 
 use WC_Shipping_Zone;
 use WC_Data_Store;
