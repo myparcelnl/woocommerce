@@ -90,12 +90,14 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 4.5.0 (2021-09-23) =
+= 4.5.0 (2021-10-08) =
 * Feat: Add order mode 'Export entire order' aka PPS
 * Feat: Make age check, large format and insurance available to pickup
+* Feat: Disable morning/evening delivery when agecheck is present
 * Feat: Always show delivery date when available on order grid
 * Fix: Return extra options without extra linebreaks
 * Fix: Add WPDesk flexible shipping single compatibility
+* Fix: Url for print button to act like other print label buttons
 
 = 4.4.5 (2021-08-17) =
 * Fix: Update package type above shipment options dialog without refreshing page
