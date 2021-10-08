@@ -43,10 +43,13 @@ class WCMP_Shipping_Methods
     private $shippingMethods = [];
 
     /**
-     * @var array[] Holds on to the shipping zones, so reloading is not needed
+     * @var array
      */
     private $shippingZones;
 
+    /**
+     * WCMP_Shipping_Methods constructor.
+     */
     public function __construct()
     {
         $this->shippingZones = WC_Shipping_Zones::get_zones();
@@ -61,6 +64,9 @@ class WCMP_Shipping_Methods
         return $this->shippingMethods;
     }
 
+    /**
+     * @throws Exception
+     */
     private function gatherShippingMethods(): void
     {
         $wooCommerceShippingMethods = WC()->shipping()->get_shipping_methods();
