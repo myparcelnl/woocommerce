@@ -16,7 +16,7 @@ class ShippingZone extends WC_Shipping_Zone
      */
     public function __construct($zone = null)
     {
-        if (is_array($zone) && count($zone) > 0) {
+        if (is_array($zone) && $zone) {
             $this->transformToObject($zone);
         } else {
             parent::__construct($zone);
