@@ -1231,7 +1231,10 @@ class WCMYPA_Admin
      */
     private function printDeliveryDate(DeliveryOptions $deliveryOptions): void
     {
-        if (null !== $deliveryOptions->getDate()) {
+        if (
+            $deliveryOptions->getDate() ||
+            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $deliveryOptions->getPackageType()
+        ) {
             printf(
                 '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
                 __("MyParcel shipment:", "woocommerce-myparcel"),
