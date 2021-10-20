@@ -340,9 +340,10 @@ class WCMP_Export_Consignments
      */
     private function getFormattedLabelDescription(): string
     {
-        $productIds   = [];
-        $productNames = [];
-        $productSkus  = [];
+        $productIds      = [];
+        $productNames    = [];
+        $productSkus     = [];
+        $productQuantity = [];
 
         foreach ($this->order->get_items() as $item) {
             if (! method_exists($item, 'get_product')) {
@@ -353,9 +354,11 @@ class WCMP_Export_Consignments
             $product = $item->get_product();
             $sku     = $product->get_sku();
 
-            $productIds[]   = $product->get_id();
-            $productNames[] = $product->get_name();
-            $productSkus[]  = empty($sku) ? '–' : $sku;
+            $productIds[]      = $product->get_id();
+            $productNames[]    = $product->get_name();
+            $productSkus[]     = empty($sku) ? '–' : $sku;
+            $productQuantity[] = $item->get_quantity();
+
         }
 
         $formattedLabelDescription = strtr(
@@ -365,7 +368,7 @@ class WCMP_Export_Consignments
                 '[ORDER_NR]'      => $this->order->get_order_number(),
                 '[PRODUCT_ID]'    => implode(', ', $productIds),
                 '[PRODUCT_NAME]'  => implode(', ', $productNames),
-                '[PRODUCT_QTY]'   => count($this->order->get_items()),
+                '[PRODUCT_QTY]'   => implode(', ', $productQuantity),
                 '[PRODUCT_SKU]'   => implode(', ', $productSkus),
                 '[CUSTOMER_NOTE]' => $this->order->get_customer_note(),
             ]
