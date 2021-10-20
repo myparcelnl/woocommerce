@@ -1304,7 +1304,7 @@ class WCMYPA_Admin
     private function getDeliveryTypeOptions(DeliveryOptions $deliveryOptions): string
     {
         $deliveryType  = $deliveryOptions->getDeliveryType();
-        $deliveryTitle = '';
+        $deliveryTitle = null;
 
         switch ($deliveryType) {
             case AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME:
