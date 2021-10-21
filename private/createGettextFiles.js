@@ -50,8 +50,8 @@ function createGettextFiles(data) {
       };
     });
 
-    fs.writeFileSync(poFilePath, gettextParser.po.compile(translationObject));
-    fs.writeFileSync(moFilePath, gettextParser.mo.compile(translationObject));
+    fs.writeFileSync(poFilePath, `${gettextParser.po.compile(translationObject)}\n`);
+    fs.writeFileSync(moFilePath, `${gettextParser.mo.compile(translationObject)}\n`);
   });
 }
 
