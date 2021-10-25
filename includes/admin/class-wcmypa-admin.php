@@ -1247,7 +1247,7 @@ class WCMYPA_Admin
     /**
      * Output the chosen delivery options or the chosen pickup options.
      *
-     * @param DeliveryOptions $deliveryOptions
+     * @param  DeliveryOptions  $deliveryOptions
      *
      * @return array[]|null
      * @throws \Exception
@@ -1262,11 +1262,13 @@ class WCMYPA_Admin
             return null;
         }
 
+        $deliveryType = $this->getDeliveryTypeOptions($deliveryOptions);
+
         if (AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME === $deliveryOptions->getDeliveryType()) {
             $pickupLocation = $deliveryOptions->getPickupLocation();
-            $deliveryType   = $deliveryOptions->getDeliveryType();
+
             return [
-                __('delivery_type', 'woocommerce-myparcel')   => WCMP_Data::getDeliveryTypesHuman()[$deliveryType],
+                __('delivery_type', 'woocommerce-myparcel')   => $deliveryType,
                 __('pickup_location', 'woocommerce-myparcel') => sprintf(
                     "%s<br>%s %s<br>%s %s",
                     $pickupLocation->getLocationName(),
@@ -1279,7 +1281,7 @@ class WCMYPA_Admin
         }
 
         $confirmationData = [
-            __('delivery_type', 'woocommerce-myparcel') => WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
+            __('delivery_type', 'woocommerce-myparcel') => $deliveryType,
         ];
 
         if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
@@ -1292,6 +1294,34 @@ class WCMYPA_Admin
         }
 
         return $confirmationData;
+    }
+
+    /**
+     * @param  DeliveryOptions  $deliveryOptions
+     *
+     * @return string
+     */
+    private function getDeliveryTypeOptions(DeliveryOptions $deliveryOptions): string
+    {
+        $deliveryType  = $deliveryOptions->getDeliveryType();
+        $deliveryTitle = null;
+
+        switch ($deliveryType) {
+            case AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME:
+                $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_STANDARD_TITLE);
+                break;
+            case AbstractConsignment::DELIVERY_TYPE_MORNING_NAME:
+                $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE);
+                break;
+            case AbstractConsignment::DELIVERY_TYPE_EVENING_NAME:
+                $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE);
+                break;
+            case AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME:
+                $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_PICKUP_TITLE);
+                break;
+        }
+
+        return $deliveryTitle ?: WCMP_Data::getDeliveryTypesHuman()[$deliveryType];
     }
 
     /**
