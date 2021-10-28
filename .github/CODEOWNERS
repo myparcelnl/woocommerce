@@ -1,17 +1,42 @@
-# Global
-*       @myparcelnl/plugin-developers
+# --- Only integration developers ---
+*  @myparcelnl/integration
 
-# Both plugin and frontend
-*.scss  @myparcelnl/plugin-developers @myparcelnl/frontend-developers
-*.css   @myparcelnl/plugin-developers @myparcelnl/frontend-developers
-*.png   @myparcelnl/plugin-developers @myparcelnl/frontend-developers
-*.svg   @myparcelnl/plugin-developers @myparcelnl/frontend-developers
-*.jpg   @myparcelnl/plugin-developers @myparcelnl/frontend-developers
+# --- Both integration and frontend developers ---
+*.json  @myparcelnl/integration @myparcelnl/frontend
+*.md    @myparcelnl/integration @myparcelnl/frontend
+*.yml   @myparcelnl/integration @myparcelnl/frontend
 
-# Frontend only
-*.json  @myparcelnl/frontend-developers
-*.js    @myparcelnl/frontend-developers
-*.jsx   @myparcelnl/frontend-developers
-*.ts    @myparcelnl/frontend-developers
-*.tsx   @myparcelnl/frontend-developers  
-*.vue   @myparcelnl/frontend-developers
+# Css and related file types
+*.css   @myparcelnl/integration @myparcelnl/frontend
+*.sass  @myparcelnl/integration @myparcelnl/frontend
+*.scss  @myparcelnl/integration @myparcelnl/frontend
+*.styl  @myparcelnl/integration @myparcelnl/frontend
+
+# HTML and HTML-like
+*.hbs   @myparcelnl/integration @myparcelnl/frontend
+*.html  @myparcelnl/integration @myparcelnl/frontend
+*.tpl   @myparcelnl/integration @myparcelnl/frontend
+*.twig  @myparcelnl/integration @myparcelnl/frontend
+
+# Images
+*.jpeg  @myparcelnl/integration @myparcelnl/frontend
+*.jpg   @myparcelnl/integration @myparcelnl/frontend
+*.png   @myparcelnl/integration @myparcelnl/frontend
+*.svg   @myparcelnl/integration @myparcelnl/frontend
+
+# --- Frontend only ---
+*.js    @myparcelnl/frontend
+*.jsx   @myparcelnl/frontend
+*.ts    @myparcelnl/frontend
+*.tsx   @myparcelnl/frontend
+*.vue   @myparcelnl/frontend
+
+# --- Exceptions ---
+# Top level javascript or dotfiles are probably config files.
+./*.js  @myparcelnl/integration @myparcelnl/frontend
+./.*    @myparcelnl/integration @myparcelnl/frontend
+
+# Include IT support for readme changes
+readme.md  @myparcelnl/integration @myparcelnl/frontend @myparcelnl/it-support
+README.md  @myparcelnl/integration @myparcelnl/frontend @myparcelnl/it-support
+
