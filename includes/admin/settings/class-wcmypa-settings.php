@@ -17,68 +17,68 @@ if (class_exists('WCMYPA_Settings')) {
  */
 class WCMYPA_Settings
 {
-    public const SETTINGS_MENU_SLUG = "wcmp_settings";
+    public const SETTINGS_MENU_SLUG = 'wcmp_settings';
 
-    public const SETTINGS_GENERAL         = "general";
-    public const SETTINGS_CHECKOUT        = "checkout";
-    public const SETTINGS_EXPORT_DEFAULTS = "export_defaults";
+    public const SETTINGS_GENERAL         = 'general';
+    public const SETTINGS_CHECKOUT        = 'checkout';
+    public const SETTINGS_EXPORT_DEFAULTS = 'export_defaults';
     public const SETTINGS_POSTNL          = PostNLConsignment::CARRIER_NAME;
     public const SETTINGS_DPD             = DPDConsignment::CARRIER_NAME;
 
     /**
      * General
      */
-    public const SETTING_API_KEY                   = "api_key";
-    public const SETTING_AUTOMATIC_ORDER_STATUS    = "automatic_order_status";
-    public const SETTING_BARCODE_IN_NOTE           = "barcode_in_note";
-    public const SETTING_BARCODE_IN_NOTE_TITLE     = "barcode_in_note_title";
-    public const SETTING_DOWNLOAD_DISPLAY          = "download_display";
+    public const SETTING_API_KEY                   = 'api_key';
+    public const SETTING_AUTOMATIC_ORDER_STATUS    = 'automatic_order_status';
+    public const SETTING_BARCODE_IN_NOTE           = 'barcode_in_note';
+    public const SETTING_BARCODE_IN_NOTE_TITLE     = 'barcode_in_note_title';
+    public const SETTING_DOWNLOAD_DISPLAY          = 'download_display';
     public const SETTING_EXPORT_MODE               = 'export_mode';
-    public const SETTING_ERROR_LOGGING             = "error_logging";
-    public const SETTING_LABEL_FORMAT              = "label_format";
-    public const SETTING_ORDER_STATUS_AUTOMATION   = "order_status_automation";
-    public const SETTING_CHANGE_ORDER_STATUS_AFTER = "change_order_status_after";
-    public const SETTING_ASK_FOR_PRINT_POSITION    = "ask_for_print_position";
-    public const SETTING_PROCESS_DIRECTLY          = "process_directly";
-    public const SETTING_TRACK_TRACE_EMAIL         = "track_trace_email";
-    public const SETTING_TRACK_TRACE_MY_ACCOUNT    = "track_trace_my_account";
+    public const SETTING_ERROR_LOGGING             = 'error_logging';
+    public const SETTING_LABEL_FORMAT              = 'label_format';
+    public const SETTING_ORDER_STATUS_AUTOMATION   = 'order_status_automation';
+    public const SETTING_CHANGE_ORDER_STATUS_AFTER = 'change_order_status_after';
+    public const SETTING_ASK_FOR_PRINT_POSITION    = 'ask_for_print_position';
+    public const SETTING_PROCESS_DIRECTLY          = 'process_directly';
+    public const SETTING_TRACK_TRACE_EMAIL         = 'track_trace_email';
+    public const SETTING_TRACK_TRACE_MY_ACCOUNT    = 'track_trace_my_account';
 
     /**
      * Export defaults
      */
-    public const SETTING_SHIPPING_METHODS_PACKAGE_TYPES = "shipping_methods_package_types";
-    public const SETTING_CONNECT_EMAIL                  = "connect_email";
-    public const SETTING_CONNECT_PHONE                  = "connect_phone";
-    public const SETTING_LABEL_DESCRIPTION              = "label_description";
-    public const SETTING_EMPTY_PARCEL_WEIGHT            = "empty_parcel_weight";
+    public const SETTING_SHIPPING_METHODS_PACKAGE_TYPES = 'shipping_methods_package_types';
+    public const SETTING_CONNECT_EMAIL                  = 'connect_email';
+    public const SETTING_CONNECT_PHONE                  = 'connect_phone';
+    public const SETTING_LABEL_DESCRIPTION              = 'label_description';
+    public const SETTING_EMPTY_PARCEL_WEIGHT            = 'empty_parcel_weight';
     public const SETTING_EMPTY_DIGITAL_STAMP_WEIGHT     = 'empty_digital_stamp_weight';
-    public const SETTING_HS_CODE                        = "hs_code";
-    public const SETTING_PACKAGE_CONTENT                = "package_contents";
-    public const SETTING_COUNTRY_OF_ORIGIN              = "country_of_origin";
-    public const SETTING_AUTOMATIC_EXPORT               = "export_automatic";
-    public const SETTING_AUTOMATIC_EXPORT_STATUS        = "export_automatic_status";
-    public const SETTING_RETURN_IN_THE_BOX              = "return_in_the_box";
+    public const SETTING_HS_CODE                        = 'hs_code';
+    public const SETTING_PACKAGE_CONTENT                = 'package_contents';
+    public const SETTING_COUNTRY_OF_ORIGIN              = 'country_of_origin';
+    public const SETTING_AUTOMATIC_EXPORT               = 'export_automatic';
+    public const SETTING_AUTOMATIC_EXPORT_STATUS        = 'export_automatic_status';
+    public const SETTING_RETURN_IN_THE_BOX              = 'return_in_the_box';
 
     /**
      * Checkout
      */
-    public const SETTING_DELIVERY_OPTIONS_CUSTOM_CSS           = "delivery_options_custom_css";
-    public const SETTING_DELIVERY_OPTIONS_DISPLAY              = "delivery_options_display";
-    public const SETTING_DELIVERY_OPTIONS_ENABLED              = "delivery_options_enabled";
-    public const SETTING_DELIVERY_OPTIONS_POSITION             = "delivery_options_position";
-    public const SETTING_DELIVERY_OPTIONS_PRICE_FORMAT         = "delivery_options_price_format";
-    public const SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS = "delivery_options_enabled_for_backorders";
-    public const SETTING_SHOW_DELIVERY_DAY                     = "show_delivery_day";
-    public const SETTING_DELIVERY_TITLE                        = "delivery_title";
-    public const SETTING_HEADER_DELIVERY_OPTIONS_TITLE         = "header_delivery_options_title";
-    public const SETTING_PICKUP_TITLE                          = "pickup_title";
-    public const SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW         = "pickup_locations_default_view";
-    public const SETTING_MORNING_DELIVERY_TITLE                = "morning_title";
-    public const SETTING_EVENING_DELIVERY_TITLE                = "evening_title";
-    public const SETTING_ONLY_RECIPIENT_TITLE                  = "only_recipient_title";
-    public const SETTING_SIGNATURE_TITLE                       = "signature_title";
-    public const SETTING_STANDARD_TITLE                        = "standard_title";
-    public const SETTING_USE_SPLIT_ADDRESS_FIELDS              = "use_split_address_fields";
+    public const SETTING_DELIVERY_OPTIONS_CUSTOM_CSS           = 'delivery_options_custom_css';
+    public const SETTING_DELIVERY_OPTIONS_DISPLAY              = 'delivery_options_display';
+    public const SETTING_DELIVERY_OPTIONS_ENABLED              = 'delivery_options_enabled';
+    public const SETTING_DELIVERY_OPTIONS_POSITION             = 'delivery_options_position';
+    public const SETTING_DELIVERY_OPTIONS_PRICE_FORMAT         = 'delivery_options_price_format';
+    public const SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS = 'delivery_options_enabled_for_backorders';
+    public const SETTING_SHOW_DELIVERY_DAY                     = 'show_delivery_day';
+    public const SETTING_DELIVERY_TITLE                        = 'delivery_title';
+    public const SETTING_HEADER_DELIVERY_OPTIONS_TITLE         = 'header_delivery_options_title';
+    public const SETTING_PICKUP_TITLE                          = 'pickup_title';
+    public const SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW         = 'pickup_locations_default_view';
+    public const SETTING_MORNING_DELIVERY_TITLE                = 'morning_title';
+    public const SETTING_EVENING_DELIVERY_TITLE                = 'evening_title';
+    public const SETTING_ONLY_RECIPIENT_TITLE                  = 'only_recipient_title';
+    public const SETTING_SIGNATURE_TITLE                       = 'signature_title';
+    public const SETTING_STANDARD_TITLE                        = 'standard_title';
+    public const SETTING_USE_SPLIT_ADDRESS_FIELDS              = 'use_split_address_fields';
 
     /*
      * Carrier settings, these will be prefixed with carrier names.
@@ -86,45 +86,46 @@ class WCMYPA_Settings
      * e.g. cutoff_time => postnl_cutoff_time/dpd_cutoff_time
      */
     // Defaults
-    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE          = "export_signature";
-    public const SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT     = "export_only_recipient";
-    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT       = "export_large_format";
-    public const SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK          = "export_age_check";
-    public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN             = "export_return_shipments";
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED            = "export_insured";
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT     = "export_insured_amount";
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE = "export_insured_from_price";
+    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE                = 'export_signature';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT           = 'export_only_recipient';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT             = 'export_large_format';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT = 'export_large_format_from_weight';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK                = 'export_age_check';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN                   = 'export_return_shipments';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED                  = 'export_insured';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT           = 'export_insured_amount';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE       = 'export_insured_from_price';
 
 
     // Delivery options settings
-    public const SETTING_CARRIER_CUTOFF_TIME              = "cutoff_time";
-    public const SETTING_CARRIER_DELIVERY_DAYS_WINDOW     = "delivery_days_window";
-    public const SETTING_CARRIER_DELIVERY_ENABLED         = "delivery_enabled";
-    public const SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE = "allow_show_delivery_date";
-    public const SETTING_CARRIER_DROP_OFF_DAYS            = "drop_off_days";
-    public const SETTING_CARRIER_DROP_OFF_DELAY           = "drop_off_delay";
-    public const SETTING_CARRIER_PICKUP_ENABLED           = "pickup_enabled";
-    public const SETTING_CARRIER_PICKUP_FEE               = "pickup_fee";
-    public const SETTING_CARRIER_PICKUP_TITLE             = "pickup_title";
-    public const SETTING_CARRIER_ONLY_RECIPIENT_ENABLED   = "only_recipient_enabled";
-    public const SETTING_CARRIER_ONLY_RECIPIENT_FEE       = "only_recipient_fee";
-    public const SETTING_CARRIER_SIGNATURE_ENABLED        = "signature_enabled";
-    public const SETTING_CARRIER_SIGNATURE_FEE            = "signature_fee";
-    public const SETTING_CARRIER_DELIVERY_MORNING_ENABLED = "delivery_morning_enabled";
-    public const SETTING_CARRIER_DELIVERY_MORNING_FEE     = "delivery_morning_fee";
-    public const SETTING_CARRIER_DELIVERY_EVENING_ENABLED = "delivery_evening_enabled";
-    public const SETTING_CARRIER_DELIVERY_EVENING_FEE     = "delivery_evening_fee";
+    public const SETTING_CARRIER_CUTOFF_TIME              = 'cutoff_time';
+    public const SETTING_CARRIER_DELIVERY_DAYS_WINDOW     = 'delivery_days_window';
+    public const SETTING_CARRIER_DELIVERY_ENABLED         = 'delivery_enabled';
+    public const SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE = 'allow_show_delivery_date';
+    public const SETTING_CARRIER_DROP_OFF_DAYS            = 'drop_off_days';
+    public const SETTING_CARRIER_DROP_OFF_DELAY           = 'drop_off_delay';
+    public const SETTING_CARRIER_PICKUP_ENABLED           = 'pickup_enabled';
+    public const SETTING_CARRIER_PICKUP_FEE               = 'pickup_fee';
+    public const SETTING_CARRIER_PICKUP_TITLE             = 'pickup_title';
+    public const SETTING_CARRIER_ONLY_RECIPIENT_ENABLED   = 'only_recipient_enabled';
+    public const SETTING_CARRIER_ONLY_RECIPIENT_FEE       = 'only_recipient_fee';
+    public const SETTING_CARRIER_SIGNATURE_ENABLED        = 'signature_enabled';
+    public const SETTING_CARRIER_SIGNATURE_FEE            = 'signature_fee';
+    public const SETTING_CARRIER_DELIVERY_MORNING_ENABLED = 'delivery_morning_enabled';
+    public const SETTING_CARRIER_DELIVERY_MORNING_FEE     = 'delivery_morning_fee';
+    public const SETTING_CARRIER_DELIVERY_EVENING_ENABLED = 'delivery_evening_enabled';
+    public const SETTING_CARRIER_DELIVERY_EVENING_FEE     = 'delivery_evening_fee';
 
     // Saturday delivery
     // TODO; Currently not implemented
-    public const SETTING_CARRIER_FRIDAY_CUTOFF_TIME        = "friday_cutoff_time";
-    public const SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED = "saturday_delivery_enabled";
-    public const SETTING_CARRIER_SATURDAY_DELIVERY_FEE     = "saturday_delivery_fee";
+    public const SETTING_CARRIER_FRIDAY_CUTOFF_TIME        = 'friday_cutoff_time';
+    public const SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED = 'saturday_delivery_enabled';
+    public const SETTING_CARRIER_SATURDAY_DELIVERY_FEE     = 'saturday_delivery_fee';
 
     // Monday delivery
-    public const SETTING_CARRIER_MONDAY_DELIVERY_ENABLED = "monday_delivery_enabled";
-    public const SETTING_CARRIER_MONDAY_DELIVERY_FEE     = "monday_delivery_fee";
-    public const SETTING_CARRIER_SATURDAY_CUTOFF_TIME    = "saturday_cutoff_time";
+    public const SETTING_CARRIER_MONDAY_DELIVERY_ENABLED = 'monday_delivery_enabled';
+    public const SETTING_CARRIER_MONDAY_DELIVERY_FEE     = 'monday_delivery_fee';
+    public const SETTING_CARRIER_SATURDAY_CUTOFF_TIME    = 'saturday_cutoff_time';
 
     public function __construct()
     {
