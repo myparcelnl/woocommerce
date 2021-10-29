@@ -467,15 +467,15 @@ class OrderSettings
      */
     private function setLargeFormat(): void
     {
-        $this->largeFormat = false;
-        $weightFromOrder   = $this->extraOptions['weight'];
+        $this->largeFormat  = false;
+        $weightFromOrder    = WCMP_Export::convertWeightToGrams($this->extraOptions['weight']);
 
         $defaultLargeFormat = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->shipmentOptions->hasLargeFormat(),
             "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
         );
 
-        $weightFromSettings = WCMYPA()->setting_collection->getByName(
+        $weightFromSettings = (int) WCMYPA()->setting_collection->getByName(
             "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT
         );
 
