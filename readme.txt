@@ -90,6 +90,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.6.0 () =
+* Feat: Customize delivery type title on confirmation
+* Feat: Weight feature for extra large package
+* Fix: Duplicate queries in wordpress backend
+* Fix: Use correct product quantity for label description
+
 = 4.5.0 (2021-10-08) =
 * Feat: Add order mode 'Export entire order' aka PPS
 * Feat: Make age check, large format and insurance available to pickup
