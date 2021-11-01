@@ -38,7 +38,7 @@ class WCMYPA_Admin
     public const META_HS_CODE                     = "_myparcel_hs_code";
     public const META_HS_CODE_VARIATION           = "_myparcel_hs_code_variation";
     public const META_COUNTRY_OF_ORIGIN_VARIATION = "_myparcel_country_of_origin_variation";
-  
+
     public const META_COUNTRY_OF_ORIGIN      = "_myparcel_country_of_origin";
     public const META_AGE_CHECK              = "_myparcel_age_check";
     public const META_PPS                    = '_myparcel_pps';
@@ -1219,7 +1219,7 @@ class WCMYPA_Admin
             $meta['collo_amount'] = OrderSettings::DEFAULT_COLLO_AMOUNT;
         }
 
-        return $meta;
+        return (array) $meta;
     }
 
     /**
