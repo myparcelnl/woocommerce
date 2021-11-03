@@ -1764,14 +1764,19 @@ class WCMP_Export
 
     /**
      * @param  \MyParcelNL\Sdk\src\Helper\MyParcelCollection  $collection
-     * @param  string                                         $returnOptions
      *
      * @throws \MyParcelNL\Sdk\src\Exception\AccountNotActiveException
      * @throws \MyParcelNL\Sdk\src\Exception\ApiException
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
-    public function addReturnInTheBox(MyParcelCollection $collection, string $returnOptions = 'equalToShipment'): void
+    public function addReturnInTheBox(MyParcelCollection $collection): void
     {
+        $returnOptions = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_RETURN_IN_THE_BOX);
+
+        if (WCMP_Settings_Data::NOT_ACTIVE === $returnOptions || WCMP_Settings_Data::NOT_ACTIVE === null) {
+            return;
+        }
+
         $collection
             ->generateReturnConsignments(
                 false,
@@ -1784,7 +1789,7 @@ class WCMP_Export
                         ' This label is valid until: ' . date("d-m-Y", strtotime("+ 28 days"))
                     );
 
-                    if ('noOptions' === $returnOptions) {
+                    if ($returnOptions === WCMP_Settings_Data::NO_OPTIONS) {
                         $returnConsignment->setOnlyRecipient(false);
                         $returnConsignment->setSignature(false);
                         $returnConsignment->setAgeCheck(false);
