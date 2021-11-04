@@ -1773,7 +1773,7 @@ class WCMP_Export
     {
         $returnOptions = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_RETURN_IN_THE_BOX);
 
-        if (WCMP_Settings_Data::NOT_ACTIVE === $returnOptions || WCMP_Settings_Data::NOT_ACTIVE === null) {
+        if (WCMP_Settings_Data::NOT_ACTIVE === $returnOptions || ! $returnOptions) {
             return;
         }
 
