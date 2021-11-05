@@ -61,6 +61,10 @@ class WCMP_Export
     public $order_id;
     public $success;
     public $errors;
+
+    /**
+     * @var MyParcelCollection
+     */
     public $myParcelCollection;
 
     private $prefix_message;
@@ -1754,6 +1758,49 @@ class WCMP_Export
         }
 
         $collection->addConsignment($consignment);
+
+        $this->addreturnInTheBox($collection);
+    }
+
+    /**
+     * @param  \MyParcelNL\Sdk\src\Helper\MyParcelCollection  $collection
+     *
+     * @throws \MyParcelNL\Sdk\src\Exception\AccountNotActiveException
+     * @throws \MyParcelNL\Sdk\src\Exception\ApiException
+     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
+     */
+    public function addReturnInTheBox(MyParcelCollection $collection): void
+    {
+        $returnOptions = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_RETURN_IN_THE_BOX);
+
+        if (! $returnOptions || WCMP_Settings_Data::NOT_ACTIVE === $returnOptions) {
+            return;
+        }
+
+        $collection
+            ->generateReturnConsignments(
+                false,
+                function (
+                    AbstractConsignment $returnConsignment,
+                    AbstractConsignment $parent
+                ) use ($returnOptions): AbstractConsignment {
+                    $returnConsignment->setLabelDescription(
+                        'Return: ' . $parent->getLabelDescription() .
+                        ' This label is valid until: ' . date("d-m-Y", strtotime("+ 28 days"))
+                    );
+
+                    if (WCMP_Settings_Data::NO_OPTIONS === $returnOptions) {
+                        $returnConsignment->setOnlyRecipient(false);
+                        $returnConsignment->setSignature(false);
+                        $returnConsignment->setAgeCheck(false);
+                        $returnConsignment->setReturn(false);
+                        $returnConsignment->setLargeFormat(false);
+                        $returnConsignment->setInsurance(false);
+                    }
+
+                    return $returnConsignment;
+                }
+            );
     }
 }
 
