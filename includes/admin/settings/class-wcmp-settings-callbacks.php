@@ -133,6 +133,17 @@ class WCMP_Settings_Callbacks
     }
 
     /**
+     * @param  string $string
+     * @param  string $link
+     *
+     * @return string
+     */
+    public static function getLink(string $string, string $link): string
+    {
+        return sprintf($string, sprintf("<a href=\"%s\" target='_blank' rel='noreferrer noopener'>", $link), "</a>");
+    }
+
+    /**
      * @param $description
      */
     private static function renderDescription($description): void

@@ -2,12 +2,21 @@
 
 declare(strict_types=1);
 
+namespace MyParcelNL\WooCommerce\includes\admin;
+
+defined('ABSPATH') or die();
+
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
+use WC_Order;
+use WCMP_Data;
+use WCMP_Export;
+use WCMYPA_Admin;
+use WCMYPA_Settings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
@@ -130,7 +139,7 @@ class OrderSettings
         $this->order = $order;
 
         $this->setDeliveryOptions($deliveryOptions);
-        $this->carrier         = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
+        $this->carrier         = $this->deliveryOptions->getCarrier() ?? (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
         $this->shipmentOptions = $this->deliveryOptions->getShipmentOptions();
         $this->shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
         $this->extraOptions    = WCMYPA_Admin::getExtraOptionsFromOrder($order);
@@ -342,10 +351,10 @@ class OrderSettings
      */
     private function setAgeCheck(): void
     {
-        $settingName                 = "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK;
+        $settingName                 = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK;
         $ageCheckFromShipmentOptions = $this->shipmentOptions->hasAgeCheck();
         $ageCheckOfProduct           = $this->getAgeCheckOfProduct();
-        $ageCheckFromSettings        = (bool) WCMYPA()->setting_collection->getByName($settingName);
+        $ageCheckFromSettings        = (bool) WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
 
         $this->ageCheck = $ageCheckFromShipmentOptions ?? $ageCheckOfProduct ?? $ageCheckFromSettings;
     }
@@ -424,6 +433,7 @@ class OrderSettings
      * Sets insured and insuranceAmount.
      *
      * @return void
+     * @throws \Exception
      */
     private function setInsuranceData(): void
     {
@@ -436,7 +446,7 @@ class OrderSettings
         $insuranceFromDeliveryOptions      = $this->shipmentOptions->getInsurance();
 
         $carrier             = ConsignmentFactory::createByCarrierName($this->carrier);
-        $amountPossibilities = $carrier::INSURANCE_POSSIBILITIES_LOCAL;
+        $amountPossibilities = $carrier->getInsurancePossibilities();
 
         if ($insuranceFromDeliveryOptions && $insuranceFromDeliveryOptions >= $amountPossibilities[self::FIRST_INSURANCE]) {
             $isInsured       = (bool) $insuranceFromDeliveryOptions;
@@ -472,7 +482,8 @@ class OrderSettings
 
         $defaultLargeFormat = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->shipmentOptions->hasLargeFormat(),
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT
+            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
+            $this->carrier
         );
 
         $weightFromSettings = (int) WCMYPA()->setting_collection->getByName(
@@ -491,7 +502,8 @@ class OrderSettings
     {
         $this->onlyRecipient = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->shipmentOptions->hasOnlyRecipient(),
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT
+            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
+            $this->carrier
         );
     }
 
@@ -502,7 +514,8 @@ class OrderSettings
     {
         $this->signature = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->shipmentOptions->hasSignature(),
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE
+            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+            $this->carrier
         );
     }
 
@@ -523,7 +536,8 @@ class OrderSettings
     {
         $this->returnShipment = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->shipmentOptions->isReturn(),
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN
+            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
+            $this->carrier
         );
     }
 
@@ -534,7 +548,7 @@ class OrderSettings
      */
     private function getCarrierSetting(string $settingName)
     {
-        return WCMYPA()->setting_collection->getByName("{$this->carrier}_" . $settingName);
+        return WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
     }
 
     /**

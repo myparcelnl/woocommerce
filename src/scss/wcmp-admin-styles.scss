@@ -1,5 +1,8 @@
 @import "variables";
 @import "admin/index";
+@import "admin/tables";
+@import "admin/box";
+@import "admin/settings-sections";
 
 /*
  * Shipment overview
@@ -18,14 +21,9 @@
   white-space: nowrap;
 }
 
-.wcmp__box {
-  background-color: white;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-  padding: 10px;
+.wcmp__modal {
   position: absolute;
   z-index: 999;
-  border-radius: 3px;
 }
 
 /*
@@ -88,31 +86,6 @@
   border: 1px solid #666;
   color: #666;
   text-align: center;
-}
-
-/*
- * Track & Trace status
- */
-.wcmp__table--track-trace {
-  width: 100%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border-collapse: collapse;
-}
-
-.wcmp__table--track-trace th {
-  text-align: left
-}
-
-.wcmp__table--track-trace th,
-.wcmp__table--track-trace td {
-  vertical-align: top;
-  padding: 5px 2px;
-  border-bottom: 1px solid #ccc;
-}
-
-.wcmp__table--track-trace td.wcmp__td--create-label {
-  vertical-align: middle;
 }
 
 /*

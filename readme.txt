@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors: richardperdaan, ademdemir, edielemoine
+Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
 Tested up to: 5.8.0

@@ -165,7 +165,7 @@ const build = gulp.series(
     'build:scss',
     'copy',
     'translations:import',
-    'translations:pot',
+    // 'translations:pot',
     'update:composer',
     gulp.series(
       'update:npm',
