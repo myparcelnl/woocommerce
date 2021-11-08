@@ -1,18 +1,19 @@
 <?php
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
+use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
-use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
 use MyParcelNL\Sdk\src\Model\Fulfilment\Order;
-use MyParcelNL\WooCommerce\Includes\Adapter\OrderLineFromWooCommerce;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\WooCommerce\Includes\Adapter\OrderLineFromWooCommerce;
+use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
@@ -112,9 +113,9 @@ class WCMP_Export
      *
      * @return mixed
      */
-    public static function getChosenOrDefaultShipmentOption($option, string $settingName)
+    public static function getChosenOrDefaultShipmentOption($option, string $settingName, ?string $carrierName = null)
     {
-        return $option ?? WCMYPA()->setting_collection->getByName($settingName);
+        return $option ?? WCMYPA()->setting_collection->where('carrier', $carrierName)->getByName($settingName);
     }
 
     /**
@@ -1184,7 +1185,7 @@ class WCMP_Export
 
             // if shipment id matches and status is not concept, get track trace barcode and status name
             $status        = $this->getShipmentStatusName($shipment["status"]);
-            $track_trace   = $shipment["barcode"];
+            $track_trace   = $shipment["barcode"] ?: $shipment['external_identifier'];
             $shipment_id   = $shipment["id"];
             $shipment_data = compact("shipment_id", "status", "track_trace", "shipment");
             $this->saveShipmentData($order, $shipment_data);
@@ -1468,9 +1469,9 @@ class WCMP_Export
     }
 
     /**
-     * @param \OrderSettings      $orderSettings
-     * @param MyParcelCollection  $collection
-     * @param AbstractConsignment $consignment
+     * @param  \MyParcelNL\WooCommerce\includes\admin\OrderSettings $orderSettings
+     * @param  MyParcelCollection                                   $collection
+     * @param  AbstractConsignment                                  $consignment
      *
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
@@ -1729,25 +1730,25 @@ class WCMP_Export
                 /**
                  * @var AbstractConsignment $consignment
                  */
-                array_push($trackTraces, $consignment->getBarcode());
+                $trackTraces[] = $consignment->getBarcode();
             }
 
-            WCMP_Export::addTrackTraceNoteToOrder($order_id, $trackTraces);
+            self::addTrackTraceNoteToOrder($order_id, $trackTraces);
         }
     }
 
     /**
      * Adds one or more consignments to the collection, depending on the collo amount.
      *
-     * @param \OrderSettings                                            $orderSettings
-     * @param \MyParcelNL\Sdk\src\Helper\MyParcelCollection             $collection
-     * @param \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment $consignment
+     * @param  \MyParcelNL\WooCommerce\includes\admin\OrderSettings      $orderSettings
+     * @param  \MyParcelNL\Sdk\src\Helper\MyParcelCollection             $collection
+     * @param  \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment $consignment
      *
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
     private function addConsignments(
-        OrderSettings $orderSettings,
-        MyParcelCollection $collection,
+        OrderSettings       $orderSettings,
+        MyParcelCollection  $collection,
         AbstractConsignment $consignment
     ): void {
         $colloAmount = $orderSettings->getColloAmount();

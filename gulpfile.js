@@ -119,8 +119,13 @@ gulp.task('translations:pot', () => gulp.src(PHP_FILES, {read: false})
 /**
  * Download translations as csv and convert them to .po files.
  */
-gulp.task('translations:import', (callback) => {
-  downloadTranslations();
+gulp.task('translations:import', async(callback) => {
+  try {
+    await downloadTranslations();
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('Failed to download translations.', e);
+  }
   callback();
 });
 
@@ -165,7 +170,7 @@ const build = gulp.series(
     'build:scss',
     'copy',
     'translations:import',
-    'translations:pot',
+    // 'translations:pot',
     'update:composer',
     gulp.series(
       'update:npm',

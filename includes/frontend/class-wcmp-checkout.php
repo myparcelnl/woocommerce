@@ -1,15 +1,12 @@
 <?php
 
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\DPDConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 
-if (! defined('ABSPATH')) {
-    exit;
-} // Exit if accessed directly
+defined('ABSPATH') or die();
 
 if (class_exists('WCMP_Checkout')) {
     return new WCMP_Checkout();
@@ -195,7 +192,7 @@ class WCMP_Checkout
     public function getDeliveryOptionsConfig(): array
     {
         $settings                   = WCMYPA()->setting_collection;
-        $carriers                   = $this->getCarriers();
+        $carriers                   = AccountSettings::getInstance()->getEnabledCarriers();
         $cartTotals                 = WC()->session->get('cart_totals');
         $chosenShippingMethodPrice  = (float) $cartTotals['shipping_total'];
         $displayIncludingTax        = WC()->cart->display_prices_including_tax();
@@ -236,17 +233,21 @@ class WCMP_Checkout
         ];
 
         foreach ($carriers as $carrier) {
-            foreach (self::getDeliveryOptionsConfigMap($carrier) as $key => $setting) {
+            $carrierName = $carrier->getName();
+
+            if (! AccountSettings::getInstance()->isEnabledCarrier($carrierName)) {
+                continue;
+            }
+
+            $carrierSettings = $settings->where('carrier', $carrierName);
+
+            foreach (self::getDeliveryOptionsConfigMap($carrierName) as $key => $setting) {
                 [$settingName, $function, $addBasePrice] = $setting;
 
-                $value = $settings->{$function}($carrier . '_' . $settingName);
+                $value = $carrierSettings->{$function}($settingName);
 
-                if (is_numeric($value) && $this->useTotalPrice() && $addBasePrice) {
+                if ($addBasePrice && is_numeric($value) && $this->useTotalPrice()) {
                     $value += $chosenShippingMethodPrice;
-                }
-
-                if ($this->hasAgeCheck($settingName, $carrier)) {
-                    $value = false;
                 }
 
                 Arr::set($myParcelConfig, 'config.' . $key, $value);
@@ -311,28 +312,6 @@ class WCMP_Checkout
         do_action('woocommerce_myparcel_before_delivery_options');
         require_once(WCMYPA()->includes . '/views/html-delivery-options-template.php');
         do_action('woocommerce_myparcel_after_delivery_options');
-    }
-
-    /**
-     * Get the array of enabled carriers by checking if they have either delivery or pickup enabled.
-     *
-     * @return array
-     */
-    private function getCarriers(): array
-    {
-        $settings = WCMYPA()->setting_collection;
-        $carriers = [];
-
-        foreach ([PostNLConsignment::CARRIER_NAME, DPDConsignment::CARRIER_NAME] as $carrier) {
-            if ($settings->getByName("{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED)
-                || $settings->getByName(
-                    "{$carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED
-                )) {
-                $carriers[] = $carrier;
-            }
-        }
-
-        return $carriers;
     }
 
     /**
@@ -526,18 +505,19 @@ class WCMP_Checkout
            "carrierSettings.$carrier.allowShowDeliveryDate" => [WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE, 'isEnabled', false],
            "carrierSettings.$carrier.priceEveningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE, 'getPriceByName', true],
            "carrierSettings.$carrier.priceMondayDelivery"   => [WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_FEE, 'getPriceByName', true],
+           "carrierSettings.$carrier.priceStandardDelivery" => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_STANDARD_FEE, 'getPriceByName', true],
            "carrierSettings.$carrier.priceMorningDelivery"  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE, 'getPriceByName', true],
            "carrierSettings.$carrier.priceOnlyRecipient"    => [WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE, 'getPriceByName', false],
            "carrierSettings.$carrier.pricePickup"           => [WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE, 'getPriceByName', true],
            "carrierSettings.$carrier.priceSaturdayDelivery" => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE, 'getPriceByName', true],
            "carrierSettings.$carrier.priceSignature"        => [WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE, 'getPriceByName', false],
-           "cutoffTime"                                     => [WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName', false],
-           "deliveryDaysWindow"                             => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW, 'getIntegerByName', false],
-           "dropOffDays"                                    => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS, 'getByName', false],
-           "dropOffDelay"                                   => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName', false],
-           "fridayCutoffTime"                               => [WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName', false],
-           "saturdayCutoffTime"                             => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME, 'getStringByName', false],
-       ];
+           "carrierSettings.$carrier.cutoffTime"            => [WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME, 'getStringByName', false],
+           "carrierSettings.$carrier.deliveryDaysWindow"    => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW, 'getIntegerByName', false],
+           "carrierSettings.$carrier.dropOffDays"           => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS, 'getByName', false],
+           "carrierSettings.$carrier.dropOffDelay"          => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName', false],
+           "carrierSettings.$carrier.fridayCutoffTime"      => [WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName', false],
+           "carrierSettings.$carrier.saturdayCutoffTime"    => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME, 'getStringByName', false],
+        ];
     }
 
     /**
@@ -591,8 +571,8 @@ class WCMP_Checkout
             return false;
         }
 
-        $ageCheckFromSettings = (bool) WCMYPA()->setting_collection->getByName(
-            sprintf('%s_%s', $carrier, WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK)
+        $ageCheckFromSettings = (bool) WCMYPA()->setting_collection->where('carrier', $carrier)->getByName(
+            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
         );
         $ageCheckFromProduct  = false;
 

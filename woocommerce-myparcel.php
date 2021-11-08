@@ -12,27 +12,37 @@ License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 */
 
-if (! defined('ABSPATH')) {
-    exit;
-} // Exit if accessed directly
+use MyParcelNL\WooCommerce\includes\admin\Messages;
+use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
+use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
+
+defined('ABSPATH') or die();
+
+require(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
 
 if (! class_exists('WCMYPA')) :
-
     class WCMYPA
     {
+        use HasInstance;
+
         /**
          * Translations domain
          */
-        const DOMAIN               = 'woocommerce-myparcel';
-        const NONCE_ACTION         = 'wc_myparcel';
-        const PHP_VERSION_7_1      = '7.1';
-        const PHP_VERSION_REQUIRED = self::PHP_VERSION_7_1;
+        public const DOMAIN               = 'woocommerce-myparcel';
+        public const NONCE_ACTION         = 'wc_myparcel';
+        public const PHP_VERSION_7_1      = '7.1';
+        public const PHP_VERSION_REQUIRED = self::PHP_VERSION_7_1;
+        public const NAME                 = 'woocommerce-myparcel';
 
+        /**
+         * @var string
+         */
         public $version = '4.6.0';
 
+        /**
+         * @var string
+         */
         public $plugin_basename;
-
-        protected static $_instance = null;
 
         /**
          * @var WPO\WC\MyParcel\Collections\SettingsCollection
@@ -55,17 +65,9 @@ if (! class_exists('WCMYPA')) :
         public $admin;
 
         /**
-         * Main Plugin Instance
-         * Ensures only one instance of plugin is loaded or can be loaded.
+         * @var array
          */
-        public static function instance()
-        {
-            if (is_null(self::$_instance)) {
-                self::$_instance = new self();
-            }
-
-            return self::$_instance;
-        }
+        private $activeCarriers;
 
         /**
          * Constructor
@@ -77,7 +79,7 @@ if (! class_exists('WCMYPA')) :
 
             // load the localisation & classes
             add_action('plugins_loaded', [$this, 'translations']);
-            add_action('init', [$this, 'load_classes'], 9999);
+            add_action('init', [$this, 'initialize'], 9999);
 
             // run lifecycle methods
             if (is_admin() && ! defined('DOING_AJAX')) {
@@ -138,11 +140,6 @@ if (! class_exists('WCMYPA')) :
         public function includes()
         {
             $this->includes = $this->plugin_path() . '/includes';
-            // Use minimum php version 7.1
-            require_once($this->plugin_path() . "/vendor/autoload.php");
-
-            require_once($this->includes . "/admin/OrderSettings.php");
-            require_once($this->includes . "/admin/OrderSettingsRows.php");
 
             // include compatibility classes
             require_once($this->includes . "/compatibility/abstract-wc-data-compatibility.php");
@@ -164,12 +161,12 @@ if (! class_exists('WCMYPA')) :
             require_once($this->includes . "/frontend/class-wcmp-frontend-track-trace.php");
             require_once($this->includes . "/frontend/class-wcmp-checkout.php");
             require_once($this->includes . "/frontend/class-wcmp-frontend.php");
-            $this->admin = require_once($this->includes . "/admin/class-wcmypa-admin.php");
+            $this->admin = require($this->includes . "/admin/class-wcmypa-admin.php");
             require_once($this->includes . "/admin/settings/class-wcmypa-settings.php");
             require_once($this->includes . "/class-wcmp-log.php");
             require_once($this->includes . "/admin/class-wcmp-country-codes.php");
             require_once($this->includes . '/admin/settings/class-wcmp-shipping-methods.php');
-            $this->export = require_once($this->includes . "/admin/class-wcmp-export.php");
+            $this->export = require($this->includes . "/admin/class-wcmp-export.php");
             require_once($this->includes . "/class-wcmp-postcode-fields.php");
             require_once($this->includes . "/adapter/delivery-options-from-order-adapter.php");
             require_once($this->includes . "/adapter/pickup-location-from-order-adapter.php");
@@ -180,10 +177,19 @@ if (! class_exists('WCMYPA')) :
 
         /**
          * Instantiate classes when WooCommerce is activated
+         * @deprecated use ->initialize()
          */
         public function load_classes()
         {
-            if ($this->is_woocommerce_activated() === false) {
+            $this->initialize();
+        }
+
+        /**
+         * Perform required tasks that initialize the plugin.
+         */
+        public function initialize(): void
+        {
+            if (false === $this->is_woocommerce_activated()) {
                 add_action('admin_notices', [$this, 'need_woocommerce']);
 
                 return;
@@ -198,6 +204,16 @@ if (! class_exists('WCMYPA')) :
             $this->useStagingEnvironment();
             $this->includes();
             $this->initSettings();
+
+            if (! $this->validateApiKeyPresence()) {
+                return;
+            }
+
+            AccountSettings::getInstance();
+            add_action(
+                'wp_ajax_' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE,
+                [AccountSettings::class, "restRefreshFromApi"]
+            );
         }
 
         /**
@@ -308,7 +324,7 @@ if (! class_exists('WCMYPA')) :
                 require_once('migration/wcmp-upgrade-migration-v3-0-4.php');
             }
 
-            if ($this->phpVersionMeets(\WCMYPA::PHP_VERSION_7_1)) {
+            if ($this->phpVersionMeets(WCMYPA::PHP_VERSION_7_1)) {
                 // Import the migration class base
                 require_once('migration/wcmp-upgrade-migration.php');
 
@@ -353,20 +369,9 @@ if (! class_exists('WCMYPA')) :
 
         /**
          * Initialize the settings.
-         * Legacy: Before PHP 7.1, use old settings structure.
          */
         public function initSettings()
         {
-            if (! $this->phpVersionMeets(\WCMYPA::PHP_VERSION_7_1)) {
-                $this->general_settings  = get_option('woocommerce_myparcel_general_settings');
-                $this->export_defaults   = get_option('woocommerce_myparcel_export_defaults_settings');
-                $this->checkout_settings = get_option('woocommerce_myparcel_checkout_settings');
-
-                return;
-            }
-
-            // Create the settings collection by importing this function, because we can't use the sdk
-            // imports in the legacy version.
             require_once('includes/wcmp-initialize-settings-collection.php');
             if (empty($this->setting_collection)) {
                 $this->setting_collection = (new WCMP_Initialize_Settings_Collection())->initialize();
@@ -382,6 +387,27 @@ if (! class_exists('WCMYPA')) :
         {
             return version_compare(PHP_VERSION, $version, '>=');
         }
+
+        /**
+         * @return bool
+         */
+        private function validateApiKeyPresence(): bool
+        {
+            if ($this->setting_collection->getByName(WCMYPA_Settings::SETTING_API_KEY)) {
+                return true;
+            }
+
+            Messages::showAdminNotice(
+                sprintf(
+                    __('error_settings_api_key_missing', 'woocommerce-myparcel'),
+                    sprintf('<a href="%s">', WCMYPA_Settings::getSettingsUrl()),
+                    '</a>'
+                ),
+                Messages::NOTICE_LEVEL_WARNING
+            );
+
+            return false;
+        }
     }
 
 endif;
@@ -392,19 +418,9 @@ endif;
  * @return WCMYPA
  * @since  2.0
  */
-function WCMYPA()
+function WCMYPA(): WCMYPA
 {
-    return WCMYPA::instance();
-}
-
-/**
- * For PHP < 7.1 support.
- *
- * @return WCMYPA
- */
-function WooCommerce_MyParcel()
-{
-    return WCMYPA();
+    return WCMYPA::getInstance();
 }
 
 WCMYPA(); // load plugin

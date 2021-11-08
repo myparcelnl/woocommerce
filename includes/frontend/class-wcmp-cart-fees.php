@@ -188,7 +188,7 @@ class WCMP_Cart_Fees
         foreach ($this->fees as $name) {
             [$string, $fee] = $this->getFee($name);
 
-            if ($string) {
+            if ($string && $fee) {
                 $cart->add_fee($string, $fee, (bool) $tax, $tax ?? "");
             }
         }
@@ -217,11 +217,12 @@ class WCMP_Cart_Fees
         };
 
         return [
-            'delivery_evening' => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE),
-            'delivery_morning' => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE),
-            'delivery_pickup'  => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE),
-            'only_recipient'   => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE),
-            'signature'        => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE),
+            'delivery_evening'  => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE),
+            'delivery_standard' => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_STANDARD_FEE),
+            'delivery_morning'  => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE),
+            'delivery_pickup'   => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE),
+            'only_recipient'    => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE),
+            'signature'         => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE),
         ];
     }
 
@@ -235,11 +236,12 @@ class WCMP_Cart_Fees
     {
 
         return [
-            'delivery_evening' => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE) ?: __('shipment_options_delivery_evening', 'woocommerce-myparcel'),
-            'delivery_morning' => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE) ?: __('shipment_options_delivery_morning', 'woocommerce-myparcel'),
-            'delivery_pickup'  => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_PICKUP_TITLE) ?: __('shipment_options_delivery_pickup', 'woocommerce-myparcel'),
-            'only_recipient'   => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE) ?: __('shipment_options_only_recipient', 'woocommerce-myparcel'),
-            'signature'        => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE) ?: __('shipment_options_signature', 'woocommerce-myparcel'),
+            'delivery_evening'  => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE) ?: __('shipment_options_delivery_evening', 'woocommerce-myparcel'),
+            'delivery_standard' => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_STANDARD_TITLE) ?: __('shipment_options_delivery_standard', 'woocommerce-myparcel'),
+            'delivery_morning'  => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE) ?: __('shipment_options_delivery_morning', 'woocommerce-myparcel'),
+            'delivery_pickup'   => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_PICKUP_TITLE) ?: __('shipment_options_delivery_pickup', 'woocommerce-myparcel'),
+            'only_recipient'    => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE) ?: __('shipment_options_only_recipient', 'woocommerce-myparcel'),
+            'signature'         => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SIGNATURE_TITLE) ?: __('shipment_options_signature', 'woocommerce-myparcel'),
         ];
     }
 

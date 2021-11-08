@@ -1,11 +1,13 @@
 <?php
 
-use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
+declare(strict_types=1);
+
+use MyParcelNL\WooCommerce\includes\admin\settings\CarrierSettings;
+use MyParcelNL\WooCommerce\includes\admin\settings\Status;
+use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
-if (! defined('ABSPATH')) {
-    exit;
-}
+defined('ABSPATH') or die();
 
 if (class_exists('WCMP_Settings_Data')) {
     return new WCMP_Settings_Data();
@@ -43,9 +45,15 @@ class WCMP_Settings_Data
      */
     private $callbacks;
 
+    /**
+     * @var \MyParcelNL\WooCommerce\includes\admin\settings\CarrierSettings
+     */
+    private $carrierSettings;
+
     public function __construct()
     {
-        $this->callbacks = require 'class-wcmp-settings-callbacks.php';
+        $this->callbacks       = require 'class-wcmp-settings-callbacks.php';
+        $this->carrierSettings = new CarrierSettings();
 
         // Create the MyParcel settings with the admin_init hook.
         add_action("admin_init", [$this, "create_all_settings"]);
@@ -73,11 +81,7 @@ class WCMP_Settings_Data
             WCMYPA_Settings::SETTINGS_CHECKOUT
         );
 
-        $this->generate_settings(
-            $this->get_sections_carrier_postnl(),
-            WCMYPA_Settings::SETTINGS_POSTNL,
-            true
-        );
+        $this->generateCarrierSettings();
     }
 
     /**
@@ -91,10 +95,46 @@ class WCMP_Settings_Data
             WCMYPA_Settings::SETTINGS_CHECKOUT        => __("Checkout settings", "woocommerce-myparcel"),
         ];
 
-        $array[WCMYPA_Settings::SETTINGS_POSTNL] = __("PostNL", "woocommerce-myparcel");
-//        $array[WCMYPA_Settings::SETTINGS_DPD]    = __("DPD", "woocommerce-myparcel");
+        foreach (AccountSettings::getInstance()->getEnabledCarriers() as $carrier) {
+            $array[$carrier->getName()] = $carrier->getHuman();
+        }
 
         return $array;
+    }
+
+    /**
+     * Get the weekdays from WP_Locale and remove any given entries.
+     *
+     * @param  int[] $remove
+     *
+     * @return array
+     */
+    public static function getWeekdays(array $remove = []): array
+    {
+        $weekdays = (new WP_Locale())->weekday;
+
+        foreach ($remove as $index) {
+            unset($weekdays[$index]);
+        }
+
+        return $weekdays;
+    }
+
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    private function generateCarrierSettings(): void
+    {
+        $enabledCarriers = AccountSettings::getInstance()
+            ->getEnabledCarriers();
+
+        foreach ($enabledCarriers as $carrier) {
+            $this->generate_settings(
+                [$carrier->getName() => $this->carrierSettings->getCarrierSection($carrier)],
+                $carrier->getName()
+            );
+        }
     }
 
     /**
@@ -131,14 +171,21 @@ class WCMP_Settings_Data
                 );
 
                 foreach ($section["settings"] as $setting) {
-                    $namePrefix            = $prefix ? "{$name}_" : '';
-                    $setting["id"]        = $prefix ? "{$name}_{$setting["name"]}" : $setting["name"];
+                    if (isset($setting['condition']) && false === $setting['condition']) {
+                        continue;
+                    }
+                    $namePrefix           = $prefix ? "{$name}_" : '';
                     $setting["option_id"] = $optionIdentifier;
+                    if (isset($setting['name'])) {
+                        $setting["id"] = $prefix ? "{$name}_{$setting["name"]}" : $setting["name"];
+                    }
 
                     $class = new SettingsFieldArguments($setting, "{$optionIdentifier}[{$namePrefix}", ']');
 
                     // Add the setting's default value to the defaults array.
-                    $defaults[$setting["id"]] = $class->getDefault();
+                    if (isset($setting['id'])) {
+                        $defaults[$setting["id"]] = $class->getDefault();
+                    }
 
                     if (isset(get_option($optionIdentifier)[$class->getId()])) {
                         $class->setValue(get_option($optionIdentifier)[$class->getId()]);
@@ -157,8 +204,8 @@ class WCMP_Settings_Data
                     }
 
                     add_settings_field(
-                        $setting["id"],
-                        $setting["label"],
+                        $setting["id"] ?? null,
+                        $setting["label"] ?? null,
                         $callback,
                         $optionIdentifier,
                         $sectionName,
@@ -180,7 +227,7 @@ class WCMP_Settings_Data
             $optionIdentifier,
             array_replace_recursive(
                 $defaults,
-                get_option($optionIdentifier)
+                get_option($optionIdentifier) ?: []
             )
         );
     }
@@ -188,23 +235,23 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_sections_general()
+    private function get_sections_general(): array
     {
         return [
             WCMYPA_Settings::SETTINGS_GENERAL => [
                 [
                     "name"     => "api",
-                    "label"    => __("API settings", "woocommerce-myparcel"),
+                    "label"    => __("settings_general_api_title", "woocommerce-myparcel"),
                     "settings" => $this->get_section_general_api(),
                 ],
                 [
                     "name"     => "general",
-                    "label"    => __("General settings", "woocommerce-myparcel"),
+                    "label"    => __("settings_general_general_title", "woocommerce-myparcel"),
                     "settings" => $this->get_section_general_general(),
                 ],
                 [
                     "name"     => "diagnostics",
-                    "label"    => __("Diagnostic tools", "woocommerce-myparcel"),
+                    "label"    => __("settings_general_diagnostics_title", "woocommerce-myparcel"),
                     "settings" => $this->get_section_general_diagnostics(),
                 ],
             ],
@@ -214,7 +261,7 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_sections_export_defaults()
+    private function get_sections_export_defaults(): array
     {
         return [
             WCMYPA_Settings::SETTINGS_EXPORT_DEFAULTS => [
@@ -227,7 +274,7 @@ class WCMP_Settings_Data
         ];
     }
 
-    private function get_sections_checkout()
+    private function get_sections_checkout(): array
     {
         return [
             WCMYPA_Settings::SETTINGS_CHECKOUT => [
@@ -247,49 +294,35 @@ class WCMP_Settings_Data
     }
 
     /**
-     * Get the array of PostNL sections and their settings to be added to WordPress.
-     *
-     * @return array
-     */
-    private function get_sections_carrier_postnl()
-    {
-        return [
-            PostNLConsignment::CARRIER_NAME => [
-                [
-                    "name"        => "export_defaults",
-                    "label"       => __("PostNL export settings", "woocommerce-myparcel"),
-                    "description" => __(
-                        "These settings will be applied to PostNL shipments you create in the backend.",
-                        "woocommerce-myparcel"
-                    ),
-                    "settings"    => $this->get_section_carrier_postnl_export_defaults(),
-                ],
-                [
-                    "name"     => "delivery_options",
-                    "label"    => __("PostNL delivery options", "woocommerce-myparcel"),
-                    "settings" => $this->get_section_carrier_postnl_delivery_options(),
-                ],
-                [
-                    "name"     => "pickup_options",
-                    "label"    => __("PostNL pickup options", "woocommerce-myparcel"),
-                    "settings" => $this->get_section_carrier_postnl_pickup_options(),
-                ],
-            ],
-        ];
-    }
-
-    /**
      * @return array
      */
     private function get_section_general_api(): array
     {
         return [
             [
-                "name"      => WCMYPA_Settings::SETTING_API_KEY,
-                "label"     => __("Key", "woocommerce-myparcel"),
-                "help_text" => __("api key", "woocommerce-myparcel"),
+                'name'      => WCMYPA_Settings::SETTING_API_KEY,
+                'label'     => __('settings_general_api_key', 'woocommerce-myparcel'),
+                'help_text' => __('settings_general_api_key_help_text', 'woocommerce-myparcel'),
+            ],
+            [
+                'name'      => WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE,
+                'label'     => __('settings_trigger_manual_update', 'woocommerce-myparcel'),
+                'help_text' => __('settings_trigger_manual_update_help_text', 'woocommerce-myparcel'),
+                'condition' => AccountSettings::getInstance()->useManualUpdate(),
+                'callback'  => [$this, 'renderManualUpdateTrigger'],
             ],
         ];
+    }
+
+    public function renderManualUpdateTrigger(): void
+    {
+        $baseUrl = 'admin-ajax.php?action=' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE;
+
+        echo sprintf(
+            '<a class="button wcmp__trigger" href="%s">%s</a>',
+            $baseUrl,
+            __('settings_trigger_manual_update_button', 'woocommerce-myparcel')
+        );
     }
 
     /**
@@ -463,237 +496,9 @@ class WCMP_Settings_Data
                         admin_url("admin.php?page=wc-status&tab=logs")
                     ) . '" target="_blank">' . __("View logs", "woocommerce-myparcel") . "</a> (wc-myparcel)",
             ],
-        ];
-    }
-
-    /**
-     * Export defaults specifically for postnl.
-     *
-     * @return array
-     */
-    private function get_section_carrier_postnl_export_defaults(): array
-    {
-        return [
             [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
-                'label'     => __('shipment_options_only_recipient', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_only_recipient_help_text', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
+                'callback' => [Status::class, 'renderDiagnostics'],
             ],
-            [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
-                'label'     => __('shipment_options_signature', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_signature_help_text', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-            ],
-            [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
-                'label'     => __('shipment_options_large_format', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_large_format_help_text', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-            ],
-            [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT,
-                'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
-                'label'     => __('shipment_options_large_format_from_weight', 'woocommerce-myparcel'),
-                'default'   => 0,
-                'help_text' => __('shipment_options_large_format_from_weight_help_text', 'woocommerce-myparcel'),
-                'type'      => 'number',
-            ],
-            [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
-                'label'     => __('shipment_options_age_check', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-                'help_text' => __('shipment_options_age_check_help_text', 'woocommerce-myparcel'),
-            ],
-            [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
-                'label'     => __('shipment_options_return', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_return_help_text', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-            ],
-            [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                'label'     => __('shipment_options_insured', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_insured_help_text', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-            ],
-            [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE,
-                'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                'label'     => __('shipment_options_insured_from_price', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_insured_from_price_help_text', 'woocommerce-myparcel'),
-                'type'      => 'number',
-            ],
-            [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
-                'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
-                'label'     => __('shipment_options_insured_amount', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_insured_amount_help_text', 'woocommerce-myparcel'),
-                'type'      => 'select',
-                'options'   => WCMP_Data::getInsuranceAmounts(),
-            ],
-        ];
-    }
-
-    /**
-     * These are the unprefixed settings for postnl.
-     * After the settings are generated every name will be prefixed with "postnl_"
-     * Example: delivery_enabled => postnl_delivery_enabled
-     *
-     * @return array
-     */
-    private function get_section_carrier_postnl_delivery_options(): array
-    {
-        return [
-            [
-                "name"  => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label" => __("Enable PostNL delivery", "woocommerce-myparcel"),
-                "type"  => "toggle",
-            ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Drop-off days", "woocommerce-myparcel"),
-                "callback"  => [WCMP_Settings_Callbacks::class, "enhanced_select"],
-                "options"   => $this->getWeekdays(null),
-                "default"   => [2],
-                "help_text" => __("Days of the week on which you hand over parcels to PostNL", "woocommerce-myparcel"),
-            ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Cut-off time", "woocommerce-myparcel"),
-                "help_text" => __(
-                    "Time at which you stop processing orders for the day (format: hh:mm)",
-                    "woocommerce-myparcel"
-                ),
-                "default"   => "17:00",
-            ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("Drop-off delay", "woocommerce-myparcel"),
-                "type"      => "number",
-                "max"       => 14,
-                "help_text" => __("Number of days you need to process an order.", "woocommerce-myparcel"),
-            ],
-            [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE,
-                'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                'label'     => __('feature_allow_show_delivery_date_title', 'woocommerce-myparcel'),
-                'type'      => 'toggle',
-                'default'   => self::ENABLED,
-                'help_text' => __('feature_allow_show_delivery_date_help_text', 'woocommerce-myparcel'),
-            ],
-            [
-                'name'      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW,
-                'condition' => WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE,
-                'class'      => ['wcmp__child'],
-                'label'     => __('setting_carrier_delivery_days_window_title', 'woocommerce-myparcel'),
-                'type'      => 'number',
-                'min'       => 1,
-                'max'       => 14,
-                'default'   => 1,
-                'help_text' => __('setting_carrier_delivery_days_window_help_text', 'woocommerce-myparcel'),
-            ],
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("shipment_options_delivery_morning", "woocommerce-myparcel"),
-                "type"      => "toggle",
-            ],
-            self::getFeeField(
-                WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
-                [
-                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
-                ]
-            ),
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("shipment_options_delivery_evening", "woocommerce-myparcel"),
-                "type"      => "toggle",
-            ],
-            self::getFeeField(
-                WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
-                [
-                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
-                ]
-            ),
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("shipment_options_only_recipient", "woocommerce-myparcel"),
-                "type"      => "toggle",
-            ],
-            self::getFeeField(
-                WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
-                [
-                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
-                ]
-            ),
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("shipment_options_signature", "woocommerce-myparcel"),
-                "type"      => "toggle",
-                "help_text" => __(
-                    "Enter an amount that is either positive or negative. For example, do you want to give a discount for using this function or do you want to charge extra for this delivery option.",
-                    "woocommerce-myparcel"
-                ),
-            ],
-            self::getFeeField(
-                WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_FEE,
-                [
-                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
-                ]
-            ),
-            [
-                "name"      => WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
-                "condition" => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                "label"     => __("shipment_options_delivery_monday", "woocommerce-myparcel"),
-                "type"      => "toggle",
-            ],
-            [
-                "name"        => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME,
-                "condition"   => [
-                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
-                ],
-                "class"       => ["wcmp__child"],
-                "label"       => __("Cut-off time on Saturday", "woocommerce-myparcel"),
-                "placeholder" => "14:30",
-                "default"     => "15:00",
-                "help_text"   => __(
-                    "Time at which you stop processing orders for the day (format: hh:mm)",
-                    "woocommerce-myparcel"
-                ),
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function get_section_carrier_postnl_pickup_options(): array
-    {
-        return [
-            [
-                "name"  => WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                "label" => __("Enable PostNL pickup", "woocommerce-myparcel"),
-                "type"  => "toggle",
-            ],
-            self::getFeeField(
-                WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE,
-                [
-                    WCMYPA_Settings::SETTING_CARRIER_PICKUP_ENABLED,
-                ]
-            ),
         ];
     }
 
@@ -968,27 +773,6 @@ class WCMP_Settings_Data
         ];
     }
 
-    /**
-     * Get the weekdays from WP_Locale and remove any entries. Sunday is removed by default unless `null` is passed.
-     *
-     * @param int|null ...$remove
-     *
-     * @return array
-     */
-    private function getWeekdays(...$remove): array
-    {
-        $weekdays = (new WP_Locale())->weekday;
-
-        if ($remove !== null) {
-            $remove = count($remove) ? $remove : [0];
-            foreach ($remove as $index) {
-                unset($weekdays[$index]);
-            }
-        }
-
-        return $weekdays;
-    }
-
     private function get_section_checkout_strings(): array
     {
         return [
@@ -1112,7 +896,7 @@ class WCMP_Settings_Data
      *
      * @return array
      */
-    private static function getFeeField(string $name, array $conditions): array
+    public static function getFeeField(string $name, array $conditions): array
     {
         return [
             "name"       => $name,

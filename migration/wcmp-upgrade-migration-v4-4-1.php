@@ -1,6 +1,7 @@
 <?php
 
 use migration\WCMP_Upgrade_Migration;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -73,7 +74,7 @@ class WCMP_Upgrade_Migration_v4_4_1 extends WCMP_Upgrade_Migration
 
     protected function migrateCarrierSettings(): void
     {
-        $keyPostNl                 = WCMYPA_Settings::SETTINGS_POSTNL;
+        $keyPostNl                 = CarrierPostNL::NAME;
         $keyDeliveryDaysWindow     = $keyPostNl . '_' . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW;
         $keyAllowShowDeliveryDate  = $keyPostNl . '_' . WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE;
         $settingDeliveryDaysWindow = $this->newPostNlSettings[$keyDeliveryDaysWindow] ?? '1';
