@@ -70,6 +70,7 @@ jQuery(($) => {
     toggle: '.wcmp__toggle',
     tipTipHolder: '#tiptip_holder',
     tipTipContent: '#tiptip_content',
+    triggerButton: '.wcmp__trigger',
   };
 
   const spinner = {
@@ -124,6 +125,11 @@ jQuery(($) => {
      * Single actions click. The .wc_actions .single_wc_actions for support wc > 3.3.0.
      */
     $(selectors.orderAction).click(onActionClick);
+
+    /**
+     * Buttons that trigger a simple ajax action.
+     */
+    $(selectors.triggerButton).click(onTriggerClick);
 
     $(window).bind('tb_unload', onThickBoxUnload);
 
@@ -233,6 +239,7 @@ jQuery(($) => {
           type: dependency.condition.type,
           setValue: data.setValue,
           toggle: data.toggle,
+          additionalContext: data.additionalContext,
         });
 
         if (dependencies.hasOwnProperty(dependency.node.name)) {
@@ -249,20 +256,34 @@ jQuery(($) => {
    * Executes a set of changes on an element and its parent.
    *
    * @param {Object} data
-   * @param {HTMLInputElement} data.node
-   * @param {HTMLInputElement} data.parent
+   * @param {HTMLInputElement|HTMLSelectElement} data.node
+   * @param {HTMLInputElement|HTMLSelectElement} data.parent
    * @param {*} data.setValue
    * @param {Boolean} data.toggle
    * @param {String} data.type
    * @param {Number} easing
    */
   function toggleElement(data, easing) {
-    const {node} = data;
-    const {setValue} = data;
-    const {toggle} = data;
+    let {setValue} = data;
+    const {parent, node, toggle, type, additionalContext} = data;
     const elementContainer = $(node).closest('tr');
 
-    switch (data.type) {
+    switch (type) {
+      case 'options':
+        let additionalContextReduced = {};
+        for (let index in additionalContext) {
+          for (let carrier in additionalContext[index]) {
+            additionalContextReduced[carrier] = additionalContext[index][carrier];
+          }
+        }
+        const isAllowed = (val) => additionalContextReduced[parent.value].includes(val);
+
+        [...node.options].forEach((option) => {
+          option.disabled = isAllowed(option.value) ? '' : 'disabled';
+        });
+
+        setValue = isAllowed(node.value) ? null : setValue;
+        break;
       case 'show':
         elementContainer[toggle ? 'hide' : 'show'](easing);
         break;
@@ -276,7 +297,7 @@ jQuery(($) => {
         break;
     }
 
-    if (toggle && setValue) {
+    if (toggle && setValue && node.value !== setValue) {
       node.value = setValue;
       node.dispatchEvent(new Event('change'));
       // Sync toggles here as well as in the createDependencies because not all inputs listen to the change event.
@@ -369,6 +390,7 @@ jQuery(($) => {
     const {parents} = dependency.condition;
     const setValue = dependency.condition.set_value || null;
     let toggle = false;
+    let additionalContext = null;
 
     Object
       .keys(parents)
@@ -384,6 +406,9 @@ jQuery(($) => {
           localToggle = true;
         } else if (typeof wantedValue === 'string') {
           localToggle = parentInput.value !== wantedValue;
+        } else if (isPlainObject(wantedValue)) {
+          localToggle = true;
+          additionalContext = wantedValue;
         } else {
           localToggle = wantedValue.indexOf(parentInput.value) === -1;
         }
@@ -394,8 +419,9 @@ jQuery(($) => {
       });
 
     return {
-      toggle: toggle,
-      setValue: setValue,
+      toggle,
+      setValue,
+      additionalContext,
     };
   }
 
@@ -731,6 +757,18 @@ jQuery(($) => {
     }
 
     return decodeURIComponent(results[1].replace(/\+/g, ' '));
+  }
+
+  function onTriggerClick(event) {
+    event.preventDefault();
+    doRequest.bind(this)({
+      url: this.href,
+      data: {},
+      afterDone(response) {
+        const redirectUrl = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
+        window.location.href = redirectUrl;
+      },
+    });
   }
 
   /**
@@ -1191,5 +1229,24 @@ jQuery(($) => {
 
     // To trigger event listeners
     input.dispatchEvent(new Event('change'));
+  }
+
+  /**
+   * @param {*} value
+   *
+   * @returns {Boolean}
+   */
+  function isPlainObject(value) {
+    if (typeof value !== 'object' || value === null) {
+      return false;
+    }
+
+    let proto = value;
+
+    while (Object.getPrototypeOf(proto) !== null) {
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return Object.getPrototypeOf(value) === proto;
   }
 });

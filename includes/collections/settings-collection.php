@@ -2,31 +2,30 @@
 
 namespace WPO\WC\MyParcel\Collections;
 
+defined('ABSPATH') or die();
+
 use MyParcelNL\Sdk\src\Support\Collection;
+use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use WC_Tax;
 use WPO\WC\MyParcel\Entity\Setting;
-
-defined('ABSPATH') or exit;
 
 if (class_exists('\\WPO\\WC\\MyParcel\\Collections\\SettingsCollection')) {
     return;
 }
 
 /**
- * @mixin Setting
- */
-
-/**
  * @property mixed getByName
  */
 class SettingsCollection extends Collection
 {
+    use HasInstance;
+
     /**
-     * @param array  $rawSettings
-     * @param string $type
-     * @param string $carrierName
+     * @param  array       $rawSettings
+     * @param  string      $type
+     * @param  null|string $carrierName
      */
-    public function setSettingsByType(array $rawSettings = [], string $type = "", string $carrierName = null)
+    public function setSettingsByType(array $rawSettings = [], string $type = "", string $carrierName = null): void
     {
         foreach ($rawSettings as $name => $value) {
             $setting = new Setting($name, $value, $type, $carrierName);
@@ -43,7 +42,7 @@ class SettingsCollection extends Collection
      */
     public function isEnabled(string $name): bool
     {
-        return $this->getByName($name) ?? false;
+        return (bool) $this->getByName($name);
     }
 
     /**
