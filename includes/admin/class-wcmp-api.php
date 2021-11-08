@@ -149,7 +149,8 @@ class WCMP_API extends WCMP_Rest
      */
     public function getShipmentLabels(array $shipment_ids, array $order_ids, array $positions = [], $display = true)
     {
-        $collection = MyParcelCollection::findMany($shipment_ids, $this->key);
+        $collection = MyParcelCollection::findMany($shipment_ids, $this->key)
+            ->setUserAgents(WCMP_Export::getUserAgents());
 
         /**
          * @see https://github.com/MyParcelNL/Sdk#label-format-and-position

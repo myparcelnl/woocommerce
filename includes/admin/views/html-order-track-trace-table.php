@@ -31,7 +31,7 @@ if (! count($shipments)) {
 
 ?>
 
-<table class="wcmp__table--track-trace">
+<table class="wcmp__table wcmp__table--track-trace">
   <thead>
   <tr>
     <th><?php _e("Track & Trace", "woocommerce-myparcel"); ?></th>

@@ -1,5 +1,12 @@
 {
-    "require": {
-        "myparcelnl/sdk": "~v6.0.0-beta.1"
+  "require": {
+    "myparcelnl/sdk": "~6.0.0-beta.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "MyParcelNL\\WooCommerce\\includes\\": "includes",
+      "MyParcelNL\\WooCommerce\\": "includes"
     }
+  }
 }
+

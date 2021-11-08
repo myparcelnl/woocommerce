@@ -5,19 +5,18 @@ use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
+use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
+use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
+use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
-if (! defined("ABSPATH")) {
-    exit;
-} // Exit if accessed directly
-
-if (class_exists("WCMP_Export_Consignments")) {
-    return;
-}
+defined('ABSPATH') or die();
 
 class WCMP_Export_Consignments
 {
+    use HasApiKey;
+
     private const DEFAULT_PRODUCT_QUANTITY = 1;
 
     /**
@@ -46,12 +45,7 @@ class WCMP_Export_Consignments
     private $carrier;
 
     /**
-     * @var MyParcelCollection
-     */
-    public $myParcelCollection;
-
-    /**
-     * @var \OrderSettings
+     * @var OrderSettings
      */
     private $orderSettings;
 
@@ -72,15 +66,7 @@ class WCMP_Export_Consignments
         $this->orderSettings   = new OrderSettings($order);
         $this->deliveryOptions = $this->orderSettings->getDeliveryOptions();
 
-        $this->carrier = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
-
-        $this->myParcelCollection = (new MyParcelCollection())->setUserAgents(
-            [
-                'Wordpress'              => get_bloginfo('version'),
-                'WooCommerce'            => WOOCOMMERCE_VERSION,
-                'MyParcelNL-WooCommerce' => WC_MYPARCEL_NL_VERSION,
-            ]
-        );
+        $this->carrier = $this->deliveryOptions->getCarrier() ?? (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
 
         $this->createConsignment();
         $this->setConsignmentData();
@@ -108,6 +94,7 @@ class WCMP_Export_Consignments
         $this->setRecipient();
         $this->setShipmentOptions();
         $this->setPickupLocation();
+        $this->setDropOffPoint();
         $this->setCustomsDeclaration();
         $this->setPhysicalProperties();
     }
@@ -282,7 +269,7 @@ class WCMP_Export_Consignments
     }
 
     /**
-     * @return \OrderSettings
+     * @return OrderSettings
      */
     public function getOrderSettings(): OrderSettings
     {
@@ -319,18 +306,6 @@ class WCMP_Export_Consignments
             ->setEmail($recipient['email'])
             ->setPhone($recipient['phone'])
             ->setSaveRecipientAddress(false);
-    }
-
-    /**
-     * @throws ErrorException
-     */
-    private function getApiKey(): void
-    {
-        $this->apiKey = $this->getSetting(WCMYPA_Settings::SETTING_API_KEY);
-
-        if (! $this->apiKey) {
-            throw new ErrorException(__("No API key found in MyParcel settings", "woocommerce-myparcel"));
-        }
     }
 
     /**
@@ -382,6 +357,18 @@ class WCMP_Export_Consignments
         }
 
         return $formattedLabelDescription;
+    }
+
+    private function setDropOffPoint(): void
+    {
+        $carrierId     = $this->consignment->getCarrierId();
+        $configuration = AccountSettings::getInstance()->getCarrierConfigurationByCarrierId($carrierId);
+
+        if (! $configuration) {
+            return;
+        }
+
+        $this->consignment->setDropOffPoint($configuration->getDefaultDropOffPoint());
     }
 
     /**
