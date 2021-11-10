@@ -334,15 +334,16 @@ class WCMP_Export
     }
 
     /**
-     * @param array $order_ids
-     * @param bool  $process
+     * @param  array $order_ids
+     * @param  bool  $process
      *
      * @return array
      * @throws ApiException
      * @throws MissingFieldException
      * @throws \MyParcelNL\Sdk\src\Exception\AccountNotActiveException
+     * @throws \Exception
      */
-    public function addShipments(array $order_ids, bool $process)
+    public function addShipments(array $order_ids, bool $process): array
     {
         $return          = [];
         $collection      = new MyParcelCollection();
@@ -386,7 +387,9 @@ class WCMP_Export
             return [];
         }
 
-        $collection = $collection->createConcepts();
+        $collection = $collection
+            ->setUserAgents(self::getUserAgents())
+            ->createConcepts();
 
         if ($processDirectly) {
             $collection->setLinkOfLabels();
@@ -1512,6 +1515,18 @@ class WCMP_Export
         }
 
         return $response["body"]["data"]["shipments"][0]["barcode"];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getUserAgents(): array
+    {
+        return [
+            'MyParcelNL-WooCommerce' => WCMYPA::getInstance()->version,
+            'WooCommerce'            => WooCommerce::instance()->version,
+            'Wordpress'              => get_bloginfo('version'),
+        ];
     }
 
     /**

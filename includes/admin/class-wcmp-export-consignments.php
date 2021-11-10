@@ -45,11 +45,6 @@ class WCMP_Export_Consignments
     private $carrier;
 
     /**
-     * @var MyParcelCollection
-     */
-    public $myParcelCollection;
-
-    /**
      * @var OrderSettings
      */
     private $orderSettings;
@@ -71,15 +66,7 @@ class WCMP_Export_Consignments
         $this->orderSettings   = new OrderSettings($order);
         $this->deliveryOptions = $this->orderSettings->getDeliveryOptions();
 
-        $this->carrier = $this->deliveryOptions->getCarrier() ?? WCMP_Data::DEFAULT_CARRIER;
-
-        $this->myParcelCollection = (new MyParcelCollection())->setUserAgents(
-            [
-                'Wordpress'              => get_bloginfo('version'),
-                'WooCommerce'            => WOOCOMMERCE_VERSION,
-                'MyParcelNL-WooCommerce' => WC_MYPARCEL_NL_VERSION,
-            ]
-        );
+        $this->carrier = $this->deliveryOptions->getCarrier() ?? (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
 
         $this->createConsignment();
         $this->setConsignmentData();
