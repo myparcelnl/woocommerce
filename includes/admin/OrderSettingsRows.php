@@ -145,9 +145,6 @@ class OrderSettingsRows
                     'min' => '1',
                     'max' => '10',
                 ],
-                'condition'         => [
-                    $this->getCarriersWithMultiColloCondition(),
-                ],
             ],
         ];
 
