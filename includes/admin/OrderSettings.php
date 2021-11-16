@@ -478,7 +478,7 @@ class OrderSettings
     private function setLargeFormat(): void
     {
         $this->largeFormat  = false;
-        $weightFromOrder    = WCMP_Export::convertWeightToGrams($this->extraOptions['weight']);
+        $weightFromOrder    = WCMP_Export::convertWeightToGrams($this->extraOptions['weight'] ?? 0);
 
         $defaultLargeFormat = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->shipmentOptions->hasLargeFormat(),
