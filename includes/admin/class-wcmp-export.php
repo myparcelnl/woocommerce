@@ -905,7 +905,7 @@ class WCMP_Export
      * @return string|null
      * @throws Exception
      */
-    public function getOrderShippingClass(WC_Order $order, string $shippingMethodId = '')
+    public function getOrderShippingClass(WC_Order $order, string $shippingMethodId = ''): ?string
     {
         if (empty($shippingMethodId)) {
             $orderShippingMethods = $order->get_items('shipping');
@@ -925,7 +925,7 @@ class WCMP_Export
             return null;
         }
 
-        return $shippingMethodId;
+        return (string) $shippingMethodId;
     }
 
     /**
