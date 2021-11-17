@@ -1,8 +1,7 @@
 {
   "name": "@myparcel/woocommerce",
   "private": true,
-  "version": "4.1.0",
-  "description": "Welcome to the WooCommerce MyParcel repository on GitHub. Here you can browse the source, look at open issues and keep track of development.",
+  "version": "4.7.0",
   "scripts": {
     "build": "gulp",
     "watch": "gulp watch",
@@ -10,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/myparcel/woocommerce.git"
+    "url": "git+https://github.com/myparcelnl/woocommerce.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/myparcel/woocommerce/issues"
+    "url": "https://github.com/myparcelnl/woocommerce/issues"
   },
-  "homepage": "https://github.com/myparcel/woocommerce#readme",
+  "homepage": "https://github.com/myparcelnl/woocommerce#readme",
   "dependencies": {
     "@myparcel/delivery-options": "^4.3.1"
   },

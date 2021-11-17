@@ -32,6 +32,9 @@ msgstr "Calculated weight: %s"
 msgid "delivery_type"
 msgstr "Delivery type:"
 
+msgid "diagnostics_status_api_key_missing"
+msgstr "Please enter your MyParcel API key."
+
 msgid "diagnostics_status_carrier_disabled"
 msgstr "Carrier is disabled. Go to %scarrier settings%s to enable it."
 
@@ -95,26 +98,6 @@ msgstr ""
 
 msgid "error_settings_api_key_missing"
 msgstr "MyParcel API key is missing or invalid. Please check your %ssettings%s."
-
-msgid "notice_admin_api_key_missing"
-msgstr "Please enter your API key in the %sMyParcel settings%s."
-
-msgid "notice_settings_fetched_from_api"
-msgstr "Settings fetched from backoffice."
-
-msgid "diagnostics_status_api_key_missing"
-msgstr "Please enter your MyParcel API key."
-
-msgid "settings_trigger_manual_update_button"
-msgstr "Refresh"
-
-msgid "settings_trigger_manual_update"
-msgstr "Refresh settings from backoffice"
-
-msgid "settings_trigger_manual_update_help_text"
-msgstr ""
-"Click the button to fetch the settings from your MyParcel backoffice anew. "
-"Only necessary once after you change settings for your shop there."
 
 msgid "error_woocommerce_minimum_version"
 msgstr "requires a minimum WooCommerce {woocommerce_version} version!"
@@ -188,6 +171,12 @@ msgstr "MyParcel shipment created:"
 msgid "not_active"
 msgstr "Not active"
 
+msgid "notice_admin_api_key_missing"
+msgstr "Please enter your API key in the %sMyParcel settings%s."
+
+msgid "notice_settings_fetched_from_api"
+msgstr "Settings fetched from backoffice."
+
 msgid "pickup_location"
 msgstr "Pickup location:"
 
@@ -210,6 +199,9 @@ msgstr "Activate %s in your MyParcel backoffice to use it."
 
 msgid "setting_automatic_order_status"
 msgstr "Automatic order status"
+
+msgid "setting_carrier_cut_off_time_day_title"
+msgstr "Cut-off time on %s"
 
 msgid "setting_carrier_cut_off_time_help_text"
 msgstr "Time at which you stop processing orders for the day (format: hh:mm)"
@@ -305,6 +297,14 @@ msgstr ""
 msgid "setting_show_delivery_day_title"
 msgstr "Delivery date in customer communication"
 
+msgid "settings_carrier_delivery_day"
+msgstr "%s delivery"
+
+msgid "settings_carrier_delivery_day_help_text"
+msgstr ""
+"To allow :delivery_day delivery, :cutoff_day must be present in "
+":delivery_days, and the cut-off time must be 15:00 or earlier."
+
 msgid "settings_checkout_display_for"
 msgstr "Display for"
 
@@ -355,6 +355,17 @@ msgstr "List"
 
 msgid "settings_pickup_locations_default_view_map"
 msgstr "Map"
+
+msgid "settings_trigger_manual_update"
+msgstr "Refresh settings from backoffice"
+
+msgid "settings_trigger_manual_update_button"
+msgstr "Refresh"
+
+msgid "settings_trigger_manual_update_help_text"
+msgstr ""
+"Click the button to fetch the settings from your MyParcel backoffice anew. "
+"Only necessary once after you change settings for your shop there."
 
 msgid "shipment_options_age_check"
 msgstr "Age check 18+"
@@ -435,13 +446,6 @@ msgstr ""
 msgid "shipment_options_large_format"
 msgstr "Extra large size"
 
-msgid "shipment_options_large_format_help_text"
-msgstr ""
-"Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
-"smaller than 175 x 78 x 58 cm. An extra fee will be charged. Note! If the "
-"parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet "
-"rate will be charged."
-
 msgid "shipment_options_large_format_from_weight"
 msgstr "From weight (g) "
 
@@ -449,6 +453,13 @@ msgid "shipment_options_large_format_from_weight_help_text"
 msgstr ""
 "Enter the weight in grams from which the Large package setting should be "
 "activated."
+
+msgid "shipment_options_large_format_help_text"
+msgstr ""
+"Enable this option when your shipment is bigger than 100 x 70 x 50 cm, but "
+"smaller than 175 x 78 x 58 cm. An extra fee will be charged. Note! If the "
+"parcel is bigger than 175 x 78 x 58 of or heavier than 30 kg, the pallet "
+"rate will be charged."
 
 msgid "shipment_options_only_recipient"
 msgstr "Home address only"
