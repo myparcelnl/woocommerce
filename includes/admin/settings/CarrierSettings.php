@@ -19,6 +19,25 @@ use WPO\WC\MyParcel\Collections\SettingsCollection;
 class CarrierSettings
 {
     /**
+     * Map consignment options to correct settings and translations.
+     */
+    private const OPTIONS_EXTRA_DELIVERY_DAY_MAP = [
+        AbstractConsignment::EXTRA_OPTION_DELIVERY_MONDAY   => [
+            'setting'         => WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
+            'day'             => 'Monday',
+            'cut_off_setting' => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME,
+            'cut_off_day'     => 'Saturday',
+        ],
+        AbstractConsignment::EXTRA_OPTION_DELIVERY_SATURDAY => [
+            'setting'         => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED,
+            'day'             => 'Saturday',
+            'cut_off_setting' => WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME,
+            'cut_off_day'     => 'Friday',
+            'fee'             => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE,
+        ],
+    ];
+
+    /**
      * @param  \MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier $carrier
      *
      * @return array
@@ -282,6 +301,59 @@ class CarrierSettings
     /**
      * @param  \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment $consignment
      *
+     * @return void
+     */
+    private function createExtraDayDeliveryOptions(AbstractConsignment $consignment): array
+    {
+        $options = [];
+
+        foreach (self::OPTIONS_EXTRA_DELIVERY_DAY_MAP as $consignmentOption => $settings) {
+            if (! $consignment->canHaveExtraOption($consignmentOption)) {
+                continue;
+            }
+
+            $options[] = [
+                'name'      => $settings['setting'],
+                'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                'label'     => sprintf(
+                    __('shipment_options_delivery_day', 'woocommerce-myparcel'),
+                    __($settings['day'])
+                ),
+                'type'      => 'toggle',
+            ];
+            $options[] = [
+                'name'      => $settings['cut_off_setting'],
+                'type'      => 'time',
+                'condition' => [
+                    WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    $settings['setting'],
+                ],
+                'class'     => ['wcmp__child'],
+                'label'     => sprintf(
+                    __('setting_carrier_cut_off_time_day_title', 'woocommerce-myparcel'),
+                    __($settings['cut_off_day'])
+                ),
+                'default'   => '15:00',
+                'help_text' => __('setting_carrier_cut_off_time_help_text', 'woocommerce-myparcel'),
+            ];
+
+            if (isset($settings['fee'])) {
+                $options[] = WCMP_Settings_Data::getFeeField(
+                    $settings['fee'],
+                    [
+                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                        $settings['setting'],
+                    ]
+                );
+            }
+        }
+
+        return $options;
+    }
+
+    /**
+     * @param  \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment $consignment
+     *
      * @return array
      */
     private function createMorningDeliveryOptions(AbstractConsignment $consignment): array
@@ -372,6 +444,7 @@ class CarrierSettings
             ],
             [
                 'name'      => WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME,
+                'type'      => 'time',
                 'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 'label'     => __('setting_carrier_cut_off_time_title', 'woocommerce-myparcel'),
                 'help_text' => __('setting_carrier_cut_off_time_help_text', 'woocommerce-myparcel'),
@@ -391,6 +464,7 @@ class CarrierSettings
 
         return array_merge(
             $settings,
+            $this->createExtraDayDeliveryOptions($consignment),
             $this->createMorningDeliveryOptions($consignment),
             $this->createEveningDeliveryOptions($consignment),
             $this->createCarrierOptions($consignment, [$this, 'createDeliveryOptionsSettingsArray'])
