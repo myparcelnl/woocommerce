@@ -353,7 +353,7 @@ class WCMP_Export_Consignments
         $formattedLabelDescription = strtr(
             $this->orderSettings->getLabelDescription(),
             [
-                '[DELIVERY_DATE]' => $deliveryDate ?? date('d-m-Y', strtotime($deliveryDate)),
+                '[DELIVERY_DATE]' => $deliveryDate ? date('d-m-Y', strtotime($deliveryDate)) : '',
                 '[ORDER_NR]'      => $this->order->get_order_number(),
                 '[PRODUCT_ID]'    => implode(', ', $productIds),
                 '[PRODUCT_NAME]'  => implode(', ', $productNames),
