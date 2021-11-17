@@ -23,17 +23,18 @@ class CarrierSettings
      */
     private const OPTIONS_EXTRA_DELIVERY_DAY_MAP = [
         AbstractConsignment::EXTRA_OPTION_DELIVERY_MONDAY   => [
-            'setting'         => WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
-            'day'             => 'Monday',
-            'cut_off_setting' => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME,
-            'cut_off_day'     => 'Saturday',
+            'cut_off_time_day'     => 'Saturday',
+            'cut_off_time_setting' => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME,
+            'day'                  => 'Monday',
+            'setting'              => WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
         ],
         AbstractConsignment::EXTRA_OPTION_DELIVERY_SATURDAY => [
-            'setting'         => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED,
-            'day'             => 'Saturday',
-            'cut_off_setting' => WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME,
-            'cut_off_day'     => 'Friday',
-            'fee'             => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE,
+            'cut_off_time_day'     => 'Friday',
+            'cut_off_time_default' => '',
+            'cut_off_time_setting' => WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME,
+            'day'                  => 'Saturday',
+            'fee'                  => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_FEE,
+            'setting'              => WCMYPA_Settings::SETTING_CARRIER_SATURDAY_DELIVERY_ENABLED,
         ],
     ];
 
@@ -316,25 +317,39 @@ class CarrierSettings
                 'name'      => $settings['setting'],
                 'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 'label'     => sprintf(
-                    __('shipment_options_delivery_day', 'woocommerce-myparcel'),
+                    __('settings_carrier_delivery_day', 'woocommerce-myparcel'),
                     __($settings['day'])
+                ),
+                'help_text' => strtr(
+                    __('settings_carrier_delivery_day_help_text', 'woocommerce-myparcel'),
+                    [
+                        ':delivery_days' => strtolower(
+                            __('setting_carrier_drop_off_days_title', 'woocommerce-myparcel')
+                        ),
+                        ':cutoff_day'    => __($settings['cut_off_time_day']),
+                        ':delivery_day'  => __($settings['day']),
+                    ]
                 ),
                 'type'      => 'toggle',
             ];
             $options[] = [
-                'name'      => $settings['cut_off_setting'],
-                'type'      => 'time',
-                'condition' => [
+                'name'              => $settings['cut_off_time_setting'],
+                'type'              => 'time',
+                'condition'         => [
                     WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                     $settings['setting'],
                 ],
-                'class'     => ['wcmp__child'],
-                'label'     => sprintf(
+                'class'             => ['wcmp__child'],
+                'label'             => sprintf(
                     __('setting_carrier_cut_off_time_day_title', 'woocommerce-myparcel'),
-                    __($settings['cut_off_day'])
+                    __($settings['cut_off_time_day'])
                 ),
-                'default'   => '15:00',
-                'help_text' => __('setting_carrier_cut_off_time_help_text', 'woocommerce-myparcel'),
+                'default'           => '15:00',
+                'help_text'         => __('setting_carrier_cut_off_time_help_text', 'woocommerce-myparcel'),
+                'custom_attributes' => [
+                    'min' => '00:00',
+                    'max' => '15:00',
+                ],
             ];
 
             if (isset($settings['fee'])) {
