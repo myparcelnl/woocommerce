@@ -32,6 +32,9 @@ msgstr "Poids calculé : %s"
 msgid "delivery_type"
 msgstr "Type de livraison :"
 
+msgid "diagnostics_status_api_key_missing"
+msgstr ""
+
 msgid "diagnostics_status_carrier_disabled"
 msgstr ""
 
@@ -90,24 +93,6 @@ msgid "error_settings_account_missing"
 msgstr ""
 
 msgid "error_settings_api_key_missing"
-msgstr ""
-
-msgid "notice_admin_api_key_missing"
-msgstr ""
-
-msgid "notice_settings_fetched_from_api"
-msgstr ""
-
-msgid "diagnostics_status_api_key_missing"
-msgstr ""
-
-msgid "settings_trigger_manual_update_button"
-msgstr ""
-
-msgid "settings_trigger_manual_update"
-msgstr ""
-
-msgid "settings_trigger_manual_update_help_text"
 msgstr ""
 
 msgid "error_woocommerce_minimum_version"
@@ -182,6 +167,12 @@ msgstr "Envoi MyParcel créé :"
 msgid "not_active"
 msgstr "Non actif"
 
+msgid "notice_admin_api_key_missing"
+msgstr ""
+
+msgid "notice_settings_fetched_from_api"
+msgstr ""
+
 msgid "pickup_location"
 msgstr "Lieu de ramassage"
 
@@ -202,6 +193,9 @@ msgstr "Activez %s dans votre MyParcel backOffice pour utiliser."
 
 msgid "setting_automatic_order_status"
 msgstr "Statut de commande automatique"
+
+msgid "setting_carrier_cut_off_time_day_title"
+msgstr "Heure de clôture le %s"
 
 msgid "setting_carrier_cut_off_time_help_text"
 msgstr ""
@@ -305,6 +299,14 @@ msgstr ""
 msgid "setting_show_delivery_day_title"
 msgstr "Date de livraison dans communication"
 
+msgid "settings_carrier_delivery_day"
+msgstr "Livraison le %s"
+
+msgid "settings_carrier_delivery_day_help_text"
+msgstr ""
+"Pour permettre la livraison :delivery_day, :cutoff_day doit être présent "
+"dans :delivery_days et l'heure limite doit être 15h00 ou plus tôt."
+
 msgid "settings_checkout_display_for"
 msgstr "Afficher pour"
 
@@ -356,6 +358,15 @@ msgstr "Liste"
 
 msgid "settings_pickup_locations_default_view_map"
 msgstr "Carte"
+
+msgid "settings_trigger_manual_update"
+msgstr ""
+
+msgid "settings_trigger_manual_update_button"
+msgstr ""
+
+msgid "settings_trigger_manual_update_help_text"
+msgstr ""
 
 msgid "shipment_options_age_check"
 msgstr "Vérification de l'âge"
@@ -440,13 +451,6 @@ msgstr ""
 msgid "shipment_options_large_format"
 msgstr "Très grande taille"
 
-msgid "shipment_options_large_format_help_text"
-msgstr ""
-"Activez cette option lorsque votre envoi est de plus de 100 x 70 x 50 cm, "
-"mais inférieur à 175 x 78 x 58 cm. Un supplément sera facturé. Noter! Si le "
-"colis est plus grand que 175 x 78 x 58 de ou plus lourd que 30 kg, la "
-"vitesse de palette sera chargée."
-
 msgid "shipment_options_large_format_from_weight"
 msgstr "Du poids (g)"
 
@@ -454,6 +458,13 @@ msgid "shipment_options_large_format_from_weight_help_text"
 msgstr ""
 "Entrez ici le poids en grammes à partir duquel le paramètre Grand colis "
 "doit être activé."
+
+msgid "shipment_options_large_format_help_text"
+msgstr ""
+"Activez cette option lorsque votre envoi est de plus de 100 x 70 x 50 cm, "
+"mais inférieur à 175 x 78 x 58 cm. Un supplément sera facturé. Noter! Si le "
+"colis est plus grand que 175 x 78 x 58 de ou plus lourd que 30 kg, la "
+"vitesse de palette sera chargée."
 
 msgid "shipment_options_only_recipient"
 msgstr "Seul destinataire"

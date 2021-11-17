@@ -90,7 +90,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 4.6.0 () =
+= 4.7.0 () =
+* Feat: add redjepakketje
+* Fix: no notice when weight missing in order
+* Fix: re-add alternate delivery days settings
+
+= 4.6.0 (2021-11-17) =
 * Feat: Customize delivery type title on confirmation
 * Feat: Weight feature for extra large package
 * Fix: Duplicate queries in wordpress backend

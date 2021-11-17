@@ -32,6 +32,9 @@ msgstr "Berekend gewicht: %s"
 msgid "delivery_type"
 msgstr "Soort levering:"
 
+msgid "diagnostics_status_api_key_missing"
+msgstr "Vul je MyParcel API key in."
+
 msgid "diagnostics_status_carrier_disabled"
 msgstr ""
 "Vervoerder is uitgeschakeld. Ga naar %svervoerders%s om deze in te "
@@ -100,27 +103,6 @@ msgstr ""
 
 msgid "error_settings_api_key_missing"
 msgstr "MyParcel API key mist of is ongeldig. Controleer je %sinstellingen%s."
-
-msgid "notice_admin_api_key_missing"
-msgstr "Vul je API key in in de %sMyParcel instellingen%s."
-
-msgid "notice_settings_fetched_from_api"
-msgstr "Instellingen opgehaald uit de backoffice."
-
-msgid "diagnostics_status_api_key_missing"
-msgstr "Vul je MyParcel API key in."
-
-msgid "settings_trigger_manual_update_button"
-msgstr "Verversen"
-
-msgid "settings_trigger_manual_update"
-msgstr "Ververs instellingen uit backoffice"
-
-msgid "settings_trigger_manual_update_help_text"
-msgstr ""
-"Druk op de knop om de instellingen uit je MyParcel backoffice opnieuw op te "
-"halen. Alleen nodig wanneer je je instellingen voor deze shop daar hebt "
-"aangepast."
 
 msgid "error_woocommerce_minimum_version"
 msgstr "vereist een minimale WooCommerce {woocommerce_version} versie!"
@@ -194,6 +176,12 @@ msgstr "MyParcel zending aangemaakt"
 msgid "not_active"
 msgstr "Niet actief"
 
+msgid "notice_admin_api_key_missing"
+msgstr "Vul je API key in in de %sMyParcel instellingen%s."
+
+msgid "notice_settings_fetched_from_api"
+msgstr "Instellingen opgehaald uit de backoffice."
+
 msgid "pickup_location"
 msgstr "Afhaallocatie:"
 
@@ -216,6 +204,9 @@ msgstr "Activeer %s in uw MyParcel backoffice om te kunnen gebruiken."
 
 msgid "setting_automatic_order_status"
 msgstr "Automatische orderstatus"
+
+msgid "setting_carrier_cut_off_time_day_title"
+msgstr "Sluitingstijd op %s"
 
 msgid "setting_carrier_cut_off_time_help_text"
 msgstr ""
@@ -327,6 +318,14 @@ msgstr ""
 msgid "setting_show_delivery_day_title"
 msgstr "Toon bezorgdatum in klantcommunicatie"
 
+msgid "settings_carrier_delivery_day"
+msgstr "%slevering"
+
+msgid "settings_carrier_delivery_day_help_text"
+msgstr ""
+"Om :delivery_day delivery in te schakelen moet :cutoff_day geselecteerd "
+"zijn in :delivery_days, en de sluitingstijd mag uiterlijk 15:00 zijn."
+
 msgid "settings_checkout_display_for"
 msgstr "Toon bij"
 
@@ -378,6 +377,18 @@ msgstr "Lijst"
 msgid "settings_pickup_locations_default_view_map"
 msgstr "Kaart"
 
+msgid "settings_trigger_manual_update"
+msgstr "Ververs instellingen uit backoffice"
+
+msgid "settings_trigger_manual_update_button"
+msgstr "Verversen"
+
+msgid "settings_trigger_manual_update_help_text"
+msgstr ""
+"Druk op de knop om de instellingen uit je MyParcel backoffice opnieuw op te "
+"halen. Alleen nodig wanneer je je instellingen voor deze shop daar hebt "
+"aangepast."
+
 msgid "shipment_options_age_check"
 msgstr "Leeftijdscheck 18+"
 
@@ -398,7 +409,7 @@ msgid "shipment_options_delivery_evening_title"
 msgstr "Avondlevering titel"
 
 msgid "shipment_options_delivery_monday"
-msgstr "Maandag levering"
+msgstr "Maandaglevering"
 
 msgid "shipment_options_delivery_morning"
 msgstr "Ochtendlevering"
@@ -459,13 +470,6 @@ msgstr ""
 msgid "shipment_options_large_format"
 msgstr "Extra grote verpakking"
 
-msgid "shipment_options_large_format_help_text"
-msgstr ""
-"Activeer deze instelling als je zending groter is dan 100 x 70 x 50 cm, "
-"maar kleiner dan 175 x 78 x 58 cm. Dit kost meer. Let op! Als het pakket "
-"groter dan 175 x 78 x 58 cm of zwaarder dan 30kg is, wordt het gerekend als "
-"pallet."
-
 msgid "shipment_options_large_format_from_weight"
 msgstr "Vanaf gewicht (g)"
 
@@ -473,6 +477,13 @@ msgid "shipment_options_large_format_from_weight_help_text"
 msgstr ""
 "Vul hier in gram in vanaf welk gewicht de instelling Groot pakket "
 "geactiveerd moet worden. "
+
+msgid "shipment_options_large_format_help_text"
+msgstr ""
+"Activeer deze instelling als je zending groter is dan 100 x 70 x 50 cm, "
+"maar kleiner dan 175 x 78 x 58 cm. Dit kost meer. Let op! Als het pakket "
+"groter dan 175 x 78 x 58 cm of zwaarder dan 30kg is, wordt het gerekend als "
+"pallet."
 
 msgid "shipment_options_only_recipient"
 msgstr "Alleen thuisadres"
