@@ -332,6 +332,7 @@ class WCMP_Export_Consignments
         $productNames    = [];
         $productSkus     = [];
         $productQuantity = [];
+        $deliveryDate    = $this->deliveryOptions->getDate();
 
         foreach ($this->order->get_items() as $item) {
             if (! method_exists($item, 'get_product')) {
@@ -352,7 +353,7 @@ class WCMP_Export_Consignments
         $formattedLabelDescription = strtr(
             $this->orderSettings->getLabelDescription(),
             [
-                '[DELIVERY_DATE]' => date('d-m-Y', strtotime($this->deliveryOptions->getDate())),
+                '[DELIVERY_DATE]' => $deliveryDate ?? date('d-m-Y', strtotime($deliveryDate)),
                 '[ORDER_NR]'      => $this->order->get_order_number(),
                 '[PRODUCT_ID]'    => implode(', ', $productIds),
                 '[PRODUCT_NAME]'  => implode(', ', $productNames),
