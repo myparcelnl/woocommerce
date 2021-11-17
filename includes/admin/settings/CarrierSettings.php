@@ -318,7 +318,7 @@ class CarrierSettings
                 'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 'label'     => sprintf(
                     __('settings_carrier_delivery_day', 'woocommerce-myparcel'),
-                    __($settings['day'])
+                    ucfirst(__($settings['day']))
                 ),
                 'help_text' => strtr(
                     __('settings_carrier_delivery_day_help_text', 'woocommerce-myparcel'),
