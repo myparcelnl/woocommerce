@@ -278,7 +278,7 @@ class CarrierSettings
      */
     private function createEveningDeliveryOptions(AbstractConsignment $consignment): array
     {
-        if ($consignment->canHaveDeliveryMoment(AbstractConsignment::DELIVERY_TYPE_EVENING_NAME)) {
+        if ($consignment->canHaveDeliveryType(AbstractConsignment::DELIVERY_TYPE_EVENING_NAME)) {
             return [
                 [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
@@ -373,7 +373,7 @@ class CarrierSettings
      */
     private function createMorningDeliveryOptions(AbstractConsignment $consignment): array
     {
-        if ($consignment->canHaveDeliveryMoment(AbstractConsignment::DELIVERY_TYPE_MORNING_NAME)) {
+        if ($consignment->canHaveDeliveryType(AbstractConsignment::DELIVERY_TYPE_MORNING_NAME)) {
             return [
                 [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
@@ -535,7 +535,7 @@ class CarrierSettings
         $deliveryOptionsEnabled = SettingsCollection::getInstance()
             ->isEnabled(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED);
 
-        $carrierHasPickup = $consignment->canHaveDeliveryMoment(AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME);
+        $carrierHasPickup = $consignment->canHaveDeliveryType(AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME);
 
         if (! $deliveryOptionsEnabled || ! $carrierHasPickup) {
             return [];
