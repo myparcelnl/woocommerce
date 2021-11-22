@@ -229,12 +229,11 @@ class AccountSettings extends Model
         $carrierOptions        = $settings->get('carrier_options');
         $carrierConfigurations = $settings->get('carrier_configurations');
 
-        if (empty($shop) || empty($account) || empty($carrierOptions) || empty($carrierConfigurations)) {
+        if (! isset($shop, $account, $carrierOptions, $carrierConfigurations)) {
             Messages::showAdminNotice(
                 __('error_settings_account_missing', 'woocommerce-myparcel'),
                 Messages::NOTICE_LEVEL_ERROR
             );
-
 
             return;
         }
