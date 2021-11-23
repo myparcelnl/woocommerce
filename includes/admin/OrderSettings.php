@@ -272,19 +272,21 @@ class OrderSettings
     }
 
     /**
-     * @TODO MY-28781 refactor OrderSettings-> get and set Shipping and Billing Recipients
-     *
      * @return self
      */
     public function setShippingRecipient(): self
     {
+        $recipient = WCMP_Export::getRecipientFromOrder($this->order);
+
         $this->shippingRecipient = (new Recipient())
-            ->setCc($this->order->get_shipping_country())
-            ->setCity($this->order->get_shipping_city())
-            ->setCompany($this->order->get_shipping_company())
-            ->setPerson(substr($this->order->get_formatted_shipping_full_name(), 0, 50))
-            ->setPostalCode($this->order->get_shipping_postcode())
-            ->setStreet($this->makeStreet($this->order->get_billing_address_1(), $this->order->get_billing_address_2()));
+            ->setCc($recipient['cc'])
+            ->setCity($recipient['city'])
+            ->setCompany($recipient['company'])
+            ->setPerson(substr($recipient['person'], 0, 50))
+            ->setPostalCode($recipient['postal_code'])
+            ->setStreet($recipient['street'])
+            ->setNumber($recipient['number'])
+            ->setNumberSuffix($recipient['number_suffix']);
 
         return $this;
     }
@@ -302,14 +304,19 @@ class OrderSettings
      */
     public function setBillingRecipient(): self
     {
-        $this->billingRecipient = (new Recipient())->setCc($this->order->get_billing_country())
-            ->setCity($this->order->get_billing_city())
-            ->setCompany($this->order->get_billing_company())
-            ->setEmail($this->order->get_billing_email())
-            ->setPerson(substr($this->order->get_formatted_billing_full_name(), 0, 50))
-            ->setPhone($this->order->get_billing_phone())
-            ->setPostalCode($this->order->get_billing_postcode())
-            ->setStreet($this->makeStreet($this->order->get_billing_address_1(), $this->order->get_billing_address_2()));
+        $recipient = WCMP_Export::getRecipientFromOrder($this->order);
+
+        $this->billingRecipient = (new Recipient())
+            ->setCc($recipient['cc'])
+            ->setCity($recipient['city'])
+            ->setCompany($recipient['company'])
+            ->setEmail($recipient['email'])
+            ->setPhone($recipient['phone'])
+            ->setPerson(substr($recipient['person'], 0, 50))
+            ->setPostalCode($recipient['postal_code'])
+            ->setStreet($recipient['street'])
+            ->setNumber($recipient['number'])
+            ->setNumberSuffix($recipient['number_suffix']);
 
         return $this;
     }
