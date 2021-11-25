@@ -1651,6 +1651,7 @@ class WCMP_Export
                 ->setInvoiceAddress($orderSettings->getBillingRecipient())
                 ->setRecipient($orderSettings->getShippingRecipient())
                 ->setOrderDate($wcOrder->get_date_created() ?? new DateTime())
+                ->setPickupLocation($orderSettings->getPickupLocation())
                 ->setExternalIdentifier($orderId);
 
             $orderLines = new Collection();
