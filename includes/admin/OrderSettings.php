@@ -9,6 +9,7 @@ defined('ABSPATH') or die();
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
+use MyParcelNL\Sdk\src\Model\PickupLocation;
 use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
@@ -118,6 +119,11 @@ class OrderSettings
      * @var Recipient
      */
     private $shippingRecipient;
+
+    /**
+     * @var PickupLocation
+     */
+    private $pickupLocation;
 
     /**
      * @var Recipient
@@ -268,6 +274,8 @@ class OrderSettings
 
         $this->setWeight();
         $this->setDigitalStampRangeWeight();
+
+        $this->setPickupLocation();
     }
 
     /**
@@ -319,6 +327,38 @@ class OrderSettings
     public function getBillingRecipient(): ?Recipient
     {
         return $this->billingRecipient;
+    }
+
+    /**
+     * @return self
+     */
+    public function setPickupLocation(): self
+    {
+        $pickupLocation = $this->deliveryOptions->getPickupLocation();
+
+        if (! $this->deliveryOptions->isPickup() || ! $pickupLocation) {
+            return $this;
+        }
+
+        $this->pickupLocation = (new PickupLocation())
+            ->setCc($pickupLocation->getCountry())
+            ->setCity($pickupLocation->getCity())
+            ->setLocationName($pickupLocation->getLocationName())
+            ->setStreet($pickupLocation->getStreet())
+            ->setNumber($pickupLocation->getNumber())
+            ->setPostalCode($pickupLocation->getPostalCode())
+            ->setRetailNetworkId($pickupLocation->getRetailNetworkId())
+            ->setLocationCode($pickupLocation->getLocationCode());
+
+        return $this;
+    }
+
+    /**
+     * @return \MyParcelNL\Sdk\src\Model\PickupLocation|null
+     */
+    public function getPickupLocation(): ?PickupLocation
+    {
+        return $this->pickupLocation;
     }
 
     /**
