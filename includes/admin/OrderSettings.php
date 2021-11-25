@@ -9,6 +9,7 @@ defined('ABSPATH') or die();
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
+use MyParcelNL\Sdk\src\Helper\SplitStreet;
 use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
@@ -273,20 +274,13 @@ class OrderSettings
 
     /**
      * @return self
+     * @throws \Exception
      */
     public function setShippingRecipient(): self
     {
-        $recipient = WCMP_Export::getRecipientFromOrder($this->order);
+        $addressData = WCMP_Export::getRecipientFromOrder($this->order);
 
-        $this->shippingRecipient = (new Recipient())
-            ->setCc($recipient['cc'])
-            ->setCity($recipient['city'])
-            ->setCompany($recipient['company'])
-            ->setPerson(substr($recipient['person'], 0, 50))
-            ->setPostalCode($recipient['postal_code'])
-            ->setStreet($recipient['street'])
-            ->setNumber($recipient['number'])
-            ->setNumberSuffix($recipient['number_suffix']);
+        $this->shippingRecipient = $this->getRecipientFromAddressData($addressData);
 
         return $this;
     }
@@ -301,22 +295,13 @@ class OrderSettings
 
     /**
      * @return self
+     * @throws \Exception
      */
     public function setBillingRecipient(): self
     {
-        $recipient = WCMP_Export::getRecipientFromOrder($this->order);
+        $addressData = WCMP_Export::getRecipientFromOrder($this->order);
 
-        $this->billingRecipient = (new Recipient())
-            ->setCc($recipient['cc'])
-            ->setCity($recipient['city'])
-            ->setCompany($recipient['company'])
-            ->setEmail($recipient['email'])
-            ->setPhone($recipient['phone'])
-            ->setPerson(substr($recipient['person'], 0, 50))
-            ->setPostalCode($recipient['postal_code'])
-            ->setStreet($recipient['street'])
-            ->setNumber($recipient['number'])
-            ->setNumberSuffix($recipient['number_suffix']);
+        $this->billingRecipient = $this->getRecipientFromAddressData($addressData);
 
         return $this;
     }
@@ -330,13 +315,31 @@ class OrderSettings
     }
 
     /**
-     * @param ...$parts
+     * @param array $address
      *
-     * @return string
+     * @return \MyParcelNL\Sdk\src\Model\Recipient
+     * @throws \Exception
      */
-    private function makeStreet(...$parts): string
+    private function getRecipientFromAddressData(array $address): Recipient
     {
-        return (substr(trim(implode($parts)), 0, 40) ?: '');
+        if (isset($address['street']) && ! isset($address['full_street'])) {
+            $address['full_street'] = trim(implode(' ', [
+                $address['street'] ?? null,
+                $address['number'] ?? null,
+                $address['number_suffix'] ?? null,
+                $address['box_number'] ?? null,
+            ]));
+        }
+
+        $splitStreet = SplitStreet::splitStreet($address['full_street'], AbstractConsignment::CC_NL, $address['cc']);
+        unset($address['full_street']);
+
+        $address['street']        = $splitStreet->getStreet();
+        $address['number']        = $splitStreet->getNumber();
+        $address['number_suffix'] = $splitStreet->getNumberSuffix();
+        $address['box_number']    = $splitStreet->getBoxNumber();
+
+        return new Recipient($address);
     }
 
     /**
