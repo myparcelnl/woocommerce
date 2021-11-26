@@ -447,7 +447,7 @@ class OrderSettings
         $carrier             = ConsignmentFactory::createByCarrierName($this->carrier);
         $amountPossibilities = $carrier->getInsurancePossibilities();
 
-        if ($insuranceFromDeliveryOptions && $insuranceFromDeliveryOptions >= array_shift($amountPossibilities)) {
+        if ($insuranceFromDeliveryOptions && $insuranceFromDeliveryOptions >= reset($amountPossibilities)) {
             $isInsured       = (bool) $insuranceFromDeliveryOptions;
             $insuranceAmount = $insuranceFromDeliveryOptions;
         } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && $insuranceFromDeliveryOptions !== 0) {
