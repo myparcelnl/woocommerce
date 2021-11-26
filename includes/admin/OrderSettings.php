@@ -23,7 +23,6 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 class OrderSettings
 {
     public const DEFAULT_COLLO_AMOUNT = 1;
-    private const FIRST_INSURANCE     = 0;
 
     /**
      * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter
@@ -448,7 +447,7 @@ class OrderSettings
         $carrier             = ConsignmentFactory::createByCarrierName($this->carrier);
         $amountPossibilities = $carrier->getInsurancePossibilities();
 
-        if ($insuranceFromDeliveryOptions && $insuranceFromDeliveryOptions >= $amountPossibilities[self::FIRST_INSURANCE]) {
+        if ($insuranceFromDeliveryOptions && $insuranceFromDeliveryOptions >= array_shift($amountPossibilities)) {
             $isInsured       = (bool) $insuranceFromDeliveryOptions;
             $insuranceAmount = $insuranceFromDeliveryOptions;
         } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && $insuranceFromDeliveryOptions !== 0) {
