@@ -5,9 +5,10 @@ use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use MyParcelNL\WooCommerce\Helper\ExportRow;
+use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
-use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
+use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 
 defined('ABSPATH') or die();
@@ -243,20 +244,22 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $recipient = WCMP_Export::getRecipientFromOrder($this->order);
+        $originCountry = $this->consignment->getLocalCountryCode();
+        $recipient     = new RecipientFromWCOrder($this->order, $originCountry, RecipientFromWCOrder::SHIPPING);
 
         $this->consignment
-            ->setCountry($recipient['cc'])
-            ->setPerson($recipient['person'])
-            ->setCompany($recipient['company'])
-            ->setStreet($recipient['street'])
-            ->setNumber($recipient['number'] ?? null)
-            ->setNumberSuffix($recipient['number_suffix'] ?? null)
-            ->setStreetAdditionalInfo($recipient['street_additional_info'] ?? null)
-            ->setPostalCode($recipient['postal_code'])
-            ->setCity($recipient['city'])
-            ->setEmail($recipient['email'])
-            ->setPhone($recipient['phone'])
+            ->setCountry($recipient->getCc())
+            ->setPerson($recipient->getPerson())
+            ->setCompany($recipient->getCompany())
+            ->setStreetAdditionalInfo($recipient->getStreetAdditionalInfo())
+            ->setNumber($recipient->getNumber())
+            ->setNumberSuffix($recipient->getNumberSuffix())
+            ->setBoxNumber($recipient->getBoxNumber())
+            ->setStreet($recipient->getStreet())
+            ->setPostalCode($recipient->getPostalCode())
+            ->setCity($recipient->getCity())
+            ->setEmail($recipient->getEmail())
+            ->setPhone($recipient->getPhone())
             ->setSaveRecipientAddress(false);
     }
 
