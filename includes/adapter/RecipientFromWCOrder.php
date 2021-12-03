@@ -22,7 +22,7 @@ abstract class RecipientFromWCOrder extends Recipient
     public function __construct()
     {
         $recipientDetails = $this->prepareOrderData();
-        parent::__construct($recipientDetails, $this->local);
+        parent::__construct($recipientDetails, $this->carrierCountry);
     }
 
     abstract public function prepareOrderData(): array;

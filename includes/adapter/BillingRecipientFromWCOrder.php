@@ -18,7 +18,7 @@ class BillingRecipientFromWCOrder extends RecipientFromWCOrder
     /**
      * @var string
      */
-    protected $local;
+    protected $carrierCountry;
 
     /**
      * RecipientFromOrder constructor.
@@ -28,10 +28,10 @@ class BillingRecipientFromWCOrder extends RecipientFromWCOrder
      *
      * @throws \Exception
      */
-    public function __construct(WC_Order $order, string $local)
+    public function __construct(WC_Order $order, string $carrierCountry)
     {
         $this->order = $order;
-        $this->local = $local;
+        $this->carrierCountry = $carrierCountry;
         parent::__construct();
     }
 
