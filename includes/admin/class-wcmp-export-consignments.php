@@ -5,6 +5,7 @@ use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
+use MyParcelNL\WooCommerce\Includes\Adapter\ShippingRecipientFromWCOrder;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
@@ -291,17 +292,22 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $recipient = WCMP_Export::getRecipientFromOrder($this->order);
+        $local = $this->consignment->getLocalCountryCode();
+        $recipient = new ShippingRecipientFromWCOrder($this->order, $local);
 
         $this->consignment
-            ->setCountry($recipient['cc'])
-            ->setPerson($recipient['person'])
-            ->setCompany($recipient['company'])
-            ->setFullStreet($recipient['full_street'])
-            ->setPostalCode($recipient['postal_code'])
-            ->setCity($recipient['city'])
-            ->setEmail($recipient['email'])
-            ->setPhone($recipient['phone'])
+            ->setCountry($recipient->getCc())
+            ->setPerson($recipient->getPerson())
+            ->setCompany($recipient->getCompany())
+            ->setStreetAdditionalInfo($recipient->getStreetAdditionalInfo())
+            ->setNumber($recipient->getNumber())
+            ->setNumberSuffix($recipient->getNumberSuffix())
+            ->setBoxNumber($recipient->getBoxNumber())
+            ->setStreet($recipient->getStreet())
+            ->setPostalCode($recipient->getPostalCode())
+            ->setCity($recipient->getCity())
+            ->setEmail($recipient->getEmail())
+            ->setPhone($recipient->getPhone())
             ->setSaveRecipientAddress(false);
     }
 

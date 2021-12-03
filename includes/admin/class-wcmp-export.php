@@ -623,6 +623,7 @@ class WCMP_Export
 
         // set name & email
         $return_shipment_data = [
+            'parent'  => (int) $order->get_order_number(),
             "name"    => $shipping_name,
             "email"   => WCX_Order::get_prop($order, "billing_email"),
             "carrier" => PostNLConsignment::CARRIER_ID, // default to PostNL for now
@@ -678,55 +679,6 @@ class WCMP_Export
         }
 
         return $return_shipment_data;
-    }
-
-    /**
-     * @param WC_Order $order
-     *
-     * @return mixed|void
-     * @throws Exception
-     */
-    public static function getRecipientFromOrder(WC_Order $order)
-    {
-        $isUsingSeparateFields = WCX_Order::get_meta($order, '_billing_street_name')
-            || WCX_Order::get_meta($order, '_billing_house_number');
-
-        $shippingName = method_exists($order, 'get_formatted_shipping_full_name')
-            ? $order->get_formatted_shipping_full_name()
-            : trim($order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name());
-
-        $deliveryOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_DELIVERY_OPTIONS);
-        $connectEmail    = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_EMAIL);
-        $connectPhone    = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_PHONE);
-        $shippingCountry = $order->get_shipping_country();
-
-        if ($isUsingSeparateFields) {
-            $fullStreet = implode(' ', [
-                (string) WCX_Order::get_meta($order, '_shipping_street_name'),
-                (string) WCX_Order::get_meta($order, '_shipping_house_number'),
-                (string) WCX_Order::get_meta($order, '_shipping_house_number_suffix'),
-            ]);
-        } else {
-            $fullStreet = $order->get_shipping_address_1() . ' ' . $order->get_shipping_address_2();
-        }
-
-        $address = [
-            'cc'          => $shippingCountry,
-            'city'        => $order->get_shipping_city(),
-            'person'      => $shippingName,
-            'company'     => $order->get_shipping_company(),
-            'email'       => $connectEmail || $deliveryOptions['isPickup']
-                ? $order->get_billing_email()
-                : '',
-            'phone'       => $connectPhone
-                ? $order->get_billing_phone()
-                : '',
-            'full_street' => $fullStreet,
-            'postal_code' => $order->get_shipping_postcode(),
-            'region'      => $order->get_shipping_state(),
-        ];
-
-        return apply_filters('wc_myparcel_recipient', $address, $order);
     }
 
     /**
