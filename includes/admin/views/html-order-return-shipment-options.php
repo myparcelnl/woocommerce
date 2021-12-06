@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 
 if (! defined('ABSPATH')) {
     exit;

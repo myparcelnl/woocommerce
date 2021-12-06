@@ -618,63 +618,64 @@ class WCMP_Export
         $order = WCX::get_order($order_id);
 
         $shipping_name =
-            method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
-                : trim($order->get_shipping_first_name() . " " . $order->get_shipping_last_name());
+            method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name()
+                : trim($order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name());
 
         // set name & email
         $return_shipment_data = [
-            "name"    => $shipping_name,
-            "email"   => WCX_Order::get_prop($order, "billing_email"),
-            "carrier" => PostNLConsignment::CARRIER_ID, // default to PostNL for now
+            'parent'  => (int) $order->get_order_number(),
+            'name'    => $shipping_name,
+            'email'   => WCX_Order::get_prop($order, 'billing_email'),
+            'carrier' => PostNLConsignment::CARRIER_ID, // default to PostNL for now
         ];
 
-        if (! Arr::get($return_shipment_data, "email")) {
-            throw new Exception(__("No e-mail address found in order.", "woocommerce-myparcel"));
+        if (! Arr::get($return_shipment_data, 'email')) {
+            throw new Exception(__('No e-mail address found in order.', 'woocommerce-myparcel'));
         }
 
         // add options if available
         if (! empty($options)) {
             // convert insurance option
-            if (! isset($options["insurance"]) && isset($options["insured_amount"])) {
-                if ($options["insured_amount"] > 0) {
-                    $options["insurance"] = [
-                        "amount"   => (int) $options["insured_amount"] * 100,
-                        "currency" => "EUR",
+            if (! isset($options['insurance']) && isset($options['insured_amount'])) {
+                if ($options['insured_amount'] > 0) {
+                    $options['insurance'] = [
+                        'amount'   => (int) $options['insured_amount'] * 100,
+                        'currency' => 'EUR',
                     ];
                 }
-                unset($options["insured_amount"]);
-                unset($options["insured"]);
+                unset($options['insured_amount']);
+                unset($options['insured']);
             }
             // PREVENT ILLEGAL SETTINGS
             // convert numeric strings to int
-            $int_options = ["package_type", "delivery_type", "signature", "return "];
+            $int_options = ['package_type', 'delivery_type', 'signature', 'return '];
             foreach ($options as $key => &$value) {
                 if (in_array($key, $int_options)) {
                     $value = (int) $value;
                 }
             }
             // remove frontend insurance option values
-            if (isset($options["insured_amount"])) {
-                unset($options["insured_amount"]);
+            if (isset($options['insured_amount'])) {
+                unset($options['insured_amount']);
             }
-            if (isset($options["insured"])) {
-                unset($options["insured"]);
+            if (isset($options['insured'])) {
+                unset($options['insured']);
             }
 
-            $return_shipment_data["options"] = $options;
+            $return_shipment_data['options'] = $options;
         }
 
         // get parent
         $shipment_ids = $this->getShipmentIds(
             (array) $order_id,
             [
-                "exclude_concepts" => true,
-                "only_last"        => true,
+                'exclude_concepts' => true,
+                'only_last'        => true,
             ]
         );
 
         if (! empty($shipment_ids)) {
-            $return_shipment_data["parent"] = (int) array_pop($shipment_ids);
+            $return_shipment_data['parent'] = (int) array_pop($shipment_ids);
         }
 
         return $return_shipment_data;
