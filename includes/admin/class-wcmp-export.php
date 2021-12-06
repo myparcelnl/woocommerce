@@ -623,7 +623,6 @@ class WCMP_Export
 
         // set name & email
         $return_shipment_data = [
-            'parent'  => (int) $order->get_order_number(),
             "name"    => $shipping_name,
             "email"   => WCX_Order::get_prop($order, "billing_email"),
             "carrier" => PostNLConsignment::CARRIER_ID, // default to PostNL for now
