@@ -10,25 +10,25 @@ use WCMYPA_Admin;
 use WCMYPA_Settings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 
-abstract class RecipientFromWCOrder extends Recipient
+class RecipientFromWCOrder extends Recipient
 {
     public const BILLING  = 'billing';
     public const SHIPPING = 'shipping';
 
     /**
-     * @param  WC_Order $order
+     * Parameter $type should always be one of two constants, either 'billing' or 'shipping'.
+     *
+     * @param  \WC_Order $order
      * @param  string   $originCountry
      * @param  string   $type
      *
      * @throws \Exception
      */
-    public function __construct()
+    public function __construct(WC_Order $order, string $originCountry, string $type)
     {
-        $recipientDetails = $this->prepareOrderData();
-        parent::__construct($recipientDetails, $this->carrierCountry);
+        $recipientDetails = $this->createAddress($order, $type);
+        parent::__construct($recipientDetails, $originCountry);
     }
-
-    abstract public function prepareOrderData(): array;
 
     /**
      * @param  \WC_Order $order

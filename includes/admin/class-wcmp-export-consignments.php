@@ -5,8 +5,6 @@ use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
-use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrderAdapter;
-use MyParcelNL\WooCommerce\includes\adapter\ShippingRecipientFromWCOrder;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
@@ -294,7 +292,7 @@ class WCMP_Export_Consignments
     private function setRecipient(): void
     {
         $originCountry = $this->consignment->getLocalCountryCode();
-        $recipient     = new RecipientFromWCOrder($this->order, $originCountry);
+        $recipient     = new RecipientFromWCOrder($this->order, $originCountry, RecipientFromWCOrder::SHIPPING);
 
         $this->consignment
             ->setCountry($recipient->getCc())
