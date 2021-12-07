@@ -2,6 +2,7 @@
 
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 
 defined('ABSPATH') or die();
 
