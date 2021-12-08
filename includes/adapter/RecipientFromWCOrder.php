@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\includes\adapter;
 
+use MyParcelNL\Sdk\src\Helper\ValidateStreet;
 use MyParcelNL\Sdk\src\Model\Recipient;
 use WC_Order;
 use WCMYPA_Admin;
@@ -14,13 +15,14 @@ class RecipientFromWCOrder extends Recipient
 {
     public const BILLING  = 'billing';
     public const SHIPPING = 'shipping';
+    private const MIN_STREET_ADDITIONAL_INFO_LENGTH = 10;
 
     /**
      * Parameter $type should always be one of two constants, either 'billing' or 'shipping'.
      *
      * @param  \WC_Order $order
-     * @param  string   $originCountry
-     * @param  string   $type
+     * @param  string    $originCountry
+     * @param  string    $type
      *
      * @throws \Exception
      */
@@ -60,19 +62,36 @@ class RecipientFromWCOrder extends Recipient
      */
     private function getAddressFromOrder(WC_Order $order, string $type): array
     {
-        $street       = WCX_Order::get_meta($order, "_{$type}_street_name") ?: null;
-        $number       = WCX_Order::get_meta($order, "_{$type}_house_number") ?: null;
-        $numberSuffix = WCX_Order::get_meta($order, "_{$type}_house_number_suffix") ?: null;
+        $street               = WCX_Order::get_meta($order, "_{$type}_street_name") ?: null;
+        $number               = WCX_Order::get_meta($order, "_{$type}_house_number") ?: null;
+        $numberSuffix         = WCX_Order::get_meta($order, "_{$type}_house_number_suffix") ?: null;
+        $streetAdditionalInfo = $order->{"get_{$type}_address_2"}();
 
         $isUsingSplitAddressFields = ! empty($street) || ! empty($number) || ! empty($numberSuffix);
 
         if ($isUsingSplitAddressFields) {
             $fullStreet           = implode(' ', [$street, $number, $numberSuffix]);
-            $streetAdditionalInfo = null;
-        } else {
-            $fullStreet           = $order->get_shipping_address_1();
-            $streetAdditionalInfo = $order->get_shipping_address_2();
+
+            return [
+                'full_street'            => $fullStreet,
+                'street_additional_info' => $streetAdditionalInfo,
+            ];
         }
+
+        $separatedStreet = $this->separateStreet($order->{"get_{$type}_address_1"}());
+        $streetAdditionalInfoIsNumberSuffix = strlen($order->{"get_{$type}_address_2"}()) < self::MIN_STREET_ADDITIONAL_INFO_LENGTH;
+
+        if (!$separatedStreet['number_suffix'] && $streetAdditionalInfoIsNumberSuffix) {
+            $separatedStreet['number_suffix'] = $order->{"get_{$type}_address_2"}();
+            $streetAdditionalInfo = null;
+        }
+
+        $fullStreet = implode(' ', [
+                $separatedStreet['street'],
+                $separatedStreet['number'],
+                $separatedStreet['number_suffix'],
+            ]
+        );
 
         return [
             'full_street'            => $fullStreet,
@@ -129,5 +148,17 @@ class RecipientFromWCOrder extends Recipient
         return method_exists($order, $getFullName)
             ? $order->{$getFullName}()
             : trim($order->{$getFirstName}() . ' ' . $order->{$getLastName}());
+    }
+
+    /**
+     * @param  string $street
+     *
+     * @return array
+     */
+    private function separateStreet(string $street): array
+    {
+        preg_match(ValidateStreet::SPLIT_STREET_REGEX_BE, $street, $separateStreet);
+
+        return $separateStreet;
     }
 }
