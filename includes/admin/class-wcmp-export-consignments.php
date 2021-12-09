@@ -305,6 +305,7 @@ class WCMP_Export_Consignments
             ->setStreet($recipient->getStreet())
             ->setPostalCode($recipient->getPostalCode())
             ->setCity($recipient->getCity())
+            ->setRegion($recipient->getRegion())
             ->setEmail($recipient->getEmail())
             ->setPhone($recipient->getPhone())
             ->setSaveRecipientAddress(false);
