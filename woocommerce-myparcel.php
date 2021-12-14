@@ -214,6 +214,12 @@ if (! class_exists('WCMYPA')) :
                 'wp_ajax_' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE,
                 [AccountSettings::class, "restRefreshFromApi"]
             );
+
+            // Show temporary message concerning insurances for shipments to Belgium.
+            Messages::showAdminNotice(
+                __('message_insurance_belgium_2022', 'woocommerce-myparcel'),
+                Messages::NOTICE_LEVEL_INFO
+            );
         }
 
         /**

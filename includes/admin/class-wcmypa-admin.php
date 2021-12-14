@@ -134,13 +134,6 @@ class WCMYPA_Admin
         add_action('woocommerce_product_after_variable_attributes', [$this, 'renderVariationCountryOfOriginField'], 10, 3);
         add_action('woocommerce_save_product_variation', [$this, 'saveVariationCountryOfOriginField'], 10, 2);
         add_filter('woocommerce_available_variation', [$this, 'loadVariationCountryOfOriginField'], 10, 1);
-
-        // Show temporary message concerning insurances for shipments to Belgium.
-        Messages::showAdminNotice(
-          __('message_insurance_belgium_2022', 'woocommerce-myparcel'),
-          Messages::NOTICE_LEVEL_INFO,
-            true
-        );
     }
 
     /**
