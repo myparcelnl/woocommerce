@@ -249,13 +249,13 @@ msgid "settings_checkout_display_for_selected_methods"
 msgstr "Mode d'expédition couplé au type de colis"
 
 msgid "settings_checkout_price_format"
-msgstr "Voir les prix comme"
+msgstr "Bezig met laden..."
 
 msgid "settings_checkout_surcharge"
-msgstr "Surtaxe"
+msgstr "Bezig met laden..."
 
 msgid "settings_checkout_total_price"
-msgstr "Prix ​​total"
+msgstr "Bezig met laden..."
 
 msgid "settings_general_api_key"
 msgstr "API key"
@@ -1192,6 +1192,9 @@ msgstr ""
 msgid "export_hint_not_exported"
 msgstr ""
 
+msgid "message_insurance_belgium_2022"
+msgstr ""
+
 msgid "myparcel_export"
 msgstr ""
 
@@ -1229,6 +1232,12 @@ msgid "settings_trigger_manual_update_button"
 msgstr ""
 
 msgid "settings_trigger_manual_update_help_text"
+msgstr ""
+
+msgid "shipment_options_insured_for_be"
+msgstr ""
+
+msgid "shipment_options_insured_for_be_help_text"
 msgstr ""
 
 msgid "warning_webhook_has_error"

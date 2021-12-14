@@ -5,6 +5,7 @@ use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
@@ -133,6 +134,13 @@ class WCMYPA_Admin
         add_action('woocommerce_product_after_variable_attributes', [$this, 'renderVariationCountryOfOriginField'], 10, 3);
         add_action('woocommerce_save_product_variation', [$this, 'saveVariationCountryOfOriginField'], 10, 2);
         add_filter('woocommerce_available_variation', [$this, 'loadVariationCountryOfOriginField'], 10, 1);
+
+        // Show temporary message concerning insurances for shipments to Belgium.
+        Messages::showAdminNotice(
+          __('message_insurance_belgium_2022', 'woocommerce-myparcel'),
+          Messages::NOTICE_LEVEL_INFO,
+            true
+        );
     }
 
     /**
@@ -1557,15 +1565,18 @@ class WCMYPA_Admin
         $data['package_type'] = $data['package_type'] ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
         $isHomeCountry        = WCMP_Data::isHomeCountry($country);
         $isEuCountry          = WCMP_Country_Codes::isEuCountry($country);
-
-        $isPackage      = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $data['package_type'];
-        $isDigitalStamp = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $data['package_type'];
+        $isBelgium            = AbstractConsignment::CC_BE === $country;
+        $isPackage            = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $data['package_type'];
+        $isDigitalStamp       = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $data['package_type'];
 
         if (! $isHomeCountry || ! $isPackage) {
             $data['shipment_options']['age_check']       = false;
             $data['shipment_options']['return_shipment'] = false;
-            $data['shipment_options']['insured']         = false;
-            $data['shipment_options']['insured_amount']  = 0;
+
+            if (! $isBelgium) {
+                $data['shipment_options']['insured']        = false;
+                $data['shipment_options']['insured_amount'] = 0;
+            }
         }
 
         if (! $isPackage || (! $isHomeCountry && ! $isEuCountry)) {

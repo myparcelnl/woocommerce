@@ -146,6 +146,9 @@ msgstr "Montant d'assurance"
 msgid "insured_for"
 msgstr "Montant assuré"
 
+msgid "message_insurance_belgium_2022"
+msgstr ""
+
 msgid "message_orders_exported_successfully"
 msgstr "%s de commandes disponible dans votre backOffice."
 
@@ -324,13 +327,13 @@ msgid "settings_checkout_display_for_selected_methods"
 msgstr "Mode d'expédition couplé au type de colis"
 
 msgid "settings_checkout_price_format"
-msgstr "Voir les prix comme"
+msgstr "Bezig met laden..."
 
 msgid "settings_checkout_surcharge"
-msgstr "Surtaxe"
+msgstr "Bezig met laden..."
 
 msgid "settings_checkout_total_price"
-msgstr "Prix ​​total"
+msgstr "Bezig met laden..."
 
 msgid "settings_general_api_key"
 msgstr "API key"
@@ -433,6 +436,12 @@ msgstr "Quantité assurée max"
 
 msgid "shipment_options_insured_amount_help_text"
 msgstr "Assurez tous les colis jusqu'au montant sélectionné."
+
+msgid "shipment_options_insured_for_be"
+msgstr ""
+
+msgid "shipment_options_insured_for_be_help_text"
+msgstr ""
 
 msgid "shipment_options_insured_from_price"
 msgstr "Assurer de prix"

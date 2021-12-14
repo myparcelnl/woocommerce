@@ -155,6 +155,11 @@ msgstr "Verzekerd bedrag"
 msgid "insured_for"
 msgstr "Verzekerd voor"
 
+msgid "message_insurance_belgium_2022"
+msgstr ""
+"Voor zendingen naar België kun je per 1 januari 2022 een verzekering "
+"instellen. Deze optie staat standaard geactiveerd."
+
 msgid "message_orders_exported_successfully"
 msgstr "%s bestellingen nu beschikbaar in MyParcel Backoffice."
 
@@ -449,6 +454,14 @@ msgstr "Verzekeren tot maximaal"
 
 msgid "shipment_options_insured_amount_help_text"
 msgstr "Verzeker alle orders tot het geselecteerde bedrag."
+
+msgid "shipment_options_insured_for_be"
+msgstr "Verzekerde zending naar België"
+
+msgid "shipment_options_insured_for_be_help_text"
+msgstr ""
+"Je kunt een zending naar België verzekeren voor maximaal €500 van de "
+"inkoopwaarde."
 
 msgid "shipment_options_insured_from_price"
 msgstr "Verzeker vanaf bedrag"

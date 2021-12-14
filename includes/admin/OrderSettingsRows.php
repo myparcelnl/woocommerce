@@ -103,6 +103,7 @@ class OrderSettingsRows
         $shippingCountry    = $orderSettings->getShippingCountry();
         $isEuCountry        = WCMP_Country_Codes::isEuCountry($shippingCountry);
         $isHomeCountry      = WCMP_Data::isHomeCountry($shippingCountry);
+        $isBelgium          = AbstractConsignment::CC_BE === $shippingCountry;
         $packageTypeOptions = array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman());
 
         // Remove mailbox and digital stamp, because this is not possible for international shipments
@@ -151,6 +152,19 @@ class OrderSettingsRows
         // Only add extra options and shipment options to home country shipments.
         if ($isHomeCountry) {
             $rows = array_merge($rows, $this->getAdditionalOptionsRows($orderSettings));
+        }
+
+        if($isBelgium) {
+            $rows[] = [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED,
+                'type'      => 'toggle',
+                'label'     => __('insured', 'woocommerce-myparcel'),
+                'value'     => $orderSettings->isInsured(),
+                'condition' => [
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_INSURED),
+                ],
+            ];
         }
 
         if ($isEuCountry) {
