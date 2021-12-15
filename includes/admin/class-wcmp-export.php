@@ -7,11 +7,14 @@ use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
+use MyParcelNL\Sdk\src\Model\CustomsDeclaration;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
 use MyParcelNL\Sdk\src\Model\Fulfilment\Order;
+use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\WooCommerce\Helper\ExportRow;
 use MyParcelNL\WooCommerce\Includes\Adapter\OrderLineFromWooCommerce;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -67,6 +70,11 @@ class WCMP_Export
      * @var MyParcelCollection
      */
     public $myParcelCollection;
+
+    /**
+     * @var \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection
+     */
+    private $orderCollection;
 
     private $prefix_message;
 
@@ -636,11 +644,11 @@ class WCMP_Export
         // add options if available
         if (! empty($options)) {
             // convert insurance option
-            if (! isset($options['insurance']) && isset($options['insured_amount'])) {
-                if ($options['insured_amount'] > 0) {
-                    $options['insurance'] = [
-                        'amount'   => (int) $options['insured_amount'] * 100,
-                        'currency' => 'EUR',
+            if (! isset($options["insurance"]) && isset($options["insured_amount"])) {
+                if ($options["insured_amount"] > 0) {
+                    $options["insurance"] = [
+                        "amount"   => (int) $options["insured_amount"] * 100,
+                        "currency" => ExportRow::CURRENCY_EURO,
                     ];
                 }
                 unset($options['insured_amount']);
@@ -690,7 +698,7 @@ class WCMP_Export
     public static function getRecipientFromOrder(WC_Order $order)
     {
         $isUsingMyParcelFields = WCX_Order::has_meta($order, "_billing_street_name")
-                                 && WCX_Order::has_meta($order, "_billing_house_number");
+            && WCX_Order::has_meta($order, "_billing_house_number");
 
         $shipping_name =
             method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
@@ -1638,8 +1646,8 @@ class WCMP_Export
      */
     private function saveOrderCollection(array $orderIds): array
     {
-        $apiKey          = $this->getSetting(WCMYPA_Settings::SETTING_API_KEY);
-        $orderCollection = (new OrderCollection())->setApiKey($apiKey);
+        $apiKey                = $this->getSetting(WCMYPA_Settings::SETTING_API_KEY);
+        $this->orderCollection = (new OrderCollection())->setApiKey($apiKey);
 
         foreach ($orderIds as $orderId) {
             $wcOrder         = WCX::get_order($orderId);
@@ -1663,13 +1671,54 @@ class WCMP_Export
                 $orderLines->push($orderLine);
             }
 
+            $order->setCustomsDeclaration($this->generateCustomsDeclaration($wcOrder));
+
             $order->setOrderLines($orderLines);
-            $orderCollection->push($order);
+            $this->orderCollection->push($order);
         }
 
-        $savedOrderCollection = $orderCollection->save();
+        $savedOrderCollection = $this->orderCollection->save();
 
         return $this->updateOrderMetaByCollection($savedOrderCollection);
+    }
+
+    /**
+     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
+     * @throws \ErrorException
+     * @throws \JsonException
+     */
+    public function generateCustomsDeclaration(WC_Order $wcOrder): CustomsDeclaration
+    {
+        $customsDeclaration = new CustomsDeclaration();
+        $contents           = (int) ($this->getSetting("package_contents") ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
+        $orderSettings      = new OrderSettings($wcOrder);
+        $totalWeight        = WCMP_Export::convertWeightToGrams($orderSettings->getWeight());
+
+        $customsDeclaration
+            ->setContents($contents)
+            ->setInvoice($wcOrder->get_id())
+            ->setWeight($totalWeight);
+
+        foreach ($wcOrder->get_items() as $item) {
+            $product       = $item->get_product();
+            $productHelper = new ExportRow($wcOrder, $product);
+
+            if (! $product || $product->is_virtual()) {
+                continue;
+            }
+
+            $customsItem = (new MyParcelCustomsItem())
+                ->setDescription($productHelper->getItemDescription())
+                ->setAmount($productHelper->getItemAmount($item))
+                ->setWeight($productHelper->getItemWeight())
+                ->setItemValueArray($productHelper->getValueOfItem())
+                ->setCountry($productHelper->getCountryOfOrigin())
+                ->setClassification($productHelper->getHsCode());
+
+            $customsDeclaration->addCustomsItem($customsItem);
+        }
+
+        return $customsDeclaration;
     }
 
     /**
