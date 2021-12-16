@@ -249,13 +249,13 @@ msgid "settings_checkout_display_for_selected_methods"
 msgstr "Mode d'expédition couplé au type de colis"
 
 msgid "settings_checkout_price_format"
-msgstr "Bezig met laden..."
+msgstr "Voir les prix comme"
 
 msgid "settings_checkout_surcharge"
-msgstr "Bezig met laden..."
+msgstr "Surtaxe"
 
 msgid "settings_checkout_total_price"
-msgstr "Bezig met laden..."
+msgstr "Prix ​​total"
 
 msgid "settings_general_api_key"
 msgstr "API key"
@@ -1238,6 +1238,9 @@ msgid "shipment_options_insured_for_be"
 msgstr ""
 
 msgid "shipment_options_insured_for_be_help_text"
+msgstr ""
+
+msgid "understand_message"
 msgstr ""
 
 msgid "warning_webhook_has_error"

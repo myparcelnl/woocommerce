@@ -13,6 +13,10 @@ class MessagesRepository
 {
     use HasInstance;
 
+    public const ORDERS_PAGE   = 'edit-shop_order';
+    public const SETTINGS_PAGE = 'woocommerce_page_wcmp_settings';
+    public const PLUGINS_PAGE  = 'plugins';
+
     /**
      * @var array
      */
@@ -20,31 +24,56 @@ class MessagesRepository
 
     public function __construct()
     {
-        add_action('admin_notices', [$this, 'showMessages']);
+        if(get_option( 'myparcel_notice_dismissed' ) !== true) {
+            add_action( 'admin_notices', [$this, 'showMessages']);
+            add_action('wp_ajax_dismissNotice', [$this, 'dismissNotice']);
+        }
     }
 
     /**
      * @param  string $message
      * @param  string $level
-     * @param  bool   $onAllPages
+     * @param  array  $onPages
      */
-    public function addMessage(string $message, string $level, bool $onAllPages = false): void
+    public function addMessage(string $message, string $level, array $onPages = []): void
     {
         $this->messages[] = [
-            'message'    => $message,
-            'level'      => $level,
-            'onAllPages' => $onAllPages,
+            'message' => $message,
+            'level'   => $level,
+            'onPages' => $onPages,
         ];
     }
 
     public function showMessages(): void
     {
         foreach ($this->messages as $message) {
-            if (! $message['onAllPages'] && ! WCMYPA_Settings::isViewingOwnSettingsPage()) {
-                continue;
+            if ($this->shouldMessageBeShown($message)) {
+                echo sprintf(
+                    '<div class="notice myparcel-dismiss-notice notice-%s is-dismissible"><p>%s</p></div>',
+                    $message['level'],
+                    $message['message']
+                );
             }
-
-            echo sprintf('<div class="notice notice-%s"><p>%s</p></div>', $message['level'], $message['message']);
         }
+    }
+
+    private function shouldMessageBeShown(array $message): bool
+    {
+        $currentPage = get_current_screen();
+
+        if (in_array($currentPage->id, $message['onPages'], true)) {
+            return true;
+        }
+
+        if (empty($message['onPages'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function dismissNotice()
+    {
+        update_option('myparcel_notice_dismissed', true);
     }
 }

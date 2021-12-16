@@ -25,6 +25,8 @@ class WCMP_Assets
         if ($post_type === "shop_order" || (is_object($screen) && strpos($screen->id, "wcmp") !== false)) {
             self::enqueue_admin_scripts_and_styles();
         }
+
+        $this->enqueueAdminScriptsForAllPages();
     }
 
     /**
@@ -113,6 +115,15 @@ class WCMP_Assets
                 "all"
             );
         }
+    }
+
+    /**
+     * load scripts that should be available on all pages
+     */
+    private function enqueueAdminScriptsForAllPages(): void
+    {
+        wp_register_script('wcmp-admin-all-pages', WC()->plugin_url() . 'assets/js/wcmp-admin-all-pages.js', ['jquery'], '1.0', false);
+        self::enqueueJs('wcmp-admin-all-pages', 'wcmp-admin-all-pages.js', ['jquery']);
     }
 
     /**

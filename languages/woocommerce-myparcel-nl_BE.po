@@ -537,6 +537,9 @@ msgstr "Toev."
 msgid "tomorrow"
 msgstr "Morgen "
 
+msgid "understand_message"
+msgstr "Ik heb het begrepen"
+
 msgid "warning_webhook_has_error"
 msgstr "Webhook %s niet actief vanwege een error. Zie hiervoor de logs."
 

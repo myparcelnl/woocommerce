@@ -13,6 +13,7 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 */
 
 use MyParcelNL\WooCommerce\includes\admin\Messages;
+use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 
@@ -216,9 +217,12 @@ if (! class_exists('WCMYPA')) :
             );
 
             // Show temporary message concerning insurances for shipments to Belgium.
+            delete_option('myparcel_notice_dismissed');
+            add_option('myparcel_notice_dismissed', false);
             Messages::showAdminNotice(
                 __('message_insurance_belgium_2022', 'woocommerce-myparcel'),
-                Messages::NOTICE_LEVEL_INFO
+                Messages::NOTICE_LEVEL_WARNING,
+                [MessagesRepository::PLUGINS_PAGE]
             );
         }
 

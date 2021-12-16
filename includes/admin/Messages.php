@@ -20,12 +20,12 @@ class Messages
      *
      * @param  string $message
      * @param  string $level
-     * @param  bool   $onAllPages
+     * @param  array  $onPages
      */
     public static function showAdminNotice(
         string $message,
         string $level = self::NOTICE_LEVEL_DEFAULT,
-        bool   $onAllPages = false
+        array  $onPages = []
     ): void {
         if (! in_array($level, [
             self::NOTICE_LEVEL_LOG,
@@ -38,6 +38,6 @@ class Messages
         }
 
         MessagesRepository::getInstance()
-            ->addMessage($message, $level, $onAllPages);
+            ->addMessage($message, $level, $onPages);
     }
 }

@@ -517,6 +517,9 @@ msgstr "Suffix"
 msgid "tomorrow"
 msgstr "Tomorrow"
 
+msgid "understand_message"
+msgstr "I understand"
+
 msgid "warning_webhook_has_error"
 msgstr "Webhook %s not active because of an error. See the logs."
 
