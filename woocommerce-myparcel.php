@@ -217,12 +217,10 @@ if (! class_exists('WCMYPA')) :
             );
 
             // Show temporary message concerning insurances for shipments to Belgium.
-            delete_option('myparcel_notice_dismissed');
-            add_option('myparcel_notice_dismissed', false);
             Messages::showAdminNotice(
                 __('message_insurance_belgium_2022', 'woocommerce-myparcel'),
                 Messages::NOTICE_LEVEL_WARNING,
-                [MessagesRepository::PLUGINS_PAGE]
+                'message_insurance_belgium_2022',
             );
         }
 

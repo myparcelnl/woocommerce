@@ -122,7 +122,19 @@ class WCMP_Assets
      */
     private function enqueueAdminScriptsForAllPages(): void
     {
-        wp_register_script('wcmp-admin-all-pages', WC()->plugin_url() . 'assets/js/wcmp-admin-all-pages.js', ['jquery'], '1.0', false);
+        wp_register_script(
+            'wcmp-admin-all-pages',
+            WCMYPA()->plugin_url() . '/assets/js/wcmp-admin-all-pages.js',
+            ['jquery'],
+            '1.0',
+            false
+        );
+
+        wp_localize_script('wcmp-admin-all-pages', 'wcmp_params',
+            ["ajax_url"               => admin_url("admin-ajax.php"),
+             "nonce"                  => wp_create_nonce(WCMYPA::NONCE_ACTION),]
+        );
+
         self::enqueueJs('wcmp-admin-all-pages', 'wcmp-admin-all-pages.js', ['jquery']);
     }
 

@@ -22,25 +22,30 @@ class MessagesRepository
      */
     private $messages = [];
 
+    /**
+     * @var array
+     */
+    private $messagesToDelete = [];
+
     public function __construct()
     {
-        if(get_option( 'myparcel_notice_dismissed' ) !== true) {
-            add_action( 'admin_notices', [$this, 'showMessages']);
-            add_action('wp_ajax_dismissNotice', [$this, 'dismissNotice']);
-        }
+        add_action('admin_notices', [$this, 'showMessages']);
+        add_action('wp_ajax_dismissNotice', [$this, 'dismissNotice']);
     }
 
     /**
-     * @param  string $message
-     * @param  string $level
-     * @param  array  $onPages
+     * @param  string      $message
+     * @param  string      $level
+     * @param  string|null $messageId
+     * @param  array       $onPages
      */
-    public function addMessage(string $message, string $level, array $onPages = []): void
+    public function addMessage(string $message, string $level, ?string $messageId, array $onPages = []): void
     {
         $this->messages[] = [
-            'message' => $message,
-            'level'   => $level,
-            'onPages' => $onPages,
+            'message'   => $message,
+            'messageId' => $messageId ?? null,
+            'level'     => $level,
+            'onPages'   => $onPages,
         ];
     }
 
@@ -48,9 +53,11 @@ class MessagesRepository
     {
         foreach ($this->messages as $message) {
             if ($this->shouldMessageBeShown($message)) {
+                $isDismissible = $message['messageId'] ? 'is-dismissible' : '';
                 echo sprintf(
-                    '<div class="notice myparcel-dismiss-notice notice-%s is-dismissible"><p>%s</p></div>',
+                    '<div class="notice myparcel-dismiss-notice notice-%s %s"><p>%s</p></div>',
                     $message['level'],
+                    $isDismissible,
                     $message['message']
                 );
             }
@@ -59,8 +66,12 @@ class MessagesRepository
 
     private function shouldMessageBeShown(array $message): bool
     {
-        $currentPage = get_current_screen();
+        $messageAlreadyShown = in_array($message['messageId'], get_option('myparcel_notice_dismissed'), true);
+        $currentPage         = get_current_screen();
 
+        if ($messageAlreadyShown) {
+            return false;
+        }
         if (in_array($currentPage->id, $message['onPages'], true)) {
             return true;
         }
@@ -72,8 +83,15 @@ class MessagesRepository
         return false;
     }
 
-    private function dismissNotice()
+    public function dismissNotice(): void
     {
-        update_option('myparcel_notice_dismissed', true);
+        $messageArray = get_option('myparcel_notice_dismissed', []);
+
+        foreach ($this->messages as $message) {
+            if (! in_array($message['messageId'], $messageArray, true)) {
+                $messageArray[] = $message['messageId'];
+                update_option('myparcel_notice_dismissed', $messageArray);
+            }
+        }
     }
 }

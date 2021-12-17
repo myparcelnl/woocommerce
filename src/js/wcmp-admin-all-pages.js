@@ -1,10 +1,13 @@
-jQuery(document).ready(function() {
-  jQuery(document).on( 'click', '.myparcel-dismiss-notice .notice-dismiss', function() {
-    var data = {
-      action: 'dismissNotice',
-    };
+jQuery(($) => {
+  $(document).ready(() => {
+    $(document).on('click', '.myparcel-dismiss-notice .notice-dismiss', () => {
+      const data = {
+        action: 'dismissNotice',
+        security: wcmp_params.nonce,
+      };
 
-    jQuery.post(wcmp.ajax_url, data, function() {
+      $.post(wcmp_params.ajax_url, data, () => {
+      });
     });
-  })
+  });
 });
