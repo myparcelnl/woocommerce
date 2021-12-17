@@ -644,11 +644,11 @@ class WCMP_Export
         // add options if available
         if (! empty($options)) {
             // convert insurance option
-            if (! isset($options["insurance"]) && isset($options["insured_amount"])) {
-                if ($options["insured_amount"] > 0) {
-                    $options["insurance"] = [
-                        "amount"   => (int) $options["insured_amount"] * 100,
-                        "currency" => ExportRow::CURRENCY_EURO,
+            if (! isset($options['insurance']) && isset($options['insured_amount'])) {
+                if ($options['insured_amount'] > 0) {
+                    $options['insurance'] = [
+                        'amount'   => (int) $options['insured_amount'] * 100,
+                        'currency' => ExportRow::CURRENCY_EURO,
                     ];
                 }
                 unset($options['insured_amount']);
