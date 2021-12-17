@@ -539,11 +539,11 @@ class OrderSettings
      */
     private function setOnlyRecipient(): void
     {
-        $this->onlyRecipient = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->shipmentOptions->hasOnlyRecipient(),
-            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
-            $this->carrier
-        );
+        $settingName                      = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT;
+        $onlyRecipientFromShipmentOptions = $this->shipmentOptions->hasAgeCheck();
+        $onlyRecipientFromSettings        = (bool)WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
+
+        $this->onlyRecipient = $onlyRecipientFromShipmentOptions ?? $onlyRecipientFromSettings;
     }
 
     /**
@@ -551,11 +551,11 @@ class OrderSettings
      */
     private function setSignature(): void
     {
-        $this->signature = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->shipmentOptions->hasSignature(),
-            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
-            $this->carrier
-        );
+        $settingName                  = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE;
+        $signatureFromShipmentOptions = $this->shipmentOptions->hasAgeCheck();
+        $signatureFromSettings        = (bool) WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
+
+        $this->signature = $signatureFromShipmentOptions ?? $signatureFromSettings;
     }
 
     /**
