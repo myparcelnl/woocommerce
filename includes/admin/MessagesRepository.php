@@ -22,11 +22,6 @@ class MessagesRepository
      */
     private $messages = [];
 
-    /**
-     * @var array
-     */
-    private $messagesToDelete = [];
-
     public function __construct()
     {
         add_action('admin_notices', [$this, 'showMessages']);
