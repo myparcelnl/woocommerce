@@ -7,7 +7,6 @@ namespace MyParcelNL\WooCommerce\includes\admin;
 defined('ABSPATH') or die();
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\DeliveryOptionsV3Adapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\PickupLocation;
 use MyParcelNL\Sdk\src\Model\Recipient;
@@ -139,7 +138,7 @@ class OrderSettings
      */
     public function __construct(
         WC_Order $order,
-        $deliveryOptions = null
+                 $deliveryOptions = null
     ) {
         $this->order = $order;
 
@@ -516,8 +515,8 @@ class OrderSettings
      */
     private function setLargeFormat(): void
     {
-        $this->largeFormat  = false;
-        $weightFromOrder    = WCMP_Export::convertWeightToGrams($this->extraOptions['weight'] ?? 0);
+        $this->largeFormat = false;
+        $weightFromOrder   = WCMP_Export::convertWeightToGrams($this->extraOptions['weight'] ?? 0);
 
         $defaultLargeFormat = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
             $this->shipmentOptions->hasLargeFormat(),
@@ -564,7 +563,7 @@ class OrderSettings
      */
     private function setPackageType(): void
     {
-        $packageType = WCMYPA()->export->getPackageTypeFromOrder($this->order, $this->deliveryOptions);
+        $packageType       = WCMYPA()->export->getPackageTypeFromOrder($this->order, $this->deliveryOptions);
         $this->packageType = $packageType;
     }
 
