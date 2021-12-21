@@ -23,7 +23,7 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
 class OrderSettings
 {
-    public const DEFAULT_COLLO_AMOUNT = 1;
+    public const DEFAULT_COLLO_AMOUNT      = 1;
     public const DEFAULT_BELGIAN_INSURANCE = 500;
 
     /**
@@ -490,17 +490,17 @@ class OrderSettings
         $carrier             = ConsignmentFactory::createByCarrierName($this->carrier);
         $amountPossibilities = $carrier->getInsurancePossibilities();
 
+        if ($isDefaultInsured && $isBelgium) {
+            $isInsured       = $isDefaultInsuredForBE;
+            $insuranceAmount = $isDefaultInsuredForBE ? self::DEFAULT_BELGIAN_INSURANCE : 0;
+        }
+
         if ($insuranceFromDeliveryOptions && $insuranceFromDeliveryOptions >= reset($amountPossibilities)) {
             $isInsured       = (bool) $insuranceFromDeliveryOptions;
             $insuranceAmount = $insuranceFromDeliveryOptions;
         } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && $insuranceFromDeliveryOptions !== 0) {
             $isInsured       = true;
             $insuranceAmount = $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT);
-        }
-
-        if ($isDefaultInsured && $isBelgium) {
-            $isInsured = $isDefaultInsuredForBE;
-            $insuranceAmount = $isDefaultInsuredForBE ? self::DEFAULT_BELGIAN_INSURANCE : 0;
         }
 
         $this->insured         = $isInsured;

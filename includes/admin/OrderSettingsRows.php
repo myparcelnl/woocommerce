@@ -154,7 +154,7 @@ class OrderSettingsRows
             $rows = array_merge($rows, $this->getAdditionalOptionsRows($orderSettings));
         }
 
-        if($isBelgium) {
+        if ($isBelgium) {
             $rows[] = [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 'type'      => 'toggle',

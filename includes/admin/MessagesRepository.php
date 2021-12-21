@@ -34,7 +34,7 @@ class MessagesRepository
      * @param  string|null $messageId
      * @param  array       $onPages
      */
-    public function addMessage(string $message, string $level, ?string $messageId, array $onPages = []): void
+    public function addMessage(string $message, string $level, ?string $messageId = null, array $onPages = []): void
     {
         $this->messages[] = [
             'message'   => $message,
@@ -49,34 +49,33 @@ class MessagesRepository
         foreach ($this->messages as $message) {
             if ($this->shouldMessageBeShown($message)) {
                 $isDismissible = $message['messageId'] ? 'is-dismissible' : '';
-                echo sprintf(
+                printf(
                     '<div class="notice myparcel-dismiss-notice notice-%s %s"><p>%s</p></div>',
-                    $message['level'],
-                    $isDismissible,
-                    $message['message']
+                    esc_attr($message['level']),
+                    esc_attr($isDismissible),
+                    esc_attr($message['message'])
                 );
             }
         }
     }
 
+    /**
+     * @param  array $message
+     *
+     * @return bool
+     */
     private function shouldMessageBeShown(array $message): bool
     {
-        $messageAlreadyShown = in_array($message['messageId'], get_option('myparcel_notice_dismissed'), true);
-        $currentPage         = get_current_screen();
+        $messageAlreadyShown             = in_array(
+            $message['messageId'],
+            get_option('myparcel_notice_dismissed'),
+            true
+        );
+        $currentPage                     = get_current_screen();
+        $currentPageShouldDisplayMessage = in_array($currentPage->id, $message['onPages'], true);
+        $allPagesShouldDisplayMessage    = empty($message['onPages']);
 
-        if ($messageAlreadyShown) {
-            return false;
-        }
-        
-        if (in_array($currentPage->id, $message['onPages'], true)) {
-            return true;
-        }
-
-        if (empty($message['onPages'])) {
-            return true;
-        }
-
-        return false;
+        return ! $messageAlreadyShown && ($currentPageShouldDisplayMessage || $allPagesShouldDisplayMessage);
     }
 
     public function dismissNotice(): void
@@ -84,10 +83,11 @@ class MessagesRepository
         $messageArray = get_option('myparcel_notice_dismissed', []);
 
         foreach ($this->messages as $message) {
-            if (! in_array($message['messageId'], $messageArray, true)) {
-                $messageArray[] = $message['messageId'];
-                update_option('myparcel_notice_dismissed', $messageArray);
+            if (in_array($message['messageId'], $messageArray, true)) {
+                continue;
             }
+            $messageArray[] = $message['messageId'];
+            update_option('myparcel_notice_dismissed', $messageArray);
         }
     }
 }
