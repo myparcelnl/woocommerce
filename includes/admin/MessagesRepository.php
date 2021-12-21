@@ -67,6 +67,7 @@ class MessagesRepository
         if ($messageAlreadyShown) {
             return false;
         }
+        
         if (in_array($currentPage->id, $message['onPages'], true)) {
             return true;
         }
