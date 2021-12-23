@@ -146,9 +146,6 @@ msgstr "Montant d'assurance"
 msgid "insured_for"
 msgstr "Montant assuré"
 
-msgid "message_insurance_belgium_2022"
-msgstr ""
-
 msgid "message_orders_exported_successfully"
 msgstr "%s de commandes disponible dans votre backOffice."
 
@@ -437,12 +434,6 @@ msgstr "Quantité assurée max"
 msgid "shipment_options_insured_amount_help_text"
 msgstr "Assurez tous les colis jusqu'au montant sélectionné."
 
-msgid "shipment_options_insured_for_be"
-msgstr ""
-
-msgid "shipment_options_insured_for_be_help_text"
-msgstr ""
-
 msgid "shipment_options_insured_from_price"
 msgstr "Assurer de prix"
 
@@ -518,9 +509,6 @@ msgstr "Extension"
 
 msgid "tomorrow"
 msgstr "Demain"
-
-msgid "understand_message"
-msgstr ""
 
 msgid "warning_webhook_has_error"
 msgstr ""

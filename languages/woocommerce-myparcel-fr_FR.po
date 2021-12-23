@@ -1192,9 +1192,6 @@ msgstr ""
 msgid "export_hint_not_exported"
 msgstr ""
 
-msgid "message_insurance_belgium_2022"
-msgstr ""
-
 msgid "myparcel_export"
 msgstr ""
 
@@ -1232,15 +1229,6 @@ msgid "settings_trigger_manual_update_button"
 msgstr ""
 
 msgid "settings_trigger_manual_update_help_text"
-msgstr ""
-
-msgid "shipment_options_insured_for_be"
-msgstr ""
-
-msgid "shipment_options_insured_for_be_help_text"
-msgstr ""
-
-msgid "understand_message"
 msgstr ""
 
 msgid "warning_webhook_has_error"

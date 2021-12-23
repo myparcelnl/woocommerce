@@ -153,11 +153,6 @@ msgstr "Insurance amount"
 msgid "insured_for"
 msgstr "Insured for"
 
-msgid "message_insurance_belgium_2022"
-msgstr ""
-"You can set up insurance for shipments to Belgium as of January 1, 2022. "
-"This option is enabled by default."
-
 msgid "message_orders_exported_successfully"
 msgstr "%s orders now available in MyParcel Backoffice."
 
@@ -438,14 +433,6 @@ msgstr "Max insured amount"
 msgid "shipment_options_insured_amount_help_text"
 msgstr "Insure all parcels up to the selected amount."
 
-msgid "shipment_options_insured_for_be"
-msgstr "Insured shipment to Belgium"
-
-msgid "shipment_options_insured_for_be_help_text"
-msgstr ""
-"You can insure a shipment to Belgium for a maximum of €500 of the purchase "
-"value."
-
 msgid "shipment_options_insured_from_price"
 msgstr "Insure from price"
 
@@ -519,9 +506,6 @@ msgstr "Suffix"
 
 msgid "tomorrow"
 msgstr "Tomorrow"
-
-msgid "understand_message"
-msgstr "I understand"
 
 msgid "warning_webhook_has_error"
 msgstr "Webhook %s not active because of an error. See the logs."
