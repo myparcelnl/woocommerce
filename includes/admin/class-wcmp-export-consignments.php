@@ -5,6 +5,7 @@ use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use MyParcelNL\WooCommerce\Helper\ExportRow;
+use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormat;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
@@ -270,49 +271,9 @@ class WCMP_Export_Consignments
      */
     private function getFormattedLabelDescription(): string
     {
-        $productIds      = [];
-        $productNames    = [];
-        $productSkus     = [];
-        $productQuantity = [];
-        $deliveryDate    = $this->deliveryOptions->getDate();
+      $labelDescriptionFormat = new LabelDescriptionFormat($this->order, $this->orderSettings, $this->deliveryOptions);
 
-        foreach ($this->order->get_items() as $item) {
-            if (! method_exists($item, 'get_product')) {
-                continue;
-            }
-
-            /** @var WC_Product $product */
-            $product = $item->get_product();
-            $sku     = $product->get_sku();
-
-            $productIds[]      = $product->get_id();
-            $productNames[]    = $product->get_name();
-            $productSkus[]     = empty($sku) ? '–' : $sku;
-            $productQuantity[] = $item->get_quantity();
-
-        }
-
-        $formattedLabelDescription = strtr(
-            $this->orderSettings->getLabelDescription(),
-            [
-                '[DELIVERY_DATE]' => $deliveryDate ? date('d-m-Y', strtotime($deliveryDate)) : '',
-                '[ORDER_NR]'      => $this->order->get_order_number(),
-                '[PRODUCT_ID]'    => implode(', ', $productIds),
-                '[PRODUCT_NAME]'  => implode(', ', $productNames),
-                '[PRODUCT_QTY]'   => implode(', ', $productQuantity),
-                '[PRODUCT_SKU]'   => implode(', ', $productSkus),
-                '[CUSTOMER_NOTE]' => $this->order->get_customer_note(),
-            ]
-        );
-
-        // Add filter to let plugins change the label description
-        $formattedLabelDescription = apply_filters('wcmp_formatted_label_description', $formattedLabelDescription, $this->order);
-
-        if (strlen($formattedLabelDescription) > WCMP_Export::ORDER_DESCRIPTION_MAX_LENGTH) {
-            return substr($formattedLabelDescription, 0, 42) . "...";
-        }
-
-        return $formattedLabelDescription;
+      return $labelDescriptionFormat->getFormattedLabelDescription();
     }
 
     private function setDropOffPoint(): void

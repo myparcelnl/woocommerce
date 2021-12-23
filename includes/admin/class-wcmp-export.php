@@ -15,6 +15,7 @@ use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Helper\ExportRow;
+use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormat;
 use MyParcelNL\WooCommerce\Includes\Adapter\OrderLineFromWooCommerce;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -1543,6 +1544,10 @@ class WCMP_Export
             $wcOrder         = WCX::get_order($orderId);
             $orderSettings   = new OrderSettings($wcOrder);
             $deliveryOptions = $orderSettings->getDeliveryOptions();
+
+            $labelDescriptionFormat = new LabelDescriptionFormat($wcOrder, $orderSettings, $deliveryOptions);
+
+            $deliveryOptions->getShipmentOptions()->setLabelDescription($labelDescriptionFormat->getFormattedLabelDescription());
 
             $order = (new Order())
                 ->setStatus($wcOrder->get_status())
