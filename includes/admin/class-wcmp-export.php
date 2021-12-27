@@ -1646,6 +1646,13 @@ class WCMP_Export
             $orderSettings   = new OrderSettings($wcOrder);
             $deliveryOptions = $orderSettings->getDeliveryOptions();
 
+            $deliveryOptions->getShipmentOptions()->setSignature($orderSettings->hasSignature());
+            $deliveryOptions->getShipmentOptions()->setInsurance($orderSettings->getInsuranceAmount());
+            $deliveryOptions->getShipmentOptions()->setAgeCheck($orderSettings->hasAgeCheck());
+            $deliveryOptions->getShipmentOptions()->setOnlyRecipient($orderSettings->hasOnlyRecipient());
+            $deliveryOptions->getShipmentOptions()->setReturn($orderSettings->hasReturnShipment());
+            $deliveryOptions->getShipmentOptions()->setLargeFormat($orderSettings->hasLargeFormat());
+
             $order = (new Order())
                 ->setStatus($wcOrder->get_status())
                 ->setDeliveryOptions($deliveryOptions)
