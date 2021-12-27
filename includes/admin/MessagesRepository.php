@@ -68,7 +68,7 @@ class MessagesRepository
     {
         $messageAlreadyShown             = in_array(
             $message['messageId'],
-            get_option('myparcel_notice_dismissed'),
+            (array) get_option('myparcel_notice_dismissed'),
             true
         );
         $currentPage                     = get_current_screen();
