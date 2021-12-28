@@ -46,7 +46,7 @@ class CarrierSettings
      */
     public function getCarrierSection(AbstractCarrier $carrier): array
     {
-        $consignment = ConsignmentFactory::createFromCarrier($carrier);
+        $consignment = ConsignmentFactory::createFromCarrier($carrier)->setPackageType(AbstractConsignment::PACKAGE_TYPE_PACKAGE);
 
         return array_filter(
             [
