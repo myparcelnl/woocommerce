@@ -165,6 +165,17 @@ class OrderSettingsRows
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_INSURED),
                 ],
             ];
+
+            $rows[] = [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT,
+                'type'      => 'select',
+                'label'     => __('insured_amount', 'woocommerce-myparcel'),
+                'options'   => [$orderSettings::DEFAULT_BELGIAN_INSURANCE => $orderSettings::DEFAULT_BELGIAN_INSURANCE],
+                'value'     => $orderSettings->getInsuranceAmount(),
+                'condition' => [
+                    self::OPTION_SHIPMENT_OPTIONS_INSURED,
+                ],
+            ];
         }
 
         if ($isEuCountry) {

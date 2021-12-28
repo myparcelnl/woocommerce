@@ -222,6 +222,7 @@ if (! class_exists('WCMYPA')) :
                 __('message_insurance_belgium_2022', 'woocommerce-myparcel'),
                 Messages::NOTICE_LEVEL_WARNING,
                 'message_insurance_belgium_2022',
+                [MessagesRepository::SETTINGS_PAGE, MessagesRepository::PLUGINS_PAGE]
             );
         }
 
