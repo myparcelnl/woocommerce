@@ -494,8 +494,8 @@ class OrderSettings
             $isInsured       = (bool) $insuranceFromDeliveryOptions;
             $insuranceAmount = $insuranceFromDeliveryOptions;
         } elseif ($isDefaultInsured && $isBelgium) {
-            $isInsured       = $isDefaultInsuredForBE;
-            $insuranceAmount = $isDefaultInsuredForBE ? self::DEFAULT_BELGIAN_INSURANCE : 0;
+            $isInsured       = $insuranceFromDeliveryOptions === 0 ? false : $isDefaultInsuredForBE;
+            $insuranceAmount = $isInsured ? self::DEFAULT_BELGIAN_INSURANCE : 0;
         } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && $insuranceFromDeliveryOptions !== 0) {
             $isInsured       = true;
             $insuranceAmount = $this->getCarrierSetting(
