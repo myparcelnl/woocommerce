@@ -93,6 +93,7 @@ class WCMYPA_Settings
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED                  = 'export_insured';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT           = 'export_insured_amount';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE       = 'export_insured_from_price';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE           = 'export_insured_for_be';
 
 
     // Delivery options settings
