@@ -41,7 +41,11 @@ class LabelDescriptionFormat
 
             /** @var WC_Product $product */
             $product = $item->get_product();
-            $sku     = $product->get_sku();
+            if (! $product) {
+                continue;
+            }
+
+            $sku = $product->get_sku();
 
             $productIds[]      = $product->get_id();
             $productNames[]    = $product->get_name();

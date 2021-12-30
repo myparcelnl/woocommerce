@@ -77,7 +77,7 @@ $target_url = wp_nonce_url(
                                                 <td class="wcmp__text--right">
                                                     <?php
 
-                                                    $weight = $item->get_product()->weight;
+                                                    $weight = $item->get_product()->weight ?? null;
 
                                                     if ($weight) {
                                                         echo wc_format_weight($weight * $item['qty']);
