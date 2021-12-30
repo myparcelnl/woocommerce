@@ -1599,7 +1599,10 @@ class WCMP_Export
             $product = $item->get_product();
             if (! $product) {
                 Messages::showAdminNotice(
-                    __('warning_product_missing_check_backoffice', 'woocommerce-myparcel'),
+                    sprintf(
+                        __('warning_product_missing_check_backoffice', 'woocommerce-myparcel'),
+                        $wcOrder->get_id()
+                    ),
                     Messages::NOTICE_LEVEL_WARNING
                 );
                 $product = new WC_Product();
