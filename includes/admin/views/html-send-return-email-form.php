@@ -1,5 +1,7 @@
 <?php
 
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
@@ -39,7 +41,7 @@ $target_url = wp_nonce_url(
                     continue;
                 }
 
-                $recipient     = WCMP_Export::getRecipientFromOrder($order);
+                $recipient     = (new RecipientFromWCOrder($order, AbstractConsignment::CC_NL, RecipientFromWCOrder::SHIPPING))->toArray();
                 $package_types = WCMP_Data::getPackageTypes();
                 ?>
                 <tr
