@@ -62,11 +62,11 @@ class OrderLineFromWooCommerce extends OrderLine
     }
 
     /**
-     * @param \WC_Product|null $wcProduct
+     * @param \WC_Product|null|bool $wcProduct
      *
      * @return array
      */
-    protected function getDataFromProduct(?\WC_Product $wcProduct): array
+    protected function getDataFromProduct($wcProduct): array
     {
         if ($wcProduct) {
             return [

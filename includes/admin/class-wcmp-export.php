@@ -17,6 +17,7 @@ use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Helper\ExportRow;
 use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormat;
 use MyParcelNL\WooCommerce\Includes\Adapter\OrderLineFromWooCommerce;
+use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -1595,14 +1596,22 @@ class WCMP_Export
             ->setWeight($totalWeight);
 
         foreach ($wcOrder->get_items() as $item) {
-            $product       = $item->get_product();
-            $productHelper = new ExportRow($wcOrder, $product);
+            $product = $item->get_product();
+            if (! $product) {
+                Messages::showAdminNotice(
+                    __('warning_product_missing_check_backoffice', 'woocommerce-myparcel'),
+                    Messages::NOTICE_LEVEL_WARNING
+                );
+                $product = new WC_Product();
+                $product->set_weight(1);
+            }
 
             if (! $product || $product->is_virtual()) {
                 continue;
             }
 
-            $customsItem = (new MyParcelCustomsItem())
+            $productHelper = new ExportRow($wcOrder, $product);
+            $customsItem   = (new MyParcelCustomsItem())
                 ->setDescription($productHelper->getItemDescription())
                 ->setAmount($productHelper->getItemAmount($item))
                 ->setWeight($productHelper->getItemWeight())
