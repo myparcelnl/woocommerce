@@ -1,7 +1,8 @@
 jQuery(($) => {
-  $(document).on('click', '.myparcel-dismiss-notice .notice-dismiss', function triggerAction() {
+  $(document).on('click', '.myparcel-dismiss-notice .notice-dismiss', function triggerAction(event) {
     const data = {
       action: 'dismissNotice',
+      messageid: event.target.parentNode.getAttribute('data-messageid') || null,
       security: wcmp_params.nonce,
     };
 

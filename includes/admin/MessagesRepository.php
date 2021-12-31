@@ -17,15 +17,37 @@ class MessagesRepository
     public const SETTINGS_PAGE = 'woocommerce_page_wcmp_settings';
     public const PLUGINS_PAGE  = 'plugins';
 
+    private const OPTION_NOTICES_DISMISSED = 'myparcel_notice_dismissed';
+    private const OPTION_NOTICES_PERSISTED = 'myparcel_notice_persisted';
+
+    /**
+     * @var bool remembers if showMessages has been triggered already
+     */
+    private $triggered = false;
+
     /**
      * @var array
      */
-    private $messages = [];
+    private $messages;
 
     public function __construct()
     {
         add_action('admin_notices', [$this, 'showMessages']);
-        add_action('wp_ajax_dismissNotice', [$this, 'dismissNotice']);
+        add_action('wp_ajax_dismissNotice', [$this, 'ajaxDismissNotice']);
+
+        $this->messages = get_option(self::OPTION_NOTICES_PERSISTED, []);
+        if ($this->messages) {
+            update_option(self::OPTION_NOTICES_PERSISTED, []);
+        }
+
+        register_shutdown_function([$this, 'persistMessages']);
+    }
+
+    public function persistMessages(): void
+    {
+        if ($this->messages) {
+            update_option(self::OPTION_NOTICES_PERSISTED, $this->messages);
+        }
     }
 
     /**
@@ -50,13 +72,17 @@ class MessagesRepository
             if ($this->shouldMessageBeShown($message)) {
                 $isDismissible = $message['messageId'] ? 'is-dismissible' : '';
                 printf(
-                    '<div class="notice myparcel-dismiss-notice notice-%s %s"><p>%s</p></div>',
+                    '<div class="notice myparcel-dismiss-notice notice-%s %s" data-messageid="%s"><p>%s</p></div>',
                     esc_attr($message['level']),
                     esc_attr($isDismissible),
+                    esc_attr($message['messageId']),
                     esc_attr($message['message'])
                 );
             }
         }
+
+        $this->triggered = true;
+        $this->messages  = [];
     }
 
     /**
@@ -68,7 +94,7 @@ class MessagesRepository
     {
         $messageAlreadyShown             = in_array(
             $message['messageId'],
-            (array) get_option('myparcel_notice_dismissed'),
+            (array) get_option(self::OPTION_NOTICES_DISMISSED),
             true
         );
         $currentPage                     = get_current_screen();
@@ -78,16 +104,16 @@ class MessagesRepository
         return ! $messageAlreadyShown && ($currentPageShouldDisplayMessage || $allPagesShouldDisplayMessage);
     }
 
-    public function dismissNotice(): void
+    public function ajaxDismissNotice(): void
     {
-        $messageArray = get_option('myparcel_notice_dismissed', []);
+        $messageId    = $_POST['messageid'] ?? null;
+        $messageArray = get_option(self::OPTION_NOTICES_DISMISSED, []);
 
-        foreach ($this->messages as $message) {
-            if (in_array($message['messageId'], $messageArray, true)) {
-                continue;
-            }
-            $messageArray[] = $message['messageId'];
-            update_option('myparcel_notice_dismissed', $messageArray);
+        if ($messageId && ! in_array($messageId, $messageArray)) {
+            $messageArray[] = $messageId;
+
+            update_option(self::OPTION_NOTICES_DISMISSED, $messageArray);
         }
+        die();
     }
 }
