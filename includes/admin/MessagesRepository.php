@@ -95,7 +95,7 @@ class MessagesRepository
             }
         }
 
-        $this->messages  = [];
+        $this->messages = [];
     }
 
     /**
