@@ -2,22 +2,21 @@
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
-use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
+use MyParcelNL\WooCommerce\Helper\ExportRow;
+use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormat;
+use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
-use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
+use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 
 defined('ABSPATH') or die();
 
 class WCMP_Export_Consignments
 {
     use HasApiKey;
-
-    private const DEFAULT_PRODUCT_QUANTITY = 1;
 
     /**
      * @var AbstractConsignment
@@ -151,6 +150,7 @@ class WCMP_Export_Consignments
      * @return void
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      * @throws \ErrorException
+     * @throws \JsonException
      */
     public function setCustomItems(): void
     {
@@ -161,21 +161,16 @@ class WCMP_Export_Consignments
                 continue;
             }
 
-            $amount      = (int) ($item['qty'] ?? self::DEFAULT_PRODUCT_QUANTITY);
-            $weight      = WCMP_Export::convertWeightToGrams($product->get_weight());
-            $description = $item['name'];
-
-            if (strlen($description) > WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
-                $description = substr_replace($description, '...', WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH - 3);
-            }
+            $productHelper = new ExportRow($this->order, $product);
 
             $this->consignment->addItem(
-                (new MyParcelCustomsItem())->setDescription($description)
-                    ->setAmount($amount)
-                    ->setWeight($weight)
+                (new MyParcelCustomsItem())
+                    ->setDescription($productHelper->getItemDescription())
+                    ->setAmount($productHelper->getItemAmount($item))
+                    ->setWeight($productHelper->getItemWeight())
                     ->setItemValue($this->getValueOfItem($item))
-                    ->setCountry($this->getCountryOfOrigin($product))
-                    ->setClassification($this->getHsCode($product))
+                    ->setCountry($productHelper->getCountryOfOrigin())
+                    ->setClassification($productHelper->getHsCode())
             );
         }
     }
@@ -209,7 +204,7 @@ class WCMP_Export_Consignments
         switch ($this->orderSettings->getPackageType()) {
             case AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME:
                 $emptyParcelWeight = (float) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
-                $weight += $emptyParcelWeight;
+                $weight            += $emptyParcelWeight;
                 break;
             case AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME:
                 $digitalStampRangeWeight = $this->orderSettings->getDigitalStampRangeWeight();
@@ -217,47 +212,6 @@ class WCMP_Export_Consignments
         }
 
         return $digitalStampRangeWeight ?? WCMP_Export::convertWeightToGrams($weight);
-    }
-
-    /**
-     * @param WC_Product $product
-     *
-     * @return int
-     * @throws \ErrorException
-     */
-    public function getHsCode(WC_Product $product): int
-    {
-        $defaultHsCode   = $this->getSetting(WCMYPA_Settings::SETTING_HS_CODE);
-        $productHsCode   = WCX_Product::get_meta($product, WCMYPA_Admin::META_HS_CODE, true);
-        $variationHsCode = WCX_Product::get_meta($product, WCMYPA_Admin::META_HS_CODE_VARIATION, true);
-
-        $hsCode = $productHsCode ?: $defaultHsCode;
-
-        if ($variationHsCode) {
-            $hsCode = $variationHsCode;
-        }
-
-        if (! $hsCode) {
-            throw new ErrorException(__("No HS code found in MyParcel settings", "woocommerce-myparcel"));
-        }
-
-        return (int) $hsCode;
-    }
-
-    /**
-     * @param WC_Product $product
-     *
-     * @return string
-     * @throws \JsonException
-     */
-    public function getCountryOfOrigin(WC_Product $product): string
-    {
-        $defaultCountryOfOrigin   = $this->getSetting(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
-        $productCountryOfOrigin   = WCX_Product::get_meta($product,WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
-        $variationCountryOfOrigin = WCX_Product::get_meta($product,WCMYPA_Admin::META_COUNTRY_OF_ORIGIN_VARIATION, true);
-        $fallbackCountryOfOrigin  = WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
-
-        return $variationCountryOfOrigin ?: $productCountryOfOrigin ?: $defaultCountryOfOrigin ?: $fallbackCountryOfOrigin;
     }
 
     /**
@@ -291,20 +245,23 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $recipient = WCMP_Export::getRecipientFromOrder($this->order);
+        $originCountry = $this->consignment->getLocalCountryCode();
+        $recipient     = new RecipientFromWCOrder($this->order, $originCountry, RecipientFromWCOrder::SHIPPING);
 
         $this->consignment
-            ->setCountry($recipient['cc'])
-            ->setPerson($recipient['person'])
-            ->setCompany($recipient['company'])
-            ->setStreet($recipient['street'])
-            ->setNumber($recipient['number'] ?? null)
-            ->setNumberSuffix($recipient['number_suffix'] ?? null)
-            ->setStreetAdditionalInfo($recipient['street_additional_info'] ?? null)
-            ->setPostalCode($recipient['postal_code'])
-            ->setCity($recipient['city'])
-            ->setEmail($recipient['email'])
-            ->setPhone($recipient['phone'])
+            ->setCountry($recipient->getCc())
+            ->setPerson($recipient->getPerson())
+            ->setCompany($recipient->getCompany())
+            ->setStreetAdditionalInfo($recipient->getStreetAdditionalInfo())
+            ->setNumber($recipient->getNumber())
+            ->setNumberSuffix($recipient->getNumberSuffix())
+            ->setBoxNumber($recipient->getBoxNumber())
+            ->setStreet($recipient->getStreet())
+            ->setPostalCode($recipient->getPostalCode())
+            ->setCity($recipient->getCity())
+            ->setRegion($recipient->getRegion())
+            ->setEmail($recipient->getEmail())
+            ->setPhone($recipient->getPhone())
             ->setSaveRecipientAddress(false);
     }
 
@@ -315,49 +272,9 @@ class WCMP_Export_Consignments
      */
     private function getFormattedLabelDescription(): string
     {
-        $productIds      = [];
-        $productNames    = [];
-        $productSkus     = [];
-        $productQuantity = [];
-        $deliveryDate    = $this->deliveryOptions->getDate();
+      $labelDescriptionFormat = new LabelDescriptionFormat($this->order, $this->orderSettings, $this->deliveryOptions);
 
-        foreach ($this->order->get_items() as $item) {
-            if (! method_exists($item, 'get_product')) {
-                continue;
-            }
-
-            /** @var WC_Product $product */
-            $product = $item->get_product();
-            $sku     = $product->get_sku();
-
-            $productIds[]      = $product->get_id();
-            $productNames[]    = $product->get_name();
-            $productSkus[]     = empty($sku) ? '–' : $sku;
-            $productQuantity[] = $item->get_quantity();
-
-        }
-
-        $formattedLabelDescription = strtr(
-            $this->orderSettings->getLabelDescription(),
-            [
-                '[DELIVERY_DATE]' => $deliveryDate ? date('d-m-Y', strtotime($deliveryDate)) : '',
-                '[ORDER_NR]'      => $this->order->get_order_number(),
-                '[PRODUCT_ID]'    => implode(', ', $productIds),
-                '[PRODUCT_NAME]'  => implode(', ', $productNames),
-                '[PRODUCT_QTY]'   => implode(', ', $productQuantity),
-                '[PRODUCT_SKU]'   => implode(', ', $productSkus),
-                '[CUSTOMER_NOTE]' => $this->order->get_customer_note(),
-            ]
-        );
-
-        // Add filter to let plugins change the label description
-        $formattedLabelDescription = apply_filters('wcmp_formatted_label_description', $formattedLabelDescription, $this->order);
-
-        if (strlen($formattedLabelDescription) > WCMP_Export::ORDER_DESCRIPTION_MAX_LENGTH) {
-            return substr($formattedLabelDescription, 0, 42) . "...";
-        }
-
-        return $formattedLabelDescription;
+      return $labelDescriptionFormat->getFormattedLabelDescription();
     }
 
     private function setDropOffPoint(): void

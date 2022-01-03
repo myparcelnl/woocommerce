@@ -7,11 +7,15 @@ use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
+use MyParcelNL\Sdk\src\Model\CustomsDeclaration;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
 use MyParcelNL\Sdk\src\Model\Fulfilment\Order;
+use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\Sdk\src\Support\Str;
+use MyParcelNL\WooCommerce\Helper\ExportRow;
+use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormat;
 use MyParcelNL\WooCommerce\Includes\Adapter\OrderLineFromWooCommerce;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -67,6 +71,11 @@ class WCMP_Export
      * @var MyParcelCollection
      */
     public $myParcelCollection;
+
+    /**
+     * @var \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection
+     */
+    private $orderCollection;
 
     private $prefix_message;
 
@@ -640,7 +649,7 @@ class WCMP_Export
                 if ($options['insured_amount'] > 0) {
                     $options['insurance'] = [
                         'amount'   => (int) $options['insured_amount'] * 100,
-                        'currency' => 'EUR',
+                        'currency' => ExportRow::CURRENCY_EURO,
                     ];
                 }
                 unset($options['insured_amount']);
@@ -679,116 +688,6 @@ class WCMP_Export
         }
 
         return $return_shipment_data;
-    }
-
-    /**
-     * @param WC_Order $order
-     *
-     * @return mixed|void
-     * @throws Exception
-     */
-    public static function getRecipientFromOrder(WC_Order $order)
-    {
-        $isUsingMyParcelFields = WCX_Order::has_meta($order, "_billing_street_name")
-                                 && WCX_Order::has_meta($order, "_billing_house_number");
-
-        $shipping_name =
-            method_exists($order, "get_formatted_shipping_full_name") ? $order->get_formatted_shipping_full_name()
-                : trim($order->get_shipping_first_name() . " " . $order->get_shipping_last_name());
-
-
-        $connectEmail = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_EMAIL);
-        $connectPhone = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_PHONE);
-
-        $address = [
-            "cc"                     => (string) WCX_Order::get_prop($order, "shipping_country"),
-            "city"                   => (string) WCX_Order::get_prop($order, "shipping_city"),
-            "person"                 => $shipping_name,
-            "company"                => (string) WCX_Order::get_prop($order, "shipping_company"),
-            "email"                  => $connectEmail ? WCX_Order::get_prop($order, "billing_email") : "",
-            "phone"                  => $connectPhone ? WCX_Order::get_prop($order, "billing_phone") : "",
-            "street_additional_info" => WCX_Order::get_prop($order, "shipping_address_2"),
-        ];
-
-        $shipping_country = WCX_Order::get_prop($order, "shipping_country");
-        if ($shipping_country === "NL") {
-            // use billing address if old "pakjegemak" (1.5.6 and older)
-            $pgAddress = WCX_Order::get_meta($order, WCMYPA_Admin::META_PGADDRESS);
-
-            if ($pgAddress) {
-                $billing_name = method_exists($order, "get_formatted_billing_full_name")
-                    ? $order->get_formatted_billing_full_name()
-                    : trim(
-                        $order->get_billing_first_name() . " " . $order->get_billing_last_name()
-                    );
-                $address_intl = [
-                    "city"        => (string) WCX_Order::get_prop($order, "billing_city"),
-                    "person"      => $billing_name,
-                    "company"     => (string) WCX_Order::get_prop($order, "billing_company"),
-                    "postal_code" => (string) WCX_Order::get_prop($order, "billing_postcode"),
-                ];
-
-                if ($isUsingMyParcelFields) {
-                    $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_billing_street_name");
-                    $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_billing_house_number");
-                    $address_intl["number_suffix"] =
-                        (string) WCX_Order::get_meta($order, "_billing_house_number_suffix");
-                } else {
-                    // Split the address line 1 into three parts
-                    preg_match(
-                        WCMP_NL_Postcode_Fields::SPLIT_STREET_REGEX,
-                        WCX_Order::get_prop($order, "billing_address_1"),
-                        $address_parts
-                    );
-                    $address_intl["street"]                 = (string) $address_parts["street"];
-                    $address_intl["number"]                 = (string) $address_parts["number"];
-                    $address_intl["number_suffix"]          =
-                        array_key_exists("number_suffix", $address_parts) // optional
-                            ? (string) $address_parts["number_suffix"] : "";
-                    $address_intl["street_additional_info"] = WCX_Order::get_prop($order, "billing_address_2");
-                }
-            } else {
-                $address_intl = [
-                    "postal_code" => (string) WCX_Order::get_prop($order, "shipping_postcode"),
-                ];
-                // If not using old fields
-                if ($isUsingMyParcelFields) {
-                    $address_intl["street"]        = (string) WCX_Order::get_meta($order, "_shipping_street_name");
-                    $address_intl["number"]        = (string) WCX_Order::get_meta($order, "_shipping_house_number");
-                    $address_intl["number_suffix"] =
-                        (string) WCX_Order::get_meta($order, "_shipping_house_number_suffix");
-                } else {
-                    // Split the address line 1 into three parts
-                    preg_match(
-                        WCMP_NL_Postcode_Fields::SPLIT_STREET_REGEX,
-                        WCX_Order::get_prop($order, "shipping_address_1"),
-                        $address_parts
-                    );
-
-                    $address_intl["street"]        = (string) $address_parts["street"];
-                    $address_intl["number"]        = (string) $address_parts["number"];
-                    $address_intl["number_suffix"] = (string) $address_parts["extension"] ?: "";
-
-                    if (! $address_intl["number_suffix"]) {
-                        if (preg_match(self::SUFFIX_CHECK_REG, $address["street_additional_info"])) {
-                            $address_intl["number_suffix"]     = $address["street_additional_info"];
-                            $address["street_additional_info"] = "";
-                        }
-                    }
-                }
-            }
-        } else {
-            $address_intl = [
-                "postal_code"            => (string) WCX_Order::get_prop($order, "shipping_postcode"),
-                "street"                 => (string) WCX_Order::get_prop($order, "shipping_address_1"),
-                "street_additional_info" => (string) WCX_Order::get_prop($order, "shipping_address_2"),
-                "region"                 => (string) WCX_Order::get_prop($order, "shipping_state"),
-            ];
-        }
-
-        $address = array_merge($address, $address_intl);
-
-        return apply_filters("wc_myparcel_recipient", $address, $order);
     }
 
     /**
@@ -1638,20 +1537,22 @@ class WCMP_Export
      */
     private function saveOrderCollection(array $orderIds): array
     {
-        $apiKey          = $this->getSetting(WCMYPA_Settings::SETTING_API_KEY);
-        $orderCollection = (new OrderCollection())->setApiKey($apiKey);
+        $apiKey                = $this->getSetting(WCMYPA_Settings::SETTING_API_KEY);
+        $this->orderCollection = (new OrderCollection())->setApiKey($apiKey);
 
         foreach ($orderIds as $orderId) {
-            $wcOrder         = WCX::get_order($orderId);
-            $orderSettings   = new OrderSettings($wcOrder);
-            $deliveryOptions = $orderSettings->getDeliveryOptions();
-
+            $wcOrder                = WCX::get_order($orderId);
+            $orderSettings          = new OrderSettings($wcOrder);
+            $deliveryOptions        = $orderSettings->getDeliveryOptions();
+            $labelDescriptionFormat = new LabelDescriptionFormat($wcOrder, $orderSettings, $deliveryOptions);
+          
             $deliveryOptions->getShipmentOptions()->setSignature($orderSettings->hasSignature());
             $deliveryOptions->getShipmentOptions()->setInsurance($orderSettings->getInsuranceAmount());
             $deliveryOptions->getShipmentOptions()->setAgeCheck($orderSettings->hasAgeCheck());
             $deliveryOptions->getShipmentOptions()->setOnlyRecipient($orderSettings->hasOnlyRecipient());
             $deliveryOptions->getShipmentOptions()->setReturn($orderSettings->hasReturnShipment());
             $deliveryOptions->getShipmentOptions()->setLargeFormat($orderSettings->hasLargeFormat());
+            $deliveryOptions->getShipmentOptions()->setLabelDescription($labelDescriptionFormat->getFormattedLabelDescription());
 
             $order = (new Order())
                 ->setStatus($wcOrder->get_status())
@@ -1670,13 +1571,54 @@ class WCMP_Export
                 $orderLines->push($orderLine);
             }
 
+            $order->setCustomsDeclaration($this->generateCustomsDeclaration($wcOrder));
+
             $order->setOrderLines($orderLines);
-            $orderCollection->push($order);
+            $this->orderCollection->push($order);
         }
 
-        $savedOrderCollection = $orderCollection->save();
+        $savedOrderCollection = $this->orderCollection->save();
 
         return $this->updateOrderMetaByCollection($savedOrderCollection);
+    }
+
+    /**
+     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
+     * @throws \ErrorException
+     * @throws \JsonException
+     */
+    public function generateCustomsDeclaration(WC_Order $wcOrder): CustomsDeclaration
+    {
+        $customsDeclaration = new CustomsDeclaration();
+        $contents           = (int) ($this->getSetting("package_contents") ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
+        $orderSettings      = new OrderSettings($wcOrder);
+        $totalWeight        = WCMP_Export::convertWeightToGrams($orderSettings->getWeight());
+
+        $customsDeclaration
+            ->setContents($contents)
+            ->setInvoice($wcOrder->get_id())
+            ->setWeight($totalWeight);
+
+        foreach ($wcOrder->get_items() as $item) {
+            $product       = $item->get_product();
+            $productHelper = new ExportRow($wcOrder, $product);
+
+            if (! $product || $product->is_virtual()) {
+                continue;
+            }
+
+            $customsItem = (new MyParcelCustomsItem())
+                ->setDescription($productHelper->getItemDescription())
+                ->setAmount($productHelper->getItemAmount($item))
+                ->setWeight($productHelper->getItemWeight())
+                ->setItemValueArray($productHelper->getValueOfItem())
+                ->setCountry($productHelper->getCountryOfOrigin())
+                ->setClassification($productHelper->getHsCode());
+
+            $customsDeclaration->addCustomsItem($customsItem);
+        }
+
+        return $customsDeclaration;
     }
 
     /**

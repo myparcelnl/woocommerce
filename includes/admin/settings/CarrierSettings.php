@@ -46,7 +46,7 @@ class CarrierSettings
      */
     public function getCarrierSection(AbstractCarrier $carrier): array
     {
-        $consignment = ConsignmentFactory::createFromCarrier($carrier);
+        $consignment = ConsignmentFactory::createFromCarrier($carrier)->setPackageType(AbstractConsignment::PACKAGE_TYPE_PACKAGE);
 
         return array_filter(
             [
@@ -187,6 +187,14 @@ class CarrierSettings
                     'help_text' => __('shipment_options_insured_amount_help_text', 'woocommerce-myparcel'),
                     'type'      => 'select',
                     'options'   => WCMP_Data::getInsuranceAmounts(),
+                ];
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE,
+                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                    'label'     => __('shipment_options_insured_for_be', 'woocommerce-myparcel'),
+                    'default'   => WCMP_Settings_Data::ENABLED,
+                    'help_text' => __('shipment_options_insured_for_be_help_text', 'woocommerce-myparcel'),
+                    'type'      => 'toggle',
                 ];
                 break;
             case AbstractConsignment::SHIPMENT_OPTION_LARGE_FORMAT:
