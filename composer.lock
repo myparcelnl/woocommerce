@@ -4,28 +4,28 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eb1ab8bf2b61d68cdeb99caf045f9445",
+    "content-hash": "b38794f3bf79e2edcb40b43b7bd61da3",
     "packages": [
         {
             "name": "myparcelnl/sdk",
-            "version": "v6.0.0",
+            "version": "6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "0a9e25cb6ef1ac26fb494960e0ade63bc6d8f45b"
+                "reference": "28bc0c5dcef202c22f7eb40fc7e14102ad30e8bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/0a9e25cb6ef1ac26fb494960e0ade63bc6d8f45b",
-                "reference": "0a9e25cb6ef1ac26fb494960e0ade63bc6d8f45b",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/28bc0c5dcef202c22f7eb40fc7e14102ad30e8bf",
+                "reference": "28bc0c5dcef202c22f7eb40fc7e14102ad30e8bf",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1.0"
             },
             "require-dev": {
-                "fakerphp/faker": "^1.15.0",
-                "phpunit/phpunit": "^5.5",
+                "fakerphp/faker": "^v1.16.0",
+                "phpunit/phpunit": "^7.5.20",
                 "psr/container": "~1.0.0"
             },
             "type": "library",
@@ -63,12 +63,14 @@
             "homepage": "https://www.myparcel.nl",
             "keywords": [
                 "Flespakket",
-                "My Parcel",
-                "Post NL",
                 "myparcel",
                 "postnl"
             ],
-            "time": "2021-12-20T08:41:14+00:00"
+            "support": {
+                "issues": "https://github.com/myparcelnl/sdk/issues",
+                "source": "https://github.com/myparcelnl/sdk/tree/v6.1.0"
+            },
+            "time": "2021-12-31T10:43:50+00:00"
         }
     ],
     "packages-dev": [],
@@ -79,5 +81,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.1.0"
 }

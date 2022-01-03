@@ -90,7 +90,19 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 4.7.0 () =
+= 4.8.0 (2022-01-03) =
+* Feat: add option to disable insurance for shipments to Belgium (#744) (5017e19)
+* Feat: add region to consignment when exporting (#745) (0d91010)
+* Feat: pps: export label description (b7ae15f)
+* Fix: accountsettings may be empty not absent (#729) (004ce07)
+* Fix: add 'parent' element to return_shipment_data array (#738) (8dfb65f)
+* Fix: allow old shipping methods in order (#720) (fda83bc)
+* Fix: export orders with a pickup location for PPS (4b21dea)
+* Fix: pps: export ROW orders (#742) (48867a6)
+* Fix: fix return email not working (#751) (4334bbf)
+* Fix: save lowest insurance possibility (#734) (c962a22), closes #730
+
+= 4.7.0 (2021-11-18) =
 * Feat: add redjepakketje
 * Fix: no notice when weight missing in order
 * Fix: re-add alternate delivery days settings
