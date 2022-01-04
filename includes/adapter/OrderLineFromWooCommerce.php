@@ -30,7 +30,7 @@ class OrderLineFromWooCommerce extends OrderLine
     {
         $wcItemData = $wcOrderItem->get_data();
 
-        $price = (int) ($wcItemData['subtotal'] * 100.0);
+        $price = (int) ($wcItemData['subtotal'] * 100.0) / $wcItemData['quantity'];
         $vat   = (int) ($wcItemData['subtotal_tax'] * 100.0);
 
         return [
