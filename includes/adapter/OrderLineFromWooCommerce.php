@@ -29,8 +29,9 @@ class OrderLineFromWooCommerce extends OrderLine
     protected function prepareItemData(WC_Order_Item $wcOrderItem): array
     {
         $wcItemData = $wcOrderItem->get_data();
+        $wcProduct  = $wcOrderItem->get_product();
 
-        $price = (int) ($wcItemData['subtotal'] * 100.0) / $wcItemData['quantity'];
+        $price = (int) ($wcProduct->get_price() * 100.0);
         $vat   = (int) ($wcItemData['subtotal_tax'] * 100.0);
 
         return [
