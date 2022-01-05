@@ -96,11 +96,11 @@ class RecipientFromWCOrder extends Recipient
         }
 
         $fullStreet = implode(' ', [
-                $streetParts['street'] ?? '',
-                $streetParts['number'] ?? '',
-                $streetParts['number_suffix'] ?? '',
-                $streetParts['box_separator'] ?? '',
-                $streetParts['box_number'] ?? '',
+                $streetParts['street'] ?? null,
+                $streetParts['number'] ?? null,
+                $streetParts['number_suffix'] ?? null,
+                $streetParts['box_separator'] ?? null,
+                $streetParts['box_number'] ?? null,
             ]
         );
 
