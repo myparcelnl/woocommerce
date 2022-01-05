@@ -1541,12 +1541,17 @@ class WCMP_Export
         $this->orderCollection = (new OrderCollection())->setApiKey($apiKey);
 
         foreach ($orderIds as $orderId) {
-            $wcOrder         = WCX::get_order($orderId);
-            $orderSettings   = new OrderSettings($wcOrder);
-            $deliveryOptions = $orderSettings->getDeliveryOptions();
-
+            $wcOrder                = WCX::get_order($orderId);
+            $orderSettings          = new OrderSettings($wcOrder);
+            $deliveryOptions        = $orderSettings->getDeliveryOptions();
             $labelDescriptionFormat = new LabelDescriptionFormat($wcOrder, $orderSettings, $deliveryOptions);
-
+          
+            $deliveryOptions->getShipmentOptions()->setSignature($orderSettings->hasSignature());
+            $deliveryOptions->getShipmentOptions()->setInsurance($orderSettings->getInsuranceAmount());
+            $deliveryOptions->getShipmentOptions()->setAgeCheck($orderSettings->hasAgeCheck());
+            $deliveryOptions->getShipmentOptions()->setOnlyRecipient($orderSettings->hasOnlyRecipient());
+            $deliveryOptions->getShipmentOptions()->setReturn($orderSettings->hasReturnShipment());
+            $deliveryOptions->getShipmentOptions()->setLargeFormat($orderSettings->hasLargeFormat());
             $deliveryOptions->getShipmentOptions()->setLabelDescription($labelDescriptionFormat->getFormattedLabelDescription());
 
             $order = (new Order())
