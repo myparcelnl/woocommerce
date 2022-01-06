@@ -280,7 +280,6 @@ class OrderSettings
     }
 
     /**
-     * @TODO MY-28781 refactor OrderSettings-> get and set Shipping and Billing Recipients
      * @return self
      * @throws \Exception
      */
