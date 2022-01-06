@@ -50,10 +50,7 @@ class OrderLineFromWooCommerce extends OrderLine
     protected function prepareProductData(WC_Order_Item $wcOrderItem): array
     {
         $wcItemData = $wcOrderItem->get_data();
-        $wcProduct  = $wcOrderItem->get_product();
-        if (! $wcProduct) {
-            $wcProduct = null;
-        }
+        $wcProduct  = $wcOrderItem->get_product() ?: null;
 
         return array_merge(
             [
