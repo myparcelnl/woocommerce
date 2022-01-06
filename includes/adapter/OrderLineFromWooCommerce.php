@@ -28,17 +28,16 @@ class OrderLineFromWooCommerce extends OrderLine
      */
     protected function prepareItemData(WC_Order_Item $wcOrderItem): array
     {
-        $wcItemData = $wcOrderItem->get_data();
-        $wcProduct  = $wcOrderItem->get_product();
+        $quantity   = $wcOrderItem->get_quantity();
 
-        $price = (int) ($wcProduct->get_price() * 100.0);
-        $vat   = (int) ($wcItemData['subtotal_tax'] * 100.0);
+        $price = (int) ($wcOrderItem->get_subtotal() * 100.0) / $quantity;
+        $vat   = (int) ($wcOrderItem->get_subtotal_tax() * 100.0) / $quantity;
 
         return [
             'price'           => $price,
             'vat'             => $vat,
             'price_after_vat' => $price + $vat,
-            'quantity'        => $wcOrderItem->get_quantity(),
+            'quantity'        => $quantity,
             'product'         => $this->prepareProductData($wcOrderItem),
         ];
     }
