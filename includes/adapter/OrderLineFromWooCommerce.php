@@ -51,6 +51,9 @@ class OrderLineFromWooCommerce extends OrderLine
     {
         $wcItemData = $wcOrderItem->get_data();
         $wcProduct  = $wcOrderItem->get_product();
+        if (! $wcProduct) {
+            $wcProduct = null;
+        }
 
         return array_merge(
             [
@@ -62,30 +65,29 @@ class OrderLineFromWooCommerce extends OrderLine
     }
 
     /**
-     * @param \WC_Product|null|bool $wcProduct
+     * @param \WC_Product|null $wcProduct
      *
      * @return array
      */
-    protected function getDataFromProduct($wcProduct): array
+    protected function getDataFromProduct(?\WC_Product $wcProduct): array
     {
-        if ($wcProduct) {
+        if (! $wcProduct) {
             return [
-                'sku'         => $wcProduct->get_sku(),
-                'height'      => (int) $wcProduct->get_height() ?: 0,
-                'length'      => (int) $wcProduct->get_length() ?: 0,
-                'weight'      => (int) $wcProduct->get_weight() ?: 0,
-                'width'       => (int) $wcProduct->get_width() ?: 0,
-                'description' => $wcProduct->get_short_description(),
+                'sku'         => '',
+                'height'      => 0,
+                'length'      => 0,
+                'weight'      => 0,
+                'width'       => 0,
+                'description' => '',
             ];
         }
         return [
-            'sku'         => '',
-            'height'      => 0,
-            'length'      => 0,
-            'weight'      => 0,
-            'width'       => 0,
-            'description' => '',
+            'sku'         => $wcProduct->get_sku(),
+            'height'      => (int) $wcProduct->get_height() ?: 0,
+            'length'      => (int) $wcProduct->get_length() ?: 0,
+            'weight'      => (int) $wcProduct->get_weight() ?: 0,
+            'width'       => (int) $wcProduct->get_width() ?: 0,
+            'description' => $wcProduct->get_short_description(),
         ];
     }
-
 }
