@@ -50,17 +50,41 @@ class OrderLineFromWooCommerce extends OrderLine
     protected function prepareProductData(WC_Order_Item $wcOrderItem): array
     {
         $wcItemData = $wcOrderItem->get_data();
-        $wcProduct  = $wcOrderItem->get_product();
+        $wcProduct  = $wcOrderItem->get_product() ?: null;
 
+        return array_merge(
+            [
+                'external_identifier' => (string) ($wcItemData['variation_id'] ?: $wcItemData['product_id']),
+                'name'                => $wcItemData['name'],
+            ],
+            $this->getDataFromProduct($wcProduct)
+        );
+    }
+
+    /**
+     * @param \WC_Product|null $wcProduct
+     *
+     * @return array
+     */
+    protected function getDataFromProduct(?\WC_Product $wcProduct): array
+    {
+        if (! $wcProduct) {
+            return [
+                'sku'         => '',
+                'height'      => 0,
+                'length'      => 0,
+                'weight'      => 0,
+                'width'       => 0,
+                'description' => '',
+            ];
+        }
         return [
-            'external_identifier' => (string) ($wcItemData['variation_id'] ?: $wcItemData['product_id']),
-            'name'                => $wcItemData['name'],
-            'sku'                 => $wcProduct->get_sku(),
-            'height'              => (int) $wcProduct->get_height() ?: 0,
-            'length'              => (int) $wcProduct->get_length() ?: 0,
-            'weight'              => (int) $wcProduct->get_weight() ?: 0,
-            'width'               => (int) $wcProduct->get_width() ?: 0,
-            'description'         => $wcProduct->get_short_description(),
+            'sku'         => $wcProduct->get_sku(),
+            'height'      => (int) $wcProduct->get_height() ?: 0,
+            'length'      => (int) $wcProduct->get_length() ?: 0,
+            'weight'      => (int) $wcProduct->get_weight() ?: 0,
+            'width'       => (int) $wcProduct->get_width() ?: 0,
+            'description' => $wcProduct->get_short_description(),
         ];
     }
 }
