@@ -90,6 +90,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.8.1 (2022-01-10) =
+* Fix: prevent eternal recreation of webhook
+
 = 4.8.0 (2022-01-03) =
 * Feat: add option to disable insurance for shipments to Belgium (#744) (5017e19)
 * Feat: add region to consignment when exporting (#745) (0d91010)
