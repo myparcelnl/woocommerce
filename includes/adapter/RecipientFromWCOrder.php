@@ -90,17 +90,17 @@ class RecipientFromWCOrder extends Recipient
 
         $addressLine2IsNumberSuffix = strlen($addressLine2) < self::MIN_STREET_ADDITIONAL_INFO_LENGTH;
 
-        if (! $streetParts['number_suffix'] && $addressLine2IsNumberSuffix) {
+        if (! isset($streetParts['number_suffix']) && $addressLine2IsNumberSuffix) {
             $streetParts['number_suffix'] = $order->{"get_{$type}_address_2"}();
             $addressLine2                  = null;
         }
 
         $fullStreet = implode(' ', [
-                $streetParts['street'],
-                $streetParts['number'],
-                $streetParts['number_suffix'],
-                $streetParts['box_separator'],
-                $streetParts['box_number'],
+                $streetParts['street'] ?? null,
+                $streetParts['number'] ?? null,
+                $streetParts['number_suffix'] ?? null,
+                $streetParts['box_separator'] ?? null,
+                $streetParts['box_number'] ?? null,
             ]
         );
 

@@ -12,6 +12,7 @@ use MyParcelNL\Sdk\src\Model\PickupLocation;
 use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use WC_Order;
 use WCMP_Data;
 use WCMP_Export;
@@ -279,19 +280,18 @@ class OrderSettings
     }
 
     /**
-     * @TODO MY-28781 refactor OrderSettings-> get and set Shipping and Billing Recipients
-     *
      * @return self
+     * @throws \Exception
      */
     public function setShippingRecipient(): self
     {
-        $this->shippingRecipient = (new Recipient())
-            ->setCc($this->order->get_shipping_country())
-            ->setCity($this->order->get_shipping_city())
-            ->setCompany($this->order->get_shipping_company())
-            ->setPerson(substr($this->order->get_formatted_shipping_full_name(), 0, 50))
-            ->setPostalCode($this->order->get_shipping_postcode())
-            ->setStreet($this->makeStreet($this->order->get_billing_address_1(), $this->order->get_billing_address_2()));
+        $consignment             = ConsignmentFactory::createByCarrierName($this->carrier);
+        $localCountryCode        = $consignment->getLocalCountryCode();
+        $this->shippingRecipient = (new RecipientFromWCOrder(
+            $this->order,
+            $localCountryCode,
+            RecipientFromWCOrder::SHIPPING
+        ));
 
         return $this;
     }
@@ -306,17 +306,17 @@ class OrderSettings
 
     /**
      * @return self
+     * @throws \Exception
      */
     public function setBillingRecipient(): self
     {
-        $this->billingRecipient = (new Recipient())->setCc($this->order->get_billing_country())
-            ->setCity($this->order->get_billing_city())
-            ->setCompany($this->order->get_billing_company())
-            ->setEmail($this->order->get_billing_email())
-            ->setPerson(substr($this->order->get_formatted_billing_full_name(), 0, 50))
-            ->setPhone($this->order->get_billing_phone())
-            ->setPostalCode($this->order->get_billing_postcode())
-            ->setStreet($this->makeStreet($this->order->get_billing_address_1(), $this->order->get_billing_address_2()));
+        $consignment            = ConsignmentFactory::createByCarrierName($this->carrier);
+        $localCountryCode       = $consignment->getLocalCountryCode();
+        $this->billingRecipient = (new RecipientFromWCOrder(
+            $this->order,
+            $localCountryCode,
+            RecipientFromWCOrder::BILLING
+        ));
 
         return $this;
     }
@@ -359,16 +359,6 @@ class OrderSettings
     public function getPickupLocation(): ?PickupLocation
     {
         return $this->pickupLocation;
-    }
-
-    /**
-     * @param ...$parts
-     *
-     * @return string
-     */
-    private function makeStreet(...$parts): string
-    {
-        return (substr(trim(implode($parts)), 0, 40) ?: '');
     }
 
     /**
