@@ -90,6 +90,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.8.2 (2022-01-11) =
+* Fix: **hotfix:** show delivery options prices in order review
+
 = 4.8.1 (2022-01-10) =
 * Fix: prevent eternal recreation of webhook
 
