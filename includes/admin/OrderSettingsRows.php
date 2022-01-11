@@ -38,6 +38,7 @@ class OrderSettingsRows
     private const OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT      = "[shipment_options][large_format]";
     private const OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT    = "[shipment_options][only_recipient]";
     private const OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT   = "[shipment_options][return_shipment]";
+    private const OPTION_SHIPMENT_OPTIONS_SAME_DAY          = "[shipment_options][same_day]";
     private const OPTION_SHIPMENT_OPTIONS_SIGNATURE         = "[shipment_options][signature]";
     private const OPTION_SHIPMENT_OPTIONS_AGE_CHECK         = "[shipment_options][age_check]";
 
@@ -50,6 +51,7 @@ class OrderSettingsRows
         self::OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT    => AbstractConsignment::SHIPMENT_OPTION_LARGE_FORMAT,
         self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT  => AbstractConsignment::SHIPMENT_OPTION_ONLY_RECIPIENT,
         self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT => AbstractConsignment::SHIPMENT_OPTION_RETURN,
+        self::OPTION_SHIPMENT_OPTIONS_SAME_DAY        => AbstractConsignment::SHIPMENT_OPTION_SAME_DAY,
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE       => AbstractConsignment::SHIPMENT_OPTION_SIGNATURE,
     ];
 
@@ -295,6 +297,16 @@ class OrderSettingsRows
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT),
+                ],
+            ],
+            [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_SAME_DAY,
+                'type'      => 'toggle',
+                'label'     => __('shipment_options_same_day', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_same_day_help_text', 'woocommerce-myparcel'),
+                'value'     => $orderSettings->isSameDay(),
+                'condition' => [
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY),
                 ],
             ],
             [

@@ -324,6 +324,7 @@ class WCMP_Export_Consignments
             ->setLargeFormat($this->orderSettings->hasLargeFormat())
             ->setOnlyRecipient($this->orderSettings->hasOnlyRecipient())
             ->setReturn($this->orderSettings->hasReturnShipment())
+            ->setSameDay($this->orderSettings->isSameDay())
             ->setSignature($this->orderSettings->hasSignature())
             ->setContents($this->getContents())
             ->setInvoice($this->order->get_id());

@@ -90,6 +90,7 @@ class WCMYPA_Settings
     public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT = 'export_large_format_from_weight';
     public const SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK                = 'export_age_check';
     public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN                   = 'export_return_shipments';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY                 = 'export_same_day';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED                  = 'export_insured';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT           = 'export_insured_amount';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE       = 'export_insured_from_price';
