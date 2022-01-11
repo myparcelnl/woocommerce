@@ -213,7 +213,7 @@ class WCMP_Cart_Fees
     {
         $carrier       = $this->deliveryOptions->getCarrier();
         $getCarrierFee = static function (string $setting) use ($carrier): float {
-            return WCMYPA()->setting_collection->getFloatByName("{$carrier}_{$setting}");
+            return (float) WCMYPA()->setting_collection->where('carrier', $carrier)->getByName($setting);
         };
 
         return [
