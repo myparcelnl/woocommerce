@@ -1552,7 +1552,7 @@ class WCMP_Export
             $deliveryOptions->getShipmentOptions()->setAgeCheck($orderSettings->hasAgeCheck());
             $deliveryOptions->getShipmentOptions()->setOnlyRecipient($orderSettings->hasOnlyRecipient());
             $deliveryOptions->getShipmentOptions()->setReturn($orderSettings->hasReturnShipment());
-            $deliveryOptions->getShipmentOptions()->setSameDay($orderSettings->isSameDay());
+            $deliveryOptions->getShipmentOptions()->setSameDayDelivery($orderSettings->isSameDayDelivery());
             $deliveryOptions->getShipmentOptions()->setLargeFormat($orderSettings->hasLargeFormat());
             $deliveryOptions->getShipmentOptions()->setLabelDescription($labelDescriptionFormat->getFormattedLabelDescription());
 

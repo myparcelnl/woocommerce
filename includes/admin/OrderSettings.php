@@ -99,7 +99,7 @@ class OrderSettings
     /**
      * @var bool
      */
-    private $sameDay;
+    private $sameDayDelivery;
 
     /**
      * @var bool
@@ -253,9 +253,9 @@ class OrderSettings
     /**
      * @return bool
      */
-    public function isSameDay(): bool
+    public function isSameDayDelivery(): bool
     {
-        return $this->sameDay;
+        return $this->sameDayDelivery;
     }
 
     /**
@@ -282,7 +282,7 @@ class OrderSettings
         $this->setLargeFormat();
         $this->setOnlyRecipient();
         $this->setReturnShipment();
-        $this->setSameDay();
+        $this->setSameDayDelivery();
         $this->setSignature();
 
         $this->setInsuranceData();
@@ -557,13 +557,13 @@ class OrderSettings
         $this->onlyRecipient = $onlyRecipientFromShipmentOptions ?: $onlyRecipientFromSettings;
     }
 
-    private function setSameDay(): void
+    private function setSameDayDelivery(): void
     {
-        $settingName                = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY;
-        $sameDayFromShipmentOptions = $this->shipmentOptions->isSameDay();
+        $settingName                = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY;
+        $sameDayFromShipmentOptions = $this->shipmentOptions->isSameDayDelivery();
         $sameDayFromSettings        = (bool)WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
 
-        $this->sameDay = $sameDayFromShipmentOptions ?: $sameDayFromSettings;
+        $this->sameDayDelivery = $sameDayFromShipmentOptions ?: $sameDayFromSettings;
     }
 
     /**

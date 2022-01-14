@@ -222,11 +222,11 @@ class CarrierSettings
                     'type'      => 'toggle',
                 ];
                 break;
-            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY:
+            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY,
-                    'label'     => __('shipment_options_same_day', 'woocommerce-myparcel'),
-                    'help_text' => __('shipment_options_same_day_help_text', 'woocommerce-myparcel'),
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
+                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ];
                 break;
