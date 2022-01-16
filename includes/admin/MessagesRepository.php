@@ -31,7 +31,9 @@ class MessagesRepository
         add_action('wp_ajax_dismissNotice', [$this, 'ajaxDismissNotice']);
 
         $this->preloadPersistedMessages();
-        register_shutdown_function([$this, 'persistRemainingMessages']);
+        if (defined('DOING_AJAX')) {
+            register_shutdown_function([$this, 'persistRemainingMessages']);
+        }
     }
 
     public function persistRemainingMessages(): void
@@ -44,10 +46,12 @@ class MessagesRepository
     public function preloadPersistedMessages(): void
     {
         $this->messages = get_option(self::OPTION_NOTICE_PERSISTED, []);
+
         if ($this->messages) {
             update_option(self::OPTION_NOTICE_PERSISTED, []);
         }
     }
+
     /**
      * @param  string      $message
      * @param  string      $level
@@ -87,10 +91,10 @@ class MessagesRepository
                 $isDismissible = $message['messageId'] ? 'is-dismissible' : '';
                 printf(
                     '<div class="notice myparcel-dismiss-notice notice-%s %s" data-messageid="%s"><p>%s</p></div>',
-                    esc_attr($message['level']),
-                    esc_attr($isDismissible),
-                    esc_attr($message['messageId']),
-                    esc_attr($message['message'])
+                    $message['level'],
+                    $isDismissible,
+                    $message['messageId'],
+                    $message['message']
                 );
             }
         }
