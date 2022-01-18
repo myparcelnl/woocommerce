@@ -109,7 +109,8 @@ class MessagesRepository
      */
     private function shouldMessageBeShown(array $message): bool
     {
-        $messageAlreadyShown             = in_array(
+        $messageAlreadyShown             =
+            $message['messageId'] && in_array(
             $message['messageId'],
             (array) get_option(self::OPTION_NOTICE_DISMISSED),
             true
