@@ -181,7 +181,7 @@ if (! class_exists('WCMYPA')) :
          */
         public function initialize(): void
         {
-            if (! $this->checkPreRequisites()) {
+            if (! $this->checkPrerequisites()) {
                 return;
             }
 
@@ -218,7 +218,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * @return bool
          */
-        private function checkPreRequisites(): bool
+        private function checkPrerequisites(): bool
         {
             return $this->isWoocommerceActivated()
                 && $this->phpVersionMeets(self::PHP_VERSION_REQUIRED);
@@ -229,11 +229,11 @@ if (! class_exists('WCMYPA')) :
          */
         public function isWoocommerceActivated(): bool
         {
-            $blog_plugins = get_option('active_plugins', []);
-            $site_plugins = get_site_option('active_sitewide_plugins', []);
+            $blogPlugins = get_option('active_plugins', []);
+            $sitePlugins = get_site_option('active_sitewide_plugins', []);
 
-            if (isset($site_plugins['woocommerce/woocommerce.php'])
-                || in_array('woocommerce/woocommerce.php', $blog_plugins)
+            if (isset($sitePlugins['woocommerce/woocommerce.php'])
+                || in_array('woocommerce/woocommerce.php', $blogPlugins)
             ) {
                 return true;
             }
@@ -371,12 +371,12 @@ if (! class_exists('WCMYPA')) :
             $error = __('WooCommerce MyParcel requires PHP {PHP_VERSION} or higher.', 'woocommerce-myparcel');
             $error = str_replace('{PHP_VERSION}', self::PHP_VERSION_REQUIRED, $error);
 
-            $how_to_update = __('How to update your PHP version', 'woocommerce-myparcel');
-            $message       = sprintf(
+            $howToUpdate = __('How to update your PHP version', 'woocommerce-myparcel');
+            $message     = sprintf(
                 '<p>%s</p><p><a href="%s">%s</a></p>',
                 $error,
                 'http://docs.wpovernight.com/general/how-to-update-your-php-version/',
-                $how_to_update
+                $howToUpdate
             );
 
             Messages::showAdminNotice($message, Messages::NOTICE_LEVEL_ERROR);

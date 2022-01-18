@@ -38,9 +38,11 @@ class MessagesRepository
 
     public function persistRemainingMessages(): void
     {
-        if ($this->messages) {
-            update_option(self::OPTION_NOTICE_PERSISTED, $this->messages);
+        if (! $this->messages) {
+            return;
         }
+
+        update_option(self::OPTION_NOTICE_PERSISTED, $this->messages);
     }
 
     public function preloadPersistedMessages(): void
@@ -79,7 +81,7 @@ class MessagesRepository
      */
     private function messageIsDuplicate(string $message): bool
     {
-        return 0 < count(array_filter($this->messages, static function ($entry) use ($message) {
+        return 0 < count(array_filter($this->messages, static function (array $entry) use ($message) {
             return $message === $entry['message'];
         }));
     }
