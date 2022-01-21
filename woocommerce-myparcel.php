@@ -177,31 +177,15 @@ if (! class_exists('WCMYPA')) :
         }
 
         /**
-         * Instantiate classes when WooCommerce is activated
-         * @deprecated use ->initialize()
-         */
-        public function load_classes()
-        {
-            $this->initialize();
-        }
-
-        /**
          * Perform required tasks that initialize the plugin.
          */
         public function initialize(): void
         {
-            if (false === $this->is_woocommerce_activated()) {
-                add_action('admin_notices', [$this, 'need_woocommerce']);
-
+            if (! $this->checkPrerequisites()) {
                 return;
             }
 
-            if (! $this->phpVersionMeets(self::PHP_VERSION_REQUIRED)) {
-                add_action('admin_notices', [$this, 'required_php_version']);
-
-                return;
-            }
-
+            $this->initMessenger();
             $this->useStagingEnvironment();
             $this->includes();
             $this->initSettings();
@@ -216,8 +200,13 @@ if (! class_exists('WCMYPA')) :
                 [AccountSettings::class, "restRefreshFromApi"]
             );
 
+        }
+
+        public function initMessenger(): void
+        {
+            // Always call the MessagesRepository to make sure lingering messages are shown
+            MessagesRepository::getInstance();
             // Show temporary message concerning insurances for shipments to Belgium.
-            add_option('myparcel_notice_dismissed', []);
             Messages::showAdminNotice(
                 __('message_insurance_belgium_2022', 'woocommerce-myparcel'),
                 Messages::NOTICE_LEVEL_WARNING,
@@ -227,57 +216,37 @@ if (! class_exists('WCMYPA')) :
         }
 
         /**
-         * Check if woocommerce is activated
+         * @return bool
          */
-        public function is_woocommerce_activated()
+        private function checkPrerequisites(): bool
         {
-            $blog_plugins = get_option('active_plugins', []);
-            $site_plugins = get_site_option('active_sitewide_plugins', []);
-
-            if (in_array('woocommerce/woocommerce.php', $blog_plugins)
-                || isset($site_plugins['woocommerce/woocommerce.php'])) {
-                return true;
-            } else {
-                return false;
-            }
+            return $this->isWoocommerceActivated()
+                && $this->phpVersionMeets(self::PHP_VERSION_REQUIRED);
         }
 
         /**
-         * WooCommerce not active notice.
+         * Check if woocommerce is activated
          */
-        public function need_woocommerce()
+        public function isWoocommerceActivated(): bool
         {
-            $error = sprintf(
+            $blogPlugins = get_option('active_plugins', []);
+            $sitePlugins = get_site_option('active_sitewide_plugins', []);
+
+            if (isset($sitePlugins['woocommerce/woocommerce.php'])
+                || in_array('woocommerce/woocommerce.php', $blogPlugins)
+            ) {
+                return true;
+            }
+
+            Messages::showAdminNotice(sprintf(
                 __("WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!",
                     "woocommerce-myparcel"
                 ),
                 '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
                 '</a>'
-            );
+            ), Messages::NOTICE_LEVEL_ERROR);
 
-            $message = '<div class="error"><p>' . $error . '</p></div>';
-
-            echo $message;
-        }
-
-        /**
-         * PHP version requirement notice
-         */
-
-        public function required_php_version()
-        {
-            $error = __("WooCommerce MyParcel requires PHP {PHP_VERSION} or higher.", "woocommerce-myparcel");
-            $error = str_replace('{PHP_VERSION}', self::PHP_VERSION_REQUIRED, $error);
-
-            $how_to_update = __("How to update your PHP version", "woocommerce-myparcel");
-            $message       = sprintf(
-                '<div class="error"><p>%s</p><p><a href="%s">%s</a></p></div>',
-                $error,
-                'http://docs.wpovernight.com/general/how-to-update-your-php-version/',
-                $how_to_update
-            );
-
-            echo $message;
+            return false;
         }
 
         /** Lifecycle methods *******************************************************
@@ -393,9 +362,26 @@ if (! class_exists('WCMYPA')) :
          *
          * @return bool
          */
-        private function phpVersionMeets($version)
+        private function phpVersionMeets(string $version): bool
         {
-            return version_compare(PHP_VERSION, $version, '>=');
+            if (version_compare(PHP_VERSION, $version, '>=')) {
+                return true;
+            }
+
+            $error = __('WooCommerce MyParcel requires PHP {PHP_VERSION} or higher.', 'woocommerce-myparcel');
+            $error = str_replace('{PHP_VERSION}', self::PHP_VERSION_REQUIRED, $error);
+
+            $howToUpdate = __('How to update your PHP version', 'woocommerce-myparcel');
+            $message     = sprintf(
+                '<p>%s</p><p><a href="%s">%s</a></p>',
+                $error,
+                'http://docs.wpovernight.com/general/how-to-update-your-php-version/',
+                $howToUpdate
+            );
+
+            Messages::showAdminNotice($message, Messages::NOTICE_LEVEL_ERROR);
+
+            return false;
         }
 
         /**
