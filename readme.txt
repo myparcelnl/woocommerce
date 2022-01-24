@@ -109,7 +109,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 * Fix: save lowest insurance possibility (#734) (c962a22), closes #730
 
 = 4.7.0 (2021-11-18) =
-* Feat: add redjepakketje
+* Feat: add instabox
 * Fix: no notice when weight missing in order
 * Fix: re-add alternate delivery days settings
 
