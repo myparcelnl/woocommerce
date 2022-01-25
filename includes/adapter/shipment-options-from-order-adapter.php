@@ -27,6 +27,7 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
         $this->age_check         = $this->isAgeCheckFromOptions($options, $shipmentOptionsAdapter);
         $this->insurance         = $this->isInsuranceFromOptions($options, $shipmentOptionsAdapter);
         $this->label_description = $this->getLabelDescriptionFromOptions($options, $shipmentOptionsAdapter);
+        $this->same_day_delivery = $this->isSameDayDeliveryFromOptions($options, $shipmentOptionsAdapter);
     }
 
     /**
@@ -43,6 +44,25 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
 
         if ($shipmentOptionsAdapter) {
             return $shipmentOptionsAdapter->hasSignature();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array                               $options
+     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
+     *
+     * @return bool|null
+     */
+    private function isSameDayDeliveryFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
+    {
+        if (array_key_exists('same_day_delivery', $options)) {
+            return (bool) $options['same_day_delivery'];
+        }
+
+        if ($shipmentOptionsAdapter) {
+            return $shipmentOptionsAdapter->isSameDayDelivery();
         }
 
         return null;
