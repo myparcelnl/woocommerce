@@ -1546,7 +1546,8 @@ class WCMP_Export
             $orderSettings          = new OrderSettings($wcOrder);
             $deliveryOptions        = $orderSettings->getDeliveryOptions();
             $labelDescriptionFormat = new LabelDescriptionFormat($wcOrder, $orderSettings, $deliveryOptions);
-          
+            $totalWeight            = WCMP_Export_Consignments::getTotalWeight($orderSettings);
+
             $deliveryOptions->getShipmentOptions()->setSignature($orderSettings->hasSignature());
             $deliveryOptions->getShipmentOptions()->setInsurance($orderSettings->getInsuranceAmount());
             $deliveryOptions->getShipmentOptions()->setAgeCheck($orderSettings->hasAgeCheck());
@@ -1562,7 +1563,8 @@ class WCMP_Export
                 ->setRecipient($orderSettings->getShippingRecipient())
                 ->setOrderDate($wcOrder->get_date_created() ?? new DateTime())
                 ->setPickupLocation($orderSettings->getPickupLocation())
-                ->setExternalIdentifier($orderId);
+                ->setExternalIdentifier($orderId)
+                ->setWeight($totalWeight);
 
             $orderLines = new Collection();
 
