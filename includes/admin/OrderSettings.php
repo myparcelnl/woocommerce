@@ -550,11 +550,11 @@ class OrderSettings
      */
     private function setOnlyRecipient(): void
     {
-        $settingName                      = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT;
-        $onlyRecipientFromShipmentOptions = $this->shipmentOptions->hasOnlyRecipient();
-        $onlyRecipientFromSettings        = (bool)WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
-
-        $this->onlyRecipient = $onlyRecipientFromShipmentOptions ?: $onlyRecipientFromSettings;
+        $this->onlyRecipient = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->shipmentOptions->hasOnlyRecipient(),
+            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
+            $this->carrier
+        );
     }
 
     /**
