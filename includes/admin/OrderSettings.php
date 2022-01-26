@@ -574,11 +574,11 @@ class OrderSettings
      */
     private function setSignature(): void
     {
-        $settingName                  = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE;
-        $signatureFromShipmentOptions = $this->shipmentOptions->hasSignature();
-        $signatureFromSettings        = (bool) WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
-
-        $this->signature = $signatureFromShipmentOptions ?: $signatureFromSettings;
+        $this->signature = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
+            $this->shipmentOptions->hasSignature(),
+            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+            $this->carrier
+        );
     }
 
     /**

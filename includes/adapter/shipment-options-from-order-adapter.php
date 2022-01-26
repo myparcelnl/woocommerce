@@ -38,15 +38,10 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isSignatureFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
     {
-        if (array_key_exists('signature', $options)) {
-            return (bool) $options['signature'];
-        }
+        $valueFromOptions = (bool) ($options['signature'] ?? null);
+        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->hasSignature() : null;
 
-        if ($shipmentOptionsAdapter) {
-            return $shipmentOptionsAdapter->hasSignature();
-        }
-
-        return null;
+        return $valueFromOptions ?? $valueFromAdapter;
     }
 
     /**
@@ -57,15 +52,10 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isSameDayDeliveryFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
     {
-        if (array_key_exists('same_day_delivery', $options)) {
-            return (bool) $options['same_day_delivery'];
-        }
+        $valueFromOptions = (bool) ($options['same_day_delivery'] ?? null);
+        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->isSameDayDelivery() : null;
 
-        if ($shipmentOptionsAdapter) {
-            return $shipmentOptionsAdapter->isSameDayDelivery();
-        }
-
-        return null;
+        return $valueFromOptions ?? $valueFromAdapter;
     }
 
     /**
@@ -76,14 +66,10 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isOnlyRecipientFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
     {
-        if (array_key_exists('only_recipient', $options)) {
-            return (bool) $options['only_recipient'];
-        }
-        if ($shipmentOptionsAdapter) {
-            return $shipmentOptionsAdapter->hasOnlyRecipient();
-        }
+        $valueFromOptions = (bool) ($options['only_recipient'] ?? null);
+        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->hasOnlyRecipient() : null;
 
-        return null;
+        return $valueFromOptions ?? $valueFromAdapter;
     }
 
     /**
@@ -94,15 +80,10 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isLargeFormatFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
     {
-        if (array_key_exists('large_format', $options)) {
-            return (bool) $options['large_format'];
-        }
+        $valueFromOptions = (bool) ($options['large_format'] ?? null);
+        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->hasLargeFormat() : null;
 
-        if ($shipmentOptionsAdapter) {
-            return $shipmentOptionsAdapter->hasLargeFormat();
-        }
-
-        return null;
+        return $valueFromOptions ?? $valueFromAdapter;
     }
 
     /**
@@ -113,15 +94,10 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isReturnShipmentFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
     {
-        if (array_key_exists('return_shipment', $options)) {
-            return (bool) $options['return_shipment'];
-        }
+        $valueFromOptions = (bool) ($options['return_shipment'] ?? null);
+        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->isReturn() : null;
 
-        if ($shipmentOptionsAdapter) {
-            return $shipmentOptionsAdapter->isReturn();
-        }
-
-        return null;
+        return $valueFromOptions ?? $valueFromAdapter;
     }
 
     /**
@@ -132,15 +108,10 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isAgeCheckFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
     {
-        if (array_key_exists('age_check', $options)) {
-            return (bool) $options['age_check'];
-        }
+        $valueFromOptions = (bool) ($options['age_check'] ?? null);
+        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->hasAgeCheck() : null;
 
-        if ($shipmentOptionsAdapter) {
-            return $shipmentOptionsAdapter->hasAgeCheck();
-        }
-
-        return null;
+        return $valueFromOptions ?? $valueFromAdapter;
     }
 
     /**
