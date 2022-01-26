@@ -31,12 +31,9 @@ class WCMP_Checkout
         'shipmentOptions.insuredAmount'  => 'shipment_options.insured_amount',
         'shipmentOptions.largeFormat'    => 'shipment_options.large_format',
         'shipmentOptions.onlyRecipient'  => 'shipment_options.only_recipient',
-        'shipmentOptions.returnShipment' => 'shipment_options.return_shipment',
+        'shipmentOptions.returnShipment' => 'shipment_options.return',
     ];
 
-    /**
-     * WCMP_Checkout constructor.
-     */
     public function __construct()
     {
         add_action("wp_enqueue_scripts", [$this, "enqueue_frontend_scripts"], 100);
