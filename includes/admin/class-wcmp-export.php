@@ -1546,7 +1546,6 @@ class WCMP_Export
             $orderSettings          = new OrderSettings($wcOrder);
             $deliveryOptions        = $orderSettings->getDeliveryOptions();
             $labelDescriptionFormat = new LabelDescriptionFormat($wcOrder, $orderSettings, $deliveryOptions);
-            $totalWeight            = WCMP_Export_Consignments::getTotalWeight($orderSettings);
 
             $deliveryOptions->getShipmentOptions()->setSignature($orderSettings->hasSignature());
             $deliveryOptions->getShipmentOptions()->setInsurance($orderSettings->getInsuranceAmount());
@@ -1564,7 +1563,7 @@ class WCMP_Export
                 ->setOrderDate($wcOrder->get_date_created() ?? new DateTime())
                 ->setPickupLocation($orderSettings->getPickupLocation())
                 ->setExternalIdentifier($orderId)
-                ->setWeight($totalWeight);
+                ->setWeight($orderSettings->getTotalWeight());
 
             $orderLines = new Collection();
 

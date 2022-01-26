@@ -16,6 +16,7 @@ use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use WC_Order;
 use WCMP_Data;
 use WCMP_Export;
+use WCMP_Export_Consignments;
 use WCMYPA_Admin;
 use WCMYPA_Settings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -609,6 +610,32 @@ class OrderSettings
     public function getExtraOptions(): array
     {
         return $this->extraOptions;
+    }
+
+    /**
+     * Returns the weight of the order plus the empty parcel weight.
+     *
+     * @return int
+     */
+    public function getTotalWeight(): int
+    {
+        $digitalStampRangeWeight = null;
+        $weight                  = $this->getWeight();
+
+        // Divide the consignment weight by the amount of parcels.
+        $weight /= $this->getColloAmount();
+
+        switch ($this->getPackageType()) {
+            case AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME:
+                $emptyParcelWeight = (float) WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+                $weight            += $emptyParcelWeight;
+                break;
+            case AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME:
+                $digitalStampRangeWeight = $this->getDigitalStampRangeWeight();
+                break;
+        }
+
+        return $digitalStampRangeWeight ?? WCMP_Export::convertWeightToGrams($weight);
     }
 
     /**
