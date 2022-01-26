@@ -108,10 +108,10 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
      */
     private function isAgeCheckFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
     {
-        $valueFromOptions = (bool) ($options['age_check'] ?? null);
+        $valueFromOptions = $options['age_check'] ?? null;
         $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->hasAgeCheck() : null;
 
-        return $valueFromOptions ?? $valueFromAdapter;
+        return (bool) ($valueFromOptions ?? $valueFromAdapter);
     }
 
     /**
