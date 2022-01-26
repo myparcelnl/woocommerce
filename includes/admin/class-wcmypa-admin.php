@@ -1192,7 +1192,7 @@ class WCMYPA_Admin
                 $meta = json_decode(stripslashes($meta), true);
             }
 
-            if ($meta['carrier'] === self::OLD_RED_JE_PAKKETJE_NAME) {
+            if (self::OLD_RED_JE_PAKKETJE_NAME === $meta['carrier']) {
                 $meta['carrier'] = CarrierInstabox::NAME;
             }
 
