@@ -3,6 +3,7 @@
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
@@ -55,6 +56,7 @@ class WCMYPA_Admin
     public const BULK_ACTION_PRINT        = 'wcmp_print';
     public const BULK_ACTION_EXPORT_PRINT = 'wcmp_export_print';
 
+    public const OLD_RED_JE_PAKKETJE_NAME = 'redjepakketje';
     /**
      * @deprecated use weight property in META_SHIPMENT_OPTIONS_EXTRA.
      */
@@ -1190,9 +1192,14 @@ class WCMYPA_Admin
                 $meta = json_decode(stripslashes($meta), true);
             }
 
+            if (self::OLD_RED_JE_PAKKETJE_NAME === $meta['carrier']) {
+                $meta['carrier'] = CarrierInstabox::NAME;
+            }
+
             if (! $meta['carrier'] || ! AccountSettings::getInstance()->isEnabledCarrier($meta['carrier'])) {
                 $meta['carrier'] = (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
             }
+
             $meta['date'] = $meta['date'] ?? '';
 
             try {

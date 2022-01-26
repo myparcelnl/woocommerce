@@ -1,7 +1,7 @@
 <?php
 
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierRedJePakketje;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Collection;
@@ -412,9 +412,9 @@ class WCMP_Checkout
         $carriers = AccountSettings::getInstance()
             ->getEnabledCarriers();
 
-        // Make sure RedJePakketje is displayed first if it's present.
+        // Make sure Instabox is displayed first if it's present.
         return $carriers->sort(static function (AbstractCarrier $carrier) {
-            return CarrierRedJePakketje::NAME <=> $carrier->getName();
+            return CarrierInstabox::NAME <=> $carrier->getName();
         });
     }
 

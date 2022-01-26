@@ -1,6 +1,6 @@
 <?php
 
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierRedJePakketje;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Support\Arr;
 
 if (! defined('ABSPATH')) {
