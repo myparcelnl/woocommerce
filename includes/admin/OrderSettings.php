@@ -570,11 +570,16 @@ class OrderSettings
      */
     private function setReturnShipment(): void
     {
-        $this->returnShipment = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->shipmentOptions->isReturn(),
-            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
-            $this->carrier
-        );
+        $this->returnShipment = false;
+
+        $settingName               = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN;
+        $returnFromShipmentOptions = $this->shipmentOptions->isReturn();
+        $returnFromSettings        = (bool)WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
+        $isPickup                  = $this->deliveryOptions->isPickup();
+
+        if (! $isPickup) {
+            $this->returnShipment = $returnFromShipmentOptions ?: $returnFromSettings;
+        }
     }
 
     /**
