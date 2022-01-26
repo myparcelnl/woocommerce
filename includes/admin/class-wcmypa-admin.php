@@ -1563,8 +1563,8 @@ class WCMYPA_Admin
         $isDigitalStamp       = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $data['package_type'];
 
         if (! $isHomeCountry || ! $isPackage) {
-            $data['shipment_options']['age_check']       = false;
-            $data['shipment_options']['return_shipment'] = false;
+            $data['shipment_options']['age_check'] = false;
+            $data['shipment_options']['return']    = false;
 
             if (! $isBelgium) {
                 $data['shipment_options']['insured']        = false;

@@ -562,11 +562,11 @@ class OrderSettings
      */
     private function setSameDayDelivery(): void
     {
-        $this->sameDayDelivery = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->shipmentOptions->isSameDayDelivery(),
-            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
-            $this->carrier
-        );
+        $settingName                = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY;
+        $sameDayFromShipmentOptions = $this->shipmentOptions->isSameDayDelivery();
+        $sameDayFromSettings        = (bool)WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
+
+        $this->sameDayDelivery = $sameDayFromShipmentOptions ?? $sameDayFromSettings;
     }
 
     /**

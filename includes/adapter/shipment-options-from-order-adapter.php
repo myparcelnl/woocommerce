@@ -9,109 +9,63 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
 {
     private const DEFAULT_INSURANCE = 0;
 
+    private const PROPERTY_SHIPMENT_OPTIONS_METHOD_MAP = [
+        'age_check'         => 'hasAgeCheck',
+        'large_format'      => 'hasLargeFormat',
+        'only_recipient'    => 'hasOnlyRecipient',
+        'return'            => 'isReturn',
+        'same_day_delivery' => 'isSameDayDelivery',
+        'signature'         => 'hasSignature',
+    ];
+
     /**
-     * WCMP_ShipmentOptionsFromOrderAdapter constructor.
-     *
      * @param AbstractDeliveryOptionsAdapter|null $originAdapter
      * @param array                               $inputData
      */
     public function __construct(?AbstractDeliveryOptionsAdapter $originAdapter, array $inputData)
     {
-        $shipmentOptionsAdapter = $originAdapter ? $originAdapter->getShipmentOptions() : null;
-        $options                = $inputData['shipment_options'] ?? $inputData;
+        $adapter = $originAdapter ? $originAdapter->getShipmentOptions() : null;
+        $options = $inputData['shipment_options'] ?? $inputData;
 
-        $this->signature         = $this->isSignatureFromOptions($options, $shipmentOptionsAdapter);
-        $this->only_recipient    = $this->isOnlyRecipientFromOptions($options, $shipmentOptionsAdapter);
-        $this->large_format      = $this->isLargeFormatFromOptions($options, $shipmentOptionsAdapter);
-        $this->return            = $this->isReturnShipmentFromOptions($options, $shipmentOptionsAdapter);
-        $this->age_check         = $this->isAgeCheckFromOptions($options, $shipmentOptionsAdapter);
-        $this->insurance         = $this->isInsuranceFromOptions($options, $shipmentOptionsAdapter);
-        $this->label_description = $this->getLabelDescriptionFromOptions($options, $shipmentOptionsAdapter);
-        $this->same_day_delivery = $this->isSameDayDeliveryFromOptions($options, $shipmentOptionsAdapter);
+        $this->insurance         = $this->isInsuranceFromOptions($options, $adapter);
+        $this->label_description = $this->getLabelDescriptionFromOptions($options, $adapter);
+        $this->setBooleanShipmentOptions($options, $adapter);
     }
 
     /**
-     * @param array                               $options
-     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
-     *
-     * @return bool|null
+     * @param                                                                                  $options
+     * @param  null|\MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter $adapter
      */
-    private function isSignatureFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
+    public function setBooleanShipmentOptions($options, ?AbstractShipmentOptionsAdapter $adapter): void
     {
-        $valueFromOptions = (bool) ($options['signature'] ?? null);
-        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->hasSignature() : null;
+        foreach (self::PROPERTY_SHIPMENT_OPTIONS_METHOD_MAP as $property => $method) {
+            $this->{$property} = $this->getBooleanOption($options, $adapter, $property, $method);
+        }
+    }
+
+    /**
+     * @param  array                                                                           $options
+     * @param  null|\MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter $shipmentOptionsAdapter
+     * @param  string                                                                          $optionKey
+     * @param  string                                                                          $shipmentOptionsMethod
+     *
+     * @return null|bool
+     */
+    private function getBooleanOption(
+        array                           $options,
+        ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter,
+        string                          $optionKey,
+        string                          $shipmentOptionsMethod
+    ): ?bool {
+        $valueFromOptions = null;
+
+        if (array_key_exists($optionKey, $options)) {
+            $valueFromOptions = (bool) $options[$optionKey];
+        }
+
+        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->{$shipmentOptionsMethod}() : null;
 
         return $valueFromOptions ?? $valueFromAdapter;
-    }
-
-    /**
-     * @param array                               $options
-     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
-     *
-     * @return bool|null
-     */
-    private function isSameDayDeliveryFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
-    {
-        $valueFromOptions = (bool) ($options['same_day_delivery'] ?? null);
-        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->isSameDayDelivery() : null;
-
-        return $valueFromOptions ?? $valueFromAdapter;
-    }
-
-    /**
-     * @param array                               $options
-     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
-     *
-     * @return bool|null
-     */
-    private function isOnlyRecipientFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
-    {
-        $valueFromOptions = (bool) ($options['only_recipient'] ?? null);
-        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->hasOnlyRecipient() : null;
-
-        return $valueFromOptions ?? $valueFromAdapter;
-    }
-
-    /**
-     * @param array                               $options
-     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
-     *
-     * @return bool|null
-     */
-    private function isLargeFormatFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
-    {
-        $valueFromOptions = (bool) ($options['large_format'] ?? null);
-        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->hasLargeFormat() : null;
-
-        return $valueFromOptions ?? $valueFromAdapter;
-    }
-
-    /**
-     * @param array                               $options
-     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
-     *
-     * @return bool|null
-     */
-    private function isReturnShipmentFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
-    {
-        $valueFromOptions = (bool) ($options['return_shipment'] ?? null);
-        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->isReturn() : null;
-
-        return $valueFromOptions ?? $valueFromAdapter;
-    }
-
-    /**
-     * @param array                               $options
-     * @param AbstractShipmentOptionsAdapter|null $shipmentOptionsAdapter
-     *
-     * @return bool|null
-     */
-    private function isAgeCheckFromOptions(array $options, ?AbstractShipmentOptionsAdapter $shipmentOptionsAdapter): ?bool
-    {
-        $valueFromOptions = $options['age_check'] ?? null;
-        $valueFromAdapter = $shipmentOptionsAdapter ? $shipmentOptionsAdapter->hasAgeCheck() : null;
-
-        return (bool) ($valueFromOptions ?? $valueFromAdapter);
     }
 
     /**

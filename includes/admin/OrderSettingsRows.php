@@ -37,7 +37,7 @@ class OrderSettingsRows
     private const OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION = "[shipment_options][label_description]";
     private const OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT      = "[shipment_options][large_format]";
     private const OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT    = "[shipment_options][only_recipient]";
-    private const OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT   = "[shipment_options][return_shipment]";
+    private const OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT   = "[shipment_options][return]";
     private const OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY = "[shipment_options][same_day_delivery]";
     private const OPTION_SHIPMENT_OPTIONS_SIGNATURE         = "[shipment_options][signature]";
     private const OPTION_SHIPMENT_OPTIONS_AGE_CHECK         = "[shipment_options][age_check]";
