@@ -301,11 +301,19 @@ class OrderSettings
     {
         $consignment             = ConsignmentFactory::createByCarrierName($this->carrier);
         $localCountryCode        = $consignment->getLocalCountryCode();
-        $this->shippingRecipient = (new RecipientFromWCOrder(
-            $this->order,
-            $localCountryCode,
-            RecipientFromWCOrder::SHIPPING
-        ));
+        try {
+            $this->shippingRecipient = (new RecipientFromWCOrder(
+                $this->order, $localCountryCode, RecipientFromWCOrder::SHIPPING
+            ));
+        } catch (\Exception $exception) {
+            \WCMP_Log::add(
+                sprintf(
+                    'Failed to create shipping recipient from order %s',
+                    (string) $this->order->get_id()
+                ),
+                $exception->getMessage()
+            );
+        }
 
         return $this;
     }
@@ -326,11 +334,19 @@ class OrderSettings
     {
         $consignment            = ConsignmentFactory::createByCarrierName($this->carrier);
         $localCountryCode       = $consignment->getLocalCountryCode();
-        $this->billingRecipient = (new RecipientFromWCOrder(
-            $this->order,
-            $localCountryCode,
-            RecipientFromWCOrder::BILLING
-        ));
+        try {
+            $this->billingRecipient = (new RecipientFromWCOrder(
+                $this->order, $localCountryCode, RecipientFromWCOrder::BILLING
+            ));
+        } catch (\Exception $exception) {
+            \WCMP_Log::add(
+                sprintf(
+                    'Failed to create billing recipient from order %s',
+                    (string) $this->order->get_id()
+                ),
+                $exception->getMessage()
+            );
+        }
 
         return $this;
     }
