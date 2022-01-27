@@ -176,7 +176,7 @@ class OrderSettingsRows
                 'value'     => $orderSettings->getInsuranceAmount(),
                 'condition' => [
                     self::OPTION_SHIPMENT_OPTIONS_INSURED,
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
                 ],
             ];
         }
