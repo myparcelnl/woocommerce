@@ -324,7 +324,7 @@ class WCMP_Export_Consignments
     {
         $this->consignment->setPhysicalProperties(
             [
-                'weight' => $this->orderSettings->getTotalWeight(),
+                'weight' => $this->orderSettings->getColloWeight(),
             ]
         );
     }
@@ -358,7 +358,7 @@ class WCMP_Export_Consignments
      */
     public function validateWeight(): void
     {
-        $colloWeight       = $this->orderSettings->getTotalWeight();
+        $colloWeight       = $this->orderSettings->getColloWeight();
         $maxForPackageType = WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_TYPE[$this->getPackageType()];
         $maxColloWeight    = $maxForPackageType ?? WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_DEFAULT;
 

@@ -613,23 +613,16 @@ class OrderSettings
     }
 
     /**
-     * Returns the weight of the order plus the empty parcel weight.
+     * Returns the weight of a single order plus the empty parcel weight.
      *
      * @return int
      */
-    public function getTotalWeight(): int
-    {
-        $weight = $this->getWeight();
-
-    }
-
     public function getColloWeight(): int
     {
         $packageType             = $this->getPackageType();
         $digitalStampRangeWeight = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType
             ? $this->getDigitalStampRangeWeight() : null;
-        $weight                  = $this->getWeight();
-        $weight                  /= $this->getColloAmount();
+        $weight                  = $this->getWeight() / $this->getColloAmount();
 
         if (AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $packageType) {
             $emptyParcelWeight = (float) WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
