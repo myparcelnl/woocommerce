@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\includes\admin;
 
 defined('ABSPATH') or die();
 
+use Exception;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\PickupLocation;
@@ -16,6 +17,7 @@ use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use WC_Order;
 use WCMP_Data;
 use WCMP_Export;
+use WCMP_Log;
 use WCMYPA_Admin;
 use WCMYPA_Settings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -299,21 +301,7 @@ class OrderSettings
      */
     public function setShippingRecipient(): self
     {
-        $consignment             = ConsignmentFactory::createByCarrierName($this->carrier);
-        $localCountryCode        = $consignment->getLocalCountryCode();
-        try {
-            $this->shippingRecipient = (new RecipientFromWCOrder(
-                $this->order, $localCountryCode, RecipientFromWCOrder::SHIPPING
-            ));
-        } catch (\Exception $exception) {
-            \WCMP_Log::add(
-                sprintf(
-                    'Failed to create shipping recipient from order %s',
-                    (string) $this->order->get_id()
-                ),
-                $exception->getMessage()
-            );
-        }
+        $this->shippingRecipient = $this->createRecipientFromWCOrder();
 
         return $this;
     }
@@ -332,23 +320,38 @@ class OrderSettings
      */
     public function setBillingRecipient(): self
     {
-        $consignment            = ConsignmentFactory::createByCarrierName($this->carrier);
-        $localCountryCode       = $consignment->getLocalCountryCode();
+        $this->billingRecipient = $this->createRecipientFromWCOrder(RecipientFromWCOrder::BILLING);
+
+        return $this;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return \MyParcelNL\Sdk\src\Model\Recipient|null
+     */
+    private function createRecipientFromWCOrder(string $type = RecipientFromWCOrder::SHIPPING): ?Recipient
+    {
         try {
-            $this->billingRecipient = (new RecipientFromWCOrder(
-                $this->order, $localCountryCode, RecipientFromWCOrder::BILLING
+            $consignment             = ConsignmentFactory::createByCarrierName($this->carrier);
+            $localCountryCode        = $consignment->getLocalCountryCode();
+
+            return (new RecipientFromWCOrder(
+                $this->order,
+                $localCountryCode,
+                $type
             ));
-        } catch (\Exception $exception) {
-            \WCMP_Log::add(
+        } catch (Exception $exception) {
+            WCMP_Log::add(
                 sprintf(
-                    'Failed to create billing recipient from order %s',
-                    (string) $this->order->get_id()
+                    'Failed to create recipient from order %d',
+                    $this->order->get_id()
                 ),
                 $exception->getMessage()
             );
         }
 
-        return $this;
+        return null;
     }
 
     /**
