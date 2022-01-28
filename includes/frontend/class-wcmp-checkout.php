@@ -226,6 +226,7 @@ class WCMP_Checkout
 
         return [
             'config' => [
+                'apiBaseUrl'                 => getenv('API_BASE_URL', true) ?: MyParcelRequest::REQUEST_URL,
                 'currency'                   => get_woocommerce_currency(),
                 'locale'                     => 'nl-NL',
                 'platform'                   => 'myparcel',
