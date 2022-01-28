@@ -1389,15 +1389,21 @@ class WCMYPA_Admin
     public function generateThankYouConfirmation(?array $options): ?string
     {
         if ($options) {
-            $htmlHeader = "<h2 class='woocommerce-column__title'> " . __("Delivery information:", "woocommerce-myparcel") . "</h2><table>";
+            $html = '<h2 class="woocommerce-column__title"> ';
+            $html .= __('Delivery information:', 'woocommerce-myparcel');
+            $html .= '</h2><table>';
 
             foreach ($options as $key => $option) {
                 if ($option) {
-                    $htmlHeader .= "<tr><td>$key</td><td>" . __($option, "woocommerce-myparcel") . "</td></tr>";
+                    $html .= '<tr><td>';
+                    $html .= __($key, 'woocommerce-myparcel');
+                    $html .= '</td><td>';
+                    $html .= __($option, 'woocommerce-myparcel');
+                    $html .= '</td></tr>';
                 }
             }
 
-            return $htmlHeader . "</table>";
+            return $html . '</table>';
         }
 
         return null;
