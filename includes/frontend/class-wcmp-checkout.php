@@ -3,6 +3,7 @@
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\Sdk\src\Model\MyParcelRequest;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
@@ -226,6 +227,7 @@ class WCMP_Checkout
 
         return [
             'config' => [
+                'apiBaseUrl'                 => getenv('MYPARCEL_API_BASE_URL', true) ?: MyParcelRequest::REQUEST_URL,
                 'currency'                   => get_woocommerce_currency(),
                 'locale'                     => 'nl-NL',
                 'platform'                   => 'myparcel',
