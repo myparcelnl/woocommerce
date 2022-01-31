@@ -613,7 +613,7 @@ class OrderSettings
     }
 
     /**
-     * Returns the weight of a single order plus the empty parcel weight.
+     * Returns the weight of a single collo plus the empty parcel weight.
      *
      * @return int
      */
