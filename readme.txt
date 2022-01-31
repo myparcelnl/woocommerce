@@ -2,7 +2,7 @@
 Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
-Tested up to: 5.8.0
+Tested up to: 5.9.0
 Stable tag: trunk
 Requires PHP: 7.1
 License: GPLv3 or later
@@ -89,6 +89,13 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 5. MyParcel information on the order details page
 
 == Changelog ==
+
+= 4.9.0 (2022-02-01) =
+* Feat: propagate api url to delivery options (#775) (9656be2)
+* Feat: add same day shipment option for Instabox (#764) (ccd4c1c)
+* Feat: persist notices over requests (#753) (548160d)
+* Fix: do not show insurance amount when irrelevant (#771) (d47a111)
+* refactor: rename Red je Pakketje to Instabox (#767) (ab93339)
 
 = 4.8.2 (2022-01-11) =
 * Fix: **hotfix:** show delivery options prices in order review
