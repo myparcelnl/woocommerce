@@ -10,7 +10,7 @@ use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierRedJePakketje;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WC_Order;
@@ -37,7 +37,8 @@ class OrderSettingsRows
     private const OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION = "[shipment_options][label_description]";
     private const OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT      = "[shipment_options][large_format]";
     private const OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT    = "[shipment_options][only_recipient]";
-    private const OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT   = "[shipment_options][return_shipment]";
+    private const OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT   = "[shipment_options][return]";
+    private const OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY = "[shipment_options][same_day_delivery]";
     private const OPTION_SHIPMENT_OPTIONS_SIGNATURE         = "[shipment_options][signature]";
     private const OPTION_SHIPMENT_OPTIONS_AGE_CHECK         = "[shipment_options][age_check]";
 
@@ -45,12 +46,13 @@ class OrderSettingsRows
      * Maps shipment options in this form to their respective name in the SDK.
      */
     private const SHIPMENT_OPTIONS_ROW_MAP = [
-        self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK       => AbstractConsignment::SHIPMENT_OPTION_AGE_CHECK,
-        self::OPTION_SHIPMENT_OPTIONS_INSURED         => AbstractConsignment::SHIPMENT_OPTION_INSURANCE,
-        self::OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT    => AbstractConsignment::SHIPMENT_OPTION_LARGE_FORMAT,
-        self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT  => AbstractConsignment::SHIPMENT_OPTION_ONLY_RECIPIENT,
-        self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT => AbstractConsignment::SHIPMENT_OPTION_RETURN,
-        self::OPTION_SHIPMENT_OPTIONS_SIGNATURE       => AbstractConsignment::SHIPMENT_OPTION_SIGNATURE,
+        self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK         => AbstractConsignment::SHIPMENT_OPTION_AGE_CHECK,
+        self::OPTION_SHIPMENT_OPTIONS_INSURED           => AbstractConsignment::SHIPMENT_OPTION_INSURANCE,
+        self::OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT      => AbstractConsignment::SHIPMENT_OPTION_LARGE_FORMAT,
+        self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT    => AbstractConsignment::SHIPMENT_OPTION_ONLY_RECIPIENT,
+        self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT   => AbstractConsignment::SHIPMENT_OPTION_RETURN,
+        self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY => AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY,
+        self::OPTION_SHIPMENT_OPTIONS_SIGNATURE         => AbstractConsignment::SHIPMENT_OPTION_SIGNATURE,
     ];
 
     private const CONDITION_DELIVERY_TYPE_DELIVERY = [
@@ -174,6 +176,7 @@ class OrderSettingsRows
                 'value'     => $orderSettings->getInsuranceAmount(),
                 'condition' => [
                     self::OPTION_SHIPMENT_OPTIONS_INSURED,
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
                 ],
             ];
         }
@@ -298,6 +301,16 @@ class OrderSettingsRows
                 ],
             ],
             [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY,
+                'type'      => 'toggle',
+                'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
+                'value'     => $orderSettings->isSameDayDelivery(),
+                'condition' => [
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
+                ],
+            ],
+            [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 'type'      => 'toggle',
                 'label'     => __('insured', 'woocommerce-myparcel'),
@@ -334,7 +347,7 @@ class OrderSettingsRows
         $carriersOptions = [];
 
         foreach ($carriers as $carrier) {
-            if (CarrierRedJePakketje::ID === $carrier->getId() && ! WCMP_Data::isHomeCountry($country)) {
+            if (CarrierInstabox::ID === $carrier->getId() && ! WCMP_Data::isHomeCountry($country)) {
                 continue;
             }
 

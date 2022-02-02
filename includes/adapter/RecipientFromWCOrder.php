@@ -8,6 +8,7 @@ use MyParcelNL\Sdk\src\Helper\SplitStreet;
 use MyParcelNL\Sdk\src\Helper\ValidateStreet;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Recipient;
+use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use WC_Order;
 use WCMYPA_Admin;
 use WCMYPA_Settings;
@@ -121,14 +122,14 @@ class RecipientFromWCOrder extends Recipient
      * @param  \WC_Order $order
      *
      * @return string
-     * @throws \JsonException
+     * @throws \Exception
      */
     private function getEmailAddressFromOrder(WC_Order $order): string
     {
-        $deliveryOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_DELIVERY_OPTIONS);
+        $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
         $emailConnected  = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_EMAIL);
 
-        return $emailConnected || $deliveryOptions['isPickup']
+        return $emailConnected || $deliveryOptions->isPickup()
             ? $order->get_billing_email()
             : '';
     }

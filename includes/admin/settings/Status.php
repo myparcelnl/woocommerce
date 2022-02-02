@@ -7,7 +7,7 @@ namespace MyParcelNL\WooCommerce\includes\admin\settings;
 defined('ABSPATH') or die();
 
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierRedJePakketje;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
@@ -53,7 +53,7 @@ class Status
             $text = __('diagnostics_status_carrier_ready', 'woocommerce-myparcel');
             $type = self::TYPE_SUCCESS;
 
-            if ($carrierClass === CarrierRedJePakketje::class && ! self::getDropOffPoint($carrier)) {
+            if ($carrierClass === CarrierInstabox::class && ! self::getDropOffPoint($carrier)) {
                 $text = WCMP_Settings_Callbacks::getLink(
                     __('diagnostics_status_drop_off_point_missing', 'woocommerce-myparcel'),
                     self::LINK_RETAIL_OVERVIEW

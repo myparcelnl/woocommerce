@@ -1,8 +1,9 @@
 <?php
 
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierRedJePakketje;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\Sdk\src\Model\MyParcelRequest;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
@@ -31,12 +32,9 @@ class WCMP_Checkout
         'shipmentOptions.insuredAmount'  => 'shipment_options.insured_amount',
         'shipmentOptions.largeFormat'    => 'shipment_options.large_format',
         'shipmentOptions.onlyRecipient'  => 'shipment_options.only_recipient',
-        'shipmentOptions.returnShipment' => 'shipment_options.return_shipment',
+        'shipmentOptions.returnShipment' => 'shipment_options.return',
     ];
 
-    /**
-     * WCMP_Checkout constructor.
-     */
     public function __construct()
     {
         add_action("wp_enqueue_scripts", [$this, "enqueue_frontend_scripts"], 100);
@@ -229,6 +227,7 @@ class WCMP_Checkout
 
         return [
             'config' => [
+                'apiBaseUrl'                 => getenv('MYPARCEL_API_BASE_URL', true) ?: MyParcelRequest::REQUEST_URL,
                 'currency'                   => get_woocommerce_currency(),
                 'locale'                     => 'nl-NL',
                 'platform'                   => 'myparcel',
@@ -415,9 +414,9 @@ class WCMP_Checkout
         $carriers = AccountSettings::getInstance()
             ->getEnabledCarriers();
 
-        // Make sure RedJePakketje is displayed first if it's present.
+        // Make sure Instabox is displayed first if it's present.
         return $carriers->sort(static function (AbstractCarrier $carrier) {
-            return CarrierRedJePakketje::NAME <=> $carrier->getName();
+            return CarrierInstabox::NAME <=> $carrier->getName();
         });
     }
 

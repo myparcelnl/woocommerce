@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\includes\admin;
 
 defined('ABSPATH') or die();
 
+use Exception;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\PickupLocation;
@@ -17,6 +18,7 @@ use WC_Order;
 use WCMP_Data;
 use WCMP_Export;
 use WCMP_Export_Consignments;
+use WCMP_Log;
 use WCMYPA_Admin;
 use WCMYPA_Settings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -96,6 +98,11 @@ class OrderSettings
      * @var bool
      */
     private $returnShipment;
+
+    /**
+     * @var bool
+     */
+    private $sameDayDelivery;
 
     /**
      * @var bool
@@ -249,6 +256,14 @@ class OrderSettings
     /**
      * @return bool
      */
+    public function isSameDayDelivery(): bool
+    {
+        return $this->sameDayDelivery;
+    }
+
+    /**
+     * @return bool
+     */
     public function hasSignature(): bool
     {
         return $this->signature;
@@ -270,6 +285,7 @@ class OrderSettings
         $this->setLargeFormat();
         $this->setOnlyRecipient();
         $this->setReturnShipment();
+        $this->setSameDayDelivery();
         $this->setSignature();
 
         $this->setInsuranceData();
@@ -286,13 +302,7 @@ class OrderSettings
      */
     public function setShippingRecipient(): self
     {
-        $consignment             = ConsignmentFactory::createByCarrierName($this->carrier);
-        $localCountryCode        = $consignment->getLocalCountryCode();
-        $this->shippingRecipient = (new RecipientFromWCOrder(
-            $this->order,
-            $localCountryCode,
-            RecipientFromWCOrder::SHIPPING
-        ));
+        $this->shippingRecipient = $this->createRecipientFromWCOrder();
 
         return $this;
     }
@@ -311,15 +321,38 @@ class OrderSettings
      */
     public function setBillingRecipient(): self
     {
-        $consignment            = ConsignmentFactory::createByCarrierName($this->carrier);
-        $localCountryCode       = $consignment->getLocalCountryCode();
-        $this->billingRecipient = (new RecipientFromWCOrder(
-            $this->order,
-            $localCountryCode,
-            RecipientFromWCOrder::BILLING
-        ));
+        $this->billingRecipient = $this->createRecipientFromWCOrder(RecipientFromWCOrder::BILLING);
 
         return $this;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return \MyParcelNL\Sdk\src\Model\Recipient|null
+     */
+    private function createRecipientFromWCOrder(string $type = RecipientFromWCOrder::SHIPPING): ?Recipient
+    {
+        try {
+            $consignment             = ConsignmentFactory::createByCarrierName($this->carrier);
+            $localCountryCode        = $consignment->getLocalCountryCode();
+
+            return (new RecipientFromWCOrder(
+                $this->order,
+                $localCountryCode,
+                $type
+            ));
+        } catch (Exception $exception) {
+            WCMP_Log::add(
+                sprintf(
+                    'Failed to create recipient from order %d',
+                    $this->order->get_id()
+                ),
+                $exception->getMessage()
+            );
+        }
+
+        return null;
     }
 
     /**
@@ -547,6 +580,18 @@ class OrderSettings
     /**
      * @return void
      */
+    private function setSameDayDelivery(): void
+    {
+        $settingName                = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY;
+        $sameDayFromShipmentOptions = $this->shipmentOptions->isSameDayDelivery();
+        $sameDayFromSettings        = (bool)WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
+
+        $this->sameDayDelivery = $sameDayFromShipmentOptions ?? $sameDayFromSettings;
+    }
+
+    /**
+     * @return void
+     */
     private function setSignature(): void
     {
         $settingName                  = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE;
@@ -571,11 +616,16 @@ class OrderSettings
      */
     private function setReturnShipment(): void
     {
-        $this->returnShipment = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->shipmentOptions->isReturn(),
-            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
-            $this->carrier
-        );
+        $this->returnShipment = false;
+
+        $settingName               = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN;
+        $returnFromShipmentOptions = $this->shipmentOptions->isReturn();
+        $returnFromSettings        = (bool)WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
+        $isPickup                  = $this->deliveryOptions->isPickup();
+
+        if (! $isPickup) {
+            $this->returnShipment = $returnFromShipmentOptions ?: $returnFromSettings;
+        }
     }
 
     /**
