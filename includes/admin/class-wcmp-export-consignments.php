@@ -103,7 +103,7 @@ class WCMP_Export_Consignments
      *
      * @return mixed
      */
-    private function getSetting(string $name)
+    public static function getSetting(string $name)
     {
         return WCMYPA()->setting_collection->getByName($name);
     }
@@ -189,32 +189,6 @@ class WCMP_Export_Consignments
     }
 
     /**
-     * Returns the weight of the order plus the empty parcel weight.
-     *
-     * @return int
-     */
-    private function getTotalWeight(): int
-    {
-        $digitalStampRangeWeight = null;
-        $weight                  = $this->orderSettings->getWeight();
-
-        // Divide the consignment weight by the amount of parcels.
-        $weight /= $this->orderSettings->getColloAmount();
-
-        switch ($this->orderSettings->getPackageType()) {
-            case AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME:
-                $emptyParcelWeight = (float) $this->getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
-                $weight            += $emptyParcelWeight;
-                break;
-            case AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME:
-                $digitalStampRangeWeight = $this->orderSettings->getDigitalStampRangeWeight();
-                break;
-        }
-
-        return $digitalStampRangeWeight ?? WCMP_Export::convertWeightToGrams($weight);
-    }
-
-    /**
      * @return AbstractConsignment
      */
     public function getConsignment(): AbstractConsignment
@@ -235,7 +209,7 @@ class WCMP_Export_Consignments
      */
     private function getContents(): int
     {
-        return (int) ($this->getSetting("package_contents") ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
+        return (int) (self::getSetting("package_contents") ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
     }
 
     /**
@@ -351,7 +325,7 @@ class WCMP_Export_Consignments
     {
         $this->consignment->setPhysicalProperties(
             [
-                'weight' => $this->getTotalWeight(),
+                'weight' => $this->orderSettings->getColloWeight(),
             ]
         );
     }
@@ -385,7 +359,7 @@ class WCMP_Export_Consignments
      */
     public function validateWeight(): void
     {
-        $colloWeight       = $this->getTotalWeight();
+        $colloWeight       = $this->orderSettings->getColloWeight();
         $maxForPackageType = WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_TYPE[$this->getPackageType()];
         $maxColloWeight    = $maxForPackageType ?? WCMP_Data::MAX_COLLO_WEIGHT_PER_PACKAGE_DEFAULT;
 

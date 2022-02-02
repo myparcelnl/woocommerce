@@ -17,6 +17,7 @@ use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use WC_Order;
 use WCMP_Data;
 use WCMP_Export;
+use WCMP_Export_Consignments;
 use WCMP_Log;
 use WCMYPA_Admin;
 use WCMYPA_Settings;
@@ -659,6 +660,26 @@ class OrderSettings
     public function getExtraOptions(): array
     {
         return $this->extraOptions;
+    }
+
+    /**
+     * Returns the weight of a single collo plus the empty parcel weight.
+     *
+     * @return int
+     */
+    public function getColloWeight(): int
+    {
+        $packageType             = $this->getPackageType();
+        $digitalStampRangeWeight = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType
+            ? $this->getDigitalStampRangeWeight() : null;
+        $weight                  = $this->getWeight() / $this->getColloAmount();
+
+        if (AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $packageType) {
+            $emptyParcelWeight = (float) WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+            $weight            += $emptyParcelWeight;
+        }
+
+        return $digitalStampRangeWeight ?? WCMP_Export::convertWeightToGrams($weight);
     }
 
     /**
