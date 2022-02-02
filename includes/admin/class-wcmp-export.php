@@ -5,6 +5,7 @@ use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\CustomsDeclaration;
@@ -19,6 +20,7 @@ use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormat;
 use MyParcelNL\WooCommerce\Includes\Adapter\OrderLineFromWooCommerce;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
+use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
@@ -1546,6 +1548,10 @@ class WCMP_Export
             $orderSettings          = new OrderSettings($wcOrder);
             $deliveryOptions        = $orderSettings->getDeliveryOptions();
             $labelDescriptionFormat = new LabelDescriptionFormat($wcOrder, $orderSettings, $deliveryOptions);
+            $carrier                = CarrierFactory::createFromName($deliveryOptions->getCarrier());
+            $configuration          = AccountSettings::getInstance()
+                ->getCarrierConfigurationByCarrierId($carrier->getId());
+            $dropOffPoint           = $configuration ? $configuration->getDefaultDropOffPoint() : null;
             $shipmentOptions        = $deliveryOptions->getShipmentOptions();
 
             $shipmentOptions->setSignature($orderSettings->hasSignature());
@@ -1564,7 +1570,8 @@ class WCMP_Export
                 ->setRecipient($orderSettings->getShippingRecipient())
                 ->setOrderDate($wcOrder->get_date_created() ?? new DateTime())
                 ->setPickupLocation($orderSettings->getPickupLocation())
-                ->setExternalIdentifier($orderId);
+                ->setExternalIdentifier($orderId)
+                ->setDropOffPoint($dropOffPoint);
 
             $orderLines = new Collection();
 
