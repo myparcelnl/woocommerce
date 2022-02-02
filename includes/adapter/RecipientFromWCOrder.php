@@ -89,11 +89,15 @@ class RecipientFromWCOrder extends Recipient
 
         $streetParts = $this->separateStreet($addressLine1, $order, $type);
 
+        if (! $streetParts) {
+            return (array) $addressLine1;
+        }
+
         $addressLine2IsNumberSuffix = strlen($addressLine2) < self::MIN_STREET_ADDITIONAL_INFO_LENGTH;
 
         if (! isset($streetParts['number_suffix']) && $addressLine2IsNumberSuffix) {
             $streetParts['number_suffix'] = $order->{"get_{$type}_address_2"}();
-            $addressLine2                  = null;
+            $addressLine2                 = null;
         }
 
         $fullStreet = implode(' ', [
@@ -180,9 +184,13 @@ class RecipientFromWCOrder extends Recipient
             foreach (SplitStreet::BOX_SEPARATOR_BY_REGEX as $boxRegex) {
                 $street = preg_replace('#' . $boxRegex . '([0-9])#', SplitStreet::BOX_NL . ' ' . ltrim('$1'), $street);
             }
+
+            preg_match(ValidateStreet::SPLIT_STREET_REGEX_BE, $street, $separateStreet);
+
+            return $separateStreet;
         }
 
-        preg_match(ValidateStreet::SPLIT_STREET_REGEX_BE, $street, $separateStreet);
+        preg_match(ValidateStreet::SPLIT_STREET_REGEX_NL, $street, $separateStreet);
 
         return $separateStreet;
     }
