@@ -1571,9 +1571,9 @@ class WCMP_Export
                 ->setOrderDate($wcOrder->get_date_created() ?? new DateTime())
                 ->setPickupLocation($orderSettings->getPickupLocation())
                 ->setExternalIdentifier($orderId)
-                ->setWeight($orderSettings->getColloWeight());
+                ->setWeight($orderSettings->getColloWeight())
                 ->setDropOffPoint($dropOffPoint);
-          
+
             $orderLines = new Collection();
 
             foreach ($wcOrder->get_items() as $wcOrderItem) {
