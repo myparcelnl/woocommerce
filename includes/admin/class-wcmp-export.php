@@ -1552,14 +1552,16 @@ class WCMP_Export
             $configuration          = AccountSettings::getInstance()
                 ->getCarrierConfigurationByCarrierId($carrier->getId());
             $dropOffPoint           = $configuration ? $configuration->getDefaultDropOffPoint() : null;
+            $shipmentOptions        = $deliveryOptions->getShipmentOptions();
 
-            $deliveryOptions->getShipmentOptions()->setSignature($orderSettings->hasSignature());
-            $deliveryOptions->getShipmentOptions()->setInsurance($orderSettings->getInsuranceAmount());
-            $deliveryOptions->getShipmentOptions()->setAgeCheck($orderSettings->hasAgeCheck());
-            $deliveryOptions->getShipmentOptions()->setOnlyRecipient($orderSettings->hasOnlyRecipient());
-            $deliveryOptions->getShipmentOptions()->setReturn($orderSettings->hasReturnShipment());
-            $deliveryOptions->getShipmentOptions()->setLargeFormat($orderSettings->hasLargeFormat());
-            $deliveryOptions->getShipmentOptions()->setLabelDescription($labelDescriptionFormat->getFormattedLabelDescription());
+            $shipmentOptions->setSignature($orderSettings->hasSignature());
+            $shipmentOptions->setInsurance($orderSettings->getInsuranceAmount());
+            $shipmentOptions->setAgeCheck($orderSettings->hasAgeCheck());
+            $shipmentOptions->setOnlyRecipient($orderSettings->hasOnlyRecipient());
+            $shipmentOptions->setReturn($orderSettings->hasReturnShipment());
+            $shipmentOptions->setSameDayDelivery($orderSettings->isSameDayDelivery());
+            $shipmentOptions->setLargeFormat($orderSettings->hasLargeFormat());
+            $shipmentOptions->setLabelDescription($labelDescriptionFormat->getFormattedLabelDescription());
 
             $order = (new Order())
                 ->setStatus($wcOrder->get_status())
