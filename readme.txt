@@ -90,6 +90,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.9.1 (2022-02-02) =
+* Fix: **hotfix:** fix error when an address can't be split
+
 = 4.9.0 (2022-02-01) =
 * Feat: propagate api url to delivery options (#775) (9656be2)
 * Feat: add same day shipment option for Instabox (#764) (ccd4c1c)
