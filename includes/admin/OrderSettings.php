@@ -164,10 +164,19 @@ class OrderSettings
 
         $this->setDeliveryOptions($deliveryOptions);
         $this->carrier         = $this->deliveryOptions->getCarrier() ?? (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
-        $this->consignment     = ConsignmentFactory::createFromCarrier(CarrierFactory::create($this->carrier));
         $this->shipmentOptions = $this->deliveryOptions->getShipmentOptions();
         $this->shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
         $this->extraOptions    = WCMYPA_Admin::getExtraOptionsFromOrder($order);
+
+        $this->consignment     = ConsignmentFactory::createFromCarrier(CarrierFactory::create($this->carrier));
+
+        $deliveryOptions = $this->getDeliveryOptions();
+        if ($deliveryOptions->getPackageTypeId()) {
+            $this->consignment->setPackageType($deliveryOptions->getPackageTypeId());
+        }
+        if ($deliveryOptions->getDeliveryTypeId()) {
+            $this->consignment->setDeliveryType($deliveryOptions->getDeliveryTypeId());
+        }
 
         $this->setAllData();
     }
@@ -565,6 +574,23 @@ class OrderSettings
             $insuranceAmount = $this->getCarrierSetting(
                 WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT
             );
+        }
+
+        $consignmentSettingName = AbstractConsignment::SHIPMENT_OPTION_INSURANCE;
+        if ($isInsured
+            && $this->deliveryOptions->isPickup()
+            && ! $this->consignment->canHaveShipmentOption($consignmentSettingName)
+        ) {
+            $this->showNotWithPickupWarning(
+                __(
+                    self::OPTION_TRANSLATION_STRINGS[$consignmentSettingName] ?? $consignmentSettingName,
+                    'woocommerce-myparcel'
+                )
+            );
+            $this->insured         = false;
+            $this->insuranceAmount = 0;
+
+            return;
         }
 
         $this->insured         = $isInsured;
