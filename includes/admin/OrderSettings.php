@@ -163,14 +163,14 @@ class OrderSettings
         $this->order = $order;
 
         $this->setDeliveryOptions($deliveryOptions);
-        $this->carrier         = $this->deliveryOptions->getCarrier() ?? (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
-        $this->shipmentOptions = $this->deliveryOptions->getShipmentOptions();
         $this->shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
         $this->extraOptions    = WCMYPA_Admin::getExtraOptionsFromOrder($order);
 
-        $this->consignment     = ConsignmentFactory::createFromCarrier(CarrierFactory::create($this->carrier));
-
         $deliveryOptions = $this->getDeliveryOptions();
+        $this->carrier         = $deliveryOptions->getCarrier() ?? (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
+        $this->consignment     = ConsignmentFactory::createFromCarrier(CarrierFactory::create($this->carrier));
+        $this->shipmentOptions = $deliveryOptions->getShipmentOptions();
+
         if ($deliveryOptions->getPackageTypeId()) {
             $this->consignment->setPackageType($deliveryOptions->getPackageTypeId());
         }
@@ -644,14 +644,14 @@ class OrderSettings
 
         if ($returnValue
             && $this->deliveryOptions->isPickup()
-            && ! $this->consignment->canHaveShipmentOption($consignmentSettingName)) {
+            && ! $this->consignment->canHaveShipmentOption($consignmentSettingName)
+        ) {
             $this->showNotWithPickupWarning(
                 __(
                     self::OPTION_TRANSLATION_STRINGS[$consignmentSettingName] ?? $consignmentSettingName,
                     'woocommerce-myparcel'
                 )
             );
-
             $returnValue = false;
         }
 
@@ -738,7 +738,8 @@ class OrderSettings
     /**
      * @param string $translatedOptionDesignation human understandable string denoting the concerned option
      */
-    private function showNotWithPickupWarning(string $translatedOptionDesignation): void {
+    private function showNotWithPickupWarning(string $translatedOptionDesignation): void
+    {
         Messages::showAdminNotice(
             sprintf(
                 __('warning_removed_disallowed_delivery_option', 'woocommerce-myparcel'),
