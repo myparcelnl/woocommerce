@@ -34,6 +34,15 @@ class WCMP_Checkout
         'shipmentOptions.onlyRecipient'  => 'shipment_options.only_recipient',
         'shipmentOptions.returnShipment' => 'shipment_options.return',
     ];
+    public const DAYS_TO_NUMBER_MAP        = [
+        'Monday'    => '1',
+        'Tuesday'   => '2',
+        'Wednesday' => '3',
+        'Thursday'  => '4',
+        'Friday'    => '5',
+        'Saturday'  => '6',
+        'Sunday'    => '7',
+    ];
 
     public function __construct()
     {
@@ -69,7 +78,7 @@ class WCMP_Checkout
             );
         }
 
-        // Don"t load the delivery options scripts if it"s disabled
+        // Don't load the delivery options scripts if it's disabled
         if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
             return;
         }
@@ -236,6 +245,7 @@ class WCMP_Checkout
                 'pickupLocationsDefaultView' => self::getPickupLocationsDefaultView(),
                 'priceStandardDelivery'      => $this->useTotalPrice() ? $chosenShippingMethodPrice : null,
                 'carrierSettings'            => $carrierSettings,
+                'sameDayDelivery'            => $this->shouldShowSameDayDelivery(),
             ],
             'strings' => [
                 'addressNotFound'       => __('Address details are not entered', 'woocommerce-myparcel'),
@@ -275,11 +285,7 @@ class WCMP_Checkout
     {
         $priceFormat = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
 
-        if (! isset($priceFormat) || WCMP_Settings_Data::DISPLAY_TOTAL_PRICE === $priceFormat){
-            return true;
-        }
-
-        return false;
+        return ! isset($priceFormat) || WCMP_Settings_Data::DISPLAY_TOTAL_PRICE === $priceFormat;
     }
 
     /**
@@ -317,13 +323,12 @@ class WCMP_Checkout
     /**
      * Save delivery options to order when used
      *
-     * @param int   $order_id
-     * @param array $posted
+     * @param  int $order_id
      *
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
-    public static function save_delivery_options($order_id)
+    public static function save_delivery_options(int $order_id): void
     {
         $order = WCX::get_order($order_id);
 
@@ -465,7 +470,7 @@ class WCMP_Checkout
      * Split a <rateId>:<instanceId> string into an array. If there is no instanceId, the second array element will be
      * null.
      *
-     * @param $shippingMethod
+     * @param  string $shippingMethod
      *
      * @return array
      */
@@ -529,6 +534,7 @@ class WCMP_Checkout
            'dropOffDelay'          => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName', false],
            'fridayCutoffTime'      => [WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName', false],
            'saturdayCutoffTime'    => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME, 'getStringByName', false],
+           'sameDayDeliveryFee'    => [WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_FEE, false]
         ];
     }
 
@@ -562,6 +568,20 @@ class WCMP_Checkout
         }
 
         return apply_filters("wc_myparcel_show_delivery_options", $showDeliveryOptions);
+    }
+
+    private function shouldShowSameDayDelivery(): bool
+    {
+        $settingCollection             = WCMYPA()->setting_collection->where('carrier', CarrierInstabox::NAME);
+        $dropOffDays                   = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS);
+        $sameDayFromSettings           = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY);
+        $sameDayCutoffTimeFromSettings = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME);
+        $cutOffTimeFromSettings        = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME);
+        $beforeSameDayCutOffTime       = time() < strtotime($sameDayCutoffTimeFromSettings);
+        $afterRegularCutOffTime        = strtotime($cutOffTimeFromSettings) < time();
+        $tomorrowIsDropOffDay          = in_array(self::DAYS_TO_NUMBER_MAP[date('l')], $dropOffDays, true);
+
+        return $sameDayFromSettings && $tomorrowIsDropOffDay && ($beforeSameDayCutOffTime || $afterRegularCutOffTime);
     }
 
     /**

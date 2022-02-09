@@ -229,6 +229,20 @@ class CarrierSettings
                     'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ];
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME,
+                    'type'      => 'time',
+                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
+                    'label'     => __('shipment_options_same_day_delivery_cutoff_time', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_same_day_delivery_cutoff_time_help_text', 'woocommerce-myparcel'),
+                    'default'   => '9:00',
+                ];
+                $settings[] = WCMP_Settings_Data::getFeeField(
+                    WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_FEE,
+                    [
+                        WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
+                    ]
+                );
                 break;
             case AbstractConsignment::SHIPMENT_OPTION_SIGNATURE:
                 $settings[] = [

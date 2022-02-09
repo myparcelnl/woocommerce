@@ -1749,7 +1749,7 @@ class WCMP_Export
 
         $collection->addConsignment($consignment);
 
-        $this->addreturnInTheBox($collection);
+        $this->addReturnInTheBox($collection);
     }
 
     /**
