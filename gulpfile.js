@@ -21,8 +21,8 @@ const PHP_FILES = ['*.php', 'migration/**/*.php', 'templates/**/*.php', 'include
  *
  * @param {Function} callback
  * @param {ExecException} err
- * @param {String} stdout
- * @param {String} stderr
+ * @param {string} stdout
+ * @param {string} stderr
  */
 function execCallback(callback, err, stdout, stderr) {
   /* eslint-disable no-console */
@@ -63,7 +63,7 @@ gulp.task('build:js', () => gulp.src('src/js/**/*.js', {read: false})
 /**
  * Copy the delivery options js.
  */
-gulp.task('copy:delivery-options', () => gulp.src('node_modules/@myparcel/delivery-options/dist/myparcel.js')
+gulp.task('copy:delivery-options', () => gulp.src(require.resolve('@myparcel/delivery-options/dist/myparcel.js'))
   .pipe(gulp.dest('assets/js')));
 
 /**
@@ -151,10 +151,6 @@ gulp.task('update:composer', (callback) => {
   exec('composer update', (...params) => execCallback(callback, ...params));
 });
 
-gulp.task('update:npm', (callback) => {
-  exec('npm update @myparcel/delivery-options', (...params) => execCallback(callback, ...params));
-});
-
 /**
  * The default task.
  */
@@ -165,12 +161,8 @@ const build = gulp.series(
     'build:scss',
     'copy',
     'translations:import',
-    // 'translations:pot',
     'update:composer',
-    gulp.series(
-      'update:npm',
-      'copy:delivery-options',
-    ),
+    'copy:delivery-options',
   ),
 );
 
@@ -184,7 +176,6 @@ const watch = () => {
   gulp.watch(['node_modules/@myparcel/delivery-options/**/*'], null, gulp.series('copy:delivery-options'));
   gulp.watch(['src/scss/**/*'], null, gulp.series('build:scss'));
   gulp.watch(['composer.json'], null, gulp.series('update:composer'));
-  gulp.watch(['package.json'], null, gulp.series('update:npm'));
 };
 
 gulp.task('watch', gulp.series(

@@ -6,3 +6,5 @@ vendor
 *.zip
 .DS_Store
 languages/
+
+yarn-error.log
