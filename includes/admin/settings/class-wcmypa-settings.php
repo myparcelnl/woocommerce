@@ -76,6 +76,7 @@ class WCMYPA_Settings
     public const SETTING_ONLY_RECIPIENT_TITLE                  = 'only_recipient_title';
     public const SETTING_SIGNATURE_TITLE                       = 'signature_title';
     public const SETTING_STANDARD_TITLE                        = 'standard_title';
+    public const SETTING_SAME_DAY_TITLE                        = 'same_day_title';
     public const SETTING_USE_SPLIT_ADDRESS_FIELDS              = 'use_split_address_fields';
 
     /*
@@ -84,38 +85,41 @@ class WCMYPA_Settings
      * e.g. cutoff_time => postnl_cutoff_time/dpd_cutoff_time
      */
     // Defaults
-    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE                = 'export_signature';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT           = 'export_only_recipient';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT             = 'export_large_format';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT = 'export_large_format_from_weight';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK                = 'export_age_check';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN                   = 'export_return_shipments';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY        = 'export_same_day_delivery';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED                  = 'export_insured';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT           = 'export_insured_amount';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE       = 'export_insured_from_price';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE           = 'export_insured_for_be';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE                     = 'export_signature';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT                = 'export_only_recipient';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT                  = 'export_large_format';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT      = 'export_large_format_from_weight';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK                     = 'export_age_check';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN                        = 'export_return_shipments';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY             = 'export_same_day_delivery';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED                       = 'export_insured';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT                = 'export_insured_amount';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE            = 'export_insured_from_price';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE                = 'export_insured_for_be';
 
 
     // Delivery options settings
-    public const SETTING_CARRIER_CUTOFF_TIME              = 'cutoff_time';
-    public const SETTING_CARRIER_DELIVERY_DAYS_WINDOW     = 'delivery_days_window';
-    public const SETTING_CARRIER_DELIVERY_ENABLED         = 'delivery_enabled';
-    public const SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE = 'allow_show_delivery_date';
-    public const SETTING_CARRIER_DROP_OFF_DAYS            = 'drop_off_days';
-    public const SETTING_CARRIER_DROP_OFF_DELAY           = 'drop_off_delay';
-    public const SETTING_CARRIER_PICKUP_ENABLED           = 'pickup_enabled';
-    public const SETTING_CARRIER_PICKUP_FEE               = 'pickup_fee';
-    public const SETTING_CARRIER_PICKUP_TITLE             = 'pickup_title';
-    public const SETTING_CARRIER_ONLY_RECIPIENT_ENABLED   = 'only_recipient_enabled';
-    public const SETTING_CARRIER_ONLY_RECIPIENT_FEE       = 'only_recipient_fee';
-    public const SETTING_CARRIER_SIGNATURE_ENABLED        = 'signature_enabled';
-    public const SETTING_CARRIER_SIGNATURE_FEE            = 'signature_fee';
-    public const SETTING_CARRIER_DELIVERY_MORNING_ENABLED = 'delivery_morning_enabled';
-    public const SETTING_CARRIER_DELIVERY_MORNING_FEE     = 'delivery_morning_fee';
-    public const SETTING_CARRIER_DELIVERY_EVENING_ENABLED = 'delivery_evening_enabled';
-    public const SETTING_CARRIER_DELIVERY_EVENING_FEE     = 'delivery_evening_fee';
-    public const SETTING_CARRIER_DELIVERY_STANDARD_FEE    = 'delivery_standard_fee';
+    public const SETTING_CARRIER_CUTOFF_TIME                   = 'cutoff_time';
+    public const SETTING_CARRIER_DELIVERY_DAYS_WINDOW          = 'delivery_days_window';
+    public const SETTING_CARRIER_DELIVERY_ENABLED              = 'delivery_enabled';
+    public const SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE      = 'allow_show_delivery_date';
+    public const SETTING_CARRIER_DROP_OFF_DAYS                 = 'drop_off_days';
+    public const SETTING_CARRIER_DROP_OFF_DELAY                = 'drop_off_delay';
+    public const SETTING_CARRIER_PICKUP_ENABLED                = 'pickup_enabled';
+    public const SETTING_CARRIER_PICKUP_FEE                    = 'pickup_fee';
+    public const SETTING_CARRIER_PICKUP_TITLE                  = 'pickup_title';
+    public const SETTING_CARRIER_ONLY_RECIPIENT_ENABLED        = 'only_recipient_enabled';
+    public const SETTING_CARRIER_ONLY_RECIPIENT_FEE            = 'only_recipient_fee';
+    public const SETTING_CARRIER_SIGNATURE_ENABLED             = 'signature_enabled';
+    public const SETTING_CARRIER_SIGNATURE_FEE                 = 'signature_fee';
+    public const SETTING_CARRIER_DELIVERY_MORNING_ENABLED      = 'delivery_morning_enabled';
+    public const SETTING_CARRIER_DELIVERY_MORNING_FEE          = 'delivery_morning_fee';
+    public const SETTING_CARRIER_DELIVERY_EVENING_ENABLED      = 'delivery_evening_enabled';
+    public const SETTING_CARRIER_DELIVERY_EVENING_FEE          = 'delivery_evening_fee';
+    public const SETTING_CARRIER_DELIVERY_STANDARD_FEE         = 'delivery_standard_fee';
+    public const SETTING_CARRIER_SAME_DAY_DELIVERY             = 'same_day_delivery';
+    public const SETTING_CARRIER_SAME_DAY_DELIVERY_CUTOFF_TIME = 'same_day_delivery_cutoff_time';
+    public const SETTING_CARRIER_SAME_DAY_DELIVERY_FEE         = 'same_day_delivery_fee';
 
     // Saturday delivery
     // TODO; Currently not implemented
