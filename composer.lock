@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6433ac7b073e68cc21cf63ea6e8c0566",
+    "content-hash": "91dc181f194567e96795ab4738f7b8e0",
     "packages": [
         {
             "name": "myparcelnl/sdk",
-            "version": "7.0.0",
+            "version": "7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "890a4a3a3144a7c74a5c4fac7cff4309c1c72762"
+                "reference": "719b800cfd0dc45855eec8547ca9926e65a5013b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/890a4a3a3144a7c74a5c4fac7cff4309c1c72762",
-                "reference": "890a4a3a3144a7c74a5c4fac7cff4309c1c72762",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/719b800cfd0dc45855eec8547ca9926e65a5013b",
+                "reference": "719b800cfd0dc45855eec8547ca9926e65a5013b",
                 "shasum": ""
             },
             "require": {
@@ -31,8 +31,8 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "MyParcelNL\\Sdk\\src\\": "src",
-                    "MyParcelNL\\Sdk\\": "src"
+                    "MyParcelNL\\Sdk\\": "src",
+                    "MyParcelNL\\Sdk\\src\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -68,9 +68,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v7.0.0"
+                "source": "https://github.com/myparcelnl/sdk/tree/v7.1.0"
             },
-            "time": "2022-02-01T13:49:21+00:00"
+            "time": "2022-02-09T15:33:36+00:00"
         }
     ],
     "packages-dev": [],

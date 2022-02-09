@@ -1,3 +1,17 @@
+## [4.10.0-alpha.1](https://github.com/myparcelnl/woocommerce/compare/v4.9.1...v4.10.0-alpha.1) (2022-02-09)
+
+
+### Features
+
+* **orders:** add dropoff point to order ([#770](https://github.com/myparcelnl/woocommerce/issues/770)) ([96d0af9](https://github.com/myparcelnl/woocommerce/commit/96d0af925ee41b8f1d052809d9946aca56f0a83c))
+* **orders:** show the export mode option ([#788](https://github.com/myparcelnl/woocommerce/issues/788)) ([8d292f6](https://github.com/myparcelnl/woocommerce/commit/8d292f6a75ad99fa17f3990531eea98c467463ec))
+
+
+### Bug Fixes
+
+* display ordergrid even when an address is faulty ([#772](https://github.com/myparcelnl/woocommerce/issues/772)) ([8b8ffb5](https://github.com/myparcelnl/woocommerce/commit/8b8ffb50e287c4c6755daa4b17fc835df6aada21))
+* **orders:** add weight when exporting orders ([#769](https://github.com/myparcelnl/woocommerce/issues/769)) ([6402741](https://github.com/myparcelnl/woocommerce/commit/6402741745f95f1a7afd8a96685d8bde649968de))
+
 ### [4.9.2](https://github.com/myparcelnl/woocommerce/compare/v4.9.1...v4.9.2) (2022-02-16)
 
 
