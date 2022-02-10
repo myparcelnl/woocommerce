@@ -221,7 +221,7 @@ class WCMP_Checkout
 
             $settingsByCarrier = $settings->where('carrier', $carrierName);
 
-            foreach (self::getDeliveryOptionsConfigMap() as $key => $setting) {
+            foreach ($this->getDeliveryOptionsConfigMap() as $key => $setting) {
                 [$settingName, $function, $addBasePrice] = $setting;
 
                 $value = $settingsByCarrier->{$function}($settingName);
@@ -234,6 +234,8 @@ class WCMP_Checkout
             }
         }
 
+        $carrierSettings['instabox']['allowSameDayDelivery'] = $this->shouldShowSameDayDelivery();
+
         return [
             'config' => [
                 'apiBaseUrl'                 => getenv('MYPARCEL_API_BASE_URL', true) ?: MyParcelRequest::REQUEST_URL,
@@ -245,7 +247,6 @@ class WCMP_Checkout
                 'pickupLocationsDefaultView' => self::getPickupLocationsDefaultView(),
                 'priceStandardDelivery'      => $this->useTotalPrice() ? $chosenShippingMethodPrice : null,
                 'carrierSettings'            => $carrierSettings,
-                'sameDayDelivery'            => $this->shouldShowSameDayDelivery(),
             ],
             'strings' => [
                 'addressNotFound'       => __('Address details are not entered', 'woocommerce-myparcel'),
@@ -508,7 +509,7 @@ class WCMP_Checkout
     /**
      * @return array
      */
-    private static function getDeliveryOptionsConfigMap(): array
+    private function getDeliveryOptionsConfigMap(): array
     {
         return [
            'allowDeliveryOptions'  => [WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED, 'isEnabled', false],
@@ -534,7 +535,7 @@ class WCMP_Checkout
            'dropOffDelay'          => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName', false],
            'fridayCutoffTime'      => [WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName', false],
            'saturdayCutoffTime'    => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME, 'getStringByName', false],
-           'sameDayDeliveryFee'    => [WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_FEE, false]
+           'priceSameDayDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_FEE, 'getPriceByName', false],
         ];
     }
 
@@ -570,18 +571,35 @@ class WCMP_Checkout
         return apply_filters("wc_myparcel_show_delivery_options", $showDeliveryOptions);
     }
 
+    /**
+     * @return bool
+     */
     private function shouldShowSameDayDelivery(): bool
     {
-        $settingCollection             = WCMYPA()->setting_collection->where('carrier', CarrierInstabox::NAME);
-        $dropOffDays                   = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS);
-        $sameDayFromSettings           = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY);
-        $sameDayCutoffTimeFromSettings = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME);
-        $cutOffTimeFromSettings        = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME);
-        $beforeSameDayCutOffTime       = time() < strtotime($sameDayCutoffTimeFromSettings);
-        $afterRegularCutOffTime        = strtotime($cutOffTimeFromSettings) < time();
-        $tomorrowIsDropOffDay          = in_array(self::DAYS_TO_NUMBER_MAP[date('l')], $dropOffDays, true);
+        $settingCollection    = WCMYPA()->setting_collection->where('carrier', CarrierInstabox::NAME);
+        $instaboxIsActive     = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED);
+        $dropOffDays          = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS);
+        $sameDayFromSettings  = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY);
+        $isInSameDayTimeSlot    = $this->isInSameDayTimeSlot();
+        $tomorrowIsDropOffDay = in_array(self::DAYS_TO_NUMBER_MAP[date('l')], $dropOffDays, true);
 
-        return $sameDayFromSettings && $tomorrowIsDropOffDay && ($beforeSameDayCutOffTime || $afterRegularCutOffTime);
+        return $instaboxIsActive && $sameDayFromSettings && $tomorrowIsDropOffDay && $isInSameDayTimeSlot;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isInSameDayTimeSlot(): bool
+    {
+        $settingCollection               = WCMYPA()->setting_collection->where('carrier', CarrierInstabox::NAME);
+        $sameDayCutoffTimeFromSettings   = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME);
+        $cutOffTimeFromSettings          = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME);
+        $now                             = time();
+        $sameDayCutOffBeforeNormalCutOff = strtotime($sameDayCutoffTimeFromSettings) < strtotime($cutOffTimeFromSettings);
+        $beforeSameDayCutOffTime         = $now < strtotime($sameDayCutoffTimeFromSettings);
+        $afterRegularCutOffTime          = strtotime($cutOffTimeFromSettings) < $now;
+
+        return ($beforeSameDayCutOffTime && $afterRegularCutOffTime) || ($sameDayCutOffBeforeNormalCutOff && $beforeSameDayCutOffTime);
     }
 
     /**
