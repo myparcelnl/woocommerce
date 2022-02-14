@@ -34,15 +34,6 @@ class WCMP_Checkout
         'shipmentOptions.onlyRecipient'  => 'shipment_options.only_recipient',
         'shipmentOptions.returnShipment' => 'shipment_options.return',
     ];
-    public const DAYS_TO_NUMBER_MAP        = [
-        'Monday'    => '1',
-        'Tuesday'   => '2',
-        'Wednesday' => '3',
-        'Thursday'  => '4',
-        'Friday'    => '5',
-        'Saturday'  => '6',
-        'Sunday'    => '7',
-    ];
 
     public function __construct()
     {
@@ -232,9 +223,9 @@ class WCMP_Checkout
 
                 Arr::set($carrierSettings, "$carrierName.$key", $value);
             }
-        }
 
-        $carrierSettings['instabox']['allowSameDayDelivery'] = $this->shouldShowSameDayDelivery();
+            $carrierSettings[$carrierName]['allowSameDayDelivery'] = $this->shouldShowSameDayDelivery($carrierName);
+        }
 
         return [
             'config' => [
@@ -573,27 +564,32 @@ class WCMP_Checkout
     }
 
     /**
+     * @param  string $carrierName
+     *
      * @return bool
      */
-    private function shouldShowSameDayDelivery(): bool
+    private function shouldShowSameDayDelivery(string $carrierName): bool
     {
-        $settingCollection    = WCMYPA()->setting_collection->where('carrier', CarrierInstabox::NAME);
-        $instaboxIsActive     = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED);
+        $settingCollection    = WCMYPA()->setting_collection->where('carrier', $carrierName);
+        $carrierIsActive      = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED);
         $dropOffDays          = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS);
         $sameDayFromSettings  = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY);
-        $isInSameDayTimeSlot    = $this->isInSameDayTimeSlot();
-        $tomorrowIsDropOffDay = in_array(self::DAYS_TO_NUMBER_MAP[date('l')], $dropOffDays, true);
+        $isInSameDayTimeSlot  = $this->isInSameDayTimeSlot($carrierName);
+        $tomorrowIsDropOffDay = in_array(date('N'), $dropOffDays, true);
+        $noDropOffDelay       = 0 === $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY);
 
-        return $instaboxIsActive && $sameDayFromSettings && $tomorrowIsDropOffDay && $isInSameDayTimeSlot;
+        return $carrierIsActive && $sameDayFromSettings && $tomorrowIsDropOffDay && $noDropOffDelay && $isInSameDayTimeSlot;
     }
 
     /**
+     * @param  string $carrierName
+     *
      * @return bool
      */
-    private function isInSameDayTimeSlot(): bool
+    private function isInSameDayTimeSlot(string $carrierName): bool
     {
         $date                            = (new DateTime())->setTimezone(new DateTimeZone('Europe/Amsterdam'));
-        $settingCollection               = WCMYPA()->setting_collection->where('carrier', CarrierInstabox::NAME);
+        $settingCollection               = WCMYPA()->setting_collection->where('carrier', $carrierName);
         $sameDayCutoffTimeFromSettings   = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME);
         $cutOffTimeFromSettings          = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME);
         $sameDayCutOffBeforeNormalCutOff = strtotime($sameDayCutoffTimeFromSettings) < strtotime($cutOffTimeFromSettings);
