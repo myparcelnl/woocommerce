@@ -255,6 +255,7 @@ class WCMP_Checkout
                 'deliveryEveningTitle'  => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE),
                 'deliveryMorningTitle'  => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE),
                 'deliveryStandardTitle' => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_STANDARD_TITLE),
+                'deliverySameDayTitle'  => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SAMEDAY_TITLE),
                 'deliveryTitle'         => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_DELIVERY_TITLE),
                 'headerDeliveryOptions' => self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_HEADER_DELIVERY_OPTIONS_TITLE),
                 'houseNumber'           => __('House number', 'woocommerce-myparcel'),
@@ -591,11 +592,12 @@ class WCMP_Checkout
      */
     private function isInSameDayTimeSlot(): bool
     {
+        $date                            = (new DateTime())->setTimezone(new DateTimeZone('Europe/Amsterdam'));
         $settingCollection               = WCMYPA()->setting_collection->where('carrier', CarrierInstabox::NAME);
         $sameDayCutoffTimeFromSettings   = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME);
         $cutOffTimeFromSettings          = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME);
-        $now                             = time();
         $sameDayCutOffBeforeNormalCutOff = strtotime($sameDayCutoffTimeFromSettings) < strtotime($cutOffTimeFromSettings);
+        $now                             = $date->getTimestamp() + $date->getOffset();
         $beforeSameDayCutOffTime         = $now < strtotime($sameDayCutoffTimeFromSettings);
         $afterRegularCutOffTime          = strtotime($cutOffTimeFromSettings) < $now;
 
