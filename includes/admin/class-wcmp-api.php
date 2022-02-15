@@ -211,14 +211,20 @@ class WCMP_API extends WCMP_Rest
                 continue;
             }
 
-            $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
-            $trackTrace   = $shipmentData['track_trace'] ?? null;
+            $shipmentData    = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
+            $trackTraceArray = [];
 
-            WCMP_Export::saveTrackTracesToOrders($collection, $orderId);
+            foreach ($shipmentData as $shipment) {
+                $trackTraceArray[] = $shipment['track_trace'] ?? null;
+            }
+
+            WCMP_Export::addTrackTraceNoteToOrder($orderId, $trackTraceArray);
 
             self::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING);
 
-            ChannelEngine::updateMetaOnExport($order, $trackTrace);
+            $trackTraceCode   = $shipmentData['track_trace'] ?? null;
+
+            ChannelEngine::updateMetaOnExport($order, $trackTraceCode);
         }
 
 
