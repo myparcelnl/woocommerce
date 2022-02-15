@@ -413,7 +413,7 @@ class WCMYPA_Admin
             $orderSettings = new OrderSettings($order);
         } catch (\Exception $exception) {
             WCMP_Log::add(sprintf('Could not get OrderSettings for order %d', $order->get_id()), $exception);
-            printf('<div class="wcmp__shipment-settings-wrapper">⚠ %s</div>', __('Error in order settings or address.'));
+            printf('<div class="wcmp__shipment-settings-wrapper">⚠ %s</div>', __('warning_faulty_order_settings'));
 
             return;
         }
