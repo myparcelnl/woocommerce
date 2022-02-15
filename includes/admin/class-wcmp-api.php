@@ -222,11 +222,9 @@ class WCMP_API extends WCMP_Rest
 
             self::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING);
 
-            $trackTraceCode   = $shipmentData['track_trace'] ?? null;
+            $trackTraceCode = $shipmentData['track_trace'] ?? null;
 
             ChannelEngine::updateMetaOnExport($order, $trackTraceCode);
         }
-
-
     }
 }
