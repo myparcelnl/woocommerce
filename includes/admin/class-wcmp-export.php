@@ -1707,23 +1707,19 @@ class WCMP_Export
     /**
      * Save created track & trace information as meta data to the corresponding order(s).
      *
-     * @param MyParcelCollection $collection
-     * @param array              $order_ids
+     * @param  MyParcelCollection $collection
+     * @param                     $orderId
      */
-    public static function saveTrackTracesToOrders(MyParcelCollection $collection, array $order_ids): void
+    public static function saveTrackTracesToOrders(MyParcelCollection $collection,  $orderId): void
     {
-        foreach ($order_ids as $order_id) {
-            $trackTraces = [];
-
-            foreach ($collection->getConsignmentsByReferenceId($order_id) as $consignment) {
+            foreach ($collection->getConsignmentsByReferenceId((string) $orderId) as $consignment) {
                 /**
                  * @var AbstractConsignment $consignment
                  */
                 $trackTraces[] = $consignment->getBarcode();
             }
 
-            self::addTrackTraceNoteToOrder($order_id, $trackTraces);
-        }
+            self::addTrackTraceNoteToOrder($orderId, $trackTraces);
     }
 
     /**

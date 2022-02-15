@@ -214,11 +214,13 @@ class WCMP_API extends WCMP_Rest
             $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
             $trackTrace   = $shipmentData['track_trace'] ?? null;
 
+            WCMP_Export::saveTrackTracesToOrders($collection, $orderId);
+
             self::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING);
 
             ChannelEngine::updateMetaOnExport($order, $trackTrace);
         }
 
-        WCMP_Export::saveTrackTracesToOrders($collection, $orderIds);
+
     }
 }
