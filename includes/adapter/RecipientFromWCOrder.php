@@ -74,7 +74,7 @@ class RecipientFromWCOrder extends Recipient
         $isNL         = AbstractConsignment::CC_NL === $country;
         $isBE         = AbstractConsignment::CC_BE === $country;
 
-        $isUsingSplitAddressFields  = $street || $number || $numberSuffix;
+        $isUsingSplitAddressFields = $street || $number || $numberSuffix;
 
         if (! $isNL && ! $isBE) {
             $fullStreet = $isUsingSplitAddressFields
