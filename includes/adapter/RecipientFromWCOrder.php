@@ -74,7 +74,7 @@ class RecipientFromWCOrder extends Recipient
         $isNL         = AbstractConsignment::CC_NL === $country;
         $isBE         = AbstractConsignment::CC_BE === $country;
 
-        $isUsingSplitAddressFields  = ! empty($street) || ! empty($number) || ! empty($numberSuffix);
+        $isUsingSplitAddressFields  = $street || $number || $numberSuffix;
 
         if (! $isNL && ! $isBE) {
             $fullStreet = $isUsingSplitAddressFields
@@ -90,14 +90,20 @@ class RecipientFromWCOrder extends Recipient
         $streetParts = $this->separateStreet($addressLine1, $order, $type);
 
         if (! $streetParts) {
-            return (array) $addressLine1;
+            $streetParts['street'] = $addressLine1;
         }
 
         $addressLine2IsNumberSuffix = strlen($addressLine2) < self::MIN_STREET_ADDITIONAL_INFO_LENGTH;
 
         if (! isset($streetParts['number_suffix']) && $addressLine2IsNumberSuffix) {
-            $streetParts['number_suffix'] = $order->{"get_{$type}_address_2"}();
+            $streetParts['number_suffix'] = $addressLine2;
             $addressLine2                 = null;
+        }
+
+        if ($isUsingSplitAddressFields) {
+            $streetParts['street']        = $street ?? $streetParts['street'];
+            $streetParts['number']        = $number ?? $streetParts['number'];
+            $streetParts['number_suffix'] = $numberSuffix ?? $streetParts['number_suffix'];
         }
 
         $fullStreet = implode(' ', [
@@ -108,11 +114,6 @@ class RecipientFromWCOrder extends Recipient
                 $streetParts['box_number'] ?? null,
             ]
         );
-
-        if ($isUsingSplitAddressFields) {
-            $fullStreet   = implode(' ', [$street, $number, $numberSuffix]);
-            $addressLine2 = null;
-        }
 
         return [
             'full_street'            => $fullStreet,

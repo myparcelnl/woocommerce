@@ -409,7 +409,15 @@ class WCMYPA_Admin
      */
     public function showMyParcelSettings(WC_Order $order): void
     {
-        $orderSettings        = new OrderSettings($order);
+        try {
+            $orderSettings = new OrderSettings($order);
+        } catch (\Exception $exception) {
+            WCMP_Log::add(sprintf('Could not get OrderSettings for order %d', $order->get_id()), $exception);
+            printf('<div class="wcmp__shipment-settings-wrapper">⚠ %s</div>', __('Error in order settings or address.'));
+
+            return;
+        }
+
         $isAllowedDestination = WCMP_Country_Codes::isAllowedDestination($orderSettings->getShippingCountry());
 
         if (! $isAllowedDestination) {
