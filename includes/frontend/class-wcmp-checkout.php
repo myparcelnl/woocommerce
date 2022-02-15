@@ -571,12 +571,12 @@ class WCMP_Checkout
     private function shouldShowSameDayDelivery(string $carrierName): bool
     {
         $settingCollection    = WCMYPA()->setting_collection->where('carrier', $carrierName);
-        $carrierIsActive      = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED);
+        $carrierIsActive      = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED);
         $dropOffDays          = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS);
         $sameDayFromSettings  = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY);
         $isInSameDayTimeSlot  = $this->isInSameDayTimeSlot($carrierName);
         $tomorrowIsDropOffDay = in_array(date('N'), $dropOffDays, true);
-        $noDropOffDelay       = 0 === $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY);
+        $noDropOffDelay       = "0" === $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY);
 
         return $carrierIsActive && $sameDayFromSettings && $tomorrowIsDropOffDay && $noDropOffDelay && $isInSameDayTimeSlot;
     }
@@ -597,7 +597,7 @@ class WCMP_Checkout
         $beforeSameDayCutOffTime         = $now < strtotime($sameDayCutoffTimeFromSettings);
         $afterRegularCutOffTime          = strtotime($cutOffTimeFromSettings) < $now;
 
-        return ($beforeSameDayCutOffTime && $afterRegularCutOffTime) || ($sameDayCutOffBeforeNormalCutOff && $beforeSameDayCutOffTime);
+        return $sameDayCutOffBeforeNormalCutOff && ($beforeSameDayCutOffTime || $afterRegularCutOffTime);
     }
 
     /**
