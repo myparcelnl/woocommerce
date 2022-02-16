@@ -8,7 +8,6 @@ use MyParcelNL\Sdk\src\Helper\SplitStreet;
 use MyParcelNL\Sdk\src\Helper\ValidateStreet;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Recipient;
-use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use WC_Order;
 use WCMYPA_Admin;
 use WCMYPA_Settings;
@@ -101,9 +100,9 @@ class RecipientFromWCOrder extends Recipient
         }
 
         if ($isUsingSplitAddressFields) {
-            $streetParts['street']        = $street ?? $streetParts['street'];
-            $streetParts['number']        = $number ?? $streetParts['number'];
-            $streetParts['number_suffix'] = $numberSuffix ?? $streetParts['number_suffix'];
+            $streetParts['street']        = $street ?? $streetParts['street'] ?? null;
+            $streetParts['number']        = $number ?? $streetParts['number'] ?? null;
+            $streetParts['number_suffix'] = $numberSuffix ?? $streetParts['number_suffix'] ?? null;
         }
 
         $fullStreet = implode(' ', [
