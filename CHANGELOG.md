@@ -1,3 +1,10 @@
+### [4.9.2](https://github.com/myparcelnl/woocommerce/compare/v4.9.1...v4.9.2) (2022-02-16)
+
+
+### Bug Fixes
+
+* catch fatal error on faulty address ([#799](https://github.com/myparcelnl/woocommerce/issues/799)) ([b5e0b66](https://github.com/myparcelnl/woocommerce/commit/b5e0b667c6fe882c296cbe3b08be1de1109ed2e3))
+
 ### [4.9.1](https://github.com/myparcelnl/woocommerce/compare/v4.9.0...v4.9.1) (2022-02-02)
 
 
@@ -517,4 +524,3 @@
 ### Reverts
 
 * Revert "smarter checkout re-ordening" ([125d27e](https://github.com/myparcelnl/woocommerce/commit/125d27e0d7437936c98a9bc925c21690d33abae9))
-
