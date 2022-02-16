@@ -27,6 +27,7 @@ This WooCommerce extension allows you to export your orders to the MyParcel [Bac
 [Plugin Manual](https://myparcelnl.github.io/woocommerce)
 
 ## Installation
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a5ff20b0e054918a1d95332e348ad0f)](https://app.codacy.com/gh/myparcelnl/woocommerce?utm_source=github.com&utm_medium=referral&utm_content=myparcelnl/woocommerce&utm_campaign=Badge_Grade_Settings)
 You can download the .zip file of the latest release from here: [Latest] [![GitHub release](https://img.shields.io/github/v/release/myparcelnl/woocommerce?logo=github)](https://github.com/myparcelnl/woocommerce/releases/latest)
 
 Or install it on your website from the [WordPress plugin repository]. [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/woocommerce-myparcel?logo=wordpress)](https://wordpress.org/plugins/woocommerce-myparcel/)
