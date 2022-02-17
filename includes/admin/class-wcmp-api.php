@@ -211,12 +211,7 @@ class WCMP_API extends WCMP_Rest
                 continue;
             }
 
-            $shipmentData    = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
-            $trackTraceArray = [];
-
-            foreach ($shipmentData as $shipment) {
-                $trackTraceArray[] = $shipment['track_trace'] ?? null;
-            }
+            $trackTraceArray = $this->getTrackTraceForOrder($lastShipmentIds, $order);
 
             WCMP_Export::addTrackTraceNoteToOrder($orderId, $trackTraceArray);
 
@@ -226,5 +221,23 @@ class WCMP_API extends WCMP_Rest
 
             ChannelEngine::updateMetaOnExport($order, $trackTraceCode);
         }
+    }
+
+    /**
+     * @param  array     $lastShipmentIds
+     * @param  \WC_Order $order
+     *
+     * @return array
+     */
+    private function getTrackTraceForOrder(array $lastShipmentIds, WC_Order $order): array
+    {
+        $shipmentData    = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
+        $trackTraceArray = [];
+
+        foreach ($shipmentData as $shipment) {
+            $trackTraceArray[] = $shipment['track_trace'] ?? null;
+        }
+
+        return $trackTraceArray;
     }
 }
