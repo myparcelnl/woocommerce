@@ -197,11 +197,14 @@ class WCMP_Checkout
         $chosenShippingMethodPrice  = (float) $cartTotals['shipping_total'];
         $displayIncludingTax        = WC()->cart->display_prices_including_tax();
         $priceFormat                = self::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
-
+        $shippingMethod             = WC()->session->get('chosen_shipping_methods')[0] ?? false;
+        $shippingClass              = WCMP_Frontend::get_cart_shipping_class();
+        $packageType                = ($shippingMethod)
+            ? WCMP_Export::getPackageTypeFromShippingMethod($shippingMethod, $shippingClass)
+            : null;
         if ($displayIncludingTax) {
             $chosenShippingMethodPrice += (float) $cartTotals['shipping_tax'];
         }
-
         $carrierSettings = [];
         foreach ($this->getSortedCarriersForDeliveryOptions() as $carrier) {
             $carrierName = $carrier->getName();
@@ -229,6 +232,7 @@ class WCMP_Checkout
             'config' => [
                 'apiBaseUrl'                 => getenv('MYPARCEL_API_BASE_URL', true) ?: MyParcelRequest::REQUEST_URL,
                 'currency'                   => get_woocommerce_currency(),
+                'packageType'                => $packageType,
                 'locale'                     => 'nl-NL',
                 'platform'                   => 'myparcel',
                 'basePrice'                  => $chosenShippingMethodPrice,
@@ -562,54 +566,6 @@ class WCMP_Checkout
         }
 
         return apply_filters("wc_myparcel_show_delivery_options", $showDeliveryOptions);
-    }
-
-    /**
-     * Returns if the cart is by product or default settings age restricted
-     *
-     * @param  string $settingName
-     * @param  string $carrier
-     *
-     * @return bool
-     */
-    private function hasAgeCheck(string $settingName, string $carrier): bool
-    {
-        $morningAndEveningTypes = [
-            WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
-            WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
-        ];
-
-        if (! in_array($settingName, $morningAndEveningTypes, true)) {
-            return false;
-        }
-
-        $ageCheckFromSettings = (bool) WCMYPA()->setting_collection->where('carrier', $carrier)->getByName(
-            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK
-        );
-        $ageCheckFromProduct  = false;
-
-        foreach (WC()->cart->get_cart() as $cartItem) {
-            /**
-             * @var WC_Product $product
-             */
-            $product      = $cartItem['data'];
-            $ageCheckMeta = $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true);
-            if ($ageCheckMeta === 'yes') {
-                $ageCheckFromProduct = true;
-                break;
-            }
-        }
-
-        $cartItemsWithoutAgeCheck = array_filter(WC()->cart->get_cart(), static function ($element) {
-            $product = $element['data'];
-            return 'no' === $product->get_meta(WCMYPA_Admin::META_AGE_CHECK, true);
-        });
-
-        if (count($cartItemsWithoutAgeCheck) === count(WC()->cart->get_cart())) {
-            return false;
-        }
-
-        return $ageCheckFromSettings || $ageCheckFromProduct;
     }
 }
 
