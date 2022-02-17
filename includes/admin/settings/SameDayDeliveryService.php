@@ -37,19 +37,17 @@ class SameDayDeliveryService
      */
     public function shouldShowSameDayDelivery(): bool
     {
-        $settingCollection    = WCMYPA()->setting_collection->where('carrier', $this->carrierName);
-        $carrierIsActive      = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED);
-        $sameDayFromSettings  = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY);
+        $settingCollection   = WCMYPA()->setting_collection->where('carrier', $this->carrierName);
+        $carrierIsActive     = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED);
+        $sameDayFromSettings = (bool) $settingCollection->getByName(
+            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY
+        );
 
         if (! $carrierIsActive || ! $sameDayFromSettings) {
             return false;
         }
 
-        $isInSameDayTimeSlot      = $this->isInSameDayTimeSlot();
-        $hasNoDropOffDelay        = $this->hasNoDropOffDelay();
-        $dropOffAvailableTomorrow = $this->isDropOffPossibleTomorrow();
-
-        return $isInSameDayTimeSlot && $hasNoDropOffDelay && $dropOffAvailableTomorrow;
+        return $this->isInSameDayTimeSlot() && ! $this->hasDropOffDelay() && $this->isDropOffPossibleTomorrow();
     }
 
     /**
@@ -57,18 +55,24 @@ class SameDayDeliveryService
      */
     private function isInSameDayTimeSlot(): bool
     {
-        $date                            = (new DateTime())->setTimezone(new DateTimeZone('Europe/Amsterdam'));
-        $sameDayCutoffTimeFromSettings   = $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME);
-        $cutOffTimeFromSettings          = $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME);
-        $sameDayCutOffBeforeNormalCutOff = strtotime($sameDayCutoffTimeFromSettings) < strtotime($cutOffTimeFromSettings);
+        $sameDayCutoffTimeFromSettings   = $this->settingsCollection->getByName(
+            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME
+        );
+        $cutOffTimeFromSettings          = $this->settingsCollection->getByName(
+            WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME
+        );
+        $sameDayCutOffBeforeNormalCutOff = strtotime($sameDayCutoffTimeFromSettings) < strtotime(
+                $cutOffTimeFromSettings
+            );
 
         if (! $sameDayCutOffBeforeNormalCutOff) {
             return false;
         }
 
-        $now                             = $date->getTimestamp() + $date->getOffset();
-        $beforeSameDayCutOffTime         = $now < strtotime($sameDayCutoffTimeFromSettings);
-        $afterRegularCutOffTime          = strtotime($cutOffTimeFromSettings) < $now;
+        $date                    = (new DateTime())->setTimezone(new DateTimeZone('Europe/Amsterdam'));
+        $now                     = $date->getTimestamp() + $date->getOffset();
+        $beforeSameDayCutOffTime = $now < strtotime($sameDayCutoffTimeFromSettings);
+        $afterRegularCutOffTime  = strtotime($cutOffTimeFromSettings) < $now;
 
         return $beforeSameDayCutOffTime || $afterRegularCutOffTime;
     }
@@ -86,8 +90,8 @@ class SameDayDeliveryService
     /**
      * @return bool
      */
-    private function hasNoDropOffDelay(): bool
+    private function hasDropOffDelay(): bool
     {
-        return '0' === $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY);
+        return '0' !== $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY);
     }
 }
