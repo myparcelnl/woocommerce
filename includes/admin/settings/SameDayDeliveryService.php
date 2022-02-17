@@ -41,7 +41,7 @@ class SameDayDeliveryService
         $carrierIsActive      = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED);
         $sameDayFromSettings  = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY);
 
-        if (! $carrierIsActive && ! $sameDayFromSettings) {
+        if (! $carrierIsActive || ! $sameDayFromSettings) {
             return false;
         }
 
