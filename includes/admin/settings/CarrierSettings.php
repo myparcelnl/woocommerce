@@ -73,7 +73,7 @@ class CarrierSettings
         if (! $dropOffPoint) {
             return WCMP_Settings_Callbacks::getLink(
                 __('diagnostics_status_drop_off_point_missing', 'woocommerce-myparcel'),
-                Status::LINK_RETAIL_OVERVIEW . "?carrier={$carrier->getId()}"
+                self::getRetailOverviewLink($carrier)
             );
         }
 
@@ -86,9 +86,19 @@ class CarrierSettings
             $dropOffPoint->getCity(),
             WCMP_Settings_Callbacks::getLink(
                 __('diagnostics_status_drop_off_point_manage', 'woocommerce-myparcel'),
-                Status::LINK_RETAIL_OVERVIEW . "?carrier={$carrier->getId()}"
+                self::getRetailOverviewLink($carrier)
             )
         );
+    }
+
+    /**
+     * @param  \MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier $carrier
+     *
+     * @return string
+     */
+    public static function getRetailOverviewLink(AbstractCarrier $carrier): string
+    {
+        return Status::LINK_RETAIL_OVERVIEW . "?carrier={$carrier->getId()}";
     }
 
     /**
