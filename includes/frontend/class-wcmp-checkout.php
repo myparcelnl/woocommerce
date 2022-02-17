@@ -6,6 +6,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelRequest;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Collection;
+use MyParcelNL\WooCommerce\includes\admin\settings\SameDayDeliveryService;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -224,7 +225,8 @@ class WCMP_Checkout
                 Arr::set($carrierSettings, "$carrierName.$key", $value);
             }
 
-            $carrierSettings[$carrierName]['allowSameDayDelivery'] = $this->shouldShowSameDayDelivery($carrierName);
+            $sameDayDeliveryService                                = new SameDayDeliveryService($carrierName);
+            $carrierSettings[$carrierName]['allowSameDayDelivery'] = $sameDayDeliveryService->shouldShowSameDayDelivery();
         }
 
         return [
@@ -527,6 +529,7 @@ class WCMP_Checkout
            'dropOffDelay'          => [WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY, 'getIntegerByName', false],
            'fridayCutoffTime'      => [WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName', false],
            'saturdayCutoffTime'    => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME, 'getStringByName', false],
+           'cutoffTimeSameDay'     => [WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME, 'getStringByName', false],
            'priceSameDayDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_FEE, 'getPriceByName', false],
         ];
     }
@@ -561,43 +564,6 @@ class WCMP_Checkout
         }
 
         return apply_filters("wc_myparcel_show_delivery_options", $showDeliveryOptions);
-    }
-
-    /**
-     * @param  string $carrierName
-     *
-     * @return bool
-     */
-    private function shouldShowSameDayDelivery(string $carrierName): bool
-    {
-        $settingCollection    = WCMYPA()->setting_collection->where('carrier', $carrierName);
-        $carrierIsActive      = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED);
-        $dropOffDays          = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS);
-        $sameDayFromSettings  = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY);
-        $isInSameDayTimeSlot  = $this->isInSameDayTimeSlot($carrierName);
-        $tomorrowIsDropOffDay = in_array(date('N'), $dropOffDays, true);
-        $noDropOffDelay       = "0" === $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY);
-
-        return $carrierIsActive && $sameDayFromSettings && $tomorrowIsDropOffDay && $noDropOffDelay && $isInSameDayTimeSlot;
-    }
-
-    /**
-     * @param  string $carrierName
-     *
-     * @return bool
-     */
-    private function isInSameDayTimeSlot(string $carrierName): bool
-    {
-        $date                            = (new DateTime())->setTimezone(new DateTimeZone('Europe/Amsterdam'));
-        $settingCollection               = WCMYPA()->setting_collection->where('carrier', $carrierName);
-        $sameDayCutoffTimeFromSettings   = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME);
-        $cutOffTimeFromSettings          = $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME);
-        $sameDayCutOffBeforeNormalCutOff = strtotime($sameDayCutoffTimeFromSettings) < strtotime($cutOffTimeFromSettings);
-        $now                             = $date->getTimestamp() + $date->getOffset();
-        $beforeSameDayCutOffTime         = $now < strtotime($sameDayCutoffTimeFromSettings);
-        $afterRegularCutOffTime          = strtotime($cutOffTimeFromSettings) < $now;
-
-        return $sameDayCutOffBeforeNormalCutOff && ($beforeSameDayCutOffTime || $afterRegularCutOffTime);
     }
 
     /**
