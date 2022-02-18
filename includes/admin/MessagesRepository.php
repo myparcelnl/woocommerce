@@ -92,7 +92,7 @@ class MessagesRepository
             if ($this->shouldMessageBeShown($message)) {
                 $isDismissible = $message['messageId'] ? 'is-dismissible' : '';
                 printf(
-                    '<div class="notice myparcel-dismiss-notice notice-%s %s" data-messageid="%s"><p>%s</p></div>',
+                    '<div class="wcmp__notice notice myparcel-dismiss-notice notice-%s %s" data-messageid="%s"><p>%s</p></div>',
                     $message['level'],
                     $isDismissible,
                     $message['messageId'],

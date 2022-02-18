@@ -9,6 +9,7 @@ defined('ABSPATH') or die();
 use Exception;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierFactory;
 use MyParcelNL\Sdk\src\Model\PickupLocation;
 use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
@@ -28,6 +29,11 @@ class OrderSettings
 {
     public const DEFAULT_COLLO_AMOUNT      = 1;
     public const DEFAULT_BELGIAN_INSURANCE = 500;
+
+    public const OPTION_TRANSLATION_STRINGS = [
+        AbstractConsignment::SHIPMENT_OPTION_RETURN         => 'shipment_options_return',
+        AbstractConsignment::SHIPMENT_OPTION_ONLY_RECIPIENT => 'shipment_options_only_recipient',
+    ];
 
     /**
      * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter
@@ -140,6 +146,11 @@ class OrderSettings
     private $billingRecipient;
 
     /**
+     * @var \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment
+     */
+    private $consignment;
+
+    /**
      * @param WC_Order                                                                              $order
      * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter|array|null $deliveryOptions
      *
@@ -153,10 +164,20 @@ class OrderSettings
         $this->order = $order;
 
         $this->setDeliveryOptions($deliveryOptions);
-        $this->carrier         = $this->deliveryOptions->getCarrier() ?? (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
-        $this->shipmentOptions = $this->deliveryOptions->getShipmentOptions();
         $this->shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
         $this->extraOptions    = WCMYPA_Admin::getExtraOptionsFromOrder($order);
+
+        $deliveryOptions       = $this->getDeliveryOptions();
+        $this->carrier         = $deliveryOptions->getCarrier() ?? (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
+        $this->consignment     = ConsignmentFactory::createFromCarrier(CarrierFactory::create($this->carrier));
+        $this->shipmentOptions = $deliveryOptions->getShipmentOptions();
+
+        if ($deliveryOptions->getPackageTypeId()) {
+            $this->consignment->setPackageType($deliveryOptions->getPackageTypeId());
+        }
+        if ($deliveryOptions->getDeliveryTypeId()) {
+            $this->consignment->setDeliveryType($deliveryOptions->getDeliveryTypeId());
+        }
 
         $this->setAllData();
     }
@@ -166,7 +187,7 @@ class OrderSettings
      *
      * @return float
      */
-    public function getWeight($inGrams = false): float
+    public function getWeight(bool $inGrams = false): float
     {
         return $inGrams
             ? WCMP_Export::convertWeightToGrams($this->weight)
@@ -281,19 +302,70 @@ class OrderSettings
         $this->setColloAmount();
         $this->setLabelDescription();
 
-        $this->setAgeCheck();
-        $this->setLargeFormat();
-        $this->setOnlyRecipient();
-        $this->setReturnShipment();
-        $this->setSameDayDelivery();
-        $this->setSignature();
-
+        $this->setShipmentOptions();
         $this->setInsuranceData();
 
         $this->setWeight();
         $this->setDigitalStampRangeWeight();
 
         $this->setPickupLocation();
+    }
+
+    private function setShipmentOptions(): void
+    {
+        foreach ($this->allShipmentOptions() as $property => $item) {
+            $this->{$property} = $this->determineShipmentOption(
+                $item['method'],
+                $item['setting'],
+                $item['consignment_option'],
+                $item['default_when_false']
+            );
+        }
+    }
+
+    /**
+     * @return array[]
+     */
+    private function allShipmentOptions(): array
+    {
+        return [
+            'largeFormat'     => [
+                'method'             => [$this, 'determineLargeFormat'],
+                'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
+                'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_LARGE_FORMAT,
+                'default_when_false' => false,
+            ],
+            'returnShipment'  => [
+                'method'             => [$this->shipmentOptions, 'isReturn'],
+                'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
+                'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_RETURN,
+                'default_when_false' => true,
+            ],
+            'onlyRecipient'   => [
+                'method'             => [$this->shipmentOptions, 'hasOnlyRecipient'],
+                'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
+                'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_ONLY_RECIPIENT,
+                'default_when_false' => true,
+            ],
+            'signature'       => [
+                'method'             => [$this->shipmentOptions, 'hasSignature'],
+                'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
+                'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_SIGNATURE,
+                'default_when_false' => true,
+            ],
+            'sameDayDelivery' => [
+                'method'             => [$this->shipmentOptions, 'isSameDayDelivery'],
+                'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
+                'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY,
+                'default_when_false' => false,
+            ],
+            'ageCheck'        => [
+                'method'             => [$this, 'getAgeCheckFromOptionsOrOrder'],
+                'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
+                'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_AGE_CHECK,
+                'default_when_false' => false,
+            ],
+        ];
     }
 
     /**
@@ -410,25 +482,24 @@ class OrderSettings
     }
 
     /**
-     * @return void
+     * Gets age check from shipment options when set, otherwise gets age check from the order
+     *
+     * @return bool|null
+     * @throws \JsonException
      */
-    private function setAgeCheck(): void
+    private function getAgeCheckFromOptionsOrOrder(): ?bool
     {
-        $settingName                 = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK;
-        $ageCheckFromShipmentOptions = $this->shipmentOptions->hasAgeCheck();
-        $ageCheckOfProduct           = $this->getAgeCheckOfProduct();
-        $ageCheckFromSettings        = (bool) WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
-
-        $this->ageCheck = $ageCheckFromShipmentOptions ?? $ageCheckOfProduct ?? $ageCheckFromSettings;
+        return $this->shipmentOptions->hasAgeCheck() ?? $this->getAgeCheckFromOrder();
     }
 
     /**
-     * Gets product age check value based on if it was explicitly set to either true or false. It defaults to inheriting from the default export settings.
+     * Gets product age check value based on if it was explicitly set to either true or false. It defaults to
+     * inheriting from the default export settings.
      *
      * @return bool|null
-     * @throws JsonException
+     * @throws \JsonException
      */
-    private function getAgeCheckOfProduct(): ?bool
+    private function getAgeCheckFromOrder(): ?bool
     {
         $hasAgeCheck = false;
 
@@ -441,9 +512,9 @@ class OrderSettings
 
             $productAgeCheck = WCX_Product::get_meta($product, WCMYPA_Admin::META_AGE_CHECK, true);
 
-            if (empty($productAgeCheck)) {
+            if (! $productAgeCheck) {
                 $hasAgeCheck = WCMYPA_Admin::PRODUCT_OPTIONS_DEFAULT;
-            } elseif ($productAgeCheck === WCMYPA_Admin::PRODUCT_OPTIONS_ENABLED) {
+            } elseif (WCMYPA_Admin::PRODUCT_OPTIONS_ENABLED === $productAgeCheck) {
                 return true;
             }
         }
@@ -526,6 +597,23 @@ class OrderSettings
             );
         }
 
+        $consignmentSettingName = AbstractConsignment::SHIPMENT_OPTION_INSURANCE;
+        if ($isInsured
+            && $this->deliveryOptions->isPickup()
+            && ! $this->consignment->canHaveShipmentOption($consignmentSettingName)
+        ) {
+            $this->showAdminNoticeOptionRemoved(
+                __(
+                    self::OPTION_TRANSLATION_STRINGS[$consignmentSettingName] ?? $consignmentSettingName,
+                    'woocommerce-myparcel'
+                )
+            );
+            $this->insured         = false;
+            $this->insuranceAmount = 0;
+
+            return;
+        }
+
         $this->insured         = $isInsured;
         $this->insuranceAmount = (int) $insuranceAmount;
     }
@@ -543,62 +631,52 @@ class OrderSettings
     }
 
     /**
-     * @return void
+     * @return bool
      */
-    private function setLargeFormat(): void
+    private function determineLargeFormat(): bool
     {
-        $this->largeFormat = false;
-        $weightFromOrder   = WCMP_Export::convertWeightToGrams($this->extraOptions['weight'] ?? 0);
+        $weightFromOrder    = WCMP_Export::convertWeightToGrams($this->extraOptions['weight'] ?? 0);
+        $weightFromSettings = (int) $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT);
+        $optionFromSettings = (bool) $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT);
+        $defaultLargeFormat = $this->shipmentOptions->hasLargeFormat() ?? $optionFromSettings;
 
-        $defaultLargeFormat = (bool) WCMP_Export::getChosenOrDefaultShipmentOption(
-            $this->shipmentOptions->hasLargeFormat(),
-            WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
-            $this->carrier
-        );
+        return $defaultLargeFormat && $weightFromOrder >= $weightFromSettings;
+    }
 
-        $weightFromSettings = (int) WCMYPA()->setting_collection->getByName(
-            "{$this->carrier}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT
-        );
+    /**
+     * @param callable $calculateOptionValue
+     * @param string   $carrierSettingName
+     * @param string   $consignmentSettingName
+     * @param bool     $defaultWhenFalse
+     *
+     * @return bool
+     */
+    private function determineShipmentOption(
+        callable $calculateOptionValue,
+        string $carrierSettingName,
+        string $consignmentSettingName,
+        bool $defaultWhenFalse
+    ): bool {
+        $returnValue = $calculateOptionValue();
 
-        if ($defaultLargeFormat && $weightFromOrder >= $weightFromSettings) {
-            $this->largeFormat = true;
+        if (null === $returnValue || (false === $returnValue && $defaultWhenFalse)) {
+            $returnValue = (bool) $this->getCarrierSetting($carrierSettingName);
         }
-    }
 
-    /**
-     * @return void
-     */
-    private function setOnlyRecipient(): void
-    {
-        $settingName                      = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT;
-        $onlyRecipientFromShipmentOptions = $this->shipmentOptions->hasOnlyRecipient();
-        $onlyRecipientFromSettings        = (bool)WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
+        if ($returnValue
+            && $this->deliveryOptions->isPickup()
+            && ! $this->consignment->canHaveShipmentOption($consignmentSettingName)
+        ) {
+            $this->showAdminNoticeOptionRemoved(
+                __(
+                    self::OPTION_TRANSLATION_STRINGS[$consignmentSettingName] ?? $consignmentSettingName,
+                    'woocommerce-myparcel'
+                )
+            );
+            $returnValue = false;
+        }
 
-        $this->onlyRecipient = $onlyRecipientFromShipmentOptions ?: $onlyRecipientFromSettings;
-    }
-
-    /**
-     * @return void
-     */
-    private function setSameDayDelivery(): void
-    {
-        $settingName                = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY;
-        $sameDayFromShipmentOptions = $this->shipmentOptions->isSameDayDelivery();
-        $sameDayFromSettings        = (bool)WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
-
-        $this->sameDayDelivery = $sameDayFromShipmentOptions ?? $sameDayFromSettings;
-    }
-
-    /**
-     * @return void
-     */
-    private function setSignature(): void
-    {
-        $settingName                  = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE;
-        $signatureFromShipmentOptions = $this->shipmentOptions->hasSignature();
-        $signatureFromSettings        = (bool) WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
-
-        $this->signature = $signatureFromShipmentOptions ?: $signatureFromSettings;
+        return $returnValue;
     }
 
     /**
@@ -607,25 +685,7 @@ class OrderSettings
      */
     private function setPackageType(): void
     {
-        $packageType       = WCMYPA()->export->getPackageTypeFromOrder($this->order, $this->deliveryOptions);
-        $this->packageType = $packageType;
-    }
-
-    /**
-     * @return void
-     */
-    private function setReturnShipment(): void
-    {
-        $this->returnShipment = false;
-
-        $settingName               = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN;
-        $returnFromShipmentOptions = $this->shipmentOptions->isReturn();
-        $returnFromSettings        = (bool)WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
-        $isPickup                  = $this->deliveryOptions->isPickup();
-
-        if (! $isPickup) {
-            $this->returnShipment = $returnFromShipmentOptions ?: $returnFromSettings;
-        }
+        $this->packageType = WCMYPA()->export->getPackageTypeFromOrder($this->order, $this->deliveryOptions);
     }
 
     /**
@@ -694,5 +754,21 @@ class OrderSettings
         } else {
             $this->deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($this->order, (array) $deliveryOptions);
         }
+    }
+
+    /**
+     * @param string $optionName human understandable string denoting the concerned option
+     */
+    private function showAdminNoticeOptionRemoved(string $optionName): void
+    {
+        Messages::showAdminNotice(
+            sprintf(
+                __('warning_removed_disallowed_delivery_option', 'woocommerce-myparcel'),
+                $optionName,
+                $this->order->get_id(),
+                __('shipment_options_delivery_pickup', 'woocommerce-myparcel')
+            ),
+            Messages::NOTICE_LEVEL_WARNING
+        );
     }
 }
