@@ -107,7 +107,7 @@ class SameDayDeliveryService
      */
     private function isDropOffTomorrowPossible(array $dropOffDays): bool
     {
-        return in_array((date('N') + 1), $dropOffDays, true);
+        return in_array((string) (date('N') + 1), $dropOffDays, true);
     }
 
     /**
