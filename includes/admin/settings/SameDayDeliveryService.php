@@ -14,11 +14,6 @@ use WCMYPA_Settings;
 class SameDayDeliveryService
 {
     /**
-     * @var string
-     */
-    private $carrierName;
-
-    /**
      * @var
      */
     private $settingsCollection;
@@ -28,7 +23,6 @@ class SameDayDeliveryService
      */
     public function __construct(string $carrierName)
     {
-        $this->carrierName        = $carrierName;
         $this->settingsCollection = WCMYPA()->setting_collection->where('carrier', $carrierName);
     }
 
@@ -37,9 +31,8 @@ class SameDayDeliveryService
      */
     public function shouldShowSameDayDelivery(): bool
     {
-        $settingCollection   = WCMYPA()->setting_collection->where('carrier', $this->carrierName);
-        $carrierIsActive     = (bool) $settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED);
-        $sameDayFromSettings = (bool) $settingCollection->getByName(
+        $carrierIsActive     = (bool) $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED);
+        $sameDayFromSettings = (bool) $this->settingsCollection->getByName(
             WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY
         );
 
@@ -47,13 +40,18 @@ class SameDayDeliveryService
             return false;
         }
 
-        return $this->isInSameDayTimeSlot() && ! $this->hasDropOffDelay() && $this->isDropOffPossibleTomorrow();
+        $date = (new DateTime())->setTimezone(new DateTimeZone('Europe/Amsterdam'));
+        $now  = $date->getTimestamp() + $date->getOffset();
+
+        return $this->isInSameDayTimeSlot($now) && ! $this->hasDropOffDelay() && $this->isDropOffPossible($now);
     }
 
     /**
+     * @param  int $now
+     *
      * @return bool
      */
-    private function isInSameDayTimeSlot(): bool
+    private function isInSameDayTimeSlot(int $now): bool
     {
         $sameDayCutoffTimeFromSettings   = $this->settingsCollection->getByName(
             WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME
@@ -69,8 +67,6 @@ class SameDayDeliveryService
             return false;
         }
 
-        $date                    = (new DateTime())->setTimezone(new DateTimeZone('Europe/Amsterdam'));
-        $now                     = $date->getTimestamp() + $date->getOffset();
         $beforeSameDayCutOffTime = $now < strtotime($sameDayCutoffTimeFromSettings);
         $afterRegularCutOffTime  = strtotime($cutOffTimeFromSettings) < $now;
 
@@ -78,13 +74,40 @@ class SameDayDeliveryService
     }
 
     /**
+     * @param  int $now
+     *
      * @return bool
      */
-    private function isDropOffPossibleTomorrow(): bool
+    private function isDropOffPossible(int $now): bool
     {
+        $cutOffTime = $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME);
         $dropOffDays = $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS);
 
-        return in_array(date('N'), $dropOffDays, true);
+        if ($now > $cutOffTime) {
+            return $this->isDropOffTomorrowPossible($dropOffDays);
+        }
+
+        return $this->isDropOffTodayPossible($dropOffDays);
+    }
+
+    /**
+     * @param  array $dropOffDays
+     *
+     * @return bool
+     */
+    private function isDropOffTodayPossible(array $dropOffDays): bool
+    {
+        return in_array((date('N')), $dropOffDays, true);
+    }
+
+    /**
+     * @param  array $dropOffDays
+     *
+     * @return bool
+     */
+    private function isDropOffTomorrowPossible(array $dropOffDays): bool
+    {
+        return in_array((date('N') + 1), $dropOffDays, true);
     }
 
     /**
