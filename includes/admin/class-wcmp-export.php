@@ -1582,7 +1582,11 @@ class WCMP_Export
                 $orderLines->push($orderLine);
             }
 
-            $order->setCustomsDeclaration($this->generateCustomsDeclaration($wcOrder));
+            $isToRowCountry = ! in_array($order->getRecipient()->getCc(), AbstractConsignment::EURO_COUNTRIES, true);
+
+            if ($isToRowCountry) {
+                $order->setCustomsDeclaration($this->generateCustomsDeclaration($wcOrder));
+            }
 
             $order->setOrderLines($orderLines);
             $this->orderCollection->push($order);
