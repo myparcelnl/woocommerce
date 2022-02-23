@@ -1253,15 +1253,16 @@ class WCMYPA_Admin
      */
     private function printDeliveryDate(DeliveryOptions $deliveryOptions): void
     {
-        if (
-            $deliveryOptions->getDate() ||
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $deliveryOptions->getPackageType()
-        ) {
+        $deliveryDate = $deliveryOptions->getDate();
+        $deliveryType = $deliveryOptions->getDeliveryType();
+
+        if ($deliveryDate || AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $deliveryOptions->getPackageType()) {
             printf(
                 '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
-                __("MyParcel shipment:", "woocommerce-myparcel"),
-                WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
-                wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()), 'D d-m')
+                __('MyParcel shipment:', 'woocommerce-myparcel'),
+                WCMP_Data::getDeliveryTypesHuman()[$deliveryType],
+                empty($deliveryDate) || $deliveryType === AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME ? ''
+                    : wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()), 'D d-m')
             );
         }
     }
