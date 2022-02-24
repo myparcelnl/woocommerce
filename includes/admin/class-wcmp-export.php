@@ -1705,28 +1705,6 @@ class WCMP_Export
     }
 
     /**
-     * Save created track & trace information as meta data to the corresponding order(s).
-     *
-     * @param MyParcelCollection $collection
-     * @param array              $order_ids
-     */
-    public static function saveTrackTracesToOrders(MyParcelCollection $collection, array $order_ids): void
-    {
-        foreach ($order_ids as $order_id) {
-            $trackTraces = [];
-
-            foreach ($collection->getConsignmentsByReferenceId($order_id) as $consignment) {
-                /**
-                 * @var AbstractConsignment $consignment
-                 */
-                $trackTraces[] = $consignment->getBarcode();
-            }
-
-            self::addTrackTraceNoteToOrder($order_id, $trackTraces);
-        }
-    }
-
-    /**
      * Adds one or more consignments to the collection, depending on the collo amount.
      *
      * @param  \MyParcelNL\WooCommerce\includes\admin\OrderSettings      $orderSettings
