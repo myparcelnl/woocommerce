@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>
+  /**
+   * Redirects to the latest release of this repository. Must be on a <user>.github.io/<repo> link. Pass ?prerelease to download prerelease instead of latest.
+   */
+  (function() {
+    var user = window.location.host.split('.')[0];
+    var repository = window.location.pathname.split('/')[1];
+    var url = 'https://api.github.com/repos/' + user + '/' + repository + '/releases';
+    var req = new XMLHttpRequest();
+    req.responseType = 'json';
+    req.open('GET', url, true);
+    req.onload = function() {
+      callback(req.response);
+    };
+    req.send(null);
+
+    function callback(releases) {
+      var prereleases = releases.filter(release => {
+        return release.prerelease === (-1 !== window.location.search.split('?').indexOf('prerelease'));
+      });
+      window.location.assign(prereleases[0].html_url);
+    };
+  })();
+
+  </script>
+  <title>Redirecting...</title>
+</head>
+<body></body>
+</html>
+
+
