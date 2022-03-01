@@ -311,7 +311,7 @@ class WCMP_NL_Postcode_Fields
                 "{$form}_house_number_suffix" => [
                     'label'     => __("suffix", "woocommerce-myparcel"),
                     'class'     => apply_filters('wcmp_custom_address_field_class', ['form-row-third last']),
-                    'maxlength' => 4,
+                    'maxlength' => 6,
                     'priority'  => 62,
                 ],
             ]
