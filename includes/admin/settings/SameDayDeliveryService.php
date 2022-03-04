@@ -115,6 +115,10 @@ class SameDayDeliveryService
      */
     private function hasDropOffDelay(): bool
     {
-        return '0' !== $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY);
+        return ! in_array(
+            $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY),
+            ['0', ''],
+            true
+        );
     }
 }

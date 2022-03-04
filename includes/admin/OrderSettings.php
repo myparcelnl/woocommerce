@@ -14,6 +14,7 @@ use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
+use MyParcelNL\WooCommerce\includes\admin\settings\SameDayDeliveryService;
 use WC_Order;
 use WCMP_Data;
 use WCMP_Export;
@@ -582,11 +583,8 @@ class OrderSettings
      */
     private function setSameDayDelivery(): void
     {
-        $settingName                = WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY;
-        $sameDayFromShipmentOptions = $this->shipmentOptions->isSameDayDelivery();
-        $sameDayFromSettings        = (bool)WCMYPA()->setting_collection->where('carrier', $this->carrier)->getByName($settingName);
-
-        $this->sameDayDelivery = $sameDayFromShipmentOptions ?? $sameDayFromSettings;
+        $sameDayService = new SameDayDeliveryService($this->carrier);
+        $this->sameDayDelivery = $sameDayService->shouldShowSameDayDelivery();
     }
 
     /**

@@ -224,9 +224,6 @@ class WCMP_Checkout
 
                 Arr::set($carrierSettings, "$carrierName.$key", $value);
             }
-
-            $sameDayDeliveryService                                = new SameDayDeliveryService($carrierName);
-            $carrierSettings[$carrierName]['allowSameDayDelivery'] = $sameDayDeliveryService->shouldShowSameDayDelivery();
         }
 
         return [
@@ -531,6 +528,7 @@ class WCMP_Checkout
            'saturdayCutoffTime'    => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME, 'getStringByName', false],
            'cutoffTimeSameDay'     => [WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME, 'getStringByName', false],
            'priceSameDayDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_FEE, 'getPriceByName', false],
+           'allowSameDayDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY, 'isEnabled', false]
         ];
     }
 
