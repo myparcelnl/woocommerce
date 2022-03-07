@@ -583,8 +583,8 @@ class OrderSettings
      */
     private function setSameDayDelivery(): void
     {
-        $sameDayService = new SameDayDeliveryService($this->carrier);
-        $this->sameDayDelivery = $sameDayService->shouldShowSameDayDelivery();
+        $sameDayService        = new SameDayDeliveryService($this->carrier);
+        $this->sameDayDelivery = $this->shipmentOptions->isSameDayDelivery() && $sameDayService->shouldShowSameDayDelivery();
     }
 
     /**
