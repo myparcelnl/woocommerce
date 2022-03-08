@@ -56,7 +56,7 @@ class Status
             if ($carrierClass === CarrierInstabox::class && ! self::getDropOffPoint($carrier)) {
                 $text = WCMP_Settings_Callbacks::getLink(
                     __('diagnostics_status_drop_off_point_missing', 'woocommerce-myparcel'),
-                    self::LINK_RETAIL_OVERVIEW
+                    CarrierSettings::getRetailOverviewLink($carrier)
                 );
                 $type = self::TYPE_ERROR;
             }

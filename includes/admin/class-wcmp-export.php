@@ -1582,7 +1582,11 @@ class WCMP_Export
                 $orderLines->push($orderLine);
             }
 
-            $order->setCustomsDeclaration($this->generateCustomsDeclaration($wcOrder));
+            $isToRowCountry = ! in_array($order->getRecipient()->getCc(), AbstractConsignment::EURO_COUNTRIES, true);
+
+            if ($isToRowCountry) {
+                $order->setCustomsDeclaration($this->generateCustomsDeclaration($wcOrder));
+            }
 
             $order->setOrderLines($orderLines);
             $this->orderCollection->push($order);
@@ -1702,28 +1706,6 @@ class WCMP_Export
         }
 
         return $return;
-    }
-
-    /**
-     * Save created track & trace information as meta data to the corresponding order(s).
-     *
-     * @param MyParcelCollection $collection
-     * @param array              $order_ids
-     */
-    public static function saveTrackTracesToOrders(MyParcelCollection $collection, array $order_ids): void
-    {
-        foreach ($order_ids as $order_id) {
-            $trackTraces = [];
-
-            foreach ($collection->getConsignmentsByReferenceId($order_id) as $consignment) {
-                /**
-                 * @var AbstractConsignment $consignment
-                 */
-                $trackTraces[] = $consignment->getBarcode();
-            }
-
-            self::addTrackTraceNoteToOrder($order_id, $trackTraces);
-        }
     }
 
     /**

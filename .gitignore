@@ -1,10 +1,9 @@
-.idea
-assets
-node_modules
-vendor
+.idea/
+assets/
+node_modules/
+vendor/
 
 *.zip
 .DS_Store
-languages/
 
 yarn-error.log
