@@ -196,12 +196,11 @@ class WCMP_API extends WCMP_Rest
     }
 
     /**
-     * @param array              $orderIds
-     * @param MyParcelCollection $collection
+     * @param  array $orderIds
      *
-     * @throws Exception
+     * @throws \JsonException
      */
-    private function updateOrderBarcode(array $orderIds, MyParcelCollection $collection): void
+    private function updateOrderBarcode(array $orderIds): void
     {
         foreach ($orderIds as $orderId) {
             $order           = WC_Core::get_order($orderId);
@@ -211,14 +210,29 @@ class WCMP_API extends WCMP_Rest
                 continue;
             }
 
-            $shipmentData = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
-            $trackTrace   = $shipmentData['track_trace'] ?? null;
+            $trackTraceArray = $this->getTrackTraceForOrder($lastShipmentIds, $order);
+
+            WCMP_Export::addTrackTraceNoteToOrder($orderId, $trackTraceArray);
 
             self::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING);
+        }
+    }
 
-            ChannelEngine::updateMetaOnExport($order, $trackTrace);
+    /**
+     * @param  array     $lastShipmentIds
+     * @param  \WC_Order $order
+     *
+     * @return array
+     */
+    private function getTrackTraceForOrder(array $lastShipmentIds, WC_Order $order): array
+    {
+        $shipmentData    = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
+        $trackTraceArray = [];
+
+        foreach ($shipmentData as $shipment) {
+            $trackTraceArray[] = $shipment['track_trace'] ?? null;
         }
 
-        WCMP_Export::saveTrackTracesToOrders($collection, $orderIds);
+        return $trackTraceArray;
     }
 }

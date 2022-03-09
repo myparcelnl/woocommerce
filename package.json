@@ -4,8 +4,7 @@
   "version": "4.10.0-alpha.1",
   "scripts": {
     "build": "gulp",
-    "watch": "gulp watch",
-    "zip": "gulp build:zip"
+    "serve": "gulp watch"
   },
   "repository": {
     "type": "git",
@@ -34,6 +33,7 @@
     "glob": "^7.1.6",
     "gulp": "^4.0.2",
     "gulp-clean": "^0.4.0",
+    "gulp-load-plugins": "^2.0.7",
     "gulp-po-sync": "^0.1.0",
     "gulp-postcss": "^9.0.0",
     "gulp-sass": "^5.0.0",
