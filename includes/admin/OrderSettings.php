@@ -305,6 +305,7 @@ class OrderSettings
 
         $this->setShipmentOptions();
         $this->setInsuranceData();
+        $this->setSameDayDelivery();
 
         $this->setWeight();
         $this->setDigitalStampRangeWeight();
@@ -679,7 +680,7 @@ class OrderSettings
 
         return $returnValue;
     }
-  
+
     private function setSameDayDelivery(): void
     {
         $sameDayService        = new SameDayDeliveryService($this->carrier);
