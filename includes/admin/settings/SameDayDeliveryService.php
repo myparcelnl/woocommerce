@@ -14,7 +14,7 @@ use WCMYPA_Settings;
 class SameDayDeliveryService
 {
     /**
-     * @var
+     * @var \WPO\WC\MyParcel\Collections\SettingsCollection
      */
     private $settingsCollection;
 
@@ -59,9 +59,7 @@ class SameDayDeliveryService
         $cutOffTimeFromSettings          = $this->settingsCollection->getByName(
             WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME
         );
-        $sameDayCutOffBeforeNormalCutOff = strtotime($sameDayCutoffTimeFromSettings) < strtotime(
-                $cutOffTimeFromSettings
-            );
+        $sameDayCutOffBeforeNormalCutOff = strtotime($sameDayCutoffTimeFromSettings) < strtotime($cutOffTimeFromSettings);
 
         if (! $sameDayCutOffBeforeNormalCutOff) {
             return false;
@@ -80,7 +78,7 @@ class SameDayDeliveryService
      */
     private function isDropOffPossible(int $now): bool
     {
-        $cutOffTime = $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME);
+        $cutOffTime  = $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME);
         $dropOffDays = $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DAYS);
 
         if ($now > $cutOffTime) {
@@ -107,7 +105,9 @@ class SameDayDeliveryService
      */
     private function isDropOffTomorrowPossible(array $dropOffDays): bool
     {
-        return in_array((string) (date('N') + 1), $dropOffDays, true);
+        $tomorrow = new DateTime('tomorrow');
+        $dayOfTomorrowAsNumber = $tomorrow->format('N');
+        return in_array($dayOfTomorrowAsNumber, $dropOffDays, true);
     }
 
     /**
@@ -115,10 +115,6 @@ class SameDayDeliveryService
      */
     private function hasDropOffDelay(): bool
     {
-        return ! in_array(
-            $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY),
-            ['0', ''],
-            true
-        );
+        return $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DROP_OFF_DELAY);
     }
 }

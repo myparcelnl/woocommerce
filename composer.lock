@@ -66,10 +66,6 @@
                 "myparcel",
                 "postnl"
             ],
-            "support": {
-                "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v7.1.0"
-            },
             "time": "2022-02-09T15:33:36+00:00"
         }
     ],
@@ -81,5 +77,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "1.1.0"
 }
