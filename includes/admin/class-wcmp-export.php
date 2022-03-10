@@ -389,6 +389,8 @@ class WCMP_Export
             WCMP_Log::add("Shipment data for order {$order_id}.");
         }
 
+        $this->addreturnInTheBox($collection);
+
         if ($this->errors) {
             setcookie('myparcel_response', implode('<br/>', $this->errors), time() + self::COOKIE_EXPIRE_TIME, "/");
         }
@@ -1730,8 +1732,6 @@ class WCMP_Export
         }
 
         $collection->addConsignment($consignment);
-
-        $this->addreturnInTheBox($collection);
     }
 
     /**
