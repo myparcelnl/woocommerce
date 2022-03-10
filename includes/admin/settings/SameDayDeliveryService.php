@@ -31,7 +31,9 @@ class SameDayDeliveryService
      */
     public function shouldShowSameDayDelivery(): bool
     {
-        $carrierIsActive     = (bool) $this->settingsCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED);
+        $carrierIsActive     = (bool) $this->settingsCollection->getByName(
+            WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED
+        );
         $sameDayFromSettings = (bool) $this->settingsCollection->getByName(
             WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY
         );
@@ -59,7 +61,9 @@ class SameDayDeliveryService
         $cutOffTimeFromSettings          = $this->settingsCollection->getByName(
             WCMYPA_Settings::SETTING_CARRIER_CUTOFF_TIME
         );
-        $sameDayCutOffBeforeNormalCutOff = strtotime($sameDayCutoffTimeFromSettings) < strtotime($cutOffTimeFromSettings);
+        $sameDayCutOffBeforeNormalCutOff = strtotime($sameDayCutoffTimeFromSettings) < strtotime(
+                $cutOffTimeFromSettings
+            );
 
         if (! $sameDayCutOffBeforeNormalCutOff) {
             return false;
@@ -105,7 +109,7 @@ class SameDayDeliveryService
      */
     private function isDropOffTomorrowPossible(array $dropOffDays): bool
     {
-        $tomorrow = new DateTime('tomorrow');
+        $tomorrow              = new DateTime('tomorrow');
         $dayOfTomorrowAsNumber = $tomorrow->format('N');
         return in_array($dayOfTomorrowAsNumber, $dropOffDays, true);
     }
