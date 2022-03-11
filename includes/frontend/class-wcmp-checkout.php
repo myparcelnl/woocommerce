@@ -223,21 +223,14 @@ class WCMP_Checkout
 
                 if ($addBasePrice && is_numeric($value) && $this->useTotalPrice()) {
                     $value += $chosenShippingMethodPrice;
+
+                    if (WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_FEE === $settingName) {
+                        $value += $settingsByCarrier->getPriceByName(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_STANDARD_FEE);
+                    }
                 }
 
                 Arr::set($carrierSettings, "$carrierName.$key", $value);
             }
-
-            $sameDayDeliveryfee    = $settingsByCarrier->getPriceByName(
-                WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_FEE
-            );
-            $priceStandardDelivery = $settingsByCarrier->getPriceByName(
-                WCMYPA_Settings::SETTING_CARRIER_DELIVERY_STANDARD_FEE
-            );
-            $showPriceSurcharge    = WCMP_Settings_Data::DISPLAY_SURCHARGE_PRICE === $priceFormat;
-
-            $carrierSettings[CarrierInstabox::NAME]['priceSameDayDelivery'] = $showPriceSurcharge ? $sameDayDeliveryfee
-                : $sameDayDeliveryfee + $priceStandardDelivery;
         }
 
         return [
@@ -542,7 +535,8 @@ class WCMP_Checkout
            'fridayCutoffTime'      => [WCMYPA_Settings::SETTING_CARRIER_FRIDAY_CUTOFF_TIME, 'getStringByName', false],
            'saturdayCutoffTime'    => [WCMYPA_Settings::SETTING_CARRIER_SATURDAY_CUTOFF_TIME, 'getStringByName', false],
            'cutoffTimeSameDay'     => [WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_CUTOFF_TIME, 'getStringByName', false],
-           'allowSameDayDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY, 'isEnabled', false]
+           'priceSameDayDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY_FEE, 'getPriceByName', true],
+           'allowSameDayDelivery'  => [WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY, 'isEnabled', false],
         ];
     }
 
