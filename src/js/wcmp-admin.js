@@ -644,7 +644,7 @@ jQuery(($) => {
 
       // Export and print.
       case wcmp.bulk_actions.export_print:
-        exportToMyParcel.bind(spinnerWrapper)(orderIds, 'after_reload');
+        exportToMyParcel.bind(spinnerWrapper)(orderIds, 'yes');
         break;
     }
   }
@@ -938,17 +938,15 @@ jQuery(($) => {
       url: url,
       data: data || {},
       afterDone(response) {
-        const redirectUrl = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
-
-        if (print === 'no' || print === 'after_reload') {
-          /* refresh page, admin notices are stored in options and will be displayed automatically */
-          window.location.href = redirectUrl;
-        } else {
+        if ('yes' === print) {
           /* load PDF */
           printLabel({
             order_ids: orderIds,
           });
+          return;
         }
+        /* update the page with all changes including message(s) */
+        window.location.reload();
       },
     });
   }
