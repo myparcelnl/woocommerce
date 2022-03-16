@@ -65,10 +65,10 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
 
     protected function migrate(): void
     {
-        $this->oldGeneralSettings        = $this->getSettings("woocommerce_myparcel_general_settings");
-        $this->oldCheckoutSettings       = $this->getSettings("woocommerce_myparcel_checkout_settings");
-        $this->oldExportDefaultsSettings = $this->getSettings("woocommerce_myparcel_export_defaults_settings");
-        $oldPostNlSettings               = $this->getSettings("woocommerce_myparcel_postnl_settings");
+        $this->oldGeneralSettings        = $this->getSettings('woocommerce_myparcel_general_settings');
+        $this->oldCheckoutSettings       = $this->getSettings('woocommerce_myparcel_checkout_settings');
+        $this->oldExportDefaultsSettings = $this->getSettings('woocommerce_myparcel_export_defaults_settings');
+        $oldPostNlSettings               = $this->getSettings('woocommerce_myparcel_postnl_settings');
 
         $this->newGeneralSettings        = $this->oldGeneralSettings;
         $this->newCheckoutSettings       = $this->oldCheckoutSettings;
@@ -85,10 +85,10 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
     protected function setOptionSettingsMap(): void
     {
         $this->optionSettingsMap = [
-            "woocommerce_myparcel_general_settings"         => $this->newGeneralSettings,
-            "woocommerce_myparcel_checkout_settings"        => $this->newCheckoutSettings,
-            "woocommerce_myparcel_export_defaults_settings" => $this->newExportDefaultsSettings,
-            "woocommerce_myparcel_postnl_settings"          => $this->newPostNlSettings,
+            'woocommerce_myparcel_general_settings'         => $this->newGeneralSettings,
+            'woocommerce_myparcel_checkout_settings'        => $this->newCheckoutSettings,
+            'woocommerce_myparcel_export_defaults_settings' => $this->newExportDefaultsSettings,
+            'woocommerce_myparcel_postnl_settings'          => $this->newPostNlSettings,
         ];
     }
 
@@ -150,15 +150,15 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
         $postnl = CarrierPostNL::NAME;
 
         return [
-            "delivery_options_enabled" => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-            "evening_enabled"          => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
-            "evening_fee"              => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
-            "morning_enabled"          => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
-            "morning_fee"              => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
-            "myparcel_checkout"        => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-            "only_recipient_enabled"   => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
-            "only_recipient_fee"       => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
-            "saturday_cutoff_enabled" =>  "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
+            'delivery_options_enabled' => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+            'evening_enabled'          => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_ENABLED,
+            'evening_fee'              => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE,
+            'morning_enabled'          => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_ENABLED,
+            'morning_fee'              => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE,
+            'myparcel_checkout'        => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+            'only_recipient_enabled'   => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_ENABLED,
+            'only_recipient_fee'       => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE,
+            'saturday_cutoff_enabled'  => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_MONDAY_DELIVERY_ENABLED,
         ];
     }
 
@@ -168,7 +168,7 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
     private static function getCheckoutMap(): array
     {
         return [
-            "at_home_delivery" => WCMYPA_Settings::SETTING_DELIVERY_TITLE,
+            'at_home_delivery' => WCMYPA_Settings::SETTING_DELIVERY_TITLE,
         ];
     }
 
@@ -180,10 +180,10 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
         $postnl = CarrierPostNL::NAME;
 
         return [
-            "insured_amount" => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
-            "large_format"   => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
-            "only_recipient" => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
-            "return"         => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
+            'insured_amount' => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT,
+            'large_format'   => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT,
+            'only_recipient' => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT,
+            'return'         => "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_RETURN,
         ];
     }
 
@@ -223,7 +223,7 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
             $match = $i;
         }
 
-        return $possibleValues[$match];
+        return $possibleValues[$match] ?? $possibleValues[0];
     }
 }
 
