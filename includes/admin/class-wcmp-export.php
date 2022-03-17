@@ -389,7 +389,7 @@ class WCMP_Export
             WCMP_Log::add("Shipment data for order {$order_id}.");
         }
 
-        $this->addreturnInTheBox($collection);
+        $this->addReturnInTheBox($collection);
 
         if ($this->errors) {
             setcookie('myparcel_response', implode('<br/>', $this->errors), time() + self::COOKIE_EXPIRE_TIME, "/");
