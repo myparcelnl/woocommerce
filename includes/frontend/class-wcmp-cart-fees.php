@@ -19,6 +19,7 @@ class WCMP_Cart_Fees
 {
     // We treat same day here like a delivery type, even though it is a shipment option.
     private const SAME_DAY = 'same_day';
+
     /**
      * @var array
      */
