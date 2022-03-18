@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -16,6 +17,9 @@ if (class_exists('WCMP_Cart_Fees')) {
  */
 class WCMP_Cart_Fees
 {
+    // We treat same day here like a delivery type, even though it is a shipment option.
+    private const SAME_DAY = 'same_day';
+
     /**
      * @var array
      */
@@ -134,7 +138,7 @@ class WCMP_Cart_Fees
         $location = WC_Tax::get_tax_location('');
 
         if (sizeof($location) === 4) {
-            list($country, $state, $postcode, $city) = $location;
+            [, $state, $postcode, $city] = $location;
 
             // This will be per order shipping - loop through the order and find the highest tax class rate
             $cart_tax_classes = WC()->cart->get_cart_item_tax_classes();
@@ -171,6 +175,10 @@ class WCMP_Cart_Fees
         $shipmentOptions = ($this->deliveryOptions->getShipmentOptions())->toArray();
 
         foreach ($shipmentOptions as $shipmentOption => $enabled) {
+            if (AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY === $shipmentOption) {
+                return;
+            }
+
             //Don't add the fee if it wasn't selected.
             if ($enabled) {
                 $this->addFee($shipmentOption);
@@ -219,6 +227,7 @@ class WCMP_Cart_Fees
         return [
             'delivery_evening'  => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_EVENING_FEE),
             'delivery_standard' => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_STANDARD_FEE),
+            'delivery_same_day' => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_FEE),
             'delivery_morning'  => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_DELIVERY_MORNING_FEE),
             'delivery_pickup'   => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_PICKUP_FEE),
             'only_recipient'    => $getCarrierFee(WCMYPA_Settings::SETTING_CARRIER_ONLY_RECIPIENT_FEE),
@@ -238,6 +247,7 @@ class WCMP_Cart_Fees
         return [
             'delivery_evening'  => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE) ?: __('shipment_options_delivery_evening', 'woocommerce-myparcel'),
             'delivery_standard' => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_STANDARD_TITLE) ?: __('shipment_options_delivery_standard', 'woocommerce-myparcel'),
+            'delivery_same_day' => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_SAME_DAY_TITLE) ?: __('shipment_options_delivery_same_day', 'woocommerce-myparcel'),
             'delivery_morning'  => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE) ?: __('shipment_options_delivery_morning', 'woocommerce-myparcel'),
             'delivery_pickup'   => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_PICKUP_TITLE) ?: __('shipment_options_delivery_pickup', 'woocommerce-myparcel'),
             'only_recipient'    => WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE) ?: __('shipment_options_only_recipient', 'woocommerce-myparcel'),
@@ -250,6 +260,13 @@ class WCMP_Cart_Fees
      */
     private function addDeliveryFee(): void
     {
-        $this->addFee("delivery_{$this->deliveryOptions->getDeliveryType()}");
+        $deliveryType = $this->deliveryOptions->getDeliveryType();
+
+        if ($this->deliveryOptions->getShipmentOptions()
+            && $this->deliveryOptions->getShipmentOptions()->isSameDayDelivery()) {
+            $deliveryType = self::SAME_DAY;
+        }
+
+        $this->addFee("delivery_{$deliveryType}");
     }
 }

@@ -15,6 +15,7 @@ use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
+use MyParcelNL\WooCommerce\includes\admin\settings\SameDayDeliveryService;
 use WC_Order;
 use WCMP_Data;
 use WCMP_Export;
@@ -304,6 +305,7 @@ class OrderSettings
 
         $this->setShipmentOptions();
         $this->setInsuranceData();
+        $this->setSameDayDelivery();
 
         $this->setWeight();
         $this->setDigitalStampRangeWeight();
@@ -677,6 +679,14 @@ class OrderSettings
         }
 
         return $returnValue;
+    }
+
+    /**
+     * @return void
+     */
+    private function setSameDayDelivery(): void
+    {
+        $this->sameDayDelivery = (bool) $this->shipmentOptions->isSameDayDelivery();
     }
 
     /**
