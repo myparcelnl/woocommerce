@@ -232,19 +232,19 @@ class CarrierSettings
                     'type'      => 'toggle',
                 ];
                 break;
-            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
-                $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
-                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
-                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
-                    'type'      => 'toggle',
-                ];
-                break;
             case AbstractConsignment::SHIPMENT_OPTION_SIGNATURE:
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE,
                     'label'     => __('shipment_options_signature', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_signature_help_text', 'woocommerce-myparcel'),
+                    'type'      => 'toggle',
+                ];
+                break;
+            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
+                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ];
                 break;
@@ -291,6 +291,38 @@ class CarrierSettings
                         WCMYPA_Settings::SETTING_CARRIER_SIGNATURE_ENABLED,
                     ]
                 );
+                break;
+            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
+                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
+                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
+                    'type'      => 'toggle',
+                ];
+                $settings[] = WCMP_Settings_Data::getFeeField(
+                    WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_FEE,
+                    [
+                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                        WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
+                    ]
+                );
+                $settings[] = [
+                    'name'  => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_CUTOFF_TIME,
+                    'type'  => 'time',
+                    'class' => ['wcmp__child'],
+                    'condition' => [
+                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                        WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
+                    ],
+                    'label'     => __('setting_carrier_cut_off_time_title', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_same_day_delivery_cutoff_time_help_text', 'woocommerce-myparcel'),
+                    'default'   => '09:00',
+                    'custom_attributes' => [
+                        'min' => '00:00',
+                        'max' => '10:00',
+                    ],
+                ];
                 break;
         }
 
