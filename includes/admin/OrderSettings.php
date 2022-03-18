@@ -686,7 +686,7 @@ class OrderSettings
      */
     private function setSameDayDelivery(): void
     {
-        $this->sameDayDelivery = $this->shipmentOptions->isSameDayDelivery();
+        $this->sameDayDelivery = (bool) $this->shipmentOptions->isSameDayDelivery();
     }
 
     /**

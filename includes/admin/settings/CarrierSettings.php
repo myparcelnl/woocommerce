@@ -317,7 +317,7 @@ class CarrierSettings
                     ],
                     'label'     => __('setting_carrier_cut_off_time_title', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_same_day_delivery_cutoff_time_help_text', 'woocommerce-myparcel'),
-                    'default'   => '9:00',
+                    'default'   => '09:00',
                     'custom_attributes' => [
                         'min' => '00:00',
                         'max' => '10:00',
