@@ -85,17 +85,17 @@ class WCMYPA_Settings
      * e.g. cutoff_time => postnl_cutoff_time/dpd_cutoff_time
      */
     // Defaults
-    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE                     = 'export_signature';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT                = 'export_only_recipient';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT                  = 'export_large_format';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT      = 'export_large_format_from_weight';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK                     = 'export_age_check';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN                        = 'export_return_shipments';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY             = 'export_same_day_delivery';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED                       = 'export_insured';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT                = 'export_insured_amount';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE            = 'export_insured_from_price';
-    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE                = 'export_insured_for_be';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE                = 'export_signature';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT           = 'export_only_recipient';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT             = 'export_large_format';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT = 'export_large_format_from_weight';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK                = 'export_age_check';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN                   = 'export_return_shipments';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY        = 'export_same_day_delivery';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED                  = 'export_insured';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT           = 'export_insured_amount';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE       = 'export_insured_from_price';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE           = 'export_insured_for_be';
 
 
     // Delivery options settings

@@ -17,6 +17,8 @@ if (class_exists('WCMP_Cart_Fees')) {
  */
 class WCMP_Cart_Fees
 {
+    // We treat same day here like a delivery type, even though it is a shipment option.
+    private const SAME_DAY = 'same_day';
     /**
      * @var array
      */
@@ -135,7 +137,7 @@ class WCMP_Cart_Fees
         $location = WC_Tax::get_tax_location('');
 
         if (sizeof($location) === 4) {
-            [$country, $state, $postcode, $city] = $location;
+            [, $state, $postcode, $city] = $location;
 
             // This will be per order shipping - loop through the order and find the highest tax class rate
             $cart_tax_classes = WC()->cart->get_cart_item_tax_classes();
@@ -261,7 +263,7 @@ class WCMP_Cart_Fees
 
         if ($this->deliveryOptions->getShipmentOptions()
             && $this->deliveryOptions->getShipmentOptions()->isSameDayDelivery()) {
-            $deliveryType = 'same_day';
+            $deliveryType = self::SAME_DAY;
         }
 
         $this->addFee("delivery_{$deliveryType}");
