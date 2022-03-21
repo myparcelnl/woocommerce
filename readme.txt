@@ -90,6 +90,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.10.0 (2022-03-21) =
+* Feat: add settings for same day delivery (#810) (3c170b7)
+* Fix: allow 6 characters as number suffix (#806) (073acc9)
+* Fix: fatal error in 4.1.0 migration (#811) (ee20777)
+* Fix: multiple return labels for label in the box (#808) (fa19b4a)
+
 = 4.9.2 (2022-02-16) =
 * Fix: **hotfix:** catch fatal error on faulty address
 

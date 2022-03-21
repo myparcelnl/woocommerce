@@ -1,3 +1,17 @@
+## [4.10.0](https://github.com/myparcelnl/woocommerce/compare/v4.10.0-alpha.2...v4.10.0) (2022-03-21)
+
+
+### Features
+
+* add settings for same day delivery ([#810](https://github.com/myparcelnl/woocommerce/issues/810)) ([3c170b7](https://github.com/myparcelnl/woocommerce/commit/3c170b791d91105d237a23b4ccd2bad6931f19a0))
+
+
+### Bug Fixes
+
+* **checkout:** allow 6 characters as number suffix ([#806](https://github.com/myparcelnl/woocommerce/issues/806)) ([073acc9](https://github.com/myparcelnl/woocommerce/commit/073acc962347095e59f9af4019acf44106e73d83))
+* fix fatal error in 4.1.0 migration ([#811](https://github.com/myparcelnl/woocommerce/issues/811)) ([ee20777](https://github.com/myparcelnl/woocommerce/commit/ee20777989fcf4f91074e6482cf69a1a8310e2bc))
+* multiple return labels for label in the box ([#808](https://github.com/myparcelnl/woocommerce/issues/808)) ([fa19b4a](https://github.com/myparcelnl/woocommerce/commit/fa19b4a66340bab617981ab8725375fafd8a7c09))
+
 ## [4.10.0-alpha.2](https://github.com/myparcelnl/woocommerce/compare/v4.10.0-alpha.1...v4.10.0-alpha.2) (2022-02-25)
 
 
