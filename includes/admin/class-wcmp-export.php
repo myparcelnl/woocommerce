@@ -87,8 +87,6 @@ class WCMP_Export
         require_once("class-wcmp-rest.php");
         require_once("class-wcmp-api.php");
 
-        add_action("admin_notices", [$this, "admin_notices"]);
-
         add_action("wp_ajax_" . self::EXPORT, [$this, "export"]);
     }
 
@@ -145,63 +143,6 @@ class WCMP_Export
         }
 
         return $name;
-    }
-
-    public function admin_notices()
-    {
-        // only do this when the user that initiated this
-        if (isset($_GET["myparcel_done"])) {
-            $action_return = get_option("wcmyparcel_admin_notices");
-            $print_queue   = get_option("wcmyparcel_print_queue", []);
-
-            if (! empty($action_return)) {
-                foreach ($action_return as $type => $message) {
-                    if (! in_array($type, ["success", "error"])) {
-                        continue;
-                    }
-
-                    if ($type === "success" && ! empty($print_queue)) {
-                        $print_queue_store = sprintf(
-                            '<input type="hidden" value=\'%s\' class="wcmp__print-queue">',
-                            json_encode(
-                                [
-                                    "shipment_ids" => $print_queue["shipment_ids"],
-                                    "order_ids"    => $print_queue["order_ids"],
-                                    "offset"       => $print_queue["offset"],
-                                ]
-                            )
-                        );
-
-                        // Empty queue
-                        delete_option("wcmyparcel_print_queue");
-                    }
-
-                    printf(
-                        '<div class="wcmp__notice is-dismissible notice notice-%s"><p>%s</p>%s</div>',
-                        $type,
-                        $message,
-                        $print_queue_store ?? ""
-                    );
-                }
-                // destroy after reading
-                delete_option("wcmyparcel_admin_notices");
-                wp_cache_delete("wcmyparcel_admin_notices", "options");
-            }
-        }
-
-        if (isset($_GET["myparcel"])) {
-            switch ($_GET["myparcel"]) {
-                case "no_consignments":
-                    $message = __(
-                        "You have to export the orders to MyParcel before you can print the labels!",
-                        "woocommerce-myparcel"
-                    );
-                    printf('<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p></div>', $message);
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     /**
