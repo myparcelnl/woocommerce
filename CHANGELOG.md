@@ -1,16 +1,44 @@
-## [4.10.0-alpha.1](https://github.com/myparcelnl/woocommerce/compare/v4.9.1...v4.10.0-alpha.1) (2022-02-09)
+## [4.10.0](https://github.com/myparcelnl/woocommerce/compare/v4.10.0-alpha.2...v4.10.0) (2022-03-21)
 
 
 ### Features
 
-* **orders:** add dropoff point to order ([#770](https://github.com/myparcelnl/woocommerce/issues/770)) ([96d0af9](https://github.com/myparcelnl/woocommerce/commit/96d0af925ee41b8f1d052809d9946aca56f0a83c))
-* **orders:** show the export mode option ([#788](https://github.com/myparcelnl/woocommerce/issues/788)) ([8d292f6](https://github.com/myparcelnl/woocommerce/commit/8d292f6a75ad99fa17f3990531eea98c467463ec))
+* add settings for same day delivery ([#810](https://github.com/myparcelnl/woocommerce/issues/810)) ([3c170b7](https://github.com/myparcelnl/woocommerce/commit/3c170b791d91105d237a23b4ccd2bad6931f19a0))
 
 
 ### Bug Fixes
 
-* display ordergrid even when an address is faulty ([#772](https://github.com/myparcelnl/woocommerce/issues/772)) ([8b8ffb5](https://github.com/myparcelnl/woocommerce/commit/8b8ffb50e287c4c6755daa4b17fc835df6aada21))
-* **orders:** add weight when exporting orders ([#769](https://github.com/myparcelnl/woocommerce/issues/769)) ([6402741](https://github.com/myparcelnl/woocommerce/commit/6402741745f95f1a7afd8a96685d8bde649968de))
+* **checkout:** allow 6 characters as number suffix ([#806](https://github.com/myparcelnl/woocommerce/issues/806)) ([073acc9](https://github.com/myparcelnl/woocommerce/commit/073acc962347095e59f9af4019acf44106e73d83))
+* fix fatal error in 4.1.0 migration ([#811](https://github.com/myparcelnl/woocommerce/issues/811)) ([ee20777](https://github.com/myparcelnl/woocommerce/commit/ee20777989fcf4f91074e6482cf69a1a8310e2bc))
+* multiple return labels for label in the box ([#808](https://github.com/myparcelnl/woocommerce/issues/808)) ([fa19b4a](https://github.com/myparcelnl/woocommerce/commit/fa19b4a66340bab617981ab8725375fafd8a7c09))
+
+## [4.10.0-alpha.2](https://github.com/myparcelnl/woocommerce/compare/v4.10.0-alpha.1...v4.10.0-alpha.2) (2022-02-25)
+
+
+### Features
+
+* check and handle shipment options with pickup ([#787](https://github.com/myparcelnl/woocommerce/issues/787)) ([93c402b](https://github.com/myparcelnl/woocommerce/commit/93c402bfd6c7bd638d5c23937b9147f2d9eb827f))
+
+
+### Bug Fixes
+
+* **checkout:** use correct package type ([#796](https://github.com/myparcelnl/woocommerce/issues/796)) ([ab27dd6](https://github.com/myparcelnl/woocommerce/commit/ab27dd61b29493cfaf0bf700c36c5be9406edecb))
+* **instabox:** track trace not showing in notes ([#798](https://github.com/myparcelnl/woocommerce/issues/798)) ([3eb7c5b](https://github.com/myparcelnl/woocommerce/commit/3eb7c5bf1f58f69e99fed8ca0575dfb1e71e39ea))
+* **om:** no errors for eu shipments without weight ([#804](https://github.com/myparcelnl/woocommerce/issues/804)) ([77258bb](https://github.com/myparcelnl/woocommerce/commit/77258bbc8d44989dd53932cba682cda5d380eab5))
+
+## [4.10.0-alpha.1](https://github.com/myparcelnl/woocommerce/compare/v4.9.2...v4.10.0-alpha.1) (2022-02-16)
+
+
+### Features
+
+* **orders:** add dropoff point to order ([#770](https://github.com/myparcelnl/woocommerce/issues/770)) ([0e07f17](https://github.com/myparcelnl/woocommerce/commit/0e07f17df585d0ec83d4077993e0bd2b8d638eff))
+* **orders:** show the export mode option ([#788](https://github.com/myparcelnl/woocommerce/issues/788)) ([46f7eea](https://github.com/myparcelnl/woocommerce/commit/46f7eeacb89b17161e177c4f91d230d746c7214b))
+
+
+### Bug Fixes
+
+* display ordergrid even when an address is faulty ([#772](https://github.com/myparcelnl/woocommerce/issues/772)) ([73150bb](https://github.com/myparcelnl/woocommerce/commit/73150bbb09c107345067b87e1117d1e2c4e7b385))
+* **orders:** add weight when exporting orders ([#769](https://github.com/myparcelnl/woocommerce/issues/769)) ([918afbe](https://github.com/myparcelnl/woocommerce/commit/918afbe4a7ca2706ec627d5f8ae666564935faaa))
 
 ### [4.9.2](https://github.com/myparcelnl/woocommerce/compare/v4.9.1...v4.9.2) (2022-02-16)
 
@@ -538,3 +566,4 @@
 ### Reverts
 
 * Revert "smarter checkout re-ordening" ([125d27e](https://github.com/myparcelnl/woocommerce/commit/125d27e0d7437936c98a9bc925c21690d33abae9))
+
