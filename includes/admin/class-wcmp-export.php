@@ -1123,10 +1123,10 @@ class WCMP_Export
                 $weight = $floatWeight * 1000;
                 break;
             case 'lbs':
-                $weight = $floatWeight / 0.45359237;
+                $weight = $floatWeight * 0.45359237;
                 break;
             case 'oz':
-                $weight = $floatWeight / 0.0283495231;
+                $weight = $floatWeight * 0.0283495231;
                 break;
             default:
                 $weight = $floatWeight;
