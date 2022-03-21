@@ -938,15 +938,15 @@ jQuery(($) => {
       url: url,
       data: data || {},
       afterDone(response) {
-        if ('yes' === print) {
-          /* load PDF */
-          printLabel({
-            order_ids: orderIds,
-          });
+        if ('yes' !== print) {
+          /* update the page with all changes including message(s) */
+          window.location.reload();
           return;
         }
-        /* update the page with all changes including message(s) */
-        window.location.reload();
+        /* load PDF */
+        printLabel({
+          order_ids: orderIds,
+        });
       },
     });
   }
