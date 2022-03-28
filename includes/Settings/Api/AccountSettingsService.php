@@ -18,9 +18,11 @@ use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierConfigurationUpdatedWebho
 use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopUpdatedWebhookWebService;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
+use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Listener\ApiKeySettingsListener;
+use MyParcelNL\WooCommerce\includes\Settings\Listener\ExportModeSettingsListener;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use WCMP_Log;
 use WP_REST_Response;
@@ -48,6 +50,7 @@ class AccountSettingsService
     public function createSettingsListeners(): void
     {
         (new ApiKeySettingsListener([$this, 'removeSettings']))->listen();
+        (new ExportModeSettingsListener([$this, 'exportModeChangedToPps']))->listen();
     }
 
     /**
@@ -57,6 +60,21 @@ class AccountSettingsService
     {
         $this->deleteWebhooks();
         $this->deleteSettingsFromDatabase();
+    }
+
+    /**
+     *
+     */
+    public function exportModeChangedToPps($optionName, $newValue, $oldValue): void
+    {
+        if ('pps' === $newValue) {
+            Messages::showAdminNotice(
+                __('message_export_mode_on', 'woocommerce-myparcel'),
+                Messages::NOTICE_LEVEL_WARNING,
+                null,
+                [MessagesRepository::SETTINGS_PAGE]
+            );
+        }
     }
 
     /**
