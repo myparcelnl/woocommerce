@@ -27,7 +27,7 @@ class MessagesRepository
 
     public function __construct()
     {
-        add_action('admin_notices', [$this, 'showMessages'], 20);
+        add_action('admin_notices', [$this, 'showMessages']);
         add_action('wp_ajax_dismissNotice', [$this, 'ajaxDismissNotice']);
 
         $this->preloadPersistedMessages();

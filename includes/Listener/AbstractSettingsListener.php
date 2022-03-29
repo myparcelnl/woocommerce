@@ -43,6 +43,6 @@ abstract class AbstractSettingsListener extends AbstractListener
      */
     public function listen(): void
     {
-        add_action('updated_option', [$this, 'handler'], 1, 3);
+        add_action('updated_option', [$this, 'handler'], 10, 3);
     }
 }
