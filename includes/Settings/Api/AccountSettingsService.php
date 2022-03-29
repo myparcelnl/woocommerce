@@ -50,7 +50,6 @@ class AccountSettingsService
     public function createSettingsListeners(): void
     {
         (new ApiKeySettingsListener([$this, 'removeSettings']))->listen();
-        (new ExportModeSettingsListener([$this, 'exportModeChangedToPps']))->listen();
     }
 
     /**
@@ -60,21 +59,6 @@ class AccountSettingsService
     {
         $this->deleteWebhooks();
         $this->deleteSettingsFromDatabase();
-    }
-
-    /**
-     *
-     */
-    public function exportModeChangedToPps($optionName, $newValue, $oldValue): void
-    {
-        if ('pps' === $newValue) {
-            Messages::showAdminNotice(
-                __('message_export_mode_on', 'woocommerce-myparcel'),
-                Messages::NOTICE_LEVEL_WARNING,
-                null,
-                [MessagesRepository::SETTINGS_PAGE]
-            );
-        }
     }
 
     /**
