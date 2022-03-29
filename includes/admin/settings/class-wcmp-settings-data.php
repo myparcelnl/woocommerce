@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use MyParcelNL\WooCommerce\includes\admin\Messages;
+use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\admin\settings\CarrierSettings;
 use MyParcelNL\WooCommerce\includes\admin\settings\Status;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
