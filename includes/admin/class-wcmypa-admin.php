@@ -156,7 +156,14 @@ class WCMYPA_Admin
      */
     public function deliveryDayFilter(): void
     {
-        if (is_admin() && ! empty($_GET['post_type']) == 'shop_order') {
+        $postNlShowDate   = WCMYPA()->setting_collection->where('carrier', CarrierPostNL::NAME)
+            ->getByName(
+                WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE
+            );
+        $instaboxShowDate = WCMYPA()->setting_collection->where('carrier', CarrierInstabox::NAME)
+            ->getByName(WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE);
+
+        if (is_admin() && ! empty($_GET['post_type']) == 'shop_order' && ($postNlShowDate || $instaboxShowDate)) {
             $selected = (isset($_GET['deliveryDate'])
                 ? sanitize_text_field($_GET['deliveryDate'])
                 : false);
