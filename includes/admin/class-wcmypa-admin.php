@@ -156,14 +156,7 @@ class WCMYPA_Admin
      */
     public function deliveryDayFilter(): void
     {
-        $postNlShowDate   = WCMYPA()->setting_collection->where('carrier', CarrierPostNL::NAME)
-            ->getByName(
-                WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE
-            );
-        $instaboxShowDate = WCMYPA()->setting_collection->where('carrier', CarrierInstabox::NAME)
-            ->getByName(WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE);
-
-        if (is_admin() && ! empty($_GET['post_type']) == 'shop_order' && ($postNlShowDate || $instaboxShowDate)) {
+        if (is_admin() && ! empty($_GET['post_type']) == 'shop_order' && $this->anyActiveCarrierHasShowDeliveryDate()) {
             $selected = (isset($_GET['deliveryDate'])
                 ? sanitize_text_field($_GET['deliveryDate'])
                 : false);
@@ -1249,6 +1242,23 @@ class WCMYPA_Admin
         }
 
         return (array) $meta;
+    }
+
+    /**
+     * @return bool
+     */
+    private function anyActiveCarrierHasShowDeliveryDate(): bool
+    {
+        $enabledCarriers = AccountSettings::getInstance()->getEnabledCarriers();
+
+        foreach ($enabledCarriers->all() as $carrier) {
+            if (WCMYPA()->setting_collection->where('carrier', $carrier->getName())
+                ->getByName(WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE)) {
+              return true;
+            }
+        }
+
+        return false;
     }
 
     /**
