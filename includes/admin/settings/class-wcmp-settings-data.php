@@ -346,11 +346,9 @@ class WCMP_Settings_Data
                     self::EXPORT_MODE_SHIPMENTS => __('setting_mode_shipments_title', 'woocommerce-myparcel'),
                     self::EXPORT_MODE_PPS       => __('setting_mode_pps_title', 'woocommerce-myparcel'),
                 ],
-                'default' => self::EXPORT_MODE_SHIPMENTS,
-                'help_text' => __(
-                    __('setting_modus_help_text', 'woocommerce-myparcel')
-                ),
-                'append'  => $this->getExportModeDescription(),
+                'default'   => self::EXPORT_MODE_SHIPMENTS,
+                'help_text' => __('setting_modus_help_text', 'woocommerce-myparcel'),
+                'append'    => $this->getExportModeDescription(),
             ],
             [
                 'name'      => WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY,
@@ -885,9 +883,12 @@ class WCMP_Settings_Data
         return sprintf("<div class=\"label-description-variables\"><p>Available variables: %s</p>", $output);
     }
 
+    /**
+     * @return string
+     */
     private function getExportModeDescription(): string
     {
-        return sprintf("<br><div>%s</div>", __('setting_modus_append', 'woocommerce-myparcel'));
+        return sprintf('<br><div>%s</div>', __('setting_modus_append', 'woocommerce-myparcel'));
     }
 
     /**
