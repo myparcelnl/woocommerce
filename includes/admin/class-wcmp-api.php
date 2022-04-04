@@ -196,6 +196,28 @@ class WCMP_API extends WCMP_Rest
     }
 
     /**
+     * Update the status of given order based on the automatic order status settings.
+     *
+     * @param WC_Order $order
+     * @param string   $thisMoment
+     */
+    public static function updateOrderStatusAfterPrint(WC_Order $order, string $thisMoment = ''): void
+    {
+        $statusAutomation     = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION);
+        $momentOfStatusChange = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER);
+        $newStatus            = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
+
+        if ($statusAutomation && (! $thisMoment || $thisMoment === $momentOfStatusChange)) {
+            $order->update_status(
+                $newStatus,
+                __('myparcel_export', 'woocommerce-myparcel')
+            );
+
+            WCMP_Log::add("Status of order {$order->get_id()} updated to \"$newStatus\"");
+        }
+    }
+
+    /**
      * @param  array $orderIds
      *
      * @throws \JsonException

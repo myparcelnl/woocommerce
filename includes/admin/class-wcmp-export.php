@@ -63,12 +63,10 @@ class WCMP_Export
     public const COUNTRY_CODE_NL = 'NL';
     public const COUNTRY_CODE_BE = 'BE';
     public const NO              = 'no';
-    public const AFTER_RELOAD    = 'after_reload';
     public const YES             = 'yes';
 
     public $order_id;
     public $success;
-    public $errors;
 
     /**
      * @var MyParcelCollection
@@ -85,12 +83,9 @@ class WCMP_Export
     public function __construct()
     {
         $this->success = [];
-        $this->errors  = [];
 
         require_once("class-wcmp-rest.php");
         require_once("class-wcmp-api.php");
-
-        add_action("admin_notices", [$this, "admin_notices"]);
 
         add_action("wp_ajax_" . self::EXPORT, [$this, "export"]);
     }
@@ -150,83 +145,6 @@ class WCMP_Export
         return $name;
     }
 
-    public function admin_notices()
-    {
-        // only do this when the user that initiated this
-        if (isset($_GET["myparcel_done"])) {
-            $action_return = get_option("wcmyparcel_admin_notices");
-            $print_queue   = get_option("wcmyparcel_print_queue", []);
-            $error_notice  = get_option("wcmyparcel_admin_error_notices");
-
-            if (! empty($action_return)) {
-                foreach ($action_return as $type => $message) {
-                    if (! in_array($type, ["success", "error"])) {
-                        continue;
-                    }
-
-                    if ($type === "success" && ! empty($print_queue)) {
-                        $print_queue_store = sprintf(
-                            '<input type="hidden" value=\'%s\' class="wcmp__print-queue">',
-                            json_encode(
-                                [
-                                    "shipment_ids" => $print_queue["shipment_ids"],
-                                    "order_ids"    => $print_queue["order_ids"],
-                                    "offset"       => $print_queue["offset"],
-                                ]
-                            )
-                        );
-
-                        // Empty queue
-                        delete_option("wcmyparcel_print_queue");
-                    }
-
-                    printf(
-                        '<div class="wcmp__notice is-dismissible notice notice-%s"><p>%s</p>%s</div>',
-                        $type,
-                        $message,
-                        $print_queue_store ?? ""
-                    );
-                }
-                // destroy after reading
-                delete_option("wcmyparcel_admin_notices");
-                wp_cache_delete("wcmyparcel_admin_notices", "options");
-            }
-        }
-
-        if (! empty($error_notice)) {
-            printf(
-                '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p>%s</div>',
-                $error_notice,
-                $print_queue_store ?? ""
-            );
-            // destroy after reading
-            delete_option("wcmyparcel_admin_error_notices");
-            wp_cache_delete("wcmyparcel_admin_error_notices", "options");
-        }
-
-        if (isset($_GET["myparcel"])) {
-            switch ($_GET["myparcel"]) {
-                case "no_consignments":
-                    $message = __(
-                        "You have to export the orders to MyParcel before you can print the labels!",
-                        "woocommerce-myparcel"
-                    );
-                    printf('<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p></div>', $message);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        if (isset($_COOKIE['myparcel_response'])) {
-            $response = $_COOKIE['myparcel_response'];
-            printf(
-                '<div class="wcmp__notice is-dismissible notice notice-error"><p>%s</p></div>',
-                $response
-            );
-        }
-    }
-
     /**
      * Export selected orders.
      *
@@ -274,7 +192,7 @@ class WCMP_Export
         $shipment_ids = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
 
         if (empty($shipment_ids) && empty($order_ids)) {
-            $this->errors[] = __("You have not selected any orders!", "woocommerce-myparcel");
+            Messages::showAdminNotice(__('You have not selected any orders!', 'woocommerce-myparcel'));
         } else {
             try {
                 switch ($request) {
@@ -300,20 +218,9 @@ class WCMP_Export
                 }
             } catch (Exception $e) {
                 $errorMessage = $e->getMessage();
-                $this->errors[] = "$request: {$errorMessage}";
-                add_option("wcmyparcel_admin_error_notices", $errorMessage);
+                WCMP_Log::add("$request: {$errorMessage}");
+                Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
             }
-        }
-
-        // display errors directly if PDF requested or modal
-        if (! empty($this->errors) && in_array($request, [self::EXPORT_RETURN, self::GET_LABELS, self::MODAL_DIALOG])) {
-            echo $this->parse_errors($this->errors);
-            die();
-        }
-
-        // format errors for html output
-        if (! empty($this->errors)) {
-            $return["error"] = $this->parse_errors($this->errors);
         }
 
         // if we're directed here from modal, show proper result page
@@ -378,9 +285,9 @@ class WCMP_Export
                     __('error_export_order_id_failed_because', 'woocommerce-myparcel'),
                     $order_id, __($ex->getMessage(), 'woocommerce-myparcel')
                 );
-                $this->errors[$order_id] = $errorMessage;
-
-                WCMP_Log::add($this->errors[$order_id]);
+                Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
+                WCMP_Log::add($errorMessage);
+                unset($order_ids[$order_id]);
 
                 continue;
             }
@@ -391,14 +298,13 @@ class WCMP_Export
 
         $this->addReturnInTheBox($collection);
 
-        if ($this->errors) {
-            setcookie('myparcel_response', implode('<br/>', $this->errors), time() + self::COOKIE_EXPIRE_TIME, "/");
-        }
-
         if (0 === count($collection)) {
-            WCMP_Log::add("No shipments exported to MyParcel.");
+            WCMP_Log::add('No shipments exported to MyParcel.');
 
-            return [];
+            return ['error' => __(
+                'error_no_shipments_created',
+                'woocommerce-myparcel'
+            )];
         }
 
         $collection = $collection
@@ -410,15 +316,14 @@ class WCMP_Export
         }
 
         foreach ($order_ids as $order_id) {
-            if (isset($this->errors[$order_id])) {
+            $order          = WCX::get_order($order_id);
+            $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
+            if (! $consignmentIds) {
                 continue;
             }
 
-            $order          = WCX::get_order($order_id);
-            $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
-
             foreach ($consignmentIds as $consignmentId) {
-                $shipment["shipment_id"] = $consignmentId;
+                $shipment['shipment_id'] = $consignmentId;
                 $this->saveShipmentData($order, $shipment);
                 $this->success[$order_id] = $consignmentId;
             }
@@ -503,8 +408,7 @@ class WCMP_Export
                 }
             } catch (Exception $e) {
                 $errorMessage = $e->getMessage();
-                $this->errors[$order_id] = $errorMessage;
-                add_option('wcmyparcel_admin_error_notices', $errorMessage);
+                Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
             }
         }
 
@@ -541,8 +445,8 @@ class WCMP_Export
             $display        = ($displayOverride ?? $displaySetting) === "display";
             $api->getShipmentLabels($shipment_ids, $order_ids, $positions, $display);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-            add_option('wcmyparcel_admin_error_notice', $e->getMessage());
+            Messages::showAdminNotice($e->getMessage());
+            throw new \RuntimeException($e->getMessage());
         }
 
         return $return;
@@ -993,41 +897,6 @@ class WCMP_Export
         return $packageType;
     }
 
-    /**
-     * @param $errors
-     *
-     * @return mixed|string
-     */
-    public function parse_errors($errors)
-    {
-        $parsed_errors = [];
-
-        foreach ($errors as $key => $error) {
-            // check if we have an order_id
-            if ($key > 10) {
-                $parsed_errors[] = sprintf(
-                    "<strong>%s %s:</strong> %s",
-                    __("Order", "woocommerce-myparcel"),
-                    $key,
-                    $error
-                );
-            } else {
-                $parsed_errors[] = $error;
-            }
-        }
-
-        if (count($parsed_errors) == 1) {
-            $html = array_shift($parsed_errors);
-        } else {
-            foreach ($parsed_errors as &$parsed_error) {
-                $parsed_error = "<li>{$parsed_error}</li>";
-            }
-            $html = sprintf("<ul>%s</ul>", implode("\n", $parsed_errors));
-        }
-
-        return $html;
-    }
-
     public function getShipmentStatusName($status_code)
     {
         $shipment_statuses = [
@@ -1123,10 +992,10 @@ class WCMP_Export
                 $weight = $floatWeight * 1000;
                 break;
             case 'lbs':
-                $weight = $floatWeight / 0.45359237;
+                $weight = $floatWeight * 453.59237;
                 break;
             case 'oz':
-                $weight = $floatWeight / 0.0283495231;
+                $weight = $floatWeight * 28.34952;
                 break;
             default:
                 $weight = $floatWeight;
@@ -1354,8 +1223,10 @@ class WCMP_Export
 
             if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
                 unset($order_ids[$key]);
-                $this->errors[] =
-                    sprintf(__('error_order_has_invalid_shipment_country', 'woocommerce-myparcel'), $key);
+                Messages::showAdminNotice(
+                    sprintf(__('error_order_has_invalid_shipment_country', 'woocommerce-myparcel'), $order_id),
+                    Messages::NOTICE_LEVEL_ERROR
+                );
             }
         }
 
@@ -1668,10 +1539,13 @@ class WCMP_Export
             ];
 
             if (! add_post_meta($orderId, WCMYPA_Admin::META_PPS, $value)) {
-                $this->errors[] = sprintf(__('error_pps_export_feedback', 'woocommerce-myparcel'), $orderId);
+                Messages::showAdminNotice(
+                    sprintf(__('error_pps_export_feedback', 'woocommerce-myparcel'), $orderId),
+                    Messages::NOTICE_LEVEL_ERROR
+                );
             }
 
-            WCMP_API::updateOrderStatus($wcOrder);
+            WCMP_API::updateOrderStatus($wcOrder, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
         }
 
         return [
@@ -1695,16 +1569,11 @@ class WCMP_Export
      */
     private function setFeedbackForClient(string $print, int $offset, array $orderIds, array $return): array
     {
-        if (in_array($print, [self::NO, self::AFTER_RELOAD])) {
-            update_option('wcmyparcel_admin_notices', $return);
-            if (self::AFTER_RELOAD === $print) {
-                $print_queue = [
-                    'order_ids'    => $orderIds,
-                    'shipment_ids' => $return['success_ids'],
-                    'offset'       => isset($offset) && is_numeric($offset) ? $offset % 4 : 0,
-                ];
-                update_option('wcmyparcel_print_queue', $print_queue);
-            }
+        if ($return['success']) {
+            Messages::showAdminNotice($return['success'], Messages::NOTICE_LEVEL_SUCCESS);
+        }
+        if ($return['error']) {
+            Messages::showAdminNotice($return['error'], Messages::NOTICE_LEVEL_ERROR);
         }
 
         return $return;

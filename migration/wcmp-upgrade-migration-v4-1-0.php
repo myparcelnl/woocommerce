@@ -195,7 +195,7 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
         $postnl           = CarrierPostNL::NAME;
         $key              = "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT;
         $availableAmounts = WCMP_Data::getInsuranceAmounts();
-        $insuranceAmount  = $this->newPostNlSettings[$key];
+        $insuranceAmount  = $this->newPostNlSettings[$key] ?? 0;
 
         if (! in_array($insuranceAmount, $availableAmounts)) {
             $closestValue = $this->roundUpToMatch($insuranceAmount, $availableAmounts);

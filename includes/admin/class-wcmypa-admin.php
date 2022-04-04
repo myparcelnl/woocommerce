@@ -156,7 +156,7 @@ class WCMYPA_Admin
      */
     public function deliveryDayFilter(): void
     {
-        if (is_admin() && ! empty($_GET['post_type']) == 'shop_order') {
+        if (is_admin() && ! empty($_GET['post_type']) == 'shop_order' && $this->anyActiveCarrierHasShowDeliveryDate()) {
             $selected = (isset($_GET['deliveryDate'])
                 ? sanitize_text_field($_GET['deliveryDate'])
                 : false);
@@ -1136,7 +1136,7 @@ class WCMYPA_Admin
      */
     public function renderBarcodes(WC_Order $order): void
     {
-        $shipments  = self::get_order_shipments($order, true);
+        $shipments  = self::get_order_shipments($order, false);
         $exportMode = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
@@ -1157,26 +1157,26 @@ class WCMYPA_Admin
         echo '<div class="wcmp__barcodes">';
 
         foreach ($shipments as $shipment_id => $shipment) {
-            $shipmentStatusId = $shipment['shipment']['status'];
+            $shipmentStatusId = $shipment['shipment']['status'] ?? null;
             $printedStatuses  = [WCMYPA_Admin::ORDER_STATUS_PRINTED_DIGITAL_STAMP, WCMYPA_Admin::ORDER_STATUS_PRINTED_LETTER];
 
             if (in_array($shipmentStatusId, $printedStatuses)) {
-                echo __("The label has been printed.", "woocommerce-myparcel");
+                echo __('The label has been printed.', 'woocommerce-myparcel') . '<br/>';
                 continue;
             }
 
-            if (empty($shipment["track_trace"])) {
-                echo __("Concept created but not printed.", "woocommerce-myparcel");
+            if (empty($shipment['track_trace'])) {
+                echo __('Concept created but not printed.', 'woocommerce-myparcel') . '<br/>';
                 continue;
             }
 
             printf(
                 '<a target="_blank" class="wcmp__barcode-link" title="%2$s" href="%1$s">%2$s</a><br>',
-                self::getTrackTraceUrl($order, $shipment["track_trace"]),
-                $shipment["track_trace"]
+                self::getTrackTraceUrl($order, $shipment['track_trace']),
+                $shipment['track_trace']
             );
         }
-        echo "</div>";
+        echo '</div>';
     }
 
     /**
@@ -1245,6 +1245,23 @@ class WCMYPA_Admin
     }
 
     /**
+     * @return bool
+     */
+    private function anyActiveCarrierHasShowDeliveryDate(): bool
+    {
+        $enabledCarriers = AccountSettings::getInstance()->getEnabledCarriers();
+
+        foreach ($enabledCarriers->all() as $carrier) {
+            if (WCMYPA()->setting_collection->where('carrier', $carrier->getName())
+                ->getByName(WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE)) {
+              return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Output the delivery date if there is a date and the show delivery day setting is enabled.
      *
      * @param DeliveryOptions $deliveryOptions
@@ -1253,15 +1270,16 @@ class WCMYPA_Admin
      */
     private function printDeliveryDate(DeliveryOptions $deliveryOptions): void
     {
-        if (
-            $deliveryOptions->getDate() ||
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $deliveryOptions->getPackageType()
-        ) {
+        $deliveryDate = $deliveryOptions->getDate();
+        $deliveryType = $deliveryOptions->getDeliveryType();
+
+        if ($deliveryDate || AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $deliveryOptions->getPackageType()) {
             printf(
                 '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
-                __("MyParcel shipment:", "woocommerce-myparcel"),
-                WCMP_Data::getDeliveryTypesHuman()[$deliveryOptions->getDeliveryType()],
-                wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()), 'D d-m')
+                __('MyParcel shipment:', 'woocommerce-myparcel'),
+                WCMP_Data::getDeliveryTypesHuman()[$deliveryType],
+                empty($deliveryDate) || $deliveryType === AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME ? ''
+                    : wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()), 'D d-m')
             );
         }
     }

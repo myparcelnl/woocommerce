@@ -159,6 +159,13 @@ class WebhookSubscriptionService
             return null;
         }
 
+        WCMP_Log::add(
+            sprintf(
+                'Successfully subscribed to webhook %s.',
+                $service->getHook()
+            )
+        );
+
         return $subscriptionId;
     }
 

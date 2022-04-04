@@ -129,14 +129,19 @@ class WCMP_Export_Consignments
     /**
      * Get date in YYYY-MM-DD HH:MM:SS format
      *
-     * @return string
+     * @return null|string
      */
-    public function getDeliveryDate(): string
+    public function getDeliveryDate(): ?string
     {
-        $date             = strtotime($this->deliveryOptions->getDate());
+        $deliveryDateFromDeliveryOptions = $this->deliveryOptions->getDate();
+
+        if (! $deliveryDateFromDeliveryOptions) {
+            return null;
+        }
+        $date             = strtotime($deliveryDateFromDeliveryOptions);
         $deliveryDateTime = date('Y-m-d H:i:s', $date);
-        $deliveryDate     = date("Y-m-d", $date);
-        $dateOfToday      = date("Y-m-d", strtotime('now'));
+        $deliveryDate     = date('Y-m-d', $date);
+        $dateOfToday      = date('Y-m-d');
         $dateOfTomorrow   = date('Y-m-d H:i:s', strtotime('now +1 day'));
 
         if ($deliveryDate <= $dateOfToday) {
@@ -219,8 +224,9 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $originCountry = $this->consignment->getLocalCountryCode();
-        $recipient     = new RecipientFromWCOrder($this->order, $originCountry, RecipientFromWCOrder::SHIPPING);
+        $originCountry        = $this->consignment->getLocalCountryCode();
+        $recipient            = new RecipientFromWCOrder($this->order, $originCountry, RecipientFromWCOrder::SHIPPING);
+        $saveRecipientAddress = (bool) WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SAVE_CUSTOMER_ADDRESS);
 
         $this->consignment
             ->setCountry($recipient->getCc())
@@ -236,7 +242,7 @@ class WCMP_Export_Consignments
             ->setRegion($recipient->getRegion())
             ->setEmail($recipient->getEmail())
             ->setPhone($recipient->getPhone())
-            ->setSaveRecipientAddress(false);
+            ->setSaveRecipientAddress($saveRecipientAddress);
     }
 
     /**

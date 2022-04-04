@@ -18,7 +18,10 @@ use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Model\Model;
 use WCMP_Data;
+use WCMP_Export_Consignments;
+use WCMP_Settings_Data;
 use WCMYPA_Admin;
+use WCMYPA_Settings;
 
 /**
  * @property null|\MyParcelNL\Sdk\src\Model\Account\Shop                         $shop
@@ -82,6 +85,12 @@ class AccountSettings extends Model
 
         if ($this->validateWebhooksUsage()) {
             $service->setUpWebhooks();
+            $settingPrintAfter = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER);
+            $exportMode        = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EXPORT_MODE);
+
+            if (WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === $settingPrintAfter && WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
+                $service->setUpOrderStatusWebhook();
+            }
         }
     }
 
