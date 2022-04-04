@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use MyParcelNL\WooCommerce\includes\admin\Messages;
+use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\admin\settings\CarrierSettings;
 use MyParcelNL\WooCommerce\includes\admin\settings\Status;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
@@ -330,8 +332,18 @@ class WCMP_Settings_Data
      */
     private function get_section_general_general(): array
     {
-        $exportMode          = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE) ??
-            self::EXPORT_MODE_SHIPMENTS;
+        $exportModeSetting = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
+
+        if (self::EXPORT_MODE_PPS === $exportModeSetting) {
+            Messages::showAdminNotice(
+                __('message_export_mode_on', 'woocommerce-myparcel'),
+                Messages::NOTICE_LEVEL_WARNING,
+                null,
+                [MessagesRepository::SETTINGS_PAGE]
+            );
+        }
+
+        $exportMode = $exportModeSetting ?? self::EXPORT_MODE_SHIPMENTS;
         $exportModeClassName = self::EXPORT_MODE_PPS !== $exportMode ? 'hidden' : '';
 
         return [
@@ -344,7 +356,9 @@ class WCMP_Settings_Data
                     self::EXPORT_MODE_SHIPMENTS => __('setting_mode_shipments_title', 'woocommerce-myparcel'),
                     self::EXPORT_MODE_PPS       => __('setting_mode_pps_title', 'woocommerce-myparcel'),
                 ],
-                'default' => self::EXPORT_MODE_SHIPMENTS,
+                'default'   => self::EXPORT_MODE_SHIPMENTS,
+                'help_text' => __('setting_modus_help_text', 'woocommerce-myparcel'),
+                'append'    => $this->getExportModeDescription(),
             ],
             [
                 'name'      => WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY,
@@ -877,6 +891,14 @@ class WCMP_Settings_Data
         }
 
         return sprintf("<div class=\"label-description-variables\"><p>Available variables: %s</p>", $output);
+    }
+
+    /**
+     * @return string
+     */
+    private function getExportModeDescription(): string
+    {
+        return sprintf('<br><div>%s</div>', __('setting_modus_append', 'woocommerce-myparcel'));
     }
 
     /**
