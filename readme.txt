@@ -90,6 +90,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.10.2 (2022-04-05) =
+* Fix: update delivery options
+
 = 4.10.1 (2022-04-05) =
 * Fix: the weight calculations must be multiplied (#814)
 * Fix: show message when order management is enabled (#815)

@@ -1,3 +1,10 @@
+### [4.10.2](https://github.com/myparcelnl/woocommerce/compare/v4.10.1...v4.10.2) (2022-04-05)
+
+### Bug Fixes
+
+* update delivery options
+
+
 ### [4.10.1](https://github.com/myparcelnl/woocommerce/compare/v4.10.0...v4.10.1) (2022-04-05)
 
 
