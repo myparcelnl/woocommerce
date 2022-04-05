@@ -129,19 +129,14 @@ class WCMP_Export_Consignments
     /**
      * Get date in YYYY-MM-DD HH:MM:SS format
      *
-     * @return null|string
+     * @return string
      */
-    public function getDeliveryDate(): ?string
+    public function getDeliveryDate(): string
     {
-        $deliveryDateFromDeliveryOptions = $this->deliveryOptions->getDate();
-
-        if (! $deliveryDateFromDeliveryOptions) {
-            return null;
-        }
-        $date             = strtotime($deliveryDateFromDeliveryOptions);
+        $date             = strtotime($this->deliveryOptions->getDate());
         $deliveryDateTime = date('Y-m-d H:i:s', $date);
-        $deliveryDate     = date('Y-m-d', $date);
-        $dateOfToday      = date('Y-m-d');
+        $deliveryDate     = date("Y-m-d", $date);
+        $dateOfToday      = date("Y-m-d", strtotime('now'));
         $dateOfTomorrow   = date('Y-m-d H:i:s', strtotime('now +1 day'));
 
         if ($deliveryDate <= $dateOfToday) {
