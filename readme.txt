@@ -90,6 +90,12 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.10.1 (2022-04-05) =
+* Fix: the weight calculations must be multiplied (#814)
+* Fix: show message when order management is enabled (#815)
+* Fix: only show delivery date in order view when necessary (#816)
+* Fix: syntax error on 4.1.0 migration (#817)
+
 = 4.10.0 (2022-03-21) =
 * Feat: add settings for same day delivery (#810) (3c170b7)
 * Fix: allow 6 characters as number suffix (#806) (073acc9)

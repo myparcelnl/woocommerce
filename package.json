@@ -1,7 +1,7 @@
 {
   "name": "@myparcel/woocommerce",
   "private": true,
-  "version": "4.10.0",
+  "version": "4.10.1",
   "scripts": {
     "build": "gulp",
     "serve": "gulp watch"
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/myparcelnl/woocommerce#readme",
   "dependencies": {
-    "@myparcel/delivery-options": "^5.0.0"
+    "@myparcel/delivery-options": "^5.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
