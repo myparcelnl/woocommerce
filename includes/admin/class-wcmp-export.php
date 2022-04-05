@@ -6,6 +6,7 @@ use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierFactory;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\CustomsDeclaration;
@@ -20,6 +21,7 @@ use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormat;
 use MyParcelNL\WooCommerce\Includes\Adapter\OrderLineFromWooCommerce;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
+use MyParcelNL\WooCommerce\includes\admin\settings\CarrierSettings;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -1427,6 +1429,15 @@ class WCMP_Export
             $dropOffPoint           = $configuration ? $configuration->getDefaultDropOffPoint() : null;
             $shipmentOptions        = $deliveryOptions->getShipmentOptions();
 
+            if ($dropOffPoint && CarrierInstabox::NAME === $carrier->getName()) {
+                throw new RuntimeException(
+                    WCMP_Settings_Callbacks::getLink(
+                        __('no_drop_off_point_instabox', 'woocommerce-myparcel'),
+                        CarrierSettings::getRetailOverviewLink($carrier)
+                    )
+                );
+            }
+
             $shipmentOptions->setSignature($orderSettings->hasSignature());
             $shipmentOptions->setInsurance($orderSettings->getInsuranceAmount());
             $shipmentOptions->setAgeCheck($orderSettings->hasAgeCheck());
@@ -1444,8 +1455,7 @@ class WCMP_Export
                 ->setOrderDate($wcOrder->get_date_created() ?? new DateTime())
                 ->setPickupLocation($orderSettings->getPickupLocation())
                 ->setExternalIdentifier($orderId)
-                ->setWeight($orderSettings->getColloWeight())
-                ->setDropOffPoint($dropOffPoint);
+                ->setWeight($orderSettings->getColloWeight());
 
             $orderLines = new Collection();
 
