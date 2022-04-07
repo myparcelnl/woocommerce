@@ -1429,15 +1429,6 @@ class WCMP_Export
             $dropOffPoint           = $configuration ? $configuration->getDefaultDropOffPoint() : null;
             $shipmentOptions        = $deliveryOptions->getShipmentOptions();
 
-            if ($dropOffPoint && CarrierInstabox::NAME === $carrier->getName()) {
-                throw new RuntimeException(
-                    WCMP_Settings_Callbacks::getLink(
-                        __('no_drop_off_point_instabox', 'woocommerce-myparcel'),
-                        CarrierSettings::getRetailOverviewLink($carrier)
-                    )
-                );
-            }
-
             $shipmentOptions->setSignature($orderSettings->hasSignature());
             $shipmentOptions->setInsurance($orderSettings->getInsuranceAmount());
             $shipmentOptions->setAgeCheck($orderSettings->hasAgeCheck());
