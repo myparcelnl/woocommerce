@@ -343,14 +343,10 @@ class WCMP_Settings_Data
             );
         }
 
-        $exportMode = $exportModeSetting ?? self::EXPORT_MODE_SHIPMENTS;
-        $exportModeClassName = self::EXPORT_MODE_PPS !== $exportMode ? 'hidden' : '';
-
         return [
             [
                 'name'    => WCMYPA_Settings::SETTING_EXPORT_MODE,
                 'label'   => __('setting_mode_title', 'woocommerce-myparcel'),
-                'class'   => [$exportModeClassName],
                 'type'    => 'select',
                 'options' => [
                     self::EXPORT_MODE_SHIPMENTS => __('setting_mode_shipments_title', 'woocommerce-myparcel'),
