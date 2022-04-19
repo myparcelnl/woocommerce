@@ -21,14 +21,14 @@ class WCMP_Frontend
     {
         new WCMP_Frontend_Track_Trace();
 
-	// Shipment information in confirmation mail
-	add_action("woocommerce_email_customer_details", [$this, "confirmationEmail"], 19, 3);
+        // Shipment information in confirmation mail
+        add_action("woocommerce_email_customer_details", [$this, "confirmationEmail"], 19, 3);
 
-	// Shipment information in my account
-	add_action('woocommerce_view_order', [$this, "confirmationOrderReceived"]);
+        // Shipment information in my account
+        add_action('woocommerce_view_order', [$this, "confirmationOrderReceived"]);
 
-	// Shipment information on the thank you page
-	add_action("woocommerce_thankyou", [$this, "confirmationOrderReceived"], 10, 1);
+        // Shipment information on the thank you page
+        add_action("woocommerce_thankyou", [$this, "confirmationOrderReceived"], 10, 1);
         add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_options", [$this, "wpo_wcpdf_delivery_options"], 10, 2);
 
         // Initialize delivery options fees
@@ -50,7 +50,9 @@ class WCMP_Frontend
      */
     public function confirmationEmail(WC_Order $order): void
     {
-	    WCMYPA()->admin->showShipmentConfirmation($order, true);
+        if (self::get_cart_shipping_class()) {
+            WCMYPA()->admin->showShipmentConfirmation($order, false);
+        }
     }
 
     /**
@@ -61,7 +63,9 @@ class WCMP_Frontend
     public function confirmationOrderReceived(int $order_id): void
     {
         $order = wc_get_order($order_id);
-        WCMYPA()->admin->showShipmentConfirmation($order, false);
+        if (self::get_cart_shipping_class()) {
+            WCMYPA()->admin->showShipmentConfirmation($order, false);
+        }
     }
 
     /**
