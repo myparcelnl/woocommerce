@@ -56,6 +56,7 @@ class WCMYPA_Settings
     public const SETTING_AUTOMATIC_EXPORT               = 'export_automatic';
     public const SETTING_AUTOMATIC_EXPORT_STATUS        = 'export_automatic_status';
     public const SETTING_RETURN_IN_THE_BOX              = 'return_in_the_box';
+    public const SETTING_SAVE_CUSTOMER_ADDRESS          = 'save_customer_address';
 
     /**
      * Checkout
