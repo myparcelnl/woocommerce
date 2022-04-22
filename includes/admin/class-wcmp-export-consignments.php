@@ -224,8 +224,9 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $originCountry = $this->consignment->getLocalCountryCode();
-        $recipient     = new RecipientFromWCOrder($this->order, $originCountry, RecipientFromWCOrder::SHIPPING);
+        $originCountry        = $this->consignment->getLocalCountryCode();
+        $recipient            = new RecipientFromWCOrder($this->order, $originCountry, RecipientFromWCOrder::SHIPPING);
+        $saveRecipientAddress = (bool) WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SAVE_CUSTOMER_ADDRESS);
 
         $this->consignment
             ->setCountry($recipient->getCc())
@@ -241,7 +242,7 @@ class WCMP_Export_Consignments
             ->setRegion($recipient->getRegion())
             ->setEmail($recipient->getEmail())
             ->setPhone($recipient->getPhone())
-            ->setSaveRecipientAddress(false);
+            ->setSaveRecipientAddress($saveRecipientAddress);
     }
 
     /**
