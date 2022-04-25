@@ -1136,7 +1136,7 @@ class WCMYPA_Admin
      */
     public function renderBarcodes(WC_Order $order): void
     {
-        $shipments  = self::get_order_shipments($order, true);
+        $shipments  = self::get_order_shipments($order, false);
         $exportMode = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
@@ -1157,26 +1157,26 @@ class WCMYPA_Admin
         echo '<div class="wcmp__barcodes">';
 
         foreach ($shipments as $shipment_id => $shipment) {
-            $shipmentStatusId = $shipment['shipment']['status'];
+            $shipmentStatusId = $shipment['shipment']['status'] ?? null;
             $printedStatuses  = [WCMYPA_Admin::ORDER_STATUS_PRINTED_DIGITAL_STAMP, WCMYPA_Admin::ORDER_STATUS_PRINTED_LETTER];
 
             if (in_array($shipmentStatusId, $printedStatuses)) {
-                echo __("The label has been printed.", "woocommerce-myparcel");
+                echo __('The label has been printed.', 'woocommerce-myparcel') . '<br/>';
                 continue;
             }
 
-            if (empty($shipment["track_trace"])) {
-                echo __("Concept created but not printed.", "woocommerce-myparcel");
+            if (empty($shipment['track_trace'])) {
+                echo __('Concept created but not printed.', 'woocommerce-myparcel') . '<br/>';
                 continue;
             }
 
             printf(
                 '<a target="_blank" class="wcmp__barcode-link" title="%2$s" href="%1$s">%2$s</a><br>',
-                self::getTrackTraceUrl($order, $shipment["track_trace"]),
-                $shipment["track_trace"]
+                self::getTrackTraceUrl($order, $shipment['track_trace']),
+                $shipment['track_trace']
             );
         }
-        echo "</div>";
+        echo '</div>';
     }
 
     /**
