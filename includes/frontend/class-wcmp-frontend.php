@@ -50,7 +50,7 @@ class WCMP_Frontend
      */
     public function confirmationEmail(WC_Order $order): void
     {
-        if (! self::get_cart_shipping_class()) {
+        if (self::get_cart_shipping_class()) {
             return;
         }
 
@@ -64,7 +64,7 @@ class WCMP_Frontend
      */
     public function confirmationOrderReceived(int $order_id): void
     {
-        if (! self::get_cart_shipping_class()) {
+        if (self::get_cart_shipping_class()) {
             return;
         }
 
