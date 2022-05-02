@@ -70,12 +70,19 @@ echo "<hr>";
  * Do show the Track & Trace status for all shipments.
  */
 foreach ($shipments as $shipment_id => $shipment) {
-    $trackTrace = Arr::get($shipment, "track_trace");
+    $trackTrace       = Arr::get($shipment, 'track_trace');
+    $shipmentShipment = Arr::get($shipment, 'shipment');
+    $shipmentStatusId = Arr::get($shipmentShipment, 'status');
+    $printedStatuses  = [WCMYPA_Admin::ORDER_STATUS_PRINTED_DIGITAL_STAMP, WCMYPA_Admin::ORDER_STATUS_PRINTED_LETTER];
 
     /**
      * Show Track & Trace status.
      */
     if (! $trackTrace) {
+        if (in_array($shipmentStatusId, $printedStatuses)) {
+            echo __('The label has been printed.', 'woocommerce-myparcel');
+            echo '<br/>';
+        }
         continue;
     }
 
