@@ -50,7 +50,7 @@ class WCMP_Frontend
      */
     public function confirmationEmail(WC_Order $order): void
     {
-        if (self::get_cart_shipping_class()) {
+        if ($this->isLocalPickup()) {
             return;
         }
 
@@ -64,12 +64,24 @@ class WCMP_Frontend
      */
     public function confirmationOrderReceived(int $order_id): void
     {
-        if (self::get_cart_shipping_class()) {
+        if ($this->isLocalPickup()) {
             return;
         }
 
         $order = wc_get_order($order_id);
         WCMYPA()->admin->showShipmentConfirmation($order, false);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isLocalPickup(): bool
+    {
+        $shippingMethodString = WC()->session->get('chosen_shipping_methods')[0] ?? '';
+
+        [$methodSlug, $methodInstance] = WCMP_Checkout::splitShippingMethodString($shippingMethodString);
+
+        return WCMP_Shipping_Methods::LOCAL_PICKUP === $methodSlug;
     }
 
     /**
