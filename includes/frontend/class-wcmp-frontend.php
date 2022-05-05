@@ -79,7 +79,7 @@ class WCMP_Frontend
     {
         $shippingMethodString = WC()->session->get('chosen_shipping_methods')[0] ?? '';
 
-        [$methodSlug, $methodInstance] = WCMP_Checkout::splitShippingMethodString($shippingMethodString);
+        [$methodSlug] = WCMP_Checkout::splitShippingMethodString($shippingMethodString);
 
         return WCMP_Shipping_Methods::LOCAL_PICKUP === $methodSlug;
     }
