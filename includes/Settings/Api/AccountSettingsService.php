@@ -13,6 +13,8 @@ use MyParcelNL\Sdk\src\Model\Account\Shop;
 use MyParcelNL\Sdk\src\Services\Web\AccountWebService;
 use MyParcelNL\Sdk\src\Services\Web\CarrierConfigurationWebService;
 use MyParcelNL\Sdk\src\Services\Web\CarrierOptionsWebService;
+use MyParcelNL\Sdk\src\Services\Web\OrderWebService;
+use MyParcelNL\Sdk\src\Services\Web\Webhook\OrderStatusChangeWebhookWebService;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierAccessibilityUpdatedWebhookWebService;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierConfigurationUpdatedWebhookWebService;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopUpdatedWebhookWebService;
@@ -23,7 +25,10 @@ use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Listener\ApiKeySettingsListener;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use WCMP_Log;
+use WCMYPA_Settings;
+use WP_REST_Request;
 use WP_REST_Response;
+use WPO\WC\MyParcel\Compatibility\WC_Core;
 
 class AccountSettingsService
 {
@@ -39,6 +44,16 @@ class AccountSettingsService
         ShopCarrierAccessibilityUpdatedWebhookWebService::class,
         ShopCarrierConfigurationUpdatedWebhookWebService::class,
         ShopUpdatedWebhookWebService::class,
+    ];
+    /**
+     * 2 : Package shipment barcode printed
+     * 12: Letter shipment barcode printed
+     * 14: Digital stamp barcode printed
+     */
+    public const COMPLETED_ORDER_STATUSES = [
+        2,
+        12,
+        14,
     ];
 
     /**
@@ -116,6 +131,18 @@ class AccountSettingsService
         }
 
         return new Collection($options);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function setUpOrderStatusWebhook(): void
+    {
+        $subscriptionService = new WebhookSubscriptionService();
+        $orderStatusChangeWebhook = OrderStatusChangeWebhookWebService::class;
+        $webhookWebService = (new $orderStatusChangeWebhook())->setApiKey($this->ensureHasApiKey());
+
+        $subscriptionService->create($webhookWebService, [$this, 'updateOrderStatus']);
     }
 
     /**
@@ -273,5 +300,58 @@ class AccountSettingsService
         $array = $this->createArray($settings);
 
         return update_option(AccountSettings::WP_OPTION_KEY, $array);
+    }
+
+    /**
+     * @param  \WP_REST_Request $request
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function updateOrderStatus(WP_REST_Request $request): void
+    {
+        $requestBody = $request->get_body();
+        $jsonBody    = json_decode($requestBody, true);
+        $orderId     = $jsonBody['data']['hooks'][0]['order'];
+        $order       = $this->getOrderAsArray($orderId);
+
+        if (! $order || ! $order['order_shipments']) {
+            return;
+        }
+
+        $shipment = $order['order_shipments'][0];
+
+        if (! ($shipment['external_shipment_identifier']
+            && in_array($shipment['shipment']['status'], self::COMPLETED_ORDER_STATUSES, true))) {
+            return;
+        }
+
+        $wcOrder = WC_Core::get_order($order['external_identifier']);
+        $wcOrder->update_status(
+            WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
+            '',
+            true
+        );
+    }
+
+    /**
+     * @param $orderId
+     *
+     * @return null|array
+     * @throws \Exception
+     */
+    private function getOrderAsArray($orderId): ?array
+    {
+        $orderWebService = new OrderWebService();
+        $orderWebService->setApiKey($this->ensureHasApiKey());
+
+        try {
+            $order = $orderWebService->getOrder($orderId);
+        } catch (Exception $e) {
+            WCMP_Log::add($e->getMessage());
+            return null;
+        }
+
+        return $order;
     }
 }

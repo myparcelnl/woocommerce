@@ -438,15 +438,6 @@ class WCMP_Settings_Data
             ],
             [
                 'name'      => WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER,
-                'condition' => [
-                        WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION,
-                        [
-                            'parent_name'  => WCMYPA_Settings::SETTING_EXPORT_MODE,
-                            'type'         => 'disable',
-                            'parent_value' => self::EXPORT_MODE_SHIPMENTS,
-                            'set_value'    => self::CHANGE_STATUS_AFTER_EXPORT,
-                        ],
-                    ],
                 'class'     => ['wcmp__child'],
                 'label'     => __('setting_change_order_status_after', 'woocommerce-myparcel'),
                 'type'      => 'select',

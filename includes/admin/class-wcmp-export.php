@@ -1545,7 +1545,7 @@ class WCMP_Export
                 );
             }
 
-            WCMP_API::updateOrderStatus($wcOrder);
+            WCMP_API::updateOrderStatus($wcOrder, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
         }
 
         return [
