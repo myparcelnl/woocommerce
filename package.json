@@ -1,21 +1,17 @@
 {
   "name": "@myparcel/woocommerce",
-  "private": true,
   "version": "4.11.0",
-  "scripts": {
-    "build": "gulp",
-    "serve": "gulp watch"
-  },
+  "private": true,
+  "homepage": "https://myparcelnl.github.io/woocommerce",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/myparcelnl/woocommerce.git"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/myparcelnl/woocommerce/issues"
+  "license": "MIT",
+  "scripts": {
+    "build": "gulp",
+    "serve": "gulp watch"
   },
-  "homepage": "https://github.com/myparcelnl/woocommerce#readme",
   "dependencies": {
     "@myparcel/delivery-options": "^5.0.0"
   },
