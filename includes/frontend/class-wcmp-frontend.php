@@ -21,22 +21,22 @@ class WCMP_Frontend
     {
         new WCMP_Frontend_Track_Trace();
 
-	// Shipment information in confirmation mail
-	add_action("woocommerce_email_customer_details", [$this, "confirmationEmail"], 19, 3);
+        // Shipment information in confirmation mail
+        add_action('woocommerce_email_customer_details', [$this, 'confirmationEmail'], 19, 3);
 
-	// Shipment information in my account
-	add_action('woocommerce_view_order', [$this, "confirmationOrderReceived"]);
+        // Shipment information in my account
+        add_action('woocommerce_view_order', [$this, 'confirmationOrderReceived']);
 
-	// Shipment information on the thank you page
-	add_action("woocommerce_thankyou", [$this, "confirmationOrderReceived"], 10, 1);
-        add_filter("wpo_wcpdf_templates_replace_myparcel_delivery_options", [$this, "wpo_wcpdf_delivery_options"], 10, 2);
+        // Shipment information on the thank you page
+        add_action('woocommerce_thankyou', [$this, 'confirmationOrderReceived'], 10, 1);
+        add_filter('wpo_wcpdf_templates_replace_myparcel_delivery_options', [$this, 'wpo_wcpdf_delivery_options'], 10, 2);
 
         // Initialize delivery options fees
         new WCMP_Cart_Fees();
 
         // Output most expensive shipping class in frontend data
-        add_action("woocommerce_checkout_before_order_review", [$this, "injectShippingClassInput"], 100);
-        add_action("woocommerce_update_order_review_fragments", [$this, "order_review_fragments"]);
+        add_action('woocommerce_checkout_before_order_review', [$this, 'injectShippingClassInput'], 100);
+        add_action('woocommerce_update_order_review_fragments', [$this, 'order_review_fragments']);
 
         // Ajax
         add_action('wp_ajax_get_highest_shipping_class', [$this, 'ajaxGetHighestShippingClass']);
@@ -50,7 +50,11 @@ class WCMP_Frontend
      */
     public function confirmationEmail(WC_Order $order): void
     {
-	    WCMYPA()->admin->showShipmentConfirmation($order, true);
+        if ($this->isLocalPickup()) {
+            return;
+        }
+
+        WCMYPA()->admin->showShipmentConfirmation($order, false);
     }
 
     /**
@@ -60,8 +64,24 @@ class WCMP_Frontend
      */
     public function confirmationOrderReceived(int $order_id): void
     {
+        if ($this->isLocalPickup()) {
+            return;
+        }
+
         $order = wc_get_order($order_id);
         WCMYPA()->admin->showShipmentConfirmation($order, false);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isLocalPickup(): bool
+    {
+        $shippingMethodString = WC()->session->get('chosen_shipping_methods')[0] ?? '';
+
+        [$methodSlug] = WCMP_Checkout::splitShippingMethodString($shippingMethodString);
+
+        return WCMP_Shipping_Methods::LOCAL_PICKUP === $methodSlug;
     }
 
     /**
@@ -193,7 +213,7 @@ class WCMP_Frontend
         }
 
         foreach ($shipments as $shipment_id => $shipment) {
-            $trackTrace = Arr::get($shipment, "track_trace");
+            $trackTrace = Arr::get($shipment, 'track_trace');
 
             // skip concepts
             if (! $trackTrace) {
@@ -236,8 +256,8 @@ class WCMP_Frontend
 
         foreach ($consignments as $key => $consignment) {
             $track_trace_links[] = [
-                "link" => $consignment["track_trace_link"],
-                "url"  => $consignment["track_trace_url"],
+                'link' => $consignment['track_trace_link'],
+                'url'  => $consignment['track_trace_url'],
             ];
         }
 
