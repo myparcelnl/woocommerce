@@ -16,17 +16,29 @@ This WooCommerce extension allows you to export your orders to the MyParcel serv
 
 **Online Manual (in Dutch):** [https://myparcelnl.github.io/woocommerce/](https://myparcelnl.github.io/woocommerce/)
 
-= Main features =
-- Delivery options integrated in your checkout
-- Export your WooCommerce orders to MyParcel with a simple click, single orders or in batch
-- Print shipping labels directly (PDF)
-- Create multiple shipments for the same order
-- Choose your package type (Parcel, mailbox package or unpaid letter)
-- Define preset MyParcel shipping options (signature required, extra insurance, etc.)
-- Modify the MyParcel shipping options per order before exporting
+###The no. 1 shipping platform for every online entrepreneur.
+We are MyParcel, the platform with which every online entrepreneur, large or small, can easily create shipping labels to send parcels, mail, letterbox parcels, and pallets. To destinations inland and abroad. Our goal is to make the services of major carriers accessible to every online entrepreneur so that they have time for what they are good at: doing business. We do this with our easy and accessible shipping service, smart IT solutions, and the most personal customer service.
+
+###How does it work?
+Automatically import your orders from any desired sales channel into the platform and print out your shipping labels in no time. Have your packages picked up or bring them yourself to a PostNL or Instabox delivery point. Your customer receives the track & trace information, and you can keep an overview of all shipments in the MyParcel platform.
+
+###Just like the other 36,000 webshops, experience…
+- Our free personal customer service. We offer you direct telephone support!
+- How to save time and money printing your shipping labels.
+- That you are not tied to anything! We do not charge monthly fees.
+- How to easily integrate our shipping platform into your webshop.
+
+###Main features.
+- Delivery options integrated in your checkout.
+- Export your WooCommerce orders to MyParcel with a simple click, single orders or in batch.
+- Print shipping labels directly (PDF).
+- Create multiple shipments for the same order.
+- Choose your package type (Parcel, Digital stamp, mailbox package or unpaid letter)
+- Define preset MyParcel shipping options (signature required, extra insurance, etc.).
+- Modify the MyParcel shipping options per order before exporting.
 - Extra checkout fields to separate street name, house number and house number suffix for more precise address data
-- View the status of the shipment in the order details page
-- Add Track & Trace link to the order confirmation email
+- View the status of the shipment in the order details page.
+- Add Track & Trace link to the order confirmation email.
 
 An API-key is required for this plugin! You can create this in your backoffice account.
 
@@ -85,8 +97,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 1. Export or print MyParcel label per order
 2. Bulk export or print MyParcel labels
 3. Change the shipment options for an order
-4. MyParcel actions on the order overview page
-5. MyParcel information on the order details page
+4. MyParcel information on the order details page
+5. MyParcel at home delivery options
+6. MyParcel pickup delivery options
 
 == Changelog ==
 
