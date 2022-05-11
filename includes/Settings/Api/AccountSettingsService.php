@@ -315,24 +315,24 @@ class AccountSettingsService
         $orderId     = $jsonBody['data']['hooks'][0]['order'] ?? null;
 
         try {
-            $order = OrderCollection::query($this->ensureHasApiKey(), ['uuid' => '7be7951d-69f6-44d2-8bbf-0bfdbcd2efe0']);
+            $order = OrderCollection::query($this->ensureHasApiKey(), ['uuid' => $orderId])->first();
         } catch (Exception $e) {
             WCMP_Log::add($e->getMessage());
             return;
         }
 
-        if (! $order['order_shipments']) {
+        if (! $order->getOrderShipments()) {
             return;
         }
 
-        $shipment = $order['order_shipments'][0] ?? null;
+        $shipment = $order->getOrderShipments()[0];
 
         if (! ($shipment['external_shipment_identifier']
             && in_array($shipment['shipment']['status'], self::COMPLETED_ORDER_STATUSES, true))) {
             return;
         }
 
-        $wcOrder = WC_Core::get_order($order['external_identifier']);
+        $wcOrder = WC_Core::get_order($order->getExternalIdentifier());
         $wcOrder->update_status(
             WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
             '',
