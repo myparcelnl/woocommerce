@@ -104,6 +104,7 @@ class WCMYPA_Settings
     public const SETTING_CARRIER_DELIVERY_DAYS_WINDOW          = 'delivery_days_window';
     public const SETTING_CARRIER_DELIVERY_ENABLED              = 'delivery_enabled';
     public const SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE      = 'allow_show_delivery_date';
+    public const SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT  = 'digital_stamp_default_weight';
     public const SETTING_CARRIER_DROP_OFF_DAYS                 = 'drop_off_days';
     public const SETTING_CARRIER_DROP_OFF_DELAY                = 'drop_off_delay';
     public const SETTING_CARRIER_PICKUP_ENABLED                = 'pickup_enabled';
