@@ -531,6 +531,21 @@ class CarrierSettings
                 'max'       => 14,
                 'help_text' => __('setting_carrier_drop_off_delay_help_text', 'woocommerce-myparcel'),
             ],
+            [
+                'name'      => WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT,
+                'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                'label'     => __('setting_carrier_digital_stamp', 'woocommerce-myparcel'),
+                'type'      => 'select',
+                'options'   => [
+                    null                                          => __('no_default_weight', 'woocommerce-myparcel'),
+                    WCMP_Data::DIGITAL_STAMP_RANGES[0]['average'] => '0 - 20 gram',
+                    WCMP_Data::DIGITAL_STAMP_RANGES[1]['average'] => '20 - 50 gram',
+                    WCMP_Data::DIGITAL_STAMP_RANGES[2]['average'] => '50 - 100 gram',
+                    WCMP_Data::DIGITAL_STAMP_RANGES[3]['average'] => '100 - 350 gram',
+                    WCMP_Data::DIGITAL_STAMP_RANGES[4]['average'] => '350 - 2000 gram',
+                ],
+                'help_text' => __('setting_carrier_digital_stamp_help_text', 'woocommerce-myparcel'),
+            ],
         ];
 
         $settings = $this->addDeliveryDateSettings($consignment, $settings);
