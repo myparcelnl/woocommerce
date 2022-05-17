@@ -7,30 +7,20 @@ namespace MyParcelNL\WooCommerce\includes\Settings\Api;
 defined('ABSPATH') or die();
 
 use Exception;
-use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Model\Account\CarrierConfiguration;
 use MyParcelNL\Sdk\src\Model\Account\CarrierOptions;
 use MyParcelNL\Sdk\src\Model\Account\Shop;
 use MyParcelNL\Sdk\src\Services\Web\AccountWebService;
 use MyParcelNL\Sdk\src\Services\Web\CarrierConfigurationWebService;
 use MyParcelNL\Sdk\src\Services\Web\CarrierOptionsWebService;
-use MyParcelNL\Sdk\src\Services\Web\Webhook\OrderStatusChangeWebhookWebService;
-use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierAccessibilityUpdatedWebhookWebService;
-use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierConfigurationUpdatedWebhookWebService;
-use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopUpdatedWebhookWebService;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Listener\ApiKeySettingsListener;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
-use WCMP_Export_Consignments;
 use WCMP_Log;
-use WCMP_Settings_Data;
-use WCMYPA_Settings;
-use WP_REST_Request;
 use WP_REST_Response;
-use WPO\WC\MyParcel\Compatibility\WC_Core;
 
 class AccountSettingsService
 {
