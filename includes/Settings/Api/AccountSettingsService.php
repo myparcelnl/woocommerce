@@ -38,28 +38,6 @@ class AccountSettingsService
     use HasInstance;
 
     /**
-     * Webhooks that should refresh the account settings when triggered.
-     *
-     * @var class-string[]
-     */
-    public const RELATED_WEBHOOKS = [
-        ShopCarrierAccessibilityUpdatedWebhookWebService::class,
-        ShopCarrierConfigurationUpdatedWebhookWebService::class,
-        ShopUpdatedWebhookWebService::class,
-    ];
-
-    /**
-     * 2 : Package shipment barcode printed
-     * 12: Letter shipment barcode printed
-     * 14: Digital stamp barcode printed
-     */
-    public const COMPLETED_ORDER_STATUSES = [
-        2,
-        12,
-        14,
-    ];
-
-    /**
      * When a setting is updated, the old value is still in the settings collection, so you cannot use
      * refreshSettingsFromApi.
      */
@@ -134,33 +112,6 @@ class AccountSettingsService
         }
 
         return new Collection($options);
-    }
-
-    /**
-     * Install the webhooks relating to account settings.
-     *
-     * @return void
-     * @throws \Exception
-     */
-    public function setUpWebhooks(): void
-    {
-        $apiKey              = $this->ensureHasApiKey();
-        $subscriptionService = new WebhookSubscriptionService();
-
-        foreach (self::RELATED_WEBHOOKS as $webhookWebServiceClass) {
-            $webhookWebService = (new $webhookWebServiceClass())->setApiKey($apiKey);
-
-            $subscriptionService->create($webhookWebService, [$this, 'restRefreshSettingsFromApi']);
-        }
-
-        $changeOrderStatusAfter = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER);
-        $exportMode             = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EXPORT_MODE);
-
-        if (WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === $changeOrderStatusAfter && WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-            $orderStatusChangeWebhook     = OrderStatusChangeWebhookWebService::class;
-            $orderStatusWebhookWebService = (new $orderStatusChangeWebhook())->setApiKey($this->ensureHasApiKey());
-            $subscriptionService->create($orderStatusWebhookWebService, [$this, 'updateOrderStatus']);
-        }
     }
 
     /**
@@ -300,43 +251,5 @@ class AccountSettingsService
         $array = $this->createArray($settings);
 
         return update_option(AccountSettings::WP_OPTION_KEY, $array);
-    }
-
-    /**
-     * @param  \WP_REST_Request $request
-     *
-     * @return void
-     * @throws \Exception
-     */
-    public function updateOrderStatus(WP_REST_Request $request): void
-    {
-        $requestBody = $request->get_body();
-        $jsonBody    = json_decode($requestBody, true);
-        $orderId     = $jsonBody['data']['hooks'][0]['order'] ?? null;
-
-        try {
-            $order = OrderCollection::query($this->ensureHasApiKey(), ['uuid' => $orderId])->first();
-        } catch (Exception $e) {
-            WCMP_Log::add($e->getMessage());
-            return;
-        }
-
-        if (! $order->getOrderShipments()) {
-            return;
-        }
-
-        $shipment = $order->getOrderShipments()[0];
-
-        if (! ($shipment['external_shipment_identifier']
-            && in_array($shipment['shipment']['status'], self::COMPLETED_ORDER_STATUSES, true))) {
-            return;
-        }
-
-        $wcOrder = WC_Core::get_order($order->getExternalIdentifier());
-        $wcOrder->update_status(
-            WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
-            '',
-            true
-        );
     }
 }

@@ -16,6 +16,8 @@ use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
+use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
+use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\OrderStatusWebhook;
 
 defined('ABSPATH') or die();
 
@@ -91,14 +93,23 @@ if (! class_exists('WCMYPA')) :
         /**
          * Define constant if not already set
          *
-         * @param string      $name
+         * @param  string     $name
          * @param string|bool $value
          */
-        private function define($name, $value)
+        private function define(string $name, $value): void
         {
             if (! defined($name)) {
                 define($name, $value);
             }
+        }
+
+        /**
+         * @return void
+         */
+        private function setupWebhooks(): void
+        {
+            OrderStatusWebhook::getInstance();
+            AccountSettingsWebhook::getInstance();
         }
 
         /**
@@ -143,37 +154,39 @@ if (! class_exists('WCMYPA')) :
             $this->includes = $this->plugin_path() . '/includes';
 
             // include compatibility classes
-            require_once($this->includes . "/compatibility/abstract-wc-data-compatibility.php");
-            require_once($this->includes . "/compatibility/class-wc-date-compatibility.php");
-            require_once($this->includes . "/compatibility/class-wc-core-compatibility.php");
-            require_once($this->includes . "/compatibility/class-wc-order-compatibility.php");
-            require_once($this->includes . "/compatibility/class-wc-product-compatibility.php");
-            require_once($this->includes . "/compatibility/class-ce-compatibility.php");
-            require_once($this->includes . "/compatibility/class-wcpdf-compatibility.php");
-            require_once($this->includes . "/compatibility/ShippingZone.php");
+            require_once($this->includes . '/compatibility/abstract-wc-data-compatibility.php');
+            require_once($this->includes . '/compatibility/class-wc-date-compatibility.php');
+            require_once($this->includes . '/compatibility/class-wc-core-compatibility.php');
+            require_once($this->includes . '/compatibility/class-wc-order-compatibility.php');
+            require_once($this->includes . '/compatibility/class-wc-product-compatibility.php');
+            require_once($this->includes . '/compatibility/class-ce-compatibility.php');
+            require_once($this->includes . '/compatibility/class-wcpdf-compatibility.php');
+            require_once($this->includes . '/compatibility/ShippingZone.php');
 
-            require_once($this->includes . "/class-wcmp-data.php");
-            require_once($this->includes . "/collections/settings-collection.php");
-            require_once($this->includes . "/entities/setting.php");
-            require_once($this->includes . "/entities/settings-field-arguments.php");
+            require_once($this->includes . '/class-wcmp-data.php');
+            require_once($this->includes . '/collections/settings-collection.php');
+            require_once($this->includes . '/entities/setting.php');
+            require_once($this->includes . '/entities/settings-field-arguments.php');
 
-            require_once($this->includes . "/class-wcmp-assets.php");
-            require_once($this->includes . "/frontend/class-wcmp-cart-fees.php");
-            require_once($this->includes . "/frontend/class-wcmp-frontend-track-trace.php");
-            require_once($this->includes . "/frontend/class-wcmp-checkout.php");
-            require_once($this->includes . "/frontend/class-wcmp-frontend.php");
-            $this->admin = require($this->includes . "/admin/class-wcmypa-admin.php");
-            require_once($this->includes . "/admin/settings/class-wcmypa-settings.php");
-            require_once($this->includes . "/class-wcmp-log.php");
-            require_once($this->includes . "/admin/class-wcmp-country-codes.php");
+            require_once($this->includes . '/class-wcmp-assets.php');
+            require_once($this->includes . '/frontend/class-wcmp-cart-fees.php');
+            require_once($this->includes . '/frontend/class-wcmp-frontend-track-trace.php');
+            require_once($this->includes . '/frontend/class-wcmp-checkout.php');
+            require_once($this->includes . '/frontend/class-wcmp-frontend.php');
+            $this->admin = require($this->includes . '/admin/class-wcmypa-admin.php');
+            require_once($this->includes . '/admin/settings/class-wcmypa-settings.php');
+            require_once($this->includes . '/class-wcmp-log.php');
+            require_once($this->includes . '/admin/class-wcmp-country-codes.php');
             require_once($this->includes . '/admin/settings/class-wcmp-shipping-methods.php');
-            $this->export = require($this->includes . "/admin/class-wcmp-export.php");
-            require_once($this->includes . "/class-wcmp-postcode-fields.php");
-            require_once($this->includes . "/adapter/delivery-options-from-order-adapter.php");
-            require_once($this->includes . "/adapter/pickup-location-from-order-adapter.php");
-            require_once($this->includes . "/adapter/shipment-options-from-order-adapter.php");
-            require_once($this->includes . "/adapter/OrderLineFromWooCommerce.php");
-            require_once($this->includes . "/admin/class-wcmp-export-consignments.php");
+            $this->export = require($this->includes . '/admin/class-wcmp-export.php');
+            require_once($this->includes . '/class-wcmp-postcode-fields.php');
+            require_once($this->includes . '/adapter/delivery-options-from-order-adapter.php');
+            require_once($this->includes . '/adapter/pickup-location-from-order-adapter.php');
+            require_once($this->includes . '/adapter/shipment-options-from-order-adapter.php');
+            require_once($this->includes . '/adapter/OrderLineFromWooCommerce.php');
+            require_once($this->includes . '/admin/class-wcmp-export-consignments.php');
+            require_once($this->includes . '/Webhook/Hooks/OrderStatusWebhook.php');
+            require_once($this->includes . '/Webhook/Hooks/AccountSettingsWebhook.php');
         }
 
         /**
@@ -194,12 +207,13 @@ if (! class_exists('WCMYPA')) :
                 return;
             }
 
+            $this->setupWebhooks();
+
             AccountSettings::getInstance();
             add_action(
                 'wp_ajax_' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE,
-                [AccountSettings::class, "restRefreshFromApi"]
+                [AccountSettings::class, 'restRefreshFromApi']
             );
-
         }
 
         public function initMessenger(): void
@@ -239,8 +253,9 @@ if (! class_exists('WCMYPA')) :
             }
 
             Messages::showAdminNotice(sprintf(
-                __("WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!",
-                    "woocommerce-myparcel"
+                __(
+                    'WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!',
+                    'woocommerce-myparcel'
                 ),
                 '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
                 '</a>'
@@ -260,7 +275,7 @@ if (! class_exists('WCMYPA')) :
          */
         public function do_install()
         {
-            $version_setting   = "woocommerce_myparcel_version";
+            $version_setting   = 'woocommerce_myparcel_version';
             $installed_version = get_option($version_setting);
 
             // installed version lower than plugin version?
