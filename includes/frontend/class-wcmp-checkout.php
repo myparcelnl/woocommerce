@@ -328,7 +328,7 @@ class WCMP_Checkout
     {
         $order = WCX::get_order($orderId);
 
-        $shippingMethod       = sanitize_text_field($_POST['shipping_method'][0]);
+        $shippingMethod       = sanitize_text_field($_POST['shipping_method'][0] ?? '');
         $highestShippingClass = (int) ($_POST['myparcel_highest_shipping_class'] ?? 0);
 
         /**
