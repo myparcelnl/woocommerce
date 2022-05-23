@@ -13,10 +13,10 @@ use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
-use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
+use MyParcelNL\WooCommerce\includes\Webhook\Hooks\AbstractWebhook;
 use WCMYPA_Admin;
 
-class AccountSettingsWebhook
+class AccountSettingsWebhook extends AbstractWebhook
 {
     use HasApiKey;
     use HasInstance;
@@ -26,7 +26,7 @@ class AccountSettingsWebhook
      *
      * @var class-string[]
      */
-    public const ACCOUNTSETTINGS_WEBHOOKS = [
+    public const ACCOUNT_SETTINGS_WEBHOOKS = [
         ShopCarrierAccessibilityUpdatedWebhookWebService::class,
         ShopCarrierConfigurationUpdatedWebhookWebService::class,
         ShopUpdatedWebhookWebService::class,
@@ -42,18 +42,26 @@ class AccountSettingsWebhook
      */
     public function __construct()
     {
+        $this->initializeWebhooks();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    protected function initializeWebhooks(): void
+    {
         if (! $this->validateWebhooksUsage()) {
             return;
         }
 
         $accountSettingsServiceClass = AccountSettingsService::getInstance();
         $callback                    = [$accountSettingsServiceClass, 'restRefreshSettingsFromApi'];
-        $webhookSubscriptionService  = new WebhookSubscriptionService();
 
-        foreach (self::ACCOUNTSETTINGS_WEBHOOKS as $webhookClass) {
-            $service = (new $webhookClass())->setApiKey($this->ensureHasApiKey());
-            $webhookSubscriptionService->create($service, $callback);
-        }
+        $this->setupWebhooks([
+            ShopCarrierAccessibilityUpdatedWebhookWebService::class => $callback,
+            ShopCarrierConfigurationUpdatedWebhookWebService::class => $callback,
+            ShopUpdatedWebhookWebService::class                     => $callback,
+        ]);
     }
 
     /**

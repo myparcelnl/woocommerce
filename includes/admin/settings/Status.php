@@ -138,7 +138,7 @@ class Status
         $webhookSubscriptionService = new WebhookSubscriptionService();
         $allWebhooksPresent         = true;
 
-        foreach (AccountSettingsWebhook::ACCOUNTSETTINGS_WEBHOOKS as $webhook) {
+        foreach (AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS as $webhook) {
             /**
              * @var class-string<\MyParcelNL\Sdk\src\Services\Web\Webhook\AbstractWebhookWebService>[] $webhook
              */
