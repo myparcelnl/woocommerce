@@ -9,6 +9,7 @@ defined('ABSPATH') or die();
 use Exception;
 use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Model\Fulfilment\Order;
+use MyParcelNL\Sdk\src\Services\Web\Webhook\OrderStatusChangeWebhookWebService;
 use MyParcelNL\WooCommerce\includes\Webhook\Hooks\AbstractWebhook;
 use WCMP_Log;
 use WCMYPA_Settings;
