@@ -8,77 +8,73 @@ defined('ABSPATH') or die();
 
 use Exception;
 use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
-use MyParcelNL\Sdk\src\Services\Web\Webhook\OrderStatusChangeWebhookWebService;
-use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
-use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
+use MyParcelNL\Sdk\src\Model\Fulfilment\Order;
 use MyParcelNL\WooCommerce\includes\Webhook\Hooks\AbstractWebhook;
-use WCMP_Export_Consignments;
 use WCMP_Log;
-use WCMP_Settings_Data;
 use WCMYPA_Settings;
 use WP_REST_Request;
+use WP_REST_Response;
 use WPO\WC\MyParcel\Compatibility\WC_Core;
 
 class OrderStatusWebhook extends AbstractWebhook
 {
-    use HasApiKey;
-    use HasInstance;
-
     /**
      * 2 : Package shipment barcode printed
      * 12: Letter shipment barcode printed
      * 14: Digital stamp barcode printed
      */
-    public const COMPLETED_SHIPMENT_STATUSES = [
+    private const COMPLETED_SHIPMENT_STATUSES = [
         2,
         12,
         14,
     ];
 
     /**
-     * @throws \Exception
-     */
-    public function __construct()
-    {
-        $this->initializeWebhooks();
-    }
-
-    /**
-     * @throws \Exception
-     */
-    protected function initializeWebhooks(): void
-    {
-        $changeOrderStatusAfter = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER);
-        $exportMode             = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EXPORT_MODE);
-
-        if (WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === $changeOrderStatusAfter && WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-            $this->setupWebhooks([OrderStatusChangeWebhookWebService::class, [$this, 'updateOrderStatus']]);
-        }
-    }
-
-    /**
      * @param  \WP_REST_Request $request
      *
-     * @return void
-     * @throws \Exception
+     * @return \WP_REST_Response
      */
-    public function updateOrderStatus(WP_REST_Request $request): void
+    public function getCallback(WP_REST_Request $request): WP_REST_Response
     {
         $requestBody = $request->get_body();
         $jsonBody    = json_decode($requestBody, true);
         $orderUuid   = $jsonBody['data']['hooks'][0]['order'] ?? null;
 
         try {
-            $order = OrderCollection::query($this->ensureHasApiKey(), ['uuid' => $orderUuid])->first();
+            /** @type \MyParcelNL\Sdk\src\Model\Fulfilment\Order */
+            $order = OrderCollection::query($this->ensureHasApiKey(), ['uuid' => $orderUuid])
+                ->first();
         } catch (Exception $e) {
             WCMP_Log::add($e->getMessage());
-            return;
+            return $this->getUnprocessableEntityResponse();
         }
 
-        if (! $order->getOrderShipments()) {
-            return;
+        if (! $order->getOrderShipments() || ! $this->isPrinted($order)) {
+            return $this->getSkippedResponse();
         }
 
+        $this->updateWooCommerceOrderStatus($order);
+
+        return $this->getNoContentResponse();
+    }
+
+    /**
+     * @return class-string<\MyParcelNL\Sdk\src\Services\Web\Webhook\AbstractWebhookWebService>[]
+     */
+    protected function getHooks(): array
+    {
+        return [
+            OrderStatusChangeWebhookWebService::class,
+        ];
+    }
+
+    /**
+     * @param $order
+     *
+     * @return bool
+     */
+    private function isPrinted($order): bool
+    {
         $shipment                   = $order->getOrderShipments()[0];
         $shipmentHasCompletedStatus = in_array(
             $shipment['shipment']['status'],
@@ -86,10 +82,16 @@ class OrderStatusWebhook extends AbstractWebhook
             true
         );
 
-        if (! ($shipment['external_shipment_identifier'] && $shipmentHasCompletedStatus)) {
-            return;
-        }
+        return ($shipment['external_shipment_identifier'] && $shipmentHasCompletedStatus);
+    }
 
+    /**
+     * @param  \MyParcelNL\Sdk\src\Model\Fulfilment\Order $order
+     *
+     * @return void
+     */
+    private function updateWooCommerceOrderStatus(Order $order): void
+    {
         $wcOrder = WC_Core::get_order($order->getExternalIdentifier());
         $wcOrder->update_status(
             WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS),

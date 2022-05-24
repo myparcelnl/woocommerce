@@ -28,21 +28,17 @@ class AccountSettingsService
     use HasInstance;
 
     /**
+     * @var bool
+     */
+    private $useManualUpdate = false;
+
+    /**
      * When a setting is updated, the old value is still in the settings collection, so you cannot use
      * refreshSettingsFromApi.
      */
     public function createSettingsListeners(): void
     {
         (new ApiKeySettingsListener([$this, 'removeSettings']))->listen();
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function removeSettings(): void
-    {
-        $this->deleteWebhooks();
-        $this->deleteSettingsFromDatabase();
     }
 
     /**
@@ -67,6 +63,15 @@ class AccountSettingsService
         }
 
         return false;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function removeSettings(): void
+    {
+        $this->deleteWebhooks();
+        $this->deleteSettingsFromDatabase();
     }
 
     /**
@@ -102,6 +107,25 @@ class AccountSettingsService
         }
 
         return new Collection($options);
+    }
+
+    /**
+     * @param  bool $useManualUpdate
+     *
+     * @return self
+     */
+    public function setUseManualUpdate(bool $useManualUpdate): self
+    {
+        $this->useManualUpdate = $useManualUpdate;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function useManualUpdate(): bool
+    {
+        return $this->useManualUpdate;
     }
 
     /**

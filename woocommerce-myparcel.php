@@ -108,8 +108,16 @@ if (! class_exists('WCMYPA')) :
          */
         private function setupWebhooks(): void
         {
-            OrderStatusWebhook::getInstance();
-            AccountSettingsWebhook::getInstance();
+            $changeOrderStatusAfter = WCMP_Export_Consignments::getSetting(
+                WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER
+            );
+            $exportMode             = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EXPORT_MODE);
+
+            if (WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === $changeOrderStatusAfter && WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
+                new OrderStatusWebhook();
+            }
+
+            new AccountSettingsWebhook();
         }
 
         /**

@@ -10,81 +10,52 @@ use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierAccessibilityUpdatedWebho
 use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierConfigurationUpdatedWebhookWebService;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopUpdatedWebhookWebService;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
-use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
-use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
 use MyParcelNL\WooCommerce\includes\Webhook\Hooks\AbstractWebhook;
 use WCMYPA_Admin;
+use WP_REST_Request;
+use WP_REST_Response;
 
 class AccountSettingsWebhook extends AbstractWebhook
 {
-    use HasApiKey;
-    use HasInstance;
-
     /**
-     * Webhooks that should refresh the account settings when triggered.
+     * @param  \WP_REST_Request $request
      *
-     * @var class-string[]
+     * @return \WP_REST_Response
      */
-    public const ACCOUNT_SETTINGS_WEBHOOKS = [
-        ShopCarrierAccessibilityUpdatedWebhookWebService::class,
-        ShopCarrierConfigurationUpdatedWebhookWebService::class,
-        ShopUpdatedWebhookWebService::class,
-    ];
-
-    /**
-     * @var bool
-     */
-    public $useManualUpdate = false;
-
-    /**
-     * @throws \Exception
-     */
-    public function __construct()
+    public function getCallback(WP_REST_Request $request): WP_REST_Response
     {
-        $this->initializeWebhooks();
-    }
-
-    /**
-     * @throws \Exception
-     */
-    protected function initializeWebhooks(): void
-    {
-        if (! $this->validateWebhooksUsage()) {
-            return;
-        }
-
-        $accountSettingsServiceClass = AccountSettingsService::getInstance();
-        $callback                    = [$accountSettingsServiceClass, 'restRefreshSettingsFromApi'];
-
-        $this->setupWebhooks([
-            ShopCarrierAccessibilityUpdatedWebhookWebService::class => $callback,
-            ShopCarrierConfigurationUpdatedWebhookWebService::class => $callback,
-            ShopUpdatedWebhookWebService::class                     => $callback,
-        ]);
+        return AccountSettingsService::getInstance()
+            ->restRefreshSettingsFromApi();
     }
 
     /**
      * @return bool
      */
-    public function validateWebhooksUsage(): bool
+    public function validate(): bool
     {
         if (! WCMYPA_Admin::canUseWebhooks()) {
             Messages::showAdminNotice(
                 __('setting_account_settings_manual_update_hint', 'woocommerce-myparcel'),
                 Messages::NOTICE_LEVEL_WARNING
             );
-            $this->useManualUpdate = true;
+            AccountSettingsService::getInstance()
+                ->setUseManualUpdate(true);
             return false;
         }
-        return true;
+
+        return parent::validate();
     }
 
     /**
-     * @return bool
+     * @return class-string<\MyParcelNL\Sdk\src\Services\Web\Webhook\AbstractWebhookWebService>[]
      */
-    public function useManualUpdate(): bool
+    protected function getHooks(): array
     {
-        return $this->useManualUpdate;
+        return [
+            ShopCarrierAccessibilityUpdatedWebhookWebService::class,
+            ShopCarrierConfigurationUpdatedWebhookWebService::class,
+            ShopUpdatedWebhookWebService::class,
+        ];
     }
 }
