@@ -16,9 +16,10 @@ abstract class AbstractWebhook
     use HasApiKey;
 
     /**
+     * @return void
      * @throws \Exception
      */
-    public function __construct()
+    public function register(): void
     {
         if (! $this->validate()) {
             return;

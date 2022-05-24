@@ -105,6 +105,7 @@ if (! class_exists('WCMYPA')) :
 
         /**
          * @return void
+         * @throws \Exception
          */
         private function setupWebhooks(): void
         {
@@ -114,10 +115,10 @@ if (! class_exists('WCMYPA')) :
             $exportMode             = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EXPORT_MODE);
 
             if (WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === $changeOrderStatusAfter && WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-                new OrderStatusWebhook();
+                (new OrderStatusWebhook())->register();
             }
 
-            new AccountSettingsWebhook();
+            (new AccountSettingsWebhook())->register();
         }
 
         /**
