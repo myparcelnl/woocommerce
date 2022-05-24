@@ -328,8 +328,8 @@ class WCMP_Checkout
     {
         $order = WCX::get_order($orderId);
 
-        $shippingMethod       = sanitize_text_field($_POST['shipping_method'][0] ?? '');
-        $highestShippingClass = (int) ($_POST['myparcel_highest_shipping_class'] ?? 0);
+        $shippingMethod       = sanitize_text_field(wp_unslash($_POST['shipping_method'][0] ?? ''));
+        $highestShippingClass = (int) (wp_unslash($_POST['myparcel_highest_shipping_class'] ?? ''));
 
         /**
          * Save the current version of our plugin to the order.
