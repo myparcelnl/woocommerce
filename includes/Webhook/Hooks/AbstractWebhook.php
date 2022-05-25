@@ -16,6 +16,21 @@ abstract class AbstractWebhook
     use HasApiKey;
 
     /**
+     * @var int
+     */
+    private const HTTP_STATUS_OK = 200;
+
+    /**
+     * @var int
+     */
+    private const HTTP_STATUS_NO_CONTENT = 204;
+
+    /**
+     * @var int
+     */
+    private const HTTP_STATUS_UNPROCESSABLE_ENTITY = 422;
+
+    /**
      * @return void
      * @throws \Exception
      */
@@ -54,7 +69,7 @@ abstract class AbstractWebhook
     protected function getNoContentResponse(): WP_REST_Response
     {
         $response = new WP_REST_Response();
-        $response->set_status(204);
+        $response->set_status(self::HTTP_STATUS_NO_CONTENT);
         return $response;
     }
 
@@ -64,7 +79,7 @@ abstract class AbstractWebhook
     protected function getSkippedResponse(): WP_REST_Response
     {
         $response = new WP_REST_Response();
-        $response->set_status(200);
+        $response->set_status(self::HTTP_STATUS_OK);
         $response->set_data(['message' => 'skipped']);
         return $response;
     }
@@ -75,7 +90,7 @@ abstract class AbstractWebhook
     protected function getUnprocessableEntityResponse(): WP_REST_Response
     {
         $response = new WP_REST_Response();
-        $response->set_status(422);
+        $response->set_status(self::HTTP_STATUS_UNPROCESSABLE_ENTITY);
         return $response;
     }
 
