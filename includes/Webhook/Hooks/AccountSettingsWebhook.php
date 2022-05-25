@@ -19,6 +19,15 @@ use WP_REST_Response;
 class AccountSettingsWebhook extends AbstractWebhook
 {
     /**
+     * @var array
+     */
+    public const ACCOUNT_SETTINGS_WEBHOOKS = [
+        ShopCarrierAccessibilityUpdatedWebhookWebService::class,
+        ShopCarrierConfigurationUpdatedWebhookWebService::class,
+        ShopUpdatedWebhookWebService::class,
+    ];
+
+    /**
      * @param  \WP_REST_Request $request
      *
      * @return \WP_REST_Response
@@ -52,10 +61,6 @@ class AccountSettingsWebhook extends AbstractWebhook
      */
     protected function getHooks(): array
     {
-        return [
-            ShopCarrierAccessibilityUpdatedWebhookWebService::class,
-            ShopCarrierConfigurationUpdatedWebhookWebService::class,
-            ShopUpdatedWebhookWebService::class,
-        ];
+        return self::ACCOUNT_SETTINGS_WEBHOOKS;
     }
 }
