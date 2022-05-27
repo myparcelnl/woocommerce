@@ -12,6 +12,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
+use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use WCMP_Data;
 use WCMP_Settings_Callbacks;
 use WCMYPA_Admin;
@@ -137,7 +138,7 @@ class Status
         $webhookSubscriptionService = new WebhookSubscriptionService();
         $allWebhooksPresent         = true;
 
-        foreach (AccountSettingsService::RELATED_WEBHOOKS as $webhook) {
+        foreach (AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS as $webhook) {
             /**
              * @var class-string<\MyParcelNL\Sdk\src\Services\Web\Webhook\AbstractWebhookWebService>[] $webhook
              */

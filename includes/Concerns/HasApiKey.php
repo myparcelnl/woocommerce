@@ -37,7 +37,7 @@ trait HasApiKey
      * @return string
      * @throws \Exception
      */
-    private function ensureHasApiKey(): string
+    protected function ensureHasApiKey(): string
     {
         if (! $this->getApiKey()) {
             throw new Exception('No API key found!');
