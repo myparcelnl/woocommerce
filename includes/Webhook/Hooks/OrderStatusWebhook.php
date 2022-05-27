@@ -77,13 +77,11 @@ class OrderStatusWebhook extends AbstractWebhook
     private function isPrinted($order): bool
     {
         $shipment                   = $order->getOrderShipments()[0];
-        $shipmentHasCompletedStatus = in_array(
+        return in_array(
             $shipment['shipment']['status'],
             self::COMPLETED_SHIPMENT_STATUSES,
             true
         );
-
-        return ($shipment['external_shipment_identifier'] && $shipmentHasCompletedStatus);
     }
 
     /**
