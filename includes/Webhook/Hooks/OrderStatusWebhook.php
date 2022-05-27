@@ -50,7 +50,7 @@ class OrderStatusWebhook extends AbstractWebhook
             return $this->getUnprocessableEntityResponse();
         }
 
-        if (! $order->getOrderShipments() || ! $this->isPrinted($order)) {
+        if (! $order || ! $order->getOrderShipments() || ! $this->isPrinted($order)) {
             return $this->getSkippedResponse();
         }
 
