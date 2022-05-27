@@ -18,7 +18,6 @@ use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Model\Model;
 use WCMP_Data;
-use WCMYPA_Admin;
 
 /**
  * @property null|\MyParcelNL\Sdk\src\Model\Account\Shop                         $shop
@@ -79,10 +78,6 @@ class AccountSettings extends Model
 
         $this->fillProperties($settings);
         $service->createSettingsListeners();
-
-        if ($this->validateWebhooksUsage()) {
-            $service->setUpWebhooks();
-        }
     }
 
     /**
@@ -263,21 +258,5 @@ class AccountSettings extends Model
         }
 
         return $this->settings->get($settingKey);
-    }
-
-    /**
-     * @return bool
-     */
-    private function validateWebhooksUsage(): bool
-    {
-        if (! WCMYPA_Admin::canUseWebhooks()) {
-            Messages::showAdminNotice(
-                __('setting_account_settings_manual_update_hint', 'woocommerce-myparcel'),
-                Messages::NOTICE_LEVEL_WARNING
-            );
-            $this->useManualUpdate = true;
-            return false;
-        }
-        return true;
     }
 }

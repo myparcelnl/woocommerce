@@ -7,6 +7,8 @@ use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\admin\settings\CarrierSettings;
 use MyParcelNL\WooCommerce\includes\admin\settings\Status;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
+use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
+use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
 defined('ABSPATH') or die();
@@ -310,7 +312,7 @@ class WCMP_Settings_Data
                 'name'      => WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE,
                 'label'     => __('settings_trigger_manual_update', 'woocommerce-myparcel'),
                 'help_text' => __('settings_trigger_manual_update_help_text', 'woocommerce-myparcel'),
-                'condition' => AccountSettings::getInstance()->useManualUpdate(),
+                'condition' => AccountSettingsService::getInstance()->useManualUpdate(),
                 'callback'  => [$this, 'renderManualUpdateTrigger'],
             ],
         ];
@@ -438,15 +440,6 @@ class WCMP_Settings_Data
             ],
             [
                 'name'      => WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER,
-                'condition' => [
-                        WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION,
-                        [
-                            'parent_name'  => WCMYPA_Settings::SETTING_EXPORT_MODE,
-                            'type'         => 'disable',
-                            'parent_value' => self::EXPORT_MODE_SHIPMENTS,
-                            'set_value'    => self::CHANGE_STATUS_AFTER_EXPORT,
-                        ],
-                    ],
                 'class'     => ['wcmp__child'],
                 'label'     => __('setting_change_order_status_after', 'woocommerce-myparcel'),
                 'type'      => 'select',

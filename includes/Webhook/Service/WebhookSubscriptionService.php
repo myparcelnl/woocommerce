@@ -9,6 +9,7 @@ defined('ABSPATH') or die();
 use Exception;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\AbstractWebhookWebService;
 use MyParcelNL\Sdk\src\Support\Collection;
+use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Utils;
 use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
 use MyParcelNL\WooCommerce\includes\Webhook\Model\WebhookCallback;
@@ -18,6 +19,8 @@ use WCMYPA;
 
 class WebhookSubscriptionService
 {
+    use HasApiKey;
+
     private const WEBHOOK_SETTINGS_PATH = 'woocommerce_myparcel_webhook_settings';
 
     /**

@@ -13,9 +13,6 @@ use MyParcelNL\Sdk\src\Model\Account\Shop;
 use MyParcelNL\Sdk\src\Services\Web\AccountWebService;
 use MyParcelNL\Sdk\src\Services\Web\CarrierConfigurationWebService;
 use MyParcelNL\Sdk\src\Services\Web\CarrierOptionsWebService;
-use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierAccessibilityUpdatedWebhookWebService;
-use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierConfigurationUpdatedWebhookWebService;
-use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopUpdatedWebhookWebService;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
@@ -31,15 +28,9 @@ class AccountSettingsService
     use HasInstance;
 
     /**
-     * Webhooks that should refresh the account settings when triggered.
-     *
-     * @var class-string[]
+     * @var bool
      */
-    public const RELATED_WEBHOOKS = [
-        ShopCarrierAccessibilityUpdatedWebhookWebService::class,
-        ShopCarrierConfigurationUpdatedWebhookWebService::class,
-        ShopUpdatedWebhookWebService::class,
-    ];
+    private $useManualUpdate = false;
 
     /**
      * When a setting is updated, the old value is still in the settings collection, so you cannot use
@@ -48,15 +39,6 @@ class AccountSettingsService
     public function createSettingsListeners(): void
     {
         (new ApiKeySettingsListener([$this, 'removeSettings']))->listen();
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function removeSettings(): void
-    {
-        $this->deleteWebhooks();
-        $this->deleteSettingsFromDatabase();
     }
 
     /**
@@ -81,6 +63,15 @@ class AccountSettingsService
         }
 
         return false;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function removeSettings(): void
+    {
+        $this->deleteWebhooks();
+        $this->deleteSettingsFromDatabase();
     }
 
     /**
@@ -119,21 +110,22 @@ class AccountSettingsService
     }
 
     /**
-     * Install the webhooks relating to account settings.
+     * @param  bool $useManualUpdate
      *
-     * @return void
-     * @throws \Exception
+     * @return self
      */
-    public function setUpWebhooks(): void
+    public function setUseManualUpdate(bool $useManualUpdate): self
     {
-        $apiKey              = $this->ensureHasApiKey();
-        $subscriptionService = new WebhookSubscriptionService();
+        $this->useManualUpdate = $useManualUpdate;
+        return $this;
+    }
 
-        foreach (self::RELATED_WEBHOOKS as $webhookWebServiceClass) {
-            $webhookWebService = (new $webhookWebServiceClass())->setApiKey($apiKey);
-
-            $subscriptionService->create($webhookWebService, [$this, 'restRefreshSettingsFromApi']);
-        }
+    /**
+     * @return bool
+     */
+    public function useManualUpdate(): bool
+    {
+        return $this->useManualUpdate;
     }
 
     /**
