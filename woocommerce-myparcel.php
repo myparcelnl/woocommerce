@@ -40,7 +40,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * @var string
          */
-        public $version = '4.11.0';
+        public $version = '4.12.0';
 
         /**
          * @var string

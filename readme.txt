@@ -103,6 +103,20 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.12.0 (2022-06-14) =
+* Feat: add default weight for digital stamp (#832) (bccf454)
+* Feat: add option to save customer address (#827) (bdcb0bf)
+* Feat: order status change after label print in backoffice (#831) (5846d56)
+* Feat: show message when order management is enabled (#815) (66be2e7)
+* Fix: allow empty shipping method in post from checkout (#834) (c273e42)
+* Fix: auto export function (#835) (9c3a672)
+* Fix: **export** messages handling (#809) (e073f55)
+* Fix: **export** show correct shipment status in order grid (#828) (fd6b627)
+* Fix: no shipping details when using local pickup (#826) (97413cf)
+* Fix: only show delivery date in order view when necessary (#816) (44e02a7)
+* Fix: syntax error on 4.1.0 migration (#817) (df61016)
+* Fix: the weight calculations must be multiplied (#814) (08c8992)
+
 = 4.11.0 (2022-04-15) =
 * Feat: enable order management setting (#824) (78524ae)
 

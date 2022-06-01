@@ -1,27 +1,35 @@
-## [4.11.0](https://github.com/myparcelnl/woocommerce/compare/v4.10.0...v4.11.0) (2022-04-15)
+## [4.12.0](https://github.com/myparcelnl/woocommerce/compare/v4.11.0...v4.12.0) (2022-06-14)
 
 
 ### Features
 
-* enable order management setting ([#824](https://github.com/myparcelnl/woocommerce/issues/824)) ([78524ae](https://github.com/myparcelnl/woocommerce/commit/78524ae802d97bc5fe5706e4fea9e4c72d5143e1))
-
-### [4.10.2](https://github.com/myparcelnl/woocommerce/compare/v4.10.1...v4.10.2) (2022-04-05)
-
-
-### Bug Fixes
-
-* update delivery options
-
-
-### [4.10.1](https://github.com/myparcelnl/woocommerce/compare/v4.10.0...v4.10.1) (2022-04-05)
+* add default weight for digital stamp ([#832](https://github.com/myparcelnl/woocommerce/issues/832)) ([702f467](https://github.com/myparcelnl/woocommerce/commit/702f46796c626252fe4d66d0a98e0edcaf82c6a6))
+* add option to save customer address ([#827](https://github.com/myparcelnl/woocommerce/issues/827)) ([4c4b475](https://github.com/myparcelnl/woocommerce/commit/4c4b47570d7d8c9a3e92c78dd028b52789b65cd8))
+* order status change after label print in backoffice ([#831](https://github.com/myparcelnl/woocommerce/issues/831)) ([e7d8560](https://github.com/myparcelnl/woocommerce/commit/e7d856056588128dcb121cac11b6943308cb2f6e))
 
 
 ### Bug Fixes
 
-* show message when order management is enabled ([#815](https://github.com/myparcelnl/woocommerce/issues/815)) ([f12570e](https://github.com/myparcelnl/woocommerce/commit/f12570e23ce812893bf6dfd83054c0a20f187b3a))
+* allow empty shipping method in post from checkout ([#834](https://github.com/myparcelnl/woocommerce/issues/834)) ([dc304d1](https://github.com/myparcelnl/woocommerce/commit/dc304d15f1434568ac7b5dae887ac55746685ed5))
+* **export:** show correct shipment status in order grid ([#828](https://github.com/myparcelnl/woocommerce/issues/828)) ([c991c90](https://github.com/myparcelnl/woocommerce/commit/c991c909e42a4cb703be580edd4dc2529a88e93a)), closes [#809](https://github.com/myparcelnl/woocommerce/issues/809)
+* no shipping details when using local pickup ([#826](https://github.com/myparcelnl/woocommerce/issues/826)) ([0e351c3](https://github.com/myparcelnl/woocommerce/commit/0e351c3f327fec421d6528b1b48c1d0e5523fd85))
+
+## [4.11.0](https://github.com/myparcelnl/woocommerce/compare/v4.10.0...v4.11.0) (2022-04-19)
+
+
+### Features
+
+* enable order management setting ([#824](https://github.com/myparcelnl/woocommerce/issues/824)) ([d05d507](https://github.com/myparcelnl/woocommerce/commit/d05d507f1c90fb0e9caac6075c005d5bceb1acbd))
+* show message when order management is enabled ([#815](https://github.com/myparcelnl/woocommerce/issues/815)) ([66be2e7](https://github.com/myparcelnl/woocommerce/commit/66be2e78dd4ef9ad6fce11908fbc8d18c528ccfc))
+
+
+### Bug Fixes
+
+* **export:** messages handling ([#809](https://github.com/myparcelnl/woocommerce/issues/809)) ([e073f55](https://github.com/myparcelnl/woocommerce/commit/e073f557c715588152df392a3462e9a65b459159))
 * only show delivery date in order view when necessary ([#816](https://github.com/myparcelnl/woocommerce/issues/816)) ([44e02a7](https://github.com/myparcelnl/woocommerce/commit/44e02a73c326ad3f4c8e4d8978bd6bd60ad07792))
-* syntax error on 4.1.0 migration ([#817](https://github.com/myparcelnl/woocommerce/issues/817)) ([bba5246](https://github.com/myparcelnl/woocommerce/commit/bba524610af4a8eaf888718fe7006132d63c0d3f))
-* the weight calculations must be multiplied ([#814](https://github.com/myparcelnl/woocommerce/issues/814)) ([5d88f8e](https://github.com/myparcelnl/woocommerce/commit/5d88f8e091223b6304a663138c3141f560427b45))
+* revert only show delivery date in order view when necessary ([#816](https://github.com/myparcelnl/woocommerce/issues/816))([#820](https://github.com/myparcelnl/woocommerce/issues/820)) ([901316b](https://github.com/myparcelnl/woocommerce/commit/901316b96c94835431ee174a8b771104f9e4e009))
+* syntax error on 4.1.0 migration ([#817](https://github.com/myparcelnl/woocommerce/issues/817)) ([df61016](https://github.com/myparcelnl/woocommerce/commit/df61016d9dd687f4ea49bcde93bcde441b2d4cc1))
+* the weight calculations must be multiplied ([#814](https://github.com/myparcelnl/woocommerce/issues/814)) ([08c8992](https://github.com/myparcelnl/woocommerce/commit/08c899210239741195637a40020b794c202975a0))
 
 ## [4.10.0](https://github.com/myparcelnl/woocommerce/compare/v4.10.0-alpha.2...v4.10.0) (2022-03-21)
 
