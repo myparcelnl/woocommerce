@@ -78,6 +78,7 @@ class WCMP_Frontend
     private function isLocalPickup(): bool
     {
         $shippingMethod = $this->getShippingMethod();
+
         if (! $shippingMethod) {
             return false;
         }
