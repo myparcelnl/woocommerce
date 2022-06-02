@@ -89,7 +89,7 @@ class WCMP_Frontend
     }
 
     /**
-     * @return string
+     * @return null|string
      */
     private function getShippingMethod(): ?string
     {
