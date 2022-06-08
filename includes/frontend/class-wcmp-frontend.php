@@ -77,11 +77,27 @@ class WCMP_Frontend
      */
     private function isLocalPickup(): bool
     {
-        $shippingMethodString = WC()->session->get('chosen_shipping_methods')[0] ?? '';
+        $shippingMethod = $this->getShippingMethod();
 
-        [$methodSlug] = WCMP_Checkout::splitShippingMethodString($shippingMethodString);
+        if (! $shippingMethod) {
+            return false;
+        }
+
+        [$methodSlug] = WCMP_Checkout::splitShippingMethodString($shippingMethod);
 
         return WCMP_Shipping_Methods::LOCAL_PICKUP === $methodSlug;
+    }
+
+    /**
+     * @return null|string
+     */
+    private function getShippingMethod(): ?string
+    {
+        if (! isset(WC()->session)) {
+            return null;
+        }
+
+        return WC()->session->get('chosen_shipping_methods')[0] ?? null;
     }
 
     /**
