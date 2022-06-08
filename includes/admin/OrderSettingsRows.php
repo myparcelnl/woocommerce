@@ -80,10 +80,10 @@ class OrderSettingsRows
     ];
 
     private const CONDITION_FORCE_ENABLED_ON_INSURED = [
-        "parent_name"  => self::OPTION_SHIPMENT_OPTIONS_INSURED,
-        "type"         => "disable",
-        "set_value"    => WCMP_Settings_Data::ENABLED,
-        "parent_value" => WCMP_Settings_Data::DISABLED,
+        'parent_name'  => self::OPTION_SHIPMENT_OPTIONS_INSURED,
+        'type'         => 'disable',
+        'set_value'    => WCMP_Settings_Data::ENABLED,
+        'parent_value' => WCMP_Settings_Data::DISABLED,
     ];
 
     /**
