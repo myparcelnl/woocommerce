@@ -79,6 +79,13 @@ class OrderSettingsRows
         "parent_value" => WCMP_Settings_Data::DISABLED,
     ];
 
+    private const CONDITION_FORCE_ENABLED_ON_INSURED = [
+        "parent_name"  => self::OPTION_SHIPMENT_OPTIONS_INSURED,
+        "type"         => "disable",
+        "set_value"    => WCMP_Settings_Data::ENABLED,
+        "parent_value" => WCMP_Settings_Data::DISABLED,
+    ];
+
     /**
      * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter
      */
@@ -262,6 +269,7 @@ class OrderSettingsRows
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT),
                     self::CONDITION_FORCE_ENABLED_ON_AGE_CHECK,
+                    self::CONDITION_FORCE_ENABLED_ON_INSURED,
                 ],
             ],
             [
@@ -275,6 +283,7 @@ class OrderSettingsRows
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SIGNATURE),
                     self::CONDITION_FORCE_ENABLED_ON_AGE_CHECK,
+                    self::CONDITION_FORCE_ENABLED_ON_INSURED,
                 ],
             ],
             [

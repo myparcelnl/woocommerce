@@ -403,7 +403,7 @@ jQuery(($) => {
         const dependantToggled = dependency.node.getAttribute('data-toggled') === 'true';
 
         if (parentToggled && !dependantToggled && level > 1) {
-          localToggle = true;
+          localToggle = false;
         } else if (typeof wantedValue === 'string') {
           localToggle = parentInput.value !== wantedValue;
         } else if (isPlainObject(wantedValue)) {
