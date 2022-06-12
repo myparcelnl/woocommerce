@@ -18,7 +18,6 @@ use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use MyParcelNL\WooCommerce\includes\admin\settings\SameDayDeliveryService;
 use WC_Order;
 use WCMP_Data;
-use WCMP_Export;
 use WCMP_Export_Consignments;
 use WCMP_Log;
 use WCMYPA_Admin;
@@ -191,7 +190,7 @@ class OrderSettings
     public function getWeight(bool $inGrams = false): float
     {
         return $inGrams
-            ? WCMP_Export::convertWeightToGrams($this->weight)
+            ? WeightService::convertToGrams($this->weight)
             : $this->weight;
     }
 
@@ -548,22 +547,13 @@ class OrderSettings
         $savedWeight   = $this->extraOptions['digital_stamp_weight'] ?? null;
         $orderWeight   = $this->getWeight(true);
         $defaultWeight = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT);
-        $weight        = (float) ($savedWeight ?? $defaultWeight ?? $orderWeight);
+        $weight        = (int) ($savedWeight ?? $defaultWeight ?? $orderWeight);
 
-        $results = Arr::where(
-            WCMP_Data::getDigitalStampRanges(),
-            static function ($range) use ($weight) {
-                return $weight > $range['min'];
-            }
-        );
-
-        if (empty($results)) {
-            $digitalStampRangeWeight = Arr::first(WCMP_Data::getDigitalStampRanges())['average'];
-        } else {
-            $digitalStampRangeWeight = Arr::last($results)['average'];
+        try {
+            $this->digitalStampRangeWeight = WeightService::convertToDigitalStamp($weight);
+        } catch (\Throwable $e) {
+            $this->digitalStampRangeWeight = Arr::last(WeightService::DIGITAL_STAMP_RANGES)['average'];
         }
-
-        $this->digitalStampRangeWeight = $digitalStampRangeWeight;
     }
 
     /**
@@ -638,7 +628,7 @@ class OrderSettings
      */
     private function determineLargeFormat(): bool
     {
-        $weightFromOrder    = WCMP_Export::convertWeightToGrams($this->extraOptions['weight'] ?? 0);
+        $weightFromOrder    = WeightService::convertToGrams($this->extraOptions['weight'] ?? 0);
         $weightFromSettings = (int) $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT);
         $optionFromSettings = (bool) $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT);
         $defaultLargeFormat = $this->shipmentOptions->hasLargeFormat() ?? $optionFromSettings;
@@ -750,7 +740,7 @@ class OrderSettings
             $weight            += $emptyParcelWeight;
         }
 
-        return $digitalStampRangeWeight ?? WCMP_Export::convertWeightToGrams($weight);
+        return $digitalStampRangeWeight ?? WeightService::convertToGrams($weight);
     }
 
     /**

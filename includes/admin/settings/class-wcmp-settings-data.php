@@ -312,7 +312,7 @@ class WCMP_Settings_Data
                 'name'      => WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE,
                 'label'     => __('settings_trigger_manual_update', 'woocommerce-myparcel'),
                 'help_text' => __('settings_trigger_manual_update_help_text', 'woocommerce-myparcel'),
-                'condition' => AccountSettingsService::getInstance()->useManualUpdate(),
+                'condition' => ! WCMYPA_Admin::canUseWebhooks(),
                 'callback'  => [$this, 'renderManualUpdateTrigger'],
             ],
         ];

@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\Helper;
 
 use ErrorException;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\WooCommerce\includes\admin\WeightService;
 use WC_Order;
 use WC_Order_Item_Product;
 use WC_Product;
@@ -105,7 +106,7 @@ class ExportRow
      */
     public function getItemWeight(): int
     {
-        return WCMP_Export::convertWeightToGrams($this->product->get_weight());
+        return WeightService::convertToGrams($this->product->get_weight());
     }
 
     /**

@@ -6,9 +6,11 @@ namespace MyParcelNL\WooCommerce\includes\admin\settings;
 
 defined('ABSPATH') or die();
 
+use MyParcelNL\Pdk\Storage\AbstractStorage;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
+use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
@@ -16,9 +18,12 @@ use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use WCMP_Data;
 use WCMP_Settings_Callbacks;
 use WCMYPA_Admin;
+use WPO\WC\MyParcel\Collections\SettingsCollection;
 
 class Status
 {
+    use HasApiKey;
+
     public const LINK_RETAIL_OVERVIEW    = 'https://backoffice.myparcel.nl/shipments/retail-overview';
     public const LINK_SETTINGS_SHIPMENTS = 'https://backoffice.myparcel.nl/settings/shipment';
 
@@ -41,7 +46,7 @@ class Status
 
     private static function addCarrierRows(): void
     {
-        $hasApiKey = AccountSettings::getInstance()->hasApiKey();
+        $hasApiKey = WCMYPA()->pdk()->get(AbstractStorage::class)->hasApiKey();
 
         foreach (WCMP_Data::getCarriers() as $carrierClass) {
             $carrier = new $carrierClass();
@@ -95,7 +100,7 @@ class Status
     {
         $title = __('diagnostics_status_shop_connection', 'woocommerce-myparcel');
 
-        if (! AccountSettings::getInstance()->hasApiKey()) {
+        if (! WCMYPA()->pdk()->get(AbstractStorage::class)->hasApiKey()) {
             self::addItem($title, __('diagnostics_status_api_key_missing', 'woocommerce-myparcel'), self::TYPE_ERROR);
             return;
         }
@@ -119,7 +124,7 @@ class Status
     {
         $title = __('diagnostics_status_webhooks', 'woocommerce-myparcel');
 
-        if (! AccountSettings::getInstance()->hasApiKey()) {
+        if (! WCMYPA()->pdk()->get(AbstractStorage::class)->hasApiKey()) {
             self::addItem($title, '', self::TYPE_ERROR);
             return;
         }

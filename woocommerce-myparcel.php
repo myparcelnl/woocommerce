@@ -12,12 +12,22 @@ License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 */
 
+use MyParcelNL\Pdk\MyParcelContainer;
+use MyParcelNL\Pdk\MyParcelPdk;
+use MyParcelNL\Pdk\Repository\AccountSettingsRepository;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
+use MyParcelNL\WooCommerce\includes\admin\MyParcelPdkConfig;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
+use MyParcelNL\WooCommerce\includes\Settings\Listener\ApiKeySettingsListener;
+use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\OrderStatusWebhook;
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 defined('ABSPATH') or die();
 
@@ -91,6 +101,14 @@ if (! class_exists('WCMYPA')) :
         }
 
         /**
+         * @return \MyParcelNL\Pdk\MyParcelContainer
+         */
+        public function pdk(): MyParcelContainer
+        {
+            return MyParcelPdk::getInstance(new MyParcelPdkConfig());
+        }
+
+        /**
          * Define constant if not already set
          *
          * @param  string     $name
@@ -119,6 +137,8 @@ if (! class_exists('WCMYPA')) :
             }
 
             (new AccountSettingsWebhook())->register();
+
+            (new ApiKeySettingsListener([AccountSettings::class, 'removeSettings']))->listen();
         }
 
         /**
@@ -216,13 +236,12 @@ if (! class_exists('WCMYPA')) :
                 return;
             }
 
-            $this->setupWebhooks();
-
-            AccountSettings::getInstance();
             add_action(
                 'wp_ajax_' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE,
-                [AccountSettings::class, 'restRefreshFromApi']
+                [AccountSettings::class, 'removeSettings']
             );
+
+            $this->setupWebhooks();
         }
 
         public function initMessenger(): void

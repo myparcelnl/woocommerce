@@ -976,36 +976,6 @@ class WCMP_Export
     }
 
     /**
-     * Returns the weight in grams.
-     *
-     * @param int|float $weight
-     *
-     * @return int
-     */
-    public static function convertWeightToGrams($weight): int
-    {
-        $weightUnit  = get_option('woocommerce_weight_unit');
-        $floatWeight = (float) $weight;
-
-        switch ($weightUnit) {
-            case 'kg':
-                $weight = $floatWeight * 1000;
-                break;
-            case 'lbs':
-                $weight = $floatWeight * 453.59237;
-                break;
-            case 'oz':
-                $weight = $floatWeight * 28.34952;
-                break;
-            default:
-                $weight = $floatWeight;
-                break;
-        }
-
-        return (int) ceil($weight);
-    }
-
-    /**
      * @return array
      */
     public static function getDigitalStampRangeOptions(): array
@@ -1480,7 +1450,7 @@ class WCMP_Export
         $customsDeclaration = new CustomsDeclaration();
         $contents           = (int) ($this->getSetting("package_contents") ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
         $orderSettings      = new OrderSettings($wcOrder);
-        $totalWeight        = WCMP_Export::convertWeightToGrams($orderSettings->getWeight());
+        $totalWeight        = WeightService::convertToGrams($orderSettings->getWeight());
 
         $customsDeclaration
             ->setContents($contents)

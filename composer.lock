@@ -4,20 +4,67 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d50127efc2eaf09973ae091e6ca3513a",
+    "content-hash": "1f1aa65a6b23bc8456b3128f9da118d8",
     "packages": [
         {
-            "name": "myparcelnl/sdk",
-            "version": "7.1.0",
+            "name": "myparcelnl/pdk",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "719b800cfd0dc45855eec8547ca9926e65a5013b"
+                "url": "https://github.com/myparcelnl/pdk.git",
+                "reference": "adef359a4f9c70fa18cc4d671d875939a293e909"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/719b800cfd0dc45855eec8547ca9926e65a5013b",
-                "reference": "719b800cfd0dc45855eec8547ca9926e65a5013b",
+                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/adef359a4f9c70fa18cc4d671d875939a293e909",
+                "reference": "adef359a4f9c70fa18cc4d671d875939a293e909",
+                "shasum": ""
+            },
+            "require": {
+                "myparcelnl/sdk": "^7.1",
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "pestphp/pest": "^1.21",
+                "pestphp/pest-plugin-faker": "^1.x-dev",
+                "pestphp/pest-plugin-watch": "^1.x-dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MyParcelNL\\Pdk\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Edie Lemoine",
+                    "email": "edie@myparcel.nl"
+                }
+            ],
+            "description": "MyParcel Plugin Development Kit",
+            "homepage": "https://www.myparcel.nl",
+            "support": {
+                "issues": "https://github.com/myparcelnl/pdk/issues",
+                "source": "https://github.com/myparcelnl/pdk/tree/v1.1.0"
+            },
+            "time": "2022-05-31T09:24:02+00:00"
+        },
+        {
+            "name": "myparcelnl/sdk",
+            "version": "7.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myparcelnl/sdk.git",
+                "reference": "2334d5535815da98d8062fd69074fd4247bf0eb6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/2334d5535815da98d8062fd69074fd4247bf0eb6",
+                "reference": "2334d5535815da98d8062fd69074fd4247bf0eb6",
                 "shasum": ""
             },
             "require": {
@@ -68,9 +115,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v7.1.0"
+                "source": "https://github.com/myparcelnl/sdk/tree/v7.2.2"
             },
-            "time": "2022-02-09T15:33:36+00:00"
+            "time": "2022-04-15T08:14:51+00:00"
         }
     ],
     "packages-dev": [],
