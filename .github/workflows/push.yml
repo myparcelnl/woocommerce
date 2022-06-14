@@ -10,7 +10,7 @@ on:
 jobs:
   rebase:
     name: 'Rebase develop onto main'
-    uses: myparcelnl/prestashop/.github/workflows/rebase.yml@main
+    uses: myparcelnl/woocommerce/.github/workflows/rebase.yml@main
     secrets: inherit
     with:
       base: 'main'
