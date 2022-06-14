@@ -1,0 +1,35 @@
+name: 'Rebase'
+
+on:
+  workflow_call:
+    inputs:
+      base:
+        type: string
+        required: false
+        default: 'main'
+
+      target:
+        type: string
+        required: false
+        default: 'develop'
+
+  workflow_dispatch:
+    inputs:
+      target:
+        type: string
+        description: 'Target branch'
+        default: 'develop'
+        required: true
+
+  repository_dispatch:
+    types: [ rebase-command ]
+
+jobs:
+  rebase:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: myparcelnl/actions/rebase@v2
+        with:
+          token: ${{ secrets.GH_REPO_TOKEN }}
+          target: ${{ github.event.client_payload.target || github.event.inputs.target || inputs.target }}
+          base: ${{ github.event.client_payload.base || github.event.inputs.base || inputs.base }}
