@@ -1,13 +1,23 @@
 {
   "name": "myparcelnl/woocommerce",
   "version": "4.11.0",
+  "minimum-stability": "dev",
   "require": {
-    "myparcelnl/pdk": "~1.1.0"
+    "myparcelnl/pdk": "1.*"
   },
   "autoload": {
     "psr-4": {
       "MyParcelNL\\WooCommerce\\includes\\": "includes",
       "MyParcelNL\\WooCommerce\\": "includes"
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../../../pdk",
+      "options": {
+        "symlink": false
+      }
+    }
+  ]
 }

@@ -6,18 +6,17 @@ namespace MyParcelNL\WooCommerce\includes\admin\settings;
 
 defined('ABSPATH') or die();
 
-use MyParcelNL\Pdk\Storage\AbstractStorage;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
-use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use WCMP_Data;
 use WCMP_Settings_Callbacks;
 use WCMYPA_Admin;
+use WCMYPA_Settings;
 use WPO\WC\MyParcel\Collections\SettingsCollection;
 
 class Status
@@ -44,14 +43,17 @@ class Status
         self::renderStatusTable();
     }
 
+    private static function hasApiKey(): bool
+    {
+        return (bool)SettingsCollection::getInstance()->getByName(WCMYPA_Settings::SETTING_API_KEY);
+    }
+
     private static function addCarrierRows(): void
     {
-        $hasApiKey = WCMYPA()->pdk()->get(AbstractStorage::class)->hasApiKey();
-
         foreach (WCMP_Data::getCarriers() as $carrierClass) {
             $carrier = new $carrierClass();
 
-            if (! $hasApiKey) {
+            if (! self::hasApiKey()) {
                 self::addItem($carrier->getHuman(), '', self::TYPE_ERROR);
                 continue;
             }
@@ -100,7 +102,7 @@ class Status
     {
         $title = __('diagnostics_status_shop_connection', 'woocommerce-myparcel');
 
-        if (! WCMYPA()->pdk()->get(AbstractStorage::class)->hasApiKey()) {
+        if (! self::hasApiKey()) {
             self::addItem($title, __('diagnostics_status_api_key_missing', 'woocommerce-myparcel'), self::TYPE_ERROR);
             return;
         }
@@ -124,7 +126,7 @@ class Status
     {
         $title = __('diagnostics_status_webhooks', 'woocommerce-myparcel');
 
-        if (! WCMYPA()->pdk()->get(AbstractStorage::class)->hasApiKey()) {
+        if (! self::hasApiKey()) {
             self::addItem($title, '', self::TYPE_ERROR);
             return;
         }

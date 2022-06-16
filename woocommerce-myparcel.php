@@ -14,14 +14,12 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 
 use MyParcelNL\Pdk\MyParcelContainer;
 use MyParcelNL\Pdk\MyParcelPdk;
-use MyParcelNL\Pdk\Repository\AccountSettingsRepository;
+use MyParcelNL\Pdk\Pdk;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
-use MyParcelNL\WooCommerce\includes\admin\MyParcelPdkConfig;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Settings\Listener\ApiKeySettingsListener;
-use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\OrderStatusWebhook;
 
@@ -83,10 +81,24 @@ if (! class_exists('WCMYPA')) :
         private $activeCarriers;
 
         /**
-         * Constructor
+         * @var \DI\Container
+         */
+        public $container;
+
+        /**
+         * @var MyParcelNL\Pdk\Pdk
+         */
+        private $pdk;
+
+        /**
+         * @throws \Exception
          */
         public function __construct()
         {
+            $pdkConfig = require('config/pdk.php');
+            $this->pdk = new Pdk($pdkConfig);
+            $this->container = $this->pdk->container;
+
             $this->define('WC_MYPARCEL_NL_VERSION', $this->version);
             $this->plugin_basename = plugin_basename(__FILE__);
 
@@ -101,11 +113,11 @@ if (! class_exists('WCMYPA')) :
         }
 
         /**
-         * @return \MyParcelNL\Pdk\MyParcelContainer
+         * @return \MyParcelNL\Pdk\Pdk
          */
-        public function pdk(): MyParcelContainer
+        public function pdk(): Pdk
         {
-            return MyParcelPdk::getInstance(new MyParcelPdkConfig());
+            return $this->pdk;
         }
 
         /**

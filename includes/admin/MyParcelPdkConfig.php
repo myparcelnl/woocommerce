@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\includes\admin;
 
 use MyParcelNL\Pdk\Concerns\PdkConfigInterface;
-use MyParcelNL\WooCommerce\includes\admin\settings\StorageAccess;
+use MyParcelNL\WooCommerce\includes\admin\settings\WordPressOptionStorage;
 
 class MyParcelPdkConfig implements PdkConfigInterface
 {
@@ -14,6 +14,6 @@ class MyParcelPdkConfig implements PdkConfigInterface
      */
     public function getStorageClass(): string
     {
-        return StorageAccess::class;
+        return WordPressOptionStorage::class;
     }
 }

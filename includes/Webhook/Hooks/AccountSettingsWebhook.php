@@ -6,13 +6,12 @@ namespace MyParcelNL\WooCommerce\includes\Webhooks\Hooks;
 
 defined('ABSPATH') or die();
 
-use MyParcelNL\Pdk\Repository\AccountSettingsRepository;
+use MyParcelNL\Pdk\Account\Respository\AccountSettingsRepository;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierAccessibilityUpdatedWebhookWebService;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopCarrierConfigurationUpdatedWebhookWebService;
 use MyParcelNL\Sdk\src\Services\Web\Webhook\ShopUpdatedWebhookWebService;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
-use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
 use MyParcelNL\WooCommerce\includes\Webhook\Hooks\AbstractWebhook;
 use WCMYPA_Admin;
 use WP_REST_Request;
@@ -36,7 +35,7 @@ class AccountSettingsWebhook extends AbstractWebhook
      */
     public function getCallback(WP_REST_Request $request): WP_REST_Response
     {
-        WCMYPA()->pdk()->get(AccountSettingsRepository::class)->refreshFromApi();
+        WCMYPA()->container->get(AccountSettings::class)->refreshFromApi();
 
         $response = new WP_REST_Response();
         $response->set_status(200);

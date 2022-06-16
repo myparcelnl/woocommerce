@@ -4,25 +4,56 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f1aa65a6b23bc8456b3128f9da118d8",
+    "content-hash": "ca1202da6a0d65265bf4229d58f8e38d",
     "packages": [
         {
-            "name": "myparcelnl/pdk",
-            "version": "1.1.0",
+            "name": "container-interop/container-interop",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/myparcelnl/pdk.git",
-                "reference": "adef359a4f9c70fa18cc4d671d875939a293e909"
+                "url": "https://github.com/container-interop/container-interop.git",
+                "reference": "79cbf1341c22ec75643d841642dd5d6acd83bdb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/pdk/zipball/adef359a4f9c70fa18cc4d671d875939a293e909",
-                "reference": "adef359a4f9c70fa18cc4d671d875939a293e909",
+                "url": "https://api.github.com/repos/container-interop/container-interop/zipball/79cbf1341c22ec75643d841642dd5d6acd83bdb8",
+                "reference": "79cbf1341c22ec75643d841642dd5d6acd83bdb8",
                 "shasum": ""
             },
             "require": {
+                "psr/container": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Interop\\Container\\": "src/Interop/Container/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
+            "homepage": "https://github.com/container-interop/container-interop",
+            "support": {
+                "issues": "https://github.com/container-interop/container-interop/issues",
+                "source": "https://github.com/container-interop/container-interop/tree/master"
+            },
+            "abandoned": "psr/container",
+            "time": "2017-02-14T19:40:03+00:00"
+        },
+        {
+            "name": "myparcelnl/pdk",
+            "version": "1.0.1",
+            "dist": {
+                "type": "path",
+                "url": "../../../pdk",
+                "reference": "583b9afb4abd2af854972e77f176872ddf6ae741"
+            },
+            "require": {
                 "myparcelnl/sdk": "^7.1",
-                "php": ">=7.1.0"
+                "php": ">=7.1.0",
+                "php-di/php-di": "~6.0.0"
             },
             "require-dev": {
                 "pestphp/pest": "^1.21",
@@ -33,9 +64,11 @@
             "autoload": {
                 "psr-4": {
                     "MyParcelNL\\Pdk\\": "src/"
-                }
+                },
+                "classmap": [
+                    "src"
+                ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -47,11 +80,10 @@
             ],
             "description": "MyParcel Plugin Development Kit",
             "homepage": "https://www.myparcel.nl",
-            "support": {
-                "issues": "https://github.com/myparcelnl/pdk/issues",
-                "source": "https://github.com/myparcelnl/pdk/tree/v1.1.0"
-            },
-            "time": "2022-05-31T09:24:02+00:00"
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
         },
         {
             "name": "myparcelnl/sdk",
@@ -118,15 +150,218 @@
                 "source": "https://github.com/myparcelnl/sdk/tree/v7.2.2"
             },
             "time": "2022-04-15T08:14:51+00:00"
+        },
+        {
+            "name": "php-di/invoker",
+            "version": "1.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHP-DI/Invoker.git",
+                "reference": "1f4ca63b9abc66109e53b255e465d0ddb5c2e3f7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHP-DI/Invoker/zipball/1f4ca63b9abc66109e53b255e465d0ddb5c2e3f7",
+                "reference": "1f4ca63b9abc66109e53b255e465d0ddb5c2e3f7",
+                "shasum": ""
+            },
+            "require": {
+                "container-interop/container-interop": "~1.1"
+            },
+            "require-dev": {
+                "athletic/athletic": "~0.1.8",
+                "phpunit/phpunit": "~4.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Invoker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Generic and extensible callable invoker",
+            "homepage": "https://github.com/PHP-DI/Invoker",
+            "keywords": [
+                "callable",
+                "dependency",
+                "dependency-injection",
+                "injection",
+                "invoke",
+                "invoker"
+            ],
+            "support": {
+                "issues": "https://github.com/PHP-DI/Invoker/issues",
+                "source": "https://github.com/PHP-DI/Invoker/tree/master"
+            },
+            "time": "2016-07-14T13:09:58+00:00"
+        },
+        {
+            "name": "php-di/php-di",
+            "version": "6.0.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHP-DI/PHP-DI.git",
+                "reference": "ff03746f30bf776641a809e26e28892c73eebfd0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHP-DI/PHP-DI/zipball/ff03746f30bf776641a809e26e28892c73eebfd0",
+                "reference": "ff03746f30bf776641a809e26e28892c73eebfd0",
+                "shasum": ""
+            },
+            "require": {
+                "container-interop/container-interop": "~1.2",
+                "php": ">=7.0.0",
+                "php-di/invoker": "^1.3.2",
+                "php-di/phpdoc-reader": "^2.0.1",
+                "psr/container": "~1.0"
+            },
+            "provide": {
+                "container-interop/container-interop-implementation": "^1.0",
+                "psr/container-implementation": "^1.0"
+            },
+            "replace": {
+                "mnapoli/php-di": "*"
+            },
+            "require-dev": {
+                "doctrine/annotations": "~1.2",
+                "doctrine/cache": "~1.4",
+                "mnapoli/phpunit-easymock": "~0.2.0",
+                "ocramius/proxy-manager": "~2.0.2",
+                "phpunit/phpunit": "~5.0"
+            },
+            "suggest": {
+                "doctrine/annotations": "Install it if you want to use annotations (version ~1.2)",
+                "doctrine/cache": "Install it if you want to use the cache (version ~1.4)",
+                "ocramius/proxy-manager": "Install it if you want to use lazy injection (version ~2.0)"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/DI/functions.php"
+                ],
+                "psr-4": {
+                    "DI\\": "src/DI/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The dependency injection container for humans",
+            "homepage": "http://php-di.org/",
+            "keywords": [
+                "container",
+                "dependency injection",
+                "di"
+            ],
+            "support": {
+                "issues": "https://github.com/PHP-DI/PHP-DI/issues",
+                "source": "https://github.com/PHP-DI/PHP-DI/tree/6.0"
+            },
+            "time": "2017-04-15T16:09:37+00:00"
+        },
+        {
+            "name": "php-di/phpdoc-reader",
+            "version": "2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHP-DI/PhpDocReader.git",
+                "reference": "66daff34cbd2627740ffec9469ffbac9f8c8185c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHP-DI/PhpDocReader/zipball/66daff34cbd2627740ffec9469ffbac9f8c8185c",
+                "reference": "66daff34cbd2627740ffec9469ffbac9f8c8185c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "require-dev": {
+                "mnapoli/hard-mode": "~0.3.0",
+                "phpunit/phpunit": "^8.5|^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpDocReader\\": "src/PhpDocReader"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PhpDocReader parses @var and @param values in PHP docblocks (supports namespaced class names with the same resolution rules as PHP)",
+            "keywords": [
+                "phpdoc",
+                "reflection"
+            ],
+            "support": {
+                "issues": "https://github.com/PHP-DI/PhpDocReader/issues",
+                "source": "https://github.com/PHP-DI/PhpDocReader/tree/2.2.1"
+            },
+            "time": "2020-10-12T12:39:22+00:00"
+        },
+        {
+            "name": "psr/container",
+            "version": "1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/container.git",
+                "reference": "513e0666f7216c7459170d56df27dfcefe1689ea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/513e0666f7216c7459170d56df27dfcefe1689ea",
+                "reference": "513e0666f7216c7459170d56df27dfcefe1689ea",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Container\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common Container Interface (PHP FIG PSR-11)",
+            "homepage": "https://github.com/php-fig/container",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interface",
+                "container-interop",
+                "psr"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/container/issues",
+                "source": "https://github.com/php-fig/container/tree/1.1.2"
+            },
+            "time": "2021-11-05T16:50:12+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "1.1.0"
 }
