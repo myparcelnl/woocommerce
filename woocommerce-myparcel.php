@@ -40,7 +40,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * @var string
          */
-        public $version = '4.12.0';
+        public $version;
 
         /**
          * @var string
@@ -77,6 +77,8 @@ if (! class_exists('WCMYPA')) :
          */
         public function __construct()
         {
+            $composerJson          = json_decode(file_get_contents(__DIR__ . '/composer.json'), false);
+            $this->version         = $composerJson->version;
             $this->define('WC_MYPARCEL_NL_VERSION', $this->version);
             $this->plugin_basename = plugin_basename(__FILE__);
 
