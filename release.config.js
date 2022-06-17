@@ -8,7 +8,11 @@ module.exports = {
   extends: '@myparcel/semantic-release-config',
   plugins: [
     ...mainConfig.plugins,
-    addGitHubPlugin(),
+    addGitHubPlugin({
+      assets: [
+        {path: './woocommerce-myparcel.zip', label: 'Download Woocommerce MyParcel plugin v${nextRelease.version}'},
+      ],
+    }),
     addExecPlugin({
       prepareCmd: 'node ./private/updateVersion.js ${nextRelease.version}',
     }),
