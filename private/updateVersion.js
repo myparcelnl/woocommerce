@@ -4,7 +4,6 @@ const path = require('path');
 const [, , version] = process.argv;
 
 const rootDir = path.resolve(__dirname, '..');
-const parsedVersion = version.replace(/^v/, '');
 
 [
   'composer.json',

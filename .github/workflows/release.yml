@@ -21,13 +21,13 @@ jobs:
 
       - uses: myparcelnl/actions/composer-install@v2
         with:
-          php-version: '7.4'
+          php-version: '7.1'
 
       - uses: myparcelnl/actions/yarn-install@v2
 
       - uses: myparcelnl/actions/semantic-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
+        with:
+          token: ${{ secrets.GH_REPO_TOKEN }}
 
       - uses: myparcelnl/actions/rebase@v2
         with:
