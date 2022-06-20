@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - .github/**/*
 
   workflow_dispatch: ~
 
@@ -25,12 +23,31 @@ jobs:
 
       - uses: myparcelnl/actions/yarn-install@v2
 
+      - name: 'Create build'
+        run: yarn build
+
       - uses: myparcelnl/actions/semantic-release@v2
         with:
           token: ${{ secrets.GH_REPO_TOKEN }}
 
-      - uses: myparcelnl/actions/rebase@v2
+  rebase:
+    name: 'Rebase develop onto main'
+    uses: myparcelnl/woocommerce/.github/workflows/rebase.yml@main
+    secrets: inherit
+    needs: release
+    if: always()
+    with:
+      base: 'main'
+      target: 'develop'
+
+  rebase-prs:
+    name: 'Rebase pull requests onto develop'
+    needs: rebase
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: peter-evans/rebase@v2
         with:
           token: ${{ secrets.GH_REPO_TOKEN }}
-          base: main
-          target: develop
+          base: develop
+          exclude-drafts: true
+          exclude-labels: 'hotfix'
