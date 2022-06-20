@@ -77,8 +77,7 @@ if (! class_exists('WCMYPA')) :
          */
         public function __construct()
         {
-            $composerJson          = json_decode(file_get_contents(__DIR__ . '/composer.json'), false);
-            $this->version         = $composerJson->version;
+            $this->version         = $this->getVersion();
             $this->define('WC_MYPARCEL_NL_VERSION', $this->version);
             $this->plugin_basename = plugin_basename(__FILE__);
 
@@ -103,6 +102,16 @@ if (! class_exists('WCMYPA')) :
             if (! defined($name)) {
                 define($name, $value);
             }
+        }
+
+        /**
+         * @return string
+         */
+        private function getVersion(): string
+        {
+            $composerJson = json_decode(file_get_contents(__DIR__ . '/composer.json'), false);
+
+            return $composerJson->version;
         }
 
         /**
