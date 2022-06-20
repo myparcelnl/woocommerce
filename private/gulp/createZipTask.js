@@ -9,6 +9,7 @@ function createZipTask(gulp, plugins) {
     'readme.txt',
     'templates/**/*',
     'vendor/**/*',
+    'composer.json',
     'woocommerce-myparcel.php',
     'wpm-config.json',
   ], { base: '.' })

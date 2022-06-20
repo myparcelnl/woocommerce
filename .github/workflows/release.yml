@@ -23,9 +23,6 @@ jobs:
 
       - uses: myparcelnl/actions/yarn-install@v2
 
-      - name: 'Create build'
-        run: yarn build
-
       - uses: myparcelnl/actions/semantic-release@v2
         with:
           token: ${{ secrets.GH_REPO_TOKEN }}

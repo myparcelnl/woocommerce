@@ -13,7 +13,7 @@ module.exports = {
       ],
     }),
     addExecPlugin({
-      prepareCmd: 'node ./private/updateVersion.js ${nextRelease.version}',
+      prepareCmd: 'node ./private/updateVersion.js ${nextRelease.version} && yarn build',
     }),
     addGitPlugin({
       ...gitPluginDefaults,
