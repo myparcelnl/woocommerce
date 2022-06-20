@@ -103,6 +103,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.12.1 (2022-06-20) =
+* Fix: om: fix error when creating webhook (#840) (2b09ef4)
+
 = 4.12.0 (2022-06-14) =
 * Feat: add default weight for digital stamp (#832) (bccf454)
 * Feat: add option to save customer address (#827) (bdcb0bf)
