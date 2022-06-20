@@ -1,3 +1,15 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+### [4.12.1](https://github.com/myparcelnl/woocommerce/compare/v4.12.0...v4.12.1) (2022-06-20)
+
+
+### :bug: Bug Fixes
+
+* **om:** fix error when creating webhook ([#840](https://github.com/myparcelnl/woocommerce/issues/840)) ([2b09ef4](https://github.com/myparcelnl/woocommerce/commit/2b09ef4236a9f3960d2a3e180c73bdedadb42cca))
+
 ## [4.12.0](https://github.com/myparcelnl/woocommerce/compare/v4.11.0...v4.12.0) (2022-06-14)
 
 
@@ -599,4 +611,3 @@
 ### Reverts
 
 * Revert "smarter checkout re-ordening" ([125d27e](https://github.com/myparcelnl/woocommerce/commit/125d27e0d7437936c98a9bc925c21690d33abae9))
-
