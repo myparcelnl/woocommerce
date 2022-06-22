@@ -58,6 +58,7 @@ class WCMP_Data
 
     public const DEFAULT_COUNTRY_CODE = "NL";
     public const DEFAULT_CARRIER       = CarrierPostNL::ID;
+    public const DEFAULT_CARRIER_NAME  = CarrierPostNL::NAME;
     public const DEFAULT_CARRIER_CLASS = CarrierPostNL::class;
 
     /**
