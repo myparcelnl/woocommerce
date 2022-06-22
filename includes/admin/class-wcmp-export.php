@@ -1484,7 +1484,7 @@ class WCMP_Export
             $savedOrderCollection = $this->orderCollection->save();
 
             return $this->updateOrderMetaByCollection($savedOrderCollection);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Messages::showAdminNotice($e->getMessage());
             return [];
         }
