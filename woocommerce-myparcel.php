@@ -120,7 +120,7 @@ if (! class_exists('WCMYPA')) :
          */
         private function setupWebhooks(): void
         {
-            $apiKeyIsValid = get_option('valid_api_key');
+            $apiKeyIsValid = get_option('myparcel_valid_api_key');
 
             if (! $apiKeyIsValid) {
                 return;

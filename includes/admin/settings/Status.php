@@ -157,7 +157,7 @@ class Status
         $text = $allWebhooksPresent ? 'diagnostics_status_webhooks_set_up' : 'diagnostics_status_webhooks_error';
         $type = $allWebhooksPresent ? self::TYPE_SUCCESS : self::TYPE_ERROR;
 
-        update_option('valid_api_key', $allWebhooksPresent);
+        update_option('myparcel_valid_api_key', $allWebhooksPresent);
 
         self::addItem($title, __($text, 'woocommerce-myparcel'), $type);
     }
