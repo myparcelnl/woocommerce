@@ -14,6 +14,7 @@ use MyParcelNL\WooCommerce\includes\Utils;
 use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
 use MyParcelNL\WooCommerce\includes\Webhook\Model\WebhookCallback;
 use MyParcelNL\WooCommerce\includes\Webhook\Model\WebhookSubscription;
+use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use WCMP_Log;
 use WCMYPA;
 
@@ -299,5 +300,27 @@ class WebhookSubscriptionService
         $array = Utils::toArray($newSubscriptions->all());
 
         update_option(self::WEBHOOK_SETTINGS_PATH, json_encode($array));
+    }
+
+    /**
+     * @return bool
+     */
+    public static function hasValidSubscription(): bool
+    {
+        $webhookSubscriptionService = new WebhookSubscriptionService();
+        $allWebhooksPresent         = true;
+
+        foreach (AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS as $webhook) {
+            /**
+             * @var class-string<\MyParcelNL\Sdk\src\Services\Web\Webhook\AbstractWebhookWebService>[] $webhook
+             */
+            $subscription = $webhookSubscriptionService->findByHook((new $webhook())->getHook());
+
+            if (! $subscription) {
+                $allWebhooksPresent = false;
+            }
+        }
+
+        return $allWebhooksPresent;
     }
 }

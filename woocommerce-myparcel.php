@@ -16,6 +16,7 @@ use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
+use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\OrderStatusWebhook;
 
@@ -120,22 +121,24 @@ if (! class_exists('WCMYPA')) :
          */
         private function setupWebhooks(): void
         {
-            $apiKeyIsValid = get_option('myparcel_valid_api_key');
+            $currentApiKey = $this->setting_collection->getByName(WCMYPA_Settings::SETTING_API_KEY);
+            $validApiKey   = get_option('woocommerce_myparcel_valid_api_key');
 
-            if (! $apiKeyIsValid) {
-                return;
+            if ($validApiKey !== $currentApiKey) {
+
+                $changeOrderStatusAfter = WCMP_Export_Consignments::getSetting(
+                    WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER
+                );
+                $exportMode             = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EXPORT_MODE);
+
+                if (WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === $changeOrderStatusAfter && WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
+                    (new OrderStatusWebhook())->register();
+                }
+
+                (new AccountSettingsWebhook())->register();
+
+                update_option('woocommerce_myparcel_valid_api_key', $currentApiKey);
             }
-
-            $changeOrderStatusAfter = WCMP_Export_Consignments::getSetting(
-                WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER
-            );
-            $exportMode             = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EXPORT_MODE);
-
-            if (WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === $changeOrderStatusAfter && WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-                (new OrderStatusWebhook())->register();
-            }
-
-            (new AccountSettingsWebhook())->register();
         }
 
         /**
@@ -229,7 +232,7 @@ if (! class_exists('WCMYPA')) :
             $this->includes();
             $this->initSettings();
 
-            if (! $this->validateApiKeyPresence()) {
+            if (! $this->validateApiKey()) {
                 return;
             }
 
@@ -428,22 +431,24 @@ if (! class_exists('WCMYPA')) :
         /**
          * @return bool
          */
-        private function validateApiKeyPresence(): bool
+        private function validateApiKey(): bool
         {
-            if ($this->setting_collection->getByName(WCMYPA_Settings::SETTING_API_KEY)) {
-                return true;
+            $apiKey = $this->setting_collection->getByName(WCMYPA_Settings::SETTING_API_KEY);
+
+            if (! $apiKey) {
+                Messages::showAdminNotice(
+                    sprintf(
+                        __('error_settings_api_key_missing', 'woocommerce-myparcel'),
+                        sprintf('<a href="%s">', WCMYPA_Settings::getSettingsUrl()),
+                        '</a>'
+                    ),
+                    Messages::NOTICE_LEVEL_WARNING
+                );
+
+                return false;
             }
 
-            Messages::showAdminNotice(
-                sprintf(
-                    __('error_settings_api_key_missing', 'woocommerce-myparcel'),
-                    sprintf('<a href="%s">', WCMYPA_Settings::getSettingsUrl()),
-                    '</a>'
-                ),
-                Messages::NOTICE_LEVEL_WARNING
-            );
-
-            return false;
+            return true;
         }
     }
 
