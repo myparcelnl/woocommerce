@@ -115,6 +115,9 @@ class Status
         );
     }
 
+    /**
+     * @throws \Exception
+     */
     private static function addWebhookStatusRow(): void
     {
         $title = __('diagnostics_status_webhooks', 'woocommerce-myparcel');
@@ -138,6 +141,8 @@ class Status
         $webhookSubscriptionService = new WebhookSubscriptionService();
         $allWebhooksPresent         = true;
 
+        (new AccountSettingsWebhook())->register();
+
         foreach (AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS as $webhook) {
             /**
              * @var class-string<\MyParcelNL\Sdk\src\Services\Web\Webhook\AbstractWebhookWebService>[] $webhook
@@ -151,6 +156,8 @@ class Status
 
         $text = $allWebhooksPresent ? 'diagnostics_status_webhooks_set_up' : 'diagnostics_status_webhooks_error';
         $type = $allWebhooksPresent ? self::TYPE_SUCCESS : self::TYPE_ERROR;
+
+        update_option('valid_api_key', $allWebhooksPresent);
 
         self::addItem($title, __($text, 'woocommerce-myparcel'), $type);
     }

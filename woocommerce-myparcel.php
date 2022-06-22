@@ -120,6 +120,12 @@ if (! class_exists('WCMYPA')) :
          */
         private function setupWebhooks(): void
         {
+            $apiKeyIsValid = get_option('valid_api_key');
+
+            if (! $apiKeyIsValid) {
+                return;
+            }
+
             $changeOrderStatusAfter = WCMP_Export_Consignments::getSetting(
                 WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER
             );
