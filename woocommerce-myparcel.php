@@ -18,6 +18,7 @@ use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\OrderStatusWebhook;
+use MyParcelNL\WooCommerce\includes\Widget\MyParcelWidget;
 
 defined('ABSPATH') or die();
 
@@ -146,7 +147,7 @@ if (! class_exists('WCMYPA')) :
          * Load the translation / text-domain files
          * Note: the first-loaded translation file overrides any following ones if the same translation is present
          */
-        public function translations()
+        public function translations(): void
         {
             $locale = apply_filters('plugin_locale', get_locale(), self::DOMAIN);
             $dir    = trailingslashit(WP_LANG_DIR);
@@ -169,7 +170,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * Load the main plugin classes and functions
          */
-        public function includes()
+        public function includes(): void
         {
             $this->includes = $this->plugin_path() . '/includes';
 
@@ -222,6 +223,8 @@ if (! class_exists('WCMYPA')) :
             $this->useStagingEnvironment();
             $this->includes();
             $this->initSettings();
+
+            add_action( 'wp_dashboard_setup', [$this, 'initDashboardWidget'] );
 
             if (! $this->validateApiKeyPresence()) {
                 return;
@@ -293,7 +296,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * Handles version checking
          */
-        public function do_install()
+        public function do_install(): void
         {
             $version_setting   = 'woocommerce_myparcel_version';
             $installed_version = get_option($version_setting);
@@ -314,7 +317,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * Plugin install method. Perform any installation tasks here
          */
-        protected function install()
+        protected function install(): void
         {
             // Pre 2.0.0
             if (! empty(get_option('wcmyparcel_settings'))) {
@@ -328,7 +331,7 @@ if (! class_exists('WCMYPA')) :
          *
          * @param string $installed_version the currently installed ('old') version
          */
-        protected function upgrade($installed_version)
+        protected function upgrade($installed_version): void
         {
             if (version_compare($installed_version, '2.4.0-beta-4', '<')) {
                 require_once('migration/wcmp-upgrade-migration-v2-4-0-beta-4.php');
@@ -366,7 +369,7 @@ if (! class_exists('WCMYPA')) :
          *
          * @return string
          */
-        public function plugin_url()
+        public function plugin_url(): string
         {
             return untrailingslashit(plugins_url('/', __FILE__));
         }
@@ -376,15 +379,23 @@ if (! class_exists('WCMYPA')) :
          *
          * @return string
          */
-        public function plugin_path()
+        public function plugin_path(): string
         {
             return untrailingslashit(plugin_dir_path(__FILE__));
         }
 
         /**
+         * @return void
+         */
+        public function initDashboardWidget(): void
+        {
+            (new MyParcelWidget())->loadWidget();
+        }
+
+        /**
          * Initialize the settings.
          */
-        public function initSettings()
+        public function initSettings(): void
         {
             require_once('includes/wcmp-initialize-settings-collection.php');
             if (empty($this->setting_collection)) {
