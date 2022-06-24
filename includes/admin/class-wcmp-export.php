@@ -1589,10 +1589,10 @@ class WCMP_Export
      */
     private function setFeedbackForClient(string $print, int $offset, array $orderIds, array $return): array
     {
-        if ($return['success']) {
+        if ($return['success'] ?? null) {
             Messages::showAdminNotice($return['success'], Messages::NOTICE_LEVEL_SUCCESS);
         }
-        if ($return['error']) {
+        if ($return['error'] ?? null) {
             Messages::showAdminNotice($return['error'], Messages::NOTICE_LEVEL_ERROR);
         }
 
