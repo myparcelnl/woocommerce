@@ -30,7 +30,7 @@ class MyParcelWidget
      */
     public function myparcelDashboardWidgetHandler()
     {
-        $orderAmount = get_option('woocommerce_myparcel_dashboard_widget')['items'];
+        $orderAmount = get_option('woocommerce_myparcel_dashboard_widget')['items'] ?? 0;
         $orders      = wc_get_orders([
             'limit' => $orderAmount,
         ]);
@@ -58,10 +58,13 @@ class MyParcelWidget
             }
 
             $tableContent      .= sprintf(
-                '<tr>
-<td>%s</td>
-<td>%s %s %s %s</td>
-<td><span class="label label-primary">%s</span></td>
+                '
+<tr onclick="window.location=\'/wp-admin/post.php?post='. $orderId .'&action=edit\';" style="cursor: pointer !important;">
+  <td>%s</td>
+  <td>%s %s %s %s</td>
+  <td>
+    <span class="badge badge-primary">%s</span>
+  </td>
 </tr>',
                 $orderId,
                 $shippingRecipient->getStreet(),
@@ -72,8 +75,18 @@ class MyParcelWidget
             );
         }
 
-        echo sprintf('<div class="panel panel-default"><div class="panel-heading"><img class="logo-img" src="https://www.myparcel.nl/assets/novio/img/MyParcel_logo_wit.svg"></div>
-  <div class="panel-body"><table class="table table-hover">%s%s</table></div></div>', $tableHeaders, $tableContent);
+        echo sprintf('
+<div class="card">
+  <div class="card-header">
+      <img src="https://www.myparcel.nl/assets/novio/img/MyParcel_logo_wit.svg" alt="Card image cap">
+   </div>
+  <div class="card-body">
+    <table class="table table-hover">
+      %s%s
+    </table>
+  </div>
+</div>
+', $tableHeaders, $tableContent);
     }
 
     public function addStyles()
@@ -101,10 +114,10 @@ class MyParcelWidget
         }
 
         ?>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <img class="logo-img" src="https://www.myparcel.nl/assets/novio/img/MyParcel_logo_wit.svg">
-            </div>
+        <div class="card">
+          <div class="card-header">
+            <img src="https://www.myparcel.nl/assets/novio/img/MyParcel_logo_wit.svg" alt="Card image cap">
+          </div>
         </div>
         <p>
             <div class="form-group">
