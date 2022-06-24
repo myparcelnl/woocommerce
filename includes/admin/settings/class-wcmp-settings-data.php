@@ -254,6 +254,11 @@ class WCMP_Settings_Data
                     'settings' => $this->get_section_general_general(),
                 ],
                 [
+                    'name'     => 'widget',
+                    'label'    => __('settings_general_widget_title', 'woocommerce-myparcel'),
+                    'settings' => $this->get_section_general_widget(),
+                ],
+                [
                     'name'     => 'diagnostics',
                     'label'    => __('settings_general_diagnostics_title', 'woocommerce-myparcel'),
                     'settings' => $this->get_section_general_diagnostics(),
@@ -482,6 +487,32 @@ class WCMP_Settings_Data
                     'woocommerce-myparcel'
                 ),
             ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function get_section_general_widget(): array
+    {
+        return [
+            [
+                'name'  => WCMYPA_Settings::SETTING_SHOW_WIDGET,
+                'label' => __('setting_show_widget_label', 'woocommerce-myparcel'),
+                'type'  => 'toggle',
+            ],
+//            [
+//                'name'      => WCMYPA_Settings::SETTING_WIDGET_AMOUNT,
+//                'label'     => __('setting_widget_amount_label', 'woocommerce-myparcel'),
+//                'type'      => 'select',
+//                'condition' => WCMYPA_Settings::SETTING_SHOW_WIDGET,
+//                'default'   => 10,
+//                'options'   => [
+//                    5  => 5,
+//                    10 => 10,
+//                    15 => 15,
+//                ],
+//            ],
         ];
     }
 

@@ -40,6 +40,8 @@ class WCMYPA_Settings
     public const SETTING_PROCESS_DIRECTLY          = 'process_directly';
     public const SETTING_TRACK_TRACE_EMAIL         = 'track_trace_email';
     public const SETTING_TRACK_TRACE_MY_ACCOUNT    = 'track_trace_my_account';
+    public const SETTING_SHOW_WIDGET               = 'show_widget';
+    public const SETTING_WIDGET_AMOUNT             = 'show_widget';
 
     /**
      * Export defaults
