@@ -56,8 +56,7 @@ class WCMP_Data
         AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP => 2000,
     ];
 
-    public const DEFAULT_COUNTRY_CODE = "NL";
-    public const DEFAULT_CARRIER       = CarrierPostNL::ID;
+    public const DEFAULT_COUNTRY_CODE = 'NL';
     public const DEFAULT_CARRIER_CLASS = CarrierPostNL::class;
 
     /**
