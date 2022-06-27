@@ -14,6 +14,7 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
+use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
@@ -28,6 +29,7 @@ if (! class_exists('WCMYPA')) :
     class WCMYPA
     {
         use HasInstance;
+        use HasApiKey;
 
         /**
          * Translations domain
@@ -121,24 +123,8 @@ if (! class_exists('WCMYPA')) :
          */
         private function setupWebhooks(): void
         {
-            $currentApiKey = $this->setting_collection->getByName(WCMYPA_Settings::SETTING_API_KEY);
-            $validApiKey   = get_option('woocommerce_myparcel_valid_api_key');
-
-            if ($validApiKey !== $currentApiKey) {
-
-                $changeOrderStatusAfter = WCMP_Export_Consignments::getSetting(
-                    WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER
-                );
-                $exportMode             = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EXPORT_MODE);
-
-                if (WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === $changeOrderStatusAfter && WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-                    (new OrderStatusWebhook())->register();
-                }
-
-                (new AccountSettingsWebhook())->register();
-
-                update_option('woocommerce_myparcel_valid_api_key', $currentApiKey);
-            }
+            (new OrderStatusWebhook())->register();
+            (new AccountSettingsWebhook())->register();
         }
 
         /**
@@ -238,6 +224,8 @@ if (! class_exists('WCMYPA')) :
 
             $this->setupWebhooks();
 
+            add_action('update_option_' . AccountSettings::WP_OPTION_KEY, [$this, 'afterAccountSettingsUpdate']);
+
             AccountSettings::getInstance();
             add_action(
                 'wp_ajax_' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE,
@@ -256,6 +244,37 @@ if (! class_exists('WCMYPA')) :
                 'message_insurance_belgium_2022',
                 [MessagesRepository::SETTINGS_PAGE, MessagesRepository::PLUGINS_PAGE]
             );
+        }
+
+        /**
+         * @throws \Exception
+         */
+        public function afterAccountSettingsUpdate(): void
+        {
+
+            $this->subscribeToWebhooks();
+        }
+
+        /**
+         * @return void
+         * @throws \Exception
+         */
+        private function subscribeToWebhooks(): void
+        {
+            $hooks = AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS;
+            $webhookSubscriptionService = new WebhookSubscriptionService();
+
+            foreach ($hooks as $webhookClass) {
+                $service = (new $webhookClass())->setApiKey($this->ensureHasApiKey());
+                $webhookCallback = $webhookSubscriptionService->createCallbackUrl($service, 'v1');
+                $subscriptionId  = $webhookSubscriptionService->createWebhook($service, $webhookCallback);
+
+                if (! $subscriptionId) {
+                    return;
+                }
+
+                $webhookSubscriptionService->saveSubscription($service, $webhookCallback, $subscriptionId);
+            }
         }
 
         /**

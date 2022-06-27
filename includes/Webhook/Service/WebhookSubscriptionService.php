@@ -121,7 +121,7 @@ class WebhookSubscriptionService
      * @return \MyParcelNL\WooCommerce\includes\Webhook\Model\WebhookCallback
      * @throws \Exception
      */
-    private function createCallbackUrl(AbstractWebhookWebService $service, string $version): WebhookCallback
+    public function createCallbackUrl(AbstractWebhookWebService $service, string $version): WebhookCallback
     {
         $hash = $this->generateHash();
         $path = implode('/', [$service->getHook(), $hash]);
@@ -148,7 +148,7 @@ class WebhookSubscriptionService
      *
      * @return null|int
      */
-    private function createWebhook(AbstractWebhookWebService $service, WebhookCallback $webhookCallback): ?int
+    public function createWebhook(AbstractWebhookWebService $service, WebhookCallback $webhookCallback): ?int
     {
         try {
             $subscriptionId = $service->subscribe($webhookCallback->getFullUrl());
@@ -283,7 +283,7 @@ class WebhookSubscriptionService
      *
      * @return void
      */
-    private function saveSubscription(
+    public function saveSubscription(
         AbstractWebhookWebService $service,
         WebhookCallback           $callback,
         int                       $subscriptionId
