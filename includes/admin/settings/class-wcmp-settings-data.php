@@ -501,18 +501,6 @@ class WCMP_Settings_Data
                 'label' => __('setting_show_widget_label', 'woocommerce-myparcel'),
                 'type'  => 'toggle',
             ],
-//            [
-//                'name'      => WCMYPA_Settings::SETTING_WIDGET_AMOUNT,
-//                'label'     => __('setting_widget_amount_label', 'woocommerce-myparcel'),
-//                'type'      => 'select',
-//                'condition' => WCMYPA_Settings::SETTING_SHOW_WIDGET,
-//                'default'   => 10,
-//                'options'   => [
-//                    5  => 5,
-//                    10 => 10,
-//                    15 => 15,
-//                ],
-//            ],
         ];
     }
 
