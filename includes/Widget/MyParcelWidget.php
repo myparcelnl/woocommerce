@@ -42,10 +42,8 @@ class MyParcelWidget
      */
     public function myparcelDashboardWidgetHandler(): void
     {
-        $orderAmount = get_option('woocommerce_myparcel_dashboard_widget')['items'] ?? 5;
-        $orders      = wc_get_orders([
-            'limit' => $orderAmount,
-        ]);
+        $orderAmount = get_option('woocommerce_myparcel_dashboard_widget')['items'] ?? self::DEFAULT_ORDER_AMOUNT;
+        $orders      = wc_get_orders(['limit' => $orderAmount,]);
 
         if (! $orders) {
             echo '<h4>No orders found</h4>';
@@ -54,7 +52,11 @@ class MyParcelWidget
 
         $tableHeaders = sprintf(
             '
-  <tr class=""><th>%s</th><th>%s</th><th>%s</th></tr>',
+            <tr>
+              <th>%s</th>
+              <th>%s</th>
+              <th>%s</th>
+            </tr>',
             'Order',
             'Address',
             'Status'
@@ -66,40 +68,33 @@ class MyParcelWidget
             $orderId           = $order->get_id();
             $shippingRecipient = $orderSettings->getShippingRecipient();
             $shipmentIds       = (new WCMP_Export())->getShipmentIds([$orderId], ['exclude_concepts']);
-            $shipment          = WCMYPA()->export->getShipmentData($shipmentIds ? $shipmentIds[0] : [], $order);
-
-            $shipmentStatus = null;
-
-            if ($shipment) {
-                $shipmentStatus = $shipment[$shipmentIds[0][0]]['status'];
-            }
-
-            $tableContent .= sprintf(
+            $shipmentStatus    = $this->getShipmentStatus($shipmentIds, $order);
+            $tableContent      .= sprintf(
                 '
-              <tr onclick="window.location=\'/wp-admin/post.php?post=' . $orderId . '&action=edit\';" style="cursor: pointer !important;">
-                <td>%s</td>
-                <td>%s %s %s %s</td>
-                <td>
-                  <span class="badge badge-primary">%s</span>
-                </td>
-              </tr>',
+                <tr onclick="window.location=\'/wp-admin/post.php?post=' . $orderId . '&action=edit\';" style="cursor: pointer !important;">
+                  <td>%s</td>
+                  <td>%s %s %s %s</td>
+                  <td>
+                    %s
+                  </td>
+                </tr>',
                 $orderId,
                 $shippingRecipient->getStreet(),
                 $shippingRecipient->getNumber(),
                 $shippingRecipient->getNumberSuffix(),
                 $shippingRecipient->getCity(),
-                $shipmentStatus
+                $this->getShipmentStatusBadge($shipmentStatus)
             );
         }
 
         echo sprintf(
             '
-            <img src="../../assets/img/myparcel_logo_rgb.svg" alt="MyParcel logo">
+            <img src="%s" alt="MyParcel logo">
             <table class="table table-hover">
               %s%s
             </table>
-    
-',
+            ',
+            $this->getLogoImg(),
             $tableHeaders,
             $tableContent
         );
@@ -133,13 +128,7 @@ class MyParcelWidget
         }
 
         ?>
-      <div class="card">
-        <div class="card-header">
-          <img
-            src="https://www.myparcel.nl/assets/novio/img/MyParcel_logo_wit.svg"
-            alt="Card image cap">
-        </div>
-      </div><p>
+      <p>
       <div class="form-group">
         <label><?php
             _e('Number of orders:'); ?>
@@ -173,5 +162,43 @@ class MyParcelWidget
     private function isWidgetEnabled(): bool
     {
         return (bool) WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_SHOW_WIDGET);
+    }
+
+    /**
+     * @return void
+     */
+    private function getLogoImg(): string
+    {
+        return sprintf('%s/assets/img/myparcel_logo_rgb.svg', WCMYPA()->plugin_url());
+    }
+
+    /**
+     * @param  null|string $status
+     *
+     * @return string
+     */
+    private function getShipmentStatusBadge(?string $status): string
+    {
+        return $status
+            ? sprintf('<span class="badge badge-primary">%s</span>', $status)
+            : sprintf('<span class="badge badge-secondary">%s</span>', __('no_status_available', 'woocommerce-myparcel'));
+    }
+
+    /**
+     * @param  null|array $shipmentIds
+     * @param             $order
+     *
+     * @return null|string
+     * @throws \Exception
+     */
+    private function getShipmentStatus(?array $shipmentIds, $order): ?string
+    {
+        if (! $shipmentIds) {
+            return null;
+        }
+
+        $firstShipmentId = $shipmentIds[0][0];
+        $shipment        = WCMYPA()->export->getShipmentData([$firstShipmentId], $order);
+        return $shipment[$firstShipmentId]['status'];
     }
 }
