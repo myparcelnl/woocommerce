@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\includes\Widget;
+namespace MyParcelNL\WooCommerce\includes\admin\views;
 
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;

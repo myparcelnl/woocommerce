@@ -14,11 +14,11 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
+use MyParcelNL\WooCommerce\includes\admin\views\MyParcelWidget;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\OrderStatusWebhook;
-use MyParcelNL\WooCommerce\includes\Widget\MyParcelWidget;
 
 defined('ABSPATH') or die();
 
@@ -386,6 +386,7 @@ if (! class_exists('WCMYPA')) :
 
         /**
          * @return void
+         * @throws \Exception
          */
         public function initDashboardWidget(): void
         {
