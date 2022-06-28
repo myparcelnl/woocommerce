@@ -42,22 +42,12 @@ class WebhookSubscriptionService
      * @return $this
      * @throws \Exception
      */
-    public function create(AbstractWebhookWebService $service, callable $callback, string $version = 'v1'): self
+    public function register(AbstractWebhookWebService $service, callable $callback, string $version = 'v1'): self
     {
         $existingWebhook = $this->getExistingWebhook($service, $version);
 
-        if ($existingWebhook) {
-            $webhookCallback = $existingWebhook->getCallback();
-        } else {
-            $webhookCallback = $this->createCallbackUrl($service, $version);
-            $subscriptionId  = $this->createWebhook($service, $webhookCallback);
-
-            if (! $subscriptionId) {
-                return $this;
-            }
-
-            $this->saveSubscription($service, $webhookCallback, $subscriptionId);
-        }
+        $webhookCallback = $existingWebhook ? $existingWebhook->getCallback()
+            : $this->createCallbackUrl($service, $version);
 
         $this->registerRestRoute($webhookCallback, $callback, $version);
 
@@ -300,6 +290,30 @@ class WebhookSubscriptionService
         $array = Utils::toArray($newSubscriptions->all());
 
         update_option(self::WEBHOOK_SETTINGS_PATH, json_encode($array));
+    }
+
+    /**
+     * @param  string $apiKey
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function subscribeToWebhooks(string $apiKey): void
+    {
+        $hooks = AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS;
+        $webhookSubscriptionService = new WebhookSubscriptionService();
+
+        foreach ($hooks as $webhookClass) {
+            $service = (new $webhookClass())->setApiKey($apiKey);
+            $webhookCallback = $webhookSubscriptionService->createCallbackUrl($service, 'v1');
+            $subscriptionId  = $webhookSubscriptionService->createWebhook($service, $webhookCallback);
+
+            if (! $subscriptionId) {
+                return;
+            }
+
+            $webhookSubscriptionService->saveSubscription($service, $webhookCallback, $subscriptionId);
+        }
     }
 
     /**

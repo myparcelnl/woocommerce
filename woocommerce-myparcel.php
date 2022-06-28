@@ -17,6 +17,8 @@ use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
+use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
+use MyParcelNL\WooCommerce\includes\Settings\Listener\ApiKeySettingsListener;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\OrderStatusWebhook;
@@ -121,7 +123,7 @@ if (! class_exists('WCMYPA')) :
          * @return void
          * @throws \Exception
          */
-        private function setupWebhooks(): void
+        private function registerWebhooks(): void
         {
             (new OrderStatusWebhook())->register();
             (new AccountSettingsWebhook())->register();
@@ -222,9 +224,9 @@ if (! class_exists('WCMYPA')) :
                 return;
             }
 
-            $this->setupWebhooks();
+            $this->registerWebhooks();
 
-            add_action('update_option_' . AccountSettings::WP_OPTION_KEY, [$this, 'afterAccountSettingsUpdate']);
+            (new ApiKeySettingsListener([$this, 'afterApiKeyUpdate']))->listen();
 
             AccountSettings::getInstance();
             add_action(
@@ -249,32 +251,10 @@ if (! class_exists('WCMYPA')) :
         /**
          * @throws \Exception
          */
-        public function afterAccountSettingsUpdate(): void
+        public function afterApiKeyUpdate($optionName, $newApiKey, $oldApiKey): void
         {
-
-            $this->subscribeToWebhooks();
-        }
-
-        /**
-         * @return void
-         * @throws \Exception
-         */
-        private function subscribeToWebhooks(): void
-        {
-            $hooks = AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS;
-            $webhookSubscriptionService = new WebhookSubscriptionService();
-
-            foreach ($hooks as $webhookClass) {
-                $service = (new $webhookClass())->setApiKey($this->ensureHasApiKey());
-                $webhookCallback = $webhookSubscriptionService->createCallbackUrl($service, 'v1');
-                $subscriptionId  = $webhookSubscriptionService->createWebhook($service, $webhookCallback);
-
-                if (! $subscriptionId) {
-                    return;
-                }
-
-                $webhookSubscriptionService->saveSubscription($service, $webhookCallback, $subscriptionId);
-            }
+            (new AccountSettingsService())->removeSettings();
+            (new WebhookSubscriptionService())->subscribeToWebhooks($newApiKey);
         }
 
         /**

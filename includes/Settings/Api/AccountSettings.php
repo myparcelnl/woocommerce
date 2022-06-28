@@ -77,7 +77,6 @@ class AccountSettings extends Model
         }
 
         $this->fillProperties($settings);
-        $service->createSettingsListeners();
     }
 
     /**

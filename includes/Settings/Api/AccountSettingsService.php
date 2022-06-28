@@ -33,15 +33,6 @@ class AccountSettingsService
     private $useManualUpdate = false;
 
     /**
-     * When a setting is updated, the old value is still in the settings collection, so you cannot use
-     * refreshSettingsFromApi.
-     */
-    public function createSettingsListeners(): void
-    {
-        (new ApiKeySettingsListener([$this, 'removeSettings']))->listen();
-    }
-
-    /**
      * Load the account settings from the API, and save them to wp options.
      *
      * @return bool
