@@ -46,7 +46,7 @@ class MyParcelWidget
         $orders      = wc_get_orders(['limit' => $orderAmount,]);
 
         if (! $orders) {
-            echo '<h4>No orders found</h4>';
+            echo __('no_orders_found', 'woocommerce-myparcel');
             return;
         }
 
@@ -89,7 +89,9 @@ class MyParcelWidget
 
         echo sprintf(
             '
-            <img src="%s" alt="MyParcel logo">
+            <div class="logo-img">
+              <img src="%s" alt="MyParcel logo">
+            </div>
             <table class="table table-hover">
               %s%s
             </table>
@@ -129,9 +131,9 @@ class MyParcelWidget
 
         ?>
       <p>
-      <div class="form-group">
         <label><?php
             _e('Number of orders:'); ?>
+        </label>
           <input
             class="form-control"
             type="number"
@@ -141,8 +143,7 @@ class MyParcelWidget
             name="orders_amount"
             value="<?php
             echo esc_attr($options['items']); ?>" />
-        </label>
-      </div></p>
+      </p>
         <?php
     }
 
