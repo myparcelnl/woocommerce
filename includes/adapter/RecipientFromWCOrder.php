@@ -105,12 +105,14 @@ class RecipientFromWCOrder extends Recipient
             $streetParts['number_suffix'] = $numberSuffix ?? $streetParts['number_suffix'] ?? null;
         }
 
-        $definitiveNumberSuffix = is_int($streetParts['number_suffix']) ? ' -' . $streetParts['number_suffix'] : $streetParts['number_suffix'];
+        if (is_int($streetParts['number_suffix'])) {
+            $streetParts['number_suffix'] = ' -' . $streetParts['number_suffix'];
+        }
 
         $fullStreet = implode(' ', [
                 $streetParts['street'] ?? null,
                 $streetParts['number'] ?? null,
-                $definitiveNumberSuffix,
+                $streetParts['number_suffix'] ??  null,
                 $streetParts['box_separator'] ?? null,
                 $streetParts['box_number'] ?? null,
             ]

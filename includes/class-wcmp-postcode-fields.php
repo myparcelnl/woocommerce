@@ -594,28 +594,33 @@ class WCMP_NL_Postcode_Fields
         }
 
         if ($shippingHasCustomAddressFields && $shipToDifferentAddress) {
-            $shippingAddress1    = $this->getAddress1FromPost('shipping');
+            $shippingAddress1 = $this->getAddress1FromPost('shipping');
             WCX_Order::set_address_prop($order, 'address_1', 'shipping', $shippingAddress1);
         }
     }
 
     /**
-     * @param  string $which
+     * @param  string $type
      *
      * @return string
      */
-    private function getAddress1FromPost(string $which = 'billing'): string
+    private function getAddress1FromPost(string $type = 'billing'): string
     {
         $suffix    = '';
-        $suffixKey = "{$which}_house_number_suffix";
+        $suffixKey = "{$type}_house_number_suffix";
 
         if (isset($_POST[$suffixKey]) && $_POST[$suffixKey]) {
-            $suffix = '-' . sanitize_text_field(wp_unslash($_POST[$suffixKey]));
+            $suffix = sprintf('-%s', sanitize_text_field(wp_unslash($_POST[$suffixKey])));
         }
 
-        $houseNumber = sanitize_text_field(wp_unslash($_POST["{$which}_house_number"]));
+        $houseNumber = sanitize_text_field(wp_unslash($_POST["{$type}_house_number"]));
 
-        return sanitize_text_field(wp_unslash($_POST["{$which}_street_name"])) . ' ' . $houseNumber . $suffix;
+        return sprintf(
+            '%s %s%s',
+            sanitize_text_field(wp_unslash($_POST["{$type}_street_name"])),
+            $houseNumber,
+            $suffix
+        );
     }
 
     /**
