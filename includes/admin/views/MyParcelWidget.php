@@ -46,7 +46,7 @@ class MyParcelWidget
         $orders      = wc_get_orders(['limit' => $orderAmount,]);
 
         if (! $orders) {
-            echo __('no_orders_found', 'woocommerce-myparcel');
+            echo esc_attr(__('no_orders_found', 'woocommerce-myparcel'));
             return;
         }
 
@@ -97,8 +97,8 @@ class MyParcelWidget
             </table>
             ',
             $this->getLogoImg(),
-            $tableHeaders,
-            $tableContent
+            esc_attr($tableHeaders),
+            esc_attr($tableContent)
         );
     }
 
@@ -132,7 +132,7 @@ class MyParcelWidget
         ?>
       <p>
         <label><?php
-            _e('Number of orders:'); ?>
+            esc_attr_e('Number of orders:'); ?>
         </label>
           <input
             class="form-control"
@@ -153,7 +153,7 @@ class MyParcelWidget
     private function getDefaultWidgetConfig(): array
     {
         return [
-            'items' => 5,
+            'items' => self::DEFAULT_ORDER_AMOUNT,
         ];
     }
 
