@@ -224,7 +224,7 @@ if (! class_exists('WCMYPA')) :
             $this->includes();
             $this->initSettings();
 
-            add_action( 'wp_dashboard_setup', [$this, 'initDashboardWidget'] );
+            add_action('wp_dashboard_setup', [new MyParcelWidget(), 'loadWidget']);
 
             if (! $this->validateApiKeyPresence()) {
                 return;
@@ -382,15 +382,6 @@ if (! class_exists('WCMYPA')) :
         public function plugin_path(): string
         {
             return untrailingslashit(plugin_dir_path(__FILE__));
-        }
-
-        /**
-         * @return void
-         * @throws \Exception
-         */
-        public function initDashboardWidget(): void
-        {
-            (new MyParcelWidget())->loadWidget();
         }
 
         /**

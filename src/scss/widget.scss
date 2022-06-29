@@ -1,3 +1,5 @@
+$MyParcelGreen: #0f5c47;
+
 .table {
   width: 100%;
   max-width: 100%;
@@ -5,8 +7,7 @@
   background-color: transparent;
 }
 
-.table th,
-.table td {
+.table th, .table td {
   padding: 0.75rem;
   vertical-align: top;
   border-top: 1px solid #dee2e6;
@@ -34,8 +35,7 @@
   background-color: rgba(0, 0, 0, 0.075);
 }
 
-.table-hover .table-active:hover > td,
-.table-hover .table-active:hover > th {
+.table-hover .table-active:hover > td, .table-hover .table-active:hover > th {
   background-color: rgba(0, 0, 0, 0.075);
 }
 
@@ -57,13 +57,13 @@
 
 .badge-primary {
   color: #fff;
-  background-color: #0f5c47;
+  background-color: $MyParcelGreen;
 }
 
 .badge-primary[href]:hover, .badge-primary[href]:focus {
   color: #fff;
   text-decoration: none;
-  background-color: #0f5c47;
+  background-color: $MyParcelGreen;
 }
 
 .badge-secondary {
@@ -82,8 +82,9 @@
 }
 
 .logo-img img {
-  max-width: 50%;
+  width: 50%;
+  max-height: 45px;
   display: block;
   margin: 0 auto;
-  padding: 2% 0;
+  padding: 1em 0;
 }

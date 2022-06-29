@@ -43,10 +43,14 @@ class MyParcelWidget
     public function myparcelDashboardWidgetHandler(): void
     {
         $orderAmount = get_option('woocommerce_myparcel_dashboard_widget')['items'] ?? self::DEFAULT_ORDER_AMOUNT;
-        $orders      = wc_get_orders(['limit' => $orderAmount,]);
+        $orders      = wc_get_orders(
+          [
+            'limit' => $orderAmount
+          ]
+        );
 
         if (! $orders) {
-            echo esc_attr(__('no_orders_found', 'woocommerce-myparcel'));
+            printf(esc_attr(__('no_orders_found', 'woocommerce-myparcel')));
             return;
         }
 
@@ -71,13 +75,14 @@ class MyParcelWidget
             $shipmentStatus    = $this->getShipmentStatus($shipmentIds, $order);
             $tableContent      .= sprintf(
                 '
-                <tr onclick="window.location=\'/wp-admin/post.php?post=' . $orderId . '&action=edit\';" style="cursor: pointer !important;">
+                <tr onclick="window.location=\'/wp-admin/post.php?post=%s&action=edit\';" style="cursor: pointer !important;">
                   <td>%s</td>
                   <td>%s %s %s %s</td>
                   <td>
                     %s
                   </td>
                 </tr>',
+                $orderId,
                 $orderId,
                 $shippingRecipient->getStreet(),
                 $shippingRecipient->getNumber(),
@@ -87,8 +92,9 @@ class MyParcelWidget
             );
         }
 
-        echo sprintf(
-            '
+        esc_html(
+            printf(
+                '
             <div class="logo-img">
               <img src="%s" alt="MyParcel logo">
             </div>
@@ -96,9 +102,10 @@ class MyParcelWidget
               %s%s
             </table>
             ',
-            $this->getLogoImg(),
-            esc_attr($tableHeaders),
-            esc_attr($tableContent)
+                $this->getLogoImg(),
+                $tableHeaders,
+                $tableContent
+            )
         );
     }
 
@@ -121,30 +128,39 @@ class MyParcelWidget
     {
         $options = get_option('woocommerce_myparcel_dashboard_widget') ?: $this->getDefaultWidgetConfig();
 
-        if (isset($_POST['submit'])) {
-            if (isset($_POST['orders_amount']) && (int) $_POST['orders_amount'] > 0) {
-                $options['items'] = (int) $_POST['orders_amount'];
+        $submit      = filter_input(INPUT_POST, 'submit');
+        $ordersAmount = (int) filter_input(INPUT_POST, 'orders_amount');
+
+        if (isset($submit)) {
+            if ($ordersAmount > 0) {
+                $options['items'] = $ordersAmount;
             }
 
             update_option('woocommerce_myparcel_dashboard_widget', $options);
         }
 
-        ?>
-      <p>
-        <label><?php
-            esc_attr_e('Number of orders:'); ?>
-        </label>
-          <input
-            class="form-control"
-            type="number"
-            min="1"
-            max="100"
-            step="1"
-            name="orders_amount"
-            value="<?php
-            echo esc_attr($options['items']); ?>" />
-      </p>
-        <?php
+        esc_html(
+            printf(
+                sprintf(
+                    '
+              <p>
+                <label>
+                    %s:
+                </label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="1"
+                    name="orders_amount"
+                    value="%s" />
+              </p>',
+                    __('order_amount', 'woocommerce-myparcel'),
+                    $options['items']
+                )
+            )
+        );
     }
 
     /**
