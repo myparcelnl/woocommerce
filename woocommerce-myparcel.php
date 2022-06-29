@@ -17,9 +17,6 @@ use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
-use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
-use MyParcelNL\WooCommerce\includes\Settings\Listener\ApiKeySettingsListener;
-use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\OrderStatusWebhook;
 
@@ -226,8 +223,6 @@ if (! class_exists('WCMYPA')) :
 
             $this->registerWebhooks();
 
-            (new ApiKeySettingsListener([$this, 'afterApiKeyUpdate']))->listen();
-
             AccountSettings::getInstance();
             add_action(
                 'wp_ajax_' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE,
@@ -246,15 +241,6 @@ if (! class_exists('WCMYPA')) :
                 'message_insurance_belgium_2022',
                 [MessagesRepository::SETTINGS_PAGE, MessagesRepository::PLUGINS_PAGE]
             );
-        }
-
-        /**
-         * @throws \Exception
-         */
-        public function afterApiKeyUpdate($optionName, $newApiKey, $oldApiKey): void
-        {
-            (new AccountSettingsService())->removeSettings();
-            (new WebhookSubscriptionService())->subscribeToWebhooks($newApiKey);
         }
 
         /**

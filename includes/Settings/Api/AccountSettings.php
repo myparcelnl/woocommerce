@@ -17,6 +17,8 @@ use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Model\Model;
+use MyParcelNL\WooCommerce\includes\Settings\Listener\ApiKeySettingsListener;
+use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use WCMP_Data;
 
 /**
@@ -77,6 +79,7 @@ class AccountSettings extends Model
         }
 
         $this->fillProperties($settings);
+        (new ApiKeySettingsListener([$this, 'afterApiKeyUpdate']))->listen();
     }
 
     /**
@@ -93,6 +96,15 @@ class AccountSettings extends Model
     public function getAccount(): ?Account
     {
         return $this->account;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function afterApiKeyUpdate($optionName, $newApiKey, $oldApiKey): void
+    {
+        (new AccountSettingsService())->removeSettings();
+        (new WebhookSubscriptionService())->subscribeToWebhooks($newApiKey);
     }
 
     /**
