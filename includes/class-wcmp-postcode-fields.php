@@ -31,6 +31,9 @@ class WCMP_NL_Postcode_Fields
     public function __construct()
     {
         $this->postedValues = wp_unslash($_POST);
+        if ($this->postedValues) {
+            wp_verify_nonce('_wpnonce');
+        }
 
         // Load styles
         add_action('wp_enqueue_scripts', [$this, 'add_styles_scripts']);
