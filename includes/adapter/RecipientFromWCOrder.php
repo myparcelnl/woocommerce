@@ -106,7 +106,7 @@ class RecipientFromWCOrder extends Recipient
         }
 
         if (is_int($streetParts['number_suffix'])) {
-            $streetParts['number_suffix'] = sprintf(' -%s', $streetParts['number_suffix']);
+            $streetParts['number_suffix'] = sprintf(' -%d', abs($streetParts['number_suffix']));
         }
 
         $fullStreet = implode(' ', [
