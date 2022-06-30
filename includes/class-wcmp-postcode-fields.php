@@ -30,7 +30,7 @@ class WCMP_NL_Postcode_Fields
 
     public function __construct()
     {
-        $this->postedValues = wp_unslash($_POST);
+        $this->postedValues = wp_unslash(filter_input_array(INPUT_POST));
         if ($this->postedValues) {
             wp_verify_nonce('_wpnonce');
         }
