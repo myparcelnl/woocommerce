@@ -112,7 +112,7 @@ class RecipientFromWCOrder extends Recipient
         $fullStreet = implode(' ', [
                 $streetParts['street'] ?? null,
                 $streetParts['number'] ?? null,
-                $streetParts['number_suffix'] ??  null,
+                $streetParts['number_suffix'] ?? null,
                 $streetParts['box_separator'] ?? null,
                 $streetParts['box_number'] ?? null,
             ]
