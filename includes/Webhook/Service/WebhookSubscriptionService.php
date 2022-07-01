@@ -23,6 +23,7 @@ class WebhookSubscriptionService
     use HasApiKey;
 
     private const WEBHOOK_SETTINGS_PATH = 'woocommerce_myparcel_webhook_settings';
+    private const VERSION               = 'v1';
 
     /**
      * @var \MyParcelNL\Sdk\src\Support\Collection|\MyParcelNL\WooCommerce\includes\Webhook\Model\WebhookSubscription[]
@@ -305,7 +306,7 @@ class WebhookSubscriptionService
 
         foreach ($hooks as $webhookClass) {
             $service         = (new $webhookClass())->setApiKey($apiKey);
-            $webhookCallback = $webhookSubscriptionService->createCallbackUrl($service, 'v1');
+            $webhookCallback = $webhookSubscriptionService->createCallbackUrl($service, self::VERSION);
             $subscriptionId  = $webhookSubscriptionService->createWebhook($service, $webhookCallback);
 
             if (! $subscriptionId) {
