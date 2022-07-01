@@ -300,11 +300,11 @@ class WebhookSubscriptionService
      */
     public function subscribeToWebhooks(string $apiKey): void
     {
-        $hooks = AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS;
+        $hooks                      = AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS;
         $webhookSubscriptionService = new WebhookSubscriptionService();
 
         foreach ($hooks as $webhookClass) {
-            $service = (new $webhookClass())->setApiKey($apiKey);
+            $service         = (new $webhookClass())->setApiKey($apiKey);
             $webhookCallback = $webhookSubscriptionService->createCallbackUrl($service, 'v1');
             $subscriptionId  = $webhookSubscriptionService->createWebhook($service, $webhookCallback);
 
@@ -322,7 +322,6 @@ class WebhookSubscriptionService
     public static function hasValidSubscription(): bool
     {
         $webhookSubscriptionService = new WebhookSubscriptionService();
-        $allWebhooksPresent         = true;
 
         foreach (AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS as $webhook) {
             /**
@@ -331,10 +330,10 @@ class WebhookSubscriptionService
             $subscription = $webhookSubscriptionService->findByHook((new $webhook())->getHook());
 
             if (! $subscription) {
-                $allWebhooksPresent = false;
+                return false;
             }
         }
 
-        return $allWebhooksPresent;
+        return true;
     }
 }
