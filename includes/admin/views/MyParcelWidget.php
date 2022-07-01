@@ -51,6 +51,7 @@ class MyParcelWidget
 
         if (! $orders) {
             printf(esc_attr(__('no_orders_found', 'woocommerce-myparcel')));
+
             return;
         }
 
@@ -92,9 +93,8 @@ class MyParcelWidget
             );
         }
 
-        esc_html(
-            printf(
-                '
+        printf(
+            '
             <div class="logo-img">
               <img src="%s" alt="MyParcel logo">
             </div>
@@ -102,10 +102,9 @@ class MyParcelWidget
               %s%s
             </table>
             ',
-                $this->getLogoImg(),
-                $tableHeaders,
-                $tableContent
-            )
+            wp_kses_post($this->getLogoImg()),
+            wp_kses_post($tableHeaders),
+            wp_kses_post($tableContent)
         );
     }
 
@@ -139,10 +138,9 @@ class MyParcelWidget
             update_option('woocommerce_myparcel_dashboard_widget', $options);
         }
 
-        esc_html(
-            printf(
-                sprintf(
-                    '
+        printf(
+            sprintf(
+                '
               <p>
                 <label>
                     %s:
@@ -156,9 +154,8 @@ class MyParcelWidget
                     name="orders_amount"
                     value="%s" />
               </p>',
-                    __('order_amount', 'woocommerce-myparcel'),
-                    $options['items']
-                )
+                esc_attr(__('order_amount', 'woocommerce-myparcel')),
+                esc_attr($options['items'])
             )
         );
     }
