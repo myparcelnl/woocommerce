@@ -58,14 +58,13 @@ class AccountSettings extends Model
     private $useManualUpdate = false;
 
     /**
-     * @throws \MyParcelNL\Sdk\src\Exception\ApiException
-     * @throws \MyParcelNL\Sdk\src\Exception\AccountNotActiveException
-     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      * @throws \Exception
      */
     public function __construct()
     {
         parent::__construct([]);
+
+        (new ApiKeySettingsListener([$this, 'afterApiKeyUpdate']))->listen();
 
         if (! $this->hasApiKey()) {
             return;
@@ -79,7 +78,6 @@ class AccountSettings extends Model
         }
 
         $this->fillProperties($settings);
-        (new ApiKeySettingsListener([$this, 'afterApiKeyUpdate']))->listen();
     }
 
     /**
@@ -103,7 +101,9 @@ class AccountSettings extends Model
      */
     public function afterApiKeyUpdate($optionName, $newApiKey, $oldApiKey): void
     {
-        (new AccountSettingsService())->removeSettings();
+        $accountSettingsService = new AccountSettingsService();
+        $accountSettingsService->removeSettings();
+        $accountSettingsService->refreshSettingsFromApi($newApiKey);
         (new WebhookSubscriptionService())->subscribeToWebhooks($newApiKey);
     }
 
