@@ -17,6 +17,7 @@ use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
+use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\OrderStatusWebhook;
 
@@ -122,12 +123,7 @@ if (! class_exists('WCMYPA')) :
          */
         private function registerWebhooks(): void
         {
-            $isAutomaticStatusActive = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
-            $isAfterPrinting         = WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === WCMP_Export_Consignments::getSetting(
-                    WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER
-                );
-
-            if ($isAutomaticStatusActive && $isAfterPrinting) {
+            if (WebhookSubscriptionService::shouldRegisterOrderStatusRoute()) {
                 (new OrderStatusWebhook())->register();
             }
 

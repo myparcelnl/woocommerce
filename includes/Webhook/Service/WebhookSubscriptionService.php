@@ -15,8 +15,11 @@ use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
 use MyParcelNL\WooCommerce\includes\Webhook\Model\WebhookCallback;
 use MyParcelNL\WooCommerce\includes\Webhook\Model\WebhookSubscription;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
+use WCMP_Export_Consignments;
 use WCMP_Log;
+use WCMP_Settings_Data;
 use WCMYPA;
+use WCMYPA_Settings;
 
 class WebhookSubscriptionService
 {
@@ -336,5 +339,21 @@ class WebhookSubscriptionService
         }
 
         return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function shouldRegisterOrderStatusRoute(): bool
+    {
+        $isAutomaticStatusActive   = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION);
+        $changeStatusAfterPrinting = WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === WCMP_Export_Consignments::getSetting(
+                WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER
+            );
+        $isExportModeActive        = WCMP_Settings_Data::EXPORT_MODE_PPS === WCMP_Export_Consignments::getSetting(
+                WCMYPA_Settings::SETTING_EXPORT_MODE
+            );
+
+        return $isAutomaticStatusActive && $changeStatusAfterPrinting && $isExportModeActive;
     }
 }
