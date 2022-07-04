@@ -122,7 +122,15 @@ if (! class_exists('WCMYPA')) :
          */
         private function registerWebhooks(): void
         {
-            (new OrderStatusWebhook())->register();
+            $isAutomaticStatusActive = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
+            $isAfterPrinting         = WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === WCMP_Export_Consignments::getSetting(
+                    WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER
+                );
+
+            if ($isAutomaticStatusActive && $isAfterPrinting) {
+                (new OrderStatusWebhook())->register();
+            }
+
             (new AccountSettingsWebhook())->register();
         }
 
