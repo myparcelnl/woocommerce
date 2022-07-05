@@ -201,6 +201,6 @@ class MyParcelWidget
 
         $firstShipmentId = $shipmentIds[0][0];
         $shipment        = WCMYPA()->export->getShipmentData([$firstShipmentId], $order);
-        return $shipment[$firstShipmentId]['status'];
+        return $shipment ? $shipment[$firstShipmentId]['status'] : null;
     }
 }
