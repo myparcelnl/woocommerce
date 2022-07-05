@@ -254,11 +254,6 @@ class WCMP_Settings_Data
                     'settings' => $this->getSectionGeneralGeneral(),
                 ],
                 [
-                    'name'     => 'widget',
-                    'label'    => __('settings_general_widget_title', 'woocommerce-myparcel'),
-                    'settings' => $this->getSectionGeneralWidget(),
-                ],
-                [
                     'name'     => 'diagnostics',
                     'label'    => __('settings_general_diagnostics_title', 'woocommerce-myparcel'),
                     'settings' => $this->getSectionGeneralDiagnostics(),
@@ -486,20 +481,6 @@ class WCMP_Settings_Data
                     'You can change the text before the barcode inside an note',
                     'woocommerce-myparcel'
                 ),
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getSectionGeneralWidget(): array
-    {
-        return [
-            [
-                'name'  => WCMYPA_Settings::SETTING_SHOW_WIDGET,
-                'label' => __('setting_show_widget_label', 'woocommerce-myparcel'),
-                'type'  => 'toggle',
             ],
         ];
     }

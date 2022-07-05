@@ -24,10 +24,6 @@ class MyParcelWidget
      */
     public function loadWidget(): void
     {
-        if (! $this->isWidgetEnabled()) {
-            return;
-        }
-
         wp_add_dashboard_widget(
             'woocommerce_myparcel_dashboard_widget',
             __('MyParcel'),
@@ -168,14 +164,6 @@ class MyParcelWidget
         return [
             'items' => self::DEFAULT_ORDER_AMOUNT,
         ];
-    }
-
-    /**
-     * @return bool
-     */
-    private function isWidgetEnabled(): bool
-    {
-        return (bool) WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_SHOW_WIDGET);
     }
 
     /**
