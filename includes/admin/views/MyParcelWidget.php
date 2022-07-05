@@ -100,7 +100,7 @@ class MyParcelWidget
             ',
             wp_kses_post($this->getLogoImg()),
             wp_kses_post($tableHeaders),
-            wp_kses_post($tableContent)
+            $tableContent
         );
     }
 
