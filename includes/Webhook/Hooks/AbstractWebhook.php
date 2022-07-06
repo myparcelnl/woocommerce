@@ -103,7 +103,7 @@ abstract class AbstractWebhook
 
         foreach ($this->getHooks() as $webhookClass) {
             $service = (new $webhookClass())->setApiKey($this->ensureHasApiKey());
-            $webhookSubscriptionService->create($service, [$this, 'getCallback']);
+            $webhookSubscriptionService->register($service, [$this, 'getCallback']);
         }
     }
 }

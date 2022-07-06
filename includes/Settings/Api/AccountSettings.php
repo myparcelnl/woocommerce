@@ -17,6 +17,8 @@ use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Model\Model;
+use MyParcelNL\WooCommerce\includes\Settings\Listener\ApiKeySettingsListener;
+use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use WCMP_Data;
 
 /**
@@ -56,14 +58,13 @@ class AccountSettings extends Model
     private $useManualUpdate = false;
 
     /**
-     * @throws \MyParcelNL\Sdk\src\Exception\ApiException
-     * @throws \MyParcelNL\Sdk\src\Exception\AccountNotActiveException
-     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      * @throws \Exception
      */
     public function __construct()
     {
         parent::__construct([]);
+
+        (new ApiKeySettingsListener([$this, 'afterApiKeyUpdate']))->listen();
 
         if (! $this->hasApiKey()) {
             return;
@@ -77,7 +78,6 @@ class AccountSettings extends Model
         }
 
         $this->fillProperties($settings);
-        $service->createSettingsListeners();
     }
 
     /**
@@ -94,6 +94,17 @@ class AccountSettings extends Model
     public function getAccount(): ?Account
     {
         return $this->account;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function afterApiKeyUpdate($optionName, $newApiKey, $oldApiKey): void
+    {
+        $accountSettingsService = new AccountSettingsService();
+        $accountSettingsService->removeSettings();
+        $accountSettingsService->refreshSettingsFromApi($newApiKey);
+        (new WebhookSubscriptionService())->subscribeToWebhooks($newApiKey);
     }
 
     /**

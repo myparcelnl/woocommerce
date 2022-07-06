@@ -14,14 +14,19 @@ use MyParcelNL\WooCommerce\includes\Utils;
 use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
 use MyParcelNL\WooCommerce\includes\Webhook\Model\WebhookCallback;
 use MyParcelNL\WooCommerce\includes\Webhook\Model\WebhookSubscription;
+use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
+use WCMP_Export_Consignments;
 use WCMP_Log;
+use WCMP_Settings_Data;
 use WCMYPA;
+use WCMYPA_Settings;
 
 class WebhookSubscriptionService
 {
     use HasApiKey;
 
     private const WEBHOOK_SETTINGS_PATH = 'woocommerce_myparcel_webhook_settings';
+    private const VERSION               = 'v1';
 
     /**
      * @var \MyParcelNL\Sdk\src\Support\Collection|\MyParcelNL\WooCommerce\includes\Webhook\Model\WebhookSubscription[]
@@ -41,22 +46,12 @@ class WebhookSubscriptionService
      * @return $this
      * @throws \Exception
      */
-    public function create(AbstractWebhookWebService $service, callable $callback, string $version = 'v1'): self
+    public function register(AbstractWebhookWebService $service, callable $callback, string $version = 'v1'): self
     {
         $existingWebhook = $this->getExistingWebhook($service, $version);
 
-        if ($existingWebhook) {
-            $webhookCallback = $existingWebhook->getCallback();
-        } else {
-            $webhookCallback = $this->createCallbackUrl($service, $version);
-            $subscriptionId  = $this->createWebhook($service, $webhookCallback);
-
-            if (! $subscriptionId) {
-                return $this;
-            }
-
-            $this->saveSubscription($service, $webhookCallback, $subscriptionId);
-        }
+        $webhookCallback = $existingWebhook ? $existingWebhook->getCallback()
+            : $this->createCallbackUrl($service, $version);
 
         $this->registerRestRoute($webhookCallback, $callback, $version);
 
@@ -120,7 +115,7 @@ class WebhookSubscriptionService
      * @return \MyParcelNL\WooCommerce\includes\Webhook\Model\WebhookCallback
      * @throws \Exception
      */
-    private function createCallbackUrl(AbstractWebhookWebService $service, string $version): WebhookCallback
+    public function createCallbackUrl(AbstractWebhookWebService $service, string $version): WebhookCallback
     {
         $hash = $this->generateHash();
         $path = implode('/', [$service->getHook(), $hash]);
@@ -147,7 +142,7 @@ class WebhookSubscriptionService
      *
      * @return null|int
      */
-    private function createWebhook(AbstractWebhookWebService $service, WebhookCallback $webhookCallback): ?int
+    public function createWebhook(AbstractWebhookWebService $service, WebhookCallback $webhookCallback): ?int
     {
         try {
             $subscriptionId = $service->subscribe($webhookCallback->getFullUrl());
@@ -282,7 +277,7 @@ class WebhookSubscriptionService
      *
      * @return void
      */
-    private function saveSubscription(
+    public function saveSubscription(
         AbstractWebhookWebService $service,
         WebhookCallback           $callback,
         int                       $subscriptionId
@@ -299,5 +294,66 @@ class WebhookSubscriptionService
         $array = Utils::toArray($newSubscriptions->all());
 
         update_option(self::WEBHOOK_SETTINGS_PATH, json_encode($array));
+    }
+
+    /**
+     * @param  string $apiKey
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function subscribeToWebhooks(string $apiKey): void
+    {
+        $hooks                      = AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS;
+        $webhookSubscriptionService = new WebhookSubscriptionService();
+
+        foreach ($hooks as $webhookClass) {
+            $service         = (new $webhookClass())->setApiKey($apiKey);
+            $webhookCallback = $webhookSubscriptionService->createCallbackUrl($service, self::VERSION);
+            $subscriptionId  = $webhookSubscriptionService->createWebhook($service, $webhookCallback);
+
+            if (! $subscriptionId) {
+                return;
+            }
+
+            $webhookSubscriptionService->saveSubscription($service, $webhookCallback, $subscriptionId);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public static function hasValidSubscription(): bool
+    {
+        $webhookSubscriptionService = new WebhookSubscriptionService();
+
+        foreach (AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS as $webhook) {
+            /**
+             * @var class-string<\MyParcelNL\Sdk\src\Services\Web\Webhook\AbstractWebhookWebService>[] $webhook
+             */
+            $subscription = $webhookSubscriptionService->findByHook((new $webhook())->getHook());
+
+            if (! $subscription) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function shouldRegisterOrderStatusRoute(): bool
+    {
+        $isAutomaticStatusActive   = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION);
+        $changeStatusAfterPrinting = WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === WCMP_Export_Consignments::getSetting(
+                WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER
+            );
+        $isExportModeActive        = WCMP_Settings_Data::EXPORT_MODE_PPS === WCMP_Export_Consignments::getSetting(
+                WCMYPA_Settings::SETTING_EXPORT_MODE
+            );
+
+        return $isAutomaticStatusActive && $changeStatusAfterPrinting && $isExportModeActive;
     }
 }

@@ -14,8 +14,10 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
+use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
+use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\OrderStatusWebhook;
 
@@ -27,6 +29,7 @@ if (! class_exists('WCMYPA')) :
     class WCMYPA
     {
         use HasInstance;
+        use HasApiKey;
 
         /**
          * Translations domain
@@ -118,14 +121,9 @@ if (! class_exists('WCMYPA')) :
          * @return void
          * @throws \Exception
          */
-        private function setupWebhooks(): void
+        private function registerWebhooks(): void
         {
-            $changeOrderStatusAfter = WCMP_Export_Consignments::getSetting(
-                WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER
-            );
-            $exportMode             = WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EXPORT_MODE);
-
-            if (WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING === $changeOrderStatusAfter && WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
+            if (WebhookSubscriptionService::shouldRegisterOrderStatusRoute()) {
                 (new OrderStatusWebhook())->register();
             }
 
@@ -223,11 +221,11 @@ if (! class_exists('WCMYPA')) :
             $this->includes();
             $this->initSettings();
 
-            if (! $this->validateApiKeyPresence()) {
+            if (! $this->validateApiKey()) {
                 return;
             }
 
-            $this->setupWebhooks();
+            $this->registerWebhooks();
 
             AccountSettings::getInstance();
             add_action(
@@ -422,22 +420,24 @@ if (! class_exists('WCMYPA')) :
         /**
          * @return bool
          */
-        private function validateApiKeyPresence(): bool
+        private function validateApiKey(): bool
         {
-            if ($this->setting_collection->getByName(WCMYPA_Settings::SETTING_API_KEY)) {
-                return true;
+            $apiKey = $this->setting_collection->getByName(WCMYPA_Settings::SETTING_API_KEY);
+
+            if (! $apiKey) {
+                Messages::showAdminNotice(
+                    sprintf(
+                        __('error_settings_api_key_missing', 'woocommerce-myparcel'),
+                        sprintf('<a href="%s">', WCMYPA_Settings::getSettingsUrl()),
+                        '</a>'
+                    ),
+                    Messages::NOTICE_LEVEL_WARNING
+                );
+
+                return false;
             }
 
-            Messages::showAdminNotice(
-                sprintf(
-                    __('error_settings_api_key_missing', 'woocommerce-myparcel'),
-                    sprintf('<a href="%s">', WCMYPA_Settings::getSettingsUrl()),
-                    '</a>'
-                ),
-                Messages::NOTICE_LEVEL_WARNING
-            );
-
-            return false;
+            return true;
         }
     }
 

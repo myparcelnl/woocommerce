@@ -33,23 +33,16 @@ class AccountSettingsService
     private $useManualUpdate = false;
 
     /**
-     * When a setting is updated, the old value is still in the settings collection, so you cannot use
-     * refreshSettingsFromApi.
-     */
-    public function createSettingsListeners(): void
-    {
-        (new ApiKeySettingsListener([$this, 'removeSettings']))->listen();
-    }
-
-    /**
      * Load the account settings from the API, and save them to wp options.
+     *
+     * @param  null|string $apiKey
      *
      * @return bool
      */
-    public function refreshSettingsFromApi(): bool
+    public function refreshSettingsFromApi(string $apiKey): bool
     {
         try {
-            $settings = $this->fetchFromApi();
+            $settings = $this->fetchFromApi($apiKey);
             $this->saveSettingsToDatabase($settings);
             Messages::showAdminNotice(
                 __('notice_settings_fetched_from_api', 'woocommerce-myparcel'),
@@ -90,20 +83,14 @@ class AccountSettingsService
     }
 
     /**
-     * @param  bool $triedFetching
-     *
      * @return null|\MyParcelNL\Sdk\src\Support\Collection
-     * @throws \MyParcelNL\Sdk\src\Exception\AccountNotActiveException
-     * @throws \MyParcelNL\Sdk\src\Exception\ApiException
-     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
-    public function retrieveSettings(bool $triedFetching = false): ?Collection
+    public function retrieveSettings(): ?Collection
     {
         $options = get_option(AccountSettings::WP_OPTION_KEY);
 
-        if (! $options && ! $triedFetching) {
-            $this->refreshSettingsFromApi();
-            return $this->retrieveSettings(true) ?? new Collection();
+        if (! $options) {
+            return null;
         }
 
         return new Collection($options);
@@ -209,10 +196,8 @@ class AccountSettingsService
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      * @throws \Exception
      */
-    private function fetchFromApi(): Collection
+    private function fetchFromApi(string $apiKey): Collection
     {
-        $apiKey = $this->ensureHasApiKey();
-
         $accountService = (new AccountWebService())->setApiKey($apiKey);
 
         $account = $accountService->getAccount();
