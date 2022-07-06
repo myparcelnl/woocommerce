@@ -14,7 +14,6 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
-use MyParcelNL\WooCommerce\includes\admin\views\MyParcelWidget;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
@@ -98,7 +97,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * Define constant if not already set
          *
-         * @param string      $name
+         * @param  string     $name
          * @param string|bool $value
          */
         private function define(string $name, $value): void
@@ -143,26 +142,32 @@ if (! class_exists('WCMYPA')) :
 
         /**
          * Load the translation / text-domain files
+         * Note: the first-loaded translation file overrides any following ones if the same translation is present
          */
-        public function translations(): void
+        public function translations()
         {
             $locale = apply_filters('plugin_locale', get_locale(), self::DOMAIN);
+            $dir    = trailingslashit(WP_LANG_DIR);
 
+            /**
+             * Frontend/global Locale. Looks in:
+             *        - WP_LANG_DIR/woocommerce-myparcel/woocommerce-myparcel-LOCALE.mo
+             *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
+             *        - woocommerce-myparcel/languages/woocommerce-myparcel-LOCALE.mo (which if not found falls back to:)
+             *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
+             */
             load_textdomain(
                 self::DOMAIN,
-                sprintf(
-                    '%s/languages/%s-%s.mo',
-                    __DIR__,
-                    self::DOMAIN,
-                    $locale
-                )
+                $dir . 'woocommerce-myparcel/' . self::DOMAIN . '-' . $locale . '.mo'
             );
+            load_textdomain(self::DOMAIN, $dir . 'plugins/' . self::DOMAIN . '-' . $locale . '.mo');
+            load_plugin_textdomain(self::DOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages');
         }
 
         /**
          * Load the main plugin classes and functions
          */
-        public function includes(): void
+        public function includes()
         {
             $this->includes = $this->plugin_path() . '/includes';
 
@@ -216,8 +221,6 @@ if (! class_exists('WCMYPA')) :
             $this->includes();
             $this->initSettings();
 
-            add_action('wp_dashboard_setup', [new MyParcelWidget(), 'loadWidget']);
-
             if (! $this->validateApiKey()) {
                 return;
             }
@@ -269,7 +272,7 @@ if (! class_exists('WCMYPA')) :
 
             Messages::showAdminNotice(sprintf(
                 __(
-                    'MyParcel requires %sWooCommerce%s to be installed & activated!',
+                    'WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!',
                     'woocommerce-myparcel'
                 ),
                 '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
@@ -288,7 +291,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * Handles version checking
          */
-        public function do_install(): void
+        public function do_install()
         {
             $version_setting   = 'woocommerce_myparcel_version';
             $installed_version = get_option($version_setting);
@@ -309,7 +312,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * Plugin install method. Perform any installation tasks here
          */
-        protected function install(): void
+        protected function install()
         {
             // Pre 2.0.0
             if (! empty(get_option('wcmyparcel_settings'))) {
@@ -323,7 +326,7 @@ if (! class_exists('WCMYPA')) :
          *
          * @param string $installed_version the currently installed ('old') version
          */
-        protected function upgrade($installed_version): void
+        protected function upgrade($installed_version)
         {
             if (version_compare($installed_version, '2.4.0-beta-4', '<')) {
                 require_once('migration/wcmp-upgrade-migration-v2-4-0-beta-4.php');
@@ -361,7 +364,7 @@ if (! class_exists('WCMYPA')) :
          *
          * @return string
          */
-        public function plugin_url(): string
+        public function plugin_url()
         {
             return untrailingslashit(plugins_url('/', __FILE__));
         }
@@ -371,7 +374,7 @@ if (! class_exists('WCMYPA')) :
          *
          * @return string
          */
-        public function plugin_path(): string
+        public function plugin_path()
         {
             return untrailingslashit(plugin_dir_path(__FILE__));
         }
@@ -379,7 +382,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * Initialize the settings.
          */
-        public function initSettings(): void
+        public function initSettings()
         {
             require_once('includes/wcmp-initialize-settings-collection.php');
             if (empty($this->setting_collection)) {
@@ -398,7 +401,7 @@ if (! class_exists('WCMYPA')) :
                 return true;
             }
 
-            $error = __('MyParcel requires PHP {PHP_VERSION} or higher.', 'woocommerce-myparcel');
+            $error = __('WooCommerce MyParcel requires PHP {PHP_VERSION} or higher.', 'woocommerce-myparcel');
             $error = str_replace('{PHP_VERSION}', self::PHP_VERSION_REQUIRED, $error);
 
             $howToUpdate = __('How to update your PHP version', 'woocommerce-myparcel');
