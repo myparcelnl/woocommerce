@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\includes\admin\views;
 
+use Automattic\WooCommerce\Admin\Overrides\Order;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use WCMP_Export;
-use WCMP_Export_Consignments;
-use WCMYPA_Settings;
 
 defined('ABSPATH') or die();
 
@@ -65,13 +64,19 @@ class MyParcelWidget
         $tableContent = '';
 
         foreach ($orders as $order) {
+            if (Order::class !== get_class($order)) {
+                continue;
+            }
+
             $orderSettings     = new OrderSettings($order);
             $orderId           = $order->get_id();
             $shippingRecipient = $orderSettings->getShippingRecipient();
             $shipmentIds       = (new WCMP_Export())->getShipmentIds([$orderId], ['exclude_concepts']);
             $shipmentStatus    = $this->getShipmentStatus($shipmentIds, $order);
-            $tableContent      .= sprintf(
-                '
+
+            if ($shippingRecipient) {
+                $tableContent .= sprintf(
+                    '
                 <tr onclick="window.location=\'/wp-admin/post.php?post=%s&action=edit\';" style="cursor: pointer !important;">
                   <td>%s</td>
                   <td>%s %s %s %s</td>
@@ -79,14 +84,15 @@ class MyParcelWidget
                     %s
                   </td>
                 </tr>',
-                $orderId,
-                $orderId,
-                $shippingRecipient->getStreet(),
-                $shippingRecipient->getNumber(),
-                $shippingRecipient->getNumberSuffix(),
-                $shippingRecipient->getCity(),
-                $this->getShipmentStatusBadge($shipmentStatus)
-            );
+                    $orderId,
+                    $orderId,
+                    $shippingRecipient->getStreet(),
+                    $shippingRecipient->getNumber(),
+                    $shippingRecipient->getNumberSuffix(),
+                    $shippingRecipient->getCity(),
+                    $this->getShipmentStatusBadge($shipmentStatus)
+                );
+            }
         }
 
         printf(
