@@ -72,7 +72,7 @@ class MyParcelWidget
                 $shipmentIds       = (new WCMP_Export())->getShipmentIds([$orderId], ['exclude_concepts']);
                 $shipmentStatus    = $this->getShipmentStatus($shipmentIds, $order);
 
-                $tableContent .= $this->buildTableRow($orderId, $shippingRecipient, $shipmentStatus);
+                $tableContent .= $this->buildTableRow($orderId, null, $shipmentStatus);
             } catch (TypeError $e) {
                 $tableContent .= $this->buildTableRow();
             }
@@ -251,8 +251,7 @@ class MyParcelWidget
         return sprintf(
             '<tr onclick="window.location=\'/wp-admin/post.php?post=%s&action=edit\';" style="cursor: pointer !important;">
                       <td>%s</td>
-                      <td>%s</td>
-                      <td></td>
+                      <td colspan="2">%s</td>
                     </tr>',
             $orderId,
             $orderId,
