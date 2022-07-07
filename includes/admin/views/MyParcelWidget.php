@@ -151,13 +151,13 @@ class MyParcelWidget
      *
      * @return string
      */
-    private function buildTableRow(int $orderId = null, Recipient $shippingRecipient = null, string $shipmentStatus = null): string
-    {
-        if (! $orderId || ! $shippingRecipient) {
-            return '
-            <tr>
-              <td colspan="3">Order status unknown</td>
-            </tr>';
+    private function buildTableRow(
+        int       $orderId = null,
+        Recipient $shippingRecipient = null,
+        string    $shipmentStatus = null
+    ): string {
+        if (! $shippingRecipient) {
+            return $this->getIncompleteTableRow($orderId);
         }
 
         return sprintf(
@@ -229,5 +229,34 @@ class MyParcelWidget
         $shipment        = WCMYPA()->export->getShipmentData([$firstShipmentId], $order);
 
         return $shipment ? $shipment[$firstShipmentId]['status'] : null;
+    }
+
+    /**
+     * @param  null|int $orderId
+     *
+     * @return string
+     */
+    private function getIncompleteTableRow(?int $orderId): string
+    {
+        if (! $orderId) {
+            return sprintf(
+                '
+                <tr>
+                  <td colspan="3">%s</td>
+                </tr>',
+                __('status_unknown', 'woocommerce-myparcel')
+            );
+        }
+
+        return sprintf(
+            '<tr onclick="window.location=\'/wp-admin/post.php?post=%s&action=edit\';" style="cursor: pointer !important;">
+                      <td>%s</td>
+                      <td>%s</td>
+                      <td></td>
+                    </tr>',
+            $orderId,
+            $orderId,
+            __('status_unknown', 'woocommerce-myparcel')
+        );
     }
 }
