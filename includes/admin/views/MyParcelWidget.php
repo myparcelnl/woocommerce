@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\includes\admin\views;
 
-use Automattic\WooCommerce\Admin\Overrides\Order;
+use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
+use TypeError;
 use WCMP_Export;
 
 defined('ABSPATH') or die();
@@ -39,9 +40,9 @@ class MyParcelWidget
     {
         $orderAmount = get_option('woocommerce_myparcel_dashboard_widget')['items'] ?? self::DEFAULT_ORDER_AMOUNT;
         $orders      = wc_get_orders(
-          [
-            'limit' => $orderAmount
-          ]
+            [
+                'limit' => $orderAmount,
+            ]
         );
 
         if (! $orders) {
@@ -64,34 +65,16 @@ class MyParcelWidget
         $tableContent = '';
 
         foreach ($orders as $order) {
-            if (Order::class !== get_class($order)) {
-                continue;
-            }
+            try {
+                $orderSettings     = new OrderSettings($order);
+                $orderId           = $order->get_id();
+                $shippingRecipient = $orderSettings->getShippingRecipient();
+                $shipmentIds       = (new WCMP_Export())->getShipmentIds([$orderId], ['exclude_concepts']);
+                $shipmentStatus    = $this->getShipmentStatus($shipmentIds, $order);
 
-            $orderSettings     = new OrderSettings($order);
-            $orderId           = $order->get_id();
-            $shippingRecipient = $orderSettings->getShippingRecipient();
-            $shipmentIds       = (new WCMP_Export())->getShipmentIds([$orderId], ['exclude_concepts']);
-            $shipmentStatus    = $this->getShipmentStatus($shipmentIds, $order);
-
-            if ($shippingRecipient) {
-                $tableContent .= sprintf(
-                    '
-                <tr onclick="window.location=\'/wp-admin/post.php?post=%s&action=edit\';" style="cursor: pointer !important;">
-                  <td>%s</td>
-                  <td>%s %s %s %s</td>
-                  <td>
-                    %s
-                  </td>
-                </tr>',
-                    $orderId,
-                    $orderId,
-                    $shippingRecipient->getStreet(),
-                    $shippingRecipient->getNumber(),
-                    $shippingRecipient->getNumberSuffix(),
-                    $shippingRecipient->getCity(),
-                    $this->getShipmentStatusBadge($shipmentStatus)
-                );
+                $tableContent .= $this->buildTableRow($orderId, $shippingRecipient, $shipmentStatus);
+            } catch (TypeError $e) {
+                $tableContent .= $this->buildTableRow();
             }
         }
 
@@ -127,9 +110,8 @@ class MyParcelWidget
      */
     public function myparcelDashboardWidgetConfigHandler(): void
     {
-        $options = get_option('woocommerce_myparcel_dashboard_widget') ?: $this->getDefaultWidgetConfig();
-
-        $submit      = filter_input(INPUT_POST, 'submit');
+        $options      = get_option('woocommerce_myparcel_dashboard_widget') ?: $this->getDefaultWidgetConfig();
+        $submit       = filter_input(INPUT_POST, 'submit');
         $ordersAmount = (int) filter_input(INPUT_POST, 'orders_amount');
 
         if (isset($submit)) {
@@ -163,6 +145,41 @@ class MyParcelWidget
     }
 
     /**
+     * @param  null|int                                 $orderId
+     * @param  null|\MyParcelNL\Sdk\src\Model\Recipient $shippingRecipient
+     * @param  null|string                              $shipmentStatus
+     *
+     * @return string
+     */
+    private function buildTableRow(int $orderId = null, Recipient $shippingRecipient = null, string $shipmentStatus = null): string
+    {
+        if (! $orderId || ! $shippingRecipient) {
+            return '
+            <tr>
+              <td colspan="3">Order status unknown</td>
+            </tr>';
+        }
+
+        return sprintf(
+            '
+                <tr onclick="window.location=\'/wp-admin/post.php?post=%s&action=edit\';" style="cursor: pointer !important;">
+                  <td>%s</td>
+                  <td>%s %s %s %s</td>
+                  <td>
+                    %s
+                  </td>
+                </tr>',
+            $orderId,
+            $orderId,
+            $shippingRecipient->getStreet(),
+            $shippingRecipient->getNumber(),
+            $shippingRecipient->getNumberSuffix(),
+            $shippingRecipient->getCity(),
+            $this->getShipmentStatusBadge($shipmentStatus)
+        );
+    }
+
+    /**
      * @return array
      */
     private function getDefaultWidgetConfig(): array
@@ -189,7 +206,10 @@ class MyParcelWidget
     {
         return $status
             ? sprintf('<span class="badge badge-primary">%s</span>', $status)
-            : sprintf('<span class="badge badge-secondary">%s</span>', __('no_status_available', 'woocommerce-myparcel'));
+            : sprintf(
+                '<span class="badge badge-secondary">%s</span>',
+                __('no_status_available', 'woocommerce-myparcel')
+            );
     }
 
     /**
@@ -207,6 +227,7 @@ class MyParcelWidget
 
         $firstShipmentId = $shipmentIds[0][0];
         $shipment        = WCMYPA()->export->getShipmentData([$firstShipmentId], $order);
+
         return $shipment ? $shipment[$firstShipmentId]['status'] : null;
     }
 }
