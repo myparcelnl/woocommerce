@@ -10,9 +10,7 @@ use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
-use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
-use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use WCMP_Data;
 use WCMP_Settings_Callbacks;
 use WCMYPA_Admin;
@@ -115,6 +113,9 @@ class Status
         );
     }
 
+    /**
+     * @throws \Exception
+     */
     private static function addWebhookStatusRow(): void
     {
         $title = __('diagnostics_status_webhooks', 'woocommerce-myparcel');
@@ -135,19 +136,7 @@ class Status
             return;
         }
 
-        $webhookSubscriptionService = new WebhookSubscriptionService();
-        $allWebhooksPresent         = true;
-
-        foreach (AccountSettingsWebhook::ACCOUNT_SETTINGS_WEBHOOKS as $webhook) {
-            /**
-             * @var class-string<\MyParcelNL\Sdk\src\Services\Web\Webhook\AbstractWebhookWebService>[] $webhook
-             */
-            $subscription = $webhookSubscriptionService->findByHook((new $webhook())->getHook());
-
-            if (! $subscription) {
-                $allWebhooksPresent = false;
-            }
-        }
+        $allWebhooksPresent = WebhookSubscriptionService::hasValidSubscription();
 
         $text = $allWebhooksPresent ? 'diagnostics_status_webhooks_set_up' : 'diagnostics_status_webhooks_error';
         $type = $allWebhooksPresent ? self::TYPE_SUCCESS : self::TYPE_ERROR;

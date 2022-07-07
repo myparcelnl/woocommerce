@@ -5,8 +5,10 @@ use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
+use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\CustomsDeclaration;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
@@ -1405,6 +1407,22 @@ class WCMP_Export
     }
 
     /**
+     * @param  null|\MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier $carrier
+     *
+     * @return null|\MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint
+     */
+    private function getDropOffPoint(?AbstractCarrier $carrier): ?DropOffPoint
+    {
+        if (! $carrier) {
+            return null;
+        }
+
+        $configuration = AccountSettings::getInstance()->getCarrierConfigurationByCarrierId($carrier->getId());
+
+        return $configuration ? $configuration->getDefaultDropOffPoint() : null;
+    }
+
+    /**
      * @param array $orderIds
      *
      * @return array
@@ -1420,11 +1438,8 @@ class WCMP_Export
             $wcOrder                = WCX::get_order($orderId);
             $orderSettings          = new OrderSettings($wcOrder);
             $deliveryOptions        = $orderSettings->getDeliveryOptions();
-            $labelDescriptionFormat = new LabelDescriptionFormat($wcOrder, $orderSettings, $deliveryOptions);
             $carrier                = CarrierFactory::createFromName($deliveryOptions->getCarrier());
-            $configuration          = AccountSettings::getInstance()
-                ->getCarrierConfigurationByCarrierId($carrier->getId());
-            $dropOffPoint           = $configuration ? $configuration->getDefaultDropOffPoint() : null;
+            $labelDescriptionFormat = new LabelDescriptionFormat($wcOrder, $orderSettings, $deliveryOptions);
             $shipmentOptions        = $deliveryOptions->getShipmentOptions();
 
             $shipmentOptions->setSignature($orderSettings->hasSignature());
@@ -1445,7 +1460,7 @@ class WCMP_Export
                 ->setPickupLocation($orderSettings->getPickupLocation())
                 ->setExternalIdentifier($orderId)
                 ->setWeight($orderSettings->getColloWeight())
-                ->setDropOffPoint($dropOffPoint);
+                ->setDropOffPoint($this->getDropOffPoint($carrier));
 
             $orderLines = new Collection();
 
@@ -1465,9 +1480,14 @@ class WCMP_Export
             $this->orderCollection->push($order);
         }
 
-        $savedOrderCollection = $this->orderCollection->save();
+        try {
+            $savedOrderCollection = $this->orderCollection->save();
 
-        return $this->updateOrderMetaByCollection($savedOrderCollection);
+            return $this->updateOrderMetaByCollection($savedOrderCollection);
+        } catch (Exception $e) {
+            Messages::showAdminNotice($e->getMessage());
+            return [];
+        }
     }
 
     /**
@@ -1569,10 +1589,10 @@ class WCMP_Export
      */
     private function setFeedbackForClient(string $print, int $offset, array $orderIds, array $return): array
     {
-        if ($return['success']) {
+        if ($return['success'] ?? null) {
             Messages::showAdminNotice($return['success'], Messages::NOTICE_LEVEL_SUCCESS);
         }
-        if ($return['error']) {
+        if ($return['error'] ?? null) {
             Messages::showAdminNotice($return['error'], Messages::NOTICE_LEVEL_ERROR);
         }
 
