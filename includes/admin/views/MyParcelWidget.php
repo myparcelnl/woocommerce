@@ -72,7 +72,7 @@ class MyParcelWidget
                 $shipmentIds       = (new WCMP_Export())->getShipmentIds([$orderId], ['exclude_concepts']);
                 $shipmentStatus    = $this->getShipmentStatus($shipmentIds, $order);
 
-                $tableContent .= $this->buildTableRow($orderId, null, $shipmentStatus);
+                $tableContent .= $this->buildTableRow($orderId, $shippingRecipient, $shipmentStatus);
             } catch (TypeError $e) {
                 $tableContent .= $this->buildTableRow();
             }
