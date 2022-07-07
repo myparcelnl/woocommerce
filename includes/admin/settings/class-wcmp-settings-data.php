@@ -60,7 +60,7 @@ class WCMP_Settings_Data
         $this->carrierSettings = new CarrierSettings();
 
         // Create the MyParcel settings with the admin_init hook.
-        add_action('admin_init', [$this, 'create_all_settings']);
+        add_action('admin_init', [$this, 'createAllSettings']);
     }
 
     /**
@@ -68,20 +68,20 @@ class WCMP_Settings_Data
      *
      * @throws \Exception
      */
-    public function create_all_settings(): void
+    public function createAllSettings(): void
     {
-        $this->generate_settings(
-            $this->get_sections_general(),
+        $this->generateSettings(
+            $this->getSectionsGeneral(),
             WCMYPA_Settings::SETTINGS_GENERAL
         );
 
-        $this->generate_settings(
-            $this->get_sections_export_defaults(),
+        $this->generateSettings(
+            $this->getSectionsExportDefaults(),
             WCMYPA_Settings::SETTINGS_EXPORT_DEFAULTS
         );
 
-        $this->generate_settings(
-            $this->get_sections_checkout(),
+        $this->generateSettings(
+            $this->getSectionsCheckout(),
             WCMYPA_Settings::SETTINGS_CHECKOUT
         );
 
@@ -134,7 +134,7 @@ class WCMP_Settings_Data
             ->getEnabledCarriers();
 
         foreach ($enabledCarriers as $carrier) {
-            $this->generate_settings(
+            $this->generateSettings(
                 [$carrier->getName() => $this->carrierSettings->getCarrierSection($carrier)],
                 $carrier->getName()
             );
@@ -150,7 +150,7 @@ class WCMP_Settings_Data
      *
      * @throws \Exception
      */
-    private function generate_settings(array $settingsArray, string $optionName, bool $prefix = false): void
+    private function generateSettings(array $settingsArray, string $optionName, bool $prefix = false): void
     {
         $optionIdentifier = WCMYPA_Settings::getOptionId($optionName);
         $defaults         = [];
@@ -239,24 +239,24 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_sections_general(): array
+    private function getSectionsGeneral(): array
     {
         return [
             WCMYPA_Settings::SETTINGS_GENERAL => [
                 [
                     'name'     => 'api',
                     'label'    => __('settings_general_api_title', 'woocommerce-myparcel'),
-                    'settings' => $this->get_section_general_api(),
+                    'settings' => $this->getSectionGeneralApi(),
                 ],
                 [
                     'name'     => 'general',
                     'label'    => __('settings_general_general_title', 'woocommerce-myparcel'),
-                    'settings' => $this->get_section_general_general(),
+                    'settings' => $this->getSectionGeneralGeneral(),
                 ],
                 [
                     'name'     => 'diagnostics',
                     'label'    => __('settings_general_diagnostics_title', 'woocommerce-myparcel'),
-                    'settings' => $this->get_section_general_diagnostics(),
+                    'settings' => $this->getSectionGeneralDiagnostics(),
                 ],
             ],
         ];
@@ -265,33 +265,33 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_sections_export_defaults(): array
+    private function getSectionsExportDefaults(): array
     {
         return [
             WCMYPA_Settings::SETTINGS_EXPORT_DEFAULTS => [
                 [
                     'name'     => 'main',
                     'label'    => __('Default export settings', 'woocommerce-myparcel'),
-                    'settings' => $this->get_section_export_defaults_main(),
+                    'settings' => $this->getSectionExportDefaultsMain(),
                 ],
             ],
         ];
     }
 
-    private function get_sections_checkout(): array
+    private function getSectionsCheckout(): array
     {
         return [
             WCMYPA_Settings::SETTINGS_CHECKOUT => [
                 [
                     'name'     => 'main',
                     'label'    => __('Checkout settings', 'woocommerce-myparcel'),
-                    'settings' => $this->get_section_checkout_main(),
+                    'settings' => $this->getSectionCheckoutMain(),
                 ],
                 [
                     'name'      => 'strings',
                     'label'     => __('Titles', 'woocommerce-myparcel'),
                     'condition' => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
-                    'settings'  => $this->get_section_checkout_strings(),
+                    'settings'  => $this->getSectionCheckoutStrings(),
                 ],
             ],
         ];
@@ -300,7 +300,7 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_section_general_api(): array
+    private function getSectionGeneralApi(): array
     {
         return [
             [
@@ -332,7 +332,7 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_section_general_general(): array
+    private function getSectionGeneralGeneral(): array
     {
         $exportModeSetting = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
 
@@ -488,7 +488,7 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_section_general_diagnostics(): array
+    private function getSectionGeneralDiagnostics(): array
     {
         return [
             [
@@ -508,7 +508,7 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_section_export_defaults_main(): array
+    private function getSectionExportDefaultsMain(): array
     {
         return [
             [
@@ -658,7 +658,7 @@ class WCMP_Settings_Data
     /**
      * @return array
      */
-    private function get_section_checkout_main(): array
+    private function getSectionCheckoutMain(): array
     {
         return [
             [
@@ -788,7 +788,7 @@ class WCMP_Settings_Data
         ];
     }
 
-    private function get_section_checkout_strings(): array
+    private function getSectionCheckoutStrings(): array
     {
         return [
             [
