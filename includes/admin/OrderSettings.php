@@ -208,6 +208,12 @@ class OrderSettings
      */
     public function hasAgeCheck(): bool
     {
+        $recipient = $this->getShippingRecipient();
+
+        if ($recipient && AbstractConsignment::CC_NL !== $recipient->getCc()) {
+            $this->ageCheck = false;
+        }
+
         return $this->ageCheck;
     }
 
