@@ -420,7 +420,7 @@ class WCMYPA_Admin
 
         $isAllowedDestination = WCMP_Country_Codes::isAllowedDestination($orderSettings->getShippingCountry());
 
-        if (! $isAllowedDestination || WCMP_Shipping_Methods::SHIPPING_METHOD_LOCAL_PICKUP === $order->get_shipping_method()) {
+        if (! $isAllowedDestination || WCMP_Shipping_Methods::LOCAL_PICKUP_HUMAN === $order->get_shipping_method()) {
             return;
         }
 
@@ -686,7 +686,7 @@ class WCMYPA_Admin
             unset($listingActions[WCMP_Export::EXPORT_RETURN]);
         }
 
-        if (WCMP_Shipping_Methods::SHIPPING_METHOD_LOCAL_PICKUP === $order->get_shipping_method()) {
+        if (WCMP_Shipping_Methods::LOCAL_PICKUP_HUMAN === $order->get_shipping_method()) {
             unset($listingActions[WCMP_Export::GET_LABELS], $listingActions[WCMP_Export::EXPORT_ORDER]);
         }
 
