@@ -420,7 +420,7 @@ class WCMYPA_Admin
 
         $isAllowedDestination = WCMP_Country_Codes::isAllowedDestination($orderSettings->getShippingCountry());
 
-        if (! $isAllowedDestination) {
+        if (! $isAllowedDestination || WCMP_Shipping_Methods::SHIPPING_METHOD_LOCAL_PICKUP === $order->get_shipping_method()) {
             return;
         }
 
