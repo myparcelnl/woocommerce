@@ -686,6 +686,10 @@ class WCMYPA_Admin
             unset($listingActions[WCMP_Export::EXPORT_RETURN]);
         }
 
+        if (WCMP_Shipping_Methods::SHIPPING_METHOD_LOCAL_PICKUP === $order->get_shipping_method()) {
+            unset($listingActions[WCMP_Export::GET_LABELS], $listingActions[WCMP_Export::EXPORT_ORDER]);
+        }
+
         return $listingActions;
     }
 
