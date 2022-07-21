@@ -420,7 +420,7 @@ class WCMYPA_Admin
 
         $isAllowedDestination = WCMP_Country_Codes::isAllowedDestination($orderSettings->getShippingCountry());
 
-        if (! $isAllowedDestination) {
+        if (! $isAllowedDestination || WCMP_Shipping_Methods::LOCAL_PICKUP_HUMAN === $order->get_shipping_method()) {
             return;
         }
 
@@ -684,6 +684,10 @@ class WCMYPA_Admin
 
         if (empty($consignments) || WCMP_Data::DEFAULT_COUNTRY_CODE !== $shippingCountry) {
             unset($listingActions[WCMP_Export::EXPORT_RETURN]);
+        }
+
+        if (WCMP_Shipping_Methods::LOCAL_PICKUP_HUMAN === $order->get_shipping_method()) {
+            unset($listingActions[WCMP_Export::GET_LABELS], $listingActions[WCMP_Export::EXPORT_ORDER]);
         }
 
         return $listingActions;
