@@ -90,7 +90,7 @@ foreach ($shipments as $shipment_id => $shipment) {
         '<a href="%1$s" target="_blank" title="%2$s">%2$s</a><br/> %3$s: %4$s<br/>',
         WCMYPA_Admin::getTrackTraceUrl($order_id, $trackTrace),
         $trackTrace,
-        __('Status', 'woocommerce-myparcel'),
+        esc_html(__('Status', 'woocommerce-myparcel')),
         Arr::get($shipment, 'status')
     );
 }
