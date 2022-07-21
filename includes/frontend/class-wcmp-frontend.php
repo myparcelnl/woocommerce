@@ -54,7 +54,7 @@ class WCMP_Frontend
             return;
         }
 
-        WCMYPA()->admin->showShipmentConfirmation($order, false);
+        WCMYPA()->admin->showShipmentConfirmation($order, true);
     }
 
     /**
