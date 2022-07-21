@@ -1187,7 +1187,6 @@ jQuery(($) => {
    * @param {Node} elements.main
    */
   function handleClickOutside(event, elements) {
-    event.preventDefault();
     let clickedOutside = true;
 
     elements.wrappers.forEach((className) => {
