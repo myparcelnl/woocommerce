@@ -17,7 +17,6 @@ class WCMP_Shipping_Methods
     public const FREE_SHIPPING                = 'free_shipping';
     public const LEGACY_FLAT_RATE             = 'legacy_flat_rate';
     public const LOCAL_PICKUP                = 'local_pickup';
-    public const LOCAL_PICKUP_HUMAN          = 'Local pickup';
     public const TABLE_RATES_BOLDER_ELEMENTS = 'betrs_shipping';
     public const TABLE_RATES_WOOCOMMERCE      = 'table_rate';
 

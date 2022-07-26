@@ -194,9 +194,10 @@ class WCMP_Export
         $shipment_ids = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
 
         foreach ($order_ids as $key => $id) {
-            $order = WCX::get_order($id);
+            $order         = WCX::get_order($id);
+            $orderSettings = new OrderSettings($order);
 
-            if (WCMP_Shipping_Methods::LOCAL_PICKUP_HUMAN === $order->get_shipping_method()) {
+            if ($orderSettings->hasLocalPickup()) {
                 unset($order_ids[$key]);
             }
         }

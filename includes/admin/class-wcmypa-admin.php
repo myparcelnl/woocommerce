@@ -6,7 +6,6 @@ use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
@@ -420,7 +419,7 @@ class WCMYPA_Admin
 
         $isAllowedDestination = WCMP_Country_Codes::isAllowedDestination($orderSettings->getShippingCountry());
 
-        if (! $isAllowedDestination || WCMP_Shipping_Methods::LOCAL_PICKUP_HUMAN === $order->get_shipping_method()) {
+        if (! $isAllowedDestination || $orderSettings->hasLocalPickup()) {
             return;
         }
 
@@ -668,6 +667,7 @@ class WCMYPA_Admin
     public static function getListingActions(WC_Order $order): array
     {
         $orderId         = WCX_Order::get_id($order);
+        $orderSettings   = new OrderSettings($order);
         $shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
         $exportMode      = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
         $consignments    = self::get_order_shipments($order);
@@ -686,7 +686,7 @@ class WCMYPA_Admin
             unset($listingActions[WCMP_Export::EXPORT_RETURN]);
         }
 
-        if (WCMP_Shipping_Methods::LOCAL_PICKUP_HUMAN === $order->get_shipping_method()) {
+        if ($orderSettings->hasLocalPickup()) {
             unset($listingActions[WCMP_Export::GET_LABELS], $listingActions[WCMP_Export::EXPORT_ORDER]);
         }
 
