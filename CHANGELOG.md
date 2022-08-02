@@ -1,19 +1,34 @@
-# Changelog
+### 4.12.2 (2022-08-02)
 
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+#### Bug Fixes
+
+* fix track trace link in order summary (#856) ([6144752b](git+https://github.com/myparcelnl/woocommerce/commit/6144752bf3fced9d125dc7a8b4e5663ce5a1492d))
+* fix tablerate plugin mailbox (#859) ([57dd6d61](git+https://github.com/myparcelnl/woocommerce/commit/57dd6d6171fd6dace42c9b0ac16aedaa382a79a1))
+* prevent exporting of orders with local pickup as shipping method (#858) ([9de8b411](git+https://github.com/myparcelnl/woocommerce/commit/9de8b411d81eff543f50dbbc35afad42cecf688e))
+* remove age check from eu and row consignments (#855) ([1e625435](git+https://github.com/myparcelnl/woocommerce/commit/1e625435d13a4f3a31f023af87337033077cd689))
+* only subscribe to webhook when api key changed (#846) ([f1dfa827](git+https://github.com/myparcelnl/woocommerce/commit/f1dfa82756732ec7a968c34992d4c294d0fb079f))
+* allow numbers as suffix using myparcel address fields (#850) ([dce98ce8](git+https://github.com/myparcelnl/woocommerce/commit/dce98ce897fb7c1a1a94afaedc85b1659b0d8c51))
+* php warnings undefined array key (#848) ([0850f965](git+https://github.com/myparcelnl/woocommerce/commit/0850f965ceb5d467ad6c780b60ca540276c1b124))
+* **om:** error when delivery options absent (#845) ([73ec6568](git+https://github.com/myparcelnl/woocommerce/commit/73ec6568ec2befe5c2dfccc9cfd3bfd6d5f26cd7))
+
+
+#### Features
+
+* add myparcel block to dashboard (#854) ([f13f9b6e](git+https://github.com/myparcelnl/woocommerce/commit/f13f9b6ee917bacb4bc746874b2ac120434be138))
+
 
 ### [4.12.2](https://github.com/myparcelnl/woocommerce/compare/v4.12.1...v4.12.2) (2022-06-20)
 
 
-### :bug: Bug Fixes
+### Bug Fixes
 
 * add missing file to final zip ([bbb90b6](https://github.com/myparcelnl/woocommerce/commit/bbb90b646452399184a3b961063af5a15ab8f90f))
 
 ### [4.12.1](https://github.com/myparcelnl/woocommerce/compare/v4.12.0...v4.12.1) (2022-06-20)
 
 
-### :bug: Bug Fixes
+### Bug Fixes
 
 * **om:** fix error when creating webhook ([#840](https://github.com/myparcelnl/woocommerce/issues/840)) ([2b09ef4](https://github.com/myparcelnl/woocommerce/commit/2b09ef4236a9f3960d2a3e180c73bdedadb42cca))
 
@@ -38,31 +53,21 @@ All notable changes to this project will be documented in this file. See
 
 ### Features
 
+* add settings for same day delivery ([#810](https://github.com/myparcelnl/woocommerce/issues/810)) ([3c170b7](https://github.com/myparcelnl/woocommerce/commit/3c170b791d91105d237a23b4ccd2bad6931f19a0))
 * enable order management setting ([#824](https://github.com/myparcelnl/woocommerce/issues/824)) ([d05d507](https://github.com/myparcelnl/woocommerce/commit/d05d507f1c90fb0e9caac6075c005d5bceb1acbd))
 * show message when order management is enabled ([#815](https://github.com/myparcelnl/woocommerce/issues/815)) ([66be2e7](https://github.com/myparcelnl/woocommerce/commit/66be2e78dd4ef9ad6fce11908fbc8d18c528ccfc))
 
 
 ### Bug Fixes
 
+* **checkout:** allow 6 characters as number suffix ([#806](https://github.com/myparcelnl/woocommerce/issues/806)) ([073acc9](https://github.com/myparcelnl/woocommerce/commit/073acc962347095e59f9af4019acf44106e73d83))
 * **export:** messages handling ([#809](https://github.com/myparcelnl/woocommerce/issues/809)) ([e073f55](https://github.com/myparcelnl/woocommerce/commit/e073f557c715588152df392a3462e9a65b459159))
+* fix fatal error in 4.1.0 migration ([#811](https://github.com/myparcelnl/woocommerce/issues/811)) ([ee20777](https://github.com/myparcelnl/woocommerce/commit/ee20777989fcf4f91074e6482cf69a1a8310e2bc))
+* multiple return labels for label in the box ([#808](https://github.com/myparcelnl/woocommerce/issues/808)) ([fa19b4a](https://github.com/myparcelnl/woocommerce/commit/fa19b4a66340bab617981ab8725375fafd8a7c09))
 * only show delivery date in order view when necessary ([#816](https://github.com/myparcelnl/woocommerce/issues/816)) ([44e02a7](https://github.com/myparcelnl/woocommerce/commit/44e02a73c326ad3f4c8e4d8978bd6bd60ad07792))
 * revert only show delivery date in order view when necessary ([#816](https://github.com/myparcelnl/woocommerce/issues/816))([#820](https://github.com/myparcelnl/woocommerce/issues/820)) ([901316b](https://github.com/myparcelnl/woocommerce/commit/901316b96c94835431ee174a8b771104f9e4e009))
 * syntax error on 4.1.0 migration ([#817](https://github.com/myparcelnl/woocommerce/issues/817)) ([df61016](https://github.com/myparcelnl/woocommerce/commit/df61016d9dd687f4ea49bcde93bcde441b2d4cc1))
 * the weight calculations must be multiplied ([#814](https://github.com/myparcelnl/woocommerce/issues/814)) ([08c8992](https://github.com/myparcelnl/woocommerce/commit/08c899210239741195637a40020b794c202975a0))
-
-## [4.10.0](https://github.com/myparcelnl/woocommerce/compare/v4.10.0-alpha.2...v4.10.0) (2022-03-21)
-
-
-### Features
-
-* add settings for same day delivery ([#810](https://github.com/myparcelnl/woocommerce/issues/810)) ([3c170b7](https://github.com/myparcelnl/woocommerce/commit/3c170b791d91105d237a23b4ccd2bad6931f19a0))
-
-
-### Bug Fixes
-
-* **checkout:** allow 6 characters as number suffix ([#806](https://github.com/myparcelnl/woocommerce/issues/806)) ([073acc9](https://github.com/myparcelnl/woocommerce/commit/073acc962347095e59f9af4019acf44106e73d83))
-* fix fatal error in 4.1.0 migration ([#811](https://github.com/myparcelnl/woocommerce/issues/811)) ([ee20777](https://github.com/myparcelnl/woocommerce/commit/ee20777989fcf4f91074e6482cf69a1a8310e2bc))
-* multiple return labels for label in the box ([#808](https://github.com/myparcelnl/woocommerce/issues/808)) ([fa19b4a](https://github.com/myparcelnl/woocommerce/commit/fa19b4a66340bab617981ab8725375fafd8a7c09))
 
 ## [4.10.0-alpha.2](https://github.com/myparcelnl/woocommerce/compare/v4.10.0-alpha.1...v4.10.0-alpha.2) (2022-02-25)
 
@@ -89,15 +94,9 @@ All notable changes to this project will be documented in this file. See
 
 ### Bug Fixes
 
+* catch fatal error on faulty address ([#799](https://github.com/myparcelnl/woocommerce/issues/799)) ([b5e0b66](https://github.com/myparcelnl/woocommerce/commit/b5e0b667c6fe882c296cbe3b08be1de1109ed2e3))
 * display ordergrid even when an address is faulty ([#772](https://github.com/myparcelnl/woocommerce/issues/772)) ([73150bb](https://github.com/myparcelnl/woocommerce/commit/73150bbb09c107345067b87e1117d1e2c4e7b385))
 * **orders:** add weight when exporting orders ([#769](https://github.com/myparcelnl/woocommerce/issues/769)) ([918afbe](https://github.com/myparcelnl/woocommerce/commit/918afbe4a7ca2706ec627d5f8ae666564935faaa))
-
-### [4.9.2](https://github.com/myparcelnl/woocommerce/compare/v4.9.1...v4.9.2) (2022-02-16)
-
-
-### Bug Fixes
-
-* catch fatal error on faulty address ([#799](https://github.com/myparcelnl/woocommerce/issues/799)) ([b5e0b66](https://github.com/myparcelnl/woocommerce/commit/b5e0b667c6fe882c296cbe3b08be1de1109ed2e3))
 
 ### [4.9.1](https://github.com/myparcelnl/woocommerce/compare/v4.9.0...v4.9.1) (2022-02-02)
 
@@ -165,18 +164,6 @@ All notable changes to this project will be documented in this file. See
 ### Features
 
 * add redjepakketje ([#705](https://github.com/myparcelnl/woocommerce/issues/705)) ([aa1721d](https://github.com/myparcelnl/woocommerce/commit/aa1721d3f75d969c01024b18828f70fd02d81eab))
-
-
-### Bug Fixes
-
-* fix nonexistent delivery date in label description ([#725](https://github.com/myparcelnl/woocommerce/issues/725)) ([dabe5cf](https://github.com/myparcelnl/woocommerce/commit/dabe5cf1741f831ffe3a2a59e4a6b2b0a911d804))
-* no notice when weight missing in order ([#721](https://github.com/myparcelnl/woocommerce/issues/721)) ([3dc4760](https://github.com/myparcelnl/woocommerce/commit/3dc4760d27a5abe2ebf552047406cccbd156a8fe))
-
-## [4.6.0](https://github.com/myparcelnl/woocommerce/compare/v4.5.0...v4.6.0) (2021-11-05)
-
-
-### Features
-
 * customize delivery type title on confirmation ([#713](https://github.com/myparcelnl/woocommerce/issues/713)) ([df10806](https://github.com/myparcelnl/woocommerce/commit/df10806d63ef4e7bfba84b6bdc608a06d90caa7e))
 
 
@@ -184,6 +171,8 @@ All notable changes to this project will be documented in this file. See
 
 * delivery date display condition ([#703](https://github.com/myparcelnl/woocommerce/issues/703)) ([8c1ea56](https://github.com/myparcelnl/woocommerce/commit/8c1ea56d33f1e03cd47fe14fa0663a9c147fc193))
 * Duplicate queries in wordpress backend ([#706](https://github.com/myparcelnl/woocommerce/issues/706)) ([54bf853](https://github.com/myparcelnl/woocommerce/commit/54bf8539eb2faa804839509e79846775918e9e23))
+* fix nonexistent delivery date in label description ([#725](https://github.com/myparcelnl/woocommerce/issues/725)) ([dabe5cf](https://github.com/myparcelnl/woocommerce/commit/dabe5cf1741f831ffe3a2a59e4a6b2b0a911d804))
+* no notice when weight missing in order ([#721](https://github.com/myparcelnl/woocommerce/issues/721)) ([3dc4760](https://github.com/myparcelnl/woocommerce/commit/3dc4760d27a5abe2ebf552047406cccbd156a8fe))
 * open old orders where the data getExtraOptionsFromOrder is still a string ([8566784](https://github.com/myparcelnl/woocommerce/commit/8566784fa7cb4d0e49091bb2d81ee1a130ded067))
 * use correct product quantity for label description ([5f760d0](https://github.com/myparcelnl/woocommerce/commit/5f760d01cb75bcf1b2f2e673813e945fc1099220))
 
@@ -192,30 +181,18 @@ All notable changes to this project will be documented in this file. See
 
 ### Features
 
+* add empty digital stamp weight setting ([9739d95](https://github.com/myparcelnl/woocommerce/commit/9739d950ccab7d47f7aedf5f03d2799255c8f93c))
 * Added order mode 'Export entire order' aka PPS. ([#661](https://github.com/myparcelnl/woocommerce/issues/661)) ([a00c8d8](https://github.com/myparcelnl/woocommerce/commit/a00c8d8e05c66369840d1547a6b13b55d94cc533))
 * Always show delivery date when available on ordergrid ([0386112](https://github.com/myparcelnl/woocommerce/commit/0386112c23b944ee6acf4d42c15d360db0512b51))
 * disable morning/evening delivery when agecheck is present ([#699](https://github.com/myparcelnl/woocommerce/issues/699)) ([625ccd7](https://github.com/myparcelnl/woocommerce/commit/625ccd709586ed1e9a3c61ea73fe16eb6ecb49dd))
-* make age check, large format and insurance available to pickup delivery ([1beda77](https://github.com/myparcelnl/woocommerce/commit/1beda77887bdd48178d834aad92ad6661dcbd3e2))
-
-
-### Bug Fixes
-
-* add wpdesk flexible shipping single compatibility ([1e3092f](https://github.com/myparcelnl/woocommerce/commit/1e3092f1809ee90988ee08cfa508cd6fd2693ebe))
-* return extra options without extra linebreaks ([#693](https://github.com/myparcelnl/woocommerce/issues/693)) ([20d241e](https://github.com/myparcelnl/woocommerce/commit/20d241eb5a4cd1443bb512610c581fb6206fa020))
-* url for print button to act like other print label buttons ([#698](https://github.com/myparcelnl/woocommerce/issues/698)) ([42f5b19](https://github.com/myparcelnl/woocommerce/commit/42f5b19d67d16b500f0ba70acadc0834bc9ec6be))
-
-### [4.4.5](https://github.com/myparcelnl/woocommerce/compare/v4.4.4...v4.4.5) (2021-08-17)
-
-
-### Features
-
-* add empty digital stamp weight setting ([9739d95](https://github.com/myparcelnl/woocommerce/commit/9739d950ccab7d47f7aedf5f03d2799255c8f93c))
 * filter orders by delivery date in order overview ([f39fa2b](https://github.com/myparcelnl/woocommerce/commit/f39fa2b2cd32b09b576da370a8080510ea7fa242))
+* make age check, large format and insurance available to pickup delivery ([1beda77](https://github.com/myparcelnl/woocommerce/commit/1beda77887bdd48178d834aad92ad6661dcbd3e2))
 * update package type above shipment options dialog without refreshing page ([db90a82](https://github.com/myparcelnl/woocommerce/commit/db90a82e8f33cad616d402d2527bcf86a785e9a7))
 
 
 ### Bug Fixes
 
+* add wpdesk flexible shipping single compatibility ([1e3092f](https://github.com/myparcelnl/woocommerce/commit/1e3092f1809ee90988ee08cfa508cd6fd2693ebe))
 * age check with different scenarios ([3b9dc8b](https://github.com/myparcelnl/woocommerce/commit/3b9dc8b49f0d183f0cf659d6f3c427f257ec530d))
 * Changelog and update version number ([00c02de](https://github.com/myparcelnl/woocommerce/commit/00c02de7d9dad6cf61ddb18eca779391079cb18e))
 * Changelog for version 4.4.1 ([bc942bb](https://github.com/myparcelnl/woocommerce/commit/bc942bb4b97f7fc1d686186954eb5853e34425c8))
@@ -225,9 +202,11 @@ All notable changes to this project will be documented in this file. See
 * ignore virtual products when creating consignment ([9c69528](https://github.com/myparcelnl/woocommerce/commit/9c69528ceea4d4294a5e61f58878fd8db394e06e))
 * indenting for class-wcmp-frontend.php ([105a154](https://github.com/myparcelnl/woocommerce/commit/105a154239ea81b4122a2e04eb6608eb9fc687b9))
 * object type is only supported from php 7.2 ([1a8bda3](https://github.com/myparcelnl/woocommerce/commit/1a8bda3e2193d0a22c02b65c2c10985324f51efd))
+* return extra options without extra linebreaks ([#693](https://github.com/myparcelnl/woocommerce/issues/693)) ([20d241e](https://github.com/myparcelnl/woocommerce/commit/20d241eb5a4cd1443bb512610c581fb6206fa020))
 * revert code for age check ([32178cf](https://github.com/myparcelnl/woocommerce/commit/32178cffb471126acc9beb3d90305de1c7ce81e7))
 * update changelog ([0d5bef8](https://github.com/myparcelnl/woocommerce/commit/0d5bef8e2309d607f5415c20e1475af634f3b351))
 * update version to 4.4.2 ([565442f](https://github.com/myparcelnl/woocommerce/commit/565442ff09435e0b4d4bf45a5a00764402c72f69))
+* url for print button to act like other print label buttons ([#698](https://github.com/myparcelnl/woocommerce/issues/698)) ([42f5b19](https://github.com/myparcelnl/woocommerce/commit/42f5b19d67d16b500f0ba70acadc0834bc9ec6be))
 * when a product is created, country of origin must be set to default ([3e16078](https://github.com/myparcelnl/woocommerce/commit/3e1607882e2d6925c81d4fd074dc2bc90feea8d8))
 * woocommerce hooks for the address fields in the admin ([46c7e62](https://github.com/myparcelnl/woocommerce/commit/46c7e62fe6a65d92c027a8637b33c7b57b978fc2))
 
@@ -618,3 +597,4 @@ All notable changes to this project will be documented in this file. See
 ### Reverts
 
 * Revert "smarter checkout re-ordening" ([125d27e](https://github.com/myparcelnl/woocommerce/commit/125d27e0d7437936c98a9bc925c21690d33abae9))
+
