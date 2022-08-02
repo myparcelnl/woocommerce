@@ -103,6 +103,17 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.13.0 (2022-08-02) =
+* Feat: add myparcel block to dashboard (#854) (f13f9b6e)
+* Fix: allow numbers as suffix using myparcel address fields (#850) (3b5d712)
+* Fix: fix tablerate plugin mailbox (#859) (09f1d08)
+* Fix: fix track trace link in order summary (#856) (c3b03ea)
+* Fix: om: error when delivery options absent (#845) (e964884)
+* Fix: only subscribe to webhook when api key changed (#846) (8a2b92c)
+* Fix: php warnings undefined array key (#848) (7a82b33)
+* Fix: prevent exporting of orders with local pickup as shipping method (#858) (508dc49)
+* Fix: remove age check from eu and row consignments (#855) (2e6a9eb)
+
 = 4.12.1 (2022-06-20) =
 * Fix: om: fix error when creating webhook (#840) (2b09ef4)
 
