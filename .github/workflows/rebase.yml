@@ -5,21 +5,24 @@ on:
     inputs:
       base:
         type: string
-        required: false
-        default: 'main'
+        required: true
 
       target:
         type: string
+        required: true
+
+      force:
+        type: boolean
         required: false
-        default: 'develop'
+        default: false
 
   workflow_dispatch:
     inputs:
       target:
         type: string
-        description: 'Target branch'
-        default: 'develop'
+        description: 'Target branch to update'
         required: true
+        default: 'develop'
 
   repository_dispatch:
     types: [ rebase-command ]
@@ -31,5 +34,6 @@ jobs:
       - uses: myparcelnl/actions/rebase@v2
         with:
           token: ${{ secrets.GH_REPO_TOKEN }}
-          target: ${{ github.event.client_payload.target || github.event.inputs.target || inputs.target }}
-          base: ${{ github.event.client_payload.base || github.event.inputs.base || inputs.base }}
+          base: ${{ github.event.client_payload.base || inputs.base || github.ref_name }}
+          target: ${{ github.event.client_payload.target || inputs.target }}
+          force: ${{ inputs.force }}

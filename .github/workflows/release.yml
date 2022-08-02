@@ -36,6 +36,7 @@ jobs:
     with:
       base: 'main'
       target: 'develop'
+      force: true
 
   rebase-prs:
     name: 'Rebase pull requests onto develop'
