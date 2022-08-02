@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.13.0](https://github.com/myparcelnl/woocommerce/compare/v4.12.2...v4.13.0) (2022-08-02)
+
+
+### :sparkles: New Features
+
+* add myparcel block to dashboard ([#854](https://github.com/myparcelnl/woocommerce/issues/854)) ([c36dd09](https://github.com/myparcelnl/woocommerce/commit/c36dd09f39f610c47ed6196eca106f007f020139))
+
+
+### :bug: Bug Fixes
+
+* allow numbers as suffix using myparcel address fields ([#850](https://github.com/myparcelnl/woocommerce/issues/850)) ([3b5d712](https://github.com/myparcelnl/woocommerce/commit/3b5d712c03171563605ab9cd3a5f38211b3242ce))
+* fix tablerate plugin mailbox ([#859](https://github.com/myparcelnl/woocommerce/issues/859)) ([09f1d08](https://github.com/myparcelnl/woocommerce/commit/09f1d08afaaf022bb6af0633c57be4ba21cbfcae))
+* fix track trace link in order summary ([#856](https://github.com/myparcelnl/woocommerce/issues/856)) ([c3b03ea](https://github.com/myparcelnl/woocommerce/commit/c3b03eab658f14e5ba9235d8dc297e62100694b2))
+* **om:** error when delivery options absent ([#845](https://github.com/myparcelnl/woocommerce/issues/845)) ([e964884](https://github.com/myparcelnl/woocommerce/commit/e964884ff480be0d1ca8394c00b3517c2d1e6aa2))
+* only subscribe to webhook when api key changed ([#846](https://github.com/myparcelnl/woocommerce/issues/846)) ([8a2b92c](https://github.com/myparcelnl/woocommerce/commit/8a2b92ccd585e7388ca3026b9e54ab9e57303671))
+* php warnings undefined array key ([#848](https://github.com/myparcelnl/woocommerce/issues/848)) ([7a82b33](https://github.com/myparcelnl/woocommerce/commit/7a82b33abd58a547e13f152fb196bd50a6f71000))
+* prevent exporting of orders with local pickup as shipping method ([#858](https://github.com/myparcelnl/woocommerce/issues/858)) ([508dc49](https://github.com/myparcelnl/woocommerce/commit/508dc49d2bd02c8bd015a5ed6d2a42b14238bc6e))
+* remove age check from eu and row consignments ([#855](https://github.com/myparcelnl/woocommerce/issues/855)) ([2e6a9eb](https://github.com/myparcelnl/woocommerce/commit/2e6a9eb9d412688665c8fbf2a96678e10780a2c0))
+
 ### [4.12.2](https://github.com/myparcelnl/woocommerce/compare/v4.12.1...v4.12.2) (2022-06-20)
 
 
