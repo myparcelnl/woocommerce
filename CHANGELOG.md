@@ -1,11 +1,19 @@
+# Changelog
 
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+### [4.12.2](https://github.com/myparcelnl/woocommerce/compare/v4.12.1...v4.12.2) (2022-06-20)
+
+
+### :bug: Bug Fixes
 ### Bug Fixes
 
 * add missing file to final zip ([bbb90b6](https://github.com/myparcelnl/woocommerce/commit/bbb90b646452399184a3b961063af5a15ab8f90f))
 
 ### [4.12.1](https://github.com/myparcelnl/woocommerce/compare/v4.12.0...v4.12.1) (2022-06-20)
 
-
+### :bug: Bug Fixes
 ### Bug Fixes
 
 * **om:** fix error when creating webhook ([#840](https://github.com/myparcelnl/woocommerce/issues/840)) ([2b09ef4](https://github.com/myparcelnl/woocommerce/commit/2b09ef4236a9f3960d2a3e180c73bdedadb42cca))
