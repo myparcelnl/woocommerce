@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "08b23b912304f36bb380b701cde00a26",
+    "content-hash": "4d4dca7bd3c1c7431676486a07a3ad47",
     "packages": [
         {
             "name": "myparcelnl/sdk",
-            "version": "7.3.0",
+            "version": "7.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "f884e3a10c6ea19dd445362803b89c626ae35e20"
+                "reference": "c5df736b5baaac8cde296050bbd34037f795b467"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/f884e3a10c6ea19dd445362803b89c626ae35e20",
-                "reference": "f884e3a10c6ea19dd445362803b89c626ae35e20",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/c5df736b5baaac8cde296050bbd34037f795b467",
+                "reference": "c5df736b5baaac8cde296050bbd34037f795b467",
                 "shasum": ""
             },
             "require": {
@@ -41,15 +41,19 @@
             ],
             "authors": [
                 {
-                    "name": "Reindert Vetter",
+                    "name": "Edie Lemoine",
+                    "email": "support@myparcel.nl"
+                },
+                {
+                    "name": "Joeri van Veen",
+                    "email": "support@myparcel.nl"
+                },
+                {
+                    "name": "Mark Ernst",
                     "email": "support@myparcel.nl"
                 },
                 {
                     "name": "Richard Perdaan",
-                    "email": "support@myparcel.nl"
-                },
-                {
-                    "name": "Edie Lemoine",
                     "email": "support@myparcel.nl"
                 }
             ],
@@ -62,9 +66,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v7.3.0"
+                "source": "https://github.com/myparcelnl/sdk/tree/v7.4.3"
             },
-            "time": "2022-06-16T12:15:31+00:00"
+            "time": "2022-07-20T14:31:34+00:00"
         }
     ],
     "packages-dev": [],
