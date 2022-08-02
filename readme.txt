@@ -103,7 +103,7 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
-= 4.12.2 (2022-08-02) =
+= 4.13.0 (2022-08-02) =
 * Feat: add myparcel block to dashboard (#854) (f13f9b6e)
 * Fix: fix track trace link in order summary (#856) (6144752b)
 * Fix: fix tablerate plugin mailbox (#859) (57dd6d61)

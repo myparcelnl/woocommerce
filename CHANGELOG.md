@@ -1,25 +1,3 @@
-### 4.12.2 (2022-08-02)
-
-
-#### Bug Fixes
-
-* fix track trace link in order summary (#856) ([6144752b](git+https://github.com/myparcelnl/woocommerce/commit/6144752bf3fced9d125dc7a8b4e5663ce5a1492d))
-* fix tablerate plugin mailbox (#859) ([57dd6d61](git+https://github.com/myparcelnl/woocommerce/commit/57dd6d6171fd6dace42c9b0ac16aedaa382a79a1))
-* prevent exporting of orders with local pickup as shipping method (#858) ([9de8b411](git+https://github.com/myparcelnl/woocommerce/commit/9de8b411d81eff543f50dbbc35afad42cecf688e))
-* remove age check from eu and row consignments (#855) ([1e625435](git+https://github.com/myparcelnl/woocommerce/commit/1e625435d13a4f3a31f023af87337033077cd689))
-* only subscribe to webhook when api key changed (#846) ([f1dfa827](git+https://github.com/myparcelnl/woocommerce/commit/f1dfa82756732ec7a968c34992d4c294d0fb079f))
-* allow numbers as suffix using myparcel address fields (#850) ([dce98ce8](git+https://github.com/myparcelnl/woocommerce/commit/dce98ce897fb7c1a1a94afaedc85b1659b0d8c51))
-* php warnings undefined array key (#848) ([0850f965](git+https://github.com/myparcelnl/woocommerce/commit/0850f965ceb5d467ad6c780b60ca540276c1b124))
-* **om:** error when delivery options absent (#845) ([73ec6568](git+https://github.com/myparcelnl/woocommerce/commit/73ec6568ec2befe5c2dfccc9cfd3bfd6d5f26cd7))
-
-
-#### Features
-
-* add myparcel block to dashboard (#854) ([f13f9b6e](git+https://github.com/myparcelnl/woocommerce/commit/f13f9b6ee917bacb4bc746874b2ac120434be138))
-
-
-### [4.12.2](https://github.com/myparcelnl/woocommerce/compare/v4.12.1...v4.12.2) (2022-06-20)
-
 
 ### Bug Fixes
 
