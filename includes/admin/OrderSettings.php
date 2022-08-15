@@ -15,12 +15,12 @@ use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
-use MyParcelNL\WooCommerce\includes\admin\settings\SameDayDeliveryService;
 use WC_Order;
 use WCMP_Data;
 use WCMP_Export;
 use WCMP_Export_Consignments;
 use WCMP_Log;
+use WCMP_Shipping_Methods;
 use WCMYPA_Admin;
 use WCMYPA_Settings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -404,6 +404,17 @@ class OrderSettings
         $this->billingRecipient = $this->createRecipientFromWCOrder(RecipientFromWCOrder::BILLING);
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasLocalPickup(): bool
+    {
+        $shippingMethods  = $this->order->get_shipping_methods();
+        $shippingMethodId = reset($shippingMethods)->get_method_id();
+
+        return WCMP_Shipping_Methods::LOCAL_PICKUP === $shippingMethodId;
     }
 
     /**
