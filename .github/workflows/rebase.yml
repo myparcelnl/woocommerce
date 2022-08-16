@@ -16,14 +16,6 @@ on:
         required: false
         default: false
 
-  workflow_dispatch:
-    inputs:
-      target:
-        type: string
-        description: 'Target branch to update'
-        required: true
-        default: 'develop'
-
   repository_dispatch:
     types: [ rebase-command ]
 
