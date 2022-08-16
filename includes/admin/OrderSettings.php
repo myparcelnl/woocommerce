@@ -412,7 +412,8 @@ class OrderSettings
     public function hasLocalPickup(): bool
     {
         $shippingMethods  = $this->order->get_shipping_methods();
-        $shippingMethodId = reset($shippingMethods)->get_method_id();
+        $shippingMethod   = $shippingMethods[0] ?? null;
+        $shippingMethodId = $shippingMethod ? $shippingMethod->get_method_id() : null;
 
         return WCMP_Shipping_Methods::LOCAL_PICKUP === $shippingMethodId;
     }
