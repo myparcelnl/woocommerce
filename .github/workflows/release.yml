@@ -5,12 +5,30 @@ on:
     branches:
       - main
 
-  workflow_dispatch: ~
+  workflow_dispatch:
+    inputs:
+      rebase-first:
+        type: boolean
+        description: 'Rebase main onto develop before release'
+        default: false
+        required: false
 
 jobs:
+  rebase-main:
+    if: ${{ inputs.rebase-first }}
+    name: 'Rebase main onto develop'
+    uses: ./.github/workflows/rebase.yml
+    secrets: inherit
+    with:
+      base: 'develop'
+      target: 'main'
+      force: true
+
   release:
     name: 'Build and publish 🚀'
-    runs-on: ubuntu-20.04
+    if: always()
+    needs: rebase-main
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
         with:
@@ -27,9 +45,9 @@ jobs:
         with:
           token: ${{ secrets.GH_REPO_TOKEN }}
 
-  rebase:
+  rebase-develop:
     name: 'Rebase develop onto main'
-    uses: myparcelnl/woocommerce/.github/workflows/rebase.yml@main
+    uses: ./.github/workflows/rebase.yml
     secrets: inherit
     needs: release
     if: always()
@@ -40,8 +58,8 @@ jobs:
 
   rebase-prs:
     name: 'Rebase pull requests onto develop'
-    needs: rebase
-    runs-on: ubuntu-20.04
+    needs: rebase-develop
+    runs-on: ubuntu-22.04
     steps:
       - uses: peter-evans/rebase@v2
         with:
