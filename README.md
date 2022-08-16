@@ -117,7 +117,7 @@ You can also upload the plugin folder manually.
 [Backoffice]: https://backoffice.myparcel.nl/
 [Delivery options]: https://github.com/myparcelnl/delivery-options
 [Node 16]: https://nodejs.org/en/
-[Plugin manual]: https://myparcelnl.github.io/woocommerce
+[Plugin manual]: https://developer.myparcel.nl/nl/documentatie/10.woocommerce/
 [WordPress plugin repository]: https://wordpress.org/plugins/woocommerce-myparcel/
 [Yarn]: https://classic.yarnpkg.com/en/docs/install
 [generate one]: https://myparcelnl.github.io/woocommerce/#2_A
