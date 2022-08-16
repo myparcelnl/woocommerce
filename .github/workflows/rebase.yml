@@ -1,4 +1,4 @@
-name: 'Rebase'
+name: '🧩 Rebase branches'
 
 on:
   workflow_call:
@@ -13,6 +13,26 @@ on:
 
       force:
         type: boolean
+        required: false
+        default: false
+
+  workflow_dispatch:
+    inputs:
+      base:
+        type: string
+        description: 'Base branch'
+        required: true
+        default: 'develop'
+
+      target:
+        type: string
+        description: 'Target branch to update'
+        required: true
+        default: 'main'
+
+      force:
+        type: boolean
+        description: 'Force push target branch'
         required: false
         default: false
 

@@ -1,4 +1,4 @@
-name: 'Dispatch command'
+name: '📣 Dispatch command'
 
 on:
   issue_comment:

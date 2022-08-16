@@ -1,33 +1,13 @@
-name: 'Release'
+name: '🚀 Release'
 
 on:
   push:
     branches:
       - main
 
-  workflow_dispatch:
-    inputs:
-      rebase-first:
-        type: boolean
-        description: 'Rebase main onto develop before release'
-        default: false
-        required: false
-
 jobs:
-  rebase-main:
-    if: ${{ inputs.rebase-first }}
-    name: 'Rebase main onto develop'
-    uses: ./.github/workflows/rebase.yml
-    secrets: inherit
-    with:
-      base: 'develop'
-      target: 'main'
-      force: true
-
   release:
     name: 'Build and publish 🚀'
-    if: always()
-    needs: rebase-main
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
