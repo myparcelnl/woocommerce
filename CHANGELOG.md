@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [4.13.2](https://github.com/myparcelnl/woocommerce/compare/v4.13.1...v4.13.2) (2022-08-16)
+
+
+### :bug: Bug Fixes
+
+* catch orders without shipping method ([#864](https://github.com/myparcelnl/woocommerce/issues/864)) ([2368a8e](https://github.com/myparcelnl/woocommerce/commit/2368a8e4f4483d5accf10d95b838ce45fa458b50))
+
 ### [4.13.1](https://github.com/myparcelnl/woocommerce/compare/v4.13.0...v4.13.1) (2022-08-16)
 
 
