@@ -10,18 +10,33 @@ jobs:
     name: 'Build and publish 🚀'
     runs-on: ubuntu-22.04
     steps:
+      - uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            vendor
+            woocommerce-myparcel.zip
+          key: ${{ runner.os }}-cache-${{ hashFiles('**/yarn.lock', '**/composer.lock') }}-${{ hashFiles('**/*.php', 'includes/**', 'src/**', 'templates/**','migration/**') }}
+          restore-keys: |
+            ${{ runner.os }}-cache-${{ hashFiles('**/yarn.lock', '**/composer.lock') }}
+            ${{ runner.os }}-cache
+
       - uses: actions/checkout@v3
+        if: steps.cache.outputs.cache-hit != 'true'
         with:
           fetch-depth: 0
           persist-credentials: false
 
       - uses: myparcelnl/actions/composer-install@v2
+        if: steps.cache.outputs.cache-hit != 'true'
         with:
           php-version: '7.1'
 
       - uses: myparcelnl/actions/yarn-install@v2
+        if: steps.cache.outputs.cache-hit != 'true'
 
       - uses: myparcelnl/actions/semantic-release@v2
+        if: steps.cache.outputs.cache-hit != 'true'
         with:
           token: ${{ secrets.GH_REPO_TOKEN }}
 
