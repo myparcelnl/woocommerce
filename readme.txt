@@ -103,6 +103,9 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.13.1 (2022-08-16) =
+* Fix: use local pickup method id (#860) (56fb80d)
+
 = 4.13.0 (2022-08-02) =
 * Feat: add myparcel block to dashboard (#854) (f13f9b6e)
 * Fix: allow numbers as suffix using myparcel address fields (#850) (3b5d712)

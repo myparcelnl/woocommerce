@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [4.13.1](https://github.com/myparcelnl/woocommerce/compare/v4.13.0...v4.13.1) (2022-08-16)
+
+
+### :bug: Bug Fixes
+
+* use local pickup method id ([#860](https://github.com/myparcelnl/woocommerce/issues/860)) ([56fb80d](https://github.com/myparcelnl/woocommerce/commit/56fb80d0c0ffe395edeaf5573934da486b88268e))
+
 ## [4.13.0](https://github.com/myparcelnl/woocommerce/compare/v4.12.2...v4.13.0) (2022-08-02)
 
 
