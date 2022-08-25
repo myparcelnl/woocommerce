@@ -1031,19 +1031,19 @@ class WCMP_Export
     }
 
     /**
-     * @param $chosenMethod
+     * @param  string $chosenMethod
      *
-     * @throws \Exception
+     * @return null|bool|\WC_Shipping_Method
      */
     public static function getShippingMethod(string $chosenMethod)
     {
-        if (version_compare(WOOCOMMERCE_VERSION, "2.6", "<") || $chosenMethod === WCMP_Shipping_Methods::LEGACY_FLAT_RATE) {
+        if ($chosenMethod === WCMP_Shipping_Methods::LEGACY_FLAT_RATE || version_compare(WOOCOMMERCE_VERSION, '2.6', '<')) {
             return self::getLegacyShippingMethod($chosenMethod);
         }
 
         [$methodSlug, $methodInstance] = WCMP_Checkout::splitShippingMethodString($chosenMethod);
 
-        $isDisallowedShippingMethod = in_array($methodSlug, self::DISALLOWED_SHIPPING_METHODS);
+        $isDisallowedShippingMethod = in_array($methodSlug, self::DISALLOWED_SHIPPING_METHODS, true);
         $isManualOrder              = empty($methodInstance);
 
         if ($isDisallowedShippingMethod || $isManualOrder) {
