@@ -8,7 +8,10 @@ use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use TypeError;
+use WC_Order;
 use WCMP_Export;
+use WCMP_Export_Consignments;
+use WCMYPA_Settings;
 
 defined('ABSPATH') or die();
 
@@ -51,6 +54,8 @@ class MyParcelWidget
             return;
         }
 
+        $orders = $this->filterOrders($orders);
+
         $tableHeaders = sprintf(
             '
             <tr>
@@ -58,9 +63,9 @@ class MyParcelWidget
               <th>%s</th>
               <th>%s</th>
             </tr>',
-            'Order',
-            'Address',
-            'Status'
+            __('Order', 'woocommerce-myparcel'),
+            __('Address', 'woocommerce-myparcel'),
+            __('Status', 'woocommerce-myparcel')
         );
         $tableContent = '';
 
@@ -110,13 +115,15 @@ class MyParcelWidget
      */
     public function myparcelDashboardWidgetConfigHandler(): void
     {
-        $options      = get_option('woocommerce_myparcel_dashboard_widget') ?: $this->getDefaultWidgetConfig();
-        $submit       = filter_input(INPUT_POST, 'submit');
-        $ordersAmount = (int) filter_input(INPUT_POST, 'orders_amount');
+        $options            = get_option('woocommerce_myparcel_dashboard_widget') ?: $this->getDefaultWidgetConfig();
+        $submit             = filter_input(INPUT_POST, 'submit');
+        $ordersAmount       = (int) filter_input(INPUT_POST, 'orders_amount');
+        $showMyParcelOrders = filter_input(INPUT_POST, 'showMyParcelOrders');
 
         if (isset($submit)) {
             if ($ordersAmount > 0) {
-                $options['items'] = $ordersAmount;
+                $options['items']              = $ordersAmount;
+                $options['showMyParcelOrders'] = $showMyParcelOrders;
             }
 
             update_option('woocommerce_myparcel_dashboard_widget', $options);
@@ -137,9 +144,22 @@ class MyParcelWidget
                     step="1"
                     name="orders_amount"
                     value="%s" />
+              </p>
+              <p>
+                <label>
+                    %s:
+                </label>
+                  <input
+                    name="showMyParcelOrders"
+                    class="form-control"
+                    type="checkbox"
+                    %s
+                    />
               </p>',
                 esc_attr(__('order_amount', 'woocommerce-myparcel')),
-                esc_attr($options['items'])
+                esc_attr($options['items']),
+                esc_attr(__('show_myparcel_orders_only', 'woocommerce-myparcel')),
+                isset($options['showMyParcelOrders']) ? 'checked' : ''
             )
         );
     }
@@ -180,12 +200,79 @@ class MyParcelWidget
     }
 
     /**
+     * @param  \WC_Order $order
+     *
+     * @return null|string
+     */
+    private function findHighestShippingClass(WC_Order $order): ?string
+    {
+        $metaData = $order->get_meta_data();
+
+        foreach ($metaData as $item) {
+            $data = $item->get_data();
+
+            if ('_myparcel_highest_shipping_class' === $data['key']) {
+                return $data['value'];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  array $orders
+     *
+     * @return array
+     */
+    private function filterOrders(array $orders): array
+    {
+        $myParcelMethods    = WCMP_Export_Consignments::getSetting(
+            WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES
+        );
+        $shippingMethods    = $this->flattenArray($myParcelMethods);
+        $showMyParcelOrders = get_option('woocommerce_myparcel_dashboard_widget')['showMyParcelOrders'];
+
+        return array_filter($orders, function ($order) use ($shippingMethods, $showMyParcelOrders) {
+            if (! $order->get_shipping_address_1()) {
+                return false;
+            }
+
+            if (! $showMyParcelOrders) {
+                return $order;
+            }
+
+            $highestShippingClass = $this->findHighestShippingClass($order);
+            $shippingClasses      = $order->get_shipping_methods();
+            $shippingClass        = reset($shippingClasses)->get_method_id();
+
+            if (in_array($shippingClass . ':' . $highestShippingClass, $shippingMethods, true)) {
+                return $order;
+            }
+
+            return false;
+        });
+    }
+
+    /**
+     * @param  array $array
+     *
+     * @return array
+     */
+    private function flattenArray(array $array): array
+    {
+        $return = [];
+        array_walk_recursive($array, static function ($a) use (&$return) { $return[] = $a; });
+        return $return;
+    }
+
+    /**
      * @return array
      */
     private function getDefaultWidgetConfig(): array
     {
         return [
-            'items' => self::DEFAULT_ORDER_AMOUNT,
+            'items'              => self::DEFAULT_ORDER_AMOUNT,
+            'showMyParcelOrders' => true,
         ];
     }
 
