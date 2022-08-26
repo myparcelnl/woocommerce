@@ -7,7 +7,8 @@
  *    export_order: String,
  *    export_return: String,
  *    get_labels: String,
- *    modal_dialog: String
+ *    modal_dialog: String,
+ *    delete_shipment: String
  *  }
  * } wcmp.actions
  * @property {String} wcmp.api_url - The API Url we use in MyParcel requests.
@@ -764,9 +765,8 @@ jQuery(($) => {
     doRequest.bind(this)({
       url: this.href,
       data: {},
-      afterDone(response) {
-        const redirectUrl = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
-        window.location.href = redirectUrl;
+      afterDone() {
+        window.location.href = updateUrlParameter(window.location.href, 'myparcel_done', 'true');
       },
     });
   }
@@ -798,8 +798,10 @@ jQuery(($) => {
         }
         break;
       case wcmp.actions.export_return:
-        showDialog(orderIds, 'return', request);
+        showDialog(orderIds, 'return');
         break;
+      case wcmp.actions.delete_shipment:
+        deleteShipment.bind(this)
     }
   }
 
@@ -937,7 +939,7 @@ jQuery(($) => {
     doRequest.bind(this)({
       url: url,
       data: data || {},
-      afterDone(response) {
+      afterDone() {
         if ('yes' !== print) {
           /* update the page with all changes including message(s) */
           window.location.reload();
@@ -972,6 +974,32 @@ jQuery(($) => {
     $('body').css({overflow: 'hidden'});
 
     tb_show(wcmp.strings.dialog[dialog], url);
+  }
+
+  /**
+   * Delete MyParcel orders via AJAX.
+   *
+   * @param {String[]} orderId
+   */
+  function deleteShipment(orderId) {
+    let url;
+    let data;
+
+    if (this.href) {
+      url = this.href;
+    } else {
+      data = {
+        action: wcmp.actions.delete_shipment,
+        request: wcmp.actions.delete_shipment,
+        order_ids: orderId,
+        _wpnonce: wcmp.nonce,
+      };
+    }
+
+    doRequest.bind(this)({
+      url: url,
+      data: data || {},
+    });
   }
 
   /**

@@ -34,8 +34,8 @@ if (! count($shipments)) {
 <table class="wcmp__table wcmp__table--track-trace">
   <thead>
   <tr>
-    <th><?php _e("Track & Trace", "woocommerce-myparcel"); ?></th>
-    <th><?php _e("Status", "woocommerce-myparcel"); ?></th>
+    <th><?php _e('Track & Trace', 'woocommerce-myparcel'); ?></th>
+    <th><?php _e('Status', 'woocommerce-myparcel'); ?></th>
     <th>&nbsp;</th>
   </tr>
   </thead>
@@ -43,7 +43,7 @@ if (! count($shipments)) {
   <?php
 
   foreach ($shipments as $shipment_id => $shipment):
-      $consignment = $shipments[$shipment_id];
+      $consignment = $shipment;
 
       ?>
     <tr>
@@ -64,7 +64,13 @@ if (! count($shipments)) {
           WCMYPA_Admin::renderAction(
               admin_url("admin-ajax.php?action=$action&request=$getLabels&order_ids=$order_id&shipment_ids=$shipment_id&return_shipment_id=$returnShipmentId"),
               __('action_print_myparcel_label', 'woocommerce-myparcel'),
-              WCMYPA()->plugin_url() . "/assets/img/print.svg"
+              WCMYPA()->plugin_url() . '/assets/img/print.svg'
+          );
+
+          WCMYPA_Admin::renderAction(
+              admin_url("admin-ajax.php?action=$action&request=$getLabels&order_ids=$order_id&shipment_ids=$shipment_id&return_shipment_id=$returnShipmentId"),
+              __('action_print_myparcel_label', 'woocommerce-myparcel'),
+              WCMYPA()->plugin_url() . '/assets/img/print.svg'
           );
           ?>
       </td>
