@@ -327,7 +327,9 @@ class WCMP_Checkout
     public static function save_delivery_options(int $orderId): void
     {
         $order                = WCX::get_order($orderId);
-        $shippingMethod       = sanitize_text_field(wp_unslash($_POST['shipping_method'][0] ?? ''));
+        $shippingMethod       = sanitize_text_field(wp_unslash($_POST['shipping_method'][0]
+            ?? WC()->session->get('chosen_shipping_methods')[0]
+            ?? ''));
         $highestShippingClass = sanitize_text_field(
             wp_unslash($_POST['myparcel_highest_shipping_class'] ?? $shippingMethod)
         );
