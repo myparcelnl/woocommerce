@@ -159,7 +159,7 @@ class MyParcelWidget
                 esc_attr(__('order_amount', 'woocommerce-myparcel')),
                 esc_attr($options['items']),
                 esc_attr(__('show_myparcel_orders_only', 'woocommerce-myparcel')),
-                isset($options['showMyParcelOrders']) ? 'checked' : ''
+                esc_attr(isset($options['showMyParcelOrders']) ? 'checked' : '')
             )
         );
     }
@@ -244,8 +244,9 @@ class MyParcelWidget
             $highestShippingClass = $this->findHighestShippingClass($order);
             $shippingClasses      = $order->get_shipping_methods();
             $shippingClass        = reset($shippingClasses)->get_method_id();
+            $shippingMethod       = sprintf('%s:%s', $shippingClass, $highestShippingClass);
 
-            if (in_array($shippingClass . ':' . $highestShippingClass, $shippingMethods, true)) {
+            if (in_array($shippingMethod, $shippingMethods, true)) {
                 return $order;
             }
 
@@ -254,15 +255,21 @@ class MyParcelWidget
     }
 
     /**
-     * @param  array $array
+     * @param  array $packageTypes
      *
      * @return array
      */
-    private function flattenArray(array $array): array
+    private function flattenArray(array $packageTypes): array
     {
-        $return = [];
-        array_walk_recursive($array, static function ($a) use (&$return) { $return[] = $a; });
-        return $return;
+        $flatArray = [];
+
+        foreach ($packageTypes as $shippingMethods) {
+            foreach ($shippingMethods as $shippingMethod) {
+                $flatArray[] = $shippingMethod;
+            }
+        }
+
+        return $flatArray;
     }
 
     /**
