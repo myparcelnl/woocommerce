@@ -565,7 +565,7 @@ class OrderSettings
 
         $savedWeight   = $this->extraOptions['digital_stamp_weight'] ?? null;
         $orderWeight   = $this->getWeight(true);
-        $defaultWeight = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT);
+        $defaultWeight = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT) ?: null;
         $weight        = (float) ($savedWeight ?? $defaultWeight ?? $orderWeight);
 
         $results = Arr::where(
