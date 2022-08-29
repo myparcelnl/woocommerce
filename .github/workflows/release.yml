@@ -40,6 +40,12 @@ jobs:
         with:
           token: ${{ secrets.GH_REPO_TOKEN }}
 
+  deploy-svn:
+    name: 'Deploy with svn'
+    uses: ./.github/workflows/svn_deploy.yml
+    needs: release
+    secrets: inherit
+
   rebase-develop:
     name: 'Rebase develop onto main'
     uses: ./.github/workflows/rebase.yml

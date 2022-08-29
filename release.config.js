@@ -7,6 +7,7 @@ module.exports = {
   extends: '@myparcel/semantic-release-config',
   plugins: [
     ...mainConfig.plugins,
+    '@myparcel/semantic-release-wordpress-readme-generator',
     addGitHubPlugin({
       assets: [
         { path: './woocommerce-myparcel.zip', label: 'Download Woocommerce MyParcel plugin v${nextRelease.version}' },
