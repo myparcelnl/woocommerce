@@ -81,7 +81,7 @@ if (! class_exists('WCMYPA')) :
          */
         public function __construct()
         {
-            $this->version         = $this->getVersion();
+            $this->version = $this->getVersion();
             $this->define('WC_MYPARCEL_NL_VERSION', $this->version);
             $this->plugin_basename = plugin_basename(__FILE__);
 
@@ -98,8 +98,8 @@ if (! class_exists('WCMYPA')) :
         /**
          * Define constant if not already set
          *
-         * @param  string     $name
-         * @param string|bool $value
+         * @param  string      $name
+         * @param  string|bool $value
          */
         private function define(string $name, $value): void
         {
@@ -148,7 +148,15 @@ if (! class_exists('WCMYPA')) :
         {
             $locale = apply_filters('plugin_locale', get_locale(), self::DOMAIN);
 
-            load_textdomain(self::DOMAIN, __DIR__ . '/languages/' . self::DOMAIN . '-' . $locale . '.mo');
+            load_textdomain(
+                self::DOMAIN,
+                sprintf(
+                    '%s/languages/%s-%s.mo',
+                    __DIR__,
+                    self::DOMAIN,
+                    $locale
+                )
+            );
         }
 
         /**
@@ -259,14 +267,17 @@ if (! class_exists('WCMYPA')) :
                 return true;
             }
 
-            Messages::showAdminNotice(sprintf(
-                __(
-                    'WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!',
-                    'woocommerce-myparcel'
+            Messages::showAdminNotice(
+                sprintf(
+                    __(
+                        'WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!',
+                        'woocommerce-myparcel'
+                    ),
+                    '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
+                    '</a>'
                 ),
-                '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
-                '</a>'
-            ), Messages::NOTICE_LEVEL_ERROR);
+                Messages::NOTICE_LEVEL_ERROR
+            );
 
             return false;
         }
@@ -313,7 +324,7 @@ if (! class_exists('WCMYPA')) :
         /**
          * Plugin upgrade method. Perform any required upgrades here
          *
-         * @param string $installed_version the currently installed ('old') version
+         * @param  string $installed_version the currently installed ('old') version
          */
         protected function upgrade($installed_version): void
         {
@@ -380,7 +391,7 @@ if (! class_exists('WCMYPA')) :
         }
 
         /**
-         * @param string $version
+         * @param  string $version
          *
          * @return bool
          */
