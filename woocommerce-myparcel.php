@@ -267,17 +267,14 @@ if (! class_exists('WCMYPA')) :
                 return true;
             }
 
-            Messages::showAdminNotice(
-                sprintf(
-                    __(
-                        'WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!',
-                        'woocommerce-myparcel'
-                    ),
-                    '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
-                    '</a>'
+            Messages::showAdminNotice(sprintf(
+                __(
+                    'WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!',
+                    'woocommerce-myparcel'
                 ),
-                Messages::NOTICE_LEVEL_ERROR
-            );
+                '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
+                '</a>'
+            ), Messages::NOTICE_LEVEL_ERROR);
 
             return false;
         }
