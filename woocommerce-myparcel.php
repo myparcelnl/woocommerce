@@ -143,26 +143,12 @@ if (! class_exists('WCMYPA')) :
 
         /**
          * Load the translation / text-domain files
-         * Note: the first-loaded translation file overrides any following ones if the same translation is present
          */
         public function translations(): void
         {
             $locale = apply_filters('plugin_locale', get_locale(), self::DOMAIN);
-            $dir    = trailingslashit(WP_LANG_DIR);
 
-            /**
-             * Frontend/global Locale. Looks in:
-             *        - WP_LANG_DIR/woocommerce-myparcel/woocommerce-myparcel-LOCALE.mo
-             *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
-             *        - woocommerce-myparcel/languages/woocommerce-myparcel-LOCALE.mo (which if not found falls back to:)
-             *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
-             */
-            load_textdomain(
-                self::DOMAIN,
-                $dir . 'woocommerce-myparcel/' . self::DOMAIN . '-' . $locale . '.mo'
-            );
-            load_textdomain(self::DOMAIN, $dir . 'plugins/' . self::DOMAIN . '-' . $locale . '.mo');
-            load_plugin_textdomain(self::DOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages');
+            load_textdomain(self::DOMAIN, __DIR__ . '/languages/' . self::DOMAIN . '-' . $locale . '.mo');
         }
 
         /**
