@@ -163,36 +163,26 @@ class MyParcelWidget
      * @param  array $orders
      *
      * @return \WC_Order[]
+     * @throws \JsonException
      */
     private function filterOrders(array $orders): array
     {
         $orderAmount        = get_option('woocommerce_myparcel_dashboard_widget')['items'] ?? self::DEFAULT_ORDER_AMOUNT;
-        $myParcelMethods    = WCMP_Export_Consignments::getSetting(
-            WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES
-        );
-        $shippingMethods    = Arr::flatten($myParcelMethods);
         $showMyParcelOrders = get_option('woocommerce_myparcel_dashboard_widget')['showMyParcelOrders'];
 
-        $filteredOrders = array_filter($orders, function (WC_Order $order) use ($shippingMethods, $showMyParcelOrders) {
-            $highestShippingClass = $this->findHighestShippingClass($order);
-            $shippingClasses      = $order->get_shipping_methods();
+        $filteredOrders = array_filter($orders, static function (WC_Order $order) use ($showMyParcelOrders) {
+            $shippingClasses = $order->get_shipping_methods();
+            $orderSettings   = new OrderSettings($order);
 
             if (! $showMyParcelOrders) {
                 return true;
             }
 
-            if (! $highestShippingClass || ! $shippingClasses || ! $order->get_shipping_address_1()) {
+            if (! $shippingClasses || ! $order->get_shipping_address_1() || $orderSettings->hasLocalPickup()) {
                 return false;
             }
 
-            $shippingClass  = reset($shippingClasses)->get_method_id();
-            $shippingMethod = sprintf('%s:%s', $shippingClass, $highestShippingClass);
-
-            if (in_array($shippingMethod, $shippingMethods, true)) {
-                return true;
-            }
-
-            return false;
+            return true;
         });
 
         return array_slice($filteredOrders, 0, $orderAmount);
