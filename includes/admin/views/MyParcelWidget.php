@@ -17,7 +17,8 @@ defined('ABSPATH') or die();
 
 class MyParcelWidget
 {
-    private const DEFAULT_ORDER_AMOUNT = 5;
+    private const DEFAULT_ORDER_AMOUNT       = 5;
+    private const DEFAULT_FETCH_ORDER_AMOUNT = 100;
 
     /**
      * @return void
@@ -89,8 +90,7 @@ class MyParcelWidget
      */
     public function myparcelDashboardWidgetHandler(): void
     {
-        $orderAmount = get_option('woocommerce_myparcel_dashboard_widget')['items'] ?? self::DEFAULT_ORDER_AMOUNT;
-        $orders      = wc_get_orders(['limit' => $orderAmount]);
+        $orders = wc_get_orders(['limit' => self::DEFAULT_FETCH_ORDER_AMOUNT]);
 
         if (! $orders) {
             printf(__('no_orders_found', 'woocommerce-myparcel'));
@@ -98,7 +98,7 @@ class MyParcelWidget
         }
 
         $tableHeaders = sprintf(
-            '<tr><th>%s</th><th>%s</th><th>%s</th</tr>',
+            '<tr><th>%s</th><th>%s</th><th>%s</th></tr>',
             __('Order', 'woocommerce-myparcel'),
             __('Address', 'woocommerce-myparcel'),
             __('Status', 'woocommerce-myparcel')
@@ -166,25 +166,27 @@ class MyParcelWidget
      */
     private function filterOrders(array $orders): array
     {
+        $orderAmount        = get_option('woocommerce_myparcel_dashboard_widget')['items'] ?? self::DEFAULT_ORDER_AMOUNT;
         $myParcelMethods    = WCMP_Export_Consignments::getSetting(
             WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES
         );
         $shippingMethods    = Arr::flatten($myParcelMethods);
         $showMyParcelOrders = get_option('woocommerce_myparcel_dashboard_widget')['showMyParcelOrders'];
 
-        return array_filter($orders, function (WC_Order $order) use ($shippingMethods, $showMyParcelOrders) {
-            if (! $order->get_shipping_address_1()) {
-                return false;
-            }
+        $filteredOrders = array_filter($orders, function (WC_Order $order) use ($shippingMethods, $showMyParcelOrders) {
+            $highestShippingClass = $this->findHighestShippingClass($order);
+            $shippingClasses      = $order->get_shipping_methods();
 
             if (! $showMyParcelOrders) {
                 return true;
             }
 
-            $highestShippingClass = $this->findHighestShippingClass($order);
-            $shippingClasses      = $order->get_shipping_methods();
-            $shippingClass        = reset($shippingClasses)->get_method_id();
-            $shippingMethod       = sprintf('%s:%s', $shippingClass, $highestShippingClass);
+            if (! $highestShippingClass || ! $shippingClasses || ! $order->get_shipping_address_1()) {
+                return false;
+            }
+
+            $shippingClass  = reset($shippingClasses)->get_method_id();
+            $shippingMethod = sprintf('%s:%s', $shippingClass, $highestShippingClass);
 
             if (in_array($shippingMethod, $shippingMethods, true)) {
                 return true;
@@ -192,6 +194,8 @@ class MyParcelWidget
 
             return false;
         });
+
+        return array_slice($filteredOrders, 0, $orderAmount);
     }
 
     /**
