@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [4.13.3](https://github.com/myparcelnl/woocommerce/compare/v4.13.2...v4.13.3) (2022-09-06)
+
+
+### :bug: Bug Fixes
+
+* prevent external translations ([#873](https://github.com/myparcelnl/woocommerce/issues/873)) ([a67f404](https://github.com/myparcelnl/woocommerce/commit/a67f4049f788c2b180b3d208d50f6195c3990f4e))
+* prevent shipping method from defaulting to package ([#865](https://github.com/myparcelnl/woocommerce/issues/865)) ([45409e7](https://github.com/myparcelnl/woocommerce/commit/45409e7af59e76d7b7ff6f5798dee57305c61da3))
+* use shift instead of index ([#866](https://github.com/myparcelnl/woocommerce/issues/866)) ([d31bb15](https://github.com/myparcelnl/woocommerce/commit/d31bb15abb52f87046dbcf3bea7f14ad1c2eabd1))
+
 ### [4.13.2](https://github.com/myparcelnl/woocommerce/compare/v4.13.1...v4.13.2) (2022-08-16)
 
 
