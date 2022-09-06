@@ -93,7 +93,7 @@ class MyParcelWidget
         $orders = wc_get_orders(['limit' => self::DEFAULT_FETCH_ORDER_AMOUNT]);
 
         if (! $orders) {
-            printf(__('no_orders_found', 'woocommerce-myparcel'));
+            printf(esc_attr(__('no_orders_found', 'woocommerce-myparcel')));
             return;
         }
 
@@ -186,26 +186,6 @@ class MyParcelWidget
         });
 
         return array_slice($filteredOrders, 0, $orderAmount);
-    }
-
-    /**
-     * @param  \WC_Order $order
-     *
-     * @return null|string
-     */
-    private function findHighestShippingClass(WC_Order $order): ?string
-    {
-        $metaData = $order->get_meta_data();
-
-        foreach ($metaData as $item) {
-            $data = $item->get_data();
-
-            if ('_myparcel_highest_shipping_class' === $data['key']) {
-                return $data['value'];
-            }
-        }
-
-        return null;
     }
 
     /**

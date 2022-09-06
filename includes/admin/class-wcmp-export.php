@@ -1037,7 +1037,7 @@ class WCMP_Export
      */
     public static function getShippingMethod(string $chosenMethod)
     {
-        if ($chosenMethod === WCMP_Shipping_Methods::LEGACY_FLAT_RATE || version_compare(WOOCOMMERCE_VERSION, '2.6', '<')) {
+        if ($chosenMethod === WCMP_Shipping_Methods::LEGACY_FLAT_RATE) {
             return self::getLegacyShippingMethod($chosenMethod);
         }
 
