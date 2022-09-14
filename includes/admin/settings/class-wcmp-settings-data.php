@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHL;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\admin\settings\CarrierSettings;
@@ -146,11 +147,10 @@ class WCMP_Settings_Data
      *
      * @param array  $settingsArray - Array of settings to loop through.
      * @param string $optionName    - Name to use in the identifier.
-     * @param bool   $prefix        - Add the key of the top level settings as prefix before every setting or not.
      *
      * @throws \Exception
      */
-    private function generateSettings(array $settingsArray, string $optionName, bool $prefix = false): void
+    private function generateSettings(array $settingsArray, string $optionName): void
     {
         $optionIdentifier = WCMYPA_Settings::getOptionId($optionName);
         $defaults         = [];
@@ -178,10 +178,10 @@ class WCMP_Settings_Data
                     if (isset($setting['condition']) && false === $setting['condition']) {
                         continue;
                     }
-                    $namePrefix           = $prefix ? "{$name}_" : '';
+                    $namePrefix           = false ? "{$name}_" : '';
                     $setting['option_id'] = $optionIdentifier;
                     if (isset($setting['name'])) {
-                        $setting['id'] = $prefix ? "{$name}_{$setting['name']}" : $setting['name'];
+                        $setting['id'] = false ? "{$name}_{$setting['name']}" : $setting['name'];
                     }
 
                     $class = new SettingsFieldArguments($setting, "{$optionIdentifier}[{$namePrefix}", ']');

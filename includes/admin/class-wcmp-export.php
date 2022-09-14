@@ -1459,6 +1459,9 @@ class WCMP_Export
             $shipmentOptions->setSameDayDelivery($orderSettings->isSameDayDelivery());
             $shipmentOptions->setLargeFormat($orderSettings->hasLargeFormat());
             $shipmentOptions->setLabelDescription($labelDescriptionFormat->getFormattedLabelDescription());
+            $shipmentOptions->setDirectEveningService($orderSettings->hasDirectEveningService());
+            $shipmentOptions->setEasyLabel($orderSettings->hasEasyLabel());
+            $shipmentOptions->setExpeditionSecret($orderSettings->hasExpeditionSecret());
 
             $order = (new Order())
                 ->setStatus($wcOrder->get_status())

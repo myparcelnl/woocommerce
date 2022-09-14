@@ -12,6 +12,7 @@ use MyParcelNL\Sdk\src\Model\Account\CarrierConfiguration;
 use MyParcelNL\Sdk\src\Model\Account\CarrierOptions;
 use MyParcelNL\Sdk\src\Model\Account\Shop;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHL;
 use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
@@ -173,13 +174,17 @@ class AccountSettings extends Model
             return new Collection();
         }
 
-        return $this->getCarrierOptions()
+        $enabledCarriers = $this->getCarrierOptions()
             ->filter(static function (CarrierOptions $carrierOption) {
                 return $carrierOption->isEnabled() && WCMP_Data::hasCarrier($carrierOption->getCarrier());
             })
             ->map(static function (CarrierOptions $carrierOptions) {
                 return $carrierOptions->getCarrier();
             });
+
+        $enabledCarriers->push(new CarrierDHL());
+
+        return $enabledCarriers;
     }
 
     /**
