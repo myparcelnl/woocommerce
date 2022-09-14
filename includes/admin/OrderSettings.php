@@ -42,6 +42,21 @@ class OrderSettings
     private $deliveryOptions;
 
     /**
+     * @var bool
+     */
+    private $directEveningService;
+
+    /**
+     * @var bool
+     */
+    private $easyLabel;
+
+    /**
+     * @var bool
+     */
+    private $expeditionSecret;
+
+    /**
      * @var \WC_Order
      */
     private $order;
@@ -223,6 +238,30 @@ class OrderSettings
     public function getColloAmount(): int
     {
         return $this->colloAmount;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasDirectEveningService(): bool
+    {
+        return $this->directEveningService ?? false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasEasyLabel(): bool
+    {
+        return $this->easyLabel ?? false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasExpeditionSecret(): bool
+    {
+        return $this->expeditionSecret ?? false;
     }
 
     /**
@@ -766,6 +805,7 @@ class OrderSettings
         $packageType             = $this->getPackageType();
         $digitalStampRangeWeight = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType
             ? $this->getDigitalStampRangeWeight() : null;
+        $var1 = $this->getWeight();
         $weight                  = $this->getWeight() / $this->getColloAmount();
 
         if (AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $packageType) {

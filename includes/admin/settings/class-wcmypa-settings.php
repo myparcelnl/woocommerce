@@ -97,7 +97,9 @@ class WCMYPA_Settings
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT           = 'export_insured_amount';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE       = 'export_insured_from_price';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE           = 'export_insured_for_be';
-
+    public const SETTING_CARRIER_DEFAULT_EXPORT_EASY_LABEL               = 'export_easy_label';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_EXPEDITION_SECRET        = 'export_expedition_secret';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_DIRECT_EVENING_SERVICE   = 'export_direct_evening_service';
 
     // Delivery options settings
     public const SETTING_CARRIER_CUTOFF_TIME                   = 'cutoff_time';

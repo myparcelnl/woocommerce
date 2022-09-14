@@ -46,7 +46,8 @@ class CarrierSettings
      */
     public function getCarrierSection(AbstractCarrier $carrier): array
     {
-        $consignment = ConsignmentFactory::createFromCarrier($carrier)->setPackageType(AbstractConsignment::PACKAGE_TYPE_PACKAGE);
+        $consignment = ConsignmentFactory::createFromCarrier($carrier)
+            ->setPackageType(AbstractConsignment::PACKAGE_TYPE_PACKAGE);
 
         return array_filter(
             [
@@ -248,6 +249,30 @@ class CarrierSettings
                     'type'      => 'toggle',
                 ];
                 break;
+            case AbstractConsignment::SHIPMENT_OPTION_EASY_LABEL:
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_EASY_LABEL,
+                    'label'     => __('shipment_options_easy_label', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_easy_label_help_text', 'woocommerce-myparcel'),
+                    'type'      => 'toggle',
+                ];
+                break;
+            case AbstractConsignment::SHIPMENT_OPTION_EXPEDITION_SECRET:
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_EXPEDITION_SECRET,
+                    'label'     => __('shipment_options_expedition_secret', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_expedition_secret_help_text', 'woocommerce-myparcel'),
+                    'type'      => 'toggle',
+                ];
+                break;
+            case AbstractConsignment::SHIPMENT_OPTION_DIRECT_EVENING_SERVICE:
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_DIRECT_EVENING_SERVICE,
+                    'label'     => __('shipment_options_direct_evening_service', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_direct_evening_service_help_text', 'woocommerce-myparcel'),
+                    'type'      => 'toggle',
+                ];
+                break;
         }
 
         return $settings;
@@ -308,16 +333,19 @@ class CarrierSettings
                     ]
                 );
                 $settings[] = [
-                    'name'  => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_CUTOFF_TIME,
-                    'type'  => 'time',
-                    'class' => ['wcmp__child'],
-                    'condition' => [
+                    'name'              => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_CUTOFF_TIME,
+                    'type'              => 'time',
+                    'class'             => ['wcmp__child'],
+                    'condition'         => [
                         WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                         WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
                     ],
-                    'label'     => __('setting_carrier_cut_off_time_title', 'woocommerce-myparcel'),
-                    'help_text' => __('shipment_options_same_day_delivery_cutoff_time_help_text', 'woocommerce-myparcel'),
-                    'default'   => '09:00',
+                    'label'             => __('setting_carrier_cut_off_time_title', 'woocommerce-myparcel'),
+                    'help_text'         => __(
+                        'shipment_options_same_day_delivery_cutoff_time_help_text',
+                        'woocommerce-myparcel'
+                    ),
+                    'default'           => '09:00',
                     'custom_attributes' => [
                         'min' => '00:00',
                         'max' => '10:00',
