@@ -11,19 +11,22 @@ if (! defined('ABSPATH')) {
  */
 class WCMP_Shipping_Methods
 {
-    public const FLAT_RATE                    = 'flat_rate';
-    public const FLEXIBLE_SHIPPING            = 'flexible_shipping';
-    public const FLEXIBLE_SHIPPING_INFO       = 'flexible_shipping_info';
-    public const FREE_SHIPPING                = 'free_shipping';
-    public const LEGACY_FLAT_RATE             = 'legacy_flat_rate';
+    public const ADVANCED_SHIPPING           = 'advanced_shipping';
+    public const FLAT_RATE                   = 'flat_rate';
+    public const FLEXIBLE_SHIPPING           = 'flexible_shipping';
+    public const FLEXIBLE_SHIPPING_INFO      = 'flexible_shipping_info';
+    public const FREE_SHIPPING               = 'free_shipping';
+    public const LEGACY_ADVANCED_SHIPPING    = 'legacy_advanced_shipping';
+    public const LEGACY_FLAT_RATE            = 'legacy_flat_rate';
     public const LOCAL_PICKUP                = 'local_pickup';
     public const TABLE_RATES_BOLDER_ELEMENTS = 'betrs_shipping';
-    public const TABLE_RATES_WOOCOMMERCE      = 'table_rate';
+    public const TABLE_RATES_WOOCOMMERCE     = 'table_rate';
 
     private const SHIPPING_METHOD_CLASS_WOOCOMMERCE             = 'WC_Shipping_Table_Rate';
     private const SHIPPING_METHOD_CLASS_BOLDER_ELEMENTS         = 'BE_Table_Rate_Method';
     private const SHIPPING_METHOD_CLASS_WP_DESK_FLEXIBLE        = 'WPDesk_Flexible_Shipping';
     private const SHIPPING_METHOD_CLASS_WP_DESK_FLEXIBLE_SINGLE = 'WPDesk\FS\TableRate\ShippingMethodSingle';
+    private const SHIPPING_METHOD_CLASS_ADVANCED_SHIPPING       = 'WAS_Advanced_Shipping_Method';
 
     /**
      * Items in this array will not be added to the shipping methods array. Useful for table rates because the base
@@ -35,6 +38,8 @@ class WCMP_Shipping_Methods
         self::FLEXIBLE_SHIPPING_INFO,
         self::TABLE_RATES_BOLDER_ELEMENTS,
         self::TABLE_RATES_WOOCOMMERCE,
+        self::ADVANCED_SHIPPING,
+        self::LEGACY_ADVANCED_SHIPPING,
     ];
 
     /**
@@ -62,6 +67,19 @@ class WCMP_Shipping_Methods
     public function getShippingMethods(): array
     {
         return $this->shippingMethods;
+    }
+
+    /**
+     * @param  \WC_Shipping_Method $zoneShippingMethod
+     *
+     * @return void
+     */
+    private function addAdvancedShippingZoneShippingMethodRates(WC_Shipping_Method $zoneShippingMethod): void
+    {
+        $shippingMethodId    = $zoneShippingMethod->get_rate_id();
+        $shippingMethodTitle = $zoneShippingMethod->get_title();
+
+        $this->addShippingMethod($shippingMethodId, $shippingMethodTitle);
     }
 
     /**
@@ -170,6 +188,9 @@ class WCMP_Shipping_Methods
                 break;
             case self::SHIPPING_METHOD_CLASS_WP_DESK_FLEXIBLE_SINGLE:
                 $this->addWPDeskFlexibleSingleZoneShippingMethodRates($zoneShippingMethod);
+                break;
+            case self::SHIPPING_METHOD_CLASS_ADVANCED_SHIPPING:
+                $this->addAdvancedShippingZoneShippingMethodRates($zoneShippingMethod);
                 break;
         }
     }
