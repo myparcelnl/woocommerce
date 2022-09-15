@@ -17,6 +17,7 @@ defined('ABSPATH') or die();
 
 class MyParcelWidget
 {
+    private const CLASS_WC_ORDER             = 'Automattic\WooCommerce\Admin\Overrides\Order';
     private const DEFAULT_ORDER_AMOUNT       = 5;
     private const DEFAULT_FETCH_ORDER_AMOUNT = 100;
 
@@ -170,7 +171,11 @@ class MyParcelWidget
         $orderAmount        = get_option('woocommerce_myparcel_dashboard_widget')['items'] ?? self::DEFAULT_ORDER_AMOUNT;
         $showMyParcelOrders = get_option('woocommerce_myparcel_dashboard_widget')['showMyParcelOrders'];
 
-        $filteredOrders = array_filter($orders, static function (WC_Order $order) use ($showMyParcelOrders) {
+        $filteredOrders = array_filter($orders, static function ($order) use ($showMyParcelOrders) {
+            if (self::CLASS_WC_ORDER !== get_class($order)) {
+                return false;
+            }
+
             $shippingClasses = $order->get_shipping_methods();
             $orderSettings   = new OrderSettings($order);
 
