@@ -28,11 +28,6 @@ class AccountSettingsService
     use HasInstance;
 
     /**
-     * @var bool
-     */
-    private $useManualUpdate = false;
-
-    /**
      * Load the account settings from the API, and save them to wp options.
      *
      * @param  null|string $apiKey
@@ -94,25 +89,6 @@ class AccountSettingsService
         }
 
         return new Collection($options);
-    }
-
-    /**
-     * @param  bool $useManualUpdate
-     *
-     * @return self
-     */
-    public function setUseManualUpdate(bool $useManualUpdate): self
-    {
-        $this->useManualUpdate = $useManualUpdate;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function useManualUpdate(): bool
-    {
-        return $this->useManualUpdate;
     }
 
     /**

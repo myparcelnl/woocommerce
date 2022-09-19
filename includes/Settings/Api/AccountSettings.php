@@ -53,11 +53,6 @@ class AccountSettings extends Model
     private $settings;
 
     /**
-     * @var bool true when webhooks are disabled
-     */
-    private $useManualUpdate = false;
-
-    /**
      * @throws \Exception
      */
     public function __construct()
@@ -213,14 +208,6 @@ class AccountSettings extends Model
             && $this->account instanceof Account
             && $this->carrier_options instanceof Collection
             && $this->carrier_configurations instanceof Collection;
-    }
-
-    /**
-     * @return bool
-     */
-    public function useManualUpdate(): bool
-    {
-        return $this->useManualUpdate;
     }
 
     /**

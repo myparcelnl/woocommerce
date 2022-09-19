@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "myparcelnl/sdk",
-            "version": "7.4.3",
+            "version": "7.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myparcelnl/sdk.git",
-                "reference": "c5df736b5baaac8cde296050bbd34037f795b467"
+                "reference": "b9eac2897c604f3f54cb08c160a9c9aa2706deb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/c5df736b5baaac8cde296050bbd34037f795b467",
-                "reference": "c5df736b5baaac8cde296050bbd34037f795b467",
+                "url": "https://api.github.com/repos/myparcelnl/sdk/zipball/b9eac2897c604f3f54cb08c160a9c9aa2706deb2",
+                "reference": "b9eac2897c604f3f54cb08c160a9c9aa2706deb2",
                 "shasum": ""
             },
             "require": {
@@ -66,9 +66,9 @@
             ],
             "support": {
                 "issues": "https://github.com/myparcelnl/sdk/issues",
-                "source": "https://github.com/myparcelnl/sdk/tree/v7.4.3"
+                "source": "https://github.com/myparcelnl/sdk/tree/v7.4.4"
             },
-            "time": "2022-07-20T14:31:34+00:00"
+            "time": "2022-09-09T08:01:16+00:00"
         }
     ],
     "packages-dev": [],
@@ -79,5 +79,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.1.0"
 }
