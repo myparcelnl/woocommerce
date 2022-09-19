@@ -9,6 +9,8 @@ jobs:
   release:
     name: 'Build and publish 🚀'
     runs-on: ubuntu-22.04
+    outputs:
+      released: ${{ steps.release.outputs.released }}
     steps:
       - uses: actions/cache@v3
         with:
@@ -36,14 +38,16 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
 
       - uses: myparcelnl/actions/semantic-release@v2
+        id: release
         if: steps.cache.outputs.cache-hit != 'true'
         with:
           token: ${{ secrets.GH_REPO_TOKEN }}
 
   deploy-svn:
     name: 'Deploy with svn'
-    uses: ./.github/workflows/svn_deploy.yml
     needs: release
+    if: needs.release.outputs.released == 'true'
+    uses: ./.github/workflows/svn-deploy.yml
     secrets: inherit
 
   rebase-develop:
