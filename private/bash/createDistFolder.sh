@@ -7,6 +7,7 @@ fi
 
 mkdir -p "$1"
 cp ./LICENSE "$1"/LICENSE
+cp ./readme.txt "$1"/readme.txt
 cp ./composer.json "$1"/composer.json
 cp ./woocommerce-myparcel.php "$1"/woocommerce-myparcel.php
 cp ./wpm-config.json "$1"/wpm-config.json
