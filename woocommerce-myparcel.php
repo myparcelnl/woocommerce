@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: WooCommerce MyParcel
+Plugin Name: MyParcel
 Plugin URI: https://myparcel.nl/
 Description: Export your WooCommerce orders to MyParcel (https://myparcel.nl/) and print labels directly from the WooCommerce admin
 Author: MyParcel
@@ -269,7 +269,7 @@ if (! class_exists('WCMYPA')) :
 
             Messages::showAdminNotice(sprintf(
                 __(
-                    'WooCommerce MyParcel requires %sWooCommerce%s to be installed & activated!',
+                    'MyParcel requires %sWooCommerce%s to be installed & activated!',
                     'woocommerce-myparcel'
                 ),
                 '<a href="http://wordpress.org/extend/plugins/woocommerce/">',
@@ -398,7 +398,7 @@ if (! class_exists('WCMYPA')) :
                 return true;
             }
 
-            $error = __('WooCommerce MyParcel requires PHP {PHP_VERSION} or higher.', 'woocommerce-myparcel');
+            $error = __('MyParcel requires PHP {PHP_VERSION} or higher.', 'woocommerce-myparcel');
             $error = str_replace('{PHP_VERSION}', self::PHP_VERSION_REQUIRED, $error);
 
             $howToUpdate = __('How to update your PHP version', 'woocommerce-myparcel');
