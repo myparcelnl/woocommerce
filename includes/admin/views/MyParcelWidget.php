@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\includes\admin\views;
 
 use MyParcelNL\Sdk\src\Model\Recipient;
-use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use TypeError;
 use WC_Order;
 use WCMP_Export;
-use WCMP_Export_Consignments;
-use WCMYPA_Settings;
 
 defined('ABSPATH') or die();
 
 class MyParcelWidget
 {
-    private const CLASS_WC_ORDER             = 'Automattic\WooCommerce\Admin\Overrides\Order';
+    private const CLASS_WC_ORDER             = 'WC_Order';
     private const DEFAULT_ORDER_AMOUNT       = 5;
     private const DEFAULT_FETCH_ORDER_AMOUNT = 100;
 
@@ -172,7 +169,7 @@ class MyParcelWidget
         $showMyParcelOrders = get_option('woocommerce_myparcel_dashboard_widget')['showMyParcelOrders'];
 
         $filteredOrders = array_filter($orders, static function ($order) use ($showMyParcelOrders) {
-            if (self::CLASS_WC_ORDER !== get_class($order)) {
+            if (self::CLASS_WC_ORDER !== get_parent_class($order)) {
                 return false;
             }
 
