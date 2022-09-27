@@ -122,6 +122,7 @@ class RecipientFromWCOrder extends Recipient
                     $streetParts['street'] ?? null,
                     $streetParts['number'] ?? null,
                     $streetParts['box_separator'] ?? null,
+                    $streetParts['box_separator'] ?? null,
                     $streetParts['box_number'] ?? null,
                 ]
             );
