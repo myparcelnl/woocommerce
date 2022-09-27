@@ -7,13 +7,14 @@ module.exports = {
   extends: '@myparcel/semantic-release-config',
   plugins: [
     ...mainConfig.plugins,
+    '@myparcel/semantic-release-wordpress-readme-generator',
+    addExecPlugin({
+      prepareCmd: 'node ./private/updateVersion.js ${nextRelease.version} && yarn build',
+    }),
     addGitHubPlugin({
       assets: [
         { path: './woocommerce-myparcel.zip', label: 'Download Woocommerce MyParcel plugin v${nextRelease.version}' },
       ],
-    }),
-    addExecPlugin({
-      prepareCmd: 'node ./private/updateVersion.js ${nextRelease.version} && yarn build',
     }),
     addGitPlugin({
       ...gitPluginDefaults,

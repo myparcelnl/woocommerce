@@ -1,0 +1,24 @@
+name: 'Deploy to WordPress.org'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    env:
+      ASSETS_DIR: ./.wordpress-assets
+      BUILD_DIR: ./.wordpress-dist
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+
+      - name: 'Create dist folder'
+        run: |
+          bash ./private/bash/createDistFolder.sh ${{ env.BUILD_DIR }}
+
+      - name: 'Deploy using svn'
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          ASSETS_DIR: ${{ env.ASSETS_DIR }}
+          BUILD_DIR: ${{ env.BUILD_DIR }}
+          SLUG: woocommerce-myparcel

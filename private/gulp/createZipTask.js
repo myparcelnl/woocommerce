@@ -1,6 +1,5 @@
 function createZipTask(gulp, plugins) {
   return () => gulp.src([
-    '*.png',
     'LICENSE',
     'assets/**/*',
     'includes/**/*',
