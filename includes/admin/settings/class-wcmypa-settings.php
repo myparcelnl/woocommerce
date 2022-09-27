@@ -160,7 +160,7 @@ class WCMYPA_Settings
         // Create the admin settings
         require_once("class-wcmp-settings-data.php");
 
-        // notice for WooCommerce MyParcel plugin
+        // notice for MyParcel plugin
         add_action("woocommerce_myparcel_before_settings_page", [$this, "myparcel_country_notice"], 10, 1);
     }
 
@@ -211,7 +211,7 @@ class WCMYPA_Settings
         $active_tab = isset($_GET["tab"]) ? $_GET["tab"] : self::SETTINGS_GENERAL;
         ?>
         <div class="wrap woocommerce">
-            <h1><?php _e("WooCommerce MyParcel Settings", "woocommerce-myparcel"); ?></h1>
+            <h1><?php _e("MyParcel Settings", "woocommerce-myparcel"); ?></h1>
             <h2 class="nav-tab-wrapper">
                 <?php
                 foreach ($settings_tabs as $tab_slug => $tab_title) :
