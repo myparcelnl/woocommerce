@@ -7,8 +7,6 @@ use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\admin\settings\CarrierSettings;
 use MyParcelNL\WooCommerce\includes\admin\settings\Status;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
-use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
-use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
 defined('ABSPATH') or die();
@@ -320,12 +318,10 @@ class WCMP_Settings_Data
     public function renderManualUpdateTrigger(): void
     {
         $baseUrl = 'admin-ajax.php?action=' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE;
-
-        echo sprintf(
-            '<a class="button wcmp__trigger" href="%s">%s</a>',
-            $baseUrl,
-            __('settings_trigger_manual_update_button', 'woocommerce-myparcel')
-        );
+        printf('<a class="button wcmp__trigger" href="%s">', $baseUrl);
+        _e('settings_trigger_manual_update_button', 'woocommerce-myparcel');
+        WCMYPA_Admin::renderSpinner();
+        echo '</a>';
     }
 
     /**

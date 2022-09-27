@@ -64,13 +64,16 @@ class AccountSettingsService
 
     /**
      * @return \WP_REST_Response
+     * @throws \Exception
      */
     public function restRefreshSettingsFromApi(): WP_REST_Response
     {
         $response = new WP_REST_Response();
         $response->set_status(200);
 
-        if (! $this->refreshSettingsFromApi()) {
+        $this->ensureHasApiKey();
+
+        if (! $this->refreshSettingsFromApi($this->getApiKey())) {
             $response->set_status(400);
         }
 
