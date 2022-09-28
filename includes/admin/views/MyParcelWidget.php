@@ -144,11 +144,13 @@ class MyParcelWidget
         ?Recipient $shippingRecipient = null,
         ?string    $shipmentStatus = null
     ): string {
+        $adminUrl = get_admin_url();
+
         if (! $shippingRecipient) {
             return $this->getIncompleteTableRow($orderId);
         }
 
-        return "<tr onclick=\"window.location='/wp-admin/post.php?post={$orderId}&action=edit';\" style=\"cursor: pointer !important;\">
+        return "<tr onclick=\"window.location='{$adminUrl}post.php?post={$orderId}&action=edit';\" style=\"cursor: pointer !important;\">
                   <td>$orderId</td>
                   <td>{$shippingRecipient->getStreet()} {$shippingRecipient->getNumber()} {$shippingRecipient->getNumberSuffix()} {$shippingRecipient->getCity()}</td>
                   <td>
@@ -169,7 +171,7 @@ class MyParcelWidget
         $showMyParcelOrders = get_option('woocommerce_myparcel_dashboard_widget')['showMyParcelOrders'];
 
         $filteredOrders = array_filter($orders, static function ($order) use ($showMyParcelOrders) {
-            if (self::CLASS_WC_ORDER !== get_parent_class($order)) {
+            if (! $order instanceof WC_Order) {
                 return false;
             }
 
