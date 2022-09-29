@@ -110,14 +110,22 @@ class RecipientFromWCOrder extends Recipient
             $streetParts['number_suffix'] = sprintf(' -%d', abs($streetParts['number_suffix']));
         }
 
-        $fullStreet = implode(' ', [
-                $streetParts['street'] ?? null,
-                $streetParts['number'] ?? null,
-                $streetParts['number_suffix'] ?? null,
-                $streetParts['box_separator'] ?? null,
-                $streetParts['box_number'] ?? null,
-            ]
-        );
+        if ($isNL) {
+            $fullStreet = implode(' ', [
+                    $streetParts['street'] ?? null,
+                    $streetParts['number'] ?? null,
+                    $streetParts['number_suffix'] ?? null,
+                ]
+            );
+        } else {
+            $fullStreet = implode(' ', [
+                    $streetParts['street'] ?? null,
+                    $streetParts['number'] ?? null,
+                    $streetParts['box_separator'] ?? null,
+                    $streetParts['box_number'] ?? null,
+                ]
+            );
+        }
 
         return [
             'full_street'            => $fullStreet,
