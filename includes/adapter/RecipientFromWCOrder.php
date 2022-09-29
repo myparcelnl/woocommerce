@@ -56,6 +56,30 @@ class RecipientFromWCOrder extends Recipient
     }
 
     /**
+     * @param  bool  $isNL
+     * @param  array $streetParts
+     *
+     * @return string
+     */
+    private function createFullStreet(bool $isNL, array $streetParts): string
+    {
+        return $isNL
+            ? implode(' ', [
+                    $streetParts['street'] ?? null,
+                    $streetParts['number'] ?? null,
+                    $streetParts['number_suffix'] ?? null,
+                ]
+            )
+            : implode(' ', [
+                    $streetParts['street'] ?? null,
+                    $streetParts['number'] ?? null,
+                    $streetParts['box_separator'] ?? null,
+                    $streetParts['box_number'],
+                ]
+            );
+    }
+
+    /**
      * @param  \WC_Order $order
      * @param  string    $type
      *
@@ -110,25 +134,8 @@ class RecipientFromWCOrder extends Recipient
             $streetParts['number_suffix'] = sprintf(' -%d', abs($streetParts['number_suffix']));
         }
 
-        if ($isNL) {
-            $fullStreet = implode(' ', [
-                    $streetParts['street'] ?? null,
-                    $streetParts['number'] ?? null,
-                    $streetParts['number_suffix'] ?? null,
-                ]
-            );
-        } else {
-            $fullStreet = implode(' ', [
-                    $streetParts['street'] ?? null,
-                    $streetParts['number'] ?? null,
-                    $streetParts['box_separator'] ?? null,
-                    $streetParts['box_number'] ?? null,
-                ]
-            );
-        }
-
         return [
-            'full_street'            => $fullStreet,
+            'full_street'            => $this->createFullStreet($isNL, $streetParts),
             'street_additional_info' => $addressLine2,
         ];
     }
