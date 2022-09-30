@@ -14,7 +14,6 @@ defined('ABSPATH') or die();
 
 class MyParcelWidget
 {
-    private const CLASS_WC_ORDER             = 'WC_Order';
     private const DEFAULT_ORDER_AMOUNT       = 5;
     private const DEFAULT_FETCH_ORDER_AMOUNT = 100;
 
