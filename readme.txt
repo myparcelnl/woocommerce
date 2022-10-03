@@ -103,6 +103,14 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 
 == Changelog ==
 
+= 4.13.3 (2022-08-16) =
+* Fix: prevent external translations (#873) (a67f404)
+* Fix: prevent shipping method from defaulting to package (#865) (45409e7)
+* Fix: use shift instead of index (#866) (d31bb15)
+
+= 4.13.2 (2022-08-16) =
+* Fix: catch orders without shipping method (#864) (2368a8e)
+
 = 4.13.1 (2022-08-16) =
 * Fix: use local pickup method id (#860) (56fb80d)
 
