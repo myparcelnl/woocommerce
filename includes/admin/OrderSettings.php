@@ -14,13 +14,12 @@ use MyParcelNL\Sdk\src\Model\Carrier\CarrierFactory;
 use MyParcelNL\Sdk\src\Model\PickupLocation;
 use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use WC_Order;
 use WCMP_Data;
 use WCMP_Export;
-use WCMP_Export_Consignments;
 use WCMP_Log;
+use WCMP_Settings_Data;
 use WCMP_Shipping_Methods;
 use WCMYPA_Admin;
 use WCMYPA_Settings;
@@ -753,7 +752,7 @@ class OrderSettings
         $weight                  = $this->getWeight() / $this->getColloAmount();
 
         if (AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $packageType) {
-            $emptyParcelWeight = (float) WCMP_Export_Consignments::getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
+            $emptyParcelWeight = (float) WCMP_Settings_Data::getSetting(WCMYPA_Settings::SETTING_EMPTY_PARCEL_WEIGHT);
             $weight            += $emptyParcelWeight;
         }
 

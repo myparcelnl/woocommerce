@@ -89,6 +89,16 @@ class WCMP_Settings_Data
     }
 
     /**
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public static function getSetting(string $name)
+    {
+        return WCMYPA()->setting_collection->getByName($name);
+    }
+
+    /**
      * @return array
      */
     public static function getTabs(): array

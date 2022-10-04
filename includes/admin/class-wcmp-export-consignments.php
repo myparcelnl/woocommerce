@@ -76,7 +76,7 @@ class WCMP_Export_Consignments
 
         // 1. Create PDK order
         // 2. Build shipment from PDK order
-        $this->pdkOrder = new WCOrderToPdkOrderAdapter($this->order, $this->orderSettings);
+        $this->pdkOrder = (new WCOrderToPdkOrderAdapter($this->order, $this->orderSettings))->convert();
 
         $this->deliveryOptions = $this->orderSettings->getDeliveryOptions();
 

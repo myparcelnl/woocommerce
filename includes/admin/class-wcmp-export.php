@@ -1,6 +1,9 @@
 <?php
 
+use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Base\Service\WeightService;
+use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
+use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Exception\ApiException;
@@ -21,6 +24,7 @@ use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Helper\ExportRow;
 use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormat;
 use MyParcelNL\WooCommerce\Includes\Adapter\OrderLineFromWooCommerce;
+use MyParcelNL\WooCommerce\includes\adapter\WCOrderToPdkOrderAdapter;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
@@ -277,51 +281,57 @@ class WCMP_Export
     public function addShipments(array $order_ids, bool $process): array
     {
         $return          = [];
-        $collection      = new MyParcelCollection();
         $processDirectly = $process || WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_PROCESS_DIRECTLY);
 
-        WCMP_Log::add("*** Creating shipments started ***");
+        WCMP_Log::add('*** Creating shipments started ***');
 
-        /**
-         * Loop over the order ids and create consignments for each order.
-         */
-        foreach ($order_ids as $order_id) {
-            $order = WCX::get_order($order_id);
+        $pdkOrderCollection = (new WCOrderToPdkOrderAdapter($order_ids))->convert();
+        $shipmentCollection = $pdkOrderCollection->generateShipments();
 
-            try {
-                $exportConsignments = new WCMP_Export_Consignments($order);
-                $exportConsignments->validate();
-                $consignment        = $exportConsignments->getConsignment();
-            } catch (Exception $ex) {
-                $errorMessage = sprintf(
-                    __('error_export_order_id_failed_because', 'woocommerce-myparcel'),
-                    $order_id, __($ex->getMessage(), 'woocommerce-myparcel')
-                );
-                Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
-                WCMP_Log::add($errorMessage);
-                unset($order_ids[$order_id]);
+//        foreach ($order_ids as $order_id) {
+//
+//            try {
+//
+//                // PdkOrder complete
+//                $pdkOrder        = $orderAdapter->getPdkOrder();
+//
+//                // Create shipment from the order and push to the pdkOrder shipmentCollection
+//                $pdkShipment     = $pdkOrder->toShipment();
+//
+//            } catch (Exception $ex) {
+//                $errorMessage = sprintf(
+//                    __('error_export_order_id_failed_because', 'woocommerce-myparcel'),
+//                    $order_id, __($ex->getMessage(), 'woocommerce-myparcel')
+//                );
+//                Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
+//                WCMP_Log::add($errorMessage);
+//                unset($order_ids[$order_id]);
+//
+//                continue;
+//            }
+//
+//            $collection->push($pdkShipment);
+////            $this->addConsignments($exportShipments->getOrderSettings(), $collection, $consignment);
+//            WCMP_Log::add("Shipment data for order {$order_id}.");
+//        }
 
-                continue;
-            }
+//        $this->addReturnInTheBox($collection);
 
-            $this->addConsignments($exportConsignments->getOrderSettings(), $collection, $consignment);
-            WCMP_Log::add("Shipment data for order {$order_id}.");
-        }
+//        if (0 === count($shipmentCollection)) {
+//            WCMP_Log::add('No shipments exported to MyParcel.');
+//
+//            return ['error' => __(
+//                'error_no_shipments_created',
+//                'woocommerce-myparcel'
+//            )];
+//        }
 
-        $this->addReturnInTheBox($collection);
+        // Create concepts
+        $repository = Pdk::get(ShipmentRepository::class);
+        $concepts   = $repository->createConcepts($shipmentCollection);
 
-        if (0 === count($collection)) {
-            WCMP_Log::add('No shipments exported to MyParcel.');
-
-            return ['error' => __(
-                'error_no_shipments_created',
-                'woocommerce-myparcel'
-            )];
-        }
-
-        $collection = $collection
-            ->setUserAgents(self::getUserAgents())
-            ->createConcepts();
+//        $shipmentRepository = (new ShipmentRepository())
+//            ->createConcepts($shipmentCollection);
 
         if ($processDirectly) {
             $collection->setLinkOfLabels();
@@ -1623,7 +1633,7 @@ class WCMP_Export
      * @throws \MyParcelNL\Sdk\src\Exception\ApiException
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
-    public function addReturnInTheBox(MyParcelCollection $collection): void
+    public function addReturnInTheBox(ShipmentCollection $collection): void
     {
         $returnOptions = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_RETURN_IN_THE_BOX);
 

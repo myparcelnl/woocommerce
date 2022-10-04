@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\includes\adapter;
 
 use MyParcelNL\Pdk\Base\Model\ContactDetails;
+use MyParcelNL\Pdk\Fulfilment\Model\Product;
+use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderLineCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
-use MyParcelNL\Pdk\Shipment\Model\ShipmentOptions;
-use WC_ORDER;
+use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
+use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use WC_Order_Item;
 
 /**
  *
@@ -29,39 +32,37 @@ class WCOrderToPdkOrderAdapter
     private $pdkOrder;
 
     /**
-     * @param  \WC_Order $order
-     * @param            $orderSettings
+     * @param  array $orderIds
+     *
+     * @throws \JsonException
      */
-    public function __construct(WC_Order $order, $orderSettings)
+    public function __construct(array $orderIds)
     {
-        $this->order         = $order;
-        $this->orderSettings = $orderSettings;
-        $this->pdkOrder      = $this->convert();
+        $this->orderIds = $orderIds;
+        $this->pdkOrderCollection = new PdkOrderCollection();
     }
 
     /**
-     * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
+     * @param  null|array $orderIds
+     *
+     * @return PdkOrderCollection
+     * @throws \JsonException
      */
-    private function convert(): PdkOrder
+    public function convert(): PdkOrderCollection
     {
-        return new PdkOrder([
-            'customsDeclaration'    => CustomsDeclaration::class,
-            'deliveryOptions'       => $this->getDeliveryOptions(),
-            'externalIdentifier'    => $this->order->id,
-            'label'                 => $this->orderSettings->getLabelDescription(),
-            'lines'                 => $this->getOrderLines(),
-            'orderPrice'            => $this->order->data['total'],
-            'orderPriceAfterVat'    => $this->order->data['total'] + $this->order->data['cart_tax'],
-            'orderVat'              => $this->order->data['total_tax'],
-            'recipient'             => $this->getShippingRecipient(),
-            'sender'                => $this->setSender(),
-            'shipmentPrice'         => $this->order->data['shipping_total'],
-            'shipmentPriceAfterVat' => $this->order->data['shipping_total'],
-            'shipmentVat'           => $this->order->data['shipping_tax'],
-            'totalPrice'            => $this->order->data['shipping_total'] + $this->order->data['total'],
-            'totalPriceAfterVat'    => ($this->order->data['total'] + $this->order->data['cart_tax']) + ($this->order->data['shipping_total'] + $this->order->data['shipping_tax']),
-            'totalVat'              => $this->order->data['shipping_tax'] + $this->order->data['cart_tax'],
-        ]);
+        if (is_null($this->orderIds)) {
+            // Pdk log error
+            // Cant create order with shipments
+        }
+
+        foreach($this->orderIds as $orderId) {
+            $this->pushPdkOrderToCollection($orderId);
+        }
+
+        // Create the shipments
+        //$this->buildShipmentCollection();
+
+        return $this->pdkOrderCollection;
     }
 
     /**
@@ -69,23 +70,41 @@ class WCOrderToPdkOrderAdapter
      */
     private function getOrderLines(): PdkOrderLineCollection
     {
-        // 1. Create new order line for every product
-        // 2. Add to PdkOrderLineCollection
-        // 3. Return OrderLineCollection
         $orderLinesCollection = new PdkOrderLineCollection();
-        foreach ($this->order->items as $item) {
+        foreach ($this->currentOrder->get_items() as $item) {
             $orderLinesCollection->push(
                 new PdkOrderLine([
                     'quantity'      => $item['quantity'],
                     'price'         => 0,
                     'vat'           => 0,
                     'priceAfterVat' => 0,
-                    'product'       => $item['name'],
+                    'product'       => $this->getProduct($item),
                 ])
             );
         }
 
         return $orderLinesCollection;
+    }
+
+    /**
+     * @param  \WC_Order_Item $item
+     *
+     * @return \MyParcelNL\Pdk\Fulfilment\Model\Product
+     */
+    private function getProduct(WC_Order_Item $item): Product
+    {
+        return new Product([
+            'uuid'               => $item->get_id(),
+            'sku'                => null,
+            'ean'                => null,
+            'externalIdentifier' => $item->get_order_id(),
+            'name'               => $item->get_name(),
+            'description'        => $item->get_name(),
+            'width'              => 0,
+            'length'             => 0,
+            'height'             => 0,
+            'weight'             => 0,
+        ]);
     }
 
     /**
@@ -95,22 +114,24 @@ class WCOrderToPdkOrderAdapter
     {
         $shippingRecipient = $this->orderSettings->getShippingRecipient();
 
-        return new ContactDetails([
-            'boxNumber'            => $shippingRecipient->getBoxNumber(),
-            'cc'                   => $shippingRecipient->getCc(),
-            'city'                 => $shippingRecipient->getCity(),
-            'company'              => $shippingRecipient->getCompany(),
-            'email'                => $shippingRecipient->getEmail(),
-            'fullStreet'           => null,
-            'number'               => $shippingRecipient->getNumber(),
-            'numberSuffix'         => $shippingRecipient->getNumberSuffix(),
-            'person'               => $shippingRecipient->getPerson(),
-            'phone'                => $shippingRecipient->getPhone(),
-            'postalCode'           => $shippingRecipient->getPostalCode(),
-            'region'               => $shippingRecipient->getRegion(),
-            'street'               => $shippingRecipient->getStreet(),
-            'streetAdditionalInfo' => $shippingRecipient->getStreetAdditionalInfo(),
-        ]);
+        return new ContactDetails(
+            $shippingRecipient ? [
+                'boxNumber'            => $shippingRecipient->getBoxNumber(),
+                'cc'                   => $shippingRecipient->getCc(),
+                'city'                 => $shippingRecipient->getCity(),
+                'company'              => $shippingRecipient->getCompany(),
+                'email'                => $shippingRecipient->getEmail(),
+                'fullStreet'           => null,
+                'number'               => $shippingRecipient->getNumber(),
+                'numberSuffix'         => $shippingRecipient->getNumberSuffix(),
+                'person'               => $shippingRecipient->getPerson(),
+                'phone'                => $shippingRecipient->getPhone(),
+                'postalCode'           => $shippingRecipient->getPostalCode(),
+                'region'               => $shippingRecipient->getRegion(),
+                'street'               => $shippingRecipient->getStreet(),
+                'streetAdditionalInfo' => $shippingRecipient->getStreetAdditionalInfo(),
+            ] : []
+        );
     }
 
     /**
