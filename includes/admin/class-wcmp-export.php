@@ -90,7 +90,6 @@ class WCMP_Export
     public function __construct()
     {
         $this->success = [];
-        $this->pdk = Pdk::
         require_once("class-wcmp-rest.php");
         require_once("class-wcmp-api.php");
 

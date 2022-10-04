@@ -3,10 +3,14 @@
 namespace MyParcelNL\WooCommerce\includes\adapter;
 
 use GuzzleHttp\Client;
+use MyParcelNL\Pdk\Api\Adapter\ClientAdapterInterface;
 use MyParcelNL\Pdk\Api\Response\ClientResponseInterface;
 use MyParcelNL\Pdk\Api\Response\ClientResponse;
 
-class Guzzle7ClientAdapter
+/**
+ *
+ */
+class Guzzle7ClientAdapter implements ClientAdapterInterface
 {
     private const DEFAULT_OPTIONS = [
         'exceptions' => false,
@@ -35,6 +39,9 @@ class Guzzle7ClientAdapter
      */
     public function doRequest(string $httpMethod, string $uri, array $options = []): ClientResponseInterface
     {
+        $arr = $options;
+        $merged = self::DEFAULT_OPTIONS + $options;
+
         $clientRequest = $this->client->createRequest(
             $httpMethod,
             $uri,

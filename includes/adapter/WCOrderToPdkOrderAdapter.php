@@ -13,6 +13,7 @@ use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Sdk\src\Model\PickupLocation;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WC_Order_Item;
@@ -44,8 +45,6 @@ class WCOrderToPdkOrderAdapter
 
     /**
      * @param  array $orderIds
-     *
-     * @throws \JsonException
      */
     public function __construct(array $orderIds)
     {
@@ -54,8 +53,6 @@ class WCOrderToPdkOrderAdapter
     }
 
     /**
-     * @param  null|array $orderIds
-     *
      * @return PdkOrderCollection
      * @throws \JsonException
      */
@@ -74,6 +71,19 @@ class WCOrderToPdkOrderAdapter
         //$this->buildShipmentCollection();
 
         return $this->pdkOrderCollection;
+    }
+
+    /**
+     * @param $pdkOrder
+     *
+     * @return void
+     */
+    private function buildShipmentData($pdkOrder)
+    {
+
+        return [
+
+        ];
     }
 
     /**
@@ -109,10 +119,14 @@ class WCOrderToPdkOrderAdapter
         );
     }
 
+    /**
+     * @return void
+     */
     private function buildShipmentCollection(): void
     {
         $shipmentCollection = new ShipmentCollection();
         foreach ($this->pdkOrderCollection as $pdkOrder) {
+            //$data = $this->buildShipmentData($pdkOrder);
             $pdkOrder->createShipment();
         }
     }
@@ -199,7 +213,10 @@ class WCOrderToPdkOrderAdapter
             'deliveryType'    => $deliveryOptions->getDeliveryType(),
             'labelAmount'     => 1,
             'packageType'     => $deliveryOptions->getPackageType(),
-            'pickupLocation'  => $deliveryOptions->getPickupLocation(),
+//            'pickupLocation'  => (array) $deliveryOptions->getPickupLocation(),
+            'pickupLocation'  => (array) new PickupLocation([
+                'location_code' => 'NL'
+            ]),
             'shipmentOptions' => (array) $deliveryOptions->getShipmentOptions(),
         ]);
     }
