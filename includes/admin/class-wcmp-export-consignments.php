@@ -32,7 +32,7 @@ class WCMP_Export_Consignments
     /**
      * @var AbstractConsignment
      */
-    private $consignment;
+    private $shipment;
 
     /**
      * @var DeliveryOptions
@@ -82,7 +82,6 @@ class WCMP_Export_Consignments
 
         $this->carrier = $this->deliveryOptions->getCarrier() ?? (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
 
-        $this->createConsignment();
         $this->setConsignmentData();
     }
 
@@ -158,7 +157,7 @@ class WCMP_Export_Consignments
 
             $productHelper = new ExportRow($this->order, $product);
 
-            $this->consignment->addItem(
+            $this->shipment->addItem(
                 (new MyParcelCustomsItem())
                     ->setDescription($productHelper->getItemDescription())
                     ->setAmount($productHelper->getItemAmount($item))
@@ -188,7 +187,7 @@ class WCMP_Export_Consignments
      */
     public function getConsignment(): AbstractConsignment
     {
-        return $this->consignment;
+        return $this->shipment;
     }
 
     /**
@@ -214,11 +213,11 @@ class WCMP_Export_Consignments
      */
     private function setRecipient(): void
     {
-        $originCountry        = $this->consignment->getLocalCountryCode();
+        $originCountry        = $this->shipment->getLocalCountryCode();
         $recipient            = new RecipientFromWCOrder($this->order, $originCountry, RecipientFromWCOrder::SHIPPING);
         $saveRecipientAddress = (bool) WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SAVE_CUSTOMER_ADDRESS);
 
-        $this->consignment
+        $this->shipment
             ->setCountry($recipient->getCc())
             ->setPerson($recipient->getPerson())
             ->setCompany($recipient->getCompany())
@@ -249,14 +248,14 @@ class WCMP_Export_Consignments
 
     private function setDropOffPoint(): void
     {
-        $carrierId     = $this->consignment->getCarrierId();
+        $carrierId     = $this->shipment->getCarrierId();
         $configuration = AccountSettings::getInstance()->getCarrierConfigurationByCarrierId($carrierId);
 
         if (! $configuration) {
             return;
         }
 
-        $this->consignment->setDropOffPoint($configuration->getDefaultDropOffPoint());
+        $this->shipment->setDropOffPoint($configuration->getDefaultDropOffPoint());
     }
 
     /**
@@ -270,7 +269,7 @@ class WCMP_Export_Consignments
             return;
         }
 
-        $this->consignment
+        $this->shipment
             ->setPickupCountry($pickupLocation->getCountry())
             ->setPickupCity($pickupLocation->getCity())
             ->setPickupLocationName($pickupLocation->getLocationName())
@@ -288,7 +287,7 @@ class WCMP_Export_Consignments
      */
     private function setShipmentOptions(): void
     {
-        $this->consignment
+        $this->shipment
             ->setAgeCheck($this->orderSettings->hasAgeCheck())
             ->setInsurance($this->orderSettings->getInsuranceAmount())
             ->setLargeFormat($this->orderSettings->hasLargeFormat())
@@ -319,7 +318,7 @@ class WCMP_Export_Consignments
      */
     private function setPhysicalProperties(): void
     {
-        $this->consignment->setPhysicalProperties(
+        $this->shipment->setPhysicalProperties(
             [
                 'weight' => $this->orderSettings->getColloWeight(),
             ]
@@ -331,7 +330,7 @@ class WCMP_Export_Consignments
      */
     private function setBaseData(): void
     {
-        $this->consignment
+        $this->shipment
             ->setApiKey($this->apiKey)
             ->setReferenceId((string) $this->order->get_id())
             ->setPackageType($this->getPackageType())
@@ -347,7 +346,7 @@ class WCMP_Export_Consignments
     {
         $this->validateWeight();
 
-        return $this->consignment->validate();
+        return $this->shipment->validate();
     }
 
     /**

@@ -211,6 +211,8 @@ if (! class_exists('WCMYPA')) :
 
         /**
          * Perform required tasks that initialize the plugin.
+         *
+         * @throws \Throwable
          */
         public function initialize(): void
         {
@@ -229,6 +231,7 @@ if (! class_exists('WCMYPA')) :
                 return;
             }
 
+            $this->setupPdk();
             $this->registerWebhooks();
 
             AccountSettings::getInstance();
@@ -249,6 +252,15 @@ if (! class_exists('WCMYPA')) :
                 'message_insurance_belgium_2022',
                 [MessagesRepository::SETTINGS_PAGE, MessagesRepository::PLUGINS_PAGE]
             );
+        }
+
+        /**
+         * @return void
+         * @throws \Throwable
+         */
+        private function setupPdk(): void
+        {
+            Boot::setupPdk($this);
         }
 
         /**
