@@ -22,14 +22,25 @@ use WC_Order_Item;
  */
 class WCOrderToPdkOrderAdapter
 {
-    private $order;
-
-    private $orderSettings;
+    /**
+     * @var
+     */
+    private $currentOrderSettings;
 
     /**
-     * @var \MyParcelNL\Pdk\Plugin\Model\PdkOrder
+     * @var
      */
-    private $pdkOrder;
+    private $currentOrder;
+
+    /**
+     * @var array
+     */
+    private $orderIds;
+
+    /**
+     * @var \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection
+     */
+    private $pdkOrderCollection;
 
     /**
      * @param  array $orderIds
@@ -63,6 +74,47 @@ class WCOrderToPdkOrderAdapter
         //$this->buildShipmentCollection();
 
         return $this->pdkOrderCollection;
+    }
+
+    /**
+     * @param $orderId
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    private function pushPdkOrderToCollection($orderId): void
+    {
+        $this->currentOrder         = WCX::get_order($orderId);
+        $this->currentOrderSettings = new OrderSettings($this->currentOrder);
+        $this->pdkOrderCollection->push(
+            new PdkOrder([
+                'customsDeclaration'    => CustomsDeclaration::class,
+                'deliveryOptions'       => $this->getDeliveryOptions(),
+                'externalIdentifier'    => $this->currentOrder->get_id(),
+                'label'                 => $this->currentOrderSettings->getLabelDescription(),
+                'lines'                 => $this->getOrderLines(),
+                'orderPrice'            => $this->currentOrder->get_total(),
+                'orderPriceAfterVat'    => $this->currentOrder->get_total() + $this->currentOrder->get_cart_tax(),
+                'orderVat'              => $this->currentOrder->get_total_tax(),
+                'recipient'             => $this->getShippingRecipient(),
+                'sender'                => $this->setSender(),
+                'shipmentPrice'         => (float) $this->currentOrder->get_shipping_total(),
+                'shipmentPriceAfterVat' => (float) $this->currentOrder->get_shipping_total(),
+                'shipmentVat'           => (float) $this->currentOrder->get_shipping_tax(),
+                'totalPrice'            => (float) $this->currentOrder->get_shipping_total() + $this->currentOrder->get_total(),
+                'totalPriceAfterVat'    => ($this->currentOrder->get_total() + $this->currentOrder->get_cart_tax(
+                        )) + ((float) $this->currentOrder->get_shipping_total() + (float) $this->currentOrder->get_shipping_tax()),
+                'totalVat'              => (float) $this->currentOrder->get_shipping_tax() + $this->currentOrder->get_cart_tax(),
+            ])
+        );
+    }
+
+    private function buildShipmentCollection(): void
+    {
+        $shipmentCollection = new ShipmentCollection();
+        foreach ($this->pdkOrderCollection as $pdkOrder) {
+            $pdkOrder->createShipment();
+        }
     }
 
     /**
@@ -112,7 +164,7 @@ class WCOrderToPdkOrderAdapter
      */
     private function getShippingRecipient(): ContactDetails
     {
-        $shippingRecipient = $this->orderSettings->getShippingRecipient();
+        $shippingRecipient = $this->currentOrderSettings->getShippingRecipient();
 
         return new ContactDetails(
             $shippingRecipient ? [
@@ -139,7 +191,7 @@ class WCOrderToPdkOrderAdapter
      */
     private function getDeliveryOptions(): DeliveryOptions
     {
-        $deliveryOptions = $this->orderSettings->getDeliveryOptions();
+        $deliveryOptions = $this->currentOrderSettings->getDeliveryOptions();
 
         return new DeliveryOptions([
             'carrier'         => $deliveryOptions->getCarrier(),
@@ -148,7 +200,7 @@ class WCOrderToPdkOrderAdapter
             'labelAmount'     => 1,
             'packageType'     => $deliveryOptions->getPackageType(),
             'pickupLocation'  => $deliveryOptions->getPickupLocation(),
-            'shipmentOptions' => $deliveryOptions->getShipmentOptions(),
+            'shipmentOptions' => (array) $deliveryOptions->getShipmentOptions(),
         ]);
     }
 
