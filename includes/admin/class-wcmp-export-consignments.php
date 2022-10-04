@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
+use MyParcelNL\Pdk\Shipment\Service\DeliveryDateService;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
@@ -11,12 +15,19 @@ use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
+use MyParcelNL\Pdk\Shipment\Model\Shipment;
+use MyParcelNL\WooCommerce\includes\adapter\WCOrderToPdkOrderAdapter;
 
 defined('ABSPATH') or die();
 
 class WCMP_Export_Consignments
 {
     use HasApiKey;
+
+    /**
+     * @var WCOrderToPdkOrderAdapter
+     */
+    private $pdkOrder;
 
     /**
      * @var AbstractConsignment
@@ -53,7 +64,6 @@ class WCMP_Export_Consignments
      *
      * @param WC_Order $order
      *
-     * @throws \ErrorException
      * @throws \JsonException
      * @throws \Exception
      */
@@ -61,25 +71,19 @@ class WCMP_Export_Consignments
     {
         $this->getApiKey();
 
-        $this->order           = $order;
-        $this->orderSettings   = new OrderSettings($order);
+        $this->order                  = $order;
+        $this->orderSettings          = new OrderSettings($order);
+
+        // 1. Create PDK order
+        // 2. Build shipment from PDK order
+        $this->pdkOrder = new WCOrderToPdkOrderAdapter($this->order, $this->orderSettings);
+
         $this->deliveryOptions = $this->orderSettings->getDeliveryOptions();
 
         $this->carrier = $this->deliveryOptions->getCarrier() ?? (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
 
         $this->createConsignment();
         $this->setConsignmentData();
-    }
-
-    /**
-     * Create a new consignment
-     *
-     * @return void
-     * @throws Exception
-     */
-    public function createConsignment(): void
-    {
-        $this->consignment = ConsignmentFactory::createByCarrierName($this->carrier);
     }
 
     /**
@@ -133,22 +137,8 @@ class WCMP_Export_Consignments
      */
     public function getDeliveryDate(): ?string
     {
-        $deliveryDateFromDeliveryOptions = $this->deliveryOptions->getDate();
-
-        if (! $deliveryDateFromDeliveryOptions) {
-            return null;
-        }
-        $date             = strtotime($deliveryDateFromDeliveryOptions);
-        $deliveryDateTime = date('Y-m-d H:i:s', $date);
-        $deliveryDate     = date('Y-m-d', $date);
-        $dateOfToday      = date('Y-m-d');
-        $dateOfTomorrow   = date('Y-m-d H:i:s', strtotime('now +1 day'));
-
-        if ($deliveryDate <= $dateOfToday) {
-            return $dateOfTomorrow;
-        }
-
-        return $deliveryDateTime;
+        $deliveryDate = DeliveryDateService::fixPastDeliveryDate($this->deliveryOptions->getDate());
+        return date('Y-m-d', $deliveryDate->getTimestamp());
     }
 
     /**

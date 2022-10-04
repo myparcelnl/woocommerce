@@ -1,5 +1,6 @@
 <?php
 
+use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
@@ -127,7 +128,7 @@ class WCMP_Data
      */
     public static function getDigitalStampRanges(): array
     {
-        return self::DIGITAL_STAMP_RANGES;
+        return WeightService::DIGITAL_STAMP_RANGES;
     }
 
     /**

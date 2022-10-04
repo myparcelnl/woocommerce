@@ -1,5 +1,6 @@
 <?php
 
+use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Exception\ApiException;
@@ -996,24 +997,7 @@ class WCMP_Export
     public static function convertWeightToGrams($weight): int
     {
         $weightUnit  = get_option('woocommerce_weight_unit');
-        $floatWeight = (float) $weight;
-
-        switch ($weightUnit) {
-            case 'kg':
-                $weight = $floatWeight * 1000;
-                break;
-            case 'lbs':
-                $weight = $floatWeight * 453.59237;
-                break;
-            case 'oz':
-                $weight = $floatWeight * 28.34952;
-                break;
-            default:
-                $weight = $floatWeight;
-                break;
-        }
-
-        return (int) ceil($weight);
+        return WeightService::convertToGrams($weight, $weightUnit);
     }
 
     /**
@@ -1023,8 +1007,8 @@ class WCMP_Export
     {
         $options = [];
 
-        foreach (WCMP_Data::getDigitalStampRanges() as $key => $tierRange) {
-            $options[$tierRange['average']] = $tierRange['min'] . " - " . $tierRange['max'] . " gram";
+        foreach (WeightService::DIGITAL_STAMP_RANGES as $tierRange) {
+            $options[$tierRange['average']] = sprintf('%s - %s gram', $tierRange['min'], $tierRange['max']);
         }
 
         return $options;

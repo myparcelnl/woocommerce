@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\Helper;
 
 use ErrorException;
+use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use WC_Order;
 use WC_Order_Item_Product;

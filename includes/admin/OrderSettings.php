@@ -7,6 +7,7 @@ namespace MyParcelNL\WooCommerce\includes\admin;
 defined('ABSPATH') or die();
 
 use Exception;
+use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierFactory;
@@ -552,6 +553,7 @@ class OrderSettings
 
     /**
      * @return void
+     * @throws \MyParcelNL\Sdk\src\Exception\ValidationException
      */
     private function setDigitalStampRangeWeight(): void
     {
@@ -568,20 +570,7 @@ class OrderSettings
         $defaultWeight = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT) ?: null;
         $weight        = (float) ($savedWeight ?? $defaultWeight ?? $orderWeight);
 
-        $results = Arr::where(
-            WCMP_Data::getDigitalStampRanges(),
-            static function ($range) use ($weight) {
-                return $weight > $range['min'];
-            }
-        );
-
-        if (empty($results)) {
-            $digitalStampRangeWeight = Arr::first(WCMP_Data::getDigitalStampRanges())['average'];
-        } else {
-            $digitalStampRangeWeight = Arr::last($results)['average'];
-        }
-
-        $this->digitalStampRangeWeight = $digitalStampRangeWeight;
+        $this->digitalStampRangeWeight = WeightService::convertToDigitalStamp((int) $weight);
     }
 
     /**

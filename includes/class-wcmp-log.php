@@ -8,8 +8,35 @@ if (class_exists('WCMP_Log')) {
     return;
 }
 
+/**
+ *
+ */
 class WCMP_Log
 {
+    public const LOG_LEVELS = [
+        'alert',
+        'critical',
+        'debug',
+        'emergency',
+        'error',
+        'info',
+        'notice',
+        'warning'
+    ];
+
+    /**
+     * @param $string
+     *
+     * @return string
+     */
+    public static function getLogLevel($string): string
+    {
+        if (self::LOG_LEVELS[$string]) {
+            return self::LOG_LEVELS[$string];
+        }
+
+        self::add('Log level not found');
+    }
 
     /**
      * Log data if the error logging setting is enabled.
