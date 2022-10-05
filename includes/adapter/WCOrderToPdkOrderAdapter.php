@@ -13,6 +13,7 @@ use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Pdk\Shipment\Service\DeliveryDateService;
 use MyParcelNL\Sdk\src\Model\PickupLocation;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use PdkLogger;
@@ -98,7 +99,6 @@ class WCOrderToPdkOrderAdapter
                 'orderPriceAfterVat'    => $this->currentOrder->get_total() + $this->currentOrder->get_cart_tax(),
                 'orderVat'              => $this->currentOrder->get_total_tax(),
                 'recipient'             => $this->getShippingRecipient(),
-                //'sender'                => $this->setSender(),
                 'shipmentPrice'         => (float) $this->currentOrder->get_shipping_total(),
                 'shipmentPriceAfterVat' => (float) $this->currentOrder->get_shipping_total(),
                 'shipmentVat'           => (float) $this->currentOrder->get_shipping_tax(),
@@ -145,7 +145,7 @@ class WCOrderToPdkOrderAdapter
             'uuid'               => $item->get_id(),
             'sku'                => null,
             'ean'                => null,
-            'externalIdentifier' => $item->get_order_id(),
+            'externalIdentifier'  => $item->get_order_id(),
             'name'               => $item->get_name(),
             'description'        => $item->get_name(),
             'width'              => 0,
@@ -171,7 +171,7 @@ class WCOrderToPdkOrderAdapter
                 'email'                => $shippingRecipient->getEmail(),
                 'fullStreet'           => null,
                 'number'               => $shippingRecipient->getNumber(),
-                'numberSuffix'         => $shippingRecipient->getNumberSuffix(),
+                'numberSuffix'          => $shippingRecipient->getNumberSuffix(),
                 'person'               => $shippingRecipient->getPerson(),
                 'phone'                => $shippingRecipient->getPhone(),
                 'postalCode'           => $shippingRecipient->getPostalCode(),
@@ -191,7 +191,7 @@ class WCOrderToPdkOrderAdapter
 
         return new DeliveryOptions([
             'carrier'         => $deliveryOptions->getCarrier(),
-            'date'            => $deliveryOptions->getDate(),
+            'date'            => DeliveryDateService::fixPastDeliveryDate($deliveryOptions->getDate()),
             'deliveryType'    => $deliveryOptions->getDeliveryType(),
             'labelAmount'     => 1,
             'packageType'     => $deliveryOptions->getPackageType(),
@@ -200,19 +200,6 @@ class WCOrderToPdkOrderAdapter
                 'location_code' => 'NL',
             ]),
             'shipmentOptions' => (array) $deliveryOptions->getShipmentOptions(),
-        ]);
-    }
-
-    /**
-     * @return \MyParcelNL\Pdk\Base\Model\ContactDetails
-     */
-    private function setSender(): ContactDetails
-    {
-        return new ContactDetails([
-            'address'    => get_option('woocommerce_store_address'),
-            'city'       => get_option('woocommerce_store_city'),
-            'postalCode' => get_option('woocommerce_store_postcode'),
-            'country'    => get_option('woocommerce_default_country'),
         ]);
     }
 }

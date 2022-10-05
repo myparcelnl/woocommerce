@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MyParcelNL\WooCommerce\includes\adapter;
 
 use GuzzleHttp\Client;
