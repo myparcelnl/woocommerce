@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\includes\adapter;
 
 use MyParcelNL\Pdk\Base\Model\ContactDetails;
+use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Fulfilment\Model\Product;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderLineCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
-use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Sdk\src\Model\PickupLocation;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
+use PdkLogger;
+use WCMP_Log;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WC_Order_Item;
 
@@ -34,6 +36,11 @@ class WCOrderToPdkOrderAdapter
     private $currentOrder;
 
     /**
+     * @var mixed
+     */
+    private $logger;
+
+    /**
      * @var array
      */
     private $orderIds;
@@ -48,7 +55,8 @@ class WCOrderToPdkOrderAdapter
      */
     public function __construct(array $orderIds)
     {
-        $this->orderIds = $orderIds;
+        $this->logger             = Pdk::get(PdkLogger::class);
+        $this->orderIds           = $orderIds;
         $this->pdkOrderCollection = new PdkOrderCollection();
     }
 
@@ -59,31 +67,14 @@ class WCOrderToPdkOrderAdapter
     public function convert(): PdkOrderCollection
     {
         if (is_null($this->orderIds)) {
-            // Pdk log error
-            // Cant create order with shipments
+            $this->logger->log(WCMP_Log::LOG_LEVELS['error'], 'No order ids found');
         }
 
-        foreach($this->orderIds as $orderId) {
+        foreach ($this->orderIds as $orderId) {
             $this->pushPdkOrderToCollection($orderId);
         }
 
-        // Create the shipments
-        //$this->buildShipmentCollection();
-
         return $this->pdkOrderCollection;
-    }
-
-    /**
-     * @param $pdkOrder
-     *
-     * @return void
-     */
-    private function buildShipmentData($pdkOrder)
-    {
-
-        return [
-
-        ];
     }
 
     /**
@@ -107,28 +98,19 @@ class WCOrderToPdkOrderAdapter
                 'orderPriceAfterVat'    => $this->currentOrder->get_total() + $this->currentOrder->get_cart_tax(),
                 'orderVat'              => $this->currentOrder->get_total_tax(),
                 'recipient'             => $this->getShippingRecipient(),
-                'sender'                => $this->setSender(),
+                //'sender'                => $this->setSender(),
                 'shipmentPrice'         => (float) $this->currentOrder->get_shipping_total(),
                 'shipmentPriceAfterVat' => (float) $this->currentOrder->get_shipping_total(),
                 'shipmentVat'           => (float) $this->currentOrder->get_shipping_tax(),
-                'totalPrice'            => (float) $this->currentOrder->get_shipping_total() + $this->currentOrder->get_total(),
+                'totalPrice'            => (float) $this->currentOrder->get_shipping_total(
+                    ) + $this->currentOrder->get_total(),
                 'totalPriceAfterVat'    => ($this->currentOrder->get_total() + $this->currentOrder->get_cart_tax(
-                        )) + ((float) $this->currentOrder->get_shipping_total() + (float) $this->currentOrder->get_shipping_tax()),
-                'totalVat'              => (float) $this->currentOrder->get_shipping_tax() + $this->currentOrder->get_cart_tax(),
+                        )) + ((float) $this->currentOrder->get_shipping_total(
+                        ) + (float) $this->currentOrder->get_shipping_tax()),
+                'totalVat'              => (float) $this->currentOrder->get_shipping_tax(
+                    ) + $this->currentOrder->get_cart_tax(),
             ])
         );
-    }
-
-    /**
-     * @return void
-     */
-    private function buildShipmentCollection(): void
-    {
-        $shipmentCollection = new ShipmentCollection();
-        foreach ($this->pdkOrderCollection as $pdkOrder) {
-            //$data = $this->buildShipmentData($pdkOrder);
-            $pdkOrder->createShipment();
-        }
     }
 
     /**
@@ -213,19 +195,24 @@ class WCOrderToPdkOrderAdapter
             'deliveryType'    => $deliveryOptions->getDeliveryType(),
             'labelAmount'     => 1,
             'packageType'     => $deliveryOptions->getPackageType(),
-//            'pickupLocation'  => (array) $deliveryOptions->getPickupLocation(),
+            //            'pickupLocation'  => (array) $deliveryOptions->getPickupLocation(),
             'pickupLocation'  => (array) new PickupLocation([
-                'location_code' => 'NL'
+                'location_code' => 'NL',
             ]),
             'shipmentOptions' => (array) $deliveryOptions->getShipmentOptions(),
         ]);
     }
 
     /**
-     * @return void
+     * @return \MyParcelNL\Pdk\Base\Model\ContactDetails
      */
-    private function setSender()
+    private function setSender(): ContactDetails
     {
-        return null;
+        return new ContactDetails([
+            'address'    => get_option('woocommerce_store_address'),
+            'city'       => get_option('woocommerce_store_city'),
+            'postalCode' => get_option('woocommerce_store_postcode'),
+            'country'    => get_option('woocommerce_default_country'),
+        ]);
     }
 }

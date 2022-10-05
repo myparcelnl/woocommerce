@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Base\Service\WeightService;
+use MyParcelNL\Pdk\Fulfilment\Repository\OrderRepository;
+use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
@@ -81,6 +85,11 @@ class WCMP_Export
     public $myParcelCollection;
 
     /**
+     * @var mixed
+     */
+    private $logger;
+
+    /**
      * @var \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection
      */
     private $orderCollection;
@@ -89,6 +98,7 @@ class WCMP_Export
 
     public function __construct()
     {
+        //$this->logger  = Pdk::get(PdkLogger::class);
         $this->success = [];
         require_once("class-wcmp-rest.php");
         require_once("class-wcmp-api.php");
@@ -286,71 +296,31 @@ class WCMP_Export
 
         $pdkOrderCollection = (new WCOrderToPdkOrderAdapter($order_ids))->convert();
         $shipmentCollection = $pdkOrderCollection->generateShipments();
-
-//        foreach ($order_ids as $order_id) {
-//
-//            try {
-//
-//                // PdkOrder complete
-//                $pdkOrder        = $orderAdapter->getPdkOrder();
-//
-//                // Create shipment from the order and push to the pdkOrder shipmentCollection
-//                $pdkShipment     = $pdkOrder->toShipment();
-//
-//            } catch (Exception $ex) {
-//                $errorMessage = sprintf(
-//                    __('error_export_order_id_failed_because', 'woocommerce-myparcel'),
-//                    $order_id, __($ex->getMessage(), 'woocommerce-myparcel')
-//                );
-//                Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
-//                WCMP_Log::add($errorMessage);
-//                unset($order_ids[$order_id]);
-//
-//                continue;
-//            }
-//
-//            $collection->push($pdkShipment);
-////            $this->addConsignments($exportShipments->getOrderSettings(), $collection, $consignment);
-//            WCMP_Log::add("Shipment data for order {$order_id}.");
-//        }
-
-//        $this->addReturnInTheBox($collection);
-
-//        if (0 === count($shipmentCollection)) {
-//            WCMP_Log::add('No shipments exported to MyParcel.');
-//
-//            return ['error' => __(
-//                'error_no_shipments_created',
-//                'woocommerce-myparcel'
-//            )];
-//        }
-
-        // Create concepts
-        $repository = Pdk::get(ShipmentRepository::class);
-        $concepts   = $repository->createConcepts($shipmentCollection);
-
-//        $shipmentRepository = (new ShipmentRepository())
-//            ->createConcepts($shipmentCollection);
+        $repository         = Pdk::get(ShipmentRepository::class);
+        //        $concepts   = $repository->createConcepts($shipmentCollection);
 
         if ($processDirectly) {
             $collection->setLinkOfLabels();
         }
 
-        foreach ($order_ids as $order_id) {
-            $order          = WCX::get_order($order_id);
-            $consignmentIds = ($collection->getConsignmentsByReferenceIdGroup($order_id))->getConsignmentIds();
-            if (! $consignmentIds) {
+        foreach ($orderIds as $order_id) {
+
+            $order       = WCX::get_order($order_id);
+            $shipmentIds = $shipmentCollection->pluck('id');
+            if (! $shipmentIds) {
                 continue;
             }
 
-            foreach ($consignmentIds as $consignmentId) {
-                $shipment['shipment_id'] = $consignmentId;
-                $this->saveShipmentData($order, $shipment);
-                $this->success[$order_id] = $consignmentId;
-            }
+            $savedShipmentData = $shipmentIds->map(static function ($shipmentId) use ($order, $shipmentCollection){
+                $shipment = $shipmentCollection->where('id', $shipmentId)->toArray();
+                self::saveShipmentData($order, $shipment);
+                return $shipmentId;
+            });
+
+            $this->success[$order_id] = $savedShipmentData;
 
             if ($processDirectly) {
-                $this->getShipmentData($consignmentIds, $order);
+                $this->getShipmentData($shipmentCollection, $order);
             }
 
             WCMP_API::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
@@ -365,9 +335,9 @@ class WCMP_Export
         if (! empty($this->success)) {
             $return["success"]     = sprintf(
                 __("%s shipments successfully exported to MyParcel", "woocommerce-myparcel"),
-                count($collection->getConsignmentIds())
+                count($shipmentIds)
             );
-            $return["success_ids"] = $collection->getConsignmentIds();
+            $return["success_ids"] = $shipmentIds;
 
             // do action on successfully exporting the label
             do_action("wcmp_labels_exported", $order_ids);
@@ -712,12 +682,12 @@ class WCMP_Export
     public function saveShipmentData(WC_Order $order, array $shipment): void
     {
         if (empty($shipment)) {
-            throw new Exception("save_shipment_data requires a valid \$shipment.");
+            throw new Exception('save_shipment_data requires a valid shipment');
         }
 
-        $old_shipments                           = [];
-        $new_shipments                           = [];
-        $new_shipments[$shipment["shipment_id"]] = $shipment;
+        $old_shipments                  = [];
+        $new_shipments                  = [];
+        $new_shipments[$shipment['id']] = $shipment;
 
         if (WCX_Order::has_meta($order, WCMYPA_Admin::META_SHIPMENTS)) {
             $old_shipments = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENTS);
@@ -966,34 +936,41 @@ class WCMP_Export
             return [];
         }
 
-        $data     = [];
-        $api      = $this->init_api();
-        $response = $api->get_shipments($ids);
-
-        $shipments = Arr::get($response, "body.data.shipments");
-
-        if (! $shipments) {
-            return [];
+        foreach ($shipmentCollection->items as $shipment) {
+            $this->saveShipmentData($order, $shipment->toArray());
+            ChannelEngine::updateMetaOnExport($order, $shipment->getAttribute('barcode') ?: $shipment->getAttribute('external_identifier'));
         }
 
-        foreach ($shipments as $shipment) {
-            if (! isset($shipment["id"])) {
-                return [];
-            }
+        return $shipmentCollection->toArray();
 
-            // if shipment id matches and status is not concept, get track trace barcode and status name
-            $status        = $this->getShipmentStatusName($shipment["status"]);
-            $track_trace   = $shipment["barcode"] ?: $shipment['external_identifier'];
-            $shipment_id   = $shipment["id"];
-            $shipment_data = compact("shipment_id", "status", "track_trace", "shipment");
-            $this->saveShipmentData($order, $shipment_data);
-
-            ChannelEngine::updateMetaOnExport($order, $track_trace);
-
-            $data[$shipment_id] = $shipment_data;
-        }
-
-        return $data;
+//        $data     = [];
+//        $api      = $this->init_api();
+//        $response = $api->get_shipments($ids);
+//
+//        $shipments = Arr::get($response, "body.data.shipments");
+//
+//        if (! $shipments) {
+//            return [];
+//        }
+//
+//        foreach ($shipments as $shipment) {
+//            if (! isset($shipment["id"])) {
+//                return [];
+//            }
+//
+//            // if shipment id matches and status is not concept, get track trace barcode and status name
+//            $status        = $this->getShipmentStatusName($shipment["status"]);
+//            $track_trace   = $shipment["barcode"] ?: $shipment['external_identifier'];
+//            $shipment_id   = $shipment["id"];
+//            $shipment_data = compact("shipment_id", "status", "track_trace", "shipment");
+//            $this->saveShipmentData($order, $shipment_data);
+//
+//            ChannelEngine::updateMetaOnExport($order, $track_trace);
+//
+//            $data[$shipment_id] = $shipment_data;
+//        }
+//
+//        return $data;
     }
 
     /**
@@ -1280,25 +1257,6 @@ class WCMP_Export
     }
 
     /**
-     * @param $shipment_id
-     *
-     * @return mixed
-     * @throws ErrorException
-     * @throws Exception
-     */
-    private function getShipmentBarcodeFromApi($shipment_id)
-    {
-        $api      = $this->init_api();
-        $response = $api->get_shipments($shipment_id);
-
-        if (! isset($response["body"]["data"]["shipments"][0]["barcode"])) {
-            throw new ErrorException("No MyParcel barcode found for shipment id; " . $shipment_id);
-        }
-
-        return $response["body"]["data"]["shipments"][0]["barcode"];
-    }
-
-    /**
      * @return array
      */
     public static function getUserAgents(): array
@@ -1437,54 +1395,64 @@ class WCMP_Export
         $this->orderCollection = (new OrderCollection())->setApiKey($apiKey);
 
         foreach ($orderIds as $orderId) {
-            $wcOrder                = WCX::get_order($orderId);
-            $orderSettings          = new OrderSettings($wcOrder);
-            $deliveryOptions        = $orderSettings->getDeliveryOptions();
-            $carrier                = CarrierFactory::createFromName($deliveryOptions->getCarrier());
-            $labelDescriptionFormat = new LabelDescriptionFormat($wcOrder, $orderSettings, $deliveryOptions);
-            $shipmentOptions        = $deliveryOptions->getShipmentOptions();
-
-            $shipmentOptions->setSignature($orderSettings->hasSignature());
-            $shipmentOptions->setInsurance($orderSettings->getInsuranceAmount());
-            $shipmentOptions->setAgeCheck($orderSettings->hasAgeCheck());
-            $shipmentOptions->setOnlyRecipient($orderSettings->hasOnlyRecipient());
-            $shipmentOptions->setReturn($orderSettings->hasReturnShipment());
-            $shipmentOptions->setSameDayDelivery($orderSettings->isSameDayDelivery());
-            $shipmentOptions->setLargeFormat($orderSettings->hasLargeFormat());
-            $shipmentOptions->setLabelDescription($labelDescriptionFormat->getFormattedLabelDescription());
-
-            $order = (new Order())
-                ->setStatus($wcOrder->get_status())
-                ->setDeliveryOptions($deliveryOptions)
-                ->setInvoiceAddress($orderSettings->getBillingRecipient())
-                ->setRecipient($orderSettings->getShippingRecipient())
-                ->setOrderDate($wcOrder->get_date_created() ?? new DateTime())
-                ->setPickupLocation($orderSettings->getPickupLocation())
-                ->setExternalIdentifier($orderId)
-                ->setWeight($orderSettings->getColloWeight())
-                ->setDropOffPoint($this->getDropOffPoint($carrier));
-
-            $orderLines = new Collection();
-
-            foreach ($wcOrder->get_items() as $wcOrderItem) {
-                $orderLine = new OrderLineFromWooCommerce($wcOrderItem);
-
-                $orderLines->push($orderLine);
-            }
-
-            $isToRowCountry = ! in_array($order->getRecipient()->getCc(), AbstractConsignment::EURO_COUNTRIES, true);
-
-            if ($isToRowCountry) {
-                $order->setCustomsDeclaration($this->generateCustomsDeclaration($wcOrder));
-            }
-
-            $order->setOrderLines($orderLines);
-            $this->orderCollection->push($order);
+//            $wcOrder                = WCX::get_order($orderId);
+//            $orderSettings          = new OrderSettings($wcOrder);
+//            $deliveryOptions        = $orderSettings->getDeliveryOptions();
+//            $carrier                = CarrierFactory::createFromName($deliveryOptions->getCarrier());
+//            $labelDescriptionFormat = new LabelDescriptionFormat($wcOrder, $orderSettings, $deliveryOptions);
+//            $shipmentOptions        = $deliveryOptions->getShipmentOptions();
+//
+//            $shipmentOptions->setSignature($orderSettings->hasSignature());
+//            $shipmentOptions->setInsurance($orderSettings->getInsuranceAmount());
+//            $shipmentOptions->setAgeCheck($orderSettings->hasAgeCheck());
+//            $shipmentOptions->setOnlyRecipient($orderSettings->hasOnlyRecipient());
+//            $shipmentOptions->setReturn($orderSettings->hasReturnShipment());
+//            $shipmentOptions->setSameDayDelivery($orderSettings->isSameDayDelivery());
+//            $shipmentOptions->setLargeFormat($orderSettings->hasLargeFormat());
+//            $shipmentOptions->setLabelDescription($labelDescriptionFormat->getFormattedLabelDescription());
+//
+//            $order = (new Order())
+//                ->setStatus($wcOrder->get_status())
+//                ->setDeliveryOptions($deliveryOptions)
+//                ->setInvoiceAddress($orderSettings->getBillingRecipient())
+//                ->setRecipient($orderSettings->getShippingRecipient())
+//                ->setOrderDate($wcOrder->get_date_created() ?? new DateTime())
+//                ->setPickupLocation($orderSettings->getPickupLocation())
+//                ->setExternalIdentifier($orderId)
+//                ->setWeight($orderSettings->getColloWeight())
+//                ->setDropOffPoint($this->getDropOffPoint($carrier));
+//
+//            $orderLines = new Collection();
+//
+//            foreach ($wcOrder->get_items() as $wcOrderItem) {
+//                $orderLine = new OrderLineFromWooCommerce($wcOrderItem);
+//
+//                $orderLines->push($orderLine);
+//            }
+//
+//            $isToRowCountry = ! in_array(
+//                $order->getRecipient()
+//                    ->getCc(),
+//                AbstractConsignment::EURO_COUNTRIES,
+//                true
+//            );
+//
+//            if ($isToRowCountry) {
+//                $order->setCustomsDeclaration($this->generateCustomsDeclaration($wcOrder));
+//            }
+//
+//            $order->setOrderLines($orderLines);
+//            $this->orderCollection->push($order);
         }
 
         try {
-            $savedOrderCollection = $this->orderCollection->save();
 
+            // 1 . Export collection to api
+            // 2.  Update meta data for collection
+
+
+            $savedOrderCollection = $repository->saveOrder($fulfilmentOrderCollection);
+//            $savedOrderCollection = $this->orderCollection->save();
             return $this->updateOrderMetaByCollection($savedOrderCollection);
         } catch (Exception $e) {
             Messages::showAdminNotice($e->getMessage());
