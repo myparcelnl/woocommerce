@@ -5,16 +5,20 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\includes\adapter;
 
 use MyParcelNL\Pdk\Base\Model\ContactDetails;
+use MyParcelNL\Pdk\Base\Model\Currency;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Fulfilment\Model\Product;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderLineCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
+use MyParcelNL\Pdk\Shipment\Collection\CustomsDeclarationItemCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
+use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Shipment\Service\DeliveryDateService;
 use MyParcelNL\Sdk\src\Model\PickupLocation;
+use MyParcelNL\WooCommerce\Helper\ExportRow;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use PdkLogger;
 use WCMP_Log;
@@ -29,12 +33,12 @@ class WCOrderToPdkOrderAdapter
     /**
      * @var
      */
-    private $currentOrderSettings;
+    private $orderSettings;
 
     /**
-     * @var
+     * @var \WC_Order
      */
-    private $currentOrder;
+    private $order;
 
     /**
      * @var mixed
@@ -86,31 +90,71 @@ class WCOrderToPdkOrderAdapter
      */
     private function pushPdkOrderToCollection($orderId): void
     {
-        $this->currentOrder         = WCX::get_order($orderId);
-        $this->currentOrderSettings = new OrderSettings($this->currentOrder);
+        $this->order         = WCX::get_order($orderId);
+        $this->orderSettings = new OrderSettings($this->order);
         $this->pdkOrderCollection->push(
             new PdkOrder([
-                'customsDeclaration'    => CustomsDeclaration::class,
+                'customsDeclaration'    => $this->getCustomsDeclaration(),
                 'deliveryOptions'       => $this->getDeliveryOptions(),
-                'externalIdentifier'    => $this->currentOrder->get_id(),
-                'label'                 => $this->currentOrderSettings->getLabelDescription(),
+                'externalIdentifier'    => $this->order->get_id(),
+                'label'                 => $this->orderSettings->getLabelDescription(),
                 'lines'                 => $this->getOrderLines(),
-                'orderPrice'            => $this->currentOrder->get_total(),
-                'orderPriceAfterVat'    => $this->currentOrder->get_total() + $this->currentOrder->get_cart_tax(),
-                'orderVat'              => $this->currentOrder->get_total_tax(),
+                'orderPrice'            => $this->order->get_total(),
+                'orderPriceAfterVat'    => $this->order->get_total() + $this->order->get_cart_tax(),
+                'orderVat'              => $this->order->get_total_tax(),
                 'recipient'             => $this->getShippingRecipient(),
-                'shipmentPrice'         => (float) $this->currentOrder->get_shipping_total(),
-                'shipmentPriceAfterVat' => (float) $this->currentOrder->get_shipping_total(),
-                'shipmentVat'           => (float) $this->currentOrder->get_shipping_tax(),
-                'totalPrice'            => (float) $this->currentOrder->get_shipping_total(
-                    ) + $this->currentOrder->get_total(),
-                'totalPriceAfterVat'    => ($this->currentOrder->get_total() + $this->currentOrder->get_cart_tax(
-                        )) + ((float) $this->currentOrder->get_shipping_total(
-                        ) + (float) $this->currentOrder->get_shipping_tax()),
-                'totalVat'              => (float) $this->currentOrder->get_shipping_tax(
-                    ) + $this->currentOrder->get_cart_tax(),
+                'shipmentPrice'         => (float) $this->order->get_shipping_total(),
+                'shipmentPriceAfterVat' => (float) $this->order->get_shipping_total(),
+                'shipmentVat'           => (float) $this->order->get_shipping_tax(),
+                'totalPrice'            => (float) $this->order->get_shipping_total(
+                    ) + $this->order->get_total(),
+                'totalPriceAfterVat'    => ($this->order->get_total() + $this->order->get_cart_tax(
+                        )) + ((float) $this->order->get_shipping_total(
+                        ) + (float) $this->order->get_shipping_tax()),
+                'totalVat'              => (float) $this->order->get_shipping_tax(
+                    ) + $this->order->get_cart_tax(),
             ])
         );
+    }
+
+    /**
+     * @return \MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration
+     */
+    private function getCustomsDeclaration(): CustomsDeclaration
+    {
+        return new CustomsDeclaration([
+            'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
+            'invoice'  => null,
+            'items'    => $this->getCustomsDeclarationItems(),
+            'weight'   => 1000,
+        ]);
+    }
+
+    /**
+     * @throws \JsonException
+     * @throws \ErrorException
+     */
+    private function getCustomsDeclarationItems(): CustomsDeclarationItemCollection
+    {
+        $customsDeclarationItemCollection = new CustomsDeclarationItemCollection();
+
+        foreach ($this->order->get_items() as $item) {
+            $product = $item->get_product();
+            $productHelper = new ExportRow($this->order, $product);
+
+            $customsDeclarationItemCollection->push(
+                new CustomsDeclarationItem([
+                    'amount'         => $productHelper->getItemAmount($item),
+                    'classification' => $productHelper->getHsCode(),
+                    'country'        => $productHelper->getCountryOfOrigin(),
+                    'description'    => $productHelper->getItemDescription(),
+                    'itemValue'      => $productHelper->getValueOfItem(),
+                    'weight'         => $productHelper->getItemWeight(),
+                ])
+            );
+        }
+
+        return $customsDeclarationItemCollection;
     }
 
     /**
@@ -119,7 +163,7 @@ class WCOrderToPdkOrderAdapter
     private function getOrderLines(): PdkOrderLineCollection
     {
         $orderLinesCollection = new PdkOrderLineCollection();
-        foreach ($this->currentOrder->get_items() as $item) {
+        foreach ($this->order->get_items() as $item) {
             $orderLinesCollection->push(
                 new PdkOrderLine([
                     'quantity'      => $item['quantity'],
@@ -160,7 +204,7 @@ class WCOrderToPdkOrderAdapter
      */
     private function getShippingRecipient(): ContactDetails
     {
-        $shippingRecipient = $this->currentOrderSettings->getShippingRecipient();
+        $shippingRecipient = $this->orderSettings->getShippingRecipient();
 
         return new ContactDetails(
             $shippingRecipient ? [
@@ -187,7 +231,7 @@ class WCOrderToPdkOrderAdapter
      */
     private function getDeliveryOptions(): DeliveryOptions
     {
-        $deliveryOptions = $this->currentOrderSettings->getDeliveryOptions();
+        $deliveryOptions = $this->orderSettings->getDeliveryOptions();
 
         return new DeliveryOptions([
             'carrier'         => $deliveryOptions->getCarrier(),

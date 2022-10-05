@@ -2,32 +2,30 @@
 
 declare(strict_types=1);
 
+use MyParcelNL\Pdk\Base\Service\CountryService;
+use MyParcelNL\Pdk\Carrier\Model\CarrierOptions;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Base\Service\WeightService;
+use MyParcelNL\Pdk\Fulfilment\Collection\OrderCollection;
+use MyParcelNL\Pdk\Fulfilment\Model\Order;
 use MyParcelNL\Pdk\Fulfilment\Repository\OrderRepository;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
+use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
+use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
-use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierFactory;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
-use MyParcelNL\Sdk\src\Model\CustomsDeclaration;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
-use MyParcelNL\Sdk\src\Model\Fulfilment\Order;
-use MyParcelNL\Sdk\src\Model\MyParcelCustomsItem;
 use MyParcelNL\Sdk\src\Support\Arr;
-use MyParcelNL\Sdk\src\Support\Collection;
 use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Helper\ExportRow;
-use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormat;
-use MyParcelNL\WooCommerce\Includes\Adapter\OrderLineFromWooCommerce;
 use MyParcelNL\WooCommerce\includes\adapter\WCOrderToPdkOrderAdapter;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
@@ -1419,69 +1417,13 @@ class WCMP_Export
      */
     private function saveOrderCollection(PdkOrderCollection $pdkOrderCollection, array $orderIds): array
     {
-//        $apiKey                = $this->getSetting(WCMYPA_Settings::SETTING_API_KEY);
-//        $this->orderCollection = (new OrderCollection())->setApiKey($apiKey);
-        $repository         = Pdk::get(OrderRepository::class);
-
-        foreach ($orderIds as $orderId) {
-//            $wcOrder                = WCX::get_order($orderId);
-//            $orderSettings          = new OrderSettings($wcOrder);
-//            $deliveryOptions        = $orderSettings->getDeliveryOptions();
-//            $carrier                = CarrierFactory::createFromName($deliveryOptions->getCarrier());
-//            $labelDescriptionFormat = new LabelDescriptionFormat($wcOrder, $orderSettings, $deliveryOptions);
-//            $shipmentOptions        = $deliveryOptions->getShipmentOptions();
-//
-//            $shipmentOptions->setSignature($orderSettings->hasSignature());
-//            $shipmentOptions->setInsurance($orderSettings->getInsuranceAmount());
-//            $shipmentOptions->setAgeCheck($orderSettings->hasAgeCheck());
-//            $shipmentOptions->setOnlyRecipient($orderSettings->hasOnlyRecipient());
-//            $shipmentOptions->setReturn($orderSettings->hasReturnShipment());
-//            $shipmentOptions->setSameDayDelivery($orderSettings->isSameDayDelivery());
-//            $shipmentOptions->setLargeFormat($orderSettings->hasLargeFormat());
-//            $shipmentOptions->setLabelDescription($labelDescriptionFormat->getFormattedLabelDescription());
-//
-//            $order = (new Order())
-//                ->setStatus($wcOrder->get_status())
-//                ->setDeliveryOptions($deliveryOptions)
-//                ->setInvoiceAddress($orderSettings->getBillingRecipient())
-//                ->setRecipient($orderSettings->getShippingRecipient())
-//                ->setOrderDate($wcOrder->get_date_created() ?? new DateTime())
-//                ->setPickupLocation($orderSettings->getPickupLocation())
-//                ->setExternalIdentifier($orderId)
-//                ->setWeight($orderSettings->getColloWeight())
-//                ->setDropOffPoint($this->getDropOffPoint($carrier));
-//
-//            $orderLines = new Collection();
-//
-//            foreach ($wcOrder->get_items() as $wcOrderItem) {
-//                $orderLine = new OrderLineFromWooCommerce($wcOrderItem);
-//
-//                $orderLines->push($orderLine);
-//            }
-//
-//            $isToRowCountry = ! in_array(
-//                $order->getRecipient()
-//                    ->getCc(),
-//                AbstractConsignment::EURO_COUNTRIES,
-//                true
-//            );
-//
-//            if ($isToRowCountry) {
-//                $order->setCustomsDeclaration($this->generateCustomsDeclaration($wcOrder));
-//            }
-//
-//            $order->setOrderLines($orderLines);
-//            $this->orderCollection->push($order);
-        }
+        $repository                = Pdk::get(OrderRepository::class);
+        $pdkOrderCollection->generateShipments();
+        $fulfilmentOrderCollection = $pdkOrderCollection->getOrderCollection();
 
         try {
-
-            // 1 . Export collection to api
-            // 2.  Update meta data for collection
-
-
             $savedOrderCollection = $repository->saveOrder($fulfilmentOrderCollection);
-//            $savedOrderCollection = $this->orderCollection->save();
+
             return $this->updateOrderMetaByCollection($savedOrderCollection);
         } catch (Exception $e) {
             Messages::showAdminNotice($e->getMessage());
@@ -1490,59 +1432,7 @@ class WCMP_Export
     }
 
     /**
-     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
-     * @throws \ErrorException
-     * @throws \JsonException
-     */
-    public function generateCustomsDeclaration(WC_Order $wcOrder): CustomsDeclaration
-    {
-        $customsDeclaration = new CustomsDeclaration();
-        $contents           = (int) ($this->getSetting(
-                "package_contents"
-            ) ?? AbstractConsignment::PACKAGE_CONTENTS_COMMERCIAL_GOODS);
-        $orderSettings      = new OrderSettings($wcOrder);
-        $totalWeight        = WCMP_Export::convertWeightToGrams($orderSettings->getWeight());
-
-        $customsDeclaration
-            ->setContents($contents)
-            ->setInvoice($wcOrder->get_id())
-            ->setWeight($totalWeight);
-
-        foreach ($wcOrder->get_items() as $item) {
-            $product = $item->get_product();
-            if (! $product) {
-                Messages::showAdminNotice(
-                    sprintf(
-                        __('warning_product_missing_check_backoffice', 'woocommerce-myparcel'),
-                        $wcOrder->get_id()
-                    ),
-                    Messages::NOTICE_LEVEL_WARNING
-                );
-                $product = new WC_Product();
-                $product->set_weight(1);
-            }
-
-            if (! $product || $product->is_virtual()) {
-                continue;
-            }
-
-            $productHelper = new ExportRow($wcOrder, $product);
-            $customsItem   = (new MyParcelCustomsItem())
-                ->setDescription($productHelper->getItemDescription())
-                ->setAmount($productHelper->getItemAmount($item))
-                ->setWeight($productHelper->getItemWeight())
-                ->setItemValueArray($productHelper->getValueOfItem())
-                ->setCountry($productHelper->getCountryOfOrigin())
-                ->setClassification($productHelper->getHsCode());
-
-            $customsDeclaration->addCustomsItem($customsItem);
-        }
-
-        return $customsDeclaration;
-    }
-
-    /**
-     * @param  \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection $orderCollection
+     * @param  \MyParcelNL\Pdk\Fulfilment\Collection\OrderCollection $orderCollection
      *
      * @return array
      */
@@ -1550,9 +1440,9 @@ class WCMP_Export
     {
         $currentDateTime = (new DateTime())->format(AbstractOrder::DATE_FORMAT_FULL);
 
-        foreach ($orderCollection as $order) {
-            $orderId = $order->getExternalIdentifier();
-            $wcOrder = WCX::get_order($orderId);
+        $orderCollection->each(static function ($order) use ($currentDateTime){
+            $orderId = $order->externalIdentifier;
+            $wcOrder = WCX::get_order($order->externalIdentifier);
             $value   = [
                 WCMYPA_Admin::META_PPS_EXPORTED    => true,
                 WCMYPA_Admin::META_PPS_UUID        => $order->getUuid(),
@@ -1567,7 +1457,7 @@ class WCMP_Export
             }
 
             WCMP_API::updateOrderStatus($wcOrder, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
-        }
+        });
 
         return [
             'success' => sprintf(
@@ -1598,71 +1488,6 @@ class WCMP_Export
         }
 
         return $return;
-    }
-
-    /**
-     * Adds one or more consignments to the collection, depending on the collo amount.
-     *
-     * @param  \MyParcelNL\WooCommerce\includes\admin\OrderSettings      $orderSettings
-     * @param  \MyParcelNL\Sdk\src\Helper\MyParcelCollection             $collection
-     * @param  \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment $consignment
-     *
-     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
-     */
-    private function addConsignments(
-        OrderSettings       $orderSettings,
-        MyParcelCollection  $collection,
-        AbstractConsignment $consignment
-    ): void {
-        $colloAmount = $orderSettings->getColloAmount();
-
-        if ($colloAmount > 1) {
-            $this->addMultiCollo($orderSettings, $collection, $consignment);
-            return;
-        }
-
-        $collection->addConsignment($consignment);
-    }
-
-    /**
-     * @param  \MyParcelNL\Sdk\src\Helper\MyParcelCollection $collection
-     *
-     * @throws \MyParcelNL\Sdk\src\Exception\AccountNotActiveException
-     * @throws \MyParcelNL\Sdk\src\Exception\ApiException
-     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
-     */
-    public function addReturnInTheBox(ShipmentCollection $collection): void
-    {
-        $returnOptions = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_RETURN_IN_THE_BOX);
-
-        if (! $returnOptions || WCMP_Settings_Data::NOT_ACTIVE===$returnOptions) {
-            return;
-        }
-
-        $collection
-            ->generateReturnConsignments(
-                false,
-                function (
-                    AbstractConsignment $returnConsignment,
-                    AbstractConsignment $parent
-                ) use ($returnOptions): AbstractConsignment {
-                    $returnConsignment->setLabelDescription(
-                        'Return: ' . $parent->getLabelDescription() .
-                        ' This label is valid until: ' . date("d-m-Y", strtotime("+ 28 days"))
-                    );
-
-                    if (WCMP_Settings_Data::NO_OPTIONS===$returnOptions) {
-                        $returnConsignment->setOnlyRecipient(false);
-                        $returnConsignment->setSignature(false);
-                        $returnConsignment->setAgeCheck(false);
-                        $returnConsignment->setReturn(false);
-                        $returnConsignment->setLargeFormat(false);
-                        $returnConsignment->setInsurance(false);
-                    }
-
-                    return $returnConsignment;
-                }
-            );
     }
 }
 

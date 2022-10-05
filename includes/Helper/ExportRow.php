@@ -106,7 +106,9 @@ class ExportRow
      */
     public function getItemWeight(): int
     {
-        return WCMP_Export::convertWeightToGrams($this->product->get_weight());
+        $weight = $this->product->get_weight() ?: 0;
+
+        return WCMP_Export::convertWeightToGrams($weight);
     }
 
     /**
