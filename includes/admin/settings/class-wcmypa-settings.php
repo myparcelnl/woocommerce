@@ -138,7 +138,7 @@ class WCMYPA_Settings
     {
         add_action("admin_menu", [$this, "menu"]);
         add_filter(
-            "plugin_action_links_" . WCMYPA()->plugin_basename,
+            "plugin_action_links_" . WCMYPA()->pluginBasename,
             [
                 $this,
                 "add_settings_link",

@@ -46,7 +46,7 @@ class WCMP_NL_Postcode_Fields
 
     public function initialize(): void
     {
-        if (WCMYPA()->setting_collection->isEnabled('use_split_address_fields')) {
+        if (WCMYPA()->settingCollection->isEnabled('use_split_address_fields')) {
             // Add street name & house number checkout fields.
             if (version_compare(WOOCOMMERCE_VERSION, '2.0') >= 0) {
                 // WC 2.0 or newer is used, the filter got a $country parameter, yay!
@@ -199,7 +199,7 @@ class WCMP_NL_Postcode_Fields
             WC_MYPARCEL_NL_VERSION
         );
 
-        if (! WCMYPA()->setting_collection->isEnabled('use_split_address_fields')) {
+        if (! WCMYPA()->settingCollection->isEnabled('use_split_address_fields')) {
             return;
         }
 

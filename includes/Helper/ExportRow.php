@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\Helper;
 
+use Data;
 use ErrorException;
 use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
@@ -42,7 +43,7 @@ class ExportRow
      */
     public function getCountryOfOrigin(): string
     {
-        $defaultCountryOfOrigin   = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
+        $defaultCountryOfOrigin   = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
         $productCountryOfOrigin   = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
         $variationCountryOfOrigin = WCX_Product::get_meta(
             $this->product,
@@ -60,7 +61,7 @@ class ExportRow
      */
     public function getHsCode(): int
     {
-        $defaultHsCode   = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_HS_CODE);
+        $defaultHsCode   = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_HS_CODE);
         $productHsCode   = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_HS_CODE, true);
         $variationHsCode = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_HS_CODE_VARIATION, true);
 
@@ -108,7 +109,7 @@ class ExportRow
     {
         $weight = $this->product->get_weight() ?: 0;
 
-        return WCMP_Export::convertWeightToGrams($weight);
+        return Data::convertWeightToGrams($weight);
     }
 
     /**

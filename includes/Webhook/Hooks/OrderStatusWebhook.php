@@ -93,7 +93,7 @@ class OrderStatusWebhook extends AbstractWebhook
     {
         $wcOrder = WC_Core::get_order($order->getExternalIdentifier());
         $wcOrder->update_status(
-            WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
+            WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS),
             '',
             true
         );

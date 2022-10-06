@@ -6,11 +6,13 @@ namespace MyParcelNL\WooCommerce\includes\admin\settings;
 
 defined('ABSPATH') or die();
 
+use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
-use WCMP_Data;
+use Data;
+use WCMP_Export;
 use WCMP_Settings_Callbacks;
 use WCMP_Settings_Data;
 use WCMYPA_Settings;
@@ -196,7 +198,7 @@ class CarrierSettings
                     'label'     => __('shipment_options_insured_amount', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_insured_amount_help_text', 'woocommerce-myparcel'),
                     'type'      => 'select',
-                    'options'   => WCMP_Data::getInsuranceAmounts(),
+                    'options'   => Data::getInsuranceAmounts(),
                 ];
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE,
@@ -538,12 +540,7 @@ class CarrierSettings
                 'type'      => 'select',
                 'options'   => [
                     null                                          => __('no_default_weight', 'woocommerce-myparcel'),
-                    WCMP_Data::DIGITAL_STAMP_RANGES[0]['average'] => '0 - 20 gram',
-                    WCMP_Data::DIGITAL_STAMP_RANGES[1]['average'] => '20 - 50 gram',
-                    WCMP_Data::DIGITAL_STAMP_RANGES[2]['average'] => '50 - 100 gram',
-                    WCMP_Data::DIGITAL_STAMP_RANGES[3]['average'] => '100 - 350 gram',
-                    WCMP_Data::DIGITAL_STAMP_RANGES[4]['average'] => '350 - 2000 gram',
-                ],
+                ] + Data::getDigitalStampRangeOptions(),
                 'help_text' => __('setting_carrier_digital_stamp_help_text', 'woocommerce-myparcel'),
             ],
         ];

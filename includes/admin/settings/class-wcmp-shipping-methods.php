@@ -15,7 +15,6 @@ class WCMP_Shipping_Methods
     public const FLAT_RATE                   = 'flat_rate';
     public const FLEXIBLE_SHIPPING           = 'flexible_shipping';
     public const FLEXIBLE_SHIPPING_INFO      = 'flexible_shipping_info';
-    public const FREE_SHIPPING               = 'free_shipping';
     public const LEGACY_ADVANCED_SHIPPING    = 'legacy_advanced_shipping';
     public const LEGACY_FLAT_RATE            = 'legacy_flat_rate';
     public const LOCAL_PICKUP                = 'local_pickup';
@@ -54,6 +53,8 @@ class WCMP_Shipping_Methods
 
     /**
      * WCMP_Shipping_Methods constructor.
+     *
+     * @throws \Exception
      */
     public function __construct()
     {
@@ -148,10 +149,8 @@ class WCMP_Shipping_Methods
     private function addFlatRateShippingMethods(string $shippingMethodId, string $methodTitle): void
     {
         $isFlatRate      = in_array($shippingMethodId, [self::FLAT_RATE, self::LEGACY_FLAT_RATE]);
-        $versionAbove2_4 = version_compare(WOOCOMMERCE_VERSION, '2.4', '>=');
 
-        // split flat rate by shipping class
-        if (! $isFlatRate || ! $versionAbove2_4) {
+        if (! $isFlatRate) {
             return;
         }
 

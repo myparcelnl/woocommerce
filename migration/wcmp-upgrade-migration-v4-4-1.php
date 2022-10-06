@@ -42,7 +42,7 @@ class WCMP_Upgrade_Migration_v4_4_1 extends WCMP_Upgrade_Migration
     {
         require_once(WCMYPA()->plugin_path() . '/vendor/autoload.php');
         require_once(WCMYPA()->plugin_path() . '/includes/admin/settings/class-wcmypa-settings.php');
-        require_once(WCMYPA()->plugin_path() . '/includes/class-wcmp-data.php');
+        require_once(WCMYPA()->plugin_path() . '/includes/Data.php');
     }
 
     protected function migrate(): void

@@ -60,7 +60,7 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
     {
         require_once(WCMYPA()->plugin_path() . '/vendor/autoload.php');
         require_once(WCMYPA()->plugin_path() . '/includes/admin/settings/class-wcmypa-settings.php');
-        require_once(WCMYPA()->plugin_path() . '/includes/class-wcmp-data.php');
+        require_once(WCMYPA()->plugin_path() . '/includes/Data.php');
     }
 
     protected function migrate(): void
@@ -194,7 +194,7 @@ class WCMP_Upgrade_Migration_v4_1_0 extends WCMP_Upgrade_Migration
     {
         $postnl           = CarrierPostNL::NAME;
         $key              = "{$postnl}_" . WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT;
-        $availableAmounts = WCMP_Data::getInsuranceAmounts();
+        $availableAmounts = Data::getInsuranceAmounts();
         $insuranceAmount  = $this->newPostNlSettings[$key] ?? 0;
 
         if (! in_array($insuranceAmount, $availableAmounts)) {

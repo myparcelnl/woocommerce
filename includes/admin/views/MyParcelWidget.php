@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\includes\admin\views;
 
-use MyParcelNL\Sdk\src\Model\Recipient;
-use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
+use MyParcelNL\Pdk\Base\Model\ContactDetails;
+use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use TypeError;
 use WCMP_Export;
@@ -66,9 +66,9 @@ class MyParcelWidget
 
         foreach ($orders as $order) {
             try {
-                $orderSettings     = new OrderSettings($order);
+                $pdkOrderAdapter   = new PdkOrderFromWCOrderAdapter($order);
                 $orderId           = $order->get_id();
-                $shippingRecipient = $orderSettings->getShippingRecipient();
+                $shippingRecipient = $pdkOrderAdapter->getShippingRecipient();
                 $shipmentIds       = (new WCMP_Export())->getShipmentIds([$orderId], ['exclude_concepts']);
                 $shipmentStatus    = $this->getShipmentStatus($shipmentIds, $order);
 
@@ -145,16 +145,16 @@ class MyParcelWidget
     }
 
     /**
-     * @param  null|int                                 $orderId
-     * @param  null|\MyParcelNL\Sdk\src\Model\Recipient $shippingRecipient
-     * @param  null|string                              $shipmentStatus
+     * @param  null|int                                       $orderId
+     * @param  null|\MyParcelNL\Pdk\Base\Model\ContactDetails $shippingRecipient
+     * @param  null|string                                    $shipmentStatus
      *
      * @return string
      */
     private function buildTableRow(
-        int       $orderId = null,
-        Recipient $shippingRecipient = null,
-        string    $shipmentStatus = null
+        int            $orderId = null,
+        ContactDetails $shippingRecipient = null,
+        string         $shipmentStatus = null
     ): string {
         if (! $shippingRecipient) {
             return $this->getIncompleteTableRow($orderId);
@@ -171,10 +171,10 @@ class MyParcelWidget
                 </tr>',
             $orderId,
             $orderId,
-            $shippingRecipient->getStreet(),
-            $shippingRecipient->getNumber(),
-            $shippingRecipient->getNumberSuffix(),
-            $shippingRecipient->getCity(),
+            $shippingRecipient->street,
+            $shippingRecipient->number,
+            $shippingRecipient->numberSuffix,
+            $shippingRecipient->city,
             $this->getShipmentStatusBadge($shipmentStatus)
         );
     }

@@ -22,11 +22,6 @@ class WCMP_API extends WCMP_Rest
     private $key;
 
     /**
-     * @var string
-     */
-    private $userAgent;
-
-    /**
      * Default constructor
      *
      * @param string $key API Key provided by MyParcel
@@ -37,104 +32,7 @@ class WCMP_API extends WCMP_Rest
     {
         parent::__construct();
 
-        $this->userAgent = $this->getUserAgent();
         $this->key       = (string) $key;
-    }
-
-    /**
-     * Add shipment
-     *
-     * @param array  $shipments array of shipments
-     * @param string $type      shipment type: standard/return/unrelated_return
-     *
-     * @return array
-     * @throws Exception
-     * @deprecated Use MyParcel SDK instead
-     */
-    public function add_shipments(array $shipments, string $type = "standard"): array
-    {
-        $endpoint = 'shipments';
-
-        // define content type
-        switch ($type) {
-            case 'return':
-                $contentType = 'application/vnd.return_shipment+json';
-                $dataKey     = 'return_shipments';
-                break;
-            case 'unrelated_return':
-                $contentType = 'application/vnd.unrelated_return_shipment+json';
-                $dataKey     = 'unrelated_return_shipments';
-                break;
-            default:
-                $contentType = 'application/vnd.shipment+json';
-                $dataKey     = 'shipments';
-                break;
-        }
-
-        $data = [
-            'data' => [
-                $dataKey => $shipments,
-            ],
-        ];
-
-        $json = json_encode($data);
-
-        $headers = [
-            'Content-type'  => $contentType . '; charset=UTF-8',
-            'Authorization' => 'basic ' . base64_encode($this->key),
-            'user-agent'    => $this->userAgent,
-        ];
-
-        $requestUrl = (new MyParcelRequest())->getRequestUrl() . '/' . $endpoint;
-
-        return $this->post($requestUrl, $json, $headers);
-    }
-
-    /**
-     * Get shipments
-     *
-     * @param int|array $ids
-     * @param array     $params request parameters
-     *
-     * @return array            response
-     * @throws Exception
-     */
-    public function get_shipments($ids, array $params = []): array
-    {
-        $endpoint = 'shipments';
-
-        $headers = [
-            'headers' => [
-                'Accept'        => 'application/json; charset=UTF-8',
-                'Authorization' => 'basic ' . base64_encode($this->key),
-                'user-agent'    => $this->userAgent,
-            ],
-        ];
-
-        $requestUrl = (new MyParcelRequest())->getRequestUrl() . '/' . $endpoint . '/' . implode(';', (array) $ids);
-        $requestUrl = add_query_arg($params, $requestUrl);
-
-        return $this->get($requestUrl, $headers);
-    }
-
-    /**
-     * Get Wordpress, WooCommerce, MyParcel version and place theme in a array. Implode the array to get an UserAgent.
-     *
-     * @return string
-     */
-    private function getUserAgent(): string
-    {
-        $userAgents = [
-            'Wordpress',
-            get_bloginfo('version')
-            . 'WooCommerce/'
-            . WOOCOMMERCE_VERSION
-            . 'MyParcelNL-WooCommerce/'
-            . WC_MYPARCEL_NL_VERSION,
-        ];
-
-        // Place white space between the array elements
-        return implode(" ", $userAgents);
     }
 
     /**
@@ -143,31 +41,30 @@ class WCMP_API extends WCMP_Rest
      * @param array $shipment_ids Shipment ids.
      * @param array $order_ids
      * @param array $positions    Print position(s).
-     * @param bool  $display      Download or display.
+     * @param  bool $display      Download or display.
      *
      * @throws Exception
      */
-    public function getShipmentLabels(array $shipment_ids, array $order_ids, array $positions = [], $display = true)
+    public function getShipmentLabels(array $shipment_ids, array $order_ids, array $positions = [], bool $display = true): void
     {
-        $collection = MyParcelCollection::findMany($shipment_ids, $this->key)
-            ->setUserAgents(WCMP_Export::getUserAgents());
+        $collection = MyParcelCollection::findMany($shipment_ids, $this->key);
 
         /**
          * @see https://github.com/MyParcelNL/Sdk#label-format-and-position
          */
-        if (WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_LABEL_FORMAT) === "A6") {
+        if (WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_LABEL_FORMAT) === "A6") {
             $positions = false;
         }
 
         if ($display) {
             $collection->setPdfOfLabels($positions);
-            $this->updateOrderBarcode($order_ids, $collection);
+            $this->updateOrderBarcode($order_ids);
             $collection->downloadPdfOfLabels($display);
         }
 
         if (! $display) {
             $collection->setLinkOfLabels($positions);
-            $this->updateOrderBarcode($order_ids, $collection);
+            $this->updateOrderBarcode($order_ids);
             echo $collection->getLinkOfLabels();
             die();
         }
@@ -181,9 +78,9 @@ class WCMP_API extends WCMP_Rest
      */
     public static function updateOrderStatus(WC_Order $order, string $thisMoment = ''): void
     {
-        $statusAutomation     = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION);
-        $momentOfStatusChange = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER);
-        $newStatus            = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
+        $statusAutomation     = WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION);
+        $momentOfStatusChange = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_CHANGE_ORDER_STATUS_AFTER);
+        $newStatus            = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS);
 
         if ($statusAutomation && (! $thisMoment || $thisMoment === $momentOfStatusChange)) {
             $order->update_status(

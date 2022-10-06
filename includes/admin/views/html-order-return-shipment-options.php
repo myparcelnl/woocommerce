@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
+use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -14,8 +14,7 @@ if (! defined('ABSPATH')) {
  * @var int       $order_id
  */
 
-/** @noinspection PhpUnhandledExceptionInspection */
-$orderSettings = new OrderSettings($order);
+$pdkOrderAdapter = new PdkOrderFromWCOrderAdapter($order);
 
 ?>
 <table class="wcmp__settings-table" style="width: auto">
@@ -24,7 +23,7 @@ $orderSettings = new OrderSettings($order);
             <?php _e("Shipment type", "woocommerce-myparcel") ?>:<br/> <small class="calculated_weight">
                 <?php printf(
                     __("calculated_order_weight", "woocommerce-myparcel"),
-                    wc_format_weight($orderSettings->getWeight())
+                    wc_format_weight($pdkOrderAdapter->getWeight())
                 ) ?>
             </small>
         </td>
@@ -32,7 +31,7 @@ $orderSettings = new OrderSettings($order);
             <?php
             $name = "myparcel_options[{$order_id}][package_type]";
             printf('<select name="%s" class="package_type">', $name);
-            foreach (WCMP_Data::getPackageTypesHuman() as $key => $label) {
+            foreach (Data::getPackageTypesHuman() as $key => $label) {
                 $isReturnPackageType = in_array(
                     $key,
                     [
@@ -47,7 +46,7 @@ $orderSettings = new OrderSettings($order);
 
                 printf(
                     '<option value="%s">%s</option>',
-                    WCMP_Data::getPackageTypeId($key),
+                    Data::getPackageTypeId($key),
                     $label
                 );
             }

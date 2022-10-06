@@ -1,12 +1,13 @@
 <?php
 
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
+use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
+use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -35,7 +36,6 @@ class WCMYPA_Admin
     public const META_RETURN_SHIPMENT_IDS         = "_myparcel_return_shipment_ids";
     public const META_ORDER_VERSION               = "_myparcel_order_version";
     public const META_DELIVERY_DATE               = "_myparcel_delivery_date";
-    public const META_PGADDRESS                   = "_myparcel_pgaddress";
     public const META_SHIPMENTS                   = "_myparcel_shipments";
     public const META_SHIPMENT_OPTIONS_EXTRA      = "_myparcel_shipment_options_extra";
     public const META_TRACK_TRACE                 = "_myparcel_tracktrace";
@@ -165,7 +165,7 @@ class WCMYPA_Admin
                 <option value=""><?php _e('all_delivery_days', 'woocommerce-myparcel'); ?></option>
                 <?php
                 $carrierName       = CarrierPostNL::NAME;
-                $deliveryDayWindow = (int) WCMYPA()->setting_collection->where('carrier', $carrierName)->getByName(
+                $deliveryDayWindow = (int) WCMYPA()->settingCollection->where('carrier', $carrierName)->getByName(
                     WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW
 
                 );
@@ -218,7 +218,7 @@ class WCMYPA_Admin
     /**
      * @param \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
      */
-    public static function renderPickupLocation(DeliveryOptions $deliveryOptions): void
+    public static function renderPickupLocation(DeliveryOptionsAdapter $deliveryOptions): void
     {
         $pickup = $deliveryOptions->getPickupLocation();
 
@@ -387,7 +387,7 @@ class WCMYPA_Admin
      */
     public function automaticExportOrder($orderId, ?string $oldStatus = null, ?string $newStatus = null): void
     {
-        if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT)) {
+        if (! WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT)) {
             return;
         }
 
@@ -399,7 +399,7 @@ class WCMYPA_Admin
         }
 
         $newStatus             = $newStatus ?? WCMP_Settings_Data::NOT_ACTIVE;
-        $automaticExportStatus = WCMYPA()->setting_collection->getByName(
+        $automaticExportStatus = WCMYPA()->settingCollection->getByName(
             WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT_STATUS
         );
 
@@ -416,7 +416,7 @@ class WCMYPA_Admin
     public function showMyParcelSettings(WC_Order $order): void
     {
         try {
-            $orderSettings = new OrderSettings($order);
+            $pdkOrderAdapter = (new PdkOrderFromWCOrderAdapter($order));
         } catch (Exception $exception) {
             WCMP_Log::add(sprintf('Could not get OrderSettings for order %d', $order->get_id()), $exception);
             printf('<div class="wcmp__shipment-settings-wrapper">⚠ %s</div>', __('warning_faulty_order_settings', 'woocommerce-myparcel'));
@@ -424,14 +424,14 @@ class WCMYPA_Admin
             return;
         }
 
-        $isAllowedDestination = WCMP_Country_Codes::isAllowedDestination($orderSettings->getShippingCountry());
+        $isAllowedDestination = CountryCodes::isAllowedDestination($pdkOrderAdapter->getShippingRecipient()->cc);
 
-        if (! $isAllowedDestination || $orderSettings->hasLocalPickup()) {
+        if (! $isAllowedDestination || $pdkOrderAdapter->hasLocalPickup()) {
             return;
         }
 
         echo '<div class="wcmp__shipment-settings-wrapper" style="display: none;">';
-        $this->printDeliveryDate($orderSettings->getDeliveryOptions());
+        $this->printDeliveryDate($pdkOrderAdapter->getDeliveryOptions());
 
         $consignments  = self::get_order_shipments($order);
         // if we have shipments, then we show status & link to Track & Trace, settings under i
@@ -457,8 +457,8 @@ class WCMYPA_Admin
         printf(
             '<a href="#" class="wcmp__shipment-options__show" data-order-id="%d"><span class="wcmp__shipment-options__package-type">%s</span> &#x25BE;</a>',
             $order->get_id(),
-            WCMP_Data::getPackageTypeHuman(
-                (new WCMP_Export())->getAllowedPackageType($order, $orderSettings->getPackageType())
+            Data::getPackageTypeHuman(
+                (new WCMP_Export())->getAllowedPackageType($order, $pdkOrderAdapter->getPackageType())
             )
         );
 
@@ -483,7 +483,7 @@ class WCMYPA_Admin
      */
     public function getMyParcelBulkActions(): array
     {
-        $exportMode  = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
+        $exportMode  = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
         $returnValue = [
             self::BULK_ACTION_EXPORT => __('myparcel_bulk_action_export', 'woocommerce-myparcel'),
         ];
@@ -556,7 +556,7 @@ class WCMYPA_Admin
      */
     public function renderOffsetDialog(): void
     {
-        if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION)) {
+        if (! WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION)) {
             return;
         }
 
@@ -646,13 +646,14 @@ class WCMYPA_Admin
             return;
         }
 
+        $pdkOrderAdapter = new PdkOrderFromWCOrderAdapter($order);
         $shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
 
-        if (! WCMP_Country_Codes::isAllowedDestination($shippingCountry)) {
+        if (! CountryCodes::isAllowedDestination($shippingCountry)) {
             return;
         }
 
-        $listingActions = self::getListingActions($order);
+        $listingActions = self::getListingActions($pdkOrderAdapter);
         $attributes     = self::getListingAttributes($order);
 
         foreach ($listingActions as $data) {
@@ -671,17 +672,16 @@ class WCMYPA_Admin
      * @return array|array[]
      * @throws \Exception
      */
-    public static function getListingActions(WC_Order $order): array
+    public static function getListingActions(PdkOrderFromWCOrderAdapter $pdkOrderAdapter): array
     {
-        $orderId         = WCX_Order::get_id($order);
-        $orderSettings   = new OrderSettings($order);
-        $shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
-        $exportMode      = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
+        $order           = $pdkOrderAdapter->getOrder();
+        $shippingCountry = $pdkOrderAdapter->getShippingRecipient()->cc;
+        $exportMode      = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
         $consignments    = self::get_order_shipments($order);
-        $listingActions  = self::getDefaultListingActions($orderId);
+        $listingActions  = self::getDefaultListingActions($order->get_id());
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-            $metaPps        = get_post_meta($orderId, self::META_PPS);
+            $metaPps        = get_post_meta($order->get_id(), self::META_PPS);
             $listingActions = self::updateExportButtonForPps($listingActions, $metaPps);
         }
 
@@ -689,11 +689,11 @@ class WCMYPA_Admin
             unset($listingActions[WCMP_Export::GET_LABELS]);
         }
 
-        if (empty($consignments) || WCMP_Data::DEFAULT_COUNTRY_CODE !== $shippingCountry) {
+        if (empty($consignments) || Data::DEFAULT_COUNTRY_CODE !== $shippingCountry) {
             unset($listingActions[WCMP_Export::EXPORT_RETURN]);
         }
 
-        if ($orderSettings->hasLocalPickup()) {
+        if ($pdkOrderAdapter->hasLocalPickup()) {
             unset($listingActions[WCMP_Export::GET_LABELS], $listingActions[WCMP_Export::EXPORT_ORDER]);
         }
 
@@ -707,7 +707,7 @@ class WCMYPA_Admin
      */
     public static function getListingAttributes(WC_Order $order): array
     {
-        $downloadDisplay = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY);
+        $downloadDisplay = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY);
         $orderId         = WCX_Order::get_id($order);
         $metaPps         = get_post_meta($orderId, self::META_PPS);
         $attributes      = [];
@@ -849,12 +849,13 @@ class WCMYPA_Admin
         foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
             $order         = WCX::get_order($order_id);
             $data          = self::removeDisallowedDeliveryOptions($data, $order->get_shipping_country());
-            $orderSettings = new OrderSettings($order, $data);
+//            $orderSettings = new OrderSettings($order, $data);
+            $pdkOrderAdapter = new PdkOrderFromWCOrderAdapter($order);
 
             WCX_Order::update_meta_data(
                 $order,
                 self::META_DELIVERY_OPTIONS,
-                $orderSettings->getDeliveryOptions()->toArray()
+                $pdkOrderAdapter->getDeliveryOptions()->toArray()
             );
 
             // Save extra options
@@ -862,8 +863,8 @@ class WCMYPA_Admin
                 $order,
                 self::META_SHIPMENT_OPTIONS_EXTRA,
                 array_merge(
-                    $orderSettings->getExtraOptions(),
-                    $data["extra_options"]
+                    self::getExtraOptionsFromOrder($order),
+                    $data['extra_options']
                 )
             );
         }
@@ -904,7 +905,7 @@ class WCMYPA_Admin
         $order_id = WCX_Order::get_id($order);
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-        if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
+        if (! CountryCodes::isAllowedDestination($shipping_country)) {
             return;
         }
 
@@ -914,7 +915,7 @@ class WCMYPA_Admin
         $this->showOrderActions($order);
         echo '</div>';
 
-        $downloadDisplay = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
+        $downloadDisplay = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
         $consignments    = self::get_order_shipments($order);
 
         // show shipments if available
@@ -934,22 +935,11 @@ class WCMYPA_Admin
     {
         $shipping_country = WCX_Order::get_prop($order, "shipping_country");
 
-        if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
+        if (! CountryCodes::isAllowedDestination($shipping_country)) {
             return;
         }
 
         $this->showMyParcelSettings($order);
-    }
-
-    /**
-     * @param WC_Order $order
-     *
-     * @throws Exception
-     */
-    public function showDeliveryDateForOrder(WC_Order $order): void
-    {
-        $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
-        $this->printDeliveryDate($deliveryOptions);
     }
 
     /**
@@ -1148,7 +1138,7 @@ class WCMYPA_Admin
     public function renderBarcodes(WC_Order $order): void
     {
         $shipments  = self::get_order_shipments($order, false);
-        $exportMode = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
+        $exportMode = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
             $orderId = WCX_Order::get_id($order);
@@ -1197,16 +1187,16 @@ class WCMYPA_Admin
      * @param WC_Order $order
      * @param array    $inputData
      *
-     * @return DeliveryOptions
+     * @return DeliveryOptionsAdapter
      * @throws \Exception
      * @see \WCMP_Checkout::save_delivery_options
      */
-    public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptions
+    public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptionsAdapter
     {
         $meta = WCX_Order::get_meta($order, self::META_DELIVERY_OPTIONS) ?: null;
 
         // $meta is a json string, create an instance
-        if (! empty($meta) && ! $meta instanceof DeliveryOptions) {
+        if (! empty($meta) && ! $meta instanceof DeliveryOptionsAdapter) {
             if (is_string($meta)) {
                 $meta = json_decode(stripslashes($meta), true);
             }
@@ -1216,7 +1206,7 @@ class WCMYPA_Admin
             }
 
             if (! $meta['carrier'] || ! AccountSettings::getInstance()->isEnabledCarrier($meta['carrier'])) {
-                $meta['carrier'] = (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
+                $meta['carrier'] = (Data::DEFAULT_CARRIER_CLASS)::NAME;
             }
 
             $meta['date'] = $meta['date'] ?? '';
@@ -1249,7 +1239,7 @@ class WCMYPA_Admin
         $meta = WCX_Order::get_meta($order, self::META_SHIPMENT_OPTIONS_EXTRA) ?: null;
 
         if (empty($meta)) {
-            $meta['collo_amount'] = OrderSettings::DEFAULT_COLLO_AMOUNT;
+            $meta['collo_amount'] = 1;
         }
 
         return (array) $meta;
@@ -1263,7 +1253,7 @@ class WCMYPA_Admin
         $enabledCarriers = AccountSettings::getInstance()->getEnabledCarriers();
 
         foreach ($enabledCarriers->all() as $carrier) {
-            if (WCMYPA()->setting_collection->where('carrier', $carrier->getName())
+            if (WCMYPA()->settingCollection->where('carrier', $carrier->getName())
                 ->getByName(WCMYPA_Settings::SETTING_CARRIER_ALLOW_SHOW_DELIVERY_DATE)) {
               return true;
             }
@@ -1275,22 +1265,22 @@ class WCMYPA_Admin
     /**
      * Output the delivery date if there is a date and the show delivery day setting is enabled.
      *
-     * @param DeliveryOptions $deliveryOptions
+     * @param  \MyParcelNL\Pdk\Shipment\Model\DeliveryOptions $deliveryOptions
      *
-     * @throws Exception
+     * @throws \Exception
      */
     private function printDeliveryDate(DeliveryOptions $deliveryOptions): void
     {
-        $deliveryDate = $deliveryOptions->getDate();
-        $deliveryType = $deliveryOptions->getDeliveryType();
+        $deliveryDate = $deliveryOptions->date;
+        $deliveryType = $deliveryOptions->deliveryType;
 
-        if ($deliveryDate || AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $deliveryOptions->getPackageType()) {
+        if ($deliveryDate || AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $deliveryOptions->packageType) {
             printf(
                 '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
                 __('MyParcel shipment:', 'woocommerce-myparcel'),
-                WCMP_Data::getDeliveryTypesHuman()[$deliveryType],
-                empty($deliveryDate) || $deliveryType === AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME ? ''
-                    : wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()), 'D d-m')
+                Data::getDeliveryTypesHuman()[$deliveryType],
+                null === $deliveryDate || $deliveryType === AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME ? ''
+                    : wc_format_datetime(new WC_DateTime($deliveryDate), 'D d-m')
             );
         }
     }
@@ -1298,14 +1288,14 @@ class WCMYPA_Admin
     /**
      * Output the chosen delivery options or the chosen pickup options.
      *
-     * @param  DeliveryOptions  $deliveryOptions
+     * @param  DeliveryOptionsAdapter $deliveryOptions
      *
      * @return array[]|null
      * @throws \Exception
      */
-    private function getConfirmationData(DeliveryOptions $deliveryOptions): ?array
+    private function getConfirmationData(DeliveryOptionsAdapter $deliveryOptions): ?array
     {
-        $deliveryOptionsEnabled = WCMYPA()->setting_collection->isEnabled(
+        $deliveryOptionsEnabled = WCMYPA()->settingCollection->isEnabled(
             WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED
         );
 
@@ -1335,7 +1325,7 @@ class WCMYPA_Admin
             __('delivery_type', 'woocommerce-myparcel') => $deliveryType,
         ];
 
-        if (WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
+        if (WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_SHOW_DELIVERY_DAY)) {
             $confirmationData[__('Date:', 'woocommerce')] = wc_format_datetime(new WC_DateTime($deliveryOptions->getDate()));
         }
 
@@ -1348,11 +1338,11 @@ class WCMYPA_Admin
     }
 
     /**
-     * @param  DeliveryOptions  $deliveryOptions
+     * @param  DeliveryOptionsAdapter $deliveryOptions
      *
      * @return string
      */
-    private function getDeliveryTypeOptions(DeliveryOptions $deliveryOptions): string
+    private function getDeliveryTypeOptions(DeliveryOptionsAdapter $deliveryOptions): string
     {
         $deliveryType  = $deliveryOptions->getDeliveryType();
         $deliveryTitle = null;
@@ -1372,7 +1362,7 @@ class WCMYPA_Admin
                 break;
         }
 
-        return $deliveryTitle ?: WCMP_Data::getDeliveryTypesHuman()[$deliveryType];
+        return $deliveryTitle ?: Data::getDeliveryTypesHuman()[$deliveryType];
     }
 
     /**
@@ -1600,8 +1590,8 @@ class WCMYPA_Admin
     public static function removeDisallowedDeliveryOptions(array $data, string $country): array
     {
         $data['package_type'] = $data['package_type'] ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
-        $isHomeCountry        = WCMP_Data::isHomeCountry($country);
-        $isEuCountry          = WCMP_Country_Codes::isEuCountry($country);
+        $isHomeCountry        = Data::isHomeCountry($country);
+        $isEuCountry          = CountryCodes::isEuCountry($country);
         $isBelgium            = AbstractConsignment::CC_BE === $country;
         $isPackage            = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $data['package_type'];
         $isDigitalStamp       = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $data['package_type'];

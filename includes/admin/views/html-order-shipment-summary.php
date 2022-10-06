@@ -40,7 +40,7 @@ echo '<ul class="wcmp__shipment-summary wcmp__ws--nowrap">';
 printf(
     '%s: %s',
     __('Shipment type', 'woocommerce-myparcel'),
-    WCMP_Data::getPackageTypeHuman(Arr::get($firstShipment, 'shipment.options.package_type'))
+    Data::getPackageTypeHuman(Arr::get($firstShipment, 'shipment.options.package_type'))
 );
 
 foreach ($option_strings as $key => $label) {

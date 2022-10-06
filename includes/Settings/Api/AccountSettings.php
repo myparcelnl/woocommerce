@@ -19,7 +19,7 @@ use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
 use MyParcelNL\WooCommerce\includes\Model\Model;
 use MyParcelNL\WooCommerce\includes\Settings\Listener\ApiKeySettingsListener;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
-use WCMP_Data;
+use Data;
 
 /**
  * @property null|\MyParcelNL\Sdk\src\Model\Account\Shop                         $shop
@@ -175,7 +175,7 @@ class AccountSettings extends Model
 
         return $this->getCarrierOptions()
             ->filter(static function (CarrierOptions $carrierOption) {
-                return $carrierOption->isEnabled() && WCMP_Data::hasCarrier($carrierOption->getCarrier());
+                return $carrierOption->isEnabled() && Data::hasCarrier($carrierOption->getCarrier());
             })
             ->map(static function (CarrierOptions $carrierOptions) {
                 return $carrierOptions->getCarrier();

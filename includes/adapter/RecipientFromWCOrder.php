@@ -151,7 +151,7 @@ class RecipientFromWCOrder extends Recipient
     private function getEmailAddressFromOrder(WC_Order $order): string
     {
         $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
-        $emailConnected  = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_EMAIL);
+        $emailConnected  = WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_EMAIL);
 
         return $emailConnected || $deliveryOptions->isPickup()
             ? $order->get_billing_email()
@@ -167,7 +167,7 @@ class RecipientFromWCOrder extends Recipient
      */
     private function getPhoneNumberFromOrder(WC_Order $order): ?string
     {
-        $connectPhone = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_PHONE);
+        $connectPhone = WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_PHONE);
 
         return $connectPhone
             ? $order->get_billing_phone()

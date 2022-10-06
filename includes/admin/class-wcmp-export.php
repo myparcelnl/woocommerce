@@ -2,34 +2,26 @@
 
 declare(strict_types=1);
 
-use MyParcelNL\Pdk\Base\Service\CountryService;
-use MyParcelNL\Pdk\Carrier\Model\CarrierOptions;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Pdk\Fulfilment\Collection\OrderCollection;
-use MyParcelNL\Pdk\Fulfilment\Model\Order;
 use MyParcelNL\Pdk\Fulfilment\Repository\OrderRepository;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
-use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
-use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
-use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\Helper\ExportRow;
-use MyParcelNL\WooCommerce\includes\adapter\WCOrderToPdkOrderAdapter;
+use MyParcelNL\WooCommerce\includes\adapter\PdkOrderCollectionFromWCOrdersAdapter;
+use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
-use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
-use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
@@ -68,26 +60,12 @@ class WCMP_Export
     public const NO              = 'no';
     public const YES             = 'yes';
 
-    public $orderId;
-
     public $success;
-
-    /**
-     * @var MyParcelCollection
-     */
-    public $myParcelCollection;
 
     /**
      * @var mixed
      */
     private $logger;
-
-    /**
-     * @var \MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection
-     */
-    private $orderCollection;
-
-    private $prefix_message;
 
     public function __construct()
     {
@@ -102,9 +80,8 @@ class WCMP_Export
     /**
      * @param  int $orderId
      *
-     * @throws ApiException
-     * @throws ErrorException
-     * @throws MissingFieldException
+     * @throws \JsonException
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
     public function exportByOrderId(int $orderId): void
     {
@@ -112,27 +89,13 @@ class WCMP_Export
             return;
         }
 
-        $return = $this->exportAccordingToMode([(string) $orderId], 0, false);
+        $pdkOrderCollection = (new PdkOrderFromWCOrderAdapter([$orderId]))->convert();
+        $return             = $this->exportAccordingToMode($pdkOrderCollection, [(string) $orderId], WCMP_Export::NO);
 
         if (isset($return['success'])) {
             $order = WCX::get_order($orderId);
             $order->add_order_note($return['success']);
         }
-    }
-
-    /**
-     * Get the value of a shipment option. Check if it was set manually, through the delivery options for example,
-     *  if not get the value of the default export setting for given settingName.
-     *
-     * @param  mixed  $option      Chosen value.
-     * @param  string $settingName Name of the setting to fall back to if there is no chosen value.
-     *
-     * @return mixed
-     */
-    public static function getChosenOrDefaultShipmentOption($option, string $settingName, ?string $carrierName = null)
-    {
-        return $option ?? WCMYPA()->setting_collection->where('carrier', $carrierName)
-                ->getByName($settingName);
     }
 
     /**
@@ -194,49 +157,43 @@ class WCMP_Export
             die();
         }
 
-        $dialog  = $_REQUEST['dialog'] ?? null;
         $print   = $_REQUEST['print'] ?? null;
         $offset  = (int) ($_REQUEST['offset'] ?? 0);
         $request = $_REQUEST['request'];
 
         /**
-         * @var $order_ids
+         * @var $orderIds
          */
-        $order_ids    = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
-        $shipment_ids = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
+        $orderIds    = $this->sanitize_posted_array($_REQUEST['order_ids'] ?? []);
+        $shipmentIds = $this->sanitize_posted_array($_REQUEST['shipment_ids'] ?? []);
 
-        foreach ($order_ids as $key => $id) {
-            $order         = WCX::get_order($id);
-            $orderSettings = new OrderSettings($order);
+        foreach ($orderIds as $key => $id) {
+            $order    = WCX::get_order($id);
+            $pdkOrder = (new PdkOrderFromWCOrderAdapter($order));
 
-            if ($orderSettings->hasLocalPickup()) {
-                unset($order_ids[$key]);
+            if ($pdkOrder->hasLocalPickup()) {
+                unset($orderIds[$key]);
             }
         }
+        $pdkOrderCollection = (new PdkOrderCollectionFromWCOrdersAdapter($orderIds))->convert();
 
-        if (empty($shipment_ids) && empty($order_ids)) {
+        if (empty($shipmentIds) && empty($orderIds)) {
             Messages::showAdminNotice(__('You have not selected any orders!', 'woocommerce-myparcel'));
         } else {
             try {
                 switch ($request) {
-                    // Creating consignments.
                     case self::EXPORT_ORDER:
-                        $return = $this->exportAccordingToMode($order_ids, $offset, $print);
+                        $return = $this->exportAccordingToMode($pdkOrderCollection, $orderIds, $print);
                         break;
-
-                    // Creating a return shipment.
                     case self::EXPORT_RETURN:
-                        $return = $this->exportReturn($order_ids, $_REQUEST['myparcel_options']);
+                        $return = $this->exportReturn($pdkOrderCollection);
                         break;
-
-                    // Downloading labels.
                     case self::GET_LABELS:
-                        $return = $this->printLabels($order_ids, $shipment_ids, $offset);
+                        $return = $this->printLabels($pdkOrderCollection, $orderIds, $shipmentIds, $offset);
                         break;
-
                     case self::MODAL_DIALOG:
-                        $order_ids = $this->filterOrderDestinations($order_ids);
-                        $this->modal_dialog($order_ids, $dialog);
+                        $orderIds = $this->filterOrderDestinations($orderIds);
+                        $this->modal_dialog($orderIds);
                         break;
                 }
             } catch (Exception $e) {
@@ -247,8 +204,8 @@ class WCMP_Export
         }
 
         // if we're directed here from modal, show proper result page
-        if (isset($_REQUEST["modal"])) {
-            $this->modal_success_page($request, $return);
+        if (isset($_REQUEST['modal'])) {
+            $this->modal_success_page($request);
         } else {
             // return JSON response
             echo json_encode($return);
@@ -264,32 +221,30 @@ class WCMP_Export
     public function sanitize_posted_array($array): array
     {
         if (is_array($array)) {
-            return $array;
+            return array_map('esc_attr', $array);
         }
 
         // check for JSON
-        if (is_string($array) && strpos($array, "[")!==false) {
-            $array = json_decode(stripslashes($array));
+        if (is_string($array) && strpos($array, '[')!==false) {
+            $array = json_decode(stripslashes($array), false);
         }
 
-        return (array) $array;
+        return array_map('esc_attr', (array) $array);
     }
 
     /**
-     * @param  array $orderIds
-     * @param  bool  $process
+     * @param  \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection $pdkOrderCollection
+     * @param  array                                                $orderIds
+     * @param  bool                                                 $process
      *
      * @return array
-     * @throws ApiException
-     * @throws MissingFieldException
-     * @throws \MyParcelNL\Sdk\src\Exception\AccountNotActiveException
-     * @throws \Exception
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
     public function addShipments(PdkOrderCollection $pdkOrderCollection, array $orderIds, bool $process): array
     {
         $return          = [];
         $processDirectly = $process
-            || WCMYPA()->setting_collection->isEnabled(
+            || WCMYPA()->settingCollection->isEnabled(
                 WCMYPA_Settings::SETTING_PROCESS_DIRECTLY
             );
 
@@ -352,65 +307,34 @@ class WCMP_Export
     }
 
     /**
-     * @param  array      $order_ids
-     * @param  array|null $options
+     * @param  \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection $pdkOrderCollection
      *
      * @return array
+     * @throws \Exception
      */
-    public function exportReturn(array $order_ids, ?array $options = []): array
+    public function exportReturn(PdkOrderCollection $pdkOrderCollection): array
     {
-        $return = [];
+        WCMP_Log::add('*** Creating return shipments started ***');
 
-        WCMP_Log::add("*** Creating return shipments started ***");
+        $repository         = Pdk::get(ShipmentRepository::class);
+        $shipmentCollection = $pdkOrderCollection->generateShipments();
+        $returnShipments    = $repository->createReturnShipments($shipmentCollection);
 
-        foreach ($order_ids as $order_id) {
-            try {
-                $return_shipments = [
-                    $this->prepareReturnShipmentData(
-                        $order_id,
-                        $options
-                            ? $options[$order_id]
-                            : null
-                    ),
-                ];
+        $returnShipments->each(function (Shipment $returnShipment) {
+            $orderId = $returnShipment->externalIdentifier;
+            $shipmentId = $returnShipment->id;
+            $order                    = WCX::get_order($orderId);
+            $shipment = ['id' => $shipmentId,];
 
-                WCMP_Log::add("Return shipment data for order {$order_id}:", print_r($return_shipments, true));
+            $this->saveShipmentData($order, $shipment);
+        });
 
-                $api      = $this->init_api();
-                $response = $api->add_shipments($return_shipments, "return");
-
-                WCMP_Log::add("API response (order {$order_id}):\n" . print_r($response, true));
-
-                $ids = Arr::get($response, "body.data.ids");
-
-                if ($ids) {
-                    $order                    = WCX::get_order($order_id);
-                    $ids                      = array_shift($response["body"]["data"]["ids"]);
-                    $shipment_id              = $ids["id"];
-                    $this->success[$order_id] = $shipment_id;
-
-                    $shipment = [
-                        "shipment_id" => $shipment_id,
-                    ];
-
-                    // save shipment data in order meta
-                    $this->saveShipmentData($order, $shipment);
-                } else {
-                    WCMP_Log::add("\$response\[\"body.data.ids\"] empty or not found.", print_r($response, true));
-                    throw new Exception("\$response\[\"body.data.ids\"] empty or not found.");
-                }
-            } catch (Exception $e) {
-                $errorMessage = $e->getMessage();
-                Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
-            }
-        }
-
-        return $return;
+        return [];
     }
 
     /**
-     * @param  array       $shipment_ids
-     * @param  array       $order_ids
+     * @param  array       $shipmentIds
+     * @param  array       $orderIds
      * @param  int         $offset
      * @param  string|null $displayOverride - Overrides display setting.
      *
@@ -418,15 +342,15 @@ class WCMP_Export
      * @throws Exception
      */
     public function downloadOrGetUrlOfLabels(
-        array  $shipment_ids,
-        array  $order_ids = [],
+        array  $shipmentIds,
+        array  $orderIds = [],
         int    $offset = 0,
         string $displayOverride = null
-    ) {
+    ): array {
         $return = [];
 
         WCMP_Log::add("*** downloadOrGetUrlOfLabels() ***");
-        WCMP_Log::add("Shipment IDs: " . implode(", ", $shipment_ids));
+        WCMP_Log::add("Shipment IDs: " . implode(", ", $shipmentIds));
 
         try {
             $api = $this->init_api();
@@ -434,9 +358,9 @@ class WCMP_Export
             // positions are defined on landscape, but paper is filled portrait-wise
             $positions = array_slice(self::DEFAULT_POSITIONS, $offset % 4);
 
-            $displaySetting = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY);
+            $displaySetting = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY);
             $display        = ($displayOverride ?? $displaySetting)==="display";
-            $api->getShipmentLabels($shipment_ids, $order_ids, $positions, $display);
+            $api->getShipmentLabels($shipmentIds, $orderIds, $positions, $display);
         } catch (Exception $e) {
             Messages::showAdminNotice($e->getMessage());
             throw new \RuntimeException($e->getMessage());
@@ -479,26 +403,25 @@ class WCMP_Export
     /**
      * @param $order_ids
      */
-    public function modal_dialog($order_ids, $dialog): void
+    public function modal_dialog($order_ids): void
     {
         // check for JSON
-        if (is_string($order_ids) && strpos($order_ids, "[")!==false) {
-            $order_ids = json_decode(stripslashes($order_ids));
+        if (is_string($order_ids) && strpos($order_ids, '[')!==false) {
+            $order_ids = json_decode(stripslashes($order_ids), false);
         }
 
         // cast as array for single exports
         $order_ids = (array) $order_ids;
-        require("views/html-send-return-email-form.php");
+        require('views/html-send-return-email-form.php');
         die();
     }
 
     /**
      * @param $request
-     * @param $result
      */
-    public function modal_success_page($request, $result)
+    public function modal_success_page($request): void
     {
-        require("views/html-modal-result-page.php");
+        require('views/html-modal-result-page.php');
         die();
     }
 
@@ -508,7 +431,7 @@ class WCMP_Export
      */
     public function init_api()
     {
-        $key = $this->getSetting(WCMYPA_Settings::SETTING_API_KEY);
+        $key = WCMP_Settings_Data::getSetting(WCMYPA_Settings::SETTING_API_KEY);
 
         if (! ($key)) {
             throw new ErrorException(__("No API key found in MyParcel settings", "woocommerce-myparcel"));
@@ -602,11 +525,11 @@ class WCMP_Export
      */
     public static function addTrackTraceNoteToOrder(int $order_id, array $track_traces): void
     {
-        if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_BARCODE_IN_NOTE)) {
+        if (! WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_BARCODE_IN_NOTE)) {
             return;
         }
 
-        $prefix_message = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_BARCODE_IN_NOTE_TITLE);
+        $prefix_message = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_BARCODE_IN_NOTE_TITLE);
 
         // Select the barcode text of the MyParcel settings
         $prefix_message = $prefix_message ? $prefix_message . " " : "";
@@ -616,20 +539,11 @@ class WCMP_Export
     }
 
     /**
-     * @param  string $name
-     *
-     * @return mixed
-     */
-    private function getSetting(string $name)
-    {
-        return WCMYPA()->setting_collection->getByName($name);
-    }
-
-    /**
      * @param  array $order_ids
      * @param  array $args
      *
      * @return array
+     * @throws \JsonException
      */
     public function getShipmentIds(array $order_ids, array $args): array
     {
@@ -756,7 +670,7 @@ class WCMP_Export
             $shipmentOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0);
 
             if (isset($shipmentOptions['package_type'])) {
-                $packageType = WCMP_Data::getPackageTypeId($shipmentOptions['package_type']);
+                $packageType = Data::getPackageTypeId($shipmentOptions['package_type']);
             }
 
             return (string) apply_filters(
@@ -827,7 +741,7 @@ class WCMP_Export
             }
         }
 
-        $packageTypes = WCMYPA()->setting_collection->getByName(
+        $packageTypes = WCMYPA()->settingCollection->getByName(
             WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES
         );
         foreach ($packageTypes as $packageTypeKey => $packageTypeShippingMethods) {
@@ -853,7 +767,7 @@ class WCMP_Export
     public static function getPackageTypeHuman(?string $packageType): string
     {
         if ($packageType) {
-            $packageType = WCMP_Data::getPackageTypeHuman($packageType);
+            $packageType = Data::getPackageTypeHuman($packageType);
         }
 
         return $packageType ?? __("Unknown", "woocommerce-myparcel");
@@ -869,10 +783,10 @@ class WCMP_Export
     public static function getPackageTypeAsString($packageType): string
     {
         if (is_numeric($packageType)) {
-            $packageType = WCMP_Data::getPackageTypeName($packageType);
+            $packageType = Data::getPackageTypeName($packageType);
         }
 
-        if (! is_string($packageType) || ! in_array($packageType, WCMP_Data::getPackageTypes())) {
+        if (! is_string($packageType) || ! in_array($packageType, AbstractConsignment::PACKAGE_TYPES_NAMES)) {
             // Log data when this occurs but don't actually throw an exception.
             $type = gettype($packageType);
             WCMP_Log::add(new Exception("Tried to convert invalid value to package type: $packageType ($type)"));
@@ -932,9 +846,9 @@ class WCMP_Export
 
         if (isset($shipment_statuses[$status_code])) {
             return $shipment_statuses[$status_code];
-        } else {
-            return __("Unknown status", "woocommerce-myparcel");
         }
+
+        return __("Unknown status", "woocommerce-myparcel");
     }
 
     /**
@@ -947,7 +861,7 @@ class WCMP_Export
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      * @throws \Exception
      */
-    public function getShipmentData(ShipmentCollection $shipmentCollection, WC_Order $order, ): array
+    public function getShipmentData(ShipmentCollection $shipmentCollection, WC_Order $order): array
     {
         if ($shipmentCollection->isEmpty()) {
             return [];
@@ -959,119 +873,25 @@ class WCMP_Export
         }
 
         return $shipmentCollection->toArray();
-
-//        $data     = [];
-//        $api      = $this->init_api();
-//        $response = $api->get_shipments($ids);
-//
-//        $shipments = Arr::get($response, "body.data.shipments");
-//
-//        if (! $shipments) {
-//            return [];
-//        }
-//
-//        foreach ($shipments as $shipment) {
-//            if (! isset($shipment["id"])) {
-//                return [];
-//            }
-//
-//            // if shipment id matches and status is not concept, get track trace barcode and status name
-//            $status        = $this->getShipmentStatusName($shipment["status"]);
-//            $track_trace   = $shipment["barcode"] ?: $shipment['external_identifier'];
-//            $shipment_id   = $shipment["id"];
-//            $shipment_data = compact("shipment_id", "status", "track_trace", "shipment");
-//            $this->saveShipmentData($order, $shipment_data);
-//
-//            ChannelEngine::updateMetaOnExport($order, $track_trace);
-//
-//            $data[$shipment_id] = $shipment_data;
-//        }
-//
-//        return $data;
     }
 
     /**
-     * Returns the weight in grams.
+     * @param  string $chosenMethod
      *
-     * @param  int|float $weight
-     *
-     * @return int
-     */
-    public static function convertWeightToGrams($weight): int
-    {
-        $weightUnit = get_option('woocommerce_weight_unit');
-        return WeightService::convertToGrams($weight, $weightUnit);
-    }
-
-    /**
-     * @return array
-     */
-    public static function getDigitalStampRangeOptions(): array
-    {
-        $options = [];
-
-        foreach (WeightService::DIGITAL_STAMP_RANGES as $tierRange) {
-            $options[$tierRange['average']] = sprintf('%s - %s gram', $tierRange['min'], $tierRange['max']);
-        }
-
-        return $options;
-    }
-
-    /**
-     * @param $chosenMethod
-     *
-     * @throws \Exception
+     * @return null|bool|\WC_Shipping_Method
      */
     public static function getShippingMethod(string $chosenMethod)
     {
-        if (version_compare(
-                WOOCOMMERCE_VERSION,
-                "2.6",
-                "<"
-            )
-            || $chosenMethod===WCMP_Shipping_Methods::LEGACY_FLAT_RATE) {
-            return self::getLegacyShippingMethod($chosenMethod);
-        }
-
         [$methodSlug, $methodInstance] = WCMP_Checkout::splitShippingMethodString($chosenMethod);
 
-        $isDisallowedShippingMethod = in_array($methodSlug, self::DISALLOWED_SHIPPING_METHODS);
+        $isDisallowedShippingMethod = in_array($methodSlug, self::DISALLOWED_SHIPPING_METHODS, true);
         $isManualOrder              = empty($methodInstance);
 
         if ($isDisallowedShippingMethod || $isManualOrder) {
             return null;
         }
 
-        return WC_Shipping_Zones::get_shipping_method($methodInstance) ?? null;
-    }
-
-    /**
-     * @param  string $chosen_method
-     *
-     * @return null|WC_Shipping_Method
-     */
-    private static function getLegacyShippingMethod(string $chosen_method): ?WC_Shipping_Method
-    {
-        // only for flat rate or legacy flat rate
-        if (! in_array(
-            $chosen_method,
-            [
-                WCMP_Shipping_Methods::FLAT_RATE,
-                WCMP_Shipping_Methods::LEGACY_FLAT_RATE,
-            ]
-        )) {
-            return null;
-        }
-
-        $shipping_methods = WC()
-            ->shipping()
-            ->load_shipping_methods();
-
-        if (! isset($shipping_methods[$chosen_method])) {
-            return null;
-        }
-
-        return $shipping_methods[$chosen_method];
+        return WC_Shipping_Zones::get_shipping_method($methodInstance);
     }
 
     /**
@@ -1226,7 +1046,7 @@ class WCMP_Export
             $order            = WCX::get_order($order_id);
             $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
 
-            if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
+            if (! CountryCodes::isAllowedDestination($shipping_country)) {
                 unset($order_ids[$key]);
                 Messages::showAdminNotice(
                     sprintf(__('error_order_has_invalid_shipment_country', 'woocommerce-myparcel'), $order_id),
@@ -1255,42 +1075,33 @@ class WCMP_Export
     }
 
     /**
-     * @param  \MyParcelNL\WooCommerce\includes\admin\OrderSettings $orderSettings
-     * @param  MyParcelCollection                                   $collection
-     * @param  AbstractConsignment                                  $consignment
+     * @param  \MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter $pdkOrderAdapter
+     * @param  MyParcelCollection                                                  $collection
+     * @param  AbstractConsignment                                                 $consignment
      *
+     * @throws \JsonException
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
     public function addMultiCollo(
-        OrderSettings       $orderSettings,
-        MyParcelCollection  $collection,
-        AbstractConsignment $consignment
+        PdkOrderFromWCOrderAdapter $pdkOrderAdapter,
+        MyParcelCollection         $collection,
+        AbstractConsignment        $consignment
     ): void {
-        $isPackage            = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME===$orderSettings->getPackageType();
+        $pdkOrder             = $pdkOrderAdapter->getPdkOrder();
+        $isPackage            = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $pdkOrder->deliveryOptions->packageType;
         $hasCarrierMultiCollo = $consignment->canHaveExtraOption(AbstractConsignment::EXTRA_OPTION_MULTI_COLLO);
         $isMultiColloCountry  = in_array(
-            $orderSettings->getShippingCountry(),
-            [self::COUNTRY_CODE_NL, self::COUNTRY_CODE_BE]
+            $pdkOrder->recipient->cc,
+            [self::COUNTRY_CODE_NL, self::COUNTRY_CODE_BE],
+            true
         );
 
         if ($isMultiColloCountry && $hasCarrierMultiCollo && $isPackage) {
-            $collection->addMultiCollo($consignment, $orderSettings->getColloAmount());
+            $collection->addMultiCollo($consignment, $pdkOrderAdapter->getColloAmount());
             return;
         }
 
-        $this->addFakeMultiCollo($orderSettings->getColloAmount(), $collection, $consignment);
-    }
-
-    /**
-     * @return array
-     */
-    public static function getUserAgents(): array
-    {
-        return [
-            'MyParcelNL-WooCommerce' => WCMYPA::getInstance()->version,
-            'WooCommerce'            => WooCommerce::instance()->version,
-            'Wordpress'              => get_bloginfo('version'),
-        ];
+        $this->addFakeMultiCollo($pdkOrderAdapter->getColloAmount(), $collection, $consignment);
     }
 
     /**
@@ -1309,31 +1120,28 @@ class WCMP_Export
     ) {
         //support WooCommerce flat rate
         // check if we have a match with the predefined methods
-        if (in_array($shipping_method_id, $package_type_shipping_methods)) {
+        if (in_array($shipping_method_id, $package_type_shipping_methods, true)) {
             return true;
         }
 
-        if (in_array($shipping_method_id_class, $package_type_shipping_methods)) {
+        if (in_array($shipping_method_id_class, $package_type_shipping_methods, true)) {
             return true;
         }
 
         // fallback to bare method (without class) (if bare method also defined in settings)
         if (! empty($shipping_method_id_class)
-            && in_array(
-                $shipping_method_id_class,
-                $package_type_shipping_methods
-            )) {
+            && in_array($shipping_method_id_class, $package_type_shipping_methods, true)) {
             return true;
         }
 
         // support WooCommerce Table Rate Shipping by WooCommerce
-        if (! empty($shipping_class) && in_array($shipping_class, $package_type_shipping_methods)) {
+        if (! empty($shipping_class) && in_array($shipping_class, $package_type_shipping_methods, true)) {
             return true;
         }
 
         // support WooCommerce Table Rate Shipping by Bolder Elements
-        $newShippingClass = str_replace(":", "_", $shipping_class);
-        if (! empty($shipping_class) && in_array($newShippingClass, $package_type_shipping_methods)) {
+        $newShippingClass = str_replace(':', '_', $shipping_class);
+        if (! empty($shipping_class) && in_array($newShippingClass, $package_type_shipping_methods, true)) {
             return true;
         }
 
@@ -1341,15 +1149,18 @@ class WCMP_Export
     }
 
     /**
-     * @param  array $order_ids
-     * @param  array $shipment_ids
-     * @param  int   $offset
+     * @param  \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection $pdkOrderCollection
+     * @param  array                                                $order_ids
+     * @param  array                                                $shipment_ids
+     * @param  int                                                  $offset
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
-    private function printLabels(array $order_ids, array $shipment_ids, int $offset)
+    private function printLabels(PdkOrderCollection $pdkOrderCollection, array $order_ids, array $shipment_ids, int $offset): array
     {
+        $shipmentCollection = $pdkOrderCollection->generateShipments();
+
         if (! empty($shipment_ids)) {
             $return = $this->downloadOrGetUrlOfLabels(
                 $shipment_ids,
@@ -1365,21 +1176,18 @@ class WCMP_Export
     }
 
     /**
-     * @param  array         $orderIds
-     * @param  int           $offset
-     * @param  string | null $print
+     * @param  \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection $pdkOrderCollection
+     * @param  array                                                $orderIds
+     * @param  string | null                                        $print
      *
      * @return array
-     * @throws ApiException
-     * @throws MissingFieldException
-     * @throws Exception
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
-    private function exportAccordingToMode(array $orderIds, int $offset, ?string $print): array
+    private function exportAccordingToMode(PdkOrderCollection $pdkOrderCollection, array $orderIds, ?string $print): array
     {
         $exportMode = WCMP_Settings_Data::getSetting(WCMYPA_Settings::SETTING_EXPORT_MODE);
         $orderIds   = $this->filterOrderDestinations($orderIds);
         $print      = $print ?? self::NO;
-        $pdkOrderCollection = (new WCOrderToPdkOrderAdapter($orderIds))->convert();
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
             $return = $this->saveOrderCollection($pdkOrderCollection, $orderIds);
@@ -1389,36 +1197,19 @@ class WCMP_Export
             $return  = $this->addShipments($pdkOrderCollection, $orderIds, $process);
         }
 
-        return $this->setFeedbackForClient($print, $offset, $orderIds, $return ?? []);
+        return $this->setFeedbackForClient($return ?? []);
     }
 
     /**
-     * @param  null|\MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier $carrier
-     *
-     * @return null|\MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint
-     */
-    private function getDropOffPoint(?AbstractCarrier $carrier): ?DropOffPoint
-    {
-        if (! $carrier) {
-            return null;
-        }
-
-        $configuration = AccountSettings::getInstance()
-            ->getCarrierConfigurationByCarrierId($carrier->getId());
-
-        return $configuration ? $configuration->getDefaultDropOffPoint() : null;
-    }
-
-    /**
-     * @param  array $orderIds
+     * @param  \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection $pdkOrderCollection
+     * @param  array                                                $orderIds
      *
      * @return array
-     * @throws \Exception
      */
     private function saveOrderCollection(PdkOrderCollection $pdkOrderCollection, array $orderIds): array
     {
         $repository                = Pdk::get(OrderRepository::class);
-        $pdkOrderCollection->generateShipments();
+        $pdkOrderCollection->getAllShipments();
         $fulfilmentOrderCollection = $pdkOrderCollection->getOrderCollection();
 
         try {
@@ -1462,7 +1253,7 @@ class WCMP_Export
         return [
             'success' => sprintf(
                 __('message_orders_exported_successfully', 'woocommerce-myparcel'),
-                count($orderCollection)
+                $orderCollection->count()
             ),
         ];
     }
@@ -1471,14 +1262,11 @@ class WCMP_Export
      * When adding shipments, store $return for use in admin_notice
      * This way we can refresh the page (JS) to show all new buttons
      *
-     * @param  string $print
-     * @param  int    $offset
-     * @param  array  $orderIds
-     * @param  array  $return
+     * @param  array $return
      *
      * @return array
      */
-    private function setFeedbackForClient(string $print, int $offset, array $orderIds, array $return): array
+    private function setFeedbackForClient(array $return): array
     {
         if ($return['success'] ?? null) {
             Messages::showAdminNotice($return['success'], Messages::NOTICE_LEVEL_SUCCESS);

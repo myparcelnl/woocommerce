@@ -11,7 +11,7 @@ use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
-use WCMP_Data;
+use Data;
 use WCMP_Settings_Callbacks;
 use WCMYPA_Admin;
 
@@ -41,7 +41,7 @@ class Status
     {
         $hasApiKey = AccountSettings::getInstance()->hasApiKey();
 
-        foreach (WCMP_Data::getCarriers() as $carrierClass) {
+        foreach (Data::getCarriers() as $carrierClass) {
             $carrier = new $carrierClass();
 
             if (! $hasApiKey) {

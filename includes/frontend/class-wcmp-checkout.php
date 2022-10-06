@@ -59,7 +59,7 @@ class WCMP_Checkout
         }
 
         // if using split address fields
-        $useSplitAddressFields = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS);
+        $useSplitAddressFields = WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS);
         if ($useSplitAddressFields) {
             wp_enqueue_script(
                 "wcmp-checkout-fields",
@@ -71,7 +71,7 @@ class WCMP_Checkout
         }
 
         // Don't load the delivery options scripts if it's disabled
-        if (! WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
+        if (! WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED)) {
             return;
         }
 
@@ -130,7 +130,7 @@ class WCMP_Checkout
             "MyParcelDisplaySettings",
             [
                 // Convert true/false to int for JavaScript
-                "isUsingSplitAddressFields" => (int) WCMYPA()->setting_collection->isEnabled(
+                "isUsingSplitAddressFields" => (int) WCMYPA()->settingCollection->isEnabled(
                     WCMYPA_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS
                 ),
                 "splitAddressFieldsCountries" => WCMP_NL_Postcode_Fields::COUNTRIES_WITH_SPLIT_ADDRESS_FIELDS,
@@ -158,7 +158,7 @@ class WCMP_Checkout
         add_action(
             apply_filters(
                 'wc_wcmp_delivery_options_location',
-                WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_POSITION)
+                WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_POSITION)
             ),
             [$this, 'output_delivery_options'],
             10
@@ -170,7 +170,7 @@ class WCMP_Checkout
      */
     public function get_delivery_options_shipping_methods()
     {
-        $packageTypes = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+        $packageTypes = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
 
         if (! is_array($packageTypes)) {
             $packageTypes = [];
@@ -193,7 +193,7 @@ class WCMP_Checkout
      */
     public function getDeliveryOptionsConfig(): array
     {
-        $settings                   = WCMYPA()->setting_collection;
+        $settings                   = WCMYPA()->settingCollection;
         $cartTotals                 = WC()->session->get('cart_totals');
         $chosenShippingMethodPrice  = (float) $cartTotals['shipping_total'];
         $displayIncludingTax        = WC()->cart->display_prices_including_tax();
@@ -279,7 +279,7 @@ class WCMP_Checkout
      */
     public function useTotalPrice(): bool
     {
-        $priceFormat = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
+        $priceFormat = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_PRICE_FORMAT);
 
         return ! isset($priceFormat) || WCMP_Settings_Data::DISPLAY_TOTAL_PRICE === $priceFormat;
     }
@@ -291,7 +291,7 @@ class WCMP_Checkout
      */
     public static function getDeliveryOptionsTitle(string $title): string
     {
-        $settings = WCMYPA()->setting_collection;
+        $settings = WCMYPA()->settingCollection;
 
         return __(strip_tags($settings->getStringByName($title)), "woocommerce-myparcel");
     }
@@ -301,7 +301,7 @@ class WCMP_Checkout
      */
     public static function getPickupLocationsDefaultView(): string
     {
-        $settings = WCMYPA()->setting_collection;
+        $settings = WCMYPA()->settingCollection;
 
         return $settings->getStringByName(WCMYPA_Settings::SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW);
     }
@@ -436,8 +436,8 @@ class WCMP_Checkout
     private function getShippingMethodsAllowingDeliveryOptions(): array
     {
         $allowedMethods               = [];
-        $displayFor                   = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
-        $shippingMethodsByPackageType = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+        $displayFor                   = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
+        $shippingMethodsByPackageType = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
 
         if (WCMP_Settings_Data::DISPLAY_FOR_ALL_METHODS === $displayFor || ! $shippingMethodsByPackageType) {
             return $allowedMethods;
@@ -461,7 +461,7 @@ class WCMP_Checkout
      */
     private function alwaysDisplayDeliveryOptions(): bool
     {
-        $display = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
+        $display = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_DISPLAY);
 
         return $display === WCMP_Settings_Data::DISPLAY_FOR_ALL_METHODS;
     }
@@ -548,7 +548,7 @@ class WCMP_Checkout
      */
     private function shouldShowDeliveryOptions(): bool
     {
-        $showForBackorders   = WCMYPA()->setting_collection->isEnabled(WCMYPA_Settings::SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS);
+        $showForBackorders   = WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTINGS_SHOW_DELIVERY_OPTIONS_FOR_BACKORDERS);
         $showDeliveryOptions = false;
 
         foreach (WC()->cart->get_cart() as $cartItem) {

@@ -95,7 +95,7 @@ class WCMP_Settings_Data
      */
     public static function getSetting(string $name)
     {
-        return WCMYPA()->setting_collection->getByName($name);
+        return WCMYPA()->settingCollection->getByName($name);
     }
 
     /**
@@ -344,7 +344,7 @@ class WCMP_Settings_Data
      */
     private function getSectionGeneralGeneral(): array
     {
-        $exportModeSetting = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
+        $exportModeSetting = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
 
         if (self::EXPORT_MODE_PPS === $exportModeSetting) {
             Messages::showAdminNotice(
@@ -525,7 +525,7 @@ class WCMP_Settings_Data
                 'name'      => WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES,
                 'label'     => __('Package types', 'woocommerce-myparcel'),
                 'callback'  => [WCMP_Settings_Callbacks::class, 'enhanced_select'],
-                'loop'      => WCMP_Data::getPackageTypesHuman(),
+                'loop'      => Data::getPackageTypesHuman(),
                 'options'   => (new WCMP_Shipping_Methods())->getShippingMethods(),
                 'default'   => [],
                 'help_text' => __(

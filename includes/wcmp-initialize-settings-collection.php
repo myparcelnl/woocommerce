@@ -18,7 +18,7 @@ class WCMP_Initialize_Settings_Collection
         $settings->setSettingsByType($this->getOption('woocommerce_myparcel_checkout_settings'), 'checkout');
         $settings->setSettingsByType($this->getOption('woocommerce_myparcel_export_defaults_settings'), 'export');
 
-        foreach (WCMP_Data::getCarriers() as $carrier) {
+        foreach (Data::getCarriers() as $carrier) {
             $this->setCarrierSettings($settings, new $carrier());
         }
 

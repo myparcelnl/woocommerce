@@ -50,12 +50,12 @@ if (! class_exists('WCMYPA')) :
         /**
          * @var string
          */
-        public $plugin_basename;
+        public $pluginBasename;
 
         /**
          * @var WPO\WC\MyParcel\Collections\SettingsCollection
          */
-        public $setting_collection;
+        public $settingCollection;
 
         /**
          * @var string
@@ -84,7 +84,7 @@ if (! class_exists('WCMYPA')) :
         {
             $this->version         = $this->getVersion();
             $this->define('WC_MYPARCEL_NL_VERSION', $this->version);
-            $this->plugin_basename = plugin_basename(__FILE__);
+            $this->pluginBasename = plugin_basename(__FILE__);
 
             // load the localisation & classes
             add_action('plugins_loaded', [$this, 'translations']);
@@ -183,7 +183,7 @@ if (! class_exists('WCMYPA')) :
             require_once($this->includes . '/compatibility/class-wcpdf-compatibility.php');
             require_once($this->includes . '/compatibility/ShippingZone.php');
 
-            require_once($this->includes . '/class-wcmp-data.php');
+            require_once($this->includes . '/Data.php');
             require_once($this->includes . '/collections/settings-collection.php');
             require_once($this->includes . '/entities/setting.php');
             require_once($this->includes . '/entities/settings-field-arguments.php');
@@ -196,7 +196,7 @@ if (! class_exists('WCMYPA')) :
             $this->admin = require($this->includes . '/admin/class-wcmypa-admin.php');
             require_once($this->includes . '/admin/settings/class-wcmypa-settings.php');
             require_once($this->includes . '/class-wcmp-log.php');
-            require_once($this->includes . '/admin/class-wcmp-country-codes.php');
+            require_once($this->includes . '/admin/CountryCodes.php');
             require_once($this->includes . '/admin/settings/class-wcmp-shipping-methods.php');
             $this->export = require($this->includes . '/admin/class-wcmp-export.php');
             require_once($this->includes . '/class-wcmp-postcode-fields.php');
@@ -204,7 +204,6 @@ if (! class_exists('WCMYPA')) :
             require_once($this->includes . '/adapter/pickup-location-from-order-adapter.php');
             require_once($this->includes . '/adapter/shipment-options-from-order-adapter.php');
             require_once($this->includes . '/adapter/OrderLineFromWooCommerce.php');
-            require_once($this->includes . '/admin/class-wcmp-export-consignments.php');
             require_once($this->includes . '/Webhook/Hooks/OrderStatusWebhook.php');
             require_once($this->includes . '/Webhook/Hooks/AccountSettingsWebhook.php');
         }
@@ -281,7 +280,7 @@ if (! class_exists('WCMYPA')) :
             $sitePlugins = get_site_option('active_sitewide_plugins', []);
 
             if (isset($sitePlugins['woocommerce/woocommerce.php'])
-                || in_array('woocommerce/woocommerce.php', $blogPlugins)
+                || in_array('woocommerce/woocommerce.php', $blogPlugins, true)
             ) {
                 return true;
             }
@@ -314,27 +313,11 @@ if (! class_exists('WCMYPA')) :
 
             // installed version lower than plugin version?
             if (version_compare($installed_version, $this->version, '<')) {
-                if (! $installed_version) {
-                    $this->install();
-                } else {
-                    $this->upgrade($installed_version);
-                }
+                $this->upgrade($installed_version);
 
                 // new version number
                 update_option($version_setting, $this->version);
             }
-        }
-
-        /**
-         * Plugin install method. Perform any installation tasks here
-         */
-        protected function install(): void
-        {
-            // Pre 2.0.0
-            if (! empty(get_option('wcmyparcel_settings'))) {
-                require_once('migration/wcmp-installation-migration-v2-0-0.php');
-            }
-            // todo: Pre 4.0.0?
         }
 
         /**
@@ -401,8 +384,8 @@ if (! class_exists('WCMYPA')) :
         public function initSettings(): void
         {
             require_once('includes/wcmp-initialize-settings-collection.php');
-            if (empty($this->setting_collection)) {
-                $this->setting_collection = (new WCMP_Initialize_Settings_Collection())->initialize();
+            if (empty($this->settingCollection)) {
+                $this->settingCollection = (new WCMP_Initialize_Settings_Collection())->initialize();
             }
         }
 
@@ -438,7 +421,7 @@ if (! class_exists('WCMYPA')) :
          */
         private function validateApiKey(): bool
         {
-            $apiKey = $this->setting_collection->getByName(WCMYPA_Settings::SETTING_API_KEY);
+            $apiKey = $this->settingCollection->getByName(WCMYPA_Settings::SETTING_API_KEY);
 
             if (! $apiKey) {
                 Messages::showAdminNotice(

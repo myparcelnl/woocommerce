@@ -1,10 +1,10 @@
 <?php
 
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
-use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 
 defined('ABSPATH') or die();
 
@@ -32,17 +32,20 @@ $target_url = wp_nonce_url(
             <?php
             $c = true;
             foreach ($order_ids as $order_id) :
-                $order         = WCX::get_order($order_id);
-                $orderSettings = new OrderSettings($order);
+                $order = WCX::get_order($order_id);
+                $pdkOrderAdapter = new PdkOrderFromWCOrderAdapter($order);
 
                 // skip non-myparcel destinations
                 $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-                if (! WCMP_Country_Codes::isAllowedDestination($shipping_country)) {
+                if (! CountryCodes::isAllowedDestination($shipping_country)) {
                     continue;
                 }
 
-                $recipient     = (new RecipientFromWCOrder($order, AbstractConsignment::CC_NL, RecipientFromWCOrder::SHIPPING))->toArray();
-                $package_types = WCMP_Data::getPackageTypes();
+                $recipient = (new RecipientFromWCOrder(
+                    $order,
+                    AbstractConsignment::CC_NL,
+                    RecipientFromWCOrder::SHIPPING
+                ))->toArray();
                 ?>
                 <tr
                     class="order-row <?php echo(($c = ! $c)
@@ -97,7 +100,7 @@ $target_url = wp_nonce_url(
                                             <th><?php _e("Total weight", "woocommerce-myparcel"); ?></th>
                                             <th class="wcmp__text--right">
                                                 <?php
-                                                $weight = $orderSettings->getWeight();
+                                                $weight = $pdkOrderAdapter->getWeight();
 
                                                 if ($weight) {
                                                     echo wc_format_weight($weight);
@@ -112,13 +115,13 @@ $target_url = wp_nonce_url(
                                 </td>
                                 <td>
                                     <?php
-                                    if (WCMP_Data::isHomeCountry($shipping_country)
+                                    if (Data::isHomeCountry($shipping_country)
                                     && (empty($recipient['street']) || empty($recipient['number']))): ?>
                                     <p>
                                         <span style="color:red">
                                             <?php __(
-                                                "This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcel plugin was activated. The address data can still be manually entered in the order screen.",
-                                                "woocommerce-myparcel"
+                                                'This order does not contain valid street and house number data and cannot be exported because of this! This order was probably placed before the MyParcel plugin was activated. The address data can still be manually entered in the order screen.',
+                                                'woocommerce-myparcel'
                                             ); ?>
                                         </span>
                                     </p>
