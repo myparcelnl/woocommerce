@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\includes\adapter;
 
+use Exception;
 use GuzzleHttp\Client;
 use MyParcelNL\Pdk\Api\Adapter\ClientAdapterInterface;
 use MyParcelNL\Pdk\Api\Response\ClientResponseInterface;
@@ -50,7 +51,12 @@ class Guzzle7ClientAdapter implements ClientAdapterInterface
             self::DEFAULT_OPTIONS + $options
         );
 
-        $response   = $this->client->send($clientRequest);
+        try {
+            $response = $this->client->send($clientRequest);
+        } catch(Exception $e) {
+            throw($e->getBody());
+        }
+
         $statusCode = $response ? $response->getStatusCode() : 500;
 
         $body = $response

@@ -252,7 +252,7 @@ class WCMP_Export
 
         $shipmentCollection = $pdkOrderCollection->generateShipments();
         $repository         = Pdk::get(ShipmentRepository::class);
-        $concepts   = $repository->createConcepts($shipmentCollection);
+        $concepts           = $repository->createConcepts($shipmentCollection);
 
         if ($processDirectly) {
             $labelFormat   = WCMP_Settings_Data::getSetting(WCMYPA_Settings::SETTING_LABEL_FORMAT);
