@@ -57,7 +57,7 @@ class Data
     public static function convertWeightToGrams($weight): int
     {
         $weightUnit = get_option('woocommerce_weight_unit');
-        return WeightService::convertToGrams($weight, $weightUnit);
+        return WeightService::convertToGrams( (int) $weight, $weightUnit);
     }
 
     /**

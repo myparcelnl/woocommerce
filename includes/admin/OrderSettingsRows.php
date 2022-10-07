@@ -18,6 +18,7 @@ use WC_Order;
 use CountryCodes;
 use Data;
 use WCMP_Settings_Data;
+use WCMYPA_Admin;
 
 class OrderSettingsRows
 {
@@ -105,7 +106,7 @@ class OrderSettingsRows
 //        $orderSettings      = new OrderSettings($this->order, $this->deliveryOptions);
         $pdkOrderAdapter    = new PdkOrderFromWCOrderAdapter($this->order);
         $pdkOrder           = $pdkOrderAdapter->getPdkOrder();
-        $shippingCountry    = $pdkOrderAdapter->getShippingRecipient()->cc;
+        $shippingCountry    = $pdkOrder->recipient->cc;
         $isEuCountry        = CountryCodes::isEuCountry($shippingCountry);
         $isHomeCountry      = Data::isHomeCountry($shippingCountry);
         $isBelgium          = AbstractConsignment::CC_BE === $shippingCountry;
@@ -164,7 +165,7 @@ class OrderSettingsRows
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 'type'      => 'toggle',
                 'label'     => __('insured', 'woocommerce-myparcel'),
-                'value'     => (bool) $pdkOrder->deliveryOptions->shipmentOptions->insurance,
+                'value'     => (bool) $this->deliveryOptions->getShipmentOptions()->getInsurance(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_INSURED),
@@ -176,7 +177,7 @@ class OrderSettingsRows
                 'type'      => 'select',
                 'label'     => __('insured_amount', 'woocommerce-myparcel'),
                 'options'   => [PdkOrderFromWCOrderAdapter::DEFAULT_BELGIAN_INSURANCE => PdkOrderFromWCOrderAdapter::DEFAULT_BELGIAN_INSURANCE],
-                'value'     => $pdkOrder->deliveryOptions->shipmentOptions->insurance,
+                'value'     => $this->deliveryOptions->getShipmentOptions()->getInsurance(),
                 'condition' => [
                     self::OPTION_SHIPMENT_OPTIONS_INSURED,
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
@@ -190,7 +191,7 @@ class OrderSettingsRows
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_large_format', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_large_format_help_text', 'woocommerce-myparcel'),
-                'value'     => $pdkOrder->deliveryOptions->shipmentOptions->largeFormat,
+                'value'     => $this->deliveryOptions->getShipmentOptions()->hasLargeFormat(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT),
@@ -238,6 +239,7 @@ class OrderSettingsRows
     private function getAdditionalOptionsRows(PdkOrderFromWCOrderAdapter $pdkOrderAdapter): array
     {
         $pdkOrder = $pdkOrderAdapter->getPdkOrder();
+        $shipmentOptions = $this->deliveryOptions->getShipmentOptions();
 
         return [
             [
@@ -263,7 +265,7 @@ class OrderSettingsRows
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_only_recipient', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_only_recipient_help_text', 'woocommerce-myparcel'),
-                'value'     => $pdkOrder->deliveryOptions->shipmentOptions->onlyRecipient,
+                'value'     => $shipmentOptions->hasOnlyRecipient(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
@@ -276,7 +278,7 @@ class OrderSettingsRows
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_signature', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_signature_help_text', 'woocommerce-myparcel'),
-                'value'     => $pdkOrder->deliveryOptions->shipmentOptions->signature,
+                'value'     => $shipmentOptions->hasSignature(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
@@ -289,7 +291,7 @@ class OrderSettingsRows
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_age_check', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_age_check_help_text', 'woocommerce-myparcel'),
-                'value'     => $pdkOrder->deliveryOptions->shipmentOptions->ageCheck,
+                'value'     => $shipmentOptions->hasAgeCheck(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK),
@@ -300,7 +302,7 @@ class OrderSettingsRows
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_return', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_return_help_text', 'woocommerce-myparcel'),
-                'value'     => $pdkOrder->deliveryOptions->shipmentOptions->return,
+                'value'     => $shipmentOptions->isReturn(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
@@ -312,7 +314,7 @@ class OrderSettingsRows
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
-                'value'     => $pdkOrder->deliveryOptions->shipmentOptions->sameDayDelivery,
+                'value'     => $shipmentOptions->isSameDayDelivery(),
                 'condition' => [
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
                 ],
@@ -321,7 +323,7 @@ class OrderSettingsRows
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 'type'      => 'toggle',
                 'label'     => __('insured', 'woocommerce-myparcel'),
-                'value'     => (bool) $pdkOrder->deliveryOptions->shipmentOptions->insurance,
+                'value'     => (bool) $shipmentOptions->getInsurance(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_INSURED),
@@ -332,7 +334,7 @@ class OrderSettingsRows
                 'type'      => 'select',
                 'label'     => __('insured_amount', 'woocommerce-myparcel'),
                 'options'   => Data::getInsuranceAmounts(),
-                'value'     => $pdkOrder->deliveryOptions->shipmentOptions->insurance,
+                'value'     => $shipmentOptions->getInsurance(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_INSURED),

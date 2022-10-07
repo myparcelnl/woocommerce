@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\includes\adapter;
 
-use Exception;
 use GuzzleHttp\Client;
 use MyParcelNL\Pdk\Api\Adapter\ClientAdapterInterface;
-use MyParcelNL\Pdk\Api\Response\ClientResponseInterface;
 use MyParcelNL\Pdk\Api\Response\ClientResponse;
 
 /**
@@ -40,30 +38,19 @@ class Guzzle7ClientAdapter implements ClientAdapterInterface
      * @return \MyParcelNL\Pdk\Api\Response\ClientResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function doRequest(string $httpMethod, string $uri, array $options = []): ClientResponseInterface
+    public function doRequest(string $httpMethod, string $uri, array $options = []): ClientResponse
     {
-        $arr = $options;
-        $merged = self::DEFAULT_OPTIONS + $options;
-
-        $clientRequest = $this->client->createRequest(
+        $response = $this->client->request(
             $httpMethod,
             $uri,
             self::DEFAULT_OPTIONS + $options
         );
 
-        try {
-            $response = $this->client->send($clientRequest);
-        } catch(Exception $e) {
-            throw($e->getBody());
-        }
-
-        $statusCode = $response ? $response->getStatusCode() : 500;
+        $statusCode = $response->getStatusCode() ?? 500;
 
         $body = $response
-            ? $response
-                ->getBody()
-                ->getContents()
-            : null;
+            ->getBody()
+            ->getContents();
 
         return new ClientResponse($body, $statusCode);
     }

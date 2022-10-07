@@ -257,7 +257,7 @@ class WCMP_Export
         if ($processDirectly) {
             $labelFormat   = WCMP_Settings_Data::getSetting(WCMYPA_Settings::SETTING_LABEL_FORMAT);
             $labelPosition = WCMP_Settings_Data::getSetting(WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION);
-            $repository->fetchLabelLink($shipmentCollection, $labelFormat, $labelPosition);
+            $repository->fetchLabelLink($shipmentCollection, $labelFormat, $labelPosition = null);
         }
 
         foreach ($orderIds as $order_id) {
@@ -268,9 +268,9 @@ class WCMP_Export
                 continue;
             }
 
-            $savedShipmentData = $shipmentIds->map(static function ($shipmentId) use ($order, $shipmentCollection){
+            $savedShipmentData = $shipmentIds->map(function ($shipmentId) use ($order, $shipmentCollection){
                 $shipment = $shipmentCollection->where('id', $shipmentId)->toArray();
-                self::saveShipmentData($order, $shipment);
+                $this->saveShipmentData($order, $shipment);
                 return $shipmentId;
             });
 
@@ -282,10 +282,11 @@ class WCMP_Export
 
             WCMP_API::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
 
+
             WCX_Order::update_meta_data(
                 $order,
                 WCMYPA_Admin::META_LAST_SHIPMENT_IDS,
-                $shipmentIds->toArray()
+                $shipmentIds->all()
             );
         }
 
@@ -294,7 +295,7 @@ class WCMP_Export
                 __("%s shipments successfully exported to MyParcel", "woocommerce-myparcel"),
                 count($shipmentIds)
             );
-            $return["success_ids"] = $shipmentIds;
+            $return["success_ids"] = $shipmentIds->all();
 
             // do action on successfully exporting the label
             do_action("wcmp_labels_exported", $orderIds);
@@ -603,9 +604,9 @@ class WCMP_Export
             throw new Exception('save_shipment_data requires a valid shipment');
         }
 
-        $old_shipments                  = [];
-        $new_shipments                  = [];
-        $new_shipments[$shipment['id']] = $shipment;
+        $old_shipments                           = [];
+        $new_shipments                           = [];
+        $new_shipments[$shipment['shipment_id']] = $shipment;
 
         if (WCX_Order::has_meta($order, WCMYPA_Admin::META_SHIPMENTS)) {
             $old_shipments = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENTS);
@@ -656,7 +657,7 @@ class WCMP_Export
      * @throws Exception
      */
     public function getPackageTypeFromOrder(WC_Order                       $order,
-                                            AbstractDeliveryOptionsAdapter $deliveryOptions = null
+                                            $deliveryOptions = null
     ): string {
         $packageTypeFromDeliveryOptions = $deliveryOptions ? $deliveryOptions->getPackageType() : null;
         $allowedPackageType             = $this->getAllowedPackageType($order, $packageTypeFromDeliveryOptions);
@@ -867,7 +868,7 @@ class WCMP_Export
             return [];
         }
 
-        foreach ($shipmentCollection->items as $shipment) {
+        foreach ($shipmentCollection->all() as $shipment) {
             $this->saveShipmentData($order, $shipment->toArray());
             ChannelEngine::updateMetaOnExport($order, $shipment->getAttribute('barcode') ?: $shipment->getAttribute('external_identifier'));
         }

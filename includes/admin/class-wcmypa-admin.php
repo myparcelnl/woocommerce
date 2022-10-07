@@ -381,7 +381,6 @@ class WCMYPA_Admin
      * @param string|null $oldStatus
      * @param string|null $newStatus will be passed when order status change triggers this method
      *
-     * @throws \ErrorException
      * @throws \MyParcelNL\Sdk\src\Exception\ApiException
      * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
      */
@@ -417,6 +416,7 @@ class WCMYPA_Admin
     {
         try {
             $pdkOrderAdapter = (new PdkOrderFromWCOrderAdapter($order));
+            $pdkOrder        = $pdkOrderAdapter->getPdkOrder();
         } catch (Exception $exception) {
             WCMP_Log::add(sprintf('Could not get OrderSettings for order %d', $order->get_id()), $exception);
             printf('<div class="wcmp__shipment-settings-wrapper">⚠ %s</div>', __('warning_faulty_order_settings', 'woocommerce-myparcel'));
@@ -424,7 +424,7 @@ class WCMYPA_Admin
             return;
         }
 
-        $isAllowedDestination = CountryCodes::isAllowedDestination($pdkOrderAdapter->getShippingRecipient()->cc);
+        $isAllowedDestination = CountryCodes::isAllowedDestination($pdkOrder->recipient->cc ?? 'NL');
 
         if (! $isAllowedDestination || $pdkOrderAdapter->hasLocalPickup()) {
             return;
@@ -458,7 +458,7 @@ class WCMYPA_Admin
             '<a href="#" class="wcmp__shipment-options__show" data-order-id="%d"><span class="wcmp__shipment-options__package-type">%s</span> &#x25BE;</a>',
             $order->get_id(),
             Data::getPackageTypeHuman(
-                (new WCMP_Export())->getAllowedPackageType($order, $pdkOrderAdapter->getPackageType())
+                (new WCMP_Export())->getAllowedPackageType($order, $pdkOrder->deliveryOptions->packageType)
             )
         );
 
@@ -849,13 +849,18 @@ class WCMYPA_Admin
         foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
             $order         = WCX::get_order($order_id);
             $data          = self::removeDisallowedDeliveryOptions($data, $order->get_shipping_country());
+
 //            $orderSettings = new OrderSettings($order, $data);
-            $pdkOrderAdapter = new PdkOrderFromWCOrderAdapter($order);
+//            $pdkOrderAdapter = new PdkOrderFromWCOrderAdapter($order);
+//            $pdkOrderAdapter->setDeliveryOptions($data);
+
+//            $deliveryOptionsObjectNew  = (new DeliveryOptions($data))->toArray();
+//            $postOptions = $data;
 
             WCX_Order::update_meta_data(
                 $order,
                 self::META_DELIVERY_OPTIONS,
-                $pdkOrderAdapter->getDeliveryOptions()->toArray()
+                $data
             );
 
             // Save extra options
@@ -916,6 +921,8 @@ class WCMYPA_Admin
         echo '</div>';
 
         $downloadDisplay = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY) === 'display';
+
+
         $consignments    = self::get_order_shipments($order);
 
         // show shipments if available
@@ -1280,7 +1287,7 @@ class WCMYPA_Admin
                 __('MyParcel shipment:', 'woocommerce-myparcel'),
                 Data::getDeliveryTypesHuman()[$deliveryType],
                 null === $deliveryDate || $deliveryType === AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME ? ''
-                    : wc_format_datetime(new WC_DateTime($deliveryDate), 'D d-m')
+                    : wc_format_datetime($deliveryDate, 'D d-m')
             );
         }
     }

@@ -16,6 +16,7 @@ use MyParcelNL\Pdk\Shipment\Collection\CustomsDeclarationItemCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Pdk\Shipment\Model\ShipmentOptions;
 use MyParcelNL\Pdk\Shipment\Service\DeliveryDateService;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\PickupLocation;
@@ -45,7 +46,7 @@ class PdkOrderFromWCOrderAdapter
      */
     public function __construct(WC_Order $order)
     {
-        $this->order  = $order;
+        $this->order           = $order;
     }
 
     /**
@@ -72,6 +73,34 @@ class PdkOrderFromWCOrderAdapter
                     )) + ((float) $this->order->get_shipping_total() + (float) $this->order->get_shipping_tax()),
             'totalVat'              => (float) $this->order->get_shipping_tax() + $this->order->get_cart_tax(),
         ]);
+    }
+
+    /**
+     * @param $data
+     *
+     * @return \MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter
+     */
+    public function setDeliveryOptions($data): PdkOrderFromWCOrderAdapter
+    {
+        $this->order->deliveryOptions = new DeliveryOptions([
+            'carrier'         => $data['carrier'],
+            'labelAmount'     => $data['extra_options']['collo_amount'],
+            'packageType'     => $data['package_type'],
+            //            'pickupLocation'  => (array) $deliveryOptions->getPickupLocation(),
+
+            'shipmentOptions' => new ShipmentOptions([
+                'ageCheck'         => $data['shipment_options']['age_check'],
+                'insurance'        => $data['shipment_options']['insured_amount'],
+                'labelDescription' => $data['shipment_options']['label_description'],
+                'largeFormat'      => $data['shipment_options']['large_format'],
+                'onlyRecipient'    => $data['shipment_options']['only_recipient'] ?? null,
+                'return'           => $data['shipment_options']['return'],
+                'sameDayDelivery'  => $data['shipment_options']['same_day_delivery'],
+                'signature'        => $data['shipment_options']['signature'] ?? null,
+            ])
+        ]);
+
+        return $this;
     }
 
     /**
@@ -309,7 +338,7 @@ class PdkOrderFromWCOrderAdapter
 
         return new DeliveryOptions([
             'carrier'         => $deliveryOptions->getCarrier(),
-            'date'            => DeliveryDateService::fixPastDeliveryDate($deliveryOptions->getDate()),
+            'date'            => DeliveryDateService::fixPastDeliveryDate($deliveryOptions->getDate() ?? ''),
             'deliveryType'    => $deliveryOptions->getDeliveryType(),
             'labelAmount'     => 1,
             'packageType'     => $deliveryOptions->getPackageType(),

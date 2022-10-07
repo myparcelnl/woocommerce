@@ -2,6 +2,7 @@
 
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\MyParcelRequest;
+use MyParcelNL\WooCommerce\includes\adapter\PdkOrderCollectionFromWCOrdersAdapter;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core;
 use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
@@ -120,11 +121,15 @@ class WCMP_API extends WCMP_Rest
      * @param  \WC_Order $order
      *
      * @return array
+     * @throws \JsonException|\MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     * @throws \Exception
      */
     private function getTrackTraceForOrder(array $lastShipmentIds, WC_Order $order): array
     {
-        $shipmentData    = (new WCMP_Export())->getShipmentData($lastShipmentIds, $order);
-        $trackTraceArray = [];
+        $pdkOrderCollection = (new PdkOrderCollectionFromWCOrdersAdapter($lastShipmentIds))->convert();
+        $shipments = $pdkOrderCollection->generateShipments();
+        $shipmentData       = (new WCMP_Export())->getShipmentData($pdkOrderCollection->generateShipments(), $order);
+        $trackTraceArray    = [];
 
         foreach ($shipmentData as $shipment) {
             $trackTraceArray[] = $shipment['track_trace'] ?? null;
