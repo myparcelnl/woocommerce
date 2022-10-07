@@ -6,11 +6,12 @@ namespace MyParcelNL\WooCommerce\includes\admin;
 
 defined('ABSPATH') or die();
 
+use MyParcelNL\Pdk\Base\Service\CountryService;
+use MyParcelNL\Pdk\Carrier\Model\CarrierOptions;
+use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
@@ -60,9 +61,9 @@ class OrderSettingsRows
         'parent_name'  => self::OPTION_DELIVERY_TYPE,
         'type'         => 'show',
         'parent_value' => [
-            AbstractConsignment::DELIVERY_TYPE_MORNING_NAME,
-            AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME,
-            AbstractConsignment::DELIVERY_TYPE_EVENING_NAME,
+            DeliveryOptions::DELIVERY_TYPE_MORNING_NAME,
+            DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME,
+            DeliveryOptions::DELIVERY_TYPE_EVENING_NAME,
         ],
         'set_value'    => WCMP_Settings_Data::DISABLED,
     ];
@@ -70,7 +71,7 @@ class OrderSettingsRows
     private const CONDITION_PACKAGE_TYPE_PACKAGE = [
         'parent_name'  => self::OPTION_PACKAGE_TYPE,
         'type'         => 'show',
-        'parent_value' => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
+        'parent_value' => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
     ];
 
     private const CONDITION_FORCE_ENABLED_ON_AGE_CHECK = [
@@ -109,8 +110,10 @@ class OrderSettingsRows
         $shippingCountry    = $pdkOrder->recipient->cc;
         $isEuCountry        = CountryCodes::isEuCountry($shippingCountry);
         $isHomeCountry      = Data::isHomeCountry($shippingCountry);
-        $isBelgium          = AbstractConsignment::CC_BE === $shippingCountry;
-        $packageTypeOptions = array_combine(AbstractConsignment::PACKAGE_TYPES_NAMES , Data::getPackageTypesHuman());
+        $isBelgium          = CountryService::CC_BE === $shippingCountry;
+        $packageTypeOptions = array_combine(DeliveryOptions::PACKAGE_TYPES_NAMES , Data::getPackageTypesHuman());
+
+        $this->deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($this->order);
 
         // Remove mailbox and digital stamp, because this is not possible for international shipments
         if (! $isHomeCountry) {
@@ -123,7 +126,7 @@ class OrderSettingsRows
                 'label'   => __('Carrier', 'woocommerce-myparcel'),
                 'type'    => 'select',
                 'options' => $this->getAvailableCarriers($shippingCountry),
-                'value'   => $this->deliveryOptions->getCarrier() ?? CarrierPostNL::NAME,
+                'value'   => $this->deliveryOptions->getCarrier() ?? CarrierOptions::CARRIER_POSTNL_NAME,
             ],
             [
                 'name'              => self::OPTION_DELIVERY_TYPE,
@@ -356,7 +359,7 @@ class OrderSettingsRows
         $carriersOptions = [];
 
         foreach ($carriers as $carrier) {
-            if (CarrierInstabox::ID === $carrier->getId() && ! Data::isHomeCountry($country)) {
+            if (CarrierOptions::CARRIER_INSTABOX_ID === $carrier->getId() && ! Data::isHomeCountry($country)) {
                 continue;
             }
 
@@ -414,7 +417,7 @@ class OrderSettingsRows
                         ];
                     })
                     ->getIterator(),
-            'set_value' => AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME,
+            'set_value' => DeliveryOptions::DEFAULT_PACKAGE_TYPE_NAME,
         ];
     }
 }
