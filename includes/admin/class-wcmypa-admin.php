@@ -391,6 +391,13 @@ class WCMYPA_Admin
             return;
         }
 
+        $order         = WCX::get_order($orderId);
+        $orderSettings = new OrderSettings($order);
+
+        if ($orderSettings->hasLocalPickup()) {
+            return;
+        }
+
         $newStatus             = $newStatus ?? WCMP_Settings_Data::NOT_ACTIVE;
         $automaticExportStatus = WCMYPA()->setting_collection->getByName(
             WCMYPA_Settings::SETTING_AUTOMATIC_EXPORT_STATUS
