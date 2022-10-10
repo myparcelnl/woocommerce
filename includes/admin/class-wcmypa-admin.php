@@ -438,7 +438,7 @@ class WCMYPA_Admin
         if (! empty($consignments)) :
             // only use last shipment
             $lastShipment   = array_pop($consignments);
-            $lastShipmentId = $lastShipment['shipment_id'];
+            $lastShipmentId = $lastShipment['shipment_id'] ?? null;
 
             ?>
             <a class="wcmp__shipment-summary__show">

@@ -221,15 +221,15 @@ class WCMP_Export
     public function sanitize_posted_array($array): array
     {
         if (is_array($array)) {
-            return array_map('esc_attr', $array);
+            return $array;
         }
 
         // check for JSON
-        if (is_string($array) && strpos($array, '[')!==false) {
-            $array = json_decode(stripslashes($array), false);
+        if (is_string($array) && strpos($array, "[")!==false) {
+            $array = json_decode(stripslashes($array));
         }
 
-        return array_map('esc_attr', (array) $array);
+        return (array) $array;
     }
 
     /**

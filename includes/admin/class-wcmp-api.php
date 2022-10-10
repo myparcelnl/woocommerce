@@ -15,7 +15,7 @@ if (class_exists('WCMP_API')) {
     return;
 }
 
-class WCMP_API extends WCMP_Rest
+class WCMP_API
 {
     /**
      * @var string
@@ -31,8 +31,6 @@ class WCMP_API extends WCMP_Rest
      */
     public function __construct($key)
     {
-        parent::__construct();
-
         $this->key       = (string) $key;
     }
 
