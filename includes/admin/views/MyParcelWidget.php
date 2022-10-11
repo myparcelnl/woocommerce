@@ -69,6 +69,7 @@ class MyParcelWidget
                 $pdkOrderAdapter   = new PdkOrderFromWCOrderAdapter($order);
                 $orderId           = $order->get_id();
                 $shippingRecipient = $pdkOrderAdapter->getShippingRecipient();
+                // TODO: get shipment ID's
                 $shipmentIds       = (new WCMP_Export())->getShipmentIds([$orderId], ['exclude_concepts']);
                 $shipmentStatus    = $this->getShipmentStatus($shipmentIds, $order);
 
