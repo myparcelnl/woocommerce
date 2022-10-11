@@ -6,7 +6,6 @@ namespace MyParcelNL\WooCommerce\Helper;
 
 use Data;
 use ErrorException;
-use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use WC_Order;
 use WC_Order_Item_Product;
@@ -19,7 +18,6 @@ use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 class ExportRow
 {
     public const DEFAULT_PRODUCT_QUANTITY = 1;
-    public const CURRENCY_EURO = 'EUR';
 
     /**
      * @var \WC_Order

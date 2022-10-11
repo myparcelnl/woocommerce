@@ -7,7 +7,6 @@ namespace MyParcelNL\WooCommerce\includes\admin;
 defined('ABSPATH') or die();
 
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
-use WCMYPA_Settings;
 
 class MessagesRepository
 {
@@ -36,6 +35,9 @@ class MessagesRepository
         }
     }
 
+    /**
+     * @return void
+     */
     public function persistRemainingMessages(): void
     {
         if (! $this->messages) {
@@ -45,6 +47,9 @@ class MessagesRepository
         update_option(self::OPTION_NOTICE_PERSISTED, $this->messages);
     }
 
+    /**
+     * @return void
+     */
     public function preloadPersistedMessages(): void
     {
         $this->messages = get_option(self::OPTION_NOTICE_PERSISTED, []);

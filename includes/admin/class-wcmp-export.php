@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Fulfilment\Collection\OrderCollection;
 use MyParcelNL\Pdk\Fulfilment\Repository\OrderRepository;
@@ -11,15 +10,11 @@ use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
-use MyParcelNL\Sdk\src\Exception\ApiException;
 use MyParcelNL\Sdk\src\Exception\MissingFieldException;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
-use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Str;
-use MyParcelNL\WooCommerce\Helper\ExportRow;
 use MyParcelNL\WooCommerce\includes\adapter\PdkOrderCollectionFromWCOrdersAdapter;
 use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
@@ -82,6 +77,7 @@ class WCMP_Export
      *
      * @throws \JsonException
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     * @throws \Exception
      */
     public function exportByOrderId(int $orderId): void
     {
@@ -89,11 +85,13 @@ class WCMP_Export
             return;
         }
 
-        $pdkOrderCollection = (new PdkOrderFromWCOrderAdapter([$orderId]))->convert();
-        $return             = $this->exportAccordingToMode($pdkOrderCollection, [(string) $orderId], self::NO);
+        $order              = WCX::get_order($orderId);
+        $pdkOrderCollection = new PdkOrderCollection();
+        $pdkOrder           = (new PdkOrderFromWCOrderAdapter($order))->getPdkOrder();
+        $pdkOrderCollection->push($pdkOrder);
+        $return = $this->exportAccordingToMode($pdkOrderCollection, [(string) $orderId], self::NO);
 
         if (isset($return['success'])) {
-            $order = WCX::get_order($orderId);
             $order->add_order_note($return['success']);
         }
     }
@@ -188,6 +186,7 @@ class WCMP_Export
                         break;
                     case self::GET_LABELS:
                         $return = $this->printLabels($pdkOrderCollection, $offset);
+                        
                         break;
                     case self::MODAL_DIALOG:
                         $orderIds = $this->filterOrderDestinations($orderIds);
