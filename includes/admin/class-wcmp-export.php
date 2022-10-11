@@ -90,7 +90,7 @@ class WCMP_Export
         }
 
         $pdkOrderCollection = (new PdkOrderFromWCOrderAdapter([$orderId]))->convert();
-        $return             = $this->exportAccordingToMode($pdkOrderCollection, [(string) $orderId], WCMP_Export::NO);
+        $return             = $this->exportAccordingToMode($pdkOrderCollection, [(string) $orderId], self::NO);
 
         if (isset($return['success'])) {
             $order = WCX::get_order($orderId);
@@ -189,7 +189,7 @@ class WCMP_Export
                         $return = $this->exportReturn($pdkOrderCollection);
                         break;
                     case self::GET_LABELS:
-                        $return = $this->printLabels($pdkOrderCollection, $orderIds, $shipmentIds, $offset);
+                        $return = $this->printLabels($pdkOrderCollection, $offset);
                         break;
                     case self::MODAL_DIALOG:
                         $orderIds = $this->filterOrderDestinations($orderIds);
@@ -322,10 +322,10 @@ class WCMP_Export
         $returnShipments    = $repository->createReturnShipments($shipmentCollection);
 
         $returnShipments->each(function (Shipment $returnShipment) {
-            $orderId = $returnShipment->externalIdentifier;
+            $orderId    = $returnShipment->externalIdentifier;
             $shipmentId = $returnShipment->id;
-            $order                    = WCX::get_order($orderId);
-            $shipment = ['id' => $shipmentId,];
+            $order      = WCX::get_order($orderId);
+            $shipment   = ['id' => $shipmentId,];
 
             $this->saveShipmentData($order, $shipment);
         });
@@ -334,40 +334,23 @@ class WCMP_Export
     }
 
     /**
-     * @param  array       $shipmentIds
-     * @param  array       $orderIds
-     * @param  int         $offset
-     * @param  string|null $displayOverride - Overrides display setting.
+     * @param  \MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection $shipments
+     * @param  int                                                    $offset
      *
      * @return array
-     * @throws Exception
      */
     public function downloadOrGetUrlOfLabels(
-        array  $shipmentIds,
-        array  $orderIds = [],
-        int    $offset = 0,
-        string $displayOverride = null
+        ShipmentCollection $shipments,
+        int                $offset = 0
     ): array {
-        $return = [];
+        WCMP_Log::add('*** downloadOrGetUrlOfLabels() ***');
+        WCMP_Log::add('Shipment IDs: ' . implode(', ', $shipments));
 
-        WCMP_Log::add("*** downloadOrGetUrlOfLabels() ***");
-        WCMP_Log::add("Shipment IDs: " . implode(", ", $shipmentIds));
+        $positions = array_slice(self::DEFAULT_POSITIONS, $offset % 4);
+        $displayOverride = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY);
 
-        try {
-            $api = $this->init_api();
-
-            // positions are defined on landscape, but paper is filled portrait-wise
-            $positions = array_slice(self::DEFAULT_POSITIONS, $offset % 4);
-
-            $displaySetting = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY);
-            $display        = ($displayOverride ?? $displaySetting)==="display";
-            $api->getShipmentLabels($shipmentIds, $orderIds, $positions, $display);
-        } catch (Exception $e) {
-            Messages::showAdminNotice($e->getMessage());
-            throw new \RuntimeException($e->getMessage());
-        }
-
-        return $return;
+        return Pdk::get(ShipmentRepository::class)
+            ->fetchLabelLink($shipments, $displayOverride, $positions);
     }
 
     /**
@@ -1151,29 +1134,20 @@ class WCMP_Export
 
     /**
      * @param  \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection $pdkOrderCollection
-     * @param  array                                                $order_ids
-     * @param  array                                                $shipment_ids
      * @param  int                                                  $offset
      *
      * @return array
      * @throws \Exception
      */
-    private function printLabels(PdkOrderCollection $pdkOrderCollection, array $order_ids, array $shipment_ids, int $offset): array
-    {
-        $shipmentCollection = $pdkOrderCollection->generateShipments();
-
-        if (! empty($shipment_ids)) {
-            $return = $this->downloadOrGetUrlOfLabels(
-                $shipment_ids,
-                $order_ids,
-                $offset
-            );
-        } else {
-            $order_ids = $this->filterOrderDestinations($order_ids);
-            $return    = $this->getOrderLabels($order_ids, $offset);
-        }
-
-        return $return;
+    private function printLabels(
+        PdkOrderCollection $pdkOrderCollection,
+        int                $offset
+    ): array {
+        $pdkOrderCollection->generateShipments();
+        return $this->downloadOrGetUrlOfLabels(
+            $pdkOrderCollection->getAllShipments(),
+            $offset
+        );
     }
 
     /**
@@ -1206,11 +1180,12 @@ class WCMP_Export
      * @param  array                                                $orderIds
      *
      * @return array
+     * @throws \Exception
      */
     private function saveOrderCollection(PdkOrderCollection $pdkOrderCollection, array $orderIds): array
     {
         $repository                = Pdk::get(OrderRepository::class);
-        $pdkOrderCollection->getAllShipments();
+        $pdkOrderCollection->generateShipments();
         $fulfilmentOrderCollection = $pdkOrderCollection->getOrderCollection();
 
         try {

@@ -46,7 +46,7 @@ class PdkOrderFromWCOrderAdapter
      */
     public function __construct(WC_Order $order)
     {
-        $this->order           = $order;
+        $this->order = $order;
     }
 
     /**
@@ -56,6 +56,7 @@ class PdkOrderFromWCOrderAdapter
     {
         $deliveryOptions = $this->getDeliveryOptions();
         return new PdkOrder([
+            'orderDate'             => $this->order->get_date_created()->getTimestamp(),
             'customsDeclaration'    => $this->getCustomsDeclaration(),
             'deliveryOptions'       => $deliveryOptions,
             'externalIdentifier'    => $this->order->get_id(),
@@ -83,9 +84,9 @@ class PdkOrderFromWCOrderAdapter
     public function setDeliveryOptions($data): PdkOrderFromWCOrderAdapter
     {
         $this->order->deliveryOptions = new DeliveryOptions([
-            'carrier'         => $data['carrier'],
-            'labelAmount'     => $data['extra_options']['collo_amount'],
-            'packageType'     => $data['package_type'],
+            'carrier'     => $data['carrier'],
+            'labelAmount' => $data['extra_options']['collo_amount'],
+            'packageType' => $data['package_type'],
             //            'pickupLocation'  => (array) $deliveryOptions->getPickupLocation(),
 
             'shipmentOptions' => new ShipmentOptions([
@@ -97,7 +98,7 @@ class PdkOrderFromWCOrderAdapter
                 'return'           => $data['shipment_options']['return'],
                 'sameDayDelivery'  => $data['shipment_options']['same_day_delivery'],
                 'signature'        => $data['shipment_options']['signature'] ?? null,
-            ])
+            ]),
         ]);
 
         return $this;
@@ -132,7 +133,7 @@ class PdkOrderFromWCOrderAdapter
     {
         $weight = $this->getExtraOptions()['weight'] ?? null;
 
-        if (null === $weight && $this->order->meta_exists(WCMYPA_Admin::META_ORDER_WEIGHT)) {
+        if (null===$weight && $this->order->meta_exists(WCMYPA_Admin::META_ORDER_WEIGHT)) {
             $weight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
         }
 
@@ -164,9 +165,9 @@ class PdkOrderFromWCOrderAdapter
      */
     public function getDigitalStampRangeWeight(): int
     {
-        $weight = 0;
+        $weight       = 0;
         $extraOptions = $this->getExtraOptions();
-        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $this->getPdkOrder()->deliveryOptions->packageType) {
+        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME===$this->getPdkOrder()->deliveryOptions->packageType) {
             $emptyWeight = (float) WCMYPA()->settingCollection->getByName(
                 WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
             );
@@ -176,7 +177,9 @@ class PdkOrderFromWCOrderAdapter
 
         $savedWeight   = $extraOptions['digital_stamp_weight'] ?? null;
         $orderWeight   = $this->getWeight();
-        $defaultWeight = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT) ?: null;
+        $defaultWeight = WCMYPA()->settingCollection->getByName(
+            WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT
+        ) ?: null;
         $weight        = (float) ($savedWeight ?? $defaultWeight ?? $orderWeight);
 
         return WeightService::convertToDigitalStamp((int) $weight);
@@ -300,7 +303,7 @@ class PdkOrderFromWCOrderAdapter
         $shippingMethod   = array_shift($shippingMethods);
         $shippingMethodId = $shippingMethod ? $shippingMethod->get_method_id() : null;
 
-        return WCMP_Shipping_Methods::LOCAL_PICKUP === $shippingMethodId;
+        return WCMP_Shipping_Methods::LOCAL_PICKUP===$shippingMethodId;
     }
 
     /**

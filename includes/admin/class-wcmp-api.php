@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\MyParcelRequest;
 use MyParcelNL\WooCommerce\includes\adapter\PdkOrderCollectionFromWCOrdersAdapter;
@@ -94,7 +96,7 @@ class WCMP_API
     /**
      * @param  array $orderIds
      *
-     * @throws \JsonException
+     * @throws \JsonException|\MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
     private function updateOrderBarcode(array $orderIds): void
     {
