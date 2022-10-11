@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use MyParcelNL\Pdk\Base\Support\Collection;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Fulfilment\Collection\OrderCollection;
 use MyParcelNL\Pdk\Fulfilment\Repository\OrderRepository;
@@ -26,11 +27,11 @@ use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
 
-if (! defined("ABSPATH")) {
+if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists("WCMP_Export")) {
+if (class_exists('WCMP_Export')) {
     return new WCMP_Export();
 }
 
@@ -48,7 +49,7 @@ class WCMP_Export
     public const ORDER_DESCRIPTION_MAX_LENGTH = 45;
     public const COOKIE_EXPIRE_TIME = 20;
     public const DEFAULT_POSITIONS = [2, 4, 1, 3];
-    public const SUFFIX_CHECK_REG  = "~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i";
+    public const SUFFIX_CHECK_REG  = '~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i';
     /**
      * Shipping methods that can never have delivery options.
      */
@@ -71,10 +72,9 @@ class WCMP_Export
     {
         //$this->logger  = Pdk::get(PdkLogger::class);
         $this->success = [];
-        require_once("class-wcmp-rest.php");
-        require_once("class-wcmp-api.php");
+        require_once('class-wcmp-api.php');
 
-        add_action("wp_ajax_" . self::EXPORT, [$this, "export"]);
+        add_action('wp_ajax_' . self::EXPORT, [$this, 'export']);
     }
 
     /**
@@ -127,31 +127,29 @@ class WCMP_Export
      *
      * @access public
      * @return void
-     * @throws ApiException
-     * @throws MissingFieldException
      * @throws Exception
      */
-    public function export()
+    public function export(): void
     {
         // Check the nonce
-        if (! check_ajax_referer(WCMYPA::NONCE_ACTION, "_wpnonce", false)) {
+        if (! check_ajax_referer(WCMYPA::NONCE_ACTION, '_wpnonce', false)) {
             die("Ajax security check failed. Did you pass a valid nonce in \$_REQUEST['_wpnonce']?");
         }
 
         if (! is_user_logged_in()) {
-            wp_die(__("You do not have sufficient permissions to access this page.", "woocommerce-myparcel"));
+            wp_die(__('You do not have sufficient permissions to access this page.', 'woocommerce-myparcel'));
         }
 
         $return = [];
 
         // Check the user privileges (maybe use order ids for filter?)
         if (apply_filters(
-            "wc_myparcel_check_privs",
-            ! current_user_can("manage_woocommerce_orders") && ! current_user_can("edit_shop_orders")
+            'wc_myparcel_check_privs',
+            ! current_user_can('manage_woocommerce_orders') && ! current_user_can('edit_shop_orders')
         )) {
-            $return["error"] = __(
-                "You do not have sufficient permissions to access this page.",
-                "woocommerce-myparcel"
+            $return['error'] = __(
+                'You do not have sufficient permissions to access this page.',
+                'woocommerce-myparcel'
             );
             echo json_encode($return);
             die();
@@ -225,7 +223,7 @@ class WCMP_Export
         }
 
         // check for JSON
-        if (is_string($array) && strpos($array, "[")!==false) {
+        if (is_string($array) && strpos($array, '[')!==false) {
             $array = json_decode(stripslashes($array));
         }
 
@@ -291,17 +289,17 @@ class WCMP_Export
         }
 
         if (! empty($this->success)) {
-            $return["success"]     = sprintf(
-                __("%s shipments successfully exported to MyParcel", "woocommerce-myparcel"),
+            $return['success']     = sprintf(
+                __('%s shipments successfully exported to MyParcel', 'woocommerce-myparcel'),
                 count($shipmentIds)
             );
-            $return["success_ids"] = $shipmentIds->all();
+            $return['success_ids'] = $shipmentIds->all();
 
             // do action on successfully exporting the label
-            do_action("wcmp_labels_exported", $orderIds);
+            do_action('wcmp_labels_exported', $orderIds);
 
-            WCMP_Log::add($return["success"]);
-            WCMP_Log::add("ids: " . implode(", ", $return["success_ids"]));
+            WCMP_Log::add($return['success']);
+            WCMP_Log::add('ids: ' . implode(', ', $return['success_ids']));
         }
 
         return $return;
@@ -354,37 +352,6 @@ class WCMP_Export
     }
 
     /**
-     * @param  array       $order_ids
-     * @param  int         $offset
-     * @param  string|null $display
-     *
-     * @return array
-     * @throws Exception
-     */
-    public function getOrderLabels(array $order_ids, int $offset = 0, string $display = null)
-    {
-        $shipment_ids = $this->getShipmentIds($order_ids, ["only_last" => true]);
-
-        if (empty($shipment_ids)) {
-            WCMP_Log::add(" *** Failed label request(not exported yet) ***");
-
-            throw new Exception(
-                __(
-                    "The selected orders have not been exported to MyParcel yet! ",
-                    "woocommerce-myparcel"
-                )
-            );
-        }
-
-        return $this->downloadOrGetUrlOfLabels(
-            $shipment_ids,
-            $order_ids,
-            $offset,
-            $display
-        );
-    }
-
-    /**
      * @param $order_ids
      */
     public function modal_dialog($order_ids): void
@@ -410,98 +377,6 @@ class WCMP_Export
     }
 
     /**
-     * @return WCMP_API
-     * @throws Exception
-     */
-    public function init_api()
-    {
-        $key = WCMP_Settings_Data::getSetting(WCMYPA_Settings::SETTING_API_KEY);
-
-        if (! ($key)) {
-            throw new ErrorException(__("No API key found in MyParcel settings", "woocommerce-myparcel"));
-        }
-
-        return new WCMP_API($key);
-    }
-
-    /**
-     * TODO: There are no options being passed right now but these will be necessary for NL.
-     *
-     * @param             $order_id
-     * @param  array|null $options
-     *
-     * @return array
-     * @throws Exception
-     */
-    public function prepareReturnShipmentData($order_id, ?array $options = []): array
-    {
-        $order = WCX::get_order($order_id);
-
-        $shipping_name =
-            method_exists($order, 'get_formatted_shipping_full_name') ? $order->get_formatted_shipping_full_name()
-                : trim($order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name());
-
-        // set name & email
-        $return_shipment_data = [
-            'parent'  => (int) $order->get_order_number(),
-            'name'    => $shipping_name,
-            'email'   => WCX_Order::get_prop($order, 'billing_email'),
-            'carrier' => PostNLConsignment::CARRIER_ID, // default to PostNL for now
-        ];
-
-        if (! Arr::get($return_shipment_data, 'email')) {
-            throw new Exception(__('No e-mail address found in order.', 'woocommerce-myparcel'));
-        }
-
-        // add options if available
-        if (! empty($options)) {
-            // convert insurance option
-            if (! isset($options['insurance']) && isset($options['insured_amount'])) {
-                if ($options['insured_amount'] > 0) {
-                    $options['insurance'] = [
-                        'amount'   => (int) $options['insured_amount'] * 100,
-                        'currency' => ExportRow::CURRENCY_EURO,
-                    ];
-                }
-                unset($options['insured_amount']);
-                unset($options['insured']);
-            }
-            // PREVENT ILLEGAL SETTINGS
-            // convert numeric strings to int
-            $int_options = ['package_type', 'delivery_type', 'signature', 'return '];
-            foreach ($options as $key => &$value) {
-                if (in_array($key, $int_options)) {
-                    $value = (int) $value;
-                }
-            }
-            // remove frontend insurance option values
-            if (isset($options['insured_amount'])) {
-                unset($options['insured_amount']);
-            }
-            if (isset($options['insured'])) {
-                unset($options['insured']);
-            }
-
-            $return_shipment_data['options'] = $options;
-        }
-
-        // get parent
-        $shipment_ids = $this->getShipmentIds(
-            (array) $order_id,
-            [
-                'exclude_concepts' => true,
-                'only_last'        => true,
-            ]
-        );
-
-        if (! empty($shipment_ids)) {
-            $return_shipment_data['parent'] = (int) array_pop($shipment_ids);
-        }
-
-        return $return_shipment_data;
-    }
-
-    /**
      * @param  int   $order_id
      * @param  array $track_traces
      *
@@ -516,10 +391,10 @@ class WCMP_Export
         $prefix_message = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_BARCODE_IN_NOTE_TITLE);
 
         // Select the barcode text of the MyParcel settings
-        $prefix_message = $prefix_message ? $prefix_message . " " : "";
+        $prefix_message = $prefix_message ? $prefix_message . ' ' : '';
 
         $order = WCX::get_order($order_id);
-        $order->add_order_note($prefix_message . implode(", ", $track_traces));
+        $order->add_order_note($prefix_message . implode(', ', $track_traces));
     }
 
     /**
@@ -544,17 +419,17 @@ class WCMP_Export
             $order_shipment_ids = [];
             // exclude concepts or only concepts
             foreach ($order_shipments as $shipment_id => $shipment) {
-                if (isset($args["exclude_concepts"]) && empty($shipment["track_trace"])) {
+                if (isset($args['exclude_concepts']) && empty($shipment['track_trace'])) {
                     continue;
                 }
-                if (isset($args["only_concepts"]) && ! empty($shipment["track_trace"])) {
+                if (isset($args['only_concepts']) && ! empty($shipment['track_trace'])) {
                     continue;
                 }
 
                 $order_shipment_ids[] = $shipment_id;
             }
 
-            if (isset($args["only_last"])) {
+            if (isset($args['only_last'])) {
                 $last_shipment_ids = WCX_Order::get_meta($order, WCMYPA_Admin::META_LAST_SHIPMENT_IDS);
 
                 if (! empty($last_shipment_ids) && is_array($last_shipment_ids)) {
@@ -646,7 +521,7 @@ class WCMP_Export
         $allowedPackageType             = $this->getAllowedPackageType($order, $packageTypeFromDeliveryOptions);
 
         if ($allowedPackageType) {
-            return apply_filters("wc_myparcel_order_package_type", $allowedPackageType, $order, $this);
+            return apply_filters('wc_myparcel_order_package_type', $allowedPackageType, $order, $this);
         }
 
         // Get pre 4.0.0 package type if it exists.
@@ -658,7 +533,7 @@ class WCMP_Export
             }
 
             return (string) apply_filters(
-                "wc_myparcel_order_package_type",
+                'wc_myparcel_order_package_type',
                 ($packageType ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE),
                 $order,
                 $this
@@ -687,7 +562,7 @@ class WCMP_Export
         }
 
         return apply_filters(
-            "wc_myparcel_order_package_type",
+            'wc_myparcel_order_package_type',
             $this->getAllowedPackageType($order, $packageType),
             $order,
             $this
@@ -754,7 +629,7 @@ class WCMP_Export
             $packageType = Data::getPackageTypeHuman($packageType);
         }
 
-        return $packageType ?? __("Unknown", "woocommerce-myparcel");
+        return $packageType ?? __('Unknown', 'woocommerce-myparcel');
     }
 
     /**
@@ -790,7 +665,7 @@ class WCMP_Export
      */
     public function getAllowedPackageType(WC_Order $order, ?string $packageType): ?string
     {
-        $shippingCountry      = WCX_Order::get_prop($order, "shipping_country");
+        $shippingCountry      = WCX_Order::get_prop($order, 'shipping_country');
         $isMailbox            = AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME===$packageType;
         $isDigitalStamp       = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME===$packageType;
         $isDefaultPackageType = AbstractConsignment::CC_NL!==$shippingCountry && ($isMailbox || $isDigitalStamp);
@@ -805,34 +680,34 @@ class WCMP_Export
     public function getShipmentStatusName($status_code)
     {
         $shipment_statuses = [
-            1  => __("pending - concept", "woocommerce-myparcel"),
-            2  => __("pending - registered", "woocommerce-myparcel"),
-            3  => __("enroute - handed to carrier", "woocommerce-myparcel"),
-            4  => __("enroute - sorting", "woocommerce-myparcel"),
-            5  => __("enroute - distribution", "woocommerce-myparcel"),
-            6  => __("enroute - customs", "woocommerce-myparcel"),
-            7  => __("delivered - at recipient", "woocommerce-myparcel"),
-            8  => __("delivered - ready for pickup", "woocommerce-myparcel"),
-            9  => __("delivered - package picked up", "woocommerce-myparcel"),
-            12 => __("printed - letter", "woocommerce-myparcel"),
-            14 => __("printed - digital stamp", "woocommerce-myparcel"),
-            30 => __("inactive - concept", "woocommerce-myparcel"),
-            31 => __("inactive - registered", "woocommerce-myparcel"),
-            32 => __("inactive - enroute - handed to carrier", "woocommerce-myparcel"),
-            33 => __("inactive - enroute - sorting", "woocommerce-myparcel"),
-            34 => __("inactive - enroute - distribution", "woocommerce-myparcel"),
-            35 => __("inactive - enroute - customs", "woocommerce-myparcel"),
-            36 => __("inactive - delivered - at recipient", "woocommerce-myparcel"),
-            37 => __("inactive - delivered - ready for pickup", "woocommerce-myparcel"),
-            38 => __("inactive - delivered - package picked up", "woocommerce-myparcel"),
-            99 => __("inactive - unknown", "woocommerce-myparcel"),
+            1  => __('pending - concept', 'woocommerce-myparcel'),
+            2  => __('pending - registered', 'woocommerce-myparcel'),
+            3  => __('enroute - handed to carrier', 'woocommerce-myparcel'),
+            4  => __('enroute - sorting', 'woocommerce-myparcel'),
+            5  => __('enroute - distribution', 'woocommerce-myparcel'),
+            6  => __('enroute - customs', 'woocommerce-myparcel'),
+            7  => __('delivered - at recipient', 'woocommerce-myparcel'),
+            8  => __('delivered - ready for pickup', 'woocommerce-myparcel'),
+            9  => __('delivered - package picked up', 'woocommerce-myparcel'),
+            12 => __('printed - letter', 'woocommerce-myparcel'),
+            14 => __('printed - digital stamp', 'woocommerce-myparcel'),
+            30 => __('inactive - concept', 'woocommerce-myparcel'),
+            31 => __('inactive - registered', 'woocommerce-myparcel'),
+            32 => __('inactive - enroute - handed to carrier', 'woocommerce-myparcel'),
+            33 => __('inactive - enroute - sorting', 'woocommerce-myparcel'),
+            34 => __('inactive - enroute - distribution', 'woocommerce-myparcel'),
+            35 => __('inactive - enroute - customs', 'woocommerce-myparcel'),
+            36 => __('inactive - delivered - at recipient', 'woocommerce-myparcel'),
+            37 => __('inactive - delivered - ready for pickup', 'woocommerce-myparcel'),
+            38 => __('inactive - delivered - package picked up', 'woocommerce-myparcel'),
+            99 => __('inactive - unknown', 'woocommerce-myparcel'),
         ];
 
         if (isset($shipment_statuses[$status_code])) {
             return $shipment_statuses[$status_code];
         }
 
-        return __("Unknown status", "woocommerce-myparcel");
+        return __('Unknown status', 'woocommerce-myparcel');
     }
 
     /**
@@ -892,27 +767,27 @@ class WCMP_Export
         $highest_class      = null;
         foreach ($found_shipping_classes as $shipping_class => $products) {
             // Also handles BW compatibility when slugs were used instead of ids
-            $shipping_class_term    = get_term_by("slug", $shipping_class, "product_shipping_class");
-            $shipping_class_term_id = "";
+            $shipping_class_term    = get_term_by('slug', $shipping_class, 'product_shipping_class');
+            $shipping_class_term_id = '';
 
             if ($shipping_class_term!=null) {
                 $shipping_class_term_id = $shipping_class_term->term_id;
             }
 
             $class_cost_string = $shipping_class_term && $shipping_class_term_id ? $shipping_method->get_option(
-                "class_cost_" . $shipping_class_term_id,
-                $shipping_method->get_option("class_cost_" . $shipping_class, "")
-            ) : $shipping_method->get_option("no_class_cost", "");
+                'class_cost_' . $shipping_class_term_id,
+                $shipping_method->get_option('class_cost_' . $shipping_class, '')
+            ) : $shipping_method->get_option('no_class_cost', '');
 
-            if ($class_cost_string==="") {
+            if ($class_cost_string==='') {
                 continue;
             }
 
             $class_cost = $this->wc_flat_rate_evaluate_cost(
                 $class_cost_string,
                 [
-                    "qty"  => array_sum(wp_list_pluck($products, "quantity")),
-                    "cost" => array_sum(wp_list_pluck($products, "line_total")),
+                    'qty'  => array_sum(wp_list_pluck($products, 'quantity')),
+                    'cost' => array_sum(wp_list_pluck($products, 'line_total')),
                 ],
                 $shipping_method
             );
@@ -937,41 +812,41 @@ class WCMP_Export
      */
     public function wc_flat_rate_evaluate_cost(string $sum, array $args, $flat_rate_method)
     {
-        if (version_compare(WOOCOMMERCE_VERSION, "2.6", ">=")) {
-            include_once(WC()->plugin_path() . "/includes/libraries/class-wc-eval-math.php");
+        if (version_compare(WOOCOMMERCE_VERSION, '2.6', '>=')) {
+            include_once(WC()->plugin_path() . '/includes/libraries/class-wc-eval-math.php');
         } else {
-            include_once(WC()->plugin_path() . "/includes/shipping/flat-rate/includes/class-wc-eval-math.php");
+            include_once(WC()->plugin_path() . '/includes/shipping/flat-rate/includes/class-wc-eval-math.php');
         }
 
         // Allow 3rd parties to process shipping cost arguments
-        $args           = apply_filters("woocommerce_evaluate_shipping_cost_args", $args, $sum, $flat_rate_method);
+        $args           = apply_filters('woocommerce_evaluate_shipping_cost_args', $args, $sum, $flat_rate_method);
         $locale         = localeconv();
         $decimals       = [
             wc_get_price_decimal_separator(),
-            $locale["decimal_point"],
-            $locale["mon_decimal_point"],
-            ",",
+            $locale['decimal_point'],
+            $locale['mon_decimal_point'],
+            ',',
         ];
-        $this->fee_cost = $args["cost"];
+        $this->fee_cost = $args['cost'];
 
         // Expand shortcodes
-        add_shortcode("fee", [$this, "wc_flat_rate_fee"]);
+        add_shortcode('fee', [$this, 'wc_flat_rate_fee']);
 
         $sum = do_shortcode(
             str_replace(
-                ["[qty]", "[cost]"],
-                [$args["qty"], $args["cost"]],
+                ['[qty]', '[cost]'],
+                [$args['qty'], $args['cost']],
                 $sum
             )
         );
 
-        remove_shortcode("fee");
+        remove_shortcode('fee');
 
         // Remove whitespace from string
-        $sum = preg_replace("/\s+/", "", $sum);
+        $sum = preg_replace('/\s+/', '', $sum);
 
         // Remove locale from string
-        $sum = str_replace($decimals, ".", $sum);
+        $sum = str_replace($decimals, '.', $sum);
 
         // Trim invalid start/end characters
         $sum = rtrim(ltrim($sum, "\t\n\r\0\x0B+*/"), "\t\n\r\0\x0B+-*/");
@@ -992,25 +867,25 @@ class WCMP_Export
     {
         $atts = shortcode_atts(
             [
-                "percent" => "",
-                "min_fee" => "",
-                "max_fee" => "",
+                'percent' => '',
+                'min_fee' => '',
+                'max_fee' => '',
             ],
             $atts
         );
 
         $calculated_fee = 0;
 
-        if ($atts["percent"]) {
-            $calculated_fee = $this->fee_cost * (floatval($atts["percent"]) / 100);
+        if ($atts['percent']) {
+            $calculated_fee = $this->fee_cost * (floatval($atts['percent']) / 100);
         }
 
-        if ($atts["min_fee"] && $calculated_fee < $atts["min_fee"]) {
-            $calculated_fee = $atts["min_fee"];
+        if ($atts['min_fee'] && $calculated_fee < $atts['min_fee']) {
+            $calculated_fee = $atts['min_fee'];
         }
 
-        if ($atts["max_fee"] && $calculated_fee > $atts["max_fee"]) {
-            $calculated_fee = $atts["max_fee"];
+        if ($atts['max_fee'] && $calculated_fee > $atts['max_fee']) {
+            $calculated_fee = $atts['max_fee'];
         }
 
         return $calculated_fee;

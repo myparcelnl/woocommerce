@@ -20,58 +20,6 @@ if (class_exists('WCMP_API')) {
 class WCMP_API
 {
     /**
-     * @var string
-     */
-    private $key;
-
-    /**
-     * Default constructor
-     *
-     * @param string $key API Key provided by MyParcel
-     *
-     * @throws Exception
-     */
-    public function __construct($key)
-    {
-        $this->key       = (string) $key;
-    }
-
-    /**
-     * Get shipment labels, save them to the orders before showing them.
-     *
-     * @param array $shipment_ids Shipment ids.
-     * @param array $order_ids
-     * @param array $positions    Print position(s).
-     * @param  bool $display      Download or display.
-     *
-     * @throws Exception
-     */
-    public function getShipmentLabels(array $shipment_ids, array $order_ids, array $positions = [], bool $display = true): void
-    {
-        $collection = MyParcelCollection::findMany($shipment_ids, $this->key);
-
-        /**
-         * @see https://github.com/MyParcelNL/Sdk#label-format-and-position
-         */
-        if (WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_LABEL_FORMAT) === "A6") {
-            $positions = false;
-        }
-
-        if ($display) {
-            $collection->setPdfOfLabels($positions);
-            $this->updateOrderBarcode($order_ids);
-            $collection->downloadPdfOfLabels($display);
-        }
-
-        if (! $display) {
-            $collection->setLinkOfLabels($positions);
-            $this->updateOrderBarcode($order_ids);
-            echo $collection->getLinkOfLabels();
-            die();
-        }
-    }
-
-    /**
      * Update the status of given order based on the automatic order status settings.
      *
      * @param WC_Order $order
@@ -128,7 +76,7 @@ class WCMP_API
     {
         $pdkOrderCollection = (new PdkOrderCollectionFromWCOrdersAdapter($lastShipmentIds))->convert();
         $shipments = $pdkOrderCollection->generateShipments();
-        $shipmentData       = (new WCMP_Export())->getShipmentData($pdkOrderCollection->generateShipments(), $order);
+        $shipmentData       = (new WCMP_Export())->getShipmentData($shipments, $order);
         $trackTraceArray    = [];
 
         foreach ($shipmentData as $shipment) {
