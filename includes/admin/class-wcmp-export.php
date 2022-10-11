@@ -24,7 +24,7 @@ use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEng
 
 if (! defined('ABSPATH')) {
     exit;
-} // Exit if accessed directly
+}
 
 if (class_exists('WCMP_Export')) {
     return new WCMP_Export();
@@ -56,7 +56,7 @@ class WCMP_Export
     public const NO              = 'no';
     public const YES             = 'yes';
 
-    public $success;
+    public array $success;
 
     /**
      * @var mixed
@@ -204,7 +204,7 @@ class WCMP_Export
             $this->modal_success_page($request);
         } else {
             // return JSON response
-            echo json_encode($return);
+            echo json_encode($return, JSON_THROW_ON_ERROR);
             die();
         }
     }
@@ -351,15 +351,15 @@ class WCMP_Export
 
     /**
      * @param $order_ids
+     *
+     * @throws \JsonException
      */
     public function modal_dialog($order_ids): void
     {
-        // check for JSON
         if (is_string($order_ids) && strpos($order_ids, '[')!==false) {
-            $order_ids = json_decode(stripslashes($order_ids), false);
+            $order_ids = json_decode(stripslashes($order_ids), false, 512, JSON_THROW_ON_ERROR);
         }
 
-        // cast as array for single exports
         $order_ids = (array) $order_ids;
         require('views/html-send-return-email-form.php');
         die();
@@ -396,58 +396,6 @@ class WCMP_Export
     }
 
     /**
-     * @param  array $order_ids
-     * @param  array $args
-     *
-     * @return array
-     * @throws \JsonException
-     */
-    public function getShipmentIds(array $order_ids, array $args): array
-    {
-        $shipment_ids = [];
-
-        foreach ($order_ids as $order_id) {
-            $order           = WCX::get_order($order_id);
-            $order_shipments = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENTS);
-
-            if (empty($order_shipments)) {
-                continue;
-            }
-
-            $order_shipment_ids = [];
-            // exclude concepts or only concepts
-            foreach ($order_shipments as $shipment_id => $shipment) {
-                if (isset($args['exclude_concepts']) && empty($shipment['track_trace'])) {
-                    continue;
-                }
-                if (isset($args['only_concepts']) && ! empty($shipment['track_trace'])) {
-                    continue;
-                }
-
-                $order_shipment_ids[] = $shipment_id;
-            }
-
-            if (isset($args['only_last'])) {
-                $last_shipment_ids = WCX_Order::get_meta($order, WCMYPA_Admin::META_LAST_SHIPMENT_IDS);
-
-                if (! empty($last_shipment_ids) && is_array($last_shipment_ids)) {
-                    foreach ($order_shipment_ids as $order_shipment_id) {
-                        if (in_array($order_shipment_id, $last_shipment_ids)) {
-                            $shipment_ids[] = $order_shipment_id;
-                        }
-                    }
-                } else {
-                    $shipment_ids[] = array_pop($order_shipment_ids);
-                }
-            } else {
-                $shipment_ids[] = array_merge($shipment_ids, $order_shipment_ids);
-            }
-        }
-
-        return $shipment_ids;
-    }
-
-    /**
      * @param  WC_Order $order
      * @param  array    $shipment
      *
@@ -457,7 +405,7 @@ class WCMP_Export
     public function saveShipmentData(WC_Order $order, array $shipment): void
     {
         if (empty($shipment)) {
-            throw new Exception('save_shipment_data requires a valid shipment');
+            throw new \RuntimeException('save_shipment_data requires a valid shipment');
         }
 
         $old_shipments                           = [];
@@ -507,13 +455,14 @@ class WCMP_Export
      * Determine appropriate package type for this order.
      *
      * @param  WC_Order                            $order
-     * @param  AbstractDeliveryOptionsAdapter|null $deliveryOptions
+     * @param  null|AbstractDeliveryOptionsAdapter $deliveryOptions
      *
      * @return string
      * @throws Exception
      */
-    public function getPackageTypeFromOrder(WC_Order                       $order,
-                                            $deliveryOptions = null
+    public function getPackageTypeFromOrder(
+        WC_Order $order,
+        AbstractDeliveryOptionsAdapter $deliveryOptions = null
     ): string {
         $packageTypeFromDeliveryOptions = $deliveryOptions ? $deliveryOptions->getPackageType() : null;
         $allowedPackageType             = $this->getAllowedPackageType($order, $packageTypeFromDeliveryOptions);
@@ -578,7 +527,7 @@ class WCMP_Export
         $packageType           = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME;
         $shippingMethodIdClass = $shippingMethod;
 
-        if (Str::startsWith($shippingMethod, 'table_rate:') && class_exists('WC_Table_Rate_Shipping')) {
+        if (class_exists('WC_Table_Rate_Shipping') && Str::startsWith($shippingMethod, 'table_rate:')) {
             // Automattic / WooCommerce table rate
             // use full method = method_id:instance_id:rate_id
             $shippingMethodId = $shippingMethod;
@@ -646,7 +595,9 @@ class WCMP_Export
         if (! is_string($packageType) || ! in_array($packageType, AbstractConsignment::PACKAGE_TYPES_NAMES)) {
             // Log data when this occurs but don't actually throw an exception.
             $type = gettype($packageType);
-            WCMP_Log::add(new Exception("Tried to convert invalid value to package type: $packageType ($type)"));
+            WCMP_Log::add(
+                (string) new Exception("Tried to convert invalid value to package type: $packageType ($type)")
+            );
 
             $packageType = null;
         }
@@ -675,6 +626,11 @@ class WCMP_Export
         return $packageType;
     }
 
+    /**
+     * @param $status_code
+     *
+     * @return mixed|string|void
+     */
     public function getShipmentStatusName($status_code)
     {
         $shipment_statuses = [
@@ -701,11 +657,7 @@ class WCMP_Export
             99 => __('inactive - unknown', 'woocommerce-myparcel'),
         ];
 
-        if (isset($shipment_statuses[$status_code])) {
-            return $shipment_statuses[$status_code];
-        }
-
-        return __('Unknown status', 'woocommerce-myparcel');
+        return $shipment_statuses[$status_code] ?? __('Unknown status', 'woocommerce-myparcel');
     }
 
     /**
@@ -768,7 +720,7 @@ class WCMP_Export
             $shipping_class_term    = get_term_by('slug', $shipping_class, 'product_shipping_class');
             $shipping_class_term_id = '';
 
-            if ($shipping_class_term!=null) {
+            if (null !== $shipping_class_term) {
                 $shipping_class_term_id = $shipping_class_term->term_id;
             }
 
@@ -777,7 +729,7 @@ class WCMP_Export
                 $shipping_method->get_option('class_cost_' . $shipping_class, '')
             ) : $shipping_method->get_option('no_class_cost', '');
 
-            if ($class_cost_string==='') {
+            if ('' === $class_cost_string) {
                 continue;
             }
 
@@ -1030,6 +982,7 @@ class WCMP_Export
      *
      * @return array
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     * @throws \Exception
      */
     private function exportAccordingToMode(PdkOrderCollection $pdkOrderCollection, array $orderIds, ?string $print): array
     {
@@ -1057,7 +1010,7 @@ class WCMP_Export
      */
     private function saveOrderCollection(PdkOrderCollection $pdkOrderCollection, array $orderIds): array
     {
-        $repository                = Pdk::get(OrderRepository::class);
+        $repository = Pdk::get(OrderRepository::class);
         $pdkOrderCollection->generateShipments();
         $fulfilmentOrderCollection = $pdkOrderCollection->getOrderCollection();
 
@@ -1120,6 +1073,7 @@ class WCMP_Export
         if ($return['success'] ?? null) {
             Messages::showAdminNotice($return['success'], Messages::NOTICE_LEVEL_SUCCESS);
         }
+
         if ($return['error'] ?? null) {
             Messages::showAdminNotice($return['error'], Messages::NOTICE_LEVEL_ERROR);
         }
