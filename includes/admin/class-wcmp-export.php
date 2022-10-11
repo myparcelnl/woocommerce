@@ -186,7 +186,6 @@ class WCMP_Export
                         break;
                     case self::GET_LABELS:
                         $return = $this->printLabels($pdkOrderCollection, $offset);
-                        
                         break;
                     case self::MODAL_DIALOG:
                         $orderIds = $this->filterOrderDestinations($orderIds);
@@ -258,9 +257,9 @@ class WCMP_Export
         }
 
         foreach ($orderIds as $order_id) {
-
             $order       = WCX::get_order($order_id);
             $shipmentIds = $shipmentCollection->pluck('id');
+
             if (! $shipmentIds) {
                 continue;
             }
