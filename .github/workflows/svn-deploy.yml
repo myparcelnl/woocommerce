@@ -1,5 +1,13 @@
 name: 'Deploy to WordPress.org'
 
+on:
+  workflow_call:
+    secrets:
+      SVN_USERNAME:
+        required: true
+      SVN_PASSWORD:
+        required: true
+
 jobs:
   deploy:
     runs-on: ubuntu-22.04
