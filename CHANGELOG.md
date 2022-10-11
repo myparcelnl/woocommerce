@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.14.0](https://github.com/myparcelnl/woocommerce/compare/v4.13.3...v4.14.0) (2022-10-11)
+
+
+### :sparkles: New Features
+
+* add support for advanced shipping ([#879](https://github.com/myparcelnl/woocommerce/issues/879)) ([1219564](https://github.com/myparcelnl/woocommerce/commit/1219564e2a0411d5b5521462b539f06b6087c786))
+
+
+### :bug: Bug Fixes
+
+* fix belgian box numbers ([#883](https://github.com/myparcelnl/woocommerce/issues/883)) ([70b436e](https://github.com/myparcelnl/woocommerce/commit/70b436e99fb8f117edd65193d2c3a117ea2ed923))
+* fix digital stamp default weight ([#871](https://github.com/myparcelnl/woocommerce/issues/871)) ([e6d696a](https://github.com/myparcelnl/woocommerce/commit/e6d696abc63309629ec3550226a605eadc85ac81))
+* make deploy workflow reusable ([#888](https://github.com/myparcelnl/woocommerce/issues/888)) ([a9461e1](https://github.com/myparcelnl/woocommerce/commit/a9461e128d1907a58f7fd4339dc7cf579c15dd1d))
+* prevent automatic export when local pickup ([#887](https://github.com/myparcelnl/woocommerce/issues/887)) ([42253fc](https://github.com/myparcelnl/woocommerce/commit/42253fc85c574bc0e16fc2187088bf64f1a2feb9))
+
 ### [4.13.3](https://github.com/myparcelnl/woocommerce/compare/v4.13.2...v4.13.3) (2022-09-06)
 
 

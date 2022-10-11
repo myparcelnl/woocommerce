@@ -3,7 +3,7 @@ Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
 Tested up to: 6.0
-Stable tag: trunk
+Stable tag: 4.14.0
 Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -102,6 +102,14 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 6. MyParcel pickup delivery options
 
 == Changelog ==
+
+= 4.14.0 (2022-10-11) =
+
+* New: add support for advanced shipping (#879)
+* Fixed bug: make deploy workflow reusable (#888)
+* Fixed bug: prevent automatic export when local pickup (#887)
+* Fixed bug: fix belgian box numbers (#883)
+* Fixed bug: fix digital stamp default weight (#871)
 
 = 4.13.3 (2022-08-16) =
 * Fix: prevent external translations (#873) (a67f404)
