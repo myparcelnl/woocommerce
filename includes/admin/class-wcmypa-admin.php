@@ -155,10 +155,10 @@ class WCMYPA_Admin
      */
     public function deliveryDayFilter(): void
     {
-        if (is_admin() && ! empty($_GET['post_type']) == 'shop_order' && $this->anyActiveCarrierHasShowDeliveryDate()) {
-            $selected = (isset($_GET['deliveryDate'])
-                ? sanitize_text_field($_GET['deliveryDate'])
-                : false);
+        if (is_admin() && 'shop_order' === filter_input(INPUT_GET, 'post_type') && $this->anyActiveCarrierHasShowDeliveryDate()) {
+            $selected = (filter_input(INPUT_GET, 'deliveryDate'))
+                ? sanitize_text_field(filter_input(INPUT_GET, 'deliveryDate'))
+                : false;
             ?>
 
             <select name="deliveryDate">
@@ -167,7 +167,6 @@ class WCMYPA_Admin
                 $carrierName       = CarrierPostNL::NAME;
                 $deliveryDayWindow = (int) WCMYPA()->setting_collection->where('carrier', $carrierName)->getByName(
                     WCMYPA_Settings::SETTING_CARRIER_DELIVERY_DAYS_WINDOW
-
                 );
 
                 foreach (range(1, $deliveryDayWindow) as $number) {
@@ -200,13 +199,13 @@ class WCMYPA_Admin
     {
         global $typenow;
 
-        $hasDeliveryDate = isset($_GET['deliveryDate']) && ! empty($_GET['deliveryDate']);
+        $hasDeliveryDate = filter_input(INPUT_GET, 'deliveryDate');
 
-        if (in_array($typenow, wc_get_order_types('order-meta-boxes')) && $hasDeliveryDate) {
+        if ($hasDeliveryDate && in_array($typenow, wc_get_order_types('order-meta-boxes'))) {
             $deliveryDate['meta_query'] = [
                 [
                     'key'     => '_myparcel_delivery_date',
-                    'value'   => sanitize_text_field($_GET['deliveryDate']),
+                    'value'   => sanitize_text_field(filter_input(INPUT_GET, 'deliveryDate')),
                     'compare' => '=',
                 ],
             ];
@@ -227,16 +226,16 @@ class WCMYPA_Admin
         }
 
         printf(
-            "<div class=\"pickup-location\"><strong>%s:</strong><br /> %s<br />%s %s<br />%s %s</div>",
-            __("Pickup location", "woocommerce-myparcel"),
-            $pickup->getLocationName(),
-            $pickup->getStreet(),
-            $pickup->getNumber(),
-            $pickup->getPostalCode(),
-            $pickup->getCity()
+            '<div class="pickup-location"><strong>%s:</strong><br /> %s<br />%s %s<br />%s %s</div>',
+            esc_html__('Pickup location', 'woocommerce-myparcel'),
+            esc_html($pickup->getLocationName()),
+            esc_html($pickup->getStreet()),
+            esc_html($pickup->getNumber()),
+            esc_html($pickup->getPostalCode()),
+            esc_html($pickup->getCity())
         );
 
-        echo "<hr>";
+        echo '<hr/>';
     }
 
     /**
@@ -277,8 +276,8 @@ class WCMYPA_Admin
     {
         $countryOfOriginValue = $_POST[self::META_COUNTRY_OF_ORIGIN_VARIATION][$loop];
 
-        if (! empty($countryOfOriginValue)) {
-            update_post_meta($variationId, self::META_COUNTRY_OF_ORIGIN_VARIATION, esc_attr($countryOfOriginValue));
+        if (! empty($countryOfOriginValue) && (new WC_Countries())->country_exists($countryOfOriginValue)) {
+            update_post_meta($variationId, self::META_COUNTRY_OF_ORIGIN_VARIATION, $countryOfOriginValue);
         }
     }
 
@@ -322,9 +321,11 @@ class WCMYPA_Admin
     {
         $hsCodeValue = $_POST[self::META_HS_CODE_VARIATION][$loop];
 
-        if (! empty($hsCodeValue)) {
-            update_post_meta($variationId, self::META_HS_CODE_VARIATION, esc_attr($hsCodeValue));
+        if (! $hsCodeValue || ! ctype_digit(str_replace(' ', '', $hsCodeValue))) {
+            return;
         }
+
+        update_post_meta($variationId, self::META_HS_CODE_VARIATION, esc_attr($hsCodeValue));
     }
 
     /**
@@ -419,7 +420,10 @@ class WCMYPA_Admin
             $orderSettings = new OrderSettings($order);
         } catch (Exception $exception) {
             WCMP_Log::add(sprintf('Could not get OrderSettings for order %d', $order->get_id()), $exception);
-            printf('<div class="wcmp__shipment-settings-wrapper">⚠ %s</div>', __('warning_faulty_order_settings', 'woocommerce-myparcel'));
+            printf(
+                '<div class="wcmp__shipment-settings-wrapper">⚠ %s</div>',
+                esc_html__('warning_faulty_order_settings', 'woocommerce-myparcel')
+            );
 
             return;
         }
@@ -447,7 +451,7 @@ class WCMYPA_Admin
             <div
                 class="wcmp__box wcmp__modal wcmp__shipment-summary__list"
                 data-loaded=""
-                data-shipment_id="<?php echo $lastShipmentId; ?>"
+                data-shipment_id="<?php echo (int) $lastShipmentId; ?>"
                 data-order_id="<?php echo $order->get_id(); ?>"
                 style="display: none;">
                 <?php self::renderSpinner(); ?>
@@ -462,7 +466,7 @@ class WCMYPA_Admin
             )
         );
 
-        echo "</div>";
+        echo '</div>';
     }
 
     /**
@@ -529,9 +533,8 @@ class WCMYPA_Admin
     {
         global $post_type;
 
-        $bulk_actions = $this->getMyParcelBulkActions();
-
         if ('shop_order' === $post_type) {
+            $bulk_actions = $this->getMyParcelBulkActions();
             ?>
             <script type="text/javascript">
               jQuery(document).ready(function () {
@@ -591,8 +594,8 @@ class WCMYPA_Admin
                     <div class="wcmp__d--flex wcmp__pb--2">
                         <?php woocommerce_form_field($field["name"], $class->getArguments(false), ""); ?>
                         <img
-                          src="<?php echo WCMYPA()->plugin_url() . "/assets/img/offset.svg"; ?>"
-                          alt="<?php implode(", ", WCMP_Export::DEFAULT_POSITIONS) ?>"
+                          src="<?php echo WCMYPA()->plugin_url(), '/assets/img/offset.svg'; ?>"
+                          alt="Offset"
                           class="wcmp__offset-dialog__icon wcmp__pl--1"/>
                     </div>
                     <div>
@@ -601,7 +604,7 @@ class WCMYPA_Admin
                             class="wcmp__offset-dialog__button button"
                             style="display: none;"
                             target="_blank">
-                            <?php _e("Print", "woocommerce-myparcel"); ?>
+                            <?php esc_html_e('Print', 'woocommerce-myparcel'); ?>
                             <?php self::renderSpinner(); ?>
                         </a>
                     </div>
@@ -626,7 +629,7 @@ class WCMYPA_Admin
     public function ajaxGetShipmentOptions(): void
     {
         // Order is used in views/html-order-shipment-options.php
-        $order = wc_get_order((int) $_POST['orderId']);
+        $order = wc_get_order((int) filter_input(INPUT_POST, 'orderId'));
 
         include('views/html-order-shipment-options.php');
 
@@ -844,7 +847,9 @@ class WCMYPA_Admin
      */
     public function save_shipment_options_ajax(): void
     {
-        parse_str($_POST["form_data"], $form_data);
+        $post = wp_unslash(filter_input_array(INPUT_POST));
+
+        parse_str($post['form_data'], $form_data);
 
         foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
             $order         = WCX::get_order($order_id);
@@ -908,9 +913,8 @@ class WCMYPA_Admin
             return;
         }
 
-        $class = version_compare(WOOCOMMERCE_VERSION, '3.3.0', '>=') ? "single_wc_actions" : "single_order_actions";
         // show buttons and check if WooCommerce > 3.3.0 is used and select the correct function and class
-        echo "<div class=\"$class\">";
+        echo '<div class="single_wc_actions">';
         $this->showOrderActions($order);
         echo '</div>';
 
@@ -1002,18 +1006,20 @@ class WCMYPA_Admin
      */
     public function productOptionsFieldSave(int $postId): void
     {
+        $product = wc_get_product($postId);
+        $post    = wp_unslash(filter_input_array(INPUT_POST));
+
         foreach ($this->getProductOptions() as $productOption) {
             // check if hs code is passed and not an array (=variation hs code)
-            if (isset($_POST[$productOption['id']]) && ! is_array($_POST[$productOption['id']])) {
-                $product   = wc_get_product($postId);
-                $productId = $_POST[$productOption['id']];
+            $productOptionId = $productOption['id'];
 
-                if (! empty($productId)) {
-                    WCX_Product::update_meta_data($product, $productOption['id'], esc_attr($productId));
+            if (isset($post[$productOptionId]) && ! is_array($post[$productOptionId])) {
+                $postedValue = $post[$productOptionId];
+
+                if (! empty($postedValue)) {
+                    WCX_Product::update_meta_data($product, $productOptionId, sanitize_text_field($postedValue));
                 } else {
-                    if (isset($_POST[$productOption['id']]) && empty($productId)) {
-                        WCX_Product::delete_meta_data($product, $productOption['id']);
-                    }
+                    WCX_Product::delete_meta_data($product, $productOptionId);
                 }
             }
         }
@@ -1037,7 +1043,7 @@ class WCMYPA_Admin
         $postcode = preg_replace('/\s+/', '', WCX_Order::get_prop($order, 'shipping_postcode'));
 
         // set url for NL or foreign orders
-        if ($country === 'NL') {
+        if ('NL' === $country) {
             $deliveryOptions = self::getDeliveryOptionsFromOrder($order);
 
             // use billing postcode for pickup/pakjegemak
@@ -1060,7 +1066,7 @@ class WCMYPA_Admin
             );
         }
 
-        return $trackTraceUrl;
+        return esc_url($trackTraceUrl);
     }
 
     /**
@@ -1155,12 +1161,12 @@ class WCMYPA_Admin
             $metaPps = get_post_meta($orderId, self::META_PPS);
 
             if ($metaPps) {
-                echo sprintf(__('export_hint_how_many_times', 'woocommerce-myparcel'), count($metaPps));
+                echo esc_html(sprintf(__('export_hint_how_many_times', 'woocommerce-myparcel'), count($metaPps)));
             } else {
-                echo __('export_hint_not_exported', 'woocommerce-myparcel');
+                esc_html_e('export_hint_not_exported', 'woocommerce-myparcel');
             }
         } elseif (empty($shipments)) {
-            echo __('export_hint_no_label_created_yet', 'woocommerce-myparcel');
+            esc_html_e('export_hint_no_label_created_yet', 'woocommerce-myparcel');
 
             return;
         }
@@ -1172,19 +1178,19 @@ class WCMYPA_Admin
             $printedStatuses  = [WCMYPA_Admin::ORDER_STATUS_PRINTED_DIGITAL_STAMP, WCMYPA_Admin::ORDER_STATUS_PRINTED_LETTER];
 
             if (in_array($shipmentStatusId, $printedStatuses)) {
-                echo __('The label has been printed.', 'woocommerce-myparcel') . '<br/>';
+                echo esc_html(__('The label has been printed.', 'woocommerce-myparcel')), '<br/>';
                 continue;
             }
 
             if (empty($shipment['track_trace'])) {
-                echo __('Concept created but not printed.', 'woocommerce-myparcel') . '<br/>';
+                echo esc_html(__('Concept created but not printed.', 'woocommerce-myparcel')), '<br/>';
                 continue;
             }
 
             printf(
-                '<a target="_blank" class="wcmp__barcode-link" title="%2$s" href="%1$s">%2$s</a><br>',
-                self::getTrackTraceUrl($order, $shipment['track_trace']),
-                $shipment['track_trace']
+                '<a target="_blank" class="wcmp__barcode-link" title="%2$s" href="%1$s">%2$s</a><br/>',
+                esc_html(self::getTrackTraceUrl($order, $shipment['track_trace'])),
+                esc_html($shipment['track_trace'])
             );
         }
         echo '</div>';
@@ -1235,7 +1241,7 @@ class WCMYPA_Admin
             $meta = new WCMP_DeliveryOptionsFromOrderAdapter($meta, $inputData);
         }
 
-        return apply_filters("wc_myparcel_order_delivery_options", $meta, $order);
+        return apply_filters('wc_myparcel_order_delivery_options', $meta, $order);
     }
 
     /**
@@ -1405,7 +1411,7 @@ class WCMYPA_Admin
      */
     public function printThankYouConfirmation(?array $selectedDeliveryOptions): void
     {
-        printf($this->generateThankYouConfirmation($selectedDeliveryOptions));
+        echo wp_kses_post($this->generateThankYouConfirmation($selectedDeliveryOptions));
     }
 
     /**
@@ -1415,7 +1421,7 @@ class WCMYPA_Admin
      */
     public function printEmailConfirmation(?array $selectedDeliveryOptions): void
     {
-        printf($this->generateEmailConfirmation($selectedDeliveryOptions));
+        echo wp_kses_post($this->generateEmailConfirmation($selectedDeliveryOptions));
     }
 
     /**
@@ -1472,38 +1478,38 @@ class WCMYPA_Admin
      * @param string $state
      * @param array  $args
      */
-    public static function renderSpinner(string $state = "", array $args = []): void
+    public static function renderSpinner(string $state = '', array $args = []): void
     {
         $spinners = [
-            "loading" => get_site_url() . "/wp-admin/images/spinner.gif",
-            "success" => get_site_url() . "/wp-admin/images/yes.png",
-            "failed"  => get_site_url() . "/wp-admin/images/no.png",
+            'loading' => get_site_url() . '/wp-admin/images/spinner.gif',
+            'success' => get_site_url() . '/wp-admin/images/yes.png',
+            'failed'  => get_site_url() . '/wp-admin/images/no.png',
         ];
 
         $arguments = [];
 
-        $args["class"][] = "wcmp__spinner";
+        $args['class'][] = 'wcmp__spinner';
 
         if ($state) {
-            $args["class"][] = "wcmp__spinner--$state";
+            $args['class'][] = "wcmp__spinner--$state";
         }
 
         foreach ($args as $arg => $value) {
             if (is_array($value)) {
-                $value = implode(" ", $value);
+                $value = implode(' ', $value);
             }
             $arguments[] = "$arg=\"$value\"";
         }
 
-        $attributes = implode(" ", $arguments);
+        $attributes = implode(' ', $arguments);
 
-        echo "<span $attributes>";
+        echo wp_kses_post("<span $attributes>");
         foreach ($spinners as $spinnerState => $icon) {
             printf(
                 '<img class="wcmp__spinner__%1$s" alt="%1$s" src="%2$s" style="display: %3$s;" />',
                 $spinnerState,
                 $icon,
-                $state === $spinnerState ? "block" : "none"
+                $state === $spinnerState ? 'block' : 'none'
             );
         }
         echo '</span>';
@@ -1517,20 +1523,20 @@ class WCMYPA_Admin
      */
     public static function renderAction(string $url, string $alt, string $icon, array $rawAttributes = []): void
     {
-        printf(
+        echo wp_kses_post(sprintf(
             '<a href="%1$s" 
                 class="button tips wcmp__action" 
                 data-tip="%2$s" 
                 %4$s>
                 <img class="wcmp__action__img wcmp__m--auto" src="%3$s" alt="%2$s" />',
             wp_nonce_url($url, WCMYPA::NONCE_ACTION),
-            $alt,
-            $icon,
+            esc_attr($alt),
+            esc_attr($icon),
             wc_implode_html_attributes($rawAttributes)
-        );
+        ));
 
         self::renderSpinner();
-        echo "</a>";
+        echo '</a>';
     }
 
     /**
@@ -1541,7 +1547,7 @@ class WCMYPA_Admin
      */
     public static function renderTrackTraceLink(array $shipment, int $order_id): void
     {
-        $track_trace = $shipment["track_trace"] ?? null;
+        $track_trace = $shipment['track_trace'] ?? null;
 
         if ($track_trace) {
             $track_trace_url  = self::getTrackTraceUrl($order_id, $track_trace);
@@ -1550,14 +1556,14 @@ class WCMYPA_Admin
                 $track_trace_url,
                 $track_trace
             );
-        } elseif (isset($shipment["shipment"]) && isset($shipment["shipment"]["options"])) {
-            $package_type     = WCMP_Export::getPackageTypeHuman($shipment["shipment"]["options"]["package_type"]);
+        } elseif (isset($shipment['shipment']['options'])) {
+            $package_type     = WCMP_Export::getPackageTypeHuman($shipment['shipment']['options']['package_type']);
             $track_trace_link = "($package_type)";
         } else {
-            $track_trace_link = __("(Unknown)", "woocommerce-myparcel");
+            $track_trace_link = __('(Unknown)', 'woocommerce-myparcel');
         }
 
-        echo $track_trace_link;
+        echo wp_kses_post($track_trace_link);
     }
 
     /**
@@ -1566,7 +1572,7 @@ class WCMYPA_Admin
      */
     public static function renderStatus(array $shipment, int $order_id): void
     {
-        echo $shipment["status"] ?? "–";
+        echo esc_html($shipment['status'] ?? '–');
 
         if (self::shipmentIsStatus($shipment, self::ORDER_STATUS_DELIVERED_AT_RECIPIENT)
             || self::shipmentIsStatus($shipment, self::ORDER_STATUS_DELIVERED_READY_FOR_PICKUP)

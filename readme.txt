@@ -45,9 +45,9 @@ An API-key is required for this plugin! You can create this in your backoffice a
 == Installation ==
 
 = Automatic installation =
-Automatic installation is the easiest option as WordPress handles the file transfers itself and you don't even need to leave your web browser. To do an automatic install of WooCommerce MyParcel, log in to your WordPress admin panel, navigate to the Plugins menu and click Add New.
+Automatic installation is the easiest option as WordPress handles the file transfers itself and you don't even need to leave your web browser. To do an automatic install of MyParcel, log in to your WordPress admin panel, navigate to the Plugins menu and click Add New.
 
-In the search field type "WooCommerce MyParcel" and click Search Plugins. You can install it by simply clicking Install Now. After clicking that link you will be asked if you're sure you want to install the plugin. Click yes and WordPress will automatically complete the installation.
+In the search field type "MyParcel" and click Search Plugins. You can install it by simply clicking Install Now. After clicking that link you will be asked if you're sure you want to install the plugin. Click yes and WordPress will automatically complete the installation.
 
 = Manual installation via the WordPress interface =
 1. Download the plugin zip file to your computer

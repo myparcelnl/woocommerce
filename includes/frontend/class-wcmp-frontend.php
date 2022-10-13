@@ -172,10 +172,6 @@ class WCMP_Frontend
      */
     public static function get_cart_shipping_class(): ?int
     {
-        if (version_compare(WOOCOMMERCE_VERSION, '2.4', '<')) {
-            return null;
-        }
-
         $shippingMethodString = WC()->session->get('chosen_shipping_methods')[0] ?? '';
         $shippingMethod       = WCMP_Export::getShippingMethod($shippingMethodString);
 
@@ -286,7 +282,7 @@ class WCMP_Frontend
      */
     public function ajaxGetHighestShippingClass(): ?int
     {
-        echo WCMP_Frontend::get_cart_shipping_class();
+        echo esc_html(WCMP_Frontend::get_cart_shipping_class());
         die();
     }
 }

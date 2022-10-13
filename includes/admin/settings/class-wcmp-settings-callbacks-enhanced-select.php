@@ -45,13 +45,13 @@ class WCMP_Settings_Callbacks_Enhanced_Select
             $optionId    = self::getOptionId($newClass);
             $optionValue = get_option($optionId)[$newClass->getId()];
 
-            printf('<h4 class="title">%s:</h4>', $human);
+            printf('<h4 class="title">%s:</h4>', esc_html($human));
 
             if (array_key_exists($id, $optionValue)) {
                 $value = $optionValue[$id];
             }
 
-            $newClass->setId($optionId . '_' . $id);
+            $newClass->setId("{$optionId}_$id");
             $this->createSearchBox($newClass, $id, $value ?? []);
         }
     }
@@ -74,15 +74,15 @@ class WCMP_Settings_Callbacks_Enhanced_Select
                 multiple="multiple"
                 data-placeholder="%s"
                 %s>',
-            $class->getId(),
-            $class->getName() . ($id ? "[$id][]" : "[]"),
-            $args["placeholder"] ?? "",
-            $class->getCustomAttributesAsString()
+            esc_attr($class->getId()),
+            esc_attr($class->getName() . ($id ? "[$id][]" : '[]')),
+            esc_attr($args['placeholder'] ?? ''),
+            esc_attr($class->getCustomAttributesAsString())
         );
 
         foreach ($args["options"] as $key => $label) {
             printf(
-                "<option value=\"%s\"%s>%s</option>",
+                "<option value=\"%s\" %s>%s</option>",
                 esc_attr($key),
                 selected(
                     in_array($key, $value),
@@ -93,7 +93,7 @@ class WCMP_Settings_Callbacks_Enhanced_Select
             );
         }
 
-        echo "</select>";
+        echo '</select>';
     }
 
     /**

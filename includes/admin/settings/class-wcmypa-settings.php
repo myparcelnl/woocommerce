@@ -192,7 +192,7 @@ class WCMYPA_Settings
         $links[] = sprintf(
             '<a href="%s">%s</a>',
             $url,
-            __("Settings", "woocommerce-myparcel")
+            __('Settings', 'woocommerce-myparcel')
         );
 
         return $links;
@@ -204,24 +204,23 @@ class WCMYPA_Settings
     public function settings_page()
     {
         $settings_tabs = apply_filters(
-            self::SETTINGS_MENU_SLUG . "_tabs",
+            self::SETTINGS_MENU_SLUG . '_tabs',
             WCMP_Settings_Data::getTabs()
         );
 
-        $active_tab = isset($_GET["tab"]) ? $_GET["tab"] : self::SETTINGS_GENERAL;
+        $active_tab = filter_input(INPUT_GET, 'tab') ?? self::SETTINGS_GENERAL;
         ?>
         <div class="wrap woocommerce">
-            <h1><?php _e("MyParcel Settings", "woocommerce-myparcel"); ?></h1>
+            <h1><?php _e('MyParcel Settings', 'woocommerce-myparcel'); ?></h1>
             <h2 class="nav-tab-wrapper">
                 <?php
-                foreach ($settings_tabs as $tab_slug => $tab_title) :
+                foreach ($settings_tabs as $tabSlug => $tabTitle) :
                     printf(
-                        '<a href="?page='
-                        . self::SETTINGS_MENU_SLUG
-                        . '&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>',
-                        $tab_slug,
-                        (($active_tab === $tab_slug) ? "nav-tab-active" : ""),
-                        $tab_title
+                        '<a href="?page=%4$s&tab=%1$s" class="nav-tab nav-tab-%1$s %2$s">%3$s</a>',
+                        esc_html($tabSlug),
+                        (($active_tab === $tabSlug) ? 'nav-tab-active' : ''),
+                        esc_html($tabTitle),
+                        self::SETTINGS_MENU_SLUG
                     );
                 endforeach;
                 ?>
@@ -252,31 +251,35 @@ class WCMYPA_Settings
     {
         $base_country = WC()->countries->get_base_country();
 
-        // save or check option to hide notice
-        if (Arr::get($_GET, "myparcel_hide_be_notice")) {
-            update_option("myparcel_hide_be_notice", true);
+        // save or check option to hide notice filter_input(INPUT_GET, 'tab') ?? self::SETTINGS_GENERAL;
+        if (filter_input(INPUT_GET, 'myparcel_hide_be_notice')) {
+            update_option('myparcel_hide_be_notice', true);
             $hide_notice = true;
         } else {
-            $hide_notice = get_option("myparcel_hide_be_notice");
+            $hide_notice = get_option('myparcel_hide_be_notice');
         }
 
         // link to hide message when one of the premium extensions is installed
-        if (! $hide_notice && $base_country === "BE") {
+        if (! $hide_notice && 'BE' === $base_country) {
             $myparcel_nl_link =
                 '<a href="https://wordpress.org/plugins/woocommerce-myparcel/" target="blank">WC MyParcel Netherlands</a>';
             $text             = sprintf(
                 __(
-                    "It looks like your shop is based in Netherlands. This plugin is for MyParcel. If you are using MyParcel Netherlands, download the %s plugin instead!",
-                    "woocommerce-myparcel"
+                    'It looks like your shop is based in Netherlands. This plugin is for MyParcel. If you are using MyParcel Netherlands, download the %s plugin instead!',
+                    'woocommerce-myparcel'
                 ),
                 $myparcel_nl_link
             );
             $dismiss_button   = sprintf(
                 '<a href="%s" style="display:inline-block; margin-top: 10px;">%s</a>',
                 add_query_arg('myparcel_hide_be_notice', 'true'),
-                __("Hide this message", "woocommerce-myparcel")
+                esc_html__('Hide this message', 'woocommerce-myparcel')
             );
-            printf('<div class="notice notice-warning"><p>%s %s</p></div>', $text, $dismiss_button);
+            printf(
+              '<div class="notice notice-warning"><p>%s %s</p></div>',
+              esc_html($text),
+              $dismiss_button
+            );
         }
     }
 
@@ -288,14 +291,6 @@ class WCMYPA_Settings
     public static function getOptionId(string $option)
     {
         return "woocommerce_myparcel_{$option}_settings";
-    }
-
-    /**
-     * @return bool whether the current script is running on one of this plugins own admin settings pages
-     */
-    public static function isViewingOwnSettingsPage(): bool
-    {
-        return (isset($_GET['page']) && 'wcmp_settings' === $_GET['page']);
     }
 
     /**
@@ -324,27 +319,25 @@ class WCMYPA_Settings
 
         foreach ((array) $wp_settings_sections[$page] as $section) {
             echo '<div class="wcmp__settings-section">';
-            $id       = Arr::get($section, "id");
-            $title    = Arr::get($section, "title");
-            $callback = Arr::get($section, "callback");
+            $id       = Arr::get($section, 'id');
+            $title    = Arr::get($section, 'title');
+            $callback = Arr::get($section, 'callback');
 
             if ($title) {
-                printf('<h2 id="%s">%s</h2>', $id, $title);
+                printf('<h2 id="%s">%s</h2>', esc_html($id), esc_html($title));
             }
 
             if ($callback) {
-                call_user_func($callback, $section);
+                $callback($section);
             }
 
-            if (! isset($wp_settings_fields)
-                || ! isset($wp_settings_fields[$page])
-                || ! isset($wp_settings_fields[$page][$id])) {
+            if (! isset($wp_settings_fields[$page][$id])) {
                 continue;
             }
             echo '<table class="form-table" role="presentation">';
             $this->render_settings_fields($page, $id);
-            echo "</table>";
-            echo "</div>";
+            echo '</table>';
+            echo '</div>';
         }
     }
 
@@ -365,31 +358,31 @@ class WCMYPA_Settings
         }
 
         foreach (Arr::get($wp_settings_fields, "$page.$section") as $field) {
-            $class = Arr::get($field, "args.class") ?? "";
+            $class = Arr::get($field, 'args.class') ?? '';
 
             if ($class) {
-                $class = is_array($class) ? implode(" ", $class) : $class;
-                $class = wc_implode_html_attributes(["class" => esc_attr($class)]);
+                $class = is_array($class) ? implode(' ', $class) : $class;
+                $class = wc_implode_html_attributes(['class' => esc_attr($class)]);
             }
 
             echo "<tr {$class}>";
 
-            $helpText = Arr::get($field, "args.help_text");
-            $label    = Arr::get($field, "args.label_for");
+            $helpText = Arr::get($field, 'args.help_text');
+            $label    = Arr::get($field, 'args.label_for');
 
             printf('<th scope="row"><label class="wcmp__ws--nowrap" %s>%s%s</label></th>',
-                $label ? "for=\"" . esc_attr($label) . "\"" : "",
-                Arr::get($field, "title"),
-                $helpText ? wc_help_tip($helpText) : ""
+                $label ? 'for="' . esc_attr($label) . '"' : '',
+                esc_html(Arr::get($field, 'title')),
+                $helpText ? wc_help_tip($helpText) : ''
             );
 
             // Pass the option id as argument
-            Arr::set($field, "args.option_id", $page);
+            Arr::set($field, 'args.option_id', $page);
 
             echo '<td>';
             call_user_func(
-                Arr::get($field, "callback"),
-                Arr::get($field, "args")
+                Arr::get($field, 'callback'),
+                Arr::get($field, 'args')
             );
             echo '</td>';
             echo '</tr>';

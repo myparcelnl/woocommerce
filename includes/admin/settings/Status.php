@@ -9,6 +9,7 @@ defined('ABSPATH') or die();
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
+use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
 use WCMP_Data;
@@ -164,28 +165,29 @@ class Status
         echo '<table class="wcmp__table wc_status_table widefat">';
         echo sprintf(
             "<thead><tr><td colspan='2'>%s</td></tr></thead>",
-            __('diagnostics_status_title', 'woocommerce-myparcel')
+            esc_html__('diagnostics_status_title', 'woocommerce-myparcel')
         );
         echo '<tbody>';
         foreach (self::$items as $item) {
             echo '<tr>';
-            printf('<th>%s</th>', $item['title']);
+            printf('<th>%s</th>', esc_html($item['title']));
             echo '<td>';
             switch ($item['type'] ?? null) {
                 case self::TYPE_SUCCESS:
                     printf(
                         '<mark class="yes"><span class="dashicons dashicons-yes"></span> %s</mark>',
-                        $item['text']
+                        wp_kses($item['text'], MessagesRepository::ALLOWED_HTML)
                     );
                     break;
                 case self::TYPE_ERROR:
                     printf(
                         '<mark class="error"><span class="dashicons dashicons-warning"></span> %s</mark>',
-                        $item['text']
+                        wp_kses($item['text'], MessagesRepository::ALLOWED_HTML)
                     );
                     break;
                 default:
-                    echo $item['text'];
+                    echo wp_kses($item['text'], MessagesRepository::ALLOWED_HTML);
+
                     break;
             }
             echo '</td></tr>';

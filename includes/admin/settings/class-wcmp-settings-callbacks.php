@@ -66,8 +66,8 @@ class WCMP_Settings_Callbacks
      */
     public static function renderSection(array $args): void
     {
-        if (isset($args["description"])) {
-            echo "<p>{$args["description"]}</p>";
+        if (isset($args['description'])) {
+            echo wp_kses_post("<p>{$args['description']}</p>");
         }
     }
 
@@ -81,9 +81,9 @@ class WCMP_Settings_Callbacks
         $arguments  = $class->getArguments();
         $attributes = $class->getCustomAttributes();
 
-        if (isset($arguments["description"])) {
-            $description = $arguments["description"];
-            unset ($arguments["description"]);
+        if (isset($arguments['description'])) {
+            $description = $arguments['description'];
+            unset ($arguments['description']);
         }
 
         if (isset($attributes['data-type']) && $attributes['data-type'] === 'toggle') {
@@ -96,8 +96,11 @@ class WCMP_Settings_Callbacks
             );
         }
 
-        if (isset($arguments["append"])) {
-            echo $arguments["append"];
+        if (isset($arguments['append'])) {
+            echo wp_kses($arguments['append'],[
+                'p' => ['class' => [],],
+                'a' => ['href' => [], 'class' => [], 'onclick' => true,],
+            ]);
         }
 
         // Render the description here instead of inside the above function.
@@ -148,7 +151,7 @@ class WCMP_Settings_Callbacks
      */
     private static function renderDescription($description): void
     {
-        echo "<p class=\"description\">$description</p>";
+        echo wp_kses_post("<p class=\"description\">$description</p>");
     }
 
     /**
@@ -167,8 +170,8 @@ class WCMP_Settings_Callbacks
 
         printf(
             '<input type="hidden" name="%s" value="%s" %s>',
-            $class->getName(),
-            $class->getValue(),
+            esc_attr($class->getName()),
+            esc_attr($class->getValue()),
             $class->getCustomAttributesAsString()
         );
 
@@ -184,7 +187,7 @@ class WCMP_Settings_Callbacks
             );
         }
 
-        echo "</a>";
+        echo '</a>';
     }
 }
 

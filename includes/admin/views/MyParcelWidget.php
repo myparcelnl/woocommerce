@@ -89,7 +89,7 @@ class MyParcelWidget
             ',
             wp_kses_post($this->getLogoImg()),
             wp_kses_post($tableHeaders),
-            $tableContent
+            wp_kses_post($tableContent)
         );
     }
 
@@ -138,7 +138,7 @@ class MyParcelWidget
                     name="orders_amount"
                     value="%s" />
               </p>',
-                esc_attr(__('order_amount', 'woocommerce-myparcel')),
+                esc_html(__('order_amount', 'woocommerce-myparcel')),
                 esc_attr($options['items'])
             )
         );
@@ -244,7 +244,7 @@ class MyParcelWidget
                 <tr>
                   <td colspan="3">%s</td>
                 </tr>',
-                __('status_unknown', 'woocommerce-myparcel')
+                esc_html__('status_unknown', 'woocommerce-myparcel')
             );
         }
 
@@ -255,7 +255,7 @@ class MyParcelWidget
                     </tr>',
             $orderId,
             $orderId,
-            __('status_unknown', 'woocommerce-myparcel')
+            esc_html__('status_unknown', 'woocommerce-myparcel')
         );
     }
 }
