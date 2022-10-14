@@ -48,8 +48,7 @@ class AccountSettingsWebhook extends AbstractWebhook
                 __('setting_account_settings_manual_update_hint', 'woocommerce-myparcel'),
                 Messages::NOTICE_LEVEL_WARNING
             );
-            AccountSettingsService::getInstance()
-                ->setUseManualUpdate(true);
+
             return false;
         }
 
