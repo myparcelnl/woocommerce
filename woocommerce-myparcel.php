@@ -12,10 +12,6 @@ License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 */
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\admin\views\MyParcelWidget;
