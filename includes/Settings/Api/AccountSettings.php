@@ -53,11 +53,6 @@ class AccountSettings extends Model
     private $settings;
 
     /**
-     * @var bool true when webhooks are disabled
-     */
-    private $useManualUpdate = false;
-
-    /**
      * @throws \Exception
      */
     public function __construct()
@@ -81,11 +76,18 @@ class AccountSettings extends Model
     }
 
     /**
-     * @return \WP_REST_Response
+     * @throws \Exception
      */
-    public static function restRefreshFromApi(): \WP_REST_Response
+    public static function ajaxRefreshFromApi(): void
     {
-        return AccountSettingsService::getInstance()->restRefreshSettingsFromApi();
+        $response = AccountSettingsService::getInstance()->restRefreshSettingsFromApi();
+        switch ($response->get_status()) {
+            case 400:
+                wp_send_json_error(esc_html__('error_settings_account_missing', 'woocommerce-myparcel'), 400);
+            default:
+                wp_send_json($response, $response->get_status());
+        }
+        wp_die();
     }
 
     /**
@@ -213,14 +215,6 @@ class AccountSettings extends Model
             && $this->account instanceof Account
             && $this->carrier_options instanceof Collection
             && $this->carrier_configurations instanceof Collection;
-    }
-
-    /**
-     * @return bool
-     */
-    public function useManualUpdate(): bool
-    {
-        return $this->useManualUpdate;
     }
 
     /**

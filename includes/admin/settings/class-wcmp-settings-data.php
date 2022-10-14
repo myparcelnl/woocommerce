@@ -7,8 +7,6 @@ use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\admin\settings\CarrierSettings;
 use MyParcelNL\WooCommerce\includes\admin\settings\Status;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
-use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
-use MyParcelNL\WooCommerce\includes\Webhooks\Hooks\AccountSettingsWebhook;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 
 defined('ABSPATH') or die();
@@ -312,7 +310,6 @@ class WCMP_Settings_Data
                 'name'      => WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE,
                 'label'     => __('settings_trigger_manual_update', 'woocommerce-myparcel'),
                 'help_text' => __('settings_trigger_manual_update_help_text', 'woocommerce-myparcel'),
-                'condition' => AccountSettingsService::getInstance()->useManualUpdate(),
                 'callback'  => [$this, 'renderManualUpdateTrigger'],
             ],
         ];
@@ -320,13 +317,11 @@ class WCMP_Settings_Data
 
     public function renderManualUpdateTrigger(): void
     {
-        $baseUrl = 'admin-ajax.php?action=' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE;
-
-        echo sprintf(
-            '<a class="button wcmp__trigger" href="%s">%s</a>',
-            $baseUrl,
-            __('settings_trigger_manual_update_button', 'woocommerce-myparcel')
-        );
+        $baseUrl = esc_url('admin-ajax.php?action=' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE);
+        printf('<a class="button wcmp__trigger" href="%s">', $baseUrl);
+        esc_html_e('settings_trigger_manual_update_button', 'woocommerce-myparcel');
+        WCMYPA_Admin::renderSpinner();
+        echo '</a>';
     }
 
     /**
