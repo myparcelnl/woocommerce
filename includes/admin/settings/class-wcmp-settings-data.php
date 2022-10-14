@@ -319,7 +319,7 @@ class WCMP_Settings_Data
     {
         $baseUrl = 'admin-ajax.php?action=' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE;
         printf('<a class="button wcmp__trigger" href="%s">', $baseUrl);
-        _e('settings_trigger_manual_update_button', 'woocommerce-myparcel');
+        esc_html_e('settings_trigger_manual_update_button', 'woocommerce-myparcel');
         WCMYPA_Admin::renderSpinner();
         echo '</a>';
     }
