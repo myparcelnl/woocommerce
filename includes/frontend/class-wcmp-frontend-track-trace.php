@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WCMP_WCPDF_Compatibility;
 
@@ -41,7 +43,7 @@ class WCMP_Frontend_Track_Trace
             return;
         }
 
-        if ($sentToAdmin || WCX_Order::get_status($order) !== "completed") {
+        if ($sentToAdmin || WCX_Order::get_status($order) !== 'completed' || $order->get_total_refunded()) {
             return;
         }
 
