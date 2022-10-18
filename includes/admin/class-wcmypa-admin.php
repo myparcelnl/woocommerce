@@ -391,10 +391,18 @@ class WCMYPA_Admin
             return;
         }
 
-        $order         = WCX::get_order($orderId);
-        $orderSettings = new OrderSettings($order);
+        $order                 = WCX::get_order($orderId);
+        $orderSettings         = new OrderSettings($order);
+        $orderStatusAutomation = WCMYPA()->setting_collection->getByName(
+            WCMYPA_Settings::SETTING_ORDER_STATUS_AUTOMATION
+        );
+        $automaticOrderStatus  = WCMYPA()->setting_collection->getByName(
+            WCMYPA_Settings::SETTING_AUTOMATIC_ORDER_STATUS
+        );
+        $alreadyExported       = $orderStatusAutomation && $newStatus === $automaticOrderStatus;
 
-        if ($orderSettings->hasLocalPickup()) {
+
+        if ($alreadyExported || $orderSettings->hasLocalPickup()) {
             return;
         }
 
