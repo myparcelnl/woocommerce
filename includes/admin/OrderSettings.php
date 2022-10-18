@@ -551,9 +551,9 @@ class OrderSettings
     }
 
     /**
-     * @return void
+     * @return array
      */
-    private function setDigitalStampRangeWeight(): void
+    public function getDigitalStampRange(): array
     {
         if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $this->getPackageType()) {
             $emptyWeight = (float) WCMYPA()->setting_collection->getByName(
@@ -576,12 +576,20 @@ class OrderSettings
         );
 
         if (empty($results)) {
-            $digitalStampRangeWeight = Arr::first(WCMP_Data::getDigitalStampRanges())['average'];
-        } else {
-            $digitalStampRangeWeight = Arr::last($results)['average'];
+            return Arr::first(WCMP_Data::getDigitalStampRanges());
         }
 
-        $this->digitalStampRangeWeight = $digitalStampRangeWeight;
+        return Arr::last($results);
+    }
+
+    /**
+     * @return void
+     */
+    private function setDigitalStampRangeWeight(): void
+    {
+        $range = $this->getDigitalStampRange();
+
+        $this->digitalStampRangeWeight = $range['average'];
     }
 
     /**
