@@ -464,7 +464,7 @@ class WCMYPA_Admin
             '<a href="#" class="wcmp__shipment-options__show" data-order-id="%s"><span class="wcmp__shipment-options__package-type">%s%s</span> &#x25BE;</a>',
             $order->get_id(),
             $packageTypeHuman,
-            AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType ? ' (' . $digitalStampRange['min'] . '-' . $digitalStampRange['max'] . ')' : ''
+            AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType ? sprintf(' (%s - %s)', $digitalStampRange['min'], $digitalStampRange['max']) : ''
         );
 
         echo "</div>";
