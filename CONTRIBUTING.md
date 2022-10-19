@@ -9,18 +9,18 @@
 ## Prerequisites
 
 * [Docker]
-* [Node 16]
-* [Yarn]
 
 ## Steps
 
-### Install dependencies
-
-Install npm dependencies
+### Build and run the image
 
 ```shell
-yarn
+docker build . -t myparcelnl/woocommerce
+docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce
 ```
+
+This will install Node and Composer dependencies and build the plugin. The
+plugin will be available in the `dist` folder and as a zip file in the root.
 
 ### Make your changes
 
@@ -37,13 +37,13 @@ to the next section.
 Run this after every change:
 
 ```shell
-yarn build
+docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce
 ```
 
 Or run this to monitor your changes and rebuild automatically:
 
 ```shell
-yarn serve
+docker run -it --rm -v $(pwd):/app myparcelnl/woocommerce yarn serve
 ```
 
 **If your WordPress instance is hosted somewhere else**
@@ -65,5 +65,3 @@ You can also upload the plugin folder manually.
 > created .zip file and upload its contents to your website.
 
 [Docker]: https://www.docker.com/
-[Node 16]: https://nodejs.org/en/
-[Yarn]: https://classic.yarnpkg.com/en/docs/install
