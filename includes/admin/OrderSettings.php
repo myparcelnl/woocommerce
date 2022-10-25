@@ -563,7 +563,7 @@ class OrderSettings
         $defaultWeight = WCMYPA()->setting_collection->getByName(
             WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT
         ) ?: null;
-        $weight        = (float) ($savedWeight ?? $orderWeight ?? $defaultWeight);
+        $weight        = (float) ($savedWeight ?? $defaultWeight ?? $orderWeight);
 
         $results = Arr::where(
             WCMP_Data::getDigitalStampRanges(),
