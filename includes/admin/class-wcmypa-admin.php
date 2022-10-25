@@ -401,7 +401,6 @@ class WCMYPA_Admin
         );
         $alreadyExported       = $orderStatusAutomation && $newStatus === $automaticOrderStatus;
 
-
         if ($alreadyExported || $orderSettings->hasLocalPickup()) {
             return;
         }
