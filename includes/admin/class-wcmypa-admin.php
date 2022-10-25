@@ -454,8 +454,8 @@ class WCMYPA_Admin
                 <?php self::renderSpinner(); ?>
             </div>
         <?php endif;
-        $packageType = (new WCMP_Export())->getAllowedPackageType($order, $orderSettings->getPackageType());
-        $packageTypeHuman = WCMP_Data::getPackageTypeHuman(
+        $packageType       = (new WCMP_Export())->getAllowedPackageType($order, $orderSettings->getPackageType());
+        $packageTypeHuman  = WCMP_Data::getPackageTypeHuman(
             $packageType
         );
         $digitalStampRange = $orderSettings->getDigitalStampRange();

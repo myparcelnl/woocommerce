@@ -555,18 +555,15 @@ class OrderSettings
      */
     public function getDigitalStampRange(): array
     {
-        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $this->getPackageType()) {
-            $emptyWeight = (float) WCMYPA()->setting_collection->getByName(
-                WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
-            );
-
-            $this->weight += $emptyWeight;
-        }
-
+        $emptyWeight   = (float) WCMYPA()->setting_collection->getByName(
+            WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
+        );
         $savedWeight   = $this->extraOptions['digital_stamp_weight'] ?? null;
-        $orderWeight   = $this->getWeight(true);
-        $defaultWeight = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT) ?: null;
-        $weight        = (float) ($savedWeight ?? $defaultWeight ?? $orderWeight);
+        $orderWeight   = $this->getWeight(true) + $emptyWeight;
+        $defaultWeight = WCMYPA()->setting_collection->getByName(
+            WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT
+        ) ?: null;
+        $weight        = (float) ($savedWeight ?? $orderWeight ?? $defaultWeight);
 
         $results = Arr::where(
             WCMP_Data::getDigitalStampRanges(),
