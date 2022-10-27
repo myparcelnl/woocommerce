@@ -6,6 +6,7 @@ use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\includes\admin\OrderSettings;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
@@ -460,13 +461,17 @@ class WCMYPA_Admin
                 <?php self::renderSpinner(); ?>
             </div>
         <?php endif;
+        $packageType       = (new WCMP_Export())->getAllowedPackageType($order, $orderSettings->getPackageType());
+        $packageTypeHuman  = WCMP_Data::getPackageTypeHuman(
+            $packageType
+        );
+        $digitalStampRange = $orderSettings->getDigitalStampRange();
 
         printf(
-            '<a href="#" class="wcmp__shipment-options__show" data-order-id="%d"><span class="wcmp__shipment-options__package-type">%s</span> &#x25BE;</a>',
+            '<a href="#" class="wcmp__shipment-options__show" data-order-id="%s"><span class="wcmp__shipment-options__package-type">%s%s</span> &#x25BE;</a>',
             $order->get_id(),
-            WCMP_Data::getPackageTypeHuman(
-                (new WCMP_Export())->getAllowedPackageType($order, $orderSettings->getPackageType())
-            )
+            $packageTypeHuman,
+            AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType ? sprintf(' (%s - %s)', esc_html($digitalStampRange['min']), esc_html($digitalStampRange['max'])) : ''
         );
 
         echo "</div>";
