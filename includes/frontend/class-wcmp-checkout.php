@@ -331,7 +331,7 @@ class WCMP_Checkout
             ?? WC()->session->get('chosen_shipping_methods')[0]
             ?? ''));
         $highestShippingClass = sanitize_text_field(
-            wp_unslash($_POST['myparcel_highest_shipping_class'] ?? $shippingMethod)
+            wp_unslash(filter_input(INPUT_POST, 'myparcel_highest_shipping_class') ?? $shippingMethod)
         );
 
         /**
@@ -360,7 +360,7 @@ class WCMP_Checkout
             );
         }
 
-        $deliveryOptionsFromPost          = Arr::get($_POST, WCMYPA_Admin::META_DELIVERY_OPTIONS);
+        $deliveryOptionsFromPost          = filter_input(INPUT_POST, WCMYPA_Admin::META_DELIVERY_OPTIONS);
         $deliveryOptionsFromShippingClass = $highestShippingClass
             ? [
                 'packageType' => WCMP_Export::getPackageTypeFromShippingMethod(

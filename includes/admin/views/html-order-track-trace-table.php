@@ -19,7 +19,7 @@ try {
 }
 
 if (isset($message)) {
-    echo "<p>$message</p>";
+    echo wp_kses_post("<p>$message</p>");
 }
 
 /**
@@ -34,8 +34,8 @@ if (! count($shipments)) {
 <table class="wcmp__table wcmp__table--track-trace">
   <thead>
   <tr>
-    <th><?php _e("Track & Trace", "woocommerce-myparcel"); ?></th>
-    <th><?php _e("Status", "woocommerce-myparcel"); ?></th>
+    <th><?php esc_html_e('Track & Trace', 'woocommerce-myparcel'); ?></th>
+    <th><?php esc_html_e('Status', 'woocommerce-myparcel'); ?></th>
     <th>&nbsp;</th>
   </tr>
   </thead>

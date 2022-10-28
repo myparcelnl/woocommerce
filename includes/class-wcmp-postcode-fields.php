@@ -557,8 +557,12 @@ class WCMP_NL_Postcode_Fields
      */
     public function save_custom_fields($post_id)
     {
+        if (! $this->postedValues) {
+            return;
+        }
+
         $post_type = get_post_type($post_id);
-        if (($post_type == 'shop_order' || $post_type == 'shop_order_refund') && ! empty($_POST)) {
+        if ('shop_order' === $post_type || 'shop_order_refund' === $post_type) {
             $order          = WCX::get_order($post_id);
             $addresses      = ['billing', 'shipping'];
             $address_fields = ['street_name', 'house_number', 'house_number_suffix'];
@@ -771,15 +775,15 @@ class WCMP_NL_Postcode_Fields
     public function required_field_notices($notice, $field_label)
     {
         // concatenate translations
-        $billing_nr  = sprintf(__("Billing %s", "woocommerce"), __("No."));
-        $shipping_nr = sprintf(__("Shipping %s", "woocommerce"), __("No."));
+        $billing_nr  = sprintf(__('Billing %s', 'woocommerce'), __('No.'));
+        $shipping_nr = sprintf(__('Shipping %s', 'woocommerce'), __('No.'));
 
         switch ($field_label) {
             case $billing_nr:
-                $notice = __("<b>Billing No.</b> is a required field", "woocommerce-myparcel");
+                $notice = __('<strong>Billing No.</strong> is a required field', 'woocommerce-myparcel');
                 break;
             case $shipping_nr:
-                $notice = __("<b>Shipping No.</b> is a required field", "woocommerce-myparcel");
+                $notice = __('<strong>Shipping No.</strong> is a required field', 'woocommerce-myparcel');
                 break;
             default:
                 break;
