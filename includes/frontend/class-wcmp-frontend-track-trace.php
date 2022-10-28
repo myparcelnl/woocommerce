@@ -55,21 +55,21 @@ class WCMP_Frontend_Track_Trace
         }
 
         $createLinkCallback = function ($trackTrace) {
-            return sprintf('<a href="%s">%s</a>', $trackTrace["url"], $trackTrace["link"]);
+            return sprintf('<a href="%s">%s</a>', $trackTrace['url'], $trackTrace['link']);
         };
 
-        printf(
+        echo wp_kses_post(sprintf(
             '<p>%s %s</p>',
             apply_filters(
-                "wcmyparcel_email_text",
-                __("You can track your order with the following Track & Trace link:", "woocommerce-myparcel"),
+                'wcmyparcel_email_text',
+                __('You can track your order with the following Track & Trace link:', 'woocommerce-myparcel'),
                 $order
             ),
             implode(
                 '<br />',
                 array_map($createLinkCallback, $trackTraceLinks)
             )
-        );
+        ));
     }
 
     /**

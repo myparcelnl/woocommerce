@@ -149,7 +149,7 @@ class WCMP_Assets
      */
     private static function enqueueJs(string $handle, string $file, array $dependencies = []): void
     {
-        if (getenv('WP_ENV') === "development") {
+        if ('development' === getenv('WP_ENV')) {
             $path = 'src';
         } else {
             $path = 'assets';

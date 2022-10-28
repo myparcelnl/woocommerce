@@ -7,7 +7,6 @@ namespace MyParcelNL\WooCommerce\includes\admin;
 defined('ABSPATH') or die();
 
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
-use WCMYPA_Settings;
 
 class MessagesRepository
 {
@@ -19,6 +18,12 @@ class MessagesRepository
 
     private const OPTION_NOTICE_DISMISSED = 'myparcel_notice_dismissed';
     private const OPTION_NOTICE_PERSISTED = 'myparcel_notice_persisted';
+
+    // https://wp-mix.com/wordpress-basic-allowed-html-wp_kses/
+    public const ALLOWED_HTML = [
+        'p' => ['class' => [],],
+        'a' => ['href' => [], 'class' => [], 'rel' => [], 'target' => [],],
+    ];
 
     /**
      * @var array
@@ -90,13 +95,13 @@ class MessagesRepository
     {
         foreach ($this->messages as $message) {
             if ($this->shouldMessageBeShown($message)) {
-                $isDismissible = $message['messageId'] ? 'is-dismissible' : '';
+                $cssClassDismiss = $message['messageId'] ? 'is-dismissible' : '';
                 printf(
                     '<div class="wcmp__notice notice myparcel-dismiss-notice notice-%s %s" data-messageid="%s"><p>%s</p></div>',
-                    $message['level'],
-                    $isDismissible,
-                    $message['messageId'],
-                    $message['message']
+                    esc_html($message['level']),
+                    $cssClassDismiss,
+                    esc_html($message['messageId']),
+                    wp_kses($message['message'], self::ALLOWED_HTML)
                 );
             }
         }
@@ -126,7 +131,7 @@ class MessagesRepository
 
     public function ajaxDismissNotice(): void
     {
-        $messageId    = $_POST['messageid'] ?? null;
+        $messageId    = sanitize_text_field(filter_input(INPUT_POST, 'messageid'));
         $messageArray = get_option(self::OPTION_NOTICE_DISMISSED, []);
 
         if ($messageId && ! in_array($messageId, $messageArray)) {

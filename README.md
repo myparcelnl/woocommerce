@@ -1,9 +1,9 @@
-# WooCommerce MyParcel
+# MyParcel for WooCommerce
 
 [![GitHub release](https://img.shields.io/github/v/release/myparcelnl/woocommerce?logo=github)](https://github.com/myparcelnl/woocommerce/releases/latest)
 [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/woocommerce-myparcel?logo=wordpress)](https://wordpress.org/plugins/woocommerce-myparcel/)
 
-Welcome to the WooCommerce MyParcel repository on GitHub. Here you can browse
+Welcome to the MyParcel for WooCommerce repository on GitHub. Here you can browse
 the source, look at open issues and keep
 track of development.
 
