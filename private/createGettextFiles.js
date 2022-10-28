@@ -9,7 +9,7 @@ const languagesDir = path.join(__dirname, '../', 'languages');
 const baseObject = {
   charset: 'utf-8',
   headers: {
-    'Project-Id-Version': 'WooCommerce MyParcel',
+    'Project-Id-Version': 'MyParcel',
     'MIME-Version': '1.0',
     'Content-Type': 'text/plain; charset=UTF-8',
     'Content-Transfer-Encoding': '8bit',

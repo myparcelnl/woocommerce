@@ -26,7 +26,7 @@ $target_url = wp_nonce_url(
 
 ?>
     <form
-        method="post" class="page-form wcmp__bulk-options wcmp__return-dialog" action="<?php echo $target_url; ?>">
+        method="post" class="page-form wcmp__bulk-options wcmp__return-dialog" action="<?php echo esc_url($target_url); ?>">
         <table style="width: 100%">
             <tbody>
             <?php
@@ -54,9 +54,9 @@ $target_url = wp_nonce_url(
                                 <td colspan="2">
                                     <strong>
                                         <?php echo sprintf(
-                                            "%s %s",
-                                            __("Order", "woocommerce-myparcel"),
-                                            $order->get_order_number()
+                                            '%s %s',
+                                            esc_html__('Order', 'woocommerce-myparcel'),
+                                            esc_html($order->get_order_number())
                                         ); ?>
                                     </strong>
                                 </td>
@@ -74,8 +74,8 @@ $target_url = wp_nonce_url(
                                         <tbody>
                                         <?php foreach ($order->get_items() as $item_id => $item) : ?>
                                             <tr>
-                                                <td><?php echo $item['qty'] . 'x'; ?></td>
-                                                <td><?php echo WCMP_Export::get_item_display_name($item, $order) ?></td>
+                                                <td><?php echo (int) $item['qty'], 'x'; ?></td>
+                                                <td><?php echo esc_html(WCMP_Export::get_item_display_name($item, $order)) ?></td>
                                                 <td class="wcmp__text--right">
                                                     <?php
 
@@ -126,10 +126,10 @@ $target_url = wp_nonce_url(
                             </tr> <!-- last row -->
                             <?php else: // required address data is available
                                 // print address
-                                echo '<p>' . $order->get_formatted_shipping_address() . '<br/>' . WCX_Order::get_prop(
+                                echo '<p>', wp_kses_post($order->get_formatted_shipping_address()), '<br/>', esc_html(WCX_Order::get_prop(
                                         $order,
                                         'billing_phone'
-                                    ) . '<br/>' . WCX_Order::get_prop($order, 'billing_email') . '</p>';
+                                    )), '<br/>', esc_html(WCX_Order::get_prop($order, 'billing_email')), '</p>';
                                 ?>
                                 </td></tr>
                                 <tr>
@@ -157,11 +157,11 @@ $target_url = wp_nonce_url(
             if (isset($dialog) && $dialog === 'shipment') {
                 $button_text = __('action_export_to_myparcel', 'woocommerce-myparcel');
             } else {
-                $button_text = __("Send email", "woocommerce-myparcel");
+                $button_text = __('Send email', 'woocommerce-myparcel');
             }
             ?>
             <div class="wcmp__d--flex">
-                <input type="submit" value="<?php echo $button_text; ?>" class="button wcmp__return-dialog__save">
+                <input type="submit" value="<?php echo esc_html($button_text); ?>" class="button wcmp__return-dialog__save">
                 <?php WCMYPA_Admin::renderSpinner() ?>
             </div>
         </div>

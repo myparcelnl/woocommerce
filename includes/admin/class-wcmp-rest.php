@@ -170,29 +170,29 @@ class WCMP_Rest
      * @param string $method
      * @param array  $headers
      * @param        $post
-     * @param null   $body
+     * @param null   $deprecated
      * @param bool   $raw
      *
      * @return array
      * @throws Exception
      */
-    public function request($url, $method = "GET", $headers = [], $post = '', $body = null, $raw = false)
+    public function request($url, $method = 'GET', $headers = [], $post = '', $deprecated = null, $raw = false)
     {
         // Set the method and related options
         switch ($method) {
-            case "PUT":
+            case 'PUT':
                 throw new Exception('Can not put MyParcel shipment', 500);
                 break;
 
-            case "POST":
+            case 'POST':
                 $response = wp_remote_post($url, ['body' => $post, 'headers' => $headers]);
                 break;
 
-            case "DELETE":
+            case 'DELETE':
                 throw new Exception('Can not delete MyParcel shipment', 500);
                 break;
 
-            case "GET":
+            case 'GET':
             default:
                 $response = wp_remote_get($url, $headers);
                 break;
@@ -203,8 +203,8 @@ class WCMP_Rest
             @fclose($f);
         }
 
-        $status = Arr::get($response, "response.code");
-        $body   = Arr::get($response, "body");
+        $status = Arr::get($response, 'response.code');
+        $body   = Arr::get($response, 'body');
 
         if ($raw !== true) {
             $body = json_decode($body, true); // The second parameter set to true returns objects as associative arrays
@@ -215,17 +215,17 @@ class WCMP_Rest
                 $body = json_decode($body, true);
             }
 
-            if (! empty($body["errors"])) {
+            if (! empty($body['errors'])) {
                 $error = $this->parse_errors($body);
-            } elseif (! empty($body["message"])) {
-                $error = $body["message"];
+            } elseif (! empty($body['message'])) {
+                $error = $body['message'];
             } else {
-                $error = "Unknown error";
+                $error = 'Unknown error';
             }
             throw new Exception($error, $status);
         }
 
-        return ["code" => $status, "body" => $body, "headers" => Arr::get($response, "headers")];
+        return ['code' => $status, 'body' => $body, 'headers' => Arr::get($response, 'headers')];
     }
 
     /**
@@ -257,7 +257,7 @@ class WCMP_Rest
             $html = array_shift($parsed_errors);
         } else {
             foreach ($parsed_errors as &$parsed_error) {
-                $parsed_error = "<li>{$parsed_error}</li>";
+                $parsed_error = "<li>$parsed_error</li>";
             }
             $html = sprintf("<ul>%s</ul>", implode("\n", $parsed_errors));
         }

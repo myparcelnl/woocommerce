@@ -168,7 +168,7 @@ class WCMP_API extends WCMP_Rest
         if (! $display) {
             $collection->setLinkOfLabels($positions);
             $this->updateOrderBarcode($order_ids, $collection);
-            echo $collection->getLinkOfLabels();
+            echo esc_html($collection->getLinkOfLabels());
             die();
         }
     }

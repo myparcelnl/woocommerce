@@ -859,7 +859,7 @@ class WCMP_Settings_Data
         return sprintf(
             '<p>%s <a class="" href="#" onclick="document.querySelector(`#delivery_options_custom_css`).value = `%s`">%s</a></p>',
             sprintf(__('Theme "%s" detected.', 'woocommerce-myparcel'), $currentTheme),
-            file_get_contents($cssPath),
+            esc_js(file_get_contents($cssPath)),
             __('Apply preset.', 'woocommerce-myparcel')
         );
     }

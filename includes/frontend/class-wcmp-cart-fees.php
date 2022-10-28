@@ -59,12 +59,14 @@ class WCMP_Cart_Fees
             return;
         }
 
-        if (isset($_POST['post_data'])) {
+        $post = wp_unslash(filter_input_array(INPUT_POST));
+
+        if (isset($post['post_data'])) {
             // non-default post data for AJAX calls
-            parse_str($_POST['post_data'], $postData);
+            parse_str($post['post_data'], $postData);
         } else {
             // checkout finalization
-            $postData = $_POST;
+            $postData = $post;
         }
 
         // Check if delivery options exist at all.
@@ -76,7 +78,7 @@ class WCMP_Cart_Fees
         $deliveryOptionsData = json_decode(stripslashes($deliveryOptionsData), true);
 
         /*
-         * Check if delivery options is null. Happens when when switching to a shipping method that does not allow
+         * Check if delivery options is null. Happens when switching to a shipping method that does not allow
          * showing delivery options, for example.
          */
         if (!$deliveryOptionsData) {

@@ -164,34 +164,37 @@ class WCMP_Export
         }
 
         if (! is_user_logged_in()) {
-            wp_die(__("You do not have sufficient permissions to access this page.", "woocommerce-myparcel"));
+            wp_die(__('You do not have sufficient permissions to access this page.', 'woocommerce-myparcel'));
         }
 
         $return = [];
 
         // Check the user privileges (maybe use order ids for filter?)
         if (apply_filters(
-            "wc_myparcel_check_privs",
-            ! current_user_can("manage_woocommerce_orders") && ! current_user_can("edit_shop_orders")
+            'wc_myparcel_check_privs',
+            ! current_user_can('manage_woocommerce_orders') && ! current_user_can('edit_shop_orders')
         )) {
-            $return["error"] = __(
-                "You do not have sufficient permissions to access this page.",
-                "woocommerce-myparcel"
+            $return['error'] = __(
+                'You do not have sufficient permissions to access this page.',
+                'woocommerce-myparcel'
             );
             echo json_encode($return);
             die();
         }
 
-        $dialog  = $_REQUEST['dialog'] ?? null;
-        $print   = $_REQUEST['print'] ?? null;
-        $offset  = (int) ($_REQUEST['offset'] ?? 0);
-        $request = $_REQUEST['request'];
+        $requestVars = array_merge(
+            filter_input_array(INPUT_GET) ?? [],
+            filter_input_array(INPUT_POST) ?? []
+        );
+        $print       = sanitize_text_field($requestVars['print'] ?? null);
+        $offset      = (int) ($requestVars['offset'] ?? 0);
+        $request     = sanitize_text_field($requestVars['request']);
 
         /**
          * @var $order_ids
          */
-        $order_ids    = $this->sanitize_posted_array($_REQUEST["order_ids"] ?? []);
-        $shipment_ids = $this->sanitize_posted_array($_REQUEST["shipment_ids"] ?? []);
+        $order_ids    = $this->onlyIntegersInArray($requestVars['order_ids'] ?? []);
+        $shipment_ids = $this->onlyIntegersInArray($requestVars['shipment_ids'] ?? []);
 
         foreach ($order_ids as $key => $id) {
             $order         = WCX::get_order($id);
@@ -214,7 +217,8 @@ class WCMP_Export
 
                     // Creating a return shipment.
                     case self::EXPORT_RETURN:
-                        $return = $this->exportReturn($order_ids, $_REQUEST['myparcel_options']);
+                        $options = array_map('sanitize_text_field', $requestVars['myparcel_options'] ?? []);
+                        $return = $this->exportReturn($order_ids, $options);
                         break;
 
                     // Downloading labels.
@@ -224,7 +228,7 @@ class WCMP_Export
 
                     case self::MODAL_DIALOG:
                         $order_ids = $this->filterOrderDestinations($order_ids);
-                        $this->modal_dialog($order_ids, $dialog);
+                        $this->modal_dialog($order_ids);
                         break;
                 }
             } catch (Exception $e) {
@@ -235,7 +239,7 @@ class WCMP_Export
         }
 
         // if we're directed here from modal, show proper result page
-        if (isset($_REQUEST["modal"])) {
+        if (isset($requestVars['modal'])) {
             $this->modal_success_page($request, $return);
         } else {
             // return JSON response
@@ -249,18 +253,14 @@ class WCMP_Export
      *
      * @return array
      */
-    public function sanitize_posted_array($array): array
+    public function onlyIntegersInArray($array): array
     {
-        if (is_array($array)) {
-            return $array;
-        }
-
         // check for JSON
-        if (is_string($array) && strpos($array, "[") !== false) {
-            $array = json_decode(stripslashes($array));
+        if (is_string($array) && false !== strpos($array, '[')) {
+            $array = json_decode(stripslashes($array), false);
         }
 
-        return (array) $array;
+        return array_map(static function ($value) { return (int) $value; }, (array) $array);
     }
 
     /**
@@ -353,17 +353,17 @@ class WCMP_Export
         }
 
         if (! empty($this->success)) {
-            $return["success"]     = sprintf(
-                __("%s shipments successfully exported to MyParcel", "woocommerce-myparcel"),
+            $return['success']     = sprintf(
+                __('%s shipments successfully exported to MyParcel', 'woocommerce-myparcel'),
                 count($collection->getConsignmentIds())
             );
-            $return["success_ids"] = $collection->getConsignmentIds();
+            $return['success_ids'] = $collection->getConsignmentIds();
 
             // do action on successfully exporting the label
-            do_action("wcmp_labels_exported", $order_ids);
+            do_action('wcmp_labels_exported', $order_ids);
 
-            WCMP_Log::add($return["success"]);
-            WCMP_Log::add("ids: " . implode(", ", $return["success_ids"]));
+            WCMP_Log::add($return['success']);
+            WCMP_Log::add('ids: ' . implode(', ', $return['success_ids']));
         }
 
         return $return;
@@ -495,7 +495,7 @@ class WCMP_Export
     /**
      * @param $order_ids
      */
-    public function modal_dialog($order_ids, $dialog): void
+    public function modal_dialog($order_ids): void
     {
         // check for JSON
         if (is_string($order_ids) && strpos($order_ids, "[") !== false) {
@@ -1401,7 +1401,9 @@ class WCMP_Export
     private function exportAccordingToMode(array $orderIds, int $offset, ?string $print): array
     {
         $exportMode = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
-        $orderIds   = $this->filterOrderDestinations($orderIds);
+        $orderIds   = array_map(static function ($value) { return (string) $value; },
+            $this->filterOrderDestinations($orderIds)
+        );
         $print      = $print ?? self::NO;
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {

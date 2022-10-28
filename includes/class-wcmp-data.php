@@ -84,17 +84,17 @@ class WCMP_Data
         ];
 
         self::$packageTypesHuman = [
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME       => __("Package", "woocommerce-myparcel"),
-            AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME       => __("Mailbox", "woocommerce-myparcel"),
-            AbstractConsignment::PACKAGE_TYPE_LETTER_NAME        => __("Unpaid letter", "woocommerce-myparcel"),
-            AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME => __("Digital stamp", "woocommerce-myparcel"),
+            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME       => __('Package', 'woocommerce-myparcel'),
+            AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME       => __('Mailbox', 'woocommerce-myparcel'),
+            AbstractConsignment::PACKAGE_TYPE_LETTER_NAME        => __('Unpaid letter', 'woocommerce-myparcel'),
+            AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME => __('Digital stamp', 'woocommerce-myparcel'),
         ];
 
         self::$deliveryTypesHuman = [
-            AbstractConsignment::DELIVERY_TYPE_MORNING_NAME  => __("shipment_options_delivery_morning", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME => __("shipment_options_delivery_standard", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_EVENING_NAME  => __("shipment_options_delivery_evening", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME   => __("shipment_options_delivery_pickup", "woocommerce-myparcel"),
+            AbstractConsignment::DELIVERY_TYPE_MORNING_NAME  => __('shipment_options_delivery_morning', 'woocommerce-myparcel'),
+            AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME => __('shipment_options_delivery_standard', 'woocommerce-myparcel'),
+            AbstractConsignment::DELIVERY_TYPE_EVENING_NAME  => __('shipment_options_delivery_evening', 'woocommerce-myparcel'),
+            AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME   => __('shipment_options_delivery_pickup', 'woocommerce-myparcel'),
         ];
     }
 

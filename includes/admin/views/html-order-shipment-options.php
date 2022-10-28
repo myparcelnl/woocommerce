@@ -23,7 +23,7 @@ try {
     WCMYPA_Admin::renderPickupLocation($deliveryOptions);
 
     $orderSettingsRows = new OrderSettingsRows($deliveryOptions, $order);
-    $optionRows        = ($orderSettingsRows)->getOptionsRows();
+    $optionRows        = $orderSettingsRows->getOptionsRows();
     $optionRows        = $orderSettingsRows->filterRowsByCountry($order->get_shipping_country(), $optionRows);
 
     $namePrefix = WCMYPA_Admin::SHIPMENT_OPTIONS_FORM_NAME . "[{$order->get_id()}]";
@@ -32,17 +32,17 @@ try {
         $class = new SettingsFieldArguments($optionRow, $namePrefix);
 
         // Cast boolean values to the correct enabled/disabled values.
-        if (is_bool($optionRow["value"])) {
-            $optionRow["value"] = $optionRow["value"] ? WCMP_Settings_Data::ENABLED : WCMP_Settings_Data::DISABLED;
+        if (is_bool($optionRow['value'])) {
+            $optionRow['value'] = $optionRow['value'] ? WCMP_Settings_Data::ENABLED : WCMP_Settings_Data::DISABLED;
         }
 
-        $class->setValue($optionRow["value"]);
+        $class->setValue($optionRow['value']);
         ?>
 
         <tr>
             <td>
                 <label for="<?php echo $class->getName() ?>">
-                    <?php echo $class->getArgument('label'); ?>
+                    <?php echo esc_html($class->getArgument('label')); ?>
                 </label>
             </td>
             <td>
@@ -61,7 +61,7 @@ try {
         <td colspan="2">
             <div class="button wcmp__shipment-options__save">
                 <?php
-                _e("Save", "woocommerce-myparcel");
+                esc_html_e('Save', 'woocommerce-myparcel');
                 WCMYPA_Admin::renderSpinner();
                 ?>
             </div>
