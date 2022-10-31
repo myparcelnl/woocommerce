@@ -5,6 +5,7 @@
 
 namespace WPO\WC\MyParcel\Compatibility;
 
+use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use WC_Data;
 
 defined('ABSPATH') or exit;
@@ -100,16 +101,16 @@ abstract class Data
     /**
      * Gets an object's stored meta value.
      *
-     * @param WC_Data $object  the data object, likely \WC_Order or \WC_Product
-     * @param string  $key     the meta key
-     * @param bool    $single  whether to get the meta as a single item. Defaults to `true`
-     * @param string  $context if 'view' then the value will be filtered
+     * @param  PdkOrder $object  the data object, likely \WC_Order or \WC_Product
+     * @param  string   $key     the meta key
+     * @param  bool     $single  whether to get the meta as a single item. Defaults to `true`
+     * @param  string   $context if 'view' then the value will be filtered
      *
      * @return mixed
      * @throws \JsonException
      * @since 4.6.0-dev
      */
-    public static function get_meta($object, $key = '', $single = true, $context = 'edit')
+    public static function get_meta(PdkOrder $object, string $key = '', bool $single = true, string $context = 'edit')
     {
         if (WC_Core::is_wc_version_gte_3_0()) {
             $value = $object->get_meta($key, $single, $context);
@@ -123,7 +124,7 @@ abstract class Data
         $value = self::removeSerialization($object, $key, $value);
 
         if (is_string($value)) {
-            $decoded = json_decode($value, true);
+            $decoded = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
             // json_decode returns null if there was a syntax error, meaning input was not valid JSON.
             $value = $decoded ?? $value;
         }
@@ -174,17 +175,18 @@ abstract class Data
     /**
      * Updates an object's stored meta value.
      *
-     * @param WC_Data      $object  the data object, likely \WC_Order or \WC_Product
-     * @param string       $key     the meta key
-     * @param string|array $value   the meta value, will be encoded if it's an array
-     * @param int|string   $meta_id Optional. The specific meta ID to update
+     * @param  PdkOrder     $object  the data object, likely \WC_Order or \WC_Product
+     * @param  string       $key     the meta key
+     * @param  string|array $value   the meta value, will be encoded if it's an array
+     * @param  int|string   $meta_id Optional. The specific meta ID to update
      *
+     * @throws \JsonException
      * @since 4.6.0-dev
      */
-    public static function update_meta_data($object, $key, $value, $meta_id = ''): void
+    public static function update_meta_data(PdkOrder $object, string $key, $value, $meta_id = ''): void
     {
         if (is_array($value)) {
-            $value = json_encode($value);
+            $value = json_encode($value, JSON_THROW_ON_ERROR);
         }
 
         if (WC_Core::is_wc_version_gte_3_0()) {
@@ -221,14 +223,14 @@ abstract class Data
     /**
      * Fix data stored as objects or serialized strings. Converts everything to array and updates it in the meta data.
      *
-     * @param \WC_Data $object
+     * @param PdkOrder $object
      * @param string   $key
      * @param mixed    $value
      *
      * @return mixed
      * @throws \JsonException
      */
-    private static function removeSerialization(WC_Data $object, string $key, $value)
+    private static function removeSerialization(PdkOrder $object, string $key, $value)
     {
         if (is_serialized($value)) {
             $value = @unserialize(trim($value));

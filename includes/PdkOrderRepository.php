@@ -25,6 +25,8 @@ use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use WC_Order;
 use WC_Order_Item;
+use WCMYPA_Admin;
+use WCMYPA_Settings;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
@@ -159,53 +161,52 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  array  $orderData
-     *
-     * @return null|\CustomsDeclaration
+     * @return null|CustomsDeclaration
      */
     private function getCustomsDeclaration(): ?CustomsDeclaration
     {
-        $isToRowCountry = $this->countryService->isRowCountry(strtoupper($orderData['iso_code']));
-        $customFormConfiguration = Configuration::get(CustomsSettings::ID);
-
-        if (! $isToRowCountry || 'No' === $customFormConfiguration) {
-            return null;
-        }
-
-        $products = OrderLabel::getCustomsOrderProducts($this->order->id);
-
-        $items = (new Collection($products))
-            ->filter()
-            ->map(function ($product) {
-                $productHsCode = ProductConfigurationProvider::get(
-                    $product['product_id'],
-                    CustomsSettings::DEFAULT_CUSTOMS_CODE
-                );
-
-                $productCountryOfOrigin = ProductConfigurationProvider::get(
-                    $product['product_id'],
-                    CustomsSettings::DEFAULT_COUNTRY_OF_ORIGIN
-                );
-
-                return new CustomsDeclarationItem([
-                    'amount'         => $product['product_quantity'],
-                    'classification' => (int) ($productHsCode
-                        ?: Configuration::get(
-                            CustomsSettings::DEFAULT_CUSTOMS_CODE
-                        )),
-                    'country'        => $productCountryOfOrigin ?? Configuration::get(
-                            CustomsSettings::DEFAULT_COUNTRY_OF_ORIGIN
-                        ),
-                    'description'    => $product['product_name'],
-                    'itemValue'      => Tools::ps_round($product['unit_price_tax_incl'] * 100),
-                    'weight'         => WeightService::convertToGrams($product['product_weight'], WeightService::UNIT_GRAMS),
-                ]);
-            });
+//        $isToRowCountry = $this->countryService->isRowCountry(strtoupper($orderData['iso_code']));
+//        $customFormConfiguration = Configuration::get(CustomsSettings::ID);
+//
+//        if (! $isToRowCountry || 'No' === $customFormConfiguration) {
+//            return null;
+//        }
+//
+//        $products = OrderLabel::getCustomsOrderProducts($this->order->id);
+//
+//        $items = (new Collection($products))
+//            ->filter()
+//            ->map(function ($product) {
+//                $productHsCode = ProductConfigurationProvider::get(
+//                    $product['product_id'],
+//                    CustomsSettings::DEFAULT_CUSTOMS_CODE
+//                );
+//
+//                $productCountryOfOrigin = ProductConfigurationProvider::get(
+//                    $product['product_id'],
+//                    CustomsSettings::DEFAULT_COUNTRY_OF_ORIGIN
+//                );
+//
+//                return new CustomsDeclarationItem([
+//                    'amount'         => $product['product_quantity'],
+//                    'classification' => (int) ($productHsCode
+//                        ?: Configuration::get(
+//                            CustomsSettings::DEFAULT_CUSTOMS_CODE
+//                        )),
+//                    'country'        => $productCountryOfOrigin ?? Configuration::get(
+//                            CustomsSettings::DEFAULT_COUNTRY_OF_ORIGIN
+//                        ),
+//                    'description'    => $product['product_name'],
+//                    'itemValue'      => Tools::ps_round($product['unit_price_tax_incl'] * 100),
+//                    'weight'         => WeightService::convertToGrams($product['product_weight'], WeightService::UNIT_GRAMS),
+//                ]);
+//            });
 
         return new CustomsDeclaration([
             'contents' => null,
             'invoice'  => null,
-            'items'    => $items->toArray(),
+            //'items'    => $items->toArray(),
+            'items'    => [],
             'weight'   => null,
         ]);
     }

@@ -128,37 +128,17 @@ class ExportActions
         $_GET['action'] = $_REQUEST['pdkAction'];
         $action         = $_GET['pdkAction'];
 
-        //        $orderIds = $this->sanitize_posted_array($_REQUEST['order_ids'] ?? []);
-
-        //        foreach ($orderIds as $key => $id) {
-        //            $order    = WCX::get_order($id);
-        //            $pdkOrder = (new PdkOrderFromWCOrderAdapter($order));
-        //
-        //            if ($pdkOrder->hasLocalPickup()) {
-        //                unset($orderIds[$key]);
-        //            }
-        //        }
-        //
-        //        $pdkOrderCollection = (new PdkOrderCollectionFromWCOrdersAdapter($orderIds))->convert();
-        //        if (empty($orderIds) && $pdkOrderCollection->getAllShipments() === null) {
-        //            Messages::showAdminNotice(__('You have not selected any orders!', 'woocommerce-myparcel'));
-        //        }
-
         try {
             /** @var \MyParcelNL\Pdk\Base\PdkEndpoint $endpoint */
             $endpoint = Pdk::get(PdkEndpoint::class);
             $response = $endpoint->call($action);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
-            //            WCMP_Log::add("$request: {$errorMessage}");
+            //WCMP_Log::add("$request: {$errorMessage}");
             Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
         }
 
-        if (isset($_REQUEST['modal'])) {
-            $this->modal_success_page($request);
-        }
-
-        echo json_encode($response ?? null);
+        echo json_encode($response ?? null, JSON_THROW_ON_ERROR);
         die();
     }
 
@@ -176,7 +156,7 @@ class ExportActions
 
         // check for JSON
         if (is_string($array) && strpos($array, '[') !== false) {
-            $array = json_decode(stripslashes($array), false);
+            $array = json_decode(stripslashes($array), false, 512, JSON_THROW_ON_ERROR);
         }
 
         return (array) $array;

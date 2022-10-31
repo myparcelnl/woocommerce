@@ -4,26 +4,9 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\includes\adapter;
 
-use Exception;
-use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Base\Service\WeightService;
-use MyParcelNL\Pdk\Fulfilment\Model\Product;
-use MyParcelNL\Pdk\Plugin\Collection\PdkOrderLineCollection;
-use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
-use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
-use MyParcelNL\Pdk\Shipment\Collection\CustomsDeclarationItemCollection;
-use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
-use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
-use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
-use MyParcelNL\Pdk\Shipment\Model\ShipmentOptions;
-use MyParcelNL\Pdk\Shipment\Service\DeliveryDateService;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\Sdk\src\Model\PickupLocation;
-use MyParcelNL\Sdk\src\Model\Recipient;
-use MyParcelNL\WooCommerce\Helper\ExportRow;
 use WC_Order;
-use WCMP_Log;
-use WCMP_Shipping_Methods;
 use WCMYPA_Admin;
 use WCMYPA_Settings;
 use WC_Order_Item;
@@ -98,7 +81,7 @@ class PdkOrderFromWCOrderAdapter
     {
         $weight       = 0;
         $extraOptions = $this->getExtraOptions();
-        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME===$this->getPdkOrder()->deliveryOptions->packageType) {
+        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $this->getPdkOrder()->deliveryOptions->packageType) {
             $emptyWeight = (float) WCMYPA()->settingCollection->getByName(
                 WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
             );

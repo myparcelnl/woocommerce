@@ -707,7 +707,6 @@ class WCMYPA_Admin
      */
     public static function getListingActions(PdkOrder $pdkOrder, PdkOrderRepository $orderRepository): array
     {
-
        //$shippingCountry = $pdkOrder->getShippingRecipient()->cc;
         $exportMode      = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
         $consignments    = self::get_order_shipments($pdkOrder);
@@ -818,13 +817,13 @@ class WCMYPA_Admin
     }
 
     /**
-     * @param  WC_Order $order
+     * @param  PdkOrder $order
      * @param  bool     $exclude_concepts
      *
      * @return array
      * @throws \JsonException
      */
-    public static function get_order_shipments(WC_Order $order, bool $exclude_concepts = false): array
+    public static function get_order_shipments(PdkOrder $order, bool $exclude_concepts = false): array
     {
         $shipments = WCX_Order::get_meta($order, self::META_SHIPMENTS);
 
@@ -880,6 +879,7 @@ class WCMYPA_Admin
         parse_str($_POST['form_data'], $form_data);
 
         foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
+          $order =
             $order = WCX::get_order($order_id);
             $data  = self::removeDisallowedDeliveryOptions($data, $order->get_shipping_country());
 
@@ -926,6 +926,7 @@ class WCMYPA_Admin
     public function createMetaBox(): void
     {
         global $post_id;
+
         // get order
         $order = WCX::get_order($post_id);
 
