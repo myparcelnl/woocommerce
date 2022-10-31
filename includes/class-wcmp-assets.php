@@ -69,7 +69,7 @@ class WCMP_Assets
             [
                 "api_url"                => (new MyParcelRequest())->getRequestUrl(),
                 "actions"                => [
-                    "export"        => ExportActions::EXPORT,
+                    "export"        => ExportActions::ACTION_NAME,
                     "export_return" => ExportActions::EXPORT_RETURN,
                     "export_order"  => ExportActions::EXPORT_ORDER,
                     "get_labels"    => ExportActions::GET_LABELS,

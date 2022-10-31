@@ -68,7 +68,7 @@ if (! count($shipments)) {
       </td>
       <td class="wcmp__td--create-label">
           <?php
-          $action    = ExportActions::EXPORT;
+          $action    = ExportActions::ACTION_NAME;
           $getLabels = ExportActions::GET_LABELS;
 
           $order            = wc_get_order($order_id);

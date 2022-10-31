@@ -15,7 +15,7 @@ include('html-start.php');
  */
 
 $export_return = ExportActions::EXPORT_RETURN;
-$export        = ExportActions::EXPORT;
+$export        = ExportActions::ACTION_NAME;
 
 $order_ids_string = implode(';', $order_ids);
 

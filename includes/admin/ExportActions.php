@@ -31,13 +31,25 @@ if (class_exists('ExportActions')) {
 
 class ExportActions
 {
-    public const EXPORT           = 'ExportActions';
-    public const EXPORT_ORDER     = 'export_order';
-    public const EXPORT_RETURN    = 'export_return';
-    public const GET_LABELS       = 'get_labels';
-    public const MODAL_DIALOG     = 'modal_dialog';
-    public const ITEM_DESCRIPTION_MAX_LENGTH  = 50;
-    public const DEFAULT_POSITIONS = [2, 4, 1, 3];
+    public const ACTION_NAME = 'MyParcelPdk';
+    /**
+     * @deprecated GEBRUIK PDK
+     */
+    const        EXPORT_ORDER = '';
+    /**
+     * @deprecated GEBRUIK PDK
+     */
+    const        EXPORT_RETURN = '';
+    /**
+     * @deprecated GEBRUIK PDK
+     */
+    const        GET_LABELS = '';
+    /**
+     * @deprecated GEBRUIK PDK
+     */
+    const        MODAL_DIALOG                = '';
+    public const ITEM_DESCRIPTION_MAX_LENGTH = 50;
+    public const DEFAULT_POSITIONS           = [2, 4, 1, 3];
     public const DISALLOWED_SHIPPING_METHODS = [
         WCMP_Shipping_Methods::LOCAL_PICKUP,
     ];
@@ -45,13 +57,13 @@ class ExportActions
     /**
      * @var array
      */
-    public array $success;
+    public $success;
 
     public function __construct()
     {
         $this->success  = [];
 
-        add_action('wp_ajax_' . self::EXPORT, [$this, 'export']);
+        add_action('wp_ajax_' . self::ACTION_NAME, [$this, 'handlePdkAction']);
     }
 
     /**
@@ -109,32 +121,36 @@ class ExportActions
      * @return void
      * @throws Exception
      */
-    public function export(): void
+    public function handlePdkAction(): void
     {
         $this->permissionChecks();
 
-        $request  = $_REQUEST['request'];
+        $_GET['action'] = $_REQUEST['pdkAction'];
+        $action         = $_GET['pdkAction'];
+
+        //        $orderIds = $this->sanitize_posted_array($_REQUEST['order_ids'] ?? []);
+
+        //        foreach ($orderIds as $key => $id) {
+        //            $order    = WCX::get_order($id);
+        //            $pdkOrder = (new PdkOrderFromWCOrderAdapter($order));
+        //
+        //            if ($pdkOrder->hasLocalPickup()) {
+        //                unset($orderIds[$key]);
+        //            }
+        //        }
+        //
+        //        $pdkOrderCollection = (new PdkOrderCollectionFromWCOrdersAdapter($orderIds))->convert();
+        //        if (empty($orderIds) && $pdkOrderCollection->getAllShipments() === null) {
+        //            Messages::showAdminNotice(__('You have not selected any orders!', 'woocommerce-myparcel'));
+        //        }
 
         try {
-            switch ($request) {
-                case PdkActions::GET_ORDER_DATA;
-                    $action = PdkActions::GET_ORDER_DATA;
-                    break;
-                case PdkActions::EXPORT_AND_PRINT_ORDER:
-                    $action = PdkActions::EXPORT_AND_PRINT_ORDER;
-                    break;
-                case PdkActions::UPDATE_TRACKING_NUMBER:
-                    $action = PdkActions::UPDATE_TRACKING_NUMBER;
-                    break;
-                default:
-                    $action = PdkActions::EXPORT_ORDER;
-            }
-
-            $response = (Pdk::get(PdkEndpoint::class))->call($action);
-
+            /** @var \MyParcelNL\Pdk\Base\PdkEndpoint $endpoint */
+            $endpoint = Pdk::get(PdkEndpoint::class);
+            $response = $endpoint->call($action);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
-            WCMP_Log::add("$request: {$errorMessage}");
+            //            WCMP_Log::add("$request: {$errorMessage}");
             Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
         }
 
@@ -142,7 +158,7 @@ class ExportActions
             $this->modal_success_page($request);
         }
 
-        echo json_encode($response ?? null, JSON_THROW_ON_ERROR);
+        echo json_encode($response ?? null);
         die();
     }
 
@@ -159,8 +175,8 @@ class ExportActions
         }
 
         // check for JSON
-        if (is_string($array) && strpos($array, '[')!==false) {
-            $array = json_decode(stripslashes($array), false, 512, JSON_THROW_ON_ERROR);
+        if (is_string($array) && strpos($array, '[') !== false) {
+            $array = json_decode(stripslashes($array), false);
         }
 
         return (array) $array;
@@ -179,7 +195,7 @@ class ExportActions
         WCMP_Log::add('*** downloadOrGetUrlOfLabels() ***');
         WCMP_Log::add('Shipment IDs: ' . implode(', ', $shipments));
 
-        $positions = array_slice(self::DEFAULT_POSITIONS, $offset % 4);
+        $positions       = array_slice(self::DEFAULT_POSITIONS, $offset % 4);
         $displayOverride = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY);
 
         return Pdk::get(ShipmentRepository::class)
@@ -298,7 +314,7 @@ class ExportActions
      * @throws Exception
      */
     public function getPackageTypeFromOrder(
-        WC_Order $order,
+        WC_Order                       $order,
         AbstractDeliveryOptionsAdapter $deliveryOptions = null
     ): string {
         $packageTypeFromDeliveryOptions = $deliveryOptions ? $deliveryOptions->getPackageType() : null;
@@ -452,8 +468,8 @@ class ExportActions
     public function getAllowedPackageType(WC_Order $order, ?string $packageType): ?string
     {
         $shippingCountry      = WCX_Order::get_prop($order, 'shipping_country');
-        $isMailbox            = AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME===$packageType;
-        $isDigitalStamp       = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME===$packageType;
+        $isMailbox            = AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME === $packageType;
+        $isDigitalStamp       = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType;
         $isDefaultPackageType = AbstractConsignment::CC_NL !== $shippingCountry && ($isMailbox || $isDigitalStamp);
 
         if ($isDefaultPackageType) {
@@ -515,11 +531,13 @@ class ExportActions
         }
 
         foreach ($shipmentCollection->all() as $shipment) {
-
             // TODO: Convert PdkOrder to WC_Order
 
             $this->saveShipmentData($order, $shipment->toArray());
-            ChannelEngine::updateMetaOnExport($order, $shipment->getAttribute('barcode') ?: $shipment->getAttribute('external_identifier'));
+            ChannelEngine::updateMetaOnExport(
+                $order,
+                $shipment->getAttribute('barcode') ?: $shipment->getAttribute('external_identifier')
+            );
         }
 
         return $shipmentCollection->toArray();
@@ -559,11 +577,7 @@ class ExportActions
         foreach ($found_shipping_classes as $shipping_class => $products) {
             // Also handles BW compatibility when slugs were used instead of ids
             $shipping_class_term    = get_term_by('slug', $shipping_class, 'product_shipping_class');
-            $shipping_class_term_id = '';
-
-            if (null !== $shipping_class_term) {
-                $shipping_class_term_id = $shipping_class_term->term_id;
-            }
+            $shipping_class_term_id = $shipping_class_term->term_id ?? '';
 
             $class_cost_string = $shipping_class_term && $shipping_class_term_id ? $shipping_method->get_option(
                 'class_cost_' . $shipping_class_term_id,
@@ -744,7 +758,7 @@ class ExportActions
         }
 
         // support WooCommerce Table Rate Shipping by Bolder Elements
-        $newShippingClass = str_replace(':', '_', $shipping_class);
+        $newShippingClass = str_replace(':', '_', (string) $shipping_class);
         return ! empty($shipping_class) && in_array($newShippingClass, $package_type_shipping_methods, true);
     }
 
@@ -801,7 +815,7 @@ class ExportActions
     {
         $currentDateTime = (new DateTime())->format(AbstractOrder::DATE_FORMAT_FULL);
 
-        $orderCollection->each(static function ($order) use ($currentDateTime){
+        $orderCollection->each(static function ($order) use ($currentDateTime) {
             $orderId = $order->externalIdentifier;
             $wcOrder = WCX::get_order($order->externalIdentifier);
             $value   = [

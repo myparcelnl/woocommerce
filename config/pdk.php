@@ -13,6 +13,7 @@ use MyParcelNL\Pdk\Plugin\Action\EndpointActionsInterface;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
 use MyParcelNL\Pdk\Settings\Repository\AbstractSettingsRepository;
 use MyParcelNL\WooCommerce\includes\adapter\Guzzle7ClientAdapter;
+use MyParcelNL\WooCommerce\PdkOrderRepository;
 use WPO\WC\MyParcel\Collections\SettingsCollection;
 use function DI\autowire;
 use function DI\value;
