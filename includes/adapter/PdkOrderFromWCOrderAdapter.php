@@ -116,16 +116,4 @@ class PdkOrderFromWCOrderAdapter
         return WeightService::convertToDigitalStamp((int) $weight);
     }
 
-    /**
-     * @return bool
-     */
-    public function hasLocalPickup(): bool
-    {
-        $shippingMethods  = $this->order->get_shipping_methods();
-        $shippingMethod   = array_shift($shippingMethods);
-        $shippingMethodId = $shippingMethod ? $shippingMethod->get_method_id() : null;
-
-        return WCMP_Shipping_Methods::LOCAL_PICKUP===$shippingMethodId;
-    }
-
 }

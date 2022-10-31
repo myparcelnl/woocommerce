@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace MyParcelNL\WooCommerce;
+
 use MyParcelNL\Pdk\Api\Service\ApiServiceInterface;
 use MyParcelNL\Pdk\Base\Model\ContactDetails;
 use MyParcelNL\Pdk\Base\Service\CountryService;
@@ -21,6 +23,8 @@ use MyParcelNL\Pdk\Storage\StorageInterface;
 use MyParcelNL\Sdk\src\Model\PickupLocation;
 use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
+use WC_Order;
+use WC_Order_Item;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
@@ -236,6 +240,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
     /**
      * @return Recipient|null
+     * @throws \Exception
      */
     private function createRecipientFromWCOrder(): ?Recipient
     {
@@ -310,5 +315,17 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'height'             => 0,
             'weight'             => 0,
         ]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasLocalPickup(): bool
+    {
+        $shippingMethods  = $this->order->get_shipping_methods();
+        $shippingMethod   = array_shift($shippingMethods);
+        $shippingMethodId = $shippingMethod ? $shippingMethod->get_method_id() : null;
+
+        return WCMP_Shipping_Methods::LOCAL_PICKUP===$shippingMethodId;
     }
 }

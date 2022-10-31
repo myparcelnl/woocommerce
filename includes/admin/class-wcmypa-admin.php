@@ -1,6 +1,8 @@
 <?php
 
 use MyParcelNL\Pdk\Base\Exception\InvalidCastException;
+use MyParcelNL\Pdk\Facade\Pdk;
+use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
@@ -11,6 +13,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
+use MyParcelNL\WooCommerce\PdkOrderRepository;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -651,14 +654,15 @@ class WCMYPA_Admin
             return;
         }
 
-        $pdkOrderAdapter = new PdkOrderFromWCOrderAdapter($order);
+        $orderRepository = (Pdk::get(PdkOrderRepository::class));
+        $pdkOrder = $orderRepository->get($order);
         $shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
 
         if (! CountryCodes::isAllowedDestination($shippingCountry)) {
             return;
         }
 
-        $listingActions = self::getListingActions($pdkOrderAdapter);
+        $listingActions = self::getListingActions($pdkOrder, $orderRepository);
         $attributes     = self::getListingAttributes($order);
 
         foreach ($listingActions as $data) {
@@ -672,22 +676,22 @@ class WCMYPA_Admin
     }
 
     /**
-     * @param  \MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter $pdkOrderAdapter
+     * @param  PdkOrder            $pdkOrder
+     * @param  \PdkOrderRepository $orderRepository
      *
      * @return array|array[]
      * @throws \JsonException
-     * @throws \Exception
      */
-    public static function getListingActions(PdkOrderFromWCOrderAdapter $pdkOrderAdapter): array
+    public static function getListingActions(PdkOrder $pdkOrder, PdkOrderRepository $orderRepository): array
     {
-        $order           = $pdkOrderAdapter->getOrder();
-        $shippingCountry = $pdkOrderAdapter->getShippingRecipient()->cc;
+
+       //$shippingCountry = $pdkOrder->getShippingRecipient()->cc;
         $exportMode      = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
-        $consignments    = self::get_order_shipments($order);
-        $listingActions  = self::getDefaultListingActions($order->get_id());
+        $consignments    = self::get_order_shipments($pdkOrder);
+        $listingActions  = self::getDefaultListingActions($pdkOrder->get_id());
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-            $metaPps        = get_post_meta($order->get_id(), self::META_PPS);
+            $metaPps        = get_post_meta($pdkOrder->get_id(), self::META_PPS);
             $listingActions = self::updateExportButtonForPps($listingActions, $metaPps);
         }
 
@@ -699,7 +703,7 @@ class WCMYPA_Admin
             unset($listingActions[ExportActions::EXPORT_RETURN]);
         }
 
-        if ($pdkOrderAdapter->hasLocalPickup()) {
+        if ($orderRepository->hasLocalPickup()) {
             unset($listingActions[ExportActions::GET_LABELS], $listingActions[ExportActions::EXPORT_ORDER]);
         }
 

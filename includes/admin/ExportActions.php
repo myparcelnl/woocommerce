@@ -114,21 +114,6 @@ class ExportActions
         $this->permissionChecks();
 
         $request  = $_REQUEST['request'];
-        $orderIds = $this->sanitize_posted_array($_REQUEST['order_ids'] ?? []);
-
-        foreach ($orderIds as $key => $id) {
-            $order    = WCX::get_order($id);
-            $pdkOrder = (new PdkOrderFromWCOrderAdapter($order));
-
-            if ($pdkOrder->hasLocalPickup()) {
-                unset($orderIds[$key]);
-            }
-        }
-
-        $pdkOrderCollection = (new PdkOrderCollectionFromWCOrdersAdapter($orderIds))->convert();
-        if (empty($orderIds) && $pdkOrderCollection->getAllShipments() === null) {
-            Messages::showAdminNotice(__('You have not selected any orders!', 'woocommerce-myparcel'));
-        }
 
         try {
             switch ($request) {
@@ -152,7 +137,6 @@ class ExportActions
             WCMP_Log::add("$request: {$errorMessage}");
             Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
         }
-
 
         if (isset($_REQUEST['modal'])) {
             $this->modal_success_page($request);
