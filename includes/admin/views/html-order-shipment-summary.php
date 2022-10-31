@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * The shipment summary that shows when you click (i) in an order.
  */

@@ -8,6 +8,7 @@ use MyParcelNL\Pdk\Api\Service\MyParcelApiService;
 use MyParcelNL\Pdk\Base\Pdk;
 use MyParcelNL\Pdk\Facade\LanguageService;
 use MyParcelNL\Pdk\Language\Service\LanguageServiceInterface;
+use MyParcelNL\Pdk\Logger\AbstractLogger;
 use MyParcelNL\Pdk\Plugin\Action\EndpointActionsInterface;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
 use MyParcelNL\Pdk\Settings\Repository\AbstractSettingsRepository;
@@ -32,6 +33,6 @@ return [
     ClientAdapterInterface::class     => autowire(Guzzle7ClientAdapter::class),
     EndpointActionsInterface::class   => autowire(WooEndPointActions::class),
     LanguageServiceInterface::class   => autowire(LanguageService::class),
-    PdkLogger::class             => autowire(WCMP_Log::class),
+    PdkLogger::class                  => autowire(WCMP_Log::class),
     AbstractSettingsRepository::class => autowire(PdkSettingsRepository::class),
 ];

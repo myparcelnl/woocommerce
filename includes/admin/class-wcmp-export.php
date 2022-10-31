@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
+use MyParcelNL\Pdk\Base\PdkActions;
+use MyParcelNL\Pdk\Base\PdkEndpoint;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Fulfilment\Collection\OrderCollection;
 use MyParcelNL\Pdk\Fulfilment\Repository\OrderRepository;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
+use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
@@ -32,11 +35,12 @@ if (class_exists('WCMP_Export')) {
 
 class WCMP_Export
 {
-    public const EXPORT = 'wcmp_export';
-    public const EXPORT_ORDER  = 'export_order';
-    public const EXPORT_RETURN = 'export_return';
-    public const GET_LABELS    = 'get_labels';
-    public const MODAL_DIALOG  = 'modal_dialog';
+    public const EXPORT           = 'wcmp_export';
+    const        EXPORT_PRINT     = 'wcmp_export_print';
+    public const EXPORT_ORDER     = 'export_order';
+    public const EXPORT_RETURN    = 'export_return';
+    public const GET_LABELS       = 'get_labels';
+    public const MODAL_DIALOG     = 'modal_dialog';
     /**
      * Maximum characters length of item description.
      */
@@ -61,13 +65,12 @@ class WCMP_Export
     /**
      * @var mixed
      */
-    private $logger;
+    private $endpoint;
 
     public function __construct()
     {
-        //$this->logger  = Pdk::get(PdkLogger::class);
-        $this->success = [];
-        require_once('class-wcmp-api.php');
+        $this->success  = [];
+        $this->endpoint = Pdk::get(PdkEndpoint::class);
 
         add_action('wp_ajax_' . self::EXPORT, [$this, 'export']);
     }
@@ -81,16 +84,16 @@ class WCMP_Export
      */
     public function exportByOrderId(int $orderId): void
     {
-        if (! $orderId) {
+        $order = WCX::get_order($orderId ?? null);
+        if (! $order) {
             return;
         }
 
-        $order              = WCX::get_order($orderId);
         $pdkOrderCollection = new PdkOrderCollection();
         $pdkOrder           = (new PdkOrderFromWCOrderAdapter($order))->getPdkOrder();
         $pdkOrderCollection->push($pdkOrder);
-        $return = $this->exportAccordingToMode($pdkOrderCollection, [(string) $orderId], self::NO);
 
+        $return = $this->endpoint->call(PdkActions::EXPORT_ORDER);
         if (isset($return['success'])) {
             $order->add_order_note($return['success']);
         }
@@ -129,39 +132,10 @@ class WCMP_Export
      */
     public function export(): void
     {
-        // Check the nonce
-        if (! check_ajax_referer(WCMYPA::NONCE_ACTION, '_wpnonce', false)) {
-            die("Ajax security check failed. Did you pass a valid nonce in \$_REQUEST['_wpnonce']?");
-        }
+        $this->permissionChecks();
 
-        if (! is_user_logged_in()) {
-            wp_die(__('You do not have sufficient permissions to access this page.', 'woocommerce-myparcel'));
-        }
-
-        $return = [];
-
-        // Check the user privileges (maybe use order ids for filter?)
-        if (apply_filters(
-            'wc_myparcel_check_privs',
-            ! current_user_can('manage_woocommerce_orders') && ! current_user_can('edit_shop_orders')
-        )) {
-            $return['error'] = __(
-                'You do not have sufficient permissions to access this page.',
-                'woocommerce-myparcel'
-            );
-            echo json_encode($return);
-            die();
-        }
-
-        $print   = $_REQUEST['print'] ?? null;
-        $offset  = (int) ($_REQUEST['offset'] ?? 0);
-        $request = $_REQUEST['request'];
-
-        /**
-         * @var $orderIds
-         */
-        $orderIds    = $this->sanitize_posted_array($_REQUEST['order_ids'] ?? []);
-        $shipmentIds = $this->sanitize_posted_array($_REQUEST['shipment_ids'] ?? []);
+        $request  = $_REQUEST['request'];
+        $orderIds = $this->sanitize_posted_array($_REQUEST['order_ids'] ?? []);
 
         foreach ($orderIds as $key => $id) {
             $order    = WCX::get_order($id);
@@ -171,48 +145,45 @@ class WCMP_Export
                 unset($orderIds[$key]);
             }
         }
-        $pdkOrderCollection = (new PdkOrderCollectionFromWCOrdersAdapter($orderIds))->convert();
 
-        if (empty($shipmentIds) && empty($orderIds)) {
+        $pdkOrderCollection = (new PdkOrderCollectionFromWCOrdersAdapter($orderIds))->convert();
+        if (empty($orderIds) && $pdkOrderCollection->getAllShipments() === null) {
             Messages::showAdminNotice(__('You have not selected any orders!', 'woocommerce-myparcel'));
-        } else {
-            try {
-                switch ($request) {
-                    case self::EXPORT_ORDER:
-                        $return = $this->exportAccordingToMode($pdkOrderCollection, $orderIds, $print);
-                        break;
-                    case self::EXPORT_RETURN:
-                        $return = $this->exportReturn($pdkOrderCollection);
-                        break;
-                    case self::GET_LABELS:
-                        $return = $this->printLabels($pdkOrderCollection, $offset);
-                        break;
-                    case self::MODAL_DIALOG:
-                        $orderIds = $this->filterOrderDestinations($orderIds);
-                        $this->modal_dialog($orderIds);
-                        break;
-                }
-            } catch (Exception $e) {
-                $errorMessage = $e->getMessage();
-                WCMP_Log::add("$request: {$errorMessage}");
-                Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
-            }
         }
 
-        // if we're directed here from modal, show proper result page
+        try {
+
+            switch ($request) {
+                case self::EXPORT_ORDER:
+                    $action = PdkActions::EXPORT_ORDER;
+                    break;
+                case self::EXPORT_PRINT:
+                    $action = PdkActions::EXPORT_AND_PRINT_ORDER;
+                    break;
+            }
+
+            $response = $this->endpoint->call($action ?? PdkActions::EXPORT_ORDER);
+
+        } catch (Exception $e) {
+            $errorMessage = $e->getMessage();
+            WCMP_Log::add("$request: {$errorMessage}");
+            Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
+        }
+
+
         if (isset($_REQUEST['modal'])) {
             $this->modal_success_page($request);
-        } else {
-            // return JSON response
-            echo json_encode($return, JSON_THROW_ON_ERROR);
-            die();
         }
+
+        echo json_encode($response ?? null, JSON_THROW_ON_ERROR);
+        die();
     }
 
     /**
      * @param  string|array $array
      *
      * @return array
+     * @throws \JsonException
      */
     public function sanitize_posted_array($array): array
     {
@@ -222,7 +193,7 @@ class WCMP_Export
 
         // check for JSON
         if (is_string($array) && strpos($array, '[')!==false) {
-            $array = json_decode(stripslashes($array));
+            $array = json_decode(stripslashes($array), false, 512, JSON_THROW_ON_ERROR);
         }
 
         return (array) $array;
@@ -235,6 +206,7 @@ class WCMP_Export
      *
      * @return array
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     * @throws \Exception
      */
     public function addShipments(PdkOrderCollection $pdkOrderCollection, array $orderIds, bool $process): array
     {
@@ -617,7 +589,7 @@ class WCMP_Export
         $shippingCountry      = WCX_Order::get_prop($order, 'shipping_country');
         $isMailbox            = AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME===$packageType;
         $isDigitalStamp       = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME===$packageType;
-        $isDefaultPackageType = AbstractConsignment::CC_NL!==$shippingCountry && ($isMailbox || $isDigitalStamp);
+        $isDefaultPackageType = AbstractConsignment::CC_NL !== $shippingCountry && ($isMailbox || $isDigitalStamp);
 
         if ($isDefaultPackageType) {
             $packageType = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
@@ -670,7 +642,7 @@ class WCMP_Export
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      * @throws \Exception
      */
-    public function getShipmentData(ShipmentCollection $shipmentCollection, WC_Order $order): array
+    public function getShipmentData(ShipmentCollection $shipmentCollection, PdkOrder $order): array
     {
         if ($shipmentCollection->isEmpty()) {
             return [];
@@ -868,52 +840,6 @@ class WCMP_Export
     }
 
     /**
-     * @param  int                 $colloAmount
-     * @param  MyParcelCollection  $collection
-     * @param  AbstractConsignment $consignment
-     *
-     * @throws MissingFieldException
-     */
-    public function addFakeMultiCollo(int                 $colloAmount,
-                                      MyParcelCollection  $collection,
-                                      AbstractConsignment $consignment
-    ): void {
-        for ($i = 1; $i <= $colloAmount; $i++) {
-            $collection->addConsignment($consignment);
-        }
-    }
-
-    /**
-     * @param  \MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter $pdkOrderAdapter
-     * @param  MyParcelCollection                                                  $collection
-     * @param  AbstractConsignment                                                 $consignment
-     *
-     * @throws \JsonException
-     * @throws \MyParcelNL\Sdk\src\Exception\MissingFieldException
-     */
-    public function addMultiCollo(
-        PdkOrderFromWCOrderAdapter $pdkOrderAdapter,
-        MyParcelCollection         $collection,
-        AbstractConsignment        $consignment
-    ): void {
-        $pdkOrder             = $pdkOrderAdapter->getPdkOrder();
-        $isPackage            = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $pdkOrder->deliveryOptions->packageType;
-        $hasCarrierMultiCollo = $consignment->canHaveExtraOption(AbstractConsignment::EXTRA_OPTION_MULTI_COLLO);
-        $isMultiColloCountry  = in_array(
-            $pdkOrder->recipient->cc,
-            [self::COUNTRY_CODE_NL, self::COUNTRY_CODE_BE],
-            true
-        );
-
-        if ($isMultiColloCountry && $hasCarrierMultiCollo && $isPackage) {
-            $collection->addMultiCollo($consignment, $pdkOrderAdapter->getColloAmount());
-            return;
-        }
-
-        $this->addFakeMultiCollo($pdkOrderAdapter->getColloAmount(), $collection, $consignment);
-    }
-
-    /**
      * @param $shipping_method_id
      * @param $package_type_shipping_methods
      * @param $shipping_method_id_class
@@ -958,6 +884,32 @@ class WCMP_Export
     }
 
     /**
+     * @throws \JsonException
+     */
+    private function permissionChecks(): void
+    {
+        if (! check_ajax_referer(WCMYPA::NONCE_ACTION, '_wpnonce', false)) {
+            die("Ajax security check failed. Did you pass a valid nonce in \$_REQUEST['_wpnonce']?");
+        }
+
+        if (! is_user_logged_in()) {
+            wp_die(__('You do not have sufficient permissions to access this page.', 'woocommerce-myparcel'));
+        }
+
+        if (apply_filters(
+            'wc_myparcel_check_privs',
+            ! current_user_can('manage_woocommerce_orders') && ! current_user_can('edit_shop_orders')
+        )) {
+            $return['error'] = __(
+                'You do not have sufficient permissions to access this page.',
+                'woocommerce-myparcel'
+            );
+            echo json_encode($return, JSON_THROW_ON_ERROR);
+            die();
+        }
+    }
+
+    /**
      * @param  \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection $pdkOrderCollection
      * @param  int                                                  $offset
      *
@@ -973,55 +925,6 @@ class WCMP_Export
             $pdkOrderCollection->getAllShipments(),
             $offset
         );
-    }
-
-    /**
-     * @param  \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection $pdkOrderCollection
-     * @param  array                                                $orderIds
-     * @param  string | null                                        $print
-     *
-     * @return array
-     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
-     * @throws \Exception
-     */
-    private function exportAccordingToMode(PdkOrderCollection $pdkOrderCollection, array $orderIds, ?string $print): array
-    {
-        $exportMode = WCMP_Settings_Data::getSetting(WCMYPA_Settings::SETTING_EXPORT_MODE);
-        $orderIds   = $this->filterOrderDestinations($orderIds);
-        $print      = $print ?? self::NO;
-
-        if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-            $return = $this->saveOrderCollection($pdkOrderCollection, $orderIds);
-        } else {
-            // if we're going to print directly, we need to process the orders first, regardless of the settings
-            $process = (self::YES === $print);
-            $return  = $this->addShipments($pdkOrderCollection, $orderIds, $process);
-        }
-
-        return $this->setFeedbackForClient($return ?? []);
-    }
-
-    /**
-     * @param  \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection $pdkOrderCollection
-     * @param  array                                                $orderIds
-     *
-     * @return array
-     * @throws \Exception
-     */
-    private function saveOrderCollection(PdkOrderCollection $pdkOrderCollection, array $orderIds): array
-    {
-        $repository = Pdk::get(OrderRepository::class);
-        $pdkOrderCollection->generateShipments();
-        $fulfilmentOrderCollection = $pdkOrderCollection->getOrderCollection();
-
-        try {
-            $savedOrderCollection = $repository->saveOrder($fulfilmentOrderCollection);
-
-            return $this->updateOrderMetaByCollection($savedOrderCollection);
-        } catch (Exception $e) {
-            Messages::showAdminNotice($e->getMessage());
-            return [];
-        }
     }
 
     /**

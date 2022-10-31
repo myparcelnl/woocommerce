@@ -3,13 +3,12 @@
 declare(strict_types=1);
 
 use MyParcelNL\Sdk\src\Support\Arr;
-use MyParcelNL\Pdk\Logger\AbstractLogger;
 use MyParcelNL\Sdk\src\Support\Str;
 
 /**`
  *
  */
-class PdkLogger extends AbstractLogger
+class PdkLogger
 {
     /**
      * Log levels, in order of severity.
@@ -22,6 +21,7 @@ class PdkLogger extends AbstractLogger
      * @param  array $context
      *
      * @return void
+     * @throws \JsonException
      */
     public function log($level, $message, array $context = []): void
     {
@@ -36,6 +36,7 @@ class PdkLogger extends AbstractLogger
      * @param  string                  $level
      *
      * @return void
+     * @throws \JsonException
      */
     protected function createMessage($message, array $context, string $level): string
     {
@@ -43,7 +44,7 @@ class PdkLogger extends AbstractLogger
         $logContext = Arr::except($context, 'exception');
 
         if (! empty($logContext)) {
-            $output .= "\nContext: " . json_encode($logContext, JSON_PRETTY_PRINT);
+            $output .= "\nContext: " . json_encode($logContext, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
         }
 
         if (WCMP_Log::getLogLevel('debug') !== $level) {
@@ -101,6 +102,7 @@ class PdkLogger extends AbstractLogger
      * @param  \Throwable|array|string $message
      *
      * @return string
+     * @throws \JsonException
      */
     private function getOutput($message): string
     {
@@ -109,7 +111,7 @@ class PdkLogger extends AbstractLogger
         if ($message instanceof Throwable) {
             $output = $message->getMessage();
         } elseif (! is_string($message)) {
-            $output = (string) json_encode($message, JSON_PRETTY_PRINT);
+            $output = (string) json_encode($message, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
         }
 
         return $output;

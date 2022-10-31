@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This template is for the Track & Trace information in the MyParcel meta box in a single order/
  */
@@ -10,10 +12,21 @@
  * @var bool  $downloadDisplay
  */
 
+use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
+use MyParcelNL\WooCommerce\includes\adapter\PdkOrderCollectionFromWCOrdersAdapter;
+use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
+
 $shipments = [];
 
 try {
-    $shipments = WCMYPA()->export->getShipmentData(array_keys($consignments), $order);
+
+
+    $pdkOrderCollection = new PdkOrderCollection();
+    $pdkOrder = (new PdkOrderFromWCOrderAdapter($order));
+    $pdkOrderCollection->push($pdkOrder->getPdkOrder());
+    $shipments = WCMYPA()->export->getShipmentData($pdkOrderCollection->getAllShipments(), $pdkOrder->getPdkOrder());
+    $test = 0;
+    //$shipments = WCMYPA()->export->getShipmentData(array_keys($consignments), $order);
 } catch (Exception $e) {
     $message = $e->getMessage();
 }
