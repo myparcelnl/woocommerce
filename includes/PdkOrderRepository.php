@@ -6,13 +6,19 @@ use MyParcelNL\Pdk\Api\Service\ApiServiceInterface;
 use MyParcelNL\Pdk\Base\Model\ContactDetails;
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Base\Service\WeightService;
+use MyParcelNL\Pdk\Fulfilment\Model\Product;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
+use MyParcelNL\Pdk\Plugin\Collection\PdkOrderLineCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
+use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
 use MyParcelNL\Pdk\Settings\Model\CustomsSettings;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
+use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Pdk\Shipment\Service\DeliveryDateService;
 use MyParcelNL\Pdk\Storage\StorageInterface;
+use MyParcelNL\Sdk\src\Model\PickupLocation;
 use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 
@@ -22,6 +28,11 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      * @var \MyParcelNL\Pdk\Base\Service\CountryService
      */
     private $countryService;
+
+    /**
+     * @var WC_Order $order
+     */
+    private $order;
 
     /**
      * @param  \MyParcelNL\Pdk\Storage\StorageInterface        $storage
@@ -54,6 +65,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      * @param  int|string $input
      *
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
+     * @throws \Exception
      */
     public function get($input): PdkOrder
     {
@@ -64,7 +76,8 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         }
 
         return $this->retrieve((string) $order->id, function () use ($order) {
-            return $this->getDataFromOrder($order);
+            $this->order = $order;
+            return $this->getDataFromOrder();
         });
     }
 
@@ -95,37 +108,58 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
      * @throws \Exception
      */
-    private function getDataFromOrder(WC_Order $order): PdkOrder
+    private function getDataFromOrder(): PdkOrder
     {
         $deliveryOptions = $this->getDeliveryOptions();
         return new PdkOrder([
-            'orderDate'             => $order->get_date_created()->getTimestamp(),
+            'orderDate'             => $this->order->get_date_created()->getTimestamp(),
             'customsDeclaration'    => $this->getCustomsDeclaration(),
             'deliveryOptions'       => $deliveryOptions,
-            'externalIdentifier'    =>  $order->get_id(),
+            'externalIdentifier'    =>  $this->order->get_id(),
             'label'                 => $this->getLabelDescription($deliveryOptions),
             'lines'                 => $this->getOrderLines(),
-            'orderPrice'            => $order->get_total(),
-            'orderPriceAfterVat'    => $order->get_total() + $order->get_cart_tax(),
-            'orderVat'              => $order->get_total_tax(),
-            'recipient'             => $this->getShippingRecipient($order),
-            'shipmentPrice'         => (float) $order->get_shipping_total(),
-            'shipmentPriceAfterVat' => (float) $order->get_shipping_total(),
-            'shipmentVat'           => (float) $order->get_shipping_tax(),
-            'totalPrice'            => (float) $order->get_shipping_total() + $order->get_total(),
-            'totalPriceAfterVat'    => ($order->get_total() + $order->get_cart_tax(
-                    )) + ((float) $order->get_shipping_total() + (float) $order->get_shipping_tax()),
-            'totalVat'              => (float) $order->get_shipping_tax() + $order->get_cart_tax(),
+            'orderPrice'            => $this->order->get_total(),
+            'orderPriceAfterVat'    => $this->order->get_total() + $this->order->get_cart_tax(),
+            'orderVat'              => $this->order->get_total_tax(),
+            'recipient'             => $this->getShippingRecipient(),
+            'shipmentPrice'         => (float) $this->order->get_shipping_total(),
+            'shipmentPriceAfterVat' => (float) $this->order->get_shipping_total(),
+            'shipmentVat'           => (float) $this->order->get_shipping_tax(),
+            'totalPrice'            => (float) $this->order->get_shipping_total() + $this->order->get_total(),
+            'totalPriceAfterVat'    => ($this->order->get_total() + $this->order->get_cart_tax(
+                    )) + ((float) $this->order->get_shipping_total() + (float) $this->order->get_shipping_tax()),
+            'totalVat'              => (float) $this->order->get_shipping_tax() + $this->order->get_cart_tax(),
         ]);
     }
 
     /**
-     * @param  WC_ORDER $order
+     * @return \MyParcelNL\Pdk\Shipment\Model\DeliveryOptions
+     * @throws \Exception
+     */
+    public function getDeliveryOptions(): DeliveryOptions
+    {
+        $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($this->order);
+
+        return new DeliveryOptions([
+            'carrier'         => $deliveryOptions->getCarrier(),
+            'date'            => DeliveryDateService::fixPastDeliveryDate($deliveryOptions->getDate() ?? ''),
+            'deliveryType'    => $deliveryOptions->getDeliveryType(),
+            'labelAmount'     => 1,
+            'packageType'     => $deliveryOptions->getPackageType(),
+            //            'pickupLocation'  => (array) $deliveryOptions->getPickupLocation(),
+            'pickupLocation'  => (array) new PickupLocation([
+                'location_code' => 'NL',
+            ]),
+            'shipmentOptions' => (array) $deliveryOptions->getShipmentOptions(),
+        ]);
+    }
+
+    /**
      * @param  array  $orderData
      *
      * @return null|\CustomsDeclaration
      */
-    private function getCustomsDeclaration(WC_Order $order, array $orderData): ?CustomsDeclaration
+    private function getCustomsDeclaration(): ?CustomsDeclaration
     {
         $isToRowCountry = $this->countryService->isRowCountry(strtoupper($orderData['iso_code']));
         $customFormConfiguration = Configuration::get(CustomsSettings::ID);
@@ -134,7 +168,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             return null;
         }
 
-        $products = OrderLabel::getCustomsOrderProducts($order->id);
+        $products = OrderLabel::getCustomsOrderProducts($this->order->id);
 
         $items = (new Collection($products))
             ->filter()
@@ -173,14 +207,12 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  \WC_Order $order
-     *
      * @return \MyParcelNL\Pdk\Base\Model\ContactDetails
      * @throws \Exception
      */
-    public function getShippingRecipient(WC_Order $order: ContactDetails
+    public function getShippingRecipient(): ContactDetails
     {
-        $shippingRecipient = $this->createRecipientFromWCOrder($order);
+        $shippingRecipient = $this->createRecipientFromWCOrder();
 
         return new ContactDetails(
             $shippingRecipient ? [
@@ -203,15 +235,13 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  \WC_Order $order
-     *
      * @return Recipient|null
      */
-    private function createRecipientFromWCOrder(WC_Order $order): ?Recipient
+    private function createRecipientFromWCOrder(): ?Recipient
     {
         try {
             return (new RecipientFromWCOrder(
-                $order,
+                $this->order,
                 CountryService::CC_NL,
                 RecipientFromWCOrder::SHIPPING
             ));
@@ -226,5 +256,59 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         }
 
         return null;
+    }
+
+    /**
+     * @return void
+     */
+    public function getLabelDescription($deliveryOptions): string
+    {
+        $defaultValue     = sprintf('Order: %s', $this->order->get_id());
+        $valueFromSetting = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_LABEL_DESCRIPTION);
+        $valueFromOrder   = $deliveryOptions['shipmentOptions']['labelDescription'];
+
+        return (string) ($valueFromOrder ?? $valueFromSetting ?? $defaultValue);
+    }
+
+    /**
+     * @return \MyParcelNL\Pdk\Plugin\Collection\PdkOrderLineCollection
+     */
+    private function getOrderLines(): PdkOrderLineCollection
+    {
+        $orderLinesCollection = new PdkOrderLineCollection();
+        foreach ($this->order->get_items() as $item) {
+            $orderLinesCollection->push(
+                new PdkOrderLine([
+                    'quantity'      => $item['quantity'],
+                    'price'         => 0,
+                    'vat'           => 0,
+                    'priceAfterVat' => 0,
+                    'product'       => $this->getProduct($item),
+                ])
+            );
+        }
+
+        return $orderLinesCollection;
+    }
+
+    /**
+     * @param  \WC_Order_Item $item
+     *
+     * @return \MyParcelNL\Pdk\Fulfilment\Model\Product
+     */
+    private function getProduct(WC_Order_Item $item): Product
+    {
+        return new Product([
+            'uuid'               => $item->get_id(),
+            'sku'                => null,
+            'ean'                => null,
+            'externalIdentifier' => $item->get_order_id(),
+            'name'               => $item->get_name(),
+            'description'        => $item->get_name(),
+            'width'              => 0,
+            'length'             => 0,
+            'height'             => 0,
+            'weight'             => 0,
+        ]);
     }
 }
