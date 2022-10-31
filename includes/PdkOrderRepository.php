@@ -5,9 +5,6 @@ declare(strict_types=1);
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
 
-/**
- *
- */
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
     /**

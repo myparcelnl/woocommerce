@@ -45,20 +45,14 @@ class WCMP_Export
      * Maximum characters length of item description.
      */
     public const ITEM_DESCRIPTION_MAX_LENGTH  = 50;
-    public const ORDER_DESCRIPTION_MAX_LENGTH = 45;
-    public const COOKIE_EXPIRE_TIME = 20;
     public const DEFAULT_POSITIONS = [2, 4, 1, 3];
-    public const SUFFIX_CHECK_REG  = '~^([a-z]{1}\d{1,3}|-\d{1,4}\d{2}\w{1,2}|[a-z]{1}[a-z\s]{0,3})(?:\W|$)~i';
     /**
      * Shipping methods that can never have delivery options.
      */
     public const DISALLOWED_SHIPPING_METHODS = [
         WCMP_Shipping_Methods::LOCAL_PICKUP,
     ];
-    public const COUNTRY_CODE_NL = 'NL';
-    public const COUNTRY_CODE_BE = 'BE';
     public const NO              = 'no';
-    public const YES             = 'yes';
 
     public array $success;
 
@@ -152,17 +146,18 @@ class WCMP_Export
         }
 
         try {
-
             switch ($request) {
-                case self::EXPORT_ORDER:
-                    $action = PdkActions::EXPORT_ORDER;
+                case self::EXPORT_RETURN;
+                    $action = null;
                     break;
                 case self::EXPORT_PRINT:
                     $action = PdkActions::EXPORT_AND_PRINT_ORDER;
                     break;
+                default:
+                    $action = PdkActions::EXPORT_ORDER;
             }
 
-            $response = $this->endpoint->call($action ?? PdkActions::EXPORT_ORDER);
+            $response = $this->endpoint->call($action);
 
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
