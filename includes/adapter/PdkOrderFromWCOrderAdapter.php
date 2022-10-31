@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\includes\adapter;
 
 use Exception;
-use MyParcelNL\Pdk\Base\Model\ContactDetails;
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Base\Service\WeightService;
 use MyParcelNL\Pdk\Fulfilment\Model\Product;
@@ -264,34 +263,6 @@ class PdkOrderFromWCOrderAdapter
             'height'             => 0,
             'weight'             => 0,
         ]);
-    }
-
-    /**
-     * @return \MyParcelNL\Pdk\Base\Model\ContactDetails
-     * @throws \Exception
-     */
-    public function getShippingRecipient(): ContactDetails
-    {
-        $shippingRecipient = $this->createRecipientFromWCOrder();
-
-        return new ContactDetails(
-            $shippingRecipient ? [
-                'boxNumber'            => $shippingRecipient->getBoxNumber(),
-                'cc'                   => $shippingRecipient->getCc(),
-                'city'                 => $shippingRecipient->getCity(),
-                'company'              => $shippingRecipient->getCompany(),
-                'email'                => $shippingRecipient->getEmail(),
-                'fullStreet'           => null,
-                'number'               => $shippingRecipient->getNumber(),
-                'numberSuffix'         => $shippingRecipient->getNumberSuffix(),
-                'person'               => $shippingRecipient->getPerson(),
-                'phone'                => $shippingRecipient->getPhone(),
-                'postalCode'           => $shippingRecipient->getPostalCode(),
-                'region'               => $shippingRecipient->getRegion(),
-                'street'               => $shippingRecipient->getStreet(),
-                'streetAdditionalInfo' => $shippingRecipient->getStreetAdditionalInfo(),
-            ] : []
-        );
     }
 
     /**

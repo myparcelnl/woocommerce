@@ -9,7 +9,6 @@ use MyParcelNL\Pdk\Fulfilment\Collection\OrderCollection;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
-use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
@@ -48,15 +47,9 @@ class ExportActions
      */
     public array $success;
 
-    /**
-     * @var mixed
-     */
-    private $endpoint;
-
     public function __construct()
     {
         $this->success  = [];
-        $this->getEndpoint();
 
         add_action('wp_ajax_' . self::EXPORT, [$this, 'export']);
     }
@@ -79,7 +72,7 @@ class ExportActions
         $pdkOrder           = (new PdkOrderFromWCOrderAdapter($order))->getPdkOrder();
         $pdkOrderCollection->push($pdkOrder);
 
-        $return = $this->endpoint->call(PdkActions::EXPORT_ORDER);
+        $return = (Pdk::get(PdkEndpoint::class))->call(PdkActions::EXPORT_ORDER);
         if (isset($return['success'])) {
             $order->add_order_note($return['success']);
         }
@@ -152,7 +145,7 @@ class ExportActions
                     $action = PdkActions::EXPORT_ORDER;
             }
 
-            $response = $this->endpoint->call($action);
+            $response = (Pdk::get(PdkEndpoint::class))->call($action);
 
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
@@ -190,107 +183,6 @@ class ExportActions
     }
 
     /**
-     * @param  \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection $pdkOrderCollection
-     * @param  array                                                $orderIds
-     * @param  bool                                                 $process
-     *
-     * @return array
-     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
-     * @throws \Exception
-     */
-    public function addShipments(PdkOrderCollection $pdkOrderCollection, array $orderIds, bool $process): array
-    {
-        $return          = [];
-        $processDirectly = $process
-            || WCMYPA()->settingCollection->isEnabled(
-                WCMYPA_Settings::SETTING_PROCESS_DIRECTLY
-            );
-
-        //$this->logger->log(WCMP_Log::LOG_LEVELS['alert'], '*** Creating shipments started ***');
-
-        $shipmentCollection = $pdkOrderCollection->generateShipments();
-        $repository         = Pdk::get(ShipmentRepository::class);
-        $concepts           = $repository->createConcepts($shipmentCollection);
-
-        if ($processDirectly) {
-            $labelFormat   = WCMP_Settings_Data::getSetting(WCMYPA_Settings::SETTING_LABEL_FORMAT);
-            $labelPosition = WCMP_Settings_Data::getSetting(WCMYPA_Settings::SETTING_ASK_FOR_PRINT_POSITION);
-            $repository->fetchLabelLink($shipmentCollection, $labelFormat, $labelPosition = null);
-        }
-
-        foreach ($orderIds as $order_id) {
-            $order       = WCX::get_order($order_id);
-            $shipmentIds = $shipmentCollection->pluck('id');
-
-            if (! $shipmentIds) {
-                continue;
-            }
-
-            $savedShipmentData = $shipmentIds->map(function ($shipmentId) use ($order, $shipmentCollection){
-                $shipment = $shipmentCollection->where('id', $shipmentId)->toArray();
-                $this->saveShipmentData($order, $shipment);
-                return $shipmentId;
-            });
-
-            $this->success[$order_id] = $savedShipmentData;
-
-            if ($processDirectly) {
-                $this->getShipmentData($shipmentCollection, $order);
-            }
-
-            OrderStatus::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
-
-            WCX_Order::update_meta_data(
-                $order,
-                WCMYPA_Admin::META_LAST_SHIPMENT_IDS,
-                $shipmentIds->all()
-            );
-        }
-
-        if (! empty($this->success)) {
-            $return['success']     = sprintf(
-                __('%s shipments successfully exported to MyParcel', 'woocommerce-myparcel'),
-                count($shipmentIds)
-            );
-            $return['success_ids'] = $shipmentIds->all();
-
-            // do action on successfully exporting the label
-            do_action('wcmp_labels_exported', $orderIds);
-
-            WCMP_Log::add($return['success']);
-            WCMP_Log::add('ids: ' . implode(', ', $return['success_ids']));
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param  \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection $pdkOrderCollection
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function exportReturn(PdkOrderCollection $pdkOrderCollection): array
-    {
-        WCMP_Log::add('*** Creating return shipments started ***');
-
-        $repository         = Pdk::get(ShipmentRepository::class);
-        $shipmentCollection = $pdkOrderCollection->generateShipments();
-        $returnShipments    = $repository->createReturnShipments($shipmentCollection);
-
-        $returnShipments->each(function (Shipment $returnShipment) {
-            $orderId    = $returnShipment->externalIdentifier;
-            $shipmentId = $returnShipment->id;
-            $order      = WCX::get_order($orderId);
-            $shipment   = ['id' => $shipmentId,];
-
-            $this->saveShipmentData($order, $shipment);
-        });
-
-        return [];
-    }
-
-    /**
      * @param  \MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection $shipments
      * @param  int                                                    $offset
      *
@@ -317,7 +209,7 @@ class ExportActions
      */
     public function modal_dialog($order_ids): void
     {
-        if (is_string($order_ids) && strpos($order_ids, '[')!==false) {
+        if (is_string($order_ids) && strpos($order_ids, '[') !== false) {
             $order_ids = json_decode(stripslashes($order_ids), false, 512, JSON_THROW_ON_ERROR);
         }
 
@@ -830,14 +722,6 @@ class ExportActions
         }
 
         return $order_ids;
-    }
-
-    /**
-     * @return void
-     */
-    private function getEndpoint(): void
-    {
-        $this->endpoint = Pdk::get(PdkEndpoint::class);
     }
 
     /**

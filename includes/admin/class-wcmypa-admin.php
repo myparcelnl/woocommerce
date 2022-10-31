@@ -145,8 +145,11 @@ class WCMYPA_Admin
     {
         global $typenow;
 
-        if (in_array($typenow, wc_get_order_types('order-meta-boxes'))
-            && (apply_filters('deliveryDayFilter', true))) {
+        if ((apply_filters('deliveryDayFilter', true)) && in_array(
+                $typenow,
+                wc_get_order_types('order-meta-boxes'),
+                true
+            )) {
             $this->deliveryDayFilter();
         }
     }
@@ -156,7 +159,7 @@ class WCMYPA_Admin
      */
     public function deliveryDayFilter(): void
     {
-        if (is_admin() && ! empty($_GET['post_type']) == 'shop_order' && $this->anyActiveCarrierHasShowDeliveryDate()) {
+        if (! empty($_GET['post_type']) == 'shop_order' && is_admin() && $this->anyActiveCarrierHasShowDeliveryDate()) {
             $selected = (isset($_GET['deliveryDate'])
                 ? sanitize_text_field($_GET['deliveryDate'])
                 : false);
@@ -229,7 +232,7 @@ class WCMYPA_Admin
 
         printf(
             "<div class=\"pickup-location\"><strong>%s:</strong><br /> %s<br />%s %s<br />%s %s</div>",
-            __("Pickup location", "woocommerce-myparcel"),
+            __('Pickup location', 'woocommerce-myparcel'),
             $pickup->getLocationName(),
             $pickup->getStreet(),
             $pickup->getNumber(),
@@ -463,7 +466,7 @@ class WCMYPA_Admin
             )
         );
 
-        echo "</div>";
+        echo '</div>';
     }
 
     /**
@@ -741,17 +744,17 @@ class WCMYPA_Admin
 
         return [
             $addShipments => [
-                'url' => admin_url("$baseUrl&request=$addShipments&order_ids=$orderId"),
+                'url' => admin_url(sprintf('%s&request=%s&order_ids=%s', $baseUrl, $addShipments, $orderId)),
                 'img' => "{$pluginUrl}/assets/img/export.svg",
                 'alt' => __('action_export_to_myparcel', 'woocommerce-myparcel'),
             ],
             $getLabels    => [
-                'url' => admin_url("$baseUrl&request=$getLabels&order_ids=$orderId"),
+                'url' => admin_url(sprintf('%s&request=%s&order_ids=%s', $baseUrl, $getLabels, $orderId)),
                 'img' => "{$pluginUrl}/assets/img/print.svg",
                 'alt' => __('action_print_myparcel_label', 'woocommerce-myparcel'),
             ],
             $addReturn    => [
-                'url' => admin_url("$baseUrl&request=$addReturn&order_ids=$orderId"),
+                'url' => admin_url(sprintf('%s&request=%s&order_ids=%s', $baseUrl, $addReturn, $orderId)),
                 'img' => "{$pluginUrl}/assets/img/return.svg",
                 'alt' => __('action_email_return_label', 'woocommerce-myparcel'),
             ],
@@ -854,13 +857,6 @@ class WCMYPA_Admin
             $order         = WCX::get_order($order_id);
             $data          = self::removeDisallowedDeliveryOptions($data, $order->get_shipping_country());
 
-//            $orderSettings = new OrderSettings($order, $data);
-//            $pdkOrderAdapter = new PdkOrderFromWCOrderAdapter($order);
-//            $pdkOrderAdapter->setDeliveryOptions($data);
-
-//            $deliveryOptionsObjectNew  = (new DeliveryOptions($data))->toArray();
-//            $postOptions = $data;
-
             WCX_Order::update_meta_data(
                 $order,
                 self::META_DELIVERY_OPTIONS,
@@ -883,6 +879,7 @@ class WCMYPA_Admin
 
     /**
      * Add the meta box on the single order page
+     * @return void
      */
     public function add_order_meta_box(): void
     {
@@ -937,9 +934,9 @@ class WCMYPA_Admin
     }
 
     /**
-     * @param $order
+     * @param  \WC_Order $order
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function single_order_shipment_options(WC_Order $order)
     {
