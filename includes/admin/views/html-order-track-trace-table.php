@@ -68,8 +68,8 @@ if (! count($shipments)) {
       </td>
       <td class="wcmp__td--create-label">
           <?php
-          $action    = WCMP_Export::EXPORT;
-          $getLabels = WCMP_Export::GET_LABELS;
+          $action    = ExportActions::EXPORT;
+          $getLabels = ExportActions::GET_LABELS;
 
           $order            = wc_get_order($order_id);
           $returnShipmentId = $order->get_meta(WCMYPA_Admin::META_RETURN_SHIPMENT_IDS);

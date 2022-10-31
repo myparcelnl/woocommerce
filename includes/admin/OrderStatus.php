@@ -10,11 +10,11 @@ if (! defined("ABSPATH")) {
     exit;
 } // Exit if accessed directly
 
-if (class_exists('WCMP_API')) {
+if (class_exists('OrderStatus')) {
     return;
 }
 
-class WCMP_API
+class OrderStatus
 {
     /**
      * Update the status of given order based on the automatic order status settings.
@@ -55,7 +55,7 @@ class WCMP_API
 
             $trackTraceArray = $this->getTrackTraceForOrder($lastShipmentIds, $order);
 
-            WCMP_Export::addTrackTraceNoteToOrder($orderId, $trackTraceArray);
+            ExportActions::addTrackTraceNoteToOrder($orderId, $trackTraceArray);
 
             self::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING);
         }
@@ -73,7 +73,7 @@ class WCMP_API
     {
         $pdkOrderCollection = (new PdkOrderCollectionFromWCOrdersAdapter($lastShipmentIds))->convert();
         $shipments = $pdkOrderCollection->generateShipments();
-        $shipmentData       = (new WCMP_Export())->getShipmentData($shipments, $order);
+        $shipmentData       = (new ExportActions())->getShipmentData($shipments, $order);
         $trackTraceArray    = [];
 
         foreach ($shipmentData as $shipment) {

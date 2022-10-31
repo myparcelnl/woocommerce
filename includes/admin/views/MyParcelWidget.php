@@ -8,7 +8,7 @@ use MyParcelNL\Pdk\Base\Model\ContactDetails;
 use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use TypeError;
-use WCMP_Export;
+use ExportActions;
 
 defined('ABSPATH') or die();
 
@@ -70,7 +70,7 @@ class MyParcelWidget
                 $orderId           = $order->get_id();
                 $shippingRecipient = $pdkOrderAdapter->getShippingRecipient();
                 // TODO: get shipment ID's
-                $shipmentIds       = (new WCMP_Export())->getShipmentIds([$orderId], ['exclude_concepts']);
+                $shipmentIds       = (new ExportActions())->getShipmentIds([$orderId], ['exclude_concepts']);
                 $shipmentStatus    = $this->getShipmentStatus($shipmentIds, $order);
 
                 $tableContent .= $this->buildTableRow($orderId, $shippingRecipient, $shipmentStatus);

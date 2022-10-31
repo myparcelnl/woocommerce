@@ -63,7 +63,7 @@ if (! class_exists('WCMYPA')) :
         public $includes;
 
         /**
-         * @var WCMP_Export
+         * @var ExportActions
          */
         public $export;
 
@@ -198,7 +198,7 @@ if (! class_exists('WCMYPA')) :
             require_once($this->includes . '/class-wcmp-log.php');
             require_once($this->includes . '/admin/CountryCodes.php');
             require_once($this->includes . '/admin/settings/class-wcmp-shipping-methods.php');
-            $this->export = require($this->includes . '/admin/class-wcmp-export.php');
+            $this->export = require($this->includes . '/admin/ExportActions.php');
             require_once($this->includes . '/class-wcmp-postcode-fields.php');
             require_once($this->includes . '/adapter/delivery-options-from-order-adapter.php');
             require_once($this->includes . '/adapter/pickup-location-from-order-adapter.php');

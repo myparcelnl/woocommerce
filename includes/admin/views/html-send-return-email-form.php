@@ -14,8 +14,8 @@ include('html-start.php');
  * @var array $order_ids
  */
 
-$export_return = WCMP_Export::EXPORT_RETURN;
-$export        = WCMP_Export::EXPORT;
+$export_return = ExportActions::EXPORT_RETURN;
+$export        = ExportActions::EXPORT;
 
 $order_ids_string = implode(';', $order_ids);
 
@@ -78,7 +78,7 @@ $target_url = wp_nonce_url(
                                         <?php foreach ($order->get_items() as $item_id => $item) : ?>
                                             <tr>
                                                 <td><?php echo $item['qty'] . 'x'; ?></td>
-                                                <td><?php echo WCMP_Export::get_item_display_name($item, $order) ?></td>
+                                                <td><?php echo ExportActions::get_item_display_name($item, $order) ?></td>
                                                 <td class="wcmp__text--right">
                                                     <?php
 

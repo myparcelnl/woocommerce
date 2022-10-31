@@ -69,11 +69,11 @@ class WCMP_Assets
             [
                 "api_url"                => (new MyParcelRequest())->getRequestUrl(),
                 "actions"                => [
-                    "export"        => WCMP_Export::EXPORT,
-                    "export_return" => WCMP_Export::EXPORT_RETURN,
-                    "export_order"  => WCMP_Export::EXPORT_ORDER,
-                    "get_labels"    => WCMP_Export::GET_LABELS,
-                    "modal_dialog"  => WCMP_Export::MODAL_DIALOG,
+                    "export"        => ExportActions::EXPORT,
+                    "export_return" => ExportActions::EXPORT_RETURN,
+                    "export_order"  => ExportActions::EXPORT_ORDER,
+                    "get_labels"    => ExportActions::GET_LABELS,
+                    "modal_dialog"  => ExportActions::MODAL_DIALOG,
                 ],
                 "bulk_actions"           => [
                     "export"       => WCMYPA_Admin::BULK_ACTION_EXPORT,

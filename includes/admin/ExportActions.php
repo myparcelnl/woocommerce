@@ -6,15 +6,12 @@ use MyParcelNL\Pdk\Base\PdkActions;
 use MyParcelNL\Pdk\Base\PdkEndpoint;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Fulfilment\Collection\OrderCollection;
-use MyParcelNL\Pdk\Fulfilment\Repository\OrderRepository;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
-use MyParcelNL\Sdk\src\Exception\MissingFieldException;
-use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
 use MyParcelNL\Sdk\src\Support\Str;
@@ -29,31 +26,26 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-if (class_exists('WCMP_Export')) {
-    return new WCMP_Export();
+if (class_exists('ExportActions')) {
+    return new ExportActions();
 }
 
-class WCMP_Export
+class ExportActions
 {
-    public const EXPORT           = 'wcmp_export';
-    const        EXPORT_PRINT     = 'wcmp_export_print';
+    public const EXPORT           = 'ExportActions';
     public const EXPORT_ORDER     = 'export_order';
     public const EXPORT_RETURN    = 'export_return';
     public const GET_LABELS       = 'get_labels';
     public const MODAL_DIALOG     = 'modal_dialog';
-    /**
-     * Maximum characters length of item description.
-     */
     public const ITEM_DESCRIPTION_MAX_LENGTH  = 50;
     public const DEFAULT_POSITIONS = [2, 4, 1, 3];
-    /**
-     * Shipping methods that can never have delivery options.
-     */
     public const DISALLOWED_SHIPPING_METHODS = [
         WCMP_Shipping_Methods::LOCAL_PICKUP,
     ];
-    public const NO              = 'no';
 
+    /**
+     * @var array
+     */
     public array $success;
 
     /**
@@ -64,7 +56,7 @@ class WCMP_Export
     public function __construct()
     {
         $this->success  = [];
-        $this->endpoint = Pdk::get(PdkEndpoint::class);
+        $this->getEndpoint();
 
         add_action('wp_ajax_' . self::EXPORT, [$this, 'export']);
     }
@@ -147,11 +139,14 @@ class WCMP_Export
 
         try {
             switch ($request) {
-                case self::EXPORT_RETURN;
-                    $action = null;
+                case PdkActions::GET_ORDER_DATA;
+                    $action = PdkActions::GET_ORDER_DATA;
                     break;
-                case self::EXPORT_PRINT:
+                case PdkActions::EXPORT_AND_PRINT_ORDER:
                     $action = PdkActions::EXPORT_AND_PRINT_ORDER;
+                    break;
+                case PdkActions::UPDATE_TRACKING_NUMBER:
+                    $action = PdkActions::UPDATE_TRACKING_NUMBER;
                     break;
                 default:
                     $action = PdkActions::EXPORT_ORDER;
@@ -243,8 +238,7 @@ class WCMP_Export
                 $this->getShipmentData($shipmentCollection, $order);
             }
 
-            WCMP_API::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
-
+            OrderStatus::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
 
             WCX_Order::update_meta_data(
                 $order,
@@ -597,6 +591,7 @@ class WCMP_Export
      * @param $status_code
      *
      * @return mixed|string|void
+     * TODO: Move to SDK
      */
     public function getShipmentStatusName($status_code)
     {
@@ -631,7 +626,7 @@ class WCMP_Export
      * Retrieves, updates and returns shipment data for given id.
      *
      * @param  \MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection $shipmentCollection
-     * @param  WC_Order                                               $order
+     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder                  $order
      *
      * @return array
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
@@ -644,6 +639,9 @@ class WCMP_Export
         }
 
         foreach ($shipmentCollection->all() as $shipment) {
+
+            // TODO: Convert PdkOrder to WC_Order
+
             $this->saveShipmentData($order, $shipment->toArray());
             ChannelEngine::updateMetaOnExport($order, $shipment->getAttribute('barcode') ?: $shipment->getAttribute('external_identifier'));
         }
@@ -835,6 +833,14 @@ class WCMP_Export
     }
 
     /**
+     * @return void
+     */
+    private function getEndpoint(): void
+    {
+        $this->endpoint = Pdk::get(PdkEndpoint::class);
+    }
+
+    /**
      * @param $shipping_method_id
      * @param $package_type_shipping_methods
      * @param $shipping_method_id_class
@@ -847,7 +853,7 @@ class WCMP_Export
         $package_type_shipping_methods,
         $shipping_method_id_class,
         $shipping_class
-    ) {
+    ): bool {
         //support WooCommerce flat rate
         // check if we have a match with the predefined methods
         if (in_array($shipping_method_id, $package_type_shipping_methods, true)) {
@@ -871,11 +877,7 @@ class WCMP_Export
 
         // support WooCommerce Table Rate Shipping by Bolder Elements
         $newShippingClass = str_replace(':', '_', $shipping_class);
-        if (! empty($shipping_class) && in_array($newShippingClass, $package_type_shipping_methods, true)) {
-            return true;
-        }
-
-        return false;
+        return ! empty($shipping_class) && in_array($newShippingClass, $package_type_shipping_methods, true);
     }
 
     /**
@@ -947,7 +949,7 @@ class WCMP_Export
                 );
             }
 
-            WCMP_API::updateOrderStatus($wcOrder, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
+            OrderStatus::updateOrderStatus($wcOrder, WCMP_Settings_Data::CHANGE_STATUS_AFTER_EXPORT);
         });
 
         return [
@@ -980,4 +982,4 @@ class WCMP_Export
     }
 }
 
-return new WCMP_Export();
+return new ExportActions();

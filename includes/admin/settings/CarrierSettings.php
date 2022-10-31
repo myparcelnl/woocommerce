@@ -12,7 +12,7 @@ use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use Data;
-use WCMP_Export;
+use ExportActions;
 use WCMP_Settings_Callbacks;
 use WCMP_Settings_Data;
 use WCMYPA_Settings;

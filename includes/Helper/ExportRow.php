@@ -10,7 +10,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use WC_Order;
 use WC_Order_Item_Product;
 use WC_Product;
-use WCMP_Export;
+use ExportActions;
 use WCMYPA_Admin;
 use WCMYPA_Settings;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
@@ -93,8 +93,8 @@ class ExportRow
     {
         $description = $this->product->get_name();
 
-        if (strlen($description) > WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH) {
-            $description = substr_replace($description, '...', WCMP_Export::ITEM_DESCRIPTION_MAX_LENGTH - 3);
+        if (strlen($description) > ExportActions::ITEM_DESCRIPTION_MAX_LENGTH) {
+            $description = substr_replace($description, '...', ExportActions::ITEM_DESCRIPTION_MAX_LENGTH - 3);
         }
 
         return $description;

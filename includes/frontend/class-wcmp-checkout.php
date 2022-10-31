@@ -142,7 +142,7 @@ class WCMP_Checkout
             "MyParcelDeliveryOptions",
             [
                 "allowedShippingMethods"    => json_encode($this->getShippingMethodsAllowingDeliveryOptions()),
-                "disallowedShippingMethods" => json_encode(WCMP_Export::DISALLOWED_SHIPPING_METHODS),
+                "disallowedShippingMethods" => json_encode(ExportActions::DISALLOWED_SHIPPING_METHODS),
                 "alwaysShow"                => $this->alwaysDisplayDeliveryOptions(),
                 "hiddenInputName"           => WCMYPA_Admin::META_DELIVERY_OPTIONS,
             ]
@@ -201,7 +201,7 @@ class WCMP_Checkout
         $shippingMethod             = WC()->session->get('chosen_shipping_methods')[0] ?? false;
         $shippingClass              = WCMP_Frontend::get_cart_shipping_class();
         $packageType                = ($shippingMethod)
-            ? WCMP_Export::getPackageTypeFromShippingMethod($shippingMethod, $shippingClass)
+            ? ExportActions::getPackageTypeFromShippingMethod($shippingMethod, $shippingClass)
             : null;
         if ($displayIncludingTax) {
             $chosenShippingMethodPrice += (float) $cartTotals['shipping_tax'];
@@ -363,7 +363,7 @@ class WCMP_Checkout
         $deliveryOptionsFromPost          = Arr::get($_POST, WCMYPA_Admin::META_DELIVERY_OPTIONS);
         $deliveryOptionsFromShippingClass = $highestShippingClass
             ? [
-                'packageType' => WCMP_Export::getPackageTypeFromShippingMethod(
+                'packageType' => ExportActions::getPackageTypeFromShippingMethod(
                     $shippingMethod,
                     $highestShippingClass
                 ),
@@ -431,7 +431,7 @@ class WCMP_Checkout
      *
      * @return string[]
      * @throws Exception
-     * @see WCMP_Export::DISALLOWED_SHIPPING_METHODS
+     * @see ExportActions::DISALLOWED_SHIPPING_METHODS
      */
     private function getShippingMethodsAllowingDeliveryOptions(): array
     {
@@ -448,7 +448,7 @@ class WCMP_Checkout
         foreach ($shippingMethodsForPackage as $shippingMethod) {
             [$methodId] = self::splitShippingMethodString($shippingMethod);
 
-            if (! in_array($methodId, WCMP_Export::DISALLOWED_SHIPPING_METHODS)) {
+            if (! in_array($methodId, ExportActions::DISALLOWED_SHIPPING_METHODS)) {
                 $allowedMethods[] = $shippingMethod;
             }
         }

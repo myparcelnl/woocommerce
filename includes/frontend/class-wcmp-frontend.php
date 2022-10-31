@@ -177,7 +177,7 @@ class WCMP_Frontend
         }
 
         $shippingMethodString = WC()->session->get('chosen_shipping_methods')[0] ?? '';
-        $shippingMethod       = WCMP_Export::getShippingMethod($shippingMethodString);
+        $shippingMethod       = ExportActions::getShippingMethod($shippingMethodString);
 
         if (empty($shippingMethod)) {
             return null;
