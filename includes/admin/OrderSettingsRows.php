@@ -8,6 +8,7 @@ defined('ABSPATH') or die();
 
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Carrier\Model\CarrierOptions;
+use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
@@ -15,6 +16,7 @@ use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
+use MyParcelNL\WooCommerce\PdkOrderRepository;
 use WC_Order;
 use CountryCodes;
 use Data;
@@ -103,15 +105,13 @@ class OrderSettingsRows
      */
     public function getOptionsRows(): array
     {
-        // TODO: Waarom hier $this->deliveryOptions meegeven?
-//        $orderSettings      = new OrderSettings($this->order, $this->deliveryOptions);
-        $pdkOrderAdapter    = new PdkOrderFromWCOrderAdapter($this->order);
-        $pdkOrder           = $pdkOrderAdapter->getPdkOrder();
+        $orderRepository    = (Pdk::get(PdkOrderRepository::class));
+        $pdkOrder           = $orderRepository->get($this->order->get_id());
         $shippingCountry    = $pdkOrder->recipient->cc;
         $isEuCountry        = CountryCodes::isEuCountry($shippingCountry);
         $isHomeCountry      = Data::isHomeCountry($shippingCountry);
         $isBelgium          = CountryService::CC_BE === $shippingCountry;
-        $packageTypeOptions = array_combine(DeliveryOptions::PACKAGE_TYPES_NAMES , Data::getPackageTypesHuman());
+        $packageTypeOptions = array_combine(DeliveryOptions::PACKAGE_TYPES_NAMES, Data::getPackageTypesHuman());
 
         $this->deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($this->order);
 
@@ -150,7 +150,7 @@ class OrderSettingsRows
                 'name'              => self::OPTION_EXTRA_OPTIONS_COLLO_AMOUNT,
                 'label'             => __('Number of labels', 'woocommerce-myparcel'),
                 'type'              => 'number',
-                'value'             => $pdkOrderAdapter->getColloAmount(),
+                'value'             => $orderRepository->getColloAmount(),
                 'custom_attributes' => [
                     'min' => '1',
                     'max' => '10',
@@ -160,7 +160,7 @@ class OrderSettingsRows
 
         // Only add extra options and shipment options to home country shipments.
         if ($isHomeCountry) {
-            $rows = array_merge($rows, $this->getAdditionalOptionsRows($pdkOrderAdapter));
+            $rows = array_merge($rows, $this->getAdditionalOptionsRows($orderRepository));
         }
 
         if ($isBelgium) {
@@ -206,7 +206,7 @@ class OrderSettingsRows
             'name'  => self::OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION,
             'type'  => 'text',
             'label' => __('Custom ID (top left on label)', 'woocommerce-myparcel'),
-            'value' => $pdkOrderAdapter->getLabelDescription($pdkOrder->deliveryOptions),
+            'value' => $orderRepository->getLabelDescription($pdkOrder->deliveryOptions),
         ];
 
         return $rows;
@@ -232,16 +232,15 @@ class OrderSettingsRows
     }
 
     /**
-     * @param  \MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter $pdkOrderAdapter
+     * @param  \MyParcelNL\WooCommerce\PdkOrderRepository $orderRepository
      *
      * @return array[]
      * @throws \JsonException
      * @throws \MyParcelNL\Sdk\src\Exception\ValidationException
      * @throws \Exception
      */
-    private function getAdditionalOptionsRows(PdkOrderFromWCOrderAdapter $pdkOrderAdapter): array
+    private function getAdditionalOptionsRows(PdkOrderRepository $orderRepository): array
     {
-        $pdkOrder = $pdkOrderAdapter->getPdkOrder();
         $shipmentOptions = $this->deliveryOptions->getShipmentOptions();
 
         return [
@@ -251,10 +250,10 @@ class OrderSettingsRows
                 'label'       => __('weight', 'woocommerce-myparcel'),
                 'description' => sprintf(
                     __('calculated_order_weight', 'woocommerce-myparcel'),
-                    wc_format_weight($pdkOrderAdapter->getWeight())
+                    wc_format_weight($orderRepository->getWeight())
                 ),
                 'options'     => Data::getDigitalStampRangeOptions(),
-                'value'       => $pdkOrderAdapter->getDigitalStampRangeWeight(),
+                'value'       => $orderRepository->getDigitalStampRangeWeight(),
                 'condition'   => [
                     [
                         'parent_name'  => self::OPTION_PACKAGE_TYPE,

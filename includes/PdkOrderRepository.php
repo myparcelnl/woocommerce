@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce;
 
-use MyParcelNL\Pdk\Api\Service\ApiServiceInterface;
+use Exception;
 use MyParcelNL\Pdk\Base\Model\ContactDetails;
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Base\Service\WeightService;
@@ -14,46 +14,29 @@ use MyParcelNL\Pdk\Plugin\Collection\PdkOrderLineCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
-use MyParcelNL\Pdk\Settings\Model\CustomsSettings;
+use MyParcelNL\Pdk\Shipment\Collection\CustomsDeclarationItemCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Shipment\Service\DeliveryDateService;
-use MyParcelNL\Pdk\Storage\StorageInterface;
-use MyParcelNL\Sdk\src\Model\PickupLocation;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
+use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Recipient;
+use MyParcelNL\WooCommerce\Helper\ExportRow;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use WC_Order;
 use WC_Order_Item;
+use WCMP_Log;
+use WCMP_Shipping_Methods;
 use WCMYPA_Admin;
 use WCMYPA_Settings;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
     /**
-     * @var \MyParcelNL\Pdk\Base\Service\CountryService
-     */
-    private $countryService;
-
-    /**
      * @var WC_Order $order
      */
     private $order;
-
-    /**
-     * @param  \MyParcelNL\Pdk\Storage\StorageInterface        $storage
-     * @param  \MyParcelNL\Pdk\Api\Service\ApiServiceInterface $api
-     * @param  \MyParcelNL\Pdk\Base\Service\CountryService     $countryService
-     */
-    public function __construct(StorageInterface $storage, ApiServiceInterface $api, CountryService $countryService)
-    {
-        parent::__construct(
-            $storage,
-            $api
-        );
-
-        $this->countryService = $countryService;
-    }
 
     /**
      * @param  PdkOrder ...$orders
@@ -81,7 +64,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             $order = new WC_Order($input);
         }
 
-        return $this->retrieve((string) $order->id, function () use ($order) {
+        return $this->retrieve((string) $order->get_id(), function () use ($order) {
             $this->order = $order;
             return $this->getDataFromOrder();
         });
@@ -92,7 +75,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      *
      * @return \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection
      */
-    public function updateMany(PdkOrderCollection $collection): \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection
+    public function updateMany(PdkOrderCollection $collection): PdkOrderCollection
     {
         return $collection->map([$this, 'update']);
     }
@@ -118,10 +101,11 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     {
         $deliveryOptions = $this->getDeliveryOptions();
         return new PdkOrder([
-            'orderDate'             => $this->order->get_date_created()->getTimestamp(),
+            'orderDate'             => $this->order->get_date_created()
+                ->getTimestamp(),
             'customsDeclaration'    => $this->getCustomsDeclaration(),
             'deliveryOptions'       => $deliveryOptions,
-            'externalIdentifier'    =>  $this->order->get_id(),
+            'externalIdentifier'    => $this->order->get_id(),
             'label'                 => $this->getLabelDescription($deliveryOptions),
             'lines'                 => $this->getOrderLines(),
             'orderPrice'            => $this->order->get_total(),
@@ -144,7 +128,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     public function getDeliveryOptions(): DeliveryOptions
     {
-        $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($this->order);
+        $deliveryOptions = $this->getDeliveryOptionsFromOrder();
 
         return new DeliveryOptions([
             'carrier'         => $deliveryOptions->getCarrier(),
@@ -153,62 +137,49 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'labelAmount'     => 1,
             'packageType'     => $deliveryOptions->getPackageType(),
             //            'pickupLocation'  => (array) $deliveryOptions->getPickupLocation(),
-            'pickupLocation'  => (array) new PickupLocation([
+            'pickupLocation'  => [
                 'location_code' => 'NL',
-            ]),
+            ],
             'shipmentOptions' => (array) $deliveryOptions->getShipmentOptions(),
         ]);
     }
 
     /**
-     * @return null|CustomsDeclaration
+     * @return \MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration
      */
-    private function getCustomsDeclaration(): ?CustomsDeclaration
+    private function getCustomsDeclaration(): CustomsDeclaration
     {
-//        $isToRowCountry = $this->countryService->isRowCountry(strtoupper($orderData['iso_code']));
-//        $customFormConfiguration = Configuration::get(CustomsSettings::ID);
-//
-//        if (! $isToRowCountry || 'No' === $customFormConfiguration) {
-//            return null;
-//        }
-//
-//        $products = OrderLabel::getCustomsOrderProducts($this->order->id);
-//
-//        $items = (new Collection($products))
-//            ->filter()
-//            ->map(function ($product) {
-//                $productHsCode = ProductConfigurationProvider::get(
-//                    $product['product_id'],
-//                    CustomsSettings::DEFAULT_CUSTOMS_CODE
-//                );
-//
-//                $productCountryOfOrigin = ProductConfigurationProvider::get(
-//                    $product['product_id'],
-//                    CustomsSettings::DEFAULT_COUNTRY_OF_ORIGIN
-//                );
-//
-//                return new CustomsDeclarationItem([
-//                    'amount'         => $product['product_quantity'],
-//                    'classification' => (int) ($productHsCode
-//                        ?: Configuration::get(
-//                            CustomsSettings::DEFAULT_CUSTOMS_CODE
-//                        )),
-//                    'country'        => $productCountryOfOrigin ?? Configuration::get(
-//                            CustomsSettings::DEFAULT_COUNTRY_OF_ORIGIN
-//                        ),
-//                    'description'    => $product['product_name'],
-//                    'itemValue'      => Tools::ps_round($product['unit_price_tax_incl'] * 100),
-//                    'weight'         => WeightService::convertToGrams($product['product_weight'], WeightService::UNIT_GRAMS),
-//                ]);
-//            });
-
         return new CustomsDeclaration([
-            'contents' => null,
+            'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
             'invoice'  => null,
-            //'items'    => $items->toArray(),
-            'items'    => [],
-            'weight'   => null,
+            'items'    => $this->getCustomsDeclarationItems(),
+            'weight'   => 1000,
         ]);
+    }
+
+    /**
+     * @throws \JsonException
+     * @throws \ErrorException
+     */
+    private function getCustomsDeclarationItems(): CustomsDeclarationItemCollection
+    {
+        $customsDeclarationItemCollection = new CustomsDeclarationItemCollection();
+        foreach ($this->order->get_items() as $item) {
+            $product       = $item->get_product();
+            $productHelper = new ExportRow($this->order, $product);
+            $customsDeclarationItemCollection->push(
+                new CustomsDeclarationItem([
+                    'amount'         => $productHelper->getItemAmount($item),
+                    'classification' => $productHelper->getHsCode(),
+                    'country'        => $productHelper->getCountryOfOrigin(),
+                    'description'    => $productHelper->getItemDescription(),
+                    'itemValue'      => $productHelper->getValueOfItem(),
+                    'weight'         => $productHelper->getItemWeight(),
+                ])
+            );
+        }
+
+        return $customsDeclarationItemCollection;
     }
 
     /**
@@ -327,6 +298,71 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $shippingMethod   = array_shift($shippingMethods);
         $shippingMethodId = $shippingMethod ? $shippingMethod->get_method_id() : null;
 
-        return WCMP_Shipping_Methods::LOCAL_PICKUP===$shippingMethodId;
+        return WCMP_Shipping_Methods::LOCAL_PICKUP === $shippingMethodId;
+    }
+
+    /**
+     * @return int
+     * @throws \MyParcelNL\Sdk\src\Exception\ValidationException|\JsonException
+     * @throws \Exception
+     */
+    public function getDigitalStampRangeWeight(): int
+    {
+        $extraOptions    = $this->getExtraOptions();
+        $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($this->order);
+        $savedWeight     = $extraOptions['digital_stamp_weight'] ?? null;
+        $orderWeight     = $this->getWeight();
+        $defaultWeight   = WCMYPA()->settingCollection->getByName(
+            WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT
+        ) ?: null;
+        $weight          = (float) ($savedWeight ?? $defaultWeight ?? $orderWeight);
+
+        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $deliveryOptions->getPackageType()) {
+            $weight += (float) WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT);
+        }
+
+        return WeightService::convertToDigitalStamp((int) $weight);
+    }
+
+    /**
+     * @return array
+     * @throws \JsonException
+     */
+    private function getExtraOptions(): array
+    {
+        return WCMYPA_Admin::getExtraOptionsFromOrder($this->order);
+    }
+
+    /**
+     * @return \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter
+     * @throws \Exception
+     */
+    private function getDeliveryOptionsFromOrder(): AbstractDeliveryOptionsAdapter
+    {
+        return WCMYPA_Admin::getDeliveryOptionsFromOrder($this->order);
+    }
+
+    /**
+     * @return void
+     * @throws \JsonException
+     */
+    public function getWeight(): float
+    {
+        $weight = $this->getExtraOptions()['weight'] ?? null;
+
+        if (null === $weight && $this->order->meta_exists(WCMYPA_Admin::META_ORDER_WEIGHT)) {
+            $weight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
+        }
+
+        return (float) $weight;
+    }
+
+    /**
+     * @return int
+     * @throws \JsonException
+     */
+    public function getColloAmount(): int
+    {
+        return (int) ($this->getExtraOptions()['collo_amount'] ?? 1);
     }
 }

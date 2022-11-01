@@ -131,14 +131,14 @@ class ExportActions
         try {
             /** @var \MyParcelNL\Pdk\Base\PdkEndpoint $endpoint */
             $endpoint = Pdk::get(PdkEndpoint::class);
-            $response = $endpoint->call($action);
+            $response = $endpoint->call(PdkActions::EXPORT_ORDER);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
             //WCMP_Log::add("$request: {$errorMessage}");
             Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
         }
 
-        echo json_encode($response ?? null, JSON_THROW_ON_ERROR);
+        echo json_encode($response ?? null);
         die();
     }
 
@@ -146,7 +146,6 @@ class ExportActions
      * @param  string|array $array
      *
      * @return array
-     * @throws \JsonException
      */
     public function sanitize_posted_array($array): array
     {
@@ -156,30 +155,10 @@ class ExportActions
 
         // check for JSON
         if (is_string($array) && strpos($array, '[') !== false) {
-            $array = json_decode(stripslashes($array), false, 512, JSON_THROW_ON_ERROR);
+            $array = json_decode(stripslashes($array), false);
         }
 
         return (array) $array;
-    }
-
-    /**
-     * @param  \MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection $shipments
-     * @param  int                                                    $offset
-     *
-     * @return array
-     */
-    public function downloadOrGetUrlOfLabels(
-        ShipmentCollection $shipments,
-        int                $offset = 0
-    ): array {
-        WCMP_Log::add('*** downloadOrGetUrlOfLabels() ***');
-        WCMP_Log::add('Shipment IDs: ' . implode(', ', $shipments));
-
-        $positions       = array_slice(self::DEFAULT_POSITIONS, $offset % 4);
-        $displayOverride = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_DOWNLOAD_DISPLAY);
-
-        return Pdk::get(ShipmentRepository::class)
-            ->fetchLabelLink($shipments, $displayOverride, $positions);
     }
 
     /**
@@ -190,7 +169,7 @@ class ExportActions
     public function modal_dialog($order_ids): void
     {
         if (is_string($order_ids) && strpos($order_ids, '[') !== false) {
-            $order_ids = json_decode(stripslashes($order_ids), false, 512, JSON_THROW_ON_ERROR);
+            $order_ids = json_decode(stripslashes($order_ids), false);
         }
 
         $order_ids = (array) $order_ids;
@@ -281,7 +260,7 @@ class ExportActions
             return null;
         }
 
-        return (string) $shippingMethodId;
+        return $shippingMethodId;
     }
 
     /**
@@ -302,22 +281,6 @@ class ExportActions
 
         if ($allowedPackageType) {
             return apply_filters('wc_myparcel_order_package_type', $allowedPackageType, $order, $this);
-        }
-
-        // Get pre 4.0.0 package type if it exists.
-        if (WCX_Order::has_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0)) {
-            $shipmentOptions = WCX_Order::get_meta($order, WCMYPA_Admin::META_SHIPMENT_OPTIONS_LT_4_0_0);
-
-            if (isset($shipmentOptions['package_type'])) {
-                $packageType = Data::getPackageTypeId($shipmentOptions['package_type']);
-            }
-
-            return (string) apply_filters(
-                'wc_myparcel_order_package_type',
-                ($packageType ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE),
-                $order,
-                $this
-            );
         }
 
         $packageType = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
@@ -597,11 +560,7 @@ class ExportActions
      */
     public function wc_flat_rate_evaluate_cost(string $sum, array $args, $flat_rate_method)
     {
-        if (version_compare(WOOCOMMERCE_VERSION, '2.6', '>=')) {
-            include_once(WC()->plugin_path() . '/includes/libraries/class-wc-eval-math.php');
-        } else {
-            include_once(WC()->plugin_path() . '/includes/shipping/flat-rate/includes/class-wc-eval-math.php');
-        }
+        include_once(WC()->plugin_path() . '/includes/libraries/class-wc-eval-math.php');
 
         // Allow 3rd parties to process shipping cost arguments
         $args           = apply_filters('woocommerce_evaluate_shipping_cost_args', $args, $sum, $flat_rate_method);
@@ -648,7 +607,7 @@ class ExportActions
      *
      * @return string
      */
-    public function wc_flat_rate_fee($atts)
+    public function wc_flat_rate_fee(array $atts)
     {
         $atts = shortcode_atts(
             [
@@ -662,7 +621,7 @@ class ExportActions
         $calculated_fee = 0;
 
         if ($atts['percent']) {
-            $calculated_fee = $this->fee_cost * (floatval($atts['percent']) / 100);
+            $calculated_fee = $this->fee_cost * ((float) $atts['percent'] / 100);
         }
 
         if ($atts['min_fee'] && $calculated_fee < $atts['min_fee']) {
@@ -674,32 +633,6 @@ class ExportActions
         }
 
         return $calculated_fee;
-    }
-
-    /**
-     * Filter out orders shipping to country codes that are not in the allowed list.
-     *
-     * @param  array $order_ids
-     *
-     * @return array
-     * @throws Exception
-     */
-    public function filterOrderDestinations(array $order_ids): array
-    {
-        foreach ($order_ids as $key => $order_id) {
-            $order            = WCX::get_order($order_id);
-            $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
-
-            if (! CountryCodes::isAllowedDestination($shipping_country)) {
-                unset($order_ids[$key]);
-                Messages::showAdminNotice(
-                    sprintf(__('error_order_has_invalid_shipment_country', 'woocommerce-myparcel'), $order_id),
-                    Messages::NOTICE_LEVEL_ERROR
-                );
-            }
-        }
-
-        return $order_ids;
     }
 
     /**
@@ -763,27 +696,9 @@ class ExportActions
                 'You do not have sufficient permissions to access this page.',
                 'woocommerce-myparcel'
             );
-            echo json_encode($return, JSON_THROW_ON_ERROR);
+            echo json_encode($return);
             die();
         }
-    }
-
-    /**
-     * @param  \MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection $pdkOrderCollection
-     * @param  int                                                  $offset
-     *
-     * @return array
-     * @throws \Exception
-     */
-    private function printLabels(
-        PdkOrderCollection $pdkOrderCollection,
-        int                $offset
-    ): array {
-        $pdkOrderCollection->generateShipments();
-        return $this->downloadOrGetUrlOfLabels(
-            $pdkOrderCollection->getAllShipments(),
-            $offset
-        );
     }
 
     /**

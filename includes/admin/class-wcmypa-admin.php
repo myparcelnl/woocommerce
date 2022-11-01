@@ -11,7 +11,6 @@ use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
 use MyParcelNL\WooCommerce\PdkOrderRepository;
@@ -111,24 +110,15 @@ class WCMYPA_Admin
         // Add barcode in order grid
         add_filter('manage_edit-shop_order_columns', [$this, 'barcode_add_new_order_admin_list_column'], 10, 1);
         add_action('manage_shop_order_posts_custom_column', [$this, 'addBarcodeToOrderColumn'], 10, 2);
-
         add_action('restrict_manage_posts', [$this, 'addDeliveryDayFilterToOrdergrid'], 10, 1);
         add_filter('request', [$this, 'getDeliveryDateFromOrder'], 10, 1);
-
         add_action('woocommerce_payment_complete', [$this, 'automaticExportOrder'], 1000);
         add_action('woocommerce_order_status_changed', [$this, 'automaticExportOrder'], 1000, 3);
-
-        // At the moment this doens't work correctly. Shipment will disappear when status is delivered.
-        // add_action("init", [$this, "registerDeliveredPostStatus"], 10, 1);
-        // add_filter("wc_order_statuses", [$this, "displayDeliveredPostStatus"], 10, 2);
-
         add_action('woocommerce_product_after_variable_attributes', [$this, 'variation_hs_code_field'], 10, 3);
         add_action('woocommerce_save_product_variation', [$this, 'save_variation_hs_code_field'], 10, 2);
         add_filter('woocommerce_available_variation', [$this, 'load_variation_hs_code_field'], 10, 1);
-
         add_action('woocommerce_product_options_shipping', [$this, 'productOptionsFields']);
         add_action('woocommerce_process_product_meta', [$this, 'productOptionsFieldSave']);
-
         add_action(
             'woocommerce_product_after_variable_attributes',
             [$this, 'renderVariationCountryOfOriginField'],
@@ -355,44 +345,6 @@ class WCMYPA_Admin
     }
 
     /**
-     * Add delivered post type to order statuses list
-     */
-    public function registerDeliveredPostStatus(): void
-    {
-        register_post_status(
-            'wc-custom-delivered',
-            [
-                'label'                     => 'Delivered',
-                'public'                    => true,
-                'exclude_from_search'       => false,
-                'show_in_admin_all_list'    => true,
-                'show_in_admin_status_list' => true,
-                'label_count'               => _n_noop('Delivered (%s)', 'Delivered (%s)'),
-            ]
-        );
-    }
-
-    /**
-     * @param  array $order_statuses
-     *
-     * @return array
-     */
-    public function displayDeliveredPostStatus(array $order_statuses): array
-    {
-        $new_order_statuses = [];
-
-        foreach ($order_statuses as $key => $status) {
-            $new_order_statuses[$key] = $status;
-
-            if ('wc-processing' === $key) {
-                $new_order_statuses['wc-custom-delivered'] = 'Delivered';
-            }
-        }
-
-        return $new_order_statuses;
-    }
-
-    /**
      * @param              $orderId
      * @param  string|null $oldStatus
      * @param  string|null $newStatus will be passed when order status change triggers this method
@@ -431,8 +383,8 @@ class WCMYPA_Admin
     public function showMyParcelSettings(WC_Order $order): void
     {
         try {
-            $pdkOrderAdapter = (new PdkOrderFromWCOrderAdapter($order));
-            $pdkOrder        = $pdkOrderAdapter->getPdkOrder();
+            $orderRepository = (Pdk::get(PdkOrderRepository::class));
+            $pdkOrder = $orderRepository->get($order);
         } catch (Exception $exception) {
             WCMP_Log::add(sprintf('Could not get OrderSettings for order %d', $order->get_id()), $exception);
             printf(
@@ -445,12 +397,12 @@ class WCMYPA_Admin
 
         $isAllowedDestination = CountryCodes::isAllowedDestination($pdkOrder->recipient->cc ?? 'NL');
 
-        if (! $isAllowedDestination || $pdkOrderAdapter->hasLocalPickup()) {
+        if (! $isAllowedDestination || $orderRepository->hasLocalPickup()) {
             return;
         }
 
         echo '<div class="wcmp__shipment-settings-wrapper" style="display: none;">';
-        $this->printDeliveryDate($pdkOrderAdapter->getDeliveryOptions());
+        $this->printDeliveryDate($orderRepository->getDeliveryOptions());
 
         $consignments       = self::get_order_shipments($order);
         // if we have shipments, then we show status & link to Track & Trace, settings under i
@@ -708,9 +660,10 @@ class WCMYPA_Admin
     public static function getListingActions(PdkOrder $pdkOrder, PdkOrderRepository $orderRepository): array
     {
        //$shippingCountry = $pdkOrder->getShippingRecipient()->cc;
+        $wcOrderId       = $pdkOrder->externalIdentifier;
         $exportMode      = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
-        $consignments    = self::get_order_shipments($pdkOrder);
-        $listingActions  = self::getDefaultListingActions($pdkOrder->get_id());
+        $consignments    = self::get_order_shipments(wc_get_order($wcOrderId));
+        $listingActions  = self::getDefaultListingActions($wcOrderId);
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
             $metaPps        = get_post_meta($pdkOrder->get_id(), self::META_PPS);
@@ -823,7 +776,7 @@ class WCMYPA_Admin
      * @return array
      * @throws \JsonException
      */
-    public static function get_order_shipments(PdkOrder $order, bool $exclude_concepts = false): array
+    public static function get_order_shipments(WC_Order $order, bool $exclude_concepts = false): array
     {
         $shipments = WCX_Order::get_meta($order, self::META_SHIPMENTS);
 

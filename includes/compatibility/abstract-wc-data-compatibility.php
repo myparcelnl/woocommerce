@@ -110,7 +110,7 @@ abstract class Data
      * @throws \JsonException
      * @since 4.6.0-dev
      */
-    public static function get_meta(PdkOrder $object, string $key = '', bool $single = true, string $context = 'edit')
+    public static function get_meta(object $object, string $key = '', bool $single = true, string $context = 'edit')
     {
         if (WC_Core::is_wc_version_gte_3_0()) {
             $value = $object->get_meta($key, $single, $context);
@@ -124,7 +124,7 @@ abstract class Data
         $value = self::removeSerialization($object, $key, $value);
 
         if (is_string($value)) {
-            $decoded = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+            $decoded = json_decode($value, true);
             // json_decode returns null if there was a syntax error, meaning input was not valid JSON.
             $value = $decoded ?? $value;
         }
@@ -175,18 +175,17 @@ abstract class Data
     /**
      * Updates an object's stored meta value.
      *
-     * @param  PdkOrder     $object  the data object, likely \WC_Order or \WC_Product
+     * @param  object       $object  the data object, likely \WC_Order or \WC_Product
      * @param  string       $key     the meta key
      * @param  string|array $value   the meta value, will be encoded if it's an array
      * @param  int|string   $meta_id Optional. The specific meta ID to update
      *
-     * @throws \JsonException
      * @since 4.6.0-dev
      */
-    public static function update_meta_data(PdkOrder $object, string $key, $value, $meta_id = ''): void
+    public static function update_meta_data(object $object, string $key, $value, $meta_id = ''): void
     {
         if (is_array($value)) {
-            $value = json_encode($value, JSON_THROW_ON_ERROR);
+            $value = json_encode($value);
         }
 
         if (WC_Core::is_wc_version_gte_3_0()) {
@@ -230,7 +229,7 @@ abstract class Data
      * @return mixed
      * @throws \JsonException
      */
-    private static function removeSerialization(PdkOrder $object, string $key, $value)
+    private static function removeSerialization(object $object, string $key, $value)
     {
         if (is_serialized($value)) {
             $value = @unserialize(trim($value));
