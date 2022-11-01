@@ -132,7 +132,7 @@ class MessagesRepository
     public function ajaxDismissNotice(): void
     {
         $messageId    = sanitize_text_field(filter_input(INPUT_POST, 'messageid'));
-        $messageArray = get_option(self::OPTION_NOTICE_DISMISSED, []);
+        $messageArray = (array) get_option(self::OPTION_NOTICE_DISMISSED, []);
 
         if ($messageId && ! in_array($messageId, $messageArray)) {
             $messageArray[] = $messageId;
