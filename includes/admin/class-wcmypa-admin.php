@@ -1,6 +1,5 @@
 <?php
 
-use MyParcelNL\Pdk\Base\Exception\InvalidCastException;
 use MyParcelNL\Pdk\Base\PdkActions;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
@@ -46,24 +45,21 @@ class WCMYPA_Admin
     public const META_HS_CODE                     = '_myparcel_hs_code';
     public const META_HS_CODE_VARIATION           = '_myparcel_hs_code_variation';
     public const META_COUNTRY_OF_ORIGIN_VARIATION = '_myparcel_country_of_origin_variation';
-    public const META_COUNTRY_OF_ORIGIN = '_myparcel_country_of_origin';
-    public const META_AGE_CHECK         = '_myparcel_age_check';
-    public const META_PPS               = '_myparcel_pps';
-    public const META_PPS_EXPORTED    = 'pps_exported';
-    public const META_PPS_EXPORT_DATE = 'pps_export_date';
-    public const META_PPS_UUID        = 'pps_uuid';
-    public const BULK_ACTION_EXPORT       = 'ExportActions';
-    public const BULK_ACTION_PRINT        = 'wcmp_print';
-    public const BULK_ACTION_EXPORT_PRINT = 'wcmp_export_print';
-    public const OLD_RED_JE_PAKKETJE_NAME = 'redjepakketje';
+    public const META_COUNTRY_OF_ORIGIN           = '_myparcel_country_of_origin';
+    public const META_AGE_CHECK                   = '_myparcel_age_check';
+    public const META_PPS                         = '_myparcel_pps';
+    public const META_PPS_EXPORTED                = 'pps_exported';
+    public const META_PPS_EXPORT_DATE             = 'pps_export_date';
+    public const META_PPS_UUID                    = 'pps_uuid';
+    public const BULK_ACTION_EXPORT               = 'ExportActions';
+    public const BULK_ACTION_PRINT                = 'wcmp_print';
+    public const BULK_ACTION_EXPORT_PRINT         = 'wcmp_export_print';
+    public const OLD_RED_JE_PAKKETJE_NAME         = 'redjepakketje';
     /**
      * @deprecated use weight property in META_SHIPMENT_OPTIONS_EXTRA.
      */
     public const META_ORDER_WEIGHT = '_myparcel_order_weight';
-    /**
-     * Legacy meta keys.
-     */
-    public const META_SHIPMENT_OPTIONS_LT_4_0_0 = '_myparcel_shipment_options';
+
     // Ids referring to shipment statuses.
     public const ORDER_STATUS_DELIVERED_AT_RECIPIENT      = 7;
     public const ORDER_STATUS_DELIVERED_READY_FOR_PICKUP  = 8;
@@ -73,7 +69,6 @@ class WCMYPA_Admin
     public const SHIPMENT_OPTIONS_FORM_NAME = 'myparcel_options';
     public const PRODUCT_OPTIONS_ENABLED  = 'yes';
     public const PRODUCT_OPTIONS_DISABLED = 'no';
-    public const PRODUCT_OPTIONS_DEFAULT  = null;
 
     public function __construct()
     {
@@ -369,7 +364,8 @@ class WCMYPA_Admin
 
         if ($automaticExportStatus === $newStatus) {
             try {
-                (new ExportActions())->exportByOrderId($orderId);
+                $_GET['orderIds'] = $orderId;
+                (new ExportActions())->callAction(PdkActions::EXPORT_ORDER);
             } catch (Exception $e) {
             }
         }

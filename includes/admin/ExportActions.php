@@ -17,6 +17,7 @@ use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\includes\adapter\PdkOrderCollectionFromWCOrdersAdapter;
 use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
+use Symfony\Component\HttpFoundation\Response;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 use WPO\WC\MyParcel\Compatibility\WCMP_ChannelEngine_Compatibility as ChannelEngine;
@@ -35,22 +36,22 @@ class ExportActions
     /**
      * @deprecated GEBRUIK PDK
      */
-    const        EXPORT_ORDER = '';
+    public const EXPORT_ORDER = '';
     /**
      * @deprecated GEBRUIK PDK
      */
-    const        EXPORT_RETURN = '';
+    public const EXPORT_RETURN = '';
     /**
      * @deprecated GEBRUIK PDK
      */
-    const        GET_LABELS = '';
+    public const GET_LABELS = '';
     /**
      * @deprecated GEBRUIK PDK
      */
-    const        MODAL_DIALOG                = '';
-    public const ITEM_DESCRIPTION_MAX_LENGTH = 50;
-    public const DEFAULT_POSITIONS           = [2, 4, 1, 3];
-    public const DISALLOWED_SHIPPING_METHODS = [
+    public const        MODAL_DIALOG                = '';
+    public const        ITEM_DESCRIPTION_MAX_LENGTH = 50;
+    public const        DEFAULT_POSITIONS           = [2, 4, 1, 3];
+    public const        DISALLOWED_SHIPPING_METHODS = [
         WCMP_Shipping_Methods::LOCAL_PICKUP,
     ];
 
@@ -61,33 +62,9 @@ class ExportActions
 
     public function __construct()
     {
-        $this->success  = [];
+        $this->success = [];
 
         add_action('wp_ajax_' . self::ACTION_NAME, [$this, 'handlePdkAction']);
-    }
-
-    /**
-     * @param  int $orderId
-     *
-     * @throws \JsonException
-     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
-     * @throws \Exception
-     */
-    public function exportByOrderId(int $orderId): void
-    {
-        $order = WCX::get_order($orderId ?? null);
-        if (! $order) {
-            return;
-        }
-
-        $pdkOrderCollection = new PdkOrderCollection();
-        $pdkOrder           = (new PdkOrderFromWCOrderAdapter($order))->getPdkOrder();
-        $pdkOrderCollection->push($pdkOrder);
-
-        $return = (Pdk::get(PdkEndpoint::class))->call(PdkActions::EXPORT_ORDER);
-        if (isset($return['success'])) {
-            $order->add_order_note($return['success']);
-        }
     }
 
     /**
@@ -128,18 +105,31 @@ class ExportActions
         $_GET['action'] = $_REQUEST['pdkAction'];
         $action         = $_GET['pdkAction'];
 
+        $response = $this->callAction($action);
+
+        echo json_encode($response ?? null);
+        die();
+    }
+
+    /**
+     * @param $action
+     *
+     * @return null|
+     */
+    public function callAction($action): ?Response
+    {
         try {
             /** @var \MyParcelNL\Pdk\Base\PdkEndpoint $endpoint */
             $endpoint = Pdk::get(PdkEndpoint::class);
-            $response = $endpoint->call(PdkActions::EXPORT_ORDER);
+            $response = $endpoint->call($action);
+            Messages::showAdminNotice('Joepie, het is gelukt', Messages::NOTICE_LEVEL_SUCCESS);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
             //WCMP_Log::add("$request: {$errorMessage}");
             Messages::showAdminNotice($errorMessage, Messages::NOTICE_LEVEL_ERROR);
         }
 
-        echo json_encode($response ?? null);
-        die();
+        return $response ?? null;
     }
 
     /**
@@ -461,24 +451,26 @@ class ExportActions
      * Retrieves, updates and returns shipment data for given id.
      *
      * @param  \MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection $shipmentCollection
-     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder                  $order
+     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder                  $pdkOrder
      *
      * @return array
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      * @throws \Exception
      */
-    public function getShipmentData(ShipmentCollection $shipmentCollection, PdkOrder $order): array
+    public function getShipmentData(ShipmentCollection $shipmentCollection, PdkOrder $pdkOrder): array
     {
         if ($shipmentCollection->isEmpty()) {
             return [];
         }
 
+        $wcOrder = wc_get_order($pdkOrder->externalIdentifier);
+
         foreach ($shipmentCollection->all() as $shipment) {
             // TODO: Convert PdkOrder to WC_Order
 
-            $this->saveShipmentData($order, $shipment->toArray());
+            $this->saveShipmentData($wcOrder, $shipment->toArray());
             ChannelEngine::updateMetaOnExport(
-                $order,
+                $wcOrder,
                 $shipment->getAttribute('barcode') ?: $shipment->getAttribute('external_identifier')
             );
         }
