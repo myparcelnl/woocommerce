@@ -655,14 +655,14 @@ class WCMYPA_Admin
      */
     public static function getListingActions(PdkOrder $pdkOrder, PdkOrderRepository $orderRepository): array
     {
-       //$shippingCountry = $pdkOrder->getShippingRecipient()->cc;
+       $shippingCountry = $pdkOrder->getShippingRecipient()->cc;
         $wcOrderId       = $pdkOrder->externalIdentifier;
         $exportMode      = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
         $consignments    = self::get_order_shipments(wc_get_order($wcOrderId));
         $listingActions  = self::getDefaultListingActions($wcOrderId);
 
         if (WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-            $metaPps        = get_post_meta($pdkOrder->get_id(), self::META_PPS);
+            $metaPps        = get_post_meta($wcOrderId, self::META_PPS);
             $listingActions = self::updateExportButtonForPps($listingActions, $metaPps);
         }
 
