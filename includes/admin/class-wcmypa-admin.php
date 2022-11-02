@@ -655,7 +655,7 @@ class WCMYPA_Admin
      */
     public static function getListingActions(PdkOrder $pdkOrder, PdkOrderRepository $orderRepository): array
     {
-       $shippingCountry = $pdkOrder->getShippingRecipient()->cc;
+        $shippingCountry = $pdkOrder->recipient->cc;
         $wcOrderId       = $pdkOrder->externalIdentifier;
         $exportMode      = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
         $consignments    = self::get_order_shipments(wc_get_order($wcOrderId));
@@ -903,7 +903,7 @@ class WCMYPA_Admin
         $shipmentIds = self::get_order_shipments($order);
 
         // show shipments if available
-        if (empty($consignments)) {
+        if (! $shipmentIds) {
             return;
         }
 
@@ -915,7 +915,7 @@ class WCMYPA_Admin
      *
      * @throws \Exception
      */
-    public function single_order_shipment_options(WC_Order $order)
+    public function single_order_shipment_options(WC_Order $order): void
     {
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
 
@@ -984,10 +984,6 @@ class WCMYPA_Admin
 
                 if (! empty($productId)) {
                     WCX_Product::update_meta_data($product, $productOption['id'], esc_attr($productId));
-                } else {
-                    if (isset($_POST[$productOption['id']]) && empty($productId)) {
-                        WCX_Product::delete_meta_data($product, $productOption['id']);
-                    }
                 }
             }
         }

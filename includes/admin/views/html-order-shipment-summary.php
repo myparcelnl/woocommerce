@@ -6,20 +6,22 @@ declare(strict_types=1);
  * The shipment summary that shows when you click (i) in an order.
  */
 
+use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Sdk\src\Support\Arr;
-use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
+use MyParcelNL\WooCommerce\PdkOrderRepository;
 
 if (! defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-$order_id    = $_POST['order_id'];
+$orderId     = $_POST['order_id'];
 $shipment_id = $_POST['shipment_id'];
 
-$order = WCX::get_order($order_id);
+$orderRepository = (Pdk::get(PdkOrderRepository::class));
+$pdkOrder = $orderRepository->get($orderId);
 
-$shipments       = WCMYPA()->export->getShipmentData([$shipment_id], $order);
-$deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
+//TODO: create shipment collection
+$shipments       = WCMYPA()->export->getShipmentData([$shipment_id], $pdkOrder);
 
 $option_strings = [
     'signature'      => __('shipment_options_signature', 'woocommerce-myparcel'),
@@ -81,7 +83,7 @@ foreach ($shipments as $shipment_id => $shipment) {
      * Show Track & Trace status.
      */
     if (! $trackTrace) {
-        if (in_array($shipmentStatusId, $printedStatuses)) {
+        if (in_array($shipmentStatusId, $printedStatuses, true)) {
             echo __('The label has been printed.', 'woocommerce-myparcel');
             echo '<br/>';
         }
@@ -90,7 +92,7 @@ foreach ($shipments as $shipment_id => $shipment) {
 
     printf(
         '<a href="%1$s" target="_blank" title="%2$s">%2$s</a><br/> %3$s: %4$s<br/>',
-        WCMYPA_Admin::getTrackTraceUrl($order_id, $trackTrace),
+        WCMYPA_Admin::getTrackTraceUrl($orderId, $trackTrace),
         $trackTrace,
         esc_html(__('Status', 'woocommerce-myparcel')),
         Arr::get($shipment, 'status')

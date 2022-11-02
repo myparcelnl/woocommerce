@@ -1,8 +1,9 @@
 <?php
 
+use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
+use MyParcelNL\WooCommerce\PdkOrderRepository;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 
@@ -33,7 +34,8 @@ $target_url = wp_nonce_url(
             $c = true;
             foreach ($order_ids as $order_id) :
                 $order = WCX::get_order($order_id);
-                $pdkOrderAdapter = new PdkOrderFromWCOrderAdapter($order);
+                $orderRepository = (Pdk::get(PdkOrderRepository::class));
+                $pdkOrder = $orderRepository->get($order);
 
                 // skip non-myparcel destinations
                 $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
@@ -100,7 +102,7 @@ $target_url = wp_nonce_url(
                                             <th><?php _e("Total weight", "woocommerce-myparcel"); ?></th>
                                             <th class="wcmp__text--right">
                                                 <?php
-                                                $weight = $pdkOrderAdapter->getWeight();
+                                                $weight = $orderRepository->getWeight();
 
                                                 if ($weight) {
                                                     echo wc_format_weight($weight);

@@ -20,15 +20,15 @@ class WCMP_ChannelEngine_Compatibility
      * @param WC_Order $order
      * @param          $data
      */
-    public static function updateMetaOnExport(WC_Order $order, $data)
+    public static function updateMetaOnExport(WC_Order $order, $data): void
     {
-        if (! class_exists('Channel_Engine') || WCX_Order::has_meta($order, "_shipping_ce_track_and_trace")) {
+        if (! class_exists('Channel_Engine') || WCX_Order::has_meta($order, '_shipping_ce_track_and_trace')) {
             return;
         }
 
-        WCX_Order::update_meta_data($order, "_shipping_ce_track_and_trace", $data);
+        WCX_Order::update_meta_data($order, '_shipping_ce_track_and_trace', $data);
 
         // Todo: Check if this has to be changed
-        WCX_Order::update_meta_data($order, "_shipping_ce_shipping_method", "PostNL");
+        WCX_Order::update_meta_data($order, '_shipping_ce_shipping_method', 'PostNL');
     }
 }

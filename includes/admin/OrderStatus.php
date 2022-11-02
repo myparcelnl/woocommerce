@@ -2,7 +2,16 @@
 
 declare(strict_types=1);
 
+namespace MyParcelNL\WooCommerce\includes\admin;
+
+use ExportActions;
+use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\includes\adapter\PdkOrderCollectionFromWCOrdersAdapter;
+use MyParcelNL\WooCommerce\PdkOrderRepository;
+use WC_Order;
+use WCMP_Log;
+use WCMYPA_Admin;
+use WCMYPA_Settings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core;
 
@@ -43,7 +52,7 @@ class OrderStatus
      *
      * @throws \JsonException|\MyParcelNL\Pdk\Base\Exception\InvalidCastException
      */
-    private function updateOrderBarcode(array $orderIds): void
+    public function updateOrderBarcode(array $orderIds): void
     {
         foreach ($orderIds as $orderId) {
             $order           = WC_Core::get_order($orderId);
@@ -71,13 +80,11 @@ class OrderStatus
      */
     private function getTrackTraceForOrder(array $lastShipmentIds, WC_Order $order): array
     {
-        $pdkOrderCollection = (new PdkOrderCollectionFromWCOrdersAdapter($lastShipmentIds))->convert();
-        $shipments = $pdkOrderCollection->generateShipments();
-        $shipmentData       = (new ExportActions())->getShipmentData($shipments, $order);
+        $shipmentData       = (new ExportActions())->getShipmentData($lastShipmentIds, $order);
         $trackTraceArray    = [];
 
         foreach ($shipmentData as $shipment) {
-            $trackTraceArray[] = $shipment['track_trace'] ?? null;
+            $trackTraceArray[] = $shipment['barcode'] ?? null;
         }
 
         return $trackTraceArray;

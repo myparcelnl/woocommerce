@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace MyParcelNL\WooCommerce\includes\admin\views;
 
 use MyParcelNL\Pdk\Base\Model\ContactDetails;
-use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
+use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
+use MyParcelNL\WooCommerce\PdkOrderRepository;
 use TypeError;
 use ExportActions;
 
@@ -66,9 +67,10 @@ class MyParcelWidget
 
         foreach ($orders as $order) {
             try {
-                $pdkOrderAdapter   = new PdkOrderFromWCOrderAdapter($order);
-                $orderId           = $order->get_id();
-                $shippingRecipient = $pdkOrderAdapter->getShippingRecipient();
+                $orderRepository = (Pdk::get(PdkOrderRepository::class));
+                $pdkOrder = $orderRepository->get($order);
+                $orderId                    = $order->get_id();
+                $shippingRecipient          = $pdkOrder->recipient->cc;
                 // TODO: get shipment ID's
                 $shipmentIds       = (new ExportActions())->getShipmentIds([$orderId], ['exclude_concepts']);
                 $shipmentStatus    = $this->getShipmentStatus($shipmentIds, $order);

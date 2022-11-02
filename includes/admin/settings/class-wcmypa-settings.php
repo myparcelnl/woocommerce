@@ -80,6 +80,8 @@ class WCMYPA_Settings
     public const SETTING_SAME_DAY_TITLE                        = 'same_day_title';
     public const SETTING_USE_SPLIT_ADDRESS_FIELDS              = 'use_split_address_fields';
 
+    public const DEFAULT_BELGIAN_INSURANCE = 500;
+
     /*
      * Carrier settings, these will be prefixed with carrier names.
      *

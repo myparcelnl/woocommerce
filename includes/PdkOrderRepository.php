@@ -87,7 +87,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     public function update(PdkOrder $order): PdkOrder
     {
-        $this->save($order);
+        $this->save('myparcel_order_id', $order->externalIdentifier);
         return $order;
     }
 

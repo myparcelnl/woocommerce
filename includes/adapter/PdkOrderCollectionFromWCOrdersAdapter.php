@@ -6,6 +6,7 @@ namespace MyParcelNL\WooCommerce\includes\adapter;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
+use MyParcelNL\WooCommerce\PdkOrderRepository;
 use PdkLogger;
 use WCMP_Log;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -66,8 +67,8 @@ class PdkOrderCollectionFromWCOrdersAdapter
      */
     private function pushPdkOrderToCollection($orderId): void
     {
-        $order           = WCX::get_order($orderId);
-        $pdkOrderAdapter = new PdkOrderFromWCOrderAdapter($order);
-        $this->pdkOrderCollection->push($pdkOrderAdapter->getPdkOrder());
+        $orderRepository = (Pdk::get(PdkOrderRepository::class));
+        $pdkOrder = $orderRepository->get($orderId);
+        $this->pdkOrderCollection->push($pdkOrder);
     }
 }

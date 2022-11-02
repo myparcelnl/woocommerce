@@ -14,7 +14,6 @@ use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
-use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\PdkOrderRepository;
 use WC_Order;
@@ -22,6 +21,7 @@ use CountryCodes;
 use Data;
 use WCMP_Settings_Data;
 use WCMYPA_Admin;
+use WCMYPA_Settings;
 
 class OrderSettingsRows
 {
@@ -179,7 +179,7 @@ class OrderSettingsRows
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT,
                 'type'      => 'select',
                 'label'     => __('insured_amount', 'woocommerce-myparcel'),
-                'options'   => [PdkOrderFromWCOrderAdapter::DEFAULT_BELGIAN_INSURANCE => PdkOrderFromWCOrderAdapter::DEFAULT_BELGIAN_INSURANCE],
+                'options'   => [WCMYPA_Settings::DEFAULT_BELGIAN_INSURANCE => WCMYPA_Settings::DEFAULT_BELGIAN_INSURANCE],
                 'value'     => $this->deliveryOptions->getShipmentOptions()->getInsurance(),
                 'condition' => [
                     self::OPTION_SHIPMENT_OPTIONS_INSURED,

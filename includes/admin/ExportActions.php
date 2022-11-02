@@ -2,20 +2,17 @@
 
 declare(strict_types=1);
 
+use MyParcelNL\WooCommerce\includes\admin\OrderStatus;
 use MyParcelNL\Pdk\Base\PdkActions;
 use MyParcelNL\Pdk\Base\PdkEndpoint;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Fulfilment\Collection\OrderCollection;
-use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
-use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
 use MyParcelNL\Sdk\src\Support\Str;
-use MyParcelNL\WooCommerce\includes\adapter\PdkOrderCollectionFromWCOrdersAdapter;
-use MyParcelNL\WooCommerce\includes\adapter\PdkOrderFromWCOrderAdapter;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use Symfony\Component\HttpFoundation\Response;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -106,6 +103,11 @@ class ExportActions
         $action         = $_GET['pdkAction'];
 
         $response = $this->callAction($action);
+
+        // TODO: replace with 'print' action
+        if (PdkActions::EXPORT_AND_PRINT_ORDER === $action) {
+            (new OrderStatus())->updateOrderBarcode((array) $_GET['orderIds']);
+        }
 
         echo json_encode($response ?? null);
         die();
@@ -450,6 +452,50 @@ class ExportActions
     /**
      * Retrieves, updates and returns shipment data for given id.
      *
+     * @param array    $ids
+     * @param WC_Order $order
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function getShipmentData(array $ids, WC_Order $order): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        $data     = [];
+        $response = Pdk::execute(PdkActions::GET_ORDER_DATA, ['orderIds' => $ids]);
+
+        $shipments = Arr::get($response, "body.data.shipments");
+
+        if (! $shipments) {
+            return [];
+        }
+
+        foreach ($shipments as $shipment) {
+            if (! isset($shipment["id"])) {
+                return [];
+            }
+
+            // if shipment id matches and status is not concept, get track trace barcode and status name
+            $status        = $this->getShipmentStatusName($shipment["status"]);
+            $track_trace   = $shipment["barcode"] ?: $shipment['external_identifier'];
+            $shipment_id   = $shipment["id"];
+            $shipment_data = compact("shipment_id", "status", "track_trace", "shipment");
+            $this->saveShipmentData($order, $shipment_data);
+
+            ChannelEngine::updateMetaOnExport($order, $track_trace);
+
+            $data[$shipment_id] = $shipment_data;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Retrieves, updates and returns shipment data for given id.
+     *
      * @param  \MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection $shipmentCollection
      * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder                  $pdkOrder
      *
@@ -457,9 +503,9 @@ class ExportActions
      * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      * @throws \Exception
      */
-    public function getShipmentData(ShipmentCollection $shipmentCollection, PdkOrder $pdkOrder): array
+    public function getShipmentData2(array $ids, PdkOrder $pdkOrder): array
     {
-        if ($shipmentCollection->isEmpty()) {
+        if (! $ids) {
             return [];
         }
 
@@ -471,7 +517,7 @@ class ExportActions
             $this->saveShipmentData($wcOrder, $shipment->toArray());
             ChannelEngine::updateMetaOnExport(
                 $wcOrder,
-                $shipment->getAttribute('barcode') ?: $shipment->getAttribute('external_identifier')
+                $shipment->barcode ?: $shipment->externalIdentifier
             );
         }
 
