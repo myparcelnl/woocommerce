@@ -15,14 +15,18 @@ RUN apk update \
    && apk add --no-cache \
       nodejs>${NODE_VERSION} \
       npm \
-    && npm install -g yarn
+    && npm install -g yarn  \
+    && mkdir -p /home/www-data/.composer \
+    && chown -R www-data:www-data /home/www-data
 
-ENV YARN_CACHE_FOLDER=/usr/local/yarn-cache
+ENV YARN_CACHE_FOLDER=/home/www-data/yarn-cache
 
 # Create volume for yarn cache
 VOLUME /usr/local/yarn-cache
 
 # Create volume for composercache
-VOLUME /root/.composer/cache
+VOLUME /www-data/.composer/cache
+
+USER www-data
 
 CMD ["sh", "/app/private/entrypoint.sh"]
