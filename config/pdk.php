@@ -34,6 +34,6 @@ return [
     ClientAdapterInterface::class     => autowire(Guzzle7ClientAdapter::class),
     EndpointActionsInterface::class   => autowire(WooEndPointActions::class),
     LanguageServiceInterface::class   => autowire(LanguageService::class),
-    PdkLogger::class                  => autowire(WCMP_Log::class),
+    //AbstractLogger::class                  => autowire(PdkLogger::class),
     AbstractSettingsRepository::class => autowire(PdkSettingsRepository::class),
 ];

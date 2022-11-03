@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\includes\admin\OrderStatus;
 use MyParcelNL\Pdk\Base\PdkActions;
 use MyParcelNL\Pdk\Base\PdkEndpoint;
@@ -467,22 +468,22 @@ class ExportActions
         $data     = [];
         $response = Pdk::execute(PdkActions::GET_ORDER_DATA, ['orderIds' => $ids]);
 
-        $shipments = Arr::get($response, "body.data.shipments");
+        $shipments = Arr::get($response, 'body.data.shipments');
 
         if (! $shipments) {
             return [];
         }
 
         foreach ($shipments as $shipment) {
-            if (! isset($shipment["id"])) {
+            if (! isset($shipment['id'])) {
                 return [];
             }
 
             // if shipment id matches and status is not concept, get track trace barcode and status name
-            $status        = $this->getShipmentStatusName($shipment["status"]);
-            $track_trace   = $shipment["barcode"] ?: $shipment['external_identifier'];
-            $shipment_id   = $shipment["id"];
-            $shipment_data = compact("shipment_id", "status", "track_trace", "shipment");
+            $status        = $this->getShipmentStatusName($shipment['status']);
+            $track_trace   = $shipment['barcode'] ?: $shipment['external_identifier'];
+            $shipment_id   = $shipment['id'];
+            $shipment_data = compact('shipment_id', 'status', 'track_trace', 'shipment');
             $this->saveShipmentData($order, $shipment_data);
 
             ChannelEngine::updateMetaOnExport($order, $track_trace);
@@ -496,11 +497,10 @@ class ExportActions
     /**
      * Retrieves, updates and returns shipment data for given id.
      *
-     * @param  \MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection $shipmentCollection
-     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder                  $pdkOrder
+     * @param  array                                 $ids
+     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder $pdkOrder
      *
      * @return array
-     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
      * @throws \Exception
      */
     public function getShipmentData2(array $ids, PdkOrder $pdkOrder): array

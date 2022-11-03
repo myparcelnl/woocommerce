@@ -92,8 +92,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
-     * @param  \WC_Order $order
-     *
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
      * @throws \Exception
      */
