@@ -64,9 +64,10 @@ class OrderStatus
 
             $trackTraceArray = $this->getTrackTraceForOrder($lastShipmentIds, $order);
 
-            ExportActions::addTrackTraceNoteToOrder($orderId, $trackTraceArray);
+            ExportActions::addTrackTraceNoteToOrder((int) $orderId, $trackTraceArray);
 
-            self::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING);
+//            self::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING);
+            self::updateOrderStatus($order, 'after_printing');
         }
     }
 

@@ -103,14 +103,23 @@ class ExportActions
         $_GET['action'] = $_REQUEST['pdkAction'];
         $action         = $_GET['pdkAction'];
 
-        $response = $this->callAction($action);
+        try {
+            $response = $this->callAction($action);
+            echo json_encode($this->setFeedbackForClient([
+                'success' => sprintf(__('successfully_exported', 'woocommerce-myparcel'), implode(', ', (array) $_GET['orderIds'])),
+            ]));
+        } catch (Exception $e) {
+
+            echo json_encode($this->setFeedbackForClient([
+                'error' => 'Helaas pindakaas',
+            ]));
+        }
 
         // TODO: replace with 'print' action
         if (PdkActions::EXPORT_AND_PRINT_ORDER === $action) {
             (new OrderStatus())->updateOrderBarcode((array) $_GET['orderIds']);
         }
 
-        echo json_encode($response ?? null);
         die();
     }
 
@@ -125,7 +134,6 @@ class ExportActions
             /** @var \MyParcelNL\Pdk\Base\PdkEndpoint $endpoint */
             $endpoint = Pdk::get(PdkEndpoint::class);
             $response = $endpoint->call($action);
-            Messages::showAdminNotice('Joepie, het is gelukt', Messages::NOTICE_LEVEL_SUCCESS);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
             //WCMP_Log::add("$request: {$errorMessage}");
@@ -466,7 +474,7 @@ class ExportActions
         }
 
         $data     = [];
-        $response = Pdk::execute(PdkActions::GET_ORDER_DATA, ['orderIds' => $ids]);
+        $response = Pdk::execute(PdkActions::GET_ORDER_DATA, ['orderIds' => (array) $order->get_id()]);
 
         $shipments = Arr::get($response, 'body.data.shipments');
 
@@ -492,36 +500,6 @@ class ExportActions
         }
 
         return $data;
-    }
-
-    /**
-     * Retrieves, updates and returns shipment data for given id.
-     *
-     * @param  array                                 $ids
-     * @param  \MyParcelNL\Pdk\Plugin\Model\PdkOrder $pdkOrder
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function getShipmentData2(array $ids, PdkOrder $pdkOrder): array
-    {
-        if (! $ids) {
-            return [];
-        }
-
-        $wcOrder = wc_get_order($pdkOrder->externalIdentifier);
-
-        foreach ($shipmentCollection->all() as $shipment) {
-            // TODO: Convert PdkOrder to WC_Order
-
-            $this->saveShipmentData($wcOrder, $shipment->toArray());
-            ChannelEngine::updateMetaOnExport(
-                $wcOrder,
-                $shipment->barcode ?: $shipment->externalIdentifier
-            );
-        }
-
-        return $shipmentCollection->toArray();
     }
 
     /**

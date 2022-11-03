@@ -4,8 +4,8 @@
  * @property {
  *  {
  *    export: String,
- *    export_order: String,
- *    export_return: String,
+ *    exportOrder: String,
+ *    exportReturn: String,
  *    get_labels: String,
  *    modal_dialog: String
  *  }
@@ -777,17 +777,13 @@ jQuery(($) => {
    * @param {Event} event - Click event.
    */
   function onActionClick(event) {
-    const request = getParameterByName('request', this.href);
-    const orderIds = getParameterByName('order_ids', this.href);
-
-    if (!wcmp.actions.hasOwnProperty(request)) {
-      return;
-    }
+    const request = getParameterByName('pdkAction', this.href);
+    const orderIds = getParameterByName('orderIds', this.href);
 
     event.preventDefault();
 
     switch (request) {
-      case wcmp.actions.export_order:
+      case 'exportOrder':
         exportToMyParcel.bind(this)();
         break;
       case wcmp.actions.get_labels:
@@ -917,6 +913,8 @@ jQuery(($) => {
     let url;
     let data;
 
+    console.log('print')
+
     if (typeof print === 'undefined') {
       print = 'no';
     }
@@ -926,7 +924,7 @@ jQuery(($) => {
     } else {
       data = {
         action: wcmp.actions.export,
-        request: wcmp.actions.export_order,
+        request: wcmp.actions.exportOrder,
         offset: getPrintOffset(),
         order_ids: orderIds,
         print: print,

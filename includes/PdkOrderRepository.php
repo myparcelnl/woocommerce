@@ -104,7 +104,6 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'customsDeclaration'    => $this->getCustomsDeclaration(),
             'deliveryOptions'       => $deliveryOptions,
             'externalIdentifier'    => $this->order->get_id(),
-            'label'                 => $this->getLabelDescription($deliveryOptions),
             'lines'                 => $this->getOrderLines(),
             'orderPrice'            => $this->order->get_total(),
             'orderPriceAfterVat'    => $this->order->get_total() + $this->order->get_cart_tax(),
