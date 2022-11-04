@@ -6,7 +6,7 @@
  *    export: String,
  *    exportOrder: String,
  *    exportReturn: String,
- *    get_labels: String,
+ *    exportAndPrintOrder: String,
  *    modal_dialog: String
  *  }
  * } wcmp.actions
@@ -781,12 +781,14 @@ jQuery(($) => {
     const orderIds = getParameterByName('orderIds', this.href);
 
     event.preventDefault();
+    console.log(request);
 
     switch (request) {
       case 'exportOrder':
         exportToMyParcel.bind(this)();
         break;
-      case wcmp.actions.get_labels:
+      case 'exportAndPrintOrder':
+        console.log('hallo')
         if (askForPrintPosition && !$(this).hasClass('wcmp__offset-dialog__button')) {
           showOffsetDialog.bind(this)();
         } else {

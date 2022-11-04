@@ -647,8 +647,8 @@ class WCMYPA_Admin
     }
 
     /**
-     * @param  PdkOrder            $pdkOrder
-     * @param  \PdkOrderRepository $orderRepository
+     * @param  PdkOrder                                   $pdkOrder
+     * @param  \MyParcelNL\WooCommerce\PdkOrderRepository $orderRepository
      *
      * @return array|array[]
      * @throws \JsonException
@@ -667,7 +667,7 @@ class WCMYPA_Admin
         }
 
         if (empty($consignments) || WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-            unset($listingActions[ExportActions::GET_LABELS]);
+            unset($listingActions[PdkActions::EXPORT_AND_PRINT_ORDER]);
         }
 
         if (empty($consignments) || Data::DEFAULT_COUNTRY_CODE !== $shippingCountry) {
