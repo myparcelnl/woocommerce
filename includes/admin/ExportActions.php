@@ -117,10 +117,18 @@ class ExportActions
                 'success' => sprintf(__('successfully_exported', 'woocommerce-myparcel'), implode(', ', $orderIds)),
             ]));
         } catch (Exception $e) {
-
             echo json_encode($this->setFeedbackForClient([
                 'error' => 'Helaas pindakaas',
             ]));
+        }
+
+        // TODO: replace with 'print' action
+        switch ($action) {
+            case PdkActions::EXPORT_AND_PRINT_ORDER:
+                (new OrderStatus())->updateOrderBarcode((array) $_GET['orderIds']);
+                break;
+            case PdkActions::EXPORT_ORDER:
+                break;
         }
 
         die();
