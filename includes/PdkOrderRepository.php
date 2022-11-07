@@ -137,7 +137,10 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'pickupLocation'  => [
                 'location_code' => 'NL',
             ],
-            'shipmentOptions' => (array) $deliveryOptions->getShipmentOptions(),
+            'shipmentOptions' => $deliveryOptions->getShipmentOptions()
+                ? $deliveryOptions->getShipmentOptions()
+                    ->toArray()
+                : [],
         ]);
     }
 
@@ -295,7 +298,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $shippingMethod   = array_shift($shippingMethods);
         $shippingMethodId = $shippingMethod ? $shippingMethod->get_method_id() : null;
 
-        return WCMP_Shipping_Methods::LOCAL_PICKUP === $shippingMethodId;
+        return WCMP_Shipping_Methods::LOCAL_PICKUP===$shippingMethodId;
     }
 
     /**
@@ -314,8 +317,10 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         ) ?: null;
         $weight          = (float) ($savedWeight ?? $defaultWeight ?? $orderWeight);
 
-        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $deliveryOptions->getPackageType()) {
-            $weight += (float) WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT);
+        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME===$deliveryOptions->getPackageType()) {
+            $weight += (float) WCMYPA()->settingCollection->getByName(
+                WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
+            );
         }
 
         return WeightService::convertToDigitalStamp((int) $weight);
@@ -347,7 +352,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     {
         $weight = $this->getExtraOptions()['weight'] ?? null;
 
-        if (null === $weight && $this->order->meta_exists(WCMYPA_Admin::META_ORDER_WEIGHT)) {
+        if (null===$weight && $this->order->meta_exists(WCMYPA_Admin::META_ORDER_WEIGHT)) {
             $weight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
         }
 
