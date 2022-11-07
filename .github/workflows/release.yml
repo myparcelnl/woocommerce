@@ -47,7 +47,7 @@ jobs:
           token: ${{ secrets.GH_REPO_TOKEN }}
 
       - name: 'Create dist folder'
-        if: steps.release.outputs.released == true
+        if: steps.release.outputs.released == 'true'
         run: |
           bash ./private/bash/createDistFolder.sh ${{ env.BUILD_DIR }}
 
