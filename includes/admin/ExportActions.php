@@ -102,22 +102,25 @@ class ExportActions
 
         $_GET['action'] = $_REQUEST['pdkAction'];
         $action         = $_GET['pdkAction'];
+        $orderIds       = (array) $_GET['orderIds'];
 
         try {
-            $response = $this->callAction($action);
+            $this->callAction($action);
+            $this->getShipmentData($orderIds);
+
+            // TODO: replace with 'print' action
+//            if (PdkActions::EXPORT_AND_PRINT_ORDER === $action) {
+                (new OrderStatus())->updateOrderBarcode($orderIds);
+//            }
+
             echo json_encode($this->setFeedbackForClient([
-                'success' => sprintf(__('successfully_exported', 'woocommerce-myparcel'), implode(', ', (array) $_GET['orderIds'])),
+                'success' => sprintf(__('successfully_exported', 'woocommerce-myparcel'), implode(', ', $orderIds)),
             ]));
         } catch (Exception $e) {
 
             echo json_encode($this->setFeedbackForClient([
                 'error' => 'Helaas pindakaas',
             ]));
-        }
-
-        // TODO: replace with 'print' action
-        if (PdkActions::EXPORT_AND_PRINT_ORDER === $action) {
-            (new OrderStatus())->updateOrderBarcode((array) $_GET['orderIds']);
         }
 
         die();
@@ -461,20 +464,20 @@ class ExportActions
     /**
      * Retrieves, updates and returns shipment data for given id.
      *
-     * @param array    $ids
+     * @param array    $orderIds
      * @param WC_Order $order
      *
      * @return array
      * @throws Exception
      */
-    public function getShipmentData(array $ids, WC_Order $order): array
+    public function getShipmentData(array $orderIds): array
     {
-        if (empty($ids)) {
+        if (empty($orderIds)) {
             return [];
         }
 
         $data     = [];
-        $response = Pdk::execute(PdkActions::GET_ORDER_DATA, ['orderIds' => (array) $order->get_id()]);
+        $response = Pdk::execute(PdkActions::GET_ORDER_DATA, ['orderIds' => $orderIds]);
 
         $shipments = Arr::get($response, 'body.data.shipments');
 
