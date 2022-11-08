@@ -20,9 +20,11 @@ use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Shipment\Service\DeliveryDateService;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
+use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\WooCommerce\Helper\ExportRow;
+use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormatter;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use WC_Order;
 use WC_Order_Item;
@@ -87,7 +89,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     public function update(PdkOrder $order): PdkOrder
     {
-        $this->save('myparcel_order_id', $order->externalIdentifier);
+        $this->save($order->externalIdentifier, $order);
         return $order;
     }
 
@@ -137,10 +139,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'pickupLocation'  => [
                 'location_code' => 'NL',
             ],
-            'shipmentOptions' => $deliveryOptions->getShipmentOptions()
-                ? $deliveryOptions->getShipmentOptions()
-                    ->toArray()
-                : [],
+            'shipmentOptions' => $this->getShipmentOptions($deliveryOptions),
         ]);
     }
 
@@ -238,11 +237,12 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     /**
      * @return void
      */
-    public function getLabelDescription($deliveryOptions): string
+    public function getLabelDescription(AbstractDeliveryOptionsAdapter $deliveryOptions): string
     {
         $defaultValue     = sprintf('Order: %s', $this->order->get_id());
         $valueFromSetting = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_LABEL_DESCRIPTION);
-        $valueFromOrder   = $deliveryOptions['shipmentOptions']['labelDescription'];
+        $valueFromOrder   = $deliveryOptions->getShipmentOptions()
+            ->getLabelDescription();
 
         return (string) ($valueFromOrder ?? $valueFromSetting ?? $defaultValue);
     }
@@ -298,7 +298,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $shippingMethod   = array_shift($shippingMethods);
         $shippingMethodId = $shippingMethod ? $shippingMethod->get_method_id() : null;
 
-        return WCMP_Shipping_Methods::LOCAL_PICKUP===$shippingMethodId;
+        return WCMP_Shipping_Methods::LOCAL_PICKUP === $shippingMethodId;
     }
 
     /**
@@ -317,7 +317,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         ) ?: null;
         $weight          = (float) ($savedWeight ?? $defaultWeight ?? $orderWeight);
 
-        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME===$deliveryOptions->getPackageType()) {
+        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $deliveryOptions->getPackageType()) {
             $weight += (float) WCMYPA()->settingCollection->getByName(
                 WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
             );
@@ -352,7 +352,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     {
         $weight = $this->getExtraOptions()['weight'] ?? null;
 
-        if (null===$weight && $this->order->meta_exists(WCMYPA_Admin::META_ORDER_WEIGHT)) {
+        if (null === $weight && $this->order->meta_exists(WCMYPA_Admin::META_ORDER_WEIGHT)) {
             $weight = $this->order->get_meta(WCMYPA_Admin::META_ORDER_WEIGHT);
         }
 
@@ -366,5 +366,25 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     public function getColloAmount(): int
     {
         return (int) ($this->getExtraOptions()['collo_amount'] ?? 1);
+    }
+
+    /**
+     * @param  \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
+     *
+     * @return array
+     */
+    private function getShipmentOptions(AbstractDeliveryOptionsAdapter $deliveryOptions): array
+    {
+        $shipmentOptions = $deliveryOptions->getShipmentOptions()
+            ? $deliveryOptions->getShipmentOptions()
+                ->toArray()
+            : [];
+
+        $labelDescription                     = $this->getLabelDescription($deliveryOptions);
+        $shipmentOptions['label_description'] = (new LabelDescriptionFormatter(
+            $this->order, $labelDescription, $deliveryOptions
+        ))->getFormattedLabelDescription();
+
+        return $shipmentOptions;
     }
 }

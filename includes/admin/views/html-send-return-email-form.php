@@ -80,7 +80,7 @@ $target_url = wp_nonce_url(
                                         <?php foreach ($order->get_items() as $item_id => $item) : ?>
                                             <tr>
                                                 <td><?php echo $item['qty'] . 'x'; ?></td>
-                                                <td><?php echo ExportActions::get_item_display_name($item, $order) ?></td>
+                                                <td><?php echo ExportActions::getItemDisplayName($item, $order) ?></td>
                                                 <td class="wcmp__text--right">
                                                     <?php
 

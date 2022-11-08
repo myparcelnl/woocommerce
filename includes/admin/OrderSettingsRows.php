@@ -206,7 +206,7 @@ class OrderSettingsRows
             'name'  => self::OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION,
             'type'  => 'text',
             'label' => __('Custom ID (top left on label)', 'woocommerce-myparcel'),
-            'value' => $orderRepository->getLabelDescription($pdkOrder->deliveryOptions),
+            'value' => $orderRepository->getLabelDescription($this->deliveryOptions),
         ];
 
         return $rows;

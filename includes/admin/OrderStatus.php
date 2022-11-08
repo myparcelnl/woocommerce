@@ -54,20 +54,23 @@ class OrderStatus
      */
     public function updateOrderBarcode(array $orderIds): void
     {
-        foreach ($orderIds as $orderId) {
-            $order           = WC_Core::get_order($orderId);
-            $lastShipmentIds = WCX_Order::get_meta($order, WCMYPA_Admin::META_LAST_SHIPMENT_IDS);
+        $orderRepository = Pdk::get(PdkOrderRepository::class);
 
-            if (empty($lastShipmentIds)) {
+        foreach ($orderIds as $orderId) {
+            /** @var \MyParcelNL\Pdk\Plugin\Model\PdkOrder $order */
+            $order = $orderRepository->get($orderId);
+            $shipments = $order->shipments;
+
+            if ($shipments->isEmpty()) {
                 continue;
             }
 
-            $trackTraceArray = $this->getTrackTraceForOrder($lastShipmentIds, $order);
+            $trackTraceArray = $shipments->pluck('barcode')->toArray();
 
             ExportActions::addTrackTraceNoteToOrder((int) $orderId, $trackTraceArray);
 
 //            self::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING);
-            self::updateOrderStatus($order, 'after_printing');
+            self::updateOrderStatus(wc_get_order($orderId), 'after_printing');
         }
     }
 

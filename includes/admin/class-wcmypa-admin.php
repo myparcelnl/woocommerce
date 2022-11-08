@@ -59,16 +59,15 @@ class WCMYPA_Admin
      * @deprecated use weight property in META_SHIPMENT_OPTIONS_EXTRA.
      */
     public const META_ORDER_WEIGHT = '_myparcel_order_weight';
-
     // Ids referring to shipment statuses.
     public const ORDER_STATUS_DELIVERED_AT_RECIPIENT      = 7;
     public const ORDER_STATUS_DELIVERED_READY_FOR_PICKUP  = 8;
     public const ORDER_STATUS_DELIVERED_PACKAGE_PICKED_UP = 9;
     public const ORDER_STATUS_PRINTED_LETTER              = 12;
     public const ORDER_STATUS_PRINTED_DIGITAL_STAMP       = 14;
-    public const SHIPMENT_OPTIONS_FORM_NAME = 'myparcel_options';
-    public const PRODUCT_OPTIONS_ENABLED  = 'yes';
-    public const PRODUCT_OPTIONS_DISABLED = 'no';
+    public const SHIPMENT_OPTIONS_FORM_NAME               = 'myparcel_options';
+    public const PRODUCT_OPTIONS_ENABLED                  = 'yes';
+    public const PRODUCT_OPTIONS_DISABLED                 = 'no';
 
     public function __construct()
     {
@@ -131,7 +130,8 @@ class WCMYPA_Admin
     {
         global $typenow;
 
-        if ((apply_filters('deliveryDayFilter', true)) && in_array(
+        if ((apply_filters('deliveryDayFilter', true))
+            && in_array(
                 $typenow,
                 wc_get_order_types('order-meta-boxes'),
                 true
@@ -380,7 +380,7 @@ class WCMYPA_Admin
     {
         try {
             $orderRepository = (Pdk::get(PdkOrderRepository::class));
-            $pdkOrder = $orderRepository->get($order);
+            $pdkOrder        = $orderRepository->get($order);
         } catch (Exception $exception) {
             WCMP_Log::add(sprintf('Could not get OrderSettings for order %d', $order->get_id()), $exception);
             printf(
@@ -626,7 +626,7 @@ class WCMYPA_Admin
         }
 
         $orderRepository = (Pdk::get(PdkOrderRepository::class));
-        $pdkOrder = $orderRepository->get($order);
+        $pdkOrder        = $orderRepository->get($order);
         $shippingCountry = WCX_Order::get_prop($order, 'shipping_country');
 
         if (! CountryCodes::isAllowedDestination($shippingCountry)) {
@@ -766,8 +766,8 @@ class WCMYPA_Admin
     }
 
     /**
-     * @param  PdkOrder $order
-     * @param  bool     $exclude_concepts
+     * @param  \WC_Order $order
+     * @param  bool      $exclude_concepts
      *
      * @return array
      * @throws \JsonException
@@ -828,7 +828,6 @@ class WCMYPA_Admin
         parse_str($_POST['form_data'], $form_data);
 
         foreach ($form_data[self::SHIPMENT_OPTIONS_FORM_NAME] as $order_id => $data) {
-          $order =
             $order = WCX::get_order($order_id);
             $data  = self::removeDisallowedDeliveryOptions($data, $order->get_shipping_country());
 
@@ -854,6 +853,7 @@ class WCMYPA_Admin
 
     /**
      * Add the meta box on the single order page
+     *
      * @return void
      */
     public function add_order_meta_box(): void
@@ -883,7 +883,7 @@ class WCMYPA_Admin
             return;
         }
 
-        $order_id = WCX_Order::get_id($order);
+        $orderId = WCX_Order::get_id($order);
 
         $shipping_country = WCX_Order::get_prop($order, 'shipping_country');
         if (! CountryCodes::isAllowedDestination($shipping_country)) {
@@ -1181,7 +1181,7 @@ class WCMYPA_Admin
         // $meta is a json string, create an instance
         if (! empty($meta) && ! $meta instanceof DeliveryOptionsAdapter) {
             if (is_string($meta)) {
-                $meta = json_decode(stripslashes($meta), true, 512, JSON_THROW_ON_ERROR);
+                $meta = json_decode(stripslashes($meta), true);
             }
 
             if (self::OLD_RED_JE_PAKKETJE_NAME === $meta['carrier']) {
