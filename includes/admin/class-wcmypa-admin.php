@@ -713,6 +713,7 @@ class WCMYPA_Admin
     {
         $exportOrder      = PdkActions::EXPORT_ORDER;
         $exportPrintOrder = PdkActions::EXPORT_AND_PRINT_ORDER;
+        $printOrder       = PdkActions::PRINT_ORDER;
         $addReturn        = 'return';
         $pluginUrl        = WCMYPA()->plugin_url();
         $baseUrl          = 'admin-ajax.php?action=' . ExportActions::ACTION_NAME;
@@ -723,8 +724,8 @@ class WCMYPA_Admin
                 'img' => "{$pluginUrl}/assets/img/export.svg",
                 'alt' => __('action_export_to_myparcel', 'woocommerce-myparcel'),
             ],
-            $exportPrintOrder => [
-                'url' => admin_url("$baseUrl&pdkAction=$exportPrintOrder&orderIds=$orderId"),
+            $printOrder => [
+                'url' => admin_url("$baseUrl&pdkAction=$printOrder&orderIds=$orderId"),
                 'img' => "{$pluginUrl}/assets/img/print.svg",
                 'alt' => __('action_print_myparcel_label', 'woocommerce-myparcel'),
             ],

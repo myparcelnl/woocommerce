@@ -7,6 +7,7 @@
  *    exportOrder: String,
  *    exportReturn: String,
  *    exportAndPrintOrder: String,
+ *    printOrder: String,
  *    modal_dialog: String
  *  }
  * } wcmp.actions
@@ -794,6 +795,9 @@ jQuery(($) => {
         } else {
           printLabel.bind(this)();
         }
+        break;
+      case 'printOrder':
+        printLabel.bind(this)();
         break;
       case wcmp.actions.export_return:
         showDialog(orderIds, 'return', request);

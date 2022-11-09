@@ -93,7 +93,11 @@ class OrderSettingsRows
      */
     private $order;
 
-    public function __construct(        AbstractDeliveryOptionsAdapter $deliveryOptions, WC_Order $order) {
+    /**
+     * @param  \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
+     * @param  \WC_Order                                                                  $order
+     */
+    public function __construct(AbstractDeliveryOptionsAdapter $deliveryOptions, WC_Order $order) {
         $this->deliveryOptions = $deliveryOptions;
         $this->order = $order;
     }
