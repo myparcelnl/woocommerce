@@ -915,8 +915,6 @@ jQuery(($) => {
     let url;
     let data;
 
-    console.log('print')
-
     if (typeof print === 'undefined') {
       print = 'no';
     }
@@ -925,7 +923,8 @@ jQuery(($) => {
       url = this.href;
     } else {
       data = {
-        action: wcmp.actions.export,
+        action: 'MyParcelPdk',
+        pdkAction: 'exportOrder',
         request: wcmp.actions.exportOrder,
         offset: getPrintOffset(),
         order_ids: orderIds,
@@ -1014,6 +1013,16 @@ jQuery(($) => {
     return parseInt(askForPrintPosition ? $(selectors.offsetDialogInputOffset).val() : 0);
   }
 
+  function downloadPDF(pdf) {
+    const linkSource = `data:application/pdf;base64,${pdf}`;
+    const downloadLink = document.createElement('a');
+    const date = new Date();
+    const fileName = 'myparcel-label-' + date.getTime() + '.pdf';
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
+  }
+
   /**
    * Request MyParcel labels.
    *
@@ -1029,8 +1038,9 @@ jQuery(($) => {
     } else {
       request = {
         data: {
-          action: wcmp.actions.export,
-          request: wcmp.actions.get_labels,
+          action: 'MyParcelPdk',
+          pdkAction: 'printOrder',
+          request: 'printOrder',
           offset: getPrintOffset(),
           _wpnonce: wcmp.nonce,
           ...data,
@@ -1038,19 +1048,26 @@ jQuery(($) => {
       };
     }
 
-    addCallback(request, 'afterDone', (response) => {
-      const isDisplay = wcmp.download_display === 'display';
-      const isDownload = wcmp.download_display === 'download';
-      const isPdf = response.includes('PDF');
-      const isApi = response.includes('myparcel.nl/pdfs/');
+    console.log(request);
 
-      if (isDisplay && isPdf) {
-        handlePDF(request);
-      } else if (isDownload && isApi) {
-        openPdf(response);
-      } else {
-        window.location.reload();
-      }
+    addCallback(request, 'afterDone', (response) => {
+      var pdfdata = JSON.parse(response);
+      downloadPDF(pdfdata.pdf)
+      window.location.reload();
+      // const pdf = atob(pdfdata.pdf);
+      // const isDisplay = wcmp.download_display === 'display';
+      // const isDownload = wcmp.download_display === 'download';
+      // console.log(request);
+      // const isPdf = response.includes('pdf');
+      // const isApi = response.includes('myparcel.nl/pdfs/');
+
+      // if (isDisplay && isPdf) {
+      //   handlePDF(request);
+      // } else if (isDownload && isApi) {
+      //   openPdf(pdf);
+      // } else {
+      //   // window.location.reload();
+      // }
     });
 
     doRequest.bind(this)(request);

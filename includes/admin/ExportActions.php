@@ -100,16 +100,22 @@ class ExportActions
     {
         $this->permissionChecks();
 
-        $_GET['action'] = $_REQUEST['pdkAction'];
-        $action         = $_GET['pdkAction'];
+        $action = $_REQUEST['pdkAction'];
+
+        if ($action === 'exportAndPrintOrder'){
+            $action = 'printOrder';
+        }
         $orderIds       = (array) $_GET['orderIds'];
 
         try {
-            $this->callAction($action, $orderIds);
+            $response = $this->callAction($action, $orderIds);
+
+            $var1 = json_decode($response->getContent(), true);
 
             echo json_encode(
                 $this->setFeedbackForClient([
-                    'success' => sprintf(__('successfully_exported', 'woocommerce-myparcel'), implode(', ', $orderIds)),
+//                    'success' => sprintf(__('successfully_exported', 'woocommerce-myparcel'), implode(', ', $orderIds)),
+                    'pdf' => $var1['data']['link'],
                 ])
             );
         } catch (Exception $e) {
@@ -495,7 +501,7 @@ class ExportActions
             return [];
         }
 
-        foreach ($shipments as $orderId => $shipment) {
+        foreach ($shipments as $shipment) {
             if (! $shipment->id) {
                 return [];
             }
@@ -505,10 +511,10 @@ class ExportActions
                 'shipment_id' => $shipment->id,
                 'status' => $this->getShipmentStatusName($shipment->status),
                 'track_trace' => $trackTrace,
-                'shipment' => $shipment
+                'shipment' => $shipment->toArray(),
             ];
 
-            $order = wc_get_order($orderId);
+            $order = wc_get_order($shipment->referenceIdentifier);
 
             $this->saveShipmentData($order, $shipmentData);
 

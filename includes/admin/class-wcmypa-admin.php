@@ -456,12 +456,12 @@ class WCMYPA_Admin
     {
         $exportMode  = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_EXPORT_MODE);
         $returnValue = [
-            self::BULK_ACTION_EXPORT => __('myparcel_bulk_action_export', 'woocommerce-myparcel'),
+            PdkActions::EXPORT_ORDER => __('myparcel_bulk_action_export', 'woocommerce-myparcel'),
         ];
 
         if (WCMP_Settings_Data::EXPORT_MODE_SHIPMENTS === $exportMode) {
-            $returnValue[self::BULK_ACTION_PRINT]        = __('myparcel_bulk_action_print', 'woocommerce-myparcel');
-            $returnValue[self::BULK_ACTION_EXPORT_PRINT] = __(
+            $returnValue[PdkActions::PRINT_ORDER]            = __('myparcel_bulk_action_print', 'woocommerce-myparcel');
+            $returnValue[PdkActions::EXPORT_AND_PRINT_ORDER] = __(
                 'myparcel_bulk_action_export_print',
                 'woocommerce-myparcel'
             );

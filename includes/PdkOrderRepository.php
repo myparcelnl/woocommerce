@@ -15,9 +15,11 @@ use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrderLine;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
 use MyParcelNL\Pdk\Shipment\Collection\CustomsDeclarationItemCollection;
+use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclaration;
 use MyParcelNL\Pdk\Shipment\Model\CustomsDeclarationItem;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Shipment\Service\DeliveryDateService;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
@@ -32,6 +34,7 @@ use WCMP_Log;
 use WCMP_Shipping_Methods;
 use WCMYPA_Admin;
 use WCMYPA_Settings;
+use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 
 class PdkOrderRepository extends AbstractPdkOrderRepository
 {
@@ -94,12 +97,36 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
     }
 
     /**
+     * @return array|mixed|string
+     * @throws \JsonException
+     */
+    private function generateShipmentsForOrder()
+    {
+        $shipments = WCX_Order::get_meta($this->order, WCMYPA_Admin::META_SHIPMENTS);
+
+        if (! $shipments) {
+            return null;
+        }
+
+        $shipmentCollection = new ShipmentCollection();
+
+        foreach ($shipments as $shipmentId => $shipmenData) {
+            if ($shipmenData['shipment']) {
+                $shipmentCollection->push(new Shipment($shipmenData['shipment']));
+            }
+        }
+
+        return $shipmentCollection;
+    }
+
+    /**
      * @return \MyParcelNL\Pdk\Plugin\Model\PdkOrder
      * @throws \Exception
      */
     private function getDataFromOrder(): PdkOrder
     {
         $deliveryOptions = $this->getDeliveryOptions();
+
         return new PdkOrder([
             'orderDate'             => $this->order->get_date_created()
                 ->getTimestamp(),
@@ -113,6 +140,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'recipient'             => $this->getShippingRecipient(),
             'shipmentPrice'         => (float) $this->order->get_shipping_total(),
             'shipmentPriceAfterVat' => (float) $this->order->get_shipping_total(),
+            'shipments'             => $this->generateShipmentsForOrder(),
             'shipmentVat'           => (float) $this->order->get_shipping_tax(),
             'totalPrice'            => (float) $this->order->get_shipping_total() + $this->order->get_total(),
             'totalPriceAfterVat'    => ($this->order->get_total() + $this->order->get_cart_tax(
