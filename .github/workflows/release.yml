@@ -12,8 +12,6 @@ jobs:
     env:
       ASSETS_DIR: ./.wordpress-assets
       BUILD_DIR: ./.wordpress-dist
-    outputs:
-      released: ${{ steps.release.outputs.released }}
     steps:
       - uses: actions/cache@v3
         with:
@@ -52,7 +50,7 @@ jobs:
           bash ./private/bash/createDistFolder.sh ${{ env.BUILD_DIR }}
 
       - name: 'Deploy using svn'
-        if: steps.release.outputs.released == true
+        if: steps.release.outputs.released == 'true'
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
