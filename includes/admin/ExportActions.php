@@ -100,41 +100,39 @@ class ExportActions
     {
         $this->permissionChecks();
 
-        $action = $_REQUEST['pdkAction'];
-
-        if ($action === 'exportAndPrintOrder'){
-            $action = 'printOrder';
-        }
-        $orderIds       = (array) $_GET['orderIds'];
+        $action   = $_REQUEST['pdkAction'];
+        $orderIds = (array) $_GET['orderIds'];
 
         try {
             $response = $this->callAction($action, $orderIds);
-
-            $var1 = json_decode($response->getContent(), true);
-
-            echo json_encode(
-                $this->setFeedbackForClient([
-//                    'success' => sprintf(__('successfully_exported', 'woocommerce-myparcel'), implode(', ', $orderIds)),
-                    'pdf' => $var1['data']['link'],
-                ])
-            );
         } catch (Exception $e) {
             echo json_encode(
                 $this->setFeedbackForClient([
                     'error' => 'Helaas pindakaas',
-                ])
+                ]),
+                JSON_THROW_ON_ERROR
             );
         }
 
-        // TODO: replace with 'print' action
+        $return = [];
         switch ($action) {
-            case PdkActions::EXPORT_AND_PRINT_ORDER:
-                (new OrderStatus())->updateOrderBarcode($orderIds);
-                break;
             case PdkActions::EXPORT_ORDER:
+                (new OrderStatus())->updateOrderBarcode($orderIds);
+                $return = [
+                    'success' => sprintf(__('successfully_exported', 'woocommerce-myparcel'), implode(', ', $orderIds))
+                ];
+                break;
+            case PdkActions::PRINT_ORDER:
+                if (isset($response)) {
+                    $return = [
+                        'success' => sprintf(__('successfully_printed', 'woocommerce-myparcel'), implode(', ', $orderIds)),
+                        'pdf' => json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR)['data']['link'],
+                        ];
+                }
                 break;
         }
 
+        echo json_encode($this->setFeedbackForClient($return), JSON_THROW_ON_ERROR);
         die();
     }
 
