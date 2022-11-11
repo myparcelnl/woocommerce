@@ -9,8 +9,9 @@ jobs:
   release:
     name: 'Build and publish 🚀'
     runs-on: ubuntu-22.04
-    outputs:
-      released: ${{ steps.release.outputs.released }}
+    env:
+      ASSETS_DIR: ./.wordpress-assets
+      BUILD_DIR: ./.wordpress-dist
     steps:
       - uses: actions/cache@v3
         with:
@@ -43,12 +44,20 @@ jobs:
         with:
           token: ${{ secrets.GH_REPO_TOKEN }}
 
-  deploy-svn:
-    name: 'Deploy with svn'
-    needs: release
-    if: needs.release.outputs.released == 'true'
-    uses: ./.github/workflows/svn-deploy.yml
-    secrets: inherit
+      - name: 'Create dist folder'
+        if: steps.release.outputs.released == 'true'
+        run: |
+          bash ./private/bash/createDistFolder.sh ${{ env.BUILD_DIR }}
+
+      - name: 'Deploy using svn'
+        if: steps.release.outputs.released == 'true'
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          ASSETS_DIR: ${{ env.ASSETS_DIR }}
+          BUILD_DIR: ${{ env.BUILD_DIR }}
+          SLUG: woocommerce-myparcel
 
   rebase-develop:
     name: 'Rebase develop onto main'
