@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-use MyParcelNL\Sdk\src\Support\Arr;
+use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
+use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
 use MyParcelNL\WooCommerce\includes\admin\OrderStatus;
 use MyParcelNL\Pdk\Base\PdkActions;
 use MyParcelNL\Pdk\Base\PdkEndpoint;
@@ -101,7 +102,8 @@ class ExportActions
         $this->permissionChecks();
 
         $action   = $_REQUEST['pdkAction'];
-        $orderIds = (array) $_GET['orderIds'];
+
+        $orderIds = (array) $_GET['orderIds'] ?: $_REQUEST['order_ids'];
 
         try {
             $response = $this->callAction($action, $orderIds);
@@ -109,30 +111,32 @@ class ExportActions
             echo json_encode(
                 $this->setFeedbackForClient([
                     'error' => 'Helaas pindakaas',
-                ]),
-                JSON_THROW_ON_ERROR
+                ])
             );
         }
 
         $return = [];
         switch ($action) {
             case PdkActions::EXPORT_ORDER:
-                (new OrderStatus())->updateOrderBarcode($orderIds);
                 $return = [
                     'success' => sprintf(__('successfully_exported', 'woocommerce-myparcel'), implode(', ', $orderIds))
                 ];
                 break;
             case PdkActions::PRINT_ORDER:
                 if (isset($response)) {
+                    (new OrderStatus())->updateOrderBarcode($orderIds);
                     $return = [
-                        'success' => sprintf(__('successfully_printed', 'woocommerce-myparcel'), implode(', ', $orderIds)),
-                        'pdf' => json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR)['data']['link'],
-                        ];
+                        'success' => sprintf(
+                            __('successfully_printed', 'woocommerce-myparcel'),
+                            implode(', ', $orderIds)
+                        ),
+                        'pdf'     => json_decode($response->getContent(), true)['data']['link'],
+                    ];
                 }
                 break;
         }
 
-        echo json_encode($this->setFeedbackForClient($return), JSON_THROW_ON_ERROR);
+        echo json_encode($this->setFeedbackForClient($return));
         die();
     }
 
@@ -150,7 +154,6 @@ class ExportActions
             $response = $endpoint->call($action);
 
             $this->getShipmentData($orderIds);
-            (new OrderStatus())->updateOrderBarcode($orderIds);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
             //WCMP_Log::add("$request: {$errorMessage}");
@@ -494,12 +497,14 @@ class ExportActions
         $orderRepository = Pdk::get(PdkOrderRepository::class);
         $orders = $orderRepository->getMany($orderIds);
         $shipments = $orders->getLastShipments();
+        $shipmentRepository = Pdk::get(ShipmentRepository::class);
+        $fetchedShipments = new ShipmentCollection($shipmentRepository->getByReferenceIdentifiers($orderIds)->last());
 
         if (! $shipments) {
             return [];
         }
 
-        foreach ($shipments as $shipment) {
+        foreach ($fetchedShipments as $shipment) {
             if (! $shipment->id) {
                 return [];
             }

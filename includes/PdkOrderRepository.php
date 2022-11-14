@@ -111,7 +111,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         $shipmentCollection = new ShipmentCollection();
 
         foreach ($shipments as $shipmentId => $shipmenData) {
-            if ($shipmenData['shipment']) {
+            if (isset($shipmenData['shipment'])) {
                 $shipmentCollection->push(new Shipment($shipmenData['shipment']));
             }
         }
@@ -164,9 +164,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'labelAmount'     => 1,
             'packageType'     => $deliveryOptions->getPackageType(),
             //            'pickupLocation'  => (array) $deliveryOptions->getPickupLocation(),
-            'pickupLocation'  => [
-                'location_code' => 'NL',
-            ],
+//            'pickupLocation'  => null,
             'shipmentOptions' => $this->getShipmentOptions($deliveryOptions),
         ]);
     }

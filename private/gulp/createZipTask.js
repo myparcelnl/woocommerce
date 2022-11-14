@@ -2,6 +2,7 @@ function createZipTask(gulp, plugins) {
   return () => gulp.src([
     'LICENSE',
     'assets/**/*',
+    'config/**',
     'includes/**/*',
     'languages/**/*',
     'migration/**/*',
