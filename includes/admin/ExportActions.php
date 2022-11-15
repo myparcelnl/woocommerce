@@ -101,16 +101,18 @@ class ExportActions
     {
         $this->permissionChecks();
 
-        $action   = $_REQUEST['pdkAction'];
+        $action = $_REQUEST['pdkAction'];
 
-        $orderIds = (array) $_GET['orderIds'] ?: $_REQUEST['order_ids'];
+        $_GET['orderIds'] = $_GET['orderIds'] ?: $_REQUEST['order_ids'];
+
+        $orderIds = (array) $_GET['orderIds'];
 
         try {
             $response = $this->callAction($action, $orderIds);
         } catch (Exception $e) {
             echo json_encode(
                 $this->setFeedbackForClient([
-                    'error' => 'Helaas pindakaas',
+                    'error' => $e->getMessage(),
                 ])
             );
         }
@@ -119,19 +121,37 @@ class ExportActions
         switch ($action) {
             case PdkActions::EXPORT_ORDER:
                 $return = [
-                    'success' => sprintf(__('successfully_exported', 'woocommerce-myparcel'), implode(', ', $orderIds))
+                    'success' => sprintf(__('successfully_exported', 'woocommerce-myparcel'), implode(', ', $orderIds)),
                 ];
                 break;
             case PdkActions::PRINT_ORDER:
                 if (isset($response)) {
                     (new OrderStatus())->updateOrderBarcode($orderIds);
-                    $return = [
-                        'success' => sprintf(
-                            __('successfully_printed', 'woocommerce-myparcel'),
-                            implode(', ', $orderIds)
-                        ),
-                        'pdf'     => json_decode($response->getContent(), true)['data']['link'],
-                    ];
+                    $displaySetting = WCMYPA()->settingCollection->getByName('download_display');
+                    $display        = $displaySetting === 'display';
+                    $parsedResponse = json_decode($response->getContent(), true)['data'];
+
+                    if ($display) {
+                        $pdf = base64_decode(json_decode($response->getContent(), true)['data']['pdf']);
+
+                        header('Content-Type: application/pdf');
+                        header('Content-Length: ' . strlen($pdf));
+                        header('Content-disposition: inline; filename="pietje' . gmdate('Y-M-d H-i-s') . '.pdf"');
+                        header('Cache-Control: public, must-revalidate, max-age=0');
+                        header('Pragma: public');
+                        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+                        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+
+                        $return = $pdf;
+                    } else {
+                        $return = [
+                            'success' => sprintf(
+                                __('successfully_printed', 'woocommerce-myparcel'),
+                                implode(', ', $orderIds)
+                            ),
+                            'link'     => $parsedResponse['link'],
+                        ];
+                    }
                 }
                 break;
         }
@@ -493,12 +513,22 @@ class ExportActions
             return [];
         }
 
-        $data     = [];
+        $data            = [];
         $orderRepository = Pdk::get(PdkOrderRepository::class);
-        $orders = $orderRepository->getMany($orderIds);
-        $shipments = $orders->getLastShipments();
+        $orders          = $orderRepository->getMany($orderIds);
+
+        $shipments = $orders->getAllShipments()
+            ->groupBy('orderId')
+            ->reduce(static function (ShipmentCollection $acc, $shipments) {
+                $acc->push($shipments->last());
+                return $acc;
+            }, new ShipmentCollection());
+
         $shipmentRepository = Pdk::get(ShipmentRepository::class);
-        $fetchedShipments = new ShipmentCollection($shipmentRepository->getByReferenceIdentifiers($orderIds)->last());
+        $fetchedShipments   = $shipmentRepository->getShipments(
+            $shipments->pluck('id')
+                ->all()
+        );
 
         if (! $shipments) {
             return [];
@@ -509,12 +539,12 @@ class ExportActions
                 return [];
             }
 
-            $trackTrace = $shipment->barcode ?: $shipment->externalIdentifier;
+            $trackTrace   = $shipment->barcode ?: $shipment->externalIdentifier;
             $shipmentData = [
                 'shipment_id' => $shipment->id,
-                'status' => $this->getShipmentStatusName($shipment->status),
+                'status'      => $this->getShipmentStatusName($shipment->status),
                 'track_trace' => $trackTrace,
-                'shipment' => $shipment->toArray(),
+                'shipment'    => $shipment->toArray(),
             ];
 
             $order = wc_get_order($shipment->referenceIdentifier);
@@ -784,11 +814,11 @@ class ExportActions
      * When adding shipments, store $return for use in admin_notice
      * This way we can refresh the page (JS) to show all new buttons
      *
-     * @param  array $return
+     * @param $return
      *
-     * @return array
+     * @return mixed
      */
-    private function setFeedbackForClient(array $return): array
+    private function setFeedbackForClient($return)
     {
         if ($return['success'] ?? null) {
             Messages::showAdminNotice($return['success'], Messages::NOTICE_LEVEL_SUCCESS);

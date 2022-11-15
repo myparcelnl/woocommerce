@@ -994,6 +994,8 @@ jQuery(($) => {
   function openPdf(pdfUrl, waitForOnload) {
     const pdfWindow = window.open(pdfUrl, '_blank');
 
+    console.log(pdfUrl);
+
     if (waitForOnload) {
       /*
        * When the pdf window is loaded reload the main window. If we reload earlier the track & trace code won't be
@@ -1015,16 +1017,6 @@ jQuery(($) => {
    */
   function getPrintOffset() {
     return parseInt(askForPrintPosition ? $(selectors.offsetDialogInputOffset).val() : 0);
-  }
-
-  function downloadPDF(pdf) {
-    const linkSource = `data:application/pdf;base64,${pdf}`;
-    const downloadLink = document.createElement('a');
-    const date = new Date();
-    const fileName = 'myparcel-label-' + date.getTime() + '.pdf';
-    downloadLink.href = linkSource;
-    downloadLink.download = fileName;
-    downloadLink.click();
   }
 
   /**
@@ -1055,23 +1047,22 @@ jQuery(($) => {
     console.log(request);
 
     addCallback(request, 'afterDone', (response) => {
-      var pdfdata = JSON.parse(response);
-      downloadPDF(pdfdata.pdf)
-      window.location.reload();
-      // const pdf = atob(pdfdata.pdf);
-      // const isDisplay = wcmp.download_display === 'display';
-      // const isDownload = wcmp.download_display === 'download';
-      // console.log(request);
+      const pdfdata = JSON.parse(response);
+
+      console.log(pdfdata);
+      console.log(response);
+      const isDisplay = wcmp.download_display === 'display';
+      const isDownload = wcmp.download_display === 'download';
       // const isPdf = response.includes('pdf');
       // const isApi = response.includes('myparcel.nl/pdfs/');
 
-      // if (isDisplay && isPdf) {
-      //   handlePDF(request);
-      // } else if (isDownload && isApi) {
-      //   openPdf(pdf);
-      // } else {
-      //   // window.location.reload();
-      // }
+      if (isDisplay) {
+        handlePDF(request);
+      } else if (isDownload && pdfdata.link) {
+        openPdf(pdfdata.link);
+      } else {
+        window.location.reload();
+      }
     });
 
     doRequest.bind(this)(request);
