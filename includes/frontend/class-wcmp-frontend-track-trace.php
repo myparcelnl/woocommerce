@@ -43,7 +43,7 @@ class WCMP_Frontend_Track_Trace
             return;
         }
 
-        if ($sentToAdmin || WCX_Order::get_status($order) !== 'completed' || method_exists($order, 'get_total_refunded')) {
+        if ($sentToAdmin || WCX_Order::get_status($order) !== 'completed' || $order->get_refunds()) {
             return;
         }
 
