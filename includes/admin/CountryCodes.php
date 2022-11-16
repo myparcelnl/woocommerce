@@ -1,5 +1,8 @@
 <?php
-use \MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+
+declare(strict_types=1);
+
+use MyParcelNL\Pdk\Base\Service\CountryService;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -18,7 +21,7 @@ class CountryCodes
      */
     public static function isEuCountry(string $countryCode): bool
     {
-        return in_array($countryCode, AbstractConsignment::EURO_COUNTRIES);
+        return in_array($countryCode, CountryService::EU_COUNTRIES, true);
     }
 
     /**

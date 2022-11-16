@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\includes\adapter;
 
+use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Sdk\src\Helper\SplitStreet;
 use MyParcelNL\Sdk\src\Helper\ValidateStreet;
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Recipient;
 use WC_Order;
 use WCMYPA_Admin;
@@ -40,6 +40,7 @@ class RecipientFromWCOrder extends Recipient
      *
      * @return array
      * @throws \JsonException
+     * @throws \Exception
      */
     private function createAddress(WC_Order $order, string $type): array
     {
@@ -94,8 +95,8 @@ class RecipientFromWCOrder extends Recipient
         $addressLine2 = $order->{"get_{$type}_address_2"}();
         $addressLine1 = $order->{"get_{$type}_address_1"}();
         $country      = $order->{"get_{$type}_country"}();
-        $isNL         = AbstractConsignment::CC_NL === $country;
-        $isBE         = AbstractConsignment::CC_BE === $country;
+        $isNL         = CountryService::CC_NL === $country;
+        $isBE         = CountryService::CC_BE === $country;
 
         $isUsingSplitAddressFields = $street || $number || $numberSuffix;
 
@@ -200,7 +201,7 @@ class RecipientFromWCOrder extends Recipient
      */
     private function separateStreet(string $street, WC_Order $order, string $type): array
     {
-        if ($order->{"get_{$type}_country"}() === AbstractConsignment::CC_BE) {
+        if ($order->{"get_{$type}_country"}() === CountryService::CC_BE) {
             foreach (SplitStreet::BOX_SEPARATOR_BY_REGEX as $boxRegex) {
                 $street = preg_replace('#' . $boxRegex . '([0-9])#', SplitStreet::BOX_NL . ' ' . ltrim('$1'), $street);
             }

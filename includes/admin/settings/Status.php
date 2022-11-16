@@ -7,7 +7,6 @@ namespace MyParcelNL\WooCommerce\includes\admin\settings;
 defined('ABSPATH') or die();
 
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Webhook\Service\WebhookSubscriptionService;
@@ -28,6 +27,9 @@ class Status
      */
     private static $items = [];
 
+    /**
+     * @throws \Exception
+     */
     public static function renderDiagnostics(): void
     {
         self::addShopConnectionRow();
@@ -37,6 +39,9 @@ class Status
         self::renderStatusTable();
     }
 
+    /**
+     * @return void
+     */
     private static function addCarrierRows(): void
     {
         $hasApiKey = AccountSettings::getInstance()->hasApiKey();
@@ -51,14 +56,6 @@ class Status
 
             $text = __('diagnostics_status_carrier_ready', 'woocommerce-myparcel');
             $type = self::TYPE_SUCCESS;
-
-            if ($carrierClass === CarrierInstabox::class && ! self::getDropOffPoint($carrier)) {
-                $text = WCMP_Settings_Callbacks::getLink(
-                    __('diagnostics_status_drop_off_point_missing', 'woocommerce-myparcel'),
-                    CarrierSettings::getRetailOverviewLink($carrier)
-                );
-                $type = self::TYPE_ERROR;
-            }
 
             if (! AccountSettings::getInstance()
                 ->isEnabledCarrier($carrier->getName())) {
@@ -89,6 +86,9 @@ class Status
         ];
     }
 
+    /**
+     * @return void
+     */
     private static function addShopConnectionRow(): void
     {
         $title = __('diagnostics_status_shop_connection', 'woocommerce-myparcel');
@@ -157,6 +157,9 @@ class Status
         return $configuration ? $configuration->getDefaultDropOffPoint() : null;
     }
 
+    /**
+     * @return void
+     */
     private static function renderStatusTable(): void
     {
         echo '<div class="wcmp__d--flex">';

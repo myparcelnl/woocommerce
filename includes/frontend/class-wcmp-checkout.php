@@ -1,12 +1,11 @@
 <?php
 
-use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
+declare(strict_types=1);
+
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelRequest;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\Sdk\src\Support\Collection;
-use MyParcelNL\WooCommerce\includes\admin\settings\SameDayDeliveryService;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -38,12 +37,12 @@ class WCMP_Checkout
 
     public function __construct()
     {
-        add_action("wp_enqueue_scripts", [$this, "enqueue_frontend_scripts"], 100);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_scripts'], 100);
 
         // Save delivery options data
-        add_action("woocommerce_checkout_update_order_meta", [$this, "save_delivery_options"], 10, 2);
+        add_action('woocommerce_checkout_update_order_meta', [$this, 'save_delivery_options'], 10, 2);
 
-        add_action("wp_ajax_wcmp_get_delivery_options_config", [$this, "getDeliveryOptionsConfigAjax"]);
+        add_action('wp_ajax_wcmp_get_delivery_options_config', [$this, 'getDeliveryOptionsConfigAjax']);
     }
 
     /**
@@ -62,9 +61,9 @@ class WCMP_Checkout
         $useSplitAddressFields = WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS);
         if ($useSplitAddressFields) {
             wp_enqueue_script(
-                "wcmp-checkout-fields",
-                WCMYPA()->plugin_url() . "/assets/js/wcmp-checkout-fields.js",
-                ["wc-checkout"],
+                'wcmp-checkout-fields',
+                WCMYPA()->plugin_url() . '/assets/js/wcmp-checkout-fields.js',
+                ['wc-checkout'],
                 WC_MYPARCEL_NL_VERSION,
                 true
             );
@@ -78,13 +77,13 @@ class WCMP_Checkout
         /**
          * JS dependencies array
          */
-        $deps = ["wc-checkout"];
+        $deps = ['wc-checkout'];
 
         /**
          * If split address fields are enabled add the checkout fields script as an additional dependency.
          */
         if ($useSplitAddressFields) {
-            $deps[] = "wcmp-checkout-fields";
+            $deps[] = 'wcmp-checkout-fields';
         }
 
         if (! $this->shouldShowDeliveryOptions()) {
@@ -92,17 +91,17 @@ class WCMP_Checkout
         }
 
         wp_enqueue_script(
-            "wc-myparcel",
-            WCMYPA()->plugin_url() . "/assets/js/myparcel.js",
+            'wc-myparcel',
+            WCMYPA()->plugin_url() . '/assets/js/myparcel.js',
             $deps,
             WC_MYPARCEL_NL_VERSION,
             true
         );
 
         wp_enqueue_script(
-            "wc-myparcel-frontend",
-            WCMYPA()->plugin_url() . "/assets/js/wcmp-frontend.js",
-            array_merge($deps, ["wc-myparcel", "jquery"]),
+            'wc-myparcel-frontend',
+            WCMYPA()->plugin_url() . '/assets/js/wcmp-frontend.js',
+            array_merge($deps, ['wc-myparcel', 'jquery']),
             WC_MYPARCEL_NL_VERSION,
             true
         );
@@ -121,30 +120,30 @@ class WCMP_Checkout
             'wc-myparcel-frontend',
             'wcmp',
             [
-                "ajax_url" => admin_url("admin-ajax.php"),
+                'ajax_url' => admin_url('admin-ajax.php'),
             ]
         );
 
         wp_localize_script(
-            "wc-myparcel-frontend",
-            "MyParcelDisplaySettings",
+            'wc-myparcel-frontend',
+            'MyParcelDisplaySettings',
             [
                 // Convert true/false to int for JavaScript
-                "isUsingSplitAddressFields" => (int) WCMYPA()->settingCollection->isEnabled(
+                'isUsingSplitAddressFields'   => (int) WCMYPA()->settingCollection->isEnabled(
                     WCMYPA_Settings::SETTING_USE_SPLIT_ADDRESS_FIELDS
                 ),
-                "splitAddressFieldsCountries" => WCMP_NL_Postcode_Fields::COUNTRIES_WITH_SPLIT_ADDRESS_FIELDS,
+                'splitAddressFieldsCountries' => WCMP_NL_Postcode_Fields::COUNTRIES_WITH_SPLIT_ADDRESS_FIELDS,
             ]
         );
 
         wp_localize_script(
-            "wc-myparcel",
-            "MyParcelDeliveryOptions",
+            'wc-myparcel',
+            'MyParcelDeliveryOptions',
             [
-                "allowedShippingMethods"    => json_encode($this->getShippingMethodsAllowingDeliveryOptions()),
-                "disallowedShippingMethods" => json_encode(ExportActions::DISALLOWED_SHIPPING_METHODS),
-                "alwaysShow"                => $this->alwaysDisplayDeliveryOptions(),
-                "hiddenInputName"           => WCMYPA_Admin::META_DELIVERY_OPTIONS,
+                'allowedShippingMethods'    => json_encode($this->getShippingMethodsAllowingDeliveryOptions()),
+                'disallowedShippingMethods' => json_encode(ExportActions::DISALLOWED_SHIPPING_METHODS),
+                'alwaysShow'                => $this->alwaysDisplayDeliveryOptions(),
+                'hiddenInputName'           => WCMYPA_Admin::META_DELIVERY_OPTIONS,
             ]
         );
 
@@ -166,30 +165,10 @@ class WCMP_Checkout
     }
 
     /**
-     * @return string
-     */
-    public function get_delivery_options_shipping_methods()
-    {
-        $packageTypes = WCMYPA()->settingCollection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
-
-        if (! is_array($packageTypes)) {
-            $packageTypes = [];
-        }
-
-        $shipping_methods = [];
-
-        if (array_key_exists(AbstractConsignment::PACKAGE_TYPE_PACKAGE, $packageTypes ?? [])) {
-            // settings_checkout_display_for_selected_methods = enable delivery options
-            $shipping_methods = $packageTypes[AbstractConsignment::PACKAGE_TYPE_PACKAGE];
-        }
-
-        return json_encode($shipping_methods);
-    }
-
-    /**
      * Get the delivery options config in JSON for passing to JavaScript.
      *
      * @return array
+     * @throws \Exception
      */
     public function getDeliveryOptionsConfig(): array
     {
@@ -207,7 +186,7 @@ class WCMP_Checkout
             $chosenShippingMethodPrice += (float) $cartTotals['shipping_tax'];
         }
         $carrierSettings = [];
-        foreach ($this->getSortedCarriersForDeliveryOptions() as $carrier) {
+        foreach ($this->getCarriersForDeliveryOptions() as $carrier) {
             $carrierName = $carrier->getName();
 
             if (! AccountSettings::getInstance()->isEnabledCarrier($carrierName)) {
@@ -267,6 +246,8 @@ class WCMP_Checkout
 
     /**
      * Echoes the delivery options config as a JSON string for use with AJAX.
+     *
+     * @throws \Exception
      */
     public function getDeliveryOptionsConfigAjax(): void
     {
@@ -293,7 +274,7 @@ class WCMP_Checkout
     {
         $settings = WCMYPA()->settingCollection;
 
-        return __(strip_tags($settings->getStringByName($title)), "woocommerce-myparcel");
+        return __(strip_tags($settings->getStringByName($title)), 'woocommerce-myparcel');
     }
 
     /**
@@ -301,9 +282,7 @@ class WCMP_Checkout
      */
     public static function getPickupLocationsDefaultView(): string
     {
-        $settings = WCMYPA()->settingCollection;
-
-        return $settings->getStringByName(WCMYPA_Settings::SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW);
+        return WCMYPA()->settingCollection->getStringByName(WCMYPA_Settings::SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW);
     }
 
     /**
@@ -388,10 +367,10 @@ class WCMP_Checkout
              * Create a new DeliveryOptions class from the data.
              */
             $deliveryOptions = new WCMP_DeliveryOptionsFromOrderAdapter(null, $deliveryOptions);
-            $deliveryOptions = apply_filters("wc_myparcel_order_delivery_options", $deliveryOptions, $order);
+            $deliveryOptions = apply_filters('wc_myparcel_order_delivery_options', $deliveryOptions, $order);
 
             /*
-             * Store it in the meta data.
+             * Store it in the metadata.
              */
             WCX_Order::update_meta_data(
                 $order,
@@ -414,15 +393,10 @@ class WCMP_Checkout
     /**
      * @return \MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier[]|\MyParcelNL\Sdk\src\Support\Collection
      */
-    protected function getSortedCarriersForDeliveryOptions(): Collection
+    protected function getCarriersForDeliveryOptions(): Collection
     {
-        $carriers = AccountSettings::getInstance()
+        return AccountSettings::getInstance()
             ->getEnabledCarriers();
-
-        // Make sure Instabox is displayed first if it's present.
-        return $carriers->sort(static function (AbstractCarrier $carrier) {
-            return CarrierInstabox::NAME <=> $carrier->getName();
-        });
     }
 
     /**
@@ -448,7 +422,7 @@ class WCMP_Checkout
         foreach ($shippingMethodsForPackage as $shippingMethod) {
             [$methodId] = self::splitShippingMethodString($shippingMethod);
 
-            if (! in_array($methodId, ExportActions::DISALLOWED_SHIPPING_METHODS)) {
+            if (! in_array($methodId, ExportActions::DISALLOWED_SHIPPING_METHODS, true)) {
                 $allowedMethods[] = $shippingMethod;
             }
         }
@@ -569,7 +543,7 @@ class WCMP_Checkout
             }
         }
 
-        return apply_filters("wc_myparcel_show_delivery_options", $showDeliveryOptions);
+        return apply_filters('wc_myparcel_show_delivery_options', $showDeliveryOptions);
     }
 }
 

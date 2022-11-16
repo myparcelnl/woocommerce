@@ -21,11 +21,11 @@ $orderRepository = (Pdk::get(PdkOrderRepository::class));
 $pdkOrder = $orderRepository->get($orderId);
 
 //TODO: create shipment collection
-$shipments       = WCMYPA()->export->getShipmentData([$shipment_id], $pdkOrder);
+$shipments       = WCMYPA()->export->getShipmentData([$orderId]);
 
 $option_strings = [
     'signature'      => __('shipment_options_signature', 'woocommerce-myparcel'),
-    'only_recipient' => __('shipment_options_only_recipient', 'woocommerce-myparcel'),
+    'onlyRecipient' => __('shipment_options_only_recipient', 'woocommerce-myparcel'),
 ];
 
 $firstShipment = $shipments[$shipment_id];
@@ -33,8 +33,8 @@ $firstShipment = $shipments[$shipment_id];
 /**
  * Show options only for the first shipment as they are all the same.
  */
-$insurance        = Arr::get($firstShipment, 'shipment.options.insurance');
-$labelDescription = Arr::get($firstShipment, 'shipment.options.label_description');
+$insurance        = Arr::get($firstShipment, 'shipment.deliveryOptions.insurance');
+$labelDescription = Arr::get($firstShipment, 'shipment.deliveryOptions.labelDescription');
 
 echo '<ul class="wcmp__shipment-summary wcmp__ws--nowrap">';
 
@@ -44,12 +44,12 @@ echo '<ul class="wcmp__shipment-summary wcmp__ws--nowrap">';
 printf(
     '%s: %s',
     __('Shipment type', 'woocommerce-myparcel'),
-    Data::getPackageTypeHuman(Arr::get($firstShipment, 'shipment.options.package_type'))
+    Data::getPackageTypeHuman(Arr::get($firstShipment, 'shipment.deliveryOptions.packageType'))
 );
 
 foreach ($option_strings as $key => $label) {
-    if (Arr::get($firstShipment, "shipment.options.$key")
-        && (int) Arr::get($firstShipment, "shipment.options.$key") === 1) {
+    if (Arr::get($firstShipment, "shipment.deliveryOptions.$key")
+        && (int) Arr::get($firstShipment, "shipment.deliveryOptions.$key") === 1) {
         printf('<li class="%s">%s</li>', $key, $label);
     }
 }

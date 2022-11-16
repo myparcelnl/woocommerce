@@ -1,15 +1,14 @@
 <?php
 
 use MyParcelNL\Pdk\Base\PdkActions;
+use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
 use MyParcelNL\WooCommerce\PdkOrderRepository;
@@ -51,9 +50,6 @@ class WCMYPA_Admin
     public const META_PPS_EXPORTED                = 'pps_exported';
     public const META_PPS_EXPORT_DATE             = 'pps_export_date';
     public const META_PPS_UUID                    = 'pps_uuid';
-    public const BULK_ACTION_EXPORT               = 'ExportActions';
-    public const BULK_ACTION_PRINT                = 'wcmp_print';
-    public const BULK_ACTION_EXPORT_PRINT         = 'wcmp_export_print';
     public const OLD_RED_JE_PAKKETJE_NAME         = 'redjepakketje';
     /**
      * @deprecated use weight property in META_SHIPMENT_OPTIONS_EXTRA.
@@ -351,9 +347,9 @@ class WCMYPA_Admin
         }
 
         $order         = WCX::get_order($orderId);
-        $orderSettings = new OrderSettings($order);
+        $orderRepository = Pdk::get(PdkOrderRepository::class);
 
-        if ($orderSettings->hasLocalPickup()) {
+        if ($orderRepository->hasLocalPickup()) {
             return;
         }
 
@@ -365,7 +361,7 @@ class WCMYPA_Admin
         if ($automaticExportStatus === $newStatus) {
             try {
                 $_GET['orderIds'] = $orderId;
-                (new ExportActions())->callAction(PdkActions::EXPORT_ORDER);
+                (new ExportActions())->callAction(PdkActions::EXPORT_ORDER, (array) $orderId);
             } catch (Exception $e) {
             }
         }
@@ -667,7 +663,7 @@ class WCMYPA_Admin
         }
 
         if (empty($consignments) || WCMP_Settings_Data::EXPORT_MODE_PPS === $exportMode) {
-            unset($listingActions[PdkActions::EXPORT_AND_PRINT_ORDER]);
+            unset($listingActions[PdkActions::PRINT_ORDER]);
         }
 
         if (empty($consignments) || Data::DEFAULT_COUNTRY_CODE !== $shippingCountry) {
@@ -675,7 +671,7 @@ class WCMYPA_Admin
         }
 
         if ($orderRepository->hasLocalPickup()) {
-            unset($listingActions[ExportActions::GET_LABELS], $listingActions[ExportActions::EXPORT_ORDER]);
+            unset($listingActions[PdkActions::PRINT_ORDER], $listingActions[PdkActions::EXPORT_ORDER]);
         }
 
         return $listingActions;
@@ -711,25 +707,24 @@ class WCMYPA_Admin
      */
     public static function getDefaultListingActions(int $orderId): array
     {
-        $exportOrder      = PdkActions::EXPORT_ORDER;
-        $exportPrintOrder = PdkActions::EXPORT_AND_PRINT_ORDER;
-        $printOrder       = PdkActions::PRINT_ORDER;
-        $addReturn        = 'return';
-        $pluginUrl        = WCMYPA()->plugin_url();
-        $baseUrl          = 'admin-ajax.php?action=' . ExportActions::ACTION_NAME;
+        $exportOrder = PdkActions::EXPORT_ORDER;
+        $printOrder  = PdkActions::PRINT_ORDER;
+        $addReturn   = 'return';
+        $pluginUrl   = WCMYPA()->plugin_url();
+        $baseUrl     = 'admin-ajax.php?action=' . ExportActions::ACTION_NAME;
 
         return [
-            $exportOrder      => [
+            $exportOrder => [
                 'url' => admin_url("$baseUrl&pdkAction=$exportOrder&orderIds=$orderId"),
                 'img' => "{$pluginUrl}/assets/img/export.svg",
                 'alt' => __('action_export_to_myparcel', 'woocommerce-myparcel'),
             ],
-            $printOrder => [
+            $printOrder  => [
                 'url' => admin_url("$baseUrl&pdkAction=$printOrder&orderIds=$orderId"),
                 'img' => "{$pluginUrl}/assets/img/print.svg",
                 'alt' => __('action_print_myparcel_label', 'woocommerce-myparcel'),
             ],
-            $addReturn        => [
+            $addReturn   => [
                 'url' => admin_url("$baseUrl&pdkAction=$addReturn&orderIds=$orderId"),
                 'img' => "{$pluginUrl}/assets/img/return.svg",
                 'alt' => __('action_email_return_label', 'woocommerce-myparcel'),
@@ -749,12 +744,12 @@ class WCMYPA_Admin
             return $listingActions;
         }
 
-        $pluginUrl                                          = WCMYPA()->plugin_url();
-        $listingActions[ExportActions::EXPORT_ORDER]['img'] = "{$pluginUrl}/assets/img/myparcel.svg";
+        $pluginUrl                                       = WCMYPA()->plugin_url();
+        $listingActions[PdkActions::EXPORT_ORDER]['img'] = "{$pluginUrl}/assets/img/myparcel.svg";
 
         foreach ($metaPps as $metaPpsFeedback) {
             if (is_array($metaPpsFeedback) && $metaPpsFeedback[self::META_PPS_EXPORTED]) {
-                $listingActions[ExportActions::EXPORT_ORDER]['alt'] = __(
+                $listingActions[PdkActions::EXPORT_ORDER]['alt'] = __(
                     'export_hint_already_exported',
                     'woocommerce-myparcel'
                 );
@@ -1101,7 +1096,7 @@ class WCMYPA_Admin
      *
      * @throws Exception
      */
-    public function addBarcodeToOrderColumn($column)
+    public function addBarcodeToOrderColumn($column): void
     {
         global $post;
 
@@ -1185,10 +1180,6 @@ class WCMYPA_Admin
                 $meta = json_decode(stripslashes($meta), true);
             }
 
-            if (self::OLD_RED_JE_PAKKETJE_NAME === $meta['carrier']) {
-                $meta['carrier'] = CarrierInstabox::NAME;
-            }
-
             if (! $meta['carrier']
                 || ! AccountSettings::getInstance()
                     ->isEnabledCarrier($meta['carrier'])) {
@@ -1261,12 +1252,12 @@ class WCMYPA_Admin
         $deliveryDate = $deliveryOptions->date;
         $deliveryType = $deliveryOptions->deliveryType;
 
-        if ($deliveryDate || AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $deliveryOptions->packageType) {
+        if ($deliveryDate || DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME === $deliveryOptions->packageType) {
             printf(
                 '<div class="delivery-date"><strong>%s</strong><br />%s, %s</div>',
                 __('MyParcel shipment:', 'woocommerce-myparcel'),
                 Data::getDeliveryTypesHuman()[$deliveryType],
-                null === $deliveryDate || $deliveryType === AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME ? ''
+                null === $deliveryDate || $deliveryType === DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME ? ''
                     : wc_format_datetime($deliveryDate, 'D d-m')
             );
         }
@@ -1292,7 +1283,7 @@ class WCMYPA_Admin
 
         $deliveryType = $this->getDeliveryTypeOptions($deliveryOptions);
 
-        if (AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME === $deliveryOptions->getDeliveryType()) {
+        if (DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME === $deliveryOptions->getDeliveryType()) {
             $pickupLocation = $deliveryOptions->getPickupLocation();
 
             return [
@@ -1337,20 +1328,20 @@ class WCMYPA_Admin
         $deliveryTitle = null;
 
         switch ($deliveryType) {
-            case AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME:
+            case DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME:
                 $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_STANDARD_TITLE);
                 break;
-            case AbstractConsignment::DELIVERY_TYPE_MORNING_NAME:
+            case DeliveryOptions::DELIVERY_TYPE_MORNING_NAME:
                 $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle(
                     WCMYPA_Settings::SETTING_MORNING_DELIVERY_TITLE
                 );
                 break;
-            case AbstractConsignment::DELIVERY_TYPE_EVENING_NAME:
+            case DeliveryOptions::DELIVERY_TYPE_EVENING_NAME:
                 $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle(
                     WCMYPA_Settings::SETTING_EVENING_DELIVERY_TITLE
                 );
                 break;
-            case AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME:
+            case DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME:
                 $deliveryTitle = WCMP_Checkout::getDeliveryOptionsTitle(WCMYPA_Settings::SETTING_PICKUP_TITLE);
                 break;
         }
@@ -1588,12 +1579,12 @@ class WCMYPA_Admin
      */
     public static function removeDisallowedDeliveryOptions(array $data, string $country): array
     {
-        $data['package_type'] = $data['package_type'] ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
+        $data['package_type'] = $data['package_type'] ?? DeliveryOptions::DEFAULT_PACKAGE_TYPE_NAME;
         $isHomeCountry        = Data::isHomeCountry($country);
         $isEuCountry          = CountryCodes::isEuCountry($country);
-        $isBelgium            = AbstractConsignment::CC_BE === $country;
-        $isPackage            = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $data['package_type'];
-        $isDigitalStamp       = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $data['package_type'];
+        $isBelgium            = CountryService::CC_BE === $country;
+        $isPackage            = DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME === $data['package_type'];
+        $isDigitalStamp       = DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $data['package_type'];
 
         if (! $isHomeCountry || ! $isPackage) {
             $data['shipment_options']['age_check'] = false;

@@ -6,7 +6,7 @@ namespace MyParcelNL\WooCommerce\Helper;
 
 use Data;
 use ErrorException;
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\Pdk\Base\Service\CountryService;
 use WC_Order;
 use WC_Order_Item_Product;
 use WC_Product;
@@ -48,7 +48,7 @@ class ExportRow
             WCMYPA_Admin::META_COUNTRY_OF_ORIGIN_VARIATION,
             true
         );
-        $fallbackCountryOfOrigin  = WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
+        $fallbackCountryOfOrigin  = WC()->countries->get_base_country() ?? CountryService::CC_NL;
 
         return $variationCountryOfOrigin ?: $productCountryOfOrigin ?: $defaultCountryOfOrigin ?: $fallbackCountryOfOrigin;
     }

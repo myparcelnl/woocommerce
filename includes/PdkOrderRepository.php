@@ -22,8 +22,6 @@ use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Shipment\Service\DeliveryDateService;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
-use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Recipient;
 use MyParcelNL\WooCommerce\Helper\ExportRow;
 use MyParcelNL\WooCommerce\Helper\LabelDescriptionFormatter;
@@ -110,9 +108,9 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
 
         $shipmentCollection = new ShipmentCollection();
 
-        foreach ($shipments as $shipmentId => $shipmenData) {
-            if (isset($shipmenData['shipment'])) {
-                $shipmentCollection->push(new Shipment($shipmenData['shipment']));
+        foreach ($shipments as $shipmentId => $shipmentData) {
+            if (isset($shipmentData['shipment']) && $shipmentData['shipment']) {
+                $shipmentCollection->push(new Shipment($shipmentData['shipment']));
             }
         }
 
@@ -343,7 +341,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
         ) ?: null;
         $weight          = (float) ($savedWeight ?? $defaultWeight ?? $orderWeight);
 
-        if (AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $deliveryOptions->getPackageType()) {
+        if (DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $deliveryOptions->getPackageType()) {
             $weight += (float) WCMYPA()->settingCollection->getByName(
                 WCMYPA_Settings::SETTING_EMPTY_DIGITAL_STAMP_WEIGHT
             );

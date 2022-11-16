@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
+use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
 use MyParcelNL\WooCommerce\includes\admin\OrderStatus;
 use MyParcelNL\Pdk\Base\PdkActions;
@@ -10,7 +12,6 @@ use MyParcelNL\Pdk\Base\PdkEndpoint;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Fulfilment\Collection\OrderCollection;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Fulfilment\AbstractOrder;
 use MyParcelNL\Sdk\src\Support\Str;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
@@ -34,15 +35,7 @@ class ExportActions
     /**
      * @deprecated GEBRUIK PDK
      */
-    public const EXPORT_ORDER = '';
-    /**
-     * @deprecated GEBRUIK PDK
-     */
     public const EXPORT_RETURN = '';
-    /**
-     * @deprecated GEBRUIK PDK
-     */
-    public const GET_LABELS = '';
     /**
      * @deprecated GEBRUIK PDK
      */
@@ -324,7 +317,7 @@ class ExportActions
             return apply_filters('wc_myparcel_order_package_type', $allowedPackageType, $order, $this);
         }
 
-        $packageType = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
+        $packageType = DeliveryOptions::DEFAULT_PACKAGE_TYPE_NAME;
 
         // get shipping methods from order
         $orderShippingMethods = $order->get_items('shipping');
@@ -361,7 +354,7 @@ class ExportActions
      */
     public static function getPackageTypeFromShippingMethod($shippingMethod, $shippingClass): string
     {
-        $packageType           = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME;
+        $packageType           = DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME;
         $shippingMethodIdClass = $shippingMethod;
 
         if (class_exists('WC_Table_Rate_Shipping') && Str::startsWith($shippingMethod, 'table_rate:')) {
@@ -429,7 +422,7 @@ class ExportActions
             $packageType = Data::getPackageTypeName($packageType);
         }
 
-        if (! is_string($packageType) || ! in_array($packageType, AbstractConsignment::PACKAGE_TYPES_NAMES)) {
+        if (! is_string($packageType) || ! in_array($packageType, DeliveryOptions::PACKAGE_TYPES_NAMES)) {
             // Log data when this occurs but don't actually throw an exception.
             $type = gettype($packageType);
             WCMP_Log::add(
@@ -439,7 +432,7 @@ class ExportActions
             $packageType = null;
         }
 
-        return $packageType ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
+        return $packageType ?? DeliveryOptions::DEFAULT_PACKAGE_TYPE_NAME;
     }
 
     /**
@@ -452,12 +445,12 @@ class ExportActions
     public function getAllowedPackageType(WC_Order $order, ?string $packageType): ?string
     {
         $shippingCountry      = WCX_Order::get_prop($order, 'shipping_country');
-        $isMailbox            = AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME === $packageType;
-        $isDigitalStamp       = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType;
-        $isDefaultPackageType = AbstractConsignment::CC_NL !== $shippingCountry && ($isMailbox || $isDigitalStamp);
+        $isMailbox            = DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME === $packageType;
+        $isDigitalStamp       = DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType;
+        $isDefaultPackageType = CountryService::CC_NL !== $shippingCountry && ($isMailbox || $isDigitalStamp);
 
         if ($isDefaultPackageType) {
-            $packageType = AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
+            $packageType = DeliveryOptions::DEFAULT_PACKAGE_TYPE_NAME;
         }
 
         return $packageType;
@@ -501,11 +494,10 @@ class ExportActions
     /**
      * Retrieves, updates and returns shipment data for given id.
      *
-     * @param  array    $orderIds
-     * @param  WC_Order $order
+     * @param  array $orderIds
      *
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     public function getShipmentData(array $orderIds): array
     {
@@ -529,10 +521,6 @@ class ExportActions
             $shipments->pluck('id')
                 ->all()
         );
-
-        if (! $shipments) {
-            return [];
-        }
 
         foreach ($fetchedShipments as $shipment) {
             if (! $shipment->id) {
@@ -676,33 +664,33 @@ class ExportActions
      * Adapted from WC_Shipping_Flat_Rate - Protected method
      * Work out fee (shortcode).
      *
-     * @param  array $atts
+     * @param  array $attributes
      *
      * @return string
      */
-    public function wc_flat_rate_fee(array $atts)
+    public function wc_flat_rate_fee(array $attributes)
     {
-        $atts = shortcode_atts(
+        $attributes = shortcode_atts(
             [
                 'percent' => '',
                 'min_fee' => '',
                 'max_fee' => '',
             ],
-            $atts
+            $attributes
         );
 
         $calculated_fee = 0;
 
-        if ($atts['percent']) {
-            $calculated_fee = $this->fee_cost * ((float) $atts['percent'] / 100);
+        if ($attributes['percent']) {
+            $calculated_fee = $this->fee_cost * ((float) $attributes['percent'] / 100);
         }
 
-        if ($atts['min_fee'] && $calculated_fee < $atts['min_fee']) {
-            $calculated_fee = $atts['min_fee'];
+        if ($attributes['min_fee'] && $calculated_fee < $attributes['min_fee']) {
+            $calculated_fee = $attributes['min_fee'];
         }
 
-        if ($atts['max_fee'] && $calculated_fee > $atts['max_fee']) {
-            $calculated_fee = $atts['max_fee'];
+        if ($attributes['max_fee'] && $calculated_fee > $attributes['max_fee']) {
+            $calculated_fee = $attributes['max_fee'];
         }
 
         return $calculated_fee;

@@ -782,14 +782,12 @@ jQuery(($) => {
     const orderIds = getParameterByName('orderIds', this.href);
 
     event.preventDefault();
-    console.log(request);
 
     switch (request) {
       case 'exportOrder':
         exportToMyParcel.bind(this)();
         break;
       case 'exportAndPrintOrder':
-        console.log('hallo')
         if (askForPrintPosition && !$(this).hasClass('wcmp__offset-dialog__button')) {
           showOffsetDialog.bind(this)();
         } else {
@@ -994,8 +992,6 @@ jQuery(($) => {
   function openPdf(pdfUrl, waitForOnload) {
     const pdfWindow = window.open(pdfUrl, '_blank');
 
-    console.log(pdfUrl);
-
     if (waitForOnload) {
       /*
        * When the pdf window is loaded reload the main window. If we reload earlier the track & trace code won't be
@@ -1044,17 +1040,10 @@ jQuery(($) => {
       };
     }
 
-    console.log(request);
-
     addCallback(request, 'afterDone', (response) => {
       const pdfdata = JSON.parse(response);
-
-      console.log(pdfdata);
-      console.log(response);
       const isDisplay = wcmp.download_display === 'display';
       const isDownload = wcmp.download_display === 'download';
-      // const isPdf = response.includes('pdf');
-      // const isApi = response.includes('myparcel.nl/pdfs/');
 
       if (isDisplay) {
         handlePDF(request);

@@ -1,7 +1,7 @@
 <?php
 
+use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use MyParcelNL\WooCommerce\PdkOrderRepository;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
@@ -45,7 +45,7 @@ $target_url = wp_nonce_url(
 
                 $recipient = (new RecipientFromWCOrder(
                     $order,
-                    AbstractConsignment::CC_NL,
+                    CountryService::CC_NL,
                     RecipientFromWCOrder::SHIPPING
                 ))->toArray();
                 ?>
@@ -59,8 +59,8 @@ $target_url = wp_nonce_url(
                                 <td colspan="2">
                                     <strong>
                                         <?php echo sprintf(
-                                            "%s %s",
-                                            __("Order", "woocommerce-myparcel"),
+                                            '%s %s',
+                                            __('Order', 'woocommerce-myparcel'),
                                             $order->get_order_number()
                                         ); ?>
                                     </strong>
@@ -72,8 +72,8 @@ $target_url = wp_nonce_url(
                                         <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th><?php _e("Product name", "woocommerce-myparcel"); ?></th>
-                                            <th class="wcmp__text--right"><?php _e("weight", "woocommerce-myparcel"); ?></th>
+                                            <th><?php _e('Product name', 'woocommerce-myparcel'); ?></th>
+                                            <th class="wcmp__text--right"><?php _e('weight', 'woocommerce-myparcel'); ?></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -99,7 +99,7 @@ $target_url = wp_nonce_url(
                                         <tfoot>
                                         <tr>
                                             <th>&nbsp;</th>
-                                            <th><?php _e("Total weight", "woocommerce-myparcel"); ?></th>
+                                            <th><?php _e('Total weight', 'woocommerce-myparcel'); ?></th>
                                             <th class="wcmp__text--right">
                                                 <?php
                                                 $weight = $orderRepository->getWeight();
@@ -162,7 +162,7 @@ $target_url = wp_nonce_url(
             if (isset($dialog) && $dialog === 'shipment') {
                 $button_text = __('action_export_to_myparcel', 'woocommerce-myparcel');
             } else {
-                $button_text = __("Send email", "woocommerce-myparcel");
+                $button_text = __('Send email', 'woocommerce-myparcel');
             }
             ?>
             <div class="wcmp__d--flex">

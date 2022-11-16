@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 
 class WCMP_DeliveryOptionsFromOrderAdapter extends AbstractDeliveryOptionsAdapter
 {
@@ -17,8 +17,8 @@ class WCMP_DeliveryOptionsFromOrderAdapter extends AbstractDeliveryOptionsAdapte
     {
         $adapterCarrier        = $originAdapter ? $originAdapter->getCarrier() : (Data::DEFAULT_CARRIER_CLASS)::NAME;
         $adapterDate           = $originAdapter ? $originAdapter->getDate() : null;
-        $adapterDeliveryType   = $originAdapter ? $originAdapter->getDeliveryType() : AbstractConsignment::DEFAULT_DELIVERY_TYPE_NAME;
-        $adapterPackageType    = $originAdapter ? $originAdapter->getPackageType() : AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
+        $adapterDeliveryType   = $originAdapter ? $originAdapter->getDeliveryType() : DeliveryOptions::DEFAULT_DELIVERY_TYPE_NAME;
+        $adapterPackageType    = $originAdapter ? $originAdapter->getPackageType() : DeliveryOptions::DEFAULT_PACKAGE_TYPE_NAME;
         $adapterPickupLocation = $originAdapter ? $originAdapter->getPickupLocation() : null;
 
         $this->carrier         = $inputData['carrier'] ?? $adapterCarrier;

@@ -12,6 +12,7 @@ declare(strict_types=1);
  * @var bool  $downloadDisplay
  */
 
+use MyParcelNL\Pdk\Base\PdkActions;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
 use MyParcelNL\WooCommerce\PdkOrderRepository;
@@ -24,9 +25,8 @@ try {
     $pdkOrderCollection = new PdkOrderCollection();
 
     $pdkOrderCollection->push($pdkOrder->getPdkOrder());
-    $shipments = WCMYPA()->export->getShipmentData((array) $orderId, $pdkOrder);
+    $shipments = WCMYPA()->export->getShipmentData((array) $orderId);
     $test      = 0;
-    //$shipments = WCMYPA()->export->getShipmentData(array_keys($consignments), $order);
 } catch (Exception $e) {
     $message = $e->getMessage();
 }
@@ -68,7 +68,7 @@ if (! count($shipments)) {
       <td class="wcmp__td--create-label">
           <?php
           $action    = ExportActions::ACTION_NAME;
-          $getLabels = ExportActions::GET_LABELS;
+          $getLabels = PdkActions::PRINT_ORDER;
 
           $order            = wc_get_order($orderId);
           $returnShipmentId = $order->get_meta(WCMYPA_Admin::META_RETURN_SHIPMENT_IDS);

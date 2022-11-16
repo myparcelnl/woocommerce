@@ -1,11 +1,10 @@
 <?php
 
 use MyParcelNL\Pdk\Base\Service\WeightService;
+use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
-use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 
@@ -33,17 +32,29 @@ class Data
     public function __construct()
     {
         self::$packageTypesHuman = [
-            AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME       => __("Package", "woocommerce-myparcel"),
-            AbstractConsignment::PACKAGE_TYPE_MAILBOX_NAME       => __("Mailbox", "woocommerce-myparcel"),
-            AbstractConsignment::PACKAGE_TYPE_LETTER_NAME        => __("Unpaid letter", "woocommerce-myparcel"),
-            AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME => __("Digital stamp", "woocommerce-myparcel"),
+            DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME       => __('Package', 'woocommerce-myparcel'),
+            DeliveryOptions::PACKAGE_TYPE_MAILBOX_NAME       => __('Mailbox', 'woocommerce-myparcel'),
+            DeliveryOptions::PACKAGE_TYPE_LETTER_NAME        => __('Unpaid letter', 'woocommerce-myparcel'),
+            DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME => __('Digital stamp', 'woocommerce-myparcel'),
         ];
 
         self::$deliveryTypesHuman = [
-            AbstractConsignment::DELIVERY_TYPE_MORNING_NAME  => __("shipment_options_delivery_morning", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME => __("shipment_options_delivery_standard", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_EVENING_NAME  => __("shipment_options_delivery_evening", "woocommerce-myparcel"),
-            AbstractConsignment::DELIVERY_TYPE_PICKUP_NAME   => __("shipment_options_delivery_pickup", "woocommerce-myparcel"),
+            DeliveryOptions::DELIVERY_TYPE_MORNING_NAME  => __(
+                'shipment_options_delivery_morning',
+                'woocommerce-myparcel'
+            ),
+            DeliveryOptions::DELIVERY_TYPE_STANDARD_NAME => __(
+                'shipment_options_delivery_standard',
+                'woocommerce-myparcel'
+            ),
+            DeliveryOptions::DELIVERY_TYPE_EVENING_NAME  => __(
+                'shipment_options_delivery_evening',
+                'woocommerce-myparcel'
+            ),
+            DeliveryOptions::DELIVERY_TYPE_PICKUP_NAME   => __(
+                'shipment_options_delivery_pickup',
+                'woocommerce-myparcel'
+            ),
         ];
     }
 
@@ -83,7 +94,6 @@ class Data
     {
         return [
             CarrierPostNL::class,
-            CarrierInstabox::class,
         ];
     }
 
@@ -96,7 +106,6 @@ class Data
     {
         return self::getHuman(
             $packageType,
-            AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP,
             self::$packageTypesHuman
         );
     }
@@ -108,7 +117,7 @@ class Data
      */
     public static function getPackageTypeId(string $packageType): ?int
     {
-        return Arr::get(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP, $packageType);
+        return Arr::get(DeliveryOptions::PACKAGE_TYPES_NAMES_IDS_MAP, $packageType);
     }
 
     /**
@@ -118,7 +127,7 @@ class Data
      */
     public static function getPackageTypeName(int $packageType): ?string
     {
-        return Arr::get(array_flip(AbstractConsignment::PACKAGE_TYPES_NAMES_IDS_MAP), (string) $packageType, null);
+        return Arr::get(array_flip(DeliveryOptions::PACKAGE_TYPES_NAMES_IDS_MAP), (string) $packageType, null);
     }
 
     /**
@@ -133,15 +142,14 @@ class Data
 
     /**
      * @param string|int $key
-     * @param array      $map
      * @param array      $humanMap
      *
      * @return string|null
      */
-    private static function getHuman($key, array $map, array $humanMap): ?string
+    private static function getHuman($key, array $humanMap): ?string
     {
         if (is_numeric($key)) {
-            $integerMap = array_flip($map);
+            $integerMap = array_flip(DeliveryOptions::PACKAGE_TYPES_NAMES_IDS_MAP);
             $key        = (int) $key;
 
             if (! array_key_exists($key, $integerMap)) {
@@ -163,7 +171,7 @@ class Data
         $amounts = [];
 
         /**
-         * @type PostNLConsignment
+         * @type PostNLConsignment $carrier
          */
         $carrier             = ConsignmentFactory::createByCarrierName(CarrierPostNL::NAME);
         $amountPossibilities = $carrier->getInsurancePossibilities();

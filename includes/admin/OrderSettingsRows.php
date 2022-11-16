@@ -30,7 +30,6 @@ class OrderSettingsRows
         self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
     ];
-
     private const OPTION_CARRIER                            = '[carrier]';
     private const OPTION_DELIVERY_TYPE                      = '[delivery_type]';
     private const OPTION_EXTRA_OPTIONS_COLLO_AMOUNT         = '[extra_options][collo_amount]';
@@ -45,7 +44,6 @@ class OrderSettingsRows
     private const OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY = '[shipment_options][same_day_delivery]';
     private const OPTION_SHIPMENT_OPTIONS_SIGNATURE         = '[shipment_options][signature]';
     private const OPTION_SHIPMENT_OPTIONS_AGE_CHECK         = '[shipment_options][age_check]';
-
     /**
      * Maps shipment options in this form to their respective name in the SDK.
      */
@@ -58,7 +56,6 @@ class OrderSettingsRows
         self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY => AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY,
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE         => AbstractConsignment::SHIPMENT_OPTION_SIGNATURE,
     ];
-
     private const CONDITION_DELIVERY_TYPE_DELIVERY = [
         'parent_name'  => self::OPTION_DELIVERY_TYPE,
         'type'         => 'show',
@@ -69,13 +66,11 @@ class OrderSettingsRows
         ],
         'set_value'    => WCMP_Settings_Data::DISABLED,
     ];
-
     private const CONDITION_PACKAGE_TYPE_PACKAGE = [
         'parent_name'  => self::OPTION_PACKAGE_TYPE,
         'type'         => 'show',
         'parent_value' => DeliveryOptions::PACKAGE_TYPE_PACKAGE_NAME,
     ];
-
     private const CONDITION_FORCE_ENABLED_ON_AGE_CHECK = [
         'parent_name'  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
         'type'         => 'disable',
@@ -97,9 +92,10 @@ class OrderSettingsRows
      * @param  \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
      * @param  \WC_Order                                                                  $order
      */
-    public function __construct(AbstractDeliveryOptionsAdapter $deliveryOptions, WC_Order $order) {
+    public function __construct(AbstractDeliveryOptionsAdapter $deliveryOptions, WC_Order $order)
+    {
         $this->deliveryOptions = $deliveryOptions;
-        $this->order = $order;
+        $this->order           = $order;
     }
 
     /**
@@ -172,7 +168,8 @@ class OrderSettingsRows
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 'type'      => 'toggle',
                 'label'     => __('insured', 'woocommerce-myparcel'),
-                'value'     => (bool) $this->deliveryOptions->getShipmentOptions()->getInsurance(),
+                'value'     => (bool) $this->deliveryOptions->getShipmentOptions()
+                    ->getInsurance(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_INSURED),
@@ -184,7 +181,8 @@ class OrderSettingsRows
                 'type'      => 'select',
                 'label'     => __('insured_amount', 'woocommerce-myparcel'),
                 'options'   => [WCMYPA_Settings::DEFAULT_BELGIAN_INSURANCE => WCMYPA_Settings::DEFAULT_BELGIAN_INSURANCE],
-                'value'     => $this->deliveryOptions->getShipmentOptions()->getInsurance(),
+                'value'     => $this->deliveryOptions->getShipmentOptions()
+                    ->getInsurance(),
                 'condition' => [
                     self::OPTION_SHIPMENT_OPTIONS_INSURED,
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
@@ -198,7 +196,8 @@ class OrderSettingsRows
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_large_format', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_large_format_help_text', 'woocommerce-myparcel'),
-                'value'     => $this->deliveryOptions->getShipmentOptions()->hasLargeFormat(),
+                'value'     => $this->deliveryOptions->getShipmentOptions()
+                    ->hasLargeFormat(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT),
@@ -262,7 +261,7 @@ class OrderSettingsRows
                     [
                         'parent_name'  => self::OPTION_PACKAGE_TYPE,
                         'type'         => 'show',
-                        'parent_value' => AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
+                        'parent_value' => DeliveryOptions::PACKAGE_TYPE_DIGITAL_STAMP_NAME,
                     ],
                 ],
             ],
@@ -362,10 +361,6 @@ class OrderSettingsRows
         $carriersOptions = [];
 
         foreach ($carriers as $carrier) {
-            if (CarrierOptions::CARRIER_INSTABOX_ID === $carrier->getId() && ! Data::isHomeCountry($country)) {
-                continue;
-            }
-
             $carriersOptions[$carrier->getName()] = $carrier->getHuman();
         }
 
@@ -408,8 +403,8 @@ class OrderSettingsRows
     private function getCarrierPackageTypesCondition(): array
     {
         return [
-            'parent_name' => self::OPTION_CARRIER,
-            'type' => 'options',
+            'parent_name'  => self::OPTION_CARRIER,
+            'type'         => 'options',
             'parent_value' =>
                 AccountSettings::getInstance()
                     ->getEnabledCarriers()
@@ -420,7 +415,7 @@ class OrderSettingsRows
                         ];
                     })
                     ->getIterator(),
-            'set_value' => DeliveryOptions::DEFAULT_PACKAGE_TYPE_NAME,
+            'set_value'    => DeliveryOptions::DEFAULT_PACKAGE_TYPE_NAME,
         ];
     }
 }
