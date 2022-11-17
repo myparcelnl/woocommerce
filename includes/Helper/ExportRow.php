@@ -41,16 +41,26 @@ class ExportRow
      */
     public function getCountryOfOrigin(): string
     {
-        $defaultCountryOfOrigin   = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
-        $productCountryOfOrigin   = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
-        $variationCountryOfOrigin = WCX_Product::get_meta(
-            $this->product,
-            WCMYPA_Admin::META_COUNTRY_OF_ORIGIN_VARIATION,
-            true
-        );
-        $fallbackCountryOfOrigin  = WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
+        $cc = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN_VARIATION, true);
 
-        return $variationCountryOfOrigin ?: $productCountryOfOrigin ?: $defaultCountryOfOrigin ?: $fallbackCountryOfOrigin;
+        if (! $cc) {
+            $cc = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
+        }
+
+        if (! $cc && $this->product->get_parent_id()) {
+            $cc = get_post_meta($this->product->get_parent_id(), WCMYPA_Admin::META_COUNTRY_OF_ORIGIN, true);
+        }
+
+        if (! $cc) {
+            $cc = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_COUNTRY_OF_ORIGIN);
+        }
+
+        if (! $cc) {
+             $cc = WC()->countries->get_base_country() ?? AbstractConsignment::CC_NL;
+        }
+
+        return $cc;
+
     }
 
     /**
@@ -59,14 +69,18 @@ class ExportRow
      */
     public function getHsCode(): int
     {
-        $defaultHsCode   = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_HS_CODE);
-        $productHsCode   = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_HS_CODE, true);
-        $variationHsCode = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_HS_CODE_VARIATION, true);
+        $hsCode = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_HS_CODE_VARIATION, true);
 
-        $hsCode = $productHsCode ?: $defaultHsCode;
+        if (! $hsCode) {
+            $hsCode = WCX_Product::get_meta($this->product, WCMYPA_Admin::META_HS_CODE, true);
+        }
 
-        if ($variationHsCode) {
-            $hsCode = $variationHsCode;
+        if (! $hsCode && $this->product->get_parent_id()) {
+            $hsCode = get_post_meta($this->product->get_parent_id(), WCMYPA_Admin::META_HS_CODE, true);
+        }
+
+        if (! $hsCode) {
+            $hsCode = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_HS_CODE);
         }
 
         if (! $hsCode) {
