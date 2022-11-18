@@ -55,6 +55,7 @@ jQuery(($) => {
     offsetDialogButton: '.wcmp__offset-dialog__button',
     offsetDialogClose: '.wcmp__offset-dialog__close',
     offsetDialogInputOffset: '.wcmp__offset-dialog__offset',
+    offsetDialogInputDisplay: '.wcmp__offset-dialog__display',
     orderAction: '.wcmp__action',
     orderActionImage: '.wcmp__action__img',
     printQueue: '.wcmp__print-queue',
@@ -797,8 +798,8 @@ jQuery(($) => {
       case 'printOrder':
         printLabel.bind(this)();
         break;
-      case wcmp.actions.export_return:
-        showDialog(orderIds, 'return', request);
+      case 'exportReturn':
+        exportReturn.bind(this)();
         break;
     }
   }
@@ -953,6 +954,36 @@ jQuery(($) => {
   }
 
   /**
+   * Export orders to MyParcel via AJAX.
+   *
+   * @param {String[]} orderIds
+   */
+  function exportReturn(orderIds) {
+    let url;
+    let data;
+
+    if (this.href) {
+      url = this.href;
+    } else {
+      data = {
+        action: 'MyParcelPdk',
+        pdkAction: 'exportReturn',
+        request: wcmp.actions.exportReturn,
+        order_ids: orderIds,
+        print: print,
+        _wpnonce: wcmp.nonce,
+      };
+    }
+
+    doRequest.bind(this)({
+      url: url,
+      data: data || {},
+    });
+
+    window.location.reload();
+  }
+
+  /**
    * @param {String} orderIds
    * @param {String} dialog
    */
@@ -1015,6 +1046,10 @@ jQuery(($) => {
     return parseInt(askForPrintPosition ? $(selectors.offsetDialogInputOffset).val() : 0);
   }
 
+  function getPrintDisplay(offset) {
+    return (offset !== 0) ? $(selectors.offsetDialogInputDisplay).val() : 'A6';
+  }
+
   /**
    * Request MyParcel labels.
    *
@@ -1025,15 +1060,18 @@ jQuery(($) => {
 
     if (this && this.href) {
       request = {
-        url: this.href,
+        url: this.href,z
       };
     } else {
+      const offset = getPrintOffset();
+      const display = getPrintDisplay(offset);
       request = {
         data: {
           action: 'MyParcelPdk',
           pdkAction: 'printOrder',
           request: 'printOrder',
-          offset: getPrintOffset(),
+          display: display,
+          positions: offset,
           _wpnonce: wcmp.nonce,
           ...data,
         },

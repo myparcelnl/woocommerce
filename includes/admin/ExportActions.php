@@ -94,11 +94,9 @@ class ExportActions
     {
         $this->permissionChecks();
 
-        $action = $_REQUEST['pdkAction'];
-
+        $action           = $_REQUEST['pdkAction'];
         $_GET['orderIds'] = $_GET['orderIds'] ?: $_REQUEST['order_ids'];
-
-        $orderIds = (array) $_GET['orderIds'];
+        $orderIds         = (array) $_GET['orderIds'];
 
         try {
             $response = $this->callAction($action, $orderIds);
@@ -108,6 +106,7 @@ class ExportActions
                     'error' => $e->getMessage(),
                 ])
             );
+            die();
         }
 
         $return = [];
@@ -118,35 +117,15 @@ class ExportActions
                 ];
                 break;
             case PdkActions::PRINT_ORDER:
-                if (isset($response)) {
-                    (new OrderStatus())->updateOrderBarcode($orderIds);
-                    $displaySetting = WCMYPA()->settingCollection->getByName('download_display');
-                    $display        = $displaySetting === 'display';
-                    $parsedResponse = json_decode($response->getContent(), true)['data'];
-
-                    if ($display) {
-                        $pdf = base64_decode(json_decode($response->getContent(), true)['data']['pdf']);
-
-                        header('Content-Type: application/pdf');
-                        header('Content-Length: ' . strlen($pdf));
-                        header('Content-disposition: inline; filename="pietje' . gmdate('Y-M-d H-i-s') . '.pdf"');
-                        header('Cache-Control: public, must-revalidate, max-age=0');
-                        header('Pragma: public');
-                        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
-                        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-
-                        $return = $pdf;
-                    } else {
-                        $return = [
-                            'success' => sprintf(
-                                __('successfully_printed', 'woocommerce-myparcel'),
-                                implode(', ', $orderIds)
-                            ),
-                            'link'     => $parsedResponse['link'],
-                        ];
-                    }
-                }
+                $return = $this->afterPrintAction($response, $orderIds);
                 break;
+            case PdkActions::EXPORT_RETURN:
+                $return = [
+                    'success' => sprintf(
+                        __('successfully_exported_return', 'woocommerce-myparcel'),
+                        implode(', ', $orderIds)
+                    ),
+                ];
         }
 
         echo json_encode($this->setFeedbackForClient($return));
@@ -694,6 +673,46 @@ class ExportActions
         }
 
         return $calculated_fee;
+    }
+
+    /**
+     * @param        $response
+     * @param  array $orderIds
+     *
+     * @return array
+     * @throws \JsonException
+     * @throws \MyParcelNL\Pdk\Base\Exception\InvalidCastException
+     */
+    private function afterPrintAction($response, array $orderIds): array
+    {
+        if (isset($response)) {
+            (new OrderStatus())->updateOrderBarcode($orderIds);
+            $displaySetting = WCMYPA()->settingCollection->getByName('download_display');
+            $display        = $displaySetting === 'display';
+            $parsedResponse = json_decode($response->getContent(), true)['data'];
+
+            if ($display) {
+                $pdf = base64_decode(json_decode($response->getContent(), true)['data']['pdf']);
+
+                header('Content-Type: application/pdf');
+                header('Content-Length: ' . strlen($pdf));
+                header('Content-disposition: inline; filename="pietje' . gmdate('Y-M-d H-i-s') . '.pdf"');
+                header('Cache-Control: public, must-revalidate, max-age=0');
+                header('Pragma: public');
+                header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+                header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+
+                return $pdf;
+            } else {
+                return [
+                    'success' => sprintf(
+                        __('successfully_printed', 'woocommerce-myparcel'),
+                        implode(', ', $orderIds)
+                    ),
+                    'link'    => $parsedResponse['link'],
+                ];
+            }
+        }
     }
 
     /**

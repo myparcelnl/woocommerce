@@ -65,12 +65,15 @@ class OrderStatus
                 continue;
             }
 
+            self::updateOrderStatus(wc_get_order($orderId), 'after_printing');
+
             $trackTraceArray = $shipments->pluck('barcode')->toArray();
 
-            ExportActions::addTrackTraceNoteToOrder((int) $orderId, $trackTraceArray);
+            if ($trackTraceArray) {
+                return;
+            }
 
-//            self::updateOrderStatus($order, WCMP_Settings_Data::CHANGE_STATUS_AFTER_PRINTING);
-            self::updateOrderStatus(wc_get_order($orderId), 'after_printing');
+            ExportActions::addTrackTraceNoteToOrder((int) $orderId, $trackTraceArray);
         }
     }
 

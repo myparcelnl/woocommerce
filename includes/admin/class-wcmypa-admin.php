@@ -543,7 +543,18 @@ class WCMYPA_Admin
             ],
         ];
 
+        $fieldDisplay = [
+            'name' => 'display',
+            'class'             => ['wcmp__d--inline-block'],
+            'input_class'       => ['wcmp__offset-dialog__display'],
+            'type'              => 'select',
+            'options' => [
+                'A4' => 'A4',
+                'A6' => 'A6',
+            ],
+        ];
         $class = new SettingsFieldArguments($field, false);
+        $classDisplay = new SettingsFieldArguments($fieldDisplay, false);
         ?>
 
       <div
@@ -565,9 +576,11 @@ class WCMYPA_Admin
               <img
                 src="<?php
                 echo WCMYPA()->plugin_url() . '/assets/img/offset.svg'; ?>"
-                alt="<?php
-                implode(', ', ExportActions::DEFAULT_POSITIONS) ?>"
                 class="wcmp__offset-dialog__icon wcmp__pl--1" />
+            </div>
+            <div class="wcmp__d--flex wcmp__pb--2">
+                <?php
+                woocommerce_form_field($fieldDisplay['name'], $classDisplay->getArguments(false), '');?>
             </div>
             <div>
               <a
@@ -709,7 +722,7 @@ class WCMYPA_Admin
     {
         $exportOrder = PdkActions::EXPORT_ORDER;
         $printOrder  = PdkActions::PRINT_ORDER;
-        $addReturn   = 'return';
+        $addReturn   = PdkActions::EXPORT_RETURN;
         $pluginUrl   = WCMYPA()->plugin_url();
         $baseUrl     = 'admin-ajax.php?action=' . ExportActions::ACTION_NAME;
 

@@ -162,7 +162,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'labelAmount'     => 1,
             'packageType'     => $deliveryOptions->getPackageType(),
             //            'pickupLocation'  => (array) $deliveryOptions->getPickupLocation(),
-//            'pickupLocation'  => null,
+            //            'pickupLocation'  => null,
             'shipmentOptions' => $this->getShipmentOptions($deliveryOptions),
         ]);
     }
@@ -172,11 +172,20 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
      */
     private function getCustomsDeclaration(): CustomsDeclaration
     {
+        $customDeclarationItems = $this->getCustomsDeclarationItems();
+        $totalWeight            = $customDeclarationItems->reduce(
+            static function (int $acc, CustomsDeclarationItem $item) {
+                $acc += $item->weight;
+                return $acc;
+            },
+            0
+        );
+
         return new CustomsDeclaration([
             'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
-            'invoice'  => null,
-            'items'    => $this->getCustomsDeclarationItems(),
-            'weight'   => 1000,
+            'invoice'  => '1234',
+            'items'    => $customDeclarationItems,
+            'weight'   => $totalWeight,
         ]);
     }
 
