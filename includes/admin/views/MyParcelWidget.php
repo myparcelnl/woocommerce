@@ -127,7 +127,10 @@ class MyParcelWidget
             ',
             wp_kses_post($this->getLogoImg()),
             wp_kses_post($tableHeaders),
-            wp_kses_post($tableContent)
+            wp_kses($tableContent, [
+                'td' => ['colspan' => [],],
+                'tr' => ['onclick' => [], 'style' => [],],
+            ])
         );
     }
 
