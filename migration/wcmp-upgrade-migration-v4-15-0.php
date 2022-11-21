@@ -1,9 +1,7 @@
 <?php
 
 use migration\WCMP_Upgrade_Migration;
-use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
-use WPO\WC\MyParcel\Collections\SettingsCollection;
 
 if (! defined('ABSPATH')) {
     exit;
