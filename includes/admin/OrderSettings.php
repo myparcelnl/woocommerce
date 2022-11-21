@@ -248,22 +248,6 @@ class OrderSettings
     /**
      * @return bool
      */
-    public function hasDirectEveningService(): bool
-    {
-        return $this->directEveningService ?? false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasEasyLabel(): bool
-    {
-        return $this->easyLabel ?? false;
-    }
-
-    /**
-     * @return bool
-     */
     public function hasHideSender(): bool
     {
         return $this->hideSender ?? false;
@@ -426,13 +410,13 @@ class OrderSettings
                 'default_when_false' => false,
             ],
             'hideSender'        => [
-                'method'             => [$this, 'hasHideSender'],
+                'method'             => [$this->shipmentOptions, 'hasHideSender'],
                 'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_HIDE_SENDER,
                 'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER,
                 'default_when_false' => false,
             ],
             'extraAssurance'        => [
-                'method'             => [$this, 'hasExtraAssurance'],
+                'method'             => [$this->shipmentOptions, 'hasExtraAssurance'],
                 'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_EXTRA_ASSURANCE,
                 'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE,
                 'default_when_false' => false,

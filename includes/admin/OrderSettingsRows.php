@@ -40,8 +40,6 @@ class OrderSettingsRows
     private const OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY      = '[shipment_options][same_day_delivery]';
     private const OPTION_SHIPMENT_OPTIONS_SIGNATURE              = '[shipment_options][signature]';
     private const OPTION_SHIPMENT_OPTIONS_AGE_CHECK              = '[shipment_options][age_check]';
-    private const OPTION_SHIPMENT_OPTIONS_EASY_LABEL             = '[shipment_options][easy_label]';
-    private const OPTION_SHIPMENT_OPTIONS_DIRECT_EVENING_SERVICE = '[shipment_options][direct_evening_service]';
     private const OPTION_SHIPMENT_OPTIONS_HIDE_SENDER            = '[shipment_options][hide_sender]';
     private const OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE        = '[shipment_options][extra_assurance]';
 
@@ -56,8 +54,6 @@ class OrderSettingsRows
         self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT        => AbstractConsignment::SHIPMENT_OPTION_RETURN,
         self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY      => AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY,
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE              => AbstractConsignment::SHIPMENT_OPTION_SIGNATURE,
-        self::OPTION_SHIPMENT_OPTIONS_EASY_LABEL             => AbstractConsignment::SHIPMENT_OPTION_EASY_LABEL,
-        self::OPTION_SHIPMENT_OPTIONS_DIRECT_EVENING_SERVICE => AbstractConsignment::SHIPMENT_OPTION_DIRECT_EVENING_SERVICE,
         self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER            => AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER,
         self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE        => AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE,
     ];
@@ -119,7 +115,6 @@ class OrderSettingsRows
         if (! $isHomeCountry) {
             unset($packageTypeOptions['mailbox'], $packageTypeOptions['digital_stamp']);
         }
-
         $rows = [
             [
                 'name'    => self::OPTION_CARRIER,
@@ -328,18 +323,6 @@ class OrderSettingsRows
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER),
-                ],
-            ],
-            [
-                'name'      => self::OPTION_SHIPMENT_OPTIONS_DIRECT_EVENING_SERVICE,
-                'type'      => 'toggle',
-                'label'     => __('shipment_options_direct_evening_service', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_direct_evening_service_help_text', 'woocommerce-myparcel'),
-                'value'     => $orderSettings->hasDirectEveningService(),
-                'condition' => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_DIRECT_EVENING_SERVICE),
                 ],
             ],
             [
