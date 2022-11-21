@@ -320,7 +320,7 @@ class OrderSettingsRows
                 ],
             ],
             [
-                'name'      => self::OPTION_SHIPMENT_OPTIONS_EXPEDITION_SECRET,
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER,
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_expedition_secret', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_expedition_secret_help_text', 'woocommerce-myparcel'),
@@ -328,7 +328,7 @@ class OrderSettingsRows
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_EXPEDITION_SECRET),
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER),
                 ],
             ],
             [

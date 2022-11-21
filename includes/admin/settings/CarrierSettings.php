@@ -257,11 +257,19 @@ class CarrierSettings
                     'type'      => 'toggle',
                 ];
                 break;
-            case AbstractConsignment::SHIPMENT_OPTION_EXPEDITION_SECRET:
+            case AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_EXPEDITION_SECRET,
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_HIDE_SENDER,
                     'label'     => __('shipment_options_expedition_secret', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_expedition_secret_help_text', 'woocommerce-myparcel'),
+                    'type'      => 'toggle',
+                ];
+                break;
+            case AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE:
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_EXTRA_ASSURANCE,
+                    'label'     => __('shipment_options_extra_assurance', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_extra_assurance_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ];
                 break;
