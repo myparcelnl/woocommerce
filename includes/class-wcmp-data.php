@@ -137,7 +137,6 @@ class WCMP_Data
     {
         return [
             CarrierPostNL::class,
-            CarrierInstabox::class,
         ];
     }
 
