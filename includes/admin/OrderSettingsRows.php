@@ -42,7 +42,8 @@ class OrderSettingsRows
     private const OPTION_SHIPMENT_OPTIONS_AGE_CHECK              = '[shipment_options][age_check]';
     private const OPTION_SHIPMENT_OPTIONS_EASY_LABEL             = '[shipment_options][easy_label]';
     private const OPTION_SHIPMENT_OPTIONS_DIRECT_EVENING_SERVICE = '[shipment_options][direct_evening_service]';
-    private const OPTION_SHIPMENT_OPTIONS_EXPEDITION_SECRET      = '[shipment_options][expedition_secret]';
+    private const OPTION_SHIPMENT_OPTIONS_HIDE_SENDER            = '[shipment_options][hide_sender]';
+    private const OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE        = '[shipment_options][extra_assurance]';
 
     /**
      * Maps shipment options in this form to their respective name in the SDK.
@@ -57,7 +58,8 @@ class OrderSettingsRows
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE              => AbstractConsignment::SHIPMENT_OPTION_SIGNATURE,
         self::OPTION_SHIPMENT_OPTIONS_EASY_LABEL             => AbstractConsignment::SHIPMENT_OPTION_EASY_LABEL,
         self::OPTION_SHIPMENT_OPTIONS_DIRECT_EVENING_SERVICE => AbstractConsignment::SHIPMENT_OPTION_DIRECT_EVENING_SERVICE,
-        self::OPTION_SHIPMENT_OPTIONS_EXPEDITION_SECRET      => AbstractConsignment::SHIPMENT_OPTION_EXPEDITION_SECRET,
+        self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER            => AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER,
+        self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE        => AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE,
     ];
 
     private const CONDITION_DELIVERY_TYPE_DELIVERY = [
