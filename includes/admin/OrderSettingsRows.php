@@ -76,6 +76,7 @@ class OrderSettingsRows
     ];
 
     private const CONDITION_FORCE_ENABLED_ON_AGE_CHECK = [
+        'carrier'      => CarrierPostNL::NAME,
         'parent_name'  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
         'type'         => 'disable',
         'set_value'    => WCMP_Settings_Data::ENABLED,
@@ -298,6 +299,7 @@ class OrderSettingsRows
                 'value'     => $orderSettings->hasExtraAssurance(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE),
                 ],
             ],
@@ -316,15 +318,21 @@ class OrderSettingsRows
             [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER,
                 'type'      => 'toggle',
-                'label'     => __('shipment_options_expedition_secret', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_expedition_secret_help_text', 'woocommerce-myparcel'),
+                'label'     => __('shipment_options_hide_sender', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_hide_sender_help_text', 'woocommerce-myparcel'),
                 'value'     => $orderSettings->hasHideSender(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER),
+                    [
+                        'parent_name'  => self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE,
+                        'type'         => 'disable',
+                        'set_value'    => WCMP_Settings_Data::DISABLED,
+                        'parent_value' => WCMP_Settings_Data::DISABLED,
+                    ],
                 ],
-            ],
+           ],
             [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY,
                 'type'      => 'toggle',
