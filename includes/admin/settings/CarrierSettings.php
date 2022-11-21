@@ -325,6 +325,36 @@ class CarrierSettings
                     ]
                 );
                 break;
+            case AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE:
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_EXTRA_ASSURANCE_ENABLED,
+                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    'label'     => __('shipment_options_extra_assurance', 'woocommerce-myparcel'),
+                    'type'      => 'toggle',
+                ];
+                $settings[] = WCMP_Settings_Data::getFeeField(
+                    WCMYPA_Settings::SETTING_CARRIER_EXTRA_ASSURANCE_FEE,
+                    [
+                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                        WCMYPA_Settings::SETTING_CARRIER_EXTRA_ASSURANCE_ENABLED,
+                    ]
+                );
+                break;
+            case AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER:
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_HIDE_SENDER_ENABLED,
+                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                    'label'     => __('shipment_options_hide_sender', 'woocommerce-myparcel'),
+                    'type'      => 'toggle',
+                ];
+                $settings[] = WCMP_Settings_Data::getFeeField(
+                    WCMYPA_Settings::SETTING_CARRIER_HIDE_SENDER_FEE,
+                    [
+                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+                        WCMYPA_Settings::SETTING_CARRIER_HIDE_SENDER_ENABLED,
+                    ]
+                );
+                break;
             case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,

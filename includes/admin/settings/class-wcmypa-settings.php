@@ -111,6 +111,10 @@ class WCMYPA_Settings
     public const SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT  = 'digital_stamp_default_weight';
     public const SETTING_CARRIER_DROP_OFF_DAYS                 = 'drop_off_days';
     public const SETTING_CARRIER_DROP_OFF_DELAY                = 'drop_off_delay';
+    public const SETTING_CARRIER_EXTRA_ASSURANCE_ENABLED       = 'extra_assurance_enabled';
+    public const SETTING_CARRIER_EXTRA_ASSURANCE_FEE           = 'extra_assurance_fee';
+    public const SETTING_CARRIER_HIDE_SENDER_ENABLED           = 'hide_sender_enabled';
+    public const SETTING_CARRIER_HIDE_SENDER_FEE               = 'hide_sender_fee';
     public const SETTING_CARRIER_PICKUP_ENABLED                = 'pickup_enabled';
     public const SETTING_CARRIER_PICKUP_FEE                    = 'pickup_fee';
     public const SETTING_CARRIER_PICKUP_TITLE                  = 'pickup_title';
