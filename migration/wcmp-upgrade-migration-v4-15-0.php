@@ -1,7 +1,9 @@
 <?php
 
 use migration\WCMP_Upgrade_Migration;
+use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettingsService;
+use WPO\WC\MyParcel\Collections\SettingsCollection;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -24,12 +26,9 @@ class WCMP_Upgrade_Migration_v4_15_0 extends WCMP_Upgrade_Migration
     protected function import(): void
     {
         require_once(WCMYPA()->plugin_path() . '/vendor/autoload.php');
-        require_once(WCMYPA()->plugin_path() . '/includes/admin/settings/class-wcmypa-settings.php');
-    }
 
-    protected function log(string $message): void
-    {
-
+        WCMYPA()->includes();
+        WCMYPA()->initSettings();
     }
 
     protected function migrate(): void
@@ -41,9 +40,11 @@ class WCMP_Upgrade_Migration_v4_15_0 extends WCMP_Upgrade_Migration
         }
 
         try {
-            AccountSettingsService::getInstance()->refreshSettingsFromApi($apiKey);
+            if (! AccountSettingsService::getInstance()->refreshSettingsFromApi($apiKey)) {
+                WCMP_Log::add('Upgrade MyParcel plugin: could not refresh settings from api');
+            }
         } catch(\Throwable $thrown) {
-            // nope
+            WCMP_Log::add($thrown->getMessage());
         }
     }
 }
