@@ -298,8 +298,8 @@ class OrderSettingsRows
             [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE,
                 'type'      => 'toggle',
-                'label'     => __('shipment_options_age_check', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_age_check_help_text', 'woocommerce-myparcel'),
+                'label'     => __('shipment_options_extra_assurance', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_extra_assurance_help_text', 'woocommerce-myparcel'),
                 'value'     => $orderSettings->hasExtraAssurance(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
