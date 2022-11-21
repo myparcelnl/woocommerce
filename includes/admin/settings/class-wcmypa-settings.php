@@ -88,12 +88,14 @@ class WCMYPA_Settings
     // Defaults
     public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE                = 'export_signature';
     public const SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT           = 'export_only_recipient';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_HIDE_SENDER              = 'export_hide_sender';
     public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT             = 'export_large_format';
     public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT = 'export_large_format_from_weight';
     public const SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK                = 'export_age_check';
     public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN                   = 'export_return_shipments';
     public const SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY        = 'export_same_day_delivery';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED                  = 'export_insured';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_EXTRA_ASSURANCE          = 'export_extra_assurance';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT           = 'export_insured_amount';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE       = 'export_insured_from_price';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE           = 'export_insured_for_be';
