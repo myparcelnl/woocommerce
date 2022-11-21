@@ -223,14 +223,6 @@ class WCMP_Export
             }
         }
 
-        foreach ($order_ids as $key => $id) {
-            $order = WCX::get_order($id);
-
-            if (WCMP_Shipping_Methods::LOCAL_PICKUP_HUMAN === $order->get_shipping_method()) {
-                unset($order_ids[$key]);
-            }
-        }
-
         if (empty($shipment_ids) && empty($order_ids)) {
             Messages::showAdminNotice(__('You have not selected any orders!', 'woocommerce-myparcel'));
         } else {

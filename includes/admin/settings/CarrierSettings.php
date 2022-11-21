@@ -249,14 +249,6 @@ class CarrierSettings
                     'type'      => 'toggle',
                 ];
                 break;
-            case AbstractConsignment::SHIPMENT_OPTION_EASY_LABEL:
-                $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_EASY_LABEL,
-                    'label'     => __('shipment_options_easy_label', 'woocommerce-myparcel'),
-                    'help_text' => __('shipment_options_easy_label_help_text', 'woocommerce-myparcel'),
-                    'type'      => 'toggle',
-                ];
-                break;
             case AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER:
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_HIDE_SENDER,
@@ -270,14 +262,6 @@ class CarrierSettings
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_EXTRA_ASSURANCE,
                     'label'     => __('shipment_options_extra_assurance', 'woocommerce-myparcel'),
                     'help_text' => __('shipment_options_extra_assurance_help_text', 'woocommerce-myparcel'),
-                    'type'      => 'toggle',
-                ];
-                break;
-            case AbstractConsignment::SHIPMENT_OPTION_DIRECT_EVENING_SERVICE:
-                $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_DIRECT_EVENING_SERVICE,
-                    'label'     => __('shipment_options_direct_evening_service', 'woocommerce-myparcel'),
-                    'help_text' => __('shipment_options_direct_evening_service_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ];
                 break;

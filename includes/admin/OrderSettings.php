@@ -425,6 +425,18 @@ class OrderSettings
                 'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_AGE_CHECK,
                 'default_when_false' => false,
             ],
+            'hideSender'        => [
+                'method'             => [$this, 'hasHideSender'],
+                'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_HIDE_SENDER,
+                'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER,
+                'default_when_false' => false,
+            ],
+            'extraAssurance'        => [
+                'method'             => [$this, 'hasExtraAssurance'],
+                'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_EXTRA_ASSURANCE,
+                'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE,
+                'default_when_false' => false,
+            ],
         ];
     }
 

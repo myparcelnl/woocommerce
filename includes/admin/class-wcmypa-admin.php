@@ -868,11 +868,15 @@ class WCMYPA_Admin
             $data          = self::removeDisallowedDeliveryOptions($data, $order->get_shipping_country());
             $orderSettings = new OrderSettings($order, $data);
 
+            $var1 = $orderSettings->getDeliveryOptions()->toArray();
+
             WCX_Order::update_meta_data(
                 $order,
                 self::META_DELIVERY_OPTIONS,
                 $orderSettings->getDeliveryOptions()->toArray()
             );
+
+            $var2 = wc_get_order($order_id);
 
             // Save extra options
             WCX_Order::update_meta_data(
@@ -1227,10 +1231,6 @@ class WCMYPA_Admin
         if (! empty($meta) && ! $meta instanceof DeliveryOptions) {
             if (is_string($meta)) {
                 $meta = json_decode(stripslashes($meta), true);
-            }
-
-            if (self::OLD_RED_JE_PAKKETJE_NAME === $meta['carrier']) {
-                $meta['carrier'] = CarrierInstabox::NAME;
             }
 
             if (! $meta['carrier'] || ! AccountSettings::getInstance()->isEnabledCarrier($meta['carrier'])) {

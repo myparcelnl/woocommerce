@@ -190,6 +190,7 @@ class WCMP_Checkout
      * Get the delivery options config in JSON for passing to JavaScript.
      *
      * @return array
+     * @throws \Exception
      */
     public function getDeliveryOptionsConfig(): array
     {
