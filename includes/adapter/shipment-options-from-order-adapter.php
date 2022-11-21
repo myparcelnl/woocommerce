@@ -16,6 +16,8 @@ class WCMP_ShipmentOptionsFromOrderAdapter extends AbstractShipmentOptionsAdapte
         'return'            => 'isReturn',
         'same_day_delivery' => 'isSameDayDelivery',
         'signature'         => 'hasSignature',
+        'hide_sender'       => 'hasHideSender',
+        'extra_assurance'   => 'hasExtraAssurance',
     ];
 
     /**

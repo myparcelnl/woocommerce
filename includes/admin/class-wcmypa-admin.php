@@ -868,8 +868,6 @@ class WCMYPA_Admin
             $data          = self::removeDisallowedDeliveryOptions($data, $order->get_shipping_country());
             $orderSettings = new OrderSettings($order, $data);
 
-            $var1 = $orderSettings->getDeliveryOptions()->toArray();
-
             WCX_Order::update_meta_data(
                 $order,
                 self::META_DELIVERY_OPTIONS,
