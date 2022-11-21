@@ -54,7 +54,12 @@ class OrderSettings
     /**
      * @var bool
      */
-    private $expeditionSecret;
+    private $hideSender;
+
+    /**
+     * @var bool
+     */
+    private $extraAssurance;
 
     /**
      * @var \WC_Order
@@ -259,9 +264,17 @@ class OrderSettings
     /**
      * @return bool
      */
-    public function hasExpeditionSecret(): bool
+    public function hasHideSender(): bool
     {
-        return $this->expeditionSecret ?? false;
+        return $this->hideSender ?? false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasExtraAssurance(): bool
+    {
+        return $this->extraAssurance ?? false;
     }
 
     /**

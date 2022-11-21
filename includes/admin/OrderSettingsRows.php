@@ -296,6 +296,17 @@ class OrderSettingsRows
                 ],
             ],
             [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE,
+                'type'      => 'toggle',
+                'label'     => __('shipment_options_age_check', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_age_check_help_text', 'woocommerce-myparcel'),
+                'value'     => $orderSettings->hasExtraAssurance(),
+                'condition' => [
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE),
+                ],
+            ],
+            [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT,
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_return', 'woocommerce-myparcel'),
@@ -308,23 +319,11 @@ class OrderSettingsRows
                 ],
             ],
             [
-                'name'      => self::OPTION_SHIPMENT_OPTIONS_EASY_LABEL,
-                'type'      => 'toggle',
-                'label'     => __('shipment_options_easy_label', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_easy_label_help_text', 'woocommerce-myparcel'),
-                'value'     => $orderSettings->hasEasyLabel(),
-                'condition' => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
-                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_EASY_LABEL),
-                ],
-            ],
-            [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER,
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_expedition_secret', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_expedition_secret_help_text', 'woocommerce-myparcel'),
-                'value'     => $orderSettings->hasExpeditionSecret(),
+                'value'     => $orderSettings->hasHideSender(),
                 'condition' => [
                     self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,

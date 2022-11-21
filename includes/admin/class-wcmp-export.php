@@ -1489,7 +1489,7 @@ class WCMP_Export
             $shipmentOptions->setLabelDescription($labelDescriptionFormat->getFormattedLabelDescription());
             $shipmentOptions->setDirectEveningService($orderSettings->hasDirectEveningService());
             $shipmentOptions->setEasyLabel($orderSettings->hasEasyLabel());
-            $shipmentOptions->setExpeditionSecret($orderSettings->hasExpeditionSecret());
+            $shipmentOptions->setHideSender($orderSettings->hasHideSender());
 
             $order = (new Order())
                 ->setStatus($wcOrder->get_status())
