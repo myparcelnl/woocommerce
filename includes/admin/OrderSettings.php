@@ -44,16 +44,6 @@ class OrderSettings
     /**
      * @var bool
      */
-    private $directEveningService;
-
-    /**
-     * @var bool
-     */
-    private $easyLabel;
-
-    /**
-     * @var bool
-     */
     private $hideSender;
 
     /**
