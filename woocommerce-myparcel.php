@@ -354,9 +354,7 @@ if (! class_exists('WCMYPA')) :
                     require_once('migration/wcmp-upgrade-migration-v4-4-1.php');
                 }
 
-                if (version_compare($installed_version, '4.15.0', '<')) {
-                    require_once('migration/wcmp-upgrade-migration-v4-15-0.php');
-                }
+                require_once('migration/wcmp-upgrade-migration-always.php');
             }
         }
 
