@@ -9,8 +9,8 @@ defined('ABSPATH') or die();
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WC_Order;
@@ -380,7 +380,7 @@ class OrderSettingsRows
         $carriersOptions = [];
 
         foreach ($carriers as $carrier) {
-            if (CarrierInstabox::ID === $carrier->getId() && ! WCMP_Data::isHomeCountry($country)) {
+            if (CarrierDHLForYou::ID === $carrier->getId() && ! WCMP_Data::isHomeCountry($country)) {
                 continue;
             }
 
