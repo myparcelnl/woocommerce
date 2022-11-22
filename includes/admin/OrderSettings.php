@@ -814,7 +814,6 @@ class OrderSettings
         $packageType             = $this->getPackageType();
         $digitalStampRangeWeight = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $packageType
             ? $this->getDigitalStampRangeWeight() : null;
-        $var1 = $this->getWeight();
         $weight                  = $this->getWeight() / $this->getColloAmount();
 
         if (AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $packageType) {

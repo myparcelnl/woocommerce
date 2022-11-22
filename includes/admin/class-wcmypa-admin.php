@@ -874,8 +874,6 @@ class WCMYPA_Admin
                 $orderSettings->getDeliveryOptions()->toArray()
             );
 
-            $var2 = wc_get_order($order_id);
-
             // Save extra options
             WCX_Order::update_meta_data(
                 $order,
