@@ -3,7 +3,7 @@ Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
 Tested up to: 6.1
-Stable tag: 4.14.0
+Stable tag: 4.15.0
 Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -102,6 +102,22 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 6. MyParcel pickup delivery options
 
 == Changelog ==
+
+= 4.15.0 (2022-11-22) =
+
+* New: add modal option for myparcel orders only (#869)
+* New: show digital stamp weight in order view (#896)
+* New: show test connection button (#881)
+* Fixed bug: allow return options (#915)
+* Fixed bug: load account settings during upgrade (#914)
+* Fixed bug: remove carrier instabox (#912)
+* Fixed bug: allow link to order detail from widget (#906)
+* Fixed bug: show tracktrace in order email when no refunds (#908)
+* Fixed bug: get correct hs code and country of origin for variation (#910)
+* Fixed bug: show tracktrace in order email when no refunds
+* Fixed bug: prevent dismissed message from reappearing (#898)
+* Fixed bug: prevent unnecessary automatic export (#895)
+* Fixed bug: remove barcode from refund mail (#894)
 
 = 4.14.0 (2022-10-11) =
 

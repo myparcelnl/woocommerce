@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.15.0](https://github.com/myparcelnl/woocommerce/compare/v4.14.0...v4.15.0) (2022-11-22)
+
+
+### :sparkles: New Features
+
+* add modal option for myparcel orders only ([#869](https://github.com/myparcelnl/woocommerce/issues/869)) ([77b1121](https://github.com/myparcelnl/woocommerce/commit/77b112195e602210a3646adc87ba85f30188e463))
+* show digital stamp weight in order view ([#896](https://github.com/myparcelnl/woocommerce/issues/896)) ([036c34c](https://github.com/myparcelnl/woocommerce/commit/036c34c9f0b4b204163d448e2df8e72a72a51c96))
+* show test connection button ([#881](https://github.com/myparcelnl/woocommerce/issues/881)) ([6719f0a](https://github.com/myparcelnl/woocommerce/commit/6719f0a6d7133d2f917b7e616a9e8189acadf097))
+
+
+### :bug: Bug Fixes
+
+* allow link to order detail from widget ([#906](https://github.com/myparcelnl/woocommerce/issues/906)) ([0073155](https://github.com/myparcelnl/woocommerce/commit/0073155d98a1e3ce47e0ecf9dc6ea0a20685e5f8))
+* allow return options ([#915](https://github.com/myparcelnl/woocommerce/issues/915)) ([373f5d6](https://github.com/myparcelnl/woocommerce/commit/373f5d658be77ab2d61d34aad1811d948c418bc9))
+* get correct hs code and country of origin for variation ([#910](https://github.com/myparcelnl/woocommerce/issues/910)) ([aaefdd1](https://github.com/myparcelnl/woocommerce/commit/aaefdd178230ab6c79b7282d620dc1f3cd77cfc3))
+* load account settings during upgrade ([#914](https://github.com/myparcelnl/woocommerce/issues/914)) ([0bc1532](https://github.com/myparcelnl/woocommerce/commit/0bc15322b40308e897c15f6622d02effc86ba156))
+* prevent dismissed message from reappearing ([#898](https://github.com/myparcelnl/woocommerce/issues/898)) ([7066bfa](https://github.com/myparcelnl/woocommerce/commit/7066bfab45bd3da6882ec334071760b67b9e2792))
+* prevent unnecessary automatic export ([#895](https://github.com/myparcelnl/woocommerce/issues/895)) ([f04e1f2](https://github.com/myparcelnl/woocommerce/commit/f04e1f206e432000cd307e4dc9bc5cf18f22510f))
+* remove barcode from refund mail ([#894](https://github.com/myparcelnl/woocommerce/issues/894)) ([be0bcda](https://github.com/myparcelnl/woocommerce/commit/be0bcdaee53159ac47f1b5f1f8e73ee7b9ce3a04))
+* remove carrier instabox ([#912](https://github.com/myparcelnl/woocommerce/issues/912)) ([b59e3ef](https://github.com/myparcelnl/woocommerce/commit/b59e3efeb2e3d3f98cc414686646ab41d8b0f054))
+* show tracktrace in order email when no refunds ([0bcd634](https://github.com/myparcelnl/woocommerce/commit/0bcd634f4308321b9196c6d144aee7344601fbb9))
+* show tracktrace in order email when no refunds ([#908](https://github.com/myparcelnl/woocommerce/issues/908)) ([7239dfb](https://github.com/myparcelnl/woocommerce/commit/7239dfb4cccc54bbaf961cba264b987f7ac97c39))
+
 ## [4.14.0](https://github.com/myparcelnl/woocommerce/compare/v4.13.3...v4.14.0) (2022-10-11)
 
 
