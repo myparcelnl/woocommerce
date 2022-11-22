@@ -252,8 +252,8 @@ class CarrierSettings
             case AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER:
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_HIDE_SENDER,
-                    'label'     => __('shipment_options_expedition_secret', 'woocommerce-myparcel'),
-                    'help_text' => __('shipment_options_expedition_secret_help_text', 'woocommerce-myparcel'),
+                    'label'     => __('shipment_options_hide_sender', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_hide_sender_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ];
                 break;

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHL;
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\admin\settings\CarrierSettings;
@@ -176,13 +175,12 @@ class WCMP_Settings_Data
                     if (isset($setting['condition']) && false === $setting['condition']) {
                         continue;
                     }
-                    $namePrefix           = false ? "{$name}_" : '';
                     $setting['option_id'] = $optionIdentifier;
                     if (isset($setting['name'])) {
-                        $setting['id'] = false ? "{$name}_{$setting['name']}" : $setting['name'];
+                        $setting['id'] = $setting['name'];
                     }
 
-                    $class = new SettingsFieldArguments($setting, "{$optionIdentifier}[{$namePrefix}", ']');
+                    $class = new SettingsFieldArguments($setting, "{$optionIdentifier}[", ']');
 
                     // Add the setting's default value to the defaults array.
                     if (isset($setting['id'])) {

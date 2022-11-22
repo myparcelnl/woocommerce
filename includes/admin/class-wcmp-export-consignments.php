@@ -354,7 +354,7 @@ class WCMP_Export_Consignments
             [
                 'weight' => $this->orderSettings->getColloWeight(),
                 'length' => $dimensions['length'] ?: 30,
-                'height' => 30,
+                'height' => $dimensions['height'] ?: 30,
                 'width'  => $dimensions['width'] ?: 30,
             ]
         );
