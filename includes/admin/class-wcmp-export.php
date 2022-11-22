@@ -234,7 +234,6 @@ class WCMP_Export
                     // Creating a return shipment.
                     case self::EXPORT_RETURN:
                         $options = array_map([$this, 'sanitizeOptions'], $requestVars['myparcel_options'] ?? []);
-                        die('rer');
                         $return = $this->exportReturn($order_ids, $options);
                         break;
 
