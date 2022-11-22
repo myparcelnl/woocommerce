@@ -307,6 +307,8 @@ class WCMP_Export_Consignments
             ->setSameDayDelivery($this->orderSettings->isSameDayDelivery())
             ->setSignature($this->orderSettings->hasSignature())
             ->setContents($this->getContents())
+            ->setExtraAssurance($this->orderSettings->hasExtraAssurance())
+            ->setHideSender($this->orderSettings->hasHideSender())
             ->setInvoice($this->order->get_id());
     }
 
