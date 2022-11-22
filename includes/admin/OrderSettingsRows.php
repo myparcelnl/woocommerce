@@ -76,7 +76,6 @@ class OrderSettingsRows
     ];
 
     private const CONDITION_FORCE_ENABLED_ON_AGE_CHECK = [
-        'carrier'      => CarrierPostNL::NAME,
         'parent_name'  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
         'type'         => 'disable',
         'set_value'    => WCMP_Settings_Data::ENABLED,

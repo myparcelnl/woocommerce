@@ -231,10 +231,7 @@ jQuery(($) => {
     dependencies[input.name]
       .forEach((dependency) => {
         const data = handleDependency(dependency, level);
-if (dependency.condition.hasOwnProperty('carrier')) {
-  const carrierSelect = document.getElementById(dependency.node.name.replace(/\[\w+\]\[\w+\]$/, '[carrier]'));
-  if (dependency.condition.carrier !== carrierSelect.options[carrierSelect.selectedIndex].value) return;
-}
+
         queue.push({
           name: dependency.node.name.replace(/myparcel_options\[\d+\]/, ''),
           parent: input,
