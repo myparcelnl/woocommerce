@@ -148,6 +148,24 @@ class WCMP_Export
     }
 
     /**
+     * @param $value
+     *
+     * @return int|string|array
+     */
+    public static function sanitizeOptions($value)
+    {
+        if (is_string($value)) {
+            return sanitize_text_field($value);
+        }
+
+        if (is_array($value)) {
+            return array_map(['self', 'sanitizeOptions'], $value);
+        }
+
+        return (int) $value;
+    }
+
+    /**
      * Export selected orders.
      *
      * @access public
@@ -217,7 +235,7 @@ class WCMP_Export
 
                     // Creating a return shipment.
                     case self::EXPORT_RETURN:
-                        $options = array_map('sanitize_text_field', $requestVars['myparcel_options'] ?? []);
+                        $options = array_map([$this, 'sanitizeOptions'], $requestVars['myparcel_options'] ?? []);
                         $return = $this->exportReturn($order_ids, $options);
                         break;
 
