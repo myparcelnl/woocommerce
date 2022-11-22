@@ -186,12 +186,14 @@ if (! class_exists('WCMYPA')) :
             require_once($this->includes . '/frontend/class-wcmp-frontend-track-trace.php');
             require_once($this->includes . '/frontend/class-wcmp-checkout.php');
             require_once($this->includes . '/frontend/class-wcmp-frontend.php');
-            $this->admin = require($this->includes . '/admin/class-wcmypa-admin.php');
+            $temp = require_once($this->includes . '/admin/class-wcmypa-admin.php');
+            if (true !== $temp) $this->admin = $temp;
             require_once($this->includes . '/admin/settings/class-wcmypa-settings.php');
             require_once($this->includes . '/class-wcmp-log.php');
             require_once($this->includes . '/admin/class-wcmp-country-codes.php');
             require_once($this->includes . '/admin/settings/class-wcmp-shipping-methods.php');
-            $this->export = require($this->includes . '/admin/class-wcmp-export.php');
+            $temp = require_once($this->includes . '/admin/class-wcmp-export.php');
+            if (true !== $temp) $this->export = $temp;
             require_once($this->includes . '/class-wcmp-postcode-fields.php');
             require_once($this->includes . '/adapter/delivery-options-from-order-adapter.php');
             require_once($this->includes . '/adapter/pickup-location-from-order-adapter.php');
