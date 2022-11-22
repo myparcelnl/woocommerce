@@ -157,9 +157,11 @@ class WCMP_Export
         if (is_string($value)) {
             return sanitize_text_field($value);
         }
+
         if (is_array($value)) {
             return array_map(['self', 'sanitizeOptions'], $value);
         }
+
         return (int) $value;
     }
 
