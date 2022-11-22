@@ -175,15 +175,13 @@ class AccountSettings extends Model
             return new Collection();
         }
 
-        $enabledCarriers = $this->getCarrierOptions()
+        return $this->getCarrierOptions()
             ->filter(static function (CarrierOptions $carrierOption) {
                 return $carrierOption->isEnabled() && WCMP_Data::hasCarrier($carrierOption->getCarrier());
             })
             ->map(static function (CarrierOptions $carrierOptions) {
                 return $carrierOptions->getCarrier();
             });
-
-        return $enabledCarriers;
     }
 
     /**
