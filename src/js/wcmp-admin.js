@@ -1046,8 +1046,8 @@ jQuery(($) => {
     return parseInt(askForPrintPosition ? $(selectors.offsetDialogInputOffset).val() : 0);
   }
 
-  function getPrintDisplay(offset) {
-    return (offset !== 0) ? $(selectors.offsetDialogInputDisplay).val() : 'A6';
+  function getPrintDisplay() {
+    return $(selectors.offsetDialogInputDisplay).val();
   }
 
   /**
@@ -1060,11 +1060,11 @@ jQuery(($) => {
 
     if (this && this.href) {
       request = {
-        url: this.href,z
+        url: this.href,
       };
     } else {
       const offset = getPrintOffset();
-      const display = getPrintDisplay(offset);
+      const display = getPrintDisplay();
       request = {
         data: {
           action: 'MyParcelPdk',
