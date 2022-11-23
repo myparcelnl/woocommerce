@@ -74,6 +74,7 @@ class WCMYPA_Settings
     public const SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW         = 'pickup_locations_default_view';
     public const SETTING_MORNING_DELIVERY_TITLE                = 'morning_title';
     public const SETTING_EVENING_DELIVERY_TITLE                = 'evening_title';
+    public const SETTING_SAME_DAY_DELIVERY_TITLE               = 'same_day_title';
     public const SETTING_ONLY_RECIPIENT_TITLE                  = 'only_recipient_title';
     public const SETTING_SIGNATURE_TITLE                       = 'signature_title';
     public const SETTING_STANDARD_TITLE                        = 'standard_title';

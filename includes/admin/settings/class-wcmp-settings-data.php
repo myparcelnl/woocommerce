@@ -819,6 +819,13 @@ class WCMP_Settings_Data
                 'default'   => __('shipment_options_delivery_evening', 'woocommerce-myparcel'),
             ],
             [
+                'name'      => WCMYPA_Settings::SETTING_SAME_DAY_DELIVERY_TITLE,
+                'condition' => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                'label'     => __('shipment_options_delivery_same_day_title', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_delivery_same_day_description', 'woocommerce-myparcel'),
+                'default'   => __('shipment_options_delivery_same_day', 'woocommerce-myparcel'),
+            ],
+            [
                 'name'      => WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE,
                 'condition' => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 'label'     => __('shipment_options_only_recipient_title', 'woocommerce-myparcel'),
