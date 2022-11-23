@@ -147,7 +147,7 @@ class WCMP_Settings_Data
      *
      * @throws \Exception
      */
-    private function generateSettings(array $settingsArray, string $optionName): void
+    private function generateSettings(array $settingsArray, string $optionName, bool $prefix = false): void
     {
         $optionIdentifier = WCMYPA_Settings::getOptionId($optionName);
         $defaults         = [];
@@ -175,12 +175,13 @@ class WCMP_Settings_Data
                     if (isset($setting['condition']) && false === $setting['condition']) {
                         continue;
                     }
+                    $namePrefix           = $prefix ? "{$name}_" : '';
                     $setting['option_id'] = $optionIdentifier;
                     if (isset($setting['name'])) {
-                        $setting['id'] = $setting['name'];
+                        $setting['id'] = $prefix ? "{$name}_{$setting['name']}" : $setting['name'];
                     }
 
-                    $class = new SettingsFieldArguments($setting, "{$optionIdentifier}[", ']');
+                    $class = new SettingsFieldArguments($setting, "{$optionIdentifier}[{$namePrefix}", ']');
 
                     // Add the setting's default value to the defaults array.
                     if (isset($setting['id'])) {
