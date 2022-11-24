@@ -230,6 +230,10 @@ class WCMP_Checkout
             }
         }
 
+        if (array_key_exists('dhlforyou', $carrierSettings)) {
+            $carrierSettings['dhlforyou']['allowSameDayDelivery'] = true;
+        }
+
         return [
             'config' => [
                 'apiBaseUrl'                 => getenv('MYPARCEL_API_BASE_URL', true) ?: MyParcelRequest::REQUEST_URL,
