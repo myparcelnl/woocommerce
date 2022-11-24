@@ -310,36 +310,6 @@ class CarrierSettings
                     ]
                 );
                 break;
-            case AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE:
-                $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_EXTRA_ASSURANCE_ENABLED,
-                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    'label'     => __('shipment_options_extra_assurance', 'woocommerce-myparcel'),
-                    'type'      => 'toggle',
-                ];
-                $settings[] = WCMP_Settings_Data::getFeeField(
-                    WCMYPA_Settings::SETTING_CARRIER_EXTRA_ASSURANCE_FEE,
-                    [
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                        WCMYPA_Settings::SETTING_CARRIER_EXTRA_ASSURANCE_ENABLED,
-                    ]
-                );
-                break;
-            case AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER:
-                $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_HIDE_SENDER_ENABLED,
-                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    'label'     => __('shipment_options_hide_sender', 'woocommerce-myparcel'),
-                    'type'      => 'toggle',
-                ];
-                $settings[] = WCMP_Settings_Data::getFeeField(
-                    WCMYPA_Settings::SETTING_CARRIER_HIDE_SENDER_FEE,
-                    [
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                        WCMYPA_Settings::SETTING_CARRIER_HIDE_SENDER_ENABLED,
-                    ]
-                );
-                break;
             case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
                 $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
@@ -582,7 +552,10 @@ class CarrierSettings
                 'max'       => 14,
                 'help_text' => __('setting_carrier_drop_off_delay_help_text', 'woocommerce-myparcel'),
             ],
-            CarrierPostNL::NAME === $carrier->getName() ? [
+        ];
+
+        if (CarrierPostNL::NAME === $carrier->getName()) {
+            $settings[] = [
                 'name'      => WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT,
                 'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 'label'     => __('setting_carrier_digital_stamp', 'woocommerce-myparcel'),
@@ -596,8 +569,8 @@ class CarrierSettings
                     WCMP_Data::DIGITAL_STAMP_RANGES[4]['average'] => '350 - 2000 gram',
                 ],
                 'help_text' => __('setting_carrier_digital_stamp_help_text', 'woocommerce-myparcel'),
-            ] : [],
-        ];
+            ];
+        }
 
         $settings = $this->addDeliveryDateSettings($consignment, $settings);
 
