@@ -8,6 +8,7 @@ defined('ABSPATH') or die();
 
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WCMP_Data;
@@ -581,7 +582,7 @@ class CarrierSettings
                 'max'       => 14,
                 'help_text' => __('setting_carrier_drop_off_delay_help_text', 'woocommerce-myparcel'),
             ],
-            [
+            CarrierPostNL::NAME === $carrier->getName() ? [
                 'name'      => WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT,
                 'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 'label'     => __('setting_carrier_digital_stamp', 'woocommerce-myparcel'),
@@ -595,7 +596,7 @@ class CarrierSettings
                     WCMP_Data::DIGITAL_STAMP_RANGES[4]['average'] => '350 - 2000 gram',
                 ],
                 'help_text' => __('setting_carrier_digital_stamp_help_text', 'woocommerce-myparcel'),
-            ],
+            ] : [],
         ];
 
         $settings = $this->addDeliveryDateSettings($consignment, $settings);

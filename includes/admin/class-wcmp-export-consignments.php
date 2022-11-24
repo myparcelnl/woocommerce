@@ -353,9 +353,9 @@ class WCMP_Export_Consignments
         $this->consignment->setPhysicalProperties(
             [
                 'weight' => $this->orderSettings->getColloWeight(),
-                'length' => $dimensions['length'] ?: 30,
-                'height' => $dimensions['height'] ?: 30,
-                'width'  => $dimensions['width'] ?: 30,
+                'length' => $dimensions['length'] ?: 2,
+                'height' => $dimensions['height'] ?: 2,
+                'width'  => $dimensions['width'] ?: 2,
             ]
         );
     }

@@ -321,7 +321,6 @@ class OrderSettingsRows
                 'help_text' => __('shipment_options_hide_sender_help_text', 'woocommerce-myparcel'),
                 'value'     => $orderSettings->hasHideSender(),
                 'condition' => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
                     self::CONDITION_DELIVERY_TYPE_DELIVERY,
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER),
                     [
