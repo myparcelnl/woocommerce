@@ -822,7 +822,7 @@ class WCMP_Settings_Data
                 'name'      => WCMYPA_Settings::SETTING_SAME_DAY_DELIVERY_TITLE,
                 'condition' => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
                 'label'     => __('shipment_options_delivery_same_day_title', 'woocommerce-myparcel'),
-                'help_text' => __('shipment_options_delivery_same_day_description', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_delivery_standard_description', 'woocommerce-myparcel'),
                 'default'   => __('shipment_options_delivery_same_day', 'woocommerce-myparcel'),
             ],
             [
