@@ -67,7 +67,7 @@ class OrderStatus
 
             self::updateOrderStatus(wc_get_order($orderId), 'after_printing');
 
-            $trackTraceArray = $shipments->pluck('barcode')->toArray();
+            $trackTraceArray = $shipments->pluck('barcode')->last()->toArray();
 
             if ($trackTraceArray) {
                 return;
