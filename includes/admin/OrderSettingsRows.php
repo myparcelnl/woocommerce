@@ -26,6 +26,7 @@ class OrderSettingsRows
         self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT,
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
     ];
+
     private const OPTION_CARRIER                                 = '[carrier]';
     private const OPTION_DELIVERY_TYPE                           = '[delivery_type]';
     private const OPTION_EXTRA_OPTIONS_COLLO_AMOUNT              = '[extra_options][collo_amount]';
