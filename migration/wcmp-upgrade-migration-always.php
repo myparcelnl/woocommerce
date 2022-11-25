@@ -7,14 +7,14 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-if (class_exists('WCMP_Upgrade_Migration_v4_15_0')) {
-    return new WCMP_Upgrade_Migration_v4_15_0();
+if (class_exists('WCMP_Upgrade_Migration_always')) {
+    return new WCMP_Upgrade_Migration_always();
 }
 
 /**
- * Load account settings once during upgrade because Instabox is removed
+ * Load account settings once during upgrade
  */
-class WCMP_Upgrade_Migration_v4_15_0 extends WCMP_Upgrade_Migration
+class WCMP_Upgrade_Migration_always extends WCMP_Upgrade_Migration
 {
     public function __construct()
     {
@@ -47,4 +47,4 @@ class WCMP_Upgrade_Migration_v4_15_0 extends WCMP_Upgrade_Migration
     }
 }
 
-return new WCMP_Upgrade_Migration_v4_15_0();
+return new WCMP_Upgrade_Migration_always();
