@@ -231,7 +231,7 @@ class WCMP_Checkout
         }
 
         if (array_key_exists('dhlforyou', $carrierSettings)) {
-            $carrierSettings['dhlforyou']['allowSameDayDelivery'] = true;
+            $carrierSettings['dhlforyou'] = $this->adjustDhlDeliverySettings($carrierSettings['dhlforyou']);
         }
 
         return [
@@ -487,6 +487,27 @@ class WCMP_Checkout
         }
 
         return $split;
+    }
+
+    /**
+     * @param  array $dhlForYouSettings
+     *
+     * @return array
+     * @throws \Exception
+     */
+    private function adjustDhlDeliverySettings(array $dhlForYouSettings): array
+    {
+        $weekDay                                   = date('N', strtotime(date('Y-m-d')));
+        $timezone                                  = new DateTimeZone('Europe/Amsterdam');
+        $now                                       = new DateTime('now', $timezone);
+        $cutOffTime                                = DateTime::createFromFormat('H:i', $dhlForYouSettings['cutoffTime'], $timezone);
+        $weekDay                                   = $now < $cutOffTime ? $weekDay : $weekDay + 1;
+        $weekDay                                   = ($weekDay + $dhlForYouSettings['dropOffDelay']) % 7;
+        $todayIsDropOffDay                         = in_array((string) $weekDay, $dhlForYouSettings['dropOffDays'], true);
+        $dhlForYouSettings['allowDeliveryOptions'] = $todayIsDropOffDay;
+        $dhlForYouSettings['allowSameDayDelivery'] = true;
+
+        return $dhlForYouSettings;
     }
 
     /**
