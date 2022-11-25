@@ -1,6 +1,7 @@
 <?php
 
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Model\MyParcelRequest;
@@ -228,10 +229,10 @@ class WCMP_Checkout
 
                 Arr::set($carrierSettings, "$carrierName.$key", $value);
             }
-        }
 
-        if (array_key_exists('dhlforyou', $carrierSettings)) {
-            $carrierSettings['dhlforyou'] = $this->adjustDhlDeliverySettings($carrierSettings['dhlforyou']);
+            if (CarrierDHLForYou::NAME === $carrierName && $carrierSettings['dhlforyou']['allowDeliveryOptions']) {
+                $carrierSettings['dhlforyou'] = $this->adjustDHLDeliverySettings($carrierSettings['dhlforyou']);
+            }
         }
 
         return [
@@ -495,7 +496,7 @@ class WCMP_Checkout
      * @return array
      * @throws \Exception
      */
-    private function adjustDhlDeliverySettings(array $dhlForYouSettings): array
+    private function adjustDHLDeliverySettings(array $dhlForYouSettings): array
     {
         $weekDay                                   = date('N', strtotime(date('Y-m-d')));
         $timezone                                  = new DateTimeZone('Europe/Amsterdam');
