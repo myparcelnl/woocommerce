@@ -84,6 +84,11 @@ class OrderSettingsRows
         'type'         => 'disable',
         'parent_value'    => WCMP_Settings_Data::ENABLED,
     ];
+    private const EU_INSURANCE_OPTIONS = [
+        0   => 0,
+        50  => 50,
+        500 => 500,
+    ];
 
     /**
      * @var \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter
@@ -159,6 +164,31 @@ class OrderSettingsRows
         // Only add extra options and shipment options to home country shipments.
         if ($isHomeCountry) {
             $rows = array_merge($rows, $this->getAdditionalOptionsRows($orderSettings));
+        }
+
+        if ($isEuCountry && ! $isHomeCountry) {
+            $rows[] = [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED,
+                'type'      => 'toggle',
+                'label'     => __('insured', 'woocommerce-myparcel'),
+                'value'     => $orderSettings->isInsured(),
+                'condition' => [
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_INSURED),
+                ],
+            ];
+
+            $rows[] = [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED_EU_AMOUNT,
+                'type'      => 'select',
+                'label'     => __('insured_amount', 'woocommerce-myparcel'),
+                'options'   => self::EU_INSURANCE_OPTIONS,
+                'value'     => $orderSettings->getInsuranceAmount(),
+                'condition' => [
+                    self::OPTION_SHIPMENT_OPTIONS_INSURED,
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                ],
+            ];
         }
 
         if ($isBelgium) {

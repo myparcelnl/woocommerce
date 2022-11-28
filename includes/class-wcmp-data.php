@@ -244,6 +244,27 @@ class WCMP_Data
     }
 
     /**
+     * @return array
+     * @throws \Exception
+     */
+    public static function getEUInsuranceAmounts(): array
+    {
+        $amounts = [];
+
+        /**
+         * @type PostNLConsignment $consignment
+         */
+        $consignment         = ConsignmentFactory::createByCarrierName(CarrierPostNL::NAME);
+        $amountPossibilities = $consignment->getEUInsurancePossibilities();
+
+        foreach ($amountPossibilities as $key => $value) {
+            $amounts[$value] = $value;
+        }
+
+        return $amounts;
+    }
+
+    /**
      * Check if a given cc matches the default country code.
      *
      * @param string $country

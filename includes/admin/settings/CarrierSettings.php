@@ -202,6 +202,14 @@ class CarrierSettings
                     'options'   => WCMP_Data::getInsuranceAmounts(),
                 ];
                 $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_EU_AMOUNT,
+                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
+                    'label'     => __('shipment_options_insured_eu_amount', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_insured_eu_amount_help_text', 'woocommerce-myparcel'),
+                    'type'      => 'select',
+                    'options'   => WCMP_Data::getEUInsuranceAmounts(),
+                ];
+                $settings[] = [
                     'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE,
                     'condition' => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED,
                     'label'     => __('shipment_options_insured_for_be', 'woocommerce-myparcel'),
