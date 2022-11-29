@@ -63,20 +63,26 @@ class RecipientFromWCOrder extends Recipient
      */
     private function createFullStreet(bool $isNL, array $streetParts): string
     {
-        return $isNL
-            ? implode(' ', [
+        if ($isNL) {
+            return implode(' ', [
                     $streetParts['street'] ?? null,
                     $streetParts['number'] ?? null,
                     $streetParts['number_suffix'] ?? null,
                 ]
-            )
-            : implode(' ', [
-                    $streetParts['street'] ?? null,
-                    $streetParts['number'] ?? null,
-                    $streetParts['box_separator'] ?? null,
-                    $streetParts['box_number'] ?? null,
-                ]
             );
+        }
+
+        $boxString = $streetParts['box_number'] ? implode(
+            '',
+            [$streetParts['box_separator'] ?? null, $streetParts['box_number']]
+        ) : '';
+
+        return implode(' ', [
+                $streetParts['street'] ?? null,
+                $streetParts['number'] ?? null,
+                $boxString ?: $streetParts['number_suffix']
+            ]
+        );
     }
 
     /**
