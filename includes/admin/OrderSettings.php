@@ -391,7 +391,7 @@ class OrderSettings
                 'method'             => [$this->shipmentOptions, 'isSameDayDelivery'],
                 'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
                 'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY,
-                'default_when_false' => false,
+                'default_when_false' => true,
             ],
             'ageCheck'        => [
                 'method'             => [$this, 'getAgeCheckFromOptionsOrOrder'],

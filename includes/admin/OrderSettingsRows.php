@@ -58,8 +58,7 @@ class OrderSettingsRows
         self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER            => AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER,
         self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE        => AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE,
     ];
-
-    private const CONDITION_DELIVERY_TYPE_DELIVERY = [
+    private const CONDITION_DELIVERY_TYPE_DELIVERY     = [
         'parent_name'  => self::OPTION_DELIVERY_TYPE,
         'type'         => 'show',
         'parent_value' => [
@@ -69,18 +68,21 @@ class OrderSettingsRows
         ],
         'set_value'    => WCMP_Settings_Data::DISABLED,
     ];
-
-    private const CONDITION_PACKAGE_TYPE_PACKAGE = [
+    private const CONDITION_PACKAGE_TYPE_PACKAGE       = [
         'parent_name'  => self::OPTION_PACKAGE_TYPE,
         'type'         => 'show',
         'parent_value' => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
     ];
-
     private const CONDITION_FORCE_ENABLED_ON_AGE_CHECK = [
         'parent_name'  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
         'type'         => 'disable',
         'set_value'    => WCMP_Settings_Data::ENABLED,
         'parent_value' => WCMP_Settings_Data::DISABLED,
+    ];
+    private const CONDITION_FORCE_ENABLED_SAME_DAY = [
+        'parent_name'  => self::OPTION_CARRIER,
+        'type'         => 'disable',
+        'parent_value'    => WCMP_Settings_Data::ENABLED,
     ];
 
     /**
@@ -337,9 +339,10 @@ class OrderSettingsRows
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
-                'value'     => $orderSettings->isSameDayDelivery(),
+                'value'     => true,
                 'condition' => [
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
+                    self::CONDITION_FORCE_ENABLED_SAME_DAY
                 ],
             ],
             [
