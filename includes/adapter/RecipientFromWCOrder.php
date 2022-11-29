@@ -72,9 +72,11 @@ class RecipientFromWCOrder extends Recipient
             );
         }
 
+        // In order to keep both box number and number suffix working for Belgian addresses, the
+        // box_separator has to be doubled if present. This is a quick 'ugly' fix.
         $boxString = $streetParts['box_number'] ? implode(
-            '',
-            [$streetParts['box_separator'] ?? null, $streetParts['box_number']]
+            ' ',
+            [$streetParts['box_separator'] ?? null, $streetParts['box_separator'] ?? null, $streetParts['box_number']]
         ) : '';
 
         return implode(' ', [
