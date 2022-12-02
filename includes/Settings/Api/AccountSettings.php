@@ -78,12 +78,16 @@ class AccountSettings extends Model
     /**
      * @throws \Exception
      */
-    public static function ajaxRefreshFromApi(): void
+    public function ajaxRefreshFromApi(): void
     {
         $response = AccountSettingsService::getInstance()->restRefreshSettingsFromApi();
         switch ($response->get_status()) {
             case 400:
                 wp_send_json_error(esc_html__('error_settings_account_missing', 'woocommerce-myparcel'), 400);
+                break;
+            case 200:
+                (new WebhookSubscriptionService())->subscribeToWebhooks($this->getApiKey());
+                // intentional fall through
             default:
                 wp_send_json($response, $response->get_status());
         }
