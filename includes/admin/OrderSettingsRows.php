@@ -12,6 +12,7 @@ use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
+use MyParcelNL\Sdk\src\Model\Consignment\PostNLConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WC_Order;
 use WCMP_Country_Codes;
@@ -83,10 +84,6 @@ class OrderSettingsRows
         'parent_name'  => self::OPTION_CARRIER,
         'type'         => 'disable',
         'parent_value'    => WCMP_Settings_Data::ENABLED,
-    ];
-    private const EU_INSURANCE_OPTIONS = [
-        50  => 50,
-        500 => 500,
     ];
 
     /**
@@ -166,6 +163,9 @@ class OrderSettingsRows
         }
 
         if ($isEuCountry && ! $isHomeCountry && ! $isBelgium) {
+            $carrier = $this->deliveryOptions->getCarrier();
+            $consignment = ConsignmentFactory::createByCarrierName($carrier);
+
             $rows[] = [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 'type'      => 'toggle',
@@ -181,7 +181,7 @@ class OrderSettingsRows
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED_EU_AMOUNT,
                 'type'      => 'select',
                 'label'     => __('insured_amount', 'woocommerce-myparcel'),
-                'options'   => self::EU_INSURANCE_OPTIONS,
+                'options'   => $consignment->getEuInsurancePossibilities(),
                 'value'     => $orderSettings->getInsuranceAmount(),
                 'condition' => [
                     self::OPTION_SHIPMENT_OPTIONS_INSURED,
