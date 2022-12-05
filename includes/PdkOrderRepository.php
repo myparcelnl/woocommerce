@@ -159,7 +159,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'carrier'         => $deliveryOptions->getCarrier(),
             'date'            => DeliveryDateService::fixPastDeliveryDate($deliveryOptions->getDate() ?? ''),
             'deliveryType'    => $deliveryOptions->getDeliveryType(),
-            'labelAmount'     => 1,
+            'labelAmount'     => $this->getColloAmount(),
             'packageType'     => $deliveryOptions->getPackageType(),
             //            'pickupLocation'  => (array) $deliveryOptions->getPickupLocation(),
             //            'pickupLocation'  => null,
@@ -185,7 +185,7 @@ class PdkOrderRepository extends AbstractPdkOrderRepository
             'contents' => CustomsDeclaration::CONTENTS_COMMERCIAL_GOODS,
             'invoice'  => '1234',
             'items'    => $customDeclarationItems,
-            'weight'   => $totalWeight,
+            'weight'   => 1,
         ]);
     }
 
