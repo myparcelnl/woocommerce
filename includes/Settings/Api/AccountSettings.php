@@ -87,7 +87,6 @@ class AccountSettings extends Model
                 break;
             case 200:
                 (new WebhookSubscriptionService())->subscribeToWebhooks($this->getApiKey());
-                // intentional fall through
             default:
                 wp_send_json($response, $response->get_status());
         }
