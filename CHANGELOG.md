@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [4.15.2](https://github.com/myparcelnl/woocommerce/compare/v4.15.1...v4.15.2) (2022-12-06)
+
+
+### :bug: Bug Fixes
+
+* provide correct version to svn deploy ([#919](https://github.com/myparcelnl/woocommerce/issues/919)) ([6109c24](https://github.com/myparcelnl/woocommerce/commit/6109c24dd2ebb6a47154382d4678ae17ce2429fd))
+
 ### [4.15.1](https://github.com/myparcelnl/woocommerce/compare/v4.15.0...v4.15.1) (2022-11-22)
 
 
