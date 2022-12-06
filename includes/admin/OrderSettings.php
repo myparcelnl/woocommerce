@@ -641,17 +641,19 @@ class OrderSettings
         $isDefaultInsured                  = (bool) $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED);
         $isDefaultInsuredFromPrice         = $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE);
         $isDefaultInsuredForBE             = (bool) $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE);
-        $orderTotalExceedsInsuredFromPrice = (float) $this->order->get_total() >= (float) $isDefaultInsuredFromPrice;
+        $orderTotalExceedsInsuredFromPrice = $this->order->get_total() >= (float) $isDefaultInsuredFromPrice;
         $insuranceFromDeliveryOptions      = $this->shipmentOptions->getInsurance();
-        $isBelgium                         = AbstractConsignment::CC_BE === $this->getShippingCountry();
+        $isBe                              = AbstractConsignment::CC_BE === $this->getShippingCountry();
+        $isNl                              = AbstractConsignment::CC_NL === $this->getShippingCountry();
+        $isEu                              = in_array($this->getShippingCountry(), AbstractConsignment::EURO_COUNTRIES) && ! $isNl && ! $isBe;
 
         $carrier             = ConsignmentFactory::createByCarrierName($this->carrier);
-        $amountPossibilities = $carrier->getInsurancePossibilities();
+        $amountPossibilities = $isEu ? $carrier->getEuInsurancePossibilities() : $carrier->getInsurancePossibilities();
 
         if ($insuranceFromDeliveryOptions && $insuranceFromDeliveryOptions >= reset($amountPossibilities)) {
             $isInsured       = (bool) $insuranceFromDeliveryOptions;
             $insuranceAmount = $insuranceFromDeliveryOptions;
-        } elseif ($isDefaultInsured && $isBelgium) {
+        } elseif ($isDefaultInsured && $isBe) {
             $isInsured       = $insuranceFromDeliveryOptions === 0 ? false : $isDefaultInsuredForBE;
             $insuranceAmount = $isInsured ? self::DEFAULT_BELGIAN_INSURANCE : 0;
         } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && $insuranceFromDeliveryOptions !== 0) {

@@ -1619,7 +1619,6 @@ class WCMYPA_Admin
         $data['package_type'] = $data['package_type'] ?? AbstractConsignment::DEFAULT_PACKAGE_TYPE_NAME;
         $isHomeCountry        = WCMP_Data::isHomeCountry($country);
         $isEuCountry          = WCMP_Country_Codes::isEuCountry($country);
-        $isBelgium            = AbstractConsignment::CC_BE === $country;
         $isPackage            = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME === $data['package_type'];
         $isDigitalStamp       = AbstractConsignment::PACKAGE_TYPE_DIGITAL_STAMP_NAME === $data['package_type'];
 
@@ -1627,7 +1626,7 @@ class WCMYPA_Admin
             $data['shipment_options']['age_check'] = false;
             $data['shipment_options']['return']    = false;
 
-            if (! $isBelgium) {
+            if (! $isEuCountry) {
                 $data['shipment_options']['insured']        = false;
                 $data['shipment_options']['insured_amount'] = 0;
             }

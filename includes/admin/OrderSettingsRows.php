@@ -162,8 +162,15 @@ class OrderSettingsRows
         }
 
         if ($isEuCountry && ! $isHomeCountry && ! $isBelgium) {
-            $carrier = $this->deliveryOptions->getCarrier();
-            $consignment = ConsignmentFactory::createByCarrierName($carrier);
+            $carrier                = $this->deliveryOptions->getCarrier();
+            $consignment            = ConsignmentFactory::createByCarrierName($carrier);
+            $insurancePossibilities = [];
+
+            foreach ($consignment->getEuInsurancePossibilities() as $amount) {
+                $insurancePossibilities[$amount] = $amount;
+            }
+
+            unset($insurancePossibilities[0]);
 
             $rows[] = [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED,
@@ -177,10 +184,10 @@ class OrderSettingsRows
             ];
 
             $rows[] = [
-                'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED_EU_AMOUNT,
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT,
                 'type'      => 'select',
                 'label'     => __('insured_amount', 'woocommerce-myparcel'),
-                'options'   => $consignment->getEuInsurancePossibilities(),
+                'options'   => $insurancePossibilities,
                 'value'     => $orderSettings->getInsuranceAmount(),
                 'condition' => [
                     self::OPTION_SHIPMENT_OPTIONS_INSURED,
