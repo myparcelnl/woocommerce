@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.15.3-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.15.2...v4.15.3-rc.1) (2022-12-07)
+
+
+### :bug: Bug Fixes
+
+* always load account settings during upgrade ([#916](https://github.com/myparcelnl/woocommerce/issues/916)) ([2d87f4e](https://github.com/myparcelnl/woocommerce/commit/2d87f4e2ed8a0258b411191562e3d4dbf7a53053))
+
 ### [4.15.2](https://github.com/myparcelnl/woocommerce/compare/v4.15.1...v4.15.2) (2022-12-06)
 
 
