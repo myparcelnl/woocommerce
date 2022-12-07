@@ -1625,11 +1625,6 @@ class WCMYPA_Admin
         if (! $isHomeCountry || ! $isPackage) {
             $data['shipment_options']['age_check'] = false;
             $data['shipment_options']['return']    = false;
-
-            if (! $isEuCountry) {
-                $data['shipment_options']['insured']        = false;
-                $data['shipment_options']['insured_amount'] = 0;
-            }
         }
 
         if (! $isPackage || (! $isHomeCountry && ! $isEuCountry)) {

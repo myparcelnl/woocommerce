@@ -644,11 +644,9 @@ class OrderSettings
         $orderTotalExceedsInsuredFromPrice = $this->order->get_total() >= (float) $isDefaultInsuredFromPrice;
         $insuranceFromDeliveryOptions      = $this->shipmentOptions->getInsurance();
         $isBe                              = AbstractConsignment::CC_BE === $this->getShippingCountry();
-        $isNl                              = AbstractConsignment::CC_NL === $this->getShippingCountry();
-        $isEu                              = in_array($this->getShippingCountry(), AbstractConsignment::EURO_COUNTRIES) && ! $isNl && ! $isBe;
 
-        $carrier             = ConsignmentFactory::createByCarrierName($this->carrier);
-        $amountPossibilities = $isEu ? $carrier->getEuInsurancePossibilities() : $carrier->getInsurancePossibilities();
+        $consignment             = ConsignmentFactory::createByCarrierName($this->carrier);
+        $amountPossibilities = $consignment->getInsurancePossibilities($this->getShippingCountry());
 
         if ($insuranceFromDeliveryOptions && $insuranceFromDeliveryOptions >= reset($amountPossibilities)) {
             $isInsured       = (bool) $insuranceFromDeliveryOptions;
