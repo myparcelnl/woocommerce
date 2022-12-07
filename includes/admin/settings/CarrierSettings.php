@@ -8,6 +8,8 @@ defined('ABSPATH') or die();
 
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WCMP_Data;
@@ -46,7 +48,8 @@ class CarrierSettings
      */
     public function getCarrierSection(AbstractCarrier $carrier): array
     {
-        $consignment = ConsignmentFactory::createFromCarrier($carrier)->setPackageType(AbstractConsignment::PACKAGE_TYPE_PACKAGE);
+        $consignment = ConsignmentFactory::createFromCarrier($carrier)
+            ->setPackageType(AbstractConsignment::PACKAGE_TYPE_PACKAGE);
 
         return array_filter(
             [
@@ -240,11 +243,27 @@ class CarrierSettings
                     'type'      => 'toggle',
                 ];
                 break;
-            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
+//            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
+//                $settings[] = [
+//                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
+//                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
+//                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
+//                    'type'      => 'toggle',
+//                ];
+//                break;
+            case AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER:
                 $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
-                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
-                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_HIDE_SENDER,
+                    'label'     => __('shipment_options_hide_sender', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_hide_sender_help_text', 'woocommerce-myparcel'),
+                    'type'      => 'toggle',
+                ];
+                break;
+            case AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE:
+                $settings[] = [
+                    'name'      => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_EXTRA_ASSURANCE,
+                    'label'     => __('shipment_options_extra_assurance', 'woocommerce-myparcel'),
+                    'help_text' => __('shipment_options_extra_assurance_help_text', 'woocommerce-myparcel'),
                     'type'      => 'toggle',
                 ];
                 break;
@@ -292,37 +311,40 @@ class CarrierSettings
                     ]
                 );
                 break;
-            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
-                $settings[] = [
-                    'name'      => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
-                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
-                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
-                    'type'      => 'toggle',
-                ];
-                $settings[] = WCMP_Settings_Data::getFeeField(
-                    WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_FEE,
-                    [
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                        WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
-                    ]
-                );
-                $settings[] = [
-                    'name'  => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_CUTOFF_TIME,
-                    'type'  => 'time',
-                    'class' => ['wcmp__child'],
-                    'condition' => [
-                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
-                        WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
-                    ],
-                    'label'     => __('setting_carrier_cut_off_time_title', 'woocommerce-myparcel'),
-                    'help_text' => __('shipment_options_same_day_delivery_cutoff_time_help_text', 'woocommerce-myparcel'),
-                    'default'   => '09:00',
-                    'custom_attributes' => [
-                        'min' => '00:00',
-                        'max' => '10:00',
-                    ],
-                ];
+//            case AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY:
+//                $settings[] = [
+//                    'name'      => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
+//                    'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+//                    'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
+//                    'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
+//                    'type'      => 'toggle',
+//                ];
+//                $settings[] = WCMP_Settings_Data::getFeeField(
+//                    WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_FEE,
+//                    [
+//                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+//                        WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
+//                    ]
+//                );
+//                $settings[] = [
+//                    'name'              => WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY_CUTOFF_TIME,
+//                    'type'              => 'time',
+//                    'class'             => ['wcmp__child'],
+//                    'condition'         => [
+//                        WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
+//                        WCMYPA_Settings::SETTING_CARRIER_SAME_DAY_DELIVERY,
+//                    ],
+//                    'label'             => __('setting_carrier_cut_off_time_title', 'woocommerce-myparcel'),
+//                    'help_text'         => __(
+//                        'shipment_options_same_day_delivery_cutoff_time_help_text',
+//                        'woocommerce-myparcel'
+//                    ),
+//                    'default'           => '09:00',
+//                    'custom_attributes' => [
+//                        'min' => '00:00',
+//                        'max' => '10:00',
+//                    ],
+//                ];
                 break;
         }
 
@@ -497,6 +519,7 @@ class CarrierSettings
                     __('setting_carrier_delivery_enabled', 'woocommerce-myparcel'),
                     $carrier->getHuman()
                 ),
+                'help_text' => CarrierDHLForYou::NAME === $carrier->getName() ? __('carrier_dhl_for_you_today_help_text', 'woocommerce-myparcel') : '',
                 'type'  => 'toggle',
             ],
             WCMP_Settings_Data::getFeeField(
@@ -531,7 +554,10 @@ class CarrierSettings
                 'max'       => 14,
                 'help_text' => __('setting_carrier_drop_off_delay_help_text', 'woocommerce-myparcel'),
             ],
-            [
+        ];
+
+        if (CarrierPostNL::NAME === $carrier->getName()) {
+            $settings[] = [
                 'name'      => WCMYPA_Settings::SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT,
                 'condition' => WCMYPA_Settings::SETTING_CARRIER_DELIVERY_ENABLED,
                 'label'     => __('setting_carrier_digital_stamp', 'woocommerce-myparcel'),
@@ -545,8 +571,8 @@ class CarrierSettings
                     WCMP_Data::DIGITAL_STAMP_RANGES[4]['average'] => '350 - 2000 gram',
                 ],
                 'help_text' => __('setting_carrier_digital_stamp_help_text', 'woocommerce-myparcel'),
-            ],
-        ];
+            ];
+        }
 
         $settings = $this->addDeliveryDateSettings($consignment, $settings);
 

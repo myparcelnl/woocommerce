@@ -1229,10 +1229,6 @@ class WCMYPA_Admin
                 $meta = json_decode(stripslashes($meta), true);
             }
 
-            if (self::OLD_RED_JE_PAKKETJE_NAME === $meta['carrier']) {
-                $meta['carrier'] = CarrierInstabox::NAME;
-            }
-
             if (! $meta['carrier'] || ! AccountSettings::getInstance()->isEnabledCarrier($meta['carrier'])) {
                 $meta['carrier'] = (WCMP_Data::DEFAULT_CARRIER_CLASS)::NAME;
             }

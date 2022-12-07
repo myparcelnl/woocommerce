@@ -144,7 +144,6 @@ class WCMP_Settings_Data
      *
      * @param array  $settingsArray - Array of settings to loop through.
      * @param string $optionName    - Name to use in the identifier.
-     * @param bool   $prefix        - Add the key of the top level settings as prefix before every setting or not.
      *
      * @throws \Exception
      */
@@ -818,6 +817,13 @@ class WCMP_Settings_Data
                 'label'     => __('shipment_options_delivery_evening_title', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_delivery_standard_description', 'woocommerce-myparcel'),
                 'default'   => __('shipment_options_delivery_evening', 'woocommerce-myparcel'),
+            ],
+            [
+                'name'      => WCMYPA_Settings::SETTING_SAME_DAY_DELIVERY_TITLE,
+                'condition' => WCMYPA_Settings::SETTING_DELIVERY_OPTIONS_ENABLED,
+                'label'     => __('shipment_options_delivery_same_day_title', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_delivery_standard_description', 'woocommerce-myparcel'),
+                'default'   => __('shipment_options_delivery_same_day', 'woocommerce-myparcel'),
             ],
             [
                 'name'      => WCMYPA_Settings::SETTING_ONLY_RECIPIENT_TITLE,

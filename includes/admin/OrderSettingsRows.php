@@ -9,8 +9,8 @@ defined('ABSPATH') or die();
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierDHLForYou;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use WC_Order;
@@ -27,56 +27,62 @@ class OrderSettingsRows
         self::OPTION_SHIPMENT_OPTIONS_SIGNATURE,
     ];
 
-    private const OPTION_CARRIER                            = "[carrier]";
-    private const OPTION_DELIVERY_TYPE                      = "[delivery_type]";
-    private const OPTION_EXTRA_OPTIONS_COLLO_AMOUNT         = "[extra_options][collo_amount]";
-    private const OPTION_EXTRA_OPTIONS_DIGITAL_STAMP_WEIGHT = "[extra_options][digital_stamp_weight]";
-    private const OPTION_PACKAGE_TYPE                       = "[package_type]";
-    private const OPTION_SHIPMENT_OPTIONS_INSURED           = "[shipment_options][insured]";
-    private const OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT    = "[shipment_options][insured_amount]";
-    private const OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION = "[shipment_options][label_description]";
-    private const OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT      = "[shipment_options][large_format]";
-    private const OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT    = "[shipment_options][only_recipient]";
-    private const OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT   = "[shipment_options][return]";
-    private const OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY = "[shipment_options][same_day_delivery]";
-    private const OPTION_SHIPMENT_OPTIONS_SIGNATURE         = "[shipment_options][signature]";
-    private const OPTION_SHIPMENT_OPTIONS_AGE_CHECK         = "[shipment_options][age_check]";
+    private const OPTION_CARRIER                                 = '[carrier]';
+    private const OPTION_DELIVERY_TYPE                           = '[delivery_type]';
+    private const OPTION_EXTRA_OPTIONS_COLLO_AMOUNT              = '[extra_options][collo_amount]';
+    private const OPTION_EXTRA_OPTIONS_DIGITAL_STAMP_WEIGHT      = '[extra_options][digital_stamp_weight]';
+    private const OPTION_PACKAGE_TYPE                            = '[package_type]';
+    private const OPTION_SHIPMENT_OPTIONS_INSURED                = '[shipment_options][insured]';
+    private const OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT         = '[shipment_options][insured_amount]';
+    private const OPTION_SHIPMENT_OPTIONS_LABEL_DESCRIPTION      = '[shipment_options][label_description]';
+    private const OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT           = '[shipment_options][large_format]';
+    private const OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT         = '[shipment_options][only_recipient]';
+    private const OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT        = '[shipment_options][return]';
+    private const OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY      = '[shipment_options][same_day_delivery]';
+    private const OPTION_SHIPMENT_OPTIONS_SIGNATURE              = '[shipment_options][signature]';
+    private const OPTION_SHIPMENT_OPTIONS_AGE_CHECK              = '[shipment_options][age_check]';
+    private const OPTION_SHIPMENT_OPTIONS_HIDE_SENDER            = '[shipment_options][hide_sender]';
+    private const OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE        = '[shipment_options][extra_assurance]';
 
     /**
      * Maps shipment options in this form to their respective name in the SDK.
      */
     private const SHIPMENT_OPTIONS_ROW_MAP = [
-        self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK         => AbstractConsignment::SHIPMENT_OPTION_AGE_CHECK,
-        self::OPTION_SHIPMENT_OPTIONS_INSURED           => AbstractConsignment::SHIPMENT_OPTION_INSURANCE,
-        self::OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT      => AbstractConsignment::SHIPMENT_OPTION_LARGE_FORMAT,
-        self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT    => AbstractConsignment::SHIPMENT_OPTION_ONLY_RECIPIENT,
-        self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT   => AbstractConsignment::SHIPMENT_OPTION_RETURN,
-        self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY => AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY,
-        self::OPTION_SHIPMENT_OPTIONS_SIGNATURE         => AbstractConsignment::SHIPMENT_OPTION_SIGNATURE,
+        self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK              => AbstractConsignment::SHIPMENT_OPTION_AGE_CHECK,
+        self::OPTION_SHIPMENT_OPTIONS_INSURED                => AbstractConsignment::SHIPMENT_OPTION_INSURANCE,
+        self::OPTION_SHIPMENT_OPTIONS_LARGE_FORMAT           => AbstractConsignment::SHIPMENT_OPTION_LARGE_FORMAT,
+        self::OPTION_SHIPMENT_OPTIONS_ONLY_RECIPIENT         => AbstractConsignment::SHIPMENT_OPTION_ONLY_RECIPIENT,
+        self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT        => AbstractConsignment::SHIPMENT_OPTION_RETURN,
+        self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY      => AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY,
+        self::OPTION_SHIPMENT_OPTIONS_SIGNATURE              => AbstractConsignment::SHIPMENT_OPTION_SIGNATURE,
+        self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER            => AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER,
+        self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE        => AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE,
     ];
-
-    private const CONDITION_DELIVERY_TYPE_DELIVERY = [
-        "parent_name"  => self::OPTION_DELIVERY_TYPE,
-        "type"         => "show",
-        "parent_value" => [
+    private const CONDITION_DELIVERY_TYPE_DELIVERY     = [
+        'parent_name'  => self::OPTION_DELIVERY_TYPE,
+        'type'         => 'show',
+        'parent_value' => [
             AbstractConsignment::DELIVERY_TYPE_MORNING_NAME,
             AbstractConsignment::DELIVERY_TYPE_STANDARD_NAME,
             AbstractConsignment::DELIVERY_TYPE_EVENING_NAME,
         ],
-        "set_value"    => WCMP_Settings_Data::DISABLED,
+        'set_value'    => WCMP_Settings_Data::DISABLED,
     ];
-
-    private const CONDITION_PACKAGE_TYPE_PACKAGE = [
-        "parent_name"  => self::OPTION_PACKAGE_TYPE,
-        "type"         => "show",
-        "parent_value" => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
+    private const CONDITION_PACKAGE_TYPE_PACKAGE       = [
+        'parent_name'  => self::OPTION_PACKAGE_TYPE,
+        'type'         => 'show',
+        'parent_value' => AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME,
     ];
-
     private const CONDITION_FORCE_ENABLED_ON_AGE_CHECK = [
-        "parent_name"  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
-        "type"         => "disable",
-        "set_value"    => WCMP_Settings_Data::ENABLED,
-        "parent_value" => WCMP_Settings_Data::DISABLED,
+        'parent_name'  => self::OPTION_SHIPMENT_OPTIONS_AGE_CHECK,
+        'type'         => 'disable',
+        'set_value'    => WCMP_Settings_Data::ENABLED,
+        'parent_value' => WCMP_Settings_Data::DISABLED,
+    ];
+    private const CONDITION_FORCE_ENABLED_SAME_DAY = [
+        'parent_name'  => self::OPTION_CARRIER,
+        'type'         => 'disable',
+        'parent_value'    => WCMP_Settings_Data::ENABLED,
     ];
 
     /**
@@ -112,7 +118,6 @@ class OrderSettingsRows
         if (! $isHomeCountry) {
             unset($packageTypeOptions['mailbox'], $packageTypeOptions['digital_stamp']);
         }
-
         $rows = [
             [
                 'name'    => self::OPTION_CARRIER,
@@ -289,6 +294,18 @@ class OrderSettingsRows
                 ],
             ],
             [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE,
+                'type'      => 'toggle',
+                'label'     => __('shipment_options_extra_assurance', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_extra_assurance_help_text', 'woocommerce-myparcel'),
+                'value'     => $orderSettings->hasExtraAssurance(),
+                'condition' => [
+                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE),
+                ],
+            ],
+            [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_RETURN_SHIPMENT,
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_return', 'woocommerce-myparcel'),
@@ -301,13 +318,31 @@ class OrderSettingsRows
                 ],
             ],
             [
+                'name'      => self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER,
+                'type'      => 'toggle',
+                'label'     => __('shipment_options_hide_sender', 'woocommerce-myparcel'),
+                'help_text' => __('shipment_options_hide_sender_help_text', 'woocommerce-myparcel'),
+                'value'     => $orderSettings->hasHideSender(),
+                'condition' => [
+                    self::CONDITION_DELIVERY_TYPE_DELIVERY,
+                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_HIDE_SENDER),
+                    [
+                        'parent_name'  => self::OPTION_SHIPMENT_OPTIONS_EXTRA_ASSURANCE,
+                        'type'         => 'disable',
+                        'set_value'    => WCMP_Settings_Data::DISABLED,
+                        'parent_value' => WCMP_Settings_Data::DISABLED,
+                    ],
+                ],
+           ],
+            [
                 'name'      => self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY,
                 'type'      => 'toggle',
                 'label'     => __('shipment_options_same_day_delivery', 'woocommerce-myparcel'),
                 'help_text' => __('shipment_options_same_day_delivery_help_text', 'woocommerce-myparcel'),
-                'value'     => $orderSettings->isSameDayDelivery(),
+                'value'     => true,
                 'condition' => [
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
+                    self::CONDITION_FORCE_ENABLED_SAME_DAY
                 ],
             ],
             [
@@ -347,7 +382,7 @@ class OrderSettingsRows
         $carriersOptions = [];
 
         foreach ($carriers as $carrier) {
-            if (CarrierInstabox::ID === $carrier->getId() && ! WCMP_Data::isHomeCountry($country)) {
+            if (CarrierDHLForYou::ID === $carrier->getId() && ! WCMP_Data::isHomeCountry($country)) {
                 continue;
             }
 

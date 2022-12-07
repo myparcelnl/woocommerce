@@ -42,6 +42,16 @@ class OrderSettings
     private $deliveryOptions;
 
     /**
+     * @var bool
+     */
+    private $hideSender;
+
+    /**
+     * @var bool
+     */
+    private $extraAssurance;
+
+    /**
      * @var \WC_Order
      */
     private $order;
@@ -228,6 +238,22 @@ class OrderSettings
     /**
      * @return bool
      */
+    public function hasHideSender(): bool
+    {
+        return $this->hideSender ?? false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasExtraAssurance(): bool
+    {
+        return $this->extraAssurance ?? false;
+    }
+
+    /**
+     * @return bool
+     */
     public function isInsured(): bool
     {
         return $this->insured;
@@ -365,12 +391,24 @@ class OrderSettings
                 'method'             => [$this->shipmentOptions, 'isSameDayDelivery'],
                 'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY,
                 'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_SAME_DAY_DELIVERY,
-                'default_when_false' => false,
+                'default_when_false' => true,
             ],
             'ageCheck'        => [
                 'method'             => [$this, 'getAgeCheckFromOptionsOrOrder'],
                 'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK,
                 'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_AGE_CHECK,
+                'default_when_false' => false,
+            ],
+            'hideSender'        => [
+                'method'             => [$this->shipmentOptions, 'hasHideSender'],
+                'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_HIDE_SENDER,
+                'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_HIDE_SENDER,
+                'default_when_false' => false,
+            ],
+            'extraAssurance'        => [
+                'method'             => [$this->shipmentOptions, 'hasExtraAssurance'],
+                'setting'            => WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_EXTRA_ASSURANCE,
+                'consignment_option' => AbstractConsignment::SHIPMENT_OPTION_EXTRA_ASSURANCE,
                 'default_when_false' => false,
             ],
         ];

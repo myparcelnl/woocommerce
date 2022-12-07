@@ -74,6 +74,7 @@ class WCMYPA_Settings
     public const SETTING_PICKUP_LOCATIONS_DEFAULT_VIEW         = 'pickup_locations_default_view';
     public const SETTING_MORNING_DELIVERY_TITLE                = 'morning_title';
     public const SETTING_EVENING_DELIVERY_TITLE                = 'evening_title';
+    public const SETTING_SAME_DAY_DELIVERY_TITLE               = 'same_day_title';
     public const SETTING_ONLY_RECIPIENT_TITLE                  = 'only_recipient_title';
     public const SETTING_SIGNATURE_TITLE                       = 'signature_title';
     public const SETTING_STANDARD_TITLE                        = 'standard_title';
@@ -88,16 +89,17 @@ class WCMYPA_Settings
     // Defaults
     public const SETTING_CARRIER_DEFAULT_EXPORT_SIGNATURE                = 'export_signature';
     public const SETTING_CARRIER_DEFAULT_EXPORT_ONLY_RECIPIENT           = 'export_only_recipient';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_HIDE_SENDER              = 'export_hide_sender';
     public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT             = 'export_large_format';
     public const SETTING_CARRIER_DEFAULT_EXPORT_LARGE_FORMAT_FROM_WEIGHT = 'export_large_format_from_weight';
     public const SETTING_CARRIER_DEFAULT_EXPORT_AGE_CHECK                = 'export_age_check';
     public const SETTING_CARRIER_DEFAULT_EXPORT_RETURN                   = 'export_return_shipments';
     public const SETTING_CARRIER_DEFAULT_EXPORT_SAME_DAY_DELIVERY        = 'export_same_day_delivery';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED                  = 'export_insured';
+    public const SETTING_CARRIER_DEFAULT_EXPORT_EXTRA_ASSURANCE          = 'export_extra_assurance';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT           = 'export_insured_amount';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE       = 'export_insured_from_price';
     public const SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE           = 'export_insured_for_be';
-
 
     // Delivery options settings
     public const SETTING_CARRIER_CUTOFF_TIME                   = 'cutoff_time';
@@ -107,6 +109,10 @@ class WCMYPA_Settings
     public const SETTING_CARRIER_DIGITAL_STAMP_DEFAULT_WEIGHT  = 'digital_stamp_default_weight';
     public const SETTING_CARRIER_DROP_OFF_DAYS                 = 'drop_off_days';
     public const SETTING_CARRIER_DROP_OFF_DELAY                = 'drop_off_delay';
+    public const SETTING_CARRIER_EXTRA_ASSURANCE_ENABLED       = 'extra_assurance_enabled';
+    public const SETTING_CARRIER_EXTRA_ASSURANCE_FEE           = 'extra_assurance_fee';
+    public const SETTING_CARRIER_HIDE_SENDER_ENABLED           = 'hide_sender_enabled';
+    public const SETTING_CARRIER_HIDE_SENDER_FEE               = 'hide_sender_fee';
     public const SETTING_CARRIER_PICKUP_ENABLED                = 'pickup_enabled';
     public const SETTING_CARRIER_PICKUP_FEE                    = 'pickup_fee';
     public const SETTING_CARRIER_PICKUP_TITLE                  = 'pickup_title';

@@ -15,35 +15,35 @@ class WCMP_Settings_Callbacks
     /**
      * Validate options.
      *
-     * @param array $input options to valid.
+     * @param  array $input options to valid.
      *
      * @return array        validated options.
      */
-    public function validate($input)
+    public function validate(array $input): array
     {
         // Create our array for storing the validated options.
         $output = [];
 
-        if (empty($input) || ! is_array($input)) {
+        if (empty($input)) {
             return $input;
         }
 
         // Loop through each of the incoming options.
         foreach ($input as $key => $value) {
             // Check to see if the current option has a value. If so, process it.
-            if (isset($input[$key])) {
-                if (is_array($input[$key])) {
-                    foreach ($input[$key] as $sub_key => $sub_value) {
-                        $output[$key][$sub_key] = $input[$key][$sub_key];
+            if (isset($value)) {
+                if (is_array($value)) {
+                    foreach ($value as $sub_key => $sub_value) {
+                        $output[$key][$sub_key] = $sub_value;
                     }
                 } else {
-                    $output[$key] = $input[$key];
+                    $output[$key] = $value;
                 }
             }
         }
 
         // Return the array processing any additional functions filtered by this action.
-        return apply_filters('wcmp_settings_validate_input', $input, $input);
+        return apply_filters('wcmp_settings_validate_input', $input, $output);
     }
 
     /**

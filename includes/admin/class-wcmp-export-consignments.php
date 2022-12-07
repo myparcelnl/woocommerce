@@ -307,6 +307,8 @@ class WCMP_Export_Consignments
             ->setSameDayDelivery($this->orderSettings->isSameDayDelivery())
             ->setSignature($this->orderSettings->hasSignature())
             ->setContents($this->getContents())
+            ->setExtraAssurance($this->orderSettings->hasExtraAssurance())
+            ->setHideSender($this->orderSettings->hasHideSender())
             ->setInvoice($this->order->get_id());
     }
 
@@ -329,9 +331,31 @@ class WCMP_Export_Consignments
      */
     private function setPhysicalProperties(): void
     {
+        $items      = $this->order->get_items();
+        $dimensions = [
+            'length' => 0,
+            'width'  => 0,
+            'height' => 0,
+        ];
+
+        foreach ($items as $item) {
+            $data = $item
+                ->get_product()
+                ->get_data();
+
+            foreach ($dimensions as $dimension => $value) {
+                if ($data[$dimension] > $value) {
+                    $dimensions[$dimension] = (int) $data[$dimension];
+                }
+            }
+        }
+
         $this->consignment->setPhysicalProperties(
             [
                 'weight' => $this->orderSettings->getColloWeight(),
+                'length' => $dimensions['length'] ?: 2,
+                'height' => $dimensions['height'] ?: 2,
+                'width'  => $dimensions['width'] ?: 2,
             ]
         );
     }
