@@ -3,7 +3,7 @@ Contributors: richardperdaan, edielemoine, joerimyparcel
 Tags: woocommerce, export, delivery, packages, myparcel, flespakket, postnl
 Requires at least: 5.2.0
 Tested up to: 6.1
-Stable tag: 4.15.3-rc.1
+Stable tag: 4.16.0-rc.1
 Requires PHP: 7.1
 License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
@@ -102,6 +102,10 @@ function wcmyparcel_new_email_text($track_trace_tekst) {
 6. MyParcel pickup delivery options
 
 == Changelog ==
+
+= 4.16.0-rc.1 (2022-12-07) =
+
+* New: add carrier dhl (#913)
 
 = 4.15.3-rc.1 (2022-12-07) =
 

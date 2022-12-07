@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.16.0-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.15.3-rc.1...v4.16.0-rc.1) (2022-12-07)
+
+
+### :sparkles: New Features
+
+* add carrier dhl ([#913](https://github.com/myparcelnl/woocommerce/issues/913)) ([d18e8aa](https://github.com/myparcelnl/woocommerce/commit/d18e8aacb5bdbc4c7ec98d9a56c4a915265100a7))
+
 ## [4.15.3-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.15.2...v4.15.3-rc.1) (2022-12-07)
 
 
