@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - next
       - alpha
       - beta
 
@@ -37,7 +38,7 @@ jobs:
         with:
           php-version: '7.1'
 
-      - uses: myparcelnl/actions/yarn-install@v2
+      - uses: myparcelnl/actions/yarn2-install@v2
         if: steps.cache.outputs.cache-hit != 'true'
 
       - uses: myparcelnl/actions/semantic-release@v2
