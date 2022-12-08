@@ -5,6 +5,7 @@ declare(strict_types=1);
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Shipment\Collection\ShipmentCollection;
 use MyParcelNL\Pdk\Shipment\Model\DeliveryOptions;
+use MyParcelNL\Pdk\Shipment\Model\Shipment;
 use MyParcelNL\Pdk\Shipment\Repository\ShipmentRepository;
 use MyParcelNL\WooCommerce\includes\admin\OrderStatus;
 use MyParcelNL\Pdk\Base\PdkActions;
@@ -488,25 +489,30 @@ class ExportActions
         $orderRepository = Pdk::get(PdkOrderRepository::class);
         $orders          = $orderRepository->getMany($orderIds);
 
-        $shipments = $orders->getAllShipments()
-            ->groupBy('orderId')
-            ->reduce(static function (ShipmentCollection $acc, $shipments) {
-                $acc->push($shipments->last());
-                return $acc;
-            }, new ShipmentCollection());
+        /** @var ShipmentCollection $shipments */
+        $shipments = $orders->getAllShipments();
+        $ids       = $shipments->filter(function (Shipment $shipment) {
+            return is_int($shipment->id);
+        })
+            ->pluck('id')
+            ->all();
+
+        //        $shipments = $orders->getAllShipments()
+        //            ->groupBy('orderId')
+        //            ->reduce(static function (ShipmentCollection $acc, $shipments) {
+        //                $acc->push($shipments->last());
+        //                return $acc;
+        //            }, new ShipmentCollection());
 
         $shipmentRepository = Pdk::get(ShipmentRepository::class);
-        $fetchedShipments   = $shipmentRepository->getShipments(
-            $shipments->pluck('id')
-                ->all()
-        );
+        $fetchedShipments   = $shipmentRepository->getShipments($ids);
 
         foreach ($fetchedShipments as $shipment) {
             if (! $shipment->id) {
                 return [];
             }
 
-            $trackTrace   = $shipment->barcode ?: $shipment->externalIdentifier;
+            $trackTrace   = $shipment->barcode ?? null;
             $shipmentData = [
                 'shipment_id' => $shipment->id,
                 'status'      => $this->getShipmentStatusName($shipment->status),

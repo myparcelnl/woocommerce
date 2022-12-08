@@ -19,7 +19,7 @@ use function DI\autowire;
 use function DI\value;
 
 return [
-    'platform' => WCMYPA::NAME,
+    'platform' => WCMYPA::PLATFORM,
     'mode'     => value(WP_DEBUG_LOG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),
 
     ApiServiceInterface::class => autowire(MyParcelApiService::class)->constructor(

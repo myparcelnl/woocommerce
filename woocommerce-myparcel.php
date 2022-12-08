@@ -41,6 +41,7 @@ if (! class_exists('WCMYPA')) :
         public const PHP_VERSION_7_1      = '7.1';
         public const PHP_VERSION_REQUIRED = self::PHP_VERSION_7_1;
         public const NAME                 = 'woocommerce-myparcel';
+        public const PLATFORM             = 'myparcel';
 
         /**
          * @var string
