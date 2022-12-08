@@ -229,7 +229,7 @@ if (! class_exists('WCMYPA')) :
             AccountSettings::getInstance();
             add_action(
                 'wp_ajax_' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE,
-                [AccountSettings::class, 'ajaxRefreshFromApi']
+                [new AccountSettings(), 'ajaxRefreshFromApi']
             );
         }
 
