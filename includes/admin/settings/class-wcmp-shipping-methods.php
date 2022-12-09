@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use MyParcelNL\WooCommerce\Includes\Compatibility\ShippingZone;
 
 if (! defined('ABSPATH')) {

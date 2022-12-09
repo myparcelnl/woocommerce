@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use WPO\WC\MyParcel\Collections\SettingsCollection;
 

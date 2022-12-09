@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WPO\WC\MyParcel\Collections;
 
 defined('ABSPATH') or die();
