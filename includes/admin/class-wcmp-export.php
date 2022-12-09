@@ -830,7 +830,7 @@ class WCMP_Export
         $packageType           = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME;
         $shippingMethodIdClass = $shippingMethod;
 
-        if (Str::startsWith($shippingMethod, 'table_rate:') && class_exists('WC_Table_Rate_Shipping')) {
+        if (Str::startsWith((string) $shippingMethod, 'table_rate:') && class_exists('WC_Table_Rate_Shipping')) {
             // Automattic / WooCommerce table rate
             // use full method = method_id:instance_id:rate_id
             $shippingMethodId = $shippingMethod;
