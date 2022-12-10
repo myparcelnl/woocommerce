@@ -854,6 +854,11 @@ class WCMP_Export
         }
 
         $packageTypes = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+
+        if (! $packageTypes) {
+            return $packageType;
+        }
+
         foreach ($packageTypes as $packageTypeKey => $packageTypeShippingMethods) {
             if (self::isActiveMethod(
                 $shippingMethodId,
