@@ -44,9 +44,42 @@ class WCMP_NL_Postcode_Fields
         add_action("wp_loaded", [$this, "initialize"], 9999);
     }
 
+    /**
+     * @return bool
+     */
+    private function shouldShowAddressFields(): ?bool
+    {
+        $showFields = true;
+        if (WC()->cart) {
+            $isVirtual = [];
+            foreach (WC()->cart->get_cart() as $cartItem) {
+                /** @var WC_Product $product */
+                $product = $cartItem['data'];
+
+                if ($product->is_virtual()) {
+                    $isVirtual[] = true;
+                    continue;
+                }
+
+                $isVirtual[] = false;
+            }
+
+            if (in_array(false, $isVirtual, true)) {
+                $showFields = false;
+            }
+        }
+
+        return $showFields;
+    }
+
     public function initialize(): void
     {
         if (WCMYPA()->setting_collection->isEnabled('use_split_address_fields')) {
+
+            if ($this->shouldShowAddressFields()) {
+                return;
+            }
+
             // Add street name & house number checkout fields.
             if (version_compare(WOOCOMMERCE_VERSION, '2.0') >= 0) {
                 // WC 2.0 or newer is used, the filter got a $country parameter, yay!
