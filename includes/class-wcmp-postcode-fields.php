@@ -49,34 +49,27 @@ class WCMP_NL_Postcode_Fields
      */
     private function shouldShowAddressFields(): ?bool
     {
-        $showFields = true;
-        if (WC()->cart) {
-            $isVirtual = [];
-            foreach (WC()->cart->get_cart() as $cartItem) {
-                /** @var WC_Product $product */
-                $product = $cartItem['data'];
+        if (! WC()->cart){
+            return true;
+        }
 
-                if ($product->is_virtual()) {
-                    $isVirtual[] = true;
-                    continue;
-                }
+        foreach (WC()->cart->get_cart() as $cartItem) {
+            /** @var WC_Product $product */
+            $product = $cartItem['data'];
 
-                $isVirtual[] = false;
-            }
-
-            if (in_array(false, $isVirtual, true)) {
-                $showFields = false;
+            if (! $product->is_virtual()) {
+                return true;
             }
         }
 
-        return $showFields;
+        return false;
     }
 
     public function initialize(): void
     {
         if (WCMYPA()->setting_collection->isEnabled('use_split_address_fields')) {
 
-            if ($this->shouldShowAddressFields()) {
+            if (! $this->shouldShowAddressFields()) {
                 return;
             }
 
