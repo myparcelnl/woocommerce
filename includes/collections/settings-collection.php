@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WPO\WC\MyParcel\Collections;
 
 defined('ABSPATH') or die();
@@ -105,8 +107,7 @@ class SettingsCollection extends Collection
      */
     public function getFloatByName(string $name): float
     {
-        $value = str_replace(',', '.', $this->getByName($name));
-        return (float) ($value ?? 0);
+        return (float) str_replace(',', '.', $this->getByName($name) ?? '0');
     }
 
     /**

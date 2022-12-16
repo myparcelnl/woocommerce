@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use MyParcelNL\WooCommerce\includes\admin\OrderSettingsRows;
 use WPO\WC\MyParcel\Entity\SettingsFieldArguments;
 

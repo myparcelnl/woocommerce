@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use MyParcelNL\Sdk\src\Model\MyParcelRequest;
 
 if (! defined("ABSPATH")) {

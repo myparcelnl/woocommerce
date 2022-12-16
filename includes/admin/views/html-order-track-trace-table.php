@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This template is for the Track & Trace information in the MyParcel meta box in a single order/
  */

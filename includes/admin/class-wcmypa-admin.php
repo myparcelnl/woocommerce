@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter as DeliveryOptions;
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter;
 use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
@@ -427,7 +429,8 @@ class WCMYPA_Admin
         try {
             $orderSettings = new OrderSettings($order);
         } catch (Exception $exception) {
-            WCMP_Log::add(sprintf('Could not get OrderSettings for order %d', $order->get_id()), $exception);
+            WCMP_Log::add(sprintf('Could not get OrderSettings for order %d', $order->get_id()),
+                $exception->getMessage());
             printf(
                 '<div class="wcmp__shipment-settings-wrapper">⚠ %s</div>',
                 esc_html__('warning_faulty_order_settings', 'woocommerce-myparcel')
@@ -588,7 +591,7 @@ class WCMYPA_Admin
             ],
         ];
 
-        $class = new SettingsFieldArguments($field, false);
+        $class = new SettingsFieldArguments($field, '');
         ?>
 
         <div

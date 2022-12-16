@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter;
 use MyParcelNL\Sdk\src\Collection\Fulfilment\OrderCollection;
 use MyParcelNL\Sdk\src\Exception\ApiException;
@@ -105,7 +107,7 @@ class WCMP_Export
             return;
         }
 
-        $return = $this->exportAccordingToMode([(string) $orderId], 0, false);
+        $return = $this->exportAccordingToMode([(string) $orderId], 0, self::NO);
 
         if (isset($return['success'])) {
             $order = WCX::get_order($orderId);
@@ -827,6 +829,7 @@ class WCMP_Export
      */
     public static function getPackageTypeFromShippingMethod($shippingMethod, $shippingClass): string
     {
+        $shippingMethod        = (string) $shippingMethod;
         $packageType           = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME;
         $shippingMethodIdClass = $shippingMethod;
 
@@ -851,6 +854,11 @@ class WCMP_Export
         }
 
         $packageTypes = WCMYPA()->setting_collection->getByName(WCMYPA_Settings::SETTING_SHIPPING_METHODS_PACKAGE_TYPES);
+
+        if (! $packageTypes) {
+            return $packageType;
+        }
+
         foreach ($packageTypes as $packageTypeKey => $packageTypeShippingMethods) {
             if (self::isActiveMethod(
                 $shippingMethodId,
@@ -896,7 +904,7 @@ class WCMP_Export
         if (! is_string($packageType) || ! in_array($packageType, WCMP_Data::getPackageTypes())) {
             // Log data when this occurs but don't actually throw an exception.
             $type = gettype($packageType);
-            WCMP_Log::add(new Exception("Tried to convert invalid value to package type: $packageType ($type)"));
+            WCMP_Log::add("Tried to convert invalid value to package type: $packageType ($type)");
 
             $packageType = null;
         }
@@ -1535,7 +1543,7 @@ class WCMP_Export
 
         $customsDeclaration
             ->setContents($contents)
-            ->setInvoice($wcOrder->get_id())
+            ->setInvoice((string) $wcOrder->get_id())
             ->setWeight($totalWeight);
 
         foreach ($wcOrder->get_items() as $item) {
@@ -1687,7 +1695,7 @@ class WCMP_Export
                         $returnConsignment->setAgeCheck(false);
                         $returnConsignment->setReturn(false);
                         $returnConsignment->setLargeFormat(false);
-                        $returnConsignment->setInsurance(false);
+                        $returnConsignment->setInsurance(0);
                     }
 
                     return $returnConsignment;

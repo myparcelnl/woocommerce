@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WPO\WC\MyParcel\Entity;
 
 use MyParcelNL\Sdk\src\Support\Arr;

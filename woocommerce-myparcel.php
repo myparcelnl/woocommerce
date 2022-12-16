@@ -12,6 +12,8 @@ License: GPLv3 or later
 License URI: http://www.opensource.org/licenses/gpl-license.php
 */
 
+declare(strict_types=1);
+
 use MyParcelNL\WooCommerce\includes\admin\Messages;
 use MyParcelNL\WooCommerce\includes\admin\MessagesRepository;
 use MyParcelNL\WooCommerce\includes\admin\views\MyParcelWidget;

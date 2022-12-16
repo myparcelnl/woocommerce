@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;

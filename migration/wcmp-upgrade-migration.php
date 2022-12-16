@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace migration;
 
 abstract class WCMP_Upgrade_Migration

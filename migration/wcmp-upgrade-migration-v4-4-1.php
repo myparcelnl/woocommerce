@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use migration\WCMP_Upgrade_Migration;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 
