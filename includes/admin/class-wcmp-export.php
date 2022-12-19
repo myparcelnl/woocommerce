@@ -830,6 +830,7 @@ class WCMP_Export
     public static function getPackageTypeFromShippingMethod($shippingMethod, $shippingClass): string
     {
         $shippingMethod        = (string) $shippingMethod;
+        $shippingClass         = (string) $shippingClass;
         $packageType           = AbstractConsignment::PACKAGE_TYPE_PACKAGE_NAME;
         $shippingMethodIdClass = $shippingMethod;
 
