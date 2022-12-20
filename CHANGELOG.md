@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.16.0-rc.2](https://github.com/myparcelnl/woocommerce/compare/v4.16.0-rc.1...v4.16.0-rc.2) (2022-12-20)
+
+
+### :bug: Bug Fixes
+
+* fix deprecation warning on belgian shipments ([#929](https://github.com/myparcelnl/woocommerce/issues/929)) ([b80b507](https://github.com/myparcelnl/woocommerce/commit/b80b507d7f6726e2d4737263e752c85afacdebdf))
+* fix exclude billing with digital download ([#930](https://github.com/myparcelnl/woocommerce/issues/930)) ([00d8c3b](https://github.com/myparcelnl/woocommerce/commit/00d8c3bbfb018718ac9585641ec7a26a34e7987e))
+* prevent error substr expects parameter 1 to be string ([#927](https://github.com/myparcelnl/woocommerce/issues/927)) ([5e03b1f](https://github.com/myparcelnl/woocommerce/commit/5e03b1f9d23a57b1f6526e4c7a2510ee18bddeef))
+
 ## [4.16.0-rc.1](https://github.com/myparcelnl/woocommerce/compare/v4.15.3-rc.1...v4.16.0-rc.1) (2022-12-07)
 
 
