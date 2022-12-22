@@ -295,7 +295,7 @@ if (! class_exists('WCMYPA')) :
         public function do_install(): void
         {
             $version_setting   = 'woocommerce_myparcel_version';
-            $installed_version = get_option($version_setting);
+            $installed_version = get_option($version_setting) ?: '0';
 
             // installed version lower than plugin version?
             if (version_compare($installed_version, $this->version, '<')) {
