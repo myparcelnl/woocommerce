@@ -1794,6 +1794,14 @@ __metadata:
   languageName: node
   linkType: soft
 
+"@myparcel-pdk/frontend-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/components::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@myparcel-pdk/frontend-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/components::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  dependencies:
+    "@myparcel-pdk/common": "workspace:^"
+  languageName: node
+  linkType: soft
+
 "@myparcel-pdk/frontend-core@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
   version: 0.0.0-use.local
   resolution: "@myparcel-pdk/frontend-core@portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
@@ -1895,30 +1903,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@myparcel/pdk-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+"@myparcel/pdk-component-tests@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@myparcel/pdk-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  resolution: "@myparcel/pdk-component-tests@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/common": "workspace:^"
-    "@myparcel-pdk/frontend-core": "workspace:^"
-    "@myparcel/ts-utils": ^1.3.0
-    "@vueuse/core": ^9.6.0
+    "@myparcel-pdk/common": "workspace:*"
+    "@myparcel-pdk/frontend-core": "workspace:*"
+    "@vue/test-utils": ^2.2.6
     vue: ^3.2.45
   languageName: node
   linkType: soft
 
-"@myparcel/pdk-frontend-component-tests@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-frontend-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
+"@myparcel/pdk-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A.":
   version: 0.0.0-use.local
-  resolution: "@myparcel/pdk-frontend-component-tests@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-frontend-component-tests::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
+  resolution: "@myparcel/pdk-components@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/common": "workspace:*"
-    "@myparcel-pdk/frontend-core": "workspace:*"
+    "@myparcel-pdk/frontend-components": "workspace:^"
+    "@myparcel/pdk-frontend": "workspace:^"
     "@myparcel/ts-utils": ^1.3.0
-    "@vitejs/plugin-vue": ^4.0.0
-    "@vue/test-utils": ^2.2.6
-    pinia: ^2.0.28
-    vite: ^4.0.3
-    vitest: ^0.26.2
+    "@vueuse/core": ^9.6.0
     vue: ^3.2.45
   languageName: node
   linkType: soft
@@ -1936,9 +1939,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel/pdk-preset-bootstrap4@portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-preset-bootstrap4::locator=%40myparcel%2Fwoocommerce%40workspace%3A."
   dependencies:
-    "@myparcel-pdk/common": "workspace:*"
-    "@myparcel-pdk/frontend-core": "workspace:*"
-    "@myparcel/pdk-components": "workspace:*"
+    "@myparcel-pdk/frontend-components": "workspace:*"
+    "@myparcel/pdk-frontend": "workspace:*"
     "@myparcel/ts-utils": ^1.3.0
     vue: ^3.2.45
   languageName: node
@@ -2013,8 +2015,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@myparcel/woocommerce-admin@workspace:views/admin"
   dependencies:
+    "@myparcel/pdk-component-tests": "*"
+    "@myparcel/pdk-components": "*"
     "@myparcel/pdk-frontend": "*"
-    "@myparcel/pdk-frontend-component-tests": "*"
     "@myparcel/pdk-preset-bootstrap4": "*"
     "@tanstack/vue-query": ^4.20.5
     sass: ^1.57.1

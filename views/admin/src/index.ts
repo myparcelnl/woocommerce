@@ -1,6 +1,5 @@
 import './assets/scss/index.scss';
 import {
-  Bootstrap4Alert,
   Bootstrap4Button,
   Bootstrap4ButtonGroup,
   Bootstrap4Card,
@@ -8,6 +7,7 @@ import {
   Bootstrap4Col,
   Bootstrap4DropdownButton,
   Bootstrap4Image,
+  Bootstrap4Notification,
   Bootstrap4NumberInput,
   Bootstrap4RadioInput,
   Bootstrap4Row,
@@ -16,7 +16,6 @@ import {
   Bootstrap4TextInput,
 } from '@myparcel/pdk-preset-bootstrap4';
 import {
-  DefaultAccordion,
   DefaultCurrencyInput,
   DefaultIcon,
   DefaultLink,
@@ -34,8 +33,6 @@ import WcModal from './components/WcModal.vue';
 createPdkFrontend({
   logLevel: LogLevel.DEBUG,
   components: {
-    PdkAccordion: DefaultAccordion,
-    PdkAlert: Bootstrap4Alert,
     PdkButton: Bootstrap4Button,
     PdkButtonGroup: Bootstrap4ButtonGroup,
     PdkCard: Bootstrap4Card,
@@ -50,6 +47,7 @@ createPdkFrontend({
     PdkModal: WcModal,
     PdkMultiCheckbox: DefaultMultiCheckbox,
     PdkMultiRadio: DefaultMultiRadio,
+    PdkNotification: Bootstrap4Notification,
     PdkNumberInput: Bootstrap4NumberInput,
     PdkPluginSettingsWrapper: DefaultPluginSettingsWrapper,
     PdkRadioInput: Bootstrap4RadioInput,

@@ -3,9 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "dependencies": {
+    "@myparcel/pdk-component-tests": "*",
     "@myparcel/pdk-components": "*",
     "@myparcel/pdk-frontend": "*",
-    "@myparcel/pdk-frontend-component-tests": "*",
     "@myparcel/pdk-preset-bootstrap4": "*",
     "@tanstack/vue-query": "^4.20.5"
   },

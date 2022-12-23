@@ -4,8 +4,6 @@ const {createBuildTask} = require('./private/gulp/createBuildTask');
 const {createCleanTask} = require('./private/gulp/createCleanTask');
 const {createCopyDeliveryOptionsTask} = require('./private/gulp/createCopyDeliveryOptionsTask');
 const {createCopyTask} = require('./private/gulp/createCopyTask');
-const {createUpdateComposerTask} = require('./private/gulp/createUpdateComposerTask');
-const {createWatchTask} = require('./private/gulp/createWatchTask');
 const {createZipTask} = require('./private/gulp/createZipTask');
 const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
@@ -40,18 +38,13 @@ gulp.task('copy', createCopyTask(gulp));
  */
 gulp.task('zip', createZipTask(gulp, plugins));
 
-/**
- * Run composer update.
- */
-gulp.task('update:composer', createUpdateComposerTask());
+const baseBuild = createBuildTask(gulp);
+
+const build = gulp.series(baseBuild, 'zip');
 
 /**
  * The default task.
  */
-const baseBuild = createBuildTask(gulp);
-const build = gulp.series(baseBuild, 'zip');
-
 gulp.task('build', build);
-gulp.task('watch', gulp.series(baseBuild, createWatchTask()));
 
 exports.default = build;
