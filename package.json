@@ -1,7 +1,7 @@
 {
   "name": "@myparcel/woocommerce",
   "private": true,
-  "version": "4.14.0",
+  "version": "5.0.0-alpha.0",
   "scripts": {
     "build": "yarn build:js && yarn translations:import && yarn bundle",
     "build:js": "yarn workspaces foreach --exclude @myparcel/woocommerce -pvi run build",
