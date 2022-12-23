@@ -15,7 +15,7 @@ declare(strict_types=1);
 use MyParcelNL\Pdk\Base\PdkActions;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
-use MyParcelNL\WooCommerce\PdkOrderRepository;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 
 $shipments = [];
 

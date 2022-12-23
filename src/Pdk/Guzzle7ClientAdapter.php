@@ -2,15 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\includes\adapter;
+namespace MyParcelNL\WooCommerce\Pdk;
 
 use GuzzleHttp\Client;
 use MyParcelNL\Pdk\Api\Adapter\ClientAdapterInterface;
 use MyParcelNL\Pdk\Api\Response\ClientResponse;
 
-/**
- *
- */
 class Guzzle7ClientAdapter implements ClientAdapterInterface
 {
     private const DEFAULT_OPTIONS = [

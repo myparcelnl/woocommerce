@@ -2,7 +2,7 @@
   "name": "myparcelnl/woocommerce",
   "version": "4.14.0",
   "require": {
-    "myparcelnl/pdk": "1.25.3",
+    "myparcelnl/pdk": "*",
     "guzzlehttp/guzzle": "~7.5.0",
     "psr/log": "*"
   },
@@ -11,8 +11,13 @@
   },
   "autoload": {
     "psr-4": {
-      "MyParcelNL\\WooCommerce\\includes\\": "includes",
-      "MyParcelNL\\WooCommerce\\": "includes"
+      "MyParcelNL\\WooCommerce\\": "src"
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "/Users/edie/Sites/myparcel/pdk"
+    }
+  ]
 }

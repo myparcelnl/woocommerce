@@ -73,9 +73,9 @@ class WCMP_Assets
                     'export'        => ExportActions::ACTION_NAME,
                 ],
                 'bulk_actions'           => [
-                    'export'       => PdkActions::EXPORT_ORDER,
-                    'print'        => PdkActions::PRINT_ORDER,
-                    'export_print' => PdkActions::EXPORT_AND_PRINT_ORDER,
+                    'export'       => PdkActions::EXPORT_ORDERS,
+                    'print'        => PdkActions::PRINT_ORDERS,
+                    'export_print' => 'export_print',
                 ],
                 'ajax_url'               => admin_url('admin-ajax.php'),
                 'nonce'                  => wp_create_nonce(WCMYPA::NONCE_ACTION),

@@ -1,10 +1,10 @@
 function createTranslationsImportTask() {
-  const { downloadTranslations } = require('../downloadTranslations');
+  const {downloadTranslations} = require('../downloadTranslations');
 
-  return async(done) => {
+  return async (done) => {
     await downloadTranslations();
     return done;
   };
 }
 
-module.exports = { createTranslationsImportTask };
+module.exports = {createTranslationsImportTask};

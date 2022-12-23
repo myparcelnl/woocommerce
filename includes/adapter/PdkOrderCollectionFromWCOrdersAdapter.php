@@ -6,10 +6,9 @@ namespace MyParcelNL\WooCommerce\includes\adapter;
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Plugin\Collection\PdkOrderCollection;
-use MyParcelNL\WooCommerce\PdkOrderRepository;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use PdkLogger;
 use WCMP_Log;
-use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 
 /**
  *

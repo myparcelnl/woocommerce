@@ -11,7 +11,7 @@ use MyParcelNL\Sdk\src\Factory\DeliveryOptionsAdapterFactory;
 use MyParcelNL\Sdk\src\Model\Carrier\CarrierPostNL;
 use MyParcelNL\WooCommerce\includes\Settings\Api\AccountSettings;
 use MyParcelNL\WooCommerce\includes\Validators\WebhookCallbackUrlValidator;
-use MyParcelNL\WooCommerce\PdkOrderRepository;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\Product as WCX_Product;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
@@ -27,6 +27,8 @@ if (class_exists('WCMYPA_Admin')) {
 
 /**
  * Admin options, buttons & data
+ *
+ * @deprecated@deprecated
  */
 class WCMYPA_Admin
 {
@@ -53,6 +55,7 @@ class WCMYPA_Admin
     public const OLD_RED_JE_PAKKETJE_NAME         = 'redjepakketje';
     /**
      * @deprecated use weight property in META_SHIPMENT_OPTIONS_EXTRA.
+     *             @deprecated
      */
     public const META_ORDER_WEIGHT = '_myparcel_order_weight';
     // Ids referring to shipment statuses.
@@ -83,12 +86,14 @@ class WCMYPA_Admin
          * in the shipping address column... It is put in the right place after loading using JavaScript.
          *
          * @see wcmp-admin.js -> runTriggers()
+         *                    @deprecated
          */
-        add_action('woocommerce_admin_order_actions_end', [$this, 'showMyParcelSettings'], 9999);
-        add_action('woocommerce_admin_order_actions_end', [$this, 'showOrderActions'], 20);
+//        add_action('woocommerce_admin_order_actions_end', [$this, 'showMyParcelSettings'], 9999);
+//        add_action('woocommerce_admin_order_actions_end', [$this, 'showOrderActions'], 20);
 
         /*
          * Single order page
+         * @deprecated
          */
         add_action('add_meta_boxes_shop_order', [$this, 'add_order_meta_box']);
         add_action('woocommerce_admin_order_data_after_shipping_address', [$this, 'single_order_shipment_options']);
@@ -121,6 +126,7 @@ class WCMYPA_Admin
 
     /**
      * @throws \Exception
+     *                   @deprecated
      */
     public function addDeliveryDayFilterToOrdergrid(): void
     {
@@ -138,6 +144,7 @@ class WCMYPA_Admin
 
     /**
      * @throws \Exception
+     *                   @deprecated
      */
     public function deliveryDayFilter(): void
     {
@@ -183,6 +190,7 @@ class WCMYPA_Admin
      * @param  array $deliveryDate
      *
      * @return array
+     *              @deprecated
      */
     public function getDeliveryDateFromOrder(array $deliveryDate): array
     {
@@ -205,6 +213,7 @@ class WCMYPA_Admin
 
     /**
      * @param  \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractDeliveryOptionsAdapter $deliveryOptions
+     *                                                                                                    @deprecated
      */
     public static function renderPickupLocation(DeliveryOptionsAdapter $deliveryOptions): void
     {
@@ -231,6 +240,7 @@ class WCMYPA_Admin
      * @param  int    $loop
      * @param  array  $variationData
      * @param  object $variation
+     *                          @deprecated
      */
     public function renderVariationCountryOfOriginField(int $loop, array $variationData, object $variation): void
     {
@@ -260,6 +270,7 @@ class WCMYPA_Admin
     /**
      * @param  int $variationId
      * @param  int $loop
+     *                  @deprecated
      */
     public function saveVariationCountryOfOriginField(int $variationId, int $loop): void
     {
@@ -274,6 +285,7 @@ class WCMYPA_Admin
      * @param  array $variation
      *
      * @return array
+     *              @deprecated
      */
     public function loadVariationCountryOfOriginField(array $variation): array
     {
@@ -290,6 +302,7 @@ class WCMYPA_Admin
      * @param $loop
      * @param $variationData
      * @param $variation
+     *                  @deprecated
      */
     public function variation_hs_code_field($loop, $variationData, $variation): void
     {
@@ -309,6 +322,7 @@ class WCMYPA_Admin
     /**
      * @param $variationId
      * @param $loop
+     *             @deprecated
      */
     public function save_variation_hs_code_field($variationId, $loop): void
     {
@@ -323,6 +337,7 @@ class WCMYPA_Admin
      * @param $variation
      *
      * @return mixed
+     *              @deprecated
      */
     public function load_variation_hs_code_field($variation)
     {
@@ -339,6 +354,7 @@ class WCMYPA_Admin
      * @param              $orderId
      * @param  string|null $oldStatus
      * @param  string|null $newStatus will be passed when order status change triggers this method
+     *                                @deprecated
      */
     public function automaticExportOrder($orderId, ?string $oldStatus = null, ?string $newStatus = null): void
     {
@@ -371,6 +387,7 @@ class WCMYPA_Admin
      * @param  WC_Order $order
      *
      * @throws Exception
+     *                  @deprecated
      */
     public function showMyParcelSettings(WC_Order $order): void
     {
@@ -436,6 +453,7 @@ class WCMYPA_Admin
      * Get shipment status + Track & Trace link via AJAX
      *
      * @throws Exception
+     *                  @deprecated
      */
     public function order_list_ajax_get_shipment_summary(): void
     {
@@ -447,6 +465,7 @@ class WCMYPA_Admin
 
     /**
      * @return array
+     *              @deprecated
      */
     public function getMyParcelBulkActions(): array
     {
@@ -473,6 +492,7 @@ class WCMYPA_Admin
      *
      * @return array
      * @since WordPress 4.7.0
+     *        @deprecated
      */
     public function addBulkActions(array $actions): array
     {
@@ -493,6 +513,7 @@ class WCMYPA_Admin
      *
      * @access public
      * @return void
+     *             @deprecated
      */
     public function bulk_actions()
     {
@@ -523,6 +544,7 @@ class WCMYPA_Admin
      * @access public
      * @return void
      * @throws \Exception
+     *                   @deprecated
      */
     public function renderOffsetDialog(): void
     {
@@ -602,6 +624,7 @@ class WCMYPA_Admin
 
     /**
      * Hide an empty shipment options form in the footer.
+     * @deprecated
      */
     public function renderShipmentOptionsForm(): void
     {
@@ -610,6 +633,7 @@ class WCMYPA_Admin
 
     /**
      * Get the new html content for the shipment options form based on the passed order id.
+     * @deprecated
      */
     public function ajaxGetShipmentOptions(): void
     {
@@ -627,6 +651,7 @@ class WCMYPA_Admin
      * @param $order
      *
      * @throws Exception
+     *                  @deprecated
      */
     public function showOrderActions($order): void
     {
@@ -656,11 +681,12 @@ class WCMYPA_Admin
     }
 
     /**
-     * @param  PdkOrder                                   $pdkOrder
-     * @param  \MyParcelNL\WooCommerce\PdkOrderRepository $orderRepository
+     * @param  PdkOrder                                                         $pdkOrder
+     * @param  \MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository $orderRepository
      *
      * @return array|array[]
      * @throws \JsonException
+     *                       @deprecated
      */
     public static function getListingActions(PdkOrder $pdkOrder, PdkOrderRepository $orderRepository): array
     {
@@ -694,6 +720,7 @@ class WCMYPA_Admin
      * @param  \WC_Order $order
      *
      * @return array
+     *              @deprecated
      */
     public static function getListingAttributes(WC_Order $order): array
     {
@@ -717,6 +744,7 @@ class WCMYPA_Admin
      * @param  int $orderId
      *
      * @return array[]
+     *                @deprecated
      */
     public static function getDefaultListingActions(int $orderId): array
     {
@@ -750,6 +778,7 @@ class WCMYPA_Admin
      * @param  array $metaPps
      *
      * @return array
+     *              @deprecated
      */
     public static function updateExportButtonForPps(array $listingActions, array $metaPps): array
     {
@@ -780,6 +809,7 @@ class WCMYPA_Admin
      *
      * @return array
      * @throws \JsonException
+     *                       @deprecated
      */
     public static function get_order_shipments(WC_Order $order, bool $exclude_concepts = false): array
     {
@@ -813,6 +843,7 @@ class WCMYPA_Admin
 
         /**
          * Filter out concepts.
+         * @deprecated
          */
         if ($exclude_concepts) {
             $shipments = array_filter(
@@ -831,6 +862,7 @@ class WCMYPA_Admin
      *
      * @throws Exception
      * @see admin/views/html-order-shipment-options.php
+     *                                                 @deprecated
      */
     public function save_shipment_options_ajax(): void
     {
@@ -864,6 +896,7 @@ class WCMYPA_Admin
      * Add the meta box on the single order page
      *
      * @return void
+     *             @deprecated
      */
     public function add_order_meta_box(): void
     {
@@ -880,6 +913,7 @@ class WCMYPA_Admin
      * Callback: Create the meta box content on the single order page
      *
      * @throws Exception
+     *                  @deprecated
      */
     public function createMetaBox(): void
     {
@@ -923,6 +957,7 @@ class WCMYPA_Admin
      * @param  \WC_Order $order
      *
      * @throws \Exception
+     *                   @deprecated
      */
     public function single_order_shipment_options(WC_Order $order): void
     {
@@ -940,6 +975,7 @@ class WCMYPA_Admin
      * @param  bool      $isEmail
      *
      * @throws \Exception
+     *                   @deprecated
      */
     public function showShipmentConfirmation(WC_Order $order, bool $isEmail): void
     {
@@ -952,6 +988,7 @@ class WCMYPA_Admin
 
     /**
      * Go through all getProductOptions and show them on the screen
+     * @deprecated
      */
     public function productOptionsFields(): void
     {
@@ -982,6 +1019,7 @@ class WCMYPA_Admin
 
     /**
      * @param  int $postId
+     *                    @deprecated
      */
     public function productOptionsFieldSave(int $postId): void
     {
@@ -1004,6 +1042,7 @@ class WCMYPA_Admin
      *
      * @return string|void
      * @throws Exception
+     *                  @deprecated
      */
     public static function getTrackTraceUrl($order_id, $track_trace)
     {
@@ -1044,6 +1083,7 @@ class WCMYPA_Admin
 
     /**
      * @return array
+     *              @deprecated
      */
     public function getProductOptions(): array
     {
@@ -1097,6 +1137,7 @@ class WCMYPA_Admin
      * @param $columns
      *
      * @return mixed
+     *              @deprecated
      */
     public function barcode_add_new_order_admin_list_column($columns)
     {
@@ -1108,6 +1149,7 @@ class WCMYPA_Admin
      * @param $column
      *
      * @throws Exception
+     *                  @deprecated
      */
     public function addBarcodeToOrderColumn($column): void
     {
@@ -1123,6 +1165,7 @@ class WCMYPA_Admin
      *
      * @return void
      * @throws Exception
+     *                  @deprecated
      */
     public function renderBarcodes(WC_Order $order): void
     {
@@ -1182,6 +1225,7 @@ class WCMYPA_Admin
      * @return DeliveryOptionsAdapter
      * @throws \Exception
      * @see \WCMP_Checkout::save_delivery_options
+     *                                           @deprecated
      */
     public static function getDeliveryOptionsFromOrder(WC_Order $order, array $inputData = []): DeliveryOptionsAdapter
     {
@@ -1223,6 +1267,7 @@ class WCMYPA_Admin
      *
      * @return array
      * @throws JsonException
+     *                      @deprecated
      */
     public static function getExtraOptionsFromOrder(WC_Order $order): array
     {
@@ -1237,6 +1282,7 @@ class WCMYPA_Admin
 
     /**
      * @return bool
+     *             @deprecated
      */
     private function anyActiveCarrierHasShowDeliveryDate(): bool
     {
@@ -1259,6 +1305,7 @@ class WCMYPA_Admin
      * @param  \MyParcelNL\Pdk\Shipment\Model\DeliveryOptions $deliveryOptions
      *
      * @throws \Exception
+     *                   @deprecated
      */
     private function printDeliveryDate(DeliveryOptions $deliveryOptions): void
     {
@@ -1283,6 +1330,7 @@ class WCMYPA_Admin
      *
      * @return array[]|null
      * @throws \Exception
+     *                   @deprecated
      */
     private function getConfirmationData(DeliveryOptionsAdapter $deliveryOptions): ?array
     {
@@ -1334,6 +1382,7 @@ class WCMYPA_Admin
      * @param  DeliveryOptionsAdapter $deliveryOptions
      *
      * @return string
+     *               @deprecated
      */
     private function getDeliveryTypeOptions(DeliveryOptionsAdapter $deliveryOptions): string
     {
@@ -1366,6 +1415,7 @@ class WCMYPA_Admin
      * @param  \MyParcelNL\Sdk\src\Adapter\DeliveryOptions\AbstractShipmentOptionsAdapter|null $shipmentOptions
      *
      * @return array indexed array of strings holding the extra options, may be empty
+     *               @deprecated
      */
     private function getExtraOptions(?AbstractShipmentOptionsAdapter $shipmentOptions): array
     {
@@ -1389,6 +1439,7 @@ class WCMYPA_Admin
      * Print a table with the chosen delivery options on the confirmation page.
      *
      * @param  array[]|null $selectedDeliveryOptions
+     *                                              @deprecated
      */
     public function printThankYouConfirmation(?array $selectedDeliveryOptions): void
     {
@@ -1399,6 +1450,7 @@ class WCMYPA_Admin
      * Print a table with the chosen delivery options in the confirmation email.
      *
      * @param  array[]|null $selectedDeliveryOptions
+     *                                              @deprecated
      */
     public function printEmailConfirmation(?array $selectedDeliveryOptions): void
     {
@@ -1409,6 +1461,7 @@ class WCMYPA_Admin
      * @param  array[]|null $options
      *
      * @return string|null
+     *                    @deprecated
      */
     public function generateThankYouConfirmation(?array $options): ?string
     {
@@ -1434,6 +1487,7 @@ class WCMYPA_Admin
      * @param  array[]|null $options
      *
      * @return string|null
+     *                    @deprecated
      */
     public function generateEmailConfirmation(?array $options): ?string
     {
@@ -1464,6 +1518,7 @@ class WCMYPA_Admin
      *
      * @param  string $state
      * @param  array  $args
+     *                     @deprecated
      */
     public static function renderSpinner(string $state = '', array $args = []): void
     {
@@ -1507,6 +1562,7 @@ class WCMYPA_Admin
      * @param  string $alt
      * @param  string $icon
      * @param  array  $rawAttributes
+     *                              @deprecated
      */
     public static function renderAction(string $url, string $alt, string $icon, array $rawAttributes = []): void
     {
@@ -1531,6 +1587,7 @@ class WCMYPA_Admin
      * @param  int   $order_id
      *
      * @throws Exception
+     *                  @deprecated
      */
     public static function renderTrackTraceLink(array $shipment, int $order_id): void
     {
@@ -1556,6 +1613,7 @@ class WCMYPA_Admin
     /**
      * @param  array $shipment
      * @param  int   $order_id
+     *                        @deprecated
      */
     public static function renderStatus(array $shipment, int $order_id): void
     {
@@ -1576,6 +1634,7 @@ class WCMYPA_Admin
      * @param  int   $status
      *
      * @return bool
+     *             @deprecated
      */
     public static function shipmentIsStatus(array $shipment, int $status): bool
     {
@@ -1589,6 +1648,7 @@ class WCMYPA_Admin
      * @param  string $country
      *
      * @return mixed
+     *              @deprecated
      */
     public static function removeDisallowedDeliveryOptions(array $data, string $country): array
     {
@@ -1624,6 +1684,7 @@ class WCMYPA_Admin
      * Whether the current site is capable of receiving webhooks. Checks for SSL connection.
      *
      * @return bool
+     *             @deprecated
      */
     public static function canUseWebhooks(): bool
     {

@@ -3,15 +3,13 @@
   "private": true,
   "version": "4.14.0",
   "scripts": {
-    "build": "gulp",
-    "serve": "gulp watch"
+    "build": "yarn build:js && yarn translations:import && yarn bundle",
+    "build:js": "yarn workspaces foreach --exclude @myparcel/woocommerce -pvi run build",
+    "bundle": "gulp",
+    "translations:import": "npx -q @edielemoine/google-docs-importer --documentId 1TPE7gwG2GXtX7vlKIaskwMy0Xr4o_ir-lsedWB86xyc -o config/pdk/translations"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/myparcelnl/woocommerce.git"
-  },
-  "author": "",
-  "license": "ISC",
+  "repository": "github:myparcelnl/woocommerce",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/myparcelnl/woocommerce/issues"
   },
@@ -19,10 +17,18 @@
   "dependencies": {
     "@myparcel/delivery-options": "^5.0.0"
   },
+  "workspaces": [
+    "views/**/*"
+  ],
+  "prettier": "@myparcel/prettier-config",
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
-    "@myparcel/eslint-config": "^3.0.2",
+    "@edielemoine/google-docs-importer": "^1.0.2",
+    "@myparcel-eslint/eslint-config-node": "^1.2.0",
+    "@myparcel-eslint/eslint-config-prettier": "^1.2.0",
+    "@myparcel-eslint/eslint-config-prettier-typescript": "^1.2.0",
+    "@myparcel-eslint/eslint-config-prettier-typescript-vue": "^1.2.0",
     "@myparcel/semantic-release-config": "^3.1.0",
     "@myparcel/semantic-release-wordpress-readme-generator": "^1.0.1",
     "@types/papaparse": "^5.2.5",
@@ -31,6 +37,8 @@
     "browserify": "^17.0.0",
     "core-js": "^3.9.1",
     "download": "^8.0.0",
+    "eslint": "^8.30.0",
+    "eslint-plugin-sort-exports": "^0.8.0",
     "gettext-parser": "^4.0.4",
     "glob": "^7.1.6",
     "gulp": "^4.0.2",
@@ -44,9 +52,21 @@
     "gulp-uglify": "^3.0.2",
     "gulp-wp-pot": "^2.5.0",
     "gulp-zip": "^5.1.0",
+    "husky": "^8.0.2",
+    "is-ci": "^3.0.1",
+    "lint-staged": "^13.1.0",
     "papaparse": "^5.3.0",
     "postcss": "^8.2.10",
+    "prettier": "^2.8.1",
     "sass": "^1.43.2",
     "vinyl-buffer": "^1.0.1"
+  },
+  "resolutions": {
+    "@myparcel/pdk-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components",
+    "@myparcel/pdk-frontend": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-frontend",
+    "@myparcel/pdk-frontend-component-tests": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-frontend-component-tests",
+    "@myparcel/pdk-preset-bootstrap4": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-preset-bootstrap4",
+    "@myparcel-pdk/common": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/common",
+    "@myparcel-pdk/frontend-core": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core"
   }
 }

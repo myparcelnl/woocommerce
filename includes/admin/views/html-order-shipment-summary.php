@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Sdk\src\Support\Arr;
-use MyParcelNL\WooCommerce\PdkOrderRepository;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 
 if (! defined('ABSPATH')) {
     exit;

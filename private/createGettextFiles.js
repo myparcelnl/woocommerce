@@ -44,9 +44,7 @@ function createGettextFiles(data) {
 
       translationObject.translations[''][key] = {
         msgid: key,
-        msgstr: [
-          translation[index + 1],
-        ],
+        msgstr: [translation[index + 1]],
       };
     });
 

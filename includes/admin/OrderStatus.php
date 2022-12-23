@@ -6,14 +6,10 @@ namespace MyParcelNL\WooCommerce\includes\admin;
 
 use ExportActions;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\WooCommerce\includes\adapter\PdkOrderCollectionFromWCOrdersAdapter;
-use MyParcelNL\WooCommerce\PdkOrderRepository;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use WC_Order;
 use WCMP_Log;
-use WCMYPA_Admin;
 use WCMYPA_Settings;
-use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
-use WPO\WC\MyParcel\Compatibility\WC_Core;
 
 if (! defined("ABSPATH")) {
     exit;

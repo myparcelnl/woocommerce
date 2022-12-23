@@ -1,13 +1,12 @@
-const { createBuildJsTask } = require('./private/gulp/createBuildJsTask');
-const { createBuildScssTask } = require('./private/gulp/createBuildScssTask');
-const { createBuildTask } = require('./private/gulp/createBuildTask');
-const { createCleanTask } = require('./private/gulp/createCleanTask');
-const { createCopyDeliveryOptionsTask } = require('./private/gulp/createCopyDeliveryOptionsTask');
-const { createCopyTask } = require('./private/gulp/createCopyTask');
-const { createTranslationsImportTask } = require('./private/gulp/createTranslationsImportTask');
-const { createUpdateComposerTask } = require('./private/gulp/createUpdateComposerTask');
-const { createWatchTask } = require('./private/gulp/createWatchTask');
-const { createZipTask } = require('./private/gulp/createZipTask');
+const {createBuildJsTask} = require('./private/gulp/createBuildJsTask');
+const {createBuildScssTask} = require('./private/gulp/createBuildScssTask');
+const {createBuildTask} = require('./private/gulp/createBuildTask');
+const {createCleanTask} = require('./private/gulp/createCleanTask');
+const {createCopyDeliveryOptionsTask} = require('./private/gulp/createCopyDeliveryOptionsTask');
+const {createCopyTask} = require('./private/gulp/createCopyTask');
+const {createUpdateComposerTask} = require('./private/gulp/createUpdateComposerTask');
+const {createWatchTask} = require('./private/gulp/createWatchTask');
+const {createZipTask} = require('./private/gulp/createZipTask');
 const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 
@@ -45,11 +44,6 @@ gulp.task('zip', createZipTask(gulp, plugins));
  * Run composer update.
  */
 gulp.task('update:composer', createUpdateComposerTask());
-
-/**
- * Download translations as csv and convert them to .po files.
- */
-gulp.task('translations:import', createTranslationsImportTask());
 
 /**
  * The default task.

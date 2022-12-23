@@ -1,10 +1,10 @@
 function createUpdateComposerTask() {
-  const { spawnSync } = require('child_process');
+  const {spawnSync} = require('child_process');
 
   return (done) => {
-    spawnSync('composer', ['update'], { stdio: 'inherit' });
+    spawnSync('composer', ['update'], {stdio: 'inherit'});
     done();
   };
 }
 
-module.exports = { createUpdateComposerTask };
+module.exports = {createUpdateComposerTask};

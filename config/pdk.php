@@ -6,34 +6,30 @@ use MyParcelNL\Pdk\Api\Adapter\ClientAdapterInterface;
 use MyParcelNL\Pdk\Api\Service\ApiServiceInterface;
 use MyParcelNL\Pdk\Api\Service\MyParcelApiService;
 use MyParcelNL\Pdk\Base\Pdk;
-use MyParcelNL\Pdk\Facade\LanguageService;
 use MyParcelNL\Pdk\Language\Service\LanguageServiceInterface;
-use MyParcelNL\Pdk\Logger\AbstractLogger;
 use MyParcelNL\Pdk\Plugin\Action\EndpointActionsInterface;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
+use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
 use MyParcelNL\Pdk\Settings\Repository\AbstractSettingsRepository;
-use MyParcelNL\WooCommerce\includes\adapter\Guzzle7ClientAdapter;
-use MyParcelNL\WooCommerce\PdkOrderRepository;
-use WPO\WC\MyParcel\Collections\SettingsCollection;
+use MyParcelNL\WooCommerce\Pdk\Guzzle7ClientAdapter;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcEndpointActions;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
+use MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository;
+use MyParcelNL\WooCommerce\Pdk\Service\LanguageService;
+use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
 use function DI\autowire;
 use function DI\value;
 
 return [
-    'platform' => WCMYPA::PLATFORM,
-    'mode'     => value(WP_DEBUG_LOG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),
+    'mode' => value(WP_DEBUG_LOG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),
 
-    ApiServiceInterface::class => autowire(MyParcelApiService::class)->constructor(
-        [
-            'userAgent' => ['Woocommerce', WOOCOMMERCE_VERSION],
-            'apiKey'    => SettingsCollection::getInstance()
-                ->getByName(WCMYPA_Settings::SETTING_API_KEY),
-        ]
-    ),
-
+    ApiServiceInterface::class        => autowire(MyParcelApiService::class),
     AbstractPdkOrderRepository::class => autowire(PdkOrderRepository::class),
     ClientAdapterInterface::class     => autowire(Guzzle7ClientAdapter::class),
-    EndpointActionsInterface::class   => autowire(WooEndPointActions::class),
+    EndpointActionsInterface::class   => autowire(WcEndpointActions::class),
     LanguageServiceInterface::class   => autowire(LanguageService::class),
-    //AbstractLogger::class                  => autowire(PdkLogger::class),
     AbstractSettingsRepository::class => autowire(PdkSettingsRepository::class),
+    AbstractProductRepository::class  => autowire(PdkProductRepository::class),
+
+    //AbstractLogger::class                  => autowire(PdkLogger::class),
 ];

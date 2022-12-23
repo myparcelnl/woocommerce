@@ -2,8 +2,8 @@
 
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Pdk\Facade\Pdk;
-use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
-use MyParcelNL\WooCommerce\PdkOrderRepository;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
+use MyParcelNL\WooCommerce\Service\WcRecipientService;
 use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 use WPO\WC\MyParcel\Compatibility\WC_Core as WCX;
 
@@ -43,10 +43,10 @@ $target_url = wp_nonce_url(
                     continue;
                 }
 
-                $recipient = (new RecipientFromWCOrder(
+                $recipient = (new WcRecipientService(
                     $order,
                     CountryService::CC_NL,
-                    RecipientFromWCOrder::SHIPPING
+                    WcRecipientService::SHIPPING
                 ))->toArray();
                 ?>
                 <tr

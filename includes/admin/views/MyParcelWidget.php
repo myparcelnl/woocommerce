@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace MyParcelNL\WooCommerce\includes\admin\views;
 
+use ExportActions;
 use MyParcelNL\Pdk\Base\Model\ContactDetails;
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
-use MyParcelNL\WooCommerce\PdkOrderRepository;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
 use TypeError;
-use ExportActions;
 
 defined('ABSPATH') or die();
 

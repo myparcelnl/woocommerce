@@ -2,37 +2,32 @@
 
 declare(strict_types=1);
 
-namespace MyParcelNL\WooCommerce\includes\adapter;
+namespace MyParcelNL\WooCommerce\Service;
 
 use MyParcelNL\Pdk\Base\Service\CountryService;
 use MyParcelNL\Sdk\src\Helper\SplitStreet;
 use MyParcelNL\Sdk\src\Helper\ValidateStreet;
-use MyParcelNL\Sdk\src\Model\Recipient;
 use WC_Order;
-use WCMYPA_Admin;
-use WCMYPA_Settings;
-use WPO\WC\MyParcel\Compatibility\Order as WCX_Order;
 
-class RecipientFromWCOrder extends Recipient
+class WcRecipientService
 {
     public const  BILLING                           = 'billing';
     public const  SHIPPING                          = 'shipping';
     private const MIN_STREET_ADDITIONAL_INFO_LENGTH = 10;
-
-    /**
-     * Parameter $type should always be one of two constants, either 'billing' or 'shipping'.
-     *
-     * @param  \WC_Order $order
-     * @param  string    $originCountry
-     * @param  string    $type
-     *
-     * @throws \Exception
-     */
-    public function __construct(WC_Order $order, string $originCountry, string $type)
-    {
-        $recipientDetails = $this->createAddress($order, $type);
-        parent::__construct($recipientDetails, $originCountry);
-    }
+    //    /**
+    //     * Parameter $type should always be one of two constants, either 'billing' or 'shipping'.
+    //     *
+    //     * @param  \WC_Order $order
+    //     * @param  string    $originCountry
+    //     * @param  string    $type
+    //     *
+    //     * @throws \Exception
+    //     */
+    //    public function __construct(WC_Order $order, string $originCountry, string $type)
+    //    {
+    //        $recipientDetails = $this->createAddress($order, $type);
+    //        parent::__construct($recipientDetails, $originCountry);
+    //    }
 
     /**
      * @param  \WC_Order $order
@@ -42,7 +37,7 @@ class RecipientFromWCOrder extends Recipient
      * @throws \JsonException
      * @throws \Exception
      */
-    private function createAddress(WC_Order $order, string $type): array
+    public function createAddress(WC_Order $order, string $type): array
     {
         return [
                 'cc'          => $order->{"get_{$type}_country"}(),
@@ -51,8 +46,8 @@ class RecipientFromWCOrder extends Recipient
                 'postal_code' => $order->{"get_{$type}_postcode"}(),
                 'region'      => $order->{"get_{$type}_state"}(),
                 'person'      => $this->getPersonFromOrder($order, $type),
-                'email'       => $this->getEmailAddressFromOrder($order),
-                'phone'       => $this->getPhoneNumberFromOrder($order),
+                'email'       => $order->get_billing_email(),
+                'phone'       => $order->get_billing_phone(),
             ] + $this->getAddressFromOrder($order, $type);
     }
 
@@ -89,9 +84,9 @@ class RecipientFromWCOrder extends Recipient
      */
     private function getAddressFromOrder(WC_Order $order, string $type): array
     {
-        $street       = WCX_Order::get_meta($order, "_{$type}_street_name") ?: null;
-        $number       = WCX_Order::get_meta($order, "_{$type}_house_number") ?: null;
-        $numberSuffix = WCX_Order::get_meta($order, "_{$type}_house_number_suffix") ?: null;
+        $street       = $order->get_meta("_{$type}_street_name") ?: null;
+        $number       = $order->get_meta("_{$type}_house_number") ?: null;
+        $numberSuffix = $order->get_meta("_{$type}_house_number_suffix") ?: null;
         $addressLine2 = $order->{"get_{$type}_address_2"}();
         $addressLine1 = $order->{"get_{$type}_address_1"}();
         $country      = $order->{"get_{$type}_country"}();
@@ -142,40 +137,6 @@ class RecipientFromWCOrder extends Recipient
     }
 
     /**
-     * Email address should always come from the billing address.
-     *
-     * @param  \WC_Order $order
-     *
-     * @return string
-     * @throws \Exception
-     */
-    private function getEmailAddressFromOrder(WC_Order $order): string
-    {
-        $deliveryOptions = WCMYPA_Admin::getDeliveryOptionsFromOrder($order);
-        $emailConnected  = WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_EMAIL);
-
-        return $emailConnected || $deliveryOptions->isPickup()
-            ? $order->get_billing_email()
-            : '';
-    }
-
-    /**
-     * Phone should always come from the billing address.
-     *
-     * @param  \WC_Order $order
-     *
-     * @return string|null
-     */
-    private function getPhoneNumberFromOrder(WC_Order $order): ?string
-    {
-        $connectPhone = WCMYPA()->settingCollection->isEnabled(WCMYPA_Settings::SETTING_CONNECT_PHONE);
-
-        return $connectPhone
-            ? $order->get_billing_phone()
-            : null;
-    }
-
-    /**
      * @param  \WC_Order $order
      * @param  string    $type
      *
@@ -189,7 +150,7 @@ class RecipientFromWCOrder extends Recipient
 
         return method_exists($order, $getFullName)
             ? $order->{$getFullName}()
-            : trim($order->{$getFirstName}() . ' ' . $order->{$getLastName}());
+            : trim($order->{$getFirstName}() . ' WcRecipientService.php' . $order->{$getLastName}());
     }
 
     /**

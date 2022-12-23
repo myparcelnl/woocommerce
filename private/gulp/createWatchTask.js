@@ -9,4 +9,4 @@ function createWatchTask(gulp) {
   };
 }
 
-module.exports = { createWatchTask };
+module.exports = {createWatchTask};
