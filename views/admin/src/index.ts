@@ -27,16 +27,23 @@ import {
   DefaultToggleInput,
 } from '@myparcel/pdk-components';
 import {LogLevel, createPdkFrontend, useModalStore} from '@myparcel/pdk-frontend';
-import WcFormGroup from './components/WcFormGroup.vue';
-import WcModal from './components/WcModal.vue';
+import WcFormGroup from './components/pdk/WcFormGroup.vue';
+import WcModal from './components/pdk/WcModal.vue';
+import WcButton from './components/pdk/WcButton.vue';
+import WcCard from './components/pdk/WcCard.vue';
+import WcToggleInput from './components/pdk/WcToggleInput.vue';
+import WcNotification from './components/pdk/WcNotification.vue';
+import WcTable from './components/pdk/WcTable.vue';
+import WcCheckboxInput from './components/pdk/WcCheckboxInput.vue';
+import WcMultiCheckbox from './components/pdk/WcMultiCheckbox.vue';
 
 createPdkFrontend({
   logLevel: LogLevel.DEBUG,
   components: {
-    PdkButton: Bootstrap4Button,
+    PdkButton: WcButton,
     PdkButtonGroup: Bootstrap4ButtonGroup,
-    PdkCard: Bootstrap4Card,
-    PdkCheckboxInput: Bootstrap4CheckboxInput,
+    PdkCard: WcCard,
+    PdkCheckboxInput: WcCheckboxInput,
     PdkCol: Bootstrap4Col,
     PdkCurrencyInput: DefaultCurrencyInput,
     PdkDropdownButton: Bootstrap4DropdownButton,
@@ -45,7 +52,7 @@ createPdkFrontend({
     PdkImage: Bootstrap4Image,
     PdkLink: DefaultLink,
     PdkModal: WcModal,
-    PdkMultiCheckbox: DefaultMultiCheckbox,
+    PdkMultiCheckbox: WcMultiCheckbox,
     PdkMultiRadio: DefaultMultiRadio,
     PdkNotification: WcNotification,
     PdkNumberInput: Bootstrap4NumberInput,
@@ -53,7 +60,7 @@ createPdkFrontend({
     PdkRadioInput: Bootstrap4RadioInput,
     PdkRow: Bootstrap4Row,
     PdkSelectInput: Bootstrap4SelectInput,
-    PdkTable: Bootstrap4Table,
+    PdkTable: WcTable,
     PdkTableCol: DefaultTableCol,
     PdkTableRow: DefaultTableRow,
     PdkTextInput: Bootstrap4TextInput,

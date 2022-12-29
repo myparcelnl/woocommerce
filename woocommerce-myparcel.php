@@ -255,6 +255,9 @@ class MyParcelNL
         // Render scripts in the footer
         add_action('admin_footer', [$this, 'renderPdkInitScripts']);
 
+        // Render scripts in woocommerce header
+        add_action('admin_notices', [$this, 'renderPdkNotifications']);
+
         // Render custom column in order grid
         add_filter('manage_edit-shop_order_columns', [$this, 'addMyParcelColumnToOrderGrid'], 20);
 
@@ -262,10 +265,21 @@ class MyParcelNL
         add_action('manage_shop_order_posts_custom_column', [$this, 'renderPdkOrderListColumn']);
     }
 
+    /**
+     * @return void
+     */
     public function renderPdkInitScripts(): void
     {
         echo RenderService::renderInitScript();
         echo RenderService::renderModals();
+    }
+
+    /**
+     * @return void
+     */
+    public function renderPdkNotifications(): void
+    {
+        echo RenderService::renderNotifications();
     }
 
     /**

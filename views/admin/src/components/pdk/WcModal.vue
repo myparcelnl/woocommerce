@@ -14,6 +14,11 @@
           <h4 v-text="translate(title)" />
         </div>
         <div v-if="context">
+
+          <WcMultiCheckBox
+            disabled="false"
+            options="{'1';'2'}" />
+
           <NotificationContainer category="modal" />
 
           <slot :context="context" />
@@ -63,9 +68,6 @@ export default defineComponent({
       required: true,
     },
 
-    /**
-     * Available actions in the modal.
-     */
     actions: {
       type: Array as PropType<PdkButtonAction[]>,
       required: true,

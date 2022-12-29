@@ -28,5 +28,11 @@ export default defineConfig((env) => ({
     'process.env': {},
   },
 
-  plugins: [vue()],
+  plugins: [vue({
+    template: {
+      compilerOptions: {
+        isCustomElement: (tag) => ['WcMultiCheckBox', 'NotificationContainer'].includes(tag),
+      }
+    }
+  })],
 }));
