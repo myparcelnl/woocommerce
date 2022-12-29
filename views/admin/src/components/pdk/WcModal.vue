@@ -12,11 +12,6 @@
       <div>
         <div>
           <h4 v-text="translate(title)" />
-          <button
-            type="button"
-            @click="closeModal">
-            <PdkIcon icon="close" />
-          </button>
         </div>
         <div v-if="context">
           <NotificationContainer category="modal" />
@@ -25,10 +20,11 @@
         </div>
         <div>
           <div>
-            <ActionButton
+            <WcButton
               v-for="(action, index) in actions"
               :key="`action_${action.id}_${index}`"
-              :action="action" />
+              :action="action.id"
+              :label="action.label" />
           </div>
         </div>
       </div>
@@ -46,12 +42,14 @@ import {
   useTranslate,
 } from '@myparcel/pdk-frontend';
 import {PropType, computed, defineComponent, toRefs} from 'vue';
+import WcButton from './WcButton.vue';
+import WcMultiCheckbox from './WcMultiCheckbox.vue';
 
 export default defineComponent({
   name: 'WcPdkModal',
   components: {
-    NotificationContainer,
-    ActionButton,
+    WcButton,
+    WcMultiCheckbox,
   },
 
   props: {

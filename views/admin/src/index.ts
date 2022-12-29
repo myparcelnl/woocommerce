@@ -47,7 +47,7 @@ createPdkFrontend({
     PdkModal: WcModal,
     PdkMultiCheckbox: DefaultMultiCheckbox,
     PdkMultiRadio: DefaultMultiRadio,
-    PdkNotification: Bootstrap4Notification,
+    PdkNotification: WcNotification,
     PdkNumberInput: Bootstrap4NumberInput,
     PdkPluginSettingsWrapper: DefaultPluginSettingsWrapper,
     PdkRadioInput: Bootstrap4RadioInput,
@@ -57,7 +57,7 @@ createPdkFrontend({
     PdkTableCol: DefaultTableCol,
     PdkTableRow: DefaultTableRow,
     PdkTextInput: Bootstrap4TextInput,
-    PdkToggleInput: DefaultToggleInput,
+    PdkToggleInput: WcToggleInput,
   },
 
   onCreateStore() {

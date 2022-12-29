@@ -1,0 +1,9 @@
+.wcmp__toggle {
+  cursor: pointer;
+}
+
+[data-disabled="true"] .wcmp__toggle,
+[data-readonly="true"] .wcmp__toggle {
+  opacity: 65%;
+  cursor: not-allowed;
+}
