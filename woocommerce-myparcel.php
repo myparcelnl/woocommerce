@@ -44,6 +44,7 @@ class MyParcelNL
     public const NAME                   = 'myparcelnl';
     public const PLATFORM               = 'myparcel';
     const        CUSTOM_ORDER_COLUMN_ID = 'myparcelnl';
+    public const SETTINGS_MENU_SLUG     = 'wcmp_settings';
 
     /**
      * @var WCMYPA_Admin
@@ -85,7 +86,7 @@ class MyParcelNL
         $this->pluginBasename = plugin_basename(__FILE__);
 
         // load the localisation & classes
-//        add_action('plugins_loaded', [$this, 'translations']);
+        //        add_action('plugins_loaded', [$this, 'translations']);
         add_action('init', [$this, 'initialize'], 9999);
 
         // run lifecycle methods
@@ -163,17 +164,6 @@ class MyParcelNL
             'message_insurance_belgium_2022',
             [MessagesRepository::SETTINGS_PAGE, MessagesRepository::PLUGINS_PAGE]
         );
-    }
-
-    /**
-     * Initialize the settings.
-     */
-    public function initSettings(): void
-    {
-        require_once('includes/wcmp-initialize-settings-collection.php');
-        if (empty($this->settingCollection)) {
-            $this->settingCollection = (new WCMP_Initialize_Settings_Collection())->initialize();
-        }
     }
 
     //        /**
@@ -263,6 +253,8 @@ class MyParcelNL
 
         // Render pdk order list column in above custom order grid column
         add_action('manage_shop_order_posts_custom_column', [$this, 'renderPdkOrderListColumn']);
+
+        add_action('admin_menu', [$this, 'addSubMenu']);
     }
 
     /**
@@ -280,6 +272,30 @@ class MyParcelNL
     public function renderPdkNotifications(): void
     {
         echo RenderService::renderNotifications();
+    }
+
+    /**
+     * @return void
+     */
+    public function renderPdkPluginSettings(): void
+    {
+        echo 'hier komen settings';
+//        echo RenderService::renderPluginSettings();
+    }
+
+    /**
+     * @return void
+     */
+    public function addSubMenu()
+    {
+        add_submenu_page(
+            'woocommerce',
+            __('MyParcel', 'woocommerce-myparcel'),
+            __('MyParcel', 'woocommerce-myparcel'),
+            'edit_pages',
+            self::SETTINGS_MENU_SLUG,
+            [$this, 'renderPdkPluginSettings']
+        );
     }
 
     /**
@@ -358,29 +374,29 @@ class MyParcelNL
         }
     }
 
-//    /**
-//     * Load the translation / text-domain files
-//     * Note: the first-loaded translation file overrides any following ones if the same translation is present
-//     */
-//    public function translations(): void
-//    {
-//        $locale = apply_filters('plugin_locale', get_locale(), self::DOMAIN);
-//        $dir    = trailingslashit(WP_LANG_DIR);
-//
-//        /**
-//         * Frontend/global Locale. Looks in:
-//         *        - WP_LANG_DIR/woocommerce-myparcel/woocommerce-myparcel-LOCALE.mo
-//         *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
-//         *        - woocommerce-myparcel/languages/woocommerce-myparcel-LOCALE.mo (which if not found falls back to:)
-//         *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
-//         */
-//        load_textdomain(
-//            self::DOMAIN,
-//            $dir . 'woocommerce-myparcel/' . self::DOMAIN . '-' . $locale . '.mo'
-//        );
-//        load_textdomain(self::DOMAIN, $dir . 'plugins/' . self::DOMAIN . '-' . $locale . '.mo');
-//        load_plugin_textdomain(self::DOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages');
-//    }
+    //    /**
+    //     * Load the translation / text-domain files
+    //     * Note: the first-loaded translation file overrides any following ones if the same translation is present
+    //     */
+    //    public function translations(): void
+    //    {
+    //        $locale = apply_filters('plugin_locale', get_locale(), self::DOMAIN);
+    //        $dir    = trailingslashit(WP_LANG_DIR);
+    //
+    //        /**
+    //         * Frontend/global Locale. Looks in:
+    //         *        - WP_LANG_DIR/woocommerce-myparcel/woocommerce-myparcel-LOCALE.mo
+    //         *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
+    //         *        - woocommerce-myparcel/languages/woocommerce-myparcel-LOCALE.mo (which if not found falls back to:)
+    //         *        - WP_LANG_DIR/plugins/woocommerce-myparcel-LOCALE.mo
+    //         */
+    //        load_textdomain(
+    //            self::DOMAIN,
+    //            $dir . 'woocommerce-myparcel/' . self::DOMAIN . '-' . $locale . '.mo'
+    //        );
+    //        load_textdomain(self::DOMAIN, $dir . 'plugins/' . self::DOMAIN . '-' . $locale . '.mo');
+    //        load_plugin_textdomain(self::DOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages');
+    //    }
 
     /**
      * Plugin upgrade method. Perform any required upgrades here
