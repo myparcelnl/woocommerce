@@ -16,6 +16,7 @@ use MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment;
 use MyParcelNL\Sdk\src\Support\Arr;
 use MyParcelNL\WooCommerce\includes\adapter\RecipientFromWCOrder;
 use WC_Order;
+use WCMP_Country_Codes;
 use WCMP_Data;
 use WCMP_Export;
 use WCMP_Export_Consignments;
@@ -641,9 +642,14 @@ class OrderSettings
         $isDefaultInsured                  = (bool) $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED);
         $isDefaultInsuredFromPrice         = $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FROM_PRICE);
         $isDefaultInsuredForBE             = (bool) $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_FOR_BE);
-        $orderTotalExceedsInsuredFromPrice = $this->order->get_total() >= (float) $isDefaultInsuredFromPrice;
         $insuranceFromDeliveryOptions      = $this->shipmentOptions->getInsurance();
-        $isBe                              = AbstractConsignment::CC_BE === $this->getShippingCountry();
+        $cc                                = $this->getShippingCountry();
+        $isBe                              = AbstractConsignment::CC_BE === $cc;
+        $isNl                              = AbstractConsignment::CC_NL === $cc;
+        $isRowOrEu                         = (WCMP_Country_Codes::isEuCountry($cc) ||
+            WCMP_Country_Codes::isWorldShipmentCountry($cc)) && ! $isNl;
+        $orderTotalExceedsInsuredFromPrice = $this->order->get_total() >= (float) $isDefaultInsuredFromPrice || $isRowOrEu;
+
 
         $consignment             = ConsignmentFactory::createByCarrierName($this->carrier);
         $amountPossibilities = $consignment->getInsurancePossibilities($this->getShippingCountry());
@@ -652,11 +658,11 @@ class OrderSettings
             $isInsured       = (bool) $insuranceFromDeliveryOptions;
             $insuranceAmount = $insuranceFromDeliveryOptions;
         } elseif ($isDefaultInsured && $isBe) {
-            $isInsured       = $insuranceFromDeliveryOptions === 0 ? false : $isDefaultInsuredForBE;
+            $isInsured       = 0 === $insuranceFromDeliveryOptions ? false : $isDefaultInsuredForBE;
             $insuranceAmount = $isInsured ? self::DEFAULT_BELGIAN_INSURANCE : 0;
-        } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && $insuranceFromDeliveryOptions !== 0) {
+        } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && 0 !== $insuranceFromDeliveryOptions) {
             $isInsured       = true;
-            $insuranceAmount = $this->getCarrierSetting(
+            $insuranceAmount = $isRowOrEu ? $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_EU_AMOUNT) : $this->getCarrierSetting(
                 WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT
             );
         }
@@ -678,6 +684,7 @@ class OrderSettings
             return;
         }
 
+        WCMP_Log::add('Insurance: ' . ($isInsured ? 'yes' : 'no'));
         $this->insured         = $isInsured;
         $this->insuranceAmount = (int) $insuranceAmount;
     }
