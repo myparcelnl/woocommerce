@@ -661,10 +661,10 @@ class OrderSettings
             $isInsured       = 0 === $insuranceFromDeliveryOptions ? false : $isDefaultInsuredForBE;
             $insuranceAmount = $isInsured ? self::DEFAULT_BELGIAN_INSURANCE : 0;
         } elseif ($isDefaultInsured && $orderTotalExceedsInsuredFromPrice && 0 !== $insuranceFromDeliveryOptions) {
-            $isInsured       = true;
             $insuranceAmount = $isRowOrEu ? $this->getCarrierSetting(WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_EU_AMOUNT) : $this->getCarrierSetting(
                 WCMYPA_Settings::SETTING_CARRIER_DEFAULT_EXPORT_INSURED_AMOUNT
             );
+            $isInsured       = (bool) $insuranceAmount;
         }
 
         $consignmentSettingName = AbstractConsignment::SHIPMENT_OPTION_INSURANCE;
