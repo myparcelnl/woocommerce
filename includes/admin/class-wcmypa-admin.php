@@ -1584,26 +1584,6 @@ class WCMYPA_Admin
     public static function renderStatus(array $shipment, int $order_id): void
     {
         echo esc_html($shipment['status'] ?? '–');
-
-        if (self::shipmentIsStatus($shipment, self::ORDER_STATUS_DELIVERED_AT_RECIPIENT)
-            || self::shipmentIsStatus($shipment, self::ORDER_STATUS_DELIVERED_READY_FOR_PICKUP)
-            || self::shipmentIsStatus($shipment, self::ORDER_STATUS_DELIVERED_PACKAGE_PICKED_UP)
-        ) {
-            $order = WCX::get_order($order_id);
-//            This will be addressed in MY-24881
-//            $order->update_status('wc-custom-delivered');
-        }
-    }
-
-    /**
-     * @param array $shipment
-     * @param int   $status
-     *
-     * @return bool
-     */
-    public static function shipmentIsStatus(array $shipment, int $status): bool
-    {
-        return strstr($shipment['status'], (new WCMP_Export())->getShipmentStatusName($status));
     }
 
     /**
