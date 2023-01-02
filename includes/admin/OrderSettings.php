@@ -667,6 +667,10 @@ class OrderSettings
             $isInsured       = (bool) $insuranceAmount;
         }
 
+        if (! $isNl && ! $isInsured) {
+            $this->signature = false;
+        }
+
         $consignmentSettingName = AbstractConsignment::SHIPMENT_OPTION_INSURANCE;
         if ($isInsured
             && $this->deliveryOptions->isPickup()
