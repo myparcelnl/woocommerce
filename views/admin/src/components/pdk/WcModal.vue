@@ -85,7 +85,6 @@ export default defineComponent({
 
       translate: useTranslate(),
       context: computed(() => {
-        console.log(modalStore, modalStore.context);
         return propRefs.modalKey.value === modalStore.opened ? modalStore.context : null;
       }),
 

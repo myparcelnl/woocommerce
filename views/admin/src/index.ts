@@ -36,6 +36,10 @@ import WcNotification from './components/pdk/WcNotification.vue';
 import WcTable from './components/pdk/WcTable.vue';
 import WcCheckboxInput from './components/pdk/WcCheckboxInput.vue';
 import WcMultiCheckbox from './components/pdk/WcMultiCheckbox.vue';
+import WcSelectInput from './components/pdk/WcSelectInput.vue';
+// @ts-ignore
+import WcTextInput from './components/pdk/WcTextInput.vue';
+import WcNumberInput from './components/pdk/WcNumberInput.vue';
 
 createPdkFrontend({
   logLevel: LogLevel.DEBUG,
@@ -55,11 +59,11 @@ createPdkFrontend({
     PdkMultiCheckbox: WcMultiCheckbox,
     PdkMultiRadio: DefaultMultiRadio,
     PdkNotification: WcNotification,
-    PdkNumberInput: Bootstrap4NumberInput,
+    PdkNumberInput: WcNumberInput,
     PdkPluginSettingsWrapper: DefaultPluginSettingsWrapper,
     PdkRadioInput: Bootstrap4RadioInput,
     PdkRow: Bootstrap4Row,
-    PdkSelectInput: Bootstrap4SelectInput,
+    PdkSelectInput: WcSelectInput,
     PdkTable: WcTable,
     PdkTableCol: DefaultTableCol,
     PdkTableRow: DefaultTableRow,

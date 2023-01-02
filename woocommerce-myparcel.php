@@ -16,6 +16,7 @@ License URI: http://www.opensource.org/licenses/gpl-license.php
 
 use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
+use MyParcelNL\Pdk\Plugin\Model\PdkOrder;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
 use MyParcelNL\WooCommerce\Pdk\Boot;
 
@@ -219,25 +220,8 @@ class MyParcelNL
             return;
         }
 
-        //        $this->initMessenger();
         $this->useStagingEnvironment();
-        //            $this->includes();
-        //            $this->initSettings();
-
-        //            add_action('wp_dashboard_setup', [new MyParcelWidget(), 'loadWidget']);
-
-        //            if (! $this->validateApiKey()) {
-        //                return;
-        //            }
-
         $this->setupPdk();
-        //            $this->registerWebhooks();
-
-        //            AccountSettings::getInstance();
-        //            add_action(
-        //                'wp_ajax_' . WCMYPA_Settings::SETTING_TRIGGER_MANUAL_UPDATE,
-        //                [AccountSettings::class, 'restRefreshFromApi']
-        //            );
 
         // Load the js necessary to run the pdk frontend
         add_action('admin_enqueue_scripts', [$this, 'loadPdkScripts']);
@@ -255,6 +239,10 @@ class MyParcelNL
         add_action('manage_shop_order_posts_custom_column', [$this, 'renderPdkOrderListColumn']);
 
         add_action('admin_menu', [$this, 'addSubMenu']);
+
+        add_action('woocommerce_product_options_shipping', [$this, 'renderPdkProductSettings']);
+
+        add_action('woocommerce_admin_order_data_after_shipping_address', [$this, 'renderPdkSingleOrderSettings']);
     }
 
     /**
@@ -279,8 +267,23 @@ class MyParcelNL
      */
     public function renderPdkPluginSettings(): void
     {
-        echo 'hier komen settings';
-//        echo RenderService::renderPluginSettings();
+        echo RenderService::renderPluginSettings();
+    }
+
+    /**
+     * @return void
+     */
+    public function renderPdkSingleOrderSettings()
+    {
+        echo RenderService::renderOrderCard(new PdkOrder([]));
+    }
+
+    /**
+     * @return void
+     */
+    public function renderPdkProductSettings(): void
+    {
+        echo RenderService::renderProductSettings();
     }
 
     /**
