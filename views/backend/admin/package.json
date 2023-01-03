@@ -1,0 +1,27 @@
+{
+  "name": "@myparcel-woocommerce/backend-admin",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "dev": "vite",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@myparcel/pdk-component-tests": "*",
+    "@myparcel/pdk-components": "*",
+    "@myparcel/pdk-frontend": "*",
+    "@myparcel/pdk-preset-bootstrap4": "*",
+    "@tanstack/vue-query": "^4.20.5"
+  },
+  "devDependencies": {
+    "sass": "^1.57.1",
+    "vite": "^4.0.4",
+    "vitest": "^0.26.3",
+    "vue": "^3.2.45"
+  }
+}

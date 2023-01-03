@@ -29,14 +29,23 @@ class Boot
     {
         if (! self::$initialized) {
             self::$initialized = true;
-            self::$pdk         = PdkFactory::create($plugin->getPluginPath() . '/config/pdk.php', [
+
+            $pluginPath    = untrailingslashit(plugin_dir_path(MyParcelNL::ROOT_FILE));
+            $pluginUrl     = untrailingslashit(plugins_url('/', MyParcelNL::ROOT_FILE));
+            $pluginVersion = $plugin->version;
+
+            self::$pdk = PdkFactory::create($pluginPath . '/config/pdk.php', [
+                'platform'      => value('myparcel'),
                 'pluginName'    => value(MyParcelNL::NAME),
-                'platform'      => 'myparcel',
-                'userAgent'     => value([
-                    'MyParcelNL-WooCommerce' => $plugin->version,
+                'pluginPath'    => value($pluginPath),
+                'pluginUrl'     => value($pluginUrl),
+                'pluginVersion' => value($pluginVersion),
+
+                'userAgent' => value([
+                    'MyParcelNL-WooCommerce' => $pluginVersion,
                     'Woocommerce'            => defined('WOOCOMMERCE_VERSION') ? WOOCOMMERCE_VERSION : '?',
+                    'WordPress'              => get_bloginfo('version'),
                 ]),
-                'pluginRootDir' => value($plugin->getPluginPath()),
             ]);
         }
 

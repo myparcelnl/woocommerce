@@ -11,7 +11,7 @@ use MyParcelNL\Pdk\Plugin\Action\EndpointActionsInterface;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
 use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
 use MyParcelNL\Pdk\Settings\Repository\AbstractSettingsRepository;
-use MyParcelNL\WooCommerce\Logger\WordPressLogger;
+use MyParcelNL\WooCommerce\Logger\WooCommerceLogger;
 use MyParcelNL\WooCommerce\Pdk\Guzzle7ClientAdapter;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcEndpointActions;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
@@ -22,8 +22,18 @@ use Psr\Log\LoggerInterface;
 use function DI\autowire;
 use function DI\value;
 
+/**
+ * @see \MyParcelNL\WooCommerce\Pdk\Boot::setupPdk() for configuration based on the plugin itself.
+ */
 return [
-    'mode' => value(WP_DEBUG_LOG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),
+    'mode'                   => value(WP_DEBUG ? Pdk::MODE_DEVELOPMENT : Pdk::MODE_PRODUCTION),
+
+    /**
+     * The version of the delivery options in the checkout.
+     *
+     * @see https://github.com/myparcelnl/delivery-options/releases
+     */
+    'deliveryOptionsVersion' => value('5.3.0'),
 
     AbstractPdkOrderRepository::class => autowire(PdkOrderRepository::class),
     AbstractProductRepository::class  => autowire(PdkProductRepository::class),
@@ -32,5 +42,5 @@ return [
     ClientAdapterInterface::class     => autowire(Guzzle7ClientAdapter::class),
     EndpointActionsInterface::class   => autowire(WcEndpointActions::class),
     LanguageServiceInterface::class   => autowire(LanguageService::class),
-    LoggerInterface::class            => autowire(WordPressLogger::class),
+    LoggerInterface::class            => autowire(WooCommerceLogger::class),
 ];

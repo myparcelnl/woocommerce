@@ -14,7 +14,6 @@ use MyParcelNL\Sdk\src\Model\Account\CarrierOptions;
 use MyParcelNL\Sdk\src\Model\Account\Shop;
 use MyParcelNL\Sdk\src\Model\Carrier\AbstractCarrier;
 use MyParcelNL\Sdk\src\Support\Collection;
-use MyParcelNL\WooCommerce\Admin\MessageLogger;
 use MyParcelNL\WooCommerce\Facade\Messages;
 use MyParcelNL\WooCommerce\includes\Concerns\HasApiKey;
 use MyParcelNL\WooCommerce\includes\Concerns\HasInstance;
@@ -87,15 +86,8 @@ class AccountSettings extends Model
      */
     public static function restRefreshFromApi(): WP_REST_Response
     {
-        return AccountSettingsService::getInstance()->restRefreshSettingsFromApi();
-    }
-
-    /**
-     * @return null|\MyParcelNL\Sdk\src\Model\Account\Account
-     */
-    public function getAccount(): ?Account
-    {
-        return $this->account;
+        return AccountSettingsService::getInstance()
+            ->restRefreshSettingsFromApi();
     }
 
     /**
@@ -107,6 +99,14 @@ class AccountSettings extends Model
         $accountSettingsService->removeSettings();
         $accountSettingsService->refreshSettingsFromApi($newApiKey);
         (new WebhookSubscriptionService())->subscribeToWebhooks($newApiKey);
+    }
+
+    /**
+     * @return null|\MyParcelNL\Sdk\src\Model\Account\Account
+     */
+    public function getAccount(): ?Account
+    {
+        return $this->account;
     }
 
     /**
@@ -238,10 +238,7 @@ class AccountSettings extends Model
         $carrierConfigurations = $settings->get('carrier_configurations');
 
         if (! isset($shop, $account, $carrierOptions, $carrierConfigurations)) {
-            Messages::log(
-                __('error_settings_account_missing', 'woocommerce-myparcel'),
-                MessageLogger::NOTICE_LEVEL_ERROR
-            );
+            Messages::error(__('error_settings_account_missing', 'woocommerce-myparcel'));
 
             return;
         }
@@ -263,10 +260,7 @@ class AccountSettings extends Model
     private function get(string $settingKey)
     {
         if (! $this->isValid()) {
-            Messages::log(
-                __('error_settings_account_missing', 'woocommerce-myparcel'),
-                MessageLogger::NOTICE_LEVEL_WARNING
-            );
+            Messages::warning(__('error_settings_account_missing', 'woocommerce-myparcel'),);
             return null;
         }
 

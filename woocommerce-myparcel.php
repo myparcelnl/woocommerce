@@ -19,7 +19,8 @@ use MyParcelNL\WooCommerce\Admin\MessageLogger;
 use MyParcelNL\WooCommerce\Facade\Messages;
 use MyParcelNL\WooCommerce\Migration\Migrator;
 use MyParcelNL\WooCommerce\Pdk\Boot;
-use MyParcelNL\WooCommerce\Pdk\Service\HookRenderService;
+use MyParcelNL\WooCommerce\Pdk\Service\AdminPdkHookService;
+use MyParcelNL\WooCommerce\Pdk\Service\CheckoutHookService;
 
 defined('ABSPATH') or die();
 
@@ -27,10 +28,18 @@ require(plugin_dir_path(__FILE__) . 'vendor/autoload.php');
 
 class MyParcelNL
 {
-    public const PHP_VERSION_MINIMUM    = '7.1';
-    public const NAME                   = 'myparcelnl';
-    public const CUSTOM_ORDER_COLUMN_ID = 'myparcelnl';
-    public const SETTINGS_MENU_SLUG     = 'myparcelnl_settings';
+    public const  ROOT_FILE              = __FILE__;
+    public const  PHP_VERSION_MINIMUM    = '7.1';
+    public const  NAME                   = 'myparcelnl';
+    public const  CUSTOM_ORDER_COLUMN_ID = 'myparcelnl';
+    public const  SETTINGS_MENU_SLUG     = 'myparcelnl_settings';
+    /**
+     * @var class-string<\MyParcelNL\WooCommerce\Pdk\Service\WordPressHookServiceInterface>[]
+     */
+    private const HOOK_SERVICES = [
+        AdminPdkHookService::class,
+        CheckoutHookService::class,
+    ];
 
     /**
      * @var WCMYPA_Admin
@@ -65,11 +74,11 @@ class MyParcelNL
     public function __construct()
     {
         $this->version        = $this->getVersion();
-        $this->pluginBasename = plugin_basename(__FILE__);
+        $this->pluginBasename = plugin_basename(self::ROOT_FILE);
 
-        $this->setupPdk();
+        Boot::setupPdk($this);
 
-        define('WC_MYPARCEL_NL_VERSION', $this->version);
+        define('MYPARCELNL_WC_VERSION', $this->version);
 
         // run lifecycle methods
         if (! defined('DOING_AJAX') && is_admin()) {
@@ -79,75 +88,6 @@ class MyParcelNL
         // load the localisation & classes
         //        add_action('plugins_loaded', [$this, 'translations']);
         add_action('init', [$this, 'initialize'], 9999);
-    }
-
-    /**
-     * @param  array $columns
-     *
-     * @return array
-     */
-    public function addMyParcelColumnToOrderGrid(array $columns): array
-    {
-        $newColumns = [];
-
-        // Insert the column before the column we want to appear after
-        foreach ($columns as $name => $data) {
-            $newColumns[$name] = $data;
-
-            if ('shipping_address' === $name) {
-                $newColumns[self::CUSTOM_ORDER_COLUMN_ID] = __('MyParcel', 'my-textdomain');
-            }
-        }
-
-        return $newColumns;
-    }
-
-    /**
-     * @return void
-     */
-    public function addSubMenu()
-    {
-        add_submenu_page(
-            'woocommerce',
-            __('MyParcel', 'woocommerce-myparcel'),
-            __('MyParcel', 'woocommerce-myparcel'),
-            'edit_pages',
-            self::SETTINGS_MENU_SLUG,
-            [$this, 'renderPdkPluginSettings']
-        );
-    }
-
-    /**
-     * Get the plugin path.
-     *
-     * @return string
-     */
-    public function getPluginPath(): string
-    {
-        return untrailingslashit(plugin_dir_path(__FILE__));
-    }
-
-    /**
-     * Get the plugin url.
-     *
-     * @return string
-     */
-    public function getPluginUrl(): string
-    {
-        return untrailingslashit(plugins_url('/', __FILE__));
-    }
-
-    public function initMessenger(): void
-    {
-        // Always call the MessagesRepository to make sure lingering messages are shown
-        MessagesRepository::getInstance();
-        // Show temporary message concerning insurances for shipments to Belgium.
-        Messages::log(
-            __('message_insurance_belgium_2022', 'woocommerce-myparcel'),
-            MessageLogger::NOTICE_LEVEL_WARNING,
-            'message_insurance_belgium_2022',
-            [MessagesRepository::SETTINGS_PAGE, MessagesRepository::PLUGINS_PAGE]
-        );
     }
 
     //        /**
@@ -192,6 +132,19 @@ class MyParcelNL
     //            require_once($this->includes . '/Webhook/Hooks/AccountSettingsWebhook.php');
     //        }
 
+    public function initMessenger(): void
+    {
+        // Always call the MessagesRepository to make sure lingering messages are shown
+        MessagesRepository::getInstance();
+        // Show temporary message concerning insurances for shipments to Belgium.
+        Messages::log(
+            __('message_insurance_belgium_2022', 'woocommerce-myparcel'),
+            MessageLogger::NOTICE_LEVEL_WARNING,
+            'message_insurance_belgium_2022',
+            [MessagesRepository::SETTINGS_PAGE, MessagesRepository::PLUGINS_PAGE]
+        );
+    }
+
     /**
      * Perform required tasks that initialize the plugin.
      *
@@ -205,19 +158,11 @@ class MyParcelNL
 
         $this->useStagingEnvironment();
 
-        // Add MyParcel menu item
-        add_action('admin_menu', [$this, 'addSubMenu']);
-
-        // Render custom column in order grid
-        add_filter('manage_edit-shop_order_columns', [$this, 'addMyParcelColumnToOrderGrid'], 20);
-
-        // Load the js necessary to run the pdk frontend
-        add_action('admin_enqueue_scripts', [$this, 'loadPdkScripts']);
-
-        /** @var \MyParcelNL\WooCommerce\Pdk\Service\HookRenderService $hookRenderService */
-        $hookRenderService = Pdk::get(HookRenderService::class);
-
-        $hookRenderService->registerHooks();
+        foreach (self::HOOK_SERVICES as $service) {
+            /** @var \MyParcelNL\WooCommerce\Pdk\Service\WordPressHookServiceInterface $instance */
+            $instance = Pdk::get($service);
+            $instance->initialize();
+        }
     }
 
     /**
@@ -242,71 +187,7 @@ class MyParcelNL
         }
     }
 
-    /**
-     * @return void
-     */
-    public function loadPdkScripts(): void
-    {
-        $enqueue = static function (string $handle, string $url) {
-            wp_enqueue_script($handle, $url, [], null, true);
-        };
 
-        if (Pdk::isDevelopment()) {
-            $enqueue('vue', 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js');
-            $enqueue('vue-demi', 'https://cdnjs.cloudflare.com/ajax/libs/vue-demi/0.13.11/index.iife.js');
-        } else {
-            $enqueue('vue', 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.min.js');
-            $enqueue('vue-demi', 'https://cdnjs.cloudflare.com/ajax/libs/vue-demi/0.13.11/index.iife.min.js');
-        }
-
-        $enqueue(
-            'myparcel-pdk-frontend',
-            $this->getPluginUrl() . '/views/admin/lib/woocommerce-admin.iife.js'
-        );
-
-        wp_enqueue_style(
-            'myparcel-pdk-frontend',
-            $this->getPluginUrl() . '/views/admin/lib/style.css'
-        );
-    }
-
-    /**
-     * Plugin upgrade method. Perform any required upgrades here
-     *
-     * @param  string $installed_version the currently installed ('old') version
-     */
-    protected function upgrade($installed_version): void
-    {
-        if (version_compare($installed_version, '2.4.0-beta-4', '<')) {
-            require_once('migration/wcmp-upgrade-migration-v2-4-0-beta-4.php');
-        }
-
-        if (version_compare($installed_version, '3.0.4', '<=')) {
-            require_once('migration/wcmp-upgrade-migration-v3-0-4.php');
-        }
-
-        if ($this->phpVersionMeets(WCMYPA::PHP_VERSION_7_1)) {
-            // Import the migration class base
-            require_once('migration/wcmp-upgrade-migration.php');
-
-            // Migrate php 7.1+ only version settings
-            if (version_compare($installed_version, '4.0.0', '<=')) {
-                require_once('migration/wcmp-upgrade-migration-v4-0-0.php');
-            }
-
-            if (version_compare($installed_version, '4.1.0', '<=')) {
-                require_once('migration/wcmp-upgrade-migration-v4-1-0.php');
-            }
-
-            if (version_compare($installed_version, '4.2.1', '<=')) {
-                require_once('migration/wcmp-upgrade-migration-v4-2-1.php');
-            }
-
-            if (version_compare($installed_version, '4.4.1', '<')) {
-                require_once('migration/wcmp-upgrade-migration-v4-4-1.php');
-            }
-        }
-    }
 
     //    /**
     //     * Load the translation / text-domain files
@@ -402,18 +283,9 @@ class MyParcelNL
             $howToUpdate
         );
 
-        Messages::log($message, MessageLogger::NOTICE_LEVEL_ERROR);
+        Messages::error($message);
 
         return false;
-    }
-
-    /**
-     * @return void
-     * @throws \Throwable
-     */
-    private function setupPdk(): void
-    {
-        Boot::setupPdk($this);
     }
 
     /**

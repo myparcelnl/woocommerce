@@ -27,6 +27,6 @@ class LanguageService extends AbstractLanguageService
         $lang = $language ?? $this->getLanguage();
         $iso2 = substr($lang, 0, 2);
 
-        return sprintf("%s/config/pdk/translations/%s.json", Pdk::get('pluginRootDir'), $iso2);
+        return sprintf('%s/config/pdk/translations/%s.json', Pdk::get('pluginPath'), $iso2);
     }
 }
