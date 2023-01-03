@@ -226,15 +226,15 @@ class WCMP_Data
      * @return array
      * @throws \Exception
      */
-    public static function getInsuranceAmounts(): array
+    public static function getInsuranceAmounts($cc): array
     {
         $amounts = [];
 
         /**
-         * @type PostNLConsignment
+         * @type PostNLConsignment $consignment
          */
-        $carrier             = ConsignmentFactory::createByCarrierName(CarrierPostNL::NAME);
-        $amountPossibilities = $carrier->getInsurancePossibilities();
+        $consignment             = ConsignmentFactory::createByCarrierName(CarrierPostNL::NAME);
+        $amountPossibilities = $consignment->getInsurancePossibilities($cc);
 
         foreach ($amountPossibilities as $key => $value) {
             $amounts[$value] = $value;

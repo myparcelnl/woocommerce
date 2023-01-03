@@ -111,7 +111,6 @@ class OrderSettingsRows
         $shippingCountry    = $orderSettings->getShippingCountry();
         $isEuCountry        = WCMP_Country_Codes::isEuCountry($shippingCountry);
         $isHomeCountry      = WCMP_Data::isHomeCountry($shippingCountry);
-        $isBelgium          = AbstractConsignment::CC_BE === $shippingCountry;
         $packageTypeOptions = array_combine(WCMP_Data::getPackageTypes(), WCMP_Data::getPackageTypesHuman());
 
         // Remove mailbox and digital stamp, because this is not possible for international shipments
@@ -161,30 +160,28 @@ class OrderSettingsRows
             $rows = array_merge($rows, $this->getAdditionalOptionsRows($orderSettings));
         }
 
-        if ($isBelgium) {
-            $rows[] = [
-                'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED,
-                'type'      => 'toggle',
-                'label'     => __('insured', 'woocommerce-myparcel'),
-                'value'     => $orderSettings->isInsured(),
-                'condition' => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_INSURED),
-                ],
-            ];
-
-            $rows[] = [
-                'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT,
-                'type'      => 'select',
-                'label'     => __('insured_amount', 'woocommerce-myparcel'),
-                'options'   => [$orderSettings::DEFAULT_BELGIAN_INSURANCE => $orderSettings::DEFAULT_BELGIAN_INSURANCE],
-                'value'     => $orderSettings->getInsuranceAmount(),
-                'condition' => [
-                    self::OPTION_SHIPMENT_OPTIONS_INSURED,
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                ],
-            ];
-        }
+        $rows[] = [
+            'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED,
+            'type'      => 'toggle',
+            'label'     => __('insured', 'woocommerce-myparcel'),
+            'value'     => $orderSettings->isInsured(),
+            'condition' => [
+                self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_INSURED),
+            ],
+        ];
+        $rows[] = [
+            'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT,
+            'type'      => 'select',
+            'label'     => __('insured_amount', 'woocommerce-myparcel'),
+            'options'   => WCMP_Data::getInsuranceAmounts($shippingCountry),
+            'value'     => $orderSettings->getInsuranceAmount(),
+            'condition' => [
+                self::CONDITION_PACKAGE_TYPE_PACKAGE,
+                $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_INSURED),
+                self::OPTION_SHIPMENT_OPTIONS_INSURED,
+            ],
+        ];
 
         if ($isEuCountry) {
             $rows[] = [
@@ -343,28 +340,6 @@ class OrderSettingsRows
                 'condition' => [
                     $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_SAME_DAY_DELIVERY),
                     self::CONDITION_FORCE_ENABLED_SAME_DAY
-                ],
-            ],
-            [
-                'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED,
-                'type'      => 'toggle',
-                'label'     => __('insured', 'woocommerce-myparcel'),
-                'value'     => $orderSettings->isInsured(),
-                'condition' => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_INSURED),
-                ],
-            ],
-            [
-                'name'      => self::OPTION_SHIPMENT_OPTIONS_INSURED_AMOUNT,
-                'type'      => 'select',
-                'label'     => __('insured_amount', 'woocommerce-myparcel'),
-                'options'   => WCMP_Data::getInsuranceAmounts(),
-                'value'     => $orderSettings->getInsuranceAmount(),
-                'condition' => [
-                    self::CONDITION_PACKAGE_TYPE_PACKAGE,
-                    $this->getCarriersWithFeatureCondition(self::OPTION_SHIPMENT_OPTIONS_INSURED),
-                    self::OPTION_SHIPMENT_OPTIONS_INSURED,
                 ],
             ],
         ];
