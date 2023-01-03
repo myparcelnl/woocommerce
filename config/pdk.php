@@ -9,12 +9,14 @@ use MyParcelNL\Pdk\Base\Pdk;
 use MyParcelNL\Pdk\Language\Service\LanguageServiceInterface;
 use MyParcelNL\Pdk\Plugin\Action\EndpointActionsInterface;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
+use MyParcelNL\Pdk\Plugin\Service\OrderStatusServiceInterface;
 use MyParcelNL\Pdk\Product\Repository\AbstractProductRepository;
 use MyParcelNL\Pdk\Settings\Repository\AbstractSettingsRepository;
 use MyParcelNL\WooCommerce\Logger\WooCommerceLogger;
 use MyParcelNL\WooCommerce\Pdk\Guzzle7ClientAdapter;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Action\WcEndpointActions;
 use MyParcelNL\WooCommerce\Pdk\Plugin\Repository\PdkOrderRepository;
+use MyParcelNL\WooCommerce\Pdk\Plugin\Service\WooCommerceOrderStatusService;
 use MyParcelNL\WooCommerce\Pdk\Product\Repository\PdkProductRepository;
 use MyParcelNL\WooCommerce\Pdk\Service\LanguageService;
 use MyParcelNL\WooCommerce\Pdk\Settings\Repository\PdkSettingsRepository;
@@ -35,12 +37,13 @@ return [
      */
     'deliveryOptionsVersion' => value('5.3.0'),
 
-    AbstractPdkOrderRepository::class => autowire(PdkOrderRepository::class),
-    AbstractProductRepository::class  => autowire(PdkProductRepository::class),
-    AbstractSettingsRepository::class => autowire(PdkSettingsRepository::class),
-    ApiServiceInterface::class        => autowire(MyParcelApiService::class),
-    ClientAdapterInterface::class     => autowire(Guzzle7ClientAdapter::class),
-    EndpointActionsInterface::class   => autowire(WcEndpointActions::class),
-    LanguageServiceInterface::class   => autowire(LanguageService::class),
-    LoggerInterface::class            => autowire(WooCommerceLogger::class),
+    AbstractPdkOrderRepository::class  => autowire(PdkOrderRepository::class),
+    AbstractProductRepository::class   => autowire(PdkProductRepository::class),
+    AbstractSettingsRepository::class  => autowire(PdkSettingsRepository::class),
+    ApiServiceInterface::class         => autowire(MyParcelApiService::class),
+    ClientAdapterInterface::class      => autowire(Guzzle7ClientAdapter::class),
+    EndpointActionsInterface::class    => autowire(WcEndpointActions::class),
+    LanguageServiceInterface::class    => autowire(LanguageService::class),
+    LoggerInterface::class             => autowire(WooCommerceLogger::class),
+    OrderStatusServiceInterface::class => autowire(WooCommerceOrderStatusService::class),
 ];
