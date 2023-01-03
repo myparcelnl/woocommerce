@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.16.1](https://github.com/myparcelnl/woocommerce/compare/v4.16.0...v4.16.1) (2023-01-03)
+
+
+### :bug: Bug Fixes
+
+* show order detail even when package type is integer ([#935](https://github.com/myparcelnl/woocommerce/issues/935)) ([4e533bd](https://github.com/myparcelnl/woocommerce/commit/4e533bdff894880128e79d87a22e6961cb7109f8))
+
 ## [4.16.0](https://github.com/myparcelnl/woocommerce/compare/v4.15.2...v4.16.0) (2023-01-03)
 
 
