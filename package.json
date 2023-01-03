@@ -1,26 +1,26 @@
 {
   "name": "@myparcel/woocommerce",
-  "private": true,
   "version": "5.0.0-alpha.0",
+  "private": true,
+  "homepage": "https://github.com/myparcelnl/woocommerce#readme",
+  "bugs": {
+    "url": "https://github.com/myparcelnl/woocommerce/issues"
+  },
+  "repository": "github:myparcelnl/woocommerce",
+  "license": "MIT",
+  "workspaces": [
+    "views/**/*"
+  ],
   "scripts": {
     "build": "yarn build:js && yarn translations:import && yarn bundle",
     "build:js": "yarn workspaces foreach --exclude @myparcel/woocommerce -pvi run build",
     "bundle": "gulp",
     "translations:import": "npx -q @edielemoine/google-docs-importer --documentId 1TPE7gwG2GXtX7vlKIaskwMy0Xr4o_ir-lsedWB86xyc -o config/pdk/translations"
   },
-  "repository": "github:myparcelnl/woocommerce",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/myparcelnl/woocommerce/issues"
-  },
-  "homepage": "https://github.com/myparcelnl/woocommerce#readme",
+  "prettier": "@myparcel/prettier-config",
   "dependencies": {
     "@myparcel/delivery-options": "^5.0.0"
   },
-  "workspaces": [
-    "views/**/*"
-  ],
-  "prettier": "@myparcel/prettier-config",
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
@@ -61,13 +61,5 @@
     "sass": "^1.43.2",
     "vinyl-buffer": "^1.0.1"
   },
-  "resolutions": {
-    "@myparcel/pdk-component-tests": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-component-tests",
-    "@myparcel/pdk-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-components",
-    "@myparcel/pdk-frontend": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-frontend",
-    "@myparcel/pdk-preset-bootstrap4": "portal:/Users/edie/Sites/myparcel/pdk-frontend/apps/pdk-preset-bootstrap4",
-    "@myparcel-pdk/common": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/common",
-    "@myparcel-pdk/frontend-components": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/components",
-    "@myparcel-pdk/frontend-core": "portal:/Users/edie/Sites/myparcel/pdk-frontend/libs/frontend/core"
-  }
+  "packageManager": "yarn@3.3.1"
 }
