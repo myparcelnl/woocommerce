@@ -21,6 +21,7 @@ use MyParcelNL\WooCommerce\Migration\Migrator;
 use MyParcelNL\WooCommerce\Pdk\Boot;
 use MyParcelNL\WooCommerce\Pdk\Service\AdminPdkHookService;
 use MyParcelNL\WooCommerce\Pdk\Service\CheckoutHookService;
+use MyParcelNL\WooCommerce\Pdk\Service\RestApiHookService;
 
 defined('ABSPATH') or die();
 
@@ -39,6 +40,7 @@ class MyParcelNL
     private const HOOK_SERVICES = [
         AdminPdkHookService::class,
         CheckoutHookService::class,
+        RestApiHookService::class,
     ];
 
     /**
