@@ -9,6 +9,9 @@ use MyParcelNL\Pdk\Facade\Pdk;
 use MyParcelNL\Pdk\Facade\RenderService;
 use MyParcelNL\Pdk\Plugin\Repository\AbstractPdkOrderRepository;
 
+/**
+ * Responsible for hooking PDK components into the WordPress admin.
+ */
 class HookRenderService
 {
     public function registerHooks(): void
