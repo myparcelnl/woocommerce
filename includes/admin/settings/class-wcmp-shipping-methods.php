@@ -99,7 +99,7 @@ class WCMP_Shipping_Methods
             $method      = $zoneShippingMethod;
             $methodTitle = $method->method_title ?? $method->title;
 
-            $this->addShippingMethod($shippingMethodId, $methodTitle);
+            $this->addShippingMethod((string) $shippingMethodId, $methodTitle);
             $this->addFlatRateShippingMethods($shippingMethodId, $methodTitle);
         }
 
